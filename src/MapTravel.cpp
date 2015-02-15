@@ -142,6 +142,7 @@ void goToNxt()
     Map::player->restoreShock(999, true);
 
     Map::player->tgt_ = nullptr;
+    GameTime::updateLightMap();
     Map::player->updateFov();
     Map::player->updateClr();
     Render::drawMapAndInterface();

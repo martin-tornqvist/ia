@@ -177,7 +177,7 @@ void summon(const Pos&              origin,
         }
     }
 
-    Render::drawBlastAtCells(positionsToAnimate, clrMagenta);
+    Render::drawBlastAtSeenCells(positionsToAnimate, clrMagenta);
 }
 
 } //ActorFactory

@@ -572,7 +572,7 @@ public:
 class WormMass: public Mon
 {
 public:
-    WormMass() : Mon(), spawnNewOneInN(20) {}
+    WormMass() : Mon(), spawnNewOneInN(10) {}
     ~WormMass() {}
     bool onActorTurn_() override;
     void mkStartItems() override;
@@ -721,13 +721,14 @@ private:
     void onStdTurn_()   override;
 
     bool      hasGreetedPlayer_;
+    const int BIG_SPELL_COOLDOWN_;
     int       bigSpellCounter_;
 };
 
 class TheDarkOneCpy: public Mon
 {
 public:
-    TheDarkOneCpy();
+    TheDarkOneCpy() {}
     ~TheDarkOneCpy() {}
     void mkStartItems() override;
 };

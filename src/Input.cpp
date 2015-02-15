@@ -351,7 +351,10 @@ void handleMapModeKeyPress(const KeyData& d)
 
                             auto* const actor = Utils::getActorAtPos(p);
 
-                            if (actor && !actor->isPlayer())
+                            if (
+                                actor               &&
+                                !actor->isPlayer()  &&
+                                Map::player->canSeeActor(*actor, nullptr))
                             {
                                 bool tgtProps[size_t(PropId::END)];
                                 actor->getPropHandler().getPropIds(tgtProps);
@@ -384,7 +387,13 @@ void handleMapModeKeyPress(const KeyData& d)
                                     Render::drawMapAndInterface();
 
                                     Actor* const actor = Utils::getActorAtPos(p);
-                                    if (actor) {Map::player->tgt_ = actor;}
+
+                                    if (
+                                        actor &&
+                                        Map::player->canSeeActor(*actor, nullptr))
+                                    {
+                                        Map::player->tgt_ = actor;
+                                    }
 
                                     Attack::ranged(*Map::player, *wpn, p);
 
@@ -598,7 +607,6 @@ void handleMapModeKeyPress(const KeyData& d)
         Log::clearLog();
         if (Map::player->isAlive())
         {
-
             if (Map::player->activeExplosive)
             {
                 auto onMarkerAtPos = [](const Pos & p)
@@ -647,18 +655,27 @@ void handleMapModeKeyPress(const KeyData& d)
 
                             auto* const actor = Utils::getActorAtPos(p);
 
-                            if (actor && !actor->isPlayer())
+                            if (
+                                actor               &&
+                                !actor->isPlayer()  &&
+                                Map::player->canSeeActor(*actor, nullptr))
                             {
                                 bool tgtProps[size_t(PropId::END)];
                                 actor->getPropHandler().getPropIds(tgtProps);
 
                                 const bool GETS_UNDEAD_BANE_BON =
-                                    PlayerBon::getsUndeadBaneBon(*Map::player, actor->getData());
+                                    PlayerBon::getsUndeadBaneBon(*Map::player,
+                                                                 actor->getData());
 
-                                if (!tgtProps[int(PropId::ethereal)] || GETS_UNDEAD_BANE_BON)
+                                if (
+                                    !tgtProps[int(PropId::ethereal)] ||
+                                    GETS_UNDEAD_BANE_BON)
                                 {
-                                    ThrowAttData data(*Map::player, *itemToThrow, actor->pos, actor->pos);
-                                    Log::addMsg(toStr(data.hitChanceTot) + "% hit chance.");
+                                    ThrowAttData data(*Map::player, *itemToThrow,
+                                                      actor->pos, actor->pos);
+
+                                    Log::addMsg(toStr(data.hitChanceTot) +
+                                                "% hit chance.");
                                 }
                             }
 
@@ -671,7 +688,8 @@ void handleMapModeKeyPress(const KeyData& d)
                             {
                                 if (p == Map::player->pos)
                                 {
-                                    Log::addMsg("I think I can persevere a little longer.");
+                                    Log::addMsg(
+                                        "I think I can persevere a little longer.");
                                 }
                                 else
                                 {
@@ -696,12 +714,14 @@ void handleMapModeKeyPress(const KeyData& d)
                             return MarkerDone::no;
                         };
 
-                        Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTgt::yes, onMarkerAtPos,
-                                    onKeyPress, itemToThrow->getData().ranged.effectiveRange);
+                        Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTgt::yes,
+                                    onMarkerAtPos, onKeyPress,
+                                    itemToThrow->getData().ranged.effectiveRange);
                     }
                     else //No item equipped
                     {
-                        Log::addMsg("I have no missiles chosen for throwing (press 'w').");
+                        Log::addMsg(
+                            "I have no missiles chosen for throwing (press 'w').");
                     }
                 }
             }
@@ -723,9 +743,12 @@ void handleMapModeKeyPress(const KeyData& d)
                     Log::clearLog();
                     Look::printLocationInfoMsgs(p);
 
-                    auto* const actor = Utils::getActorAtPos(p);
+                    const auto* const actor = Utils::getActorAtPos(p);
 
-                    if (actor && actor != Map::player)
+                    if (
+                        actor                   &&
+                        actor != Map::player    &&
+                        Map::player->canSeeActor(*actor, nullptr))
                     {
                         Log::addMsg("[v] for description");
                     }
@@ -737,14 +760,21 @@ void handleMapModeKeyPress(const KeyData& d)
                 {
                     if (d_.key == 'v')
                     {
-                        Log::clearLog();
+                        const auto* const actor = Utils::getActorAtPos(p);
 
-                        Look::printDetailedActorDescr(p);
+                        if (
+                            actor                   &&
+                            actor != Map::player    &&
+                            Map::player->canSeeActor(*actor, nullptr))
+                        {
+                            Log::clearLog();
 
-                        Render::drawMapAndInterface();
+                            Look::printDetailedActorDescr(*actor);
 
-                        onMarkerAtPos(p);
+                            Render::drawMapAndInterface();
 
+                            onMarkerAtPos(p);
+                        }
                     }
                     else if (d_.sdlKey == SDLK_SPACE || d_.sdlKey == SDLK_ESCAPE)
                     {
@@ -853,7 +883,9 @@ void handleMapModeKeyPress(const KeyData& d)
         {
             const KeyData shortcutKeyData = Query::letter(true);
 
-            if (shortcutKeyData.sdlKey == SDLK_ESCAPE || shortcutKeyData.sdlKey == SDLK_SPACE)
+            if (
+                shortcutKeyData.sdlKey == SDLK_ESCAPE ||
+                shortcutKeyData.sdlKey == SDLK_SPACE)
             {
                 Log::clearLog();
                 Render::drawMapAndInterface();
@@ -920,7 +952,7 @@ void handleMapModeKeyPress(const KeyData& d)
                 queryQuit();
             }
         }
-        else
+        else //Player not alive
         {
             Init::quitToMainMenu = true;
         }
@@ -929,7 +961,7 @@ void handleMapModeKeyPress(const KeyData& d)
     }
 
     //----------------------------------- QUIT
-    else if (d.key == 'Q' /*&& IS_DEBUG_MODE*/)
+    else if (d.key == 'Q')
     {
         queryQuit();
         clearEvents();
@@ -1106,7 +1138,8 @@ KeyData getInput(const bool IS_O_RETURN)
 
                 if ((unicode == 'o' || unicode == 'O') && IS_O_RETURN)
                 {
-                    return KeyData(-1, SDLK_RETURN, unicode == 'O', false);
+                    const bool IS_SHIFT_HELD = unicode == 'O';
+                    return KeyData(-1, SDLK_RETURN, IS_SHIFT_HELD, false);
                 }
                 else if (unicode >= 33 && unicode < 126)
                 {

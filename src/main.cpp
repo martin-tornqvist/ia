@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
                 else
                 {
                     //Build forest.
-                    Render::coverPanel(Panel::screen);
+                    Render::clearScreen();
                     Render::updateScreen();
                     MapGen::mkIntroLvl();
                 }
@@ -80,20 +80,22 @@ int main(int argc, char* argv[])
             Map::player->updateFov();
             Render::drawMapAndInterface();
 
-            if (gameEntryType == GameEntryMode::newGame)
+            if (gameEntryType == GameEntryMode::newGame && !Config::isIntroLvlSkipped())
             {
-                if (Config::isIntroLvlSkipped() == 0)
-                {
-                    const string msg =
-                        "I stand on a cobbled forest path, ahead lies a shunned decrepit "
-                        "old church building. From years of investigation and discreet "
-                        "inquiries, I know this to be the access point to the abhorred "
-                        "\"Cult of Starry Wisdom\". I will enter these sprawling catacombs "
-                        "and rob them of treasures and knowledge. The ultimate prize is an "
-                        "artifact of non-human origin called \"The shining Trapezohedron\" "
-                        "- a window to all secrets of the universe.";
-                    Popup::showMsg(msg, true, "The story so far...");
-                }
+                const string msg =
+                    "I stand on a cobbled forest path, ahead lies a shunned and "
+                    "decrepit old church. In countless dreams this place "
+                    "appeared to me - I know of the things that dwell below, and of the "
+                    "Cult of Starry Wisdom and the monstrous sacrifices dedicated "
+                    "to their overlords. But now they are nothing - only a few deranged "
+                    "fanatics shamble about the corridors, grasping at false "
+                    "promises. I will enter these sprawling catacombs and rob them of "
+                    "treasures and knowledge. But at the depths of the abyss "
+                    "lies my true destiny, an artifact of non-human origin called "
+                    "\"The shining Trapezohedron\" - a window to all secrets of the "
+                    "universe.";
+
+                Popup::showMsg(msg, true, "The story so far...", SfxId::END, 1);
             }
 
             //========== M A I N   L O O P ==========

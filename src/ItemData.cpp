@@ -323,15 +323,15 @@ void resetData(ItemDataT& d, ItemType const itemType)
         resetData(d, ItemType::general);
         d.type = ItemType::amulet;
         d.value = ItemValue::majorTreasure;
-        d.shockWhileInBackpack = d.shockWhileEquipped = 15;
+        d.shockWhileInBackpack = d.shockWhileEquipped = 10;
         d.tile = TileId::amulet;
         d.glyph = '\"';
         d.weight = ItemWeight::light;
         d.isIdentified = false;
         d.isStackable = false;
-        d.chanceToIncludeInFloorSpawnList = 2;
-        addFeatureFoundIn(d, FeatureId::tomb, 16);
-        addFeatureFoundIn(d, FeatureId::chest, 5);
+        d.chanceToIncludeInFloorSpawnList = 0;
+        addFeatureFoundIn(d, FeatureId::tomb, 13);
+        addFeatureFoundIn(d, FeatureId::chest, 3);
     } break;
 
     case ItemType::ring:
@@ -339,15 +339,15 @@ void resetData(ItemDataT& d, ItemType const itemType)
         resetData(d, ItemType::general);
         d.type = ItemType::ring;
         d.value = ItemValue::majorTreasure;
-        d.shockWhileInBackpack = d.shockWhileEquipped = 15;
+        d.shockWhileInBackpack = d.shockWhileEquipped = 10;
         d.tile = TileId::ring;
         d.glyph = '=';
         d.weight = ItemWeight::extraLight;
         d.isIdentified = false;
         d.isStackable = false;
-        d.chanceToIncludeInFloorSpawnList = 2;
-        addFeatureFoundIn(d, FeatureId::tomb, 16);
-        addFeatureFoundIn(d, FeatureId::chest, 5);
+        d.chanceToIncludeInFloorSpawnList = 0;
+        addFeatureFoundIn(d, FeatureId::tomb, 13);
+        addFeatureFoundIn(d, FeatureId::chest, 3);
     } break;
 
     case ItemType::explosive:
@@ -481,6 +481,7 @@ void initDataList()
     d->ranged.missileGlyph = '*';
     d->ranged.missileClr = clrRedLgt;
     d->spawnStdRange.lower = 5;
+    d->chanceToIncludeInFloorSpawnList = 25;
     addFeatureFoundIn(*d, FeatureId::chest, 25);
     addFeatureFoundIn(*d, FeatureId::cabinet, 25);
     addFeatureFoundIn(*d, FeatureId::cocoon, 25);
@@ -500,6 +501,7 @@ void initDataList()
     d->ranged.maxNrAmmoInClip = 5;
     d->spawnStdRange.lower = 5;
     d->maxStackAtSpawn = 1;
+    d->chanceToIncludeInFloorSpawnList = 25;
     addFeatureFoundIn(*d, FeatureId::chest, 25);
     addFeatureFoundIn(*d, FeatureId::cabinet, 25);
     addFeatureFoundIn(*d, FeatureId::cocoon, 25);
@@ -1405,7 +1407,7 @@ void initDataList()
     d = new ItemDataT(ItemId::theDarkOneClaw);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "claws me"};
-    d->melee.propApplied = new PropTerrified(PropTurns::std);
+//    d->melee.propApplied = new PropTerrified(PropTurns::std);
     setDmgFromMonId(*d, ActorId::theDarkOne);
     data[size_t(d->id)] = d;
 
@@ -1565,27 +1567,27 @@ void initDataList()
     d->landOnHardSndMsg = "";
     data[size_t(d->id)] = d;
 
-    d = new ItemDataT(ItemId::hideousMask);
-    resetData(*d, ItemType::headWear);
-    d->baseName = {"Hideous Mask", "", "The Hideous Mask"};
-    d->baseDescr =
-    {
-        "[TODO]",
-
-        itemCarryShockDescr + " (+15% shock)."
-    };
-    d->isStackable = false;
-    d->clr = clrMagenta;
-    d->tile = TileId::mask;
-    d->glyph = '[';
-    d->spawnStdRange = Range(-1, -1);
-    d->weight = ItemWeight::light;
-    d->landOnHardSndMsg = "";
-    d->chanceToIncludeInFloorSpawnList = 1;
-    d->value = ItemValue::majorTreasure;
-    d->shockWhileInBackpack = d->shockWhileEquipped = 15;
-    addFeatureFoundIn(*d, FeatureId::tomb, 8);
-    data[size_t(d->id)] = d;
+//    d = new ItemDataT(ItemId::hideousMask);
+//    resetData(*d, ItemType::headWear);
+//    d->baseName = {"Hideous Mask", "", "The Hideous Mask"};
+//    d->baseDescr =
+//    {
+//        "[TODO]",
+//
+//        itemCarryShockDescr + " (+15% shock)."
+//    };
+//    d->isStackable = false;
+//    d->clr = clrMagenta;
+//    d->tile = TileId::mask;
+//    d->glyph = '[';
+//    d->spawnStdRange = Range(-1, -1);
+//    d->weight = ItemWeight::light;
+//    d->landOnHardSndMsg = "";
+//    d->chanceToIncludeInFloorSpawnList = 1;
+//    d->value = ItemValue::majorTreasure;
+//    d->shockWhileInBackpack = d->shockWhileEquipped = 15;
+//    addFeatureFoundIn(*d, FeatureId::tomb, 8);
+//    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollMayhem);
     resetData(*d, ItemType::scroll);
@@ -2014,17 +2016,6 @@ void setupFromSaveLines(vector<string>& lines)
             lines.erase(begin(lines));
         }
     }
-}
-
-//TODO: Remove this function
-bool isWpnStronger(const ItemDataT& data1, const ItemDataT& data2,
-                   const bool IS_MELEE)
-{
-    (void)data1;
-    (void)data2;
-    (void)IS_MELEE;
-
-    return false;
 }
 
 } //ItemData

@@ -873,7 +873,18 @@ void decorate()
                         {
                             auto& adjCell = Map::cells[pAdj.x][pAdj.y];
 
-                            if (adjCell.rigid->getId() == FeatureId::floor)
+                            const auto adjId = adjCell.rigid->getId();
+
+                            //TODO: Traps count as floor here - otherwise walls that are
+                            //only adjacent to traps (and not to any "real" floor) would
+                            //be converted to cave walls, which would spoil the presence
+                            //of the trap for the player, and just be weird in general.
+                            //This works for now, but it should probably be handled
+                            //better in the future. Currently, traps are the only rigid
+                            //that can "mimic" floor, but if some other feature like that
+                            //is added, it could be a problem.
+
+                            if (adjId == FeatureId::floor || adjId == FeatureId::trap)
                             {
                                 hasAdjFloor = true;
 

@@ -353,13 +353,13 @@ public:
     Clr getInterfaceClr() const override {return clrBrown;}
 };
 
-class HideousMask: public Headwear
-{
-public:
-    HideousMask(ItemDataT* itemData);
-
-    void onStdTurnInInv(const InvType invType) override;
-};
+//class HideousMask: public Headwear
+//{
+//public:
+//    HideousMask(ItemDataT* itemData);
+//
+//    void onStdTurnInInv(const InvType invType) override;
+//};
 
 class GasMask: public Headwear
 {

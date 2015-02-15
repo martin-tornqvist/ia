@@ -12,7 +12,7 @@ class Feature;
 namespace AutoDescrActor
 {
 
-void addAutoDescriptionLines(Actor* const actor, std::string& line);
+void addAutoDescriptionLines(const Actor& actor, std::string& line);
 
 } //AutoDescrActor
 
@@ -21,7 +21,7 @@ namespace Look
 
 void printLocationInfoMsgs(const Pos& pos);
 
-void printDetailedActorDescr(const Pos& pos);
+void printDetailedActorDescr(const Actor& actor);
 
 } //Look
 

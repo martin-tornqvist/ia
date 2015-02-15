@@ -24,40 +24,48 @@ void readFile()
     string curLine;
     ifstream file("manual.txt");
 
+    if (!file.is_open())
+    {
+        return;
+    }
+
     vector<string> formatted;
 
-    if (file.is_open())
+    while (getline(file, curLine))
     {
-        while (getline(file, curLine))
+        if (curLine.empty())
         {
-            if (curLine.empty())
+            lines_.push_back(curLine);
+        }
+        else //Current line not empty
+        {
+            //Do not format lines that start with two spaces
+            bool shouldFormatLine = true;
+
+            if (curLine.size() >= 2)
             {
-                lines_.push_back(curLine);
+                if (curLine[0] == ' ' && curLine[1] == ' ')
+                {
+                    shouldFormatLine = false;
+                }
             }
-            else
+
+            if (shouldFormatLine)
             {
-                //Do not format lines that start with two spaces
-                bool shouldFormatLine = true;
-                if (curLine.size() > 1)
+                TextFormat::lineToLines(curLine, MAP_W, formatted);
+
+                TRACE << "curLine: " << curLine << endl;
+
+                for (const auto& line : formatted)
                 {
-                    if (curLine[0] == ' ' && curLine[1] == ' ')
-                    {
-                        shouldFormatLine = false;
-                    }
+                    cout << line << endl;
+                    lines_.push_back(line);
                 }
-                if (shouldFormatLine)
-                {
-                    TextFormat::lineToLines(curLine, MAP_W - 3, formatted);
-                    for (const auto& line : formatted)
-                    {
-                        lines_.push_back(line);
-                    }
-                }
-                else
-                {
-                    curLine.erase(curLine.begin());
-                    lines_.push_back(curLine);
-                }
+            }
+            else //Do not format line
+            {
+//                curLine.erase(curLine.begin());
+                lines_.push_back(curLine);
             }
         }
     }
@@ -69,15 +77,13 @@ void drawManualInterface()
 {
     const string decorationLine(MAP_W, '-');
 
-    const int X_LABEL = 3;
+    const int   X_LABEL = 3;
+    const auto  panel   = Panel::screen;
 
-    Render::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
-
-    Render::drawText(" Browsing the Tome of Wisdom ", Panel::screen, Pos(X_LABEL, 0), clrGray);
-
-    Render::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1), clrGray);
-
-    Render::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
+    Render::drawText(decorationLine, panel, Pos(0, 0), clrGray);
+    Render::drawText(" Browsing the Tome of Wisdom ", panel, Pos(X_LABEL, 0), clrGray);
+    Render::drawText(decorationLine, panel, Pos(0, SCREEN_H - 1), clrGray);
+    Render::drawText(infoScrCmdInfo, panel, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 }
 
 } //namespace
@@ -100,7 +106,9 @@ void run()
     {
         Render::clearScreen();
         drawManualInterface();
+
         int yPos = 1;
+
         for (int i = topNr; i <= btmNr; ++i)
         {
             Render::drawText(lines_[i], Panel::screen, Pos(0, yPos++),

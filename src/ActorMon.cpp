@@ -1368,9 +1368,9 @@ void LengElder::onStdTurn_()
 
                 Popup::showMsg("", true, "");
 
-                auto& inv = Map::player->getInv();
+                //auto& inv = Map::player->getInv();
                 //TODO: Which item to give?
-                inv.putInGeneral(ItemFactory::mk(ItemId::hideousMask));
+                //inv.putInGeneral(ItemFactory::mk(ItemId::hideousMask));
 
                 hasGivenItemToPlayer_ = true;
                 nrTurnsToHostile_     = Rnd::range(9, 11);
@@ -1488,7 +1488,7 @@ bool WormMass::onActorTurn_()
             {
                 Actor* const    actor   = ActorFactory::mk(data_->id, pAdj);
                 WormMass* const worm    = static_cast<WormMass*>(actor);
-                spawnNewOneInN += 3;
+                spawnNewOneInN += 8;
                 worm->spawnNewOneInN    = spawnNewOneInN;
                 worm->awareCounter_     = awareCounter_;
                 worm->leader_           = leader_ ? leader_ : this;
@@ -1778,13 +1778,13 @@ void GasSpore::onDeath()
 TheDarkOne::TheDarkOne() :
     Mon                 (),
     hasGreetedPlayer_   (false),
-    bigSpellCounter_    (30) {}
+    BIG_SPELL_COOLDOWN_ (0),
+    bigSpellCounter_    (BIG_SPELL_COOLDOWN_) {}
 
 void TheDarkOne::mkStartItems()
 {
     inv_->putInIntrinsics(ItemFactory::mk(ItemId::theDarkOneClaw));
 
-    spellsKnown_.push_back(new SpellTeleport());
     spellsKnown_.push_back(new SpellTerrifyMon());
     spellsKnown_.push_back(new SpellDisease());
     spellsKnown_.push_back(new SpellBurn());
@@ -1826,39 +1826,39 @@ bool TheDarkOne::onActorTurn_()
         awareCounter_     = data_->nrTurnsAware;
     }
 
-    if (bigSpellCounter_ > 0)
+    bool blockedLos[MAP_W][MAP_H];
+    MapParse::run(CellCheck::BlocksLos(), blockedLos);
+
+    if (bigSpellCounter_ > 0 && canSeeActor(*Map::player, blockedLos))
     {
-        bigSpellCounter_--;
+        --bigSpellCounter_;
     }
 
     //Summon copies, change position with one of them.
-    //NOTE: The copies sets their HP equal to "real" Dark One.
-    if (bigSpellCounter_ <= 0 && tgt_ && Rnd::oneIn(4))
+    if (bigSpellCounter_ <= 0 && tgt_)
     {
         bool blocked[MAP_W][MAP_H];
-
         MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
 
         vector<Pos> freeCells;
-
         Utils::mkVectorFromBoolMap(false, blocked, freeCells);
-
-        random_shuffle(begin(freeCells), end(freeCells));
 
         const int NR_SUMMONED = min(3, int(freeCells.size()));
 
-        vector<Mon*> summoned;
-
         for (int i = 0; i < NR_SUMMONED; ++i)
         {
-            const Pos& p(freeCells[i]);
+            const int CELL_IDX = Rnd::range(0, int(freeCells.size()));
+
+            const Pos& p(CELL_IDX);
+
+            vector<Mon*> summoned;
             ActorFactory::summon(p, {ActorId::theDarkOneCpy}, true, this, &summoned);
 
             assert(summoned.size() == 1);
 
             Mon* const mon = summoned.front();
 
-            mon->nrTurnsUntilUnsummoned_ = Rnd::range(10, 30);
+            mon->nrTurnsUntilUnsummoned_ = Rnd::range(6, 12);
 
             if (i == 0)
             {
@@ -1869,7 +1869,7 @@ bool TheDarkOne::onActorTurn_()
 
         GameTime::tick();
 
-        bigSpellCounter_ = 30;
+        bigSpellCounter_ = BIG_SPELL_COOLDOWN_ + Rnd::range(-5, 5);
 
         return true;
     }
@@ -1883,18 +1883,16 @@ bool TheDarkOne::onActorTurn_()
     return false;
 }
 
-TheDarkOneCpy::TheDarkOneCpy()
-{
-
-}
-
 void TheDarkOneCpy::mkStartItems()
 {
+    hasGivenXpForSpotting_ = true;
+
     for (Actor* const actor : GameTime::actors_)
     {
         if (actor->getId() == ActorId::theDarkOne)
         {
-            hp_ = actor->getHp();
+            hpMax_  = max(2, actor->getHpMax(true)  / 4);
+            hp_     = max(1, actor->getHp()         / 4);
         }
     }
 

@@ -409,11 +409,11 @@ void DeviceLantern::onStdTurnInInv(const InvType invType)
         }
         else //Not flickering
         {
-            if (Rnd::oneIn(30))
+            if (Rnd::oneIn(40))
             {
                 Log::addMsg("My Electric Lantern flickers...");
                 workingState_         = LanternWorkingState::flicker;
-                nrFlickerTurnsLeft_   = Rnd::range(4, 12);
+                nrFlickerTurnsLeft_   = Rnd::range(4, 8);
 
                 GameTime::updateLightMap();
                 Map::player->updateFov();

@@ -184,9 +184,9 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
         r = new GasMask(d);
         break;
 
-    case ItemId::hideousMask:
-        r = new HideousMask(d);
-        break;
+//    case ItemId::hideousMask:
+//        r = new HideousMask(d);
+//        break;
 
     case ItemId::scrollMayhem:
     case ItemId::scrollTelep:

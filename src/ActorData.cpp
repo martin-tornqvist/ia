@@ -1892,7 +1892,7 @@ void initDataList()
     d.glyph = 'A';
     d.color = clrWhite;
     d.tile = TileId::ape;
-    d.hp = 20;
+    d.hp = 18;
     d.spi = 6;
     d.dmgMelee = 6;
     d.abilityVals.setVal(AbilityId::melee, 50);
@@ -1911,6 +1911,8 @@ void initDataList()
         "ago.";
     d.aggroTextMonHidden = "I hear a beast howling.";
     d.aggroTextMonSeen = d.nameThe + " howls at me.";
+    d.aggroSfxMonSeen = SfxId::ape;
+    d.aggroSfxMonHidden = SfxId::ape;
     d.erraticMovePct = ActorErraticFreq::rare;
     d.monShockLvl = MonShockLvl::unsettling;
     d.nativeRooms.push_back(RoomType::forest);
@@ -1941,7 +1943,7 @@ void initDataList()
     d.spawnMinDLVL = 3;
     d.spawnMaxDLVL = d.spawnMinDLVL + 5;
     d.canSeeInDarkness = true;
-    d.groupSize = MonGroupSize::group;
+    d.groupSize = MonGroupSize::few;
     d.actorSize = ActorSize::floor;
     d.nrTurnsAware = 10;
     d.descr = "A slithering conglomeration of carnivorous worms. They multiply rapidly.";
@@ -2598,7 +2600,8 @@ void initDataList()
     d.intrProps[int(PropId::rConf)] = true;
     d.intrProps[int(PropId::rFear)] = true;
     d.intrProps[int(PropId::rFire)] = true;
-    d.dmgMelee = 12;
+    d.intrProps[int(PropId::rBreath)] = true;
+    d.dmgMelee = 10;
     d.abilityVals.setVal(AbilityId::melee, 70);
     d.isAutoSpawnAllowed = false;
     d.groupSize = MonGroupSize::alone;
@@ -2614,6 +2617,7 @@ void initDataList()
     d.monShockLvl = MonShockLvl::terrifying;
     d.isHumanoid = true;
     d.canLeaveCorpse = false;
+    d.canBleed = false;
     data[size_t(d.id)] = d;
     d.reset();
 
