@@ -308,7 +308,7 @@ class MedicalBag: public Item
 public:
     MedicalBag(ItemDataT* const itemData) :
         Item                    (itemData),
-        nrSupplies_             (60),
+        nrSupplies_             (40),
         nrTurnsUntilHealWounds_ (-1),
         nrTurnsLeftSanitize_    (-1),
         curAction_              (MedBagAction::END) {}

@@ -178,8 +178,8 @@ void initDataList()
 
     d.nameA = "A Bloated Corpse";
     d.nameThe = "The Bloated Corpse";
-    d.corpseNameA = "A very large lifeless gruesome corpse";
-    d.corpseNameThe = "The very large lifeless gruesome corpse";
+    d.corpseNameA = "A huge gruesome corpse";
+    d.corpseNameThe = "The huge gruesome corpse";
     d.id = ActorId::bloatedZombie;
     d.ai[int(AiId::looks)] = true;
     d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -236,8 +236,8 @@ void initDataList()
     d.glyph = 'Z';
     d.color = clrCyanLgt;
     d.tile = TileId::zombieUnarmed;
-    d.hp = 24;
-    d.dmgMelee = 2;
+    d.hp = 26;
+    d.dmgMelee = 6;
     d.abilityVals.setVal(AbilityId::melee, 40);
     d.abilityVals.setVal(AbilityId::ranged, 40);
     d.spawnMinDLVL = 4;
@@ -279,8 +279,8 @@ void initDataList()
     d.glyph = 'Z';
     d.color = clrCyan;
     d.tile = TileId::zombieUnarmed;
-    d.hp = 24;
-    d.dmgMelee = 2;
+    d.hp = 26;
+    d.dmgMelee = 6;
     d.abilityVals.setVal(AbilityId::melee, 40);
     d.abilityVals.setVal(AbilityId::ranged, 40);
     d.isAutoSpawnAllowed = false;
@@ -1848,12 +1848,12 @@ void initDataList()
     d.glyph = 'F';
     d.color = clrWhite;
     d.tile = TileId::deepOne;
-    d.hp = 10;
+    d.hp = 12;
     d.spi = 12;
     d.dmgMelee = 5;
     d.dmgRanged = 5;
-    d.abilityVals.setVal(AbilityId::melee, 50);
-    d.abilityVals.setVal(AbilityId::ranged, 40);
+    d.abilityVals.setVal(AbilityId::melee, 55);
+    d.abilityVals.setVal(AbilityId::ranged, 50);
     d.spawnMinDLVL = 6;
     d.groupSize = MonGroupSize::horde;
     d.actorSize = ActorSize::humanoid;
@@ -2458,11 +2458,12 @@ void initDataList()
     d.glyph = '~';
     d.color = clrRed;
     d.tile = TileId::device2;
-    d.hp = 20;
+    d.hp = 22;
     d.spi = 40;
     d.dmgRanged = 6;
     d.abilityVals.setVal(AbilityId::melee, 50);
     d.abilityVals.setVal(AbilityId::ranged, 65);
+    d.abilityVals.setVal(AbilityId::dodgeAtt, 35);
     d.intrProps[int(PropId::flying)] = true;
     d.intrProps[int(PropId::radiant)] = true;
     d.intrProps[int(PropId::rFear)] = true;

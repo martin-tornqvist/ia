@@ -48,7 +48,7 @@ void initRoomBucket()
 
     if (DLVL <= DLVL_LAST_EARLY_GAME)
     {
-        addToRoomBucket(RoomType::human,    Rnd::range(3, 6));
+        addToRoomBucket(RoomType::human,    Rnd::range(2, 4));
         addToRoomBucket(RoomType::ritual,   Rnd::range(1, 1));
         addToRoomBucket(RoomType::spider,   Rnd::range(0, 3));
         addToRoomBucket(RoomType::crypt,    Rnd::range(1, 4));
@@ -70,7 +70,7 @@ void initRoomBucket()
         addToRoomBucket(RoomType::flooded,  Rnd::range(0, 2));
         addToRoomBucket(RoomType::muddy,    Rnd::range(0, 2));
         addToRoomBucket(RoomType::cave,     Rnd::range(1, 4));
-        addToRoomBucket(RoomType::chasm,    Rnd::range(0, 3));
+        addToRoomBucket(RoomType::chasm,    Rnd::range(0, 2));
         addToRoomBucket(RoomType::forest,   Rnd::range(1, 4));
 
         const size_t NR_PLAIN_ROOM_PER_THEMED = 1;
@@ -84,7 +84,7 @@ void initRoomBucket()
         addToRoomBucket(RoomType::flooded,  Rnd::range(0, 2));
         addToRoomBucket(RoomType::muddy,    Rnd::range(0, 2));
         addToRoomBucket(RoomType::cave,     Rnd::range(3, 4));
-        addToRoomBucket(RoomType::chasm,    Rnd::range(0, 3));
+        addToRoomBucket(RoomType::chasm,    Rnd::range(0, 2));
         addToRoomBucket(RoomType::forest,   Rnd::range(1, 4));
     }
 

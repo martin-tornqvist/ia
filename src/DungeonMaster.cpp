@@ -104,7 +104,7 @@ TimeData getStartTime() {return timeStarted_;}
 int getMonTotXpWorth(const ActorDataT& d)
 {
     //K regulates player XP rate, higher -> more XP per monster
-    const double K              = 0.4;
+    const double K              = 0.45;
 
     const double HP             = d.hp;
 

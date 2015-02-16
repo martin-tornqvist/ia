@@ -637,10 +637,10 @@ void Player::incrInsanity()
             {
                 msg += "The shadows are closing in on me!";
                 Popup::showMsg(msg, true, "Haunted by shadows!", SfxId::insanityRise);
-                const int NR_SHADOWS_LOWER  = 1;
-                const int NR_SHADOWS_UPPER  =
+                const int NR_SHADOWS_LOWER = 2;
+                const int NR_SHADOWS_UPPER =
                     getConstrInRange(2, (Map::dlvl + 1) / 2, 6);
-                const int NR                =
+                const int NR =
                     Rnd::range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
                 ActorFactory::summon(pos, vector<ActorId>(NR, ActorId::shadow), true);
                 return;
@@ -651,7 +651,7 @@ void Player::incrInsanity()
         {
             msg +=
                 "I find myself in a peculiar trance. I struggle to recall where I am, "
-                " and what is happening.";
+                "and what is happening.";
             Popup::showMsg(msg, true, "Confusion!", SfxId::insanityRise);
             propHandler_->tryApplyProp(new PropConfused(PropTurns::std));
             return;

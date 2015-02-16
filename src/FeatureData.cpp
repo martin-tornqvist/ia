@@ -370,7 +370,7 @@ void initDataList()
     d.canHaveRigid = false;
     d.canHaveItem = false;
     d.matlType = Matl::stone;
-    d.roomSpawnRules.set(5, {0, DLVL_LAST_MID_GAME}, PlacementRule::either,
+    d.roomSpawnRules.set(6, {0, DLVL_LAST_MID_GAME}, PlacementRule::either,
     {
         RoomType::plain, RoomType::human, RoomType::forest
     });

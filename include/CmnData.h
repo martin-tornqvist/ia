@@ -94,6 +94,6 @@ const std::string msgDisarmNoTrap       = "I find nothing there to disarm.";
 const std::string msgMonPreventCmd      = "Not while an enemy is near.";
 const std::string spellReflectMsg       = "The spell is reflected!";
 const std::string spellReflectSelfMsg   = "There is a faint echo...";
-const std::string itemCarryShockDescr   = "This item is disturbing to carry";
+const std::string itemCarryShockDescr   = "This item is disturbing to carry.";
 
 #endif

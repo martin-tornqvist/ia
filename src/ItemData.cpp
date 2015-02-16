@@ -988,7 +988,7 @@ void initDataList()
         "Once wielded by long-forgotten kings in ancient times, this powerful artifact "
         "grants the power to call up a loyal servant from the dead.",
 
-        itemCarryShockDescr + " (+15% shock)."
+        itemCarryShockDescr
     };
     d->clr = clrMagenta;
     d->weight = ItemWeight::medium;
@@ -1530,7 +1530,7 @@ void initDataList()
     {
         "A self-repairing biological armor created by the Mi-go.",
 
-        "It is very disturbing for a human to wear (+15% shock while worn)."
+        "It is very disturbing for a human to wear."
     };
     d->spawnStdRange = Range(-1, -1);
     d->weight = ItemWeight::medium;
@@ -1573,7 +1573,7 @@ void initDataList()
 //    {
 //        "[TODO]",
 //
-//        itemCarryShockDescr + " (+15% shock)."
+//        itemCarryShockDescr
 //    };
 //    d->isStackable = false;
 //    d->clr = clrMagenta;

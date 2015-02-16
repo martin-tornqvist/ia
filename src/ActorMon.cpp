@@ -807,9 +807,12 @@ void CultistSpikeGun::mkStartItems()
     static_cast<Wpn*>(item)->nrAmmoLoaded = Rnd::range(AMMO_CAP / 4, AMMO_CAP);
     inv_->putInSlot(SlotId::wielded, item);
 
-    item = ItemFactory::mk(ItemId::ironSpike);
-    item->nrItems_ = Rnd::range(4, 12);
-    inv_->putInGeneral(item);
+    if (Rnd::oneIn(4))
+    {
+        item = ItemFactory::mk(ItemId::ironSpike);
+        item->nrItems_ = Rnd::range(4, 12);
+        inv_->putInGeneral(item);
+    }
 }
 
 void CultistPriest::mkStartItems()
