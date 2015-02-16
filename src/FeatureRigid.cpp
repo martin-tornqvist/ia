@@ -1424,7 +1424,7 @@ void ItemContainer::init(const FeatureId featureId, const int NR_ITEMS_TO_ATTEMP
         {
             vector<ItemId> itemBucket;
 
-            for (int i = 0; i < int(ItemId::END); ++i)
+            for (size_t i = 0; i < size_t(ItemId::END); ++i)
             {
                 ItemDataT* const d = ItemData::data[i];
 
@@ -1501,7 +1501,20 @@ void ItemContainer::open(const Pos& featurePos, Actor* const actorOpening)
             if (answer == YesNoAnswer::yes)
             {
                 Audio::play(SfxId::pickup);
-                Map::player->getInv().putInGeneral(item);
+
+                Inventory& inv = Map::player->getInv();
+
+                Item* const thrownItem = inv.slots_[size_t(SlotId::thrown)].item;
+
+                if (thrownItem && thrownItem->getId() == item->getId())
+                {
+                    thrownItem->nrItems_ += item->nrItems_;
+                    delete item;
+                }
+                else //Item does not stack with current thrown weapon
+                {
+                    inv.putInGeneral(item);
+                }
             }
             else if (answer == YesNoAnswer::no)
             {
@@ -1574,7 +1587,7 @@ Tomb::Tomb(const Pos& pos) :
     itemContainer_.init(FeatureId::tomb, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 
     //Appearance
-    if (Rnd::oneIn(10))
+    if (Rnd::oneIn(12))
     {
         //Do not base appearance on items (random appearance)
         const int NR_APP    = int(TombAppearance::END);

@@ -329,9 +329,9 @@ void resetData(ItemDataT& d, ItemType const itemType)
         d.weight = ItemWeight::light;
         d.isIdentified = false;
         d.isStackable = false;
-        d.chanceToIncludeInFloorSpawnList = 2;
+        d.chanceToIncludeInFloorSpawnList = 1;
         addFeatureFoundIn(d, FeatureId::tomb, 16);
-        addFeatureFoundIn(d, FeatureId::chest, 4);
+        addFeatureFoundIn(d, FeatureId::chest, 5);
     } break;
 
     case ItemType::ring:
@@ -345,9 +345,9 @@ void resetData(ItemDataT& d, ItemType const itemType)
         d.weight = ItemWeight::extraLight;
         d.isIdentified = false;
         d.isStackable = false;
-        d.chanceToIncludeInFloorSpawnList = 2;
+        d.chanceToIncludeInFloorSpawnList = 1;
         addFeatureFoundIn(d, FeatureId::tomb, 16);
-        addFeatureFoundIn(d, FeatureId::chest, 4);
+        addFeatureFoundIn(d, FeatureId::chest, 5);
     } break;
 
     case ItemType::explosive:
