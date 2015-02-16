@@ -58,13 +58,11 @@ void readFile()
 
                 for (const auto& line : formatted)
                 {
-                    cout << line << endl;
                     lines_.push_back(line);
                 }
             }
             else //Do not format line
             {
-//                curLine.erase(curLine.begin());
                 lines_.push_back(curLine);
             }
         }
