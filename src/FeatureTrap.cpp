@@ -278,7 +278,7 @@ void Trap::disarm()
 
     if (IS_DISARMED)
     {
-        if (getTrapType() == TrapId::web)
+        if (isMagical() || getTrapType() == TrapId::web)
         {
             Map::put(new Floor(pos_));
         }

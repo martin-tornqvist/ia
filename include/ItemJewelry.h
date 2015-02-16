@@ -50,7 +50,11 @@ public:
 
     virtual JewelryEffectId  getId() const = 0;
 
-    virtual void            onEquip()               {}
+    virtual void onEquip(const bool IS_SILENT)
+    {
+        (void)IS_SILENT;
+    }
+
     virtual UnequipAllowed  onUnequip()             {return UnequipAllowed::yes;}
     virtual void            onStdTurnEquiped()      {}
     virtual void            onActorTurnEquiped()    {}
@@ -75,8 +79,8 @@ public:
 
     virtual ~JewelryPropertyEffect() {}
 
-    void            onEquip()           override final;
-    UnequipAllowed  onUnequip()         override final;
+    void            onEquip(const bool IS_SILENT)   override final;
+    UnequipAllowed  onUnequip()                     override final;
 
 protected:
     virtual Prop* mkProp() const = 0;
@@ -270,8 +274,8 @@ public:
         return "It grants stronger vitality.";
     }
 
-    void            onEquip()           override;
-    UnequipAllowed  onUnequip()         override;
+    void            onEquip(const bool IS_SILENT)   override;
+    UnequipAllowed  onUnequip()                     override;
 };
 
 class JewelryEffectHpPen : public JewelryEffect
@@ -289,8 +293,8 @@ public:
         return "It makes the wearer frailer.";
     }
 
-    void            onEquip()           override;
-    UnequipAllowed  onUnequip()         override;
+    void            onEquip(const bool IS_SILENT)   override;
+    UnequipAllowed  onUnequip()                     override;
 };
 
 class JewelryEffectSpiBon : public JewelryEffect
@@ -308,8 +312,8 @@ public:
         return "It strengthens the spirit of the wearer.";
     }
 
-    void            onEquip()         override;
-    UnequipAllowed  onUnequip()       override;
+    void            onEquip(const bool IS_SILENT)   override;
+    UnequipAllowed  onUnequip()                     override;
 };
 
 class JewelryEffectSpiPen : public JewelryEffect
@@ -327,8 +331,8 @@ public:
         return "It weakens the spirit of the wearer.";
     }
 
-    void            onEquip()           override;
-    UnequipAllowed  onUnequip()         override;
+    void            onEquip(const bool IS_SILENT)   override;
+    UnequipAllowed  onUnequip()                     override;
 };
 
 class JewelryEffectRandomTele : public JewelryEffect
@@ -440,7 +444,7 @@ public:
         return "It burdens the wearer, as if there was an invisible weight to carry.";
     }
 
-    void onEquip()                          override;
+    void onEquip(const bool IS_SILENT)      override;
     void changeItemWeight(int& weightRef)   override;
 };
 
@@ -461,8 +465,8 @@ public:
         return "The wounds of the wearer heal faster.";
     }
 
-    void            onEquip()   override;
-    UnequipAllowed  onUnequip() override;
+    void            onEquip(const bool IS_SILENT)   override;
+    UnequipAllowed  onUnequip()                     override;
 };
 
 class JewelryEffectHpRegenPen : public JewelryEffect
@@ -475,15 +479,15 @@ public:
 
     JewelryEffectId getId() const override {return JewelryEffectId::hpRegenPen;}
 
-    int getHpRegenChange() const override {return 10;}
+    int getHpRegenChange() const override {return 12;}
 
     std::string getDescr() const override
     {
         return "The wounds of the wearer heal slower.";
     }
 
-    void            onEquip()   override;
-    UnequipAllowed  onUnequip() override;
+    void            onEquip(const bool IS_SILENT)   override;
+    UnequipAllowed  onUnequip()                     override;
 };
 
 class Jewelry : public Item
@@ -495,7 +499,7 @@ public:
 
     std::vector<std::string> getDescr() const override final;
 
-    void            onEquip()                                   override final;
+    void            onEquip(const bool IS_SILENT)               override final;
     UnequipAllowed  onUnequip()                                 override final;
     void            onStdTurnInInv      (const InvType invType) override final;
     void            onActorTurnInInv    (const InvType invType) override final;

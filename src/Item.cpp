@@ -202,9 +202,9 @@ void Armor::setupFromSaveLines(vector<string>& lines)
     lines.erase(begin(lines));
 }
 
-void Armor::onEquip()
+void Armor::onEquip(const bool IS_SILENT)
 {
-    onEquip_();
+    onEquip_(IS_SILENT);
 }
 
 UnequipAllowed Armor::onUnequip()
@@ -281,8 +281,10 @@ int Armor::getArmorPoints() const
     return 0;
 }
 
-void ArmorAsbSuit::onEquip_()
+void ArmorAsbSuit::onEquip_(const bool IS_SILENT)
 {
+    (void)IS_SILENT;
+
     carrierProps_.push_back(new PropRFire   (PropTurns::indefinite));
     carrierProps_.push_back(new PropRAcid   (PropTurns::indefinite));
     carrierProps_.push_back(new PropRElec   (PropTurns::indefinite));
@@ -297,8 +299,10 @@ UnequipAllowed ArmorAsbSuit::onUnequip_()
     return UnequipAllowed::yes;
 }
 
-void ArmorHeavyCoat::onEquip_()
+void ArmorHeavyCoat::onEquip_(const bool IS_SILENT)
 {
+    (void)IS_SILENT;
+
     carrierProps_.push_back(new PropRCold(PropTurns::indefinite));
 }
 
@@ -330,11 +334,14 @@ void ArmorMiGo::onStdTurnInInv(const InvType invType)
     }
 }
 
-void ArmorMiGo::onEquip_()
+void ArmorMiGo::onEquip_(const bool IS_SILENT)
 {
-    Render::drawMapAndInterface();
-    Log::addMsg("The armor joins with my skin!", clrWhite, false, true);
-    Map::player->incrShock(ShockLvl::heavy, ShockSrc::useStrangeItem);
+    if (!IS_SILENT)
+    {
+        Render::drawMapAndInterface();
+        Log::addMsg("The armor joins with my skin!", clrWhite, false, true);
+        Map::player->incrShock(ShockLvl::heavy, ShockSrc::useStrangeItem);
+    }
 }
 
 UnequipAllowed ArmorMiGo::onUnequip_()
@@ -766,8 +773,10 @@ int MedicalBag::getTotSupplForSanitize() const
 //}
 
 //--------------------------------------------------------- GAS MASK
-void GasMask::onEquip()
+void GasMask::onEquip(const bool IS_SILENT)
 {
+    (void)IS_SILENT;
+
     carrierProps_.push_back(new PropRBreath(PropTurns::indefinite));
 }
 

@@ -123,7 +123,7 @@ JewelryEffect* mkEffect(const JewelryEffectId id, Jewelry* const jewelry)
 } //namespace
 
 //--------------------------------------------------------- JEWELRY PROPERTY EFFECT
-void JewelryPropertyEffect::onEquip()
+void JewelryPropertyEffect::onEquip(const bool IS_SILENT)
 {
     Prop* const prop = mkProp();
 
@@ -131,14 +131,17 @@ void JewelryPropertyEffect::onEquip()
 
     jewelry_->carrierProps_.push_back(prop);
 
-    GameTime::updateLightMap();
-    Map::player->updateFov();
-    Render::drawMapAndInterface();
+    if (!IS_SILENT)
+    {
+        GameTime::updateLightMap();
+        Map::player->updateFov();
+        Render::drawMapAndInterface();
 
-    const auto&   propData  = PropData::data[size_t(prop->getId())];
-    const string  msg       = propData.msg[propMsgOnStartPlayer];
+        const auto&   propData  = PropData::data[size_t(prop->getId())];
+        const string  msg       = propData.msg[propMsgOnStartPlayer];
 
-    Log::addMsg(msg);
+        Log::addMsg(msg);
+    }
 
     jewelry_->effectNoticed(getId());
 }
@@ -223,8 +226,10 @@ Prop* JewelryEffectHaste::mkProp() const
 }
 
 //--------------------------------------------------------- EFFECT: HP BONUS
-void JewelryEffectHpBon::onEquip()
+void JewelryEffectHpBon::onEquip(const bool IS_SILENT)
 {
+    (void)IS_SILENT;
+
     Map::player->changeMaxHp(4, true);
     jewelry_->effectNoticed(getId());
 }
@@ -237,8 +242,10 @@ UnequipAllowed JewelryEffectHpBon::onUnequip()
 }
 
 //--------------------------------------------------------- EFFECT: HP PENALTY
-void JewelryEffectHpPen::onEquip()
+void JewelryEffectHpPen::onEquip(const bool IS_SILENT)
 {
+    (void)IS_SILENT;
+
     Map::player->changeMaxHp(-4, true);
     jewelry_->effectNoticed(getId());
 }
@@ -251,8 +258,10 @@ UnequipAllowed JewelryEffectHpPen::onUnequip()
 }
 
 //--------------------------------------------------------- EFFECT: SPI BONUS
-void JewelryEffectSpiBon::onEquip()
+void JewelryEffectSpiBon::onEquip(const bool IS_SILENT)
 {
+    (void)IS_SILENT;
+
     Map::player->changeMaxSpi(4, true);
     jewelry_->effectNoticed(getId());
 }
@@ -265,8 +274,10 @@ UnequipAllowed JewelryEffectSpiBon::onUnequip()
 }
 
 //--------------------------------------------------------- EFFECT: SPI PENALTY
-void JewelryEffectSpiPen::onEquip()
+void JewelryEffectSpiPen::onEquip(const bool IS_SILENT)
 {
+    (void)IS_SILENT;
+
     Map::player->changeMaxSpi(-4, true);
     jewelry_->effectNoticed(getId());
 }
@@ -515,11 +526,15 @@ void JewelryEffectShriek::onStdTurnEquiped()
 }
 
 //--------------------------------------------------------- EFFECT: BURDEN
-void JewelryEffectBurden::onEquip()
+void JewelryEffectBurden::onEquip(const bool IS_SILENT)
 {
     if (!effectsKnown_[size_t(getId())])
     {
-        Log::addMsg("I suddenly feel more burdened.");
+        if (!IS_SILENT)
+        {
+            Log::addMsg("I suddenly feel more burdened.");
+        }
+
         jewelry_->effectNoticed(getId());
     }
 }
@@ -534,9 +549,13 @@ void JewelryEffectBurden::changeItemWeight(int& weightRef)
 }
 
 //--------------------------------------------------------- EFFECT: HP REGEN BONUS
-void JewelryEffectHpRegenBon::onEquip()
+void JewelryEffectHpRegenBon::onEquip(const bool IS_SILENT)
 {
-    Log::addMsg("I heal faster.");
+    if (!IS_SILENT)
+    {
+        Log::addMsg("I heal faster.");
+    }
+
     jewelry_->effectNoticed(getId());
 }
 
@@ -547,9 +566,13 @@ UnequipAllowed JewelryEffectHpRegenBon::onUnequip()
 }
 
 //--------------------------------------------------------- EFFECT: HP REGEN PENALTY
-void JewelryEffectHpRegenPen::onEquip()
+void JewelryEffectHpRegenPen::onEquip(const bool IS_SILENT)
 {
-    Log::addMsg("I heal slower.");
+    if (!IS_SILENT)
+    {
+        Log::addMsg("I heal slower.");
+    }
+
     jewelry_->effectNoticed(getId());
 }
 
@@ -615,15 +638,18 @@ string Jewelry::getNameInf() const
     return data_->isIdentified ? "{Known}" : "";
 }
 
-void Jewelry::onEquip()
+void Jewelry::onEquip(const bool IS_SILENT)
 {
     for (auto* const effect : effects_)
     {
         //This may cause the effect to set up carrier properties (e.g. fire resistance)
-        effect->onEquip();
+        effect->onEquip(IS_SILENT);
     }
 
-    Log::morePrompt();
+    if (!IS_SILENT)
+    {
+        Log::morePrompt();
+    }
 }
 
 UnequipAllowed Jewelry::onUnequip()

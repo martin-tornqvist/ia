@@ -98,7 +98,7 @@ void setDefaultVariables()
     TRACE_FUNC_BEGIN;
     isAudioEnabled_               = true;
     isTilesMode_                  = true;
-    fontName_                     = "images/16x24_v2.png";
+    fontName_                     = "images/16x24_v1.png";
     parseFontNameAndSetCellDims();
     isFullscreen_                 = false;
     isTilesWallFullSquare_        = false;

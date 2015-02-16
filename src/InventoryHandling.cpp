@@ -384,7 +384,7 @@ bool runEquipScreen(InvSlot& slotToEquip)
 
                 inv.equipGeneralItem(ELEMENT, slotToEquip.id);
 
-                slotToEquip.item->onEquip();
+                slotToEquip.item->onEquip(false);
 
                 GameTime::tick();
 

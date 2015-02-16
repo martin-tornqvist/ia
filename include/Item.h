@@ -52,7 +52,12 @@ public:
     virtual void            onStdTurnInInv    (const InvType invType) {(void)invType;}
     virtual void            onActorTurnInInv  (const InvType invType) {(void)invType;}
     virtual void            onPickupToBackpack(Inventory& inv)    {(void)inv;}
-    virtual void            onEquip()                             {}
+
+    virtual void onEquip(const bool IS_SILENT)
+    {
+        (void)IS_SILENT;
+    }
+
     virtual UnequipAllowed  onUnequip() {return UnequipAllowed::yes;}
 
     virtual int getHpRegenChange(const InvType invType) const
@@ -92,8 +97,8 @@ public:
     void setupFromSaveLines(std::vector<std::string>& lines) override;
 
     Clr                     getInterfaceClr() const override {return clrGray;}
-    virtual void            onEquip()               override;
-    virtual UnequipAllowed  onUnequip()             override;
+    virtual void            onEquip(const bool IS_SILENT)   override;
+    virtual UnequipAllowed  onUnequip()                     override;
 
     int   getDurability()     const {return dur_;}
     void  setMaxDurability()        {dur_ = 100;}
@@ -106,8 +111,11 @@ public:
 protected:
     int getArmorPoints() const;
 
-    virtual void            onEquip_()    {}
-    virtual UnequipAllowed  onUnequip_()  {return UnequipAllowed::yes;}
+    virtual void onEquip_(const bool IS_SILENT)
+    {
+        (void)IS_SILENT;
+    }
+    virtual UnequipAllowed  onUnequip_() {return UnequipAllowed::yes;}
 
     std::string getNameInf() const override {return getArmorDataLine(true);}
 
@@ -121,8 +129,8 @@ public:
     ~ArmorAsbSuit() {}
 
 private:
-    void            onEquip_()    override;
-    UnequipAllowed  onUnequip_()  override;
+    void            onEquip_(const bool IS_SILENT)  override;
+    UnequipAllowed  onUnequip_()                    override;
 };
 
 class ArmorHeavyCoat: public Armor
@@ -132,8 +140,8 @@ public:
     ~ArmorHeavyCoat() {}
 
 private:
-    void            onEquip_()    override;
-    UnequipAllowed  onUnequip_()  override;
+    void            onEquip_(const bool IS_SILENT)  override;
+    UnequipAllowed  onUnequip_()                    override;
 };
 
 class ArmorMiGo: public Armor
@@ -145,8 +153,8 @@ public:
     void onStdTurnInInv(const InvType invType) override;
 
 private:
-    void            onEquip_()    override;
-    UnequipAllowed  onUnequip_()  override;
+    void            onEquip_(const bool IS_SILENT)  override;
+    UnequipAllowed  onUnequip_()                    override;
 };
 
 class Wpn: public Item
@@ -366,8 +374,8 @@ class GasMask: public Headwear
 public:
     GasMask(ItemDataT* itemData) : Headwear(itemData), nrTurnsLeft_(60) {}
 
-    void            onEquip()   override;
-    UnequipAllowed  onUnequip() override;
+    void            onEquip(const bool IS_SILENT)   override;
+    UnequipAllowed  onUnequip()                     override;
 
     void            decrTurnsLeft(Inventory& carrierInv);
 
