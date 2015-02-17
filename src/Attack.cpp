@@ -1117,7 +1117,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
 
     int nrActorsHit = 0;
 
-    int nrMonKilledInElem = -1;
+    int killedMonIdx = -1;
 
     //Emit sound
     const bool IS_ATTACKER_PLAYER = &attacker == Map::player;
@@ -1134,8 +1134,11 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
 
     for (size_t i = 1; i < path.size(); ++i)
     {
-        //If traveled more than two steps after a killed monster, stop projectile.
-        if (nrMonKilledInElem != -1 && int(i) > nrMonKilledInElem + 1) {break;}
+        //If travelled more than two steps after a killed monster, stop projectile.
+        if (killedMonIdx != -1 && i > size_t(killedMonIdx + 1))
+        {
+            break;
+        }
 
         const Pos curPos(path[i]);
 
@@ -1175,21 +1178,24 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
                     //Damage
                     data.defender->hit(data.dmg, wpn.getData().ranged.dmgType);
 
-                    nrActorsHit++;
+                    ++nrActorsHit;
 
                     Render::drawMapAndInterface();
 
                     //Special shotgun behavior:
-                    //If current defender was killed, and player aimed at humanoid level,
+                    //If current defender was killed, and player aimed at humanoid level
                     //or at floor level but beyond the current position, the shot will
                     //continue one cell.
                     const bool IS_TGT_KILLED = !data.defender->isAlive();
-                    if (IS_TGT_KILLED && nrMonKilledInElem == -1)
+
+                    if (IS_TGT_KILLED && killedMonIdx == -1)
                     {
-                        nrMonKilledInElem = i;
+                        killedMonIdx = i;
                     }
+
                     if (
-                        nrActorsHit >= 2 || !IS_TGT_KILLED ||
+                        !IS_TGT_KILLED      ||
+                        nrActorsHit >= 2    ||
                         (intendedAimLvl == ActorSize::floor && curPos == aimPos))
                     {
                         break;

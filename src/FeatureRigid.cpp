@@ -1826,25 +1826,30 @@ void Tomb::playerLoot()
 
 DidOpen Tomb::open(Actor* const actorOpening)
 {
-    const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
-
-    isOpen_ = true;
-
-    SndEmit::emitSnd({"I hear heavy stone sliding.", SfxId::tombOpen,
-                      IgnoreMsgIfOriginSeen::yes, pos_, nullptr, SndVol::high,
-                      AlertsMon::yes
-                     });
-
-    if (IS_SEEN)
+    if (isOpen_)
     {
-        Render::drawMapAndInterface();
-        Log::addMsg("The lid comes off.");
+        return DidOpen::no;
     }
+    else //Was not already open
+    {
+        isOpen_ = true;
 
-    triggerTrap(actorOpening);
+        SndEmit::emitSnd({"I hear heavy stone sliding.", SfxId::tombOpen,
+                          IgnoreMsgIfOriginSeen::yes, pos_, nullptr, SndVol::high,
+                          AlertsMon::yes
+                         });
 
-    Render::drawMapAndInterface();
-    return DidOpen::yes;
+        if (Map::cells[pos_.x][pos_.y].isSeenByPlayer)
+        {
+            Render::drawMapAndInterface();
+            Log::addMsg("The lid comes off.");
+        }
+
+        triggerTrap(actorOpening);
+
+        Render::drawMapAndInterface();
+        return DidOpen::yes;
+    }
 }
 
 DidTriggerTrap Tomb::triggerTrap(Actor* const actor)
@@ -2016,8 +2021,8 @@ void Chest::tryFindTrap()
     assert(!isOpen_);
 
     const bool CAN_DET_TRAP =
-        TRAP_DET_LVL == 0                               ||
-        PlayerBon::traits[int(Trait::perceptive)] ||
+        TRAP_DET_LVL == 0                           ||
+        PlayerBon::traits[int(Trait::perceptive)]   ||
         (TRAP_DET_LVL == 1 && PlayerBon::traits[int(Trait::observant)]);
 
     if (CAN_DET_TRAP)
@@ -2059,23 +2064,30 @@ void Chest::playerLoot()
 
 DidOpen Chest::open(Actor* const actorOpening)
 {
-    const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
-
-    if (IS_SEEN)
-    {
-        Log::addMsg("The chest opens.");
-    }
-
-    isOpen_             = true;
     isLocked_           = false;
     isTrapStatusKnown_  = true;
 
-    Render::drawMapAndInterface();
+    if (isOpen_)
+    {
+        return DidOpen::no;
+    }
+    else //Chest was not already open
+    {
+        isOpen_ = true;
 
-    triggerTrap(actorOpening);
+        if (Map::cells[pos_.x][pos_.y].isSeenByPlayer)
+        {
+            Log::addMsg("The chest opens.");
+        }
 
-    Render::drawMapAndInterface();
-    return DidOpen::yes;
+        Render::drawMapAndInterface();
+
+        triggerTrap(actorOpening);
+
+        Render::drawMapAndInterface();
+
+        return DidOpen::yes;
+    }
 }
 
 void Chest::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor)
@@ -2340,10 +2352,11 @@ DidTriggerTrap Chest::triggerTrap(Actor* const actor)
 
         if (Map::dlvl < MIN_DLVL_HARDER_TRAPS)
         {
+            //Weak poison
             actor->getPropHandler().tryApplyProp(new PropPoisoned(PropTurns::specific,
                                                  POISON_DMG_N_TURN * 3));
         }
-        else
+        else //We're at the deep end of the pool now, apply strong poison
         {
             actor->getPropHandler().tryApplyProp(new PropPoisoned(PropTurns::std));
         }
@@ -2725,17 +2738,24 @@ DidOpen Cabinet::open(Actor* const actorOpening)
 {
     (void)actorOpening;
 
-    isOpen_ = true;
-
-    if (Map::cells[pos_.x][pos_.y].isSeenByPlayer)
+    if (isOpen_)
     {
-        Render::drawMapAndInterface();
-        Log::addMsg("The cabinet opens.");
+        return DidOpen::no;
     }
+    else //Was not already open
+    {
+        isOpen_ = true;
 
-    Render::drawMapAndInterface(true);
+        if (Map::cells[pos_.x][pos_.y].isSeenByPlayer)
+        {
+            Render::drawMapAndInterface();
+            Log::addMsg("The cabinet opens.");
+        }
 
-    return DidOpen::yes;
+        Render::drawMapAndInterface(true);
+
+        return DidOpen::yes;
+    }
 }
 
 string Cabinet::getName(const Article article) const
@@ -2891,18 +2911,25 @@ void Cocoon::playerLoot()
 
 DidOpen Cocoon::open(Actor* const actorOpening)
 {
-    isOpen_ = true;
-
-    Render::drawMapAndInterface(true);
-
-    if (Map::cells[pos_.x][pos_.y].isSeenByPlayer)
+    if (isOpen_)
     {
-        Log::addMsg("The cocoon opens.");
+        return DidOpen::no;
     }
+    else //Was not already open
+    {
+        isOpen_ = true;
 
-    triggerTrap(actorOpening);
+        Render::drawMapAndInterface(true);
 
-    return DidOpen::yes;
+        if (Map::cells[pos_.x][pos_.y].isSeenByPlayer)
+        {
+            Log::addMsg("The cocoon opens.");
+        }
+
+        triggerTrap(actorOpening);
+
+        return DidOpen::yes;
+    }
 }
 
 string Cocoon::getName(const Article article) const

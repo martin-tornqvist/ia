@@ -165,7 +165,7 @@ void runStdTurnEvents()
 
     if (Map::dlvl > 0)
     {
-        Audio::tryPlayAmb(75);
+        Audio::tryPlayAmb(100);
     }
 }
 

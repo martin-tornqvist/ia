@@ -19,8 +19,8 @@ namespace
 
 vector<Mix_Chunk*> audioChunks;
 
-int curChannel    = 0;
-int timeAtLastAmb = -1;
+int curChannel_     = 0;
+int timeAtLastAmb_  = -1;
 
 void loadAudioFile(const SfxId sfx, const string& filename)
 {
@@ -28,7 +28,8 @@ void loadAudioFile(const SfxId sfx, const string& filename)
 
     const string fileRelPath  = "audio/" + filename;
 
-    Render::drawText("Loading " + fileRelPath + "...", Panel::screen, Pos(0, 0), clrWhite);
+    Render::drawText("Loading " + fileRelPath + "...", Panel::screen, Pos(0, 0),
+                     clrWhite);
 
     Render::updateScreen();
 
@@ -40,6 +41,40 @@ void loadAudioFile(const SfxId sfx, const string& filename)
               << "Mix_GetError(): "                       << Mix_GetError() << endl;
         assert(false);
     }
+}
+
+int getNextChannel(const int FROM)
+{
+    assert(FROM >= 0 && FROM < AUDIO_ALLOCATED_CHANNELS);
+
+    int ret = FROM + 1;
+
+    if (ret == AUDIO_ALLOCATED_CHANNELS)
+    {
+        ret = 0;
+    }
+
+    return ret;
+}
+
+int getFreeChannel(const int FROM)
+{
+    assert(FROM >= 0 && FROM < AUDIO_ALLOCATED_CHANNELS);
+
+    int ret = FROM;
+
+    for (int i = 0; i < AUDIO_ALLOCATED_CHANNELS; ++i)
+    {
+        ret = getNextChannel(ret);
+
+        if (Mix_Playing(ret) == 0)
+        {
+            return ret;
+        }
+    }
+
+    // Failed to find free channel
+    return -1;
 }
 
 } //Namespace
@@ -126,15 +161,12 @@ void cleanup()
     for (Mix_Chunk* chunk : audioChunks) {Mix_FreeChunk(chunk);}
     audioChunks.clear();
 
-    curChannel    =  0;
-    timeAtLastAmb = -1;
+    curChannel_     =  0;
+    timeAtLastAmb_  = -1;
 }
 
-int play(const SfxId sfx, const int VOL_PERCENT_TOT,
-         const int VOL_PERCENT_L)
+int play(const SfxId sfx, const int VOL_PERCENT_TOT, const int VOL_PERCENT_L)
 {
-    int ret = -1;
-
     if (
         !audioChunks.empty()    &&
         sfx != SfxId::AMB_START &&
@@ -142,21 +174,25 @@ int play(const SfxId sfx, const int VOL_PERCENT_TOT,
         sfx != SfxId::END       &&
         !Config::isBotPlaying())
     {
-        const int VOL_TOT = (255 * VOL_PERCENT_TOT)   / 100;
-        const int VOL_L   = (VOL_PERCENT_L * VOL_TOT) / 100;
-        const int VOL_R   = VOL_TOT - VOL_L;
+        const int FREE_CHANNEL = getFreeChannel(curChannel_);
 
-        Mix_SetPanning(curChannel, VOL_L, VOL_R);
+        if (FREE_CHANNEL >= 0)
+        {
+            curChannel_ = FREE_CHANNEL;
 
-        Mix_PlayChannel(curChannel, audioChunks[int(sfx)], 0);
+            const int VOL_TOT   = (255 * VOL_PERCENT_TOT)   / 100;
+            const int VOL_L     = (VOL_PERCENT_L * VOL_TOT) / 100;
+            const int VOL_R     = VOL_TOT - VOL_L;
 
-        ret = curChannel;
+            Mix_SetPanning(curChannel_, VOL_L, VOL_R);
 
-        ++curChannel;
+            Mix_PlayChannel(curChannel_, audioChunks[int(sfx)], 0);
 
-        if (curChannel >= AUDIO_ALLOCATED_CHANNELS) {curChannel = 0;}
+            return curChannel_;
+        }
     }
-    return ret;
+
+    return -1;
 }
 
 void play(const SfxId sfx, const Dir dir, const int DISTANCE_PERCENT)
@@ -186,16 +222,14 @@ void play(const SfxId sfx, const Dir dir, const int DISTANCE_PERCENT)
 
 void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY)
 {
-
     if (!audioChunks.empty() && Rnd::oneIn(ONE_IN_N_CHANCE_TO_PLAY))
     {
-
         const int TIME_NOW                  = time(nullptr);
         const int TIME_REQ_BETWEEN_AMB_SFX  = 20;
 
-        if ((TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX) > timeAtLastAmb)
+        if ((TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX) > timeAtLastAmb_)
         {
-            timeAtLastAmb           = TIME_NOW;
+            timeAtLastAmb_          = TIME_NOW;
             const int   VOL_PERCENT = Rnd::oneIn(5) ? Rnd::range(50,  99) : 100;
             const int   FIRST_INT   = int(SfxId::AMB_START) + 1;
             const int   LAST_INT    = int(SfxId::AMB_END)   - 1;
@@ -207,7 +241,10 @@ void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY)
 
 void fadeOutChannel(const int CHANNEL_NR)
 {
-    if (!audioChunks.empty()) {Mix_FadeOutChannel(CHANNEL_NR, 5000);}
+    if (!audioChunks.empty())
+    {
+        Mix_FadeOutChannel(CHANNEL_NR, 5000);
+    }
 }
 
 } //Audio

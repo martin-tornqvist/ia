@@ -120,6 +120,8 @@ void tryUnloadWpnOrPickupAmmo()
         {
             Wpn* const wpn = static_cast<Wpn*>(item);
 
+            const string wpnName = wpn->getName(ItemRefType::a, ItemRefInf::yes);
+
             if (!wpn->getData().ranged.hasInfiniteAmmo)
             {
                 Ammo* const spawnedAmmo = unloadRangedWpn(*wpn);
@@ -128,9 +130,7 @@ void tryUnloadWpnOrPickupAmmo()
                 {
                     Audio::play(SfxId::pickup);
 
-                    const string name = wpn->getName(ItemRefType::a, ItemRefInf::yes);
-
-                    Log::addMsg("I unload " + name + ".");
+                    Log::addMsg("I unload " + wpnName + ".");
 
                     Map::player->getInv().putInGeneral(spawnedAmmo);
 

@@ -734,7 +734,7 @@ int MedicalBag::getTotTurnsForSanitize() const
 
 int MedicalBag::getTotSupplForSanitize() const
 {
-    return PlayerBon::traits[int(Trait::healer)] ? 5 : 10;
+    return PlayerBon::traits[int(Trait::healer)] ? 3 : 6;
 }
 
 //--------------------------------------------------------- HIDEOUS MASK

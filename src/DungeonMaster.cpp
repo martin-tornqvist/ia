@@ -97,9 +97,9 @@ void setupFromSaveLines(vector<string>& lines)
     lines.erase(begin(lines));
 }
 
-int getCLvl()             {return clvl_;}
-int getXp()               {return xp_;}
-TimeData getStartTime() {return timeStarted_;}
+int         getCLvl()       {return clvl_;}
+int         getXp()         {return xp_;}
+TimeData    getStartTime()  {return timeStarted_;}
 
 int getMonTotXpWorth(const ActorDataT& d)
 {
@@ -110,11 +110,11 @@ int getMonTotXpWorth(const ActorDataT& d)
 
     const double SPEED          = double(d.speed);
     const double SPEED_MAX      = double(ActorSpeed::END);
-    const double SPEED_FACTOR   = (1.0 + ((SPEED / SPEED_MAX) * 0.50));
+    const double SPEED_FACTOR   = 1.0 + ((SPEED / SPEED_MAX) * 0.50);
 
     const double SHOCK          = double(d.monShockLvl);
     const double SHOCK_MAX      = double(MonShockLvl::END);
-    const double SHOCK_FACTOR   = (1.0 + ((SHOCK / SHOCK_MAX) * 0.75));
+    const double SHOCK_FACTOR   = 1.0 + ((SHOCK / SHOCK_MAX) * 0.75);
 
     const double UNIQUE_FACTOR  = d.isUnique ? 2.0 : 1.0;
 
@@ -228,9 +228,9 @@ void onMonKilled(Actor& actor)
 
     if (!Map::player->isLeaderOf(mon))
     {
-        const int MON_XP_VAL_TOT  = getMonTotXpWorth(d);
-        const int XP_GAINED       = mon->hasGivenXpForSpotting_ ?
-                                    (MON_XP_VAL_TOT / 2) : MON_XP_VAL_TOT;
+        const int MON_XP_TOT    = getMonTotXpWorth(d);
+        const int XP_GAINED     = mon->hasGivenXpForSpotting_ ?
+                                  max(1, MON_XP_TOT / 2) : MON_XP_TOT;
         playerGainXp(XP_GAINED);
     }
 }

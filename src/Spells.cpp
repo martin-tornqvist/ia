@@ -59,7 +59,7 @@ Spell* mkSpellFromId(const SpellId spellId)
     case SpellId::disease:              return new SpellDisease;
     case SpellId::darkbolt:             return new SpellDarkbolt;
     case SpellId::azaWrath:             return new SpellAzaWrath;
-    case SpellId::summon:            return new SpellSummonMon;
+    case SpellId::summon:               return new SpellSummonMon;
     case SpellId::healSelf:             return new SpellHealSelf;
     case SpellId::knockBack:            return new SpellKnockBack;
     case SpellId::teleport:             return new SpellTeleport;
