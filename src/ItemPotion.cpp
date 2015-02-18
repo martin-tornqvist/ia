@@ -491,7 +491,7 @@ void PotionClairv::quaff_(Actor& actor)
 void PotionDescent::quaff_(Actor& actor)
 {
     (void)actor;
-    if (Map::dlvl <= DLVL_LAST)
+    if (Map::dlvl < DLVL_LAST - 1)
     {
         Render::drawMapAndInterface();
         Log::addMsg("I sink downwards!", clrWhite, false, true);
