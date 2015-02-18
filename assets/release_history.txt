@@ -1,4 +1,81 @@
 --------------------------------------------------------------
+v17.0 (February 18, 2015)
+--------------------------------------------------------------
+Gameplay
+* Monsters can now be allied to the player
+* Added spell/manuscript "Summon Creature"
+* The "Pestilence" spell now summons allied critters, and can be learned by both the player and monsters
+* Renamed "Sentry Device" to "Blaster Device", and added a new "Sentry Drone Device" which will hover around you when activated and attack your enemies
+* Added (rare) magic Amulets and Rings
+* Added spell (and manuscript) of "Light" (illuminates the area around the caster for a number of turns)
+* Added forest rooms
+* Removed the old way of making cave like rooms, and added a new improved cave room
+* Some of the old rooms are now occasionally cave shaped (e.g. flooded rooms and spider rooms)
+* Added in-game descriptions for all items and spells
+* Some items now causes ability penalties while used (e.g. the Iron Suite makes it more difficult to dodge) - all penalties are mentioned in the item descriptions
+* A vast majority of the common fountains are now "refreshing" (restores HP, SPI and shock), many of the beneficial properties (RFire, RFear, etc) granted from fountains lasts twice as long. Golden fountains are much rarer than before and gives three effects (always beneficial).
+* Some map features can catch fire, which can spread to adjacent cells over time
+* Smoke causes blinding and choking
+* Added Gas mask (the war veteran starts with one)
+* Added Smoke grenades (the war veteran starts with some)
+* Removed wounds - instead passive HP regeneration is now much slower, the Medical Bag can be used for restoring HP at a quick rate.
+* Your inventory is no longer limited by the number of items (only by weight)
+* Items can now exist on revealed traps (in previous versions, revealing a trap would "push" away any item to an adjacent cell, which was very annoying if you intended to pick up the item) - traps covered by an item are drawn with a background color corresponding to the trap type.
+* You now start with a fixed number of items (instead of a random range), and your starting items depend more on the chosen background (e.g. the Rogue always starts with a +1 Dagger).
+* Added trait "Summoner" - Reduced cost for summoning spells, and lower risk that called creatures are hostile
+* Added trait "Vicious" - +50% backstab damage
+* Added trait "Bane of the Undead" - +2 melee/ranged attack damage against undead monsters, attacks against ethereal undead monsters (e.g. Ghosts) never pass through them (although you can still miss in the ordinary way)
+* Added trait "Unbreakable" - This is a continuation of "Tough"/"Rugged" (HP bonus, carry weight bonus, etc)
+* The Electric Lantern now lasts a specific number of turns (displayed in the item name) instead of having a random chance per turn to break (but it can still randomly malfunction).
+* Kicking a statue can cause it to topple over, damaging any monster behind it
+* Doors no longer have a "broken" state - instead, breaking them simply converts them to "rubble"
+* Brown Jenkin now does more melee damage, has very high sneak skills, and knows the teleport spell
+* Added a bunch of new monsters
+* The Mi-go Electric gun is now a "real" weapon that the Mi-go can drop, and can be used by the player - the Tesla Cannon has been removed (redundant). The "yellow cultists" now use the Mi-go Electric gun.
+* Added Mi-go Biological Armor - this can be used by the player
+* Monsters now drop all their items when they die (in previous versions, each item had 50% chance to be destroyed)
+* Reworked how you interact with lootable features (chests etc). This is now a lot quicker - there is no need to search repeatedly with [a] (that command has been removed) - you use [d] to disarm/search for chest traps and check if the chest is locked, and you are either able to spot the trap or not (based on Observant/Perceptive traits) - searching repeatedly makes no difference. Attempting to disarm a known chest trap only either succeeds or triggers the trap, there is never any need to disarm repeatedly.
+* When picking up Electric Lanterns or Medical Bags, those items are now combined with existing Lanterns/Medical Bags instead of adding a separate item in the inventory
+* Removed insanity as a factor in score (it is now purely based on XP and dungeon level reached)
+* Graves are no longer placed in the forest intro level for winning characters
+* Firearms and thrown weapons have limited effective ranges, beyond which their damage is halved. When selecting target, the marker is colored orange beyond the effective range.
+* Added phobia for darkness
+
+Interface
+* Added a quick move command [e], to automatically move in some direction until interrupted
+* Removed the Inventory menu [i] and the Use menu [e] - instead you now view and handle your inventory from a single menu, accessed with [w].
+* Removed the examine command [a]
+* Added a shortcut key [a] to quickly activate the two most common items - Medical bag and Electric Lantern. When you press [a] the game asks if you want to use [a] Medical Bag or [e] Electric Lantern (perhaps in the future, shortcuts like these could be customized by the player).
+* You no longer choose Medical Bag actions through a popup menu, instead it first sanitizes an infection if you have one, otherwise it restores HP.
+* The "--More--" prompts now only accepts space or esc to proceed, this prompt is also added to more messages, for example triggering or avoiding traps - making it much easier to notice
+* Changed the general color theme of the game’s interface
+* When viewing map cells with [v], information is printed for everything in that cell (not just the "top" thing) - e.g.: "I see here: A dart trap. A murky potion"
+* Monster corpses are now included when viewing map cells with [v]
+* Monster corpses are now referred to in more interesting ways, e.g. "A lifeless gruesome corpse" instead of "A body of a Reanimated Corpse"
+* Monster corpses are now rendered in the same color as the living monster, making them easier to distinguish
+* Adjacent dark cells are now rendered darker than normal cells to make it easier to notice darkness
+* Walls now draw the front wall tile instead of the top tile if the cell below is unexplored
+* Fountains are now either blue (common) or yellow (golden), then turns to gray when they are dried up
+* Added more sound effects
+* Number of turns left on the Electric Lantern is printed in the map screen interface (e.g. "L:498") - the number is printed with yellow color when the Lantern is lit
+* Removed the status line at the bottom of the map that said "It is dark here" / "The darkness is lit up" (etc)
+* Lit cells are no longer colored completely yellow - instead they are just colored slightly brighter (with more weight on yellow)
+* The game no longer prints hit chance percent when aiming at ethereal monsters (this number was misleading)
+* The graves in the intro level forest now also display the background of the characters
+* Throwing explosives in tiles mode now draws the items tile instead of its ASCII character
+* The game no longer draws/delays at each intermediate cell when creatures are knocked back (or pulled by a Vortex), only when the creature reach the "destination" cell - this feels more intuitive and responsive.
+
+Bug fixes
+* Fixed a bug that prevented backstabs from giving hit chance bonus in many cases
+* Fixed a crash that occurred if enter was pressed while equipping a slot with no available items
+* Fixed a crash that occurred if shift + enter (drop item) was pressed while a slot with no item was selected
+* Fixed a bug that caused properties to "stick" on an item if it was dropped while wearing it (if the item was picked up again, the properties were enabled on the player even when the item was just carried in the backpack)
+* Thrown objects may now pass through ethereal monsters (in the previous version, this rule mistakenly only applied to firearms and melee attacks)
+* The Electric Lantern on/off state is now stored when saving the game
+* Flying monsters can no longer be killed by kicking them into chasms
+* The audio player now attempts to find a free channel, instead of just picking the next channel (this could stop other sounds, which frequently happened with long tracks like the ambient background noises)
+
+--------------------------------------------------------------
 v16.0 (April 17, 2014)
 --------------------------------------------------------------
 Gameplay
