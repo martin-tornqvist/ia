@@ -613,7 +613,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
     Item* item = ItemFactory::mk(ItemId::armorAsbSuit);
     inv.putInSlot(SlotId::body, item);
 
-    item->onEquip();
+    item->onEquip(true);
 
     //Check that the props are applied
     propHandler.getPropIds(props);
@@ -644,7 +644,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
     inv.equipGeneralItem(inv.general_.size() - 1, SlotId::body);
     GameTime::tick();
 
-    item->onEquip();
+    item->onEquip(true);
 
     //Check that the props are applied
     propHandler.getPropIds(props);
@@ -680,7 +680,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
     inv.putInSlot(SlotId::body, cell.item);
     cell.item = nullptr;
 
-    item->onEquip();
+    item->onEquip(true);
 
     //Check that the props are applied
     propHandler.getPropIds(props);
