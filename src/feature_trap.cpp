@@ -1,25 +1,25 @@
-#include "feature_trap.h"
+#include "feature_trap.hpp"
 
 #include <algorithm>
 #include <assert.h>
 
-#include "init.h"
-#include "feature_data.h"
-#include "actor_player.h"
-#include "log.h"
-#include "map.h"
-#include "item.h"
-#include "drop.h"
-#include "postmortem.h"
-#include "explosion.h"
-#include "popup.h"
-#include "actor_mon.h"
-#include "inventory.h"
-#include "sound.h"
-#include "actor_factory.h"
-#include "render.h"
-#include "utils.h"
-#include "player_bon.h"
+#include "init.hpp"
+#include "feature_data.hpp"
+#include "actor_player.hpp"
+#include "log.hpp"
+#include "map.hpp"
+#include "item.hpp"
+#include "drop.hpp"
+#include "postmortem.hpp"
+#include "explosion.hpp"
+#include "popup.hpp"
+#include "actor_mon.hpp"
+#include "inventory.hpp"
+#include "sound.hpp"
+#include "actor_factory.hpp"
+#include "render.hpp"
+#include "utils.hpp"
+#include "player_bon.hpp"
 
 using namespace std;
 

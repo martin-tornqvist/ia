@@ -1,18 +1,18 @@
-#include "item_scroll.h"
+#include "item_scroll.hpp"
 
 #include <string>
 #include <assert.h>
 
-#include "init.h"
-#include "actor_player.h"
-#include "map.h"
-#include "player_bon.h"
-#include "log.h"
-#include "inventory.h"
-#include "player_spells_handling.h"
-#include "render.h"
-#include "utils.h"
-#include "item_factory.h"
+#include "init.hpp"
+#include "actor_player.hpp"
+#include "map.hpp"
+#include "player_bon.hpp"
+#include "log.hpp"
+#include "inventory.hpp"
+#include "player_spells_handling.hpp"
+#include "render.hpp"
+#include "utils.hpp"
+#include "item_factory.hpp"
 
 using namespace std;
 

@@ -1,7 +1,7 @@
 #ifndef MENU_BROWSER_H
 #define MENU_BROWSER_H
 
-#include "cmn_types.h"
+#include "cmn_types.hpp"
 
 //NOTE: If "ELEM_ON_WRAP_UP_A" is set, the browser will jump to that position if the user
 //presses up while the top element is marked. For example:

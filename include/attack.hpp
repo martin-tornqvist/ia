@@ -4,10 +4,10 @@
 #include <vector>
 #include <math.h>
 
-#include "ability_values.h"
-#include "item_data.h"
-#include "actor_data.h"
-#include "art.h"
+#include "ability_values.hpp"
+#include "item_data.hpp"
+#include "actor_data.hpp"
+#include "art.hpp"
 
 class Actor;
 class Wpn;

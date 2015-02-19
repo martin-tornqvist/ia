@@ -1,13 +1,13 @@
-#include "audio.h"
+#include "audio.hpp"
 
 #include <time.h>
 
 #include <SDL_mixer.h>
 
-#include "init.h"
-#include "map.h"
-#include "render.h"
-#include "utils.h"
+#include "init.hpp"
+#include "map.hpp"
+#include "render.hpp"
+#include "utils.hpp"
 
 using namespace std;
 

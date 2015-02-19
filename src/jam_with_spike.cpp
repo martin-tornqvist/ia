@@ -1,16 +1,16 @@
-#include "jam_with_spike.h"
+#include "jam_with_spike.hpp"
 
-#include "game_time.h"
-#include "feature.h"
-#include "actor.h"
-#include "actor_player.h"
-#include "log.h"
-#include "map.h"
-#include "query.h"
-#include "inventory.h"
-#include "render.h"
-#include "feature_door.h"
-#include "utils.h"
+#include "game_time.hpp"
+#include "feature.hpp"
+#include "actor.hpp"
+#include "actor_player.hpp"
+#include "log.hpp"
+#include "map.hpp"
+#include "query.hpp"
+#include "inventory.hpp"
+#include "render.hpp"
+#include "feature_door.hpp"
+#include "utils.hpp"
 
 namespace Jam_with_spike
 {

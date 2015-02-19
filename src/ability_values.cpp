@@ -1,12 +1,12 @@
-#include "ability_values.h"
+#include "ability_values.hpp"
 
 #include <math.h>
 
-#include "actor_player.h"
-#include "player_bon.h"
-#include "utils.h"
-#include "properties.h"
-#include "map.h"
+#include "actor_player.hpp"
+#include "player_bon.hpp"
+#include "utils.hpp"
+#include "properties.hpp"
+#include "map.hpp"
 
 using namespace std;
 

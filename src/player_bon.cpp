@@ -1,15 +1,15 @@
-#include "player_bon.h"
+#include "player_bon.hpp"
 
 #include <assert.h>
 
-#include "text_format.h"
-#include "actor_player.h"
-#include "dungeon_master.h"
-#include "item_factory.h"
-#include "inventory.h"
-#include "player_spells_handling.h"
-#include "map.h"
-#include "map_parsing.h"
+#include "text_format.hpp"
+#include "actor_player.hpp"
+#include "dungeon_master.hpp"
+#include "item_factory.hpp"
+#include "inventory.hpp"
+#include "player_spells_handling.hpp"
+#include "map.hpp"
+#include "map_parsing.hpp"
 
 using namespace std;
 

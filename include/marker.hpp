@@ -4,7 +4,7 @@
 #include <functional>
 #include <climits>
 
-#include "cmn_types.h"
+#include "cmn_types.hpp"
 
 struct Key_data;
 

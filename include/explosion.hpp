@@ -3,10 +3,10 @@
 
 #include <vector>
 
-#include "cmn_data.h"
-#include "cmn_types.h"
-#include "colors.h"
-#include "audio.h"
+#include "cmn_data.hpp"
+#include "cmn_types.hpp"
+#include "colors.hpp"
+#include "audio.hpp"
 
 class Prop;
 

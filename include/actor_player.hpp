@@ -3,8 +3,8 @@
 
 #include <math.h>
 
-#include "actor.h"
-#include "cmn_data.h"
+#include "actor.hpp"
+#include "cmn_data.hpp"
 
 enum class Phobia
 {

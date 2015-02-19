@@ -1,7 +1,7 @@
 #ifndef KNOCKBACK_H
 #define KNOCKBACK_H
 
-#include "cmn_types.h"
+#include "cmn_types.hpp"
 
 class Actor;
 

@@ -1,14 +1,14 @@
-#include "utils.h"
+#include "utils.hpp"
 
 #include <algorithm>
 #include <vector>
 #include <assert.h>
 
-#include "converters.h"
-#include "game_time.h"
-#include "mersenne_twister.h"
-#include "actor.h"
-#include "feature_mob.h"
+#include "converters.hpp"
+#include "game_time.hpp"
+#include "mersenne_twister.hpp"
+#include "actor.hpp"
+#include "feature_mob.hpp"
 
 using namespace std;
 

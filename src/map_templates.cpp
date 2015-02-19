@@ -1,6 +1,6 @@
-#include "map_templates.h"
+#include "map_templates.hpp"
 
-#include "init.h"
+#include "init.hpp"
 
 #include <vector>
 #include <assert.h>

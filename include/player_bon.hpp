@@ -5,8 +5,8 @@
 #include <vector>
 #include <algorithm>
 
-#include "ability_values.h"
-#include "converters.h"
+#include "ability_values.hpp"
+#include "converters.hpp"
 
 #include <math.h>
 

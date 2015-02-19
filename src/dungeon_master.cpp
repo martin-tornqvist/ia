@@ -1,19 +1,19 @@
-#include "dungeon_master.h"
+#include "dungeon_master.hpp"
 
 #include <vector>
 
-#include "highscore.h"
-#include "text_format.h"
-#include "render.h"
-#include "query.h"
-#include "actor_player.h"
-#include "character_lines.h"
-#include "log.h"
-#include "sdl_wrapper.h"
-#include "map.h"
-#include "utils.h"
-#include "create_character.h"
-#include "actor_mon.h"
+#include "highscore.hpp"
+#include "text_format.hpp"
+#include "render.hpp"
+#include "query.hpp"
+#include "actor_player.hpp"
+#include "character_lines.hpp"
+#include "log.hpp"
+#include "sdl_wrapper.hpp"
+#include "map.hpp"
+#include "utils.hpp"
+#include "create_character.hpp"
+#include "actor_mon.hpp"
 
 using namespace std;
 

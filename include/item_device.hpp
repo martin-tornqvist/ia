@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-#include "item.h"
+#include "item.hpp"
 
 class Device: public Item
 {

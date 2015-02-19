@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "item.h"
+#include "item.hpp"
 
 namespace Item_factory
 {

@@ -1,16 +1,16 @@
-#include "actor_factory.h"
+#include "actor_factory.hpp"
 
 #include <algorithm>
 #include <assert.h>
 
-#include "actor_mon.h"
-#include "actor_player.h"
-#include "map.h"
-#include "render.h"
-#include "map_parsing.h"
-#include "utils.h"
-#include "actor.h"
-#include "feature_rigid.h"
+#include "actor_mon.hpp"
+#include "actor_player.hpp"
+#include "map.hpp"
+#include "render.hpp"
+#include "map_parsing.hpp"
+#include "utils.hpp"
+#include "actor.hpp"
+#include "feature_rigid.hpp"
 
 using namespace std;
 

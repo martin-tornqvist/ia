@@ -1,17 +1,17 @@
-#include "pickup.h"
+#include "pickup.hpp"
 
 #include <string>
 
-#include "init.h"
-#include "item.h"
-#include "map.h"
-#include "actor_player.h"
-#include "log.h"
-#include "query.h"
-#include "drop.h"
-#include "item_factory.h"
-#include "game_time.h"
-#include "audio.h"
+#include "init.hpp"
+#include "item.hpp"
+#include "map.hpp"
+#include "actor_player.hpp"
+#include "log.hpp"
+#include "query.hpp"
+#include "drop.hpp"
+#include "item_factory.hpp"
+#include "game_time.hpp"
+#include "audio.hpp"
 
 using namespace std;
 

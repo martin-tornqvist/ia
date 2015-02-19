@@ -1,13 +1,13 @@
-#include "item_factory.h"
+#include "item_factory.hpp"
 
-#include "init.h"
-#include "item_scroll.h"
-#include "item_potion.h"
-#include "item_jewelry.h"
-#include "drop.h"
-#include "item_device.h"
-#include "utils.h"
-#include "item_data.h"
+#include "init.hpp"
+#include "item_scroll.hpp"
+#include "item_potion.hpp"
+#include "item_jewelry.hpp"
+#include "drop.hpp"
+#include "item_device.hpp"
+#include "utils.hpp"
+#include "item_data.hpp"
 
 using namespace std;
 

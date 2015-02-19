@@ -1,19 +1,19 @@
-#include "knockback.h"
+#include "knockback.hpp"
 
 #include <algorithm>
 #include <vector>
 
-#include "attack.h"
-#include "actor_player.h"
-#include "map.h"
-#include "log.h"
-#include "config.h"
-#include "game_time.h"
-#include "render.h"
-#include "map_parsing.h"
-#include "sdl_wrapper.h"
-#include "feature_rigid.h"
-#include "feature_mob.h"
+#include "attack.hpp"
+#include "actor_player.hpp"
+#include "map.hpp"
+#include "log.hpp"
+#include "config.hpp"
+#include "game_time.hpp"
+#include "render.hpp"
+#include "map_parsing.hpp"
+#include "sdl_wrapper.hpp"
+#include "feature_rigid.hpp"
+#include "feature_mob.hpp"
 
 using namespace std;
 

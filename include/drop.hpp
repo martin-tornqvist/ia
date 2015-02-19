@@ -1,7 +1,7 @@
 #ifndef DROP_H
 #define DROP_H
 
-#include "cmn_types.h"
+#include "cmn_types.hpp"
 
 class Item;
 class Actor;

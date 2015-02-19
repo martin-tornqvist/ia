@@ -1,14 +1,14 @@
-#include "actor_data.h"
+#include "actor_data.hpp"
 
-#include "init.h"
+#include "init.hpp"
 
 #include <string>
 #include <vector>
 #include <math.h>
 
-#include "cmn_types.h"
-#include "converters.h"
-#include "item.h"
+#include "cmn_types.hpp"
+#include "converters.hpp"
+#include "item.hpp"
 
 using namespace std;
 

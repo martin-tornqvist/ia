@@ -1,22 +1,22 @@
-#include "save_handling.h"
+#include "save_handling.hpp"
 
 #include <fstream>
 #include <iostream>
 
-#include "init.h"
-#include "log.h"
-#include "render.h"
-#include "actor_player.h"
-#include "dungeon_master.h"
-#include "item_scroll.h"
-#include "item_potion.h"
-#include "player_bon.h"
-#include "map.h"
-#include "map_travel.h"
-#include "inventory.h"
-#include "game_time.h"
-#include "player_spells_handling.h"
-#include "item_jewelry.h"
+#include "init.hpp"
+#include "log.hpp"
+#include "render.hpp"
+#include "actor_player.hpp"
+#include "dungeon_master.hpp"
+#include "item_scroll.hpp"
+#include "item_potion.hpp"
+#include "player_bon.hpp"
+#include "map.hpp"
+#include "map_travel.hpp"
+#include "inventory.hpp"
+#include "game_time.hpp"
+#include "player_spells_handling.hpp"
+#include "item_jewelry.hpp"
 
 using namespace std;
 

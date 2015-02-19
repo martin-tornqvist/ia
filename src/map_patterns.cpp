@@ -1,11 +1,11 @@
-#include "map_patterns.h"
+#include "map_patterns.hpp"
 
-#include "init.h"
+#include "init.hpp"
 
 #include <vector>
 
-#include "map.h"
-#include "feature_rigid.h"
+#include "map.hpp"
+#include "feature_rigid.hpp"
 
 using namespace std;
 

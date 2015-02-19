@@ -1,27 +1,27 @@
-#include "render.h"
+#include "render.hpp"
 
 #include <vector>
 #include <iostream>
 
 #include <SDL_image.h>
 
-#include "init.h"
-#include "item.h"
-#include "character_lines.h"
-#include "marker.h"
-#include "map.h"
-#include "actor.h"
-#include "actor_player.h"
-#include "actor_mon.h"
-#include "log.h"
-#include "attack.h"
-#include "feature_mob.h"
-#include "feature_door.h"
-#include "inventory.h"
-#include "utils.h"
-#include "cmn_data.h"
-#include "sdl_wrapper.h"
-#include "text_format.h"
+#include "init.hpp"
+#include "item.hpp"
+#include "character_lines.hpp"
+#include "marker.hpp"
+#include "map.hpp"
+#include "actor.hpp"
+#include "actor_player.hpp"
+#include "actor_mon.hpp"
+#include "log.hpp"
+#include "attack.hpp"
+#include "feature_mob.hpp"
+#include "feature_door.hpp"
+#include "inventory.hpp"
+#include "utils.hpp"
+#include "cmn_data.hpp"
+#include "sdl_wrapper.hpp"
+#include "text_format.hpp"
 
 using namespace std;
 

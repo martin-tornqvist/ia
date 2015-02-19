@@ -1,19 +1,19 @@
-#include "init.h"
+#include "init.hpp"
 
 #include <algorithm>
 #include <vector>
 
-#include "feature_mob.h"
-#include "game_time.h"
-#include "player_bon.h"
-#include "explosion.h"
-#include "utils.h"
-#include "map.h"
-#include "feature_rigid.h"
-#include "fov.h"
-#include "inventory.h"
-#include "item.h"
-#include "log.h"
+#include "feature_mob.hpp"
+#include "game_time.hpp"
+#include "player_bon.hpp"
+#include "explosion.hpp"
+#include "utils.hpp"
+#include "map.hpp"
+#include "feature_rigid.hpp"
+#include "fov.hpp"
+#include "inventory.hpp"
+#include "item.hpp"
+#include "log.hpp"
 
 using namespace std;
 

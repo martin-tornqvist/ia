@@ -1,13 +1,13 @@
-#include "manual.h"
+#include "manual.hpp"
 
-#include "init.h"
+#include "init.hpp"
 
 #include <fstream>
 #include <vector>
 
-#include "input.h"
-#include "text_format.h"
-#include "render.h"
+#include "input.hpp"
+#include "text_format.hpp"
+#include "render.hpp"
 
 using namespace std;
 

@@ -1,24 +1,24 @@
-#include "postmortem.h"
+#include "postmortem.hpp"
 
 #include <fstream>
 #include <iostream>
 #include <vector>
 #include <string>
 
-#include "init.h"
-#include "render.h"
-#include "input.h"
-#include "actor_player.h"
-#include "dungeon_master.h"
-#include "map.h"
-#include "log.h"
-#include "menu_input_handling.h"
-#include "highscore.h"
-#include "player_bon.h"
-#include "text_format.h"
-#include "menu_browser.h"
-#include "feature_rigid.h"
-#include "utils.h"
+#include "init.hpp"
+#include "render.hpp"
+#include "input.hpp"
+#include "actor_player.hpp"
+#include "dungeon_master.hpp"
+#include "map.hpp"
+#include "log.hpp"
+#include "menu_input_handling.hpp"
+#include "highscore.hpp"
+#include "player_bon.hpp"
+#include "text_format.hpp"
+#include "menu_browser.hpp"
+#include "feature_rigid.hpp"
+#include "utils.hpp"
 
 using namespace std;
 

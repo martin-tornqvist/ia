@@ -1,16 +1,16 @@
-#include "log.h"
+#include "log.hpp"
 
 #include <vector>
 #include <string>
 
-#include "init.h"
-#include "input.h"
-#include "converters.h"
-#include "render.h"
-#include "query.h"
-#include "actor_player.h"
-#include "map.h"
-#include "text_format.h"
+#include "init.hpp"
+#include "input.hpp"
+#include "converters.hpp"
+#include "render.hpp"
+#include "query.hpp"
+#include "actor_player.hpp"
+#include "map.hpp"
+#include "text_format.hpp"
 
 using namespace std;
 

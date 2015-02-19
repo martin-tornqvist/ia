@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <string>
 
-#include "colors.h"
-#include "art.h"
+#include "colors.hpp"
+#include "art.hpp"
 
 enum class Inv_type        {slots, general};
 

@@ -1,13 +1,13 @@
-#include "sdl_wrapper.h"
+#include "sdl_wrapper.hpp"
 
 #include <iostream>
 
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 
-#include "init.h"
-#include "cmn_data.h"
-#include "config.h"
+#include "init.hpp"
+#include "cmn_data.hpp"
+#include "config.hpp"
 
 using namespace std;
 

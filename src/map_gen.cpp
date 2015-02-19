@@ -1,32 +1,32 @@
-#include "map_gen.h"
+#include "map_gen.hpp"
 
-#include "init.h"
+#include "init.hpp"
 
 #include <algorithm>
 #include <climits>
 
-#include "room.h"
-#include "map_gen.h"
-#include "feature_event.h"
-#include "actor_player.h"
-#include "feature_door.h"
-#include "actor_factory.h"
-#include "actor_mon.h"
-#include "drop.h"
-#include "item_factory.h"
-#include "map.h"
-#include "map_parsing.h"
-#include "render.h"
-#include "utils.h"
-#include "populate_monsters.h"
-#include "populate_traps.h"
-#include "populate_items.h"
-#include "gods.h"
+#include "room.hpp"
+#include "map_gen.hpp"
+#include "feature_event.hpp"
+#include "actor_player.hpp"
+#include "feature_door.hpp"
+#include "actor_factory.hpp"
+#include "actor_mon.hpp"
+#include "drop.hpp"
+#include "item_factory.hpp"
+#include "map.hpp"
+#include "map_parsing.hpp"
+#include "render.hpp"
+#include "utils.hpp"
+#include "populate_monsters.hpp"
+#include "populate_traps.hpp"
+#include "populate_items.hpp"
+#include "gods.hpp"
 
 #ifdef DEMO_MODE
-#include "render.h"
-#include "sdl_wrapper.h"
-#include "query.h"
+#include "render.hpp"
+#include "sdl_wrapper.hpp"
+#include "query.hpp"
 #endif // DEMO_MODE
 
 //-------------------------------------

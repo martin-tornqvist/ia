@@ -1,7 +1,7 @@
 #ifndef INIT_H
 #define INIT_H
 
-#include "debug_mode.h"
+#include "debug_mode.hpp"
 
 #include <assert.h>
 #include <iostream>

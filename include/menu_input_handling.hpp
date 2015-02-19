@@ -1,7 +1,7 @@
 #ifndef MENU_INPUT_HANDLING_H
 #define MENU_INPUT_HANDLING_H
 
-#include "menu_browser.h"
+#include "menu_browser.hpp"
 
 enum class Menu_action {browsed, selected, selected_shift, space, esc};
 

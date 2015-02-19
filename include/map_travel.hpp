@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-#include "map.h"
+#include "map.hpp"
 
 using namespace std;
 

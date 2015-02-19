@@ -1,7 +1,7 @@
 #ifndef FEATURE_MOB_H
 #define FEATURE_MOB_H
 
-#include "feature.h"
+#include "feature.hpp"
 
 class Mob: public Feature
 {

@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "feature_mob.h"
+#include "feature_mob.hpp"
 
 class Event: public Mob
 {

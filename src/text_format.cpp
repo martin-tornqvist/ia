@@ -1,6 +1,6 @@
-#include "text_format.h"
+#include "text_format.hpp"
 
-#include "init.h"
+#include "init.hpp"
 
 #include <algorithm>
 

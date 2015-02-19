@@ -3,9 +3,9 @@
 
 #include <vector>
 
-#include "cmn_types.h"
-#include "config.h"
-#include "feature_data.h"
+#include "cmn_types.hpp"
+#include "config.hpp"
+#include "feature_data.hpp"
 
 struct Cell;
 class Mob;

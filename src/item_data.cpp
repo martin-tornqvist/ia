@@ -1,19 +1,19 @@
-#include "item_data.h"
+#include "item_data.hpp"
 
 #include <iostream>
 #include <climits>
 
-#include "init.h"
-#include "colors.h"
-#include "item.h"
-#include "cmn_data.h"
-#include "actor_data.h"
-#include "item_scroll.h"
-#include "item_potion.h"
-#include "actor_player.h"
-#include "sound.h"
-#include "item_device.h"
-#include "map.h"
+#include "init.hpp"
+#include "colors.hpp"
+#include "item.hpp"
+#include "cmn_data.hpp"
+#include "actor_data.hpp"
+#include "item_scroll.hpp"
+#include "item_potion.hpp"
+#include "actor_player.hpp"
+#include "sound.hpp"
+#include "item_device.hpp"
+#include "map.hpp"
 
 using namespace std;
 

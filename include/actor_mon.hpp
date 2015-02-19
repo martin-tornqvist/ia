@@ -1,11 +1,11 @@
 #ifndef MON_H
 #define MON_H
 
-#include "cmn_data.h"
+#include "cmn_data.hpp"
 
-#include "actor.h"
-#include "sound.h"
-#include "spells.h"
+#include "actor.hpp"
+#include "sound.hpp"
+#include "spells.hpp"
 
 struct Ai_att_data
 {

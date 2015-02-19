@@ -1,7 +1,7 @@
 #ifndef FEATURE_RIGID_H
 #define FEATURE_RIGID_H
 
-#include "feature.h"
+#include "feature.hpp"
 
 enum class Burn_state        {not_burned, burning, has_burned};
 

@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "actor_data.h"
+#include "actor_data.hpp"
 
 class Actor;
 class Mon;

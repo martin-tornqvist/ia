@@ -3,7 +3,7 @@
 
 #include <SDL.h>
 
-#include "cmn_data.h"
+#include "cmn_data.hpp"
 
 struct Key_data
 {

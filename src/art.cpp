@@ -1,6 +1,6 @@
-#include "art.h"
+#include "art.hpp"
 
-#include "utils.h"
+#include "utils.hpp"
 
 namespace Art
 {

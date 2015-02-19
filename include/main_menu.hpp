@@ -1,8 +1,8 @@
 #ifndef MAIN_MENU_H
 #define MAIN_MENU_H
 
-#include "menu_browser.h"
-#include "cmn_data.h"
+#include "menu_browser.hpp"
+#include "cmn_data.hpp"
 
 namespace Main_menu
 {

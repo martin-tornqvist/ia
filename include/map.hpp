@@ -3,13 +3,13 @@
 
 #include <vector>
 
-#include "cmn_data.h"
-#include "cmn_types.h"
-#include "colors.h"
-#include "item_data.h"
-#include "feature.h"
-#include "config.h"
-#include "actor_player.h"
+#include "cmn_data.hpp"
+#include "cmn_types.hpp"
+#include "colors.hpp"
+#include "item_data.hpp"
+#include "feature.hpp"
+#include "config.hpp"
+#include "actor_player.hpp"
 
 class Save_handler;
 class Rigid;

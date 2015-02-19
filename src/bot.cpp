@@ -1,26 +1,26 @@
-#include "init.h"
+#include "init.hpp"
 
-#include "bot.h"
+#include "bot.hpp"
 
 #include <assert.h>
 #include <algorithm>
 #include <vector>
 
-#include "properties.h"
-#include "actor.h"
-#include "feature.h"
-#include "input.h"
-#include "map.h"
-#include "actor_player.h"
-#include "actor_factory.h"
-#include "attack.h"
-#include "feature_door.h"
-#include "inventory.h"
-#include "actor_mon.h"
-#include "map_parsing.h"
-#include "utils.h"
-#include "game_time.h"
-#include "map_travel.h"
+#include "properties.hpp"
+#include "actor.hpp"
+#include "feature.hpp"
+#include "input.hpp"
+#include "map.hpp"
+#include "actor_player.hpp"
+#include "actor_factory.hpp"
+#include "attack.hpp"
+#include "feature_door.hpp"
+#include "inventory.hpp"
+#include "actor_mon.hpp"
+#include "map_parsing.hpp"
+#include "utils.hpp"
+#include "game_time.hpp"
+#include "map_travel.hpp"
 
 using namespace std;
 

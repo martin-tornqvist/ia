@@ -1,18 +1,18 @@
-#include "room.h"
+#include "room.hpp"
 
 #include <algorithm>
 
-#include "init.h"
-#include "utils.h"
-#include "map.h"
-#include "map_parsing.h"
-#include "feature_rigid.h"
-#include "map_gen.h"
-#include "gods.h"
+#include "init.hpp"
+#include "utils.hpp"
+#include "map.hpp"
+#include "map_parsing.hpp"
+#include "feature_rigid.hpp"
+#include "map_gen.hpp"
+#include "gods.hpp"
 
 #ifdef DEMO_MODE
-#include "render.h"
-#include "sdl_wrapper.h"
+#include "render.hpp"
+#include "sdl_wrapper.hpp"
 #endif // DEMO_MODE
 
 using namespace std;

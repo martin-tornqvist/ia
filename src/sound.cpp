@@ -1,15 +1,15 @@
-#include "sound.h"
+#include "sound.hpp"
 
 #include <iostream>
 #include <string>
 
-#include "feature_rigid.h"
-#include "map.h"
-#include "actor_player.h"
-#include "actor_mon.h"
-#include "game_time.h"
-#include "map_parsing.h"
-#include "utils.h"
+#include "feature_rigid.hpp"
+#include "map.hpp"
+#include "actor_player.hpp"
+#include "actor_mon.hpp"
+#include "game_time.hpp"
+#include "map_parsing.hpp"
+#include "utils.hpp"
 
 using namespace std;
 

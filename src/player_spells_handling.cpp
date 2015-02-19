@@ -1,20 +1,20 @@
-#include "player_spells_handling.h"
+#include "player_spells_handling.hpp"
 
 #include <vector>
 #include <algorithm>
 
-#include "init.h"
-#include "item_scroll.h"
-#include "actor_player.h"
-#include "log.h"
-#include "menu_input_handling.h"
-#include "render.h"
-#include "inventory.h"
-#include "item_factory.h"
-#include "player_bon.h"
-#include "query.h"
-#include "utils.h"
-#include "map.h"
+#include "init.hpp"
+#include "item_scroll.hpp"
+#include "actor_player.hpp"
+#include "log.hpp"
+#include "menu_input_handling.hpp"
+#include "render.hpp"
+#include "inventory.hpp"
+#include "item_factory.hpp"
+#include "player_bon.hpp"
+#include "query.hpp"
+#include "utils.hpp"
+#include "map.hpp"
 
 using namespace std;
 

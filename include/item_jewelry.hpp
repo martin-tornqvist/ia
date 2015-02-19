@@ -1,8 +1,8 @@
 #ifndef ITEM_JEWELRY_H
 #define ITEM_JEWELRY_H
 
-#include "item.h"
-#include "actor_data.h"
+#include "item.hpp"
+#include "actor_data.hpp"
 
 #include <vector>
 

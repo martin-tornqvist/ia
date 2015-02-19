@@ -1,7 +1,7 @@
-#include "menu_input_handling.h"
+#include "menu_input_handling.hpp"
 
-#include "input.h"
-#include "config.h"
+#include "input.hpp"
+#include "config.hpp"
 
 namespace Menu_input_handling
 {

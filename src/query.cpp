@@ -1,11 +1,11 @@
-#include "query.h"
+#include "query.hpp"
 
 #include <iostream>
 
-#include "config.h"
-#include "input.h"
-#include "render.h"
-#include "converters.h"
+#include "config.hpp"
+#include "input.hpp"
+#include "render.hpp"
+#include "converters.hpp"
 
 using namespace std;
 

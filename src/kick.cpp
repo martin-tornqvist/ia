@@ -1,16 +1,16 @@
-#include "kick.h"
+#include "kick.hpp"
 
-#include "init.h"
-#include "game_time.h"
-#include "feature_rigid.h"
-#include "actor_player.h"
-#include "map.h"
-#include "log.h"
-#include "query.h"
-#include "render.h"
-#include "map_parsing.h"
-#include "utils.h"
-#include "text_format.h"
+#include "init.hpp"
+#include "game_time.hpp"
+#include "feature_rigid.hpp"
+#include "actor_player.hpp"
+#include "map.hpp"
+#include "log.hpp"
+#include "query.hpp"
+#include "render.hpp"
+#include "map_parsing.hpp"
+#include "utils.hpp"
+#include "text_format.hpp"
 
 using namespace std;
 

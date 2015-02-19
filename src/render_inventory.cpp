@@ -1,15 +1,15 @@
-#include "render_inventory.h"
+#include "render_inventory.hpp"
 
 #include <string>
 #include <iostream>
 
-#include "init.h"
-#include "actor_player.h"
-#include "log.h"
-#include "render.h"
-#include "map.h"
-#include "item.h"
-#include "text_format.h"
+#include "init.hpp"
+#include "actor_player.hpp"
+#include "log.hpp"
+#include "render.hpp"
+#include "map.hpp"
+#include "item.hpp"
+#include "text_format.hpp"
 
 using namespace std;
 
