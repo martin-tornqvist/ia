@@ -18,8 +18,8 @@ const int INV_H   = INV_Y1 - INV_Y0 + 1;
 void draw_browse_inv(const Menu_browser& browser);
 
 void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
-               const std::vector<size_t>& gen_inv_indexes);
+                const std::vector<size_t>& gen_inv_indexes);
 
-} //Render_inventory
+} //render_inventory
 
 #endif

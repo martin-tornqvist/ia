@@ -32,21 +32,21 @@ void mk_lines()
     const Clr& clr_text      = clr_white;
     const Clr& clr_text_dark  = clr_gray;
 
-    lines_.push_back({Map::player->get_name_the(), clr_menu_highlight});
+    lines_.push_back({map::player->get_name_the(), clr_menu_highlight});
     lines_.push_back({" ", clr_text});
 
-    const Ability_vals& abilities = Map::player->get_data().ability_vals;
+    const Ability_vals& abilities = map::player->get_data().ability_vals;
 
     lines_.push_back({"Combat skills", clr_heading});
 
     const int BASE_MELEE          = min(100, abilities.get_val(Ability_id::melee,
-                                        true, *(Map::player)));
+                                        true, *(map::player)));
 
     const int BASE_RANGED         = min(100, abilities.get_val(Ability_id::ranged,
-                                        true, *(Map::player)));
+                                        true, *(map::player)));
 
     const int BASE_DODGE_ATTACKS  = min(100, abilities.get_val(Ability_id::dodge_att,
-                                        true, *(Map::player)));
+                                        true, *(map::player)));
 
     lines_.push_back({offset + "Melee    : " + to_str(BASE_MELEE)         + "%", clr_text});
     lines_.push_back({offset + "Ranged   : " + to_str(BASE_RANGED)        + "%", clr_text});
@@ -57,7 +57,7 @@ void mk_lines()
     lines_.push_back({"Mental conditions", clr_heading});
     const int NR_LINES_BEFORE_MENTAL = lines_.size();
 
-    const auto& phobias = Map::player->phobias;
+    const auto& phobias = map::player->phobias;
 
     if (phobias[int(Phobia::dog)])
         lines_.push_back({offset + "Phobia of dogs",            clr_text});
@@ -83,10 +83,10 @@ void mk_lines()
     if (phobias[int(Phobia::dark)])
         lines_.push_back({offset + "Phobia of darkness",        clr_text});
 
-    if (Map::player->obsessions[int(Obsession::masochism)])
+    if (map::player->obsessions[int(Obsession::masochism)])
         lines_.push_back({offset + "Masochistic obsession",     clr_text});
 
-    if (Map::player->obsessions[int(Obsession::sadism)])
+    if (map::player->obsessions[int(Obsession::sadism)])
         lines_.push_back({offset + "Sadistic obsession",        clr_text});
 
     const int NR_LINES_AFTER_MENTAL = lines_.size();
@@ -104,11 +104,11 @@ void mk_lines()
 
     for (int i = 0; i < int(Item_id::END); ++i)
     {
-        const Item_data_t* const d = Item_data::data[i];
+        const Item_data_t* const d = item_data::data[i];
 
         if (d->type == Item_type::potion && (d->is_tried || d->is_identified))
         {
-            Item* item = Item_factory::mk(d->id);
+            Item* item = item_factory::mk(d->id);
             potion_list.push_back({offset + item->get_name(Item_ref_type::plain), d->clr});
             delete item;
         }
@@ -116,9 +116,9 @@ void mk_lines()
         {
             if (d->type == Item_type::scroll && (d->is_tried || d->is_identified))
             {
-                Item* item = Item_factory::mk(d->id);
+                Item* item = item_factory::mk(d->id);
                 manuscript_list.push_back(Str_and_clr(offset + item->get_name(Item_ref_type::plain),
-                                                   item->get_interface_clr()));
+                                                      item->get_interface_clr()));
                 delete item;
             }
         }
@@ -159,15 +159,15 @@ void mk_lines()
 
     for (int i = 0; i < int(Trait::END); ++i)
     {
-        if (Player_bon::traits[i])
+        if (player_bon::traits[i])
         {
             const Trait trait = Trait(i);
             string title = "", descr = "";
-            Player_bon::get_trait_title(trait, title);
-            Player_bon::get_trait_descr(trait, descr);
+            player_bon::get_trait_title(trait, title);
+            player_bon::get_trait_descr(trait, descr);
             lines_.push_back({offset + title, clr_text});
             vector<string> descr_lines;
-            Text_format::line_to_lines(descr, MAX_W_DESCR, descr_lines);
+            text_format::line_to_lines(descr, MAX_W_DESCR, descr_lines);
             for (string& descr_line : descr_lines)
             {
                 lines_.push_back({offset + descr_line, clr_text_dark});
@@ -197,15 +197,15 @@ void draw_interface()
 
     const int X_LABEL = 3;
 
-    Render::draw_text(decoration_line, Panel::screen, Pos(0, 0), clr_gray);
+    render::draw_text(decoration_line, Panel::screen, Pos(0, 0), clr_gray);
 
-    Render::draw_text(" Displaying character description ", Panel::screen,
-                     Pos(X_LABEL, 0), clr_white);
+    render::draw_text(" Displaying character description ", Panel::screen,
+                      Pos(X_LABEL, 0), clr_white);
 
-    Render::draw_text(decoration_line, Panel::screen, Pos(0, SCREEN_H - 1),
-                     clr_gray);
+    render::draw_text(decoration_line, Panel::screen, Pos(0, SCREEN_H - 1),
+                      clr_gray);
 
-    Render::draw_text(info_scr_cmd_info, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clr_white);
+    render::draw_text(info_scr_cmd_info, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clr_white);
 }
 
 } //namespace
@@ -223,17 +223,17 @@ void run()
 
     while (true)
     {
-        Render::clear_screen();
+        render::clear_screen();
         draw_interface();
         int y_pos = 1;
         for (int i = top_nr; i <= btm_nr; ++i)
         {
             const Str_and_clr& line = lines_[i];
-            Render::draw_text(line.str , Panel::screen, Pos(0, y_pos++), line.clr);
+            render::draw_text(line.str , Panel::screen, Pos(0, y_pos++), line.clr);
         }
-        Render::update_screen();
+        render::update_screen();
 
-        const Key_data& d = Input::get_input();
+        const Key_data& d = input::get_input();
 
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {
@@ -257,7 +257,7 @@ void run()
         }
         btm_nr = min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
     }
-    Render::draw_map_and_interface();
+    render::draw_map_and_interface();
 }
 
 } //Character_descr

@@ -5,7 +5,7 @@
 #include "converters.hpp"
 #include "item.hpp"
 #include "actor_player.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "map.hpp"
 #include "inventory.hpp"
 #include "item_factory.hpp"
@@ -25,8 +25,8 @@ namespace
 {
 
 void print_msg_and_play_sfx(Actor& actor_reloading, Wpn* const wpn,
-                        Item* const ammo, const Reload_result result,
-                        const bool IS_SWIFT_RELOAD)
+                            Item* const ammo, const Reload_result result,
+                            const bool IS_SWIFT_RELOAD)
 {
     string ammo_name = "";
     bool is_clip = false;
@@ -45,28 +45,28 @@ void print_msg_and_play_sfx(Actor& actor_reloading, Wpn* const wpn,
     case Reload_result::not_carrying_wpn:
         if (IS_PLAYER)
         {
-            Log::add_msg("I am not wielding a weapon.");
+            msg_log::add("I am not wielding a weapon.");
         }
         break;
 
     case Reload_result::wpn_not_using_ammo:
         if (IS_PLAYER)
         {
-            Log::add_msg("This weapon does not use ammo.");
+            msg_log::add("This weapon does not use ammo.");
         }
         break;
 
     case Reload_result::already_full:
         if (IS_PLAYER)
         {
-            Log::add_msg("Weapon already loaded.");
+            msg_log::add("Weapon already loaded.");
         }
         break;
 
     case Reload_result::no_ammo:
         if (IS_PLAYER)
         {
-            Log::add_msg("I carry no ammunition for this weapon.");
+            msg_log::add("I carry no ammunition for this weapon.");
         }
         break;
 
@@ -75,28 +75,28 @@ void print_msg_and_play_sfx(Actor& actor_reloading, Wpn* const wpn,
         const string swift_str = IS_SWIFT_RELOAD ? " swiftly" : "";
         if (IS_PLAYER)
         {
-            Audio::play(wpn->get_data().ranged.reload_sfx);
+            audio::play(wpn->get_data().ranged.reload_sfx);
 
             if (is_clip)
             {
                 const string wpn_name = wpn->get_name(Item_ref_type::plain, Item_ref_inf::none);
-                Log::add_msg(
+                msg_log::add(
                     "I" + swift_str + " reload the " + wpn_name +
                     " (" + to_str(wpn->nr_ammo_loaded) + "/" + to_str(wpn->AMMO_CAP) + ").");
             }
             else
             {
-                Log::add_msg(
+                msg_log::add(
                     "I" + swift_str + " load " + ammo_name + " (" + to_str(wpn->nr_ammo_loaded) +
                     "/" + to_str(wpn->AMMO_CAP) + ").");
             }
-            Render::draw_map_and_interface();
+            render::draw_map_and_interface();
         }
         else
         {
-            if (Map::player->can_see_actor(actor_reloading, nullptr))
+            if (map::player->can_see_actor(actor_reloading, nullptr))
             {
-                Log::add_msg(actor_name + swift_str + " reloads.");
+                msg_log::add(actor_name + swift_str + " reloads.");
             }
         }
     } break;
@@ -104,13 +104,13 @@ void print_msg_and_play_sfx(Actor& actor_reloading, Wpn* const wpn,
     case Reload_result::fumble:
         if (IS_PLAYER)
         {
-            Log::add_msg("I fumble with " + ammo_name + ".");
+            msg_log::add("I fumble with " + ammo_name + ".");
         }
         else
         {
-            if (Map::player->can_see_actor(actor_reloading, nullptr))
+            if (map::player->can_see_actor(actor_reloading, nullptr))
             {
-                Log::add_msg(actor_name + " fumbles with " + ammo_name + ".");
+                msg_log::add(actor_name + " fumbles with " + ammo_name + ".");
             }
         }
         break;
@@ -129,7 +129,7 @@ bool reload_wielded_wpn(Actor& actor_reloading)
     if (!wpn_item)
     {
         print_msg_and_play_sfx(actor_reloading, nullptr, nullptr,
-                           Reload_result::not_carrying_wpn, false);
+                               Reload_result::not_carrying_wpn, false);
         return did_act;
     }
 
@@ -139,8 +139,8 @@ bool reload_wielded_wpn(Actor& actor_reloading)
 
     if (actor_reloading.is_player())
     {
-        is_swift_reload = Player_bon::traits[int(Trait::expert_marksman)] &&
-                        Rnd::coin_toss();
+        is_swift_reload = player_bon::traits[int(Trait::expert_marksman)] &&
+                          rnd::coin_toss();
     }
 
     const int wpn_ammo_capacity = wpn->AMMO_CAP;
@@ -148,7 +148,7 @@ bool reload_wielded_wpn(Actor& actor_reloading)
     if (wpn_ammo_capacity == 0)
     {
         print_msg_and_play_sfx(actor_reloading, wpn, nullptr,
-                           Reload_result::wpn_not_using_ammo, false);
+                               Reload_result::wpn_not_using_ammo, false);
     }
     else
     {
@@ -174,13 +174,13 @@ bool reload_wielded_wpn(Actor& actor_reloading)
                     const int CHANCE_TO_FUMBLE = (IS_RELOADER_BLIND      ? 48 : 0) +
                                                  (IS_REALOADER_TERRIFIED ? 48 : 0);
 
-                    if (Rnd::percent() < CHANCE_TO_FUMBLE)
+                    if (rnd::percent() < CHANCE_TO_FUMBLE)
                     {
                         is_swift_reload = false;
                         result        = Reload_result::fumble;
 
                         print_msg_and_play_sfx(actor_reloading, nullptr, item, Reload_result::fumble,
-                                           false);
+                                               false);
                     }
                     else //Not fumbling
                     {
@@ -201,7 +201,7 @@ bool reload_wielded_wpn(Actor& actor_reloading)
                             //If weapon previously contained ammo, create a new clip item
                             if (previous_ammo_count > 0)
                             {
-                                item = Item_factory::mk(ammo_type);
+                                item = item_factory::mk(ammo_type);
                                 clip_item = static_cast<Ammo_clip*>(item);
                                 clip_item->ammo_ = previous_ammo_count;
                                 inv.put_in_general(clip_item);
@@ -235,7 +235,7 @@ bool reload_wielded_wpn(Actor& actor_reloading)
     if (result == Reload_result::success || result == Reload_result::fumble)
     {
         did_act = true;
-        Game_time::tick(is_swift_reload);
+        game_time::tick(is_swift_reload);
     }
 
     return did_act;

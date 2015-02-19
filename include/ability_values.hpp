@@ -33,7 +33,7 @@ public:
     void reset();
 
     int get_val(const Ability_id ability_id, const bool IS_AFFECTED_BY_PROPS,
-               Actor& actor) const;
+                Actor& actor) const;
 
     int get_raw_val(const Ability_id ability)
     {
@@ -50,9 +50,9 @@ private:
 
 //TODO: Is this really necessary? Most functionality nowadays just roll their own chances.
 //Probably the only case where fail_small and fail_big is used is for melee attack messages.
-//It seems simpler and more transparent to just use the Rnd functions for rolling,
+//It seems simpler and more transparent to just use the rnd functions for rolling,
 //together with Ability_vals::get_val() for retrieving abilities to roll against.
-enum Ability_roll_result
+enum ability_roll_result
 {
     fail_critical,
     fail_big,
@@ -64,12 +64,12 @@ enum Ability_roll_result
     success_critical
 };
 
-//TODO: See comment above for Ability_roll_result
+//TODO: See comment above for ability_roll_result
 namespace ability_roll
 {
 
-Ability_roll_result roll(const int TOT_SKILL_VALUE);
+ability_roll_result roll(const int TOT_SKILL_VALUE);
 
-} //Ability_roll
+} //ability_roll
 
 #endif

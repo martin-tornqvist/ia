@@ -6,7 +6,7 @@
 #include "item.hpp"
 #include "map.hpp"
 #include "actor_player.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "query.hpp"
 #include "drop.hpp"
 #include "item_factory.hpp"
@@ -32,12 +32,12 @@ void pickup_effects(Actor* actor, Item* item)
 //Can always be called, to check if something is there to be picked up.
 void try_pick()
 {
-    const Pos&  pos   = Map::player->pos;
-    Item* const item  = Map::cells[pos.x][pos.y].item;
+    const Pos&  pos   = map::player->pos;
+    Item* const item  = map::cells[pos.x][pos.y].item;
 
     if (item)
     {
-        Inventory& player_inv = Map::player->get_inv();
+        Inventory& player_inv = map::player->get_inv();
 
         const string ITEM_NAME = item->get_name(Item_ref_type::plural);
 
@@ -49,33 +49,33 @@ void try_pick()
             {
                 if (item->get_id() == carried_missile->get_data().id)
                 {
-                    Audio::play(Sfx_id::pickup);
+                    audio::play(Sfx_id::pickup);
 
-                    Log::add_msg("I add " + ITEM_NAME + " to my missile stack.");
+                    msg_log::add("I add " + ITEM_NAME + " to my missile stack.");
                     carried_missile->nr_items_ += item->nr_items_;
                     delete item;
-                    Map::cells[pos.x][pos.y].item = nullptr;
-                    Game_time::tick();
+                    map::cells[pos.x][pos.y].item = nullptr;
+                    game_time::tick();
                     return;
                 }
             }
         }
 
-        Audio::play(Sfx_id::pickup);
+        audio::play(Sfx_id::pickup);
 
-        Log::clear_log();
-        Log::add_msg("I pick up " + ITEM_NAME + ".");
+        msg_log::clear();
+        msg_log::add("I pick up " + ITEM_NAME + ".");
 
         player_inv.put_in_general(item);
 
-        Map::cells[pos.x][pos.y].item = nullptr;
+        map::cells[pos.x][pos.y].item = nullptr;
 
-        Game_time::tick();
+        game_time::tick();
     }
     else //No item in this cell
     {
-        Log::clear_log();
-        Log::add_msg("I see nothing to pick up here.");
+        msg_log::clear();
+        msg_log::add("I see nothing to pick up here.");
     }
 }
 
@@ -91,8 +91,8 @@ Ammo* unload_ranged_wpn(Wpn& wpn)
     }
 
     const Item_id      ammo_id      = wpn.get_data().ranged.ammo_item_id;
-    Item_data_t* const  ammo_data    = Item_data::data[int(ammo_id)];
-    Item*             spawned_ammo = Item_factory::mk(ammo_id);
+    Item_data_t* const  ammo_data    = item_data::data[int(ammo_id)];
+    Item*             spawned_ammo = item_factory::mk(ammo_id);
 
     if (ammo_data->type == Item_type::ammo_clip)
     {
@@ -112,7 +112,7 @@ Ammo* unload_ranged_wpn(Wpn& wpn)
 
 void try_unload_wpn_or_pickup_ammo()
 {
-    Item* item = Map::cells[Map::player->pos.x][Map::player->pos.y].item;
+    Item* item = map::cells[map::player->pos.x][map::player->pos.y].item;
 
     if (item)
     {
@@ -128,13 +128,13 @@ void try_unload_wpn_or_pickup_ammo()
 
                 if (spawned_ammo)
                 {
-                    Audio::play(Sfx_id::pickup);
+                    audio::play(Sfx_id::pickup);
 
-                    Log::add_msg("I unload " + wpn_name + ".");
+                    msg_log::add("I unload " + wpn_name + ".");
 
-                    Map::player->get_inv().put_in_general(spawned_ammo);
+                    map::player->get_inv().put_in_general(spawned_ammo);
 
-                    Game_time::tick();
+                    game_time::tick();
                     return;
                 }
             }
@@ -151,7 +151,7 @@ void try_unload_wpn_or_pickup_ammo()
         }
     }
 
-    Log::add_msg("I see no ammo to unload or pick up here.");
+    msg_log::add("I see no ammo to unload or pick up here.");
 }
 
 } //Item_pickup

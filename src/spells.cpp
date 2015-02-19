@@ -8,7 +8,7 @@
 #include "render.hpp"
 #include "actor_mon.hpp"
 #include "actor_player.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "postmortem.hpp"
 #include "knockback.hpp"
 #include "map.hpp"
@@ -45,7 +45,7 @@ Spell* get_random_spell_for_mon()
         if (spell->is_avail_for_all_mon()) {bucket.push_back(Spell_id(i));}
         delete spell;
     }
-    const int ELEMENT = Rnd::range(0, bucket.size() - 1);
+    const int ELEMENT = rnd::range(0, bucket.size() - 1);
     return mk_spell_from_id(bucket[ELEMENT]);
 }
 
@@ -53,31 +53,31 @@ Spell* mk_spell_from_id(const Spell_id spell_id)
 {
     switch (spell_id)
     {
-    case Spell_id::slow_mon:              return new Spell_slow_mon;
-    case Spell_id::terrify_mon:           return new Spell_terrify_mon;
-    case Spell_id::paralyze_mon:          return new Spell_paralyze_mon;
-    case Spell_id::disease:              return new Spell_disease;
-    case Spell_id::darkbolt:             return new Spell_darkbolt;
-    case Spell_id::aza_wrath:             return new Spell_aza_wrath;
-    case Spell_id::summon:               return new Spell_summon_mon;
-    case Spell_id::heal_self:             return new Spell_heal_self;
-    case Spell_id::knock_back:            return new Spell_knock_back;
-    case Spell_id::teleport:             return new Spell_teleport;
-    case Spell_id::mayhem:               return new Spell_mayhem;
-    case Spell_id::pest:                 return new Spell_pest;
-    case Spell_id::det_items:             return new Spell_det_items;
-    case Spell_id::det_traps:             return new Spell_det_traps;
-    case Spell_id::det_mon:               return new Spell_det_mon;
-    case Spell_id::opening:              return new Spell_opening;
-    case Spell_id::sacr_life:             return new Spell_sacr_life;
-    case Spell_id::sacr_spi:              return new Spell_sacr_spi;
-    case Spell_id::cloud_minds:           return new Spell_cloud_minds;
-    case Spell_id::bless:                return new Spell_bless;
-    case Spell_id::mi_go_hypno:            return new Spell_mi_go_hypno;
-    case Spell_id::burn:                 return new Spell_burn;
-    case Spell_id::elem_res:              return new Spell_elem_res;
-    case Spell_id::pharaoh_staff:         return new Spell_pharaoh_staff;
-    case Spell_id::light:                return new Spell_light;
+    case Spell_id::slow_mon:            return new Spell_slow_mon;
+    case Spell_id::terrify_mon:         return new Spell_terrify_mon;
+    case Spell_id::paralyze_mon:        return new Spell_paralyze_mon;
+    case Spell_id::disease:             return new Spell_disease;
+    case Spell_id::darkbolt:            return new Spell_darkbolt;
+    case Spell_id::aza_wrath:           return new Spell_aza_wrath;
+    case Spell_id::summon:              return new Spell_summon_mon;
+    case Spell_id::heal_self:           return new Spell_heal_self;
+    case Spell_id::knock_back:          return new Spell_knock_back;
+    case Spell_id::teleport:            return new Spell_teleport;
+    case Spell_id::mayhem:              return new Spell_mayhem;
+    case Spell_id::pest:                return new Spell_pest;
+    case Spell_id::det_items:           return new Spell_det_items;
+    case Spell_id::det_traps:           return new Spell_det_traps;
+    case Spell_id::det_mon:             return new Spell_det_mon;
+    case Spell_id::opening:             return new Spell_opening;
+    case Spell_id::sacr_life:           return new Spell_sacr_life;
+    case Spell_id::sacr_spi:            return new Spell_sacr_spi;
+    case Spell_id::cloud_minds:         return new Spell_cloud_minds;
+    case Spell_id::bless:               return new Spell_bless;
+    case Spell_id::mi_go_hypno:         return new Spell_mi_go_hypno;
+    case Spell_id::burn:                return new Spell_burn;
+    case Spell_id::elem_res:            return new Spell_elem_res;
+    case Spell_id::pharaoh_staff:       return new Spell_pharaoh_staff;
+    case Spell_id::light:               return new Spell_light;
     case Spell_id::END: {}
         break;
     }
@@ -91,7 +91,7 @@ Range Spell::get_spi_cost(const bool IS_BASE_COST_ONLY, Actor* const caster) con
 {
     int cost_max = get_max_spi_cost_();
 
-    if (caster == Map::player && !IS_BASE_COST_ONLY)
+    if (caster == map::player && !IS_BASE_COST_ONLY)
     {
         const int X0 = max(0, caster->pos.x - 1);
         const int Y0 = max(0, caster->pos.y - 1);
@@ -102,17 +102,17 @@ Range Spell::get_spi_cost(const bool IS_BASE_COST_ONLY, Actor* const caster) con
         {
             for (int y = Y0; y <= Y1; ++y)
             {
-                if (Map::cells[x][y].rigid->get_id() == Feature_id::altar)
+                if (map::cells[x][y].rigid->get_id() == Feature_id::altar)
                 {
                     cost_max -= 1;
                 }
             }
         }
 
-        bool IS_WARLOCK     = Player_bon::traits[int(Trait::warlock)];
-        bool IS_BLOOD_SORC  = Player_bon::traits[int(Trait::blood_sorcerer)];
-        bool IS_SEER        = Player_bon::traits[int(Trait::seer)];
-        bool IS_SUMMONER    = Player_bon::traits[int(Trait::summoner)];
+        bool IS_WARLOCK     = player_bon::traits[int(Trait::warlock)];
+        bool IS_BLOOD_SORC  = player_bon::traits[int(Trait::blood_sorcerer)];
+        bool IS_SEER        = player_bon::traits[int(Trait::seer)];
+        bool IS_SUMMONER    = player_bon::traits[int(Trait::summoner)];
 
         if (IS_BLOOD_SORC) {cost_max--;}
 
@@ -155,25 +155,25 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
         {
             TRACE << "Player casting spell" << endl;
             const Shock_src shock_src = IS_INTRINSIC ?
-                                      Shock_src::cast_intr_spell :
-                                      Shock_src::use_strange_item;
+                                        Shock_src::cast_intr_spell :
+                                        Shock_src::use_strange_item;
             const int SHOCK_VALUE = IS_INTRINSIC ? get_shock_lvl_intr_cast() : 10;
-            Map::player->incr_shock(SHOCK_VALUE, shock_src);
-            if (Map::player->is_alive())
+            map::player->incr_shock(SHOCK_VALUE, shock_src);
+            if (map::player->is_alive())
             {
-                Audio::play(Sfx_id::spell_generic);
+                audio::play(Sfx_id::spell_generic);
             }
         }
         else //Caster is not player
         {
             TRACE << "Monster casting spell" << endl;
             Mon* const mon = static_cast<Mon*>(caster);
-            if (Map::cells[mon->pos.x][mon->pos.y].is_seen_by_player)
+            if (map::cells[mon->pos.x][mon->pos.y].is_seen_by_player)
             {
                 const string spell_str = mon->get_data().spell_cast_msg;
                 if (!spell_str.empty())
                 {
-                    Log::add_msg(spell_str);
+                    msg_log::add(spell_str);
                 }
             }
             mon->spell_cool_down_cur_ = mon->get_data().spell_cooldown_turns;
@@ -182,7 +182,7 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
         if (IS_INTRINSIC)
         {
             const Range cost = get_spi_cost(false, caster);
-            caster->hit_spi(Rnd::range(cost), false);
+            caster->hit_spi(rnd::range(cost), false);
         }
 
         Spell_effect_noticed is_noticed = Spell_effect_noticed::no;
@@ -192,7 +192,7 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
             is_noticed = cast_(caster);
         }
 
-        Game_time::tick();
+        game_time::tick();
         TRACE_FUNC_END;
         return is_noticed;
     }
@@ -213,7 +213,7 @@ Spell_effect_noticed Spell_darkbolt::cast_(Actor* const caster) const
         return Spell_effect_noticed::no;
     }
 
-    tgt = Utils::get_random_closest_actor(caster->pos, seen_actors);
+    tgt = utils::get_random_closest_actor(caster->pos, seen_actors);
 
     //Spell reflection?
     bool tgt_props[size_t(Prop_id::END)];
@@ -222,34 +222,34 @@ Spell_effect_noticed Spell_darkbolt::cast_(Actor* const caster) const
 
     if (tgt_props[size_t(Prop_id::spell_reflect)])
     {
-        Log::add_msg(spell_reflect_msg, clr_white, false, true);
+        msg_log::add(spell_reflect_msg, clr_white, false, true);
         return cast_(tgt);
     }
 
     vector<Pos> line;
 
-    Line_calc::calc_new_line(caster->pos, tgt->pos, true, 999, false, line);
+    line_calc::calc_new_line(caster->pos, tgt->pos, true, 999, false, line);
 
-    Render::draw_map_and_interface();
+    render::draw_map_and_interface();
 
     const size_t LINE_SIZE = line.size();
 
     for (size_t i = 1; i < LINE_SIZE; ++i)
     {
         const Pos& p = line[i];
-        if (Config::is_tiles_mode())
+        if (config::is_tiles_mode())
         {
-            Render::draw_tile(Tile_id::blast1, Panel::map, p, clr_magenta);
+            render::draw_tile(Tile_id::blast1, Panel::map, p, clr_magenta);
         }
         else
         {
-            Render::draw_glyph('*', Panel::map, p, clr_magenta);
+            render::draw_glyph('*', Panel::map, p, clr_magenta);
         }
-        Render::update_screen();
-        Sdl_wrapper::sleep(Config::get_delay_projectile_draw());
+        render::update_screen();
+        sdl_wrapper::sleep(config::get_delay_projectile_draw());
     }
 
-    Render::draw_blast_at_cells(vector<Pos> {tgt->pos}, clr_magenta);
+    render::draw_blast_at_cells(vector<Pos> {tgt->pos}, clr_magenta);
 
     bool    is_warlock_charged  = false;
     Clr     msg_clr            = clr_msg_good;
@@ -263,7 +263,7 @@ Spell_effect_noticed Spell_darkbolt::cast_(Actor* const caster) const
     {
         tgt_str = tgt->get_name_the() + " is";
 
-        if (Map::player->is_leader_of(tgt)) {msg_clr = clr_white;}
+        if (map::player->is_leader_of(tgt)) {msg_clr = clr_white;}
     }
 
     if (caster->is_player())
@@ -273,28 +273,28 @@ Spell_effect_noticed Spell_darkbolt::cast_(Actor* const caster) const
         is_warlock_charged = props[int(Prop_id::warlock_charged)];
     }
 
-    if (Map::player->can_see_actor(*tgt, nullptr))
+    if (map::player->can_see_actor(*tgt, nullptr))
     {
-        Log::add_msg(tgt_str + " struck by a blast!", msg_clr);
+        msg_log::add(tgt_str + " struck by a blast!", msg_clr);
     }
 
     tgt->get_prop_handler().try_apply_prop(new Prop_paralyzed(Prop_turns::specific, 2));
 
     Range dmg_range(4, 10);
-    const int DMG = is_warlock_charged ? dmg_range.upper : Rnd::range(dmg_range);
+    const int DMG = is_warlock_charged ? dmg_range.upper : rnd::range(dmg_range);
 
     tgt->hit(DMG, Dmg_type::physical);
 
-    Snd_emit::emit_snd({"", Sfx_id::END, Ignore_msg_if_origin_seen::yes, tgt->pos, nullptr,
-                      Snd_vol::low, Alerts_mon::yes
-                     });
+    snd_emit::emit_snd({"", Sfx_id::END, Ignore_msg_if_origin_seen::yes, tgt->pos, nullptr,
+                        Snd_vol::low, Alerts_mon::yes
+                       });
 
     return Spell_effect_noticed::yes;
 }
 
 bool Spell_darkbolt::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && Rnd::one_in(3);
+    return mon.tgt_ && rnd::one_in(3);
 }
 
 //------------------------------------------------------------ AZATHOTHS WRATH
@@ -320,7 +320,7 @@ Spell_effect_noticed Spell_aza_wrath::cast_(Actor* const caster) const
         is_warlock_charged = props[int(Prop_id::warlock_charged)];
     }
 
-    Render::draw_blast_at_seen_actors(tgts, clr_red_lgt);
+    render::draw_blast_at_seen_actors(tgts, clr_red_lgt);
 
     for (Actor* const tgt : tgts)
     {
@@ -331,7 +331,7 @@ Spell_effect_noticed Spell_aza_wrath::cast_(Actor* const caster) const
 
         if (tgt_props[size_t(Prop_id::spell_reflect)])
         {
-            Log::add_msg(spell_reflect_msg, clr_white, false, true);
+            msg_log::add(spell_reflect_msg, clr_white, false, true);
             cast_(tgt);
             continue;
         }
@@ -345,23 +345,23 @@ Spell_effect_noticed Spell_aza_wrath::cast_(Actor* const caster) const
         else //Target is monster
         {
             tgt_str = tgt->get_name_the();
-            if (Map::player->is_leader_of(tgt)) {msg_clr = clr_white;}
+            if (map::player->is_leader_of(tgt)) {msg_clr = clr_white;}
         }
 
-        if (Map::player->can_see_actor(*tgt, nullptr))
+        if (map::player->can_see_actor(*tgt, nullptr))
         {
-            Log::add_msg(tgt_str + " is struck by a roaring blast!", msg_clr);
+            msg_log::add(tgt_str + " is struck by a roaring blast!", msg_clr);
         }
 
         tgt->get_prop_handler().try_apply_prop(new Prop_paralyzed(Prop_turns::specific, 2));
 
-        const int DMG = is_warlock_charged ? dmg_range.upper : Rnd::range(dmg_range);
+        const int DMG = is_warlock_charged ? dmg_range.upper : rnd::range(dmg_range);
 
         tgt->hit(DMG, Dmg_type::physical);
 
-        Snd_emit::emit_snd({"", Sfx_id::END, Ignore_msg_if_origin_seen::yes, tgt->pos, nullptr,
-                          Snd_vol::high, Alerts_mon::yes
-                         });
+        snd_emit::emit_snd({"", Sfx_id::END, Ignore_msg_if_origin_seen::yes, tgt->pos, nullptr,
+                            Snd_vol::high, Alerts_mon::yes
+                           });
     }
 
     return Spell_effect_noticed::yes;
@@ -369,7 +369,7 @@ Spell_effect_noticed Spell_aza_wrath::cast_(Actor* const caster) const
 
 bool Spell_aza_wrath::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && Rnd::one_in(3);
+    return mon.tgt_ && rnd::one_in(3);
 }
 
 //------------------------------------------------------------ MAYHEM
@@ -377,10 +377,10 @@ Spell_effect_noticed Spell_mayhem::cast_(Actor* const caster) const
 {
     const bool IS_PLAYER = caster->is_player();
 
-    if ( Map::player->can_see_actor(*caster, nullptr))
+    if ( map::player->can_see_actor(*caster, nullptr))
     {
         string caster_name = IS_PLAYER ? "me" : caster->get_name_the();
-        Log::add_msg("Destruction rages around " + caster_name + "!");
+        msg_log::add("Destruction rages around " + caster_name + "!");
     }
 
     const Pos& caster_pos = caster->pos;
@@ -404,13 +404,13 @@ Spell_effect_noticed Spell_mayhem::cast_(Actor* const caster) const
                 {
                     for (int dy = -1; dy <= 1; ++dy)
                     {
-                        const Rigid* const f = Map::cells[x + dx][y + dy].rigid;
+                        const Rigid* const f = map::cells[x + dx][y + dy].rigid;
                         if (f->can_move_cmn()) {is_adj_to_walkable_cell = true;}
                     }
                 }
-                if (is_adj_to_walkable_cell && Rnd::one_in(8))
+                if (is_adj_to_walkable_cell && rnd::one_in(8))
                 {
-                    Map::cells[x][y].rigid->hit(Dmg_type::physical, Dmg_method::explosion);
+                    map::cells[x][y].rigid->hit(Dmg_type::physical, Dmg_method::explosion);
                 }
             }
         }
@@ -420,14 +420,14 @@ Spell_effect_noticed Spell_mayhem::cast_(Actor* const caster) const
     {
         for (int x = X0; x <= X1; ++x)
         {
-            auto* const f = Map::cells[x][y].rigid;
+            auto* const f = map::cells[x][y].rigid;
 
-            if (f->can_have_blood() && Rnd::one_in(10))
+            if (f->can_have_blood() && rnd::one_in(10))
             {
                 f->mk_bloody();
             }
 
-            if (Rnd::one_in(4))
+            if (rnd::one_in(4))
             {
                 f->hit(Dmg_type::fire, Dmg_method::elemental, nullptr);
             }
@@ -446,7 +446,7 @@ Spell_effect_noticed Spell_mayhem::cast_(Actor* const caster) const
 
         if (tgt_props[size_t(Prop_id::spell_reflect)])
         {
-            Log::add_msg(spell_reflect_msg, clr_white, false, true);
+            msg_log::add(spell_reflect_msg, clr_white, false, true);
             cast_(tgt);
             continue;
         }
@@ -454,9 +454,9 @@ Spell_effect_noticed Spell_mayhem::cast_(Actor* const caster) const
         tgt->get_prop_handler().try_apply_prop(new Prop_burning(Prop_turns::std));
     }
 
-    Snd_emit::emit_snd({"", Sfx_id::END, Ignore_msg_if_origin_seen::yes, caster_pos, nullptr,
-                      Snd_vol::high, Alerts_mon::yes
-                     });
+    snd_emit::emit_snd({"", Sfx_id::END, Ignore_msg_if_origin_seen::yes, caster_pos, nullptr,
+                        Snd_vol::high, Alerts_mon::yes
+                       });
 
     return Spell_effect_noticed::yes;
 }
@@ -464,19 +464,19 @@ Spell_effect_noticed Spell_mayhem::cast_(Actor* const caster) const
 bool Spell_mayhem::allow_mon_cast_now(Mon& mon) const
 {
     return mon.aware_counter_ > 0  &&
-           Rnd::coin_toss()        &&
-           (mon.tgt_ || Rnd::one_in(20));
+           rnd::coin_toss()        &&
+           (mon.tgt_ || rnd::one_in(20));
 }
 
 //------------------------------------------------------------ PESTILENCE
 Spell_effect_noticed Spell_pest::cast_(Actor* const caster) const
 {
-    const int RND = Rnd::range(1, 3);
+    const int RND = rnd::range(1, 3);
     const Actor_id monster_id = RND == 1 ? Actor_id::green_spider :
-                              RND == 2 ? Actor_id::red_spider   :
-                              Actor_id::rat;
+                                RND == 2 ? Actor_id::red_spider   :
+                                Actor_id::rat;
 
-    const size_t NR_MON = Rnd::range(7, 10);
+    const size_t NR_MON = rnd::range(7, 10);
 
     Actor*  leader                  = nullptr;
     bool    did_player_summon_hostile  = false;
@@ -484,8 +484,8 @@ Spell_effect_noticed Spell_pest::cast_(Actor* const caster) const
     if (caster->is_player())
     {
         const int N             = SUMMON_HOSTILE_ONE_IN_N *
-                                  (Player_bon::traits[int(Trait::summoner)] ? 2 : 1);
-        did_player_summon_hostile  = Rnd::one_in(N);
+                                  (player_bon::traits[int(Trait::summoner)] ? 2 : 1);
+        did_player_summon_hostile  = rnd::one_in(N);
         leader                  = did_player_summon_hostile ? nullptr : caster;
     }
     else //Caster is monster
@@ -496,16 +496,16 @@ Spell_effect_noticed Spell_pest::cast_(Actor* const caster) const
 
     vector<Mon*> mon_summoned;
 
-    Actor_factory::summon(caster->pos, {NR_MON, monster_id}, true, leader, &mon_summoned);
+    actor_factory::summon(caster->pos, {NR_MON, monster_id}, true, leader, &mon_summoned);
 
     bool is_any_seen_by_player = false;
 
-    const int NR_TURNS_SUMMONED = Rnd::range(40, 70);
+    const int NR_TURNS_SUMMONED = rnd::range(40, 70);
 
     for (Mon* const mon : mon_summoned)
     {
         mon->nr_turns_until_unsummoned_ = NR_TURNS_SUMMONED;
-        if (Map::player->can_see_actor(*mon, nullptr))
+        if (map::player->can_see_actor(*mon, nullptr))
         {
             is_any_seen_by_player = true;
         }
@@ -520,11 +520,11 @@ Spell_effect_noticed Spell_pest::cast_(Actor* const caster) const
             caster_str = caster->get_name_the();
         }
 
-        Log::add_msg("Disgusting critters appear around " + caster_str + "!");
+        msg_log::add("Disgusting critters appear around " + caster_str + "!");
 
         if (did_player_summon_hostile)
         {
-            Log::add_msg("They are hostile!", clr_msg_note, true, true);
+            msg_log::add("They are hostile!", clr_msg_note, true, true);
         }
 
         return Spell_effect_noticed::yes;
@@ -536,15 +536,15 @@ Spell_effect_noticed Spell_pest::cast_(Actor* const caster) const
 bool Spell_pest::allow_mon_cast_now(Mon& mon) const
 {
     return mon.tgt_         &&
-           Rnd::coin_toss()  &&
-           (mon.tgt_ || Rnd::one_in(20));
+           rnd::coin_toss()  &&
+           (mon.tgt_ || rnd::one_in(20));
 }
 
 //------------------------------------------------------------ PHARAOH STAFF
 Spell_effect_noticed Spell_pharaoh_staff::cast_(Actor* const caster) const
 {
     //First check for a friendly mummy and heal it (as per the spell description)
-    for (Actor* const actor : Game_time::actors_)
+    for (Actor* const actor : game_time::actors_)
     {
         const auto id = actor->get_data().id;
 
@@ -565,8 +565,8 @@ Spell_effect_noticed Spell_pharaoh_staff::cast_(Actor* const caster) const
     if (caster->is_player())
     {
         const int N             = SUMMON_HOSTILE_ONE_IN_N *
-                                  (Player_bon::traits[int(Trait::summoner)] ? 2 : 1);
-        did_player_summon_hostile  = Rnd::one_in(N);
+                                  (player_bon::traits[int(Trait::summoner)] ? 2 : 1);
+        did_player_summon_hostile  = rnd::one_in(N);
         leader                  = did_player_summon_hostile ? nullptr : caster;
     }
     else //Caster is monster
@@ -577,19 +577,19 @@ Spell_effect_noticed Spell_pharaoh_staff::cast_(Actor* const caster) const
 
     vector<Mon*> summoned_mon;
 
-    const auto id = Rnd::coin_toss() ? Actor_id::mummy : Actor_id::croc_head_mummy;
+    const auto id = rnd::coin_toss() ? Actor_id::mummy : Actor_id::croc_head_mummy;
 
-    Actor_factory::summon(caster->pos, {id}, false, leader, &summoned_mon);
+    actor_factory::summon(caster->pos, {id}, false, leader, &summoned_mon);
 
     const Mon* const mon = summoned_mon[0];
 
-    if (Map::player->can_see_actor(*mon, nullptr))
+    if (map::player->can_see_actor(*mon, nullptr))
     {
-        Log::add_msg(mon->get_name_a() + " appears!");
+        msg_log::add(mon->get_name_a() + " appears!");
 
         if (did_player_summon_hostile)
         {
-            Log::add_msg("It is hostile!", clr_msg_note, true, true);
+            msg_log::add("It is hostile!", clr_msg_note, true, true);
         }
 
         return Spell_effect_noticed::yes;
@@ -600,7 +600,7 @@ Spell_effect_noticed Spell_pharaoh_staff::cast_(Actor* const caster) const
 
 bool Spell_pharaoh_staff::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && Rnd::one_in(4);
+    return mon.tgt_ && rnd::one_in(4);
 }
 
 //------------------------------------------------------------ DETECT ITEMS
@@ -609,8 +609,8 @@ Spell_effect_noticed Spell_det_items::cast_(Actor* const caster) const
     (void)caster;
 
     const int RADI    = FOV_STD_RADI_INT + 3;
-    const int ORIG_X  = Map::player->pos.x;
-    const int ORIG_Y  = Map::player->pos.y;
+    const int ORIG_X  = map::player->pos.x;
+    const int ORIG_Y  = map::player->pos.y;
     const int X0      = max(0, ORIG_X - RADI);
     const int Y0      = max(0, ORIG_Y - RADI);
     const int X1      = min(MAP_W - 1, ORIG_X + RADI);
@@ -622,29 +622,29 @@ Spell_effect_noticed Spell_det_items::cast_(Actor* const caster) const
     {
         for (int x = X0; x <= X1; ++x)
         {
-            Item* item = Map::cells[x][y].item;
+            Item* item = map::cells[x][y].item;
             if (item)
             {
-                Map::cells[x][y].is_seen_by_player = true;
-                Map::cells[x][y].is_explored     = true;
+                map::cells[x][y].is_seen_by_player = true;
+                map::cells[x][y].is_explored     = true;
                 items_revealed_cells.push_back(Pos(x, y));
             }
         }
     }
     if (!items_revealed_cells.empty())
     {
-        Render::draw_map_and_interface();
-        Map::player->update_fov();
-        Render::draw_blast_at_cells(items_revealed_cells, clr_white);
-        Render::draw_map_and_interface();
+        render::draw_map_and_interface();
+        map::player->update_fov();
+        render::draw_blast_at_cells(items_revealed_cells, clr_white);
+        render::draw_map_and_interface();
 
         if (items_revealed_cells.size() == 1)
         {
-            Log::add_msg("An item is revealed to me.");
+            msg_log::add("An item is revealed to me.");
         }
         if (items_revealed_cells.size() > 1)
         {
-            Log::add_msg("Some items are revealed to me.");
+            msg_log::add("Some items are revealed to me.");
         }
         return Spell_effect_noticed::yes;
     }
@@ -662,9 +662,9 @@ Spell_effect_noticed Spell_det_traps::cast_(Actor* const caster) const
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            if (Map::cells[x][y].is_seen_by_player)
+            if (map::cells[x][y].is_seen_by_player)
             {
-                auto* const f = Map::cells[x][y].rigid;
+                auto* const f = map::cells[x][y].rigid;
                 if (f->get_id() == Feature_id::trap)
                 {
                     auto* const trap = static_cast<Trap*>(f);
@@ -677,17 +677,17 @@ Spell_effect_noticed Spell_det_traps::cast_(Actor* const caster) const
 
     if (!traps_revealed_cells.empty())
     {
-        Render::draw_map_and_interface();
-        Map::player->update_fov();
-        Render::draw_blast_at_cells(traps_revealed_cells, clr_white);
-        Render::draw_map_and_interface();
+        render::draw_map_and_interface();
+        map::player->update_fov();
+        render::draw_blast_at_cells(traps_revealed_cells, clr_white);
+        render::draw_map_and_interface();
         if (traps_revealed_cells.size() == 1)
         {
-            Log::add_msg("A hidden trap is revealed to me.");
+            msg_log::add("A hidden trap is revealed to me.");
         }
         if (traps_revealed_cells.size() > 1)
         {
-            Log::add_msg("Some hidden traps are revealed to me.");
+            msg_log::add("Some hidden traps are revealed to me.");
         }
         return Spell_effect_noticed::yes;
     }
@@ -699,11 +699,11 @@ Spell_effect_noticed Spell_det_mon::cast_(Actor* const caster) const
 {
     (void)caster;
 
-    bool                is_seer      = Player_bon::traits[int(Trait::seer)];
+    bool                is_seer      = player_bon::traits[int(Trait::seer)];
     const int           MULTIPLIER  = 6 * (is_seer ? 3 : 1);
     Spell_effect_noticed  is_noticed   = Spell_effect_noticed::no;
 
-    for (Actor* actor : Game_time::actors_)
+    for (Actor* actor : game_time::actors_)
     {
         if (!actor->is_player())
         {
@@ -714,7 +714,7 @@ Spell_effect_noticed Spell_det_mon::cast_(Actor* const caster) const
 
     if (is_noticed == Spell_effect_noticed::yes)
     {
-        Log::add_msg("I detect creatures.");
+        msg_log::add("I detect creatures.");
     }
 
     return is_noticed;
@@ -731,7 +731,7 @@ Spell_effect_noticed Spell_opening::cast_(Actor* const caster) const
     {
         for (int x = 1; x < MAP_W - 1; ++x)
         {
-            const auto& cell = Map::cells[x][y];
+            const auto& cell = map::cells[x][y];
 
             if (cell.is_seen_by_player)
             {
@@ -750,8 +750,8 @@ Spell_effect_noticed Spell_opening::cast_(Actor* const caster) const
         return Spell_effect_noticed::no;
     }
 
-    Map::player->update_fov();
-    Render::draw_map_and_interface();
+    map::player->update_fov();
+    render::draw_map_and_interface();
     return Spell_effect_noticed::yes;
 }
 
@@ -765,21 +765,21 @@ Spell_effect_noticed Spell_sacr_life::cast_(Actor* const caster) const
     //Spell reflection?
     bool tgt_props[size_t(Prop_id::END)];
 
-    Map::player->get_prop_handler().get_prop_ids(tgt_props);
+    map::player->get_prop_handler().get_prop_ids(tgt_props);
 
     if (tgt_props[size_t(Prop_id::spell_reflect)])
     {
-        Log::add_msg(spell_reflect_self_msg, clr_white, false, true);
+        msg_log::add(spell_reflect_self_msg, clr_white, false, true);
         return Spell_effect_noticed::no;
     }
 
-    const int PLAYER_HP_CUR = Map::player->get_hp();
+    const int PLAYER_HP_CUR = map::player->get_hp();
 
     if (PLAYER_HP_CUR > 2)
     {
         const int HP_DRAINED = ((PLAYER_HP_CUR - 1) / 2) * 2;
-        Map::player->hit(HP_DRAINED, Dmg_type::pure);
-        Map::player->restore_spi(HP_DRAINED, true, true);
+        map::player->hit(HP_DRAINED, Dmg_type::pure);
+        map::player->restore_spi(HP_DRAINED, true, true);
         return Spell_effect_noticed::yes;
     }
     return Spell_effect_noticed::no;
@@ -795,21 +795,21 @@ Spell_effect_noticed Spell_sacr_spi::cast_(Actor* const caster) const
     //Spell reflection?
     bool tgt_props[size_t(Prop_id::END)];
 
-    Map::player->get_prop_handler().get_prop_ids(tgt_props);
+    map::player->get_prop_handler().get_prop_ids(tgt_props);
 
     if (tgt_props[size_t(Prop_id::spell_reflect)])
     {
-        Log::add_msg(spell_reflect_self_msg, clr_white, false, true);
+        msg_log::add(spell_reflect_self_msg, clr_white, false, true);
         return Spell_effect_noticed::no;
     }
 
-    const int PLAYER_SPI_CUR = Map::player->get_spi();
+    const int PLAYER_SPI_CUR = map::player->get_spi();
 
     if (PLAYER_SPI_CUR > 0)
     {
         const int HP_DRAINED = PLAYER_SPI_CUR - 1;
-        Map::player->hit_spi(HP_DRAINED, true);
-        Map::player->restore_hp(HP_DRAINED, true, true);
+        map::player->hit_spi(HP_DRAINED, true);
+        map::player->restore_hp(HP_DRAINED, true, true);
         return Spell_effect_noticed::yes;
     }
     return Spell_effect_noticed::no;
@@ -820,9 +820,9 @@ Spell_effect_noticed Spell_cloud_minds::cast_(Actor* const caster) const
 {
 
     (void)caster;
-    Log::add_msg("I vanish from the minds of my enemies.");
+    msg_log::add("I vanish from the minds of my enemies.");
 
-    for (Actor* actor : Game_time::actors_)
+    for (Actor* actor : game_time::actors_)
     {
         if (!actor->is_player())
         {
@@ -845,7 +845,7 @@ Spell_effect_noticed Spell_bless::cast_(Actor* const caster) const
     {
         if (caster->is_player())
         {
-            Log::add_msg(spell_reflect_self_msg, clr_white, false, true);
+            msg_log::add(spell_reflect_self_msg, clr_white, false, true);
         }
         return Spell_effect_noticed::no;
     }
@@ -873,7 +873,7 @@ Spell_effect_noticed Spell_teleport::cast_(Actor* const caster) const
     {
         if (caster->is_player())
         {
-            Log::add_msg(spell_reflect_self_msg, clr_white, false, true);
+            msg_log::add(spell_reflect_self_msg, clr_white, false, true);
         }
         return Spell_effect_noticed::no;
     }
@@ -886,7 +886,7 @@ bool Spell_teleport::allow_mon_cast_now(Mon& mon) const
 {
     return mon.tgt_                                 &&
            mon.get_hp() <= (mon.get_hp_max(true) / 2)  &&
-           Rnd::coin_toss();
+           rnd::coin_toss();
 }
 
 //------------------------------------------------------------ ELEMENTAL RES
@@ -901,7 +901,7 @@ Spell_effect_noticed Spell_elem_res::cast_(Actor* const caster) const
     {
         if (caster->is_player())
         {
-            Log::add_msg(spell_reflect_self_msg, clr_white, false, true);
+            msg_log::add(spell_reflect_self_msg, clr_white, false, true);
         }
         return Spell_effect_noticed::no;
     }
@@ -916,7 +916,7 @@ Spell_effect_noticed Spell_elem_res::cast_(Actor* const caster) const
 
 bool Spell_elem_res::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && Rnd::one_in(3);
+    return mon.tgt_ && rnd::one_in(3);
 }
 
 //------------------------------------------------------------ KNOCKBACK
@@ -937,7 +937,7 @@ Spell_effect_noticed Spell_knock_back::cast_(Actor* const caster) const
 
     if (tgt_props[size_t(Prop_id::spell_reflect)])
     {
-        Log::add_msg(spell_reflect_msg, clr_white, false, true);
+        msg_log::add(spell_reflect_msg, clr_white, false, true);
         swap(caster_used, tgt);
     }
 
@@ -948,15 +948,15 @@ Spell_effect_noticed Spell_knock_back::cast_(Actor* const caster) const
     else //Target is monster
     {
         tgt_str = tgt->get_name_the();
-        if (Map::player->is_leader_of(tgt)) {msg_clr = clr_white;}
+        if (map::player->is_leader_of(tgt)) {msg_clr = clr_white;}
     }
 
-    if (Map::player->can_see_actor(*tgt, nullptr))
+    if (map::player->can_see_actor(*tgt, nullptr))
     {
-        Log::add_msg("A force pushes " + tgt_str + "!", msg_clr);
+        msg_log::add("A force pushes " + tgt_str + "!", msg_clr);
     }
 
-    Knock_back::try_knock_back(*tgt, caster->pos, false);
+    knock_back::try_knock_back(*tgt, caster->pos, false);
 
     return Spell_effect_noticed::no;
 }
@@ -979,7 +979,7 @@ Spell_effect_noticed Spell_prop_on_mon::cast_(Actor* const caster) const
         return Spell_effect_noticed::no;
     }
 
-    Render::draw_blast_at_seen_actors(tgts, clr_magenta);
+    render::draw_blast_at_seen_actors(tgts, clr_magenta);
 
     for (Actor* const tgt : tgts)
     {
@@ -992,7 +992,7 @@ Spell_effect_noticed Spell_prop_on_mon::cast_(Actor* const caster) const
 
         if (tgt_props[size_t(Prop_id::spell_reflect)])
         {
-            Log::add_msg(spell_reflect_msg, clr_white, false, true);
+            msg_log::add(spell_reflect_msg, clr_white, false, true);
             cast_(tgt);
             continue;
         }
@@ -1011,7 +1011,7 @@ bool Spell_prop_on_mon::allow_mon_cast_now(Mon& mon) const
 
 bool Spell_paralyze_mon::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && Rnd::one_in(3);
+    return mon.tgt_ && rnd::one_in(3);
 }
 
 //------------------------------------------------------------ DISEASE
@@ -1029,7 +1029,7 @@ Spell_effect_noticed Spell_disease::cast_(Actor* const caster) const
 
     if (tgt_props[size_t(Prop_id::spell_reflect)])
     {
-        Log::add_msg(spell_reflect_msg, clr_white, false, true);
+        msg_log::add(spell_reflect_msg, clr_white, false, true);
         swap(caster_used, tgt);
     }
 
@@ -1040,9 +1040,9 @@ Spell_effect_noticed Spell_disease::cast_(Actor* const caster) const
         actor_name = tgt->get_name_the();
     }
 
-    if (Map::player->can_see_actor(*tgt, nullptr))
+    if (map::player->can_see_actor(*tgt, nullptr))
     {
-        Log::add_msg("A horrible disease is starting to afflict " + actor_name + "!");
+        msg_log::add("A horrible disease is starting to afflict " + actor_name + "!");
     }
 
     tgt->get_prop_handler().try_apply_prop(new Prop_diseased(Prop_turns::specific, 50));
@@ -1051,7 +1051,7 @@ Spell_effect_noticed Spell_disease::cast_(Actor* const caster) const
 
 bool Spell_disease::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && Rnd::coin_toss();
+    return mon.tgt_ && rnd::coin_toss();
 }
 
 //------------------------------------------------------------ SUMMON MONSTER
@@ -1061,11 +1061,11 @@ Spell_effect_noticed Spell_summon_mon::cast_(Actor* const caster) const
     //free visible cell. If no such cell is available, instead summon near the caster.
 
     bool blocked[MAP_W][MAP_H];
-    Map_parse::run(Cell_check::Blocks_move_cmn(true), blocked);
+    map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
     vector<Pos> free_cells_seen_by_player;
     const int RADI = FOV_STD_RADI_INT;
-    const Pos player_pos(Map::player->pos);
+    const Pos player_pos(map::player->pos);
     const int X0 = max(0, player_pos.x - RADI);
     const int Y0 = max(0, player_pos.y - RADI);
     const int X1 = min(MAP_W, player_pos.x + RADI) - 1;
@@ -1074,7 +1074,7 @@ Spell_effect_noticed Spell_summon_mon::cast_(Actor* const caster) const
     {
         for (int y = Y0; y <= Y1; ++y)
         {
-            if (!blocked[x][y] && Map::cells[x][y].is_seen_by_player)
+            if (!blocked[x][y] && map::cells[x][y].is_seen_by_player)
             {
                 free_cells_seen_by_player.push_back(Pos(x, y));
             }
@@ -1087,7 +1087,7 @@ Spell_effect_noticed Spell_summon_mon::cast_(Actor* const caster) const
     {
         //No free cells seen by player, instead summon near the caster.
         vector<Pos> free_cells_vector;
-        Utils::mk_vector_from_bool_map(false, blocked, free_cells_vector);
+        utils::mk_vector_from_bool_map(false, blocked, free_cells_vector);
         if (!free_cells_vector.empty())
         {
             sort(free_cells_vector.begin(), free_cells_vector.end(),
@@ -1097,14 +1097,14 @@ Spell_effect_noticed Spell_summon_mon::cast_(Actor* const caster) const
     }
     else //There are free cells seen by the player available
     {
-        const size_t IDX  = Rnd::range(0, free_cells_seen_by_player.size() - 1);
+        const size_t IDX  = rnd::range(0, free_cells_seen_by_player.size() - 1);
         summon_pos         = free_cells_seen_by_player[IDX];
     }
 
     vector<Actor_id> summon_bucket;
     for (int i = 0; i < int(Actor_id::END); ++i)
     {
-        const Actor_data_t& data = Actor_data::data[i];
+        const actor_data_t& data = actor_data::data[i];
         if (data.can_be_summoned)
         {
             //Method for finding eligible monsters depends on if player or monster is
@@ -1114,7 +1114,7 @@ Spell_effect_noticed Spell_summon_mon::cast_(Actor* const caster) const
             if (caster->is_player())
             {
                 //Compare player CVL with monster's allowed spawning DLVL.
-                const int PLAYER_CLVL     = Dungeon_master::get_cLvl();
+                const int PLAYER_CLVL     = dungeon_master::get_cLvl();
                 const int PLAYER_CLVL_PCT = (PLAYER_CLVL * 100) / PLAYER_MAX_CLVL;
 
                 dlvl_max                   = (PLAYER_CLVL_PCT * DLVL_LAST) / 100;
@@ -1139,7 +1139,7 @@ Spell_effect_noticed Spell_summon_mon::cast_(Actor* const caster) const
         return Spell_effect_noticed::no;
     }
 
-    const int       IDX                     = Rnd::range(0, summon_bucket.size() - 1);
+    const int       IDX                     = rnd::range(0, summon_bucket.size() - 1);
     const Actor_id   mon_id                   = summon_bucket[IDX];
     Actor*          leader                  = nullptr;
     bool            did_player_summon_hostile  = false;
@@ -1147,8 +1147,8 @@ Spell_effect_noticed Spell_summon_mon::cast_(Actor* const caster) const
     if (caster->is_player())
     {
         const int N             = SUMMON_HOSTILE_ONE_IN_N *
-                                  (Player_bon::traits[int(Trait::summoner)] ? 2 : 1);
-        did_player_summon_hostile  = Rnd::one_in(N);
+                                  (player_bon::traits[int(Trait::summoner)] ? 2 : 1);
+        did_player_summon_hostile  = rnd::one_in(N);
         leader                  = did_player_summon_hostile ? nullptr : caster;
     }
     else //Caster is monster
@@ -1159,18 +1159,18 @@ Spell_effect_noticed Spell_summon_mon::cast_(Actor* const caster) const
 
     vector<Mon*> mon_summoned;
 
-    Actor_factory::summon(summon_pos, {mon_id}, true, leader, &mon_summoned);
+    actor_factory::summon(summon_pos, {mon_id}, true, leader, &mon_summoned);
 
     Mon* const mon                = mon_summoned[0];
-    mon->nr_turns_until_unsummoned_  = Rnd::range(40, 70);;
+    mon->nr_turns_until_unsummoned_  = rnd::range(40, 70);;
 
-    if (Map::player->can_see_actor(*mon, nullptr))
+    if (map::player->can_see_actor(*mon, nullptr))
     {
-        Log::add_msg(mon->get_name_a() + " appears!");
+        msg_log::add(mon->get_name_a() + " appears!");
 
         if (did_player_summon_hostile)
         {
-            Log::add_msg("It is hostile!", clr_msg_note, true, true);
+            msg_log::add("It is hostile!", clr_msg_note, true, true);
         }
 
         return Spell_effect_noticed::yes;
@@ -1182,8 +1182,8 @@ Spell_effect_noticed Spell_summon_mon::cast_(Actor* const caster) const
 bool Spell_summon_mon::allow_mon_cast_now(Mon& mon) const
 {
     return mon.aware_counter_ > 0  &&
-           Rnd::coin_toss()        &&
-           (mon.tgt_ || Rnd::one_in(20));
+           rnd::coin_toss()        &&
+           (mon.tgt_ || rnd::one_in(20));
 }
 
 //------------------------------------------------------------ HEAL SELF
@@ -1198,7 +1198,7 @@ Spell_effect_noticed Spell_heal_self::cast_(Actor* const caster) const
     {
         if (caster->is_player())
         {
-            Log::add_msg(spell_reflect_self_msg, clr_white, false, true);
+            msg_log::add(spell_reflect_self_msg, clr_white, false, true);
         }
         return Spell_effect_noticed::no;
     }
@@ -1231,23 +1231,23 @@ Spell_effect_noticed Spell_mi_go_hypno::cast_(Actor* const caster) const
 
     if (tgt_props[size_t(Prop_id::spell_reflect)])
     {
-        Log::add_msg(spell_reflect_msg, clr_white, false, true);
+        msg_log::add(spell_reflect_msg, clr_white, false, true);
         swap(caster_used, tgt);
     }
 
     if (tgt->is_player())
     {
-        Log::add_msg("There is a sharp droning in my head!");
+        msg_log::add("There is a sharp droning in my head!");
     }
 
-    if (Rnd::coin_toss())
+    if (rnd::coin_toss())
     {
-        Prop* const prop = new Prop_fainted(Prop_turns::specific, Rnd::range(2, 10));
+        Prop* const prop = new Prop_fainted(Prop_turns::specific, rnd::range(2, 10));
         tgt->get_prop_handler().try_apply_prop(prop);
     }
     else
     {
-        Log::add_msg("I feel dizzy.");
+        msg_log::add("I feel dizzy.");
     }
 
     return Spell_effect_noticed::yes;
@@ -1255,7 +1255,7 @@ Spell_effect_noticed Spell_mi_go_hypno::cast_(Actor* const caster) const
 
 bool Spell_mi_go_hypno::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && mon.tgt_->is_player() && Rnd::one_in(4);
+    return mon.tgt_ && mon.tgt_->is_player() && rnd::one_in(4);
 }
 
 //------------------------------------------------------------ IMMOLATION
@@ -1275,7 +1275,7 @@ Spell_effect_noticed Spell_burn::cast_(Actor* const caster) const
 
     if (tgt_props[size_t(Prop_id::spell_reflect)])
     {
-        Log::add_msg(spell_reflect_msg, clr_white, false, true);
+        msg_log::add(spell_reflect_msg, clr_white, false, true);
         swap(caster_used, tgt);
     }
 
@@ -1286,12 +1286,12 @@ Spell_effect_noticed Spell_burn::cast_(Actor* const caster) const
         tgt_str = tgt->get_name_the();
     }
 
-    if (Map::player->can_see_actor(*tgt, nullptr))
+    if (map::player->can_see_actor(*tgt, nullptr))
     {
-        Log::add_msg("Flames are rising around " + tgt_str + "!");
+        msg_log::add("Flames are rising around " + tgt_str + "!");
     }
 
-    Prop* const prop = new Prop_burning(Prop_turns::specific, Rnd::range(3, 4));
+    Prop* const prop = new Prop_burning(Prop_turns::specific, rnd::range(3, 4));
     tgt->get_prop_handler().try_apply_prop(prop);
 
     return Spell_effect_noticed::yes;
@@ -1299,5 +1299,5 @@ Spell_effect_noticed Spell_burn::cast_(Actor* const caster) const
 
 bool Spell_burn::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && Rnd::one_in(4);
+    return mon.tgt_ && rnd::one_in(4);
 }

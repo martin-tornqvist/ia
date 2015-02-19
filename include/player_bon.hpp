@@ -10,7 +10,7 @@
 
 #include <math.h>
 
-struct Actor_data_t;
+struct actor_data_t;
 
 enum class Trait
 {
@@ -97,8 +97,8 @@ void set_all_traits_to_picked();
 
 int get_spi_occultist_can_cast_at_lvl(const int LVL);
 
-bool gets_undead_bane_bon(const Actor& attacker, const Actor_data_t& actor_data);
+bool gets_undead_bane_bon(const Actor& attacker, const actor_data_t& actor_data);
 
-} //Player_bon
+} //player_bon
 
 #endif

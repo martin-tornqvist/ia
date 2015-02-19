@@ -190,19 +190,19 @@ private:
     std::vector<Feature_id> features_;
 };
 
-} //Cell_check
+} //cell_check
 
 //NOTE: If append mode is used, the caller is responsible for initializing the array
 //(typically with a previous parse call, with write rule set to "overwrite")
-enum class Map_parse_mode {overwrite, append};
+enum class map_parse_mode {overwrite, append};
 
 namespace map_parse
 {
 
 extern const Rect map_rect;
 
-void run(const Cell_check::Check& check, bool out[MAP_W][MAP_H],
-         const Map_parse_mode write_rule = Map_parse_mode::overwrite,
+void run(const cell_check::Check& check, bool out[MAP_W][MAP_H],
+         const map_parse_mode write_rule = map_parse_mode::overwrite,
          const Rect& area_to_check_cells = map_rect);
 
 //Given a map array of booleans, this will fill a second map array of boolens
@@ -210,7 +210,7 @@ void run(const Cell_check::Check& check, bool out[MAP_W][MAP_H],
 //interval of the first array.
 //This can be used for example to find all cells up to 3 steps from a wall.
 void get_cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
-                                const Range& dist_interval);
+                                     const Range& dist_interval);
 
 bool is_val_in_area(const Rect& area, const bool in[MAP_W][MAP_H], const bool VAL = true);
 
@@ -225,7 +225,7 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST)
 
 bool is_map_connected(const bool blocked[MAP_W][MAP_H]);
 
-} //Map_parse
+} //map_parse
 
 //Function object for sorting STL containers by distance to a position
 struct Is_closer_to_pos
@@ -259,6 +259,6 @@ void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H],
          std::vector<Pos>& out, const bool ALLOW_DIAGONAL = true,
          const bool RANDOMIZE_STEP_CHOICES = false);
 
-} //Path_find
+} //path_find
 
 #endif

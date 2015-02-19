@@ -14,7 +14,7 @@
 #include "map_travel.hpp"
 #include "dungeon_master.hpp"
 #include "popup.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "query.hpp"
 #include "highscore.hpp"
 #include "postmortem.hpp"
@@ -33,54 +33,54 @@ int main(int argc, char* argv[])
     (void)argc;
     (void)argv;
 
-    Init::init_iO();
-    Init::init_game();
+    init::init_iO();
+    init::init_game();
 
     bool quit_game = false;
     while (!quit_game)
     {
-        Init::init_session();
+        init::init_session();
 
         int intro_mus_chan = -1;
-        const Game_entry_mode game_entry_type = Main_menu::run(quit_game, intro_mus_chan);
+        const Game_entry_mode game_entry_type = main_menu::run(quit_game, intro_mus_chan);
 
         if (!quit_game)
         {
-            Init::quit_to_main_menu = false;
+            init::quit_to_main_menu = false;
 
             if (game_entry_type == Game_entry_mode::new_game)
             {
-                if (Config::is_bot_playing())
+                if (config::is_bot_playing())
                 {
-                    Player_bon::set_all_traits_to_picked();
+                    player_bon::set_all_traits_to_picked();
                 }
-                Create_character::create_character();
-                Map::player->mk_start_items();
+                create_character::create_character();
+                map::player->mk_start_items();
 
-                if (Config::is_intro_lvl_skipped())
+                if (config::is_intro_lvl_skipped())
                 {
                     //Build first dungeon level
-                    Map_travel::go_to_nxt();
+                    map_travel::go_to_nxt();
                 }
                 else
                 {
                     //Build forest.
-                    Render::clear_screen();
-                    Render::update_screen();
-                    Map_gen::mk_intro_lvl();
+                    render::clear_screen();
+                    render::update_screen();
+                    map_gen::mk_intro_lvl();
                 }
-                Dungeon_master::set_time_started_to_now();
-                const Time_data& t = Dungeon_master::get_start_time();
+                dungeon_master::set_time_started_to_now();
+                const Time_data& t = dungeon_master::get_start_time();
                 TRACE << "Game started on: " << t.get_time_str(Time_type::minute, true)
                       << endl;
             }
 
-            Audio::fade_out_channel(intro_mus_chan);
+            audio::fade_out_channel(intro_mus_chan);
 
-            Map::player->update_fov();
-            Render::draw_map_and_interface();
+            map::player->update_fov();
+            render::draw_map_and_interface();
 
-            if (game_entry_type == Game_entry_mode::new_game && !Config::is_intro_lvl_skipped())
+            if (game_entry_type == Game_entry_mode::new_game && !config::is_intro_lvl_skipped())
             {
                 const string msg =
                     "I stand on a cobbled forest path, ahead lies a shunned and "
@@ -95,15 +95,15 @@ int main(int argc, char* argv[])
                     "\"The shining Trapezohedron\" - a window to all secrets of the "
                     "universe.";
 
-                Popup::show_msg(msg, true, "The story so far...", Sfx_id::END, 1);
+                popup::show_msg(msg, true, "The story so far...", Sfx_id::END, 1);
             }
 
             //========== M A I N   L O O P ==========
-            while (!Init::quit_to_main_menu)
+            while (!init::quit_to_main_menu)
             {
-                if (Map::player->is_alive())
+                if (map::player->is_alive())
                 {
-                    Actor* const actor = Game_time::get_cur_actor();
+                    Actor* const actor = game_time::get_cur_actor();
 
                     //Properties running on the actor's turn are not immediately applied
                     //on the actor, but instead placed in a buffer. This is to ensure
@@ -126,28 +126,28 @@ int main(int argc, char* argv[])
                     {
                         if (actor->is_player())
                         {
-                            Sdl_wrapper::sleep(DELAY_PLAYER_UNABLE_TO_ACT);
+                            sdl_wrapper::sleep(DELAY_PLAYER_UNABLE_TO_ACT);
                         }
-                        Game_time::tick();
+                        game_time::tick();
                     }
                 }
                 else //Player is dead
                 {
                     //Run postmortem, then return to main menu
-                    static_cast<Player*>(Map::player)->wait_turns_left = -1;
-                    Audio::play(Sfx_id::death);
-                    Log::add_msg("I am dead...", clr_msg_bad, false, true);
-                    Log::clear_log();
-                    High_score::on_game_over(false);
-                    Postmortem::run(&quit_game);
-                    Init::quit_to_main_menu = true;
+                    static_cast<Player*>(map::player)->wait_turns_left = -1;
+                    audio::play(Sfx_id::death);
+                    msg_log::add("I am dead...", clr_msg_bad, false, true);
+                    msg_log::clear();
+                    high_score::on_game_over(false);
+                    postmortem::run(&quit_game);
+                    init::quit_to_main_menu = true;
                 }
             }
         }
-        Init::cleanup_session();
+        init::cleanup_session();
     }
-    Init::cleanup_game();
-    Init::cleanup_iO();
+    init::cleanup_game();
+    init::cleanup_iO();
 
     TRACE_FUNC_END;
 

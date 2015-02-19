@@ -55,13 +55,13 @@ public:
     void on_std_turn()    override;
 
     void hear_sound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
-                   const Dir dir_to_origin,
-                   const int PERCENT_AUDIBLE_DISTANCE);
+                    const Dir dir_to_origin,
+                    const int PERCENT_AUDIBLE_DISTANCE);
 
     void incr_shock(const Shock_lvl shock_value, Shock_src shock_src);
     void incr_shock(const int SHOCK, Shock_src shock_src);
     void restore_shock(const int amount_restored,
-                      const bool IS_TEMP_SHOCK_RESTORED);
+                       const bool IS_TEMP_SHOCK_RESTORED);
     void update_tmp_shock();
     int get_shock_total()  const {return int(floor(shock_ + shock_tmp_));}
     int get_insanity()    const {return std::min(100, ins_);}
@@ -76,7 +76,7 @@ public:
 
     int get_shock_resistance(const Shock_src shock_src) const;
     double get_shock_taken_after_mods(const int BASE_SHOCK,
-                                  const Shock_src shock_src) const;
+                                      const Shock_src shock_src) const;
 
     void store_to_save_lines(std::vector<std::string>& lines) const;
     void setup_from_save_lines(std::vector<std::string>& lines);

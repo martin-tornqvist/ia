@@ -6,7 +6,7 @@
 #include "actor_player.hpp"
 #include "feature_door.hpp"
 #include "map.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "query.hpp"
 #include "render.hpp"
 #include "utils.hpp"
@@ -21,38 +21,38 @@ void player_close_feature(Feature* const feature)
     if (feature->get_id() == Feature_id::door)
     {
         Door* const door = static_cast<Door*>(feature);
-        door->try_close(Map::player);
+        door->try_close(map::player);
         close_able_object_found = true;
     }
 
     if (!close_able_object_found)
     {
-        const bool PLAYER_CAN_SEE = Map::player->get_prop_handler().allow_see();
+        const bool PLAYER_CAN_SEE = map::player->get_prop_handler().allow_see();
         if (PLAYER_CAN_SEE)
         {
-            Log::add_msg("I see nothing there to close.");
+            msg_log::add("I see nothing there to close.");
         }
         else
         {
-            Log::add_msg("I find nothing there to close.");
+            msg_log::add("I find nothing there to close.");
         }
     }
 }
 
 void player_close()
 {
-    Log::clear_log();
-    Log::add_msg("Which direction?" + cancel_info_str, clr_white_high);
-    Render::draw_map_and_interface();
-    Pos close_pos(Map::player->pos + Dir_utils::get_offset(Query::dir()));
-    Log::clear_log();
+    msg_log::clear();
+    msg_log::add("Which direction?" + cancel_info_str, clr_white_high);
+    render::draw_map_and_interface();
+    Pos close_pos(map::player->pos + dir_utils::get_offset(query::dir()));
+    msg_log::clear();
 
-    if (close_pos != Map::player->pos)
+    if (close_pos != map::player->pos)
     {
-        player_close_feature(Map::cells[close_pos.x][close_pos.y].rigid);
+        player_close_feature(map::cells[close_pos.x][close_pos.y].rigid);
     }
 
-    Render::draw_map_and_interface();
+    render::draw_map_and_interface();
 }
 
 } //Close

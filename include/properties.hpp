@@ -13,18 +13,18 @@ class Wpn;
 
 enum class Prop_id
 {
-    r_phys,
-    r_fire,
-    r_cold,
-    r_poison,
-    r_elec,
-    r_acid,
-    r_sleep,
-    r_fear,
-    r_conf,
-    r_breath,
-    r_disease,
-    lgt_sens,
+    rPhys,
+    rFire,
+    rCold,
+    rPoison,
+    rElec,
+    rAcid,
+    rSleep,
+    rFear,
+    rConf,
+    rBreath,
+    rDisease,
+    lgtSens,
     blind,
     fainted,
     burning,
@@ -142,10 +142,10 @@ public:
     ~Prop_handler();
 
     void try_apply_prop(Prop* const   prop,
-                      const bool    FORCE_EFFECT                = false,
-                      const bool    NO_MESSAGES                 = false,
-                      const bool    DISABLE_REDRAW              = false,
-                      const bool    DISABLE_PROP_START_EFFECTS  = false);
+                        const bool    FORCE_EFFECT                = false,
+                        const bool    NO_MESSAGES                 = false,
+                        const bool    DISABLE_REDRAW              = false,
+                        const bool    DISABLE_PROP_START_EFFECTS  = false);
 
     void try_apply_prop_from_att(const Wpn& wpn, const bool IS_MELEE);
 
@@ -189,7 +189,7 @@ public:
     void get_props_interface_line(std::vector<Str_and_clr>& line) const;
 
     Prop* mk_prop(const Prop_id id, Prop_turns turns_init,
-                 const int NR_TURNS = -1) const;
+                  const int NR_TURNS = -1) const;
 
     bool try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const;
 
@@ -202,10 +202,10 @@ private:
     //the ids. It would then be wasteful to first gather all Props, then gather the ids
     //from those. It's more efficient to just gather the ids at once.
     void get_props_from_sources(std::vector<Prop*>& out,
-                             bool sources[int(Prop_src::END)]) const;
+                                bool sources[int(Prop_src::END)]) const;
 
     void get_prop_ids_from_sources(bool out[size_t(Prop_id::END)],
-                               bool sources[int(Prop_src::END)]) const;
+                                   bool sources[int(Prop_src::END)]) const;
 
     bool try_resist_prop(const Prop_id id, const std::vector<Prop*>& prop_list) const;
 
@@ -860,7 +860,7 @@ class Prop_rAcid: public Prop
 {
 public:
     Prop_rAcid(Prop_turns turns_init, int turns = -1) :
-        Prop(Prop_id::r_acid, turns_init, turns) {}
+        Prop(Prop_id::rAcid, turns_init, turns) {}
 
     bool try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const override;
 };
@@ -869,7 +869,7 @@ class Prop_rCold: public Prop
 {
 public:
     Prop_rCold(Prop_turns turns_init, int turns = -1) :
-        Prop(Prop_id::r_cold, turns_init, turns) {}
+        Prop(Prop_id::rCold, turns_init, turns) {}
 
     bool try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const override;
 };
@@ -878,7 +878,7 @@ class Prop_rConfusion: public Prop
 {
 public:
     Prop_rConfusion(Prop_turns turns_init, int turns = -1) :
-        Prop(Prop_id::r_conf, turns_init, turns) {}
+        Prop(Prop_id::rConf, turns_init, turns) {}
 
     void on_start() override;
 
@@ -889,7 +889,7 @@ class Prop_rElec: public Prop
 {
 public:
     Prop_rElec(Prop_turns turns_init, int turns = -1) :
-        Prop(Prop_id::r_elec, turns_init, turns) {}
+        Prop(Prop_id::rElec, turns_init, turns) {}
 
     bool try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const override;
 };
@@ -898,7 +898,7 @@ class Prop_rFear: public Prop
 {
 public:
     Prop_rFear(Prop_turns turns_init, int turns = -1) :
-        Prop(Prop_id::r_fear, turns_init, turns) {}
+        Prop(Prop_id::rFear, turns_init, turns) {}
 
     void on_start() override;
 
@@ -909,7 +909,7 @@ class Prop_rPhys: public Prop
 {
 public:
     Prop_rPhys(Prop_turns turns_init, int turns = -1) :
-        Prop(Prop_id::r_phys, turns_init, turns) {}
+        Prop(Prop_id::rPhys, turns_init, turns) {}
 
     void on_start() override;
 
@@ -922,7 +922,7 @@ class Prop_rFire: public Prop
 {
 public:
     Prop_rFire(Prop_turns turns_init, int turns = -1) :
-        Prop(Prop_id::r_fire, turns_init, turns) {}
+        Prop(Prop_id::rFire, turns_init, turns) {}
 
     void on_start() override;
 
@@ -935,7 +935,7 @@ class Prop_rPoison: public Prop
 {
 public:
     Prop_rPoison(Prop_turns turns_init, int turns = -1) :
-        Prop(Prop_id::r_poison, turns_init, turns) {}
+        Prop(Prop_id::rPoison, turns_init, turns) {}
 
     void on_start() override;
 
@@ -946,7 +946,7 @@ class Prop_rSleep: public Prop
 {
 public:
     Prop_rSleep(Prop_turns turns_init, int turns = -1) :
-        Prop(Prop_id::r_sleep, turns_init, turns) {}
+        Prop(Prop_id::rSleep, turns_init, turns) {}
 
     void on_start() override;
 
@@ -957,7 +957,7 @@ class Prop_rDisease: public Prop
 {
 public:
     Prop_rDisease(Prop_turns turns_init, int turns = -1) :
-        Prop(Prop_id::r_disease, turns_init, turns) {}
+        Prop(Prop_id::rDisease, turns_init, turns) {}
 
     void on_start() override;
 
@@ -968,15 +968,15 @@ class Prop_rBreath: public Prop
 {
 public:
     Prop_rBreath(Prop_turns turns_init, int turns = -1) :
-        Prop(Prop_id::r_breath, turns_init, turns) {}
+        Prop(Prop_id::rBreath, turns_init, turns) {}
 };
 
-class Prop_lgt_sens: public Prop
+class Prop_lgtSens: public Prop
 {
 public:
-    Prop_lgt_sens(Prop_turns turns_init, int turns = -1) :
-        Prop(Prop_id::lgt_sens, turns_init, turns) {}
-    ~Prop_lgt_sens() override {}
+    Prop_lgtSens(Prop_turns turns_init, int turns = -1) :
+        Prop(Prop_id::lgtSens, turns_init, turns) {}
+    ~Prop_lgtSens() override {}
 };
 
 class Prop_tele_control: public Prop

@@ -94,12 +94,12 @@ Actor* mk_actor_from_id(const Actor_id id)
 Actor* mk(const Actor_id id, const Pos& pos)
 {
     assert(
-        !Map::cells[pos.x][pos.y].rigid ||
-        Map::cells[pos.x][pos.y].rigid->get_id() != Feature_id::stairs);
+        !map::cells[pos.x][pos.y].rigid ||
+        map::cells[pos.x][pos.y].rigid->get_id() != Feature_id::stairs);
 
     Actor* const actor = mk_actor_from_id(id);
 
-    actor->place(pos, Actor_data::data[int(id)]);
+    actor->place(pos, actor_data::data[int(id)]);
 
     auto& data = actor->get_data();
 
@@ -108,20 +108,20 @@ Actor* mk(const Actor_id id, const Pos& pos)
         data.nr_left_allowed_to_spawn--;
     }
 
-    Game_time::add_actor(actor);
+    game_time::add_actor(actor);
 
     return actor;
 }
 
 void delete_all_mon()
 {
-    vector<Actor*>& actors = Game_time::actors_;
+    vector<Actor*>& actors = game_time::actors_;
 
     for (size_t i = 0; i < actors.size(); ++i)
     {
-        if (actors[i] != Map::player)
+        if (actors[i] != map::player)
         {
-            Game_time::erase_actor_in_element(i);
+            game_time::erase_actor_in_element(i);
             --i;
         }
     }
@@ -136,10 +136,10 @@ void summon(const Pos&              origin,
     if (monsters_ret) {monsters_ret->clear();}
 
     bool blocked[MAP_W][MAP_H];
-    Map_parse::run(Cell_check::Blocks_move_cmn(true), blocked);
+    map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
     vector<Pos> free_cells;
-    Utils::mk_vector_from_bool_map(false, blocked, free_cells);
+    utils::mk_vector_from_bool_map(false, blocked, free_cells);
 
     sort(begin(free_cells), end(free_cells), Is_closer_to_pos(origin));
 
@@ -156,7 +156,7 @@ void summon(const Pos&              origin,
         Actor* const  actor = mk(id, pos);
         Mon* const    mon   = static_cast<Mon*>(actor);
 
-        assert(Utils::is_pos_inside_map(pos, false));
+        assert(utils::is_pos_inside_map(pos, false));
 
         if (monsters_ret)
         {
@@ -171,13 +171,13 @@ void summon(const Pos&              origin,
             mon->aware_counter_ = mon->get_data().nr_turns_aware;
         }
 
-        if (Map::player->can_see_actor(*actor, nullptr))
+        if (map::player->can_see_actor(*actor, nullptr))
         {
             positions_to_animate.push_back(pos);
         }
     }
 
-    Render::draw_blast_at_seen_cells(positions_to_animate, clr_magenta);
+    render::draw_blast_at_seen_cells(positions_to_animate, clr_magenta);
 }
 
 } //Actor_factory

@@ -6,7 +6,7 @@
 #include "actor_player.hpp"
 #include "render.hpp"
 #include "game_time.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "knockback.hpp"
 #include "inventory.hpp"
 #include "map.hpp"
@@ -30,7 +30,7 @@ void Device::identify(const bool IS_SILENT_IDENTIFY)
 //---------------------------------------------------- STRANGE DEVICE
 Strange_device::Strange_device(Item_data_t* const item_data) :
     Device      (item_data),
-    condition_  (Rnd::coin_toss() ? Condition::fine : Condition::shoddy) {}
+    condition_  (rnd::coin_toss() ? Condition::fine : Condition::shoddy) {}
 
 void Strange_device::store_to_save_lines(vector<string>& lines)
 {
@@ -77,7 +77,7 @@ Consume_item Strange_device::activate(Actor* const actor)
         const string item_name   = get_name(Item_ref_type::plain, Item_ref_inf::none);
         const string item_name_a  = get_name(Item_ref_type::a, Item_ref_inf::none);
 
-        Log::add_msg("I activate " + item_name_a + "...");
+        msg_log::add("I activate " + item_name_a + "...");
 
         //Damage user? Fail to run effect? Condition degrade? Warning?
         const string hurt_msg  = "It hits me with a jolt of electricity!";
@@ -95,15 +95,15 @@ Consume_item Strange_device::activate(Actor* const actor)
         {
             bon -= 2;
         }
-        const int RND = Rnd::range(1, 8 + bon);
+        const int RND = rnd::range(1, 8 + bon);
         switch (condition_)
         {
         case Condition::breaking:
         {
             if (RND == 5 || RND == 6)
             {
-                Log::add_msg(hurt_msg, clr_msg_bad);
-                actor->hit(Rnd::dice(2, 4), Dmg_type::electric);
+                msg_log::add(hurt_msg, clr_msg_bad);
+                actor->hit(rnd::dice(2, 4), Dmg_type::electric);
             }
             is_effect_failed  = RND == 3 || RND == 4;
             is_cond_degrade   = RND <= 2;
@@ -114,8 +114,8 @@ Consume_item Strange_device::activate(Actor* const actor)
         {
             if (RND == 4)
             {
-                Log::add_msg(hurt_msg, clr_msg_bad);
-                actor->hit(Rnd::dice(1, 4), Dmg_type::electric);
+                msg_log::add(hurt_msg, clr_msg_bad);
+                actor->hit(rnd::dice(1, 4), Dmg_type::electric);
             }
             is_effect_failed  = RND == 3;
             is_cond_degrade   = RND <= 2;
@@ -129,7 +129,7 @@ Consume_item Strange_device::activate(Actor* const actor)
         } break;
         }
 
-        if (!Map::player->is_alive())
+        if (!map::player->is_alive())
         {
             return Consume_item::no;
         }
@@ -138,7 +138,7 @@ Consume_item Strange_device::activate(Actor* const actor)
 
         if (is_effect_failed)
         {
-            Log::add_msg("It suddenly stops.");
+            msg_log::add("It suddenly stops.");
         }
         else
         {
@@ -151,30 +151,30 @@ Consume_item Strange_device::activate(Actor* const actor)
             {
                 if (condition_ == Condition::breaking)
                 {
-                    Log::add_msg("The " + item_name + " breaks!");
+                    msg_log::add("The " + item_name + " breaks!");
                     consumed_state = Consume_item::yes;
                 }
                 else
                 {
-                    Log::add_msg("The " + item_name + " makes a terrible grinding noise.");
-                    Log::add_msg("I seem to have damaged it.");
+                    msg_log::add("The " + item_name + " makes a terrible grinding noise.");
+                    msg_log::add("I seem to have damaged it.");
                     condition_ = Condition(int(condition_) - 1);
                 }
             }
 
             if (is_warning)
             {
-                Log::add_msg("The " + item_name + " hums ominously.");
+                msg_log::add("The " + item_name + " hums ominously.");
             }
         }
 
-        Game_time::tick();
+        game_time::tick();
         return consumed_state;
     }
     else //Not identified
     {
-        Log::add_msg("This device is completely alien to me, ");
-        Log::add_msg("I could never understand it through normal means.");
+        msg_log::add("This device is completely alien to me, ");
+        msg_log::add("I could never understand it through normal means.");
         return Consume_item::no;
     }
 }
@@ -197,15 +197,15 @@ std::string Strange_device::get_name_inf() const
 Consume_item Device_blaster::trigger_effect()
 {
     vector<Actor*> target_bucket;
-    Map::player->get_seen_foes(target_bucket);
+    map::player->get_seen_foes(target_bucket);
     if (target_bucket.empty())
     {
-        Log::add_msg("It seems to peruse area.");
+        msg_log::add("It seems to peruse area.");
     }
     else //Targets are available
     {
-        Spell* const spell = Spell_handling::mk_spell_from_id(Spell_id::aza_wrath);
-        spell->cast(Map::player, false);
+        Spell* const spell = spell_handling::mk_spell_from_id(Spell_id::aza_wrath);
+        spell->cast(map::player, false);
         delete spell;
     }
     return Consume_item::no;
@@ -214,35 +214,35 @@ Consume_item Device_blaster::trigger_effect()
 //---------------------------------------------------- SHOCK WAVE
 Consume_item Device_shockwave::trigger_effect()
 {
-    Log::add_msg("It triggers a shock wave around me.");
+    msg_log::add("It triggers a shock wave around me.");
 
-    const Pos& player_pos = Map::player->pos;
+    const Pos& player_pos = map::player->pos;
 
     for (int dx = -1; dx <= 1; ++dx)
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
             const Pos p(player_pos + Pos(dx, dy));
-            Rigid* const rigid = Map::cells[p.x][p.y].rigid;
+            Rigid* const rigid = map::cells[p.x][p.y].rigid;
             rigid->hit(Dmg_type::physical, Dmg_method::explosion);
 
-            //Game_time::update_light_map();
-            Map::player->update_fov();
-            Render::draw_map_and_interface();
+            //game_time::update_light_map();
+            map::player->update_fov();
+            render::draw_map_and_interface();
         }
     }
 
-    for (Actor* actor : Game_time::actors_)
+    for (Actor* actor : game_time::actors_)
     {
-        if (actor != Map::player && actor->is_alive())
+        if (actor != map::player && actor->is_alive())
         {
             const Pos& other_pos = actor->pos;
-            if (Utils::is_pos_adj(player_pos, other_pos, false))
+            if (utils::is_pos_adj(player_pos, other_pos, false))
             {
-                actor->hit(Rnd::dice(1, 8), Dmg_type::physical);
+                actor->hit(rnd::dice(1, 8), Dmg_type::physical);
                 if (actor->is_alive())
                 {
-                    Knock_back::try_knock_back(*actor, player_pos, false, true);
+                    knock_back::try_knock_back(*actor, player_pos, false, true);
                 }
             }
         }
@@ -253,29 +253,29 @@ Consume_item Device_shockwave::trigger_effect()
 //---------------------------------------------------- REJUVENATOR
 Consume_item Device_rejuvenator::trigger_effect()
 {
-    Log::add_msg("It repairs my body.");
-    Map::player->get_prop_handler().end_applied_props_by_magic_healing();
-    Map::player->restore_hp(999, false);
+    msg_log::add("It repairs my body.");
+    map::player->get_prop_handler().end_applied_props_by_magic_healing();
+    map::player->restore_hp(999, false);
     return Consume_item::no;
 }
 
 //---------------------------------------------------- TRANSLOCATOR
 Consume_item Device_translocator::trigger_effect()
 {
-    Player* const player = Map::player;
+    Player* const player = map::player;
     vector<Actor*> seen_foes;
     player->get_seen_foes(seen_foes);
 
     if (seen_foes.empty())
     {
-        Log::add_msg("It seems to peruse area.");
+        msg_log::add("It seems to peruse area.");
     }
     else //Seen targets are available
     {
         for (Actor* actor : seen_foes)
         {
-            Log::add_msg(actor->get_name_the() + " is teleported.");
-            Render::draw_blast_at_cells(vector<Pos> {actor->pos}, clr_yellow);
+            msg_log::add(actor->get_name_the() + " is teleported.");
+            render::draw_blast_at_cells(vector<Pos> {actor->pos}, clr_yellow);
             actor->teleport();
         }
     }
@@ -285,8 +285,8 @@ Consume_item Device_translocator::trigger_effect()
 //---------------------------------------------------- SENTRY DRONE
 Consume_item Device_sentry_drone::trigger_effect()
 {
-    Log::add_msg("The Sentry Drone awakens!");
-    Actor_factory::summon(Map::player->pos, {Actor_id::sentry_drone}, true, Map::player);
+    msg_log::add("The Sentry Drone awakens!");
+    actor_factory::summon(map::player->pos, {Actor_id::sentry_drone}, true, map::player);
     return Consume_item::yes;
 }
 
@@ -309,7 +309,7 @@ Consume_item Device_lantern::activate(Actor* const actor)
 {
     (void)actor;
     toggle();
-    Game_time::tick();
+    game_time::tick();
     return Consume_item::no;
 }
 
@@ -352,14 +352,14 @@ void Device_lantern::on_pickup_to_backpack(Inventory& inv)
 void Device_lantern::toggle()
 {
     const string toggle_str = is_activated_ ? "I turn off" : "I turn on";
-    Log::add_msg(toggle_str + " an Electric Lantern.");
+    msg_log::add(toggle_str + " an Electric Lantern.");
 
     is_activated_ = !is_activated_;
 
-    Audio::play(Sfx_id::electric_lantern);
-    Game_time::update_light_map();
-    Map::player->update_fov();
-    Render::draw_map_and_interface();
+    audio::play(Sfx_id::electric_lantern);
+    game_time::update_light_map();
+    map::player->update_fov();
+    render::draw_map_and_interface();
 }
 
 void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
@@ -375,20 +375,20 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
 
         if (nr_turns_left_ <= 0)
         {
-            Log::add_msg("My Electric Lantern breaks!", clr_msg_note, true, true);
+            msg_log::add("My Electric Lantern breaks!", clr_msg_note, true, true);
 
             //NOTE: The this deletes the object
-            Map::player->get_inv().remove_item_in_backpack_with_ptr(this, true);
+            map::player->get_inv().remove_item_in_backpack_with_ptr(this, true);
 
-            Game_time::update_light_map();
-            Map::player->update_fov();
-            Render::draw_map_and_interface();
+            game_time::update_light_map();
+            map::player->update_fov();
+            render::draw_map_and_interface();
 
             return;
         }
         else if (nr_turns_left_ <= 3)
         {
-            Log::add_msg("My Electric Lantern is breaking.", clr_msg_note, true, true);
+            msg_log::add("My Electric Lantern is breaking.", clr_msg_note, true, true);
         }
 
         //This point reached means the lantern is not destroyed
@@ -402,22 +402,22 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
             {
                 working_state_ = Lantern_working_state::working;
 
-                Game_time::update_light_map();
-                Map::player->update_fov();
-                Render::draw_map_and_interface();
+                game_time::update_light_map();
+                map::player->update_fov();
+                render::draw_map_and_interface();
             }
         }
         else //Not flickering
         {
-            if (Rnd::one_in(40))
+            if (rnd::one_in(40))
             {
-                Log::add_msg("My Electric Lantern flickers...");
+                msg_log::add("My Electric Lantern flickers...");
                 working_state_         = Lantern_working_state::flicker;
-                nr_flicker_turns_left_   = Rnd::range(4, 8);
+                nr_flicker_turns_left_   = rnd::range(4, 8);
 
-                Game_time::update_light_map();
-                Map::player->update_fov();
-                Render::draw_map_and_interface();
+                game_time::update_light_map();
+                map::player->update_fov();
+                render::draw_map_and_interface();
             }
             else
             {

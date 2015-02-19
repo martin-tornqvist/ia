@@ -1,7 +1,7 @@
 #include "disarm.hpp"
 
 #include "game_time.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "render.hpp"
 #include "actor_player.hpp"
 #include "query.hpp"
@@ -19,17 +19,17 @@ void player_disarm()
     //with some potentially horrible results
 
     //Abort if blind
-    if (!Map::player->get_prop_handler().allow_see())
+    if (!map::player->get_prop_handler().allow_see())
     {
-        Log::add_msg("Not while blind.");
-        Render::draw_map_and_interface();
+        msg_log::add("Not while blind.");
+        render::draw_map_and_interface();
         return;
     }
 
     //Abort if held by spider web
-    const Pos player_pos = Map::player->pos;
+    const Pos player_pos = map::player->pos;
     const auto* const feature_at_player =
-        Map::cells[player_pos.x][player_pos.y].rigid;
+        map::cells[player_pos.x][player_pos.y].rigid;
     if (feature_at_player->get_id() == Feature_id::trap)
     {
         const Trap* const trap = static_cast<const Trap*>(feature_at_player);
@@ -38,63 +38,63 @@ void player_disarm()
             const auto* const web = static_cast<const Trap_web*>(trap->get_specific_trap());
             if (web->is_holding())
             {
-                Log::add_msg("Not while entangled in a spider web.");
-                Render::draw_map_and_interface();
+                msg_log::add("Not while entangled in a spider web.");
+                render::draw_map_and_interface();
                 return;
             }
         }
     }
 
     //Abort if encumbered
-    if (Map::player->get_enc_percent() >= 100)
+    if (map::player->get_enc_percent() >= 100)
     {
-        Log::add_msg("Not while encumbered.");
-        Render::draw_map_and_interface();
+        msg_log::add("Not while encumbered.");
+        render::draw_map_and_interface();
         return;
     }
 
-    Log::add_msg("Which direction?" + cancel_info_str, clr_white_high);
-    Render::draw_map_and_interface();
+    msg_log::add("Which direction?" + cancel_info_str, clr_white_high);
+    render::draw_map_and_interface();
 
-    const Pos pos(Map::player->pos + Dir_utils::get_offset(Query::dir()));
+    const Pos pos(map::player->pos + dir_utils::get_offset(query::dir()));
 
-    if (pos == Map::player->pos)
+    if (pos == map::player->pos)
     {
-        Log::clear_log();
-        Render::draw_map_and_interface();
+        msg_log::clear();
+        render::draw_map_and_interface();
     }
     else
     {
         //Abort if cell is unseen
-        if (!Map::cells[pos.x][pos.y].is_seen_by_player)
+        if (!map::cells[pos.x][pos.y].is_seen_by_player)
         {
-            Log::add_msg("I cannot see there.");
-            Render::draw_map_and_interface();
+            msg_log::add("I cannot see there.");
+            render::draw_map_and_interface();
             return;
         }
 
-        Log::clear_log();
+        msg_log::clear();
 
-        Actor* actor_on_trap = Utils::get_actor_at_pos(pos);
+        Actor* actor_on_trap = utils::get_actor_at_pos(pos);
 
         //Abort if trap blocked by monster
         if (actor_on_trap)
         {
-            if (Map::player->can_see_actor(*actor_on_trap, nullptr))
+            if (map::player->can_see_actor(*actor_on_trap, nullptr))
             {
-                Log::add_msg("It's blocked.");
+                msg_log::add("It's blocked.");
             }
             else
             {
-                Log::add_msg("Something is blocking it.");
+                msg_log::add("Something is blocking it.");
             }
         }
         else //No actor on the trap
         {
-            Map::cells[pos.x][pos.y].rigid->disarm();
+            map::cells[pos.x][pos.y].rigid->disarm();
         }
 
-        Render::draw_map_and_interface();
+        render::draw_map_and_interface();
     }
 }
 

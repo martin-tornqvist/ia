@@ -6,7 +6,7 @@
 #include "init.hpp"
 #include "item_scroll.hpp"
 #include "actor_player.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "menu_input_handling.hpp"
 #include "render.hpp"
 #include "inventory.hpp"
@@ -45,10 +45,10 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
 {
     const int NR_SPELLS = spell_opts.size();
 
-    Render::clear_screen();
+    render::clear_screen();
 
     const string label = "Invoke which power? [enter] to cast " + cancel_info_str;
-    Render::draw_text(label, Panel::screen, Pos(0, 0), clr_white_high);
+    render::draw_text(label, Panel::screen, Pos(0, 0), clr_white_high);
 
     for (int i = 0; i < NR_SPELLS; ++i)
     {
@@ -65,24 +65,24 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
         const int     SHOCK_X     = SPI_X + 10;
         const int     Y           = 2 + i;
 
-        Render::draw_text(name, Panel::screen, Pos(NAME_X, Y), clr);
+        render::draw_text(name, Panel::screen, Pos(NAME_X, Y), clr);
 
         string fill_str = "";
         const size_t FILL_SIZE = SPI_X - NAME_X - name.size();
         for (size_t ii = 0; ii < FILL_SIZE; ii++) {fill_str.push_back('.');}
         Clr fill_clr = clr_gray;
         fill_clr.r /= 3; fill_clr.g /= 3; fill_clr.b /= 3;
-        Render::draw_text(fill_str, Panel::screen, Pos(NAME_X + name.size(), Y), fill_clr);
+        render::draw_text(fill_str, Panel::screen, Pos(NAME_X + name.size(), Y), fill_clr);
 
         int     x       = SPI_X;
         string  info_str = "SPI: ";
 
-        const Range spi_cost = spell->get_spi_cost(false, Map::player);
+        const Range spi_cost = spell->get_spi_cost(false, map::player);
         const string lower_str = to_str(spi_cost.lower);
         const string upper_str = to_str(spi_cost.upper);
         info_str += spi_cost.upper == 1 ? "1" : (lower_str +  "-" + upper_str);
 
-        Render::draw_text(info_str, Panel::screen, Pos(x, Y), clr_white);
+        render::draw_text(info_str, Panel::screen, Pos(x, Y), clr_white);
 
         x = SHOCK_X;
         const Intr_spell_shock shock_type = spell->get_shock_type_intr_cast();
@@ -92,7 +92,7 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
         case Intr_spell_shock::disturbing:  info_str = "Disturbing"; break;
         case Intr_spell_shock::severe:      info_str = "Severe";     break;
         }
-        Render::draw_text(info_str, Panel::screen, Pos(x, Y), clr_white);
+        render::draw_text(info_str, Panel::screen, Pos(x, Y), clr_white);
 
         if (IS_SELECTED)
         {
@@ -114,14 +114,14 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
             }
             if (!lines.empty())
             {
-                Render::draw_descr_box(lines);
+                render::draw_descr_box(lines);
             }
         }
     }
 
-    Render::draw_popup_box(Rect(Pos(0, 1), Pos(DESCR_X0 - 1, SCREEN_H - 1)));
+    render::draw_popup_box(Rect(Pos(0, 1), Pos(DESCR_X0 - 1, SCREEN_H - 1)));
 
-    Render::update_screen();
+    render::update_screen();
 }
 
 void get_spells_avail(vector<Spell_opt>& out)
@@ -133,7 +133,7 @@ void get_spells_avail(vector<Spell_opt>& out)
         out.push_back(Spell_opt(spell, nullptr));
     }
 
-    Inventory& inv = Map::player->get_inv();
+    Inventory& inv = map::player->get_inv();
 
     for (auto slot : inv.slots_)
     {
@@ -161,61 +161,61 @@ void try_cast(const Spell_opt& spell_opt)
     assert(spell_opt.spell);
 
     if (
-        Map::player->get_prop_handler().allow_cast_spell(true) &&
-        Map::player->get_prop_handler().allow_speak    (true))
+        map::player->get_prop_handler().allow_cast_spell(true) &&
+        map::player->get_prop_handler().allow_speak    (true))
     {
-        Log::clear_log();
-        Render::draw_map_and_interface();
+        msg_log::clear();
+        render::draw_map_and_interface();
 
         Spell* const spell = spell_opt.spell;
 
-        const Range spi_cost_range = spell->get_spi_cost(false, Map::player);
+        const Range spi_cost_range = spell->get_spi_cost(false, map::player);
 
-        if (spi_cost_range.upper >= Map::player->get_spi())
+        if (spi_cost_range.upper >= map::player->get_spi())
         {
-            Log::add_msg("Cast spell and risk depleting your spirit [y/n]?",
-                        clr_white_high);
+            msg_log::add("Cast spell and risk depleting your spirit [y/n]?",
+                         clr_white_high);
 
-            Render::draw_map_and_interface();
+            render::draw_map_and_interface();
 
-            if (Query::yes_or_no() == Yes_no_answer::no)
+            if (query::yes_or_no() == Yes_no_answer::no)
             {
-                Log::clear_log();
-                Render::draw_map_and_interface();
+                msg_log::clear();
+                render::draw_map_and_interface();
                 return;
             }
-            Log::clear_log();
+            msg_log::clear();
         }
 
-        const bool IS_BLOOD_SORC = Player_bon::traits[int(Trait::blood_sorcerer)];
-        const bool IS_WARLOCK    = Player_bon::traits[int(Trait::warlock)];
+        const bool IS_BLOOD_SORC = player_bon::traits[int(Trait::blood_sorcerer)];
+        const bool IS_WARLOCK    = player_bon::traits[int(Trait::warlock)];
 
         const int BLOOD_SORC_HP_DRAINED = 2;
 
         if (IS_BLOOD_SORC)
         {
-            if (Map::player->get_hp() <= BLOOD_SORC_HP_DRAINED)
+            if (map::player->get_hp() <= BLOOD_SORC_HP_DRAINED)
             {
-                Log::add_msg("I do not have enough life force to cast this spell.");
-                Render::draw_map_and_interface();
+                msg_log::add("I do not have enough life force to cast this spell.");
+                render::draw_map_and_interface();
                 return;
             }
         }
 
-        Log::add_msg("I cast " + spell->get_name() + "!");
+        msg_log::add("I cast " + spell->get_name() + "!");
 
         if (IS_BLOOD_SORC)
         {
-            Map::player->hit(BLOOD_SORC_HP_DRAINED, Dmg_type::pure);
+            map::player->hit(BLOOD_SORC_HP_DRAINED, Dmg_type::pure);
         }
-        if (Map::player->is_alive())
+        if (map::player->is_alive())
         {
-            spell->cast(Map::player, true);
+            spell->cast(map::player, true);
             prev_cast_ = spell_opt;
-            if (IS_WARLOCK && Rnd::one_in(2))
+            if (IS_WARLOCK && rnd::one_in(2))
             {
                 auto* const prop = new Prop_warlock_charged(Prop_turns::std);
-                Map::player->get_prop_handler().try_apply_prop(prop);
+                map::player->get_prop_handler().try_apply_prop(prop);
             }
         }
     }
@@ -250,7 +250,7 @@ void setup_from_save_lines(vector<string>& lines)
     {
         const int ID = to_int(lines.front());
         lines.erase(begin(lines));
-        known_spells_.push_back(Spell_handling::mk_spell_from_id(Spell_id(ID)));
+        known_spells_.push_back(spell_handling::mk_spell_from_id(Spell_id(ID)));
     }
 }
 
@@ -261,7 +261,7 @@ void player_select_spell_to_cast()
 
     if (spell_opts.empty())
     {
-        Log::add_msg("I do not know any spells to invoke.");
+        msg_log::add("I do not know any spells to invoke.");
     }
     else
     {
@@ -274,13 +274,13 @@ void player_select_spell_to_cast()
 
         Menu_browser browser(spell_opts.size(), 0);
 
-        Render::draw_map_and_interface();
+        render::draw_map_and_interface();
 
         draw(browser, spell_opts);
 
         while (true)
         {
-            const Menu_action action = Menu_input_handling::get_action(browser);
+            const Menu_action action = menu_input_handling::get_action(browser);
             switch (action)
             {
             case Menu_action::browsed:
@@ -289,8 +289,8 @@ void player_select_spell_to_cast()
 
             case Menu_action::esc:
             case Menu_action::space:
-                Log::clear_log();
-                Render::draw_map_and_interface();
+                msg_log::clear();
+                render::draw_map_and_interface();
                 return;
 
             case Menu_action::selected:
@@ -320,7 +320,7 @@ void try_cast_prev_spell()
         auto spell_opt_cmp = [&](const Spell_opt & opt) {return opt.spell == prev_cast_.spell;};
 
         is_prev_spell_ok = find_if(begin(spell_opts), end(spell_opts), spell_opt_cmp) !=
-                        end(spell_opts);
+                           end(spell_opts);
     }
 
     if (is_prev_spell_ok)
@@ -345,7 +345,7 @@ bool is_spell_learned(const Spell_id id)
 
 void learn_spell_if_not_known(const Spell_id id)
 {
-    learn_spell_if_not_known(Spell_handling::mk_spell_from_id(id));
+    learn_spell_if_not_known(spell_handling::mk_spell_from_id(id));
 }
 
 void learn_spell_if_not_known(Spell* const spell)

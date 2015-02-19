@@ -31,8 +31,8 @@ public:
     virtual Lgt_size   get_lgt_size()  const {return Lgt_size::none;}
 
     std::string get_name(const Item_ref_type   ref_type,
-                        const Item_ref_inf    inf     = Item_ref_inf::yes,
-                        const Item_ref_att_inf att_inf  = Item_ref_att_inf::none) const;
+                         const Item_ref_inf    inf     = Item_ref_inf::yes,
+                         const Item_ref_att_inf att_inf  = Item_ref_att_inf::none) const;
 
     virtual std::vector<std::string> get_descr() const;
 

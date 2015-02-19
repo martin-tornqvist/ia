@@ -18,7 +18,7 @@ Yes_no_answer yes_or_no(char key_for_special_event = -1);
 
 Dir dir();
 
-void wait_for_confirm();
+void wait_forConfirm();
 
 Key_data letter(const bool ACCEPT_ENTER);
 

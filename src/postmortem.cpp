@@ -11,7 +11,7 @@
 #include "actor_player.hpp"
 #include "dungeon_master.hpp"
 #include "map.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "menu_input_handling.hpp"
 #include "highscore.hpp"
 #include "player_bon.hpp"
@@ -52,7 +52,7 @@ void mk_info_lines(vector<Str_and_clr>& out)
     TRACE << "Finding number of killed monsters" << endl;
     vector<string> unique_killed_names;
     int nr_kills_tot_all_mon = 0;
-    for (const auto& d : Actor_data::data)
+    for (const auto& d : actor_data::data)
     {
         if (d.id != Actor_id::player && d.nr_kills > 0)
         {
@@ -64,44 +64,44 @@ void mk_info_lines(vector<Str_and_clr>& out)
         }
     }
 
-    out.push_back(Str_and_clr(" " + Map::player->get_name_a(), clr_heading));
+    out.push_back(Str_and_clr(" " + map::player->get_name_a(), clr_heading));
 
     out.push_back(Str_and_clr("   * Explored to the depth of dungeon level "
-                            + to_str(Map::dlvl), clr_info));
-    out.push_back(Str_and_clr("   * Was " + to_str(min(100, Map::player->get_insanity())) +
-                            "% insane", clr_info));
+                              + to_str(map::dlvl), clr_info));
+    out.push_back(Str_and_clr("   * Was " + to_str(min(100, map::player->get_insanity())) +
+                              "% insane", clr_info));
     out.push_back(Str_and_clr("   * Killed " + to_str(nr_kills_tot_all_mon) + " monsters ",
-                            clr_info));
+                              clr_info));
 
     //TODO: This is ugly as hell
-    if (Map::player->phobias[int(Phobia::dog)])
+    if (map::player->phobias[int(Phobia::dog)])
         out.push_back(Str_and_clr("   * Had a phobia of dogs", clr_info));
 
-    if (Map::player->phobias[int(Phobia::rat)])
+    if (map::player->phobias[int(Phobia::rat)])
         out.push_back(Str_and_clr("   * Had a phobia of rats", clr_info));
 
-    if (Map::player->phobias[int(Phobia::spider)])
+    if (map::player->phobias[int(Phobia::spider)])
         out.push_back(Str_and_clr("   * Had a phobia of spiders", clr_info));
 
-    if (Map::player->phobias[int(Phobia::undead)])
+    if (map::player->phobias[int(Phobia::undead)])
         out.push_back(Str_and_clr("   * Had a phobia of the dead", clr_info));
 
-    if (Map::player->phobias[int(Phobia::cramped_place)])
+    if (map::player->phobias[int(Phobia::cramped_place)])
         out.push_back(Str_and_clr("   * Had a phobia of cramped spaces", clr_info));
 
-    if (Map::player->phobias[int(Phobia::open_place)])
+    if (map::player->phobias[int(Phobia::open_place)])
         out.push_back(Str_and_clr("   * Had a phobia of open places", clr_info));
 
-    if (Map::player->phobias[int(Phobia::deep_places)])
+    if (map::player->phobias[int(Phobia::deep_places)])
         out.push_back(Str_and_clr("   * Had a phobia of deep places", clr_info));
 
-    if (Map::player->phobias[int(Phobia::dark)])
+    if (map::player->phobias[int(Phobia::dark)])
         out.push_back(Str_and_clr("   * Had a phobia of darkness", clr_info));
 
-    if (Map::player->obsessions[int(Obsession::masochism)])
+    if (map::player->obsessions[int(Obsession::masochism)])
         out.push_back(Str_and_clr("   * Had a masochistic obsession", clr_info));
 
-    if (Map::player->obsessions[int(Obsession::sadism)])
+    if (map::player->obsessions[int(Obsession::sadism)])
         out.push_back(Str_and_clr("   * Had a sadistic obsession", clr_info));
 
     out.push_back(Str_and_clr(" ", clr_info));
@@ -109,7 +109,7 @@ void mk_info_lines(vector<Str_and_clr>& out)
     TRACE << "Finding traits gained" << endl;
     out.push_back(Str_and_clr(" Traits gained:", clr_heading));
     string traits_line;
-    Player_bon::get_all_picked_traits_titles_line(traits_line);
+    player_bon::get_all_picked_traits_titles_line(traits_line);
     if (traits_line.empty())
     {
         out.push_back(Str_and_clr("   * None", clr_info));
@@ -117,7 +117,7 @@ void mk_info_lines(vector<Str_and_clr>& out)
     else
     {
         vector<string> abilities_lines;
-        Text_format::line_to_lines(traits_line, 60, abilities_lines);
+        text_format::line_to_lines(traits_line, 60, abilities_lines);
         for (string& str : abilities_lines)
         {
             out.push_back(Str_and_clr("   " + str, clr_info));
@@ -140,7 +140,7 @@ void mk_info_lines(vector<Str_and_clr>& out)
     out.push_back(Str_and_clr(" ", clr_info));
 
     out.push_back(Str_and_clr(" Last messages:", clr_heading));
-    const vector< vector<Msg> >& history = Log::get_history();
+    const vector< vector<Msg> >& history = msg_log::get_history();
     int history_element = max(0, int(history.size()) - 20);
 
     for (size_t i = history_element; i < history.size(); ++i)
@@ -166,54 +166,54 @@ void mk_info_lines(vector<Str_and_clr>& out)
             {
                 for (int dy = -1; dy <= 1; ++dy)
                 {
-                    if (Utils::is_pos_inside_map(Pos(x + dx, y + dy)))
+                    if (utils::is_pos_inside_map(Pos(x + dx, y + dy)))
                     {
-                        const auto* const f = Map::cells[x + dx][y + dy].rigid;
+                        const auto* const f = map::cells[x + dx][y + dy].rigid;
                         if (f->is_los_passable())
                         {
-                            Map::cells[x][y].is_seen_by_player = true;
+                            map::cells[x][y].is_seen_by_player = true;
                         }
                     }
                 }
             }
         }
     }
-    Render::draw_map(); //To set the glyph array
+    render::draw_map(); //To set the glyph array
     for (int y = 0; y < MAP_H; ++y)
     {
         string cur_row = "";
         for (int x = 0; x < MAP_W; ++x)
         {
-            if (Pos(x, y) == Map::player->pos)
+            if (Pos(x, y) == map::player->pos)
             {
                 cur_row.push_back('@');
             }
             else
             {
                 if (
-                    Render::render_array[x][y].glyph == ' ' &&
+                    render::render_array[x][y].glyph == ' ' &&
                     (y == 0 || x == 0 || y == MAP_H - 1 || x == MAP_W - 1))
                 {
                     cur_row.push_back('*');
                 }
                 else
                 {
-                    const auto& wall_d       = Feature_data::get_data(Feature_id::wall);
-                    const auto& rubble_high_d = Feature_data::get_data(Feature_id::rubble_high);
-                    const auto& statue_d     = Feature_data::get_data(Feature_id::statue);
+                    const auto& wall_d       = feature_data::get_data(Feature_id::wall);
+                    const auto& rubble_high_d = feature_data::get_data(Feature_id::rubble_high);
+                    const auto& statue_d     = feature_data::get_data(Feature_id::statue);
                     if (
-                        Render::render_array[x][y].glyph == wall_d.glyph ||
-                        Render::render_array[x][y].glyph == rubble_high_d.glyph)
+                        render::render_array[x][y].glyph == wall_d.glyph ||
+                        render::render_array[x][y].glyph == rubble_high_d.glyph)
                     {
                         cur_row.push_back('#');
                     }
-                    else if (Render::render_array[x][y].glyph == statue_d.glyph)
+                    else if (render::render_array[x][y].glyph == statue_d.glyph)
                     {
                         cur_row.push_back('M');
                     }
                     else
                     {
-                        cur_row.push_back(Render::render_array[x][y].glyph);
+                        cur_row.push_back(render::render_array[x][y].glyph);
                     }
                 }
             }
@@ -228,20 +228,20 @@ void mk_info_lines(vector<Str_and_clr>& out)
 
 void render(const vector<Str_and_clr>& lines, const int TOP_ELEMENT)
 {
-    Render::clear_screen();
+    render::clear_screen();
 
     const string decoration_line(MAP_W, '-');
-    Render::draw_text(decoration_line, Panel::screen, Pos(0, 0), clr_gray);
+    render::draw_text(decoration_line, Panel::screen, Pos(0, 0), clr_gray);
 
     const int X_LABEL = 3;
 
-    Render::draw_text(" Displaying postmortem information ", Panel::screen,
-                     Pos(X_LABEL, 0), clr_gray);
+    render::draw_text(" Displaying postmortem information ", Panel::screen,
+                      Pos(X_LABEL, 0), clr_gray);
 
-    Render::draw_text(decoration_line, Panel::screen, Pos(0, SCREEN_H - 1),
-                     clr_gray);
+    render::draw_text(decoration_line, Panel::screen, Pos(0, SCREEN_H - 1),
+                      clr_gray);
 
-    Render::draw_text(info_scr_cmd_info, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clr_gray);
+    render::draw_text(info_scr_cmd_info, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clr_gray);
 
     const int NR_LINES_TOT = int(lines.size());
     const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
@@ -252,10 +252,10 @@ void render(const vector<Str_and_clr>& lines, const int TOP_ELEMENT)
         i < NR_LINES_TOT && ((i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR);
         ++i)
     {
-        Render::draw_text(lines[i].str, Panel::screen, Pos(0, y_pos++), lines[i].clr);
+        render::draw_text(lines[i].str, Panel::screen, Pos(0, y_pos++), lines[i].clr);
     }
 
-    Render::update_screen();
+    render::update_screen();
 }
 
 void run_info(const vector<Str_and_clr>& lines)
@@ -270,7 +270,7 @@ void run_info(const vector<Str_and_clr>& lines)
     {
         render(lines, top_nr);
 
-        const Key_data& d = Input::get_input();
+        const Key_data& d = input::get_input();
 
         if (d.sdl_key == SDLK_DOWN || d.key == '2' || d.key == 'j')
         {
@@ -298,8 +298,8 @@ void run_info(const vector<Str_and_clr>& lines)
 void mk_memorial_file(const vector<Str_and_clr>& lines)
 {
     const string time_stamp =
-        Dungeon_master::get_start_time().get_time_str(Time_type::second, false);
-    const string memorial_file_name = Map::player->get_name_a() + "_" + time_stamp + ".txt";
+        dungeon_master::get_start_time().get_time_str(Time_type::second, false);
+    const string memorial_file_name = map::player->get_name_a() + "_" + time_stamp + ".txt";
     const string memorial_file_path = "data/" + memorial_file_name;
 
     //Add memorial file
@@ -308,9 +308,9 @@ void mk_memorial_file(const vector<Str_and_clr>& lines)
     for (const Str_and_clr& line : lines) {file << line.str << endl;}
     file.close();
 
-    Render::draw_text("Wrote file: data/" + memorial_file_name, Panel::screen, Pos(0, 0),
-                     clr_white_high);
-    Render::update_screen();
+    render::draw_text("Wrote file: data/" + memorial_file_name, Panel::screen, Pos(0, 0),
+                      clr_white_high);
+    render::update_screen();
 }
 
 void render_menu(const Menu_browser& browser)
@@ -338,7 +338,7 @@ void render_menu(const Menu_browser& browser)
 
     file.close();
 
-    Render::cover_panel(Panel::screen);
+    render::cover_panel(Panel::screen);
 
     Pos pos(1, SCREEN_H - ascii_graveyard.size());
 
@@ -346,41 +346,41 @@ void render_menu(const Menu_browser& browser)
     {
         const Uint8 K = Uint8(16 + (180 * ((pos.y * 100) / SCREEN_H) / 100));
         const Clr clr = {K, K, K, 0};
-        Render::draw_text(line, Panel::screen, pos, clr);
+        render::draw_text(line, Panel::screen, pos, clr);
         pos.y++;
     }
 
     pos.set(45, 20);
-    const string NAME_STR = Map::player->get_data().name_a;
-    Render::draw_text_centered(NAME_STR, Panel::screen, pos, clr_white);
+    const string NAME_STR = map::player->get_data().name_a;
+    render::draw_text_centered(NAME_STR, Panel::screen, pos, clr_white);
 
     //Draw command labels
     pos.set(55, 13);
-    Render::draw_text("Information", Panel::screen, pos,
-                     browser.is_at_idx(0) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text("Information", Panel::screen, pos,
+                      browser.is_at_idx(0) ? clr_menu_highlight : clr_menu_drk);
     pos.y++;
 
-    Render::draw_text("Write memorial file", Panel::screen, pos,
-                     browser.is_at_idx(1) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text("Write memorial file", Panel::screen, pos,
+                      browser.is_at_idx(1) ? clr_menu_highlight : clr_menu_drk);
     pos.y++;
 
-    Render::draw_text("View High Scores", Panel::screen, pos,
-                     browser.is_at_idx(2) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text("View High Scores", Panel::screen, pos,
+                      browser.is_at_idx(2) ? clr_menu_highlight : clr_menu_drk);
     pos.y++;
 
-    Render::draw_text("View message log", Panel::screen, pos,
-                     browser.is_at_idx(3) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text("View message log", Panel::screen, pos,
+                      browser.is_at_idx(3) ? clr_menu_highlight : clr_menu_drk);
     pos.y++;
 
-    Render::draw_text("Return to main menu", Panel::screen, pos,
-                     browser.is_at_idx(4) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text("Return to main menu", Panel::screen, pos,
+                      browser.is_at_idx(4) ? clr_menu_highlight : clr_menu_drk);
     pos.y++;
 
-    Render::draw_text("Quit the game", Panel::screen, pos,
-                     browser.is_at_idx(5) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text("Quit the game", Panel::screen, pos,
+                      browser.is_at_idx(5) ? clr_menu_highlight : clr_menu_drk);
     pos.y++;
 
-    Render::update_screen();
+    render::update_screen();
 }
 
 } //namespace
@@ -397,7 +397,7 @@ void run(bool* const quit_game)
 
     while (true)
     {
-        const Menu_action action = Menu_input_handling::get_action(browser);
+        const Menu_action action = menu_input_handling::get_action(browser);
         switch (action)
         {
         case Menu_action::esc:
@@ -422,12 +422,12 @@ void run(bool* const quit_game)
             }
             else if (browser.is_at_idx(2))
             {
-                High_score::run_high_score_screen();
+                high_score::run_high_score_screen();
                 render_menu(browser);
             }
             else if (browser.is_at_idx(3))
             {
-                Log::display_history();
+                msg_log::display_history();
                 render_menu(browser);
             }
             else if (browser.is_at_idx(4))

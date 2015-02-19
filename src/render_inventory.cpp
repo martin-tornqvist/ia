@@ -5,7 +5,7 @@
 
 #include "init.hpp"
 #include "actor_player.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "render.hpp"
 #include "map.hpp"
 #include "item.hpp"
@@ -19,20 +19,20 @@ namespace
 void draw_item_symbol(const Item& item, const Pos& p)
 {
     const Clr item_clr = item.get_clr();
-    if (Config::is_tiles_mode())
+    if (config::is_tiles_mode())
     {
-        Render::draw_tile(item.get_tile(), Panel::screen, p, item_clr);
+        render::draw_tile(item.get_tile(), Panel::screen, p, item_clr);
     }
     else
     {
-        Render::draw_glyph(item.get_glyph(), Panel::screen, p, item_clr);
+        render::draw_glyph(item.get_glyph(), Panel::screen, p, item_clr);
     }
 }
 
 void draw_weight_pct(const int Y, const int ITEM_NAME_X, const size_t ITEM_NAME_LEN,
-                   const Item& item, const Clr& item_name_clr, const bool IS_SELECTED)
+                     const Item& item, const Clr& item_name_clr, const bool IS_SELECTED)
 {
-    const int WEIGHT_CARRIED_TOT = Map::player->get_inv().get_total_item_weight();
+    const int WEIGHT_CARRIED_TOT = map::player->get_inv().get_total_item_weight();
     const int WEIGHT_PCT         = (item.get_weight() * 100) / WEIGHT_CARRIED_TOT;
 
     if (WEIGHT_PCT > 0 && WEIGHT_PCT < 100)
@@ -41,14 +41,14 @@ void draw_weight_pct(const int Y, const int ITEM_NAME_X, const size_t ITEM_NAME_
         const int     WEIGHT_X = DESCR_X0 - weight_str.size() - 1;
         const Pos     weight_pos(WEIGHT_X, Y);
         const Clr     weight_clr = IS_SELECTED ? clr_white : clr_gray_drk;
-        Render::draw_text(weight_str, Panel::screen, weight_pos, weight_clr);
+        render::draw_text(weight_str, Panel::screen, weight_pos, weight_clr);
 
         const int DOTS_X  = ITEM_NAME_X + ITEM_NAME_LEN;
         const int DOTS_W  = WEIGHT_X - DOTS_X;
         const string dots_str(DOTS_W, '.');
         Clr dots_clr       = IS_SELECTED ? clr_white : item_name_clr;
         if (!IS_SELECTED) {dots_clr.r /= 2; dots_clr.g /= 2; dots_clr.b /= 2;}
-        Render::draw_text(dots_str, Panel::screen, Pos(DOTS_X, Y), dots_clr);
+        render::draw_text(dots_str, Panel::screen, Pos(DOTS_X, Y), dots_clr);
     }
 }
 
@@ -74,7 +74,7 @@ void draw_detailed_item_descr(const Item* const item)
 
         lines.push_back({weight_str, clr_green});
 
-        const int WEIGHT_CARRIED_TOT = Map::player->get_inv().get_total_item_weight();
+        const int WEIGHT_CARRIED_TOT = map::player->get_inv().get_total_item_weight();
         const int WEIGHT_PCT         = (item->get_weight() * 100) / WEIGHT_CARRIED_TOT;
 
         if (WEIGHT_PCT > 0 && WEIGHT_PCT < 100)
@@ -83,7 +83,7 @@ void draw_detailed_item_descr(const Item* const item)
             lines.push_back({pct_str, clr_green});
         }
 
-        Render::draw_descr_box(lines);
+        render::draw_descr_box(lines);
     }
 }
 
@@ -95,10 +95,10 @@ namespace render_inventory
 void draw_browse_inv(const Menu_browser& browser)
 {
 
-    Render::clear_screen();
+    render::clear_screen();
 
     const int     BROWSER_Y   = browser.get_y();
-    const auto&   inv         = Map::player->get_inv();
+    const auto&   inv         = map::player->get_inv();
     const size_t  NR_SLOTS    = size_t(Slot_id::END);
 
     const bool    IS_IN_EQP   = BROWSER_Y < int(NR_SLOTS);
@@ -115,7 +115,7 @@ void draw_browse_inv(const Menu_browser& browser)
 
     string str                = query_base_str + query_drop_str + " [space/esc] to exit";
 
-    Render::draw_text(str, Panel::screen, Pos(0, 0), clr_white_high);
+    render::draw_text(str, Panel::screen, Pos(0, 0), clr_white_high);
 
     Pos p(1, EQP_Y0);
 
@@ -129,7 +129,7 @@ void draw_browse_inv(const Menu_browser& browser)
 
         p.x = 1;
 
-        Render::draw_text(slot_name, panel, p, IS_CUR_POS ? clr_white_high : clr_menu_drk);
+        render::draw_text(slot_name, panel, p, IS_CUR_POS ? clr_white_high : clr_menu_drk);
 
         p.x += 9; //Offset to leave room for slot label
 
@@ -148,7 +148,7 @@ void draw_browse_inv(const Menu_browser& browser)
             {
                 //Thrown weapons are forced to show melee info instead
                 att_inf = d.main_att_mode == Main_att_mode::thrown ? Item_ref_att_inf::melee :
-                         Item_ref_att_inf::wpn_context;
+                          Item_ref_att_inf::wpn_context;
             }
             else if (slot.id == Slot_id::thrown)
             {
@@ -161,16 +161,16 @@ void draw_browse_inv(const Menu_browser& browser)
 
             string item_name = cur_item->get_name(ref_type, Item_ref_inf::yes, att_inf);
 
-            Text_format::first_to_upper(item_name);
+            text_format::first_to_upper(item_name);
 
-            Render::draw_text(item_name, panel, p, clr);
+            render::draw_text(item_name, panel, p, clr);
 
             draw_weight_pct(p.y, p.x, item_name.size(), *cur_item, clr, IS_CUR_POS);
         }
         else
         {
             p.x += 2;
-            Render::draw_text("<empty>", panel, p, IS_CUR_POS ? clr_white_high : clr_menu_drk);
+            render::draw_text("<empty>", panel, p, IS_CUR_POS ? clr_white_high : clr_menu_drk);
         }
 
         ++p.y;
@@ -224,7 +224,7 @@ void draw_browse_inv(const Menu_browser& browser)
         if (i == inv_top_idx && inv_top_idx > 0)
         {
             p.x = INV_ITEM_NAME_X;
-            Render::draw_text("(more)", panel, p, clr_black, clr_gray);
+            render::draw_text("(more)", panel, p, clr_black, clr_gray);
             ++p.y;
         }
 
@@ -235,11 +235,11 @@ void draw_browse_inv(const Menu_browser& browser)
         p.x = INV_ITEM_NAME_X;
 
         string item_name = cur_item->get_name(Item_ref_type::plural, Item_ref_inf::yes,
-                                           Item_ref_att_inf::wpn_context);
+                                              Item_ref_att_inf::wpn_context);
 
-        Text_format::first_to_upper(item_name);
+        text_format::first_to_upper(item_name);
 
-        Render::draw_text(item_name, panel, p, clr);
+        render::draw_text(item_name, panel, p, clr);
 
         draw_weight_pct(p.y, INV_ITEM_NAME_X, item_name.size(), *cur_item, clr, IS_CUR_POS);
 
@@ -247,40 +247,40 @@ void draw_browse_inv(const Menu_browser& browser)
 
         if (p.y == INV_Y1 && ((i + 1) < (NR_INV_ITEMS - 1)))
         {
-            Render::draw_text("(more)", panel, p, clr_black, clr_gray);
+            render::draw_text("(more)", panel, p, clr_black, clr_gray);
             break;
         }
     }
 
-//  Render::draw_popup_box(eqp_rect, panel, clr_popup_box, false);
+//  render::draw_popup_box(eqp_rect, panel, clr_popup_box, false);
 
     const Rect eqp_rect(0, EQP_Y0 - 1, DESCR_X0 - 1, EQP_Y1 + 1);
     const Rect inv_rect(0, INV_Y0 - 1, DESCR_X0 - 1, INV_Y1 + 1);
 
-    Render::draw_popup_box(eqp_rect, panel, clr_popup_box, false);
-    Render::draw_popup_box(inv_rect, panel, clr_popup_box, false);
+    render::draw_popup_box(eqp_rect, panel, clr_popup_box, false);
+    render::draw_popup_box(inv_rect, panel, clr_popup_box, false);
 
-    if (Config::is_tiles_mode())
+    if (config::is_tiles_mode())
     {
-        Render::draw_tile(Tile_id::popup_ver_r, panel, inv_rect.p0, clr_popup_box);
-        Render::draw_tile(Tile_id::popup_ver_l, panel, Pos(inv_rect.p1.x, inv_rect.p0.y),
-                         clr_popup_box);
+        render::draw_tile(Tile_id::popup_ver_r, panel, inv_rect.p0, clr_popup_box);
+        render::draw_tile(Tile_id::popup_ver_l, panel, Pos(inv_rect.p1.x, inv_rect.p0.y),
+                          clr_popup_box);
     }
 
     draw_detailed_item_descr(item);
 
-    Render::update_screen();
+    render::update_screen();
 }
 
 void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
-               const vector<size_t>& gen_inv_indexes)
+                const vector<size_t>& gen_inv_indexes)
 {
     assert(slot_id_to_equip != Slot_id::END);
 
     Pos p(0, 0);
 
     const int NR_ITEMS = browser.get_nr_of_items_in_first_list();
-    Render::cover_area(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 1));
+    render::cover_area(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 1));
 
     const bool HAS_ITEM = !gen_inv_indexes.empty();
 
@@ -341,11 +341,11 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
 
     str += cancel_info_str;
 
-    Render::draw_text(str, Panel::screen, p, clr_white_high);
+    render::draw_text(str, Panel::screen, p, clr_white_high);
 
     ++p.y;
 
-    Inventory& inv = Map::player->get_inv();
+    Inventory& inv = map::player->get_inv();
 
     const int NR_INDEXES = gen_inv_indexes.size();
 
@@ -367,7 +367,7 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
         {
             //Thrown weapons are forced to show melee info instead
             att_inf = d.main_att_mode == Main_att_mode::thrown ? Item_ref_att_inf::melee :
-                     Item_ref_att_inf::wpn_context;
+                      Item_ref_att_inf::wpn_context;
         }
         else if (slot_id_to_equip == Slot_id::thrown)
         {
@@ -376,13 +376,13 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
 
         str = item->get_name(Item_ref_type::plural, Item_ref_inf::yes, att_inf);
 
-        Text_format::first_to_upper(str);
+        text_format::first_to_upper(str);
 
-        Render::draw_text(str, Panel::screen, p, item_interf_clr);
+        render::draw_text(str, Panel::screen, p, item_interf_clr);
         ++p.y;
     }
 
-    Render::update_screen();
+    render::update_screen();
 }
 
-} //Render_inventory
+} //render_inventory

@@ -114,11 +114,11 @@ class Spell_darkbolt: public Spell
 {
 public:
     Spell_darkbolt() : Spell() {}
-    bool allow_mon_cast_now(Mon& mon)  const override;
+    bool allow_mon_cast_now(Mon& mon)   const override;
     bool is_avail_for_all_mon()         const override {return true;}
-    bool is_avail_for_player()         const override {return true;}
-    std::string get_name()           const override {return "Darkbolt";}
-    Spell_id get_id()                 const override {return Spell_id::darkbolt;}
+    bool is_avail_for_player()          const override {return true;}
+    std::string get_name()              const override {return "Darkbolt";}
+    Spell_id get_id()                   const override {return Spell_id::darkbolt;}
     Intr_spell_shock get_shock_type_intr_cast() const override
     {
         return Intr_spell_shock::mild;
@@ -135,7 +135,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(1) - (SPI_PER_LVL * 3);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(1) - (SPI_PER_LVL * 3);
     }
 };
 
@@ -171,7 +171,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(2);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(2);
     }
 };
 
@@ -200,7 +200,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(11);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(11);
     }
 };
 
@@ -229,7 +229,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(2);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(2);
     }
 };
 
@@ -270,7 +270,7 @@ protected:
 
     virtual int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(2);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(2);
     }
 };
 
@@ -294,7 +294,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(6);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(6);
     }
 };
 
@@ -318,7 +318,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(4);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(4);
     }
 };
 
@@ -342,7 +342,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(6);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(6);
     }
 };
 
@@ -366,7 +366,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(5);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(5);
     }
 };
 
@@ -394,7 +394,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(2);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(2);
     }
 };
 
@@ -422,7 +422,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(1) - (SPI_PER_LVL * 3);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(1) - (SPI_PER_LVL * 3);
     }
 };
 
@@ -446,7 +446,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(1) - (SPI_PER_LVL * 2);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(1) - (SPI_PER_LVL * 2);
     }
 };
 
@@ -470,7 +470,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(11);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(11);
     }
 };
 
@@ -497,7 +497,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(1);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(1);
     }
 };
 
@@ -548,7 +548,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(2);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(2);
     }
 };
 
@@ -577,7 +577,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(4);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(4);
     }
 };
 
@@ -619,7 +619,7 @@ private:
 
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(1);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(1);
     }
 };
 
@@ -645,7 +645,7 @@ private:
 
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(3);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(3);
     }
 };
 
@@ -672,7 +672,7 @@ private:
     Prop_id get_prop_id() const override {return Prop_id::paralyzed;}
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(6);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(6);
     }
 };
 
@@ -703,7 +703,7 @@ private:
 
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(2);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(2);
     }
 };
 
@@ -734,7 +734,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(2);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(2);
     }
 };
 
@@ -759,7 +759,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(2);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(2);
     }
 };
 
@@ -784,7 +784,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(2);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(2);
     }
 };
 
@@ -809,7 +809,7 @@ private:
     Spell_effect_noticed cast_(Actor* const caster) const override;
     int get_max_spi_cost_() const override
     {
-        return Player_bon::get_spi_occultist_can_cast_at_lvl(2);
+        return player_bon::get_spi_occultist_can_cast_at_lvl(2);
     }
 };
 

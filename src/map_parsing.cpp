@@ -18,7 +18,7 @@ namespace cell_check
 
 bool Blocks_los::check(const Cell& c)  const
 {
-    return !Utils::is_pos_inside_map(c.pos, false) || !c.rigid->is_los_passable();
+    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->is_los_passable();
 }
 
 bool Blocks_los::check(const Mob& f) const
@@ -28,7 +28,7 @@ bool Blocks_los::check(const Mob& f) const
 
 bool Blocks_move_cmn::check(const Cell& c) const
 {
-    return !Utils::is_pos_inside_map(c.pos, false) || !c.rigid->can_move_cmn();
+    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->can_move_cmn();
 }
 
 bool Blocks_move_cmn::check(const Mob& f) const
@@ -50,7 +50,7 @@ Blocks_actor::Blocks_actor(Actor& actor, bool is_actors_blocking) :
 
 bool Blocks_actor::check(const Cell& c) const
 {
-    return !Utils::is_pos_inside_map(c.pos, false) || !c.rigid->can_move(actors_props_);
+    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->can_move(actors_props_);
 }
 
 bool Blocks_actor::check(const Mob& f) const
@@ -65,7 +65,7 @@ bool Blocks_actor::check(const Actor& a) const
 
 bool Blocks_projectiles::check(const Cell& c)  const
 {
-    return !Utils::is_pos_inside_map(c.pos, false) || !c.rigid->is_projectile_passable();
+    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->is_projectile_passable();
 }
 
 bool Blocks_projectiles::check(const Mob& f)  const
@@ -79,12 +79,12 @@ bool Living_actors_adj_to_pos::check(const Actor& a) const
     {
         return false;
     }
-    return Utils::is_pos_adj(pos_, a.pos, true);
+    return utils::is_pos_adj(pos_, a.pos, true);
 }
 
 bool Blocks_items::check(const Cell& c)  const
 {
-    return !Utils::is_pos_inside_map(c.pos, false) || !c.rigid->can_have_item();
+    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->can_have_item();
 }
 
 bool Blocks_items::check(const Mob& f) const
@@ -108,7 +108,7 @@ bool All_adj_is_feature::check(const Cell& c) const
     const int X = c.pos.x;
     const int Y = c.pos.y;
 
-    if (!Utils::is_pos_inside_map(c.pos, false))
+    if (!utils::is_pos_inside_map(c.pos, false))
     {
         return false;
     }
@@ -117,7 +117,7 @@ bool All_adj_is_feature::check(const Cell& c) const
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            if (Map::cells[X + dx][Y + dy].rigid->get_id() != feature_)
+            if (map::cells[X + dx][Y + dy].rigid->get_id() != feature_)
             {
                 return false;
             }
@@ -138,7 +138,7 @@ bool All_adj_is_any_of_features::check(const Cell& c) const
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const auto cur_id = Map::cells[X + dx][Y + dy].rigid->get_id();
+            const auto cur_id = map::cells[X + dx][Y + dy].rigid->get_id();
 
             bool is_match = false;
             for (auto f : features_) {if (f == cur_id) {is_match = true; break;}}
@@ -160,7 +160,7 @@ bool All_adj_is_not_feature::check(const Cell& c) const
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            if (Map::cells[X + dx][Y + dy].rigid->get_id() == feature_)
+            if (map::cells[X + dx][Y + dy].rigid->get_id() == feature_)
             {
                 return false;
             }
@@ -181,7 +181,7 @@ bool All_adj_is_none_of_features::check(const Cell& c) const
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const auto cur_id = Map::cells[X + dx][Y + dy].rigid->get_id();
+            const auto cur_id = map::cells[X + dx][Y + dy].rigid->get_id();
             for (auto f : features_) {if (f == cur_id) {return false;}}
         }
     }
@@ -189,7 +189,7 @@ bool All_adj_is_none_of_features::check(const Cell& c) const
     return true;
 }
 
-} //Cell_check
+} //cell_check
 
 //------------------------------------------------------------ MAP PARSE
 namespace map_parse
@@ -197,14 +197,14 @@ namespace map_parse
 
 const Rect map_rect(0, 0, MAP_W - 1, MAP_H - 1);
 
-void run(const Cell_check::Check& check, bool out[MAP_W][MAP_H],
-         const Map_parse_mode write_rule, const Rect& area_to_check_cells)
+void run(const cell_check::Check& check, bool out[MAP_W][MAP_H],
+         const map_parse_mode write_rule, const Rect& area_to_check_cells)
 {
     assert(check.is_checking_cells()  ||
            check.is_checking_mobs()   ||
            check.is_checking_actors());
 
-    const bool ALLOW_WRITE_FALSE = write_rule == Map_parse_mode::overwrite;
+    const bool ALLOW_WRITE_FALSE = write_rule == map_parse_mode::overwrite;
 
     if (check.is_checking_cells())
     {
@@ -212,7 +212,7 @@ void run(const Cell_check::Check& check, bool out[MAP_W][MAP_H],
         {
             for (int y = area_to_check_cells.p0.y; y <= area_to_check_cells.p1.y; ++y)
             {
-                const auto& c         = Map::cells[x][y];
+                const auto& c         = map::cells[x][y];
                 const bool  IS_MATCH  = check.check(c);
                 if (IS_MATCH || ALLOW_WRITE_FALSE)
                 {
@@ -224,11 +224,11 @@ void run(const Cell_check::Check& check, bool out[MAP_W][MAP_H],
 
     if (check.is_checking_mobs())
     {
-        for (Mob* mob : Game_time::mobs_)
+        for (Mob* mob : game_time::mobs_)
         {
             const Pos& p = mob->get_pos();
 
-            if (Utils::is_pos_inside(p, area_to_check_cells))
+            if (utils::is_pos_inside(p, area_to_check_cells))
             {
                 const bool IS_MATCH = check.check(*mob);
 
@@ -243,11 +243,11 @@ void run(const Cell_check::Check& check, bool out[MAP_W][MAP_H],
 
     if (check.is_checking_actors())
     {
-        for (Actor* actor : Game_time::actors_)
+        for (Actor* actor : game_time::actors_)
         {
             const Pos& p = actor->pos;
 
-            if (Utils::is_pos_inside(p, area_to_check_cells))
+            if (utils::is_pos_inside(p, area_to_check_cells))
             {
                 const bool IS_MATCH = check.check(*actor);
 
@@ -262,7 +262,7 @@ void run(const Cell_check::Check& check, bool out[MAP_W][MAP_H],
 }
 
 void get_cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
-                                const Range& dist_interval)
+                                     const Range& dist_interval)
 {
     assert(in != out);
 
@@ -308,9 +308,9 @@ void get_cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W
 }
 
 bool is_val_in_area(const Rect& area, const bool in[MAP_W][MAP_H],
-                 const bool VAL)
+                    const bool VAL)
 {
-    assert(Utils::is_area_inside_map(area));
+    assert(utils::is_area_inside_map(area));
 
     for (int y = area.p0.y; y <= area.p1.y; ++y)
     {
@@ -436,10 +436,10 @@ bool is_map_connected(const bool blocked[MAP_W][MAP_H])
         }
     }
 
-    assert(Utils::is_pos_inside_map(origin, false));
+    assert(utils::is_pos_inside_map(origin, false));
 
     int flood_fill[MAP_W][MAP_H];
-    Flood_fill::run(origin, blocked, flood_fill, INT_MAX, Pos(-1, -1), true);
+    flood_fill::run(origin, blocked, flood_fill, INT_MAX, Pos(-1, -1), true);
 
     //NOTE: We can skip to origin.x immediately, since this is guaranteed to be the
     //leftmost non-blocked cell.
@@ -456,13 +456,13 @@ bool is_map_connected(const bool blocked[MAP_W][MAP_H])
     return true;
 }
 
-} //Map_parse
+} //map_parse
 
 //------------------------------------------------------------ IS CLOSER TO POS
 bool Is_closer_to_pos::operator()(const Pos& p1, const Pos& p2)
 {
-    const int king_dist1 = Utils::king_dist(p_.x, p_.y, p1.x, p1.y);
-    const int king_dist2 = Utils::king_dist(p_.x, p_.y, p2.x, p2.y);
+    const int king_dist1 = utils::king_dist(p_.x, p_.y, p1.x, p1.y);
+    const int king_dist2 = utils::king_dist(p_.x, p_.y, p2.x, p2.y);
     return king_dist1 < king_dist2;
 }
 
@@ -473,7 +473,7 @@ namespace flood_fill
 void run(const Pos& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
          int travel_lmt, const Pos& p1, const bool ALLOW_DIAGONAL)
 {
-    Utils::reset_array(out);
+    utils::reset_array(out);
 
     vector<Pos> positions;
     positions.clear();
@@ -506,7 +506,7 @@ void run(const Pos& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
                 const Pos new_pos(cur_pos + d);
                 if (
                     !blocked[new_pos.x][new_pos.y]        &&
-                    Utils::is_pos_inside(new_pos, bounds)  &&
+                    utils::is_pos_inside(new_pos, bounds)  &&
                     out[new_pos.x][new_pos.y] == 0        &&
                     new_pos != p0)
                 {
@@ -569,7 +569,7 @@ void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H],
     }
 
     int flood[MAP_W][MAP_H];
-    Flood_fill::run(p0, blocked, flood, 10000, p1, ALLOW_DIAGONAL);
+    flood_fill::run(p0, blocked, flood, 10000, p1, ALLOW_DIAGONAL);
 
     if (flood[p1.x][p1.y] == 0)
     {
@@ -577,7 +577,7 @@ void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H],
         return;
     }
 
-    const vector<Pos>& dirs = ALLOW_DIAGONAL ? Dir_utils::dir_list : Dir_utils::cardinal_list;
+    const vector<Pos>& dirs = ALLOW_DIAGONAL ? dir_utils::dir_list : dir_utils::cardinal_list;
 
     const size_t NR_DIRS = dirs.size();
 
@@ -607,7 +607,7 @@ void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H],
                 return;
             }
 
-            const bool IS_INSIDE_MAP  = Utils::is_pos_inside_map(adj_pos);
+            const bool IS_INSIDE_MAP  = utils::is_pos_inside_map(adj_pos);
 
             const int VAL_AT_ADJ      = IS_INSIDE_MAP ? flood[adj_pos.x][adj_pos.y] : 0;
             const int VAL_AT_CUR      =                 flood[cur_pos.x][cur_pos.y];
@@ -631,7 +631,7 @@ void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H],
 
             assert(!adj_pos_bucket.empty());
 
-            adj_pos = adj_pos_bucket[Rnd::range(0, adj_pos_bucket.size() - 1)];
+            adj_pos = adj_pos_bucket[rnd::range(0, adj_pos_bucket.size() - 1)];
         }
         else //Do not randomize step choices - iterate over offset list
         {
@@ -652,5 +652,5 @@ void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H],
     } //while
 }
 
-} //Path_find
+} //path_find
 

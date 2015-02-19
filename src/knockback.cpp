@@ -6,7 +6,7 @@
 #include "attack.hpp"
 #include "actor_player.hpp"
 #include "map.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "config.hpp"
 #include "game_time.hpp"
 #include "render.hpp"
@@ -21,9 +21,9 @@ namespace knock_back
 {
 
 void try_knock_back(Actor&        defender,
-                  const Pos&    attacked_from_pos,
-                  const bool    IS_SPIKE_GUN,
-                  const bool    IS_MSG_ALLOWED)
+                    const Pos&    attacked_from_pos,
+                    const bool    IS_SPIKE_GUN,
+                    const bool    IS_MSG_ALLOWED)
 {
     const bool  IS_DEF_MON    = !defender.is_player();
     const auto& defender_data  = defender.get_data();
@@ -37,7 +37,7 @@ void try_knock_back(Actor&        defender,
         props[int(Prop_id::ethereal)]                ||
         props[int(Prop_id::ooze)]                    ||
         /*Do not knock back if bot is playing*/
-        (!IS_DEF_MON && Config::is_bot_playing()))
+        (!IS_DEF_MON && config::is_bot_playing()))
     {
         //Defender is not knockable
         return;
@@ -52,10 +52,10 @@ void try_knock_back(Actor&        defender,
         const Pos new_pos = defender.pos + d;
 
         bool blocked[MAP_W][MAP_H];
-        Map_parse::run(Cell_check::Blocks_actor(defender, true), blocked);
+        map_parse::run(cell_check::Blocks_actor(defender, true), blocked);
 
         const bool IS_CELL_BOTTOMLESS =
-            Map::cells[new_pos.x][new_pos.y].rigid->is_bottomless();
+            map::cells[new_pos.x][new_pos.y].rigid->is_bottomless();
 
         const bool IS_CELL_BLOCKED    =
             blocked[new_pos.x][new_pos.y] && !IS_CELL_BOTTOMLESS;
@@ -65,7 +65,7 @@ void try_knock_back(Actor&        defender,
             //Defender nailed to a wall from a spike gun?
             if (IS_SPIKE_GUN)
             {
-                Rigid* const f = Map::cells[new_pos.x][new_pos.y].rigid;
+                Rigid* const f = map::cells[new_pos.x][new_pos.y].rigid;
                 if (!f->is_los_passable())
                 {
                     defender.get_prop_handler().try_apply_prop(
@@ -77,7 +77,7 @@ void try_knock_back(Actor&        defender,
         else //Target cell is free
         {
             const bool IS_PLAYER_SEE_DEF = IS_DEF_MON ?
-                                           Map::player->can_see_actor(defender, nullptr) :
+                                           map::player->can_see_actor(defender, nullptr) :
                                            true;
 
             if (i == 0)
@@ -86,11 +86,11 @@ void try_knock_back(Actor&        defender,
                 {
                     if (IS_DEF_MON && IS_PLAYER_SEE_DEF)
                     {
-                        Log::add_msg(defender.get_name_the() + " is knocked back!");
+                        msg_log::add(defender.get_name_the() + " is knocked back!");
                     }
                     else
                     {
-                        Log::add_msg("I am knocked back!");
+                        msg_log::add("I am knocked back!");
                     }
                 }
                 defender.get_prop_handler().try_apply_prop(
@@ -101,20 +101,20 @@ void try_knock_back(Actor&        defender,
 
             if (i == KNOCK_RANGE - 1)
             {
-                Render::draw_map_and_interface();
-                Sdl_wrapper::sleep(Config::get_delay_projectile_draw());
+                render::draw_map_and_interface();
+                sdl_wrapper::sleep(config::get_delay_projectile_draw());
             }
 
             if (IS_CELL_BOTTOMLESS && !props[int(Prop_id::flying)])
             {
                 if (IS_DEF_MON && IS_PLAYER_SEE_DEF)
                 {
-                    Log::add_msg(defender.get_name_the() + " plummets down the depths.",
-                                clr_msg_good);
+                    msg_log::add(defender.get_name_the() + " plummets down the depths.",
+                                 clr_msg_good);
                 }
                 else
                 {
-                    Log::add_msg("I plummet down the depths!", clr_msg_bad);
+                    msg_log::add("I plummet down the depths!", clr_msg_bad);
                 }
                 defender.die(true, false, false);
                 return;
@@ -122,7 +122,7 @@ void try_knock_back(Actor&        defender,
 
             // Bump features (e.g. so monsters can be knocked back into traps)
             vector<Mob*> mobs;
-            Game_time::get_mobs_at_pos(defender.pos, mobs);
+            game_time::get_mobs_at_pos(defender.pos, mobs);
             for (Mob* const mob : mobs)
             {
                 mob->bump(defender);
@@ -133,7 +133,7 @@ void try_knock_back(Actor&        defender,
                 return;
             }
 
-            Rigid* const f = Map::cells[defender.pos.x][defender.pos.y].rigid;
+            Rigid* const f = map::cells[defender.pos.x][defender.pos.y].rigid;
             f->bump(defender);
 
             if (!defender.is_alive())

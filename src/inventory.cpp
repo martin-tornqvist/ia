@@ -7,7 +7,7 @@
 #include "item.hpp"
 #include "drop.hpp"
 #include "actor_player.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "game_time.hpp"
 #include "render.hpp"
 #include "item_factory.hpp"
@@ -89,7 +89,7 @@ void Inventory::setup_from_save_lines(vector<string>& lines)
         lines.erase(begin(lines));
         if (id != Item_id::END)
         {
-            item = Item_factory::mk(id);
+            item = item_factory::mk(id);
             item->nr_items_ = to_int(lines.front());
             lines.erase(begin(lines));
             item->setup_from_save_lines(lines);
@@ -110,7 +110,7 @@ void Inventory::setup_from_save_lines(vector<string>& lines)
     {
         const Item_id id = Item_id(to_int(lines.front()));
         lines.erase(begin(lines));
-        Item* item = Item_factory::mk(id);
+        Item* item = item_factory::mk(id);
         item->nr_items_ = to_int(lines.front());
         lines.erase(begin(lines));
         item->setup_from_save_lines(lines);
@@ -203,7 +203,7 @@ void Inventory::drop_all_non_intrinsic(const Pos& pos)
         item = slot.item;
         if (item)
         {
-            Item_drop::drop_item_on_map(pos, *item);
+            item_drop::drop_item_on_map(pos, *item);
 
             slot.item = nullptr;
         }
@@ -216,7 +216,7 @@ void Inventory::drop_all_non_intrinsic(const Pos& pos)
         item = general_[i];
         if (item)
         {
-            Item_drop::drop_item_on_map(pos, *item);
+            item_drop::drop_item_on_map(pos, *item);
 
             general_.erase(begin(general_) + i);
         }
@@ -224,7 +224,7 @@ void Inventory::drop_all_non_intrinsic(const Pos& pos)
     }
 }
 
-bool Inventory::has_ammo_for_firearm_in_inventory()
+bool Inventory::has_ammo_forFirearm_in_inventory()
 {
     Wpn* weapon = static_cast<Wpn*>(get_item_in_slot(Slot_id::wielded));
 
@@ -388,7 +388,7 @@ void Inventory::equip_general_item(const size_t GEN_IDX, const Slot_id slot_id)
 
     move_item_to_slot(slots_[int(slot_id)], GEN_IDX);
 
-    const bool IS_PLAYER  = this == &Map::player->get_inv();
+    const bool IS_PLAYER  = this == &map::player->get_inv();
 
     if (IS_PLAYER)
     {
@@ -434,7 +434,7 @@ void Inventory::equip_general_item(const size_t GEN_IDX, const Slot_id slot_id)
             break;
         }
 
-        Log::add_msg(msg, clr_white, false, true);
+        msg_log::add(msg, clr_white, false, true);
     }
 }
 
@@ -448,9 +448,9 @@ void Inventory::swap_wielded_and_prepared(
     slot1.item  = item2;
     slot2.item  = item1;
 
-    Render::draw_map_and_interface();
+    render::draw_map_and_interface();
 
-    Game_time::tick(IS_FREE_TURN);
+    game_time::tick(IS_FREE_TURN);
 }
 
 void Inventory::move_from_general_to_intrinsics(const size_t GEN_IDX)
@@ -628,7 +628,7 @@ void Inventory::sort_general_inventory()
         for (vector<Item*>& group : sort_buffer)
         {
             const Clr clr_cur_group = group[0]->get_interface_clr();
-            if (Utils::is_clr_eq(item->get_interface_clr(), clr_cur_group))
+            if (utils::is_clr_eq(item->get_interface_clr(), clr_cur_group))
             {
                 group.push_back(item);
                 is_added_to_buffer = true;

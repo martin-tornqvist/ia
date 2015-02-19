@@ -6,7 +6,7 @@
 #include "cmn_data.hpp"
 #include "cmn_types.hpp"
 
-//TODO: This should be merged into Map_parsing
+//TODO: This should be merged into map_parsing
 //Also, most/all things in here really needs clearer purpose/naming
 
 class Room;
@@ -20,10 +20,10 @@ namespace map_patterns
 {
 
 void get_cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,
-                    std::vector<Pos>& away_from_walls);
+                       std::vector<Pos>& away_from_walls);
 
 int get_walk_blockers_in_dir(const Dir dir, const Pos& pos);
 
-} //Map_patterns
+} //map_patterns
 
 #endif

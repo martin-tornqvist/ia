@@ -68,7 +68,7 @@ public:
 
     void swap_wielded_and_prepared(const bool IS_FREE_TURN);
 
-    bool has_ammo_for_firearm_in_inventory();
+    bool has_ammo_forFirearm_in_inventory();
 
     Item* get_first_item_in_backpack_with_id(const Item_id id);
 

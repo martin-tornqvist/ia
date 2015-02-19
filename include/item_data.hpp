@@ -204,15 +204,15 @@ enum class Item_id
 struct Item_container_spawn_rule
 {
     Item_container_spawn_rule() :
-        feature_id       (Feature_id::END),
-        pct_chance_to_incl (0) {}
+        feature_id          (Feature_id::END),
+        pct_chance_to_incl  (0) {}
 
     Item_container_spawn_rule(Feature_id feature_id_, int pct_chance_to_incl_) :
-        feature_id       (feature_id_),
-        pct_chance_to_incl (pct_chance_to_incl_) {}
+        feature_id          (feature_id_),
+        pct_chance_to_incl  (pct_chance_to_incl_) {}
 
-    Feature_id feature_id;
-    int       pct_chance_to_incl;
+    Feature_id  feature_id;
+    int         pct_chance_to_incl;
 };
 
 class Item_data_t
@@ -224,32 +224,32 @@ public:
 
     ~Item_data_t() {}
 
-    Item_id                      id;
-    Item_type                    type;
-    Item_value                   value;
-    Item_weight                  weight;
+    Item_id                     id;
+    Item_type                   type;
+    Item_value                  value;
+    Item_weight                 weight;
     bool                        allow_spawn;
     Range                       spawn_std_range;
     int                         max_stack_at_spawn;
-    int                         chance_to_include_in_floor_spawn_list;
+    int                         chance_to_incl_in_floor_spawn_list;
     bool                        is_stackable;
     bool                        is_identified;
     bool                        is_tried;
-    Item_name                    base_name;
-    Item_name                    base_name_un_id;
+    Item_name                   base_name;
+    Item_name                   base_name_un_id;
     std::vector<std::string>    base_descr;
     char                        glyph;
     Clr                         clr;
-    Tile_id                      tile;
-    Main_att_mode                 main_att_mode;
-    Spell_id                     spell_cast_from_scroll;
+    Tile_id                     tile;
+    Main_att_mode               main_att_mode;
+    Spell_id                    spell_cast_from_scroll;
     std::string                 land_on_hard_snd_msg;
-    Sfx_id                       land_on_hard_sfx;
+    Sfx_id                      land_on_hard_sfx;
     int                         shock_while_in_backpack;
     int                         shock_while_equipped;
-    std::vector<Room_type>       native_rooms;
-    std::vector<Item_container_spawn_rule> container_spawn_rules;
-    int                         ability_mods_while_equipped[int(Ability_id::END)];
+    std::vector<Room_type>      native_rooms;
+    std::vector<Item_container_spawn_rule>  container_spawn_rules;
+    int ability_mods_while_equipped[int(Ability_id::END)];
 
     struct Item_melee_data
     {
@@ -259,14 +259,14 @@ public:
         bool                    is_melee_wpn;
         std::pair<int, int>     dmg;
         int                     hit_chance_mod;
-        Item_att_msgs             att_msgs;
+        Item_att_msgs           att_msgs;
         Prop*                   prop_applied;
-        Dmg_type                 dmg_type;
+        Dmg_type                dmg_type;
         bool                    knocks_back;
-        Sfx_id                   hit_small_sfx;
-        Sfx_id                   hit_medium_sfx;
-        Sfx_id                   hit_hard_sfx;
-        Sfx_id                   miss_sfx;
+        Sfx_id                  hit_small_sfx;
+        Sfx_id                  hit_medium_sfx;
+        Sfx_id                  hit_hard_sfx;
+        Sfx_id                  miss_sfx;
     } melee;
 
     struct Item_ranged_data
@@ -274,29 +274,30 @@ public:
         Item_ranged_data();
         ~Item_ranged_data();
 
-        bool                    is_ranged_wpn, is_throwing_wpn, is_machine_gun, is_shotgun;
+        bool                    is_ranged_wpn, is_throwing_wpn, is_machine_gun,
+                                is_shotgun;
         int                     max_nr_ammo_in_clip;
-        Dice_param               dmg;
-        Dice_param               throw_dmg;
+        Dice_param              dmg;
+        Dice_param              throw_dmg;
         int                     hit_chance_mod;
         int                     throw_hit_chance_mod;
         int                     effective_range;
         bool                    knocks_back;
         std::string             dmg_info_override;
-        Item_id                  ammo_item_id;
-        Dmg_type                 dmg_type;
+        Item_id                 ammo_item_id;
+        Dmg_type                dmg_type;
         bool                    has_infinite_ammo;
         char                    missile_glyph;
-        Tile_id                  missile_tile;
+        Tile_id                 missile_tile;
         Clr                     missile_clr;
         bool                    missile_leaves_trail;
         bool                    missile_leaves_smoke;
-        Item_att_msgs             att_msgs;
+        Item_att_msgs           att_msgs;
         std::string             snd_msg;
-        Snd_vol                  snd_vol;
+        Snd_vol                 snd_vol;
         bool                    makes_ricochet_snd;
-        Sfx_id                   att_sfx;
-        Sfx_id                   reload_sfx;
+        Sfx_id                  att_sfx;
+        Sfx_id                  reload_sfx;
         Prop*                   prop_applied;
     } ranged;
 

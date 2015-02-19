@@ -11,7 +11,7 @@
 #include "item_scroll.hpp"
 #include "item_potion.hpp"
 #include "map.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "dungeon_master.hpp"
 #include "bot.hpp"
 #include "manual.hpp"
@@ -34,22 +34,22 @@ bool quit_to_main_menu       = false;
 void init_iO()
 {
     TRACE_FUNC_BEGIN;
-    Sdl_wrapper::init();
-    Config::init();
-    Input::init();
-    Query::init();
-    Render::init();
-    Audio::init();
+    sdl_wrapper::init();
+    config::init();
+    input::init();
+    query::init();
+    render::init();
+    audio::init();
     TRACE_FUNC_END;
 }
 
 void cleanup_iO()
 {
     TRACE_FUNC_BEGIN;
-    Audio::cleanup();
-    Render::cleanup();
-    Input::cleanup();
-    Sdl_wrapper::cleanup();
+    audio::cleanup();
+    render::cleanup();
+    input::cleanup();
+    sdl_wrapper::cleanup();
     TRACE_FUNC_END;
 }
 
@@ -57,11 +57,11 @@ void cleanup_iO()
 void init_game()
 {
     TRACE_FUNC_BEGIN;
-    Line_calc::init();
-    Gods::init();
-    Manual::init();
-    Credits::init();
-    Map_templ_handling::init();
+    line_calc::init();
+    gods::init();
+    manual::init();
+    credits::init();
+    map_templ_handling::init();
     TRACE_FUNC_END;
 }
 
@@ -76,32 +76,32 @@ void cleanup_game()
 void init_session()
 {
     TRACE_FUNC_BEGIN;
-    Actor_data::init();
-    Feature_data::init();
-    Prop_data::init();
-    Item_data::init();
-    Scroll_handling::init();
-    Potion_handling::init();
-    Inv_handling::init();
-    Game_time::init();
-    Map_travel::init();
-    Map::init();
-    Player_bon::init();
-    Log::init();
-    Dungeon_master::init();
-    Bot::init();
-    Player_spells_handling::init();
-    Jewelry_handling::init();
+    actor_data::init();
+    feature_data::init();
+    prop_data::init();
+    item_data::init();
+    scroll_handling::init();
+    potion_handling::init();
+    inv_handling::init();
+    game_time::init();
+    map_travel::init();
+    map::init();
+    player_bon::init();
+    msg_log::init();
+    dungeon_master::init();
+    bot::init();
+    player_spells_handling::init();
+    jewelry_handling::init();
     TRACE_FUNC_END;
 }
 
 void cleanup_session()
 {
     TRACE_FUNC_BEGIN;
-    Player_spells_handling::cleanup();
-    Map::cleanup();
-    Game_time::cleanup();
-    Item_data::cleanup();
+    player_spells_handling::cleanup();
+    map::cleanup();
+    game_time::cleanup();
+    item_data::cleanup();
     TRACE_FUNC_END;
 }
 

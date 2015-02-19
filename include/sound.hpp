@@ -68,7 +68,7 @@ void emit_snd(Snd snd);
 
 void reset_nr_snd_msg_printed_cur_turn();
 
-} //Snd_emit
+} //snd_emit
 
 #endif
 

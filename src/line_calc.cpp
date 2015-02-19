@@ -75,7 +75,7 @@ void init()
 }
 
 const vector<Pos>* get_fov_delta_line(const Pos& delta,
-                                   const double& MAX_DIST_ABS)
+                                      const double& MAX_DIST_ABS)
 {
     const int X = delta.x + FOV_MAX_RADI_INT;
     const int Y = delta.y + FOV_MAX_RADI_INT;
@@ -90,8 +90,8 @@ const vector<Pos>* get_fov_delta_line(const Pos& delta,
 }
 
 void calc_new_line(const Pos& origin, const Pos& target,
-                 const bool SHOULD_STOP_AT_TARGET, const int CHEB_TRAVEL_LIMIT,
-                 const bool ALLOW_OUTSIDE_MAP, vector<Pos>& line_ref)
+                   const bool SHOULD_STOP_AT_TARGET, const int CHEB_TRAVEL_LIMIT,
+                   const bool ALLOW_OUTSIDE_MAP, vector<Pos>& line_ref)
 {
     line_ref.clear();
 
@@ -124,7 +124,7 @@ void calc_new_line(const Pos& origin, const Pos& target,
 
         cur_pos.set(floor(cur_x_db), floor(cur_y_db));
 
-        if (!ALLOW_OUTSIDE_MAP && !Utils::is_pos_inside_map(cur_pos)) {return;}
+        if (!ALLOW_OUTSIDE_MAP && !utils::is_pos_inside_map(cur_pos)) {return;}
 
         bool is_pos_ok_to_add = false;
         if (line_ref.empty())
@@ -145,10 +145,10 @@ void calc_new_line(const Pos& origin, const Pos& target,
         if (SHOULD_STOP_AT_TARGET && (cur_pos == target)) {return;}
 
         const int DISTANCE_TRAVELED =
-            Utils::king_dist(origin.x, origin.y, cur_pos.x, cur_pos.y);
+            utils::king_dist(origin.x, origin.y, cur_pos.x, cur_pos.y);
 
         if (DISTANCE_TRAVELED >= CHEB_TRAVEL_LIMIT) {return;}
     }
 }
 
-} //Line_calc
+} //line_calc

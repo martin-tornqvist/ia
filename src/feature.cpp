@@ -3,7 +3,7 @@
 #include "init.hpp"
 #include "actor.hpp"
 #include "actor_player.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "render.hpp"
 #include "map_parsing.hpp"
 #include "game_time.hpp"
@@ -19,7 +19,7 @@ using namespace std;
 
 const Feature_data_t& Feature::get_data() const
 {
-    return Feature_data::get_data(get_id());
+    return feature_data::get_data(get_id());
 }
 
 void Feature::bump(Actor& actor_bumping)
@@ -31,13 +31,13 @@ void Feature::bump(Actor& actor_bumping)
     {
         if (actor_bumping.is_player())
         {
-            if (Map::player->get_prop_handler().allow_see())
+            if (map::player->get_prop_handler().allow_see())
             {
-                Log::add_msg(get_data().msg_on_player_blocked);
+                msg_log::add(get_data().msg_on_player_blocked);
             }
             else
             {
-                Log::add_msg(get_data().msg_on_player_blocked_blind);
+                msg_log::add(get_data().msg_on_player_blocked_blind);
             }
         }
     }

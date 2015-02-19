@@ -5,7 +5,7 @@
 
 #include "init.hpp"
 #include "actor_player.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "postmortem.hpp"
 #include "render.hpp"
 #include "actor_mon.hpp"
@@ -42,10 +42,10 @@ void init_data_list()
 {
     Prop_data_t d;
 
-    d.id = Prop_id::r_phys;
+    d.id = Prop_id::rPhys;
     d.std_rnd_turns = Range(40, 60);
     d.name = "Physical Resistance";
-    d.name_short = "r_phys";
+    d.name_short = "rPhys";
     d.msg[prop_msg_on_start_player] = "I feel resistant to physical harm.";
     d.msg[prop_msg_on_start_mon] = "is resistant to physical harm.";
     d.msg[prop_msg_on_end_player] = "I feel vulnerable to physical harm.";
@@ -58,10 +58,10 @@ void init_data_list()
     d.alignment = prop_alignment_good;
     add_prop_data(d);
 
-    d.id = Prop_id::r_fire;
+    d.id = Prop_id::rFire;
     d.std_rnd_turns = Range(40, 60);
     d.name = "Fire resistance";
-    d.name_short = "r_fire";
+    d.name_short = "rFire";
     d.msg[prop_msg_on_start_player] = "I feel resistant to fire.";
     d.msg[prop_msg_on_start_mon] = "is resistant to fire.";
     d.msg[prop_msg_on_end_player] = "I feel vulnerable to fire.";
@@ -74,10 +74,10 @@ void init_data_list()
     d.alignment = prop_alignment_good;
     add_prop_data(d);
 
-    d.id = Prop_id::r_cold;
+    d.id = Prop_id::rCold;
     d.std_rnd_turns = Range(40, 60);
     d.name = "Cold resistance";
-    d.name_short = "r_cold";
+    d.name_short = "rCold";
     d.msg[prop_msg_on_start_player] = "I feel resistant to cold.";
     d.msg[prop_msg_on_start_mon] = "is resistant to cold.";
     d.msg[prop_msg_on_end_player] = "I feel vulnerable to cold.";
@@ -90,10 +90,10 @@ void init_data_list()
     d.alignment = prop_alignment_good;
     add_prop_data(d);
 
-    d.id = Prop_id::r_poison;
+    d.id = Prop_id::rPoison;
     d.std_rnd_turns = Range(40, 60);
     d.name = "Poison resistance";
-    d.name_short = "r_poison";
+    d.name_short = "rPoison";
     d.msg[prop_msg_on_start_player] = "I feel resistant to poison.";
     d.msg[prop_msg_on_start_mon] = "is resistant to poison.";
     d.msg[prop_msg_on_end_player] = "I feel vulnerable to poison.";
@@ -106,10 +106,10 @@ void init_data_list()
     d.alignment = prop_alignment_good;
     add_prop_data(d);
 
-    d.id = Prop_id::r_elec;
+    d.id = Prop_id::rElec;
     d.std_rnd_turns = Range(40, 60);
     d.name = "Electric resistance";
-    d.name_short = "r_elec";
+    d.name_short = "rElec";
     d.msg[prop_msg_on_start_player] = "I feel resistant to electricity.";
     d.msg[prop_msg_on_start_mon] = "is resistant to electricity.";
     d.msg[prop_msg_on_end_player] = "I feel vulnerable to electricity.";
@@ -122,10 +122,10 @@ void init_data_list()
     d.alignment = prop_alignment_good;
     add_prop_data(d);
 
-    d.id = Prop_id::r_acid;
+    d.id = Prop_id::rAcid;
     d.std_rnd_turns = Range(40, 60);
     d.name = "Acid resistance";
-    d.name_short = "r_acid";
+    d.name_short = "rAcid";
     d.msg[prop_msg_on_start_player] = "I feel resistant to acid.";
     d.msg[prop_msg_on_start_mon] = "is resistant to acid.";
     d.msg[prop_msg_on_end_player] = "I feel vulnerable to acid.";
@@ -138,10 +138,10 @@ void init_data_list()
     d.alignment = prop_alignment_good;
     add_prop_data(d);
 
-    d.id = Prop_id::r_sleep;
+    d.id = Prop_id::rSleep;
     d.std_rnd_turns = Range(40, 60);
     d.name = "Sleep resistance";
-    d.name_short = "r_sleep";
+    d.name_short = "rSleep";
     d.msg[prop_msg_on_start_player] = "I feel resistant to sleep.";
     d.msg[prop_msg_on_start_mon] = "is resistant to sleep.";
     d.msg[prop_msg_on_end_player] = "I feel vulnerable to sleep.";
@@ -154,10 +154,10 @@ void init_data_list()
     d.alignment = prop_alignment_good;
     add_prop_data(d);
 
-    d.id = Prop_id::r_fear;
+    d.id = Prop_id::rFear;
     d.std_rnd_turns = Range(40, 60);
     d.name = "Fear resistance";
-    d.name_short = "r_fear";
+    d.name_short = "rFear";
     d.msg[prop_msg_on_start_player] = "I feel resistant to fear.";
     d.msg[prop_msg_on_start_mon] = "is resistant to fear.";
     d.msg[prop_msg_on_end_player] = "I feel vulnerable to fear.";
@@ -170,10 +170,10 @@ void init_data_list()
     d.alignment = prop_alignment_good;
     add_prop_data(d);
 
-    d.id = Prop_id::r_conf;
+    d.id = Prop_id::rConf;
     d.std_rnd_turns = Range(40, 50);
     d.name = "Confusion resistance";
-    d.name_short = "r_conf";
+    d.name_short = "rConf";
     d.msg[prop_msg_on_start_player] = "I feel resistant to confusion.";
     d.msg[prop_msg_on_start_mon] = "is resistant to confusion.";
     d.msg[prop_msg_on_end_player] = "I feel vulnerable to confusion.";
@@ -186,10 +186,10 @@ void init_data_list()
     d.alignment = prop_alignment_good;
     add_prop_data(d);
 
-    d.id = Prop_id::r_disease;
+    d.id = Prop_id::rDisease;
     d.std_rnd_turns = Range(40, 60);
     d.name = "Disease resistance";
-    d.name_short = "r_disease";
+    d.name_short = "rDisease";
     d.msg[prop_msg_on_start_player] = "I feel resistant to disease.";
     d.msg[prop_msg_on_start_mon] = "is resistant to disease.";
     d.msg[prop_msg_on_end_player] = "I feel vulnerable to disease.";
@@ -202,10 +202,10 @@ void init_data_list()
     d.alignment = prop_alignment_good;
     add_prop_data(d);
 
-    d.id = Prop_id::r_breath;
+    d.id = Prop_id::rBreath;
     d.std_rnd_turns = Range(40, 60);
     d.name = "Breath resistance";
-    d.name_short = "r_breath";
+    d.name_short = "rBreath";
     d.msg[prop_msg_on_start_player] = "I can breath without harm.";
     d.msg[prop_msg_on_start_mon] = "can breath without harm.";
     d.is_making_mon_aware = false;
@@ -216,10 +216,10 @@ void init_data_list()
     d.alignment = prop_alignment_good;
     add_prop_data(d);
 
-    d.id = Prop_id::lgt_sens;
+    d.id = Prop_id::lgtSens;
     d.std_rnd_turns = Range(40, 60);
     d.name = "Light sensitive";
-    d.name_short = "Lgt_sensitive";
+    d.name_short = "lgtSensitive";
     d.msg[prop_msg_on_start_player] = "I feel vulnerable to light!";
     d.msg[prop_msg_on_start_mon] = "is vulnerable to light.";
     d.msg[prop_msg_on_end_player] = "I no longer feel vulnerable to light.";
@@ -726,7 +726,7 @@ void init()
 Prop_handler::Prop_handler(Actor* owning_actor) :
     owning_actor_(owning_actor)
 {
-    const Actor_data_t& d = owning_actor->get_data();
+    const actor_data_t& d = owning_actor->get_data();
 
     for (size_t i = 0; i < int(Prop_id::END); ++i)
     {
@@ -739,7 +739,7 @@ Prop_handler::Prop_handler(Actor* owning_actor) :
 }
 
 Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init,
-                          const int NR_TURNS) const
+                            const int NR_TURNS) const
 {
     assert(id != Prop_id::END);
 
@@ -769,24 +769,24 @@ Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init,
     case Prop_id::disabled_ranged:    return new Prop_disabled_ranged (turns_init, NR_TURNS);
     case Prop_id::blessed:           return new Prop_blessed        (turns_init, NR_TURNS);
     case Prop_id::cursed:            return new Prop_cursed         (turns_init, NR_TURNS);
-    case Prop_id::r_acid:             return new Prop_rAcid          (turns_init, NR_TURNS);
-    case Prop_id::r_cold:             return new Prop_rCold          (turns_init, NR_TURNS);
-    case Prop_id::r_conf:             return new Prop_rConfusion     (turns_init, NR_TURNS);
-    case Prop_id::r_breath:           return new Prop_rBreath        (turns_init, NR_TURNS);
-    case Prop_id::r_elec:             return new Prop_rElec          (turns_init, NR_TURNS);
-    case Prop_id::r_fear:             return new Prop_rFear          (turns_init, NR_TURNS);
-    case Prop_id::r_phys:             return new Prop_rPhys          (turns_init, NR_TURNS);
-    case Prop_id::r_fire:             return new Prop_rFire          (turns_init, NR_TURNS);
-    case Prop_id::r_poison:           return new Prop_rPoison        (turns_init, NR_TURNS);
-    case Prop_id::r_sleep:            return new Prop_rSleep         (turns_init, NR_TURNS);
-    case Prop_id::lgt_sens:           return new Prop_lgt_sens        (turns_init, NR_TURNS);
+    case Prop_id::rAcid:             return new Prop_rAcid          (turns_init, NR_TURNS);
+    case Prop_id::rCold:             return new Prop_rCold          (turns_init, NR_TURNS);
+    case Prop_id::rConf:             return new Prop_rConfusion     (turns_init, NR_TURNS);
+    case Prop_id::rBreath:           return new Prop_rBreath        (turns_init, NR_TURNS);
+    case Prop_id::rElec:             return new Prop_rElec          (turns_init, NR_TURNS);
+    case Prop_id::rFear:             return new Prop_rFear          (turns_init, NR_TURNS);
+    case Prop_id::rPhys:             return new Prop_rPhys          (turns_init, NR_TURNS);
+    case Prop_id::rFire:             return new Prop_rFire          (turns_init, NR_TURNS);
+    case Prop_id::rPoison:           return new Prop_rPoison        (turns_init, NR_TURNS);
+    case Prop_id::rSleep:            return new Prop_rSleep         (turns_init, NR_TURNS);
+    case Prop_id::lgtSens:           return new Prop_lgtSens        (turns_init, NR_TURNS);
     case Prop_id::poss_by_zuul:        return new Prop_poss_by_zuul     (turns_init, NR_TURNS);
     case Prop_id::flying:            return new Prop_flying         (turns_init, NR_TURNS);
     case Prop_id::ethereal:          return new Prop_ethereal       (turns_init, NR_TURNS);
     case Prop_id::ooze:              return new Prop_ooze           (turns_init, NR_TURNS);
     case Prop_id::burrowing:         return new Prop_burrowing      (turns_init, NR_TURNS);
     case Prop_id::radiant:           return new Prop_radiant        (turns_init, NR_TURNS);
-    case Prop_id::r_disease:          return new Prop_rDisease       (turns_init, NR_TURNS);
+    case Prop_id::rDisease:          return new Prop_rDisease       (turns_init, NR_TURNS);
     case Prop_id::tele_ctrl:          return new Prop_tele_control    (turns_init, NR_TURNS);
     case Prop_id::spell_reflect:      return new Prop_spell_reflect   (turns_init, NR_TURNS);
     case Prop_id::strangled:         return new Prop_strangled      (turns_init, NR_TURNS);
@@ -933,9 +933,9 @@ bool Prop_handler::allow_see() const
 }
 
 void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
-                               const bool NO_MESSAGES,
-                               const bool DISABLE_REDRAW,
-                               const bool DISABLE_PROP_START_EFFECTS)
+                                  const bool NO_MESSAGES,
+                                  const bool DISABLE_REDRAW,
+                                  const bool DISABLE_PROP_START_EFFECTS)
 {
     assert(prop);
 
@@ -959,7 +959,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
     prop->owning_actor_    = owning_actor_;
 
     const bool IS_PLAYER  = owning_actor_->is_player();
-    bool player_see_owner   = Map::player->can_see_actor(*owning_actor_, nullptr);
+    bool player_see_owner   = map::player->can_see_actor(*owning_actor_, nullptr);
 
     if (!FORCE_EFFECT)
     {
@@ -978,18 +978,18 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
                 {
                     string msg = "";
                     prop->get_msg(prop_msg_on_res_player, msg);
-                    if (!msg.empty()) {Log::add_msg(msg, clr_white, true);}
+                    if (!msg.empty()) {msg_log::add(msg, clr_white, true);}
                 }
                 else //Is a monster
                 {
-                    if (Map::player->can_see_actor(*owning_actor_, nullptr))
+                    if (map::player->can_see_actor(*owning_actor_, nullptr))
                     {
                         string msg = "";
                         prop->get_msg(prop_msg_on_res_mon, msg);
                         if (!msg.empty())
                         {
                             const string monster_name = owning_actor_->get_name_the();
-                            Log::add_msg(monster_name + " " + msg, clr_white, true);
+                            msg_log::add(monster_name + " " + msg, clr_white, true);
                         }
                     }
                 }
@@ -1024,7 +1024,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
                     prop->get_msg(prop_msg_on_start_player, msg);
                     if (!msg.empty())
                     {
-                        Log::add_msg(msg, clr_white, true);
+                        msg_log::add(msg, clr_white, true);
                     }
                 }
                 else //Not player
@@ -1035,7 +1035,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
                         prop->get_msg(prop_msg_on_start_mon, msg);
                         if (!msg.empty())
                         {
-                            Log::add_msg(owning_actor_->get_name_the() + " " + msg);
+                            msg_log::add(owning_actor_->get_name_the() + " " + msg);
                         }
                     }
                 }
@@ -1044,7 +1044,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
             old_prop->on_more();
 
             old_prop->turns_left_ = (TURNS_LEFT_OLD < 0 || TURNS_LEFT_NEW < 0) ? -1 :
-                                  max(TURNS_LEFT_OLD, TURNS_LEFT_NEW);
+                                    max(TURNS_LEFT_OLD, TURNS_LEFT_NEW);
             delete prop;
             return;
         }
@@ -1060,8 +1060,8 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
         if (prop->should_update_player_visual_when_start_or_end())
         {
             prop->owning_actor_->update_clr();
-            Map::player->update_fov();
-            Render::draw_map_and_interface();
+            map::player->update_fov();
+            render::draw_map_and_interface();
         }
     }
 
@@ -1073,7 +1073,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
             prop->get_msg(prop_msg_on_start_player, msg);
             if (!msg.empty())
             {
-                Log::add_msg(msg, clr_white, true);
+                msg_log::add(msg, clr_white, true);
             }
         }
         else
@@ -1084,7 +1084,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
                 prop->get_msg(prop_msg_on_start_mon, msg);
                 if (!msg.empty())
                 {
-                    Log::add_msg(owning_actor_->get_name_the() + " " + msg);
+                    msg_log::add(owning_actor_->get_name_the() + " " + msg);
                 }
             }
         }
@@ -1095,7 +1095,7 @@ void Prop_handler::try_apply_prop_from_att(const Wpn& wpn, const bool IS_MELEE)
 {
     const Item_data_t& d            = wpn.get_data();
     const auto* const origin_prop  = IS_MELEE ? d.melee.prop_applied :
-                                    d.ranged.prop_applied;
+                                     d.ranged.prop_applied;
 
     if (origin_prop)
     {
@@ -1107,7 +1107,7 @@ void Prop_handler::try_apply_prop_from_att(const Wpn& wpn, const bool IS_MELEE)
             //Make a copy of the weapon effect
             auto* const prop_cpy =
                 mk_prop(origin_prop->get_id(), origin_prop->get_turns_init_type(),
-                       origin_prop->turns_left_);
+                        origin_prop->turns_left_);
             try_apply_prop(prop_cpy);
         }
     }
@@ -1145,8 +1145,8 @@ bool Prop_handler::end_applied_prop(const Prop_id id, const bool RUN_PROP_END_EF
         if (IS_VISUAL_UPDATE_NEEDED)
         {
             prop->owning_actor_->update_clr();
-            Map::player->update_fov();
-            Render::draw_map_and_interface();
+            map::player->update_fov();
+            render::draw_map_and_interface();
         }
 
         bool cur_prop_ids[size_t(Prop_id::END)];
@@ -1159,17 +1159,17 @@ bool Prop_handler::end_applied_prop(const Prop_id id, const bool RUN_PROP_END_EF
             {
                 string msg = "";
                 prop->get_msg(prop_msg_on_end_player, msg);
-                if (!msg.empty()) {Log::add_msg(msg, clr_white);}
+                if (!msg.empty()) {msg_log::add(msg, clr_white);}
             }
             else //Not player
             {
-                if (Map::player->can_see_actor(*owning_actor_, nullptr))
+                if (map::player->can_see_actor(*owning_actor_, nullptr))
                 {
                     string msg = "";
                     prop->get_msg(prop_msg_on_end_mon, msg);
                     if (!msg.empty())
                     {
-                        Log::add_msg(owning_actor_->get_name_the() + " " + msg);
+                        msg_log::add(owning_actor_->get_name_the() + " " + msg);
                     }
                 }
             }
@@ -1254,7 +1254,7 @@ void Prop_handler::get_props_interface_line(vector<Str_and_clr>& line) const
 {
     line.clear();
 
-    const bool IS_SELF_AWARE = Player_bon::traits[int(Trait::self_aware)];
+    const bool IS_SELF_AWARE = player_bon::traits[int(Trait::self_aware)];
 
     vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
@@ -1268,12 +1268,12 @@ void Prop_handler::get_props_interface_line(vector<Str_and_clr>& line) const
             const Prop_alignment alignment = prop->get_alignment();
             const int TURNS_LEFT = prop->turns_left_;
             const string turns_str = TURNS_LEFT > 0 && IS_SELF_AWARE ?
-                                    ("(" + to_str(TURNS_LEFT) + ")") : "";
+                                     ("(" + to_str(TURNS_LEFT) + ")") : "";
             line.push_back(
                 Str_and_clr(prop_name + turns_str,
-                          alignment == prop_alignment_good ? clr_msg_good :
-                          alignment == prop_alignment_bad  ? clr_msg_bad :
-                          clr_white));
+                            alignment == prop_alignment_good ? clr_msg_good :
+                            alignment == prop_alignment_bad  ? clr_msg_bad :
+                            clr_white));
         }
     }
 }
@@ -1586,13 +1586,13 @@ Prop::Prop(Prop_id id, Prop_turns turns_init, int turns) :
     turns_left_      (turns),
     owning_actor_    (nullptr),
     id_             (id),
-    data_           (&(Prop_data::data[int(id)])),
+    data_           (&(prop_data::data[int(id)])),
     turns_init_type_  (turns_init)
 {
     switch (turns_init)
     {
     case Prop_turns::std:
-        turns_left_ = Rnd::range(data_->std_rnd_turns);
+        turns_left_ = rnd::range(data_->std_rnd_turns);
         break;
 
     case Prop_turns::indefinite:
@@ -1626,18 +1626,18 @@ void Prop_hasted::on_start()
 
 void Prop_infected::on_new_turn()
 {
-    if (Rnd::one_in(165))
+    if (rnd::one_in(165))
     {
         Prop_handler& prop_hlr = owning_actor_->get_prop_handler();
         prop_hlr.try_apply_prop(new Prop_diseased(Prop_turns::std));
         prop_hlr.end_applied_prop(Prop_id::infected, false);
-        Log::more_prompt();
+        msg_log::more_prompt();
     }
 }
 
 int Prop_diseased::get_changed_max_hp(const int HP_MAX) const
 {
-    if (owning_actor_->is_player() && Player_bon::traits[int(Trait::survivalist)])
+    if (owning_actor_->is_player() && player_bon::traits[int(Trait::survivalist)])
     {
         return (HP_MAX * 3) / 4; //Survavlist makes you lose only 25% instead of 50%
     }
@@ -1652,7 +1652,7 @@ void Prop_diseased::on_start()
     //Actor::get_hp_max() will now return a decreased value
     //cap current HP to the new, lower, maximum
     int& hp = owning_actor_->hp_;
-    hp = min(Map::player->get_hp_max(true), hp);
+    hp = min(map::player->get_hp_max(true), hp);
 }
 
 bool Prop_diseased::is_resisting_other_prop(const Prop_id id) const
@@ -1666,34 +1666,34 @@ void Prop_poss_by_zuul::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
     if (IS_PLAYER_SEE_OWNING_ACTOR)
     {
         const string& name1 = owning_actor_->get_name_the();
-        const string& name2 = Actor_data::data[int(Actor_id::zuul)].name_the;
-        Log::add_msg(name1 + " was possessed by " + name2 + "!");
+        const string& name2 = actor_data::data[int(Actor_id::zuul)].name_the;
+        msg_log::add(name1 + " was possessed by " + name2 + "!");
     }
     owning_actor_->state_  = Actor_state::destroyed;
     const Pos& pos        = owning_actor_->pos;
-    Map::mk_gore(pos);
-    Map::mk_blood(pos);
-    Actor_factory::summon(pos, vector<Actor_id> {Actor_id::zuul}, true);
+    map::mk_gore(pos);
+    map::mk_blood(pos);
+    actor_factory::summon(pos, vector<Actor_id> {Actor_id::zuul}, true);
 
     //Zuul is now free, allow him to spawn.
-    Actor_data::data[size_t(Actor_id::zuul)].nr_left_allowed_to_spawn = -1;
+    actor_data::data[size_t(Actor_id::zuul)].nr_left_allowed_to_spawn = -1;
 }
 
 void Prop_poisoned::on_new_turn()
 {
     if (owning_actor_->is_alive())
     {
-        if (Game_time::get_turn() % POISON_DMG_N_TURN == 0)
+        if (game_time::get_turn() % POISON_DMG_N_TURN == 0)
         {
             if (owning_actor_->is_player())
             {
-                Log::add_msg("I am suffering from the poison!", clr_msg_bad, true);
+                msg_log::add("I am suffering from the poison!", clr_msg_bad, true);
             }
             else
             {
-                if (Map::player->can_see_actor(*owning_actor_, nullptr))
+                if (map::player->can_see_actor(*owning_actor_, nullptr))
                 {
-                    Log::add_msg(owning_actor_->get_name_the() + " suffers from poisoning!");
+                    msg_log::add(owning_actor_->get_name_the() + " suffers from poisoning!");
                 }
             }
             owning_actor_->hit(1, Dmg_type::pure);
@@ -1705,7 +1705,7 @@ bool Prop_terrified::allow_attack_melee(const bool ALLOW_MSG) const
 {
     if (owning_actor_->is_player() && ALLOW_MSG)
     {
-        Log::add_msg("I am too terrified to engage in close combat!");
+        msg_log::add("I am too terrified to engage in close combat!");
     }
     return false;
 }
@@ -1724,38 +1724,38 @@ void Prop_nailed::change_move_dir(const Pos& actor_pos, Dir& dir)
     {
         if (owning_actor_->is_player())
         {
-            Log::add_msg("I struggle to tear out the spike!", clr_msg_bad);
+            msg_log::add("I struggle to tear out the spike!", clr_msg_bad);
         }
         else
         {
-            if (Map::player->can_see_actor(*owning_actor_, nullptr))
+            if (map::player->can_see_actor(*owning_actor_, nullptr))
             {
-                Log::add_msg(owning_actor_->get_name_the() +  " struggles in pain!",
-                            clr_msg_good);
+                msg_log::add(owning_actor_->get_name_the() +  " struggles in pain!",
+                             clr_msg_good);
             }
         }
 
-        owning_actor_->hit(Rnd::dice(1, 3), Dmg_type::physical);
+        owning_actor_->hit(rnd::dice(1, 3), Dmg_type::physical);
 
         if (owning_actor_->is_alive())
         {
 
             //TODO: reimplement something affecting chance of success?
 
-            if (Rnd::one_in(4))
+            if (rnd::one_in(4))
             {
                 nr_spikes_--;
                 if (nr_spikes_ > 0)
                 {
                     if (owning_actor_->is_player())
                     {
-                        Log::add_msg("I rip out a spike from my flesh!");
+                        msg_log::add("I rip out a spike from my flesh!");
                     }
                     else
                     {
-                        if (Map::player->can_see_actor(*owning_actor_, nullptr))
+                        if (map::player->can_see_actor(*owning_actor_, nullptr))
                         {
-                            Log::add_msg(
+                            msg_log::add(
                                 owning_actor_->get_name_the() + " tears out a spike!");
                         }
                     }
@@ -1770,7 +1770,7 @@ bool Prop_confused::allow_read(const bool ALLOW_MSG) const
 {
     if (owning_actor_->is_player() && ALLOW_MSG)
     {
-        Log::add_msg("I am too confused to read.");
+        msg_log::add("I am too confused to read.");
     }
     return false;
 }
@@ -1779,7 +1779,7 @@ bool Prop_confused::allow_cast_spell(const bool ALLOW_MSG) const
 {
     if (owning_actor_->is_player() && ALLOW_MSG)
     {
-        Log::add_msg("I am too confused to concentrate.");
+        msg_log::add("I am too confused to concentrate.");
     }
     return false;
 }
@@ -1788,9 +1788,9 @@ bool Prop_confused::allow_attack_melee(const bool ALLOW_MSG) const
 {
     (void)ALLOW_MSG;
 
-    if (owning_actor_ != Map::player)
+    if (owning_actor_ != map::player)
     {
-        return Rnd::coin_toss();
+        return rnd::coin_toss();
     }
     return true;
 }
@@ -1799,9 +1799,9 @@ bool Prop_confused::allow_attack_ranged(const bool ALLOW_MSG) const
 {
     (void)ALLOW_MSG;
 
-    if (owning_actor_ != Map::player)
+    if (owning_actor_ != map::player)
     {
-        return Rnd::coin_toss();
+        return rnd::coin_toss();
     }
     return true;
 }
@@ -1811,23 +1811,23 @@ void Prop_confused::change_move_dir(const Pos& actor_pos, Dir& dir)
     if (dir != Dir::center)
     {
         bool blocked[MAP_W][MAP_H];
-        Map_parse::run(Cell_check::Blocks_actor(*owning_actor_, true),
-                      blocked);
+        map_parse::run(cell_check::Blocks_actor(*owning_actor_, true),
+                       blocked);
 
-        if (Rnd::one_in(8))
+        if (rnd::one_in(8))
         {
             int tries_left = 100;
             while (tries_left != 0)
             {
                 //-1 to 1 for x and y
-                const Pos delta(Rnd::range(-1, 1), Rnd::range(-1, 1));
+                const Pos delta(rnd::range(-1, 1), rnd::range(-1, 1));
                 if (delta.x != 0 || delta.y != 0)
                 {
                     const Pos c = actor_pos + delta;
 
                     if (!blocked[c.x][c.y])
                     {
-                        dir = Dir_utils::get_dir(delta);
+                        dir = dir_utils::get_dir(delta);
                     }
                 }
                 tries_left--;
@@ -1838,7 +1838,7 @@ void Prop_confused::change_move_dir(const Pos& actor_pos, Dir& dir)
 
 void Prop_strangled::on_new_turn()
 {
-    const int DMG = Rnd::range(3, 4);
+    const int DMG = rnd::range(3, 4);
 
     owning_actor_->hit(DMG, Dmg_type::pure, Dmg_method::forced);
 }
@@ -1847,7 +1847,7 @@ bool Prop_strangled::allow_speak(const bool ALLOW_MSG) const
 {
     if (ALLOW_MSG && owning_actor_->is_player())
     {
-        Log::add_msg("My throat is constricted.");
+        msg_log::add("My throat is constricted.");
     }
 
     return false;
@@ -1857,7 +1857,7 @@ bool Prop_strangled::allow_eat(const bool ALLOW_MSG) const
 {
     if (ALLOW_MSG && owning_actor_->is_player())
     {
-        Log::add_msg("My throat is constricted.");
+        msg_log::add("My throat is constricted.");
     }
 
     return false;
@@ -1889,10 +1889,10 @@ void Prop_frenzied::change_move_dir(const Pos& actor_pos, Dir& dir)
         const Pos& closest_mon_pos = seen_foes_cells[0];
 
         bool blocked[MAP_W][MAP_H];
-        Map_parse::run(Cell_check::Blocks_actor(*owning_actor_, false), blocked);
+        map_parse::run(cell_check::Blocks_actor(*owning_actor_, false), blocked);
 
         vector<Pos> line;
-        Line_calc::calc_new_line(actor_pos, closest_mon_pos, true, 999, false, line);
+        line_calc::calc_new_line(actor_pos, closest_mon_pos, true, 999, false, line);
 
         if (line.size() > 1)
         {
@@ -1903,7 +1903,7 @@ void Prop_frenzied::change_move_dir(const Pos& actor_pos, Dir& dir)
                     return;
                 }
             }
-            dir = Dir_utils::get_dir(line[1] - actor_pos);
+            dir = dir_utils::get_dir(line[1] - actor_pos);
         }
     }
 }
@@ -1934,7 +1934,7 @@ bool Prop_frenzied::allow_read(const bool ALLOW_MSG) const
 {
     if (owning_actor_->is_player() && ALLOW_MSG)
     {
-        Log::add_msg("I am too enraged to read!");
+        msg_log::add("I am too enraged to read!");
     }
     return false;
 }
@@ -1943,30 +1943,30 @@ bool Prop_frenzied::allow_cast_spell(const bool ALLOW_MSG) const
 {
     if (owning_actor_->is_player() && ALLOW_MSG)
     {
-        Log::add_msg("I am too enraged to concentrate!");
+        msg_log::add("I am too enraged to concentrate!");
     }
     return false;
 }
 
 void Prop_burning::on_start()
 {
-//  owning_actor_->add_light(Map::light);
+//  owning_actor_->add_light(map::light);
 }
 
 void Prop_burning::on_new_turn()
 {
     if (owning_actor_->is_player())
     {
-        Log::add_msg("AAAARGH IT BURNS!!!", clr_red_lgt);
+        msg_log::add("AAAARGH IT BURNS!!!", clr_red_lgt);
     }
-    owning_actor_->hit(Rnd::dice(1, 2), Dmg_type::fire);
+    owning_actor_->hit(rnd::dice(1, 2), Dmg_type::fire);
 }
 
 bool Prop_burning::allow_read(const bool ALLOW_MSG) const
 {
     if (owning_actor_->is_player() && ALLOW_MSG)
     {
-        Log::add_msg("I cannot read while burning.");
+        msg_log::add("I cannot read while burning.");
     }
     return false;
 }
@@ -1975,7 +1975,7 @@ bool Prop_burning::allow_cast_spell(const bool ALLOW_MSG) const
 {
     if (owning_actor_->is_player() && ALLOW_MSG)
     {
-        Log::add_msg("I cannot concentrate while burning!");
+        msg_log::add("I cannot concentrate while burning!");
     }
     return false;
 }
@@ -1984,7 +1984,7 @@ bool Prop_burning::allow_attack_ranged(const bool ALLOW_MSG) const
 {
     if (owning_actor_->is_player() && ALLOW_MSG)
     {
-        Log::add_msg("Not while burning.");
+        msg_log::add("Not while burning.");
     }
     return false;
 }
@@ -1996,7 +1996,7 @@ bool Prop_blind::should_update_player_visual_when_start_or_end() const
 
 void Prop_paralyzed::on_start()
 {
-    auto* const player = Map::player;
+    auto* const player = map::player;
     if (owning_actor_->is_player())
     {
         auto* const active_explosive = player->active_explosive;
@@ -2028,11 +2028,11 @@ bool Prop_rAcid::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
         {
             if (owning_actor_->is_player())
             {
-                Log::add_msg("I feel a faint burning sensation.");
+                msg_log::add("I feel a faint burning sensation.");
             }
-            else if (Map::player->can_see_actor(*owning_actor_, nullptr))
+            else if (map::player->can_see_actor(*owning_actor_, nullptr))
             {
-                Log::add_msg(owning_actor_->get_name_the() + " seems unaffected.");
+                msg_log::add(owning_actor_->get_name_the() + " seems unaffected.");
             }
         }
         return true;
@@ -2048,11 +2048,11 @@ bool Prop_rCold::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
         {
             if (owning_actor_->is_player())
             {
-                Log::add_msg("I feel chilly.");
+                msg_log::add("I feel chilly.");
             }
-            else if (Map::player->can_see_actor(*owning_actor_, nullptr))
+            else if (map::player->can_see_actor(*owning_actor_, nullptr))
             {
-                Log::add_msg(owning_actor_->get_name_the() + " seems unaffected.");
+                msg_log::add(owning_actor_->get_name_the() + " seems unaffected.");
             }
         }
         return true;
@@ -2068,11 +2068,11 @@ bool Prop_rElec::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
         {
             if (owning_actor_->is_player())
             {
-                Log::add_msg("I feel a faint tingle.");
+                msg_log::add("I feel a faint tingle.");
             }
-            else if (Map::player->can_see_actor(*owning_actor_, nullptr))
+            else if (map::player->can_see_actor(*owning_actor_, nullptr))
             {
-                Log::add_msg(owning_actor_->get_name_the() + " seems unaffected.");
+                msg_log::add(owning_actor_->get_name_the() + " seems unaffected.");
             }
         }
         return true;
@@ -2119,11 +2119,11 @@ bool Prop_rPhys::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
         {
             if (owning_actor_->is_player())
             {
-                Log::add_msg("I resist harm.");
+                msg_log::add("I resist harm.");
             }
-            else if (Map::player->can_see_actor(*owning_actor_, nullptr))
+            else if (map::player->can_see_actor(*owning_actor_, nullptr))
             {
-                Log::add_msg(owning_actor_->get_name_the() + " seems unaffected.");
+                msg_log::add(owning_actor_->get_name_the() + " seems unaffected.");
             }
         }
         return true;
@@ -2149,11 +2149,11 @@ bool Prop_rFire::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
         {
             if (owning_actor_->is_player())
             {
-                Log::add_msg("I feel hot.");
+                msg_log::add("I feel hot.");
             }
-            else if (Map::player->can_see_actor(*owning_actor_, nullptr))
+            else if (map::player->can_see_actor(*owning_actor_, nullptr))
             {
-                Log::add_msg(owning_actor_->get_name_the() + " seems unaffected.");
+                msg_log::add(owning_actor_->get_name_the() + " seems unaffected.");
             }
         }
         return true;
@@ -2195,5 +2195,5 @@ void Prop_rDisease::on_start()
 void Prop_burrowing::on_new_turn()
 {
     const Pos& p = owning_actor_->pos;
-    Map::cells[p.x][p.y].rigid->hit(Dmg_type::physical, Dmg_method::forced);
+    map::cells[p.x][p.y].rigid->hit(Dmg_type::physical, Dmg_method::forced);
 }

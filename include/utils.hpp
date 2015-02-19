@@ -38,7 +38,7 @@ int percent();
 
 bool percent(const int PCT_CHANCE);
 
-} //Rnd
+} //rnd
 
 enum class Time_type
 {
@@ -97,7 +97,7 @@ void reverse_bool_array(bool array[MAP_W][MAP_H]);
 void copy_bool_array(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]);
 
 void mk_vector_from_bool_map(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_H],
-                         std::vector<Pos>& out);
+                             std::vector<Pos>& out);
 
 void mk_bool_map_from_vector(const std::vector<Pos>& positions, bool out[MAP_W][MAP_H]);
 
@@ -114,7 +114,7 @@ bool is_pos_inside_map(const Pos& pos, const bool COUNT_EDGE_AS_INSIDE = true);
 bool is_pos_inside(const Pos& pos, const Rect& area);
 
 bool is_area_inside_other(const Rect& inner, const Rect& outer,
-                       const bool COUNT_EQUAL_AS_INSIDE);
+                          const bool COUNT_EQUAL_AS_INSIDE);
 
 bool is_area_inside_map(const Rect& area);
 
@@ -132,7 +132,7 @@ bool is_val_in_range(const int VAL, const Range& range);
 
 Time_data get_cur_time();
 
-} //Utils
+} //utils
 
 namespace dir_utils
 {
@@ -163,6 +163,6 @@ void get_compass_dir_name(const Pos& offset, std::string& str_ref);
 
 bool is_cardinal(const Pos& d);
 
-} //Dir_utils
+} //dir_utils
 
 #endif

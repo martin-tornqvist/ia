@@ -26,7 +26,7 @@ namespace map_gen_utils
 
 //NOTE: Some of the reshape functions below will never change the boundaries of the room,
 //but they may affect which cells belong to the room. However, this is done on
-//Map::room_map - so the room parameter should be a const reference for these methods.
+//map::room_map - so the room parameter should be a const reference for these methods.
 //For other reshape functions the room may expand beyond its initial rectangle, so in
 //those cases the functions need to assign values to the data of the room object.
 void cut_room_corners (const Room& room);
@@ -36,19 +36,19 @@ void cavify_room     (Room& room);
 void get_valid_room_corr_entries(const Room& room, std::vector<Pos>& out);
 
 void mk_path_find_cor(Room& r0, Room& r1,
-                   bool door_proposals[MAP_W][MAP_H] = nullptr);
+                      bool door_proposals[MAP_W][MAP_H] = nullptr);
 
 void backup_map();
 void restore_map();
 
 void rnd_walk(const Pos& p0, int len, std::vector<Pos>& pos_list_ref,
-             const bool ALLOW_DIAGONAL = true,
-             Rect area = Rect(1, 1, MAP_W - 2, MAP_H - 2));
+              const bool ALLOW_DIAGONAL = true,
+              Rect area = Rect(1, 1, MAP_W - 2, MAP_H - 2));
 
 void pathfinder_walk(const Pos& p0, const Pos& p1, std::vector<Pos>& pos_list_ref,
-                    const bool IS_SMOOTH);
+                     const bool IS_SMOOTH);
 
-} //Map_gen_utils
+} //map_gen_utils
 
 namespace map_gen
 {
@@ -66,6 +66,6 @@ bool mk_rats_in_the_walls_lvl();
 bool mk_trapezohedron_lvl();
 bool mk_boss_lvl();
 
-} //Map_gen
+} //map_gen
 
 #endif

@@ -24,9 +24,9 @@ Feature_room_spawn_rules::Feature_room_spawn_rules() :
 void Feature_room_spawn_rules::reset() {*this = Feature_room_spawn_rules();}
 
 void Feature_room_spawn_rules::set(const int MAX_NR_IN_ROOM,
-                                const Range& dlvls_allowed,
-                                const Placement_rule placement_rule,
-                                std::initializer_list<Room_type> room_types)
+                                   const Range& dlvls_allowed,
+                                   const Placement_rule placement_rule,
+                                   std::initializer_list<Room_type> room_types)
 {
     max_nr_in_room_    = MAX_NR_IN_ROOM;
     dlvls_allowed_   = dlvls_allowed;
@@ -143,7 +143,7 @@ void init_data_list()
     //---------------------------------------------------------------------------
     d.id = Feature_id::wall;
     d.mk_obj = [](const Pos & p) {return new Wall(p);};
-    d.glyph = Config::is_ascii_wall_full_square() ? 10 : '#';
+    d.glyph = config::is_ascii_wall_full_square() ? 10 : '#';
     d.tile = Tile_id::wall_top;
     d.move_rules.set_prop_can_move(Prop_id::ethereal);
     d.move_rules.set_prop_can_move(Prop_id::burrowing);

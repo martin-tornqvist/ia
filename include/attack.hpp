@@ -17,7 +17,7 @@ class Att_data
 public:
     Actor* attacker;
     Actor* defender;
-    Ability_roll_result attack_result;
+    ability_roll_result attack_result;
     int nr_dmg_rolls, nr_dmg_sides, dmg_plus;
     int dmg_roll, dmg;
     bool is_intrinsic_att;
@@ -40,10 +40,10 @@ class Ranged_att_data: public Att_data
 {
 public:
     Ranged_att_data(Actor& attacker_, const Wpn& wpn_, const Pos& aim_pos_,
-                  const Pos& cur_pos_, Actor_size intended_aim_lvl_ = Actor_size::none);
-    int           hit_chance_tot;
-    Actor_size   intended_aim_lvl;
-    Actor_size   defender_size;
+                    const Pos& cur_pos_, Actor_size intended_aim_lvl_ = Actor_size::none);
+    int         hit_chance_tot;
+    Actor_size  intended_aim_lvl;
+    Actor_size  defender_size;
     std::string verb_player_attacks;
     std::string verb_other_attacks;
 };
@@ -52,7 +52,7 @@ class Throw_att_data: public Att_data
 {
 public:
     Throw_att_data(Actor& attacker_, const Item& item_, const Pos& aim_pos_,
-                 const Pos& cur_pos_, Actor_size intended_aim_lvl_ = Actor_size::none);
+                   const Pos& cur_pos_, Actor_size intended_aim_lvl_ = Actor_size::none);
     int       hit_chance_tot;
     Actor_size intended_aim_lvl;
     Actor_size defender_size;
@@ -107,7 +107,7 @@ void melee(Actor& attacker, const Wpn& wpn, Actor& defender);
 bool ranged(Actor& attacker, Wpn& wpn, const Pos& aim_pos);
 
 void get_ranged_hit_chance(const Actor& attacker, const Actor& defender,
-                        const Wpn& wpn);
+                           const Wpn& wpn);
 
 } //Attack
 

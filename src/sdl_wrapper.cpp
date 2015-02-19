@@ -33,7 +33,7 @@ void init()
         assert(false);
     }
 
-    SDL_Enable_uNICODE(1);
+    SDL_EnableUNICODE(1);
 
     if (IMG_Init(IMG_INIT_PNG) == -1)
     {
@@ -46,13 +46,13 @@ void init()
     const int     AUDIO_CHANNELS  = 2;
     const int     AUDIO_BUFFERS   = 1024;
 
-    if (Mix_Open_audio(AUDIO_FREQ, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS) == -1)
+    if (Mix_OpenAudio(AUDIO_FREQ, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS) == -1)
     {
         TRACE << "Failed to init SDL_mixer" << endl;
         assert(false);
     }
 
-    Mix_Allocate_channels(AUDIO_ALLOCATED_CHANNELS);
+    Mix_AllocateChannels(AUDIO_ALLOCATED_CHANNELS);
 
     TRACE_FUNC_END;
 }
@@ -61,14 +61,14 @@ void cleanup()
 {
     is_inited = false;
     IMG_Quit();
-    Mix_Allocate_channels(0);
-    Mix_Close_audio();
+    Mix_AllocateChannels(0);
+    Mix_CloseAudio();
     SDL_Quit();
 }
 
 void sleep(const Uint32 DURATION)
 {
-    if (is_inited && !Config::is_bot_playing())
+    if (is_inited && !config::is_bot_playing())
     {
         if (DURATION == 1)
         {
@@ -76,8 +76,8 @@ void sleep(const Uint32 DURATION)
         }
         else
         {
-            const Uint32 WAIT_UNTIL = SDL_Get_ticks() + DURATION;
-            while (SDL_Get_ticks() < WAIT_UNTIL) {SDL_Pump_events();}
+            const Uint32 WAIT_UNTIL = SDL_GetTicks() + DURATION;
+            while (SDL_GetTicks() < WAIT_UNTIL) {SDL_PumpEvents();}
         }
     }
 }

@@ -16,13 +16,13 @@ namespace item_factory
 
 Item* mk(const Item_id item_id, const int NR_ITEMS)
 {
-    Item*             r     = nullptr;
-    Item_data_t* const  d     = Item_data::data[int(item_id)];
-    Item_data_t*        ammo_d = nullptr;
+    Item*               r       = nullptr;
+    Item_data_t* const  d       = item_data::data[int(item_id)];
+    Item_data_t*        ammo_d  = nullptr;
 
     if (d->ranged.ammo_item_id != Item_id::END)
     {
-        ammo_d = Item_data::data[int(d->ranged.ammo_item_id)];
+        ammo_d = item_data::data[int(d->ranged.ammo_item_id)];
     }
 
     switch (item_id)
@@ -94,7 +94,7 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
     case Item_id::frost_vortex_engulf:
     case Item_id::mold_spores:
     case Item_id::mi_go_sting:
-        case Item_id::mi_go_commander_sting:
+    case Item_id::mi_go_commander_sting:
     case Item_id::the_high_priest_claw:
         r = new Wpn(d, ammo_d);
         break;
@@ -357,7 +357,7 @@ void set_item_randomized_properties(Item* item)
         Wpn* const wpn = static_cast<Wpn*>(item);
         if (wpn->AMMO_CAP == 1)
         {
-            wpn->nr_ammo_loaded = Rnd::coin_toss() ? 1 : 0;
+            wpn->nr_ammo_loaded = rnd::coin_toss() ? 1 : 0;
         }
         else
         {
@@ -368,24 +368,24 @@ void set_item_randomized_properties(Item* item)
                 const int CAP         = wpn->AMMO_CAP;
                 const int CAP_SCALED  = CAP / NR_MG_PROJECTILES;
                 const int MIN_SCALED  = CAP_SCALED / 4;
-                wpn->nr_ammo_loaded     = Rnd::range(MIN_SCALED, CAP_SCALED) *
-                                        NR_MG_PROJECTILES;
+                wpn->nr_ammo_loaded     = rnd::range(MIN_SCALED, CAP_SCALED) *
+                                          NR_MG_PROJECTILES;
             }
             else //Not machinegun
             {
-                wpn->nr_ammo_loaded = Rnd::range(wpn->AMMO_CAP / 4, wpn->AMMO_CAP);
+                wpn->nr_ammo_loaded = rnd::range(wpn->AMMO_CAP / 4, wpn->AMMO_CAP);
             }
         }
     }
 
-    if (d.is_stackable) {item->nr_items_ = Rnd::range(1, d.max_stack_at_spawn);}
+    if (d.is_stackable) {item->nr_items_ = rnd::range(1, d.max_stack_at_spawn);}
 }
 
 Item* mk_item_on_floor(const Item_id item_id, const Pos& pos)
 {
     Item* item = mk(item_id);
     set_item_randomized_properties(item);
-    Item_drop::drop_item_on_map(pos, *item);
+    item_drop::drop_item_on_map(pos, *item);
     return item;
 }
 
@@ -402,7 +402,7 @@ Item* mk_random_scroll_or_potion(const bool ALLOW_SCROLLS, const bool ALLOW_POTI
 
     for (int i = 0; i < int(Item_id::END); ++i)
     {
-        const Item_data_t* const d = Item_data::data[i];
+        const Item_data_t* const d = item_data::data[i];
 
         if (
             (d->type == Item_type::scroll && ALLOW_SCROLLS) ||
@@ -414,11 +414,11 @@ Item* mk_random_scroll_or_potion(const bool ALLOW_SCROLLS, const bool ALLOW_POTI
 
     if (!item_bucket.empty())
     {
-        const int ELEMENT = Rnd::range(0, item_bucket.size() - 1);
+        const int ELEMENT = rnd::range(0, item_bucket.size() - 1);
         return mk(item_bucket[ELEMENT]);
     }
 
     return nullptr;
 }
 
-} //Item_factory
+} //item_factory

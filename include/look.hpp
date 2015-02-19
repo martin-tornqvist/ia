@@ -23,6 +23,6 @@ void print_location_info_msgs(const Pos& pos);
 
 void print_detailed_actor_descr(const Actor& actor);
 
-} //Look
+} //look
 
 #endif

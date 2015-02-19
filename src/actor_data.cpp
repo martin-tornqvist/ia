@@ -12,7 +12,7 @@
 
 using namespace std;
 
-void Actor_data_t::reset()
+void actor_data_t::reset()
 {
     id = Actor_id::END;
     name_a = "";
@@ -63,14 +63,14 @@ void Actor_data_t::reset()
 namespace actor_data
 {
 
-Actor_data_t data[int(Actor_id::END)];
+actor_data_t data[int(Actor_id::END)];
 
 namespace
 {
 
 void init_data_list()
 {
-    Actor_data_t d;
+    actor_data_t d;
     d.reset();
 
     d.name_a = "Player";
@@ -81,7 +81,7 @@ void init_data_list()
     d.speed = Actor_speed::normal;
     d.glyph = '@';
     d.color = clr_white_high;
-    d.tile = Tile_id::player_firearm;
+    d.tile = Tile_id::playerFirearm;
     d.is_auto_spawn_allowed = false;
     d.actor_size = Actor_size::humanoid;
     d.is_humanoid = true;
@@ -742,7 +742,7 @@ void init_data_list()
     d.dmg_melee = 3;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::stealth, 90);
-    d.intr_props[int(Prop_id::lgt_sens)] = true;
+    d.intr_props[int(Prop_id::lgtSens)] = true;
     d.spawn_min_dLVL = 6;
     d.spawn_max_dLVL = DLVL_LAST_MID_GAME;
     d.can_see_in_darkness = true;
@@ -822,7 +822,7 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::ranged, 65);
     d.ability_vals.set_val(Ability_id::dodge_att, 35);
-    d.intr_props[int(Prop_id::r_fire)] = true;
+    d.intr_props[int(Prop_id::rFire)] = true;
     d.spawn_min_dLVL = 9;
     d.can_see_in_darkness = true;
     d.group_size = Mon_group_size::few;
@@ -867,7 +867,7 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::ranged, 65);
     d.ability_vals.set_val(Ability_id::dodge_att, 35);
-    d.intr_props[int(Prop_id::r_cold)] = true;
+    d.intr_props[int(Prop_id::rCold)] = true;
     d.spawn_min_dLVL = 9;
     d.can_see_in_darkness = true;
     d.group_size = Mon_group_size::few;
@@ -912,7 +912,7 @@ void init_data_list()
     d.dmg_melee = 8;
     d.ability_vals.set_val(Ability_id::melee, 60);
     d.ability_vals.set_val(Ability_id::dodge_att, 25);
-    d.intr_props[int(Prop_id::r_fear)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
     d.spawn_min_dLVL = 13;
     d.spawn_max_dLVL = 999;
     d.can_see_in_darkness = true;
@@ -961,8 +961,8 @@ void init_data_list()
     d.dmg_melee = 2;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.intr_props[int(Prop_id::ethereal)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
-    d.intr_props[int(Prop_id::r_conf)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.intr_props[int(Prop_id::rConf)] = true;
     d.spawn_min_dLVL = 3;
     d.spawn_max_dLVL = d.spawn_min_dLVL + 5;
     d.can_see_in_darkness = true;
@@ -1003,8 +1003,8 @@ void init_data_list()
     d.dmg_melee = 2;
     d.ability_vals.set_val(Ability_id::melee, 45);
     d.intr_props[int(Prop_id::ethereal)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
-    d.intr_props[int(Prop_id::r_conf)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.intr_props[int(Prop_id::rConf)] = true;
     d.spawn_min_dLVL = 7;
     d.spawn_max_dLVL = d.spawn_min_dLVL + 5;
     d.can_see_in_darkness = true;
@@ -1048,8 +1048,8 @@ void init_data_list()
     d.dmg_melee = 2;
     d.ability_vals.set_val(Ability_id::melee, 50);
     d.intr_props[int(Prop_id::ethereal)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
-    d.intr_props[int(Prop_id::r_conf)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.intr_props[int(Prop_id::rConf)] = true;
     d.spawn_min_dLVL = 12;
     d.can_see_in_darkness = true;
     d.group_size = Mon_group_size::alone;
@@ -1486,14 +1486,14 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::melee, 60);
     d.ability_vals.set_val(Ability_id::stealth, 85);
     d.intr_props[int(Prop_id::flying)] = true;
-    d.intr_props[int(Prop_id::r_phys)] = true;
-    d.intr_props[int(Prop_id::r_conf)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
-    d.intr_props[int(Prop_id::r_acid)] = true;
-    d.intr_props[int(Prop_id::r_cold)] = true;
-    d.intr_props[int(Prop_id::r_fire)] = true;
-    d.intr_props[int(Prop_id::r_poison)] = true;
-    d.intr_props[int(Prop_id::r_sleep)] = true;
+    d.intr_props[int(Prop_id::rPhys)] = true;
+    d.intr_props[int(Prop_id::rConf)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.intr_props[int(Prop_id::rAcid)] = true;
+    d.intr_props[int(Prop_id::rCold)] = true;
+    d.intr_props[int(Prop_id::rFire)] = true;
+    d.intr_props[int(Prop_id::rPoison)] = true;
+    d.intr_props[int(Prop_id::rSleep)] = true;
     d.prevent_knockback = true;
     d.spawn_min_dLVL = 6;
     d.group_size = Mon_group_size::alone;
@@ -1543,14 +1543,14 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::melee, 70);
     d.ability_vals.set_val(Ability_id::stealth, 85);
     d.intr_props[int(Prop_id::flying)] = true;
-    d.intr_props[int(Prop_id::r_phys)] = true;
-    d.intr_props[int(Prop_id::r_conf)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
-    d.intr_props[int(Prop_id::r_acid)] = true;
-    d.intr_props[int(Prop_id::r_cold)] = true;
-    d.intr_props[int(Prop_id::r_fire)] = true;
-    d.intr_props[int(Prop_id::r_poison)] = true;
-    d.intr_props[int(Prop_id::r_sleep)] = true;
+    d.intr_props[int(Prop_id::rPhys)] = true;
+    d.intr_props[int(Prop_id::rConf)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.intr_props[int(Prop_id::rAcid)] = true;
+    d.intr_props[int(Prop_id::rCold)] = true;
+    d.intr_props[int(Prop_id::rFire)] = true;
+    d.intr_props[int(Prop_id::rPoison)] = true;
+    d.intr_props[int(Prop_id::rSleep)] = true;
     d.prevent_knockback = true;
     d.spawn_min_dLVL = DLVL_LAST - 4;
     d.group_size = Mon_group_size::alone;
@@ -1638,9 +1638,9 @@ void init_data_list()
     d.dmg_melee = 3;
     d.ability_vals.set_val(Ability_id::melee, 35);
     d.ability_vals.set_val(Ability_id::stealth, 90);
-    d.intr_props[int(Prop_id::lgt_sens)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
-    d.intr_props[int(Prop_id::r_conf)] = true;
+    d.intr_props[int(Prop_id::lgtSens)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.intr_props[int(Prop_id::rConf)] = true;
     d.prevent_knockback = true;
     d.spawn_min_dLVL = 4;
     d.spawn_max_dLVL = d.spawn_min_dLVL + 5;
@@ -1979,9 +1979,9 @@ void init_data_list()
     d.dmg_melee = 4;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.intr_props[int(Prop_id::flying)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
-    d.intr_props[int(Prop_id::r_conf)] = true;
-    d.intr_props[int(Prop_id::r_poison)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.intr_props[int(Prop_id::rConf)] = true;
+    d.intr_props[int(Prop_id::rPoison)] = true;
     d.prevent_knockback = true;
     d.spawn_min_dLVL = 8;
     d.spawn_max_dLVL = d.spawn_min_dLVL + 5;
@@ -2024,10 +2024,10 @@ void init_data_list()
     d.dmg_melee = 6;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.intr_props[int(Prop_id::flying)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
-    d.intr_props[int(Prop_id::r_conf)] = true;
-    d.intr_props[int(Prop_id::r_fire)] = true;
-    d.intr_props[int(Prop_id::r_poison)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.intr_props[int(Prop_id::rConf)] = true;
+    d.intr_props[int(Prop_id::rFire)] = true;
+    d.intr_props[int(Prop_id::rPoison)] = true;
     d.prevent_knockback = true;
     d.spawn_min_dLVL = 13;
     d.group_size = Mon_group_size::few;
@@ -2069,10 +2069,10 @@ void init_data_list()
     d.dmg_melee = 6;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.intr_props[int(Prop_id::flying)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
-    d.intr_props[int(Prop_id::r_conf)] = true;
-    d.intr_props[int(Prop_id::r_cold)] = true;
-    d.intr_props[int(Prop_id::r_poison)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.intr_props[int(Prop_id::rConf)] = true;
+    d.intr_props[int(Prop_id::rCold)] = true;
+    d.intr_props[int(Prop_id::rPoison)] = true;
     d.prevent_knockback = true;
     d.spawn_min_dLVL = 13;
     d.group_size = Mon_group_size::few;
@@ -2114,8 +2114,8 @@ void init_data_list()
     d.dmg_melee = 6;
     d.ability_vals.set_val(Ability_id::melee, 50);
     d.intr_props[int(Prop_id::ooze)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
-    d.intr_props[int(Prop_id::r_conf)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.intr_props[int(Prop_id::rConf)] = true;
     d.spawn_min_dLVL = 3;
     d.spawn_max_dLVL = d.spawn_min_dLVL + 5;
     d.can_see_in_darkness = true;
@@ -2164,8 +2164,8 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::melee, 50);
     d.ability_vals.set_val(Ability_id::stealth, 90);
     d.intr_props[int(Prop_id::ooze)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
-    d.intr_props[int(Prop_id::r_conf)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.intr_props[int(Prop_id::rConf)] = true;
     d.spawn_min_dLVL = 4;
     d.spawn_max_dLVL = d.spawn_min_dLVL + 5;
     d.can_see_in_darkness = true;
@@ -2213,8 +2213,8 @@ void init_data_list()
     d.dmg_melee = 6;
     d.ability_vals.set_val(Ability_id::melee, 50);
     d.intr_props[int(Prop_id::ooze)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
-    d.intr_props[int(Prop_id::r_conf)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.intr_props[int(Prop_id::rConf)] = true;
     d.spawn_min_dLVL = 5;
     d.spawn_max_dLVL = d.spawn_min_dLVL + 5;
     d.can_see_in_darkness = true;
@@ -2263,9 +2263,9 @@ void init_data_list()
     d.dmg_melee = 6;
     d.ability_vals.set_val(Ability_id::melee, 50);
     d.intr_props[int(Prop_id::ooze)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
-    d.intr_props[int(Prop_id::r_conf)] = true;
-    d.intr_props[int(Prop_id::r_poison)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.intr_props[int(Prop_id::rConf)] = true;
+    d.intr_props[int(Prop_id::rPoison)] = true;
     d.spawn_min_dLVL = 9;
     d.spawn_max_dLVL = d.spawn_min_dLVL + 5;
     d.can_see_in_darkness = true;
@@ -2315,8 +2315,8 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::melee, 50);
     d.intr_props[int(Prop_id::ooze)] = true;
     d.intr_props[int(Prop_id::ethereal)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
-    d.intr_props[int(Prop_id::r_conf)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.intr_props[int(Prop_id::rConf)] = true;
     d.spawn_min_dLVL = 14;
     d.can_see_in_darkness = true;
     d.group_size = Mon_group_size::alone;
@@ -2361,7 +2361,7 @@ void init_data_list()
     d.dmg_melee = 10;
     d.ability_vals.set_val(Ability_id::melee, 45);
     d.intr_props[int(Prop_id::burrowing)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
     d.prevent_knockback = true;
     d.spawn_min_dLVL = 12;
     d.can_see_in_darkness = true;
@@ -2410,7 +2410,7 @@ void init_data_list()
     d.dmg_melee = 12;
     d.ability_vals.set_val(Ability_id::melee, 75);
     d.intr_props[int(Prop_id::flying)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
     d.prevent_knockback = true;
     d.spawn_min_dLVL = DLVL_LAST - 6;
     d.spawn_max_dLVL = 999;
@@ -2466,11 +2466,11 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::dodge_att, 35);
     d.intr_props[int(Prop_id::flying)] = true;
     d.intr_props[int(Prop_id::radiant)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
-    d.intr_props[int(Prop_id::r_breath)] = true;
-    d.intr_props[int(Prop_id::r_poison)] = true;
-    d.intr_props[int(Prop_id::r_sleep)] = true;
-    d.intr_props[int(Prop_id::r_disease)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.intr_props[int(Prop_id::rBreath)] = true;
+    d.intr_props[int(Prop_id::rPoison)] = true;
+    d.intr_props[int(Prop_id::rSleep)] = true;
+    d.intr_props[int(Prop_id::rDisease)] = true;
     d.spawn_min_dLVL = 14;
     d.group_size = Mon_group_size::alone;
     d.actor_size = Actor_size::humanoid;
@@ -2551,8 +2551,8 @@ void init_data_list()
     d.hp = 1;
     d.spi = 1;
     d.intr_props[int(Prop_id::flying)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
-    d.intr_props[int(Prop_id::r_conf)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.intr_props[int(Prop_id::rConf)] = true;
     d.spawn_min_dLVL = 3;
     d.group_size = Mon_group_size::group;
     d.actor_size = Actor_size::humanoid;
@@ -2598,10 +2598,10 @@ void init_data_list()
     d.tile = Tile_id::the_high_priest;
     d.hp = 250;
     d.spi = 99999;
-    d.intr_props[int(Prop_id::r_conf)] = true;
-    d.intr_props[int(Prop_id::r_fear)] = true;
-    d.intr_props[int(Prop_id::r_fire)] = true;
-    d.intr_props[int(Prop_id::r_breath)] = true;
+    d.intr_props[int(Prop_id::rConf)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.intr_props[int(Prop_id::rFire)] = true;
+    d.intr_props[int(Prop_id::rBreath)] = true;
     d.dmg_melee = 10;
     d.ability_vals.set_val(Ability_id::melee, 70);
     d.is_auto_spawn_allowed = false;
@@ -2667,4 +2667,4 @@ void setup_from_save_lines(vector<string>& lines)
     }
 }
 
-} //Actor_data
+} //actor_data

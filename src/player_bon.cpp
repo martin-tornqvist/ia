@@ -124,7 +124,7 @@ void get_bg_descr(const Bg id, vector<string>& lines_ref)
         lines_ref.push_back("Can learn spells cast from manuscripts");
         lines_ref.push_back(" ");
         lines_ref.push_back("-50% shock taken from using and identifying "
-                           "strange items (e.g. potions)");
+                            "strange items (e.g. potions)");
         lines_ref.push_back(" ");
         lines_ref.push_back("Can dispel magic traps");
         lines_ref.push_back(" ");
@@ -138,13 +138,13 @@ void get_bg_descr(const Bg id, vector<string>& lines_ref)
 
     case Bg::rogue:
         lines_ref.push_back("Has an arcane ability to cloud the minds of "
-                           "enemies, causing them to forget their pursuit "
-                           "(press [x])");
+                            "enemies, causing them to forget their pursuit "
+                            "(press [x])");
         lines_ref.push_back(" ");
         lines_ref.push_back("+25% hit chance with ranged attacks vs unaware targets");
         lines_ref.push_back(" ");
         lines_ref.push_back("The rate of shock recieved passively over time "
-                           "is reduced by half");
+                            "is reduced by half");
         lines_ref.push_back(" ");
         lines_ref.push_back("Starts with the following trait(s):");
         lines_ref.push_back(" ");
@@ -621,11 +621,11 @@ void pick_bg(const Bg bg)
     {
     case Bg::occultist:
         pick_trait(Trait::stout_spirit);
-        Map::player->change_max_hp(-2, false); //Occultist starts with fewer HP
+        map::player->change_max_hp(-2, false); //Occultist starts with fewer HP
         break;
 
     case Bg::rogue:
-        Player_spells_handling::learn_spell_if_not_known(Spell_id::cloud_minds);
+        player_spells_handling::learn_spell_if_not_known(Spell_id::cloud_minds);
         pick_trait(Trait::observant);
         pick_trait(Trait::stealthy);
         break;
@@ -634,7 +634,7 @@ void pick_bg(const Bg bg)
         pick_trait(Trait::adept_melee_fighter);
         pick_trait(Trait::adept_marksman);
         pick_trait(Trait::tough);
-        Map::player->ins_ += 10; //War Veteran starts a little bit insane
+        map::player->ins_ += 10; //War Veteran starts a little bit insane
         break;
 
     case Bg::END: {}
@@ -656,36 +656,36 @@ void pick_trait(const Trait id)
     switch (id)
     {
     case Trait::tough:
-        Map::player->change_max_hp(2, false);
+        map::player->change_max_hp(2, false);
         break;
 
     case Trait::rugged:
-        Map::player->change_max_hp(2, false);
+        map::player->change_max_hp(2, false);
         break;
 
     case Trait::unbreakable:
-        Map::player->change_max_hp(2, false);
+        map::player->change_max_hp(2, false);
         break;
 
     case Trait::stout_spirit:
-        Map::player->change_max_spi(2, false);
+        map::player->change_max_spi(2, false);
         break;
 
     case Trait::strong_spirit:
-        Map::player->change_max_spi(2, false);
+        map::player->change_max_spi(2, false);
         break;
 
     case Trait::mighty_spirit:
-        Map::player->change_max_spi(2, false);
+        map::player->change_max_spi(2, false);
         break;
 
     case Trait::self_aware:
-        Map::player->get_prop_handler().try_apply_prop(
+        map::player->get_prop_handler().try_apply_prop(
             new Prop_rConfusion(Prop_turns::indefinite), true, true, true, false);
         break;
 
     case Trait::fearless:
-        Map::player->get_prop_handler().try_apply_prop(
+        map::player->get_prop_handler().try_apply_prop(
             new Prop_rFear(Prop_turns::indefinite), true, true, true, false);
         break;
 
@@ -717,11 +717,11 @@ int get_spi_occultist_can_cast_at_lvl(const int LVL)
     return PLAYER_START_SPI + SPI_FROM_LVLS + SPI_FROM_START_TRAIT - 1;
 }
 
-bool gets_undead_bane_bon(const Actor& attacker, const Actor_data_t& actor_data)
+bool gets_undead_bane_bon(const Actor& attacker, const actor_data_t& actor_data)
 {
     return attacker.is_player()                              &&
-           Player_bon::traits[int(Trait::undead_bane)]  &&
+           player_bon::traits[int(Trait::undead_bane)]  &&
            actor_data.is_undead;
 }
 
-} //Player_bon
+} //player_bon

@@ -13,7 +13,7 @@
 #include "actor.hpp"
 #include "actor_player.hpp"
 #include "actor_mon.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "attack.hpp"
 #include "feature_mob.hpp"
 #include "feature_door.hpp"
@@ -54,16 +54,17 @@ void load_main_menu_logo()
 
     SDL_Surface* main_menu_logo_surface_tmp = IMG_Load(main_menu_logo_img_name.data());
 
-    main_menu_logo_surface = SDL_Display_format_alpha(main_menu_logo_surface_tmp);
+    main_menu_logo_surface = SDL_DisplayFormatAlpha(main_menu_logo_surface_tmp);
 
-    SDL_Free_surface(main_menu_logo_surface_tmp);
+    SDL_FreeSurface(main_menu_logo_surface_tmp);
 
     TRACE_FUNC_END;
 }
 
 Uint32 get_pixel(SDL_Surface* const surface, const int PIXEL_X, const int PIXEL_Y)
 {
-    int bpp = surface->format->Bytes_per_pixel;
+    int bpp = surface->format->BytesPerPixel;
+
     /* Here p is the address to the pixel we want to retrieve */
     Uint8* p = (Uint8*)surface->pixels + PIXEL_Y * surface->pitch + PIXEL_X * bpp;
 
@@ -89,9 +90,10 @@ Uint32 get_pixel(SDL_Surface* const surface, const int PIXEL_X, const int PIXEL_
 }
 
 void put_pixel(SDL_Surface* const surface, const int PIXEL_X, const int PIXEL_Y,
-              Uint32 pixel)
+               Uint32 pixel)
 {
-    int bpp = surface->format->Bytes_per_pixel;
+    int bpp = surface->format->BytesPerPixel;
+
     //Here p is the address to the pixel we want to set
     Uint8* p = (Uint8*)surface->pixels + PIXEL_Y * surface->pitch + PIXEL_X * bpp;
 
@@ -132,9 +134,9 @@ void load_font()
 {
     TRACE_FUNC_BEGIN;
 
-    SDL_Surface* font_surface_tmp = IMG_Load(Config::get_font_name().data());
+    SDL_Surface* font_surface_tmp = IMG_Load(config::get_font_name().data());
 
-    Uint32 bg_clr = SDL_Map_rGB(font_surface_tmp->format, 0, 0, 0);
+    Uint32 bg_clr = SDL_MapRGB(font_surface_tmp->format, 0, 0, 0);
 
     for (int x = 0; x < font_surface_tmp->w; ++x)
     {
@@ -144,7 +146,7 @@ void load_font()
         }
     }
 
-    SDL_Free_surface(font_surface_tmp);
+    SDL_FreeSurface(font_surface_tmp);
 
     TRACE_FUNC_END;
 }
@@ -155,7 +157,8 @@ void load_tiles()
 
     SDL_Surface* tile_surface_tmp = IMG_Load(tiles_img_name.data());
 
-    Uint32 img_clr = SDL_Map_rGB(tile_surface_tmp->format, 255, 255, 255);
+    Uint32 img_clr = SDL_MapRGB(tile_surface_tmp->format, 255, 255, 255);
+
     for (int x = 0; x < tile_surface_tmp->w; ++x)
     {
         for (int y = 0; y < tile_surface_tmp->h; ++y)
@@ -164,14 +167,14 @@ void load_tiles()
         }
     }
 
-    SDL_Free_surface(tile_surface_tmp);
+    SDL_FreeSurface(tile_surface_tmp);
 
     TRACE_FUNC_END;
 }
 
 void load_contour(const bool base[PIXEL_DATA_W][PIXEL_DATA_H])
 {
-    const Pos cell_dims(Config::get_cell_w(), Config::get_cell_h());
+    const Pos cell_dims(config::get_cell_w(), config::get_cell_h());
 
     for (size_t px_x = 0; px_x < PIXEL_DATA_W; ++px_x)
     {
@@ -208,16 +211,16 @@ void load_contour(const bool base[PIXEL_DATA_W][PIXEL_DATA_H])
 }
 
 void put_pixels_on_scr(const bool pixel_data[PIXEL_DATA_W][PIXEL_DATA_H],
-                    const Pos& sheet_pos, const Pos& scr_pixel_pos, const Clr& clr)
+                       const Pos& sheet_pos, const Pos& scr_pixel_pos, const Clr& clr)
 {
     if (is_inited())
     {
-        const int CLR_TO = SDL_Map_rGB(screen_surface->format, clr.r, clr.g, clr.b);
+        const int CLR_TO = SDL_MapRGB(screen_surface->format, clr.r, clr.g, clr.b);
 
-        SDL_Lock_surface(screen_surface);
+        SDL_LockSurface(screen_surface);
 
-        const int CELL_W      = Config::get_cell_w();
-        const int CELL_H      = Config::get_cell_h();
+        const int CELL_W      = config::get_cell_w();
+        const int CELL_H      = config::get_cell_h();
         const int SHEET_PX_X0 = sheet_pos.x * CELL_W;
         const int SHEET_PX_Y0 = sheet_pos.y * CELL_H;
         const int SHEET_PX_X1 = SHEET_PX_X0 + CELL_W - 1;
@@ -242,23 +245,23 @@ void put_pixels_on_scr(const bool pixel_data[PIXEL_DATA_W][PIXEL_DATA_H],
             ++scr_px_x;
         }
 
-        SDL_Unlock_surface(screen_surface);
+        SDL_UnlockSurface(screen_surface);
     }
 }
 
 void put_pixels_on_scr_for_tile(const Tile_id tile, const Pos& scr_pixel_pos, const Clr& clr)
 {
-    put_pixels_on_scr(tile_pixel_data_, Art::get_tile_pos(tile), scr_pixel_pos, clr);
+    put_pixels_on_scr(tile_pixel_data_, art::get_tile_pos(tile), scr_pixel_pos, clr);
 }
 
 void put_pixels_on_scr_for_glyph(const char GLYPH, const Pos& scr_pixel_pos, const Clr& clr)
 {
-    put_pixels_on_scr(font_pixel_data_, Art::get_glyph_pos(GLYPH), scr_pixel_pos, clr);
+    put_pixels_on_scr(font_pixel_data_, art::get_glyph_pos(GLYPH), scr_pixel_pos, clr);
 }
 
 Pos get_pixel_pos_for_cell_in_panel(const Panel panel, const Pos& pos)
 {
-    const Pos cell_dims(Config::get_cell_w(), Config::get_cell_h());
+    const Pos cell_dims(config::get_cell_w(), config::get_cell_h());
 
     switch (panel)
     {
@@ -266,13 +269,13 @@ Pos get_pixel_pos_for_cell_in_panel(const Panel panel, const Pos& pos)
         return Pos(pos.x * cell_dims.x, pos.y * cell_dims.y);
 
     case Panel::map:
-        return (pos * cell_dims) + Pos(0, Config::get_map_pixel_offset_h());
+        return (pos * cell_dims) + Pos(0, config::get_map_pixel_offset_h());
 
     case Panel::log:
         return pos * cell_dims;
 
     case Panel::char_lines:
-        return (pos * cell_dims) + Pos(0, Config::get_char_lines_pixel_offset_h());
+        return (pos * cell_dims) + Pos(0, config::get_char_lines_pixel_offset_h());
     }
     return Pos();
 }
@@ -284,7 +287,7 @@ int get_lifebar_length(const Actor& actor)
     if (ACTOR_HP < ACTOR_HP_MAX)
     {
         int HP_PERCENT = (ACTOR_HP * 100) / ACTOR_HP_MAX;
-        return ((Config::get_cell_w() - 2) * HP_PERCENT) / 100;
+        return ((config::get_cell_w() - 2) * HP_PERCENT) / 100;
     }
     return -1;
 }
@@ -293,7 +296,7 @@ void draw_life_bar(const Pos& pos, const int LENGTH)
 {
     if (LENGTH >= 0)
     {
-        const Pos cell_dims(Config::get_cell_w(),  Config::get_cell_h());
+        const Pos cell_dims(config::get_cell_w(),  config::get_cell_h());
         const int W_GREEN   = LENGTH;
         const int W_BAR_TOT = cell_dims.x - 2;
         const int W_RED     = W_BAR_TOT - W_GREEN;
@@ -322,12 +325,12 @@ void draw_excl_mark_at(const Pos& pixel_pos)
 
 void draw_player_shock_excl_marks()
 {
-    const double SHOCK  = Map::player->get_perm_shock_taken_cur_turn();
+    const double SHOCK  = map::player->get_perm_shock_taken_cur_turn();
     const int NR_EXCL   = SHOCK > 8 ? 3 : SHOCK > 3 ? 2 : SHOCK > 1 ? 1 : 0;
 
     if (NR_EXCL > 0)
     {
-        const Pos& player_pos = Map::player->pos;
+        const Pos& player_pos = map::player->pos;
         const Pos pixel_pos_right = get_pixel_pos_for_cell_in_panel(Panel::map, player_pos);
 
         for (int i = 0; i < NR_EXCL; ++i)
@@ -338,18 +341,18 @@ void draw_player_shock_excl_marks()
 }
 
 void draw_glyph_at_pixel(const char GLYPH, const Pos& pixel_pos, const Clr& clr,
-                      const bool DRAW_BG_CLR, const Clr& bg_clr = clr_black)
+                         const bool DRAW_BG_CLR, const Clr& bg_clr = clr_black)
 {
     if (DRAW_BG_CLR)
     {
-        const Pos cell_dims(Config::get_cell_w(), Config::get_cell_h());
+        const Pos cell_dims(config::get_cell_w(), config::get_cell_h());
 
         draw_rectangle_solid(pixel_pos, cell_dims, bg_clr);
 
         //Only draw contour if neither the foreground or background is black
-        if (!Utils::is_clr_eq(clr, clr_black) && !Utils::is_clr_eq(bg_clr, clr_black))
+        if (!utils::is_clr_eq(clr, clr_black) && !utils::is_clr_eq(bg_clr, clr_black))
         {
-            put_pixels_on_scr(contour_pixel_data_, Art::get_glyph_pos(GLYPH), pixel_pos, clr_black);
+            put_pixels_on_scr(contour_pixel_data_, art::get_glyph_pos(GLYPH), pixel_pos, clr_black);
         }
     }
 
@@ -364,19 +367,21 @@ void init()
     cleanup();
 
     TRACE << "Setting up rendering window" << endl;
-    const string title = "IA " + game_version_str;
-    SDL_WM_Set_caption(title.data(), nullptr);
 
-    const int W = Config::get_screen_pixel_w();
-    const int H = Config::get_screen_pixel_h();
-    if (Config::is_fullscreen())
+    const string title = "IA " + game_version_str;
+
+    SDL_WM_SetCaption(title.data(), nullptr);
+
+    const int W = config::get_screen_pixel_w();
+    const int H = config::get_screen_pixel_h();
+    if (config::is_fullscreen())
     {
-        screen_surface = SDL_Set_video_mode(W, H, SCREEN_BPP,
-                                         SDL_SWSURFACE | SDL_FULLSCREEN);
+        screen_surface = SDL_SetVideoMode(W, H, SCREEN_BPP,
+                                          SDL_SWSURFACE | SDL_FULLSCREEN);
     }
-    if (!Config::is_fullscreen() || !screen_surface)
+    if (!config::is_fullscreen() || !screen_surface)
     {
-        screen_surface = SDL_Set_video_mode(W, H, SCREEN_BPP, SDL_SWSURFACE);
+        screen_surface = SDL_SetVideoMode(W, H, SCREEN_BPP, SDL_SWSURFACE);
     }
 
     if (!screen_surface)
@@ -387,13 +392,13 @@ void init()
 
     load_font();
 
-    if (Config::is_tiles_mode())
+    if (config::is_tiles_mode())
     {
         load_tiles();
         load_main_menu_logo();
     }
 
-    load_contour(Config::is_tiles_mode() ? tile_pixel_data_ : font_pixel_data_);
+    load_contour(config::is_tiles_mode() ? tile_pixel_data_ : font_pixel_data_);
 
     TRACE_FUNC_END;
 }
@@ -404,13 +409,13 @@ void cleanup()
 
     if (screen_surface)
     {
-        SDL_Free_surface(screen_surface);
+        SDL_FreeSurface(screen_surface);
         screen_surface = nullptr;
     }
 
     if (main_menu_logo_surface)
     {
-        SDL_Free_surface(main_menu_logo_surface);
+        SDL_FreeSurface(main_menu_logo_surface);
         main_menu_logo_surface = nullptr;
     }
 
@@ -426,26 +431,26 @@ void clear_screen()
 {
     if (is_inited())
     {
-        SDL_Fill_rect(screen_surface, nullptr, SDL_Map_rGB(screen_surface->format, 0, 0, 0));
+        SDL_FillRect(screen_surface, nullptr,
+                     SDL_MapRGB(screen_surface->format, 0, 0, 0));
     }
 }
 
-void apply_surface(const Pos& pixel_pos, SDL_Surface* const src,
-                  SDL_Rect* clip)
+void apply_surface(const Pos& pixel_pos, SDL_Surface* const src, SDL_Rect* clip)
 {
     if (is_inited())
     {
         SDL_Rect offset;
         offset.x = pixel_pos.x;
         offset.y = pixel_pos.y;
-        SDL_Blit_surface(src, clip, screen_surface, &offset);
+        SDL_BlitSurface(src, clip, screen_surface, &offset);
     }
 }
 
 void draw_main_menu_logo(const int Y_POS)
 {
-    const Pos pos((Config::get_screen_pixel_w() - main_menu_logo_surface->w) / 2,
-                  Config::get_cell_h() * Y_POS);
+    const Pos pos((config::get_screen_pixel_w() - main_menu_logo_surface->w) / 2,
+                  config::get_cell_h() * Y_POS);
     apply_surface(pos, main_menu_logo_surface);
 }
 
@@ -462,14 +467,14 @@ void draw_marker(const Pos& p, const vector<Pos>& trail, const int EFFECTIVE_RAN
 
             if (EFFECTIVE_RANGE != -1)
             {
-                const int CHEB_DIST = Utils::king_dist(trail[0], pos);
+                const int CHEB_DIST = utils::king_dist(trail[0], pos);
 
                 if (CHEB_DIST > EFFECTIVE_RANGE)
                 {
                     clr = clr_orange;
                 }
             }
-            if (Config::is_tiles_mode())
+            if (config::is_tiles_mode())
             {
                 draw_tile(Tile_id::aim_marker_trail, Panel::map, pos, clr, clr_black);
             }
@@ -486,7 +491,7 @@ void draw_marker(const Pos& p, const vector<Pos>& trail, const int EFFECTIVE_RAN
     {
         if (EFFECTIVE_RANGE != -1)
         {
-            const int CHEB_DIST = Utils::king_dist(trail[0], p);
+            const int CHEB_DIST = utils::king_dist(trail[0], p);
 
             if (CHEB_DIST > EFFECTIVE_RANGE)
             {
@@ -495,7 +500,7 @@ void draw_marker(const Pos& p, const vector<Pos>& trail, const int EFFECTIVE_RAN
         }
     }
 
-    if (Config::is_tiles_mode())
+    if (config::is_tiles_mode())
     {
         draw_tile(Tile_id::aim_marker_head, Panel::map, p, clr, clr_black);
     }
@@ -506,8 +511,8 @@ void draw_marker(const Pos& p, const vector<Pos>& trail, const int EFFECTIVE_RAN
 }
 
 void draw_blast_at_field(const Pos& center_pos, const int RADIUS,
-                      bool forbidden_cells[MAP_W][MAP_H], const Clr& clr_inner,
-                      const Clr& clr_outer)
+                         bool forbidden_cells[MAP_W][MAP_H], const Clr& clr_inner,
+                         const Clr& clr_outer)
 {
     TRACE_FUNC_BEGIN;
     if (is_inited())
@@ -535,7 +540,7 @@ void draw_blast_at_field(const Pos& center_pos, const int RADIUS,
                                           pos.y == center_pos.y - RADIUS ||
                                           pos.y == center_pos.y + RADIUS;
                     const Clr clr = IS_OUTER ? clr_outer : clr_inner;
-                    if (Config::is_tiles_mode())
+                    if (config::is_tiles_mode())
                     {
                         draw_tile(Tile_id::blast1, Panel::map, pos, clr, clr_black);
                     }
@@ -548,7 +553,7 @@ void draw_blast_at_field(const Pos& center_pos, const int RADIUS,
             }
         }
         update_screen();
-        if (is_any_blast_rendered) {Sdl_wrapper::sleep(Config::get_delay_explosion() / 2);}
+        if (is_any_blast_rendered) {sdl_wrapper::sleep(config::get_delay_explosion() / 2);}
 
         for (
             pos.y = max(1, center_pos.y - RADIUS);
@@ -567,7 +572,7 @@ void draw_blast_at_field(const Pos& center_pos, const int RADIUS,
                                           pos.y == center_pos.y - RADIUS ||
                                           pos.y == center_pos.y + RADIUS;
                     const Clr clr = IS_OUTER ? clr_outer : clr_inner;
-                    if (Config::is_tiles_mode())
+                    if (config::is_tiles_mode())
                     {
                         draw_tile(Tile_id::blast2, Panel::map, pos, clr, clr_black);
                     }
@@ -579,7 +584,7 @@ void draw_blast_at_field(const Pos& center_pos, const int RADIUS,
             }
         }
         update_screen();
-        if (is_any_blast_rendered) {Sdl_wrapper::sleep(Config::get_delay_explosion() / 2);}
+        if (is_any_blast_rendered) {sdl_wrapper::sleep(config::get_delay_explosion() / 2);}
         draw_map_and_interface();
     }
     TRACE_FUNC_END;
@@ -595,7 +600,7 @@ void draw_blast_at_cells(const vector<Pos>& positions, const Clr& clr)
 
         for (const Pos& pos : positions)
         {
-            if (Config::is_tiles_mode())
+            if (config::is_tiles_mode())
             {
                 draw_tile(Tile_id::blast1, Panel::map, pos, clr, clr_black);
             }
@@ -605,11 +610,11 @@ void draw_blast_at_cells(const vector<Pos>& positions, const Clr& clr)
             }
         }
         update_screen();
-        Sdl_wrapper::sleep(Config::get_delay_explosion() / 2);
+        sdl_wrapper::sleep(config::get_delay_explosion() / 2);
 
         for (const Pos& pos : positions)
         {
-            if (Config::is_tiles_mode())
+            if (config::is_tiles_mode())
             {
                 draw_tile(Tile_id::blast2, Panel::map, pos, clr, clr_black);
             }
@@ -619,7 +624,7 @@ void draw_blast_at_cells(const vector<Pos>& positions, const Clr& clr)
             }
         }
         update_screen();
-        Sdl_wrapper::sleep(Config::get_delay_explosion() / 2);
+        sdl_wrapper::sleep(config::get_delay_explosion() / 2);
         draw_map_and_interface();
     }
     TRACE_FUNC_END;
@@ -633,7 +638,7 @@ void draw_blast_at_seen_cells(const vector<Pos>& positions, const Clr& clr)
 
         for (const Pos& p : positions)
         {
-            if (Map::cells[p.x][p.y].is_seen_by_player)
+            if (map::cells[p.x][p.y].is_seen_by_player)
             {
                 positions_with_vision.push_back(p);
             }
@@ -641,7 +646,7 @@ void draw_blast_at_seen_cells(const vector<Pos>& positions, const Clr& clr)
 
         if (!positions_with_vision.empty())
         {
-            Render::draw_blast_at_cells(positions_with_vision, clr);
+            render::draw_blast_at_cells(positions_with_vision, clr);
         }
     }
 }
@@ -660,18 +665,18 @@ void draw_blast_at_seen_actors(const std::vector<Actor*>& actors, const Clr& clr
 }
 
 void draw_tile(const Tile_id tile, const Panel panel, const Pos& pos, const Clr& clr,
-              const Clr& bg_clr)
+               const Clr& bg_clr)
 {
     if (is_inited())
     {
         const Pos pixel_pos = get_pixel_pos_for_cell_in_panel(panel, pos);
-        const Pos cell_dims(Config::get_cell_w(), Config::get_cell_h());
+        const Pos cell_dims(config::get_cell_w(), config::get_cell_h());
 
         draw_rectangle_solid(pixel_pos, cell_dims, bg_clr);
 
-        if (!Utils::is_clr_eq(bg_clr, clr_black))
+        if (!utils::is_clr_eq(bg_clr, clr_black))
         {
-            put_pixels_on_scr(contour_pixel_data_, Art::get_tile_pos(tile), pixel_pos, clr_black);
+            put_pixels_on_scr(contour_pixel_data_, art::get_tile_pos(tile), pixel_pos, clr_black);
         }
 
         put_pixels_on_scr_for_tile(tile, pixel_pos, clr);
@@ -679,7 +684,7 @@ void draw_tile(const Tile_id tile, const Panel panel, const Pos& pos, const Clr&
 }
 
 void draw_glyph(const char GLYPH, const Panel panel, const Pos& pos, const Clr& clr,
-               const bool DRAW_BG_CLR, const Clr& bg_clr)
+                const bool DRAW_BG_CLR, const Clr& bg_clr)
 {
     if (is_inited())
     {
@@ -689,24 +694,24 @@ void draw_glyph(const char GLYPH, const Panel panel, const Pos& pos, const Clr& 
 }
 
 void draw_text(const string& str, const Panel panel, const Pos& pos, const Clr& clr,
-              const Clr& bg_clr)
+               const Clr& bg_clr)
 {
     if (is_inited())
     {
         Pos pixel_pos = get_pixel_pos_for_cell_in_panel(panel, pos);
 
-        if (pixel_pos.y < 0 || pixel_pos.y >= Config::get_screen_pixel_h())
+        if (pixel_pos.y < 0 || pixel_pos.y >= config::get_screen_pixel_h())
         {
             return;
         }
 
-        const Pos cell_dims(Config::get_cell_w(), Config::get_cell_h());
+        const Pos cell_dims(config::get_cell_w(), config::get_cell_h());
         const int LEN = str.size();
         draw_rectangle_solid(pixel_pos, Pos(cell_dims.x * LEN, cell_dims.y), bg_clr);
 
         for (int i = 0; i < LEN; ++i)
         {
-            if (pixel_pos.x < 0 || pixel_pos.x >= Config::get_screen_pixel_w())
+            if (pixel_pos.x < 0 || pixel_pos.x >= config::get_screen_pixel_w())
             {
                 return;
             }
@@ -717,14 +722,14 @@ void draw_text(const string& str, const Panel panel, const Pos& pos, const Clr& 
 }
 
 int draw_text_centered(const string& str, const Panel panel, const Pos& pos,
-                     const Clr& clr, const Clr& bg_clr,
-                     const bool IS_PIXEL_POS_ADJ_ALLOWED)
+                       const Clr& clr, const Clr& bg_clr,
+                       const bool IS_PIXEL_POS_ADJ_ALLOWED)
 {
     const int LEN         = str.size();
     const int LEN_HALF    = LEN / 2;
     const int X_POS_LEFT  = pos.x - LEN_HALF;
 
-    const Pos cell_dims(Config::get_cell_w(), Config::get_cell_h());
+    const Pos cell_dims(config::get_cell_w(), config::get_cell_h());
 
     Pos pixel_pos = get_pixel_pos_for_cell_in_panel(panel, Pos(X_POS_LEFT, pos.y));
 
@@ -741,12 +746,12 @@ int draw_text_centered(const string& str, const Panel panel, const Pos& pos,
         (Sint16)pixel_pos.x, (Sint16)pixel_pos.y,
         (Uint16)W_TOT_PIXEL, (Uint16)cell_dims.y
     };
-    SDL_Fill_rect(screen_surface, &sdl_rect, SDL_Map_rGB(screen_surface->format,
+    SDL_FillRect(screen_surface, &sdl_rect, SDL_MapRGB(screen_surface->format,
                  bg_clr.r, bg_clr.g, bg_clr.b));
 
     for (int i = 0; i < LEN; ++i)
     {
-        if (pixel_pos.x < 0 || pixel_pos.x >= Config::get_screen_pixel_w())
+        if (pixel_pos.x < 0 || pixel_pos.x >= config::get_screen_pixel_w())
         {
             return X_POS_LEFT;
         }
@@ -758,25 +763,25 @@ int draw_text_centered(const string& str, const Panel panel, const Pos& pos,
 
 void cover_panel(const Panel panel)
 {
-    const int SCREEN_PIXEL_W = Config::get_screen_pixel_w();
+    const int SCREEN_PIXEL_W = config::get_screen_pixel_w();
 
     switch (panel)
     {
     case Panel::char_lines:
     {
         const Pos pixel_pos = get_pixel_pos_for_cell_in_panel(panel, Pos(0, 0));
-        cover_area_pixel(pixel_pos, Pos(SCREEN_PIXEL_W, Config::get_char_lines_pixel_h()));
+        cover_area_pixel(pixel_pos, Pos(SCREEN_PIXEL_W, config::get_char_lines_pixel_h()));
     } break;
 
     case Panel::log:
     {
-        cover_area_pixel(Pos(0, 0), Pos(SCREEN_PIXEL_W, Config::get_log_pixel_h()));
+        cover_area_pixel(Pos(0, 0), Pos(SCREEN_PIXEL_W, config::get_log_pixel_h()));
     } break;
 
     case Panel::map:
     {
         const Pos pixel_pos = get_pixel_pos_for_cell_in_panel(panel, Pos(0, 0));
-        cover_area_pixel(pixel_pos, Pos(SCREEN_PIXEL_W, Config::get_map_pixel_h()));
+        cover_area_pixel(pixel_pos, Pos(SCREEN_PIXEL_W, config::get_map_pixel_h()));
     } break;
 
     case Panel::screen: {clear_screen();} break;
@@ -791,7 +796,7 @@ void cover_area(const Panel panel, const Rect& area)
 void cover_area(const Panel panel, const Pos& pos, const Pos& dims)
 {
     const Pos pixel_pos = get_pixel_pos_for_cell_in_panel(panel, pos);
-    const Pos cell_dims(Config::get_cell_w(), Config::get_cell_h());
+    const Pos cell_dims(config::get_cell_w(), config::get_cell_h());
     cover_area_pixel(pixel_pos, dims * cell_dims);
 }
 
@@ -802,7 +807,7 @@ void cover_area_pixel(const Pos& pixel_pos, const Pos& pixel_dims)
 
 void cover_cell_in_map(const Pos& pos)
 {
-    const Pos cell_dims(Config::get_cell_w(), Config::get_cell_h());
+    const Pos cell_dims(config::get_cell_w(), config::get_cell_h());
     Pos pixel_pos = get_pixel_pos_for_cell_in_panel(Panel::map, pos);
     cover_area_pixel(pixel_pos, cell_dims);
 }
@@ -822,16 +827,16 @@ void draw_rectangle_solid(const Pos& pixel_pos, const Pos& pixel_dims, const Clr
     if (is_inited())
     {
         SDL_Rect sdl_rect = {(Sint16)pixel_pos.x, (Sint16)pixel_pos.y,
-                            (Uint16)pixel_dims.x, (Uint16)pixel_dims.y
-                           };
+                             (Uint16)pixel_dims.x, (Uint16)pixel_dims.y
+                            };
 
-        SDL_Fill_rect(screen_surface, &sdl_rect,
-                     SDL_Map_rGB(screen_surface->format, clr.r, clr.g, clr.b));
+        SDL_FillRect(screen_surface, &sdl_rect,
+                     SDL_MapRGB(screen_surface->format, clr.r, clr.g, clr.b));
     }
 }
 
 void draw_projectiles(vector<Projectile*>& projectiles,
-                     const bool SHOULD_DRAW_MAP_BEFORE)
+                      const bool SHOULD_DRAW_MAP_BEFORE)
 {
 
     if (SHOULD_DRAW_MAP_BEFORE) {draw_map_and_interface(false);}
@@ -841,7 +846,7 @@ void draw_projectiles(vector<Projectile*>& projectiles,
         if (!p->is_done_rendering && p->is_visible_to_player)
         {
             cover_cell_in_map(p->pos);
-            if (Config::is_tiles_mode())
+            if (config::is_tiles_mode())
             {
                 if (p->tile != Tile_id::empty)
                 {
@@ -859,11 +864,11 @@ void draw_projectiles(vector<Projectile*>& projectiles,
 }
 
 void draw_popup_box(const Rect& border, const Panel panel, const Clr& clr,
-                  const bool COVER_AREA)
+                    const bool COVER_AREA)
 {
     if (COVER_AREA) {cover_area(panel, border);}
 
-    const bool IS_TILES = Config::is_tiles_mode();
+    const bool IS_TILES = config::is_tiles_mode();
 
     //Vertical bars
     const int Y0_VERT = border.p0.y + 1;
@@ -937,7 +942,7 @@ void draw_descr_box(const std::vector<Str_and_clr>& lines)
     for (const auto& line : lines)
     {
         vector<string> formatted;
-        Text_format::line_to_lines(line.str, MAX_W, formatted);
+        text_format::line_to_lines(line.str, MAX_W, formatted);
         for (const auto& line_in_formatted : formatted)
         {
             draw_text(line_in_formatted, Panel::screen, p, line.clr);
@@ -955,9 +960,9 @@ void draw_map_and_interface(const bool SHOULD_UPDATE_SCREEN)
 
         draw_map();
 
-        Character_lines::draw();
+        character_lines::draw();
 
-        Log::draw_log(false);
+        msg_log::draw(false);
 
         if (SHOULD_UPDATE_SCREEN)
         {
@@ -973,19 +978,19 @@ void draw_map()
     Cell_render_data* cur_drw = nullptr;
     Cell_render_data  tmp_drw;
 
-    const bool IS_TILES = Config::is_tiles_mode();
+    const bool IS_TILES = config::is_tiles_mode();
 
     //---------------- INSERT RIGIDS AND BLOOD INTO ARRAY
     for (int x = 0; x < MAP_W; ++x)
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            if (Map::cells[x][y].is_seen_by_player)
+            if (map::cells[x][y].is_seen_by_player)
             {
 
                 render_array[x][y]           = Cell_render_data();
                 cur_drw                      = &render_array[x][y];
-                const auto* const f         = Map::cells[x][y].rigid;
+                const auto* const f         = map::cells[x][y].rigid;
                 Tile_id            gore_tile  = Tile_id::empty;
                 char              gore_glyph = 0;
 
@@ -1000,7 +1005,7 @@ void draw_map()
                     cur_drw->glyph = f->get_glyph();
                     cur_drw->clr   = f->get_clr();
                     const Clr& feature_clr_bg = f->get_clr_bg();
-                    if (!Utils::is_clr_eq(feature_clr_bg, clr_black))
+                    if (!utils::is_clr_eq(feature_clr_bg, clr_black))
                     {
                         cur_drw->clr_bg = feature_clr_bg;
                     }
@@ -1011,7 +1016,7 @@ void draw_map()
                     cur_drw->glyph = gore_glyph;
                     cur_drw->clr   = clr_red;
                 }
-                if (Map::cells[x][y].is_lit && f->can_move_cmn())
+                if (map::cells[x][y].is_lit && f->can_move_cmn())
                 {
                     cur_drw->is_marked_lit = true;
                 }
@@ -1020,14 +1025,14 @@ void draw_map()
     }
 
     //---------------- INSERT DEAD ACTORS INTO ARRAY
-    for (Actor* actor : Game_time::actors_)
+    for (Actor* actor : game_time::actors_)
     {
         const Pos& p(actor->pos);
         if (
             actor->is_corpse()                       &&
             actor->get_data().glyph != ' '           &&
             actor->get_data().tile != Tile_id::empty  &&
-            Map::cells[p.x][p.y].is_seen_by_player)
+            map::cells[p.x][p.y].is_seen_by_player)
         {
             cur_drw        = &render_array[p.x][p.y];
             cur_drw->clr   = actor->get_clr();
@@ -1041,10 +1046,10 @@ void draw_map()
         for (int y = 0; y < MAP_H; ++y)
         {
             cur_drw = &render_array[x][y];
-            if (Map::cells[x][y].is_seen_by_player)
+            if (map::cells[x][y].is_seen_by_player)
             {
                 //---------------- INSERT ITEMS INTO ARRAY
-                const Item* const item = Map::cells[x][y].item;
+                const Item* const item = map::cells[x][y].item;
                 if (item)
                 {
                     cur_drw->clr   = item->get_clr();
@@ -1067,14 +1072,14 @@ void draw_map()
     }
 
     //---------------- INSERT MOBILE FEATURES INTO ARRAY
-    for (auto* mob : Game_time::mobs_)
+    for (auto* mob : game_time::mobs_)
     {
         const Pos& p            = mob->get_pos();
         const Tile_id  mob_tile   = mob->get_tile();
         const char    mob_glyph  = mob->get_glyph();
         if (
             mob_tile != Tile_id::empty && mob_glyph != ' ' &&
-            Map::cells[p.x][p.y].is_seen_by_player)
+            map::cells[p.x][p.y].is_seen_by_player)
         {
             cur_drw = &render_array[p.x][p.y];
             cur_drw->clr   = mob->get_clr();
@@ -1084,9 +1089,9 @@ void draw_map()
     }
 
     //---------------- INSERT LIVING ACTORS INTO ARRAY
-    for (auto* actor : Game_time::actors_)
+    for (auto* actor : game_time::actors_)
     {
-        if (actor != Map::player)
+        if (actor != map::player)
         {
             if (actor->is_alive())
             {
@@ -1095,7 +1100,7 @@ void draw_map()
 
                 const auto* const mon = static_cast<const Mon*>(actor);
 
-                if (Map::player->can_see_actor(*actor, nullptr))
+                if (map::player->can_see_actor(*actor, nullptr))
                 {
                     if (actor->get_tile()  != Tile_id::empty && actor->get_glyph() != ' ')
                     {
@@ -1107,7 +1112,7 @@ void draw_map()
                         cur_drw->is_living_actor_seen_here = true;
                         cur_drw->is_light_fade_allowed    = false;
 
-                        if (Map::player->is_leader_of(mon))
+                        if (map::player->is_leader_of(mon))
                         {
                             cur_drw->clr_bg = clr_green;
                         }
@@ -1119,7 +1124,7 @@ void draw_map()
                 }
                 else //Player is not seeing actor
                 {
-                    if (mon->player_aware_of_me_counter_ > 0 || Map::player->is_leader_of(mon))
+                    if (mon->player_aware_of_me_counter_ > 0 || map::player->is_leader_of(mon))
                     {
                         cur_drw->is_aware_of_mon_here  = true;
                     }
@@ -1143,14 +1148,14 @@ void draw_map()
 
             tmp_drw = render_array[x][y];
 
-            const Cell& cell = Map::cells[x][y];
+            const Cell& cell = map::cells[x][y];
 
             if (cell.is_seen_by_player)
             {
                 if (tmp_drw.is_light_fade_allowed)
                 {
                     const int DIST_FROM_PLAYER =
-                        Utils::king_dist(Map::player->pos, Pos(x, y));
+                        utils::king_dist(map::player->pos, Pos(x, y));
 
                     if (DIST_FROM_PLAYER > 1)
                     {
@@ -1206,16 +1211,16 @@ void draw_map()
                             y < MAP_H - 1 &&
                             (feature_id == Feature_id::wall || is_hidden_door))
                         {
-                            if (Map::cells[x][y + 1].is_explored)
+                            if (map::cells[x][y + 1].is_explored)
                             {
                                 const bool IS_SEEN_BELOW  =
-                                    Map::cells[x][y + 1].is_seen_by_player;
+                                    map::cells[x][y + 1].is_seen_by_player;
 
                                 const auto tile_below_seen  =
                                     render_array_no_actors[x][y + 1].tile;
 
                                 const auto tile_below_mem   =
-                                    Map::cells[x][y + 1].player_visual_memory.tile;
+                                    map::cells[x][y + 1].player_visual_memory.tile;
 
                                 const bool TILE_BELOW_IS_WALL_FRONT =
                                     IS_SEEN_BELOW ?
@@ -1251,9 +1256,9 @@ void draw_map()
                                 }
                                 else if (is_hidden_door)
                                 {
-                                    tmp_drw.tile = Config::is_tiles_wall_full_square() ?
-                                                  Tile_id::wall_top :
-                                                  Tile_id::wall_front;
+                                    tmp_drw.tile = config::is_tiles_wall_full_square() ?
+                                                   Tile_id::wall_top :
+                                                   Tile_id::wall_front;
                                 }
                             }
                             else //Cell below is not explored
@@ -1290,7 +1295,7 @@ void draw_map()
                 else
                 {
                     draw_glyph(tmp_drw.glyph, Panel::map, pos, tmp_drw.clr, true,
-                              tmp_drw.clr_bg);
+                               tmp_drw.clr_bg);
                 }
 
                 if (tmp_drw.lifebar_length != -1)
@@ -1305,23 +1310,23 @@ void draw_map()
 
     //---------------- DRAW PLAYER CHARACTER
     bool        is_ranged_wpn = false;
-    const Pos&  pos         = Map::player->pos;
-    Item*       item        = Map::player->get_inv().get_item_in_slot(Slot_id::wielded);
+    const Pos&  pos         = map::player->pos;
+    Item*       item        = map::player->get_inv().get_item_in_slot(Slot_id::wielded);
     if (item)
     {
         is_ranged_wpn = item->get_data().ranged.is_ranged_wpn;
     }
     if (IS_TILES)
     {
-        const Tile_id tile = is_ranged_wpn ? Tile_id::player_firearm : Tile_id::player_melee;
-        draw_tile(tile, Panel::map, pos, Map::player->get_clr(), clr_black);
+        const Tile_id tile = is_ranged_wpn ? Tile_id::playerFirearm : Tile_id::player_melee;
+        draw_tile(tile, Panel::map, pos, map::player->get_clr(), clr_black);
     }
     else
     {
-        draw_glyph('@', Panel::map, pos, Map::player->get_clr(), true, clr_black);
+        draw_glyph('@', Panel::map, pos, map::player->get_clr(), true, clr_black);
     }
 
-    const int LIFE_BAR_LENGTH = get_lifebar_length(*Map::player);
+    const int LIFE_BAR_LENGTH = get_lifebar_length(*map::player);
 
     if (LIFE_BAR_LENGTH != -1)
     {
@@ -1330,4 +1335,4 @@ void draw_map()
     draw_player_shock_excl_marks();
 }
 
-} //Render
+} //render

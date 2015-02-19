@@ -8,20 +8,20 @@
 #include <SDL.h>
 
 #include "Config.h"
-#include "Utils.h"
-#include "Render.h"
-#include "Map.h"
+#include "utils.h"
+#include "render.h"
+#include "map.h"
 #include "ActorPlayer.h"
 #include "Throwing.h"
 #include "ItemFactory.h"
 #include "TextFormat.h"
 #include "ActorFactory.h"
 #include "ActorMon.h"
-#include "MapGen.h"
+#include "mapGen.h"
 #include "Converters.h"
 #include "CmnTypes.h"
-#include "MapParsing.h"
-#include "Fov.h"
+#include "mapParsing.h"
+#include "fov.h"
 #include "LineCalc.h"
 #include "SaveHandling.h"
 #include "Inventory.h"
@@ -32,7 +32,7 @@
 #include "FeatureRigid.h"
 #include "FeatureTrap.h"
 #include "Drop.h"
-#include "MapTravel.h"
+#include "mapTravel.h"
 
 using namespace std;
 
@@ -40,46 +40,46 @@ struct BasicFixture
 {
     BasicFixture()
     {
-        Init::initGame();
-        Init::initSession();
-        Map::player->pos = Pos(1, 1);
-        Map::resetMap(); //Because map generation is not run
+        init::initGame();
+        init::initSession();
+        map::player->pos = Pos(1, 1);
+        map::resetmap(); //Because map generation is not run
     }
     ~BasicFixture()
     {
-        Init::cleanupSession();
-        Init::cleanupGame();
+        init::cleanupSession();
+        init::cleanupGame();
     }
 };
 
 TEST(IsValInRange)
 {
     //Check in range
-    CHECK(Utils::isValInRange(5,    Range(3,  7)));
-    CHECK(Utils::isValInRange(3,    Range(3,  7)));
-    CHECK(Utils::isValInRange(7,    Range(3,  7)));
-    CHECK(Utils::isValInRange(10,   Range(-5, 12)));
-    CHECK(Utils::isValInRange(-5,   Range(-5, 12)));
-    CHECK(Utils::isValInRange(12,   Range(-5, 12)));
+    CHECK(utils::isValInRange(5,    Range(3,  7)));
+    CHECK(utils::isValInRange(3,    Range(3,  7)));
+    CHECK(utils::isValInRange(7,    Range(3,  7)));
+    CHECK(utils::isValInRange(10,   Range(-5, 12)));
+    CHECK(utils::isValInRange(-5,   Range(-5, 12)));
+    CHECK(utils::isValInRange(12,   Range(-5, 12)));
 
-    CHECK(Utils::isValInRange(0,    Range(-1,  1)));
-    CHECK(Utils::isValInRange(-1,   Range(-1,  1)));
-    CHECK(Utils::isValInRange(1,    Range(-1,  1)));
+    CHECK(utils::isValInRange(0,    Range(-1,  1)));
+    CHECK(utils::isValInRange(-1,   Range(-1,  1)));
+    CHECK(utils::isValInRange(1,    Range(-1,  1)));
 
-    CHECK(Utils::isValInRange(5,    Range(5,  5)));
+    CHECK(utils::isValInRange(5,    Range(5,  5)));
 
     //Check NOT in range
-    CHECK(!Utils::isValInRange(2,   Range(3,  7)));
-    CHECK(!Utils::isValInRange(8,   Range(3,  7)));
-    CHECK(!Utils::isValInRange(-1,  Range(3,  7)));
+    CHECK(!utils::isValInRange(2,   Range(3,  7)));
+    CHECK(!utils::isValInRange(8,   Range(3,  7)));
+    CHECK(!utils::isValInRange(-1,  Range(3,  7)));
 
-    CHECK(!Utils::isValInRange(-9,  Range(-5, 12)));
-    CHECK(!Utils::isValInRange(13,  Range(-5, 12)));
+    CHECK(!utils::isValInRange(-9,  Range(-5, 12)));
+    CHECK(!utils::isValInRange(13,  Range(-5, 12)));
 
-    CHECK(!Utils::isValInRange(0,   Range(1,  2)));
+    CHECK(!utils::isValInRange(0,   Range(1,  2)));
 
-    CHECK(!Utils::isValInRange(4,   Range(5,  5)));
-    CHECK(!Utils::isValInRange(6,   Range(5,  5)));
+    CHECK(!utils::isValInRange(4,   Range(5,  5)));
+    CHECK(!utils::isValInRange(6,   Range(5,  5)));
 
     //NOTE: Reversed range settings (e.g. Range(7, 3)) will fail an assert on debug builds.
     //For release builds, this will reverse the result - i.e. isValInRange(1, Range(7, 3))
@@ -88,9 +88,9 @@ TEST(IsValInRange)
 
 TEST(RollDice)
 {
-    int val = Rnd::range(100, 200);
+    int val = rnd::range(100, 200);
     CHECK(val >= 100 && val <= 200);
-    val = Rnd::range(-1, 1);
+    val = rnd::range(-1, 1);
     CHECK(val >= -1 && val <= 1);
 }
 
@@ -120,10 +120,10 @@ TEST(ConstrainValInRange)
 
 TEST(CalculateDistances)
 {
-    CHECK_EQUAL(Utils::kingDist(Pos(1, 2), Pos(2, 3)), 1);
-    CHECK_EQUAL(Utils::kingDist(Pos(1, 2), Pos(2, 4)), 2);
-    CHECK_EQUAL(Utils::kingDist(Pos(1, 2), Pos(1, 2)), 0);
-    CHECK_EQUAL(Utils::kingDist(Pos(10, 3), Pos(1, 4)), 9);
+    CHECK_EQUAL(utils::kingDist(Pos(1, 2), Pos(2, 3)), 1);
+    CHECK_EQUAL(utils::kingDist(Pos(1, 2), Pos(2, 4)), 2);
+    CHECK_EQUAL(utils::kingDist(Pos(1, 2), Pos(1, 2)), 0);
+    CHECK_EQUAL(utils::kingDist(Pos(10, 3), Pos(1, 4)), 9);
 }
 
 TEST(Directions)
@@ -132,55 +132,55 @@ TEST(Directions)
     const int Y0 = 20;
     const Pos fromPos(X0, Y0);
     string str = "";
-    DirUtils::getCompassDirName(fromPos, Pos(X0 + 1, Y0), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 + 1, Y0), str);
     CHECK_EQUAL("E", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0 + 1, Y0 + 1), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 + 1, Y0 + 1), str);
     CHECK_EQUAL("SE", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0    , Y0 + 1), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0    , Y0 + 1), str);
     CHECK_EQUAL("S", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0 - 1, Y0 + 1), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 - 1, Y0 + 1), str);
     CHECK_EQUAL("SW", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0 - 1, Y0), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 - 1, Y0), str);
     CHECK_EQUAL("W", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0 - 1, Y0 - 1), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 - 1, Y0 - 1), str);
     CHECK_EQUAL("NW", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0    , Y0 - 1), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0    , Y0 - 1), str);
     CHECK_EQUAL("N", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0 + 1, Y0 - 1), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 + 1, Y0 - 1), str);
     CHECK_EQUAL("NE", str);
 
-    DirUtils::getCompassDirName(fromPos, Pos(X0 + 3, Y0 + 1), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 + 3, Y0 + 1), str);
     CHECK_EQUAL("E", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0 + 2, Y0 + 3), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 + 2, Y0 + 3), str);
     CHECK_EQUAL("SE", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0 + 1, Y0 + 3), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 + 1, Y0 + 3), str);
     CHECK_EQUAL("S", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0 - 3, Y0 + 2), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 - 3, Y0 + 2), str);
     CHECK_EQUAL("SW", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0 - 3, Y0 + 1), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 - 3, Y0 + 1), str);
     CHECK_EQUAL("W", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0 - 3, Y0 - 2), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 - 3, Y0 - 2), str);
     CHECK_EQUAL("NW", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0 + 1, Y0 - 3), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 + 1, Y0 - 3), str);
     CHECK_EQUAL("N", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0 + 3, Y0 - 2), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 + 3, Y0 - 2), str);
     CHECK_EQUAL("NE", str);
 
-    DirUtils::getCompassDirName(fromPos, Pos(X0 + 10000, Y0), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 + 10000, Y0), str);
     CHECK_EQUAL("E", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0 + 10000, Y0 + 10000), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 + 10000, Y0 + 10000), str);
     CHECK_EQUAL("SE", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0        , Y0 + 10000), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0        , Y0 + 10000), str);
     CHECK_EQUAL("S", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0 - 10000, Y0 + 10000), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 - 10000, Y0 + 10000), str);
     CHECK_EQUAL("SW", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0 - 10000, Y0), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 - 10000, Y0), str);
     CHECK_EQUAL("W", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0 - 10000, Y0 - 10000), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 - 10000, Y0 - 10000), str);
     CHECK_EQUAL("NW", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0        , Y0 - 10000), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0        , Y0 - 10000), str);
     CHECK_EQUAL("N", str);
-    DirUtils::getCompassDirName(fromPos, Pos(X0 + 10000, Y0 - 10000), str);
+    Dirutils::getCompassDirName(fromPos, Pos(X0 + 10000, Y0 - 10000), str);
     CHECK_EQUAL("NE", str);
 }
 
@@ -319,7 +319,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation)
 
     //Test precalculated FOV line offsets
     const vector<Pos>* deltaLine =
-        LineCalc::getFovDeltaLine(Pos(3, 3), FOV_STD_RADI_DB);
+        LineCalc::getfovDeltaLine(Pos(3, 3), FOV_STD_RADI_DB);
     CHECK(deltaLine->size() == 4);
     CHECK(deltaLine->at(0) == Pos(0, 0));
     CHECK(deltaLine->at(1) == Pos(1, 1));
@@ -327,7 +327,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation)
     CHECK(deltaLine->at(3) == Pos(3, 3));
 
     deltaLine =
-        LineCalc::getFovDeltaLine(Pos(-3, 3), FOV_STD_RADI_DB);
+        LineCalc::getfovDeltaLine(Pos(-3, 3), FOV_STD_RADI_DB);
     CHECK(deltaLine->size() == 4);
     CHECK(deltaLine->at(0) == Pos(0, 0));
     CHECK(deltaLine->at(1) == Pos(-1, 1));
@@ -335,7 +335,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation)
     CHECK(deltaLine->at(3) == Pos(-3, 3));
 
     deltaLine =
-        LineCalc::getFovDeltaLine(Pos(3, -3), FOV_STD_RADI_DB);
+        LineCalc::getfovDeltaLine(Pos(3, -3), FOV_STD_RADI_DB);
     CHECK(deltaLine->size() == 4);
     CHECK(deltaLine->at(0) == Pos(0, 0));
     CHECK(deltaLine->at(1) == Pos(1, -1));
@@ -343,7 +343,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation)
     CHECK(deltaLine->at(3) == Pos(3, -3));
 
     deltaLine =
-        LineCalc::getFovDeltaLine(Pos(-3, -3), FOV_STD_RADI_DB);
+        LineCalc::getfovDeltaLine(Pos(-3, -3), FOV_STD_RADI_DB);
     CHECK(deltaLine->size() == 4);
     CHECK(deltaLine->at(0) == Pos(0, 0));
     CHECK(deltaLine->at(1) == Pos(-1, -1));
@@ -352,41 +352,41 @@ TEST_FIXTURE(BasicFixture, LineCalculation)
 
     //Check constraints for retrieving FOV offset lines
     //Delta > parameter max distance
-    deltaLine = LineCalc::getFovDeltaLine(Pos(3, 0), 2);
+    deltaLine = LineCalc::getfovDeltaLine(Pos(3, 0), 2);
     CHECK(!deltaLine);
     //Delta > limit of precalculated
-    deltaLine = LineCalc::getFovDeltaLine(Pos(50, 0), 999);
+    deltaLine = LineCalc::getfovDeltaLine(Pos(50, 0), 999);
     CHECK(!deltaLine);
 }
 
-TEST_FIXTURE(BasicFixture, Fov)
+TEST_FIXTURE(BasicFixture, fov)
 {
     bool blocked[MAP_W][MAP_H];
 
-    Utils::resetArray(blocked, false);   //Nothing blocking sight
+    utils::resetArray(blocked, false);   //Nothing blocking sight
 
     const int X = MAP_W_HALF;
     const int Y = MAP_H_HALF;
 
-    Map::player->pos = Pos(X, Y);
+    map::player->pos = Pos(X, Y);
 
-    Fov::runPlayerFov(blocked, Map::player->pos);
+    fov::runPlayerfov(blocked, map::player->pos);
 
     const int R = FOV_STD_RADI_INT;
 
-    CHECK(Map::cells[X    ][Y    ].isSeenByPlayer);
-    CHECK(Map::cells[X + 1][Y    ].isSeenByPlayer);
-    CHECK(Map::cells[X - 1][Y    ].isSeenByPlayer);
-    CHECK(Map::cells[X    ][Y + 1].isSeenByPlayer);
-    CHECK(Map::cells[X    ][Y - 1].isSeenByPlayer);
-    CHECK(Map::cells[X + 2][Y + 2].isSeenByPlayer);
-    CHECK(Map::cells[X - 2][Y + 2].isSeenByPlayer);
-    CHECK(Map::cells[X + 2][Y - 2].isSeenByPlayer);
-    CHECK(Map::cells[X - 2][Y - 2].isSeenByPlayer);
-    CHECK(Map::cells[X + R][Y    ].isSeenByPlayer);
-    CHECK(Map::cells[X - R][Y    ].isSeenByPlayer);
-    CHECK(Map::cells[X    ][Y + R].isSeenByPlayer);
-    CHECK(Map::cells[X    ][Y - R].isSeenByPlayer);
+    CHECK(map::cells[X    ][Y    ].isSeenByPlayer);
+    CHECK(map::cells[X + 1][Y    ].isSeenByPlayer);
+    CHECK(map::cells[X - 1][Y    ].isSeenByPlayer);
+    CHECK(map::cells[X    ][Y + 1].isSeenByPlayer);
+    CHECK(map::cells[X    ][Y - 1].isSeenByPlayer);
+    CHECK(map::cells[X + 2][Y + 2].isSeenByPlayer);
+    CHECK(map::cells[X - 2][Y + 2].isSeenByPlayer);
+    CHECK(map::cells[X + 2][Y - 2].isSeenByPlayer);
+    CHECK(map::cells[X - 2][Y - 2].isSeenByPlayer);
+    CHECK(map::cells[X + R][Y    ].isSeenByPlayer);
+    CHECK(map::cells[X - R][Y    ].isSeenByPlayer);
+    CHECK(map::cells[X    ][Y + R].isSeenByPlayer);
+    CHECK(map::cells[X    ][Y - R].isSeenByPlayer);
 }
 
 TEST_FIXTURE(BasicFixture, ThrowItems)
@@ -402,14 +402,14 @@ TEST_FIXTURE(BasicFixture, ThrowItems)
     // @ <- Player position (5, 10).
     //-----------------------------------------------------------------
 
-    Map::put(new Floor(Pos(5, 7)));
-    Map::put(new Floor(Pos(5, 9)));
-    Map::put(new Floor(Pos(5, 10)));
-    Map::player->pos = Pos(5, 10);
+    map::put(new Floor(Pos(5, 7)));
+    map::put(new Floor(Pos(5, 9)));
+    map::put(new Floor(Pos(5, 10)));
+    map::player->pos = Pos(5, 10);
     Pos target(5, 8);
     Item* item = ItemFactory::mk(ItemId::thrKnife);
-    Throwing::throwItem(*(Map::player), target, *item);
-    CHECK(Map::cells[5][9].item);
+    throwing::throwItem(*(map::player), target, *item);
+    CHECK(map::cells[5][9].item);
 }
 
 TEST_FIXTURE(BasicFixture, Explosions)
@@ -418,39 +418,39 @@ TEST_FIXTURE(BasicFixture, Explosions)
     const int Y0 = 7;
 
     //auto* const floor = new Floor(Pos(X0, Y0));
-    Map::put(new Floor(Pos(X0, Y0)));
+    map::put(new Floor(Pos(X0, Y0)));
 
     //Check wall destruction
     for (int i = 0; i < 2; ++i)
     {
-        Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
+        explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
 
         //Cells around the center, at a distance of 1, should be destroyed
         int r = 1;
-        CHECK(Map::cells[X0 + r][Y0    ].rigid->getId() != FeatureId::wall);
-        CHECK(Map::cells[X0 - r][Y0    ].rigid->getId() != FeatureId::wall);
-        CHECK(Map::cells[X0    ][Y0 + r].rigid->getId() != FeatureId::wall);
-        CHECK(Map::cells[X0    ][Y0 - r].rigid->getId() != FeatureId::wall);
-        CHECK(Map::cells[X0 + r][Y0 + r].rigid->getId() != FeatureId::wall);
-        CHECK(Map::cells[X0 + r][Y0 - r].rigid->getId() != FeatureId::wall);
-        CHECK(Map::cells[X0 - r][Y0 + r].rigid->getId() != FeatureId::wall);
-        CHECK(Map::cells[X0 - r][Y0 - r].rigid->getId() != FeatureId::wall);
+        CHECK(map::cells[X0 + r][Y0    ].rigid->getId() != FeatureId::wall);
+        CHECK(map::cells[X0 - r][Y0    ].rigid->getId() != FeatureId::wall);
+        CHECK(map::cells[X0    ][Y0 + r].rigid->getId() != FeatureId::wall);
+        CHECK(map::cells[X0    ][Y0 - r].rigid->getId() != FeatureId::wall);
+        CHECK(map::cells[X0 + r][Y0 + r].rigid->getId() != FeatureId::wall);
+        CHECK(map::cells[X0 + r][Y0 - r].rigid->getId() != FeatureId::wall);
+        CHECK(map::cells[X0 - r][Y0 + r].rigid->getId() != FeatureId::wall);
+        CHECK(map::cells[X0 - r][Y0 - r].rigid->getId() != FeatureId::wall);
 
         //Cells around the center, at a distance of 2, should NOT be destroyed
         r = 2;
-        CHECK(Map::cells[X0 + r][Y0    ].rigid->getId() == FeatureId::wall);
-        CHECK(Map::cells[X0 - r][Y0    ].rigid->getId() == FeatureId::wall);
-        CHECK(Map::cells[X0    ][Y0 + r].rigid->getId() == FeatureId::wall);
-        CHECK(Map::cells[X0    ][Y0 - r].rigid->getId() == FeatureId::wall);
-        CHECK(Map::cells[X0 + r][Y0 + r].rigid->getId() == FeatureId::wall);
-        CHECK(Map::cells[X0 + r][Y0 - r].rigid->getId() == FeatureId::wall);
-        CHECK(Map::cells[X0 - r][Y0 + r].rigid->getId() == FeatureId::wall);
-        CHECK(Map::cells[X0 - r][Y0 - r].rigid->getId() == FeatureId::wall);
+        CHECK(map::cells[X0 + r][Y0    ].rigid->getId() == FeatureId::wall);
+        CHECK(map::cells[X0 - r][Y0    ].rigid->getId() == FeatureId::wall);
+        CHECK(map::cells[X0    ][Y0 + r].rigid->getId() == FeatureId::wall);
+        CHECK(map::cells[X0    ][Y0 - r].rigid->getId() == FeatureId::wall);
+        CHECK(map::cells[X0 + r][Y0 + r].rigid->getId() == FeatureId::wall);
+        CHECK(map::cells[X0 + r][Y0 - r].rigid->getId() == FeatureId::wall);
+        CHECK(map::cells[X0 - r][Y0 + r].rigid->getId() == FeatureId::wall);
+        CHECK(map::cells[X0 - r][Y0 - r].rigid->getId() == FeatureId::wall);
     }
 
     //Check damage to actors
     Actor* a1 = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
-    Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
+    explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
     CHECK_EQUAL(int(ActorState::destroyed), int(a1->getState()));
 
     //Check that corpses can be destroyed, and do not block living actors
@@ -462,7 +462,7 @@ TEST_FIXTURE(BasicFixture, Explosions)
         corpses[i]->die(false, false, false);
     }
     a1 = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
-    Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
+    explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
     for (int i = 0; i < NR_CORPSES; ++i)
     {
         CHECK_EQUAL(int(ActorState::destroyed), int(corpses[i]->getState()));
@@ -477,7 +477,7 @@ TEST_FIXTURE(BasicFixture, Explosions)
         corpses[i] = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
         corpses[i]->die(false, false, false);
     }
-    Explosion::runExplosionAt(Pos(X0, Y0), ExplType::applyProp,
+    explosion::runExplosionAt(Pos(X0, Y0), ExplType::applyProp,
                               ExplSrc::misc, 0, SfxId::END,
                               new PropBurning(PropTurns::std));
     CHECK(a1->getPropHandler().getProp(PropId::burning, PropSrc::applied));
@@ -494,22 +494,22 @@ TEST_FIXTURE(BasicFixture, Explosions)
     //North-west edge
     int x = 1;
     int y = 1;
-    Map::put(new Floor(Pos(x, y)));
-    Explosion::runExplosionAt(Pos(x, y), ExplType::expl);
-    CHECK(Map::cells[x + 1][y    ].rigid->getId() != FeatureId::wall);
-    CHECK(Map::cells[x    ][y + 1].rigid->getId() != FeatureId::wall);
-    CHECK(Map::cells[x - 1][y    ].rigid->getId() == FeatureId::wall);
-    CHECK(Map::cells[x    ][y - 1].rigid->getId() == FeatureId::wall);
+    map::put(new Floor(Pos(x, y)));
+    explosion::runExplosionAt(Pos(x, y), ExplType::expl);
+    CHECK(map::cells[x + 1][y    ].rigid->getId() != FeatureId::wall);
+    CHECK(map::cells[x    ][y + 1].rigid->getId() != FeatureId::wall);
+    CHECK(map::cells[x - 1][y    ].rigid->getId() == FeatureId::wall);
+    CHECK(map::cells[x    ][y - 1].rigid->getId() == FeatureId::wall);
 
     //South-east edge
     x = MAP_W - 2;
     y = MAP_H - 2;
-    Map::put(new Floor(Pos(x, y)));
-    Explosion::runExplosionAt(Pos(x, y), ExplType::expl);
-    CHECK(Map::cells[x - 1][y    ].rigid->getId() != FeatureId::wall);
-    CHECK(Map::cells[x    ][y - 1].rigid->getId() != FeatureId::wall);
-    CHECK(Map::cells[x + 1][y    ].rigid->getId() == FeatureId::wall);
-    CHECK(Map::cells[x    ][y + 1].rigid->getId() == FeatureId::wall);
+    map::put(new Floor(Pos(x, y)));
+    explosion::runExplosionAt(Pos(x, y), ExplType::expl);
+    CHECK(map::cells[x - 1][y    ].rigid->getId() != FeatureId::wall);
+    CHECK(map::cells[x    ][y - 1].rigid->getId() != FeatureId::wall);
+    CHECK(map::cells[x + 1][y    ].rigid->getId() == FeatureId::wall);
+    CHECK(map::cells[x    ][y + 1].rigid->getId() == FeatureId::wall);
 }
 
 TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb)
@@ -525,7 +525,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb)
     const Pos posR(2, 4);
 
     //Spawn left floor cell
-    Map::put(new Floor(posL));
+    map::put(new Floor(posL));
 
     //Conditions for finished test
     bool testedStuck              = false;
@@ -536,17 +536,17 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb)
     {
 
         //Spawn right floor cell
-        Map::put(new Floor(posR));
+        map::put(new Floor(posR));
 
         //Spawn a monster that can get stuck in the web
         Actor* const actor = ActorFactory::mk(ActorId::zombie, posL);
         Mon* const mon = static_cast<Mon*>(actor);
 
         //Create a spider web in the right cell
-        const auto  mimicId     = Map::cells[posR.x][posR.x].rigid->getId();
+        const auto  mimicId     = map::cells[posR.x][posR.x].rigid->getId();
         const auto& mimicData   = FeatureData::getData(mimicId);
         const auto* const mimic = static_cast<const Rigid*>(mimicData.mkObj(posR));
-        Map::put(new Trap(posR, mimic, TrapId::web));
+        map::put(new Trap(posR, mimic, TrapId::web));
 
         //Move the monster into the trap, and back again
         mon->awareCounter_ = 20000; // > 0 req. for triggering trap
@@ -563,7 +563,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb)
         }
         else if (mon->pos == posL)
         {
-            const auto featureId = Map::cells[posR.x][posR.y].rigid->getId();
+            const auto featureId = map::cells[posR.x][posR.y].rigid->getId();
             if (featureId == FeatureId::floor)
             {
                 testedLooseWebDestroyed = true;
@@ -590,17 +590,17 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb)
 TEST_FIXTURE(BasicFixture, InventoryHandling)
 {
     const Pos p(10, 10);
-    Map::put(new Floor(p));
-    Map::player->pos = p;
+    map::put(new Floor(p));
+    map::player->pos = p;
 
-    Inventory&  inv       = Map::player->getInv();
+    Inventory&  inv       = map::player->getInv();
     InvSlot&    bodySlot  = inv.slots_[int(SlotId::body)];
 
     delete bodySlot.item;
     bodySlot.item = nullptr;
 
     bool props[size_t(PropId::END)];
-    PropHandler& propHandler = Map::player->getPropHandler();
+    PropHandler& propHandler = map::player->getPropHandler();
 
     //Check that no props are enabled
     propHandler.getPropIds(props);
@@ -660,13 +660,13 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
     CHECK(props[int(PropId::rBreath)]);
 
     //Drop the asbeshos suit on the ground
-    ItemDrop::tryDropItemFromInv(*Map::player, InvType::slots, int(SlotId::body), 1);
+    ItemDrop::tryDropItemFromInv(*map::player, InvType::slots, int(SlotId::body), 1);
 
     //Check that no item exists in body slot
     CHECK(!bodySlot.item);
 
     //Check that the item is on the ground
-    Cell& cell = Map::cells[p.x][p.y];
+    Cell& cell = map::cells[p.x][p.y];
     CHECK(cell.item);
 
     //Check that the properties are cleared
@@ -707,7 +707,7 @@ TEST_FIXTURE(BasicFixture, SavingGame)
     PlayerBon::traits[int(Trait::healer)] = true;
 
     //Player inventory
-    Inventory& inv = Map::player->getInv();
+    Inventory& inv = map::player->getInv();
 
     //First, remove all present items
     vector<Item*>& gen = inv.general_;
@@ -755,12 +755,12 @@ TEST_FIXTURE(BasicFixture, SavingGame)
     inv.putInGeneral(item);
 
     //Player
-    ActorDataT& def = Map::player->getData();
+    ActorDataT& def = map::player->getData();
     def.nameA = def.nameThe = "TEST PLAYER";
-    Map::player->changeMaxHp(5, false);
+    map::player->changeMaxHp(5, false);
 
-    //Map
-    Map::dlvl = 7;
+    //map
+    map::dlvl = 7;
 
     //Actor data
     ActorData::data[int(ActorId::END) - 1].nrKills = 123;
@@ -770,7 +770,7 @@ TEST_FIXTURE(BasicFixture, SavingGame)
     PlayerSpellsHandling::learnSpellIfNotKnown(SpellId::azaWrath);
 
     //Applied properties
-    PropHandler& propHlr = Map::player->getPropHandler();
+    PropHandler& propHlr = map::player->getPropHandler();
     propHlr.tryApplyProp(new PropRSleep(PropTurns::specific, 3));
     propHlr.tryApplyProp(new PropDiseased(PropTurns::indefinite));
     propHlr.tryApplyProp(new PropBlessed(PropTurns::std));
@@ -786,9 +786,9 @@ TEST_FIXTURE(BasicFixture, SavingGame)
     prop = propHlr.getProp(PropId::confused, PropSrc::applied);
     CHECK(!prop);
 
-    //Map sequence
-    MapTravel::mapList[5] = {MapType::ratsInTheWalls,   IsMainDungeon::yes};
-    MapTravel::mapList[7] = {MapType::leng,             IsMainDungeon::no};
+    //map sequence
+    mapTravel::mapList[5] = {mapType::ratsInTheWalls,   IsMainDungeon::yes};
+    mapTravel::mapList[7] = {mapType::leng,             IsMainDungeon::no};
 
     SaveHandling::save();
     CHECK(SaveHandling::isSaveAvailable());
@@ -798,7 +798,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
 {
     CHECK(SaveHandling::isSaveAvailable());
 
-    const int PLAYER_MAX_HP_BEFORE_LOAD = Map::player->getHpMax(true);
+    const int PLAYER_MAX_HP_BEFORE_LOAD = map::player->getHpMax(true);
 
     SaveHandling::load();
 
@@ -816,7 +816,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
     CHECK(!PlayerBon::traits[int(Trait::sharpShooter)]);
 
     //Player inventory
-    Inventory& inv  = Map::player->getInv();
+    Inventory& inv  = map::player->getInv();
     auto& genInv    = inv.general_;
     CHECK_EQUAL(6, int(genInv.size()));
     CHECK_EQUAL(int(ItemId::miGoGun),
@@ -864,15 +864,15 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
     CHECK(isElectricLanternFound);
 
     //Player
-    ActorDataT& def = Map::player->getData();
+    ActorDataT& def = map::player->getData();
     def.nameA = def.nameThe = "TEST PLAYER";
     CHECK_EQUAL("TEST PLAYER", def.nameA);
     CHECK_EQUAL("TEST PLAYER", def.nameThe);
     //Check max HP (affected by disease)
-    CHECK_EQUAL((PLAYER_MAX_HP_BEFORE_LOAD + 5) / 2, Map::player->getHpMax(true));
+    CHECK_EQUAL((PLAYER_MAX_HP_BEFORE_LOAD + 5) / 2, map::player->getHpMax(true));
 
-    //Map
-    CHECK_EQUAL(7, Map::dlvl);
+    //map
+    CHECK_EQUAL(7, map::dlvl);
 
     //Actor data
     CHECK_EQUAL(123, ActorData::data[int(ActorId::END) - 1].nrKills);
@@ -883,12 +883,12 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
     CHECK_EQUAL(false, PlayerSpellsHandling::isSpellLearned(SpellId::mayhem));
 
     //Properties
-    PropHandler& propHlr = Map::player->getPropHandler();
+    PropHandler& propHlr = map::player->getPropHandler();
     Prop* prop = propHlr.getProp(PropId::diseased, PropSrc::applied);
     CHECK(prop);
     CHECK_EQUAL(-1, prop->turnsLeft_);
     //Check currrent HP (affected by disease)
-    CHECK_EQUAL((Map::player->getData().hp + 5) / 2, Map::player->getHp());
+    CHECK_EQUAL((map::player->getData().hp + 5) / 2, map::player->getHp());
 
     prop = propHlr.getProp(PropId::rSleep, PropSrc::applied);
     CHECK(prop);
@@ -910,17 +910,17 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
     CHECK(prop);
     CHECK(prop->turnsLeft_ == -1);
 
-    //Map sequence
-    auto mapData = MapTravel::mapList[3];
-    CHECK(mapData.type          == MapType::std);
+    //map sequence
+    auto mapData = mapTravel::mapList[3];
+    CHECK(mapData.type          == mapType::std);
     CHECK(mapData.isMainDungeon == IsMainDungeon::yes);
 
-    mapData = MapTravel::mapList[5];
-    CHECK(mapData.type          == MapType::ratsInTheWalls);
+    mapData = mapTravel::mapList[5];
+    CHECK(mapData.type          == mapType::ratsInTheWalls);
     CHECK(mapData.isMainDungeon == IsMainDungeon::yes);
 
-    mapData = MapTravel::mapList[7];
-    CHECK(mapData.type          == MapType::leng);
+    mapData = mapTravel::mapList[7];
+    CHECK(mapData.type          == mapType::leng);
     CHECK(mapData.isMainDungeon == IsMainDungeon::no);
 
     //Game time
@@ -930,7 +930,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
 TEST_FIXTURE(BasicFixture, FloodFilling)
 {
     bool b[MAP_W][MAP_H];
-    Utils::resetArray(b, false);
+    utils::resetArray(b, false);
     for (int y = 0; y < MAP_H; ++y) {b[0][y] = b[MAP_W - 1][y] = false;}
     for (int x = 0; x < MAP_W; ++x) {b[x][0] = b[x][MAP_H - 1] = false;}
     int flood[MAP_W][MAP_H];
@@ -951,7 +951,7 @@ TEST_FIXTURE(BasicFixture, PathFinding)
 {
     vector<Pos> path;
     bool b[MAP_W][MAP_H];
-    Utils::resetArray(b, false);
+    utils::resetArray(b, false);
     for (int y = 0; y < MAP_H; ++y) {b[0][y] = b[MAP_W - 1][y] = false;}
     for (int x = 0; x < MAP_W; ++x) {b[x][0] = b[x][MAP_H - 1] = false;}
 
@@ -1014,15 +1014,15 @@ TEST_FIXTURE(BasicFixture, PathFinding)
     CHECK_EQUAL(10, int(path.size()));
 }
 
-TEST_FIXTURE(BasicFixture, MapParseExpandOne)
+TEST_FIXTURE(BasicFixture, mapParseExpandOne)
 {
     bool in[MAP_W][MAP_H];
-    Utils::resetArray(in, false);
+    utils::resetArray(in, false);
 
     in[10][5] = true;
 
     bool out[MAP_W][MAP_H];
-    MapParse::expand(in, out);
+    mapParse::expand(in, out);
 
     CHECK(!out[8][5]);
     CHECK(out[9][5]);
@@ -1037,7 +1037,7 @@ TEST_FIXTURE(BasicFixture, MapParseExpandOne)
     CHECK(!out[12][4]);
 
     in[14][5] = true;
-    MapParse::expand(in, out);
+    mapParse::expand(in, out);
 
     CHECK(out[10][5]);
     CHECK(out[11][5]);
@@ -1046,15 +1046,15 @@ TEST_FIXTURE(BasicFixture, MapParseExpandOne)
     CHECK(out[14][5]);
 
     in[12][5] = true;
-    MapParse::expand(in, out);
+    mapParse::expand(in, out);
     CHECK(out[12][4]);
     CHECK(out[12][5]);
     CHECK(out[12][6]);
 
     //Check that old values are cleared
-    Utils::resetArray(in, false);
+    utils::resetArray(in, false);
     in[40][10] = true;
-    MapParse::expand(in, out);
+    mapParse::expand(in, out);
     CHECK(out[39][10]);
     CHECK(out[40][10]);
     CHECK(out[41][10]);
@@ -1074,49 +1074,49 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries)
     {
         for (int x = roomRect.p0.x; x <= roomRect.p1.x; ++x)
         {
-            Map::put(new Floor(Pos(x, y)));
-            Map::roomMap[x][y] = room;
+            map::put(new Floor(Pos(x, y)));
+            map::roommap[x][y] = room;
         }
     }
 
     vector<Pos> entryList;
-    MapGenUtils::getValidRoomCorrEntries(*room, entryList);
-    bool entryMap[MAP_W][MAP_H];
-    Utils::mkBoolMapFromVector(entryList, entryMap);
+    mapGenutils::getValidRoomCorrEntries(*room, entryList);
+    bool entrymap[MAP_W][MAP_H];
+    utils::mkBoolmapFromVector(entryList, entrymap);
 
-    CHECK(!entryMap[19][4]);
-    CHECK(entryMap[19][5]);
-    CHECK(entryMap[20][4]);
-    CHECK(!entryMap[20][5]);
-    CHECK(entryMap[21][4]);
-    CHECK(entryMap[25][4]);
-    CHECK(!entryMap[25][8]);
-    CHECK(entryMap[29][4]);
-    CHECK(entryMap[30][4]);
-    CHECK(!entryMap[31][4]);
+    CHECK(!entrymap[19][4]);
+    CHECK(entrymap[19][5]);
+    CHECK(entrymap[20][4]);
+    CHECK(!entrymap[20][5]);
+    CHECK(entrymap[21][4]);
+    CHECK(entrymap[25][4]);
+    CHECK(!entrymap[25][8]);
+    CHECK(entrymap[29][4]);
+    CHECK(entrymap[30][4]);
+    CHECK(!entrymap[31][4]);
 
     //Check that a cell in the middle of the room is not an entry, even if it's not
     //belonging to the room
-    Map::roomMap[25][7] = nullptr;
-    MapGenUtils::getValidRoomCorrEntries(*room, entryList);
-    Utils::mkBoolMapFromVector(entryList, entryMap);
+    map::roommap[25][7] = nullptr;
+    mapGenutils::getValidRoomCorrEntries(*room, entryList);
+    utils::mkBoolmapFromVector(entryList, entrymap);
 
-    CHECK(!entryMap[25][7]);
+    CHECK(!entrymap[25][7]);
 
     //The cell should also not be an entry if it's a wall and belonging to the room
-    Map::roomMap[25][7] = room;
-    Map::put(new Wall(Pos(25, 7)));
-    MapGenUtils::getValidRoomCorrEntries(*room, entryList);
-    Utils::mkBoolMapFromVector(entryList, entryMap);
+    map::roommap[25][7] = room;
+    map::put(new Wall(Pos(25, 7)));
+    mapGenutils::getValidRoomCorrEntries(*room, entryList);
+    utils::mkBoolmapFromVector(entryList, entrymap);
 
-    CHECK(!entryMap[25][7]);
+    CHECK(!entrymap[25][7]);
 
     //The cell should also not be an entry if it's a wall and not belonging to the room
-    Map::roomMap[25][7] = nullptr;
-    MapGenUtils::getValidRoomCorrEntries(*room, entryList);
-    Utils::mkBoolMapFromVector(entryList, entryMap);
+    map::roommap[25][7] = nullptr;
+    mapGenutils::getValidRoomCorrEntries(*room, entryList);
+    utils::mkBoolmapFromVector(entryList, entrymap);
 
-    CHECK(!entryMap[25][7]);
+    CHECK(!entrymap[25][7]);
 
     //Check that the room can share an antry point with a nearby room
     roomRect = Rect(10, 5, 18, 10);
@@ -1127,23 +1127,23 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries)
     {
         for (int x = roomRect.p0.x; x <= roomRect.p1.x; ++x)
         {
-            Map::put(new Floor(Pos(x, y)));
-            Map::roomMap[x][y] = nearbyRoom;
+            map::put(new Floor(Pos(x, y)));
+            map::roommap[x][y] = nearbyRoom;
         }
     }
 
-    MapGenUtils::getValidRoomCorrEntries(*room, entryList);
-    Utils::mkBoolMapFromVector(entryList, entryMap);
+    mapGenutils::getValidRoomCorrEntries(*room, entryList);
+    utils::mkBoolmapFromVector(entryList, entrymap);
 
     vector<Pos> entryListNearbyRoom;
-    MapGenUtils::getValidRoomCorrEntries(*nearbyRoom, entryListNearbyRoom);
-    bool entryMapNearbyRoom[MAP_W][MAP_H];
-    Utils::mkBoolMapFromVector(entryListNearbyRoom, entryMapNearbyRoom);
+    mapGenutils::getValidRoomCorrEntries(*nearbyRoom, entryListNearbyRoom);
+    bool entrymapNearbyRoom[MAP_W][MAP_H];
+    utils::mkBoolmapFromVector(entryListNearbyRoom, entrymapNearbyRoom);
 
     for (int y = 5; y <= 10; ++y)
     {
-        CHECK(entryMap[19][y]);
-        CHECK(entryMapNearbyRoom[19][y]);
+        CHECK(entrymap[19][y]);
+        CHECK(entrymapNearbyRoom[19][y]);
     }
 
     delete nearbyRoom;
@@ -1151,61 +1151,61 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries)
     //------------------------------------------------ Room with only one cell
     delete room;
     room = RoomFactory::mk(RoomType::plain, {60, 10, 60, 10});
-    Map::put(new Floor(Pos(60, 10)));
-    Map::roomMap[60][10] = room;
-    MapGenUtils::getValidRoomCorrEntries(*room, entryList);
-    Utils::mkBoolMapFromVector(entryList, entryMap);
+    map::put(new Floor(Pos(60, 10)));
+    map::roommap[60][10] = room;
+    mapGenutils::getValidRoomCorrEntries(*room, entryList);
+    utils::mkBoolmapFromVector(entryList, entrymap);
 
     // 59 60 61
     // #  #  # 9
     // #  .  # 10
     // #  #  # 11
-    CHECK(!entryMap[59][9]);
-    CHECK(entryMap[60][9]);
-    CHECK(!entryMap[61][9]);
-    CHECK(entryMap[59][10]);
-    CHECK(!entryMap[60][10]);
-    CHECK(entryMap[61][10]);
-    CHECK(!entryMap[59][11]);
-    CHECK(entryMap[60][11]);
-    CHECK(!entryMap[61][11]);
+    CHECK(!entrymap[59][9]);
+    CHECK(entrymap[60][9]);
+    CHECK(!entrymap[61][9]);
+    CHECK(entrymap[59][10]);
+    CHECK(!entrymap[60][10]);
+    CHECK(entrymap[61][10]);
+    CHECK(!entrymap[59][11]);
+    CHECK(entrymap[60][11]);
+    CHECK(!entrymap[61][11]);
 
     //Add an adjacent floor above the room
     // 59 60 61
     // #  .  # 9
     // #  .  # 10
     // #  #  # 11
-    Map::put(new Floor(Pos(60, 9)));
-    MapGenUtils::getValidRoomCorrEntries(*room, entryList);
-    Utils::mkBoolMapFromVector(entryList, entryMap);
+    map::put(new Floor(Pos(60, 9)));
+    mapGenutils::getValidRoomCorrEntries(*room, entryList);
+    utils::mkBoolmapFromVector(entryList, entrymap);
 
-    CHECK(!entryMap[59][9]);
-    CHECK(!entryMap[60][9]);
-    CHECK(!entryMap[61][9]);
-    CHECK(entryMap[59][10]);
-    CHECK(!entryMap[60][10]);
-    CHECK(entryMap[61][10]);
-    CHECK(!entryMap[59][11]);
-    CHECK(entryMap[60][11]);
-    CHECK(!entryMap[61][11]);
+    CHECK(!entrymap[59][9]);
+    CHECK(!entrymap[60][9]);
+    CHECK(!entrymap[61][9]);
+    CHECK(entrymap[59][10]);
+    CHECK(!entrymap[60][10]);
+    CHECK(entrymap[61][10]);
+    CHECK(!entrymap[59][11]);
+    CHECK(entrymap[60][11]);
+    CHECK(!entrymap[61][11]);
 
     //Mark the adjacent floor as a room and check again
     Room* adjRoom = RoomFactory::mk(RoomType::plain, {60, 9, 60, 9});
-    Map::roomMap[60][9] = adjRoom;
-    MapGenUtils::getValidRoomCorrEntries(*room, entryList);
-    Utils::mkBoolMapFromVector(entryList, entryMap);
+    map::roommap[60][9] = adjRoom;
+    mapGenutils::getValidRoomCorrEntries(*room, entryList);
+    utils::mkBoolmapFromVector(entryList, entrymap);
 
     delete adjRoom;
 
-    CHECK(!entryMap[59][9]);
-    CHECK(!entryMap[60][9]);
-    CHECK(!entryMap[61][9]);
-    CHECK(entryMap[59][10]);
-    CHECK(!entryMap[60][10]);
-    CHECK(entryMap[61][10]);
-    CHECK(!entryMap[59][11]);
-    CHECK(entryMap[60][11]);
-    CHECK(!entryMap[61][11]);
+    CHECK(!entrymap[59][9]);
+    CHECK(!entrymap[60][9]);
+    CHECK(!entrymap[61][9]);
+    CHECK(entrymap[59][10]);
+    CHECK(!entrymap[60][10]);
+    CHECK(entrymap[61][10]);
+    CHECK(!entrymap[59][11]);
+    CHECK(entrymap[60][11]);
+    CHECK(!entrymap[61][11]);
 
     //Make the room wider, entries should not be placed next to adjacent floor
     // 58 59 60 61
@@ -1213,23 +1213,23 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries)
     // #  .  .  # 10
     // #  #  #  # 11
     room->r_.p0.x = 59;
-    Map::put(new Floor(Pos(59, 10)));
-    Map::roomMap[59][10] = room;
-    MapGenUtils::getValidRoomCorrEntries(*room, entryList);
-    Utils::mkBoolMapFromVector(entryList, entryMap);
+    map::put(new Floor(Pos(59, 10)));
+    map::roommap[59][10] = room;
+    mapGenutils::getValidRoomCorrEntries(*room, entryList);
+    utils::mkBoolmapFromVector(entryList, entrymap);
 
-    CHECK(!entryMap[58][9]);
-    CHECK(entryMap[59][9]);
-    CHECK(!entryMap[60][9]);
-    CHECK(!entryMap[61][9]);
-    CHECK(entryMap[58][10]);
-    CHECK(!entryMap[59][10]);
-    CHECK(!entryMap[60][10]);
-    CHECK(entryMap[61][10]);
-    CHECK(!entryMap[58][11]);
-    CHECK(entryMap[59][11]);
-    CHECK(entryMap[60][11]);
-    CHECK(!entryMap[61][11]);
+    CHECK(!entrymap[58][9]);
+    CHECK(entrymap[59][9]);
+    CHECK(!entrymap[60][9]);
+    CHECK(!entrymap[61][9]);
+    CHECK(entrymap[58][10]);
+    CHECK(!entrymap[59][10]);
+    CHECK(!entrymap[60][10]);
+    CHECK(entrymap[61][10]);
+    CHECK(!entrymap[58][11]);
+    CHECK(entrymap[59][11]);
+    CHECK(entrymap[60][11]);
+    CHECK(!entrymap[61][11]);
 
     //Remove the adjacent room, and check that the blocked entries are now placed
     //TODO
@@ -1249,8 +1249,8 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor)
     {
         for (int x = roomArea1.p0.x; x <= roomArea1.p1.x; ++x)
         {
-            Map::put(new Floor(Pos(x, y)));
-            Map::roomMap[x][y] = room0;
+            map::put(new Floor(Pos(x, y)));
+            map::roommap[x][y] = room0;
         }
     }
 
@@ -1258,16 +1258,16 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor)
     {
         for (int x = roomArea2.p0.x; x <= roomArea2.p1.x; ++x)
         {
-            Map::put(new Floor(Pos(x, y)));
-            Map::roomMap[x][y] = room1;
+            map::put(new Floor(Pos(x, y)));
+            map::roommap[x][y] = room1;
         }
     }
 
-    MapGenUtils::mkPathFindCor(*room0, *room1);
+    mapGenutils::mkPathFindCor(*room0, *room1);
 
     int flood[MAP_W][MAP_H];
     bool blocked[MAP_W][MAP_H];
-    MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
+    mapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
     FloodFill::run(5, blocked, flood, INT_MAX, -1, true);
     CHECK(flood[20][10] > 0);
 
@@ -1275,16 +1275,16 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor)
     delete room1;
 }
 
-TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers)
+TEST_FIXTURE(BasicFixture, mapParseGetCellsWithinDistOfOthers)
 {
     bool in[MAP_W][MAP_H];
     bool out[MAP_W][MAP_H];
 
-    Utils::resetArray(in, false);  //Make sure all values are 0
+    utils::resetArray(in, false);  //Make sure all values are 0
 
     in[20][10] = true;
 
-    MapParse::getCellsWithinDistOfOthers(in, out, Range(0, 1));
+    mapParse::getCellsWithinDistOfOthers(in, out, Range(0, 1));
     CHECK_EQUAL(false, out[18][10]);
     CHECK_EQUAL(true,  out[19][10]);
     CHECK_EQUAL(false, out[20][ 8]);
@@ -1293,12 +1293,12 @@ TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers)
     CHECK_EQUAL(true,  out[20][11]);
     CHECK_EQUAL(true,  out[21][11]);
 
-    MapParse::getCellsWithinDistOfOthers(in, out, Range(1, 1));
+    mapParse::getCellsWithinDistOfOthers(in, out, Range(1, 1));
     CHECK_EQUAL(true,  out[19][10]);
     CHECK_EQUAL(false, out[20][10]);
     CHECK_EQUAL(true,  out[21][11]);
 
-    MapParse::getCellsWithinDistOfOthers(in, out, Range(1, 5));
+    mapParse::getCellsWithinDistOfOthers(in, out, Range(1, 5));
     CHECK_EQUAL(true,  out[23][10]);
     CHECK_EQUAL(true,  out[24][10]);
     CHECK_EQUAL(true,  out[25][10]);
@@ -1313,7 +1313,7 @@ TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers)
 
     in[23][10] = true;
 
-    MapParse::getCellsWithinDistOfOthers(in, out, Range(1, 1));
+    mapParse::getCellsWithinDistOfOthers(in, out, Range(1, 1));
     CHECK_EQUAL(false, out[18][10]);
     CHECK_EQUAL(true,  out[19][10]);
     CHECK_EQUAL(false, out[20][10]);
@@ -1327,8 +1327,8 @@ TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers)
 //-----------------------------------------------------------------------------
 // Some code exercise - Ichi! Ni! San!
 //-----------------------------------------------------------------------------
-//TEST_FIXTURE(BasicFixture, MapGenStd) {
-//  for(int i = 0; i < 100; ++i) {MapGen::Std::run();}
+//TEST_FIXTURE(BasicFixture, mapGenStd) {
+//  for(int i = 0; i < 100; ++i) {mapGen::Std::run();}
 //}
 
 #ifdef _WIN32

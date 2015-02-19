@@ -30,7 +30,7 @@ bool step_path(Mon& mon, std::vector<Pos>& path);
 
 bool step_to_lair_if_los(Mon& mon, const Pos& lair_cell);
 
-} //Action
+} //action
 
 namespace info
 {
@@ -45,8 +45,8 @@ void set_path_to_player_if_aware(Mon& mon, std::vector<Pos>& path);
 
 void set_special_blocked_cells(Mon& mon, bool a[MAP_W][MAP_H]);
 
-} //Info
+} //info
 
-} //Ai
+} //ai
 
 #endif

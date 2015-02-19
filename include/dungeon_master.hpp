@@ -5,10 +5,10 @@
 #include <string>
 
 struct Time_data;
-struct Actor_data_t;
+struct actor_data_t;
 class Actor;
 
-namespace  Dungeon_master
+namespace dungeon_master
 {
 
 void init();
@@ -29,7 +29,7 @@ void set_time_started_to_now();
 
 void player_lose_xp_percent(const int PERCENT);
 
-int get_mon_tot_xp_worth(const Actor_data_t& d);
+int get_mon_tot_xp_worth(const actor_data_t& d);
 
 int get_xp_to_next_lvl();
 

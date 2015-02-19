@@ -77,7 +77,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 
     const Rigid* const mimic_feature_;
     int nr_spikes_;

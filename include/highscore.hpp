@@ -11,7 +11,7 @@ class High_score_entry
 {
 public:
     High_score_entry(std::string date_and_time, std::string name, int xp, int lvl, int dlvl,
-                   int insanity, bool is_win, Bg bg);
+                     int insanity, bool is_win, Bg bg);
 
     ~High_score_entry() {}
 

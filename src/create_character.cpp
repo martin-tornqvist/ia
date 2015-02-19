@@ -21,27 +21,27 @@ namespace enter_name
 
 void draw(const string& cur_string)
 {
-    Render::clear_screen();
-    Render::draw_popup_box(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+    render::clear_screen();
+    render::draw_popup_box(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
-    Render::draw_text_centered("What is your name?", Panel::screen,
-                             Pos(MAP_W_HALF, 0), clr_white);
+    render::draw_text_centered("What is your name?", Panel::screen,
+                               Pos(MAP_W_HALF, 0), clr_white);
     const int Y_NAME = 2;
     const string NAME_STR =
         cur_string.size() < PLAYER_NAME_MAX_LEN ? cur_string + "_" :
         cur_string;
     const size_t NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LEN / 2);
     const size_t NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LEN - 1;
-    Render::draw_text(NAME_STR, Panel::screen, Pos(NAME_X0, Y_NAME),
-                     clr_menu_highlight);
+    render::draw_text(NAME_STR, Panel::screen, Pos(NAME_X0, Y_NAME),
+                      clr_menu_highlight);
     Rect box_rect(Pos(NAME_X0 - 1, Y_NAME - 1), Pos(NAME_X1 + 1, Y_NAME + 1));
-    Render::draw_popup_box(box_rect);
-    Render::update_screen();
+    render::draw_popup_box(box_rect);
+    render::update_screen();
 }
 
 void read_keys(string& cur_string, bool& is_done)
 {
-    const Key_data& d = Input::get_input(false);
+    const Key_data& d = input::get_input(false);
 
     if (d.sdl_key == SDLK_RETURN)
     {
@@ -88,7 +88,7 @@ void run()
     bool is_done = false;
     while (!is_done)
     {
-        if (Config::is_bot_playing())
+        if (config::is_bot_playing())
         {
             name = "AZATHOTH";
             is_done = true;
@@ -98,7 +98,7 @@ void run()
             read_keys(name, is_done);
         }
     }
-    Actor_data_t& def = Map::player->get_data();
+    actor_data_t& def = map::player->get_data();
     def.name_a      = def.name_the = name;
 }
 
@@ -106,11 +106,11 @@ void run()
 
 void draw_pick_bg(const vector<Bg>& bgs, const Menu_browser& browser)
 {
-    Render::clear_screen();
-    Render::draw_popup_box(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+    render::clear_screen();
+    render::draw_popup_box(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
-    Render::draw_text_centered("Choose your background", Panel::screen,
-                             Pos(MAP_W_HALF, 0), clr_white, clr_black, true);
+    render::draw_text_centered("Choose your background", Panel::screen,
+                               Pos(MAP_W_HALF, 0), clr_white, clr_black, true);
 
     const Pos& browser_pos = browser.get_pos();
 
@@ -127,18 +127,18 @@ void draw_pick_bg(const vector<Bg>& bgs, const Menu_browser& browser)
     {
         const Bg bg = bgs[i];
         string name = "";
-        Player_bon::get_bg_title(bg, name);
+        player_bon::get_bg_title(bg, name);
         const bool IS_MARKED  = bg == marked_bg;
         const Clr& drw_clr     = IS_MARKED ? clr_menu_highlight : clr_menu_drk;
-        Render::draw_text_centered(name, Panel::screen, Pos(MAP_W_HALF, y), drw_clr);
+        render::draw_text_centered(name, Panel::screen, Pos(MAP_W_HALF, y), drw_clr);
         y++;
     }
     y++;
 
     const int BGS_BOX_W_HALF = 7;
     Rect box_rect(Pos(MAP_W_HALF - BGS_BOX_W_HALF, Y0_BGS - 1),
-                 Pos(MAP_W_HALF + BGS_BOX_W_HALF, Y0_BGS + NR_BGS));
-    Render::draw_popup_box(box_rect);
+                  Pos(MAP_W_HALF + BGS_BOX_W_HALF, Y0_BGS + NR_BGS));
+    render::draw_popup_box(box_rect);
 
     //------------------------------------------------------------- DESCRIPTION
     const int MARGIN_W_DESCR  = 12;
@@ -146,37 +146,37 @@ void draw_pick_bg(const vector<Bg>& bgs, const Menu_browser& browser)
     const int MAX_W_DESCR     = MAP_W - (MARGIN_W_DESCR * 2);
 
     vector<string> raw_descr_lines;
-    Player_bon::get_bg_descr(marked_bg, raw_descr_lines);
+    player_bon::get_bg_descr(marked_bg, raw_descr_lines);
     for (string& raw_line : raw_descr_lines)
     {
         vector<string> formatted_lines;
-        Text_format::line_to_lines(raw_line, MAX_W_DESCR, formatted_lines);
+        text_format::line_to_lines(raw_line, MAX_W_DESCR, formatted_lines);
         for (string& line : formatted_lines)
         {
-            Render::draw_text(line, Panel::screen, Pos(X0_DESCR, y), clr_white);
+            render::draw_text(line, Panel::screen, Pos(X0_DESCR, y), clr_white);
             y++;
         }
     }
-    Render::update_screen();
+    render::update_screen();
 }
 
 void pick_bg()
 {
-    if (Config::is_bot_playing())
+    if (config::is_bot_playing())
     {
-        Player_bon::pick_bg(Bg(Rnd::range(0, int(Bg::END) - 1)));
+        player_bon::pick_bg(Bg(rnd::range(0, int(Bg::END) - 1)));
     }
     else
     {
         vector<Bg> bgs;
-        Player_bon::get_pickable_bgs(bgs);
+        player_bon::get_pickable_bgs(bgs);
 
         Menu_browser browser(bgs.size(), 0);
         draw_pick_bg(bgs, browser);
 
         while (true)
         {
-            const Menu_action action = Menu_input_handling::get_action(browser);
+            const Menu_action action = menu_input_handling::get_action(browser);
             switch (action)
             {
             case Menu_action::browsed: {draw_pick_bg(bgs, browser);} break;
@@ -186,7 +186,7 @@ void pick_bg()
 
             case Menu_action::selected:
             {
-                Player_bon::pick_bg(bgs[browser.get_pos().y]);
+                player_bon::pick_bg(bgs[browser.get_pos().y]);
                 return;
             } break;
 
@@ -201,8 +201,8 @@ void draw_pick_trait(
     const Menu_browser& browser, const bool IS_CHARACTER_CREATION)
 {
 
-    Render::clear_screen();
-    Render::draw_popup_box(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+    render::clear_screen();
+    render::draw_popup_box(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
     const int NR_TRAITS_1 = traits1.size();
     const int NR_TRAITS_2 = traits2.size();
@@ -211,7 +211,7 @@ void draw_pick_trait(
     for (const Trait& id : traits2)
     {
         string title = "";
-        Player_bon::get_trait_title(id, title);
+        player_bon::get_trait_title(id, title);
         const int CUR_LEN = title.length();
         if (CUR_LEN > len_of_longest_in_col2) {len_of_longest_in_col2 = CUR_LEN;}
     }
@@ -225,8 +225,8 @@ void draw_pick_trait(
                    "Which additional trait do you start with?" :
                    "You have reached a new level! Which trait do you gain?";
 
-    Render::draw_text_centered(title, Panel::screen, Pos(MAP_W_HALF, 0),
-                             clr_white, clr_black, true);
+    render::draw_text_centered(title, Panel::screen, Pos(MAP_W_HALF, 0),
+                               clr_white, clr_black, true);
 
     const Pos& browser_pos = browser.get_pos();
 
@@ -237,10 +237,10 @@ void draw_pick_trait(
     {
         const Trait trait = traits1[i];
         string name = "";
-        Player_bon::get_trait_title(trait, name);
+        player_bon::get_trait_title(trait, name);
         const bool IS_MARKED  = browser_pos.x == 0 && browser_pos.y == int(i);
         const Clr& drw_clr     = IS_MARKED ? clr_menu_highlight : clr_menu_drk;
-        Render::draw_text(name, Panel::screen, Pos(X_COL_ONE, y), drw_clr);
+        render::draw_text(name, Panel::screen, Pos(X_COL_ONE, y), drw_clr);
         y++;
     }
     y = Y0_TRAITS;
@@ -248,10 +248,10 @@ void draw_pick_trait(
     {
         const Trait trait = traits2[i];
         string name = "";
-        Player_bon::get_trait_title(trait, name);
+        player_bon::get_trait_title(trait, name);
         const bool IS_MARKED  = browser_pos.x == 1 && browser_pos.y == int(i);
         const Clr& drw_clr     = IS_MARKED ? clr_menu_highlight : clr_menu_drk;
-        Render::draw_text(name, Panel::screen, Pos(X_COL_TWO, y), drw_clr);
+        render::draw_text(name, Panel::screen, Pos(X_COL_TWO, y), drw_clr);
         y++;
     }
 
@@ -259,7 +259,7 @@ void draw_pick_trait(
     Rect box_rect(
         Pos(MARGIN_W - 2, Y0_TRAITS - 1),
         Pos(X_COL_TWO_RIGHT + 2, Y0_TRAITS + traits1.size()));
-    Render::draw_popup_box(box_rect);
+    render::draw_popup_box(box_rect);
 
     //------------------------------------------------------------- DESCRIPTION
     const int Y0_DESCR = Y0_TRAITS + NR_TRAITS_1 + 1;
@@ -268,14 +268,14 @@ void draw_pick_trait(
     const Trait marked_trait =
         browser_pos.x == 0 ? traits1[browser_pos.y] : traits2[browser_pos.y];
     string descr = "";
-    Player_bon::get_trait_descr(marked_trait, descr);
+    player_bon::get_trait_descr(marked_trait, descr);
     const int MAX_W_DESCR = X_COL_TWO_RIGHT - X_COL_ONE + 1;
     vector<string> descr_lines;
-    Text_format::line_to_lines(
+    text_format::line_to_lines(
         "Effect(s): " + descr, MAX_W_DESCR, descr_lines);
     for (const string& str : descr_lines)
     {
-        Render::draw_text(str, Panel::screen, Pos(X0_DESCR, y), clr_white);
+        render::draw_text(str, Panel::screen, Pos(X0_DESCR, y), clr_white);
         y++;
     }
 
@@ -284,32 +284,32 @@ void draw_pick_trait(
     y = Y0_PREREQS;
     vector<Trait> trait_prereqs;
     Bg bg_prereq = Bg::END;
-    Player_bon::get_trait_prereqs(marked_trait, trait_prereqs, bg_prereq);
+    player_bon::get_trait_prereqs(marked_trait, trait_prereqs, bg_prereq);
     if (!trait_prereqs.empty() || bg_prereq != Bg::END)
     {
-        Render::draw_text("This trait had the following prerequisite(s):",
-                         Panel::screen, Pos(X0_DESCR, y), clr_white);
+        render::draw_text("This trait had the following prerequisite(s):",
+                          Panel::screen, Pos(X0_DESCR, y), clr_white);
         y++;
 
         string prereq_str = "";
 
         if (bg_prereq != Bg::END)
         {
-            Player_bon::get_bg_title(bg_prereq, prereq_str);
+            player_bon::get_bg_title(bg_prereq, prereq_str);
         }
 
         for (Trait prereq_trait : trait_prereqs)
         {
             string prereq_title = "";
-            Player_bon::get_trait_title(prereq_trait, prereq_title);
+            player_bon::get_trait_title(prereq_trait, prereq_title);
             prereq_str += (prereq_str.empty() ? "" : ", ") + prereq_title;
         }
 
         vector<string> prereq_lines;
-        Text_format::line_to_lines(prereq_str, MAX_W_DESCR, prereq_lines);
+        text_format::line_to_lines(prereq_str, MAX_W_DESCR, prereq_lines);
         for (const string& str : prereq_lines)
         {
-            Render::draw_text(str, Panel::screen, Pos(X0_DESCR, y), clr_white);
+            render::draw_text(str, Panel::screen, Pos(X0_DESCR, y), clr_white);
             y++;
         }
     }
@@ -318,21 +318,21 @@ void draw_pick_trait(
     y = Y0_PREREQS + 4;
     const int MAX_W_PREV_PICKS  = SCREEN_W - 2;
     string picked_str = "";
-    Player_bon::get_all_picked_traits_titles_line(picked_str);
+    player_bon::get_all_picked_traits_titles_line(picked_str);
     if (picked_str != "")
     {
         picked_str = "Trait(s) gained: " + picked_str;
         vector<string> picked_lines;
-        Text_format::line_to_lines(picked_str, MAX_W_PREV_PICKS, picked_lines);
+        text_format::line_to_lines(picked_str, MAX_W_PREV_PICKS, picked_lines);
         for (const string& str : picked_lines)
         {
-            Render::draw_text(
+            render::draw_text(
                 str, Panel::screen, Pos(1, y), clr_white);
             y++;
         }
     }
 
-    Render::update_screen();
+    render::update_screen();
 }
 
 } //namespace
@@ -341,15 +341,15 @@ void create_character()
 {
     pick_bg();
     pick_new_trait(true);
-    Enter_name::run();
+    enter_name::run();
 }
 
 void pick_new_trait(const bool IS_CHARACTER_CREATION)
 {
-    if (!Config::is_bot_playing())
+    if (!config::is_bot_playing())
     {
         vector<Trait> pickable_traits;
-        Player_bon::get_pickable_traits(pickable_traits);
+        player_bon::get_pickable_traits(pickable_traits);
 
         if (!pickable_traits.empty())
         {
@@ -379,7 +379,7 @@ void pick_new_trait(const bool IS_CHARACTER_CREATION)
 
             while (true)
             {
-                const Menu_action action = Menu_input_handling::get_action(browser);
+                const Menu_action action = menu_input_handling::get_action(browser);
                 switch (action)
                 {
                 case Menu_action::browsed:
@@ -393,8 +393,8 @@ void pick_new_trait(const bool IS_CHARACTER_CREATION)
                 case Menu_action::selected:
                 {
                     const Pos pos = browser.get_pos();
-                    Player_bon::pick_trait(pos.x == 0 ? traits1[pos.y] : traits2[pos.y]);
-                    if (!IS_CHARACTER_CREATION) {Render::draw_map_and_interface();}
+                    player_bon::pick_trait(pos.x == 0 ? traits1[pos.y] : traits2[pos.y]);
+                    if (!IS_CHARACTER_CREATION) {render::draw_map_and_interface();}
                     return;
                 } break;
 

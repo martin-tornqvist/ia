@@ -52,7 +52,7 @@ void read_file()
 
             if (should_format_line)
             {
-                Text_format::line_to_lines(cur_line, MAP_W, formatted);
+                text_format::line_to_lines(cur_line, MAP_W, formatted);
 
                 TRACE << "cur_line: " << cur_line << endl;
 
@@ -78,10 +78,10 @@ void draw_manual_interface()
     const int   X_LABEL = 3;
     const auto  panel   = Panel::screen;
 
-    Render::draw_text(decoration_line, panel, Pos(0, 0), clr_gray);
-    Render::draw_text(" Browsing the Tome of Wisdom ", panel, Pos(X_LABEL, 0), clr_gray);
-    Render::draw_text(decoration_line, panel, Pos(0, SCREEN_H - 1), clr_gray);
-    Render::draw_text(info_scr_cmd_info, panel, Pos(X_LABEL, SCREEN_H - 1), clr_gray);
+    render::draw_text(decoration_line, panel, Pos(0, 0), clr_gray);
+    render::draw_text(" Browsing the Tome of Wisdom ", panel, Pos(X_LABEL, 0), clr_gray);
+    render::draw_text(decoration_line, panel, Pos(0, SCREEN_H - 1), clr_gray);
+    render::draw_text(info_scr_cmd_info, panel, Pos(X_LABEL, SCREEN_H - 1), clr_gray);
 }
 
 } //namespace
@@ -102,19 +102,19 @@ void run()
 
     while (true)
     {
-        Render::clear_screen();
+        render::clear_screen();
         draw_manual_interface();
 
         int y_pos = 1;
 
         for (int i = top_nr; i <= btm_nr; ++i)
         {
-            Render::draw_text(lines_[i], Panel::screen, Pos(0, y_pos++),
-                             clr_white);
+            render::draw_text(lines_[i], Panel::screen, Pos(0, y_pos++),
+                              clr_white);
         }
-        Render::update_screen();
+        render::update_screen();
 
-        const Key_data& d = Input::get_input();
+        const Key_data& d = input::get_input();
 
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {

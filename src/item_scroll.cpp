@@ -7,7 +7,7 @@
 #include "actor_player.hpp"
 #include "map.hpp"
 #include "player_bon.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "inventory.hpp"
 #include "player_spells_handling.hpp"
 #include "render.hpp"
@@ -18,7 +18,7 @@ using namespace std;
 
 const string Scroll::get_real_name() const
 {
-    Spell* spell      = Spell_handling::mk_spell_from_id(data_->spell_cast_from_scroll);
+    Spell* spell      = spell_handling::mk_spell_from_id(data_->spell_cast_from_scroll);
     const string name = spell->get_name();
     delete spell;
     return name;
@@ -56,7 +56,7 @@ Consume_item Scroll::activate(Actor* const actor)
 
 Spell* Scroll::mk_spell() const
 {
-    return Spell_handling::mk_spell_from_id(data_->spell_cast_from_scroll);
+    return spell_handling::mk_spell_from_id(data_->spell_cast_from_scroll);
 }
 
 void Scroll::identify(const bool IS_SILENT_IDENTIFY)
@@ -68,23 +68,23 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY)
         if (!IS_SILENT_IDENTIFY)
         {
             const string name = get_name(Item_ref_type::a, Item_ref_inf::none);
-            Log::add_msg("It was " + name + ".");
-            Render::draw_map_and_interface();
+            msg_log::add("It was " + name + ".");
+            render::draw_map_and_interface();
         }
     }
 }
 
 void Scroll::try_learn()
 {
-    if (Player_bon::get_bg() == Bg::occultist)
+    if (player_bon::get_bg() == Bg::occultist)
     {
         Spell* const spell = mk_spell();
         if (
             spell->is_avail_for_player() &&
-            !Player_spells_handling::is_spell_learned(spell->get_id()))
+            !player_spells_handling::is_spell_learned(spell->get_id()))
         {
-            Log::add_msg("I learn to cast this incantation by heart!");
-            Player_spells_handling::learn_spell_if_not_known(spell);
+            msg_log::add("I learn to cast this incantation by heart!");
+            player_spells_handling::learn_spell_if_not_known(spell);
         }
         else
         {
@@ -95,11 +95,11 @@ void Scroll::try_learn()
 
 Consume_item Scroll::read()
 {
-    Render::draw_map_and_interface();
+    render::draw_map_and_interface();
 
-    if (!Map::player->get_prop_handler().allow_see())
+    if (!map::player->get_prop_handler().allow_see())
     {
-        Log::add_msg("I cannot read while blind.");
+        msg_log::add("I cannot read while blind.");
         return Consume_item::no;
     }
 
@@ -110,17 +110,17 @@ Consume_item Scroll::read()
     if (data_->is_identified)
     {
         const string name = get_name(Item_ref_type::a, Item_ref_inf::none);
-        Log::add_msg("I read " + name + "...");
-        spell->cast(Map::player, false);
-        Log::add_msg(crumble_str);
+        msg_log::add("I read " + name + "...");
+        spell->cast(map::player, false);
+        msg_log::add(crumble_str);
         try_learn();
     }
     else
     {
-        Log::add_msg("I recite the forbidden incantations on the manuscript...");
+        msg_log::add("I recite the forbidden incantations on the manuscript...");
         data_->is_tried = true;
-        const auto is_noticed = spell->cast(Map::player, false);
-        Log::add_msg(crumble_str);
+        const auto is_noticed = spell->cast(map::player, false);
+        msg_log::add(crumble_str);
         if (is_noticed == Spell_effect_noticed::yes) {identify(false);}
     }
 
@@ -214,13 +214,13 @@ void init()
     }
 
     TRACE << "Init scroll names" << endl;
-    for (auto* const d : Item_data::data)
+    for (auto* const d : item_data::data)
     {
         if (d->type == Item_type::scroll)
         {
             //False name
             const int NR_ELEMENTS = false_names_.size();
-            const int ELEMENT     = Rnd::range(0, NR_ELEMENTS - 1);
+            const int ELEMENT     = rnd::range(0, NR_ELEMENTS - 1);
 
             const string& TITLE = false_names_[ELEMENT];
 
@@ -237,7 +237,7 @@ void init()
 
             //True name
             const Scroll* const scroll =
-                static_cast<const Scroll*>(Item_factory::mk(d->id, 1));
+                static_cast<const Scroll*>(item_factory::mk(d->id, 1));
 
             const string REAL_TYPE_NAME = scroll->get_real_name();
 
@@ -260,9 +260,9 @@ void store_to_save_lines(vector<string>& lines)
 {
     for (int i = 0; i < int(Item_id::END); ++i)
     {
-        if (Item_data::data[i]->type == Item_type::scroll)
+        if (item_data::data[i]->type == Item_type::scroll)
         {
-            auto& base_name_un_id = Item_data::data[i]->base_name_un_id;
+            auto& base_name_un_id = item_data::data[i]->base_name_un_id;
             lines.push_back(base_name_un_id.names[int(Item_ref_type::plain)]);
             lines.push_back(base_name_un_id.names[int(Item_ref_type::plural)]);
             lines.push_back(base_name_un_id.names[int(Item_ref_type::a)]);
@@ -274,9 +274,9 @@ void setup_from_save_lines(vector<string>& lines)
 {
     for (int i = 0; i < int(Item_id::END); ++i)
     {
-        if (Item_data::data[i]->type == Item_type::scroll)
+        if (item_data::data[i]->type == Item_type::scroll)
         {
-            auto& base_name_un_id = Item_data::data[i]->base_name_un_id;
+            auto& base_name_un_id = item_data::data[i]->base_name_un_id;
             base_name_un_id.names[int(Item_ref_type::plain)]  = lines.front();
             lines.erase(begin(lines));
             base_name_un_id.names[int(Item_ref_type::plural)] = lines.front();

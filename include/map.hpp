@@ -21,11 +21,11 @@ struct Cell
 
     void reset();
 
-    bool            is_explored, is_seen_by_player, is_lit, is_dark;
-    Item*           item;
-    Rigid*          rigid;
-    Cell_render_data  player_visual_memory;
-    Pos             pos;
+    bool                is_explored, is_seen_by_player, is_lit, is_dark;
+    Item*               item;
+    Rigid*              rigid;
+    Cell_render_data    player_visual_memory;
+    Pos                 pos;
 };
 
 enum class Map_type
@@ -69,6 +69,6 @@ void delete_and_remove_room_from_list(Room* const room);
 
 bool is_pos_seen_by_player(const Pos& p);
 
-} //Map
+} //map
 
 #endif

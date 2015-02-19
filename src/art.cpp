@@ -124,7 +124,7 @@ Pos get_column_and_row_tile(const Tile_id tile)
 {
     switch (tile)
     {
-    case Tile_id::player_firearm:               return Pos(0, 0);
+    case Tile_id::playerFirearm:               return Pos(0, 0);
     case Tile_id::player_melee:                 return Pos(1, 0);
     case Tile_id::zombie_unarmed:               return Pos(2, 0);
     case Tile_id::zombie_armed:                 return Pos(3, 0);

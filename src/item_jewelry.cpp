@@ -4,7 +4,7 @@
 
 #include "map.hpp"
 #include "utils.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "game_time.hpp"
 #include "render.hpp"
 #include "actor_mon.hpp"
@@ -28,23 +28,23 @@ Jewelry_effect* mk_effect(const Jewelry_effect_id id, Jewelry* const jewelry)
 
     switch (id)
     {
-    case Jewelry_effect_id::r_fire:
+    case Jewelry_effect_id::rFire:
         ret = new Jewelry_effect_rFire(jewelry);
         break;
 
-    case Jewelry_effect_id::r_cold:
+    case Jewelry_effect_id::rCold:
         ret = new Jewelry_effect_rCold(jewelry);
         break;
 
-    case Jewelry_effect_id::r_elec:
+    case Jewelry_effect_id::rElec:
         ret = new Jewelry_effect_rElec(jewelry);
         break;
 
-    case Jewelry_effect_id::r_poison:
+    case Jewelry_effect_id::rPoison:
         ret = new Jewelry_effect_rPoison(jewelry);
         break;
 
-    case Jewelry_effect_id::r_disease:
+    case Jewelry_effect_id::rDisease:
         ret = new Jewelry_effect_rDisease(jewelry);
         break;
 
@@ -133,14 +133,14 @@ void Jewelry_property_effect::on_equip(const bool IS_SILENT)
 
     if (!IS_SILENT)
     {
-        Game_time::update_light_map();
-        Map::player->update_fov();
-        Render::draw_map_and_interface();
+        game_time::update_light_map();
+        map::player->update_fov();
+        render::draw_map_and_interface();
 
-        const auto&   prop_data  = Prop_data::data[size_t(prop->get_id())];
+        const auto&   prop_data  = prop_data::data[size_t(prop->get_id())];
         const string  msg       = prop_data.msg[prop_msg_on_start_player];
 
-        Log::add_msg(msg);
+        msg_log::add(msg);
     }
 
     jewelry_->effect_noticed(get_id());
@@ -157,15 +157,15 @@ Unequip_allowed Jewelry_property_effect::on_unequip()
     }
     jewelry_->carrier_props_.clear();
 
-    Game_time::update_light_map();
-    Map::player->update_fov();
-    Render::draw_map_and_interface();
+    game_time::update_light_map();
+    map::player->update_fov();
+    render::draw_map_and_interface();
 
     for (const Prop_id prop_id : prop_ids_ended)
     {
-        const auto&     prop_data    = Prop_data::data[size_t(prop_id)];
+        const auto&     prop_data    = prop_data::data[size_t(prop_id)];
         const string    msg         = prop_data.msg[prop_msg_on_end_player];
-        Log::add_msg(msg);
+        msg_log::add(msg);
     }
 
     return Unequip_allowed::yes;
@@ -230,13 +230,13 @@ void Jewelry_effect_hp_bon::on_equip(const bool IS_SILENT)
 {
     (void)IS_SILENT;
 
-    Map::player->change_max_hp(4, true);
+    map::player->change_max_hp(4, true);
     jewelry_->effect_noticed(get_id());
 }
 
 Unequip_allowed Jewelry_effect_hp_bon::on_unequip()
 {
-    Map::player->change_max_hp(-4, true);
+    map::player->change_max_hp(-4, true);
 
     return Unequip_allowed::yes;
 }
@@ -246,13 +246,13 @@ void Jewelry_effect_hp_pen::on_equip(const bool IS_SILENT)
 {
     (void)IS_SILENT;
 
-    Map::player->change_max_hp(-4, true);
+    map::player->change_max_hp(-4, true);
     jewelry_->effect_noticed(get_id());
 }
 
 Unequip_allowed Jewelry_effect_hp_pen::on_unequip()
 {
-    Map::player->change_max_hp(4, true);
+    map::player->change_max_hp(4, true);
 
     return Unequip_allowed::yes;
 }
@@ -262,13 +262,13 @@ void Jewelry_effect_spi_bon::on_equip(const bool IS_SILENT)
 {
     (void)IS_SILENT;
 
-    Map::player->change_max_spi(4, true);
+    map::player->change_max_spi(4, true);
     jewelry_->effect_noticed(get_id());
 }
 
 Unequip_allowed Jewelry_effect_spi_bon::on_unequip()
 {
-    Map::player->change_max_spi(-4, true);
+    map::player->change_max_spi(-4, true);
 
     return Unequip_allowed::yes;
 }
@@ -278,13 +278,13 @@ void Jewelry_effect_spi_pen::on_equip(const bool IS_SILENT)
 {
     (void)IS_SILENT;
 
-    Map::player->change_max_spi(-4, true);
+    map::player->change_max_spi(-4, true);
     jewelry_->effect_noticed(get_id());
 }
 
 Unequip_allowed Jewelry_effect_spi_pen::on_unequip()
 {
-    Map::player->change_max_spi(4, true);
+    map::player->change_max_spi(4, true);
 
     return Unequip_allowed::yes;
 }
@@ -292,14 +292,14 @@ Unequip_allowed Jewelry_effect_spi_pen::on_unequip()
 //--------------------------------------------------------- EFFECT: RANDOM TELEPORTATION
 void Jewelry_effect_random_tele::on_std_turn_equiped()
 {
-    auto& prop_handler = Map::player->get_prop_handler();
+    auto& prop_handler = map::player->get_prop_handler();
 
     const int TELE_ON_IN_N = 200;
 
-    if (Rnd::one_in(TELE_ON_IN_N) && prop_handler.allow_act())
+    if (rnd::one_in(TELE_ON_IN_N) && prop_handler.allow_act())
     {
-        Log::add_msg("I am being teleported...", clr_white, true, true);
-        Map::player->teleport();
+        msg_log::add("I am being teleported...", clr_white, true, true);
+        map::player->teleport();
         jewelry_->effect_noticed(get_id());
     }
 }
@@ -309,32 +309,32 @@ void Jewelry_effect_summon_mon::on_std_turn_equiped()
 {
     const int SOUND_ONE_IN_N  = 250;
 
-    if (effects_known_[size_t(get_id())] && Rnd::one_in(SOUND_ONE_IN_N))
+    if (effects_known_[size_t(get_id())] && rnd::one_in(SOUND_ONE_IN_N))
     {
-        Log::add_msg("I hear a faint whistling sound coming nearer...", clr_white, false,
-                    true);
+        msg_log::add("I hear a faint whistling sound coming nearer...", clr_white, false,
+                     true);
 
-        Map::player->incr_shock(Shock_lvl::mild, Shock_src::misc);
+        map::player->incr_shock(Shock_lvl::mild, Shock_src::misc);
     }
 
     const int SUMMON_ONE_IN_N = 1200;
 
-    if (Rnd::one_in(SUMMON_ONE_IN_N))
+    if (rnd::one_in(SUMMON_ONE_IN_N))
     {
-        Log::add_msg("There is a loud whistling sound.", clr_white, false, true);
+        msg_log::add("There is a loud whistling sound.", clr_white, false, true);
 
-        const Pos origin = Map::player->pos;
+        const Pos origin = map::player->pos;
 
         vector<Mon*> summoned_mon;
 
-        Actor_factory::summon(origin, {Actor_id::greater_polyp}, false, nullptr,
-                             &summoned_mon);
+        actor_factory::summon(origin, {Actor_id::greater_polyp}, false, nullptr,
+                              &summoned_mon);
 
         const Mon* const mon = summoned_mon[0];
 
-        if (Map::player->can_see_actor(*mon, nullptr))
+        if (map::player->can_see_actor(*mon, nullptr))
         {
-            Log::add_msg(mon->get_name_a() + " appears!", clr_white, true, true);
+            msg_log::add(mon->get_name_a() + " appears!", clr_white, true, true);
         }
 
         jewelry_->effect_noticed(get_id());
@@ -346,9 +346,9 @@ void Jewelry_effect_fire::on_std_turn_equiped()
 {
     const int FIRE_ONE_IN_N = 300;
 
-    if (Rnd::one_in(FIRE_ONE_IN_N))
+    if (rnd::one_in(FIRE_ONE_IN_N))
     {
-        const Pos& origin   = Map::player->pos;
+        const Pos& origin   = map::player->pos;
         const int D         = FOV_STD_RADI_INT - 2;
         const int X0        = max(1,            origin.x - D);
         const int Y0        = max(1,            origin.y - D);
@@ -357,16 +357,16 @@ void Jewelry_effect_fire::on_std_turn_equiped()
 
         const int FIRE_CELL_ONE_IN_N = 4;
 
-        Log::add_msg("The surrounding area suddenly burst into flames!", clr_white,
-                    false, true);
+        msg_log::add("The surrounding area suddenly burst into flames!", clr_white,
+                     false, true);
 
         for (int x = X0; x <= X1; ++x)
         {
             for (int y = Y0; y <= Y1; ++y)
             {
-                if (Rnd::one_in(FIRE_CELL_ONE_IN_N) && Pos(x, y) != origin)
+                if (rnd::one_in(FIRE_CELL_ONE_IN_N) && Pos(x, y) != origin)
                 {
-                    Map::cells[x][y].rigid->hit(Dmg_type::fire, Dmg_method::elemental);
+                    map::cells[x][y].rigid->hit(Dmg_type::fire, Dmg_method::elemental);
                 }
             }
         }
@@ -380,10 +380,10 @@ void Jewelry_effect_conflict::on_std_turn_equiped()
 {
     const int CONFLICT_ONE_IN_N = 50;
 
-    if (Rnd::one_in(CONFLICT_ONE_IN_N))
+    if (rnd::one_in(CONFLICT_ONE_IN_N))
     {
         vector<Actor*> seen_foes;
-        Map::player->get_seen_foes(seen_foes);
+        map::player->get_seen_foes(seen_foes);
 
         if (!seen_foes.empty())
         {
@@ -409,9 +409,9 @@ void Jewelry_effect_conflict::on_std_turn_equiped()
 Jewelry_effect_shriek::Jewelry_effect_shriek(Jewelry* const jewelry) :
     Jewelry_effect(jewelry)
 {
-    string player_name = Map::player->get_name_the();
+    string player_name = map::player->get_name_the();
 
-    Text_format::all_to_upper(player_name);
+    text_format::all_to_upper(player_name);
 
     words_ =
     {
@@ -488,11 +488,11 @@ void Jewelry_effect_shriek::on_std_turn_equiped()
 {
     const int NOISE_ONE_IN_N = 300;
 
-    if (Rnd::one_in(NOISE_ONE_IN_N))
+    if (rnd::one_in(NOISE_ONE_IN_N))
     {
         const string name = jewelry_->get_name(Item_ref_type::plain, Item_ref_inf::none);
 
-        Log::add_msg("The " + name + " shrieks...", clr_white, false, true);
+        msg_log::add("The " + name + " shrieks...", clr_white, false, true);
 
         const int NR_WORDS = 3;
 
@@ -500,7 +500,7 @@ void Jewelry_effect_shriek::on_std_turn_equiped()
 
         for (int i = 0; i < NR_WORDS; ++i)
         {
-            const int   IDX     = Rnd::range(0, words_.size() - 1);
+            const int   IDX     = rnd::range(0, words_.size() - 1);
             const auto& word    = words_[size_t(IDX)];
 
             phrase += word;
@@ -513,13 +513,13 @@ void Jewelry_effect_shriek::on_std_turn_equiped()
 
         phrase += "!!!";
 
-        Snd_emit::emit_snd(Snd(phrase, Sfx_id::END, Ignore_msg_if_origin_seen::no,
-                             Map::player->pos, Map::player, Snd_vol::high, Alerts_mon::yes
-                            ));
+        snd_emit::emit_snd(Snd(phrase, Sfx_id::END, Ignore_msg_if_origin_seen::no,
+                               map::player->pos, map::player, Snd_vol::high, Alerts_mon::yes
+                              ));
 
-        Map::player->incr_shock(Shock_lvl::mild, Shock_src::misc);
+        map::player->incr_shock(Shock_lvl::mild, Shock_src::misc);
 
-        Log::more_prompt();
+        msg_log::more_prompt();
 
         jewelry_->effect_noticed(get_id());
     }
@@ -532,7 +532,7 @@ void Jewelry_effect_burden::on_equip(const bool IS_SILENT)
     {
         if (!IS_SILENT)
         {
-            Log::add_msg("I suddenly feel more burdened.");
+            msg_log::add("I suddenly feel more burdened.");
         }
 
         jewelry_->effect_noticed(get_id());
@@ -553,7 +553,7 @@ void Jewelry_effect_hp_regen_bon::on_equip(const bool IS_SILENT)
 {
     if (!IS_SILENT)
     {
-        Log::add_msg("I heal faster.");
+        msg_log::add("I heal faster.");
     }
 
     jewelry_->effect_noticed(get_id());
@@ -561,7 +561,7 @@ void Jewelry_effect_hp_regen_bon::on_equip(const bool IS_SILENT)
 
 Unequip_allowed Jewelry_effect_hp_regen_bon::on_unequip()
 {
-    Log::add_msg("I heal slower.");
+    msg_log::add("I heal slower.");
     return Unequip_allowed::yes;
 }
 
@@ -570,7 +570,7 @@ void Jewelry_effect_hp_regen_pen::on_equip(const bool IS_SILENT)
 {
     if (!IS_SILENT)
     {
-        Log::add_msg("I heal slower.");
+        msg_log::add("I heal slower.");
     }
 
     jewelry_->effect_noticed(get_id());
@@ -578,7 +578,7 @@ void Jewelry_effect_hp_regen_pen::on_equip(const bool IS_SILENT)
 
 Unequip_allowed Jewelry_effect_hp_regen_pen::on_unequip()
 {
-    Log::add_msg("I heal faster.");
+    msg_log::add("I heal faster.");
     return Unequip_allowed::yes;
 }
 
@@ -648,7 +648,7 @@ void Jewelry::on_equip(const bool IS_SILENT)
 
     if (!IS_SILENT)
     {
-        Log::more_prompt();
+        msg_log::more_prompt();
     }
 }
 
@@ -664,7 +664,7 @@ Unequip_allowed Jewelry::on_unequip()
         }
     }
 
-    Log::more_prompt();
+    msg_log::more_prompt();
 
     return unequip_allowed;
 }
@@ -757,17 +757,17 @@ void Jewelry::effect_noticed(const Jewelry_effect_id effect_id)
 
         const string name = get_name(Item_ref_type::plain, Item_ref_inf::none);
 
-        Log::add_msg("I gained new knowledge about the " + name + ".", clr_white, false,
-                    true);
+        msg_log::add("I gained new knowledge about the " + name + ".", clr_white, false,
+                     true);
 
         if (nr_effects_known_this_item == MAX_NR_EFFECTS_ON_ITEM)
         {
-            Log::add_msg("I feel like all properties of the " + name +
-                        " are known to me.", clr_white, false, true);
+            msg_log::add("I feel like all properties of the " + name +
+                         " are known to me.", clr_white, false, true);
             data_->is_identified = true;
         }
 
-        Map::player->incr_shock(Shock_lvl::heavy, Shock_src::use_strange_item);
+        map::player->incr_shock(Shock_lvl::heavy, Shock_src::use_strange_item);
     }
 }
 
@@ -776,7 +776,7 @@ namespace
 {
 
 bool can_effects_be_combined(const Jewelry_effect_id id1,
-                          const Jewelry_effect_id id2)
+                             const Jewelry_effect_id id2)
 {
     typedef Jewelry_effect_id Id;
 
@@ -793,7 +793,7 @@ bool can_effects_be_combined(const Jewelry_effect_id id1,
         return id2 != Id::hp_pen;
 
     case Id::hp_pen:
-        return id2 != Id::hp_bon && id2 != Id::r_disease;
+        return id2 != Id::hp_bon && id2 != Id::rDisease;
 
     case Id::spi_bon:
         return id2 != Id::spi_pen;
@@ -801,7 +801,7 @@ bool can_effects_be_combined(const Jewelry_effect_id id1,
     case Id::spi_pen:
         return id2 != Id::spi_bon;
 
-    case Id::r_disease:
+    case Id::rDisease:
         return id2 != Id::hp_pen;
 
     case Id::tele_ctrl:
@@ -822,10 +822,10 @@ bool can_effects_be_combined(const Jewelry_effect_id id1,
     case Id::summon:
     case Id::light:
     case Id::conflict:
-    case Id::r_fire:
-    case Id::r_cold:
-    case Id::r_elec:
-    case Id::r_poison:
+    case Id::rFire:
+    case Id::rCold:
+    case Id::rElec:
+    case Id::rPoison:
     case Id::burden:
     case Id::shriek:
     case Id::haste:
@@ -841,7 +841,7 @@ bool can_effects_be_combined(const Jewelry_effect_id id1,
 }
 
 int get_rnd_item_bucket_idx_for_effect(const Jewelry_effect_id  effect_to_assign,
-                                 const vector<Item_id>&  item_bucket)
+                                       const vector<Item_id>&  item_bucket)
 {
     vector<int> item_idx_bucket;
 
@@ -876,7 +876,7 @@ int get_rnd_item_bucket_idx_for_effect(const Jewelry_effect_id  effect_to_assign
         return -1;
     }
 
-    const int IDX_BUCKET_IDX = Rnd::range(0, item_idx_bucket.size() - 1);
+    const int IDX_BUCKET_IDX = rnd::range(0, item_idx_bucket.size() - 1);
     return item_idx_bucket[IDX_BUCKET_IDX];
 }
 
@@ -896,7 +896,7 @@ void init()
 
     vector<Item_id> item_bucket;
 
-    for (auto* data : Item_data::data)
+    for (auto* data : item_data::data)
     {
         const auto type = data->type;
 
@@ -944,7 +944,7 @@ void init()
         }
         else //All primary effects are assigned
         {
-            Item_data::data[size_t(item_id)]->allow_spawn = false;
+            item_data::data[size_t(item_id)]->allow_spawn = false;
         }
     }
 

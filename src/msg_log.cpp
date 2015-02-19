@@ -1,4 +1,4 @@
-#include "log.hpp"
+#include "msg_log.hpp"
 
 #include <vector>
 #include <string>
@@ -14,7 +14,7 @@
 
 using namespace std;
 
-namespace log
+namespace msg_log
 {
 
 namespace
@@ -37,26 +37,27 @@ void draw_history_interface(const int TOP_LINE_NR, const int BTM_LINE_NR)
 {
     const string decoration_line(MAP_W, '-');
 
-    Render::draw_text(decoration_line, Panel::screen, Pos(0, 0), clr_gray);
+    render::draw_text(decoration_line, Panel::screen, Pos(0, 0), clr_gray);
 
     const int X_LABEL = 3;
 
     if (history_.empty())
     {
-        Render::draw_text(" No message history ", Panel::screen,
-                         Pos(X_LABEL, 0), clr_gray);
+        render::draw_text(" No message history ", Panel::screen,
+                          Pos(X_LABEL, 0), clr_gray);
     }
     else
     {
-        Render::draw_text(
+        render::draw_text(
             " Displaying messages " + to_str(TOP_LINE_NR + 1) + "-" +
             to_str(BTM_LINE_NR + 1) + " of " +
             to_str(history_.size()) + " ", Panel::screen, Pos(X_LABEL, 0), clr_gray);
     }
 
-    Render::draw_text(decoration_line, Panel::screen, Pos(0, SCREEN_H - 1), clr_gray);
+    render::draw_text(decoration_line, Panel::screen, Pos(0, SCREEN_H - 1), clr_gray);
 
-    Render::draw_text(info_scr_cmd_info, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clr_gray);
+    render::draw_text(info_scr_cmd_info, Panel::screen, Pos(X_LABEL, SCREEN_H - 1),
+                      clr_gray);
 }
 
 //Used by normal log and history viewer
@@ -66,7 +67,7 @@ void draw_line(const vector<Msg>& line_to_draw, const int Y_POS)
     {
         string str = "";
         msg.get_str_with_repeats(str);
-        Render::draw_text(str, Panel::log, Pos(msg.x_pos_, Y_POS), msg.clr_);
+        render::draw_text(str, Panel::log, Pos(msg.x_pos_, Y_POS), msg.clr_);
     }
 }
 
@@ -82,7 +83,7 @@ void init()
     history_.clear();
 }
 
-void clear_log()
+void clear()
 {
     for (vector<Msg>& line : lines_)
     {
@@ -100,14 +101,14 @@ void clear_log()
     }
 }
 
-void draw_log(const bool SHOULD_UPDATE_SCREEN)
+void draw(const bool SHOULD_UPDATE_SCREEN)
 {
     const int NR_LINES_WITH_CONTENT = lines_[0].empty() ? 0 :
                                       lines_[1].empty() ? 1 : 2;
 
     if (NR_LINES_WITH_CONTENT > 0)
     {
-        Render::cover_area(Panel::log, Pos(0, 0), Pos(MAP_W, NR_LINES_WITH_CONTENT));
+        render::cover_area(Panel::log, Pos(0, 0), Pos(MAP_W, NR_LINES_WITH_CONTENT));
 
         for (int i = 0; i < NR_LINES_WITH_CONTENT; ++i)
         {
@@ -117,12 +118,14 @@ void draw_log(const bool SHOULD_UPDATE_SCREEN)
 
     if (SHOULD_UPDATE_SCREEN)
     {
-        Render::update_screen();
+        render::update_screen();
     }
 }
 
-void add_msg(const string& str, const Clr& clr, const bool INTERRUPT_PLAYER_ACTIONS,
-            const bool ADD_MORE_PROMPT_AFTER_MSG)
+void add(const string&  str,
+         const Clr&     clr,
+         const bool     INTERRUPT_PLAYER_ACTIONS,
+         const bool     ADD_MORE_PROMPT_AFTER_MSG)
 {
     assert(!str.empty());
 
@@ -136,7 +139,7 @@ void add_msg(const string& str, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
 
     //If frenzied, change message
     bool props[size_t(Prop_id::END)];
-    Map::player->get_prop_handler().get_prop_ids(props);
+    map::player->get_prop_handler().get_prop_ids(props);
 
     if (props[size_t(Prop_id::frenzied)])
     {
@@ -159,7 +162,7 @@ void add_msg(const string& str, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
         if (has_lower_case && is_ended_by_punctuation)
         {
             //Convert to upper case
-            Text_format::all_to_upper(frenzied_str);
+            text_format::all_to_upper(frenzied_str);
 
             //Do not put "!" if string contains "..."
             if (frenzied_str.find("...") == string::npos)
@@ -174,7 +177,8 @@ void add_msg(const string& str, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
                 frenzied_str += "!!";
             }
 
-            add_msg(frenzied_str, clr, INTERRUPT_PLAYER_ACTIONS, ADD_MORE_PROMPT_AFTER_MSG);
+            add(frenzied_str, clr, INTERRUPT_PLAYER_ACTIONS,
+                ADD_MORE_PROMPT_AFTER_MSG);
 
             return;
         }
@@ -207,7 +211,8 @@ void add_msg(const string& str, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
     {
         const int REPEAT_STR_LEN = 4;
 
-        const int PADDING_LEN = REPEAT_STR_LEN + (cur_line_nr == 0 ? 0 : (more_str.size() + 1));
+        const int PADDING_LEN = REPEAT_STR_LEN +
+                                (cur_line_nr == 0 ? 0 : (more_str.size() + 1));
 
         int x_pos = get_xAfter_msg(prev_msg);
 
@@ -238,10 +243,10 @@ void add_msg(const string& str, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
     //Messages may stop long actions like first aid and quick walk
     if (INTERRUPT_PLAYER_ACTIONS)
     {
-        Map::player->interrupt_actions();
+        map::player->interrupt_actions();
     }
 
-    Map::player->on_log_msg_printed();
+    map::player->on_log_msg_printed();
 }
 
 void more_prompt()
@@ -252,9 +257,9 @@ void more_prompt()
         return;
     }
 
-    Render::draw_map_and_interface(false);
+    render::draw_map_and_interface(false);
 
-    draw_log(false);
+    draw(false);
 
     int x_pos    = 0;
     int line_nr = lines_[1].empty() ? 0 : 1;
@@ -273,16 +278,16 @@ void more_prompt()
         }
     }
 
-    Render::draw_text(more_str, Panel::log, Pos(x_pos, line_nr), clr_black, clr_gray);
+    render::draw_text(more_str, Panel::log, Pos(x_pos, line_nr), clr_black, clr_gray);
 
-    Render::update_screen();
-    Query::wait_for_confirm();
-    clear_log();
+    render::update_screen();
+    query::wait_forConfirm();
+    clear();
 }
 
 void display_history()
 {
-    clear_log();
+    clear();
 
     const int LINE_JUMP           = 3;
     const int NR_LINES_TOT        = history_.size();
@@ -293,16 +298,16 @@ void display_history()
 
     while (true)
     {
-        Render::clear_screen();
+        render::clear_screen();
         draw_history_interface(top_nr, btm_nr);
         int y_pos = 1;
         for (int i = top_nr; i <= btm_nr; ++i)
         {
             draw_line(history_[i], y_pos++);
         }
-        Render::update_screen();
+        render::update_screen();
 
-        const Key_data& d = Input::get_input();
+        const Key_data& d = input::get_input();
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {
             top_nr += LINE_JUMP;
@@ -326,7 +331,7 @@ void display_history()
         btm_nr = min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
     }
 
-    Render::draw_map_and_interface();
+    render::draw_map_and_interface();
 }
 
 void add_line_to_history(const string& line_to_add)
@@ -341,4 +346,4 @@ const vector< vector<Msg> >& get_history()
     return history_;
 }
 
-} //Log
+} //log

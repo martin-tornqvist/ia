@@ -10,7 +10,7 @@ Menu_action get_action(Menu_browser& browser)
 {
     while (true)
     {
-        Key_data d = Input::get_input();
+        Key_data d = input::get_input();
 
         if (d.sdl_key == SDLK_RIGHT        || d.key == '6' || d.key == 'l')
         {

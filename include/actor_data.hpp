@@ -92,9 +92,9 @@ enum class Ai_id
     END
 };
 
-struct Actor_data_t
+struct actor_data_t
 {
-    Actor_data_t() {reset();}
+    actor_data_t() {reset();}
 
     void reset();
 
@@ -145,13 +145,13 @@ struct Actor_data_t
 namespace actor_data
 {
 
-extern Actor_data_t data[int(Actor_id::END)];
+extern actor_data_t data[int(Actor_id::END)];
 
 void init();
 
 void store_to_save_lines(std::vector<std::string>& lines);
 void setup_from_save_lines(std::vector<std::string>& lines);
 
-} //Actor_data
+} //actor_data
 
 #endif

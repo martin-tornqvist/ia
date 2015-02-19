@@ -57,14 +57,14 @@ void run_std_turn_events()
         if (actor->get_state() == Actor_state::destroyed)
         {
             //Do not delete player if player died, just return
-            if (actor == Map::player)
+            if (actor == map::player)
             {
                 return;
             }
 
-            if (Map::player->tgt_ == actor)
+            if (map::player->tgt_ == actor)
             {
-                Map::player->tgt_ = nullptr;
+                map::player->tgt_ = nullptr;
             }
 
             delete actor;
@@ -88,7 +88,7 @@ void run_std_turn_events()
 
             //Do light damage if actor in lit cell
             const Pos& pos = actor->pos;
-            if (Map::cells[pos.x][pos.y].is_lit)
+            if (map::cells[pos.x][pos.y].is_lit)
             {
                 actor->hit(1, Dmg_type::light);
             }
@@ -96,15 +96,15 @@ void run_std_turn_events()
             if (actor->is_alive())
             {
                 //Regen Spi
-                if (actor == Map::player)
+                if (actor == map::player)
                 {
-                    if (Player_bon::traits[int(Trait::stout_spirit)])
+                    if (player_bon::traits[int(Trait::stout_spirit)])
                         regen_spi_nTurns -= 2;
 
-                    if (Player_bon::traits[int(Trait::strong_spirit)])
+                    if (player_bon::traits[int(Trait::strong_spirit)])
                         regen_spi_nTurns -= 2;
 
-                    if (Player_bon::traits[int(Trait::mighty_spirit)])
+                    if (player_bon::traits[int(Trait::mighty_spirit)])
                         regen_spi_nTurns -= 2;
                 }
 
@@ -125,7 +125,7 @@ void run_std_turn_events()
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            Map::cells[x][y].rigid->on_new_turn();
+            map::cells[x][y].rigid->on_new_turn();
         }
     }
 
@@ -135,18 +135,18 @@ void run_std_turn_events()
 
     //Spawn more monsters?
     //(If an unexplored cell is selected, the spawn is canceled)
-    if (Map::dlvl >= 1 && Map::dlvl <= DLVL_LAST)
+    if (map::dlvl >= 1 && map::dlvl <= DLVL_LAST)
     {
         const int SPAWN_N_TURNS = 130;
 
         if (turn_nr_ % SPAWN_N_TURNS == 0)
         {
-            Populate_mon::try_spawn_due_to_time_passed();
+            populate_mon::try_spawn_due_to_time_passed();
         }
     }
 
     //Run new turn events on all player items
-    auto& player_inv = Map::player->get_inv();
+    auto& player_inv = map::player->get_inv();
 
     for (Item* const item : player_inv.general_)
     {
@@ -161,11 +161,11 @@ void run_std_turn_events()
         }
     }
 
-    Snd_emit::reset_nr_snd_msg_printed_cur_turn();
+    snd_emit::reset_nr_snd_msg_printed_cur_turn();
 
-    if (Map::dlvl > 0)
+    if (map::dlvl > 0)
     {
-        Audio::try_play_amb(100);
+        audio::try_play_amb(100);
     }
 }
 
@@ -250,7 +250,7 @@ void erase_actor_in_element(const size_t i)
 void add_actor(Actor* actor)
 {
     //Sanity check actor inserted
-    assert(Utils::is_pos_inside_map(actor->pos));
+    assert(utils::is_pos_inside_map(actor->pos));
     actors_.push_back(actor);
 }
 
@@ -269,14 +269,14 @@ void tick(const bool IS_FREE_TURN)
 
     auto* cur_actor = get_cur_actor();
 
-    if (cur_actor == Map::player)
+    if (cur_actor == map::player)
     {
-        Map::player->update_fov();
-        Render::draw_map_and_interface();
-        Map::update_visual_memory();
+        map::player->update_fov();
+        render::draw_map_and_interface();
+        map::update_visual_memory();
 
         //Run new turn events on all player items
-        auto& inv = Map::player->get_inv();
+        auto& inv = map::player->get_inv();
 
         for (Item* const item : inv.general_)
         {
@@ -336,18 +336,18 @@ void tick(const bool IS_FREE_TURN)
             {
             case Actor_speed::sluggish:
                 can_act = (cur_turn_type == Turn_type::slow ||
-                          cur_turn_type == Turn_type::normal2)
-                         && Rnd::fraction(2, 3);
+                           cur_turn_type == Turn_type::normal2)
+                          && rnd::fraction(2, 3);
                 break;
 
             case Actor_speed::slow:
                 can_act = cur_turn_type == Turn_type::slow ||
-                         cur_turn_type == Turn_type::normal2;
+                          cur_turn_type == Turn_type::normal2;
                 break;
 
             case Actor_speed::normal:
                 can_act = cur_turn_type != Turn_type::fast &&
-                         cur_turn_type != Turn_type::fastest;
+                          cur_turn_type != Turn_type::fastest;
                 break;
 
             case Actor_speed::fast:
@@ -375,12 +375,12 @@ void update_light_map()
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            Map::cells[x][y].is_lit = light_tmp[x][y] = false;
+            map::cells[x][y].is_lit = light_tmp[x][y] = false;
         }
     }
 
     //Do not add light on Leng
-    if (Map_travel::get_map_type() == Map_type::leng) {return;}
+    if (map_travel::get_map_type() == Map_type::leng) {return;}
 
     for (const auto* const a : actors_)  {a->add_light(light_tmp);}
 
@@ -390,7 +390,7 @@ void update_light_map()
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            auto* rigid = Map::cells[x][y].rigid;
+            auto* rigid = map::cells[x][y].rigid;
 
             if (rigid->get_burn_state() == Burn_state::burning)
             {
@@ -400,7 +400,7 @@ void update_light_map()
             rigid->add_light(light_tmp);
 
             //Copy the temp values to the real light map.
-            Map::cells[x][y].is_lit = light_tmp[x][y];
+            map::cells[x][y].is_lit = light_tmp[x][y];
         }
     }
 }
@@ -410,8 +410,8 @@ Actor* get_cur_actor()
     Actor* const actor = actors_[cur_actor_index_];
 
     //Sanity check actor retrieved
-    assert(Utils::is_pos_inside_map(actor->pos));
+    assert(utils::is_pos_inside_map(actor->pos));
     return actor;
 }
 
-} //Game_time
+} //game_time

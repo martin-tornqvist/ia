@@ -12,11 +12,11 @@ class Jewelry;
 enum class Jewelry_effect_id
 {
     //Primary effects (i.e. one of these must be on the jewelry)
-    r_fire,
-    r_cold,
-    r_elec,
-    r_poison,
-    r_disease,
+    rFire,
+    rCold,
+    rElec,
+    rPoison,
+    rDisease,
     tele_ctrl,
     light,
     haste,
@@ -95,7 +95,7 @@ public:
 
     ~Jewelry_effect_rFire() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::r_fire;}
+    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::rFire;}
 
     std::string get_descr() const override
     {
@@ -114,7 +114,7 @@ public:
 
     ~Jewelry_effect_rCold() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::r_cold;}
+    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::rCold;}
 
     std::string get_descr() const override
     {
@@ -133,7 +133,7 @@ public:
 
     ~Jewelry_effect_rElec() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::r_elec;}
+    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::rElec;}
 
     std::string get_descr() const override
     {
@@ -152,7 +152,7 @@ public:
 
     ~Jewelry_effect_rPoison() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::r_poison;}
+    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::rPoison;}
 
     std::string get_descr() const override
     {
@@ -171,7 +171,7 @@ public:
 
     ~Jewelry_effect_rDisease() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::r_disease;}
+    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::rDisease;}
 
     std::string get_descr() const override
     {

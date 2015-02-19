@@ -19,7 +19,7 @@
 using namespace std;
 
 High_score_entry::High_score_entry(std::string date_and_time, std::string name, int xp,
-                               int lvl, int dlvl, int insanity, bool did_win, Bg bg) :
+                                   int lvl, int dlvl, int insanity, bool did_win, Bg bg) :
     date_and_time_  (date_and_time),
     name_         (name),
     xp_           (xp),
@@ -122,32 +122,32 @@ void draw(const vector<High_score_entry>& entries, const int TOP_ELEMENT)
 {
     TRACE_FUNC_BEGIN;
 
-    Render::clear_screen();
+    render::clear_screen();
 
     const Panel panel   = Panel::screen;
     const int   X_LABEL = 3;
 
     const string decoration_line(MAP_W, '-');
 
-    Render::draw_text(decoration_line, panel, Pos(0, 0), clr_gray);
+    render::draw_text(decoration_line, panel, Pos(0, 0), clr_gray);
 
-    Render::draw_text(" Displaying High Scores ", panel, Pos(X_LABEL, 0), clr_gray);
+    render::draw_text(" Displaying High Scores ", panel, Pos(X_LABEL, 0), clr_gray);
 
-    Render::draw_text(decoration_line, panel, Pos(0, SCREEN_H - 1), clr_gray);
+    render::draw_text(decoration_line, panel, Pos(0, SCREEN_H - 1), clr_gray);
 
-    Render::draw_text(info_scr_cmd_info, panel, Pos(X_LABEL, SCREEN_H - 1), clr_gray);
+    render::draw_text(info_scr_cmd_info, panel, Pos(X_LABEL, SCREEN_H - 1), clr_gray);
 
     int y_pos = 1;
 
     const Clr& label_clr = clr_white_high;
 
-    Render::draw_text("Ended",       panel, Pos(X_POS_DATE,    y_pos), label_clr);
-    Render::draw_text("Name",        panel, Pos(X_POS_NAME,    y_pos), label_clr);
-    Render::draw_text("Level",       panel, Pos(X_POS_LVL,     y_pos), label_clr);
-    Render::draw_text("Depth",       panel, Pos(X_POS_DLVL,    y_pos), label_clr);
-    Render::draw_text("Insanity",    panel, Pos(X_POS_INS,     y_pos), label_clr);
-    Render::draw_text("Win",         panel, Pos(X_POS_WIN,     y_pos), label_clr);
-    Render::draw_text("Score",       panel, Pos(X_POS_SCORE,   y_pos), label_clr);
+    render::draw_text("Ended",       panel, Pos(X_POS_DATE,    y_pos), label_clr);
+    render::draw_text("Name",        panel, Pos(X_POS_NAME,    y_pos), label_clr);
+    render::draw_text("Level",       panel, Pos(X_POS_LVL,     y_pos), label_clr);
+    render::draw_text("Depth",       panel, Pos(X_POS_DLVL,    y_pos), label_clr);
+    render::draw_text("Insanity",    panel, Pos(X_POS_INS,     y_pos), label_clr);
+    render::draw_text("Win",         panel, Pos(X_POS_WIN,     y_pos), label_clr);
+    render::draw_text("Score",       panel, Pos(X_POS_SCORE,   y_pos), label_clr);
 
     y_pos++;
 
@@ -170,17 +170,17 @@ void draw(const vector<High_score_entry>& entries, const int TOP_ELEMENT)
 
         const Clr& clr = clr_white;
 
-        Render::draw_text(date_and_time, panel, Pos(X_POS_DATE,    y_pos), clr);
-        Render::draw_text(name,        panel, Pos(X_POS_NAME,    y_pos), clr);
-        Render::draw_text(lvl,         panel, Pos(X_POS_LVL,     y_pos), clr);
-        Render::draw_text(dlvl,        panel, Pos(X_POS_DLVL,    y_pos), clr);
-        Render::draw_text(ins + "%",   panel, Pos(X_POS_INS,     y_pos), clr);
-        Render::draw_text(win,         panel, Pos(X_POS_WIN,     y_pos), clr);
-        Render::draw_text(score,       panel, Pos(X_POS_SCORE,   y_pos), clr);
+        render::draw_text(date_and_time, panel, Pos(X_POS_DATE,    y_pos), clr);
+        render::draw_text(name,        panel, Pos(X_POS_NAME,    y_pos), clr);
+        render::draw_text(lvl,         panel, Pos(X_POS_LVL,     y_pos), clr);
+        render::draw_text(dlvl,        panel, Pos(X_POS_DLVL,    y_pos), clr);
+        render::draw_text(ins + "%",   panel, Pos(X_POS_INS,     y_pos), clr);
+        render::draw_text(win,         panel, Pos(X_POS_WIN,     y_pos), clr);
+        render::draw_text(score,       panel, Pos(X_POS_SCORE,   y_pos), clr);
         y_pos++;
     }
 
-    Render::update_screen();
+    render::update_screen();
 
     TRACE_FUNC_END;
 }
@@ -194,7 +194,7 @@ void run_high_score_screen()
 
     if (entries.empty())
     {
-        Popup::show_msg("No High Score entries found.", false);
+        popup::show_msg("No High Score entries found.", false);
         return;
     }
 
@@ -212,7 +212,7 @@ void run_high_score_screen()
     {
         draw(entries, top_nr);
 
-        const Key_data& d = Input::get_input();
+        const Key_data& d = input::get_input();
 
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {
@@ -244,14 +244,14 @@ void on_game_over(const bool IS_WIN)
     vector<High_score_entry> entries = get_entries_sorted();
 
     High_score_entry cur_player(
-        Utils::get_cur_time().get_time_str(Time_type::minute, true),
-        Map::player->get_name_a(),
-        Dungeon_master::get_xp(),
-        Dungeon_master::get_cLvl(),
-        Map::dlvl,
-        Map::player->get_insanity(),
+        utils::get_cur_time().get_time_str(Time_type::minute, true),
+        map::player->get_name_a(),
+        dungeon_master::get_xp(),
+        dungeon_master::get_cLvl(),
+        map::dlvl,
+        map::player->get_insanity(),
         IS_WIN,
-        Player_bon::get_bg());
+        player_bon::get_bg());
 
     entries.push_back(cur_player);
 

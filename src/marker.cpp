@@ -7,7 +7,7 @@
 #include "input.hpp"
 #include "actor_player.hpp"
 #include "attack.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "look.hpp"
 #include "throwing.hpp"
 #include "render.hpp"
@@ -30,34 +30,34 @@ Pos pos_;
 void set_pos_to_closest_enemy_if_visible()
 {
     vector<Actor*> seen_foes;
-    Map::player->get_seen_foes(seen_foes);
+    map::player->get_seen_foes(seen_foes);
     vector<Pos> seen_foes_cells;
 
-    Utils::get_actor_cells(seen_foes, seen_foes_cells);
+    utils::get_actor_cells(seen_foes, seen_foes_cells);
 
     //If player sees enemies, suggest one for targeting
     if (!seen_foes_cells.empty())
     {
-        pos_ = Utils::get_closest_pos(Map::player->pos, seen_foes_cells);
+        pos_ = utils::get_closest_pos(map::player->pos, seen_foes_cells);
 
-        Map::player->tgt_ = Utils::get_actor_at_pos(pos_);
+        map::player->tgt_ = utils::get_actor_at_pos(pos_);
     }
 }
 
 void try_move(const Dir dir)
 {
-    const Pos new_pos(pos_ + Dir_utils::get_offset(dir));
-    if (Utils::is_pos_inside_map(new_pos)) {pos_ = new_pos;}
+    const Pos new_pos(pos_ + dir_utils::get_offset(dir));
+    if (utils::is_pos_inside_map(new_pos)) {pos_ = new_pos;}
 }
 
 bool set_pos_to_target_if_visible()
 {
-    const Actor* const target = Map::player->tgt_;
+    const Actor* const target = map::player->tgt_;
 
     if (target)
     {
         vector<Actor*> seen_foes;
-        Map::player->get_seen_foes(seen_foes);
+        map::player->get_seen_foes(seen_foes);
 
         if (!seen_foes.empty())
         {
@@ -76,12 +76,13 @@ bool set_pos_to_target_if_visible()
 
 } //namespace
 
-Pos run(const Marker_draw_tail draw_trail, const Marker_use_player_tgt use_target,
+Pos run(const Marker_draw_tail draw_trail,
+        const Marker_use_player_tgt use_target,
         function<void(const Pos&)> on_marker_at_pos,
         function<Marker_done(const Pos&, const Key_data&)> on_key_press,
         const int EFFECTIVE_RANGE_LMT)
 {
-    pos_ = Map::player->pos;
+    pos_ = map::player->pos;
 
     if (use_target == Marker_use_player_tgt::yes)
     {
@@ -90,7 +91,7 @@ Pos run(const Marker_draw_tail draw_trail, const Marker_use_player_tgt use_targe
         {
             //If no target available, attempt to place marker at closest visible monster.
             //This sets a new target if successful.
-            Map::player->tgt_ = nullptr;
+            map::player->tgt_ = nullptr;
             set_pos_to_closest_enemy_if_visible();
         }
     }
@@ -102,21 +103,21 @@ Pos run(const Marker_draw_tail draw_trail, const Marker_use_player_tgt use_targe
         //Print info such as name of actor at current position, etc.
         on_marker_at_pos(pos_);
 
-        Render::draw_map_and_interface(false);
+        render::draw_map_and_interface(false);
 
         vector<Pos> trail;
 
         if (draw_trail == Marker_draw_tail::yes)
         {
-            const Pos origin(Map::player->pos);
-            Line_calc::calc_new_line(origin, pos_, true, INT_MAX, false, trail);
+            const Pos origin(map::player->pos);
+            line_calc::calc_new_line(origin, pos_, true, INT_MAX, false, trail);
         }
 
-        Render::draw_marker(pos_, trail, EFFECTIVE_RANGE_LMT);
+        render::draw_marker(pos_, trail, EFFECTIVE_RANGE_LMT);
 
-        Render::update_screen();
+        render::update_screen();
 
-        const Key_data& d = Input::get_input();
+        const Key_data& d = input::get_input();
 
         if (d.sdl_key == SDLK_RIGHT    || d.key == '6' || d.key == 'l')
         {
@@ -183,10 +184,10 @@ Pos run(const Marker_draw_tail draw_trail, const Marker_use_player_tgt use_targe
 
         if (is_done == Marker_done::yes)
         {
-            Render::draw_map_and_interface();
+            render::draw_map_and_interface();
         }
     }
     return pos_;
 }
 
-} //Marker
+} //marker

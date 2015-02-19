@@ -9,7 +9,7 @@
 #include "utils.hpp"
 #include "map_parsing.hpp"
 #include "properties.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "explosion.hpp"
 #include "render.hpp"
 #include "input.hpp"
@@ -70,13 +70,13 @@ string Item::get_weight_str() const
 Consume_item Item::activate(Actor* const actor)
 {
     (void)actor;
-    Log::add_msg("I cannot apply that.");
+    msg_log::add("I cannot apply that.");
     return Consume_item::no;
 }
 
 string Item::get_name(const Item_ref_type      ref_type,
-                     const Item_ref_inf       inf,
-                     const Item_ref_att_inf    att_inf) const
+                      const Item_ref_inf       inf,
+                      const Item_ref_att_inf    att_inf) const
 {
     Item_ref_type ref_type_used = ref_type;
 
@@ -107,7 +107,7 @@ string Item::get_name(const Item_ref_type      ref_type,
         }
     }
 
-    const auto ability_vals = Map::player->get_data().ability_vals;
+    const auto ability_vals = map::player->get_data().ability_vals;
 
     if (att_inf_used == Item_ref_att_inf::melee)
     {
@@ -115,19 +115,19 @@ string Item::get_name(const Item_ref_type      ref_type,
         const string    sides_str    = to_str(data_->melee.dmg.second);
         const int       PLUS        = melee_dmg_plus_;
         const string    plus_str     = PLUS == 0 ? "" :
-                                      PLUS  > 0 ?
-                                      ("+" + to_str(PLUS)) :
-                                      ("-" + to_str(PLUS));
+                                       PLUS  > 0 ?
+                                       ("+" + to_str(PLUS)) :
+                                       ("-" + to_str(PLUS));
         const int       ITEM_SKILL  = data_->melee.hit_chance_mod;
         const int       MELEE_SKILL = ability_vals.get_val(Ability_id::melee, true,
-                                      *(Map::player));
+                                      *(map::player));
         const int       SKILL_TOT   = max(0, min(100, ITEM_SKILL + MELEE_SKILL));
         const string    skill_str    = to_str(SKILL_TOT) + "%";
 
         att_str = " " + rolls_str + "d" + sides_str + plus_str + " " + skill_str;
     }
 
-    const int RANGED_SKILL = ability_vals.get_val(Ability_id::ranged, true, *(Map::player));
+    const int RANGED_SKILL = ability_vals.get_val(Ability_id::ranged, true, *(map::player));
 
     if (att_inf_used == Item_ref_att_inf::ranged)
     {
@@ -141,9 +141,9 @@ string Item::get_name(const Item_ref_type      ref_type,
             const string    sides_str    = to_str(data_->ranged.dmg.sides);
             const int       PLUS        = data_->ranged.dmg.plus * MULTIPL;
             const string    plus_str     = PLUS ==  0 ? "" :
-                                          PLUS  > 0  ?
-                                          ("+" + to_str(PLUS)) :
-                                          ("-" + to_str(PLUS));
+                                           PLUS  > 0  ?
+                                           ("+" + to_str(PLUS)) :
+                                           ("-" + to_str(PLUS));
             dmg_str                      = rolls_str + "d" + sides_str + plus_str;
         }
         const int       ITEM_SKILL  = data_->ranged.hit_chance_mod;
@@ -159,8 +159,8 @@ string Item::get_name(const Item_ref_type      ref_type,
         const string    sides_str    = to_str(data_->ranged.throw_dmg.sides);
         const int       PLUS        = data_->ranged.throw_dmg.plus;
         const string    plus_str     = PLUS ==  0 ? "" :
-                                      PLUS  > 0 ? "+" :
-                                      ("-" + to_str(PLUS));
+                                       PLUS  > 0 ? "+" :
+                                       ("-" + to_str(PLUS));
         const int       ITEM_SKILL  = data_->ranged.throw_hit_chance_mod;
         const int       SKILL_TOT   = max(0, min(100, ITEM_SKILL + RANGED_SKILL));
         const string    skill_str    = to_str(SKILL_TOT) + "%";
@@ -183,13 +183,13 @@ string Item::get_name(const Item_ref_type      ref_type,
 
 bool Item::is_in_effective_range_lmt(const Pos& p0, const Pos& p1) const
 {
-    return Utils::king_dist(p0, p1) <= data_->ranged.effective_range;
+    return utils::king_dist(p0, p1) <= data_->ranged.effective_range;
 }
 
 //--------------------------------------------------------- ARMOR
 Armor::Armor(Item_data_t* const item_data) :
     Item  (item_data),
-    dur_  (Rnd::range(80, 100)) {}
+    dur_  (rnd::range(80, 100)) {}
 
 void Armor::store_to_save_lines(vector<string>& lines)
 {
@@ -209,17 +209,17 @@ void Armor::on_equip(const bool IS_SILENT)
 
 Unequip_allowed Armor::on_unequip()
 {
-    Render::draw_map_and_interface();
+    render::draw_map_and_interface();
 
     const Unequip_allowed unequip_allowed = on_unequip_();
 
     if (unequip_allowed == Unequip_allowed::yes)
     {
         const string name = get_name(Item_ref_type::plain, Item_ref_inf::none);
-        Log::add_msg("I take off my " + name + ".", clr_white, false, true);
+        msg_log::add("I take off my " + name + ".", clr_white, false, true);
     }
 
-    Game_time::tick();
+    game_time::tick();
 
     return unequip_allowed;
 }
@@ -244,7 +244,7 @@ int Armor::take_dur_hit_and_get_reduced_dmg(const int DMG_BEFORE)
     const int     AP_BEFORE       = get_armor_points();
     const double  DDF_BASE        = data_->armor.dmg_to_durability_factor;
     //TODO: Add check for if wearer is player!
-    const double  DDF_WAR_VET_MOD = Player_bon::get_bg() == Bg::war_vet ? 0.5 : 1.0;
+    const double  DDF_WAR_VET_MOD = player_bon::get_bg() == Bg::war_vet ? 0.5 : 1.0;
     const double  DDF_K           = 1.5;
     const double  DMG_BEFORE_DB   = double(DMG_BEFORE);
 
@@ -256,7 +256,7 @@ int Armor::take_dur_hit_and_get_reduced_dmg(const int DMG_BEFORE)
     if (AP_AFTER < AP_BEFORE && AP_AFTER != 0)
     {
         const string armor_name = get_name(Item_ref_type::plain);
-        Log::add_msg("My " + armor_name + " is damaged!", clr_msg_note);
+        msg_log::add("My " + armor_name + " is damaged!", clr_msg_note);
     }
 
     TRACE << "Damage before: " + to_str(DMG_BEFORE) << endl;
@@ -329,7 +329,7 @@ void Armor_mi_go::on_std_turn_in_inv(const Inv_type inv_type)
         if (AP_AFTER > AP_BEFORE)
         {
             const string name = get_name(Item_ref_type::plain, Item_ref_inf::none);
-            Log::add_msg("My " + name + " reconstructs itself.", clr_msg_note, false, true);
+            msg_log::add("My " + name + " reconstructs itself.", clr_msg_note, false, true);
         }
     }
 }
@@ -338,21 +338,21 @@ void Armor_mi_go::on_equip_(const bool IS_SILENT)
 {
     if (!IS_SILENT)
     {
-        Render::draw_map_and_interface();
-        Log::add_msg("The armor joins with my skin!", clr_white, false, true);
-        Map::player->incr_shock(Shock_lvl::heavy, Shock_src::use_strange_item);
+        render::draw_map_and_interface();
+        msg_log::add("The armor joins with my skin!", clr_white, false, true);
+        map::player->incr_shock(Shock_lvl::heavy, Shock_src::use_strange_item);
     }
 }
 
 Unequip_allowed Armor_mi_go::on_unequip_()
 {
-    Render::draw_map_and_interface();
-    Log::add_msg("I attempt to tear off the armor, it rips my skin!", clr_msg_bad, false,
-                true);
+    render::draw_map_and_interface();
+    msg_log::add("I attempt to tear off the armor, it rips my skin!", clr_msg_bad, false,
+                 true);
 
-    Map::player->hit(Rnd::range(1, 3), Dmg_type::pure);
+    map::player->hit(rnd::range(1, 3), Dmg_type::pure);
 
-    if (Rnd::coin_toss())
+    if (rnd::coin_toss())
     {
         //NOTE: There is no need to print a message here, a message is always printed when
         //taking off armor.
@@ -360,7 +360,7 @@ Unequip_allowed Armor_mi_go::on_unequip_()
     }
     else
     {
-        Log::add_msg("I fail to tear it off.", clr_white, false, true);
+        msg_log::add("I fail to tear it off.", clr_white, false, true);
         return Unequip_allowed::no;
     }
 }
@@ -407,7 +407,7 @@ void Wpn::set_random_melee_plus()
     melee_dmg_plus_ = 0;
 
     int chance = 45;
-    while (Rnd::percent() < chance && melee_dmg_plus_ < 3)
+    while (rnd::percent() < chance && melee_dmg_plus_ < 3)
     {
         melee_dmg_plus_++;
         chance -= 5;
@@ -451,7 +451,7 @@ void Incinerator::on_projectile_blocked(
     const Pos& pos, Actor* actor_hit)
 {
     (void)actor_hit;
-    Explosion::run_explosion_at(pos, Expl_type::expl);
+    explosion::run_explosion_at(pos, Expl_type::expl);
 }
 
 //--------------------------------------------------------- AMMO CLIP
@@ -489,17 +489,17 @@ Consume_item Medical_bag::activate(Actor* const actor)
     (void)actor;
 
     vector<Actor*> seen_foes;
-    Map::player->get_seen_foes(seen_foes);
+    map::player->get_seen_foes(seen_foes);
     if (!seen_foes.empty())
     {
-        Log::add_msg("Not while an enemy is near.");
+        msg_log::add("Not while an enemy is near.");
         cur_action_ = Med_bag_action::END;
         return Consume_item::no;
     }
 
     cur_action_ = choose_action();
 
-    Log::clear_log();
+    msg_log::clear();
 
     if (cur_action_ == Med_bag_action::END)
     {
@@ -508,13 +508,13 @@ Consume_item Medical_bag::activate(Actor* const actor)
 
     //Check if chosen action can be done
     bool props[size_t(Prop_id::END)];
-    Map::player->get_prop_handler().get_prop_ids(props);
+    map::player->get_prop_handler().get_prop_ids(props);
     switch (cur_action_)
     {
     case Med_bag_action::treat_wounds:
-        if (Map::player->get_hp() >= Map::player->get_hp_max(true))
+        if (map::player->get_hp() >= map::player->get_hp_max(true))
         {
-            Log::add_msg("I have no wounds to treat.");
+            msg_log::add("I have no wounds to treat.");
             cur_action_ = Med_bag_action::END;
             return Consume_item::no;
         }
@@ -523,7 +523,7 @@ Consume_item Medical_bag::activate(Actor* const actor)
     case Med_bag_action::sanitize_infection:
         if (!props[int(Prop_id::infected)])
         {
-            Log::add_msg("I have no infection to sanitize.");
+            msg_log::add("I have no infection to sanitize.");
             cur_action_ = Med_bag_action::END;
             return Consume_item::no;
         }
@@ -548,40 +548,40 @@ Consume_item Medical_bag::activate(Actor* const actor)
 
     if (!is_enough_suppl)
     {
-        Log::add_msg("I do not have enough supplies for that.");
+        msg_log::add("I do not have enough supplies for that.");
         cur_action_ = Med_bag_action::END;
         return Consume_item::no;
     }
 
     //Action can be done
-    Map::player->active_medical_bag = this;
+    map::player->active_medical_bag = this;
 
     switch (cur_action_)
     {
     case Med_bag_action::treat_wounds:
-        Log::add_msg("I start treating my wounds...");
+        msg_log::add("I start treating my wounds...");
         nr_turns_until_heal_wounds_ = NR_TRN_BEFORE_HEAL;
         break;
 
     case Med_bag_action::sanitize_infection:
-        Log::add_msg("I start to sanitize an infection...");
+        msg_log::add("I start to sanitize an infection...");
         nr_turns_left_sanitize_ = get_tot_turns_for_sanitize();
         break;
 
     case Med_bag_action::END: {} break;
     }
 
-    Game_time::tick();
+    game_time::tick();
 
     return Consume_item::no;
 }
 
 Med_bag_action Medical_bag::choose_action() const
 {
-    Log::clear_log();
+    msg_log::clear();
 
     bool props[size_t(Prop_id::END)];
-    Map::player->get_prop_handler().get_prop_ids(props);
+    map::player->get_prop_handler().get_prop_ids(props);
 
     //Infections are treated first
     if (props[int(Prop_id::infected)])
@@ -592,14 +592,14 @@ Med_bag_action Medical_bag::choose_action() const
     return Med_bag_action::treat_wounds;
 
 
-//  Log::add_msg("Use Medical Bag how? [h/enter] Treat wounds [s] Sanitize infection",
+//  msg_log::add("Use Medical Bag how? [h/enter] Treat wounds [s] Sanitize infection",
 //              clr_white_high);
 
-//  Render::draw_map_and_interface(true);
+//  render::draw_map_and_interface(true);
 //
 //  while (true)
 //  {
-//    const Key_data d = Query::letter(true);
+//    const Key_data d = query::letter(true);
 //    if (d.sdl_key == SDLK_ESCAPE || d.sdl_key == SDLK_SPACE)
 //    {
 //      return Med_bag_action::END;
@@ -624,9 +624,9 @@ void Medical_bag::continue_action()
     case Med_bag_action::treat_wounds:
     {
 
-        auto& player = *Map::player;
+        auto& player = *map::player;
 
-        const bool IS_HEALER = Player_bon::traits[int(Trait::healer)];
+        const bool IS_HEALER = player_bon::traits[int(Trait::healer)];
 
         if (nr_turns_until_heal_wounds_ > 0)
         {
@@ -638,14 +638,14 @@ void Medical_bag::continue_action()
             const int NR_TRN_PER_HP_W_BON =
                 IS_HEALER ? (NR_TRN_PER_HP / 2) : NR_TRN_PER_HP;
 
-            if (Game_time::get_turn() % NR_TRN_PER_HP_W_BON == 0)
+            if (game_time::get_turn() % NR_TRN_PER_HP_W_BON == 0)
             {
                 player.restore_hp(1, false);
             }
 
             //The rate of supply use is consistent (this means that with the healer
             // trait, you spend half the time and supplies, as per the description).
-            if (Game_time::get_turn() % NR_TRN_PER_HP == 0)
+            if (game_time::get_turn() % NR_TRN_PER_HP == 0)
             {
                 --nr_supplies_;
             }
@@ -653,7 +653,7 @@ void Medical_bag::continue_action()
 
         if (nr_supplies_ <= 0)
         {
-            Log::add_msg("No more medical supplies.");
+            msg_log::add("No more medical supplies.");
             finish_cur_action();
             return;
         }
@@ -664,7 +664,7 @@ void Medical_bag::continue_action()
             return;
         }
 
-        Game_time::tick();
+        game_time::tick();
 
     } break;
 
@@ -677,7 +677,7 @@ void Medical_bag::continue_action()
         }
         else
         {
-            Game_time::tick();
+            game_time::tick();
         }
     } break;
 
@@ -691,19 +691,19 @@ void Medical_bag::continue_action()
 
 void Medical_bag::finish_cur_action()
 {
-    Map::player->active_medical_bag = nullptr;
+    map::player->active_medical_bag = nullptr;
 
     switch (cur_action_)
     {
     case Med_bag_action::sanitize_infection:
     {
-        Map::player->get_prop_handler().end_applied_prop(Prop_id::infected);
+        map::player->get_prop_handler().end_applied_prop(Prop_id::infected);
         nr_supplies_ -= get_tot_suppl_for_sanitize();
     } break;
 
     case Med_bag_action::treat_wounds:
     {
-        Log::add_msg("I finish treating my wounds.");
+        msg_log::add("I finish treating my wounds.");
     } break;
 
     case Med_bag_action::END: {} break;
@@ -713,28 +713,28 @@ void Medical_bag::finish_cur_action()
 
     if (nr_supplies_ <= 0)
     {
-        Map::player->get_inv().remove_item_in_backpack_with_ptr(this, true);
+        map::player->get_inv().remove_item_in_backpack_with_ptr(this, true);
     }
 }
 
 void Medical_bag::interrupted()
 {
-    Log::add_msg("My healing is disrupted.", clr_white, false);
+    msg_log::add("My healing is disrupted.", clr_white, false);
 
     nr_turns_until_heal_wounds_ = -1;
     nr_turns_left_sanitize_    = -1;
 
-    Map::player->active_medical_bag = nullptr;
+    map::player->active_medical_bag = nullptr;
 }
 
 int Medical_bag::get_tot_turns_for_sanitize() const
 {
-    return Player_bon::traits[int(Trait::healer)] ? 10 : 20;
+    return player_bon::traits[int(Trait::healer)] ? 10 : 20;
 }
 
 int Medical_bag::get_tot_suppl_for_sanitize() const
 {
-    return Player_bon::traits[int(Trait::healer)] ? 3 : 6;
+    return player_bon::traits[int(Trait::healer)] ? 3 : 6;
 }
 
 //--------------------------------------------------------- HIDEOUS MASK
@@ -748,10 +748,10 @@ int Medical_bag::get_tot_suppl_for_sanitize() const
 //    if (inv_type == Inv_type::slots)
 //    {
 //        vector<Actor*> adj_actors;
-//        const Pos p(Map::player->pos);
-//        for (auto* const actor : Game_time::actors_)
+//        const Pos p(map::player->pos);
+//        for (auto* const actor : game_time::actors_)
 //        {
-//            if (actor->is_alive() && Utils::is_pos_adj(p, actor->pos, false))
+//            if (actor->is_alive() && utils::is_pos_adj(p, actor->pos, false))
 //            {
 //                adj_actors.push_back(actor);
 //            }
@@ -759,10 +759,10 @@ int Medical_bag::get_tot_suppl_for_sanitize() const
 //        if (!adj_actors.empty())
 //        {
 //            bool blocked_los[MAP_W][MAP_H];
-//            Map_parse::run(Cell_check::Blocks_los(), blocked_los);
+//            map_parse::run(cell_check::Blocks_los(), blocked_los);
 //            for (auto* const actor : adj_actors)
 //            {
-//                if (Rnd::one_in(4) && actor->can_see_actor(*Map::player, blocked_los))
+//                if (rnd::one_in(4) && actor->can_see_actor(*map::player, blocked_los))
 //                {
 //                    actor->get_prop_handler().try_apply_prop(
 //                        new Prop_terrified(Prop_turns::std));
@@ -794,8 +794,8 @@ void Gas_mask::decr_turns_left(Inventory& carrier_inv)
 
     if (nr_turns_left_ <= 0)
     {
-        Log::add_msg("My " + get_name(Item_ref_type::plain, Item_ref_inf::none) + " expires.",
-                    clr_msg_note, true, true);
+        msg_log::add("My " + get_name(Item_ref_type::plain, Item_ref_inf::none) + " expires.",
+                     clr_msg_note, true, true);
         carrier_inv.decr_item(this);
     }
 }
@@ -805,11 +805,11 @@ Consume_item Explosive::activate(Actor* const actor)
 {
     (void)actor;
     //Make a copy to use as the held ignited explosive.
-    auto* cpy = static_cast<Explosive*>(Item_factory::mk(get_data().id, 1));
+    auto* cpy = static_cast<Explosive*>(item_factory::mk(get_data().id, 1));
 
     cpy->fuse_turns_               = get_std_fuse_turns();
-    Map::player->active_explosive  = cpy;
-    Map::player->update_clr();
+    map::player->active_explosive  = cpy;
+    map::player->update_clr();
     cpy->on_player_ignite();
     return Consume_item::yes;
 }
@@ -817,12 +817,12 @@ Consume_item Explosive::activate(Actor* const actor)
 //--------------------------------------------------------- DYNAMITE
 void Dynamite::on_player_ignite() const
 {
-    const bool IS_SWIFT   = Player_bon::traits[int(Trait::dem_expert)] && Rnd::coin_toss();
+    const bool IS_SWIFT   = player_bon::traits[int(Trait::dem_expert)] && rnd::coin_toss();
     const string swift_str = IS_SWIFT ? "swiftly " : "";
 
-    Log::add_msg("I " + swift_str + "light a dynamite stick.");
-    Render::draw_map_and_interface();
-    Game_time::tick(IS_SWIFT);
+    msg_log::add("I " + swift_str + "light a dynamite stick.");
+    render::draw_map_and_interface();
+    game_time::tick(IS_SWIFT);
 }
 
 void Dynamite::on_std_turn_player_hold_ignited()
@@ -833,14 +833,14 @@ void Dynamite::on_std_turn_player_hold_ignited()
         string fuse_msg = "***F";
         for (int i = 0; i < fuse_turns_; ++i) {fuse_msg += "Z";}
         fuse_msg += "***";
-        Log::add_msg(fuse_msg, clr_yellow);
+        msg_log::add(fuse_msg, clr_yellow);
     }
     else
     {
-        Log::add_msg("The dynamite explodes in my hand!");
-        Map::player->active_explosive = nullptr;
-        Explosion::run_explosion_at(Map::player->pos, Expl_type::expl);
-        Map::player->update_clr();
+        msg_log::add("The dynamite explodes in my hand!");
+        map::player->active_explosive = nullptr;
+        explosion::run_explosion_at(map::player->pos, Expl_type::expl);
+        map::player->update_clr();
         fuse_turns_ = -1;
         delete this;
     }
@@ -848,30 +848,30 @@ void Dynamite::on_std_turn_player_hold_ignited()
 
 void Dynamite::on_thrown_ignited_landing(const Pos& p)
 {
-    Game_time::add_mob(new Lit_dynamite(p, fuse_turns_));
+    game_time::add_mob(new Lit_dynamite(p, fuse_turns_));
 }
 
 void Dynamite::on_player_paralyzed()
 {
-    Log::add_msg("The lit Dynamite stick falls from my hand!");
-    Map::player->active_explosive = nullptr;
-    Map::player->update_clr();
-    const Pos& p = Map::player->pos;
-    auto* const f = Map::cells[p.x][p.y].rigid;
-    if (!f->is_bottomless()) {Game_time::add_mob(new Lit_dynamite(p, fuse_turns_));}
+    msg_log::add("The lit Dynamite stick falls from my hand!");
+    map::player->active_explosive = nullptr;
+    map::player->update_clr();
+    const Pos& p = map::player->pos;
+    auto* const f = map::cells[p.x][p.y].rigid;
+    if (!f->is_bottomless()) {game_time::add_mob(new Lit_dynamite(p, fuse_turns_));}
     delete this;
 }
 
 //--------------------------------------------------------- MOLOTOV
 void Molotov::on_player_ignite() const
 {
-    const bool IS_SWIFT   = Player_bon::traits[int(Trait::dem_expert)] &&
-                            Rnd::coin_toss();
+    const bool IS_SWIFT   = player_bon::traits[int(Trait::dem_expert)] &&
+                            rnd::coin_toss();
     const string swift_str = IS_SWIFT ? "swiftly " : "";
 
-    Log::add_msg("I " + swift_str + "light a Molotov Cocktail.");
-    Render::draw_map_and_interface();
-    Game_time::tick(IS_SWIFT);
+    msg_log::add("I " + swift_str + "light a Molotov Cocktail.");
+    render::draw_map_and_interface();
+    game_time::tick(IS_SWIFT);
 }
 
 void Molotov::on_std_turn_player_hold_ignited()
@@ -880,45 +880,45 @@ void Molotov::on_std_turn_player_hold_ignited()
 
     if (fuse_turns_ <= 0)
     {
-        Log::add_msg("The Molotov Cocktail explodes in my hand!");
-        Map::player->active_explosive = nullptr;
-        Map::player->update_clr();
-        Explosion::run_explosion_at(Map::player->pos, Expl_type::apply_prop, Expl_src::misc, 0,
-                                  Sfx_id::explosion_molotov, new Prop_burning(Prop_turns::std));
+        msg_log::add("The Molotov Cocktail explodes in my hand!");
+        map::player->active_explosive = nullptr;
+        map::player->update_clr();
+        explosion::run_explosion_at(map::player->pos, Expl_type::apply_prop, Expl_src::misc, 0,
+                                    Sfx_id::explosion_molotov, new Prop_burning(Prop_turns::std));
         delete this;
     }
 }
 
 void Molotov::on_thrown_ignited_landing(const Pos& p)
 {
-    const int D = Player_bon::traits[int(Trait::dem_expert)] ? 1 : 0;
-    Explosion::run_explosion_at(p, Expl_type::apply_prop, Expl_src::player_use_moltv_intended, D,
-                              Sfx_id::explosion_molotov, new Prop_burning(Prop_turns::std));
+    const int D = player_bon::traits[int(Trait::dem_expert)] ? 1 : 0;
+    explosion::run_explosion_at(p, Expl_type::apply_prop, Expl_src::player_use_moltv_intended, D,
+                                Sfx_id::explosion_molotov, new Prop_burning(Prop_turns::std));
 }
 
 
 void Molotov::on_player_paralyzed()
 {
-    Log::add_msg("The lit Molotov Cocktail falls from my hand!");
-    Map::player->active_explosive = nullptr;
-    Map::player->update_clr();
-    Explosion::run_explosion_at(Map::player->pos, Expl_type::apply_prop, Expl_src::misc, 0,
-                              Sfx_id::explosion_molotov, new Prop_burning(Prop_turns::std));
+    msg_log::add("The lit Molotov Cocktail falls from my hand!");
+    map::player->active_explosive = nullptr;
+    map::player->update_clr();
+    explosion::run_explosion_at(map::player->pos, Expl_type::apply_prop, Expl_src::misc, 0,
+                                Sfx_id::explosion_molotov, new Prop_burning(Prop_turns::std));
     delete this;
 }
 
 //--------------------------------------------------------- FLARE
 void Flare::on_player_ignite() const
 {
-    const bool IS_SWIFT   = Player_bon::traits[int(Trait::dem_expert)] &&
-                            Rnd::coin_toss();
+    const bool IS_SWIFT   = player_bon::traits[int(Trait::dem_expert)] &&
+                            rnd::coin_toss();
     const string swift_str = IS_SWIFT ? "swiftly " : "";
 
-    Log::add_msg("I " + swift_str + "light a Flare.");
-    Game_time::update_light_map();
-    Map::player->update_fov();
-    Render::draw_map_and_interface();
-    Game_time::tick(IS_SWIFT);
+    msg_log::add("I " + swift_str + "light a Flare.");
+    game_time::update_light_map();
+    map::player->update_fov();
+    render::draw_map_and_interface();
+    game_time::tick(IS_SWIFT);
 }
 
 void Flare::on_std_turn_player_hold_ignited()
@@ -926,80 +926,80 @@ void Flare::on_std_turn_player_hold_ignited()
     fuse_turns_--;
     if (fuse_turns_ <= 0)
     {
-        Log::add_msg("The flare is extinguished.");
-        Map::player->active_explosive = nullptr;
-        Map::player->update_clr();
+        msg_log::add("The flare is extinguished.");
+        map::player->active_explosive = nullptr;
+        map::player->update_clr();
         delete this;
     }
 }
 
 void Flare::on_thrown_ignited_landing(const Pos& p)
 {
-    Game_time::add_mob(new Lit_flare(p, fuse_turns_));
-    Game_time::update_light_map();
-    Map::player->update_fov();
-    Render::draw_map_and_interface();
+    game_time::add_mob(new Lit_flare(p, fuse_turns_));
+    game_time::update_light_map();
+    map::player->update_fov();
+    render::draw_map_and_interface();
 }
 
 void Flare::on_player_paralyzed()
 {
-    Log::add_msg("The lit Flare falls from my hand!");
-    Map::player->active_explosive = nullptr;
-    Map::player->update_clr();
-    const Pos&  p = Map::player->pos;
-    auto* const f = Map::cells[p.x][p.y].rigid;
-    if (!f->is_bottomless()) {Game_time::add_mob(new Lit_flare(p, fuse_turns_));}
-    Game_time::update_light_map();
-    Map::player->update_fov();
-    Render::draw_map_and_interface();
+    msg_log::add("The lit Flare falls from my hand!");
+    map::player->active_explosive = nullptr;
+    map::player->update_clr();
+    const Pos&  p = map::player->pos;
+    auto* const f = map::cells[p.x][p.y].rigid;
+    if (!f->is_bottomless()) {game_time::add_mob(new Lit_flare(p, fuse_turns_));}
+    game_time::update_light_map();
+    map::player->update_fov();
+    render::draw_map_and_interface();
     delete this;
 }
 
 //--------------------------------------------------------- SMOKE GRENADE
 void Smoke_grenade::on_player_ignite() const
 {
-    const bool IS_SWIFT   = Player_bon::traits[int(Trait::dem_expert)] &&
-                            Rnd::coin_toss();
+    const bool IS_SWIFT   = player_bon::traits[int(Trait::dem_expert)] &&
+                            rnd::coin_toss();
     const string swift_str = IS_SWIFT ? "swiftly " : "";
 
-    Log::add_msg("I " + swift_str + "ignite a smoke grenade.");
-    Render::draw_map_and_interface();
-    Game_time::tick(IS_SWIFT);
+    msg_log::add("I " + swift_str + "ignite a smoke grenade.");
+    render::draw_map_and_interface();
+    game_time::tick(IS_SWIFT);
 }
 
 void Smoke_grenade::on_std_turn_player_hold_ignited()
 {
-    if (fuse_turns_ < get_std_fuse_turns() && Rnd::coin_toss())
+    if (fuse_turns_ < get_std_fuse_turns() && rnd::coin_toss())
     {
-        Explosion::run_smoke_explosion_at(Map::player->pos);
+        explosion::run_smoke_explosion_at(map::player->pos);
     }
     fuse_turns_--;
     if (fuse_turns_ <= 0)
     {
-        Log::add_msg("The smoke grenade is extinguished.");
-        Map::player->active_explosive = nullptr;
-        Map::player->update_clr();
+        msg_log::add("The smoke grenade is extinguished.");
+        map::player->active_explosive = nullptr;
+        map::player->update_clr();
         delete this;
     }
 }
 
 void Smoke_grenade::on_thrown_ignited_landing(const Pos& p)
 {
-    Explosion::run_smoke_explosion_at(p);
-    Map::player->update_fov();
-    Render::draw_map_and_interface();
+    explosion::run_smoke_explosion_at(p);
+    map::player->update_fov();
+    render::draw_map_and_interface();
 }
 
 void Smoke_grenade::on_player_paralyzed()
 {
-    Log::add_msg("The ignited smoke grenade falls from my hand!");
-    Map::player->active_explosive = nullptr;
-    Map::player->update_clr();
-    const Pos&  p = Map::player->pos;
-    auto* const f = Map::cells[p.x][p.y].rigid;
-    if (!f->is_bottomless()) {Explosion::run_smoke_explosion_at(Map::player->pos);}
-    Map::player->update_fov();
-    Render::draw_map_and_interface();
+    msg_log::add("The ignited smoke grenade falls from my hand!");
+    map::player->active_explosive = nullptr;
+    map::player->update_clr();
+    const Pos&  p = map::player->pos;
+    auto* const f = map::cells[p.x][p.y].rigid;
+    if (!f->is_bottomless()) {explosion::run_smoke_explosion_at(map::player->pos);}
+    map::player->update_fov();
+    render::draw_map_and_interface();
     delete this;
 }
 

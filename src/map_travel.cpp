@@ -12,7 +12,7 @@
 #include "map_gen.hpp"
 #include "populate_items.hpp"
 #include "render.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "feature_rigid.hpp"
 #include "utils.hpp"
 
@@ -21,7 +21,7 @@ using namespace std;
 namespace map_travel
 {
 
-vector<Map_data> map_list;
+vector<map_data> map_list;
 
 namespace
 {
@@ -49,20 +49,20 @@ void mk_lvl(const Map_type& map_type)
 #endif
         switch (map_type)
         {
-        case Map_type::intro:          is_lvl_built = Map_gen::mk_intro_lvl();          break;
-        case Map_type::std:            is_lvl_built = Map_gen::mk_std_lvl();            break;
-        case Map_type::egypt:          is_lvl_built = Map_gen::mk_egypt_lvl();          break;
-        case Map_type::leng:           is_lvl_built = Map_gen::mk_leng_lvl();           break;
-        case Map_type::rats_in_the_walls: is_lvl_built = Map_gen::mk_rats_in_the_walls_lvl(); break;
-        case Map_type::trapezohedron:  is_lvl_built = Map_gen::mk_trapezohedron_lvl();  break;
-        case Map_type::boss:           is_lvl_built = Map_gen::mk_boss_lvl();           break;
+        case Map_type::intro:          is_lvl_built = map_gen::mk_intro_lvl();          break;
+        case Map_type::std:            is_lvl_built = map_gen::mk_std_lvl();            break;
+        case Map_type::egypt:          is_lvl_built = map_gen::mk_egypt_lvl();          break;
+        case Map_type::leng:           is_lvl_built = map_gen::mk_leng_lvl();           break;
+        case Map_type::rats_in_the_walls: is_lvl_built = map_gen::mk_rats_in_the_walls_lvl(); break;
+        case Map_type::trapezohedron:  is_lvl_built = map_gen::mk_trapezohedron_lvl();  break;
+        case Map_type::boss:           is_lvl_built = map_gen::mk_boss_lvl();           break;
         }
     }
 
 #ifndef NDEBUG
     auto diff_time = chrono::steady_clock::now() - start_time;
 
-    TRACE << "Map built after   " << nr_attempts << " attempt(s). " << endl
+    TRACE << "map built after   " << nr_attempts << " attempt(s). " << endl
           << "Total time taken: "
           << chrono::duration <double, milli> (diff_time).count() << " ms" << endl;
 #endif
@@ -77,13 +77,13 @@ void init()
     //Forest + dungeon + boss + trapezohedron
     const size_t NR_LVL_TOT = DLVL_LAST + 3;
 
-    map_list = vector<Map_data>(NR_LVL_TOT, {Map_type::std, Is_main_dungeon::yes});
+    map_list = vector<map_data>(NR_LVL_TOT, {Map_type::std, Is_main_dungeon::yes});
 
     //Forest intro level
     map_list[0] = {Map_type::intro, Is_main_dungeon::yes};
 
     //Occasionally set rats-in-the-walls level as intro to first late game level
-    if (Rnd::one_in(3))
+    if (rnd::one_in(3))
     {
         map_list[DLVL_FIRST_LATE_GAME - 1] =
         {Map_type::rats_in_the_walls, Is_main_dungeon::yes};
@@ -120,7 +120,7 @@ void setup_from_save_lines(std::vector<std::string>& lines)
         lines.erase(begin(lines));
 
         map_data.is_main_dungeon = lines.front() == "1" ?
-                                Is_main_dungeon::yes : Is_main_dungeon::no;
+                                   Is_main_dungeon::yes : Is_main_dungeon::no;
         lines.erase(begin(lines));
     }
 }
@@ -134,31 +134,31 @@ void go_to_nxt()
 
     if (map_data.is_main_dungeon == Is_main_dungeon::yes)
     {
-        ++Map::dlvl;
+        ++map::dlvl;
     }
 
     mk_lvl(map_data.type);
 
-    Map::player->restore_shock(999, true);
+    map::player->restore_shock(999, true);
 
-    Map::player->tgt_ = nullptr;
-    Game_time::update_light_map();
-    Map::player->update_fov();
-    Map::player->update_clr();
-    Render::draw_map_and_interface();
+    map::player->tgt_ = nullptr;
+    game_time::update_light_map();
+    map::player->update_fov();
+    map::player->update_clr();
+    render::draw_map_and_interface();
 
-    if (map_data.is_main_dungeon == Is_main_dungeon::yes && Map::dlvl == DLVL_LAST - 1)
+    if (map_data.is_main_dungeon == Is_main_dungeon::yes && map::dlvl == DLVL_LAST - 1)
     {
-        Log::add_msg("An ominous voice thunders in my ears.", clr_white, false, true);
-        Audio::play(Sfx_id::boss_voice2);
+        msg_log::add("An ominous voice thunders in my ears.", clr_white, false, true);
+        audio::play(Sfx_id::boss_voice2);
     }
 
-    Audio::try_play_amb(1);
+    audio::try_play_amb(1);
 
-    if (Map::player->phobias[int(Phobia::deep_places)])
+    if (map::player->phobias[int(Phobia::deep_places)])
     {
-        Log::add_msg("I am plagued by my phobia of deep places!");
-        Map::player->get_prop_handler().try_apply_prop(new Prop_terrified(Prop_turns::std));
+        msg_log::add("I am plagued by my phobia of deep places!");
+        map::player->get_prop_handler().try_apply_prop(new Prop_terrified(Prop_turns::std));
         return;
     }
 
@@ -170,4 +170,4 @@ Map_type get_map_type()
     return map_list.front().type;
 }
 
-} //Map_travel
+} //map_travel

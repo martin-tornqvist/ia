@@ -5,7 +5,7 @@
 #include "actor_mon.hpp"
 #include "feature.hpp"
 #include "item.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "map.hpp"
 #include "actor_player.hpp"
 #include "text_format.hpp"
@@ -27,7 +27,7 @@ namespace auto_descr_actor
 namespace
 {
 
-string get_normal_group_size_str(const Actor_data_t& def)
+string get_normal_group_size_str(const actor_data_t& def)
 {
     const Mon_group_size s = def.group_size;
 
@@ -38,7 +38,7 @@ string get_normal_group_size_str(const Actor_data_t& def)
         s == Mon_group_size::horde  ? "in hordes"       : "in swarms";
 }
 
-string get_speed_str(const Actor_data_t& def)
+string get_speed_str(const actor_data_t& def)
 {
     switch (def.speed)
     {
@@ -52,7 +52,7 @@ string get_speed_str(const Actor_data_t& def)
     return "";
 }
 
-string get_dwelling_lvl_str(const Actor_data_t& def)
+string get_dwelling_lvl_str(const actor_data_t& def)
 {
     return to_str(max(1, def.spawn_min_dLVL - 1));
 }
@@ -61,7 +61,7 @@ string get_dwelling_lvl_str(const Actor_data_t& def)
 
 void add_auto_description_lines(const Actor& actor, string& line)
 {
-    const Actor_data_t& def = actor.get_data();
+    const actor_data_t& def = actor.get_data();
 
     if (def.is_unique)
     {
@@ -87,29 +87,29 @@ namespace look
 
 void print_location_info_msgs(const Pos& pos)
 {
-    const Cell& cell = Map::cells[pos.x][pos.y];
+    const Cell& cell = map::cells[pos.x][pos.y];
 
-    if (Map::cells[pos.x][pos.y].is_seen_by_player)
+    if (map::cells[pos.x][pos.y].is_seen_by_player)
     {
-        Log::add_msg("I see here:");
+        msg_log::add("I see here:");
 
         //Describe rigid.
         string str = cell.rigid->get_name(Article::a);
 
-        Text_format::first_to_upper(str);
+        text_format::first_to_upper(str);
 
-        Log::add_msg(str + ".");
+        msg_log::add(str + ".");
 
         //Describe mobile features.
-        for (auto* mob : Game_time::mobs_)
+        for (auto* mob : game_time::mobs_)
         {
             if (mob->get_pos() == pos)
             {
                 str = mob->get_name(Article::a);
 
-                Text_format::first_to_upper(str);
+                text_format::first_to_upper(str);
 
-                Log::add_msg(str  + ".");
+                msg_log::add(str  + ".");
             }
         }
 
@@ -118,39 +118,39 @@ void print_location_info_msgs(const Pos& pos)
         if (item)
         {
             str = item->get_name(Item_ref_type::plural, Item_ref_inf::yes,
-                                Item_ref_att_inf::wpn_context);
+                                 Item_ref_att_inf::wpn_context);
 
-            Text_format::first_to_upper(str);
+            text_format::first_to_upper(str);
 
-            Log::add_msg(str + ".");
+            msg_log::add(str + ".");
         }
 
         //Describe dead actors.
-        for (Actor* actor : Game_time::actors_)
+        for (Actor* actor : game_time::actors_)
         {
             if (actor->is_corpse() && actor->pos == pos)
             {
                 str = actor->get_corpse_name_a();
 
-                Text_format::first_to_upper(str);
+                text_format::first_to_upper(str);
 
-                Log::add_msg(str + ".");
+                msg_log::add(str + ".");
             }
         }
 
         //Describe living actor.
-        Actor* actor = Utils::get_actor_at_pos(pos);
-        if (actor && actor != Map::player)
+        Actor* actor = utils::get_actor_at_pos(pos);
+        if (actor && actor != map::player)
         {
             if (actor->is_alive())
             {
-                if (Map::player->can_see_actor(*actor, nullptr))
+                if (map::player->can_see_actor(*actor, nullptr))
                 {
                     str = actor->get_name_a();
 
-                    Text_format::first_to_upper(str);
+                    text_format::first_to_upper(str);
 
-                    Log::add_msg(str + ".");
+                    msg_log::add(str + ".");
                 }
             }
         }
@@ -158,7 +158,7 @@ void print_location_info_msgs(const Pos& pos)
     }
     else //Cell not seen
     {
-        Log::add_msg("I have no vision here.");
+        msg_log::add("I have no vision here.");
     }
 }
 
@@ -170,26 +170,26 @@ void print_detailed_actor_descr(const Actor& actor)
     //Add auto-description.
     if (actor.get_data().is_auto_descr_allowed)
     {
-        Auto_descr_actor::add_auto_description_lines(actor, descr);
+        auto_descr_actor::add_auto_description_lines(actor, descr);
     }
 
     vector<string> formatted_text;
-    Text_format::line_to_lines(descr, MAP_W - 1, formatted_text);
+    text_format::line_to_lines(descr, MAP_W - 1, formatted_text);
 
     const size_t NR_OF_LINES = formatted_text.size();
 
-    Render::cover_area(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_OF_LINES));
+    render::cover_area(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_OF_LINES));
 
     int y = 1;
     for (string& s : formatted_text)
     {
-        Render::draw_text(s, Panel::screen, Pos(0, y), clr_white_high);
+        render::draw_text(s, Panel::screen, Pos(0, y), clr_white_high);
         y++;
     }
 
-    Render::update_screen();
+    render::update_screen();
 
-    Query::wait_for_key_press();
+    query::wait_for_key_press();
 }
 
-} //Look
+} //look

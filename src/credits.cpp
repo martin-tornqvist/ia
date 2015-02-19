@@ -37,7 +37,7 @@ void read_file()
             }
             else
             {
-                Text_format::line_to_lines(cur_line, MAP_W - 2, formatted_lines);
+                text_format::line_to_lines(cur_line, MAP_W - 2, formatted_lines);
                 for (string& line : formatted_lines) {lines_.push_back(line);}
             }
         }
@@ -55,35 +55,35 @@ void init()
 
 void run()
 {
-    Render::clear_screen();
+    render::clear_screen();
 
     const string decoration_line(MAP_W, '-');
 
     const int X_LABEL = 3;
 
-    Render::draw_text(decoration_line, Panel::screen, Pos(0, 0), clr_gray);
+    render::draw_text(decoration_line, Panel::screen, Pos(0, 0), clr_gray);
 
-    Render::draw_text(" Displaying credits.txt ", Panel::screen,
-                     Pos(X_LABEL, 0), clr_gray);
+    render::draw_text(" Displaying credits.txt ", Panel::screen,
+                      Pos(X_LABEL, 0), clr_gray);
 
-    Render::draw_text(decoration_line, Panel::screen, Pos(0, SCREEN_H - 1),
-                     clr_gray);
+    render::draw_text(decoration_line, Panel::screen, Pos(0, SCREEN_H - 1),
+                      clr_gray);
 
-    Render::draw_text(" [space/esc] to exit ", Panel::screen,
-                     Pos(X_LABEL, SCREEN_H - 1), clr_gray);
+    render::draw_text(" [space/esc] to exit ", Panel::screen,
+                      Pos(X_LABEL, SCREEN_H - 1), clr_gray);
 
     int y_pos = 1;
     for (string& line : lines_)
     {
-        Render::draw_text(line, Panel::screen, Pos(0, y_pos++), clr_white);
+        render::draw_text(line, Panel::screen, Pos(0, y_pos++), clr_white);
     }
 
-    Render::update_screen();
+    render::update_screen();
 
     //Read keys
     while (true)
     {
-        const Key_data& d = Input::get_input();
+        const Key_data& d = input::get_input();
         if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)
         {
             break;

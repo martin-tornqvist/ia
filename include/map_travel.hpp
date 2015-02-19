@@ -12,16 +12,16 @@ using namespace std;
 //increments the DLVL number).
 enum Is_main_dungeon {no, yes};
 
-struct Map_data
+struct map_data
 {
-    Map_type       type;
+    Map_type        type;
     Is_main_dungeon is_main_dungeon;
 };
 
 namespace map_travel
 {
 
-extern std::vector<Map_data> map_list;
+extern std::vector<map_data> map_list;
 
 void init();
 
@@ -34,6 +34,6 @@ void go_to_nxt();
 
 Map_type get_map_type();
 
-} //Map_travel
+} //map_travel
 
 #endif

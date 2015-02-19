@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "init.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "render.hpp"
 #include "actor_player.hpp"
 #include "dungeon_master.hpp"
@@ -29,44 +29,44 @@ namespace
 void collect_lines_from_game(vector<string>& lines)
 {
     lines.clear();
-    lines.push_back(Map::player->get_name_a());
+    lines.push_back(map::player->get_name_a());
 
-    Dungeon_master::store_to_save_lines(lines);
-    Scroll_handling::store_to_save_lines(lines);
-    Potion_handling::store_to_save_lines(lines);
-    Item_data::store_to_save_lines(lines);
-    Jewelry_handling::store_to_save_lines(lines);
-    Map::player->get_inv().store_to_save_lines(lines);
-    Map::player->store_to_save_lines(lines);
-    Player_bon::store_to_save_lines(lines);
-    Map_travel::store_to_save_lines(lines);
-    Map::store_to_save_lines(lines);
-    Actor_data::store_to_save_lines(lines);
-    Game_time::store_to_save_lines(lines);
-    Player_spells_handling::store_to_save_lines(lines);
+    dungeon_master::store_to_save_lines(lines);
+    scroll_handling::store_to_save_lines(lines);
+    potion_handling::store_to_save_lines(lines);
+    item_data::store_to_save_lines(lines);
+    jewelry_handling::store_to_save_lines(lines);
+    map::player->get_inv().store_to_save_lines(lines);
+    map::player->store_to_save_lines(lines);
+    player_bon::store_to_save_lines(lines);
+    map_travel::store_to_save_lines(lines);
+    map::store_to_save_lines(lines);
+    actor_data::store_to_save_lines(lines);
+    game_time::store_to_save_lines(lines);
+    player_spells_handling::store_to_save_lines(lines);
 }
 
 void setup_game_from_lines(vector<string>& lines)
 {
     TRACE_FUNC_BEGIN;
     const string& player_name = lines.front();
-    Map::player->get_data().name_a = player_name;
-    Map::player->get_data().name_the = player_name;
+    map::player->get_data().name_a = player_name;
+    map::player->get_data().name_the = player_name;
     lines.erase(begin(lines));
 
-    Dungeon_master::setup_from_save_lines(lines);
-    Scroll_handling::setup_from_save_lines(lines);
-    Potion_handling::setup_from_save_lines(lines);
-    Item_data::setup_from_save_lines(lines);
-    Jewelry_handling::setup_from_save_lines(lines);
-    Map::player->get_inv().setup_from_save_lines(lines);
-    Map::player->setup_from_save_lines(lines);
-    Player_bon::setup_from_save_lines(lines);
-    Map_travel::setup_from_save_lines(lines);
-    Map::setup_from_save_lines(lines);
-    Actor_data::setup_from_save_lines(lines);
-    Game_time::setup_from_save_lines(lines);
-    Player_spells_handling::setup_from_save_lines(lines);
+    dungeon_master::setup_from_save_lines(lines);
+    scroll_handling::setup_from_save_lines(lines);
+    potion_handling::setup_from_save_lines(lines);
+    item_data::setup_from_save_lines(lines);
+    jewelry_handling::setup_from_save_lines(lines);
+    map::player->get_inv().setup_from_save_lines(lines);
+    map::player->setup_from_save_lines(lines);
+    player_bon::setup_from_save_lines(lines);
+    map_travel::setup_from_save_lines(lines);
+    map::setup_from_save_lines(lines);
+    actor_data::setup_from_save_lines(lines);
+    game_time::setup_from_save_lines(lines);
+    player_spells_handling::setup_from_save_lines(lines);
     TRACE_FUNC_END;
 }
 

@@ -20,10 +20,10 @@ namespace
 
 void mk_trap_at(const Trap_id id, const Pos& pos)
 {
-    const auto* const f     = Map::cells[pos.x][pos.y].rigid;
-    const auto&       d     = Feature_data::get_data(f->get_id());
+    const auto* const f     = map::cells[pos.x][pos.y].rigid;
+    const auto&       d     = feature_data::get_data(f->get_id());
     const auto* const mimic = static_cast<Rigid*>(d.mk_obj(pos));
-    Map::put(new Trap(pos, mimic, id));
+    map::put(new Trap(pos, mimic, id));
 }
 
 } //namespace
@@ -33,10 +33,10 @@ void populate_std_lvl()
     TRACE_FUNC_BEGIN;
 
     bool blocked[MAP_W][MAP_H];
-    Map_parse::run(Cell_check::Blocks_move_cmn(false), blocked);
+    map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
     //Put traps in non-plain rooms
-    for (Room* const room : Map::room_list)
+    for (Room* const room : map::room_list)
     {
         const Room_type type = room->type_;
 
@@ -63,7 +63,7 @@ void populate_std_lvl()
             case Room_type::crumble_room: {} break;
             }
 
-            if (Rnd::fraction(chance_for_trapped_room))
+            if (rnd::fraction(chance_for_trapped_room))
             {
                 TRACE_VERBOSE << "Trapping non-plain room" << endl;
 
@@ -75,7 +75,7 @@ void populate_std_lvl()
                 {
                     for (int x = p0.x; x <= p1.x; ++x)
                     {
-                        if (!blocked[x][y] && Map::cells[x][y].rigid->can_have_rigid())
+                        if (!blocked[x][y] && map::cells[x][y].rigid->can_have_rigid())
                         {
                             trap_pos_bucket.push_back(Pos(x, y));
                         }
@@ -94,10 +94,10 @@ void populate_std_lvl()
                     }
 
                     const Trap_id trap_type = IS_SPIDER_ROOM ?
-                                            Trap_id::web :
-                                            Trap_id(Rnd::range(0, int(Trap_id::END) - 1));
+                                              Trap_id::web :
+                                              Trap_id(rnd::range(0, int(Trap_id::END) - 1));
 
-                    const int ELEMENT = Rnd::range(0, trap_pos_bucket.size() - 1);
+                    const int ELEMENT = rnd::range(0, trap_pos_bucket.size() - 1);
                     const Pos& pos    = trap_pos_bucket[ELEMENT];
 
                     TRACE_VERBOSE << "Placing base trap" << endl;
@@ -110,7 +110,7 @@ void populate_std_lvl()
                     Is_closer_to_pos sorter(pos);
                     sort(trap_pos_bucket.begin(), trap_pos_bucket.end(), sorter);
                     const int NR_ADJ = trap_type == Trap_id::web ? 0 :
-                                       min(Rnd::range(0, 2), nr_pos_cand);
+                                       min(rnd::range(0, 2), nr_pos_cand);
                     TRACE_VERBOSE << "Placing adjacent traps" << endl;
                     for (int i_adj = 0; i_adj < NR_ADJ; i_adj++)
                     {
@@ -125,8 +125,8 @@ void populate_std_lvl()
         }
     }
 
-    const int CHANCE_ALLOW_TRAPPED_PLAIN_AREAS = min(85, 30 + (Map::dlvl * 5));
-    if (Rnd::percent() < CHANCE_ALLOW_TRAPPED_PLAIN_AREAS)
+    const int CHANCE_ALLOW_TRAPPED_PLAIN_AREAS = min(85, 30 + (map::dlvl * 5));
+    if (rnd::percent() < CHANCE_ALLOW_TRAPPED_PLAIN_AREAS)
     {
         TRACE_VERBOSE << "Trapping plain room" << endl;
 
@@ -135,12 +135,12 @@ void populate_std_lvl()
         {
             for (int x = 1; x < MAP_W - 1; ++x)
             {
-                if (Map::room_map[x][y])
+                if (map::room_map[x][y])
                 {
                     if (
                         !blocked[x][y]                                &&
-                        Map::room_map[x][y]->type_ == Room_type::plain  &&
-                        Map::cells[x][y].rigid->can_have_rigid())
+                        map::room_map[x][y]->type_ == Room_type::plain  &&
+                        map::cells[x][y].rigid->can_have_rigid())
                     {
                         trap_pos_bucket.push_back(Pos(x, y));
                     }
@@ -149,7 +149,7 @@ void populate_std_lvl()
         }
 
         int         nr_pos_cand       = int(trap_pos_bucket.size());
-        const int   NR_BASE_TRAPS   = min(nr_pos_cand / 2, Rnd::range(1, 3));
+        const int   NR_BASE_TRAPS   = min(nr_pos_cand / 2, rnd::range(1, 3));
 
         for (int i = 0; i < NR_BASE_TRAPS; ++i)
         {
@@ -158,9 +158,9 @@ void populate_std_lvl()
                 break;
             }
 
-            const Trap_id trap_type = Trap_id(Rnd::range(0, int(Trap_id::END) - 1));
+            const Trap_id trap_type = Trap_id(rnd::range(0, int(Trap_id::END) - 1));
 
-            const int ELEMENT = Rnd::range(0, trap_pos_bucket.size() - 1);
+            const int ELEMENT = rnd::range(0, trap_pos_bucket.size() - 1);
             const Pos& pos = trap_pos_bucket[ELEMENT];
 
             TRACE_VERBOSE << "Placing base trap" << endl;
@@ -172,7 +172,7 @@ void populate_std_lvl()
             Is_closer_to_pos sorter(pos);
             sort(trap_pos_bucket.begin(), trap_pos_bucket.end(), sorter);
             const int NR_ADJ = trap_type == Trap_id::web ? 0 :
-                               min(Rnd::range(0, 2), nr_pos_cand);
+                               min(rnd::range(0, 2), nr_pos_cand);
             TRACE_VERBOSE << "Placing adjacent traps" << endl;
             for (int i_adj = 0; i_adj < NR_ADJ; i_adj++)
             {

@@ -52,6 +52,6 @@ void reset_turn_type_and_actor_counters();
 
 void update_light_map();
 
-} //Game_time
+} //game_time
 
 #endif

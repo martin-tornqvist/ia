@@ -11,7 +11,7 @@
 using namespace std;
 
 int Ability_vals::get_val(const Ability_id ability_id,
-                        const bool IS_AFFECTED_BY_PROPS, Actor& actor) const
+                          const bool IS_AFFECTED_BY_PROPS, Actor& actor) const
 {
     int ret = ability_list[int(ability_id)];
 
@@ -36,43 +36,43 @@ int Ability_vals::get_val(const Ability_id ability_id,
         {
         case Ability_id::searching:
             ret += 8;
-            if (Player_bon::traits[int(Trait::observant)])   ret += 4;
-            if (Player_bon::traits[int(Trait::perceptive)])  ret += 4;
+            if (player_bon::traits[int(Trait::observant)])   ret += 4;
+            if (player_bon::traits[int(Trait::perceptive)])  ret += 4;
             break;
 
         case Ability_id::melee:
             ret += 45;
-            if (Player_bon::traits[int(Trait::adept_melee_fighter)])   ret += 10;
-            if (Player_bon::traits[int(Trait::expert_melee_fighter)])  ret += 10;
-            if (Player_bon::traits[int(Trait::master_melee_fighter)])  ret += 10;
-            if (Player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25) ret += 30;
+            if (player_bon::traits[int(Trait::adept_melee_fighter)])   ret += 10;
+            if (player_bon::traits[int(Trait::expert_melee_fighter)])  ret += 10;
+            if (player_bon::traits[int(Trait::master_melee_fighter)])  ret += 10;
+            if (player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25) ret += 30;
             break;
 
         case Ability_id::ranged:
             ret += 50;
-            if (Player_bon::traits[int(Trait::adept_marksman)])   ret += 10;
-            if (Player_bon::traits[int(Trait::expert_marksman)])  ret += 10;
-            if (Player_bon::traits[int(Trait::master_marksman)])  ret += 10;
-            if (Player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25) ret += 30;
+            if (player_bon::traits[int(Trait::adept_marksman)])   ret += 10;
+            if (player_bon::traits[int(Trait::expert_marksman)])  ret += 10;
+            if (player_bon::traits[int(Trait::master_marksman)])  ret += 10;
+            if (player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25) ret += 30;
             break;
 
         case Ability_id::dodge_trap:
             ret += 5;
-            if (Player_bon::traits[int(Trait::dexterous)]) ret += 25;
-            if (Player_bon::traits[int(Trait::lithe)])     ret += 25;
+            if (player_bon::traits[int(Trait::dexterous)]) ret += 25;
+            if (player_bon::traits[int(Trait::lithe)])     ret += 25;
             break;
 
         case Ability_id::dodge_att:
             ret += 10;
-            if (Player_bon::traits[int(Trait::dexterous)]) ret += 25;
-            if (Player_bon::traits[int(Trait::lithe)])     ret += 25;
-            if (Player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25) ret += 50;
+            if (player_bon::traits[int(Trait::dexterous)]) ret += 25;
+            if (player_bon::traits[int(Trait::lithe)])     ret += 25;
+            if (player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25) ret += 50;
             break;
 
         case Ability_id::stealth:
             ret += 10;
-            if (Player_bon::traits[int(Trait::stealthy)])      ret += 50;
-            if (Player_bon::traits[int(Trait::imperceptible)]) ret += 30;
+            if (player_bon::traits[int(Trait::stealthy)])      ret += 50;
+            if (player_bon::traits[int(Trait::imperceptible)]) ret += 30;
             break;
 
         case Ability_id::empty:
@@ -117,9 +117,9 @@ void Ability_vals::change_val(const Ability_id ability, const int CHANGE)
 namespace ability_roll
 {
 
-Ability_roll_result roll(const int TOT_SKILL_VALUE)
+ability_roll_result roll(const int TOT_SKILL_VALUE)
 {
-    const int ROLL = Rnd::percent();
+    const int ROLL = rnd::percent();
 
     const int SUCC_CRI_LMT = int(ceil(float(TOT_SKILL_VALUE) / 20.0));
     const int SUCC_BIG_LMT = int(ceil(float(TOT_SKILL_VALUE) / 5.0));
@@ -154,4 +154,4 @@ Ability_roll_result roll(const int TOT_SKILL_VALUE)
     99 - 100: Critical  Fail */
 }
 
-} //Ability_roll
+} //ability_roll

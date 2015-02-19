@@ -23,8 +23,8 @@ public:
     virtual ~Actor();
 
     Prop_handler&        get_prop_handler()    {return *prop_handler_;}
-    Actor_data_t&         get_data()           {return *data_;}
-    const Actor_data_t&   get_data() const     {return *data_;}
+    actor_data_t&         get_data()           {return *data_;}
+    const actor_data_t&   get_data() const     {return *data_;}
     Inventory&          get_inv()            {return *inv_;}
 
     //This function is not concerned with whether the parameter actor is within
@@ -33,17 +33,17 @@ public:
     //It has no side effects - it merely does a randomized check.
     bool is_spotting_hidden_actor(Actor& actor);
 
-    void place(const Pos& pos_, Actor_data_t& data);
+    void place(const Pos& pos_, actor_data_t& data);
     virtual void place_() {}
 
     Actor_died hit(int dmg, const Dmg_type dmg_type,
-                  const Dmg_method method = Dmg_method::END);
+                   const Dmg_method method = Dmg_method::END);
     Actor_died hit_spi(const int DMG, const bool ALLOW_MSG);
 
     bool restore_hp   (const int HP_RESTORED, const bool ALLOW_MSG = true,
-                      const bool IS_ALLOWED_ABOVE_MAX = false);
+                       const bool IS_ALLOWED_ABOVE_MAX = false);
     bool restore_spi  (const int SPI_RESTORED, const bool ALLOW_MSG = true,
-                      const bool IS_ALLOWED_ABOVE_MAX = false);
+                       const bool IS_ALLOWED_ABOVE_MAX = false);
     void change_max_hp (const int CHANGE, const bool ALLOW_MSG);
     void change_max_spi(const int CHANGE, const bool ALLOW_MSG);
 
@@ -118,7 +118,7 @@ protected:
     Pos lair_cell_;
 
     Prop_handler*  prop_handler_;
-    Actor_data_t*   data_;
+    actor_data_t*   data_;
     Inventory*    inv_;
 };
 

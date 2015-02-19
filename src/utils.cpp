@@ -28,7 +28,7 @@ int roll(const int ROLLS, const int SIDES)
     int result = 0;
     for (int i = 0; i < ROLLS; ++i)
     {
-        result += mt_rand.rand_int(SIDES - 1) + 1;
+        result += mt_rand.randInt(SIDES - 1) + 1;
     }
     return result;
 }
@@ -94,7 +94,7 @@ bool percent(const int PCT_CHANCE)
     return PCT_CHANCE >= roll(1, 100);
 }
 
-} //Rnd
+} //rnd
 
 namespace utils
 {
@@ -149,7 +149,7 @@ void copy_bool_array(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H])
 }
 
 void mk_vector_from_bool_map(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_H],
-                         vector<Pos>& out)
+                             vector<Pos>& out)
 {
     out.clear();
     for (int x = 0; x < MAP_W; ++x)
@@ -178,7 +178,7 @@ void get_actor_cells(const vector<Actor*>& actors, vector<Pos>& out)
 
 Actor* get_actor_at_pos(const Pos& pos, Actor_state state)
 {
-    for (auto* const actor : Game_time::actors_)
+    for (auto* const actor : game_time::actors_)
     {
         if (actor->pos == pos && actor->get_state() == state)
         {
@@ -190,7 +190,7 @@ Actor* get_actor_at_pos(const Pos& pos, Actor_state state)
 
 Mob* get_first_mob_at_pos(const Pos& pos)
 {
-    for (auto* const mob : Game_time::mobs_)
+    for (auto* const mob : game_time::mobs_)
     {
         if (mob->get_pos() == pos) {return mob;}
     }
@@ -201,7 +201,7 @@ void mk_actor_array(Actor* a[MAP_W][MAP_H])
 {
     reset_array(a);
 
-    for (Actor* actor : Game_time::actors_)
+    for (Actor* actor : game_time::actors_)
     {
         const Pos& p = actor->pos;
         a[p.x][p.y] = actor;
@@ -230,7 +230,7 @@ bool is_pos_inside(const Pos& pos, const Rect& area)
 }
 
 bool is_area_inside_other(const Rect& inner, const Rect& outer,
-                       const bool COUNT_EQUAL_AS_INSIDE)
+                          const bool COUNT_EQUAL_AS_INSIDE)
 {
     if (COUNT_EQUAL_AS_INSIDE)
     {
@@ -315,7 +315,7 @@ Actor* get_random_closest_actor(const Pos& c, const vector<Actor*>& actors)
 
     assert(!closest_actors.empty());
 
-    const int ELEMENT = Rnd::range(0, closest_actors.size() - 1);
+    const int ELEMENT = rnd::range(0, closest_actors.size() - 1);
 
     return closest_actors[ELEMENT];
 }
@@ -335,7 +335,7 @@ Time_data get_cur_time()
     time_t      t   = time(nullptr);
     struct tm*  now = localtime(&t);
     return Time_data(now->tm_year + 1900, now->tm_mon + 1, now->tm_mday,
-                    now->tm_hour, now->tm_min, now->tm_sec);
+                     now->tm_hour, now->tm_min, now->tm_sec);
 }
 
 bool is_val_in_range(const int VAL, const Range& range)
@@ -344,11 +344,11 @@ bool is_val_in_range(const int VAL, const Range& range)
     return (unsigned int)(VAL - range.lower) <= (unsigned int)(range.upper - range.lower);
 }
 
-} //Utils
+} //utils
 
 //------------------------------------------------------ TIME DATA
 string Time_data::get_time_str(const Time_type lowest,
-                            const bool ADD_SEPARATORS) const
+                               const bool ADD_SEPARATORS) const
 {
     string ret = to_str(year_);
 
@@ -447,12 +447,12 @@ Pos get_rnd_adj_pos(const Pos& origin, const bool IS_ORIGIN_ALLOWED)
 {
     if (IS_ORIGIN_ALLOWED)
     {
-        const int ELEMENT = Rnd::range(0, dir_list.size()); //Treat origin as extra element
+        const int ELEMENT = rnd::range(0, dir_list.size()); //Treat origin as extra element
         return ELEMENT == int(dir_list.size()) ? origin : (origin + dir_list[ELEMENT]);
     }
     else
     {
-        return origin + dir_list[Rnd::range(0, dir_list.size() - 1)];
+        return origin + dir_list[rnd::range(0, dir_list.size() - 1)];
     }
 }
 
@@ -516,4 +516,4 @@ bool is_cardinal(const Pos& d)
     return d != 0 && (d.x == 0 || d.y == 0);
 }
 
-} //Dir_utils
+} //dir_utils

@@ -208,7 +208,7 @@ string get_hpl_quote()
         "the piling-up of unbroken time-accumulations; a region where old, "
         "strange things have had a chance to grow and linger because they have "
         "never been stirred up.");
-    return quotes[Rnd::range(0, quotes.size() - 1)];
+    return quotes[rnd::range(0, quotes.size() - 1)];
 }
 
 void draw(const Menu_browser& browser)
@@ -218,20 +218,20 @@ void draw(const Menu_browser& browser)
     Pos pos(MAP_W_HALF, 3);
 
     TRACE << "Calling clear_window()" << endl;
-    Render::clear_screen();
+    render::clear_screen();
 
-    Render::draw_popup_box(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+    render::draw_popup_box(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
-    if (Config::is_tiles_mode())
+    if (config::is_tiles_mode())
     {
         TRACE << "Calling draw_main_menu_logo()" << endl;
-        Render::draw_main_menu_logo(0);
+        render::draw_main_menu_logo(0);
         pos.y += 10;
     }
     else
     {
         vector<string> logo;
-        if (!Config::is_tiles_mode())
+        if (!config::is_tiles_mode())
         {
             logo.push_back("        ___  __                __  __                  ");
             logo.push_back("| |\\  | |   |  )  /\\      /\\  |  )/    /\\  |\\  |  /\\   ");
@@ -248,9 +248,9 @@ void draw(const Menu_browser& browser)
                 if (glyph != ' ')
                 {
                     Clr clr = clr_green_lgt;
-                    clr.g += Rnd::range(-50, 100);
+                    clr.g += rnd::range(-50, 100);
                     clr.g = max(0, min(254, int(clr.g)));
-                    Render::draw_glyph(glyph, Panel::screen, pos, clr);
+                    render::draw_glyph(glyph, Panel::screen, pos, clr);
                 }
                 pos.x++;
             }
@@ -261,7 +261,7 @@ void draw(const Menu_browser& browser)
 
     if (IS_DEBUG_MODE)
     {
-        Render::draw_text(
+        render::draw_text(
             "## DEBUG MODE ##", Panel::screen, Pos(1, 1), clr_yellow);
     }
 
@@ -272,11 +272,11 @@ void draw(const Menu_browser& browser)
     quote_clr.b /= 7;
 
     vector<string> quote_lines;
-    Text_format::line_to_lines(quote, 28, quote_lines);
+    text_format::line_to_lines(quote, 28, quote_lines);
     Pos quote_pos(15, pos.y - 1);
     for (string& quote_line : quote_lines)
     {
-        Render::draw_text_centered(quote_line, Panel::screen, quote_pos, quote_clr);
+        render::draw_text_centered(quote_line, Panel::screen, quote_pos, quote_clr);
         quote_pos.y++;
     }
 
@@ -286,38 +286,38 @@ void draw(const Menu_browser& browser)
 
     const int BOX_Y0 = pos.y - 1;
 
-    Render::draw_text_centered("New journey", Panel::screen, pos,
-                             browser.is_at_idx(0) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text_centered("New journey", Panel::screen, pos,
+                               browser.is_at_idx(0) ? clr_menu_highlight : clr_menu_drk);
     pos.y++;
 
-    Render::draw_text_centered("Resurrect", Panel::screen, pos,
-                             browser.is_at_idx(1) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text_centered("Resurrect", Panel::screen, pos,
+                               browser.is_at_idx(1) ? clr_menu_highlight : clr_menu_drk);
     pos.y++;
 
-    Render::draw_text_centered("Tome of Wisdom", Panel::screen, pos,
-                             browser.is_at_idx(2) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text_centered("Tome of Wisdom", Panel::screen, pos,
+                               browser.is_at_idx(2) ? clr_menu_highlight : clr_menu_drk);
     pos.y++;
 
-    Render::draw_text_centered("Options", Panel::screen, pos,
-                             browser.is_at_idx(3) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text_centered("Options", Panel::screen, pos,
+                               browser.is_at_idx(3) ? clr_menu_highlight : clr_menu_drk);
     pos.y++;
 
-    Render::draw_text_centered("Credits", Panel::screen, pos,
-                             browser.is_at_idx(4) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text_centered("Credits", Panel::screen, pos,
+                               browser.is_at_idx(4) ? clr_menu_highlight : clr_menu_drk);
     pos.y++;
 
-    Render::draw_text_centered("Graveyard", Panel::screen, pos,
-                             browser.is_at_idx(5) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text_centered("Graveyard", Panel::screen, pos,
+                               browser.is_at_idx(5) ? clr_menu_highlight : clr_menu_drk);
     pos.y++;
 
-    Render::draw_text_centered("Escape to reality", Panel::screen, pos,
-                             browser.is_at_idx(6) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text_centered("Escape to reality", Panel::screen, pos,
+                               browser.is_at_idx(6) ? clr_menu_highlight : clr_menu_drk);
     pos.y++;
 
     if (IS_DEBUG_MODE)
     {
-        Render::draw_text_centered("DEBUG: RUN BOT", Panel::screen, pos,
-                                 browser.is_at_idx(7) ? clr_menu_highlight : clr_menu_drk);
+        render::draw_text_centered("DEBUG: RUN BOT", Panel::screen, pos,
+                                   browser.is_at_idx(7) ? clr_menu_highlight : clr_menu_drk);
         pos.y++;
     }
 
@@ -325,14 +325,14 @@ void draw(const Menu_browser& browser)
     const int BOX_W_HALF  = 10;
     const int BOX_X0      = pos.x - BOX_W_HALF;
     const int BOX_X1      = pos.x + BOX_W_HALF;
-    Render::draw_popup_box(Rect(Pos(BOX_X0, BOX_Y0), Pos(BOX_X1, BOX_Y1)),
-                         Panel::screen);
+    render::draw_popup_box(Rect(Pos(BOX_X0, BOX_Y0), Pos(BOX_X1, BOX_Y1)),
+                           Panel::screen);
 
-    Render::draw_text_centered(
+    render::draw_text_centered(
         game_version_str + " - " + __DATE__ + " (c) 2011-2015 Martin Tornqvist",
         Panel::screen, Pos(MAP_W_HALF, SCREEN_H - 1), clr_gray_drk);
 
-    Render::update_screen();
+    render::update_screen();
 
     TRACE_FUNC_END;
 }
@@ -347,13 +347,13 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
 
     Menu_browser browser(IS_DEBUG_MODE ? 8 : 7, 0);
 
-    intro_mus_channel = Audio::play(Sfx_id::mus_cthulhiana_Madness);
+    intro_mus_channel = audio::play(Sfx_id::mus_cthulhiana_Madness);
 
     draw(browser);
 
     while (true)
     {
-        const Menu_action action = Menu_input_handling::get_action(browser);
+        const Menu_action action = menu_input_handling::get_action(browser);
 
         switch (action)
         {
@@ -381,37 +381,37 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
             }
             if (browser.is_at_idx(1))
             {
-                if (Save_handling::is_save_available())
+                if (save_handling::is_save_available())
                 {
-                    Save_handling::load();
-                    Map_travel::go_to_nxt();
+                    save_handling::load();
+                    map_travel::go_to_nxt();
                     TRACE_FUNC_END;
                     return Game_entry_mode::load_game;
                 }
                 else
                 {
-                    Popup::show_msg("No saved game found", false);
+                    popup::show_msg("No saved game found", false);
                     draw(browser);
                 }
             }
             if (browser.is_at_idx(2))
             {
-                Manual::run();
+                manual::run();
                 draw(browser);
             }
             if (browser.is_at_idx(3))
             {
-                Config::run_options_menu();
+                config::run_options_menu();
                 draw(browser);
             }
             if (browser.is_at_idx(4))
             {
-                Credits::run();
+                credits::run();
                 draw(browser);
             }
             if (browser.is_at_idx(5))
             {
-                High_score::run_high_score_screen();
+                high_score::run_high_score_screen();
                 draw(browser);
             }
             if (browser.is_at_idx(6))
@@ -424,7 +424,7 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
             {
                 if (browser.is_at_idx(7))
                 {
-                    Config::toggle_bot_playing();
+                    config::toggle_bot_playing();
                     TRACE_FUNC_END;
                     return Game_entry_mode::new_game;
                 }

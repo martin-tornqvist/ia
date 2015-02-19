@@ -18,7 +18,7 @@ class Menu_browser
 {
 public:
     Menu_browser(const int NR_ITEMS_A, const int NR_ITEMS_B,
-                const int ELEM_ON_WRAP_UP_A = -1) :
+                 const int ELEM_ON_WRAP_UP_A = -1) :
         x0y0_(NR_ITEMS_A > 0 ? Pos(0, 0) : Pos(1, 0)),
         x1y0_(NR_ITEMS_B > 0 ? Pos(1, 0) : Pos(0, 0)),
         x0y1_(NR_ITEMS_A > 0 ? Pos(0, NR_ITEMS_A - 1) : Pos(1, NR_ITEMS_B - 1)),

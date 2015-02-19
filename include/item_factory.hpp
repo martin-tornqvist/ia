@@ -19,6 +19,6 @@ Item* mk_item_on_floor(const Item_id item_id, const Pos& pos);
 
 Item* copy_item(Item* old_item);
 
-} //Item_factory
+} //item_factory
 
 #endif

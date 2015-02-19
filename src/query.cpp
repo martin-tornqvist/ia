@@ -26,17 +26,17 @@ void init()
 
 void wait_for_key_press()
 {
-    if (is_inited_ && !Config::is_bot_playing())
+    if (is_inited_ && !config::is_bot_playing())
     {
-        Input::get_input();
+        input::get_input();
     }
 }
 
 Yes_no_answer yes_or_no(char key_for_special_event)
 {
-    if (!is_inited_ || Config::is_bot_playing()) {return Yes_no_answer::yes;}
+    if (!is_inited_ || config::is_bot_playing()) {return Yes_no_answer::yes;}
 
-    Key_data d = Input::get_input();
+    Key_data d = input::get_input();
     while (
         d.key    != 'y'          &&
         d.key    != 'n'          &&
@@ -44,7 +44,7 @@ Yes_no_answer yes_or_no(char key_for_special_event)
         d.sdl_key != SDLK_SPACE   &&
         (d.key != key_for_special_event || key_for_special_event == -1))
     {
-        d = Input::get_input();
+        d = input::get_input();
     }
     if (d.key == key_for_special_event && key_for_special_event != -1)
     {
@@ -60,11 +60,11 @@ Yes_no_answer yes_or_no(char key_for_special_event)
 
 Key_data letter(const bool ACCEPT_ENTER)
 {
-    if (!is_inited_ || Config::is_bot_playing()) {return 'a';}
+    if (!is_inited_ || config::is_bot_playing()) {return 'a';}
 
     while (true)
     {
-        Key_data d = Input::get_input();
+        Key_data d = input::get_input();
 
         if (
             (ACCEPT_ENTER && d.sdl_key == SDLK_RETURN) ||
@@ -82,13 +82,13 @@ Key_data letter(const bool ACCEPT_ENTER)
 int number(const Pos& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS,
            const int DEFAULT, const bool CANCEL_RETURNS_DEFAULT)
 {
-    if (!is_inited_ || Config::is_bot_playing()) {return 0;}
+    if (!is_inited_ || config::is_bot_playing()) {return 0;}
 
     int ret_num = max(MIN, DEFAULT);
-    Render::cover_area(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
+    render::cover_area(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
     const string str = (ret_num == 0 ? "" : to_str(ret_num)) + "_";
-    Render::draw_text(str, Panel::screen, pos, clr);
-    Render::update_screen();
+    render::draw_text(str, Panel::screen, pos, clr);
+    render::update_screen();
 
     while (true)
     {
@@ -97,7 +97,7 @@ int number(const Pos& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS
                 d.sdl_key != SDLK_SPACE && d.sdl_key != SDLK_ESCAPE &&
                 d.sdl_key != SDLK_BACKSPACE)
         {
-            d = Input::get_input();
+            d = input::get_input();
         }
 
         if (d.sdl_key == SDLK_RETURN)
@@ -116,10 +116,10 @@ int number(const Pos& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS
         if (d.sdl_key == SDLK_BACKSPACE)
         {
             ret_num = ret_num / 10;
-            Render::cover_area(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
-            Render::draw_text((ret_num == 0 ? "" : to_str(ret_num)) + "_",
-                             Panel::screen, pos, clr);
-            Render::update_screen();
+            render::cover_area(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
+            render::draw_text((ret_num == 0 ? "" : to_str(ret_num)) + "_",
+                              Panel::screen, pos, clr);
+            render::update_screen();
             continue;
         }
 
@@ -127,35 +127,35 @@ int number(const Pos& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS
         {
             int cur_digit = d.key - '0';
             ret_num = max(MIN, ret_num * 10 + cur_digit);
-            Render::cover_area(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
-            Render::draw_text((ret_num == 0 ? "" : to_str(ret_num)) + "_",
-                             Panel::screen, pos, clr);
-            Render::update_screen();
+            render::cover_area(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
+            render::draw_text((ret_num == 0 ? "" : to_str(ret_num)) + "_",
+                              Panel::screen, pos, clr);
+            render::update_screen();
         }
     }
     return -1;
 }
 
-void wait_for_confirm()
+void wait_forConfirm()
 {
-    if (is_inited_ && !Config::is_bot_playing())
+    if (is_inited_ && !config::is_bot_playing())
     {
-        Key_data d = Input::get_input();
+        Key_data d = input::get_input();
         while (d.sdl_key != SDLK_SPACE && d.sdl_key != SDLK_ESCAPE && d.sdl_key != SDLK_RETURN)
         {
-            d = Input::get_input();
+            d = input::get_input();
         }
     }
 }
 
 Dir dir()
 {
-    if (!is_inited_ || Config::is_bot_playing())
+    if (!is_inited_ || config::is_bot_playing())
     {
         return Dir::END;
     }
 
-    Key_data d = Input::get_input();
+    Key_data d = input::get_input();
 
     while (d.sdl_key != SDLK_RIGHT   && d.sdl_key != SDLK_UP       &&
             d.sdl_key != SDLK_LEFT    && d.sdl_key != SDLK_DOWN     &&
@@ -166,7 +166,7 @@ Dir dir()
             d.key != 'y' && d.key != 'u' && d.key != 'b' && d.key != 'n' &&
             (d.key < '1' || d.key > '9' || d.key == '5'))
     {
-        d = Input::get_input();
+        d = input::get_input();
     }
 
     if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)

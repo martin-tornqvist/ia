@@ -13,7 +13,7 @@ namespace map_patterns
 {
 
 void get_cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,
-                    std::vector<Pos>& away_from_walls)
+                       std::vector<Pos>& away_from_walls)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     vector<Pos> pos_bucket;
@@ -25,9 +25,9 @@ void get_cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,
     {
         for (int y = r.p0.y; y <= r.p1.y; ++y)
         {
-            if (Map::room_map[x][y] == &room)
+            if (map::room_map[x][y] == &room)
             {
-                auto* const f = Map::cells[x][y].rigid;
+                auto* const f = map::cells[x][y].rigid;
 
                 if (f->can_move_cmn() && f->can_have_rigid())
                 {
@@ -61,7 +61,7 @@ void get_cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,
         {
             for (int dy = -1; dy <= 1; ++dy)
             {
-                const auto* const f = Map::cells[pos.x + dx][pos.y + dy].rigid;
+                const auto* const f = map::cells[pos.x + dx][pos.y + dy].rigid;
                 if (f->get_id() == Feature_id::door) {is_door_adjacent = true;}
             }
         }
@@ -92,7 +92,7 @@ int get_walk_blockers_in_dir(const Dir dir, const Pos& pos)
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const auto* const f = Map::cells[pos.x + 1][pos.y + dy].rigid;
+            const auto* const f = map::cells[pos.x + 1][pos.y + dy].rigid;
             if (!f->can_move_cmn()) {nr_blockers += 1;}
         }
     } break;
@@ -101,7 +101,7 @@ int get_walk_blockers_in_dir(const Dir dir, const Pos& pos)
     {
         for (int dx = -1; dx <= 1; ++dx)
         {
-            const auto* const f = Map::cells[pos.x + dx][pos.y + 1].rigid;
+            const auto* const f = map::cells[pos.x + dx][pos.y + 1].rigid;
             if (!f->can_move_cmn()) {nr_blockers += 1;}
         }
     } break;
@@ -110,7 +110,7 @@ int get_walk_blockers_in_dir(const Dir dir, const Pos& pos)
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const auto* const f = Map::cells[pos.x - 1][pos.y + dy].rigid;
+            const auto* const f = map::cells[pos.x - 1][pos.y + dy].rigid;
             if (!f->can_move_cmn()) {nr_blockers += 1;}
         }
     } break;
@@ -119,7 +119,7 @@ int get_walk_blockers_in_dir(const Dir dir, const Pos& pos)
     {
         for (int dx = -1; dx <= 1; ++dx)
         {
-            const auto* const f = Map::cells[pos.x + dx][pos.y - 1].rigid;
+            const auto* const f = map::cells[pos.x + dx][pos.y - 1].rigid;
             if (!f->can_move_cmn()) {nr_blockers += 1;}
         }
     } break;
@@ -134,4 +134,4 @@ int get_walk_blockers_in_dir(const Dir dir, const Pos& pos)
     return nr_blockers;
 }
 
-} //Map_patterns
+} //map_patterns

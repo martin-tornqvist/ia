@@ -18,30 +18,30 @@
 using namespace std;
 
 Item_data_t::Item_data_t(const Item_id id_) :
-    id                              (id_),
-    type                            (Item_type::general),
-    value                           (Item_value::normal),
-    weight                          (Item_weight::none),
-    allow_spawn                      (true),
-    spawn_std_range                   (Range(1, INT_MAX)),
-    max_stack_at_spawn                 (1),
-    chance_to_include_in_floor_spawn_list (100),
-    is_stackable                     (true),
-    is_identified                    (true),
-    is_tried                         (false),
-    base_name                        (),
-    glyph                           ('X'),
-    clr                             (clr_white),
-    tile                            (Tile_id::empty),
-    main_att_mode                     (Main_att_mode::none),
-    spell_cast_from_scroll             (Spell_id::END),
+    id                                  (id_),
+    type                                (Item_type::general),
+    value                               (Item_value::normal),
+    weight                              (Item_weight::none),
+    allow_spawn                         (true),
+    spawn_std_range                     (Range(1, INT_MAX)),
+    max_stack_at_spawn                  (1),
+    chance_to_incl_in_floor_spawn_list  (100),
+    is_stackable                        (true),
+    is_identified                       (true),
+    is_tried                            (false),
+    base_name                           (),
+    glyph                               ('X'),
+    clr                                 (clr_white),
+    tile                                (Tile_id::empty),
+    main_att_mode                       (Main_att_mode::none),
+    spell_cast_from_scroll              (Spell_id::END),
     land_on_hard_snd_msg                ("I hear a thudding sound."),
-    land_on_hard_sfx                   (),
-    shock_while_in_backpack            (0),
-    shock_while_equipped              (0),
-    melee                           (Item_melee_data()),
-    ranged                          (Item_ranged_data()),
-    armor                           (Item_armor_data())
+    land_on_hard_sfx                    (),
+    shock_while_in_backpack             (0),
+    shock_while_equipped                (0),
+    melee                               (Item_melee_data()),
+    ranged                              (Item_ranged_data()),
+    armor                               (Item_armor_data())
 {
     for (int i = 0; i < int(Ability_id::END); ++i)
     {
@@ -54,17 +54,17 @@ Item_data_t::Item_data_t(const Item_id id_) :
 }
 
 Item_data_t::Item_melee_data::Item_melee_data() :
-    is_melee_wpn                      (false),
-    dmg                             (pair<int, int>(0, 0)),
-    hit_chance_mod                    (0),
-    att_msgs                         (Item_att_msgs()),
-    prop_applied                     (nullptr),
-    dmg_type                         (Dmg_type::physical),
-    knocks_back                      (false),
-    hit_small_sfx                     (Sfx_id::END),
-    hit_medium_sfx                    (Sfx_id::END),
-    hit_hard_sfx                      (Sfx_id::END),
-    miss_sfx                         (Sfx_id::END) {}
+    is_melee_wpn                        (false),
+    dmg                                 (pair<int, int>(0, 0)),
+    hit_chance_mod                      (0),
+    att_msgs                            (Item_att_msgs()),
+    prop_applied                        (nullptr),
+    dmg_type                            (Dmg_type::physical),
+    knocks_back                         (false),
+    hit_small_sfx                       (Sfx_id::END),
+    hit_medium_sfx                      (Sfx_id::END),
+    hit_hard_sfx                        (Sfx_id::END),
+    miss_sfx                            (Sfx_id::END) {}
 
 Item_data_t::Item_melee_data::~Item_melee_data()
 {
@@ -72,33 +72,33 @@ Item_data_t::Item_melee_data::~Item_melee_data()
 }
 
 Item_data_t::Item_ranged_data::Item_ranged_data() :
-    is_ranged_wpn                     (false),
-    is_throwing_wpn                   (false),
-    is_machine_gun                    (false),
-    is_shotgun                       (false),
+    is_ranged_wpn                       (false),
+    is_throwing_wpn                     (false),
+    is_machine_gun                      (false),
+    is_shotgun                          (false),
     max_nr_ammo_in_clip                 (0),
-    dmg                             (Dice_param()),
-    throw_dmg                        (Dice_param()),
-    hit_chance_mod                    (0),
-    throw_hit_chance_mod               (0),
-    effective_range                  (3),
-    knocks_back                      (false),
-    dmg_info_override                 (""),
-    ammo_item_id                      (Item_id::END),
-    dmg_type                         (Dmg_type::physical),
-    has_infinite_ammo                 (false),
-    missile_glyph                    ('/'),
-    missile_tile                     (Tile_id::projectile_std_front_slash),
-    missile_clr                      (clr_white),
-    missile_leaves_trail              (false),
-    missile_leaves_smoke              (false),
-    att_msgs                         (Item_att_msgs()),
-    snd_msg                          (""),
-    snd_vol                          (Snd_vol::low),
-    makes_ricochet_snd                (false),
-    att_sfx                          (Sfx_id::END),
-    reload_sfx                       (Sfx_id::END),
-    prop_applied                     (nullptr) {}
+    dmg                                 (Dice_param()),
+    throw_dmg                           (Dice_param()),
+    hit_chance_mod                      (0),
+    throw_hit_chance_mod                (0),
+    effective_range                     (3),
+    knocks_back                         (false),
+    dmg_info_override                   (""),
+    ammo_item_id                        (Item_id::END),
+    dmg_type                            (Dmg_type::physical),
+    has_infinite_ammo                   (false),
+    missile_glyph                       ('/'),
+    missile_tile                        (Tile_id::projectile_std_front_slash),
+    missile_clr                         (clr_white),
+    missile_leaves_trail                (false),
+    missile_leaves_smoke                (false),
+    att_msgs                            (Item_att_msgs()),
+    snd_msg                             (""),
+    snd_vol                             (Snd_vol::low),
+    makes_ricochet_snd                  (false),
+    att_sfx                             (Sfx_id::END),
+    reload_sfx                          (Sfx_id::END),
+    prop_applied                        (nullptr) {}
 
 Item_data_t::Item_ranged_data::~Item_ranged_data()
 {
@@ -118,7 +118,7 @@ namespace
 {
 
 void add_feature_found_in(Item_data_t& data, const Feature_id feature_id,
-                       const int CHANCE_TO_INCL = 100)
+                          const int CHANCE_TO_INCL = 100)
 {
     data.container_spawn_rules.push_back({feature_id, CHANCE_TO_INCL});
 }
@@ -154,7 +154,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         reset_data(d, Item_type::melee_wpn);
         d.type = Item_type::melee_wpn_intr;
         d.spawn_std_range = Range(-1, -1);
-        d.chance_to_include_in_floor_spawn_list = 0;
+        d.chance_to_incl_in_floor_spawn_list = 0;
         d.allow_spawn = false;
         d.melee.hit_small_sfx = Sfx_id::hit_small;
         d.melee.hit_medium_sfx = Sfx_id::hit_medium;
@@ -190,7 +190,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.type = Item_type::ranged_wpn_intr;
         d.ranged.has_infinite_ammo = true;
         d.spawn_std_range = Range(-1, -1);
-        d.chance_to_include_in_floor_spawn_list = 0;
+        d.chance_to_incl_in_floor_spawn_list = 0;
         d.allow_spawn = false;
         d.melee.is_melee_wpn = false;
         d.ranged.missile_glyph = '*';
@@ -239,7 +239,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
             "It should be possible to pronounce it correctly, but the purpose is unclear."
         };
         d.value = Item_value::minor_treasure;
-        d.chance_to_include_in_floor_spawn_list = 40;
+        d.chance_to_incl_in_floor_spawn_list = 40;
         d.weight = Item_weight::none;
         d.is_identified = false;
         d.glyph = '?';
@@ -262,7 +262,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
             "A small glass bottle containing a mysterious concoction."
         };
         d.value = Item_value::minor_treasure;
-        d.chance_to_include_in_floor_spawn_list = 55;
+        d.chance_to_incl_in_floor_spawn_list = 55;
         d.weight = Item_weight::light;
         d.is_identified = false;
         d.glyph = '!';
@@ -289,7 +289,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
             "human mind. Even for its small size, it seems incredibly complex. There is "
             "no hope of understanding the purpose or function of it through normal means."
         };
-        d.chance_to_include_in_floor_spawn_list = 12;
+        d.chance_to_incl_in_floor_spawn_list = 12;
         d.weight = Item_weight::light;
         d.is_identified = false;
         d.glyph = '~';
@@ -329,7 +329,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.weight = Item_weight::light;
         d.is_identified = false;
         d.is_stackable = false;
-        d.chance_to_include_in_floor_spawn_list = 1;
+        d.chance_to_incl_in_floor_spawn_list = 1;
         add_feature_found_in(d, Feature_id::tomb, 16);
         add_feature_found_in(d, Feature_id::chest, 5);
     } break;
@@ -345,7 +345,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.weight = Item_weight::extra_light;
         d.is_identified = false;
         d.is_stackable = false;
-        d.chance_to_include_in_floor_spawn_list = 1;
+        d.chance_to_incl_in_floor_spawn_list = 1;
         add_feature_found_in(d, Feature_id::tomb, 16);
         add_feature_found_in(d, Feature_id::chest, 5);
     } break;
@@ -366,7 +366,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
 
 void set_dmg_from_mon_id(Item_data_t& item_data, const Actor_id id)
 {
-    const auto& actor_data     = Actor_data::data[int(id)];
+    const auto& actor_data     = actor_data::data[int(id)];
     item_data.melee.dmg        = pair<int, int>(1, actor_data.dmg_melee);
     item_data.ranged.dmg       = Dice_param(1, actor_data.dmg_ranged, 0);
     item_data.ranged.throw_dmg  = Dice_param(1, actor_data.dmg_ranged, 0);
@@ -384,7 +384,7 @@ void init_data_list()
         "Shining Trapezohedron", "Shining Trapezohedrons", "The Shining Trapezohedron"
     };
     d->spawn_std_range = Range(-1, -1);
-    d->chance_to_include_in_floor_spawn_list = 0;
+    d->chance_to_incl_in_floor_spawn_list = 0;
     d->allow_spawn = false;
     d->is_stackable = false;
     d->glyph = '*';
@@ -481,7 +481,7 @@ void init_data_list()
     d->ranged.missile_glyph = '*';
     d->ranged.missile_clr = clr_red_lgt;
     d->spawn_std_range.lower = 5;
-    d->chance_to_include_in_floor_spawn_list = 25;
+    d->chance_to_incl_in_floor_spawn_list = 25;
     add_feature_found_in(*d, Feature_id::chest, 25);
     add_feature_found_in(*d, Feature_id::cabinet, 25);
     add_feature_found_in(*d, Feature_id::cocoon, 25);
@@ -501,7 +501,7 @@ void init_data_list()
     d->ranged.max_nr_ammo_in_clip = 5;
     d->spawn_std_range.lower = 5;
     d->max_stack_at_spawn = 1;
-    d->chance_to_include_in_floor_spawn_list = 25;
+    d->chance_to_incl_in_floor_spawn_list = 25;
     add_feature_found_in(*d, Feature_id::chest, 25);
     add_feature_found_in(*d, Feature_id::cabinet, 25);
     add_feature_found_in(*d, Feature_id::cocoon, 25);
@@ -573,8 +573,8 @@ void init_data_list()
     d = new Item_data_t(Item_id::pistol_clip);
     reset_data(*d, Item_type::ammo_clip);
     d->base_name = {".45ACP Colt cartridge", ".45ACP Colt cartridges",
-                   "a .45ACP Colt cartridge"
-                  };
+                    "a .45ACP Colt cartridge"
+                   };
     d->base_descr =
     {
         "Ammunition used by Colt pistols."
@@ -997,7 +997,7 @@ void init_data_list()
     d->melee.dmg = pair<int, int>(2, 4);
     d->melee.hit_chance_mod = 0;
     d->melee.miss_sfx = Sfx_id::miss_medium;
-    d->chance_to_include_in_floor_spawn_list = 1;
+    d->chance_to_incl_in_floor_spawn_list = 1;
     d->value = Item_value::major_treasure;
     d->shock_while_in_backpack = d->shock_while_equipped = 15;
     add_feature_found_in(*d, Feature_id::tomb, 20);
@@ -1561,7 +1561,7 @@ void init_data_list()
     d->tile = Tile_id::mask;
     d->glyph = '[';
     d->spawn_std_range = Range(1, DLVL_LAST_EARLY_GAME);
-    d->chance_to_include_in_floor_spawn_list = 50;
+    d->chance_to_incl_in_floor_spawn_list = 50;
     d->weight = Item_weight::light;
     d->land_on_hard_snd_msg = "";
     data[size_t(d->id)] = d;
@@ -1582,7 +1582,7 @@ void init_data_list()
 //    d->spawn_std_range = Range(-1, -1);
 //    d->weight = Item_weight::light;
 //    d->land_on_hard_snd_msg = "";
-//    d->chance_to_include_in_floor_spawn_list = 1;
+//    d->chance_to_incl_in_floor_spawn_list = 1;
 //    d->value = Item_value::major_treasure;
 //    d->shock_while_in_backpack = d->shock_while_equipped = 15;
 //    add_feature_found_in(*d, Feature_id::tomb, 8);
@@ -1806,7 +1806,7 @@ void init_data_list()
     };
     d->spawn_std_range = Range(1, DLVL_LAST_MID_GAME);
     d->spawn_std_range = Range(1, 10);
-    d->chance_to_include_in_floor_spawn_list = 50;
+    d->chance_to_incl_in_floor_spawn_list = 50;
     d->is_identified = true;
     d->tile = Tile_id::electric_lantern;
     d->clr = clr_yellow;

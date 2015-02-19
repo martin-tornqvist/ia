@@ -44,17 +44,17 @@ void init_room_bucket()
 
     room_bucket_.clear();
 
-    const int DLVL = Map::dlvl;
+    const int DLVL = map::dlvl;
 
     if (DLVL <= DLVL_LAST_EARLY_GAME)
     {
-        add_to_room_bucket(Room_type::human,    Rnd::range(2, 4));
-        add_to_room_bucket(Room_type::ritual,   Rnd::range(1, 1));
-        add_to_room_bucket(Room_type::spider,   Rnd::range(0, 3));
-        add_to_room_bucket(Room_type::crypt,    Rnd::range(1, 4));
-        add_to_room_bucket(Room_type::monster,  Rnd::range(0, 3));
-        add_to_room_bucket(Room_type::flooded,  Rnd::range(0, 1));
-        add_to_room_bucket(Room_type::muddy,    Rnd::range(0, 1));
+        add_to_room_bucket(Room_type::human,    rnd::range(2, 4));
+        add_to_room_bucket(Room_type::ritual,   rnd::range(1, 1));
+        add_to_room_bucket(Room_type::spider,   rnd::range(0, 3));
+        add_to_room_bucket(Room_type::crypt,    rnd::range(1, 4));
+        add_to_room_bucket(Room_type::monster,  rnd::range(0, 3));
+        add_to_room_bucket(Room_type::flooded,  rnd::range(0, 1));
+        add_to_room_bucket(Room_type::muddy,    rnd::range(0, 1));
 
         const size_t NR_PLAIN_ROOM_PER_THEMED = 1;
 
@@ -62,16 +62,16 @@ void init_room_bucket()
     }
     else if (DLVL <= DLVL_LAST_MID_GAME)
     {
-        add_to_room_bucket(Room_type::human,    Rnd::range(1, 3));
-        add_to_room_bucket(Room_type::ritual,   Rnd::range(1, 1));
-        add_to_room_bucket(Room_type::spider,   Rnd::range(0, 3));
-        add_to_room_bucket(Room_type::crypt,    Rnd::range(0, 4));
-        add_to_room_bucket(Room_type::monster,  Rnd::range(0, 3));
-        add_to_room_bucket(Room_type::flooded,  Rnd::range(0, 2));
-        add_to_room_bucket(Room_type::muddy,    Rnd::range(0, 2));
-        add_to_room_bucket(Room_type::cave,     Rnd::range(1, 4));
-        add_to_room_bucket(Room_type::chasm,    Rnd::range(0, 2));
-        add_to_room_bucket(Room_type::forest,   Rnd::range(1, 4));
+        add_to_room_bucket(Room_type::human,    rnd::range(1, 3));
+        add_to_room_bucket(Room_type::ritual,   rnd::range(1, 1));
+        add_to_room_bucket(Room_type::spider,   rnd::range(0, 3));
+        add_to_room_bucket(Room_type::crypt,    rnd::range(0, 4));
+        add_to_room_bucket(Room_type::monster,  rnd::range(0, 3));
+        add_to_room_bucket(Room_type::flooded,  rnd::range(0, 2));
+        add_to_room_bucket(Room_type::muddy,    rnd::range(0, 2));
+        add_to_room_bucket(Room_type::cave,     rnd::range(1, 4));
+        add_to_room_bucket(Room_type::chasm,    rnd::range(0, 2));
+        add_to_room_bucket(Room_type::forest,   rnd::range(1, 4));
 
         const size_t NR_PLAIN_ROOM_PER_THEMED = 1;
 
@@ -79,13 +79,13 @@ void init_room_bucket()
     }
     else
     {
-        add_to_room_bucket(Room_type::monster,  Rnd::range(0, 3));
-        add_to_room_bucket(Room_type::spider,   Rnd::range(0, 3));
-        add_to_room_bucket(Room_type::flooded,  Rnd::range(0, 2));
-        add_to_room_bucket(Room_type::muddy,    Rnd::range(0, 2));
-        add_to_room_bucket(Room_type::cave,     Rnd::range(3, 4));
-        add_to_room_bucket(Room_type::chasm,    Rnd::range(0, 2));
-        add_to_room_bucket(Room_type::forest,   Rnd::range(1, 4));
+        add_to_room_bucket(Room_type::monster,  rnd::range(0, 3));
+        add_to_room_bucket(Room_type::spider,   rnd::range(0, 3));
+        add_to_room_bucket(Room_type::flooded,  rnd::range(0, 2));
+        add_to_room_bucket(Room_type::muddy,    rnd::range(0, 2));
+        add_to_room_bucket(Room_type::cave,     rnd::range(3, 4));
+        add_to_room_bucket(Room_type::chasm,    rnd::range(0, 2));
+        add_to_room_bucket(Room_type::forest,   rnd::range(1, 4));
     }
 
     std::random_shuffle(begin(room_bucket_), end(room_bucket_));
@@ -177,7 +177,7 @@ void Room::mk_drk() const
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            if (Map::room_map[x][y] == this) {Map::cells[x][y].is_dark = true;}
+            if (map::room_map[x][y] == this) {map::cells[x][y].is_dark = true;}
         }
     }
 
@@ -199,10 +199,10 @@ void Std_room::on_post_connect(bool door_proposals[MAP_W][MAP_H])
 
     //Make dark?
     int pct_chance_dark = get_base_pct_chance_drk() - 15;
-    pct_chance_dark += Map::dlvl; //Increase with higher dungeon level
+    pct_chance_dark += map::dlvl; //Increase with higher dungeon level
     constr_in_range(0, pct_chance_dark, 100);
 
-    if (Rnd::percent() < pct_chance_dark)
+    if (rnd::percent() < pct_chance_dark)
     {
         mk_drk();
     }
@@ -236,14 +236,14 @@ size_t Std_room::try_get_auto_feature_placement(
     for (int i = 0; i < NR_ATTEMPTS_TO_FIND_POS; ++i)
     {
         const size_t      NR_DATA = feature_data_bucket.size();
-        const size_t      ELEMENT = Rnd::range(0, NR_DATA - 1);
+        const size_t      ELEMENT = rnd::range(0, NR_DATA - 1);
         const auto* const data    = feature_data_bucket[ELEMENT];
 
         if (
             IS_ADJ_TO_WALLS_AVAIL &&
             data->room_spawn_rules.get_placement_rule() == Placement_rule::adj_to_walls)
         {
-            pos_ref = adj_to_walls[Rnd::range(0, adj_to_walls.size() - 1)];
+            pos_ref = adj_to_walls[rnd::range(0, adj_to_walls.size() - 1)];
             TRACE_FUNC_END_VERBOSE;
             return ELEMENT;
         }
@@ -252,18 +252,18 @@ size_t Std_room::try_get_auto_feature_placement(
             IS_AWAY_FROM_WALLS_AVAIL &&
             data->room_spawn_rules.get_placement_rule() == Placement_rule::away_from_walls)
         {
-            pos_ref = away_from_walls[Rnd::range(0, away_from_walls.size() - 1)];
+            pos_ref = away_from_walls[rnd::range(0, away_from_walls.size() - 1)];
             TRACE_FUNC_END_VERBOSE;
             return ELEMENT;
         }
 
         if (data->room_spawn_rules.get_placement_rule() == Placement_rule::either)
         {
-            if (Rnd::coin_toss())
+            if (rnd::coin_toss())
             {
                 if (IS_ADJ_TO_WALLS_AVAIL)
                 {
-                    pos_ref = adj_to_walls[Rnd::range(0, adj_to_walls.size() - 1)];
+                    pos_ref = adj_to_walls[rnd::range(0, adj_to_walls.size() - 1)];
                     TRACE_FUNC_END_VERBOSE;
                     return ELEMENT;
 
@@ -273,7 +273,7 @@ size_t Std_room::try_get_auto_feature_placement(
             {
                 if (IS_AWAY_FROM_WALLS_AVAIL)
                 {
-                    pos_ref = away_from_walls[Rnd::range(0, away_from_walls.size() - 1)];
+                    pos_ref = away_from_walls[rnd::range(0, away_from_walls.size() - 1)];
                     TRACE_FUNC_END_VERBOSE;
                     return ELEMENT;
                 }
@@ -292,12 +292,12 @@ int Std_room::place_auto_features()
 
     for (int i = 0; i < int (Feature_id::END); ++i)
     {
-        const auto& d           = Feature_data::get_data((Feature_id)(i));
+        const auto& d           = feature_data::get_data((Feature_id)(i));
         const auto& spawn_rules  = d.room_spawn_rules;
 
         if (
             spawn_rules.is_belonging_to_room_type(type_) &&
-            Utils::is_val_in_range(Map::dlvl, spawn_rules.get_dlvls_allowed()))
+            utils::is_val_in_range(map::dlvl, spawn_rules.get_dlvls_allowed()))
         {
             feature_bucket.push_back(&d);
         }
@@ -306,11 +306,11 @@ int Std_room::place_auto_features()
     vector<Pos> adj_to_walls;
     vector<Pos> away_from_walls;
 
-    Map_patterns::get_cells_in_room(*this, adj_to_walls, away_from_walls);
+    map_patterns::get_cells_in_room(*this, adj_to_walls, away_from_walls);
 
     vector<int> spawn_count(feature_bucket.size(), 0);
 
-    int nr_features_left_to_place = Rnd::range(get_nr_auto_features_allowed());
+    int nr_features_left_to_place = rnd::range(get_nr_auto_features_allowed());
     int nr_features_placed      = 0;
 
     while (true)
@@ -333,7 +333,7 @@ int Std_room::place_auto_features()
             const Feature_data_t* d = feature_bucket[FEATURE_IDX];
 
             TRACE << "Placing feature" << endl;
-            Map::put(static_cast<Rigid*>(d->mk_obj(pos)));
+            map::put(static_cast<Rigid*>(d->mk_obj(pos)));
             ++spawn_count[FEATURE_IDX];
 
             nr_features_left_to_place--;
@@ -353,11 +353,11 @@ int Std_room::place_auto_features()
             }
 
             //Erase all adjacent positions
-            auto is_adj = [&](const Pos & p) {return Utils::is_pos_adj(p, pos, true);};
+            auto is_adj = [&](const Pos & p) {return utils::is_pos_adj(p, pos, true);};
             adj_to_walls   .erase(remove_if(begin(adj_to_walls),    end(adj_to_walls),    is_adj),
-                                end(adj_to_walls));
+                                  end(adj_to_walls));
             away_from_walls.erase(remove_if(begin(away_from_walls), end(away_from_walls), is_adj),
-                                end(away_from_walls));
+                                  end(away_from_walls));
         }
         else //No good feature placement found
         {
@@ -370,7 +370,7 @@ int Std_room::place_auto_features()
 //------------------------------------------------------------------- PLAIN ROOM
 Range Plain_room::get_nr_auto_features_allowed() const
 {
-    if (Rnd::one_in(4))
+    if (rnd::one_in(4))
     {
         return {1, 2};
     }
@@ -389,8 +389,8 @@ void Plain_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
-    Map_gen_utils::cut_room_corners (*this);
-    if (Rnd::fraction(1, 3)) {Map_gen_utils::mk_pillars_in_room(*this);}
+    map_gen_utils::cut_room_corners (*this);
+    if (rnd::fraction(1, 3)) {map_gen_utils::mk_pillars_in_room(*this);}
 }
 
 void Plain_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
@@ -419,27 +419,27 @@ void Human_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
-    Map_gen_utils::cut_room_corners (*this);
-    if (Rnd::fraction(1, 3)) {Map_gen_utils::mk_pillars_in_room(*this);}
+    map_gen_utils::cut_room_corners (*this);
+    if (rnd::fraction(1, 3)) {map_gen_utils::mk_pillars_in_room(*this);}
 }
 
 void Human_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
-    if (Rnd::coin_toss())
+    if (rnd::coin_toss())
     {
         bool blocked[MAP_W][MAP_H];
-        Map_parse::run(Cell_check::Blocks_move_cmn(false), blocked);
+        map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
         for (int x = r_.p0.x + 1; x <= r_.p1.x - 1; ++x)
         {
             for (int y = r_.p0.y + 1; y <= r_.p1.y - 1; ++y)
             {
-                if (!blocked[x][y] && Map::room_map[x][y] == this)
+                if (!blocked[x][y] && map::room_map[x][y] == this)
                 {
                     Carpet* const carpet = new Carpet(Pos(x, y));
-                    Map::put(carpet);
+                    map::put(carpet);
                 }
             }
         }
@@ -466,21 +466,21 @@ void Ritual_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
-    Map_gen_utils::cut_room_corners (*this);
-    if (Rnd::fraction(1, 3)) {Map_gen_utils::mk_pillars_in_room(*this);}
+    map_gen_utils::cut_room_corners (*this);
+    if (rnd::fraction(1, 3)) {map_gen_utils::mk_pillars_in_room(*this);}
 }
 
 void Ritual_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
-    Gods::set_random_god();
+    gods::set_random_god();
 
     bool blocked[MAP_W][MAP_H];
-    Map_parse::run(Cell_check::Blocks_move_cmn(false), blocked);
+    map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
     const int BLOODY_CHAMBER_PCT = 60;
-    if (Rnd::percent() < BLOODY_CHAMBER_PCT)
+    if (rnd::percent() < BLOODY_CHAMBER_PCT)
     {
         Pos origin(-1, -1);
         vector<Pos> origin_bucket;
@@ -488,7 +488,7 @@ void Ritual_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
         {
             for (int x = r_.p0.x; x <= r_.p1.x; ++x)
             {
-                if (Map::cells[x][y].rigid->get_id() == Feature_id::altar)
+                if (map::cells[x][y].rigid->get_id() == Feature_id::altar)
                 {
                     origin = Pos(x, y);
                     y = 999;
@@ -504,20 +504,20 @@ void Ritual_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
         {
             if (origin.x == -1)
             {
-                const int ELEMENT = Rnd::range(0, origin_bucket.size() - 1);
+                const int ELEMENT = rnd::range(0, origin_bucket.size() - 1);
                 origin = origin_bucket[ELEMENT];
             }
             for (int dx = -1; dx <= 1; ++dx)
             {
                 for (int dy = -1; dy <= 1; ++dy)
                 {
-                    if ((dx == 0 && dy == 0) || (Rnd::percent() < BLOODY_CHAMBER_PCT / 2))
+                    if ((dx == 0 && dy == 0) || (rnd::percent() < BLOODY_CHAMBER_PCT / 2))
                     {
                         const Pos pos = origin + Pos(dx, dy);
                         if (!blocked[pos.x][pos.y])
                         {
-                            Map::mk_gore(pos);
-                            Map::mk_blood(pos);
+                            map::mk_gore(pos);
+                            map::mk_blood(pos);
                         }
                     }
                 }
@@ -549,21 +549,21 @@ void Spider_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
     //Early game : Always reshape by cutting corners
     //Mid    -   : "Flip a coin"
     //Late   -   : Always reshape by cavifying
-    const bool IS_EARLY = Map::dlvl <= DLVL_LAST_EARLY_GAME;
-    const bool IS_MID   = !IS_EARLY && Map::dlvl <= DLVL_LAST_MID_GAME;
+    const bool IS_EARLY = map::dlvl <= DLVL_LAST_EARLY_GAME;
+    const bool IS_MID   = !IS_EARLY && map::dlvl <= DLVL_LAST_MID_GAME;
 
-    if (IS_EARLY || (IS_MID && Rnd::coin_toss()))
+    if (IS_EARLY || (IS_MID && rnd::coin_toss()))
     {
-        Map_gen_utils::cut_room_corners (*this);
+        map_gen_utils::cut_room_corners (*this);
     }
     else
     {
-        Map_gen_utils::cavify_room(*this);
+        map_gen_utils::cavify_room(*this);
     }
 
-    if ((IS_EARLY || IS_MID) && Rnd::fraction(1, 3))
+    if ((IS_EARLY || IS_MID) && rnd::fraction(1, 3))
     {
-        Map_gen_utils::mk_pillars_in_room(*this);
+        map_gen_utils::mk_pillars_in_room(*this);
     }
 }
 
@@ -592,8 +592,8 @@ void Crypt_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
-    Map_gen_utils::cut_room_corners (*this);
-    if (Rnd::fraction(1, 3)) {Map_gen_utils::mk_pillars_in_room(*this);}
+    map_gen_utils::cut_room_corners (*this);
+    if (rnd::fraction(1, 3)) {map_gen_utils::mk_pillars_in_room(*this);}
 }
 
 void Crypt_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
@@ -621,23 +621,23 @@ void Monster_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
-    const bool IS_EARLY = Map::dlvl <= DLVL_LAST_EARLY_GAME;
-    const bool IS_MID   = !IS_EARLY && Map::dlvl <= DLVL_LAST_MID_GAME;
+    const bool IS_EARLY = map::dlvl <= DLVL_LAST_EARLY_GAME;
+    const bool IS_MID   = !IS_EARLY && map::dlvl <= DLVL_LAST_MID_GAME;
 
     if (IS_EARLY || IS_MID)
     {
-        if (Rnd::fraction(3, 4))
+        if (rnd::fraction(3, 4))
         {
-            Map_gen_utils::cut_room_corners (*this);
+            map_gen_utils::cut_room_corners (*this);
         }
-        if (Rnd::fraction(1, 3))
+        if (rnd::fraction(1, 3))
         {
-            Map_gen_utils::mk_pillars_in_room(*this);
+            map_gen_utils::mk_pillars_in_room(*this);
         }
     }
     else //Is late game
     {
-        Map_gen_utils::cavify_room(*this);
+        map_gen_utils::cavify_room(*this);
     }
 }
 
@@ -646,7 +646,7 @@ void Monster_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
     (void)door_proposals;
 
     bool blocked[MAP_W][MAP_H];
-    Map_parse::run(Cell_check::Blocks_move_cmn(false), blocked);
+    map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
     int       nr_blood_put  = 0;
     const int NR_TRIES    = 1000; //TODO: Hacky, needs improving
@@ -657,10 +657,10 @@ void Monster_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
         {
             for (int y = r_.p0.y; y <= r_.p1.y; ++y)
             {
-                if (!blocked[x][y] && Map::room_map[x][y] == this && Rnd::fraction(2, 5))
+                if (!blocked[x][y] && map::room_map[x][y] == this && rnd::fraction(2, 5))
                 {
-                    Map::mk_gore(Pos(x, y));
-                    Map::mk_blood(Pos(x, y));
+                    map::mk_gore(Pos(x, y));
+                    map::mk_blood(Pos(x, y));
                     nr_blood_put++;
                 }
             }
@@ -695,21 +695,21 @@ void Flooded_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
     //Early game : Always reshape by cutting corners
     //Mid    -   : "Flip a coin"
     //Late   -   : Always reshape by cavifying
-    const bool IS_EARLY = Map::dlvl <= DLVL_LAST_EARLY_GAME;
-    const bool IS_MID   = !IS_EARLY && Map::dlvl <= DLVL_LAST_MID_GAME;
+    const bool IS_EARLY = map::dlvl <= DLVL_LAST_EARLY_GAME;
+    const bool IS_MID   = !IS_EARLY && map::dlvl <= DLVL_LAST_MID_GAME;
 
-    if (IS_EARLY || (IS_MID && Rnd::coin_toss()))
+    if (IS_EARLY || (IS_MID && rnd::coin_toss()))
     {
-        Map_gen_utils::cut_room_corners (*this);
+        map_gen_utils::cut_room_corners (*this);
     }
     else
     {
-        Map_gen_utils::cavify_room(*this);
+        map_gen_utils::cavify_room(*this);
     }
 
-    if ((IS_EARLY || IS_MID) && Rnd::fraction(1, 3))
+    if ((IS_EARLY || IS_MID) && rnd::fraction(1, 3))
     {
-        Map_gen_utils::mk_pillars_in_room(*this);
+        map_gen_utils::mk_pillars_in_room(*this);
     }
 }
 
@@ -723,9 +723,9 @@ void Flooded_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
     {
         for (int y = r_.p0.y; y <= r_.p1.y; ++y)
         {
-            if (Map::room_map[x][y] == this)
+            if (map::room_map[x][y] == this)
             {
-                const auto id = Map::cells[x][y].rigid->get_id();
+                const auto id = map::cells[x][y].rigid->get_id();
                 if (
                     id == Feature_id::chest    ||
                     id == Feature_id::tomb     ||
@@ -741,21 +741,21 @@ void Flooded_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
 #endif // NDEBUG
 
     bool blocked[MAP_W][MAP_H];
-    Map_parse::run(Cell_check::Blocks_move_cmn(false), blocked);
+    map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
-    const int LIQUID_ONE_IN_N = Rnd::range(2, 4);
+    const int LIQUID_ONE_IN_N = rnd::range(2, 4);
 
     for (int x = r_.p0.x; x <= r_.p1.x; ++x)
     {
         for (int y = r_.p0.y; y <= r_.p1.y; ++y)
         {
             if (
-                !blocked[x][y] && Map::room_map[x][y] == this &&
-                Rnd::one_in(LIQUID_ONE_IN_N))
+                !blocked[x][y] && map::room_map[x][y] == this &&
+                rnd::one_in(LIQUID_ONE_IN_N))
             {
                 Liquid_shallow* const liquid = new Liquid_shallow(Pos(x, y));
                 liquid->type_ = Liquid_type::water;
-                Map::put(liquid);
+                map::put(liquid);
             }
         }
     }
@@ -787,9 +787,9 @@ void Muddy_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
     {
         for (int y = r_.p0.y; y <= r_.p1.y; ++y)
         {
-            if (Map::room_map[x][y] == this)
+            if (map::room_map[x][y] == this)
             {
-                const auto id = Map::cells[x][y].rigid->get_id();
+                const auto id = map::cells[x][y].rigid->get_id();
                 if (
                     id == Feature_id::chest    ||
                     id == Feature_id::tomb     ||
@@ -807,21 +807,21 @@ void Muddy_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
     //Early game : Always reshape by cutting corners
     //Mid    -   : "Flip a coin"
     //Late   -   : Always reshape by cavifying
-    const bool IS_EARLY = Map::dlvl <= DLVL_LAST_EARLY_GAME;
-    const bool IS_MID   = !IS_EARLY && Map::dlvl <= DLVL_LAST_MID_GAME;
+    const bool IS_EARLY = map::dlvl <= DLVL_LAST_EARLY_GAME;
+    const bool IS_MID   = !IS_EARLY && map::dlvl <= DLVL_LAST_MID_GAME;
 
-    if (IS_EARLY || (IS_MID && Rnd::coin_toss()))
+    if (IS_EARLY || (IS_MID && rnd::coin_toss()))
     {
-        Map_gen_utils::cut_room_corners (*this);
+        map_gen_utils::cut_room_corners (*this);
     }
     else
     {
-        Map_gen_utils::cavify_room(*this);
+        map_gen_utils::cavify_room(*this);
     }
 
-    if ((IS_EARLY || IS_MID) && Rnd::fraction(1, 3))
+    if ((IS_EARLY || IS_MID) && rnd::fraction(1, 3))
     {
-        Map_gen_utils::mk_pillars_in_room(*this);
+        map_gen_utils::mk_pillars_in_room(*this);
     }
 }
 
@@ -830,19 +830,19 @@ void Muddy_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
     (void)door_proposals;
 
     bool blocked[MAP_W][MAP_H];
-    Map_parse::run(Cell_check::Blocks_move_cmn(false), blocked);
+    map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
-    const int LIQUID_ONE_IN_N = Rnd::range(2, 4);
+    const int LIQUID_ONE_IN_N = rnd::range(2, 4);
 
     for (int x = r_.p0.x; x <= r_.p1.x; ++x)
     {
         for (int y = r_.p0.y; y <= r_.p1.y; ++y)
         {
-            if (!blocked[x][y] && Map::room_map[x][y] == this && Rnd::one_in(LIQUID_ONE_IN_N))
+            if (!blocked[x][y] && map::room_map[x][y] == this && rnd::one_in(LIQUID_ONE_IN_N))
             {
                 Liquid_shallow* const liquid = new Liquid_shallow(Pos(x, y));
                 liquid->type_ = Liquid_type::mud;
-                Map::put(liquid);
+                map::put(liquid);
             }
         }
     }
@@ -868,7 +868,7 @@ void Cave_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
-    Map_gen_utils::cavify_room(*this);
+    map_gen_utils::cavify_room(*this);
 }
 
 void Cave_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
@@ -879,7 +879,7 @@ void Cave_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
 //------------------------------------------------------------------- FOREST ROOM
 Range Forest_room::get_nr_auto_features_allowed() const
 {
-    if (Rnd::one_in(3))
+    if (rnd::one_in(3))
     {
         return {2, 6};
     }
@@ -903,7 +903,7 @@ void Forest_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
-    Map_gen_utils::cavify_room(*this);
+    map_gen_utils::cavify_room(*this);
 }
 
 void Forest_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
@@ -911,7 +911,7 @@ void Forest_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
     (void)door_proposals;
 
     bool blocked[MAP_W][MAP_H];
-    Map_parse::run(Cell_check::Blocks_move_cmn(false), blocked);
+    map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
     vector<Pos> tree_pos_bucket;
 
@@ -919,18 +919,18 @@ void Forest_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
     {
         for (int y = r_.p0.y; y <= r_.p1.y; ++y)
         {
-            if (!blocked[x][y] && Map::room_map[x][y] == this)
+            if (!blocked[x][y] && map::room_map[x][y] == this)
             {
                 const Pos p(x, y);
                 tree_pos_bucket.push_back(p);
 
-                if (Rnd::one_in(6))
+                if (rnd::one_in(6))
                 {
-                    Map::put(new Bush(p));
+                    map::put(new Bush(p));
                 }
                 else
                 {
-                    Map::put(new Grass(p));
+                    map::put(new Grass(p));
                 }
             }
         }
@@ -940,20 +940,20 @@ void Forest_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
 
     int nr_trees_placed = 0;
 
-    const int TREE_ONE_IN_N = Rnd::range(2, 5);
+    const int TREE_ONE_IN_N = rnd::range(2, 5);
 
     while (!tree_pos_bucket.empty())
     {
         const Pos p = tree_pos_bucket.back();
         tree_pos_bucket.pop_back();
 
-        if (Rnd::one_in(TREE_ONE_IN_N))
+        if (rnd::one_in(TREE_ONE_IN_N))
         {
             blocked[p.x][p.y] = true;
 
-            if (Map_parse::is_map_connected(blocked))
+            if (map_parse::is_map_connected(blocked))
             {
-                Map::put(new Tree(p));
+                map::put(new Tree(p));
                 ++nr_trees_placed;
             }
             else
@@ -985,7 +985,7 @@ void Chasm_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
-    Map_gen_utils::cavify_room(*this);
+    map_gen_utils::cavify_room(*this);
 }
 
 void Chasm_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
@@ -993,13 +993,13 @@ void Chasm_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
     (void)door_proposals;
 
     bool blocked[MAP_W][MAP_H];
-    Map_parse::run(Cell_check::Blocks_move_cmn(false), blocked);
+    map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
     for (int x = 0; x < MAP_W; ++x)
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            if (Map::room_map[x][y] != this)
+            if (map::room_map[x][y] != this)
             {
                 blocked[x][y] = true;
             }
@@ -1007,7 +1007,7 @@ void Chasm_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
     }
 
     bool blocked_expanded[MAP_W][MAP_H];
-    Map_parse::expand(blocked, blocked_expanded);
+    map_parse::expand(blocked, blocked_expanded);
 
     Pos origin;
 
@@ -1024,7 +1024,7 @@ void Chasm_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
 
     int flood[MAP_W][MAP_H];
 
-    Flood_fill::run(origin, blocked_expanded, flood, 10000, { -1,  -1}, false);
+    flood_fill::run(origin, blocked_expanded, flood, 10000, { -1,  -1}, false);
 
     for (int x = r_.p0.x; x <= r_.p1.x; ++x)
     {
@@ -1034,7 +1034,7 @@ void Chasm_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
 
             if (p == origin || flood[x][y] != 0)
             {
-                Map::put(new Chasm(p));
+                map::put(new Chasm(p));
             }
         }
     }
@@ -1052,9 +1052,9 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
 
     TRACE << "Finding room centers" << endl;
     bool centers[MAP_W][MAP_H];
-    Utils::reset_array(centers, false);
+    utils::reset_array(centers, false);
 
-    for (Room* const room : Map::room_list)
+    for (Room* const room : map::room_list)
     {
         if (room != this)
         {
@@ -1140,17 +1140,17 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
                 (dir_ == ver && (x >= closest_center0 && x <= closest_center1))
             )
             {
-                Room* r       = Map::room_map[x][y];
+                Room* r       = map::room_map[x][y];
                 blocked[x][y] = r && r != this;
             }
         }
     }
     bool blocked_expanded[MAP_W][MAP_H];
-    Map_parse::expand(blocked, blocked_expanded);
+    map_parse::expand(blocked, blocked_expanded);
 
     int flood[MAP_W][MAP_H];
     const Pos origin(r_.get_center_pos());
-    Flood_fill::run(origin, blocked_expanded, flood, INT_MAX, Pos(-1, -1), true);
+    flood_fill::run(origin, blocked_expanded, flood, INT_MAX, Pos(-1, -1), true);
 
     for (int x = 0; x < MAP_W; ++x)
     {
@@ -1161,8 +1161,8 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
             {
 //        Liquid_deep* const liquid  = new Liquid_deep(p);
 //        liquid->type_             = Liquid_type::water;
-                Map::put(new Chasm(p));
-                Map::room_map[x][y] = this;
+                map::put(new Chasm(p));
+                map::room_map[x][y] = this;
                 r_.p0.x = min(r_.p0.x, x);
                 r_.p0.y = min(r_.p0.y, y);
                 r_.p1.x = max(r_.p1.x, x);
@@ -1190,7 +1190,7 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
                 bool is_on_side0 = true;
                 for (i_inner = r_inner.lower; i_inner <= r_inner.upper; ++i_inner)
                 {
-                    if (Map::room_map[x][y] == this)
+                    if (map::room_map[x][y] == this)
                     {
                         is_on_side0 = false;
                         sides[x][y] = in_river;
@@ -1228,19 +1228,19 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
     {
         for (int y = EDGE_D; y < MAP_H - EDGE_D; ++y)
         {
-            const Feature_id feature_id = Map::cells[x][y].rigid->get_id();
-            if (feature_id == Feature_id::wall && !Map::room_map[x][y])
+            const Feature_id feature_id = map::cells[x][y].rigid->get_id();
+            if (feature_id == Feature_id::wall && !map::room_map[x][y])
             {
                 const Pos p(x, y);
                 int nr_cardinal_floor  = 0;
                 int nr_cardinal_river  = 0;
-                for (const auto& d : Dir_utils::cardinal_list)
+                for (const auto& d : dir_utils::cardinal_list)
                 {
                     const auto p_adj(p + d);
-                    const auto* const f = Map::cells[p_adj.x][p_adj.y].rigid;
+                    const auto* const f = map::cells[p_adj.x][p_adj.y].rigid;
 
                     if (f->get_id() == Feature_id::floor)        {nr_cardinal_floor++;}
-                    if (Map::room_map[p_adj.x][p_adj.y] == this)  {nr_cardinal_river++;}
+                    if (map::room_map[p_adj.x][p_adj.y] == this)  {nr_cardinal_river++;}
                 }
                 if (nr_cardinal_floor == 1 && nr_cardinal_river == 1)
                 {
@@ -1256,7 +1256,7 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
     }
 
 #ifdef DEMO_MODE
-    Render::draw_map();
+    render::draw_map();
     for (int y = 1; y < MAP_H - 1; ++y)
     {
         for (int x = 1; x < MAP_W - 1; ++x)
@@ -1264,16 +1264,16 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
             Pos p(x, y);
             if (valid_room_entries0[x][y])
             {
-                Render::draw_glyph('0', Panel::map, p, clr_red_lgt);
+                render::draw_glyph('0', Panel::map, p, clr_red_lgt);
             }
             if (valid_room_entries1[x][y])
             {
-                Render::draw_glyph('1', Panel::map, p, clr_red_lgt);
+                render::draw_glyph('1', Panel::map, p, clr_red_lgt);
             }
             if (valid_room_entries0[x][y] || valid_room_entries1[x][y])
             {
-                Render::update_screen();
-                Sdl_wrapper::sleep(100);
+                render::update_screen();
+                sdl_wrapper::sleep(100);
             }
         }
     }
@@ -1286,7 +1286,7 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
     vector<int> c_built;
 
     const int MIN_EDGE_DIST   = 6;
-    const int MAX_NR_BRIDGES  = Rnd::range(1, 3);
+    const int MAX_NR_BRIDGES  = rnd::range(1, 3);
 
     for (const int BRIDGE_C : coordinates)
     {
@@ -1301,7 +1301,7 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
         const int MIN_D = 2;
         for (int c_other : c_built)
         {
-            if (Utils::is_val_in_range(BRIDGE_C, Range(c_other - MIN_D, c_other + MIN_D)))
+            if (utils::is_val_in_range(BRIDGE_C, Range(c_other - MIN_D, c_other + MIN_D)))
             {
                 is_too_close_to_other_bridge = true;
                 break;
@@ -1353,11 +1353,11 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
         if (room_con0.x != -1 && room_con1.x != -1)
         {
 #ifdef DEMO_MODE
-            Render::draw_map();
-            Render::draw_glyph('0', Panel::map, room_con0, clr_green_lgt);
-            Render::draw_glyph('1', Panel::map, room_con1, clr_yellow);
-            Render::update_screen();
-            Sdl_wrapper::sleep(2000);
+            render::draw_map();
+            render::draw_glyph('0', Panel::map, room_con0, clr_green_lgt);
+            render::draw_glyph('1', Panel::map, room_con1, clr_yellow);
+            render::update_screen();
+            sdl_wrapper::sleep(2000);
 #endif // DEMO_MODE
 
             TRACE << "Found valid connection pair at: "
@@ -1368,13 +1368,13 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
             {
                 for (int y = room_con0.y; y <= room_con1.y; ++y)
                 {
-                    if (Map::room_map[BRIDGE_C][y] == this)
+                    if (map::room_map[BRIDGE_C][y] == this)
                     {
 //            auto* const bridge = new Bridge(Pos(BRIDGE_C, y));
 //            bridge->set_dir(ver);
                         auto* const floor = new Floor({BRIDGE_C, y});
                         floor->type_ = Floor_type::cmn;
-                        Map::put(floor);
+                        map::put(floor);
                     }
                 }
             }
@@ -1382,18 +1382,18 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
             {
                 for (int x = room_con0.x; x <= room_con1.x; ++x)
                 {
-                    if (Map::room_map[x][BRIDGE_C] == this)
+                    if (map::room_map[x][BRIDGE_C] == this)
                     {
 //            auto* const bridge = new Bridge(Pos(x, BRIDGE_C));
 //            bridge->set_dir(hor);
                         auto* const floor = new Floor({x, BRIDGE_C});
                         floor->type_ = Floor_type::cmn;
-                        Map::put(floor);
+                        map::put(floor);
                     }
                 }
             }
-            Map::put(new Floor(room_con0));
-            Map::put(new Floor(room_con1));
+            map::put(new Floor(room_con0));
+            map::put(new Floor(room_con1));
             door_proposals[room_con0.x][room_con0.y] = true;
             door_proposals[room_con1.x][room_con1.y] = true;
             c_built.push_back(BRIDGE_C);
@@ -1408,9 +1408,9 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
 
     if (c_built.empty())
     {
-        Map_gen::is_map_valid = false;
+        map_gen::is_map_valid = false;
     }
-    else //Map is valid (at least one bridge was built)
+    else //map is valid (at least one bridge was built)
     {
         bool valid_room_entries[MAP_W][MAP_H];
 
@@ -1423,10 +1423,10 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
                 //Convert some remaining valid room entries to floor
                 if (valid_room_entries[x][y] && find(begin(c_built), end(c_built), x) == end(c_built))
                 {
-//          if (Rnd::one_in(3))
+//          if (rnd::one_in(3))
 //          {
-                    Map::put(new Floor(Pos(x, y)));
-                    Map::room_map[x][y] = this;
+                    map::put(new Floor(Pos(x, y)));
+                    map::room_map[x][y] = this;
 //          }
                 }
             }
@@ -1434,18 +1434,18 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
 
         //Convert wall cells adjacent to river cells to river
         bool valid_room_entries_expanded[MAP_W][MAP_H];
-        Map_parse::expand(valid_room_entries, valid_room_entries_expanded, 2);
+        map_parse::expand(valid_room_entries, valid_room_entries_expanded, 2);
 
         for (int x = 2; x < MAP_W - 2; ++x)
         {
             for (int y = 2; y < MAP_H - 2; ++y)
             {
-                if (valid_room_entries_expanded[x][y] && Map::room_map[x][y] == this)
+                if (valid_room_entries_expanded[x][y] && map::room_map[x][y] == this)
                 {
                     auto* const floor = new Floor(Pos(x, y));
                     floor->type_      = Floor_type::cmn;
-                    Map::put(floor);
-                    Map::room_map[x][y] = nullptr;
+                    map::put(floor);
+                    map::room_map[x][y] = nullptr;
                 }
             }
         }

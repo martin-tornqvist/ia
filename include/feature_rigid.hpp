@@ -48,7 +48,7 @@ protected:
     virtual void            on_new_turn_() {}
 
     virtual void            on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-                                  Actor* const actor) = 0;
+                                   Actor* const actor) = 0;
 
     virtual Clr             get_clr_()   const = 0;
     virtual Clr             get_clr_bg_() const {return clr_black;}
@@ -85,7 +85,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 class Carpet: public Rigid
@@ -104,7 +104,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 enum class Grass_type {cmn, withered};
@@ -127,7 +127,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 class Bush: public Rigid
@@ -148,7 +148,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 class Brazier: public Rigid
@@ -166,7 +166,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 enum class Wall_type {cmn, cmn_alt, cave, egypt, cliff, leng_monestary};
@@ -198,7 +198,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 class Rubble_low: public Rigid
@@ -216,7 +216,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 class Bones: public Rigid
@@ -234,7 +234,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 class Rubble_high: public Rigid
@@ -252,7 +252,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 class Grave_stone: public Rigid
@@ -274,7 +274,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 
     std::string inscr_;
 };
@@ -293,7 +293,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 enum class Statue_type {cmn, ghoul};
@@ -319,7 +319,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 class Pillar: public Rigid
@@ -337,7 +337,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 class Monolith: public Rigid
@@ -355,7 +355,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 class Stalagmite: public Rigid
@@ -373,7 +373,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 class Stairs: public Rigid
@@ -395,7 +395,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 class Bridge : public Rigid
@@ -419,7 +419,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 
     Horizontal_vertical dir_;
 };
@@ -445,7 +445,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 class Liquid_deep: public Rigid
@@ -467,7 +467,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 class Chasm: public Rigid
@@ -485,7 +485,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 class Door;
@@ -510,7 +510,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 
     void pull();
 
@@ -533,7 +533,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 class Tree: public Rigid
@@ -553,7 +553,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 };
 
 class Item;
@@ -614,7 +614,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 
     Did_trigger_trap trigger_trap(Actor* const actor) override;
 
@@ -657,7 +657,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 
     void try_find_trap();
 
@@ -698,7 +698,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 
     void player_loot();
 
@@ -718,11 +718,11 @@ enum class Fountain_effect
     paralyze,
     blind,
     faint,
-    r_fire,
-    r_cold,
-    r_elec,
-    r_fear,
-    r_conf,
+    rFire,
+    rCold,
+    rElec,
+    rFear,
+    rConf,
     END
 };
 
@@ -744,7 +744,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 
     std::vector<Fountain_effect> fountain_effects_;
     Fountain_matl                fountain_matl_;
@@ -769,7 +769,7 @@ private:
     Clr get_clr_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-               Actor* const actor) override;
+                Actor* const actor) override;
 
     void player_loot();
 

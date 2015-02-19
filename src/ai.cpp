@@ -1,7 +1,7 @@
 #include "ai.hpp"
 
 #include "actor_player.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "map.hpp"
 #include "utils.hpp"
 #include "feature_mob.hpp"
@@ -58,13 +58,13 @@ bool try_cast_random_spell(Mon& mon)
             //If monster is not allied to player, with a small chance, cast the spell
             //anyway if HP is low.
             if (
-                !Map::player->is_leader_of(&mon)  &&
+                !map::player->is_leader_of(&mon)  &&
                 CUR_HP < (MAX_HP / 3)           &&
-                Rnd::one_in(20))
+                rnd::one_in(20))
             {
-                if (Map::player->can_see_actor(mon, nullptr))
+                if (map::player->can_see_actor(mon, nullptr))
                 {
-                    Log::add_msg(mon.get_name_the() + " looks desperate.");
+                    msg_log::add(mon.get_name_the() + " looks desperate.");
                 }
                 spell->cast(&mon, true);
                 return true;
@@ -88,7 +88,7 @@ bool handle_closed_blocking_door(Mon& mon, vector<Pos> path)
     }
 
     const Pos& p = path.back();
-    Feature* const f = Map::cells[p.x][p.y].rigid;
+    Feature* const f = map::cells[p.x][p.y].rigid;
     if (f->get_id() == Feature_id::door)
     {
         Door* const door = static_cast<Door*>(f);
@@ -135,7 +135,7 @@ namespace
 bool check_if_blocking_mon(const Pos& pos, Mon& other)
 {
     vector<Pos> line;
-    Line_calc::calc_new_line(other.pos, Map::player->pos, true, 9999, false, line);
+    line_calc::calc_new_line(other.pos, map::player->pos, true, 9999, false, line);
 
     for (const Pos& pos_in_line : line) {if (pos_in_line == pos) {return true;}}
     return false;
@@ -148,13 +148,13 @@ void get_move_bucket(Mon& self, vector<Pos>& dirs_to_mk)
 
     dirs_to_mk.clear();
 
-    const int PLAYER_X = Map::player->pos.x;
-    const int PLAYER_Y = Map::player->pos.y;
+    const int PLAYER_X = map::player->pos.x;
+    const int PLAYER_Y = map::player->pos.y;
     const int OLD_X = self.pos.x;
     const int OLD_Y = self.pos.y;
 
     bool blocked[MAP_W][MAP_H];
-    Map_parse::run(Cell_check::Blocks_actor(self, true), blocked);
+    map_parse::run(cell_check::Blocks_actor(self, true), blocked);
 
     for (int x = -1; x <= 1; ++x)
     {
@@ -164,8 +164,8 @@ void get_move_bucket(Mon& self, vector<Pos>& dirs_to_mk)
             {
                 const int NEW_X = OLD_X + x;
                 const int NEW_Y = OLD_Y + y;
-                const int DIST_CUR = Utils::king_dist(OLD_X, OLD_Y, PLAYER_X, PLAYER_Y);
-                const int DIST_NEW = Utils::king_dist(NEW_X, NEW_Y, PLAYER_X, PLAYER_Y);
+                const int DIST_CUR = utils::king_dist(OLD_X, OLD_Y, PLAYER_X, PLAYER_Y);
+                const int DIST_NEW = utils::king_dist(NEW_X, NEW_Y, PLAYER_X, PLAYER_Y);
 
                 if (DIST_NEW <= DIST_CUR)
                 {
@@ -184,13 +184,13 @@ void get_move_bucket(Mon& self, vector<Pos>& dirs_to_mk)
  #####
  */
 bool is_adj_and_no_vision(const Mon& self, Mon& other,
-                      bool blocked_los[MAP_W][MAP_H])
+                          bool blocked_los[MAP_W][MAP_H])
 {
     //If the pal is next to me
-    if (Utils::is_pos_adj(self.pos, other.pos, false))
+    if (utils::is_pos_adj(self.pos, other.pos, false))
     {
         //If pal does not see player
-        if (!other.can_see_actor(*Map::player, blocked_los)) {return true;}
+        if (!other.can_see_actor(*map::player, blocked_los)) {return true;}
     }
     return false;
 }
@@ -202,14 +202,14 @@ bool make_room_for_friend(Mon& mon)
     if (mon.is_alive())
     {
         bool blocked_los[MAP_W][MAP_H];
-        Map_parse::run(Cell_check::Blocks_los(), blocked_los);
+        map_parse::run(cell_check::Blocks_los(), blocked_los);
 
-        if (mon.can_see_actor(*Map::player, blocked_los))
+        if (mon.can_see_actor(*map::player, blocked_los))
         {
             //Loop through all actors
-            for (Actor* actor : Game_time::actors_)
+            for (Actor* actor : game_time::actors_)
             {
-                if (actor != Map::player && actor != &mon && actor->is_alive())
+                if (actor != map::player && actor != &mon && actor->is_alive())
                 {
                     Mon* other = static_cast<Mon*>(actor);
 
@@ -218,7 +218,7 @@ bool make_room_for_friend(Mon& mon)
                     //Other monster can see player, or it's an adjacent monster that
                     //does not see the player?
                     if (
-                        other->can_see_actor(*Map::player, blocked_los) ||
+                        other->can_see_actor(*map::player, blocked_los) ||
                         is_other_adj_with_no_los)
                     {
                         //If we are blocking a pal, check every neighbouring position
@@ -234,7 +234,7 @@ bool make_room_for_friend(Mon& mon)
                             get_move_bucket(mon, pos_bucket);
 
                             //Sort the list by closeness to player
-                            Is_closer_to_pos cmp(Map::player->pos);
+                            Is_closer_to_pos cmp(map::player->pos);
                             sort(pos_bucket.begin(), pos_bucket.end(), cmp);
 
                             //Test positions until one is found that is not blocking
@@ -243,15 +243,15 @@ bool make_room_for_friend(Mon& mon)
                             {
                                 bool is_good_candidate_found = true;
 
-                                for (Actor* actor2 : Game_time::actors_)
+                                for (Actor* actor2 : game_time::actors_)
                                 {
                                     if (!actor2->is_player() && actor2 != &mon)
                                     {
                                         other = static_cast<Mon*>(actor2);
 
                                         const bool OTHER_IS_SEEING_PLAYER =
-                                            other->can_see_actor(*Map::player,
-                                                               blocked_los);
+                                            other->can_see_actor(*map::player,
+                                                                 blocked_los);
 
                                         if (
                                             OTHER_IS_SEEING_PLAYER &&
@@ -266,7 +266,7 @@ bool make_room_for_friend(Mon& mon)
                                 if (is_good_candidate_found)
                                 {
                                     const Pos offset = target_pos - mon.pos;
-                                    mon.move_dir(Dir_utils::get_dir(offset));
+                                    mon.move_dir(dir_utils::get_dir(offset));
                                     return true;
                                 }
                             }
@@ -286,7 +286,7 @@ namespace
 Dir get_dir_to_rnd_adj_free_cell(Mon& mon)
 {
     bool blocked[MAP_W][MAP_H];
-    Cell_check::Blocks_actor cellcheck(mon, true);
+    cell_check::Blocks_actor cellcheck(mon, true);
 
     const Pos& mon_pos = mon.pos;
     for (int dx = -1; dx <= 1; ++dx)
@@ -294,16 +294,16 @@ Dir get_dir_to_rnd_adj_free_cell(Mon& mon)
         for (int dy = -1; dy <= 1; ++dy)
         {
             const Pos p(mon_pos.x + dx, mon_pos.y + dy);
-            blocked[p.x][p.y] = cellcheck.check(Map::cells[p.x][p.y]);
+            blocked[p.x][p.y] = cellcheck.check(map::cells[p.x][p.y]);
         }
     }
 
-    for (Actor* actor : Game_time::actors_)
+    for (Actor* actor : game_time::actors_)
     {
         const Pos& p = actor->pos;
         blocked[p.x][p.y] = true;
     }
-    for (Mob* mob : Game_time::mobs_)
+    for (Mob* mob : game_time::mobs_)
     {
         const Pos& p = mob->get_pos();
         blocked[p.x][p.y] = cellcheck.check(*mob);
@@ -315,10 +315,10 @@ Dir get_dir_to_rnd_adj_free_cell(Mon& mon)
     const Dir last_dir_travelled = mon.last_dir_travelled_;
     if (last_dir_travelled != Dir::center)
     {
-        const Pos target_cell(mon_pos + Dir_utils::get_offset(last_dir_travelled));
+        const Pos target_cell(mon_pos + dir_utils::get_offset(last_dir_travelled));
         if (
             !blocked[target_cell.x][target_cell.y] &&
-            Utils::is_pos_inside(target_cell, area_allowed))
+            utils::is_pos_inside(target_cell, area_allowed))
         {
             return last_dir_travelled;
         }
@@ -337,9 +337,9 @@ Dir get_dir_to_rnd_adj_free_cell(Mon& mon)
                 const Pos target_cell(mon_pos + offset);
                 if (
                     !blocked[target_cell.x][target_cell.y] &&
-                    Utils::is_pos_inside(target_cell, area_allowed))
+                    utils::is_pos_inside(target_cell, area_allowed))
                 {
-                    dir_bucket.push_back(Dir_utils::get_dir(offset));
+                    dir_bucket.push_back(dir_utils::get_dir(offset));
                 }
             }
         }
@@ -352,7 +352,7 @@ Dir get_dir_to_rnd_adj_free_cell(Mon& mon)
     }
     else
     {
-        return dir_bucket[Rnd::range(0, NR_ELEMENTS - 1)];
+        return dir_bucket[rnd::range(0, NR_ELEMENTS - 1)];
     }
 }
 
@@ -379,16 +379,16 @@ bool move_to_tgt_simple(Mon& mon)
 {
     if (mon.is_alive() && mon.tgt_)
     {
-        if (mon.aware_counter_ > 0 || Map::player->is_leader_of(&mon))
+        if (mon.aware_counter_ > 0 || map::player->is_leader_of(&mon))
         {
             const Pos offset  = mon.tgt_->pos - mon.pos;
             const Pos signs   = offset.get_signs();
             bool blocked[MAP_W][MAP_H];
-            Map_parse::run(Cell_check::Blocks_actor(mon, true), blocked);
+            map_parse::run(cell_check::Blocks_actor(mon, true), blocked);
             const Pos new_pos(mon.pos + signs);
             if (!blocked[new_pos.x][new_pos.y])
             {
-                mon.move_dir(Dir_utils::get_dir(signs));
+                mon.move_dir(dir_utils::get_dir(signs));
                 return true;
             }
         }
@@ -403,7 +403,7 @@ bool step_path(Mon& mon, vector<Pos>& path)
         if (!path.empty())
         {
             const Pos delta = path.back() - mon.pos;
-            mon.move_dir(Dir_utils::get_dir(delta));
+            mon.move_dir(dir_utils::get_dir(delta));
             return true;
         }
     }
@@ -415,9 +415,9 @@ bool step_to_lair_if_los(Mon& mon, const Pos& lair_cell)
     if (mon.is_alive())
     {
         bool blocked[MAP_W][MAP_H];
-        Map_parse::run(Cell_check::Blocks_los(), blocked);
+        map_parse::run(cell_check::Blocks_los(), blocked);
         const bool HAS_LOS_TO_LAIR =
-            Fov::check_cell(blocked, lair_cell, mon.pos, true);
+            fov::check_cell(blocked, lair_cell, mon.pos, true);
 
         if (HAS_LOS_TO_LAIR)
         {
@@ -427,14 +427,14 @@ bool step_to_lair_if_los(Mon& mon, const Pos& lair_cell)
             delta.y = delta.y == 0 ? 0 : (delta.y > 0 ? 1 : -1);
             const Pos new_pos = mon.pos + delta;
 
-            Map_parse::run(Cell_check::Blocks_los(), blocked);
+            map_parse::run(cell_check::Blocks_los(), blocked);
             if (blocked[new_pos.x][new_pos.y])
             {
                 return false;
             }
             else
             {
-                mon.move_dir(Dir_utils::get_dir(delta));
+                mon.move_dir(dir_utils::get_dir(delta));
                 return true;
             }
         }
@@ -480,7 +480,7 @@ bool look_become_player_aware(Mon& mon)
                 }
                 else //Was not aware before
                 {
-                    Game_time::tick();
+                    game_time::tick();
                     return true;
                 }
             }
@@ -495,7 +495,7 @@ bool look_become_player_aware(Mon& mon)
             }
             else //Was not aware before
             {
-                Game_time::tick();
+                game_time::tick();
                 return true;
             }
         }
@@ -505,25 +505,25 @@ bool look_become_player_aware(Mon& mon)
 }
 
 void set_path_to_lair_if_no_los(Mon& mon, vector<Pos>& path,
-                          const Pos& lair_cell)
+                                const Pos& lair_cell)
 {
     if (mon.is_alive())
     {
         bool blocked[MAP_W][MAP_H];
-        Map_parse::run(Cell_check::Blocks_los(), blocked);
+        map_parse::run(cell_check::Blocks_los(), blocked);
 
-        if (Fov::check_cell(blocked, lair_cell, mon.pos, true))
+        if (fov::check_cell(blocked, lair_cell, mon.pos, true))
         {
             path.clear();
             return;
         }
 
-        Map_parse::run(Cell_check::Blocks_actor(mon, false), blocked);
+        map_parse::run(cell_check::Blocks_actor(mon, false), blocked);
 
-        Map_parse::run(Cell_check::Living_actors_adj_to_pos(mon.pos),
-                      blocked, Map_parse_mode::append);
+        map_parse::run(cell_check::Living_actors_adj_to_pos(mon.pos),
+                       blocked, map_parse_mode::append);
 
-        Path_find::run(mon.pos, lair_cell, blocked, path);
+        path_find::run(mon.pos, lair_cell, blocked, path);
         return;
     }
 
@@ -540,20 +540,20 @@ void set_path_to_leader_if_no_los_toleader(Mon& mon, vector<Pos>& path)
             if (leader->is_alive())
             {
                 bool blocked[MAP_W][MAP_H];
-                Map_parse::run(Cell_check::Blocks_los(), blocked);
+                map_parse::run(cell_check::Blocks_los(), blocked);
 
-                if (Fov::check_cell(blocked, leader->pos, mon.pos, true))
+                if (fov::check_cell(blocked, leader->pos, mon.pos, true))
                 {
                     path.clear();
                     return;
                 }
 
-                Map_parse::run(Cell_check::Blocks_actor(mon, false), blocked);
+                map_parse::run(cell_check::Blocks_actor(mon, false), blocked);
 
-                Map_parse::run(Cell_check::Living_actors_adj_to_pos(mon.pos),
-                              blocked, Map_parse_mode::append);
+                map_parse::run(cell_check::Living_actors_adj_to_pos(mon.pos),
+                               blocked, map_parse_mode::append);
 
-                Path_find::run(mon.pos, leader->pos, blocked, path);
+                path_find::run(mon.pos, leader->pos, blocked, path);
                 return;
             }
         }
@@ -571,7 +571,7 @@ void set_path_to_player_if_aware(Mon& mon, vector<Pos>& path)
     }
 
     bool blocked[MAP_W][MAP_H];
-    Utils::reset_array(blocked, false);
+    utils::reset_array(blocked, false);
 
     bool props[size_t(Prop_id::END)];
     mon.get_prop_handler().get_prop_ids(props);
@@ -585,7 +585,7 @@ void set_path_to_player_if_aware(Mon& mon, vector<Pos>& path)
     {
         for (int y = Y0; y < Y1; ++y)
         {
-            const auto* const f = Map::cells[x][y].rigid;
+            const auto* const f = map::cells[x][y].rigid;
 
             if (!f->can_move(props))
             {
@@ -593,7 +593,7 @@ void set_path_to_player_if_aware(Mon& mon, vector<Pos>& path)
                 {
                     const Door* const door = static_cast<const Door*>(f);
 
-                    const Actor_data_t& d = mon.get_data();
+                    const actor_data_t& d = mon.get_data();
 
                     if (
                         (!d.can_open_doors && !d.can_bash_doors) ||
@@ -611,10 +611,10 @@ void set_path_to_player_if_aware(Mon& mon, vector<Pos>& path)
     }
 
     //Append living adjacent actors to the blocking array
-    Map_parse::run(Cell_check::Living_actors_adj_to_pos(mon.pos), blocked,
-                  Map_parse_mode::append);
+    map_parse::run(cell_check::Living_actors_adj_to_pos(mon.pos), blocked,
+                   map_parse_mode::append);
 
-    Path_find::run(mon.pos, Map::player->pos, blocked, path);
+    path_find::run(mon.pos, map::player->pos, blocked, path);
 }
 
 void set_special_blocked_cells(Mon& mon, bool a[MAP_W][MAP_H])

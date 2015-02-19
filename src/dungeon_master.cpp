@@ -8,7 +8,7 @@
 #include "query.hpp"
 #include "actor_player.hpp"
 #include "character_lines.hpp"
-#include "log.hpp"
+#include "msg_log.hpp"
 #include "sdl_wrapper.hpp"
 #include "map.hpp"
 #include "utils.hpp"
@@ -30,19 +30,19 @@ Time_data  time_started_;
 
 void player_gain_lvl()
 {
-    if (Map::player->is_alive())
+    if (map::player->is_alive())
     {
         clvl_++;
 
-        Log::add_msg("Welcome to level " + to_str(clvl_) + "!", clr_green, false, true);
+        msg_log::add("Welcome to level " + to_str(clvl_) + "!", clr_green, false, true);
 
-        Create_character::pick_new_trait(false);
+        create_character::pick_new_trait(false);
 
-        Map::player->restore_hp(999, false);
-        Map::player->change_max_hp(HP_PER_LVL, true);
-        Map::player->restore_spi(999, false);
-        Map::player->change_max_spi(SPI_PER_LVL, true);
-        Map::player->restore_shock(999, false);
+        map::player->restore_hp(999, false);
+        map::player->change_max_hp(HP_PER_LVL, true);
+        map::player->restore_spi(999, false);
+        map::player->change_max_spi(SPI_PER_LVL, true);
+        map::player->restore_shock(999, false);
     }
 }
 
@@ -101,7 +101,7 @@ int         get_cLvl()       {return clvl_;}
 int         get_xp()         {return xp_;}
 Time_data    get_start_time()  {return time_started_;}
 
-int get_mon_tot_xp_worth(const Actor_data_t& d)
+int get_mon_tot_xp_worth(const actor_data_t& d)
 {
     //K regulates player XP rate, higher -> more XP per monster
     const double K              = 0.45;
@@ -123,7 +123,7 @@ int get_mon_tot_xp_worth(const Actor_data_t& d)
 
 void player_gain_xp(const int XP_GAINED)
 {
-    if (Map::player->is_alive())
+    if (map::player->is_alive())
     {
         for (int i = 0; i < XP_GAINED; ++i)
         {
@@ -152,10 +152,10 @@ void player_lose_xp_percent(const int PERCENT)
 
 void win_game()
 {
-    High_score::on_game_over(true);
+    high_score::on_game_over(true);
 
-    Render::cover_panel(Panel::screen);
-    Render::update_screen();
+    render::cover_panel(Panel::screen);
+    render::update_screen();
 
     const vector<string> win_msg =
     {
@@ -188,14 +188,14 @@ void win_game()
     for (const string& section_msg : win_msg)
     {
         vector<string> section_lines;
-        Text_format::line_to_lines(section_msg, MAX_W, section_lines);
+        text_format::line_to_lines(section_msg, MAX_W, section_lines);
 
         for (const string& line : section_lines)
         {
-            Render::draw_text(line, Panel::screen, Pos(X0, y), clr_white, clr_black);
+            render::draw_text(line, Panel::screen, Pos(X0, y), clr_white, clr_black);
 
-            Render::update_screen();
-            Sdl_wrapper::sleep(LINE_DELAY);
+            render::update_screen();
+            sdl_wrapper::sleep(LINE_DELAY);
             ++y;
         }
         ++y;
@@ -205,28 +205,28 @@ void win_game()
     const string CMD_LABEL =
         "[space/esc/enter] to record high score and return to main menu";
 
-    Render::draw_text_centered(CMD_LABEL, Panel::screen, Pos(MAP_W_HALF, y), clr_menu_medium,
-                             clr_black, true);
+    render::draw_text_centered(CMD_LABEL, Panel::screen, Pos(MAP_W_HALF, y), clr_menu_medium,
+                               clr_black, true);
 
-    Render::update_screen();
+    render::update_screen();
 
-    Query::wait_for_confirm();
+    query::wait_forConfirm();
 }
 
 void on_mon_killed(Actor& actor)
 {
-    Actor_data_t& d = actor.get_data();
+    actor_data_t& d = actor.get_data();
 
     d.nr_kills += 1;
 
-    if (d.hp >= 3 && Map::player->obsessions[int(Obsession::sadism)])
+    if (d.hp >= 3 && map::player->obsessions[int(Obsession::sadism)])
     {
-        Map::player->shock_ = max(0.0, Map::player->shock_ - 3.0);
+        map::player->shock_ = max(0.0, map::player->shock_ - 3.0);
     }
 
     Mon* const  mon = static_cast<Mon*>(&actor);
 
-    if (!Map::player->is_leader_of(mon))
+    if (!map::player->is_leader_of(mon))
     {
         const int MON_XP_TOT    = get_mon_tot_xp_worth(d);
         const int XP_GAINED     = mon->has_given_xp_for_spotting_ ?
@@ -248,7 +248,7 @@ void on_mon_seen(Actor& actor)
 
 void set_time_started_to_now()
 {
-    time_started_ = Utils::get_cur_time();
+    time_started_ = utils::get_cur_time();
 }
 
 } //Dungeon_master

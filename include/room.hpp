@@ -14,7 +14,7 @@
 
 //---------------------------------------------------------------------------------------
 // Room theming occurs both before and after rooms are connected (pre/post-connect).
-//   > In pre-connect reshaping is done. The reshaping is called from Map_gen_utils
+//   > In pre-connect reshaping is done. The reshaping is called from map_gen_utils
 //     (e.g. plus-shape, cavern-shape, pillars, etc)
 //
 //     When pre-connect starts, it is assumed that all (standard) rooms are rectangular
@@ -104,8 +104,10 @@ protected:
     virtual int   get_base_pct_chance_drk()      const = 0;
 
     size_t try_get_auto_feature_placement(
-        const std::vector<Pos>& adj_to_walls, const std::vector<Pos>& away_from_walls,
-        const std::vector<const Feature_data_t*>& feature_data_bucket, Pos& pos_ref) const;
+        const std::vector<Pos>& adj_to_walls,
+        const std::vector<Pos>& away_from_walls,
+        const std::vector<const Feature_data_t*>& feature_data_bucket,
+        Pos& pos_ref) const;
 
     int place_auto_features();
 
