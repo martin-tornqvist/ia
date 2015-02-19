@@ -1,0 +1,23 @@
+#ifndef DROP_H
+#define DROP_H
+
+#include "Cmn_types.h"
+
+class Item;
+class Actor;
+
+namespace Item_drop
+{
+
+void drop_all_characters_items(Actor& actor);
+
+//This function places the item as close to the origin as possible, but never on top of
+//other items, unless they can be stacked.
+Item* drop_item_on_map(const Pos& intended_pos, Item& item);
+
+void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t IDX,
+                        const int NR_ITEMS_TO_DROP = -1);
+
+} //Item_drop
+
+#endif

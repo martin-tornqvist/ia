@@ -2,17 +2,17 @@
 
 #include <SDL.h>
 
-#include "SdlWrapper.h"
+#include "Sdl_wrapper.h"
 #include "Config.h"
 #include "Render.h"
-#include "MainMenu.h"
-#include "PlayerBon.h"
+#include "Main_menu.h"
+#include "Player_bon.h"
 #include "Bot.h"
-#include "CreateCharacter.h"
-#include "ActorPlayer.h"
-#include "MapGen.h"
-#include "MapTravel.h"
-#include "DungeonMaster.h"
+#include "Create_character.h"
+#include "Actor_player.h"
+#include "Map_gen.h"
+#include "Map_travel.h"
+#include "Dungeon_master.h"
 #include "Popup.h"
 #include "Log.h"
 #include "Query.h"
@@ -33,54 +33,54 @@ int main(int argc, char* argv[])
     (void)argc;
     (void)argv;
 
-    Init::initIO();
-    Init::initGame();
+    Init::init_iO();
+    Init::init_game();
 
-    bool quitGame = false;
-    while (!quitGame)
+    bool quit_game = false;
+    while (!quit_game)
     {
-        Init::initSession();
+        Init::init_session();
 
-        int introMusChan = -1;
-        const GameEntryMode gameEntryType = MainMenu::run(quitGame, introMusChan);
+        int intro_mus_chan = -1;
+        const Game_entry_mode game_entry_type = Main_menu::run(quit_game, intro_mus_chan);
 
-        if (!quitGame)
+        if (!quit_game)
         {
-            Init::quitToMainMenu = false;
+            Init::quit_to_main_menu = false;
 
-            if (gameEntryType == GameEntryMode::newGame)
+            if (game_entry_type == Game_entry_mode::new_game)
             {
-                if (Config::isBotPlaying())
+                if (Config::is_bot_playing())
                 {
-                    PlayerBon::setAllTraitsToPicked();
+                    Player_bon::set_all_traits_to_picked();
                 }
-                CreateCharacter::createCharacter();
-                Map::player->mkStartItems();
+                Create_character::create_character();
+                Map::player->mk_start_items();
 
-                if (Config::isIntroLvlSkipped())
+                if (Config::is_intro_lvl_skipped())
                 {
                     //Build first dungeon level
-                    MapTravel::goToNxt();
+                    Map_travel::go_to_nxt();
                 }
                 else
                 {
                     //Build forest.
-                    Render::clearScreen();
-                    Render::updateScreen();
-                    MapGen::mkIntroLvl();
+                    Render::clear_screen();
+                    Render::update_screen();
+                    Map_gen::mk_intro_lvl();
                 }
-                DungeonMaster::setTimeStartedToNow();
-                const TimeData& t = DungeonMaster::getStartTime();
-                TRACE << "Game started on: " << t.getTimeStr(TimeType::minute, true)
+                Dungeon_master::set_time_started_to_now();
+                const Time_data& t = Dungeon_master::get_start_time();
+                TRACE << "Game started on: " << t.get_time_str(Time_type::minute, true)
                       << endl;
             }
 
-            Audio::fadeOutChannel(introMusChan);
+            Audio::fade_out_channel(intro_mus_chan);
 
-            Map::player->updateFov();
-            Render::drawMapAndInterface();
+            Map::player->update_fov();
+            Render::draw_map_and_interface();
 
-            if (gameEntryType == GameEntryMode::newGame && !Config::isIntroLvlSkipped())
+            if (game_entry_type == Game_entry_mode::new_game && !Config::is_intro_lvl_skipped())
             {
                 const string msg =
                     "I stand on a cobbled forest path, ahead lies a shunned and "
@@ -95,15 +95,15 @@ int main(int argc, char* argv[])
                     "\"The shining Trapezohedron\" - a window to all secrets of the "
                     "universe.";
 
-                Popup::showMsg(msg, true, "The story so far...", SfxId::END, 1);
+                Popup::show_msg(msg, true, "The story so far...", Sfx_id::END, 1);
             }
 
             //========== M A I N   L O O P ==========
-            while (!Init::quitToMainMenu)
+            while (!Init::quit_to_main_menu)
             {
-                if (Map::player->isAlive())
+                if (Map::player->is_alive())
                 {
-                    Actor* const actor = GameTime::getCurActor();
+                    Actor* const actor = Game_time::get_cur_actor();
 
                     //Properties running on the actor's turn are not immediately applied
                     //on the actor, but instead placed in a buffer. This is to ensure
@@ -111,43 +111,43 @@ int main(int argc, char* argv[])
                     //(and not applied after the actor acts, and ends before the actor's
                     //next turn)
                     //The contents of the buffer are moved to the applied properties here
-                    actor->getPropHandler().applyActorTurnPropBuffer();
+                    actor->get_prop_handler().apply_actor_turn_prop_buffer();
 
-                    actor->updateClr();
+                    actor->update_clr();
 
-                    const bool ALLOW_ACT  = actor->getPropHandler().allowAct();
-                    const bool IS_GIBBED  = actor->getState() == ActorState::destroyed;
+                    const bool ALLOW_ACT  = actor->get_prop_handler().allow_act();
+                    const bool IS_GIBBED  = actor->get_state() == Actor_state::destroyed;
 
                     if (ALLOW_ACT && !IS_GIBBED)
                     {
-                        actor->onActorTurn();
+                        actor->on_actor_turn();
                     }
                     else //Actor cannot act
                     {
-                        if (actor->isPlayer())
+                        if (actor->is_player())
                         {
-                            SdlWrapper::sleep(DELAY_PLAYER_UNABLE_TO_ACT);
+                            Sdl_wrapper::sleep(DELAY_PLAYER_UNABLE_TO_ACT);
                         }
-                        GameTime::tick();
+                        Game_time::tick();
                     }
                 }
                 else //Player is dead
                 {
                     //Run postmortem, then return to main menu
-                    static_cast<Player*>(Map::player)->waitTurnsLeft = -1;
-                    Audio::play(SfxId::death);
-                    Log::addMsg("I am dead...", clrMsgBad, false, true);
-                    Log::clearLog();
-                    HighScore::onGameOver(false);
-                    Postmortem::run(&quitGame);
-                    Init::quitToMainMenu = true;
+                    static_cast<Player*>(Map::player)->wait_turns_left = -1;
+                    Audio::play(Sfx_id::death);
+                    Log::add_msg("I am dead...", clr_msg_bad, false, true);
+                    Log::clear_log();
+                    High_score::on_game_over(false);
+                    Postmortem::run(&quit_game);
+                    Init::quit_to_main_menu = true;
                 }
             }
         }
-        Init::cleanupSession();
+        Init::cleanup_session();
     }
-    Init::cleanupGame();
-    Init::cleanupIO();
+    Init::cleanup_game();
+    Init::cleanup_iO();
 
     TRACE_FUNC_END;
 
