@@ -99,7 +99,7 @@ struct Projectile
 
 enum class Melee_hit_size {small, medium, hard};
 
-namespace Attack
+namespace attack
 {
 
 void melee(Actor& attacker, const Wpn& wpn, Actor& defender);

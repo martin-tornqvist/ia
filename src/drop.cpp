@@ -18,7 +18,7 @@
 
 using namespace std;
 
-namespace Item_drop
+namespace item_drop
 {
 
 void drop_all_characters_items(Actor& actor)

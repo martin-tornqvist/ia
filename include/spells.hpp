@@ -59,7 +59,7 @@ enum class Intr_spell_shock {mild, disturbing, severe};
 
 class Spell;
 
-namespace Spell_handling
+namespace spell_handling
 {
 
 Spell* get_random_spell_for_mon();

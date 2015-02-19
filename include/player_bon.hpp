@@ -58,7 +58,7 @@ enum class Trait
 
 enum class Bg {occultist, rogue, war_vet, END};
 
-namespace Player_bon
+namespace player_bon
 {
 
 extern bool traits[int(Trait::END)];

@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace Config
+namespace config
 {
 
 void init();

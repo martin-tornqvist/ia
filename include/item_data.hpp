@@ -311,7 +311,7 @@ public:
 
 class Item;
 
-namespace Item_data
+namespace item_data
 {
 
 extern Item_data_t* data[int(Item_id::END)];

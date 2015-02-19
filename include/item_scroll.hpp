@@ -34,7 +34,7 @@ protected:
     std::string get_name_inf() const override;
 };
 
-namespace Scroll_handling
+namespace scroll_handling
 {
 
 void init();

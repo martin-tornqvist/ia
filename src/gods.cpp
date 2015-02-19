@@ -6,7 +6,7 @@
 
 using namespace std;
 
-namespace Gods
+namespace gods
 {
 
 namespace

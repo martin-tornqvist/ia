@@ -61,7 +61,7 @@ private:
     Alerts_mon is_alerting_mon_;
 };
 
-namespace Snd_emit
+namespace snd_emit
 {
 
 void emit_snd(Snd snd);

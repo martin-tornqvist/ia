@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace Line_calc
+namespace line_calc
 {
 
 namespace

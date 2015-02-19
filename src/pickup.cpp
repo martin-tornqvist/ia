@@ -15,7 +15,7 @@
 
 using namespace std;
 
-namespace Item_pickup
+namespace item_pickup
 {
 
 namespace

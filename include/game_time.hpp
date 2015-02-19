@@ -18,7 +18,7 @@ enum class Turn_type
     END
 };
 
-namespace Game_time
+namespace game_time
 {
 
 extern std::vector<Actor*>       actors_;

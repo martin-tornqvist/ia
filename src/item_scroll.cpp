@@ -134,7 +134,7 @@ string Scroll::get_name_inf() const
     return (data_->is_tried && !data_->is_identified) ? "{Tried}" : "";
 }
 
-namespace Scroll_handling
+namespace scroll_handling
 {
 
 namespace

@@ -107,7 +107,7 @@ void get_cells_reached(const Rect& area, const Pos& origin,
 } //namespace
 
 
-namespace Explosion
+namespace explosion
 {
 
 void run_explosion_at(const Pos& origin, const Expl_type expl_type,

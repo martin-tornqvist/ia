@@ -383,7 +383,7 @@ struct Potion_look
     Clr clr;
 };
 
-namespace Potion_handling
+namespace potion_handling
 {
 
 void init();

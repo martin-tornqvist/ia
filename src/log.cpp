@@ -14,7 +14,7 @@
 
 using namespace std;
 
-namespace Log
+namespace log
 {
 
 namespace

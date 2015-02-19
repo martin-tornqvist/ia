@@ -1,7 +1,7 @@
 #ifndef CHAR_LINES_HANDLER_H
 #define CHAR_LINES_HANDLER_H
 
-namespace Character_lines
+namespace character_lines
 {
 
 void draw();

@@ -18,7 +18,7 @@
 
 using namespace std;
 
-namespace Player_spells_handling
+namespace player_spells_handling
 {
 
 namespace

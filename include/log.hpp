@@ -47,7 +47,7 @@ private:
     int nr_;
 };
 
-namespace Log
+namespace log
 {
 
 void init();

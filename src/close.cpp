@@ -11,7 +11,7 @@
 #include "render.hpp"
 #include "utils.hpp"
 
-namespace Close
+namespace close
 {
 
 void player_close_feature(Feature* const feature)

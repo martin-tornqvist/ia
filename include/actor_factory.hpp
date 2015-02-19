@@ -8,7 +8,7 @@
 class Actor;
 class Mon;
 
-namespace Actor_factory
+namespace actor_factory
 {
 
 void delete_all_mon();

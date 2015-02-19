@@ -3,7 +3,7 @@
 #include "input.hpp"
 #include "config.hpp"
 
-namespace Menu_input_handling
+namespace menu_input_handling
 {
 
 Menu_action get_action(Menu_browser& browser)

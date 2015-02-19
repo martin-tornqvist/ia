@@ -15,7 +15,7 @@
 
 using namespace std;
 
-namespace Character_descr
+namespace character_descr
 {
 
 namespace

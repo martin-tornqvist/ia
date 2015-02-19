@@ -10,7 +10,7 @@
 class Actor;
 class Mob;
 
-namespace Rnd
+namespace rnd
 {
 
 //NOTE: If MTRand is not provided any parameters to the constructor, it will be seeded
@@ -73,7 +73,7 @@ struct Time_data
     int year_, month_, day_, hour_, minute_, second_;
 };
 
-namespace Utils
+namespace utils
 {
 
 bool is_clr_eq(const Clr& clr1, const Clr& clr2);
@@ -134,7 +134,7 @@ Time_data get_cur_time();
 
 } //Utils
 
-namespace Dir_utils
+namespace dir_utils
 {
 
 //Useful lists to iterate over (e.g. in map generation)

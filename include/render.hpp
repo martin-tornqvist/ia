@@ -14,7 +14,7 @@ struct Projectile;
 
 enum class Panel {screen, map, char_lines, log};
 
-namespace Render
+namespace render
 {
 
 extern Cell_render_data render_array[MAP_W][MAP_H];

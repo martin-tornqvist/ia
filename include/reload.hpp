@@ -13,7 +13,7 @@ enum class Reload_result
     fumble
 };
 
-namespace Reload
+namespace reload
 {
 
 bool reload_wielded_wpn(Actor& actor_reloading);

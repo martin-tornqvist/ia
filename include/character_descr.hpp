@@ -1,7 +1,7 @@
 #ifndef CHARACTER_DESCR_H
 #define CHARACTER_DESCR_H
 
-namespace Character_descr
+namespace character_descr
 {
 
 void run();

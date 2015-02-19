@@ -22,7 +22,7 @@
 
 using namespace std;
 
-namespace Main_menu
+namespace main_menu
 {
 
 namespace

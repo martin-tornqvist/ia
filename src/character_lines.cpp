@@ -19,7 +19,7 @@
 
 using namespace std;
 
-namespace Character_lines
+namespace character_lines
 {
 
 void draw()

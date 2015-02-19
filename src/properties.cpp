@@ -23,7 +23,7 @@
 
 using namespace std;
 
-namespace Prop_data
+namespace prop_data
 {
 
 Prop_data_t data[size_t(Prop_id::END)];

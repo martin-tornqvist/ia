@@ -54,7 +54,7 @@ void Cell::reset()
     }
 }
 
-namespace Map
+namespace map
 {
 
 Player*       player  = nullptr;

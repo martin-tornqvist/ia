@@ -36,7 +36,7 @@ struct Key_data
     bool    is_shift_held, is_ctrl_held;
 };
 
-namespace Input
+namespace input
 {
 
 void init();

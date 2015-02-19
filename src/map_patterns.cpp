@@ -9,7 +9,7 @@
 
 using namespace std;
 
-namespace Map_patterns
+namespace map_patterns
 {
 
 void get_cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,

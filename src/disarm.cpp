@@ -10,7 +10,7 @@
 #include "utils.hpp"
 #include "inventory.hpp"
 
-namespace Disarm
+namespace disarm
 {
 
 void player_disarm()

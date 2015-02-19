@@ -55,7 +55,7 @@
 
 #endif
 
-namespace Init
+namespace init
 {
 
 extern bool is_cheat_vision_enabled;

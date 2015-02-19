@@ -521,7 +521,7 @@ private:
     std::vector<Jewelry_effect*> effects_;
 };
 
-namespace Jewelry_handling
+namespace jewelry_handling
 {
 
 void init();

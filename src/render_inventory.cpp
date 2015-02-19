@@ -89,7 +89,7 @@ void draw_detailed_item_descr(const Item* const item)
 
 } //Namespace
 
-namespace Render_inventory
+namespace render_inventory
 {
 
 void draw_browse_inv(const Menu_browser& browser)

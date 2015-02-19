@@ -13,14 +13,14 @@
 
 using namespace std;
 
-namespace Map_gen
+namespace map_gen
 {
 
 bool is_map_valid = true;
 
 }
 
-namespace Map_gen_utils
+namespace map_gen_utils
 {
 
 namespace

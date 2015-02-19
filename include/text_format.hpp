@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-namespace Text_format
+namespace text_format
 {
 
 //Reads a line of space separated words, and splits them into several lines with the

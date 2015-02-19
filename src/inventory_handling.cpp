@@ -20,7 +20,7 @@
 
 using namespace std;
 
-namespace Inv_handling
+namespace inv_handling
 {
 
 Inv_scr_id  screen_to_open_after_drop     = Inv_scr_id::END;

@@ -41,7 +41,7 @@ int High_score_entry::get_score() const
     return int(FACTOR_XP * FACTOR_DLVL);
 }
 
-namespace High_score
+namespace high_score
 {
 
 namespace

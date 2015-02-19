@@ -6,7 +6,7 @@ class Actor;
 class Ammo;
 class Wpn;
 
-namespace Item_pickup
+namespace item_pickup
 {
 
 void try_pick();

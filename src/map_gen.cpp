@@ -43,7 +43,7 @@
 
 using namespace std;
 
-namespace Map_gen
+namespace map_gen
 {
 
 namespace

@@ -4,7 +4,7 @@
 #include "cmn_data.hpp"
 #include "cmn_types.hpp"
 
-namespace Fov
+namespace fov
 {
 
 bool check_cell(const bool obstructions[MAP_W][MAP_H],

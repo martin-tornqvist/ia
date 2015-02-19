@@ -32,7 +32,7 @@ private:
     Bg bg_;
 };
 
-namespace High_score
+namespace high_score
 {
 
 void run_high_score_screen();

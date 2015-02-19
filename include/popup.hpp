@@ -6,7 +6,7 @@
 
 #include "audio.hpp"
 
-namespace Popup
+namespace popup
 {
 
 void show_msg(const std::string& msg,

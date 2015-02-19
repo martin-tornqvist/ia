@@ -51,7 +51,7 @@ private:
     std::vector< std::vector<Map_templ_cell> > cells_;
 };
 
-namespace Map_templ_handling
+namespace map_templ_handling
 {
 
 void init();

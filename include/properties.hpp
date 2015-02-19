@@ -122,7 +122,7 @@ struct Prop_data_t
     Prop_alignment   alignment;
 };
 
-namespace Prop_data
+namespace prop_data
 {
 
 extern Prop_data_t data[size_t(Prop_id::END)];

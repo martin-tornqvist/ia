@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace Map_templ_handling
+namespace map_templ_handling
 {
 
 namespace

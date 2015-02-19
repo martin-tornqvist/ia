@@ -21,7 +21,7 @@ public:
     bool  is_free_;
 };
 
-namespace Map_gen_utils
+namespace map_gen_utils
 {
 
 //NOTE: Some of the reshape functions below will never change the boundaries of the room,
@@ -50,7 +50,7 @@ void pathfinder_walk(const Pos& p0, const Pos& p1, std::vector<Pos>& pos_list_re
 
 } //Map_gen_utils
 
-namespace Map_gen
+namespace map_gen
 {
 
 //This variable is checked at certain points to see if the current map

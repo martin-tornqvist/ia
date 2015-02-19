@@ -109,7 +109,7 @@ Item_data_t::Item_armor_data::Item_armor_data() :
     armor_points             (0),
     dmg_to_durability_factor   (0.0) {}
 
-namespace Item_data
+namespace item_data
 {
 
 Item_data_t* data[int(Item_id::END)];

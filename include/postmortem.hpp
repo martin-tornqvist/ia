@@ -1,7 +1,7 @@
 #ifndef POSTMORTEM_H
 #define POSTMORTEM_H
 
-namespace Postmortem
+namespace postmortem
 {
 
 void run(bool* const quit_game);

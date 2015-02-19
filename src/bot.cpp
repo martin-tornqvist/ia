@@ -24,7 +24,7 @@
 
 using namespace std;
 
-namespace Bot
+namespace bot
 {
 
 namespace

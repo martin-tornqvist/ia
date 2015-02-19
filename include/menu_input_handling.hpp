@@ -5,7 +5,7 @@
 
 enum class Menu_action {browsed, selected, selected_shift, space, esc};
 
-namespace Menu_input_handling
+namespace menu_input_handling
 {
 
 Menu_action get_action(Menu_browser& browser);

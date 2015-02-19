@@ -53,7 +53,7 @@ enum class Room_type
     river
 };
 
-namespace Room_factory
+namespace room_factory
 {
 
 void init_room_bucket();

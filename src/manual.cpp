@@ -11,7 +11,7 @@
 
 using namespace std;
 
-namespace Manual
+namespace manual
 {
 
 namespace

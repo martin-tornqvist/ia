@@ -128,7 +128,7 @@ struct Feature_data_t
     Feature_room_spawn_rules room_spawn_rules;
 };
 
-namespace Feature_data
+namespace feature_data
 {
 
 void init();

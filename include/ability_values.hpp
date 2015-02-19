@@ -65,7 +65,7 @@ enum Ability_roll_result
 };
 
 //TODO: See comment above for Ability_roll_result
-namespace Ability_roll
+namespace ability_roll
 {
 
 Ability_roll_result roll(const int TOT_SKILL_VALUE);

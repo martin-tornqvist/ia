@@ -5,7 +5,7 @@
 
 #include "actor_data.hpp"
 
-namespace Populate_mon
+namespace populate_mon
 {
 
 void try_spawn_due_to_time_passed();

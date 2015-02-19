@@ -18,7 +18,7 @@ private:
     std::string descr_;
 };
 
-namespace Gods
+namespace gods
 {
 
 void init();

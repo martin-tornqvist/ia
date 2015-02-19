@@ -24,7 +24,7 @@
 
 using namespace std;
 
-namespace Throwing
+namespace throwing
 {
 
 void player_throw_lit_explosive(const Pos& aim_cell)

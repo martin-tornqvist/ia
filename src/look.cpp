@@ -21,7 +21,7 @@
 
 using namespace std;
 
-namespace Auto_descr_actor
+namespace auto_descr_actor
 {
 
 namespace
@@ -82,7 +82,7 @@ void add_auto_description_lines(const Actor& actor, string& line)
 
 } //Auto_descr_actor
 
-namespace Look
+namespace look
 {
 
 void print_location_info_msgs(const Pos& pos)

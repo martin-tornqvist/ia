@@ -11,7 +11,7 @@
 
 using namespace std;
 
-namespace Audio
+namespace audio
 {
 
 namespace

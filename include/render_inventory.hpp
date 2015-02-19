@@ -6,7 +6,7 @@
 #include "item_data.hpp"
 #include "menu_browser.hpp"
 
-namespace Render_inventory
+namespace render_inventory
 {
 
 const int EQP_Y0  = 2;

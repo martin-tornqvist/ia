@@ -7,7 +7,7 @@ struct Key_data;
 
 enum class Yes_no_answer {yes, no, special};
 
-namespace Query
+namespace query
 {
 
 void init();

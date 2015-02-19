@@ -166,7 +166,7 @@ enum class Tile_id
 
 struct Pos;
 
-namespace Art
+namespace art
 {
 
 Pos get_glyph_pos(const char glyph);

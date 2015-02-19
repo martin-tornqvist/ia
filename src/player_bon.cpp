@@ -13,7 +13,7 @@
 
 using namespace std;
 
-namespace Player_bon
+namespace player_bon
 {
 
 bool traits[int(Trait::END)];

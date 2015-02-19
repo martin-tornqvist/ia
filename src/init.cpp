@@ -24,7 +24,7 @@
 
 using namespace std;
 
-namespace Init
+namespace init
 {
 
 bool is_cheat_vision_enabled = false;

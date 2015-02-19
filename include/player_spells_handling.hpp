@@ -8,7 +8,7 @@
 
 class Spell;
 
-namespace Player_spells_handling
+namespace player_spells_handling
 {
 
 void init();

@@ -18,7 +18,7 @@
 
 using namespace std;
 
-namespace Map_travel
+namespace map_travel
 {
 
 vector<Map_data> map_list;

@@ -17,7 +17,7 @@
 
 using namespace std;
 
-namespace Dungeon_master
+namespace dungeon_master
 {
 
 namespace

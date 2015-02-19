@@ -142,7 +142,7 @@ struct Actor_data_t
     Sfx_id aggro_sfx_mon_hidden;
 };
 
-namespace Actor_data
+namespace actor_data
 {
 
 extern Actor_data_t data[int(Actor_id::END)];

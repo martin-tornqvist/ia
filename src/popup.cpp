@@ -12,7 +12,7 @@
 
 using namespace std;
 
-namespace Popup
+namespace popup
 {
 
 namespace

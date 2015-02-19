@@ -505,7 +505,7 @@ void Potion_descent::quaff_(Actor& actor)
     identify(false);
 }
 
-namespace Potion_handling
+namespace potion_handling
 {
 
 namespace

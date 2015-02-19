@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace Credits
+namespace credits
 {
 
 namespace

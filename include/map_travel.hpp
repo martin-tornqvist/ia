@@ -18,7 +18,7 @@ struct Map_data
     Is_main_dungeon is_main_dungeon;
 };
 
-namespace Map_travel
+namespace map_travel
 {
 
 extern std::vector<Map_data> map_list;

@@ -12,7 +12,7 @@
 
 using namespace std;
 
-namespace Rnd
+namespace rnd
 {
 
 namespace
@@ -96,7 +96,7 @@ bool percent(const int PCT_CHANCE)
 
 } //Rnd
 
-namespace Utils
+namespace utils
 {
 
 bool is_clr_eq(const Clr& clr1, const Clr& clr2)
@@ -367,7 +367,7 @@ string Time_data::get_time_str(const Time_type lowest,
     return ret;
 }
 
-namespace Dir_utils
+namespace dir_utils
 {
 
 namespace

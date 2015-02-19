@@ -8,10 +8,10 @@
 
 class Mon;
 
-namespace Ai
+namespace ai
 {
 
-namespace Action
+namespace action
 {
 
 bool try_cast_random_spell(Mon& mon);
@@ -32,7 +32,7 @@ bool step_to_lair_if_los(Mon& mon, const Pos& lair_cell);
 
 } //Action
 
-namespace Info
+namespace info
 {
 
 bool look_become_player_aware(Mon& mon);

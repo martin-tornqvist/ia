@@ -12,7 +12,7 @@ enum class Marker_done         {no, yes};
 enum class Marker_draw_tail     {no, yes};
 enum class Marker_use_player_tgt {no, yes};
 
-namespace Marker
+namespace marker
 {
 
 Pos run(const Marker_draw_tail draw_tail, const Marker_use_player_tgt use_target,

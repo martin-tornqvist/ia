@@ -14,7 +14,7 @@
 
 using namespace std;
 
-namespace Kick
+namespace kick
 {
 
 void player_kick()

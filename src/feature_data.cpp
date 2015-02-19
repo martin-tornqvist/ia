@@ -82,7 +82,7 @@ bool Move_rules::can_move(const bool actor_prop_ids[size_t(Prop_id::END)]) const
 }
 
 //--------------------------------------------------------- FEATURE DATA
-namespace Feature_data
+namespace feature_data
 {
 
 Feature_data_t data[int(Feature_id::END)];

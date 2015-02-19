@@ -11,7 +11,7 @@ struct Cell;
 class Mob;
 class Actor;
 
-namespace Cell_check
+namespace cell_check
 {
 
 class Check
@@ -196,7 +196,7 @@ private:
 //(typically with a previous parse call, with write rule set to "overwrite")
 enum class Map_parse_mode {overwrite, append};
 
-namespace Map_parse
+namespace map_parse
 {
 
 extern const Rect map_rect;
@@ -236,7 +236,7 @@ public:
     Pos p_;
 };
 
-namespace Flood_fill
+namespace flood_fill
 {
 
 void run(const Pos& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
@@ -244,7 +244,7 @@ void run(const Pos& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
 
 } //Flood_fill
 
-namespace Path_find
+namespace path_find
 {
 
 //NOTE: The path goes from target to origin, not including the origin.

@@ -33,7 +33,7 @@ const int SUMMON_HOSTILE_ONE_IN_N = 7;
 
 } //namespace
 
-namespace Spell_handling
+namespace spell_handling
 {
 
 Spell* get_random_spell_for_mon()

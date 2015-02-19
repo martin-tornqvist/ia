@@ -18,7 +18,7 @@
 
 using namespace std;
 
-namespace Config
+namespace config
 {
 
 namespace

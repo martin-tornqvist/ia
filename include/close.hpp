@@ -3,7 +3,7 @@
 
 class Feature;
 
-namespace Close
+namespace close
 {
 
 void player_close();

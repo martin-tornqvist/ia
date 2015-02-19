@@ -882,7 +882,7 @@ int get_rnd_item_bucket_idx_for_effect(const Jewelry_effect_id  effect_to_assign
 
 } //namespace
 
-namespace Jewelry_handling
+namespace jewelry_handling
 {
 
 void init()

@@ -39,7 +39,7 @@ enum class Map_type
     trapezohedron
 };
 
-namespace Map
+namespace map
 {
 
 extern Player*            player;

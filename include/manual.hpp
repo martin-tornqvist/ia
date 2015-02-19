@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-namespace Manual
+namespace manual
 {
 
 void init(); //{read_file();}

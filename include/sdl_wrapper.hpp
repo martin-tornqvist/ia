@@ -3,7 +3,7 @@
 
 #include <SDL.h>
 
-namespace Sdl_wrapper
+namespace sdl_wrapper
 {
 
 void init();

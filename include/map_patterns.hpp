@@ -16,7 +16,7 @@ enum class Placement_rule
     adj_to_walls, away_from_walls, either
 };
 
-namespace Map_patterns
+namespace map_patterns
 {
 
 void get_cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,

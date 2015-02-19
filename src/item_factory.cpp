@@ -11,7 +11,7 @@
 
 using namespace std;
 
-namespace Item_factory
+namespace item_factory
 {
 
 Item* mk(const Item_id item_id, const int NR_ITEMS)

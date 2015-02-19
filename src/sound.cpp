@@ -29,7 +29,7 @@ Snd::Snd(
     vol_                        (vol),
     is_alerting_mon_              (alerting_mon) {}
 
-namespace Snd_emit
+namespace snd_emit
 {
 
 namespace

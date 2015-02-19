@@ -9,7 +9,7 @@
 
 using namespace std;
 
-namespace Query
+namespace query
 {
 
 namespace

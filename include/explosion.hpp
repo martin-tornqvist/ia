@@ -13,7 +13,7 @@ class Prop;
 enum class Expl_type {expl, apply_prop};
 enum class Expl_src  {misc, player_use_moltv_intended};
 
-namespace Explosion
+namespace explosion
 {
 
 void run_explosion_at(

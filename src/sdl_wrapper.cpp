@@ -11,7 +11,7 @@
 
 using namespace std;
 
-namespace Sdl_wrapper
+namespace sdl_wrapper
 {
 
 namespace

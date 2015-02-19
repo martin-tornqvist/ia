@@ -25,7 +25,7 @@
 
 using namespace std;
 
-namespace Render
+namespace render
 {
 
 Cell_render_data  render_array[MAP_W][MAP_H];

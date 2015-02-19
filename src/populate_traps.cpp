@@ -12,7 +12,7 @@
 
 using namespace std;
 
-namespace Populate_traps
+namespace populate_traps
 {
 
 namespace

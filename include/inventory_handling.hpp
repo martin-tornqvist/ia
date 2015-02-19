@@ -9,7 +9,7 @@ enum class Consume_item    {yes, no};
 
 enum class Unequip_allowed {yes, no};
 
-namespace Inv_handling
+namespace inv_handling
 {
 
 extern Inv_scr_id screen_to_open_after_drop;

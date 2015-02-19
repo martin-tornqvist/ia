@@ -1,7 +1,7 @@
 #ifndef CREATE_CHARACTER_H
 #define CREATE_CHARACTER_H
 
-namespace Create_character
+namespace create_character
 {
 
 void create_character();

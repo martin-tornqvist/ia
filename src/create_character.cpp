@@ -10,13 +10,13 @@
 
 using namespace std;
 
-namespace Create_character
+namespace create_character
 {
 
 namespace
 {
 
-namespace Enter_name
+namespace enter_name
 {
 
 void draw(const string& cur_string)

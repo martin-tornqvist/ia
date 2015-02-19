@@ -19,7 +19,7 @@
 
 using namespace std;
 
-namespace Marker
+namespace marker
 {
 
 namespace

@@ -61,7 +61,7 @@ enum class Sfx_id
     END
 };
 
-namespace Audio
+namespace audio
 {
 
 void init();

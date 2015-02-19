@@ -114,7 +114,7 @@ void Ability_vals::change_val(const Ability_id ability, const int CHANGE)
     ability_list[int(ability)] += CHANGE;
 }
 
-namespace Ability_roll
+namespace ability_roll
 {
 
 Ability_roll_result roll(const int TOT_SKILL_VALUE)

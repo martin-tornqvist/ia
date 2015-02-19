@@ -23,7 +23,7 @@
 
 using namespace std;
 
-namespace Game_time
+namespace game_time
 {
 
 vector<Actor*>      actors_;

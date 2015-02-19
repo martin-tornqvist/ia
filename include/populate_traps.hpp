@@ -1,7 +1,7 @@
 #ifndef POPULATE_TRAPS_H
 #define POPULATE_TRAPS_H
 
-namespace Populate_traps
+namespace populate_traps
 {
 
 void populate_std_lvl();

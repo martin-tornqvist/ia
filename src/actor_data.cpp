@@ -60,7 +60,7 @@ void Actor_data_t::reset()
     aggro_sfx_mon_hidden = Sfx_id::END;
 }
 
-namespace Actor_data
+namespace actor_data
 {
 
 Actor_data_t data[int(Actor_id::END)];

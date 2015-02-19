@@ -6,7 +6,7 @@
 #include "cmn_data.hpp"
 #include "cmn_types.hpp"
 
-namespace Line_calc
+namespace line_calc
 {
 
 void init();

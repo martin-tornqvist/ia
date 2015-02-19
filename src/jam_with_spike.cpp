@@ -12,7 +12,7 @@
 #include "feature_door.hpp"
 #include "utils.hpp"
 
-namespace Jam_with_spike
+namespace jam_with_spike
 {
 
 void player_jam_feature(Feature* const feature)

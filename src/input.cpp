@@ -36,7 +36,7 @@
 
 using namespace std;
 
-namespace Input
+namespace input
 {
 
 namespace

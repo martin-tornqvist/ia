@@ -13,7 +13,7 @@
 using namespace std;
 
 //------------------------------------------------------------ CELL CHECKS
-namespace Cell_check
+namespace cell_check
 {
 
 bool Blocks_los::check(const Cell& c)  const
@@ -192,7 +192,7 @@ bool All_adj_is_none_of_features::check(const Cell& c) const
 } //Cell_check
 
 //------------------------------------------------------------ MAP PARSE
-namespace Map_parse
+namespace map_parse
 {
 
 const Rect map_rect(0, 0, MAP_W - 1, MAP_H - 1);
@@ -467,7 +467,7 @@ bool Is_closer_to_pos::operator()(const Pos& p1, const Pos& p2)
 }
 
 //------------------------------------------------------------ FLOOD FILL
-namespace Flood_fill
+namespace flood_fill
 {
 
 void run(const Pos& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
@@ -554,7 +554,7 @@ void run(const Pos& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
 } //Flood_fill
 
 //------------------------------------------------------------ PATHFINDER
-namespace Path_find
+namespace path_find
 {
 
 void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H],

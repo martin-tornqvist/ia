@@ -5,7 +5,7 @@
 
 class Actor;
 
-namespace Knock_back
+namespace knock_back
 {
 
 void try_knock_back(Actor&        defender,

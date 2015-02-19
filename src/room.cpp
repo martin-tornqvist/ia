@@ -35,7 +35,7 @@ void add_to_room_bucket(const Room_type type, const size_t NR)
 } //namespace
 
 //------------------------------------------------------------------- ROOM FACTORY
-namespace Room_factory
+namespace room_factory
 {
 
 void init_room_bucket()

@@ -18,7 +18,7 @@
 
 using namespace std;
 
-namespace Reload
+namespace reload
 {
 
 namespace

@@ -489,7 +489,7 @@ Throw_att_data::Throw_att_data(Actor&       attacker_,
     }
 }
 
-namespace Attack
+namespace attack
 {
 
 namespace

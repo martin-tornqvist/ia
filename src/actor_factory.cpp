@@ -14,7 +14,7 @@
 
 using namespace std;
 
-namespace Actor_factory
+namespace actor_factory
 {
 
 namespace

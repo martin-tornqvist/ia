@@ -2,7 +2,7 @@
 
 #include "utils.hpp"
 
-namespace Art
+namespace art
 {
 
 namespace
