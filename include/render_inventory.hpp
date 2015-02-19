@@ -1,10 +1,10 @@
 #ifndef RENDER_INVENTORY_H
 #define RENDER_INVENTORY_H
 
-#include "Inventory_handling.h"
+#include "inventory_handling.h"
 
-#include "Item_data.h"
-#include "Menu_browser.h"
+#include "item_data.h"
+#include "menu_browser.h"
 
 namespace Render_inventory
 {

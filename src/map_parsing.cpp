@@ -1,14 +1,14 @@
-#include "Map_parsing.h"
+#include "map_parsing.h"
 
 #include <assert.h>
 #include <algorithm>
 
-#include "Map.h"
-#include "Actor_player.h"
-#include "Game_time.h"
-#include "Utils.h"
-#include "Feature_rigid.h"
-#include "Feature_mob.h"
+#include "map.h"
+#include "actor_player.h"
+#include "game_time.h"
+#include "utils.h"
+#include "feature_rigid.h"
+#include "feature_mob.h"
 
 using namespace std;
 

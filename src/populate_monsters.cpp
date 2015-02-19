@@ -1,17 +1,17 @@
-#include "Populate_monsters.h"
+#include "populate_monsters.h"
 
 #include <algorithm>
 
-#include "Init.h"
-#include "Room.h"
-#include "Feature_trap.h"
-#include "Map.h"
-#include "Actor_factory.h"
-#include "Actor_mon.h"
-#include "Actor_player.h"
-#include "Map_parsing.h"
-#include "Utils.h"
-#include "Game_time.h"
+#include "init.h"
+#include "room.h"
+#include "feature_trap.h"
+#include "map.h"
+#include "actor_factory.h"
+#include "actor_mon.h"
+#include "actor_player.h"
+#include "map_parsing.h"
+#include "utils.h"
+#include "game_time.h"
 
 using namespace std;
 

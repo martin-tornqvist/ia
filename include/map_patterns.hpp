@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "Cmn_data.h"
-#include "Cmn_types.h"
+#include "cmn_data.h"
+#include "cmn_types.h"
 
 //TODO: This should be merged into Map_parsing
 //Also, most/all things in here really needs clearer purpose/naming

@@ -4,12 +4,12 @@
 #include <string>
 #include <vector>
 
-#include "Cmn_data.h"
+#include "cmn_data.h"
 
-#include "Actor_data.h"
-#include "Sound.h"
-#include "Config.h"
-#include "Art.h"
+#include "actor_data.h"
+#include "sound.h"
+#include "config.h"
+#include "art.h"
 
 class Prop_handler;
 class Inventory;

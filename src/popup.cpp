@@ -1,14 +1,14 @@
-#include "Popup.h"
+#include "popup.h"
 
-#include "Config.h"
-#include "Render.h"
-#include "Text_format.h"
-#include "Log.h"
-#include "Query.h"
-#include "Cmn_types.h"
-#include "Menu_browser.h"
-#include "Menu_input_handling.h"
-#include "Audio.h"
+#include "config.h"
+#include "render.h"
+#include "text_format.h"
+#include "log.h"
+#include "query.h"
+#include "cmn_types.h"
+#include "menu_browser.h"
+#include "menu_input_handling.h"
+#include "audio.h"
 
 using namespace std;
 

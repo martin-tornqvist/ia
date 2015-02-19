@@ -1,9 +1,9 @@
-#include "Line_calc.h"
+#include "line_calc.h"
 
 #include <math.h>
 #include <vector>
 
-#include "Utils.h"
+#include "utils.h"
 
 using namespace std;
 

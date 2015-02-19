@@ -1,14 +1,14 @@
-#include "Disarm.h"
+#include "disarm.h"
 
-#include "Game_time.h"
-#include "Log.h"
-#include "Render.h"
-#include "Actor_player.h"
-#include "Query.h"
-#include "Map.h"
-#include "Feature_trap.h"
-#include "Utils.h"
-#include "Inventory.h"
+#include "game_time.h"
+#include "log.h"
+#include "render.h"
+#include "actor_player.h"
+#include "query.h"
+#include "map.h"
+#include "feature_trap.h"
+#include "utils.h"
+#include "inventory.h"
 
 namespace Disarm
 {

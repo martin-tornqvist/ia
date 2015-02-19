@@ -1,18 +1,18 @@
-#include "Init.h"
+#include "init.h"
 
-#include "Map.h"
+#include "map.h"
 
-#include "Feature.h"
-#include "Actor_factory.h"
-#include "Item_factory.h"
-#include "Game_time.h"
-#include "Render.h"
-#include "Map_gen.h"
-#include "Item.h"
-#include "Utils.h"
-#include "Feature_rigid.h"
+#include "feature.h"
+#include "actor_factory.h"
+#include "item_factory.h"
+#include "game_time.h"
+#include "render.h"
+#include "map_gen.h"
+#include "item.h"
+#include "utils.h"
+#include "feature_rigid.h"
 #ifdef DEMO_MODE
-#include "Sdl_wrapper.h"
+#include "sdl_wrapper.h"
 #endif // DEMO_MODE
 
 using namespace std;

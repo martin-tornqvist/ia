@@ -1,7 +1,7 @@
 #ifndef QUERY_H
 #define QUERY_H
 
-#include "Cmn_types.h"
+#include "cmn_types.h"
 
 struct Key_data;
 

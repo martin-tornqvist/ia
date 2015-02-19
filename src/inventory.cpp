@@ -1,21 +1,21 @@
-#include "Inventory.h"
+#include "inventory.h"
 
 #include <algorithm>
 #include <vector>
 
-#include "Init.h"
-#include "Item.h"
-#include "Drop.h"
-#include "Actor_player.h"
-#include "Log.h"
-#include "Game_time.h"
-#include "Render.h"
-#include "Item_factory.h"
-#include "Create_character.h"
-#include "Dungeon_master.h"
-#include "Player_bon.h"
-#include "Map.h"
-#include "Utils.h"
+#include "init.h"
+#include "item.h"
+#include "drop.h"
+#include "actor_player.h"
+#include "log.h"
+#include "game_time.h"
+#include "render.h"
+#include "item_factory.h"
+#include "create_character.h"
+#include "dungeon_master.h"
+#include "player_bon.h"
+#include "map.h"
+#include "utils.h"
 
 using namespace std;
 

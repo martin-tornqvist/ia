@@ -1,14 +1,14 @@
-#include "Feature_data.h"
+#include "feature_data.h"
 
-#include "Init.h"
+#include "init.h"
 
-#include "Colors.h"
-#include "Actor.h"
-#include "Feature_rigid.h"
-#include "Feature_mob.h"
-#include "Feature_trap.h"
-#include "Feature_event.h"
-#include "Feature_door.h"
+#include "colors.h"
+#include "actor.h"
+#include "feature_rigid.h"
+#include "feature_mob.h"
+#include "feature_trap.h"
+#include "feature_event.h"
+#include "feature_door.h"
 
 using namespace std;
 

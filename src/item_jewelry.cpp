@@ -1,16 +1,16 @@
-#include "Init.h"
+#include "init.h"
 
-#include "Item_jewelry.h"
+#include "item_jewelry.h"
 
-#include "Map.h"
-#include "Utils.h"
-#include "Log.h"
-#include "Game_time.h"
-#include "Render.h"
-#include "Actor_mon.h"
-#include "Text_format.h"
-#include "Actor_factory.h"
-#include "Feature_rigid.h"
+#include "map.h"
+#include "utils.h"
+#include "log.h"
+#include "game_time.h"
+#include "render.h"
+#include "actor_mon.h"
+#include "text_format.h"
+#include "actor_factory.h"
+#include "feature_rigid.h"
 
 using namespace std;
 

@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "Menu_browser.h"
-#include "Spells.h"
+#include "menu_browser.h"
+#include "spells.h"
 
 class Spell;
 

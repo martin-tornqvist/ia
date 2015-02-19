@@ -1,8 +1,8 @@
 #ifndef FOV_H
 #define FOV_H
 
-#include "Cmn_data.h"
-#include "Cmn_types.h"
+#include "cmn_data.h"
+#include "cmn_types.h"
 
 namespace Fov
 {

@@ -3,9 +3,9 @@
 
 #include <string>
 
-#include "Cmn_data.h"
-#include "Item_data.h"
-#include "Cmn_types.h"
+#include "cmn_data.h"
+#include "item_data.h"
+#include "cmn_types.h"
 
 class Actor;
 

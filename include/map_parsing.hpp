@@ -3,9 +3,9 @@
 
 #include <vector>
 
-#include "Cmn_types.h"
-#include "Config.h"
-#include "Feature_data.h"
+#include "cmn_types.h"
+#include "config.h"
+#include "feature_data.h"
 
 struct Cell;
 class Mob;

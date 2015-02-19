@@ -1,15 +1,15 @@
-#include "Close.h"
+#include "close.h"
 
-#include "Game_time.h"
-#include "Feature.h"
-#include "Actor.h"
-#include "Actor_player.h"
-#include "Feature_door.h"
-#include "Map.h"
-#include "Log.h"
-#include "Query.h"
-#include "Render.h"
-#include "Utils.h"
+#include "game_time.h"
+#include "feature.h"
+#include "actor.h"
+#include "actor_player.h"
+#include "feature_door.h"
+#include "map.h"
+#include "log.h"
+#include "query.h"
+#include "render.h"
+#include "utils.h"
 
 namespace Close
 {

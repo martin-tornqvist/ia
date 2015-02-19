@@ -1,11 +1,11 @@
 #ifndef FEATURE_TRAPS_H
 #define FEATURE_TRAPS_H
 
-#include "Feature.h"
-#include "Ability_values.h"
-#include "Art.h"
-#include "Feature_rigid.h"
-#include "Cmn_data.h"
+#include "feature.h"
+#include "ability_values.h"
+#include "art.h"
+#include "feature_rigid.h"
+#include "cmn_data.h"
 
 class Specific_trap_base;
 

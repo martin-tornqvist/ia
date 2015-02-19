@@ -1,14 +1,14 @@
-#include "Fov.h"
+#include "fov.h"
 
-#include "Init.h"
+#include "init.h"
 
 #include <math.h>
 #include <vector>
 
-#include "Cmn_types.h"
-#include "Line_calc.h"
-#include "Map.h"
-#include "Utils.h"
+#include "cmn_types.h"
+#include "line_calc.h"
+#include "map.h"
+#include "utils.h"
 
 using namespace std;
 

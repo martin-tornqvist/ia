@@ -4,8 +4,8 @@
 #include <vector>
 #include <string>
 
-#include "Cmn_data.h"
-#include "Player_bon.h"
+#include "cmn_data.h"
+#include "player_bon.h"
 
 class High_score_entry
 {

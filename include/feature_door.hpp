@@ -1,7 +1,7 @@
 #ifndef FEATURE_DOOR_H
 #define FEATURE_DOOR_H
 
-#include "Feature_rigid.h"
+#include "feature_rigid.h"
 
 enum class Door_spawn_state
 {

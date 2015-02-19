@@ -1,25 +1,25 @@
-#include "Game_time.h"
+#include "game_time.h"
 
 #include <vector>
 #include <assert.h>
 
-#include "Cmn_types.h"
-#include "Feature_rigid.h"
-#include "Feature_mob.h"
-#include "Actor_player.h"
-#include "Actor_mon.h"
-#include "Map.h"
-#include "Populate_monsters.h"
-#include "Input.h"
-#include "Inventory.h"
-#include "Inventory_handling.h"
-#include "Player_bon.h"
-#include "Audio.h"
-#include "Map_parsing.h"
-#include "Render.h"
-#include "Utils.h"
-#include "Map_travel.h"
-#include "Item.h"
+#include "cmn_types.h"
+#include "feature_rigid.h"
+#include "feature_mob.h"
+#include "actor_player.h"
+#include "actor_mon.h"
+#include "map.h"
+#include "populate_monsters.h"
+#include "input.h"
+#include "inventory.h"
+#include "inventory_handling.h"
+#include "player_bon.h"
+#include "audio.h"
+#include "map_parsing.h"
+#include "render.h"
+#include "utils.h"
+#include "map_travel.h"
+#include "item.h"
 
 using namespace std;
 

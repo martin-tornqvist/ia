@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 
-#include "Colors.h"
-#include "Converters.h"
-#include "Cmn_types.h"
+#include "colors.h"
+#include "converters.h"
+#include "cmn_types.h"
 
 class Msg
 {

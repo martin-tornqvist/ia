@@ -1,7 +1,7 @@
 #ifndef ITEM_SCROLL_H
 #define ITEM_SCROLL_H
 
-#include "Item.h"
+#include "item.h"
 
 class Actor;
 class Spell;

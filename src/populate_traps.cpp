@@ -1,14 +1,14 @@
-#include "Populate_traps.h"
+#include "populate_traps.h"
 
 #include <algorithm>
 
-#include "Init.h"
-#include "Map.h"
-#include "Map_gen.h"
-#include "Map_parsing.h"
-#include "Utils.h"
-#include "Feature_data.h"
-#include "Feature_trap.h"
+#include "init.h"
+#include "map.h"
+#include "map_gen.h"
+#include "map_parsing.h"
+#include "utils.h"
+#include "feature_data.h"
+#include "feature_trap.h"
 
 using namespace std;
 

@@ -1,16 +1,16 @@
-#include "Feature_door.h"
+#include "feature_door.h"
 
-#include "Init.h"
-#include "Actor.h"
-#include "Actor_player.h"
-#include "Feature_data.h"
-#include "Map.h"
-#include "Log.h"
-#include "Postmortem.h"
-#include "Player_bon.h"
-#include "Render.h"
-#include "Map_parsing.h"
-#include "Utils.h"
+#include "init.h"
+#include "actor.h"
+#include "actor_player.h"
+#include "feature_data.h"
+#include "map.h"
+#include "log.h"
+#include "postmortem.h"
+#include "player_bon.h"
+#include "render.h"
+#include "map_parsing.h"
+#include "utils.h"
 
 using namespace std;
 

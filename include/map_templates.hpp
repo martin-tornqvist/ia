@@ -4,9 +4,9 @@
 #include <vector>
 #include <string>
 
-#include "Feature_data.h"
-#include "Item_data.h"
-#include "Actor_data.h"
+#include "feature_data.h"
+#include "item_data.h"
+#include "actor_data.h"
 
 enum class Map_templ_id
 {

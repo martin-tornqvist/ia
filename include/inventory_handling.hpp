@@ -1,7 +1,7 @@
 #ifndef INV_HANDLING
 #define INV_HANDLING
 
-#include "Inventory.h"
+#include "inventory.h"
 
 enum class Inv_scr_id       {inv, equip, END};
 

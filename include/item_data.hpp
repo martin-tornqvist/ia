@@ -4,11 +4,11 @@
 #include <vector>
 #include <string>
 
-#include "Cmn_data.h"
-#include "Ability_values.h"
-#include "Spells.h"
-#include "Feature_data.h"
-#include "Audio.h"
+#include "cmn_data.h"
+#include "ability_values.h"
+#include "spells.h"
+#include "feature_data.h"
+#include "audio.h"
 
 enum class Snd_vol;
 

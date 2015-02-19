@@ -1,17 +1,17 @@
-#include "Feature_event.h"
+#include "feature_event.h"
 
 #include <assert.h>
 
-#include "Actor_player.h"
-#include "Actor_mon.h"
-#include "Map.h"
-#include "Actor_factory.h"
-#include "Log.h"
-#include "Render.h"
-#include "Utils.h"
-#include "Feature_rigid.h"
-#include "Popup.h"
-#include "Sdl_wrapper.h"
+#include "actor_player.h"
+#include "actor_mon.h"
+#include "map.h"
+#include "actor_factory.h"
+#include "log.h"
+#include "render.h"
+#include "utils.h"
+#include "feature_rigid.h"
+#include "popup.h"
+#include "sdl_wrapper.h"
 
 using namespace std;
 

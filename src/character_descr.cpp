@@ -1,17 +1,17 @@
-#include "Character_descr.h"
+#include "character_descr.h"
 
 #include <algorithm>
 
-#include "Player_bon.h"
-#include "Actor_player.h"
-#include "Render.h"
-#include "Text_format.h"
-#include "Input.h"
-#include "Item_potion.h"
-#include "Item_scroll.h"
-#include "Item_factory.h"
-#include "Item.h"
-#include "Map.h"
+#include "player_bon.h"
+#include "actor_player.h"
+#include "render.h"
+#include "text_format.h"
+#include "input.h"
+#include "item_potion.h"
+#include "item_scroll.h"
+#include "item_factory.h"
+#include "item.h"
+#include "map.h"
 
 using namespace std;
 

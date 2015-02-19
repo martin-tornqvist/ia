@@ -5,10 +5,10 @@
 
 #include <SDL_video.h>
 
-#include "Cmn_data.h"
-#include "Game_time.h"
-#include "Config.h"
-#include "Art.h"
+#include "cmn_data.h"
+#include "game_time.h"
+#include "config.h"
+#include "art.h"
 
 struct Projectile;
 

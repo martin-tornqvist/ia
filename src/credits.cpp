@@ -1,12 +1,12 @@
-#include "Credits.h"
+#include "credits.h"
 
 #include <fstream>
 #include <string>
 #include <vector>
 
-#include "Input.h"
-#include "Text_format.h"
-#include "Render.h"
+#include "input.h"
+#include "text_format.h"
+#include "render.h"
 
 using namespace std;
 

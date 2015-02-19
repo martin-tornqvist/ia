@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "Cmn_types.h"
-#include "Map_templates.h"
+#include "cmn_types.h"
+#include "map_templates.h"
 
 class Room;
 

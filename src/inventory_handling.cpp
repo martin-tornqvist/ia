@@ -1,22 +1,22 @@
-#include "Inventory_handling.h"
+#include "inventory_handling.h"
 
-#include "Init.h"
+#include "init.h"
 
 #include <vector>
 
-#include "Item_scroll.h"
-#include "Actor_player.h"
-#include "Item_potion.h"
-#include "Menu_browser.h"
-#include "Log.h"
-#include "Render_inventory.h"
-#include "Menu_input_handling.h"
-#include "Render.h"
-#include "Drop.h"
-#include "Query.h"
-#include "Item_factory.h"
-#include "Audio.h"
-#include "Map.h"
+#include "item_scroll.h"
+#include "actor_player.h"
+#include "item_potion.h"
+#include "menu_browser.h"
+#include "log.h"
+#include "render_inventory.h"
+#include "menu_input_handling.h"
+#include "render.h"
+#include "drop.h"
+#include "query.h"
+#include "item_factory.h"
+#include "audio.h"
+#include "map.h"
 
 using namespace std;
 

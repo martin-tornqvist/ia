@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "Feature.h"
-#include "Actor_data.h"
+#include "feature.h"
+#include "actor_data.h"
 
 class Mob;
 

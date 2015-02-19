@@ -4,10 +4,10 @@
 #include <vector>
 #include <string>
 
-#include "Item.h"
-#include "Cmn_types.h"
-#include "Properties.h"
-#include "Player_bon.h"
+#include "item.h"
+#include "cmn_types.h"
+#include "properties.h"
+#include "player_bon.h"
 
 class Actor;
 class Mon;

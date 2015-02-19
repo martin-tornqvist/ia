@@ -1,15 +1,15 @@
-#include "Init.h"
+#include "init.h"
 
-#include "Map_gen.h"
+#include "map_gen.h"
 
 #include <vector>
 #include <assert.h>
 
-#include "Map.h"
-#include "Map_parsing.h"
-#include "Utils.h"
-#include "Map_templates.h"
-#include "Feature_rigid.h"
+#include "map.h"
+#include "map_parsing.h"
+#include "utils.h"
+#include "map_templates.h"
+#include "feature_rigid.h"
 
 using namespace std;
 

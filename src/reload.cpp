@@ -1,20 +1,20 @@
-#include "Reload.h"
+#include "reload.h"
 
 #include <string>
 
-#include "Converters.h"
-#include "Item.h"
-#include "Actor_player.h"
-#include "Log.h"
-#include "Map.h"
-#include "Inventory.h"
-#include "Item_factory.h"
-#include "Dungeon_master.h"
-#include "Player_bon.h"
-#include "Game_time.h"
-#include "Audio.h"
-#include "Render.h"
-#include "Utils.h"
+#include "converters.h"
+#include "item.h"
+#include "actor_player.h"
+#include "log.h"
+#include "map.h"
+#include "inventory.h"
+#include "item_factory.h"
+#include "dungeon_master.h"
+#include "player_bon.h"
+#include "game_time.h"
+#include "audio.h"
+#include "render.h"
+#include "utils.h"
 
 using namespace std;
 

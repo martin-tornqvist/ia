@@ -4,12 +4,12 @@
 #include <string>
 #include <vector>
 
-#include "Converters.h"
-#include "Ability_values.h"
-#include "Cmn_data.h"
-#include "Properties.h"
-#include "Audio.h"
-#include "Room.h"
+#include "converters.h"
+#include "ability_values.h"
+#include "cmn_data.h"
+#include "properties.h"
+#include "audio.h"
+#include "room.h"
 
 enum class Actor_id
 {

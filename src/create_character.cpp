@@ -1,12 +1,12 @@
-#include "Create_character.h"
+#include "create_character.h"
 
-#include "Render.h"
-#include "Actor_player.h"
-#include "Input.h"
-#include "Menu_input_handling.h"
-#include "Text_format.h"
-#include "Utils.h"
-#include "Map.h"
+#include "render.h"
+#include "actor_player.h"
+#include "input.h"
+#include "menu_input_handling.h"
+#include "text_format.h"
+#include "utils.h"
+#include "map.h"
 
 using namespace std;
 

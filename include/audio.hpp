@@ -1,7 +1,7 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
-#include "Cmn_types.h"
+#include "cmn_types.h"
 
 enum class Sfx_id
 {

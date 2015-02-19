@@ -1,16 +1,16 @@
-#include "Ai.h"
+#include "ai.h"
 
-#include "Actor_player.h"
-#include "Log.h"
-#include "Map.h"
-#include "Utils.h"
-#include "Feature_mob.h"
-#include "Feature_door.h"
-#include "Actor_mon.h"
-#include "Line_calc.h"
-#include "Map_parsing.h"
-#include "Game_time.h"
-#include "Fov.h"
+#include "actor_player.h"
+#include "log.h"
+#include "map.h"
+#include "utils.h"
+#include "feature_mob.h"
+#include "feature_door.h"
+#include "actor_mon.h"
+#include "line_calc.h"
+#include "map_parsing.h"
+#include "game_time.h"
+#include "fov.h"
 
 using namespace std;
 

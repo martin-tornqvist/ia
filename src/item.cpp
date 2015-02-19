@@ -1,23 +1,23 @@
-#include "Init.h"
+#include "init.h"
 
-#include "Item.h"
+#include "item.h"
 
 #include <assert.h>
 
-#include "Map.h"
-#include "Game_time.h"
-#include "Utils.h"
-#include "Map_parsing.h"
-#include "Properties.h"
-#include "Log.h"
-#include "Explosion.h"
-#include "Render.h"
-#include "Input.h"
-#include "Query.h"
-#include "Item_factory.h"
-#include "Feature_mob.h"
-#include "Feature_rigid.h"
-#include "Item_data.h"
+#include "map.h"
+#include "game_time.h"
+#include "utils.h"
+#include "map_parsing.h"
+#include "properties.h"
+#include "log.h"
+#include "explosion.h"
+#include "render.h"
+#include "input.h"
+#include "query.h"
+#include "item_factory.h"
+#include "feature_mob.h"
+#include "feature_rigid.h"
+#include "item_data.h"
 
 using namespace std;
 

@@ -1,8 +1,8 @@
-#include "Gods.h"
+#include "gods.h"
 
 #include <vector>
 
-#include "Utils.h"
+#include "utils.h"
 
 using namespace std;
 

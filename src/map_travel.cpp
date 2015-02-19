@@ -1,6 +1,6 @@
-#include "Map_travel.h"
+#include "map_travel.h"
 
-#include "Init.h"
+#include "init.h"
 
 #include <list>
 
@@ -8,13 +8,13 @@
 #include <chrono>
 #endif // NDEBUG
 
-#include "Map.h"
-#include "Map_gen.h"
-#include "Populate_items.h"
-#include "Render.h"
-#include "Log.h"
-#include "Feature_rigid.h"
-#include "Utils.h"
+#include "map.h"
+#include "map_gen.h"
+#include "populate_items.h"
+#include "render.h"
+#include "log.h"
+#include "feature_rigid.h"
+#include "utils.h"
 
 using namespace std;
 

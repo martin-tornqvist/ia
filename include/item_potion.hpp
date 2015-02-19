@@ -4,8 +4,8 @@
 #include <vector>
 #include <string>
 
-#include "Item.h"
-#include "Cmn_data.h"
+#include "item.h"
+#include "cmn_data.h"
 
 class Potion: public Item
 {

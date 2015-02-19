@@ -3,9 +3,9 @@
 
 #include <vector>
 
-#include "Cmn_data.h"
-#include "Cmn_types.h"
-#include "Mersenne_twister.h"
+#include "cmn_data.h"
+#include "cmn_types.h"
+#include "mersenne_twister.h"
 
 class Actor;
 class Mob;

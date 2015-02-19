@@ -1,19 +1,19 @@
-#include "Item_device.h"
+#include "item_device.h"
 
 #include <algorithm>
 #include <vector>
 
-#include "Actor_player.h"
-#include "Render.h"
-#include "Game_time.h"
-#include "Log.h"
-#include "Knockback.h"
-#include "Inventory.h"
-#include "Map.h"
-#include "Audio.h"
-#include "Utils.h"
-#include "Feature_rigid.h"
-#include "Actor_factory.h"
+#include "actor_player.h"
+#include "render.h"
+#include "game_time.h"
+#include "log.h"
+#include "knockback.h"
+#include "inventory.h"
+#include "map.h"
+#include "audio.h"
+#include "utils.h"
+#include "feature_rigid.h"
+#include "actor_factory.h"
 
 using namespace std;
 

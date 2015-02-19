@@ -1,10 +1,10 @@
 #ifndef ITEM_H
 #define ITEM_H
 
-#include "Art.h"
-#include "Inventory_handling.h"
-#include "Converters.h"
-#include "Cmn_data.h"
+#include "art.h"
+#include "inventory_handling.h"
+#include "converters.h"
+#include "cmn_data.h"
 
 class Item_data_t;
 class Prop;

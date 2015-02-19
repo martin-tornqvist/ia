@@ -1,13 +1,13 @@
-#include "Populate_items.h"
+#include "populate_items.h"
 
 #include <vector>
 
-#include "Actor_player.h"
-#include "Map.h"
-#include "Item_factory.h"
-#include "Player_bon.h"
-#include "Map_parsing.h"
-#include "Utils.h"
+#include "actor_player.h"
+#include "map.h"
+#include "item_factory.h"
+#include "player_bon.h"
+#include "map_parsing.h"
+#include "utils.h"
 
 using namespace std;
 

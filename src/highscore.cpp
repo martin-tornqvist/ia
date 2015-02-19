@@ -1,20 +1,20 @@
-#include "Highscore.h"
+#include "highscore.h"
 
 #include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <vector>
 
-#include "Init.h"
-#include "Converters.h"
-#include "Highscore.h"
-#include "Actor_player.h"
-#include "Dungeon_master.h"
-#include "Map.h"
-#include "Popup.h"
-#include "Input.h"
-#include "Render.h"
-#include "Utils.h"
+#include "init.h"
+#include "converters.h"
+#include "highscore.h"
+#include "actor_player.h"
+#include "dungeon_master.h"
+#include "map.h"
+#include "popup.h"
+#include "input.h"
+#include "render.h"
+#include "utils.h"
 
 using namespace std;
 

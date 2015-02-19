@@ -1,21 +1,21 @@
-#include "Marker.h"
+#include "marker.h"
 
 #include <vector>
 
-#include "Input.h"
-#include "Inventory_handling.h"
-#include "Input.h"
-#include "Actor_player.h"
-#include "Attack.h"
-#include "Log.h"
-#include "Look.h"
-#include "Throwing.h"
-#include "Render.h"
-#include "Map.h"
-#include "Item_factory.h"
-#include "Line_calc.h"
-#include "Utils.h"
-#include "Config.h"
+#include "input.h"
+#include "inventory_handling.h"
+#include "input.h"
+#include "actor_player.h"
+#include "attack.h"
+#include "log.h"
+#include "look.h"
+#include "throwing.h"
+#include "render.h"
+#include "map.h"
+#include "item_factory.h"
+#include "line_calc.h"
+#include "utils.h"
+#include "config.h"
 
 using namespace std;
 

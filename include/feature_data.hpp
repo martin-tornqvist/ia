@@ -1,11 +1,11 @@
 #ifndef FEATURE_DATA_H
 #define FEATURE_DATA_H
 
-#include "Art.h"
-#include "Cmn_data.h"
-#include "Room.h"
-#include "Map_patterns.h"
-#include "Properties.h"
+#include "art.h"
+#include "cmn_data.h"
+#include "room.h"
+#include "map_patterns.h"
+#include "properties.h"
 
 enum class Feature_id
 {

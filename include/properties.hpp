@@ -3,10 +3,10 @@
 
 #include <string>
 
-#include "Ability_values.h"
-#include "Cmn_data.h"
-#include "Converters.h"
-#include "Cmn_types.h"
+#include "ability_values.h"
+#include "cmn_data.h"
+#include "converters.h"
+#include "cmn_types.h"
 
 class Actor;
 class Wpn;

@@ -1,19 +1,19 @@
-#include "Config.h"
+#include "config.h"
 
-#include "Init.h"
+#include "init.h"
 
 #include <fstream>
 #include <SDL_image.h>
 
-#include "Converters.h"
-#include "Menu_input_handling.h"
-#include "Menu_browser.h"
-#include "Query.h"
-#include "Render.h"
-#include "Input.h"
-#include "Audio.h"
-#include "Text_format.h"
-#include "Utils.h"
+#include "converters.h"
+#include "menu_input_handling.h"
+#include "menu_browser.h"
+#include "query.h"
+#include "render.h"
+#include "input.h"
+#include "audio.h"
+#include "text_format.h"
+#include "utils.h"
 
 
 using namespace std;

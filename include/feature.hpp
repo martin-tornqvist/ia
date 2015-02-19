@@ -4,8 +4,8 @@
 #include <vector>
 #include <string>
 
-#include "Cmn_types.h"
-#include "Feature_data.h"
+#include "cmn_types.h"
+#include "feature_data.h"
 
 class Actor;
 

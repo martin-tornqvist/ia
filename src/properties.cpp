@@ -1,25 +1,25 @@
-#include "Properties.h"
+#include "properties.h"
 
 #include <algorithm>
 #include <assert.h>
 
-#include "Init.h"
-#include "Actor_player.h"
-#include "Log.h"
-#include "Postmortem.h"
-#include "Render.h"
-#include "Actor_mon.h"
-#include "Inventory.h"
-#include "Map.h"
-#include "Explosion.h"
-#include "Player_bon.h"
-#include "Map_parsing.h"
-#include "Line_calc.h"
-#include "Actor_factory.h"
-#include "Utils.h"
-#include "Feature_rigid.h"
-#include "Feature_mob.h"
-#include "Item.h"
+#include "init.h"
+#include "actor_player.h"
+#include "log.h"
+#include "postmortem.h"
+#include "render.h"
+#include "actor_mon.h"
+#include "inventory.h"
+#include "map.h"
+#include "explosion.h"
+#include "player_bon.h"
+#include "map_parsing.h"
+#include "line_calc.h"
+#include "actor_factory.h"
+#include "utils.h"
+#include "feature_rigid.h"
+#include "feature_mob.h"
+#include "item.h"
 
 using namespace std;
 

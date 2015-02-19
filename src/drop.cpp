@@ -1,20 +1,20 @@
-#include "Drop.h"
+#include "drop.h"
 
 #include <algorithm>
 #include <string>
 #include <assert.h>
 
-#include "Cmn_types.h"
-#include "Game_time.h"
-#include "Actor_player.h"
-#include "Log.h"
-#include "Map.h"
-#include "Inventory.h"
-#include "Item_factory.h"
-#include "Map_parsing.h"
-#include "Utils.h"
-#include "Feature_rigid.h"
-#include "Render.h"
+#include "cmn_types.h"
+#include "game_time.h"
+#include "actor_player.h"
+#include "log.h"
+#include "map.h"
+#include "inventory.h"
+#include "item_factory.h"
+#include "map_parsing.h"
+#include "utils.h"
+#include "feature_rigid.h"
+#include "render.h"
 
 using namespace std;
 

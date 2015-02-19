@@ -1,28 +1,28 @@
-#include "Spells.h"
+#include "spells.h"
 
 #include <algorithm>
 #include <vector>
 #include <assert.h>
 
-#include "Init.h"
-#include "Render.h"
-#include "Actor_mon.h"
-#include "Actor_player.h"
-#include "Log.h"
-#include "Postmortem.h"
-#include "Knockback.h"
-#include "Map.h"
-#include "Actor_factory.h"
-#include "Feature_trap.h"
-#include "Player_spells_handling.h"
-#include "Item_scroll.h"
-#include "Inventory.h"
-#include "Map_parsing.h"
-#include "Line_calc.h"
-#include "Sdl_wrapper.h"
-#include "Player_bon.h"
-#include "Utils.h"
-#include "Dungeon_master.h"
+#include "init.h"
+#include "render.h"
+#include "actor_mon.h"
+#include "actor_player.h"
+#include "log.h"
+#include "postmortem.h"
+#include "knockback.h"
+#include "map.h"
+#include "actor_factory.h"
+#include "feature_trap.h"
+#include "player_spells_handling.h"
+#include "item_scroll.h"
+#include "inventory.h"
+#include "map_parsing.h"
+#include "line_calc.h"
+#include "sdl_wrapper.h"
+#include "player_bon.h"
+#include "utils.h"
+#include "dungeon_master.h"
 
 using namespace std;
 

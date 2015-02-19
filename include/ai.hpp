@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "Cmn_types.h"
-#include "Cmn_data.h"
+#include "cmn_types.h"
+#include "cmn_data.h"
 
 class Mon;
 
