@@ -52,7 +52,7 @@ private:
 //Probably the only case where fail_small and fail_big is used is for melee attack messages.
 //It seems simpler and more transparent to just use the rnd functions for rolling,
 //together with Ability_vals::get_val() for retrieving abilities to roll against.
-enum ability_roll_result
+enum Ability_roll_result
 {
     fail_critical,
     fail_big,

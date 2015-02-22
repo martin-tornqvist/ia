@@ -8,7 +8,7 @@
 #include "item_data.hpp"
 #include "actor_data.hpp"
 
-enum class map_templ_id
+enum class Map_templ_id
 {
     church,
     egypt,

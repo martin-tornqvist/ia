@@ -194,7 +194,7 @@ private:
 
 //NOTE: If append mode is used, the caller is responsible for initializing the array
 //(typically with a previous parse call, with write rule set to "overwrite")
-enum class map_parse_mode {overwrite, append};
+enum class Map_parse_mode {overwrite, append};
 
 namespace map_parse
 {
