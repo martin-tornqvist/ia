@@ -24,11 +24,11 @@ using namespace std;
 
 //--------------------------------------------------------------------- RIGID
 Rigid::Rigid(Pos pos) :
-    Feature     (pos),
-    gore_tile_   (Tile_id::empty),
-    gore_glyph_  (0),
-    is_bloody_   (false),
-    burn_state_  (Burn_state::not_burned) {}
+    Feature(pos),
+    gore_tile_(Tile_id::empty),
+    gore_glyph_(0),
+    is_bloody_(false),
+    burn_state_(Burn_state::not_burned) {}
 
 void Rigid::on_new_turn()
 {
@@ -50,6 +50,7 @@ void Rigid::on_new_turn()
                                  clr_msg_good);
                 }
             }
+
             actor.hit(1, Dmg_type::fire);
         };
 
@@ -57,6 +58,7 @@ void Rigid::on_new_turn()
 
         //Hit actor standing on feature
         auto* actor = utils::get_actor_at_pos(pos_);
+
         if (actor)
         {
             //Occasionally try to set actor on fire, otherwise just do small fire damage
@@ -112,6 +114,7 @@ void Rigid::on_new_turn()
         if (rnd::one_in(finish_burning_one_in_n))
         {
             burn_state_ = Burn_state::has_burned;
+
             if (on_finished_burning() == Was_destroyed::yes)
             {
                 return;
@@ -122,11 +125,13 @@ void Rigid::on_new_turn()
         if (rnd::one_in(hit_adjacent_one_in_n))
         {
             const Pos p(dir_utils::get_rnd_adj_pos(pos_, false));
+
             if (utils::is_pos_inside_map(p))
             {
                 map::cells[p.x][p.y].rigid->hit(Dmg_type::fire, Dmg_method::elemental);
 
                 actor = utils::get_actor_at_pos(p);
+
                 if (actor) {scorch_actor(*actor);}
             }
         }
@@ -135,6 +140,7 @@ void Rigid::on_new_turn()
         if (rnd::one_in(20))
         {
             const Pos p(dir_utils::get_rnd_adj_pos(pos_, true));
+
             if (utils::is_pos_inside_map(p))
             {
                 if (!cell_check::Blocks_move_cmn(false).check(map::cells[p.x][p.y]))
@@ -161,6 +167,7 @@ void Rigid::try_start_burning(const bool IS_MSG_ALLOWED)
             str[0] = toupper(str[0]);
             msg_log::add(str);
         }
+
         burn_state_ = Burn_state::burning;
     }
 }
@@ -247,11 +254,15 @@ void Rigid::try_put_gore()
     if (get_data().can_have_gore)
     {
         const int ROLL_GLYPH = rnd::dice(1, 4);
+
         switch (ROLL_GLYPH)
         {
         case 1: gore_glyph_ = ',';  break;
+
         case 2: gore_glyph_ = '`';  break;
+
         case 3: gore_glyph_ = 39;   break;
+
         case 4: gore_glyph_ = ';';  break;
         }
     }
@@ -261,12 +272,19 @@ void Rigid::try_put_gore()
     switch (ROLL_TILE)
     {
     case 1: gore_tile_ = Tile_id::gore1;  break;
+
     case 2: gore_tile_ = Tile_id::gore2;  break;
+
     case 3: gore_tile_ = Tile_id::gore3;  break;
+
     case 4: gore_tile_ = Tile_id::gore4;  break;
+
     case 5: gore_tile_ = Tile_id::gore5;  break;
+
     case 6: gore_tile_ = Tile_id::gore6;  break;
+
     case 7: gore_tile_ = Tile_id::gore7;  break;
+
     case 8: gore_tile_ = Tile_id::gore8;  break;
     }
 }
@@ -295,9 +313,11 @@ Clr Rigid::get_clr_bg() const
     switch (burn_state_)
     {
     case Burn_state::not_burned:  return get_clr_bg_();
+
     case Burn_state::burning:    return Clr {Uint8(rnd::range(32, 255)), 0, 0, 0};
     case Burn_state::has_burned:  return get_clr_bg_();
     }
+
     assert(false && "Failed to set color");
     return clr_yellow;
 }
@@ -311,14 +331,15 @@ void Rigid::clear_gore()
 
 //--------------------------------------------------------------------- FLOOR
 Floor::Floor(Pos pos) :
-    Rigid   (pos),
-    type_   (Floor_type::cmn) {}
+    Rigid(pos),
+    type_(Floor_type::cmn) {}
 
 void Floor::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
 {
     if (dmg_type == Dmg_type::fire && dmg_method == Dmg_method::elemental)
     {
         (void)actor;
+
         if (rnd::one_in(3))
         {
             try_start_burning(false);
@@ -348,7 +369,9 @@ string Floor::get_name(const Article article) const
         switch (type_)
         {
         case Floor_type::cmn:        ret += "stone floor";   break;
+
         case Floor_type::cave:       ret += "cavern floor";  break;
+
         case Floor_type::stone_path:  ret += "stone path";    break;
         }
     }
@@ -363,9 +386,9 @@ Clr Floor::get_clr_() const
 
 //--------------------------------------------------------------------- WALL
 Wall::Wall(Pos pos) :
-    Rigid     (pos),
-    type_     (Wall_type::cmn),
-    is_mossy_  (false) {}
+    Rigid(pos),
+    type_(Wall_type::cmn),
+    is_mossy_(false) {}
 
 void Wall::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
 {
@@ -376,6 +399,7 @@ void Wall::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
         for (const Pos& d : dir_utils::cardinal_list)
         {
             const Pos p(pos_ + d);
+
             if (utils::is_pos_inside_map(p))
             {
                 if (map::cells[p.x][p.y].rigid->get_id() == Feature_id::door)
@@ -390,6 +414,7 @@ void Wall::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
     {
         const Pos p(pos_);
         map::put(new Rubble_low(p)); //NOTE: "this" is now deleted!
+
         if (rnd::coin_toss()) {item_factory::mk_item_on_floor(Item_id::rock, p);}
     };
 
@@ -476,12 +501,14 @@ string Wall::get_name(const Article article) const
         ret += "cliff";
         break;
     }
+
     return ret;
 }
 
 Clr Wall::get_clr_() const
 {
     if (is_mossy_) {return clr_green_drk;}
+
     switch (type_)
     {
     case Wall_type::cliff:
@@ -498,6 +525,7 @@ Clr Wall::get_clr_() const
     case Wall_type::leng_monestary:
         return clr_red;
     }
+
     assert(false && "Failed to set color");
     return clr_yellow;
 }
@@ -545,6 +573,7 @@ Tile_id Wall::get_front_wall_tile() const
             return Tile_id::egypt_wall_front;
         }
     }
+
     assert(false && "Failed to set front wall tile");
     return Tile_id::empty;
 }
@@ -565,6 +594,7 @@ Tile_id Wall::get_top_wall_tile() const
     case Wall_type::egypt:
         return Tile_id::egypt_wall_top;
     }
+
     assert(false && "Failed to set top wall tile");
     return Tile_id::empty;
 }
@@ -572,9 +602,11 @@ Tile_id Wall::get_top_wall_tile() const
 void Wall::set_rnd_cmn_wall()
 {
     const int RND = rnd::range(1, 6);
+
     switch (RND)
     {
     case 1:   type_ = Wall_type::cmn_alt; break;
+
     default:  type_ = Wall_type::cmn;    break;
     }
 }
@@ -597,6 +629,7 @@ void Rubble_high::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
     {
         const Pos p(pos_);
         map::put(new Rubble_low(p)); //NOTE: "this" is now deleted!
+
         if (rnd::coin_toss()) {item_factory::mk_item_on_floor(Item_id::rock, p);}
     };
 
@@ -648,8 +681,11 @@ void Rubble_low::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
 string Rubble_low::get_name(const Article article) const
 {
     string ret = "";
+
     if (article == Article::the)               {ret += "the ";}
+
     if (get_burn_state() == Burn_state::burning)  {ret += "burning ";}
+
     return ret + "rubble";
 }
 
@@ -672,7 +708,9 @@ void Bones::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
 string Bones::get_name(const Article article) const
 {
     string ret = "";
+
     if (article == Article::the) {ret += "the ";}
+
     return ret + "bones";
 }
 
@@ -729,8 +767,8 @@ Clr Church_bench::get_clr_() const
 
 //--------------------------------------------------------------------- STATUE
 Statue::Statue(Pos pos) :
-    Rigid   (pos),
-    type_   (rnd::one_in(8) ? Statue_type::ghoul : Statue_type::cmn) {}
+    Rigid(pos),
+    type_(rnd::one_in(8) ? Statue_type::ghoul : Statue_type::cmn) {}
 
 int Statue::get_shock_when_adj() const
 {
@@ -780,6 +818,7 @@ void Statue::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor*
         {
             bool props_actor_behind[size_t(Prop_id::END)];
             actor_behind->get_prop_handler().get_prop_ids(props_actor_behind);
+
             if (!props_actor_behind[int(Prop_id::ethereal)])
             {
                 if (actor_behind == map::player)
@@ -790,6 +829,7 @@ void Statue::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor*
                 {
                     msg_log::add("It falls on " + actor_behind->get_name_a() + ".");
                 }
+
                 actor_behind->hit(rnd::dice(3, 5), Dmg_type::physical);
             }
         }
@@ -815,6 +855,7 @@ string Statue::get_name(const Article article) const
     switch (type_)
     {
     case Statue_type::cmn:   ret += "statue"; break;
+
     case Statue_type::ghoul: ret += "statue of a ghoulish creature"; break;
     }
 
@@ -978,8 +1019,8 @@ Clr Bridge::get_clr_() const
 
 //--------------------------------------------------------------------- SHALLOW LIQUID
 Liquid_shallow::Liquid_shallow(Pos pos) :
-    Rigid   (pos),
-    type_   (Liquid_type::water) {}
+    Rigid(pos),
+    type_(Liquid_type::water) {}
 
 void Liquid_shallow::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
                             Actor* const actor)
@@ -1006,6 +1047,7 @@ void Liquid_shallow::bump(Actor& actor_bumping)
 string Liquid_shallow::get_name(const Article article) const
 {
     string ret = "";
+
     if (article == Article::the) {ret += "the ";}
 
     ret += "a pool of ";
@@ -1013,9 +1055,13 @@ string Liquid_shallow::get_name(const Article article) const
     switch (type_)
     {
     case Liquid_type::water:   ret += "water"; break;
+
     case Liquid_type::acid:    ret += "acid";  break;
+
     case Liquid_type::blood:   ret += "blood"; break;
+
     case Liquid_type::lava:    ret += "lava";  break;
+
     case Liquid_type::mud:     ret += "mud";   break;
     }
 
@@ -1027,19 +1073,24 @@ Clr Liquid_shallow::get_clr_() const
     switch (type_)
     {
     case Liquid_type::water:   return clr_blue_lgt;  break;
+
     case Liquid_type::acid:    return clr_green_lgt; break;
+
     case Liquid_type::blood:   return clr_red_lgt;   break;
+
     case Liquid_type::lava:    return clr_orange;   break;
+
     case Liquid_type::mud:     return clr_brown;    break;
     }
+
     assert(false && "Failed to set color");
     return clr_yellow;
 }
 
 //--------------------------------------------------------------------- DEEP LIQUID
 Liquid_deep::Liquid_deep(Pos pos) :
-    Rigid   (pos),
-    type_   (Liquid_type::water) {}
+    Rigid(pos),
+    type_(Liquid_type::water) {}
 
 void Liquid_deep::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
                          Actor* const actor)
@@ -1055,6 +1106,7 @@ void Liquid_deep::bump(Actor& actor_bumping)
 string Liquid_deep::get_name(const Article article) const
 {
     string ret = "";
+
     if (article == Article::the) {ret += "the ";}
 
     ret += "deep ";
@@ -1062,9 +1114,13 @@ string Liquid_deep::get_name(const Article article) const
     switch (type_)
     {
     case Liquid_type::water:   ret += "water"; break;
+
     case Liquid_type::acid:    ret += "acid";  break;
+
     case Liquid_type::blood:   ret += "blood"; break;
+
     case Liquid_type::lava:    ret += "lava";  break;
+
     case Liquid_type::mud:     ret += "mud";   break;
     }
 
@@ -1076,11 +1132,16 @@ Clr Liquid_deep::get_clr_() const
     switch (type_)
     {
     case Liquid_type::water:   return clr_blue;     break;
+
     case Liquid_type::acid:    return clr_green;    break;
+
     case Liquid_type::blood:   return clr_red;      break;
+
     case Liquid_type::lava:    return clr_orange;   break;
+
     case Liquid_type::mud:     return clr_brown_drk; break;
     }
+
     assert(false && "Failed to set color");
     return clr_yellow;
 }
@@ -1108,9 +1169,9 @@ Clr Chasm::get_clr_() const
 
 //--------------------------------------------------------------------- LEVER
 Lever::Lever(Pos pos) :
-    Rigid             (pos),
-    is_position_left_   (true),
-    door_linked_to_     (nullptr)  {}
+    Rigid(pos),
+    is_position_left_(true),
+    door_linked_to_(nullptr)  {}
 
 void Lever::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
 {
@@ -1206,8 +1267,8 @@ Clr Carpet::get_clr_() const
 
 //--------------------------------------------------------------------- GRASS
 Grass::Grass(Pos pos) :
-    Rigid   (pos),
-    type_   (Grass_type::cmn)
+    Rigid(pos),
+    type_(Grass_type::cmn)
 {
     if (rnd::one_in(5)) {type_ = Grass_type::withered;}
 }
@@ -1232,6 +1293,7 @@ Tile_id Grass::get_tile() const
 string Grass::get_name(const Article article) const
 {
     string ret = "";
+
     if (article == Article::the) {ret += "the ";}
 
     switch (get_burn_state())
@@ -1245,6 +1307,7 @@ string Grass::get_name(const Article article) const
         case Grass_type::withered:
             return ret + "withered grass";
         }
+
         break;
 
     case Burn_state::burning:
@@ -1263,16 +1326,18 @@ Clr Grass::get_clr_() const
     switch (type_)
     {
     case Grass_type::cmn:      return clr_green;    break;
+
     case Grass_type::withered: return clr_brown_drk; break;
     }
+
     assert(false && "Failed to set color");
     return clr_yellow;
 }
 
 //--------------------------------------------------------------------- BUSH
 Bush::Bush(Pos pos) :
-    Rigid   (pos),
-    type_   (Grass_type::cmn)
+    Rigid(pos),
+    type_(Grass_type::cmn)
 {
     if (rnd::one_in(5)) {type_ = Grass_type::withered;}
 }
@@ -1309,6 +1374,7 @@ string Bush::get_name(const Article article) const
         case Grass_type::withered:
             return ret + "withered shrub";
         }
+
         break;
 
     case Burn_state::burning:
@@ -1327,8 +1393,10 @@ Clr Bush::get_clr_() const
     switch (type_)
     {
     case Grass_type::cmn:      return clr_green;    break;
+
     case Grass_type::withered: return clr_brown_drk; break;
     }
+
     assert(false && "Failed to set color");
     return clr_yellow;
 }
@@ -1342,6 +1410,7 @@ void Tree::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
     if (dmg_type == Dmg_type::fire && dmg_method == Dmg_method::elemental)
     {
         (void)actor;
+
         if (rnd::one_in(3))
         {
             try_start_burning(false);
@@ -1369,7 +1438,9 @@ string Tree::get_name(const Article article) const
     switch (get_burn_state())
     {
     case Burn_state::not_burned:  {}                  break;
+
     case Burn_state::burning:    ret += "burning ";  break;
+
     case Burn_state::has_burned:  ret += "scorched "; break;
     }
 
@@ -1536,6 +1607,7 @@ void Item_container::open(const Pos& feature_pos, Actor* const actor_opening)
                 item_drop::drop_item_on_map(feature_pos, *wpn);
             }
         }
+
         msg_log::clear();
         msg_log::add("There are no more items.");
         render::draw_map_and_interface();
@@ -1559,6 +1631,7 @@ void Item_container::destroy_single_fragile()
     {
         Item* const item = items_[i];
         const Item_data_t& d = item->get_data();
+
         if (d.type == Item_type::potion || d.id == Item_id::molotov)
         {
             delete item;
@@ -1571,13 +1644,13 @@ void Item_container::destroy_single_fragile()
 
 //--------------------------------------------------------------------- TOMB
 Tomb::Tomb(const Pos& pos) :
-    Rigid               (pos),
-    is_open_             (false),
-    is_trait_known_       (false),
-    push_lid_one_in_n_      (rnd::range(6, 14)),
-    appearance_         (Tomb_appearance::common),
-    is_random_appearance_ (false),
-    trait_              (Tomb_trait::END)
+    Rigid(pos),
+    is_open_(false),
+    is_trait_known_(false),
+    push_lid_one_in_n_(rnd::range(6, 14)),
+    appearance_(Tomb_appearance::common),
+    is_random_appearance_(false),
+    trait_(Tomb_trait::END)
 {
     //Contained items
     const int NR_ITEMS_MIN  = rnd::one_in(3) ? 0 : 1;
@@ -1706,6 +1779,7 @@ Clr Tomb::get_clr_() const
     case Tomb_appearance::END: {}
         break;
     }
+
     assert("Failed to set Tomb color" && false);
     return clr_black;
 }
@@ -1902,6 +1976,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
             Prop* prop    = nullptr;
             Clr fume_clr   = clr_magenta;
             const int RND = rnd::percent();
+
             if (map::dlvl >= MIN_DLVL_HARDER_TRAPS && RND < 20)
             {
                 prop    = new Prop_poisoned(Prop_turns::std);
@@ -1917,6 +1992,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
                 prop = new Prop_paralyzed(Prop_turns::std);
                 prop->turns_left_ *= 2;
             }
+
             explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, 0,
                                         Sfx_id::END, prop, &fume_clr);
         }
@@ -1925,6 +2001,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
             for (int i = 0; i < int(Actor_id::END); ++i)
             {
                 const actor_data_t& d = actor_data::data[i];
+
                 if (
                     d.intr_props[int(Prop_id::ooze)] &&
                     d.is_auto_spawn_allowed  &&
@@ -1933,8 +2010,10 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
                     actor_bucket.push_back(Actor_id(i));
                 }
             }
+
             msg_log::add("Something creeps up from the tomb!", clr_white, false, true);
         }
+
         did_trigger_trap = Did_trigger_trap::yes;
         break;
 
@@ -1957,13 +2036,13 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
 
 //--------------------------------------------------------------------- CHEST
 Chest::Chest(const Pos& pos) :
-    Rigid               (pos),
-    is_open_             (false),
-    is_locked_           (false),
-    is_trapped_          (false),
-    is_trap_status_known_  (false),
-    matl_               (Chest_matl(rnd::range(0, int(Chest_matl::END) - 1))),
-    TRAP_DET_LVL        (rnd::range(0, 2))
+    Rigid(pos),
+    is_open_(false),
+    is_locked_(false),
+    is_trapped_(false),
+    is_trap_status_known_(false),
+    matl_(Chest_matl(rnd::range(0, int(Chest_matl::END) - 1))),
+    TRAP_DET_LVL(rnd::range(0, 2))
 {
     const bool  IS_TREASURE_HUNTER  = player_bon::traits[int(Trait::treasure_hunter)];
     const int   NR_ITEMS_MIN        = rnd::one_in(10)      ? 0 : 1;
@@ -2009,6 +2088,7 @@ void Chest::bump(Actor& actor_bumping)
                 {
                     open(map::player);
                 }
+
                 game_time::tick();
             }
         }
@@ -2153,6 +2233,7 @@ void Chest::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* con
                         try_sprain_player();
                     }
                 }
+
                 game_time::tick();
             }
         }
@@ -2243,6 +2324,7 @@ void Chest::disarm()
                 msg_log::add("Attempt to disarm it? [y/n]");
                 render::draw_map_and_interface();
                 const auto answer = query::yes_or_no();
+
                 if (answer == Yes_no_answer::no)
                 {
                     msg_log::clear();
@@ -2271,6 +2353,7 @@ void Chest::disarm()
             {
                 trigger_trap(map::player); //NOTE: This will disable the trap
             }
+
             game_time::tick();
             return;
         }
@@ -2330,6 +2413,7 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
 
     //Fire explosion?
     const int FIRE_EXPLOSION_ONE_IN_N = 5;
+
     if (map::dlvl >= MIN_DLVL_HARDER_TRAPS && rnd::one_in(FIRE_EXPLOSION_ONE_IN_N))
     {
         if (IS_SEEN)
@@ -2370,39 +2454,41 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
             msg_log::add("Fumes burst out from the chest!", clr_white, false, true);
         }
 
-        Prop*     prop    = nullptr;
-        Clr       fume_clr = clr_magenta;
-        const int RND     = rnd::percent();
+        Prop*       prop        = nullptr;
+        Clr         fume_clr    = clr_magenta;
+        const int   RND         = rnd::percent();
 
         if (map::dlvl >= MIN_DLVL_HARDER_TRAPS && RND < 20)
         {
-            prop    = new Prop_poisoned(Prop_turns::std);
-            fume_clr = clr_green_lgt;
+            prop        = new Prop_poisoned(Prop_turns::std);
+            fume_clr    = clr_green_lgt;
         }
         else if (RND < 40)
         {
-            prop    = new Prop_diseased(Prop_turns::specific, 50);
-            fume_clr = clr_green;
+            prop        = new Prop_diseased(Prop_turns::specific, 50);
+            fume_clr    = clr_green;
         }
         else
         {
             prop = new Prop_paralyzed(Prop_turns::std);
             prop->turns_left_ *= 2;
         }
+
         explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, 0,
                                     Sfx_id::END, prop, &fume_clr);
     }
+
     return Did_trigger_trap::yes;
 }
 
 string Chest::get_name(const Article article) const
 {
-    const bool    IS_EMPTY        = item_container_.items_.empty() && is_open_;
-    const bool    IS_KNOWN_TRAP   = is_trapped_ && is_trap_status_known_;
-    const string  locked_str       = is_locked_               ? "locked "   : "";
-    const string  empty_str        = IS_EMPTY                ? "empty "    : "";
-    const string  trap_str         = IS_KNOWN_TRAP           ? "trapped "  : "";
-    const string  open_str         = (is_open_ && !IS_EMPTY)  ? "open "     : "";
+    const bool      IS_EMPTY        = item_container_.items_.empty() && is_open_;
+    const bool      IS_KNOWN_TRAP   = is_trapped_ && is_trap_status_known_;
+    const string    locked_str      = is_locked_                ? "locked "   : "";
+    const string    empty_str       = IS_EMPTY                  ? "empty "    : "";
+    const string    trap_str        = IS_KNOWN_TRAP             ? "trapped "  : "";
+    const string    open_str        = (is_open_ && !IS_EMPTY)   ? "open "     : "";
 
     string a = "";
 
@@ -2419,7 +2505,8 @@ string Chest::get_name(const Article article) const
         a = "the ";
     }
 
-    const string matl_str = is_open_ ? "" : matl_ == Chest_matl::wood ? "wooden " : "iron ";
+    const string matl_str =
+        is_open_ ? "" : matl_ == Chest_matl::wood ? "wooden " : "iron ";
 
     return a + locked_str + empty_str + open_str + trap_str + matl_str + "chest";
 }
@@ -2436,10 +2523,10 @@ Clr Chest::get_clr_() const
 
 //--------------------------------------------------------------------- FOUNTAIN
 Fountain::Fountain(const Pos& pos) :
-    Rigid             (pos),
-    fountain_effects_  (vector<Fountain_effect>()),
-    fountain_matl_     (Fountain_matl::stone),
-    nr_drinks_left_     (rnd::range(3, 4))
+    Rigid(pos),
+    fountain_effects_(vector<Fountain_effect>()),
+    fountain_matl_(Fountain_matl::stone),
+    nr_drinks_left_(rnd::range(3, 4))
 {
     if (rnd::one_in(16))
     {
@@ -2459,6 +2546,7 @@ Fountain::Fountain(const Pos& pos) :
             const auto  effect    = Fountain_effect(rnd::range(0, NR_TYPES - 1));
             fountain_effects_.push_back(effect);
         }
+
         break;
 
     case Fountain_matl::gold:
@@ -2482,6 +2570,7 @@ Fountain::Fountain(const Pos& pos) :
         {
             fountain_effects_.push_back(effect_bucket[i]);
         }
+
         break;
     }
 }
@@ -2503,9 +2592,11 @@ Clr Fountain::get_clr_() const
         switch (fountain_matl_)
         {
         case Fountain_matl::stone: return clr_blue_lgt;
+
         case Fountain_matl::gold:  return clr_yellow;
         }
     }
+
     assert("Failed to get fountain color" && false);
     return clr_black;
 }
@@ -2517,8 +2608,10 @@ string Fountain::get_name(const Article article) const
     switch (fountain_matl_)
     {
     case Fountain_matl::stone: {}                break;
+
     case Fountain_matl::gold:  ret += "golden "; break;
     }
+
     return ret + "fountain";
 }
 
@@ -2667,6 +2760,7 @@ void Fountain::bump(Actor& actor_bumping)
         {
             msg_log::add("The fountain dries out.");
         }
+
         render::draw_map_and_interface();
         game_time::tick();
     }
@@ -2674,8 +2768,8 @@ void Fountain::bump(Actor& actor_bumping)
 
 //--------------------------------------------------------------------- CABINET
 Cabinet::Cabinet(const Pos& pos) :
-    Rigid   (pos),
-    is_open_ (false)
+    Rigid(pos),
+    is_open_(false)
 {
     const int IS_EMPTY_N_IN_10  = 5;
     const int NR_ITEMS_MIN      = rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
@@ -2782,9 +2876,9 @@ Clr Cabinet::get_clr_() const
 
 //--------------------------------------------------------------------- COCOON
 Cocoon::Cocoon(const Pos& pos) :
-    Rigid      (pos),
-    is_trapped_ (rnd::fraction(6, 10)),
-    is_open_    (false)
+    Rigid(pos),
+    is_trapped_(rnd::fraction(6, 10)),
+    is_open_(false)
 {
     if (is_trapped_)
     {
@@ -2795,9 +2889,9 @@ Cocoon::Cocoon(const Pos& pos) :
         const bool  IS_TREASURE_HUNTER =
             player_bon::traits[int(Trait::treasure_hunter)];
 
-        const int   IS_EMPTY_N_IN_10    = 6;
-        const int   NR_ITEMS_MIN        = rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
-        const int   NR_ITEMS_MAX        = NR_ITEMS_MIN + (IS_TREASURE_HUNTER ? 1 : 0);
+        const int IS_EMPTY_N_IN_10  = 6;
+        const int NR_ITEMS_MIN      = rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
+        const int NR_ITEMS_MAX      = NR_ITEMS_MIN + (IS_TREASURE_HUNTER ? 1 : 0);
         item_container_.init(Feature_id::cocoon, rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
     }
 }
@@ -2861,14 +2955,15 @@ Did_trigger_trap Cocoon::trigger_trap(Actor* const actor)
             //Spiders
             TRACE << "Attempting to spawn spiders" << endl;
             vector<Actor_id> spawn_bucket;
+
             for (int i = 0; i < int(Actor_id::END); ++i)
             {
                 const actor_data_t& d = actor_data::data[i];
 
                 if (
-                    d.is_spider                      &&
-                    d.actor_size == Actor_size::floor &&
-                    d.is_auto_spawn_allowed            &&
+                    d.is_spider                         &&
+                    d.actor_size == Actor_size::floor   &&
+                    d.is_auto_spawn_allowed             &&
                     !d.is_unique)
                 {
                     spawn_bucket.push_back(d.id);
@@ -2876,6 +2971,7 @@ Did_trigger_trap Cocoon::trigger_trap(Actor* const actor)
             }
 
             const int NR_CANDIDATES = spawn_bucket.size();
+
             if (NR_CANDIDATES > 0)
             {
                 TRACE << "Spawn candidates found, attempting to place" << endl;
@@ -2883,13 +2979,13 @@ Did_trigger_trap Cocoon::trigger_trap(Actor* const actor)
                 const int NR_SPIDERS          = rnd::range(2, 5);
                 const int IDX                 = rnd::range(0, NR_CANDIDATES - 1);
                 const Actor_id actor_id_to_summon = spawn_bucket[IDX];
-                actor_factory::summon(
-                    pos_, vector<Actor_id>(NR_SPIDERS, actor_id_to_summon), true);
+                actor_factory::summon(pos_, vector<Actor_id>(NR_SPIDERS, actor_id_to_summon), true);
                 is_trapped_ = false;
                 return Did_trigger_trap::yes;
             }
         }
     }
+
     return Did_trigger_trap::no;
 }
 

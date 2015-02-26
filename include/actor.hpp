@@ -40,11 +40,11 @@ public:
                    const Dmg_method method = Dmg_method::END);
     Actor_died hit_spi(const int DMG, const bool ALLOW_MSG);
 
-    bool restore_hp   (const int HP_RESTORED, const bool ALLOW_MSG = true,
-                       const bool IS_ALLOWED_ABOVE_MAX = false);
-    bool restore_spi  (const int SPI_RESTORED, const bool ALLOW_MSG = true,
-                       const bool IS_ALLOWED_ABOVE_MAX = false);
-    void change_max_hp (const int CHANGE, const bool ALLOW_MSG);
+    bool restore_hp(const int HP_RESTORED, const bool ALLOW_MSG = true,
+                    const bool IS_ALLOWED_ABOVE_MAX = false);
+    bool restore_spi(const int SPI_RESTORED, const bool ALLOW_MSG = true,
+                     const bool IS_ALLOWED_ABOVE_MAX = false);
+    void change_max_hp(const int CHANGE, const bool ALLOW_MSG);
     void change_max_spi(const int CHANGE, const bool ALLOW_MSG);
 
     void die(const bool IS_DESTROYED, const bool ALLOW_GORE,
@@ -86,7 +86,7 @@ public:
 
     void teleport();
 
-    bool       is_alive ()  const {return state_ == Actor_state::alive;}
+    bool       is_alive()  const {return state_ == Actor_state::alive;}
     bool       is_corpse()  const {return state_ == Actor_state::corpse;}
     Actor_state get_state()  const {return state_;}
 

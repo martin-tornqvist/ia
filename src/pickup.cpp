@@ -45,6 +45,7 @@ void try_pick()
         if (item->get_data().ranged.is_throwing_wpn)
         {
             Item* const carried_missile = player_inv.get_item_in_slot(Slot_id::thrown);
+
             if (carried_missile)
             {
                 if (item->get_id() == carried_missile->get_data().id)

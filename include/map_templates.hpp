@@ -25,10 +25,10 @@ struct map_templ_cell
                    Actor_id actor_id_     = Actor_id::END,
                    Item_id item_id_       = Item_id::END,
                    int val_             = 0) :
-        feature_id (feature_id_),
-        actor_id   (actor_id_),
-        item_id    (item_id_),
-        val       (val_) {}
+        feature_id(feature_id_),
+        actor_id(actor_id_),
+        item_id(item_id_),
+        val(val_) {}
 
     Feature_id feature_id;
     Actor_id   actor_id;
@@ -56,7 +56,7 @@ namespace map_templ_handling
 
 void init();
 
-const map_templ& get_templ(const map_templ_id id);
+const map_templ& get_templ(const Map_templ_id id);
 
 } //map_templ_handling
 

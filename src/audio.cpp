@@ -81,6 +81,8 @@ int get_free_channel(const int FROM)
 
 void init()
 {
+    TRACE_FUNC_BEGIN;
+
     cleanup();
 
     if (config::is_audio_enabled())
@@ -142,6 +144,7 @@ void init()
         int a = 1;
         const int FIRST = int(Sfx_id::AMB_START) + 1;
         const int LAST  = int(Sfx_id::AMB_END)   - 1;
+
         for (int i = FIRST; i <= LAST; ++i)
         {
             const string index_str = to_str(a);
@@ -154,15 +157,21 @@ void init()
         load_audio_file(Sfx_id::mus_cthulhiana_Madness,
                         "musica_cthulhiana-fragment-madness.ogg");
     }
+    TRACE_FUNC_END;
 }
 
 void cleanup()
 {
+    TRACE_FUNC_BEGIN;
+
     for (Mix_Chunk* chunk : audio_chunks) {Mix_FreeChunk(chunk);}
+
     audio_chunks.clear();
 
     cur_channel_        =  0;
     time_at_last_amb_   = -1;
+
+    TRACE_FUNC_END;
 }
 
 int play(const Sfx_id sfx, const int VOL_PERCENT_TOT, const int VOL_PERCENT_L)
@@ -203,19 +212,30 @@ void play(const Sfx_id sfx, const Dir dir, const int DISTANCE_PERCENT)
         const int VOL_PERCENT_TOT = 100 - ((DISTANCE_PERCENT * 2) / 3);
 
         int vol_percent_l = 0;
+
         switch (dir)
         {
         case Dir::left:       vol_percent_l = 85;  break;
+
         case Dir::up_left:     vol_percent_l = 75;  break;
+
         case Dir::down_left:   vol_percent_l = 75;  break;
+
         case Dir::up:         vol_percent_l = 50;  break;
+
         case Dir::center:     vol_percent_l = 50;  break;
+
         case Dir::down:       vol_percent_l = 50;  break;
+
         case Dir::up_right:    vol_percent_l = 25;  break;
+
         case Dir::down_right:  vol_percent_l = 25;  break;
+
         case Dir::right:      vol_percent_l = 15;  break;
+
         case Dir::END:        vol_percent_l = 50;  break;
         }
+
         play(sfx, VOL_PERCENT_TOT, vol_percent_l);
     }
 }

@@ -65,11 +65,13 @@ void cut_room_corners(const Room& room)
 
     //Which corners to place - up-left, up-right, down-left, down-right
     bool c[4] = {true, true, true, true};
+
     if (rnd::fraction(2, 3))
     {
         while (true)
         {
             int nr_corners = 0;
+
             for (int i = 0; i < 4; ++i)
             {
                 if (rnd::coin_toss())
@@ -82,6 +84,7 @@ void cut_room_corners(const Room& room)
                     c[i] = false;
                 }
             }
+
             if (nr_corners > 0)
             {
                 break;
@@ -119,9 +122,11 @@ void mk_pillars_in_room(const Room& room)
             for (int dy = -1; dy <= 1; ++dy)
             {
                 const auto* const f = map::cells[p.x + dx][p.y + dy].rigid;
+
                 if (f->get_id() == Feature_id::wall) {return false;}
             }
         }
+
         return true;
     };
 
@@ -137,6 +142,7 @@ void mk_pillars_in_room(const Room& room)
             for (int x = room_p0.x + 1; x <= room_p1.x - 1; x += DX)
             {
                 const Pos p(x, y);
+
                 if (is_free(p) && rnd::fraction(2, 3)) {map::put(new Wall(p));}
             }
         }
@@ -149,6 +155,7 @@ void mk_pillars_in_room(const Room& room)
             for (int x = room_p0.x + 1; x <= room_p1.x - 1; ++x)
             {
                 const Pos p(x + rnd::range(-1, 1), y + rnd::range(-1, 1));
+
                 if (is_free(p) && rnd::one_in(5)) {map::put(new Wall(p));}
             }
         }
@@ -217,8 +224,11 @@ void cavify_room(Room& room)
                     map::room_map[x][y] = &room;
 
                     if (x < room_rect.p0.x) {room_rect.p0.x = x;}
+
                     if (y < room_rect.p0.y) {room_rect.p0.y = y;}
+
                     if (x > room_rect.p1.x) {room_rect.p1.x = x;}
+
                     if (y > room_rect.p1.y) {room_rect.p1.y = y;}
                 }
             }
@@ -295,6 +305,7 @@ void get_valid_room_corr_entries(const Room& room, vector<Pos>& out)
             for (const Pos& d : dir_utils::cardinal_list)
             {
                 const Pos& p_adj(p + d);
+
                 //Condition (4)
                 if (room_floor_cells[p_adj.x][p_adj.y])      {is_adj_to_floor_in_room = true;}
 
@@ -308,6 +319,7 @@ void get_valid_room_corr_entries(const Room& room, vector<Pos>& out)
             }
         }
     }
+
     TRACE_FUNC_END_VERBOSE;
 }
 
@@ -329,6 +341,7 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
         TRACE_FUNC_END_VERBOSE << "No entry points found in room 0" << endl;
         return;
     }
+
     if (p1Bucket.empty())
     {
         TRACE_FUNC_END_VERBOSE << "No entry points found in room 1" << endl;
@@ -338,11 +351,13 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
     int shortest_dist = INT_MAX;
 
     TRACE_VERBOSE << "Finding shortest possible dist between entries" << endl;
+
     for (const Pos& p0 : p0Bucket)
     {
         for (const Pos& p1 : p1Bucket)
         {
             const int CUR_DIST = utils::king_dist(p0, p1);
+
             if (CUR_DIST < shortest_dist) {shortest_dist = CUR_DIST;}
         }
     }
@@ -356,6 +371,7 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
         for (const Pos& p1 : p1Bucket)
         {
             const int CUR_DIST = utils::king_dist(p0, p1);
+
             if (CUR_DIST == shortest_dist)
             {
                 entries_bucket.push_back(pair<Pos, Pos>(p0, p1));
@@ -413,19 +429,25 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
         TRACE_VERBOSE << "Check that the path doesn't circle around the origin or targt "
                       << "room (looks bad)" << endl;
         vector<Room*> rooms {&r0, &r1};
+
         for (Room* room : rooms)
         {
             bool is_left_of_room   = false;
             bool is_right_of_room  = false;
             bool is_above_room    = false;
             bool is_below_room    = false;
+
             for (const Pos& p : path)
             {
                 if (p.x < room->r_.p0.x) {is_left_of_room   = true;}
+
                 if (p.x > room->r_.p1.x) {is_right_of_room  = true;}
+
                 if (p.y < room->r_.p0.y) {is_above_room    = true;}
+
                 if (p.y > room->r_.p1.y) {is_below_room    = true;}
             }
+
             if ((is_left_of_room && is_right_of_room) || (is_above_room && is_below_room))
             {
                 TRACE_FUNC_END_VERBOSE << "Path circled around room, aborting corridor"
@@ -471,11 +493,13 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
                 link->rooms_con_to_.push_back(&r1);
                 r0.rooms_con_to_.push_back(link);
                 r1.rooms_con_to_.push_back(link);
+
                 for (Room* prev_link : prev_links)
                 {
                     link->rooms_con_to_.push_back(prev_link);
                     prev_link->rooms_con_to_.push_back(link);
                 }
+
                 prev_links.push_back(link);
             }
         }
@@ -484,6 +508,7 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
         {
             door_proposals[p0.x][p0.y] = door_proposals[p1.x][p1.y] = true;
         }
+
         r0.rooms_con_to_.push_back(&r1);
         r1.rooms_con_to_.push_back(&r0);
         TRACE_FUNC_END_VERBOSE << "Successfully connected roooms" << endl;
@@ -531,6 +556,7 @@ void pathfinder_walk(const Pos& p0, const Pos& p1, std::vector<Pos>& pos_list_re
     for (const Pos& p : path)
     {
         pos_list_ref.push_back(p);
+
         if (!IS_SMOOTH && rnd::one_in(3))
         {
             rnd_walk(p, rnd::range(1, 6), rnd_walk_buffer, true);
@@ -558,6 +584,7 @@ void rnd_walk(const Pos& p0, int len, std::vector<Pos>& pos_list_ref,
         while (true)
         {
             const Pos nxt_pos = p + d_list[rnd::range(0, D_LIST_SIZE - 1)];
+
             if (utils::is_pos_inside(nxt_pos, area))
             {
                 p = nxt_pos;

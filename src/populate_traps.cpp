@@ -47,11 +47,17 @@ void populate_std_lvl()
             switch (type)
             {
             case Room_type::human:   chance_for_trapped_room.set(1, 4); break;
+
             case Room_type::ritual:  chance_for_trapped_room.set(1, 4); break;
+
             case Room_type::spider:  chance_for_trapped_room.set(2, 3); break;
+
             case Room_type::crypt:   chance_for_trapped_room.set(3, 4); break;
+
             case Room_type::monster: chance_for_trapped_room.set(1, 4); break;
+
             case Room_type::chasm:   chance_for_trapped_room.set(1, 4); break;
+
             case Room_type::forest:
             case Room_type::plain:
             case Room_type::flooded:
@@ -71,6 +77,7 @@ void populate_std_lvl()
 
                 const Pos& p0 = room->r_.p0;
                 const Pos& p1 = room->r_.p1;
+
                 for (int y = p0.y; y <= p1.y; ++y)
                 {
                     for (int x = p0.x; x <= p1.x; ++x)
@@ -112,6 +119,7 @@ void populate_std_lvl()
                     const int NR_ADJ = trap_type == Trap_id::web ? 0 :
                                        min(rnd::range(0, 2), nr_pos_cand);
                     TRACE_VERBOSE << "Placing adjacent traps" << endl;
+
                     for (int i_adj = 0; i_adj < NR_ADJ; i_adj++)
                     {
                         const Pos& adj_pos = trap_pos_bucket.front();
@@ -126,11 +134,13 @@ void populate_std_lvl()
     }
 
     const int CHANCE_ALLOW_TRAPPED_PLAIN_AREAS = min(85, 30 + (map::dlvl * 5));
+
     if (rnd::percent() < CHANCE_ALLOW_TRAPPED_PLAIN_AREAS)
     {
         TRACE_VERBOSE << "Trapping plain room" << endl;
 
         vector<Pos> trap_pos_bucket;
+
         for (int y = 1; y < MAP_H - 1; ++y)
         {
             for (int x = 1; x < MAP_W - 1; ++x)
@@ -174,6 +184,7 @@ void populate_std_lvl()
             const int NR_ADJ = trap_type == Trap_id::web ? 0 :
                                min(rnd::range(0, 2), nr_pos_cand);
             TRACE_VERBOSE << "Placing adjacent traps" << endl;
+
             for (int i_adj = 0; i_adj < NR_ADJ; i_adj++)
             {
                 const Pos& adj_pos = trap_pos_bucket.front();
@@ -183,6 +194,7 @@ void populate_std_lvl()
             }
         }
     }
+
     TRACE_FUNC_END;
 }
 

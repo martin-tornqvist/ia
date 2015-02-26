@@ -32,6 +32,7 @@ void player_jam_feature(Feature* const feature)
             map::player->get_inv().decr_item_type_in_general(Item_id::iron_spike);
             const int SPIKES_LEFT =
                 map::player->get_inv().get_item_stack_size_in_general(Item_id::iron_spike);
+
             if (SPIKES_LEFT == 0)
             {
                 msg_log::add("I have no iron spikes left.");
@@ -46,6 +47,7 @@ void player_jam_feature(Feature* const feature)
     if (!jamable_object_found)
     {
         const bool PLAYER_IS_BLIND = map::player->get_prop_handler().allow_see();
+
         if (!PLAYER_IS_BLIND)
         {
             msg_log::add("I see nothing there to jam with a spike.");

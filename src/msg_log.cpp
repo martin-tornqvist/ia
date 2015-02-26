@@ -130,11 +130,13 @@ void add(const string&  str,
     assert(!str.empty());
 
 #ifndef NDEBUG
+
     if (str[0] == ' ')
     {
         TRACE << "Message starts with space: \"" << str << "\"" << endl;
         assert(false);
     }
+
 #endif
 
     //If frenzied, change message
@@ -200,6 +202,7 @@ void add(const string&  str,
     {
         string prev_str = "";
         prev_msg->get_str_raw(prev_str);
+
         if (prev_str.compare(str) == 0)
         {
             prev_msg->incr_repeat();
@@ -229,6 +232,7 @@ void add(const string&  str,
                 more_prompt();
                 cur_line_nr = 0;
             }
+
             x_pos = 0;
         }
 
@@ -268,6 +272,7 @@ void more_prompt()
     {
         Msg* const last_msg = &lines_[line_nr].back();
         x_pos = get_xAfter_msg(last_msg);
+
         if (line_nr == 0)
         {
             if (x_pos + int(more_str.size()) - 1 >= MAP_W)
@@ -301,16 +306,20 @@ void display_history()
         render::clear_screen();
         draw_history_interface(top_nr, btm_nr);
         int y_pos = 1;
+
         for (int i = top_nr; i <= btm_nr; ++i)
         {
             draw_line(history_[i], y_pos++);
         }
+
         render::update_screen();
 
         const Key_data& d = input::get_input();
+
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {
             top_nr += LINE_JUMP;
+
             if (NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
             {
                 top_nr = 0;
@@ -328,6 +337,7 @@ void display_history()
         {
             break;
         }
+
         btm_nr = min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
     }
 

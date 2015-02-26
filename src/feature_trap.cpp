@@ -25,10 +25,10 @@ using namespace std;
 
 //------------------------------------------------------------- TRAP
 Trap::Trap(const Pos& pos, const Rigid* const mimic_feature, Trap_id type) :
-    Rigid         (pos),
-    mimic_feature_ (mimic_feature),
-    is_hidden_     (true),
-    specific_trap_ (nullptr)
+    Rigid(pos),
+    mimic_feature_(mimic_feature),
+    is_hidden_(true),
+    specific_trap_(nullptr)
 {
     assert(type != Trap_id::END);
 
@@ -42,6 +42,7 @@ Trap::Trap(const Pos& pos, const Rigid* const mimic_feature, Trap_id type) :
     {
         set_specific_trap_from_id(type);
     }
+
     assert(specific_trap_);
 }
 
@@ -117,7 +118,7 @@ bool Trap::is_magical() const {return specific_trap_->is_magical();}
 
 void Trap::trigger_on_purpose(Actor& actor_triggering)
 {
-    const ability_roll_result DODGE_RESULT = fail_small;
+    const Ability_roll_result DODGE_RESULT = fail_small;
     specific_trap_->trigger(actor_triggering, DODGE_RESULT);
 }
 
@@ -153,7 +154,7 @@ void Trap::bump(Actor& actor_bumping)
                 chance_to_avoid = max(10, chance_to_avoid / 2);
             }
 
-            const ability_roll_result result = ability_roll::roll(chance_to_avoid);
+            const Ability_roll_result result = ability_roll::roll(chance_to_avoid);
 
             if (result >= success_small)
             {
@@ -186,7 +187,7 @@ void Trap::bump(Actor& actor_bumping)
                         map::player->can_see_actor(actor_bumping, nullptr);
 
                     const int CHANCE_TO_AVOID = BASE_CHANCE_TO_AVOID + DODGE_SKILL;
-                    const ability_roll_result result = ability_roll::roll(CHANCE_TO_AVOID);
+                    const Ability_roll_result result = ability_roll::roll(CHANCE_TO_AVOID);
 
                     if (result >= success_small)
                     {
@@ -204,6 +205,7 @@ void Trap::bump(Actor& actor_bumping)
             }
         }
     }
+
     TRACE_FUNC_END;
 }
 
@@ -219,9 +221,11 @@ void Trap::disarm()
 
     //Spider webs are automatically destroyed if wielding machete
     bool is_auto_succeed = false;
+
     if (get_trap_type() == Trap_id::web)
     {
         Item* item = map::player->get_inv().get_item_in_slot(Slot_id::wielded);
+
         if (item)
         {
             is_auto_succeed = item->get_id() == Item_id::machete;
@@ -246,6 +250,7 @@ void Trap::disarm()
     const int DISARM_DENOMINATOR  = 10;
 
     if (IS_BLESSED)  disarm_numerator += 3;
+
     if (IS_CURSED)   disarm_numerator -= 3;
 
     constr_in_range(1, disarm_numerator, DISARM_DENOMINATOR - 1);
@@ -271,9 +276,11 @@ void Trap::disarm()
             {
                 map::player->pos = pos_;
             }
+
             trigger_trap(map::player);
         }
     }
+
     game_time::tick();
 
     if (IS_DISARMED)
@@ -308,7 +315,7 @@ Did_trigger_trap Trap::trigger_trap(Actor* const actor)
     if (actor->is_player())
     {
         TRACE_VERBOSE << "Player triggering trap" << endl;
-        const ability_roll_result DODGE_RESULT = ability_roll::roll(DODGE_SKILL);
+        const Ability_roll_result DODGE_RESULT = ability_roll::roll(DODGE_SKILL);
         reveal(false);
         TRACE_VERBOSE << "Calling trigger" << endl;
         specific_trap_->trigger(*actor, DODGE_RESULT);
@@ -317,11 +324,13 @@ Did_trigger_trap Trap::trigger_trap(Actor* const actor)
     {
         TRACE_VERBOSE << "Monster triggering trap" << endl;
         const bool IS_ACTOR_SEEN_BY_PLAYER  = map::player->can_see_actor(*actor, nullptr);
-        const ability_roll_result dodge_result = ability_roll::roll(DODGE_SKILL);
+        const Ability_roll_result dodge_result = ability_roll::roll(DODGE_SKILL);
+
         if (IS_ACTOR_SEEN_BY_PLAYER)
         {
             reveal(false);
         }
+
         TRACE_VERBOSE << "Calling trigger" << endl;
         specific_trap_->trigger(*actor, dodge_result);
     }
@@ -356,6 +365,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES)
             msg_log::add("I spot a " + name + ".", clr_msg_note, false, true);
         }
     }
+
     TRACE_FUNC_END_VERBOSE;
 }
 
@@ -435,7 +445,7 @@ Trap_dart::Trap_dart(Pos pos) :
     is_poisoned = map::dlvl >= MIN_DLVL_HARDER_TRAPS && rnd::coin_toss();
 }
 
-void Trap_dart::trigger(Actor& actor, const ability_roll_result dodge_result)
+void Trap_dart::trigger(Actor& actor, const Ability_roll_result dodge_result)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     const bool IS_PLAYER = &actor == map::player;
@@ -508,12 +518,14 @@ void Trap_dart::trigger(Actor& actor, const ability_roll_result dodge_result)
 
             const int DMG = rnd::dice(1, 8);
             actor.hit(DMG, Dmg_type::physical);
+
             if (actor.is_alive() && is_poisoned)
             {
                 actor.get_prop_handler().try_apply_prop(new Prop_poisoned(Prop_turns::std));
             }
         }
     }
+
     TRACE_FUNC_END_VERBOSE;
 }
 
@@ -523,7 +535,7 @@ Trap_spear::Trap_spear(Pos pos) :
     is_poisoned = map::dlvl >= MIN_DLVL_HARDER_TRAPS && rnd::one_in(4);
 }
 
-void Trap_spear::trigger(Actor& actor, const ability_roll_result dodge_result)
+void Trap_spear::trigger(Actor& actor, const Ability_roll_result dodge_result)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
@@ -602,10 +614,11 @@ void Trap_spear::trigger(Actor& actor, const ability_roll_result dodge_result)
             }
         }
     }
+
     TRACE_FUNC_BEGIN_VERBOSE;
 }
 
-void Trap_gas_confusion::trigger(Actor& actor, const ability_roll_result dodge_result)
+void Trap_gas_confusion::trigger(Actor& actor, const Ability_roll_result dodge_result)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     (void)dodge_result;
@@ -639,7 +652,7 @@ void Trap_gas_confusion::trigger(Actor& actor, const ability_roll_result dodge_r
     TRACE_FUNC_END_VERBOSE;
 }
 
-void Trap_gas_paralyzation::trigger(Actor& actor,  const ability_roll_result dodge_result)
+void Trap_gas_paralyzation::trigger(Actor& actor,  const Ability_roll_result dodge_result)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     (void)dodge_result;
@@ -672,7 +685,7 @@ void Trap_gas_paralyzation::trigger(Actor& actor,  const ability_roll_result dod
     TRACE_FUNC_END_VERBOSE;
 }
 
-void Trap_gas_fear::trigger(Actor& actor, const ability_roll_result dodge_result)
+void Trap_gas_fear::trigger(Actor& actor, const Ability_roll_result dodge_result)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     (void)dodge_result;
@@ -705,7 +718,7 @@ void Trap_gas_fear::trigger(Actor& actor, const ability_roll_result dodge_result
     TRACE_FUNC_END_VERBOSE;
 }
 
-void Trap_blinding_flash::trigger(Actor& actor, const ability_roll_result dodge_result)
+void Trap_blinding_flash::trigger(Actor& actor, const Ability_roll_result dodge_result)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     const bool IS_PLAYER = &actor == map::player;
@@ -754,10 +767,11 @@ void Trap_blinding_flash::trigger(Actor& actor, const ability_roll_result dodge_
             actor.get_prop_handler().try_apply_prop(new Prop_blind(Prop_turns::std));
         }
     }
+
     TRACE_FUNC_END_VERBOSE;
 }
 
-void Trap_teleport::trigger(Actor& actor, const ability_roll_result dodge_result)
+void Trap_teleport::trigger(Actor& actor, const Ability_roll_result dodge_result)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     (void)dodge_result;
@@ -770,6 +784,7 @@ void Trap_teleport::trigger(Actor& actor, const ability_roll_result dodge_result
     if (IS_PLAYER)
     {
         map::player->update_fov();
+
         if (CAN_SEE)
         {
             msg_log::add("A beam of light shoots out from a curious shape on the floor!",
@@ -792,7 +807,7 @@ void Trap_teleport::trigger(Actor& actor, const ability_roll_result dodge_result
     TRACE_FUNC_END_VERBOSE;
 }
 
-void Trap_summon_mon::trigger( Actor& actor, const ability_roll_result dodge_result)
+void Trap_summon_mon::trigger(Actor& actor, const Ability_roll_result dodge_result)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
@@ -816,6 +831,7 @@ void Trap_summon_mon::trigger( Actor& actor, const ability_roll_result dodge_res
 
     map::player->incr_shock(5, Shock_src::misc);
     map::player->update_fov();
+
     if (CAN_SEE)
     {
         msg_log::add("A beam of light shoots out from a curious shape on the floor!",
@@ -828,14 +844,17 @@ void Trap_summon_mon::trigger( Actor& actor, const ability_roll_result dodge_res
 
     TRACE << "Finding summon candidates" << endl;
     vector<Actor_id> summon_bucket;
+
     for (int i = 0; i < int(Actor_id::END); ++i)
     {
         const actor_data_t& data = actor_data::data[i];
+
         if (data.can_be_summoned && data.spawn_min_dLVL <= map::dlvl + 3)
         {
             summon_bucket.push_back(Actor_id(i));
         }
     }
+
     const int NR_ELEMENTS = summon_bucket.size();
     TRACE << "Nr candidates: " << NR_ELEMENTS << endl;
 
@@ -852,10 +871,11 @@ void Trap_summon_mon::trigger( Actor& actor, const ability_roll_result dodge_res
         actor_factory::summon(pos_, vector<Actor_id>(1, actor_id_to_summon), true);
         TRACE << "Monster was summoned" << endl;
     }
+
     TRACE_FUNC_END_VERBOSE;
 }
 
-void Trap_smoke::trigger(Actor& actor, const ability_roll_result dodge_result)
+void Trap_smoke::trigger(Actor& actor, const Ability_roll_result dodge_result)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     (void)dodge_result;
@@ -889,7 +909,7 @@ void Trap_smoke::trigger(Actor& actor, const ability_roll_result dodge_result)
     TRACE_FUNC_END_VERBOSE;
 }
 
-void Trap_alarm::trigger(Actor& actor, const ability_roll_result dodge_result)
+void Trap_alarm::trigger(Actor& actor, const Ability_roll_result dodge_result)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     (void)dodge_result;
@@ -912,7 +932,7 @@ void Trap_alarm::trigger(Actor& actor, const ability_roll_result dodge_result)
     TRACE_FUNC_END_VERBOSE;
 }
 
-void Trap_web::trigger(Actor& actor, const ability_roll_result dodge_result)
+void Trap_web::trigger(Actor& actor, const Ability_roll_result dodge_result)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
@@ -931,6 +951,7 @@ void Trap_web::trigger(Actor& actor, const ability_roll_result dodge_result)
         Inventory& player_inv = map::player->get_inv();
         Item* item_wielded = player_inv.get_item_in_slot(Slot_id::wielded);
         bool has_machete = false;
+
         if (item_wielded) {has_machete = item_wielded->get_data().id == Item_id::machete;}
 
         if (has_machete)
@@ -943,6 +964,7 @@ void Trap_web::trigger(Actor& actor, const ability_roll_result dodge_result)
             {
                 msg_log::add("I cut down a sticky mass of threads with my machete.");
             }
+
             TRACE << "Destroyed by Machete, placing floor" << endl;
             map::put(new Floor(pos_));
         }
@@ -966,6 +988,7 @@ void Trap_web::trigger(Actor& actor, const ability_roll_result dodge_result)
             msg_log::add(actor_name + " is entangled in a huge spider web!");
         }
     }
+
     TRACE_FUNC_END_VERBOSE;
 }
 
@@ -1012,6 +1035,7 @@ Dir Trap_web::actor_try_leave(Actor& actor, const Dir dir)
             {
                 msg_log::add("The web is destroyed.");
             }
+
             TRACE << "Web destroyed, placing floor and returning center direction"
                   << endl;
             map::put(new Floor(pos_));
@@ -1029,5 +1053,6 @@ Dir Trap_web::actor_try_leave(Actor& actor, const Dir dir)
             msg_log::add(actor_name + " struggles to break free.");
         }
     }
+
     return Dir::center;
 }

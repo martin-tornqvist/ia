@@ -34,8 +34,11 @@ void mk_forest_limit()
     auto put_tree = [](const int X, const int Y) {map::put(new Tree(Pos(X, Y)));};
 
     for (int y = 0; y < MAP_H; ++y) {put_tree(0,          y);}
+
     for (int x = 0; x < MAP_W; ++x) {put_tree(x,          0);}
+
     for (int y = 0; y < MAP_H; ++y) {put_tree(MAP_W - 1,  y);}
+
     for (int x = 0; x < MAP_W; ++x) {put_tree(x,          MAP_H - 1);}
 }
 
@@ -154,11 +157,12 @@ void mk_forest_trees()
     vector<Pos> path;
 
     bool proceed = false;
+
     while (!proceed)
     {
         for (int i = 0; i < nr_forest_patches; ++i) {mk_forest_tree_patch();}
 
-        const map_templ& templ     = map_templ_handling::get_templ(map_templ_id::church);
+        const map_templ& templ     = map_templ_handling::get_templ(Map_templ_id::church);
         const Pos       templ_dims = templ.get_dims();
 
         for (int x = 0; x < templ_dims.x; ++x)
@@ -181,6 +185,7 @@ void mk_forest_trees()
                         static_cast<Grass*>(f)->type_ = Grass_type::withered;
                     }
                 }
+
                 if (templ_cell.val == 1)
                 {
                     map::put(new Door(p, new Wall(p), Door_spawn_state::closed));
@@ -192,6 +197,7 @@ void mk_forest_trees()
         map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
         Pos stairs_pos;
+
         for (int x = 0; x < MAP_W; ++x)
         {
             for (int y = 0; y < MAP_H; ++y)
@@ -271,6 +277,7 @@ void mk_forest_trees()
         vector<Pos> grave_cells;
 
         int path_walk_count = 0;
+
         for (size_t i = 0; i < path.size(); ++i)
         {
             if (path_walk_count == TRY_PLACE_EVERY_N_STEP)
@@ -290,6 +297,7 @@ void mk_forest_trees()
                             map::cells[X][Y].rigid->get_id() == Feature_id::floor;
 
                         bool is_left_of_prev = true;
+
                         if (!grave_cells.empty())
                         {
                             is_left_of_prev = X < grave_cells.back().x;
@@ -312,22 +320,27 @@ void mk_forest_trees()
                                     }
                                 }
                             }
+
                             if (is_pos_ok)
                             {
                                 grave_cells.push_back(Pos(X, Y));
                                 blocked[X][Y] = true;
+
                                 if (int(grave_cells.size()) == NR_GRAVES_TO_PLACE)
                                 {
                                     i = 9999;
                                 }
+
                                 dy = 99999;
                                 dx = 99999;
                             }
                         }
                     }
                 }
+
                 path_walk_count = 0;
             }
+
             path_walk_count++;
         }
 
@@ -373,6 +386,7 @@ bool mk_intro_lvl()
         for (int y = 1; y < MAP_H - 1; ++y)
         {
             const Pos p(x, y);
+
             if (rnd::one_in(6))
             {
                 map::put(new Bush(p));
@@ -398,7 +412,7 @@ bool mk_egypt_lvl()
 {
     map::reset_map();
 
-    const map_templ& templ     = map_templ_handling::get_templ(map_templ_id::egypt);
+    const map_templ& templ     = map_templ_handling::get_templ(Map_templ_id::egypt);
     const Pos       templ_dims = templ.get_dims();
     const int       STAIR_VAL = rnd::range(2, 3);
 
@@ -408,6 +422,7 @@ bool mk_egypt_lvl()
         {
             const auto& templ_cell = templ.get_cell(x, y);
             const Pos p(x, y);
+
             if (templ_cell.feature_id != Feature_id::END)
             {
                 if (templ_cell.val == STAIR_VAL)
@@ -420,11 +435,13 @@ bool mk_egypt_lvl()
                     map::put(static_cast<Rigid*>(d.mk_obj(p)));
                 }
             }
+
             if (templ_cell.actor_id != Actor_id::END)
             {
                 Actor* const actor = actor_factory::mk(templ_cell.actor_id, p);
                 static_cast<Mon*>(actor)->is_roaming_allowed_ = false;
             }
+
             if (templ_cell.val == 1)
             {
                 map::player->pos = p;
@@ -437,6 +454,7 @@ bool mk_egypt_lvl()
         for (int y = 0; y < MAP_H; ++y)
         {
             Rigid* const f = map::cells[x][y].rigid;
+
             if (f->get_id() == Feature_id::wall)
             {
                 static_cast<Wall*>(f)->type_ = Wall_type::egypt;
@@ -454,7 +472,7 @@ bool mk_leng_lvl()
 {
     map::reset_map();
 
-    const map_templ& templ     = map_templ_handling::get_templ(map_templ_id::leng);
+    const map_templ& templ     = map_templ_handling::get_templ(Map_templ_id::leng);
     const Pos       templ_dims = templ.get_dims();
 
     for (int x = 0; x < templ_dims.x; ++x)
@@ -464,10 +482,12 @@ bool mk_leng_lvl()
             const auto& templ_cell = templ.get_cell(x, y);
             const auto  f_id       = templ_cell.feature_id;
             const Pos p(x, y);
+
             if (f_id != Feature_id::END)
             {
                 const auto& d = feature_data::get_data(f_id);
                 auto* const f = map::put(static_cast<Rigid*>(d.mk_obj(p)));
+
                 if (f_id == Feature_id::grass)
                 {
                     if (rnd::one_in(50))
@@ -478,6 +498,7 @@ bool mk_leng_lvl()
                 else if (f_id == Feature_id::wall)
                 {
                     auto* const wall = static_cast<Wall*>(f);
+
                     if (templ_cell.val == 2)
                     {
                         wall->type_ = Wall_type::cliff;
@@ -517,6 +538,7 @@ bool mk_leng_lvl()
             }
         }
     }
+
     return true;
 }
 
@@ -525,7 +547,7 @@ bool mk_rats_in_the_walls_lvl()
 {
     map::reset_map();
 
-    const map_templ& templ     = map_templ_handling::get_templ(map_templ_id::rats_in_the_walls);
+    const map_templ& templ     = map_templ_handling::get_templ(Map_templ_id::rats_in_the_walls);
     const Pos       templ_dims = templ.get_dims();
 
     const int       RAT_THING_ONE_IN_N_RAT = 3;
@@ -650,7 +672,7 @@ bool mk_boss_lvl()
 {
     map::reset_map();
 
-    const map_templ& templ     = map_templ_handling::get_templ(map_templ_id::boss_level);
+    const map_templ& templ     = map_templ_handling::get_templ(Map_templ_id::boss_level);
     const Pos       templ_dims = templ.get_dims();
 
     for (int x = 0; x < templ_dims.x; ++x)
@@ -692,6 +714,7 @@ bool mk_boss_lvl()
         for (int y = 0; y < MAP_H; ++y)
         {
             Rigid* const f = map::cells[x][y].rigid;
+
             if (f->get_id() == Feature_id::wall)
             {
                 static_cast<Wall*>(f)->type_ = Wall_type::egypt;
@@ -708,7 +731,7 @@ bool mk_trapezohedron_lvl()
     map::reset_map();
 
     const map_templ& templ =
-        map_templ_handling::get_templ(map_templ_id::trapezohedron_level);
+        map_templ_handling::get_templ(Map_templ_id::trapezohedron_level);
 
     const Pos templ_dims = templ.get_dims();
 
@@ -752,6 +775,7 @@ bool mk_trapezohedron_lvl()
         for (int y = 0; y < MAP_H; ++y)
         {
             Rigid* const f = map::cells[x][y].rigid;
+
             if (f->get_id() == Feature_id::wall)
             {
                 static_cast<Wall*>(f)->type_ = Wall_type::egypt;

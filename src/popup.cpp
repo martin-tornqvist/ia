@@ -62,6 +62,7 @@ void menu_msg_drawing_helper(const vector<string>& lines,
         {
             text_width = max(text_width, int(s.size()));
         }
+
         text_width += 2;
     }
 
@@ -88,6 +89,7 @@ void menu_msg_drawing_helper(const vector<string>& lines,
         {
             render::draw_text(line, Panel::map, Pos(TEXT_X0, y), clr_white);
         }
+
         msg_log::add_line_to_history(line);
     }
 
@@ -104,6 +106,7 @@ void menu_msg_drawing_helper(const vector<string>& lines,
                                    clr, clr_black, true);
         y++;
     }
+
     render::update_screen();
 }
 
@@ -145,6 +148,7 @@ void show_msg(const std::string& msg,
     for (string& line : lines)
     {
         y++;
+
         if (SHOW_MSG_CENTERED)
         {
             render::draw_text_centered(line, Panel::map, Pos(MAP_W_HALF, y),
@@ -156,8 +160,10 @@ void show_msg(const std::string& msg,
 
             render::draw_text(line, Panel::map, Pos(TEXT_X0, y), clr_white);
         }
+
         msg_log::add_line_to_history(line);
     }
+
     y += 2;
 
     render::draw_text_centered("[space/esc/enter] to close", Panel::map, Pos(MAP_W_HALF, y),
@@ -215,6 +221,7 @@ int show_menu_msg(const string&           msg,
             {
                 render::draw_map_and_interface();
             }
+
             return NR_CHOICES - 1;
 
         case Menu_action::selected_shift: {}
@@ -225,6 +232,7 @@ int show_menu_msg(const string&           msg,
             {
                 render::draw_map_and_interface();
             }
+
             return browser.get_pos().y;
         }
     }

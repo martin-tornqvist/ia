@@ -89,6 +89,7 @@ void line_to_lines(string line, const int MAX_W, vector<string>& out)
 void get_space_separated_list(const string& line, vector<string>& out)
 {
     string cur_line = "";
+
     for (char c : line)
     {
         if (c == ' ')
@@ -113,6 +114,7 @@ void replace_all(const string& line, const string& from, const string& to, strin
     out = line;
 
     size_t start_pos = 0;
+
     while ((start_pos = out.find(from, start_pos)) != string::npos)
     {
         out.replace(start_pos, from.length(), to);

@@ -41,9 +41,12 @@ Inventory::~Inventory()
     for (size_t i = 0; i < int(Slot_id::END); ++i)
     {
         auto& slot = slots_[i];
+
         if (slot.item) {delete slot.item;}
     }
+
     for (Item* item : general_)    {delete item;}
+
     for (Item* item : intrinsics_) {delete item;}
 }
 
@@ -52,6 +55,7 @@ void Inventory::store_to_save_lines(vector<string>& lines) const
     for (const Inv_slot& slot : slots_)
     {
         Item* const item = slot.item;
+
         if (item)
         {
             lines.push_back(to_str(int(item->get_id())));
@@ -65,6 +69,7 @@ void Inventory::store_to_save_lines(vector<string>& lines) const
     }
 
     lines.push_back(to_str(general_.size()));
+
     for (Item* item : general_)
     {
         lines.push_back(to_str(int(item->get_id())));
@@ -79,6 +84,7 @@ void Inventory::setup_from_save_lines(vector<string>& lines)
     {
         //Previous item is destroyed
         Item* item = slot.item;
+
         if (item)
         {
             delete item;
@@ -87,6 +93,7 @@ void Inventory::setup_from_save_lines(vector<string>& lines)
 
         const Item_id id = Item_id(to_int(lines.front()));
         lines.erase(begin(lines));
+
         if (id != Item_id::END)
         {
             item = item_factory::mk(id);
@@ -106,6 +113,7 @@ void Inventory::setup_from_save_lines(vector<string>& lines)
 
     const int NR_OF_GENERAL = to_int(lines.front());
     lines.erase(begin(lines));
+
     for (int i = 0; i < NR_OF_GENERAL; ++i)
     {
         const Item_id id = Item_id(to_int(lines.front()));
@@ -201,6 +209,7 @@ void Inventory::drop_all_non_intrinsic(const Pos& pos)
     for (Inv_slot& slot : slots_)
     {
         item = slot.item;
+
         if (item)
         {
             item_drop::drop_item_on_map(pos, *item);
@@ -211,15 +220,18 @@ void Inventory::drop_all_non_intrinsic(const Pos& pos)
 
     //Drop from general
     size_t i = 0;
+
     while (i < general_.size())
     {
         item = general_[i];
+
         if (item)
         {
             item_drop::drop_item_on_map(pos, *item);
 
             general_.erase(begin(general_) + i);
         }
+
         i++;
     }
 }
@@ -249,6 +261,7 @@ bool Inventory::has_ammo_forFirearm_in_inventory()
             }
         }
     }
+
     return false;
 }
 
@@ -283,6 +296,7 @@ void Inventory::remove_item_in_backpack_with_idx(const size_t IDX, const bool DE
         {
             delete general_[IDX];
         }
+
         general_.erase(begin(general_) + IDX);
     }
 }
@@ -297,6 +311,7 @@ void Inventory::remove_item_in_backpack_with_ptr(Item* const item, const bool DE
             {
                 delete *it;
             }
+
             general_.erase(it);
             return;
         }
@@ -532,6 +547,7 @@ int Inventory::get_backpack_idx_with_item_id(const Item_id id) const
             return i;
         }
     }
+
     return -1;
 }
 
@@ -562,6 +578,7 @@ void Inventory::put_in_intrinsics(Item* item)
 Item* Inventory::get_last_item_in_general()
 {
     if (!general_.empty()) {return general_[general_.size() - 1];}
+
     return nullptr;
 }
 
@@ -579,6 +596,7 @@ void Inventory::put_in_slot(const Slot_id id, Item* item)
             {
                 slot.item = item;
             }
+
             return;
         }
     }
@@ -595,10 +613,12 @@ int Inventory::get_total_item_weight() const
     {
         if (slots_[i].item) {weight += slots_[i].item->get_weight();}
     }
+
     for (size_t i = 0; i < general_.size(); ++i)
     {
         weight += general_[i]->get_weight();
     }
+
     return weight;
 }
 
@@ -628,6 +648,7 @@ void Inventory::sort_general_inventory()
         for (vector<Item*>& group : sort_buffer)
         {
             const Clr clr_cur_group = group[0]->get_interface_clr();
+
             if (utils::is_clr_eq(item->get_interface_clr(), clr_cur_group))
             {
                 group.push_back(item);
@@ -651,6 +672,7 @@ void Inventory::sort_general_inventory()
 
     //Sort lexicographically secondarily
     Lexicograhical_compare_items cmp;
+
     for (vector<Item*>& group : sort_buffer)
     {
         std::sort(group.begin(), group.end(), cmp);
@@ -658,6 +680,7 @@ void Inventory::sort_general_inventory()
 
     //Set the inventory from the sorting buffer
     general_.clear();
+
     for (size_t i = 0; i < sort_buffer.size(); ++i)
     {
         for (size_t ii = 0; ii < sort_buffer[i].size(); ii++)

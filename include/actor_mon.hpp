@@ -10,8 +10,8 @@
 struct Ai_att_data
 {
     Ai_att_data(Wpn* weapon_to_use, bool is_melee_att) :
-        weapon  (weapon_to_use),
-        is_melee (is_melee_att) {}
+        weapon(weapon_to_use),
+        is_melee(is_melee_att) {}
 
     Wpn* weapon;
     bool is_melee;
@@ -20,13 +20,13 @@ struct Ai_att_data
 struct Ai_avail_attacks_data
 {
     Ai_avail_attacks_data() :
-        is_time_to_reload  (false),
-        is_melee         (true) {}
+        is_time_to_reload(false),
+        is_melee(true) {}
 
     Ai_avail_attacks_data(const Ai_avail_attacks_data& other) :
-        weapons         (other.weapons),
-        is_time_to_reload  (other.is_time_to_reload),
-        is_melee         (other.is_melee) {}
+        weapons(other.weapons),
+        is_time_to_reload(other.is_time_to_reload),
+        is_melee(other.is_melee) {}
 
     Ai_avail_attacks_data& operator=(const Ai_avail_attacks_data& other)
     {
@@ -263,9 +263,9 @@ class Leng_elder: public Mon
 {
 public:
     Leng_elder() :
-        Mon                   (),
-        has_given_item_to_player_ (false),
-        nr_turns_to_hostile_     (-1) {}
+        Mon(),
+        has_given_item_to_player_(false),
+        nr_turns_to_hostile_(-1) {}
     ~Leng_elder() {}
     void mk_start_items() override;
 private:
@@ -551,8 +551,8 @@ class Khephren: public Mummy_unique
 {
 public:
     Khephren() :
-        Mummy_unique         (),
-        has_summoned_locusts  (false) {}
+        Mummy_unique(),
+        has_summoned_locusts(false) {}
     ~Khephren() {}
 
     bool on_actor_turn_() override;

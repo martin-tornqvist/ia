@@ -53,20 +53,20 @@ enum class Time_type
 struct Time_data
 {
     Time_data() :
-        year_   (0),
-        month_  (0),
-        day_    (0),
-        hour_   (0),
-        minute_ (0),
-        second_ (0) {}
+        year_(0),
+        month_(0),
+        day_(0),
+        hour_(0),
+        minute_(0),
+        second_(0) {}
 
     Time_data(int year, int month, int day, int hour, int minute, int second) :
-        year_   (year),
-        month_  (month),
-        day_    (day),
-        hour_   (hour),
-        minute_ (minute),
-        second_ (second) {}
+        year_(year),
+        month_(month),
+        day_(day),
+        hour_(hour),
+        minute_(minute),
+        second_(second) {}
 
     std::string get_time_str(const Time_type lowest, const bool ADD_SEPARATORS) const;
 
@@ -145,7 +145,7 @@ const std::vector<Pos> cardinal_list
 
 const std::vector<Pos> dir_list
 {
-    Pos(-1,  0), Pos( 1, 0), Pos(0, -1), Pos(0, 1),
+    Pos(-1,  0), Pos(1, 0), Pos(0, -1), Pos(0, 1),
     Pos(-1, -1), Pos(-1, 1), Pos(1, -1), Pos(1, 1)
 };
 

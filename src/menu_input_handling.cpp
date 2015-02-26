@@ -12,22 +12,22 @@ Menu_action get_action(Menu_browser& browser)
     {
         Key_data d = input::get_input();
 
-        if (d.sdl_key == SDLK_RIGHT        || d.key == '6' || d.key == 'l')
+        if (d.sdl_key == SDLK_RIGHT || d.key == '6' || d.key == 'l')
         {
             browser.navigate(Dir::right);
             return Menu_action::browsed;
         }
-        else if (d.sdl_key == SDLK_LEFT  || d.key == '4' || d.key == 'h')
+        else if (d.sdl_key == SDLK_LEFT || d.key == '4' || d.key == 'h')
         {
             browser.navigate(Dir::left);
             return Menu_action::browsed;
         }
-        else if (d.sdl_key == SDLK_UP    || d.key == '8' || d.key == 'k')
+        else if (d.sdl_key == SDLK_UP || d.key == '8' || d.key == 'k')
         {
             browser.navigate(Dir::up);
             return Menu_action::browsed;
         }
-        else if (d.sdl_key == SDLK_DOWN  || d.key == '2' || d.key == 'j')
+        else if (d.sdl_key == SDLK_DOWN || d.key == '2' || d.key == 'j')
         {
             browser.navigate(Dir::down);
             return Menu_action::browsed;
@@ -45,6 +45,7 @@ Menu_action get_action(Menu_browser& browser)
             return Menu_action::esc;
         }
     }
+
     return Menu_action::esc;
 }
 

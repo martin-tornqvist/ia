@@ -402,8 +402,8 @@ class Bridge : public Rigid
 {
 public:
     Bridge(Pos pos) :
-        Rigid (pos),
-        dir_  (Horizontal_vertical::hor) {}
+        Rigid(pos),
+        dir_(Horizontal_vertical::hor) {}
     Bridge() = delete;
     ~Bridge() {}
 
@@ -688,11 +688,10 @@ public:
     ~Cabinet() {}
 
     Feature_id get_id() const override {return Feature_id::cabinet;}
-
-    std::string get_name(const Article article)  const override;
-    Tile_id      get_tile()                       const override;
-    void        bump(Actor& actor_bumping)             override;
-    Did_open     open(Actor* const actor_opening)       override;
+    std::string get_name(const Article article) const override;
+    Tile_id get_tile() const override;
+    void bump(Actor& actor_bumping) override;
+    Did_open open(Actor* const actor_opening) override;
 
 private:
     Clr get_clr_() const override;

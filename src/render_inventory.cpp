@@ -19,6 +19,7 @@ namespace
 void draw_item_symbol(const Item& item, const Pos& p)
 {
     const Clr item_clr = item.get_clr();
+
     if (config::is_tiles_mode())
     {
         render::draw_tile(item.get_tile(), Panel::screen, p, item_clr);
@@ -47,7 +48,9 @@ void draw_weight_pct(const int Y, const int ITEM_NAME_X, const size_t ITEM_NAME_
         const int DOTS_W  = WEIGHT_X - DOTS_X;
         const string dots_str(DOTS_W, '.');
         Clr dots_clr       = IS_SELECTED ? clr_white : item_name_clr;
+
         if (!IS_SELECTED) {dots_clr.r /= 2; dots_clr.g /= 2; dots_clr.b /= 2;}
+
         render::draw_text(dots_str, Panel::screen, Pos(DOTS_X, Y), dots_clr);
     }
 }
@@ -144,6 +147,7 @@ void draw_browse_inv(const Menu_browser& browser)
 
             const Item_data_t& d    = cur_item->get_data();
             Item_ref_att_inf att_inf  = Item_ref_att_inf::none;
+
             if (slot.id == Slot_id::wielded || slot.id == Slot_id::wielded_alt)
             {
                 //Thrown weapons are forced to show melee info instead
@@ -285,6 +289,7 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
     const bool HAS_ITEM = !gen_inv_indexes.empty();
 
     string str = "";
+
     switch (slot_id_to_equip)
     {
     case Slot_id::wielded:
@@ -363,6 +368,7 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
 
         const Item_data_t& d    = item->get_data();
         Item_ref_att_inf att_inf  = Item_ref_att_inf::none;
+
         if (slot_id_to_equip == Slot_id::wielded || slot_id_to_equip == Slot_id::wielded_alt)
         {
             //Thrown weapons are forced to show melee info instead

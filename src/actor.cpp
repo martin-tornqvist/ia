@@ -24,19 +24,19 @@
 using namespace std;
 
 Actor::Actor() :
-    pos             (),
-    state_          (Actor_state::alive),
-    clr_            (clr_black),
-    glyph_          (' '),
-    tile_           (Tile_id::empty),
-    hp_             (-1),
-    hp_max_         (-1),
-    spi_            (-1),
-    spi_max_        (-1),
-    lair_cell_      (),
-    prop_handler_   (nullptr),
-    data_           (nullptr),
-    inv_            (nullptr) {}
+    pos(),
+    state_(Actor_state::alive),
+    clr_(clr_black),
+    glyph_(' '),
+    tile_(Tile_id::empty),
+    hp_(-1),
+    hp_max_(-1),
+    spi_(-1),
+    spi_max_(-1),
+    lair_cell_(),
+    prop_handler_(nullptr),
+    data_(nullptr),
+    inv_(nullptr) {}
 
 Actor::~Actor()
 {
@@ -171,7 +171,7 @@ void Actor::get_seen_foes(vector<Actor*>& out)
                       min(MAP_W - 1, pos.x + FOV_STD_RADI_INT),
                       min(MAP_H - 1, pos.y + FOV_STD_RADI_INT));
 
-        map_parse::run(cell_check::Blocks_los(), blocked_los, map_parse_mode::overwrite,
+        map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite,
                        los_rect);
     }
 
@@ -293,6 +293,7 @@ void Actor::teleport()
                     msg_log::clear();
                     return Marker_done::yes;
                 }
+
                 return Marker_done::no;
             };
 
@@ -331,6 +332,7 @@ void Actor::teleport()
         map::player->update_fov();
         render::draw_map_and_interface();
         map::update_visual_memory();
+
         if (!player_has_tele_control)
         {
             msg_log::add("I suddenly find myself in a different location!");
@@ -397,6 +399,7 @@ bool Actor::restore_hp(const int HP_RESTORED, const bool ALLOW_MSG,
                 msg_log::add(data_->name_the + " looks healthier.");
             }
         }
+
         render::draw_map_and_interface();
     }
 
@@ -438,6 +441,7 @@ bool Actor::restore_spi(const int SPI_RESTORED, const bool ALLOW_MSG,
                 msg_log::add(data_->name_the + " looks more spirited.");
             }
         }
+
         render::draw_map_and_interface();
     }
 
@@ -569,6 +573,7 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
                                    });
             }
         }
+
         TRACE_FUNC_END_VERBOSE;
         return Actor_died::no;
     }
@@ -577,6 +582,7 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
 
     //Property resists?
     const bool ALLOW_DMG_RES_MSG = is_alive();
+
     if (prop_handler_->try_resist_dmg(dmg_type, ALLOW_DMG_RES_MSG))
     {
         TRACE_FUNC_END_VERBOSE;
@@ -592,6 +598,7 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
     if (is_humanoid())
     {
         Armor* armor = static_cast<Armor*>(inv_->get_item_in_slot(Slot_id::body));
+
         if (armor)
         {
             TRACE_VERBOSE << "Has armor, running hit on armor" << endl;
@@ -603,12 +610,14 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
                 if (armor->is_destroyed())
                 {
                     TRACE << "Armor was destroyed" << endl;
+
                     if (is_player())
                     {
                         const string armor_name =
                             armor->get_name(Item_ref_type::plain, Item_ref_inf::none);
                         msg_log::add("My " + armor_name + " is torn apart!", clr_msg_note);
                     }
+
                     delete armor;
                     armor = nullptr;
                     inv_->slots_[int(Slot_id::body)].item = nullptr;
@@ -656,6 +665,7 @@ Actor_died Actor::hit_spi(const int DMG, const bool ALLOW_MSG)
     {
         spi_ = max(0, spi_ - DMG);
     }
+
     if (get_spi() <= 0)
     {
         if (is_player())
@@ -676,6 +686,7 @@ Actor_died Actor::hit_spi(const int DMG, const bool ALLOW_MSG)
         die(IS_DESTROYED, false, true);
         return Actor_died::yes;
     }
+
     return Actor_died::no;
 }
 
@@ -697,6 +708,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
 
     //If died on a visible trap, destroy the corpse
     const auto* const f = map::cells[pos.x][pos.y].rigid;
+
     if (f->get_id() == Feature_id::trap)
     {
         if (!static_cast<const Trap*>(f)->is_hidden()) {is_on_visible_trap = true;}
@@ -759,6 +771,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
     {
         glyph_ = ' ';
         tile_ = Tile_id::empty;
+
         if (is_humanoid() && ALLOW_GORE)
         {
             map::mk_gore(pos);
@@ -770,6 +783,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
         {
             Pos new_pos;
             auto* feature_here = map::cells[pos.x][pos.y].rigid;
+
             //TODO: this should be decided with a floodfill instead
             if (!feature_here->can_have_corpse())
             {
@@ -779,6 +793,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
                     {
                         new_pos      = pos + Pos(dx, dy);
                         feature_here = map::cells[pos.x + dx][pos.y + dy].rigid;
+
                         if (feature_here->can_have_corpse())
                         {
                             pos.set(new_pos);
@@ -789,6 +804,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
                 }
             }
         }
+
         glyph_ = '&';
         tile_ = Tile_id::corpse2;
     }
@@ -825,6 +841,7 @@ void Actor::add_light(bool light_map[MAP_W][MAP_H]) const
         Pos p1(min(MAP_W - 1, pos.x + RADI), min(MAP_H - 1, pos.y + RADI));
 
         bool blocked_los[MAP_W][MAP_H];
+
         for (int y = p0.y; y <= p1.y; ++y)
         {
             for (int x = p0.x; x <= p1.x; ++x)
@@ -835,6 +852,7 @@ void Actor::add_light(bool light_map[MAP_W][MAP_H]) const
         }
 
         fov::run_fov_on_array(blocked_los, pos, my_light, false);
+
         for (int y = p0.y; y <= p1.y; ++y)
         {
             for (int x = p0.x; x <= p1.x; ++x)
@@ -856,6 +874,7 @@ void Actor::add_light(bool light_map[MAP_W][MAP_H]) const
             }
         }
     }
+
     add_light_(light_map);
 }
 

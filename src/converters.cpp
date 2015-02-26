@@ -50,6 +50,7 @@ int get_constr_in_range(const int MIN, const int VAL, const int MAX)
     {
         return -1;
     }
+
     return std::min(MAX, std::max(VAL, MIN));
 }
 
@@ -59,6 +60,7 @@ int get_constr_in_range(const double MIN, const double VAL, const double MAX)
     {
         return -1;
     }
+
     return std::min(MAX, std::max(VAL, MIN));
 }
 

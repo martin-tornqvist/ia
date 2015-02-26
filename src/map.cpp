@@ -18,18 +18,19 @@
 using namespace std;
 
 Cell::Cell() :
-    is_explored          (false),
-    is_seen_by_player      (false),
-    is_lit               (false),
-    is_dark              (false),
-    item                (nullptr),
-    rigid               (nullptr),
-    player_visual_memory  (Cell_render_data()),
-    pos                 (Pos(-1, -1)) {}
+    is_explored(false),
+    is_seen_by_player(false),
+    is_lit(false),
+    is_dark(false),
+    item(nullptr),
+    rigid(nullptr),
+    player_visual_memory(Cell_render_data()),
+    pos(Pos(-1, -1)) {}
 
 Cell::~Cell()
 {
     if (rigid) {delete rigid;}
+
     if (item)  {delete item;}
 }
 
@@ -138,6 +139,7 @@ void reset_map()
     actor_factory::delete_all_mon();
 
     for (auto* room : room_list) {delete room;}
+
     room_list.clear();
 
     reset_cells(true);
@@ -157,6 +159,7 @@ Rigid* put(Rigid* const f)
     cell.rigid = f;
 
 #ifdef DEMO_MODE
+
     if (f->get_id() == Feature_id::floor)
     {
         for (int x = 0; x < MAP_W; ++x)
@@ -166,11 +169,13 @@ Rigid* put(Rigid* const f)
                 map::cells[x][y].is_seen_by_player = map::cells[x][y].is_explored = true;
             }
         }
+
         render::draw_map();
         render::draw_glyph('X', Panel::map, p, clr_yellow);
         render::update_screen();
         sdl_wrapper::sleep(10); //NOTE: Delay must be > 1 for user input to be read
     }
+
 #endif // DEMO_MODE
 
     return f;
@@ -195,6 +200,7 @@ void mk_blood(const Pos& origin)
         {
             const Pos c = origin + Pos(dx, dy);
             Rigid* const f  = cells[c.x][c.y].rigid;
+
             if (f->can_have_blood())
             {
                 if (rnd::one_in(3)) {f->mk_bloody();}
@@ -210,6 +216,7 @@ void mk_gore(const Pos& origin)
         for (int dy = -1; dy <= 1; ++dy)
         {
             const Pos c = origin + Pos(dx, dy);
+
             if (rnd::one_in(3)) {cells[c.x][c.y].rigid->try_put_gore();}
         }
     }
@@ -226,6 +233,7 @@ void delete_and_remove_room_from_list(Room* const room)
             return;
         }
     }
+
     assert(false && "Tried to remove non-existing room");
 }
 

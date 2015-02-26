@@ -23,13 +23,14 @@ using namespace std;
 
 //--------------------------------------------------------- ITEM
 Item::Item(Item_data_t* item_data) :
-    nr_items_      (1),
-    melee_dmg_plus_ (0),
-    data_         (item_data) {}
+    nr_items_(1),
+    melee_dmg_plus_(0),
+    data_(item_data) {}
 
 Item::~Item()
 {
     for (auto prop   : carrier_props_)   {delete prop;}
+
     for (auto spell  : carrier_spells_)  {delete spell;}
 }
 
@@ -52,18 +53,22 @@ int Item::get_weight() const
 string Item::get_weight_str() const
 {
     const int WEIGHT = get_weight();
+
     if (WEIGHT <= (int(Item_weight::extra_light) + int(Item_weight::light)) / 2)
     {
         return "very light";
     }
+
     if (WEIGHT <= (int(Item_weight::light) + int(Item_weight::medium)) / 2)
     {
         return "light";
     }
+
     if (WEIGHT <= (int(Item_weight::medium) + int(Item_weight::heavy)) / 2)
     {
         return "a bit heavy";
     }
+
     return "heavy";
 }
 
@@ -101,8 +106,11 @@ string Item::get_name(const Item_ref_type      ref_type,
         switch (data_->main_att_mode)
         {
         case Main_att_mode::melee:  att_inf_used = Item_ref_att_inf::melee;  break;
+
         case Main_att_mode::ranged: att_inf_used = Item_ref_att_inf::ranged; break;
+
         case Main_att_mode::thrown: att_inf_used = Item_ref_att_inf::thrown; break;
+
         case Main_att_mode::none:   att_inf_used = Item_ref_att_inf::none;   break;
         }
     }
@@ -146,6 +154,7 @@ string Item::get_name(const Item_ref_type      ref_type,
                                            ("-" + to_str(PLUS));
             dmg_str                      = rolls_str + "d" + sides_str + plus_str;
         }
+
         const int       ITEM_SKILL  = data_->ranged.hit_chance_mod;
         const int       SKILL_TOT   = max(0, min(100, ITEM_SKILL + RANGED_SKILL));
         const string    skill_str    = to_str(SKILL_TOT) + "%";
@@ -173,6 +182,7 @@ string Item::get_name(const Item_ref_type      ref_type,
     if (inf == Item_ref_inf::yes)
     {
         inf_str = get_name_inf();
+
         if (!inf_str.empty()) {inf_str.insert(0, " ");}
     }
 
@@ -188,8 +198,8 @@ bool Item::is_in_effective_range_lmt(const Pos& p0, const Pos& p1) const
 
 //--------------------------------------------------------- ARMOR
 Armor::Armor(Item_data_t* const item_data) :
-    Item  (item_data),
-    dur_  (rnd::range(80, 100)) {}
+    Item(item_data),
+    dur_(rnd::range(80, 100)) {}
 
 void Armor::store_to_save_lines(vector<string>& lines)
 {
@@ -274,8 +284,11 @@ int Armor::get_armor_points() const
     const int AP_MAX = data_->armor.armor_points;
 
     if (dur_ > 60) {return AP_MAX;}
+
     if (dur_ > 40) {return max(0, AP_MAX - 1);}
+
     if (dur_ > 25) {return max(0, AP_MAX - 2);}
+
     if (dur_ > 15) {return max(0, AP_MAX - 3);}
 
     return 0;
@@ -285,15 +298,16 @@ void Armor_asb_suit::on_equip_(const bool IS_SILENT)
 {
     (void)IS_SILENT;
 
-    carrier_props_.push_back(new Prop_rFire   (Prop_turns::indefinite));
-    carrier_props_.push_back(new Prop_rAcid   (Prop_turns::indefinite));
-    carrier_props_.push_back(new Prop_rElec   (Prop_turns::indefinite));
-    carrier_props_.push_back(new Prop_rBreath (Prop_turns::indefinite));
+    carrier_props_.push_back(new Prop_rFire(Prop_turns::indefinite));
+    carrier_props_.push_back(new Prop_rAcid(Prop_turns::indefinite));
+    carrier_props_.push_back(new Prop_rElec(Prop_turns::indefinite));
+    carrier_props_.push_back(new Prop_rBreath(Prop_turns::indefinite));
 }
 
 Unequip_allowed Armor_asb_suit::on_unequip_()
 {
     for (Prop* prop : carrier_props_) {delete prop;}
+
     carrier_props_.clear();
 
     return Unequip_allowed::yes;
@@ -309,6 +323,7 @@ void Armor_heavy_coat::on_equip_(const bool IS_SILENT)
 Unequip_allowed Armor_heavy_coat::on_unequip_()
 {
     for (Prop* prop : carrier_props_) {delete prop;}
+
     carrier_props_.clear();
 
     return Unequip_allowed::yes;
@@ -382,11 +397,11 @@ void Wpn::setup_from_save_lines(vector<string>& lines)
 
 Wpn::Wpn(Item_data_t* const item_data, Item_data_t* const ammo_data, int ammo_cap,
          bool is_using_clip) :
-    Item                (item_data),
-    AMMO_CAP            (ammo_cap),
-    IS_USING_CLIP       (is_using_clip),
-    nr_ammo_loaded        (AMMO_CAP),
-    ammo_data_           (ammo_data) {}
+    Item(item_data),
+    AMMO_CAP(ammo_cap),
+    IS_USING_CLIP(is_using_clip),
+    nr_ammo_loaded(AMMO_CAP),
+    ammo_data_(ammo_data) {}
 
 Clr Wpn::get_clr() const
 {
@@ -399,6 +414,7 @@ Clr Wpn::get_clr() const
             return ret;
         }
     }
+
     return data_->clr;
 }
 
@@ -407,6 +423,7 @@ void Wpn::set_random_melee_plus()
     melee_dmg_plus_ = 0;
 
     int chance = 45;
+
     while (rnd::percent() < chance && melee_dmg_plus_ < 3)
     {
         melee_dmg_plus_++;
@@ -420,6 +437,7 @@ string Wpn::get_name_inf() const
     {
         return to_str(nr_ammo_loaded) + "/" + to_str(AMMO_CAP);
     }
+
     return "";
 }
 
@@ -490,6 +508,7 @@ Consume_item Medical_bag::activate(Actor* const actor)
 
     vector<Actor*> seen_foes;
     map::player->get_seen_foes(seen_foes);
+
     if (!seen_foes.empty())
     {
         msg_log::add("Not while an enemy is near.");
@@ -509,6 +528,7 @@ Consume_item Medical_bag::activate(Actor* const actor)
     //Check if chosen action can be done
     bool props[size_t(Prop_id::END)];
     map::player->get_prop_handler().get_prop_ids(props);
+
     switch (cur_action_)
     {
     case Med_bag_action::treat_wounds:
@@ -518,6 +538,7 @@ Consume_item Medical_bag::activate(Actor* const actor)
             cur_action_ = Med_bag_action::END;
             return Consume_item::no;
         }
+
         break;
 
     case Med_bag_action::sanitize_infection:
@@ -527,6 +548,7 @@ Consume_item Medical_bag::activate(Actor* const actor)
             cur_action_ = Med_bag_action::END;
             return Consume_item::no;
         }
+
         break;
 
     case Med_bag_action::END: {}
@@ -671,6 +693,7 @@ void Medical_bag::continue_action()
     case Med_bag_action::sanitize_infection:
     {
         --nr_turns_left_sanitize_;
+
         if (nr_turns_left_sanitize_ <= 0)
         {
             finish_cur_action();
@@ -783,6 +806,7 @@ void Gas_mask::on_equip(const bool IS_SILENT)
 Unequip_allowed Gas_mask::on_unequip()
 {
     for (Prop* prop : carrier_props_) {delete prop;}
+
     carrier_props_.clear();
 
     return Unequip_allowed::yes;
@@ -828,10 +852,13 @@ void Dynamite::on_player_ignite() const
 void Dynamite::on_std_turn_player_hold_ignited()
 {
     fuse_turns_--;
+
     if (fuse_turns_ > 0)
     {
         string fuse_msg = "***F";
+
         for (int i = 0; i < fuse_turns_; ++i) {fuse_msg += "Z";}
+
         fuse_msg += "***";
         msg_log::add(fuse_msg, clr_yellow);
     }
@@ -858,7 +885,9 @@ void Dynamite::on_player_paralyzed()
     map::player->update_clr();
     const Pos& p = map::player->pos;
     auto* const f = map::cells[p.x][p.y].rigid;
+
     if (!f->is_bottomless()) {game_time::add_mob(new Lit_dynamite(p, fuse_turns_));}
+
     delete this;
 }
 
@@ -924,6 +953,7 @@ void Flare::on_player_ignite() const
 void Flare::on_std_turn_player_hold_ignited()
 {
     fuse_turns_--;
+
     if (fuse_turns_ <= 0)
     {
         msg_log::add("The flare is extinguished.");
@@ -948,7 +978,9 @@ void Flare::on_player_paralyzed()
     map::player->update_clr();
     const Pos&  p = map::player->pos;
     auto* const f = map::cells[p.x][p.y].rigid;
+
     if (!f->is_bottomless()) {game_time::add_mob(new Lit_flare(p, fuse_turns_));}
+
     game_time::update_light_map();
     map::player->update_fov();
     render::draw_map_and_interface();
@@ -973,7 +1005,9 @@ void Smoke_grenade::on_std_turn_player_hold_ignited()
     {
         explosion::run_smoke_explosion_at(map::player->pos);
     }
+
     fuse_turns_--;
+
     if (fuse_turns_ <= 0)
     {
         msg_log::add("The smoke grenade is extinguished.");
@@ -997,7 +1031,9 @@ void Smoke_grenade::on_player_paralyzed()
     map::player->update_clr();
     const Pos&  p = map::player->pos;
     auto* const f = map::cells[p.x][p.y].rigid;
+
     if (!f->is_bottomless()) {explosion::run_smoke_explosion_at(map::player->pos);}
+
     map::player->update_fov();
     render::draw_map_and_interface();
     delete this;

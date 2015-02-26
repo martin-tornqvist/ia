@@ -71,6 +71,7 @@ void draw()
     render::draw_text("ARM:", Panel::char_lines, pos, clr_menu_drk);
     pos.x += 4;
     const Item* const armor = player.get_inv().get_item_in_slot(Slot_id::body);
+
     if (armor)
     {
         str = static_cast<const Armor*>(armor)->get_armor_data_line(false);
@@ -88,20 +89,25 @@ void draw()
     pos.x += 2;
     str                 = "";
     Clr lantern_info_clr  = clr_white;
+
     for (const Item* const item : map::player->get_inv().general_)
     {
         if (item->get_id() == Item_id::electric_lantern)
         {
             const Device_lantern* const lantern = static_cast<const Device_lantern*>(item);
             str = to_str(lantern->nr_turns_left_);
+
             if (lantern->is_activated_)
             {
                 lantern_info_clr  = clr_yellow;
             }
+
             break;
         }
     }
+
     if (str == "") {str = "N/A";}
+
     render::draw_text(str, Panel::char_lines, pos, lantern_info_clr);
     pos.x += str.length() + 1;
 
@@ -110,9 +116,11 @@ void draw()
     const int X_POS_MISSILE = pos.x;
 
     Item* item_wielded = map::player->get_inv().get_item_in_slot(Slot_id::wielded);
+
     if (item_wielded)
     {
         const Clr item_clr = item_wielded->get_clr();
+
         if (config::is_tiles_mode())
         {
             render::draw_tile(
@@ -123,6 +131,7 @@ void draw()
             render::draw_glyph(
                 item_wielded->get_glyph(), Panel::char_lines, pos, item_clr);
         }
+
         pos.x += 2;
 
         const auto& data = item_wielded->get_data();
@@ -188,6 +197,7 @@ void draw()
     if (item_missiles)
     {
         const Clr item_clr = item_missiles->get_clr();
+
         if (config::is_tiles_mode())
         {
             render::draw_tile(item_missiles->get_tile(), Panel::char_lines, pos, item_clr);
@@ -196,6 +206,7 @@ void draw()
         {
             render::draw_glyph(item_missiles->get_glyph(), Panel::char_lines, pos, item_clr);
         }
+
         pos.x += 2;
 
         str = item_missiles->get_name(Item_ref_type::plural, Item_ref_inf::yes,
@@ -214,6 +225,7 @@ void draw()
     vector<Str_and_clr> props_line;
     map::player->get_prop_handler().get_props_interface_line(props_line);
     const int NR_PROPS = props_line.size();
+
     for (int i = 0; i < NR_PROPS; ++i)
     {
         const Str_and_clr& cur_prop_label = props_line[i];

@@ -79,6 +79,7 @@ bool Living_actors_adj_to_pos::check(const Actor& a) const
     {
         return false;
     }
+
     return utils::is_pos_adj(pos_, a.pos, true);
 }
 
@@ -100,6 +101,7 @@ bool Is_feature::check(const Cell& c) const
 bool Is_any_of_features::check(const Cell& c) const
 {
     for (auto f : features_) {if (f == c.rigid->get_id()) return true;}
+
     return false;
 }
 
@@ -141,7 +143,9 @@ bool All_adj_is_any_of_features::check(const Cell& c) const
             const auto cur_id = map::cells[X + dx][Y + dy].rigid->get_id();
 
             bool is_match = false;
+
             for (auto f : features_) {if (f == cur_id) {is_match = true; break;}}
+
             if (!is_match) return false;
         }
     }
@@ -182,6 +186,7 @@ bool All_adj_is_none_of_features::check(const Cell& c) const
         for (int dy = -1; dy <= 1; ++dy)
         {
             const auto cur_id = map::cells[X + dx][Y + dy].rigid->get_id();
+
             for (auto f : features_) {if (f == cur_id) {return false;}}
         }
     }
@@ -197,14 +202,16 @@ namespace map_parse
 
 const Rect map_rect(0, 0, MAP_W - 1, MAP_H - 1);
 
-void run(const cell_check::Check& check, bool out[MAP_W][MAP_H],
-         const map_parse_mode write_rule, const Rect& area_to_check_cells)
+void run(const  cell_check::Check& check,
+         bool   out[MAP_W][MAP_H],
+         const  Map_parse_mode write_rule,
+         const  Rect& area_to_check_cells)
 {
     assert(check.is_checking_cells()  ||
            check.is_checking_mobs()   ||
            check.is_checking_actors());
 
-    const bool ALLOW_WRITE_FALSE = write_rule == map_parse_mode::overwrite;
+    const bool ALLOW_WRITE_FALSE = write_rule == Map_parse_mode::overwrite;
 
     if (check.is_checking_cells())
     {
@@ -214,6 +221,7 @@ void run(const cell_check::Check& check, bool out[MAP_W][MAP_H],
             {
                 const auto& c         = map::cells[x][y];
                 const bool  IS_MATCH  = check.check(c);
+
                 if (IS_MATCH || ALLOW_WRITE_FALSE)
                 {
                     out[x][y] = IS_MATCH;
@@ -235,6 +243,7 @@ void run(const cell_check::Check& check, bool out[MAP_W][MAP_H],
                 if (IS_MATCH || ALLOW_WRITE_FALSE)
                 {
                     bool& v = out[p.x][p.y];
+
                     if (!v) {v = IS_MATCH;}
                 }
             }
@@ -254,6 +263,7 @@ void run(const cell_check::Check& check, bool out[MAP_W][MAP_H],
                 if (IS_MATCH || ALLOW_WRITE_FALSE)
                 {
                     bool& v = out[p.x][p.y];
+
                     if (!v) {v = IS_MATCH;}
                 }
             }
@@ -293,6 +303,7 @@ void get_cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W
                             break;
                         }
                     }
+
                     for (int y = p0.y; y <= p1.y; ++y)
                     {
                         if (in[p0.x][y] || in[p1.x][y])
@@ -319,6 +330,7 @@ bool is_val_in_area(const Rect& area, const bool in[MAP_W][MAP_H],
             if (in[x][y] == VAL) {return true;}
         }
     }
+
     return false;
 }
 
@@ -369,6 +381,7 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
                         break;
                     }
                 }
+
                 if (is_found)
                 {
                     break;
@@ -408,6 +421,7 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST)
                         break;
                     }
                 }
+
                 if (is_found)
                 {
                     break;
@@ -420,6 +434,7 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST)
 bool is_map_connected(const bool blocked[MAP_W][MAP_H])
 {
     Pos origin(-1, -1);
+
     for (int x = 1; x < MAP_W - 1; ++x)
     {
         for (int y = 1; y < MAP_H - 1; ++y)
@@ -430,6 +445,7 @@ bool is_map_connected(const bool blocked[MAP_W][MAP_H])
                 break;
             }
         }
+
         if (origin.x != -1)
         {
             break;
@@ -453,6 +469,7 @@ bool is_map_connected(const bool blocked[MAP_W][MAP_H])
             }
         }
     }
+
     return true;
 }
 
@@ -470,23 +487,28 @@ bool Is_closer_to_pos::operator()(const Pos& p1, const Pos& p2)
 namespace flood_fill
 {
 
-void run(const Pos& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
-         int travel_lmt, const Pos& p1, const bool ALLOW_DIAGONAL)
+void run(const Pos& p0,
+         const bool blocked[MAP_W][MAP_H],
+         int out[MAP_W][MAP_H],
+         int travel_lmt,
+         const Pos& p1,
+         const bool ALLOW_DIAGONAL)
 {
     utils::reset_array(out);
 
     vector<Pos> positions;
     positions.clear();
 
-    unsigned int  nr_elements_to_skip  = 0;
-    int           cur_val            = 0;
-    bool          path_exists        = true;
-    bool          is_at_target        = false;
-    bool          is_stopping_at_p1    = p1.x != -1;
+    unsigned int  nr_elements_to_skip   = 0;
+    int           cur_val               = 0;
+    bool          path_exists           = true;
+    bool          is_at_target          = false;
+    bool          is_stopping_at_p1     = p1.x != -1;
     const         Rect bounds(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2));
     Pos           cur_pos(p0);
 
     vector<Pos> dirs {Pos(0, -1), Pos(-1, 0), Pos(0, 1), Pos(1, 0)};
+
     if (ALLOW_DIAGONAL)
     {
         dirs.push_back(Pos(-1, -1));
@@ -496,6 +518,7 @@ void run(const Pos& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
     }
 
     bool done = false;
+
     while (!done)
     {
 
@@ -504,10 +527,11 @@ void run(const Pos& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
             if ((d != 0))
             {
                 const Pos new_pos(cur_pos + d);
+
                 if (
-                    !blocked[new_pos.x][new_pos.y]        &&
-                    utils::is_pos_inside(new_pos, bounds)  &&
-                    out[new_pos.x][new_pos.y] == 0        &&
+                    !blocked[new_pos.x][new_pos.y]          &&
+                    utils::is_pos_inside(new_pos, bounds)   &&
+                    out[new_pos.x][new_pos.y] == 0          &&
                     new_pos != p0)
                 {
                     cur_val = out[cur_pos.x][cur_pos.y];
@@ -519,7 +543,11 @@ void run(const Pos& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
                         is_at_target = true;
                         break;
                     }
-                    if (!is_stopping_at_p1 || !is_at_target) {positions.push_back(new_pos);}
+
+                    if (!is_stopping_at_p1 || !is_at_target)
+                    {
+                        positions.push_back(new_pos);
+                    }
                 }
             }
         }
@@ -527,6 +555,7 @@ void run(const Pos& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
         if (is_stopping_at_p1)
         {
             if (positions.size() == nr_elements_to_skip)  {path_exists = false;}
+
             if (is_at_target || !path_exists)             {done = true;}
         }
         else if (positions.size() == nr_elements_to_skip)
@@ -557,8 +586,8 @@ void run(const Pos& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
 namespace path_find
 {
 
-void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H],
-         vector<Pos>& out, const bool ALLOW_DIAGONAL, const bool RANDOMIZE_STEP_CHOICES)
+void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H], vector<Pos>& out,
+         const bool ALLOW_DIAGONAL, const bool RANDOMIZE_STEP_CHOICES)
 {
     out.clear();
 
@@ -577,7 +606,9 @@ void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H],
         return;
     }
 
-    const vector<Pos>& dirs = ALLOW_DIAGONAL ? dir_utils::dir_list : dir_utils::cardinal_list;
+    const vector<Pos>& dirs =  ALLOW_DIAGONAL ?
+                               dir_utils::dir_list :
+                               dir_utils::cardinal_list;
 
     const size_t NR_DIRS = dirs.size();
 

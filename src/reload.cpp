@@ -47,6 +47,7 @@ void print_msg_and_play_sfx(Actor& actor_reloading, Wpn* const wpn,
         {
             msg_log::add("I am not wielding a weapon.");
         }
+
         break;
 
     case Reload_result::wpn_not_using_ammo:
@@ -54,6 +55,7 @@ void print_msg_and_play_sfx(Actor& actor_reloading, Wpn* const wpn,
         {
             msg_log::add("This weapon does not use ammo.");
         }
+
         break;
 
     case Reload_result::already_full:
@@ -61,6 +63,7 @@ void print_msg_and_play_sfx(Actor& actor_reloading, Wpn* const wpn,
         {
             msg_log::add("Weapon already loaded.");
         }
+
         break;
 
     case Reload_result::no_ammo:
@@ -68,11 +71,13 @@ void print_msg_and_play_sfx(Actor& actor_reloading, Wpn* const wpn,
         {
             msg_log::add("I carry no ammunition for this weapon.");
         }
+
         break;
 
     case Reload_result::success:
     {
         const string swift_str = IS_SWIFT_RELOAD ? " swiftly" : "";
+
         if (IS_PLAYER)
         {
             audio::play(wpn->get_data().ranged.reload_sfx);
@@ -90,6 +95,7 @@ void print_msg_and_play_sfx(Actor& actor_reloading, Wpn* const wpn,
                     "I" + swift_str + " load " + ammo_name + " (" + to_str(wpn->nr_ammo_loaded) +
                     "/" + to_str(wpn->AMMO_CAP) + ").");
             }
+
             render::draw_map_and_interface();
         }
         else
@@ -113,6 +119,7 @@ void print_msg_and_play_sfx(Actor& actor_reloading, Wpn* const wpn,
                 msg_log::add(actor_name + " fumbles with " + ammo_name + ".");
             }
         }
+
         break;
     }
 }
@@ -217,9 +224,11 @@ bool reload_wielded_wpn(Actor& actor_reloading)
                             inv.decr_item_in_general(i);
                         }
                     }
+
                     break;
                 }
             }
+
             if (result == Reload_result::no_ammo)
             {
                 print_msg_and_play_sfx(actor_reloading, wpn, item, result, is_swift_reload);

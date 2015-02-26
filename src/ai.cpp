@@ -66,9 +66,11 @@ bool try_cast_random_spell(Mon& mon)
                 {
                     msg_log::add(mon.get_name_the() + " looks desperate.");
                 }
+
                 spell->cast(&mon, true);
                 return true;
             }
+
             return false;
         }
         else //Spell does not allow monster to cast now
@@ -89,6 +91,7 @@ bool handle_closed_blocking_door(Mon& mon, vector<Pos> path)
 
     const Pos& p = path.back();
     Feature* const f = map::cells[p.x][p.y].rigid;
+
     if (f->get_id() == Feature_id::door)
     {
         Door* const door = static_cast<Door*>(f);
@@ -118,6 +121,7 @@ bool handle_closed_blocking_door(Mon& mon, vector<Pos> path)
             }
         }
     }
+
     return false;
 }
 
@@ -138,6 +142,7 @@ bool check_if_blocking_mon(const Pos& pos, Mon& other)
     line_calc::calc_new_line(other.pos, map::player->pos, true, 9999, false, line);
 
     for (const Pos& pos_in_line : line) {if (pos_in_line == pos) {return true;}}
+
     return false;
 }
 
@@ -192,6 +197,7 @@ bool is_adj_and_no_vision(const Mon& self, Mon& other,
         //If pal does not see player
         if (!other.can_see_actor(*map::player, blocked_los)) {return true;}
     }
+
     return false;
 }
 
@@ -276,6 +282,7 @@ bool make_room_for_friend(Mon& mon)
             }
         }
     }
+
     return false;
 }
 
@@ -289,6 +296,7 @@ Dir get_dir_to_rnd_adj_free_cell(Mon& mon)
     cell_check::Blocks_actor cellcheck(mon, true);
 
     const Pos& mon_pos = mon.pos;
+
     for (int dx = -1; dx <= 1; ++dx)
     {
         for (int dy = -1; dy <= 1; ++dy)
@@ -303,6 +311,7 @@ Dir get_dir_to_rnd_adj_free_cell(Mon& mon)
         const Pos& p = actor->pos;
         blocked[p.x][p.y] = true;
     }
+
     for (Mob* mob : game_time::mobs_)
     {
         const Pos& p = mob->get_pos();
@@ -313,9 +322,11 @@ Dir get_dir_to_rnd_adj_free_cell(Mon& mon)
 
     //First, try the same direction as last travelled
     const Dir last_dir_travelled = mon.last_dir_travelled_;
+
     if (last_dir_travelled != Dir::center)
     {
         const Pos target_cell(mon_pos + dir_utils::get_offset(last_dir_travelled));
+
         if (
             !blocked[target_cell.x][target_cell.y] &&
             utils::is_pos_inside(target_cell, area_allowed))
@@ -327,6 +338,7 @@ Dir get_dir_to_rnd_adj_free_cell(Mon& mon)
     //Attempt to find a random non-blocked adjacent cell
     vector<Dir> dir_bucket;
     dir_bucket.clear();
+
     for (int dx = -1; dx <= 1; ++dx)
     {
         for (int dy = -1; dy <= 1; ++dy)
@@ -335,6 +347,7 @@ Dir get_dir_to_rnd_adj_free_cell(Mon& mon)
             {
                 const Pos offset(dx, dy);
                 const Pos target_cell(mon_pos + offset);
+
                 if (
                     !blocked[target_cell.x][target_cell.y] &&
                     utils::is_pos_inside(target_cell, area_allowed))
@@ -346,6 +359,7 @@ Dir get_dir_to_rnd_adj_free_cell(Mon& mon)
     }
 
     const int NR_ELEMENTS = dir_bucket.size();
+
     if (NR_ELEMENTS == 0)
     {
         return Dir::center;
@@ -365,6 +379,7 @@ bool move_to_random_adj_cell(Mon& mon)
         if (mon.is_roaming_allowed_ || mon.aware_counter_ > 0)
         {
             const Dir dir = get_dir_to_rnd_adj_free_cell(mon);
+
             if (dir != Dir::center)
             {
                 mon.move_dir(dir);
@@ -372,6 +387,7 @@ bool move_to_random_adj_cell(Mon& mon)
             }
         }
     }
+
     return false;
 }
 
@@ -386,6 +402,7 @@ bool move_to_tgt_simple(Mon& mon)
             bool blocked[MAP_W][MAP_H];
             map_parse::run(cell_check::Blocks_actor(mon, true), blocked);
             const Pos new_pos(mon.pos + signs);
+
             if (!blocked[new_pos.x][new_pos.y])
             {
                 mon.move_dir(dir_utils::get_dir(signs));
@@ -393,6 +410,7 @@ bool move_to_tgt_simple(Mon& mon)
             }
         }
     }
+
     return false;
 }
 
@@ -407,6 +425,7 @@ bool step_path(Mon& mon, vector<Pos>& path)
             return true;
         }
     }
+
     return false;
 }
 
@@ -428,6 +447,7 @@ bool step_to_lair_if_los(Mon& mon, const Pos& lair_cell)
             const Pos new_pos = mon.pos + delta;
 
             map_parse::run(cell_check::Blocks_los(), blocked);
+
             if (blocked[new_pos.x][new_pos.y])
             {
                 return false;
@@ -521,7 +541,7 @@ void set_path_to_lair_if_no_los(Mon& mon, vector<Pos>& path,
         map_parse::run(cell_check::Blocks_actor(mon, false), blocked);
 
         map_parse::run(cell_check::Living_actors_adj_to_pos(mon.pos),
-                       blocked, map_parse_mode::append);
+                       blocked, Map_parse_mode::append);
 
         path_find::run(mon.pos, lair_cell, blocked, path);
         return;
@@ -535,6 +555,7 @@ void set_path_to_leader_if_no_los_toleader(Mon& mon, vector<Pos>& path)
     if (mon.is_alive())
     {
         Actor* leader = mon.leader_;
+
         if (leader)
         {
             if (leader->is_alive())
@@ -551,7 +572,7 @@ void set_path_to_leader_if_no_los_toleader(Mon& mon, vector<Pos>& path)
                 map_parse::run(cell_check::Blocks_actor(mon, false), blocked);
 
                 map_parse::run(cell_check::Living_actors_adj_to_pos(mon.pos),
-                               blocked, map_parse_mode::append);
+                               blocked, Map_parse_mode::append);
 
                 path_find::run(mon.pos, leader->pos, blocked, path);
                 return;
@@ -612,7 +633,7 @@ void set_path_to_player_if_aware(Mon& mon, vector<Pos>& path)
 
     //Append living adjacent actors to the blocking array
     map_parse::run(cell_check::Living_actors_adj_to_pos(mon.pos), blocked,
-                   map_parse_mode::append);
+                   Map_parse_mode::append);
 
     path_find::run(mon.pos, map::player->pos, blocked, path);
 }

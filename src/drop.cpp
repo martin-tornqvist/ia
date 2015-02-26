@@ -87,6 +87,7 @@ void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t 
         {
             bool blocked[MAP_W][MAP_H];
             map_parse::run(cell_check::Blocks_los(), blocked);
+
             if (map::player->can_see_actor(actor, blocked))
             {
                 msg_log::add(actor.get_name_the() + " drops " + item_ref + ".");
@@ -104,6 +105,7 @@ Item* drop_item_on_map(const Pos& intended_pos, Item& item)
 {
     //If target cell is bottomless, just destroy the item
     const auto* const tgt_rigid = map::cells[intended_pos.x][intended_pos.y].rigid;
+
     if (tgt_rigid->is_bottomless())
     {
         delete &item;
@@ -112,6 +114,7 @@ Item* drop_item_on_map(const Pos& intended_pos, Item& item)
 
     //Make a vector of all cells on map with no blocking feature
     bool free_cell_array[MAP_W][MAP_H];
+
     for (int x = 0; x < MAP_W; ++x)
     {
         for (int y = 0; y < MAP_H; ++y)
@@ -120,6 +123,7 @@ Item* drop_item_on_map(const Pos& intended_pos, Item& item)
             free_cell_array[x][y] = f->can_have_item() && !f->is_bottomless();
         }
     }
+
     vector<Pos> free_cells;
     utils::mk_vector_from_bool_map(true, free_cell_array, free_cells);
 
@@ -145,6 +149,7 @@ Item* drop_item_on_map(const Pos& intended_pos, Item& item)
             {
                 stack_pos = free_cells[ii];
                 Item* item_found_on_floor = map::cells[stack_pos.x][stack_pos.y].item;
+
                 if (item_found_on_floor)
                 {
                     if (item_found_on_floor->get_data().id == item.get_data().id)
@@ -155,11 +160,13 @@ Item* drop_item_on_map(const Pos& intended_pos, Item& item)
                         return &item;
                     }
                 }
+
                 ++ii;
             }
         }
 
         cur_pos = free_cells[i];
+
         if (!map::cells[cur_pos.x][cur_pos.y].item)
         {
             map::cells[cur_pos.x][cur_pos.y].item = &item;
@@ -175,6 +182,7 @@ Item* drop_item_on_map(const Pos& intended_pos, Item& item)
             return nullptr;
         }
     }
+
     return nullptr;
 }
 

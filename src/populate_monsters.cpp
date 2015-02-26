@@ -24,7 +24,9 @@ namespace
 int get_random_out_of_depth()
 {
     if (map::dlvl == 0)                     {return 0;}
+
     if (rnd::one_in(40) && map::dlvl > 1)    {return 5;}
+
     if (rnd::one_in(5))                      {return 2;}
 
     return 0;
@@ -41,6 +43,7 @@ void mk_list_of_mon_can_auto_spawn(const int NR_LVLS_OUT_OF_DEPTH, vector<Actor_
     //note that this could otherwise happen for example with Zuul - he is allowed to
     //spawn freely after he appears from a possessed Cultist priest)
     bool spawned_ids[size_t(Actor_id::END)];
+
     for (bool& v : spawned_ids) {v = false;}
 
     for (const auto* const actor : game_time::actors_)
@@ -102,6 +105,7 @@ bool mk_group_of_random_native_to_room_type_at(const Room_type       room_type,
                 break;
             }
         }
+
         if (!is_mon_native_to_room)
         {
             id_bucket.erase(id_bucket.begin() + i);
@@ -157,6 +161,7 @@ void try_spawn_due_to_time_passed()
     }
 
     vector<Pos> free_cells_vector;
+
     for (int y = 1; y < MAP_H - 1; ++y)
     {
         for (int x = 1; x < MAP_W - 1; ++x)
@@ -181,6 +186,7 @@ void try_spawn_due_to_time_passed()
             }
         }
     }
+
     TRACE_FUNC_END;
 }
 
@@ -199,6 +205,7 @@ void populate_intro_lvl()
     const int Y0 = max(0, player_pos.y - MIN_DIST_FROM_PLAYER);
     const int X1 = min(MAP_W - 1, player_pos.x + MIN_DIST_FROM_PLAYER) - 1;
     const int Y1 = min(MAP_H - 1, player_pos.y + MIN_DIST_FROM_PLAYER) - 1;
+
     for (int y = Y0; y <= Y1; ++y)
     {
         for (int x = X0; x <= X1; ++x)
@@ -210,6 +217,7 @@ void populate_intro_lvl()
     for (int i = 0; i < NR_GROUPS_ALLOWED; ++i)
     {
         vector<Pos> origin_bucket;
+
         for (int y = 1; y < MAP_H - 1; ++y)
         {
             for (int x = 1; x < MAP_W - 1; ++x)
@@ -217,10 +225,12 @@ void populate_intro_lvl()
                 if (!blocked[x][y]) {origin_bucket.push_back(Pos(x, y));}
             }
         }
+
         const int ELEMENT = rnd::range(0, origin_bucket.size() - 1);
         const Pos origin = origin_bucket[ELEMENT];
         vector<Pos> sorted_free_cells_vector;
         mk_sorted_free_cells_vector(origin, blocked, sorted_free_cells_vector);
+
         if (!sorted_free_cells_vector.empty())
         {
             mk_group_at(Actor_id::wolf, sorted_free_cells_vector, blocked, true);
@@ -270,10 +280,12 @@ void populate_std_lvl()
             const int NR_CELLS_IN_ROOM = ROOM_W * ROOM_H;
 
             const int MAX_NR_GROUPS_IN_ROOM = 2;
+
             for (int i = 0; i < MAX_NR_GROUPS_IN_ROOM; ++i)
             {
                 //Randomly pick a free position inside the room
                 vector<Pos> origin_bucket;
+
                 for (int y = room->r_.p0.y; y <= room->r_.p1.y; ++y)
                 {
                     for (int x = room->r_.p0.x; x <= room->r_.p1.x; ++x)
@@ -288,6 +300,7 @@ void populate_std_lvl()
                 //If room is too full (due to spawned monsters and features),
                 //stop spawning in this room
                 const int NR_ORIGIN_CANDIDATES = origin_bucket.size();
+
                 if (NR_ORIGIN_CANDIDATES < (NR_CELLS_IN_ROOM / 3)) {break;}
 
                 //Spawn monsters in room
@@ -302,6 +315,7 @@ void populate_std_lvl()
                                 room->type_, sorted_free_cells_vector, blocked, true))
                     {
                         nr_groups_spawned++;
+
                         if (nr_groups_spawned >= NR_GROUPS_ALLOWED_ON_MAP)
                         {
                             TRACE_FUNC_END;
@@ -325,6 +339,7 @@ void populate_std_lvl()
 
     //Second, place groups randomly in plain-themed areas until <no more groups to place
     vector<Pos> origin_bucket;
+
     for (int y = 1; y < MAP_H - 1; ++y)
     {
         for (int x = 1; x < MAP_W - 1; ++x)
@@ -370,9 +385,13 @@ void mk_group_at(const Actor_id id, const vector<Pos>& sorted_free_cells_vector,
     switch (d.group_size)
     {
     case Mon_group_size::few:    max_nr_in_group = rnd::range(1, 2);    break;
+
     case Mon_group_size::group:  max_nr_in_group = rnd::range(3, 4);    break;
+
     case Mon_group_size::horde:  max_nr_in_group = rnd::range(6, 7);    break;
+
     case Mon_group_size::swarm:  max_nr_in_group = rnd::range(10, 12);  break;
+
     default: {} break;
     }
 

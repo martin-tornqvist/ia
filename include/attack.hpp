@@ -17,7 +17,7 @@ class Att_data
 public:
     Actor* attacker;
     Actor* defender;
-    ability_roll_result attack_result;
+    Ability_roll_result attack_result;
     int nr_dmg_rolls, nr_dmg_sides, dmg_plus;
     int dmg_roll, dmg;
     bool is_intrinsic_att;
@@ -53,7 +53,7 @@ class Throw_att_data: public Att_data
 public:
     Throw_att_data(Actor& attacker_, const Item& item_, const Pos& aim_pos_,
                    const Pos& cur_pos_, Actor_size intended_aim_lvl_ = Actor_size::none);
-    int       hit_chance_tot;
+    int hit_chance_tot;
     Actor_size intended_aim_lvl;
     Actor_size defender_size;
 };
@@ -61,8 +61,13 @@ public:
 struct Projectile
 {
     Projectile() : pos(Pos(-1, -1)), is_obstructed(false),
-        is_visible_to_player(true), actor_hit(nullptr), obstructed_in_element(-1),
-        is_done_rendering(false), glyph(-1), tile(Tile_id::empty), clr(clr_white),
+        is_visible_to_player(true),
+        actor_hit(nullptr),
+        obstructed_in_element(-1),
+        is_done_rendering(false),
+        glyph(-1),
+        tile(Tile_id::empty),
+        clr(clr_white),
         attack_data(nullptr) {}
 
     ~Projectile() {if (attack_data) {delete attack_data;}}
@@ -70,6 +75,7 @@ struct Projectile
     void set_att_data(Ranged_att_data* attack_data_)
     {
         if (attack_data) {delete attack_data;}
+
         attack_data = attack_data_;
     }
 

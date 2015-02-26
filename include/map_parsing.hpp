@@ -18,11 +18,11 @@ class Check
 {
 public:
     virtual ~Check() {}
-    virtual bool is_checking_cells()          const {return false;}
-    virtual bool is_checking_mobs()           const {return false;}
-    virtual bool is_checking_actors()         const {return false;}
+    virtual bool is_checking_cells() const {return false;}
+    virtual bool is_checking_mobs()         const {return false;}
+    virtual bool is_checking_actors()       const {return false;}
     virtual bool check(const Cell& c)       const {(void)c; return false;}
-    virtual bool check(const Mob& f)        const {(void)f; return false;}
+    virtual bool check(const Mob& f) const {(void)f; return false;}
     virtual bool check(const Actor& a)      const {(void)a; return false;}
 protected:
     Check() {}
@@ -32,8 +32,8 @@ class Blocks_los : public Check
 {
 public:
     Blocks_los() : Check() {}
-    bool is_checking_cells()          const override {return true;}
-    bool is_checking_mobs()           const override {return true;}
+    bool is_checking_cells()        const override {return true;}
+    bool is_checking_mobs()         const override {return true;}
     bool check(const Cell& c)       const override;
     bool check(const Mob& f)        const override;
 };
@@ -43,9 +43,9 @@ class Blocks_move_cmn : public Check
 public:
     Blocks_move_cmn(bool is_actors_blocking) :
         Check(), IS_ACTORS_BLOCKING_(is_actors_blocking) {}
-    bool is_checking_cells()          const override {return true;}
-    bool is_checking_mobs()           const override {return true;}
-    bool is_checking_actors()         const override {return IS_ACTORS_BLOCKING_;}
+    bool is_checking_cells()        const override {return true;}
+    bool is_checking_mobs()         const override {return true;}
+    bool is_checking_actors()       const override {return IS_ACTORS_BLOCKING_;}
     bool check(const Cell& c)       const override;
     bool check(const Mob& f)        const override;
     bool check(const Actor& a)      const override;
@@ -57,9 +57,9 @@ class Blocks_actor : public Check
 {
 public:
     Blocks_actor(Actor& actor, bool is_actors_blocking);
-    bool is_checking_cells()          const override {return true;}
-    bool is_checking_mobs()           const override {return true;}
-    bool is_checking_actors()         const override {return IS_ACTORS_BLOCKING_;}
+    bool is_checking_cells()        const override {return true;}
+    bool is_checking_mobs()         const override {return true;}
+    bool is_checking_actors()       const override {return IS_ACTORS_BLOCKING_;}
     bool check(const Cell& c)       const override;
     bool check(const Mob& f)        const override;
     bool check(const Actor& a)      const override;
@@ -72,8 +72,8 @@ class Blocks_projectiles : public Check
 {
 public:
     Blocks_projectiles() : Check() {}
-    bool is_checking_cells()          const override {return true;}
-    bool is_checking_mobs()           const override {return true;}
+    bool is_checking_cells()        const override {return true;}
+    bool is_checking_mobs()         const override {return true;}
     bool check(const Cell& c)       const override;
     bool check(const Mob& f)        const override;
 };
@@ -83,7 +83,7 @@ class Living_actors_adj_to_pos : public Check
 public:
     Living_actors_adj_to_pos(const Pos& pos) :
         Check(), pos_(pos) {}
-    bool is_checking_actors()         const override {return true;}
+    bool is_checking_actors()       const override {return true;}
     bool check(const Actor& a)      const override;
     const Pos& pos_;
 };
@@ -92,8 +92,8 @@ class Blocks_items : public Check
 {
 public:
     Blocks_items() : Check() {}
-    bool is_checking_cells()          const override {return true;}
-    bool is_checking_mobs()           const override {return true;}
+    bool is_checking_cells()        const override {return true;}
+    bool is_checking_mobs()         const override {return true;}
     bool check(const Cell& c)       const override;
     bool check(const Mob& f)        const override;
 };
@@ -101,7 +101,7 @@ public:
 //class Corridor : public Check {
 //public:
 //  Corridor() : Check() {}
-//  bool is_checking_cells()          const override {return true;}
+//  bool is_checking_cells()        const override {return true;}
 //  bool check(const Cell& c)       const override;
 //};
 
@@ -111,7 +111,7 @@ public:
 //class Nook : public Check {
 //public:
 //  Nook() : Check() {}
-//  bool is_checking_cells()          const override {return true;}
+//  bool is_checking_cells()        const override {return true;}
 //  bool check(const Cell& c)       const override;
 //};
 
@@ -119,7 +119,7 @@ class Is_feature : public Check
 {
 public:
     Is_feature(const Feature_id id) : Check(), feature_(id) {}
-    bool is_checking_cells()          const override {return true;}
+    bool is_checking_cells()        const override {return true;}
     bool check(const Cell& c)       const override;
 private:
     const Feature_id feature_;
@@ -134,7 +134,7 @@ public:
     Is_any_of_features(const Feature_id id) :
         Check(), features_(std::vector<Feature_id> {id}) {}
 
-    bool is_checking_cells()          const override {return true;}
+    bool is_checking_cells()        const override {return true;}
     bool check(const Cell& c)       const override;
 private:
     std::vector<Feature_id> features_;
@@ -144,7 +144,7 @@ class All_adj_is_feature : public Check
 {
 public:
     All_adj_is_feature(const Feature_id id) : Check(), feature_(id) {}
-    bool is_checking_cells()          const override {return true;}
+    bool is_checking_cells()        const override {return true;}
     bool check(const Cell& c)       const override;
 private:
     const Feature_id feature_;
@@ -159,7 +159,7 @@ public:
     All_adj_is_any_of_features(const Feature_id id) :
         Check(), features_(std::vector<Feature_id> {id}) {}
 
-    bool is_checking_cells()          const override {return true;}
+    bool is_checking_cells()        const override {return true;}
     bool check(const Cell& c)       const override;
 private:
     std::vector<Feature_id> features_;
@@ -169,7 +169,7 @@ class All_adj_is_not_feature : public Check
 {
 public:
     All_adj_is_not_feature(const Feature_id id) : Check(), feature_(id) {}
-    bool is_checking_cells()          const override {return true;}
+    bool is_checking_cells()        const override {return true;}
     bool check(const Cell& c)       const override;
 private:
     const Feature_id feature_;
@@ -184,7 +184,7 @@ public:
     All_adj_is_none_of_features(const Feature_id id) :
         Check(), features_(std::vector<Feature_id> {id}) {}
 
-    bool is_checking_cells()          const override {return true;}
+    bool is_checking_cells()        const override {return true;}
     bool check(const Cell& c)       const override;
 private:
     std::vector<Feature_id> features_;
@@ -202,7 +202,7 @@ namespace map_parse
 extern const Rect map_rect;
 
 void run(const cell_check::Check& check, bool out[MAP_W][MAP_H],
-         const map_parse_mode write_rule = map_parse_mode::overwrite,
+         const Map_parse_mode write_rule = Map_parse_mode::overwrite,
          const Rect& area_to_check_cells = map_rect);
 
 //Given a map array of booleans, this will fill a second map array of boolens
@@ -255,9 +255,8 @@ namespace path_find
 //                        more optimized and is the default behavior (best for e.g. AI),
 //                        while the randomized method can produces nicer results in some
 //                        cases (e.g. corridors).
-void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H],
-         std::vector<Pos>& out, const bool ALLOW_DIAGONAL = true,
-         const bool RANDOMIZE_STEP_CHOICES = false);
+void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H], std::vector<Pos>&  out,
+         const bool ALLOW_DIAGONAL = true, const bool RANDOMIZE_STEP_CHOICES = false);
 
 } //path_find
 

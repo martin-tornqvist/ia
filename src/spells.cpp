@@ -39,12 +39,16 @@ namespace spell_handling
 Spell* get_random_spell_for_mon()
 {
     vector<Spell_id> bucket;
+
     for (int i = 0; i < int(Spell_id::END); ++i)
     {
         Spell* const spell = mk_spell_from_id(Spell_id(i));
+
         if (spell->is_avail_for_all_mon()) {bucket.push_back(Spell_id(i));}
+
         delete spell;
     }
+
     const int ELEMENT = rnd::range(0, bucket.size() - 1);
     return mk_spell_from_id(bucket[ELEMENT]);
 }
@@ -54,33 +58,59 @@ Spell* mk_spell_from_id(const Spell_id spell_id)
     switch (spell_id)
     {
     case Spell_id::slow_mon:            return new Spell_slow_mon;
+
     case Spell_id::terrify_mon:         return new Spell_terrify_mon;
+
     case Spell_id::paralyze_mon:        return new Spell_paralyze_mon;
+
     case Spell_id::disease:             return new Spell_disease;
+
     case Spell_id::darkbolt:            return new Spell_darkbolt;
+
     case Spell_id::aza_wrath:           return new Spell_aza_wrath;
+
     case Spell_id::summon:              return new Spell_summon_mon;
+
     case Spell_id::heal_self:           return new Spell_heal_self;
+
     case Spell_id::knock_back:          return new Spell_knock_back;
+
     case Spell_id::teleport:            return new Spell_teleport;
+
     case Spell_id::mayhem:              return new Spell_mayhem;
+
     case Spell_id::pest:                return new Spell_pest;
+
     case Spell_id::det_items:           return new Spell_det_items;
+
     case Spell_id::det_traps:           return new Spell_det_traps;
+
     case Spell_id::det_mon:             return new Spell_det_mon;
+
     case Spell_id::opening:             return new Spell_opening;
+
     case Spell_id::sacr_life:           return new Spell_sacr_life;
+
     case Spell_id::sacr_spi:            return new Spell_sacr_spi;
+
     case Spell_id::cloud_minds:         return new Spell_cloud_minds;
+
     case Spell_id::bless:               return new Spell_bless;
+
     case Spell_id::mi_go_hypno:         return new Spell_mi_go_hypno;
+
     case Spell_id::burn:                return new Spell_burn;
+
     case Spell_id::elem_res:            return new Spell_elem_res;
+
     case Spell_id::pharaoh_staff:       return new Spell_pharaoh_staff;
+
     case Spell_id::light:               return new Spell_light;
+
     case Spell_id::END: {}
         break;
     }
+
     assert(false && "No spell found for ID");
     return nullptr;
 }
@@ -119,14 +149,23 @@ Range Spell::get_spi_cost(const bool IS_BASE_COST_ONLY, Actor* const caster) con
         switch (get_id())
         {
         case Spell_id::darkbolt:       if (IS_WARLOCK)  --cost_max;     break;
+
         case Spell_id::aza_wrath:       if (IS_WARLOCK)  --cost_max;     break;
+
         case Spell_id::mayhem:         if (IS_WARLOCK)  --cost_max;     break;
+
         case Spell_id::det_mon:         if (IS_SEER)     --cost_max;     break;
+
         case Spell_id::det_items:       if (IS_SEER)     cost_max -= 3;  break;
+
         case Spell_id::det_traps:       if (IS_SEER)     cost_max -= 3;  break;
+
         case Spell_id::summon:      if (IS_SUMMONER) --cost_max;     break;
+
         case Spell_id::pest:           if (IS_SUMMONER) --cost_max;     break;
+
         case Spell_id::pharaoh_staff:   if (IS_SUMMONER) --cost_max;     break;
+
         default: {} break;
         }
 
@@ -136,7 +175,9 @@ Range Spell::get_spi_cost(const bool IS_BASE_COST_ONLY, Actor* const caster) con
         prop_hlr.get_prop_ids(props);
 
         if (!prop_hlr.allow_see()) {--cost_max;}
+
         if (props[int(Prop_id::blessed)])  {--cost_max;}
+
         if (props[int(Prop_id::cursed)])   {cost_max += 3;}
     }
 
@@ -149,6 +190,7 @@ Range Spell::get_spi_cost(const bool IS_BASE_COST_ONLY, Actor* const caster) con
 Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) const
 {
     TRACE_FUNC_BEGIN;
+
     if (caster->get_prop_handler().allow_cast_spell(true))
     {
         if (caster->is_player())
@@ -159,6 +201,7 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
                                         Shock_src::use_strange_item;
             const int SHOCK_VALUE = IS_INTRINSIC ? get_shock_lvl_intr_cast() : 10;
             map::player->incr_shock(SHOCK_VALUE, shock_src);
+
             if (map::player->is_alive())
             {
                 audio::play(Sfx_id::spell_generic);
@@ -168,14 +211,17 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
         {
             TRACE << "Monster casting spell" << endl;
             Mon* const mon = static_cast<Mon*>(caster);
+
             if (map::cells[mon->pos.x][mon->pos.y].is_seen_by_player)
             {
                 const string spell_str = mon->get_data().spell_cast_msg;
+
                 if (!spell_str.empty())
                 {
                     msg_log::add(spell_str);
                 }
             }
+
             mon->spell_cool_down_cur_ = mon->get_data().spell_cooldown_turns;
         }
 
@@ -196,6 +242,7 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
         TRACE_FUNC_END;
         return is_noticed;
     }
+
     TRACE_FUNC_END;
     return Spell_effect_noticed::no;
 }
@@ -237,6 +284,7 @@ Spell_effect_noticed Spell_darkbolt::cast_(Actor* const caster) const
     for (size_t i = 1; i < LINE_SIZE; ++i)
     {
         const Pos& p = line[i];
+
         if (config::is_tiles_mode())
         {
             render::draw_tile(Tile_id::blast1, Panel::map, p, clr_magenta);
@@ -245,6 +293,7 @@ Spell_effect_noticed Spell_darkbolt::cast_(Actor* const caster) const
         {
             render::draw_glyph('*', Panel::map, p, clr_magenta);
         }
+
         render::update_screen();
         sdl_wrapper::sleep(config::get_delay_projectile_draw());
     }
@@ -338,6 +387,7 @@ Spell_effect_noticed Spell_aza_wrath::cast_(Actor* const caster) const
 
         string  tgt_str  = "I am";
         Clr     msg_clr  = clr_msg_good;
+
         if (tgt->is_player())
         {
             msg_clr = clr_msg_bad;
@@ -345,6 +395,7 @@ Spell_effect_noticed Spell_aza_wrath::cast_(Actor* const caster) const
         else //Target is monster
         {
             tgt_str = tgt->get_name_the();
+
             if (map::player->is_leader_of(tgt)) {msg_clr = clr_white;}
         }
 
@@ -377,7 +428,7 @@ Spell_effect_noticed Spell_mayhem::cast_(Actor* const caster) const
 {
     const bool IS_PLAYER = caster->is_player();
 
-    if ( map::player->can_see_actor(*caster, nullptr))
+    if (map::player->can_see_actor(*caster, nullptr))
     {
         string caster_name = IS_PLAYER ? "me" : caster->get_name_the();
         msg_log::add("Destruction rages around " + caster_name + "!");
@@ -400,14 +451,17 @@ Spell_effect_noticed Spell_mayhem::cast_(Actor* const caster) const
             for (int x = X0; x <= X1; ++x)
             {
                 bool is_adj_to_walkable_cell = false;
+
                 for (int dx = -1; dx <= 1; ++dx)
                 {
                     for (int dy = -1; dy <= 1; ++dy)
                     {
                         const Rigid* const f = map::cells[x + dx][y + dy].rigid;
+
                         if (f->can_move_cmn()) {is_adj_to_walkable_cell = true;}
                     }
                 }
+
                 if (is_adj_to_walkable_cell && rnd::one_in(8))
                 {
                     map::cells[x][y].rigid->hit(Dmg_type::physical, Dmg_method::explosion);
@@ -505,6 +559,7 @@ Spell_effect_noticed Spell_pest::cast_(Actor* const caster) const
     for (Mon* const mon : mon_summoned)
     {
         mon->nr_turns_until_unsummoned_ = NR_TURNS_SUMMONED;
+
         if (map::player->can_see_actor(*mon, nullptr))
         {
             is_any_seen_by_player = true;
@@ -623,6 +678,7 @@ Spell_effect_noticed Spell_det_items::cast_(Actor* const caster) const
         for (int x = X0; x <= X1; ++x)
         {
             Item* item = map::cells[x][y].item;
+
             if (item)
             {
                 map::cells[x][y].is_seen_by_player = true;
@@ -631,6 +687,7 @@ Spell_effect_noticed Spell_det_items::cast_(Actor* const caster) const
             }
         }
     }
+
     if (!items_revealed_cells.empty())
     {
         render::draw_map_and_interface();
@@ -642,12 +699,15 @@ Spell_effect_noticed Spell_det_items::cast_(Actor* const caster) const
         {
             msg_log::add("An item is revealed to me.");
         }
+
         if (items_revealed_cells.size() > 1)
         {
             msg_log::add("Some items are revealed to me.");
         }
+
         return Spell_effect_noticed::yes;
     }
+
     return Spell_effect_noticed::no;
 }
 
@@ -665,6 +725,7 @@ Spell_effect_noticed Spell_det_traps::cast_(Actor* const caster) const
             if (map::cells[x][y].is_seen_by_player)
             {
                 auto* const f = map::cells[x][y].rigid;
+
                 if (f->get_id() == Feature_id::trap)
                 {
                     auto* const trap = static_cast<Trap*>(f);
@@ -681,16 +742,20 @@ Spell_effect_noticed Spell_det_traps::cast_(Actor* const caster) const
         map::player->update_fov();
         render::draw_blast_at_cells(traps_revealed_cells, clr_white);
         render::draw_map_and_interface();
+
         if (traps_revealed_cells.size() == 1)
         {
             msg_log::add("A hidden trap is revealed to me.");
         }
+
         if (traps_revealed_cells.size() > 1)
         {
             msg_log::add("Some hidden traps are revealed to me.");
         }
+
         return Spell_effect_noticed::yes;
     }
+
     return Spell_effect_noticed::no;
 }
 
@@ -782,6 +847,7 @@ Spell_effect_noticed Spell_sacr_life::cast_(Actor* const caster) const
         map::player->restore_spi(HP_DRAINED, true, true);
         return Spell_effect_noticed::yes;
     }
+
     return Spell_effect_noticed::no;
 }
 
@@ -812,6 +878,7 @@ Spell_effect_noticed Spell_sacr_spi::cast_(Actor* const caster) const
         map::player->restore_hp(HP_DRAINED, true, true);
         return Spell_effect_noticed::yes;
     }
+
     return Spell_effect_noticed::no;
 }
 
@@ -830,6 +897,7 @@ Spell_effect_noticed Spell_cloud_minds::cast_(Actor* const caster) const
             mon->aware_counter_ = 0;
         }
     }
+
     return Spell_effect_noticed::yes;
 }
 
@@ -847,6 +915,7 @@ Spell_effect_noticed Spell_bless::cast_(Actor* const caster) const
         {
             msg_log::add(spell_reflect_self_msg, clr_white, false, true);
         }
+
         return Spell_effect_noticed::no;
     }
 
@@ -875,6 +944,7 @@ Spell_effect_noticed Spell_teleport::cast_(Actor* const caster) const
         {
             msg_log::add(spell_reflect_self_msg, clr_white, false, true);
         }
+
         return Spell_effect_noticed::no;
     }
 
@@ -903,6 +973,7 @@ Spell_effect_noticed Spell_elem_res::cast_(Actor* const caster) const
         {
             msg_log::add(spell_reflect_self_msg, clr_white, false, true);
         }
+
         return Spell_effect_noticed::no;
     }
 
@@ -948,6 +1019,7 @@ Spell_effect_noticed Spell_knock_back::cast_(Actor* const caster) const
     else //Target is monster
     {
         tgt_str = tgt->get_name_the();
+
         if (map::player->is_leader_of(tgt)) {msg_clr = clr_white;}
     }
 
@@ -1070,6 +1142,7 @@ Spell_effect_noticed Spell_summon_mon::cast_(Actor* const caster) const
     const int Y0 = max(0, player_pos.y - RADI);
     const int X1 = min(MAP_W, player_pos.x + RADI) - 1;
     const int Y1 = min(MAP_H, player_pos.y + RADI) - 1;
+
     for (int x = X0; x <= X1; ++x)
     {
         for (int y = Y0; y <= Y1; ++y)
@@ -1088,6 +1161,7 @@ Spell_effect_noticed Spell_summon_mon::cast_(Actor* const caster) const
         //No free cells seen by player, instead summon near the caster.
         vector<Pos> free_cells_vector;
         utils::mk_vector_from_bool_map(false, blocked, free_cells_vector);
+
         if (!free_cells_vector.empty())
         {
             sort(free_cells_vector.begin(), free_cells_vector.end(),
@@ -1102,9 +1176,11 @@ Spell_effect_noticed Spell_summon_mon::cast_(Actor* const caster) const
     }
 
     vector<Actor_id> summon_bucket;
+
     for (int i = 0; i < int(Actor_id::END); ++i)
     {
         const actor_data_t& data = actor_data::data[i];
+
         if (data.can_be_summoned)
         {
             //Method for finding eligible monsters depends on if player or monster is
@@ -1200,6 +1276,7 @@ Spell_effect_noticed Spell_heal_self::cast_(Actor* const caster) const
         {
             msg_log::add(spell_reflect_self_msg, clr_white, false, true);
         }
+
         return Spell_effect_noticed::no;
     }
 

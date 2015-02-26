@@ -71,6 +71,7 @@ void run_std_turn_events()
 
             actors_.erase(actors_.begin() + i);
             i--;
+
             if (cur_actor_index_ >= actors_.size()) {cur_actor_index_ = 0;}
         }
         else  //Actor is alive or is a corpse
@@ -80,6 +81,7 @@ void run_std_turn_events()
             if (!actor->is_player())
             {
                 Mon* const mon = static_cast<Mon*>(actor);
+
                 if (mon->player_aware_of_me_counter_ > 0)
                 {
                     mon->player_aware_of_me_counter_--;
@@ -88,6 +90,7 @@ void run_std_turn_events()
 
             //Do light damage if actor in lit cell
             const Pos& pos = actor->pos;
+
             if (map::cells[pos.x][pos.y].is_lit)
             {
                 actor->hit(1, Dmg_type::light);
@@ -131,6 +134,7 @@ void run_std_turn_events()
 
     //New turn for mobs (using a copied vector, since mobs may get destroyed)
     const vector<Mob*> mobs_cpy = mobs_;
+
     for (auto* f : mobs_cpy) {f->on_new_turn();}
 
     //Spawn more monsters?
@@ -186,9 +190,11 @@ void init()
 void cleanup()
 {
     for (Actor* a : actors_) {delete a;}
+
     actors_.clear();
 
     for (auto* f : mobs_) {delete f;}
+
     mobs_.clear();
 }
 
@@ -211,6 +217,7 @@ int get_turn()
 void get_mobs_at_pos(const Pos& p, vector<Mob*>& vector_ref)
 {
     vector_ref.clear();
+
     for (auto* m : mobs_) {if (m->get_pos() == p) {vector_ref.push_back(m);}}
 }
 
@@ -226,6 +233,7 @@ void erase_mob(Mob* const f, const bool DESTROY_OBJECT)
         if (*it == f)
         {
             if (DESTROY_OBJECT) {delete f;}
+
             mobs_.erase(it);
             return;
         }
@@ -235,6 +243,7 @@ void erase_mob(Mob* const f, const bool DESTROY_OBJECT)
 void erase_all_mobs()
 {
     for (auto* m : mobs_) {delete m;}
+
     mobs_.clear();
 }
 
@@ -294,6 +303,7 @@ void tick(const bool IS_FREE_TURN)
     else //Actor is monster
     {
         auto* mon = static_cast<Mon*>(cur_actor);
+
         if (mon->aware_counter_ > 0)
         {
             mon->aware_counter_ -= 1;

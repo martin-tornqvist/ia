@@ -93,22 +93,22 @@ enum class Prop_src {applied, inv, END};
 struct Prop_data_t
 {
     Prop_data_t() :
-        id                                  (Prop_id::END),
-        std_rnd_turns                         (Range(10, 10)),
-        name                                (""),
-        name_short                           (""),
-        is_making_mon_aware                    (false),
-        allow_display_turns                   (true),
-        allow_apply_more_while_active           (true),
-        update_player_visual_when_start_or_end    (false),
-        is_ended_by_magic_healing               (false),
-        allow_test_on_bot                      (false),
-        alignment                           (prop_alignment_bad)
+        id(Prop_id::END),
+        std_rnd_turns(Range(10, 10)),
+        name(""),
+        name_short(""),
+        is_making_mon_aware(false),
+        allow_display_turns(true),
+        allow_apply_more_while_active(true),
+        update_player_visual_when_start_or_end(false),
+        is_ended_by_magic_healing(false),
+        allow_test_on_bot(false),
+        alignment(prop_alignment_bad)
     {
         for (int i = 0; i < end_of_prop_msg; ++i) {msg[i] = "";}
     }
 
-    Prop_id          id;
+    Prop_id         id;
     Range           std_rnd_turns;
     std::string     name;
     std::string     name_short;
@@ -119,7 +119,7 @@ struct Prop_data_t
     bool            update_player_visual_when_start_or_end;
     bool            is_ended_by_magic_healing;
     bool            allow_test_on_bot;
-    Prop_alignment   alignment;
+    Prop_alignment  alignment;
 };
 
 namespace prop_data
@@ -141,11 +141,11 @@ public:
 
     ~Prop_handler();
 
-    void try_apply_prop(Prop* const   prop,
-                        const bool    FORCE_EFFECT                = false,
-                        const bool    NO_MESSAGES                 = false,
-                        const bool    DISABLE_REDRAW              = false,
-                        const bool    DISABLE_PROP_START_EFFECTS  = false);
+    void try_apply_prop(Prop* const prop,
+                        const bool  FORCE_EFFECT                = false,
+                        const bool  NO_MESSAGES                 = false,
+                        const bool  DISABLE_REDRAW              = false,
+                        const bool  DISABLE_PROP_START_EFFECTS  = false);
 
     void try_apply_prop_from_att(const Wpn& wpn, const bool IS_MELEE);
 
@@ -153,16 +153,16 @@ public:
 
     int get_changed_max_hp(const int HP_MAX) const;
 
-    bool allow_attack        (const bool ALLOW_MSG)  const;
-    bool allow_attack_melee   (const bool ALLOW_MSG)  const;
-    bool allow_attack_ranged  (const bool ALLOW_MSG)  const;
-    bool allow_see()                                 const;
-    bool allow_move()                                const;
-    bool allow_act()                                 const;
-    bool allow_read          (const bool ALLOW_MSG)  const;
-    bool allow_cast_spell     (const bool ALLOW_MSG)  const;
-    bool allow_speak         (const bool ALLOW_MSG)  const;
-    bool allow_eat           (const bool ALLOW_MSG)  const; //Also used for drinking
+    bool allow_attack(const bool ALLOW_MSG) const;
+    bool allow_attack_melee(const bool ALLOW_MSG) const;
+    bool allow_attack_ranged(const bool ALLOW_MSG) const;
+    bool allow_see() const;
+    bool allow_move() const;
+    bool allow_act() const;
+    bool allow_read(const bool ALLOW_MSG) const;
+    bool allow_cast_spell(const bool ALLOW_MSG) const;
+    bool allow_speak(const bool ALLOW_MSG) const;
+    bool allow_eat(const bool ALLOW_MSG) const; //Also used for drinking
 
     void on_hit();
     void on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR);
@@ -262,14 +262,14 @@ public:
         return data_->is_ended_by_magic_healing;
     }
 
-    virtual bool allow_see()   const {return true;}
-    virtual bool allow_move()  const {return true;}
-    virtual bool allow_act()   const {return true;}
-    virtual void on_hit()            {}
-    virtual void on_new_turn()        {}
-    virtual void on_start()          {}
-    virtual void on_end()            {}
-    virtual void on_more()           {}
+    virtual bool allow_see() const {return true;}
+    virtual bool allow_move() const {return true;}
+    virtual bool allow_act() const {return true;}
+    virtual void on_hit() {}
+    virtual void on_new_turn() {}
+    virtual void on_start() {}
+    virtual void on_end() {}
+    virtual void on_more() {}
 
     virtual void on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
     {
@@ -369,8 +369,12 @@ public:
     {
         switch (ability)
         {
-        case Ability_id::dodge_att:   return 20;
-        case Ability_id::ranged:     return -20;
+        case Ability_id::dodge_att:
+            return 20;
+
+        case Ability_id::ranged:
+            return -20;
+
         default: {} break;
         }
 
@@ -468,8 +472,8 @@ class Prop_aiming: public Prop
 {
 public:
     Prop_aiming(Prop_turns turns_init, int turns = -1) :
-        Prop          (Prop_id::aiming, turns_init, turns),
-        nr_turns_aiming (1) {}
+        Prop(Prop_id::aiming, turns_init, turns),
+        nr_turns_aiming(1) {}
 
     Prop_turn_mode get_turn_mode() const override {return Prop_turn_mode::actor;}
 
@@ -484,6 +488,7 @@ public:
         {
             return nr_turns_aiming >= 3 ? 999 : 20;
         }
+
         return 0;
     }
 
@@ -506,11 +511,19 @@ public:
     {
         switch (ability)
         {
-        case Ability_id::searching:  return -9999;
-        case Ability_id::ranged:     return -50;
-        case Ability_id::melee:      return -25;
+        case Ability_id::searching:
+            return -9999;
+
+        case Ability_id::ranged:
+            return -50;
+
+        case Ability_id::melee:
+            return -25;
+
         case Ability_id::dodge_trap:
-        case Ability_id::dodge_att:   return -50;
+        case Ability_id::dodge_att:
+            return -50;
+
         default: {} break;
         }
 
@@ -539,6 +552,7 @@ public:
         {
             return 0;
         }
+
         return 10;
     }
 };
@@ -564,8 +578,8 @@ public:
     Prop_burning(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::burning, turns_init, turns) {}
 
-    bool allow_read      (const bool ALLOW_MSG) const override;
-    bool allow_cast_spell (const bool ALLOW_MSG) const override;
+    bool allow_read(const bool ALLOW_MSG) const override;
+    bool allow_cast_spell(const bool ALLOW_MSG) const override;
 
     bool change_actor_clr(Clr& clr) const override
     {
@@ -605,10 +619,10 @@ public:
 
     void change_move_dir(const Pos& actor_pos, Dir& dir) override;
 
-    bool allow_read          (const bool ALLOW_MSG) const override;
-    bool allow_cast_spell     (const bool ALLOW_MSG) const override;
-    bool allow_attack_melee   (const bool ALLOW_MSG) const override;
-    bool allow_attack_ranged  (const bool ALLOW_MSG) const override;
+    bool allow_read(const bool ALLOW_MSG) const override;
+    bool allow_cast_spell(const bool ALLOW_MSG) const override;
+    bool allow_attack_melee(const bool ALLOW_MSG) const override;
+    bool allow_attack_ranged(const bool ALLOW_MSG) const override;
 };
 
 class Prop_stunned: public Prop
@@ -732,6 +746,7 @@ public:
         {
             return -999;
         }
+
         return 0;
     }
 
@@ -766,6 +781,7 @@ public:
         {
             return -999;
         }
+
         return 0;
     }
 
@@ -796,11 +812,15 @@ public:
     {
         switch (ability)
         {
-        case Ability_id::dodge_att:   return -30;
-        case Ability_id::ranged:     return -10;
-        case Ability_id::melee:      return -10;
+        case Ability_id::dodge_att: return -30;
+
+        case Ability_id::ranged:    return -10;
+
+        case Ability_id::melee:     return -10;
+
         default: {} break;
         }
+
         return 0;
     }
 };
@@ -817,11 +837,18 @@ public:
     {
         switch (ability)
         {
-        case Ability_id::dodge_att:   return 10;
-        case Ability_id::ranged:     return 5;
-        case Ability_id::melee:      return 5;
+        case Ability_id::dodge_att:
+            return 10;
+
+        case Ability_id::ranged:
+            return 5;
+
+        case Ability_id::melee:
+            return 5;
+
         default: {} break;
         }
+
         return 0;
     }
 };
@@ -848,10 +875,12 @@ public:
         {
             return 999;
         }
+
         if (ability == Ability_id::dodge_att || ability == Ability_id::dodge_trap)
         {
             return -20;
         }
+
         return 0;
     }
 };
@@ -1014,7 +1043,7 @@ public:
     void on_new_turn() override;
 
     bool allow_speak(const bool ALLOW_MSG) const override;
-    bool allow_eat  (const bool ALLOW_MSG) const override;
+    bool allow_eat(const bool ALLOW_MSG) const override;
 };
 
 #endif

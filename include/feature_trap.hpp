@@ -33,10 +33,10 @@ public:
 
     //Spawn-by-id compliant ctor (do not use for normal cases):
     Trap(const Pos& pos) :
-        Rigid         (pos),
-        mimic_feature_ (nullptr),
-        is_hidden_     (false),
-        specific_trap_ (nullptr) {}
+        Rigid(pos),
+        mimic_feature_(nullptr),
+        is_hidden_(false),
+        specific_trap_(nullptr) {}
 
     Trap() = delete;
 
@@ -103,12 +103,12 @@ protected:
     }
 
     virtual void trigger(
-        Actor& actor, const ability_roll_result dodge_result) = 0;
+        Actor& actor, const Ability_roll_result dodge_result) = 0;
     virtual std::string get_title()  const = 0;
     virtual Clr get_clr()      const = 0;
     virtual char get_glyph()         const = 0;
-    virtual Tile_id get_tile()        const = 0;
-    virtual bool is_magical()        const = 0;
+    virtual Tile_id get_tile() const = 0;
+    virtual bool is_magical() const = 0;
     virtual bool is_disarmable()     const = 0;
     virtual std::string get_disarm_msg() const
     {
@@ -130,8 +130,8 @@ class Trap_dart: public Specific_trap_base
 private:
     friend class Trap;
     Trap_dart(Pos pos);
-    void trigger(Actor& actor, const ability_roll_result dodge_result);
-    Clr   get_clr()        const override {return clr_white_high;}
+    void trigger(Actor& actor, const Ability_roll_result dodge_result);
+    Clr   get_clr() const override {return clr_white_high;}
     std::string      get_title()      const override {return "Dart trap";}
     Tile_id      get_tile()       const override {return Tile_id::trap_general;}
     char        get_glyph()      const override {return '^';}
@@ -146,8 +146,8 @@ class Trap_spear: public Specific_trap_base
 private:
     friend class Trap;
     Trap_spear(Pos pos);
-    void trigger(Actor& actor, const ability_roll_result dodge_result);
-    Clr   get_clr()        const override {return clr_white_high;}
+    void trigger(Actor& actor, const Ability_roll_result dodge_result);
+    Clr   get_clr() const override {return clr_white_high;}
     std::string      get_title()      const override {return "Spear trap";}
     Tile_id      get_tile()       const override {return Tile_id::trap_general;}
     char        get_glyph()      const override {return '^';}
@@ -163,8 +163,8 @@ private:
     friend class Trap;
     Trap_gas_confusion(Pos pos) :
         Specific_trap_base(pos, Trap_id::gas_confusion) {}
-    void trigger(Actor& actor, const ability_roll_result dodge_result);
-    Clr   get_clr()        const override {return clr_magenta;}
+    void trigger(Actor& actor, const Ability_roll_result dodge_result);
+    Clr   get_clr() const override {return clr_magenta;}
     std::string      get_title()      const override {return "Gas trap";}
     Tile_id      get_tile()       const override {return Tile_id::trap_general;}
     char        get_glyph()      const override {return '^';}
@@ -180,8 +180,8 @@ private:
         Specific_trap_base(pos, Trap_id::gas_paralyze)
     {
     }
-    void trigger(Actor& actor, const ability_roll_result dodge_result);
-    Clr   get_clr()        const override {return clr_magenta;}
+    void trigger(Actor& actor, const Ability_roll_result dodge_result);
+    Clr   get_clr() const override {return clr_magenta;}
     std::string      get_title()      const override {return "Gas trap";}
     Tile_id      get_tile()       const override {return Tile_id::trap_general;}
     char        get_glyph()      const override {return '^';}
@@ -195,8 +195,8 @@ private:
     friend class Trap;
     Trap_gas_fear(Pos pos) :
         Specific_trap_base(pos, Trap_id::gas_fear) {}
-    void trigger(Actor& actor, const ability_roll_result dodge_result);
-    Clr   get_clr()        const override {return clr_magenta;}
+    void trigger(Actor& actor, const Ability_roll_result dodge_result);
+    Clr   get_clr() const override {return clr_magenta;}
     std::string      get_title()      const override {return "Gas trap";}
     char        get_glyph()      const override {return '^';}
     bool        is_magical()     const override {return false;}
@@ -210,8 +210,8 @@ private:
     friend class Trap;
     Trap_blinding_flash(Pos pos) :
         Specific_trap_base(pos, Trap_id::blinding) {}
-    void trigger(Actor& actor, const ability_roll_result dodge_result);
-    Clr   get_clr()        const override {return clr_yellow;}
+    void trigger(Actor& actor, const Ability_roll_result dodge_result);
+    Clr   get_clr() const override {return clr_yellow;}
     std::string      get_title()      const override {return "Blinding trap";}
     char        get_glyph()      const override {return '^';}
     bool        is_magical()     const override {return false;}
@@ -227,8 +227,8 @@ private:
         Specific_trap_base(pos, Trap_id::teleport)
     {
     }
-    void trigger(Actor& actor, const ability_roll_result dodge_result);
-    Clr   get_clr()        const override {return clr_cyan;}
+    void trigger(Actor& actor, const Ability_roll_result dodge_result);
+    Clr   get_clr() const override {return clr_cyan;}
     std::string      get_title()      const override {return "Teleporter trap";}
     char        get_glyph()      const override {return '^';}
     bool        is_magical()     const override {return true;}
@@ -244,8 +244,8 @@ private:
         Specific_trap_base(pos, Trap_id::summon)
     {
     }
-    void trigger(Actor& actor, const ability_roll_result dodge_result);
-    Clr   get_clr()        const override {return clr_brown_drk;}
+    void trigger(Actor& actor, const Ability_roll_result dodge_result);
+    Clr   get_clr() const override {return clr_brown_drk;}
     std::string      get_title()      const override {return "Monster summoning trap";}
     char        get_glyph()      const override {return '^';}
     bool        is_magical()     const override {return true;}
@@ -259,8 +259,8 @@ private:
     friend class Trap;
     Trap_smoke(Pos pos) :
         Specific_trap_base(pos, Trap_id::smoke) {}
-    void trigger(Actor& actor, const ability_roll_result dodge_result);
-    Clr   get_clr()        const override {return clr_gray;}
+    void trigger(Actor& actor, const Ability_roll_result dodge_result);
+    Clr   get_clr() const override {return clr_gray;}
     std::string      get_title()      const override {return "Smoke trap";}
     char        get_glyph()      const override {return '^';}
     bool        is_magical()     const override {return false;}
@@ -274,8 +274,8 @@ private:
     friend class Trap;
     Trap_alarm(Pos pos) :
         Specific_trap_base(pos, Trap_id::alarm) {}
-    void trigger(Actor& actor, const ability_roll_result dodge_result);
-    Clr   get_clr()        const override {return clr_brown;}
+    void trigger(Actor& actor, const Ability_roll_result dodge_result);
+    Clr   get_clr() const override {return clr_brown;}
     std::string      get_title()      const override {return "Alarm trap";}
     char        get_glyph()      const override {return '^';}
     bool        is_magical()     const override {return false;}
@@ -295,9 +295,9 @@ private:
     friend class Trap;
     Trap_web(Pos pos) : Specific_trap_base(pos, Trap_id::web), is_holding_actor_(false) {}
 
-    void trigger(Actor& actor, const ability_roll_result dodge_result);
+    void trigger(Actor& actor, const Ability_roll_result dodge_result);
 
-    Clr         get_clr()        const override {return clr_white_high;}
+    Clr         get_clr() const override {return clr_white_high;}
     std::string get_title()      const override {return "Spider web";}
     char        get_glyph()      const override {return '*';}
     bool        is_magical()     const override {return false;}

@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <SDL_video.h>
+#include <SDL_image.h>
 
 #include "cmn_data.hpp"
 #include "game_time.hpp"
@@ -12,15 +13,19 @@
 
 struct Projectile;
 
-enum class Panel {screen, map, char_lines, log};
+enum class Panel
+{
+    screen,
+    map,
+    char_lines,
+    log
+};
 
 namespace render
 {
 
 extern Cell_render_data render_array[MAP_W][MAP_H];
 extern Cell_render_data render_array_no_actors[MAP_W][MAP_H];
-extern SDL_Surface*   screen_surface;
-extern SDL_Surface*   main_menu_logo_surface;
 
 void init();
 void cleanup();
@@ -52,14 +57,14 @@ void cover_panel(const Panel panel);
 void cover_area(const Panel panel, const Rect& area);
 void cover_area(const Panel panel, const Pos& pos, const Pos& dims);
 
-void cover_area_pixel(const Pos& pixel_pos, const Pos& pixel_dims);
+void cover_area_px(const Pos& px_pos, const Pos& px_dims);
 
-void draw_rectangle_solid(const Pos& pixel_pos, const Pos& pixel_dims,
+void draw_rectangle_solid(const Pos& px_pos, const Pos& px_dims,
                           const Clr& clr);
 
-void draw_line_hor(const Pos& pixel_pos, const int W, const Clr& clr);
+void draw_line_hor(const Pos& px_pos, const int W, const Clr& clr);
 
-void draw_line_ver(const Pos& pixel_pos, const int H, const Clr& clr);
+void draw_line_ver(const Pos& px_pos, const int H, const Clr& clr);
 
 void draw_marker(const Pos& p, const std::vector<Pos>& trail,
                  const int EFFECTIVE_RANGE = -1);
@@ -85,10 +90,9 @@ void draw_popup_box(const Rect& area, const Panel panel = Panel::screen,
 //E.g. item and spell descriptions
 void draw_descr_box(const std::vector<Str_and_clr>& lines);
 
-void apply_surface(const Pos& pixel_pos, SDL_Surface* const src,
-                   SDL_Rect* clip = nullptr);
-
 void draw_map();
+
+void on_toggle_fullscreen();
 
 } //render
 

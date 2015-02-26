@@ -155,6 +155,7 @@ Unequip_allowed Jewelry_property_effect::on_unequip()
         prop_ids_ended.push_back(prop->get_id());
         delete prop;
     }
+
     jewelry_->carrier_props_.clear();
 
     game_time::update_light_map();
@@ -780,7 +781,7 @@ bool can_effects_be_combined(const Jewelry_effect_id id1,
 {
     typedef Jewelry_effect_id Id;
 
-    assert (id1 != Id::END && id2 != Id::END);
+    assert(id1 != Id::END && id2 != Id::END);
 
     if (id1 == id2)
     {
@@ -837,6 +838,7 @@ bool can_effects_be_combined(const Jewelry_effect_id id1,
         assert(false);
         return false;
     }
+
     return false;
 }
 
@@ -905,6 +907,7 @@ void init()
             item_bucket.push_back(data->id);
         }
     }
+
     random_shuffle(begin(item_bucket), end(item_bucket));
 
     vector<Jewelry_effect_id> primary_effect_bucket;
@@ -923,6 +926,7 @@ void init()
             secondary_effect_bucket.push_back(id);
         }
     }
+
     random_shuffle(begin(primary_effect_bucket),   end(primary_effect_bucket));
     random_shuffle(begin(secondary_effect_bucket), end(secondary_effect_bucket));
 

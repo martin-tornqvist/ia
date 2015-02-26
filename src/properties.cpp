@@ -745,60 +745,108 @@ Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init,
 
     switch (id)
     {
-    case Prop_id::nailed:            return new Prop_nailed         (turns_init, NR_TURNS);
-    case Prop_id::warlock_charged:    return new Prop_warlock_charged (turns_init, NR_TURNS);
-    case Prop_id::blind:             return new Prop_blind          (turns_init, NR_TURNS);
-    case Prop_id::burning:           return new Prop_burning        (turns_init, NR_TURNS);
-    case Prop_id::flared:            return new Prop_flared         (turns_init, NR_TURNS);
-    case Prop_id::paralyzed:         return new Prop_paralyzed      (turns_init, NR_TURNS);
-    case Prop_id::terrified:         return new Prop_terrified      (turns_init, NR_TURNS);
-    case Prop_id::weakened:          return new Prop_weakened       (turns_init, NR_TURNS);
-    case Prop_id::confused:          return new Prop_confused       (turns_init, NR_TURNS);
-    case Prop_id::stunned:           return new Prop_stunned        (turns_init, NR_TURNS);
-    case Prop_id::waiting:           return new Prop_waiting        (turns_init, NR_TURNS);
-    case Prop_id::slowed:            return new Prop_slowed         (turns_init, NR_TURNS);
-    case Prop_id::hasted:            return new Prop_hasted         (turns_init, NR_TURNS);
-    case Prop_id::infected:          return new Prop_infected       (turns_init, NR_TURNS);
-    case Prop_id::diseased:          return new Prop_diseased       (turns_init, NR_TURNS);
-    case Prop_id::poisoned:          return new Prop_poisoned       (turns_init, NR_TURNS);
-    case Prop_id::fainted:           return new Prop_fainted        (turns_init, NR_TURNS);
-    case Prop_id::frenzied:          return new Prop_frenzied       (turns_init, NR_TURNS);
-    case Prop_id::aiming:            return new Prop_aiming         (turns_init, NR_TURNS);
-    case Prop_id::disabled_attack:    return new Prop_disabled_attack (turns_init, NR_TURNS);
-    case Prop_id::disabled_melee:     return new Prop_disabled_melee  (turns_init, NR_TURNS);
-    case Prop_id::disabled_ranged:    return new Prop_disabled_ranged (turns_init, NR_TURNS);
-    case Prop_id::blessed:           return new Prop_blessed        (turns_init, NR_TURNS);
-    case Prop_id::cursed:            return new Prop_cursed         (turns_init, NR_TURNS);
-    case Prop_id::rAcid:             return new Prop_rAcid          (turns_init, NR_TURNS);
-    case Prop_id::rCold:             return new Prop_rCold          (turns_init, NR_TURNS);
-    case Prop_id::rConf:             return new Prop_rConfusion     (turns_init, NR_TURNS);
-    case Prop_id::rBreath:           return new Prop_rBreath        (turns_init, NR_TURNS);
-    case Prop_id::rElec:             return new Prop_rElec          (turns_init, NR_TURNS);
-    case Prop_id::rFear:             return new Prop_rFear          (turns_init, NR_TURNS);
-    case Prop_id::rPhys:             return new Prop_rPhys          (turns_init, NR_TURNS);
-    case Prop_id::rFire:             return new Prop_rFire          (turns_init, NR_TURNS);
-    case Prop_id::rPoison:           return new Prop_rPoison        (turns_init, NR_TURNS);
-    case Prop_id::rSleep:            return new Prop_rSleep         (turns_init, NR_TURNS);
-    case Prop_id::lgtSens:           return new Prop_lgtSens        (turns_init, NR_TURNS);
-    case Prop_id::poss_by_zuul:        return new Prop_poss_by_zuul     (turns_init, NR_TURNS);
-    case Prop_id::flying:            return new Prop_flying         (turns_init, NR_TURNS);
-    case Prop_id::ethereal:          return new Prop_ethereal       (turns_init, NR_TURNS);
-    case Prop_id::ooze:              return new Prop_ooze           (turns_init, NR_TURNS);
-    case Prop_id::burrowing:         return new Prop_burrowing      (turns_init, NR_TURNS);
-    case Prop_id::radiant:           return new Prop_radiant        (turns_init, NR_TURNS);
-    case Prop_id::rDisease:          return new Prop_rDisease       (turns_init, NR_TURNS);
-    case Prop_id::tele_ctrl:          return new Prop_tele_control    (turns_init, NR_TURNS);
-    case Prop_id::spell_reflect:      return new Prop_spell_reflect   (turns_init, NR_TURNS);
-    case Prop_id::strangled:         return new Prop_strangled      (turns_init, NR_TURNS);
-    case Prop_id::conflict:          return new Prop_conflict       (turns_init, NR_TURNS);
+    case Prop_id::nailed:            return new Prop_nailed(turns_init, NR_TURNS);
+
+    case Prop_id::warlock_charged:    return new Prop_warlock_charged(turns_init, NR_TURNS);
+
+    case Prop_id::blind:             return new Prop_blind(turns_init, NR_TURNS);
+
+    case Prop_id::burning:           return new Prop_burning(turns_init, NR_TURNS);
+
+    case Prop_id::flared:            return new Prop_flared(turns_init, NR_TURNS);
+
+    case Prop_id::paralyzed:         return new Prop_paralyzed(turns_init, NR_TURNS);
+
+    case Prop_id::terrified:         return new Prop_terrified(turns_init, NR_TURNS);
+
+    case Prop_id::weakened:          return new Prop_weakened(turns_init, NR_TURNS);
+
+    case Prop_id::confused:          return new Prop_confused(turns_init, NR_TURNS);
+
+    case Prop_id::stunned:           return new Prop_stunned(turns_init, NR_TURNS);
+
+    case Prop_id::waiting:           return new Prop_waiting(turns_init, NR_TURNS);
+
+    case Prop_id::slowed:            return new Prop_slowed(turns_init, NR_TURNS);
+
+    case Prop_id::hasted:            return new Prop_hasted(turns_init, NR_TURNS);
+
+    case Prop_id::infected:          return new Prop_infected(turns_init, NR_TURNS);
+
+    case Prop_id::diseased:          return new Prop_diseased(turns_init, NR_TURNS);
+
+    case Prop_id::poisoned:          return new Prop_poisoned(turns_init, NR_TURNS);
+
+    case Prop_id::fainted:           return new Prop_fainted(turns_init, NR_TURNS);
+
+    case Prop_id::frenzied:          return new Prop_frenzied(turns_init, NR_TURNS);
+
+    case Prop_id::aiming:            return new Prop_aiming(turns_init, NR_TURNS);
+
+    case Prop_id::disabled_attack:    return new Prop_disabled_attack(turns_init, NR_TURNS);
+
+    case Prop_id::disabled_melee:     return new Prop_disabled_melee(turns_init, NR_TURNS);
+
+    case Prop_id::disabled_ranged:    return new Prop_disabled_ranged(turns_init, NR_TURNS);
+
+    case Prop_id::blessed:           return new Prop_blessed(turns_init, NR_TURNS);
+
+    case Prop_id::cursed:            return new Prop_cursed(turns_init, NR_TURNS);
+
+    case Prop_id::rAcid:             return new Prop_rAcid(turns_init, NR_TURNS);
+
+    case Prop_id::rCold:             return new Prop_rCold(turns_init, NR_TURNS);
+
+    case Prop_id::rConf:             return new Prop_rConfusion(turns_init, NR_TURNS);
+
+    case Prop_id::rBreath:           return new Prop_rBreath(turns_init, NR_TURNS);
+
+    case Prop_id::rElec:             return new Prop_rElec(turns_init, NR_TURNS);
+
+    case Prop_id::rFear:             return new Prop_rFear(turns_init, NR_TURNS);
+
+    case Prop_id::rPhys:             return new Prop_rPhys(turns_init, NR_TURNS);
+
+    case Prop_id::rFire:             return new Prop_rFire(turns_init, NR_TURNS);
+
+    case Prop_id::rPoison:           return new Prop_rPoison(turns_init, NR_TURNS);
+
+    case Prop_id::rSleep:            return new Prop_rSleep(turns_init, NR_TURNS);
+
+    case Prop_id::lgtSens:           return new Prop_lgtSens(turns_init, NR_TURNS);
+
+    case Prop_id::poss_by_zuul:        return new Prop_poss_by_zuul(turns_init, NR_TURNS);
+
+    case Prop_id::flying:            return new Prop_flying(turns_init, NR_TURNS);
+
+    case Prop_id::ethereal:          return new Prop_ethereal(turns_init, NR_TURNS);
+
+    case Prop_id::ooze:              return new Prop_ooze(turns_init, NR_TURNS);
+
+    case Prop_id::burrowing:         return new Prop_burrowing(turns_init, NR_TURNS);
+
+    case Prop_id::radiant:           return new Prop_radiant(turns_init, NR_TURNS);
+
+    case Prop_id::rDisease:          return new Prop_rDisease(turns_init, NR_TURNS);
+
+    case Prop_id::tele_ctrl:          return new Prop_tele_control(turns_init, NR_TURNS);
+
+    case Prop_id::spell_reflect:      return new Prop_spell_reflect(turns_init, NR_TURNS);
+
+    case Prop_id::strangled:         return new Prop_strangled(turns_init, NR_TURNS);
+
+    case Prop_id::conflict:          return new Prop_conflict(turns_init, NR_TURNS);
+
     case Prop_id::END: {} break;
     }
+
     return nullptr;
 }
 
 Prop_handler::~Prop_handler()
 {
     for (Prop* prop : applied_props_)        {delete prop;}
+
     for (Prop* prop : actor_turn_prop_buffer_) {delete prop;}
 }
 
@@ -875,6 +923,7 @@ void  Prop_handler::get_prop_ids_from_sources(
         for (const auto& slot : inv.slots_)
         {
             const auto* const item = slot.item;
+
             if (item)
             {
                 add_item_props(item->carrier_props_);
@@ -891,7 +940,9 @@ void  Prop_handler::get_prop_ids_from_sources(
 void Prop_handler::get_prop_ids(bool out[size_t(Prop_id::END)]) const
 {
     bool sources[int(Prop_src::END)];
+
     for (bool& v : sources) {v = true;}
+
     get_prop_ids_from_sources(out, sources);
 }
 
@@ -904,6 +955,7 @@ bool Prop_handler::try_resist_prop(const Prop_id id, const vector<Prop*>& prop_l
             return true;
         }
     }
+
     return false;
 }
 
@@ -911,13 +963,16 @@ bool Prop_handler::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG)
 {
     vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
+
     for (bool& v : sources) {v = true;}
+
     get_props_from_sources(prop_list, sources);
 
     for (Prop* p : prop_list)
     {
         if (p->try_resist_dmg(dmg_type, ALLOW_MSG)) return true;
     }
+
     return false;
 }
 
@@ -925,10 +980,13 @@ bool Prop_handler::allow_see() const
 {
     vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
+
     for (bool& v : sources) {v = true;}
+
     get_props_from_sources(prop_list, sources);
 
     for (Prop* p : prop_list) {if (!p->allow_see()) return false;}
+
     return true;
 }
 
@@ -949,6 +1007,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
     if (prop->get_turn_mode() == Prop_turn_mode::actor)
     {
         vector<Prop*>& buffer = actor_turn_prop_buffer_;
+
         if (find(begin(buffer), end(buffer), prop) == end(buffer))
         {
             buffer.push_back(prop);
@@ -966,6 +1025,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
         vector<Prop*> all_props;
 
         bool sources[int(Prop_src::END)];
+
         for (bool& v : sources) {v = true;}
 
         get_props_from_sources(all_props, sources);
@@ -978,6 +1038,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
                 {
                     string msg = "";
                     prop->get_msg(prop_msg_on_res_player, msg);
+
                     if (!msg.empty()) {msg_log::add(msg, clr_white, true);}
                 }
                 else //Is a monster
@@ -986,6 +1047,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
                     {
                         string msg = "";
                         prop->get_msg(prop_msg_on_res_mon, msg);
+
                         if (!msg.empty())
                         {
                             const string monster_name = owning_actor_->get_name_the();
@@ -994,6 +1056,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
                     }
                 }
             }
+
             delete prop;
             return;
         }
@@ -1022,6 +1085,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
                 {
                     string msg = "";
                     prop->get_msg(prop_msg_on_start_player, msg);
+
                     if (!msg.empty())
                     {
                         msg_log::add(msg, clr_white, true);
@@ -1033,6 +1097,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
                     {
                         string msg = "";
                         prop->get_msg(prop_msg_on_start_mon, msg);
+
                         if (!msg.empty())
                         {
                             msg_log::add(owning_actor_->get_name_the() + " " + msg);
@@ -1071,6 +1136,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
         {
             string msg = "";
             prop->get_msg(prop_msg_on_start_player, msg);
+
             if (!msg.empty())
             {
                 msg_log::add(msg, clr_white, true);
@@ -1082,6 +1148,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
             {
                 string msg = "";
                 prop->get_msg(prop_msg_on_start_mon, msg);
+
                 if (!msg.empty())
                 {
                     msg_log::add(owning_actor_->get_name_the() + " " + msg);
@@ -1102,6 +1169,7 @@ void Prop_handler::try_apply_prop_from_att(const Wpn& wpn, const bool IS_MELEE)
         //If weapon damage type is resisted by the defender, the property is
         //automatically resisted
         Dmg_type dmg_type = IS_MELEE ? d.melee.dmg_type : d.ranged.dmg_type;
+
         if (!try_resist_dmg(dmg_type, false))
         {
             //Make a copy of the weapon effect
@@ -1159,6 +1227,7 @@ bool Prop_handler::end_applied_prop(const Prop_id id, const bool RUN_PROP_END_EF
             {
                 string msg = "";
                 prop->get_msg(prop_msg_on_end_player, msg);
+
                 if (!msg.empty()) {msg_log::add(msg, clr_white);}
             }
             else //Not player
@@ -1167,6 +1236,7 @@ bool Prop_handler::end_applied_prop(const Prop_id id, const bool RUN_PROP_END_EF
                 {
                     string msg = "";
                     prop->get_msg(prop_msg_on_end_mon, msg);
+
                     if (!msg.empty())
                     {
                         msg_log::add(owning_actor_->get_name_the() + " " + msg);
@@ -1185,6 +1255,7 @@ bool Prop_handler::end_applied_prop(const Prop_id id, const bool RUN_PROP_END_EF
 void Prop_handler::apply_actor_turn_prop_buffer()
 {
     for (Prop* prop : actor_turn_prop_buffer_) {try_apply_prop(prop);}
+
     actor_turn_prop_buffer_.clear();
 }
 
@@ -1245,6 +1316,7 @@ void Prop_handler::tick(const Prop_turn_mode turn_mode)
                 auto* mon           = static_cast<Mon*>(owning_actor_);
                 mon->aware_counter_  = owning_actor_->get_data().nr_turns_aware;
             }
+
             prop->on_new_turn();
         }
     }
@@ -1258,11 +1330,15 @@ void Prop_handler::get_props_interface_line(vector<Str_and_clr>& line) const
 
     vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
+
     for (bool& v : sources) {v = true;}
+
     get_props_from_sources(prop_list, sources);
+
     for (Prop* prop : prop_list)
     {
         const string prop_name = prop->get_name_short();
+
         if (!prop_name.empty())
         {
             const Prop_alignment alignment = prop->get_alignment();
@@ -1282,10 +1358,14 @@ int Prop_handler::get_changed_max_hp(const int HP_MAX) const
 {
     vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
+
     for (bool& v : sources) {v = true;}
+
     get_props_from_sources(prop_list, sources);
     int new_hp_max = HP_MAX;
+
     for (Prop* prop : prop_list) {new_hp_max = prop->get_changed_max_hp(new_hp_max);}
+
     return new_hp_max;
 }
 
@@ -1293,8 +1373,11 @@ void Prop_handler::change_move_dir(const Pos& actor_pos, Dir& dir) const
 {
     vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
+
     for (bool& v : sources) {v = true;}
+
     get_props_from_sources(prop_list, sources);
+
     for (Prop* prop : prop_list) {prop->change_move_dir(actor_pos, dir);}
 }
 
@@ -1302,8 +1385,11 @@ bool Prop_handler::allow_attack(const bool ALLOW_MSG) const
 {
     vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
+
     for (bool& v : sources) {v = true;}
+
     get_props_from_sources(prop_list, sources);
+
     for (Prop* prop : prop_list)
     {
         if (!prop->allow_attack_melee(ALLOW_MSG) && !prop->allow_attack_ranged(ALLOW_MSG))
@@ -1311,6 +1397,7 @@ bool Prop_handler::allow_attack(const bool ALLOW_MSG) const
             return false;
         }
     }
+
     return true;
 }
 
@@ -1318,8 +1405,11 @@ bool Prop_handler::allow_attack_melee(const bool ALLOW_MSG) const
 {
     vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
+
     for (bool& v : sources) {v = true;}
+
     get_props_from_sources(prop_list, sources);
+
     for (Prop* prop : prop_list)
     {
         if (!prop->allow_attack_melee(ALLOW_MSG))
@@ -1327,6 +1417,7 @@ bool Prop_handler::allow_attack_melee(const bool ALLOW_MSG) const
             return false;
         }
     }
+
     return true;
 }
 
@@ -1335,6 +1426,7 @@ bool Prop_handler::allow_attack_ranged(const bool ALLOW_MSG) const
     vector<Prop*> prop_list;
 
     bool sources[int(Prop_src::END)];
+
     for (bool& v : sources) {v = true;}
 
     get_props_from_sources(prop_list, sources);
@@ -1343,6 +1435,7 @@ bool Prop_handler::allow_attack_ranged(const bool ALLOW_MSG) const
     {
         if (!prop->allow_attack_ranged(ALLOW_MSG)) {return false;}
     }
+
     return true;
 }
 
@@ -1351,6 +1444,7 @@ bool Prop_handler::allow_move() const
     vector<Prop*> prop_list;
 
     bool sources[int(Prop_src::END)];
+
     for (bool& v : sources) {v = true;}
 
     get_props_from_sources(prop_list, sources);
@@ -1359,6 +1453,7 @@ bool Prop_handler::allow_move() const
     {
         if (!prop->allow_move()) {return false;}
     }
+
     return true;
 }
 
@@ -1367,6 +1462,7 @@ bool Prop_handler::allow_act() const
     vector<Prop*> prop_list;
 
     bool sources[int(Prop_src::END)];
+
     for (bool& v : sources) {v = true;}
 
     get_props_from_sources(prop_list, sources);
@@ -1375,6 +1471,7 @@ bool Prop_handler::allow_act() const
     {
         if (!prop->allow_act()) {return false;}
     }
+
     return true;
 }
 
@@ -1386,6 +1483,7 @@ bool Prop_handler::allow_read(const bool ALLOW_MSG) const
     bool sources[int(Prop_src::END)];
 
     for (bool& v : sources) {v = true;}
+
     get_props_from_sources(prop_list, sources);
 
     for (auto prop : prop_list)
@@ -1408,6 +1506,7 @@ bool Prop_handler::allow_cast_spell(const bool ALLOW_MSG) const
     bool sources[int(Prop_src::END)];
 
     for (bool& v : sources) {v = true;}
+
     get_props_from_sources(prop_list, sources);
 
     for (auto prop : prop_list)
@@ -1417,6 +1516,7 @@ bool Prop_handler::allow_cast_spell(const bool ALLOW_MSG) const
             return false;
         }
     }
+
     return true;
 }
 
@@ -1428,6 +1528,7 @@ bool Prop_handler::allow_speak(const bool ALLOW_MSG) const
     bool sources[int(Prop_src::END)];
 
     for (bool& v : sources) {v = true;}
+
     get_props_from_sources(prop_list, sources);
 
     for (auto prop : prop_list)
@@ -1451,6 +1552,7 @@ bool Prop_handler::allow_eat(const bool ALLOW_MSG) const
     bool sources[int(Prop_src::END)];
 
     for (bool& v : sources) {v = true;}
+
     get_props_from_sources(prop_list, sources);
 
     for (auto prop : prop_list)
@@ -1471,6 +1573,7 @@ void Prop_handler::on_hit()
     vector<Prop*> prop_list;
 
     bool sources[int(Prop_src::END)];
+
     for (bool& v : sources) {v = true;}
 
     get_props_from_sources(prop_list, sources);
@@ -1486,6 +1589,7 @@ void Prop_handler::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
     vector<Prop*> prop_list;
 
     bool sources[int(Prop_src::END)];
+
     for (bool& v : sources) {v = true;}
 
     get_props_from_sources(prop_list, sources);
@@ -1501,6 +1605,7 @@ int Prop_handler::get_ability_mod(const Ability_id ability) const
     vector<Prop*> prop_list;
 
     bool sources[int(Prop_src::END)];
+
     for (bool& v : sources) {v = true;}
 
     get_props_from_sources(prop_list, sources);
@@ -1511,6 +1616,7 @@ int Prop_handler::get_ability_mod(const Ability_id ability) const
     {
         modifier += prop->get_ability_mod(ability);
     }
+
     return modifier;
 }
 
@@ -1528,7 +1634,9 @@ Prop* Prop_handler::get_prop(const Prop_id id, const Prop_src source) const
         vector<Prop*> inv_props;
 
         bool sources[int(Prop_src::END)];
+
         for (bool& v : sources) {v = false;}
+
         sources[int(Prop_src::inv)] = true;
 
         get_props_from_sources(inv_props, sources);
@@ -1541,6 +1649,7 @@ Prop* Prop_handler::get_prop(const Prop_id id, const Prop_src source) const
             }
         }
     }
+
     return nullptr;
 }
 
@@ -1551,6 +1660,7 @@ bool Prop_handler::change_actor_clr(Clr& clr) const
     bool sources[int(Prop_src::END)];
 
     for (bool& v : sources) {v = true;}
+
     get_props_from_sources(prop_list, sources);
 
     for (Prop* prop : prop_list)
@@ -1560,6 +1670,7 @@ bool Prop_handler::change_actor_clr(Clr& clr) const
             return true;
         }
     }
+
     return false;
 }
 
@@ -1569,6 +1680,7 @@ void Prop_handler::end_applied_props_by_magic_healing()
     bool sources[int(Prop_src::END)];
 
     for (bool& v : sources) {v = true;}
+
     get_props_from_sources(prop_list, sources);
 
     for (size_t i = 0; i < prop_list.size(); ++i)
@@ -1583,11 +1695,11 @@ void Prop_handler::end_applied_props_by_magic_healing()
 }
 
 Prop::Prop(Prop_id id, Prop_turns turns_init, int turns) :
-    turns_left_      (turns),
-    owning_actor_    (nullptr),
-    id_             (id),
-    data_           (&(prop_data::data[int(id)])),
-    turns_init_type_  (turns_init)
+    turns_left_(turns),
+    owning_actor_(nullptr),
+    id_(id),
+    data_(&(prop_data::data[int(id)])),
+    turns_init_type_(turns_init)
 {
     switch (turns_init)
     {
@@ -1669,6 +1781,7 @@ void Prop_poss_by_zuul::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
         const string& name2 = actor_data::data[int(Actor_id::zuul)].name_the;
         msg_log::add(name1 + " was possessed by " + name2 + "!");
     }
+
     owning_actor_->state_  = Actor_state::destroyed;
     const Pos& pos        = owning_actor_->pos;
     map::mk_gore(pos);
@@ -1696,6 +1809,7 @@ void Prop_poisoned::on_new_turn()
                     msg_log::add(owning_actor_->get_name_the() + " suffers from poisoning!");
                 }
             }
+
             owning_actor_->hit(1, Dmg_type::pure);
         }
     }
@@ -1707,6 +1821,7 @@ bool Prop_terrified::allow_attack_melee(const bool ALLOW_MSG) const
     {
         msg_log::add("I am too terrified to engage in close combat!");
     }
+
     return false;
 }
 
@@ -1745,6 +1860,7 @@ void Prop_nailed::change_move_dir(const Pos& actor_pos, Dir& dir)
             if (rnd::one_in(4))
             {
                 nr_spikes_--;
+
                 if (nr_spikes_ > 0)
                 {
                     if (owning_actor_->is_player())
@@ -1762,6 +1878,7 @@ void Prop_nailed::change_move_dir(const Pos& actor_pos, Dir& dir)
                 }
             }
         }
+
         dir = Dir::center;
     }
 }
@@ -1772,6 +1889,7 @@ bool Prop_confused::allow_read(const bool ALLOW_MSG) const
     {
         msg_log::add("I am too confused to read.");
     }
+
     return false;
 }
 
@@ -1781,6 +1899,7 @@ bool Prop_confused::allow_cast_spell(const bool ALLOW_MSG) const
     {
         msg_log::add("I am too confused to concentrate.");
     }
+
     return false;
 }
 
@@ -1792,6 +1911,7 @@ bool Prop_confused::allow_attack_melee(const bool ALLOW_MSG) const
     {
         return rnd::coin_toss();
     }
+
     return true;
 }
 
@@ -1803,6 +1923,7 @@ bool Prop_confused::allow_attack_ranged(const bool ALLOW_MSG) const
     {
         return rnd::coin_toss();
     }
+
     return true;
 }
 
@@ -1817,10 +1938,12 @@ void Prop_confused::change_move_dir(const Pos& actor_pos, Dir& dir)
         if (rnd::one_in(8))
         {
             int tries_left = 100;
+
             while (tries_left != 0)
             {
                 //-1 to 1 for x and y
                 const Pos delta(rnd::range(-1, 1), rnd::range(-1, 1));
+
                 if (delta.x != 0 || delta.y != 0)
                 {
                     const Pos c = actor_pos + delta;
@@ -1830,6 +1953,7 @@ void Prop_confused::change_move_dir(const Pos& actor_pos, Dir& dir)
                         dir = dir_utils::get_dir(delta);
                     }
                 }
+
                 tries_left--;
             }
         }
@@ -1903,6 +2027,7 @@ void Prop_frenzied::change_move_dir(const Pos& actor_pos, Dir& dir)
                     return;
                 }
             }
+
             dir = dir_utils::get_dir(line[1] - actor_pos);
         }
     }
@@ -1936,6 +2061,7 @@ bool Prop_frenzied::allow_read(const bool ALLOW_MSG) const
     {
         msg_log::add("I am too enraged to read!");
     }
+
     return false;
 }
 
@@ -1945,6 +2071,7 @@ bool Prop_frenzied::allow_cast_spell(const bool ALLOW_MSG) const
     {
         msg_log::add("I am too enraged to concentrate!");
     }
+
     return false;
 }
 
@@ -1959,6 +2086,7 @@ void Prop_burning::on_new_turn()
     {
         msg_log::add("AAAARGH IT BURNS!!!", clr_red_lgt);
     }
+
     owning_actor_->hit(rnd::dice(1, 2), Dmg_type::fire);
 }
 
@@ -1968,6 +2096,7 @@ bool Prop_burning::allow_read(const bool ALLOW_MSG) const
     {
         msg_log::add("I cannot read while burning.");
     }
+
     return false;
 }
 
@@ -1977,6 +2106,7 @@ bool Prop_burning::allow_cast_spell(const bool ALLOW_MSG) const
     {
         msg_log::add("I cannot concentrate while burning!");
     }
+
     return false;
 }
 
@@ -1986,6 +2116,7 @@ bool Prop_burning::allow_attack_ranged(const bool ALLOW_MSG) const
     {
         msg_log::add("Not while burning.");
     }
+
     return false;
 }
 
@@ -1997,9 +2128,11 @@ bool Prop_blind::should_update_player_visual_when_start_or_end() const
 void Prop_paralyzed::on_start()
 {
     auto* const player = map::player;
+
     if (owning_actor_->is_player())
     {
         auto* const active_explosive = player->active_explosive;
+
         if (active_explosive) {active_explosive->on_player_paralyzed();}
     }
 }
@@ -2035,8 +2168,10 @@ bool Prop_rAcid::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
                 msg_log::add(owning_actor_->get_name_the() + " seems unaffected.");
             }
         }
+
         return true;
     }
+
     return false;
 }
 
@@ -2055,8 +2190,10 @@ bool Prop_rCold::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
                 msg_log::add(owning_actor_->get_name_the() + " seems unaffected.");
             }
         }
+
         return true;
     }
+
     return false;
 }
 
@@ -2075,8 +2212,10 @@ bool Prop_rElec::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
                 msg_log::add(owning_actor_->get_name_the() + " seems unaffected.");
             }
         }
+
         return true;
     }
+
     return false;
 }
 
@@ -2126,8 +2265,10 @@ bool Prop_rPhys::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
                 msg_log::add(owning_actor_->get_name_the() + " seems unaffected.");
             }
         }
+
         return true;
     }
+
     return false;
 }
 
@@ -2156,8 +2297,10 @@ bool Prop_rFire::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
                 msg_log::add(owning_actor_->get_name_the() + " seems unaffected.");
             }
         }
+
         return true;
     }
+
     return false;
 }
 

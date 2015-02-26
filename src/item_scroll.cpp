@@ -44,9 +44,9 @@ Consume_item Scroll::activate(Actor* const actor)
     auto& prop_handler = actor->get_prop_handler();
 
     if (
-        prop_handler.allow_cast_spell  (true)  &&
-        prop_handler.allow_read       (true)  &&
-        prop_handler.allow_speak      (true))
+        prop_handler.allow_cast_spell(true)  &&
+        prop_handler.allow_read(true)  &&
+        prop_handler.allow_speak(true))
     {
         return read();
     }
@@ -79,6 +79,7 @@ void Scroll::try_learn()
     if (player_bon::get_bg() == Bg::occultist)
     {
         Spell* const spell = mk_spell();
+
         if (
             spell->is_avail_for_player() &&
             !player_spells_handling::is_spell_learned(spell->get_id()))
@@ -121,6 +122,7 @@ Consume_item Scroll::read()
         data_->is_tried = true;
         const auto is_noticed = spell->cast(map::player, false);
         msg_log::add(crumble_str);
+
         if (is_noticed == Spell_effect_noticed::yes) {identify(false);}
     }
 
@@ -202,6 +204,7 @@ void init()
     cmb.push_back("Nikto");
 
     const size_t NR_CMB_PARTS = cmb.size();
+
     for (size_t i = 0; i < NR_CMB_PARTS; ++i)
     {
         for (size_t ii = 0; ii < NR_CMB_PARTS; ii++)
@@ -214,6 +217,7 @@ void init()
     }
 
     TRACE << "Init scroll names" << endl;
+
     for (auto* const d : item_data::data)
     {
         if (d->type == Item_type::scroll)

@@ -14,9 +14,9 @@ using namespace std;
 
 //--------------------------------------------------------- FEATURE ROOM SPAWN RULES
 Feature_room_spawn_rules::Feature_room_spawn_rules() :
-    max_nr_in_room_    (-1),
-    dlvls_allowed_   (Range(-1, -1)),
-    placement_rule_  (Placement_rule::adj_to_walls)
+    max_nr_in_room_(-1),
+    dlvls_allowed_(Range(-1, -1)),
+    placement_rule_(Placement_rule::adj_to_walls)
 {
     room_types_native_.clear();
 }

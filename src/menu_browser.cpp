@@ -44,6 +44,7 @@ void Menu_browser::navigate(const Dir dir)
     case Dir::up:
     {
         pos_.y--;
+
         if (pos_.y < 0)
         {
             pos_ = pos_.x == 0 ? x1y1_ : x0y1_;
@@ -56,6 +57,7 @@ void Menu_browser::navigate(const Dir dir)
     case Dir::down:
     {
         pos_.y++;
+
         if (pos_.x == 0)
         {
             if (pos_.y > x0y1_.y)   {pos_ = x1y0_;}
@@ -84,6 +86,7 @@ void Menu_browser::navigate(const Dir dir)
     case Dir::center:
     case Dir::END: {} break;
     }
+
     set_good_pos();
 }
 

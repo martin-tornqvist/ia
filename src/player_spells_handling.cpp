@@ -69,7 +69,9 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
 
         string fill_str = "";
         const size_t FILL_SIZE = SPI_X - NAME_X - name.size();
+
         for (size_t ii = 0; ii < FILL_SIZE; ii++) {fill_str.push_back('.');}
+
         Clr fill_clr = clr_gray;
         fill_clr.r /= 3; fill_clr.g /= 3; fill_clr.b /= 3;
         render::draw_text(fill_str, Panel::screen, Pos(NAME_X + name.size(), Y), fill_clr);
@@ -86,18 +88,23 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
 
         x = SHOCK_X;
         const Intr_spell_shock shock_type = spell->get_shock_type_intr_cast();
+
         switch (shock_type)
         {
         case Intr_spell_shock::mild:        info_str = "Mild";       break;
+
         case Intr_spell_shock::disturbing:  info_str = "Disturbing"; break;
+
         case Intr_spell_shock::severe:      info_str = "Severe";     break;
         }
+
         render::draw_text(info_str, Panel::screen, Pos(x, Y), clr_white);
 
         if (IS_SELECTED)
         {
             const auto descr = spell->get_descr();
             vector<Str_and_clr> lines;
+
             if (!descr.empty())
             {
                 for (const auto& line : descr)
@@ -105,6 +112,7 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
                     lines.push_back({line, clr_white_high});
                 }
             }
+
             //If spell source is an item, add info about this
             if (spell_opt.src_item)
             {
@@ -112,6 +120,7 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
                     spell_opt.src_item->get_name(Item_ref_type::plain, Item_ref_inf::none);
                 lines.push_back({"Spell granted by " + item_name + ".", clr_green});
             }
+
             if (!lines.empty())
             {
                 render::draw_descr_box(lines);
@@ -138,6 +147,7 @@ void get_spells_avail(vector<Spell_opt>& out)
     for (auto slot : inv.slots_)
     {
         Item* item = slot.item;
+
         if (item)
         {
             for (Spell* spell : item->carrier_spells_)
@@ -162,7 +172,7 @@ void try_cast(const Spell_opt& spell_opt)
 
     if (
         map::player->get_prop_handler().allow_cast_spell(true) &&
-        map::player->get_prop_handler().allow_speak    (true))
+        map::player->get_prop_handler().allow_speak(true))
     {
         msg_log::clear();
         render::draw_map_and_interface();
@@ -184,6 +194,7 @@ void try_cast(const Spell_opt& spell_opt)
                 render::draw_map_and_interface();
                 return;
             }
+
             msg_log::clear();
         }
 
@@ -208,10 +219,12 @@ void try_cast(const Spell_opt& spell_opt)
         {
             map::player->hit(BLOOD_SORC_HP_DRAINED, Dmg_type::pure);
         }
+
         if (map::player->is_alive())
         {
             spell->cast(map::player, true);
             prev_cast_ = spell_opt;
+
             if (IS_WARLOCK && rnd::one_in(2))
             {
                 auto* const prop = new Prop_warlock_charged(Prop_turns::std);
@@ -231,6 +244,7 @@ void init()
 void cleanup()
 {
     for (Spell* spell : known_spells_) {delete spell;}
+
     known_spells_.clear();
     prev_cast_ = Spell_opt();
 }
@@ -238,6 +252,7 @@ void cleanup()
 void store_to_save_lines(vector<string>& lines)
 {
     lines.push_back(to_str(known_spells_.size()));
+
     for (Spell* s : known_spells_) {lines.push_back(to_str(int(s->get_id())));}
 }
 
@@ -281,6 +296,7 @@ void player_select_spell_to_cast()
         while (true)
         {
             const Menu_action action = menu_input_handling::get_action(browser);
+
             switch (action)
             {
             case Menu_action::browsed:
@@ -340,6 +356,7 @@ void try_cast_prev_spell()
 bool is_spell_learned(const Spell_id id)
 {
     for (auto* s : known_spells_) {if (s->get_id() == id) {return true;}}
+
     return false;
 }
 
@@ -351,6 +368,7 @@ void learn_spell_if_not_known(const Spell_id id)
 void learn_spell_if_not_known(Spell* const spell)
 {
     bool is_already_learned = false;
+
     for (Spell* spell_cmpr : known_spells_)
     {
         if (spell_cmpr->get_id() == spell->get_id())
@@ -359,6 +377,7 @@ void learn_spell_if_not_known(Spell* const spell)
             break;
         }
     }
+
     if (is_already_learned)
     {
         delete spell;

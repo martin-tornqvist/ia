@@ -36,43 +36,66 @@ int Ability_vals::get_val(const Ability_id ability_id,
         {
         case Ability_id::searching:
             ret += 8;
+
             if (player_bon::traits[int(Trait::observant)])   ret += 4;
+
             if (player_bon::traits[int(Trait::perceptive)])  ret += 4;
+
             break;
 
         case Ability_id::melee:
             ret += 45;
+
             if (player_bon::traits[int(Trait::adept_melee_fighter)])   ret += 10;
+
             if (player_bon::traits[int(Trait::expert_melee_fighter)])  ret += 10;
+
             if (player_bon::traits[int(Trait::master_melee_fighter)])  ret += 10;
+
             if (player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25) ret += 30;
+
             break;
 
         case Ability_id::ranged:
             ret += 50;
+
             if (player_bon::traits[int(Trait::adept_marksman)])   ret += 10;
+
             if (player_bon::traits[int(Trait::expert_marksman)])  ret += 10;
+
             if (player_bon::traits[int(Trait::master_marksman)])  ret += 10;
+
             if (player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25) ret += 30;
+
             break;
 
         case Ability_id::dodge_trap:
             ret += 5;
+
             if (player_bon::traits[int(Trait::dexterous)]) ret += 25;
+
             if (player_bon::traits[int(Trait::lithe)])     ret += 25;
+
             break;
 
         case Ability_id::dodge_att:
             ret += 10;
+
             if (player_bon::traits[int(Trait::dexterous)]) ret += 25;
+
             if (player_bon::traits[int(Trait::lithe)])     ret += 25;
+
             if (player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25) ret += 50;
+
             break;
 
         case Ability_id::stealth:
             ret += 10;
+
             if (player_bon::traits[int(Trait::stealthy)])      ret += 50;
+
             if (player_bon::traits[int(Trait::imperceptible)]) ret += 30;
+
             break;
 
         case Ability_id::empty:
@@ -117,7 +140,7 @@ void Ability_vals::change_val(const Ability_id ability, const int CHANGE)
 namespace ability_roll
 {
 
-ability_roll_result roll(const int TOT_SKILL_VALUE)
+Ability_roll_result roll(const int TOT_SKILL_VALUE)
 {
     const int ROLL = rnd::percent();
 
@@ -130,11 +153,17 @@ ability_roll_result roll(const int TOT_SKILL_VALUE)
     const int FAIL_BIG_LMT = 98;
 
     if (ROLL <= SUCC_CRI_LMT) return success_critical;
+
     if (ROLL <= SUCC_BIG_LMT) return success_big;
+
     if (ROLL <= SUCC_NRM_LMT) return success_normal;
+
     if (ROLL <= SUCC_SML_LMT) return success_small;
+
     if (ROLL <= FAIL_SML_LMT) return fail_small;
+
     if (ROLL <= FAIL_NRM_LMT) return fail_normal;
+
     if (ROLL <= FAIL_BIG_LMT) return fail_big;
 
     return fail_critical;

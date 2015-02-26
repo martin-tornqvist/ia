@@ -204,12 +204,12 @@ enum class Item_id
 struct Item_container_spawn_rule
 {
     Item_container_spawn_rule() :
-        feature_id          (Feature_id::END),
-        pct_chance_to_incl  (0) {}
+        feature_id(Feature_id::END),
+        pct_chance_to_incl(0) {}
 
     Item_container_spawn_rule(Feature_id feature_id_, int pct_chance_to_incl_) :
-        feature_id          (feature_id_),
-        pct_chance_to_incl  (pct_chance_to_incl_) {}
+        feature_id(feature_id_),
+        pct_chance_to_incl(pct_chance_to_incl_) {}
 
     Feature_id  feature_id;
     int         pct_chance_to_incl;

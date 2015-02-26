@@ -231,6 +231,7 @@ void draw(const Menu_browser& browser)
     else
     {
         vector<string> logo;
+
         if (!config::is_tiles_mode())
         {
             logo.push_back("        ___  __                __  __                  ");
@@ -239,10 +240,13 @@ void draw(const Menu_browser& browser)
             logo.push_back("| |  \\| |   | \\ /    \\  /    \\| \\ \\__/    \\|  \\|/    \\ ");
             logo.push_back("               \\                 \\                      ");
         }
+
         const int LOGO_X_POS_LEFT = (MAP_W - logo[0].size()) / 2;
+
         for (const string& row : logo)
         {
             pos.x = LOGO_X_POS_LEFT;
+
             for (const char& glyph : row)
             {
                 if (glyph != ' ')
@@ -252,10 +256,13 @@ void draw(const Menu_browser& browser)
                     clr.g = max(0, min(254, int(clr.g)));
                     render::draw_glyph(glyph, Panel::screen, pos, clr);
                 }
+
                 pos.x++;
             }
+
             pos.y += 1;
         }
+
         pos.y += 3;
     }
 
@@ -274,6 +281,7 @@ void draw(const Menu_browser& browser)
     vector<string> quote_lines;
     text_format::line_to_lines(quote, 28, quote_lines);
     Pos quote_pos(15, pos.y - 1);
+
     for (string& quote_line : quote_lines)
     {
         render::draw_text_centered(quote_line, Panel::screen, quote_pos, quote_clr);
@@ -379,6 +387,7 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
                 TRACE_FUNC_END;
                 return Game_entry_mode::new_game;
             }
+
             if (browser.is_at_idx(1))
             {
                 if (save_handling::is_save_available())
@@ -394,32 +403,38 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
                     draw(browser);
                 }
             }
+
             if (browser.is_at_idx(2))
             {
                 manual::run();
                 draw(browser);
             }
+
             if (browser.is_at_idx(3))
             {
                 config::run_options_menu();
                 draw(browser);
             }
+
             if (browser.is_at_idx(4))
             {
                 credits::run();
                 draw(browser);
             }
+
             if (browser.is_at_idx(5))
             {
                 high_score::run_high_score_screen();
                 draw(browser);
             }
+
             if (browser.is_at_idx(6))
             {
                 quit    = true;
                 TRACE_FUNC_END;
                 return Game_entry_mode::new_game;
             }
+
             if (IS_DEBUG_MODE)
             {
                 if (browser.is_at_idx(7))
@@ -432,6 +447,7 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
         } break;
         }
     }
+
     TRACE_FUNC_END;
     return Game_entry_mode::new_game;
 }

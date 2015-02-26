@@ -21,13 +21,13 @@ Snd::Snd(
     Actor* const                actor_who_made_sound,
     const Snd_vol                vol,
     const Alerts_mon             alerting_mon) :
-    msg_                        (msg),
-    sfx_                        (sfx),
-    is_msg_ignored_if_origin_seen_   (ignore_msg_if_origin_seen),
-    origin_                     (origin),
-    actor_who_made_sound_          (actor_who_made_sound),
-    vol_                        (vol),
-    is_alerting_mon_              (alerting_mon) {}
+    msg_(msg),
+    sfx_(sfx),
+    is_msg_ignored_if_origin_seen_(ignore_msg_if_origin_seen),
+    origin_(origin),
+    actor_who_made_sound_(actor_who_made_sound),
+    vol_(vol),
+    is_alerting_mon_(alerting_mon) {}
 
 namespace snd_emit
 {
@@ -52,6 +52,7 @@ void reset_nr_snd_msg_printed_cur_turn()
 void emit_snd(Snd snd)
 {
     bool blocked[MAP_W][MAP_H];
+
     for (int x = 0; x < MAP_W; ++x)
     {
         for (int y = 0; y < MAP_H; ++y)
@@ -60,6 +61,7 @@ void emit_snd(Snd snd)
             blocked[x][y] = !f->is_sound_passable();
         }
     }
+
     int flood_fill[MAP_W][MAP_H];
     const Pos& origin = snd.get_origin();
     flood_fill::run(origin, blocked, flood_fill, 999, Pos(-1, -1), true);
@@ -95,6 +97,7 @@ void emit_snd(Snd snd)
                         dir_utils::get_compass_dir_name(player_pos, origin, dir_str);
                         snd.add_string("(" + dir_str + ")");
                     }
+
                     ++nr_snd_msg_printed_cur_turn_;
                 }
 

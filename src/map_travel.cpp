@@ -47,14 +47,21 @@ void mk_lvl(const Map_type& map_type)
 #ifndef NDEBUG
         ++nr_attempts;
 #endif
+
         switch (map_type)
         {
         case Map_type::intro:          is_lvl_built = map_gen::mk_intro_lvl();          break;
+
         case Map_type::std:            is_lvl_built = map_gen::mk_std_lvl();            break;
+
         case Map_type::egypt:          is_lvl_built = map_gen::mk_egypt_lvl();          break;
+
         case Map_type::leng:           is_lvl_built = map_gen::mk_leng_lvl();           break;
+
         case Map_type::rats_in_the_walls: is_lvl_built = map_gen::mk_rats_in_the_walls_lvl(); break;
+
         case Map_type::trapezohedron:  is_lvl_built = map_gen::mk_trapezohedron_lvl();  break;
+
         case Map_type::boss:           is_lvl_built = map_gen::mk_boss_lvl();           break;
         }
     }

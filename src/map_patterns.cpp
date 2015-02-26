@@ -57,11 +57,13 @@ void get_cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,
         }
 
         bool is_door_adjacent = false;
+
         for (int dx = -1; dx <= 1; ++dx)
         {
             for (int dy = -1; dy <= 1; ++dy)
             {
                 const auto* const f = map::cells[pos.x + dx][pos.y + dy].rigid;
+
                 if (f->get_id() == Feature_id::door) {is_door_adjacent = true;}
             }
         }
@@ -86,6 +88,7 @@ void get_cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,
 int get_walk_blockers_in_dir(const Dir dir, const Pos& pos)
 {
     int nr_blockers = 0;
+
     switch (dir)
     {
     case Dir::right:
@@ -93,6 +96,7 @@ int get_walk_blockers_in_dir(const Dir dir, const Pos& pos)
         for (int dy = -1; dy <= 1; ++dy)
         {
             const auto* const f = map::cells[pos.x + 1][pos.y + dy].rigid;
+
             if (!f->can_move_cmn()) {nr_blockers += 1;}
         }
     } break;
@@ -102,6 +106,7 @@ int get_walk_blockers_in_dir(const Dir dir, const Pos& pos)
         for (int dx = -1; dx <= 1; ++dx)
         {
             const auto* const f = map::cells[pos.x + dx][pos.y + 1].rigid;
+
             if (!f->can_move_cmn()) {nr_blockers += 1;}
         }
     } break;
@@ -111,6 +116,7 @@ int get_walk_blockers_in_dir(const Dir dir, const Pos& pos)
         for (int dy = -1; dy <= 1; ++dy)
         {
             const auto* const f = map::cells[pos.x - 1][pos.y + dy].rigid;
+
             if (!f->can_move_cmn()) {nr_blockers += 1;}
         }
     } break;
@@ -120,6 +126,7 @@ int get_walk_blockers_in_dir(const Dir dir, const Pos& pos)
         for (int dx = -1; dx <= 1; ++dx)
         {
             const auto* const f = map::cells[pos.x + dx][pos.y - 1].rigid;
+
             if (!f->can_move_cmn()) {nr_blockers += 1;}
         }
     } break;
@@ -131,6 +138,7 @@ int get_walk_blockers_in_dir(const Dir dir, const Pos& pos)
     case Dir::center:
     case Dir::END: {} break;
     }
+
     return nr_blockers;
 }
 

@@ -154,7 +154,7 @@ public:
 
     Lgt_size get_lgt_size() const override;
 
-    void store_to_save_lines  (std::vector<std::string>& lines) override;
+    void store_to_save_lines(std::vector<std::string>& lines) override;
     void setup_from_save_lines(std::vector<std::string>& lines) override;
 
     int                 nr_turns_left_;

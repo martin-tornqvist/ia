@@ -32,6 +32,7 @@ Consume_item Potion::activate(Actor* const actor)
         return Consume_item::yes;
 
     }
+
     return Consume_item::no;
 }
 
@@ -87,12 +88,14 @@ void Potion::collide(const Pos& pos, Actor* const actor)
                 msg_log::add("The potion shatters on " + f->get_name(Article::the) + ".");
             }
         }
+
         //If the blow from the bottle didn't kill the actor, apply what's inside
         if (actor)
         {
             if (actor->is_alive())
             {
                 collide_(pos, actor);
+
                 if (actor->is_alive() && !data_->is_identified && PLAYER_SEE_CELL)
                 {
                     msg_log::add("It had no apparent effect...");
@@ -120,6 +123,7 @@ void Potion::quaff(Actor& actor)
             const string name = get_name(Item_ref_type::plain, Item_ref_inf::none);
             msg_log::add("I drink an unknown " + name + "...");
         }
+
         map::player->incr_shock(Shock_lvl::heavy, Shock_src::use_strange_item);
     }
 
@@ -156,6 +160,7 @@ void Potion_vitality::quaff_(Actor& actor)
 void Potion_vitality::collide_(const Pos& pos, Actor* const actor)
 {
     (void)pos;
+
     if (actor) {quaff_(*actor);}
 }
 
@@ -178,12 +183,14 @@ void Potion_spirit::quaff_(Actor& actor)
 void Potion_spirit::collide_(const Pos& pos, Actor* const actor)
 {
     (void)pos;
+
     if (actor) {quaff_(*actor);}
 }
 
 void Potion_blindness::quaff_(Actor& actor)
 {
     actor.get_prop_handler().try_apply_prop(new Prop_blind(Prop_turns::std));
+
     if (map::player->can_see_actor(actor, nullptr))
     {
         identify(false);
@@ -193,12 +200,14 @@ void Potion_blindness::quaff_(Actor& actor)
 void Potion_blindness::collide_(const Pos& pos, Actor* const actor)
 {
     (void)pos;
+
     if (actor) {quaff_(*actor);}
 }
 
 void Potion_paral::quaff_(Actor& actor)
 {
     actor.get_prop_handler().try_apply_prop(new Prop_paralyzed(Prop_turns::std));
+
     if (map::player->can_see_actor(actor, nullptr))
     {
         identify(false);
@@ -209,12 +218,14 @@ void Potion_paral::collide_(const Pos& pos, Actor* const actor)
 {
 
     (void)pos;
+
     if (actor) {quaff_(*actor);}
 }
 
 void Potion_disease::quaff_(Actor& actor)
 {
     actor.get_prop_handler().try_apply_prop(new Prop_diseased(Prop_turns::std));
+
     if (map::player->can_see_actor(actor, nullptr))
     {
         identify(false);
@@ -224,6 +235,7 @@ void Potion_disease::quaff_(Actor& actor)
 void Potion_conf::quaff_(Actor& actor)
 {
     actor.get_prop_handler().try_apply_prop(new Prop_confused(Prop_turns::std));
+
     if (map::player->can_see_actor(actor, nullptr))
     {
         identify(false);
@@ -233,12 +245,14 @@ void Potion_conf::quaff_(Actor& actor)
 void Potion_conf::collide_(const Pos& pos, Actor* const actor)
 {
     (void)pos;
+
     if (actor) {quaff_(*actor);}
 }
 
 void Potion_frenzy::quaff_(Actor& actor)
 {
     actor.get_prop_handler().try_apply_prop(new Prop_frenzied(Prop_turns::std));
+
     if (map::player->can_see_actor(actor, nullptr))
     {
         identify(false);
@@ -248,6 +262,7 @@ void Potion_frenzy::quaff_(Actor& actor)
 void Potion_frenzy::collide_(const Pos& pos, Actor* const actor)
 {
     (void)pos;
+
     if (actor) {quaff_(*actor);}
 }
 
@@ -268,6 +283,7 @@ void Potion_fortitude::quaff_(Actor& actor)
     if (actor.is_player())
     {
         bool is_phobias_cured = false;
+
         for (int i = 0; i < int(Phobia::END); ++i)
         {
             if (map::player->phobias[i])
@@ -283,6 +299,7 @@ void Potion_fortitude::quaff_(Actor& actor)
         }
 
         bool is_obsessions_cured = false;
+
         for (int i = 0; i < int(Obsession::END); ++i)
         {
             if (map::player->obsessions[i])
@@ -291,6 +308,7 @@ void Potion_fortitude::quaff_(Actor& actor)
                 is_obsessions_cured = true;
             }
         }
+
         if (is_obsessions_cured)
         {
             msg_log::add("All my obsessions are cured!");
@@ -309,12 +327,14 @@ void Potion_fortitude::quaff_(Actor& actor)
 void Potion_fortitude::collide_(const Pos& pos, Actor* const actor)
 {
     (void)pos;
+
     if (actor) {quaff_(*actor);}
 }
 
 void Potion_poison::quaff_(Actor& actor)
 {
     actor.get_prop_handler().try_apply_prop(new Prop_poisoned(Prop_turns::std));
+
     if (map::player->can_see_actor(actor, nullptr))
     {
         identify(false);
@@ -324,12 +344,14 @@ void Potion_poison::quaff_(Actor& actor)
 void Potion_poison::collide_(const Pos& pos, Actor* const actor)
 {
     (void)pos;
+
     if (actor) {quaff_(*actor);}
 }
 
 void Potion_rFire::quaff_(Actor& actor)
 {
     actor.get_prop_handler().try_apply_prop(new Prop_rFire(Prop_turns::std));
+
     if (map::player->can_see_actor(actor, nullptr))
     {
         identify(false);
@@ -339,6 +361,7 @@ void Potion_rFire::quaff_(Actor& actor)
 void Potion_rFire::collide_(const Pos& pos, Actor* const actor)
 {
     (void)pos;
+
     if (actor) {quaff_(*actor);}
 }
 
@@ -355,12 +378,14 @@ void Potion_antidote::quaff_(Actor& actor)
 void Potion_antidote::collide_(const Pos& pos, Actor* const actor)
 {
     (void)pos;
+
     if (actor) {quaff_(*actor);}
 }
 
 void Potion_rElec::quaff_(Actor& actor)
 {
     actor.get_prop_handler().try_apply_prop(new Prop_rElec(Prop_turns::std));
+
     if (map::player->can_see_actor(actor, nullptr))
     {
         identify(false);
@@ -370,12 +395,14 @@ void Potion_rElec::quaff_(Actor& actor)
 void Potion_rElec::collide_(const Pos& pos, Actor* const actor)
 {
     (void)pos;
+
     if (actor) {quaff_(*actor);}
 }
 
 void Potion_rAcid::quaff_(Actor& actor)
 {
     actor.get_prop_handler().try_apply_prop(new Prop_rAcid(Prop_turns::std));
+
     if (map::player->can_see_actor(actor, nullptr))
     {
         identify(false);
@@ -385,6 +412,7 @@ void Potion_rAcid::quaff_(Actor& actor)
 void Potion_rAcid::collide_(const Pos& pos, Actor* const actor)
 {
     (void)pos;
+
     if (actor) {quaff_(*actor);}
 }
 
@@ -397,26 +425,33 @@ void Potion_insight::quaff_(Actor& actor)
     vector<Item*> identify_bucket;
 
     auto& slots = inv.slots_;
+
     for (Inv_slot& slot : slots)
     {
         Item* const item = slot.item;
+
         if (item)
         {
             const Item_data_t& d = item->get_data();
+
             if (!d.is_identified) {identify_bucket.push_back(item);}
         }
     }
+
     vector<Item*>& general = inv.general_;
+
     for (Item* item : general)
     {
         if (item->get_id() != Item_id::potion_insight)
         {
             const Item_data_t& d = item->get_data();
+
             if (!d.is_identified) {identify_bucket.push_back(item);}
         }
     }
 
     const size_t NR_ELEMENTS = identify_bucket.size();
+
     if (NR_ELEMENTS > 0)
     {
         const int     IDX             = rnd::range(0, NR_ELEMENTS - 1);
@@ -465,11 +500,13 @@ void Potion_clairv::quaff_(Actor& actor)
 
         bool blocked[MAP_W][MAP_H];
         map_parse::run(cell_check::Blocks_los(), blocked);
+
         for (int x = 0; x < MAP_W; ++x)
         {
             for (int y = 0; y < MAP_H; ++y)
             {
                 Cell& cell = map::cells[x][y];
+
                 if (!blocked[x][y] && !cell.is_dark)
                 {
                     cell.is_explored = true;
@@ -485,12 +522,14 @@ void Potion_clairv::quaff_(Actor& actor)
 
         render::draw_blast_at_cells(anim_cells, clr_white);
     }
+
     identify(false);
 }
 
 void Potion_descent::quaff_(Actor& actor)
 {
     (void)actor;
+
     if (map::dlvl < DLVL_LAST - 1)
     {
         render::draw_map_and_interface();
@@ -545,6 +584,7 @@ void init()
     potion_looks_.push_back(Potion_look {"Frothy",   "a Frothy",   clr_white});
 
     TRACE << "Init potion names" << endl;
+
     for (auto* const d : item_data::data)
     {
         if (d->type == Item_type::potion)
@@ -587,6 +627,7 @@ void store_to_save_lines(vector<string>& lines)
     for (int i = 0; i < int(Item_id::END); ++i)
     {
         Item_data_t* const d = item_data::data[i];
+
         if (d->type == Item_type::potion)
         {
             lines.push_back(d->base_name_un_id.names[int(Item_ref_type::plain)]);
@@ -604,6 +645,7 @@ void setup_from_save_lines(vector<string>& lines)
     for (int i = 0; i < int(Item_id::END); ++i)
     {
         Item_data_t* const d = item_data::data[i];
+
         if (d->type == Item_type::potion)
         {
             d->base_name_un_id.names[int(Item_ref_type::plain)]  = lines.front();

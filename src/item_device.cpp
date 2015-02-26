@@ -29,8 +29,8 @@ void Device::identify(const bool IS_SILENT_IDENTIFY)
 
 //---------------------------------------------------- STRANGE DEVICE
 Strange_device::Strange_device(Item_data_t* const item_data) :
-    Device      (item_data),
-    condition_  (rnd::coin_toss() ? Condition::fine : Condition::shoddy) {}
+    Device(item_data),
+    condition_(rnd::coin_toss() ? Condition::fine : Condition::shoddy) {}
 
 void Strange_device::store_to_save_lines(vector<string>& lines)
 {
@@ -54,7 +54,9 @@ vector<string> Strange_device::get_descr() const
         switch (condition_)
         {
         case Condition::fine:     cond_str += "to be in fine condition.";    break;
+
         case Condition::shoddy:   cond_str += "to be in shoddy condition.";  break;
+
         case Condition::breaking: cond_str += "almost broken.";              break;
         }
 
@@ -87,15 +89,19 @@ Consume_item Strange_device::activate(Actor* const actor)
         int bon = 0;
         bool props[size_t(Prop_id::END)];
         actor->get_prop_handler().get_prop_ids(props);
+
         if (props[int(Prop_id::blessed)])
         {
             bon += 2;
         }
+
         if (props[int(Prop_id::cursed)])
         {
             bon -= 2;
         }
+
         const int RND = rnd::range(1, 8 + bon);
+
         switch (condition_)
         {
         case Condition::breaking:
@@ -105,6 +111,7 @@ Consume_item Strange_device::activate(Actor* const actor)
                 msg_log::add(hurt_msg, clr_msg_bad);
                 actor->hit(rnd::dice(2, 4), Dmg_type::electric);
             }
+
             is_effect_failed  = RND == 3 || RND == 4;
             is_cond_degrade   = RND <= 2;
             is_warning       = RND == 7 || RND == 8;
@@ -117,6 +124,7 @@ Consume_item Strange_device::activate(Actor* const actor)
                 msg_log::add(hurt_msg, clr_msg_bad);
                 actor->hit(rnd::dice(1, 4), Dmg_type::electric);
             }
+
             is_effect_failed  = RND == 3;
             is_cond_degrade   = RND <= 2;
             is_warning       = RND == 5 || RND == 6;
@@ -186,10 +194,13 @@ std::string Strange_device::get_name_inf() const
         switch (condition_)
         {
         case Condition::breaking: return "{breaking}";
+
         case Condition::shoddy:   return "{shoddy}";
+
         case Condition::fine:     return "{fine}";
         }
     }
+
     return "";
 }
 
@@ -198,6 +209,7 @@ Consume_item Device_blaster::trigger_effect()
 {
     vector<Actor*> target_bucket;
     map::player->get_seen_foes(target_bucket);
+
     if (target_bucket.empty())
     {
         msg_log::add("It seems to peruse area.");
@@ -208,6 +220,7 @@ Consume_item Device_blaster::trigger_effect()
         spell->cast(map::player, false);
         delete spell;
     }
+
     return Consume_item::no;
 }
 
@@ -237,9 +250,11 @@ Consume_item Device_shockwave::trigger_effect()
         if (actor != map::player && actor->is_alive())
         {
             const Pos& other_pos = actor->pos;
+
             if (utils::is_pos_adj(player_pos, other_pos, false))
             {
                 actor->hit(rnd::dice(1, 8), Dmg_type::physical);
+
                 if (actor->is_alive())
                 {
                     knock_back::try_knock_back(*actor, player_pos, false, true);
@@ -247,6 +262,7 @@ Consume_item Device_shockwave::trigger_effect()
             }
         }
     }
+
     return Consume_item::no;
 }
 
@@ -279,6 +295,7 @@ Consume_item Device_translocator::trigger_effect()
             actor->teleport();
         }
     }
+
     return Consume_item::no;
 }
 
@@ -292,16 +309,18 @@ Consume_item Device_sentry_drone::trigger_effect()
 
 //---------------------------------------------------- ELECTRIC LANTERN
 Device_lantern::Device_lantern(Item_data_t* const item_data) :
-    Device                (item_data),
-    nr_turns_left_          (500),
-    nr_flicker_turns_left_   (-1),
-    working_state_         (Lantern_working_state::working),
-    is_activated_          (false) {}
+    Device(item_data),
+    nr_turns_left_(500),
+    nr_flicker_turns_left_(-1),
+    working_state_(Lantern_working_state::working),
+    is_activated_(false) {}
 
 std::string Device_lantern::get_name_inf() const
 {
     string inf = "{" + to_str(nr_turns_left_);
+
     if (is_activated_) {inf += ", Lit";}
+
     return inf + "}";
 }
 
@@ -434,8 +453,10 @@ Lgt_size Device_lantern::get_lgt_size() const
         switch (working_state_)
         {
         case Lantern_working_state::working: return Lgt_size::fov;
+
         case Lantern_working_state::flicker: return Lgt_size::small;
         }
     }
+
     return Lgt_size::none;
 }

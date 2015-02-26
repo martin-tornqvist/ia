@@ -29,9 +29,9 @@ namespace map_gen_utils
 //map::room_map - so the room parameter should be a const reference for these methods.
 //For other reshape functions the room may expand beyond its initial rectangle, so in
 //those cases the functions need to assign values to the data of the room object.
-void cut_room_corners (const Room& room);
+void cut_room_corners(const Room& room);
 void mk_pillars_in_room(const Room& room);
-void cavify_room     (Room& room);
+void cavify_room(Room& room);
 
 void get_valid_room_corr_entries(const Room& room, std::vector<Pos>& out);
 

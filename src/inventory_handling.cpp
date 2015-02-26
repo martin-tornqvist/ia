@@ -76,6 +76,7 @@ bool run_drop_screen(const Inv_type inv_type, const size_t ELEMENT)
                           clr_white_high);
         const int NR_TO_DROP = query::number(nr_query_pos, clr_white_high, 0, 3,
                                              item->nr_items_, false);
+
         if (NR_TO_DROP <= 0)
         {
             TRACE << "Nr to drop <= 0, nothing to be done" << endl;
@@ -96,6 +97,7 @@ bool run_drop_screen(const Inv_type inv_type, const size_t ELEMENT)
         TRACE_FUNC_END;
         return true;
     }
+
     TRACE_FUNC_END;
     return false;
 }
@@ -121,6 +123,7 @@ void filter_player_general_equip(const Slot_id slot_to_equip)
             {
                 general_items_to_show_.push_back(i);
             }
+
             break;
 
         case Slot_id::wielded_alt:
@@ -128,6 +131,7 @@ void filter_player_general_equip(const Slot_id slot_to_equip)
             {
                 general_items_to_show_.push_back(i);
             }
+
             break;
 
         case Slot_id::thrown:
@@ -135,6 +139,7 @@ void filter_player_general_equip(const Slot_id slot_to_equip)
             {
                 general_items_to_show_.push_back(i);
             }
+
             break;
 
         case Slot_id::body:
@@ -142,6 +147,7 @@ void filter_player_general_equip(const Slot_id slot_to_equip)
             {
                 general_items_to_show_.push_back(i);
             }
+
             break;
 
         case Slot_id::head:
@@ -149,6 +155,7 @@ void filter_player_general_equip(const Slot_id slot_to_equip)
             {
                 general_items_to_show_.push_back(i);
             }
+
             break;
 
         case Slot_id::neck:
@@ -156,6 +163,7 @@ void filter_player_general_equip(const Slot_id slot_to_equip)
             {
                 general_items_to_show_.push_back(i);
             }
+
             break;
 
         case Slot_id::ring1:
@@ -163,6 +171,7 @@ void filter_player_general_equip(const Slot_id slot_to_equip)
             {
                 general_items_to_show_.push_back(i);
             }
+
             break;
 
         case Slot_id::ring2:
@@ -170,6 +179,7 @@ void filter_player_general_equip(const Slot_id slot_to_equip)
             {
                 general_items_to_show_.push_back(i);
             }
+
             break;
 
         case Slot_id::END: {}
@@ -183,6 +193,7 @@ void filter_player_general_show_all()
     auto& general = map::player->get_inv().general_;
     general_items_to_show_.clear();
     const int NR_GEN = general.size();
+
     for (int i = 0; i < NR_GEN; ++i) {general_items_to_show_.push_back(i);}
 }
 
@@ -246,6 +257,7 @@ void run_inv_screen()
                                   Inv_type::slots : Inv_type::general;
 
         const Menu_action action = menu_input_handling::get_action(browser);
+
         switch (action)
         {
         case Menu_action::browsed:
@@ -258,6 +270,7 @@ void run_inv_screen()
             const int BROWSER_Y = browser.get_pos().y;
             const size_t ELEMENT =
                 inv_type == Inv_type::slots ? BROWSER_Y : (BROWSER_Y - int(Slot_id::END));
+
             if (run_drop_screen(inv_type, ELEMENT))
             {
                 browser.set_good_pos();
@@ -265,6 +278,7 @@ void run_inv_screen()
                 screen_to_open_after_drop     = Inv_scr_id::inv;
                 return;
             }
+
             render_inventory::draw_browse_inv(browser);
         } break;
 
@@ -368,6 +382,7 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
     while (true)
     {
         const Menu_action action = menu_input_handling::get_action(browser);
+
         switch (action)
         {
         case Menu_action::browsed:
@@ -403,6 +418,7 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
                 screen_to_open_after_drop     = Inv_scr_id::equip;
                 return true;
             }
+
             render_inventory::draw_equip(browser, slot_to_equip.id, general_items_to_show_);
         } break;
 

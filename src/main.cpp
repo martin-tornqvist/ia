@@ -37,6 +37,7 @@ int main(int argc, char* argv[])
     init::init_game();
 
     bool quit_game = false;
+
     while (!quit_game)
     {
         init::init_session();
@@ -54,6 +55,7 @@ int main(int argc, char* argv[])
                 {
                     player_bon::set_all_traits_to_picked();
                 }
+
                 create_character::create_character();
                 map::player->mk_start_items();
 
@@ -69,6 +71,7 @@ int main(int argc, char* argv[])
                     render::update_screen();
                     map_gen::mk_intro_lvl();
                 }
+
                 dungeon_master::set_time_started_to_now();
                 const Time_data& t = dungeon_master::get_start_time();
                 TRACE << "Game started on: " << t.get_time_str(Time_type::minute, true)
@@ -128,6 +131,7 @@ int main(int argc, char* argv[])
                         {
                             sdl_wrapper::sleep(DELAY_PLAYER_UNABLE_TO_ACT);
                         }
+
                         game_time::tick();
                     }
                 }
@@ -144,8 +148,10 @@ int main(int argc, char* argv[])
                 }
             }
         }
+
         init::cleanup_session();
     }
+
     init::cleanup_game();
     init::cleanup_iO();
 

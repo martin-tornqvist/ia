@@ -136,12 +136,15 @@ void mk_lines()
     else
     {
         sort(potion_list.begin(), potion_list.end(), str_and_clr_sort);
+
         for (Str_and_clr& e : potion_list) {lines_.push_back(e);}
     }
+
     lines_.push_back({" ", clr_text});
 
 
     lines_.push_back({"Manuscript knowledge", clr_heading});
+
     if (manuscript_list.size() == 0)
     {
         lines_.push_back({offset + "No known manuscripts", clr_text});
@@ -149,8 +152,10 @@ void mk_lines()
     else
     {
         sort(manuscript_list.begin(), manuscript_list.end(), str_and_clr_sort);
+
         for (Str_and_clr& e : manuscript_list) {lines_.push_back(e);}
     }
+
     lines_.push_back({" ", clr_text});
 
     lines_.push_back({"Traits gained", clr_heading});
@@ -168,10 +173,12 @@ void mk_lines()
             lines_.push_back({offset + title, clr_text});
             vector<string> descr_lines;
             text_format::line_to_lines(descr, MAX_W_DESCR, descr_lines);
+
             for (string& descr_line : descr_lines)
             {
                 lines_.push_back({offset + descr_line, clr_text_dark});
             }
+
             lines_.push_back({" ", clr_text});
         }
     }
@@ -180,13 +187,19 @@ void mk_lines()
 void get_shock_res_src_title(const Shock_src shock_src, string& str_ref)
 {
     str_ref = "";
+
     switch (shock_src)
     {
     case Shock_src::time:            str_ref = "Time";                    break;
+
     case Shock_src::cast_intr_spell:   str_ref = "Casting learned spells";  break;
+
     case Shock_src::see_mon:          str_ref = "Seeing monsters";         break;
+
     case Shock_src::use_strange_item:  str_ref = "Using strange items";     break;
+
     case Shock_src::misc:            str_ref = "Other";                   break;
+
     case Shock_src::END: {} break;
     }
 }
@@ -226,11 +239,13 @@ void run()
         render::clear_screen();
         draw_interface();
         int y_pos = 1;
+
         for (int i = top_nr; i <= btm_nr; ++i)
         {
             const Str_and_clr& line = lines_[i];
             render::draw_text(line.str , Panel::screen, Pos(0, y_pos++), line.clr);
         }
+
         render::update_screen();
 
         const Key_data& d = input::get_input();
@@ -238,6 +253,7 @@ void run()
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {
             top_nr += LINE_JUMP;
+
             if (NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
             {
                 top_nr = 0;
@@ -255,8 +271,10 @@ void run()
         {
             break;
         }
+
         btm_nr = min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
     }
+
     render::draw_map_and_interface();
 }
 

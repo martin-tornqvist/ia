@@ -37,6 +37,7 @@ Yes_no_answer yes_or_no(char key_for_special_event)
     if (!is_inited_ || config::is_bot_playing()) {return Yes_no_answer::yes;}
 
     Key_data d = input::get_input();
+
     while (
         d.key    != 'y'          &&
         d.key    != 'n'          &&
@@ -46,10 +47,12 @@ Yes_no_answer yes_or_no(char key_for_special_event)
     {
         d = input::get_input();
     }
+
     if (d.key == key_for_special_event && key_for_special_event != -1)
     {
         return Yes_no_answer::special;
     }
+
     if (d.key == 'y')
     {
         return Yes_no_answer::yes;
@@ -93,6 +96,7 @@ int number(const Pos& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS
     while (true)
     {
         Key_data d;
+
         while ((d.key < '0' || d.key > '9') && d.sdl_key != SDLK_RETURN &&
                 d.sdl_key != SDLK_SPACE && d.sdl_key != SDLK_ESCAPE &&
                 d.sdl_key != SDLK_BACKSPACE)
@@ -133,6 +137,7 @@ int number(const Pos& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS
             render::update_screen();
         }
     }
+
     return -1;
 }
 
@@ -141,6 +146,7 @@ void wait_forConfirm()
     if (is_inited_ && !config::is_bot_playing())
     {
         Key_data d = input::get_input();
+
         while (d.sdl_key != SDLK_SPACE && d.sdl_key != SDLK_ESCAPE && d.sdl_key != SDLK_RETURN)
         {
             d = input::get_input();
@@ -173,6 +179,7 @@ Dir dir()
     {
         return Dir::center;
     }
+
     if (d.sdl_key == SDLK_RIGHT    || d.key == '6' || d.key == 'l')
     {
         if (d.is_shift_held)
@@ -188,18 +195,22 @@ Dir dir()
             return Dir::right;
         }
     }
+
     if (d.sdl_key == SDLK_PAGEUP   || d.key == '9' || d.key == 'u')
     {
         return Dir::up_right;
     }
+
     if (d.sdl_key == SDLK_UP       || d.key == '8' || d.key == 'k')
     {
         return Dir::up;
     }
+
     if (d.sdl_key == SDLK_END      || d.key == '7' || d.key == 'y')
     {
         return Dir::up_left;
     }
+
     if (d.sdl_key == SDLK_LEFT     || d.key == '4' || d.key == 'h')
     {
         if (d.is_shift_held)
@@ -215,14 +226,17 @@ Dir dir()
             return Dir::left;
         }
     }
+
     if (d.sdl_key == SDLK_END      || d.key == '1' || d.key == 'b')
     {
         return Dir::down_left;
     }
+
     if (d.sdl_key == SDLK_DOWN     || d.key == '2' || d.key == 'j')
     {
         return Dir::down;
     }
+
     if (d.sdl_key == SDLK_PAGEDOWN || d.key == '3' || d.key == 'n')
     {
         return Dir::down_right;

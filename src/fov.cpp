@@ -45,12 +45,14 @@ void check_one_cell_of_many(const bool obstructions[MAP_W][MAP_H],
     for (size_t i = 0; i < PATH_SIZE; ++i)
     {
         cur_pos.set(origin + path_deltas[i]);
+
         if (i > 1)
         {
             prev_pos.set(origin + path_deltas[i - 1]);
             const bool PRE_CELL_IS_DRK = map::cells[prev_pos.x][prev_pos.y].is_dark;
             const bool CUR_CELL_IS_DRK = map::cells[cur_pos.x][cur_pos.y].is_dark;
             const bool CUR_CELL_IS_LGT = map::cells[cur_pos.x][cur_pos.y].is_lit;
+
             if (
                 !CUR_CELL_IS_LGT                      &&
                 !TGT_IS_LGT                           &&
@@ -60,11 +62,13 @@ void check_one_cell_of_many(const bool obstructions[MAP_W][MAP_H],
                 return;
             }
         }
+
         if (cur_pos == cell_to_check)
         {
             values[cell_to_check.x][cell_to_check.y] = true;
             return;
         }
+
         if (i > 0)
         {
             if (obstructions[cur_pos.x][cur_pos.y])
@@ -106,6 +110,7 @@ bool check_cell(const bool obstructions[MAP_W][MAP_H], const Pos& cell_to_check,
     for (size_t i = 0; i < PATH_SIZE; ++i)
     {
         cur_pos.set(origin + path_deltas[i]);
+
         if (i > 1)
         {
             prev_pos.set(origin + path_deltas[i - 1]);
@@ -122,9 +127,12 @@ bool check_cell(const bool obstructions[MAP_W][MAP_H], const Pos& cell_to_check,
                 return false;
             }
         }
+
         if (cur_pos == cell_to_check) {return true;}
+
         if (i > 0 && obstructions[cur_pos.x][cur_pos.y]) {return false;}
     }
+
     return false;
 }
 
@@ -151,6 +159,7 @@ void run_fov_on_array(const bool obstructions[MAP_W][MAP_H], const Pos& origin,
                                    IS_AFFECTED_BY_DARKNESS);
             check_y++;
         }
+
         check_x++;
     }
 }

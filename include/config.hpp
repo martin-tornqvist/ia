@@ -14,15 +14,15 @@ void toggle_fullscreen();
 bool            is_tiles_mode();
 std::string     get_font_name();
 bool            is_fullscreen();
-int             get_screen_pixel_w();
-int             get_screen_pixel_h();
+int             get_screen_px_w();
+int             get_screen_px_h();
 int             get_cell_w();
 int             get_cell_h();
-int             get_log_pixel_h();
-int             get_map_pixel_h();
-int             get_map_pixel_offset_h();
-int             get_char_lines_pixel_offset_h();
-int             get_char_lines_pixel_h();
+int             get_log_px_h();
+int             get_map_px_h();
+int             get_map_px_offset_h();
+int             get_char_lines_px_offset_h();
+int             get_char_lines_px_h();
 bool            is_ascii_wall_full_square();
 bool            is_tiles_wall_full_square();
 bool            is_audio_enabled();
@@ -34,8 +34,6 @@ bool            is_intro_lvl_skipped();
 int             get_delay_projectile_draw();
 int             get_delay_shotgun();
 int             get_delay_explosion();
-int             get_key_repeat_delay();
-int             get_key_repeat_interval();
 
 } //Config
 

@@ -39,6 +39,7 @@ void Smoke::on_new_turn()
             auto&       inv             = map::player->get_inv();
             auto* const player_head_item  = inv.slots_[int(Slot_id::head)].item;
             auto* const player_body_item  = inv.slots_[int(Slot_id::body)].item;
+
             if (player_head_item)
             {
                 if (player_head_item->get_data().id == Item_id::gas_mask)
@@ -49,6 +50,7 @@ void Smoke::on_new_turn()
                     static_cast<Gas_mask*>(player_head_item)->decr_turns_left(inv);
                 }
             }
+
             if (player_body_item)
             {
                 if (player_body_item->get_data().id == Item_id::armor_asb_suit)
@@ -62,6 +64,7 @@ void Smoke::on_new_turn()
         if (!is_protected_blindness && rnd::one_in(4))
         {
             if (IS_PLAYER) {msg_log::add("I am getting smoke in my eyes.");}
+
             actor->get_prop_handler().try_apply_prop(
                 new Prop_blind(Prop_turns::specific, rnd::range(1, 3)));
         }
@@ -104,7 +107,9 @@ void Smoke::on_new_turn()
 string Smoke::get_name(const Article article)  const
 {
     string ret = "";
+
     if (article == Article::the) {ret += "the ";}
+
     return ret + "smoke";
 }
 
@@ -117,6 +122,7 @@ Clr Smoke::get_clr() const
 void Lit_dynamite::on_new_turn()
 {
     nr_turns_left_--;
+
     if (nr_turns_left_ <= 0)
     {
         const int D = player_bon::traits[int(Trait::dem_expert)] ? 1 : 0;
@@ -148,6 +154,7 @@ Clr Lit_dynamite::get_clr() const
 void Lit_flare::on_new_turn()
 {
     nr_turns_left_--;
+
     if (nr_turns_left_ <= 0) {game_time::erase_mob(this, true);}
 }
 
@@ -159,6 +166,7 @@ void Lit_flare::add_light(bool light[MAP_W][MAP_H]) const
     Pos p0(max(0,         pos_.x - R),  max(0,          pos_.y - R));
     Pos p1(min(MAP_W - 1, pos_.x + R),  min(MAP_H - 1,  pos_.y + R));
     bool blocked_los[MAP_W][MAP_H];
+
     for (int y = p0.y; y <= p1.y; ++y)
     {
         for (int x = p0.x; x <= p1.x; ++x)
@@ -168,6 +176,7 @@ void Lit_flare::add_light(bool light[MAP_W][MAP_H]) const
     }
 
     fov::run_fov_on_array(blocked_los, pos_, my_light, false);
+
     for (int y = p0.y; y <= p1.y; ++y)
     {
         for (int x = p0.x; x <= p1.x; ++x)

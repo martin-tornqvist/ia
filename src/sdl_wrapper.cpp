@@ -33,8 +33,6 @@ void init()
         assert(false);
     }
 
-    SDL_EnableUNICODE(1);
-
     if (IMG_Init(IMG_INIT_PNG) == -1)
     {
         TRACE << "Failed to init SDL_image" << endl;
@@ -77,6 +75,7 @@ void sleep(const Uint32 DURATION)
         else
         {
             const Uint32 WAIT_UNTIL = SDL_GetTicks() + DURATION;
+
             while (SDL_GetTicks() < WAIT_UNTIL) {SDL_PumpEvents();}
         }
     }

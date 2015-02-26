@@ -3,8 +3,6 @@
 #include <vector>
 #include <iostream>
 
-#include <SDL_image.h>
-
 #include "init.hpp"
 #include "item.hpp"
 #include "character_lines.hpp"
@@ -28,52 +26,48 @@ using namespace std;
 namespace render
 {
 
-Cell_render_data  render_array[MAP_W][MAP_H];
-Cell_render_data  render_array_no_actors[MAP_W][MAP_H];
-SDL_Surface*    screen_surface       = nullptr;
-SDL_Surface*    main_menu_logo_surface = nullptr;
+Cell_render_data render_array[MAP_W][MAP_H];
+Cell_render_data render_array_no_actors[MAP_W][MAP_H];
 
 namespace
 {
 
+SDL_Window*     sdl_window_         = nullptr;
+SDL_Renderer*   sdl_renderer_       = nullptr;
+
+SDL_Surface*    screen_srf_         = nullptr;
+SDL_Texture*    screen_texture_     = nullptr;
+
+SDL_Surface*    main_menu_logo_srf_ = nullptr;
+
 const size_t PIXEL_DATA_W = 400;
 const size_t PIXEL_DATA_H = 400;
 
-bool tile_pixel_data_[PIXEL_DATA_W][PIXEL_DATA_H];
-bool font_pixel_data_[PIXEL_DATA_W][PIXEL_DATA_H];
-bool contour_pixel_data_[PIXEL_DATA_W][PIXEL_DATA_H];
+bool tile_px_data_[PIXEL_DATA_W][PIXEL_DATA_H];
+bool font_px_data_[PIXEL_DATA_W][PIXEL_DATA_H];
+bool contour_px_data_[PIXEL_DATA_W][PIXEL_DATA_H];
 
 bool is_inited()
 {
-    return screen_surface;
+    return sdl_window_;
 }
 
-void load_main_menu_logo()
+Uint32 get_px(SDL_Surface& srf, const int PIXEL_X, const int PIXEL_Y)
 {
-    TRACE_FUNC_BEGIN;
+    const int BPP = srf.format->BytesPerPixel;
 
-    SDL_Surface* main_menu_logo_surface_tmp = IMG_Load(main_menu_logo_img_name.data());
+    //p is the address to the pixel we want to retrieve
+    Uint8* p = (Uint8*)srf.pixels + PIXEL_Y * srf.pitch + PIXEL_X * BPP;
 
-    main_menu_logo_surface = SDL_DisplayFormatAlpha(main_menu_logo_surface_tmp);
-
-    SDL_FreeSurface(main_menu_logo_surface_tmp);
-
-    TRACE_FUNC_END;
-}
-
-Uint32 get_pixel(SDL_Surface* const surface, const int PIXEL_X, const int PIXEL_Y)
-{
-    int bpp = surface->format->BytesPerPixel;
-
-    /* Here p is the address to the pixel we want to retrieve */
-    Uint8* p = (Uint8*)surface->pixels + PIXEL_Y * surface->pitch + PIXEL_X * bpp;
-
-    switch (bpp)
+    switch (BPP)
     {
-    case 1:   return *p;          break;
-    case 2:   return *(Uint16*)p; break;
+    case 1:
+        return *p;
+
+    case 2:
+        return *(Uint16*)p;
+
     case 3:
-    {
         if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
         {
             return p[0] << 16 | p[1] << 8 | p[2];
@@ -82,71 +76,103 @@ Uint32 get_pixel(SDL_Surface* const surface, const int PIXEL_X, const int PIXEL_
         {
             return p[0] | p[1] << 8 | p[2] << 16;
         }
-    } break;
-    case 4:   return *(Uint32*)p; break;
-    default:  return -1;          break;
+        break;
+
+    case 4:
+        return *(Uint32*)p;
+
+    default:
+        break;
     }
+
     return -1;
 }
 
-void put_pixel(SDL_Surface* const surface, const int PIXEL_X, const int PIXEL_Y,
-               Uint32 pixel)
+void put_px(const SDL_Surface& srf, const int PIXEL_X, const int PIXEL_Y, Uint32 px)
 {
-    int bpp = surface->format->BytesPerPixel;
+    const int BPP = srf.format->BytesPerPixel;
 
-    //Here p is the address to the pixel we want to set
-    Uint8* p = (Uint8*)surface->pixels + PIXEL_Y * surface->pitch + PIXEL_X * bpp;
+    //p is the address to the pixel we want to set
+    Uint8* const p = (Uint8*)srf.pixels + PIXEL_Y * srf.pitch + PIXEL_X * BPP;
 
-    switch (bpp)
+    switch (BPP)
     {
     case 1:
-        *p = pixel;
+        *p = px;
         break;
 
     case 2:
-        *(Uint16*)p = pixel;
+        *(Uint16*)p = px;
         break;
 
     case 3:
         if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
         {
-            p[0] = (pixel >> 16) & 0xff;
-            p[1] = (pixel >> 8)  & 0xff;
-            p[2] = pixel & 0xff;
+            p[0] = (px >> 16) & 0xff;
+            p[1] = (px >> 8)  & 0xff;
+            p[2] = px & 0xff;
         }
         else //Little endian
         {
-            p[0] = pixel & 0xff;
-            p[1] = (pixel >> 8)  & 0xff;
-            p[2] = (pixel >> 16) & 0xff;
+            p[0] = px & 0xff;
+            p[1] = (px >> 8)  & 0xff;
+            p[2] = (px >> 16) & 0xff;
         }
         break;
 
     case 4:
-        *(Uint32*)p = pixel;
+        *(Uint32*)p = px;
         break;
 
-    default: {} break;
+    default:
+        break;
     }
+}
+
+void blit_surface(SDL_Surface& srf, const Pos& px_pos)
+{
+    SDL_Rect dst_rect
+    {
+        px_pos.x, px_pos.y, srf.w, srf.h
+    };
+
+    SDL_BlitSurface(&srf, nullptr, screen_srf_, &dst_rect);
+}
+
+void load_main_menu_logo()
+{
+    TRACE_FUNC_BEGIN;
+
+    SDL_Surface* main_menu_logo_srf_tmp = IMG_Load(main_menu_logo_img_name.c_str());
+
+    assert(main_menu_logo_srf_tmp && "Failed to load main menu logo");
+
+    main_menu_logo_srf_ = SDL_ConvertSurface(main_menu_logo_srf_tmp, screen_srf_->format, 0);
+
+    SDL_FreeSurface(main_menu_logo_srf_tmp);
+
+    TRACE_FUNC_END;
 }
 
 void load_font()
 {
     TRACE_FUNC_BEGIN;
 
-    SDL_Surface* font_surface_tmp = IMG_Load(config::get_font_name().data());
+    SDL_Surface* font_srf_tmp = IMG_Load(config::get_font_name().data());
 
-    Uint32 bg_clr = SDL_MapRGB(font_surface_tmp->format, 0, 0, 0);
+    Uint32 img_clr = SDL_MapRGB(font_srf_tmp->format, 255, 255, 255);
 
-    for (int x = 0; x < font_surface_tmp->w; ++x)
+    for (int x = 0; x < font_srf_tmp->w; ++x)
     {
-        for (int y = 0; y < font_surface_tmp->h; ++y)
+        for (int y = 0; y < font_srf_tmp->h; ++y)
         {
-            font_pixel_data_[x][y] = get_pixel(font_surface_tmp, x, y) != bg_clr;
+            const bool IS_IMG_PX = get_px(*font_srf_tmp, x, y) == img_clr;
+
+            font_px_data_[x][y] = IS_IMG_PX;
         }
     }
 
-    SDL_FreeSurface(font_surface_tmp);
+    SDL_FreeSurface(font_srf_tmp);
 
     TRACE_FUNC_END;
 }
@@ -155,19 +181,21 @@ void load_tiles()
 {
     TRACE_FUNC_BEGIN;
 
-    SDL_Surface* tile_surface_tmp = IMG_Load(tiles_img_name.data());
+    SDL_Surface* tile_srf_tmp = IMG_Load(tiles_img_name.data());
 
-    Uint32 img_clr = SDL_MapRGB(tile_surface_tmp->format, 255, 255, 255);
+    Uint32 img_clr = SDL_MapRGB(tile_srf_tmp->format, 255, 255, 255);
 
-    for (int x = 0; x < tile_surface_tmp->w; ++x)
+    for (int x = 0; x < tile_srf_tmp->w; ++x)
     {
-        for (int y = 0; y < tile_surface_tmp->h; ++y)
+        for (int y = 0; y < tile_srf_tmp->h; ++y)
         {
-            tile_pixel_data_[x][y] = get_pixel(tile_surface_tmp, x, y) == img_clr;
+            const bool IS_IMG_PX = get_px(*tile_srf_tmp, x, y) == img_clr;
+
+            tile_px_data_[x][y] = IS_IMG_PX;
         }
     }
 
-    SDL_FreeSurface(tile_surface_tmp);
+    SDL_FreeSurface(tile_srf_tmp);
 
     TRACE_FUNC_END;
 }
@@ -181,7 +209,7 @@ void load_contour(const bool base[PIXEL_DATA_W][PIXEL_DATA_H])
         for (size_t px_y = 0; px_y < PIXEL_DATA_H; ++px_y)
         {
 
-            bool& cur_val  = contour_pixel_data_[px_x][px_y];
+            bool& cur_val  = contour_px_data_[px_x][px_y];
             cur_val        = false;
 
             //Only mark this pixel as contour if it's not marked on the base image
@@ -203,21 +231,23 @@ void load_contour(const bool base[PIXEL_DATA_W][PIXEL_DATA_H])
                             break;
                         }
                     }
-                    if (cur_val) {break;}
+
+                    if (cur_val)
+                    {
+                        break;
+                    }
                 }
             }
         }
     }
 }
 
-void put_pixels_on_scr(const bool pixel_data[PIXEL_DATA_W][PIXEL_DATA_H],
-                       const Pos& sheet_pos, const Pos& scr_pixel_pos, const Clr& clr)
+void put_pixels_on_scr(const bool px_data[PIXEL_DATA_W][PIXEL_DATA_H],
+                       const Pos& sheet_pos, const Pos& scr_px_pos, const Clr& clr)
 {
     if (is_inited())
     {
-        const int CLR_TO = SDL_MapRGB(screen_surface->format, clr.r, clr.g, clr.b);
-
-        SDL_LockSurface(screen_surface);
+        const int PX_CLR = SDL_MapRGB(screen_srf_->format, clr.r, clr.g, clr.b);
 
         const int CELL_W      = config::get_cell_w();
         const int CELL_H      = config::get_cell_h();
@@ -225,8 +255,8 @@ void put_pixels_on_scr(const bool pixel_data[PIXEL_DATA_W][PIXEL_DATA_H],
         const int SHEET_PX_Y0 = sheet_pos.y * CELL_H;
         const int SHEET_PX_X1 = SHEET_PX_X0 + CELL_W - 1;
         const int SHEET_PX_Y1 = SHEET_PX_Y0 + CELL_H - 1;
-        const int SCR_PX_X0   = scr_pixel_pos.x;
-        const int SCR_PX_Y0   = scr_pixel_pos.y;
+        const int SCR_PX_X0   = scr_px_pos.x;
+        const int SCR_PX_Y0   = scr_px_pos.y;
 
         int scr_px_x = SCR_PX_X0;
 
@@ -236,30 +266,28 @@ void put_pixels_on_scr(const bool pixel_data[PIXEL_DATA_W][PIXEL_DATA_H],
 
             for (int sheet_px_y = SHEET_PX_Y0; sheet_px_y <= SHEET_PX_Y1; sheet_px_y++)
             {
-                if (pixel_data[sheet_px_x][sheet_px_y])
+                if (px_data[sheet_px_x][sheet_px_y])
                 {
-                    put_pixel(screen_surface, scr_px_x, scr_px_y, CLR_TO);
+                    put_px(*screen_srf_, scr_px_x, scr_px_y, PX_CLR);
                 }
                 ++scr_px_y;
             }
             ++scr_px_x;
         }
-
-        SDL_UnlockSurface(screen_surface);
     }
 }
 
-void put_pixels_on_scr_for_tile(const Tile_id tile, const Pos& scr_pixel_pos, const Clr& clr)
+void put_pixels_on_scr_for_tile(const Tile_id tile, const Pos& scr_px_pos, const Clr& clr)
 {
-    put_pixels_on_scr(tile_pixel_data_, art::get_tile_pos(tile), scr_pixel_pos, clr);
+    put_pixels_on_scr(tile_px_data_, art::get_tile_pos(tile), scr_px_pos, clr);
 }
 
-void put_pixels_on_scr_for_glyph(const char GLYPH, const Pos& scr_pixel_pos, const Clr& clr)
+void put_pixels_on_scr_for_glyph(const char GLYPH, const Pos& scr_px_pos, const Clr& clr)
 {
-    put_pixels_on_scr(font_pixel_data_, art::get_glyph_pos(GLYPH), scr_pixel_pos, clr);
+    put_pixels_on_scr(font_px_data_, art::get_glyph_pos(GLYPH), scr_px_pos, clr);
 }
 
-Pos get_pixel_pos_for_cell_in_panel(const Panel panel, const Pos& pos)
+Pos get_px_pos_for_cell_in_panel(const Panel panel, const Pos& pos)
 {
     const Pos cell_dims(config::get_cell_w(), config::get_cell_h());
 
@@ -269,14 +297,15 @@ Pos get_pixel_pos_for_cell_in_panel(const Panel panel, const Pos& pos)
         return Pos(pos.x * cell_dims.x, pos.y * cell_dims.y);
 
     case Panel::map:
-        return (pos * cell_dims) + Pos(0, config::get_map_pixel_offset_h());
+        return (pos * cell_dims) + Pos(0, config::get_map_px_offset_h());
 
     case Panel::log:
         return pos * cell_dims;
 
     case Panel::char_lines:
-        return (pos * cell_dims) + Pos(0, config::get_char_lines_pixel_offset_h());
+        return (pos * cell_dims) + Pos(0, config::get_char_lines_px_offset_h());
     }
+
     return Pos();
 }
 
@@ -284,11 +313,13 @@ int get_lifebar_length(const Actor& actor)
 {
     const int ACTOR_HP = max(0, actor.get_hp());
     const int ACTOR_HP_MAX = actor.get_hp_max(true);
+
     if (ACTOR_HP < ACTOR_HP_MAX)
     {
         int HP_PERCENT = (ACTOR_HP * 100) / ACTOR_HP_MAX;
         return ((config::get_cell_w() - 2) * HP_PERCENT) / 100;
     }
+
     return -1;
 }
 
@@ -300,27 +331,27 @@ void draw_life_bar(const Pos& pos, const int LENGTH)
         const int W_GREEN   = LENGTH;
         const int W_BAR_TOT = cell_dims.x - 2;
         const int W_RED     = W_BAR_TOT - W_GREEN;
-        const Pos pixel_pos =
-            get_pixel_pos_for_cell_in_panel(Panel::map, pos + Pos(0, 1)) - Pos(0, 2);
-        const int X0_GREEN  = pixel_pos.x + 1;
+        const Pos px_pos    = get_px_pos_for_cell_in_panel(Panel::map, pos + Pos(0, 1)) - Pos(0, 2);
+        const int X0_GREEN  = px_pos.x + 1;
         const int X0_RED    = X0_GREEN + W_GREEN;
 
         if (W_GREEN > 0)
         {
-            draw_line_hor(Pos(X0_GREEN, pixel_pos.y), W_GREEN, clr_green_lgt);
+            draw_line_hor(Pos(X0_GREEN, px_pos.y), W_GREEN, clr_green_lgt);
         }
+
         if (W_RED > 0)
         {
-            draw_line_hor(Pos(X0_RED, pixel_pos.y), W_RED, clr_red_lgt);
+            draw_line_hor(Pos(X0_RED, px_pos.y), W_RED, clr_red_lgt);
         }
     }
 }
 
-void draw_excl_mark_at(const Pos& pixel_pos)
+void draw_excl_mark_at(const Pos& px_pos)
 {
-    draw_rectangle_solid(pixel_pos,  Pos(3, 12),     clr_black);
-    draw_line_ver(pixel_pos +        Pos(1,  1), 6,  clr_magenta_lgt);
-    draw_line_ver(pixel_pos +        Pos(1,  9), 2,  clr_magenta_lgt);
+    draw_rectangle_solid(px_pos, Pos(3, 12), clr_black);
+    draw_line_ver(px_pos + Pos(1,  1), 6, clr_magenta_lgt);
+    draw_line_ver(px_pos + Pos(1,  9), 2, clr_magenta_lgt);
 }
 
 void draw_player_shock_excl_marks()
@@ -331,32 +362,32 @@ void draw_player_shock_excl_marks()
     if (NR_EXCL > 0)
     {
         const Pos& player_pos = map::player->pos;
-        const Pos pixel_pos_right = get_pixel_pos_for_cell_in_panel(Panel::map, player_pos);
+        const Pos px_pos_right = get_px_pos_for_cell_in_panel(Panel::map, player_pos);
 
         for (int i = 0; i < NR_EXCL; ++i)
         {
-            draw_excl_mark_at(pixel_pos_right + Pos(i * 3, 0));
+            draw_excl_mark_at(px_pos_right + Pos(i * 3, 0));
         }
     }
 }
 
-void draw_glyph_at_pixel(const char GLYPH, const Pos& pixel_pos, const Clr& clr,
-                         const bool DRAW_BG_CLR, const Clr& bg_clr = clr_black)
+void draw_glyph_at_px(const char GLYPH, const Pos& px_pos, const Clr& clr,
+                      const bool DRAW_BG_CLR, const Clr& bg_clr = clr_black)
 {
     if (DRAW_BG_CLR)
     {
         const Pos cell_dims(config::get_cell_w(), config::get_cell_h());
 
-        draw_rectangle_solid(pixel_pos, cell_dims, bg_clr);
+        draw_rectangle_solid(px_pos, cell_dims, bg_clr);
 
         //Only draw contour if neither the foreground or background is black
         if (!utils::is_clr_eq(clr, clr_black) && !utils::is_clr_eq(bg_clr, clr_black))
         {
-            put_pixels_on_scr(contour_pixel_data_, art::get_glyph_pos(GLYPH), pixel_pos, clr_black);
+            put_pixels_on_scr(contour_px_data_, art::get_glyph_pos(GLYPH), px_pos, clr_black);
         }
     }
 
-    put_pixels_on_scr_for_glyph(GLYPH, pixel_pos, clr);
+    put_pixels_on_scr_for_glyph(GLYPH, px_pos, clr);
 }
 
 } //Namespace
@@ -370,23 +401,63 @@ void init()
 
     const string title = "IA " + game_version_str;
 
-    SDL_WM_SetCaption(title.data(), nullptr);
+    const int SCR_PX_W = config::get_screen_px_w();
+    const int SCR_PX_H = config::get_screen_px_h();
 
-    const int W = config::get_screen_pixel_w();
-    const int H = config::get_screen_pixel_h();
     if (config::is_fullscreen())
     {
-        screen_surface = SDL_SetVideoMode(W, H, SCREEN_BPP,
-                                          SDL_SWSURFACE | SDL_FULLSCREEN);
-    }
-    if (!config::is_fullscreen() || !screen_surface)
-    {
-        screen_surface = SDL_SetVideoMode(W, H, SCREEN_BPP, SDL_SWSURFACE);
+        sdl_window_ = SDL_CreateWindow(title.c_str(),
+                                       SDL_WINDOWPOS_UNDEFINED,
+                                       SDL_WINDOWPOS_UNDEFINED,
+                                       SCR_PX_W, SCR_PX_H,
+                                       SDL_WINDOW_FULLSCREEN_DESKTOP);
     }
 
-    if (!screen_surface)
+    if (!config::is_fullscreen() || !sdl_window_)
+    {
+        sdl_window_ = SDL_CreateWindow(title.c_str(),
+                                       SDL_WINDOWPOS_UNDEFINED,
+                                       SDL_WINDOWPOS_UNDEFINED,
+                                       SCR_PX_W, SCR_PX_H,
+                                       SDL_WINDOW_SHOWN);
+    }
+
+    if (!sdl_window_)
+    {
+        TRACE << "Failed to create window" << endl;
+        assert(false);
+    }
+
+    sdl_renderer_ = SDL_CreateRenderer(sdl_window_, -1, SDL_RENDERER_ACCELERATED);
+
+    if (!sdl_renderer_)
+    {
+        TRACE << "Failed to create SDL renderer" << endl;
+        assert(false);
+    }
+
+    screen_srf_ = SDL_CreateRGBSurface(0,
+                                       SCR_PX_W, SCR_PX_H,
+                                       SCREEN_BPP,
+                                       0x00FF0000,
+                                       0x0000FF00,
+                                       0x000000FF,
+                                       0xFF000000);
+
+    if (!screen_srf_)
     {
         TRACE << "Failed to create screen surface" << endl;
+        assert(false);
+    }
+
+    screen_texture_ = SDL_CreateTexture(sdl_renderer_,
+                                        SDL_PIXELFORMAT_ARGB8888,
+                                        SDL_TEXTUREACCESS_STREAMING,
+                                        SCR_PX_W, SCR_PX_H);
+
+    if (!screen_texture_)
+    {
+        TRACE << "Failed to create screen texture" << endl;
         assert(false);
     }
 
@@ -398,7 +469,7 @@ void init()
         load_main_menu_logo();
     }
 
-    load_contour(config::is_tiles_mode() ? tile_pixel_data_ : font_pixel_data_);
+    load_contour(config::is_tiles_mode() ? tile_px_data_ : font_px_data_);
 
     TRACE_FUNC_END;
 }
@@ -407,51 +478,80 @@ void cleanup()
 {
     TRACE_FUNC_BEGIN;
 
-    if (screen_surface)
+    if (sdl_renderer_)
     {
-        SDL_FreeSurface(screen_surface);
-        screen_surface = nullptr;
+        SDL_DestroyRenderer(sdl_renderer_);
+        sdl_renderer_ = nullptr;
     }
 
-    if (main_menu_logo_surface)
+    if (sdl_window_)
     {
-        SDL_FreeSurface(main_menu_logo_surface);
-        main_menu_logo_surface = nullptr;
+        SDL_DestroyWindow(sdl_window_);
+        sdl_window_ = nullptr;
+    }
+
+    if (screen_texture_)
+    {
+        SDL_DestroyTexture(screen_texture_);
+        screen_texture_ = nullptr;
+    }
+
+    if (screen_srf_)
+    {
+        SDL_FreeSurface(screen_srf_);
+        screen_srf_ = nullptr;
+    }
+
+    if (main_menu_logo_srf_)
+    {
+        SDL_FreeSurface(main_menu_logo_srf_);
+        main_menu_logo_srf_ = nullptr;
     }
 
     TRACE_FUNC_END;
 }
 
+void on_toggle_fullscreen()
+{
+    if (config::is_fullscreen())
+    {
+        SDL_SetWindowFullscreen(sdl_window_, SDL_WINDOW_FULLSCREEN_DESKTOP);
+    }
+    else
+    {
+        SDL_SetWindowFullscreen(sdl_window_, SDL_WINDOW_SHOWN);
+    }
+
+    update_screen();
+}
+
 void update_screen()
 {
-    if (is_inited()) {SDL_Flip(screen_surface);}
+    if (is_inited())
+    {
+        SDL_UpdateTexture(screen_texture_, nullptr, screen_srf_->pixels, screen_srf_->pitch);
+        SDL_RenderCopy(sdl_renderer_, screen_texture_, nullptr, nullptr);
+        SDL_RenderPresent(sdl_renderer_);
+    }
 }
 
 void clear_screen()
 {
     if (is_inited())
     {
-        SDL_FillRect(screen_surface, nullptr,
-                     SDL_MapRGB(screen_surface->format, 0, 0, 0));
-    }
-}
-
-void apply_surface(const Pos& pixel_pos, SDL_Surface* const src, SDL_Rect* clip)
-{
-    if (is_inited())
-    {
-        SDL_Rect offset;
-        offset.x = pixel_pos.x;
-        offset.y = pixel_pos.y;
-        SDL_BlitSurface(src, clip, screen_surface, &offset);
+        SDL_FillRect(screen_srf_, nullptr, SDL_MapRGB(screen_srf_->format, 0, 0, 0));
     }
 }
 
 void draw_main_menu_logo(const int Y_POS)
 {
-    const Pos pos((config::get_screen_pixel_w() - main_menu_logo_surface->w) / 2,
-                  config::get_cell_h() * Y_POS);
-    apply_surface(pos, main_menu_logo_surface);
+    const int SCR_PX_W  = config::get_screen_px_w();
+    const int LOGO_PX_H = main_menu_logo_srf_->w;
+    const int CELL_PX_H = config::get_cell_h();
+
+    const Pos px_pos((SCR_PX_W - LOGO_PX_H) / 2, CELL_PX_H * Y_POS);
+
+    blit_surface(*main_menu_logo_srf_, px_pos);
 }
 
 void draw_marker(const Pos& p, const vector<Pos>& trail, const int EFFECTIVE_RANGE)
@@ -474,6 +574,7 @@ void draw_marker(const Pos& p, const vector<Pos>& trail, const int EFFECTIVE_RAN
                     clr = clr_orange;
                 }
             }
+
             if (config::is_tiles_mode())
             {
                 draw_tile(Tile_id::aim_marker_trail, Panel::map, pos, clr, clr_black);
@@ -515,6 +616,7 @@ void draw_blast_at_field(const Pos& center_pos, const int RADIUS,
                          const Clr& clr_outer)
 {
     TRACE_FUNC_BEGIN;
+
     if (is_inited())
     {
         draw_map_and_interface();
@@ -540,6 +642,7 @@ void draw_blast_at_field(const Pos& center_pos, const int RADIUS,
                                           pos.y == center_pos.y - RADIUS ||
                                           pos.y == center_pos.y + RADIUS;
                     const Clr clr = IS_OUTER ? clr_outer : clr_inner;
+
                     if (config::is_tiles_mode())
                     {
                         draw_tile(Tile_id::blast1, Panel::map, pos, clr, clr_black);
@@ -548,11 +651,14 @@ void draw_blast_at_field(const Pos& center_pos, const int RADIUS,
                     {
                         draw_glyph('*', Panel::map, pos, clr, true, clr_black);
                     }
+
                     is_any_blast_rendered = true;
                 }
             }
         }
+
         update_screen();
+
         if (is_any_blast_rendered) {sdl_wrapper::sleep(config::get_delay_explosion() / 2);}
 
         for (
@@ -572,6 +678,7 @@ void draw_blast_at_field(const Pos& center_pos, const int RADIUS,
                                           pos.y == center_pos.y - RADIUS ||
                                           pos.y == center_pos.y + RADIUS;
                     const Clr clr = IS_OUTER ? clr_outer : clr_inner;
+
                     if (config::is_tiles_mode())
                     {
                         draw_tile(Tile_id::blast2, Panel::map, pos, clr, clr_black);
@@ -583,10 +690,14 @@ void draw_blast_at_field(const Pos& center_pos, const int RADIUS,
                 }
             }
         }
+
         update_screen();
+
         if (is_any_blast_rendered) {sdl_wrapper::sleep(config::get_delay_explosion() / 2);}
+
         draw_map_and_interface();
     }
+
     TRACE_FUNC_END;
 }
 
@@ -609,6 +720,7 @@ void draw_blast_at_cells(const vector<Pos>& positions, const Clr& clr)
                 draw_glyph('*', Panel::map, pos, clr, true, clr_black);
             }
         }
+
         update_screen();
         sdl_wrapper::sleep(config::get_delay_explosion() / 2);
 
@@ -623,10 +735,12 @@ void draw_blast_at_cells(const vector<Pos>& positions, const Clr& clr)
                 draw_glyph('*', Panel::map, pos, clr, true, clr_black);
             }
         }
+
         update_screen();
         sdl_wrapper::sleep(config::get_delay_explosion() / 2);
         draw_map_and_interface();
     }
+
     TRACE_FUNC_END;
 }
 
@@ -656,10 +770,12 @@ void draw_blast_at_seen_actors(const std::vector<Actor*>& actors, const Clr& clr
     if (is_inited())
     {
         vector<Pos> positions;
+
         for (Actor* const actor : actors)
         {
             positions.push_back(actor->pos);
         }
+
         draw_blast_at_seen_cells(positions, clr);
     }
 }
@@ -669,17 +785,17 @@ void draw_tile(const Tile_id tile, const Panel panel, const Pos& pos, const Clr&
 {
     if (is_inited())
     {
-        const Pos pixel_pos = get_pixel_pos_for_cell_in_panel(panel, pos);
+        const Pos px_pos = get_px_pos_for_cell_in_panel(panel, pos);
         const Pos cell_dims(config::get_cell_w(), config::get_cell_h());
 
-        draw_rectangle_solid(pixel_pos, cell_dims, bg_clr);
+        draw_rectangle_solid(px_pos, cell_dims, bg_clr);
 
         if (!utils::is_clr_eq(bg_clr, clr_black))
         {
-            put_pixels_on_scr(contour_pixel_data_, art::get_tile_pos(tile), pixel_pos, clr_black);
+            put_pixels_on_scr(contour_px_data_, art::get_tile_pos(tile), px_pos, clr_black);
         }
 
-        put_pixels_on_scr_for_tile(tile, pixel_pos, clr);
+        put_pixels_on_scr_for_tile(tile, px_pos, clr);
     }
 }
 
@@ -688,8 +804,8 @@ void draw_glyph(const char GLYPH, const Panel panel, const Pos& pos, const Clr& 
 {
     if (is_inited())
     {
-        const Pos pixel_pos = get_pixel_pos_for_cell_in_panel(panel, pos);
-        draw_glyph_at_pixel(GLYPH, pixel_pos, clr, DRAW_BG_CLR, bg_clr);
+        const Pos px_pos = get_px_pos_for_cell_in_panel(panel, pos);
+        draw_glyph_at_px(GLYPH, px_pos, clr, DRAW_BG_CLR, bg_clr);
     }
 }
 
@@ -698,25 +814,26 @@ void draw_text(const string& str, const Panel panel, const Pos& pos, const Clr& 
 {
     if (is_inited())
     {
-        Pos pixel_pos = get_pixel_pos_for_cell_in_panel(panel, pos);
+        Pos px_pos = get_px_pos_for_cell_in_panel(panel, pos);
 
-        if (pixel_pos.y < 0 || pixel_pos.y >= config::get_screen_pixel_h())
+        if (px_pos.y < 0 || px_pos.y >= config::get_screen_px_h())
         {
             return;
         }
 
         const Pos cell_dims(config::get_cell_w(), config::get_cell_h());
         const int LEN = str.size();
-        draw_rectangle_solid(pixel_pos, Pos(cell_dims.x * LEN, cell_dims.y), bg_clr);
+        draw_rectangle_solid(px_pos, Pos(cell_dims.x * LEN, cell_dims.y), bg_clr);
 
         for (int i = 0; i < LEN; ++i)
         {
-            if (pixel_pos.x < 0 || pixel_pos.x >= config::get_screen_pixel_w())
+            if (px_pos.x < 0 || px_pos.x >= config::get_screen_px_w())
             {
                 return;
             }
-            draw_glyph_at_pixel(str[i], pixel_pos, clr, false);
-            pixel_pos.x += cell_dims.x;
+
+            draw_glyph_at_px(str[i], px_pos, clr, false);
+            px_pos.x += cell_dims.x;
         }
     }
 }
@@ -731,57 +848,59 @@ int draw_text_centered(const string& str, const Panel panel, const Pos& pos,
 
     const Pos cell_dims(config::get_cell_w(), config::get_cell_h());
 
-    Pos pixel_pos = get_pixel_pos_for_cell_in_panel(panel, Pos(X_POS_LEFT, pos.y));
+    Pos px_pos = get_px_pos_for_cell_in_panel(panel, Pos(X_POS_LEFT, pos.y));
 
     if (IS_PIXEL_POS_ADJ_ALLOWED)
     {
         const int PIXEL_X_ADJ = LEN_HALF * 2 == LEN ? cell_dims.x / 2 : 0;
-        pixel_pos += Pos(PIXEL_X_ADJ, 0);
+        px_pos += Pos(PIXEL_X_ADJ, 0);
     }
 
     const int W_TOT_PIXEL = LEN * cell_dims.x;
 
     SDL_Rect sdl_rect =
     {
-        (Sint16)pixel_pos.x, (Sint16)pixel_pos.y,
+        (Sint16)px_pos.x, (Sint16)px_pos.y,
         (Uint16)W_TOT_PIXEL, (Uint16)cell_dims.y
     };
-    SDL_FillRect(screen_surface, &sdl_rect, SDL_MapRGB(screen_surface->format,
-                 bg_clr.r, bg_clr.g, bg_clr.b));
+
+    SDL_FillRect(screen_srf_, &sdl_rect, SDL_MapRGB(screen_srf_->format, bg_clr.r, bg_clr.g, bg_clr.b));
 
     for (int i = 0; i < LEN; ++i)
     {
-        if (pixel_pos.x < 0 || pixel_pos.x >= config::get_screen_pixel_w())
+        if (px_pos.x < 0 || px_pos.x >= config::get_screen_px_w())
         {
             return X_POS_LEFT;
         }
-        draw_glyph_at_pixel(str[i], pixel_pos, clr, false, bg_clr);
-        pixel_pos.x += cell_dims.x;
+
+        draw_glyph_at_px(str[i], px_pos, clr, false, bg_clr);
+        px_pos.x += cell_dims.x;
     }
+
     return X_POS_LEFT;
 }
 
 void cover_panel(const Panel panel)
 {
-    const int SCREEN_PIXEL_W = config::get_screen_pixel_w();
+    const int SCREEN_PIXEL_W = config::get_screen_px_w();
 
     switch (panel)
     {
     case Panel::char_lines:
     {
-        const Pos pixel_pos = get_pixel_pos_for_cell_in_panel(panel, Pos(0, 0));
-        cover_area_pixel(pixel_pos, Pos(SCREEN_PIXEL_W, config::get_char_lines_pixel_h()));
+        const Pos px_pos = get_px_pos_for_cell_in_panel(panel, Pos(0, 0));
+        cover_area_px(px_pos, Pos(SCREEN_PIXEL_W, config::get_char_lines_px_h()));
     } break;
 
     case Panel::log:
     {
-        cover_area_pixel(Pos(0, 0), Pos(SCREEN_PIXEL_W, config::get_log_pixel_h()));
+        cover_area_px(Pos(0, 0), Pos(SCREEN_PIXEL_W, config::get_log_px_h()));
     } break;
 
     case Panel::map:
     {
-        const Pos pixel_pos = get_pixel_pos_for_cell_in_panel(panel, Pos(0, 0));
-        cover_area_pixel(pixel_pos, Pos(SCREEN_PIXEL_W, config::get_map_pixel_h()));
+        const Pos px_pos = get_px_pos_for_cell_in_panel(panel, Pos(0, 0));
+        cover_area_px(px_pos, Pos(SCREEN_PIXEL_W, config::get_map_px_h()));
     } break;
 
     case Panel::screen: {clear_screen();} break;
@@ -795,43 +914,44 @@ void cover_area(const Panel panel, const Rect& area)
 
 void cover_area(const Panel panel, const Pos& pos, const Pos& dims)
 {
-    const Pos pixel_pos = get_pixel_pos_for_cell_in_panel(panel, pos);
+    const Pos px_pos = get_px_pos_for_cell_in_panel(panel, pos);
     const Pos cell_dims(config::get_cell_w(), config::get_cell_h());
-    cover_area_pixel(pixel_pos, dims * cell_dims);
+    cover_area_px(px_pos, dims * cell_dims);
 }
 
-void cover_area_pixel(const Pos& pixel_pos, const Pos& pixel_dims)
+void cover_area_px(const Pos& px_pos, const Pos& px_dims)
 {
-    draw_rectangle_solid(pixel_pos, pixel_dims, clr_black);
+    draw_rectangle_solid(px_pos, px_dims, clr_black);
 }
 
 void cover_cell_in_map(const Pos& pos)
 {
     const Pos cell_dims(config::get_cell_w(), config::get_cell_h());
-    Pos pixel_pos = get_pixel_pos_for_cell_in_panel(Panel::map, pos);
-    cover_area_pixel(pixel_pos, cell_dims);
+    Pos px_pos = get_px_pos_for_cell_in_panel(Panel::map, pos);
+    cover_area_px(px_pos, cell_dims);
 }
 
-void draw_line_hor(const Pos& pixel_pos, const int W, const Clr& clr)
+void draw_line_hor(const Pos& px_pos, const int W, const Clr& clr)
 {
-    draw_rectangle_solid(pixel_pos, Pos(W, 2), clr);
+    draw_rectangle_solid(px_pos, Pos(W, 2), clr);
 }
 
-void draw_line_ver(const Pos& pixel_pos, const int H, const Clr& clr)
+void draw_line_ver(const Pos& px_pos, const int H, const Clr& clr)
 {
-    draw_rectangle_solid(pixel_pos, Pos(1, H), clr);
+    draw_rectangle_solid(px_pos, Pos(1, H), clr);
 }
 
-void draw_rectangle_solid(const Pos& pixel_pos, const Pos& pixel_dims, const Clr& clr)
+void draw_rectangle_solid(const Pos& px_pos, const Pos& px_dims, const Clr& clr)
 {
     if (is_inited())
     {
-        SDL_Rect sdl_rect = {(Sint16)pixel_pos.x, (Sint16)pixel_pos.y,
-                             (Uint16)pixel_dims.x, (Uint16)pixel_dims.y
-                            };
+        SDL_Rect sdl_rect =
+        {
+            (Sint16)px_pos.x, (Sint16)px_pos.y,
+            (Uint16)px_dims.x, (Uint16)px_dims.y
+        };
 
-        SDL_FillRect(screen_surface, &sdl_rect,
-                     SDL_MapRGB(screen_surface->format, clr.r, clr.g, clr.b));
+        SDL_FillRect(screen_srf_, &sdl_rect, SDL_MapRGB(screen_srf_->format, clr.r, clr.g, clr.b));
     }
 }
 
@@ -846,6 +966,7 @@ void draw_projectiles(vector<Projectile*>& projectiles,
         if (!p->is_done_rendering && p->is_visible_to_player)
         {
             cover_cell_in_map(p->pos);
+
             if (config::is_tiles_mode())
             {
                 if (p->tile != Tile_id::empty)
@@ -863,16 +984,19 @@ void draw_projectiles(vector<Projectile*>& projectiles,
     update_screen();
 }
 
-void draw_popup_box(const Rect& border, const Panel panel, const Clr& clr,
-                    const bool COVER_AREA)
+void draw_popup_box(const Rect& border, const Panel panel, const Clr& clr, const bool COVER_AREA)
 {
-    if (COVER_AREA) {cover_area(panel, border);}
+    if (COVER_AREA)
+    {
+        cover_area(panel, border);
+    }
 
     const bool IS_TILES = config::is_tiles_mode();
 
     //Vertical bars
     const int Y0_VERT = border.p0.y + 1;
     const int Y1_VERT = border.p1.y - 1;
+
     for (int y = Y0_VERT; y <= Y1_VERT; ++y)
     {
         if (IS_TILES)
@@ -890,6 +1014,7 @@ void draw_popup_box(const Rect& border, const Panel panel, const Clr& clr,
     //Horizontal bars
     const int X0_VERT = border.p0.x + 1;
     const int X1_VERT = border.p1.x - 1;
+
     for (int x = X0_VERT; x <= X1_VERT; ++x)
     {
         if (IS_TILES)
@@ -943,11 +1068,13 @@ void draw_descr_box(const std::vector<Str_and_clr>& lines)
     {
         vector<string> formatted;
         text_format::line_to_lines(line.str, MAX_W, formatted);
+
         for (const auto& line_in_formatted : formatted)
         {
             draw_text(line_in_formatted, Panel::screen, p, line.clr);
             ++p.y;
         }
+
         ++p.y;
     }
 }
@@ -999,12 +1126,14 @@ void draw_map()
                     gore_tile  = f->get_gore_tile();
                     gore_glyph = f->get_gore_glyph();
                 }
+
                 if (gore_tile == Tile_id::empty)
                 {
                     cur_drw->tile  = f->get_tile();
                     cur_drw->glyph = f->get_glyph();
                     cur_drw->clr   = f->get_clr();
                     const Clr& feature_clr_bg = f->get_clr_bg();
+
                     if (!utils::is_clr_eq(feature_clr_bg, clr_black))
                     {
                         cur_drw->clr_bg = feature_clr_bg;
@@ -1016,6 +1145,7 @@ void draw_map()
                     cur_drw->glyph = gore_glyph;
                     cur_drw->clr   = clr_red;
                 }
+
                 if (map::cells[x][y].is_lit && f->can_move_cmn())
                 {
                     cur_drw->is_marked_lit = true;
@@ -1028,6 +1158,7 @@ void draw_map()
     for (Actor* actor : game_time::actors_)
     {
         const Pos& p(actor->pos);
+
         if (
             actor->is_corpse()                       &&
             actor->get_data().glyph != ' '           &&
@@ -1046,10 +1177,12 @@ void draw_map()
         for (int y = 0; y < MAP_H; ++y)
         {
             cur_drw = &render_array[x][y];
+
             if (map::cells[x][y].is_seen_by_player)
             {
                 //---------------- INSERT ITEMS INTO ARRAY
                 const Item* const item = map::cells[x][y].item;
+
                 if (item)
                 {
                     cur_drw->clr   = item->get_clr();
@@ -1077,6 +1210,7 @@ void draw_map()
         const Pos& p            = mob->get_pos();
         const Tile_id  mob_tile   = mob->get_tile();
         const char    mob_glyph  = mob->get_glyph();
+
         if (
             mob_tile != Tile_id::empty && mob_glyph != ' ' &&
             map::cells[p.x][p.y].is_seen_by_player)
@@ -1198,15 +1332,18 @@ void draw_map()
                     const bool IS_TILE_WALL = cell.is_seen_by_player ?
                                               Wall::is_tile_any_wall_top(tile_seen) :
                                               Wall::is_tile_any_wall_top(tile_mem);
+
                     if (IS_TILE_WALL)
                     {
                         const auto* const f   = cell.rigid;
                         const auto feature_id  = f->get_id();
                         bool is_hidden_door     = false;
+
                         if (feature_id == Feature_id::door)
                         {
                             is_hidden_door = static_cast<const Door*>(f)->is_secret();
                         }
+
                         if (
                             y < MAP_H - 1 &&
                             (feature_id == Feature_id::wall || is_hidden_door))
@@ -1264,6 +1401,7 @@ void draw_map()
                             else //Cell below is not explored
                             {
                                 const Rigid* wall = nullptr;
+
                                 if (is_hidden_door)
                                 {
                                     wall = static_cast<const Door*>(f)->get_mimic();
@@ -1272,6 +1410,7 @@ void draw_map()
                                 {
                                     wall = f;
                                 }
+
                                 tmp_drw.tile =
                                     static_cast<const Wall*>(wall)->get_front_wall_tile();
                             }
@@ -1312,10 +1451,12 @@ void draw_map()
     bool        is_ranged_wpn = false;
     const Pos&  pos         = map::player->pos;
     Item*       item        = map::player->get_inv().get_item_in_slot(Slot_id::wielded);
+
     if (item)
     {
         is_ranged_wpn = item->get_data().ranged.is_ranged_wpn;
     }
+
     if (IS_TILES)
     {
         const Tile_id tile = is_ranged_wpn ? Tile_id::playerFirearm : Tile_id::player_melee;
@@ -1332,6 +1473,7 @@ void draw_map()
     {
         draw_life_bar(pos, LIFE_BAR_LENGTH);
     }
+
     draw_player_shock_excl_marks();
 }
 

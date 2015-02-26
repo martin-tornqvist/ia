@@ -12,18 +12,18 @@ class Msg
 {
 public:
     Msg(const std::string& text, const Clr& clr, const int X_POS) :
-        clr_            (clr),
-        x_pos_          (X_POS),
-        str_            (text),
-        repeats_str_    (""),
-        nr_             (1) {}
+        clr_(clr),
+        x_pos_(X_POS),
+        str_(text),
+        repeats_str_(""),
+        nr_(1) {}
 
     Msg() :
-        clr_            (clr_white),
-        x_pos_          (0),
-        str_            (""),
-        repeats_str_    (""),
-        nr_             (1) {}
+        clr_(clr_white),
+        x_pos_(0),
+        str_(""),
+        repeats_str_(""),
+        nr_(1) {}
 
     void get_str_with_repeats(std::string& str_ref) const
     {

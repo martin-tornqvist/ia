@@ -25,14 +25,14 @@
 				</Linker>
 				<ExtraCommands>
 					<Add after='cmd /c xcopy /e /y &quot;$(PROJECT_DIR)..\assets\*&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\SDL.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\SDL_image.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\libpng15-15.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\zlib1.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\libogg-0.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\libvorbis-0.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\libvorbisfile-3.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\SDL_mixer.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\SDL2.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\SDL2_image.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\libpng16-16.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\zlib1.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\libogg-0.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\libvorbis-0.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\libvorbisfile-3.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\SDL2_mixer.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
@@ -43,6 +43,7 @@
 				<Option object_output="../test/obj/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="1" />
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
@@ -52,12 +53,13 @@
 				</Compiler>
 				<Linker>
 					<Add option="-pg -lgmon" />
+					<Add option="-lmingw32" />
 					<Add library="..\test\UnitTest++\bin\libUnitTest++.a" />
 				</Linker>
 				<ExtraCommands>
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\SDL.dll&quot; &quot;$(PROJECT_DIR)..\test\bin\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\SDL_image.dll&quot; &quot;$(PROJECT_DIR)..\test\bin\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\SDL_mixer.dll&quot; &quot;$(PROJECT_DIR)..\test\bin\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\SD2L.dll&quot; &quot;$(PROJECT_DIR)..\test\bin\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\SDL2_image.dll&quot; &quot;$(PROJECT_DIR)..\test\bin\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\SDL2_mixer.dll&quot; &quot;$(PROJECT_DIR)..\test\bin\&quot;' />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
@@ -79,14 +81,14 @@
 				</Linker>
 				<ExtraCommands>
 					<Add after='cmd /c xcopy /e /y &quot;$(PROJECT_DIR)..\assets\*&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\SDL.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\SDL_image.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\libpng15-15.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\zlib1.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\libogg-0.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\libvorbis-0.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\libvorbisfile-3.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL\SDL_mixer.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\SDL2.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\SDL2_image.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\libpng16-16.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\zlib1.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\libogg-0.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\libvorbis-0.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\libvorbisfile-3.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\SDL2_mixer.dll&quot; &quot;$(PROJECT_DIR)..\target\release\&quot;' />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
@@ -113,11 +115,11 @@
 			<Add option="-Wno-long-long" />
 			<Add option="-fno-rtti" />
 			<Add directory="../include" />
-			<Add directory="../API/SDL/include" />
+			<Add directory="../API/SDL2/include" />
 		</Compiler>
 		<Linker>
-			<Add option="-lmingw32 -lSDLmain -lSDL -lSDL_image -lSDL_mixer" />
-			<Add directory="../API/SDL/lib" />
+			<Add option="-lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer" />
+			<Add directory="../API/SDL2/lib" />
 		</Linker>
 		<Unit filename="../icon/resource.rc">
 			<Option compilerVar="WINDRES" />

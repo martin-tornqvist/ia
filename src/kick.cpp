@@ -31,9 +31,11 @@ void player_kick()
     {
         //Kick living actor?
         Actor* living_actor = utils::get_actor_at_pos(kick_pos, Actor_state::alive);
+
         if (living_actor)
         {
             TRACE << "Actor found at kick pos, attempting to kick actor" << endl;
+
             if (map::player->get_prop_handler().allow_attack_melee(true))
             {
                 TRACE << "Player is allowed to do melee attack" << endl;
@@ -43,12 +45,14 @@ void player_kick()
                 TRACE << "Player can see actor" << endl;
                 map::player->kick_mon(*living_actor);
             }
+
             TRACE_FUNC_END;
             return;
         }
 
         //Kick corpse?
         Actor* dead_actor = utils::get_actor_at_pos(kick_pos, Actor_state::corpse);
+
         if (dead_actor)
         {
             const bool  IS_SEEING_CELL  = map::cells[kick_pos.x][kick_pos.y].is_seen_by_player;
@@ -74,6 +78,7 @@ void player_kick()
         auto* const f = map::cells[kick_pos.x][kick_pos.y].rigid;
         f->hit(Dmg_type::physical, Dmg_method::kick, map::player);
     }
+
     TRACE_FUNC_END;
 }
 

@@ -80,8 +80,10 @@ void write_file(const vector<string>& lines)
         for (size_t i = 0; i < lines.size(); ++i)
         {
             file << lines[i];
+
             if (i != lines.size() - 1) {file << endl;}
         }
+
         file.close();
     }
 }
@@ -92,9 +94,11 @@ void read_file(vector<string>& lines)
 
     string cur_line;
     ifstream file("data/save");
+
     if (file.is_open())
     {
         while (getline(file, cur_line)) {lines.push_back(cur_line);}
+
         file.close();
 
         vector<string> empty_lines;
@@ -126,6 +130,7 @@ void load()
 bool is_save_available()
 {
     ifstream file("data/save");
+
     if (file.good())
     {
         const bool IS_EMPTY = file.peek() == std::ifstream::traits_type::eof();

@@ -20,7 +20,7 @@ void replace_all(const std::string& line, const std::string& from, const std::st
 
 void first_to_lower(std::string& str);
 void first_to_upper(std::string& str);
-void all_to_upper  (std::string& str);
+void all_to_upper(std::string& str);
 
 } //Text_format
 

@@ -18,30 +18,30 @@
 using namespace std;
 
 Item_data_t::Item_data_t(const Item_id id_) :
-    id                                  (id_),
-    type                                (Item_type::general),
-    value                               (Item_value::normal),
-    weight                              (Item_weight::none),
-    allow_spawn                         (true),
-    spawn_std_range                     (Range(1, INT_MAX)),
-    max_stack_at_spawn                  (1),
-    chance_to_incl_in_floor_spawn_list  (100),
-    is_stackable                        (true),
-    is_identified                       (true),
-    is_tried                            (false),
-    base_name                           (),
-    glyph                               ('X'),
-    clr                                 (clr_white),
-    tile                                (Tile_id::empty),
-    main_att_mode                       (Main_att_mode::none),
-    spell_cast_from_scroll              (Spell_id::END),
-    land_on_hard_snd_msg                ("I hear a thudding sound."),
-    land_on_hard_sfx                    (),
-    shock_while_in_backpack             (0),
-    shock_while_equipped                (0),
-    melee                               (Item_melee_data()),
-    ranged                              (Item_ranged_data()),
-    armor                               (Item_armor_data())
+    id(id_),
+    type(Item_type::general),
+    value(Item_value::normal),
+    weight(Item_weight::none),
+    allow_spawn(true),
+    spawn_std_range(Range(1, INT_MAX)),
+    max_stack_at_spawn(1),
+    chance_to_incl_in_floor_spawn_list(100),
+    is_stackable(true),
+    is_identified(true),
+    is_tried(false),
+    base_name(),
+    glyph('X'),
+    clr(clr_white),
+    tile(Tile_id::empty),
+    main_att_mode(Main_att_mode::none),
+    spell_cast_from_scroll(Spell_id::END),
+    land_on_hard_snd_msg("I hear a thudding sound."),
+    land_on_hard_sfx(),
+    shock_while_in_backpack(0),
+    shock_while_equipped(0),
+    melee(Item_melee_data()),
+    ranged(Item_ranged_data()),
+    armor(Item_armor_data())
 {
     for (int i = 0; i < int(Ability_id::END); ++i)
     {
@@ -54,17 +54,17 @@ Item_data_t::Item_data_t(const Item_id id_) :
 }
 
 Item_data_t::Item_melee_data::Item_melee_data() :
-    is_melee_wpn                        (false),
-    dmg                                 (pair<int, int>(0, 0)),
-    hit_chance_mod                      (0),
-    att_msgs                            (Item_att_msgs()),
-    prop_applied                        (nullptr),
-    dmg_type                            (Dmg_type::physical),
-    knocks_back                         (false),
-    hit_small_sfx                       (Sfx_id::END),
-    hit_medium_sfx                      (Sfx_id::END),
-    hit_hard_sfx                        (Sfx_id::END),
-    miss_sfx                            (Sfx_id::END) {}
+    is_melee_wpn(false),
+    dmg(pair<int, int>(0, 0)),
+    hit_chance_mod(0),
+    att_msgs(Item_att_msgs()),
+    prop_applied(nullptr),
+    dmg_type(Dmg_type::physical),
+    knocks_back(false),
+    hit_small_sfx(Sfx_id::END),
+    hit_medium_sfx(Sfx_id::END),
+    hit_hard_sfx(Sfx_id::END),
+    miss_sfx(Sfx_id::END) {}
 
 Item_data_t::Item_melee_data::~Item_melee_data()
 {
@@ -72,33 +72,33 @@ Item_data_t::Item_melee_data::~Item_melee_data()
 }
 
 Item_data_t::Item_ranged_data::Item_ranged_data() :
-    is_ranged_wpn                       (false),
-    is_throwing_wpn                     (false),
-    is_machine_gun                      (false),
-    is_shotgun                          (false),
-    max_nr_ammo_in_clip                 (0),
-    dmg                                 (Dice_param()),
-    throw_dmg                           (Dice_param()),
-    hit_chance_mod                      (0),
-    throw_hit_chance_mod                (0),
-    effective_range                     (3),
-    knocks_back                         (false),
-    dmg_info_override                   (""),
-    ammo_item_id                        (Item_id::END),
-    dmg_type                            (Dmg_type::physical),
-    has_infinite_ammo                   (false),
-    missile_glyph                       ('/'),
-    missile_tile                        (Tile_id::projectile_std_front_slash),
-    missile_clr                         (clr_white),
-    missile_leaves_trail                (false),
-    missile_leaves_smoke                (false),
-    att_msgs                            (Item_att_msgs()),
-    snd_msg                             (""),
-    snd_vol                             (Snd_vol::low),
-    makes_ricochet_snd                  (false),
-    att_sfx                             (Sfx_id::END),
-    reload_sfx                          (Sfx_id::END),
-    prop_applied                        (nullptr) {}
+    is_ranged_wpn(false),
+    is_throwing_wpn(false),
+    is_machine_gun(false),
+    is_shotgun(false),
+    max_nr_ammo_in_clip(0),
+    dmg(Dice_param()),
+    throw_dmg(Dice_param()),
+    hit_chance_mod(0),
+    throw_hit_chance_mod(0),
+    effective_range(3),
+    knocks_back(false),
+    dmg_info_override(""),
+    ammo_item_id(Item_id::END),
+    dmg_type(Dmg_type::physical),
+    has_infinite_ammo(false),
+    missile_glyph('/'),
+    missile_tile(Tile_id::projectile_std_front_slash),
+    missile_clr(clr_white),
+    missile_leaves_trail(false),
+    missile_leaves_smoke(false),
+    att_msgs(Item_att_msgs()),
+    snd_msg(""),
+    snd_vol(Snd_vol::low),
+    makes_ricochet_snd(false),
+    att_sfx(Sfx_id::END),
+    reload_sfx(Sfx_id::END),
+    prop_applied(nullptr) {}
 
 Item_data_t::Item_ranged_data::~Item_ranged_data()
 {
@@ -106,8 +106,8 @@ Item_data_t::Item_ranged_data::~Item_ranged_data()
 }
 
 Item_data_t::Item_armor_data::Item_armor_data() :
-    armor_points             (0),
-    dmg_to_durability_factor   (0.0) {}
+    armor_points(0),
+    dmg_to_durability_factor(0.0) {}
 
 namespace item_data
 {
@@ -1976,7 +1976,9 @@ void init()
 void cleanup()
 {
     TRACE_FUNC_BEGIN;
+
     for (size_t i = 0; i < int(Item_id::END); ++i) {delete data[i];}
+
     TRACE_FUNC_END;
 }
 

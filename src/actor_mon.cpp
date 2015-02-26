@@ -31,20 +31,20 @@
 using namespace std;
 
 Mon::Mon() :
-    Actor                   (),
-    aware_counter_           (0),
-    player_aware_of_me_counter_ (0),
-    is_msg_mon_in_view_printed_  (false),
-    last_dir_travelled_       (Dir::center),
-    spell_cool_down_cur_       (0),
-    is_roaming_allowed_       (true),
-    is_stealth_              (false),
-    leader_                 (nullptr),
-    tgt_                    (nullptr),
-    waiting_                (false),
-    shock_caused_cur_         (0.0),
-    has_given_xp_for_spotting_  (false),
-    nr_turns_until_unsummoned_ (-1) {}
+    Actor(),
+    aware_counter_(0),
+    player_aware_of_me_counter_(0),
+    is_msg_mon_in_view_printed_(false),
+    last_dir_travelled_(Dir::center),
+    spell_cool_down_cur_(0),
+    is_roaming_allowed_(true),
+    is_stealth_(false),
+    leader_(nullptr),
+    tgt_(nullptr),
+    waiting_(false),
+    shock_caused_cur_(0.0),
+    has_given_xp_for_spotting_(false),
+    nr_turns_until_unsummoned_(-1) {}
 
 Mon::~Mon()
 {
@@ -54,6 +54,7 @@ Mon::~Mon()
 void Mon::on_actor_turn()
 {
 #ifndef NDEBUG
+
     //Verify that monster is not outside the map
     if (!utils::is_pos_inside_map(pos, false))
     {
@@ -67,6 +68,7 @@ void Mon::on_actor_turn()
         TRACE << "Two (or more) steps of leader is never allowed" << endl;
         assert(false);
     }
+
 #endif // NDEBUG
 
     if (aware_counter_ <= 0 && !is_actor_my_leader(map::player))
@@ -137,6 +139,7 @@ void Mon::on_actor_turn()
     if (aware_counter_ > 0)
     {
         is_roaming_allowed_ = true;
+
         if (leader_)
         {
             if (leader_->is_alive() && !is_actor_my_leader(map::player))
@@ -333,10 +336,12 @@ void Mon::on_std_turn()
             {
                 msg_log::add(get_name_the() + " suddenly disappears!");
             }
+
             state_ = Actor_state::destroyed;
             return;
         }
     }
+
     on_std_turn_();
 }
 
@@ -349,6 +354,7 @@ void Mon::on_hit(int& dmg)
 void Mon::move_dir(Dir dir)
 {
 #ifndef NDEBUG
+
     if (dir == Dir::END)
     {
         TRACE << "Illegal direction parameter" << endl;
@@ -360,6 +366,7 @@ void Mon::move_dir(Dir dir)
         TRACE << "Monster outside map" << endl;
         assert(false);
     }
+
 #endif // NDEBUG
 
     get_prop_handler().change_move_dir(pos, dir);
@@ -368,9 +375,11 @@ void Mon::move_dir(Dir dir)
     if (dir != Dir::center)
     {
         auto* f = map::cells[pos.x][pos.y].rigid;
+
         if (f->get_id() == Feature_id::trap)
         {
             dir = static_cast<Trap*>(f)->actor_try_leave(*this, dir);
+
             if (dir == Dir::center)
             {
                 TRACE_VERBOSE << "Monster move prevented by trap" << endl;
@@ -392,7 +401,9 @@ void Mon::move_dir(Dir dir)
         //Bump features in target cell (i.e. to trigger traps)
         vector<Mob*> mobs;
         game_time::get_mobs_at_pos(pos, mobs);
+
         for (auto* m : mobs) {m->bump(*this);}
+
         map::cells[pos.x][pos.y].rigid->bump(*this);
     }
 
@@ -431,6 +442,7 @@ void Mon::become_aware(const bool IS_FROM_SEEING)
     {
         const int AWARENESS_CNT_BEFORE  = aware_counter_;
         aware_counter_                   = data_->nr_turns_aware;
+
         if (AWARENESS_CNT_BEFORE <= 0)
         {
             if (IS_FROM_SEEING && map::player->can_see_actor(*this, nullptr))
@@ -439,6 +451,7 @@ void Mon::become_aware(const bool IS_FROM_SEEING)
                 render::draw_map_and_interface(true);
                 msg_log::add(get_name_the() + " sees me!");
             }
+
             if (rnd::coin_toss())
             {
                 speak_phrase();
@@ -479,6 +492,7 @@ bool Mon::try_attack(Actor& defender)
             attack::melee(*this, *att.weapon, defender);
             return true;
         }
+
         return false;
     }
 
@@ -492,15 +506,18 @@ bool Mon::try_attack(Actor& defender)
 
         //Check if friend is in the way (with a small chance to ignore this)
         bool is_blocked_by_friend = false;
+
         if (rnd::fraction(4, 5))
         {
             vector<Pos> line;
             line_calc::calc_new_line(pos, defender.pos, true, 9999, false, line);
+
             for (Pos& line_pos : line)
             {
                 if (line_pos != pos && line_pos != defender.pos)
                 {
                     Actor* const actor_here = utils::get_actor_at_pos(line_pos);
+
                     if (actor_here)
                     {
                         is_blocked_by_friend = true;
@@ -556,6 +573,7 @@ void Mon::get_avail_attacks(Actor& defender, Ai_avail_attacks_data& avail_attack
                 for (size_t i = 0; i < nr_intrinsics; ++i)
                 {
                     weapon = static_cast<Wpn*>(inv_->get_intrinsic_in_element(i));
+
                     if (weapon->get_data().melee.is_melee_wpn)
                     {
                         avail_attacks_ref.weapons.push_back(weapon);
@@ -594,6 +612,7 @@ void Mon::get_avail_attacks(Actor& defender, Ai_avail_attacks_data& avail_attack
                 for (size_t i = 0; i < nr_intrinsics; ++i)
                 {
                     weapon = static_cast<Wpn*>(inv_->get_intrinsic_in_element(i));
+
                     if (weapon->get_data().ranged.is_ranged_wpn)
                     {
                         avail_attacks_ref.weapons.push_back(weapon);
@@ -892,9 +911,13 @@ bool Vortex::on_actor_turn_()
 
         const Pos   delta               = player_pos - pos;
         Pos         knock_back_from_pos    = player_pos;
+
         if (delta.x >  1) {knock_back_from_pos.x++;}
+
         if (delta.x < -1) {knock_back_from_pos.x--;}
+
         if (delta.y >  1) {knock_back_from_pos.y++;}
+
         if (delta.y < -1) {knock_back_from_pos.y--;}
 
         if (knock_back_from_pos != player_pos)
@@ -906,9 +929,11 @@ bool Vortex::on_actor_turn_()
             TRACE << player_pos.x << "," << player_pos.y << ")" << endl;
             bool blocked_los[MAP_W][MAP_H];
             map_parse::run(cell_check::Blocks_los(), blocked_los);
+
             if (can_see_actor(*(map::player), blocked_los))
             {
                 TRACE << "I am seeing the player" << endl;
+
                 if (map::player->can_see_actor(*this, nullptr))
                 {
                     msg_log::add("The Vortex attempts to pull me in!");
@@ -917,6 +942,7 @@ bool Vortex::on_actor_turn_()
                 {
                     msg_log::add("A powerful wind is pulling me!");
                 }
+
                 TRACE << "Attempt pull (knockback)" << endl;
                 knock_back::try_knock_back(*(map::player), knock_back_from_pos,
                                            false, false);
@@ -926,6 +952,7 @@ bool Vortex::on_actor_turn_()
             }
         }
     }
+
     return false;
 }
 
@@ -978,10 +1005,11 @@ bool Ghost::on_actor_turn_()
 
         msg_log::add(refer + " reaches for me... ");
 
-        const ability_roll_result roll_result =
+        const Ability_roll_result roll_result =
             ability_roll::roll(map::player->get_data().ability_vals.get_val(
                                    Ability_id::dodge_att, true, *this));
         const bool PLAYER_DODGES = roll_result >= success_small;
+
         if (PLAYER_DODGES)
         {
             msg_log::add("I dodge!", clr_msg_good);
@@ -991,9 +1019,11 @@ bool Ghost::on_actor_turn_()
             map::player->get_prop_handler().try_apply_prop(
                 new Prop_slowed(Prop_turns::std));
         }
+
         game_time::tick();
         return true;
     }
+
     return false;
 }
 
@@ -1073,6 +1103,7 @@ void Greater_polyp::mk_start_items()
 void Rat::mk_start_items()
 {
     Item* item = nullptr;
+
     if (rnd::percent() < 15)
     {
         item = item_factory::mk(Item_id::rat_bite_diseased);
@@ -1081,6 +1112,7 @@ void Rat::mk_start_items()
     {
         item = item_factory::mk(Item_id::rat_bite);
     }
+
     inv_->put_in_intrinsics(item);
 }
 
@@ -1204,10 +1236,12 @@ bool Khephren::on_actor_turn_()
             sort(begin(free_cells), end(free_cells), Is_closer_to_pos(pos));
 
             const size_t NR_OF_SPAWNS = 15;
+
             if (free_cells.size() >= NR_OF_SPAWNS + 1)
             {
                 msg_log::add("Khephren calls a plague of Locusts!");
                 map::player->incr_shock(Shock_lvl::heavy, Shock_src::misc);
+
                 for (size_t i = 0; i < NR_OF_SPAWNS; ++i)
                 {
                     Actor* const actor  = actor_factory::mk(Actor_id::locust, free_cells[0]);
@@ -1216,6 +1250,7 @@ bool Khephren::on_actor_turn_()
                     mon->leader_        = leader_ ? leader_ : this;
                     free_cells.erase(begin(free_cells));
                 }
+
                 render::draw_map_and_interface();
                 has_summoned_locusts = true;
                 game_time::tick();
@@ -1257,6 +1292,7 @@ bool Ape::on_actor_turn_()
         prop_handler_->try_apply_prop(
             new Prop_frenzied(Prop_turns::specific, NR_FRENZY_TURNS));
     }
+
     return false;
 }
 
@@ -1300,9 +1336,11 @@ bool Keziah_mason::on_actor_turn_()
             line_calc::calc_new_line(pos, map::player->pos, true, 9999, false, line);
 
             const int LINE_SIZE = line.size();
+
             for (int i = 0; i < LINE_SIZE; ++i)
             {
                 const Pos c = line[i];
+
                 if (!blocked_los[c.x][c.y])
                 {
                     //TODO: Use the generalized summoning functionality
@@ -1346,6 +1384,7 @@ void Leng_elder::on_std_turn_()
         {
             bool blocked_los[MAP_W][MAP_H];
             map_parse::run(cell_check::Blocks_los(), blocked_los);
+
             if (can_see_actor(*map::player, blocked_los))
             {
                 if (nr_turns_to_hostile_ <= 0)
@@ -1363,6 +1402,7 @@ void Leng_elder::on_std_turn_()
         {
             const bool IS_PLAYER_SEE_ME = map::player->can_see_actor(*this, nullptr);
             const bool IS_PLAYER_ADJ    = utils::is_pos_adj(pos, map::player->pos, false);
+
             if (IS_PLAYER_SEE_ME && IS_PLAYER_ADJ)
             {
                 msg_log::add("I perceive a cloaked figure standing before me...",
@@ -1483,7 +1523,7 @@ bool Worm_mass::on_actor_turn_()
     {
         bool blocked[MAP_W][MAP_H];
         map_parse::run(cell_check::Blocks_actor(*this, true), blocked,
-                       map_parse_mode::overwrite, Rect(pos - 1, pos + 1));
+                       Map_parse_mode::overwrite, Rect(pos - 1, pos + 1));
 
         for (const Pos& d : dir_utils::dir_list)
         {
@@ -1502,6 +1542,7 @@ bool Worm_mass::on_actor_turn_()
             }
         }
     }
+
     return false;
 }
 
@@ -1520,7 +1561,7 @@ bool Giant_locust::on_actor_turn_()
     {
         bool blocked[MAP_W][MAP_H];
         map_parse::run(cell_check::Blocks_actor(*this, true), blocked,
-                       map_parse_mode::overwrite, Rect(pos - 1, pos + 1));
+                       Map_parse_mode::overwrite, Rect(pos - 1, pos + 1));
 
         for (const Pos& d : dir_utils::dir_list)
         {
@@ -1539,6 +1580,7 @@ bool Giant_locust::on_actor_turn_()
             }
         }
     }
+
     return false;
 }
 
@@ -1590,6 +1632,7 @@ bool Lord_of_spiders::on_actor_turn_()
             }
         }
     }
+
     return false;
 }
 
@@ -1649,14 +1692,19 @@ bool Major_clapham_lee::on_actor_turn_()
             {
                 const int ZOMBIE_TYPE = rnd::range(1, 3);
                 Actor_id id = Actor_id::zombie;
+
                 switch (ZOMBIE_TYPE)
                 {
                 case 1: id = Actor_id::zombie;        break;
+
                 case 2: id = Actor_id::zombie_axe;     break;
+
                 case 3: id = Actor_id::bloated_zombie; break;
                 }
+
                 mon_ids.push_back(id);
             }
+
             actor_factory::summon(pos, mon_ids, true, this);
             render::draw_map_and_interface();
             has_summoned_tomb_legions = true;
@@ -1679,6 +1727,7 @@ bool Zombie::try_resurrect()
         {
             ++dead_turn_counter;
         }
+
         if (dead_turn_counter >= NR_TURNS_TO_CAN_RISE)
         {
             if (pos != map::player->pos && rnd::one_in(14))
@@ -1690,6 +1739,7 @@ bool Zombie::try_resurrect()
                 clr_    = data_->color;
                 has_resurrected = true;
                 data_->nr_kills--;
+
                 if (map::cells[pos.x][pos.y].is_seen_by_player)
                 {
                     msg_log::add(get_corpse_name_the() + " rises again!!", clr_white, true);
@@ -1702,6 +1752,7 @@ bool Zombie::try_resurrect()
             }
         }
     }
+
     return false;
 }
 
@@ -1719,6 +1770,7 @@ void Zombie::on_death()
 void Zombie_claw::mk_start_items()
 {
     Item* item = nullptr;
+
     if (rnd::percent() < 20)
     {
         item = item_factory::mk(Item_id::zombie_claw_diseased);
@@ -1727,6 +1779,7 @@ void Zombie_claw::mk_start_items()
     {
         item = item_factory::mk(Item_id::zombie_claw);
     }
+
     inv_->put_in_intrinsics(item);
 }
 
@@ -1750,7 +1803,7 @@ bool Mold::on_actor_turn_()
     {
         bool blocked[MAP_W][MAP_H];
         map_parse::run(cell_check::Blocks_actor(*this, true), blocked,
-                       map_parse_mode::overwrite, Rect(pos - 1, pos + 1));
+                       Map_parse_mode::overwrite, Rect(pos - 1, pos + 1));
 
         for (const Pos& d : dir_utils::dir_list)
         {
@@ -1767,6 +1820,7 @@ bool Mold::on_actor_turn_()
             }
         }
     }
+
     return false;
 }
 
@@ -1781,10 +1835,10 @@ void Gas_spore::on_death()
 }
 
 The_high_priest::The_high_priest() :
-    Mon                     (),
-    has_greeted_player_       (false),
-    NR_TURNS_BETWEEN_CPY_   (15),
-    nr_turns_until_next_cpy_    (0) {}
+    Mon(),
+    has_greeted_player_(false),
+    NR_TURNS_BETWEEN_CPY_(15),
+    nr_turns_until_next_cpy_(0) {}
 
 void The_high_priest::mk_start_items()
 {

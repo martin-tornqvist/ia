@@ -134,6 +134,7 @@ const God* get_cur_god()
     {
         return &(god_list[cur_god_elem_]);
     }
+
     return nullptr;
 }
 

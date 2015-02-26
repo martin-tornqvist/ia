@@ -30,12 +30,15 @@ void player_disarm()
     const Pos player_pos = map::player->pos;
     const auto* const feature_at_player =
         map::cells[player_pos.x][player_pos.y].rigid;
+
     if (feature_at_player->get_id() == Feature_id::trap)
     {
         const Trap* const trap = static_cast<const Trap*>(feature_at_player);
+
         if (trap->get_trap_type() == Trap_id::web)
         {
             const auto* const web = static_cast<const Trap_web*>(trap->get_specific_trap());
+
             if (web->is_holding())
             {
                 msg_log::add("Not while entangled in a spider web.");

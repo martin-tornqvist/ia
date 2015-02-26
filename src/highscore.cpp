@@ -20,14 +20,14 @@ using namespace std;
 
 High_score_entry::High_score_entry(std::string date_and_time, std::string name, int xp,
                                    int lvl, int dlvl, int insanity, bool did_win, Bg bg) :
-    date_and_time_  (date_and_time),
-    name_         (name),
-    xp_           (xp),
-    lvl_          (lvl),
-    dlvl_         (dlvl),
-    ins_          (insanity),
-    is_win_        (did_win),
-    bg_           (bg) {}
+    date_and_time_(date_and_time),
+    name_(name),
+    xp_(xp),
+    lvl_(lvl),
+    dlvl_(dlvl),
+    ins_(insanity),
+    is_win_(did_win),
+    bg_(bg) {}
 
 int High_score_entry::get_score() const
 {
@@ -114,6 +114,7 @@ void read_file(vector<High_score_entry>& entries)
 
             entries.push_back({date_and_time, name, XP, LVL, DLVL, INS, is_win, bg});
         }
+
         file.close();
     }
 }
@@ -217,6 +218,7 @@ void run_high_score_screen()
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {
             top_nr += LINE_JUMP;
+
             if (NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
             {
                 top_nr = 0;
@@ -269,6 +271,7 @@ vector<High_score_entry> get_entries_sorted()
     {
         sort_entries(entries);
     }
+
     return entries;
 }
 

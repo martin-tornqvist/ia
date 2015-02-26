@@ -23,13 +23,16 @@ MTRand mt_rand;
 int roll(const int ROLLS, const int SIDES)
 {
     if (SIDES <= 0) {return 0;}
+
     if (SIDES == 1) {return ROLLS * SIDES;}
 
     int result = 0;
+
     for (int i = 0; i < ROLLS; ++i)
     {
         result += mt_rand.randInt(SIDES - 1) + 1;
     }
+
     return result;
 }
 
@@ -61,6 +64,7 @@ bool fraction(const int NUMERATOR, const int DENOMINATOR)
     {
         return false;
     }
+
     return roll(1, DENOMINATOR) <= NUMERATOR;
 }
 
@@ -152,6 +156,7 @@ void mk_vector_from_bool_map(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_
                              vector<Pos>& out)
 {
     out.clear();
+
     for (int x = 0; x < MAP_W; ++x)
     {
         for (int y = 0; y < MAP_H; ++y)
@@ -167,12 +172,14 @@ void mk_vector_from_bool_map(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_
 void mk_bool_map_from_vector(const vector<Pos>& positions, bool out[MAP_W][MAP_H])
 {
     reset_array(out, false);
+
     for (const Pos& p : positions) {out[p.x][p.y] = true;}
 }
 
 void get_actor_cells(const vector<Actor*>& actors, vector<Pos>& out)
 {
     out.clear();
+
     for (const auto* const a : actors) {out.push_back(a->pos);}
 }
 
@@ -185,6 +192,7 @@ Actor* get_actor_at_pos(const Pos& pos, Actor_state state)
             return actor;
         }
     }
+
     return nullptr;
 }
 
@@ -194,6 +202,7 @@ Mob* get_first_mob_at_pos(const Pos& pos)
     {
         if (mob->get_pos() == pos) {return mob;}
     }
+
     return nullptr;
 }
 
@@ -272,9 +281,11 @@ Pos get_closest_pos(const Pos& p, const vector<Pos>& positions)
 {
     int dist_to_nearest = INT_MAX;
     Pos closest_pos;
+
     for (Pos p_cmp : positions)
     {
         const int CUR_DIST = king_dist(p, p_cmp);
+
         if (CUR_DIST < dist_to_nearest)
         {
             dist_to_nearest = CUR_DIST;
@@ -288,13 +299,16 @@ Pos get_closest_pos(const Pos& p, const vector<Pos>& positions)
 Actor* get_random_closest_actor(const Pos& c, const vector<Actor*>& actors)
 {
     if (actors.empty())      {return nullptr;}
+
     if (actors.size() == 1)  {return actors[0];}
 
     //Find distance to nearest actor(s)
     int dist_to_nearest = INT_MAX;
+
     for (Actor* actor : actors)
     {
         const int CUR_DIST = king_dist(c, actor->pos);
+
         if (CUR_DIST < dist_to_nearest)
         {
             dist_to_nearest = CUR_DIST;
@@ -305,6 +319,7 @@ Actor* get_random_closest_actor(const Pos& c, const vector<Actor*>& actors)
 
     //Store all actors with distance equal to the nearest distance
     vector<Actor*> closest_actors;
+
     for (Actor* actor : actors)
     {
         if (king_dist(c, actor->pos) == dist_to_nearest)
@@ -323,10 +338,15 @@ Actor* get_random_closest_actor(const Pos& c, const vector<Actor*>& actors)
 bool is_pos_adj(const Pos& pos1, const Pos& pos2, const bool COUNT_SAME_CELL_AS_ADJ)
 {
     if (pos1.x < pos2.x - 1)                   {return false;}
+
     if (pos1.x > pos2.x + 1)                   {return false;}
+
     if (pos1.y < pos2.y - 1)                   {return false;}
+
     if (pos1.y > pos2.y + 1)                   {return false;}
+
     if (pos1.x == pos2.x && pos1.y == pos2.y)  {return COUNT_SAME_CELL_AS_ADJ;}
+
     return true;
 }
 
@@ -359,9 +379,13 @@ string Time_data::get_time_str(const Time_type lowest,
     string second_str  = (second_  < 10 ? "0" : "") + to_str(second_);
 
     if (lowest >= Time_type::month)  ret += (ADD_SEPARATORS ? "-" : "-") + month_str;
+
     if (lowest >= Time_type::day)    ret += (ADD_SEPARATORS ? "-" : "-") + day_str;
+
     if (lowest >= Time_type::hour)   ret += (ADD_SEPARATORS ? " " : "_") + hour_str;
+
     if (lowest >= Time_type::minute) ret += (ADD_SEPARATORS ? ":" : "-") + minute_str;
+
     if (lowest >= Time_type::second) ret += (ADD_SEPARATORS ? ":" : "-") + second_str;
 
     return ret;
@@ -413,6 +437,7 @@ Dir get_dir(const Pos& offset)
                offset.x ==  1 ? Dir::right :
                Dir::END;
     }
+
     if (offset.y == 1)
     {
         return offset.x == -1 ? Dir::down_left :
@@ -420,6 +445,7 @@ Dir get_dir(const Pos& offset)
                offset.x ==  1 ? Dir::down_right :
                Dir::END;
     }
+
     return Dir::END;
 }
 
@@ -430,16 +456,26 @@ Pos get_offset(const Dir dir)
     switch (dir)
     {
     case Dir::down_left:   return Pos(-1, 1);
+
     case Dir::down:       return Pos(0, 1);
+
     case Dir::down_right:  return Pos(1, 1);
+
     case Dir::left:       return Pos(-1, 0);
+
     case Dir::center:     return Pos(0, 0);
+
     case Dir::right:      return Pos(1, 0);
+
     case Dir::up_left:     return Pos(-1, -1);
+
     case Dir::up:         return Pos(0, -1);
+
     case Dir::up_right:    return Pos(1, -1);
+
     case Dir::END:        return Pos(0, 0);
     }
+
     return Pos(0, 0);
 }
 

@@ -26,14 +26,14 @@ enum class Slot_id
 struct Inv_slot
 {
     Inv_slot(Slot_id id_, std::string name_) :
-        id    (id_),
-        name  (name_),
-        item  (nullptr) {}
+        id(id_),
+        name(name_),
+        item(nullptr) {}
 
     Inv_slot() :
-        id    (Slot_id::wielded),
-        name  (""),
-        item  (nullptr) {}
+        id(Slot_id::wielded),
+        name(""),
+        item(nullptr) {}
 
     Slot_id      id;
     std::string name;
@@ -105,7 +105,7 @@ public:
 
     int get_total_item_weight() const;
 
-    void store_to_save_lines  (std::vector<std::string>& lines) const;
+    void store_to_save_lines(std::vector<std::string>& lines) const;
     void setup_from_save_lines(std::vector<std::string>& lines);
 
     Inv_slot               slots_[int(Slot_id::END)];

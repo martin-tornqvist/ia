@@ -21,14 +21,14 @@ public:
 
     //Spawn-by-id compliant ctor (do not use for normal cases):
     Door(const Pos& pos) :
-        Rigid                 (pos),
-        mimic_feature_         (nullptr),
-        nr_spikes_             (0),
-        is_open_               (false),
-        is_stuck_              (false),
-        is_secret_             (false),
-        is_handled_externally_  (false),
-        matl_                 (Matl::wood) {}
+        Rigid(pos),
+        mimic_feature_(nullptr),
+        nr_spikes_(0),
+        is_open_(false),
+        is_stuck_(false),
+        is_secret_(false),
+        is_handled_externally_(false),
+        matl_(Matl::wood) {}
 
     Door() = delete;
 

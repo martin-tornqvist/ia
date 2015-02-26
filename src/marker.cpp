@@ -47,6 +47,7 @@ void set_pos_to_closest_enemy_if_visible()
 void try_move(const Dir dir)
 {
     const Pos new_pos(pos_ + dir_utils::get_offset(dir));
+
     if (utils::is_pos_inside_map(new_pos)) {pos_ = new_pos;}
 }
 
@@ -71,6 +72,7 @@ bool set_pos_to_target_if_visible()
             }
         }
     }
+
     return false;
 }
 
@@ -133,13 +135,16 @@ Pos run(const Marker_draw_tail draw_trail,
             {
                 try_move(Dir::right);
             }
+
             continue;
         }
+
         if (d.sdl_key == SDLK_UP       || d.key == '8' || d.key == 'k')
         {
             try_move(Dir::up);
             continue;
         }
+
         if (d.sdl_key == SDLK_LEFT     || d.key == '4' || d.key == 'h')
         {
             if (d.is_shift_held)
@@ -151,28 +156,34 @@ Pos run(const Marker_draw_tail draw_trail,
                 try_move(Dir::down_left);
             }
             else {try_move(Dir::left);}
+
             continue;
         }
+
         if (d.sdl_key == SDLK_DOWN     || d.key == '2' || d.key == 'j')
         {
             try_move(Dir::down);
             continue;
         }
+
         if (d.sdl_key == SDLK_PAGEUP   || d.key == '9' || d.key == 'u')
         {
             try_move(Dir::up_right);
             continue;
         }
+
         if (d.sdl_key == SDLK_HOME     || d.key == '7' || d.key == 'y')
         {
             try_move(Dir::up_left);
             continue;
         }
+
         if (d.sdl_key == SDLK_END      || d.key == '1' || d.key == 'b')
         {
             try_move(Dir::down_left);
             continue;
         }
+
         if (d.sdl_key == SDLK_PAGEDOWN || d.key == '3' || d.key == 'n')
         {
             try_move(Dir::down_right);
@@ -187,6 +198,7 @@ Pos run(const Marker_draw_tail draw_trail,
             render::draw_map_and_interface();
         }
     }
+
     return pos_;
 }
 

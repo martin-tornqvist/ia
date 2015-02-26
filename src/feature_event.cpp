@@ -22,9 +22,9 @@ Event::Event(const Pos& pos) :
 //------------------------------------------------------------------- WALL CRUMBLE
 Event_wall_crumble::Event_wall_crumble(const Pos& pos, vector<Pos>& walls,
                                        vector<Pos>& inner) :
-    Event       (pos),
-    wall_cells_  (walls),
-    inner_cells_ (inner) {}
+    Event(pos),
+    wall_cells_(walls),
+    inner_cells_(inner) {}
 
 void Event_wall_crumble::on_new_turn()
 {
@@ -36,11 +36,13 @@ void Event_wall_crumble::on_new_turn()
             for (const Pos& p : cells)
             {
                 const auto f_id = map::cells[p.x][p.y].rigid->get_id();
+
                 if (f_id != Feature_id::wall && f_id != Feature_id::rubble_high)
                 {
                     return false;
                 }
             }
+
             return true;
         };
 
@@ -53,6 +55,7 @@ void Event_wall_crumble::on_new_turn()
 
             //Crumble
             bool done = false;
+
             while (!done)
             {
                 for (const Pos& p : wall_cells_)
@@ -65,11 +68,13 @@ void Event_wall_crumble::on_new_turn()
                 }
 
                 bool is_opening_made = true;
+
                 for (const Pos& p : wall_cells_)
                 {
                     if (utils::is_pos_adj(map::player->pos, p, true))
                     {
                         Rigid* const f = map::cells[p.x][p.y].rigid;
+
                         if (!f->can_move_cmn())
                         {
                             is_opening_made = false;
@@ -119,6 +124,7 @@ void Event_wall_crumble::on_new_turn()
 
             default: {} break;
             }
+
             int nr_mon_spawned = 0;
 
             random_shuffle(begin(inner_cells_), end(inner_cells_));
@@ -147,6 +153,7 @@ void Event_wall_crumble::on_new_turn()
 
             map::player->incr_shock(Shock_lvl::heavy, Shock_src::see_mon);
         }
+
         game_time::erase_mob(this, true);
     }
 }

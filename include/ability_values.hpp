@@ -27,6 +27,7 @@ public:
         {
             ability_list[i] = other.ability_list[i];
         }
+
         return *this;
     }
 
@@ -64,11 +65,11 @@ enum Ability_roll_result
     success_critical
 };
 
-//TODO: See comment above for ability_roll_result
+//TODO: See comment above for Ability_roll_result
 namespace ability_roll
 {
 
-ability_roll_result roll(const int TOT_SKILL_VALUE);
+Ability_roll_result roll(const int TOT_SKILL_VALUE);
 
 } //ability_roll
 

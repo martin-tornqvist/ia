@@ -31,12 +31,12 @@ namespace
 struct Str_and_clr
 {
     Str_and_clr(const string& str_, const Clr clr_) :
-        str (str_),
-        clr (clr_) {}
+        str(str_),
+        clr(clr_) {}
 
     Str_and_clr() :
-        str (""),
-        clr (clr_white) {}
+        str(""),
+        clr(clr_white) {}
 
     std::string str;
     Clr         clr;
@@ -52,11 +52,13 @@ void mk_info_lines(vector<Str_and_clr>& out)
     TRACE << "Finding number of killed monsters" << endl;
     vector<string> unique_killed_names;
     int nr_kills_tot_all_mon = 0;
+
     for (const auto& d : actor_data::data)
     {
         if (d.id != Actor_id::player && d.nr_kills > 0)
         {
             nr_kills_tot_all_mon += d.nr_kills;
+
             if (d.is_unique)
             {
                 unique_killed_names.push_back(d.name_a);
@@ -110,6 +112,7 @@ void mk_info_lines(vector<Str_and_clr>& out)
     out.push_back(Str_and_clr(" Traits gained:", clr_heading));
     string traits_line;
     player_bon::get_all_picked_traits_titles_line(traits_line);
+
     if (traits_line.empty())
     {
         out.push_back(Str_and_clr("   * None", clr_info));
@@ -118,14 +121,17 @@ void mk_info_lines(vector<Str_and_clr>& out)
     {
         vector<string> abilities_lines;
         text_format::line_to_lines(traits_line, 60, abilities_lines);
+
         for (string& str : abilities_lines)
         {
             out.push_back(Str_and_clr("   " + str, clr_info));
         }
     }
+
     out.push_back(Str_and_clr(" ", clr_info));
 
     out.push_back(Str_and_clr(" Unique monsters killed:", clr_heading));
+
     if (unique_killed_names.empty())
     {
         out.push_back(Str_and_clr("   * None", clr_info));
@@ -137,6 +143,7 @@ void mk_info_lines(vector<Str_and_clr>& out)
             out.push_back(Str_and_clr("   * " + monster_name, clr_info));
         }
     }
+
     out.push_back(Str_and_clr(" ", clr_info));
 
     out.push_back(Str_and_clr(" Last messages:", clr_heading));
@@ -146,18 +153,22 @@ void mk_info_lines(vector<Str_and_clr>& out)
     for (size_t i = history_element; i < history.size(); ++i)
     {
         string row = "";
+
         for (size_t ii = 0; ii < history[i].size(); ii++)
         {
             string msg_str = "";
             history[i][ii].get_str_with_repeats(msg_str);
             row += msg_str + " ";
         }
+
         out.push_back(Str_and_clr("   " + row, clr_info));
     }
+
     out.push_back(Str_and_clr(" ", clr_info));
 
     TRACE << "Drawing the final map" << endl;
     out.push_back(Str_and_clr(" The final moment:", clr_heading));
+
     for (int x = 0; x < MAP_W; ++x)
     {
         for (int y = 0; y < MAP_H; ++y)
@@ -169,6 +180,7 @@ void mk_info_lines(vector<Str_and_clr>& out)
                     if (utils::is_pos_inside_map(Pos(x + dx, y + dy)))
                     {
                         const auto* const f = map::cells[x + dx][y + dy].rigid;
+
                         if (f->is_los_passable())
                         {
                             map::cells[x][y].is_seen_by_player = true;
@@ -178,10 +190,13 @@ void mk_info_lines(vector<Str_and_clr>& out)
             }
         }
     }
+
     render::draw_map(); //To set the glyph array
+
     for (int y = 0; y < MAP_H; ++y)
     {
         string cur_row = "";
+
         for (int x = 0; x < MAP_W; ++x)
         {
             if (Pos(x, y) == map::player->pos)
@@ -201,6 +216,7 @@ void mk_info_lines(vector<Str_and_clr>& out)
                     const auto& wall_d       = feature_data::get_data(Feature_id::wall);
                     const auto& rubble_high_d = feature_data::get_data(Feature_id::rubble_high);
                     const auto& statue_d     = feature_data::get_data(Feature_id::statue);
+
                     if (
                         render::render_array[x][y].glyph == wall_d.glyph ||
                         render::render_array[x][y].glyph == rubble_high_d.glyph)
@@ -218,6 +234,7 @@ void mk_info_lines(vector<Str_and_clr>& out)
                 }
             }
         }
+
         out.push_back(Str_and_clr(cur_row, clr_info));
         cur_row.clear();
     }
@@ -275,6 +292,7 @@ void run_info(const vector<Str_and_clr>& lines)
         if (d.sdl_key == SDLK_DOWN || d.key == '2' || d.key == 'j')
         {
             top_nr += LINE_JUMP;
+
             if (NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
             {
                 top_nr = 0;
@@ -305,7 +323,9 @@ void mk_memorial_file(const vector<Str_and_clr>& lines)
     //Add memorial file
     ofstream file;
     file.open(memorial_file_path.data(), ios::trunc);
+
     for (const Str_and_clr& line : lines) {file << line.str << endl;}
+
     file.close();
 
     render::draw_text("Wrote file: data/" + memorial_file_name, Panel::screen, Pos(0, 0),
@@ -398,6 +418,7 @@ void run(bool* const quit_game)
     while (true)
     {
         const Menu_action action = menu_input_handling::get_action(browser);
+
         switch (action)
         {
         case Menu_action::esc:

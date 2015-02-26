@@ -50,6 +50,7 @@ void init_xp_array()
 {
     xp_for_lvl_[0] = 0;
     xp_for_lvl_[1] = 0;
+
     for (int lvl = 2; lvl <= PLAYER_MAX_CLVL; lvl++)
     {
         xp_for_lvl_[lvl] = xp_for_lvl_[lvl - 1] + (100 * lvl);
@@ -128,6 +129,7 @@ void player_gain_xp(const int XP_GAINED)
         for (int i = 0; i < XP_GAINED; ++i)
         {
             xp_++;
+
             if (clvl_ < PLAYER_MAX_CLVL)
             {
                 if (xp_ >= xp_for_lvl_[clvl_ + 1])
@@ -142,6 +144,7 @@ void player_gain_xp(const int XP_GAINED)
 int get_xp_to_next_lvl()
 {
     if (clvl_ == PLAYER_MAX_CLVL) {return -1;}
+
     return xp_for_lvl_[clvl_ + 1] - xp_;
 }
 
@@ -198,8 +201,10 @@ void win_game()
             sdl_wrapper::sleep(LINE_DELAY);
             ++y;
         }
+
         ++y;
     }
+
     ++y;
 
     const string CMD_LABEL =

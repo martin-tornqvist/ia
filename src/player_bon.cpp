@@ -28,12 +28,14 @@ Bg bg_ = Bg::END;
 void init()
 {
     for (int i = 0; i < int(Trait::END); ++i) {traits[i] = false;}
+
     bg_ = Bg::END;
 }
 
 void store_to_save_lines(vector<string>& lines)
 {
     lines.push_back(to_str(int(bg_)));
+
     for (int i = 0; i < int(Trait::END); ++i)
     {
         lines.push_back(traits[i] ? "1" : "0");
@@ -55,11 +57,15 @@ void setup_from_save_lines(vector<string>& lines)
 void get_bg_title(const Bg id, string& out)
 {
     out = "[BG TITLE MISSING]";
+
     switch (id)
     {
     case Bg::occultist: out = "Occultist";   break;
+
     case Bg::rogue:     out = "Rogue";       break;
+
     case Bg::war_vet:    out = "War Veteran"; break;
+
     case Bg::END: {} break;
     }
 }
@@ -71,44 +77,83 @@ void get_trait_title(const Trait id, string& out)
     switch (id)
     {
     case Trait::adept_melee_fighter:    out = "Adept Melee Fighter";   break;
+
     case Trait::expert_melee_fighter:   out = "Expert Melee Fighter";  break;
+
     case Trait::master_melee_fighter:   out = "Master Melee Fighter";  break;
+
     case Trait::cool_headed:           out = "Cool-headed";           break;
+
     case Trait::courageous:           out = "Courageous";            break;
+
     case Trait::warlock:              out = "Warlock";               break;
+
     case Trait::summoner:             out = "Summoner";              break;
+
     case Trait::blood_sorcerer:        out = "Blood Sorcerer";        break;
+
     case Trait::seer:                 out = "Seer";                  break;
+
     case Trait::dexterous:            out = "Dexterous";             break;
+
     case Trait::lithe:                out = "Lithe";                 break;
+
     case Trait::mobile:               out = "Mobile";                break;
+
     case Trait::fearless:             out = "Fearless";              break;
+
     case Trait::healer:               out = "Healer";                break;
+
     case Trait::adept_marksman:        out = "Adept Marksman";        break;
+
     case Trait::expert_marksman:       out = "Expert Marksman";       break;
+
     case Trait::master_marksman:       out = "Master Marksman";       break;
+
     case Trait::steady_aimer:          out = "Steady Aimer";          break;
+
     case Trait::sharp_shooter:         out = "Sharpshooter";          break;
+
     case Trait::observant:            out = "Observant";             break;
+
     case Trait::perceptive:           out = "Perceptive";            break;
+
     case Trait::vigilant:             out = "Vigilant";              break;
+
     case Trait::rapid_recoverer:       out = "Rapid Recoverer";       break;
+
     case Trait::survivalist:          out = "Survivalist";           break;
+
     case Trait::perseverant:          out = "Perseverant";           break;
+
     case Trait::self_aware:            out = "Self-aware";            break;
+
     case Trait::stout_spirit:          out = "Stout Spirit";          break;
+
     case Trait::strong_spirit:         out = "Strong Spirit";         break;
+
     case Trait::mighty_spirit:         out = "Mighty Spirit";         break;
+
     case Trait::stealthy:             out = "Stealthy";              break;
+
     case Trait::imperceptible:        out = "Imperceptible";         break;
+
     case Trait::vicious:              out = "Vicious";               break;
+
     case Trait::strong_backed:         out = "Strong-backed";         break;
+
     case Trait::tough:                out = "Tough";                 break;
+
     case Trait::rugged:               out = "Rugged";                break;
+
     case Trait::unbreakable:          out = "Unbreakable";           break;
+
     case Trait::treasure_hunter:       out = "Treasure Hunter";       break;
+
     case Trait::dem_expert:            out = "Demolition Expert";     break;
+
     case Trait::undead_bane:           out = "Bane of the Undead";    break;
+
     case Trait::END: break;
     }
 }
@@ -581,6 +626,7 @@ void get_pickable_traits(vector<Trait>& traits_ref)
             get_trait_prereqs(Trait(i), trait_prereqs, bg_prereq);
 
             bool is_pickable = true;
+
             for (Trait prereq : trait_prereqs)
             {
                 if (!traits[int(prereq)])

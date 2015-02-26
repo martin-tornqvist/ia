@@ -54,8 +54,6 @@ void read_file()
             {
                 text_format::line_to_lines(cur_line, MAP_W, formatted);
 
-                TRACE << "cur_line: " << cur_line << endl;
-
                 for (const auto& line : formatted)
                 {
                     lines_.push_back(line);
@@ -112,6 +110,7 @@ void run()
             render::draw_text(lines_[i], Panel::screen, Pos(0, y_pos++),
                               clr_white);
         }
+
         render::update_screen();
 
         const Key_data& d = input::get_input();
@@ -119,6 +118,7 @@ void run()
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {
             top_nr += LINE_JUMP;
+
             if (NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
             {
                 top_nr = 0;
@@ -136,6 +136,7 @@ void run()
         {
             break;
         }
+
         btm_nr = min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
     }
 }

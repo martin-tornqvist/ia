@@ -456,32 +456,39 @@ TEST_FIXTURE(BasicFixture, Explosions)
     //Check that corpses can be destroyed, and do not block living actors
     const int NR_CORPSES = 3;
     Actor* corpses[NR_CORPSES];
+
     for (int i = 0; i < NR_CORPSES; ++i)
     {
         corpses[i] = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
         corpses[i]->die(false, false, false);
     }
+
     a1 = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
     explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
+
     for (int i = 0; i < NR_CORPSES; ++i)
     {
         CHECK_EQUAL(int(ActorState::destroyed), int(corpses[i]->getState()));
     }
+
     CHECK_EQUAL(int(ActorState::destroyed), int(a1->getState()));
 
     //Check explosion applying Burning to living and dead actors
     a1        = ActorFactory::mk(ActorId::rat, Pos(X0 - 1, Y0));
     Actor* a2 = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
+
     for (int i = 0; i < NR_CORPSES; ++i)
     {
         corpses[i] = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
         corpses[i]->die(false, false, false);
     }
+
     explosion::runExplosionAt(Pos(X0, Y0), ExplType::applyProp,
                               ExplSrc::misc, 0, SfxId::END,
                               new PropBurning(PropTurns::std));
     CHECK(a1->getPropHandler().getProp(PropId::burning, PropSrc::applied));
     CHECK(a2->getPropHandler().getProp(PropId::burning, PropSrc::applied));
+
     for (int i = 0; i < NR_CORPSES; ++i)
     {
         PropHandler& propHlr = corpses[i]->getPropHandler();
@@ -564,6 +571,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb)
         else if (mon->pos == posL)
         {
             const auto featureId = map::cells[posR.x][posR.y].rigid->getId();
+
             if (featureId == FeatureId::floor)
             {
                 testedLooseWebDestroyed = true;
@@ -577,6 +585,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb)
         //Remove the monster
         ActorFactory::deleteAllMon();
     }
+
     //Check that all cases have been triggered (not really necessary, it just
     //verifies that the loop above is correctly written).
     CHECK(testedStuck);
@@ -604,6 +613,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
 
     //Check that no props are enabled
     propHandler.getPropIds(props);
+
     for (int i = 0; i < int(PropId::END); ++i)
     {
         CHECK(!props[i]);
@@ -618,10 +628,12 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
     //Check that the props are applied
     propHandler.getPropIds(props);
     int nrProps = 0;
+
     for (int i = 0; i < int(PropId::END); ++i)
     {
         if (props[i]) {++nrProps;}
     }
+
     CHECK_EQUAL(4, nrProps);
     CHECK(props[int(PropId::rFire)]);
     CHECK(props[int(PropId::rElec)]);
@@ -635,6 +647,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
 
     //Check that the properties are cleared
     propHandler.getPropIds(props);
+
     for (int i = 0; i < int(PropId::END); ++i)
     {
         CHECK(!props[i]);
@@ -649,10 +662,12 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
     //Check that the props are applied
     propHandler.getPropIds(props);
     nrProps = 0;
+
     for (int i = 0; i < int(PropId::END); ++i)
     {
         if (props[i]) {++nrProps;}
     }
+
     CHECK_EQUAL(4, nrProps);
     CHECK(props[int(PropId::rFire)]);
     CHECK(props[int(PropId::rElec)]);
@@ -671,6 +686,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
 
     //Check that the properties are cleared
     propHandler.getPropIds(props);
+
     for (int i = 0; i < int(PropId::END); ++i)
     {
         CHECK(!props[i]);
@@ -685,10 +701,12 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
     //Check that the props are applied
     propHandler.getPropIds(props);
     nrProps = 0;
+
     for (int i = 0; i < int(PropId::END); ++i)
     {
         if (props[i]) {++nrProps;}
     }
+
     CHECK_EQUAL(4, nrProps);
     CHECK(props[int(PropId::rFire)]);
     CHECK(props[int(PropId::rElec)]);
@@ -711,12 +729,15 @@ TEST_FIXTURE(BasicFixture, SavingGame)
 
     //First, remove all present items
     vector<Item*>& gen = inv.general_;
+
     for (Item* item : gen) {delete item;}
+
     gen.clear();
 
     for (size_t i = 0; i < size_t(SlotId::END); ++i)
     {
         auto& slot = inv.slots_[i];
+
         if (slot.item)
         {
             delete slot.item;
@@ -828,16 +849,21 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
     int nrClipWith3 = 0;
     bool isSentryDeviceFound    = false;
     bool isElectricLanternFound = false;
+
     for (Item* item : genInv)
     {
         ItemId id = item->getId();
+
         if (id == ItemId::pistolClip)
         {
             switch (static_cast<AmmoClip*>(item)->ammo_)
             {
             case 1: nrClipWith1++; break;
+
             case 2: nrClipWith2++; break;
+
             case 3: nrClipWith3++; break;
+
             default: {} break;
             }
         }
@@ -857,6 +883,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
             CHECK(lantern->isActivated_);
         }
     }
+
     CHECK_EQUAL(1, nrClipWith1);
     CHECK_EQUAL(1, nrClipWith2);
     CHECK_EQUAL(2, nrClipWith3);
@@ -931,8 +958,11 @@ TEST_FIXTURE(BasicFixture, FloodFilling)
 {
     bool b[MAP_W][MAP_H];
     utils::resetArray(b, false);
+
     for (int y = 0; y < MAP_H; ++y) {b[0][y] = b[MAP_W - 1][y] = false;}
+
     for (int x = 0; x < MAP_W; ++x) {b[x][0] = b[x][MAP_H - 1] = false;}
+
     int flood[MAP_W][MAP_H];
     FloodFill::run(Pos(20, 10), b, flood, 999, Pos(-1, -1), true);
     CHECK_EQUAL(0, flood[20][10]);
@@ -952,7 +982,9 @@ TEST_FIXTURE(BasicFixture, PathFinding)
     vector<Pos> path;
     bool b[MAP_W][MAP_H];
     utils::resetArray(b, false);
+
     for (int y = 0; y < MAP_H; ++y) {b[0][y] = b[MAP_W - 1][y] = false;}
+
     for (int x = 0; x < MAP_W; ++x) {b[x][0] = b[x][MAP_H - 1] = false;}
 
     PathFind::run(Pos(20, 10), Pos(25, 10), b, path);

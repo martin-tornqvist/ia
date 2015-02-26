@@ -66,6 +66,7 @@ void read_keys(string& cur_string, bool& is_done)
             {
                 cur_string.push_back(char(d.key));
             }
+
             draw(cur_string);
             return;
         }
@@ -86,6 +87,7 @@ void run()
     string name = "";
     draw(name);
     bool is_done = false;
+
     while (!is_done)
     {
         if (config::is_bot_playing())
@@ -98,6 +100,7 @@ void run()
             read_keys(name, is_done);
         }
     }
+
     actor_data_t& def = map::player->get_data();
     def.name_a      = def.name_the = name;
 }
@@ -133,6 +136,7 @@ void draw_pick_bg(const vector<Bg>& bgs, const Menu_browser& browser)
         render::draw_text_centered(name, Panel::screen, Pos(MAP_W_HALF, y), drw_clr);
         y++;
     }
+
     y++;
 
     const int BGS_BOX_W_HALF = 7;
@@ -147,16 +151,19 @@ void draw_pick_bg(const vector<Bg>& bgs, const Menu_browser& browser)
 
     vector<string> raw_descr_lines;
     player_bon::get_bg_descr(marked_bg, raw_descr_lines);
+
     for (string& raw_line : raw_descr_lines)
     {
         vector<string> formatted_lines;
         text_format::line_to_lines(raw_line, MAX_W_DESCR, formatted_lines);
+
         for (string& line : formatted_lines)
         {
             render::draw_text(line, Panel::screen, Pos(X0_DESCR, y), clr_white);
             y++;
         }
     }
+
     render::update_screen();
 }
 
@@ -177,6 +184,7 @@ void pick_bg()
         while (true)
         {
             const Menu_action action = menu_input_handling::get_action(browser);
+
             switch (action)
             {
             case Menu_action::browsed: {draw_pick_bg(bgs, browser);} break;
@@ -208,11 +216,13 @@ void draw_pick_trait(
     const int NR_TRAITS_2 = traits2.size();
 
     int len_of_longest_in_col2 = -1;
+
     for (const Trait& id : traits2)
     {
         string title = "";
         player_bon::get_trait_title(id, title);
         const int CUR_LEN = title.length();
+
         if (CUR_LEN > len_of_longest_in_col2) {len_of_longest_in_col2 = CUR_LEN;}
     }
 
@@ -233,6 +243,7 @@ void draw_pick_trait(
     //------------------------------------------------------------- TRAITS
     const int Y0_TRAITS = 2;
     int y = Y0_TRAITS;
+
     for (int i = 0; i < NR_TRAITS_1; ++i)
     {
         const Trait trait = traits1[i];
@@ -243,7 +254,9 @@ void draw_pick_trait(
         render::draw_text(name, Panel::screen, Pos(X_COL_ONE, y), drw_clr);
         y++;
     }
+
     y = Y0_TRAITS;
+
     for (int i = 0; i < NR_TRAITS_2; ++i)
     {
         const Trait trait = traits2[i];
@@ -273,6 +286,7 @@ void draw_pick_trait(
     vector<string> descr_lines;
     text_format::line_to_lines(
         "Effect(s): " + descr, MAX_W_DESCR, descr_lines);
+
     for (const string& str : descr_lines)
     {
         render::draw_text(str, Panel::screen, Pos(X0_DESCR, y), clr_white);
@@ -285,6 +299,7 @@ void draw_pick_trait(
     vector<Trait> trait_prereqs;
     Bg bg_prereq = Bg::END;
     player_bon::get_trait_prereqs(marked_trait, trait_prereqs, bg_prereq);
+
     if (!trait_prereqs.empty() || bg_prereq != Bg::END)
     {
         render::draw_text("This trait had the following prerequisite(s):",
@@ -307,6 +322,7 @@ void draw_pick_trait(
 
         vector<string> prereq_lines;
         text_format::line_to_lines(prereq_str, MAX_W_DESCR, prereq_lines);
+
         for (const string& str : prereq_lines)
         {
             render::draw_text(str, Panel::screen, Pos(X0_DESCR, y), clr_white);
@@ -319,11 +335,13 @@ void draw_pick_trait(
     const int MAX_W_PREV_PICKS  = SCREEN_W - 2;
     string picked_str = "";
     player_bon::get_all_picked_traits_titles_line(picked_str);
+
     if (picked_str != "")
     {
         picked_str = "Trait(s) gained: " + picked_str;
         vector<string> picked_lines;
         text_format::line_to_lines(picked_str, MAX_W_PREV_PICKS, picked_lines);
+
         for (const string& str : picked_lines)
         {
             render::draw_text(
@@ -364,6 +382,7 @@ void pick_new_trait(const bool IS_CHARACTER_CREATION)
             for (int i = 0; i < NR_TRAITS_TOT; ++i)
             {
                 const Trait trait = pickable_traits[i];
+
                 if (i < NR_TRAITS_1)
                 {
                     traits1.push_back(trait);
@@ -380,6 +399,7 @@ void pick_new_trait(const bool IS_CHARACTER_CREATION)
             while (true)
             {
                 const Menu_action action = menu_input_handling::get_action(browser);
+
                 switch (action)
                 {
                 case Menu_action::browsed:
@@ -394,7 +414,9 @@ void pick_new_trait(const bool IS_CHARACTER_CREATION)
                 {
                     const Pos pos = browser.get_pos();
                     player_bon::pick_trait(pos.x == 0 ? traits1[pos.y] : traits2[pos.y]);
+
                     if (!IS_CHARACTER_CREATION) {render::draw_map_and_interface();}
+
                     return;
                 } break;
 

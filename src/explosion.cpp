@@ -37,15 +37,18 @@ void draw(const vector< vector<Pos> >& pos_lists, bool blocked[MAP_W][MAP_H],
         const Tile_id tile = i_anim == 0 ? Tile_id::blast1 : Tile_id::blast2;
 
         const int NR_OUTER = pos_lists.size();
+
         for (int i_outer = 0; i_outer < NR_OUTER; i_outer++)
         {
             const Clr& clr = i_outer == NR_OUTER - 1 ? clr_outer : clr_inner;
             const vector<Pos>& inner = pos_lists[i_outer];
+
             for (const Pos& pos : inner)
             {
                 if (map::cells[pos.x][pos.y].is_seen_by_player && !blocked[pos.x][pos.y])
                 {
                     is_any_cell_seen_by_player = true;
+
                     if (IS_TILES)
                     {
                         render::draw_tile(tile, Panel::map, pos, clr, clr_black);
@@ -57,6 +60,7 @@ void draw(const vector< vector<Pos> >& pos_lists, bool blocked[MAP_W][MAP_H],
                 }
             }
         }
+
         if (is_any_cell_seen_by_player)
         {
             render::update_screen();
@@ -76,6 +80,7 @@ void get_cells_reached(const Rect& area, const Pos& origin,
                        vector< vector<Pos> >& pos_list_ref)
 {
     vector<Pos> line;
+
     for (int y = area.p0.y; y <= area.p1.y; ++y)
     {
         for (int x = area.p0.x; x <= area.p1.x; ++x)
@@ -83,9 +88,11 @@ void get_cells_reached(const Rect& area, const Pos& origin,
             const Pos pos(x, y);
             const int DIST = utils::king_dist(pos, origin);
             bool is_reached = true;
+
             if (DIST > 1)
             {
                 line_calc::calc_new_line(origin, pos, true, 999, false, line);
+
                 for (Pos& pos_check_block : line)
                 {
                     if (blocked[pos_check_block.x][pos_check_block.y])
@@ -95,9 +102,11 @@ void get_cells_reached(const Rect& area, const Pos& origin,
                     }
                 }
             }
+
             if (is_reached)
             {
                 if (int(pos_list_ref.size()) <= DIST) {pos_list_ref.resize(DIST + 1);}
+
                 pos_list_ref[DIST].push_back(pos);
             }
         }
@@ -149,6 +158,7 @@ void run_explosion_at(const Pos& origin, const Expl_type expl_type,
     for (Actor* actor : game_time::actors_)
     {
         const Pos& pos = actor->pos;
+
         if (actor->is_alive())
         {
             living_actors[pos.x][pos.y] = actor;
@@ -162,6 +172,7 @@ void run_explosion_at(const Pos& origin, const Expl_type expl_type,
     const bool IS_DEM_EXP = player_bon::traits[int(Trait::dem_expert)];
 
     const int NR_OUTER = pos_lists.size();
+
     for (int cur_radi = 0; cur_radi < NR_OUTER; cur_radi++)
     {
         const vector<Pos>& positions_at_cur_radi = pos_lists[cur_radi];
@@ -188,8 +199,10 @@ void run_explosion_at(const Pos& origin, const Expl_type expl_type,
                     {
                         msg_log::add("I am hit by an explosion!", clr_msg_bad);
                     }
+
                     living_actor->hit(DMG, Dmg_type::physical);
                 }
+
                 //Damage dead actors
                 for (Actor* corpse : corpses_here) {corpse->hit(DMG, Dmg_type::physical);}
 

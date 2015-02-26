@@ -355,6 +355,7 @@ void set_item_randomized_properties(Item* item)
     if (d.ranged.is_ranged_wpn && !d.ranged.has_infinite_ammo)
     {
         Wpn* const wpn = static_cast<Wpn*>(item);
+
         if (wpn->AMMO_CAP == 1)
         {
             wpn->nr_ammo_loaded = rnd::coin_toss() ? 1 : 0;

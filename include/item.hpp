@@ -38,7 +38,7 @@ public:
 
     virtual void identify(const bool IS_SILENT_IDENTIFY) {(void)IS_SILENT_IDENTIFY;}
 
-    virtual void store_to_save_lines  (std::vector<std::string>& lines)  {(void)lines;}
+    virtual void store_to_save_lines(std::vector<std::string>& lines)  {(void)lines;}
     virtual void setup_from_save_lines(std::vector<std::string>& lines)  {(void)lines;}
 
     virtual int get_weight() const;
@@ -49,8 +49,8 @@ public:
 
     virtual Clr get_interface_clr() const {return clr_brown;}
 
-    virtual void            on_std_turn_in_inv    (const Inv_type inv_type) {(void)inv_type;}
-    virtual void            on_actor_turn_in_inv  (const Inv_type inv_type) {(void)inv_type;}
+    virtual void            on_std_turn_in_inv(const Inv_type inv_type) {(void)inv_type;}
+    virtual void            on_actor_turn_in_inv(const Inv_type inv_type) {(void)inv_type;}
     virtual void            on_pickup_to_backpack(Inventory& inv)    {(void)inv;}
 
     virtual void on_equip(const bool IS_SILENT)
@@ -93,7 +93,7 @@ public:
 
     ~Armor() {}
 
-    void store_to_save_lines  (std::vector<std::string>& lines) override;
+    void store_to_save_lines(std::vector<std::string>& lines) override;
     void setup_from_save_lines(std::vector<std::string>& lines) override;
 
     Clr                     get_interface_clr() const override {return clr_gray;}
@@ -169,7 +169,7 @@ public:
 
     void set_random_melee_plus();
 
-    void store_to_save_lines  (std::vector<std::string>& lines) override;
+    void store_to_save_lines(std::vector<std::string>& lines) override;
     void setup_from_save_lines(std::vector<std::string>& lines) override;
 
     Clr get_clr()          const override;
@@ -307,11 +307,11 @@ class Medical_bag: public Item
 {
 public:
     Medical_bag(Item_data_t* const item_data) :
-        Item                    (item_data),
-        nr_supplies_             (40),
-        nr_turns_until_heal_wounds_ (-1),
-        nr_turns_left_sanitize_    (-1),
-        cur_action_              (Med_bag_action::END) {}
+        Item(item_data),
+        nr_supplies_(40),
+        nr_turns_until_heal_wounds_(-1),
+        nr_turns_left_sanitize_(-1),
+        cur_action_(Med_bag_action::END) {}
 
     ~Medical_bag() {}
 

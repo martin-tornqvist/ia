@@ -38,6 +38,7 @@ void read_file()
             else
             {
                 text_format::line_to_lines(cur_line, MAP_W - 2, formatted_lines);
+
                 for (string& line : formatted_lines) {lines_.push_back(line);}
             }
         }
@@ -73,6 +74,7 @@ void run()
                       Pos(X_LABEL, SCREEN_H - 1), clr_gray);
 
     int y_pos = 1;
+
     for (string& line : lines_)
     {
         render::draw_text(line, Panel::screen, Pos(0, y_pos++), clr_white);
@@ -84,6 +86,7 @@ void run()
     while (true)
     {
         const Key_data& d = input::get_input();
+
         if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)
         {
             break;

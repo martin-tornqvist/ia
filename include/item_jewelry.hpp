@@ -63,8 +63,8 @@ public:
 
     virtual std::string get_descr() const = 0;
 
-    void store_to_save_lines   (std::vector<std::string>& lines);
-    void setup_from_save_lines (std::vector<std::string>& lines);
+    void store_to_save_lines(std::vector<std::string>& lines);
+    void setup_from_save_lines(std::vector<std::string>& lines);
 
 protected:
     Jewelry* const jewelry_;
@@ -501,8 +501,8 @@ public:
 
     void            on_equip(const bool IS_SILENT)               override final;
     Unequip_allowed  on_unequip()                                 override final;
-    void            on_std_turn_in_inv      (const Inv_type inv_type) override final;
-    void            on_actor_turn_in_inv    (const Inv_type inv_type) override final;
+    void            on_std_turn_in_inv(const Inv_type inv_type) override final;
+    void            on_actor_turn_in_inv(const Inv_type inv_type) override final;
 
     int             get_hp_regen_change(const Inv_type inv_type) const;
 
@@ -526,7 +526,7 @@ namespace jewelry_handling
 
 void init();
 
-void store_to_save_lines  (std::vector<std::string>& lines);
+void store_to_save_lines(std::vector<std::string>& lines);
 void setup_from_save_lines(std::vector<std::string>& lines);
 
 } //Jewelry_handling

@@ -79,6 +79,7 @@ const vector<Pos>* get_fov_delta_line(const Pos& delta,
 {
     const int X = delta.x + FOV_MAX_RADI_INT;
     const int Y = delta.y + FOV_MAX_RADI_INT;
+
     if (X >= 0 && Y >= 0 && X < FOV_MAX_W_INT && Y < FOV_MAX_W_INT)
     {
         if (fov_abs_distances_[X][Y] <= MAX_DIST_ABS)
@@ -86,6 +87,7 @@ const vector<Pos>* get_fov_delta_line(const Pos& delta,
             return &(fov_delta_lines_[X][Y]);
         }
     }
+
     return nullptr;
 }
 
@@ -127,6 +129,7 @@ void calc_new_line(const Pos& origin, const Pos& target,
         if (!ALLOW_OUTSIDE_MAP && !utils::is_pos_inside_map(cur_pos)) {return;}
 
         bool is_pos_ok_to_add = false;
+
         if (line_ref.empty())
         {
             is_pos_ok_to_add = true;

@@ -28,6 +28,7 @@ void player_close_feature(Feature* const feature)
     if (!close_able_object_found)
     {
         const bool PLAYER_CAN_SEE = map::player->get_prop_handler().allow_see();
+
         if (PLAYER_CAN_SEE)
         {
             msg_log::add("I see nothing there to close.");

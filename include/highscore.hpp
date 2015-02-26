@@ -17,10 +17,10 @@ public:
 
     int          get_score()       const;
     std::string  get_date_and_time() const {return date_and_time_;}
-    std::string  get_name()        const {return name_;}
+    std::string  get_name() const {return name_;}
     int          get_xp()          const {return xp_;}
     int          get_lvl()         const {return lvl_;}
-    int          get_dlvl()        const {return dlvl_;}
+    int          get_dlvl() const {return dlvl_;}
     int          get_insanity()    const {return ins_;}
     bool         is_win()          const {return is_win_;}
     Bg           get_bg()          const {return bg_;}

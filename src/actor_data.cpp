@@ -26,10 +26,14 @@ void actor_data_t::reset()
     hp = dmg_melee = dmg_ranged = 1;
     spi = 12;
     speed = Actor_speed::normal;
+
     for (int i = 0; i < int(Prop_id::END); ++i) {intr_props[i] = false;}
+
     ranged_cooldown_turns = spell_cooldown_turns = 0;
     ability_vals.reset();
+
     for (int i = 0; i < int(Ai_id::END); ++i) {ai[i] = false;}
+
     ai[int(Ai_id::moves_to_random_when_unaware)] = true;
     nr_turns_aware = 0;
     spawn_min_dLVL = 999;

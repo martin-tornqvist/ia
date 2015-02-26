@@ -46,6 +46,7 @@ void find_path_to_stairs()
         for (int y = 0; y < MAP_H; ++y)
         {
             const auto cur_id = map::cells[x][y].rigid->get_id();
+
             if (cur_id == Feature_id::stairs)
             {
                 blocked[x][y] = false;
@@ -57,6 +58,7 @@ void find_path_to_stairs()
             }
         }
     }
+
     assert(stair_pos != Pos(-1, -1));
 
     path_find::run(map::player->pos, stair_pos, blocked, cur_path_);
@@ -99,13 +101,15 @@ void act()
         assert(utils::is_pos_inside_map(actor->pos));
 #endif
     }
+
     //=======================================================================
 
     //Abort?
-    if (input::is_key_held(SDLK_ESCAPE))
-    {
-        config::toggle_bot_playing();
-    }
+    //TODO: Reimplement this
+//    if(input::is_key_held(SDLK_ESCAPE))
+//    {
+//        config::toggle_bot_playing();
+//    }
 
     //Check if we are finished with the current run, if so, go back to DLVL 1
     if (map::dlvl >= DLVL_LAST)
@@ -129,6 +133,7 @@ void act()
             break;
         }
     }
+
     if (!has_allied_mon)
     {
         actor_factory::summon(map::player->pos, {Actor_id::mi_go}, false, map::player);
@@ -145,6 +150,7 @@ void act()
     {
         const int ELEMENT = rnd::range(0, game_time::actors_.size() - 1);
         Actor* const actor = game_time::actors_[ELEMENT];
+
         if (actor != map::player)
         {
             actor->get_prop_handler().try_apply_prop(new Prop_burning(Prop_turns::std), true);
@@ -177,8 +183,8 @@ void act()
             }
         }
 
-        Prop_id      prop_id  = prop_bucket[rnd::range(0, prop_bucket.size() - 1)];
-        Prop* const prop    = prop_handler.mk_prop(prop_id, Prop_turns::specific, 5);
+        Prop_id prop_id = prop_bucket[rnd::range(0, prop_bucket.size() - 1)];
+        Prop* const prop = prop_handler.mk_prop(prop_id, Prop_turns::specific, 5);
 
         prop_handler.try_apply_prop(prop, true);
     }
@@ -190,10 +196,12 @@ void act()
         {
             const Pos p(map::player->pos + Pos(dx, dy));
             auto* const f = map::cells[p.x][p.y].rigid;
+
             if (f->get_id() == Feature_id::door)
             {
                 Door* const door = static_cast<Door*>(f);
                 door->reveal(false);
+
                 if (door->is_stuck())
                 {
                     f->hit(Dmg_type::physical, Dmg_method::kick, map::player);

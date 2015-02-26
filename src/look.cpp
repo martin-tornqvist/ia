@@ -43,12 +43,18 @@ string get_speed_str(const actor_data_t& def)
     switch (def.speed)
     {
     case Actor_speed::sluggish:   {return "sluggishly";}
+
     case Actor_speed::slow:       {return "slowly";}
+
     case Actor_speed::normal:     {return "at normal speed";}
+
     case Actor_speed::fast:       {return "fast";}
+
     case Actor_speed::fastest:    {return "very fast";}
+
     case Actor_speed::END: {} break;
     }
+
     return "";
 }
 
@@ -115,6 +121,7 @@ void print_location_info_msgs(const Pos& pos)
 
         //Describe item.
         Item* item = cell.item;
+
         if (item)
         {
             str = item->get_name(Item_ref_type::plural, Item_ref_inf::yes,
@@ -140,6 +147,7 @@ void print_location_info_msgs(const Pos& pos)
 
         //Describe living actor.
         Actor* actor = utils::get_actor_at_pos(pos);
+
         if (actor && actor != map::player)
         {
             if (actor->is_alive())
@@ -181,6 +189,7 @@ void print_detailed_actor_descr(const Actor& actor)
     render::cover_area(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_OF_LINES));
 
     int y = 1;
+
     for (string& s : formatted_text)
     {
         render::draw_text(s, Panel::screen, Pos(0, y), clr_white_high);

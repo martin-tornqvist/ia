@@ -97,9 +97,12 @@ public:
         switch (shock_type)
         {
         case Intr_spell_shock::mild:        return 2;
+
         case Intr_spell_shock::disturbing:  return 8;
+
         case Intr_spell_shock::severe:      return 16;
         }
+
         return -1;
     }
 

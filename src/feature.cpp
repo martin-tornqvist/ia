@@ -67,7 +67,7 @@ bool      Feature::is_smoke_passable()      const {return get_data().is_smoke_pa
 bool      Feature::is_bottomless()         const {return get_data().is_bottomless;}
 char      Feature::get_glyph()             const {return get_data().glyph;}
 Tile_id    Feature::get_tile()              const {return get_data().tile;}
-bool      Feature::can_have_corpse()        const {return get_data().can_have_corpse;}
+bool      Feature::can_have_corpse() const {return get_data().can_have_corpse;}
 bool      Feature::can_have_rigid()         const {return get_data().can_have_rigid;}
 bool      Feature::can_have_blood()         const {return get_data().can_have_blood;}
 bool      Feature::can_have_gore()          const {return get_data().can_have_gore;}

@@ -66,12 +66,14 @@ void try_knock_back(Actor&        defender,
             if (IS_SPIKE_GUN)
             {
                 Rigid* const f = map::cells[new_pos.x][new_pos.y].rigid;
+
                 if (!f->is_los_passable())
                 {
                     defender.get_prop_handler().try_apply_prop(
                         new Prop_nailed(Prop_turns::indefinite));
                 }
             }
+
             return;
         }
         else //Target cell is free
@@ -93,6 +95,7 @@ void try_knock_back(Actor&        defender,
                         msg_log::add("I am knocked back!");
                     }
                 }
+
                 defender.get_prop_handler().try_apply_prop(
                     new Prop_paralyzed(Prop_turns::specific, 1), false, false);
             }
@@ -116,6 +119,7 @@ void try_knock_back(Actor&        defender,
                 {
                     msg_log::add("I plummet down the depths!", clr_msg_bad);
                 }
+
                 defender.die(true, false, false);
                 return;
             }
@@ -123,6 +127,7 @@ void try_knock_back(Actor&        defender,
             // Bump features (e.g. so monsters can be knocked back into traps)
             vector<Mob*> mobs;
             game_time::get_mobs_at_pos(defender.pos, mobs);
+
             for (Mob* const mob : mobs)
             {
                 mob->bump(defender);
