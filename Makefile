@@ -17,18 +17,18 @@ TARGET_DIR=target
 ASSETS_DIR=assets
 
 # Includes
-INC_DIR_debug=$(INC_DIR)/debugModeIncl
-INC_DIR_release=$(INC_DIR)/releaseModeIncl
+INC_DIR_debug=$(INC_DIR)/debug_mode_incl
+INC_DIR_release=$(INC_DIR)/release_mode_incl
 INCLUDES=-I $(INC_DIR) -I $(INC_DIR_$(BUILD))
 
 #Flags
 CXXFLAGS_release=-O2
 CXXFLAGS_debug=-O0 -g
-CXXFLAGS=-std=c++11 -Wall -Wextra -fno-rtti -fno-exceptions $(shell sdl-config --cflags) $(CXXFLAGS_$(BUILD))
+CXXFLAGS=-std=c++11 -Wall -Wextra -fno-rtti -fno-exceptions $(shell sdl2-config --cflags) $(CXXFLAGS_$(BUILD))
 # For building 32-bit binaries on x86_64 platform
 # CXXFLAGS+=-m32 -march=i686
 #LDFLAGS=-L/usr/lib/i386-linux-gnu -lSDL -lSDL_image -lSDL_mixer
-LDFLAGS=$(shell sdl-config --libs) -lSDL_image -lSDL_mixer
+LDFLAGS=$(shell sdl2-config --libs) -lSDL2_image -lSDL2_mixer
 
 # Output and sources
 EXECUTABLE=ia

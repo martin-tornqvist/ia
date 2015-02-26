@@ -1206,6 +1206,7 @@ Key_data get_input(const bool IS_O_RETURN)
         {
             switch (sdl_event_.window.event)
             {
+	    case SDL_WINDOWEVENT_FOCUS_GAINED:
             case SDL_WINDOWEVENT_RESTORED:
             {
                 render::update_screen();
