@@ -1,6 +1,7 @@
 #ifndef FEATURE_DATA_H
 #define FEATURE_DATA_H
 
+#include <functional>
 #include "art.hpp"
 #include "cmn_data.hpp"
 #include "room.hpp"
