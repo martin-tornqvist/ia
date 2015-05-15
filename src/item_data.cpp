@@ -1363,10 +1363,10 @@ void init_data_list()
     d->melee.prop_applied = new Prop_poisoned(Prop_turns::std);
     data[size_t(d->id)] = d;
 
-    d = new Item_data_t(Item_id::colour_oOSpace_touch);
+    d = new Item_data_t(Item_id::color_oo_space_touch);
     reset_data(*d, Item_type::melee_wpn_intr);
     d->melee.att_msgs = {"", "touches me"};
-    set_dmg_from_mon_id(*d, Actor_id::colour_oOSpace);
+    set_dmg_from_mon_id(*d, Actor_id::color_oo_space);
     data[size_t(d->id)] = d;
 
     d = new Item_data_t(Item_id::chthonian_bite);

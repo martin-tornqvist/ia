@@ -115,7 +115,7 @@ enum class Item_id
     ooze_putrid_spew_pus,
     ooze_poison_spew_pus,
     ooze_clear_spew_pus,
-    colour_oOSpace_touch,
+    color_oo_space_touch,
     chthonian_bite,
     hunting_horror_bite,
     dust_vortex_engulf, fire_vortex_engulf, frost_vortex_engulf,

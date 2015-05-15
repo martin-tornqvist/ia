@@ -674,12 +674,12 @@ public:
     void mk_start_items() override;
 };
 
-class Color_oOSpace: public Ooze
+class Color_oo_space: public Ooze
 {
 public:
-    Color_oOSpace() : Ooze(),
+    Color_oo_space() : Ooze(),
         cur_color(clr_magenta_lgt) {}
-    ~Color_oOSpace() {}
+    ~Color_oo_space() {}
     void mk_start_items() override;
     const Clr& get_clr();
 private:

@@ -1160,9 +1160,9 @@ void draw_map()
         const Pos& p(actor->pos);
 
         if (
-            actor->is_corpse()                       &&
-            actor->get_data().glyph != ' '           &&
-            actor->get_data().tile != Tile_id::empty  &&
+            actor->is_corpse()                          &&
+            actor->get_data().glyph != ' '              &&
+            actor->get_data().tile != Tile_id::empty    &&
             map::cells[p.x][p.y].is_seen_by_player)
         {
             cur_drw        = &render_array[p.x][p.y];
@@ -1196,8 +1196,8 @@ void draw_map()
                 //COLOR CELLS MARKED AS LIT YELLOW
                 if (cur_drw->is_marked_lit)
                 {
-                    cur_drw->clr.r = min(255, cur_drw->clr.r + 40);
-                    cur_drw->clr.g = min(255, cur_drw->clr.g + 40);
+                    cur_drw->clr.r = min(255, cur_drw->clr.r + 70);
+                    cur_drw->clr.g = min(255, cur_drw->clr.g + 70);
                     cur_drw->clr.b = min(255, cur_drw->clr.b + 20);
                 }
             }

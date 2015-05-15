@@ -22,40 +22,60 @@ using namespace std;
 namespace character_lines
 {
 
+const int X_NAME    = 0;
+const int X_HP      = PLAYER_NAME_MAX_LEN + 1;
+const int X_SPI     = X_HP  + 8;
+const int X_INS     = X_SPI + 8;
+
+const int X_WIELDED = X_INS + 14;
+
+const int X_XP      = 0;
+const int X_DLVL    = X_XP      + 14;
+const int X_ENC     = X_DLVL    + 8;
+const int X_TURN    = X_ENC     + 9;
+
+const int X_THROWN  = X_WIELDED;
+
 void draw()
 {
     render::cover_panel(Panel::char_lines);
 
-    const int CHARACTER_LINE_X0 = 0;
-    const int CHARACTER_LINE_Y0 = 0;
-
-    Pos pos(CHARACTER_LINE_X0, CHARACTER_LINE_Y0);
-
     Player& player = *map::player;
 
+    Pos pos(0, 0);
+
+    //Name
+    pos.x = X_NAME;
+    string str = player.get_name_a();
+    render::draw_text(str, Panel::char_lines, pos, clr_menu_highlight);
+
     //Health
-    const string hp = to_str(player.get_hp());
+    pos.x = X_HP;
+    const string hp     = to_str(player.get_hp());
     const string hp_max = to_str(player.get_hp_max(true));
-    render::draw_text("HP:", Panel::char_lines, pos, clr_menu_drk);
-    pos.x += 3;
-    string str = hp + "/" + hp_max;
+    str = "H:";
+    render::draw_text(str, Panel::char_lines, pos, clr_menu_drk);
+    pos.x += str.length();
+    str = hp + "/" + hp_max;
     render::draw_text(str, Panel::char_lines, pos, clr_red_lgt);
-    pos.x += str.length() + 1;
 
     //Spirit
-    const string spi    = to_str(player.get_spi());
-    const string spi_max = to_str(player.get_spi_max());
-    render::draw_text("SPI:", Panel::char_lines, pos, clr_menu_drk);
-    pos.x += 4;
+    pos.x = X_SPI;
+    const string spi        = to_str(player.get_spi());
+    const string spi_max    = to_str(player.get_spi_max());
+    str = "S:";
+    render::draw_text(str, Panel::char_lines, pos, clr_menu_drk);
+    pos.x += str.length();
     str = spi + "/" + spi_max;
     render::draw_text(str, Panel::char_lines, pos, clr_blue_lgt);
-    pos.x += str.length() + 1;
 
-    //Sanity
+    //Insanity
+    pos.x = X_INS;
     const int SHOCK = player.get_shock_total();
     const int INS = player.get_insanity();
-    render::draw_text("INS:", Panel::char_lines, pos, clr_menu_drk);
-    pos.x += 4;
+    str = "INS:";
+    render::draw_text(str, Panel::char_lines, pos, clr_menu_drk);
+    pos.x += str.length();
     const Clr short_san_clr =
         SHOCK < 50  ? clr_green_lgt :
         SHOCK < 75  ? clr_yellow   :
@@ -65,55 +85,9 @@ void draw()
     pos.x += str.length();
     str = to_str(INS) + "%";
     render::draw_text(str, Panel::char_lines, pos, clr_magenta);
-    pos.x += str.length() + 1;
-
-    //Armor
-    render::draw_text("ARM:", Panel::char_lines, pos, clr_menu_drk);
-    pos.x += 4;
-    const Item* const armor = player.get_inv().get_item_in_slot(Slot_id::body);
-
-    if (armor)
-    {
-        str = static_cast<const Armor*>(armor)->get_armor_data_line(false);
-        render::draw_text(str, Panel::char_lines, pos, clr_white);
-        pos.x += str.length() + 1;
-    }
-    else
-    {
-        render::draw_text("N/A", Panel::char_lines, pos, clr_white);
-        pos.x += 4;
-    }
-
-    //Electric lantern
-    render::draw_text("L:", Panel::char_lines, pos, clr_menu_drk);
-    pos.x += 2;
-    str                 = "";
-    Clr lantern_info_clr  = clr_white;
-
-    for (const Item* const item : map::player->get_inv().general_)
-    {
-        if (item->get_id() == Item_id::electric_lantern)
-        {
-            const Device_lantern* const lantern = static_cast<const Device_lantern*>(item);
-            str = to_str(lantern->nr_turns_left_);
-
-            if (lantern->is_activated_)
-            {
-                lantern_info_clr  = clr_yellow;
-            }
-
-            break;
-        }
-    }
-
-    if (str == "") {str = "N/A";}
-
-    render::draw_text(str, Panel::char_lines, pos, lantern_info_clr);
-    pos.x += str.length() + 1;
 
     //Wielded weapon
-    pos.x += 1;
-    const int X_POS_MISSILE = pos.x;
+    pos.x = X_WIELDED;
 
     Item* item_wielded = map::player->get_inv().get_item_in_slot(Slot_id::wielded);
 
@@ -135,6 +109,7 @@ void draw()
         pos.x += 2;
 
         const auto& data = item_wielded->get_data();
+
         //If thrown weapon, force melee info - otherwise use weapon context.
         const Item_ref_att_inf att_inf = data.main_att_mode == Main_att_mode::thrown ?
                                          Item_ref_att_inf::melee : Item_ref_att_inf::wpn_context;
@@ -145,54 +120,58 @@ void draw()
     }
     else
     {
-        render::draw_text("Unarmed", Panel::char_lines, pos, clr_white);
+        str = "Unarmed";
+        render::draw_text(str, Panel::char_lines, pos, clr_white);
+        pos.x += str.length() + 1;
     }
 
-    pos.x = CHARACTER_LINE_X0;
-    pos.y += 1;
+    //----------------------------------------------------------------------------- SECOND ROW
+    ++pos.y;
 
     // Level and xp
-    render::draw_text("LVL:", Panel::char_lines, pos, clr_menu_drk);
-    pos.x += 4;
+    pos.x = X_XP;
+    str = "XP:";
+    render::draw_text(str, Panel::char_lines, pos, clr_menu_drk);
+    pos.x += str.length();
     str = to_str(dungeon_master::get_cLvl());
+    if (dungeon_master::get_cLvl() < PLAYER_MAX_CLVL)
+    {
+        //Not at maximum character level
+        str += "(" + to_str(dungeon_master::get_xp_to_next_lvl()) + ")";
+    }
     render::draw_text(str, Panel::char_lines, pos, clr_white);
-    pos.x += str.length() + 1;
-    render::draw_text("NXT:", Panel::char_lines, pos, clr_menu_drk);
-    pos.x += 4;
-    str = dungeon_master::get_cLvl() >= PLAYER_MAX_CLVL ? "-" :
-          to_str(dungeon_master::get_xp_to_next_lvl());
-    render::draw_text(str, Panel::char_lines, pos, clr_white);
-    pos.x += str.length() + 1;
 
     //Dungeon level
-    render::draw_text("DLVL:", Panel::char_lines, pos, clr_menu_drk);
-    pos.x += 5;
+    pos.x = X_DLVL;
+    str = "DLVL:";
+    render::draw_text(str, Panel::char_lines, pos, clr_menu_drk);
+    pos.x += str.length();
     str = map::dlvl > 0 ? to_str(map::dlvl) : "-";
     render::draw_text(str, Panel::char_lines, pos, clr_white);
-    pos.x += str.length() + 1;
 
     //Turn number
-    render::draw_text("T:", Panel::char_lines, pos, clr_menu_drk);
-    pos.x += 2;
+    pos.x = X_TURN;
+    str = "T:";
+    render::draw_text(str, Panel::char_lines, pos, clr_menu_drk);
+    pos.x += str.length();
     str = to_str(game_time::get_turn());
     render::draw_text(str, Panel::char_lines, pos, clr_white);
-    pos.x += str.length() + 1;
 
     //Encumbrance
-    render::draw_text("ENC:", Panel::char_lines, pos, clr_menu_drk);
-    pos.x += 4;
+    pos.x = X_ENC;
+    str = "ENC:";
+    render::draw_text(str, Panel::char_lines, pos, clr_menu_drk);
+    pos.x += str.length();
     const int ENC = map::player->get_enc_percent();
     str = to_str(ENC) + "%";
     const Clr enc_clr = ENC < 100 ? clr_green_lgt :
                         ENC < ENC_IMMOBILE_LVL ? clr_yellow : clr_red_lgt;
     render::draw_text(str, Panel::char_lines, pos, enc_clr);
-    pos.x += str.length() + 1;
 
     //Thrown weapon
-    pos.x = X_POS_MISSILE;
+    pos.x = X_THROWN;
 
-    auto* const item_missiles =
-        map::player->get_inv().get_item_in_slot(Slot_id::thrown);
+    auto* const item_missiles = map::player->get_inv().get_item_in_slot(Slot_id::thrown);
 
     if (item_missiles)
     {
@@ -219,8 +198,9 @@ void draw()
         render::draw_text("No thrown weapon", Panel::char_lines, pos, clr_white);
     }
 
-    pos.y += 1;
-    pos.x = CHARACTER_LINE_X0;
+    //----------------------------------------------------------------------------- THIRD ROW
+    ++pos.y;
+    pos.x = 0;
 
     vector<Str_and_clr> props_line;
     map::player->get_prop_handler().get_props_interface_line(props_line);

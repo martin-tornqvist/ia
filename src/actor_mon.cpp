@@ -1454,17 +1454,17 @@ void Ooze_poison::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::ooze_poison_spew_pus));
 }
 
-void Color_oOSpace::mk_start_items()
+void Color_oo_space::mk_start_items()
 {
-    inv_->put_in_intrinsics(item_factory::mk(Item_id::colour_oOSpace_touch));
+    inv_->put_in_intrinsics(item_factory::mk(Item_id::color_oo_space_touch));
 }
 
-const Clr& Color_oOSpace::get_clr()
+const Clr& Color_oo_space::get_clr()
 {
     return cur_color;
 }
 
-void Color_oOSpace::on_std_turn_()
+void Color_oo_space::on_std_turn_()
 {
     cur_color.r = rnd::range(40, 255);
     cur_color.g = rnd::range(40, 255);

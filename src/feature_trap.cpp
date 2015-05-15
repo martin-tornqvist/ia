@@ -124,11 +124,9 @@ void Trap::trigger_on_purpose(Actor& actor_triggering)
 
 void Trap::bump(Actor& actor_bumping)
 {
-    TRACE_FUNC_BEGIN;
+    TRACE_FUNC_BEGIN_VERBOSE;
 
     const actor_data_t& d = actor_bumping.get_data();
-
-    TRACE << "Name of actor bumping: \"" << d.name_a << "\"" << endl;
 
     bool props[size_t(Prop_id::END)];
     actor_bumping.get_prop_handler().get_prop_ids(props);
@@ -206,7 +204,7 @@ void Trap::bump(Actor& actor_bumping)
         }
     }
 
-    TRACE_FUNC_END;
+    TRACE_FUNC_END_VERBOSE;
 }
 
 void Trap::disarm()

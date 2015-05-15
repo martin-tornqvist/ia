@@ -37,7 +37,7 @@ enum class Actor_id
     worm_mass,
     dust_vortex, fire_vortex, frost_vortex,
     ooze_black, ooze_clear, ooze_putrid, ooze_poison,
-    colour_oOSpace,
+    color_oo_space,
     chthonian,
     hunting_horror,
     sentry_drone,

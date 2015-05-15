@@ -2300,7 +2300,7 @@ void init_data_list()
 
     d.name_a = "A Colour out of space";
     d.name_the = "The Colour out of space";
-    d.id = Actor_id::colour_oOSpace;
+    d.id = Actor_id::color_oo_space;
     d.ai[int(Ai_id::looks)] = true;
     d.ai[int(Ai_id::makes_room_for_friend)] = true;
     d.ai[int(Ai_id::attacks)] = true;
