@@ -129,7 +129,7 @@ void mk_forest_tree_patch()
         ++nr_trees_created;
 
         //Find next pos
-        while (map::cells[cur_pos.x][cur_pos.y].rigid->get_id() == Feature_id::tree ||
+        while (map::cells[cur_pos.x][cur_pos.y].rigid->id() == Feature_id::tree ||
                 utils::king_dist(cur_pos, map::player->pos) <= 2)
         {
             if (rnd::coin_toss())
@@ -162,14 +162,14 @@ void mk_forest_trees()
     {
         for (int i = 0; i < nr_forest_patches; ++i) {mk_forest_tree_patch();}
 
-        const map_templ& templ     = map_templ_handling::get_templ(Map_templ_id::church);
-        const Pos       templ_dims = templ.get_dims();
+        const map_templ& templ     = map_templ_handling::templ(Map_templ_id::church);
+        const Pos       templ_dims = templ.dims();
 
         for (int x = 0; x < templ_dims.x; ++x)
         {
             for (int y = 0; y < templ_dims.y; ++y)
             {
-                const auto& templ_cell = templ.get_cell(x, y);
+                const auto& templ_cell = templ.cell(x, y);
                 const auto  f_id       = templ_cell.feature_id;
 
                 const Pos p(church_pos + Pos(x, y));
@@ -177,7 +177,7 @@ void mk_forest_trees()
                 if (f_id != Feature_id::END)
                 {
                     Rigid* const f =
-                        map::put(static_cast<Rigid*>(feature_data::get_data(f_id).mk_obj(p)));
+                        map::put(static_cast<Rigid*>(feature_data::data(f_id).mk_obj(p)));
 
                     if (f_id == Feature_id::grass)
                     {
@@ -202,7 +202,7 @@ void mk_forest_trees()
         {
             for (int y = 0; y < MAP_H; ++y)
             {
-                const auto id = map::cells[x][y].rigid->get_id();
+                const auto id = map::cells[x][y].rigid->id();
 
                 if (id == Feature_id::stairs)
                 {
@@ -253,7 +253,7 @@ void mk_forest_trees()
     }
 
     //Place graves
-    vector<High_score_entry> entries = high_score::get_entries_sorted();
+    vector<High_score_entry> entries = high_score::entries_sorted();
 
     const int NR_NON_WIN =
         count_if(begin(entries), end(entries), [](const High_score_entry & e)
@@ -294,7 +294,7 @@ void mk_forest_trees()
                         const bool IS_LEFT_OF_CHURCH =
                             X < church_pos.x - (SEARCH_RADI) + 2;
                         const bool IS_ON_STONE_PATH =
-                            map::cells[X][Y].rigid->get_id() == Feature_id::floor;
+                            map::cells[X][Y].rigid->id() == Feature_id::floor;
 
                         bool is_left_of_prev = true;
 
@@ -358,15 +358,15 @@ void mk_forest_trees()
                 entry = entries[entry_idx];
             }
 
-            const string    name      = entry.get_name();
+            const string    name      = entry.name();
             vector<string>  date_str_vector;
 
             date_str_vector.clear();
-            text_format::get_space_separated_list(entry.get_date_and_time(), date_str_vector);
+            text_format::space_separated_list(entry.date_and_time(), date_str_vector);
             const string  date_str     = date_str_vector[0];
-            const string  score_str    = to_str(entry.get_score());
+            const string  score_str    = to_str(entry.score());
             string        class_str    = "";
-            player_bon::get_bg_title(entry.get_bg(), class_str);
+            player_bon::bg_title(entry.bg(), class_str);
 
             grave->set_inscription("RIP " + name + ", " + class_str + ", " + date_str
                                    + ", Score: " + score_str);
@@ -412,15 +412,15 @@ bool mk_egypt_lvl()
 {
     map::reset_map();
 
-    const map_templ& templ     = map_templ_handling::get_templ(Map_templ_id::egypt);
-    const Pos       templ_dims = templ.get_dims();
+    const map_templ& templ     = map_templ_handling::templ(Map_templ_id::egypt);
+    const Pos       templ_dims = templ.dims();
     const int       STAIR_VAL = rnd::range(2, 3);
 
     for (int x = 0; x < templ_dims.x; ++x)
     {
         for (int y = 0; y < templ_dims.y; ++y)
         {
-            const auto& templ_cell = templ.get_cell(x, y);
+            const auto& templ_cell = templ.cell(x, y);
             const Pos p(x, y);
 
             if (templ_cell.feature_id != Feature_id::END)
@@ -431,7 +431,7 @@ bool mk_egypt_lvl()
                 }
                 else
                 {
-                    const auto& d = feature_data::get_data(templ_cell.feature_id);
+                    const auto& d = feature_data::data(templ_cell.feature_id);
                     map::put(static_cast<Rigid*>(d.mk_obj(p)));
                 }
             }
@@ -455,7 +455,7 @@ bool mk_egypt_lvl()
         {
             Rigid* const f = map::cells[x][y].rigid;
 
-            if (f->get_id() == Feature_id::wall)
+            if (f->id() == Feature_id::wall)
             {
                 static_cast<Wall*>(f)->type_ = Wall_type::egypt;
             }
@@ -472,20 +472,20 @@ bool mk_leng_lvl()
 {
     map::reset_map();
 
-    const map_templ& templ     = map_templ_handling::get_templ(Map_templ_id::leng);
-    const Pos       templ_dims = templ.get_dims();
+    const map_templ& templ     = map_templ_handling::templ(Map_templ_id::leng);
+    const Pos       templ_dims = templ.dims();
 
     for (int x = 0; x < templ_dims.x; ++x)
     {
         for (int y = 0; y < templ_dims.y; ++y)
         {
-            const auto& templ_cell = templ.get_cell(x, y);
+            const auto& templ_cell = templ.cell(x, y);
             const auto  f_id       = templ_cell.feature_id;
             const Pos p(x, y);
 
             if (f_id != Feature_id::END)
             {
-                const auto& d = feature_data::get_data(f_id);
+                const auto& d = feature_data::data(f_id);
                 auto* const f = map::put(static_cast<Rigid*>(d.mk_obj(p)));
 
                 if (f_id == Feature_id::grass)
@@ -547,8 +547,8 @@ bool mk_rats_in_the_walls_lvl()
 {
     map::reset_map();
 
-    const map_templ& templ     = map_templ_handling::get_templ(Map_templ_id::rats_in_the_walls);
-    const Pos       templ_dims = templ.get_dims();
+    const map_templ& templ     = map_templ_handling::templ(Map_templ_id::rats_in_the_walls);
+    const Pos       templ_dims = templ.dims();
 
     const int       RAT_THING_ONE_IN_N_RAT = 3;
     const Fraction  bones_one_in_n(1, 2);
@@ -557,16 +557,16 @@ bool mk_rats_in_the_walls_lvl()
     {
         for (int y = 0; y < templ_dims.y; ++y)
         {
-            const auto& templ_cell = templ.get_cell(x, y);
+            const auto& templ_cell = templ.cell(x, y);
             const auto  f_id       = templ_cell.feature_id;
             const Pos p(x, y);
 
             if (f_id != Feature_id::END)
             {
-                const auto& d = feature_data::get_data(f_id);
+                const auto& d = feature_data::data(f_id);
                 auto* const f = map::put(static_cast<Rigid*>(d.mk_obj(p)));
 
-                if (f->get_id() == Feature_id::wall)
+                if (f->id() == Feature_id::wall)
                 {
                     if (templ_cell.val == 2) //Constructed walls
                     {
@@ -588,7 +588,7 @@ bool mk_rats_in_the_walls_lvl()
                         static_cast<Wall*>(f)->type_ = Wall_type::cave;
                     }
                 }
-                else if (f->get_id() == Feature_id::floor)
+                else if (f->id() == Feature_id::floor)
                 {
                     if (templ_cell.val == 4 && rnd::fraction(bones_one_in_n))
                     {
@@ -672,8 +672,8 @@ bool mk_boss_lvl()
 {
     map::reset_map();
 
-    const map_templ& templ     = map_templ_handling::get_templ(Map_templ_id::boss_level);
-    const Pos       templ_dims = templ.get_dims();
+    const map_templ& templ     = map_templ_handling::templ(Map_templ_id::boss_level);
+    const Pos       templ_dims = templ.dims();
 
     for (int x = 0; x < templ_dims.x; ++x)
     {
@@ -681,14 +681,14 @@ bool mk_boss_lvl()
         {
 //            map::cells[x][y].is_dark = true;
 
-            const auto& templ_cell = templ.get_cell(x, y);
+            const auto& templ_cell = templ.cell(x, y);
             const auto  f_id       = templ_cell.feature_id;
 
             const Pos p(x, y);
 
             if (f_id != Feature_id::END)
             {
-                const auto& d = feature_data::get_data(f_id);
+                const auto& d = feature_data::data(f_id);
                 map::put(static_cast<Rigid*>(d.mk_obj(p)));
             }
 
@@ -715,7 +715,7 @@ bool mk_boss_lvl()
         {
             Rigid* const f = map::cells[x][y].rigid;
 
-            if (f->get_id() == Feature_id::wall)
+            if (f->id() == Feature_id::wall)
             {
                 static_cast<Wall*>(f)->type_ = Wall_type::egypt;
             }
@@ -731,9 +731,9 @@ bool mk_trapezohedron_lvl()
     map::reset_map();
 
     const map_templ& templ =
-        map_templ_handling::get_templ(Map_templ_id::trapezohedron_level);
+        map_templ_handling::templ(Map_templ_id::trapezohedron_level);
 
-    const Pos templ_dims = templ.get_dims();
+    const Pos templ_dims = templ.dims();
 
     for (int x = 0; x < templ_dims.x; ++x)
     {
@@ -741,7 +741,7 @@ bool mk_trapezohedron_lvl()
         {
             map::cells[x][y].is_dark = true;
 
-            const auto& templ_cell   = templ.get_cell(x, y);
+            const auto& templ_cell   = templ.cell(x, y);
             const auto  f_id         = templ_cell.feature_id;
             const auto  item_id      = templ_cell.item_id;
 
@@ -749,7 +749,7 @@ bool mk_trapezohedron_lvl()
 
             if (f_id != Feature_id::END)
             {
-                const auto& d = feature_data::get_data(f_id);
+                const auto& d = feature_data::data(f_id);
                 map::put(static_cast<Rigid*>(d.mk_obj(p)));
             }
 
@@ -776,7 +776,7 @@ bool mk_trapezohedron_lvl()
         {
             Rigid* const f = map::cells[x][y].rigid;
 
-            if (f->get_id() == Feature_id::wall)
+            if (f->id() == Feature_id::wall)
             {
                 static_cast<Wall*>(f)->type_ = Wall_type::egypt;
             }

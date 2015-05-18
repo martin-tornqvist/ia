@@ -25,12 +25,12 @@ public:
         repeats_str_(""),
         nr_(1) {}
 
-    void get_str_with_repeats(std::string& str_ref) const
+    void str_with_repeats(std::string& str_ref) const
     {
         str_ref = str_ + (nr_ > 1 ? repeats_str_ : "");
     }
 
-    void get_str_raw(std::string& str_ref) const {str_ref = str_;}
+    void str_raw(std::string& str_ref) const {str_ref = str_;}
 
     void incr_repeat()
     {
@@ -70,7 +70,7 @@ void clear();
 
 void add_line_to_history(const std::string& line_to_add);
 
-const std::vector< std::vector<Msg> >& get_history();
+const std::vector< std::vector<Msg> >& history();
 
 } //log
 

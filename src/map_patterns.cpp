@@ -12,8 +12,8 @@ using namespace std;
 namespace map_patterns
 {
 
-void get_cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,
-                       std::vector<Pos>& away_from_walls)
+void cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,
+                   std::vector<Pos>& away_from_walls)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     vector<Pos> pos_bucket;
@@ -42,10 +42,10 @@ void get_cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,
 
     for (Pos& pos : pos_bucket)
     {
-        const int NR_BLK_R = get_walk_blockers_in_dir(Dir::right, pos);
-        const int NR_BLK_D = get_walk_blockers_in_dir(Dir::down, pos);
-        const int NR_BLK_L = get_walk_blockers_in_dir(Dir::left, pos);
-        const int NR_BLK_U = get_walk_blockers_in_dir(Dir::up, pos);
+        const int NR_BLK_R = walk_blockers_in_dir(Dir::right, pos);
+        const int NR_BLK_D = walk_blockers_in_dir(Dir::down, pos);
+        const int NR_BLK_L = walk_blockers_in_dir(Dir::left, pos);
+        const int NR_BLK_U = walk_blockers_in_dir(Dir::up, pos);
 
         const bool IS_ZERO_BLK_ALL_DIR =
             NR_BLK_R == 0 && NR_BLK_D == 0 && NR_BLK_L == 0 && NR_BLK_U == 0;
@@ -64,7 +64,7 @@ void get_cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,
             {
                 const auto* const f = map::cells[pos.x + dx][pos.y + dy].rigid;
 
-                if (f->get_id() == Feature_id::door) {is_door_adjacent = true;}
+                if (f->id() == Feature_id::door) {is_door_adjacent = true;}
             }
         }
 
@@ -85,7 +85,7 @@ void get_cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,
     TRACE_FUNC_END_VERBOSE;
 }
 
-int get_walk_blockers_in_dir(const Dir dir, const Pos& pos)
+int walk_blockers_in_dir(const Dir dir, const Pos& pos)
 {
     int nr_blockers = 0;
 

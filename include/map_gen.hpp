@@ -14,7 +14,7 @@ public:
     Region(const Rect& r) : main_room_(nullptr), r_(r), is_free_(true) {}
     Region()              : main_room_(nullptr), r_(),  is_free_(true) {}
 
-    Rect get_rnd_room_rect() const;
+    Rect rnd_room_rect() const;
 
     Room* main_room_;
     Rect  r_;
@@ -33,7 +33,7 @@ void cut_room_corners(const Room& room);
 void mk_pillars_in_room(const Room& room);
 void cavify_room(Room& room);
 
-void get_valid_room_corr_entries(const Room& room, std::vector<Pos>& out);
+void valid_room_corr_entries(const Room& room, std::vector<Pos>& out);
 
 void mk_path_find_cor(Room& r0, Room& r1,
                       bool door_proposals[MAP_W][MAP_H] = nullptr);

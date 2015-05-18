@@ -34,15 +34,15 @@ public:
 
     void navigate(const Dir dir);
 
-    int get_element() const;
+    int element() const;
 
-    int get_nr_of_items_in_first_list()   const {return nr_a_;}
-    int get_nr_of_items_in_second_list()  const {return nr_b_;}
-    Pos get_pos()                    const {return pos_;}
+    int nr_of_items_in_first_list()   const {return nr_a_;}
+    int nr_of_items_in_second_list()  const {return nr_b_;}
+    Pos pos()                    const {return pos_;}
 
     bool is_at_idx(const int ELEMENT) const;
 
-    int get_y() const {return pos_.y;}
+    int y() const {return pos_.y;}
 
     void set_pos(const Pos& p);
 

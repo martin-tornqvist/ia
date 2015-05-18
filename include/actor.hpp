@@ -22,18 +22,33 @@ public:
     Actor();
     virtual ~Actor();
 
-    Prop_handler&        get_prop_handler()    {return *prop_handler_;}
-    actor_data_t&         get_data()           {return *data_;}
-    const actor_data_t&   get_data() const     {return *data_;}
-    Inventory&          get_inv()            {return *inv_;}
+    Prop_handler& prop_handler()
+    {
+        return *prop_handler_;
+    }
+
+    Actor_data_t& data()
+    {
+        return *data_;
+    }
+
+    const Actor_data_t& data() const
+    {
+        return *data_;
+    }
+
+    Inventory& inv()
+    {
+        return *inv_;
+    }
 
     //This function is not concerned with whether the parameter actor is within
     //FOV, or if the actor is actually hidden or not. It merely tests the sneak
-    //skill of the actor, and various conditions such as light/dark.
-    //It has no side effects - it merely does a randomized check.
+    //skill of the actor, and various conditions such as light/dark. It has no
+    //side effects - it merely does a randomized check.
     bool is_spotting_hidden_actor(Actor& actor);
 
-    void place(const Pos& pos_, actor_data_t& data);
+    void place(const Pos& pos_, Actor_data_t& data);
     virtual void place_() {}
 
     Actor_died hit(int dmg, const Dmg_type dmg_type,
@@ -57,28 +72,27 @@ public:
 
     virtual void update_clr();
 
-    //Function taking into account FOV, invisibility, status, etc
-    //This is the final word on whether an actor can visually perceive
-    //another actor.
+    //Function taking into account FOV, invisibility, status, etc. This is the final word on
+    //whether an actor can visually perceive another actor.
     bool can_see_actor(const Actor& other, const bool blocked_los[MAP_W][MAP_H]) const;
 
-    void get_seen_foes(std::vector<Actor*>& out);
+    void seen_foes(std::vector<Actor*>& out);
 
-    Actor_id     get_id()                             const {return data_->id;}
-    int         get_hp()                             const {return hp_;}
-    int         get_spi()                            const {return spi_;}
-    int         get_hp_max(const bool WITH_MODIFIERS) const;
-    int         get_spi_max()                         const {return spi_max_;}
-    Actor_speed  get_speed()                          const;
+    Actor_id id() const {return data_->id;}
+    int hp() const {return hp_;}
+    int spi() const {return spi_;}
+    int hp_max(const bool WITH_MODIFIERS) const;
+    int spi_max() const {return spi_max_;}
+    Actor_speed speed() const;
 
-    std::string get_name_the()        const   {return data_->name_the;}
-    std::string get_name_a()          const   {return data_->name_a;}
-    std::string get_corpse_name_a()    const   {return data_->corpse_name_a;}
-    std::string get_corpse_name_the()  const   {return data_->corpse_name_the;}
-    bool is_humanoid()               const   {return data_->is_humanoid;}
-    char get_glyph()                 const   {return glyph_;}
-    virtual const Clr& get_clr()             {return clr_;}
-    const Tile_id& get_tile()         const   {return tile_;}
+    std::string name_the() const   {return data_->name_the;}
+    std::string name_a() const   {return data_->name_a;}
+    std::string corpse_name_a() const   {return data_->corpse_name_a;}
+    std::string corpse_name_the() const   {return data_->corpse_name_the;}
+    bool is_humanoid() const   {return data_->is_humanoid;}
+    char glyph() const   {return glyph_;}
+    virtual const Clr& clr() {return clr_;}
+    const Tile_id& tile() const   {return tile_;}
 
     void add_light(bool light_map[MAP_W][MAP_H]) const;
 
@@ -86,12 +100,12 @@ public:
 
     void teleport();
 
-    bool       is_alive()  const {return state_ == Actor_state::alive;}
-    bool       is_corpse()  const {return state_ == Actor_state::corpse;}
-    Actor_state get_state()  const {return state_;}
+    bool is_alive() const {return state_ == Actor_state::alive;}
+    bool is_corpse() const {return state_ == Actor_state::corpse;}
+    Actor_state state() const {return state_;}
 
-    virtual bool is_leader_of(const Actor* const actor)       const = 0;
-    virtual bool is_actor_my_leader(const Actor* const actor)  const = 0;
+    virtual bool is_leader_of(const Actor* const actor) const = 0;
+    virtual bool is_actor_my_leader(const Actor* const actor) const = 0;
 
     bool is_player() const;
 
@@ -118,7 +132,7 @@ protected:
     Pos lair_cell_;
 
     Prop_handler*  prop_handler_;
-    actor_data_t*   data_;
+    Actor_data_t*   data_;
     Inventory*    inv_;
 };
 

@@ -7,11 +7,11 @@
 struct God
 {
 public:
-    God(const std::string& name, const std::string& descr) :
-        name_(name), descr_(descr) {}
+    God(const std::string& god_name, const std::string& god_descr) :
+        name_(god_name), descr_(god_descr) {}
 
-    std::string get_name()   const {return name_;}
-    std::string get_descr()  const {return descr_;}
+    std::string name()   const {return name_;}
+    std::string descr()  const {return descr_;}
 
 private:
     std::string name_;
@@ -25,7 +25,7 @@ void init();
 
 bool is_god_lvl();
 
-const God* get_cur_god();
+const God* cur_god();
 
 void set_random_god();
 

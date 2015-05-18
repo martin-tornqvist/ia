@@ -26,7 +26,7 @@ bool try_cast_random_spell(Mon& mon)
         !mon.is_alive()              ||                  //Dead?
         mon.spell_cool_down_cur_ > 0   ||                  //Cooldown?
         mon.spells_known_.empty()    ||                  //No spells?
-        !mon.get_prop_handler().allow_cast_spell(false))    //Prop not allowing to cast now?
+        !mon.prop_handler().allow_cast_spell(false))    //Prop not allowing to cast now?
     {
         return false;
     }
@@ -41,8 +41,8 @@ bool try_cast_random_spell(Mon& mon)
 
         if (spell->allow_mon_cast_now(mon))
         {
-            const int CUR_SPI = mon.get_spi();
-            const int SPELL_MAX_SPI = spell->get_spi_cost(false, &mon).upper;
+            const int CUR_SPI = mon.spi();
+            const int SPELL_MAX_SPI = spell->spi_cost(false, &mon).upper;
 
             //Cast spell if max spirit cost is lower than current spirit,
             if (SPELL_MAX_SPI < CUR_SPI)
@@ -52,8 +52,8 @@ bool try_cast_random_spell(Mon& mon)
             }
 
             //This point reached means SPI was lower than the spells potential cost
-            const int CUR_HP  = mon.get_hp();
-            const int MAX_HP  = mon.get_hp_max(true);
+            const int CUR_HP  = mon.hp();
+            const int MAX_HP  = mon.hp_max(true);
 
             //If monster is not allied to player, with a small chance, cast the spell
             //anyway if HP is low.
@@ -64,7 +64,7 @@ bool try_cast_random_spell(Mon& mon)
             {
                 if (map::player->can_see_actor(mon, nullptr))
                 {
-                    msg_log::add(mon.get_name_the() + " looks desperate.");
+                    msg_log::add(mon.name_the() + " looks desperate.");
                 }
 
                 spell->cast(&mon, true);
@@ -92,29 +92,29 @@ bool handle_closed_blocking_door(Mon& mon, vector<Pos> path)
     const Pos& p = path.back();
     Feature* const f = map::cells[p.x][p.y].rigid;
 
-    if (f->get_id() == Feature_id::door)
+    if (f->id() == Feature_id::door)
     {
         Door* const door = static_cast<Door*>(f);
 
         bool props[size_t(Prop_id::END)];
-        mon.get_prop_handler().get_prop_ids(props);
+        mon.prop_handler().prop_ids(props);
 
         if (!door->can_move(props))
         {
             if (!door->is_stuck())
             {
-                if (mon.get_data().can_open_doors)
+                if (mon.data().can_open_doors)
                 {
                     door->try_open(&mon);
                     return true;
                 }
-                else if (mon.get_data().can_bash_doors)
+                else if (mon.data().can_bash_doors)
                 {
                     door->hit(Dmg_type::physical, Dmg_method::kick, &mon);
                     return true;
                 }
             }
-            else if (mon.get_data().can_bash_doors)
+            else if (mon.data().can_bash_doors)
             {
                 door->hit(Dmg_type::physical, Dmg_method::kick, &mon);
                 return true;
@@ -148,7 +148,7 @@ bool check_if_blocking_mon(const Pos& pos, Mon& other)
 
 //Returns all free positions around the acting monster that is further
 //from the player than the monster's current position
-void get_move_bucket(Mon& self, vector<Pos>& dirs_to_mk)
+void move_bucket(Mon& self, vector<Pos>& dirs_to_mk)
 {
 
     dirs_to_mk.clear();
@@ -237,7 +237,7 @@ bool make_room_for_friend(Mon& mon)
                         {
                             // Get a list of neighbouring free cells
                             vector<Pos> pos_bucket;
-                            get_move_bucket(mon, pos_bucket);
+                            move_bucket(mon, pos_bucket);
 
                             //Sort the list by closeness to player
                             Is_closer_to_pos cmp(map::player->pos);
@@ -245,7 +245,7 @@ bool make_room_for_friend(Mon& mon)
 
                             //Test positions until one is found that is not blocking
                             //another monster
-                            for (const auto& target_pos : pos_bucket)
+                            for (const auto& tgt_pos : pos_bucket)
                             {
                                 bool is_good_candidate_found = true;
 
@@ -261,7 +261,7 @@ bool make_room_for_friend(Mon& mon)
 
                                         if (
                                             OTHER_IS_SEEING_PLAYER &&
-                                            check_if_blocking_mon(target_pos, *other))
+                                            check_if_blocking_mon(tgt_pos, *other))
                                         {
                                             is_good_candidate_found = false;
                                             break;
@@ -271,8 +271,8 @@ bool make_room_for_friend(Mon& mon)
 
                                 if (is_good_candidate_found)
                                 {
-                                    const Pos offset = target_pos - mon.pos;
-                                    mon.move_dir(dir_utils::get_dir(offset));
+                                    const Pos offset = tgt_pos - mon.pos;
+                                    mon.move_dir(dir_utils::dir(offset));
                                     return true;
                                 }
                             }
@@ -290,7 +290,7 @@ bool make_room_for_friend(Mon& mon)
 namespace
 {
 
-Dir get_dir_to_rnd_adj_free_cell(Mon& mon)
+Dir dir_to_rnd_adj_free_cell(Mon& mon)
 {
     bool blocked[MAP_W][MAP_H];
     cell_check::Blocks_actor cellcheck(mon, true);
@@ -314,7 +314,7 @@ Dir get_dir_to_rnd_adj_free_cell(Mon& mon)
 
     for (Mob* mob : game_time::mobs_)
     {
-        const Pos& p = mob->get_pos();
+        const Pos& p = mob->pos();
         blocked[p.x][p.y] = cellcheck.check(*mob);
     }
 
@@ -325,11 +325,11 @@ Dir get_dir_to_rnd_adj_free_cell(Mon& mon)
 
     if (last_dir_travelled != Dir::center)
     {
-        const Pos target_cell(mon_pos + dir_utils::get_offset(last_dir_travelled));
+        const Pos tgt_cell(mon_pos + dir_utils::offset(last_dir_travelled));
 
         if (
-            !blocked[target_cell.x][target_cell.y] &&
-            utils::is_pos_inside(target_cell, area_allowed))
+            !blocked[tgt_cell.x][tgt_cell.y] &&
+            utils::is_pos_inside(tgt_cell, area_allowed))
         {
             return last_dir_travelled;
         }
@@ -346,13 +346,13 @@ Dir get_dir_to_rnd_adj_free_cell(Mon& mon)
             if (dx != 0 || dy != 0)
             {
                 const Pos offset(dx, dy);
-                const Pos target_cell(mon_pos + offset);
+                const Pos tgt_cell(mon_pos + offset);
 
                 if (
-                    !blocked[target_cell.x][target_cell.y] &&
-                    utils::is_pos_inside(target_cell, area_allowed))
+                    !blocked[tgt_cell.x][tgt_cell.y] &&
+                    utils::is_pos_inside(tgt_cell, area_allowed))
                 {
-                    dir_bucket.push_back(dir_utils::get_dir(offset));
+                    dir_bucket.push_back(dir_utils::dir(offset));
                 }
             }
         }
@@ -378,7 +378,7 @@ bool move_to_random_adj_cell(Mon& mon)
     {
         if (mon.is_roaming_allowed_ || mon.aware_counter_ > 0)
         {
-            const Dir dir = get_dir_to_rnd_adj_free_cell(mon);
+            const Dir dir = dir_to_rnd_adj_free_cell(mon);
 
             if (dir != Dir::center)
             {
@@ -398,14 +398,14 @@ bool move_to_tgt_simple(Mon& mon)
         if (mon.aware_counter_ > 0 || map::player->is_leader_of(&mon))
         {
             const Pos offset  = mon.tgt_->pos - mon.pos;
-            const Pos signs   = offset.get_signs();
+            const Pos signs   = offset.signs();
             bool blocked[MAP_W][MAP_H];
             map_parse::run(cell_check::Blocks_actor(mon, true), blocked);
             const Pos new_pos(mon.pos + signs);
 
             if (!blocked[new_pos.x][new_pos.y])
             {
-                mon.move_dir(dir_utils::get_dir(signs));
+                mon.move_dir(dir_utils::dir(signs));
                 return true;
             }
         }
@@ -421,7 +421,7 @@ bool step_path(Mon& mon, vector<Pos>& path)
         if (!path.empty())
         {
             const Pos delta = path.back() - mon.pos;
-            mon.move_dir(dir_utils::get_dir(delta));
+            mon.move_dir(dir_utils::dir(delta));
             return true;
         }
     }
@@ -454,7 +454,7 @@ bool step_to_lair_if_los(Mon& mon, const Pos& lair_cell)
             }
             else
             {
-                mon.move_dir(dir_utils::get_dir(delta));
+                mon.move_dir(dir_utils::dir(delta));
                 return true;
             }
         }
@@ -478,7 +478,7 @@ bool look_become_player_aware(Mon& mon)
     const bool WAS_AWARE_BEFORE = mon.aware_counter_ > 0;
 
     vector<Actor*> seen_foes;
-    mon.get_seen_foes(seen_foes);
+    mon.seen_foes(seen_foes);
 
     if (!seen_foes.empty() && WAS_AWARE_BEFORE)
     {
@@ -595,7 +595,7 @@ void set_path_to_player_if_aware(Mon& mon, vector<Pos>& path)
     utils::reset_array(blocked, false);
 
     bool props[size_t(Prop_id::END)];
-    mon.get_prop_handler().get_prop_ids(props);
+    mon.prop_handler().prop_ids(props);
 
     const int X0 = 1;
     const int Y0 = 1;
@@ -610,11 +610,11 @@ void set_path_to_player_if_aware(Mon& mon, vector<Pos>& path)
 
             if (!f->can_move(props))
             {
-                if (f->get_id() == Feature_id::door)
+                if (f->id() == Feature_id::door)
                 {
                     const Door* const door = static_cast<const Door*>(f);
 
-                    const actor_data_t& d = mon.get_data();
+                    const Actor_data_t& d = mon.data();
 
                     if (
                         (!d.can_open_doors && !d.can_bash_doors) ||

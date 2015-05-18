@@ -16,14 +16,8 @@ namespace item_factory
 
 Item* mk(const Item_id item_id, const int NR_ITEMS)
 {
-    Item*               r       = nullptr;
-    Item_data_t* const  d       = item_data::data[int(item_id)];
-    Item_data_t*        ammo_d  = nullptr;
-
-    if (d->ranged.ammo_item_id != Item_id::END)
-    {
-        ammo_d = item_data::data[int(d->ranged.ammo_item_id)];
-    }
+    Item*           r = nullptr;
+    Item_data_t*    d = &item_data::data[int(item_id)];
 
     switch (item_id)
     {
@@ -96,7 +90,7 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
     case Item_id::mi_go_sting:
     case Item_id::mi_go_commander_sting:
     case Item_id::the_high_priest_claw:
-        r = new Wpn(d, ammo_d);
+        r = new Wpn(d);
         break;
 
     case Item_id::pharaoh_staff:
@@ -120,11 +114,11 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
         break;
 
     case Item_id::sawed_off:
-        r = new Sawed_off(d, ammo_d);
+        r = new Sawed_off(d);
         break;
 
     case Item_id::pump_shotgun:
-        r = new Pump_shotgun(d, ammo_d);
+        r = new Pump_shotgun(d);
         break;
 
     case Item_id::shotgun_shell:
@@ -132,7 +126,7 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
         break;
 
     case Item_id::machine_gun:
-        r = new Machine_gun(d, ammo_d);
+        r = new Machine_gun(d);
         break;
 
     case Item_id::drum_of_bullets:
@@ -143,23 +137,23 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
         break;
 
     case Item_id::pistol:
-        r = new Pistol(d, ammo_d);
+        r = new Pistol(d);
         break;
 
     case Item_id::flare_gun:
-        r = new Flare_gun(d, ammo_d);
+        r = new Flare_gun(d);
         break;
 
     case Item_id::incinerator:
-        r = new Incinerator(d, ammo_d);
+        r = new Incinerator(d);
         break;
 
     case Item_id::spike_gun:
-        r = new Spike_gun(d, ammo_d);
+        r = new Spike_gun(d);
         break;
 
     case Item_id::mi_go_gun:
-        r = new Mi_go_gun(d, ammo_d);
+        r = new Mi_go_gun(d);
         break;
 
     case Item_id::armor_flack_jacket:
@@ -319,10 +313,12 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
         return nullptr;
     }
 
-    if (!r->get_data().is_stackable && NR_ITEMS != 1)
+    // Sanity check
+    if (!r->data().is_stackable && NR_ITEMS != 1)
     {
         TRACE << "Specified number of items (" + to_str(NR_ITEMS) + ") != 1 for "
-              << "non-stackable item" << endl;
+              << "non-stackable item: "
+              << int(d->id) << ", " << r->name(Item_ref_type::plain) << endl;
         assert(false);
     }
     else
@@ -335,7 +331,7 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
 
 void set_item_randomized_properties(Item* item)
 {
-    const Item_data_t& d = item->get_data();
+    const Item_data_t& d = item->data();
 
     if (d.id == Item_id::pharaoh_staff)
     {
@@ -356,30 +352,35 @@ void set_item_randomized_properties(Item* item)
     {
         Wpn* const wpn = static_cast<Wpn*>(item);
 
-        if (wpn->AMMO_CAP == 1)
+        if (wpn->ammo_max() == 1)
         {
-            wpn->nr_ammo_loaded = rnd::coin_toss() ? 1 : 0;
+            wpn->nr_ammo_loaded_ = rnd::coin_toss() ? 1 : 0;
         }
         else
         {
+            const int AMMO_CAP = wpn->ammo_max();
+
             if (d.ranged.is_machine_gun)
             {
                 //Number of machine gun bullets loaded needs to be a multiple of the
                 //number of projectiles fired in each burst
-                const int CAP         = wpn->AMMO_CAP;
-                const int CAP_SCALED  = CAP / NR_MG_PROJECTILES;
-                const int MIN_SCALED  = CAP_SCALED / 4;
-                wpn->nr_ammo_loaded     = rnd::range(MIN_SCALED, CAP_SCALED) *
+
+                const int CAP_SCALED    = AMMO_CAP / NR_MG_PROJECTILES;
+                const int MIN_SCALED    = CAP_SCALED / 4;
+                wpn->nr_ammo_loaded_    = rnd::range(MIN_SCALED, CAP_SCALED) *
                                           NR_MG_PROJECTILES;
             }
             else //Not machinegun
             {
-                wpn->nr_ammo_loaded = rnd::range(wpn->AMMO_CAP / 4, wpn->AMMO_CAP);
+                wpn->nr_ammo_loaded_ = rnd::range(AMMO_CAP / 4, AMMO_CAP);
             }
         }
     }
 
-    if (d.is_stackable) {item->nr_items_ = rnd::range(1, d.max_stack_at_spawn);}
+    if (d.is_stackable)
+    {
+        item->nr_items_ = rnd::range(1, d.max_stack_at_spawn);
+    }
 }
 
 Item* mk_item_on_floor(const Item_id item_id, const Pos& pos)
@@ -392,7 +393,7 @@ Item* mk_item_on_floor(const Item_id item_id, const Pos& pos)
 
 Item* copy_item(Item* old_item)
 {
-    Item* new_item     = mk(old_item->get_data().id);
+    Item* new_item      = mk(old_item->data().id);
     new_item->nr_items_ = old_item->nr_items_;
     return new_item;
 }
@@ -403,11 +404,11 @@ Item* mk_random_scroll_or_potion(const bool ALLOW_SCROLLS, const bool ALLOW_POTI
 
     for (int i = 0; i < int(Item_id::END); ++i)
     {
-        const Item_data_t* const d = item_data::data[i];
+        const Item_data_t& d = item_data::data[i];
 
         if (
-            (d->type == Item_type::scroll && ALLOW_SCROLLS) ||
-            (d->type == Item_type::potion && ALLOW_POTIONS))
+            (d.type == Item_type::scroll && ALLOW_SCROLLS) ||
+            (d.type == Item_type::potion && ALLOW_POTIONS))
         {
             item_bucket.push_back(static_cast<Item_id>(i));
         }

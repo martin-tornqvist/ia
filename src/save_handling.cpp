@@ -29,14 +29,14 @@ namespace
 void collect_lines_from_game(vector<string>& lines)
 {
     lines.clear();
-    lines.push_back(map::player->get_name_a());
+    lines.push_back(map::player->name_a());
 
     dungeon_master::store_to_save_lines(lines);
     scroll_handling::store_to_save_lines(lines);
     potion_handling::store_to_save_lines(lines);
     item_data::store_to_save_lines(lines);
     jewelry_handling::store_to_save_lines(lines);
-    map::player->get_inv().store_to_save_lines(lines);
+    map::player->inv().store_to_save_lines(lines);
     map::player->store_to_save_lines(lines);
     player_bon::store_to_save_lines(lines);
     map_travel::store_to_save_lines(lines);
@@ -50,8 +50,8 @@ void setup_game_from_lines(vector<string>& lines)
 {
     TRACE_FUNC_BEGIN;
     const string& player_name = lines.front();
-    map::player->get_data().name_a = player_name;
-    map::player->get_data().name_the = player_name;
+    map::player->data().name_a = player_name;
+    map::player->data().name_the = player_name;
     lines.erase(begin(lines));
 
     dungeon_master::setup_from_save_lines(lines);
@@ -59,7 +59,7 @@ void setup_game_from_lines(vector<string>& lines)
     potion_handling::setup_from_save_lines(lines);
     item_data::setup_from_save_lines(lines);
     jewelry_handling::setup_from_save_lines(lines);
-    map::player->get_inv().setup_from_save_lines(lines);
+    map::player->inv().setup_from_save_lines(lines);
     map::player->setup_from_save_lines(lines);
     player_bon::setup_from_save_lines(lines);
     map_travel::setup_from_save_lines(lines);

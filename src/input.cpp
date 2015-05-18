@@ -48,7 +48,7 @@ bool is_inited_ = false;
 void query_quit()
 {
     const vector<string> quit_choices = vector<string> {"yes", "no"};
-    const int QUIT_CHOICE = popup::show_menu_msg (
+    const int QUIT_CHOICE = popup::show_menu_msg(
                                 "Save and highscore are not kept.",
                                 false, quit_choices, "Quit the current game?");
 
@@ -83,15 +83,15 @@ void handle_map_mode_key_press(const Key_data& d)
 
             if (d.is_shift_held)
             {
-                map::player->move_dir (Dir::up_right);
+                map::player->move_dir(Dir::up_right);
             }
             else if (d.is_ctrl_held)
             {
-                map::player->move_dir (Dir::down_right);
+                map::player->move_dir(Dir::down_right);
             }
             else
             {
-                map::player->move_dir (Dir::right);
+                map::player->move_dir(Dir::right);
             }
         }
 
@@ -103,7 +103,7 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive() )
         {
             msg_log::clear();
-            map::player->move_dir (Dir::down);
+            map::player->move_dir(Dir::down);
         }
 
         clear_events();
@@ -117,15 +117,15 @@ void handle_map_mode_key_press(const Key_data& d)
 
             if (d.is_shift_held)
             {
-                map::player->move_dir (Dir::up_left);
+                map::player->move_dir(Dir::up_left);
             }
             else if (d.is_ctrl_held)
             {
-                map::player->move_dir (Dir::down_left);
+                map::player->move_dir(Dir::down_left);
             }
             else
             {
-                map::player->move_dir (Dir::left);
+                map::player->move_dir(Dir::left);
             }
         }
 
@@ -137,7 +137,7 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive() )
         {
             msg_log::clear();
-            map::player->move_dir (Dir::up);
+            map::player->move_dir(Dir::up);
         }
 
         clear_events();
@@ -148,7 +148,7 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive() )
         {
             msg_log::clear();
-            map::player->move_dir (Dir::up_right);
+            map::player->move_dir(Dir::up_right);
         }
 
         clear_events();
@@ -159,7 +159,7 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive() )
         {
             msg_log::clear();
-            map::player->move_dir (Dir::down_right);
+            map::player->move_dir(Dir::down_right);
         }
 
         clear_events();
@@ -170,7 +170,7 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive() )
         {
             msg_log::clear();
-            map::player->move_dir (Dir::down_left);
+            map::player->move_dir(Dir::down_left);
         }
 
         clear_events();
@@ -181,7 +181,7 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive() )
         {
             msg_log::clear();
-            map::player->move_dir (Dir::up_left);
+            map::player->move_dir(Dir::up_left);
         }
 
         clear_events();
@@ -193,30 +193,30 @@ void handle_map_mode_key_press(const Key_data& d)
         {
             msg_log::clear();
 
-            if (player_bon::traits[int (Trait::steady_aimer)])
+            if (player_bon::traits[int(Trait::steady_aimer)])
             {
-                Prop_handler& prop_hlr = map::player->get_prop_handler();
+                Prop_handler& prop_hlr = map::player->prop_handler();
 
                 int nr_turns_aiming_old = 0;
 
-                if (player_bon::traits[int (Trait::sharp_shooter)])
+                if (player_bon::traits[int(Trait::sharp_shooter)])
                 {
                     Prop* const prop_aiming_old =
-                        prop_hlr.get_prop (Prop_id::aiming, Prop_src::applied);
+                        prop_hlr.prop(Prop_id::aiming, Prop_src::applied);
 
                     if (prop_aiming_old)
                     {
                         nr_turns_aiming_old =
-                            static_cast<Prop_aiming*> (prop_aiming_old)->nr_turns_aiming;
+                            static_cast<Prop_aiming*>(prop_aiming_old)->nr_turns_aiming;
                     }
                 }
 
-                Prop_aiming* const aiming = new Prop_aiming (Prop_turns::specific, 1);
+                Prop_aiming* const aiming = new Prop_aiming(Prop_turns::specific, 1);
                 aiming->nr_turns_aiming += nr_turns_aiming_old;
-                prop_hlr.try_apply_prop (aiming);
+                prop_hlr.try_apply_prop(aiming);
             }
 
-            map::player->move_dir (Dir::center);
+            map::player->move_dir(Dir::center);
         }
 
         clear_events();
@@ -248,7 +248,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
         if (map::player->is_alive() )
         {
-            reload::reload_wielded_wpn (* (map::player) );
+            reload::reload_wielded_wpn(*(map::player) );
         }
 
         clear_events();
@@ -256,7 +256,7 @@ void handle_map_mode_key_press(const Key_data& d)
     }
 
     //----------------------------------- KICK
-    else if ( (d.key == 'q') )
+    else if ((d.key == 'q') )
     {
         msg_log::clear();
 
@@ -333,72 +333,69 @@ void handle_map_mode_key_press(const Key_data& d)
 
         if (
             map::player->is_alive() &&
-            map::player->get_prop_handler().allow_attack_ranged (true) )
+            map::player->prop_handler().allow_attack_ranged(true) )
         {
-            auto* const item = map::player->get_inv().get_item_in_slot (Slot_id::wielded);
+            auto* const item = map::player->inv().item_in_slot(Slot_id::wielded);
 
             if (item)
             {
-                const Item_data_t& item_data = item->get_data();
+                const Item_data_t& item_data = item->data();
 
                 if (item_data.ranged.is_ranged_wpn)
                 {
-                    auto* wpn = static_cast<Wpn*> (item);
+                    auto* wpn = static_cast<Wpn*>(item);
 
                     //TODO: Quick hack for the Mi-go gun, shouldn't be here - refactor
                     if (
-                        wpn->get_data().id == Item_id::mi_go_gun  &&
-                        wpn->nr_ammo_loaded == 0                &&
-                        map::player->get_hp() > 1)
+                        wpn->data().id == Item_id::mi_go_gun    &&
+                        wpn->nr_ammo_loaded_ == 0               &&
+                        map::player->hp() > 1)
                     {
-                        const string wpn_name = wpn->get_name (Item_ref_type::plain,
-                                                               Item_ref_inf::none);
+                        const string wpn_name = wpn->name(Item_ref_type::plain,
+                                                          Item_ref_inf::none);
 
-                        msg_log::add ("The " + wpn_name + " draws power from my essence!",
-                                      clr_msg_bad);
+                        msg_log::add("The " + wpn_name + " draws power from my essence!",
+                                     clr_msg_bad);
 
                         render::draw_map_and_interface();
-                        ++wpn->nr_ammo_loaded;
-                        map::player->hit (1, Dmg_type::pure);
+                        ++wpn->nr_ammo_loaded_;
+                        map::player->hit(1, Dmg_type::pure);
                         return;
                     }
 
-                    if (wpn->nr_ammo_loaded >= 1 || item_data.ranged.has_infinite_ammo)
+                    if (wpn->nr_ammo_loaded_ >= 1 || item_data.ranged.has_infinite_ammo)
                     {
-                        auto on_marker_at_pos = [&] (const Pos & p)
+                        auto on_marker_at_pos = [&](const Pos & p)
                         {
                             msg_log::clear();
-                            look::print_location_info_msgs (p);
+                            look::print_location_info_msgs(p);
 
-                            auto* const actor = utils::get_actor_at_pos (p);
+                            auto* const actor = utils::actor_at_pos(p);
 
                             if (
                                 actor               &&
-                                !actor->is_player()  &&
-                                map::player->can_see_actor (*actor, nullptr) )
+                                !actor->is_player() &&
+                                map::player->can_see_actor(*actor, nullptr) )
                             {
-                                bool tgt_props[size_t (Prop_id::END)];
-                                actor->get_prop_handler().get_prop_ids (tgt_props);
+                                bool tgt_props[size_t(Prop_id::END)];
+                                actor->prop_handler().prop_ids(tgt_props);
 
                                 const bool GETS_UNDEAD_BANE_BON =
-                                    player_bon::gets_undead_bane_bon (*map::player,
-                                                                      actor->get_data() );
+                                    player_bon::gets_undead_bane_bon(*map::player,
+                                                                     actor->data());
 
-                                if (
-                                    !tgt_props[int (Prop_id::ethereal)] ||
-                                    GETS_UNDEAD_BANE_BON)
+                                if (!tgt_props[int(Prop_id::ethereal)] || GETS_UNDEAD_BANE_BON)
                                 {
-                                    Ranged_att_data data (*map::player, *wpn, actor->pos,
-                                                          actor->pos);
-                                    msg_log::add (to_str (data.hit_chance_tot) +
-                                                  "% hit chance.");
+                                    Ranged_att_data data(*map::player, *wpn, actor->pos,
+                                                         actor->pos);
+                                    msg_log::add(to_str(data.hit_chance_tot) + "% hit chance.");
                                 }
                             }
 
-                            msg_log::add ("[f] to fire" + cancel_info_str);
+                            msg_log::add("[f] to fire" + cancel_info_str);
                         };
 
-                        auto on_key_press = [&] (const Pos & p, const Key_data & d_)
+                        auto on_key_press = [&](const Pos & p, const Key_data & d_)
                         {
                             if (d_.key == 'f')
                             {
@@ -407,16 +404,16 @@ void handle_map_mode_key_press(const Key_data& d)
                                     msg_log::clear();
                                     render::draw_map_and_interface();
 
-                                    Actor* const actor = utils::get_actor_at_pos (p);
+                                    Actor* const actor = utils::actor_at_pos(p);
 
                                     if (
                                         actor &&
-                                        map::player->can_see_actor (*actor, nullptr) )
+                                        map::player->can_see_actor(*actor, nullptr) )
                                     {
                                         map::player->tgt_ = actor;
                                     }
 
-                                    attack::ranged (*map::player, *wpn, p);
+                                    attack::ranged(*map::player, *wpn, p);
 
                                     return Marker_done::yes;
                                 }
@@ -430,27 +427,27 @@ void handle_map_mode_key_press(const Key_data& d)
                             return Marker_done::no;
                         };
 
-                        marker::run (Marker_draw_tail::yes, Marker_use_player_tgt::yes,
-                                     on_marker_at_pos, on_key_press,
-                                     wpn->get_data().ranged.effective_range);
+                        marker::run(Marker_draw_tail::yes, Marker_use_player_tgt::yes,
+                                    on_marker_at_pos, on_key_press,
+                                    wpn->data().ranged.effective_range);
                     }
                     else /* Not enough ammo loaded */ if (config::is_ranged_wpn_auto_reload() )
                     {
-                        reload::reload_wielded_wpn (* (map::player) );
+                        reload::reload_wielded_wpn(*(map::player) );
                     }
                     else // Not enough ammo loaded, and auto reloading is disabled
                     {
-                        msg_log::add ("There is no ammo loaded.");
+                        msg_log::add("There is no ammo loaded.");
                     }
                 }
                 else //Wielded item is not a ranged weapon
                 {
-                    msg_log::add ("I am not wielding a firearm.");
+                    msg_log::add("I am not wielding a firearm.");
                 }
             }
             else //Not wielding any item
             {
-                msg_log::add ("I am not wielding a weapon.");
+                msg_log::add("I am not wielding a weapon.");
             }
         }
 
@@ -470,7 +467,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
             if (item_at_player)
             {
-                if (item_at_player->get_data().id == Item_id::trapezohedron)
+                if (item_at_player->data().id == Item_id::trapezohedron)
                 {
                     dungeon_master::win_game();
                     init::quit_to_main_menu = true;
@@ -506,15 +503,15 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive() )
         {
 
-            const bool IS_FREE_TURN = player_bon::get_bg() == Bg::war_vet;
+            const bool IS_FREE_TURN = player_bon::bg() == Bg::war_vet;
 
             const string swift_str = IS_FREE_TURN ? " swiftly" : "";
 
-            Inventory& inv = map::player->get_inv();
+            Inventory& inv = map::player->inv();
 
-            Item* const wielded   = inv.get_item_in_slot (Slot_id::wielded);
-            Item* const alt       = inv.get_item_in_slot (Slot_id::wielded_alt);
-            const string ALT_NAME = alt ? alt->get_name (Item_ref_type::a) : "";
+            Item* const wielded   = inv.item_in_slot(Slot_id::wielded);
+            Item* const alt       = inv.item_in_slot(Slot_id::wielded_alt);
+            const string ALT_NAME = alt ? alt->name(Item_ref_type::a) : "";
 
             if (wielded || alt)
             {
@@ -522,27 +519,27 @@ void handle_map_mode_key_press(const Key_data& d)
                 {
                     if (alt)
                     {
-                        msg_log::add ("I" + swift_str + " swap to my prepared weapon (" +
-                                      ALT_NAME + ").");
+                        msg_log::add("I" + swift_str + " swap to my prepared weapon (" +
+                                     ALT_NAME + ").");
                     }
                     else
                     {
-                        const string NAME = wielded->get_name (Item_ref_type::a);
-                        msg_log::add ("I" + swift_str + " put away my weapon (" +
-                                      NAME + ").");
+                        const string NAME = wielded->name(Item_ref_type::a);
+                        msg_log::add("I" + swift_str + " put away my weapon (" +
+                                     NAME + ").");
                     }
                 }
                 else
                 {
-                    msg_log::add ("I" + swift_str + " wield my prepared weapon (" +
-                                  ALT_NAME + ").");
+                    msg_log::add("I" + swift_str + " wield my prepared weapon (" +
+                                 ALT_NAME + ").");
                 }
 
-                inv.swap_wielded_and_prepared (IS_FREE_TURN);
+                inv.swap_wielded_and_prepared(IS_FREE_TURN);
             }
             else
             {
-                msg_log::add ("I have neither a wielded nor a prepared weapon.");
+                msg_log::add("I have neither a wielded nor a prepared weapon.");
             }
         }
 
@@ -558,18 +555,18 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive() )
         {
             vector<Actor*> seen_mon;
-            map::player->get_seen_foes (seen_mon);
+            map::player->seen_foes(seen_mon);
 
             if (seen_mon.empty() )
             {
                 const int TURNS_TO_APPLY = 5;
-                msg_log::add ("I pause for a while...");
+                msg_log::add("I pause for a while...");
                 map::player->wait_turns_left = TURNS_TO_APPLY - 1;
                 game_time::tick();
             }
             else
             {
-                msg_log::add (msg_mon_prevent_cmd);
+                msg_log::add(msg_mon_prevent_cmd);
                 render::draw_map_and_interface();
             }
         }
@@ -586,40 +583,40 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive() )
         {
             vector<Actor*> seen_mon;
-            map::player->get_seen_foes (seen_mon);
+            map::player->seen_foes(seen_mon);
 
             if (!seen_mon.empty() )
             {
                 //Monster is seen, prevent quick move
-                msg_log::add (msg_mon_prevent_cmd);
+                msg_log::add(msg_mon_prevent_cmd);
                 render::draw_map_and_interface();
             }
-            else if (!map::player->get_prop_handler().allow_see() )
+            else if (!map::player->prop_handler().allow_see() )
             {
                 //Player is blinded
-                msg_log::add ("Not while blind.");
+                msg_log::add("Not while blind.");
                 render::draw_map_and_interface();
             }
             else
             {
-                bool props[size_t (Prop_id::END)];
-                map::player->get_prop_handler().get_prop_ids (props);
+                bool props[size_t(Prop_id::END)];
+                map::player->prop_handler().prop_ids(props);
 
-                if (props[int (Prop_id::poisoned)])
+                if (props[int(Prop_id::poisoned)])
                 {
                     //Player is poisoned
-                    msg_log::add ("Not while poisoned.");
+                    msg_log::add("Not while poisoned.");
                     render::draw_map_and_interface();
                 }
-                else if (props[int (Prop_id::confused)])
+                else if (props[int(Prop_id::confused)])
                 {
                     //Player is confused
-                    msg_log::add ("Not while confused.");
+                    msg_log::add("Not while confused.");
                     render::draw_map_and_interface();
                 }
                 else
                 {
-                    msg_log::add ("Which direction?" + cancel_info_str);
+                    msg_log::add("Which direction?" + cancel_info_str);
                     render::draw_map_and_interface();
                     const Dir dir = query::dir();
                     msg_log::clear();
@@ -630,7 +627,7 @@ void handle_map_mode_key_press(const Key_data& d)
                     }
                     else
                     {
-                        map::player->set_quick_move (dir);
+                        map::player->set_quick_move(dir);
                     }
 
                 }
@@ -650,20 +647,20 @@ void handle_map_mode_key_press(const Key_data& d)
         {
             if (map::player->active_explosive)
             {
-                auto on_marker_at_pos = [] (const Pos & p)
+                auto on_marker_at_pos = [](const Pos & p)
                 {
                     msg_log::clear();
-                    look::print_location_info_msgs (p);
-                    msg_log::add ("[t] to throw." + cancel_info_str);
+                    look::print_location_info_msgs(p);
+                    msg_log::add("[t] to throw." + cancel_info_str);
                 };
 
-                auto on_key_press = [] (const Pos & p, const Key_data & d_)
+                auto on_key_press = [](const Pos & p, const Key_data & d_)
                 {
                     if (d_.sdl_key == SDLK_RETURN || d_.key == 't')
                     {
                         msg_log::clear();
                         render::draw_map_and_interface();
-                        throwing::player_throw_lit_explosive (p);
+                        throwing::player_throw_lit_explosive(p);
                         return Marker_done::yes;
                     }
                     else if (d_.sdl_key == SDLK_SPACE || d_.sdl_key == SDLK_ESCAPE)
@@ -675,62 +672,62 @@ void handle_map_mode_key_press(const Key_data& d)
                     return Marker_done::no;
                 };
 
-                marker::run (Marker_draw_tail::yes, Marker_use_player_tgt::no, on_marker_at_pos,
-                             on_key_press);
+                marker::run(Marker_draw_tail::yes, Marker_use_player_tgt::no, on_marker_at_pos,
+                            on_key_press);
             }
             else //Not holding explosive
             {
-                if (map::player->get_prop_handler().allow_attack_ranged (true) )
+                if (map::player->prop_handler().allow_attack_ranged(true) )
                 {
-                    Inventory& player_inv  = map::player->get_inv();
-                    Item* item_stack       = player_inv.get_item_in_slot (Slot_id::thrown);
+                    Inventory& player_inv  = map::player->inv();
+                    Item* item_stack       = player_inv.item_in_slot(Slot_id::thrown);
 
                     if (item_stack)
                     {
-                        Item* item_to_throw     = item_factory::copy_item (item_stack);
+                        Item* item_to_throw     = item_factory::copy_item(item_stack);
                         item_to_throw->nr_items_ = 1;
 
-                        auto on_marker_at_pos = [&] (const Pos & p)
+                        auto on_marker_at_pos = [&](const Pos & p)
                         {
                             msg_log::clear();
-                            look::print_location_info_msgs (p);
+                            look::print_location_info_msgs(p);
 
-                            auto* const actor = utils::get_actor_at_pos (p);
+                            auto* const actor = utils::actor_at_pos(p);
 
                             if (
                                 actor               &&
                                 !actor->is_player()  &&
-                                map::player->can_see_actor (*actor, nullptr) )
+                                map::player->can_see_actor(*actor, nullptr) )
                             {
-                                bool tgt_props[size_t (Prop_id::END)];
-                                actor->get_prop_handler().get_prop_ids (tgt_props);
+                                bool tgt_props[size_t(Prop_id::END)];
+                                actor->prop_handler().prop_ids(tgt_props);
 
                                 const bool GETS_UNDEAD_BANE_BON =
-                                    player_bon::gets_undead_bane_bon (*map::player,
-                                                                      actor->get_data() );
+                                    player_bon::gets_undead_bane_bon(*map::player,
+                                                                     actor->data() );
 
                                 if (
-                                    !tgt_props[int (Prop_id::ethereal)] ||
+                                    !tgt_props[int(Prop_id::ethereal)] ||
                                     GETS_UNDEAD_BANE_BON)
                                 {
-                                    Throw_att_data data (*map::player, *item_to_throw,
-                                                         actor->pos, actor->pos);
+                                    Throw_att_data data(*map::player, *item_to_throw,
+                                                        actor->pos, actor->pos);
 
-                                    msg_log::add (to_str (data.hit_chance_tot) +
-                                                  "% hit chance.");
+                                    msg_log::add(to_str(data.hit_chance_tot) +
+                                                 "% hit chance.");
                                 }
                             }
 
-                            msg_log::add ("[t] to throw");
+                            msg_log::add("[t] to throw");
                         };
 
-                        auto on_key_press = [&] (const Pos & p, const Key_data & d_)
+                        auto on_key_press = [&](const Pos & p, const Key_data & d_)
                         {
                             if (d_.sdl_key == SDLK_RETURN || d_.key == 't')
                             {
                                 if (p == map::player->pos)
                                 {
-                                    msg_log::add (
+                                    msg_log::add(
                                         "I think I can persevere a little longer.");
                                 }
                                 else
@@ -738,12 +735,12 @@ void handle_map_mode_key_press(const Key_data& d)
                                     msg_log::clear();
                                     render::draw_map_and_interface();
 
-                                    Actor* const actor = utils::get_actor_at_pos (p);
+                                    Actor* const actor = utils::actor_at_pos(p);
 
                                     if (actor) {map::player->tgt_ = actor;}
 
-                                    throwing::throw_item (*map::player, p, *item_to_throw);
-                                    player_inv.decr_item_in_slot (Slot_id::thrown);
+                                    throwing::throw_item(*map::player, p, *item_to_throw);
+                                    player_inv.decr_item_in_slot(Slot_id::thrown);
                                 }
 
                                 return Marker_done::yes;
@@ -759,13 +756,13 @@ void handle_map_mode_key_press(const Key_data& d)
                             return Marker_done::no;
                         };
 
-                        marker::run (Marker_draw_tail::yes, Marker_use_player_tgt::yes,
-                                     on_marker_at_pos, on_key_press,
-                                     item_to_throw->get_data().ranged.effective_range);
+                        marker::run(Marker_draw_tail::yes, Marker_use_player_tgt::yes,
+                                    on_marker_at_pos, on_key_press,
+                                    item_to_throw->data().ranged.effective_range);
                     }
                     else //No item equipped
                     {
-                        msg_log::add (
+                        msg_log::add(
                             "I have no missiles chosen for throwing (press 'w').");
                     }
                 }
@@ -783,44 +780,44 @@ void handle_map_mode_key_press(const Key_data& d)
 
         if (map::player->is_alive() )
         {
-            if (map::player->get_prop_handler().allow_see() )
+            if (map::player->prop_handler().allow_see() )
             {
-                auto on_marker_at_pos = [&] (const Pos & p)
+                auto on_marker_at_pos = [&](const Pos & p)
                 {
                     msg_log::clear();
-                    look::print_location_info_msgs (p);
+                    look::print_location_info_msgs(p);
 
-                    const auto* const actor = utils::get_actor_at_pos (p);
+                    const auto* const actor = utils::actor_at_pos(p);
 
                     if (
                         actor                   &&
                         actor != map::player    &&
-                        map::player->can_see_actor (*actor, nullptr) )
+                        map::player->can_see_actor(*actor, nullptr) )
                     {
-                        msg_log::add ("[v] for description");
+                        msg_log::add("[v] for description");
                     }
 
-                    msg_log::add (cancel_info_str_no_space);
+                    msg_log::add(cancel_info_str_no_space);
                 };
 
-                auto on_key_press = [&] (const Pos & p, const Key_data & d_)
+                auto on_key_press = [&](const Pos & p, const Key_data & d_)
                 {
                     if (d_.key == 'v')
                     {
-                        const auto* const actor = utils::get_actor_at_pos (p);
+                        const auto* const actor = utils::actor_at_pos(p);
 
                         if (
                             actor                   &&
                             actor != map::player    &&
-                            map::player->can_see_actor (*actor, nullptr) )
+                            map::player->can_see_actor(*actor, nullptr) )
                         {
                             msg_log::clear();
 
-                            look::print_detailed_actor_descr (*actor);
+                            look::print_detailed_actor_descr(*actor);
 
                             render::draw_map_and_interface();
 
-                            on_marker_at_pos (p);
+                            on_marker_at_pos(p);
                         }
                     }
                     else if (d_.sdl_key == SDLK_SPACE || d_.sdl_key == SDLK_ESCAPE)
@@ -832,12 +829,12 @@ void handle_map_mode_key_press(const Key_data& d)
                     return Marker_done::no;
                 };
 
-                marker::run (Marker_draw_tail::yes, Marker_use_player_tgt::yes, on_marker_at_pos,
-                             on_key_press);
+                marker::run(Marker_draw_tail::yes, Marker_use_player_tgt::yes, on_marker_at_pos,
+                            on_key_press);
             }
             else
             {
-                msg_log::add ("I cannot see.");
+                msg_log::add("I cannot see.");
             }
         }
 
@@ -905,39 +902,39 @@ void handle_map_mode_key_press(const Key_data& d)
     //----------------------------------- ITEM SHORTCUTS
     else if (d.key == 'a')
     {
-        Inventory&  inv         = map::player->get_inv();
-        Item*       medical_bag  = inv.get_first_item_in_backpack_with_id (Item_id::medical_bag);
-        Item*       lantern     = inv.get_first_item_in_backpack_with_id (Item_id::electric_lantern);
+        Inventory&  inv         = map::player->inv();
+        Item*       medical_bag  = inv.first_item_in_backpack_with_id(Item_id::medical_bag);
+        Item*       lantern     = inv.first_item_in_backpack_with_id(Item_id::electric_lantern);
 
         msg_log::clear();
 
         if (!medical_bag && !lantern)
         {
-            msg_log::add ("No item with shortcut carried.");
+            msg_log::add("No item with shortcut carried.");
             render::draw_map_and_interface();
             clear_events();
             return;
         }
 
-        msg_log::add ("Use which item?",          clr_white_high);
+        msg_log::add("Use which item?",          clr_white_high);
 
         if (medical_bag)
         {
-            msg_log::add ("[a] Medical Bag",        clr_white_high);
+            msg_log::add("[a] Medical Bag",        clr_white_high);
         }
 
         if (lantern)
         {
-            msg_log::add ("[e] Electric Lantern",   clr_white_high);
+            msg_log::add("[e] Electric Lantern",   clr_white_high);
         }
 
-        msg_log::add (cancel_info_str_no_space,       clr_white_high);
+        msg_log::add(cancel_info_str_no_space,       clr_white_high);
 
         render::draw_map_and_interface();
 
         while (true)
         {
-            const Key_data shortcut_key_data = query::letter (true);
+            const Key_data shortcut_key_data = query::letter(true);
 
             if (
                 shortcut_key_data.sdl_key == SDLK_ESCAPE ||
@@ -951,11 +948,11 @@ void handle_map_mode_key_press(const Key_data& d)
             {
                 msg_log::clear();
 
-                for (Item* const item : map::player->get_inv().general_)
+                for (Item* const item : map::player->inv().general_)
                 {
-                    if (item->get_id() == Item_id::medical_bag)
+                    if (item->id() == Item_id::medical_bag)
                     {
-                        item->activate (map::player);
+                        item->activate(map::player);
                         break;
                     }
                 }
@@ -966,11 +963,11 @@ void handle_map_mode_key_press(const Key_data& d)
             {
                 msg_log::clear();
 
-                for (Item* const item : map::player->get_inv().general_)
+                for (Item* const item : map::player->inv().general_)
                 {
-                    if (item->get_id() == Item_id::electric_lantern)
+                    if (item->id() == Item_id::electric_lantern)
                     {
-                        item->activate (map::player);
+                        item->activate(map::player);
                         break;
                     }
                 }
@@ -991,7 +988,7 @@ void handle_map_mode_key_press(const Key_data& d)
             msg_log::clear();
 
             const vector<string> choices {"Options", "Tome of Wisdom", "Quit", "Cancel"};
-            const int CHOICE = popup::show_menu_msg ("", true, choices);
+            const int CHOICE = popup::show_menu_msg("", true, choices);
 
             if (CHOICE == 0)
             {
@@ -1045,7 +1042,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         if (IS_DEBUG_MODE)
         {
-            dungeon_master::player_gain_xp (100);
+            dungeon_master::player_gain_xp(100);
             clear_events();
         }
 
@@ -1087,7 +1084,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         if (IS_DEBUG_MODE)
         {
-            map::player->incr_shock (50, Shock_src::misc);
+            map::player->incr_shock(50, Shock_src::misc);
             clear_events();
         }
 
@@ -1099,15 +1096,15 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         if (IS_DEBUG_MODE)
         {
-            item_factory::mk_item_on_floor (Item_id::gas_mask, map::player->pos);
+            item_factory::mk_item_on_floor(Item_id::gas_mask, map::player->pos);
 
-            for (int i = 0; i < int (Item_id::END); ++i)
+            for (int i = 0; i < int(Item_id::END); ++i)
             {
-                const auto* const item_data = item_data::data[i];
+                const auto& item_data = item_data::data[i];
 
-                if (item_data->value != Item_value::normal && item_data->allow_spawn)
+                if (item_data.value != Item_value::normal && item_data.allow_spawn)
                 {
-                    item_factory::mk_item_on_floor (Item_id (i), map::player->pos);
+                    item_factory::mk_item_on_floor(Item_id(i), map::player->pos);
                 }
             }
 
@@ -1135,7 +1132,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         if (IS_DEBUG_MODE)
         {
-            map::player->get_prop_handler().try_apply_prop (new Prop_infected (Prop_turns::std) );
+            map::player->prop_handler().try_apply_prop(new Prop_infected(Prop_turns::std) );
             clear_events();
         }
 
@@ -1148,7 +1145,7 @@ void handle_map_mode_key_press(const Key_data& d)
         string cmd_tried = " ";
         cmd_tried[0] = d.key;
         msg_log::clear();
-        msg_log::add ("Unknown command '" + cmd_tried + "'.");
+        msg_log::add("Unknown command '" + cmd_tried + "'.");
         clear_events();
         return;
     }
@@ -1158,11 +1155,11 @@ void map_mode_input()
 {
     if (is_inited_)
     {
-        const Key_data& d = get_input();
+        const Key_data& d = input();
 
         if (!init::quit_to_main_menu)
         {
-            handle_map_mode_key_press (d);
+            handle_map_mode_key_press(d);
         }
     }
 }
@@ -1171,11 +1168,11 @@ void clear_events()
 {
     if (is_inited_)
     {
-        while (SDL_PollEvent (&sdl_event_) ) {}
+        while (SDL_PollEvent(&sdl_event_) ) {}
     }
 }
 
-Key_data get_input(const bool IS_O_RETURN)
+Key_data input(const bool IS_O_RETURN)
 {
     Key_data ret = Key_data();
 
@@ -1190,7 +1187,7 @@ Key_data get_input(const bool IS_O_RETURN)
 
     while (!is_done)
     {
-        sdl_wrapper::sleep (1);
+        sdl_wrapper::sleep(1);
 
         const bool DID_POLL_EVENT = SDL_PollEvent(&sdl_event_);
 

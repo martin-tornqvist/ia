@@ -51,12 +51,12 @@ void player_throw_lit_explosive(const Pos& aim_cell)
 
     auto* const explosive = map::player->active_explosive;
 
-    msg_log::add(explosive->get_str_on_player_throw());
+    msg_log::add(explosive->str_on_player_throw());
 
     //render
     if (path.size() > 1)
     {
-        const auto  clr = explosive->get_ignited_projectile_clr();
+        const auto  clr = explosive->ignited_projectile_clr();
 
         for (const Pos& p : path)
         {
@@ -66,15 +66,15 @@ void player_throw_lit_explosive(const Pos& aim_cell)
             {
                 if (config::is_tiles_mode())
                 {
-                    render::draw_tile(explosive->get_tile(),    Panel::map, p, clr);
+                    render::draw_tile(explosive->tile(),    Panel::map, p, clr);
                 }
                 else
                 {
-                    render::draw_glyph(explosive->get_glyph(),  Panel::map, p, clr);
+                    render::draw_glyph(explosive->glyph(),  Panel::map, p, clr);
                 }
 
                 render::update_screen();
-                sdl_wrapper::sleep(config::get_delay_projectile_draw());
+                sdl_wrapper::sleep(config::delay_projectile_draw());
             }
         }
     }
@@ -99,9 +99,9 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
     vector<Pos> path;
     line_calc::calc_new_line(actor_throwing.pos, tgt_cell, false, THROW_RANGE_LMT, false, path);
 
-    const auto& item_thrown_data = item_thrown.get_data();
+    const auto& item_thrown_data = item_thrown.data();
 
-    const string item_name_a = item_thrown.get_name(Item_ref_type::a);
+    const string item_name_a = item_thrown.name(Item_ref_type::a);
 
     if (&actor_throwing == map::player)
     {
@@ -114,7 +114,7 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
 
         if (map::cells[p.x][p.y].is_seen_by_player)
         {
-            msg_log::add(actor_throwing.get_name_the() + " throws " + item_name_a + ".");
+            msg_log::add(actor_throwing.name_the() + " throws " + item_name_a + ".");
         }
     }
 
@@ -122,8 +122,8 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
 
     int         blocked_in_element    = -1;
     bool        is_actor_hit          = false;
-    const char  glyph               = item_thrown.get_glyph();
-    const Clr   clr                 = item_thrown.get_clr();
+    const char  glyph               = item_thrown.glyph();
+    const Clr   clr                 = item_thrown.clr();
     int         chance_to_destroy_item = 0;
 
     Pos cur_pos(-1, -1);
@@ -134,11 +134,11 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
 
         cur_pos.set(path[i]);
 
-        Actor* const actor_here = utils::get_actor_at_pos(cur_pos);
+        Actor* const actor_here = utils::actor_at_pos(cur_pos);
 
         if (actor_here)
         {
-            if (cur_pos == tgt_cell || actor_here->get_data().actor_size >= Actor_size::humanoid)
+            if (cur_pos == tgt_cell || actor_here->data().actor_size >= Actor_size::humanoid)
             {
 
                 data = Throw_att_data(actor_throwing, item_thrown, tgt_cell, cur_pos, aim_lvl);
@@ -150,12 +150,12 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
                     {
                         render::draw_glyph('*', Panel::map, cur_pos, clr_red_lgt);
                         render::update_screen();
-                        sdl_wrapper::sleep(config::get_delay_projectile_draw() * 4);
+                        sdl_wrapper::sleep(config::delay_projectile_draw() * 4);
                     }
 
                     const Clr hit_message_clr   = actor_here == map::player ? clr_msg_bad : clr_msg_good;
                     const bool CAN_SEE_ACTOR  = map::player->can_see_actor(*actor_here, nullptr);
-                    string defender_name       = CAN_SEE_ACTOR ? actor_here->get_name_the() : "It";
+                    string defender_name       = CAN_SEE_ACTOR ? actor_here->name_the() : "It";
 
                     msg_log::add(defender_name + " is hit.", hit_message_clr);
 
@@ -182,7 +182,7 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
         {
             render::draw_glyph(glyph, Panel::map, cur_pos, clr);
             render::update_screen();
-            sdl_wrapper::sleep(config::get_delay_projectile_draw());
+            sdl_wrapper::sleep(config::delay_projectile_draw());
         }
 
         const auto* feature_here = map::cells[cur_pos.x][cur_pos.y].rigid;
@@ -222,7 +222,7 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
                                  path.size() - 1 : blocked_in_element;
         const Pos drop_pos = path[DROP_ELEMENT];
         const Matl matl_at_drop_pos =
-            map::cells[drop_pos.x][drop_pos.y].rigid->get_matl();
+            map::cells[drop_pos.x][drop_pos.y].rigid->matl();
 
         bool is_noisy = false;
 

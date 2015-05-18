@@ -30,41 +30,41 @@ Pos pos_;
 void set_pos_to_closest_enemy_if_visible()
 {
     vector<Actor*> seen_foes;
-    map::player->get_seen_foes(seen_foes);
+    map::player->seen_foes(seen_foes);
     vector<Pos> seen_foes_cells;
 
-    utils::get_actor_cells(seen_foes, seen_foes_cells);
+    utils::actor_cells(seen_foes, seen_foes_cells);
 
     //If player sees enemies, suggest one for targeting
     if (!seen_foes_cells.empty())
     {
-        pos_ = utils::get_closest_pos(map::player->pos, seen_foes_cells);
+        pos_ = utils::closest_pos(map::player->pos, seen_foes_cells);
 
-        map::player->tgt_ = utils::get_actor_at_pos(pos_);
+        map::player->tgt_ = utils::actor_at_pos(pos_);
     }
 }
 
 void try_move(const Dir dir)
 {
-    const Pos new_pos(pos_ + dir_utils::get_offset(dir));
+    const Pos new_pos(pos_ + dir_utils::offset(dir));
 
     if (utils::is_pos_inside_map(new_pos)) {pos_ = new_pos;}
 }
 
-bool set_pos_to_target_if_visible()
+bool set_pos_to_tgt_if_visible()
 {
-    const Actor* const target = map::player->tgt_;
+    const Actor* const tgt = map::player->tgt_;
 
-    if (target)
+    if (tgt)
     {
         vector<Actor*> seen_foes;
-        map::player->get_seen_foes(seen_foes);
+        map::player->seen_foes(seen_foes);
 
         if (!seen_foes.empty())
         {
             for (auto* const actor : seen_foes)
             {
-                if (target == actor)
+                if (tgt == actor)
                 {
                     pos_ = actor->pos;
                     return true;
@@ -79,17 +79,17 @@ bool set_pos_to_target_if_visible()
 } //namespace
 
 Pos run(const Marker_draw_tail draw_trail,
-        const Marker_use_player_tgt use_target,
+        const Marker_use_player_tgt use_tgt,
         function<void(const Pos&)> on_marker_at_pos,
         function<Marker_done(const Pos&, const Key_data&)> on_key_press,
         const int EFFECTIVE_RANGE_LMT)
 {
     pos_ = map::player->pos;
 
-    if (use_target == Marker_use_player_tgt::yes)
+    if (use_tgt == Marker_use_player_tgt::yes)
     {
         //First, attempt to place marker at target.
-        if (!set_pos_to_target_if_visible())
+        if (!set_pos_to_tgt_if_visible())
         {
             //If no target available, attempt to place marker at closest visible monster.
             //This sets a new target if successful.
@@ -119,7 +119,7 @@ Pos run(const Marker_draw_tail draw_trail,
 
         render::update_screen();
 
-        const Key_data& d = input::get_input();
+        const Key_data& d = input::input();
 
         if (d.sdl_key == SDLK_RIGHT    || d.key == '6' || d.key == 'l')
         {

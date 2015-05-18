@@ -406,9 +406,9 @@ TEST_FIXTURE(BasicFixture, ThrowItems)
     map::put(new Floor(Pos(5, 9)));
     map::put(new Floor(Pos(5, 10)));
     map::player->pos = Pos(5, 10);
-    Pos target(5, 8);
+    Pos tgt(5, 8);
     Item* item = ItemFactory::mk(ItemId::thrKnife);
-    throwing::throwItem(*(map::player), target, *item);
+    throwing::throwItem(*(map::player), tgt, *item);
     CHECK(map::cells[5][9].item);
 }
 

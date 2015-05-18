@@ -66,11 +66,11 @@ void mk_info_lines(vector<Str_and_clr>& out)
         }
     }
 
-    out.push_back(Str_and_clr(" " + map::player->get_name_a(), clr_heading));
+    out.push_back(Str_and_clr(" " + map::player->name_a(), clr_heading));
 
     out.push_back(Str_and_clr("   * Explored to the depth of dungeon level "
                               + to_str(map::dlvl), clr_info));
-    out.push_back(Str_and_clr("   * Was " + to_str(min(100, map::player->get_insanity())) +
+    out.push_back(Str_and_clr("   * Was " + to_str(min(100, map::player->ins())) +
                               "% insane", clr_info));
     out.push_back(Str_and_clr("   * Killed " + to_str(nr_kills_tot_all_mon) + " monsters ",
                               clr_info));
@@ -111,7 +111,7 @@ void mk_info_lines(vector<Str_and_clr>& out)
     TRACE << "Finding traits gained" << endl;
     out.push_back(Str_and_clr(" Traits gained:", clr_heading));
     string traits_line;
-    player_bon::get_all_picked_traits_titles_line(traits_line);
+    player_bon::all_picked_traits_titles_line(traits_line);
 
     if (traits_line.empty())
     {
@@ -147,7 +147,7 @@ void mk_info_lines(vector<Str_and_clr>& out)
     out.push_back(Str_and_clr(" ", clr_info));
 
     out.push_back(Str_and_clr(" Last messages:", clr_heading));
-    const vector< vector<Msg> >& history = msg_log::get_history();
+    const vector< vector<Msg> >& history = msg_log::history();
     int history_element = max(0, int(history.size()) - 20);
 
     for (size_t i = history_element; i < history.size(); ++i)
@@ -157,7 +157,7 @@ void mk_info_lines(vector<Str_and_clr>& out)
         for (size_t ii = 0; ii < history[i].size(); ii++)
         {
             string msg_str = "";
-            history[i][ii].get_str_with_repeats(msg_str);
+            history[i][ii].str_with_repeats(msg_str);
             row += msg_str + " ";
         }
 
@@ -213,9 +213,9 @@ void mk_info_lines(vector<Str_and_clr>& out)
                 }
                 else
                 {
-                    const auto& wall_d       = feature_data::get_data(Feature_id::wall);
-                    const auto& rubble_high_d = feature_data::get_data(Feature_id::rubble_high);
-                    const auto& statue_d     = feature_data::get_data(Feature_id::statue);
+                    const auto& wall_d       = feature_data::data(Feature_id::wall);
+                    const auto& rubble_high_d = feature_data::data(Feature_id::rubble_high);
+                    const auto& statue_d     = feature_data::data(Feature_id::statue);
 
                     if (
                         render::render_array[x][y].glyph == wall_d.glyph ||
@@ -287,7 +287,7 @@ void run_info(const vector<Str_and_clr>& lines)
     {
         render(lines, top_nr);
 
-        const Key_data& d = input::get_input();
+        const Key_data& d = input::input();
 
         if (d.sdl_key == SDLK_DOWN || d.key == '2' || d.key == 'j')
         {
@@ -316,8 +316,8 @@ void run_info(const vector<Str_and_clr>& lines)
 void mk_memorial_file(const vector<Str_and_clr>& lines)
 {
     const string time_stamp =
-        dungeon_master::get_start_time().get_time_str(Time_type::second, false);
-    const string memorial_file_name = map::player->get_name_a() + "_" + time_stamp + ".txt";
+        dungeon_master::start_time().time_str(Time_type::second, false);
+    const string memorial_file_name = map::player->name_a() + "_" + time_stamp + ".txt";
     const string memorial_file_path = "data/" + memorial_file_name;
 
     //Add memorial file
@@ -371,7 +371,7 @@ void render_menu(const Menu_browser& browser)
     }
 
     pos.set(45, 20);
-    const string NAME_STR = map::player->get_data().name_a;
+    const string NAME_STR = map::player->data().name_a;
     render::draw_text_centered(NAME_STR, Panel::screen, pos, clr_white);
 
     //Draw command labels
@@ -417,7 +417,7 @@ void run(bool* const quit_game)
 
     while (true)
     {
-        const Menu_action action = menu_input_handling::get_action(browser);
+        const Menu_action action = menu_input_handling::action(browser);
 
         switch (action)
         {

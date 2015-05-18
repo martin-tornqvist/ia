@@ -73,8 +73,8 @@ int main(int argc, char* argv[])
                 }
 
                 dungeon_master::set_time_started_to_now();
-                const Time_data& t = dungeon_master::get_start_time();
-                TRACE << "Game started on: " << t.get_time_str(Time_type::minute, true)
+                const Time_data& t = dungeon_master::start_time();
+                TRACE << "Game started on: " << t.time_str(Time_type::minute, true)
                       << endl;
             }
 
@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
             {
                 if (map::player->is_alive())
                 {
-                    Actor* const actor = game_time::get_cur_actor();
+                    Actor* const actor = game_time::cur_actor();
 
                     //Properties running on the actor's turn are not immediately applied
                     //on the actor, but instead placed in a buffer. This is to ensure
@@ -114,12 +114,12 @@ int main(int argc, char* argv[])
                     //(and not applied after the actor acts, and ends before the actor's
                     //next turn)
                     //The contents of the buffer are moved to the applied properties here
-                    actor->get_prop_handler().apply_actor_turn_prop_buffer();
+                    actor->prop_handler().apply_actor_turn_prop_buffer();
 
                     actor->update_clr();
 
-                    const bool ALLOW_ACT  = actor->get_prop_handler().allow_act();
-                    const bool IS_GIBBED  = actor->get_state() == Actor_state::destroyed;
+                    const bool ALLOW_ACT  = actor->prop_handler().allow_act();
+                    const bool IS_GIBBED  = actor->state() == Actor_state::destroyed;
 
                     if (ALLOW_ACT && !IS_GIBBED)
                     {

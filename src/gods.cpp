@@ -128,7 +128,7 @@ bool is_god_lvl()
     return cur_god_elem_ >= 0;
 }
 
-const God* get_cur_god()
+const God* cur_god()
 {
     if (cur_god_elem_ >= 0)
     {

@@ -16,20 +16,20 @@
 
 using namespace std;
 
-const string Scroll::get_real_name() const
+const string Scroll::real_name() const
 {
-    Spell* spell      = spell_handling::mk_spell_from_id(data_->spell_cast_from_scroll);
-    const string name = spell->get_name();
+    Spell* spell                = spell_handling::mk_spell_from_id(data_->spell_cast_from_scroll);
+    const string scroll_name    = spell->name();
     delete spell;
-    return name;
+    return scroll_name;
 }
 
-vector<string> Scroll::get_descr() const
+vector<string> Scroll::descr() const
 {
     if (data_->is_identified)
     {
         const auto* const spell = mk_spell();
-        const auto descr = spell->get_descr();
+        const auto descr = spell->descr();
         delete spell;
         return descr;
     }
@@ -41,7 +41,7 @@ vector<string> Scroll::get_descr() const
 
 Consume_item Scroll::activate(Actor* const actor)
 {
-    auto& prop_handler = actor->get_prop_handler();
+    auto& prop_handler = actor->prop_handler();
 
     if (
         prop_handler.allow_cast_spell(true)  &&
@@ -67,8 +67,8 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY)
 
         if (!IS_SILENT_IDENTIFY)
         {
-            const string name = get_name(Item_ref_type::a, Item_ref_inf::none);
-            msg_log::add("It was " + name + ".");
+            const string scroll_name = name(Item_ref_type::a, Item_ref_inf::none);
+            msg_log::add("It was " + scroll_name + ".");
             render::draw_map_and_interface();
         }
     }
@@ -76,13 +76,13 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY)
 
 void Scroll::try_learn()
 {
-    if (player_bon::get_bg() == Bg::occultist)
+    if (player_bon::bg() == Bg::occultist)
     {
         Spell* const spell = mk_spell();
 
         if (
             spell->is_avail_for_player() &&
-            !player_spells_handling::is_spell_learned(spell->get_id()))
+            !player_spells_handling::is_spell_learned(spell->id()))
         {
             msg_log::add("I learn to cast this incantation by heart!");
             player_spells_handling::learn_spell_if_not_known(spell);
@@ -98,7 +98,7 @@ Consume_item Scroll::read()
 {
     render::draw_map_and_interface();
 
-    if (!map::player->get_prop_handler().allow_see())
+    if (!map::player->prop_handler().allow_see())
     {
         msg_log::add("I cannot read while blind.");
         return Consume_item::no;
@@ -110,8 +110,8 @@ Consume_item Scroll::read()
 
     if (data_->is_identified)
     {
-        const string name = get_name(Item_ref_type::a, Item_ref_inf::none);
-        msg_log::add("I read " + name + "...");
+        const string scroll_name = name(Item_ref_type::a, Item_ref_inf::none);
+        msg_log::add("I read " + scroll_name + "...");
         spell->cast(map::player, false);
         msg_log::add(crumble_str);
         try_learn();
@@ -131,7 +131,7 @@ Consume_item Scroll::read()
     return Consume_item::yes;
 }
 
-string Scroll::get_name_inf() const
+string Scroll::name_inf() const
 {
     return (data_->is_tried && !data_->is_identified) ? "{Tried}" : "";
 }
@@ -218,9 +218,9 @@ void init()
 
     TRACE << "Init scroll names" << endl;
 
-    for (auto* const d : item_data::data)
+    for (auto& d : item_data::data)
     {
-        if (d->type == Item_type::scroll)
+        if (d.type == Item_type::scroll)
         {
             //False name
             const int NR_ELEMENTS = false_names_.size();
@@ -228,22 +228,22 @@ void init()
 
             const string& TITLE = false_names_[ELEMENT];
 
-            d->base_name_un_id.names[int(Item_ref_type::plain)] =
+            d.base_name_un_id.names[int(Item_ref_type::plain)] =
                 "Manuscript titled "    + TITLE;
 
-            d->base_name_un_id.names[int(Item_ref_type::plural)] =
+            d.base_name_un_id.names[int(Item_ref_type::plural)] =
                 "Manuscripts titled "   + TITLE;
 
-            d->base_name_un_id.names[int(Item_ref_type::a)] =
+            d.base_name_un_id.names[int(Item_ref_type::a)] =
                 "a Manuscript titled "  + TITLE;
 
             false_names_.erase(false_names_.begin() + ELEMENT);
 
             //True name
             const Scroll* const scroll =
-                static_cast<const Scroll*>(item_factory::mk(d->id, 1));
+                static_cast<const Scroll*>(item_factory::mk(d.id, 1));
 
-            const string REAL_TYPE_NAME = scroll->get_real_name();
+            const string REAL_TYPE_NAME = scroll->real_name();
 
             delete scroll;
 
@@ -251,9 +251,9 @@ void init()
             const string REAL_NAME_PLURAL = "Manuscripts of "   + REAL_TYPE_NAME;
             const string REAL_NAME_A      = "a Manuscript of "  + REAL_TYPE_NAME;
 
-            d->base_name.names[int(Item_ref_type::plain)]  = REAL_NAME;
-            d->base_name.names[int(Item_ref_type::plural)] = REAL_NAME_PLURAL;
-            d->base_name.names[int(Item_ref_type::a)]      = REAL_NAME_A;
+            d.base_name.names[int(Item_ref_type::plain)]  = REAL_NAME;
+            d.base_name.names[int(Item_ref_type::plural)] = REAL_NAME_PLURAL;
+            d.base_name.names[int(Item_ref_type::a)]      = REAL_NAME_A;
         }
     }
 
@@ -264,9 +264,9 @@ void store_to_save_lines(vector<string>& lines)
 {
     for (int i = 0; i < int(Item_id::END); ++i)
     {
-        if (item_data::data[i]->type == Item_type::scroll)
+        if (item_data::data[i].type == Item_type::scroll)
         {
-            auto& base_name_un_id = item_data::data[i]->base_name_un_id;
+            auto& base_name_un_id = item_data::data[i].base_name_un_id;
             lines.push_back(base_name_un_id.names[int(Item_ref_type::plain)]);
             lines.push_back(base_name_un_id.names[int(Item_ref_type::plural)]);
             lines.push_back(base_name_un_id.names[int(Item_ref_type::a)]);
@@ -278,9 +278,9 @@ void setup_from_save_lines(vector<string>& lines)
 {
     for (int i = 0; i < int(Item_id::END); ++i)
     {
-        if (item_data::data[i]->type == Item_type::scroll)
+        if (item_data::data[i].type == Item_type::scroll)
         {
-            auto& base_name_un_id = item_data::data[i]->base_name_un_id;
+            auto& base_name_un_id = item_data::data[i].base_name_un_id;
             base_name_un_id.names[int(Item_ref_type::plain)]  = lines.front();
             lines.erase(begin(lines));
             base_name_un_id.names[int(Item_ref_type::plural)] = lines.front();

@@ -115,7 +115,7 @@ void set_default_variables()
 
 void player_sets_option(const Menu_browser* const browser, const int OPTION_VALUES_X_POS)
 {
-    switch (browser->get_pos().y)
+    switch (browser->pos().y)
     {
     case 0:
         is_audio_enabled_ = !is_audio_enabled_;
@@ -199,7 +199,7 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
 
     case 9:
     {
-        const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->get_pos().y);
+        const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->pos().y);
         const int NR = query::number(p, clr_menu_highlight, 1, 3, delay_projectile_draw_, true);
 
         if (NR != -1)
@@ -210,7 +210,7 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
 
     case 10:
     {
-        const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->get_pos().y);
+        const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->pos().y);
         const int NR =
             query::number(p, clr_menu_highlight, 1, 3, delay_shotgun_, true);
 
@@ -219,7 +219,7 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
 
     case 11:
     {
-        const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->get_pos().y);
+        const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->pos().y);
         const int NR = query::number(p, clr_menu_highlight, 1, 3, delay_explosion_, true);
 
         if (NR != -1)
@@ -254,164 +254,164 @@ void draw(const Menu_browser* const browser, const int OPTION_VALUES_X_POS)
     render::draw_text("-Options-", Panel::screen, Pos(X0, 0), clr_white);
 
     render::draw_text("Play audio", Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     str = is_audio_enabled_ ? "Yes" : "No";
     render::draw_text(str, Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     render::draw_text("Use tile set", Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     str = is_tiles_mode_ ? "Yes" : "No";
     render::draw_text(str, Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     render::draw_text("Font", Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     string font_disp_name;
     text_format::replace_all(font_name_,      "images/",  "",   font_disp_name);
     text_format::replace_all(font_disp_name,  "_",        " ",  font_disp_name);
     text_format::replace_all(font_disp_name,  ".png",     "",   font_disp_name);
     render::draw_text(font_disp_name, Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     render::draw_text("Fullscreen (experimental)", Panel::screen,
                       Pos(X0, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(is_fullscreen_ ? "Yes" : "No",
                       Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     str = "Tiles mode wall symbol";
     render::draw_text(str, Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     str = is_tiles_wall_full_square_ ? "Full square" : "Pseudo-3D";
     render::draw_text(str, Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     str = "Ascii mode wall symbol";
     render::draw_text(str, Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     str = is_ascii_wall_full_square_ ? "Full square" : "Hash sign";
     render::draw_text(str, Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     render::draw_text("Skip intro level", Panel::screen,
                       Pos(X0, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     str = is_intro_lvl_skipped_ ? "Yes" : "No";
     render::draw_text(str, Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     str = "Ranged weapon melee attack warning";
     render::draw_text(str, Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     str = is_ranged_wpn_meleee_prompt_ ? "Yes" : "No";
     render::draw_text(str, Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     str = "Ranged weapon auto reload";
     render::draw_text(str, Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     str = is_ranged_wpn_auto_reload_ ? "Yes" : "No";
     render::draw_text(str, Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     str = "Projectile delay (ms)";
     render::draw_text(str, Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(to_str(delay_projectile_draw_), Panel::screen,
                       Pos(X1, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     str = "Shotgun delay (ms)";
     render::draw_text(str, Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(to_str(delay_shotgun_), Panel::screen,
                       Pos(X1, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     str = "Explosion delay (ms)";
     render::draw_text(str, Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(to_str(delay_explosion_), Panel::screen,
                       Pos(X1, OPT_Y0 + opt_nr),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     str = "Reset to defaults";
     render::draw_text(str, Panel::screen, Pos(X0, OPT_Y0 + opt_nr + 1),
-                      browser->get_pos().y == opt_nr ?
+                      browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
 
     str = "[space/esc] to confirm changes";
@@ -586,17 +586,17 @@ void init()
 }
 
 bool    is_tiles_mode()                 {return is_tiles_mode_;}
-string  get_font_name()                 {return font_name_;}
+string  font_name()                     {return font_name_;}
 bool    is_fullscreen()                 {return is_fullscreen_;}
-int     get_screen_px_w()               {return screen_px_w_;}
-int     get_screen_px_h()               {return screen_px_h_;}
-int     get_cell_w()                    {return cell_w_;}
-int     get_cell_h()                    {return cell_h_;}
-int     get_log_px_h()                  {return log_px_h_;}
-int     get_map_px_h()                  {return map_px_h_;}
-int     get_map_px_offset_h()           {return map_px_offset_h_;}
-int     get_char_lines_px_offset_h()    {return char_lines_px_offset_h_;}
-int     get_char_lines_px_h()           {return char_lines_px_h_;}
+int     screen_px_w()                   {return screen_px_w_;}
+int     screen_px_h()                   {return screen_px_h_;}
+int     cell_w()                        {return cell_w_;}
+int     cell_h()                        {return cell_h_;}
+int     log_px_h()                      {return log_px_h_;}
+int     map_px_h()                      {return map_px_h_;}
+int     map_px_offset_h()               {return map_px_offset_h_;}
+int     char_lines_px_offset_h()        {return char_lines_px_offset_h_;}
+int     char_lines_px_h()               {return char_lines_px_h_;}
 bool    is_ascii_wall_full_square()     {return is_ascii_wall_full_square_;}
 bool    is_tiles_wall_full_square()     {return is_tiles_wall_full_square_;}
 bool    is_audio_enabled()              {return is_audio_enabled_;}
@@ -605,9 +605,9 @@ void    toggle_bot_playing()            {is_bot_playing_ = !is_bot_playing_;}
 bool    is_ranged_wpn_meleee_prompt()   {return is_ranged_wpn_meleee_prompt_;}
 bool    is_ranged_wpn_auto_reload()     {return is_ranged_wpn_auto_reload_;}
 bool    is_intro_lvl_skipped()          {return is_intro_lvl_skipped_;}
-int     get_delay_projectile_draw()     {return delay_projectile_draw_;}
-int     get_delay_shotgun()             {return delay_shotgun_;}
-int     get_delay_explosion()           {return delay_explosion_;}
+int     delay_projectile_draw()         {return delay_projectile_draw_;}
+int     delay_shotgun()                 {return delay_shotgun_;}
+int     delay_explosion()               {return delay_explosion_;}
 
 void run_options_menu()
 {
@@ -620,7 +620,7 @@ void run_options_menu()
 
     while (true)
     {
-        const Menu_action action = menu_input_handling::get_action(browser);
+        const Menu_action action = menu_input_handling::action(browser);
 
         switch (action)
         {

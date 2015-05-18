@@ -45,7 +45,7 @@ Blocks_actor::Blocks_actor(Actor& actor, bool is_actors_blocking) :
     Check(),
     IS_ACTORS_BLOCKING_(is_actors_blocking)
 {
-    actor.get_prop_handler().get_prop_ids(actors_props_);
+    actor.prop_handler().prop_ids(actors_props_);
 }
 
 bool Blocks_actor::check(const Cell& c) const
@@ -95,12 +95,12 @@ bool Blocks_items::check(const Mob& f) const
 
 bool Is_feature::check(const Cell& c) const
 {
-    return c.rigid->get_id() == feature_;
+    return c.rigid->id() == feature_;
 }
 
 bool Is_any_of_features::check(const Cell& c) const
 {
-    for (auto f : features_) {if (f == c.rigid->get_id()) return true;}
+    for (auto f : features_) {if (f == c.rigid->id()) return true;}
 
     return false;
 }
@@ -119,7 +119,7 @@ bool All_adj_is_feature::check(const Cell& c) const
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            if (map::cells[X + dx][Y + dy].rigid->get_id() != feature_)
+            if (map::cells[X + dx][Y + dy].rigid->id() != feature_)
             {
                 return false;
             }
@@ -140,7 +140,7 @@ bool All_adj_is_any_of_features::check(const Cell& c) const
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const auto cur_id = map::cells[X + dx][Y + dy].rigid->get_id();
+            const auto cur_id = map::cells[X + dx][Y + dy].rigid->id();
 
             bool is_match = false;
 
@@ -164,7 +164,7 @@ bool All_adj_is_not_feature::check(const Cell& c) const
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            if (map::cells[X + dx][Y + dy].rigid->get_id() == feature_)
+            if (map::cells[X + dx][Y + dy].rigid->id() == feature_)
             {
                 return false;
             }
@@ -185,7 +185,7 @@ bool All_adj_is_none_of_features::check(const Cell& c) const
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const auto cur_id = map::cells[X + dx][Y + dy].rigid->get_id();
+            const auto cur_id = map::cells[X + dx][Y + dy].rigid->id();
 
             for (auto f : features_) {if (f == cur_id) {return false;}}
         }
@@ -234,7 +234,7 @@ void run(const  cell_check::Check& check,
     {
         for (Mob* mob : game_time::mobs_)
         {
-            const Pos& p = mob->get_pos();
+            const Pos& p = mob->pos();
 
             if (utils::is_pos_inside(p, area_to_check_cells))
             {
@@ -271,8 +271,8 @@ void run(const  cell_check::Check& check,
     }
 }
 
-void get_cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
-                                     const Range& dist_interval)
+void cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
+                                 const Range& dist_interval)
 {
     assert(in != out);
 
@@ -502,7 +502,7 @@ void run(const Pos& p0,
     unsigned int  nr_elements_to_skip   = 0;
     int           cur_val               = 0;
     bool          path_exists           = true;
-    bool          is_at_target          = false;
+    bool          is_at_tgt          = false;
     bool          is_stopping_at_p1     = p1.x != -1;
     const         Rect bounds(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2));
     Pos           cur_pos(p0);
@@ -540,11 +540,11 @@ void run(const Pos& p0,
 
                     if (is_stopping_at_p1 && cur_pos == p1 - d)
                     {
-                        is_at_target = true;
+                        is_at_tgt = true;
                         break;
                     }
 
-                    if (!is_stopping_at_p1 || !is_at_target)
+                    if (!is_stopping_at_p1 || !is_at_tgt)
                     {
                         positions.push_back(new_pos);
                     }
@@ -556,7 +556,7 @@ void run(const Pos& p0,
         {
             if (positions.size() == nr_elements_to_skip)  {path_exists = false;}
 
-            if (is_at_target || !path_exists)             {done = true;}
+            if (is_at_tgt || !path_exists)             {done = true;}
         }
         else if (positions.size() == nr_elements_to_skip)
         {
@@ -565,7 +565,7 @@ void run(const Pos& p0,
 
         if (cur_val == travel_lmt) {done = true;}
 
-        if (!is_stopping_at_p1 || !is_at_target)
+        if (!is_stopping_at_p1 || !is_at_tgt)
         {
             if (positions.size() == nr_elements_to_skip)
             {

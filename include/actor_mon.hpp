@@ -30,9 +30,9 @@ struct Ai_avail_attacks_data
 
     Ai_avail_attacks_data& operator=(const Ai_avail_attacks_data& other)
     {
-        weapons         = other.weapons;
-        is_time_to_reload  = other.is_time_to_reload;
-        is_melee         = other.is_melee;
+        weapons = other.weapons;
+        is_time_to_reload = other.is_time_to_reload;
+        is_melee = other.is_melee;
         return *this;
     }
 
@@ -52,8 +52,10 @@ public:
 
     void move_dir(Dir dir);
 
-    void        get_avail_attacks(Actor& defender, Ai_avail_attacks_data& avail_attacks_ref);
-    Ai_att_data   get_att(const Ai_avail_attacks_data& avail_attacks);
+    void avail_attacks(Actor& defender, Ai_avail_attacks_data& dst);
+
+    Ai_att_data choose_att(const Ai_avail_attacks_data& mon_avail_attacks);
+
     bool try_attack(Actor& defender);
 
     virtual void mk_start_items() override = 0;
@@ -68,19 +70,19 @@ public:
 
     virtual void on_std_turn() override final;
 
-    virtual std::string get_aggro_phrase_mon_seen() const
+    virtual std::string aggro_phrase_mon_seen() const
     {
         return data_->aggro_text_mon_seen;
     }
-    virtual std::string get_aggro_phrase_mon_hidden() const
+    virtual std::string aggro_phrase_mon_hidden() const
     {
         return data_->aggro_text_mon_hidden;
     }
-    virtual Sfx_id get_aggro_sfx_mon_seen() const
+    virtual Sfx_id aggro_sfx_mon_seen() const
     {
         return data_->aggro_sfx_mon_seen;
     }
-    virtual Sfx_id get_aggro_sfx_mon_hidden() const
+    virtual Sfx_id aggro_sfx_mon_hidden() const
     {
         return data_->aggro_sfx_mon_hidden;
     }
@@ -110,7 +112,7 @@ protected:
     virtual bool on_actor_turn_() {return false;}
     virtual void on_std_turn_() {}
 
-    int get_group_size();
+    int group_size();
 };
 
 class Rat: public Mon
@@ -281,15 +283,15 @@ public:
 
     virtual void mk_start_items() override;
 
-    static std::string get_cultist_phrase();
+    static std::string cultist_phrase();
 
-    std::string get_aggro_phrase_mon_seen() const
+    std::string aggro_phrase_mon_seen() const
     {
-        return get_name_the() + ": " + get_cultist_phrase();
+        return name_the() + ": " + cultist_phrase();
     }
-    std::string get_aggro_phrase_mon_hidden() const
+    std::string aggro_phrase_mon_hidden() const
     {
-        return "Voice: " + get_cultist_phrase();
+        return "Voice: " + cultist_phrase();
     }
 
     virtual ~Cultist() {}
@@ -681,7 +683,7 @@ public:
         cur_color(clr_magenta_lgt) {}
     ~Color_oo_space() {}
     void mk_start_items() override;
-    const Clr& get_clr();
+    const Clr& clr();
 private:
     void on_std_turn_() override;
     Clr cur_color;

@@ -45,7 +45,7 @@ void find_path_to_stairs()
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            const auto cur_id = map::cells[x][y].rigid->get_id();
+            const auto cur_id = map::cells[x][y].rigid->id();
 
             if (cur_id == Feature_id::stairs)
             {
@@ -71,7 +71,7 @@ bool walk_to_adj_cell(const Pos& p)
 {
     assert(utils::is_pos_adj(map::player->pos, p, true));
 
-    char key = '0' + int(dir_utils::get_dir(p - map::player->pos));
+    char key = '0' + int(dir_utils::dir(p - map::player->pos));
 
     //Occasionally randomize movement
     if (rnd::one_in(5)) {key = '0' + rnd::range(1, 9);}
@@ -120,7 +120,7 @@ void act()
         return;
     }
 
-    Prop_handler& prop_handler = map::player->get_prop_handler();
+    Prop_handler& prop_handler = map::player->prop_handler();
 
     //Keep an allied Mi-go around to help getting out of sticky situations
     bool has_allied_mon = false;
@@ -153,7 +153,7 @@ void act()
 
         if (actor != map::player)
         {
-            actor->get_prop_handler().try_apply_prop(new Prop_burning(Prop_turns::std), true);
+            actor->prop_handler().try_apply_prop(new Prop_burning(Prop_turns::std), true);
         }
     }
 
@@ -197,7 +197,7 @@ void act()
             const Pos p(map::player->pos + Pos(dx, dy));
             auto* const f = map::cells[p.x][p.y].rigid;
 
-            if (f->get_id() == Feature_id::door)
+            if (f->id() == Feature_id::door)
             {
                 Door* const door = static_cast<Door*>(f);
                 door->reveal(false);
@@ -213,7 +213,7 @@ void act()
 
     //If we are terrified, wait in place
     bool props[size_t(Prop_id::END)];
-    map::player->get_prop_handler().get_prop_ids(props);
+    map::player->prop_handler().prop_ids(props);
 
     if (props[int(Prop_id::terrified)])
     {

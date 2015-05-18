@@ -340,7 +340,7 @@ void init()
     init_templs();
 }
 
-const map_templ& get_templ(const Map_templ_id id)
+const map_templ& templ(const Map_templ_id id)
 {
     assert(id != Map_templ_id::END);
     return templates_[int(id)];

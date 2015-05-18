@@ -54,7 +54,7 @@ void run_std_turn_events()
         Actor* const actor = actors_[i];
 
         //Delete destroyed actors
-        if (actor->get_state() == Actor_state::destroyed)
+        if (actor->state() == Actor_state::destroyed)
         {
             //Do not delete player if player died, just return
             if (actor == map::player)
@@ -76,7 +76,7 @@ void run_std_turn_events()
         }
         else  //Actor is alive or is a corpse
         {
-            actor->get_prop_handler().tick(Prop_turn_mode::std);
+            actor->prop_handler().tick(Prop_turn_mode::std);
 
             if (!actor->is_player())
             {
@@ -150,7 +150,7 @@ void run_std_turn_events()
     }
 
     //Run new turn events on all player items
-    auto& player_inv = map::player->get_inv();
+    auto& player_inv = map::player->inv();
 
     for (Item* const item : player_inv.general_)
     {
@@ -209,16 +209,16 @@ void setup_from_save_lines(vector<string>& lines)
     lines.erase(begin(lines));
 }
 
-int get_turn()
+int turn()
 {
     return turn_nr_;
 }
 
-void get_mobs_at_pos(const Pos& p, vector<Mob*>& vector_ref)
+void mobs_at_pos(const Pos& p, vector<Mob*>& vector_ref)
 {
     vector_ref.clear();
 
-    for (auto* m : mobs_) {if (m->get_pos() == p) {vector_ref.push_back(m);}}
+    for (auto* m : mobs_) {if (m->pos() == p) {vector_ref.push_back(m);}}
 }
 
 void add_mob(Mob* const f)
@@ -276,16 +276,16 @@ void tick(const bool IS_FREE_TURN)
 {
     run_atomic_turn_events();
 
-    auto* cur_actor = get_cur_actor();
+    auto* actor = cur_actor();
 
-    if (cur_actor == map::player)
+    if (actor == map::player)
     {
         map::player->update_fov();
         render::draw_map_and_interface();
         map::update_visual_memory();
 
         //Run new turn events on all player items
-        auto& inv = map::player->get_inv();
+        auto& inv = map::player->inv();
 
         for (Item* const item : inv.general_)
         {
@@ -302,7 +302,7 @@ void tick(const bool IS_FREE_TURN)
     }
     else //Actor is monster
     {
-        auto* mon = static_cast<Mon*>(cur_actor);
+        auto* mon = static_cast<Mon*>(actor);
 
         if (mon->aware_counter_ > 0)
         {
@@ -311,7 +311,7 @@ void tick(const bool IS_FREE_TURN)
     }
 
     //Tick properties running on actor turns
-    cur_actor->get_prop_handler().tick(Prop_turn_mode::actor);
+    actor->prop_handler().tick(Prop_turn_mode::actor);
 
     if (!IS_FREE_TURN)
     {
@@ -340,7 +340,7 @@ void tick(const bool IS_FREE_TURN)
                 }
             }
 
-            const auto speed = get_cur_actor()->get_speed();
+            const auto speed = cur_actor()->speed();
 
             switch (speed)
             {
@@ -390,7 +390,7 @@ void update_light_map()
     }
 
     //Do not add light on Leng
-    if (map_travel::get_map_type() == Map_type::leng) {return;}
+    if (map_travel::map_type() == Map_type::leng) {return;}
 
     for (const auto* const a : actors_)  {a->add_light(light_tmp);}
 
@@ -402,7 +402,7 @@ void update_light_map()
         {
             auto* rigid = map::cells[x][y].rigid;
 
-            if (rigid->get_burn_state() == Burn_state::burning)
+            if (rigid->burn_state() == Burn_state::burning)
             {
                 light_tmp[x][y] = true;
             }
@@ -415,7 +415,7 @@ void update_light_map()
     }
 }
 
-Actor* get_cur_actor()
+Actor* cur_actor()
 {
     Actor* const actor = actors_[cur_actor_index_];
 

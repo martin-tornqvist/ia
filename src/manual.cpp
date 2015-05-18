@@ -113,7 +113,7 @@ void run()
 
         render::update_screen();
 
-        const Key_data& d = input::get_input();
+        const Key_data& d = input::input();
 
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {

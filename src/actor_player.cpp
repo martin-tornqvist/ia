@@ -41,9 +41,9 @@ const int SHOCK_FROM_OBSESSION = 30;
 Player::Player() :
     Actor(),
     active_medical_bag(nullptr),
-    wait_turns_left(-1),
     active_explosive(nullptr),
     tgt_(nullptr),
+    wait_turns_left(-1),
     ins_(0),
     shock_(0.0),
     shock_tmp_(0.0),
@@ -78,7 +78,7 @@ void Player::mk_start_items()
     int nr_thr_knives   = 6;
 
     //------------------------------------------------------- BACKGROUND SPECIFIC SETUP
-    const auto bg = player_bon::get_bg();
+    const auto bg = player_bon::bg();
 
     if (bg == Bg::occultist)
     {
@@ -98,14 +98,14 @@ void Player::mk_start_items()
         {
             scroll = item_factory::mk_random_scroll_or_potion(true, false);
 
-            Spell_id       id          = scroll->get_data().spell_cast_from_scroll;
-            Spell* const  spell       = spell_handling::mk_spell_from_id(id);
-            const bool    IS_AVAIL    = spell->is_avail_for_player();
-            const bool    SPI_COST_OK = spell->get_spi_cost(true).upper <=
-                                        player_bon::get_spi_occultist_can_cast_at_lvl(4);
+            Spell_id        spell_id    = scroll->data().spell_cast_from_scroll;
+            Spell* const    spell       = spell_handling::mk_spell_from_id(spell_id);
+            const bool      IS_AVAIL    = spell->is_avail_for_player();
+            const bool      SPI_COST_OK = spell->spi_cost(true).upper <=
+                                          player_bon::spi_occultist_can_cast_at_lvl(4);
             delete spell;
 
-            if (IS_AVAIL && SPI_COST_OK && id != Spell_id::darkbolt)
+            if (IS_AVAIL && SPI_COST_OK && spell_id != Spell_id::darkbolt)
             {
                 static_cast<Scroll*>(scroll)->identify(true);
                 inv_->put_in_general(scroll);
@@ -202,7 +202,7 @@ void Player::store_to_save_lines(vector<string>& lines) const
 
     for (Prop* prop : prop_handler_->applied_props_)
     {
-        lines.push_back(to_str(int(prop->get_id())));
+        lines.push_back(to_str(int(prop->id())));
         lines.push_back(to_str(prop->turns_left_));
         prop->store_to_save_lines(lines);
     }
@@ -218,7 +218,7 @@ void Player::store_to_save_lines(vector<string>& lines) const
 
     for (int i = 0; i < int(Ability_id::END); ++i)
     {
-        lines.push_back(to_str(data_->ability_vals.get_raw_val(Ability_id(i))));
+        lines.push_back(to_str(data_->ability_vals.raw_val(Ability_id(i))));
     }
 
     for (int i = 0; i < int(Phobia::END); ++i)
@@ -239,11 +239,11 @@ void Player::setup_from_save_lines(vector<string>& lines)
 
     for (int i = 0; i < NR_PROPS; ++i)
     {
-        const auto id = Prop_id(to_int(lines.front()));
+        const auto prop_id = Prop_id(to_int(lines.front()));
         lines.erase(begin(lines));
         const int NR_TURNS = to_int(lines.front());
         lines.erase(begin(lines));
-        auto* const prop = prop_handler_->mk_prop(id, Prop_turns::specific, NR_TURNS);
+        auto* const prop = prop_handler_->mk_prop(prop_id, Prop_turns::specific, NR_TURNS);
         prop_handler_->try_apply_prop(prop, true, true, true, true);
         prop->setup_from_save_lines(lines);
     }
@@ -293,14 +293,14 @@ void Player::on_hit(int& dmg)
     render::draw_map_and_interface();
 }
 
-int Player::get_enc_percent() const
+int Player::enc_percent() const
 {
-    const int TOTAL_W = inv_->get_total_item_weight();
-    const int MAX_W   = get_carry_weight_lmt();
+    const int TOTAL_W = inv_->total_item_weight();
+    const int MAX_W   = carry_weight_lmt();
     return int((double(TOTAL_W) / double(MAX_W)) * 100.0);
 }
 
-int Player::get_carry_weight_lmt() const
+int Player::carry_weight_lmt() const
 {
     const bool IS_TOUGH         = player_bon::traits[int(Trait::tough)];
     const bool IS_RUGGED        = player_bon::traits[int(Trait::rugged)];
@@ -308,7 +308,7 @@ int Player::get_carry_weight_lmt() const
     const bool IS_STRONG_BACKED = player_bon::traits[int(Trait::strong_backed)];
 
     bool props[size_t(Prop_id::END)];
-    prop_handler_->get_prop_ids(props);
+    prop_handler_->prop_ids(props);
     const bool IS_WEAKENED = props[int(Prop_id::weakened)];
 
     const int CARRY_WEIGHT_MOD = (IS_TOUGH         * 10) +
@@ -320,7 +320,7 @@ int Player::get_carry_weight_lmt() const
     return (CARRY_WEIGHT_BASE_ * (CARRY_WEIGHT_MOD + 100)) / 100;
 }
 
-int Player::get_shock_resistance(const Shock_src shock_src) const
+int Player::shock_resistance(const Shock_src shock_src) const
 {
     int res = 0;
 
@@ -333,7 +333,7 @@ int Player::get_shock_resistance(const Shock_src shock_src) const
     switch (shock_src)
     {
     case Shock_src::use_strange_item:
-        if (player_bon::get_bg() == Bg::occultist) {res += 50;}
+        if (player_bon::bg() == Bg::occultist) {res += 50;}
 
         break;
 
@@ -345,27 +345,27 @@ int Player::get_shock_resistance(const Shock_src shock_src) const
         break;
     }
 
-    return get_constr_in_range(0, res, 100);
+    return constr_in_range(0, res, 100);
 }
 
-double Player::get_shock_taken_after_mods(const int BASE_SHOCK,
-        const Shock_src shock_src) const
+double Player::shock_taken_after_mods(const int BASE_SHOCK,
+                                      const Shock_src shock_src) const
 {
     if (BASE_SHOCK == 0) {return 0.0;}
 
-    const double SHOCK_RES_DB   = double(get_shock_resistance(shock_src));
+    const double SHOCK_RES_DB   = double(shock_resistance(shock_src));
     const double BASE_SHOCK_DB  = double(BASE_SHOCK);
     return (BASE_SHOCK_DB * (100.0 - SHOCK_RES_DB)) / 100.0;
 }
 
 void Player::incr_shock(const int SHOCK, Shock_src shock_src)
 {
-    const double SHOCK_AFTER_MODS = get_shock_taken_after_mods(SHOCK, shock_src);
+    const double SHOCK_AFTER_MODS = shock_taken_after_mods(SHOCK, shock_src);
 
     shock_                  += SHOCK_AFTER_MODS;
     perm_shock_taken_cur_turn_  += SHOCK_AFTER_MODS;
 
-    constr_in_range(0.0, shock_, 100.0);
+    set_constr_in_range(0.0, shock_, 100.0);
 }
 
 void Player::incr_shock(const Shock_lvl shock_value, Shock_src shock_src)
@@ -400,7 +400,7 @@ void Player::incr_insanity()
     update_clr();
     render::draw_map_and_interface();
 
-    if (get_insanity() >= 100)
+    if (ins() >= 100)
     {
         const string msg = "My mind can no longer withstand what it has grasped. "
                            "I am hopelessly lost.";
@@ -444,11 +444,11 @@ void Player::incr_insanity()
         {
             msg += "I find myself babbling incoherently.";
             popup::show_msg(msg, true, "Babbling!", Sfx_id::insanity_rise);
-            const string player_name = get_name_the();
+            const string player_name = name_the();
 
             for (int i = rnd::range(3, 5); i > 0; --i)
             {
-                msg_log::add(player_name + ": " + Cultist::get_cultist_phrase());
+                msg_log::add(player_name + ": " + Cultist::cultist_phrase());
             }
 
             Snd snd("", Sfx_id::END, Ignore_msg_if_origin_seen::yes, pos, this,
@@ -478,7 +478,7 @@ void Player::incr_insanity()
         case 5:
         {
             bool props[size_t(Prop_id::END)];
-            prop_handler_->get_prop_ids(props);
+            prop_handler_->prop_ids(props);
 
             if (ins_ >= 10 && !props[int(Prop_id::rFear)])
             {
@@ -674,7 +674,7 @@ void Player::incr_insanity()
                 popup::show_msg(msg, true, "Haunted by shadows!", Sfx_id::insanity_rise);
                 const int NR_SHADOWS_LOWER = 2;
                 const int NR_SHADOWS_UPPER =
-                    get_constr_in_range(2, (map::dlvl + 1) / 2, 6);
+                    constr_in_range(2, (map::dlvl + 1) / 2, 6);
                 const int NR =
                     rnd::range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
                 actor_factory::summon(pos, vector<Actor_id>(NR, Actor_id::shadow), true);
@@ -744,7 +744,7 @@ bool Player::is_standing_in_cramped_space() const
 
 void Player::test_phobias()
 {
-    if (!map::player->get_prop_handler().allow_act())
+    if (!map::player->prop_handler().allow_act())
     {
         return;
     }
@@ -752,12 +752,12 @@ void Player::test_phobias()
     if (rnd::one_in(10))
     {
         //Monster phobia?
-        vector<Actor*> seen_foes;
-        get_seen_foes(seen_foes);
+        vector<Actor*> my_seen_foes;
+        seen_foes(my_seen_foes);
 
-        for (Actor* const actor : seen_foes)
+        for (Actor* const actor : my_seen_foes)
         {
-            const actor_data_t& mon_data = actor->get_data();
+            const Actor_data_t& mon_data = actor->data();
 
             if (mon_data.is_canine && phobias[int(Phobia::dog)])
             {
@@ -889,7 +889,7 @@ void Player::on_actor_turn()
         return;
     }
 
-    if (tgt_ && tgt_->get_state() != Actor_state::alive)
+    if (tgt_ && tgt_->state() != Actor_state::alive)
     {
         tgt_ = nullptr;
     }
@@ -899,10 +899,10 @@ void Player::on_actor_turn()
 
     if (inv_screen_after_drop != Inv_scr_id::END)
     {
-        vector<Actor*> seen_foes;
-        get_seen_foes(seen_foes);
+        vector<Actor*> my_seen_foes;
+        seen_foes(my_seen_foes);
 
-        if (seen_foes.empty())
+        if (my_seen_foes.empty())
         {
             switch (inv_screen_after_drop)
             {
@@ -932,17 +932,17 @@ void Player::on_actor_turn()
         //NOTE: There is no need to check for items here, since the message from stepping
         //on an item will interrupt player actions.
 
-        const Pos dest_pos(pos + dir_utils::get_offset(quick_move_dir_));
+        const Pos dest_pos(pos + dir_utils::offset(quick_move_dir_));
 
         const Cell&         tgt_cell   = map::cells[dest_pos.x][dest_pos.y];
         const Rigid* const  tgt_rigid  = tgt_cell.rigid;
 
-        const bool IS_TGT_KNOWN_TRAP  = tgt_rigid->get_id() == Feature_id::trap &&
+        const bool IS_TGT_KNOWN_TRAP  = tgt_rigid->id() == Feature_id::trap &&
                                         !static_cast<const Trap*>(tgt_rigid)->is_hidden();
 
         const bool SHOULD_ABORT = !tgt_rigid->can_move_cmn()                         ||
                                   IS_TGT_KNOWN_TRAP                               ||
-                                  tgt_rigid->get_burn_state() == Burn_state::burning  ||
+                                  tgt_rigid->burn_state() == Burn_state::burning  ||
                                   (tgt_cell.is_dark && !tgt_cell.is_lit);
 
         if (SHOULD_ABORT)
@@ -989,7 +989,7 @@ void Player::update_tmp_shock()
 
     if (cell.is_dark && !cell.is_lit)
     {
-        shock_tmp_ += get_shock_taken_after_mods(20, Shock_src::misc);
+        shock_tmp_ += shock_taken_after_mods(20, Shock_src::misc);
     }
 
     //Temporary shock from features
@@ -997,9 +997,9 @@ void Player::update_tmp_shock()
     {
         const Pos p(pos + d);
 
-        const int BASE_SHOCK = map::cells[p.x][p.y].rigid->get_shock_when_adj();
+        const int BASE_SHOCK = map::cells[p.x][p.y].rigid->shock_when_adj();
 
-        shock_tmp_ += get_shock_taken_after_mods(BASE_SHOCK, Shock_src::misc);
+        shock_tmp_ += shock_taken_after_mods(BASE_SHOCK, Shock_src::misc);
     }
 
     //Temporary shock from items
@@ -1007,17 +1007,17 @@ void Player::update_tmp_shock()
     {
         if (slot.item)
         {
-            const int BASE_SHOCK = slot.item->get_data().shock_while_equipped;
+            const int BASE_SHOCK = slot.item->data().shock_while_equipped;
 
-            shock_tmp_ += get_shock_taken_after_mods(BASE_SHOCK, Shock_src::use_strange_item);
+            shock_tmp_ += shock_taken_after_mods(BASE_SHOCK, Shock_src::use_strange_item);
         }
     }
 
     for (const Item* const item : inv_->general_)
     {
-        const int BASE_SHOCK = item->get_data().shock_while_in_backpack;
+        const int BASE_SHOCK = item->data().shock_while_in_backpack;
 
-        shock_tmp_ += get_shock_taken_after_mods(BASE_SHOCK, Shock_src::use_strange_item);
+        shock_tmp_ += shock_taken_after_mods(BASE_SHOCK, Shock_src::use_strange_item);
     }
 
     shock_tmp_ = min(99.0, shock_tmp_);
@@ -1031,12 +1031,12 @@ void Player::on_std_turn()
 
     if (!active_medical_bag) {test_phobias();}
 
-    vector<Actor*> seen_foes;
-    get_seen_foes(seen_foes);
+    vector<Actor*> my_seen_foes;
+    seen_foes(my_seen_foes);
 
     double shock_from_mon_cur_player_turn = 0.0;
 
-    for (Actor* actor : seen_foes)
+    for (Actor* actor : my_seen_foes)
     {
         dungeon_master::on_mon_seen(*actor);
 
@@ -1044,11 +1044,11 @@ void Player::on_std_turn()
 
         mon->player_become_aware_of_me();
 
-        const actor_data_t& data = mon->get_data();
+        const Actor_data_t& mon_data = mon->data();
 
-        if (data.mon_shock_lvl != Mon_shock_lvl::none)
+        if (mon_data.mon_shock_lvl != Mon_shock_lvl::none)
         {
-            switch (data.mon_shock_lvl)
+            switch (mon_data.mon_shock_lvl)
             {
             case Mon_shock_lvl::unsettling:
                 mon->shock_caused_cur_ = min(mon->shock_caused_cur_ + 0.05,  1.0);
@@ -1082,12 +1082,12 @@ void Player::on_std_turn()
     {
         int turn_nr_incr_shock = 12;
 
-        if (player_bon::get_bg() == Bg::rogue)
+        if (player_bon::bg() == Bg::rogue)
         {
             turn_nr_incr_shock *= 2;
         }
 
-        const int TURN = game_time::get_turn();
+        const int TURN = game_time::turn();
 
         if (TURN % turn_nr_incr_shock == 0 && TURN > 1)
         {
@@ -1116,7 +1116,7 @@ void Player::on_std_turn()
     }
 
     //Take sanity hit from high shock?
-    if (get_shock_total() >= 100)
+    if (shock_tot() >= 100)
     {
         nr_turns_until_ins_ = nr_turns_until_ins_ < 0 ? 3 : nr_turns_until_ins_ - 1;
 
@@ -1160,7 +1160,7 @@ void Player::on_std_turn()
                         wait_turns_left > 0   ||
                         nr_quick_move_steps_left_ > 0)
                     {
-                        msg_log::add(actor->get_name_a() + " comes into my view.", clr_white,
+                        msg_log::add(actor->name_a() + " comes into my view.", clr_white,
                                      true);
                     }
 
@@ -1180,7 +1180,7 @@ void Player::on_std_turn()
                     mon.is_stealth_ = false;
                     update_fov();
                     render::draw_map_and_interface();
-                    const string mon_name = mon.get_name_a();
+                    const string mon_name = mon.name_a();
                     msg_log::add("I spot " + mon_name + "!", clr_msg_note, true, true);
                 }
             }
@@ -1189,20 +1189,20 @@ void Player::on_std_turn()
 
     const int DECR_ABOVE_MAX_N_TURNS = 7;
 
-    if (get_hp() > get_hp_max(true))
+    if (hp() > hp_max(true))
     {
-        if (game_time::get_turn() % DECR_ABOVE_MAX_N_TURNS == 0) {hp_--;}
+        if (game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0) {hp_--;}
     }
 
-    if (get_spi() > get_spi_max())
+    if (spi() > spi_max())
     {
-        if (game_time::get_turn() % DECR_ABOVE_MAX_N_TURNS == 0) {spi_--;}
+        if (game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0) {spi_--;}
     }
 
     if (!active_medical_bag)
     {
         bool props[size_t(Prop_id::END)];
-        prop_handler_->get_prop_ids(props);
+        prop_handler_->prop_ids(props);
 
         if (!props[int(Prop_id::poisoned)])
         {
@@ -1217,18 +1217,18 @@ void Player::on_std_turn()
             {
                 if (slot.item)
                 {
-                    nr_turns_per_hp += slot.item->get_hp_regen_change(Inv_type::slots);
+                    nr_turns_per_hp += slot.item->hp_regen_change(Inv_type::slots);
                 }
             }
 
             for (const Item* const item : inv_->general_)
             {
-                nr_turns_per_hp += item->get_hp_regen_change(Inv_type::general);
+                nr_turns_per_hp += item->hp_regen_change(Inv_type::general);
             }
 
-            const int TURN = game_time::get_turn();
+            const int TURN = game_time::turn();
 
-            if (get_hp() < get_hp_max(true) && (TURN % nr_turns_per_hp == 0)  && TURN > 1)
+            if (hp() < hp_max(true) && (TURN % nr_turns_per_hp == 0)  && TURN > 1)
             {
                 ++hp_;
             }
@@ -1252,12 +1252,12 @@ void Player::on_std_turn()
                     {
                         auto* f = map::cells[x][y].rigid;
 
-                        if (f->get_id() == Feature_id::trap)
+                        if (f->id() == Feature_id::trap)
                         {
                             static_cast<Trap*>(f)->player_try_spot_hidden();
                         }
 
-                        if (f->get_id() == Feature_id::door)
+                        if (f->id() == Feature_id::door)
                         {
                             static_cast<Door*>(f)->player_try_spot_hidden();
                         }
@@ -1314,8 +1314,8 @@ void Player::hear_sound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
                         const Dir dir_to_origin,
                         const int PERCENT_AUDIBLE_DISTANCE)
 {
-    const Sfx_id     sfx         = snd.get_sfx();
-    const string&   msg         = snd.get_msg();
+    const Sfx_id     sfx         = snd.sfx();
+    const string&   msg         = snd.msg();
     const bool      HAS_SND_MSG = !msg.empty() && msg != " ";
 
     if (HAS_SND_MSG)
@@ -1332,7 +1332,7 @@ void Player::hear_sound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
 
     if (HAS_SND_MSG)
     {
-        Actor* const actor_who_made_snd = snd.get_actor_who_made_sound();
+        Actor* const actor_who_made_snd = snd.actor_who_made_sound();
 
         if (actor_who_made_snd && actor_who_made_snd != this)
         {
@@ -1352,7 +1352,7 @@ void Player::move_dir(Dir dir)
         {
             Feature* f = map::cells[pos.x][pos.y].rigid;
 
-            if (f->get_id() == Feature_id::trap)
+            if (f->id() == Feature_id::trap)
             {
                 TRACE << "Standing on trap, check if affects move" << endl;
                 dir = static_cast<Trap*>(f)->actor_try_leave(*this, dir);
@@ -1361,11 +1361,11 @@ void Player::move_dir(Dir dir)
 
         bool is_free_turn = false;;
 
-        const Pos dest(pos + dir_utils::get_offset(dir));
+        const Pos dest(pos + dir_utils::offset(dir));
 
         if (dir != Dir::center)
         {
-            Mon* const mon_at_dest = static_cast<Mon*>(utils::get_actor_at_pos(dest));
+            Mon* const mon_at_dest = static_cast<Mon*>(utils::actor_at_pos(dest));
 
             //Attack?
             if (mon_at_dest && !is_leader_of(mon_at_dest))
@@ -1373,22 +1373,22 @@ void Player::move_dir(Dir dir)
                 if (prop_handler_->allow_attack_melee(true))
                 {
                     bool has_melee_wpn = false;
-                    Item* const item = inv_->get_item_in_slot(Slot_id::wielded);
+                    Item* const item = inv_->item_in_slot(Slot_id::wielded);
 
                     if (item)
                     {
                         Wpn* const wpn = static_cast<Wpn*>(item);
 
-                        if (wpn->get_data().melee.is_melee_wpn)
+                        if (wpn->data().melee.is_melee_wpn)
                         {
                             if (
                                 config::is_ranged_wpn_meleee_prompt()   &&
                                 can_see_actor(*mon_at_dest, nullptr)  &&
-                                wpn->get_data().ranged.is_ranged_wpn)
+                                wpn->data().ranged.is_ranged_wpn)
                             {
-                                const string wpn_name = wpn->get_name(Item_ref_type::a);
+                                const string wpn_name = wpn->name(Item_ref_type::a);
 
-                                msg_log::add("Attack " + mon_at_dest->get_name_the() +
+                                msg_log::add("Attack " + mon_at_dest->name_the() +
                                              " with " + wpn_name + " ? [y/n]",
                                              clr_white_high);
 
@@ -1421,12 +1421,12 @@ void Player::move_dir(Dir dir)
 
             //Blocking mobile or rigid?
             bool props[size_t(Prop_id::END)];
-            get_prop_handler().get_prop_ids(props);
+            prop_handler().prop_ids(props);
             Cell& cell = map::cells[dest.x][dest.y];
             bool is_features_allow_move = cell.rigid->can_move(props);
 
             vector<Mob*> mobs;
-            game_time::get_mobs_at_pos(dest, mobs);
+            game_time::mobs_at_pos(dest, mobs);
 
             if (is_features_allow_move)
             {
@@ -1443,7 +1443,7 @@ void Player::move_dir(Dir dir)
             if (is_features_allow_move)
             {
                 //Encumbrance
-                const int ENC = get_enc_percent();
+                const int ENC = enc_percent();
 
                 if (ENC >= ENC_IMMOBILE_LVL)
                 {
@@ -1460,7 +1460,7 @@ void Player::move_dir(Dir dir)
                 //Displace allied monster
                 if (mon_at_dest && is_leader_of(mon_at_dest))
                 {
-                    msg_log::add("I displace " + mon_at_dest->get_name_a() + ".");
+                    msg_log::add("I displace " + mon_at_dest->name_a() + ".");
                     mon_at_dest->pos = pos;
                 }
 
@@ -1500,8 +1500,8 @@ void Player::move_dir(Dir dir)
                                  "I try to feel what is lying here...",
                                  clr_white, true);
 
-                    string item_name = item->get_name(Item_ref_type::plural, Item_ref_inf::yes,
-                                                      Item_ref_att_inf::wpn_context);
+                    string item_name = item->name(Item_ref_type::plural, Item_ref_inf::yes,
+                                                  Item_ref_att_inf::wpn_context);
 
                     text_format::first_to_upper(item_name);
 
@@ -1526,24 +1526,24 @@ void Player::move_dir(Dir dir)
 void Player::auto_melee()
 {
     if (
-        tgt_                                    &&
-        tgt_->get_state() == Actor_state::alive   &&
-        utils::is_pos_adj(pos, tgt_->pos, false)  &&
+        tgt_                                        &&
+        tgt_->state() == Actor_state::alive         &&
+        utils::is_pos_adj(pos, tgt_->pos, false)    &&
         can_see_actor(*tgt_, nullptr))
     {
-        move_dir(dir_utils::get_dir(tgt_->pos - pos));
+        move_dir(dir_utils::dir(tgt_->pos - pos));
         return;
     }
 
     //If this line reached, there is no adjacent cur target.
     for (const Pos& d : dir_utils::dir_list)
     {
-        Actor* const actor = utils::get_actor_at_pos(pos + d);
+        Actor* const actor = utils::actor_at_pos(pos + d);
 
         if (actor && !is_leader_of(actor) && can_see_actor(*actor, nullptr))
         {
             tgt_ = actor;
-            move_dir(dir_utils::get_dir(d));
+            move_dir(dir_utils::dir(d));
             return;
         }
     }
@@ -1553,7 +1553,7 @@ void Player::kick_mon(Actor& actor_to_kick)
 {
     Wpn* kick_wpn = nullptr;
 
-    const actor_data_t& d = actor_to_kick.get_data();
+    const Actor_data_t& d = actor_to_kick.data();
 
     if (d.actor_size == Actor_size::floor && (d.is_spider || d.is_rat))
     {
@@ -1582,7 +1582,7 @@ void Player::add_light_(bool light_map[MAP_W][MAP_H]) const
 
     if (active_explosive)
     {
-        if (active_explosive->get_data().id == Item_id::flare)
+        if (active_explosive->data().id == Item_id::flare)
         {
             lgt_size = Lgt_size::fov;
         }
@@ -1592,7 +1592,7 @@ void Player::add_light_(bool light_map[MAP_W][MAP_H]) const
     {
         for (Item* const item : inv_->general_)
         {
-            Lgt_size item_lgt_size = item->get_lgt_size();
+            Lgt_size item_lgt_size = item->lgt_size();
 
             if (int(lgt_size) < int(item_lgt_size))
             {

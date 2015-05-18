@@ -43,7 +43,7 @@ void load_audio_file(const Sfx_id sfx, const string& filename)
     }
 }
 
-int get_next_channel(const int FROM)
+int next_channel(const int FROM)
 {
     assert(FROM >= 0 && FROM < AUDIO_ALLOCATED_CHANNELS);
 
@@ -57,7 +57,7 @@ int get_next_channel(const int FROM)
     return ret;
 }
 
-int get_free_channel(const int FROM)
+int free_channel(const int FROM)
 {
     assert(FROM >= 0 && FROM < AUDIO_ALLOCATED_CHANNELS);
 
@@ -65,7 +65,7 @@ int get_free_channel(const int FROM)
 
     for (int i = 0; i < AUDIO_ALLOCATED_CHANNELS; ++i)
     {
-        ret = get_next_channel(ret);
+        ret = next_channel(ret);
 
         if (Mix_Playing(ret) == 0)
         {
@@ -183,7 +183,7 @@ int play(const Sfx_id sfx, const int VOL_PERCENT_TOT, const int VOL_PERCENT_L)
         sfx != Sfx_id::END       &&
         !config::is_bot_playing())
     {
-        const int FREE_CHANNEL = get_free_channel(cur_channel_);
+        const int FREE_CHANNEL = free_channel(cur_channel_);
 
         if (FREE_CHANNEL >= 0)
         {

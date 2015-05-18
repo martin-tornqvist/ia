@@ -6,11 +6,11 @@
 namespace menu_input_handling
 {
 
-Menu_action get_action(Menu_browser& browser)
+Menu_action action(Menu_browser& browser)
 {
     while (true)
     {
-        Key_data d = input::get_input();
+        Key_data d = input::input();
 
         if (d.sdl_key == SDLK_RIGHT || d.key == '6' || d.key == 'l')
         {

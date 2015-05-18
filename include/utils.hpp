@@ -68,7 +68,7 @@ struct Time_data
         minute_(minute),
         second_(second) {}
 
-    std::string get_time_str(const Time_type lowest, const bool ADD_SEPARATORS) const;
+    std::string time_str(const Time_type lowest, const bool ADD_SEPARATORS) const;
 
     int year_, month_, day_, hour_, minute_, second_;
 };
@@ -101,11 +101,11 @@ void mk_vector_from_bool_map(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_
 
 void mk_bool_map_from_vector(const std::vector<Pos>& positions, bool out[MAP_W][MAP_H]);
 
-Actor* get_actor_at_pos(const Pos& pos, Actor_state state = Actor_state::alive);
+Actor* actor_at_pos(const Pos& pos, Actor_state state = Actor_state::alive);
 
-Mob* get_first_mob_at_pos(const Pos& pos);
+Mob* first_mob_at_pos(const Pos& pos);
 
-void get_actor_cells(const std::vector<Actor*>& actors, std::vector<Pos>& out);
+void actor_cells(const std::vector<Actor*>& actors, std::vector<Pos>& out);
 
 void mk_actor_array(Actor* a[MAP_W][MAP_H]);
 
@@ -120,9 +120,9 @@ bool is_area_inside_map(const Rect& area);
 
 bool is_pos_adj(const Pos& pos1, const Pos& pos2, const bool COUNT_SAME_CELL_AS_ADJ);
 
-Pos get_closest_pos(const Pos& p, const std::vector<Pos>& positions);
+Pos closest_pos(const Pos& p, const std::vector<Pos>& positions);
 
-Actor* get_random_closest_actor(const Pos& c, const std::vector<Actor*>& actors);
+Actor* random_closest_actor(const Pos& c, const std::vector<Actor*>& actors);
 
 int king_dist(const int X0, const int Y0, const int X1, const int Y1);
 int king_dist(const Pos& p0, const Pos& p1);
@@ -130,7 +130,7 @@ int taxicab_dist(const Pos& p0, const Pos& p1);
 
 bool is_val_in_range(const int VAL, const Range& range);
 
-Time_data get_cur_time();
+Time_data cur_time();
 
 } //utils
 
@@ -149,17 +149,17 @@ const std::vector<Pos> dir_list
     Pos(-1, -1), Pos(-1, 1), Pos(1, -1), Pos(1, 1)
 };
 
-Dir get_dir(const Pos& offset);
+Dir dir(const Pos& offset_values);
 
-Pos get_offset(const Dir dir);
+Pos offset(const Dir dir);
 
-Pos get_rnd_adj_pos(const Pos& origin, const bool IS_ORIGIN_ALLOWED);
+Pos rnd_adj_pos(const Pos& origin, const bool IS_ORIGIN_ALLOWED);
 
-void get_compass_dir_name(const Pos& from_pos, const Pos& to_pos, std::string& str_ref);
+void compass_dir_name(const Pos& from_pos, const Pos& to_pos, std::string& dst);
 
-void get_compass_dir_name(const Dir dir, std::string& str_ref);
+void compass_dir_name(const Dir dir, std::string& dst);
 
-void get_compass_dir_name(const Pos& offset, std::string& str_ref);
+void compass_dir_name(const Pos& offs, std::string& dst);
 
 bool is_cardinal(const Pos& d);
 

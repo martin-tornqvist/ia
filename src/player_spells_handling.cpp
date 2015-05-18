@@ -54,12 +54,12 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
     {
         const int     CURRENT_ELEMENT = i;
         Scroll        scroll(nullptr);
-        Clr           scroll_clr   = scroll.get_interface_clr();
+        Clr           scroll_clr   = scroll.interface_clr();
         const bool    IS_SELECTED = browser.is_at_idx(CURRENT_ELEMENT);
         const Clr     clr         = IS_SELECTED ? clr_white : scroll_clr;
         Spell_opt      spell_opt    = spell_opts[i];
         Spell* const  spell       = spell_opt.spell;
-        string        name        = spell->get_name();
+        string        name        = spell->name();
         const int     NAME_X      = 1;
         const int     SPI_X       = 26;
         const int     SHOCK_X     = SPI_X + 10;
@@ -79,7 +79,7 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
         int     x       = SPI_X;
         string  info_str = "SPI: ";
 
-        const Range spi_cost = spell->get_spi_cost(false, map::player);
+        const Range spi_cost = spell->spi_cost(false, map::player);
         const string lower_str = to_str(spi_cost.lower);
         const string upper_str = to_str(spi_cost.upper);
         info_str += spi_cost.upper == 1 ? "1" : (lower_str +  "-" + upper_str);
@@ -87,7 +87,7 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
         render::draw_text(info_str, Panel::screen, Pos(x, Y), clr_white);
 
         x = SHOCK_X;
-        const Intr_spell_shock shock_type = spell->get_shock_type_intr_cast();
+        const Intr_spell_shock shock_type = spell->shock_type_intr_cast();
 
         switch (shock_type)
         {
@@ -102,7 +102,7 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
 
         if (IS_SELECTED)
         {
-            const auto descr = spell->get_descr();
+            const auto descr = spell->descr();
             vector<Str_and_clr> lines;
 
             if (!descr.empty())
@@ -117,7 +117,7 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
             if (spell_opt.src_item)
             {
                 const string item_name =
-                    spell_opt.src_item->get_name(Item_ref_type::plain, Item_ref_inf::none);
+                    spell_opt.src_item->name(Item_ref_type::plain, Item_ref_inf::none);
                 lines.push_back({"Spell granted by " + item_name + ".", clr_green});
             }
 
@@ -133,7 +133,7 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
     render::update_screen();
 }
 
-void get_spells_avail(vector<Spell_opt>& out)
+void spells_avail(vector<Spell_opt>& out)
 {
     out.clear();
 
@@ -142,7 +142,7 @@ void get_spells_avail(vector<Spell_opt>& out)
         out.push_back(Spell_opt(spell, nullptr));
     }
 
-    Inventory& inv = map::player->get_inv();
+    Inventory& inv = map::player->inv();
 
     for (auto slot : inv.slots_)
     {
@@ -171,17 +171,17 @@ void try_cast(const Spell_opt& spell_opt)
     assert(spell_opt.spell);
 
     if (
-        map::player->get_prop_handler().allow_cast_spell(true) &&
-        map::player->get_prop_handler().allow_speak(true))
+        map::player->prop_handler().allow_cast_spell(true) &&
+        map::player->prop_handler().allow_speak(true))
     {
         msg_log::clear();
         render::draw_map_and_interface();
 
         Spell* const spell = spell_opt.spell;
 
-        const Range spi_cost_range = spell->get_spi_cost(false, map::player);
+        const Range spi_cost_range = spell->spi_cost(false, map::player);
 
-        if (spi_cost_range.upper >= map::player->get_spi())
+        if (spi_cost_range.upper >= map::player->spi())
         {
             msg_log::add("Cast spell and risk depleting your spirit [y/n]?",
                          clr_white_high);
@@ -205,7 +205,7 @@ void try_cast(const Spell_opt& spell_opt)
 
         if (IS_BLOOD_SORC)
         {
-            if (map::player->get_hp() <= BLOOD_SORC_HP_DRAINED)
+            if (map::player->hp() <= BLOOD_SORC_HP_DRAINED)
             {
                 msg_log::add("I do not have enough life force to cast this spell.");
                 render::draw_map_and_interface();
@@ -213,7 +213,7 @@ void try_cast(const Spell_opt& spell_opt)
             }
         }
 
-        msg_log::add("I cast " + spell->get_name() + "!");
+        msg_log::add("I cast " + spell->name() + "!");
 
         if (IS_BLOOD_SORC)
         {
@@ -228,7 +228,7 @@ void try_cast(const Spell_opt& spell_opt)
             if (IS_WARLOCK && rnd::one_in(2))
             {
                 auto* const prop = new Prop_warlock_charged(Prop_turns::std);
-                map::player->get_prop_handler().try_apply_prop(prop);
+                map::player->prop_handler().try_apply_prop(prop);
             }
         }
     }
@@ -253,7 +253,7 @@ void store_to_save_lines(vector<string>& lines)
 {
     lines.push_back(to_str(known_spells_.size()));
 
-    for (Spell* s : known_spells_) {lines.push_back(to_str(int(s->get_id())));}
+    for (Spell* s : known_spells_) {lines.push_back(to_str(int(s->id())));}
 }
 
 void setup_from_save_lines(vector<string>& lines)
@@ -272,7 +272,7 @@ void setup_from_save_lines(vector<string>& lines)
 void player_select_spell_to_cast()
 {
     vector<Spell_opt> spell_opts;
-    get_spells_avail(spell_opts);
+    spells_avail(spell_opts);
 
     if (spell_opts.empty())
     {
@@ -282,7 +282,7 @@ void player_select_spell_to_cast()
     {
         auto spell_opt_sort = [](const Spell_opt & opt1, const Spell_opt & opt2)
         {
-            return opt1.spell->get_name() < opt2.spell->get_name();
+            return opt1.spell->name() < opt2.spell->name();
         };
 
         sort(spell_opts.begin(), spell_opts.end(), spell_opt_sort);
@@ -295,7 +295,7 @@ void player_select_spell_to_cast()
 
         while (true)
         {
-            const Menu_action action = menu_input_handling::get_action(browser);
+            const Menu_action action = menu_input_handling::action(browser);
 
             switch (action)
             {
@@ -310,7 +310,7 @@ void player_select_spell_to_cast()
                 return;
 
             case Menu_action::selected:
-                try_cast(spell_opts[browser.get_pos().y]);
+                try_cast(spell_opts[browser.pos().y]);
                 return;
 
             default: {}
@@ -331,7 +331,7 @@ void try_cast_prev_spell()
         //Checking if previous spell is still available (it could for example have been
         //granted by an item that was dropped)
         vector<Spell_opt> spell_opts;
-        get_spells_avail(spell_opts);
+        spells_avail(spell_opts);
 
         auto spell_opt_cmp = [&](const Spell_opt & opt) {return opt.spell == prev_cast_.spell;};
 
@@ -355,7 +355,7 @@ void try_cast_prev_spell()
 
 bool is_spell_learned(const Spell_id id)
 {
-    for (auto* s : known_spells_) {if (s->get_id() == id) {return true;}}
+    for (auto* s : known_spells_) {if (s->id() == id) {return true;}}
 
     return false;
 }
@@ -371,7 +371,7 @@ void learn_spell_if_not_known(Spell* const spell)
 
     for (Spell* spell_cmpr : known_spells_)
     {
-        if (spell_cmpr->get_id() == spell->get_id())
+        if (spell_cmpr->id() == spell->id())
         {
             is_already_learned = true;
             break;

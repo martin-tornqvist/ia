@@ -37,7 +37,7 @@ bool run_drop_screen(const Inv_type inv_type, const size_t ELEMENT)
 {
     TRACE_FUNC_BEGIN;
 
-    Inventory& inv  = map::player->get_inv();
+    Inventory& inv  = map::player->inv();
     Item* item      = nullptr;
 
     if (inv_type == Inv_type::slots)
@@ -57,7 +57,7 @@ bool run_drop_screen(const Inv_type inv_type, const size_t ELEMENT)
         return false;
     }
 
-    const Item_data_t& data = item->get_data();
+    const Item_data_t& data = item->data();
 
     msg_log::clear();
 
@@ -106,7 +106,7 @@ void filter_player_general_equip(const Slot_id slot_to_equip)
 {
     assert(slot_to_equip != Slot_id::END);
 
-    const auto& inv     = map::player->get_inv();
+    const auto& inv     = map::player->inv();
     const auto& general = inv.general_;
 
     general_items_to_show_.clear();
@@ -114,7 +114,7 @@ void filter_player_general_equip(const Slot_id slot_to_equip)
     for (size_t i = 0; i < general.size(); ++i)
     {
         const auto* const item = general[i];
-        const auto&       data = item->get_data();
+        const auto&       data = item->data();
 
         switch (slot_to_equip)
         {
@@ -190,7 +190,7 @@ void filter_player_general_equip(const Slot_id slot_to_equip)
 
 void filter_player_general_show_all()
 {
-    auto& general = map::player->get_inv().general_;
+    auto& general = map::player->inv().general_;
     general_items_to_show_.clear();
     const int NR_GEN = general.size();
 
@@ -215,7 +215,7 @@ void init()
 
 void activate(const size_t GENERAL_ITEMS_ELEMENT)
 {
-    Inventory& player_inv  = map::player->get_inv();
+    Inventory& player_inv  = map::player->inv();
     Item* item            = player_inv.general_[GENERAL_ITEMS_ELEMENT];
 
     if (item->activate(map::player) == Consume_item::yes)
@@ -229,21 +229,21 @@ void run_inv_screen()
     screen_to_open_after_drop = Inv_scr_id::END;
     render::draw_map_and_interface();
 
-    Inventory& inv = map::player->get_inv();
+    Inventory& inv = map::player->inv();
 
     inv.sort_general_inventory();
 
     const int SLOTS_SIZE  = int(Slot_id::END);
     const int INV_H       = render_inventory::INV_H;
 
-    auto get_browser = [](const Inventory & inventory)
+    auto mk_browser = [](const Inventory & inventory)
     {
         const int GEN_SIZE        = int(inventory.general_.size());
         const int ELEM_ON_WRAP_UP = GEN_SIZE > INV_H ? (SLOTS_SIZE + INV_H - 2) : -1;
         return Menu_browser(int(Slot_id::END) + GEN_SIZE, 0, ELEM_ON_WRAP_UP);
     };
 
-    Menu_browser browser = get_browser(inv);
+    Menu_browser browser = mk_browser(inv);
 
     browser.set_pos(Pos(0, browser_idx_to_set_after_drop));
     browser_idx_to_set_after_drop = 0;
@@ -253,10 +253,10 @@ void run_inv_screen()
     {
         inv.sort_general_inventory();
 
-        const Inv_type inv_type = browser.get_pos().y < int(Slot_id::END) ?
+        const Inv_type inv_type = browser.pos().y < int(Slot_id::END) ?
                                   Inv_type::slots : Inv_type::general;
 
-        const Menu_action action = menu_input_handling::get_action(browser);
+        const Menu_action action = menu_input_handling::action(browser);
 
         switch (action)
         {
@@ -267,14 +267,14 @@ void run_inv_screen()
 
         case Menu_action::selected_shift:
         {
-            const int BROWSER_Y = browser.get_pos().y;
+            const int BROWSER_Y = browser.pos().y;
             const size_t ELEMENT =
                 inv_type == Inv_type::slots ? BROWSER_Y : (BROWSER_Y - int(Slot_id::END));
 
             if (run_drop_screen(inv_type, ELEMENT))
             {
                 browser.set_good_pos();
-                browser_idx_to_set_after_drop  = browser.get_y();
+                browser_idx_to_set_after_drop  = browser.y();
                 screen_to_open_after_drop     = Inv_scr_id::inv;
                 return;
             }
@@ -286,7 +286,7 @@ void run_inv_screen()
         {
             if (inv_type == Inv_type::slots)
             {
-                const size_t ELEMENT  = browser.get_y();
+                const size_t ELEMENT  = browser.y();
                 Inv_slot& slot         = inv.slots_[ELEMENT];
 
                 if (slot.item)
@@ -315,7 +315,7 @@ void run_inv_screen()
 
                     case Slot_id::body:
                         screen_to_open_after_drop     = Inv_scr_id::inv;
-                        browser_idx_to_set_after_drop  = browser.get_y();
+                        browser_idx_to_set_after_drop  = browser.y();
                         return;
 
                     case Slot_id::END: {}
@@ -323,8 +323,8 @@ void run_inv_screen()
                     }
 
                     //Create a new browser to adjust for changed inventory size
-                    const Pos p = browser.get_pos();
-                    browser     = get_browser(inv);
+                    const Pos p = browser.pos();
+                    browser     = mk_browser(inv);
                     browser.set_pos(p);
                 }
                 else //No item in slot
@@ -342,7 +342,7 @@ void run_inv_screen()
             }
             else //In general inventory
             {
-                const size_t ELEMENT = browser.get_y() - int(Slot_id::END);
+                const size_t ELEMENT = browser.y() - int(Slot_id::END);
                 activate(ELEMENT);
                 render::draw_map_and_interface();
                 return;
@@ -365,7 +365,7 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
     equip_slot_to_open_after_drop  = &slot_to_equip;
     render::draw_map_and_interface();
 
-    auto& inv = map::player->get_inv();
+    auto& inv = map::player->inv();
 
     inv.sort_general_inventory();
 
@@ -381,7 +381,7 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
 
     while (true)
     {
-        const Menu_action action = menu_input_handling::get_action(browser);
+        const Menu_action action = menu_input_handling::action(browser);
 
         switch (action)
         {
@@ -394,7 +394,7 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
         {
             if (!general_items_to_show_.empty())
             {
-                const int ELEMENT = general_items_to_show_[browser.get_y()];
+                const int ELEMENT = general_items_to_show_[browser.y()];
                 render::draw_map_and_interface();
 
                 inv.equip_general_item(ELEMENT, slot_to_equip.id);
@@ -411,10 +411,10 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
 
         case Menu_action::selected_shift:
         {
-            if (run_drop_screen(Inv_type::general, general_items_to_show_[browser.get_y()]))
+            if (run_drop_screen(Inv_type::general, general_items_to_show_[browser.y()]))
             {
                 browser.set_good_pos();
-                browser_idx_to_set_after_drop  = browser.get_y();
+                browser_idx_to_set_after_drop  = browser.y();
                 screen_to_open_after_drop     = Inv_scr_id::equip;
                 return true;
             }

@@ -28,7 +28,7 @@ void wait_for_key_press()
 {
     if (is_inited_ && !config::is_bot_playing())
     {
-        input::get_input();
+        input::input();
     }
 }
 
@@ -36,7 +36,7 @@ Yes_no_answer yes_or_no(char key_for_special_event)
 {
     if (!is_inited_ || config::is_bot_playing()) {return Yes_no_answer::yes;}
 
-    Key_data d = input::get_input();
+    Key_data d = input::input();
 
     while (
         d.key    != 'y'          &&
@@ -45,7 +45,7 @@ Yes_no_answer yes_or_no(char key_for_special_event)
         d.sdl_key != SDLK_SPACE   &&
         (d.key != key_for_special_event || key_for_special_event == -1))
     {
-        d = input::get_input();
+        d = input::input();
     }
 
     if (d.key == key_for_special_event && key_for_special_event != -1)
@@ -67,7 +67,7 @@ Key_data letter(const bool ACCEPT_ENTER)
 
     while (true)
     {
-        Key_data d = input::get_input();
+        Key_data d = input::input();
 
         if (
             (ACCEPT_ENTER && d.sdl_key == SDLK_RETURN) ||
@@ -101,7 +101,7 @@ int number(const Pos& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS
                 d.sdl_key != SDLK_SPACE && d.sdl_key != SDLK_ESCAPE &&
                 d.sdl_key != SDLK_BACKSPACE)
         {
-            d = input::get_input();
+            d = input::input();
         }
 
         if (d.sdl_key == SDLK_RETURN)
@@ -145,11 +145,11 @@ void wait_forConfirm()
 {
     if (is_inited_ && !config::is_bot_playing())
     {
-        Key_data d = input::get_input();
+        Key_data d = input::input();
 
         while (d.sdl_key != SDLK_SPACE && d.sdl_key != SDLK_ESCAPE && d.sdl_key != SDLK_RETURN)
         {
-            d = input::get_input();
+            d = input::input();
         }
     }
 }
@@ -161,7 +161,7 @@ Dir dir()
         return Dir::END;
     }
 
-    Key_data d = input::get_input();
+    Key_data d = input::input();
 
     while (d.sdl_key != SDLK_RIGHT   && d.sdl_key != SDLK_UP       &&
             d.sdl_key != SDLK_LEFT    && d.sdl_key != SDLK_DOWN     &&
@@ -172,7 +172,7 @@ Dir dir()
             d.key != 'y' && d.key != 'u' && d.key != 'b' && d.key != 'n' &&
             (d.key < '1' || d.key > '9' || d.key == '5'))
     {
-        d = input::get_input();
+        d = input::input();
     }
 
     if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)

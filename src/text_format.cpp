@@ -86,7 +86,7 @@ void line_to_lines(string line, const int MAX_W, vector<string>& out)
     }
 }
 
-void get_space_separated_list(const string& line, vector<string>& out)
+void space_separated_list(const string& line, vector<string>& out)
 {
     string cur_line = "";
 

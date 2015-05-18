@@ -23,7 +23,7 @@ void Menu_browser::set_good_pos()
     }
 }
 
-int Menu_browser::get_element() const
+int Menu_browser::element() const
 {
     return pos_.y + (pos_.x * nr_a_);
 }

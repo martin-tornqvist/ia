@@ -18,23 +18,23 @@ namespace
 
 void draw_item_symbol(const Item& item, const Pos& p)
 {
-    const Clr item_clr = item.get_clr();
+    const Clr item_clr = item.clr();
 
     if (config::is_tiles_mode())
     {
-        render::draw_tile(item.get_tile(), Panel::screen, p, item_clr);
+        render::draw_tile(item.tile(), Panel::screen, p, item_clr);
     }
     else
     {
-        render::draw_glyph(item.get_glyph(), Panel::screen, p, item_clr);
+        render::draw_glyph(item.glyph(), Panel::screen, p, item_clr);
     }
 }
 
 void draw_weight_pct(const int Y, const int ITEM_NAME_X, const size_t ITEM_NAME_LEN,
                      const Item& item, const Clr& item_name_clr, const bool IS_SELECTED)
 {
-    const int WEIGHT_CARRIED_TOT = map::player->get_inv().get_total_item_weight();
-    const int WEIGHT_PCT         = (item.get_weight() * 100) / WEIGHT_CARRIED_TOT;
+    const int WEIGHT_CARRIED_TOT = map::player->inv().total_item_weight();
+    const int WEIGHT_PCT         = (item.weight() * 100) / WEIGHT_CARRIED_TOT;
 
     if (WEIGHT_PCT > 0 && WEIGHT_PCT < 100)
     {
@@ -61,7 +61,7 @@ void draw_detailed_item_descr(const Item* const item)
     {
         vector<Str_and_clr> lines;
 
-        const auto base_descr = item->get_descr();
+        const auto base_descr = item->descr();
 
         if (!base_descr.empty())
         {
@@ -71,14 +71,14 @@ void draw_detailed_item_descr(const Item* const item)
             }
         }
 
-        const bool  IS_PLURAL = item->nr_items_ > 1 && item->get_data().is_stackable;
+        const bool  IS_PLURAL = item->nr_items_ > 1 && item->data().is_stackable;
         const string weight_str =
-            (IS_PLURAL ? "They are " : "It is ") + item->get_weight_str() + " to carry.";
+            (IS_PLURAL ? "They are " : "It is ") + item->weight_str() + " to carry.";
 
         lines.push_back({weight_str, clr_green});
 
-        const int WEIGHT_CARRIED_TOT = map::player->get_inv().get_total_item_weight();
-        const int WEIGHT_PCT         = (item->get_weight() * 100) / WEIGHT_CARRIED_TOT;
+        const int WEIGHT_CARRIED_TOT = map::player->inv().total_item_weight();
+        const int WEIGHT_PCT         = (item->weight() * 100) / WEIGHT_CARRIED_TOT;
 
         if (WEIGHT_PCT > 0 && WEIGHT_PCT < 100)
         {
@@ -100,8 +100,8 @@ void draw_browse_inv(const Menu_browser& browser)
 
     render::clear_screen();
 
-    const int     BROWSER_Y   = browser.get_y();
-    const auto&   inv         = map::player->get_inv();
+    const int     BROWSER_Y   = browser.y();
+    const auto&   inv         = map::player->inv();
     const size_t  NR_SLOTS    = size_t(Slot_id::END);
 
     const bool    IS_IN_EQP   = BROWSER_Y < int(NR_SLOTS);
@@ -143,9 +143,9 @@ void draw_browse_inv(const Menu_browser& browser)
             draw_item_symbol(*cur_item, p);
             p.x += 2;
 
-            const Clr clr = IS_CUR_POS ? clr_white_high : cur_item->get_interface_clr();
+            const Clr clr = IS_CUR_POS ? clr_white_high : cur_item->interface_clr();
 
-            const Item_data_t& d    = cur_item->get_data();
+            const Item_data_t& d    = cur_item->data();
             Item_ref_att_inf att_inf  = Item_ref_att_inf::none;
 
             if (slot.id == Slot_id::wielded || slot.id == Slot_id::wielded_alt)
@@ -163,7 +163,7 @@ void draw_browse_inv(const Menu_browser& browser)
 
             if (slot.id == Slot_id::thrown) {ref_type = Item_ref_type::plural;}
 
-            string item_name = cur_item->get_name(ref_type, Item_ref_inf::yes, att_inf);
+            string item_name = cur_item->name(ref_type, Item_ref_inf::yes, att_inf);
 
             text_format::first_to_upper(item_name);
 
@@ -223,7 +223,7 @@ void draw_browse_inv(const Menu_browser& browser)
         const bool IS_CUR_POS = !IS_IN_EQP && INV_ELEMENT == i;
         Item* const cur_item   = inv.general_[i];
 
-        const Clr clr = IS_CUR_POS ? clr_white_high : cur_item->get_interface_clr();
+        const Clr clr = IS_CUR_POS ? clr_white_high : cur_item->interface_clr();
 
         if (i == inv_top_idx && inv_top_idx > 0)
         {
@@ -238,8 +238,8 @@ void draw_browse_inv(const Menu_browser& browser)
 
         p.x = INV_ITEM_NAME_X;
 
-        string item_name = cur_item->get_name(Item_ref_type::plural, Item_ref_inf::yes,
-                                              Item_ref_att_inf::wpn_context);
+        string item_name = cur_item->name(Item_ref_type::plural, Item_ref_inf::yes,
+                                          Item_ref_att_inf::wpn_context);
 
         text_format::first_to_upper(item_name);
 
@@ -283,7 +283,7 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
 
     Pos p(0, 0);
 
-    const int NR_ITEMS = browser.get_nr_of_items_in_first_list();
+    const int NR_ITEMS = browser.nr_of_items_in_first_list();
     render::cover_area(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 1));
 
     const bool HAS_ITEM = !gen_inv_indexes.empty();
@@ -350,13 +350,13 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
 
     ++p.y;
 
-    Inventory& inv = map::player->get_inv();
+    Inventory& inv = map::player->inv();
 
     const int NR_INDEXES = gen_inv_indexes.size();
 
     for (int i = 0; i < NR_INDEXES; ++i)
     {
-        const bool IS_CUR_POS = browser.get_pos().y == int(i);
+        const bool IS_CUR_POS = browser.pos().y == int(i);
         p.x = 0;
 
         Item* const item = inv.general_[gen_inv_indexes[i]];
@@ -364,9 +364,9 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
         draw_item_symbol(*item, p);
         p.x += 2;
 
-        const Clr item_interf_clr = IS_CUR_POS ? clr_white_high : item->get_interface_clr();
+        const Clr item_interf_clr = IS_CUR_POS ? clr_white_high : item->interface_clr();
 
-        const Item_data_t& d    = item->get_data();
+        const Item_data_t& d    = item->data();
         Item_ref_att_inf att_inf  = Item_ref_att_inf::none;
 
         if (slot_id_to_equip == Slot_id::wielded || slot_id_to_equip == Slot_id::wielded_alt)
@@ -380,7 +380,7 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
             att_inf = Item_ref_att_inf::thrown;
         }
 
-        str = item->get_name(Item_ref_type::plural, Item_ref_inf::yes, att_inf);
+        str = item->name(Item_ref_type::plural, Item_ref_inf::yes, att_inf);
 
         text_format::first_to_upper(str);
 

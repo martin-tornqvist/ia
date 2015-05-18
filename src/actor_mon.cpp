@@ -90,7 +90,7 @@ void Mon::on_actor_turn()
     vector<Actor*> tgt_bucket;
 
     bool props[size_t(Prop_id::END)];
-    prop_handler_->get_prop_ids(props);
+    prop_handler_->prop_ids(props);
 
     if (props[size_t(Prop_id::conflict)])
     {
@@ -116,7 +116,7 @@ void Mon::on_actor_turn()
     }
     else //Not conflicted
     {
-        get_seen_foes(tgt_bucket);
+        seen_foes(tgt_bucket);
 
         // If not aware, remove player from target bucket
         if (aware_counter_ <= 0)
@@ -132,7 +132,7 @@ void Mon::on_actor_turn()
         }
     }
 
-    tgt_ = utils::get_random_closest_actor(pos, tgt_bucket);
+    tgt_ = utils::random_closest_actor(pos, tgt_bucket);
 
     if (spell_cool_down_cur_ != 0) {spell_cool_down_cur_--;}
 
@@ -145,7 +145,7 @@ void Mon::on_actor_turn()
             if (leader_->is_alive() && !is_actor_my_leader(map::player))
             {
                 static_cast<Mon*>(leader_)->aware_counter_ =
-                    leader_->get_data().nr_turns_aware;
+                    leader_->data().nr_turns_aware;
             }
         }
         else //Monster does not have a leader
@@ -158,7 +158,7 @@ void Mon::on_actor_turn()
     }
 
     is_stealth_ = !is_actor_my_leader(map::player)                                  &&
-                  data_->ability_vals.get_val(Ability_id::stealth, true, *this) > 0 &&
+                  data_->ability_vals.val(Ability_id::stealth, true, *this) > 0 &&
                   !map::player->can_see_actor(*this, nullptr);
 
     //Array used for AI purposes, e.g. to prevent tactically bad positions,
@@ -242,7 +242,7 @@ void Mon::on_actor_turn()
         erratic_move_pct *= 2;
     }
 
-    constr_in_range(0, erratic_move_pct, 95);
+    set_constr_in_range(0, erratic_move_pct, 95);
 
     if (
         data_->ai[int(Ai_id::moves_to_random_when_unaware)] &&
@@ -334,7 +334,7 @@ void Mon::on_std_turn()
         {
             if (map::player->can_see_actor(*this, nullptr))
             {
-                msg_log::add(get_name_the() + " suddenly disappears!");
+                msg_log::add(name_the() + " suddenly disappears!");
             }
 
             state_ = Actor_state::destroyed;
@@ -369,14 +369,14 @@ void Mon::move_dir(Dir dir)
 
 #endif // NDEBUG
 
-    get_prop_handler().change_move_dir(pos, dir);
+    prop_handler().change_move_dir(pos, dir);
 
     //Trap affects leaving?
     if (dir != Dir::center)
     {
         auto* f = map::cells[pos.x][pos.y].rigid;
 
-        if (f->get_id() == Feature_id::trap)
+        if (f->id() == Feature_id::trap)
         {
             dir = static_cast<Trap*>(f)->actor_try_leave(*this, dir);
 
@@ -392,15 +392,15 @@ void Mon::move_dir(Dir dir)
     // Movement direction is stored for AI purposes
     last_dir_travelled_ = dir;
 
-    const Pos target_cell(pos + dir_utils::get_offset(dir));
+    const Pos tgt_cell(pos + dir_utils::offset(dir));
 
-    if (dir != Dir::center && utils::is_pos_inside_map(target_cell, false))
+    if (dir != Dir::center && utils::is_pos_inside_map(tgt_cell, false))
     {
-        pos = target_cell;
+        pos = tgt_cell;
 
         //Bump features in target cell (i.e. to trigger traps)
         vector<Mob*> mobs;
-        game_time::get_mobs_at_pos(pos, mobs);
+        game_time::mobs_at_pos(pos, mobs);
 
         for (auto* m : mobs) {m->bump(*this);}
 
@@ -425,11 +425,11 @@ void Mon::speak_phrase()
 {
     const bool IS_SEEN_BY_PLAYER = map::player->can_see_actor(*this, nullptr);
     const string msg = IS_SEEN_BY_PLAYER ?
-                       get_aggro_phrase_mon_seen() :
-                       get_aggro_phrase_mon_hidden();
+                       aggro_phrase_mon_seen() :
+                       aggro_phrase_mon_hidden();
     const Sfx_id sfx = IS_SEEN_BY_PLAYER ?
-                       get_aggro_sfx_mon_seen() :
-                       get_aggro_sfx_mon_hidden();
+                       aggro_sfx_mon_seen() :
+                       aggro_sfx_mon_hidden();
 
     Snd snd(msg, sfx, Ignore_msg_if_origin_seen::no, pos, this,
             Snd_vol::low, Alerts_mon::yes);
@@ -449,7 +449,7 @@ void Mon::become_aware(const bool IS_FROM_SEEING)
             {
                 map::player->update_fov();
                 render::draw_map_and_interface(true);
-                msg_log::add(get_name_the() + " sees me!");
+                msg_log::add(name_the() + " sees me!");
             }
 
             if (rnd::coin_toss())
@@ -475,10 +475,10 @@ bool Mon::try_attack(Actor& defender)
         return false;
     }
 
-    Ai_avail_attacks_data avail_attacks;
-    get_avail_attacks(defender, avail_attacks);
+    Ai_avail_attacks_data my_avail_attacks;
+    avail_attacks(defender, my_avail_attacks);
 
-    const Ai_att_data att = get_att(avail_attacks);
+    const Ai_att_data att = choose_att(my_avail_attacks);
 
     if (!att.weapon)
     {
@@ -487,7 +487,7 @@ bool Mon::try_attack(Actor& defender)
 
     if (att.is_melee)
     {
-        if (att.weapon->get_data().melee.is_melee_wpn)
+        if (att.weapon->data().melee.is_melee_wpn)
         {
             attack::melee(*this, *att.weapon, defender);
             return true;
@@ -496,9 +496,9 @@ bool Mon::try_attack(Actor& defender)
         return false;
     }
 
-    if (att.weapon->get_data().ranged.is_ranged_wpn)
+    if (att.weapon->data().ranged.is_ranged_wpn)
     {
-        if (avail_attacks.is_time_to_reload)
+        if (my_avail_attacks.is_time_to_reload)
         {
             reload::reload_wielded_wpn(*this);
             return true;
@@ -516,7 +516,7 @@ bool Mon::try_attack(Actor& defender)
             {
                 if (line_pos != pos && line_pos != defender.pos)
                 {
-                    Actor* const actor_here = utils::get_actor_at_pos(line_pos);
+                    Actor* const actor_here = utils::actor_at_pos(line_pos);
 
                     if (actor_here)
                     {
@@ -544,39 +544,39 @@ bool Mon::try_attack(Actor& defender)
     return false;
 }
 
-void Mon::get_avail_attacks(Actor& defender, Ai_avail_attacks_data& avail_attacks_ref)
+void Mon::avail_attacks(Actor& defender, Ai_avail_attacks_data& dst)
 {
     if (prop_handler_->allow_attack(false))
     {
-        avail_attacks_ref.is_melee = utils::is_pos_adj(pos, defender.pos, false);
+        dst.is_melee = utils::is_pos_adj(pos, defender.pos, false);
 
-        Wpn* weapon = nullptr;
-        const size_t nr_intrinsics = inv_->get_intrinsics_size();
+        Wpn* wpn = nullptr;
+        const size_t nr_intrinsics = inv_->intrinsics_size();
 
-        if (avail_attacks_ref.is_melee)
+        if (dst.is_melee)
         {
             if (prop_handler_->allow_attack_melee(false))
             {
 
                 //Melee weapon in wielded slot?
-                weapon = static_cast<Wpn*>(inv_->get_item_in_slot(Slot_id::wielded));
+                wpn = static_cast<Wpn*>(inv_->item_in_slot(Slot_id::wielded));
 
-                if (weapon)
+                if (wpn)
                 {
-                    if (weapon->get_data().melee.is_melee_wpn)
+                    if (wpn->data().melee.is_melee_wpn)
                     {
-                        avail_attacks_ref.weapons.push_back(weapon);
+                        dst.weapons.push_back(wpn);
                     }
                 }
 
                 //Intrinsic melee attacks?
                 for (size_t i = 0; i < nr_intrinsics; ++i)
                 {
-                    weapon = static_cast<Wpn*>(inv_->get_intrinsic_in_element(i));
+                    wpn = static_cast<Wpn*>(inv_->intrinsic_in_element(i));
 
-                    if (weapon->get_data().melee.is_melee_wpn)
+                    if (wpn->data().melee.is_melee_wpn)
                     {
-                        avail_attacks_ref.weapons.push_back(weapon);
+                        dst.weapons.push_back(wpn);
                     }
                 }
             }
@@ -586,23 +586,22 @@ void Mon::get_avail_attacks(Actor& defender, Ai_avail_attacks_data& avail_attack
             if (prop_handler_->allow_attack_ranged(false))
             {
                 //Ranged weapon in wielded slot?
-                weapon =
-                    static_cast<Wpn*>(inv_->get_item_in_slot(Slot_id::wielded));
+                wpn = static_cast<Wpn*>(inv_->item_in_slot(Slot_id::wielded));
 
-                if (weapon)
+                if (wpn)
                 {
-                    if (weapon->get_data().ranged.is_ranged_wpn)
+                    if (wpn->data().ranged.is_ranged_wpn)
                     {
-                        avail_attacks_ref.weapons.push_back(weapon);
+                        dst.weapons.push_back(wpn);
 
                         //Check if reload time instead
                         if (
-                            weapon->nr_ammo_loaded == 0 &&
-                            !weapon->get_data().ranged.has_infinite_ammo)
+                            wpn->nr_ammo_loaded_ == 0 &&
+                            !wpn->data().ranged.has_infinite_ammo)
                         {
                             if (inv_->has_ammo_forFirearm_in_inventory())
                             {
-                                avail_attacks_ref.is_time_to_reload = true;
+                                dst.is_time_to_reload = true;
                             }
                         }
                     }
@@ -611,11 +610,11 @@ void Mon::get_avail_attacks(Actor& defender, Ai_avail_attacks_data& avail_attack
                 //Intrinsic ranged attacks?
                 for (size_t i = 0; i < nr_intrinsics; ++i)
                 {
-                    weapon = static_cast<Wpn*>(inv_->get_intrinsic_in_element(i));
+                    wpn = static_cast<Wpn*>(inv_->intrinsic_in_element(i));
 
-                    if (weapon->get_data().ranged.is_ranged_wpn)
+                    if (wpn->data().ranged.is_ranged_wpn)
                     {
-                        avail_attacks_ref.weapons.push_back(weapon);
+                        dst.weapons.push_back(wpn);
                     }
                 }
             }
@@ -623,18 +622,18 @@ void Mon::get_avail_attacks(Actor& defender, Ai_avail_attacks_data& avail_attack
     }
 }
 
-Ai_att_data Mon::get_att(const Ai_avail_attacks_data& avail_attacks)
+Ai_att_data Mon::choose_att(const Ai_avail_attacks_data& mon_avail_attacks)
 {
-    Ai_att_data att(nullptr, avail_attacks.is_melee);
+    Ai_att_data att(nullptr, mon_avail_attacks.is_melee);
 
-    if (avail_attacks.weapons.empty())
+    if (mon_avail_attacks.weapons.empty())
     {
         return att;
     }
 
-    const size_t IDX = rnd::range(0, avail_attacks.weapons.size() - 1);
+    const size_t IDX = rnd::range(0, mon_avail_attacks.weapons.size() - 1);
 
-    att.weapon = avail_attacks.weapons[IDX];
+    att.weapon = mon_avail_attacks.weapons[IDX];
 
     return att;
 }
@@ -653,7 +652,7 @@ bool Mon::is_actor_my_leader(const Actor* const actor) const
     return leader_ == actor;
 }
 
-int Mon::get_group_size()
+int Mon::group_size()
 {
     const Actor* const group_leader = leader_ ? leader_ : this;
 
@@ -671,16 +670,16 @@ int Mon::get_group_size()
 }
 
 //--------------------------------------------------------- SPECIFIC MONSTERS
-string Cultist::get_cultist_phrase()
+string Cultist::cultist_phrase()
 {
     vector<string> phrase_bucket;
 
-    const God* const god = gods::get_cur_god();
+    const God* const god = gods::cur_god();
 
     if (god && rnd::coin_toss())
     {
-        const string name   = god->get_name();
-        const string descr  = god->get_descr();
+        const string name   = god->name();
+        const string descr  = god->descr();
         phrase_bucket.push_back(name + " save us!");
         phrase_bucket.push_back(descr + " will save us!");
         phrase_bucket.push_back(name + ", guide us!");
@@ -741,9 +740,10 @@ void Cultist::mk_start_items()
 
     if (RND <= PISTOL)
     {
-        Item*     item                        = item_factory::mk(Item_id::pistol);
-        const int AMMO_CAP                    = static_cast<Wpn*>(item)->AMMO_CAP;
-        static_cast<Wpn*>(item)->nr_ammo_loaded = rnd::range(AMMO_CAP / 4, AMMO_CAP);
+        Item*   item            = item_factory::mk(Item_id::pistol);
+        Wpn*    wpn             = static_cast<Wpn*>(item);
+        const int AMMO_CAP      = wpn->ammo_max();
+        wpn->nr_ammo_loaded_    = rnd::range(AMMO_CAP / 4, AMMO_CAP);
 
         inv_->put_in_slot(Slot_id::wielded, item);
 
@@ -754,16 +754,17 @@ void Cultist::mk_start_items()
     }
     else if (RND <= PUMP_SHOTGUN)
     {
-        Item*     item                        = item_factory::mk(Item_id::pump_shotgun);
-        const int AMMO_CAP                    = static_cast<Wpn*>(item)->AMMO_CAP;
-        static_cast<Wpn*>(item)->nr_ammo_loaded = rnd::range(AMMO_CAP / 4, AMMO_CAP);
+        Item*   item            = item_factory::mk(Item_id::pump_shotgun);
+        Wpn*    wpn             = static_cast<Wpn*>(item);
+        const int AMMO_CAP      = wpn->ammo_max();
+        wpn->nr_ammo_loaded_    = rnd::range(AMMO_CAP / 4, AMMO_CAP);
 
         inv_->put_in_slot(Slot_id::wielded, item);
 
         if (rnd::one_in(4))
         {
             item            = item_factory::mk(Item_id::shotgun_shell);
-            item->nr_items_  = rnd::range(1, 8);
+            item->nr_items_ = rnd::range(1, 8);
             inv_->put_in_general(item);
         }
     }
@@ -774,7 +775,7 @@ void Cultist::mk_start_items()
         if (rnd::one_in(4))
         {
             Item* item      = item_factory::mk(Item_id::shotgun_shell);
-            item->nr_items_  = rnd::range(1, 8);
+            item->nr_items_ = rnd::range(1, 8);
             inv_->put_in_general(item);
         }
     }
@@ -784,9 +785,9 @@ void Cultist::mk_start_items()
         //projectiles fired in each burst
         Item*       item        = item_factory::mk(Item_id::machine_gun);
         Wpn* const  wpn         = static_cast<Wpn*>(item);
-        const int   CAP_SCALED  = wpn->AMMO_CAP / NR_MG_PROJECTILES;
+        const int   CAP_SCALED  = wpn->ammo_max() / NR_MG_PROJECTILES;
         const int   MIN_SCALED  = CAP_SCALED / 4;
-        wpn->nr_ammo_loaded       = rnd::range(MIN_SCALED, CAP_SCALED) * NR_MG_PROJECTILES;
+        wpn->nr_ammo_loaded_    = rnd::range(MIN_SCALED, CAP_SCALED) * NR_MG_PROJECTILES;
         inv_->put_in_slot(Slot_id::wielded, item);
     }
 
@@ -797,16 +798,17 @@ void Cultist::mk_start_items()
 
     if (rnd::one_in(12))
     {
-        spells_known_.push_back(spell_handling::get_random_spell_for_mon());
+        spells_known_.push_back(spell_handling::random_spell_for_mon());
     }
 }
 
 void Cultist_electric::mk_start_items()
 {
     Item*       item        = item_factory::mk(Item_id::mi_go_gun);
-    const int   AMMO_CAP    = static_cast<Wpn*>(item)->AMMO_CAP;
+    Wpn*        wpn         = static_cast<Wpn*>(item);
+    const int   AMMO_CAP    = wpn->ammo_max();
 
-    static_cast<Wpn*>(item)->nr_ammo_loaded = rnd::range(AMMO_CAP / 4, AMMO_CAP);
+    wpn->nr_ammo_loaded_     = rnd::range(AMMO_CAP / 4, AMMO_CAP);
 
     inv_->put_in_slot(Slot_id::wielded, item);
 
@@ -817,15 +819,17 @@ void Cultist_electric::mk_start_items()
 
     if (rnd::one_in(3))
     {
-        spells_known_.push_back(spell_handling::get_random_spell_for_mon());
+        spells_known_.push_back(spell_handling::random_spell_for_mon());
     }
 }
 
 void Cultist_spike_gun::mk_start_items()
 {
-    Item* item = item_factory::mk(Item_id::spike_gun);
-    const int AMMO_CAP = static_cast<Wpn*>(item)->AMMO_CAP;
-    static_cast<Wpn*>(item)->nr_ammo_loaded = rnd::range(AMMO_CAP / 4, AMMO_CAP);
+    Item*       item        = item_factory::mk(Item_id::spike_gun);
+    Wpn*        wpn         = static_cast<Wpn*>(item);
+    const int   AMMO_CAP    = wpn->ammo_max();
+    wpn->nr_ammo_loaded_    = rnd::range(AMMO_CAP / 4, AMMO_CAP);
+
     inv_->put_in_slot(Slot_id::wielded, item);
 
     if (rnd::one_in(4))
@@ -849,7 +853,7 @@ void Cultist_priest::mk_start_items()
 
     for (int i = 0; i < NR_SPELLS; ++i)
     {
-        spells_known_.push_back(spell_handling::get_random_spell_for_mon());
+        spells_known_.push_back(spell_handling::random_spell_for_mon());
     }
 }
 
@@ -871,12 +875,14 @@ void Zuul::place_()
     {
         //NOTE: Do not call die() here - that would have side effects such as player
         //getting XP. Instead, simply set the dead state to destroyed.
-        state_              = Actor_state::destroyed;
+        state_                      = Actor_state::destroyed;
 
-        Actor* actor        = actor_factory::mk(Actor_id::cultist_priest, pos);
-        auto& prop_handler   = actor->get_prop_handler();
+        Actor* actor                = actor_factory::mk(Actor_id::cultist_priest, pos);
+        auto& priest_prop_handler   = actor->prop_handler();
 
-        prop_handler.try_apply_prop(new Prop_poss_by_zuul(Prop_turns::indefinite), true);
+        auto* poss_by_zuul_prop     = new Prop_poss_by_zuul(Prop_turns::indefinite);
+
+        priest_prop_handler.try_apply_prop(poss_by_zuul_prop, true);
         actor->restore_hp(999, false);
     }
 }
@@ -1001,12 +1007,12 @@ bool Ghost::on_actor_turn_()
         map_parse::run(cell_check::Blocks_los(), blocked);
 
         const bool PLAYER_SEES_ME = map::player->can_see_actor(*this, blocked);
-        const string refer        = PLAYER_SEES_ME ? get_name_the() : "It";
+        const string refer        = PLAYER_SEES_ME ? name_the() : "It";
 
         msg_log::add(refer + " reaches for me... ");
 
         const Ability_roll_result roll_result =
-            ability_roll::roll(map::player->get_data().ability_vals.get_val(
+            ability_roll::roll(map::player->data().ability_vals.val(
                                    Ability_id::dodge_att, true, *this));
         const bool PLAYER_DODGES = roll_result >= success_small;
 
@@ -1016,7 +1022,7 @@ bool Ghost::on_actor_turn_()
         }
         else
         {
-            map::player->get_prop_handler().try_apply_prop(
+            map::player->prop_handler().try_apply_prop(
                 new Prop_slowed(Prop_turns::std));
         }
 
@@ -1040,24 +1046,25 @@ void Phantasm::mk_start_items()
 void Wraith::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(Item_id::wraith_claw));
-    spells_known_.push_back(spell_handling::get_random_spell_for_mon());
-    spells_known_.push_back(spell_handling::get_random_spell_for_mon());
+    spells_known_.push_back(spell_handling::random_spell_for_mon());
+    spells_known_.push_back(spell_handling::random_spell_for_mon());
 }
 
 void Mi_go::mk_start_items()
 {
     Item*       item        = item_factory::mk(Item_id::mi_go_gun);
-    const int   AMMO_CAP    = static_cast<Wpn*>(item)->AMMO_CAP;
+    Wpn*        wpn         = static_cast<Wpn*>(item);
+    const int   AMMO_CAP    = wpn->ammo_max();
 
-    static_cast<Wpn*>(item)->nr_ammo_loaded = rnd::range(AMMO_CAP / 4, AMMO_CAP);
+    wpn->nr_ammo_loaded_ = rnd::range(AMMO_CAP / 4, AMMO_CAP);
 
     inv_->put_in_slot(Slot_id::wielded, item);
 
-    if (get_id() == Actor_id::mi_go)
+    if (id() == Actor_id::mi_go)
     {
         inv_->put_in_intrinsics(item_factory::mk(Item_id::mi_go_sting));
     }
-    else if (get_id() == Actor_id::mi_go_commander)
+    else if (id() == Actor_id::mi_go_commander)
     {
         inv_->put_in_intrinsics(item_factory::mk(Item_id::mi_go_commander_sting));
 
@@ -1078,7 +1085,7 @@ void Mi_go::mk_start_items()
 
     if (rnd::coin_toss())
     {
-        spells_known_.push_back(spell_handling::get_random_spell_for_mon());
+        spells_known_.push_back(spell_handling::random_spell_for_mon());
     }
 }
 
@@ -1147,7 +1154,7 @@ void Mummy::mk_start_items()
 
     for (int i = 0; i < NR_SPELLS; ++i)
     {
-        spells_known_.push_back(spell_handling::get_random_spell_for_mon());
+        spells_known_.push_back(spell_handling::random_spell_for_mon());
     }
 }
 
@@ -1167,9 +1174,9 @@ bool Mummy::on_actor_turn_()
 //        return false;
 //    }
 //
-//    const Item* const player_wpn = map::player->get_inv().get_item_in_slot(Slot_id::wielded);
+//    const Item* const player_wpn = map::player->inv().item_in_slot(Slot_id::wielded);
 //
-//    if (player_wpn && player_wpn->get_id() == Item_id::pharaoh_staff)
+//    if (player_wpn && player_wpn->id() == Item_id::pharaoh_staff)
 //    {
 //        bool blocked_los[MAP_W][MAP_H];
 //        map_parse::run(cell_check::Blocks_los(), blocked_los);
@@ -1178,7 +1185,7 @@ bool Mummy::on_actor_turn_()
 //        {
 //            if (map::player->can_see_actor(*this, nullptr))
 //            {
-//                const string name = get_name_the();
+//                const string name = name_the();
 //
 //                msg_log::add(name + " bows before me.", clr_white, false, true);
 //            }
@@ -1204,9 +1211,9 @@ void Mummy_unique::mk_start_items()
 
     spells_known_.push_back(spell_handling::mk_spell_from_id(Spell_id::disease));
 
-    spells_known_.push_back(spell_handling::get_random_spell_for_mon());
-    spells_known_.push_back(spell_handling::get_random_spell_for_mon());
-    spells_known_.push_back(spell_handling::get_random_spell_for_mon());
+    spells_known_.push_back(spell_handling::random_spell_for_mon());
+    spells_known_.push_back(spell_handling::random_spell_for_mon());
+    spells_known_.push_back(spell_handling::random_spell_for_mon());
 }
 
 bool Khephren::on_actor_turn_()
@@ -1283,7 +1290,7 @@ bool Ape::on_actor_turn_()
     if (
         frenzy_cool_down_ <= 0    &&
         tgt_                    &&
-        (get_hp() <= get_hp_max(true) / 2))
+        (hp() <= hp_max(true) / 2))
     {
         frenzy_cool_down_ = 30;
 
@@ -1368,7 +1375,7 @@ void Keziah_mason::mk_start_items()
     spells_known_.push_back(new Spell_summon_mon);
     spells_known_.push_back(new Spell_pest);
     spells_known_.push_back(new Spell_darkbolt);
-    spells_known_.push_back(spell_handling::get_random_spell_for_mon());
+    spells_known_.push_back(spell_handling::random_spell_for_mon());
 
     for (int i = rnd::range(2, 3); i > 0; --i)
         inv_->put_in_general(item_factory::mk_random_scroll_or_potion(true, true));
@@ -1413,7 +1420,7 @@ void Leng_elder::on_std_turn_()
 
                 popup::show_msg("", true, "");
 
-                //auto& inv = map::player->get_inv();
+                //auto& inv = map::player->inv();
                 //TODO: Which item to give?
                 //inv.put_in_general(item_factory::mk(Item_id::hideous_mask));
 
@@ -1459,7 +1466,7 @@ void Color_oo_space::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::color_oo_space_touch));
 }
 
-const Clr& Color_oo_space::get_clr()
+const Clr& Color_oo_space::clr()
 {
     return cur_color;
 }
@@ -1474,7 +1481,7 @@ void Color_oo_space::on_std_turn_()
 
     if (map::player->can_see_actor(*this, nullptr))
     {
-        map::player->get_prop_handler().try_apply_prop(new Prop_confused(Prop_turns::std));
+        map::player->prop_handler().try_apply_prop(new Prop_confused(Prop_turns::std));
     }
 }
 
@@ -1622,7 +1629,7 @@ bool Lord_of_spiders::on_actor_turn_()
 
                     if (feature_here->can_have_rigid())
                     {
-                        auto& d = feature_data::get_data(feature_here->get_id());
+                        auto& d = feature_data::data(feature_here->id());
                         const auto* const mimic = static_cast<Rigid*>(d.mk_obj(p));
                         Trap* const f = new Trap(p, mimic, Trap_id::web);
                         map::put(f);
@@ -1691,18 +1698,18 @@ bool Major_clapham_lee::on_actor_turn_()
             for (int i = 0; i < NR_OF_EXTRA_SPAWNS; ++i)
             {
                 const int ZOMBIE_TYPE = rnd::range(1, 3);
-                Actor_id id = Actor_id::zombie;
+                Actor_id mon_id = Actor_id::zombie;
 
                 switch (ZOMBIE_TYPE)
                 {
-                case 1: id = Actor_id::zombie;        break;
+                case 1: mon_id = Actor_id::zombie;        break;
 
-                case 2: id = Actor_id::zombie_axe;     break;
+                case 2: mon_id = Actor_id::zombie_axe;     break;
 
-                case 3: id = Actor_id::bloated_zombie; break;
+                case 3: mon_id = Actor_id::bloated_zombie; break;
                 }
 
-                mon_ids.push_back(id);
+                mon_ids.push_back(mon_id);
             }
 
             actor_factory::summon(pos, mon_ids, true, this);
@@ -1733,7 +1740,7 @@ bool Zombie::try_resurrect()
             if (pos != map::player->pos && rnd::one_in(14))
             {
                 state_  = Actor_state::alive;
-                hp_     = (get_hp_max(true) * 3) / 4;
+                hp_     = (hp_max(true) * 3) / 4;
                 glyph_  = data_->glyph;
                 tile_   = data_->tile;
                 clr_    = data_->color;
@@ -1742,7 +1749,7 @@ bool Zombie::try_resurrect()
 
                 if (map::cells[pos.x][pos.y].is_seen_by_player)
                 {
-                    msg_log::add(get_corpse_name_the() + " rises again!!", clr_white, true);
+                    msg_log::add(corpse_name_the() + " rises again!!", clr_white, true);
                     map::player->incr_shock(Shock_lvl::some, Shock_src::misc);
                 }
 
@@ -1953,10 +1960,10 @@ void The_high_priest_cpy::mk_start_items()
 
     for (Actor* const actor : game_time::actors_)
     {
-        if (actor->get_id() == Actor_id::the_high_priest)
+        if (actor->id() == Actor_id::the_high_priest)
         {
-            hp_max_  = max(2, actor->get_hp_max(true)  / 4);
-            hp_     = max(1, actor->get_hp()         / 4);
+            hp_max_  = max(2, actor->hp_max(true)  / 4);
+            hp_     = max(1, actor->hp()         / 4);
         }
     }
 

@@ -13,7 +13,7 @@ namespace text_format
 //to the output vector, breaking the maximum width).
 void line_to_lines(std::string line, const int MAX_W, std::vector<std::string>& out);
 
-void get_space_separated_list(const std::string& line, std::vector<std::string>& out);
+void space_separated_list(const std::string& line, std::vector<std::string>& out);
 
 void replace_all(const std::string& line, const std::string& from, const std::string& to,
                  std::string& out);

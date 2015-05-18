@@ -11,10 +11,10 @@ int to_int(const std::string& in);
 template <typename T>
 typename std::underlying_type<T>::type to_underlying(T t);
 
-void constr_in_range(const int MIN, int& val, const int MAX);
-void constr_in_range(const double MIN, double& val, const double MAX);
+void set_constr_in_range(const int MIN, int& val, const int MAX);
+void set_constr_in_range(const double MIN, double& val, const double MAX);
 
-int get_constr_in_range(const int MIN, const int VAL, const int MAX);
-int get_constr_in_range(const double MIN, const double VAL, const double MAX);
+int constr_in_range(const int MIN, const int VAL, const int MAX);
+int constr_in_range(const double MIN, const double VAL, const double MAX);
 
 #endif

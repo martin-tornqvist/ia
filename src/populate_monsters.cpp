@@ -21,7 +21,7 @@ namespace populate_mon
 namespace
 {
 
-int get_random_out_of_depth()
+int random_out_of_depth()
 {
     if (map::dlvl == 0)                     {return 0;}
 
@@ -48,7 +48,7 @@ void mk_list_of_mon_can_auto_spawn(const int NR_LVLS_OUT_OF_DEPTH, vector<Actor_
 
     for (const auto* const actor : game_time::actors_)
     {
-        spawned_ids[size_t(actor->get_id())] = true;
+        spawned_ids[size_t(actor->id())] = true;
     }
 
     for (const auto& d : actor_data::data)
@@ -88,13 +88,13 @@ bool mk_group_of_random_native_to_room_type_at(const Room_type       room_type,
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    const int NR_LVLS_OUT_OF_DEPTH_ALLOWED = get_random_out_of_depth();
+    const int NR_LVLS_OUT_OF_DEPTH_ALLOWED = random_out_of_depth();
     vector<Actor_id> id_bucket;
     mk_list_of_mon_can_auto_spawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, id_bucket);
 
     for (size_t i = 0; i < id_bucket.size(); ++i)
     {
-        const actor_data_t& d = actor_data::data[int(id_bucket[i])];
+        const Actor_data_t& d = actor_data::data[int(id_bucket[i])];
         bool is_mon_native_to_room = false;
 
         for (const auto native_room_type : d.native_rooms)
@@ -181,7 +181,7 @@ void try_spawn_due_to_time_passed()
         {
             if (map::cells[origin.x][origin.y].is_explored)
             {
-                const int NR_OOD = get_random_out_of_depth();
+                const int NR_OOD = random_out_of_depth();
                 mk_group_of_random_at(free_cells_vector, blocked, NR_OOD, true);
             }
         }
@@ -378,7 +378,7 @@ void populate_std_lvl()
 void mk_group_at(const Actor_id id, const vector<Pos>& sorted_free_cells_vector,
                  bool blocked[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED)
 {
-    const actor_data_t& d = actor_data::data[int(id)];
+    const Actor_data_t& d = actor_data::data[int(id)];
 
     int max_nr_in_group = 1;
 
@@ -427,10 +427,10 @@ void mk_sorted_free_cells_vector(const Pos& origin,
     vector_ref.clear();
 
     const int RADI = 10;
-    const int X0 = get_constr_in_range(1, origin.x - RADI, MAP_W - 2);
-    const int Y0 = get_constr_in_range(1, origin.y - RADI, MAP_H - 2);
-    const int X1 = get_constr_in_range(1, origin.x + RADI, MAP_W - 2);
-    const int Y1 = get_constr_in_range(1, origin.y + RADI, MAP_H - 2);
+    const int X0 = constr_in_range(1, origin.x - RADI, MAP_W - 2);
+    const int Y0 = constr_in_range(1, origin.y - RADI, MAP_H - 2);
+    const int X1 = constr_in_range(1, origin.x + RADI, MAP_W - 2);
+    const int Y1 = constr_in_range(1, origin.y + RADI, MAP_H - 2);
 
     for (int y = Y0; y <= Y1; ++y)
     {

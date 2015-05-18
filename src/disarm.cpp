@@ -19,7 +19,7 @@ void player_disarm()
     //with some potentially horrible results
 
     //Abort if blind
-    if (!map::player->get_prop_handler().allow_see())
+    if (!map::player->prop_handler().allow_see())
     {
         msg_log::add("Not while blind.");
         render::draw_map_and_interface();
@@ -31,13 +31,13 @@ void player_disarm()
     const auto* const feature_at_player =
         map::cells[player_pos.x][player_pos.y].rigid;
 
-    if (feature_at_player->get_id() == Feature_id::trap)
+    if (feature_at_player->id() == Feature_id::trap)
     {
         const Trap* const trap = static_cast<const Trap*>(feature_at_player);
 
-        if (trap->get_trap_type() == Trap_id::web)
+        if (trap->trap_type() == Trap_id::web)
         {
-            const auto* const web = static_cast<const Trap_web*>(trap->get_specific_trap());
+            const auto* const web = static_cast<const Trap_web*>(trap->specific_trap());
 
             if (web->is_holding())
             {
@@ -49,7 +49,7 @@ void player_disarm()
     }
 
     //Abort if encumbered
-    if (map::player->get_enc_percent() >= 100)
+    if (map::player->enc_percent() >= 100)
     {
         msg_log::add("Not while encumbered.");
         render::draw_map_and_interface();
@@ -59,7 +59,7 @@ void player_disarm()
     msg_log::add("Which direction?" + cancel_info_str, clr_white_high);
     render::draw_map_and_interface();
 
-    const Pos pos(map::player->pos + dir_utils::get_offset(query::dir()));
+    const Pos pos(map::player->pos + dir_utils::offset(query::dir()));
 
     if (pos == map::player->pos)
     {
@@ -78,7 +78,7 @@ void player_disarm()
 
         msg_log::clear();
 
-        Actor* actor_on_trap = utils::get_actor_at_pos(pos);
+        Actor* actor_on_trap = utils::actor_at_pos(pos);
 
         //Abort if trap blocked by monster
         if (actor_on_trap)

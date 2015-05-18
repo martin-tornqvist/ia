@@ -169,8 +169,8 @@ struct Pos;
 namespace art
 {
 
-Pos get_glyph_pos(const char glyph);
-Pos get_tile_pos(const Tile_id tile);
+Pos glyph_pos(const char glyph);
+Pos tile_pos(const Tile_id tile);
 
 } //Art
 

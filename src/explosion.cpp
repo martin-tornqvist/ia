@@ -64,20 +64,20 @@ void draw(const vector< vector<Pos> >& pos_lists, bool blocked[MAP_W][MAP_H],
         if (is_any_cell_seen_by_player)
         {
             render::update_screen();
-            sdl_wrapper::sleep(config::get_delay_explosion() / NR_ANIM_STEPS);
+            sdl_wrapper::sleep(config::delay_explosion() / NR_ANIM_STEPS);
         }
     }
 }
 
-void get_area(const Pos& c, const int RADI, Rect& rect_ref)
+void explosion_area(const Pos& c, const int RADI, Rect& rect_ref)
 {
     rect_ref = Rect(Pos(max(c.x - RADI, 1),         max(c.y - RADI, 1)),
                     Pos(min(c.x + RADI, MAP_W - 2), min(c.y + RADI, MAP_H - 2)));
 }
 
-void get_cells_reached(const Rect& area, const Pos& origin,
-                       bool blocked[MAP_W][MAP_H],
-                       vector< vector<Pos> >& pos_list_ref)
+void cells_reached(const Rect& area, const Pos& origin,
+                   bool blocked[MAP_W][MAP_H],
+                   vector< vector<Pos> >& pos_list_ref)
 {
     vector<Pos> line;
 
@@ -125,13 +125,13 @@ void run_explosion_at(const Pos& origin, const Expl_type expl_type,
 {
     Rect area;
     const int RADI = EXPLOSION_STD_RADI + RADI_CHANGE;
-    get_area(origin, RADI, area);
+    explosion_area(origin, RADI, area);
 
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_projectiles(), blocked);
 
     vector< vector<Pos> > pos_lists;
-    get_cells_reached(area, origin, blocked, pos_lists);
+    cells_reached(area, origin, blocked, pos_lists);
 
     Snd_vol vol = expl_type == Expl_type::expl ? Snd_vol::high : Snd_vol::low;
 
@@ -219,7 +219,7 @@ void run_explosion_at(const Pos& origin, const Expl_type expl_type,
                 //intentionally throwing a Molotov
                 if (
                     living_actor    == map::player &&
-                    prop->get_id()  == Prop_id::burning &&
+                    prop->id()  == Prop_id::burning &&
                     IS_DEM_EXP                    &&
                     expl_src        == Expl_src::player_use_moltv_intended)
                 {
@@ -228,22 +228,22 @@ void run_explosion_at(const Pos& origin, const Expl_type expl_type,
 
                 if (should_apply_on_living_actor)
                 {
-                    Prop_handler& prop_hlr = living_actor->get_prop_handler();
-                    Prop* prop_cpy = prop_hlr.mk_prop(prop->get_id(), Prop_turns::specific,
+                    Prop_handler& prop_hlr = living_actor->prop_handler();
+                    Prop* prop_cpy = prop_hlr.mk_prop(prop->id(), Prop_turns::specific,
                                                       prop->turns_left_);
                     prop_hlr.try_apply_prop(prop_cpy);
                 }
 
                 //If property is burning, also apply it to corpses and environment
-                if (prop->get_id() == Prop_id::burning)
+                if (prop->id() == Prop_id::burning)
                 {
                     Cell& cell = map::cells[pos.x][pos.y];
                     cell.rigid->hit(Dmg_type::fire, Dmg_method::elemental, nullptr);
 
                     for (Actor* corpse : corpses_here)
                     {
-                        Prop_handler& prop_hlr = corpse->get_prop_handler();
-                        Prop* prop_cpy = prop_hlr.mk_prop(prop->get_id(), Prop_turns::specific,
+                        Prop_handler& prop_hlr = corpse->prop_handler();
+                        Prop* prop_cpy = prop_hlr.mk_prop(prop->id(), Prop_turns::specific,
                                                           prop->turns_left_);
                         prop_hlr.try_apply_prop(prop_cpy);
                     }
@@ -262,13 +262,13 @@ void run_smoke_explosion_at(const Pos& origin/*, const int SMOKE_DURATION*/)
 {
     Rect area;
     const int RADI = EXPLOSION_STD_RADI;
-    get_area(origin, RADI, area);
+    explosion_area(origin, RADI, area);
 
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_projectiles(), blocked);
 
     vector< vector<Pos> > pos_lists;
-    get_cells_reached(area, origin, blocked, pos_lists);
+    cells_reached(area, origin, blocked, pos_lists);
 
     //TODO: Sound message?
     Snd snd("", Sfx_id::END, Ignore_msg_if_origin_seen::yes, origin, nullptr,

@@ -151,7 +151,7 @@ Rigid* put(Rigid* const f)
 {
     assert(f);
 
-    const Pos p     = f->get_pos();
+    const Pos p     = f->pos();
     Cell&     cell  = cells[p.x][p.y];
 
     delete cell.rigid;
@@ -160,7 +160,7 @@ Rigid* put(Rigid* const f)
 
 #ifdef DEMO_MODE
 
-    if (f->get_id() == Feature_id::floor)
+    if (f->id() == Feature_id::floor)
     {
         for (int x = 0; x < MAP_W; ++x)
         {

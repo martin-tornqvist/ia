@@ -21,7 +21,7 @@ namespace
 void mk_trap_at(const Trap_id id, const Pos& pos)
 {
     const auto* const f     = map::cells[pos.x][pos.y].rigid;
-    const auto&       d     = feature_data::get_data(f->get_id());
+    const auto&       d     = feature_data::data(f->id());
     const auto* const mimic = static_cast<Rigid*>(d.mk_obj(pos));
     map::put(new Trap(pos, mimic, id));
 }

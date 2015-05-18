@@ -17,9 +17,9 @@ public:
 
     Consume_item activate(Actor* const actor) override final;
 
-    Clr get_interface_clr() const override final {return clr_blue_lgt;}
+    Clr interface_clr() const override final {return clr_blue_lgt;}
 
-    std::vector<std::string> get_descr() const override final;
+    std::vector<std::string> descr() const override final;
 
     void quaff(Actor& actor);
 
@@ -27,16 +27,16 @@ public:
 
     void identify(const bool IS_SILENT_IDENTIFY) override final;
 
-    virtual const std::string get_real_name() const = 0;
+    virtual const std::string real_name() const = 0;
 
 protected:
-    virtual std::vector<std::string> get_descr_identified() const = 0;
+    virtual std::vector<std::string> descr_identified() const = 0;
 
     virtual void collide_(const Pos& pos, Actor* const actor) = 0;
 
     virtual void quaff_(Actor& actor) = 0;
 
-    std::string get_name_inf() const override final;
+    std::string name_inf() const override final;
 };
 
 class Potion_vitality: public Potion
@@ -48,10 +48,10 @@ public:
 
     void quaff_(Actor& actor) override;
 
-    const std::string get_real_name() const override {return "Vitality";}
+    const std::string real_name() const override {return "Vitality";}
 
 private:
-    std::vector<std::string> get_descr_identified() const override
+    std::vector<std::string> descr_identified() const override
     {
         return {"This elixir heals all wounds and physical maladies."};
     }
@@ -68,10 +68,10 @@ public:
 
     void quaff_(Actor& actor) override;
 
-    const std::string get_real_name() const override {return "Spirit";}
+    const std::string real_name() const override {return "Spirit";}
 
 private:
-    std::vector<std::string> get_descr_identified() const override
+    std::vector<std::string> descr_identified() const override
     {
         return {"Restores the spirit."};
     }
@@ -88,10 +88,10 @@ public:
 
     void quaff_(Actor& actor) override;
 
-    const std::string get_real_name() const override {return "Blindness";}
+    const std::string real_name() const override {return "Blindness";}
 
 private:
-    std::vector<std::string> get_descr_identified() const override
+    std::vector<std::string> descr_identified() const override
     {
         return {"Causes temporary loss of vision."};
     }
@@ -108,10 +108,10 @@ public:
 
     void quaff_(Actor& actor) override;
 
-    const std::string get_real_name() const override {return "Paralyzation";}
+    const std::string real_name() const override {return "Paralyzation";}
 
 private:
-    std::vector<std::string> get_descr_identified() const override
+    std::vector<std::string> descr_identified() const override
     {
         return {"Causes paralysis."};
     }
@@ -128,10 +128,10 @@ public:
 
     void quaff_(Actor& actor) override;
 
-    const std::string get_real_name() const override {return "Disease";}
+    const std::string real_name() const override {return "Disease";}
 
 private:
-    std::vector<std::string> get_descr_identified() const override
+    std::vector<std::string> descr_identified() const override
     {
         return {"This foul liquid causes a horrible disease."};
     }
@@ -151,10 +151,10 @@ public:
     ~Potion_conf() {}
     void quaff_(Actor& actor) override;
 
-    const std::string get_real_name() const override {return "Confusion";}
+    const std::string real_name() const override {return "Confusion";}
 
 private:
-    std::vector<std::string> get_descr_identified() const override
+    std::vector<std::string> descr_identified() const override
     {
         return {"Causes confusion."};
     }
@@ -171,10 +171,10 @@ public:
 
     void quaff_(Actor& actor) override;
 
-    const std::string get_real_name() const override {return "Frenzy";}
+    const std::string real_name() const override {return "Frenzy";}
 
 private:
-    std::vector<std::string> get_descr_identified() const override
+    std::vector<std::string> descr_identified() const override
     {
         return {"Causes uncontrollable fury."};
     }
@@ -191,10 +191,10 @@ public:
 
     void quaff_(Actor& actor) override;
 
-    const std::string get_real_name() const override {return "Fortitude";}
+    const std::string real_name() const override {return "Fortitude";}
 
 private:
-    std::vector<std::string> get_descr_identified() const override
+    std::vector<std::string> descr_identified() const override
     {
         return {"Gives the consumer complete peace of mind."};
     }
@@ -211,10 +211,10 @@ public:
 
     void quaff_(Actor& actor) override;
 
-    const std::string get_real_name() const override {return "Poison";}
+    const std::string real_name() const override {return "Poison";}
 
 private:
-    std::vector<std::string> get_descr_identified() const override
+    std::vector<std::string> descr_identified() const override
     {
         return {"A deadly brew."};
     }
@@ -231,10 +231,10 @@ public:
 
     void quaff_(Actor& actor) override;
 
-    const std::string get_real_name() const override {return "Insight";}
+    const std::string real_name() const override {return "Insight";}
 
 private:
-    std::vector<std::string> get_descr_identified() const override
+    std::vector<std::string> descr_identified() const override
     {
         return {"This strange concoction causes a sudden flash of intuition."};
     }
@@ -255,10 +255,10 @@ public:
 
     void quaff_(Actor& actor) override;
 
-    const std::string get_real_name() const override {return "Clairvoyance";}
+    const std::string real_name() const override {return "Clairvoyance";}
 
 private:
-    std::vector<std::string> get_descr_identified() const override
+    std::vector<std::string> descr_identified() const override
     {
         return {"Bestows visions of the surrounding area."};
     }
@@ -279,10 +279,10 @@ public:
 
     void quaff_(Actor& actor) override;
 
-    const std::string get_real_name() const override {return "Fire Resistance";}
+    const std::string real_name() const override {return "Fire Resistance";}
 
 private:
-    std::vector<std::string> get_descr_identified() const override
+    std::vector<std::string> descr_identified() const override
     {
         return {"Protects the consumer from fire."};
     }
@@ -299,10 +299,10 @@ public:
 
     void quaff_(Actor& actor) override;
 
-    const std::string get_real_name() const override {return "Antidote";}
+    const std::string real_name() const override {return "Antidote";}
 
 private:
-    std::vector<std::string> get_descr_identified() const override
+    std::vector<std::string> descr_identified() const override
     {
         return {"Cures poisoning."};
     }
@@ -319,10 +319,10 @@ public:
 
     void quaff_(Actor& actor) override;
 
-    const std::string get_real_name() const override {return "Insulation";}
+    const std::string real_name() const override {return "Insulation";}
 
 private:
-    std::vector<std::string> get_descr_identified() const override
+    std::vector<std::string> descr_identified() const override
     {
         return {"Protects the consumer from electricity."};
     }
@@ -339,10 +339,10 @@ public:
 
     void quaff_(Actor& actor) override;
 
-    const std::string get_real_name() const override {return "Acid Resistance";}
+    const std::string real_name() const override {return "Acid Resistance";}
 
 private:
-    std::vector<std::string> get_descr_identified() const override
+    std::vector<std::string> descr_identified() const override
     {
         return {"Protects the consumer from acid."};
     }
@@ -359,10 +359,10 @@ public:
 
     void quaff_(Actor& actor) override;
 
-    const std::string get_real_name() const override {return "Descent";}
+    const std::string real_name() const override {return "Descent";}
 
 private:
-    std::vector<std::string> get_descr_identified() const override
+    std::vector<std::string> descr_identified() const override
     {
         return {"A bizarre liquid that causes the consumer to dematerialize and sink "
                 "through the ground."

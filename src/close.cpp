@@ -18,7 +18,7 @@ void player_close_feature(Feature* const feature)
 {
     bool close_able_object_found = false;
 
-    if (feature->get_id() == Feature_id::door)
+    if (feature->id() == Feature_id::door)
     {
         Door* const door = static_cast<Door*>(feature);
         door->try_close(map::player);
@@ -27,7 +27,7 @@ void player_close_feature(Feature* const feature)
 
     if (!close_able_object_found)
     {
-        const bool PLAYER_CAN_SEE = map::player->get_prop_handler().allow_see();
+        const bool PLAYER_CAN_SEE = map::player->prop_handler().allow_see();
 
         if (PLAYER_CAN_SEE)
         {
@@ -45,7 +45,7 @@ void player_close()
     msg_log::clear();
     msg_log::add("Which direction?" + cancel_info_str, clr_white_high);
     render::draw_map_and_interface();
-    Pos close_pos(map::player->pos + dir_utils::get_offset(query::dir()));
+    Pos close_pos(map::player->pos + dir_utils::offset(query::dir()));
     msg_log::clear();
 
     if (close_pos != map::player->pos)

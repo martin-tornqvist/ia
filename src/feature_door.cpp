@@ -15,12 +15,12 @@
 using namespace std;
 
 //---------------------------------------------------INHERITED FUNCTIONS
-Door::Door(const Pos& pos, const Rigid* const mimic_feature, Door_spawn_state spawn_state) :
-    Rigid(pos),
+Door::Door(const Pos& feature_pos, const Rigid* const mimic_feature,
+           Door_spawn_state spawn_state) :
+    Rigid(feature_pos),
     mimic_feature_(mimic_feature),
     nr_spikes_(0)
 {
-
     is_handled_externally_ = false;
 
     const int ROLL = rnd::percent();
@@ -199,7 +199,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 
             bool props[size_t(Prop_id::END)];
 
-            if (actor) {actor->get_prop_handler().get_prop_ids(props);}
+            if (actor) {actor->prop_handler().prop_ids(props);}
 
             const bool IS_WEAK = props[int(Prop_id::weakened)];
 
@@ -373,7 +373,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 //        Snd snd("", Sfx_id::door_break, Ignore_msg_if_origin_seen::yes, pos_,
 //                &actor, Snd_vol::low, Alerts_mon::yes);
 //        snd_emit::emit_snd(snd);
-//        if(!actor.get_prop_handler().allow_see()) {
+//        if(!actor.prop_handler().allow_see()) {
 //          msg_log::add("I feel a door crashing open!");
 //        } else {
 //          if(IS_SECRET_BEFORE) {
@@ -407,7 +407,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 //                &actor, Snd_vol::low, Alerts_mon::no);
 //        snd_emit::emit_snd(snd);
 //        if(map::player->can_see_actor(actor, nullptr)) {
-//          msg_log::add(actor.get_name_the() + " bashes at a door!");
+//          msg_log::add(actor.name_the() + " bashes at a door!");
 //        }
 //      }
 //    }
@@ -448,13 +448,13 @@ bool Door::is_los_passable()     const {return is_open_;}
 bool Door::is_projectile_passable() const {return is_open_;}
 bool Door::is_smoke_passable()      const {return is_open_;}
 
-string Door::get_name(const Article article) const
+string Door::name(const Article article) const
 {
-    if (is_secret_) {return mimic_feature_->get_name(article);}
+    if (is_secret_) {return mimic_feature_->name(article);}
 
     string ret = "";
 
-    if (get_burn_state() == Burn_state::burning)
+    if (burn_state() == Burn_state::burning)
     {
         ret = article == Article::a ? "a " : "the ";
         ret += "burning ";
@@ -470,11 +470,11 @@ string Door::get_name(const Article article) const
     return ret + "door";
 }
 
-Clr Door::get_clr_() const
+Clr Door::clr_() const
 {
     if (is_secret_)
     {
-        return mimic_feature_->get_clr();
+        return mimic_feature_->clr();
     }
     else
     {
@@ -496,20 +496,20 @@ Clr Door::get_clr_() const
     return clr_gray;
 }
 
-char Door::get_glyph() const
+char Door::glyph() const
 {
-    return is_secret_ ? mimic_feature_->get_glyph() : (is_open_ ? 39 : '+');
+    return is_secret_ ? mimic_feature_->glyph() : (is_open_ ? 39 : '+');
 }
 
-Tile_id Door::get_tile() const
+Tile_id Door::tile() const
 {
-    return is_secret_ ? mimic_feature_->get_tile() :
+    return is_secret_ ? mimic_feature_->tile() :
            (is_open_ ? Tile_id::door_open : Tile_id::door_closed);
 }
 
-Matl Door::get_matl() const
+Matl Door::matl() const
 {
-    return is_secret_ ? mimic_feature_->get_matl() : matl_;
+    return is_secret_ ? mimic_feature_->matl() : matl_;
 }
 
 void Door::bump(Actor& actor_bumping)
@@ -559,7 +559,7 @@ void Door::player_try_spot_hidden()
 {
     if (is_secret_)
     {
-        const int PLAYER_SKILL = map::player->get_data().ability_vals.get_val(
+        const int PLAYER_SKILL = map::player->data().ability_vals.val(
                                      Ability_id::searching, true, *(map::player));
 
         if (ability_roll::roll(PLAYER_SKILL) >= success_small) {reveal(true);}
@@ -569,7 +569,7 @@ void Door::player_try_spot_hidden()
 bool Door::try_spike(Actor* actor_trying)
 {
     const bool IS_PLAYER = actor_trying == map::player;
-    const bool TRYER_IS_BLIND = !actor_trying->get_prop_handler().allow_see();
+    const bool TRYER_IS_BLIND = !actor_trying->prop_handler().allow_see();
 
     if (is_secret_ || is_open_) {return false;}
 
@@ -596,7 +596,7 @@ bool Door::try_spike(Actor* actor_trying)
 void Door::try_close(Actor* actor_trying)
 {
     const bool IS_PLAYER = actor_trying == map::player;
-    const bool TRYER_IS_BLIND = !actor_trying->get_prop_handler().allow_see();
+    const bool TRYER_IS_BLIND = !actor_trying->prop_handler().allow_see();
     //const bool PLAYER_SEE_DOOR    = map::player_vision[pos_.x][pos_.y];
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_los(), blocked);
@@ -691,7 +691,7 @@ void Door::try_close(Actor* actor_trying)
 
                 if (PLAYER_SEE_TRYER)
                 {
-                    msg_log::add(actor_trying->get_name_the() + " closes a door.");
+                    msg_log::add(actor_trying->name_the() + " closes a door.");
                 }
             }
         }
@@ -717,7 +717,7 @@ void Door::try_close(Actor* actor_trying)
 
                     if (PLAYER_SEE_TRYER)
                     {
-                        msg_log::add(actor_trying->get_name_the() +
+                        msg_log::add(actor_trying->name_the() +
                                      "fumbles about and succeeds to close a door.");
                     }
                 }
@@ -733,7 +733,7 @@ void Door::try_close(Actor* actor_trying)
                 {
                     if (PLAYER_SEE_TRYER)
                     {
-                        msg_log::add(actor_trying->get_name_the() +
+                        msg_log::add(actor_trying->name_the() +
                                      " fumbles blindly and fails to close a door.");
                     }
                 }
@@ -748,7 +748,7 @@ void Door::try_open(Actor* actor_trying)
 {
     TRACE_FUNC_BEGIN;
     const bool IS_PLAYER        = actor_trying == map::player;
-    const bool TRYER_IS_BLIND   = !actor_trying->get_prop_handler().allow_see();
+    const bool TRYER_IS_BLIND   = !actor_trying->prop_handler().allow_see();
     const bool PLAYER_SEE_DOOR  = map::cells[pos_.x][pos_.y].is_seen_by_player;
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_los(), blocked);
@@ -803,7 +803,7 @@ void Door::try_open(Actor* actor_trying)
 
                 if (PLAYER_SEE_TRYER)
                 {
-                    msg_log::add(actor_trying->get_name_the() + " opens a door.");
+                    msg_log::add(actor_trying->name_the() + " opens a door.");
                 }
                 else if (PLAYER_SEE_DOOR)
                 {
@@ -834,7 +834,7 @@ void Door::try_open(Actor* actor_trying)
 
                     if (PLAYER_SEE_TRYER)
                     {
-                        msg_log::add(actor_trying->get_name_the() +
+                        msg_log::add(actor_trying->name_the() +
                                      "fumbles about and succeeds to open a door.");
                     }
                     else if (PLAYER_SEE_DOOR)
@@ -865,7 +865,7 @@ void Door::try_open(Actor* actor_trying)
 
                     if (PLAYER_SEE_TRYER)
                     {
-                        msg_log::add(actor_trying->get_name_the() +
+                        msg_log::add(actor_trying->name_the() +
                                      " fumbles blindly and fails to open a door.");
                     }
                 }

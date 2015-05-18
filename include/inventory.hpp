@@ -70,11 +70,11 @@ public:
 
     bool has_ammo_forFirearm_in_inventory();
 
-    Item* get_first_item_in_backpack_with_id(const Item_id id);
+    Item* first_item_in_backpack_with_id(const Item_id id);
 
-    int get_backpack_idx_with_item_id(const Item_id item_id) const;
+    int backpack_idx_with_item_id(const Item_id item_id) const;
 
-    Item* get_item_in_slot(const Slot_id id) const;
+    Item* item_in_slot(const Slot_id id) const;
 
     void remove_without_destroying(const Inv_type inv_type, const size_t IDX);
 
@@ -89,21 +89,21 @@ public:
     void remove_item_in_backpack_with_idx(const size_t IDX, const bool DELETE_ITEM);
     void remove_item_in_backpack_with_ptr(Item* const item, const bool DELETE_ITEM);
 
-    int get_intrinsics_size() const {return intrinsics_.size();}
+    int intrinsics_size() const {return intrinsics_.size();}
 
-    Item* get_intrinsic_in_element(const int IDX) const;
+    Item* intrinsic_in_element(const int IDX) const;
 
-    Item* get_last_item_in_general();
+    Item* last_item_in_general();
 
     bool has_item_in_backpack(const Item_id id) const;
 
-    int get_item_stack_size_in_general(const Item_id id) const;
+    int item_stack_size_in_general(const Item_id id) const;
 
     void decr_dynamite_in_general();
 
     void sort_general_inventory();
 
-    int get_total_item_weight() const;
+    int total_item_weight() const;
 
     void store_to_save_lines(std::vector<std::string>& lines) const;
     void setup_from_save_lines(std::vector<std::string>& lines);

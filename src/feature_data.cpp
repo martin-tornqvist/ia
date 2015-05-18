@@ -28,9 +28,9 @@ void Feature_room_spawn_rules::set(const int MAX_NR_IN_ROOM,
                                    const Placement_rule placement_rule,
                                    std::initializer_list<Room_type> room_types)
 {
-    max_nr_in_room_    = MAX_NR_IN_ROOM;
-    dlvls_allowed_   = dlvls_allowed;
-    placement_rule_  = placement_rule;
+    max_nr_in_room_     = MAX_NR_IN_ROOM;
+    dlvls_allowed_      = dlvls_allowed;
+    placement_rule_     = placement_rule;
 
     room_types_native_.clear();
 
@@ -46,17 +46,17 @@ bool Feature_room_spawn_rules::is_belonging_to_room_type(const Room_type type) c
            end(room_types_native_);
 }
 
-Placement_rule Feature_room_spawn_rules::get_placement_rule() const
+Placement_rule Feature_room_spawn_rules::placement_rule() const
 {
     return placement_rule_;
 }
 
-int Feature_room_spawn_rules::get_max_nr_in_room() const
+int Feature_room_spawn_rules::max_nr_in_room() const
 {
     return max_nr_in_room_;
 }
 
-Range Feature_room_spawn_rules::get_dlvls_allowed() const
+Range Feature_room_spawn_rules::dlvls_allowed() const
 {
     return dlvls_allowed_;
 }
@@ -85,7 +85,7 @@ bool Move_rules::can_move(const bool actor_prop_ids[size_t(Prop_id::END)]) const
 namespace feature_data
 {
 
-Feature_data_t data[int(Feature_id::END)];
+Feature_data_t data_list[int(Feature_id::END)];
 
 namespace
 {
@@ -117,7 +117,7 @@ void reset_data(Feature_data_t& d)
 
 void add_to_list_and_reset(Feature_data_t& d)
 {
-    data[int(d.id)] = d;
+    data_list[int(d.id)] = d;
     reset_data(d);
 }
 
@@ -595,11 +595,11 @@ void init()
     TRACE_FUNC_END;
 }
 
-const Feature_data_t& get_data(const Feature_id id)
+const Feature_data_t& data(const Feature_id id)
 {
     assert(id != Feature_id::END);
     assert(id != Feature_id::END);
-    return data[int(id)];
+    return data_list[int(id)];
 }
 
 } //Feature_data

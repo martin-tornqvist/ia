@@ -54,7 +54,7 @@ void setup_from_save_lines(vector<string>& lines)
     }
 }
 
-void get_bg_title(const Bg id, string& out)
+void bg_title(const Bg id, string& out)
 {
     out = "[BG TITLE MISSING]";
 
@@ -70,7 +70,7 @@ void get_bg_title(const Bg id, string& out)
     }
 }
 
-void get_trait_title(const Trait id, string& out)
+void trait_title(const Trait id, string& out)
 {
     out = "[TRAIT TITLE MISSING]";
 
@@ -158,7 +158,7 @@ void get_trait_title(const Trait id, string& out)
     }
 }
 
-void get_bg_descr(const Bg id, vector<string>& lines_ref)
+void bg_descr(const Bg id, vector<string>& lines_ref)
 {
     lines_ref.clear();
     string s = "";
@@ -177,8 +177,8 @@ void get_bg_descr(const Bg id, vector<string>& lines_ref)
         lines_ref.push_back(" ");
         lines_ref.push_back("Starts with the following trait(s):");
         lines_ref.push_back(" ");
-        get_trait_title(Trait::stout_spirit, s); lines_ref.push_back("* " + s);
-        get_trait_descr(Trait::stout_spirit, s); lines_ref.push_back(s);
+        trait_title(Trait::stout_spirit, s); lines_ref.push_back("* " + s);
+        trait_descr(Trait::stout_spirit, s); lines_ref.push_back(s);
         break;
 
     case Bg::rogue:
@@ -193,11 +193,11 @@ void get_bg_descr(const Bg id, vector<string>& lines_ref)
         lines_ref.push_back(" ");
         lines_ref.push_back("Starts with the following trait(s):");
         lines_ref.push_back(" ");
-        get_trait_title(Trait::observant, s); lines_ref.push_back("* " + s);
-        get_trait_descr(Trait::observant, s); lines_ref.push_back(s);
+        trait_title(Trait::observant, s); lines_ref.push_back("* " + s);
+        trait_descr(Trait::observant, s); lines_ref.push_back(s);
         lines_ref.push_back(" ");
-        get_trait_title(Trait::stealthy, s);  lines_ref.push_back("* " + s);
-        get_trait_descr(Trait::stealthy, s);  lines_ref.push_back(s);
+        trait_title(Trait::stealthy, s);  lines_ref.push_back("* " + s);
+        trait_descr(Trait::stealthy, s);  lines_ref.push_back(s);
         break;
 
     case Bg::war_vet:
@@ -209,14 +209,14 @@ void get_bg_descr(const Bg id, vector<string>& lines_ref)
         lines_ref.push_back(" ");
         lines_ref.push_back("Starts with the following trait(s):");
         lines_ref.push_back(" ");
-        get_trait_title(Trait::adept_marksman, s);     lines_ref.push_back("* " + s);
-        get_trait_descr(Trait::adept_marksman, s);     lines_ref.push_back(s);
+        trait_title(Trait::adept_marksman, s);     lines_ref.push_back("* " + s);
+        trait_descr(Trait::adept_marksman, s);     lines_ref.push_back(s);
         lines_ref.push_back(" ");
-        get_trait_title(Trait::adept_melee_fighter, s); lines_ref.push_back("* " + s);
-        get_trait_descr(Trait::adept_melee_fighter, s); lines_ref.push_back(s);
+        trait_title(Trait::adept_melee_fighter, s); lines_ref.push_back("* " + s);
+        trait_descr(Trait::adept_melee_fighter, s); lines_ref.push_back(s);
         lines_ref.push_back(" ");
-        get_trait_title(Trait::tough, s);             lines_ref.push_back("* " + s);
-        get_trait_descr(Trait::tough, s);             lines_ref.push_back(s);
+        trait_title(Trait::tough, s);             lines_ref.push_back("* " + s);
+        trait_descr(Trait::tough, s);             lines_ref.push_back(s);
         break;
 
     case Bg::END: {}
@@ -224,7 +224,7 @@ void get_bg_descr(const Bg id, vector<string>& lines_ref)
     }
 }
 
-void get_trait_descr(const Trait id, string& out)
+void trait_descr(const Trait id, string& out)
 {
     out = "[TRAIT DESCRIPTION MISSING]";
 
@@ -413,7 +413,7 @@ void get_trait_descr(const Trait id, string& out)
     }
 }
 
-void get_trait_prereqs(const Trait id, vector<Trait>& traits_ref, Bg& bg_ref)
+void trait_prereqs(const Trait id, vector<Trait>& traits_ref, Bg& bg_ref)
 {
     traits_ref.clear();
     bg_ref = Bg::END;
@@ -590,15 +590,15 @@ void get_trait_prereqs(const Trait id, vector<Trait>& traits_ref, Bg& bg_ref)
     //Sort lexicographically
     sort(traits_ref.begin(), traits_ref.end(), [](const Trait & t1, const Trait & t2)
     {
-        string str1 = ""; get_trait_title(t1, str1);
-        string str2 = ""; get_trait_title(t2, str2);
+        string str1 = ""; trait_title(t1, str1);
+        string str2 = ""; trait_title(t2, str2);
         return str1 < str2;
     });
 }
 
-Bg get_bg() {return bg_;}
+Bg bg() {return bg_;}
 
-void get_pickable_bgs(vector<Bg>& bgs_ref)
+void pickable_bgs(vector<Bg>& bgs_ref)
 {
     bgs_ref.clear();
 
@@ -607,13 +607,13 @@ void get_pickable_bgs(vector<Bg>& bgs_ref)
     //Sort lexicographically
     sort(bgs_ref.begin(), bgs_ref.end(), [](const Bg & bg1, const Bg & bg2)
     {
-        string str1 = ""; get_bg_title(bg1, str1);
-        string str2 = ""; get_bg_title(bg2, str2);
+        string str1 = ""; bg_title(bg1, str1);
+        string str2 = ""; bg_title(bg2, str2);
         return str1 < str2;
     });
 }
 
-void get_pickable_traits(vector<Trait>& traits_ref)
+void pickable_traits(vector<Trait>& traits_ref)
 {
     traits_ref.clear();
 
@@ -621,13 +621,14 @@ void get_pickable_traits(vector<Trait>& traits_ref)
     {
         if (!traits[i])
         {
-            vector<Trait> trait_prereqs;
+            vector<Trait> trait_prereq_list;
             Bg bg_prereq = Bg::END;
-            get_trait_prereqs(Trait(i), trait_prereqs, bg_prereq);
+
+            trait_prereqs(Trait(i), trait_prereq_list, bg_prereq);
 
             bool is_pickable = true;
 
-            for (Trait prereq : trait_prereqs)
+            for (Trait prereq : trait_prereq_list)
             {
                 if (!traits[int(prereq)])
                 {
@@ -651,8 +652,8 @@ void get_pickable_traits(vector<Trait>& traits_ref)
     sort(traits_ref.begin(), traits_ref.end(),
          [](const Trait & t1, const Trait & t2)
     {
-        string str1 = ""; get_trait_title(t1, str1);
-        string str2 = ""; get_trait_title(t2, str2);
+        string str1 = ""; trait_title(t1, str1);
+        string str2 = ""; trait_title(t2, str2);
         return str1 < str2;
     });
 }
@@ -726,12 +727,12 @@ void pick_trait(const Trait id)
         break;
 
     case Trait::self_aware:
-        map::player->get_prop_handler().try_apply_prop(
+        map::player->prop_handler().try_apply_prop(
             new Prop_rConfusion(Prop_turns::indefinite), true, true, true, false);
         break;
 
     case Trait::fearless:
-        map::player->get_prop_handler().try_apply_prop(
+        map::player->prop_handler().try_apply_prop(
             new Prop_rFear(Prop_turns::indefinite), true, true, true, false);
         break;
 
@@ -740,7 +741,7 @@ void pick_trait(const Trait id)
     }
 }
 
-void get_all_picked_traits_titles_line(string& out)
+void all_picked_traits_titles_line(string& out)
 {
     out = "";
 
@@ -749,13 +750,13 @@ void get_all_picked_traits_titles_line(string& out)
         if (traits[i])
         {
             string title = "";
-            get_trait_title(Trait(i), title);
+            trait_title(Trait(i), title);
             out += (out.empty() ? "" : ", ") + title;
         }
     }
 }
 
-int get_spi_occultist_can_cast_at_lvl(const int LVL)
+int spi_occultist_can_cast_at_lvl(const int LVL)
 {
     assert(LVL > 0);
     const int SPI_FROM_START_TRAIT  = 2;
@@ -763,7 +764,7 @@ int get_spi_occultist_can_cast_at_lvl(const int LVL)
     return PLAYER_START_SPI + SPI_FROM_LVLS + SPI_FROM_START_TRAIT - 1;
 }
 
-bool gets_undead_bane_bon(const Actor& attacker, const actor_data_t& actor_data)
+bool gets_undead_bane_bon(const Actor& attacker, const Actor_data_t& actor_data)
 {
     return attacker.is_player()                              &&
            player_bon::traits[int(Trait::undead_bane)]  &&

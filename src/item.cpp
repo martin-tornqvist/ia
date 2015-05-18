@@ -21,7 +21,7 @@
 
 using namespace std;
 
-//--------------------------------------------------------- ITEM
+//---------------------------------------------------------- ITEM
 Item::Item(Item_data_t* item_data) :
     nr_items_(1),
     melee_dmg_plus_(0),
@@ -30,29 +30,47 @@ Item::Item(Item_data_t* item_data) :
 Item::~Item()
 {
     for (auto prop   : carrier_props_)   {delete prop;}
-
     for (auto spell  : carrier_spells_)  {delete spell;}
 }
 
-Item_id            Item::get_id()     const {return data_->id;}
-const Item_data_t&  Item::get_data()   const {return *data_;}
-Clr               Item::get_clr()    const {return data_->clr;}
-char              Item::get_glyph()  const {return data_->glyph;}
-Tile_id            Item::get_tile()   const {return data_->tile;}
+Item_id Item::id() const
+{
+    return data_->id;
+}
 
-vector<string> Item::get_descr() const
+const Item_data_t& Item::data() const
+{
+    return *data_;
+}
+
+Clr Item::clr() const
+{
+    return data_->clr;
+}
+
+char Item::glyph() const
+{
+    return data_->glyph;
+}
+
+Tile_id Item::tile() const
+{
+    return data_->tile;
+}
+
+vector<string> Item::descr() const
 {
     return data_->base_descr;
 }
 
-int Item::get_weight() const
+int Item::weight() const
 {
     return int(data_->weight) * nr_items_;
 }
 
-string Item::get_weight_str() const
+string Item::weight_str() const
 {
-    const int WEIGHT = get_weight();
+    const int WEIGHT = weight();
 
     if (WEIGHT <= (int(Item_weight::extra_light) + int(Item_weight::light)) / 2)
     {
@@ -79,9 +97,9 @@ Consume_item Item::activate(Actor* const actor)
     return Consume_item::no;
 }
 
-string Item::get_name(const Item_ref_type      ref_type,
-                      const Item_ref_inf       inf,
-                      const Item_ref_att_inf    att_inf) const
+string Item::name(const Item_ref_type      ref_type,
+                  const Item_ref_inf       inf,
+                  const Item_ref_att_inf    att_inf) const
 {
     Item_ref_type ref_type_used = ref_type;
 
@@ -105,37 +123,45 @@ string Item::get_name(const Item_ref_type      ref_type,
     {
         switch (data_->main_att_mode)
         {
-        case Main_att_mode::melee:  att_inf_used = Item_ref_att_inf::melee;  break;
+        case Main_att_mode::melee:
+            att_inf_used = Item_ref_att_inf::melee;
+            break;
 
-        case Main_att_mode::ranged: att_inf_used = Item_ref_att_inf::ranged; break;
+        case Main_att_mode::ranged:
+            att_inf_used = Item_ref_att_inf::ranged;
+            break;
 
-        case Main_att_mode::thrown: att_inf_used = Item_ref_att_inf::thrown; break;
+        case Main_att_mode::thrown:
+            att_inf_used = Item_ref_att_inf::thrown;
+            break;
 
-        case Main_att_mode::none:   att_inf_used = Item_ref_att_inf::none;   break;
+        case Main_att_mode::none:
+            att_inf_used = Item_ref_att_inf::none;
+            break;
         }
     }
 
-    const auto ability_vals = map::player->get_data().ability_vals;
+    const auto ability_vals = map::player->data().ability_vals;
 
     if (att_inf_used == Item_ref_att_inf::melee)
     {
-        const string    rolls_str    = to_str(data_->melee.dmg.first);
-        const string    sides_str    = to_str(data_->melee.dmg.second);
-        const int       PLUS        = melee_dmg_plus_;
-        const string    plus_str     = PLUS == 0 ? "" :
-                                       PLUS  > 0 ?
-                                       ("+" + to_str(PLUS)) :
-                                       ("-" + to_str(PLUS));
-        const int       ITEM_SKILL  = data_->melee.hit_chance_mod;
-        const int       MELEE_SKILL = ability_vals.get_val(Ability_id::melee, true,
-                                      *(map::player));
-        const int       SKILL_TOT   = max(0, min(100, ITEM_SKILL + MELEE_SKILL));
-        const string    skill_str    = to_str(SKILL_TOT) + "%";
+        const string    rolls_str       = to_str(data_->melee.dmg.first);
+        const string    sides_str       = to_str(data_->melee.dmg.second);
+        const int       PLUS            = melee_dmg_plus_;
+        const string    plus_str        = PLUS == 0 ? "" :
+                                          PLUS  > 0 ?
+                                          ("+" + to_str(PLUS)) :
+                                          ("-" + to_str(PLUS));
+        const int       ITEM_SKILL      = data_->melee.hit_chance_mod;
+        const int       MELEE_SKILL     = ability_vals.val(Ability_id::melee, true,
+                                          *(map::player));
+        const int       SKILL_TOT       = max(0, min(100, ITEM_SKILL + MELEE_SKILL));
+        const string    skill_str       = to_str(SKILL_TOT) + "%";
 
         att_str = " " + rolls_str + "d" + sides_str + plus_str + " " + skill_str;
     }
 
-    const int RANGED_SKILL = ability_vals.get_val(Ability_id::ranged, true, *(map::player));
+    const int RANGED_SKILL = ability_vals.val(Ability_id::ranged, true, *(map::player));
 
     if (att_inf_used == Item_ref_att_inf::ranged)
     {
@@ -145,34 +171,34 @@ string Item::get_name(const Item_ref_type      ref_type,
         {
             const int       MULTIPL     = data_->ranged.is_machine_gun ?
                                           NR_MG_PROJECTILES : 1;
-            const string    rolls_str    = to_str(data_->ranged.dmg.rolls * MULTIPL);
-            const string    sides_str    = to_str(data_->ranged.dmg.sides);
+            const string    rolls_str   = to_str(data_->ranged.dmg.rolls * MULTIPL);
+            const string    sides_str   = to_str(data_->ranged.dmg.sides);
             const int       PLUS        = data_->ranged.dmg.plus * MULTIPL;
-            const string    plus_str     = PLUS ==  0 ? "" :
-                                           PLUS  > 0  ?
-                                           ("+" + to_str(PLUS)) :
-                                           ("-" + to_str(PLUS));
-            dmg_str                      = rolls_str + "d" + sides_str + plus_str;
+            const string    plus_str    = PLUS ==  0 ? "" :
+                                          PLUS  > 0  ?
+                                          ("+" + to_str(PLUS)) :
+                                          ("-" + to_str(PLUS));
+            dmg_str                     = rolls_str + "d" + sides_str + plus_str;
         }
 
-        const int       ITEM_SKILL  = data_->ranged.hit_chance_mod;
-        const int       SKILL_TOT   = max(0, min(100, ITEM_SKILL + RANGED_SKILL));
-        const string    skill_str    = to_str(SKILL_TOT) + "%";
+        const int       ITEM_SKILL      = data_->ranged.hit_chance_mod;
+        const int       SKILL_TOT       = max(0, min(100, ITEM_SKILL + RANGED_SKILL));
+        const string    skill_str       = to_str(SKILL_TOT) + "%";
 
         att_str = " " + dmg_str + " " + skill_str;
     }
 
     if (att_inf_used == Item_ref_att_inf::thrown)
     {
-        const string    rolls_str    = to_str(data_->ranged.throw_dmg.rolls);
-        const string    sides_str    = to_str(data_->ranged.throw_dmg.sides);
-        const int       PLUS        = data_->ranged.throw_dmg.plus;
-        const string    plus_str     = PLUS ==  0 ? "" :
-                                       PLUS  > 0 ? "+" :
-                                       ("-" + to_str(PLUS));
-        const int       ITEM_SKILL  = data_->ranged.throw_hit_chance_mod;
-        const int       SKILL_TOT   = max(0, min(100, ITEM_SKILL + RANGED_SKILL));
-        const string    skill_str    = to_str(SKILL_TOT) + "%";
+        const string    rolls_str       = to_str(data_->ranged.throw_dmg.rolls);
+        const string    sides_str       = to_str(data_->ranged.throw_dmg.sides);
+        const int       PLUS            = data_->ranged.throw_dmg.plus;
+        const string    plus_str        = PLUS ==  0 ? "" :
+                                          PLUS  > 0 ? "+" :
+                                          ("-" + to_str(PLUS));
+        const int       ITEM_SKILL      = data_->ranged.throw_hit_chance_mod;
+        const int       SKILL_TOT       = max(0, min(100, ITEM_SKILL + RANGED_SKILL));
+        const string    skill_str       = to_str(SKILL_TOT) + "%";
 
         att_str = " " + rolls_str + "d" + sides_str + plus_str + " " + skill_str;
     }
@@ -181,7 +207,7 @@ string Item::get_name(const Item_ref_type      ref_type,
 
     if (inf == Item_ref_inf::yes)
     {
-        inf_str = get_name_inf();
+        inf_str = name_inf();
 
         if (!inf_str.empty()) {inf_str.insert(0, " ");}
     }
@@ -196,7 +222,7 @@ bool Item::is_in_effective_range_lmt(const Pos& p0, const Pos& p1) const
     return utils::king_dist(p0, p1) <= data_->ranged.effective_range;
 }
 
-//--------------------------------------------------------- ARMOR
+//---------------------------------------------------------- ARMOR
 Armor::Armor(Item_data_t* const item_data) :
     Item(item_data),
     dur_(rnd::range(80, 100)) {}
@@ -225,8 +251,8 @@ Unequip_allowed Armor::on_unequip()
 
     if (unequip_allowed == Unequip_allowed::yes)
     {
-        const string name = get_name(Item_ref_type::plain, Item_ref_inf::none);
-        msg_log::add("I take off my " + name + ".", clr_white, false, true);
+        const string armor_name = name(Item_ref_type::plain, Item_ref_inf::none);
+        msg_log::add("I take off my " + armor_name + ".", clr_white, false, true);
     }
 
     game_time::tick();
@@ -234,9 +260,9 @@ Unequip_allowed Armor::on_unequip()
     return unequip_allowed;
 }
 
-string Armor::get_armor_data_line(const bool WITH_BRACKETS) const
+string Armor::armor_data_line(const bool WITH_BRACKETS) const
 {
-    const int       AP      = get_armor_points();
+    const int       AP      = armor_points();
     const string    ap_str   = to_str(max(0, AP));
 
     return WITH_BRACKETS ? ("[" + ap_str + "]") : ap_str;
@@ -251,21 +277,21 @@ int Armor::take_dur_hit_and_get_reduced_dmg(const int DMG_BEFORE)
     //DFF, Damage (to) Durability Factor:
     //  - A factor of how much damage the armor durability takes per attack damage point
 
-    const int     AP_BEFORE       = get_armor_points();
+    const int     AP_BEFORE       = armor_points();
     const double  DDF_BASE        = data_->armor.dmg_to_durability_factor;
     //TODO: Add check for if wearer is player!
-    const double  DDF_WAR_VET_MOD = player_bon::get_bg() == Bg::war_vet ? 0.5 : 1.0;
+    const double  DDF_WAR_VET_MOD = player_bon::bg() == Bg::war_vet ? 0.5 : 1.0;
     const double  DDF_K           = 1.5;
     const double  DMG_BEFORE_DB   = double(DMG_BEFORE);
 
     dur_ -= int(DMG_BEFORE_DB * DDF_BASE * DDF_WAR_VET_MOD * DDF_K);
 
     dur_                          = max(0, dur_);
-    const int AP_AFTER            = get_armor_points();
+    const int AP_AFTER            = armor_points();
 
     if (AP_AFTER < AP_BEFORE && AP_AFTER != 0)
     {
-        const string armor_name = get_name(Item_ref_type::plain);
+        const string armor_name = name(Item_ref_type::plain);
         msg_log::add("My " + armor_name + " is damaged!", clr_msg_note);
     }
 
@@ -279,7 +305,7 @@ int Armor::take_dur_hit_and_get_reduced_dmg(const int DMG_BEFORE)
     return DMG_AFTER;
 }
 
-int Armor::get_armor_points() const
+int Armor::armor_points() const
 {
     const int AP_MAX = data_->armor.armor_points;
 
@@ -335,16 +361,16 @@ void Armor_mi_go::on_std_turn_in_inv(const Inv_type inv_type)
 
     if (dur_ < 100)
     {
-        const int AP_BEFORE = get_armor_points();
+        const int AP_BEFORE = armor_points();
 
         dur_ = 100;
 
-        const int AP_AFTER  = get_armor_points();
+        const int AP_AFTER  = armor_points();
 
         if (AP_AFTER > AP_BEFORE)
         {
-            const string name = get_name(Item_ref_type::plain, Item_ref_inf::none);
-            msg_log::add("My " + name + " reconstructs itself.", clr_msg_note, false, true);
+            const string armor_name = name(Item_ref_type::plain, Item_ref_inf::none);
+            msg_log::add("My " + armor_name + " reconstructs itself.", clr_msg_note, false, true);
         }
     }
 }
@@ -380,34 +406,38 @@ Unequip_allowed Armor_mi_go::on_unequip_()
     }
 }
 
-//--------------------------------------------------------- WEAPON
+//---------------------------------------------------------- WEAPON
+Wpn::Wpn(Item_data_t* const item_data) :
+    Item(item_data),
+    nr_ammo_loaded_(0),
+    ammo_data_(nullptr)
+{
+    if (data_->ranged.ammo_item_id != Item_id::END)
+    {
+        ammo_data_      = &item_data::data[int(data_->ranged.ammo_item_id)];
+        nr_ammo_loaded_ = ammo_max(); //NOTE: This may read from ammo data
+    }
+}
+
 void Wpn::store_to_save_lines(vector<string>& lines)
 {
     lines.push_back(to_str(melee_dmg_plus_));
-    lines.push_back(to_str(nr_ammo_loaded));
+    lines.push_back(to_str(nr_ammo_loaded_));
 }
 
 void Wpn::setup_from_save_lines(vector<string>& lines)
 {
     melee_dmg_plus_ = to_int(lines.front());
     lines.erase(begin(lines));
-    nr_ammo_loaded = to_int(lines.front());
+    nr_ammo_loaded_ = to_int(lines.front());
     lines.erase(begin(lines));
 }
 
-Wpn::Wpn(Item_data_t* const item_data, Item_data_t* const ammo_data, int ammo_cap,
-         bool is_using_clip) :
-    Item(item_data),
-    AMMO_CAP(ammo_cap),
-    IS_USING_CLIP(is_using_clip),
-    nr_ammo_loaded(AMMO_CAP),
-    ammo_data_(ammo_data) {}
-
-Clr Wpn::get_clr() const
+Clr Wpn::clr() const
 {
     if (data_->ranged.is_ranged_wpn && !data_->ranged.has_infinite_ammo)
     {
-        if (nr_ammo_loaded == 0)
+        if (nr_ammo_loaded_ == 0)
         {
             Clr ret = data_->clr;
             ret.r /= 2; ret.g /= 2; ret.b /= 2;
@@ -431,39 +461,135 @@ void Wpn::set_random_melee_plus()
     }
 }
 
-string Wpn::get_name_inf() const
+string Wpn::name_inf() const
 {
     if (data_->ranged.is_ranged_wpn && !data_->ranged.has_infinite_ammo)
     {
-        return to_str(nr_ammo_loaded) + "/" + to_str(AMMO_CAP);
+        return to_str(nr_ammo_loaded_) + "/" + to_str(ammo_max());
     }
 
     return "";
 }
 
-//--------------------------------------------------------- STAFF OF THE PHARAOHS
-Pharaoh_staff::Pharaoh_staff(Item_data_t* const item_data) : Wpn(item_data, nullptr)
+int Wpn::ammo_max() const
+{
+    return 0;
+}
+
+bool Wpn::is_using_clip() const
+{
+    return false;
+}
+
+//---------------------------------------------------------- STAFF OF THE PHARAOHS
+Pharaoh_staff::Pharaoh_staff(Item_data_t* const item_data) : Wpn(item_data)
 {
     item_data->allow_spawn = false;
 
     carrier_spells_.push_back(new Spell_pharaoh_staff);
 }
 
-//--------------------------------------------------------- MACHINE GUN
-Machine_gun::Machine_gun(Item_data_t* const item_data, Item_data_t* const ammo_data) :
-    Wpn(item_data, ammo_data, ammo_data->ranged.max_nr_ammo_in_clip, true) {}
+//---------------------------------------------------------- SAWED OFF SHOTGUN
+Sawed_off::Sawed_off(Item_data_t* const item_data) :
+    Wpn(item_data) {}
 
-//--------------------------------------------------------- MI-GO ELECTRIC GUN
-Mi_go_gun::Mi_go_gun(Item_data_t* const item_data, Item_data_t* const ammo_data) :
-    Wpn(item_data, ammo_data, ammo_data->ranged.max_nr_ammo_in_clip, true) {}
+int Sawed_off::ammo_max() const
+{
+    return 2;
+}
 
-//--------------------------------------------------------- SPIKE GUN
-Spike_gun::Spike_gun(Item_data_t* const item_data, Item_data_t* const ammo_data) :
-    Wpn(item_data, ammo_data, 12, false) {}
+bool Sawed_off::is_using_clip() const
+{
+    return false;
+}
 
-//--------------------------------------------------------- INCINERATOR
-Incinerator::Incinerator(Item_data_t* const item_data, Item_data_t* const ammo_data) :
-    Wpn(item_data, ammo_data, ammo_data->ranged.max_nr_ammo_in_clip, true) {}
+//---------------------------------------------------------- PUMP SHOTGUN
+Pump_shotgun::Pump_shotgun(Item_data_t* const item_data) :
+    Wpn(item_data) {}
+
+int Pump_shotgun::ammo_max() const
+{
+    return 8;
+}
+
+bool Pump_shotgun::is_using_clip() const
+{
+    return false;
+}
+
+//---------------------------------------------------------- FLARE GUN
+Flare_gun::Flare_gun(Item_data_t* const item_data) :
+    Wpn(item_data) {}
+
+int Flare_gun::ammo_max() const
+{
+    return 1;
+}
+
+bool Flare_gun::is_using_clip() const
+{
+    return false;
+}
+
+//---------------------------------------------------------- PISTOL
+Pistol::Pistol(Item_data_t* const item_data) :
+    Wpn(item_data) {}
+
+int Pistol::ammo_max() const
+{
+    return 7;
+}
+
+bool Pistol::is_using_clip() const
+{
+    return true;
+}
+
+//---------------------------------------------------------- MACHINE GUN
+Machine_gun::Machine_gun(Item_data_t* const item_data) :
+    Wpn(item_data) {}
+
+int Machine_gun::ammo_max() const
+{
+    return ammo_data_->ranged.max_nr_ammo_in_clip;
+}
+
+bool Machine_gun::is_using_clip() const
+{
+    return false;
+}
+
+//---------------------------------------------------------- MI-GO ELECTRIC GUN
+Mi_go_gun::Mi_go_gun(Item_data_t* const item_data) :
+    Wpn(item_data) {}
+
+int Mi_go_gun::ammo_max() const
+{
+    return ammo_data_->ranged.max_nr_ammo_in_clip;
+}
+
+bool Mi_go_gun::is_using_clip() const
+{
+    return true;
+}
+
+//---------------------------------------------------------- SPIKE GUN
+Spike_gun::Spike_gun(Item_data_t* const item_data) :
+    Wpn(item_data) {}
+
+int Spike_gun::ammo_max() const
+{
+    return 12;
+}
+
+bool Spike_gun::is_using_clip() const
+{
+    return false;
+}
+
+//---------------------------------------------------------- INCINERATOR
+Incinerator::Incinerator(Item_data_t* const item_data) :
+    Wpn(item_data) {}
 
 void Incinerator::on_projectile_blocked(
     const Pos& pos, Actor* actor_hit)
@@ -472,7 +598,17 @@ void Incinerator::on_projectile_blocked(
     explosion::run_explosion_at(pos, Expl_type::expl);
 }
 
-//--------------------------------------------------------- AMMO CLIP
+int Incinerator::ammo_max() const
+{
+    return ammo_data_->ranged.max_nr_ammo_in_clip;
+}
+
+bool Incinerator::is_using_clip() const
+{
+    return true;
+}
+
+//---------------------------------------------------------- AMMO CLIP
 Ammo_clip::Ammo_clip(Item_data_t* const item_data) : Ammo(item_data)
 {
     set_full_ammo();
@@ -483,7 +619,7 @@ void Ammo_clip::set_full_ammo()
     ammo_ = data_->ranged.max_nr_ammo_in_clip;
 }
 
-//--------------------------------------------------------- MEDICAL BAG
+//---------------------------------------------------------- MEDICAL BAG
 const int NR_TRN_BEFORE_HEAL  = 10;
 const int NR_TRN_PER_HP       = 2;
 
@@ -492,7 +628,7 @@ void Medical_bag::on_pickup_to_backpack(Inventory& inv)
     //Check for existing medical bag in inventory
     for (Item* const other : inv.general_)
     {
-        if (other != this && other->get_id() == get_id())
+        if (other != this && other->id() == id())
         {
             //Add my turns left to the other medical bag, then destroy self
             static_cast<Medical_bag*>(other)->nr_supplies_ += nr_supplies_;
@@ -507,7 +643,7 @@ Consume_item Medical_bag::activate(Actor* const actor)
     (void)actor;
 
     vector<Actor*> seen_foes;
-    map::player->get_seen_foes(seen_foes);
+    map::player->seen_foes(seen_foes);
 
     if (!seen_foes.empty())
     {
@@ -527,12 +663,12 @@ Consume_item Medical_bag::activate(Actor* const actor)
 
     //Check if chosen action can be done
     bool props[size_t(Prop_id::END)];
-    map::player->get_prop_handler().get_prop_ids(props);
+    map::player->prop_handler().prop_ids(props);
 
     switch (cur_action_)
     {
     case Med_bag_action::treat_wounds:
-        if (map::player->get_hp() >= map::player->get_hp_max(true))
+        if (map::player->hp() >= map::player->hp_max(true))
         {
             msg_log::add("I have no wounds to treat.");
             cur_action_ = Med_bag_action::END;
@@ -560,7 +696,7 @@ Consume_item Medical_bag::activate(Actor* const actor)
     switch (cur_action_)
     {
     case Med_bag_action::sanitize_infection:
-        is_enough_suppl = get_tot_suppl_for_sanitize() <= nr_supplies_;
+        is_enough_suppl = tot_suppl_for_sanitize() <= nr_supplies_;
         break;
 
     case Med_bag_action::treat_wounds: //Costs one supply per turn
@@ -587,7 +723,7 @@ Consume_item Medical_bag::activate(Actor* const actor)
 
     case Med_bag_action::sanitize_infection:
         msg_log::add("I start to sanitize an infection...");
-        nr_turns_left_sanitize_ = get_tot_turns_for_sanitize();
+        nr_turns_left_sanitize_ = tot_turns_for_sanitize();
         break;
 
     case Med_bag_action::END: {} break;
@@ -603,7 +739,7 @@ Med_bag_action Medical_bag::choose_action() const
     msg_log::clear();
 
     bool props[size_t(Prop_id::END)];
-    map::player->get_prop_handler().get_prop_ids(props);
+    map::player->prop_handler().prop_ids(props);
 
     //Infections are treated first
     if (props[int(Prop_id::infected)])
@@ -660,14 +796,14 @@ void Medical_bag::continue_action()
             const int NR_TRN_PER_HP_W_BON =
                 IS_HEALER ? (NR_TRN_PER_HP / 2) : NR_TRN_PER_HP;
 
-            if (game_time::get_turn() % NR_TRN_PER_HP_W_BON == 0)
+            if (game_time::turn() % NR_TRN_PER_HP_W_BON == 0)
             {
                 player.restore_hp(1, false);
             }
 
             //The rate of supply use is consistent (this means that with the healer
             // trait, you spend half the time and supplies, as per the description).
-            if (game_time::get_turn() % NR_TRN_PER_HP == 0)
+            if (game_time::turn() % NR_TRN_PER_HP == 0)
             {
                 --nr_supplies_;
             }
@@ -680,7 +816,7 @@ void Medical_bag::continue_action()
             return;
         }
 
-        if (player.get_hp() >= player.get_hp_max(true))
+        if (player.hp() >= player.hp_max(true))
         {
             finish_cur_action();
             return;
@@ -720,8 +856,8 @@ void Medical_bag::finish_cur_action()
     {
     case Med_bag_action::sanitize_infection:
     {
-        map::player->get_prop_handler().end_applied_prop(Prop_id::infected);
-        nr_supplies_ -= get_tot_suppl_for_sanitize();
+        map::player->prop_handler().end_applied_prop(Prop_id::infected);
+        nr_supplies_ -= tot_suppl_for_sanitize();
     } break;
 
     case Med_bag_action::treat_wounds:
@@ -736,7 +872,7 @@ void Medical_bag::finish_cur_action()
 
     if (nr_supplies_ <= 0)
     {
-        map::player->get_inv().remove_item_in_backpack_with_ptr(this, true);
+        map::player->inv().remove_item_in_backpack_with_ptr(this, true);
     }
 }
 
@@ -750,17 +886,17 @@ void Medical_bag::interrupted()
     map::player->active_medical_bag = nullptr;
 }
 
-int Medical_bag::get_tot_turns_for_sanitize() const
+int Medical_bag::tot_turns_for_sanitize() const
 {
     return player_bon::traits[int(Trait::healer)] ? 10 : 20;
 }
 
-int Medical_bag::get_tot_suppl_for_sanitize() const
+int Medical_bag::tot_suppl_for_sanitize() const
 {
     return player_bon::traits[int(Trait::healer)] ? 3 : 6;
 }
 
-//--------------------------------------------------------- HIDEOUS MASK
+//---------------------------------------------------------- HIDEOUS MASK
 //Hideous_mask::Hideous_mask(Item_data_t* item_data) : Headwear(item_data)
 //{
 //    item_data->allow_spawn = false;
@@ -787,7 +923,7 @@ int Medical_bag::get_tot_suppl_for_sanitize() const
 //            {
 //                if (rnd::one_in(4) && actor->can_see_actor(*map::player, blocked_los))
 //                {
-//                    actor->get_prop_handler().try_apply_prop(
+//                    actor->prop_handler().try_apply_prop(
 //                        new Prop_terrified(Prop_turns::std));
 //                }
 //            }
@@ -795,7 +931,7 @@ int Medical_bag::get_tot_suppl_for_sanitize() const
 //    }
 //}
 
-//--------------------------------------------------------- GAS MASK
+//---------------------------------------------------------- GAS MASK
 void Gas_mask::on_equip(const bool IS_SILENT)
 {
     (void)IS_SILENT;
@@ -818,27 +954,27 @@ void Gas_mask::decr_turns_left(Inventory& carrier_inv)
 
     if (nr_turns_left_ <= 0)
     {
-        msg_log::add("My " + get_name(Item_ref_type::plain, Item_ref_inf::none) + " expires.",
+        msg_log::add("My " + name(Item_ref_type::plain, Item_ref_inf::none) + " expires.",
                      clr_msg_note, true, true);
         carrier_inv.decr_item(this);
     }
 }
 
-//--------------------------------------------------------- EXPLOSIVE
+//---------------------------------------------------------- EXPLOSIVE
 Consume_item Explosive::activate(Actor* const actor)
 {
     (void)actor;
     //Make a copy to use as the held ignited explosive.
-    auto* cpy = static_cast<Explosive*>(item_factory::mk(get_data().id, 1));
+    auto* cpy = static_cast<Explosive*>(item_factory::mk(data().id, 1));
 
-    cpy->fuse_turns_               = get_std_fuse_turns();
+    cpy->fuse_turns_               = std_fuse_turns();
     map::player->active_explosive  = cpy;
     map::player->update_clr();
     cpy->on_player_ignite();
     return Consume_item::yes;
 }
 
-//--------------------------------------------------------- DYNAMITE
+//---------------------------------------------------------- DYNAMITE
 void Dynamite::on_player_ignite() const
 {
     const bool IS_SWIFT   = player_bon::traits[int(Trait::dem_expert)] && rnd::coin_toss();
@@ -891,7 +1027,7 @@ void Dynamite::on_player_paralyzed()
     delete this;
 }
 
-//--------------------------------------------------------- MOLOTOV
+//---------------------------------------------------------- MOLOTOV
 void Molotov::on_player_ignite() const
 {
     const bool IS_SWIFT   = player_bon::traits[int(Trait::dem_expert)] &&
@@ -936,7 +1072,7 @@ void Molotov::on_player_paralyzed()
     delete this;
 }
 
-//--------------------------------------------------------- FLARE
+//---------------------------------------------------------- FLARE
 void Flare::on_player_ignite() const
 {
     const bool IS_SWIFT   = player_bon::traits[int(Trait::dem_expert)] &&
@@ -987,7 +1123,7 @@ void Flare::on_player_paralyzed()
     delete this;
 }
 
-//--------------------------------------------------------- SMOKE GRENADE
+//---------------------------------------------------------- SMOKE GRENADE
 void Smoke_grenade::on_player_ignite() const
 {
     const bool IS_SWIFT   = player_bon::traits[int(Trait::dem_expert)] &&
@@ -1001,7 +1137,7 @@ void Smoke_grenade::on_player_ignite() const
 
 void Smoke_grenade::on_std_turn_player_hold_ignited()
 {
-    if (fuse_turns_ < get_std_fuse_turns() && rnd::coin_toss())
+    if (fuse_turns_ < std_fuse_turns() && rnd::coin_toss())
     {
         explosion::run_smoke_explosion_at(map::player->pos);
     }
@@ -1039,8 +1175,8 @@ void Smoke_grenade::on_player_paralyzed()
     delete this;
 }
 
-Clr Smoke_grenade::get_ignited_projectile_clr() const
+Clr Smoke_grenade::ignited_projectile_clr() const
 {
-    return get_data().clr;
+    return data().clr;
 }
 

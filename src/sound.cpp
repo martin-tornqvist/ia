@@ -14,13 +14,13 @@
 using namespace std;
 
 Snd::Snd(
-    const std::string&          msg,
-    const Sfx_id                 sfx,
+    const std::string&              msg,
+    const Sfx_id                    sfx,
     const Ignore_msg_if_origin_seen ignore_msg_if_origin_seen,
-    const Pos&                  origin,
-    Actor* const                actor_who_made_sound,
-    const Snd_vol                vol,
-    const Alerts_mon             alerting_mon) :
+    const Pos&                      origin,
+    Actor* const                    actor_who_made_sound,
+    const Snd_vol                   vol,
+    const Alerts_mon                alerting_mon) :
     msg_(msg),
     sfx_(sfx),
     is_msg_ignored_if_origin_seen_(ignore_msg_if_origin_seen),
@@ -63,7 +63,7 @@ void emit_snd(Snd snd)
     }
 
     int flood_fill[MAP_W][MAP_H];
-    const Pos& origin = snd.get_origin();
+    const Pos& origin = snd.origin();
     flood_fill::run(origin, blocked, flood_fill, 999, Pos(-1, -1), true);
     flood_fill[origin.x][origin.y] = 0;
 
@@ -88,13 +88,13 @@ void emit_snd(Snd snd)
 
                 const Pos& player_pos = map::player->pos;
 
-                if (!snd.get_msg().empty())
+                if (!snd.msg().empty())
                 {
                     //Add a direction string to the message (i.e. "(NW)", "(E)" , etc)
                     if (player_pos != origin)
                     {
                         string dir_str;
-                        dir_utils::get_compass_dir_name(player_pos, origin, dir_str);
+                        dir_utils::compass_dir_name(player_pos, origin, dir_str);
                         snd.add_string("(" + dir_str + ")");
                     }
 
@@ -106,8 +106,8 @@ void emit_snd(Snd snd)
                 const int PERCENT_DISTANCE =
                     (FLOOD_VALUE_AT_ACTOR * 100) / SND_MAX_DISTANCE;
 
-                const Pos offset = (origin - player_pos).get_signs();
-                const Dir dir_to_origin = dir_utils::get_dir(offset);
+                const Pos offset = (origin - player_pos).signs();
+                const Dir dir_to_origin = dir_utils::dir(offset);
                 map::player->hear_sound(snd, IS_ORIGIN_SEEN_BY_PLAYER, dir_to_origin,
                                         PERCENT_DISTANCE);
             }

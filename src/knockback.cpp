@@ -26,10 +26,10 @@ void try_knock_back(Actor&        defender,
                     const bool    IS_MSG_ALLOWED)
 {
     const bool  IS_DEF_MON    = !defender.is_player();
-    const auto& defender_data  = defender.get_data();
+    const auto& defender_data  = defender.data();
 
     bool props[size_t(Prop_id::END)];
-    defender.get_prop_handler().get_prop_ids(props);
+    defender.prop_handler().prop_ids(props);
 
     if (
         defender_data.prevent_knockback               ||
@@ -43,7 +43,7 @@ void try_knock_back(Actor&        defender,
         return;
     }
 
-    const Pos d = (defender.pos - attacked_from_pos).get_signs();
+    const Pos d = (defender.pos - attacked_from_pos).signs();
 
     const int KNOCK_RANGE = 2;
 
@@ -69,7 +69,7 @@ void try_knock_back(Actor&        defender,
 
                 if (!f->is_los_passable())
                 {
-                    defender.get_prop_handler().try_apply_prop(
+                    defender.prop_handler().try_apply_prop(
                         new Prop_nailed(Prop_turns::indefinite));
                 }
             }
@@ -88,7 +88,7 @@ void try_knock_back(Actor&        defender,
                 {
                     if (IS_DEF_MON && IS_PLAYER_SEE_DEF)
                     {
-                        msg_log::add(defender.get_name_the() + " is knocked back!");
+                        msg_log::add(defender.name_the() + " is knocked back!");
                     }
                     else
                     {
@@ -96,7 +96,7 @@ void try_knock_back(Actor&        defender,
                     }
                 }
 
-                defender.get_prop_handler().try_apply_prop(
+                defender.prop_handler().try_apply_prop(
                     new Prop_paralyzed(Prop_turns::specific, 1), false, false);
             }
 
@@ -105,14 +105,14 @@ void try_knock_back(Actor&        defender,
             if (i == KNOCK_RANGE - 1)
             {
                 render::draw_map_and_interface();
-                sdl_wrapper::sleep(config::get_delay_projectile_draw());
+                sdl_wrapper::sleep(config::delay_projectile_draw());
             }
 
             if (IS_CELL_BOTTOMLESS && !props[int(Prop_id::flying)])
             {
                 if (IS_DEF_MON && IS_PLAYER_SEE_DEF)
                 {
-                    msg_log::add(defender.get_name_the() + " plummets down the depths.",
+                    msg_log::add(defender.name_the() + " plummets down the depths.",
                                  clr_msg_good);
                 }
                 else
@@ -126,7 +126,7 @@ void try_knock_back(Actor&        defender,
 
             // Bump features (e.g. so monsters can be knocked back into traps)
             vector<Mob*> mobs;
-            game_time::get_mobs_at_pos(defender.pos, mobs);
+            game_time::mobs_at_pos(defender.pos, mobs);
 
             for (Mob* const mob : mobs)
             {

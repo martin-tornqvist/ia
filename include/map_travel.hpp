@@ -32,7 +32,7 @@ void try_use_down_stairs();
 
 void go_to_nxt();
 
-Map_type get_map_type();
+Map_type map_type();
 
 } //map_travel
 

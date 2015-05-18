@@ -51,8 +51,8 @@ public:
     void move_dir(Dir dir);
 
     void mk_start_items() override;
-    void on_actor_turn()  override;
-    void on_std_turn()    override;
+    void on_actor_turn() override;
+    void on_std_turn() override;
 
     void hear_sound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
                     const Dir dir_to_origin,
@@ -63,20 +63,32 @@ public:
     void restore_shock(const int amount_restored,
                        const bool IS_TEMP_SHOCK_RESTORED);
     void update_tmp_shock();
-    int get_shock_total()  const {return int(floor(shock_ + shock_tmp_));}
-    int get_insanity()    const {return std::min(100, ins_);}
+
+    int shock_tot() const
+    {
+        return int(floor(shock_ + shock_tmp_));
+    }
+
+    int ins() const
+    {
+        return std::min(100, ins_);
+    }
 
     //The following is used for determining if '!'-marks should be drawn on the
     //player map symbol
-    double get_perm_shock_taken_cur_turn() const
+    double perm_shock_taken_cur_turn() const
     {
         return perm_shock_taken_cur_turn_;
     }
-    void reset_perm_shock_taken_cur_turn() {perm_shock_taken_cur_turn_ = 0.0;}
 
-    int get_shock_resistance(const Shock_src shock_src) const;
-    double get_shock_taken_after_mods(const int BASE_SHOCK,
-                                      const Shock_src shock_src) const;
+    void reset_perm_shock_taken_cur_turn()
+    {
+        perm_shock_taken_cur_turn_ = 0.0;
+    }
+
+    int shock_resistance(const Shock_src shock_src) const;
+    double shock_taken_after_mods(const int BASE_SHOCK,
+                                  const Shock_src shock_src) const;
 
     void store_to_save_lines(std::vector<std::string>& lines) const;
     void setup_from_save_lines(std::vector<std::string>& lines);
@@ -90,27 +102,27 @@ public:
 
     void add_light_(bool light_map[MAP_W][MAP_H]) const;
 
-    void on_log_msg_printed();   //Aborts e.g. searching and quick move
-    void interrupt_actions();  //Aborts e.g. healing
+    void on_log_msg_printed(); //Aborts e.g. searching and quick move
+    void interrupt_actions(); //Aborts e.g. healing
 
-    int get_enc_percent() const;
+    int enc_percent() const;
 
-    int get_carry_weight_lmt() const;
+    int carry_weight_lmt() const;
 
     void set_quick_move(const Dir dir);
 
-    bool phobias    [int(Phobia::END)];
-    bool obsessions [int(Obsession::END)];
+    bool is_leader_of(const Actor* const actor) const override;
+    bool is_actor_my_leader(const Actor* const actor) const override;
 
-    bool is_leader_of(const Actor* const actor)       const override;
-    bool is_actor_my_leader(const Actor* const actor)  const override;
+    bool phobias[int(Phobia::END)];
+    bool obsessions[int(Obsession::END)];
 
     Medical_bag* active_medical_bag;
-    int         wait_turns_left;
-    Explosive*  active_explosive;
-    Actor*      tgt_;
-    int         ins_;
-    double      shock_, shock_tmp_, perm_shock_taken_cur_turn_;
+    Explosive* active_explosive;
+    Actor* tgt_;
+    int wait_turns_left;
+    int ins_;
+    double shock_, shock_tmp_, perm_shock_taken_cur_turn_;
 
 private:
     void incr_insanity();
@@ -125,11 +137,11 @@ private:
 
     bool is_standing_in_cramped_space() const;
 
-    int       nr_moves_until_free_action_;
-    int       nr_turns_until_ins_;
+    int nr_moves_until_free_action_;
+    int nr_turns_until_ins_;
 
-    int       nr_quick_move_steps_left_;
-    Dir       quick_move_dir_;
+    int nr_quick_move_steps_left_;
+    Dir quick_move_dir_;
 
     const int CARRY_WEIGHT_BASE_;
 };

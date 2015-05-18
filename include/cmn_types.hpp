@@ -7,13 +7,13 @@
 #include "colors.hpp"
 #include "art.hpp"
 
-enum class Inv_type        {slots, general};
+enum class Inv_type         {slots, general};
 
 enum class Item_ref_type    {plain, a, plural, END};
 enum class Item_ref_inf     {none, yes};
-enum class Item_ref_att_inf  {none, wpn_context, melee, ranged, thrown};
+enum class Item_ref_att_inf {none, wpn_context, melee, ranged, thrown};
 
-enum class Article        {a, the};
+enum class Article          {a, the};
 
 enum class Matl
 {
@@ -137,7 +137,7 @@ struct Pos
     bool operator<=(const Pos&  p)  const {return x <= p.x  && y <= p.y;}
     bool operator<=(const int   V)  const {return x <= V    && y <= V;}
 
-    Pos get_signs() const
+    Pos signs() const
     {
         return Pos(x == 0 ? 0 : x > 0 ? 1 : -1,
                    y == 0 ? 0 : y > 0 ? 1 : -1);
@@ -162,12 +162,12 @@ struct Rect
 
     Rect(const Rect& r) : p0(r.p0), p1(r.p1) {}
 
-    int get_w()          const {return p1.x - p0.x + 1;}
-    int get_h()          const {return p1.y - p0.y + 1;}
-    Pos get_dims()       const {return {get_w(), get_h()};}
-    int get_min_dim()     const {return std::min(get_w(), get_h());}
-    int get_max_dim()     const {return std::max(get_w(), get_h());}
-    Pos get_center_pos()  const {return ((p1 + p0) / 2);}
+    int w()                 const {return p1.x - p0.x + 1;}
+    int h()                 const {return p1.y - p0.y + 1;}
+    Pos dims()          const {return {w(), h()};}
+    int min_dim()       const {return std::min(w(), h());}
+    int max_dim()       const {return std::max(w(), h());}
+    Pos center_pos()    const {return ((p1 + p0) / 2);}
 
     Pos p0;
     Pos p1;
@@ -203,7 +203,7 @@ struct Dice_param
         return *this;
     }
 
-    int get_highest() const {return (rolls * sides) + plus;}
+    int highest() const {return (rolls * sides) + plus;}
 
     int rolls, sides, plus;
 };

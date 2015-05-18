@@ -23,13 +23,13 @@ namespace item_drop
 
 void drop_all_characters_items(Actor& actor)
 {
-    actor.get_inv().drop_all_non_intrinsic(actor.pos);
+    actor.inv().drop_all_non_intrinsic(actor.pos);
 }
 
 void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t IDX,
                             const int NR_ITEMS_TO_DROP)
 {
-    Inventory& inv    = actor.get_inv();
+    Inventory& inv    = actor.inv();
     Item* item_to_drop  = nullptr;
 
     if (inv_type == Inv_type::slots)
@@ -45,7 +45,7 @@ void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t 
 
     if (item_to_drop)
     {
-        const bool  IS_STACKABLE            = item_to_drop->get_data().is_stackable;
+        const bool  IS_STACKABLE            = item_to_drop->data().is_stackable;
         const int   NR_ITEMS_BEFORE_DROP    = item_to_drop->nr_items_;
         const bool  IS_WHOLE_STACK_DROPPED  = !IS_STACKABLE || NR_ITEMS_TO_DROP == -1 ||
                                               (NR_ITEMS_TO_DROP >= NR_ITEMS_BEFORE_DROP);
@@ -62,7 +62,7 @@ void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t 
 
         if (IS_WHOLE_STACK_DROPPED)
         {
-            item_ref = item_to_drop->get_name(Item_ref_type::plural);
+            item_ref = item_to_drop->name(Item_ref_type::plural);
             inv.remove_without_destroying(inv_type, IDX);
             drop_item_on_map(actor.pos, *item_to_drop);
         }
@@ -71,7 +71,7 @@ void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t 
             Item* item_to_keep      = item_to_drop;
             item_to_drop            = item_factory::copy_item(item_to_keep);
             item_to_drop->nr_items_  = NR_ITEMS_TO_DROP;
-            item_ref               = item_to_drop->get_name(Item_ref_type::plural);
+            item_ref               = item_to_drop->name(Item_ref_type::plural);
             item_to_keep->nr_items_  = NR_ITEMS_BEFORE_DROP - NR_ITEMS_TO_DROP;
             drop_item_on_map(actor.pos, *item_to_drop);
         }
@@ -90,7 +90,7 @@ void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t 
 
             if (map::player->can_see_actor(actor, blocked))
             {
-                msg_log::add(actor.get_name_the() + " drops " + item_ref + ".");
+                msg_log::add(actor.name_the() + " drops " + item_ref + ".");
             }
         }
 
@@ -133,7 +133,7 @@ Item* drop_item_on_map(const Pos& intended_pos, Item& item)
 
     Pos cur_pos;
     Pos stack_pos;
-    const bool IS_STACKABLE_TYPE = item.get_data().is_stackable;
+    const bool IS_STACKABLE_TYPE = item.data().is_stackable;
 
     size_t          ii          = 0;
     const size_t    VEC_SIZE    = free_cells.size();
@@ -152,7 +152,7 @@ Item* drop_item_on_map(const Pos& intended_pos, Item& item)
 
                 if (item_found_on_floor)
                 {
-                    if (item_found_on_floor->get_data().id == item.get_data().id)
+                    if (item_found_on_floor->data().id == item.data().id)
                     {
                         item.nr_items_ += item_found_on_floor->nr_items_;
                         delete item_found_on_floor;

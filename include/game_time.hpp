@@ -21,8 +21,8 @@ enum class Turn_type
 namespace game_time
 {
 
-extern std::vector<Actor*>       actors_;
-extern std::vector<Mob*>  mobs_;
+extern std::vector<Actor*> actors_;
+extern std::vector<Mob*> mobs_;
 
 void init();
 void cleanup();
@@ -34,13 +34,13 @@ void add_actor(Actor* actor);
 
 void tick(const bool IS_FREE_TURN = false);
 
-int get_turn();
+int turn();
 
-Actor* get_cur_actor();
+Actor* cur_actor();
 
 void erase_actor_in_element(const size_t i);
 
-void get_mobs_at_pos(const Pos& pos, std::vector<Mob*>& vector_ref);
+void mobs_at_pos(const Pos& pos, std::vector<Mob*>& vector_ref);
 
 void add_mob(Mob* const f);
 

@@ -16,13 +16,13 @@
 using namespace std;
 
 //------------------------------------------------------------------- EVENT
-Event::Event(const Pos& pos) :
-    Mob(pos) {}
+Event::Event(const Pos& feature_pos) :
+    Mob(feature_pos) {}
 
 //------------------------------------------------------------------- WALL CRUMBLE
-Event_wall_crumble::Event_wall_crumble(const Pos& pos, vector<Pos>& walls,
+Event_wall_crumble::Event_wall_crumble(const Pos& feature_pos, vector<Pos>& walls,
                                        vector<Pos>& inner) :
-    Event(pos),
+    Event(feature_pos),
     wall_cells_(walls),
     inner_cells_(inner) {}
 
@@ -35,7 +35,7 @@ void Event_wall_crumble::on_new_turn()
         {
             for (const Pos& p : cells)
             {
-                const auto f_id = map::cells[p.x][p.y].rigid->get_id();
+                const auto f_id = map::cells[p.x][p.y].rigid->id();
 
                 if (f_id != Feature_id::wall && f_id != Feature_id::rubble_high)
                 {
@@ -48,7 +48,7 @@ void Event_wall_crumble::on_new_turn()
 
         if (check_cells_have_wall(wall_cells_) && check_cells_have_wall(inner_cells_))
         {
-            if (map::player->get_prop_handler().allow_see())
+            if (map::player->prop_handler().allow_see())
             {
                 msg_log::add("Suddenly, the walls collapse!", clr_white, false, true);
             }
@@ -143,7 +143,7 @@ void Event_wall_crumble::on_new_turn()
                 {
                     Actor*  const actor = actor_factory::mk(mon_type, p);
                     Mon*    const mon   = static_cast<Mon*>(actor);
-                    mon->aware_counter_  = mon->get_data().nr_turns_aware;
+                    mon->aware_counter_  = mon->data().nr_turns_aware;
                     ++nr_mon_spawned;
                 }
             }
@@ -159,8 +159,8 @@ void Event_wall_crumble::on_new_turn()
 }
 
 //------------------------------------------------------------------- RITW DISCOVERY
-Event_rats_in_the_walls_discovery::Event_rats_in_the_walls_discovery(const Pos& pos) :
-    Event(pos) {}
+Event_rats_in_the_walls_discovery::Event_rats_in_the_walls_discovery(const Pos& feature_pos) :
+    Event(feature_pos) {}
 
 void Event_rats_in_the_walls_discovery::on_new_turn()
 {

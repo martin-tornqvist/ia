@@ -10,7 +10,7 @@
 
 #include <math.h>
 
-struct actor_data_t;
+struct Actor_data_t;
 
 enum class Trait
 {
@@ -69,25 +69,25 @@ void store_to_save_lines(std::vector<std::string>& lines);
 
 void setup_from_save_lines(std::vector<std::string>& lines);
 
-void get_pickable_bgs(std::vector<Bg>& bgs_ref);
+void pickable_bgs(std::vector<Bg>& bgs_ref);
 
-void get_pickable_traits(std::vector<Trait>& traits_ref);
+void pickable_traits(std::vector<Trait>& traits_ref);
 
-void get_trait_prereqs(const Trait id, std::vector<Trait>& traits_ref, Bg& bg_ref);
+void trait_prereqs(const Trait id, std::vector<Trait>& traits_ref, Bg& bg_ref);
 
-Bg get_bg();
+Bg bg();
 
-void get_trait_title(const Trait id, std::string& out);
-void get_trait_descr(const Trait id, std::string& out);
+void trait_title(const Trait id, std::string& out);
+void trait_descr(const Trait id, std::string& out);
 
-void get_bg_title(const Bg id, std::string& out);
+void bg_title(const Bg id, std::string& out);
 
 //NOTE: The string vector reference parameter set in this function is not formatted in
-//get_bg_descr. Each line still needs to be formatted by the calling function. The reason
+//bg_descr. Each line still needs to be formatted by the calling function. The reason
 //for using a vector reference instead of simply a string is only to specify line breaks.
-void get_bg_descr(const Bg id, std::vector<std::string>& lines_ref);
+void bg_descr(const Bg id, std::vector<std::string>& lines_ref);
 
-void get_all_picked_traits_titles_line(std::string& out);
+void all_picked_traits_titles_line(std::string& out);
 
 void pick_trait(const Trait id);
 
@@ -95,9 +95,9 @@ void pick_bg(const Bg bg);
 
 void set_all_traits_to_picked();
 
-int get_spi_occultist_can_cast_at_lvl(const int LVL);
+int spi_occultist_can_cast_at_lvl(const int LVL);
 
-bool gets_undead_bane_bon(const Actor& attacker, const actor_data_t& actor_data);
+bool gets_undead_bane_bon(const Actor& attacker, const Actor_data_t& actor_data);
 
 } //player_bon
 

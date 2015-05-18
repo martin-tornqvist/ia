@@ -112,8 +112,7 @@ void melee(Actor& attacker, const Wpn& wpn, Actor& defender);
 
 bool ranged(Actor& attacker, Wpn& wpn, const Pos& aim_pos);
 
-void get_ranged_hit_chance(const Actor& attacker, const Actor& defender,
-                           const Wpn& wpn);
+void ranged_hit_chance(const Actor& attacker, const Actor& defender, const Wpn& wpn);
 
 } //Attack
 

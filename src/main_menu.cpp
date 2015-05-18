@@ -30,7 +30,7 @@ namespace
 
 string quote = "";
 
-string get_hpl_quote()
+string hpl_quote()
 {
     vector<string> quotes;
     quotes.clear();
@@ -351,7 +351,7 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
 {
     TRACE_FUNC_BEGIN;
 
-    quote = get_hpl_quote();
+    quote = hpl_quote();
 
     Menu_browser browser(IS_DEBUG_MODE ? 8 : 7, 0);
 
@@ -361,7 +361,7 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
 
     while (true)
     {
-        const Menu_action action = menu_input_handling::get_action(browser);
+        const Menu_action action = menu_input_handling::action(browser);
 
         switch (action)
         {

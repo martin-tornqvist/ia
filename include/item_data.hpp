@@ -14,11 +14,11 @@ enum class Snd_vol;
 
 enum class Item_weight
 {
-    none       = 0,
+    none        = 0,
     extra_light = 1,  //E.g. ammo
-    light      = 10, //E.g. dynamite, daggers
-    medium     = 50, //E.g. most firearms
-    heavy      = 110 //E.g. heavy armor, heavy weapons
+    light       = 10, //E.g. dynamite, daggers
+    medium      = 50, //E.g. most firearms
+    heavy       = 110 //E.g. heavy armor, heavy weapons
 };
 
 enum class Main_att_mode
@@ -218,9 +218,7 @@ struct Item_container_spawn_rule
 class Item_data_t
 {
 public:
-    Item_data_t(const Item_id id);
-
-    Item_data_t() = default;
+    Item_data_t();
 
     ~Item_data_t() {}
 
@@ -247,8 +245,10 @@ public:
     Sfx_id                      land_on_hard_sfx;
     int                         shock_while_in_backpack;
     int                         shock_while_equipped;
-    std::vector<Room_type>      native_rooms;
+
+    std::vector<Room_type>                  native_rooms;
     std::vector<Item_container_spawn_rule>  container_spawn_rules;
+
     int ability_mods_while_equipped[int(Ability_id::END)];
 
     struct Item_melee_data
@@ -274,8 +274,7 @@ public:
         Item_ranged_data();
         ~Item_ranged_data();
 
-        bool                    is_ranged_wpn, is_throwing_wpn, is_machine_gun,
-                                is_shotgun;
+        bool                    is_ranged_wpn, is_throwing_wpn, is_machine_gun, is_shotgun;
         int                     max_nr_ammo_in_clip;
         Dice_param              dmg;
         Dice_param              throw_dmg;
@@ -315,7 +314,7 @@ class Item;
 namespace item_data
 {
 
-extern Item_data_t* data[int(Item_id::END)];
+extern Item_data_t data[int(Item_id::END)];
 
 void init();
 void cleanup();

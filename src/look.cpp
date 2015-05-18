@@ -27,7 +27,7 @@ namespace auto_descr_actor
 namespace
 {
 
-string get_normal_group_size_str(const actor_data_t& def)
+string normal_group_size_str(const Actor_data_t& def)
 {
     const Mon_group_size s = def.group_size;
 
@@ -38,7 +38,7 @@ string get_normal_group_size_str(const actor_data_t& def)
         s == Mon_group_size::horde  ? "in hordes"       : "in swarms";
 }
 
-string get_speed_str(const actor_data_t& def)
+string speed_str(const Actor_data_t& def)
 {
     switch (def.speed)
     {
@@ -58,7 +58,7 @@ string get_speed_str(const actor_data_t& def)
     return "";
 }
 
-string get_dwelling_lvl_str(const actor_data_t& def)
+string dwelling_lvl_str(const Actor_data_t& def)
 {
     return to_str(max(1, def.spawn_min_dLVL - 1));
 }
@@ -67,22 +67,22 @@ string get_dwelling_lvl_str(const actor_data_t& def)
 
 void add_auto_description_lines(const Actor& actor, string& line)
 {
-    const actor_data_t& def = actor.get_data();
+    const Actor_data_t& def = actor.data();
 
     if (def.is_unique)
     {
         if (def.spawn_min_dLVL < DLVL_LAST)
         {
             line += " " + def.name_the + " is normally found beneath level " +
-                    get_dwelling_lvl_str(def) + ". ";
+                    dwelling_lvl_str(def) + ". ";
         }
     }
     else
     {
-        line += " They tend to dwell " + get_normal_group_size_str(def) + ",";
+        line += " They tend to dwell " + normal_group_size_str(def) + ",";
         line += " and usually stay at depths beneath level " +
-                get_dwelling_lvl_str(def) + ".";
-        line += " They appear to move " + get_speed_str(def) + ". ";
+                dwelling_lvl_str(def) + ".";
+        line += " They appear to move " + speed_str(def) + ". ";
     }
 }
 
@@ -100,7 +100,7 @@ void print_location_info_msgs(const Pos& pos)
         msg_log::add("I see here:");
 
         //Describe rigid.
-        string str = cell.rigid->get_name(Article::a);
+        string str = cell.rigid->name(Article::a);
 
         text_format::first_to_upper(str);
 
@@ -109,9 +109,9 @@ void print_location_info_msgs(const Pos& pos)
         //Describe mobile features.
         for (auto* mob : game_time::mobs_)
         {
-            if (mob->get_pos() == pos)
+            if (mob->pos() == pos)
             {
-                str = mob->get_name(Article::a);
+                str = mob->name(Article::a);
 
                 text_format::first_to_upper(str);
 
@@ -124,8 +124,8 @@ void print_location_info_msgs(const Pos& pos)
 
         if (item)
         {
-            str = item->get_name(Item_ref_type::plural, Item_ref_inf::yes,
-                                 Item_ref_att_inf::wpn_context);
+            str = item->name(Item_ref_type::plural, Item_ref_inf::yes,
+                             Item_ref_att_inf::wpn_context);
 
             text_format::first_to_upper(str);
 
@@ -137,7 +137,7 @@ void print_location_info_msgs(const Pos& pos)
         {
             if (actor->is_corpse() && actor->pos == pos)
             {
-                str = actor->get_corpse_name_a();
+                str = actor->corpse_name_a();
 
                 text_format::first_to_upper(str);
 
@@ -146,7 +146,7 @@ void print_location_info_msgs(const Pos& pos)
         }
 
         //Describe living actor.
-        Actor* actor = utils::get_actor_at_pos(pos);
+        Actor* actor = utils::actor_at_pos(pos);
 
         if (actor && actor != map::player)
         {
@@ -154,7 +154,7 @@ void print_location_info_msgs(const Pos& pos)
             {
                 if (map::player->can_see_actor(*actor, nullptr))
                 {
-                    str = actor->get_name_a();
+                    str = actor->name_a();
 
                     text_format::first_to_upper(str);
 
@@ -173,10 +173,10 @@ void print_location_info_msgs(const Pos& pos)
 void print_detailed_actor_descr(const Actor& actor)
 {
     //Add written description.
-    string descr = actor.get_data().descr;
+    string descr = actor.data().descr;
 
     //Add auto-description.
-    if (actor.get_data().is_auto_descr_allowed)
+    if (actor.data().is_auto_descr_allowed)
     {
         auto_descr_actor::add_auto_description_lines(actor, descr);
     }

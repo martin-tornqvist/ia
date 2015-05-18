@@ -25,9 +25,9 @@ void calc_fov_delta_lines()
         for (int delta_y = -R_INT; delta_y <= R_INT; delta_y++)
         {
             const Pos origin(0, 0);
-            const Pos target(Pos(delta_x, delta_y));
+            const Pos tgt(Pos(delta_x, delta_y));
             vector<Pos> cur_line;
-            calc_new_line(origin, target, true, 999, true, cur_line);
+            calc_new_line(origin, tgt, true, 999, true, cur_line);
             fov_delta_lines_[delta_x + R_INT][delta_y + R_INT] = cur_line;
         }
     }
@@ -74,8 +74,8 @@ void init()
     calc_fov_delta_lines();
 }
 
-const vector<Pos>* get_fov_delta_line(const Pos& delta,
-                                      const double& MAX_DIST_ABS)
+const vector<Pos>* fov_delta_line(const Pos& delta,
+                                  const double& MAX_DIST_ABS)
 {
     const int X = delta.x + FOV_MAX_RADI_INT;
     const int Y = delta.y + FOV_MAX_RADI_INT;
@@ -91,20 +91,20 @@ const vector<Pos>* get_fov_delta_line(const Pos& delta,
     return nullptr;
 }
 
-void calc_new_line(const Pos& origin, const Pos& target,
+void calc_new_line(const Pos& origin, const Pos& tgt,
                    const bool SHOULD_STOP_AT_TARGET, const int CHEB_TRAVEL_LIMIT,
                    const bool ALLOW_OUTSIDE_MAP, vector<Pos>& line_ref)
 {
     line_ref.clear();
 
-    if (target == origin)
+    if (tgt == origin)
     {
         line_ref.push_back(origin);
         return;
     }
 
-    const double DELTA_X_DB = double(target.x - origin.x);
-    const double DELTA_Y_DB = double(target.y - origin.y);
+    const double DELTA_X_DB = double(tgt.x - origin.x);
+    const double DELTA_Y_DB = double(tgt.y - origin.y);
 
     const double HYPOT_DB =
         sqrt((DELTA_X_DB * DELTA_X_DB) + (DELTA_Y_DB * DELTA_Y_DB));
@@ -145,7 +145,7 @@ void calc_new_line(const Pos& origin, const Pos& target,
         }
 
         //Check distance limits
-        if (SHOULD_STOP_AT_TARGET && (cur_pos == target)) {return;}
+        if (SHOULD_STOP_AT_TARGET && (cur_pos == tgt)) {return;}
 
         const int DISTANCE_TRAVELED =
             utils::king_dist(origin.x, origin.y, cur_pos.x, cur_pos.y);

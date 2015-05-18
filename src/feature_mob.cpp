@@ -20,7 +20,7 @@ using namespace std;
 //------------------------------------------------------------------- SMOKE
 void Smoke::on_new_turn()
 {
-    auto* actor = utils::get_actor_at_pos(pos_);
+    auto* actor = utils::actor_at_pos(pos_);
 
     if (actor)
     {
@@ -36,13 +36,13 @@ void Smoke::on_new_turn()
 
         if (IS_PLAYER)
         {
-            auto&       inv             = map::player->get_inv();
+            auto&       inv             = map::player->inv();
             auto* const player_head_item  = inv.slots_[int(Slot_id::head)].item;
             auto* const player_body_item  = inv.slots_[int(Slot_id::body)].item;
 
             if (player_head_item)
             {
-                if (player_head_item->get_data().id == Item_id::gas_mask)
+                if (player_head_item->data().id == Item_id::gas_mask)
                 {
                     is_protected_blindness = true;
 
@@ -53,7 +53,7 @@ void Smoke::on_new_turn()
 
             if (player_body_item)
             {
-                if (player_body_item->get_data().id == Item_id::armor_asb_suit)
+                if (player_body_item->data().id == Item_id::armor_asb_suit)
                 {
                     is_protected_blindness = true;
                 }
@@ -65,7 +65,7 @@ void Smoke::on_new_turn()
         {
             if (IS_PLAYER) {msg_log::add("I am getting smoke in my eyes.");}
 
-            actor->get_prop_handler().try_apply_prop(
+            actor->prop_handler().try_apply_prop(
                 new Prop_blind(Prop_turns::specific, rnd::range(1, 3)));
         }
 
@@ -73,7 +73,7 @@ void Smoke::on_new_turn()
         if (rnd::one_in(4))
         {
             bool props[size_t(Prop_id::END)];
-            actor->get_prop_handler().get_prop_ids(props);
+            actor->prop_handler().prop_ids(props);
 
             if (!props[int(Prop_id::rBreath)])
             {
@@ -104,7 +104,7 @@ void Smoke::on_new_turn()
     }
 }
 
-string Smoke::get_name(const Article article)  const
+string Smoke::name(const Article article)  const
 {
     string ret = "";
 
@@ -113,7 +113,7 @@ string Smoke::get_name(const Article article)  const
     return ret + "smoke";
 }
 
-Clr Smoke::get_clr() const
+Clr Smoke::clr() const
 {
     return clr_gray;
 }
@@ -127,7 +127,7 @@ void Lit_dynamite::on_new_turn()
     {
         const int D = player_bon::traits[int(Trait::dem_expert)] ? 1 : 0;
 
-        const Pos pos(pos_);
+        const Pos p(pos_);
 
         //Removing the dynamite before the explosion, so it won't be rendered after the
         //explosion (could happen for example if there are "more" prompts).
@@ -135,17 +135,17 @@ void Lit_dynamite::on_new_turn()
 
         //NOTE: The dynamite is now deleted. Do not use member variable after this point.
 
-        explosion::run_explosion_at(pos, Expl_type::expl, Expl_src::misc, D);
+        explosion::run_explosion_at(p, Expl_type::expl, Expl_src::misc, D);
     }
 }
 
-string Lit_dynamite::get_name(const Article article)  const
+string Lit_dynamite::name(const Article article)  const
 {
     string ret = article == Article::a ? "a " : "the ";
     return ret + "lit stick of dynamite";
 }
 
-Clr Lit_dynamite::get_clr() const
+Clr Lit_dynamite::clr() const
 {
     return clr_red_lgt;
 }
@@ -162,7 +162,7 @@ void Lit_flare::add_light(bool light[MAP_W][MAP_H]) const
 {
     bool my_light[MAP_W][MAP_H];
     utils::reset_array(my_light, false);
-    const int R = FOV_STD_RADI_INT; //get_light_radius();
+    const int R = FOV_STD_RADI_INT; //light_radius();
     Pos p0(max(0,         pos_.x - R),  max(0,          pos_.y - R));
     Pos p1(min(MAP_W - 1, pos_.x + R),  min(MAP_H - 1,  pos_.y + R));
     bool blocked_los[MAP_W][MAP_H];
@@ -186,13 +186,13 @@ void Lit_flare::add_light(bool light[MAP_W][MAP_H]) const
     }
 }
 
-string Lit_flare::get_name(const Article article)  const
+string Lit_flare::name(const Article article)  const
 {
     string ret = article == Article::a ? "a " : "the ";
     return ret + "lit flare";
 }
 
-Clr Lit_flare::get_clr() const
+Clr Lit_flare::clr() const
 {
     return clr_yellow;
 }

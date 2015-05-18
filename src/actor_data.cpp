@@ -12,7 +12,7 @@
 
 using namespace std;
 
-void actor_data_t::reset()
+void Actor_data_t::reset()
 {
     id = Actor_id::END;
     name_a = "";
@@ -27,7 +27,10 @@ void actor_data_t::reset()
     spi = 12;
     speed = Actor_speed::normal;
 
-    for (int i = 0; i < int(Prop_id::END); ++i) {intr_props[i] = false;}
+    for (int i = 0; i < int(Prop_id::END); ++i)
+    {
+        intr_props[i] = false;
+    }
 
     ranged_cooldown_turns = spell_cooldown_turns = 0;
     ability_vals.reset();
@@ -67,14 +70,14 @@ void actor_data_t::reset()
 namespace actor_data
 {
 
-actor_data_t data[int(Actor_id::END)];
+Actor_data_t data[int(Actor_id::END)];
 
 namespace
 {
 
 void init_data_list()
 {
-    actor_data_t d;
+    Actor_data_t d;
     d.reset();
 
     d.name_a = "Player";

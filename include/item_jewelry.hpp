@@ -48,7 +48,7 @@ public:
 
     virtual ~Jewelry_effect() {}
 
-    virtual Jewelry_effect_id  get_id() const = 0;
+    virtual Jewelry_effect_id  id() const = 0;
 
     virtual void on_equip(const bool IS_SILENT)
     {
@@ -59,9 +59,9 @@ public:
     virtual void            on_std_turn_equiped()      {}
     virtual void            on_actor_turn_equiped()    {}
     virtual void            change_item_weight(int& weight_ref) {(void)weight_ref;}
-    virtual int             get_hp_regen_change() const {return 0;}
+    virtual int             hp_regen_change() const {return 0;}
 
-    virtual std::string get_descr() const = 0;
+    virtual std::string descr() const = 0;
 
     void store_to_save_lines(std::vector<std::string>& lines);
     void setup_from_save_lines(std::vector<std::string>& lines);
@@ -95,9 +95,9 @@ public:
 
     ~Jewelry_effect_rFire() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::rFire;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::rFire;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It shields the wearer against fire.";
     }
@@ -114,9 +114,9 @@ public:
 
     ~Jewelry_effect_rCold() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::rCold;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::rCold;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It shields the wearer against cold.";
     }
@@ -133,9 +133,9 @@ public:
 
     ~Jewelry_effect_rElec() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::rElec;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::rElec;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It shields the wearer against electricity.";
     }
@@ -152,9 +152,9 @@ public:
 
     ~Jewelry_effect_rPoison() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::rPoison;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::rPoison;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It shields the wearer against poison.";
     }
@@ -171,9 +171,9 @@ public:
 
     ~Jewelry_effect_rDisease() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::rDisease;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::rDisease;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It shields the wearer against disease.";
     }
@@ -190,9 +190,9 @@ public:
 
     ~Jewelry_effect_tele_control() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::tele_ctrl;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::tele_ctrl;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It grants the wearer power to control teleportation.";
     }
@@ -209,9 +209,9 @@ public:
 
     ~Jewelry_effect_light() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::light;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::light;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It illuminates the area around the wearer.";
     }
@@ -228,9 +228,9 @@ public:
 
     ~Jewelry_effect_spell_reflect() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::spell_reflect;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::spell_reflect;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It shields the wearer against spells, and reflects them back on the "
                "caster.";
@@ -248,9 +248,9 @@ public:
 
     ~Jewelry_effect_haste() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::haste;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::haste;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It speeds up the wearer.";
     }
@@ -267,9 +267,9 @@ public:
 
     ~Jewelry_effect_hp_bon() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::hp_bon;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::hp_bon;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It grants stronger vitality.";
     }
@@ -286,9 +286,9 @@ public:
 
     ~Jewelry_effect_hp_pen() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::hp_pen;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::hp_pen;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It makes the wearer frailer.";
     }
@@ -305,9 +305,9 @@ public:
 
     ~Jewelry_effect_spi_bon() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::spi_bon;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::spi_bon;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It strengthens the spirit of the wearer.";
     }
@@ -324,9 +324,9 @@ public:
 
     ~Jewelry_effect_spi_pen() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::spi_pen;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::spi_pen;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It weakens the spirit of the wearer.";
     }
@@ -343,9 +343,9 @@ public:
 
     ~Jewelry_effect_random_tele() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::random_tele;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::random_tele;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It occasionally teleports the wearer.";
     }
@@ -361,9 +361,9 @@ public:
 
     ~Jewelry_effect_summon_mon() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::summon;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::summon;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It calls deadly interdimensional beings into the existence of the "
                "wearer.";
@@ -380,9 +380,9 @@ public:
 
     ~Jewelry_effect_fire() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::fire;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::fire;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It spontaneously sets objects around the caster on fire.";
     }
@@ -397,9 +397,9 @@ public:
 
     ~Jewelry_effect_shriek() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::shriek;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::shriek;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It occasionally emits a disembodied voice in a horrible shrieking tone.";
     }
@@ -418,9 +418,9 @@ public:
 
     ~Jewelry_effect_conflict() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::conflict;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::conflict;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It sows hatred in the minds of nearby creatures, and turns allies "
                "against each other.";
@@ -437,9 +437,9 @@ public:
 
     ~Jewelry_effect_burden() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::burden;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::burden;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "It burdens the wearer, as if there was an invisible weight to carry.";
     }
@@ -456,11 +456,11 @@ public:
 
     ~Jewelry_effect_hp_regen_bon() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::hp_regen_bon;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::hp_regen_bon;}
 
-    int get_hp_regen_change() const override {return -12;}
+    int hp_regen_change() const override {return -12;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "The wounds of the wearer heal faster.";
     }
@@ -477,11 +477,11 @@ public:
 
     ~Jewelry_effect_hp_regen_pen() {}
 
-    Jewelry_effect_id get_id() const override {return Jewelry_effect_id::hp_regen_pen;}
+    Jewelry_effect_id id() const override {return Jewelry_effect_id::hp_regen_pen;}
 
-    int get_hp_regen_change() const override {return 12;}
+    int hp_regen_change() const override {return 12;}
 
-    std::string get_descr() const override
+    std::string descr() const override
     {
         return "The wounds of the wearer heal slower.";
     }
@@ -497,26 +497,26 @@ public:
 
     ~Jewelry();
 
-    std::vector<std::string> get_descr() const override final;
+    std::vector<std::string> descr() const override final;
 
     void            on_equip(const bool IS_SILENT)               override final;
     Unequip_allowed  on_unequip()                                 override final;
     void            on_std_turn_in_inv(const Inv_type inv_type) override final;
     void            on_actor_turn_in_inv(const Inv_type inv_type) override final;
 
-    int             get_hp_regen_change(const Inv_type inv_type) const;
+    int             hp_regen_change(const Inv_type inv_type) const;
 
-    Clr get_interface_clr() const override {return clr_orange;}
+    Clr interface_clr() const override {return clr_orange;}
 
     void identify(const bool IS_SILENT_IDENTIFY) override final;
 
-    int get_weight() const override;
+    int weight() const override;
 
     //Called from the effects
     void effect_noticed(const Jewelry_effect_id effect_id);
 
 private:
-    virtual std::string get_name_inf() const;
+    virtual std::string name_inf() const;
 
     std::vector<Jewelry_effect*> effects_;
 };

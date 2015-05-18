@@ -15,7 +15,7 @@ public:
 
     virtual Consume_item activate(Actor* const actor) override = 0;
 
-    Clr get_interface_clr() const override final {return clr_cyan;}
+    Clr interface_clr() const override final {return clr_cyan;}
 
     virtual void on_std_turn_in_inv(const Inv_type inv_type) override {(void)inv_type;}
 
@@ -27,11 +27,11 @@ class Strange_device : public Device
 public:
     Strange_device(Item_data_t* const item_data);
 
-    virtual std::vector<std::string> get_descr() const override final;
+    virtual std::vector<std::string> descr() const override final;
 
     Consume_item activate(Actor* const actor) override;
 
-    virtual std::string get_name_inf() const override;
+    virtual std::string name_inf() const override;
 
     virtual void store_to_save_lines(std::vector<std::string>& lines)    override;
     virtual void setup_from_save_lines(std::vector<std::string>& lines)  override;
@@ -39,7 +39,7 @@ public:
     Condition condition_;
 
 private:
-    virtual std::vector<std::string> get_descr_identified() const = 0;
+    virtual std::vector<std::string> descr_identified() const = 0;
 
     virtual Consume_item trigger_effect() = 0;
 };
@@ -53,7 +53,7 @@ public:
     ~Device_blaster() override {}
 
 private:
-    std::vector<std::string> get_descr_identified() const
+    std::vector<std::string> descr_identified() const
     {
         return {"When activated, this strange device blasts all visible enemies with "
                 "infernal power."
@@ -72,7 +72,7 @@ public:
     ~Device_shockwave() override {}
 
 private:
-    std::vector<std::string> get_descr_identified() const
+    std::vector<std::string> descr_identified() const
     {
         return {"When activated, this strange device generates a shock wave which violently "
                 "pushes away any adjacent creatures and destroys structures."
@@ -91,7 +91,7 @@ public:
     ~Device_rejuvenator() override {}
 
 private:
-    std::vector<std::string> get_descr_identified() const
+    std::vector<std::string> descr_identified() const
     {
         return {"When activated, this strange device heals all wounds and physical "
                 "maladies."
@@ -110,7 +110,7 @@ public:
     ~Device_translocator() override {}
 
 private:
-    std::vector<std::string> get_descr_identified() const
+    std::vector<std::string> descr_identified() const
     {
         return {"When activated, this strange device teleports all visible enemies to "
                 "different locations."
@@ -129,7 +129,7 @@ public:
     ~Device_sentry_drone() override {}
 
 private:
-    std::vector<std::string> get_descr_identified() const
+    std::vector<std::string> descr_identified() const
     {
         return {"When activated, this strange device will \"come alive\" and guard the "
                 "user."
@@ -152,7 +152,7 @@ public:
     void          on_std_turn_in_inv(const Inv_type inv_type) override;
     void          on_pickup_to_backpack(Inventory& inv)    override;
 
-    Lgt_size get_lgt_size() const override;
+    Lgt_size lgt_size() const override;
 
     void store_to_save_lines(std::vector<std::string>& lines) override;
     void setup_from_save_lines(std::vector<std::string>& lines) override;
@@ -165,9 +165,9 @@ public:
 private:
     void toggle();
 
-    int get_random_nr_turns_to_next_bad_effect() const;
+    int random_nr_turns_to_next_bad_effect() const;
 
-    std::string get_name_inf() const override;
+    std::string name_inf() const override;
 };
 
 #endif

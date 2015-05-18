@@ -28,7 +28,7 @@ typename std::underlying_type<T>::type to_underlying(T t)
 
 //The following functions will first raise val to at least MIN,
 //then lower val to at most MAX
-void constr_in_range(const int MIN, int& val, const int MAX)
+void set_constr_in_range(const int MIN, int& val, const int MAX)
 {
     if (MAX >= MIN)
     {
@@ -36,7 +36,7 @@ void constr_in_range(const int MIN, int& val, const int MAX)
     }
 }
 
-void constr_in_range(const double MIN, double& val, const double MAX)
+void set_constr_in_range(const double MIN, double& val, const double MAX)
 {
     if (MAX > MIN)
     {
@@ -44,7 +44,7 @@ void constr_in_range(const double MIN, double& val, const double MAX)
     }
 }
 
-int get_constr_in_range(const int MIN, const int VAL, const int MAX)
+int constr_in_range(const int MIN, const int VAL, const int MAX)
 {
     if (MAX < MIN)
     {
@@ -54,7 +54,7 @@ int get_constr_in_range(const int MIN, const int VAL, const int MAX)
     return std::min(MAX, std::max(VAL, MIN));
 }
 
-int get_constr_in_range(const double MIN, const double VAL, const double MAX)
+int constr_in_range(const double MIN, const double VAL, const double MAX)
 {
     if (MAX < MIN)
     {

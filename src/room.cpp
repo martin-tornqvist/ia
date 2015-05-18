@@ -213,9 +213,9 @@ void Std_room::on_post_connect(bool door_proposals[MAP_W][MAP_H])
     on_post_connect_(door_proposals);
 
     //Make dark?
-    int pct_chance_dark = get_base_pct_chance_drk() - 15;
+    int pct_chance_dark = base_pct_chance_drk() - 15;
     pct_chance_dark += map::dlvl; //Increase with higher dungeon level
-    constr_in_range(0, pct_chance_dark, 100);
+    set_constr_in_range(0, pct_chance_dark, 100);
 
     if (rnd::percent() < pct_chance_dark)
     {
@@ -223,7 +223,7 @@ void Std_room::on_post_connect(bool door_proposals[MAP_W][MAP_H])
     }
 }
 
-size_t Std_room::try_get_auto_feature_placement(
+size_t Std_room::try_auto_feature_placement(
     const vector<Pos>& adj_to_walls, const vector<Pos>& away_from_walls,
     const vector<const Feature_data_t*>& feature_data_bucket, Pos& pos_ref) const
 {
@@ -257,7 +257,7 @@ size_t Std_room::try_get_auto_feature_placement(
 
         if (
             IS_ADJ_TO_WALLS_AVAIL &&
-            data->room_spawn_rules.get_placement_rule() == Placement_rule::adj_to_walls)
+            data->room_spawn_rules.placement_rule() == Placement_rule::adj_to_walls)
         {
             pos_ref = adj_to_walls[rnd::range(0, adj_to_walls.size() - 1)];
             TRACE_FUNC_END_VERBOSE;
@@ -266,14 +266,14 @@ size_t Std_room::try_get_auto_feature_placement(
 
         if (
             IS_AWAY_FROM_WALLS_AVAIL &&
-            data->room_spawn_rules.get_placement_rule() == Placement_rule::away_from_walls)
+            data->room_spawn_rules.placement_rule() == Placement_rule::away_from_walls)
         {
             pos_ref = away_from_walls[rnd::range(0, away_from_walls.size() - 1)];
             TRACE_FUNC_END_VERBOSE;
             return ELEMENT;
         }
 
-        if (data->room_spawn_rules.get_placement_rule() == Placement_rule::either)
+        if (data->room_spawn_rules.placement_rule() == Placement_rule::either)
         {
             if (rnd::coin_toss())
             {
@@ -309,12 +309,12 @@ int Std_room::place_auto_features()
 
     for (int i = 0; i < int (Feature_id::END); ++i)
     {
-        const auto& d           = feature_data::get_data((Feature_id)(i));
+        const auto& d           = feature_data::data((Feature_id)(i));
         const auto& spawn_rules  = d.room_spawn_rules;
 
         if (
             spawn_rules.is_belonging_to_room_type(type_) &&
-            utils::is_val_in_range(map::dlvl, spawn_rules.get_dlvls_allowed()))
+            utils::is_val_in_range(map::dlvl, spawn_rules.dlvls_allowed()))
         {
             feature_bucket.push_back(&d);
         }
@@ -323,11 +323,11 @@ int Std_room::place_auto_features()
     vector<Pos> adj_to_walls;
     vector<Pos> away_from_walls;
 
-    map_patterns::get_cells_in_room(*this, adj_to_walls, away_from_walls);
+    map_patterns::cells_in_room(*this, adj_to_walls, away_from_walls);
 
     vector<int> spawn_count(feature_bucket.size(), 0);
 
-    int nr_features_left_to_place = rnd::range(get_nr_auto_features_allowed());
+    int nr_features_left_to_place = rnd::range(nr_auto_features_allowed());
     int nr_features_placed      = 0;
 
     while (true)
@@ -341,7 +341,7 @@ int Std_room::place_auto_features()
         Pos pos(-1, -1);
 
         const size_t FEATURE_IDX =
-            try_get_auto_feature_placement(adj_to_walls, away_from_walls, feature_bucket, pos);
+            try_auto_feature_placement(adj_to_walls, away_from_walls, feature_bucket, pos);
 
         if (pos.x >= 0)
         {
@@ -357,7 +357,7 @@ int Std_room::place_auto_features()
             nr_features_placed++;
 
             //Check if more of this feature can be spawned. If not, erase it.
-            if (spawn_count[FEATURE_IDX] >= d->room_spawn_rules.get_max_nr_in_room())
+            if (spawn_count[FEATURE_IDX] >= d->room_spawn_rules.max_nr_in_room())
             {
                 spawn_count   .erase(spawn_count   .begin() + FEATURE_IDX);
                 feature_bucket.erase(feature_bucket.begin() + FEATURE_IDX);
@@ -385,7 +385,7 @@ int Std_room::place_auto_features()
 }
 
 //------------------------------------------------------------------- PLAIN ROOM
-Range Plain_room::get_nr_auto_features_allowed() const
+Range Plain_room::nr_auto_features_allowed() const
 {
     if (rnd::one_in(4))
     {
@@ -397,7 +397,7 @@ Range Plain_room::get_nr_auto_features_allowed() const
     }
 }
 
-int Plain_room::get_base_pct_chance_drk() const
+int Plain_room::base_pct_chance_drk() const
 {
     return 5;
 }
@@ -418,19 +418,19 @@ void Plain_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
 }
 
 //------------------------------------------------------------------- HUMAN ROOM
-Range Human_room::get_nr_auto_features_allowed() const
+Range Human_room::nr_auto_features_allowed() const
 {
     return {3, 6};
 }
 
-int Human_room::get_base_pct_chance_drk() const
+int Human_room::base_pct_chance_drk() const
 {
     return 10;
 }
 
 bool Human_room::is_allowed() const
 {
-    return r_.get_min_dim() >= 4 && r_.get_max_dim() <= 8;
+    return r_.min_dim() >= 4 && r_.max_dim() <= 8;
 }
 
 void Human_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
@@ -466,19 +466,19 @@ void Human_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
 }
 
 //------------------------------------------------------------------- RITUAL ROOM
-Range Ritual_room::get_nr_auto_features_allowed() const
+Range Ritual_room::nr_auto_features_allowed() const
 {
     return {1, 5};
 }
 
-int Ritual_room::get_base_pct_chance_drk() const
+int Ritual_room::base_pct_chance_drk() const
 {
     return 15;
 }
 
 bool Ritual_room::is_allowed() const
 {
-    return r_.get_min_dim() >= 4 && r_.get_max_dim() <= 8;
+    return r_.min_dim() >= 4 && r_.max_dim() <= 8;
 }
 
 void Ritual_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
@@ -510,7 +510,7 @@ void Ritual_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
         {
             for (int x = r_.p0.x; x <= r_.p1.x; ++x)
             {
-                if (map::cells[x][y].rigid->get_id() == Feature_id::altar)
+                if (map::cells[x][y].rigid->id() == Feature_id::altar)
                 {
                     origin = Pos(x, y);
                     y = 999;
@@ -552,19 +552,19 @@ void Ritual_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
 }
 
 //------------------------------------------------------------------- SPIDER ROOM
-Range Spider_room::get_nr_auto_features_allowed() const
+Range Spider_room::nr_auto_features_allowed() const
 {
     return {0, 3};
 }
 
-int Spider_room::get_base_pct_chance_drk() const
+int Spider_room::base_pct_chance_drk() const
 {
     return 30;
 }
 
 bool Spider_room::is_allowed() const
 {
-    return r_.get_min_dim() >= 3 && r_.get_max_dim() <= 8;
+    return r_.min_dim() >= 3 && r_.max_dim() <= 8;
 }
 
 void Spider_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
@@ -598,19 +598,19 @@ void Spider_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
 }
 
 //------------------------------------------------------------------- CRYPT ROOM
-Range Crypt_room::get_nr_auto_features_allowed() const
+Range Crypt_room::nr_auto_features_allowed() const
 {
     return {3, 6};
 }
 
-int Crypt_room::get_base_pct_chance_drk() const
+int Crypt_room::base_pct_chance_drk() const
 {
     return 60;
 }
 
 bool Crypt_room::is_allowed() const
 {
-    return r_.get_min_dim() >= 3  && r_.get_max_dim() <= 12;
+    return r_.min_dim() >= 3  && r_.max_dim() <= 12;
 }
 
 void Crypt_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
@@ -628,19 +628,19 @@ void Crypt_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
 }
 
 //------------------------------------------------------------------- MONSTER ROOM
-Range Monster_room::get_nr_auto_features_allowed() const
+Range Monster_room::nr_auto_features_allowed() const
 {
     return {0, 6};
 }
 
-int Monster_room::get_base_pct_chance_drk() const
+int Monster_room::base_pct_chance_drk() const
 {
     return 75;
 }
 
 bool Monster_room::is_allowed() const
 {
-    return r_.get_min_dim() >= 4 && r_.get_max_dim() <= 8;
+    return r_.min_dim() >= 4 && r_.max_dim() <= 8;
 }
 
 void Monster_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
@@ -701,12 +701,12 @@ void Monster_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
 }
 
 //------------------------------------------------------------------- FLOODED ROOM
-Range Flooded_room::get_nr_auto_features_allowed() const
+Range Flooded_room::nr_auto_features_allowed() const
 {
     return {0, 0};
 }
 
-int Flooded_room::get_base_pct_chance_drk() const
+int Flooded_room::base_pct_chance_drk() const
 {
     return 25;
 }
@@ -754,7 +754,7 @@ void Flooded_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
         {
             if (map::room_map[x][y] == this)
             {
-                const auto id = map::cells[x][y].rigid->get_id();
+                const auto id = map::cells[x][y].rigid->id();
 
                 if (
                     id == Feature_id::chest    ||
@@ -793,12 +793,12 @@ void Flooded_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
 }
 
 //------------------------------------------------------------------- MUDDY ROOM
-Range Muddy_room::get_nr_auto_features_allowed() const
+Range Muddy_room::nr_auto_features_allowed() const
 {
     return {0, 0};
 }
 
-int Muddy_room::get_base_pct_chance_drk() const
+int Muddy_room::base_pct_chance_drk() const
 {
     return 25;
 }
@@ -821,7 +821,7 @@ void Muddy_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
         {
             if (map::room_map[x][y] == this)
             {
-                const auto id = map::cells[x][y].rigid->get_id();
+                const auto id = map::cells[x][y].rigid->id();
 
                 if (
                     id == Feature_id::chest    ||
@@ -883,12 +883,12 @@ void Muddy_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
 }
 
 //------------------------------------------------------------------- CAVE ROOM
-Range Cave_room::get_nr_auto_features_allowed() const
+Range Cave_room::nr_auto_features_allowed() const
 {
     return {2, 6};
 }
 
-int Cave_room::get_base_pct_chance_drk() const
+int Cave_room::base_pct_chance_drk() const
 {
     return 30;
 }
@@ -911,7 +911,7 @@ void Cave_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
 }
 
 //------------------------------------------------------------------- FOREST ROOM
-Range Forest_room::get_nr_auto_features_allowed() const
+Range Forest_room::nr_auto_features_allowed() const
 {
     if (rnd::one_in(3))
     {
@@ -923,7 +923,7 @@ Range Forest_room::get_nr_auto_features_allowed() const
     }
 }
 
-int Forest_room::get_base_pct_chance_drk() const
+int Forest_room::base_pct_chance_drk() const
 {
     return 10;
 }
@@ -999,20 +999,20 @@ void Forest_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
 }
 
 //------------------------------------------------------------------- CHASM ROOM
-Range Chasm_room::get_nr_auto_features_allowed() const
+Range Chasm_room::nr_auto_features_allowed() const
 {
     return {0, 0};
 }
 
-int Chasm_room::get_base_pct_chance_drk() const
+int Chasm_room::base_pct_chance_drk() const
 {
     return 25;
 }
 
 bool Chasm_room::is_allowed() const
 {
-    return r_.get_min_dim() >= 5 &&
-           r_.get_max_dim() <= 9;
+    return r_.min_dim() >= 5 &&
+           r_.max_dim() <= 9;
 }
 
 void Chasm_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
@@ -1092,7 +1092,7 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
     {
         if (room != this)
         {
-            const Pos c_pos(room->r_.get_center_pos());
+            const Pos c_pos(room->r_.center_pos());
             centers[c_pos.x][c_pos.y] = true;
         }
     }
@@ -1187,7 +1187,7 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
     map_parse::expand(blocked, blocked_expanded);
 
     int flood[MAP_W][MAP_H];
-    const Pos origin(r_.get_center_pos());
+    const Pos origin(r_.center_pos());
     flood_fill::run(origin, blocked_expanded, flood, INT_MAX, Pos(-1, -1), true);
 
     for (int x = 0; x < MAP_W; ++x)
@@ -1270,7 +1270,7 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
     {
         for (int y = EDGE_D; y < MAP_H - EDGE_D; ++y)
         {
-            const Feature_id feature_id = map::cells[x][y].rigid->get_id();
+            const Feature_id feature_id = map::cells[x][y].rigid->id();
 
             if (feature_id == Feature_id::wall && !map::room_map[x][y])
             {
@@ -1283,7 +1283,7 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
                     const auto p_adj(p + d);
                     const auto* const f = map::cells[p_adj.x][p_adj.y].rigid;
 
-                    if (f->get_id() == Feature_id::floor)        {nr_cardinal_floor++;}
+                    if (f->id() == Feature_id::floor)        {nr_cardinal_floor++;}
 
                     if (map::room_map[p_adj.x][p_adj.y] == this)  {nr_cardinal_river++;}
                 }

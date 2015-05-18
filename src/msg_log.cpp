@@ -24,12 +24,12 @@ vector<Msg>           lines_[2];
 vector< vector<Msg> > history_;
 const string          more_str = "-More-";
 
-int get_xAfter_msg(const Msg* const msg)
+int x_after_msg(const Msg* const msg)
 {
     if (!msg) {return 0;}
 
     string str = "";
-    msg->get_str_with_repeats(str);
+    msg->str_with_repeats(str);
     return msg->x_pos_ + str.size() + 1;
 }
 
@@ -66,7 +66,7 @@ void draw_line(const vector<Msg>& line_to_draw, const int Y_POS)
     for (const Msg& msg : line_to_draw)
     {
         string str = "";
-        msg.get_str_with_repeats(str);
+        msg.str_with_repeats(str);
         render::draw_text(str, Panel::log, Pos(msg.x_pos_, Y_POS), msg.clr_);
     }
 }
@@ -141,7 +141,7 @@ void add(const string&  str,
 
     //If frenzied, change message
     bool props[size_t(Prop_id::END)];
-    map::player->get_prop_handler().get_prop_ids(props);
+    map::player->prop_handler().prop_ids(props);
 
     if (props[size_t(Prop_id::frenzied)])
     {
@@ -201,7 +201,7 @@ void add(const string&  str,
     if (!ADD_MORE_PROMPT_AFTER_MSG && prev_msg)
     {
         string prev_str = "";
-        prev_msg->get_str_raw(prev_str);
+        prev_msg->str_raw(prev_str);
 
         if (prev_str.compare(str) == 0)
         {
@@ -217,7 +217,7 @@ void add(const string&  str,
         const int PADDING_LEN = REPEAT_STR_LEN +
                                 (cur_line_nr == 0 ? 0 : (more_str.size() + 1));
 
-        int x_pos = get_xAfter_msg(prev_msg);
+        int x_pos = x_after_msg(prev_msg);
 
         const bool IS_MSG_FIT = x_pos + int(str.size()) + PADDING_LEN - 1 < MAP_W;
 
@@ -271,7 +271,7 @@ void more_prompt()
     if (!lines_[line_nr].empty())
     {
         Msg* const last_msg = &lines_[line_nr].back();
-        x_pos = get_xAfter_msg(last_msg);
+        x_pos = x_after_msg(last_msg);
 
         if (line_nr == 0)
         {
@@ -314,7 +314,7 @@ void display_history()
 
         render::update_screen();
 
-        const Key_data& d = input::get_input();
+        const Key_data& d = input::input();
 
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {
@@ -351,7 +351,7 @@ void add_line_to_history(const string& line_to_add)
     history_.push_back(history_line);
 }
 
-const vector< vector<Msg> >& get_history()
+const vector< vector<Msg> >& history()
 {
     return history_;
 }

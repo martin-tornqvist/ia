@@ -28,8 +28,8 @@ public:
     Snd() {}
     ~Snd() {}
 
-    const std::string&  get_msg()    const {return msg_;}
-    Sfx_id               get_sfx()    const {return sfx_;}
+    const std::string&  msg()    const {return msg_;}
+    Sfx_id               sfx()    const {return sfx_;}
     void                clear_msg()        {msg_ = "";}
 
     bool is_msg_ignored_if_origin_seen() const
@@ -42,8 +42,8 @@ public:
         return is_alerting_mon_ == Alerts_mon::yes;
     }
 
-    Pos     get_origin()             const {return origin_;}
-    Actor*  get_actor_who_made_sound()  const {return actor_who_made_sound_;}
+    Pos     origin()             const {return origin_;}
+    Actor*  actor_who_made_sound()  const {return actor_who_made_sound_;}
     int     is_loud()                const {return vol_ == Snd_vol::high;}
 
     void add_string(const std::string& str)

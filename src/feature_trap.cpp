@@ -24,15 +24,15 @@
 using namespace std;
 
 //------------------------------------------------------------- TRAP
-Trap::Trap(const Pos& pos, const Rigid* const mimic_feature, Trap_id type) :
-    Rigid(pos),
+Trap::Trap(const Pos& feature_pos, const Rigid* const mimic_feature, Trap_id type) :
+    Rigid(feature_pos),
     mimic_feature_(mimic_feature),
     is_hidden_(true),
     specific_trap_(nullptr)
 {
     assert(type != Trap_id::END);
 
-    assert(map::cells[pos.x][pos.y].rigid->can_have_rigid());
+    assert(map::cells[feature_pos.x][feature_pos.y].rigid->can_have_rigid());
 
     if (type == Trap_id::any)
     {
@@ -59,9 +59,9 @@ void Trap::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
     (void)dmg_type; (void)dmg_method; (void)actor;
 }
 
-void Trap::set_specific_trap_from_id(const Trap_id id)
+void Trap::set_specific_trap_from_id(const Trap_id trap_id)
 {
-    switch (id)
+    switch (trap_id)
     {
     case Trap_id::dart:
         specific_trap_ = new Trap_dart(pos_);
@@ -112,7 +112,7 @@ void Trap::set_specific_trap_from_id(const Trap_id id)
     }
 }
 
-Trap_id Trap::get_trap_type() const {return specific_trap_->trap_type_;}
+Trap_id Trap::trap_type() const {return specific_trap_->trap_type_;}
 
 bool Trap::is_magical() const {return specific_trap_->is_magical();}
 
@@ -126,25 +126,25 @@ void Trap::bump(Actor& actor_bumping)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    const actor_data_t& d = actor_bumping.get_data();
+    const Actor_data_t& d = actor_bumping.data();
 
     bool props[size_t(Prop_id::END)];
-    actor_bumping.get_prop_handler().get_prop_ids(props);
+    actor_bumping.prop_handler().prop_ids(props);
 
     if (!props[int(Prop_id::ethereal)] && !props[int(Prop_id::flying)])
     {
         const bool    IS_PLAYER             = actor_bumping.is_player();
-        const bool    ACTOR_CAN_SEE         = actor_bumping.get_prop_handler().allow_see();
-        Ability_vals&  abilities             = actor_bumping.get_data().ability_vals;
-        const int     DODGE_SKILL           = abilities.get_val(Ability_id::dodge_trap, true,
+        const bool    ACTOR_CAN_SEE         = actor_bumping.prop_handler().allow_see();
+        Ability_vals&  abilities             = actor_bumping.data().ability_vals;
+        const int     DODGE_SKILL           = abilities.val(Ability_id::dodge_trap, true,
                                               actor_bumping);
         const int     BASE_CHANCE_TO_AVOID  = 30;
 
-        const string  trap_name              = specific_trap_->get_title();
+        const string  trap_name              = specific_trap_->title();
 
         if (IS_PLAYER)
         {
-            TRACE << "Player bumping" << endl;
+            TRACE_VERBOSE << "Player bumping" << endl;
             int chance_to_avoid = BASE_CHANCE_TO_AVOID + DODGE_SKILL;
 
             if (is_hidden_)
@@ -172,14 +172,16 @@ void Trap::bump(Actor& actor_bumping)
         }
         else //Is a monster
         {
+            TRACE_VERBOSE << "Monster bumping trap" << endl;
+
             if (d.actor_size == Actor_size::humanoid && !d.is_spider)
             {
-                TRACE << "Humanoid monster bumping" << endl;
+                TRACE_VERBOSE << "Humanoid monster bumping" << endl;
                 Mon* const mon = static_cast<Mon*>(&actor_bumping);
 
                 if (mon->aware_counter_ > 0 && !mon->is_stealth_)
                 {
-                    TRACE << "Monster eligible for triggering trap" << endl;
+                    TRACE_VERBOSE << "Monster eligible for triggering trap" << endl;
 
                     const bool IS_ACTOR_SEEN_BY_PLAYER =
                         map::player->can_see_actor(actor_bumping, nullptr);
@@ -191,7 +193,7 @@ void Trap::bump(Actor& actor_bumping)
                     {
                         if (!is_hidden_ && IS_ACTOR_SEEN_BY_PLAYER)
                         {
-                            const string actor_name = actor_bumping.get_name_the();
+                            const string actor_name = actor_bumping.name_the();
                             msg_log::add(actor_name + " avoids a " + trap_name + ".");
                         }
                     }
@@ -220,17 +222,17 @@ void Trap::disarm()
     //Spider webs are automatically destroyed if wielding machete
     bool is_auto_succeed = false;
 
-    if (get_trap_type() == Trap_id::web)
+    if (trap_type() == Trap_id::web)
     {
-        Item* item = map::player->get_inv().get_item_in_slot(Slot_id::wielded);
+        Item* item = map::player->inv().item_in_slot(Slot_id::wielded);
 
         if (item)
         {
-            is_auto_succeed = item->get_id() == Item_id::machete;
+            is_auto_succeed = item->id() == Item_id::machete;
         }
     }
 
-    const bool IS_OCCULTIST   = player_bon::get_bg() == Bg::occultist;
+    const bool IS_OCCULTIST   = player_bon::bg() == Bg::occultist;
 
     if (is_magical() && !IS_OCCULTIST)
     {
@@ -239,7 +241,7 @@ void Trap::disarm()
     }
 
     bool props[size_t(Prop_id::END)];
-    map::player->get_prop_handler().get_prop_ids(props);
+    map::player->prop_handler().prop_ids(props);
 
     const bool IS_BLESSED = props[int(Prop_id::blessed)];
     const bool IS_CURSED  = props[int(Prop_id::cursed)];
@@ -251,18 +253,18 @@ void Trap::disarm()
 
     if (IS_CURSED)   disarm_numerator -= 3;
 
-    constr_in_range(1, disarm_numerator, DISARM_DENOMINATOR - 1);
+    set_constr_in_range(1, disarm_numerator, DISARM_DENOMINATOR - 1);
 
     const bool IS_DISARMED = is_auto_succeed ||
                              rnd::fraction(disarm_numerator, DISARM_DENOMINATOR);
 
     if (IS_DISARMED)
     {
-        msg_log::add(specific_trap_->get_disarm_msg());
+        msg_log::add(specific_trap_->disarm_msg());
     }
     else //Not disarmed
     {
-        msg_log::add(specific_trap_->get_disarm_fail_msg());
+        msg_log::add(specific_trap_->disarm_fail_msg());
 
         render::draw_map_and_interface();
 
@@ -270,7 +272,7 @@ void Trap::disarm()
 
         if (rnd::one_in(TRIGGER_ONE_IN_N))
         {
-            if (get_trap_type() == Trap_id::web)
+            if (trap_type() == Trap_id::web)
             {
                 map::player->pos = pos_;
             }
@@ -283,7 +285,7 @@ void Trap::disarm()
 
     if (IS_DISARMED)
     {
-        if (is_magical() || get_trap_type() == Trap_id::web)
+        if (is_magical() || trap_type() == Trap_id::web)
         {
             map::put(new Floor(pos_));
         }
@@ -300,13 +302,13 @@ Did_trigger_trap Trap::trigger_trap(Actor* const actor)
 
     assert(actor);
 
-    TRACE << "Specific trap is " << specific_trap_->get_title() << endl;
+    TRACE << "Specific trap is " << specific_trap_->title() << endl;
 
-    const actor_data_t& d = actor->get_data();
+    const Actor_data_t& d = actor->data();
 
     TRACE << "Actor triggering is " << d.name_a << endl;
 
-    const int DODGE_SKILL = d.ability_vals.get_val(Ability_id::dodge_trap, true, *actor);
+    const int DODGE_SKILL = d.ability_vals.val(Ability_id::dodge_trap, true, *actor);
 
     TRACE << "Actor dodge skill is " << DODGE_SKILL << endl;
 
@@ -359,8 +361,8 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES)
 
         if (PRINT_MESSSAGE_WHEN_PLAYER_SEES)
         {
-            const string name = specific_trap_->get_title();
-            msg_log::add("I spot a " + name + ".", clr_msg_note, false, true);
+            const string trap_name = specific_trap_->title();
+            msg_log::add("I spot a " + trap_name + ".", clr_msg_note, false, true);
         }
     }
 
@@ -371,10 +373,10 @@ void Trap::player_try_spot_hidden()
 {
     if (is_hidden_)
     {
-        const auto& abilities = map::player->get_data().ability_vals;
+        const auto& abilities = map::player->data().ability_vals;
 
         const int SKILL =
-            abilities.get_val(Ability_id::searching, true, *(map::player));
+            abilities.val(Ability_id::searching, true, *(map::player));
 
         if (ability_roll::roll(SKILL) >= success_small)
         {
@@ -383,24 +385,24 @@ void Trap::player_try_spot_hidden()
     }
 }
 
-string Trap::get_name(const Article article) const
+string Trap::name(const Article article) const
 {
     if (is_hidden_)
     {
-        return mimic_feature_->get_name(article);
+        return mimic_feature_->name(article);
     }
     else
     {
-        return (article == Article::a ? "a " : "the ") + specific_trap_->get_title();
+        return (article == Article::a ? "a " : "the ") + specific_trap_->title();
     }
 }
 
-Clr Trap::get_clr_() const
+Clr Trap::clr_() const
 {
-    return is_hidden_ ? mimic_feature_->get_clr() : specific_trap_->get_clr();
+    return is_hidden_ ? mimic_feature_->clr() : specific_trap_->clr();
 }
 
-Clr Trap::get_clr_bg_() const
+Clr Trap::clr_bg_() const
 {
     const auto* const item = map::cells[pos_.x][pos_.y].item;
 
@@ -410,18 +412,18 @@ Clr Trap::get_clr_bg_() const
     }
     else
     {
-        return specific_trap_->get_clr();
+        return specific_trap_->clr();
     }
 }
 
-char Trap::get_glyph() const
+char Trap::glyph() const
 {
-    return is_hidden_ ? mimic_feature_->get_glyph() : specific_trap_->get_glyph();
+    return is_hidden_ ? mimic_feature_->glyph() : specific_trap_->glyph();
 }
 
-Tile_id Trap::get_tile() const
+Tile_id Trap::tile() const
 {
-    return is_hidden_ ? mimic_feature_->get_tile() : specific_trap_->get_tile();
+    return is_hidden_ ? mimic_feature_->tile() : specific_trap_->tile();
 }
 
 Dir Trap::actor_try_leave(Actor& actor, const Dir dir)
@@ -431,9 +433,9 @@ Dir Trap::actor_try_leave(Actor& actor, const Dir dir)
     return specific_trap_->actor_try_leave(actor, dir);
 }
 
-Matl Trap::get_matl() const
+Matl Trap::matl() const
 {
-    return is_hidden_ ? mimic_feature_->get_matl() : get_data().matl_type;
+    return is_hidden_ ? mimic_feature_->matl() : data().matl_type;
 }
 
 //------------------------------------------------------------- SPECIFIC TRAPS
@@ -447,9 +449,9 @@ void Trap_dart::trigger(Actor& actor, const Ability_roll_result dodge_result)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     const bool IS_PLAYER = &actor == map::player;
-    const bool CAN_SEE = actor.get_prop_handler().allow_see();
+    const bool CAN_SEE = actor.prop_handler().allow_see();
     const bool CAN_PLAYER_SEE_ACTOR = map::player->can_see_actor(actor, nullptr);
-    const string actor_name = actor.get_name_the();
+    const string actor_name = actor.name_the();
 
     //Dodge?
     if (dodge_result >= success_small)
@@ -519,7 +521,7 @@ void Trap_dart::trigger(Actor& actor, const Ability_roll_result dodge_result)
 
             if (actor.is_alive() && is_poisoned)
             {
-                actor.get_prop_handler().try_apply_prop(new Prop_poisoned(Prop_turns::std));
+                actor.prop_handler().try_apply_prop(new Prop_poisoned(Prop_turns::std));
             }
         }
     }
@@ -538,9 +540,9 @@ void Trap_spear::trigger(Actor& actor, const Ability_roll_result dodge_result)
     TRACE_FUNC_BEGIN_VERBOSE;
 
     const bool IS_PLAYER = &actor == map::player;
-    const bool CAN_SEE = actor.get_prop_handler().allow_see();
+    const bool CAN_SEE = actor.prop_handler().allow_see();
     const bool CAN_PLAYER_SEE_ACTOR = map::player->can_see_actor(actor, nullptr);
-    const string actor_name = actor.get_name_the();
+    const string actor_name = actor.name_the();
 
     //Dodge?
     if (dodge_result >= success_small)
@@ -608,7 +610,7 @@ void Trap_spear::trigger(Actor& actor, const Ability_roll_result dodge_result)
 
             if (actor.is_alive() && is_poisoned)
             {
-                actor.get_prop_handler().try_apply_prop(new Prop_poisoned(Prop_turns::std));
+                actor.prop_handler().try_apply_prop(new Prop_poisoned(Prop_turns::std));
             }
         }
     }
@@ -622,9 +624,9 @@ void Trap_gas_confusion::trigger(Actor& actor, const Ability_roll_result dodge_r
     (void)dodge_result;
 
     const bool IS_PLAYER = &actor == map::player;
-    const bool CAN_SEE = actor.get_prop_handler().allow_see();
+    const bool CAN_SEE = actor.prop_handler().allow_see();
     const bool CAN_PLAYER_SEE_ACTOR = map::player->can_see_actor(actor, nullptr);
-    const string actor_name = actor.get_name_the();
+    const string actor_name = actor.name_the();
 
     if (IS_PLAYER)
     {
@@ -643,10 +645,10 @@ void Trap_gas_confusion::trigger(Actor& actor, const Ability_roll_result dodge_r
         msg_log::add(actor_name + " is hit by a burst of gas!");
     }
 
-    Clr clr = get_clr();
+    auto explosion_clr = clr();
 
     explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, 0, Sfx_id::END,
-                                new Prop_confused(Prop_turns::std), &clr);
+                                new Prop_confused(Prop_turns::std), &explosion_clr);
     TRACE_FUNC_END_VERBOSE;
 }
 
@@ -656,9 +658,9 @@ void Trap_gas_paralyzation::trigger(Actor& actor,  const Ability_roll_result dod
     (void)dodge_result;
 
     const bool IS_PLAYER = &actor == map::player;
-    const bool CAN_SEE = actor.get_prop_handler().allow_see();
+    const bool CAN_SEE = actor.prop_handler().allow_see();
     const bool CAN_PLAYER_SEE_ACTOR = map::player->can_see_actor(actor, nullptr);
-    const string actor_name = actor.get_name_the();
+    const string actor_name = actor.name_the();
 
     if (IS_PLAYER)
     {
@@ -677,9 +679,9 @@ void Trap_gas_paralyzation::trigger(Actor& actor,  const Ability_roll_result dod
         msg_log::add(actor_name + " is hit by a burst of gas!");
     }
 
-    Clr clr = get_clr();
+    Clr explosion_clr = clr();
     explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, 0, Sfx_id::END,
-                                new Prop_paralyzed(Prop_turns::std), &clr) ;
+                                new Prop_paralyzed(Prop_turns::std), &explosion_clr) ;
     TRACE_FUNC_END_VERBOSE;
 }
 
@@ -689,9 +691,9 @@ void Trap_gas_fear::trigger(Actor& actor, const Ability_roll_result dodge_result
     (void)dodge_result;
 
     const bool IS_PLAYER = &actor == map::player;
-    const bool CAN_SEE = actor.get_prop_handler().allow_see();
+    const bool CAN_SEE = actor.prop_handler().allow_see();
     const bool CAN_PLAYER_SEE_ACTOR = map::player->can_see_actor(actor, nullptr);
-    const string actor_name = actor.get_name_the();
+    const string actor_name = actor.name_the();
 
     if (IS_PLAYER)
     {
@@ -710,9 +712,9 @@ void Trap_gas_fear::trigger(Actor& actor, const Ability_roll_result dodge_result
         msg_log::add(actor_name + " is hit by a burst of gas!");
     }
 
-    Clr clr = get_clr();
+    Clr explosion_clr = clr();
     explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, 0, Sfx_id::END,
-                                new Prop_terrified(Prop_turns::std), &clr);
+                                new Prop_terrified(Prop_turns::std), &explosion_clr);
     TRACE_FUNC_END_VERBOSE;
 }
 
@@ -720,9 +722,9 @@ void Trap_blinding_flash::trigger(Actor& actor, const Ability_roll_result dodge_
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     const bool IS_PLAYER = &actor == map::player;
-    const bool CAN_SEE = actor.get_prop_handler().allow_see();
+    const bool CAN_SEE = actor.prop_handler().allow_see();
     const bool CAN_PLAYER_SEE_ACTOR = map::player->can_see_actor(actor, nullptr);
-    const string actor_name = actor.get_name_the();
+    const string actor_name = actor.name_the();
 
     //Dodge?
     if (dodge_result >= success_small)
@@ -752,7 +754,7 @@ void Trap_blinding_flash::trigger(Actor& actor, const Ability_roll_result dodge_
             {
                 msg_log::add("A sharp flash of light pierces my eyes!", clr_white, false,
                              true);
-                actor.get_prop_handler().try_apply_prop(new Prop_blind(Prop_turns::std));
+                actor.prop_handler().try_apply_prop(new Prop_blind(Prop_turns::std));
             }
             else
             {
@@ -762,7 +764,7 @@ void Trap_blinding_flash::trigger(Actor& actor, const Ability_roll_result dodge_
         else if (CAN_PLAYER_SEE_ACTOR)
         {
             msg_log::add(actor_name + " is hit by a flash of blinding light!");
-            actor.get_prop_handler().try_apply_prop(new Prop_blind(Prop_turns::std));
+            actor.prop_handler().try_apply_prop(new Prop_blind(Prop_turns::std));
         }
     }
 
@@ -775,9 +777,9 @@ void Trap_teleport::trigger(Actor& actor, const Ability_roll_result dodge_result
     (void)dodge_result;
 
     const bool    IS_PLAYER             = &actor == map::player;
-    const bool    CAN_SEE               = actor.get_prop_handler().allow_see();
+    const bool    CAN_SEE               = actor.prop_handler().allow_see();
     const bool    CAN_PLAYER_SEE_ACTOR  = map::player->can_see_actor(actor, nullptr);
-    const string  actor_name             = actor.get_name_the();
+    const string  actor_name             = actor.name_the();
 
     if (IS_PLAYER)
     {
@@ -821,10 +823,10 @@ void Trap_summon_mon::trigger(Actor& actor, const Ability_roll_result dodge_resu
         return;
     }
 
-    const bool CAN_SEE = actor.get_prop_handler().allow_see();
+    const bool CAN_SEE = actor.prop_handler().allow_see();
     TRACE_VERBOSE << "Actor can see: " << CAN_SEE << endl;
 
-    const string actor_name = actor.get_name_the();
+    const string actor_name = actor.name_the();
     TRACE_VERBOSE << "Actor name: " << actor_name << endl;
 
     map::player->incr_shock(5, Shock_src::misc);
@@ -845,7 +847,7 @@ void Trap_summon_mon::trigger(Actor& actor, const Ability_roll_result dodge_resu
 
     for (int i = 0; i < int(Actor_id::END); ++i)
     {
-        const actor_data_t& data = actor_data::data[i];
+        const Actor_data_t& data = actor_data::data[i];
 
         if (data.can_be_summoned && data.spawn_min_dLVL <= map::dlvl + 3)
         {
@@ -879,9 +881,9 @@ void Trap_smoke::trigger(Actor& actor, const Ability_roll_result dodge_result)
     (void)dodge_result;
 
     const bool    IS_PLAYER             = &actor == map::player;
-    const bool    CAN_SEE               = actor.get_prop_handler().allow_see();
+    const bool    CAN_SEE               = actor.prop_handler().allow_see();
     const bool    CAN_PLAYER_SEE_ACTOR  = map::player->can_see_actor(actor, nullptr);
-    const string  actor_name             = actor.get_name_the();
+    const string  actor_name             = actor.name_the();
 
     if (IS_PLAYER)
     {
@@ -939,18 +941,18 @@ void Trap_web::trigger(Actor& actor, const Ability_roll_result dodge_result)
     is_holding_actor_ = true;
 
     const bool    IS_PLAYER             = &actor == map::player;
-    const bool    CAN_SEE               = actor.get_prop_handler().allow_see();
+    const bool    CAN_SEE               = actor.prop_handler().allow_see();
     const bool    CAN_PLAYER_SEE_ACTOR  = map::player->can_see_actor(actor, nullptr);
-    const string  actor_name             = actor.get_name_the();
+    const string  actor_name             = actor.name_the();
 
     if (IS_PLAYER)
     {
         TRACE << "Checking if player has machete" << endl;
-        Inventory& player_inv = map::player->get_inv();
-        Item* item_wielded = player_inv.get_item_in_slot(Slot_id::wielded);
+        Inventory& player_inv = map::player->inv();
+        Item* item_wielded = player_inv.item_in_slot(Slot_id::wielded);
         bool has_machete = false;
 
-        if (item_wielded) {has_machete = item_wielded->get_data().id == Item_id::machete;}
+        if (item_wielded) {has_machete = item_wielded->data().id == Item_id::machete;}
 
         if (has_machete)
         {
@@ -994,24 +996,24 @@ Dir Trap_web::actor_try_leave(Actor& actor, const Dir dir)
 {
     if (!is_holding_actor_)
     {
-        TRACE << "Not holding actor, returning current direction" << endl;
+        TRACE_VERBOSE << "Not holding actor, returning current direction" << endl;
         return dir;
     }
 
-    TRACE << "Is holding actor" << endl;
+    TRACE_VERBOSE << "Is holding actor" << endl;
 
     const bool    IS_PLAYER             = &actor == map::player;
-    const bool    PLAYER_CAN_SEE        = map::player->get_prop_handler().allow_see();
+    const bool    PLAYER_CAN_SEE        = map::player->prop_handler().allow_see();
     const bool    PLAYER_CAN_SEE_ACTOR  = map::player->can_see_actor(actor, nullptr);
-    const string  actor_name             = actor.get_name_the();
+    const string  actor_name             = actor.name_the();
 
-    TRACE << "Name of actor held: " << actor_name << endl;
+    TRACE_VERBOSE << "Name of actor held: " << actor_name << endl;
 
     //TODO: reimplement something affecting chance of success?
 
     if (rnd::one_in(4))
     {
-        TRACE << "Actor succeeded to break free" << endl;
+        TRACE_VERBOSE << "Actor succeeded to break free" << endl;
 
         is_holding_actor_ = false;
 
@@ -1034,8 +1036,8 @@ Dir Trap_web::actor_try_leave(Actor& actor, const Dir dir)
                 msg_log::add("The web is destroyed.");
             }
 
-            TRACE << "Web destroyed, placing floor and returning center direction"
-                  << endl;
+            TRACE_VERBOSE << "Web destroyed, placing floor and returning center direction"
+                          << endl;
             map::put(new Floor(pos_));
             return Dir::center;
         }

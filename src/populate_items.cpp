@@ -28,7 +28,7 @@ void mk_items_on_floor()
 
     for (int i = 0; i < int(Item_id::END); ++i)
     {
-        const Item_data_t* const data = item_data::data[i];
+        const Item_data_t& data = item_data::data[i];
 
         //The following items are NOT allowed to spawn on the floor:
         // * Intrinsic items
@@ -36,10 +36,10 @@ void mk_items_on_floor()
         // * Items forbidden to spawn (e.g. unique items already spawned)
 
         if (
-            int(data->type) < int(Item_type::END_OF_EXTR_ITEMS)  &&
-            utils::is_val_in_range(map::dlvl, data->spawn_std_range) &&
-            data->allow_spawn                                    &&
-            rnd::percent(data->chance_to_incl_in_floor_spawn_list))
+            int(data.type) < int(Item_type::END_OF_EXTR_ITEMS)      &&
+            utils::is_val_in_range(map::dlvl, data.spawn_std_range) &&
+            data.allow_spawn                                        &&
+            rnd::percent(data.chance_to_incl_in_floor_spawn_list))
         {
             item_bucket.push_back(Item_id(i));
         }
@@ -63,7 +63,7 @@ void mk_items_on_floor()
         const Item_id  id              = item_bucket[ITEM_IDX];
 
         //Check if this item is no longer allowed to spawn (e.g. a unique item)
-        if (!item_data::data[int(id)]->allow_spawn)
+        if (!item_data::data[int(id)].allow_spawn)
         {
             item_bucket.erase(begin(item_bucket) + ITEM_IDX);
         }

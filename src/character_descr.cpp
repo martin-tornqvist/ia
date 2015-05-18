@@ -32,20 +32,20 @@ void mk_lines()
     const Clr& clr_text      = clr_white;
     const Clr& clr_text_dark  = clr_gray;
 
-    lines_.push_back({map::player->get_name_the(), clr_menu_highlight});
+    lines_.push_back({map::player->name_the(), clr_menu_highlight});
     lines_.push_back({" ", clr_text});
 
-    const Ability_vals& abilities = map::player->get_data().ability_vals;
+    const Ability_vals& abilities = map::player->data().ability_vals;
 
     lines_.push_back({"Combat skills", clr_heading});
 
-    const int BASE_MELEE          = min(100, abilities.get_val(Ability_id::melee,
+    const int BASE_MELEE          = min(100, abilities.val(Ability_id::melee,
                                         true, *(map::player)));
 
-    const int BASE_RANGED         = min(100, abilities.get_val(Ability_id::ranged,
+    const int BASE_RANGED         = min(100, abilities.val(Ability_id::ranged,
                                         true, *(map::player)));
 
-    const int BASE_DODGE_ATTACKS  = min(100, abilities.get_val(Ability_id::dodge_att,
+    const int BASE_DODGE_ATTACKS  = min(100, abilities.val(Ability_id::dodge_att,
                                         true, *(map::player)));
 
     lines_.push_back({offset + "Melee    : " + to_str(BASE_MELEE)         + "%", clr_text});
@@ -104,21 +104,21 @@ void mk_lines()
 
     for (int i = 0; i < int(Item_id::END); ++i)
     {
-        const Item_data_t* const d = item_data::data[i];
+        const Item_data_t& d = item_data::data[i];
 
-        if (d->type == Item_type::potion && (d->is_tried || d->is_identified))
+        if (d.type == Item_type::potion && (d.is_tried || d.is_identified))
         {
-            Item* item = item_factory::mk(d->id);
-            potion_list.push_back({offset + item->get_name(Item_ref_type::plain), d->clr});
+            Item* item = item_factory::mk(d.id);
+            potion_list.push_back({offset + item->name(Item_ref_type::plain), d.clr});
             delete item;
         }
         else
         {
-            if (d->type == Item_type::scroll && (d->is_tried || d->is_identified))
+            if (d.type == Item_type::scroll && (d.is_tried || d.is_identified))
             {
-                Item* item = item_factory::mk(d->id);
-                manuscript_list.push_back(Str_and_clr(offset + item->get_name(Item_ref_type::plain),
-                                                      item->get_interface_clr()));
+                Item* item = item_factory::mk(d.id);
+                manuscript_list.push_back( Str_and_clr(offset + item->name(Item_ref_type::plain),
+                                                       item->interface_clr()));
                 delete item;
             }
         }
@@ -168,8 +168,8 @@ void mk_lines()
         {
             const Trait trait = Trait(i);
             string title = "", descr = "";
-            player_bon::get_trait_title(trait, title);
-            player_bon::get_trait_descr(trait, descr);
+            player_bon::trait_title(trait, title);
+            player_bon::trait_descr(trait, descr);
             lines_.push_back({offset + title, clr_text});
             vector<string> descr_lines;
             text_format::line_to_lines(descr, MAX_W_DESCR, descr_lines);
@@ -184,7 +184,7 @@ void mk_lines()
     }
 }
 
-void get_shock_res_src_title(const Shock_src shock_src, string& str_ref)
+void shock_res_src_title(const Shock_src shock_src, string& str_ref)
 {
     str_ref = "";
 
@@ -248,7 +248,7 @@ void run()
 
         render::update_screen();
 
-        const Key_data& d = input::get_input();
+        const Key_data& d = input::input();
 
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {

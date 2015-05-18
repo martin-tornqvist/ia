@@ -98,11 +98,11 @@ void setup_from_save_lines(vector<string>& lines)
     lines.erase(begin(lines));
 }
 
-int         get_cLvl()       {return clvl_;}
-int         get_xp()         {return xp_;}
-Time_data    get_start_time()  {return time_started_;}
+int         clvl()       {return clvl_;}
+int         xp()         {return xp_;}
+Time_data    start_time()  {return time_started_;}
 
-int get_mon_tot_xp_worth(const actor_data_t& d)
+int mon_tot_xp_worth(const Actor_data_t& d)
 {
     //K regulates player XP rate, higher -> more XP per monster
     const double K              = 0.45;
@@ -141,7 +141,7 @@ void player_gain_xp(const int XP_GAINED)
     }
 }
 
-int get_xp_to_next_lvl()
+int xp_to_next_lvl()
 {
     if (clvl_ == PLAYER_MAX_CLVL) {return -1;}
 
@@ -220,7 +220,7 @@ void win_game()
 
 void on_mon_killed(Actor& actor)
 {
-    actor_data_t& d = actor.get_data();
+    Actor_data_t& d = actor.data();
 
     d.nr_kills += 1;
 
@@ -233,7 +233,7 @@ void on_mon_killed(Actor& actor)
 
     if (!map::player->is_leader_of(mon))
     {
-        const int MON_XP_TOT    = get_mon_tot_xp_worth(d);
+        const int MON_XP_TOT    = mon_tot_xp_worth(d);
         const int XP_GAINED     = mon->has_given_xp_for_spotting_ ?
                                   max(1, MON_XP_TOT / 2) : MON_XP_TOT;
         player_gain_xp(XP_GAINED);
@@ -247,13 +247,13 @@ void on_mon_seen(Actor& actor)
     if (!mon->has_given_xp_for_spotting_)
     {
         mon->has_given_xp_for_spotting_ = true;
-        player_gain_xp(get_mon_tot_xp_worth(mon->get_data()) / 2);
+        player_gain_xp(mon_tot_xp_worth(mon->data()) / 2);
     }
 }
 
 void set_time_started_to_now()
 {
-    time_started_ = utils::get_cur_time();
+    time_started_ = utils::cur_time();
 }
 
 } //Dungeon_master

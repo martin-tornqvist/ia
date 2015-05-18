@@ -10,27 +10,27 @@
 
 using namespace std;
 
-int Ability_vals::get_val(const Ability_id ability_id,
-                          const bool IS_AFFECTED_BY_PROPS, Actor& actor) const
+int Ability_vals::val(const Ability_id ability_id,
+                      const bool IS_AFFECTED_BY_PROPS, Actor& actor) const
 {
     int ret = ability_list[int(ability_id)];
 
     if (IS_AFFECTED_BY_PROPS)
     {
-        ret += actor.get_prop_handler().get_ability_mod(ability_id);
+        ret += actor.prop_handler().ability_mod(ability_id);
     }
 
     if (actor.is_player())
     {
-        for (const Inv_slot& slot : actor.get_inv().slots_)
+        for (const Inv_slot& slot : actor.inv().slots_)
         {
             if (slot.item)
             {
-                ret += slot.item->get_data().ability_mods_while_equipped[int(ability_id)];
+                ret += slot.item->data().ability_mods_while_equipped[int(ability_id)];
             }
         }
 
-        const int HP_PCT  = (actor.get_hp() * 100) / actor.get_hp_max(true);
+        const int HP_PCT  = (actor.hp() * 100) / actor.hp_max(true);
 
         switch (ability_id)
         {

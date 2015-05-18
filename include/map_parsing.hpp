@@ -209,8 +209,8 @@ void run(const cell_check::Check& check, bool out[MAP_W][MAP_H],
 //where the cells are set to true if they are within the specified distance
 //interval of the first array.
 //This can be used for example to find all cells up to 3 steps from a wall.
-void get_cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
-                                     const Range& dist_interval);
+void cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
+                                 const Range& dist_interval);
 
 bool is_val_in_area(const Rect& area, const bool in[MAP_W][MAP_H], const bool VAL = true);
 

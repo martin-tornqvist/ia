@@ -151,7 +151,7 @@ public:
 
     void change_move_dir(const Pos& actor_pos, Dir& dir) const;
 
-    int get_changed_max_hp(const int HP_MAX) const;
+    int changed_max_hp(const int HP_MAX) const;
 
     bool allow_attack(const bool ALLOW_MSG) const;
     bool allow_attack_melee(const bool ALLOW_MSG) const;
@@ -167,11 +167,11 @@ public:
     void on_hit();
     void on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR);
 
-    int get_ability_mod(const Ability_id ability) const;
+    int ability_mod(const Ability_id ability) const;
 
-    void get_prop_ids(bool out[size_t(Prop_id::END)]) const;
+    void prop_ids(bool out[size_t(Prop_id::END)]) const;
 
-    Prop* get_prop(const Prop_id id, const Prop_src source) const;
+    Prop* prop(const Prop_id id, const Prop_src source) const;
 
     bool end_applied_prop(const Prop_id id, const bool RUN_PROP_END_EFFECTS = true);
 
@@ -186,7 +186,7 @@ public:
 
     void tick(const Prop_turn_mode turn_mode);
 
-    void get_props_interface_line(std::vector<Str_and_clr>& line) const;
+    void props_interface_line(std::vector<Str_and_clr>& line) const;
 
     Prop* mk_prop(const Prop_id id, Prop_turns turns_init,
                   const int NR_TURNS = -1) const;
@@ -201,11 +201,11 @@ private:
     //many cases (such as the very frequent Actor::add_light) it is sufficient to know
     //the ids. It would then be wasteful to first gather all Props, then gather the ids
     //from those. It's more efficient to just gather the ids at once.
-    void get_props_from_sources(std::vector<Prop*>& out,
-                                bool sources[int(Prop_src::END)]) const;
+    void props_from_sources(std::vector<Prop*>& out,
+                            bool sources[int(Prop_src::END)]) const;
 
-    void get_prop_ids_from_sources(bool out[size_t(Prop_id::END)],
-                                   bool sources[int(Prop_src::END)]) const;
+    void prop_ids_from_sources(bool out[size_t(Prop_id::END)],
+                               bool sources[int(Prop_src::END)]) const;
 
     bool try_resist_prop(const Prop_id id, const std::vector<Prop*>& prop_list) const;
 
@@ -229,10 +229,10 @@ public:
         (void)lines;
     }
 
-    Prop_id get_id() const {return id_;}
+    Prop_id id() const {return id_;}
 
     virtual bool is_finished() const {return turns_left_ == 0;}
-    virtual Prop_alignment get_alignment() const {return data_->alignment;}
+    virtual Prop_alignment alignment() const {return data_->alignment;}
     virtual bool allow_display_turns() const {return data_->allow_display_turns;}
 
     virtual bool is_making_mon_aware() const
@@ -240,9 +240,9 @@ public:
         return data_->is_making_mon_aware;
     }
 
-    virtual std::string get_name() const {return data_->name;}
-    virtual std::string get_name_short() const {return data_->name_short;}
-    virtual void get_msg(const Prop_msg_type msg_type, std::string& msg_ref) const
+    virtual std::string name() const {return data_->name;}
+    virtual std::string name_short() const {return data_->name_short;}
+    virtual void msg(const Prop_msg_type msg_type, std::string& msg_ref) const
     {
         msg_ref = data_->msg[msg_type];
     }
@@ -276,7 +276,7 @@ public:
         (void)IS_PLAYER_SEE_OWNING_ACTOR;
     }
 
-    virtual int get_changed_max_hp(const int HP_MAX) const {return HP_MAX;}
+    virtual int changed_max_hp(const int HP_MAX) const {return HP_MAX;}
 
     virtual bool change_actor_clr(Clr& clr) const {(void)clr; return false;}
 
@@ -316,7 +316,7 @@ public:
         return true;
     }
 
-    virtual int get_ability_mod(const Ability_id ability) const
+    virtual int ability_mod(const Ability_id ability) const
     {
         (void)ability;
         return 0;
@@ -328,9 +328,9 @@ public:
         (void)dir;
     }
 
-    virtual bool is_resisting_other_prop(const Prop_id id) const
+    virtual bool is_resisting_other_prop(const Prop_id prop_id) const
     {
-        (void)id;
+        (void)prop_id;
         return false;
     }
 
@@ -341,9 +341,9 @@ public:
         return false;
     }
 
-    virtual Prop_turn_mode get_turn_mode() const {return Prop_turn_mode::std;}
+    virtual Prop_turn_mode turn_mode() const {return Prop_turn_mode::std;}
 
-    Prop_turns get_turns_init_type() const {return turns_init_type_;}
+    Prop_turns turns_init_type() const {return turns_init_type_;}
 
     int turns_left_;
 
@@ -365,7 +365,7 @@ public:
     Prop_terrified(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::terrified, turns_init, turns) {}
 
-    int get_ability_mod(const Ability_id ability) const override
+    int ability_mod(const Ability_id ability) const override
     {
         switch (ability)
         {
@@ -408,9 +408,9 @@ public:
     Prop_diseased(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::diseased, turns_init, turns) {}
 
-    int get_changed_max_hp(const int HP_MAX) const override;
+    int changed_max_hp(const int HP_MAX) const override;
 
-    bool is_resisting_other_prop(const Prop_id id) const override;
+    bool is_resisting_other_prop(const Prop_id prop_id) const override;
 
     void on_start() override;
 };
@@ -453,7 +453,7 @@ public:
 
     void on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR) override;
 
-    int get_changed_max_hp(const int HP_MAX) const override
+    int changed_max_hp(const int HP_MAX) const override
     {
         return HP_MAX * 2;
     }
@@ -475,14 +475,14 @@ public:
         Prop(Prop_id::aiming, turns_init, turns),
         nr_turns_aiming(1) {}
 
-    Prop_turn_mode get_turn_mode() const override {return Prop_turn_mode::actor;}
+    Prop_turn_mode turn_mode() const override {return Prop_turn_mode::actor;}
 
-    std::string get_name_short() const override
+    std::string name_short() const override
     {
         return data_->name_short + (nr_turns_aiming >= 3 ? "(3)" : "");
     }
 
-    int get_ability_mod(const Ability_id ability) const override
+    int ability_mod(const Ability_id ability) const override
     {
         if (ability == Ability_id::ranged)
         {
@@ -507,7 +507,7 @@ public:
 
     bool allow_see() const override {return false;}
 
-    int get_ability_mod(const Ability_id ability) const override
+    int ability_mod(const Ability_id ability) const override
     {
         switch (ability)
         {
@@ -546,7 +546,7 @@ public:
 
     void on_start() override;
 
-    int get_ability_mod(const Ability_id ability) const override
+    int ability_mod(const Ability_id ability) const override
     {
         if (ability == Ability_id::searching)
         {
@@ -565,7 +565,7 @@ public:
 
     void on_start() override;
 
-    int get_ability_mod(const Ability_id ability) const override
+    int ability_mod(const Ability_id ability) const override
     {
         (void)ability;
         return -10;
@@ -608,7 +608,7 @@ public:
     Prop_warlock_charged(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::warlock_charged, turns_init, turns) {}
 
-    Prop_turn_mode get_turn_mode() const override {return Prop_turn_mode::actor;}
+    Prop_turn_mode turn_mode() const override {return Prop_turn_mode::actor;}
 };
 
 class Prop_confused: public Prop
@@ -638,7 +638,7 @@ public:
     Prop_nailed(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::nailed, turns_init, turns), nr_spikes_(1) {}
 
-    std::string get_name_short() const override
+    std::string name_short() const override
     {
         return "Nailed(" + to_str(nr_spikes_) + ")";
     }
@@ -659,7 +659,7 @@ public:
     Prop_waiting(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::waiting, turns_init, turns) {}
 
-    Prop_turn_mode get_turn_mode() const override {return Prop_turn_mode::actor;}
+    Prop_turn_mode turn_mode() const override {return Prop_turn_mode::actor;}
 
     bool allow_move() const override  {return false;}
     bool allow_act() const override   {return false;}
@@ -683,7 +683,7 @@ public:
     Prop_disabled_attack(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::disabled_attack, turns_init, turns) {}
 
-    Prop_turn_mode get_turn_mode() const override {return Prop_turn_mode::actor;}
+    Prop_turn_mode turn_mode() const override {return Prop_turn_mode::actor;}
 
     bool allow_attack_ranged(const bool ALLOW_MSG) const override
     {
@@ -704,7 +704,7 @@ public:
     Prop_disabled_melee(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::disabled_melee, turns_init, turns) {}
 
-    Prop_turn_mode get_turn_mode() const override {return Prop_turn_mode::actor;}
+    Prop_turn_mode turn_mode() const override {return Prop_turn_mode::actor;}
 
     bool allow_attack_melee(const bool ALLOW_MSG) const override
     {
@@ -719,7 +719,7 @@ public:
     Prop_disabled_ranged(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::disabled_ranged, turns_init, turns) {}
 
-    Prop_turn_mode get_turn_mode() const override {return Prop_turn_mode::actor;}
+    Prop_turn_mode turn_mode() const override {return Prop_turn_mode::actor;}
 
     bool allow_attack_ranged(const bool ALLOW_MSG) const override
     {
@@ -734,13 +734,13 @@ public:
     Prop_paralyzed(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::paralyzed, turns_init, turns) {}
 
-    Prop_turn_mode get_turn_mode() const override {return Prop_turn_mode::actor;}
+    Prop_turn_mode turn_mode() const override {return Prop_turn_mode::actor;}
 
     void on_start() override;
 
     bool allow_act() const override {return false;}
 
-    int get_ability_mod(const Ability_id ability) const override
+    int ability_mod(const Ability_id ability) const override
     {
         if (ability == Ability_id::dodge_trap || ability == Ability_id::dodge_att)
         {
@@ -775,7 +775,7 @@ public:
 
     bool allow_see() const override {return false;}
 
-    int get_ability_mod(const Ability_id ability) const override
+    int ability_mod(const Ability_id ability) const override
     {
         if (ability == Ability_id::dodge_trap || ability == Ability_id::dodge_att)
         {
@@ -808,7 +808,7 @@ public:
 
     void on_start() override;
 
-    int get_ability_mod(const Ability_id ability) const override
+    int ability_mod(const Ability_id ability) const override
     {
         switch (ability)
         {
@@ -833,7 +833,7 @@ public:
 
     void on_start() override;
 
-    int get_ability_mod(const Ability_id ability) const override
+    int ability_mod(const Ability_id ability) const override
     {
         switch (ability)
         {
@@ -867,9 +867,9 @@ public:
     bool allow_read(const bool ALLOW_MSG) const override;
     bool allow_cast_spell(const bool ALLOW_MSG) const override;
 
-    bool is_resisting_other_prop(const Prop_id id) const override;
+    bool is_resisting_other_prop(const Prop_id prop_id) const override;
 
-    int get_ability_mod(const Ability_id ability) const override
+    int ability_mod(const Ability_id ability) const override
     {
         if (ability == Ability_id::melee)
         {
@@ -911,7 +911,7 @@ public:
 
     void on_start() override;
 
-    bool is_resisting_other_prop(const Prop_id id) const override;
+    bool is_resisting_other_prop(const Prop_id prop_id) const override;
 };
 
 class Prop_rElec: public Prop
@@ -931,7 +931,7 @@ public:
 
     void on_start() override;
 
-    bool is_resisting_other_prop(const Prop_id id) const override;
+    bool is_resisting_other_prop(const Prop_id prop_id) const override;
 };
 
 class Prop_rPhys: public Prop
@@ -942,7 +942,7 @@ public:
 
     void on_start() override;
 
-    bool is_resisting_other_prop(const Prop_id id) const override;
+    bool is_resisting_other_prop(const Prop_id prop_id) const override;
 
     bool try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const override;
 };
@@ -955,7 +955,7 @@ public:
 
     void on_start() override;
 
-    bool is_resisting_other_prop(const Prop_id id) const override;
+    bool is_resisting_other_prop(const Prop_id prop_id) const override;
 
     bool try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const override;
 };
@@ -968,7 +968,7 @@ public:
 
     void on_start() override;
 
-    bool is_resisting_other_prop(const Prop_id id) const override;
+    bool is_resisting_other_prop(const Prop_id prop_id) const override;
 };
 
 class Prop_rSleep: public Prop
@@ -979,7 +979,7 @@ public:
 
     void on_start() override;
 
-    bool is_resisting_other_prop(const Prop_id id) const override;
+    bool is_resisting_other_prop(const Prop_id prop_id) const override;
 };
 
 class Prop_rDisease: public Prop
@@ -990,7 +990,7 @@ public:
 
     void on_start() override;
 
-    bool is_resisting_other_prop(const Prop_id id) const override;
+    bool is_resisting_other_prop(const Prop_id prop_id) const override;
 };
 
 class Prop_rBreath: public Prop
@@ -1038,7 +1038,7 @@ public:
     Prop_strangled(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::strangled, turns_init, turns) {}
 
-    Prop_turn_mode get_turn_mode() const override {return Prop_turn_mode::actor;}
+    Prop_turn_mode turn_mode() const override {return Prop_turn_mode::actor;}
 
     void on_new_turn() override;
 

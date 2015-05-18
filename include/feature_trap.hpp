@@ -29,29 +29,29 @@ enum class Trap_id
 class Trap: public Rigid
 {
 public:
-    Trap(const Pos& pos, const Rigid* const mimic_feature, Trap_id type);
+    Trap(const Pos& feature_pos, const Rigid* const mimic_feature, Trap_id type);
 
-    //Spawn-by-id compliant ctor (do not use for normal cases):
-    Trap(const Pos& pos) :
-        Rigid(pos),
-        mimic_feature_(nullptr),
-        is_hidden_(false),
-        specific_trap_(nullptr) {}
+//Spawn-by-id compliant ctor (do not use for normal cases):
+    Trap(const Pos& feature_pos) :
+        Rigid           (feature_pos),
+        mimic_feature_  (nullptr),
+        is_hidden_      (false),
+        specific_trap_  (nullptr) {}
 
     Trap() = delete;
 
     ~Trap();
 
-    Feature_id   get_id() const override {return Feature_id::trap;}
+    Feature_id id() const override {return Feature_id::trap;}
 
-    void        bump(Actor& actor_bumping)             override;
-    char        get_glyph()                      const override;
-    Tile_id      get_tile()                       const override;
-    std::string get_name(const Article article)  const override;
-    void        disarm()                              override;
-    bool        can_have_corpse()                 const override {return is_hidden_;}
-    bool        can_have_blood()                  const override {return is_hidden_;}
-    bool        can_have_gore()                   const override {return is_hidden_;}
+    void bump(Actor& actor_bumping) override;
+    char glyph() const override;
+    Tile_id tile() const override;
+    std::string name(const Article article) const override;
+    void disarm() override;
+    bool can_have_corpse() const override {return is_hidden_;}
+    bool can_have_blood() const override {return is_hidden_;}
+    bool can_have_gore() const override {return is_hidden_;}
 
     bool is_magical() const;
 
@@ -61,19 +61,19 @@ public:
 
     bool is_hidden() const {return is_hidden_;}
 
-    Matl get_matl() const;
+    Matl matl() const;
 
     Dir actor_try_leave(Actor& actor, const Dir dir);
 
-    Trap_id get_trap_type() const;
+    Trap_id trap_type() const;
 
-    const Specific_trap_base* get_specific_trap() const {return specific_trap_;}
+    const Specific_trap_base* specific_trap() const {return specific_trap_;}
 
-    void  player_try_spot_hidden();
+    void player_try_spot_hidden();
 
 private:
-    Clr get_clr_()   const override;
-    Clr get_clr_bg_() const override;
+    Clr clr_() const override;
+    Clr clr_bg_() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
                 Actor* const actor) override;
@@ -82,9 +82,9 @@ private:
 
     void set_specific_trap_from_id(const Trap_id id);
 
-    const Rigid* const  mimic_feature_;
-    bool                is_hidden_;
-    Specific_trap_base*   specific_trap_;
+    const Rigid* const mimic_feature_;
+    bool is_hidden_;
+    Specific_trap_base* specific_trap_;
 };
 
 class Specific_trap_base
@@ -104,17 +104,17 @@ protected:
 
     virtual void trigger(
         Actor& actor, const Ability_roll_result dodge_result) = 0;
-    virtual std::string get_title()  const = 0;
-    virtual Clr get_clr()      const = 0;
-    virtual char get_glyph()         const = 0;
-    virtual Tile_id get_tile() const = 0;
+    virtual std::string title() const = 0;
+    virtual Clr clr() const = 0;
+    virtual char glyph() const = 0;
+    virtual Tile_id tile() const = 0;
     virtual bool is_magical() const = 0;
-    virtual bool is_disarmable()     const = 0;
-    virtual std::string get_disarm_msg() const
+    virtual bool is_disarmable() const = 0;
+    virtual std::string disarm_msg() const
     {
         return is_magical() ? "I dispel a magic trap." : "I disarm a trap.";
     }
-    virtual std::string get_disarm_fail_msg() const
+    virtual std::string disarm_fail_msg() const
     {
         return is_magical() ?
                "I fail to dispel a magic trap." :
@@ -131,14 +131,14 @@ private:
     friend class Trap;
     Trap_dart(Pos pos);
     void trigger(Actor& actor, const Ability_roll_result dodge_result);
-    Clr   get_clr() const override {return clr_white_high;}
-    std::string      get_title()      const override {return "Dart trap";}
-    Tile_id      get_tile()       const override {return Tile_id::trap_general;}
-    char        get_glyph()      const override {return '^';}
-    bool        is_magical()     const override {return false;}
-    bool        is_disarmable()  const override {return true;}
+    Clr clr() const override {return clr_white_high;}
+    std::string title() const override {return "Dart trap";}
+    Tile_id tile() const override {return Tile_id::trap_general;}
+    char glyph() const override {return '^';}
+    bool is_magical() const override {return false;}
+    bool is_disarmable() const override {return true;}
 
-    bool        is_poisoned;
+    bool is_poisoned;
 };
 
 class Trap_spear: public Specific_trap_base
@@ -147,12 +147,12 @@ private:
     friend class Trap;
     Trap_spear(Pos pos);
     void trigger(Actor& actor, const Ability_roll_result dodge_result);
-    Clr   get_clr() const override {return clr_white_high;}
-    std::string      get_title()      const override {return "Spear trap";}
-    Tile_id      get_tile()       const override {return Tile_id::trap_general;}
-    char        get_glyph()      const override {return '^';}
-    bool        is_magical()     const override {return false;}
-    bool        is_disarmable()  const override {return true;}
+    Clr clr() const override {return clr_white_high;}
+    std::string title() const override {return "Spear trap";}
+    Tile_id tile() const override {return Tile_id::trap_general;}
+    char glyph() const override {return '^';}
+    bool is_magical() const override {return false;}
+    bool is_disarmable() const override {return true;}
 
     bool is_poisoned;
 };
@@ -164,12 +164,12 @@ private:
     Trap_gas_confusion(Pos pos) :
         Specific_trap_base(pos, Trap_id::gas_confusion) {}
     void trigger(Actor& actor, const Ability_roll_result dodge_result);
-    Clr   get_clr() const override {return clr_magenta;}
-    std::string      get_title()      const override {return "Gas trap";}
-    Tile_id      get_tile()       const override {return Tile_id::trap_general;}
-    char        get_glyph()      const override {return '^';}
-    bool        is_magical()     const override {return false;}
-    bool        is_disarmable()  const override {return true;}
+    Clr clr() const override {return clr_magenta;}
+    std::string title() const override {return "Gas trap";}
+    Tile_id tile() const override {return Tile_id::trap_general;}
+    char glyph() const override {return '^';}
+    bool is_magical() const override {return false;}
+    bool is_disarmable() const override {return true;}
 };
 
 class Trap_gas_paralyzation: public Specific_trap_base
@@ -181,12 +181,12 @@ private:
     {
     }
     void trigger(Actor& actor, const Ability_roll_result dodge_result);
-    Clr   get_clr() const override {return clr_magenta;}
-    std::string      get_title()      const override {return "Gas trap";}
-    Tile_id      get_tile()       const override {return Tile_id::trap_general;}
-    char        get_glyph()      const override {return '^';}
-    bool        is_magical()     const override {return false;}
-    bool        is_disarmable()  const override {return true;}
+    Clr clr() const override {return clr_magenta;}
+    std::string title() const override {return "Gas trap";}
+    Tile_id tile() const override {return Tile_id::trap_general;}
+    char glyph() const override {return '^';}
+    bool is_magical() const override {return false;}
+    bool is_disarmable() const override {return true;}
 };
 
 class Trap_gas_fear: public Specific_trap_base
@@ -196,12 +196,12 @@ private:
     Trap_gas_fear(Pos pos) :
         Specific_trap_base(pos, Trap_id::gas_fear) {}
     void trigger(Actor& actor, const Ability_roll_result dodge_result);
-    Clr   get_clr() const override {return clr_magenta;}
-    std::string      get_title()      const override {return "Gas trap";}
-    char        get_glyph()      const override {return '^';}
-    bool        is_magical()     const override {return false;}
-    Tile_id      get_tile()       const override {return Tile_id::trap_general;}
-    bool        is_disarmable()  const override {return true;}
+    Clr clr() const override {return clr_magenta;}
+    std::string title() const override {return "Gas trap";}
+    char glyph() const override {return '^';}
+    bool is_magical() const override {return false;}
+    Tile_id tile() const override {return Tile_id::trap_general;}
+    bool is_disarmable() const override {return true;}
 };
 
 class Trap_blinding_flash: public Specific_trap_base
@@ -211,12 +211,12 @@ private:
     Trap_blinding_flash(Pos pos) :
         Specific_trap_base(pos, Trap_id::blinding) {}
     void trigger(Actor& actor, const Ability_roll_result dodge_result);
-    Clr   get_clr() const override {return clr_yellow;}
-    std::string      get_title()      const override {return "Blinding trap";}
-    char        get_glyph()      const override {return '^';}
-    bool        is_magical()     const override {return false;}
-    Tile_id      get_tile()       const override {return Tile_id::trap_general;}
-    bool        is_disarmable()  const override {return true;}
+    Clr clr() const override {return clr_yellow;}
+    std::string title() const override {return "Blinding trap";}
+    char glyph() const override {return '^';}
+    bool is_magical() const override {return false;}
+    Tile_id tile() const override {return Tile_id::trap_general;}
+    bool is_disarmable() const override {return true;}
 };
 
 class Trap_teleport: public Specific_trap_base
@@ -228,12 +228,12 @@ private:
     {
     }
     void trigger(Actor& actor, const Ability_roll_result dodge_result);
-    Clr   get_clr() const override {return clr_cyan;}
-    std::string      get_title()      const override {return "Teleporter trap";}
-    char        get_glyph()      const override {return '^';}
-    bool        is_magical()     const override {return true;}
-    Tile_id      get_tile()       const override {return Tile_id::elder_sign;}
-    bool        is_disarmable()  const override {return true;}
+    Clr clr() const override {return clr_cyan;}
+    std::string title() const override {return "Teleporter trap";}
+    char glyph() const override {return '^';}
+    bool is_magical() const override {return true;}
+    Tile_id tile() const override {return Tile_id::elder_sign;}
+    bool is_disarmable() const override {return true;}
 };
 
 class Trap_summon_mon: public Specific_trap_base
@@ -245,12 +245,12 @@ private:
     {
     }
     void trigger(Actor& actor, const Ability_roll_result dodge_result);
-    Clr   get_clr() const override {return clr_brown_drk;}
-    std::string      get_title()      const override {return "Monster summoning trap";}
-    char        get_glyph()      const override {return '^';}
-    bool        is_magical()     const override {return true;}
-    Tile_id      get_tile()       const override {return Tile_id::elder_sign;}
-    bool        is_disarmable()  const override {return true;}
+    Clr clr() const override {return clr_brown_drk;}
+    std::string title() const override {return "Monster summoning trap";}
+    char glyph() const override {return '^';}
+    bool is_magical() const override {return true;}
+    Tile_id tile() const override {return Tile_id::elder_sign;}
+    bool is_disarmable() const override {return true;}
 };
 
 class Trap_smoke: public Specific_trap_base
@@ -260,12 +260,12 @@ private:
     Trap_smoke(Pos pos) :
         Specific_trap_base(pos, Trap_id::smoke) {}
     void trigger(Actor& actor, const Ability_roll_result dodge_result);
-    Clr   get_clr() const override {return clr_gray;}
-    std::string      get_title()      const override {return "Smoke trap";}
-    char        get_glyph()      const override {return '^';}
-    bool        is_magical()     const override {return false;}
-    Tile_id      get_tile()       const override { return Tile_id::trap_general;}
-    bool        is_disarmable()  const override {return true;}
+    Clr clr() const override {return clr_gray;}
+    std::string title() const override {return "Smoke trap";}
+    char glyph() const override {return '^';}
+    bool is_magical() const override {return false;}
+    Tile_id tile() const override { return Tile_id::trap_general;}
+    bool is_disarmable() const override {return true;}
 };
 
 class Trap_alarm: public Specific_trap_base
@@ -275,12 +275,12 @@ private:
     Trap_alarm(Pos pos) :
         Specific_trap_base(pos, Trap_id::alarm) {}
     void trigger(Actor& actor, const Ability_roll_result dodge_result);
-    Clr   get_clr() const override {return clr_brown;}
-    std::string      get_title()      const override {return "Alarm trap";}
-    char        get_glyph()      const override {return '^';}
-    bool        is_magical()     const override {return false;}
-    Tile_id      get_tile()       const override { return Tile_id::trap_general;}
-    bool        is_disarmable()  const override {return true;}
+    Clr clr() const override {return clr_brown;}
+    std::string title() const override {return "Alarm trap";}
+    char glyph() const override {return '^';}
+    bool is_magical() const override {return false;}
+    Tile_id tile() const override { return Tile_id::trap_general;}
+    bool is_disarmable() const override {return true;}
 };
 
 
@@ -297,18 +297,18 @@ private:
 
     void trigger(Actor& actor, const Ability_roll_result dodge_result);
 
-    Clr         get_clr() const override {return clr_white_high;}
-    std::string get_title()      const override {return "Spider web";}
-    char        get_glyph()      const override {return '*';}
-    bool        is_magical()     const override {return false;}
-    Tile_id      get_tile()       const override {return Tile_id::web;}
-    bool        is_disarmable()  const override {return true;}
+    Clr clr() const override {return clr_white_high;}
+    std::string title() const override {return "Spider web";}
+    char glyph() const override {return '*';}
+    bool is_magical() const override {return false;}
+    Tile_id tile() const override {return Tile_id::web;}
+    bool is_disarmable() const override {return true;}
 
-    std::string get_disarm_msg() const override
+    std::string disarm_msg() const override
     {
         return "I tear down a spider web.";
     }
-    std::string get_disarm_fail_msg() const override
+    std::string disarm_fail_msg() const override
     {
         return "I fail to tear down a spider web.";
     }

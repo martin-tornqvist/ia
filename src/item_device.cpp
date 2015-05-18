@@ -43,11 +43,11 @@ void Strange_device::setup_from_save_lines(vector<string>& lines)
     lines.erase(begin(lines));
 }
 
-vector<string> Strange_device::get_descr() const
+vector<string> Strange_device::descr() const
 {
     if (data_->is_identified)
     {
-        auto descr = get_descr_identified();
+        auto descr = descr_identified();
 
         string cond_str = "It seems ";
 
@@ -76,8 +76,8 @@ Consume_item Strange_device::activate(Actor* const actor)
 
     if (data_->is_identified)
     {
-        const string item_name   = get_name(Item_ref_type::plain, Item_ref_inf::none);
-        const string item_name_a  = get_name(Item_ref_type::a, Item_ref_inf::none);
+        const string item_name   = name(Item_ref_type::plain, Item_ref_inf::none);
+        const string item_name_a  = name(Item_ref_type::a, Item_ref_inf::none);
 
         msg_log::add("I activate " + item_name_a + "...");
 
@@ -88,7 +88,7 @@ Consume_item Strange_device::activate(Actor* const actor)
         bool is_warning        = false;
         int bon = 0;
         bool props[size_t(Prop_id::END)];
-        actor->get_prop_handler().get_prop_ids(props);
+        actor->prop_handler().prop_ids(props);
 
         if (props[int(Prop_id::blessed)])
         {
@@ -187,7 +187,7 @@ Consume_item Strange_device::activate(Actor* const actor)
     }
 }
 
-std::string Strange_device::get_name_inf() const
+std::string Strange_device::name_inf() const
 {
     if (data_->is_identified)
     {
@@ -207,10 +207,10 @@ std::string Strange_device::get_name_inf() const
 //---------------------------------------------------- BLASTER
 Consume_item Device_blaster::trigger_effect()
 {
-    vector<Actor*> target_bucket;
-    map::player->get_seen_foes(target_bucket);
+    vector<Actor*> tgt_bucket;
+    map::player->seen_foes(tgt_bucket);
 
-    if (target_bucket.empty())
+    if (tgt_bucket.empty())
     {
         msg_log::add("It seems to peruse area.");
     }
@@ -270,7 +270,7 @@ Consume_item Device_shockwave::trigger_effect()
 Consume_item Device_rejuvenator::trigger_effect()
 {
     msg_log::add("It repairs my body.");
-    map::player->get_prop_handler().end_applied_props_by_magic_healing();
+    map::player->prop_handler().end_applied_props_by_magic_healing();
     map::player->restore_hp(999, false);
     return Consume_item::no;
 }
@@ -280,7 +280,7 @@ Consume_item Device_translocator::trigger_effect()
 {
     Player* const player = map::player;
     vector<Actor*> seen_foes;
-    player->get_seen_foes(seen_foes);
+    player->seen_foes(seen_foes);
 
     if (seen_foes.empty())
     {
@@ -290,7 +290,7 @@ Consume_item Device_translocator::trigger_effect()
     {
         for (Actor* actor : seen_foes)
         {
-            msg_log::add(actor->get_name_the() + " is teleported.");
+            msg_log::add(actor->name_the() + " is teleported.");
             render::draw_blast_at_cells(vector<Pos> {actor->pos}, clr_yellow);
             actor->teleport();
         }
@@ -315,7 +315,7 @@ Device_lantern::Device_lantern(Item_data_t* const item_data) :
     working_state_(Lantern_working_state::working),
     is_activated_(false) {}
 
-std::string Device_lantern::get_name_inf() const
+std::string Device_lantern::name_inf() const
 {
     string inf = "{" + to_str(nr_turns_left_);
 
@@ -357,7 +357,7 @@ void Device_lantern::on_pickup_to_backpack(Inventory& inv)
     //Check for existing electric lantern in inventory
     for (Item* const other : inv.general_)
     {
-        if (other != this && other->get_id() == get_id())
+        if (other != this && other->id() == id())
         {
             //Add my turns left to the other lantern, then destroy self (it's better to keep
             //the existing lantern, to that lit state etc is preserved)
@@ -397,7 +397,7 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
             msg_log::add("My Electric Lantern breaks!", clr_msg_note, true, true);
 
             //NOTE: The this deletes the object
-            map::player->get_inv().remove_item_in_backpack_with_ptr(this, true);
+            map::player->inv().remove_item_in_backpack_with_ptr(this, true);
 
             game_time::update_light_map();
             map::player->update_fov();
@@ -446,7 +446,7 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
     }
 }
 
-Lgt_size Device_lantern::get_lgt_size() const
+Lgt_size Device_lantern::lgt_size() const
 {
     if (is_activated_)
     {

@@ -95,7 +95,6 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wnon-virtual-dtor" />
-			<Add option="-Wshadow" />
 			<Add option="-Winit-self" />
 			<Add option="-Wredundant-decls" />
 			<Add option="-Wcast-align" />

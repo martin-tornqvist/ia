@@ -41,11 +41,11 @@ struct map_templ
 public:
     map_templ() {cells_.clear();}
 
-    const map_templ_cell& get_cell(const int X, const int Y) const {return cells_[Y][X];}
+    const map_templ_cell& cell(const int X, const int Y) const {return cells_[Y][X];}
 
     void add_row(std::vector<map_templ_cell>& row) {cells_.push_back(row);}
 
-    Pos get_dims() const {return Pos(cells_.back().size(), cells_.size());}
+    Pos dims() const {return Pos(cells_.back().size(), cells_.size());}
 
 private:
     std::vector< std::vector<map_templ_cell> > cells_;
@@ -56,7 +56,7 @@ namespace map_templ_handling
 
 void init();
 
-const map_templ& get_templ(const Map_templ_id id);
+const map_templ& templ(const Map_templ_id id);
 
 } //map_templ_handling
 

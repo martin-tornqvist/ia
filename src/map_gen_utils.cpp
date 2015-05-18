@@ -28,8 +28,8 @@ namespace
 
 Feature_id backup[MAP_W][MAP_H];
 
-void get_floor_cells_in_room(const Room& room, const bool floor[MAP_W][MAP_H],
-                             vector<Pos>& out)
+void floor_cells_in_room(const Room& room, const bool floor[MAP_W][MAP_H],
+                         vector<Pos>& out)
 {
     assert(utils::is_area_inside_map(room.r_));
 
@@ -46,12 +46,12 @@ void get_floor_cells_in_room(const Room& room, const bool floor[MAP_W][MAP_H],
 
 void cut_room_corners(const Room& room)
 {
-    if (!room.sub_rooms_.empty() || room.r_.get_min_dim() < 6)
+    if (!room.sub_rooms_.empty() || room.r_.min_dim() < 6)
     {
         return;
     }
 
-    const Pos max_dims(room.r_.get_dims() - 4);
+    const Pos max_dims(room.r_.dims() - 4);
 
     const Pos room_p0(room.r_.p0);
     const Pos room_p1(room.r_.p1);
@@ -123,7 +123,7 @@ void mk_pillars_in_room(const Room& room)
             {
                 const auto* const f = map::cells[p.x + dx][p.y + dy].rigid;
 
-                if (f->get_id() == Feature_id::wall) {return false;}
+                if (f->id() == Feature_id::wall) {return false;}
             }
         }
 
@@ -133,9 +133,9 @@ void mk_pillars_in_room(const Room& room)
     if (rnd::fraction(2, 3))
     {
         //Place pillars in rows and columns (but occasionally skip a pillar)
-        auto get_step_size = []() {return rnd::range(1, 2);};
-        const int DX = get_step_size();
-        const int DY = get_step_size();
+        auto step_size = []() {return rnd::range(1, 2);};
+        const int DX = step_size();
+        const int DY = step_size();
 
         for (int y = room_p0.y + 1; y <= room_p1.y - 1; y += DY)
         {
@@ -243,7 +243,7 @@ void cavify_room(Room& room)
             {
                 Rigid* const rigid = map::cells[x][y].rigid;
 
-                if (rigid->get_id() == Feature_id::floor)
+                if (rigid->id() == Feature_id::floor)
                 {
                     static_cast<Floor*>(rigid)->type_ = Floor_type::cave;
                 }
@@ -252,7 +252,7 @@ void cavify_room(Room& room)
     }
 }
 
-void get_valid_room_corr_entries(const Room& room, vector<Pos>& out)
+void valid_room_corr_entries(const Room& room, vector<Pos>& out)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     //Find all cells that meets all of the following criteria:
@@ -274,7 +274,7 @@ void get_valid_room_corr_entries(const Room& room, vector<Pos>& out)
             const bool IS_ROOM_CELL = map::room_map[x][y] == &room;
             room_cells[x][y]         = IS_ROOM_CELL;
             const auto* const f     = map::cells[x][y].rigid;
-            room_floor_cells[x][y]    = IS_ROOM_CELL && f->get_id() == Feature_id::floor;
+            room_floor_cells[x][y]    = IS_ROOM_CELL && f->id() == Feature_id::floor;
         }
     }
 
@@ -287,7 +287,7 @@ void get_valid_room_corr_entries(const Room& room, vector<Pos>& out)
         for (int x = room.r_.p0.x - 1; x <= room.r_.p1.x + 1; ++x)
         {
             //Condition (1)
-            if (map::cells[x][y].rigid->get_id() != Feature_id::wall) {continue;}
+            if (map::cells[x][y].rigid->id() != Feature_id::wall) {continue;}
 
             //Condition (2)
             if (map::room_map[x][y]) {continue;}
@@ -333,8 +333,8 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
 
     vector<Pos> p0Bucket;
     vector<Pos> p1Bucket;
-    get_valid_room_corr_entries(r0, p0Bucket);
-    get_valid_room_corr_entries(r1, p1Bucket);
+    valid_room_corr_entries(r0, p0Bucket);
+    valid_room_corr_entries(r1, p1Bucket);
 
     if (p0Bucket.empty())
     {
@@ -404,7 +404,7 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
             for (int y = 0; y < MAP_H; ++y)
             {
                 blocked[x][y] = map::room_map[x][y] ||
-                                map::cells[x][y].rigid->get_id() != Feature_id::wall;
+                                map::cells[x][y].rigid->id() != Feature_id::wall;
             }
         }
 
@@ -524,7 +524,7 @@ void backup_map()
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            backup[x][y] = map::cells[x][y].rigid->get_id();
+            backup[x][y] = map::cells[x][y].rigid->id();
         }
     }
 }
@@ -535,7 +535,7 @@ void restore_map()
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            const auto& data = feature_data::get_data(backup[x][y]);
+            const auto& data = feature_data::data(backup[x][y]);
             map::put(static_cast<Rigid*>(data.mk_obj(Pos(x, y))));
         }
     }

@@ -8,7 +8,7 @@ namespace art
 namespace
 {
 
-Pos get_column_and_row_glyph(const char glyph)
+Pos column_and_row_glyph(const char glyph)
 {
     switch (glyph)
     {
@@ -120,7 +120,7 @@ Pos get_column_and_row_glyph(const char glyph)
     }
 }
 
-Pos get_column_and_row_tile(const Tile_id tile)
+Pos column_and_row_tile(const Tile_id tile)
 {
     switch (tile)
     {
@@ -284,14 +284,14 @@ Pos get_column_and_row_tile(const Tile_id tile)
 
 }
 
-Pos get_glyph_pos(const char glyph)
+Pos glyph_pos(const char glyph)
 {
-    return get_column_and_row_glyph(glyph);
+    return column_and_row_glyph(glyph);
 }
 
-Pos get_tile_pos(const Tile_id tile)
+Pos tile_pos(const Tile_id tile)
 {
-    return get_column_and_row_tile(tile);
+    return column_and_row_tile(tile);
 }
 
 } //Art

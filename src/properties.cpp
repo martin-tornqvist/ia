@@ -726,7 +726,7 @@ void init()
 Prop_handler::Prop_handler(Actor* owning_actor) :
     owning_actor_(owning_actor)
 {
-    const actor_data_t& d = owning_actor->get_data();
+    const Actor_data_t& d = owning_actor->data();
 
     for (size_t i = 0; i < int(Prop_id::END); ++i)
     {
@@ -850,7 +850,7 @@ Prop_handler::~Prop_handler()
     for (Prop* prop : actor_turn_prop_buffer_) {delete prop;}
 }
 
-void Prop_handler::get_props_from_sources(
+void Prop_handler::props_from_sources(
     vector<Prop*>& out, bool sources[int(Prop_src::END)]) const
 {
     out.clear();
@@ -861,7 +861,7 @@ void Prop_handler::get_props_from_sources(
     //Get from inventory if humanoid actor
     if (owning_actor_->is_humanoid() && sources[int(Prop_src::inv)])
     {
-        const auto& inv = owning_actor_->get_inv();
+        const auto& inv = owning_actor_->inv();
 
         auto add_item_props = [&](const vector<Prop*>& item_prop_list)
         {
@@ -889,7 +889,7 @@ void Prop_handler::get_props_from_sources(
     }
 }
 
-void  Prop_handler::get_prop_ids_from_sources(
+void  Prop_handler::prop_ids_from_sources(
     bool out[size_t(Prop_id::END)], bool sources[int(Prop_src::END)]) const
 {
     for (int i = 0; i < int(Prop_id::END); ++i)
@@ -902,21 +902,21 @@ void  Prop_handler::get_prop_ids_from_sources(
     {
         for (const Prop* const prop : applied_props_)
         {
-            out[int(prop->get_id())] = true;
+            out[int(prop->id())] = true;
         }
     }
 
     //Get from inventory if humanoid actor
     if (owning_actor_->is_humanoid() && sources[int(Prop_src::inv)])
     {
-        const auto& inv = owning_actor_->get_inv();
+        const auto& inv = owning_actor_->inv();
 
         auto add_item_props = [&](const vector<Prop*>& item_prop_list)
         {
             for (auto* const prop : item_prop_list)
             {
                 prop->owning_actor_      = owning_actor_;
-                out[int(prop->get_id())] = true;
+                out[int(prop->id())] = true;
             };
         };
 
@@ -937,13 +937,13 @@ void  Prop_handler::get_prop_ids_from_sources(
     }
 }
 
-void Prop_handler::get_prop_ids(bool out[size_t(Prop_id::END)]) const
+void Prop_handler::prop_ids(bool out[size_t(Prop_id::END)]) const
 {
     bool sources[int(Prop_src::END)];
 
     for (bool& v : sources) {v = true;}
 
-    get_prop_ids_from_sources(out, sources);
+    prop_ids_from_sources(out, sources);
 }
 
 bool Prop_handler::try_resist_prop(const Prop_id id, const vector<Prop*>& prop_list) const
@@ -966,7 +966,7 @@ bool Prop_handler::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG)
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     for (Prop* p : prop_list)
     {
@@ -983,7 +983,7 @@ bool Prop_handler::allow_see() const
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     for (Prop* p : prop_list) {if (!p->allow_see()) return false;}
 
@@ -1004,7 +1004,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
     //applied from the buffer to the applied props.
     //This way, this function can be used both for requesting to apply props,
     //and for applying props from the buffer.
-    if (prop->get_turn_mode() == Prop_turn_mode::actor)
+    if (prop->turn_mode() == Prop_turn_mode::actor)
     {
         vector<Prop*>& buffer = actor_turn_prop_buffer_;
 
@@ -1028,16 +1028,16 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
 
         for (bool& v : sources) {v = true;}
 
-        get_props_from_sources(all_props, sources);
+        props_from_sources(all_props, sources);
 
-        if (try_resist_prop(prop->get_id(), all_props))
+        if (try_resist_prop(prop->id(), all_props))
         {
             if (!NO_MESSAGES)
             {
                 if (IS_PLAYER)
                 {
                     string msg = "";
-                    prop->get_msg(prop_msg_on_res_player, msg);
+                    prop->msg(prop_msg_on_res_player, msg);
 
                     if (!msg.empty()) {msg_log::add(msg, clr_white, true);}
                 }
@@ -1046,11 +1046,11 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
                     if (map::player->can_see_actor(*owning_actor_, nullptr))
                     {
                         string msg = "";
-                        prop->get_msg(prop_msg_on_res_mon, msg);
+                        prop->msg(prop_msg_on_res_mon, msg);
 
                         if (!msg.empty())
                         {
-                            const string monster_name = owning_actor_->get_name_the();
+                            const string monster_name = owning_actor_->name_the();
                             msg_log::add(monster_name + " " + msg, clr_white, true);
                         }
                     }
@@ -1067,7 +1067,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
     //Actor already has property applied?
     for (Prop* old_prop : applied_props_)
     {
-        if (prop->get_id() == old_prop->get_id())
+        if (prop->id() == old_prop->id())
         {
             if (!prop->allow_apply_more_while_active())
             {
@@ -1084,7 +1084,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
                 if (IS_PLAYER)
                 {
                     string msg = "";
-                    prop->get_msg(prop_msg_on_start_player, msg);
+                    prop->msg(prop_msg_on_start_player, msg);
 
                     if (!msg.empty())
                     {
@@ -1096,11 +1096,11 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
                     if (player_see_owner)
                     {
                         string msg = "";
-                        prop->get_msg(prop_msg_on_start_mon, msg);
+                        prop->msg(prop_msg_on_start_mon, msg);
 
                         if (!msg.empty())
                         {
-                            msg_log::add(owning_actor_->get_name_the() + " " + msg);
+                            msg_log::add(owning_actor_->name_the() + " " + msg);
                         }
                     }
                 }
@@ -1135,7 +1135,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
         if (IS_PLAYER)
         {
             string msg = "";
-            prop->get_msg(prop_msg_on_start_player, msg);
+            prop->msg(prop_msg_on_start_player, msg);
 
             if (!msg.empty())
             {
@@ -1147,11 +1147,11 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
             if (player_see_owner)
             {
                 string msg = "";
-                prop->get_msg(prop_msg_on_start_mon, msg);
+                prop->msg(prop_msg_on_start_mon, msg);
 
                 if (!msg.empty())
                 {
-                    msg_log::add(owning_actor_->get_name_the() + " " + msg);
+                    msg_log::add(owning_actor_->name_the() + " " + msg);
                 }
             }
         }
@@ -1160,7 +1160,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
 
 void Prop_handler::try_apply_prop_from_att(const Wpn& wpn, const bool IS_MELEE)
 {
-    const Item_data_t& d            = wpn.get_data();
+    const Item_data_t& d            = wpn.data();
     const auto* const origin_prop  = IS_MELEE ? d.melee.prop_applied :
                                      d.ranged.prop_applied;
 
@@ -1174,7 +1174,7 @@ void Prop_handler::try_apply_prop_from_att(const Wpn& wpn, const bool IS_MELEE)
         {
             //Make a copy of the weapon effect
             auto* const prop_cpy =
-                mk_prop(origin_prop->get_id(), origin_prop->get_turns_init_type(),
+                mk_prop(origin_prop->id(), origin_prop->turns_init_type(),
                         origin_prop->turns_left_);
             try_apply_prop(prop_cpy);
         }
@@ -1191,7 +1191,7 @@ bool Prop_handler::end_applied_prop(const Prop_id id, const bool RUN_PROP_END_EF
     {
         prop = applied_props_[i];
 
-        if (prop->get_id() == id)
+        if (prop->id() == id)
         {
             idx = i;
             break;
@@ -1218,7 +1218,7 @@ bool Prop_handler::end_applied_prop(const Prop_id id, const bool RUN_PROP_END_EF
         }
 
         bool cur_prop_ids[size_t(Prop_id::END)];
-        get_prop_ids(cur_prop_ids);
+        prop_ids(cur_prop_ids);
 
         //Print property end message
         if (!cur_prop_ids[size_t(id)])
@@ -1226,7 +1226,7 @@ bool Prop_handler::end_applied_prop(const Prop_id id, const bool RUN_PROP_END_EF
             if (owning_actor_->is_player())
             {
                 string msg = "";
-                prop->get_msg(prop_msg_on_end_player, msg);
+                prop->msg(prop_msg_on_end_player, msg);
 
                 if (!msg.empty()) {msg_log::add(msg, clr_white);}
             }
@@ -1235,11 +1235,11 @@ bool Prop_handler::end_applied_prop(const Prop_id id, const bool RUN_PROP_END_EF
                 if (map::player->can_see_actor(*owning_actor_, nullptr))
                 {
                     string msg = "";
-                    prop->get_msg(prop_msg_on_end_mon, msg);
+                    prop->msg(prop_msg_on_end_mon, msg);
 
                     if (!msg.empty())
                     {
-                        msg_log::add(owning_actor_->get_name_the() + " " + msg);
+                        msg_log::add(owning_actor_->name_the() + " " + msg);
                     }
                 }
             }
@@ -1267,12 +1267,12 @@ void Prop_handler::tick(const Prop_turn_mode turn_mode)
         Prop* const prop = applied_props_[i];
 
         //Only tick property if it runs on the given turn mode
-        if (prop->get_turn_mode() == turn_mode)
+        if (prop->turn_mode() == turn_mode)
         {
             if (!owning_actor_->is_player() && prop->is_making_mon_aware())
             {
                 auto* mon           = static_cast<Mon*>(owning_actor_);
-                mon->aware_counter_  = owning_actor_->get_data().nr_turns_aware;
+                mon->aware_counter_  = owning_actor_->data().nr_turns_aware;
             }
 
             if (prop->turns_left_ > 0)
@@ -1282,7 +1282,7 @@ void Prop_handler::tick(const Prop_turn_mode turn_mode)
 
             if (prop->is_finished())
             {
-                end_applied_prop(prop->get_id());
+                end_applied_prop(prop->id());
             }
             else //Not finished
             {
@@ -1305,16 +1305,16 @@ void Prop_handler::tick(const Prop_turn_mode turn_mode)
 
     sources[int(Prop_src::inv)] = true;
 
-    get_props_from_sources(inv_props, sources);
+    props_from_sources(inv_props, sources);
 
     for (Prop* prop : inv_props)
     {
-        if (prop->get_turn_mode() == turn_mode)
+        if (prop->turn_mode() == turn_mode)
         {
             if (!owning_actor_->is_player() && prop->is_making_mon_aware())
             {
                 auto* mon           = static_cast<Mon*>(owning_actor_);
-                mon->aware_counter_  = owning_actor_->get_data().nr_turns_aware;
+                mon->aware_counter_  = owning_actor_->data().nr_turns_aware;
             }
 
             prop->on_new_turn();
@@ -1322,7 +1322,7 @@ void Prop_handler::tick(const Prop_turn_mode turn_mode)
     }
 }
 
-void Prop_handler::get_props_interface_line(vector<Str_and_clr>& line) const
+void Prop_handler::props_interface_line(vector<Str_and_clr>& line) const
 {
     line.clear();
 
@@ -1333,15 +1333,15 @@ void Prop_handler::get_props_interface_line(vector<Str_and_clr>& line) const
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     for (Prop* prop : prop_list)
     {
-        const string prop_name = prop->get_name_short();
+        const string prop_name = prop->name_short();
 
         if (!prop_name.empty())
         {
-            const Prop_alignment alignment = prop->get_alignment();
+            const Prop_alignment alignment = prop->alignment();
             const int TURNS_LEFT = prop->turns_left_;
             const string turns_str = TURNS_LEFT > 0 && IS_SELF_AWARE ?
                                      ("(" + to_str(TURNS_LEFT) + ")") : "";
@@ -1354,17 +1354,17 @@ void Prop_handler::get_props_interface_line(vector<Str_and_clr>& line) const
     }
 }
 
-int Prop_handler::get_changed_max_hp(const int HP_MAX) const
+int Prop_handler::changed_max_hp(const int HP_MAX) const
 {
     vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
     int new_hp_max = HP_MAX;
 
-    for (Prop* prop : prop_list) {new_hp_max = prop->get_changed_max_hp(new_hp_max);}
+    for (Prop* prop : prop_list) {new_hp_max = prop->changed_max_hp(new_hp_max);}
 
     return new_hp_max;
 }
@@ -1376,7 +1376,7 @@ void Prop_handler::change_move_dir(const Pos& actor_pos, Dir& dir) const
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     for (Prop* prop : prop_list) {prop->change_move_dir(actor_pos, dir);}
 }
@@ -1388,7 +1388,7 @@ bool Prop_handler::allow_attack(const bool ALLOW_MSG) const
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     for (Prop* prop : prop_list)
     {
@@ -1408,7 +1408,7 @@ bool Prop_handler::allow_attack_melee(const bool ALLOW_MSG) const
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     for (Prop* prop : prop_list)
     {
@@ -1429,7 +1429,7 @@ bool Prop_handler::allow_attack_ranged(const bool ALLOW_MSG) const
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     for (Prop* prop : prop_list)
     {
@@ -1447,7 +1447,7 @@ bool Prop_handler::allow_move() const
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     for (Prop* prop : prop_list)
     {
@@ -1465,7 +1465,7 @@ bool Prop_handler::allow_act() const
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     for (Prop* prop : prop_list)
     {
@@ -1484,7 +1484,7 @@ bool Prop_handler::allow_read(const bool ALLOW_MSG) const
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     for (auto prop : prop_list)
     {
@@ -1507,7 +1507,7 @@ bool Prop_handler::allow_cast_spell(const bool ALLOW_MSG) const
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     for (auto prop : prop_list)
     {
@@ -1529,7 +1529,7 @@ bool Prop_handler::allow_speak(const bool ALLOW_MSG) const
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     for (auto prop : prop_list)
     {
@@ -1553,7 +1553,7 @@ bool Prop_handler::allow_eat(const bool ALLOW_MSG) const
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     for (auto prop : prop_list)
     {
@@ -1576,7 +1576,7 @@ void Prop_handler::on_hit()
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     for (Prop* prop : prop_list)
     {
@@ -1592,7 +1592,7 @@ void Prop_handler::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     for (Prop* prop : prop_list)
     {
@@ -1600,7 +1600,7 @@ void Prop_handler::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
     }
 }
 
-int Prop_handler::get_ability_mod(const Ability_id ability) const
+int Prop_handler::ability_mod(const Ability_id ability) const
 {
     vector<Prop*> prop_list;
 
@@ -1608,26 +1608,26 @@ int Prop_handler::get_ability_mod(const Ability_id ability) const
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     int modifier = 0;
 
     for (Prop* prop : prop_list)
     {
-        modifier += prop->get_ability_mod(ability);
+        modifier += prop->ability_mod(ability);
     }
 
     return modifier;
 }
 
-Prop* Prop_handler::get_prop(const Prop_id id, const Prop_src source) const
+Prop* Prop_handler::prop(const Prop_id id, const Prop_src source) const
 {
 
     assert(source != Prop_src::END);
 
     if (source == Prop_src::applied)
     {
-        for (Prop* prop : applied_props_) {if (prop->get_id() == id) {return prop;}}
+        for (Prop* prop : applied_props_) {if (prop->id() == id) {return prop;}}
     }
     else if (source == Prop_src::inv)
     {
@@ -1639,11 +1639,11 @@ Prop* Prop_handler::get_prop(const Prop_id id, const Prop_src source) const
 
         sources[int(Prop_src::inv)] = true;
 
-        get_props_from_sources(inv_props, sources);
+        props_from_sources(inv_props, sources);
 
         for (Prop* prop : inv_props)
         {
-            if (prop->get_id() == id)
+            if (prop->id() == id)
             {
                 return prop;
             }
@@ -1661,7 +1661,7 @@ bool Prop_handler::change_actor_clr(Clr& clr) const
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     for (Prop* prop : prop_list)
     {
@@ -1681,24 +1681,24 @@ void Prop_handler::end_applied_props_by_magic_healing()
 
     for (bool& v : sources) {v = true;}
 
-    get_props_from_sources(prop_list, sources);
+    props_from_sources(prop_list, sources);
 
     for (size_t i = 0; i < prop_list.size(); ++i)
     {
         if (prop_list[i]->is_ended_by_magic_healing())
         {
-            end_applied_prop(applied_props_[i]->get_id());
+            end_applied_prop(applied_props_[i]->id());
             prop_list.erase(begin(prop_list) + i);
             i--;
         }
     }
 }
 
-Prop::Prop(Prop_id id, Prop_turns turns_init, int turns) :
+Prop::Prop(Prop_id prop_id, Prop_turns turns_init, int turns) :
     turns_left_(turns),
     owning_actor_(nullptr),
-    id_(id),
-    data_(&(prop_data::data[int(id)])),
+    id_(prop_id),
+    data_(&(prop_data::data[int(prop_id)])),
     turns_init_type_(turns_init)
 {
     switch (turns_init)
@@ -1718,36 +1718,36 @@ Prop::Prop(Prop_id id, Prop_turns turns_init, int turns) :
 
 void Prop_blessed::on_start()
 {
-    owning_actor_->get_prop_handler().end_applied_prop(Prop_id::cursed, false);
+    owning_actor_->prop_handler().end_applied_prop(Prop_id::cursed, false);
 }
 
 void Prop_cursed::on_start()
 {
-    owning_actor_->get_prop_handler().end_applied_prop(Prop_id::blessed, false);
+    owning_actor_->prop_handler().end_applied_prop(Prop_id::blessed, false);
 }
 
 void Prop_slowed::on_start()
 {
-    owning_actor_->get_prop_handler().end_applied_prop(Prop_id::hasted, false);
+    owning_actor_->prop_handler().end_applied_prop(Prop_id::hasted, false);
 }
 
 void Prop_hasted::on_start()
 {
-    owning_actor_->get_prop_handler().end_applied_prop(Prop_id::slowed, false);
+    owning_actor_->prop_handler().end_applied_prop(Prop_id::slowed, false);
 }
 
 void Prop_infected::on_new_turn()
 {
     if (rnd::one_in(165))
     {
-        Prop_handler& prop_hlr = owning_actor_->get_prop_handler();
+        Prop_handler& prop_hlr = owning_actor_->prop_handler();
         prop_hlr.try_apply_prop(new Prop_diseased(Prop_turns::std));
         prop_hlr.end_applied_prop(Prop_id::infected, false);
         msg_log::more_prompt();
     }
 }
 
-int Prop_diseased::get_changed_max_hp(const int HP_MAX) const
+int Prop_diseased::changed_max_hp(const int HP_MAX) const
 {
     if (owning_actor_->is_player() && player_bon::traits[int(Trait::survivalist)])
     {
@@ -1761,23 +1761,23 @@ int Prop_diseased::get_changed_max_hp(const int HP_MAX) const
 
 void Prop_diseased::on_start()
 {
-    //Actor::get_hp_max() will now return a decreased value
+    //Actor::hp_max() will now return a decreased value
     //cap current HP to the new, lower, maximum
     int& hp = owning_actor_->hp_;
-    hp = min(map::player->get_hp_max(true), hp);
+    hp = min(map::player->hp_max(true), hp);
 }
 
-bool Prop_diseased::is_resisting_other_prop(const Prop_id id) const
+bool Prop_diseased::is_resisting_other_prop(const Prop_id prop_id) const
 {
     //Getting infected while already diseased is just annoying
-    return id == Prop_id::infected;
+    return prop_id == Prop_id::infected;
 }
 
 void Prop_poss_by_zuul::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
 {
     if (IS_PLAYER_SEE_OWNING_ACTOR)
     {
-        const string& name1 = owning_actor_->get_name_the();
+        const string& name1 = owning_actor_->name_the();
         const string& name2 = actor_data::data[int(Actor_id::zuul)].name_the;
         msg_log::add(name1 + " was possessed by " + name2 + "!");
     }
@@ -1796,7 +1796,7 @@ void Prop_poisoned::on_new_turn()
 {
     if (owning_actor_->is_alive())
     {
-        if (game_time::get_turn() % POISON_DMG_N_TURN == 0)
+        if (game_time::turn() % POISON_DMG_N_TURN == 0)
         {
             if (owning_actor_->is_player())
             {
@@ -1806,7 +1806,7 @@ void Prop_poisoned::on_new_turn()
             {
                 if (map::player->can_see_actor(*owning_actor_, nullptr))
                 {
-                    msg_log::add(owning_actor_->get_name_the() + " suffers from poisoning!");
+                    msg_log::add(owning_actor_->name_the() + " suffers from poisoning!");
                 }
             }
 
@@ -1845,7 +1845,7 @@ void Prop_nailed::change_move_dir(const Pos& actor_pos, Dir& dir)
         {
             if (map::player->can_see_actor(*owning_actor_, nullptr))
             {
-                msg_log::add(owning_actor_->get_name_the() +  " struggles in pain!",
+                msg_log::add(owning_actor_->name_the() +  " struggles in pain!",
                              clr_msg_good);
             }
         }
@@ -1872,7 +1872,7 @@ void Prop_nailed::change_move_dir(const Pos& actor_pos, Dir& dir)
                         if (map::player->can_see_actor(*owning_actor_, nullptr))
                         {
                             msg_log::add(
-                                owning_actor_->get_name_the() + " tears out a spike!");
+                                owning_actor_->name_the() + " tears out a spike!");
                         }
                     }
                 }
@@ -1950,7 +1950,7 @@ void Prop_confused::change_move_dir(const Pos& actor_pos, Dir& dir)
 
                     if (!blocked[c.x][c.y])
                     {
-                        dir = dir_utils::get_dir(delta);
+                        dir = dir_utils::dir(delta);
                     }
                 }
 
@@ -1992,7 +1992,7 @@ void Prop_frenzied::change_move_dir(const Pos& actor_pos, Dir& dir)
     if (owning_actor_->is_player())
     {
         vector<Actor*> seen_foes;
-        owning_actor_->get_seen_foes(seen_foes);
+        owning_actor_->seen_foes(seen_foes);
 
         if (seen_foes.empty())
         {
@@ -2028,22 +2028,22 @@ void Prop_frenzied::change_move_dir(const Pos& actor_pos, Dir& dir)
                 }
             }
 
-            dir = dir_utils::get_dir(line[1] - actor_pos);
+            dir = dir_utils::dir(line[1] - actor_pos);
         }
     }
 }
 
-bool Prop_frenzied::is_resisting_other_prop(const Prop_id id) const
+bool Prop_frenzied::is_resisting_other_prop(const Prop_id prop_id) const
 {
-    return id == Prop_id::confused || id == Prop_id::fainted ||
-           id == Prop_id::terrified || id == Prop_id::weakened;
+    return prop_id == Prop_id::confused || prop_id == Prop_id::fainted ||
+           prop_id == Prop_id::terrified || prop_id == Prop_id::weakened;
 }
 
 void Prop_frenzied::on_start()
 {
-    owning_actor_->get_prop_handler().end_applied_prop(Prop_id::confused);
-    owning_actor_->get_prop_handler().end_applied_prop(Prop_id::terrified);
-    owning_actor_->get_prop_handler().end_applied_prop(Prop_id::weakened);
+    owning_actor_->prop_handler().end_applied_prop(Prop_id::confused);
+    owning_actor_->prop_handler().end_applied_prop(Prop_id::terrified);
+    owning_actor_->prop_handler().end_applied_prop(Prop_id::weakened);
 }
 
 void Prop_frenzied::on_end()
@@ -2051,7 +2051,7 @@ void Prop_frenzied::on_end()
     //Only the player gets tired after a frenzy (it looks weird for monsters)
     if (owning_actor_->is_player())
     {
-        owning_actor_->get_prop_handler().try_apply_prop(new Prop_weakened(Prop_turns::std));
+        owning_actor_->prop_handler().try_apply_prop(new Prop_weakened(Prop_turns::std));
     }
 }
 
@@ -2148,8 +2148,8 @@ void Prop_flared::on_new_turn()
 
     if (turns_left_ == 0)
     {
-        owning_actor_->get_prop_handler().try_apply_prop(new Prop_burning(Prop_turns::std));
-        owning_actor_->get_prop_handler().end_applied_prop(Prop_id::flared);
+        owning_actor_->prop_handler().try_apply_prop(new Prop_burning(Prop_turns::std));
+        owning_actor_->prop_handler().end_applied_prop(Prop_id::flared);
     }
 }
 
@@ -2165,7 +2165,7 @@ bool Prop_rAcid::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
             }
             else if (map::player->can_see_actor(*owning_actor_, nullptr))
             {
-                msg_log::add(owning_actor_->get_name_the() + " seems unaffected.");
+                msg_log::add(owning_actor_->name_the() + " seems unaffected.");
             }
         }
 
@@ -2187,7 +2187,7 @@ bool Prop_rCold::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
             }
             else if (map::player->can_see_actor(*owning_actor_, nullptr))
             {
-                msg_log::add(owning_actor_->get_name_the() + " seems unaffected.");
+                msg_log::add(owning_actor_->name_the() + " seems unaffected.");
             }
         }
 
@@ -2209,7 +2209,7 @@ bool Prop_rElec::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
             }
             else if (map::player->can_see_actor(*owning_actor_, nullptr))
             {
-                msg_log::add(owning_actor_->get_name_the() + " seems unaffected.");
+                msg_log::add(owning_actor_->name_the() + " seems unaffected.");
             }
         }
 
@@ -2219,29 +2219,29 @@ bool Prop_rElec::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
     return false;
 }
 
-bool Prop_rConfusion::is_resisting_other_prop(const Prop_id id) const
+bool Prop_rConfusion::is_resisting_other_prop(const Prop_id prop_id) const
 {
-    return id == Prop_id::confused;
+    return prop_id == Prop_id::confused;
 }
 
 void Prop_rConfusion::on_start()
 {
-    owning_actor_->get_prop_handler().end_applied_prop(Prop_id::confused);
+    owning_actor_->prop_handler().end_applied_prop(Prop_id::confused);
 }
 
-bool Prop_rFear::is_resisting_other_prop(const Prop_id id) const
+bool Prop_rFear::is_resisting_other_prop(const Prop_id prop_id) const
 {
-    return id == Prop_id::terrified;
+    return prop_id == Prop_id::terrified;
 }
 
 void Prop_rFear::on_start()
 {
-    owning_actor_->get_prop_handler().end_applied_prop(Prop_id::terrified);
+    owning_actor_->prop_handler().end_applied_prop(Prop_id::terrified);
 }
 
-bool Prop_rPhys::is_resisting_other_prop(const Prop_id id) const
+bool Prop_rPhys::is_resisting_other_prop(const Prop_id prop_id) const
 {
-    (void)id;
+    (void)prop_id;
     return false;
 }
 
@@ -2262,7 +2262,7 @@ bool Prop_rPhys::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
             }
             else if (map::player->can_see_actor(*owning_actor_, nullptr))
             {
-                msg_log::add(owning_actor_->get_name_the() + " seems unaffected.");
+                msg_log::add(owning_actor_->name_the() + " seems unaffected.");
             }
         }
 
@@ -2272,14 +2272,14 @@ bool Prop_rPhys::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
     return false;
 }
 
-bool Prop_rFire::is_resisting_other_prop(const Prop_id id) const
+bool Prop_rFire::is_resisting_other_prop(const Prop_id prop_id) const
 {
-    return id == Prop_id::burning;
+    return prop_id == Prop_id::burning;
 }
 
 void Prop_rFire::on_start()
 {
-    owning_actor_->get_prop_handler().end_applied_prop(Prop_id::burning);
+    owning_actor_->prop_handler().end_applied_prop(Prop_id::burning);
 }
 
 bool Prop_rFire::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const
@@ -2294,7 +2294,7 @@ bool Prop_rFire::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
             }
             else if (map::player->can_see_actor(*owning_actor_, nullptr))
             {
-                msg_log::add(owning_actor_->get_name_the() + " seems unaffected.");
+                msg_log::add(owning_actor_->name_the() + " seems unaffected.");
             }
         }
 
@@ -2304,35 +2304,35 @@ bool Prop_rFire::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
     return false;
 }
 
-bool Prop_rPoison::is_resisting_other_prop(const Prop_id id) const
+bool Prop_rPoison::is_resisting_other_prop(const Prop_id prop_id) const
 {
-    return id == Prop_id::poisoned;
+    return prop_id == Prop_id::poisoned;
 }
 
 void Prop_rPoison::on_start()
 {
-    owning_actor_->get_prop_handler().end_applied_prop(Prop_id::poisoned);
+    owning_actor_->prop_handler().end_applied_prop(Prop_id::poisoned);
 }
 
-bool Prop_rSleep::is_resisting_other_prop(const Prop_id id) const
+bool Prop_rSleep::is_resisting_other_prop(const Prop_id prop_id) const
 {
-    return id == Prop_id::fainted;
+    return prop_id == Prop_id::fainted;
 }
 
 void Prop_rSleep::on_start()
 {
-    owning_actor_->get_prop_handler().end_applied_prop(Prop_id::fainted);
+    owning_actor_->prop_handler().end_applied_prop(Prop_id::fainted);
 }
 
-bool Prop_rDisease::is_resisting_other_prop(const Prop_id id) const
+bool Prop_rDisease::is_resisting_other_prop(const Prop_id prop_id) const
 {
-    return id == Prop_id::diseased || id == Prop_id::infected;
+    return prop_id == Prop_id::diseased || prop_id == Prop_id::infected;
 }
 
 void Prop_rDisease::on_start()
 {
-    owning_actor_->get_prop_handler().end_applied_prop(Prop_id::diseased);
-    owning_actor_->get_prop_handler().end_applied_prop(Prop_id::infected);
+    owning_actor_->prop_handler().end_applied_prop(Prop_id::diseased);
+    owning_actor_->prop_handler().end_applied_prop(Prop_id::infected);
 }
 
 void Prop_burrowing::on_new_turn()

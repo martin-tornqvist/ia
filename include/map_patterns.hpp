@@ -19,10 +19,10 @@ enum class Placement_rule
 namespace map_patterns
 {
 
-void get_cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,
-                       std::vector<Pos>& away_from_walls);
+void cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,
+                   std::vector<Pos>& away_from_walls);
 
-int get_walk_blockers_in_dir(const Dir dir, const Pos& pos);
+int walk_blockers_in_dir(const Dir dir, const Pos& pos);
 
 } //map_patterns
 

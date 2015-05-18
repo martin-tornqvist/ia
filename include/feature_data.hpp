@@ -57,17 +57,18 @@ public:
     void reset();
 
     void set(const int MAX_NR_IN_ROOM, const Range& dlvls_allowed,
-             const Placement_rule placement_rule, std::initializer_list<Room_type> room_types);
+             const Placement_rule placement_rule,
+             std::initializer_list<Room_type> room_types);
 
-    bool          is_belonging_to_room_type(const Room_type type)  const;
-    Placement_rule get_placement_rule()                          const;
-    int           get_max_nr_in_room()                            const;
-    Range         get_dlvls_allowed()                           const;
+    bool is_belonging_to_room_type(const Room_type type) const;
+    Placement_rule placement_rule() const;
+    int max_nr_in_room() const;
+    Range dlvls_allowed() const;
 
 private:
-    int                   max_nr_in_room_;
-    Range                 dlvls_allowed_;
-    Placement_rule         placement_rule_;
+    int max_nr_in_room_;
+    Range dlvls_allowed_;
+    Placement_rule placement_rule_;
     std::vector<Room_type> room_types_native_;
 };
 
@@ -134,7 +135,7 @@ namespace feature_data
 
 void init();
 
-const Feature_data_t& get_data(const Feature_id id);
+const Feature_data_t& data(const Feature_id id);
 
 } //Feature_data
 

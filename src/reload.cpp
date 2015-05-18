@@ -33,12 +33,12 @@ void print_msg_and_play_sfx(Actor& actor_reloading, Wpn* const wpn,
 
     if (ammo)
     {
-        ammo_name  = ammo->get_name(Item_ref_type::a);
-        is_clip    = ammo->get_data().type == Item_type::ammo_clip;
+        ammo_name  = ammo->name(Item_ref_type::a);
+        is_clip    = ammo->data().type == Item_type::ammo_clip;
     }
 
     const bool IS_PLAYER    = actor_reloading.is_player();
-    const string actor_name  = actor_reloading.get_name_the();
+    const string actor_name  = actor_reloading.name_the();
 
     switch (result)
     {
@@ -80,20 +80,20 @@ void print_msg_and_play_sfx(Actor& actor_reloading, Wpn* const wpn,
 
         if (IS_PLAYER)
         {
-            audio::play(wpn->get_data().ranged.reload_sfx);
+            audio::play(wpn->data().ranged.reload_sfx);
 
             if (is_clip)
             {
-                const string wpn_name = wpn->get_name(Item_ref_type::plain, Item_ref_inf::none);
+                const string wpn_name = wpn->name(Item_ref_type::plain, Item_ref_inf::none);
                 msg_log::add(
                     "I" + swift_str + " reload the " + wpn_name +
-                    " (" + to_str(wpn->nr_ammo_loaded) + "/" + to_str(wpn->AMMO_CAP) + ").");
+                    " (" + to_str(wpn->nr_ammo_loaded_) + "/" + to_str(wpn->ammo_max()) + ").");
             }
             else
             {
                 msg_log::add(
-                    "I" + swift_str + " load " + ammo_name + " (" + to_str(wpn->nr_ammo_loaded) +
-                    "/" + to_str(wpn->AMMO_CAP) + ").");
+                    "I" + swift_str + " load " + ammo_name + " (" + to_str(wpn->nr_ammo_loaded_) +
+                    "/" + to_str(wpn->ammo_max()) + ").");
             }
 
             render::draw_map_and_interface();
@@ -130,8 +130,8 @@ bool reload_wielded_wpn(Actor& actor_reloading)
 {
     bool did_act = false;
 
-    Inventory& inv      = actor_reloading.get_inv();
-    Item* const wpn_item = inv.get_item_in_slot(Slot_id::wielded);
+    Inventory& inv          = actor_reloading.inv();
+    Item* const wpn_item    = inv.item_in_slot(Slot_id::wielded);
 
     if (!wpn_item)
     {
@@ -140,17 +140,16 @@ bool reload_wielded_wpn(Actor& actor_reloading)
         return did_act;
     }
 
-    Wpn* const    wpn           = static_cast<Wpn*>(wpn_item);
-    Reload_result  result        = Reload_result::no_ammo;
-    bool          is_swift_reload = false;
+    Wpn* const      wpn             = static_cast<Wpn*>(wpn_item);
+    Reload_result   result          = Reload_result::no_ammo;
+    bool            is_swift_reload = false;
 
     if (actor_reloading.is_player())
     {
-        is_swift_reload = player_bon::traits[int(Trait::expert_marksman)] &&
-                          rnd::coin_toss();
+        is_swift_reload = player_bon::traits[int(Trait::expert_marksman)] && rnd::coin_toss();
     }
 
-    const int wpn_ammo_capacity = wpn->AMMO_CAP;
+    const int wpn_ammo_capacity = wpn->ammo_max();
 
     if (wpn_ammo_capacity == 0)
     {
@@ -159,48 +158,49 @@ bool reload_wielded_wpn(Actor& actor_reloading)
     }
     else
     {
-        const Item_id ammo_type = wpn->get_data().ranged.ammo_item_id;
+        const Item_id ammo_type = wpn->data().ranged.ammo_item_id;
         Item* item            = nullptr;
 
-        if (wpn->nr_ammo_loaded < wpn_ammo_capacity)
+        if (wpn->nr_ammo_loaded_ < wpn_ammo_capacity)
         {
             for (size_t i = 0; i < inv.general_.size(); ++i)
             {
                 item = inv.general_[i];
 
-                if (item->get_id() == ammo_type)
+                if (item->id() == ammo_type)
                 {
-                    Prop_handler& prop_hlr = actor_reloading.get_prop_handler();
+                    Prop_handler& prop_hlr = actor_reloading.prop_handler();
 
                     bool props[size_t(Prop_id::END)];
-                    prop_hlr.get_prop_ids(props);
+                    prop_hlr.prop_ids(props);
 
-                    const bool IS_RELOADER_BLIND      = !actor_reloading.get_prop_handler().allow_see();
-                    const bool IS_REALOADER_TERRIFIED = props[int(Prop_id::terrified)];
+                    const bool IS_BLIND     = !actor_reloading.prop_handler().allow_see();
+                    const bool IS_TERRIFIED = props[int(Prop_id::terrified)];
 
-                    const int CHANCE_TO_FUMBLE = (IS_RELOADER_BLIND      ? 48 : 0) +
-                                                 (IS_REALOADER_TERRIFIED ? 48 : 0);
+                    const int CHANCE_TO_FUMBLE = (IS_BLIND      ? 48 : 0) +
+                                                 (IS_TERRIFIED  ? 48 : 0);
 
                     if (rnd::percent() < CHANCE_TO_FUMBLE)
                     {
                         is_swift_reload = false;
                         result        = Reload_result::fumble;
 
-                        print_msg_and_play_sfx(actor_reloading, nullptr, item, Reload_result::fumble,
-                                               false);
+                        print_msg_and_play_sfx(actor_reloading, nullptr, item,
+                                               Reload_result::fumble, false);
                     }
                     else //Not fumbling
                     {
                         result      = Reload_result::success;
-                        bool is_clip = item->get_data().type == Item_type::ammo_clip;
+                        bool is_clip = item->data().type == Item_type::ammo_clip;
 
                         if (is_clip)
                         {
-                            const int previous_ammo_count = wpn->nr_ammo_loaded;
+                            const int previous_ammo_count = wpn->nr_ammo_loaded_;
                             Ammo_clip* clip_item          = static_cast<Ammo_clip*>(item);
-                            wpn->nr_ammo_loaded           = clip_item->ammo_;
+                            wpn->nr_ammo_loaded_           = clip_item->ammo_;
 
-                            print_msg_and_play_sfx(actor_reloading, wpn, item, result, is_swift_reload);
+                            print_msg_and_play_sfx(actor_reloading, wpn, item, result,
+                                                   is_swift_reload);
 
                             //Destroy loaded clip
                             inv.remove_item_in_backpack_with_idx(i, true);
@@ -216,7 +216,7 @@ bool reload_wielded_wpn(Actor& actor_reloading)
                         }
                         else //Ammo is stackable (e.g. shotgun shells)
                         {
-                            wpn->nr_ammo_loaded += 1;
+                            wpn->nr_ammo_loaded_ += 1;
 
                             print_msg_and_play_sfx(actor_reloading, wpn, item, result, is_swift_reload);
 

@@ -24,10 +24,10 @@ void check_one_cell_of_many(const bool obstructions[MAP_W][MAP_H],
                             const bool IS_AFFECTED_BY_DARKNESS)
 {
 
-    const Pos delta_to_target(cell_to_check.x - origin.x, cell_to_check.y - origin.y);
+    const Pos delta_to_tgt(cell_to_check.x - origin.x, cell_to_check.y - origin.y);
 
     const vector<Pos>* path_deltas_ptr =
-        line_calc::get_fov_delta_line(delta_to_target, FOV_STD_RADI_DB);
+        line_calc::fov_delta_line(delta_to_tgt, FOV_STD_RADI_DB);
 
     if (!path_deltas_ptr)
     {
@@ -89,10 +89,10 @@ bool check_cell(const bool obstructions[MAP_W][MAP_H], const Pos& cell_to_check,
 
     if (utils::king_dist(origin, cell_to_check) > FOV_STD_RADI_INT) {return false;}
 
-    const Pos delta_to_target(cell_to_check - origin);
+    const Pos delta_to_tgt(cell_to_check - origin);
 
     const vector<Pos>* path_deltas_ptr =
-        line_calc::get_fov_delta_line(delta_to_target, FOV_STD_RADI_DB);
+        line_calc::fov_delta_line(delta_to_tgt, FOV_STD_RADI_DB);
 
     if (!path_deltas_ptr)
     {
@@ -181,10 +181,10 @@ void run_player_fov(const bool obstructions[MAP_W][MAP_H], const Pos& origin)
     fov_tmp[origin.x][origin.y] = true;
 
     const int R = FOV_STD_RADI_INT;
-    const int X0 = get_constr_in_range(0, origin.x - R, MAP_W - 1);
-    const int Y0 = get_constr_in_range(0, origin.y - R, MAP_H - 1);
-    const int X1 = get_constr_in_range(0, origin.x + R, MAP_W - 1);
-    const int Y1 = get_constr_in_range(0, origin.y + R, MAP_H - 1);
+    const int X0 = constr_in_range(0, origin.x - R, MAP_W - 1);
+    const int Y0 = constr_in_range(0, origin.y - R, MAP_H - 1);
+    const int X1 = constr_in_range(0, origin.x + R, MAP_W - 1);
+    const int Y1 = constr_in_range(0, origin.y + R, MAP_H - 1);
 
     for (int y = Y0; y <= Y1; ++y)
     {

@@ -213,13 +213,13 @@ Actor* mk(const Actor_id id, const Pos& pos)
 {
     assert(
         !map::cells[pos.x][pos.y].rigid ||
-        map::cells[pos.x][pos.y].rigid->get_id() != Feature_id::stairs);
+        map::cells[pos.x][pos.y].rigid->id() != Feature_id::stairs);
 
     Actor* const actor = mk_actor_from_id(id);
 
     actor->place(pos, actor_data::data[int(id)]);
 
-    auto& data = actor->get_data();
+    auto& data = actor->data();
 
     if (data.nr_left_allowed_to_spawn > 0)
     {
@@ -285,7 +285,7 @@ void summon(const Pos& origin, const vector<Actor_id>& monster_ids, const bool M
 
         if (MAKE_MONSTERS_AWARE)
         {
-            mon->aware_counter_ = mon->get_data().nr_turns_aware;
+            mon->aware_counter_ = mon->data().nr_turns_aware;
         }
 
         if (map::player->can_see_actor(*actor, nullptr))

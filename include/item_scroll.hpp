@@ -14,15 +14,15 @@ public:
 
     ~Scroll() {}
 
-    Clr get_interface_clr() const override {return clr_magenta;}
+    Clr interface_clr() const override {return clr_magenta;}
 
     Consume_item activate(Actor* const actor) override;
 
     Consume_item read();
 
-    const std::string get_real_name() const;
+    const std::string real_name() const;
 
-    std::vector<std::string> get_descr() const override;
+    std::vector<std::string> descr() const override;
 
     void identify(const bool IS_SILENT_IDENTIFY) override;
 
@@ -31,7 +31,7 @@ public:
 protected:
     void try_learn();
 
-    std::string get_name_inf() const override;
+    std::string name_inf() const override;
 };
 
 namespace scroll_handling

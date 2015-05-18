@@ -50,18 +50,18 @@ bool Actor::is_spotting_hidden_actor(Actor& other)
 
     const int PLAYER_SEARCH_MOD =
         is_player() ?
-        (data_->ability_vals.get_val(Ability_id::searching, true, *this) / 3) : 0;
+        (data_->ability_vals.val(Ability_id::searching, true, *this) / 3) : 0;
 
-    const auto& abilities_other  = other.get_data().ability_vals;
+    const auto& abilities_other  = other.data().ability_vals;
 
-    const int   SNEAK_SKILL     = abilities_other.get_val(Ability_id::stealth, true, other);
+    const int   SNEAK_SKILL     = abilities_other.val(Ability_id::stealth, true, other);
 
     const int   DIST            = utils::king_dist(pos, other_pos);
-    const int   SNEAK_DIST_MOD  = get_constr_in_range(0, (DIST - 1) * 10, 60);
+    const int   SNEAK_DIST_MOD  = constr_in_range(0, (DIST - 1) * 10, 60);
     const Cell& cell            = map::cells[other_pos.x][other_pos.y];
     const int   SNEAK_LGT_MOD   = cell.is_lit                     ? -40 : 0;
     const int   SNEAK_DRK_MOD   = (cell.is_dark && ! cell.is_lit) ?  40 : 0;
-    const int   SNEAK_TOT       = get_constr_in_range(
+    const int   SNEAK_TOT       = constr_in_range(
                                       0,
                                       SNEAK_SKILL     +
                                       SNEAK_DIST_MOD  +
@@ -73,18 +73,18 @@ bool Actor::is_spotting_hidden_actor(Actor& other)
     return ability_roll::roll(SNEAK_TOT) <= fail_small;
 }
 
-int Actor::get_hp_max(const bool WITH_MODIFIERS) const
+int Actor::hp_max(const bool WITH_MODIFIERS) const
 {
-    return WITH_MODIFIERS ? prop_handler_->get_changed_max_hp(hp_max_) : hp_max_;
+    return WITH_MODIFIERS ? prop_handler_->changed_max_hp(hp_max_) : hp_max_;
 }
 
-Actor_speed Actor::get_speed() const
+Actor_speed Actor::speed() const
 {
     const auto base_speed = data_->speed;
 
     bool props[size_t(Prop_id::END)];
 
-    prop_handler_->get_prop_ids(props);
+    prop_handler_->prop_ids(props);
 
     int speed_int = int(base_speed);
 
@@ -158,7 +158,7 @@ bool Actor::can_see_actor(const Actor& other, const bool blocked_los[MAP_W][MAP_
     return false;
 }
 
-void Actor::get_seen_foes(vector<Actor*>& out)
+void Actor::seen_foes(vector<Actor*>& out)
 {
     out.clear();
 
@@ -208,10 +208,10 @@ void Actor::get_seen_foes(vector<Actor*>& out)
     }
 }
 
-void Actor::place(const Pos& pos_, actor_data_t& data)
+void Actor::place(const Pos& pos_, Actor_data_t& actor_data)
 {
     pos             = pos_;
-    data_           = &data;
+    data_           = &actor_data;
     inv_            = new Inventory();
     prop_handler_   = new Prop_handler(this);
     state_          = Actor_state::alive;
@@ -244,7 +244,7 @@ void Actor::teleport()
 
     if (!is_player() && map::player->can_see_actor(*this, nullptr))
     {
-        msg_log::add(get_name_the() + " suddenly disappears!");
+        msg_log::add(name_the() + " suddenly disappears!");
     }
 
     Pos   tgt_pos                   = pos_bucket[rnd::range(0, pos_bucket.size() - 1)];
@@ -259,24 +259,24 @@ void Actor::teleport()
         //Teleport control?
         bool props[size_t(Prop_id::END)];
 
-        prop_handler_->get_prop_ids(props);
+        prop_handler_->prop_ids(props);
 
         if (props[int(Prop_id::tele_ctrl)] && !props[int(Prop_id::confused)])
         {
             player_has_tele_control = true;
 
-            auto get_chance_of_tele_success = [](const Pos & tgt)
+            auto chance_of_tele_success = [](const Pos & tgt)
             {
                 const int DIST = utils::king_dist(map::player->pos, tgt);
-                return get_constr_in_range(25, 100 - DIST, 95);
+                return constr_in_range(25, 100 - DIST, 95);
             };
 
-            auto on_marker_at_pos = [get_chance_of_tele_success](const Pos & p)
+            auto on_marker_at_pos = [chance_of_tele_success](const Pos & p)
             {
                 msg_log::clear();
                 look::print_location_info_msgs(p);
 
-                const int CHANCE_PCT = get_chance_of_tele_success(p);
+                const int CHANCE_PCT = chance_of_tele_success(p);
 
                 msg_log::add(to_str(CHANCE_PCT) + "% chance of success.");
 
@@ -309,7 +309,7 @@ void Actor::teleport()
                 //Blocked
                 msg_log::add("Something is blocking me...", clr_white, false, true);
             }
-            else if (rnd::percent(get_chance_of_tele_success(marker_tgt_pos)))
+            else if (rnd::percent(chance_of_tele_success(marker_tgt_pos)))
             {
                 //Success
                 tgt_pos = marker_tgt_pos;
@@ -367,18 +367,18 @@ bool Actor::restore_hp(const int HP_RESTORED, const bool ALLOW_MSG,
                        const bool IS_ALLOWED_ABOVE_MAX)
 {
     bool      is_hp_gained    = IS_ALLOWED_ABOVE_MAX;
-    const int DIF_FROM_MAX  = get_hp_max(true) - HP_RESTORED;
+    const int DIF_FROM_MAX  = hp_max(true) - HP_RESTORED;
 
     //If hp is below limit, but restored hp will push it over the limit, HP is set to max.
-    if (!IS_ALLOWED_ABOVE_MAX && get_hp() > DIF_FROM_MAX && get_hp() < get_hp_max(true))
+    if (!IS_ALLOWED_ABOVE_MAX && hp() > DIF_FROM_MAX && hp() < hp_max(true))
     {
-        hp_         = get_hp_max(true);
+        hp_         = hp_max(true);
         is_hp_gained  = true;
     }
 
     //If HP is below limit, and restored hp will NOT push it over the limit -
     //restored hp is added to current.
-    if (IS_ALLOWED_ABOVE_MAX || get_hp() <= DIF_FROM_MAX)
+    if (IS_ALLOWED_ABOVE_MAX || hp() <= DIF_FROM_MAX)
     {
         hp_ += HP_RESTORED;
         is_hp_gained = true;
@@ -411,18 +411,18 @@ bool Actor::restore_spi(const int SPI_RESTORED, const bool ALLOW_MSG,
 {
     bool is_spi_gained = IS_ALLOWED_ABOVE_MAX;
 
-    const int DIF_FROM_MAX = get_spi_max() - SPI_RESTORED;
+    const int DIF_FROM_MAX = spi_max() - SPI_RESTORED;
 
     //If spi is below limit, but will be pushed over the limit, spi is set to max.
-    if (!IS_ALLOWED_ABOVE_MAX && get_spi() > DIF_FROM_MAX && get_spi() < get_spi_max())
+    if (!IS_ALLOWED_ABOVE_MAX && spi() > DIF_FROM_MAX && spi() < spi_max())
     {
-        spi_        = get_spi_max();
+        spi_        = spi_max();
         is_spi_gained = true;
     }
 
     //If spi is below limit, and will not NOT be pushed over the limit - restored spi is
     //added to current.
-    if (IS_ALLOWED_ABOVE_MAX || get_spi() <= DIF_FROM_MAX)
+    if (IS_ALLOWED_ABOVE_MAX || spi() <= DIF_FROM_MAX)
     {
         spi_ += SPI_RESTORED;
         is_spi_gained = true;
@@ -472,11 +472,11 @@ void Actor::change_max_hp(const int CHANGE, const bool ALLOW_MSG)
             {
                 if (CHANGE > 0)
                 {
-                    msg_log::add(get_name_the() + " looks more vigorous.");
+                    msg_log::add(name_the() + " looks more vigorous.");
                 }
                 else if (CHANGE < 0)
                 {
-                    msg_log::add(get_name_the() + " looks frailer.");
+                    msg_log::add(name_the() + " looks frailer.");
                 }
             }
         }
@@ -507,11 +507,11 @@ void Actor::change_max_spi(const int CHANGE, const bool ALLOW_MSG)
             {
                 if (CHANGE > 0)
                 {
-                    msg_log::add(get_name_the() + " appears to grow in spirit.");
+                    msg_log::add(name_the() + " appears to grow in spirit.");
                 }
                 else if (CHANGE < 0)
                 {
-                    msg_log::add(get_name_the() + " appears to shrink in spirit.");
+                    msg_log::add(name_the() + " appears to shrink in spirit.");
                 }
             }
         }
@@ -531,7 +531,7 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
     TRACE_VERBOSE << "Damage from parameter: " << dmg << endl;
 
     bool props[size_t(Prop_id::END)];
-    prop_handler_->get_prop_ids(props);
+    prop_handler_->prop_ids(props);
 
     if (dmg_type == Dmg_type::light && !props[int(Prop_id::lgtSens)])
     {
@@ -545,7 +545,7 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
     //destroyed with a random chance
     if (is_corpse() && !is_player())
     {
-        if (rnd::fraction(5, 8) || dmg >= ((get_hp_max(true) * 2) / 3))
+        if (rnd::fraction(5, 8) || dmg >= ((hp_max(true) * 2) / 3))
         {
             if (method == Dmg_method::kick)
             {
@@ -561,7 +561,7 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
 
             if (map::cells[pos.x][pos.y].is_seen_by_player)
             {
-                msg_log::add(get_corpse_name_the() + " is destroyed.");
+                msg_log::add(corpse_name_the() + " is destroyed.");
             }
         }
         else //Not destroyed
@@ -597,7 +597,7 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
     //Filter damage through worn armor
     if (is_humanoid())
     {
-        Armor* armor = static_cast<Armor*>(inv_->get_item_in_slot(Slot_id::body));
+        Armor* armor = static_cast<Armor*>(inv_->item_in_slot(Slot_id::body));
 
         if (armor)
         {
@@ -614,7 +614,7 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
                     if (is_player())
                     {
                         const string armor_name =
-                            armor->get_name(Item_ref_type::plain, Item_ref_inf::none);
+                            armor->name(Item_ref_type::plain, Item_ref_inf::none);
                         msg_log::add("My " + armor_name + " is torn apart!", clr_msg_note);
                     }
 
@@ -630,10 +630,10 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
 
     if (!is_player() || !config::is_bot_playing()) {hp_ -= dmg;}
 
-    if (get_hp() <= 0)
+    if (hp() <= 0)
     {
         const bool IS_ON_BOTTOMLESS = map::cells[pos.x][pos.y].rigid->is_bottomless();
-        const bool IS_DMG_ENOUGH_TO_DESTROY = dmg > ((get_hp_max(true) * 5) / 4);
+        const bool IS_DMG_ENOUGH_TO_DESTROY = dmg > ((hp_max(true) * 5) / 4);
         const bool IS_DESTROYED = !data_->can_leave_corpse  ||
                                   IS_ON_BOTTOMLESS        ||
                                   IS_DMG_ENOUGH_TO_DESTROY;
@@ -666,7 +666,7 @@ Actor_died Actor::hit_spi(const int DMG, const bool ALLOW_MSG)
         spi_ = max(0, spi_ - DMG);
     }
 
-    if (get_spi() <= 0)
+    if (spi() <= 0)
     {
         if (is_player())
         {
@@ -676,7 +676,7 @@ Actor_died Actor::hit_spi(const int DMG, const bool ALLOW_MSG)
         {
             if (map::player->can_see_actor(*this, nullptr))
             {
-                msg_log::add(get_name_the() + " has no spirit left!");
+                msg_log::add(name_the() + " has no spirit left!");
             }
         }
 
@@ -709,7 +709,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
     //If died on a visible trap, destroy the corpse
     const auto* const f = map::cells[pos.x][pos.y].rigid;
 
-    if (f->get_id() == Feature_id::trap)
+    if (f->id() == Feature_id::trap)
     {
         if (!static_cast<const Trap*>(f)->is_hidden()) {is_on_visible_trap = true;}
     }
@@ -737,7 +737,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
             }
             else
             {
-                msg_log::add(get_name_the() + " dies.");
+                msg_log::add(name_the() + " dies.");
             }
         }
     }
@@ -827,7 +827,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
 void Actor::add_light(bool light_map[MAP_W][MAP_H]) const
 {
     bool props[size_t(Prop_id::END)];
-    prop_handler_->get_prop_ids(props);
+    prop_handler_->prop_ids(props);
 
     if (state_ == Actor_state::alive && props[int(Prop_id::radiant)])
     {

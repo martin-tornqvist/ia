@@ -58,7 +58,7 @@ void Inventory::store_to_save_lines(vector<string>& lines) const
 
         if (item)
         {
-            lines.push_back(to_str(int(item->get_id())));
+            lines.push_back(to_str(int(item->id())));
             lines.push_back(to_str(item->nr_items_));
             item->store_to_save_lines(lines);
         }
@@ -72,7 +72,7 @@ void Inventory::store_to_save_lines(vector<string>& lines) const
 
     for (Item* item : general_)
     {
-        lines.push_back(to_str(int(item->get_id())));
+        lines.push_back(to_str(int(item->id())));
         lines.push_back(to_str(item->nr_items_));
         item->store_to_save_lines(lines);
     }
@@ -130,19 +130,19 @@ bool Inventory::has_item_in_backpack(const Item_id id) const
 {
     auto it = std::find_if(begin(general_), end(general_), [id](Item * item)
     {
-        return item->get_id() == id;
+        return item->id() == id;
     });
 
     return it != end(general_);
 }
 
-int Inventory::get_item_stack_size_in_general(const Item_id id) const
+int Inventory::item_stack_size_in_general(const Item_id id) const
 {
     for (size_t i = 0; i < general_.size(); ++i)
     {
-        if (general_[i]->get_data().id == id)
+        if (general_[i]->data().id == id)
         {
-            if (general_[i]->get_data().is_stackable)
+            if (general_[i]->data().is_stackable)
             {
                 return general_[i]->nr_items_;
             }
@@ -160,7 +160,7 @@ void Inventory::decr_dynamite_in_general()
 {
     for (size_t i = 0; i < general_.size(); ++i)
     {
-        if (general_[i]->get_data().id == Item_id::dynamite)
+        if (general_[i]->data().id == Item_id::dynamite)
         {
             decr_item_in_general(i);
             break;
@@ -173,13 +173,13 @@ void Inventory::put_in_general(Item* item)
     bool is_stacked = false;
 
     //If item stacks, see if there is other items of same type
-    if (item->get_data().is_stackable)
+    if (item->data().is_stackable)
     {
         for (size_t i = 0; i < general_.size(); ++i)
         {
             Item* const other = general_[i];
 
-            if (other->get_id() == item->get_id())
+            if (other->id() == item->id())
             {
                 //Keeping picked up item and destroying the one in the inventory
                 //(then the parameter pointer is still valid).
@@ -238,23 +238,23 @@ void Inventory::drop_all_non_intrinsic(const Pos& pos)
 
 bool Inventory::has_ammo_forFirearm_in_inventory()
 {
-    Wpn* weapon = static_cast<Wpn*>(get_item_in_slot(Slot_id::wielded));
+    Wpn* weapon = static_cast<Wpn*>(item_in_slot(Slot_id::wielded));
 
     //If weapon found
     if (weapon)
     {
-        assert(!weapon->get_data().ranged.has_infinite_ammo); //Should not happen
+        assert(!weapon->data().ranged.has_infinite_ammo); //Should not happen
 
         //If weapon is a firearm
-        if (weapon->get_data().ranged.is_ranged_wpn)
+        if (weapon->data().ranged.is_ranged_wpn)
         {
             //Get weapon ammo type
-            const Item_id ammo_id = weapon->get_data().ranged.ammo_item_id;
+            const Item_id ammo_id = weapon->data().ranged.ammo_item_id;
 
             //Look for that ammo type in inventory
             for (size_t i = 0; i < general_.size(); ++i)
             {
-                if (general_[i]->get_data().id == ammo_id)
+                if (general_[i]->data().id == ammo_id)
                 {
                     return true;
                 }
@@ -267,8 +267,8 @@ bool Inventory::has_ammo_forFirearm_in_inventory()
 
 void Inventory::decr_item_in_slot(Slot_id slot_id)
 {
-    Item* item = get_item_in_slot(slot_id);
-    bool stack = item->get_data().is_stackable;
+    Item* item = item_in_slot(slot_id);
+    bool stack = item->data().is_stackable;
     bool delete_item = true;
 
     if (stack)
@@ -324,7 +324,7 @@ void Inventory::remove_item_in_backpack_with_ptr(Item* const item, const bool DE
 void Inventory::decr_item_in_general(const size_t IDX)
 {
     Item* item              = general_[IDX];
-    bool  is_stackable       = item->get_data().is_stackable;
+    bool  is_stackable       = item->data().is_stackable;
     bool  should_delete_item  = true;
 
     if (is_stackable)
@@ -344,7 +344,7 @@ void Inventory::decr_item_type_in_general(const Item_id id)
 {
     for (size_t i = 0; i < general_.size(); ++i)
     {
-        if (general_[i]->get_data().id == id)
+        if (general_[i]->data().id == id)
         {
             decr_item_in_general(i);
             return;
@@ -403,12 +403,12 @@ void Inventory::equip_general_item(const size_t GEN_IDX, const Slot_id slot_id)
 
     move_item_to_slot(slots_[int(slot_id)], GEN_IDX);
 
-    const bool IS_PLAYER  = this == &map::player->get_inv();
+    const bool IS_PLAYER  = this == &map::player->inv();
 
     if (IS_PLAYER)
     {
-        Item* const   item_after = get_item_in_slot(slot_id);
-        const string  name      = item_after->get_name(Item_ref_type::plural);
+        Item* const   item_after = item_in_slot(slot_id);
+        const string  name      = item_after->name(Item_ref_type::plural);
         string        msg       = "";
 
         switch (slot_id)
@@ -523,11 +523,11 @@ void Inventory::remove_without_destroying(const Inv_type inv_type, const size_t 
     }
 }
 
-Item* Inventory::get_first_item_in_backpack_with_id(const Item_id id)
+Item* Inventory::first_item_in_backpack_with_id(const Item_id id)
 {
     auto it = std::find_if(begin(general_), end(general_), [id](Item * item)
     {
-        return item->get_id() == id;
+        return item->id() == id;
     });
 
     if (it == end(general_))
@@ -538,11 +538,11 @@ Item* Inventory::get_first_item_in_backpack_with_id(const Item_id id)
     return *it;
 }
 
-int Inventory::get_backpack_idx_with_item_id(const Item_id id) const
+int Inventory::backpack_idx_with_item_id(const Item_id id) const
 {
     for (size_t i = 0; i < general_.size(); ++i)
     {
-        if (general_[i]->get_id() == id)
+        if (general_[i]->id() == id)
         {
             return i;
         }
@@ -551,15 +551,15 @@ int Inventory::get_backpack_idx_with_item_id(const Item_id id) const
     return -1;
 }
 
-Item* Inventory::get_item_in_slot(Slot_id id) const
+Item* Inventory::item_in_slot(Slot_id id) const
 {
     assert(id != Slot_id::END && "Illegal slot id");
     return slots_[int(id)].item;
 }
 
-Item* Inventory::get_intrinsic_in_element(int idx) const
+Item* Inventory::intrinsic_in_element(int idx) const
 {
-    if (get_intrinsics_size() > idx)
+    if (intrinsics_size() > idx)
     {
         return intrinsics_[idx];
     }
@@ -569,13 +569,13 @@ Item* Inventory::get_intrinsic_in_element(int idx) const
 
 void Inventory::put_in_intrinsics(Item* item)
 {
-    assert(item->get_data().type == Item_type::melee_wpn_intr ||
-           item->get_data().type == Item_type::ranged_wpn_intr);
+    assert(item->data().type == Item_type::melee_wpn_intr ||
+           item->data().type == Item_type::ranged_wpn_intr);
 
     intrinsics_.push_back(item);
 }
 
-Item* Inventory::get_last_item_in_general()
+Item* Inventory::last_item_in_general()
 {
     if (!general_.empty()) {return general_[general_.size() - 1];}
 
@@ -605,18 +605,18 @@ void Inventory::put_in_slot(const Slot_id id, Item* item)
     assert(false && "Bad slot id");
 }
 
-int Inventory::get_total_item_weight() const
+int Inventory::total_item_weight() const
 {
     int weight = 0;
 
     for (size_t i = 0; i < size_t(Slot_id::END); ++i)
     {
-        if (slots_[i].item) {weight += slots_[i].item->get_weight();}
+        if (slots_[i].item) {weight += slots_[i].item->weight();}
     }
 
     for (size_t i = 0; i < general_.size(); ++i)
     {
-        weight += general_[i]->get_weight();
+        weight += general_[i]->weight();
     }
 
     return weight;
@@ -627,8 +627,8 @@ struct Lexicograhical_compare_items
 {
     bool operator()(const Item* const item1, const Item* const item2)
     {
-        const string& item_name1 = item1->get_name(Item_ref_type::plain);
-        const string& item_name2 = item2->get_name(Item_ref_type::plain);
+        const string& item_name1 = item1->name(Item_ref_type::plain);
+        const string& item_name2 = item2->name(Item_ref_type::plain);
         return lexicographical_compare(item_name1.begin(), item_name1.end(),
                                        item_name2.begin(), item_name2.end());
     }
@@ -647,9 +647,9 @@ void Inventory::sort_general_inventory()
         //Check if item should be added to any existing color group
         for (vector<Item*>& group : sort_buffer)
         {
-            const Clr clr_cur_group = group[0]->get_interface_clr();
+            const Clr clr_cur_group = group[0]->interface_clr();
 
-            if (utils::is_clr_eq(item->get_interface_clr(), clr_cur_group))
+            if (utils::is_clr_eq(item->interface_clr(), clr_cur_group))
             {
                 group.push_back(item);
                 is_added_to_buffer = true;

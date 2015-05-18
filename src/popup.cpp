@@ -21,7 +21,7 @@ namespace
 const int TEXT_W_STD    = 39;
 const int TEXT_X0_STD   = MAP_W_HALF - ((TEXT_W_STD) / 2);
 
-int print_box_and_get_title_yPos(const int TEXT_H_TOT, const int TEXT_W)
+int print_box_and_get_title_y_pos(const int TEXT_H_TOT, const int TEXT_W)
 {
     const int BOX_W       = TEXT_W + 2;
     const int BOX_H       = TEXT_H_TOT + 2;
@@ -66,7 +66,7 @@ void menu_msg_drawing_helper(const vector<string>& lines,
         text_width += 2;
     }
 
-    int y = print_box_and_get_title_yPos(TEXT_H_TOT, text_width);
+    int y = print_box_and_get_title_y_pos(TEXT_H_TOT, text_width);
 
     if (!title.empty())
     {
@@ -130,7 +130,7 @@ void show_msg(const std::string& msg,
 
     const int TEXT_H_TOT =  int(lines.size()) + 3;
 
-    int y = print_box_and_get_title_yPos(TEXT_H_TOT, TEXT_W);
+    int y = print_box_and_get_title_y_pos(TEXT_H_TOT, TEXT_W);
 
     if (sfx != Sfx_id::END)
     {
@@ -201,18 +201,18 @@ int show_menu_msg(const string&           msg,
 
     if (sfx != Sfx_id::END) {audio::play(sfx);}
 
-    menu_msg_drawing_helper(lines, choices, DRAW_MAP_AND_INTERFACE, browser.get_pos().y,
+    menu_msg_drawing_helper(lines, choices, DRAW_MAP_AND_INTERFACE, browser.pos().y,
                             TEXT_X0_STD, TEXT_H_TOT, title);
 
     while (true)
     {
-        const Menu_action action = menu_input_handling::get_action(browser);
+        const Menu_action action = menu_input_handling::action(browser);
 
         switch (action)
         {
         case Menu_action::browsed:
             menu_msg_drawing_helper(lines, choices, DRAW_MAP_AND_INTERFACE,
-                                    browser.get_pos().y, TEXT_X0_STD, TEXT_H_TOT, title);
+                                    browser.pos().y, TEXT_X0_STD, TEXT_H_TOT, title);
             break;
 
         case Menu_action::esc:
@@ -233,7 +233,7 @@ int show_menu_msg(const string&           msg,
                 render::draw_map_and_interface();
             }
 
-            return browser.get_pos().y;
+            return browser.pos().y;
         }
     }
 }

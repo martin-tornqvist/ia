@@ -176,18 +176,18 @@ void mk_bool_map_from_vector(const vector<Pos>& positions, bool out[MAP_W][MAP_H
     for (const Pos& p : positions) {out[p.x][p.y] = true;}
 }
 
-void get_actor_cells(const vector<Actor*>& actors, vector<Pos>& out)
+void actor_cells(const vector<Actor*>& actors, vector<Pos>& out)
 {
     out.clear();
 
     for (const auto* const a : actors) {out.push_back(a->pos);}
 }
 
-Actor* get_actor_at_pos(const Pos& pos, Actor_state state)
+Actor* actor_at_pos(const Pos& pos, Actor_state state)
 {
     for (auto* const actor : game_time::actors_)
     {
-        if (actor->pos == pos && actor->get_state() == state)
+        if (actor->pos == pos && actor->state() == state)
         {
             return actor;
         }
@@ -196,11 +196,11 @@ Actor* get_actor_at_pos(const Pos& pos, Actor_state state)
     return nullptr;
 }
 
-Mob* get_first_mob_at_pos(const Pos& pos)
+Mob* first_mob_at_pos(const Pos& pos)
 {
     for (auto* const mob : game_time::mobs_)
     {
-        if (mob->get_pos() == pos) {return mob;}
+        if (mob->pos() == pos) {return mob;}
     }
 
     return nullptr;
@@ -277,7 +277,7 @@ int taxicab_dist(const Pos& p0, const Pos& p1)
     return abs(p1.x - p0.x) + abs(p1.y - p0.y);
 }
 
-Pos get_closest_pos(const Pos& p, const vector<Pos>& positions)
+Pos closest_pos(const Pos& p, const vector<Pos>& positions)
 {
     int dist_to_nearest = INT_MAX;
     Pos closest_pos;
@@ -296,7 +296,7 @@ Pos get_closest_pos(const Pos& p, const vector<Pos>& positions)
     return closest_pos;
 }
 
-Actor* get_random_closest_actor(const Pos& c, const vector<Actor*>& actors)
+Actor* random_closest_actor(const Pos& c, const vector<Actor*>& actors)
 {
     if (actors.empty())      {return nullptr;}
 
@@ -350,7 +350,7 @@ bool is_pos_adj(const Pos& pos1, const Pos& pos2, const bool COUNT_SAME_CELL_AS_
     return true;
 }
 
-Time_data get_cur_time()
+Time_data cur_time()
 {
     time_t      t   = time(nullptr);
     struct tm*  now = localtime(&t);
@@ -367,8 +367,8 @@ bool is_val_in_range(const int VAL, const Range& range)
 } //utils
 
 //------------------------------------------------------ TIME DATA
-string Time_data::get_time_str(const Time_type lowest,
-                               const bool ADD_SEPARATORS) const
+string Time_data::time_str(const Time_type lowest,
+                           const bool ADD_SEPARATORS) const
 {
     string ret = to_str(year_);
 
@@ -418,7 +418,7 @@ const double edge[4] =
 
 } //namespace
 
-Dir get_dir(const Pos& offset)
+Dir dir(const Pos& offset)
 {
     assert(offset.x >= -1 && offset.y >= -1 && offset.x <= 1 && offset.y <= 1);
 
@@ -449,7 +449,7 @@ Dir get_dir(const Pos& offset)
     return Dir::END;
 }
 
-Pos get_offset(const Dir dir)
+Pos offset(const Dir dir)
 {
     assert(dir != Dir::END);
 
@@ -479,7 +479,7 @@ Pos get_offset(const Dir dir)
     return Pos(0, 0);
 }
 
-Pos get_rnd_adj_pos(const Pos& origin, const bool IS_ORIGIN_ALLOWED)
+Pos rnd_adj_pos(const Pos& origin, const bool IS_ORIGIN_ALLOWED)
 {
     if (IS_ORIGIN_ALLOWED)
     {
@@ -492,58 +492,58 @@ Pos get_rnd_adj_pos(const Pos& origin, const bool IS_ORIGIN_ALLOWED)
     }
 }
 
-void get_compass_dir_name(const Pos& from_pos, const Pos& to_pos, string& str_ref)
+void compass_dir_name(const Pos& from_pos, const Pos& to_pos, string& dst)
 {
 
-    str_ref = "";
+    dst = "";
 
     const Pos offset(to_pos - from_pos);
     const double ANGLE_DB = atan2(-offset.y, offset.x);
 
     if (ANGLE_DB        <  -edge[2] && ANGLE_DB >  -edge[3])
     {
-        str_ref = "SW";
+        dst = "SW";
     }
     else if (ANGLE_DB <= -edge[1] && ANGLE_DB >= -edge[2])
     {
-        str_ref = "S";
+        dst = "S";
     }
     else if (ANGLE_DB <  -edge[0] && ANGLE_DB >  -edge[1])
     {
-        str_ref = "SE";
+        dst = "SE";
     }
     else if (ANGLE_DB >= -edge[0] && ANGLE_DB <=  edge[0])
     {
-        str_ref = "E";
+        dst = "E";
     }
     else if (ANGLE_DB >   edge[0] && ANGLE_DB <   edge[1])
     {
-        str_ref = "NE";
+        dst = "NE";
     }
     else if (ANGLE_DB >=  edge[1] && ANGLE_DB <=  edge[2])
     {
-        str_ref = "N";
+        dst = "N";
     }
     else if (ANGLE_DB >   edge[2] && ANGLE_DB <   edge[3])
     {
-        str_ref = "NW";
+        dst = "NW";
     }
     else
     {
-        str_ref = "W";
+        dst = "W";
     }
 }
 
-void get_compass_dir_name(const Dir dir, string& str_ref)
+void compass_dir_name(const Dir dir, string& dst)
 {
 
-    const Pos& offset = get_offset(dir);
-    str_ref = compass_dir_names[offset.x + 1][offset.y + 1];
+    const Pos& o = offset(dir);
+    dst = compass_dir_names[o.x + 1][o.y + 1];
 }
 
-void get_compass_dir_name(const Pos& offset, string& str_ref)
+void compass_dir_name(const Pos& offs, string& dst)
 {
-    str_ref = compass_dir_names[offset.x + 1][offset.y + 1];
+    dst = compass_dir_names[offs.x + 1][offs.y + 1];
 }
 
 bool is_cardinal(const Pos& d)

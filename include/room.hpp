@@ -100,10 +100,10 @@ public:
     virtual bool is_allowed() const {return true;}
 
 protected:
-    virtual Range get_nr_auto_features_allowed()  const = 0;
-    virtual int   get_base_pct_chance_drk()      const = 0;
+    virtual Range nr_auto_features_allowed()  const = 0;
+    virtual int   base_pct_chance_drk()      const = 0;
 
-    size_t try_get_auto_feature_placement(
+    size_t try_auto_feature_placement(
         const std::vector<Pos>& adj_to_walls,
         const std::vector<Pos>& away_from_walls,
         const std::vector<const Feature_data_t*>& feature_data_bucket,
@@ -123,8 +123,8 @@ public:
     ~Plain_room() {}
 
 protected:
-    Range   get_nr_auto_features_allowed()                        const override;
-    int     get_base_pct_chance_drk()                             const override;
+    Range   nr_auto_features_allowed()                        const override;
+    int     base_pct_chance_drk()                             const override;
     void    on_pre_connect_(bool door_proposals[MAP_W][MAP_H])        override;
     void    on_post_connect_(bool door_proposals[MAP_W][MAP_H])        override;
 };
@@ -139,8 +139,8 @@ public:
     bool    is_allowed()                                       const override;
 
 protected:
-    Range   get_nr_auto_features_allowed()                        const override;
-    int     get_base_pct_chance_drk()                             const override;
+    Range   nr_auto_features_allowed()                        const override;
+    int     base_pct_chance_drk()                             const override;
     void    on_pre_connect_(bool door_proposals[MAP_W][MAP_H])        override;
     void    on_post_connect_(bool door_proposals[MAP_W][MAP_H])        override;
 };
@@ -155,8 +155,8 @@ public:
     bool    is_allowed()                                       const override;
 
 protected:
-    Range   get_nr_auto_features_allowed()                        const override;
-    int     get_base_pct_chance_drk()                             const override;
+    Range   nr_auto_features_allowed()                        const override;
+    int     base_pct_chance_drk()                             const override;
     void    on_pre_connect_(bool door_proposals[MAP_W][MAP_H])        override;
     void    on_post_connect_(bool door_proposals[MAP_W][MAP_H])        override;
 };
@@ -171,8 +171,8 @@ public:
     bool    is_allowed()                                       const override;
 
 protected:
-    Range   get_nr_auto_features_allowed()                        const override;
-    int     get_base_pct_chance_drk()                             const override;
+    Range   nr_auto_features_allowed()                        const override;
+    int     base_pct_chance_drk()                             const override;
     void    on_pre_connect_(bool door_proposals[MAP_W][MAP_H])        override;
     void    on_post_connect_(bool door_proposals[MAP_W][MAP_H])        override;
 };
@@ -187,8 +187,8 @@ public:
     bool    is_allowed()                                       const override;
 
 protected:
-    Range   get_nr_auto_features_allowed()                        const override;
-    int     get_base_pct_chance_drk()                             const override;
+    Range   nr_auto_features_allowed()                        const override;
+    int     base_pct_chance_drk()                             const override;
     void    on_pre_connect_(bool door_proposals[MAP_W][MAP_H])        override;
     void    on_post_connect_(bool door_proposals[MAP_W][MAP_H])        override;
 };
@@ -203,8 +203,8 @@ public:
     bool    is_allowed()                                       const override;
 
 protected:
-    Range   get_nr_auto_features_allowed()                        const override;
-    int     get_base_pct_chance_drk()                             const override;
+    Range   nr_auto_features_allowed()                        const override;
+    int     base_pct_chance_drk()                             const override;
     void    on_pre_connect_(bool door_proposals[MAP_W][MAP_H])        override;
     void    on_post_connect_(bool door_proposals[MAP_W][MAP_H])        override;
 };
@@ -219,8 +219,8 @@ public:
     bool    is_allowed()                                       const override;
 
 protected:
-    Range   get_nr_auto_features_allowed()                        const override;
-    int     get_base_pct_chance_drk()                             const override;
+    Range   nr_auto_features_allowed()                        const override;
+    int     base_pct_chance_drk()                             const override;
     void    on_pre_connect_(bool door_proposals[MAP_W][MAP_H])        override;
     void    on_post_connect_(bool door_proposals[MAP_W][MAP_H])        override;
 };
@@ -235,8 +235,8 @@ public:
     bool    is_allowed()                                       const override;
 
 protected:
-    Range   get_nr_auto_features_allowed()                        const override;
-    int     get_base_pct_chance_drk()                             const override;
+    Range   nr_auto_features_allowed()                        const override;
+    int     base_pct_chance_drk()                             const override;
     void    on_pre_connect_(bool door_proposals[MAP_W][MAP_H])        override;
     void    on_post_connect_(bool door_proposals[MAP_W][MAP_H])        override;
 };
@@ -251,8 +251,8 @@ public:
     bool    is_allowed()                                       const override;
 
 protected:
-    Range   get_nr_auto_features_allowed()                        const override;
-    int     get_base_pct_chance_drk()                             const override;
+    Range   nr_auto_features_allowed()                        const override;
+    int     base_pct_chance_drk()                             const override;
     void    on_pre_connect_(bool door_proposals[MAP_W][MAP_H])        override;
     void    on_post_connect_(bool door_proposals[MAP_W][MAP_H])        override;
 };
@@ -267,8 +267,8 @@ public:
     bool    is_allowed()                                       const override;
 
 protected:
-    Range   get_nr_auto_features_allowed()                        const override;
-    int     get_base_pct_chance_drk()                             const override;
+    Range   nr_auto_features_allowed()                        const override;
+    int     base_pct_chance_drk()                             const override;
     void    on_pre_connect_(bool door_proposals[MAP_W][MAP_H])        override;
     void    on_post_connect_(bool door_proposals[MAP_W][MAP_H])        override;
 };
@@ -283,8 +283,8 @@ public:
     bool    is_allowed()                                       const override;
 
 protected:
-    Range   get_nr_auto_features_allowed()                        const override;
-    int     get_base_pct_chance_drk()                             const override;
+    Range   nr_auto_features_allowed()                        const override;
+    int     base_pct_chance_drk()                             const override;
     void    on_pre_connect_(bool door_proposals[MAP_W][MAP_H])        override;
     void    on_post_connect_(bool door_proposals[MAP_W][MAP_H])        override;
 };

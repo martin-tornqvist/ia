@@ -165,14 +165,14 @@ void go_to_nxt()
     if (map::player->phobias[int(Phobia::deep_places)])
     {
         msg_log::add("I am plagued by my phobia of deep places!");
-        map::player->get_prop_handler().try_apply_prop(new Prop_terrified(Prop_turns::std));
+        map::player->prop_handler().try_apply_prop(new Prop_terrified(Prop_turns::std));
         return;
     }
 
     TRACE_FUNC_END;
 }
 
-Map_type get_map_type()
+Map_type map_type()
 {
     return map_list.front().type;
 }
