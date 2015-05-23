@@ -29,7 +29,6 @@ void pickup_effects(Actor* actor, Item* item)
 
 } //namespace
 
-//Can always be called, to check if something is there to be picked up.
 void try_pick()
 {
     const Pos&  pos   = map::player->pos;
@@ -37,29 +36,25 @@ void try_pick()
 
     if (item)
     {
-        Inventory& player_inv = map::player->inv();
+        Inventory&      player_inv  = map::player->inv();
+        const string    ITEM_NAME   = item->name(Item_ref_type::plural);
 
-        const string ITEM_NAME = item->name(Item_ref_type::plural);
+        //First try to add it to carried item stack in thrown slot.
+        Item* const carried_missile = player_inv.item_in_slot(Slot_id::thrown);
 
-        //If picked up item is missile weapon, try to add it to carried stack.
-        if (item->data().ranged.is_throwing_wpn)
+        if (
+            item->data().is_stackable   &&
+            carried_missile             &&
+            item->id() == carried_missile->data().id)
         {
-            Item* const carried_missile = player_inv.item_in_slot(Slot_id::thrown);
+            audio::play(Sfx_id::pickup);
 
-            if (carried_missile)
-            {
-                if (item->id() == carried_missile->data().id)
-                {
-                    audio::play(Sfx_id::pickup);
-
-                    msg_log::add("I add " + ITEM_NAME + " to my missile stack.");
-                    carried_missile->nr_items_ += item->nr_items_;
-                    delete item;
-                    map::cells[pos.x][pos.y].item = nullptr;
-                    game_time::tick();
-                    return;
-                }
-            }
+            msg_log::add("I add " + ITEM_NAME + " to my missile stack.");
+            carried_missile->nr_items_ += item->nr_items_;
+            delete item;
+            map::cells[pos.x][pos.y].item = nullptr;
+            game_time::tick();
+            return;
         }
 
         audio::play(Sfx_id::pickup);

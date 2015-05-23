@@ -73,10 +73,9 @@ Item_data_t::Item_melee_data::~Item_melee_data()
 
 Item_data_t::Item_ranged_data::Item_ranged_data() :
     is_ranged_wpn(false),
-    is_throwing_wpn(false),
     is_machine_gun(false),
     is_shotgun(false),
-    max_nr_ammo_in_clip(0),
+    max_ammo(0),
     dmg(Dice_param()),
     throw_dmg(Dice_param()),
     hit_chance_mod(0),
@@ -87,11 +86,11 @@ Item_data_t::Item_ranged_data::Item_ranged_data() :
     ammo_item_id(Item_id::END),
     dmg_type(Dmg_type::physical),
     has_infinite_ammo(false),
-    missile_glyph('/'),
-    missile_tile(Tile_id::projectile_std_front_slash),
-    missile_clr(clr_white),
-    missile_leaves_trail(false),
-    missile_leaves_smoke(false),
+    projectile_glyph('/'),
+    projectile_tile(Tile_id::projectile_std_front_slash),
+    projectile_clr(clr_white),
+    projectile_leaves_trail(false),
+    projectile_leaves_smoke(false),
     att_msgs(Item_att_msgs()),
     snd_msg(""),
     snd_vol(Snd_vol::low),
@@ -170,8 +169,8 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.melee.dmg = pair<int, int>(1, 6);
         d.main_att_mode = Main_att_mode::ranged;
         d.ranged.is_ranged_wpn = true;
-        d.ranged.missile_glyph = '/';
-        d.ranged.missile_clr = clr_white;
+        d.ranged.projectile_glyph = '/';
+        d.ranged.projectile_clr = clr_white;
         d.spawn_std_range.upper = DLVL_LAST_MID_GAME;
         d.melee.hit_small_sfx = Sfx_id::hit_small;
         d.melee.hit_medium_sfx = Sfx_id::hit_medium;
@@ -188,7 +187,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.chance_to_incl_in_floor_spawn_list = 0;
         d.allow_spawn = false;
         d.melee.is_melee_wpn = false;
-        d.ranged.missile_glyph = '*';
+        d.ranged.projectile_glyph = '*';
         d.ranged.snd_vol = Snd_vol::low;
         break;
 
@@ -197,7 +196,6 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.type = Item_type::throwing_wpn;
         d.weight = Item_weight::extra_light;
         d.is_stackable = true;
-        d.ranged.is_throwing_wpn = true;
         d.spawn_std_range.upper = DLVL_LAST_MID_GAME;
         d.ranged.snd_vol = Snd_vol::low;
         break;
@@ -257,7 +255,6 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.is_identified = false;
         d.glyph = '!';
         d.tile = Tile_id::potion;
-        d.ranged.is_throwing_wpn = true;
         d.ranged.throw_hit_chance_mod = 15;
         d.ranged.throw_dmg = Dice_param(1, 3, 0);
         d.max_stack_at_spawn = 2;
@@ -393,6 +390,7 @@ void init_data_list()
     d.tile = Tile_id::shotgun;
     d.ranged.is_shotgun = true;
     d.melee.att_msgs = {"strike", "strikes me with a shotgun"};
+    d.ranged.max_ammo = 2;
     d.ranged.dmg = Dice_param(8, 3);
     d.ranged.effective_range = 3;
     d.ranged.ammo_item_id = Item_id::shotgun_shell;
@@ -420,6 +418,7 @@ void init_data_list()
     d.tile = Tile_id::shotgun;
     d.ranged.is_shotgun = true;
     d.melee.att_msgs = {"strike", "strikes me with a shotgun"};
+    d.ranged.max_ammo = 8;
     d.ranged.dmg = Dice_param(6, 3);
     d.ranged.effective_range = 5;
     d.ranged.ammo_item_id = Item_id::shotgun_shell;
@@ -457,14 +456,15 @@ void init_data_list()
     d.weight = Item_weight::heavy;
     d.tile = Tile_id::incinerator;
     d.melee.att_msgs = {"strike", "strikes me with an Incinerator"};
+    d.ranged.max_ammo = 5;
     d.ranged.dmg = Dice_param(1, 3);
     d.ranged.effective_range = 8;
     d.ranged.dmg_info_override = "* ";
     d.ranged.ammo_item_id = Item_id::incinerator_ammo;
     d.ranged.att_msgs = {"fire", "fires an incinerator"};
     d.ranged.snd_msg = "I hear the blast of a launched missile.";
-    d.ranged.missile_glyph = '*';
-    d.ranged.missile_clr = clr_red_lgt;
+    d.ranged.projectile_glyph = '*';
+    d.ranged.projectile_clr = clr_red_lgt;
     d.spawn_std_range.lower = 5;
     d.chance_to_incl_in_floor_spawn_list = 25;
     add_feature_found_in(d, Feature_id::chest, 25);
@@ -483,9 +483,9 @@ void init_data_list()
         "Ammunition designed for Incinerators."
     };
     d.weight = Item_weight::light;
-    d.ranged.max_nr_ammo_in_clip = 5;
     d.spawn_std_range.lower = 5;
     d.max_stack_at_spawn = 1;
+    d.ranged.max_ammo = data[size_t(Item_id::incinerator)].ranged.max_ammo;
     d.chance_to_incl_in_floor_spawn_list = 25;
     add_feature_found_in(d, Feature_id::chest, 25);
     add_feature_found_in(d, Feature_id::cabinet, 25);
@@ -505,6 +505,7 @@ void init_data_list()
     d.tile = Tile_id::tommy_gun;
     d.melee.att_msgs = {"strike", "strikes me with a Tommy Gun"};
     d.ranged.is_machine_gun = true;
+    d.ranged.max_ammo = 50;
     d.ranged.dmg = Dice_param(2, 2, 2);
     d.ranged.hit_chance_mod = -10;
     d.ranged.effective_range = 8;
@@ -526,7 +527,7 @@ void init_data_list()
     {
         "Ammunition used by Tommy Guns."
     };
-    d.ranged.max_nr_ammo_in_clip = 50;
+    d.ranged.max_ammo = data[size_t(Item_id::machine_gun)].ranged.max_ammo;
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
@@ -541,6 +542,7 @@ void init_data_list()
     };
     d.weight = Item_weight::light;
     d.tile = Tile_id::pistol;
+    d.ranged.max_ammo = 7;
     d.ranged.dmg = Dice_param(1, 8, 4);
     d.ranged.effective_range = 6;
     d.ranged.ammo_item_id = Item_id::pistol_clip;
@@ -564,7 +566,7 @@ void init_data_list()
     {
         "Ammunition used by Colt pistols."
     };
-    d.ranged.max_nr_ammo_in_clip = 7;
+    d.ranged.max_ammo = data[size_t(Item_id::pistol)].ranged.max_ammo;
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
@@ -586,6 +588,7 @@ void init_data_list()
     d.weight = Item_weight::medium;
     d.tile = Tile_id::mi_go_gun;
     d.clr = clr_yellow;
+    d.ranged.max_ammo = 16;
     d.ranged.dmg = Dice_param(3, 6, 0);
     d.ranged.hit_chance_mod = 5;
     d.ranged.effective_range = 4;
@@ -593,8 +596,8 @@ void init_data_list()
     d.ranged.dmg_type = Dmg_type::electric;
     d.ranged.ammo_item_id = Item_id::mi_go_gun_ammo;
     d.ranged.has_infinite_ammo = false;
-    d.ranged.missile_leaves_trail = true;
-    d.ranged.missile_clr = clr_yellow;
+    d.ranged.projectile_leaves_trail = true;
+    d.ranged.projectile_clr = clr_yellow;
     d.melee.att_msgs = {"strike", "strikes me with a Mi-go Electric Gun"};
     d.ranged.att_msgs = {"fire", "fires a Mi-go Electric Gun"};
     d.ranged.snd_msg = "I hear a bolt of electricity.";
@@ -613,9 +616,9 @@ void init_data_list()
     {
         "Ammunition for the Mi-go Electric gun."
     };
+    d.ranged.max_ammo = data[size_t(Item_id::mi_go_gun)].ranged.max_ammo;
     d.clr = clr_yellow;
     d.spawn_std_range = Range(-1, -1);
-    d.ranged.max_nr_ammo_in_clip = 20;
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::ranged_wpn);
@@ -627,6 +630,7 @@ void init_data_list()
     };
     d.weight = Item_weight::light;
     d.tile = Tile_id::flare_gun;
+    d.ranged.max_ammo = 1;
     d.ranged.dmg = Dice_param(1, 3, 0);
     d.ranged.effective_range = 3;
     d.ranged.dmg_info_override = "*";
@@ -653,9 +657,9 @@ void init_data_list()
     d.tile = Tile_id::tommy_gun;
     d.clr = clr_blue_lgt;
     d.melee.att_msgs = {"strike", "strikes me with a Spike Gun"};
-    d.ranged.is_machine_gun = false;
-    d.ranged.hit_chance_mod = 0;
+    d.ranged.max_ammo = 12;
     d.ranged.dmg = Dice_param(1, 7, 0);
+    d.ranged.hit_chance_mod = 0;
     d.ranged.effective_range = 4;
     d.ranged.dmg_type = Dmg_type::physical;
     d.ranged.knocks_back = true;
@@ -663,8 +667,8 @@ void init_data_list()
     d.ranged.att_msgs = {"fire", "fires a Spike Gun"};
     d.ranged.snd_msg = "I hear a very crude weapon being fired.";
     d.ranged.makes_ricochet_snd = true;
-    d.ranged.missile_glyph = '/';
-    d.ranged.missile_clr = clr_gray;
+    d.ranged.projectile_glyph = '/';
+    d.ranged.projectile_clr = clr_gray;
     d.spawn_std_range.lower = 4;
     d.ranged.att_sfx = Sfx_id::spike_gun;
     d.ranged.snd_vol = Snd_vol::low;
@@ -828,7 +832,6 @@ void init_data_list()
     d.melee.hit_chance_mod = 15;
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.throw_dmg = Dice_param(1, 10);
-    d.ranged.is_throwing_wpn = false;
     d.melee.hit_medium_sfx = Sfx_id::hit_sharp;
     d.melee.hit_hard_sfx = Sfx_id::hit_sharp;
     d.melee.miss_sfx = Sfx_id::miss_light;
@@ -1070,9 +1073,9 @@ void init_data_list()
     d.ranged.att_msgs = {"", "spits acid pus at me"};
     set_dmg_from_mon_id(d, Actor_id::bloated_zombie);
     d.ranged.snd_msg = "I hear spitting.";
-    d.ranged.missile_clr = clr_green_lgt;
+    d.ranged.projectile_clr = clr_green_lgt;
     d.ranged.dmg_type = Dmg_type::acid;
-    d.ranged.missile_glyph = '*';
+    d.ranged.projectile_glyph = '*';
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
@@ -1151,10 +1154,10 @@ void init_data_list()
     d.ranged.snd_msg = "I hear a burst of flames.";
     set_dmg_from_mon_id(d, Actor_id::fire_hound);
     d.ranged.prop_applied = new Prop_burning(Prop_turns::std);
-    d.ranged.missile_clr = clr_red_lgt;
-    d.ranged.missile_glyph = '*';
-    d.ranged.missile_leaves_trail = true;
-    d.ranged.missile_leaves_smoke = true;
+    d.ranged.projectile_clr = clr_red_lgt;
+    d.ranged.projectile_glyph = '*';
+    d.ranged.projectile_leaves_trail = true;
+    d.ranged.projectile_leaves_smoke = true;
     d.ranged.dmg_type = Dmg_type::fire;
     data[size_t(d.id)] = d;
 
@@ -1170,10 +1173,10 @@ void init_data_list()
     d.ranged.att_msgs = {"", "breaths frost at me"};
     d.ranged.snd_msg = "I hear a chilling sound.";
     set_dmg_from_mon_id(d, Actor_id::frost_hound);
-    d.ranged.missile_clr = clr_blue_lgt;
-    d.ranged.missile_glyph = '*';
-    d.ranged.missile_leaves_trail = true;
-    d.ranged.missile_leaves_smoke = true;
+    d.ranged.projectile_clr = clr_blue_lgt;
+    d.ranged.projectile_glyph = '*';
+    d.ranged.projectile_leaves_trail = true;
+    d.ranged.projectile_leaves_smoke = true;
     d.ranged.dmg_type = Dmg_type::cold;
     data[size_t(d.id)] = d;
 
@@ -1305,8 +1308,8 @@ void init_data_list()
     d.ranged.att_msgs = {"", "throws a javelin at me"};
     set_dmg_from_mon_id(d, Actor_id::deep_one);
     d.ranged.snd_msg = "";
-    d.ranged.missile_clr = clr_brown;
-    d.ranged.missile_glyph = '/';
+    d.ranged.projectile_clr = clr_brown;
+    d.ranged.projectile_glyph = '/';
     d.ranged.snd_vol = Snd_vol::low;
     data[size_t(d.id)] = d;
 

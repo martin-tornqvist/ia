@@ -23,7 +23,7 @@ public:
 
     void quaff(Actor& actor);
 
-    void collide(const Pos& pos, Actor* actor);
+    void on_collide(const Pos& pos, Actor* actor);
 
     void identify(const bool IS_SILENT_IDENTIFY) override final;
 

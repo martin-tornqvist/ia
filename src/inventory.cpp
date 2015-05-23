@@ -407,9 +407,9 @@ void Inventory::equip_general_item(const size_t GEN_IDX, const Slot_id slot_id)
 
     if (IS_PLAYER)
     {
-        Item* const   item_after = item_in_slot(slot_id);
-        const string  name      = item_after->name(Item_ref_type::plural);
-        string        msg       = "";
+        Item* const     item_after  = item_in_slot(slot_id);
+        const string    name        = item_after->name(Item_ref_type::plural);
+        string          msg         = "";
 
         switch (slot_id)
         {
@@ -422,7 +422,7 @@ void Inventory::equip_general_item(const size_t GEN_IDX, const Slot_id slot_id)
             break;
 
         case Slot_id::thrown:
-            msg = "I am now using " + name + " as missile weapon.";
+            msg = "I now have " + name + " at hand for throwing.";
             break;
 
         case Slot_id::body:

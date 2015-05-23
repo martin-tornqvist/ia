@@ -8,16 +8,15 @@ namespace config
 
 void init();
 void run_options_menu();
-void set_cell_dim_dependent_variables();
 void toggle_fullscreen();
 
 bool            is_tiles_mode();
 std::string     font_name();
 bool            is_fullscreen();
-int             screen_px_w();
-int             screen_px_h();
-int             cell_w();
-int             cell_h();
+int             scr_px_w();
+int             scr_px_h();
+int             cell_px_w();
+int             cell_px_h();
 int             log_px_h();
 int             map_px_h();
 int             map_px_offset_h();

@@ -77,7 +77,7 @@ void handle_map_mode_key_press(const Key_data& d)
     //----------------------------------- MOVEMENT
     if (d.sdl_key == SDLK_RIGHT || d.key == '6' || d.key == 'l')
     {
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             msg_log::clear();
 
@@ -100,7 +100,7 @@ void handle_map_mode_key_press(const Key_data& d)
     }
     else if (d.sdl_key == SDLK_DOWN || d.key == '2' || d.key == 'j')
     {
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             msg_log::clear();
             map::player->move_dir(Dir::down);
@@ -111,7 +111,7 @@ void handle_map_mode_key_press(const Key_data& d)
     }
     else if (d.sdl_key == SDLK_LEFT || d.key == '4' || d.key == 'h')
     {
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             msg_log::clear();
 
@@ -134,7 +134,7 @@ void handle_map_mode_key_press(const Key_data& d)
     }
     else if (d.sdl_key == SDLK_UP || d.key == '8' || d.key == 'k')
     {
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             msg_log::clear();
             map::player->move_dir(Dir::up);
@@ -145,7 +145,7 @@ void handle_map_mode_key_press(const Key_data& d)
     }
     else if (d.sdl_key == SDLK_PAGEUP || d.key == '9' || d.key == 'u')
     {
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             msg_log::clear();
             map::player->move_dir(Dir::up_right);
@@ -156,7 +156,7 @@ void handle_map_mode_key_press(const Key_data& d)
     }
     else if (d.sdl_key == SDLK_PAGEDOWN || d.key == '3' || d.key == 'n')
     {
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             msg_log::clear();
             map::player->move_dir(Dir::down_right);
@@ -167,7 +167,7 @@ void handle_map_mode_key_press(const Key_data& d)
     }
     else if (d.sdl_key == SDLK_END || d.key == '1' || d.key == 'b')
     {
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             msg_log::clear();
             map::player->move_dir(Dir::down_left);
@@ -178,7 +178,7 @@ void handle_map_mode_key_press(const Key_data& d)
     }
     else if (d.sdl_key == SDLK_HOME || d.key == '7' || d.key == 'y')
     {
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             msg_log::clear();
             map::player->move_dir(Dir::up_left);
@@ -189,7 +189,7 @@ void handle_map_mode_key_press(const Key_data& d)
     }
     else if (d.key == '5' || d.key == '.')
     {
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             msg_log::clear();
 
@@ -246,9 +246,9 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         msg_log::clear();
 
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
-            reload::reload_wielded_wpn(*(map::player) );
+            reload::reload_wielded_wpn(*(map::player));
         }
 
         clear_events();
@@ -256,11 +256,11 @@ void handle_map_mode_key_press(const Key_data& d)
     }
 
     //----------------------------------- KICK
-    else if ((d.key == 'q') )
+    else if ((d.key == 'q'))
     {
         msg_log::clear();
 
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             kick::player_kick();
             render::draw_map_and_interface();
@@ -275,7 +275,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         msg_log::clear();
 
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             close::player_close();
         }
@@ -289,7 +289,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         msg_log::clear();
 
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             jam_with_spike::player_jam();
         }
@@ -303,7 +303,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         msg_log::clear();
 
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             disarm::player_disarm();
         }
@@ -317,7 +317,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         msg_log::clear();
 
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             item_pickup::try_unload_wpn_or_pickup_ammo();
         }
@@ -333,7 +333,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
         if (
             map::player->is_alive() &&
-            map::player->prop_handler().allow_attack_ranged(true) )
+            map::player->prop_handler().allow_attack_ranged(true))
         {
             auto* const item = map::player->inv().item_in_slot(Slot_id::wielded);
 
@@ -375,7 +375,7 @@ void handle_map_mode_key_press(const Key_data& d)
                             if (
                                 actor               &&
                                 !actor->is_player() &&
-                                map::player->can_see_actor(*actor, nullptr) )
+                                map::player->can_see_actor(*actor, nullptr))
                             {
                                 bool tgt_props[size_t(Prop_id::END)];
                                 actor->prop_handler().prop_ids(tgt_props);
@@ -408,7 +408,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
                                     if (
                                         actor &&
-                                        map::player->can_see_actor(*actor, nullptr) )
+                                        map::player->can_see_actor(*actor, nullptr))
                                     {
                                         map::player->tgt_ = actor;
                                     }
@@ -431,9 +431,9 @@ void handle_map_mode_key_press(const Key_data& d)
                                     on_marker_at_pos, on_key_press,
                                     wpn->data().ranged.effective_range);
                     }
-                    else /* Not enough ammo loaded */ if (config::is_ranged_wpn_auto_reload() )
+                    else /* Not enough ammo loaded */ if (config::is_ranged_wpn_auto_reload())
                     {
-                        reload::reload_wielded_wpn(*(map::player) );
+                        reload::reload_wielded_wpn(*(map::player));
                     }
                     else // Not enough ammo loaded, and auto reloading is disabled
                     {
@@ -460,7 +460,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         msg_log::clear();
 
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             const Pos& p = map::player->pos;
             Item* const item_at_player = map::cells[p.x][p.y].item;
@@ -486,7 +486,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         msg_log::clear();
 
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             inv_handling::run_inv_screen();
         }
@@ -500,7 +500,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         msg_log::clear();
 
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
 
             const bool IS_FREE_TURN = player_bon::bg() == Bg::war_vet;
@@ -552,12 +552,12 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         msg_log::clear();
 
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             vector<Actor*> seen_mon;
             map::player->seen_foes(seen_mon);
 
-            if (seen_mon.empty() )
+            if (seen_mon.empty())
             {
                 const int TURNS_TO_APPLY = 5;
                 msg_log::add("I pause for a while...");
@@ -580,18 +580,18 @@ void handle_map_mode_key_press(const Key_data& d)
         //----------------------------------- QUICK WALK
         msg_log::clear();
 
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             vector<Actor*> seen_mon;
             map::player->seen_foes(seen_mon);
 
-            if (!seen_mon.empty() )
+            if (!seen_mon.empty())
             {
                 //Monster is seen, prevent quick move
                 msg_log::add(msg_mon_prevent_cmd);
                 render::draw_map_and_interface();
             }
-            else if (!map::player->prop_handler().allow_see() )
+            else if (!map::player->prop_handler().allow_see())
             {
                 //Player is blinded
                 msg_log::add("Not while blind.");
@@ -643,7 +643,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         msg_log::clear();
 
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             if (map::player->active_explosive)
             {
@@ -677,15 +677,15 @@ void handle_map_mode_key_press(const Key_data& d)
             }
             else //Not holding explosive
             {
-                if (map::player->prop_handler().allow_attack_ranged(true) )
+                if (map::player->prop_handler().allow_attack_ranged(true))
                 {
                     Inventory& player_inv  = map::player->inv();
                     Item* item_stack       = player_inv.item_in_slot(Slot_id::thrown);
 
                     if (item_stack)
                     {
-                        Item* item_to_throw     = item_factory::copy_item(item_stack);
-                        item_to_throw->nr_items_ = 1;
+                        Item* item_to_throw         = item_factory::copy_item(*item_stack);
+                        item_to_throw->nr_items_    = 1;
 
                         auto on_marker_at_pos = [&](const Pos & p)
                         {
@@ -696,25 +696,21 @@ void handle_map_mode_key_press(const Key_data& d)
 
                             if (
                                 actor               &&
-                                !actor->is_player()  &&
-                                map::player->can_see_actor(*actor, nullptr) )
+                                !actor->is_player() &&
+                                map::player->can_see_actor(*actor, nullptr))
                             {
                                 bool tgt_props[size_t(Prop_id::END)];
                                 actor->prop_handler().prop_ids(tgt_props);
 
                                 const bool GETS_UNDEAD_BANE_BON =
-                                    player_bon::gets_undead_bane_bon(*map::player,
-                                                                     actor->data() );
+                                    player_bon::gets_undead_bane_bon(*map::player, actor->data());
 
-                                if (
-                                    !tgt_props[int(Prop_id::ethereal)] ||
-                                    GETS_UNDEAD_BANE_BON)
+                                if (!tgt_props[int(Prop_id::ethereal)] || GETS_UNDEAD_BANE_BON)
                                 {
                                     Throw_att_data data(*map::player, *item_to_throw,
                                                         actor->pos, actor->pos);
 
-                                    msg_log::add(to_str(data.hit_chance_tot) +
-                                                 "% hit chance.");
+                                    msg_log::add(to_str(data.hit_chance_tot) + "% hit chance.");
                                 }
                             }
 
@@ -727,17 +723,19 @@ void handle_map_mode_key_press(const Key_data& d)
                             {
                                 if (p == map::player->pos)
                                 {
-                                    msg_log::add(
-                                        "I think I can persevere a little longer.");
+                                    msg_log::add("I think I can persevere a little longer.");
                                 }
-                                else
+                                else //Not aiming at player position
                                 {
                                     msg_log::clear();
                                     render::draw_map_and_interface();
 
                                     Actor* const actor = utils::actor_at_pos(p);
 
-                                    if (actor) {map::player->tgt_ = actor;}
+                                    if (actor)
+                                    {
+                                        map::player->tgt_ = actor;
+                                    }
 
                                     throwing::throw_item(*map::player, p, *item_to_throw);
                                     player_inv.decr_item_in_slot(Slot_id::thrown);
@@ -778,9 +776,9 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         msg_log::clear();
 
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
-            if (map::player->prop_handler().allow_see() )
+            if (map::player->prop_handler().allow_see())
             {
                 auto on_marker_at_pos = [&](const Pos & p)
                 {
@@ -792,7 +790,7 @@ void handle_map_mode_key_press(const Key_data& d)
                     if (
                         actor                   &&
                         actor != map::player    &&
-                        map::player->can_see_actor(*actor, nullptr) )
+                        map::player->can_see_actor(*actor, nullptr))
                     {
                         msg_log::add("[v] for description");
                     }
@@ -809,7 +807,7 @@ void handle_map_mode_key_press(const Key_data& d)
                         if (
                             actor                   &&
                             actor != map::player    &&
-                            map::player->can_see_actor(*actor, nullptr) )
+                            map::player->can_see_actor(*actor, nullptr))
                         {
                             msg_log::clear();
 
@@ -847,7 +845,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         msg_log::clear();
 
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             map::player->auto_melee();
         }
@@ -861,7 +859,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         msg_log::clear();
 
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             player_spells_handling::try_cast_prev_spell();
         }
@@ -875,7 +873,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         msg_log::clear();
 
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             player_spells_handling::player_select_spell_to_cast();
         }
@@ -983,7 +981,7 @@ void handle_map_mode_key_press(const Key_data& d)
     //----------------------------------- MENU
     else if (d.sdl_key == SDLK_ESCAPE)
     {
-        if (map::player->is_alive() )
+        if (map::player->is_alive())
         {
             msg_log::clear();
 
@@ -1132,7 +1130,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         if (IS_DEBUG_MODE)
         {
-            map::player->prop_handler().try_apply_prop(new Prop_infected(Prop_turns::std) );
+            map::player->prop_handler().try_apply_prop(new Prop_infected(Prop_turns::std));
             clear_events();
         }
 
@@ -1168,7 +1166,7 @@ void clear_events()
 {
     if (is_inited_)
     {
-        while (SDL_PollEvent(&sdl_event_) ) {}
+        while (SDL_PollEvent(&sdl_event_)) {}
     }
 }
 

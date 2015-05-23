@@ -313,7 +313,8 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
         return nullptr;
     }
 
-    // Sanity check
+    // Sanity check number of items (non-stackable items should never be set to
+    // anything other than one item)
     if (!r->data().is_stackable && NR_ITEMS != 1)
     {
         TRACE << "Specified number of items (" + to_str(NR_ITEMS) + ") != 1 for "
@@ -321,10 +322,8 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
               << int(d->id) << ", " << r->name(Item_ref_type::plain) << endl;
         assert(false);
     }
-    else
-    {
-        r->nr_items_ = NR_ITEMS;
-    }
+
+    r->nr_items_ = NR_ITEMS;
 
     return r;
 }
@@ -352,13 +351,13 @@ void set_item_randomized_properties(Item* item)
     {
         Wpn* const wpn = static_cast<Wpn*>(item);
 
-        if (wpn->ammo_max() == 1)
+        if (wpn->data().ranged.max_ammo == 1)
         {
             wpn->nr_ammo_loaded_ = rnd::coin_toss() ? 1 : 0;
         }
-        else
+        else //Weapon ammo capacity > 1
         {
-            const int AMMO_CAP = wpn->ammo_max();
+            const int AMMO_CAP = wpn->data().ranged.max_ammo;
 
             if (d.ranged.is_machine_gun)
             {
@@ -391,10 +390,11 @@ Item* mk_item_on_floor(const Item_id item_id, const Pos& pos)
     return item;
 }
 
-Item* copy_item(Item* old_item)
+Item* copy_item(const Item& item_to_copy)
 {
-    Item* new_item      = mk(old_item->data().id);
-    new_item->nr_items_ = old_item->nr_items_;
+    Item* new_item  = mk(item_to_copy.id());
+    *new_item       = item_to_copy;
+
     return new_item;
 }
 

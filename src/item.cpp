@@ -23,9 +23,18 @@ using namespace std;
 
 //---------------------------------------------------------- ITEM
 Item::Item(Item_data_t* item_data) :
-    nr_items_(1),
-    melee_dmg_plus_(0),
-    data_(item_data) {}
+    nr_items_       (1),
+    melee_dmg_plus_ (0),
+    data_           (item_data) {}
+
+Item& Item::operator=(const Item& other)
+{
+    nr_items_       = other.nr_items_;
+    melee_dmg_plus_ = other.melee_dmg_plus_;
+    data_           = other.data_;
+
+    return *this;
+}
 
 Item::~Item()
 {
@@ -412,10 +421,12 @@ Wpn::Wpn(Item_data_t* const item_data) :
     nr_ammo_loaded_(0),
     ammo_data_(nullptr)
 {
-    if (data_->ranged.ammo_item_id != Item_id::END)
+    const auto ammo_item_id = data_->ranged.ammo_item_id;
+
+    if (ammo_item_id != Item_id::END)
     {
-        ammo_data_      = &item_data::data[int(data_->ranged.ammo_item_id)];
-        nr_ammo_loaded_ = ammo_max(); //NOTE: This may read from ammo data
+        ammo_data_      = &item_data::data[int(ammo_item_id)];
+        nr_ammo_loaded_ = data_->ranged.max_ammo;
     }
 }
 
@@ -440,7 +451,9 @@ Clr Wpn::clr() const
         if (nr_ammo_loaded_ == 0)
         {
             Clr ret = data_->clr;
-            ret.r /= 2; ret.g /= 2; ret.b /= 2;
+            ret.r /= 2;
+            ret.g /= 2;
+            ret.b /= 2;
             return ret;
         }
     }
@@ -454,7 +467,7 @@ void Wpn::set_random_melee_plus()
 
     int chance = 45;
 
-    while (rnd::percent() < chance && melee_dmg_plus_ < 3)
+    while (rnd::percent(chance) && melee_dmg_plus_ < 3)
     {
         melee_dmg_plus_++;
         chance -= 5;
@@ -465,20 +478,10 @@ string Wpn::name_inf() const
 {
     if (data_->ranged.is_ranged_wpn && !data_->ranged.has_infinite_ammo)
     {
-        return to_str(nr_ammo_loaded_) + "/" + to_str(ammo_max());
+        return to_str(nr_ammo_loaded_) + "/" + to_str(data_->ranged.max_ammo);
     }
 
     return "";
-}
-
-int Wpn::ammo_max() const
-{
-    return 0;
-}
-
-bool Wpn::is_using_clip() const
-{
-    return false;
 }
 
 //---------------------------------------------------------- STAFF OF THE PHARAOHS
@@ -493,99 +496,29 @@ Pharaoh_staff::Pharaoh_staff(Item_data_t* const item_data) : Wpn(item_data)
 Sawed_off::Sawed_off(Item_data_t* const item_data) :
     Wpn(item_data) {}
 
-int Sawed_off::ammo_max() const
-{
-    return 2;
-}
-
-bool Sawed_off::is_using_clip() const
-{
-    return false;
-}
-
 //---------------------------------------------------------- PUMP SHOTGUN
 Pump_shotgun::Pump_shotgun(Item_data_t* const item_data) :
     Wpn(item_data) {}
-
-int Pump_shotgun::ammo_max() const
-{
-    return 8;
-}
-
-bool Pump_shotgun::is_using_clip() const
-{
-    return false;
-}
 
 //---------------------------------------------------------- FLARE GUN
 Flare_gun::Flare_gun(Item_data_t* const item_data) :
     Wpn(item_data) {}
 
-int Flare_gun::ammo_max() const
-{
-    return 1;
-}
-
-bool Flare_gun::is_using_clip() const
-{
-    return false;
-}
-
 //---------------------------------------------------------- PISTOL
 Pistol::Pistol(Item_data_t* const item_data) :
     Wpn(item_data) {}
-
-int Pistol::ammo_max() const
-{
-    return 7;
-}
-
-bool Pistol::is_using_clip() const
-{
-    return true;
-}
 
 //---------------------------------------------------------- MACHINE GUN
 Machine_gun::Machine_gun(Item_data_t* const item_data) :
     Wpn(item_data) {}
 
-int Machine_gun::ammo_max() const
-{
-    return ammo_data_->ranged.max_nr_ammo_in_clip;
-}
-
-bool Machine_gun::is_using_clip() const
-{
-    return false;
-}
-
 //---------------------------------------------------------- MI-GO ELECTRIC GUN
 Mi_go_gun::Mi_go_gun(Item_data_t* const item_data) :
     Wpn(item_data) {}
 
-int Mi_go_gun::ammo_max() const
-{
-    return ammo_data_->ranged.max_nr_ammo_in_clip;
-}
-
-bool Mi_go_gun::is_using_clip() const
-{
-    return true;
-}
-
 //---------------------------------------------------------- SPIKE GUN
 Spike_gun::Spike_gun(Item_data_t* const item_data) :
     Wpn(item_data) {}
-
-int Spike_gun::ammo_max() const
-{
-    return 12;
-}
-
-bool Spike_gun::is_using_clip() const
-{
-    return false;
-}
 
 //---------------------------------------------------------- INCINERATOR
 Incinerator::Incinerator(Item_data_t* const item_data) :
@@ -598,16 +531,6 @@ void Incinerator::on_projectile_blocked(
     explosion::run_explosion_at(pos, Expl_type::expl);
 }
 
-int Incinerator::ammo_max() const
-{
-    return ammo_data_->ranged.max_nr_ammo_in_clip;
-}
-
-bool Incinerator::is_using_clip() const
-{
-    return true;
-}
-
 //---------------------------------------------------------- AMMO CLIP
 Ammo_clip::Ammo_clip(Item_data_t* const item_data) : Ammo(item_data)
 {
@@ -616,13 +539,10 @@ Ammo_clip::Ammo_clip(Item_data_t* const item_data) : Ammo(item_data)
 
 void Ammo_clip::set_full_ammo()
 {
-    ammo_ = data_->ranged.max_nr_ammo_in_clip;
+    ammo_ = data_->ranged.max_ammo;
 }
 
 //---------------------------------------------------------- MEDICAL BAG
-const int NR_TRN_BEFORE_HEAL  = 10;
-const int NR_TRN_PER_HP       = 2;
-
 void Medical_bag::on_pickup_to_backpack(Inventory& inv)
 {
     //Check for existing medical bag in inventory
@@ -718,7 +638,7 @@ Consume_item Medical_bag::activate(Actor* const actor)
     {
     case Med_bag_action::treat_wounds:
         msg_log::add("I start treating my wounds...");
-        nr_turns_until_heal_wounds_ = NR_TRN_BEFORE_HEAL;
+        nr_turns_until_heal_wounds_ = MEDICAL_BAG_NR_TRN_BEFORE_HEAL;
         break;
 
     case Med_bag_action::sanitize_infection:
@@ -793,8 +713,8 @@ void Medical_bag::continue_action()
         else
         {
             //If player is healer, double the rate of HP healing.
-            const int NR_TRN_PER_HP_W_BON =
-                IS_HEALER ? (NR_TRN_PER_HP / 2) : NR_TRN_PER_HP;
+            const int NR_TRN_PER_HP_W_BON = IS_HEALER ? (MEDICAL_BAG_NR_TRN_PER_HP / 2) :
+                                            MEDICAL_BAG_NR_TRN_PER_HP;
 
             if (game_time::turn() % NR_TRN_PER_HP_W_BON == 0)
             {
@@ -803,7 +723,7 @@ void Medical_bag::continue_action()
 
             //The rate of supply use is consistent (this means that with the healer
             // trait, you spend half the time and supplies, as per the description).
-            if (game_time::turn() % NR_TRN_PER_HP == 0)
+            if (game_time::turn() % MEDICAL_BAG_NR_TRN_PER_HP == 0)
             {
                 --nr_supplies_;
             }

@@ -274,8 +274,9 @@ public:
         Item_ranged_data();
         ~Item_ranged_data();
 
-        bool                    is_ranged_wpn, is_throwing_wpn, is_machine_gun, is_shotgun;
-        int                     max_nr_ammo_in_clip;
+        bool                    is_ranged_wpn, is_machine_gun, is_shotgun;
+        //Note: This property should be set on ranged weapons (using ammo) and clips
+        int                     max_ammo;
         Dice_param              dmg;
         Dice_param              throw_dmg;
         int                     hit_chance_mod;
@@ -286,11 +287,11 @@ public:
         Item_id                 ammo_item_id;
         Dmg_type                dmg_type;
         bool                    has_infinite_ammo;
-        char                    missile_glyph;
-        Tile_id                 missile_tile;
-        Clr                     missile_clr;
-        bool                    missile_leaves_trail;
-        bool                    missile_leaves_smoke;
+        char                    projectile_glyph;
+        Tile_id                 projectile_tile;
+        Clr                     projectile_clr;
+        bool                    projectile_leaves_trail;
+        bool                    projectile_leaves_smoke;
         Item_att_msgs           att_msgs;
         std::string             snd_msg;
         Snd_vol                 snd_vol;

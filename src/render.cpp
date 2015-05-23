@@ -35,8 +35,8 @@ namespace
 SDL_Window*     sdl_window_         = nullptr;
 SDL_Renderer*   sdl_renderer_       = nullptr;
 
-SDL_Surface*    screen_srf_         = nullptr;
-SDL_Texture*    screen_texture_     = nullptr;
+SDL_Surface*    scr_srf_         = nullptr;
+SDL_Texture*    scr_texture_     = nullptr;
 
 SDL_Surface*    main_menu_logo_srf_ = nullptr;
 
@@ -136,7 +136,7 @@ void blit_surface(SDL_Surface& srf, const Pos& px_pos)
         px_pos.x, px_pos.y, srf.w, srf.h
     };
 
-    SDL_BlitSurface(&srf, nullptr, screen_srf_, &dst_rect);
+    SDL_BlitSurface(&srf, nullptr, scr_srf_, &dst_rect);
 }
 
 void load_main_menu_logo()
@@ -147,7 +147,7 @@ void load_main_menu_logo()
 
     assert(main_menu_logo_srf_tmp && "Failed to load main menu logo");
 
-    main_menu_logo_srf_ = SDL_ConvertSurface(main_menu_logo_srf_tmp, screen_srf_->format, 0);
+    main_menu_logo_srf_ = SDL_ConvertSurface(main_menu_logo_srf_tmp, scr_srf_->format, 0);
 
     SDL_FreeSurface(main_menu_logo_srf_tmp);
 
@@ -202,7 +202,7 @@ void load_tiles()
 
 void load_contour(const bool base[PIXEL_DATA_W][PIXEL_DATA_H])
 {
-    const Pos cell_dims(config::cell_w(), config::cell_h());
+    const Pos cell_dims(config::cell_px_w(), config::cell_px_h());
 
     for (size_t px_x = 0; px_x < PIXEL_DATA_W; ++px_x)
     {
@@ -218,8 +218,12 @@ void load_contour(const bool base[PIXEL_DATA_W][PIXEL_DATA_H])
                 //Position interval to check for this pixel is constrained within current image
                 const Pos cur_img_px_p0((Pos(px_x, px_y) / cell_dims) * cell_dims);
                 const Pos cur_img_px_p1(cur_img_px_p0 + cell_dims - 1);
-                const Pos px_p0(max(cur_img_px_p0.x, int(px_x - 1)), max(cur_img_px_p0.y, int(px_y - 1)));
-                const Pos px_p1(min(cur_img_px_p1.x, int(px_x + 1)), min(cur_img_px_p1.y, int(px_y + 1)));
+
+                const Pos px_p0(max(cur_img_px_p0.x, int(px_x - 1)),
+                                max(cur_img_px_p0.y, int(px_y - 1)));
+
+                const Pos px_p1(min(cur_img_px_p1.x, int(px_x + 1)),
+                                min(cur_img_px_p1.y, int(px_y + 1)));
 
                 for (int px_check_x = px_p0.x; px_check_x <= px_p1.x; ++px_check_x)
                 {
@@ -247,10 +251,10 @@ void put_pixels_on_scr(const bool px_data[PIXEL_DATA_W][PIXEL_DATA_H],
 {
     if (is_inited())
     {
-        const int PX_CLR = SDL_MapRGB(screen_srf_->format, clr.r, clr.g, clr.b);
+        const int PX_CLR = SDL_MapRGB(scr_srf_->format, clr.r, clr.g, clr.b);
 
-        const int CELL_W      = config::cell_w();
-        const int CELL_H      = config::cell_h();
+        const int CELL_W      = config::cell_px_w();
+        const int CELL_H      = config::cell_px_h();
         const int SHEET_PX_X0 = sheet_pos.x * CELL_W;
         const int SHEET_PX_Y0 = sheet_pos.y * CELL_H;
         const int SHEET_PX_X1 = SHEET_PX_X0 + CELL_W - 1;
@@ -268,7 +272,7 @@ void put_pixels_on_scr(const bool px_data[PIXEL_DATA_W][PIXEL_DATA_H],
             {
                 if (px_data[sheet_px_x][sheet_px_y])
                 {
-                    put_px(*screen_srf_, scr_px_x, scr_px_y, PX_CLR);
+                    put_px(*scr_srf_, scr_px_x, scr_px_y, PX_CLR);
                 }
                 ++scr_px_y;
             }
@@ -289,7 +293,7 @@ void put_pixels_on_scr_for_glyph(const char GLYPH, const Pos& scr_px_pos, const 
 
 Pos px_pos_for_cell_in_panel(const Panel panel, const Pos& pos)
 {
-    const Pos cell_dims(config::cell_w(), config::cell_h());
+    const Pos cell_dims(config::cell_px_w(), config::cell_px_h());
 
     switch (panel)
     {
@@ -317,7 +321,7 @@ int lifebar_length(const Actor& actor)
     if (ACTOR_HP < ACTOR_HP_MAX)
     {
         int HP_PERCENT = (ACTOR_HP * 100) / ACTOR_HP_MAX;
-        return ((config::cell_w() - 2) * HP_PERCENT) / 100;
+        return ((config::cell_px_w() - 2) * HP_PERCENT) / 100;
     }
 
     return -1;
@@ -327,7 +331,7 @@ void draw_life_bar(const Pos& pos, const int LENGTH)
 {
     if (LENGTH >= 0)
     {
-        const Pos cell_dims(config::cell_w(),  config::cell_h());
+        const Pos cell_dims(config::cell_px_w(),  config::cell_px_h());
         const int W_GREEN   = LENGTH;
         const int W_BAR_TOT = cell_dims.x - 2;
         const int W_RED     = W_BAR_TOT - W_GREEN;
@@ -376,7 +380,7 @@ void draw_glyph_at_px(const char GLYPH, const Pos& px_pos, const Clr& clr,
 {
     if (DRAW_BG_CLR)
     {
-        const Pos cell_dims(config::cell_w(), config::cell_h());
+        const Pos cell_dims(config::cell_px_w(), config::cell_px_h());
 
         draw_rectangle_solid(px_pos, cell_dims, bg_clr);
 
@@ -401,8 +405,8 @@ void init()
 
     const string title = "IA " + game_version_str;
 
-    const int SCR_PX_W = config::screen_px_w();
-    const int SCR_PX_H = config::screen_px_h();
+    const int SCR_PX_W = config::scr_px_w();
+    const int SCR_PX_H = config::scr_px_h();
 
     if (config::is_fullscreen())
     {
@@ -436,26 +440,26 @@ void init()
         assert(false);
     }
 
-    screen_srf_ = SDL_CreateRGBSurface(0,
-                                       SCR_PX_W, SCR_PX_H,
-                                       SCREEN_BPP,
-                                       0x00FF0000,
-                                       0x0000FF00,
-                                       0x000000FF,
-                                       0xFF000000);
+    scr_srf_ = SDL_CreateRGBSurface(0,
+                                    SCR_PX_W, SCR_PX_H,
+                                    SCREEN_BPP,
+                                    0x00FF0000,
+                                    0x0000FF00,
+                                    0x000000FF,
+                                    0xFF000000);
 
-    if (!screen_srf_)
+    if (!scr_srf_)
     {
         TRACE << "Failed to create screen surface" << endl;
         assert(false);
     }
 
-    screen_texture_ = SDL_CreateTexture(sdl_renderer_,
-                                        SDL_PIXELFORMAT_ARGB8888,
-                                        SDL_TEXTUREACCESS_STREAMING,
-                                        SCR_PX_W, SCR_PX_H);
+    scr_texture_ = SDL_CreateTexture(sdl_renderer_,
+                                     SDL_PIXELFORMAT_ARGB8888,
+                                     SDL_TEXTUREACCESS_STREAMING,
+                                     SCR_PX_W, SCR_PX_H);
 
-    if (!screen_texture_)
+    if (!scr_texture_)
     {
         TRACE << "Failed to create screen texture" << endl;
         assert(false);
@@ -490,16 +494,16 @@ void cleanup()
         sdl_window_ = nullptr;
     }
 
-    if (screen_texture_)
+    if (scr_texture_)
     {
-        SDL_DestroyTexture(screen_texture_);
-        screen_texture_ = nullptr;
+        SDL_DestroyTexture(scr_texture_);
+        scr_texture_ = nullptr;
     }
 
-    if (screen_srf_)
+    if (scr_srf_)
     {
-        SDL_FreeSurface(screen_srf_);
-        screen_srf_ = nullptr;
+        SDL_FreeSurface(scr_srf_);
+        scr_srf_ = nullptr;
     }
 
     if (main_menu_logo_srf_)
@@ -529,8 +533,8 @@ void update_screen()
 {
     if (is_inited())
     {
-        SDL_UpdateTexture(screen_texture_, nullptr, screen_srf_->pixels, screen_srf_->pitch);
-        SDL_RenderCopy(sdl_renderer_, screen_texture_, nullptr, nullptr);
+        SDL_UpdateTexture(scr_texture_, nullptr, scr_srf_->pixels, scr_srf_->pitch);
+        SDL_RenderCopy(sdl_renderer_, scr_texture_, nullptr, nullptr);
         SDL_RenderPresent(sdl_renderer_);
     }
 }
@@ -539,15 +543,15 @@ void clear_screen()
 {
     if (is_inited())
     {
-        SDL_FillRect(screen_srf_, nullptr, SDL_MapRGB(screen_srf_->format, 0, 0, 0));
+        SDL_FillRect(scr_srf_, nullptr, SDL_MapRGB(scr_srf_->format, 0, 0, 0));
     }
 }
 
 void draw_main_menu_logo(const int Y_POS)
 {
-    const int SCR_PX_W  = config::screen_px_w();
+    const int SCR_PX_W  = config::scr_px_w();
     const int LOGO_PX_H = main_menu_logo_srf_->w;
-    const int CELL_PX_H = config::cell_h();
+    const int CELL_PX_H = config::cell_px_h();
 
     const Pos px_pos((SCR_PX_W - LOGO_PX_H) / 2, CELL_PX_H * Y_POS);
 
@@ -786,7 +790,7 @@ void draw_tile(const Tile_id tile, const Panel panel, const Pos& pos, const Clr&
     if (is_inited())
     {
         const Pos px_pos = px_pos_for_cell_in_panel(panel, pos);
-        const Pos cell_dims(config::cell_w(), config::cell_h());
+        const Pos cell_dims(config::cell_px_w(), config::cell_px_h());
 
         draw_rectangle_solid(px_pos, cell_dims, bg_clr);
 
@@ -816,24 +820,45 @@ void draw_text(const string& str, const Panel panel, const Pos& pos, const Clr& 
     {
         Pos px_pos = px_pos_for_cell_in_panel(panel, pos);
 
-        if (px_pos.y < 0 || px_pos.y >= config::screen_px_h())
+        if (px_pos.y < 0 || px_pos.y >= config::scr_px_h())
         {
             return;
         }
 
-        const Pos cell_dims(config::cell_w(), config::cell_h());
-        const int LEN = str.size();
-        draw_rectangle_solid(px_pos, Pos(cell_dims.x * LEN, cell_dims.y), bg_clr);
+        const int       CELL_PX_W   = config::cell_px_w();
+        const int       CELL_PX_H   = config::cell_px_h();
+        const size_t    MSG_W       = str.size();
+        const int       MSG_PX_W    = MSG_W * CELL_PX_W;
 
-        for (int i = 0; i < LEN; ++i)
+        draw_rectangle_solid(px_pos, {MSG_PX_W, CELL_PX_H}, bg_clr);
+
+        const int   SCR_PX_W            = config::scr_px_w();
+        const int   MSG_PX_X1           = px_pos.x + MSG_PX_W - 1;
+        const bool  IS_MSG_W_FIT_ON_SCR = MSG_PX_X1 < SCR_PX_W;
+
+        //X position to start drawing dots instead when the message does not fit
+        //on the screen horizontally.
+        const int   PX_X_DOTS           = SCR_PX_W - (CELL_PX_W * 3);
+
+        for (size_t i = 0; i < MSG_W; ++i)
         {
-            if (px_pos.x < 0 || px_pos.x >= config::screen_px_w())
+            if (px_pos.x < 0 || px_pos.x >= SCR_PX_W)
             {
                 return;
             }
 
-            draw_glyph_at_px(str[i], px_pos, clr, false);
-            px_pos.x += cell_dims.x;
+            const bool DRAW_DOTS = !IS_MSG_W_FIT_ON_SCR && px_pos.x >= PX_X_DOTS;
+
+            if (DRAW_DOTS)
+            {
+                draw_glyph_at_px('.', px_pos, clr_gray, false);
+            }
+            else //Whole message fits, or we are not yet near the screen edge
+            {
+                draw_glyph_at_px(str[i], px_pos, clr, false);
+            }
+
+            px_pos.x += CELL_PX_W;
         }
     }
 }
@@ -846,7 +871,7 @@ int draw_text_centered(const string& str, const Panel panel, const Pos& pos,
     const int LEN_HALF    = LEN / 2;
     const int X_POS_LEFT  = pos.x - LEN_HALF;
 
-    const Pos cell_dims(config::cell_w(), config::cell_h());
+    const Pos cell_dims(config::cell_px_w(), config::cell_px_h());
 
     Pos px_pos = px_pos_for_cell_in_panel(panel, Pos(X_POS_LEFT, pos.y));
 
@@ -864,11 +889,12 @@ int draw_text_centered(const string& str, const Panel panel, const Pos& pos,
         (Uint16)W_TOT_PIXEL, (Uint16)cell_dims.y
     };
 
-    SDL_FillRect(screen_srf_, &sdl_rect, SDL_MapRGB(screen_srf_->format, bg_clr.r, bg_clr.g, bg_clr.b));
+    SDL_FillRect(scr_srf_, &sdl_rect,
+                 SDL_MapRGB(scr_srf_->format, bg_clr.r, bg_clr.g, bg_clr.b));
 
     for (int i = 0; i < LEN; ++i)
     {
-        if (px_pos.x < 0 || px_pos.x >= config::screen_px_w())
+        if (px_pos.x < 0 || px_pos.x >= config::scr_px_w())
         {
             return X_POS_LEFT;
         }
@@ -882,7 +908,7 @@ int draw_text_centered(const string& str, const Panel panel, const Pos& pos,
 
 void cover_panel(const Panel panel)
 {
-    const int SCREEN_PIXEL_W = config::screen_px_w();
+    const int SCREEN_PIXEL_W = config::scr_px_w();
 
     switch (panel)
     {
@@ -915,7 +941,7 @@ void cover_area(const Panel panel, const Rect& area)
 void cover_area(const Panel panel, const Pos& pos, const Pos& dims)
 {
     const Pos px_pos = px_pos_for_cell_in_panel(panel, pos);
-    const Pos cell_dims(config::cell_w(), config::cell_h());
+    const Pos cell_dims(config::cell_px_w(), config::cell_px_h());
     cover_area_px(px_pos, dims * cell_dims);
 }
 
@@ -926,7 +952,7 @@ void cover_area_px(const Pos& px_pos, const Pos& px_dims)
 
 void cover_cell_in_map(const Pos& pos)
 {
-    const Pos cell_dims(config::cell_w(), config::cell_h());
+    const Pos cell_dims(config::cell_px_w(), config::cell_px_h());
     Pos px_pos = px_pos_for_cell_in_panel(Panel::map, pos);
     cover_area_px(px_pos, cell_dims);
 }
@@ -951,7 +977,7 @@ void draw_rectangle_solid(const Pos& px_pos, const Pos& px_dims, const Clr& clr)
             (Uint16)px_dims.x, (Uint16)px_dims.y
         };
 
-        SDL_FillRect(screen_srf_, &sdl_rect, SDL_MapRGB(screen_srf_->format, clr.r, clr.g, clr.b));
+        SDL_FillRect(scr_srf_, &sdl_rect, SDL_MapRGB(scr_srf_->format, clr.r, clr.g, clr.b));
     }
 }
 

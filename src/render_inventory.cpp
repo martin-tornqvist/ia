@@ -38,29 +38,47 @@ void draw_weight_pct(const int Y, const int ITEM_NAME_X, const size_t ITEM_NAME_
 
     if (WEIGHT_PCT > 0 && WEIGHT_PCT < 100)
     {
-        const string  weight_str = to_str(WEIGHT_PCT) + "%";
-        const int     WEIGHT_X = DESCR_X0 - weight_str.size() - 1;
-        const Pos     weight_pos(WEIGHT_X, Y);
-        const Clr     weight_clr = IS_SELECTED ? clr_white : clr_gray_drk;
+        const string    weight_str  = to_str(WEIGHT_PCT) + "%";
+        const int       WEIGHT_X    = DESCR_X0 - weight_str.size() - 1;
+        const Pos       weight_pos(WEIGHT_X, Y);
+        const Clr       weight_clr  = IS_SELECTED ? clr_white : clr_gray_drk;
+
         render::draw_text(weight_str, Panel::screen, weight_pos, weight_clr);
 
-        const int DOTS_X  = ITEM_NAME_X + ITEM_NAME_LEN;
-        const int DOTS_W  = WEIGHT_X - DOTS_X;
-        const string dots_str(DOTS_W, '.');
-        Clr dots_clr       = IS_SELECTED ? clr_white : item_name_clr;
+        int dots_x = ITEM_NAME_X + ITEM_NAME_LEN;
+        int dots_w = WEIGHT_X - dots_x;
 
-        if (!IS_SELECTED) {dots_clr.r /= 2; dots_clr.g /= 2; dots_clr.b /= 2;}
+        if (dots_w > 0)
+        {
 
-        render::draw_text(dots_str, Panel::screen, Pos(DOTS_X, Y), dots_clr);
+        }
+        else //Item name does not fit
+        {
+            //Draw a few dots over the end of the item name
+            dots_x = WEIGHT_X - 3;
+            dots_w = 3;
+        }
+
+        const string    dots_str(dots_w, '.');
+        Clr             dots_clr = IS_SELECTED ? clr_white : item_name_clr;
+
+        if (!IS_SELECTED)
+        {
+            dots_clr.r /= 2;
+            dots_clr.g /= 2;
+            dots_clr.b /= 2;
+        }
+
+        render::draw_text(dots_str, Panel::screen, Pos(dots_x, Y), dots_clr);
     }
 }
 
 void draw_detailed_item_descr(const Item* const item)
 {
+    vector<Str_and_clr> lines;
+
     if (item)
     {
-        vector<Str_and_clr> lines;
-
         const auto base_descr = item->descr();
 
         if (!base_descr.empty())
@@ -71,9 +89,9 @@ void draw_detailed_item_descr(const Item* const item)
             }
         }
 
-        const bool  IS_PLURAL = item->nr_items_ > 1 && item->data().is_stackable;
-        const string weight_str =
-            (IS_PLURAL ? "They are " : "It is ") + item->weight_str() + " to carry.";
+        const bool      IS_PLURAL   = item->nr_items_ > 1 && item->data().is_stackable;
+        const string    weight_str  = (IS_PLURAL ? "They are " : "It is ") +
+                                      item->weight_str() + " to carry.";
 
         lines.push_back({weight_str, clr_green});
 
@@ -85,9 +103,11 @@ void draw_detailed_item_descr(const Item* const item)
             const string pct_str = "(" + to_str(WEIGHT_PCT) + "% of total carried weight)";
             lines.push_back({pct_str, clr_green});
         }
-
-        render::draw_descr_box(lines);
     }
+
+    //We draw the description box regardless of whether the lines are empty or not,
+    //just to clear this area on the screen.
+    render::draw_descr_box(lines);
 }
 
 } //Namespace
@@ -97,6 +117,7 @@ namespace render_inventory
 
 void draw_browse_inv(const Menu_browser& browser)
 {
+    TRACE_FUNC_BEGIN_VERBOSE;
 
     render::clear_screen();
 
@@ -113,10 +134,9 @@ void draw_browse_inv(const Menu_browser& browser)
 
     const string query_eq_str   = item ? "unequip" : "equip";
     const string query_base_str = "[enter] to " + (IS_IN_EQP ? query_eq_str : "apply item");
-
     const string query_drop_str = item ? " [shift+enter] to drop" : "";
 
-    string str                = query_base_str + query_drop_str + " [space/esc] to exit";
+    string str = query_base_str + query_drop_str + " [space/esc] to exit";
 
     render::draw_text(str, Panel::screen, Pos(0, 0), clr_white_high);
 
@@ -145,8 +165,8 @@ void draw_browse_inv(const Menu_browser& browser)
 
             const Clr clr = IS_CUR_POS ? clr_white_high : cur_item->interface_clr();
 
-            const Item_data_t& d    = cur_item->data();
-            Item_ref_att_inf att_inf  = Item_ref_att_inf::none;
+            const Item_data_t&  d       = cur_item->data();
+            Item_ref_att_inf    att_inf = Item_ref_att_inf::none;
 
             if (slot.id == Slot_id::wielded || slot.id == Slot_id::wielded_alt)
             {
@@ -161,7 +181,10 @@ void draw_browse_inv(const Menu_browser& browser)
 
             Item_ref_type ref_type = Item_ref_type::plain;
 
-            if (slot.id == Slot_id::thrown) {ref_type = Item_ref_type::plural;}
+            if (slot.id == Slot_id::thrown)
+            {
+                ref_type = Item_ref_type::plural;
+            }
 
             string item_name = cur_item->name(ref_type, Item_ref_inf::yes, att_inf);
 
@@ -171,7 +194,7 @@ void draw_browse_inv(const Menu_browser& browser)
 
             draw_weight_pct(p.y, p.x, item_name.size(), *cur_item, clr, IS_CUR_POS);
         }
-        else
+        else //No item in this slot
         {
             p.x += 2;
             render::draw_text("<empty>", panel, p, IS_CUR_POS ? clr_white_high : clr_menu_drk);
@@ -180,14 +203,12 @@ void draw_browse_inv(const Menu_browser& browser)
         ++p.y;
     }
 
-
     const size_t  NR_INV_ITEMS  = inv.general_.size();
 
     size_t inv_top_idx = 0;
 
     if (!IS_IN_EQP && NR_INV_ITEMS > 0)
     {
-
         auto is_browser_pos_on_scr = [&](const bool IS_FIRST_SCR)
         {
             const int MORE_LABEL_H = IS_FIRST_SCR ? 1 : 2;
@@ -196,7 +217,6 @@ void draw_browse_inv(const Menu_browser& browser)
 
         if (int(NR_INV_ITEMS) > INV_H && !is_browser_pos_on_scr(true))
         {
-
             inv_top_idx = INV_H - 1;
 
             while (true)
@@ -256,8 +276,6 @@ void draw_browse_inv(const Menu_browser& browser)
         }
     }
 
-//  render::draw_popup_box(eqp_rect, panel, clr_popup_box, false);
-
     const Rect eqp_rect(0, EQP_Y0 - 1, DESCR_X0 - 1, EQP_Y1 + 1);
     const Rect inv_rect(0, INV_Y0 - 1, DESCR_X0 - 1, INV_Y1 + 1);
 
@@ -274,11 +292,15 @@ void draw_browse_inv(const Menu_browser& browser)
     draw_detailed_item_descr(item);
 
     render::update_screen();
+
+    TRACE_FUNC_END_VERBOSE;
 }
 
 void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
                 const vector<size_t>& gen_inv_indexes)
 {
+    TRACE_FUNC_BEGIN_VERBOSE;
+
     assert(slot_id_to_equip != Slot_id::END);
 
     Pos p(0, 0);
@@ -389,6 +411,8 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
     }
 
     render::update_screen();
+
+    TRACE_FUNC_END_VERBOSE;
 }
 
 } //render_inventory

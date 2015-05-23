@@ -18,7 +18,9 @@ class Item
 public:
     Item(Item_data_t* item_data);
 
-    Item& operator=(Item& other) = delete;
+    Item(Item& other) = delete;
+
+    Item& operator=(const Item& other);
 
     virtual ~Item();
 
@@ -84,7 +86,10 @@ public:
 
 protected:
     //E.g. "{Off}" for Lanterns, "{60}" for Medical Bags, or "4/7" for Pistols
-    virtual std::string name_inf() const {return "";}
+    virtual std::string name_inf() const
+    {
+        return "";
+    }
 
     Item_data_t* data_;
 };
@@ -192,10 +197,6 @@ public:
         (void)actor;
     }
 
-    virtual int ammo_max() const;
-
-    virtual bool is_using_clip() const;
-
     int nr_ammo_loaded_;
 
 protected:
@@ -216,9 +217,6 @@ public:
     Sawed_off(Item_data_t* const item_data);
 
     ~Sawed_off() {}
-
-    virtual int ammo_max() const override;
-    virtual bool is_using_clip() const override;
 };
 
 class Pump_shotgun: public Wpn
@@ -226,9 +224,6 @@ class Pump_shotgun: public Wpn
 public:
     Pump_shotgun(Item_data_t* const item_data);
     ~Pump_shotgun() {}
-
-    virtual int ammo_max() const override;
-    virtual bool is_using_clip() const override;
 };
 
 class Pistol: public Wpn
@@ -236,9 +231,6 @@ class Pistol: public Wpn
 public:
     Pistol(Item_data_t* const item_data);
     ~Pistol() {}
-
-    virtual int ammo_max() const override;
-    virtual bool is_using_clip() const override;
 };
 
 class Flare_gun: public Wpn
@@ -246,9 +238,6 @@ class Flare_gun: public Wpn
 public:
     Flare_gun(Item_data_t* const item_data);
     ~Flare_gun() {}
-
-    virtual int ammo_max() const override;
-    virtual bool is_using_clip() const override;
 };
 
 class Machine_gun: public Wpn
@@ -256,9 +245,6 @@ class Machine_gun: public Wpn
 public:
     Machine_gun(Item_data_t* const item_data);
     ~Machine_gun() {}
-
-    virtual int ammo_max() const override;
-    virtual bool is_using_clip() const override;
 };
 
 class Incinerator: public Wpn
@@ -267,9 +253,6 @@ public:
     Incinerator(Item_data_t* const item_data);
     void on_projectile_blocked(const Pos& pos, Actor* actor_hit);
     ~Incinerator() {}
-
-    virtual int ammo_max() const override;
-    virtual bool is_using_clip() const override;
 };
 
 class Mi_go_gun: public Wpn
@@ -277,9 +260,6 @@ class Mi_go_gun: public Wpn
 public:
     Mi_go_gun(Item_data_t* const item_data);
     ~Mi_go_gun() {}
-
-    virtual int ammo_max() const override;
-    virtual bool is_using_clip() const override;
 };
 
 class Spike_gun: public Wpn
@@ -287,9 +267,6 @@ class Spike_gun: public Wpn
 public:
     Spike_gun(Item_data_t* const item_data);
     ~Spike_gun() {}
-
-    virtual int ammo_max() const override;
-    virtual bool is_using_clip() const override;
 };
 
 class Ammo: public Item
@@ -437,7 +414,8 @@ public:
     virtual std::string str_on_player_throw() const = 0;
 
 protected:
-    Explosive(Item_data_t* const item_data) : Item(item_data), fuse_turns_(-1) {}
+    Explosive(Item_data_t* const item_data) :
+        Item(item_data), fuse_turns_(-1) {}
 
     virtual int std_fuse_turns() const = 0;
     virtual void on_player_ignite() const = 0;

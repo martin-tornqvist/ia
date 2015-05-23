@@ -895,16 +895,16 @@ void Player::on_actor_turn()
     }
 
     //If player dropped item, check if should go back to inventory screen
-    const auto inv_screen_after_drop = inv_handling::screen_to_open_after_drop;
+    const auto inv_scr_after_drop = inv_handling::scr_to_open_after_drop;
 
-    if (inv_screen_after_drop != Inv_scr_id::END)
+    if (inv_scr_after_drop != Inv_scr_id::END)
     {
         vector<Actor*> my_seen_foes;
         seen_foes(my_seen_foes);
 
         if (my_seen_foes.empty())
         {
-            switch (inv_screen_after_drop)
+            switch (inv_scr_after_drop)
             {
             case Inv_scr_id::inv:
                 inv_handling::run_inv_screen();
@@ -921,7 +921,7 @@ void Player::on_actor_turn()
         }
         else //There are seen monsters
         {
-            inv_handling::screen_to_open_after_drop    = Inv_scr_id::END;
+            inv_handling::scr_to_open_after_drop    = Inv_scr_id::END;
             inv_handling::browser_idx_to_set_after_drop = 0;
         }
     }
@@ -1286,7 +1286,7 @@ void Player::interrupt_actions()
     render::draw_map_and_interface();
 
     //Abort browsing inventory
-    inv_handling::screen_to_open_after_drop    = Inv_scr_id::END;
+    inv_handling::scr_to_open_after_drop    = Inv_scr_id::END;
     inv_handling::browser_idx_to_set_after_drop = 0;
 
     //Abort waiting

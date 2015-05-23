@@ -817,8 +817,8 @@ void projectile_fire(Actor& attacker, Wpn& wpn, const Pos& aim_pos)
     vector<Pos> path;
     line_calc::calc_new_line(origin, aim_pos, stop_at_tgt, cheb_trvl_lim, false, path);
 
-    const Clr projectile_clr = wpn.data().ranged.missile_clr;
-    char projectile_glyph    = wpn.data().ranged.missile_glyph;
+    const Clr projectile_clr = wpn.data().ranged.projectile_clr;
+    char projectile_glyph    = wpn.data().ranged.projectile_glyph;
 
     if (projectile_glyph == '/')
     {
@@ -843,7 +843,7 @@ void projectile_fire(Actor& attacker, Wpn& wpn, const Pos& aim_pos)
         }
     }
 
-    Tile_id projectile_tile = wpn.data().ranged.missile_tile;
+    Tile_id projectile_tile = wpn.data().ranged.projectile_tile;
 
     if (projectile_tile == Tile_id::projectile_std_front_slash)
     {
@@ -854,7 +854,7 @@ void projectile_fire(Actor& attacker, Wpn& wpn, const Pos& aim_pos)
         if (projectile_glyph == '\\') {projectile_tile = Tile_id::projectile_std_back_slash;}
     }
 
-    const bool LEAVE_TRAIL = wpn.data().ranged.missile_leaves_trail;
+    const bool LEAVE_TRAIL = wpn.data().ranged.projectile_leaves_trail;
 
     const int SIZE_OF_PATH_PLUS_ONE =
         path.size() + (NR_PROJECTILES - 1) * NR_CELL_JUMPS_BETWEEN_MG_PROJECTILES;

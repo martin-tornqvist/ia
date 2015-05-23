@@ -23,7 +23,7 @@ using namespace std;
 namespace inv_handling
 {
 
-Inv_scr_id  screen_to_open_after_drop     = Inv_scr_id::END;
+Inv_scr_id  scr_to_open_after_drop     = Inv_scr_id::END;
 Inv_slot*  equip_slot_to_open_after_drop  = nullptr;
 int       browser_idx_to_set_after_drop  = 0;
 
@@ -123,7 +123,6 @@ void filter_player_general_equip(const Slot_id slot_to_equip)
             {
                 general_items_to_show_.push_back(i);
             }
-
             break;
 
         case Slot_id::wielded_alt:
@@ -131,15 +130,10 @@ void filter_player_general_equip(const Slot_id slot_to_equip)
             {
                 general_items_to_show_.push_back(i);
             }
-
             break;
 
         case Slot_id::thrown:
-            if (data.ranged.is_throwing_wpn)
-            {
-                general_items_to_show_.push_back(i);
-            }
-
+            general_items_to_show_.push_back(i);
             break;
 
         case Slot_id::body:
@@ -155,7 +149,6 @@ void filter_player_general_equip(const Slot_id slot_to_equip)
             {
                 general_items_to_show_.push_back(i);
             }
-
             break;
 
         case Slot_id::neck:
@@ -163,7 +156,6 @@ void filter_player_general_equip(const Slot_id slot_to_equip)
             {
                 general_items_to_show_.push_back(i);
             }
-
             break;
 
         case Slot_id::ring1:
@@ -171,7 +163,6 @@ void filter_player_general_equip(const Slot_id slot_to_equip)
             {
                 general_items_to_show_.push_back(i);
             }
-
             break;
 
         case Slot_id::ring2:
@@ -179,10 +170,9 @@ void filter_player_general_equip(const Slot_id slot_to_equip)
             {
                 general_items_to_show_.push_back(i);
             }
-
             break;
 
-        case Slot_id::END: {}
+        case Slot_id::END:
             break;
         }
     }
@@ -208,7 +198,7 @@ void swap_items(Item** item1, Item** item2)
 
 void init()
 {
-    screen_to_open_after_drop     = Inv_scr_id::END;
+    scr_to_open_after_drop     = Inv_scr_id::END;
     equip_slot_to_open_after_drop  = nullptr;
     browser_idx_to_set_after_drop  = 0;
 }
@@ -226,7 +216,9 @@ void activate(const size_t GENERAL_ITEMS_ELEMENT)
 
 void run_inv_screen()
 {
-    screen_to_open_after_drop = Inv_scr_id::END;
+    TRACE_FUNC_BEGIN_VERBOSE;
+
+    scr_to_open_after_drop = Inv_scr_id::END;
     render::draw_map_and_interface();
 
     Inventory& inv = map::player->inv();
@@ -267,15 +259,17 @@ void run_inv_screen()
 
         case Menu_action::selected_shift:
         {
-            const int BROWSER_Y = browser.pos().y;
-            const size_t ELEMENT =
-                inv_type == Inv_type::slots ? BROWSER_Y : (BROWSER_Y - int(Slot_id::END));
+            const int       BROWSER_Y   = browser.pos().y;
+            const size_t    ELEMENT     = inv_type == Inv_type::slots ?
+                                          BROWSER_Y : (BROWSER_Y - int(Slot_id::END));
 
             if (run_drop_screen(inv_type, ELEMENT))
             {
                 browser.set_good_pos();
                 browser_idx_to_set_after_drop  = browser.y();
-                screen_to_open_after_drop     = Inv_scr_id::inv;
+                scr_to_open_after_drop     = Inv_scr_id::inv;
+
+                TRACE_FUNC_END_VERBOSE;
                 return;
             }
 
@@ -314,11 +308,13 @@ void run_inv_screen()
                         break;
 
                     case Slot_id::body:
-                        screen_to_open_after_drop     = Inv_scr_id::inv;
+                        scr_to_open_after_drop     = Inv_scr_id::inv;
                         browser_idx_to_set_after_drop  = browser.y();
+
+                        TRACE_FUNC_END_VERBOSE;
                         return;
 
-                    case Slot_id::END: {}
+                    case Slot_id::END:
                         break;
                     }
 
@@ -332,6 +328,8 @@ void run_inv_screen()
                     if (run_equip_screen(slot))
                     {
                         render::draw_map_and_interface();
+
+                        TRACE_FUNC_END_VERBOSE;
                         return;
                     }
                     else
@@ -345,24 +343,30 @@ void run_inv_screen()
                 const size_t ELEMENT = browser.y() - int(Slot_id::END);
                 activate(ELEMENT);
                 render::draw_map_and_interface();
+
+                TRACE_FUNC_END_VERBOSE;
                 return;
             }
         } break;
 
         case Menu_action::esc:
         case Menu_action::space:
-        {
             render::draw_map_and_interface();
+
+            TRACE_FUNC_END_VERBOSE;
             return;
-        } break;
         }
     }
+
+    TRACE_FUNC_END_VERBOSE;
 }
 
 bool run_equip_screen(Inv_slot& slot_to_equip)
 {
-    screen_to_open_after_drop     = Inv_scr_id::END;
-    equip_slot_to_open_after_drop  = &slot_to_equip;
+    TRACE_FUNC_BEGIN_VERBOSE;
+
+    scr_to_open_after_drop       = Inv_scr_id::END;
+    equip_slot_to_open_after_drop   = &slot_to_equip;
     render::draw_map_and_interface();
 
     auto& inv = map::player->inv();
@@ -404,7 +408,9 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
                 game_time::tick();
 
                 browser_idx_to_set_after_drop  = int(slot_to_equip.id);
-                screen_to_open_after_drop     = Inv_scr_id::inv;
+                scr_to_open_after_drop     = Inv_scr_id::inv;
+
+                TRACE_FUNC_END_VERBOSE;
                 return true;
             }
         } break;
@@ -415,7 +421,9 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
             {
                 browser.set_good_pos();
                 browser_idx_to_set_after_drop  = browser.y();
-                screen_to_open_after_drop     = Inv_scr_id::equip;
+                scr_to_open_after_drop     = Inv_scr_id::equip;
+
+                TRACE_FUNC_END_VERBOSE;
                 return true;
             }
 
@@ -426,6 +434,8 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
         case Menu_action::space: {return false;} break;
         }
     }
+
+    TRACE_FUNC_END_VERBOSE;
 }
 
 } //Inv_handling

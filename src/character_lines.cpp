@@ -47,7 +47,7 @@ void draw()
     //Name
     pos.x = X_NAME;
     string str = player.name_a();
-    render::draw_text(str, Panel::char_lines, pos, clr_menu_highlight);
+    render::draw_text(str, Panel::char_lines, pos, clr_white);
 
     //Health
     pos.x = X_HP;
@@ -97,13 +97,11 @@ void draw()
 
         if (config::is_tiles_mode())
         {
-            render::draw_tile(
-                item_wielded->tile(), Panel::char_lines, pos, item_clr);
+            render::draw_tile(item_wielded->tile(), Panel::char_lines, pos, item_clr);
         }
-        else
+        else //ASCII mode
         {
-            render::draw_glyph(
-                item_wielded->glyph(), Panel::char_lines, pos, item_clr);
+            render::draw_glyph(item_wielded->glyph(), Panel::char_lines, pos, item_clr);
         }
 
         pos.x += 2;
@@ -115,13 +113,16 @@ void draw()
                                          Item_ref_att_inf::melee : Item_ref_att_inf::wpn_context;
 
         str = item_wielded->name(Item_ref_type::plain, Item_ref_inf::yes, att_inf);
+
+        text_format::first_to_upper(str);
+
         render::draw_text(str, Panel::char_lines, pos, clr_white);
         pos.x += str.length() + 1;
     }
     else
     {
         str = "Unarmed";
-        render::draw_text(str, Panel::char_lines, pos, clr_white);
+        render::draw_text(str, Panel::char_lines, pos, clr_gray);
         pos.x += str.length() + 1;
     }
 
@@ -190,12 +191,15 @@ void draw()
 
         str = item_missiles->name(Item_ref_type::plural, Item_ref_inf::yes,
                                   Item_ref_att_inf::thrown);
+
+        text_format::first_to_upper(str);
+
         render::draw_text(str, Panel::char_lines, pos, clr_white);
         pos.x += str.length() + 1;
     }
     else
     {
-        render::draw_text("No thrown weapon", Panel::char_lines, pos, clr_white);
+        render::draw_text("No thrown weapon", Panel::char_lines, pos, clr_gray);
     }
 
     //----------------------------------------------------------------------------- THIRD ROW

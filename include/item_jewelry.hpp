@@ -48,18 +48,30 @@ public:
 
     virtual ~Jewelry_effect() {}
 
-    virtual Jewelry_effect_id  id() const = 0;
+    virtual Jewelry_effect_id id() const = 0;
 
     virtual void on_equip(const bool IS_SILENT)
     {
         (void)IS_SILENT;
     }
 
-    virtual Unequip_allowed  on_unequip()             {return Unequip_allowed::yes;}
-    virtual void            on_std_turn_equiped()      {}
-    virtual void            on_actor_turn_equiped()    {}
-    virtual void            change_item_weight(int& weight_ref) {(void)weight_ref;}
-    virtual int             hp_regen_change() const {return 0;}
+    virtual Unequip_allowed on_unequip()
+    {
+        return Unequip_allowed::yes;
+    }
+
+    virtual void on_std_turn_equiped() {}
+    virtual void on_actor_turn_equiped() {}
+
+    virtual void change_item_weight(int& weight_ref)
+    {
+        (void)weight_ref;
+    }
+
+    virtual int hp_regen_change() const
+    {
+        return 0;
+    }
 
     virtual std::string descr() const = 0;
 
@@ -79,8 +91,8 @@ public:
 
     virtual ~Jewelry_property_effect() {}
 
-    void            on_equip(const bool IS_SILENT)   override final;
-    Unequip_allowed  on_unequip()                     override final;
+    void on_equip(const bool IS_SILENT) override final;
+    Unequip_allowed on_unequip() override final;
 
 protected:
     virtual Prop* mk_prop() const = 0;
@@ -95,7 +107,10 @@ public:
 
     ~Jewelry_effect_rFire() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::rFire;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::rFire;
+    }
 
     std::string descr() const override
     {
@@ -114,7 +129,10 @@ public:
 
     ~Jewelry_effect_rCold() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::rCold;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::rCold;
+    }
 
     std::string descr() const override
     {
@@ -133,7 +151,10 @@ public:
 
     ~Jewelry_effect_rElec() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::rElec;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::rElec;
+    }
 
     std::string descr() const override
     {
@@ -152,7 +173,10 @@ public:
 
     ~Jewelry_effect_rPoison() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::rPoison;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::rPoison;
+    }
 
     std::string descr() const override
     {
@@ -171,7 +195,10 @@ public:
 
     ~Jewelry_effect_rDisease() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::rDisease;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::rDisease;
+    }
 
     std::string descr() const override
     {
@@ -190,7 +217,10 @@ public:
 
     ~Jewelry_effect_tele_control() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::tele_ctrl;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::tele_ctrl;
+    }
 
     std::string descr() const override
     {
@@ -209,7 +239,10 @@ public:
 
     ~Jewelry_effect_light() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::light;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::light;
+    }
 
     std::string descr() const override
     {
@@ -228,12 +261,14 @@ public:
 
     ~Jewelry_effect_spell_reflect() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::spell_reflect;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::spell_reflect;
+    }
 
     std::string descr() const override
     {
-        return "It shields the wearer against spells, and reflects them back on the "
-               "caster.";
+        return "It shields the wearer against spells, and reflects them back on the caster.";
     }
 
 protected:
@@ -248,7 +283,10 @@ public:
 
     ~Jewelry_effect_haste() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::haste;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::haste;
+    }
 
     std::string descr() const override
     {
@@ -267,15 +305,18 @@ public:
 
     ~Jewelry_effect_hp_bon() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::hp_bon;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::hp_bon;
+    }
 
     std::string descr() const override
     {
         return "It grants stronger vitality.";
     }
 
-    void            on_equip(const bool IS_SILENT)   override;
-    Unequip_allowed  on_unequip()                     override;
+    void on_equip(const bool IS_SILENT) override;
+    Unequip_allowed on_unequip() override;
 };
 
 class Jewelry_effect_hp_pen : public Jewelry_effect
@@ -286,15 +327,18 @@ public:
 
     ~Jewelry_effect_hp_pen() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::hp_pen;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::hp_pen;
+    }
 
     std::string descr() const override
     {
         return "It makes the wearer frailer.";
     }
 
-    void            on_equip(const bool IS_SILENT)   override;
-    Unequip_allowed  on_unequip()                     override;
+    void on_equip(const bool IS_SILENT) override;
+    Unequip_allowed on_unequip() override;
 };
 
 class Jewelry_effect_spi_bon : public Jewelry_effect
@@ -305,15 +349,18 @@ public:
 
     ~Jewelry_effect_spi_bon() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::spi_bon;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::spi_bon;
+    }
 
     std::string descr() const override
     {
         return "It strengthens the spirit of the wearer.";
     }
 
-    void            on_equip(const bool IS_SILENT)   override;
-    Unequip_allowed  on_unequip()                     override;
+    void on_equip(const bool IS_SILENT) override;
+    Unequip_allowed on_unequip() override;
 };
 
 class Jewelry_effect_spi_pen : public Jewelry_effect
@@ -324,15 +371,18 @@ public:
 
     ~Jewelry_effect_spi_pen() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::spi_pen;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::spi_pen;
+    }
 
     std::string descr() const override
     {
         return "It weakens the spirit of the wearer.";
     }
 
-    void            on_equip(const bool IS_SILENT)   override;
-    Unequip_allowed  on_unequip()                     override;
+    void on_equip(const bool IS_SILENT) override;
+    Unequip_allowed on_unequip() override;
 };
 
 class Jewelry_effect_random_tele : public Jewelry_effect
@@ -343,7 +393,10 @@ public:
 
     ~Jewelry_effect_random_tele() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::random_tele;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::random_tele;
+    }
 
     std::string descr() const override
     {
@@ -361,7 +414,10 @@ public:
 
     ~Jewelry_effect_summon_mon() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::summon;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::summon;
+    }
 
     std::string descr() const override
     {
@@ -380,7 +436,10 @@ public:
 
     ~Jewelry_effect_fire() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::fire;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::fire;
+    }
 
     std::string descr() const override
     {
@@ -397,7 +456,10 @@ public:
 
     ~Jewelry_effect_shriek() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::shriek;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::shriek;
+    }
 
     std::string descr() const override
     {
@@ -418,7 +480,10 @@ public:
 
     ~Jewelry_effect_conflict() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::conflict;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::conflict;
+    }
 
     std::string descr() const override
     {
@@ -437,15 +502,18 @@ public:
 
     ~Jewelry_effect_burden() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::burden;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::burden;
+    }
 
     std::string descr() const override
     {
         return "It burdens the wearer, as if there was an invisible weight to carry.";
     }
 
-    void on_equip(const bool IS_SILENT)      override;
-    void change_item_weight(int& weight_ref)   override;
+    void on_equip(const bool IS_SILENT) override;
+    void change_item_weight(int& weight_ref) override;
 };
 
 class Jewelry_effect_hp_regen_bon : public Jewelry_effect
@@ -456,17 +524,23 @@ public:
 
     ~Jewelry_effect_hp_regen_bon() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::hp_regen_bon;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::hp_regen_bon;
+    }
 
-    int hp_regen_change() const override {return -12;}
+    int hp_regen_change() const override
+    {
+        return -12;
+    }
 
     std::string descr() const override
     {
         return "The wounds of the wearer heal faster.";
     }
 
-    void            on_equip(const bool IS_SILENT)   override;
-    Unequip_allowed  on_unequip()                     override;
+    void on_equip(const bool IS_SILENT) override;
+    Unequip_allowed on_unequip() override;
 };
 
 class Jewelry_effect_hp_regen_pen : public Jewelry_effect
@@ -477,17 +551,23 @@ public:
 
     ~Jewelry_effect_hp_regen_pen() {}
 
-    Jewelry_effect_id id() const override {return Jewelry_effect_id::hp_regen_pen;}
+    Jewelry_effect_id id() const override
+    {
+        return Jewelry_effect_id::hp_regen_pen;
+    }
 
-    int hp_regen_change() const override {return 12;}
+    int hp_regen_change() const override
+    {
+        return 12;
+    }
 
     std::string descr() const override
     {
         return "The wounds of the wearer heal slower.";
     }
 
-    void            on_equip(const bool IS_SILENT)   override;
-    Unequip_allowed  on_unequip()                     override;
+    void on_equip(const bool IS_SILENT) override;
+    Unequip_allowed on_unequip() override;
 };
 
 class Jewelry : public Item
@@ -499,14 +579,17 @@ public:
 
     std::vector<std::string> descr() const override final;
 
-    void            on_equip(const bool IS_SILENT)               override final;
-    Unequip_allowed  on_unequip()                                 override final;
-    void            on_std_turn_in_inv(const Inv_type inv_type) override final;
-    void            on_actor_turn_in_inv(const Inv_type inv_type) override final;
+    void on_equip(const bool IS_SILENT) override final;
+    Unequip_allowed on_unequip() override final;
+    void on_std_turn_in_inv(const Inv_type inv_type) override final;
+    void on_actor_turn_in_inv(const Inv_type inv_type) override final;
 
-    int             hp_regen_change(const Inv_type inv_type) const;
+    int hp_regen_change(const Inv_type inv_type) const;
 
-    Clr interface_clr() const override {return clr_orange;}
+    Clr interface_clr() const override
+    {
+        return clr_orange;
+    }
 
     void identify(const bool IS_SILENT_IDENTIFY) override final;
 

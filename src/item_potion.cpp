@@ -63,11 +63,11 @@ vector<string> Potion::descr() const
     }
 }
 
-void Potion::collide(const Pos& pos, Actor* const actor)
+void Potion::on_collide(const Pos& pos, Actor* const actor)
 {
     if (!map::cells[pos.x][pos.y].rigid->is_bottomless() || actor)
     {
-
+        //Render and print message
         const bool PLAYER_SEE_CELL = map::cells[pos.x][pos.y].is_seen_by_player;
 
         if (PLAYER_SEE_CELL)
@@ -82,22 +82,23 @@ void Potion::collide(const Pos& pos, Actor* const actor)
                     msg_log::add("The potion shatters on " + actor->name_the() + ".");
                 }
             }
-            else
+            else //No actor here
             {
                 Feature* const f = map::cells[pos.x][pos.y].rigid;
                 msg_log::add("The potion shatters on " + f->name(Article::the) + ".");
             }
         }
 
-        //If the blow from the bottle didn't kill the actor, apply what's inside
         if (actor)
         {
+            //If the blow from the bottle didn't kill the actor, apply what's inside
             if (actor->is_alive())
             {
                 collide_(pos, actor);
 
                 if (actor->is_alive() && !data_->is_identified && PLAYER_SEE_CELL)
                 {
+                    //This did not identify the potion
                     msg_log::add("It had no apparent effect...");
                 }
             }

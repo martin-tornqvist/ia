@@ -28,7 +28,7 @@ const int NR_OPTIONS  = 13;
 const int OPT_Y0      = 1;
 
 string  font_name_                      = "";
-bool    is_fullscreen_                  = false;
+bool    is_fullscr_                     = false;
 bool    is_tiles_wall_full_square_      = false;
 bool    is_ascii_wall_full_square_      = false;
 bool    is_ranged_wpn_meleee_prompt_    = false;
@@ -39,20 +39,31 @@ int     log_px_h_                       = -1;
 int     map_px_offset_h_                = -1;
 int     char_lines_px_h_                = -1;
 int     char_lines_px_offset_h_         = -1;
-int     screen_px_w_                    = -1;
-int     screen_px_h_                    = -1;
+int     scr_px_w_                       = -1;
+int     scr_px_h_                       = -1;
 int     delay_projectile_draw_          = -1;
 int     delay_shotgun_                  = -1;
 int     delay_explosion_                = -1;
 bool    is_bot_playing_                 = false;
 bool    is_audio_enabled_               = false;
 bool    is_tiles_mode_                  = false;
-int     cell_w_                         = -1;
-int     cell_h_                         = -1;
+int     cell_px_w_                      = -1;
+int     cell_px_h_                      = -1;
 
 vector<string> font_image_names;
 
-void set_cell_dims_from_font_name()
+void set_cell_px_dim_dependent_variables()
+{
+    map_px_h_                   = cell_px_h_ * MAP_H;
+    map_px_offset_h_            = cell_px_h_ * MAP_OFFSET_H;
+    log_px_h_                   = cell_px_h_ * LOG_H;
+    char_lines_px_h_            = cell_px_h_ * CHAR_LINES_H;
+    char_lines_px_offset_h_     = cell_px_h_ * CHAR_LINES_OFFSET_H;
+    scr_px_w_                   = cell_px_w_ * SCREEN_W;
+    scr_px_h_                   = cell_px_h_ * SCREEN_H;
+}
+
+void set_cell_px_dims_from_font_name()
 {
     TRACE_FUNC_BEGIN;
     string font_name = font_name_;
@@ -89,8 +100,8 @@ void set_cell_dims_from_font_name()
     TRACE << "Parsed font image name, found dims: "
           << w_str << "x" << h_str << endl;
 
-    cell_w_ = to_int(w_str);
-    cell_h_ = to_int(h_str);
+    cell_px_w_ = to_int(w_str);
+    cell_px_h_ = to_int(h_str);
     TRACE_FUNC_END;
 }
 
@@ -100,8 +111,8 @@ void set_default_variables()
     is_audio_enabled_               = true;
     is_tiles_mode_                  = true;
     font_name_                      = "images/16x24_v1.png";
-    set_cell_dims_from_font_name();
-    is_fullscreen_                  = false;
+    set_cell_px_dims_from_font_name();
+    is_fullscr_                     = false;
     is_tiles_wall_full_square_      = false;
     is_ascii_wall_full_square_      = true;
     is_intro_lvl_skipped_           = false;
@@ -125,13 +136,13 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
     case 1:
         is_tiles_mode_ = !is_tiles_mode_;
 
-        if (is_tiles_mode_ && (cell_w_ != 16 || cell_h_ != 24))
+        if (is_tiles_mode_ && (cell_px_w_ != 16 || cell_px_h_ != 24))
         {
             font_name_ = "images/16x24_v1.png";
         }
 
-        set_cell_dims_from_font_name();
-        set_cell_dim_dependent_variables();
+        set_cell_px_dims_from_font_name();
+        set_cell_px_dim_dependent_variables();
         render::init();
         break;
 
@@ -147,11 +158,11 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
             }
         }
 
-        set_cell_dims_from_font_name();
+        set_cell_px_dims_from_font_name();
 
         if (is_tiles_mode_)
         {
-            while (cell_w_ != 16 || cell_h_ != 24)
+            while (cell_px_w_ != 16 || cell_px_h_ != 24)
             {
                 for (unsigned int i = 0; i < font_image_names.size(); ++i)
                 {
@@ -164,16 +175,16 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
                     }
                 }
 
-                set_cell_dims_from_font_name();
+                set_cell_px_dims_from_font_name();
             }
         }
 
-        set_cell_dim_dependent_variables();
+        set_cell_px_dim_dependent_variables();
         render::init();
         break;
 
     case 3:
-        is_fullscreen_ = !is_fullscreen_;
+        is_fullscr_ = !is_fullscr_;
         render::init();
         break;
 
@@ -230,8 +241,8 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
 
     case 12:
         set_default_variables();
-        set_cell_dims_from_font_name();
-        set_cell_dim_dependent_variables();
+        set_cell_px_dims_from_font_name();
+        set_cell_px_dim_dependent_variables();
         render::init();
         audio::init();
         break;
@@ -299,7 +310,7 @@ void draw(const Menu_browser* const browser, const int OPTION_VALUES_X_POS)
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
                       browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
-    render::draw_text(is_fullscreen_ ? "Yes" : "No",
+    render::draw_text(is_fullscr_ ? "Yes" : "No",
                       Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
                       browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
@@ -463,10 +474,10 @@ void set_all_variables_from_lines(vector<string>& lines)
     {
         is_tiles_mode_ = true;
 
-        if (cell_w_ != 16 || cell_h_ != 24)
+        if (cell_px_w_ != 16 || cell_px_h_ != 24)
         {
             font_name_ = "images/16x24_v1.png";
-            set_cell_dims_from_font_name();
+            set_cell_px_dims_from_font_name();
         }
     }
 
@@ -474,11 +485,11 @@ void set_all_variables_from_lines(vector<string>& lines)
 
     cur_line = lines.front();
     font_name_ = cur_line;
-    set_cell_dims_from_font_name();
+    set_cell_px_dims_from_font_name();
     lines.erase(begin(lines));
 
     cur_line = lines.front();
-    is_fullscreen_ = cur_line == "1";
+    is_fullscr_ = cur_line == "1";
     lines.erase(begin(lines));
 
     cur_line = lines.front();
@@ -538,7 +549,7 @@ void collect_lines_from_variables(vector<string>& lines)
     lines.push_back(is_audio_enabled_               ? "1" : "0");
     lines.push_back(is_tiles_mode_                  ? "1" : "0");
     lines.push_back(font_name_);
-    lines.push_back(is_fullscreen_                  ? "1" : "0");
+    lines.push_back(is_fullscr_                  ? "1" : "0");
     lines.push_back(is_tiles_wall_full_square_      ? "1" : "0");
     lines.push_back(is_ascii_wall_full_square_      ? "1" : "0");
     lines.push_back(is_intro_lvl_skipped_           ? "1" : "0");
@@ -582,16 +593,16 @@ void init()
         set_all_variables_from_lines(lines);
     }
 
-    set_cell_dim_dependent_variables();
+    set_cell_px_dim_dependent_variables();
 }
 
 bool    is_tiles_mode()                 {return is_tiles_mode_;}
 string  font_name()                     {return font_name_;}
-bool    is_fullscreen()                 {return is_fullscreen_;}
-int     screen_px_w()                   {return screen_px_w_;}
-int     screen_px_h()                   {return screen_px_h_;}
-int     cell_w()                        {return cell_w_;}
-int     cell_h()                        {return cell_h_;}
+bool    is_fullscreen()                 {return is_fullscr_;}
+int     scr_px_w()                      {return scr_px_w_;}
+int     scr_px_h()                      {return scr_px_h_;}
+int     cell_px_w()                     {return cell_px_w_;}
+int     cell_px_h()                     {return cell_px_h_;}
 int     log_px_h()                      {return log_px_h_;}
 int     map_px_h()                      {return map_px_h_;}
 int     map_px_offset_h()               {return map_px_offset_h_;}
@@ -648,22 +659,11 @@ void run_options_menu()
     }
 }
 
-void set_cell_dim_dependent_variables()
-{
-    map_px_h_                = cell_h_ * MAP_H;
-    map_px_offset_h_         = cell_h_ * MAP_OFFSET_H;
-    log_px_h_                = cell_h_ * LOG_H;
-    char_lines_px_h_         = cell_h_ * CHAR_LINES_H;
-    char_lines_px_offset_h_  = cell_h_ * CHAR_LINES_OFFSET_H;
-    screen_px_w_             = cell_w_ * SCREEN_W;
-    screen_px_h_             = cell_h_ * SCREEN_H;
-}
-
 void toggle_fullscreen()
 {
-    is_fullscreen_ = !is_fullscreen_;
-    set_cell_dims_from_font_name();
-    set_cell_dim_dependent_variables();
+    is_fullscr_ = !is_fullscr_;
+    set_cell_px_dims_from_font_name();
+    set_cell_px_dim_dependent_variables();
 
     render::on_toggle_fullscreen();
 

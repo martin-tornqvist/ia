@@ -53,7 +53,7 @@ void player_throw_lit_explosive(const Pos& aim_cell)
 
     msg_log::add(explosive->str_on_player_throw());
 
-    //render
+    //Render
     if (path.size() > 1)
     {
         const auto  clr = explosive->ignited_projectile_clr();
@@ -66,11 +66,11 @@ void player_throw_lit_explosive(const Pos& aim_cell)
             {
                 if (config::is_tiles_mode())
                 {
-                    render::draw_tile(explosive->tile(),    Panel::map, p, clr);
+                    render::draw_tile(explosive->tile(), Panel::map, p, clr);
                 }
-                else
+                else //ASCII mode
                 {
-                    render::draw_glyph(explosive->glyph(),  Panel::map, p, clr);
+                    render::draw_glyph(explosive->glyph(), Panel::map, p, clr);
                 }
 
                 render::update_screen();
@@ -108,7 +108,7 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
         msg_log::clear();
         msg_log::add("I throw " + item_name_a + ".");
     }
-    else
+    else //Monster throwing
     {
         const Pos& p = path.front();
 
@@ -120,11 +120,11 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
 
     render::draw_map_and_interface(true);
 
-    int         blocked_in_element    = -1;
-    bool        is_actor_hit          = false;
-    const char  glyph               = item_thrown.glyph();
-    const Clr   clr                 = item_thrown.clr();
-    int         chance_to_destroy_item = 0;
+    int         blocked_in_element      = -1;
+    bool        is_actor_hit            = false;
+    const char  glyph                   = item_thrown.glyph();
+    const Clr   clr                     = item_thrown.clr();
+    int         chance_to_destroy_item  = 0;
 
     Pos cur_pos(-1, -1);
 
@@ -136,45 +136,47 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
 
         Actor* const actor_here = utils::actor_at_pos(cur_pos);
 
-        if (actor_here)
+        if (
+            actor_here &&
+            (cur_pos == tgt_cell || actor_here->data().actor_size >= Actor_size::humanoid))
         {
-            if (cur_pos == tgt_cell || actor_here->data().actor_size >= Actor_size::humanoid)
+            data = Throw_att_data(actor_throwing, item_thrown, tgt_cell, cur_pos, aim_lvl);
+
+            if (data.attack_result >= success_small && !data.is_ethereal_defender_missed)
             {
-
-                data = Throw_att_data(actor_throwing, item_thrown, tgt_cell, cur_pos, aim_lvl);
-
-                if (data.attack_result >= success_small && !data.is_ethereal_defender_missed)
+                if (map::cells[cur_pos.x][cur_pos.y].is_seen_by_player)
                 {
-
-                    if (map::cells[cur_pos.x][cur_pos.y].is_seen_by_player)
-                    {
-                        render::draw_glyph('*', Panel::map, cur_pos, clr_red_lgt);
-                        render::update_screen();
-                        sdl_wrapper::sleep(config::delay_projectile_draw() * 4);
-                    }
-
-                    const Clr hit_message_clr   = actor_here == map::player ? clr_msg_bad : clr_msg_good;
-                    const bool CAN_SEE_ACTOR  = map::player->can_see_actor(*actor_here, nullptr);
-                    string defender_name       = CAN_SEE_ACTOR ? actor_here->name_the() : "It";
-
-                    msg_log::add(defender_name + " is hit.", hit_message_clr);
-
-                    actor_here->hit(data.dmg, Dmg_type::physical);
-                    is_actor_hit = true;
-
-                    //If throwing a potion on an actor, let it make stuff happen...
-                    if (item_thrown_data.type == Item_type::potion)
-                    {
-                        static_cast<Potion*>(&item_thrown)->collide(cur_pos, actor_here);
-                        delete &item_thrown;
-                        game_time::tick();
-                        return;
-                    }
-
-                    blocked_in_element = i;
-                    chance_to_destroy_item = 25;
-                    break;
+                    render::draw_glyph('*', Panel::map, cur_pos, clr_red_lgt);
+                    render::update_screen();
+                    sdl_wrapper::sleep(config::delay_projectile_draw() * 4);
                 }
+
+                const Clr hit_message_clr =
+                    actor_here == map::player ? clr_msg_bad : clr_msg_good;
+
+                const bool CAN_SEE_ACTOR =
+                    map::player->can_see_actor(*actor_here, nullptr);
+
+                const string defender_name =
+                    CAN_SEE_ACTOR ? actor_here->name_the() : "It";
+
+                msg_log::add(defender_name + " is hit.", hit_message_clr);
+
+                actor_here->hit(data.dmg, Dmg_type::physical);
+                is_actor_hit = true;
+
+                //If throwing a potion on an actor, let it make stuff happen
+                if (item_thrown_data.type == Item_type::potion)
+                {
+                    static_cast<Potion*>(&item_thrown)->on_collide(cur_pos, actor_here);
+                    delete &item_thrown;
+                    game_time::tick();
+                    return;
+                }
+
+                blocked_in_element      = i;
+                chance_to_destroy_item  = 25;
+                break;
             }
         }
 
@@ -205,42 +207,55 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
     {
         if (blocked_in_element >= 0)
         {
-            static_cast<Potion*>(&item_thrown)->collide(path[blocked_in_element], nullptr);
+            static_cast<Potion*>(&item_thrown)->on_collide(path[blocked_in_element], nullptr);
             delete &item_thrown;
             game_time::tick();
             return;
         }
     }
 
-    if (rnd::percent() < chance_to_destroy_item)
+    if (rnd::percent(chance_to_destroy_item))
     {
         delete &item_thrown;
     }
-    else
+    else //Thrown item not destroyed
     {
-        const int DROP_ELEMENT = blocked_in_element == -1 ?
-                                 path.size() - 1 : blocked_in_element;
-        const Pos drop_pos = path[DROP_ELEMENT];
-        const Matl matl_at_drop_pos =
-            map::cells[drop_pos.x][drop_pos.y].rigid->matl();
+        const int   DROP_ELEMENT        = blocked_in_element == -1 ?
+                                          path.size() - 1 : blocked_in_element;
 
-        bool is_noisy = false;
+        const Pos   drop_pos            = path[DROP_ELEMENT];
+        const Matl  matl_at_drop_pos    = map::cells[drop_pos.x][drop_pos.y].rigid->matl();
+        bool        is_noisy            = false;
 
         switch (matl_at_drop_pos)
         {
-        case Matl::empty:   is_noisy = false;  break;
+        case Matl::empty:
+            is_noisy = false;
+            break;
 
-        case Matl::stone:   is_noisy = true;   break;
+        case Matl::stone:
+            is_noisy = true;
+            break;
 
-        case Matl::metal:   is_noisy = true;   break;
+        case Matl::metal:
+            is_noisy = true;
+            break;
 
-        case Matl::plant:   is_noisy = false;  break;
+        case Matl::plant:
+            is_noisy = false;
+            break;
 
-        case Matl::wood:    is_noisy = true;   break;
+        case Matl::wood:
+            is_noisy = true;
+            break;
 
-        case Matl::cloth:   is_noisy = false;  break;
+        case Matl::cloth:
+            is_noisy = false;
+            break;
 
-        case Matl::fluid:   is_noisy = false;  break;
+        case Matl::fluid:
+            is_noisy = false;
+            break;
         }
 
         if (is_noisy)

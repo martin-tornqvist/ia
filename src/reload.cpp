@@ -87,13 +87,15 @@ void print_msg_and_play_sfx(Actor& actor_reloading, Wpn* const wpn,
                 const string wpn_name = wpn->name(Item_ref_type::plain, Item_ref_inf::none);
                 msg_log::add(
                     "I" + swift_str + " reload the " + wpn_name +
-                    " (" + to_str(wpn->nr_ammo_loaded_) + "/" + to_str(wpn->ammo_max()) + ").");
+                    " (" + to_str(wpn->nr_ammo_loaded_) + "/" +
+                    to_str(wpn->data().ranged.max_ammo) + ").");
             }
-            else
+            else //Not a clip
             {
                 msg_log::add(
-                    "I" + swift_str + " load " + ammo_name + " (" + to_str(wpn->nr_ammo_loaded_) +
-                    "/" + to_str(wpn->ammo_max()) + ").");
+                    "I" + swift_str + " load " + ammo_name +
+                    " (" + to_str(wpn->nr_ammo_loaded_) + "/" +
+                    to_str(wpn->data().ranged.max_ammo) + ").");
             }
 
             render::draw_map_and_interface();
@@ -149,19 +151,19 @@ bool reload_wielded_wpn(Actor& actor_reloading)
         is_swift_reload = player_bon::traits[int(Trait::expert_marksman)] && rnd::coin_toss();
     }
 
-    const int wpn_ammo_capacity = wpn->ammo_max();
+    const int WPN_MAX_AMMO = wpn->data().ranged.max_ammo;
 
-    if (wpn_ammo_capacity == 0)
+    if (WPN_MAX_AMMO == 0)
     {
         print_msg_and_play_sfx(actor_reloading, wpn, nullptr,
                                Reload_result::wpn_not_using_ammo, false);
     }
-    else
+    else //Weapon ammo capacity not zero
     {
-        const Item_id ammo_type = wpn->data().ranged.ammo_item_id;
-        Item* item            = nullptr;
+        const Item_id   ammo_type   = wpn->data().ranged.ammo_item_id;
+        Item*           item        = nullptr;
 
-        if (wpn->nr_ammo_loaded_ < wpn_ammo_capacity)
+        if (wpn->nr_ammo_loaded_ < WPN_MAX_AMMO)
         {
             for (size_t i = 0; i < inv.general_.size(); ++i)
             {
@@ -190,8 +192,8 @@ bool reload_wielded_wpn(Actor& actor_reloading)
                     }
                     else //Not fumbling
                     {
-                        result      = Reload_result::success;
-                        bool is_clip = item->data().type == Item_type::ammo_clip;
+                        result          = Reload_result::success;
+                        bool is_clip    = item->data().type == Item_type::ammo_clip;
 
                         if (is_clip)
                         {
@@ -214,20 +216,20 @@ bool reload_wielded_wpn(Actor& actor_reloading)
                                 inv.put_in_general(clip_item);
                             }
                         }
-                        else //Ammo is stackable (e.g. shotgun shells)
+                        else //Ammo is not clip
                         {
                             wpn->nr_ammo_loaded_ += 1;
 
-                            print_msg_and_play_sfx(actor_reloading, wpn, item, result, is_swift_reload);
+                            print_msg_and_play_sfx(actor_reloading, wpn, item, result,
+                                                   is_swift_reload);
 
                             //Decrease ammo item number
                             inv.decr_item_in_general(i);
                         }
                     }
-
                     break;
                 }
-            }
+            } //End of general inventory loop
 
             if (result == Reload_result::no_ammo)
             {

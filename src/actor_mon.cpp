@@ -742,7 +742,7 @@ void Cultist::mk_start_items()
     {
         Item*   item            = item_factory::mk(Item_id::pistol);
         Wpn*    wpn             = static_cast<Wpn*>(item);
-        const int AMMO_CAP      = wpn->ammo_max();
+        const int AMMO_CAP      = wpn->data().ranged.max_ammo;
         wpn->nr_ammo_loaded_    = rnd::range(AMMO_CAP / 4, AMMO_CAP);
 
         inv_->put_in_slot(Slot_id::wielded, item);
@@ -756,7 +756,7 @@ void Cultist::mk_start_items()
     {
         Item*   item            = item_factory::mk(Item_id::pump_shotgun);
         Wpn*    wpn             = static_cast<Wpn*>(item);
-        const int AMMO_CAP      = wpn->ammo_max();
+        const int AMMO_CAP      = wpn->data().ranged.max_ammo;
         wpn->nr_ammo_loaded_    = rnd::range(AMMO_CAP / 4, AMMO_CAP);
 
         inv_->put_in_slot(Slot_id::wielded, item);
@@ -785,7 +785,7 @@ void Cultist::mk_start_items()
         //projectiles fired in each burst
         Item*       item        = item_factory::mk(Item_id::machine_gun);
         Wpn* const  wpn         = static_cast<Wpn*>(item);
-        const int   CAP_SCALED  = wpn->ammo_max() / NR_MG_PROJECTILES;
+        const int   CAP_SCALED  = wpn->data().ranged.max_ammo / NR_MG_PROJECTILES;
         const int   MIN_SCALED  = CAP_SCALED / 4;
         wpn->nr_ammo_loaded_    = rnd::range(MIN_SCALED, CAP_SCALED) * NR_MG_PROJECTILES;
         inv_->put_in_slot(Slot_id::wielded, item);
@@ -806,7 +806,7 @@ void Cultist_electric::mk_start_items()
 {
     Item*       item        = item_factory::mk(Item_id::mi_go_gun);
     Wpn*        wpn         = static_cast<Wpn*>(item);
-    const int   AMMO_CAP    = wpn->ammo_max();
+    const int   AMMO_CAP    = wpn->data().ranged.max_ammo;
 
     wpn->nr_ammo_loaded_     = rnd::range(AMMO_CAP / 4, AMMO_CAP);
 
@@ -827,7 +827,7 @@ void Cultist_spike_gun::mk_start_items()
 {
     Item*       item        = item_factory::mk(Item_id::spike_gun);
     Wpn*        wpn         = static_cast<Wpn*>(item);
-    const int   AMMO_CAP    = wpn->ammo_max();
+    const int   AMMO_CAP    = wpn->data().ranged.max_ammo;
     wpn->nr_ammo_loaded_    = rnd::range(AMMO_CAP / 4, AMMO_CAP);
 
     inv_->put_in_slot(Slot_id::wielded, item);
@@ -1054,7 +1054,7 @@ void Mi_go::mk_start_items()
 {
     Item*       item        = item_factory::mk(Item_id::mi_go_gun);
     Wpn*        wpn         = static_cast<Wpn*>(item);
-    const int   AMMO_CAP    = wpn->ammo_max();
+    const int   AMMO_CAP    = wpn->data().ranged.max_ammo;
 
     wpn->nr_ammo_loaded_ = rnd::range(AMMO_CAP / 4, AMMO_CAP);
 

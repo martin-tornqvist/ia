@@ -5,16 +5,16 @@
 
 enum class Inv_scr_id       {inv, equip, END};
 
-enum class Consume_item    {yes, no};
+enum class Consume_item     {yes, no};
 
-enum class Unequip_allowed {yes, no};
+enum class Unequip_allowed  {yes, no};
 
 namespace inv_handling
 {
 
-extern Inv_scr_id screen_to_open_after_drop;
-extern Inv_slot* equip_slot_to_open_after_drop;
-extern int      browser_idx_to_set_after_drop;
+extern Inv_scr_id   scr_to_open_after_drop;
+extern Inv_slot*    equip_slot_to_open_after_drop;
+extern int          browser_idx_to_set_after_drop;
 
 void init();
 
