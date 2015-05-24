@@ -33,13 +33,25 @@ void mk_forest_limit()
 {
     auto put_tree = [](const int X, const int Y) {map::put(new Tree(Pos(X, Y)));};
 
-    for (int y = 0; y < MAP_H; ++y) {put_tree(0,          y);}
+    for (int y = 0; y < MAP_H; ++y)
+    {
+        put_tree(0, y);
+    }
 
-    for (int x = 0; x < MAP_W; ++x) {put_tree(x,          0);}
+    for (int x = 0; x < MAP_W; ++x)
+    {
+        put_tree(x, 0);
+    }
 
-    for (int y = 0; y < MAP_H; ++y) {put_tree(MAP_W - 1,  y);}
+    for (int y = 0; y < MAP_H; ++y)
+    {
+        put_tree(MAP_W - 1, y);
+    }
 
-    for (int x = 0; x < MAP_W; ++x) {put_tree(x,          MAP_H - 1);}
+    for (int x = 0; x < MAP_W; ++x)
+    {
+        put_tree(x, MAP_H - 1);
+    }
 }
 
 void mk_forest_outer_treeline()
@@ -381,6 +393,8 @@ void mk_forest_trees()
 
 bool mk_intro_lvl()
 {
+    map::reset_map();
+
     for (int x = 1; x < MAP_W - 1; ++x)
     {
         for (int y = 1; y < MAP_H - 1; ++y)

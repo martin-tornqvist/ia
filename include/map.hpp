@@ -42,11 +42,13 @@ enum class Map_type
 namespace map
 {
 
-extern Player*            player;
-extern int                dlvl;
-extern Cell               cells[MAP_W][MAP_H];
-extern std::vector<Room*> room_list;               //Owns the rooms
-extern Room*              room_map[MAP_W][MAP_H];  //Helper array
+extern Player*              player;
+extern int                  dlvl;
+extern Cell                 cells[MAP_W][MAP_H];
+extern std::vector<Room*>   room_list;              //Owns the rooms
+extern Room*                room_map[MAP_W][MAP_H]; //Helper array
+
+extern Clr                  wall_clr;
 
 void init();
 void cleanup();

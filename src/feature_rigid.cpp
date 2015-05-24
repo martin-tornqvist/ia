@@ -507,7 +507,10 @@ string Wall::name(const Article article) const
 
 Clr Wall::clr_() const
 {
-    if (is_mossy_) {return clr_green_drk;}
+    if (is_mossy_)
+    {
+        return clr_green_drk;
+    }
 
     switch (type_)
     {
@@ -520,7 +523,7 @@ Clr Wall::clr_() const
 
     case Wall_type::cmn:
     case Wall_type::cmn_alt:
-        return clr_gray;
+        return map::wall_clr;
 
     case Wall_type::leng_monestary:
         return clr_red;
@@ -661,7 +664,7 @@ string Rubble_high::name(const Article article) const
 
 Clr Rubble_high::clr_() const
 {
-    return clr_gray;
+    return map::wall_clr;
 }
 
 //--------------------------------------------------------------------- LOW RUBBLE
@@ -692,7 +695,7 @@ string Rubble_low::name(const Article article) const
 
 Clr Rubble_low::clr_() const
 {
-    return clr_gray;
+    return map::wall_clr;
 }
 
 //--------------------------------------------------------------------- BONES

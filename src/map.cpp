@@ -11,6 +11,7 @@
 #include "item.hpp"
 #include "utils.hpp"
 #include "feature_rigid.hpp"
+
 #ifdef DEMO_MODE
 #include "sdl_wrapper.hpp"
 #endif // DEMO_MODE
@@ -29,9 +30,15 @@ Cell::Cell() :
 
 Cell::~Cell()
 {
-    if (rigid) {delete rigid;}
+    if (rigid)
+    {
+        delete rigid;
+    }
 
-    if (item)  {delete item;}
+    if (item)
+    {
+        delete item;
+    }
 }
 
 void Cell::reset()
@@ -58,11 +65,13 @@ void Cell::reset()
 namespace map
 {
 
-Player*       player  = nullptr;
-int           dlvl    = 0;
-Cell          cells[MAP_W][MAP_H];
-vector<Room*> room_list;
-Room*         room_map[MAP_W][MAP_H];
+Player*         player  = nullptr;
+int             dlvl    = 0;
+Cell            cells[MAP_W][MAP_H];
+vector<Room*>   room_list;
+Room*           room_map[MAP_W][MAP_H];
+
+Clr             wall_clr;
 
 namespace
 {
@@ -78,10 +87,13 @@ void reset_cells(const bool MAKE_STONE_WALLS)
 
             room_map[x][y]   = nullptr;
 
-            render::render_array[x][y]         = Cell_render_data();
-            render::render_array_no_actors[x][y] = Cell_render_data();
+            render::render_array[x][y]              = Cell_render_data();
+            render::render_array_no_actors[x][y]    = Cell_render_data();
 
-            if (MAKE_STONE_WALLS) {put(new Wall(Pos(x, y)));}
+            if (MAKE_STONE_WALLS)
+            {
+                put(new Wall(Pos(x, y)));
+            }
         }
     }
 }
@@ -96,7 +108,11 @@ void init()
 
     reset_cells(false);
 
-    if (player) {delete player; player = nullptr;}
+    if (player)
+    {
+        delete player;
+        player = nullptr;
+    }
 
     const Pos player_pos(PLAYER_START_X, PLAYER_START_Y);
     player = static_cast<Player*>(actor_factory::mk(Actor_id::player, player_pos));
@@ -138,13 +154,44 @@ void reset_map()
 {
     actor_factory::delete_all_mon();
 
-    for (auto* room : room_list) {delete room;}
+    for (auto* room : room_list)
+    {
+        delete room;
+    }
 
     room_list.clear();
 
     reset_cells(true);
     game_time::erase_all_mobs();
     game_time::reset_turn_type_and_actor_counters();
+
+    //Occasionally set wall color to something unusual
+    if (rnd::one_in(5))
+    {
+        vector<Clr> wall_clr_bucket =
+        {
+            clr_nosf_sepia,
+            clr_nosf_sepia_drk,
+            clr_red,
+            clr_brown,
+            clr_brown_drk,
+            clr_brown_gray
+        };
+
+        const size_t IDX = rnd::range(0, wall_clr_bucket.size() - 1);
+
+        wall_clr = wall_clr_bucket[IDX];
+    }
+    else
+    {
+        //Standard wall color
+        wall_clr = clr_gray;
+
+        //Randomize the color slightly (subtle effect)
+        wall_clr.r += rnd::range(-6, 6);
+        wall_clr.g += rnd::range(-6, 6);
+        wall_clr.b += rnd::range(-6, 6);
+    }
 }
 
 Rigid* put(Rigid* const f)

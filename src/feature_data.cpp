@@ -21,7 +21,10 @@ Feature_room_spawn_rules::Feature_room_spawn_rules() :
     room_types_native_.clear();
 }
 
-void Feature_room_spawn_rules::reset() {*this = Feature_room_spawn_rules();}
+void Feature_room_spawn_rules::reset()
+{
+    *this = Feature_room_spawn_rules();
+}
 
 void Feature_room_spawn_rules::set(const int MAX_NR_IN_ROOM,
                                    const Range& dlvls_allowed,

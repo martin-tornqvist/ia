@@ -71,7 +71,10 @@ public:
 
     void player_try_spot_hidden();
 
-    const Rigid* mimic() const {return mimic_feature_;}
+    const Rigid* mimic() const
+    {
+        return mimic_feature_;
+    }
 
 private:
     Clr clr_() const override;
