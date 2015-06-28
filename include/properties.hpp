@@ -2,6 +2,9 @@
 #define PROPERTIES_H
 
 #include <string>
+#ifdef MACOSX
+#include <vector>
+#endif
 
 #include "ability_values.hpp"
 #include "cmn_data.hpp"
