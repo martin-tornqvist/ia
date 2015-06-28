@@ -16,15 +16,14 @@ INSTALL = /usr/bin/install
 
 SRCDIR = ./src
 INCDIR = ./include
-OSXDIR = ./API/SDL_osx
-DEBUGDIR = $(INCDIR)/debugModeIncl
-RELEASEDIR = $(INCDIR)/releaseModeIncl
+DEBUGDIR = $(INCDIR)/debug_mode_incl
+RELEASEDIR = $(INCDIR)/release_mode_incl
 ASSETSDIR = ./assets
 BINDIR = ./target
 
 PROG = ia
 SRC = $(wildcard $(SRCDIR)/*.cpp)
-OBJ = $(SRC:.cpp=.o) $(SRCDIR)/SDLMain.o
+OBJ = $(SRC:.cpp=.o)
 
 WARNINGS = -Wall -Wextra
 OPTFLAGS = -O0 -g -pipe
@@ -34,12 +33,17 @@ COBJFLAGS = -x objective-c++
 DEF = -DMACOSX
 INC =	-I$(INCDIR) \
 	-F/Library/Frameworks \
-	-I/Library/Frameworks/SDL.framework/Headers \
-	-I/Library/Frameworks/SDL_image.framework/Headers \
-	-I/Library/Frameworks/SDL_mixer.framework/Headers
+	-I/Library/Frameworks/SDL2.framework/Headers \
+	-I/Library/Frameworks/SDL2_image.framework/Headers \
+	-I/Library/Frameworks/SDL2_mixer.framework/Headers
 LIB =	-F/Library/Frameworks \
-	-framework SDL -framework SDL_image -framework SDL_mixer \
-	-framework Cocoa
+	-framework Cocoa \
+	-framework SDL2 -framework SDL2_image -framework SDL2_mixer
+
+WARNINGS = -Wall -Wextra
+OPTFLAGS = -O0 -g -pipe
+CXXFLAGS += -std=c++11
+COBJFLAGS = -x objective-c++
 
 # supress clang warnings
 ifeq ($(CXX),c++)
@@ -63,9 +67,6 @@ $(PROG): $(OBJ)
 
 %.o: %.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -x c++ -c -o $@ $<
-
-$(SRCDIR)/%.o: $(OSXDIR)/%.m
-	$(CXX) $(CPPFLAGS) $(COBJFLAGS) -c -o $@ $<
 
 clean:
 	rm -f $(SRCDIR)/*.o
