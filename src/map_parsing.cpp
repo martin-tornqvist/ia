@@ -355,8 +355,8 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
 
     const int X0 = max(0,     area_allowed_to_modify.p0.x);
     const int Y0 = max(0,     area_allowed_to_modify.p0.y);
-    const int X1 = min(MAP_W, area_allowed_to_modify.p1.x);
-    const int Y1 = min(MAP_H, area_allowed_to_modify.p1.y);
+    const int X1 = min(MAP_W - 1, area_allowed_to_modify.p1.x);
+    const int Y1 = min(MAP_H - 1, area_allowed_to_modify.p1.y);
 
     for (int x = X0; x <= X1; ++x)
     {
