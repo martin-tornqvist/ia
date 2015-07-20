@@ -119,9 +119,13 @@ void cells_reached(const Rect& area, const Pos& origin,
 namespace explosion
 {
 
-void run_explosion_at(const Pos& origin, const Expl_type expl_type,
-                      const Expl_src expl_src, const int RADI_CHANGE,
-                      const Sfx_id sfx, Prop* const prop, const Clr* const clr_override)
+void run_explosion_at(const Pos&            origin,
+                      const Expl_type       expl_type,
+                      const Expl_src        expl_src,
+                      const Emit_expl_snd   emit_expl_snd,
+                      const int             RADI_CHANGE,
+                      Prop* const           prop,
+                      const Clr* const      clr_override)
 {
     Rect area;
     const int RADI = EXPLOSION_STD_RADI + RADI_CHANGE;
@@ -133,14 +137,17 @@ void run_explosion_at(const Pos& origin, const Expl_type expl_type,
     vector< vector<Pos> > pos_lists;
     cells_reached(area, origin, blocked, pos_lists);
 
-    Snd_vol vol = expl_type == Expl_type::expl ? Snd_vol::high : Snd_vol::low;
+    if (emit_expl_snd == Emit_expl_snd::yes)
+    {
+        Snd snd("I hear an explosion!", Sfx_id::explosion, Ignore_msg_if_origin_seen::yes,
+                origin, nullptr, Snd_vol::high, Alerts_mon::yes);
 
-    Snd snd("I hear an explosion!", sfx, Ignore_msg_if_origin_seen::yes, origin,
-            nullptr, vol, Alerts_mon::yes);
-    snd_emit::emit_snd(snd);
+        snd_emit::emit_snd(snd);
+    }
 
     draw(pos_lists, blocked, clr_override);
 
+    //----------------------------------------------------------
     //Do damage, apply effect
 
     Actor* living_actors[MAP_W][MAP_H];

@@ -1123,7 +1123,8 @@ void Player::on_std_turn()
         if (nr_turns_until_ins_ > 0)
         {
             render::draw_map_and_interface(true);
-            msg_log::add("I feel my sanity slipping...", clr_msg_note, true, true);
+            msg_log::add("I feel my sanity slipping...", clr_msg_note, true,
+                         More_prompt_on_msg::yes);
         }
         else
         {
@@ -1181,7 +1182,8 @@ void Player::on_std_turn()
                     update_fov();
                     render::draw_map_and_interface();
                     const string mon_name = mon.name_a();
-                    msg_log::add("I spot " + mon_name + "!", clr_msg_note, true, true);
+                    msg_log::add("I spot " + mon_name + "!", clr_msg_note, true,
+                                 More_prompt_on_msg::yes);
                 }
             }
         }
@@ -1310,21 +1312,23 @@ void Player::interrupt_actions()
     quick_move_dir_         = Dir::END;
 }
 
-void Player::hear_sound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
+void Player::hear_sound(const Snd& snd,
+                        const bool IS_ORIGIN_SEEN_BY_PLAYER,
                         const Dir dir_to_origin,
                         const int PERCENT_AUDIBLE_DISTANCE)
 {
-    const Sfx_id     sfx         = snd.sfx();
+    const Sfx_id    sfx         = snd.sfx();
     const string&   msg         = snd.msg();
     const bool      HAS_SND_MSG = !msg.empty() && msg != " ";
 
     if (HAS_SND_MSG)
     {
-        msg_log::add(msg, clr_white);
+        msg_log::add(msg, clr_white, false, snd.should_add_more_prompt_on_msg());
     }
 
-    //Play audio after message to ensure sync between audio and animation
-    //If origin is hidden, we only play the sound if there is a message
+    //Play audio after message to ensure sync between audio and animation.
+
+    //If origin is hidden, we only play the sound if there is a message.
     if (HAS_SND_MSG || IS_ORIGIN_SEEN_BY_PLAYER)
     {
         audio::play(sfx, dir_to_origin, PERCENT_AUDIBLE_DISTANCE);
@@ -1383,7 +1387,7 @@ void Player::move_dir(Dir dir)
                         {
                             if (
                                 config::is_ranged_wpn_meleee_prompt()   &&
-                                can_see_actor(*mon_at_dest, nullptr)  &&
+                                can_see_actor(*mon_at_dest, nullptr)    &&
                                 wpn->data().ranged.is_ranged_wpn)
                             {
                                 const string wpn_name = wpn->name(Item_ref_type::a);
@@ -1402,7 +1406,7 @@ void Player::move_dir(Dir dir)
                                 }
                             }
 
-                            attack::melee(*this, *wpn, *mon_at_dest);
+                            attack::melee(this, pos, *mon_at_dest, *wpn);
                             tgt_ = mon_at_dest;
                             return;
                         }
@@ -1484,7 +1488,7 @@ void Player::move_dir(Dir dir)
                     }
                     else
                     {
-                        nr_moves_until_free_action_--;
+                        --nr_moves_until_free_action_;
                     }
                 }
 
@@ -1510,7 +1514,10 @@ void Player::move_dir(Dir dir)
             }
 
             //NOTE: bump() prints block messages.
-            for (auto* m : mobs) {m->bump(*this);}
+            for (auto* m : mobs)
+            {
+                m->bump(*this);
+            }
 
             map::cells[dest.x][dest.y].rigid->bump(*this);
         }
@@ -1564,7 +1571,7 @@ void Player::kick_mon(Actor& actor_to_kick)
         kick_wpn = static_cast<Wpn*>(item_factory::mk(Item_id::player_kick));
     }
 
-    attack::melee(*this, *kick_wpn, actor_to_kick);
+    attack::melee(this, pos, actor_to_kick, *kick_wpn);
     delete kick_wpn;
 }
 
@@ -1572,11 +1579,11 @@ void Player::punch_mon(Actor& actor_to_punch)
 {
     //Spawn a temporary punch weapon to attack with
     Wpn* punch_wpn = static_cast<Wpn*>(item_factory::mk(Item_id::player_punch));
-    attack::melee(*this, *punch_wpn, actor_to_punch);
+    attack::melee(this, pos, actor_to_punch, *punch_wpn);
     delete punch_wpn;
 }
 
-void Player::add_light_(bool light_map[MAP_W][MAP_H]) const
+void Player::add_light_hook(bool light_map[MAP_W][MAP_H]) const
 {
     Lgt_size lgt_size = Lgt_size::none;
 

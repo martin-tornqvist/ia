@@ -74,6 +74,7 @@ class Spell
 public:
     Spell() {}
     virtual ~Spell() {}
+
     Spell_effect_noticed cast(Actor* const caster, const bool IS_INTRINSIC) const;
 
     virtual bool allow_mon_cast_now(Mon& mon) const
@@ -96,11 +97,14 @@ public:
 
         switch (shock_type)
         {
-        case Intr_spell_shock::mild: return 2;
+        case Intr_spell_shock::mild:
+            return 2;
 
-        case Intr_spell_shock::disturbing: return 8;
+        case Intr_spell_shock::disturbing:
+            return 8;
 
-        case Intr_spell_shock::severe: return 16;
+        case Intr_spell_shock::severe:
+            return 16;
         }
 
         return -1;
@@ -109,15 +113,16 @@ public:
     virtual Intr_spell_shock shock_type_intr_cast() const = 0;
 
 protected:
-    virtual Spell_effect_noticed cast_(Actor* const caster) const = 0;
+    virtual Spell_effect_noticed cast_impl(Actor* const caster) const = 0;
 
-    virtual int max_spi_cost_() const = 0;
+    virtual int max_spi_cost() const = 0;
 };
 
 class Spell_darkbolt: public Spell
 {
 public:
     Spell_darkbolt() : Spell() {}
+
     bool allow_mon_cast_now(Mon& mon) const override;
 
     bool is_avail_for_all_mon() const override
@@ -153,10 +158,11 @@ public:
             "bolt cast towards a target with great force."
         };
     }
-private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+private:
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
+
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(1) - (SPI_PER_LVL * 3);
     }
@@ -166,7 +172,9 @@ class Spell_aza_wrath: public Spell
 {
 public:
     Spell_aza_wrath() : Spell() {}
+
     bool allow_mon_cast_now(Mon& mon) const override;
+
     bool is_avail_for_all_mon() const override
     {
         return true;
@@ -204,9 +212,11 @@ public:
             "caster as well [TODO]."*/
         };
     }
+
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
-    int max_spi_cost_() const override
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
+
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(2);
     }
@@ -216,7 +226,9 @@ class Spell_mayhem: public Spell
 {
 public:
     Spell_mayhem() : Spell() {}
+
     bool allow_mon_cast_now(Mon& mon) const override;
+
     bool is_avail_for_all_mon() const override
     {
         return false;
@@ -250,9 +262,11 @@ public:
             "the surrounding area."
         };
     }
+
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
-    int max_spi_cost_() const override
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
+
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(11);
     }
@@ -299,9 +313,9 @@ public:
         };
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(2);
     }
@@ -351,9 +365,9 @@ public:
         return Intr_spell_shock::disturbing;
     }
 protected:
-    virtual Spell_effect_noticed cast_(Actor* const caster) const override;
+    virtual Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    virtual int max_spi_cost_() const override
+    virtual int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(2);
     }
@@ -394,9 +408,9 @@ public:
         return {"Reveals the presence of all items in the surrounding area."};
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(6);
     }
@@ -437,9 +451,9 @@ public:
         return {"Reveals the presence of all traps in the surrounding area."};
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(4);
     }
@@ -480,9 +494,9 @@ public:
         return {"Reveals the presence of all creatures in the surrounding area."};
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(6);
     }
@@ -523,9 +537,9 @@ public:
         return {"Opens all locks, lids and doors in the surrounding area."};
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(5);
     }
@@ -570,9 +584,9 @@ public:
         };
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(2);
     }
@@ -617,9 +631,9 @@ public:
         };
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(1) - (SPI_PER_LVL * 3);
     }
@@ -660,9 +674,9 @@ public:
         return {"All enemies forget your presence."};
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(1) - (SPI_PER_LVL * 2);
     }
@@ -703,9 +717,9 @@ public:
         return {"Bends the universe in favor of the caster."};
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(11);
     }
@@ -745,9 +759,9 @@ public:
         return {"Illuminates the area around the caster."};
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(1);
     }
@@ -789,9 +803,9 @@ public:
         return {""};
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return PLAYER_START_SPI + 2;
     }
@@ -834,9 +848,9 @@ public:
         return {"Instantly moves the caster to a different position."};
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(2);
     }
@@ -883,9 +897,9 @@ public:
         };
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(4);
     }
@@ -913,9 +927,9 @@ public:
     virtual Intr_spell_shock shock_type_intr_cast() const override = 0;
 
 protected:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
     virtual Prop_id applied_prop_id() const = 0;
-    virtual int max_spi_cost_() const override = 0;
+    virtual int max_spi_cost() const override = 0;
 };
 
 class Spell_slow_mon: public Spell_prop_on_mon
@@ -948,7 +962,7 @@ private:
         return Prop_id::slowed;
     }
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(1);
     }
@@ -984,7 +998,7 @@ private:
         return Prop_id::terrified;
     }
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(3);
     }
@@ -1022,7 +1036,7 @@ private:
         return Prop_id::paralyzed;
     }
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(6);
     }
@@ -1065,9 +1079,9 @@ public:
         return {""};
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(2);
     }
@@ -1116,9 +1130,9 @@ public:
         };
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(2);
     }
@@ -1161,9 +1175,9 @@ public:
         return {""};
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(2);
     }
@@ -1206,9 +1220,9 @@ public:
         return {""};
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(2);
     }
@@ -1251,9 +1265,9 @@ public:
         return {""};
     }
 private:
-    Spell_effect_noticed cast_(Actor* const caster) const override;
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
 
-    int max_spi_cost_() const override
+    int max_spi_cost() const override
     {
         return player_bon::spi_occultist_can_cast_at_lvl(2);
     }

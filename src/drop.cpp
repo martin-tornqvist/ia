@@ -81,7 +81,7 @@ void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t 
         {
             msg_log::clear();
             render::draw_map_and_interface();
-            msg_log::add("I drop " + item_ref + ".", clr_white, false, true);
+            msg_log::add("I drop " + item_ref + ".", clr_white, false, More_prompt_on_msg::yes);
         }
         else
         {

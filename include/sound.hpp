@@ -9,28 +9,39 @@
 
 class Actor;
 
-enum class Snd_vol                 {low, high};
-enum class Alerts_mon              {no, yes};
-enum class Ignore_msg_if_origin_seen  {no, yes};
+enum class Snd_vol                      {low, high};
+enum class Alerts_mon                   {no, yes};
+enum class Ignore_msg_if_origin_seen    {no, yes};
 
 class Snd
 {
 public:
-    Snd(
-        const std::string&          msg,
-        const Sfx_id                 sfx,
+    Snd(const std::string&              msg,
+        const Sfx_id                    sfx,
         const Ignore_msg_if_origin_seen ignore_msg_if_origin_seen,
-        const Pos&                  origin,
-        Actor* const                actor_who_made_sound,
-        const Snd_vol                vol,
-        const Alerts_mon             alerting_mon);
+        const Pos&                      origin,
+        Actor* const                    actor_who_made_sound,
+        const Snd_vol                   vol,
+        const Alerts_mon                alerting_mon,
+        const More_prompt_on_msg        add_more_prompt_on_msg = More_prompt_on_msg::no);
 
     Snd() {}
     ~Snd() {}
 
-    const std::string&  msg()    const {return msg_;}
-    Sfx_id               sfx()    const {return sfx_;}
-    void                clear_msg()        {msg_ = "";}
+    const std::string& msg() const
+    {
+        return msg_;
+    }
+
+    Sfx_id sfx() const
+    {
+        return sfx_;
+    }
+
+    void clear_msg()
+    {
+        msg_ = "";
+    }
 
     bool is_msg_ignored_if_origin_seen() const
     {
@@ -42,9 +53,25 @@ public:
         return is_alerting_mon_ == Alerts_mon::yes;
     }
 
-    Pos     origin()             const {return origin_;}
-    Actor*  actor_who_made_sound()  const {return actor_who_made_sound_;}
-    int     is_loud()                const {return vol_ == Snd_vol::high;}
+    More_prompt_on_msg should_add_more_prompt_on_msg() const
+    {
+        return add_more_prompt_on_msg_;
+    }
+
+    Pos origin() const
+    {
+        return origin_;
+    }
+
+    Actor* actor_who_made_sound() const
+    {
+        return actor_who_made_sound_;
+    }
+
+    int is_loud() const
+    {
+        return vol_ == Snd_vol::high;
+    }
 
     void add_string(const std::string& str)
     {
@@ -59,6 +86,7 @@ private:
     Actor* actor_who_made_sound_;
     Snd_vol vol_;
     Alerts_mon is_alerting_mon_;
+    More_prompt_on_msg add_more_prompt_on_msg_;
 };
 
 namespace snd_emit

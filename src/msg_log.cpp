@@ -122,10 +122,10 @@ void draw(const bool SHOULD_UPDATE_SCREEN)
     }
 }
 
-void add(const string&  str,
-         const Clr&     clr,
-         const bool     INTERRUPT_PLAYER_ACTIONS,
-         const bool     ADD_MORE_PROMPT_AFTER_MSG)
+void add(const string&              str,
+         const Clr&                 clr,
+         const bool                 INTERRUPT_PLAYER_ACTIONS,
+         const More_prompt_on_msg   add_more_prompt_on_msg)
 {
     assert(!str.empty());
 
@@ -179,8 +179,7 @@ void add(const string&  str,
                 frenzied_str += "!!";
             }
 
-            add(frenzied_str, clr, INTERRUPT_PLAYER_ACTIONS,
-                ADD_MORE_PROMPT_AFTER_MSG);
+            add(frenzied_str, clr, INTERRUPT_PLAYER_ACTIONS, add_more_prompt_on_msg);
 
             return;
         }
@@ -198,7 +197,7 @@ void add(const string&  str,
     bool is_repeated = false;
 
     //Check if message is identical to previous
-    if (!ADD_MORE_PROMPT_AFTER_MSG && prev_msg)
+    if (add_more_prompt_on_msg == More_prompt_on_msg::no && prev_msg)
     {
         string prev_str = "";
         prev_msg->str_raw(prev_str);
@@ -227,7 +226,7 @@ void add(const string&  str,
             {
                 cur_line_nr = 1;
             }
-            else
+            else //Current line number is not zero
             {
                 more_prompt();
                 cur_line_nr = 0;
@@ -239,7 +238,7 @@ void add(const string&  str,
         lines_[cur_line_nr].push_back(Msg(str, clr, x_pos));
     }
 
-    if (ADD_MORE_PROMPT_AFTER_MSG)
+    if (add_more_prompt_on_msg == More_prompt_on_msg::yes)
     {
         more_prompt();
     }

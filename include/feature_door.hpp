@@ -77,7 +77,7 @@ public:
     }
 
 private:
-    Clr clr_() const override;
+    Clr clr_default() const override;
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
                 Actor* const actor) override;

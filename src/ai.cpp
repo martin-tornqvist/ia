@@ -33,7 +33,7 @@ bool try_cast_random_spell(Mon& mon)
 
     vector<Spell*> spell_bucket = mon.spells_known_;
 
-    std::random_shuffle(begin(spell_bucket), end(spell_bucket));
+    random_shuffle(begin(spell_bucket), end(spell_bucket));
 
     while (!spell_bucket.empty())
     {

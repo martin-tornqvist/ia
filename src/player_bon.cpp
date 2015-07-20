@@ -764,11 +764,9 @@ int spi_occultist_can_cast_at_lvl(const int LVL)
     return PLAYER_START_SPI + SPI_FROM_LVLS + SPI_FROM_START_TRAIT - 1;
 }
 
-bool gets_undead_bane_bon(const Actor& attacker, const Actor_data_t& actor_data)
+bool gets_undead_bane_bon(const Actor_data_t& actor_data)
 {
-    return attacker.is_player()                              &&
-           player_bon::traits[int(Trait::undead_bane)]  &&
-           actor_data.is_undead;
+    return player_bon::traits[int(Trait::undead_bane)] && actor_data.is_undead;
 }
 
 } //player_bon

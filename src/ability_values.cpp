@@ -10,14 +10,15 @@
 
 using namespace std;
 
-int Ability_vals::val(const Ability_id ability_id,
-                      const bool IS_AFFECTED_BY_PROPS, Actor& actor) const
+int Ability_vals::val(const Ability_id id,
+                      const bool IS_AFFECTED_BY_PROPS,
+                      const Actor& actor) const
 {
-    int ret = ability_list[int(ability_id)];
+    int ret = ability_list[size_t(id)];
 
     if (IS_AFFECTED_BY_PROPS)
     {
-        ret += actor.prop_handler().ability_mod(ability_id);
+        ret += actor.prop_handler().ability_mod(id);
     }
 
     if (actor.is_player())
@@ -26,13 +27,13 @@ int Ability_vals::val(const Ability_id ability_id,
         {
             if (slot.item)
             {
-                ret += slot.item->data().ability_mods_while_equipped[int(ability_id)];
+                ret += slot.item->data().ability_mods_while_equipped[int(id)];
             }
         }
 
         const int HP_PCT  = (actor.hp() * 100) / actor.hp_max(true);
 
-        switch (ability_id)
+        switch (id)
         {
         case Ability_id::searching:
             ret += 8;
@@ -102,12 +103,12 @@ int Ability_vals::val(const Ability_id ability_id,
         case Ability_id::END: {} break;
         }
 
-        if (ability_id == Ability_id::searching)
+        if (id == Ability_id::searching)
         {
             //Searching must always be at least 1 to avoid trapping the player
             ret = max(ret, 1);
         }
-        else if (ability_id == Ability_id::dodge_att)
+        else if (id == Ability_id::dodge_att)
         {
             //It should not be possible to dodge every attack
             ret = min(ret, 95);

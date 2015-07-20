@@ -131,7 +131,7 @@ void draw()
 
     // Level and xp
     pos.x = X_XP;
-    str = "XP:";
+    str = "LVL:";
     render::draw_text(str, Panel::char_lines, pos, clr_menu_drk);
     pos.x += str.length();
     str = to_str(dungeon_master::clvl());

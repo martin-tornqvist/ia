@@ -203,14 +203,14 @@ void Room::mk_drk() const
 //------------------------------------------------------------------- STANDARD ROOM
 void Std_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
 {
-    on_pre_connect_(door_proposals);
+    on_pre_connect_hook(door_proposals);
 }
 
 void Std_room::on_post_connect(bool door_proposals[MAP_W][MAP_H])
 {
     place_auto_features();
 
-    on_post_connect_(door_proposals);
+    on_post_connect_hook(door_proposals);
 
     //Make dark?
     int pct_chance_dark = base_pct_chance_drk() - 15;
@@ -402,7 +402,7 @@ int Plain_room::base_pct_chance_drk() const
     return 5;
 }
 
-void Plain_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
+void Plain_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
@@ -411,7 +411,7 @@ void Plain_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
     if (rnd::fraction(1, 3)) {map_gen_utils::mk_pillars_in_room(*this);}
 }
 
-void Plain_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
+void Plain_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
@@ -433,7 +433,7 @@ bool Human_room::is_allowed() const
     return r_.min_dim() >= 4 && r_.max_dim() <= 8;
 }
 
-void Human_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
+void Human_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
@@ -442,7 +442,7 @@ void Human_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
     if (rnd::fraction(1, 3)) {map_gen_utils::mk_pillars_in_room(*this);}
 }
 
-void Human_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
+void Human_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
@@ -481,7 +481,7 @@ bool Ritual_room::is_allowed() const
     return r_.min_dim() >= 4 && r_.max_dim() <= 8;
 }
 
-void Ritual_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
+void Ritual_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
@@ -490,7 +490,7 @@ void Ritual_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
     if (rnd::fraction(1, 3)) {map_gen_utils::mk_pillars_in_room(*this);}
 }
 
-void Ritual_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
+void Ritual_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
@@ -567,7 +567,7 @@ bool Spider_room::is_allowed() const
     return r_.min_dim() >= 3 && r_.max_dim() <= 8;
 }
 
-void Spider_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
+void Spider_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
@@ -592,7 +592,7 @@ void Spider_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
     }
 }
 
-void Spider_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
+void Spider_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 }
@@ -613,7 +613,7 @@ bool Crypt_room::is_allowed() const
     return r_.min_dim() >= 3  && r_.max_dim() <= 12;
 }
 
-void Crypt_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
+void Crypt_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
@@ -622,7 +622,7 @@ void Crypt_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
     if (rnd::fraction(1, 3)) {map_gen_utils::mk_pillars_in_room(*this);}
 }
 
-void Crypt_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
+void Crypt_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 }
@@ -643,7 +643,7 @@ bool Monster_room::is_allowed() const
     return r_.min_dim() >= 4 && r_.max_dim() <= 8;
 }
 
-void Monster_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
+void Monster_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
@@ -668,7 +668,7 @@ void Monster_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
     }
 }
 
-void Monster_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
+void Monster_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
@@ -716,7 +716,7 @@ bool Flooded_room::is_allowed() const
     return true;
 }
 
-void Flooded_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
+void Flooded_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
@@ -741,7 +741,7 @@ void Flooded_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
     }
 }
 
-void Flooded_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
+void Flooded_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
@@ -808,7 +808,7 @@ bool Muddy_room::is_allowed() const
     return true;
 }
 
-void Muddy_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
+void Muddy_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
@@ -859,7 +859,7 @@ void Muddy_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
     }
 }
 
-void Muddy_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
+void Muddy_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
@@ -898,14 +898,14 @@ bool Cave_room::is_allowed() const
     return !is_sub_room_;
 }
 
-void Cave_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
+void Cave_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
     map_gen_utils::cavify_room(*this);
 }
 
-void Cave_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
+void Cave_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 }
@@ -933,14 +933,14 @@ bool Forest_room::is_allowed() const
     return !is_sub_room_;
 }
 
-void Forest_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
+void Forest_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
     map_gen_utils::cavify_room(*this);
 }
 
-void Forest_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
+void Forest_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
@@ -1015,14 +1015,14 @@ bool Chasm_room::is_allowed() const
            r_.max_dim() <= 9;
 }
 
-void Chasm_room::on_pre_connect_(bool door_proposals[MAP_W][MAP_H])
+void Chasm_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
     map_gen_utils::cavify_room(*this);
 }
 
-void Chasm_room::on_post_connect_(bool door_proposals[MAP_W][MAP_H])
+void Chasm_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
@@ -1082,7 +1082,7 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
     //Strategy: Expand the the river on both sides until parallel to the closest center
     //cell of another room
 
-    const bool IS_HOR = dir_ == hor;
+    const bool IS_HOR = axis_ == Axis::hor;
 
     TRACE << "Finding room centers" << endl;
     bool centers[MAP_W][MAP_H];
@@ -1173,8 +1173,8 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
             blocked[x][y] = true;
 
             if (
-                (dir_ == hor && (y >= closest_center0 && y <= closest_center1)) ||
-                (dir_ == ver && (x >= closest_center0 && x <= closest_center1))
+                (axis_ == Axis::hor && (y >= closest_center0 && y <= closest_center1)) ||
+                (axis_ == Axis::ver && (x >= closest_center0 && x <= closest_center1))
             )
             {
                 Room* r       = map::room_map[x][y];
@@ -1243,7 +1243,7 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
             }
         };
 
-        if (dir_ == hor)
+        if (axis_ == Axis::hor)
         {
             mark_sides(Range(1, MAP_W - 2), Range(1, MAP_H - 2), x, y);
         }

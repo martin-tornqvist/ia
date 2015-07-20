@@ -100,7 +100,7 @@ public:
 
     void update_clr();
 
-    void add_light_(bool light_map[MAP_W][MAP_H]) const;
+    void add_light_hook(bool light_map[MAP_W][MAP_H]) const;
 
     void on_log_msg_printed(); //Aborts e.g. searching and quick move
     void interrupt_actions(); //Aborts e.g. healing

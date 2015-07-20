@@ -50,7 +50,8 @@ void Event_wall_crumble::on_new_turn()
         {
             if (map::player->prop_handler().allow_see())
             {
-                msg_log::add("Suddenly, the walls collapse!", clr_white, false, true);
+                msg_log::add("Suddenly, the walls collapse!", clr_white, false,
+                             More_prompt_on_msg::yes);
             }
 
             //Crumble

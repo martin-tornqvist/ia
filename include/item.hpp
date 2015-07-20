@@ -11,7 +11,11 @@ class Prop;
 class Actor;
 class Spell;
 
-enum class Item_activate_ret_type {keep, destroyed};
+enum class Item_activate_ret_type
+{
+    keep,
+    destroyed
+};
 
 class Item
 {
@@ -41,10 +45,20 @@ public:
 
     virtual std::vector<std::string> descr() const;
 
-    virtual void identify(const bool IS_SILENT_IDENTIFY) {(void)IS_SILENT_IDENTIFY;}
+    virtual void identify(const bool IS_SILENT_IDENTIFY)
+    {
+        (void)IS_SILENT_IDENTIFY;
+    }
 
-    virtual void store_to_save_lines(std::vector<std::string>& lines) {(void)lines;}
-    virtual void setup_from_save_lines(std::vector<std::string>& lines) {(void)lines;}
+    virtual void store_to_save_lines(std::vector<std::string>& lines)
+    {
+        (void)lines;
+    }
+
+    virtual void setup_from_save_lines(std::vector<std::string>& lines)
+    {
+        (void)lines;
+    }
 
     virtual int weight() const;
 
@@ -54,16 +68,30 @@ public:
 
     virtual Clr interface_clr() const {return clr_brown;}
 
-    virtual void on_std_turn_in_inv(const Inv_type inv_type) {(void)inv_type;}
-    virtual void on_actor_turn_in_inv(const Inv_type inv_type) {(void)inv_type;}
-    virtual void on_pickup_to_backpack(Inventory& inv) {(void)inv;}
+    virtual void on_std_turn_in_inv(const Inv_type inv_type)
+    {
+        (void)inv_type;
+    }
+
+    virtual void on_actor_turn_in_inv(const Inv_type inv_type)
+    {
+        (void)inv_type;
+    }
+
+    virtual void on_pickup_to_backpack(Inventory& inv)
+    {
+        (void)inv;
+    }
 
     virtual void on_equip(const bool IS_SILENT)
     {
         (void)IS_SILENT;
     }
 
-    virtual Unequip_allowed on_unequip() {return Unequip_allowed::yes;}
+    virtual Unequip_allowed on_unequip()
+    {
+        return Unequip_allowed::yes;
+    }
 
     virtual int hp_regen_change(const Inv_type inv_type) const
     {
@@ -104,8 +132,13 @@ public:
     void store_to_save_lines(std::vector<std::string>& lines) override;
     void setup_from_save_lines(std::vector<std::string>& lines) override;
 
-    Clr interface_clr() const override {return clr_gray;}
+    Clr interface_clr() const override
+    {
+        return clr_gray;
+    }
+
     virtual void on_equip(const bool IS_SILENT) override;
+
     virtual Unequip_allowed on_unequip() override;
 
     int durability() const {return dur_;}
@@ -119,13 +152,20 @@ public:
 protected:
     int armor_points() const;
 
-    virtual void on_equip_(const bool IS_SILENT)
+    virtual void on_equip_hook(const bool IS_SILENT)
     {
         (void)IS_SILENT;
     }
-    virtual Unequip_allowed on_unequip_() {return Unequip_allowed::yes;}
 
-    std::string name_inf() const override {return armor_data_line(true);}
+    virtual Unequip_allowed on_unequip_hook()
+    {
+        return Unequip_allowed::yes;
+    }
+
+    std::string name_inf() const override
+    {
+        return armor_data_line(true);
+    }
 
     int dur_;
 };
@@ -137,19 +177,22 @@ public:
     ~Armor_asb_suit() {}
 
 private:
-    void on_equip_(const bool IS_SILENT) override;
-    Unequip_allowed on_unequip_() override;
+    void on_equip_hook(const bool IS_SILENT) override;
+
+    Unequip_allowed on_unequip_hook() override;
 };
 
 class Armor_heavy_coat: public Armor
 {
 public:
     Armor_heavy_coat(Item_data_t* const item_data) : Armor(item_data) {}
+
     ~Armor_heavy_coat() {}
 
 private:
-    void on_equip_(const bool IS_SILENT) override;
-    Unequip_allowed on_unequip_() override;
+    void on_equip_hook(const bool IS_SILENT) override;
+
+    Unequip_allowed on_unequip_hook() override;
 };
 
 class Armor_mi_go: public Armor
@@ -161,8 +204,9 @@ public:
     void on_std_turn_in_inv(const Inv_type inv_type) override;
 
 private:
-    void on_equip_(const bool IS_SILENT) override;
-    Unequip_allowed on_unequip_() override;
+    void on_equip_hook(const bool IS_SILENT) override;
+
+    Unequip_allowed on_unequip_hook() override;
 };
 
 class Wpn: public Item

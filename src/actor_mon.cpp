@@ -157,8 +157,8 @@ void Mon::on_actor_turn()
         }
     }
 
-    is_stealth_ = !is_actor_my_leader(map::player)                                  &&
-                  data_->ability_vals.val(Ability_id::stealth, true, *this) > 0 &&
+    is_stealth_ = !is_actor_my_leader(map::player)          &&
+                  ability(Ability_id::stealth, true) > 0    &&
                   !map::player->can_see_actor(*this, nullptr);
 
     //Array used for AI purposes, e.g. to prevent tactically bad positions,
@@ -172,7 +172,7 @@ void Mon::on_actor_turn()
     //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
     if (leader_ != map::player && (tgt_ == nullptr || tgt_ == map::player))
     {
-        if (on_actor_turn_())
+        if (on_actor_turn_hook())
         {
             return;
         }
@@ -342,7 +342,7 @@ void Mon::on_std_turn()
         }
     }
 
-    on_std_turn_();
+    on_std_turn_hook();
 }
 
 void Mon::on_hit(int& dmg)
@@ -489,7 +489,7 @@ bool Mon::try_attack(Actor& defender)
     {
         if (att.weapon->data().melee.is_melee_wpn)
         {
-            attack::melee(*this, *att.weapon, defender);
+            attack::melee(this, pos, defender, *att.weapon);
             return true;
         }
 
@@ -536,7 +536,7 @@ bool Mon::try_attack(Actor& defender)
 
         prop_handler_->try_apply_prop(ranged_cooldown_prop);
 
-        attack::ranged(*this, *att.weapon, defender.pos);
+        attack::ranged(this, pos, defender.pos, *att.weapon);
 
         return true;
     }
@@ -702,7 +702,7 @@ string Cultist::cultist_phrase()
         phrase_bucket.push_back("Cruento pestis shatruex!");
         phrase_bucket.push_back("Cruo crunatus durbe!");
         phrase_bucket.push_back("Cruo lokemundux!");
-        phrase_bucket.push_back("Cruo-stragara_na!");
+        phrase_bucket.push_back("Cruo stragara-na!");
         phrase_bucket.push_back("Gero shay cruo!");
         phrase_bucket.push_back("In marana domus-bhaava crunatus!");
         phrase_bucket.push_back("Caecux infirmux!");
@@ -869,7 +869,7 @@ void Frost_hound::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::frost_hound_bite));
 }
 
-void Zuul::place_()
+void Zuul::place_hook()
 {
     if (actor_data::data[size_t(Actor_id::zuul)].nr_left_allowed_to_spawn > 0)
     {
@@ -892,7 +892,7 @@ void Zuul::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::zuul_bite));
 }
 
-bool Vortex::on_actor_turn_()
+bool Vortex::on_actor_turn_hook()
 {
     if (!is_alive())
     {
@@ -964,7 +964,13 @@ bool Vortex::on_actor_turn_()
 
 void Dust_vortex::on_death()
 {
-    explosion::run_explosion_at(pos, Expl_type::apply_prop, Expl_src::misc, 0, Sfx_id::END,
+    //TODO: Make a sound effect for this
+    Snd snd("", Sfx_id::END, Ignore_msg_if_origin_seen::yes, pos, this, Snd_vol::high,
+            Alerts_mon::yes);
+
+    snd_emit::emit_snd(snd);
+
+    explosion::run_explosion_at(pos, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no, 0,
                                 new Prop_blind(Prop_turns::std), &clr_gray);
 }
 
@@ -975,9 +981,14 @@ void Dust_vortex::mk_start_items()
 
 void Fire_vortex::on_death()
 {
-    explosion::run_explosion_at(
-        pos, Expl_type::apply_prop, Expl_src::misc, 0, Sfx_id::END,
-        new Prop_burning(Prop_turns::std), &clr_red_lgt);
+    //TODO: Make a sound effect for this
+    Snd snd("", Sfx_id::END, Ignore_msg_if_origin_seen::yes, pos, this, Snd_vol::high,
+            Alerts_mon::yes);
+
+    snd_emit::emit_snd(snd);
+
+    explosion::run_explosion_at(pos, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no, 0,
+                                new Prop_burning(Prop_turns::std), &clr_gray);
 }
 
 void Fire_vortex::mk_start_items()
@@ -988,6 +999,7 @@ void Fire_vortex::mk_start_items()
 void Frost_vortex::on_death()
 {
     //TODO: Add explosion with cold damage
+    //TODO: Make a sound effect for this
 }
 
 void Frost_vortex::mk_start_items()
@@ -995,11 +1007,11 @@ void Frost_vortex::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::frost_vortex_engulf));
 }
 
-bool Ghost::on_actor_turn_()
+bool Ghost::on_actor_turn_hook()
 {
     if (
-        is_alive()                                     &&
-        aware_counter_ > 0                             &&
+        is_alive()                                      &&
+        aware_counter_ > 0                              &&
         utils::is_pos_adj(pos, map::player->pos, false) &&
         rnd::percent() < 30)
     {
@@ -1012,8 +1024,8 @@ bool Ghost::on_actor_turn_()
         msg_log::add(refer + " reaches for me... ");
 
         const Ability_roll_result roll_result =
-            ability_roll::roll(map::player->data().ability_vals.val(
-                                   Ability_id::dodge_att, true, *this));
+            ability_roll::roll(map::player->ability(Ability_id::dodge_att, true));
+
         const bool PLAYER_DODGES = roll_result >= success_small;
 
         if (PLAYER_DODGES)
@@ -1158,7 +1170,7 @@ void Mummy::mk_start_items()
     }
 }
 
-bool Mummy::on_actor_turn_()
+bool Mummy::on_actor_turn_hook()
 {
     //TODO: Below is an implementation for mummies turning friendly if player is wielding
     //the Staff of the Pharoh. It is commented out at least until after v17.0 is released.
@@ -1216,7 +1228,7 @@ void Mummy_unique::mk_start_items()
     spells_known_.push_back(spell_handling::random_spell_for_mon());
 }
 
-bool Khephren::on_actor_turn_()
+bool Khephren::on_actor_turn_hook()
 {
     if (is_alive() && aware_counter_ > 0 && !has_summoned_locusts)
     {
@@ -1280,7 +1292,7 @@ void Ape::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::ape_maul));
 }
 
-bool Ape::on_actor_turn_()
+bool Ape::on_actor_turn_hook()
 {
     if (frenzy_cool_down_ > 0)
     {
@@ -1328,7 +1340,7 @@ void Hunting_horror::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::hunting_horror_bite));
 }
 
-bool Keziah_mason::on_actor_turn_()
+bool Keziah_mason::on_actor_turn_hook()
 {
     if (is_alive() && aware_counter_ > 0 && !has_summoned_jenkin)
     {
@@ -1381,7 +1393,7 @@ void Keziah_mason::mk_start_items()
         inv_->put_in_general(item_factory::mk_random_scroll_or_potion(true, true));
 }
 
-void Leng_elder::on_std_turn_()
+void Leng_elder::on_std_turn_hook()
 {
     if (is_alive())
     {
@@ -1413,10 +1425,12 @@ void Leng_elder::on_std_turn_()
             if (IS_PLAYER_SEE_ME && IS_PLAYER_ADJ)
             {
                 msg_log::add("I perceive a cloaked figure standing before me...",
-                             clr_white, false, true);
+                             clr_white, false, More_prompt_on_msg::yes);
+
                 msg_log::add("It is the Elder Hierophant of the Leng monastery, ");
+
                 msg_log::add("the High Priest Not to Be Described.",
-                             clr_white, false, true);
+                             clr_white, false, More_prompt_on_msg::yes);
 
                 popup::show_msg("", true, "");
 
@@ -1436,7 +1450,7 @@ void Leng_elder::mk_start_items()
 
 }
 
-void Ooze::on_std_turn_()
+void Ooze::on_std_turn_hook()
 {
     restore_hp(1, false);
 }
@@ -1471,7 +1485,7 @@ const Clr& Color_oo_space::clr()
     return cur_color;
 }
 
-void Color_oo_space::on_std_turn_()
+void Color_oo_space::on_std_turn_hook()
 {
     cur_color.r = rnd::range(40, 255);
     cur_color.g = rnd::range(40, 255);
@@ -1485,7 +1499,7 @@ void Color_oo_space::on_std_turn_()
     }
 }
 
-bool Spider::on_actor_turn_()
+bool Spider::on_actor_turn_hook()
 {
     return false;
 }
@@ -1520,7 +1534,7 @@ void Wolf::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::wolf_bite));
 }
 
-bool Worm_mass::on_actor_turn_()
+bool Worm_mass::on_actor_turn_hook()
 {
     if (
         is_alive()                                       &&
@@ -1558,7 +1572,7 @@ void Worm_mass::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::worm_mass_bite));
 }
 
-bool Giant_locust::on_actor_turn_()
+bool Giant_locust::on_actor_turn_hook()
 {
     if (
         is_alive()                                       &&
@@ -1596,7 +1610,7 @@ void Giant_locust::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::giant_locust_bite));
 }
 
-bool Lord_of_shadows::on_actor_turn_()
+bool Lord_of_shadows::on_actor_turn_hook()
 {
     return false;
 }
@@ -1606,7 +1620,7 @@ void Lord_of_shadows::mk_start_items()
 
 }
 
-bool Lord_of_spiders::on_actor_turn_()
+bool Lord_of_spiders::on_actor_turn_hook()
 {
     if (is_alive() && aware_counter_ > 0 && rnd::coin_toss())
     {
@@ -1648,7 +1662,7 @@ void Lord_of_spiders::mk_start_items()
 
 }
 
-bool Lord_of_spirits::on_actor_turn_()
+bool Lord_of_spirits::on_actor_turn_hook()
 {
     return false;
 }
@@ -1658,7 +1672,7 @@ void Lord_of_spirits::mk_start_items()
 
 }
 
-bool Lord_of_pestilence::on_actor_turn_()
+bool Lord_of_pestilence::on_actor_turn_hook()
 {
     return false;
 }
@@ -1668,12 +1682,12 @@ void Lord_of_pestilence::mk_start_items()
 
 }
 
-bool Zombie::on_actor_turn_()
+bool Zombie::on_actor_turn_hook()
 {
     return try_resurrect();
 }
 
-bool Major_clapham_lee::on_actor_turn_()
+bool Major_clapham_lee::on_actor_turn_hook()
 {
     if (try_resurrect())
     {
@@ -1801,7 +1815,7 @@ void Bloated_zombie::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::bloated_zombie_spit));
 }
 
-bool Mold::on_actor_turn_()
+bool Mold::on_actor_turn_hook()
 {
     if (
         is_alive()                                       &&
@@ -1863,7 +1877,7 @@ void The_high_priest::mk_start_items()
 
 void The_high_priest::on_death()
 {
-    msg_log::add("The ground rumbles...", clr_white, false, true);
+    msg_log::add("The ground rumbles...", clr_white, false, More_prompt_on_msg::yes);
 
     const Pos stair_pos(MAP_W - 2, 11);
     map::put(new Stairs(stair_pos));
@@ -1873,12 +1887,12 @@ void The_high_priest::on_death()
     render::draw_map_and_interface();
 }
 
-void The_high_priest::on_std_turn_()
+void The_high_priest::on_std_turn_hook()
 {
 
 }
 
-bool The_high_priest::on_actor_turn_()
+bool The_high_priest::on_actor_turn_hook()
 {
     if (!is_alive())
     {
@@ -1890,7 +1904,8 @@ bool The_high_priest::on_actor_turn_()
         map::player->update_fov();
         render::draw_map_and_interface();
 
-        msg_log::add("A booming voice echoes through the halls.", clr_white, false, true);
+        msg_log::add("A booming voice echoes through the halls.", clr_white, false,
+                     More_prompt_on_msg::yes);
         audio::play(Sfx_id::boss_voice1);
 
         has_greeted_player_ = true;

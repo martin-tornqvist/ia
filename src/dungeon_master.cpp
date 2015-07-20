@@ -34,7 +34,8 @@ void player_gain_lvl()
     {
         clvl_++;
 
-        msg_log::add("Welcome to level " + to_str(clvl_) + "!", clr_green, false, true);
+        msg_log::add("Welcome to level " + to_str(clvl_) + "!", clr_green, false,
+                     More_prompt_on_msg::yes);
 
         create_character::pick_new_trait(false);
 

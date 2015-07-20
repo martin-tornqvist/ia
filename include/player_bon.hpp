@@ -97,7 +97,7 @@ void set_all_traits_to_picked();
 
 int spi_occultist_can_cast_at_lvl(const int LVL);
 
-bool gets_undead_bane_bon(const Actor& attacker, const Actor_data_t& actor_data);
+bool gets_undead_bane_bon(const Actor_data_t& actor_data);
 
 } //player_bon
 

@@ -66,6 +66,11 @@ enum class Item_id
     pistol_clip,
     flare_gun,
 
+    trap_dart,
+    trap_dart_poison,
+    trap_spear,
+    trap_spear_poison,
+
     dynamite,
     flare,
     molotov,
@@ -275,7 +280,7 @@ public:
         ~Item_ranged_data();
 
         bool                    is_ranged_wpn, is_machine_gun, is_shotgun;
-        //Note: This property should be set on ranged weapons (using ammo) and clips
+        //NOTE: This property should be set on ranged weapons (using ammo) and clips
         int                     max_ammo;
         Dice_param              dmg;
         Dice_param              throw_dmg;

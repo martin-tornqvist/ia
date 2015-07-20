@@ -18,30 +18,30 @@
 using namespace std;
 
 Item_data_t::Item_data_t() :
-    id(Item_id::END),
-    type(Item_type::general),
-    value(Item_value::normal),
-    weight(Item_weight::none),
-    allow_spawn(true),
-    spawn_std_range(Range(1, INT_MAX)),
-    max_stack_at_spawn(1),
-    chance_to_incl_in_floor_spawn_list(100),
-    is_stackable(true),
-    is_identified(true),
-    is_tried(false),
-    base_name(),
-    glyph('X'),
-    clr(clr_white),
-    tile(Tile_id::empty),
-    main_att_mode(Main_att_mode::none),
-    spell_cast_from_scroll(Spell_id::END),
-    land_on_hard_snd_msg("I hear a thudding sound."),
-    land_on_hard_sfx(),
-    shock_while_in_backpack(0),
-    shock_while_equipped(0),
-    melee(Item_melee_data()),
-    ranged(Item_ranged_data()),
-    armor(Item_armor_data())
+    id                                  (Item_id::END),
+    type                                (Item_type::general),
+    value                               (Item_value::normal),
+    weight                              (Item_weight::none),
+    allow_spawn                         (true),
+    spawn_std_range                     (Range(1, INT_MAX)),
+    max_stack_at_spawn                  (1),
+    chance_to_incl_in_floor_spawn_list  (100),
+    is_stackable                        (true),
+    is_identified                       (true),
+    is_tried                            (false),
+    base_name                           (),
+    glyph                               ('X'),
+    clr                                 (clr_white),
+    tile                                (Tile_id::empty),
+    main_att_mode                       (Main_att_mode::none),
+    spell_cast_from_scroll              (Spell_id::END),
+    land_on_hard_snd_msg                ("I hear a thudding sound."),
+    land_on_hard_sfx                    (),
+    shock_while_in_backpack             (0),
+    shock_while_equipped                (0),
+    melee                               (Item_melee_data()),
+    ranged                              (Item_ranged_data()),
+    armor                               (Item_armor_data())
 {
     for (int i = 0; i < int(Ability_id::END); ++i)
     {
@@ -54,17 +54,17 @@ Item_data_t::Item_data_t() :
 }
 
 Item_data_t::Item_melee_data::Item_melee_data() :
-    is_melee_wpn(false),
-    dmg(pair<int, int>(0, 0)),
-    hit_chance_mod(0),
-    att_msgs(Item_att_msgs()),
-    prop_applied(nullptr),
-    dmg_type(Dmg_type::physical),
-    knocks_back(false),
-    hit_small_sfx(Sfx_id::END),
-    hit_medium_sfx(Sfx_id::END),
-    hit_hard_sfx(Sfx_id::END),
-    miss_sfx(Sfx_id::END) {}
+    is_melee_wpn                        (false),
+    dmg                                 (pair<int, int>(0, 0)),
+    hit_chance_mod                      (0),
+    att_msgs                            (Item_att_msgs()),
+    prop_applied                        (nullptr),
+    dmg_type                            (Dmg_type::physical),
+    knocks_back                         (false),
+    hit_small_sfx                       (Sfx_id::END),
+    hit_medium_sfx                      (Sfx_id::END),
+    hit_hard_sfx                        (Sfx_id::END),
+    miss_sfx                            (Sfx_id::END) {}
 
 Item_data_t::Item_melee_data::~Item_melee_data()
 {
@@ -72,36 +72,39 @@ Item_data_t::Item_melee_data::~Item_melee_data()
 }
 
 Item_data_t::Item_ranged_data::Item_ranged_data() :
-    is_ranged_wpn(false),
-    is_machine_gun(false),
-    is_shotgun(false),
-    max_ammo(0),
-    dmg(Dice_param()),
-    throw_dmg(Dice_param()),
-    hit_chance_mod(0),
-    throw_hit_chance_mod(0),
-    effective_range(3),
-    knocks_back(false),
-    dmg_info_override(""),
-    ammo_item_id(Item_id::END),
-    dmg_type(Dmg_type::physical),
-    has_infinite_ammo(false),
-    projectile_glyph('/'),
-    projectile_tile(Tile_id::projectile_std_front_slash),
-    projectile_clr(clr_white),
-    projectile_leaves_trail(false),
-    projectile_leaves_smoke(false),
-    att_msgs(Item_att_msgs()),
-    snd_msg(""),
-    snd_vol(Snd_vol::low),
-    makes_ricochet_snd(false),
-    att_sfx(Sfx_id::END),
-    reload_sfx(Sfx_id::END),
-    prop_applied(nullptr) {}
+    is_ranged_wpn                       (false),
+    is_machine_gun                      (false),
+    is_shotgun                          (false),
+    max_ammo                            (0),
+    dmg                                 (Dice_param()),
+    throw_dmg                           (Dice_param()),
+    hit_chance_mod                      (0),
+    throw_hit_chance_mod                (0),
+    effective_range                     (3),
+    knocks_back                         (false),
+    dmg_info_override                   (""),
+    ammo_item_id                        (Item_id::END),
+    dmg_type                            (Dmg_type::physical),
+    has_infinite_ammo                   (false),
+    projectile_glyph                    ('/'),
+    projectile_tile                     (Tile_id::projectile_std_front_slash),
+    projectile_clr                      (clr_white),
+    projectile_leaves_trail             (false),
+    projectile_leaves_smoke             (false),
+    att_msgs                            (Item_att_msgs()),
+    snd_msg                             (""),
+    snd_vol                             (Snd_vol::low),
+    makes_ricochet_snd                  (false),
+    att_sfx                             (Sfx_id::END),
+    reload_sfx                          (Sfx_id::END),
+    prop_applied                        (nullptr) {}
 
 Item_data_t::Item_ranged_data::~Item_ranged_data()
 {
-    if (prop_applied) {delete prop_applied;}
+    if (prop_applied)
+    {
+        delete prop_applied;
+    }
 }
 
 Item_data_t::Item_armor_data::Item_armor_data() :
@@ -155,7 +158,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.melee.hit_small_sfx = Sfx_id::hit_small;
         d.melee.hit_medium_sfx = Sfx_id::hit_medium;
         d.melee.hit_hard_sfx = Sfx_id::hit_hard;
-        d.melee.miss_sfx = Sfx_id::miss_medium;
+        d.melee.miss_sfx = Sfx_id::END;
         break;
 
     case Item_type::ranged_wpn:
@@ -450,7 +453,7 @@ void init_data_list()
     d.base_name = {"Incinerator", "Incinerators", "an Incinerator"};
     d.base_descr =
     {
-        "This hellish, experimental weapon launches an explosive fireball. Best ued "
+        "This hellish, experimental weapon launches an explosive fireball. Best used "
         "with extreme caution."
     };
     d.weight = Item_weight::heavy;
@@ -675,6 +678,41 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest, 50);
     add_feature_found_in(d, Feature_id::cabinet, 50);
     add_feature_found_in(d, Feature_id::cocoon, 50);
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::ranged_wpn);
+    d.id = Item_id::trap_dart;
+    d.allow_spawn = false;
+    d.ranged.has_infinite_ammo = true;
+    d.ranged.dmg = Dice_param(1, 8);
+    d.ranged.hit_chance_mod = 70;
+    d.ranged.effective_range = 6;
+    d.ranged.snd_msg = "I hear the launching of a projectile.";
+    d.ranged.att_sfx = Sfx_id::END; //TODO: Make a sound effect for this
+    d.ranged.makes_ricochet_snd = true;
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::ranged_wpn);
+    d = data[size_t(Item_id::trap_dart)];
+    d.id = Item_id::trap_dart_poison;
+    d.ranged.prop_applied = new Prop_poisoned(Prop_turns::std);
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::melee_wpn);
+    d.id = Item_id::trap_spear;
+    d.allow_spawn = false;
+    d.weight = Item_weight::heavy;
+    d.melee.dmg = pair<int, int>(2, 6);
+    d.melee.hit_chance_mod = 85;
+    d.melee.hit_small_sfx = Sfx_id::hit_sharp;
+    d.melee.hit_medium_sfx = Sfx_id::hit_sharp;
+    d.melee.miss_sfx = Sfx_id::miss_heavy;
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::ranged_wpn);
+    d = data[size_t(Item_id::trap_spear)];
+    d.id = Item_id::trap_spear_poison;
+    d.ranged.prop_applied = new Prop_poisoned(Prop_turns::std);
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::explosive);
@@ -916,9 +954,6 @@ void init_data_list()
     d.melee.att_msgs = {"strike", "strikes me with an axe"};
     d.melee.dmg = pair<int, int>(2, 6);
     d.melee.hit_chance_mod = -5;
-    d.melee.hit_small_sfx = Sfx_id::hit_small;
-    d.melee.hit_medium_sfx = Sfx_id::hit_medium;
-    d.melee.hit_hard_sfx = Sfx_id::hit_hard;
     d.melee.miss_sfx = Sfx_id::miss_medium;
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::tomb);
@@ -1055,9 +1090,6 @@ void init_data_list()
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::zombie_axe;
     d.melee.att_msgs = {"", "chops me with a rusty axe"};
-    d.melee.hit_small_sfx = Sfx_id::hit_small;
-    d.melee.hit_medium_sfx = Sfx_id::hit_medium;
-    d.melee.hit_hard_sfx = Sfx_id::hit_hard;
     set_dmg_from_mon_id(d, Actor_id::zombie_axe);
     data[size_t(d.id)] = d;
 

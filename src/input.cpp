@@ -381,13 +381,15 @@ void handle_map_mode_key_press(const Key_data& d)
                                 actor->prop_handler().prop_ids(tgt_props);
 
                                 const bool GETS_UNDEAD_BANE_BON =
-                                    player_bon::gets_undead_bane_bon(*map::player,
-                                                                     actor->data());
+                                    player_bon::gets_undead_bane_bon(actor->data());
 
                                 if (!tgt_props[int(Prop_id::ethereal)] || GETS_UNDEAD_BANE_BON)
                                 {
-                                    Ranged_att_data data(*map::player, *wpn, actor->pos,
-                                                         actor->pos);
+                                    Ranged_att_data data(map::player,
+                                                         map::player->pos,  //Origin
+                                                         actor->pos,        //Aim pos
+                                                         actor->pos,        //Cur pos
+                                                         *wpn);
                                     msg_log::add(to_str(data.hit_chance_tot) + "% hit chance.");
                                 }
                             }
@@ -413,7 +415,7 @@ void handle_map_mode_key_press(const Key_data& d)
                                         map::player->tgt_ = actor;
                                     }
 
-                                    attack::ranged(*map::player, *wpn, p);
+                                    attack::ranged(map::player, map::player->pos, p, *wpn);
 
                                     return Marker_done::yes;
                                 }
@@ -703,12 +705,14 @@ void handle_map_mode_key_press(const Key_data& d)
                                 actor->prop_handler().prop_ids(tgt_props);
 
                                 const bool GETS_UNDEAD_BANE_BON =
-                                    player_bon::gets_undead_bane_bon(*map::player, actor->data());
+                                    player_bon::gets_undead_bane_bon(actor->data());
 
                                 if (!tgt_props[int(Prop_id::ethereal)] || GETS_UNDEAD_BANE_BON)
                                 {
-                                    Throw_att_data data(*map::player, *item_to_throw,
-                                                        actor->pos, actor->pos);
+                                    Throw_att_data data(map::player,
+                                                        actor->pos,     //Aim pos
+                                                        actor->pos,     //Current pos
+                                                        *item_to_throw);
 
                                     msg_log::add(to_str(data.hit_chance_tot) + "% hit chance.");
                                 }

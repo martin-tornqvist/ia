@@ -14,7 +14,11 @@
 class Prop_handler;
 class Inventory;
 
-enum class Actor_died {no, yes};
+enum class Actor_died
+{
+    no,
+    yes
+};
 
 class Actor
 {
@@ -23,6 +27,11 @@ public:
     virtual ~Actor();
 
     Prop_handler& prop_handler()
+    {
+        return *prop_handler_;
+    }
+
+    const Prop_handler& prop_handler() const
     {
         return *prop_handler_;
     }
@@ -42,14 +51,21 @@ public:
         return *inv_;
     }
 
-    //This function is not concerned with whether the parameter actor is within
-    //FOV, or if the actor is actually hidden or not. It merely tests the sneak
-    //skill of the actor, and various conditions such as light/dark. It has no
-    //side effects - it merely does a randomized check.
+    const Inventory& inv() const
+    {
+        return *inv_;
+    }
+
+    int ability(const Ability_id id, const bool IS_AFFECTED_BY_PROPS) const;
+
+    //NOTE: This function is not concerned with whether the parameter actor is
+    //within FOV, or if the actor is actually hidden or not. It merely tests the
+    //sneak skill of the actor, and various conditions such as light/dark. It
+    //has no side effects - it merely does a randomized check.
     bool is_spotting_hidden_actor(Actor& actor);
 
     void place(const Pos& pos_, Actor_data_t& data);
-    virtual void place_() {}
+    virtual void place_hook() {}
 
     Actor_died hit(int dmg, const Dmg_type dmg_type,
                    const Dmg_method method = Dmg_method::END);
@@ -78,31 +94,93 @@ public:
 
     void seen_foes(std::vector<Actor*>& out);
 
-    Actor_id id() const {return data_->id;}
-    int hp() const {return hp_;}
-    int spi() const {return spi_;}
+    Actor_id id() const
+    {
+        return data_->id;
+    }
+
+    int hp() const
+    {
+        return hp_;
+    }
+
+    int spi() const
+    {
+        return spi_;
+    }
+
     int hp_max(const bool WITH_MODIFIERS) const;
-    int spi_max() const {return spi_max_;}
+
+    int spi_max() const
+    {
+        return spi_max_;
+    }
+
     Actor_speed speed() const;
 
-    std::string name_the() const   {return data_->name_the;}
-    std::string name_a() const   {return data_->name_a;}
-    std::string corpse_name_a() const   {return data_->corpse_name_a;}
-    std::string corpse_name_the() const   {return data_->corpse_name_the;}
-    bool is_humanoid() const   {return data_->is_humanoid;}
-    char glyph() const   {return glyph_;}
-    virtual const Clr& clr() {return clr_;}
-    const Tile_id& tile() const   {return tile_;}
+    std::string name_the() const
+    {
+        return data_->name_the;
+    }
+
+    std::string name_a() const
+    {
+        return data_->name_a;
+    }
+
+    std::string corpse_name_a() const
+    {
+        return data_->corpse_name_a;
+    }
+
+    std::string corpse_name_the() const
+    {
+        return data_->corpse_name_the;
+    }
+
+    bool is_humanoid() const
+    {
+        return data_->is_humanoid;
+    }
+
+    char glyph() const
+    {
+        return glyph_;
+    }
+
+    virtual const Clr& clr()
+    {
+        return clr_;
+    }
+
+    const Tile_id& tile() const
+    {
+        return tile_;
+    }
 
     void add_light(bool light_map[MAP_W][MAP_H]) const;
 
-    virtual void add_light_(bool light[MAP_W][MAP_H]) const {(void)light;}
+    virtual void add_light_hook(bool light[MAP_W][MAP_H]) const
+    {
+        (void)light;
+    }
 
     void teleport();
 
-    bool is_alive() const {return state_ == Actor_state::alive;}
-    bool is_corpse() const {return state_ == Actor_state::corpse;}
-    Actor_state state() const {return state_;}
+    bool is_alive() const
+    {
+        return state_ == Actor_state::alive;
+    }
+
+    bool is_corpse() const
+    {
+        return state_ == Actor_state::corpse;
+    }
+
+    Actor_state state() const
+    {
+        return state_;
+    }
 
     virtual bool is_leader_of(const Actor* const actor) const = 0;
     virtual bool is_actor_my_leader(const Actor* const actor) const = 0;
@@ -119,21 +197,26 @@ protected:
     friend class Trap;
 
     virtual void on_death() {}
-    virtual void on_hit(int& dmg) {(void)dmg;}
+
+    virtual void on_hit(int& dmg)
+    {
+        (void)dmg;
+    }
+
     virtual void mk_start_items() = 0;
 
     Actor_state  state_;
-    Clr         clr_;
-    char        glyph_;
-    Tile_id      tile_;
+    Clr clr_;
+    char glyph_;
+    Tile_id tile_;
 
     int hp_, hp_max_, spi_, spi_max_;
 
     Pos lair_cell_;
 
-    Prop_handler*  prop_handler_;
-    Actor_data_t*   data_;
-    Inventory*    inv_;
+    Prop_handler* prop_handler_;
+    Actor_data_t* data_;
+    Inventory* inv_;
 };
 
 #endif

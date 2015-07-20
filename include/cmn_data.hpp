@@ -32,10 +32,12 @@ const int PLAYER_START_Y      = MAP_H_HALF;
 const int PLAYER_MAX_CLVL     = 10;
 
 const int DLVL_LAST_EARLY_GAME  = 9;
-const int DLVL_FIRST_MID_GAME   = 10;
+const int DLVL_FIRST_MID_GAME   = DLVL_LAST_EARLY_GAME + 1;
 const int DLVL_LAST_MID_GAME    = 19;
-const int DLVL_FIRST_LATE_GAME  = 20;
+const int DLVL_FIRST_LATE_GAME  = DLVL_LAST_MID_GAME + 1;
 const int DLVL_LAST             = 30;
+
+const int MIN_DLVL_HARDER_TRAPS = 6;
 
 const int AUDIO_ALLOCATED_CHANNELS = 16;
 
@@ -45,8 +47,6 @@ const int PLAYER_START_HP   = 16;
 const int PLAYER_START_SPI  = 6;
 const int HP_PER_LVL        = 2;
 const int SPI_PER_LVL       = 1;
-
-const int MIN_DLVL_HARDER_TRAPS = 6;
 
 const int     FOV_STD_RADI_INT  = 8;
 const int     FOV_STD_W_INT     = (FOV_STD_RADI_INT * 2) + 1;
@@ -81,22 +81,22 @@ const int POISON_DMG_N_TURN = 3;
 const int MEDICAL_BAG_NR_TRN_BEFORE_HEAL    = 10;
 const int MEDICAL_BAG_NR_TRN_PER_HP         = 2;
 
-//Value used for limiting spawning over time and "breeder" monsters. The actual number of
-//actors may sometimes go a bit above this number, e.g. due to a group of monsters
-//spawning when the number of actors is near the limit. Summoning spells don't check
-//this number at all (because their effect shouldn't be arbitrarily blocked by meta) -
-//so that may also push the number of actors above the limit. (It's a soft limit)
+//Value used for limiting spawning over time and "breeder" monsters. The actual number of actors
+//may sometimes go a bit above this number, e.g. due to a group of monsters spawning when the
+//number of actors is near the limit. Summoning spells does not check this number at all (because
+//their effects should not be arbitrarily limited by this) - so that may also push the number of
+//actors above the limit. This number is treated as a soft limit.
 const size_t MAX_NR_ACTORS_ON_MAP = 125;
 
 const std::string info_scr_cmd_info =
     " [2/8 down/up j/k] to navigate [space/esc] to exit ";
 
 const std::string cancel_info_str_no_space  = "[space/esc] to cancel";
-const std::string cancel_info_str         = " " + cancel_info_str_no_space;
-const std::string msg_disarm_no_trap       = "I find nothing there to disarm.";
-const std::string msg_mon_prevent_cmd      = "Not while an enemy is near.";
-const std::string spell_reflect_msg       = "The spell is reflected!";
-const std::string spell_reflect_self_msg   = "There is a faint echo...";
-const std::string item_carry_shock_descr   = "This item is disturbing to carry.";
+const std::string cancel_info_str           = " " + cancel_info_str_no_space;
+const std::string msg_disarm_no_trap        = "I find nothing there to disarm.";
+const std::string msg_mon_prevent_cmd       = "Not while an enemy is near.";
+const std::string spell_reflect_msg         = "The spell is reflected!";
+const std::string spell_reflect_self_msg    = "There is a faint echo...";
+const std::string item_carry_shock_descr    = "This item is disturbing to carry.";
 
 #endif

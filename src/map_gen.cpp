@@ -530,9 +530,9 @@ void reserve_river(Region regions[3][3])
         len1++;
     };
 
-    const Horizontal_vertical dir = rnd::coin_toss() ? hor : ver;
+    const Axis axis = rnd::coin_toss() ? Axis::hor : Axis::ver;
 
-    if (dir == hor)
+    if (axis == Axis::hor)
     {
         init_room_rect(room_rect.p0.x, room_rect.p1.x, room_rect.p0.y, room_rect.p1.y,
                        Pos(0, 1), Pos(2, 1));
@@ -545,11 +545,11 @@ void reserve_river(Region regions[3][3])
 
     Room* const       room      = room_factory::mk(Room_type::river, room_rect);
     River_room* const  river_room = static_cast<River_room*>(room);
-    river_room->dir_             = dir;
+    river_room->axis_             = axis;
     river_region->main_room_      = room;
     river_region->is_free_        = false;
 
-    if (dir == hor)
+    if (axis == Axis::hor)
     {
         regions[1][1] = regions[2][1] = *river_region;
     }
@@ -577,11 +577,11 @@ void reserve_river(Region regions[3][3])
         }
     };
 
-    if (dir == hor)
+    if (axis == Axis::hor)
     {
         mk(room_rect.p0.x + 1, room_rect.p1.x - 1,  room_rect.p0.y,      room_rect.p1.y);
     }
-    else
+    else //Vertical axis
     {
         mk(room_rect.p0.x,     room_rect.p1.x,      room_rect.p0.y + 1,  room_rect.p1.y - 1);
     }
@@ -1239,25 +1239,20 @@ bool mk_std_lvl()
     {
         reserve_river(regions);
     }
-
 #endif // MK_RIVER
 
 #ifdef MK_MERGED_REGIONS
-
     if (is_map_valid)
     {
         mk_merged_regions_and_rooms(regions);
     }
-
 #endif // MK_MERGED_REGIONS
 
 #ifdef RANDOMLY_BLOCK_REGIONS
-
     if (is_map_valid)
     {
         randomly_block_regions(regions);
     }
-
 #endif // RANDOMLY_BLOCK_REGIONS
 
     if (is_map_valid)
@@ -1273,12 +1268,11 @@ bool mk_std_lvl()
                 if (!region.main_room_ && region.is_free_)
                 {
                     const Rect room_rect = region.rnd_room_rect();
-                    auto* room          =
-                        room_factory::mk_random_allowed_std_room(room_rect, false);
+                    auto* room = room_factory::mk_random_allowed_std_room(room_rect, false);
                     register_room(*room);
                     mk_floor_in_room(*room);
-                    region.main_room_    = room;
-                    region.is_free_      = false;
+                    region.main_room_   = room;
+                    region.is_free_     = false;
                 }
             }
         }
@@ -1293,16 +1287,13 @@ bool mk_std_lvl()
     render::update_screen();
     query::wait_for_key_press();
 #endif // DEMO_MODE
-
     if (is_map_valid)
     {
         mk_aux_rooms(regions);
     }
-
 #endif // MK_AUX_ROOMS
 
 #ifdef MK_SUB_ROOMS
-
     if (is_map_valid && map::dlvl <= DLVL_LAST_MID_GAME)
     {
 #ifdef DEMO_MODE
@@ -1315,7 +1306,6 @@ bool mk_std_lvl()
 #endif // DEMO_MODE
         mk_sub_rooms();
     }
-
 #endif // MK_SUB_ROOMS
 
     if (is_map_valid)
@@ -1385,7 +1375,6 @@ bool mk_std_lvl()
     }
 
 #ifdef FILL_DEAD_ENDS
-
     if (is_map_valid)
     {
 #ifdef DEMO_MODE
@@ -1398,7 +1387,6 @@ bool mk_std_lvl()
 #endif // DEMO_MODE
         fill_dead_ends();
     }
-
 #endif // FILL_DEAD_ENDS
 
     if (is_map_valid && map::dlvl <= DLVL_LAST_MID_GAME)
@@ -1417,17 +1405,39 @@ bool mk_std_lvl()
         }
     }
 
-    if (is_map_valid) {move_player_to_nearest_allowed_pos();}
+    if (is_map_valid)
+    {
+        move_player_to_nearest_allowed_pos();
+    }
 
-    if (is_map_valid) {populate_mon::populate_std_lvl();}
+#ifdef DECORATE
+    if (is_map_valid)
+    {
+        decorate();
+    }
+#endif // DECORATE
 
-    if (is_map_valid) {populate_traps::populate_std_lvl();}
+    if (is_map_valid)
+    {
+        populate_mon::populate_std_lvl();
+    }
 
-    if (is_map_valid) {populate_items::mk_items_on_floor();}
+    if (is_map_valid)
+    {
+        populate_traps::populate_std_lvl();
+    }
+
+    if (is_map_valid)
+    {
+        populate_items::mk_items_on_floor();
+    }
 
     Pos stairs_pos;
 
-    if (is_map_valid) {stairs_pos = place_stairs();}
+    if (is_map_valid)
+    {
+        stairs_pos = place_stairs();
+    }
 
     if (is_map_valid)
     {
@@ -1439,13 +1449,10 @@ bool mk_std_lvl()
         }
     }
 
-#ifdef DECORATE
-
-    if (is_map_valid) {decorate();}
-
-#endif // DECORATE
-
-    for (auto* r : map::room_list) {delete r;}
+    for (auto* r : map::room_list)
+    {
+        delete r;
+    }
 
     map::room_list.clear();
     utils::reset_array(map::room_map);

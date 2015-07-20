@@ -33,17 +33,16 @@ public:
 
     void reset();
 
-    int val(const Ability_id ability_id, const bool IS_AFFECTED_BY_PROPS,
-            Actor& actor) const;
+    int val(const Ability_id id, const bool IS_AFFECTED_BY_PROPS, const Actor& actor) const;
 
-    int raw_val(const Ability_id ability)
+    int raw_val(const Ability_id id)
     {
-        return ability_list[int(ability)];
+        return ability_list[int(id)];
     }
 
-    void set_val(const Ability_id ability, const int VAL);
+    void set_val(const Ability_id id, const int VAL);
 
-    void change_val(const Ability_id ability, const int CHANGE);
+    void change_val(const Ability_id id, const int CHANGE);
 
 private:
     int ability_list[int(Ability_id::END)];

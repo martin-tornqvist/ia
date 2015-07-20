@@ -12,18 +12,18 @@ class Msg
 {
 public:
     Msg(const std::string& text, const Clr& clr, const int X_POS) :
-        clr_(clr),
-        x_pos_(X_POS),
-        str_(text),
-        repeats_str_(""),
-        nr_(1) {}
+        clr_            (clr),
+        x_pos_          (X_POS),
+        str_            (text),
+        repeats_str_    (""),
+        nr_             (1) {}
 
     Msg() :
-        clr_(clr_white),
-        x_pos_(0),
-        str_(""),
-        repeats_str_(""),
-        nr_(1) {}
+        clr_            (clr_white),
+        x_pos_          (0),
+        str_            (""),
+        repeats_str_    (""),
+        nr_             (1) {}
 
     void str_with_repeats(std::string& str_ref) const
     {
@@ -52,10 +52,10 @@ namespace msg_log
 
 void init();
 
-void add(const std::string& str,
-         const Clr&         clr                         = clr_white,
-         const bool         INTERRUPT_PLAYER_ACTIONS    = false,
-         const bool         ADD_MORE_PROMPT_AFTER_MSG   = false);
+void add(const std::string&         str,
+         const Clr&                 clr                         = clr_white,
+         const bool                 INTERRUPT_PLAYER_ACTIONS    = false,
+         const More_prompt_on_msg   add_more_prompt_on_msg      = More_prompt_on_msg::no);
 
 //NOTE: This function can safely be called at any time. If there is content in the log,
 //a "more" prompt will be done, and the log is cleared. If the log happens to be empty,

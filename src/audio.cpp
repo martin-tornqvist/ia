@@ -122,6 +122,7 @@ void init()
         load_audio_file(Sfx_id::ricochet,               "sfx_ricochet.ogg");
         load_audio_file(Sfx_id::explosion,              "sfx_explosion.ogg");
         load_audio_file(Sfx_id::explosion_molotov,      "sfx_explosion_molotov.ogg");
+        load_audio_file(Sfx_id::gas,                    "sfx_gas.ogg");
         load_audio_file(Sfx_id::door_open,              "sfx_door_open.ogg");
         load_audio_file(Sfx_id::door_close,             "sfx_door_close.ogg");
         load_audio_file(Sfx_id::door_bang,              "sfx_door_bang.ogg");

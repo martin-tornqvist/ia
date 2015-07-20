@@ -394,7 +394,8 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
 
         if (nr_turns_left_ <= 0)
         {
-            msg_log::add("My Electric Lantern breaks!", clr_msg_note, true, true);
+            msg_log::add("My Electric Lantern breaks!", clr_msg_note, true,
+                         More_prompt_on_msg::yes);
 
             //NOTE: The this deletes the object
             map::player->inv().remove_item_in_backpack_with_ptr(this, true);
@@ -407,7 +408,8 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
         }
         else if (nr_turns_left_ <= 3)
         {
-            msg_log::add("My Electric Lantern is breaking.", clr_msg_note, true, true);
+            msg_log::add("My Electric Lantern is breaking.", clr_msg_note, true,
+                         More_prompt_on_msg::yes);
         }
 
         //This point reached means the lantern is not destroyed

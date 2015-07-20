@@ -92,7 +92,7 @@ void player_throw_lit_explosive(const Pos& aim_cell)
 
 void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
 {
-    Throw_att_data data(actor_throwing, item_thrown, tgt_cell, actor_throwing.pos);
+    Throw_att_data data(&actor_throwing, tgt_cell, actor_throwing.pos, item_thrown);
 
     const Actor_size aim_lvl = data.intended_aim_lvl;
 
@@ -140,7 +140,7 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
             actor_here &&
             (cur_pos == tgt_cell || actor_here->data().actor_size >= Actor_size::humanoid))
         {
-            data = Throw_att_data(actor_throwing, item_thrown, tgt_cell, cur_pos, aim_lvl);
+            data = Throw_att_data(&actor_throwing, tgt_cell, cur_pos, item_thrown, aim_lvl);
 
             if (data.attack_result >= success_small && !data.is_ethereal_defender_missed)
             {
@@ -151,14 +151,11 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
                     sdl_wrapper::sleep(config::delay_projectile_draw() * 4);
                 }
 
-                const Clr hit_message_clr =
-                    actor_here == map::player ? clr_msg_bad : clr_msg_good;
+                const Clr hit_message_clr = actor_here == map::player ? clr_msg_bad : clr_msg_good;
 
-                const bool CAN_SEE_ACTOR =
-                    map::player->can_see_actor(*actor_here, nullptr);
+                const bool CAN_SEE_ACTOR = map::player->can_see_actor(*actor_here, nullptr);
 
-                const string defender_name =
-                    CAN_SEE_ACTOR ? actor_here->name_the() : "It";
+                const string defender_name = CAN_SEE_ACTOR ? actor_here->name_the() : "It";
 
                 msg_log::add(defender_name + " is hit.", hit_message_clr);
 

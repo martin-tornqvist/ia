@@ -135,7 +135,7 @@ void Lit_dynamite::on_new_turn()
 
         //NOTE: The dynamite is now deleted. Do not use member variable after this point.
 
-        explosion::run_explosion_at(p, Expl_type::expl, Expl_src::misc, D);
+        explosion::run_explosion_at(p, Expl_type::expl, Expl_src::misc, Emit_expl_snd::yes, D);
     }
 }
 

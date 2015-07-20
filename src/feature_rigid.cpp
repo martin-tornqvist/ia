@@ -152,7 +152,7 @@ void Rigid::on_new_turn()
     }
 
     //Run specialized new turn actions
-    on_new_turn_();
+    on_new_turn_hook();
 }
 
 void Rigid::try_start_burning(const bool IS_MSG_ALLOWED)
@@ -303,7 +303,7 @@ Clr Rigid::clr() const
         }
         else
         {
-            return burn_state_ == Burn_state::not_burned ? clr_() : clr_gray_drk;
+            return burn_state_ == Burn_state::not_burned ? clr_default() : clr_gray_drk;
         }
     }
 }
@@ -312,10 +312,10 @@ Clr Rigid::clr_bg() const
 {
     switch (burn_state_)
     {
-    case Burn_state::not_burned:  return clr_bg_();
+    case Burn_state::not_burned:  return clr_bg_default();
 
     case Burn_state::burning:    return Clr {Uint8(rnd::range(32, 255)), 0, 0, 0};
-    case Burn_state::has_burned:  return clr_bg_();
+    case Burn_state::has_burned:  return clr_bg_default();
     }
 
     assert(false && "Failed to set color");
@@ -379,7 +379,7 @@ string Floor::name(const Article article) const
     return ret;
 }
 
-Clr Floor::clr_() const
+Clr Floor::clr_default() const
 {
     return clr_gray;
 }
@@ -505,7 +505,7 @@ string Wall::name(const Article article) const
     return ret;
 }
 
-Clr Wall::clr_() const
+Clr Wall::clr_default() const
 {
     if (is_mossy_)
     {
@@ -662,7 +662,7 @@ string Rubble_high::name(const Article article) const
     return ret + "big pile of debris";
 }
 
-Clr Rubble_high::clr_() const
+Clr Rubble_high::clr_default() const
 {
     return map::wall_clr;
 }
@@ -693,7 +693,7 @@ string Rubble_low::name(const Article article) const
     return ret + "rubble";
 }
 
-Clr Rubble_low::clr_() const
+Clr Rubble_low::clr_default() const
 {
     return map::wall_clr;
 }
@@ -719,7 +719,7 @@ string Bones::name(const Article article) const
     return ret + "bones";
 }
 
-Clr Bones::clr_() const
+Clr Bones::clr_default() const
 {
     return clr_red;
 }
@@ -745,7 +745,7 @@ string Grave_stone::name(const Article article) const
     return ret + "gravestone; " + inscr_;
 }
 
-Clr Grave_stone::clr_() const
+Clr Grave_stone::clr_default() const
 {
     return clr_white;
 }
@@ -765,7 +765,7 @@ string Church_bench::name(const Article article) const
     return ret + "church bench";
 }
 
-Clr Church_bench::clr_() const
+Clr Church_bench::clr_default() const
 {
     return clr_brown;
 }
@@ -872,7 +872,7 @@ Tile_id Statue::tile() const
     return type_ == Statue_type::cmn ? Tile_id::witch_or_warlock : Tile_id::ghoul;
 }
 
-Clr Statue::clr_() const
+Clr Statue::clr_default() const
 {
     return clr_white;
 }
@@ -892,7 +892,7 @@ string Pillar::name(const Article article) const
     return ret + "pillar";
 }
 
-Clr Pillar::clr_() const
+Clr Pillar::clr_default() const
 {
     return clr_white;
 }
@@ -912,7 +912,7 @@ string Monolith::name(const Article article) const
     return ret + "monolith";
 }
 
-Clr Monolith::clr_() const
+Clr Monolith::clr_default() const
 {
     return clr_white;
 }
@@ -933,7 +933,7 @@ string Stalagmite::name(const Article article) const
     return ret + "stalagmite";
 }
 
-Clr Stalagmite::clr_() const
+Clr Stalagmite::clr_default() const
 {
     return clr_brown_gray;
 }
@@ -947,7 +947,7 @@ void Stairs::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor*
     (void)dmg_type; (void)dmg_method; (void)actor;
 }
 
-void Stairs::on_new_turn_()
+void Stairs::on_new_turn_hook()
 {
     assert(!map::cells[pos_.x][pos_.y].item);
 }
@@ -990,7 +990,7 @@ string Stairs::name(const Article article) const
     return ret + "downward staircase";
 }
 
-Clr Stairs::clr_() const
+Clr Stairs::clr_default() const
 {
     return clr_yellow;
 }
@@ -998,17 +998,19 @@ Clr Stairs::clr_() const
 //--------------------------------------------------------------------- BRIDGE
 Tile_id Bridge::tile() const
 {
-    return dir_ == hor ? Tile_id::hangbridge_hor : Tile_id::hangbridge_ver;
+    return axis_ == Axis::hor ? Tile_id::hangbridge_hor : Tile_id::hangbridge_ver;
 }
 
 void Bridge::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
 {
-    (void)dmg_type; (void)dmg_method; (void)actor;
+    (void)dmg_type;
+    (void)dmg_method;
+    (void)actor;
 }
 
 char Bridge::glyph() const
 {
-    return dir_ == hor ? '|' : '=';
+    return axis_ == Axis::hor ? '|' : '=';
 }
 
 string Bridge::name(const Article article) const
@@ -1017,7 +1019,7 @@ string Bridge::name(const Article article) const
     return ret + "bridge";
 }
 
-Clr Bridge::clr_() const
+Clr Bridge::clr_default() const
 {
     return clr_brown_drk;
 }
@@ -1073,7 +1075,7 @@ string Liquid_shallow::name(const Article article) const
     return ret;
 }
 
-Clr Liquid_shallow::clr_() const
+Clr Liquid_shallow::clr_default() const
 {
     switch (type_)
     {
@@ -1132,7 +1134,7 @@ string Liquid_deep::name(const Article article) const
     return ret;
 }
 
-Clr Liquid_deep::clr_() const
+Clr Liquid_deep::clr_default() const
 {
     switch (type_)
     {
@@ -1167,7 +1169,7 @@ string Chasm::name(const Article article) const
     return ret + "chasm";
 }
 
-Clr Chasm::clr_() const
+Clr Chasm::clr_default() const
 {
     return clr_black;
 }
@@ -1189,7 +1191,7 @@ string Lever::name(const Article article) const
     return ret + "lever";
 }
 
-Clr Lever::clr_() const
+Clr Lever::clr_default() const
 {
     return is_position_left_ ? clr_gray : clr_white;
 }
@@ -1233,7 +1235,7 @@ string Altar::name(const Article article) const
     return ret + "altar";
 }
 
-Clr Altar::clr_() const
+Clr Altar::clr_default() const
 {
     return clr_white;
 }
@@ -1265,7 +1267,7 @@ string Carpet::name(const Article article) const
     return ret + "carpet";
 }
 
-Clr Carpet::clr_() const
+Clr Carpet::clr_default() const
 {
     return clr_red;
 }
@@ -1326,7 +1328,7 @@ string Grass::name(const Article article) const
     return "";
 }
 
-Clr Grass::clr_() const
+Clr Grass::clr_default() const
 {
     switch (type_)
     {
@@ -1393,7 +1395,7 @@ string Bush::name(const Article article) const
     return "";
 }
 
-Clr Bush::clr_() const
+Clr Bush::clr_default() const
 {
     switch (type_)
     {
@@ -1457,7 +1459,7 @@ string Tree::name(const Article article) const
     return ret + "tree";
 }
 
-Clr Tree::clr_() const
+Clr Tree::clr_default() const
 {
     return clr_brown_drk;
 }
@@ -1475,7 +1477,7 @@ void Brazier::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
     (void)dmg_type; (void)dmg_method; (void)actor;
 }
 
-Clr Brazier::clr_() const
+Clr Brazier::clr_default() const
 {
     return clr_yellow;
 }
@@ -1772,7 +1774,7 @@ Tile_id Tomb::tile() const
     return is_open_ ? Tile_id::tomb_open : Tile_id::tomb_closed;
 }
 
-Clr Tomb::clr_() const
+Clr Tomb::clr_default() const
 {
     switch (appearance_)
     {
@@ -1822,7 +1824,8 @@ void Tomb::bump(Actor& actor_bumping)
                 if (props[int(Prop_id::weakened)])
                 {
                     try_sprain_player();
-                    msg_log::add("It seems futile.", clr_msg_note, false, true);
+                    msg_log::add("It seems futile.", clr_msg_note, false,
+                                 More_prompt_on_msg::yes);
                 }
                 else //Not weakened
                 {
@@ -1901,7 +1904,8 @@ void Tomb::player_loot()
     }
     else
     {
-        msg_log::add("There are some items inside.", clr_white, false, true);
+        msg_log::add("There are some items inside.", clr_white, false,
+                     More_prompt_on_msg::yes);
 
         item_container_.open(pos_, map::player);
     }
@@ -1969,7 +1973,8 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
             }
         }
 
-        msg_log::add("Something rises from the tomb!", clr_white, false, true);
+        msg_log::add("Something rises from the tomb!", clr_white, false,
+                     More_prompt_on_msg::yes);
         did_trigger_trap = Did_trigger_trap::yes;
         break;
 
@@ -1981,10 +1986,20 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
     case Tomb_trait::stench:
         if (rnd::coin_toss())
         {
-            msg_log::add("Fumes burst out from the tomb!", clr_white, false, true);
-            Prop* prop    = nullptr;
-            Clr fume_clr   = clr_magenta;
-            const int RND = rnd::percent();
+            if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+            {
+                msg_log::add("Fumes burst out from the tomb!", clr_white, false,
+                             More_prompt_on_msg::yes);
+            }
+
+            Snd snd("I hear a burst of gas.", Sfx_id::gas, Ignore_msg_if_origin_seen::yes, pos_,
+                    nullptr, Snd_vol::low, Alerts_mon::yes);
+
+            snd_emit::emit_snd(snd);
+
+            Prop*       prop        = nullptr;
+            Clr         fume_clr    = clr_magenta;
+            const int   RND         = rnd::percent();
 
             if (map::dlvl >= MIN_DLVL_HARDER_TRAPS && RND < 20)
             {
@@ -2002,8 +2017,8 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
                 prop->turns_left_ *= 2;
             }
 
-            explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, 0,
-                                        Sfx_id::END, prop, &fume_clr);
+            explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc,
+                                        Emit_expl_snd::no, 0, prop, &fume_clr);
         }
         else //Not fumes
         {
@@ -2020,7 +2035,8 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
                 }
             }
 
-            msg_log::add("Something creeps up from the tomb!", clr_white, false, true);
+            msg_log::add("Something creeps up from the tomb!", clr_white, false,
+                         More_prompt_on_msg::yes);
         }
 
         did_trigger_trap = Did_trigger_trap::yes;
@@ -2146,7 +2162,7 @@ void Chest::player_loot()
     }
     else //Not empty
     {
-        msg_log::add("There are some items inside.", clr_white, false, true);
+        msg_log::add("There are some items inside.", clr_white, false, More_prompt_on_msg::yes);
         item_container_.open(pos_, map::player);
     }
 }
@@ -2215,7 +2231,7 @@ void Chest::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* con
                 if (props[int(Prop_id::weakened)] || matl_ == Chest_matl::iron)
                 {
                     try_sprain_player();
-                    msg_log::add("It seems futile.", clr_msg_note, false, true);
+                    msg_log::add("It seems futile.", clr_msg_note, false, More_prompt_on_msg::yes);
                 }
                 else
                 {
@@ -2233,7 +2249,8 @@ void Chest::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* con
 
                     if (rnd::one_in(OPEN_ONE_IN_N))
                     {
-                        msg_log::add("The lock breaks!", clr_white, false, true);
+                        msg_log::add("The lock breaks!", clr_white, false,
+                                     More_prompt_on_msg::yes);
                         is_locked_ = false;
                     }
                     else
@@ -2347,7 +2364,8 @@ void Chest::disarm()
         //Try disarming trap
         if (is_trap_status_known_)
         {
-            msg_log::add("I attempt to disarm the chest...", clr_white, false, true);
+            msg_log::add("I attempt to disarm the chest...", clr_white, false,
+                         More_prompt_on_msg::yes);
             msg_log::clear();
 
             const Fraction disarm_chance(3, 5);
@@ -2397,11 +2415,12 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
 
     if (IS_SEEN)
     {
-        msg_log::add("A hidden trap on the chest triggers...", clr_white, false, true);
+        msg_log::add("A hidden trap on the chest triggers...", clr_white, false,
+                     More_prompt_on_msg::yes);
     }
 
-    is_trap_status_known_  = true;
-    is_trapped_          = false;
+    is_trap_status_known_   = true;
+    is_trapped_             = false;
 
     //Nothing happens?
     bool player_props[size_t(Prop_id::END)];
@@ -2428,11 +2447,12 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
         if (IS_SEEN)
         {
             msg_log::clear();
-            msg_log::add("Flames burst out from the chest!", clr_white, false, true);
+            msg_log::add("Flames burst out from the chest!", clr_white, false,
+                         More_prompt_on_msg::yes);
         }
 
-        explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, 0,
-                                    Sfx_id::explosion, new Prop_burning(Prop_turns::std));
+        explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc,
+                                    Emit_expl_snd::yes, 0, new Prop_burning(Prop_turns::std));
 
         return Did_trigger_trap::yes;
     }
@@ -2460,8 +2480,14 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
         if (IS_SEEN)
         {
             msg_log::clear();
-            msg_log::add("Fumes burst out from the chest!", clr_white, false, true);
+            msg_log::add("Fumes burst out from the chest!", clr_white, false,
+                         More_prompt_on_msg::yes);
         }
+
+        Snd snd("I hear a burst of gas.", Sfx_id::gas, Ignore_msg_if_origin_seen::yes, pos_,
+                nullptr, Snd_vol::low, Alerts_mon::yes);
+
+        snd_emit::emit_snd(snd);
 
         Prop*       prop        = nullptr;
         Clr         fume_clr    = clr_magenta;
@@ -2483,8 +2509,8 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
             prop->turns_left_ *= 2;
         }
 
-        explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, 0,
-                                    Sfx_id::END, prop, &fume_clr);
+        explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc,
+                                    Emit_expl_snd::no, 0, prop, &fume_clr);
     }
 
     return Did_trigger_trap::yes;
@@ -2525,7 +2551,7 @@ Tile_id Chest::tile() const
     return is_open_ ? Tile_id::chest_open : Tile_id::chest_closed;
 }
 
-Clr Chest::clr_() const
+Clr Chest::clr_default() const
 {
     return matl_ == Chest_matl::wood ? clr_brown_drk : clr_gray;
 }
@@ -2590,7 +2616,7 @@ void Fountain::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
     (void)dmg_type; (void)dmg_method; (void)actor;
 }
 
-Clr Fountain::clr_() const
+Clr Fountain::clr_default() const
 {
     if (nr_drinks_left_ <= 0)
     {
@@ -2831,7 +2857,8 @@ void Cabinet::player_loot()
     }
     else
     {
-        msg_log::add("There are some items inside.", clr_white, false, true);
+        msg_log::add("There are some items inside.", clr_white, false,
+                     More_prompt_on_msg::yes);
 
         item_container_.open(pos_, map::player);
     }
@@ -2878,7 +2905,7 @@ Tile_id Cabinet::tile() const
     return is_open_ ? Tile_id::cabinet_open : Tile_id::cabinet_closed;
 }
 
-Clr Cabinet::clr_() const
+Clr Cabinet::clr_default() const
 {
     return clr_brown_drk;
 }
@@ -3008,7 +3035,7 @@ void Cocoon::player_loot()
     }
     else
     {
-        msg_log::add("There are some items inside.", clr_white, false, true);
+        msg_log::add("There are some items inside.", clr_white, false, More_prompt_on_msg::yes);
 
         item_container_.open(pos_, map::player);
     }
@@ -3054,7 +3081,7 @@ Tile_id Cocoon::tile() const
     return is_open_ ? Tile_id::cocoon_open : Tile_id::cocoon_closed;
 }
 
-Clr Cocoon::clr_() const
+Clr Cocoon::clr_default() const
 {
     return clr_white;
 }

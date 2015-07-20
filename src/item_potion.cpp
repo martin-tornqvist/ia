@@ -94,7 +94,7 @@ void Potion::on_collide(const Pos& pos, Actor* const actor)
             //If the blow from the bottle didn't kill the actor, apply what's inside
             if (actor->is_alive())
             {
-                collide_(pos, actor);
+                collide_hook(pos, actor);
 
                 if (actor->is_alive() && !data_->is_identified && PLAYER_SEE_CELL)
                 {
@@ -128,7 +128,7 @@ void Potion::quaff(Actor& actor)
         map::player->incr_shock(Shock_lvl::heavy, Shock_src::use_strange_item);
     }
 
-    quaff_(actor);
+    quaff_impl(actor);
 
     if (map::player->is_alive())
     {
@@ -141,7 +141,7 @@ string Potion::name_inf() const
     return (data_->is_tried && !data_->is_identified) ? "{Tried}" : "";
 }
 
-void Potion_vitality::quaff_(Actor& actor)
+void Potion_vitality::quaff_impl(Actor& actor)
 {
     actor.prop_handler().end_applied_props_by_magic_healing();
 
@@ -158,14 +158,17 @@ void Potion_vitality::quaff_(Actor& actor)
     }
 }
 
-void Potion_vitality::collide_(const Pos& pos, Actor* const actor)
+void Potion_vitality::collide_hook(const Pos& pos, Actor* const actor)
 {
     (void)pos;
 
-    if (actor) {quaff_(*actor);}
+    if (actor)
+    {
+        quaff_impl(*actor);
+    }
 }
 
-void Potion_spirit::quaff_(Actor& actor)
+void Potion_spirit::quaff_impl(Actor& actor)
 {
 
     //SPI is always restored at least up to maximum SPI, but can go beyond
@@ -181,14 +184,17 @@ void Potion_spirit::quaff_(Actor& actor)
     }
 }
 
-void Potion_spirit::collide_(const Pos& pos, Actor* const actor)
+void Potion_spirit::collide_hook(const Pos& pos, Actor* const actor)
 {
     (void)pos;
 
-    if (actor) {quaff_(*actor);}
+    if (actor)
+    {
+        quaff_impl(*actor);
+    }
 }
 
-void Potion_blindness::quaff_(Actor& actor)
+void Potion_blindness::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_apply_prop(new Prop_blind(Prop_turns::std));
 
@@ -198,14 +204,17 @@ void Potion_blindness::quaff_(Actor& actor)
     }
 }
 
-void Potion_blindness::collide_(const Pos& pos, Actor* const actor)
+void Potion_blindness::collide_hook(const Pos& pos, Actor* const actor)
 {
     (void)pos;
 
-    if (actor) {quaff_(*actor);}
+    if (actor)
+    {
+        quaff_impl(*actor);
+    }
 }
 
-void Potion_paral::quaff_(Actor& actor)
+void Potion_paral::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_apply_prop(new Prop_paralyzed(Prop_turns::std));
 
@@ -215,15 +224,18 @@ void Potion_paral::quaff_(Actor& actor)
     }
 }
 
-void Potion_paral::collide_(const Pos& pos, Actor* const actor)
+void Potion_paral::collide_hook(const Pos& pos, Actor* const actor)
 {
 
     (void)pos;
 
-    if (actor) {quaff_(*actor);}
+    if (actor)
+    {
+        quaff_impl(*actor);
+    }
 }
 
-void Potion_disease::quaff_(Actor& actor)
+void Potion_disease::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_apply_prop(new Prop_diseased(Prop_turns::std));
 
@@ -233,7 +245,7 @@ void Potion_disease::quaff_(Actor& actor)
     }
 }
 
-void Potion_conf::quaff_(Actor& actor)
+void Potion_conf::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_apply_prop(new Prop_confused(Prop_turns::std));
 
@@ -243,14 +255,17 @@ void Potion_conf::quaff_(Actor& actor)
     }
 }
 
-void Potion_conf::collide_(const Pos& pos, Actor* const actor)
+void Potion_conf::collide_hook(const Pos& pos, Actor* const actor)
 {
     (void)pos;
 
-    if (actor) {quaff_(*actor);}
+    if (actor)
+    {
+        quaff_impl(*actor);
+    }
 }
 
-void Potion_frenzy::quaff_(Actor& actor)
+void Potion_frenzy::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_apply_prop(new Prop_frenzied(Prop_turns::std));
 
@@ -260,14 +275,17 @@ void Potion_frenzy::quaff_(Actor& actor)
     }
 }
 
-void Potion_frenzy::collide_(const Pos& pos, Actor* const actor)
+void Potion_frenzy::collide_hook(const Pos& pos, Actor* const actor)
 {
     (void)pos;
 
-    if (actor) {quaff_(*actor);}
+    if (actor)
+    {
+        quaff_impl(*actor);
+    }
 }
 
-void Potion_fortitude::quaff_(Actor& actor)
+void Potion_fortitude::quaff_impl(Actor& actor)
 {
     Prop_handler& prop_handler = actor.prop_handler();
 
@@ -325,14 +343,17 @@ void Potion_fortitude::quaff_(Actor& actor)
     }
 }
 
-void Potion_fortitude::collide_(const Pos& pos, Actor* const actor)
+void Potion_fortitude::collide_hook(const Pos& pos, Actor* const actor)
 {
     (void)pos;
 
-    if (actor) {quaff_(*actor);}
+    if (actor)
+    {
+        quaff_impl(*actor);
+    }
 }
 
-void Potion_poison::quaff_(Actor& actor)
+void Potion_poison::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_apply_prop(new Prop_poisoned(Prop_turns::std));
 
@@ -342,14 +363,17 @@ void Potion_poison::quaff_(Actor& actor)
     }
 }
 
-void Potion_poison::collide_(const Pos& pos, Actor* const actor)
+void Potion_poison::collide_hook(const Pos& pos, Actor* const actor)
 {
     (void)pos;
 
-    if (actor) {quaff_(*actor);}
+    if (actor)
+    {
+        quaff_impl(*actor);
+    }
 }
 
-void Potion_rFire::quaff_(Actor& actor)
+void Potion_rFire::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_apply_prop(new Prop_rFire(Prop_turns::std));
 
@@ -359,14 +383,17 @@ void Potion_rFire::quaff_(Actor& actor)
     }
 }
 
-void Potion_rFire::collide_(const Pos& pos, Actor* const actor)
+void Potion_rFire::collide_hook(const Pos& pos, Actor* const actor)
 {
     (void)pos;
 
-    if (actor) {quaff_(*actor);}
+    if (actor)
+    {
+        quaff_impl(*actor);
+    }
 }
 
-void Potion_antidote::quaff_(Actor& actor)
+void Potion_antidote::quaff_impl(Actor& actor)
 {
     const bool WAS_POISONED = actor.prop_handler().end_applied_prop(Prop_id::poisoned);
 
@@ -376,14 +403,17 @@ void Potion_antidote::quaff_(Actor& actor)
     }
 }
 
-void Potion_antidote::collide_(const Pos& pos, Actor* const actor)
+void Potion_antidote::collide_hook(const Pos& pos, Actor* const actor)
 {
     (void)pos;
 
-    if (actor) {quaff_(*actor);}
+    if (actor)
+    {
+        quaff_impl(*actor);
+    }
 }
 
-void Potion_rElec::quaff_(Actor& actor)
+void Potion_rElec::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_apply_prop(new Prop_rElec(Prop_turns::std));
 
@@ -393,14 +423,17 @@ void Potion_rElec::quaff_(Actor& actor)
     }
 }
 
-void Potion_rElec::collide_(const Pos& pos, Actor* const actor)
+void Potion_rElec::collide_hook(const Pos& pos, Actor* const actor)
 {
     (void)pos;
 
-    if (actor) {quaff_(*actor);}
+    if (actor)
+    {
+        quaff_impl(*actor);
+    }
 }
 
-void Potion_rAcid::quaff_(Actor& actor)
+void Potion_rAcid::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_apply_prop(new Prop_rAcid(Prop_turns::std));
 
@@ -410,14 +443,17 @@ void Potion_rAcid::quaff_(Actor& actor)
     }
 }
 
-void Potion_rAcid::collide_(const Pos& pos, Actor* const actor)
+void Potion_rAcid::collide_hook(const Pos& pos, Actor* const actor)
 {
     (void)pos;
 
-    if (actor) {quaff_(*actor);}
+    if (actor)
+    {
+        quaff_impl(*actor);
+    }
 }
 
-void Potion_insight::quaff_(Actor& actor)
+void Potion_insight::quaff_impl(Actor& actor)
 {
     (void)actor;
 
@@ -460,7 +496,7 @@ void Potion_insight::quaff_(Actor& actor)
         const string  item_name_before  = item->name(Item_ref_type::a, Item_ref_inf::none);
 
         msg_log::add("I gain intuitions about " + item_name_before + "...", clr_white, false,
-                     true);
+                     More_prompt_on_msg::yes);
 
         item->identify(true);
 
@@ -490,7 +526,7 @@ void Potion_insight::quaff_(Actor& actor)
     identify(false);
 }
 
-void Potion_clairv::quaff_(Actor& actor)
+void Potion_clairv::quaff_impl(Actor& actor)
 {
     if (actor.is_player())
     {
@@ -527,14 +563,14 @@ void Potion_clairv::quaff_(Actor& actor)
     identify(false);
 }
 
-void Potion_descent::quaff_(Actor& actor)
+void Potion_descent::quaff_impl(Actor& actor)
 {
     (void)actor;
 
     if (map::dlvl < DLVL_LAST - 1)
     {
         render::draw_map_and_interface();
-        msg_log::add("I sink downwards!", clr_white, false, true);
+        msg_log::add("I sink downwards!", clr_white, false, More_prompt_on_msg::yes);
         map_travel::go_to_nxt();
     }
     else

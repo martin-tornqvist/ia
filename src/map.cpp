@@ -166,7 +166,7 @@ void reset_map()
     game_time::reset_turn_type_and_actor_counters();
 
     //Occasionally set wall color to something unusual
-    if (rnd::one_in(5))
+    if (rnd::one_in(7))
     {
         vector<Clr> wall_clr_bucket =
         {
@@ -182,9 +182,8 @@ void reset_map()
 
         wall_clr = wall_clr_bucket[IDX];
     }
-    else
+    else //Standard wall color
     {
-        //Standard wall color
         wall_clr = clr_gray;
 
         //Randomize the color slightly (subtle effect)
@@ -245,12 +244,15 @@ void mk_blood(const Pos& origin)
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const Pos c = origin + Pos(dx, dy);
-            Rigid* const f  = cells[c.x][c.y].rigid;
+            const Pos       c   = origin + Pos(dx, dy);
+            Rigid* const    f   = cells[c.x][c.y].rigid;
 
             if (f->can_have_blood())
             {
-                if (rnd::one_in(3)) {f->mk_bloody();}
+                if (rnd::one_in(3))
+                {
+                    f->mk_bloody();
+                }
             }
         }
     }
@@ -264,7 +266,10 @@ void mk_gore(const Pos& origin)
         {
             const Pos c = origin + Pos(dx, dy);
 
-            if (rnd::one_in(3)) {cells[c.x][c.y].rigid->try_put_gore();}
+            if (rnd::one_in(3))
+            {
+                cells[c.x][c.y].rigid->try_put_gore();
+            }
         }
     }
 }

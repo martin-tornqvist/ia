@@ -36,6 +36,10 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
     case Item_id::axe:
     case Item_id::pitch_fork:
     case Item_id::sledge_hammer:
+    case Item_id::trap_dart:
+    case Item_id::trap_dart_poison:
+    case Item_id::trap_spear:
+    case Item_id::trap_spear_poison:
     case Item_id::player_kick:
     case Item_id::player_stomp:
     case Item_id::player_punch:

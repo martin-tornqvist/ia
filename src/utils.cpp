@@ -22,9 +22,15 @@ MTRand mt_rand;
 
 int roll(const int ROLLS, const int SIDES)
 {
-    if (SIDES <= 0) {return 0;}
+    if (SIDES <= 0)
+    {
+        return 0;
+    }
 
-    if (SIDES == 1) {return ROLLS * SIDES;}
+    if (SIDES == 1)
+    {
+        return ROLLS * SIDES;
+    }
 
     int result = 0;
 
@@ -173,14 +179,20 @@ void mk_bool_map_from_vector(const vector<Pos>& positions, bool out[MAP_W][MAP_H
 {
     reset_array(out, false);
 
-    for (const Pos& p : positions) {out[p.x][p.y] = true;}
+    for (const Pos& p : positions)
+    {
+        out[p.x][p.y] = true;
+    }
 }
 
 void actor_cells(const vector<Actor*>& actors, vector<Pos>& out)
 {
     out.clear();
 
-    for (const auto* const a : actors) {out.push_back(a->pos);}
+    for (const auto* const a : actors)
+    {
+        out.push_back(a->pos);
+    }
 }
 
 Actor* actor_at_pos(const Pos& pos, Actor_state state)
@@ -200,7 +212,10 @@ Mob* first_mob_at_pos(const Pos& pos)
 {
     for (auto* const mob : game_time::mobs_)
     {
-        if (mob->pos() == pos) {return mob;}
+        if (mob->pos() == pos)
+        {
+            return mob;
+        }
     }
 
     return nullptr;
@@ -298,9 +313,15 @@ Pos closest_pos(const Pos& p, const vector<Pos>& positions)
 
 Actor* random_closest_actor(const Pos& c, const vector<Actor*>& actors)
 {
-    if (actors.empty())      {return nullptr;}
+    if (actors.empty())
+    {
+        return nullptr;
+    }
 
-    if (actors.size() == 1)  {return actors[0];}
+    if (actors.size() == 1)
+    {
+        return actors[0];
+    }
 
     //Find distance to nearest actor(s)
     int dist_to_nearest = INT_MAX;
@@ -337,15 +358,18 @@ Actor* random_closest_actor(const Pos& c, const vector<Actor*>& actors)
 
 bool is_pos_adj(const Pos& pos1, const Pos& pos2, const bool COUNT_SAME_CELL_AS_ADJ)
 {
-    if (pos1.x < pos2.x - 1)                   {return false;}
-
-    if (pos1.x > pos2.x + 1)                   {return false;}
-
-    if (pos1.y < pos2.y - 1)                   {return false;}
-
-    if (pos1.y > pos2.y + 1)                   {return false;}
-
-    if (pos1.x == pos2.x && pos1.y == pos2.y)  {return COUNT_SAME_CELL_AS_ADJ;}
+    if (
+        pos1.x < pos2.x - 1 ||
+        pos1.x > pos2.x + 1 ||
+        pos1.y < pos2.y - 1 ||
+        pos1.y > pos2.y + 1)
+    {
+        return false;
+    }
+    else if (pos1.x == pos2.x && pos1.y == pos2.y)
+    {
+        return COUNT_SAME_CELL_AS_ADJ;
+    }
 
     return true;
 }
@@ -367,8 +391,7 @@ bool is_val_in_range(const int VAL, const Range& range)
 } //utils
 
 //------------------------------------------------------ TIME DATA
-string Time_data::time_str(const Time_type lowest,
-                           const bool ADD_SEPARATORS) const
+string Time_data::time_str(const Time_type lowest, const bool ADD_SEPARATORS) const
 {
     string ret = to_str(year_);
 
@@ -378,9 +401,9 @@ string Time_data::time_str(const Time_type lowest,
     string minute_str  = (minute_  < 10 ? "0" : "") + to_str(minute_);
     string second_str  = (second_  < 10 ? "0" : "") + to_str(second_);
 
-    if (lowest >= Time_type::month)  ret += (ADD_SEPARATORS ? "-" : "-") + month_str;
+    if (lowest >= Time_type::month)  ret += "-" + month_str;
 
-    if (lowest >= Time_type::day)    ret += (ADD_SEPARATORS ? "-" : "-") + day_str;
+    if (lowest >= Time_type::day)    ret += "-" + day_str;
 
     if (lowest >= Time_type::hour)   ret += (ADD_SEPARATORS ? " " : "_") + hour_str;
 
@@ -455,25 +478,35 @@ Pos offset(const Dir dir)
 
     switch (dir)
     {
-    case Dir::down_left:   return Pos(-1, 1);
+    case Dir::down_left:
+        return Pos(-1, 1);
 
-    case Dir::down:       return Pos(0, 1);
+    case Dir::down:
+        return Pos(0, 1);
 
-    case Dir::down_right:  return Pos(1, 1);
+    case Dir::down_right:
+        return Pos(1, 1);
 
-    case Dir::left:       return Pos(-1, 0);
+    case Dir::left:
+        return Pos(-1, 0);
 
-    case Dir::center:     return Pos(0, 0);
+    case Dir::center:
+        return Pos(0, 0);
 
-    case Dir::right:      return Pos(1, 0);
+    case Dir::right:
+        return Pos(1, 0);
 
-    case Dir::up_left:     return Pos(-1, -1);
+    case Dir::up_left:
+        return Pos(-1, -1);
 
-    case Dir::up:         return Pos(0, -1);
+    case Dir::up:
+        return Pos(0, -1);
 
-    case Dir::up_right:    return Pos(1, -1);
+    case Dir::up_right:
+        return Pos(1, -1);
 
-    case Dir::END:        return Pos(0, 0);
+    case Dir::END:
+        return Pos(0, 0);
     }
 
     return Pos(0, 0);

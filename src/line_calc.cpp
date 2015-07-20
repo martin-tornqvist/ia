@@ -16,25 +16,12 @@ namespace
 double      fov_abs_distances_[FOV_MAX_W_INT][FOV_MAX_W_INT];
 vector<Pos> fov_delta_lines_[FOV_MAX_W_INT][FOV_MAX_W_INT];
 
-void calc_fov_delta_lines()
-{
-    const int R_INT = FOV_MAX_RADI_INT;
+} //Namespace
 
-    for (int delta_x = -R_INT; delta_x <= R_INT; delta_x++)
-    {
-        for (int delta_y = -R_INT; delta_y <= R_INT; delta_y++)
-        {
-            const Pos origin(0, 0);
-            const Pos tgt(Pos(delta_x, delta_y));
-            vector<Pos> cur_line;
-            calc_new_line(origin, tgt, true, 999, true, cur_line);
-            fov_delta_lines_[delta_x + R_INT][delta_y + R_INT] = cur_line;
-        }
-    }
-}
-
-void calcfov_abs_distances_()
+void init()
 {
+    //----------------------------------------------------------
+    //Calculate FOV absolute distances
     for (int y = 0; y < FOV_MAX_W_INT; ++y)
     {
         for (int x = 0; x < FOV_MAX_W_INT; ++x)
@@ -64,14 +51,20 @@ void calcfov_abs_distances_()
             fov_abs_distances_[x][y] = floor(hypot);
         }
     }
-}
 
-} //Namespace
-
-void init()
-{
-    calcfov_abs_distances_();
-    calc_fov_delta_lines();
+    //----------------------------------------------------------
+    //Calculate FOV delta lines
+    for (int delta_x = -R_INT; delta_x <= R_INT; delta_x++)
+    {
+        for (int delta_y = -R_INT; delta_y <= R_INT; delta_y++)
+        {
+            const Pos origin(0, 0);
+            const Pos tgt(Pos(delta_x, delta_y));
+            vector<Pos> cur_line;
+            calc_new_line(origin, tgt, true, 999, true, cur_line);
+            fov_delta_lines_[delta_x + R_INT][delta_y + R_INT] = cur_line;
+        }
+    }
 }
 
 const vector<Pos>* fov_delta_line(const Pos& delta,
@@ -106,11 +99,10 @@ void calc_new_line(const Pos& origin, const Pos& tgt,
     const double DELTA_X_DB = double(tgt.x - origin.x);
     const double DELTA_Y_DB = double(tgt.y - origin.y);
 
-    const double HYPOT_DB =
-        sqrt((DELTA_X_DB * DELTA_X_DB) + (DELTA_Y_DB * DELTA_Y_DB));
+    const double HYPOT_DB   = sqrt((DELTA_X_DB * DELTA_X_DB) + (DELTA_Y_DB * DELTA_Y_DB));
 
-    const double X_INCR_DB = (DELTA_X_DB / HYPOT_DB);
-    const double Y_INCR_DB = (DELTA_Y_DB / HYPOT_DB);
+    const double X_INCR_DB  = (DELTA_X_DB / HYPOT_DB);
+    const double Y_INCR_DB  = (DELTA_Y_DB / HYPOT_DB);
 
     double cur_x_db = double(origin.x) + 0.5;
     double cur_y_db = double(origin.y) + 0.5;
@@ -145,12 +137,17 @@ void calc_new_line(const Pos& origin, const Pos& tgt,
         }
 
         //Check distance limits
-        if (SHOULD_STOP_AT_TARGET && (cur_pos == tgt)) {return;}
+        if (SHOULD_STOP_AT_TARGET && (cur_pos == tgt))
+        {
+            return;
+        }
 
-        const int DISTANCE_TRAVELED =
-            utils::king_dist(origin.x, origin.y, cur_pos.x, cur_pos.y);
+        const int DISTANCE_TRAVELED = utils::king_dist(origin.x, origin.y, cur_pos.x, cur_pos.y);
 
-        if (DISTANCE_TRAVELED >= CHEB_TRAVEL_LIMIT) {return;}
+        if (DISTANCE_TRAVELED >= CHEB_TRAVEL_LIMIT)
+        {
+            return;
+        }
     }
 }
 

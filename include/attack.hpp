@@ -15,22 +15,27 @@ class Wpn;
 class Att_data
 {
 public:
-    Actor* attacker;
-    Actor* defender;
+    Actor*              attacker;
+    Actor*              defender;
     Ability_roll_result attack_result;
-    int nr_dmg_rolls, nr_dmg_sides, dmg_plus;
-    int dmg_roll, dmg;
-    bool is_intrinsic_att;
-    bool is_ethereal_defender_missed;
+    int                 nr_dmg_rolls, nr_dmg_sides, dmg_plus;
+    int                 dmg_roll, dmg;
+    bool                is_intrinsic_att;
+    bool                is_ethereal_defender_missed;
 
 protected:
-    Att_data(Actor& attacker_, const Item& att_item_);
+    //Never use this class directly (only through inheritance)
+    Att_data(Actor* const attacker,
+             Actor* const defender,
+             const Item& att_item);
 };
 
 class Melee_att_data: public Att_data
 {
 public:
-    Melee_att_data(Actor& attacker_, const Wpn& wpn_, Actor& defender_);
+    Melee_att_data(Actor* const attacker,
+                   Actor& defender,
+                   const Wpn& wpn);
     bool is_defender_dodging;
     bool is_backstab;
     bool is_weak_attack;
@@ -39,8 +44,12 @@ public:
 class Ranged_att_data: public Att_data
 {
 public:
-    Ranged_att_data(Actor& attacker_, const Wpn& wpn_, const Pos& aim_pos_,
-                    const Pos& cur_pos_, Actor_size intended_aim_lvl_ = Actor_size::none);
+    Ranged_att_data(Actor* const attacker,
+                    const Pos& attacker_orign,
+                    const Pos& aim_pos,
+                    const Pos& cur_pos,
+                    const Wpn& wpn,
+                    Actor_size aim_lvl = Actor_size::none);
     int         hit_chance_tot;
     Actor_size  intended_aim_lvl;
     Actor_size  defender_size;
@@ -51,32 +60,40 @@ public:
 class Throw_att_data: public Att_data
 {
 public:
-    Throw_att_data(Actor& attacker_, const Item& item_, const Pos& aim_pos_,
-                   const Pos& cur_pos_, Actor_size intended_aim_lvl_ = Actor_size::none);
-    int hit_chance_tot;
-    Actor_size intended_aim_lvl;
-    Actor_size defender_size;
+    Throw_att_data(Actor* const attacker,
+                   const Pos& aim_pos,
+                   const Pos& cur_pos,
+                   const Item& item,
+                   Actor_size aim_lvl = Actor_size::none);
+    int         hit_chance_tot;
+    Actor_size  intended_aim_lvl;
+    Actor_size  defender_size;
 };
 
 struct Projectile
 {
-    Projectile() : pos(Pos(-1, -1)), is_obstructed(false),
-        is_visible_to_player(true),
-        actor_hit(nullptr),
-        obstructed_in_element(-1),
-        is_done_rendering(false),
-        glyph(-1),
-        tile(Tile_id::empty),
-        clr(clr_white),
-        attack_data(nullptr) {}
+    Projectile() :
+        pos                     (Pos(-1, -1)),
+        is_obstructed           (false),
+        is_seen_by_player       (true),
+        actor_hit               (nullptr),
+        obstructed_in_element   (-1),
+        is_done_rendering       (false),
+        glyph                   (-1),
+        tile                    (Tile_id::empty),
+        clr                     (clr_white),
+        att_data                (nullptr) {}
 
-    ~Projectile() {if (attack_data) {delete attack_data;}}
-
-    void set_att_data(Ranged_att_data* attack_data_)
+    ~Projectile()
     {
-        if (attack_data) {delete attack_data;}
+        delete att_data;
+    }
 
-        attack_data = attack_data_;
+    void set_att_data(Ranged_att_data* new_att_data)
+    {
+        delete att_data;
+
+        att_data = new_att_data;
     }
 
     void set_tile(const Tile_id tile_to_render, const Clr& clr_to_render)
@@ -91,26 +108,32 @@ struct Projectile
         clr   = clr_to_render;
     }
 
-    Pos pos;
-    bool is_obstructed;
-    bool is_visible_to_player;
-    Actor* actor_hit;
-    int obstructed_in_element;
-    bool is_done_rendering;
-    char glyph;
-    Tile_id tile;
-    Clr clr;
-    Ranged_att_data* attack_data;
+    Pos                 pos;
+    bool                is_obstructed;
+    bool                is_seen_by_player;
+    Actor*              actor_hit;
+    int                 obstructed_in_element;
+    bool                is_done_rendering;
+    char                glyph;
+    Tile_id             tile;
+    Clr                 clr;
+    Ranged_att_data*    att_data;
 };
 
-enum class Melee_hit_size {small, medium, hard};
+enum class Melee_hit_size
+{
+    small,
+    medium,
+    hard
+};
 
 namespace attack
 {
 
-void melee(Actor& attacker, const Wpn& wpn, Actor& defender);
+//NOTE: Attacker origin is needed since attacker may be a NULL pointer.
+void melee(Actor* const attacker, const Pos& attacker_origin, Actor& defender, const Wpn& wpn);
 
-bool ranged(Actor& attacker, Wpn& wpn, const Pos& aim_pos);
+bool ranged(Actor* const attacker, const Pos& origin, const Pos& aim_pos, Wpn& wpn);
 
 void ranged_hit_chance(const Actor& attacker, const Actor& defender, const Wpn& wpn);
 

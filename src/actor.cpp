@@ -44,31 +44,35 @@ Actor::~Actor()
     delete inv_;
 }
 
+int Actor::ability(const Ability_id id, const bool IS_AFFECTED_BY_PROPS) const
+{
+    return data_->ability_vals.val(id, IS_AFFECTED_BY_PROPS, *this);
+}
+
 bool Actor::is_spotting_hidden_actor(Actor& other)
 {
     const Pos& other_pos = other.pos;
 
-    const int PLAYER_SEARCH_MOD =
-        is_player() ?
-        (data_->ability_vals.val(Ability_id::searching, true, *this) / 3) : 0;
+    const int   PLAYER_SEARCH_MOD   = is_player() ?
+                                      (ability(Ability_id::searching, true) / 3) : 0;
 
-    const auto& abilities_other  = other.data().ability_vals;
+    const auto& abilities_other     = other.data().ability_vals;
 
-    const int   SNEAK_SKILL     = abilities_other.val(Ability_id::stealth, true, other);
+    const int   SNEAK_SKILL         = abilities_other.val(Ability_id::stealth, true, other);
 
-    const int   DIST            = utils::king_dist(pos, other_pos);
-    const int   SNEAK_DIST_MOD  = constr_in_range(0, (DIST - 1) * 10, 60);
-    const Cell& cell            = map::cells[other_pos.x][other_pos.y];
-    const int   SNEAK_LGT_MOD   = cell.is_lit                     ? -40 : 0;
-    const int   SNEAK_DRK_MOD   = (cell.is_dark && ! cell.is_lit) ?  40 : 0;
-    const int   SNEAK_TOT       = constr_in_range(
-                                      0,
-                                      SNEAK_SKILL     +
-                                      SNEAK_DIST_MOD  +
-                                      SNEAK_LGT_MOD   +
-                                      SNEAK_DRK_MOD   -
-                                      PLAYER_SEARCH_MOD,
-                                      99);
+    const int   DIST                = utils::king_dist(pos, other_pos);
+    const int   SNEAK_DIST_MOD      = constr_in_range(0, (DIST - 1) * 10, 60);
+    const Cell& cell                = map::cells[other_pos.x][other_pos.y];
+    const int   SNEAK_LGT_MOD       = cell.is_lit                     ? -40 : 0;
+    const int   SNEAK_DRK_MOD       = (cell.is_dark && ! cell.is_lit) ?  40 : 0;
+    const int   SNEAK_TOT           = constr_in_range(
+                                          0,
+                                          SNEAK_SKILL     +
+                                          SNEAK_DIST_MOD  +
+                                          SNEAK_LGT_MOD   +
+                                          SNEAK_DRK_MOD   -
+                                          PLAYER_SEARCH_MOD,
+                                          99);
 
     return ability_roll::roll(SNEAK_TOT) <= fail_small;
 }
@@ -224,7 +228,7 @@ void Actor::place(const Pos& pos_, Actor_data_t& actor_data)
 
     if (data_->id != Actor_id::player) {mk_start_items();}
 
-    place_();
+    place_hook();
 
     update_clr();
 }
@@ -298,7 +302,7 @@ void Actor::teleport()
             };
 
             msg_log::add("I have the power to control teleportation.", clr_white, false,
-                         true);
+                         More_prompt_on_msg::yes);
 
             const Pos marker_tgt_pos =
                 marker::run(Marker_draw_tail::yes, Marker_use_player_tgt::no,
@@ -307,7 +311,8 @@ void Actor::teleport()
             if (blocked[marker_tgt_pos.x][marker_tgt_pos.y])
             {
                 //Blocked
-                msg_log::add("Something is blocking me...", clr_white, false, true);
+                msg_log::add("Something is blocking me...", clr_white, false,
+                             More_prompt_on_msg::yes);
             }
             else if (rnd::percent(chance_of_tele_success(marker_tgt_pos)))
             {
@@ -316,7 +321,8 @@ void Actor::teleport()
             }
             else //Distance roll failed
             {
-                msg_log::add("I failed to go there...", clr_white, false, true);
+                msg_log::add("I failed to go there...", clr_white, false,
+                             More_prompt_on_msg::yes);
             }
         }
     }
@@ -831,7 +837,7 @@ void Actor::add_light(bool light_map[MAP_W][MAP_H]) const
 
     if (state_ == Actor_state::alive && props[int(Prop_id::radiant)])
     {
-        //TODO: Much of the code below is duplicated from Actor_player::add_light_(), some
+        //TODO: Much of the code below is duplicated from Actor_player::add_light_hook(), some
         //refactoring is needed.
 
         bool my_light[MAP_W][MAP_H];
@@ -875,7 +881,7 @@ void Actor::add_light(bool light_map[MAP_W][MAP_H]) const
         }
     }
 
-    add_light_(light_map);
+    add_light_hook(light_map);
 }
 
 bool Actor::is_player() const

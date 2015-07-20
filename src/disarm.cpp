@@ -37,7 +37,7 @@ void player_disarm()
 
         if (trap->trap_type() == Trap_id::web)
         {
-            const auto* const web = static_cast<const Trap_web*>(trap->specific_trap());
+            const auto* const web = static_cast<const Trap_web*>(trap->trap_impl());
 
             if (web->is_holding())
             {

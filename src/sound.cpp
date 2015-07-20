@@ -20,14 +20,16 @@ Snd::Snd(
     const Pos&                      origin,
     Actor* const                    actor_who_made_sound,
     const Snd_vol                   vol,
-    const Alerts_mon                alerting_mon) :
-    msg_(msg),
-    sfx_(sfx),
-    is_msg_ignored_if_origin_seen_(ignore_msg_if_origin_seen),
-    origin_(origin),
-    actor_who_made_sound_(actor_who_made_sound),
-    vol_(vol),
-    is_alerting_mon_(alerting_mon) {}
+    const Alerts_mon                alerting_mon,
+    const More_prompt_on_msg        add_more_prompt_on_msg) :
+    msg_                            (msg),
+    sfx_                            (sfx),
+    is_msg_ignored_if_origin_seen_  (ignore_msg_if_origin_seen),
+    origin_                         (origin),
+    actor_who_made_sound_           (actor_who_made_sound),
+    vol_                            (vol),
+    is_alerting_mon_                (alerting_mon),
+    add_more_prompt_on_msg_         (add_more_prompt_on_msg) {}
 
 namespace snd_emit
 {

@@ -137,7 +137,7 @@ void Jewelry_property_effect::on_equip(const bool IS_SILENT)
         map::player->update_fov();
         render::draw_map_and_interface();
 
-        const auto&   prop_data  = prop_data::data[size_t(prop->id())];
+        const auto&   prop_data = prop_data::data[size_t(prop->id())];
         const string  msg       = prop_data.msg[prop_msg_on_start_player];
 
         msg_log::add(msg);
@@ -299,7 +299,7 @@ void Jewelry_effect_random_tele::on_std_turn_equiped()
 
     if (rnd::one_in(TELE_ON_IN_N) && prop_handler.allow_act())
     {
-        msg_log::add("I am being teleported...", clr_white, true, true);
+        msg_log::add("I am being teleported...", clr_white, true, More_prompt_on_msg::yes);
         map::player->teleport();
         jewelry_->effect_noticed(id());
     }
@@ -313,7 +313,7 @@ void Jewelry_effect_summon_mon::on_std_turn_equiped()
     if (effects_known_[size_t(id())] && rnd::one_in(SOUND_ONE_IN_N))
     {
         msg_log::add("I hear a faint whistling sound coming nearer...", clr_white, false,
-                     true);
+                     More_prompt_on_msg::yes);
 
         map::player->incr_shock(Shock_lvl::mild, Shock_src::misc);
     }
@@ -322,7 +322,8 @@ void Jewelry_effect_summon_mon::on_std_turn_equiped()
 
     if (rnd::one_in(SUMMON_ONE_IN_N))
     {
-        msg_log::add("There is a loud whistling sound.", clr_white, false, true);
+        msg_log::add("There is a loud whistling sound.", clr_white, false,
+                     More_prompt_on_msg::yes);
 
         const Pos origin = map::player->pos;
 
@@ -335,7 +336,7 @@ void Jewelry_effect_summon_mon::on_std_turn_equiped()
 
         if (map::player->can_see_actor(*mon, nullptr))
         {
-            msg_log::add(mon->name_a() + " appears!", clr_white, true, true);
+            msg_log::add(mon->name_a() + " appears!", clr_white, true, More_prompt_on_msg::yes);
         }
 
         jewelry_->effect_noticed(id());
@@ -359,7 +360,7 @@ void Jewelry_effect_fire::on_std_turn_equiped()
         const int FIRE_CELL_ONE_IN_N = 4;
 
         msg_log::add("The surrounding area suddenly burst into flames!", clr_white,
-                     false, true);
+                     false, More_prompt_on_msg::yes);
 
         for (int x = X0; x <= X1; ++x)
         {
@@ -493,7 +494,7 @@ void Jewelry_effect_shriek::on_std_turn_equiped()
     {
         const string name = jewelry_->name(Item_ref_type::plain, Item_ref_inf::none);
 
-        msg_log::add("The " + name + " shrieks...", clr_white, false, true);
+        msg_log::add("The " + name + " shrieks...", clr_white, false, More_prompt_on_msg::yes);
 
         const int NR_WORDS = 3;
 
@@ -759,12 +760,12 @@ void Jewelry::effect_noticed(const Jewelry_effect_id effect_id)
         const string jewelry_name = name(Item_ref_type::plain, Item_ref_inf::none);
 
         msg_log::add("I gained new knowledge about the " + jewelry_name + ".", clr_white,
-                     false, true);
+                     false, More_prompt_on_msg::yes);
 
         if (nr_effects_known_this_item == MAX_NR_EFFECTS_ON_ITEM)
         {
             msg_log::add("I feel like all properties of the " + jewelry_name +
-                         " are known to me.", clr_white, false, true);
+                         " are known to me.", clr_white, false, More_prompt_on_msg::yes);
             data_->is_identified = true;
         }
 

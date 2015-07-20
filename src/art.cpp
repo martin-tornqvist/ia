@@ -222,7 +222,6 @@ Pos column_and_row_tile(const Tile_id tile)
     case Tile_id::tomb_closed:                  return Pos(14, 5);
     case Tile_id::water1:                       return Pos(7, 7);
     case Tile_id::water2:                       return Pos(8, 7);
-    case Tile_id::trap_general:                 return Pos(17, 5);
     case Tile_id::cocoon_open:                  return Pos(4, 6);
     case Tile_id::cocoon_closed:                return Pos(10, 7);
     case Tile_id::blast1:                       return Pos(11, 7);
@@ -276,6 +275,7 @@ Pos column_and_row_tile(const Tile_id tile)
     case Tile_id::popup_ver_r:                  return Pos(11, 10);
     case Tile_id::popup_ver_l:                  return Pos(12, 10);
     case Tile_id::stalagmite:                   return Pos(13, 10);
+    case Tile_id::trap_general:                 return Pos(14, 10);
 
     case Tile_id::empty:
     default:                                  return Pos(18, 10);

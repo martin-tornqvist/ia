@@ -21,8 +21,6 @@
 #include "feature_mob.hpp"
 #include "item.hpp"
 
-using namespace std;
-
 namespace prop_data
 {
 
@@ -745,99 +743,146 @@ Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init,
 
     switch (id)
     {
-    case Prop_id::nailed:            return new Prop_nailed(turns_init, NR_TURNS);
+    case Prop_id::nailed:
+        return new Prop_nailed(turns_init, NR_TURNS);
 
-    case Prop_id::warlock_charged:    return new Prop_warlock_charged(turns_init, NR_TURNS);
+    case Prop_id::warlock_charged:
+        return new Prop_warlock_charged(turns_init, NR_TURNS);
 
-    case Prop_id::blind:             return new Prop_blind(turns_init, NR_TURNS);
+    case Prop_id::blind:
+        return new Prop_blind(turns_init, NR_TURNS);
 
-    case Prop_id::burning:           return new Prop_burning(turns_init, NR_TURNS);
+    case Prop_id::burning:
+        return new Prop_burning(turns_init, NR_TURNS);
 
-    case Prop_id::flared:            return new Prop_flared(turns_init, NR_TURNS);
+    case Prop_id::flared:
+        return new Prop_flared(turns_init, NR_TURNS);
 
-    case Prop_id::paralyzed:         return new Prop_paralyzed(turns_init, NR_TURNS);
+    case Prop_id::paralyzed:
+        return new Prop_paralyzed(turns_init, NR_TURNS);
 
-    case Prop_id::terrified:         return new Prop_terrified(turns_init, NR_TURNS);
+    case Prop_id::terrified:
+        return new Prop_terrified(turns_init, NR_TURNS);
 
-    case Prop_id::weakened:          return new Prop_weakened(turns_init, NR_TURNS);
+    case Prop_id::weakened:
+        return new Prop_weakened(turns_init, NR_TURNS);
 
-    case Prop_id::confused:          return new Prop_confused(turns_init, NR_TURNS);
+    case Prop_id::confused:
+        return new Prop_confused(turns_init, NR_TURNS);
 
-    case Prop_id::stunned:           return new Prop_stunned(turns_init, NR_TURNS);
+    case Prop_id::stunned:
+        return new Prop_stunned(turns_init, NR_TURNS);
 
-    case Prop_id::waiting:           return new Prop_waiting(turns_init, NR_TURNS);
+    case Prop_id::waiting:
+        return new Prop_waiting(turns_init, NR_TURNS);
 
-    case Prop_id::slowed:            return new Prop_slowed(turns_init, NR_TURNS);
+    case Prop_id::slowed:
+        return new Prop_slowed(turns_init, NR_TURNS);
 
-    case Prop_id::hasted:            return new Prop_hasted(turns_init, NR_TURNS);
+    case Prop_id::hasted:
+        return new Prop_hasted(turns_init, NR_TURNS);
 
-    case Prop_id::infected:          return new Prop_infected(turns_init, NR_TURNS);
+    case Prop_id::infected:
+        return new Prop_infected(turns_init, NR_TURNS);
 
-    case Prop_id::diseased:          return new Prop_diseased(turns_init, NR_TURNS);
+    case Prop_id::diseased:
+        return new Prop_diseased(turns_init, NR_TURNS);
 
-    case Prop_id::poisoned:          return new Prop_poisoned(turns_init, NR_TURNS);
+    case Prop_id::poisoned:
+        return new Prop_poisoned(turns_init, NR_TURNS);
 
-    case Prop_id::fainted:           return new Prop_fainted(turns_init, NR_TURNS);
+    case Prop_id::fainted:
+        return new Prop_fainted(turns_init, NR_TURNS);
 
-    case Prop_id::frenzied:          return new Prop_frenzied(turns_init, NR_TURNS);
+    case Prop_id::frenzied:
+        return new Prop_frenzied(turns_init, NR_TURNS);
 
-    case Prop_id::aiming:            return new Prop_aiming(turns_init, NR_TURNS);
+    case Prop_id::aiming:
+        return new Prop_aiming(turns_init, NR_TURNS);
 
-    case Prop_id::disabled_attack:    return new Prop_disabled_attack(turns_init, NR_TURNS);
+    case Prop_id::disabled_attack:
+        return new Prop_disabled_attack(turns_init, NR_TURNS);
 
-    case Prop_id::disabled_melee:     return new Prop_disabled_melee(turns_init, NR_TURNS);
+    case Prop_id::disabled_melee:
+        return new Prop_disabled_melee(turns_init, NR_TURNS);
 
-    case Prop_id::disabled_ranged:    return new Prop_disabled_ranged(turns_init, NR_TURNS);
+    case Prop_id::disabled_ranged:
+        return new Prop_disabled_ranged(turns_init, NR_TURNS);
 
-    case Prop_id::blessed:           return new Prop_blessed(turns_init, NR_TURNS);
+    case Prop_id::blessed:
+        return new Prop_blessed(turns_init, NR_TURNS);
 
-    case Prop_id::cursed:            return new Prop_cursed(turns_init, NR_TURNS);
+    case Prop_id::cursed:
+        return new Prop_cursed(turns_init, NR_TURNS);
 
-    case Prop_id::rAcid:             return new Prop_rAcid(turns_init, NR_TURNS);
+    case Prop_id::rAcid:
+        return new Prop_rAcid(turns_init, NR_TURNS);
 
-    case Prop_id::rCold:             return new Prop_rCold(turns_init, NR_TURNS);
+    case Prop_id::rCold:
+        return new Prop_rCold(turns_init, NR_TURNS);
 
-    case Prop_id::rConf:             return new Prop_rConfusion(turns_init, NR_TURNS);
+    case Prop_id::rConf:
+        return new Prop_rConfusion(turns_init, NR_TURNS);
 
-    case Prop_id::rBreath:           return new Prop_rBreath(turns_init, NR_TURNS);
+    case Prop_id::rBreath:
+        return new Prop_rBreath(turns_init, NR_TURNS);
 
-    case Prop_id::rElec:             return new Prop_rElec(turns_init, NR_TURNS);
+    case Prop_id::rElec:
+        return new Prop_rElec(turns_init, NR_TURNS);
 
-    case Prop_id::rFear:             return new Prop_rFear(turns_init, NR_TURNS);
+    case Prop_id::rFear:
+        return new Prop_rFear(turns_init, NR_TURNS);
 
-    case Prop_id::rPhys:             return new Prop_rPhys(turns_init, NR_TURNS);
+    case Prop_id::rPhys:
+        return new Prop_rPhys(turns_init, NR_TURNS);
 
-    case Prop_id::rFire:             return new Prop_rFire(turns_init, NR_TURNS);
+    case Prop_id::rFire:
+        return new Prop_rFire(turns_init, NR_TURNS);
 
-    case Prop_id::rPoison:           return new Prop_rPoison(turns_init, NR_TURNS);
+    case Prop_id::rPoison:
+        return new Prop_rPoison(turns_init, NR_TURNS);
 
-    case Prop_id::rSleep:            return new Prop_rSleep(turns_init, NR_TURNS);
+    case Prop_id::rSleep:
+        return new Prop_rSleep(turns_init, NR_TURNS);
 
-    case Prop_id::lgtSens:           return new Prop_lgtSens(turns_init, NR_TURNS);
+    case Prop_id::lgtSens:
+        return new Prop_lgtSens(turns_init, NR_TURNS);
 
-    case Prop_id::poss_by_zuul:        return new Prop_poss_by_zuul(turns_init, NR_TURNS);
+    case Prop_id::poss_by_zuul:
+        return new Prop_poss_by_zuul(turns_init, NR_TURNS);
 
-    case Prop_id::flying:            return new Prop_flying(turns_init, NR_TURNS);
+    case Prop_id::flying:
+        return new Prop_flying(turns_init, NR_TURNS);
 
-    case Prop_id::ethereal:          return new Prop_ethereal(turns_init, NR_TURNS);
+    case Prop_id::ethereal:
+        return new Prop_ethereal(turns_init, NR_TURNS);
 
-    case Prop_id::ooze:              return new Prop_ooze(turns_init, NR_TURNS);
+    case Prop_id::ooze:
+        return new Prop_ooze(turns_init, NR_TURNS);
 
-    case Prop_id::burrowing:         return new Prop_burrowing(turns_init, NR_TURNS);
+    case Prop_id::burrowing:
+        return new Prop_burrowing(turns_init, NR_TURNS);
 
-    case Prop_id::radiant:           return new Prop_radiant(turns_init, NR_TURNS);
+    case Prop_id::radiant:
+        return new Prop_radiant(turns_init, NR_TURNS);
 
-    case Prop_id::rDisease:          return new Prop_rDisease(turns_init, NR_TURNS);
+    case Prop_id::rDisease:
+        return new Prop_rDisease(turns_init, NR_TURNS);
 
-    case Prop_id::tele_ctrl:          return new Prop_tele_control(turns_init, NR_TURNS);
+    case Prop_id::tele_ctrl:
+        return new Prop_tele_control(turns_init, NR_TURNS);
 
-    case Prop_id::spell_reflect:      return new Prop_spell_reflect(turns_init, NR_TURNS);
+    case Prop_id::spell_reflect:
+        return new Prop_spell_reflect(turns_init, NR_TURNS);
 
-    case Prop_id::strangled:         return new Prop_strangled(turns_init, NR_TURNS);
+    case Prop_id::strangled:
+        return new Prop_strangled(turns_init, NR_TURNS);
 
-    case Prop_id::conflict:          return new Prop_conflict(turns_init, NR_TURNS);
+    case Prop_id::conflict:
+        return new Prop_conflict(turns_init, NR_TURNS);
 
-    case Prop_id::END: {} break;
+    case Prop_id::END:
+        break;
     }
 
     return nullptr;
@@ -845,25 +890,34 @@ Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init,
 
 Prop_handler::~Prop_handler()
 {
-    for (Prop* prop : applied_props_)        {delete prop;}
+    for (Prop* prop : applied_props_)
+    {
+        delete prop;
+    }
 
-    for (Prop* prop : actor_turn_prop_buffer_) {delete prop;}
+    for (Prop* prop : actor_turn_prop_buffer_)
+    {
+        delete prop;
+    }
 }
 
 void Prop_handler::props_from_sources(
-    vector<Prop*>& out, bool sources[int(Prop_src::END)]) const
+    std::vector<Prop*>& out, bool sources[int(Prop_src::END)]) const
 {
     out.clear();
 
     //Get from applied properties
-    if (sources[int(Prop_src::applied)]) {out = applied_props_;}
+    if (sources[int(Prop_src::applied)])
+    {
+        out = applied_props_;
+    }
 
     //Get from inventory if humanoid actor
     if (owning_actor_->is_humanoid() && sources[int(Prop_src::inv)])
     {
         const auto& inv = owning_actor_->inv();
 
-        auto add_item_props = [&](const vector<Prop*>& item_prop_list)
+        auto add_item_props = [&](const std::vector<Prop*>& item_prop_list)
         {
             for (auto* const prop : item_prop_list)
             {
@@ -911,7 +965,7 @@ void  Prop_handler::prop_ids_from_sources(
     {
         const auto& inv = owning_actor_->inv();
 
-        auto add_item_props = [&](const vector<Prop*>& item_prop_list)
+        auto add_item_props = [&](const std::vector<Prop*>& item_prop_list)
         {
             for (auto* const prop : item_prop_list)
             {
@@ -946,7 +1000,7 @@ void Prop_handler::prop_ids(bool out[size_t(Prop_id::END)]) const
     prop_ids_from_sources(out, sources);
 }
 
-bool Prop_handler::try_resist_prop(const Prop_id id, const vector<Prop*>& prop_list) const
+bool Prop_handler::try_resist_prop(const Prop_id id, const std::vector<Prop*>& prop_list) const
 {
     for (Prop* p : prop_list)
     {
@@ -961,7 +1015,7 @@ bool Prop_handler::try_resist_prop(const Prop_id id, const vector<Prop*>& prop_l
 
 bool Prop_handler::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const
 {
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
 
     for (bool& v : sources) {v = true;}
@@ -978,7 +1032,7 @@ bool Prop_handler::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG)
 
 bool Prop_handler::allow_see() const
 {
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
 
     for (bool& v : sources) {v = true;}
@@ -1006,7 +1060,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
     //and for applying props from the buffer.
     if (prop->turn_mode() == Prop_turn_mode::actor)
     {
-        vector<Prop*>& buffer = actor_turn_prop_buffer_;
+        std::vector<Prop*>& buffer = actor_turn_prop_buffer_;
 
         if (find(begin(buffer), end(buffer), prop) == end(buffer))
         {
@@ -1022,7 +1076,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
 
     if (!FORCE_EFFECT)
     {
-        vector<Prop*> all_props;
+        std::vector<Prop*> all_props;
 
         bool sources[int(Prop_src::END)];
 
@@ -1036,7 +1090,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
             {
                 if (IS_PLAYER)
                 {
-                    string msg = "";
+                    std::string msg = "";
                     prop->msg(prop_msg_on_res_player, msg);
 
                     if (!msg.empty()) {msg_log::add(msg, clr_white, true);}
@@ -1045,12 +1099,12 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
                 {
                     if (map::player->can_see_actor(*owning_actor_, nullptr))
                     {
-                        string msg = "";
+                        std::string msg = "";
                         prop->msg(prop_msg_on_res_mon, msg);
 
                         if (!msg.empty())
                         {
-                            const string monster_name = owning_actor_->name_the();
+                            const std::string monster_name = owning_actor_->name_the();
                             msg_log::add(monster_name + " " + msg, clr_white, true);
                         }
                     }
@@ -1083,7 +1137,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
             {
                 if (IS_PLAYER)
                 {
-                    string msg = "";
+                    std::string msg = "";
                     prop->msg(prop_msg_on_start_player, msg);
 
                     if (!msg.empty())
@@ -1095,7 +1149,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
                 {
                     if (player_see_owner)
                     {
-                        string msg = "";
+                        std::string msg = "";
                         prop->msg(prop_msg_on_start_mon, msg);
 
                         if (!msg.empty())
@@ -1109,7 +1163,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
             old_prop->on_more();
 
             old_prop->turns_left_ = (TURNS_LEFT_OLD < 0 || TURNS_LEFT_NEW < 0) ? -1 :
-                                    max(TURNS_LEFT_OLD, TURNS_LEFT_NEW);
+                                    std::max(TURNS_LEFT_OLD, TURNS_LEFT_NEW);
             delete prop;
             return;
         }
@@ -1118,7 +1172,10 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
     //This part reached means the property is new
     applied_props_.push_back(prop);
 
-    if (!DISABLE_PROP_START_EFFECTS) {prop->on_start();}
+    if (!DISABLE_PROP_START_EFFECTS)
+    {
+        prop->on_start();
+    }
 
     if (!DISABLE_REDRAW)
     {
@@ -1134,7 +1191,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
     {
         if (IS_PLAYER)
         {
-            string msg = "";
+            std::string msg = "";
             prop->msg(prop_msg_on_start_player, msg);
 
             if (!msg.empty())
@@ -1146,7 +1203,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
         {
             if (player_see_owner)
             {
-                string msg = "";
+                std::string msg = "";
                 prop->msg(prop_msg_on_start_mon, msg);
 
                 if (!msg.empty())
@@ -1225,7 +1282,7 @@ bool Prop_handler::end_applied_prop(const Prop_id id, const bool RUN_PROP_END_EF
         {
             if (owning_actor_->is_player())
             {
-                string msg = "";
+                std::string msg = "";
                 prop->msg(prop_msg_on_end_player, msg);
 
                 if (!msg.empty()) {msg_log::add(msg, clr_white);}
@@ -1234,7 +1291,7 @@ bool Prop_handler::end_applied_prop(const Prop_id id, const bool RUN_PROP_END_EF
             {
                 if (map::player->can_see_actor(*owning_actor_, nullptr))
                 {
-                    string msg = "";
+                    std::string msg = "";
                     prop->msg(prop_msg_on_end_mon, msg);
 
                     if (!msg.empty())
@@ -1297,7 +1354,7 @@ void Prop_handler::tick(const Prop_turn_mode turn_mode)
     }
 
     //Inventory properties
-    vector<Prop*> inv_props;
+    std::vector<Prop*> inv_props;
 
     bool sources[int(Prop_src::END)];
 
@@ -1322,13 +1379,13 @@ void Prop_handler::tick(const Prop_turn_mode turn_mode)
     }
 }
 
-void Prop_handler::props_interface_line(vector<Str_and_clr>& line) const
+void Prop_handler::props_interface_line(std::vector<Str_and_clr>& line) const
 {
     line.clear();
 
     const bool IS_SELF_AWARE = player_bon::traits[int(Trait::self_aware)];
 
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
 
     for (bool& v : sources) {v = true;}
@@ -1337,14 +1394,14 @@ void Prop_handler::props_interface_line(vector<Str_and_clr>& line) const
 
     for (Prop* prop : prop_list)
     {
-        const string prop_name = prop->name_short();
+        const std::string prop_name = prop->name_short();
 
         if (!prop_name.empty())
         {
             const Prop_alignment alignment = prop->alignment();
             const int TURNS_LEFT = prop->turns_left_;
-            const string turns_str = TURNS_LEFT > 0 && IS_SELF_AWARE ?
-                                     ("(" + to_str(TURNS_LEFT) + ")") : "";
+            const std::string turns_str = TURNS_LEFT > 0 && IS_SELF_AWARE ?
+                                          ("(" + to_str(TURNS_LEFT) + ")") : "";
             line.push_back(
                 Str_and_clr(prop_name + turns_str,
                             alignment == prop_alignment_good ? clr_msg_good :
@@ -1356,7 +1413,7 @@ void Prop_handler::props_interface_line(vector<Str_and_clr>& line) const
 
 int Prop_handler::changed_max_hp(const int HP_MAX) const
 {
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
 
     for (bool& v : sources) {v = true;}
@@ -1371,7 +1428,7 @@ int Prop_handler::changed_max_hp(const int HP_MAX) const
 
 void Prop_handler::change_move_dir(const Pos& actor_pos, Dir& dir) const
 {
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
 
     for (bool& v : sources) {v = true;}
@@ -1383,7 +1440,7 @@ void Prop_handler::change_move_dir(const Pos& actor_pos, Dir& dir) const
 
 bool Prop_handler::allow_attack(const bool ALLOW_MSG) const
 {
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
 
     for (bool& v : sources) {v = true;}
@@ -1403,7 +1460,7 @@ bool Prop_handler::allow_attack(const bool ALLOW_MSG) const
 
 bool Prop_handler::allow_attack_melee(const bool ALLOW_MSG) const
 {
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
 
     for (bool& v : sources) {v = true;}
@@ -1423,7 +1480,7 @@ bool Prop_handler::allow_attack_melee(const bool ALLOW_MSG) const
 
 bool Prop_handler::allow_attack_ranged(const bool ALLOW_MSG) const
 {
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
 
     bool sources[int(Prop_src::END)];
 
@@ -1441,7 +1498,7 @@ bool Prop_handler::allow_attack_ranged(const bool ALLOW_MSG) const
 
 bool Prop_handler::allow_move() const
 {
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
 
     bool sources[int(Prop_src::END)];
 
@@ -1459,7 +1516,7 @@ bool Prop_handler::allow_move() const
 
 bool Prop_handler::allow_act() const
 {
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
 
     bool sources[int(Prop_src::END)];
 
@@ -1478,7 +1535,7 @@ bool Prop_handler::allow_act() const
 bool Prop_handler::allow_read(const bool ALLOW_MSG) const
 {
     TRACE_FUNC_BEGIN_VERBOSE;
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
 
     bool sources[int(Prop_src::END)];
 
@@ -1501,7 +1558,7 @@ bool Prop_handler::allow_read(const bool ALLOW_MSG) const
 
 bool Prop_handler::allow_cast_spell(const bool ALLOW_MSG) const
 {
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
 
     bool sources[int(Prop_src::END)];
 
@@ -1523,7 +1580,7 @@ bool Prop_handler::allow_cast_spell(const bool ALLOW_MSG) const
 bool Prop_handler::allow_speak(const bool ALLOW_MSG) const
 {
     TRACE_FUNC_BEGIN_VERBOSE;
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
 
     bool sources[int(Prop_src::END)];
 
@@ -1547,7 +1604,7 @@ bool Prop_handler::allow_speak(const bool ALLOW_MSG) const
 bool Prop_handler::allow_eat(const bool ALLOW_MSG) const
 {
     TRACE_FUNC_BEGIN_VERBOSE;
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
 
     bool sources[int(Prop_src::END)];
 
@@ -1570,7 +1627,7 @@ bool Prop_handler::allow_eat(const bool ALLOW_MSG) const
 
 void Prop_handler::on_hit()
 {
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
 
     bool sources[int(Prop_src::END)];
 
@@ -1586,7 +1643,7 @@ void Prop_handler::on_hit()
 
 void Prop_handler::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
 {
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
 
     bool sources[int(Prop_src::END)];
 
@@ -1602,7 +1659,7 @@ void Prop_handler::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
 
 int Prop_handler::ability_mod(const Ability_id ability) const
 {
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
 
     bool sources[int(Prop_src::END)];
 
@@ -1631,7 +1688,7 @@ Prop* Prop_handler::prop(const Prop_id id, const Prop_src source) const
     }
     else if (source == Prop_src::inv)
     {
-        vector<Prop*> inv_props;
+        std::vector<Prop*> inv_props;
 
         bool sources[int(Prop_src::END)];
 
@@ -1655,7 +1712,7 @@ Prop* Prop_handler::prop(const Prop_id id, const Prop_src source) const
 
 bool Prop_handler::change_actor_clr(Clr& clr) const
 {
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
 
     bool sources[int(Prop_src::END)];
 
@@ -1676,7 +1733,7 @@ bool Prop_handler::change_actor_clr(Clr& clr) const
 
 void Prop_handler::end_applied_props_by_magic_healing()
 {
-    vector<Prop*> prop_list;
+    std::vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
 
     for (bool& v : sources) {v = true;}
@@ -1761,10 +1818,10 @@ int Prop_diseased::changed_max_hp(const int HP_MAX) const
 
 void Prop_diseased::on_start()
 {
-    //Actor::hp_max() will now return a decreased value
-    //cap current HP to the new, lower, maximum
+    //Actor::hp_max() will now return a decreased value. Cap current HP to the new (lower) maximum.
     int& hp = owning_actor_->hp_;
-    hp = min(map::player->hp_max(true), hp);
+
+    hp = std::min(map::player->hp_max(true), hp);
 }
 
 bool Prop_diseased::is_resisting_other_prop(const Prop_id prop_id) const
@@ -1777,8 +1834,8 @@ void Prop_poss_by_zuul::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
 {
     if (IS_PLAYER_SEE_OWNING_ACTOR)
     {
-        const string& name1 = owning_actor_->name_the();
-        const string& name2 = actor_data::data[int(Actor_id::zuul)].name_the;
+        const std::string& name1 = owning_actor_->name_the();
+        const std::string& name2 = actor_data::data[int(Actor_id::zuul)].name_the;
         msg_log::add(name1 + " was possessed by " + name2 + "!");
     }
 
@@ -1786,7 +1843,7 @@ void Prop_poss_by_zuul::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
     const Pos& pos        = owning_actor_->pos;
     map::mk_gore(pos);
     map::mk_blood(pos);
-    actor_factory::summon(pos, vector<Actor_id> {Actor_id::zuul}, true);
+    actor_factory::summon(pos, std::vector<Actor_id> {Actor_id::zuul}, true);
 
     //Zuul is now free, allow him to spawn.
     actor_data::data[size_t(Actor_id::zuul)].nr_left_allowed_to_spawn = -1;
@@ -1802,7 +1859,7 @@ void Prop_poisoned::on_new_turn()
             {
                 msg_log::add("I am suffering from the poison!", clr_msg_bad, true);
             }
-            else
+            else //Is monster
             {
                 if (map::player->can_see_actor(*owning_actor_, nullptr))
                 {
@@ -1841,7 +1898,7 @@ void Prop_nailed::change_move_dir(const Pos& actor_pos, Dir& dir)
         {
             msg_log::add("I struggle to tear out the spike!", clr_msg_bad);
         }
-        else
+        else //Is monster
         {
             if (map::player->can_see_actor(*owning_actor_, nullptr))
             {
@@ -1859,7 +1916,7 @@ void Prop_nailed::change_move_dir(const Pos& actor_pos, Dir& dir)
 
             if (rnd::one_in(4))
             {
-                nr_spikes_--;
+                --nr_spikes_;
 
                 if (nr_spikes_ > 0)
                 {
@@ -1867,12 +1924,11 @@ void Prop_nailed::change_move_dir(const Pos& actor_pos, Dir& dir)
                     {
                         msg_log::add("I rip out a spike from my flesh!");
                     }
-                    else
+                    else //Is monster
                     {
                         if (map::player->can_see_actor(*owning_actor_, nullptr))
                         {
-                            msg_log::add(
-                                owning_actor_->name_the() + " tears out a spike!");
+                            msg_log::add(owning_actor_->name_the() + " tears out a spike!");
                         }
                     }
                 }
@@ -1991,7 +2047,7 @@ void Prop_frenzied::change_move_dir(const Pos& actor_pos, Dir& dir)
 {
     if (owning_actor_->is_player())
     {
-        vector<Actor*> seen_foes;
+        std::vector<Actor*> seen_foes;
         owning_actor_->seen_foes(seen_foes);
 
         if (seen_foes.empty())
@@ -1999,7 +2055,7 @@ void Prop_frenzied::change_move_dir(const Pos& actor_pos, Dir& dir)
             return;
         }
 
-        vector<Pos> seen_foes_cells;
+        std::vector<Pos> seen_foes_cells;
 
         seen_foes_cells.clear();
 
@@ -2015,7 +2071,7 @@ void Prop_frenzied::change_move_dir(const Pos& actor_pos, Dir& dir)
         bool blocked[MAP_W][MAP_H];
         map_parse::run(cell_check::Blocks_actor(*owning_actor_, false), blocked);
 
-        vector<Pos> line;
+        std::vector<Pos> line;
         line_calc::calc_new_line(actor_pos, closest_mon_pos, true, 999, false, line);
 
         if (line.size() > 1)

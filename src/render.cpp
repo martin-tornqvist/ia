@@ -989,7 +989,7 @@ void draw_projectiles(vector<Projectile*>& projectiles,
 
     for (Projectile* p : projectiles)
     {
-        if (!p->is_done_rendering && p->is_visible_to_player)
+        if (!p->is_done_rendering && p->is_seen_by_player)
         {
             cover_cell_in_map(p->pos);
 

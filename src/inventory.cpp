@@ -449,7 +449,7 @@ void Inventory::equip_general_item(const size_t GEN_IDX, const Slot_id slot_id)
             break;
         }
 
-        msg_log::add(msg, clr_white, false, true);
+        msg_log::add(msg, clr_white, false, More_prompt_on_msg::yes);
     }
 }
 

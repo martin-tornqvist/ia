@@ -38,8 +38,15 @@ Item& Item::operator=(const Item& other)
 
 Item::~Item()
 {
-    for (auto prop   : carrier_props_)   {delete prop;}
-    for (auto spell  : carrier_spells_)  {delete spell;}
+    for (auto prop   : carrier_props_)
+    {
+        delete prop;
+    }
+
+    for (auto spell  : carrier_spells_)
+    {
+        delete spell;
+    }
 }
 
 Item_id Item::id() const
@@ -150,8 +157,6 @@ string Item::name(const Item_ref_type      ref_type,
         }
     }
 
-    const auto ability_vals = map::player->data().ability_vals;
-
     if (att_inf_used == Item_ref_att_inf::melee)
     {
         const string    rolls_str       = to_str(data_->melee.dmg.first);
@@ -162,15 +167,14 @@ string Item::name(const Item_ref_type      ref_type,
                                           ("+" + to_str(PLUS)) :
                                           ("-" + to_str(PLUS));
         const int       ITEM_SKILL      = data_->melee.hit_chance_mod;
-        const int       MELEE_SKILL     = ability_vals.val(Ability_id::melee, true,
-                                          *(map::player));
+        const int       MELEE_SKILL     = map::player->ability(Ability_id::melee, true);
         const int       SKILL_TOT       = max(0, min(100, ITEM_SKILL + MELEE_SKILL));
         const string    skill_str       = to_str(SKILL_TOT) + "%";
 
         att_str = " " + rolls_str + "d" + sides_str + plus_str + " " + skill_str;
     }
 
-    const int RANGED_SKILL = ability_vals.val(Ability_id::ranged, true, *(map::player));
+    const int RANGED_SKILL = map::player->ability(Ability_id::ranged, true);
 
     if (att_inf_used == Item_ref_att_inf::ranged)
     {
@@ -249,19 +253,20 @@ void Armor::setup_from_save_lines(vector<string>& lines)
 
 void Armor::on_equip(const bool IS_SILENT)
 {
-    on_equip_(IS_SILENT);
+    on_equip_hook(IS_SILENT);
 }
 
 Unequip_allowed Armor::on_unequip()
 {
     render::draw_map_and_interface();
 
-    const Unequip_allowed unequip_allowed = on_unequip_();
+    const Unequip_allowed unequip_allowed = on_unequip_hook();
 
     if (unequip_allowed == Unequip_allowed::yes)
     {
         const string armor_name = name(Item_ref_type::plain, Item_ref_inf::none);
-        msg_log::add("I take off my " + armor_name + ".", clr_white, false, true);
+        msg_log::add("I take off my " + armor_name + ".", clr_white, false,
+                     More_prompt_on_msg::yes);
     }
 
     game_time::tick();
@@ -272,7 +277,7 @@ Unequip_allowed Armor::on_unequip()
 string Armor::armor_data_line(const bool WITH_BRACKETS) const
 {
     const int       AP      = armor_points();
-    const string    ap_str   = to_str(max(0, AP));
+    const string    ap_str  = to_str(max(0, AP));
 
     return WITH_BRACKETS ? ("[" + ap_str + "]") : ap_str;
 }
@@ -329,7 +334,7 @@ int Armor::armor_points() const
     return 0;
 }
 
-void Armor_asb_suit::on_equip_(const bool IS_SILENT)
+void Armor_asb_suit::on_equip_hook(const bool IS_SILENT)
 {
     (void)IS_SILENT;
 
@@ -339,25 +344,31 @@ void Armor_asb_suit::on_equip_(const bool IS_SILENT)
     carrier_props_.push_back(new Prop_rBreath(Prop_turns::indefinite));
 }
 
-Unequip_allowed Armor_asb_suit::on_unequip_()
+Unequip_allowed Armor_asb_suit::on_unequip_hook()
 {
-    for (Prop* prop : carrier_props_) {delete prop;}
+    for (Prop* prop : carrier_props_)
+    {
+        delete prop;
+    }
 
     carrier_props_.clear();
 
     return Unequip_allowed::yes;
 }
 
-void Armor_heavy_coat::on_equip_(const bool IS_SILENT)
+void Armor_heavy_coat::on_equip_hook(const bool IS_SILENT)
 {
     (void)IS_SILENT;
 
     carrier_props_.push_back(new Prop_rCold(Prop_turns::indefinite));
 }
 
-Unequip_allowed Armor_heavy_coat::on_unequip_()
+Unequip_allowed Armor_heavy_coat::on_unequip_hook()
 {
-    for (Prop* prop : carrier_props_) {delete prop;}
+    for (Prop* prop : carrier_props_)
+    {
+        delete prop;
+    }
 
     carrier_props_.clear();
 
@@ -379,26 +390,27 @@ void Armor_mi_go::on_std_turn_in_inv(const Inv_type inv_type)
         if (AP_AFTER > AP_BEFORE)
         {
             const string armor_name = name(Item_ref_type::plain, Item_ref_inf::none);
-            msg_log::add("My " + armor_name + " reconstructs itself.", clr_msg_note, false, true);
+            msg_log::add("My " + armor_name + " reconstructs itself.", clr_msg_note, false,
+                         More_prompt_on_msg::yes);
         }
     }
 }
 
-void Armor_mi_go::on_equip_(const bool IS_SILENT)
+void Armor_mi_go::on_equip_hook(const bool IS_SILENT)
 {
     if (!IS_SILENT)
     {
         render::draw_map_and_interface();
-        msg_log::add("The armor joins with my skin!", clr_white, false, true);
+        msg_log::add("The armor joins with my skin!", clr_white, false, More_prompt_on_msg::yes);
         map::player->incr_shock(Shock_lvl::heavy, Shock_src::use_strange_item);
     }
 }
 
-Unequip_allowed Armor_mi_go::on_unequip_()
+Unequip_allowed Armor_mi_go::on_unequip_hook()
 {
     render::draw_map_and_interface();
     msg_log::add("I attempt to tear off the armor, it rips my skin!", clr_msg_bad, false,
-                 true);
+                 More_prompt_on_msg::yes);
 
     map::player->hit(rnd::range(1, 3), Dmg_type::pure);
 
@@ -410,16 +422,16 @@ Unequip_allowed Armor_mi_go::on_unequip_()
     }
     else
     {
-        msg_log::add("I fail to tear it off.", clr_white, false, true);
+        msg_log::add("I fail to tear it off.", clr_white, false, More_prompt_on_msg::yes);
         return Unequip_allowed::no;
     }
 }
 
 //---------------------------------------------------------- WEAPON
 Wpn::Wpn(Item_data_t* const item_data) :
-    Item(item_data),
-    nr_ammo_loaded_(0),
-    ammo_data_(nullptr)
+    Item                (item_data),
+    nr_ammo_loaded_     (0),
+    ammo_data_          (nullptr)
 {
     const auto ammo_item_id = data_->ranged.ammo_item_id;
 
@@ -875,7 +887,7 @@ void Gas_mask::decr_turns_left(Inventory& carrier_inv)
     if (nr_turns_left_ <= 0)
     {
         msg_log::add("My " + name(Item_ref_type::plain, Item_ref_inf::none) + " expires.",
-                     clr_msg_note, true, true);
+                     clr_msg_note, true, More_prompt_on_msg::yes);
         carrier_inv.decr_item(this);
     }
 }
@@ -968,8 +980,17 @@ void Molotov::on_std_turn_player_hold_ignited()
         msg_log::add("The Molotov Cocktail explodes in my hand!");
         map::player->active_explosive = nullptr;
         map::player->update_clr();
-        explosion::run_explosion_at(map::player->pos, Expl_type::apply_prop, Expl_src::misc, 0,
-                                    Sfx_id::explosion_molotov, new Prop_burning(Prop_turns::std));
+
+        const Pos player_pos = map::player->pos;
+
+        Snd snd("I hear an explosion!", Sfx_id::explosion_molotov, Ignore_msg_if_origin_seen::yes,
+                player_pos, nullptr, Snd_vol::high, Alerts_mon::yes);
+
+        snd_emit::emit_snd(snd);
+
+        explosion::run_explosion_at(player_pos, Expl_type::apply_prop, Expl_src::misc,
+                                    Emit_expl_snd::no, 0, new Prop_burning(Prop_turns::std));
+
         delete this;
     }
 }
@@ -977,8 +998,14 @@ void Molotov::on_std_turn_player_hold_ignited()
 void Molotov::on_thrown_ignited_landing(const Pos& p)
 {
     const int D = player_bon::traits[int(Trait::dem_expert)] ? 1 : 0;
-    explosion::run_explosion_at(p, Expl_type::apply_prop, Expl_src::player_use_moltv_intended, D,
-                                Sfx_id::explosion_molotov, new Prop_burning(Prop_turns::std));
+
+    Snd snd("I hear an explosion!", Sfx_id::explosion_molotov, Ignore_msg_if_origin_seen::yes,
+            p, nullptr, Snd_vol::high, Alerts_mon::yes);
+
+    snd_emit::emit_snd(snd);
+
+    explosion::run_explosion_at(p, Expl_type::apply_prop, Expl_src::player_use_moltv_intended,
+                                Emit_expl_snd::no, D , new Prop_burning(Prop_turns::std));
 }
 
 
@@ -987,8 +1014,17 @@ void Molotov::on_player_paralyzed()
     msg_log::add("The lit Molotov Cocktail falls from my hand!");
     map::player->active_explosive = nullptr;
     map::player->update_clr();
-    explosion::run_explosion_at(map::player->pos, Expl_type::apply_prop, Expl_src::misc, 0,
-                                Sfx_id::explosion_molotov, new Prop_burning(Prop_turns::std));
+
+    const Pos player_pos = map::player->pos;
+
+    Snd snd("I hear an explosion!", Sfx_id::explosion_molotov, Ignore_msg_if_origin_seen::yes,
+            player_pos, nullptr, Snd_vol::high, Alerts_mon::yes);
+
+    snd_emit::emit_snd(snd);
+
+    explosion::run_explosion_at(player_pos, Expl_type::apply_prop, Expl_src::misc,
+                                Emit_expl_snd::no, 0, new Prop_burning(Prop_turns::std));
+
     delete this;
 }
 

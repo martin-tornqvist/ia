@@ -7,26 +7,67 @@
 #include "colors.hpp"
 #include "art.hpp"
 
-enum class Inv_type         {slots, general};
+enum class Inv_type
+{
+    slots,
+    general
+};
 
-enum class Item_ref_type    {plain, a, plural, END};
-enum class Item_ref_inf     {none, yes};
-enum class Item_ref_att_inf {none, wpn_context, melee, ranged, thrown};
+enum class Item_ref_type
+{
+    plain,
+    a,
+    plural,
+    END
+};
 
-enum class Article          {a, the};
+enum class Item_ref_inf
+{
+    none,
+    yes
+};
+
+enum class Item_ref_att_inf
+{
+    none,
+    wpn_context,
+    melee,
+    ranged,
+    thrown
+};
+
+enum class Article
+{
+    a,
+    the
+};
 
 enum class Matl
 {
     empty,
     stone,
     metal,
-    plant,  //Grass, bushes, reeds, vines, fungi
-    wood,   //Trees, doors, benches
-    cloth,  //Carpet, silk (cocoons)
+    plant,  //Grass, bushes, reeds, vines, fungi...
+    wood,   //Trees, doors, benches...
+    cloth,  //Carpet, silk (cocoons)...
     fluid
 };
 
-enum class Condition {breaking, shoddy, fine};
+enum class Liquid_type
+{
+    water,
+    mud,
+    blood,
+    acid,
+    lava
+};
+
+enum class Condition
+{
+    breaking,
+    shoddy,
+    fine
+};
 
 enum class Dmg_type
 {
@@ -315,15 +356,30 @@ enum class Dir
     END
 };
 
-enum class Actor_state {alive, corpse, destroyed};
+enum class Actor_state
+{
+    alive,
+    corpse,
+    destroyed
+};
 
-enum Horizontal_vertical {hor, ver};
+enum class Axis
+{
+    hor,
+    ver
+};
 
 enum class Lgt_size
 {
     none,
     small, //3x3
     fov
+};
+
+enum class More_prompt_on_msg
+{
+    no,
+    yes
 };
 
 #endif
