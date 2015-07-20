@@ -4,7 +4,6 @@
 #define MAPGEN_ROOM_H
 
 #include <vector>
-
 #ifdef MACOSX
 #include <numeric>
 #endif
