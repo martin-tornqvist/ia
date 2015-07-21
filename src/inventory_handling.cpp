@@ -365,7 +365,7 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    scr_to_open_after_drop       = Inv_scr_id::END;
+    scr_to_open_after_drop          = Inv_scr_id::END;
     equip_slot_to_open_after_drop   = &slot_to_equip;
     render::draw_map_and_interface();
 
@@ -392,7 +392,8 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
         case Menu_action::browsed:
         {
             render_inventory::draw_equip(browser, slot_to_equip.id, general_items_to_show_);
-        } break;
+        }
+        break;
 
         case Menu_action::selected:
         {
@@ -403,35 +404,38 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
 
                 inv.equip_general_item(ELEMENT, slot_to_equip.id);
 
-                slot_to_equip.item->on_equip(false);
+                slot_to_equip.item->on_equip(*map::player, Verbosity::verbose);
 
                 game_time::tick();
 
-                browser_idx_to_set_after_drop  = int(slot_to_equip.id);
-                scr_to_open_after_drop     = Inv_scr_id::inv;
+                browser_idx_to_set_after_drop   = int(slot_to_equip.id);
+                scr_to_open_after_drop          = Inv_scr_id::inv;
 
                 TRACE_FUNC_END_VERBOSE;
                 return true;
             }
-        } break;
+        }
+        break;
 
         case Menu_action::selected_shift:
         {
             if (run_drop_screen(Inv_type::general, general_items_to_show_[browser.y()]))
             {
                 browser.set_good_pos();
-                browser_idx_to_set_after_drop  = browser.y();
-                scr_to_open_after_drop     = Inv_scr_id::equip;
+                browser_idx_to_set_after_drop   = browser.y();
+                scr_to_open_after_drop          = Inv_scr_id::equip;
 
                 TRACE_FUNC_END_VERBOSE;
                 return true;
             }
 
             render_inventory::draw_equip(browser, slot_to_equip.id, general_items_to_show_);
-        } break;
+        }
+        break;
 
         case Menu_action::esc:
-        case Menu_action::space: {return false;} break;
+        case Menu_action::space:
+            return false;
         }
     }
 

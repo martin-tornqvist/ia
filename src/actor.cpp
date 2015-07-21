@@ -24,19 +24,19 @@
 using namespace std;
 
 Actor::Actor() :
-    pos(),
-    state_(Actor_state::alive),
-    clr_(clr_black),
-    glyph_(' '),
-    tile_(Tile_id::empty),
-    hp_(-1),
-    hp_max_(-1),
-    spi_(-1),
-    spi_max_(-1),
-    lair_cell_(),
-    prop_handler_(nullptr),
-    data_(nullptr),
-    inv_(nullptr) {}
+    pos             (),
+    state_          (Actor_state::alive),
+    clr_            (clr_black),
+    glyph_          (' '),
+    tile_           (Tile_id::empty),
+    hp_             (-1),
+    hp_max_         (-1),
+    spi_            (-1),
+    spi_max_        (-1),
+    lair_cell_      (),
+    prop_handler_   (nullptr),
+    data_           (nullptr),
+    inv_            (nullptr) {}
 
 Actor::~Actor()
 {
@@ -216,7 +216,7 @@ void Actor::place(const Pos& pos_, Actor_data_t& actor_data)
 {
     pos             = pos_;
     data_           = &actor_data;
-    inv_            = new Inventory();
+    inv_            = new Inventory(this);
     prop_handler_   = new Prop_handler(this);
     state_          = Actor_state::alive;
     clr_            = data_->color;
@@ -226,7 +226,10 @@ void Actor::place(const Pos& pos_, Actor_data_t& actor_data)
     spi_            = spi_max_ = data_->spi;
     lair_cell_      = pos;
 
-    if (data_->id != Actor_id::player) {mk_start_items();}
+    if (data_->id != Actor_id::player)
+    {
+        mk_start_items();
+    }
 
     place_hook();
 
@@ -555,9 +558,10 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
         {
             if (method == Dmg_method::kick)
             {
-                snd_emit::emit_snd({"*Crack!*", Sfx_id::hit_corpse_break, Ignore_msg_if_origin_seen::yes,
-                                    pos, nullptr, Snd_vol::low, Alerts_mon::yes
-                                   });
+                Snd snd("*Crack!*", Sfx_id::hit_corpse_break, Ignore_msg_if_origin_seen::yes,
+                        pos, nullptr, Snd_vol::low, Alerts_mon::yes);
+
+                snd_emit::emit_snd(snd);
             }
 
             state_ = Actor_state::destroyed;
@@ -574,9 +578,10 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
         {
             if (method == Dmg_method::kick)
             {
-                snd_emit::emit_snd({"*Thud*", Sfx_id::hit_medium, Ignore_msg_if_origin_seen::yes, pos,
-                                    nullptr, Snd_vol::low, Alerts_mon::yes
-                                   });
+                Snd snd("*Thud*", Sfx_id::hit_medium, Ignore_msg_if_origin_seen::yes, pos,
+                        nullptr, Snd_vol::low, Alerts_mon::yes);
+
+                snd_emit::emit_snd(snd);
             }
         }
 
@@ -587,9 +592,9 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
     if (dmg_type == Dmg_type::spirit) {return hit_spi(dmg, true);}
 
     //Property resists?
-    const bool ALLOW_DMG_RES_MSG = is_alive();
+    const auto verbosity = is_alive() ? Verbosity::verbose : Verbosity::silent;
 
-    if (prop_handler_->try_resist_dmg(dmg_type, ALLOW_DMG_RES_MSG))
+    if (prop_handler_->try_resist_dmg(dmg_type, verbosity))
     {
         TRACE_FUNC_END_VERBOSE;
         return Actor_died::no;

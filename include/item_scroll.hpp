@@ -24,7 +24,7 @@ public:
 
     std::vector<std::string> descr() const override;
 
-    void identify(const bool IS_SILENT_IDENTIFY) override;
+    void identify(const Verbosity verbosity) override;
 
     Spell* mk_spell() const;
 

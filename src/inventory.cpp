@@ -17,23 +17,22 @@
 #include "map.hpp"
 #include "utils.hpp"
 
-using namespace std;
-
-Inventory::Inventory()
+Inventory::Inventory(Actor* const owning_actor) :
+    owning_actor_(owning_actor)
 {
-    auto set_slot = [&](const Slot_id id, const string & name)
+    auto set_slot = [&](const Slot_id id, const std::string & name)
     {
         slots_[int(id)] = {id, name};
     };
 
-    set_slot(Slot_id::wielded,    "Wielding");
-    set_slot(Slot_id::wielded_alt, "Prepared");
-    set_slot(Slot_id::thrown,     "Thrown");
-    set_slot(Slot_id::body,       "Body");
-    set_slot(Slot_id::head,       "Head");
-    set_slot(Slot_id::neck,       "Neck");
-    set_slot(Slot_id::ring1,      "Ring");
-    set_slot(Slot_id::ring2,      "Ring");
+    set_slot(Slot_id::wielded,      "Wielding");
+    set_slot(Slot_id::wielded_alt,  "Prepared");
+    set_slot(Slot_id::thrown,       "Thrown");
+    set_slot(Slot_id::body,         "Body");
+    set_slot(Slot_id::head,         "Head");
+    set_slot(Slot_id::neck,         "Neck");
+    set_slot(Slot_id::ring1,        "Ring");
+    set_slot(Slot_id::ring2,        "Ring");
 }
 
 Inventory::~Inventory()
@@ -42,15 +41,24 @@ Inventory::~Inventory()
     {
         auto& slot = slots_[i];
 
-        if (slot.item) {delete slot.item;}
+        if (slot.item)
+        {
+            delete slot.item;
+        }
     }
 
-    for (Item* item : general_)    {delete item;}
+    for (Item* item : general_)
+    {
+        delete item;
+    }
 
-    for (Item* item : intrinsics_) {delete item;}
+    for (Item* item : intrinsics_)
+    {
+        delete item;
+    }
 }
 
-void Inventory::store_to_save_lines(vector<string>& lines) const
+void Inventory::store_to_save_lines(std::vector<std::string>& lines) const
 {
     for (const Inv_slot& slot : slots_)
     {
@@ -62,7 +70,7 @@ void Inventory::store_to_save_lines(vector<string>& lines) const
             lines.push_back(to_str(item->nr_items_));
             item->store_to_save_lines(lines);
         }
-        else
+        else //No item in this slot
         {
             lines.push_back(to_str(int(Item_id::END)));
         }
@@ -78,7 +86,7 @@ void Inventory::store_to_save_lines(vector<string>& lines) const
     }
 }
 
-void Inventory::setup_from_save_lines(vector<string>& lines)
+void Inventory::setup_from_save_lines(std::vector<std::string>& lines)
 {
     for (Inv_slot& slot : slots_)
     {
@@ -101,8 +109,10 @@ void Inventory::setup_from_save_lines(vector<string>& lines)
             lines.erase(begin(lines));
             item->setup_from_save_lines(lines);
             slot.item = item;
+
             //When loading the game, wear the item to apply properties from wearing
-            item->on_equip(true);
+            assert(owning_actor_);
+            item->on_equip(*owning_actor_, Verbosity::silent);
         }
     }
 
@@ -146,7 +156,7 @@ int Inventory::item_stack_size_in_general(const Item_id id) const
             {
                 return general_[i]->nr_items_;
             }
-            else
+            else //Not stackable
             {
                 return 1;
             }
@@ -154,18 +164,6 @@ int Inventory::item_stack_size_in_general(const Item_id id) const
     }
 
     return 0;
-}
-
-void Inventory::decr_dynamite_in_general()
-{
-    for (size_t i = 0; i < general_.size(); ++i)
-    {
-        if (general_[i]->data().id == Item_id::dynamite)
-        {
-            decr_item_in_general(i);
-            break;
-        }
-    }
 }
 
 void Inventory::put_in_general(Item* item)
@@ -317,7 +315,7 @@ void Inventory::remove_item_in_backpack_with_ptr(Item* const item, const bool DE
         }
     }
 
-    TRACE << "Parameter item not in backpack" << endl;
+    TRACE << "Parameter item not in backpack" << std::endl;
     assert(false);
 }
 
@@ -407,9 +405,9 @@ void Inventory::equip_general_item(const size_t GEN_IDX, const Slot_id slot_id)
 
     if (IS_PLAYER)
     {
-        Item* const     item_after  = item_in_slot(slot_id);
-        const string    name        = item_after->name(Item_ref_type::plural);
-        string          msg         = "";
+        Item* const         item_after  = item_in_slot(slot_id);
+        const std::string   name        = item_after->name(Item_ref_type::plural);
+        std::string         msg         = "";
 
         switch (slot_id)
         {
@@ -627,8 +625,9 @@ struct Lexicograhical_compare_items
 {
     bool operator()(const Item* const item1, const Item* const item2)
     {
-        const string& item_name1 = item1->name(Item_ref_type::plain);
-        const string& item_name2 = item2->name(Item_ref_type::plain);
+        const std::string& item_name1 = item1->name(Item_ref_type::plain);
+        const std::string& item_name2 = item2->name(Item_ref_type::plain);
+
         return lexicographical_compare(item_name1.begin(), item_name1.end(),
                                        item_name2.begin(), item_name2.end());
     }
@@ -636,7 +635,7 @@ struct Lexicograhical_compare_items
 
 void Inventory::sort_general_inventory()
 {
-    vector< vector<Item*> > sort_buffer;
+    std::vector< std::vector<Item*> > sort_buffer;
 
     //Sort according to item interface color first
     for (Item* item : general_)
@@ -645,7 +644,7 @@ void Inventory::sort_general_inventory()
         bool is_added_to_buffer = false;
 
         //Check if item should be added to any existing color group
-        for (vector<Item*>& group : sort_buffer)
+        for (auto& group : sort_buffer)
         {
             const Clr clr_cur_group = group[0]->interface_clr();
 
@@ -664,7 +663,7 @@ void Inventory::sort_general_inventory()
         else
         {
             //Item is a new color, create a new color group
-            vector<Item*> new_group;
+            std::vector<Item*> new_group;
             new_group.push_back(item);
             sort_buffer.push_back(new_group);
         }
@@ -673,7 +672,7 @@ void Inventory::sort_general_inventory()
     //Sort lexicographically secondarily
     Lexicograhical_compare_items cmp;
 
-    for (vector<Item*>& group : sort_buffer)
+    for (auto& group : sort_buffer)
     {
         std::sort(group.begin(), group.end(), cmp);
     }

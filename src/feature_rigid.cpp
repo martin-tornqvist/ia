@@ -2682,7 +2682,7 @@ void Fountain::bump(Actor& actor_bumping)
             }
         }
 
-        if (!prop_hlr.allow_eat(true))
+        if (!prop_hlr.allow_eat(Verbosity::verbose))
         {
             return;
         }

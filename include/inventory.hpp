@@ -7,6 +7,7 @@
 #include "cmn_types.hpp"
 
 class Item;
+class Actor;
 
 enum class Item_id;
 
@@ -26,24 +27,24 @@ enum class Slot_id
 struct Inv_slot
 {
     Inv_slot(Slot_id id_, std::string name_) :
-        id(id_),
-        name(name_),
-        item(nullptr) {}
+        id      (id_),
+        name    (name_),
+        item    (nullptr) {}
 
     Inv_slot() :
-        id(Slot_id::wielded),
-        name(""),
-        item(nullptr) {}
+        id      (Slot_id::wielded),
+        name    (""),
+        item    (nullptr) {}
 
-    Slot_id      id;
+    Slot_id id;
     std::string name;
-    Item*       item;
+    Item* item;
 };
 
 class Inventory
 {
 public:
-    Inventory();
+    Inventory(Actor* const owning_actor);
 
     ~Inventory();
 
@@ -99,8 +100,6 @@ public:
 
     int item_stack_size_in_general(const Item_id id) const;
 
-    void decr_dynamite_in_general();
-
     void sort_general_inventory();
 
     int total_item_weight() const;
@@ -108,9 +107,12 @@ public:
     void store_to_save_lines(std::vector<std::string>& lines) const;
     void setup_from_save_lines(std::vector<std::string>& lines);
 
-    Inv_slot               slots_[int(Slot_id::END)];
-    std::vector<Item*>    general_;
-    std::vector<Item*>    intrinsics_;
+    Inv_slot slots_[int(Slot_id::END)];
+    std::vector<Item*> general_;
+    std::vector<Item*> intrinsics_;
+
+private:
+    Actor* const owning_actor_;
 };
 
 #endif

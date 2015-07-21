@@ -54,9 +54,15 @@ Player::Player() :
     quick_move_dir_(Dir::END),
     CARRY_WEIGHT_BASE_(450)
 {
-    for (int i = 0; i < int(Phobia::END); ++i)     {phobias[i]     = false;}
+    for (int i = 0; i < int(Phobia::END); ++i)
+    {
+        phobias[i] = false;
+    }
 
-    for (int i = 0; i < int(Obsession::END); ++i)  {obsessions[i]  = false;}
+    for (int i = 0; i < int(Obsession::END); ++i)
+    {
+        obsessions[i] = false;
+    }
 }
 
 Player::~Player()
@@ -68,9 +74,15 @@ void Player::mk_start_items()
 {
     data_->ability_vals.reset();
 
-    for (int i = 0; i < int(Phobia::END); ++i)     {phobias[i]     = false;}
+    for (int i = 0; i < int(Phobia::END); ++i)
+    {
+        phobias[i] = false;
+    }
 
-    for (int i = 0; i < int(Obsession::END); ++i)  {obsessions[i]  = false;}
+    for (int i = 0; i < int(Obsession::END); ++i)
+    {
+        obsessions[i] = false;
+    }
 
     int nr_cartridges  = 2;
     int nr_dynamite    = 2;
@@ -91,7 +103,7 @@ void Player::mk_start_items()
         //Occultist starts with a scroll of Darkbolt, and one other random scroll.
         //(Both are identified.)
         Item* scroll = item_factory::mk(Item_id::scroll_darkbolt);
-        static_cast<Scroll*>(scroll)->identify(true);
+        static_cast<Scroll*>(scroll)->identify(Verbosity::silent);
         inv_->put_in_general(scroll);
 
         while (true)
@@ -107,7 +119,7 @@ void Player::mk_start_items()
 
             if (IS_AVAIL && SPI_COST_OK && spell_id != Spell_id::darkbolt)
             {
-                static_cast<Scroll*>(scroll)->identify(true);
+                static_cast<Scroll*>(scroll)->identify(Verbosity::silent);
                 inv_->put_in_general(scroll);
                 break;
             }
@@ -119,7 +131,7 @@ void Player::mk_start_items()
         for (int i = 0; i < NR_POTIONS; ++i)
         {
             Item* const potion = item_factory::mk_random_scroll_or_potion(false, true);
-            static_cast<Potion*>(potion)->identify(true);
+            static_cast<Potion*>(potion)->identify(Verbosity::silent);
             inv_->put_in_general(potion);
         }
     }
@@ -244,7 +256,7 @@ void Player::setup_from_save_lines(vector<string>& lines)
         const int NR_TURNS = to_int(lines.front());
         lines.erase(begin(lines));
         auto* const prop = prop_handler_->mk_prop(prop_id, Prop_turns::specific, NR_TURNS);
-        prop_handler_->try_apply_prop(prop, true, true, true, true);
+        prop_handler_->try_apply_prop(prop, true, Verbosity::silent, true, true);
         prop->setup_from_save_lines(lines);
     }
 
@@ -1374,7 +1386,7 @@ void Player::move_dir(Dir dir)
             //Attack?
             if (mon_at_dest && !is_leader_of(mon_at_dest))
             {
-                if (prop_handler_->allow_attack_melee(true))
+                if (prop_handler_->allow_attack_melee(Verbosity::verbose))
                 {
                     bool has_melee_wpn = false;
                     Item* const item = inv_->item_in_slot(Slot_id::wielded);

@@ -50,9 +50,10 @@ public:
 
     virtual Jewelry_effect_id id() const = 0;
 
-    virtual void on_equip(const bool IS_SILENT)
+    virtual void on_equip(Actor& actor, const Verbosity verbosity)
     {
-        (void)IS_SILENT;
+        (void)actor;
+        (void)verbosity;
     }
 
     virtual Unequip_allowed on_unequip()
@@ -91,7 +92,8 @@ public:
 
     virtual ~Jewelry_property_effect() {}
 
-    void on_equip(const bool IS_SILENT) override final;
+    void on_equip(Actor& actor, const Verbosity verbosity) override;
+
     Unequip_allowed on_unequip() override final;
 
 protected:
@@ -315,7 +317,7 @@ public:
         return "It grants stronger vitality.";
     }
 
-    void on_equip(const bool IS_SILENT) override;
+    void on_equip(Actor& actor, const Verbosity verbosity) override;
     Unequip_allowed on_unequip() override;
 };
 
@@ -337,7 +339,8 @@ public:
         return "It makes the wearer frailer.";
     }
 
-    void on_equip(const bool IS_SILENT) override;
+    void on_equip(Actor& actor, const Verbosity verbosity) override;
+
     Unequip_allowed on_unequip() override;
 };
 
@@ -359,7 +362,7 @@ public:
         return "It strengthens the spirit of the wearer.";
     }
 
-    void on_equip(const bool IS_SILENT) override;
+    void on_equip(Actor& actor, const Verbosity verbosity) override;
     Unequip_allowed on_unequip() override;
 };
 
@@ -381,7 +384,7 @@ public:
         return "It weakens the spirit of the wearer.";
     }
 
-    void on_equip(const bool IS_SILENT) override;
+    void on_equip(Actor& actor, const Verbosity verbosity) override;
     Unequip_allowed on_unequip() override;
 };
 
@@ -512,7 +515,7 @@ public:
         return "It burdens the wearer, as if there was an invisible weight to carry.";
     }
 
-    void on_equip(const bool IS_SILENT) override;
+    void on_equip(Actor& actor, const Verbosity verbosity) override;
     void change_item_weight(int& weight_ref) override;
 };
 
@@ -539,7 +542,7 @@ public:
         return "The wounds of the wearer heal faster.";
     }
 
-    void on_equip(const bool IS_SILENT) override;
+    void on_equip(Actor& actor, const Verbosity verbosity) override;
     Unequip_allowed on_unequip() override;
 };
 
@@ -566,7 +569,7 @@ public:
         return "The wounds of the wearer heal slower.";
     }
 
-    void on_equip(const bool IS_SILENT) override;
+    void on_equip(Actor& actor, const Verbosity verbosity) override;
     Unequip_allowed on_unequip() override;
 };
 
@@ -579,9 +582,12 @@ public:
 
     std::vector<std::string> descr() const override final;
 
-    void on_equip(const bool IS_SILENT) override final;
+    void on_equip(Actor& actor, const Verbosity verbosity) override final;
+
     Unequip_allowed on_unequip() override final;
+
     void on_std_turn_in_inv(const Inv_type inv_type) override final;
+
     void on_actor_turn_in_inv(const Inv_type inv_type) override final;
 
     int hp_regen_change(const Inv_type inv_type) const;
@@ -591,7 +597,7 @@ public:
         return clr_orange;
     }
 
-    void identify(const bool IS_SILENT_IDENTIFY) override final;
+    void identify(const Verbosity verbosity) override final;
 
     int weight() const override;
 

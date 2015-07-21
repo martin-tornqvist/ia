@@ -51,7 +51,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_good;
     add_prop_data(d);
@@ -67,7 +67,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_good;
     add_prop_data(d);
@@ -83,7 +83,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_good;
     add_prop_data(d);
@@ -99,7 +99,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_good;
     add_prop_data(d);
@@ -115,7 +115,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_good;
     add_prop_data(d);
@@ -131,7 +131,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_good;
     add_prop_data(d);
@@ -147,7 +147,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_good;
     add_prop_data(d);
@@ -163,7 +163,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_good;
     add_prop_data(d);
@@ -179,7 +179,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_good;
     add_prop_data(d);
@@ -195,7 +195,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_good;
     add_prop_data(d);
@@ -209,7 +209,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_good;
     add_prop_data(d);
@@ -227,7 +227,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.alignment = prop_alignment_bad;
     add_prop_data(d);
 
@@ -279,7 +279,7 @@ void init_data_list()
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = true;
+    d.update_vision_when_start_or_end = true;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_bad;
     add_prop_data(d);
@@ -297,7 +297,7 @@ void init_data_list()
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.is_ended_by_magic_healing = true;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_bad;
@@ -316,7 +316,7 @@ void init_data_list()
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = false;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.is_ended_by_magic_healing = true;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_bad;
@@ -335,7 +335,7 @@ void init_data_list()
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_bad;
     add_prop_data(d);
@@ -353,7 +353,7 @@ void init_data_list()
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_bad;
     add_prop_data(d);
@@ -371,7 +371,7 @@ void init_data_list()
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.is_ended_by_magic_healing = true;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_bad;
@@ -390,7 +390,7 @@ void init_data_list()
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_bad;
     add_prop_data(d);
@@ -406,7 +406,7 @@ void init_data_list()
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_good;
     add_prop_data(d);
@@ -417,7 +417,7 @@ void init_data_list()
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = true;
+    d.update_vision_when_start_or_end = true;
     d.alignment = prop_alignment_bad;
     add_prop_data(d);
 
@@ -430,7 +430,7 @@ void init_data_list()
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.alignment = prop_alignment_bad;
     add_prop_data(d);
 
@@ -442,7 +442,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.alignment = prop_alignment_good;
     add_prop_data(d);
 
@@ -459,7 +459,7 @@ void init_data_list()
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.is_ended_by_magic_healing = true;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_bad;
@@ -478,7 +478,7 @@ void init_data_list()
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.is_ended_by_magic_healing = true;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_bad;
@@ -497,7 +497,7 @@ void init_data_list()
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.is_ended_by_magic_healing = true;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_bad;
@@ -516,7 +516,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_neutral;
     add_prop_data(d);
@@ -530,7 +530,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_good;
     add_prop_data(d);
@@ -545,7 +545,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_bad;
     add_prop_data(d);
@@ -559,7 +559,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = true;
+    d.update_vision_when_start_or_end = true;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_neutral;
     add_prop_data(d);
@@ -567,12 +567,12 @@ void init_data_list()
     d.id = Prop_id::tele_ctrl;
     d.std_rnd_turns = Range(40, 60);
     d.name = "Teleport Control";
-    d.name_short = "Tele_ctrl";
+    d.name_short = "TeleCtrl";
     d.msg[prop_msg_on_start_player] = "I feel in control.";
     d.msg[prop_msg_on_end_player] = "I feel less in control.";
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.is_ended_by_magic_healing = false;
     d.allow_test_on_bot = false;
     d.alignment = prop_alignment_good;
@@ -581,12 +581,12 @@ void init_data_list()
     d.id = Prop_id::spell_reflect;
     d.std_rnd_turns = Range(40, 60);
     d.name = "Spell Reflection";
-    d.name_short = "Spell_refl";
+    d.name_short = "SpellRefl";
     d.msg[prop_msg_on_start_player] = "Spells reflect off me!";
     d.msg[prop_msg_on_end_player] = "I am vulnerable to spells.";
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.is_ended_by_magic_healing = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_good;
@@ -599,7 +599,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.alignment = prop_alignment_good;
     add_prop_data(d);
 
@@ -610,7 +610,7 @@ void init_data_list()
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.alignment = prop_alignment_bad;
     add_prop_data(d);
 
@@ -621,7 +621,7 @@ void init_data_list()
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.alignment = prop_alignment_bad;
     add_prop_data(d);
 
@@ -629,7 +629,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = false;
-    d.update_player_visual_when_start_or_end = true;
+    d.update_vision_when_start_or_end = true;
     d.is_ended_by_magic_healing = false;
     d.allow_test_on_bot = true;
     d.alignment = prop_alignment_neutral;
@@ -639,7 +639,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.is_ended_by_magic_healing = false;
     d.allow_test_on_bot = false;
     d.alignment = prop_alignment_neutral;
@@ -649,7 +649,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.is_ended_by_magic_healing = false;
     d.allow_test_on_bot = false;
     d.alignment = prop_alignment_neutral;
@@ -659,7 +659,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.is_ended_by_magic_healing = false;
     d.allow_test_on_bot = false;
     d.alignment = prop_alignment_neutral;
@@ -669,7 +669,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.is_ended_by_magic_healing = false;
     d.allow_test_on_bot = false;
     d.alignment = prop_alignment_neutral;
@@ -680,7 +680,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.alignment = prop_alignment_neutral;
     add_prop_data(d);
 
@@ -689,7 +689,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.alignment = prop_alignment_neutral;
     add_prop_data(d);
 
@@ -698,7 +698,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.alignment = prop_alignment_neutral;
     add_prop_data(d);
 
@@ -707,7 +707,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
-    d.update_player_visual_when_start_or_end = false;
+    d.update_vision_when_start_or_end = false;
     d.alignment = prop_alignment_neutral;
     add_prop_data(d);
 }
@@ -731,7 +731,7 @@ Prop_handler::Prop_handler(Actor* owning_actor) :
         if (d.intr_props[i])
         {
             Prop* const prop = mk_prop(Prop_id(i), Prop_turns::indefinite);
-            try_apply_prop(prop, true, true, true, true);
+            try_apply_prop(prop, true, Verbosity::silent, true, true);
         }
     }
 }
@@ -932,13 +932,13 @@ void Prop_handler::props_from_sources(
 
             if (item)
             {
-                add_item_props(item->carrier_props_);
+                add_item_props(item->carrier_props());
             }
         }
 
         for (auto* const item : inv.general_)
         {
-            add_item_props(item->carrier_props_);
+            add_item_props(item->carrier_props());
         }
     }
 }
@@ -969,7 +969,7 @@ void  Prop_handler::prop_ids_from_sources(
         {
             for (auto* const prop : item_prop_list)
             {
-                prop->owning_actor_      = owning_actor_;
+                prop->owning_actor_ = owning_actor_;
                 out[int(prop->id())] = true;
             };
         };
@@ -980,13 +980,13 @@ void  Prop_handler::prop_ids_from_sources(
 
             if (item)
             {
-                add_item_props(item->carrier_props_);
+                add_item_props(item->carrier_props());
             }
         }
 
         for (auto* const item : inv.general_)
         {
-            add_item_props(item->carrier_props_);
+            add_item_props(item->carrier_props());
         }
     }
 }
@@ -1013,18 +1013,24 @@ bool Prop_handler::try_resist_prop(const Prop_id id, const std::vector<Prop*>& p
     return false;
 }
 
-bool Prop_handler::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const
+bool Prop_handler::try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const
 {
     std::vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
 
-    for (bool& v : sources) {v = true;}
+    for (bool& v : sources)
+    {
+        v = true;
+    }
 
     props_from_sources(prop_list, sources);
 
     for (Prop* p : prop_list)
     {
-        if (p->try_resist_dmg(dmg_type, ALLOW_MSG)) return true;
+        if (p->try_resist_dmg(dmg_type, verbosity))
+        {
+            return true;
+        }
     }
 
     return false;
@@ -1044,20 +1050,21 @@ bool Prop_handler::allow_see() const
     return true;
 }
 
-void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
-                                  const bool NO_MESSAGES,
+void Prop_handler::try_apply_prop(Prop* const prop,
+                                  const bool FORCE_EFFECT,
+                                  const Verbosity verbosity,
                                   const bool DISABLE_REDRAW,
                                   const bool DISABLE_PROP_START_EFFECTS)
 {
     assert(prop);
 
-    //First, if this is a prop that runs on actor turns, check if the actor-turn
-    //prop buffer does not already contain the prop.
-    //-If it doesn't, then just add it to the buffer and return.
-    //-If the buffer already contains the prop, it means it was requested to be
-    //applied from the buffer to the applied props.
-    //This way, this function can be used both for requesting to apply props,
-    //and for applying props from the buffer.
+    //First, if this is a prop that runs on actor turns, check if the actor-turn prop buffer
+    //does not already contain the prop:
+    // - If it doesn't, then just add it to the buffer and return.
+    // - If the buffer already contains the prop, it means it was requested to be applied from the
+    //   buffer to the applied props.
+    //This way, this function can be used both for requesting to apply props, and for applying
+    //props from the buffer.
     if (prop->turn_mode() == Prop_turn_mode::actor)
     {
         std::vector<Prop*>& buffer = actor_turn_prop_buffer_;
@@ -1069,10 +1076,10 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
         }
     }
 
-    prop->owning_actor_    = owning_actor_;
+    prop->owning_actor_ = owning_actor_;
 
-    const bool IS_PLAYER  = owning_actor_->is_player();
-    bool player_see_owner   = map::player->can_see_actor(*owning_actor_, nullptr);
+    const bool IS_PLAYER        = owning_actor_->is_player();
+    const bool PLAYER_SEE_OWNER = map::player->can_see_actor(*owning_actor_, nullptr);
 
     if (!FORCE_EFFECT)
     {
@@ -1080,24 +1087,30 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
 
         bool sources[int(Prop_src::END)];
 
-        for (bool& v : sources) {v = true;}
+        for (bool& v : sources)
+        {
+            v = true;
+        }
 
         props_from_sources(all_props, sources);
 
         if (try_resist_prop(prop->id(), all_props))
         {
-            if (!NO_MESSAGES)
+            if (verbosity == Verbosity::verbose)
             {
                 if (IS_PLAYER)
                 {
                     std::string msg = "";
                     prop->msg(prop_msg_on_res_player, msg);
 
-                    if (!msg.empty()) {msg_log::add(msg, clr_white, true);}
+                    if (!msg.empty())
+                    {
+                        msg_log::add(msg, clr_white, true);
+                    }
                 }
                 else //Is a monster
                 {
-                    if (map::player->can_see_actor(*owning_actor_, nullptr))
+                    if (PLAYER_SEE_OWNER)
                     {
                         std::string msg = "";
                         prop->msg(prop_msg_on_res_mon, msg);
@@ -1105,7 +1118,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
                         if (!msg.empty())
                         {
                             const std::string monster_name = owning_actor_->name_the();
-                            msg_log::add(monster_name + " " + msg, clr_white, true);
+                            msg_log::add(monster_name + " " + msg);
                         }
                     }
                 }
@@ -1133,7 +1146,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
             const int TURNS_LEFT_NEW = prop->turns_left_;
 
             //Print start message
-            if (!NO_MESSAGES)
+            if (verbosity == Verbosity::verbose)
             {
                 if (IS_PLAYER)
                 {
@@ -1147,7 +1160,7 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
                 }
                 else //Not player
                 {
-                    if (player_see_owner)
+                    if (PLAYER_SEE_OWNER)
                     {
                         std::string msg = "";
                         prop->msg(prop_msg_on_start_mon, msg);
@@ -1177,18 +1190,19 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
         prop->on_start();
     }
 
-    if (!DISABLE_REDRAW)
+    if (verbosity == Verbosity::verbose)
     {
-        if (prop->should_update_player_visual_when_start_or_end())
+        if (!DISABLE_REDRAW)
         {
-            prop->owning_actor_->update_clr();
-            map::player->update_fov();
-            render::draw_map_and_interface();
+            if (prop->need_update_vision_when_start_or_end())
+            {
+                prop->owning_actor_->update_clr();
+                game_time::update_light_map();
+                map::player->update_fov();
+                render::draw_map_and_interface();
+            }
         }
-    }
 
-    if (!NO_MESSAGES)
-    {
         if (IS_PLAYER)
         {
             std::string msg = "";
@@ -1199,9 +1213,9 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
                 msg_log::add(msg, clr_white, true);
             }
         }
-        else
+        else //Is monster
         {
-            if (player_see_owner)
+            if (PLAYER_SEE_OWNER)
             {
                 std::string msg = "";
                 prop->msg(prop_msg_on_start_mon, msg);
@@ -1217,9 +1231,9 @@ void Prop_handler::try_apply_prop(Prop* const prop, const bool FORCE_EFFECT,
 
 void Prop_handler::try_apply_prop_from_att(const Wpn& wpn, const bool IS_MELEE)
 {
-    const Item_data_t& d            = wpn.data();
-    const auto* const origin_prop  = IS_MELEE ? d.melee.prop_applied :
-                                     d.ranged.prop_applied;
+    const Item_data_t&  d           = wpn.data();
+    const auto* const   origin_prop = IS_MELEE ? d.melee.prop_applied :
+                                      d.ranged.prop_applied;
 
     if (origin_prop)
     {
@@ -1227,12 +1241,11 @@ void Prop_handler::try_apply_prop_from_att(const Wpn& wpn, const bool IS_MELEE)
         //automatically resisted
         Dmg_type dmg_type = IS_MELEE ? d.melee.dmg_type : d.ranged.dmg_type;
 
-        if (!try_resist_dmg(dmg_type, false))
+        if (!try_resist_dmg(dmg_type, Verbosity::silent))
         {
             //Make a copy of the weapon effect
-            auto* const prop_cpy =
-                mk_prop(origin_prop->id(), origin_prop->turns_init_type(),
-                        origin_prop->turns_left_);
+            auto* const prop_cpy = mk_prop(origin_prop->id(), origin_prop->turns_init_type(),
+                                           origin_prop->turns_left_);
             try_apply_prop(prop_cpy);
         }
     }
@@ -1264,12 +1277,10 @@ bool Prop_handler::end_applied_prop(const Prop_id id, const bool RUN_PROP_END_EF
 
     if (RUN_PROP_END_EFFECTS)
     {
-        const bool IS_VISUAL_UPDATE_NEEDED =
-            prop->should_update_player_visual_when_start_or_end();
-
-        if (IS_VISUAL_UPDATE_NEEDED)
+        if (prop->need_update_vision_when_start_or_end())
         {
             prop->owning_actor_->update_clr();
+            game_time::update_light_map();
             map::player->update_fov();
             render::draw_map_and_interface();
         }
@@ -1285,7 +1296,10 @@ bool Prop_handler::end_applied_prop(const Prop_id id, const bool RUN_PROP_END_EF
                 std::string msg = "";
                 prop->msg(prop_msg_on_end_player, msg);
 
-                if (!msg.empty()) {msg_log::add(msg, clr_white);}
+                if (!msg.empty())
+                {
+                    msg_log::add(msg);
+                }
             }
             else //Not player
             {
@@ -1311,7 +1325,10 @@ bool Prop_handler::end_applied_prop(const Prop_id id, const bool RUN_PROP_END_EF
 
 void Prop_handler::apply_actor_turn_prop_buffer()
 {
-    for (Prop* prop : actor_turn_prop_buffer_) {try_apply_prop(prop);}
+    for (Prop* prop : actor_turn_prop_buffer_)
+    {
+        try_apply_prop(prop);
+    }
 
     actor_turn_prop_buffer_.clear();
 }
@@ -1438,7 +1455,7 @@ void Prop_handler::change_move_dir(const Pos& actor_pos, Dir& dir) const
     for (Prop* prop : prop_list) {prop->change_move_dir(actor_pos, dir);}
 }
 
-bool Prop_handler::allow_attack(const bool ALLOW_MSG) const
+bool Prop_handler::allow_attack(const Verbosity verbosity) const
 {
     std::vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
@@ -1449,7 +1466,7 @@ bool Prop_handler::allow_attack(const bool ALLOW_MSG) const
 
     for (Prop* prop : prop_list)
     {
-        if (!prop->allow_attack_melee(ALLOW_MSG) && !prop->allow_attack_ranged(ALLOW_MSG))
+        if (!prop->allow_attack_melee(verbosity) && !prop->allow_attack_ranged(verbosity))
         {
             return false;
         }
@@ -1458,7 +1475,7 @@ bool Prop_handler::allow_attack(const bool ALLOW_MSG) const
     return true;
 }
 
-bool Prop_handler::allow_attack_melee(const bool ALLOW_MSG) const
+bool Prop_handler::allow_attack_melee(const Verbosity verbosity) const
 {
     std::vector<Prop*> prop_list;
     bool sources[int(Prop_src::END)];
@@ -1469,7 +1486,7 @@ bool Prop_handler::allow_attack_melee(const bool ALLOW_MSG) const
 
     for (Prop* prop : prop_list)
     {
-        if (!prop->allow_attack_melee(ALLOW_MSG))
+        if (!prop->allow_attack_melee(verbosity))
         {
             return false;
         }
@@ -1478,7 +1495,7 @@ bool Prop_handler::allow_attack_melee(const bool ALLOW_MSG) const
     return true;
 }
 
-bool Prop_handler::allow_attack_ranged(const bool ALLOW_MSG) const
+bool Prop_handler::allow_attack_ranged(const Verbosity verbosity) const
 {
     std::vector<Prop*> prop_list;
 
@@ -1490,7 +1507,7 @@ bool Prop_handler::allow_attack_ranged(const bool ALLOW_MSG) const
 
     for (Prop* prop : prop_list)
     {
-        if (!prop->allow_attack_ranged(ALLOW_MSG)) {return false;}
+        if (!prop->allow_attack_ranged(verbosity)) {return false;}
     }
 
     return true;
@@ -1532,7 +1549,7 @@ bool Prop_handler::allow_act() const
     return true;
 }
 
-bool Prop_handler::allow_read(const bool ALLOW_MSG) const
+bool Prop_handler::allow_read(const Verbosity verbosity) const
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     std::vector<Prop*> prop_list;
@@ -1545,7 +1562,7 @@ bool Prop_handler::allow_read(const bool ALLOW_MSG) const
 
     for (auto prop : prop_list)
     {
-        if (!prop->allow_read(ALLOW_MSG))
+        if (!prop->allow_read(verbosity))
         {
             TRACE_FUNC_END_VERBOSE;
             return false;
@@ -1556,7 +1573,7 @@ bool Prop_handler::allow_read(const bool ALLOW_MSG) const
     return true;
 }
 
-bool Prop_handler::allow_cast_spell(const bool ALLOW_MSG) const
+bool Prop_handler::allow_cast_spell(const Verbosity verbosity) const
 {
     std::vector<Prop*> prop_list;
 
@@ -1568,7 +1585,7 @@ bool Prop_handler::allow_cast_spell(const bool ALLOW_MSG) const
 
     for (auto prop : prop_list)
     {
-        if (!prop->allow_cast_spell(ALLOW_MSG))
+        if (!prop->allow_cast_spell(verbosity))
         {
             return false;
         }
@@ -1577,7 +1594,7 @@ bool Prop_handler::allow_cast_spell(const bool ALLOW_MSG) const
     return true;
 }
 
-bool Prop_handler::allow_speak(const bool ALLOW_MSG) const
+bool Prop_handler::allow_speak(const Verbosity verbosity) const
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     std::vector<Prop*> prop_list;
@@ -1590,7 +1607,7 @@ bool Prop_handler::allow_speak(const bool ALLOW_MSG) const
 
     for (auto prop : prop_list)
     {
-        if (!prop->allow_speak(ALLOW_MSG))
+        if (!prop->allow_speak(verbosity))
         {
             TRACE_FUNC_END_VERBOSE;
             return false;
@@ -1601,7 +1618,7 @@ bool Prop_handler::allow_speak(const bool ALLOW_MSG) const
     return true;
 }
 
-bool Prop_handler::allow_eat(const bool ALLOW_MSG) const
+bool Prop_handler::allow_eat(const Verbosity verbosity) const
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     std::vector<Prop*> prop_list;
@@ -1614,7 +1631,7 @@ bool Prop_handler::allow_eat(const bool ALLOW_MSG) const
 
     for (auto prop : prop_list)
     {
-        if (!prop->allow_eat(ALLOW_MSG))
+        if (!prop->allow_eat(verbosity))
         {
             TRACE_FUNC_END_VERBOSE;
             return false;
@@ -1872,9 +1889,9 @@ void Prop_poisoned::on_new_turn()
     }
 }
 
-bool Prop_terrified::allow_attack_melee(const bool ALLOW_MSG) const
+bool Prop_terrified::allow_attack_melee(const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() && ALLOW_MSG)
+    if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
     {
         msg_log::add("I am too terrified to engage in close combat!");
     }
@@ -1882,9 +1899,9 @@ bool Prop_terrified::allow_attack_melee(const bool ALLOW_MSG) const
     return false;
 }
 
-bool Prop_terrified::allow_attack_ranged(const bool ALLOW_MSG) const
+bool Prop_terrified::allow_attack_ranged(const Verbosity verbosity) const
 {
-    (void)ALLOW_MSG;
+    (void)verbosity;
     return true;
 }
 
@@ -1939,9 +1956,9 @@ void Prop_nailed::change_move_dir(const Pos& actor_pos, Dir& dir)
     }
 }
 
-bool Prop_confused::allow_read(const bool ALLOW_MSG) const
+bool Prop_confused::allow_read(const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() && ALLOW_MSG)
+    if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
     {
         msg_log::add("I am too confused to read.");
     }
@@ -1949,9 +1966,9 @@ bool Prop_confused::allow_read(const bool ALLOW_MSG) const
     return false;
 }
 
-bool Prop_confused::allow_cast_spell(const bool ALLOW_MSG) const
+bool Prop_confused::allow_cast_spell(const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() && ALLOW_MSG)
+    if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
     {
         msg_log::add("I am too confused to concentrate.");
     }
@@ -1959,9 +1976,9 @@ bool Prop_confused::allow_cast_spell(const bool ALLOW_MSG) const
     return false;
 }
 
-bool Prop_confused::allow_attack_melee(const bool ALLOW_MSG) const
+bool Prop_confused::allow_attack_melee(const Verbosity verbosity) const
 {
-    (void)ALLOW_MSG;
+    (void)verbosity;
 
     if (owning_actor_ != map::player)
     {
@@ -1971,9 +1988,9 @@ bool Prop_confused::allow_attack_melee(const bool ALLOW_MSG) const
     return true;
 }
 
-bool Prop_confused::allow_attack_ranged(const bool ALLOW_MSG) const
+bool Prop_confused::allow_attack_ranged(const Verbosity verbosity) const
 {
-    (void)ALLOW_MSG;
+    (void)verbosity;
 
     if (owning_actor_ != map::player)
     {
@@ -2023,9 +2040,9 @@ void Prop_strangled::on_new_turn()
     owning_actor_->hit(DMG, Dmg_type::pure, Dmg_method::forced);
 }
 
-bool Prop_strangled::allow_speak(const bool ALLOW_MSG) const
+bool Prop_strangled::allow_speak(const Verbosity verbosity) const
 {
-    if (ALLOW_MSG && owning_actor_->is_player())
+    if (verbosity == Verbosity::verbose && owning_actor_->is_player())
     {
         msg_log::add("My throat is constricted.");
     }
@@ -2033,9 +2050,9 @@ bool Prop_strangled::allow_speak(const bool ALLOW_MSG) const
     return false;
 }
 
-bool Prop_strangled::allow_eat(const bool ALLOW_MSG) const
+bool Prop_strangled::allow_eat(const Verbosity verbosity) const
 {
-    if (ALLOW_MSG && owning_actor_->is_player())
+    if (verbosity == Verbosity::verbose && owning_actor_->is_player())
     {
         msg_log::add("My throat is constricted.");
     }
@@ -2111,9 +2128,9 @@ void Prop_frenzied::on_end()
     }
 }
 
-bool Prop_frenzied::allow_read(const bool ALLOW_MSG) const
+bool Prop_frenzied::allow_read(const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() && ALLOW_MSG)
+    if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
     {
         msg_log::add("I am too enraged to read!");
     }
@@ -2121,9 +2138,9 @@ bool Prop_frenzied::allow_read(const bool ALLOW_MSG) const
     return false;
 }
 
-bool Prop_frenzied::allow_cast_spell(const bool ALLOW_MSG) const
+bool Prop_frenzied::allow_cast_spell(const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() && ALLOW_MSG)
+    if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
     {
         msg_log::add("I am too enraged to concentrate!");
     }
@@ -2146,9 +2163,9 @@ void Prop_burning::on_new_turn()
     owning_actor_->hit(rnd::dice(1, 2), Dmg_type::fire);
 }
 
-bool Prop_burning::allow_read(const bool ALLOW_MSG) const
+bool Prop_burning::allow_read(const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() && ALLOW_MSG)
+    if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
     {
         msg_log::add("I cannot read while burning.");
     }
@@ -2156,9 +2173,9 @@ bool Prop_burning::allow_read(const bool ALLOW_MSG) const
     return false;
 }
 
-bool Prop_burning::allow_cast_spell(const bool ALLOW_MSG) const
+bool Prop_burning::allow_cast_spell(const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() && ALLOW_MSG)
+    if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
     {
         msg_log::add("I cannot concentrate while burning!");
     }
@@ -2166,9 +2183,9 @@ bool Prop_burning::allow_cast_spell(const bool ALLOW_MSG) const
     return false;
 }
 
-bool Prop_burning::allow_attack_ranged(const bool ALLOW_MSG) const
+bool Prop_burning::allow_attack_ranged(const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() && ALLOW_MSG)
+    if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
     {
         msg_log::add("Not while burning.");
     }
@@ -2176,7 +2193,7 @@ bool Prop_burning::allow_attack_ranged(const bool ALLOW_MSG) const
     return false;
 }
 
-bool Prop_blind::should_update_player_visual_when_start_or_end() const
+bool Prop_blind::need_update_vision_when_start_or_end() const
 {
     return owning_actor_->is_player();
 }
@@ -2189,11 +2206,14 @@ void Prop_paralyzed::on_start()
     {
         auto* const active_explosive = player->active_explosive;
 
-        if (active_explosive) {active_explosive->on_player_paralyzed();}
+        if (active_explosive)
+        {
+            active_explosive->on_player_paralyzed();
+        }
     }
 }
 
-bool Prop_fainted::should_update_player_visual_when_start_or_end() const
+bool Prop_fainted::need_update_vision_when_start_or_end() const
 {
     return owning_actor_->is_player();
 }
@@ -2209,11 +2229,11 @@ void Prop_flared::on_new_turn()
     }
 }
 
-bool Prop_rAcid::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const
+bool Prop_rAcid::try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const
 {
     if (dmg_type == Dmg_type::acid)
     {
-        if (ALLOW_MSG)
+        if (verbosity == Verbosity::verbose)
         {
             if (owning_actor_->is_player())
             {
@@ -2231,11 +2251,11 @@ bool Prop_rAcid::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
     return false;
 }
 
-bool Prop_rCold::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const
+bool Prop_rCold::try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const
 {
     if (dmg_type == Dmg_type::cold)
     {
-        if (ALLOW_MSG)
+        if (verbosity == Verbosity::verbose)
         {
             if (owning_actor_->is_player())
             {
@@ -2253,11 +2273,11 @@ bool Prop_rCold::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) c
     return false;
 }
 
-bool Prop_rElec::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const
+bool Prop_rElec::try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const
 {
     if (dmg_type == Dmg_type::electric)
     {
-        if (ALLOW_MSG)
+        if (verbosity == Verbosity::verbose)
         {
             if (owning_actor_->is_player())
             {
@@ -2303,14 +2323,14 @@ bool Prop_rPhys::is_resisting_other_prop(const Prop_id prop_id) const
 
 void Prop_rPhys::on_start()
 {
-    return;
+
 }
 
-bool Prop_rPhys::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const
+bool Prop_rPhys::try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const
 {
     if (dmg_type == Dmg_type::physical)
     {
-        if (ALLOW_MSG)
+        if (verbosity == Verbosity::verbose)
         {
             if (owning_actor_->is_player())
             {
@@ -2338,11 +2358,11 @@ void Prop_rFire::on_start()
     owning_actor_->prop_handler().end_applied_prop(Prop_id::burning);
 }
 
-bool Prop_rFire::try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const
+bool Prop_rFire::try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const
 {
     if (dmg_type == Dmg_type::fire)
     {
-        if (ALLOW_MSG)
+        if (verbosity == Verbosity::verbose)
         {
             if (owning_actor_->is_player())
             {

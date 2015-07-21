@@ -25,7 +25,7 @@ public:
 
     void on_collide(const Pos& pos, Actor* actor);
 
-    void identify(const bool IS_SILENT_IDENTIFY) override final;
+    void identify(const Verbosity verbosity) override final;
 
     virtual const std::string real_name() const = 0;
 

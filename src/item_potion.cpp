@@ -26,7 +26,7 @@ Consume_item Potion::activate(Actor* const actor)
 {
     assert(actor);
 
-    if (actor->prop_handler().allow_eat(true))
+    if (actor->prop_handler().allow_eat(Verbosity::verbose))
     {
         quaff(*actor);
         return Consume_item::yes;
@@ -36,13 +36,13 @@ Consume_item Potion::activate(Actor* const actor)
     return Consume_item::no;
 }
 
-void Potion::identify(const bool IS_SILENT_IDENTIFY)
+void Potion::identify(const Verbosity verbosity)
 {
     if (!data_->is_identified)
     {
         data_->is_identified = true;
 
-        if (!IS_SILENT_IDENTIFY)
+        if (verbosity == Verbosity::verbose)
         {
             const string potion_name = name(Item_ref_type::a, Item_ref_inf::none);
             msg_log::add("It was " + potion_name + ".");
@@ -154,7 +154,7 @@ void Potion_vitality::quaff_impl(Actor& actor)
 
     if (map::player->can_see_actor(actor, nullptr))
     {
-        identify(false);
+        identify(Verbosity::verbose);
     }
 }
 
@@ -180,7 +180,7 @@ void Potion_spirit::quaff_impl(Actor& actor)
 
     if (map::player->can_see_actor(actor, nullptr))
     {
-        identify(false);
+        identify(Verbosity::verbose);
     }
 }
 
@@ -200,7 +200,7 @@ void Potion_blindness::quaff_impl(Actor& actor)
 
     if (map::player->can_see_actor(actor, nullptr))
     {
-        identify(false);
+        identify(Verbosity::verbose);
     }
 }
 
@@ -220,7 +220,7 @@ void Potion_paral::quaff_impl(Actor& actor)
 
     if (map::player->can_see_actor(actor, nullptr))
     {
-        identify(false);
+        identify(Verbosity::verbose);
     }
 }
 
@@ -241,7 +241,7 @@ void Potion_disease::quaff_impl(Actor& actor)
 
     if (map::player->can_see_actor(actor, nullptr))
     {
-        identify(false);
+        identify(Verbosity::verbose);
     }
 }
 
@@ -251,7 +251,7 @@ void Potion_conf::quaff_impl(Actor& actor)
 
     if (map::player->can_see_actor(actor, nullptr))
     {
-        identify(false);
+        identify(Verbosity::verbose);
     }
 }
 
@@ -271,7 +271,7 @@ void Potion_frenzy::quaff_impl(Actor& actor)
 
     if (map::player->can_see_actor(actor, nullptr))
     {
-        identify(false);
+        identify(Verbosity::verbose);
     }
 }
 
@@ -339,7 +339,7 @@ void Potion_fortitude::quaff_impl(Actor& actor)
 
     if (map::player->can_see_actor(actor, nullptr))
     {
-        identify(false);
+        identify(Verbosity::verbose);
     }
 }
 
@@ -359,7 +359,7 @@ void Potion_poison::quaff_impl(Actor& actor)
 
     if (map::player->can_see_actor(actor, nullptr))
     {
-        identify(false);
+        identify(Verbosity::verbose);
     }
 }
 
@@ -379,7 +379,7 @@ void Potion_rFire::quaff_impl(Actor& actor)
 
     if (map::player->can_see_actor(actor, nullptr))
     {
-        identify(false);
+        identify(Verbosity::verbose);
     }
 }
 
@@ -399,7 +399,7 @@ void Potion_antidote::quaff_impl(Actor& actor)
 
     if (WAS_POISONED && map::player->can_see_actor(actor, nullptr))
     {
-        identify(false);
+        identify(Verbosity::verbose);
     }
 }
 
@@ -419,7 +419,7 @@ void Potion_rElec::quaff_impl(Actor& actor)
 
     if (map::player->can_see_actor(actor, nullptr))
     {
-        identify(false);
+        identify(Verbosity::verbose);
     }
 }
 
@@ -439,7 +439,7 @@ void Potion_rAcid::quaff_impl(Actor& actor)
 
     if (map::player->can_see_actor(actor, nullptr))
     {
-        identify(false);
+        identify(Verbosity::verbose);
     }
 }
 
@@ -498,7 +498,7 @@ void Potion_insight::quaff_impl(Actor& actor)
         msg_log::add("I gain intuitions about " + item_name_before + "...", clr_white, false,
                      More_prompt_on_msg::yes);
 
-        item->identify(true);
+        item->identify(Verbosity::silent);
 
         const string item_name_after = item->name(Item_ref_type::a, Item_ref_inf::none);
 
@@ -523,7 +523,7 @@ void Potion_insight::quaff_impl(Actor& actor)
         }
     }
 
-    identify(false);
+    identify(Verbosity::verbose);
 }
 
 void Potion_clairv::quaff_impl(Actor& actor)
@@ -560,7 +560,7 @@ void Potion_clairv::quaff_impl(Actor& actor)
         render::draw_blast_at_cells(anim_cells, clr_white);
     }
 
-    identify(false);
+    identify(Verbosity::verbose);
 }
 
 void Potion_descent::quaff_impl(Actor& actor)
@@ -578,7 +578,7 @@ void Potion_descent::quaff_impl(Actor& actor)
         msg_log::add("I feel a faint sinking sensation.");
     }
 
-    identify(false);
+    identify(Verbosity::verbose);
 }
 
 namespace potion_handling

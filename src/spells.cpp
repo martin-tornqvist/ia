@@ -271,7 +271,7 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
 {
     TRACE_FUNC_BEGIN;
 
-    if (caster->prop_handler().allow_cast_spell(true))
+    if (caster->prop_handler().allow_cast_spell(Verbosity::verbose))
     {
         if (caster->is_player())
         {

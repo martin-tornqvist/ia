@@ -97,7 +97,7 @@ void try_knock_back(Actor&        defender,
                 }
 
                 defender.prop_handler().try_apply_prop(
-                    new Prop_paralyzed(Prop_turns::specific, 1), false, false);
+                    new Prop_paralyzed(Prop_turns::specific, 1), false, Verbosity::verbose);
             }
 
             defender.pos = new_pos;

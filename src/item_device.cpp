@@ -21,9 +21,10 @@ using namespace std;
 Device::Device(Item_data_t* const item_data) :
     Item(item_data) {}
 
-void Device::identify(const bool IS_SILENT_IDENTIFY)
+void Device::identify(const Verbosity verbosity)
 {
-    (void)IS_SILENT_IDENTIFY;
+    (void)verbosity;
+
     data_->is_identified = true;
 }
 

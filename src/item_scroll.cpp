@@ -44,9 +44,9 @@ Consume_item Scroll::activate(Actor* const actor)
     auto& prop_handler = actor->prop_handler();
 
     if (
-        prop_handler.allow_cast_spell(true)  &&
-        prop_handler.allow_read(true)  &&
-        prop_handler.allow_speak(true))
+        prop_handler.allow_cast_spell(Verbosity::verbose)   &&
+        prop_handler.allow_read(Verbosity::verbose)         &&
+        prop_handler.allow_speak(Verbosity::verbose))
     {
         return read();
     }
@@ -59,13 +59,13 @@ Spell* Scroll::mk_spell() const
     return spell_handling::mk_spell_from_id(data_->spell_cast_from_scroll);
 }
 
-void Scroll::identify(const bool IS_SILENT_IDENTIFY)
+void Scroll::identify(const Verbosity verbosity)
 {
     if (!data_->is_identified)
     {
         data_->is_identified = true;
 
-        if (!IS_SILENT_IDENTIFY)
+        if (verbosity == Verbosity::verbose)
         {
             const string scroll_name = name(Item_ref_type::a, Item_ref_inf::none);
             msg_log::add("It was " + scroll_name + ".");
@@ -111,19 +111,29 @@ Consume_item Scroll::read()
     if (data_->is_identified)
     {
         const string scroll_name = name(Item_ref_type::a, Item_ref_inf::none);
+
         msg_log::add("I read " + scroll_name + "...");
+
         spell->cast(map::player, false);
-        msg_log::add(crumble_str);
-        try_learn();
-    }
-    else
-    {
-        msg_log::add("I recite the forbidden incantations on the manuscript...");
-        data_->is_tried = true;
-        const auto is_noticed = spell->cast(map::player, false);
+
         msg_log::add(crumble_str);
 
-        if (is_noticed == Spell_effect_noticed::yes) {identify(false);}
+        try_learn();
+    }
+    else //Not already identified
+    {
+        msg_log::add("I recite the forbidden incantations on the manuscript...");
+
+        data_->is_tried = true;
+
+        const auto is_noticed = spell->cast(map::player, false);
+
+        msg_log::add(crumble_str);
+
+        if (is_noticed == Spell_effect_noticed::yes)
+        {
+            identify(Verbosity::verbose);
+        }
     }
 
     delete spell;

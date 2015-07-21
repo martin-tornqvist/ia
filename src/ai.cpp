@@ -23,10 +23,10 @@ namespace action
 bool try_cast_random_spell(Mon& mon)
 {
     if (
-        !mon.is_alive()              ||                  //Dead?
-        mon.spell_cool_down_cur_ > 0   ||                  //Cooldown?
-        mon.spells_known_.empty()    ||                  //No spells?
-        !mon.prop_handler().allow_cast_spell(false))    //Prop not allowing to cast now?
+        !mon.is_alive()                 ||
+        mon.spell_cool_down_cur_ > 0    ||
+        mon.spells_known_.empty()       ||
+        !mon.prop_handler().allow_cast_spell(Verbosity::silent))
     {
         return false;
     }
@@ -58,8 +58,8 @@ bool try_cast_random_spell(Mon& mon)
             //If monster is not allied to player, with a small chance, cast the spell
             //anyway if HP is low.
             if (
-                !map::player->is_leader_of(&mon)  &&
-                CUR_HP < (MAX_HP / 3)           &&
+                !map::player->is_leader_of(&mon)    &&
+                CUR_HP < (MAX_HP / 3)               &&
                 rnd::one_in(20))
             {
                 if (map::player->can_see_actor(mon, nullptr))

@@ -728,12 +728,12 @@ void pick_trait(const Trait id)
 
     case Trait::self_aware:
         map::player->prop_handler().try_apply_prop(
-            new Prop_rConfusion(Prop_turns::indefinite), true, true, true, false);
+            new Prop_rConfusion(Prop_turns::indefinite), true, Verbosity::silent, true, false);
         break;
 
     case Trait::fearless:
         map::player->prop_handler().try_apply_prop(
-            new Prop_rFear(Prop_turns::indefinite), true, true, true, false);
+            new Prop_rFear(Prop_turns::indefinite), true, Verbosity::silent, true, false);
         break;
 
     default: {}

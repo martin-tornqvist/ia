@@ -36,7 +36,7 @@ void player_kick()
         {
             TRACE << "Actor found at kick pos, attempting to kick actor" << endl;
 
-            if (map::player->prop_handler().allow_attack_melee(true))
+            if (map::player->prop_handler().allow_attack_melee(Verbosity::verbose))
             {
                 TRACE << "Player is allowed to do melee attack" << endl;
                 bool blocked[MAP_W][MAP_H];

@@ -72,8 +72,8 @@ enum class Prop_id
     END
 };
 
-enum class Prop_turn_mode {std, actor};
-enum class Prop_turns    {std, specific, indefinite};
+enum class Prop_turn_mode   {std, actor};
+enum class Prop_turns       {std, specific, indefinite};
 
 enum Prop_msg_type
 {
@@ -103,7 +103,7 @@ struct Prop_data_t
         is_making_mon_aware(false),
         allow_display_turns(true),
         allow_apply_more_while_active(true),
-        update_player_visual_when_start_or_end(false),
+        update_vision_when_start_or_end(false),
         is_ended_by_magic_healing(false),
         allow_test_on_bot(false),
         alignment(prop_alignment_bad)
@@ -119,7 +119,7 @@ struct Prop_data_t
     bool            is_making_mon_aware;
     bool            allow_display_turns;
     bool            allow_apply_more_while_active;
-    bool            update_player_visual_when_start_or_end;
+    bool            update_vision_when_start_or_end;
     bool            is_ended_by_magic_healing;
     bool            allow_test_on_bot;
     Prop_alignment  alignment;
@@ -145,10 +145,10 @@ public:
     ~Prop_handler();
 
     void try_apply_prop(Prop* const prop,
-                        const bool  FORCE_EFFECT                = false,
-                        const bool  NO_MESSAGES                 = false,
-                        const bool  DISABLE_REDRAW              = false,
-                        const bool  DISABLE_PROP_START_EFFECTS  = false);
+                        const bool FORCE_EFFECT = false,
+                        const Verbosity verbosity = Verbosity::verbose,
+                        const bool DISABLE_REDRAW = false,
+                        const bool DISABLE_PROP_START_EFFECTS = false);
 
     void try_apply_prop_from_att(const Wpn& wpn, const bool IS_MELEE);
 
@@ -156,16 +156,16 @@ public:
 
     int changed_max_hp(const int HP_MAX) const;
 
-    bool allow_attack(const bool ALLOW_MSG) const;
-    bool allow_attack_melee(const bool ALLOW_MSG) const;
-    bool allow_attack_ranged(const bool ALLOW_MSG) const;
+    bool allow_attack(const Verbosity verbosity) const;
+    bool allow_attack_melee(const Verbosity verbosity) const;
+    bool allow_attack_ranged(const Verbosity verbosity) const;
     bool allow_see() const;
     bool allow_move() const;
     bool allow_act() const;
-    bool allow_read(const bool ALLOW_MSG) const;
-    bool allow_cast_spell(const bool ALLOW_MSG) const;
-    bool allow_speak(const bool ALLOW_MSG) const;
-    bool allow_eat(const bool ALLOW_MSG) const; //Also used for drinking
+    bool allow_read(const Verbosity verbosity) const;
+    bool allow_cast_spell(const Verbosity verbosity) const;
+    bool allow_speak(const Verbosity verbosity) const;
+    bool allow_eat(const Verbosity verbosity) const; //Also used for drinking
 
     void on_hit();
     void on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR);
@@ -194,7 +194,7 @@ public:
     Prop* mk_prop(const Prop_id id, Prop_turns turns_init,
                   const int NR_TURNS = -1) const;
 
-    bool try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const;
+    bool try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const;
 
 private:
     //These two functions are responsible for collecting properties from all possible
@@ -232,19 +232,41 @@ public:
         (void)lines;
     }
 
-    Prop_id id() const {return id_;}
+    Prop_id id() const
+    {
+        return id_;
+    }
 
-    virtual bool is_finished() const {return turns_left_ == 0;}
-    virtual Prop_alignment alignment() const {return data_->alignment;}
-    virtual bool allow_display_turns() const {return data_->allow_display_turns;}
+    virtual bool is_finished() const
+    {
+        return turns_left_ == 0;
+    }
+
+    virtual Prop_alignment alignment() const
+    {
+        return data_->alignment;
+    }
+
+    virtual bool allow_display_turns() const
+    {
+        return data_->allow_display_turns;
+    }
 
     virtual bool is_making_mon_aware() const
     {
         return data_->is_making_mon_aware;
     }
 
-    virtual std::string name() const {return data_->name;}
-    virtual std::string name_short() const {return data_->name_short;}
+    virtual std::string name() const
+    {
+        return data_->name;
+    }
+
+    virtual std::string name_short() const
+    {
+        return data_->name_short;
+    }
+
     virtual void msg(const Prop_msg_type msg_type, std::string& msg_ref) const
     {
         msg_ref = data_->msg[msg_type];
@@ -255,9 +277,9 @@ public:
         return data_->allow_apply_more_while_active;
     }
 
-    virtual bool should_update_player_visual_when_start_or_end() const
+    virtual bool need_update_vision_when_start_or_end() const
     {
-        return data_->update_player_visual_when_start_or_end;
+        return data_->update_vision_when_start_or_end;
     }
 
     virtual bool is_ended_by_magic_healing() const
@@ -265,9 +287,21 @@ public:
         return data_->is_ended_by_magic_healing;
     }
 
-    virtual bool allow_see() const {return true;}
-    virtual bool allow_move() const {return true;}
-    virtual bool allow_act() const {return true;}
+    virtual bool allow_see() const
+    {
+        return true;
+    }
+
+    virtual bool allow_move() const
+    {
+        return true;
+    }
+
+    virtual bool allow_act() const
+    {
+        return true;
+    }
+
     virtual void on_hit() {}
     virtual void on_new_turn() {}
     virtual void on_start() {}
@@ -279,43 +313,50 @@ public:
         (void)IS_PLAYER_SEE_OWNING_ACTOR;
     }
 
-    virtual int changed_max_hp(const int HP_MAX) const {return HP_MAX;}
-
-    virtual bool change_actor_clr(Clr& clr) const {(void)clr; return false;}
-
-    virtual bool allow_attack_melee(const bool ALLOW_MSG) const
+    virtual int changed_max_hp(const int HP_MAX) const
     {
-        (void)ALLOW_MSG;
+        return HP_MAX;
+    }
+
+    virtual bool change_actor_clr(Clr& clr) const
+    {
+        (void)clr;
+        return false;
+    }
+
+    virtual bool allow_attack_melee(const Verbosity verbosity) const
+    {
+        (void)verbosity;
         return true;
     }
 
-    virtual bool allow_attack_ranged(const bool ALLOW_MSG) const
+    virtual bool allow_attack_ranged(const Verbosity verbosity) const
     {
-        (void)ALLOW_MSG;
+        (void)verbosity;
         return true;
     }
 
-    virtual bool allow_read(const bool ALLOW_MSG) const
+    virtual bool allow_read(const Verbosity verbosity) const
     {
-        (void)ALLOW_MSG;
+        (void)verbosity;
         return true;
     }
 
-    virtual bool allow_cast_spell(const bool ALLOW_MSG) const
+    virtual bool allow_cast_spell(const Verbosity verbosity) const
     {
-        (void)ALLOW_MSG;
+        (void)verbosity;
         return true;
     }
 
-    virtual bool allow_speak(const bool ALLOW_MSG) const
+    virtual bool allow_speak(const Verbosity verbosity) const
     {
-        (void)ALLOW_MSG;
+        (void)verbosity;
         return true;
     }
 
-    virtual bool allow_eat(const bool ALLOW_MSG) const
+    virtual bool allow_eat(const Verbosity verbosity) const
     {
-        (void)ALLOW_MSG;
+        (void)verbosity;
         return true;
     }
 
@@ -337,16 +378,22 @@ public:
         return false;
     }
 
-    virtual bool try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const
+    virtual bool try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const
     {
         (void)dmg_type;
-        (void)ALLOW_MSG;
+        (void)verbosity;
         return false;
     }
 
-    virtual Prop_turn_mode turn_mode() const {return Prop_turn_mode::std;}
+    virtual Prop_turn_mode turn_mode() const
+    {
+        return Prop_turn_mode::std;
+    }
 
-    Prop_turns turns_init_type() const {return turns_init_type_;}
+    Prop_turns turns_init_type() const
+    {
+        return turns_init_type_;
+    }
 
     int turns_left_;
 
@@ -384,9 +431,9 @@ public:
         return 0;
     }
 
-    bool allow_attack_melee(const bool ALLOW_MSG) const override;
+    bool allow_attack_melee(const Verbosity verbosity) const override;
 
-    bool allow_attack_ranged(const bool ALLOW_MSG) const override;
+    bool allow_attack_ranged(const Verbosity verbosity) const override;
 };
 
 class Prop_weakened: public Prop
@@ -478,7 +525,10 @@ public:
         Prop(Prop_id::aiming, turns_init, turns),
         nr_turns_aiming(1) {}
 
-    Prop_turn_mode turn_mode() const override {return Prop_turn_mode::actor;}
+    Prop_turn_mode turn_mode() const override
+    {
+        return Prop_turn_mode::actor;
+    }
 
     std::string name_short() const override
     {
@@ -495,7 +545,10 @@ public:
         return 0;
     }
 
-    bool is_max_ranged_dmg() const {return nr_turns_aiming >= 3;}
+    bool is_max_ranged_dmg() const
+    {
+        return nr_turns_aiming >= 3;
+    }
 
     int nr_turns_aiming;
 };
@@ -506,9 +559,12 @@ public:
     Prop_blind(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::blind, turns_init, turns) {}
 
-    bool should_update_player_visual_when_start_or_end() const override;
+    bool need_update_vision_when_start_or_end() const override;
 
-    bool allow_see() const override {return false;}
+    bool allow_see() const override
+    {
+        return false;
+    }
 
     int ability_mod(const Ability_id ability) const override
     {
@@ -581,8 +637,8 @@ public:
     Prop_burning(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::burning, turns_init, turns) {}
 
-    bool allow_read(const bool ALLOW_MSG) const override;
-    bool allow_cast_spell(const bool ALLOW_MSG) const override;
+    bool allow_read(const Verbosity verbosity) const override;
+    bool allow_cast_spell(const Verbosity verbosity) const override;
 
     bool change_actor_clr(Clr& clr) const override
     {
@@ -590,7 +646,7 @@ public:
         return true;
     }
 
-    bool allow_attack_ranged(const bool ALLOW_MSG) const override;
+    bool allow_attack_ranged(const Verbosity verbosity) const override;
 
     void on_start()      override;
     void on_new_turn()    override;
@@ -611,7 +667,10 @@ public:
     Prop_warlock_charged(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::warlock_charged, turns_init, turns) {}
 
-    Prop_turn_mode turn_mode() const override {return Prop_turn_mode::actor;}
+    Prop_turn_mode turn_mode() const override
+    {
+        return Prop_turn_mode::actor;
+    }
 };
 
 class Prop_confused: public Prop
@@ -622,10 +681,10 @@ public:
 
     void change_move_dir(const Pos& actor_pos, Dir& dir) override;
 
-    bool allow_read(const bool ALLOW_MSG) const override;
-    bool allow_cast_spell(const bool ALLOW_MSG) const override;
-    bool allow_attack_melee(const bool ALLOW_MSG) const override;
-    bool allow_attack_ranged(const bool ALLOW_MSG) const override;
+    bool allow_read(const Verbosity verbosity) const override;
+    bool allow_cast_spell(const Verbosity verbosity) const override;
+    bool allow_attack_melee(const Verbosity verbosity) const override;
+    bool allow_attack_ranged(const Verbosity verbosity) const override;
 };
 
 class Prop_stunned: public Prop
@@ -648,9 +707,15 @@ public:
 
     void change_move_dir(const Pos& actor_pos, Dir& dir) override;
 
-    void on_more() override {nr_spikes_++;}
+    void on_more() override
+    {
+        ++nr_spikes_;
+    }
 
-    bool is_finished() const override {return nr_spikes_ <= 0;}
+    bool is_finished() const override
+    {
+        return nr_spikes_ <= 0;
+    }
 
 private:
     int nr_spikes_;
@@ -662,20 +727,30 @@ public:
     Prop_waiting(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::waiting, turns_init, turns) {}
 
-    Prop_turn_mode turn_mode() const override {return Prop_turn_mode::actor;}
-
-    bool allow_move() const override  {return false;}
-    bool allow_act() const override   {return false;}
-
-    bool allow_attack_melee(const bool ALLOW_MSG) const override
+    Prop_turn_mode turn_mode() const override
     {
-        (void)ALLOW_MSG;
+        return Prop_turn_mode::actor;
+    }
+
+    bool allow_move() const override
+    {
         return false;
     }
 
-    bool allow_attack_ranged(const bool ALLOW_MSG) const override
+    bool allow_act() const override
     {
-        (void)ALLOW_MSG;
+        return false;
+    }
+
+    bool allow_attack_melee(const Verbosity verbosity) const override
+    {
+        (void)verbosity;
+        return false;
+    }
+
+    bool allow_attack_ranged(const Verbosity verbosity) const override
+    {
+        (void)verbosity;
         return false;
     }
 };
@@ -686,17 +761,20 @@ public:
     Prop_disabled_attack(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::disabled_attack, turns_init, turns) {}
 
-    Prop_turn_mode turn_mode() const override {return Prop_turn_mode::actor;}
-
-    bool allow_attack_ranged(const bool ALLOW_MSG) const override
+    Prop_turn_mode turn_mode() const override
     {
-        (void)ALLOW_MSG;
+        return Prop_turn_mode::actor;
+    }
+
+    bool allow_attack_ranged(const Verbosity verbosity) const override
+    {
+        (void)verbosity;
         return false;
     }
 
-    bool allow_attack_melee(const bool ALLOW_MSG) const override
+    bool allow_attack_melee(const Verbosity verbosity) const override
     {
-        (void)ALLOW_MSG;
+        (void)verbosity;
         return false;
     }
 };
@@ -707,11 +785,14 @@ public:
     Prop_disabled_melee(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::disabled_melee, turns_init, turns) {}
 
-    Prop_turn_mode turn_mode() const override {return Prop_turn_mode::actor;}
-
-    bool allow_attack_melee(const bool ALLOW_MSG) const override
+    Prop_turn_mode turn_mode() const override
     {
-        (void)ALLOW_MSG;
+        return Prop_turn_mode::actor;
+    }
+
+    bool allow_attack_melee(const Verbosity verbosity) const override
+    {
+        (void)verbosity;
         return false;
     }
 };
@@ -722,11 +803,14 @@ public:
     Prop_disabled_ranged(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::disabled_ranged, turns_init, turns) {}
 
-    Prop_turn_mode turn_mode() const override {return Prop_turn_mode::actor;}
-
-    bool allow_attack_ranged(const bool ALLOW_MSG) const override
+    Prop_turn_mode turn_mode() const override
     {
-        (void)ALLOW_MSG;
+        return Prop_turn_mode::actor;
+    }
+
+    bool allow_attack_ranged(const Verbosity verbosity) const override
+    {
+        (void)verbosity;
         return false;
     }
 };
@@ -737,11 +821,17 @@ public:
     Prop_paralyzed(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::paralyzed, turns_init, turns) {}
 
-    Prop_turn_mode turn_mode() const override {return Prop_turn_mode::actor;}
+    Prop_turn_mode turn_mode() const override
+    {
+        return Prop_turn_mode::actor;
+    }
 
     void on_start() override;
 
-    bool allow_act() const override {return false;}
+    bool allow_act() const override
+    {
+        return false;
+    }
 
     int ability_mod(const Ability_id ability) const override
     {
@@ -753,15 +843,15 @@ public:
         return 0;
     }
 
-    bool allow_attack_ranged(const bool ALLOW_MSG) const override
+    bool allow_attack_ranged(const Verbosity verbosity) const override
     {
-        (void)ALLOW_MSG;
+        (void)verbosity;
         return false;
     }
 
-    bool allow_attack_melee(const bool ALLOW_MSG) const override
+    bool allow_attack_melee(const Verbosity verbosity) const override
     {
-        (void)ALLOW_MSG;
+        (void)verbosity;
         return false;
     }
 };
@@ -772,11 +862,17 @@ public:
     Prop_fainted(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::fainted, turns_init, turns) {}
 
-    bool should_update_player_visual_when_start_or_end() const override;
+    bool need_update_vision_when_start_or_end() const override;
 
-    bool allow_act() const override {return false;}
+    bool allow_act() const override
+    {
+        return false;
+    }
 
-    bool allow_see() const override {return false;}
+    bool allow_see() const override
+    {
+        return false;
+    }
 
     int ability_mod(const Ability_id ability) const override
     {
@@ -788,19 +884,22 @@ public:
         return 0;
     }
 
-    bool allow_attack_ranged(const bool ALLOW_MSG) const override
+    bool allow_attack_ranged(const Verbosity verbosity) const override
     {
-        (void)ALLOW_MSG;
+        (void)verbosity;
         return false;
     }
 
-    bool allow_attack_melee(const bool ALLOW_MSG) const override
+    bool allow_attack_melee(const Verbosity verbosity) const override
     {
-        (void)ALLOW_MSG;
+        (void)verbosity;
         return false;
     }
 
-    void on_hit() override {turns_left_ = 0;}
+    void on_hit() override
+    {
+        turns_left_ = 0;
+    }
 };
 
 class Prop_slowed: public Prop
@@ -867,8 +966,8 @@ public:
 
     void change_move_dir(const Pos& actor_pos, Dir& dir) override;
 
-    bool allow_read(const bool ALLOW_MSG) const override;
-    bool allow_cast_spell(const bool ALLOW_MSG) const override;
+    bool allow_read(const Verbosity verbosity) const override;
+    bool allow_cast_spell(const Verbosity verbosity) const override;
 
     bool is_resisting_other_prop(const Prop_id prop_id) const override;
 
@@ -894,7 +993,7 @@ public:
     Prop_rAcid(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::rAcid, turns_init, turns) {}
 
-    bool try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const override;
+    bool try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const override;
 };
 
 class Prop_rCold: public Prop
@@ -903,7 +1002,7 @@ public:
     Prop_rCold(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::rCold, turns_init, turns) {}
 
-    bool try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const override;
+    bool try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const override;
 };
 
 class Prop_rConfusion: public Prop
@@ -923,7 +1022,7 @@ public:
     Prop_rElec(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::rElec, turns_init, turns) {}
 
-    bool try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const override;
+    bool try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const override;
 };
 
 class Prop_rFear: public Prop
@@ -947,7 +1046,7 @@ public:
 
     bool is_resisting_other_prop(const Prop_id prop_id) const override;
 
-    bool try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const override;
+    bool try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const override;
 };
 
 class Prop_rFire: public Prop
@@ -960,7 +1059,7 @@ public:
 
     bool is_resisting_other_prop(const Prop_id prop_id) const override;
 
-    bool try_resist_dmg(const Dmg_type dmg_type, const bool ALLOW_MSG) const override;
+    bool try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const override;
 };
 
 class Prop_rPoison: public Prop
@@ -1041,12 +1140,15 @@ public:
     Prop_strangled(Prop_turns turns_init, int turns = -1) :
         Prop(Prop_id::strangled, turns_init, turns) {}
 
-    Prop_turn_mode turn_mode() const override {return Prop_turn_mode::actor;}
+    Prop_turn_mode turn_mode() const override
+    {
+        return Prop_turn_mode::actor;
+    }
 
     void on_new_turn() override;
 
-    bool allow_speak(const bool ALLOW_MSG) const override;
-    bool allow_eat(const bool ALLOW_MSG) const override;
+    bool allow_speak(const Verbosity verbosity) const override;
+    bool allow_eat(const Verbosity verbosity) const override;
 };
 
 #endif

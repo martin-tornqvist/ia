@@ -45,9 +45,9 @@ public:
 
     virtual std::vector<std::string> descr() const;
 
-    virtual void identify(const bool IS_SILENT_IDENTIFY)
+    virtual void identify(const Verbosity verbosity)
     {
-        (void)IS_SILENT_IDENTIFY;
+        (void)verbosity;
     }
 
     virtual void store_to_save_lines(std::vector<std::string>& lines)
@@ -83,9 +83,10 @@ public:
         (void)inv;
     }
 
-    virtual void on_equip(const bool IS_SILENT)
+    virtual void on_equip(Actor& actor, const Verbosity verbosity)
     {
-        (void)IS_SILENT;
+        (void)actor;
+        (void)verbosity;
     }
 
     virtual Unequip_allowed on_unequip()
@@ -102,13 +103,25 @@ public:
     //Used when attempting to fire or throw an item
     bool is_in_effective_range_lmt(const Pos& p0, const Pos& p1) const;
 
+    void add_carrier_prop(Prop* const prop, Actor& actor, const Verbosity verbosity);
+
+    void clear_carrier_props();
+
+    const std::vector<Prop*>& carrier_props() const
+    {
+        return carrier_props_;
+    }
+
+    void add_carrier_spell(Spell* const spell);
+
+    void clear_carrier_spells();
+
+    const std::vector<Spell*>& carrier_spells() const
+    {
+        return carrier_spells_;
+    }
+
     int nr_items_;
-
-    //Properties to apply when wearing something like a ring of fire resistance
-    std::vector<Prop*> carrier_props_;
-
-    //Spells granted to the carrier
-    std::vector<Spell*> carrier_spells_;
 
     int melee_dmg_plus_;
 
@@ -120,6 +133,13 @@ protected:
     }
 
     Item_data_t* data_;
+
+private:
+    //Properties to apply when wearing something like a ring of fire resistance
+    std::vector<Prop*> carrier_props_;
+
+    //Spells granted to the carrier
+    std::vector<Spell*> carrier_spells_;
 };
 
 class Armor: public Item
@@ -137,13 +157,22 @@ public:
         return clr_gray;
     }
 
-    virtual void on_equip(const bool IS_SILENT) override;
+    virtual Unequip_allowed on_unequip() override final;
 
-    virtual Unequip_allowed on_unequip() override;
+    int durability() const
+    {
+        return dur_;
+    }
 
-    int durability() const {return dur_;}
-    void set_max_durability() {dur_ = 100;}
-    bool is_destroyed() const {return armor_points() <= 0;}
+    void set_max_durability()
+    {
+        dur_ = 100;
+    }
+
+    bool is_destroyed() const
+    {
+        return armor_points() <= 0;
+    }
 
     std::string armor_data_line(const bool WITH_BRACKETS) const;
 
@@ -151,11 +180,6 @@ public:
 
 protected:
     int armor_points() const;
-
-    virtual void on_equip_hook(const bool IS_SILENT)
-    {
-        (void)IS_SILENT;
-    }
 
     virtual Unequip_allowed on_unequip_hook()
     {
@@ -173,38 +197,44 @@ protected:
 class Armor_asb_suit: public Armor
 {
 public:
-    Armor_asb_suit(Item_data_t* const item_data) : Armor(item_data) {}
+    Armor_asb_suit(Item_data_t* const item_data) :
+        Armor(item_data) {}
+
     ~Armor_asb_suit() {}
 
-private:
-    void on_equip_hook(const bool IS_SILENT) override;
+    void on_equip(Actor& actor, const Verbosity verbosity) override;
 
+private:
     Unequip_allowed on_unequip_hook() override;
 };
 
 class Armor_heavy_coat: public Armor
 {
 public:
-    Armor_heavy_coat(Item_data_t* const item_data) : Armor(item_data) {}
+    Armor_heavy_coat(Item_data_t* const item_data) :
+        Armor(item_data) {}
 
     ~Armor_heavy_coat() {}
 
-private:
-    void on_equip_hook(const bool IS_SILENT) override;
+    void on_equip(Actor& actor, const Verbosity verbosity) override;
 
+private:
     Unequip_allowed on_unequip_hook() override;
 };
 
 class Armor_mi_go: public Armor
 {
 public:
-    Armor_mi_go(Item_data_t* const item_data) : Armor(item_data) {}
+    Armor_mi_go(Item_data_t* const item_data) :
+        Armor(item_data) {}
+
     ~Armor_mi_go() {}
 
     void on_std_turn_in_inv(const Inv_type inv_type) override;
 
+    void on_equip(Actor& actor, const Verbosity verbosity) override;
+
 private:
-    void on_equip_hook(const bool IS_SILENT) override;
 
     Unequip_allowed on_unequip_hook() override;
 };
@@ -428,15 +458,20 @@ public:
 class Gas_mask: public Headwear
 {
 public:
-    Gas_mask(Item_data_t* item_data) : Headwear(item_data), nr_turns_left_(60) {}
+    Gas_mask(Item_data_t* item_data) :
+        Headwear        (item_data),
+        nr_turns_left_  (60) {}
 
-    void on_equip(const bool IS_SILENT) override;
+    void on_equip(Actor& actor, const Verbosity verbosity) override;
     Unequip_allowed on_unequip() override;
 
     void decr_turns_left(Inventory& carrier_inv);
 
 protected:
-    std::string name_inf() const override {return "{" + to_str(nr_turns_left_) + "}";}
+    std::string name_inf() const override
+    {
+        return "{" + to_str(nr_turns_left_) + "}";
+    }
 
     int nr_turns_left_;
 };
@@ -459,7 +494,8 @@ public:
 
 protected:
     Explosive(Item_data_t* const item_data) :
-        Item(item_data), fuse_turns_(-1) {}
+        Item(item_data),
+        fuse_turns_(-1) {}
 
     virtual int std_fuse_turns() const = 0;
     virtual void on_player_ignite() const = 0;
@@ -470,19 +506,29 @@ protected:
 class Dynamite: public Explosive
 {
 public:
-    Dynamite(Item_data_t* const item_data) : Explosive(item_data) {}
+    Dynamite(Item_data_t* const item_data) :
+        Explosive(item_data) {}
 
     void on_thrown_ignited_landing(const Pos& p) override;
     void on_std_turn_player_hold_ignited() override;
     void on_player_paralyzed() override;
-    Clr ignited_projectile_clr() const override {return clr_red_lgt;}
+
+    Clr ignited_projectile_clr() const override
+    {
+        return clr_red_lgt;
+    }
+
     std::string str_on_player_throw() const override
     {
         return "I throw a lit dynamite stick.";
     }
 
 protected:
-    int std_fuse_turns() const override {return 6;}
+    int std_fuse_turns() const override
+    {
+        return 6;
+    }
+
     void on_player_ignite() const override;
 };
 
@@ -494,7 +540,12 @@ public:
     void on_thrown_ignited_landing(const Pos& p) override;
     void on_std_turn_player_hold_ignited() override;
     void on_player_paralyzed() override;
-    Clr ignited_projectile_clr() const override {return clr_yellow;}
+
+    Clr ignited_projectile_clr() const override
+    {
+        return clr_yellow;
+    }
+
     std::string str_on_player_throw() const override
     {
         return "I throw a lit Molotov Cocktail.";
@@ -513,7 +564,12 @@ public:
     void on_thrown_ignited_landing(const Pos& p) override;
     void on_std_turn_player_hold_ignited() override;
     void on_player_paralyzed() override;
-    Clr ignited_projectile_clr() const override {return clr_yellow;}
+
+    Clr ignited_projectile_clr() const override
+    {
+        return clr_yellow;
+    }
+
     std::string str_on_player_throw() const override
     {
         return "I throw a lit flare.";
@@ -533,13 +589,18 @@ public:
     void on_std_turn_player_hold_ignited() override;
     void on_player_paralyzed() override;
     Clr ignited_projectile_clr() const override;
+
     std::string str_on_player_throw() const override
     {
         return "I throw a smoke grenade.";
     }
 
 protected:
-    int std_fuse_turns() const override {return 12;}
+    int std_fuse_turns() const override
+    {
+        return 12;
+    }
+
     void on_player_ignite() const override;
 };
 

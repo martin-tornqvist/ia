@@ -19,7 +19,7 @@ public:
 
     virtual void on_std_turn_in_inv(const Inv_type inv_type) override {(void)inv_type;}
 
-    void identify(const bool IS_SILENT_IDENTIFY) override;
+    void identify(const Verbosity verbosity) override;
 };
 
 class Strange_device : public Device

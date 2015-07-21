@@ -7,6 +7,15 @@
 #include "colors.hpp"
 #include "art.hpp"
 
+//This is typically used for functions such as item identification and property applying to
+//enable/disable printing to the message log and other such "side effects". For example when
+//loading a saved game, we may want to do these things silently.
+enum class Verbosity
+{
+    silent,
+    verbose,
+};
+
 enum class Inv_type
 {
     slots,
@@ -332,14 +341,14 @@ struct Item_att_msgs
     std::string player, other;
 };
 
-enum Spawn_rate
+enum class Spawn_rate
 {
-    spawn_never,
-    spawn_extremely_rare,
-    spawn_very_rare,
-    spawn_rare,
-    spawn_common,
-    spawn_very_common
+    never,
+    extremely_rare,
+    very_rare,
+    rare,
+    common,
+    very_common
 };
 
 enum class Dir

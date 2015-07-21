@@ -333,7 +333,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
         if (
             map::player->is_alive() &&
-            map::player->prop_handler().allow_attack_ranged(true))
+            map::player->prop_handler().allow_attack_ranged(Verbosity::verbose))
         {
             auto* const item = map::player->inv().item_in_slot(Slot_id::wielded);
 
@@ -679,7 +679,7 @@ void handle_map_mode_key_press(const Key_data& d)
             }
             else //Not holding explosive
             {
-                if (map::player->prop_handler().allow_attack_ranged(true))
+                if (map::player->prop_handler().allow_attack_ranged(Verbosity::verbose))
                 {
                     Inventory& player_inv  = map::player->inv();
                     Item* item_stack       = player_inv.item_in_slot(Slot_id::thrown);

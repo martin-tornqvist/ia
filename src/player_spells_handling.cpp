@@ -150,7 +150,9 @@ void spells_avail(vector<Spell_opt>& out)
 
         if (item)
         {
-            for (Spell* spell : item->carrier_spells_)
+            const std::vector<Spell*>& carrier_spells = item->carrier_spells();
+
+            for (Spell* spell : carrier_spells)
             {
                 out.push_back(Spell_opt(spell, item));
             }
@@ -159,7 +161,9 @@ void spells_avail(vector<Spell_opt>& out)
 
     for (Item* item : inv.general_)
     {
-        for (Spell* spell : item->carrier_spells_)
+        const std::vector<Spell*>& carrier_spells = item->carrier_spells();
+
+        for (Spell* spell : carrier_spells)
         {
             out.push_back(Spell_opt(spell, item));
         }
@@ -171,8 +175,8 @@ void try_cast(const Spell_opt& spell_opt)
     assert(spell_opt.spell);
 
     if (
-        map::player->prop_handler().allow_cast_spell(true) &&
-        map::player->prop_handler().allow_speak(true))
+        map::player->prop_handler().allow_cast_spell(Verbosity::verbose) &&
+        map::player->prop_handler().allow_speak(Verbosity::verbose))
     {
         msg_log::clear();
         render::draw_map_and_interface();

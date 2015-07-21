@@ -48,7 +48,10 @@ Mon::Mon() :
 
 Mon::~Mon()
 {
-    for (Spell* const spell : spells_known_) {delete spell;}
+    for (Spell* const spell : spells_known_)
+    {
+        delete spell;
+    }
 }
 
 void Mon::on_actor_turn()
@@ -546,7 +549,7 @@ bool Mon::try_attack(Actor& defender)
 
 void Mon::avail_attacks(Actor& defender, Ai_avail_attacks_data& dst)
 {
-    if (prop_handler_->allow_attack(false))
+    if (prop_handler_->allow_attack(Verbosity::silent))
     {
         dst.is_melee = utils::is_pos_adj(pos, defender.pos, false);
 
@@ -555,9 +558,8 @@ void Mon::avail_attacks(Actor& defender, Ai_avail_attacks_data& dst)
 
         if (dst.is_melee)
         {
-            if (prop_handler_->allow_attack_melee(false))
+            if (prop_handler_->allow_attack_melee(Verbosity::silent))
             {
-
                 //Melee weapon in wielded slot?
                 wpn = static_cast<Wpn*>(inv_->item_in_slot(Slot_id::wielded));
 
@@ -583,7 +585,7 @@ void Mon::avail_attacks(Actor& defender, Ai_avail_attacks_data& dst)
         }
         else //Ranged attack
         {
-            if (prop_handler_->allow_attack_ranged(false))
+            if (prop_handler_->allow_attack_ranged(Verbosity::silent))
             {
                 //Ranged weapon in wielded slot?
                 wpn = static_cast<Wpn*>(inv_->item_in_slot(Slot_id::wielded));

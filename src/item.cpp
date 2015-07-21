@@ -25,13 +25,17 @@ using namespace std;
 Item::Item(Item_data_t* item_data) :
     nr_items_       (1),
     melee_dmg_plus_ (0),
-    data_           (item_data) {}
+    data_           (item_data),
+    carrier_props_  (),
+    carrier_spells_ () {}
 
 Item& Item::operator=(const Item& other)
 {
     nr_items_       = other.nr_items_;
     melee_dmg_plus_ = other.melee_dmg_plus_;
     data_           = other.data_;
+    carrier_props_  = other.carrier_props_;
+    carrier_spells_ = other.carrier_spells_;
 
     return *this;
 }
@@ -235,10 +239,134 @@ bool Item::is_in_effective_range_lmt(const Pos& p0, const Pos& p1) const
     return utils::king_dist(p0, p1) <= data_->ranged.effective_range;
 }
 
+void Item::add_carrier_prop(Prop* const prop, Actor& actor, const Verbosity verbosity)
+{
+    assert(prop);
+
+    //TODO: This is very hacky (attempting to replicate some of the functionality happening in
+    //the Property handler when a property is applied). Some refactoring would not hurt...
+
+    prop->owning_actor_ = &actor;
+
+    carrier_props_.push_back(prop);
+
+    if (verbosity == Verbosity::verbose)
+    {
+        if (prop->need_update_vision_when_start_or_end())
+        {
+            actor.update_clr();
+            game_time::update_light_map();
+            map::player->update_fov();
+//            render::draw_map_and_interface();
+        }
+
+        if (actor.is_player())
+        {
+            std::string msg = "";
+            prop->msg(prop_msg_on_start_player, msg);
+
+            if (!msg.empty())
+            {
+                msg_log::add(msg, clr_white, true);
+            }
+        }
+        else //Not player
+        {
+            if (map::player->can_see_actor(actor, nullptr))
+            {
+                std::string msg = "";
+                prop->msg(prop_msg_on_start_mon, msg);
+
+                if (!msg.empty())
+                {
+                    msg_log::add(actor.name_the() + " " + msg);
+                }
+            }
+        }
+        msg_log::more_prompt();
+    }
+
+    prop->on_start();
+}
+
+void Item::clear_carrier_props()
+{
+    //TODO: This is very hacky (attempting to replicate some of the functionality happening in
+    //the Property handler when a property is ended). Some refactoring would not hurt...
+
+    Actor* owning_actor = nullptr;
+
+    //Iterate over the carrier props backwards, and run removal effects for each prop at a time
+    for (int i = carrier_props_.size() - 1; i >= 0; --i)
+    {
+        Prop* const prop = carrier_props_[i];
+
+        owning_actor = prop->owning_actor_;
+
+        assert(owning_actor);
+
+        if (owning_actor->is_player())
+        {
+            std::string msg = "";
+            prop->msg(prop_msg_on_end_player, msg);
+
+            if (!msg.empty())
+            {
+                msg_log::add(msg, clr_white, true);
+            }
+        }
+        else //Not player
+        {
+            if (map::player->can_see_actor(*owning_actor, nullptr))
+            {
+                std::string msg = "";
+                prop->msg(prop_msg_on_end_mon, msg);
+
+                if (!msg.empty())
+                {
+                    msg_log::add(owning_actor->name_the() + " " + msg);
+                }
+            }
+        }
+
+        prop->on_end();
+
+        carrier_props_.pop_back();
+
+        if (prop->need_update_vision_when_start_or_end())
+        {
+            owning_actor->update_clr();
+            game_time::update_light_map();
+            map::player->update_fov();
+        }
+
+        msg_log::more_prompt();
+
+        delete prop;
+    }
+}
+
+void Item::add_carrier_spell(Spell* const spell)
+{
+    assert(spell);
+
+    carrier_spells_.push_back(spell);
+}
+
+void Item::clear_carrier_spells()
+{
+    for (Spell* const spell : carrier_spells_)
+    {
+        delete spell;
+    }
+
+    carrier_spells_.clear();
+}
+
 //---------------------------------------------------------- ARMOR
 Armor::Armor(Item_data_t* const item_data) :
-    Item(item_data),
-    dur_(rnd::range(80, 100)) {}
+    Item    (item_data),
+    dur_    (rnd::range(80, 100)) {}
 
 void Armor::store_to_save_lines(vector<string>& lines)
 {
@@ -249,11 +377,6 @@ void Armor::setup_from_save_lines(vector<string>& lines)
 {
     dur_ = to_int(lines.front());
     lines.erase(begin(lines));
-}
-
-void Armor::on_equip(const bool IS_SILENT)
-{
-    on_equip_hook(IS_SILENT);
 }
 
 Unequip_allowed Armor::on_unequip()
@@ -293,7 +416,9 @@ int Armor::take_dur_hit_and_get_reduced_dmg(const int DMG_BEFORE)
 
     const int     AP_BEFORE       = armor_points();
     const double  DDF_BASE        = data_->armor.dmg_to_durability_factor;
+
     //TODO: Add check for if wearer is player!
+
     const double  DDF_WAR_VET_MOD = player_bon::bg() == Bg::war_vet ? 0.5 : 1.0;
     const double  DDF_K           = 1.5;
     const double  DMG_BEFORE_DB   = double(DMG_BEFORE);
@@ -334,43 +459,29 @@ int Armor::armor_points() const
     return 0;
 }
 
-void Armor_asb_suit::on_equip_hook(const bool IS_SILENT)
+void Armor_asb_suit::on_equip(Actor& actor, const Verbosity verbosity)
 {
-    (void)IS_SILENT;
-
-    carrier_props_.push_back(new Prop_rFire(Prop_turns::indefinite));
-    carrier_props_.push_back(new Prop_rAcid(Prop_turns::indefinite));
-    carrier_props_.push_back(new Prop_rElec(Prop_turns::indefinite));
-    carrier_props_.push_back(new Prop_rBreath(Prop_turns::indefinite));
+    add_carrier_prop(new Prop_rFire(Prop_turns::indefinite),    actor, verbosity);
+    add_carrier_prop(new Prop_rAcid(Prop_turns::indefinite),    actor, verbosity);
+    add_carrier_prop(new Prop_rElec(Prop_turns::indefinite),    actor, verbosity);
+    add_carrier_prop(new Prop_rBreath(Prop_turns::indefinite),  actor, verbosity);
 }
 
 Unequip_allowed Armor_asb_suit::on_unequip_hook()
 {
-    for (Prop* prop : carrier_props_)
-    {
-        delete prop;
-    }
-
-    carrier_props_.clear();
+    clear_carrier_props();
 
     return Unequip_allowed::yes;
 }
 
-void Armor_heavy_coat::on_equip_hook(const bool IS_SILENT)
+void Armor_heavy_coat::on_equip(Actor& actor, const Verbosity verbosity)
 {
-    (void)IS_SILENT;
-
-    carrier_props_.push_back(new Prop_rCold(Prop_turns::indefinite));
+    add_carrier_prop(new Prop_rCold(Prop_turns::indefinite), actor, verbosity);
 }
 
 Unequip_allowed Armor_heavy_coat::on_unequip_hook()
 {
-    for (Prop* prop : carrier_props_)
-    {
-        delete prop;
-    }
-
-    carrier_props_.clear();
+    clear_carrier_props();
 
     return Unequip_allowed::yes;
 }
@@ -396,9 +507,11 @@ void Armor_mi_go::on_std_turn_in_inv(const Inv_type inv_type)
     }
 }
 
-void Armor_mi_go::on_equip_hook(const bool IS_SILENT)
+void Armor_mi_go::on_equip(Actor& actor, const Verbosity verbosity)
 {
-    if (!IS_SILENT)
+    (void)actor;
+
+    if (verbosity == Verbosity::verbose)
     {
         render::draw_map_and_interface();
         msg_log::add("The armor joins with my skin!", clr_white, false, More_prompt_on_msg::yes);
@@ -501,7 +614,7 @@ Pharaoh_staff::Pharaoh_staff(Item_data_t* const item_data) : Wpn(item_data)
 {
     item_data->allow_spawn = false;
 
-    carrier_spells_.push_back(new Spell_pharaoh_staff);
+    add_carrier_spell(new Spell_pharaoh_staff);
 }
 
 //---------------------------------------------------------- SAWED OFF SHOTGUN
@@ -864,18 +977,14 @@ int Medical_bag::tot_suppl_for_sanitize() const
 //}
 
 //---------------------------------------------------------- GAS MASK
-void Gas_mask::on_equip(const bool IS_SILENT)
+void Gas_mask::on_equip(Actor& actor, const Verbosity verbosity)
 {
-    (void)IS_SILENT;
-
-    carrier_props_.push_back(new Prop_rBreath(Prop_turns::indefinite));
+    add_carrier_prop(new Prop_rBreath(Prop_turns::indefinite), actor, verbosity);
 }
 
 Unequip_allowed Gas_mask::on_unequip()
 {
-    for (Prop* prop : carrier_props_) {delete prop;}
-
-    carrier_props_.clear();
+    clear_carrier_props();
 
     return Unequip_allowed::yes;
 }

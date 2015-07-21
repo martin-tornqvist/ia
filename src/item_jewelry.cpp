@@ -12,13 +12,11 @@
 #include "actor_factory.hpp"
 #include "feature_rigid.hpp"
 
-using namespace std;
-
 namespace
 {
 
-Item_id  effect_list_   [int(Jewelry_effect_id::END)];
-bool    effects_known_ [int(Jewelry_effect_id::END)];
+Item_id     effect_list_    [size_t(Jewelry_effect_id::END)];
+bool        effects_known_  [size_t(Jewelry_effect_id::END)];
 
 Jewelry_effect* mk_effect(const Jewelry_effect_id id, Jewelry* const jewelry)
 {
@@ -123,51 +121,20 @@ Jewelry_effect* mk_effect(const Jewelry_effect_id id, Jewelry* const jewelry)
 } //namespace
 
 //--------------------------------------------------------- JEWELRY PROPERTY EFFECT
-void Jewelry_property_effect::on_equip(const bool IS_SILENT)
+void Jewelry_property_effect::on_equip(Actor& actor, const Verbosity verbosity)
 {
     Prop* const prop = mk_prop();
 
     assert(prop);
 
-    jewelry_->carrier_props_.push_back(prop);
-
-    if (!IS_SILENT)
-    {
-        game_time::update_light_map();
-        map::player->update_fov();
-        render::draw_map_and_interface();
-
-        const auto&   prop_data = prop_data::data[size_t(prop->id())];
-        const string  msg       = prop_data.msg[prop_msg_on_start_player];
-
-        msg_log::add(msg);
-    }
+    jewelry_->add_carrier_prop(prop, actor, verbosity);
 
     jewelry_->effect_noticed(id());
 }
 
 Unequip_allowed Jewelry_property_effect::on_unequip()
 {
-    vector<Prop_id> prop_ids_ended;
-
-    for (Prop* const prop : jewelry_->carrier_props_)
-    {
-        prop_ids_ended.push_back(prop->id());
-        delete prop;
-    }
-
-    jewelry_->carrier_props_.clear();
-
-    game_time::update_light_map();
-    map::player->update_fov();
-    render::draw_map_and_interface();
-
-    for (const Prop_id prop_id : prop_ids_ended)
-    {
-        const auto&     prop_data    = prop_data::data[size_t(prop_id)];
-        const string    msg         = prop_data.msg[prop_msg_on_end_player];
-        msg_log::add(msg);
-    }
+    jewelry_->clear_carrier_props();
 
     return Unequip_allowed::yes;
 }
@@ -227,9 +194,10 @@ Prop* Jewelry_effect_haste::mk_prop() const
 }
 
 //--------------------------------------------------------- EFFECT: HP BONUS
-void Jewelry_effect_hp_bon::on_equip(const bool IS_SILENT)
+void Jewelry_effect_hp_bon::on_equip(Actor& actor, const Verbosity verbosity)
 {
-    (void)IS_SILENT;
+    (void)actor;
+    (void)verbosity;
 
     map::player->change_max_hp(4, true);
     jewelry_->effect_noticed(id());
@@ -243,9 +211,10 @@ Unequip_allowed Jewelry_effect_hp_bon::on_unequip()
 }
 
 //--------------------------------------------------------- EFFECT: HP PENALTY
-void Jewelry_effect_hp_pen::on_equip(const bool IS_SILENT)
+void Jewelry_effect_hp_pen::on_equip(Actor& actor, const Verbosity verbosity)
 {
-    (void)IS_SILENT;
+    (void)actor;
+    (void)verbosity;
 
     map::player->change_max_hp(-4, true);
     jewelry_->effect_noticed(id());
@@ -259,9 +228,10 @@ Unequip_allowed Jewelry_effect_hp_pen::on_unequip()
 }
 
 //--------------------------------------------------------- EFFECT: SPI BONUS
-void Jewelry_effect_spi_bon::on_equip(const bool IS_SILENT)
+void Jewelry_effect_spi_bon::on_equip(Actor& actor, const Verbosity verbosity)
 {
-    (void)IS_SILENT;
+    (void)actor;
+    (void)verbosity;
 
     map::player->change_max_spi(4, true);
     jewelry_->effect_noticed(id());
@@ -275,9 +245,10 @@ Unequip_allowed Jewelry_effect_spi_bon::on_unequip()
 }
 
 //--------------------------------------------------------- EFFECT: SPI PENALTY
-void Jewelry_effect_spi_pen::on_equip(const bool IS_SILENT)
+void Jewelry_effect_spi_pen::on_equip(Actor& actor, const Verbosity verbosity)
 {
-    (void)IS_SILENT;
+    (void)actor;
+    (void)verbosity;
 
     map::player->change_max_spi(-4, true);
     jewelry_->effect_noticed(id());
@@ -327,7 +298,7 @@ void Jewelry_effect_summon_mon::on_std_turn_equiped()
 
         const Pos origin = map::player->pos;
 
-        vector<Mon*> summoned_mon;
+        std::vector<Mon*> summoned_mon;
 
         actor_factory::summon(origin, {Actor_id::greater_polyp}, false, nullptr,
                               &summoned_mon);
@@ -352,10 +323,10 @@ void Jewelry_effect_fire::on_std_turn_equiped()
     {
         const Pos& origin   = map::player->pos;
         const int D         = FOV_STD_RADI_INT - 2;
-        const int X0        = max(1,            origin.x - D);
-        const int Y0        = max(1,            origin.y - D);
-        const int X1        = min(MAP_W - 2,    origin.x + D);
-        const int Y1        = min(MAP_H - 2,    origin.y + D);
+        const int X0        = std::max(1,            origin.x - D);
+        const int Y0        = std::max(1,            origin.y - D);
+        const int X1        = std::min(MAP_W - 2,    origin.x + D);
+        const int Y1        = std::min(MAP_H - 2,    origin.y + D);
 
         const int FIRE_CELL_ONE_IN_N = 4;
 
@@ -384,12 +355,12 @@ void Jewelry_effect_conflict::on_std_turn_equiped()
 
     if (rnd::one_in(CONFLICT_ONE_IN_N))
     {
-        vector<Actor*> seen_foes;
+        std::vector<Actor*> seen_foes;
         map::player->seen_foes(seen_foes);
 
         if (!seen_foes.empty())
         {
-            random_shuffle(begin(seen_foes), end(seen_foes));
+            std::random_shuffle(begin(seen_foes), end(seen_foes));
 
             for (Actor* actor : seen_foes)
             {
@@ -411,7 +382,7 @@ void Jewelry_effect_conflict::on_std_turn_equiped()
 Jewelry_effect_shriek::Jewelry_effect_shriek(Jewelry* const jewelry) :
     Jewelry_effect(jewelry)
 {
-    string player_name = map::player->name_the();
+    std::string player_name = map::player->name_the();
 
     text_format::all_to_upper(player_name);
 
@@ -492,13 +463,13 @@ void Jewelry_effect_shriek::on_std_turn_equiped()
 
     if (rnd::one_in(NOISE_ONE_IN_N))
     {
-        const string name = jewelry_->name(Item_ref_type::plain, Item_ref_inf::none);
+        const std::string name = jewelry_->name(Item_ref_type::plain, Item_ref_inf::none);
 
         msg_log::add("The " + name + " shrieks...", clr_white, false, More_prompt_on_msg::yes);
 
         const int NR_WORDS = 3;
 
-        string phrase = "";
+        std::string phrase = "";
 
         for (int i = 0; i < NR_WORDS; ++i)
         {
@@ -528,11 +499,13 @@ void Jewelry_effect_shriek::on_std_turn_equiped()
 }
 
 //--------------------------------------------------------- EFFECT: BURDEN
-void Jewelry_effect_burden::on_equip(const bool IS_SILENT)
+void Jewelry_effect_burden::on_equip(Actor& actor, const Verbosity verbosity)
 {
+    (void)actor;
+
     if (!effects_known_[size_t(id())])
     {
-        if (!IS_SILENT)
+        if (verbosity == Verbosity::verbose)
         {
             msg_log::add("I suddenly feel more burdened.");
         }
@@ -551,9 +524,11 @@ void Jewelry_effect_burden::change_item_weight(int& weight_ref)
 }
 
 //--------------------------------------------------------- EFFECT: HP REGEN BONUS
-void Jewelry_effect_hp_regen_bon::on_equip(const bool IS_SILENT)
+void Jewelry_effect_hp_regen_bon::on_equip(Actor& actor, const Verbosity verbosity)
 {
-    if (!IS_SILENT)
+    (void)actor;
+
+    if (verbosity == Verbosity::verbose)
     {
         msg_log::add("I heal faster.");
     }
@@ -568,9 +543,11 @@ Unequip_allowed Jewelry_effect_hp_regen_bon::on_unequip()
 }
 
 //--------------------------------------------------------- EFFECT: HP REGEN PENALTY
-void Jewelry_effect_hp_regen_pen::on_equip(const bool IS_SILENT)
+void Jewelry_effect_hp_regen_pen::on_equip(Actor& actor, const Verbosity verbosity)
 {
-    if (!IS_SILENT)
+    (void)actor;
+
+    if (verbosity == Verbosity::verbose)
     {
         msg_log::add("I heal slower.");
     }
@@ -609,9 +586,9 @@ Jewelry::~Jewelry()
     }
 }
 
-vector<string> Jewelry::descr() const
+std::vector<std::string> Jewelry::descr() const
 {
-    vector<string> ret;
+    std::vector<std::string> ret;
 
     for (auto* effect : effects_)
     {
@@ -625,7 +602,7 @@ vector<string> Jewelry::descr() const
 
     if (data_->is_identified)
     {
-        const string jewelry_name = name(Item_ref_type::plain, Item_ref_inf::none);
+        const std::string jewelry_name = name(Item_ref_type::plain, Item_ref_inf::none);
 
         ret.push_back("All properties of the " + jewelry_name + " are known to me.");
     }
@@ -635,20 +612,20 @@ vector<string> Jewelry::descr() const
     return ret;
 }
 
-string Jewelry::name_inf() const
+std::string Jewelry::name_inf() const
 {
     return data_->is_identified ? "{Known}" : "";
 }
 
-void Jewelry::on_equip(const bool IS_SILENT)
+void Jewelry::on_equip(Actor& actor, const Verbosity verbosity)
 {
     for (auto* const effect : effects_)
     {
         //This may cause the effect to set up carrier properties (e.g. fire resistance)
-        effect->on_equip(IS_SILENT);
+        effect->on_equip(actor, verbosity);
     }
 
-    if (!IS_SILENT)
+    if (verbosity == Verbosity::verbose)
     {
         msg_log::more_prompt();
     }
@@ -693,9 +670,9 @@ void Jewelry::on_actor_turn_in_inv(const Inv_type inv_type)
     }
 }
 
-void Jewelry::identify(const bool IS_SILENT_IDENTIFY)
+void Jewelry::identify(const Verbosity verbosity)
 {
-    (void)IS_SILENT_IDENTIFY;
+    (void)verbosity;
 
     for (auto* effect : effects_)
     {
@@ -757,7 +734,7 @@ void Jewelry::effect_noticed(const Jewelry_effect_id effect_id)
 
         assert(nr_effects_known_this_item <= MAX_NR_EFFECTS_ON_ITEM);
 
-        const string jewelry_name = name(Item_ref_type::plain, Item_ref_inf::none);
+        const std::string jewelry_name = name(Item_ref_type::plain, Item_ref_inf::none);
 
         msg_log::add("I gained new knowledge about the " + jewelry_name + ".", clr_white,
                      false, More_prompt_on_msg::yes);
@@ -844,9 +821,9 @@ bool can_effects_be_combined(const Jewelry_effect_id id1,
 }
 
 int rnd_item_bucket_idx_for_effect(const Jewelry_effect_id  effect_to_assign,
-                                   const vector<Item_id>&  item_bucket)
+                                   const std::vector<Item_id>&  item_bucket)
 {
-    vector<int> item_idx_bucket;
+    std::vector<int> item_idx_bucket;
 
     for (size_t item_bucket_idx = 0; item_bucket_idx < item_bucket.size(); ++item_bucket_idx)
     {
@@ -897,7 +874,7 @@ void init()
         effects_known_ [i] = false;
     }
 
-    vector<Item_id> item_bucket;
+    std::vector<Item_id> item_bucket;
 
     for (auto& data : item_data::data)
     {
@@ -909,10 +886,10 @@ void init()
         }
     }
 
-    random_shuffle(begin(item_bucket), end(item_bucket));
+    std::random_shuffle(begin(item_bucket), end(item_bucket));
 
-    vector<Jewelry_effect_id> primary_effect_bucket;
-    vector<Jewelry_effect_id> secondary_effect_bucket;
+    std::vector<Jewelry_effect_id> primary_effect_bucket;
+    std::vector<Jewelry_effect_id> secondary_effect_bucket;
 
     for (size_t i = 0; i < size_t(Jewelry_effect_id::END); ++i)
     {
@@ -969,7 +946,7 @@ void init()
     }
 }
 
-void store_to_save_lines(vector<string>& lines)
+void store_to_save_lines(std::vector<std::string>& lines)
 {
     for (size_t i = 0; i < size_t(Jewelry_effect_id::END); ++i)
     {
@@ -978,7 +955,7 @@ void store_to_save_lines(vector<string>& lines)
     }
 }
 
-void setup_from_save_lines(vector<string>& lines)
+void setup_from_save_lines(std::vector<std::string>& lines)
 {
     for (size_t i = 0; i < size_t(Jewelry_effect_id::END); ++i)
     {
