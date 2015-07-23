@@ -906,10 +906,9 @@ void decorate()
                 }
                 else //Not late game
                 {
-                    //Convert walls with no adjacent floor or with adjacent cave floor
-                    //to cave
+                    //Convert walls with no adjacent floor or with adjacent cave floor to cave
                     bool has_adj_floor      = false;
-                    bool has_adj_cave_floor  = false;
+                    bool has_adj_cave_floor = false;
 
                     for (const Pos& d : dir_utils::dir_list)
                     {
@@ -952,7 +951,7 @@ void decorate()
                 {
                     wall->type_ = Wall_type::cave;
                 }
-                else
+                else //Should not convert to cave wall
                 {
                     wall->set_rnd_cmn_wall();
                 }

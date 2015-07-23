@@ -43,7 +43,6 @@
 				<Option object_output="../test/obj/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option projectLinkerOptionsRelation="1" />
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
@@ -53,11 +52,11 @@
 				</Compiler>
 				<Linker>
 					<Add option="-pg -lgmon" />
-					<Add option="-lmingw32" />
 					<Add library="..\test\UnitTest++\bin\libUnitTest++.a" />
 				</Linker>
 				<ExtraCommands>
-					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\SD2L.dll&quot; &quot;$(PROJECT_DIR)..\test\bin\&quot;' />
+					<Add after='cmd /c xcopy /e /i /y &quot;$(PROJECT_DIR)..\assets\data&quot; &quot;$(PROJECT_DIR)..\test\bin\data&quot;' />
+					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\SDL2.dll&quot; &quot;$(PROJECT_DIR)..\test\bin\&quot;' />
 					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\SDL2_image.dll&quot; &quot;$(PROJECT_DIR)..\test\bin\&quot;' />
 					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\SDL2_mixer.dll&quot; &quot;$(PROJECT_DIR)..\test\bin\&quot;' />
 					<Mode after="always" />
@@ -258,7 +257,10 @@
 		<Unit filename="../src/knockback.cpp" />
 		<Unit filename="../src/line_calc.cpp" />
 		<Unit filename="../src/look.cpp" />
-		<Unit filename="../src/main.cpp" />
+		<Unit filename="../src/main.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
 		<Unit filename="../src/main_menu.cpp" />
 		<Unit filename="../src/manual.cpp" />
 		<Unit filename="../src/map.cpp" />

@@ -867,6 +867,11 @@ int draw_text_centered(const string& str, const Panel panel, const Pos& pos,
                        const Clr& clr, const Clr& bg_clr,
                        const bool IS_PIXEL_POS_ADJ_ALLOWED)
 {
+    if (!is_inited())
+    {
+        return 0;
+    }
+
     const int LEN         = str.size();
     const int LEN_HALF    = LEN / 2;
     const int X_POS_LEFT  = pos.x - LEN_HALF;
@@ -916,20 +921,23 @@ void cover_panel(const Panel panel)
     {
         const Pos px_pos = px_pos_for_cell_in_panel(panel, Pos(0, 0));
         cover_area_px(px_pos, Pos(SCREEN_PIXEL_W, config::char_lines_px_h()));
-    } break;
+    }
+    break;
 
     case Panel::log:
-    {
         cover_area_px(Pos(0, 0), Pos(SCREEN_PIXEL_W, config::log_px_h()));
-    } break;
+        break;
 
     case Panel::map:
     {
         const Pos px_pos = px_pos_for_cell_in_panel(panel, Pos(0, 0));
         cover_area_px(px_pos, Pos(SCREEN_PIXEL_W, config::map_px_h()));
-    } break;
+    }
+    break;
 
-    case Panel::screen: {clear_screen();} break;
+    case Panel::screen:
+        clear_screen();
+        break;
     }
 }
 

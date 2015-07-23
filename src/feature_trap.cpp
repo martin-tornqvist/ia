@@ -50,7 +50,18 @@ Trap::Trap(const Pos& feature_pos, const Rigid* const mimic_feature, Trap_id id)
 {
     assert(id != Trap_id::END);
 
-    assert(map::cells[feature_pos.x][feature_pos.y].rigid->can_have_rigid());
+    auto* const rigid_here = map::cells[feature_pos.x][feature_pos.y].rigid;
+
+    if (!rigid_here->can_have_rigid())
+    {
+        //TODO: For some reason, the trap populator tries to place a trap on an existing trap.
+        //The problem seems to always happen with *web* traps.
+//#error
+        TRACE << "Cannot place trap on feature id: " << int(rigid_here->id()) << std::endl
+              << "Trap id: " << int(id) << std::endl;
+        assert(false);
+        return;
+    }
 
     auto try_place_trap_or_discard = [&](const Trap_id trap_id)
     {
@@ -500,7 +511,7 @@ std::string Trap::name(const Article article) const
     {
         return mimic_feature_->name(article);
     }
-    else
+    else //Not hidden
     {
         return (article == Article::a ? "a " : "the ") + trap_impl_->title();
     }
