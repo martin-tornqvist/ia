@@ -122,6 +122,7 @@ enum class Item_id
     ooze_clear_spew_pus,
     color_oo_space_touch,
     chthonian_bite,
+    death_fiend_claw,
     hunting_horror_bite,
     dust_vortex_engulf, fire_vortex_engulf, frost_vortex_engulf,
     mold_spores,

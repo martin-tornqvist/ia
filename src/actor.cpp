@@ -547,7 +547,10 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
         return Actor_died::no;
     }
 
-    if (is_player()) {map::player->interrupt_actions();}
+    if (is_player())
+    {
+        map::player->interrupt_actions();
+    }
 
     //Damage to corpses
     //NOTE: Corpse is automatically destroyed if damage is high enough, otherwise it is
@@ -589,7 +592,10 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
         return Actor_died::no;
     }
 
-    if (dmg_type == Dmg_type::spirit) {return hit_spi(dmg, true);}
+    if (dmg_type == Dmg_type::spirit)
+    {
+        return hit_spi(dmg, true);
+    }
 
     //Property resists?
     const auto verbosity = is_alive() ? Verbosity::verbose : Verbosity::silent;
@@ -606,7 +612,7 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
     dmg = max(1, dmg);
 
     //Filter damage through worn armor
-    if (is_humanoid())
+    if (dmg_type == Dmg_type::physical && is_humanoid())
     {
         Armor* armor = static_cast<Armor*>(inv_->item_in_slot(Slot_id::body));
 
@@ -614,25 +620,22 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
         {
             TRACE_VERBOSE << "Has armor, running hit on armor" << endl;
 
-            if (dmg_type == Dmg_type::physical)
+            dmg = armor->take_dur_hit_and_get_reduced_dmg(dmg);
+
+            if (armor->is_destroyed())
             {
-                dmg = armor->take_dur_hit_and_get_reduced_dmg(dmg);
+                TRACE << "Armor was destroyed" << endl;
 
-                if (armor->is_destroyed())
+                if (is_player())
                 {
-                    TRACE << "Armor was destroyed" << endl;
-
-                    if (is_player())
-                    {
-                        const string armor_name =
-                            armor->name(Item_ref_type::plain, Item_ref_inf::none);
-                        msg_log::add("My " + armor_name + " is torn apart!", clr_msg_note);
-                    }
-
-                    delete armor;
-                    armor = nullptr;
-                    inv_->slots_[int(Slot_id::body)].item = nullptr;
+                    const string armor_name =
+                        armor->name(Item_ref_type::plain, Item_ref_inf::none);
+                    msg_log::add("My " + armor_name + " is torn apart!", clr_msg_note);
                 }
+
+                delete armor;
+                armor = nullptr;
+                inv_->slots_[int(Slot_id::body)].item = nullptr;
             }
         }
     }

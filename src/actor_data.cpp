@@ -2395,58 +2395,6 @@ void init_data_list()
     data[size_t(d.id)] = d;
     d.reset();
 
-    d.name_a = "A Hunting Horror";
-    d.name_the = "The Hunting Horror";
-    d.corpse_name_a = "A Hunting Horror corpse";
-    d.corpse_name_the = "The Hunting Horror corpse";
-    d.id = Actor_id::hunting_horror;
-    d.ai[int(Ai_id::looks)] = true;
-    d.ai[int(Ai_id::makes_room_for_friend)] = false;
-    d.ai[int(Ai_id::attacks)] = true;
-    d.ai[int(Ai_id::paths_to_tgt_when_aware)] = true;
-    d.ai[int(Ai_id::moves_to_tgt_when_los)] = true;
-    d.ai[int(Ai_id::moves_to_lair)] = false;
-    d.ai[int(Ai_id::moves_to_leader)] = false;
-    d.speed = Actor_speed::fastest;
-    d.ranged_cooldown_turns = 0;
-    d.glyph = 'W';
-    d.color = clr_gray_drk;
-    d.tile = Tile_id::hunting_horror;
-    d.hp = 90;
-    d.spi = 40;
-    d.dmg_melee = 12;
-    d.ability_vals.set_val(Ability_id::melee, 75);
-    d.intr_props[int(Prop_id::flying)] = true;
-    d.intr_props[int(Prop_id::rFear)] = true;
-    d.prevent_knockback = true;
-    d.spawn_min_dLVL = DLVL_LAST - 6;
-    d.spawn_max_dLVL = 999;
-    d.can_see_in_darkness = true;
-    d.group_size = Mon_group_size::alone;
-    d.actor_size = Actor_size::giant;
-    d.nr_turns_aware = 4;
-    d.is_auto_descr_allowed = true;
-    d.can_open_doors = false;
-    d.can_bash_doors = true;
-    d.descr = "It resembles an enormous black ropy worm, like a legless dragon "
-              "seen in a nightmare. A great gaping maw filled with jagged, "
-              "irregular teeth gapes open hungrily as it flies in search of "
-              "prey. Hunting horrors haunt the dark places of the universe, from "
-              "which they are called up at the whim of their lord Nyarlathotep.";
-    d.aggro_text_mon_hidden = "I hear the flapping of great wings.";
-    d.aggro_sfx_mon_seen = Sfx_id::flapping_wings;
-    d.aggro_sfx_mon_hidden = Sfx_id::flapping_wings;
-    d.can_bleed = true;
-    d.can_be_summoned = false;
-    d.mon_shock_lvl = Mon_shock_lvl::mind_shattering;
-    d.native_rooms.push_back(Room_type::forest);
-    d.native_rooms.push_back(Room_type::plain);
-    d.native_rooms.push_back(Room_type::cave);
-    d.native_rooms.push_back(Room_type::chasm);
-    d.erratic_move_pct = Actor_erratic_freq::somewhat;
-    data[size_t(d.id)] = d;
-    d.reset();
-
     d.name_a = "A Sentry Drone";
     d.name_the = "The Sentry Drone";
     d.corpse_name_a = "A destroyed Sentry Drone";
@@ -2582,6 +2530,107 @@ void init_data_list()
     d.native_rooms.push_back(Room_type::muddy);
     d.native_rooms.push_back(Room_type::forest);
     d.native_rooms.push_back(Room_type::chasm);
+    data[size_t(d.id)] = d;
+    d.reset();
+
+    d.name_a = "A Hunting Horror";
+    d.name_the = "The Hunting Horror";
+    d.corpse_name_a = "A Hunting Horror corpse";
+    d.corpse_name_the = "The Hunting Horror corpse";
+    d.id = Actor_id::hunting_horror;
+    d.ai[int(Ai_id::looks)] = true;
+    d.ai[int(Ai_id::makes_room_for_friend)] = false;
+    d.ai[int(Ai_id::attacks)] = true;
+    d.ai[int(Ai_id::paths_to_tgt_when_aware)] = true;
+    d.ai[int(Ai_id::moves_to_tgt_when_los)] = true;
+    d.ai[int(Ai_id::moves_to_lair)] = false;
+    d.ai[int(Ai_id::moves_to_leader)] = false;
+    d.speed = Actor_speed::fastest;
+    d.ranged_cooldown_turns = 0;
+    d.glyph = 'W';
+    d.color = clr_gray_drk;
+    d.tile = Tile_id::hunting_horror;
+    d.hp = 90;
+    d.spi = 40;
+    d.dmg_melee = 12;
+    d.ability_vals.set_val(Ability_id::melee, 75);
+    d.intr_props[int(Prop_id::flying)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.prevent_knockback = true;
+    d.spawn_min_dLVL = DLVL_LAST - 6;
+    d.spawn_max_dLVL = 999;
+    d.can_see_in_darkness = true;
+    d.group_size = Mon_group_size::alone;
+    d.actor_size = Actor_size::giant;
+    d.nr_turns_aware = 4;
+    d.is_auto_descr_allowed = true;
+    d.can_open_doors = false;
+    d.can_bash_doors = true;
+    d.descr = "It resembles an enormous black ropy worm, like a legless dragon "
+              "seen in a nightmare. A great gaping maw filled with jagged, "
+              "irregular teeth gapes open hungrily as it flies in search of "
+              "prey. Hunting horrors haunt the dark places of the universe, from "
+              "which they are called up at the whim of their lord Nyarlathotep.";
+    d.aggro_text_mon_hidden = "I hear the flapping of great wings.";
+    d.aggro_sfx_mon_seen = Sfx_id::flapping_wings;
+    d.aggro_sfx_mon_hidden = Sfx_id::flapping_wings;
+    d.can_bleed = true;
+    d.can_be_summoned = false;
+    d.mon_shock_lvl = Mon_shock_lvl::mind_shattering;
+    d.native_rooms.push_back(Room_type::forest);
+    d.native_rooms.push_back(Room_type::plain);
+    d.native_rooms.push_back(Room_type::cave);
+    d.native_rooms.push_back(Room_type::chasm);
+    d.erratic_move_pct = Actor_erratic_freq::somewhat;
+    data[size_t(d.id)] = d;
+    d.reset();
+
+    d.name_a = "A Death Fiend";
+    d.name_the = "The Death Fiend";
+    d.corpse_name_a = "";
+    d.corpse_name_the = "";
+    d.id = Actor_id::death_fiend;
+    d.ai[int(Ai_id::looks)] = true;
+    d.ai[int(Ai_id::makes_room_for_friend)] = true;
+    d.ai[int(Ai_id::attacks)] = true;
+    d.ai[int(Ai_id::paths_to_tgt_when_aware)] = true;
+    d.ai[int(Ai_id::moves_to_tgt_when_los)] = true;
+    d.ai[int(Ai_id::moves_to_lair)] = false;
+    d.ai[int(Ai_id::moves_to_leader)] = true;
+    d.speed = Actor_speed::slow;
+    d.glyph = 'Y';
+    d.color = clr_gray_drk;
+    d.tile = Tile_id::fiend;
+    d.hp = 90;
+    d.spi = 40;
+    d.dmg_melee = 200;
+    d.ability_vals.set_val(Ability_id::melee, 75);
+    d.intr_props[int(Prop_id::rConf)] = true;
+    d.intr_props[int(Prop_id::rSleep)] = true;
+    d.intr_props[int(Prop_id::rFear)] = true;
+    d.prevent_knockback = true;
+    d.spawn_min_dLVL = DLVL_LAST - 6;
+    d.spawn_max_dLVL = 999;
+    d.can_see_in_darkness = true;
+    d.group_size = Mon_group_size::alone;
+    d.actor_size = Actor_size::humanoid;
+    d.nr_turns_aware = 6;
+    d.is_auto_descr_allowed = true;
+    d.can_open_doors = false;
+    d.can_bash_doors = true;
+    d.descr = "A living incarnation of death. With its goat-like features, its sinister "
+              "appearance is eerily similar to the imagery of Devils and Demons seen in medieval "
+              "woodcuts. The attack of this entity can bypass any armor, and means almost certain "
+              "death unless avoided.";
+    d.aggro_sfx_mon_seen = Sfx_id::END;
+    d.aggro_sfx_mon_hidden = Sfx_id::END;
+    d.can_bleed = false;
+    d.can_be_summoned = true;
+    d.mon_shock_lvl = Mon_shock_lvl::mind_shattering;
+    d.native_rooms.push_back(Room_type::plain);
+    d.native_rooms.push_back(Room_type::cave);
+    d.native_rooms.push_back(Room_type::chasm);
+    d.erratic_move_pct = Actor_erratic_freq::rare;
     data[size_t(d.id)] = d;
     d.reset();
 

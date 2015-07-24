@@ -72,14 +72,17 @@ public:
     {
         return data_->aggro_text_mon_seen;
     }
+
     virtual std::string aggro_phrase_mon_hidden() const
     {
         return data_->aggro_text_mon_hidden;
     }
+
     virtual Sfx_id aggro_sfx_mon_seen() const
     {
         return data_->aggro_sfx_mon_seen;
     }
+
     virtual Sfx_id aggro_sfx_mon_hidden() const
     {
         return data_->aggro_sfx_mon_hidden;
@@ -87,8 +90,8 @@ public:
 
     void speak_phrase();
 
-    bool is_leader_of(const Actor* const actor)       const override;
-    bool is_actor_my_leader(const Actor* const actor)  const override;
+    bool is_leader_of(const Actor* const actor) const override;
+    bool is_actor_my_leader(const Actor* const actor) const override;
 
     int                 aware_counter_, player_aware_of_me_counter_;
     bool                is_msg_mon_in_view_printed_;
@@ -436,6 +439,14 @@ class Chthonian: public Mon
 public:
     Chthonian() : Mon() {}
     ~Chthonian() {}
+    void mk_start_items() override;
+};
+
+class Death_fiend: public Mon
+{
+public:
+    Death_fiend() : Mon() {}
+    ~Death_fiend() {}
     void mk_start_items() override;
 };
 

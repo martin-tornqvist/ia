@@ -1337,6 +1337,11 @@ void Chthonian::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::chthonian_bite));
 }
 
+void Death_fiend::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(Item_id::death_fiend_claw));
+}
+
 void Hunting_horror::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(Item_id::hunting_horror_bite));

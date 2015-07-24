@@ -300,7 +300,10 @@ void Player::on_hit(int& dmg)
 {
     (void)dmg;
 
-    if (!obsessions[int(Obsession::masochism)]) {incr_shock(1, Shock_src::misc);}
+    if (!obsessions[int(Obsession::masochism)])
+    {
+        incr_shock(1, Shock_src::misc);
+    }
 
     render::draw_map_and_interface();
 }

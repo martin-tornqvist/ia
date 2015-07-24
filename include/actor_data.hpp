@@ -43,6 +43,7 @@ enum class Actor_id
     sentry_drone,
     mold,
     gas_spore,
+    death_fiend,
     the_high_priest, the_high_priest_cpy,
 
     END

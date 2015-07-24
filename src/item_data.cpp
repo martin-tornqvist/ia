@@ -1397,6 +1397,13 @@ void init_data_list()
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
+    d.id = Item_id::death_fiend_claw;
+    d.melee.att_msgs = {"", "claws me"};
+    set_dmg_from_mon_id(d, Actor_id::death_fiend);
+    d.melee.dmg_type = Dmg_type::pure;
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::hunting_horror_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::hunting_horror);

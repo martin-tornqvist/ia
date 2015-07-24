@@ -137,6 +137,7 @@ Pos column_and_row_tile(const Tile_id tile)
     case Tile_id::deep_one:                     return Pos(10, 0);
     case Tile_id::shadow:                       return Pos(11, 0);
     case Tile_id::leng_elder:                   return Pos(12, 0);
+    case Tile_id::fiend:                        return Pos(13, 0);
     case Tile_id::ape:                          return Pos(14, 0);
     case Tile_id::croc_head_mummy:              return Pos(15, 0);
     case Tile_id::the_high_priest:              return Pos(16, 0);
@@ -278,7 +279,7 @@ Pos column_and_row_tile(const Tile_id tile)
     case Tile_id::trap_general:                 return Pos(14, 10);
 
     case Tile_id::empty:
-    default:                                  return Pos(18, 10);
+    default:                                    return Pos(18, 10);
     }
 }
 

@@ -183,6 +183,9 @@ Actor* mk_actor_from_id(const Actor_id id)
     case Actor_id::chthonian:
         return new Chthonian();
 
+    case Actor_id::death_fiend:
+        return new Death_fiend();
+
     case Actor_id::hunting_horror:
         return new Hunting_horror();
 

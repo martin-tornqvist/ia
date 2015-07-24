@@ -22,6 +22,7 @@ enum class Tile_id
     deep_one,
     shadow,
     leng_elder,
+    fiend,
     ape,
     croc_head_mummy,
     the_high_priest,
