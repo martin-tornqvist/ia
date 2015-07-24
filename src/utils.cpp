@@ -10,8 +10,6 @@
 #include "actor.hpp"
 #include "feature_mob.hpp"
 
-using namespace std;
-
 namespace rnd
 {
 
@@ -159,7 +157,7 @@ void copy_bool_array(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H])
 }
 
 void mk_vector_from_bool_map(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_H],
-                             vector<Pos>& out)
+                             std::vector<Pos>& out)
 {
     out.clear();
 
@@ -175,7 +173,7 @@ void mk_vector_from_bool_map(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_
     }
 }
 
-void mk_bool_map_from_vector(const vector<Pos>& positions, bool out[MAP_W][MAP_H])
+void mk_bool_map_from_vector(const std::vector<Pos>& positions, bool out[MAP_W][MAP_H])
 {
     reset_array(out, false);
 
@@ -185,7 +183,7 @@ void mk_bool_map_from_vector(const vector<Pos>& positions, bool out[MAP_W][MAP_H
     }
 }
 
-void actor_cells(const vector<Actor*>& actors, vector<Pos>& out)
+void actor_cells(const std::vector<Actor*>& actors, std::vector<Pos>& out)
 {
     out.clear();
 
@@ -279,12 +277,12 @@ bool is_area_inside_map(const Rect& area)
 
 int king_dist(const int X0, const int Y0, const int X1, const int Y1)
 {
-    return max(abs(X1 - X0), abs(Y1 - Y0));
+    return std::max(abs(X1 - X0), abs(Y1 - Y0));
 }
 
 int king_dist(const Pos& p0, const Pos& p1)
 {
-    return max(abs(p1.x - p0.x), abs(p1.y - p0.y));
+    return std::max(abs(p1.x - p0.x), abs(p1.y - p0.y));
 }
 
 int taxicab_dist(const Pos& p0, const Pos& p1)
@@ -292,7 +290,7 @@ int taxicab_dist(const Pos& p0, const Pos& p1)
     return abs(p1.x - p0.x) + abs(p1.y - p0.y);
 }
 
-Pos closest_pos(const Pos& p, const vector<Pos>& positions)
+Pos closest_pos(const Pos& p, const std::vector<Pos>& positions)
 {
     int dist_to_nearest = INT_MAX;
     Pos closest_pos;
@@ -311,7 +309,7 @@ Pos closest_pos(const Pos& p, const vector<Pos>& positions)
     return closest_pos;
 }
 
-Actor* random_closest_actor(const Pos& c, const vector<Actor*>& actors)
+Actor* random_closest_actor(const Pos& c, const std::vector<Actor*>& actors)
 {
     if (actors.empty())
     {
@@ -339,7 +337,7 @@ Actor* random_closest_actor(const Pos& c, const vector<Actor*>& actors)
     assert(dist_to_nearest != INT_MAX);
 
     //Store all actors with distance equal to the nearest distance
-    vector<Actor*> closest_actors;
+    std::vector<Actor*> closest_actors;
 
     for (Actor* actor : actors)
     {
@@ -391,25 +389,40 @@ bool is_val_in_range(const int VAL, const Range& range)
 } //utils
 
 //------------------------------------------------------ TIME DATA
-string Time_data::time_str(const Time_type lowest, const bool ADD_SEPARATORS) const
+std::string Time_data::time_str(const Time_type lowest, const bool ADD_SEPARATORS) const
 {
-    string ret = to_str(year_);
+    std::string ret = to_str(year_);
 
-    string month_str   = (month_   < 10 ? "0" : "") + to_str(month_);
-    string day_str     = (day_     < 10 ? "0" : "") + to_str(day_);
-    string hour_str    = (hour_    < 10 ? "0" : "") + to_str(hour_);
-    string minute_str  = (minute_  < 10 ? "0" : "") + to_str(minute_);
-    string second_str  = (second_  < 10 ? "0" : "") + to_str(second_);
+    const std::string month_str   = (month_   < 10 ? "0" : "") + to_str(month_);
+    const std::string day_str     = (day_     < 10 ? "0" : "") + to_str(day_);
+    const std::string hour_str    = (hour_    < 10 ? "0" : "") + to_str(hour_);
+    const std::string minute_str  = (minute_  < 10 ? "0" : "") + to_str(minute_);
+    const std::string second_str  = (second_  < 10 ? "0" : "") + to_str(second_);
 
-    if (lowest >= Time_type::month)  ret += "-" + month_str;
+    if (lowest >= Time_type::month)
+    {
+        ret += "-" + month_str;
+    }
 
-    if (lowest >= Time_type::day)    ret += "-" + day_str;
+    if (lowest >= Time_type::day)
+    {
+        ret += "-" + day_str;
+    }
 
-    if (lowest >= Time_type::hour)   ret += (ADD_SEPARATORS ? " " : "_") + hour_str;
+    if (lowest >= Time_type::hour)
+    {
+        ret += (ADD_SEPARATORS ? " " : "_") + hour_str;
+    }
 
-    if (lowest >= Time_type::minute) ret += (ADD_SEPARATORS ? ":" : "-") + minute_str;
+    if (lowest >= Time_type::minute)
+    {
+        ret += (ADD_SEPARATORS ? ":" : "-") + minute_str;
+    }
 
-    if (lowest >= Time_type::second) ret += (ADD_SEPARATORS ? ":" : "-") + second_str;
+    if (lowest >= Time_type::second)
+    {
+        ret += (ADD_SEPARATORS ? ":" : "-") + second_str;
+    }
 
     return ret;
 }
@@ -420,7 +433,7 @@ namespace dir_utils
 namespace
 {
 
-const string compass_dir_names[3][3] =
+const std::string compass_dir_names[3][3] =
 {
     {"NW", "N", "NE"},
     {"W",  "",  "E",},
@@ -525,7 +538,7 @@ Pos rnd_adj_pos(const Pos& origin, const bool IS_ORIGIN_ALLOWED)
     }
 }
 
-void compass_dir_name(const Pos& from_pos, const Pos& to_pos, string& dst)
+void compass_dir_name(const Pos& from_pos, const Pos& to_pos, std::string& dst)
 {
 
     dst = "";
@@ -567,14 +580,14 @@ void compass_dir_name(const Pos& from_pos, const Pos& to_pos, string& dst)
     }
 }
 
-void compass_dir_name(const Dir dir, string& dst)
+void compass_dir_name(const Dir dir, std::string& dst)
 {
 
     const Pos& o = offset(dir);
     dst = compass_dir_names[o.x + 1][o.y + 1];
 }
 
-void compass_dir_name(const Pos& offs, string& dst)
+void compass_dir_name(const Pos& offs, std::string& dst)
 {
     dst = compass_dir_names[offs.x + 1][offs.y + 1];
 }

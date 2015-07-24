@@ -11,8 +11,6 @@
 #include "item.hpp"
 #include "text_format.hpp"
 
-using namespace std;
-
 namespace
 {
 
@@ -24,7 +22,7 @@ void draw_item_symbol(const Item& item, const Pos& p)
     {
         render::draw_tile(item.tile(), Panel::screen, p, item_clr);
     }
-    else
+    else //Text mode
     {
         render::draw_glyph(item.glyph(), Panel::screen, p, item_clr);
     }
@@ -36,46 +34,52 @@ void draw_weight_pct(const int Y, const int ITEM_NAME_X, const size_t ITEM_NAME_
     const int WEIGHT_CARRIED_TOT = map::player->inv().total_item_weight();
     const int WEIGHT_PCT         = (item.weight() * 100) / WEIGHT_CARRIED_TOT;
 
+    std::string weight_str  = to_str(WEIGHT_PCT) + "%";
+    int         weight_x    = DESCR_X0 - 1 - weight_str.size();
+
+    assert(WEIGHT_PCT >= 0 && WEIGHT_PCT <= 100);
+
     if (WEIGHT_PCT > 0 && WEIGHT_PCT < 100)
     {
-        const string    weight_str  = to_str(WEIGHT_PCT) + "%";
-        const int       WEIGHT_X    = DESCR_X0 - weight_str.size() - 1;
-        const Pos       weight_pos(WEIGHT_X, Y);
-        const Clr       weight_clr  = IS_SELECTED ? clr_white : clr_gray_drk;
+        const Pos weight_pos(weight_x, Y);
+
+        const Clr weight_clr = IS_SELECTED ? clr_white : clr_gray_drk;
 
         render::draw_text(weight_str, Panel::screen, weight_pos, weight_clr);
-
-        int dots_x = ITEM_NAME_X + ITEM_NAME_LEN;
-        int dots_w = WEIGHT_X - dots_x;
-
-        if (dots_w > 0)
-        {
-
-        }
-        else //Item name does not fit
-        {
-            //Draw a few dots over the end of the item name
-            dots_x = WEIGHT_X - 3;
-            dots_w = 3;
-        }
-
-        const string    dots_str(dots_w, '.');
-        Clr             dots_clr = IS_SELECTED ? clr_white : item_name_clr;
-
-        if (!IS_SELECTED)
-        {
-            dots_clr.r /= 2;
-            dots_clr.g /= 2;
-            dots_clr.b /= 2;
-        }
-
-        render::draw_text(dots_str, Panel::screen, Pos(dots_x, Y), dots_clr);
     }
+    else //"Zero" weight, or 100% of weight - no weight percent should be displayed
+    {
+        weight_str  = "";
+        weight_x    = DESCR_X0 - 1;
+    }
+
+    int dots_x = ITEM_NAME_X + ITEM_NAME_LEN;
+    int dots_w = weight_x - dots_x;
+
+    if (dots_w <= 0)
+    {
+        //Item name does not fit, draw a few dots up until the weight percentage
+        dots_w              = 3;
+        const int DOTS_X1   = weight_x - 1;
+        dots_x              = DOTS_X1 - dots_w + 1;
+    }
+
+    const std::string   dots_str(dots_w, '.');
+    Clr                 dots_clr = IS_SELECTED ? clr_white : item_name_clr;
+
+    if (!IS_SELECTED)
+    {
+        dots_clr.r /= 2;
+        dots_clr.g /= 2;
+        dots_clr.b /= 2;
+    }
+
+    render::draw_text(dots_str, Panel::screen, Pos(dots_x, Y), dots_clr);
 }
 
 void draw_detailed_item_descr(const Item* const item)
 {
-    vector<Str_and_clr> lines;
+    std::vector<Str_and_clr> lines;
 
     if (item)
     {
@@ -83,15 +87,15 @@ void draw_detailed_item_descr(const Item* const item)
 
         if (!base_descr.empty())
         {
-            for (const string& paragraph : base_descr)
+            for (const std::string& paragraph : base_descr)
             {
                 lines.push_back({paragraph, clr_white_high});
             }
         }
 
-        const bool      IS_PLURAL   = item->nr_items_ > 1 && item->data().is_stackable;
-        const string    weight_str  = (IS_PLURAL ? "They are " : "It is ") +
-                                      item->weight_str() + " to carry.";
+        const bool          IS_PLURAL   = item->nr_items_ > 1 && item->data().is_stackable;
+        const std::string   weight_str  = (IS_PLURAL ? "They are " : "It is ") +
+                                          item->weight_str() + " to carry.";
 
         lines.push_back({weight_str, clr_green});
 
@@ -100,7 +104,7 @@ void draw_detailed_item_descr(const Item* const item)
 
         if (WEIGHT_PCT > 0 && WEIGHT_PCT < 100)
         {
-            const string pct_str = "(" + to_str(WEIGHT_PCT) + "% of total carried weight)";
+            const std::string pct_str = "(" + to_str(WEIGHT_PCT) + "% of total carried weight)";
             lines.push_back({pct_str, clr_green});
         }
     }
@@ -132,11 +136,11 @@ void draw_browse_inv(const Menu_browser& browser)
                                 inv.slots_[BROWSER_Y].item :
                                 inv.general_[INV_ELEMENT];
 
-    const string query_eq_str   = item ? "unequip" : "equip";
-    const string query_base_str = "[enter] to " + (IS_IN_EQP ? query_eq_str : "apply item");
-    const string query_drop_str = item ? " [shift+enter] to drop" : "";
+    const std::string query_eq_str   = item ? "unequip" : "equip";
+    const std::string query_base_str = "[enter] to " + (IS_IN_EQP ? query_eq_str : "apply item");
+    const std::string query_drop_str = item ? " [shift+enter] to drop" : "";
 
-    string str = query_base_str + query_drop_str + " [space/esc] to exit";
+    std::string str = query_base_str + query_drop_str + " [space/esc] to exit";
 
     render::draw_text(str, Panel::screen, Pos(0, 0), clr_white_high);
 
@@ -146,9 +150,9 @@ void draw_browse_inv(const Menu_browser& browser)
 
     for (size_t i = 0; i < NR_SLOTS; ++i)
     {
-        const bool IS_CUR_POS = IS_IN_EQP && BROWSER_Y == int(i);
-        const Inv_slot& slot   = inv.slots_[i];
-        const string slot_name = slot.name;
+        const bool          IS_CUR_POS  = IS_IN_EQP && BROWSER_Y == int(i);
+        const Inv_slot&     slot        = inv.slots_[i];
+        const std::string   slot_name   = slot.name;
 
         p.x = 1;
 
@@ -186,7 +190,7 @@ void draw_browse_inv(const Menu_browser& browser)
                 ref_type = Item_ref_type::plural;
             }
 
-            string item_name = cur_item->name(ref_type, Item_ref_inf::yes, att_inf);
+            std::string item_name = cur_item->name(ref_type, Item_ref_inf::yes, att_inf);
 
             text_format::first_to_upper(item_name);
 
@@ -222,10 +226,16 @@ void draw_browse_inv(const Menu_browser& browser)
             while (true)
             {
                 //Check if this is the bottom screen
-                if (int(NR_INV_ITEMS - inv_top_idx) + 1 <= INV_H) {break;}
+                if (int(NR_INV_ITEMS - inv_top_idx) + 1 <= INV_H)
+                {
+                    break;
+                }
 
                 //Check if current browser pos is currently on screen
-                if (is_browser_pos_on_scr(false)) {break;}
+                if (is_browser_pos_on_scr(false))
+                {
+                    break;
+                }
 
                 inv_top_idx += INV_H - 2;
             }
@@ -258,8 +268,8 @@ void draw_browse_inv(const Menu_browser& browser)
 
         p.x = INV_ITEM_NAME_X;
 
-        string item_name = cur_item->name(Item_ref_type::plural, Item_ref_inf::yes,
-                                          Item_ref_att_inf::wpn_context);
+        std::string item_name = cur_item->name(Item_ref_type::plural, Item_ref_inf::yes,
+                                               Item_ref_att_inf::wpn_context);
 
         text_format::first_to_upper(item_name);
 
@@ -297,7 +307,7 @@ void draw_browse_inv(const Menu_browser& browser)
 }
 
 void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
-                const vector<size_t>& gen_inv_indexes)
+                const std::vector<size_t>& gen_inv_indexes)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
@@ -310,7 +320,7 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
 
     const bool HAS_ITEM = !gen_inv_indexes.empty();
 
-    string str = "";
+    std::string str = "";
 
     switch (slot_id_to_equip)
     {

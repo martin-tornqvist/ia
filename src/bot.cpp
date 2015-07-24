@@ -74,7 +74,10 @@ bool walk_to_adj_cell(const Pos& p)
     char key = '0' + int(dir_utils::dir(p - map::player->pos));
 
     //Occasionally randomize movement
-    if (rnd::one_in(5)) {key = '0' + rnd::range(1, 9);}
+    if (rnd::one_in(5))
+    {
+        key = '0' + rnd::range(1, 9);
+    }
 
     input::handle_map_mode_key_press(Key_data(key));
 
