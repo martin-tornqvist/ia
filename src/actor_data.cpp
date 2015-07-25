@@ -637,7 +637,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_tgt_when_los)] = true;
     d.ai[int(Ai_id::moves_to_lair)] = true;
     d.ai[int(Ai_id::moves_to_leader)] = true;
-    d.speed = Actor_speed::slow;
+    d.speed = Actor_speed::normal;
     d.ranged_cooldown_turns = 0;
     d.glyph = 's';
     d.color = clr_green_lgt;
@@ -672,7 +672,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_tgt_when_los)] = true;
     d.ai[int(Ai_id::moves_to_lair)] = true;
     d.ai[int(Ai_id::moves_to_leader)] = true;
-    d.speed = Actor_speed::slow;
+    d.speed = Actor_speed::normal;
     d.ranged_cooldown_turns = 0;
     d.glyph = 's';
     d.color = clr_white_high;
@@ -707,7 +707,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_tgt_when_los)] = true;
     d.ai[int(Ai_id::moves_to_lair)] = true;
     d.ai[int(Ai_id::moves_to_leader)] = true;
-    d.speed = Actor_speed::slow;
+    d.speed = Actor_speed::normal;
     d.ranged_cooldown_turns = 0;
     d.glyph = 's';
     d.color = clr_red_lgt;
@@ -740,7 +740,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_tgt_when_los)] = true;
     d.ai[int(Ai_id::moves_to_lair)] = true;
     d.ai[int(Ai_id::moves_to_leader)] = true;
-    d.speed = Actor_speed::slow;
+    d.speed = Actor_speed::normal;
     d.ranged_cooldown_turns = 0;
     d.glyph = 's';
     d.color = clr_gray;
