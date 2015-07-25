@@ -321,9 +321,9 @@ Dir dir_to_rnd_adj_free_cell(Mon& mon)
     const Rect area_allowed(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2));
 
     //First, try the same direction as last travelled
-    const Dir last_dir_travelled = mon.last_dir_travelled_;
+    const Dir last_dir_travelled = mon.last_dir_moved_;
 
-    if (last_dir_travelled != Dir::center)
+    if (last_dir_travelled != Dir::center && last_dir_travelled != Dir::END)
     {
         const Pos tgt_cell(mon_pos + dir_utils::offset(last_dir_travelled));
 

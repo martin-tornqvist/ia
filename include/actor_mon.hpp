@@ -95,7 +95,7 @@ public:
 
     int                 aware_counter_, player_aware_of_me_counter_;
     bool                is_msg_mon_in_view_printed_;
-    Dir                 last_dir_travelled_;
+    Dir                 last_dir_moved_;
     std::vector<Spell*> spells_known_;
     int                 spell_cool_down_cur_;
     bool                is_roaming_allowed_;

@@ -1905,6 +1905,19 @@ bool Prop_terrified::allow_attack_ranged(const Verbosity verbosity) const
     return true;
 }
 
+void Prop_terrified::on_start()
+{
+    //If this is a monster, we reset its last direction moved. Otherwise it would probably
+    //tend to move toward the player even while terrified (the AI would typically use the idle
+    //movement algorithm, which favors stepping in the same direction as the last move).
+
+    if (!owning_actor_->is_player())
+    {
+        Mon* const mon = static_cast<Mon*>(owning_actor_);
+        mon->last_dir_moved_ = Dir::center;
+    }
+}
+
 void Prop_nailed::change_move_dir(const Pos& actor_pos, Dir& dir)
 {
     (void)actor_pos;

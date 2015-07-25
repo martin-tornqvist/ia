@@ -28,23 +28,21 @@
 #include "explosion.hpp"
 #include "popup.hpp"
 
-using namespace std;
-
 Mon::Mon() :
-    Actor(),
-    aware_counter_(0),
-    player_aware_of_me_counter_(0),
-    is_msg_mon_in_view_printed_(false),
-    last_dir_travelled_(Dir::center),
-    spell_cool_down_cur_(0),
-    is_roaming_allowed_(true),
-    is_stealth_(false),
-    leader_(nullptr),
-    tgt_(nullptr),
-    waiting_(false),
-    shock_caused_cur_(0.0),
-    has_given_xp_for_spotting_(false),
-    nr_turns_until_unsummoned_(-1) {}
+    Actor                       (),
+    aware_counter_              (0),
+    player_aware_of_me_counter_ (0),
+    is_msg_mon_in_view_printed_ (false),
+    last_dir_moved_             (Dir::center),
+    spell_cool_down_cur_        (0),
+    is_roaming_allowed_         (true),
+    is_stealth_                 (false),
+    leader_                     (nullptr),
+    tgt_                        (nullptr),
+    waiting_                    (false),
+    shock_caused_cur_           (0.0),
+    has_given_xp_for_spotting_  (false),
+    nr_turns_until_unsummoned_  (-1) {}
 
 Mon::~Mon()
 {
@@ -61,14 +59,14 @@ void Mon::on_actor_turn()
     //Verify that monster is not outside the map
     if (!utils::is_pos_inside_map(pos, false))
     {
-        TRACE << "Monster outside map" << endl;
+        TRACE << "Monster outside map" << std::endl;
         assert(false);
     }
 
     //Verify that monster's leader does not have a leader (never allowed)
     if (leader_ && !is_actor_my_leader(map::player) && static_cast<Mon*>(leader_)->leader_)
     {
-        TRACE << "Two (or more) steps of leader is never allowed" << endl;
+        TRACE << "Two (or more) steps of leader is never allowed" << std::endl;
         assert(false);
     }
 
@@ -90,7 +88,7 @@ void Mon::on_actor_turn()
     }
 
     //Pick a target
-    vector<Actor*> tgt_bucket;
+    std::vector<Actor*> tgt_bucket;
 
     bool props[size_t(Prop_id::END)];
     prop_handler_->prop_ids(props);
@@ -186,7 +184,7 @@ void Mon::on_actor_turn()
     //Looking is as an action if monster not aware before, and became aware from looking.
     //(This is to give the monsters some reaction time, and not instantly attack)
     if (
-        data_->ai[int(Ai_id::looks)]    &&
+        data_->ai[size_t(Ai_id::looks)] &&
         leader_ != map::player          &&
         (tgt_ == nullptr || tgt_ == map::player))
     {
@@ -196,7 +194,7 @@ void Mon::on_actor_turn()
         }
     }
 
-    if (data_->ai[int(Ai_id::makes_room_for_friend)] && tgt_ == map::player)
+    if (data_->ai[size_t(Ai_id::makes_room_for_friend)] && tgt_ == map::player)
     {
         if (ai::action::make_room_for_friend(*this))
         {
@@ -212,7 +210,7 @@ void Mon::on_actor_turn()
         }
     }
 
-    if (data_->ai[int(Ai_id::attacks)] && tgt_)
+    if (data_->ai[size_t(Ai_id::attacks)] && tgt_)
     {
         if (try_attack(*tgt_))
         {
@@ -248,7 +246,7 @@ void Mon::on_actor_turn()
     set_constr_in_range(0, erratic_move_pct, 95);
 
     if (
-        data_->ai[int(Ai_id::moves_to_random_when_unaware)] &&
+        data_->ai[size_t(Ai_id::moves_to_random_when_unaware)] &&
         rnd::percent(erratic_move_pct))
     {
         if (ai::action::move_to_random_adj_cell(*this))
@@ -257,7 +255,9 @@ void Mon::on_actor_turn()
         }
     }
 
-    if (data_->ai[int(Ai_id::moves_to_tgt_when_los)])
+    const bool IS_TERRIFIED = props[size_t(Prop_id::terrified)];
+
+    if (data_->ai[size_t(Ai_id::moves_to_tgt_when_los)] && !IS_TERRIFIED)
     {
         if (ai::action::move_to_tgt_simple(*this))
         {
@@ -265,9 +265,12 @@ void Mon::on_actor_turn()
         }
     }
 
-    vector<Pos> path;
+    std::vector<Pos> path;
 
-    if (data_->ai[int(Ai_id::paths_to_tgt_when_aware)] && leader_ != map::player)
+    if (
+        data_->ai[size_t(Ai_id::paths_to_tgt_when_aware)]   &&
+        leader_ != map::player                              &&
+        !IS_TERRIFIED)
     {
         ai::info::set_path_to_player_if_aware(*this, path);
     }
@@ -285,7 +288,7 @@ void Mon::on_actor_turn()
         return;
     }
 
-    if (data_->ai[int(Ai_id::moves_to_leader)])
+    if (data_->ai[size_t(Ai_id::moves_to_leader)] && !IS_TERRIFIED)
     {
         ai::info::set_path_to_leader_if_no_los_toleader(*this, path);
 
@@ -296,7 +299,7 @@ void Mon::on_actor_turn()
     }
 
     if (
-        data_->ai[int(Ai_id::moves_to_lair)]    &&
+        data_->ai[size_t(Ai_id::moves_to_lair)] &&
         leader_ != map::player                  &&
         (tgt_ == nullptr || tgt_ == map::player))
     {
@@ -316,7 +319,7 @@ void Mon::on_actor_turn()
         }
     }
 
-    if (data_->ai[int(Ai_id::moves_to_random_when_unaware)])
+    if (data_->ai[size_t(Ai_id::moves_to_random_when_unaware)])
     {
         if (ai::action::move_to_random_adj_cell(*this))
         {
@@ -360,13 +363,13 @@ void Mon::move_dir(Dir dir)
 
     if (dir == Dir::END)
     {
-        TRACE << "Illegal direction parameter" << endl;
+        TRACE << "Illegal direction parameter" << std::endl;
         assert(false);
     }
 
     if (!utils::is_pos_inside_map(pos, false))
     {
-        TRACE << "Monster outside map" << endl;
+        TRACE << "Monster outside map" << std::endl;
         assert(false);
     }
 
@@ -385,7 +388,7 @@ void Mon::move_dir(Dir dir)
 
             if (dir == Dir::center)
             {
-                TRACE_VERBOSE << "Monster move prevented by trap" << endl;
+                TRACE_VERBOSE << "Monster move prevented by trap" << std::endl;
                 game_time::tick();
                 return;
             }
@@ -393,7 +396,7 @@ void Mon::move_dir(Dir dir)
     }
 
     // Movement direction is stored for AI purposes
-    last_dir_travelled_ = dir;
+    last_dir_moved_ = dir;
 
     const Pos tgt_cell(pos + dir_utils::offset(dir));
 
@@ -402,7 +405,7 @@ void Mon::move_dir(Dir dir)
         pos = tgt_cell;
 
         //Bump features in target cell (i.e. to trigger traps)
-        vector<Mob*> mobs;
+        std::vector<Mob*> mobs;
         game_time::mobs_at_pos(pos, mobs);
 
         for (auto* m : mobs) {m->bump(*this);}
@@ -427,7 +430,7 @@ void Mon::hear_sound(const Snd& snd)
 void Mon::speak_phrase()
 {
     const bool IS_SEEN_BY_PLAYER = map::player->can_see_actor(*this, nullptr);
-    const string msg = IS_SEEN_BY_PLAYER ?
+    const std::string msg = IS_SEEN_BY_PLAYER ?
                        aggro_phrase_mon_seen() :
                        aggro_phrase_mon_hidden();
     const Sfx_id sfx = IS_SEEN_BY_PLAYER ?
@@ -465,10 +468,10 @@ void Mon::become_aware(const bool IS_FROM_SEEING)
 
 void Mon::player_become_aware_of_me(const int DURATION_FACTOR)
 {
-    const int LOWER         = 4 * DURATION_FACTOR;
-    const int UPPER         = 6 * DURATION_FACTOR;
-    const int ROLL          = rnd::range(LOWER, UPPER);
-    player_aware_of_me_counter_ = max(player_aware_of_me_counter_, ROLL);
+    const int LOWER             = 4 * DURATION_FACTOR;
+    const int UPPER             = 6 * DURATION_FACTOR;
+    const int ROLL              = rnd::range(LOWER, UPPER);
+    player_aware_of_me_counter_ = std::max(player_aware_of_me_counter_, ROLL);
 }
 
 bool Mon::try_attack(Actor& defender)
@@ -512,7 +515,7 @@ bool Mon::try_attack(Actor& defender)
 
         if (rnd::fraction(4, 5))
         {
-            vector<Pos> line;
+            std::vector<Pos> line;
             line_calc::calc_new_line(pos, defender.pos, true, 9999, false, line);
 
             for (Pos& line_pos : line)
@@ -672,16 +675,16 @@ int Mon::group_size()
 }
 
 //--------------------------------------------------------- SPECIFIC MONSTERS
-string Cultist::cultist_phrase()
+std::string Cultist::cultist_phrase()
 {
-    vector<string> phrase_bucket;
+    std::vector<std::string> phrase_bucket;
 
     const God* const god = gods::cur_god();
 
     if (god && rnd::coin_toss())
     {
-        const string name   = god->name();
-        const string descr  = god->descr();
+        const std::string name   = god->name();
+        const std::string descr  = god->descr();
         phrase_bucket.push_back(name + " save us!");
         phrase_bucket.push_back(descr + " will save us!");
         phrase_bucket.push_back(name + ", guide us!");
@@ -717,7 +720,7 @@ string Cultist::cultist_phrase()
         phrase_bucket.push_back("Pestis cruento vilomaxus pretiacruento!");
         phrase_bucket.push_back("Pretaanluxis cruonit!");
         phrase_bucket.push_back("Pretiacruento!");
-        phrase_bucket.push_back("Stragar_naya!");
+        phrase_bucket.push_back("Stragar-Naya!");
         phrase_bucket.push_back("Vorox esco marana!");
         phrase_bucket.push_back("Vilomaxus!");
         phrase_bucket.push_back("Prostragaranar malachtose!");
@@ -915,7 +918,7 @@ bool Vortex::on_actor_turn_hook()
 
     if (!utils::is_pos_adj(pos, player_pos, true) && rnd::one_in(4))
     {
-        TRACE << "Vortex attempting to pull player" << endl;
+        TRACE << "Vortex attempting to pull player" << std::endl;
 
         const Pos   delta               = player_pos - pos;
         Pos         knock_back_from_pos    = player_pos;
@@ -932,15 +935,15 @@ bool Vortex::on_actor_turn_hook()
         {
             TRACE << "Good pos found to knockback player from (";
             TRACE << knock_back_from_pos.x << ",";
-            TRACE << knock_back_from_pos.y << ")" << endl;
+            TRACE << knock_back_from_pos.y << ")" << std::endl;
             TRACE << "Player position: ";
-            TRACE << player_pos.x << "," << player_pos.y << ")" << endl;
+            TRACE << player_pos.x << "," << player_pos.y << ")" << std::endl;
             bool blocked_los[MAP_W][MAP_H];
             map_parse::run(cell_check::Blocks_los(), blocked_los);
 
             if (can_see_actor(*(map::player), blocked_los))
             {
-                TRACE << "I am seeing the player" << endl;
+                TRACE << "I am seeing the player" << std::endl;
 
                 if (map::player->can_see_actor(*this, nullptr))
                 {
@@ -951,7 +954,7 @@ bool Vortex::on_actor_turn_hook()
                     msg_log::add("A powerful wind is pulling me!");
                 }
 
-                TRACE << "Attempt pull (knockback)" << endl;
+                TRACE << "Attempt pull (knockback)" << std::endl;
                 knock_back::try_knock_back(*(map::player), knock_back_from_pos,
                                            false, false);
                 pull_cooldown = 5;
@@ -1021,7 +1024,7 @@ bool Ghost::on_actor_turn_hook()
         map_parse::run(cell_check::Blocks_los(), blocked);
 
         const bool PLAYER_SEES_ME = map::player->can_see_actor(*this, blocked);
-        const string refer        = PLAYER_SEES_ME ? name_the() : "It";
+        const std::string refer        = PLAYER_SEES_ME ? name_the() : "It";
 
         msg_log::add(refer + " reaches for me... ");
 
@@ -1199,7 +1202,7 @@ bool Mummy::on_actor_turn_hook()
 //        {
 //            if (map::player->can_see_actor(*this, nullptr))
 //            {
-//                const string name = name_the();
+//                const std::string name = name_the();
 //
 //                msg_log::add(name + " bows before me.", clr_white, false, true);
 //            }
@@ -1251,7 +1254,7 @@ bool Khephren::on_actor_turn_hook()
                 }
             }
 
-            vector<Pos> free_cells;
+            std::vector<Pos> free_cells;
             utils::mk_vector_from_bool_map(false, blocked, free_cells);
 
             sort(begin(free_cells), end(free_cells), Is_closer_to_pos(pos));
@@ -1358,7 +1361,7 @@ bool Keziah_mason::on_actor_turn_hook()
         {
             map_parse::run(cell_check::Blocks_move_cmn(true), blocked_los);
 
-            vector<Pos> line;
+            std::vector<Pos> line;
             line_calc::calc_new_line(pos, map::player->pos, true, 9999, false, line);
 
             const int LINE_SIZE = line.size();
@@ -1709,7 +1712,7 @@ bool Major_clapham_lee::on_actor_turn_hook()
         if (can_see_actor(*(map::player), blocked_los))
         {
             msg_log::add("Major Clapham Lee calls forth his Tomb-Legions!");
-            vector<Actor_id> mon_ids;
+            std::vector<Actor_id> mon_ids;
             mon_ids.clear();
 
             mon_ids.push_back(Actor_id::dean_halsey);
@@ -1933,10 +1936,10 @@ bool The_high_priest::on_actor_turn_hook()
         bool blocked[MAP_W][MAP_H];
         map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
-        vector<Pos> free_cells;
+        std::vector<Pos> free_cells;
         utils::mk_vector_from_bool_map(false, blocked, free_cells);
 
-        const int NR_SUMMONED = min(3, int(free_cells.size()));
+        const int NR_SUMMONED = std::min(3, int(free_cells.size()));
 
         for (int i = 0; i < NR_SUMMONED; ++i)
         {
@@ -1944,7 +1947,7 @@ bool The_high_priest::on_actor_turn_hook()
 
             const Pos& p(CELL_IDX);
 
-            vector<Mon*> summoned;
+            std::vector<Mon*> summoned;
             actor_factory::summon(p, {Actor_id::the_high_priest_cpy}, true, this, &summoned);
 
             assert(summoned.size() == 1);
@@ -1984,8 +1987,8 @@ void The_high_priest_cpy::mk_start_items()
     {
         if (actor->id() == Actor_id::the_high_priest)
         {
-            hp_max_  = max(2, actor->hp_max(true)  / 4);
-            hp_     = max(1, actor->hp()         / 4);
+            hp_max_ = std::max(2, actor->hp_max(true)  / 4);
+            hp_     = std::max(1, actor->hp()         / 4);
         }
     }
 

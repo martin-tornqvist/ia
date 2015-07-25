@@ -434,6 +434,8 @@ public:
     bool allow_attack_melee(const Verbosity verbosity) const override;
 
     bool allow_attack_ranged(const Verbosity verbosity) const override;
+
+    void on_start() override;
 };
 
 class Prop_weakened: public Prop
