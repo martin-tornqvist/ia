@@ -96,10 +96,7 @@ bool handle_closed_blocking_door(Mon& mon, vector<Pos> path)
     {
         Door* const door = static_cast<Door*>(f);
 
-        bool props[size_t(Prop_id::END)];
-        mon.prop_handler().prop_ids(props);
-
-        if (!door->can_move(props))
+        if (!door->can_move(mon))
         {
             if (!door->is_stuck())
             {
@@ -272,7 +269,7 @@ bool make_room_for_friend(Mon& mon)
                                 if (is_good_candidate_found)
                                 {
                                     const Pos offset = tgt_pos - mon.pos;
-                                    mon.move_dir(dir_utils::dir(offset));
+                                    mon.move(dir_utils::dir(offset));
                                     return true;
                                 }
                             }
@@ -382,7 +379,7 @@ bool move_to_random_adj_cell(Mon& mon)
 
             if (dir != Dir::center)
             {
-                mon.move_dir(dir);
+                mon.move(dir);
                 return true;
             }
         }
@@ -405,7 +402,7 @@ bool move_to_tgt_simple(Mon& mon)
 
             if (!blocked[new_pos.x][new_pos.y])
             {
-                mon.move_dir(dir_utils::dir(signs));
+                mon.move(dir_utils::dir(signs));
                 return true;
             }
         }
@@ -421,7 +418,7 @@ bool step_path(Mon& mon, vector<Pos>& path)
         if (!path.empty())
         {
             const Pos delta = path.back() - mon.pos;
-            mon.move_dir(dir_utils::dir(delta));
+            mon.move(dir_utils::dir(delta));
             return true;
         }
     }
@@ -435,8 +432,7 @@ bool step_to_lair_if_los(Mon& mon, const Pos& lair_cell)
     {
         bool blocked[MAP_W][MAP_H];
         map_parse::run(cell_check::Blocks_los(), blocked);
-        const bool HAS_LOS_TO_LAIR =
-            fov::check_cell(blocked, lair_cell, mon.pos, true);
+        const bool HAS_LOS_TO_LAIR = fov::check_cell(blocked, lair_cell, mon.pos, true);
 
         if (HAS_LOS_TO_LAIR)
         {
@@ -454,7 +450,7 @@ bool step_to_lair_if_los(Mon& mon, const Pos& lair_cell)
             }
             else
             {
-                mon.move_dir(dir_utils::dir(delta));
+                mon.move(dir_utils::dir(delta));
                 return true;
             }
         }
@@ -594,9 +590,6 @@ void set_path_to_player_if_aware(Mon& mon, vector<Pos>& path)
     bool blocked[MAP_W][MAP_H];
     utils::reset_array(blocked, false);
 
-    bool props[size_t(Prop_id::END)];
-    mon.prop_handler().prop_ids(props);
-
     const int X0 = 1;
     const int Y0 = 1;
     const int X1 = MAP_W - 1;
@@ -608,7 +601,7 @@ void set_path_to_player_if_aware(Mon& mon, vector<Pos>& path)
         {
             const auto* const f = map::cells[x][y].rigid;
 
-            if (!f->can_move(props))
+            if (!f->can_move(mon))
             {
                 if (f->id() == Feature_id::door)
                 {

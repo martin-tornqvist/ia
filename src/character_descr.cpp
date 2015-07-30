@@ -13,21 +13,19 @@
 #include "item.hpp"
 #include "map.hpp"
 
-using namespace std;
-
 namespace character_descr
 {
 
 namespace
 {
 
-vector<Str_and_clr> lines_;
+std::vector<Str_and_clr> lines_;
 
 void mk_lines()
 {
     lines_.clear();
 
-    const string offset = "   ";
+    const std::string offset = "   ";
     const Clr& clr_heading   = clr_white_high;
     const Clr& clr_text      = clr_white;
     const Clr& clr_text_dark  = clr_gray;
@@ -39,14 +37,14 @@ void mk_lines()
 
     lines_.push_back({"Combat skills", clr_heading});
 
-    const int BASE_MELEE          = min(100, abilities.val(Ability_id::melee,
-                                        true, *(map::player)));
+    const int BASE_MELEE          = std::min(100, abilities.val(Ability_id::melee,
+                                    true, *(map::player)));
 
-    const int BASE_RANGED         = min(100, abilities.val(Ability_id::ranged,
-                                        true, *(map::player)));
+    const int BASE_RANGED         = std::min(100, abilities.val(Ability_id::ranged,
+                                    true, *(map::player)));
 
-    const int BASE_DODGE_ATTACKS  = min(100, abilities.val(Ability_id::dodge_att,
-                                        true, *(map::player)));
+    const int BASE_DODGE_ATTACKS  = std::min(100, abilities.val(Ability_id::dodge_att,
+                                    true, *(map::player)));
 
     lines_.push_back({offset + "Melee    : " + to_str(BASE_MELEE)         + "%", clr_text});
     lines_.push_back({offset + "Ranged   : " + to_str(BASE_RANGED)        + "%", clr_text});
@@ -99,8 +97,8 @@ void mk_lines()
     lines_.push_back({" ", clr_text});
 
     lines_.push_back({"Potion knowledge", clr_heading});
-    vector<Str_and_clr> potion_list;
-    vector<Str_and_clr> manuscript_list;
+    std::vector<Str_and_clr> potion_list;
+    std::vector<Str_and_clr> manuscript_list;
 
     for (int i = 0; i < int(Item_id::END); ++i)
     {
@@ -167,14 +165,15 @@ void mk_lines()
         if (player_bon::traits[i])
         {
             const Trait trait = Trait(i);
-            string title = "", descr = "";
-            player_bon::trait_title(trait, title);
-            player_bon::trait_descr(trait, descr);
+
+            const std::string title = player_bon::trait_title(trait);
+            const std::string descr = player_bon::trait_descr(trait);
+
             lines_.push_back({offset + title, clr_text});
-            vector<string> descr_lines;
+            std::vector<std::string> descr_lines;
             text_format::line_to_lines(descr, MAX_W_DESCR, descr_lines);
 
-            for (string& descr_line : descr_lines)
+            for (std::string& descr_line : descr_lines)
             {
                 lines_.push_back({offset + descr_line, clr_text_dark});
             }
@@ -184,29 +183,40 @@ void mk_lines()
     }
 }
 
-void shock_res_src_title(const Shock_src shock_src, string& str_ref)
+void shock_res_src_title(const Shock_src shock_src, std::string& str_ref)
 {
     str_ref = "";
 
     switch (shock_src)
     {
-    case Shock_src::time:            str_ref = "Time";                    break;
+    case Shock_src::time:
+        str_ref = "Time";
+        break;
 
-    case Shock_src::cast_intr_spell:   str_ref = "Casting learned spells";  break;
+    case Shock_src::cast_intr_spell:
+        str_ref = "Casting learned spells";
+        break;
 
-    case Shock_src::see_mon:          str_ref = "Seeing monsters";         break;
+    case Shock_src::see_mon:
+        str_ref = "Seeing monsters";
+        break;
 
-    case Shock_src::use_strange_item:  str_ref = "Using strange items";     break;
+    case Shock_src::use_strange_item:
+        str_ref = "Using strange items";
+        break;
 
-    case Shock_src::misc:            str_ref = "Other";                   break;
+    case Shock_src::misc:
+        str_ref = "Other";
+        break;
 
-    case Shock_src::END: {} break;
+    case Shock_src::END:
+        break;
     }
 }
 
 void draw_interface()
 {
-    const string decoration_line(MAP_W, '-');
+    const std::string decoration_line(MAP_W, '-');
 
     const int X_LABEL = 3;
 
@@ -232,7 +242,7 @@ void run()
     const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
 
     int top_nr = 0;
-    int btm_nr = min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
+    int btm_nr = std::min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
 
     while (true)
     {
@@ -260,22 +270,22 @@ void run()
             }
             else
             {
-                top_nr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, top_nr);
+                top_nr = std::min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, top_nr);
             }
         }
         else if (d.key == '8' || d.sdl_key == SDLK_UP || d.key == 'k')
         {
-            top_nr = max(0, top_nr - LINE_JUMP);
+            top_nr = std::max(0, top_nr - LINE_JUMP);
         }
         else if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)
         {
             break;
         }
 
-        btm_nr = min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
+        btm_nr = std::min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
     }
 
     render::draw_map_and_interface();
 }
 
-} //Character_descr
+} //character_descr

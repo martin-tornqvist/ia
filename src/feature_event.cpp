@@ -1,6 +1,6 @@
 #include "feature_event.hpp"
 
-#include <assert.h>
+#include <cassert>
 
 #include "actor_player.hpp"
 #include "actor_mon.hpp"

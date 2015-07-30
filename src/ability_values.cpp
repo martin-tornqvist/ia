@@ -8,8 +8,6 @@
 #include "properties.hpp"
 #include "map.hpp"
 
-using namespace std;
-
 int Ability_vals::val(const Ability_id id,
                       const bool IS_AFFECTED_BY_PROPS,
                       const Actor& actor) const
@@ -38,64 +36,121 @@ int Ability_vals::val(const Ability_id id,
         case Ability_id::searching:
             ret += 8;
 
-            if (player_bon::traits[int(Trait::observant)])   ret += 4;
+            if (player_bon::traits[int(Trait::observant)])
+            {
+                ret += 4;
+            }
 
-            if (player_bon::traits[int(Trait::perceptive)])  ret += 4;
+            if (player_bon::traits[int(Trait::perceptive)])
+            {
+                ret += 4;
+            }
+
 
             break;
 
         case Ability_id::melee:
             ret += 45;
 
-            if (player_bon::traits[int(Trait::adept_melee_fighter)])   ret += 10;
+            if (player_bon::traits[int(Trait::adept_melee_fighter)])
+            {
+                ret += 10;
+            }
 
-            if (player_bon::traits[int(Trait::expert_melee_fighter)])  ret += 10;
+            if (player_bon::traits[int(Trait::expert_melee_fighter)])
+            {
+                ret += 10;
+            }
 
-            if (player_bon::traits[int(Trait::master_melee_fighter)])  ret += 10;
+            if (player_bon::traits[int(Trait::master_melee_fighter)])
+            {
+                ret += 10;
+            }
 
-            if (player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25) ret += 30;
+            if (player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25)
+            {
+                ret += 30;
+            }
 
             break;
 
         case Ability_id::ranged:
             ret += 50;
 
-            if (player_bon::traits[int(Trait::adept_marksman)])   ret += 10;
+            if (player_bon::traits[int(Trait::adept_marksman)])
+            {
+                ret += 10;
+            }
 
-            if (player_bon::traits[int(Trait::expert_marksman)])  ret += 10;
+            if (player_bon::traits[int(Trait::expert_marksman)])
+            {
+                ret += 10;
+            }
 
-            if (player_bon::traits[int(Trait::master_marksman)])  ret += 10;
+            if (player_bon::traits[int(Trait::master_marksman)])
+            {
+                ret += 10;
+            }
 
-            if (player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25) ret += 30;
+            if (player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25)
+            {
+                ret += 30;
+            }
+
+            if (player_bon::bg() == Bg::ghoul)
+            {
+                ret -= 15;
+            }
 
             break;
 
         case Ability_id::dodge_trap:
             ret += 5;
 
-            if (player_bon::traits[int(Trait::dexterous)]) ret += 25;
+            if (player_bon::traits[int(Trait::dexterous)])
+            {
+                ret += 25;
+            }
 
-            if (player_bon::traits[int(Trait::lithe)])     ret += 25;
+            if (player_bon::traits[int(Trait::lithe)])
+            {
+                ret += 25;
+            }
 
             break;
 
         case Ability_id::dodge_att:
             ret += 10;
 
-            if (player_bon::traits[int(Trait::dexterous)]) ret += 25;
+            if (player_bon::traits[int(Trait::dexterous)])
+            {
+                ret += 25;
+            }
 
-            if (player_bon::traits[int(Trait::lithe)])     ret += 25;
+            if (player_bon::traits[int(Trait::lithe)])
+            {
+                ret += 25;
+            }
 
-            if (player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25) ret += 50;
+            if (player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25)
+            {
+                ret += 50;
+            }
 
             break;
 
         case Ability_id::stealth:
             ret += 10;
 
-            if (player_bon::traits[int(Trait::stealthy)])      ret += 50;
+            if (player_bon::traits[int(Trait::stealthy)])
+            {
+                ret += 50;
+            }
 
-            if (player_bon::traits[int(Trait::imperceptible)]) ret += 30;
+            if (player_bon::traits[int(Trait::imperceptible)])
+            {
+                ret += 30;
+            }
 
             break;
 
@@ -106,16 +161,16 @@ int Ability_vals::val(const Ability_id id,
         if (id == Ability_id::searching)
         {
             //Searching must always be at least 1 to avoid trapping the player
-            ret = max(ret, 1);
+            ret = std::max(ret, 1);
         }
         else if (id == Ability_id::dodge_att)
         {
             //It should not be possible to dodge every attack
-            ret = min(ret, 95);
+            ret = std::min(ret, 95);
         }
     }
 
-    ret = max(0, ret);
+    ret = std::max(0, ret);
 
     return ret;
 }

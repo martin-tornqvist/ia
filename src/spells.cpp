@@ -2,7 +2,7 @@
 
 #include <algorithm>
 #include <vector>
-#include <assert.h>
+#include <cassert>
 
 #include "init.hpp"
 #include "render.hpp"
@@ -242,20 +242,17 @@ Range Spell::spi_cost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
 
         Prop_handler& prop_hlr = caster->prop_handler();
 
-        bool props[size_t(Prop_id::END)];
-        prop_hlr.prop_ids(props);
-
         if (!prop_hlr.allow_see())
         {
             --cost_max;
         }
 
-        if (props[int(Prop_id::blessed)])
+        if (caster->has_prop(Prop_id::blessed))
         {
             --cost_max;
         }
 
-        if (props[int(Prop_id::cursed)])
+        if (caster->has_prop(Prop_id::cursed))
         {
             cost_max += 3;
         }
@@ -308,7 +305,7 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
         if (IS_INTRINSIC)
         {
             const Range cost = spi_cost(false, caster);
-            caster->hit_spi(rnd::range(cost), false);
+            caster->hit_spi(rnd::range(cost), Verbosity::silent);
         }
 
         Spell_effect_noticed is_noticed = Spell_effect_noticed::no;
@@ -343,11 +340,7 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
     tgt = utils::random_closest_actor(caster->pos, seen_actors);
 
     //Spell reflection?
-    bool tgt_props[size_t(Prop_id::END)];
-
-    tgt->prop_handler().prop_ids(tgt_props);
-
-    if (tgt_props[size_t(Prop_id::spell_reflect)])
+    if (tgt->has_prop(Prop_id::spell_reflect))
     {
         msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
         return cast_impl(tgt);
@@ -397,9 +390,7 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
 
     if (caster->is_player())
     {
-        bool props[size_t(Prop_id::END)];
-        caster->prop_handler().prop_ids(props);
-        is_warlock_charged = props[int(Prop_id::warlock_charged)];
+        is_warlock_charged = caster->has_prop(Prop_id::warlock_charged);
     }
 
     if (map::player->can_see_actor(*tgt, nullptr))
@@ -407,7 +398,7 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
         msg_log::add(tgt_str + " struck by a blast!", msg_clr);
     }
 
-    tgt->prop_handler().try_apply_prop(new Prop_paralyzed(Prop_turns::specific, 2));
+    tgt->prop_handler().try_add_prop(new Prop_paralyzed(Prop_turns::specific, 2));
 
     Range dmg_range(4, 10);
     const int DMG = is_warlock_charged ? dmg_range.upper : rnd::range(dmg_range);
@@ -443,10 +434,7 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
     //This point reached means targets are available
     if (caster->is_player())
     {
-        bool props[size_t(Prop_id::END)];
-        caster->prop_handler().prop_ids(props);
-
-        is_warlock_charged = props[int(Prop_id::warlock_charged)];
+        is_warlock_charged = caster->has_prop(Prop_id::warlock_charged);
     }
 
     render::draw_blast_at_seen_actors(tgts, clr_red_lgt);
@@ -454,11 +442,7 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
     for (Actor* const tgt : tgts)
     {
         //Spell reflection?
-        bool tgt_props[size_t(Prop_id::END)];
-
-        tgt->prop_handler().prop_ids(tgt_props);
-
-        if (tgt_props[size_t(Prop_id::spell_reflect)])
+        if (tgt->has_prop(Prop_id::spell_reflect))
         {
             msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
             cast_impl(tgt);
@@ -484,7 +468,7 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
             msg_log::add(tgt_str + " is struck by a roaring blast!", msg_clr);
         }
 
-        tgt->prop_handler().try_apply_prop(new Prop_paralyzed(Prop_turns::specific, 2));
+        tgt->prop_handler().try_add_prop(new Prop_paralyzed(Prop_turns::specific, 2));
 
         const int DMG = is_warlock_charged ? dmg_range.upper : rnd::range(dmg_range);
 
@@ -574,18 +558,14 @@ Spell_effect_noticed Spell_mayhem::cast_impl(Actor* const caster) const
     for (auto* tgt : seen_foes)
     {
         //Spell reflection?
-        bool tgt_props[size_t(Prop_id::END)];
-
-        tgt->prop_handler().prop_ids(tgt_props);
-
-        if (tgt_props[size_t(Prop_id::spell_reflect)])
+        if (tgt->has_prop(Prop_id::spell_reflect))
         {
             msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
             cast_impl(tgt);
             continue;
         }
 
-        tgt->prop_handler().try_apply_prop(new Prop_burning(Prop_turns::std));
+        tgt->prop_handler().try_add_prop(new Prop_burning(Prop_turns::std));
     }
 
     snd_emit::emit_snd({"", Sfx_id::END, Ignore_msg_if_origin_seen::yes, caster_pos, nullptr,
@@ -903,16 +883,10 @@ Spell_effect_noticed Spell_opening::cast_impl(Actor* const caster) const
 //------------------------------------------------------------ SACRIFICE LIFE
 Spell_effect_noticed Spell_sacr_life::cast_impl(Actor* const caster) const
 {
-    (void)caster;
-
     //Convert every 2 HP to 1 SPI
 
     //Spell reflection?
-    bool tgt_props[size_t(Prop_id::END)];
-
-    map::player->prop_handler().prop_ids(tgt_props);
-
-    if (tgt_props[size_t(Prop_id::spell_reflect)])
+    if (caster->has_prop(Prop_id::spell_reflect))
     {
         msg_log::add(spell_reflect_self_msg, clr_white, false, More_prompt_on_msg::yes);
         return Spell_effect_noticed::no;
@@ -924,7 +898,7 @@ Spell_effect_noticed Spell_sacr_life::cast_impl(Actor* const caster) const
     {
         const int HP_DRAINED = ((PLAYER_HP_CUR - 1) / 2) * 2;
         map::player->hit(HP_DRAINED, Dmg_type::pure);
-        map::player->restore_spi(HP_DRAINED, true, true);
+        map::player->restore_spi(HP_DRAINED, true);
         return Spell_effect_noticed::yes;
     }
 
@@ -934,16 +908,10 @@ Spell_effect_noticed Spell_sacr_life::cast_impl(Actor* const caster) const
 //------------------------------------------------------------ SACRIFICE SPIRIT
 Spell_effect_noticed Spell_sacr_spi::cast_impl(Actor* const caster) const
 {
-    (void)caster;
-
     //Convert all SPI to HP
 
     //Spell reflection?
-    bool tgt_props[size_t(Prop_id::END)];
-
-    map::player->prop_handler().prop_ids(tgt_props);
-
-    if (tgt_props[size_t(Prop_id::spell_reflect)])
+    if (caster->has_prop(Prop_id::spell_reflect))
     {
         msg_log::add(spell_reflect_self_msg, clr_white, false, More_prompt_on_msg::yes);
         return Spell_effect_noticed::no;
@@ -954,8 +922,8 @@ Spell_effect_noticed Spell_sacr_spi::cast_impl(Actor* const caster) const
     if (PLAYER_SPI_CUR > 0)
     {
         const int HP_DRAINED = PLAYER_SPI_CUR - 1;
-        map::player->hit_spi(HP_DRAINED, true);
-        map::player->restore_hp(HP_DRAINED, true, true);
+        map::player->hit_spi(HP_DRAINED);
+        map::player->restore_hp(HP_DRAINED);
         return Spell_effect_noticed::yes;
     }
 
@@ -985,11 +953,7 @@ Spell_effect_noticed Spell_cloud_minds::cast_impl(Actor* const caster) const
 Spell_effect_noticed Spell_bless::cast_impl(Actor* const caster) const
 {
     //Spell reflection?
-    bool tgt_props[size_t(Prop_id::END)];
-
-    caster->prop_handler().prop_ids(tgt_props);
-
-    if (tgt_props[size_t(Prop_id::spell_reflect)])
+    if (caster->has_prop(Prop_id::spell_reflect))
     {
         if (caster->is_player())
         {
@@ -999,14 +963,14 @@ Spell_effect_noticed Spell_bless::cast_impl(Actor* const caster) const
         return Spell_effect_noticed::no;
     }
 
-    caster->prop_handler().try_apply_prop(new Prop_blessed(Prop_turns::std));
+    caster->prop_handler().try_add_prop(new Prop_blessed(Prop_turns::std));
     return Spell_effect_noticed::yes;
 }
 
 //------------------------------------------------------------ LIGHT
 Spell_effect_noticed Spell_light::cast_impl(Actor* const caster) const
 {
-    caster->prop_handler().try_apply_prop(new Prop_radiant(Prop_turns::std));
+    caster->prop_handler().try_add_prop(new Prop_radiant(Prop_turns::std));
     return Spell_effect_noticed::yes;
 }
 
@@ -1014,11 +978,7 @@ Spell_effect_noticed Spell_light::cast_impl(Actor* const caster) const
 Spell_effect_noticed Spell_teleport::cast_impl(Actor* const caster) const
 {
     //Spell reflection?
-    bool tgt_props[size_t(Prop_id::END)];
-
-    caster->prop_handler().prop_ids(tgt_props);
-
-    if (tgt_props[size_t(Prop_id::spell_reflect)])
+    if (caster->has_prop(Prop_id::spell_reflect))
     {
         if (caster->is_player())
         {
@@ -1043,11 +1003,7 @@ bool Spell_teleport::allow_mon_cast_now(Mon& mon) const
 Spell_effect_noticed Spell_elem_res::cast_impl(Actor* const caster) const
 {
     //Spell reflection?
-    bool tgt_props[size_t(Prop_id::END)];
-
-    caster->prop_handler().prop_ids(tgt_props);
-
-    if (tgt_props[size_t(Prop_id::spell_reflect)])
+    if (caster->has_prop(Prop_id::spell_reflect))
     {
         if (caster->is_player())
         {
@@ -1059,9 +1015,9 @@ Spell_effect_noticed Spell_elem_res::cast_impl(Actor* const caster) const
 
     const int DURATION = 20;
     Prop_handler& prop_hlr = caster->prop_handler();
-    prop_hlr.try_apply_prop(new Prop_rFire(Prop_turns::specific, DURATION));
-    prop_hlr.try_apply_prop(new Prop_rElec(Prop_turns::specific, DURATION));
-    prop_hlr.try_apply_prop(new Prop_rCold(Prop_turns::specific, DURATION));
+    prop_hlr.try_add_prop(new Prop_rFire(Prop_turns::specific, DURATION));
+    prop_hlr.try_add_prop(new Prop_rElec(Prop_turns::specific, DURATION));
+    prop_hlr.try_add_prop(new Prop_rCold(Prop_turns::specific, DURATION));
     return Spell_effect_noticed::yes;
 }
 
@@ -1075,18 +1031,14 @@ Spell_effect_noticed Spell_knock_back::cast_impl(Actor* const caster) const
 {
     assert(!caster->is_player());
 
-    Clr     msg_clr      = clr_msg_good;
-    string  tgt_str      = "me";
-    Actor*  caster_used  = caster;
+    Clr     msg_clr     = clr_msg_good;
+    string  tgt_str     = "me";
+    Actor*  caster_used = caster;
     Actor*  tgt         = static_cast<Mon*>(caster_used)->tgt_;
     assert(tgt);
 
     //Spell reflection?
-    bool tgt_props[size_t(Prop_id::END)];
-
-    tgt->prop_handler().prop_ids(tgt_props);
-
-    if (tgt_props[size_t(Prop_id::spell_reflect)])
+    if (tgt->has_prop(Prop_id::spell_reflect))
     {
         msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
         swap(caster_used, tgt);
@@ -1138,11 +1090,7 @@ Spell_effect_noticed Spell_prop_on_mon::cast_impl(Actor* const caster) const
         Prop_handler& prop_handler = tgt->prop_handler();
 
         //Spell reflection?
-        bool tgt_props[size_t(Prop_id::END)];
-
-        prop_handler.prop_ids(tgt_props);
-
-        if (tgt_props[size_t(Prop_id::spell_reflect)])
+        if (tgt->has_prop(Prop_id::spell_reflect))
         {
             msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
             cast_impl(tgt);
@@ -1150,7 +1098,7 @@ Spell_effect_noticed Spell_prop_on_mon::cast_impl(Actor* const caster) const
         }
 
         Prop* const prop = prop_handler.mk_prop(prop_id, Prop_turns::std);
-        prop_handler.try_apply_prop(prop);
+        prop_handler.try_add_prop(prop);
     }
 
     return Spell_effect_noticed::yes;
@@ -1175,11 +1123,7 @@ Spell_effect_noticed Spell_disease::cast_impl(Actor* const caster) const
     Actor* tgt        = static_cast<Mon*>(caster_used)->tgt_;
 
     //Spell reflection?
-    bool tgt_props[size_t(Prop_id::END)];
-
-    tgt->prop_handler().prop_ids(tgt_props);
-
-    if (tgt_props[size_t(Prop_id::spell_reflect)])
+    if (tgt->has_prop(Prop_id::spell_reflect))
     {
         msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
         swap(caster_used, tgt);
@@ -1197,7 +1141,7 @@ Spell_effect_noticed Spell_disease::cast_impl(Actor* const caster) const
         msg_log::add("A horrible disease is starting to afflict " + actor_name + "!");
     }
 
-    tgt->prop_handler().try_apply_prop(new Prop_diseased(Prop_turns::specific, 50));
+    tgt->prop_handler().try_add_prop(new Prop_diseased(Prop_turns::specific, 50));
     return Spell_effect_noticed::no;
 }
 
@@ -1346,11 +1290,7 @@ bool Spell_summon_mon::allow_mon_cast_now(Mon& mon) const
 Spell_effect_noticed Spell_heal_self::cast_impl(Actor* const caster) const
 {
     //Spell reflection?
-    bool tgt_props[size_t(Prop_id::END)];
-
-    caster->prop_handler().prop_ids(tgt_props);
-
-    if (tgt_props[size_t(Prop_id::spell_reflect)])
+    if (caster->has_prop(Prop_id::spell_reflect))
     {
         if (caster->is_player())
         {
@@ -1361,7 +1301,7 @@ Spell_effect_noticed Spell_heal_self::cast_impl(Actor* const caster) const
     }
 
     //The spell effect is noticed if any hit points were restored
-    const bool IS_ANY_HP_HEALED = caster->restore_hp(999, true);
+    const bool IS_ANY_HP_HEALED = caster->restore_hp(999);
 
     return IS_ANY_HP_HEALED ? Spell_effect_noticed::yes : Spell_effect_noticed::no;
 }
@@ -1382,11 +1322,7 @@ Spell_effect_noticed Spell_mi_go_hypno::cast_impl(Actor* const caster) const
     assert(tgt);
 
     //Spell reflection?
-    bool tgt_props[size_t(Prop_id::END)];
-
-    tgt->prop_handler().prop_ids(tgt_props);
-
-    if (tgt_props[size_t(Prop_id::spell_reflect)])
+    if (tgt->has_prop(Prop_id::spell_reflect))
     {
         msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
         swap(caster_used, tgt);
@@ -1400,7 +1336,7 @@ Spell_effect_noticed Spell_mi_go_hypno::cast_impl(Actor* const caster) const
     if (rnd::coin_toss())
     {
         Prop* const prop = new Prop_fainted(Prop_turns::specific, rnd::range(2, 10));
-        tgt->prop_handler().try_apply_prop(prop);
+        tgt->prop_handler().try_add_prop(prop);
     }
     else
     {
@@ -1426,11 +1362,7 @@ Spell_effect_noticed Spell_burn::cast_impl(Actor* const caster) const
     assert(tgt);
 
     //Spell reflection?
-    bool tgt_props[size_t(Prop_id::END)];
-
-    tgt->prop_handler().prop_ids(tgt_props);
-
-    if (tgt_props[size_t(Prop_id::spell_reflect)])
+    if (tgt->has_prop(Prop_id::spell_reflect))
     {
         msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
         swap(caster_used, tgt);
@@ -1449,7 +1381,7 @@ Spell_effect_noticed Spell_burn::cast_impl(Actor* const caster) const
     }
 
     Prop* const prop = new Prop_burning(Prop_turns::specific, rnd::range(3, 4));
-    tgt->prop_handler().try_apply_prop(prop);
+    tgt->prop_handler().try_add_prop(prop);
 
     return Spell_effect_noticed::yes;
 }

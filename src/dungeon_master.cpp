@@ -39,10 +39,10 @@ void player_gain_lvl()
 
         create_character::pick_new_trait(false);
 
-        map::player->restore_hp(999, false);
-        map::player->change_max_hp(HP_PER_LVL, true);
-        map::player->restore_spi(999, false);
-        map::player->change_max_spi(SPI_PER_LVL, true);
+        map::player->restore_hp(999, false, Verbosity::silent);
+        map::player->change_max_hp(HP_PER_LVL);
+        map::player->restore_spi(999, false, Verbosity::silent);
+        map::player->change_max_spi(SPI_PER_LVL);
         map::player->restore_shock(999, false);
     }
 }

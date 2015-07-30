@@ -1194,7 +1194,7 @@ void draw_map()
         const Pos& p(actor->pos);
 
         if (
-            actor->is_corpse()                          &&
+            actor->is_corpse()                      &&
             actor->data().glyph != ' '              &&
             actor->data().tile != Tile_id::empty    &&
             map::cells[p.x][p.y].is_seen_by_player)
@@ -1477,26 +1477,34 @@ void draw_map()
                 }
             }
 
-            if (!cell.is_explored) {render_array[x][y] = Cell_render_data();}
+            if (!cell.is_explored)
+            {
+                render_array[x][y] = Cell_render_data();
+            }
         }
     }
 
     //---------------- DRAW PLAYER CHARACTER
-    bool        is_ranged_wpn = false;
     const Pos&  pos         = map::player->pos;
     Item*       item        = map::player->inv().item_in_slot(Slot_id::wielded);
-
-    if (item)
-    {
-        is_ranged_wpn = item->data().ranged.is_ranged_wpn;
-    }
+    const bool  IS_GHOUL    = player_bon::bg() == Bg::ghoul;
 
     if (IS_TILES)
     {
-        const Tile_id tile = is_ranged_wpn ? Tile_id::playerFirearm : Tile_id::player_melee;
+        bool uses_ranged_wpn = false;
+
+        if (item)
+        {
+            uses_ranged_wpn = item->data().ranged.is_ranged_wpn;
+        }
+
+        const Tile_id tile = IS_GHOUL           ? Tile_id::ghoul :
+                             uses_ranged_wpn    ? Tile_id::player_firearm :
+                             Tile_id::player_melee;
+
         draw_tile(tile, Panel::map, pos, map::player->clr(), clr_black);
     }
-    else
+    else //Text mode
     {
         draw_glyph('@', Panel::map, pos, map::player->clr(), true, clr_black);
     }

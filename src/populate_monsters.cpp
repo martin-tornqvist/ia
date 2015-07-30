@@ -23,11 +23,20 @@ namespace
 
 int random_out_of_depth()
 {
-    if (map::dlvl == 0)                     {return 0;}
+    if (map::dlvl == 0)
+    {
+        return 0;
+    }
 
-    if (rnd::one_in(40) && map::dlvl > 1)    {return 5;}
+    if (rnd::one_in(40) && map::dlvl > 1)
+    {
+        return 5;
+    }
 
-    if (rnd::one_in(5))                      {return 2;}
+    if (rnd::one_in(5))
+    {
+        return 2;
+    }
 
     return 0;
 }
@@ -54,11 +63,11 @@ void mk_list_of_mon_can_auto_spawn(const int NR_LVLS_OUT_OF_DEPTH, vector<Actor_
     for (const auto& d : actor_data::data)
     {
         if (
-            d.id != Actor_id::player             &&
-            d.is_auto_spawn_allowed                &&
-            d.nr_left_allowed_to_spawn != 0         &&
-            EFFECTIVE_DLVL >= d.spawn_min_dLVL    &&
-            EFFECTIVE_DLVL <= d.spawn_max_dLVL    &&
+            d.id != Actor_id::player            &&
+            d.is_auto_spawn_allowed             &&
+            d.nr_left_allowed_to_spawn != 0     &&
+            EFFECTIVE_DLVL >= d.spawn_min_dLVL  &&
+            EFFECTIVE_DLVL <= d.spawn_max_dLVL  &&
             !(d.is_unique && spawned_ids[size_t(d.id)]))
         {
             list_ref.push_back(d.id);
@@ -166,7 +175,10 @@ void try_spawn_due_to_time_passed()
     {
         for (int x = 1; x < MAP_W - 1; ++x)
         {
-            if (!blocked[x][y]) {free_cells_vector.push_back(Pos(x, y));}
+            if (!blocked[x][y])
+            {
+                free_cells_vector.push_back(Pos(x, y));
+            }
         }
     }
 
@@ -384,15 +396,24 @@ void mk_group_at(const Actor_id id, const vector<Pos>& sorted_free_cells_vector,
 
     switch (d.group_size)
     {
-    case Mon_group_size::few:    max_nr_in_group = rnd::range(1, 2);    break;
+    case Mon_group_size::few:
+        max_nr_in_group = rnd::range(1, 2);
+        break;
 
-    case Mon_group_size::group:  max_nr_in_group = rnd::range(3, 4);    break;
+    case Mon_group_size::group:
+        max_nr_in_group = rnd::range(3, 4);
+        break;
 
-    case Mon_group_size::horde:  max_nr_in_group = rnd::range(6, 7);    break;
+    case Mon_group_size::horde:
+        max_nr_in_group = rnd::range(6, 7);
+        break;
 
-    case Mon_group_size::swarm:  max_nr_in_group = rnd::range(10, 12);  break;
+    case Mon_group_size::swarm:
+        max_nr_in_group = rnd::range(10, 12);
+        break;
 
-    default: {} break;
+    default:
+        break;
     }
 
     Actor* origin_actor = nullptr;
@@ -402,18 +423,24 @@ void mk_group_at(const Actor_id id, const vector<Pos>& sorted_free_cells_vector,
 
     for (int i = 0; i < NR_CAN_BE_SPAWNED; ++i)
     {
-        const Pos&      p       = sorted_free_cells_vector[i];
-        Actor* const    actor   = actor_factory::mk(id, p);
-        Mon* const      mon     = static_cast<Mon*>(actor);
-        mon->is_roaming_allowed_  = IS_ROAMING_ALLOWED;
+        const Pos&      p           = sorted_free_cells_vector[i];
+        Actor* const    actor       = actor_factory::mk(id, p);
+        Mon* const      mon         = static_cast<Mon*>(actor);
+        mon->is_roaming_allowed_    = IS_ROAMING_ALLOWED;
 
         if (i == 0)
         {
             origin_actor = actor;
         }
-        else
+        else //Not origin actor
         {
-            mon->leader_ = origin_actor;
+            //The monster may have been assigned a leader when placed (e.g. Ghouls being allied
+            //to player Ghoul, or other special case hooks). If not, we assign the origin monster
+            //as leader of this group.
+            if (!mon->leader_)
+            {
+                mon->leader_ = origin_actor;
+            }
         }
 
         blocked[p.x][p.y] = true;

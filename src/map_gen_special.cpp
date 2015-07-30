@@ -20,8 +20,6 @@
 #include "feature_event.hpp"
 #include "game_time.hpp"
 
-using namespace std;
-
 namespace map_gen
 {
 
@@ -166,7 +164,7 @@ void mk_forest_trees()
 
     int nr_forest_patches = rnd::range(40, 55);
 
-    vector<Pos> path;
+    std::vector<Pos> path;
 
     bool proceed = false;
 
@@ -265,7 +263,7 @@ void mk_forest_trees()
     }
 
     //Place graves
-    vector<High_score_entry> entries = high_score::entries_sorted();
+    std::vector<High_score_entry> entries = high_score::entries_sorted();
 
     const int NR_NON_WIN =
         count_if(begin(entries), end(entries), [](const High_score_entry & e)
@@ -274,7 +272,7 @@ void mk_forest_trees()
     });
 
     const int MAX_NR_TO_PLACE     = 7;
-    const int NR_GRAVES_TO_PLACE  = min(MAX_NR_TO_PLACE, NR_NON_WIN);
+    const int NR_GRAVES_TO_PLACE  = std::min(MAX_NR_TO_PLACE, NR_NON_WIN);
 
     if (NR_GRAVES_TO_PLACE > 0)
     {
@@ -286,7 +284,7 @@ void mk_forest_trees()
         const int SEARCH_RADI = FOV_STD_RADI_INT - 2;
         const int TRY_PLACE_EVERY_N_STEP = 2;
 
-        vector<Pos> grave_cells;
+        std::vector<Pos> grave_cells;
 
         int path_walk_count = 0;
 
@@ -370,15 +368,14 @@ void mk_forest_trees()
                 entry = entries[entry_idx];
             }
 
-            const string    name      = entry.name();
-            vector<string>  date_str_vector;
+            const std::string name = entry.name();
+            std::vector<std::string> date_str_vector;
 
             date_str_vector.clear();
             text_format::space_separated_list(entry.date_and_time(), date_str_vector);
-            const string  date_str     = date_str_vector[0];
-            const string  score_str    = to_str(entry.score());
-            string        class_str    = "";
-            player_bon::bg_title(entry.bg(), class_str);
+            const std::string date_str  = date_str_vector[0];
+            const std::string score_str = to_str(entry.score());
+            const std::string class_str = player_bon::bg_title(entry.bg());
 
             grave->set_inscription("RIP " + name + ", " + class_str + ", " + date_str
                                    + ", Score: " + score_str);

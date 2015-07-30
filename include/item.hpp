@@ -89,8 +89,9 @@ public:
         (void)verbosity;
     }
 
-    virtual Unequip_allowed on_unequip()
+    virtual Unequip_allowed on_unequip(Actor& actor)
     {
+        (void)actor;
         return Unequip_allowed::yes;
     }
 
@@ -105,7 +106,7 @@ public:
 
     void add_carrier_prop(Prop* const prop, Actor& actor, const Verbosity verbosity);
 
-    void clear_carrier_props();
+    void clear_carrier_props(Actor& actor);
 
     const std::vector<Prop*>& carrier_props() const
     {
@@ -157,7 +158,7 @@ public:
         return clr_gray;
     }
 
-    virtual Unequip_allowed on_unequip() override final;
+    virtual Unequip_allowed on_unequip(Actor& actor) override final;
 
     int durability() const
     {
@@ -181,8 +182,9 @@ public:
 protected:
     int armor_points() const;
 
-    virtual Unequip_allowed on_unequip_hook()
+    virtual Unequip_allowed on_unequip_hook(Actor& actor)
     {
+        (void)actor;
         return Unequip_allowed::yes;
     }
 
@@ -205,7 +207,7 @@ public:
     void on_equip(Actor& actor, const Verbosity verbosity) override;
 
 private:
-    Unequip_allowed on_unequip_hook() override;
+    Unequip_allowed on_unequip_hook(Actor& actor) override;
 };
 
 class Armor_heavy_coat: public Armor
@@ -219,7 +221,7 @@ public:
     void on_equip(Actor& actor, const Verbosity verbosity) override;
 
 private:
-    Unequip_allowed on_unequip_hook() override;
+    Unequip_allowed on_unequip_hook(Actor& actor) override;
 };
 
 class Armor_mi_go: public Armor
@@ -236,7 +238,7 @@ public:
 
 private:
 
-    Unequip_allowed on_unequip_hook() override;
+    Unequip_allowed on_unequip_hook(Actor& actor) override;
 };
 
 class Wpn: public Item
@@ -463,7 +465,7 @@ public:
         nr_turns_left_  (60) {}
 
     void on_equip(Actor& actor, const Verbosity verbosity) override;
-    Unequip_allowed on_unequip() override;
+    Unequip_allowed on_unequip(Actor& actor) override;
 
     void decr_turns_left(Inventory& carrier_inv);
 

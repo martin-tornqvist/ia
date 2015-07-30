@@ -10,8 +10,6 @@
 #include "map.hpp"
 #include "utils.hpp"
 
-using namespace std;
-
 namespace fov
 {
 
@@ -20,13 +18,13 @@ namespace
 
 void check_one_cell_of_many(const bool obstructions[MAP_W][MAP_H],
                             const Pos& cell_to_check,
-                            const Pos& origin, bool values[MAP_W][MAP_H],
+                            const Pos& origin,
+                            bool values[MAP_W][MAP_H],
                             const bool IS_AFFECTED_BY_DARKNESS)
 {
-
     const Pos delta_to_tgt(cell_to_check.x - origin.x, cell_to_check.y - origin.y);
 
-    const vector<Pos>* path_deltas_ptr =
+    const std::vector<Pos>* path_deltas_ptr =
         line_calc::fov_delta_line(delta_to_tgt, FOV_STD_RADI_DB);
 
     if (!path_deltas_ptr)
@@ -34,7 +32,7 @@ void check_one_cell_of_many(const bool obstructions[MAP_W][MAP_H],
         return;
     }
 
-    const vector<Pos>& path_deltas = *path_deltas_ptr;
+    const std::vector<Pos>& path_deltas = *path_deltas_ptr;
 
     const bool TGT_IS_LGT = map::cells[cell_to_check.x][cell_to_check.y].is_lit;
 
@@ -81,17 +79,21 @@ void check_one_cell_of_many(const bool obstructions[MAP_W][MAP_H],
 
 } //namespace
 
-bool check_cell(const bool obstructions[MAP_W][MAP_H], const Pos& cell_to_check,
-                const Pos& origin, const bool IS_AFFECTED_BY_DARKNESS)
+bool check_cell(const bool obstructions[MAP_W][MAP_H],
+                const Pos& cell_to_check,
+                const Pos& origin,
+                const bool IS_AFFECTED_BY_DARKNESS)
 {
-
-    if (!utils::is_pos_inside_map(cell_to_check)) {return false;}
-
-    if (utils::king_dist(origin, cell_to_check) > FOV_STD_RADI_INT) {return false;}
+    if (
+        !utils::is_pos_inside_map(cell_to_check) ||
+        utils::king_dist(origin, cell_to_check) > FOV_STD_RADI_INT)
+    {
+        return false;
+    }
 
     const Pos delta_to_tgt(cell_to_check - origin);
 
-    const vector<Pos>* path_deltas_ptr =
+    const std::vector<Pos>* path_deltas_ptr =
         line_calc::fov_delta_line(delta_to_tgt, FOV_STD_RADI_DB);
 
     if (!path_deltas_ptr)
@@ -99,7 +101,7 @@ bool check_cell(const bool obstructions[MAP_W][MAP_H], const Pos& cell_to_check,
         return false;
     }
 
-    const vector<Pos>& path_deltas = *path_deltas_ptr;
+    const std::vector<Pos>& path_deltas = *path_deltas_ptr;
 
     const bool TGT_IS_LGT = map::cells[cell_to_check.x][cell_to_check.y].is_lit;
 
@@ -136,7 +138,8 @@ bool check_cell(const bool obstructions[MAP_W][MAP_H], const Pos& cell_to_check,
     return false;
 }
 
-void run_fov_on_array(const bool obstructions[MAP_W][MAP_H], const Pos& origin,
+void run_fov_on_array(const bool obstructions[MAP_W][MAP_H],
+                      const Pos& origin,
                       bool values[MAP_W][MAP_H],
                       const bool IS_AFFECTED_BY_DARKNESS)
 {
@@ -144,14 +147,14 @@ void run_fov_on_array(const bool obstructions[MAP_W][MAP_H], const Pos& origin,
 
     values[origin.x][origin.y] = true;
 
-    const int check_x_end = min(MAP_W - 1, origin.x + FOV_STD_RADI_INT);
-    const int check_y_end = min(MAP_H - 1, origin.y + FOV_STD_RADI_INT);
+    const int check_x_end = std::min(MAP_W - 1, origin.x + FOV_STD_RADI_INT);
+    const int check_y_end = std::min(MAP_H - 1, origin.y + FOV_STD_RADI_INT);
 
-    int check_x = max(0, origin.x - FOV_STD_RADI_INT);
+    int check_x = std::max(0, origin.x - FOV_STD_RADI_INT);
 
     while (check_x <= check_x_end)
     {
-        int check_y = max(0, origin.y - FOV_STD_RADI_INT);
+        int check_y = std::max(0, origin.y - FOV_STD_RADI_INT);
 
         while (check_y <= check_y_end)
         {
@@ -173,7 +176,7 @@ void run_player_fov(const bool obstructions[MAP_W][MAP_H], const Pos& origin)
         for (int y = 0; y < MAP_H; ++y)
         {
             map::cells[x][y].is_seen_by_player = false;
-            fov_tmp[x][y]                    = false;
+            fov_tmp[x][y] = false;
         }
     }
 

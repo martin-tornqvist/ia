@@ -48,7 +48,7 @@ public:
     Mon();
     virtual ~Mon();
 
-    void move_dir(Dir dir);
+    void move(Dir dir);
 
     void avail_attacks(Actor& defender, Ai_avail_attacks_data& dst);
 
@@ -486,6 +486,7 @@ class Sentry_drone: public Mon
 public:
     Sentry_drone() : Mon() {}
     ~Sentry_drone() {}
+
     void mk_start_items() override;
 };
 
@@ -494,6 +495,7 @@ class Flying_polyp: public Mon
 public:
     Flying_polyp() : Mon() {}
     ~Flying_polyp() {}
+
     void mk_start_items() override;
 };
 
@@ -510,7 +512,10 @@ class Ghoul: public Mon
 public:
     Ghoul() : Mon() {}
     ~Ghoul() {}
-    virtual void mk_start_items() override;
+
+    void mk_start_items() override;
+
+    void place_hook() override;
 };
 
 class Deep_one: public Mon
@@ -518,6 +523,7 @@ class Deep_one: public Mon
 public:
     Deep_one() : Mon() {}
     ~Deep_one() {}
+
     void mk_start_items() override;
 };
 

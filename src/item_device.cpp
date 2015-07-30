@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <vector>
+#include <cassert>
 
 #include "actor_player.hpp"
 #include "render.hpp"
@@ -14,8 +15,6 @@
 #include "utils.hpp"
 #include "feature_rigid.hpp"
 #include "actor_factory.hpp"
-
-using namespace std;
 
 //---------------------------------------------------- DEVICE
 Device::Device(Item_data_t* const item_data) :
@@ -33,24 +32,24 @@ Strange_device::Strange_device(Item_data_t* const item_data) :
     Device(item_data),
     condition_(rnd::coin_toss() ? Condition::fine : Condition::shoddy) {}
 
-void Strange_device::store_to_save_lines(vector<string>& lines)
+void Strange_device::store_to_save_lines(std::vector<std::string>& lines)
 {
     lines.push_back(to_str(int(condition_)));
 }
 
-void Strange_device::setup_from_save_lines(vector<string>& lines)
+void Strange_device::setup_from_save_lines(std::vector<std::string>& lines)
 {
     condition_ = Condition(to_int(lines.front()));
     lines.erase(begin(lines));
 }
 
-vector<string> Strange_device::descr() const
+std::vector<std::string> Strange_device::descr() const
 {
     if (data_->is_identified)
     {
         auto descr = descr_identified();
 
-        string cond_str = "It seems ";
+        std::string cond_str = "It seems ";
 
         switch (condition_)
         {
@@ -73,30 +72,28 @@ vector<string> Strange_device::descr() const
 
 Consume_item Strange_device::activate(Actor* const actor)
 {
-    (void)actor;
+    assert(actor);
 
     if (data_->is_identified)
     {
-        const string item_name   = name(Item_ref_type::plain, Item_ref_inf::none);
-        const string item_name_a  = name(Item_ref_type::a, Item_ref_inf::none);
+        const std::string item_name   = name(Item_ref_type::plain, Item_ref_inf::none);
+        const std::string item_name_a  = name(Item_ref_type::a, Item_ref_inf::none);
 
         msg_log::add("I activate " + item_name_a + "...");
 
         //Damage user? Fail to run effect? Condition degrade? Warning?
-        const string hurt_msg  = "It hits me with a jolt of electricity!";
+        const std::string hurt_msg  = "It hits me with a jolt of electricity!";
         bool is_effect_failed   = false;
         bool is_cond_degrade    = false;
         bool is_warning        = false;
         int bon = 0;
-        bool props[size_t(Prop_id::END)];
-        actor->prop_handler().prop_ids(props);
 
-        if (props[int(Prop_id::blessed)])
+        if (actor->has_prop(Prop_id::blessed))
         {
             bon += 2;
         }
 
-        if (props[int(Prop_id::cursed)])
+        if (actor->has_prop(Prop_id::cursed))
         {
             bon -= 2;
         }
@@ -194,11 +191,14 @@ std::string Strange_device::name_inf() const
     {
         switch (condition_)
         {
-        case Condition::breaking: return "{breaking}";
+        case Condition::breaking:
+            return "{breaking}";
 
-        case Condition::shoddy:   return "{shoddy}";
+        case Condition::shoddy:
+            return "{shoddy}";
 
-        case Condition::fine:     return "{fine}";
+        case Condition::fine:
+            return "{fine}";
         }
     }
 
@@ -208,7 +208,7 @@ std::string Strange_device::name_inf() const
 //---------------------------------------------------- BLASTER
 Consume_item Device_blaster::trigger_effect()
 {
-    vector<Actor*> tgt_bucket;
+    std::vector<Actor*> tgt_bucket;
     map::player->seen_foes(tgt_bucket);
 
     if (tgt_bucket.empty())
@@ -271,8 +271,8 @@ Consume_item Device_shockwave::trigger_effect()
 Consume_item Device_rejuvenator::trigger_effect()
 {
     msg_log::add("It repairs my body.");
-    map::player->prop_handler().end_applied_props_by_magic_healing();
-    map::player->restore_hp(999, false);
+    map::player->prop_handler().end_props_by_magic_healing();
+    map::player->restore_hp(999);
     return Consume_item::no;
 }
 
@@ -280,7 +280,7 @@ Consume_item Device_rejuvenator::trigger_effect()
 Consume_item Device_translocator::trigger_effect()
 {
     Player* const player = map::player;
-    vector<Actor*> seen_foes;
+    std::vector<Actor*> seen_foes;
     player->seen_foes(seen_foes);
 
     if (seen_foes.empty())
@@ -292,7 +292,7 @@ Consume_item Device_translocator::trigger_effect()
         for (Actor* actor : seen_foes)
         {
             msg_log::add(actor->name_the() + " is teleported.");
-            render::draw_blast_at_cells(vector<Pos> {actor->pos}, clr_yellow);
+            render::draw_blast_at_cells(std::vector<Pos> {actor->pos}, clr_yellow);
             actor->teleport();
         }
     }
@@ -318,7 +318,7 @@ Device_lantern::Device_lantern(Item_data_t* const item_data) :
 
 std::string Device_lantern::name_inf() const
 {
-    string inf = "{" + to_str(nr_turns_left_);
+    std::string inf = "{" + to_str(nr_turns_left_);
 
     if (is_activated_) {inf += ", Lit";}
 
@@ -333,7 +333,7 @@ Consume_item Device_lantern::activate(Actor* const actor)
     return Consume_item::no;
 }
 
-void Device_lantern::store_to_save_lines(vector<string>& lines)
+void Device_lantern::store_to_save_lines(std::vector<std::string>& lines)
 {
     lines.push_back(to_str(nr_turns_left_));
     lines.push_back(to_str(nr_flicker_turns_left_));
@@ -341,7 +341,7 @@ void Device_lantern::store_to_save_lines(vector<string>& lines)
     lines.push_back(is_activated_ ? "1" : "0");
 }
 
-void Device_lantern::setup_from_save_lines(vector<string>& lines)
+void Device_lantern::setup_from_save_lines(std::vector<std::string>& lines)
 {
     nr_turns_left_          = to_int(lines.front());
     lines.erase(begin(lines));
@@ -371,7 +371,7 @@ void Device_lantern::on_pickup_to_backpack(Inventory& inv)
 
 void Device_lantern::toggle()
 {
-    const string toggle_str = is_activated_ ? "I turn off" : "I turn on";
+    const std::string toggle_str = is_activated_ ? "I turn off" : "I turn on";
     msg_log::add(toggle_str + " an Electric Lantern.");
 
     is_activated_ = !is_activated_;

@@ -36,6 +36,9 @@ public:
         return *prop_handler_;
     }
 
+    //This is just a shortcut to the same function in the property handler
+    bool has_prop(const Prop_id id) const;
+
     Actor_data_t& data()
     {
         return *data_;
@@ -65,31 +68,37 @@ public:
     bool is_spotting_hidden_actor(Actor& actor);
 
     void place(const Pos& pos_, Actor_data_t& data);
+
     virtual void place_hook() {}
 
-    Actor_died hit(int dmg, const Dmg_type dmg_type,
-                   const Dmg_method method = Dmg_method::END);
-    Actor_died hit_spi(const int DMG, const bool ALLOW_MSG);
+    Actor_died hit(int dmg, const Dmg_type dmg_type, const Dmg_method method = Dmg_method::END);
 
-    bool restore_hp(const int HP_RESTORED, const bool ALLOW_MSG = true,
-                    const bool IS_ALLOWED_ABOVE_MAX = false);
-    bool restore_spi(const int SPI_RESTORED, const bool ALLOW_MSG = true,
-                     const bool IS_ALLOWED_ABOVE_MAX = false);
-    void change_max_hp(const int CHANGE, const bool ALLOW_MSG);
-    void change_max_spi(const int CHANGE, const bool ALLOW_MSG);
+    Actor_died hit_spi(const int DMG, const Verbosity verbosity = Verbosity::verbose);
 
-    void die(const bool IS_DESTROYED, const bool ALLOW_GORE,
-             const bool ALLOW_DROP_ITEMS);
+    bool restore_hp(const int HP_RESTORED, const bool IS_ALLOWED_ABOVE_MAX = false,
+                    const Verbosity verbosity = Verbosity::verbose);
+
+    bool restore_spi(const int SPI_RESTORED, const bool IS_ALLOWED_ABOVE_MAX = false,
+                     const Verbosity verbosity = Verbosity::verbose);
+
+    void change_max_hp(const int CHANGE, const Verbosity verbosity = Verbosity::verbose);
+
+    void change_max_spi(const int CHANGE, const Verbosity verbosity = Verbosity::verbose);
+
+    void die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW_DROP_ITEMS);
+
+    //Used by Ghoul class and Ghoul monsters
+    void try_eat_corpse();
 
     virtual void on_actor_turn() {}
     virtual void on_std_turn() {}
 
-    virtual void move_dir(Dir dir) = 0;
+    virtual void move(Dir dir) = 0;
 
     virtual void update_clr();
 
-    //Function taking into account FOV, invisibility, status, etc. This is the final word on
-    //whether an actor can visually perceive another actor.
+    //Function taking into account FOV, invisibility, status, etc.
+    //NOTE: This is the final word on whether an actor can visually perceive another actor.
     bool can_see_actor(const Actor& other, const bool blocked_los[MAP_W][MAP_H]) const;
 
     void seen_foes(std::vector<Actor*>& out);

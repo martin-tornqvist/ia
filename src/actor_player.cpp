@@ -34,25 +34,23 @@
 #include "text_format.hpp"
 #include "utils.hpp"
 
-using namespace std;
-
 const int SHOCK_FROM_OBSESSION = 30;
 
 Player::Player() :
     Actor(),
-    active_medical_bag(nullptr),
-    active_explosive(nullptr),
-    tgt_(nullptr),
-    wait_turns_left(-1),
-    ins_(0),
-    shock_(0.0),
-    shock_tmp_(0.0),
-    perm_shock_taken_cur_turn_(0.0),
-    nr_moves_until_free_action_(-1),
-    nr_turns_until_ins_(-1),
-    nr_quick_move_steps_left_(-1),
-    quick_move_dir_(Dir::END),
-    CARRY_WEIGHT_BASE_(450)
+    active_medical_bag          (nullptr),
+    active_explosive            (nullptr),
+    tgt_                        (nullptr),
+    wait_turns_left             (-1),
+    ins_                        (0),
+    shock_                      (0.0),
+    shock_tmp_                  (0.0),
+    perm_shock_taken_cur_turn_  (0.0),
+    nr_moves_until_free_action_ (-1),
+    nr_turns_until_ins_         (-1),
+    nr_quick_move_steps_left_   (-1),
+    quick_move_dir_             (Dir::END),
+    CARRY_WEIGHT_BASE_          (450)
 {
     for (int i = 0; i < int(Phobia::END); ++i)
     {
@@ -67,7 +65,10 @@ Player::Player() :
 
 Player::~Player()
 {
-    if (active_explosive) {delete active_explosive;}
+    if (active_explosive)
+    {
+        delete active_explosive;
+    }
 }
 
 void Player::mk_start_items()
@@ -84,20 +85,27 @@ void Player::mk_start_items()
         obsessions[i] = false;
     }
 
-    int nr_cartridges  = 2;
-    int nr_dynamite    = 2;
-    int nr_molotov     = 2;
+    bool has_pistol         = true;
+    bool has_lantern        = true;
+    bool has_medbag         = true;
+    bool has_leather_jacket = true;
+
+    int nr_cartridges   = 2;
+    int nr_dynamite     = 2;
+    int nr_molotov      = 2;
     int nr_thr_knives   = 6;
 
     //------------------------------------------------------- BACKGROUND SPECIFIC SETUP
-    const auto bg = player_bon::bg();
+    const Bg bg = player_bon::bg();
 
-    if (bg == Bg::occultist)
+    switch (bg)
+    {
+    case Bg::occultist:
     {
         //Occultist starts with zero explosives and throwing knives.
         //(They are not so thematically fitting for this background.)
-        nr_dynamite    = 0;
-        nr_molotov     = 0;
+        nr_dynamite     = 0;
+        nr_molotov      = 0;
         nr_thr_knives   = 0;
 
         //Occultist starts with a scroll of Darkbolt, and one other random scroll.
@@ -135,52 +143,89 @@ void Player::mk_start_items()
             inv_->put_in_general(potion);
         }
     }
+    break;
 
-    if (bg == Bg::rogue)
+    case Bg::rogue:
     {
         //Rogue starts with extra throwing knives
         nr_thr_knives += 6;
 
         //Rogue starts with a +1 dagger
         auto* const dagger = item_factory::mk(Item_id::dagger);
+
         static_cast<Wpn*>(dagger)->melee_dmg_plus_ = 1;
+
         inv_->slots_[int(Slot_id::wielded)].item = dagger;
 
         //Rogue starts with some iron spikes (useful tool)
         inv_->put_in_general(item_factory::mk(Item_id::iron_spike, 8));
     }
+    break;
 
-    if (bg == Bg::war_vet)
+    case Bg::war_vet:
     {
         //War Veteran starts with some smoke grenades and a gas mask
         inv_->put_in_general(item_factory::mk(Item_id::smoke_grenade, 4));
         inv_->put_in_general(item_factory::mk(Item_id::gas_mask));
     }
+    break;
+
+    case Bg::ghoul:
+    {
+        //Ghoul starts with no items
+        has_pistol          = false;
+        has_lantern         = false;
+        has_medbag          = false;
+        has_leather_jacket  = false;
+
+        nr_cartridges   = 0;
+        nr_dynamite     = 0;
+        nr_molotov      = 0;
+        nr_thr_knives   = 0;
+    }
+    break;
+
+    case Bg::END:
+        break;
+    }
 
     //------------------------------------------------------- GENERAL SETUP
-    //Randomize a melee weapon if not already wielding one.
-    if (!inv_->slots_[int(Slot_id::wielded)].item)
+    //Randomize a melee weapon if Occultist or War Veteran
+    if (bg == Bg::occultist || bg == Bg::war_vet)
     {
         const int WEAPON_CHOICE = rnd::range(1, 5);
-        auto      weapon_id      = Item_id::dagger;
+        auto      weapon_id     = Item_id::dagger;
 
         switch (WEAPON_CHOICE)
         {
-        case 1:   weapon_id = Item_id::dagger;   break;
+        case 1:
+            weapon_id = Item_id::dagger;
+            break;
 
-        case 2:   weapon_id = Item_id::hatchet;  break;
+        case 2:
+            weapon_id = Item_id::hatchet;
+            break;
 
-        case 3:   weapon_id = Item_id::hammer;   break;
+        case 3:
+            weapon_id = Item_id::hammer;
+            break;
 
-        case 4:   weapon_id = Item_id::machete;  break;
+        case 4:
+            weapon_id = Item_id::machete;
+            break;
 
-        case 5:   weapon_id = Item_id::axe;      break;
+        case 5:
+            weapon_id = Item_id::axe;
+            break;
         }
 
         inv_->put_in_slot(Slot_id::wielded, item_factory::mk(weapon_id));
     }
 
-    inv_->put_in_slot(Slot_id::wielded_alt, item_factory::mk(Item_id::pistol));
+    if (has_pistol)
+    {
+        inv_->put_in_slot(Slot_id::wielded_alt, item_factory::mk(Item_id::pistol));
+    }
 
     for (int i = 0; i < nr_cartridges; ++i)
     {
@@ -202,22 +247,25 @@ void Player::mk_start_items()
         inv_->put_in_slot(Slot_id::thrown, item_factory::mk(Item_id::thr_knife, nr_thr_knives));
     }
 
-    inv_->put_in_slot(Slot_id::body, item_factory::mk(Item_id::armor_leather_jacket));
+    if (has_lantern)
+    {
+        inv_->put_in_general(item_factory::mk(Item_id::electric_lantern));
+    }
 
-    inv_->put_in_general(item_factory::mk(Item_id::electric_lantern));
-    inv_->put_in_general(item_factory::mk(Item_id::medical_bag));
+    if (has_medbag)
+    {
+        inv_->put_in_general(item_factory::mk(Item_id::medical_bag));
+    }
+
+    if (has_leather_jacket)
+    {
+        inv_->put_in_slot(Slot_id::body, item_factory::mk(Item_id::armor_leather_jacket));
+    }
 }
 
-void Player::store_to_save_lines(vector<string>& lines) const
+void Player::store_to_save_lines(std::vector<std::string>& lines) const
 {
-    lines.push_back(to_str(prop_handler_->applied_props_.size()));
-
-    for (Prop* prop : prop_handler_->applied_props_)
-    {
-        lines.push_back(to_str(int(prop->id())));
-        lines.push_back(to_str(prop->turns_left_));
-        prop->store_to_save_lines(lines);
-    }
+    prop_handler_->store_to_save_lines(lines);
 
     lines.push_back(to_str(ins_));
     lines.push_back(to_str(int(shock_)));
@@ -244,21 +292,9 @@ void Player::store_to_save_lines(vector<string>& lines) const
     }
 }
 
-void Player::setup_from_save_lines(vector<string>& lines)
+void Player::setup_from_save_lines(std::vector<std::string>& lines)
 {
-    const int NR_PROPS = to_int(lines.front());
-    lines.erase(begin(lines));
-
-    for (int i = 0; i < NR_PROPS; ++i)
-    {
-        const auto prop_id = Prop_id(to_int(lines.front()));
-        lines.erase(begin(lines));
-        const int NR_TURNS = to_int(lines.front());
-        lines.erase(begin(lines));
-        auto* const prop = prop_handler_->mk_prop(prop_id, Prop_turns::specific, NR_TURNS);
-        prop_handler_->try_apply_prop(prop, true, Verbosity::silent, true, true);
-        prop->setup_from_save_lines(lines);
-    }
+    prop_handler_->setup_from_save_lines(lines);
 
     ins_ = to_int(lines.front());
     lines.erase(begin(lines));
@@ -312,6 +348,7 @@ int Player::enc_percent() const
 {
     const int TOTAL_W = inv_->total_item_weight();
     const int MAX_W   = carry_weight_lmt();
+
     return int((double(TOTAL_W) / double(MAX_W)) * 100.0);
 }
 
@@ -322,9 +359,7 @@ int Player::carry_weight_lmt() const
     const bool IS_UNBREAKABLE   = player_bon::traits[int(Trait::unbreakable)];
     const bool IS_STRONG_BACKED = player_bon::traits[int(Trait::strong_backed)];
 
-    bool props[size_t(Prop_id::END)];
-    prop_handler_->prop_ids(props);
-    const bool IS_WEAKENED = props[int(Prop_id::weakened)];
+    const bool IS_WEAKENED      = has_prop(Prop_id::weakened);
 
     const int CARRY_WEIGHT_MOD = (IS_TOUGH         * 10) +
                                  (IS_RUGGED        * 10) +
@@ -390,7 +425,7 @@ void Player::incr_shock(const Shock_lvl shock_value, Shock_src shock_src)
 
 void Player::restore_shock(const int amount_restored, const bool IS_TEMP_SHOCK_RESTORED)
 {
-    shock_ = max(0.0, shock_ - amount_restored);
+    shock_ = std::max(0.0, shock_ - amount_restored);
 
     if (IS_TEMP_SHOCK_RESTORED)
     {
@@ -402,7 +437,7 @@ void Player::restore_shock(const int amount_restored, const bool IS_TEMP_SHOCK_R
 
 void Player::incr_insanity()
 {
-    TRACE << "Increasing insanity" << endl;
+    TRACE << "Increasing insanity" << std::endl;
 
     if (!config::is_bot_playing())
     {
@@ -417,15 +452,15 @@ void Player::incr_insanity()
 
     if (ins() >= 100)
     {
-        const string msg = "My mind can no longer withstand what it has grasped. "
-                           "I am hopelessly lost.";
+        const std::string msg = "My mind can no longer withstand what it has grasped. "
+                                "I am hopelessly lost.";
         popup::show_msg(msg, true, "Completely insane!", Sfx_id::insanity_rise);
         die(true, false, false);
         return;
     }
 
     //This point reached means sanity is below 100%
-    string msg = "Insanity draws nearer... ";
+    std::string msg = "Insanity draws nearer... ";
 
     //When long term insanity increases, something happens (mostly bad)
     //(Reroll until something actually happens)
@@ -459,7 +494,7 @@ void Player::incr_insanity()
         {
             msg += "I find myself babbling incoherently.";
             popup::show_msg(msg, true, "Babbling!", Sfx_id::insanity_rise);
-            const string player_name = name_the();
+            const std::string player_name = name_the();
 
             for (int i = rnd::range(3, 5); i > 0; --i)
             {
@@ -476,7 +511,7 @@ void Player::incr_insanity()
         {
             msg += "I struggle to not fall into a stupor.";
             popup::show_msg(msg, true, "Fainting!", Sfx_id::insanity_rise);
-            prop_handler_->try_apply_prop(new Prop_fainted(Prop_turns::std));
+            prop_handler_->try_add_prop(new Prop_fainted(Prop_turns::std));
             return;
         } break;
 
@@ -492,10 +527,7 @@ void Player::incr_insanity()
 
         case 5:
         {
-            bool props[size_t(Prop_id::END)];
-            prop_handler_->prop_ids(props);
-
-            if (ins_ >= 10 && !props[int(Prop_id::rFear)])
+            if (ins_ >= 10 && !has_prop(Prop_id::rFear))
             {
                 if (rnd::coin_toss())
                 {
@@ -692,7 +724,7 @@ void Player::incr_insanity()
                     constr_in_range(2, (map::dlvl + 1) / 2, 6);
                 const int NR =
                     rnd::range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
-                actor_factory::summon(pos, vector<Actor_id>(NR, Actor_id::shadow), true);
+                actor_factory::summon(pos, std::vector<Actor_id>(NR, Actor_id::shadow), true);
                 return;
             }
         } break;
@@ -703,7 +735,7 @@ void Player::incr_insanity()
                 "I find myself in a peculiar trance. I struggle to recall where I am, "
                 "and what is happening.";
             popup::show_msg(msg, true, "Confusion!", Sfx_id::insanity_rise);
-            prop_handler_->try_apply_prop(new Prop_confused(Prop_turns::std));
+            prop_handler_->try_add_prop(new Prop_confused(Prop_turns::std));
             return;
         } break;
 
@@ -767,7 +799,7 @@ void Player::test_phobias()
     if (rnd::one_in(10))
     {
         //Monster phobia?
-        vector<Actor*> my_seen_foes;
+        std::vector<Actor*> my_seen_foes;
         seen_foes(my_seen_foes);
 
         for (Actor* const actor : my_seen_foes)
@@ -777,28 +809,28 @@ void Player::test_phobias()
             if (mon_data.is_canine && phobias[int(Phobia::dog)])
             {
                 msg_log::add("I am plagued by my canine phobia!");
-                prop_handler_->try_apply_prop(new Prop_terrified(Prop_turns::std));
+                prop_handler_->try_add_prop(new Prop_terrified(Prop_turns::std));
                 return;
             }
 
             if (mon_data.is_rat && phobias[int(Phobia::rat)])
             {
                 msg_log::add("I am plagued by my rat phobia!");
-                prop_handler_->try_apply_prop(new Prop_terrified(Prop_turns::std));
+                prop_handler_->try_add_prop(new Prop_terrified(Prop_turns::std));
                 return;
             }
 
             if (mon_data.is_undead && phobias[int(Phobia::undead)])
             {
                 msg_log::add("I am plagued by my phobia of the dead!");
-                prop_handler_->try_apply_prop(new Prop_terrified(Prop_turns::std));
+                prop_handler_->try_add_prop(new Prop_terrified(Prop_turns::std));
                 return;
             }
 
             if (mon_data.is_spider && phobias[int(Phobia::spider)])
             {
                 msg_log::add("I am plagued by my spider phobia!");
-                prop_handler_->try_apply_prop(new Prop_terrified(Prop_turns::std));
+                prop_handler_->try_add_prop(new Prop_terrified(Prop_turns::std));
                 return;
             }
         }
@@ -807,14 +839,14 @@ void Player::test_phobias()
         if (phobias[int(Phobia::open_place)] && is_standing_in_open_space())
         {
             msg_log::add("I am plagued by my phobia of open places!");
-            prop_handler_->try_apply_prop(new Prop_terrified(Prop_turns::std));
+            prop_handler_->try_add_prop(new Prop_terrified(Prop_turns::std));
             return;
         }
 
         if (phobias[int(Phobia::cramped_place)] && is_standing_in_cramped_space())
         {
             msg_log::add("I am plagued by my phobia of closed places!");
-            prop_handler_->try_apply_prop(new Prop_terrified(Prop_turns::std));
+            prop_handler_->try_add_prop(new Prop_terrified(Prop_turns::std));
             return;
         }
 
@@ -827,7 +859,7 @@ void Player::test_phobias()
                 map::cells[p.x][p.y].rigid->is_bottomless())
             {
                 msg_log::add("I am plagued by my phobia of deep places!");
-                prop_handler_->try_apply_prop(new Prop_terrified(Prop_turns::std));
+                prop_handler_->try_add_prop(new Prop_terrified(Prop_turns::std));
                 break;
             }
 
@@ -837,7 +869,7 @@ void Player::test_phobias()
                 !map::cells[p.x][p.y].is_lit)
             {
                 msg_log::add("I am plagued by my fear of the dark!");
-                prop_handler_->try_apply_prop(new Prop_terrified(Prop_turns::std));
+                prop_handler_->try_add_prop(new Prop_terrified(Prop_turns::std));
                 break;
             }
         }
@@ -914,7 +946,7 @@ void Player::on_actor_turn()
 
     if (inv_scr_after_drop != Inv_scr_id::END)
     {
-        vector<Actor*> my_seen_foes;
+        std::vector<Actor*> my_seen_foes;
         seen_foes(my_seen_foes);
 
         if (my_seen_foes.empty())
@@ -955,9 +987,9 @@ void Player::on_actor_turn()
         const bool IS_TGT_KNOWN_TRAP  = tgt_rigid->id() == Feature_id::trap &&
                                         !static_cast<const Trap*>(tgt_rigid)->is_hidden();
 
-        const bool SHOULD_ABORT = !tgt_rigid->can_move_cmn()                         ||
-                                  IS_TGT_KNOWN_TRAP                               ||
-                                  tgt_rigid->burn_state() == Burn_state::burning  ||
+        const bool SHOULD_ABORT = !tgt_rigid->can_move_cmn()                        ||
+                                  IS_TGT_KNOWN_TRAP                                 ||
+                                  tgt_rigid->burn_state() == Burn_state::burning    ||
                                   (tgt_cell.is_dark && !tgt_cell.is_lit);
 
         if (SHOULD_ABORT)
@@ -968,7 +1000,7 @@ void Player::on_actor_turn()
         else
         {
             --nr_quick_move_steps_left_;
-            move_dir(quick_move_dir_);
+            move(quick_move_dir_);
             return;
         }
     }
@@ -1035,7 +1067,7 @@ void Player::update_tmp_shock()
         shock_tmp_ += shock_taken_after_mods(BASE_SHOCK, Shock_src::use_strange_item);
     }
 
-    shock_tmp_ = min(99.0, shock_tmp_);
+    shock_tmp_ = std::min(99.0, shock_tmp_);
 }
 
 void Player::on_std_turn()
@@ -1046,7 +1078,7 @@ void Player::on_std_turn()
 
     if (!active_medical_bag) {test_phobias();}
 
-    vector<Actor*> my_seen_foes;
+    std::vector<Actor*> my_seen_foes;
     seen_foes(my_seen_foes);
 
     double shock_from_mon_cur_player_turn = 0.0;
@@ -1066,19 +1098,19 @@ void Player::on_std_turn()
             switch (mon_data.mon_shock_lvl)
             {
             case Mon_shock_lvl::unsettling:
-                mon->shock_caused_cur_ = min(mon->shock_caused_cur_ + 0.05,  1.0);
+                mon->shock_caused_cur_ = std::min(mon->shock_caused_cur_ + 0.05,  1.0);
                 break;
 
             case Mon_shock_lvl::scary:
-                mon->shock_caused_cur_ = min(mon->shock_caused_cur_ + 0.1,   1.0);
+                mon->shock_caused_cur_ = std::min(mon->shock_caused_cur_ + 0.1,   1.0);
                 break;
 
             case Mon_shock_lvl::terrifying:
-                mon->shock_caused_cur_ = min(mon->shock_caused_cur_ + 0.5,   2.0);
+                mon->shock_caused_cur_ = std::min(mon->shock_caused_cur_ + 0.5,   2.0);
                 break;
 
             case Mon_shock_lvl::mind_shattering:
-                mon->shock_caused_cur_ = min(mon->shock_caused_cur_ + 0.75,  3.0);
+                mon->shock_caused_cur_ = std::min(mon->shock_caused_cur_ + 0.75,  3.0);
                 break;
 
             default: {} break;
@@ -1196,7 +1228,7 @@ void Player::on_std_turn()
                     mon.is_stealth_ = false;
                     update_fov();
                     render::draw_map_and_interface();
-                    const string mon_name = mon.name_a();
+                    const std::string mon_name = mon.name_a();
                     msg_log::add("I spot " + mon_name + "!", clr_msg_note, true,
                                  More_prompt_on_msg::yes);
                 }
@@ -1208,26 +1240,35 @@ void Player::on_std_turn()
 
     if (hp() > hp_max(true))
     {
-        if (game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0) {hp_--;}
+        if (game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
+        {
+            hp_--;
+        }
     }
 
     if (spi() > spi_max())
     {
-        if (game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0) {spi_--;}
+        if (game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
+        {
+            spi_--;
+        }
     }
 
     if (!active_medical_bag)
     {
-        bool props[size_t(Prop_id::END)];
-        prop_handler_->prop_ids(props);
-
-        if (!props[int(Prop_id::poisoned)])
+        if (!has_prop(Prop_id::poisoned))
         {
             int nr_turns_per_hp = 40;
 
-            if (player_bon::traits[int(Trait::rapid_recoverer)])  {nr_turns_per_hp -= 12;}
+            if (player_bon::traits[int(Trait::rapid_recoverer)])
+            {
+                nr_turns_per_hp -= 12;
+            }
 
-            if (player_bon::traits[int(Trait::survivalist)])     {nr_turns_per_hp -= 12;}
+            if (player_bon::traits[int(Trait::survivalist)])
+            {
+                nr_turns_per_hp -= 12;
+            }
 
             //Items affect HP regen?
             for (const auto& slot : inv_->slots_)
@@ -1251,15 +1292,15 @@ void Player::on_std_turn()
             }
         }
 
-        if (!props[int(Prop_id::confused)] && prop_handler_->allow_see())
+        if (!has_prop(Prop_id::confused) && prop_handler_->allow_see())
         {
             const int R = player_bon::traits[int(Trait::perceptive)] ? 3 :
                           (player_bon::traits[int(Trait::observant)] ? 2 : 1);
 
-            int x0 = max(0, pos.x - R);
-            int y0 = max(0, pos.y - R);
-            int x1 = min(MAP_W - 1, pos.x + R);
-            int y1 = min(MAP_H - 1, pos.y + R);
+            int x0 = std::max(0, pos.x - R);
+            int y0 = std::max(0, pos.y - R);
+            int x1 = std::min(MAP_W - 1, pos.x + R);
+            int y1 = std::min(MAP_H - 1, pos.y + R);
 
             for (int y = y0; y <= y1; ++y)
             {
@@ -1291,11 +1332,11 @@ void Player::on_log_msg_printed()
     //cause endless recursion.
 
     //Abort waiting
-    wait_turns_left         = -1;
+    wait_turns_left = -1;
 
     //Abort quick move
     nr_quick_move_steps_left_ = -1;
-    quick_move_dir_         = Dir::END;
+    quick_move_dir_ = Dir::END;
 }
 
 void Player::interrupt_actions()
@@ -1333,7 +1374,7 @@ void Player::hear_sound(const Snd& snd,
                         const int PERCENT_AUDIBLE_DISTANCE)
 {
     const Sfx_id    sfx         = snd.sfx();
-    const string&   msg         = snd.msg();
+    const std::string&   msg         = snd.msg();
     const bool      HAS_SND_MSG = !msg.empty() && msg != " ";
 
     if (HAS_SND_MSG)
@@ -1360,188 +1401,206 @@ void Player::hear_sound(const Snd& snd,
     }
 }
 
-void Player::move_dir(Dir dir)
+void Player::move(Dir dir)
 {
-    if (is_alive())
+    if (!is_alive())
     {
-        prop_handler_->change_move_dir(pos, dir);
+        return;
+    }
 
-        //Trap affects leaving?
-        if (dir != Dir::center)
+    prop_handler_->change_move_dir(pos, dir);
+
+    //Trap affects leaving?
+    if (dir != Dir::center)
+    {
+        Feature* f = map::cells[pos.x][pos.y].rigid;
+
+        if (f->id() == Feature_id::trap)
         {
-            Feature* f = map::cells[pos.x][pos.y].rigid;
-
-            if (f->id() == Feature_id::trap)
-            {
-                TRACE << "Standing on trap, check if affects move" << endl;
-                dir = static_cast<Trap*>(f)->actor_try_leave(*this, dir);
-            }
+            TRACE << "Standing on trap, check if affects move" << std::endl;
+            dir = static_cast<Trap*>(f)->actor_try_leave(*this, dir);
         }
+    }
 
-        bool is_free_turn = false;;
+    bool is_free_turn = false;
 
-        const Pos dest(pos + dir_utils::offset(dir));
+    //Destination position
+    const Pos dest(pos + dir_utils::offset(dir));
 
-        if (dir != Dir::center)
+    //Attacking, bumping stuff, staggering from encumbrance, etc...
+    //NOTE: This is only run if we are (still) trying to move a direction (not center)
+    if (dir != Dir::center)
+    {
+        Mon* const mon_at_dest = static_cast<Mon*>(utils::actor_at_pos(dest));
+
+        //Attack?
+        if (mon_at_dest && !is_leader_of(mon_at_dest))
         {
-            Mon* const mon_at_dest = static_cast<Mon*>(utils::actor_at_pos(dest));
-
-            //Attack?
-            if (mon_at_dest && !is_leader_of(mon_at_dest))
+            if (prop_handler_->allow_attack_melee(Verbosity::verbose))
             {
-                if (prop_handler_->allow_attack_melee(Verbosity::verbose))
-                {
-                    bool has_melee_wpn = false;
-                    Item* const item = inv_->item_in_slot(Slot_id::wielded);
-
-                    if (item)
-                    {
-                        Wpn* const wpn = static_cast<Wpn*>(item);
-
-                        if (wpn->data().melee.is_melee_wpn)
-                        {
-                            if (
-                                config::is_ranged_wpn_meleee_prompt()   &&
-                                can_see_actor(*mon_at_dest, nullptr)    &&
-                                wpn->data().ranged.is_ranged_wpn)
-                            {
-                                const string wpn_name = wpn->name(Item_ref_type::a);
-
-                                msg_log::add("Attack " + mon_at_dest->name_the() +
-                                             " with " + wpn_name + " ? [y/n]",
-                                             clr_white_high);
-
-                                render::draw_map_and_interface();
-
-                                if (query::yes_or_no() == Yes_no_answer::no)
-                                {
-                                    msg_log::clear();
-                                    render::draw_map_and_interface();
-                                    return;
-                                }
-                            }
-
-                            attack::melee(this, pos, *mon_at_dest, *wpn);
-                            tgt_ = mon_at_dest;
-                            return;
-                        }
-                    }
-
-                    if (!has_melee_wpn)
-                    {
-                        punch_mon(*mon_at_dest);
-                    }
-                }
-
-                return;
-            }
-
-            //This point reached means no actor in the destination cell.
-
-            //Blocking mobile or rigid?
-            bool props[size_t(Prop_id::END)];
-            prop_handler().prop_ids(props);
-            Cell& cell = map::cells[dest.x][dest.y];
-            bool is_features_allow_move = cell.rigid->can_move(props);
-
-            vector<Mob*> mobs;
-            game_time::mobs_at_pos(dest, mobs);
-
-            if (is_features_allow_move)
-            {
-                for (auto* m : mobs)
-                {
-                    if (!m->can_move(props))
-                    {
-                        is_features_allow_move = false;
-                        break;
-                    }
-                }
-            }
-
-            if (is_features_allow_move)
-            {
-                //Encumbrance
-                const int ENC = enc_percent();
-
-                if (ENC >= ENC_IMMOBILE_LVL)
-                {
-                    msg_log::add("I am too encumbered to move!");
-                    render::draw_map_and_interface();
-                    return;
-                }
-                else if (ENC >= 100)
-                {
-                    msg_log::add("I stagger.", clr_msg_note);
-                    prop_handler_->try_apply_prop(new Prop_waiting(Prop_turns::std));
-                }
-
-                //Displace allied monster
-                if (mon_at_dest && is_leader_of(mon_at_dest))
-                {
-                    msg_log::add("I displace " + mon_at_dest->name_a() + ".");
-                    mon_at_dest->pos = pos;
-                }
-
-                pos = dest;
-
-                const int FREE_MOVE_EVERY_N_TURN =
-                    player_bon::traits[int(Trait::mobile)]     ? 2 :
-                    player_bon::traits[int(Trait::lithe)]      ? 4 :
-                    player_bon::traits[int(Trait::dexterous)]  ? 5 : 0;
-
-                if (FREE_MOVE_EVERY_N_TURN > 0)
-                {
-                    if (nr_moves_until_free_action_ == -1)
-                    {
-                        nr_moves_until_free_action_ = FREE_MOVE_EVERY_N_TURN - 2;
-                    }
-                    else if (nr_moves_until_free_action_ == 0)
-                    {
-                        nr_moves_until_free_action_ = FREE_MOVE_EVERY_N_TURN - 1;
-                        is_free_turn = true;
-                    }
-                    else
-                    {
-                        --nr_moves_until_free_action_;
-                    }
-                }
-
-                //Print message if walking on item
-                Item* const item = map::cells[pos.x][pos.y].item;
+                Item* const item = inv_->item_in_slot(Slot_id::wielded);
 
                 if (item)
                 {
-                    const bool CAN_SEE = prop_handler_->allow_see();
+                    Wpn* const wpn = static_cast<Wpn*>(item);
 
-                    msg_log::add(CAN_SEE ?
-                                 "I see here:" :
-                                 "I try to feel what is lying here...",
-                                 clr_white, true);
+                    if (wpn->data().melee.is_melee_wpn)
+                    {
+                        if (
+                            config::is_ranged_wpn_meleee_prompt()   &&
+                            can_see_actor(*mon_at_dest, nullptr)    &&
+                            wpn->data().ranged.is_ranged_wpn)
+                        {
+                            const std::string wpn_name = wpn->name(Item_ref_type::a);
 
-                    string item_name = item->name(Item_ref_type::plural, Item_ref_inf::yes,
-                                                  Item_ref_att_inf::wpn_context);
+                            msg_log::add("Attack " + mon_at_dest->name_the() +
+                                         " with " + wpn_name + " ? [y/n]",
+                                         clr_white_high);
 
-                    text_format::first_to_upper(item_name);
+                            render::draw_map_and_interface();
 
-                    msg_log::add(item_name + ".");
+                            if (query::yes_or_no() == Yes_no_answer::no)
+                            {
+                                msg_log::clear();
+                                render::draw_map_and_interface();
+                                return;
+                            }
+                        }
+
+                        attack::melee(this, pos, *mon_at_dest, *wpn);
+                        tgt_ = mon_at_dest;
+                        return;
+                    }
+                }
+                else //No melee weapon wielded
+                {
+                    hand_att(*mon_at_dest);
                 }
             }
 
-            //NOTE: bump() prints block messages.
-            for (auto* m : mobs)
-            {
-                m->bump(*this);
-            }
-
-            map::cells[dest.x][dest.y].rigid->bump(*this);
-        }
-
-        if (pos == dest)
-        {
-            game_time::tick(is_free_turn);
             return;
         }
+
+        //This point reached means no actor in the destination cell.
+
+        //Blocking mobile or rigid?
+        Cell& cell = map::cells[dest.x][dest.y];
+        bool is_features_allow_move = cell.rigid->can_move(*this);
+
+        std::vector<Mob*> mobs;
+        game_time::mobs_at_pos(dest, mobs);
+
+        if (is_features_allow_move)
+        {
+            for (auto* m : mobs)
+            {
+                if (!m->can_move(*this))
+                {
+                    is_features_allow_move = false;
+                    break;
+                }
+            }
+        }
+
+        if (is_features_allow_move)
+        {
+            //Encumbrance
+            const int ENC = enc_percent();
+
+            if (ENC >= ENC_IMMOBILE_LVL)
+            {
+                msg_log::add("I am too encumbered to move!");
+                render::draw_map_and_interface();
+                return;
+            }
+            else if (ENC >= 100)
+            {
+                msg_log::add("I stagger.", clr_msg_note);
+                prop_handler_->try_add_prop(new Prop_waiting(Prop_turns::std));
+            }
+
+            //Displace allied monster
+            if (mon_at_dest && is_leader_of(mon_at_dest))
+            {
+                msg_log::add("I displace " + mon_at_dest->name_a() + ".");
+                mon_at_dest->pos = pos;
+            }
+
+            pos = dest;
+
+            const int FREE_MOVE_EVERY_N_TURN =
+                player_bon::traits[int(Trait::mobile)]     ? 2 :
+                player_bon::traits[int(Trait::lithe)]      ? 4 :
+                player_bon::traits[int(Trait::dexterous)]  ? 5 : 0;
+
+            if (FREE_MOVE_EVERY_N_TURN > 0)
+            {
+                if (nr_moves_until_free_action_ == -1)
+                {
+                    nr_moves_until_free_action_ = FREE_MOVE_EVERY_N_TURN - 2;
+                }
+                else if (nr_moves_until_free_action_ == 0)
+                {
+                    nr_moves_until_free_action_ = FREE_MOVE_EVERY_N_TURN - 1;
+                    is_free_turn = true;
+                }
+                else
+                {
+                    --nr_moves_until_free_action_;
+                }
+            }
+
+            //Print message if walking on item
+            Item* const item = map::cells[pos.x][pos.y].item;
+
+            if (item)
+            {
+                const bool CAN_SEE = prop_handler_->allow_see();
+
+                msg_log::add(CAN_SEE ?
+                             "I see here:" :
+                             "I try to feel what is lying here...",
+                             clr_white, true);
+
+                std::string item_name = item->name(Item_ref_type::plural, Item_ref_inf::yes,
+                                                   Item_ref_att_inf::wpn_context);
+
+                text_format::first_to_upper(item_name);
+
+                msg_log::add(item_name + ".");
+            }
+        }
+
+        //NOTE: bump() prints block messages.
+        for (auto* mob : mobs)
+        {
+            mob->bump(*this);
+        }
+
+        map::cells[dest.x][dest.y].rigid->bump(*this);
+    }
+
+    //If position equals the destination at this point, it means that player either:
+    // * did an actual move to another cell, or
+    // * that player waited in the current cell on purpose, or
+    // * that the player was stuck (e.g. in a spider web)
+    //In either case, the game time is ticked here (since no melee attack or other "time advancing"
+    //action has occurred)
+    if (pos == dest)
+    {
+        //Ghoul feeding?
+        if (player_bon::bg() == Bg::ghoul)
+        {
+            //NOTE: If a trait is added to allow eating while moving, simply modify the following
+            //statement:
+            if (dir == Dir::center)
+            {
+                try_eat_corpse();
+            }
+        }
+
+        game_time::tick(is_free_turn);
+        return;
     }
 }
 
@@ -1553,7 +1612,7 @@ void Player::auto_melee()
         utils::is_pos_adj(pos, tgt_->pos, false)    &&
         can_see_actor(*tgt_, nullptr))
     {
-        move_dir(dir_utils::dir(tgt_->pos - pos));
+        move(dir_utils::dir(tgt_->pos - pos));
         return;
     }
 
@@ -1565,17 +1624,17 @@ void Player::auto_melee()
         if (actor && !is_leader_of(actor) && can_see_actor(*actor, nullptr))
         {
             tgt_ = actor;
-            move_dir(dir_utils::dir(d));
+            move(dir_utils::dir(d));
             return;
         }
     }
 }
 
-void Player::kick_mon(Actor& actor_to_kick)
+void Player::kick_mon(Actor& defender)
 {
     Wpn* kick_wpn = nullptr;
 
-    const Actor_data_t& d = actor_to_kick.data();
+    const Actor_data_t& d = defender.data();
 
     if (d.actor_size == Actor_size::floor && (d.is_spider || d.is_rat))
     {
@@ -1586,16 +1645,26 @@ void Player::kick_mon(Actor& actor_to_kick)
         kick_wpn = static_cast<Wpn*>(item_factory::mk(Item_id::player_kick));
     }
 
-    attack::melee(this, pos, actor_to_kick, *kick_wpn);
+    attack::melee(this, pos, defender, *kick_wpn);
     delete kick_wpn;
 }
 
-void Player::punch_mon(Actor& actor_to_punch)
+void Player::hand_att(Actor& defender)
 {
     //Spawn a temporary punch weapon to attack with
-    Wpn* punch_wpn = static_cast<Wpn*>(item_factory::mk(Item_id::player_punch));
-    attack::melee(this, pos, actor_to_punch, *punch_wpn);
-    delete punch_wpn;
+    Wpn* wpn = nullptr;
+
+    if (player_bon::bg() == Bg::ghoul)
+    {
+        wpn = static_cast<Wpn*>(item_factory::mk(Item_id::player_ghoul_claw));
+    }
+    else //Not ghoul
+    {
+        wpn = static_cast<Wpn*>(item_factory::mk(Item_id::player_punch));
+    }
+
+    attack::melee(this, pos, defender, *wpn);
+    delete wpn;
 }
 
 void Player::add_light_hook(bool light_map[MAP_W][MAP_H]) const
@@ -1632,8 +1701,8 @@ void Player::add_light_hook(bool light_map[MAP_W][MAP_H]) const
 
         const int R = FOV_STD_RADI_INT;
 
-        Pos p0(max(0,         pos.x - R), max(0,         pos.y - R));
-        Pos p1(min(MAP_W - 1, pos.x + R), min(MAP_H - 1, pos.y + R));
+        Pos p0(std::max(0,         pos.x - R), std::max(0,         pos.y - R));
+        Pos p1(std::min(MAP_W - 1, pos.x + R), std::min(MAP_H - 1, pos.y + R));
 
         bool blocked_los[MAP_W][MAP_H];
 

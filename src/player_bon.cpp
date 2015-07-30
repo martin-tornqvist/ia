@@ -1,7 +1,8 @@
 #include "player_bon.hpp"
 
-#include <assert.h>
+#include <cassert>
 
+#include "init.hpp"
 #include "text_format.hpp"
 #include "actor_player.hpp"
 #include "dungeon_master.hpp"
@@ -10,8 +11,6 @@
 #include "player_spells_handling.hpp"
 #include "map.hpp"
 #include "map_parsing.hpp"
-
-using namespace std;
 
 namespace player_bon
 {
@@ -27,12 +26,15 @@ Bg bg_ = Bg::END;
 
 void init()
 {
-    for (int i = 0; i < int(Trait::END); ++i) {traits[i] = false;}
+    for (int i = 0; i < int(Trait::END); ++i)
+    {
+        traits[i] = false;
+    }
 
     bg_ = Bg::END;
 }
 
-void store_to_save_lines(vector<string>& lines)
+void store_to_save_lines(std::vector<std::string>& lines)
 {
     lines.push_back(to_str(int(bg_)));
 
@@ -42,7 +44,7 @@ void store_to_save_lines(vector<string>& lines)
     }
 }
 
-void setup_from_save_lines(vector<string>& lines)
+void setup_from_save_lines(std::vector<std::string>& lines)
 {
     bg_ = Bg(to_int(lines.front()));
     lines.erase(begin(lines));
@@ -54,169 +56,247 @@ void setup_from_save_lines(vector<string>& lines)
     }
 }
 
-void bg_title(const Bg id, string& out)
+std::string bg_title(const Bg id)
 {
-    out = "[BG TITLE MISSING]";
-
     switch (id)
     {
-    case Bg::occultist: out = "Occultist";   break;
+    case Bg::ghoul:
+        return "Ghoul";
 
-    case Bg::rogue:     out = "Rogue";       break;
-
-    case Bg::war_vet:    out = "War Veteran"; break;
-
-    case Bg::END: {} break;
-    }
-}
-
-void trait_title(const Trait id, string& out)
-{
-    out = "[TRAIT TITLE MISSING]";
-
-    switch (id)
-    {
-    case Trait::adept_melee_fighter:    out = "Adept Melee Fighter";   break;
-
-    case Trait::expert_melee_fighter:   out = "Expert Melee Fighter";  break;
-
-    case Trait::master_melee_fighter:   out = "Master Melee Fighter";  break;
-
-    case Trait::cool_headed:           out = "Cool-headed";           break;
-
-    case Trait::courageous:           out = "Courageous";            break;
-
-    case Trait::warlock:              out = "Warlock";               break;
-
-    case Trait::summoner:             out = "Summoner";              break;
-
-    case Trait::blood_sorcerer:        out = "Blood Sorcerer";        break;
-
-    case Trait::seer:                 out = "Seer";                  break;
-
-    case Trait::dexterous:            out = "Dexterous";             break;
-
-    case Trait::lithe:                out = "Lithe";                 break;
-
-    case Trait::mobile:               out = "Mobile";                break;
-
-    case Trait::fearless:             out = "Fearless";              break;
-
-    case Trait::healer:               out = "Healer";                break;
-
-    case Trait::adept_marksman:        out = "Adept Marksman";        break;
-
-    case Trait::expert_marksman:       out = "Expert Marksman";       break;
-
-    case Trait::master_marksman:       out = "Master Marksman";       break;
-
-    case Trait::steady_aimer:          out = "Steady Aimer";          break;
-
-    case Trait::sharp_shooter:         out = "Sharpshooter";          break;
-
-    case Trait::observant:            out = "Observant";             break;
-
-    case Trait::perceptive:           out = "Perceptive";            break;
-
-    case Trait::vigilant:             out = "Vigilant";              break;
-
-    case Trait::rapid_recoverer:       out = "Rapid Recoverer";       break;
-
-    case Trait::survivalist:          out = "Survivalist";           break;
-
-    case Trait::perseverant:          out = "Perseverant";           break;
-
-    case Trait::self_aware:            out = "Self-aware";            break;
-
-    case Trait::stout_spirit:          out = "Stout Spirit";          break;
-
-    case Trait::strong_spirit:         out = "Strong Spirit";         break;
-
-    case Trait::mighty_spirit:         out = "Mighty Spirit";         break;
-
-    case Trait::stealthy:             out = "Stealthy";              break;
-
-    case Trait::imperceptible:        out = "Imperceptible";         break;
-
-    case Trait::vicious:              out = "Vicious";               break;
-
-    case Trait::strong_backed:         out = "Strong-backed";         break;
-
-    case Trait::tough:                out = "Tough";                 break;
-
-    case Trait::rugged:               out = "Rugged";                break;
-
-    case Trait::unbreakable:          out = "Unbreakable";           break;
-
-    case Trait::treasure_hunter:       out = "Treasure Hunter";       break;
-
-    case Trait::dem_expert:            out = "Demolition Expert";     break;
-
-    case Trait::undead_bane:           out = "Bane of the Undead";    break;
-
-    case Trait::END: break;
-    }
-}
-
-void bg_descr(const Bg id, vector<string>& lines_ref)
-{
-    lines_ref.clear();
-    string s = "";
-
-    switch (id)
-    {
     case Bg::occultist:
-        lines_ref.push_back("Can learn spells cast from manuscripts");
-        lines_ref.push_back(" ");
-        lines_ref.push_back("-50% shock taken from using and identifying "
-                            "strange items (e.g. potions)");
-        lines_ref.push_back(" ");
-        lines_ref.push_back("Can dispel magic traps");
-        lines_ref.push_back(" ");
-        lines_ref.push_back("-2 Hit Points");
-        lines_ref.push_back(" ");
-        lines_ref.push_back("Starts with the following trait(s):");
-        lines_ref.push_back(" ");
-        trait_title(Trait::stout_spirit, s); lines_ref.push_back("* " + s);
-        trait_descr(Trait::stout_spirit, s); lines_ref.push_back(s);
+        return "Occultist";
+
+    case Bg::rogue:
+        return "Rogue";
+
+    case Bg::war_vet:
+        return "War Veteran";
+
+    case Bg::END:
+        break;
+    }
+
+    assert(false);
+
+    return "[BG TITLE MISSING]";
+}
+
+std::string trait_title(const Trait id)
+{
+    switch (id)
+    {
+    case Trait::adept_melee_fighter:
+        return "Adept Melee Fighter";
+
+    case Trait::expert_melee_fighter:
+        return "Expert Melee Fighter";
+
+    case Trait::master_melee_fighter:
+        return "Master Melee Fighter";
+
+    case Trait::cool_headed:
+        return "Cool-headed";
+
+    case Trait::courageous:
+        return "Courageous";
+
+    case Trait::warlock:
+        return "Warlock";
+
+    case Trait::summoner:
+        return "Summoner";
+
+    case Trait::blood_sorcerer:
+        return "Blood Sorcerer";
+
+    case Trait::seer:
+        return "Seer";
+
+    case Trait::dexterous:
+        return "Dexterous";
+
+    case Trait::lithe:
+        return "Lithe";
+
+    case Trait::mobile:
+        return "Mobile";
+
+    case Trait::fearless:
+        return "Fearless";
+
+    case Trait::healer:
+        return "Healer";
+
+    case Trait::adept_marksman:
+        return "Adept Marksman";
+
+    case Trait::expert_marksman:
+        return "Expert Marksman";
+
+    case Trait::master_marksman:
+        return "Master Marksman";
+
+    case Trait::steady_aimer:
+        return "Steady Aimer";
+
+    case Trait::sharp_shooter:
+        return "Sharpshooter";
+
+    case Trait::observant:
+        return "Observant";
+
+    case Trait::perceptive:
+        return "Perceptive";
+
+    case Trait::vigilant:
+        return "Vigilant";
+
+    case Trait::rapid_recoverer:
+        return "Rapid Recoverer";
+
+    case Trait::survivalist:
+        return "Survivalist";
+
+    case Trait::perseverant:
+        return "Perseverant";
+
+    case Trait::self_aware:
+        return "Self-aware";
+
+    case Trait::stout_spirit:
+        return "Stout Spirit";
+
+    case Trait::strong_spirit:
+        return "Strong Spirit";
+
+    case Trait::mighty_spirit:
+        return "Mighty Spirit";
+
+    case Trait::stealthy:
+        return "Stealthy";
+
+    case Trait::imperceptible:
+        return "Imperceptible";
+
+    case Trait::vicious:
+        return "Vicious";
+
+    case Trait::strong_backed:
+        return "Strong-backed";
+
+    case Trait::tough:
+        return "Tough";
+
+    case Trait::rugged:
+        return "Rugged";
+
+    case Trait::unbreakable:
+        return "Unbreakable";
+
+    case Trait::treasure_hunter:
+        return "Treasure Hunter";
+
+    case Trait::dem_expert:
+        return "Demolition Expert";
+
+    case Trait::undead_bane:
+        return "Bane of the Undead";
+
+    case Trait::END:
+        break;
+    }
+
+    assert(false);
+
+    return "[TRAIT TITLE MISSING]";
+}
+
+void bg_descr(const Bg id, std::vector<std::string>& out)
+{
+    out.clear();
+
+    switch (id)
+    {
+    case Bg::ghoul:
+    {
+        Item_data_t& claw_data = item_data::data[size_t(Item_id::player_ghoul_claw)];
+
+        const std::string dmg_str = to_str(claw_data.melee.dmg.first) + "d" +
+                                    to_str(claw_data.melee.dmg.second);
+
+        const std::string att_mod_str = to_str(claw_data.melee.hit_chance_mod) + "%";
+
+        out.push_back("Cannot use medical equipment, but can instead regenerate Hit Points by "
+                      "feeding on corpses (stand still on a corpse to eat)");
+        out.push_back(" ");
+        out.push_back("Has powerful claws (" + dmg_str + ", +" + att_mod_str + " to hit)");
+        out.push_back(" ");
+        out.push_back("-15% hit chance with firearms and thrown weapons");
+        out.push_back(" ");
+        out.push_back("Starts with +4 Hit Points");
+        out.push_back(" ");
+        out.push_back("Is immune to Disease and Infections");
+        out.push_back(" ");
+        out.push_back("TODO: Has Infravision");
+        out.push_back(" ");
+        out.push_back("TODO: -50% shock taken from seeing monsters");
+        out.push_back(" ");
+        out.push_back("All Ghouls are allied to you");
+    }
+    break;
+
+    case Bg::occultist:
+        out.push_back("Can learn spells cast from manuscripts");
+        out.push_back(" ");
+        out.push_back("-50% shock taken from using and identifying "
+                      "strange items (e.g. potions)");
+        out.push_back(" ");
+        out.push_back("Can dispel magic traps");
+        out.push_back(" ");
+        out.push_back("-2 Hit Points");
+        out.push_back(" ");
+        out.push_back("Starts with the following trait(s):");
+        out.push_back(" ");
+        out.push_back("* " + trait_title(Trait::stout_spirit));
+        out.push_back(trait_descr(Trait::stout_spirit));
         break;
 
     case Bg::rogue:
-        lines_ref.push_back("Has an arcane ability to cloud the minds of "
-                            "enemies, causing them to forget their pursuit "
-                            "(press [x])");
-        lines_ref.push_back(" ");
-        lines_ref.push_back("+25% hit chance with ranged attacks vs unaware targets");
-        lines_ref.push_back(" ");
-        lines_ref.push_back("The rate of shock recieved passively over time "
-                            "is reduced by half");
-        lines_ref.push_back(" ");
-        lines_ref.push_back("Starts with the following trait(s):");
-        lines_ref.push_back(" ");
-        trait_title(Trait::observant, s); lines_ref.push_back("* " + s);
-        trait_descr(Trait::observant, s); lines_ref.push_back(s);
-        lines_ref.push_back(" ");
-        trait_title(Trait::stealthy, s);  lines_ref.push_back("* " + s);
-        trait_descr(Trait::stealthy, s);  lines_ref.push_back(s);
+        out.push_back("Has an arcane ability to cloud the minds of "
+                      "enemies, causing them to forget their pursuit "
+                      "(press [x])");
+        out.push_back(" ");
+        out.push_back("+25% hit chance with ranged attacks vs unaware targets");
+        out.push_back(" ");
+        out.push_back("The rate of shock recieved passively over time "
+                      "is reduced by half");
+        out.push_back(" ");
+        out.push_back("Starts with the following trait(s):");
+        out.push_back(" ");
+        out.push_back("* " + trait_title(Trait::observant));
+        out.push_back(trait_descr(Trait::observant));
+        out.push_back(" ");
+        out.push_back("* " + trait_title(Trait::stealthy));
+        out.push_back(trait_descr(Trait::stealthy));
         break;
 
     case Bg::war_vet:
-        lines_ref.push_back("Can switch to prepared weapon instantly");
-        lines_ref.push_back(" ");
-        lines_ref.push_back("Maintains armor twice as long before it breaks");
-        lines_ref.push_back(" ");
-        lines_ref.push_back("Starts with 10% insanity");
-        lines_ref.push_back(" ");
-        lines_ref.push_back("Starts with the following trait(s):");
-        lines_ref.push_back(" ");
-        trait_title(Trait::adept_marksman, s);     lines_ref.push_back("* " + s);
-        trait_descr(Trait::adept_marksman, s);     lines_ref.push_back(s);
-        lines_ref.push_back(" ");
-        trait_title(Trait::adept_melee_fighter, s); lines_ref.push_back("* " + s);
-        trait_descr(Trait::adept_melee_fighter, s); lines_ref.push_back(s);
-        lines_ref.push_back(" ");
-        trait_title(Trait::tough, s);             lines_ref.push_back("* " + s);
-        trait_descr(Trait::tough, s);             lines_ref.push_back(s);
+        out.push_back("Can switch to prepared weapon instantly");
+        out.push_back(" ");
+        out.push_back("Maintains armor twice as long before it breaks");
+        out.push_back(" ");
+        out.push_back("Starts with 10% insanity");
+        out.push_back(" ");
+        out.push_back("Starts with the following trait(s):");
+        out.push_back(" ");
+        out.push_back("* " + trait_title(Trait::adept_marksman));
+        out.push_back(trait_descr(Trait::adept_marksman));
+        out.push_back(" ");
+        out.push_back("* " + trait_title(Trait::adept_melee_fighter));
+        out.push_back(trait_descr(Trait::adept_melee_fighter));
+        out.push_back(" ");
+        out.push_back("* " + trait_title(Trait::tough));
+        out.push_back(trait_descr(Trait::tough));
         break;
 
     case Bg::END: {}
@@ -224,196 +304,159 @@ void bg_descr(const Bg id, vector<string>& lines_ref)
     }
 }
 
-void trait_descr(const Trait id, string& out)
+std::string trait_descr(const Trait id)
 {
-    out = "[TRAIT DESCRIPTION MISSING]";
-
     switch (id)
     {
     case Trait::adept_melee_fighter:
-        out = "+10% hit chance with melee attacks";
-        break;
+        return "+10% hit chance with melee attacks";
 
     case Trait::expert_melee_fighter:
-        out = "+10% hit chance with melee attacks";
-        break;
+        return "+10% hit chance with melee attacks";
 
     case Trait::master_melee_fighter:
-        out = "+10% hit chance with melee attacks";
-        break;
+        return "+10% hit chance with melee attacks";
 
     case Trait::adept_marksman:
-        out = "+10% hit chance with firearms and thrown weapons";
-        break;
+        return "+10% hit chance with firearms and thrown weapons";
 
     case Trait::expert_marksman:
-        out = "+10% hit chance with firearms and thrown weapons, you occasionally "
-              "reload instantly";
-        break;
+        return "+10% hit chance with firearms and thrown weapons, you occasionally "
+               "reload instantly";
 
     case Trait::master_marksman:
-        out = "+10% hit chance with firearms and thrown weapons";
-        break;
+        return "+10% hit chance with firearms and thrown weapons";
 
     case Trait::steady_aimer:
-        out = "Standing still gives ranged attacks +20% hit chance on the following turn";
-        break;
+        return "Standing still gives ranged attacks +20% hit chance on the following turn";
 
     case Trait::sharp_shooter:
-        out = "Standing still for three turns gives ranged attacks maximum hit chance "
-              "and damage on the following turn";
-        break;
+        return "Standing still for three turns gives ranged attacks maximum hit chance "
+               "and damage on the following turn";
 
     case Trait::dem_expert:
-        out = "+1 radius for explosives (be careful), you are not harmed by your own "
-              "Molotov Cocktails, you occasionally light explosives instantly";
-        break;
+        return "+1 radius for explosives (be careful), you are not harmed by your own "
+               "Molotov Cocktails, you occasionally light explosives instantly";
 
     case Trait::cool_headed:
-        out = "+20% shock resistance";
-        break;
+        return "+20% shock resistance";
 
     case Trait::courageous:
-        out = "+20% shock resistance";
-        break;
+        return "+20% shock resistance";
 
     case Trait::warlock:
-        out = "-1 Spirit cost for damage dealing spells, casting any spell has a chance "
-              "to make you \"Charged\" for one turn, causing attack spells to do "
-              "maximum damage";
-        break;
+        return "-1 Spirit cost for damage dealing spells, casting any spell has a chance "
+               "to make you \"Charged\" for one turn, causing attack spells to do "
+               "maximum damage";
 
     case Trait::summoner:
-        out = "-1 Spirit cost for summoning spells, halved risk that called creatures "
-              "are hostile";
-        break;
+        return "-1 Spirit cost for summoning spells, halved risk that called creatures "
+               "are hostile";
 
     case Trait::blood_sorcerer:
-        out = "-1 Spirit cost for all spells, casting a spell drains 2 Hit Points";
-        break;
+        return "-1 Spirit cost for all spells, casting a spell drains 2 Hit Points";
 
     case Trait::seer:
-        out = "Detection spells have decreased Spirit costs, and the spell "
-              "\"Detect Monsters\" has tripple duration";
-        break;
+        return "Detection spells have decreased Spirit costs, and the spell "
+               "\"Detect Monsters\" has tripple duration";
 
     case Trait::tough:
-        out = "+2 hit points, +10% carry weight limit, better results for object "
-              "interactions requiring strength (e.g. bashing doors or pushing a lid)";
-        break;
+        return "+2 hit points, +10% carry weight limit, better results for object "
+               "interactions requiring strength (e.g. bashing doors or pushing a lid)";
 
     case Trait::rugged:
-        out = "+2 hit points, +10% carry weight limit, better results for object "
-              "interactions requiring strength (such as bashing doors, or moving the "
-              "lid from a stone coffin)";
-        break;
+        return "+2 hit points, +10% carry weight limit, better results for object "
+               "interactions requiring strength (such as bashing doors, or moving the "
+               "lid from a stone coffin)";
 
     case Trait::unbreakable:
-        out = "+2 hit points, +10% carry weight limit, better results for object "
-              "interactions requiring strength (such as bashing doors, or moving the "
-              "lid from a stone coffin)";
-        break;
+        return "+2 hit points, +10% carry weight limit, better results for object "
+               "interactions requiring strength (such as bashing doors, or moving the "
+               "lid from a stone coffin)";
 
     case Trait::strong_backed:
-        out = "+30% carry weight limit";
-        break;
+        return "+30% carry weight limit";
 
     case Trait::dexterous:
-        out = "+25% chance to dodge melee attacks, better chances to evade traps, "
-              "every fifth move is a free action";
-        break;
+        return "+25% chance to dodge melee attacks, better chances to evade traps, "
+               "every fifth move is a free action";
 
     case Trait::lithe:
-        out = "+25% chance to dodge melee attacks, better chances to evade traps, "
-              "every fourth move is a free action";
-        break;
+        return "+25% chance to dodge melee attacks, better chances to evade traps, "
+               "every fourth move is a free action";
 
     case Trait::mobile:
-        out = "Every second move is a free action";
-        break;
+        return "Every second move is a free action";
 
     case Trait::fearless:
-        out = "You cannot become terrified, +5% shock resistance";
-        break;
+        return "You cannot become terrified, +5% shock resistance";
 
     case Trait::healer:
-        out = "Using medical equipment takes half the normal time and resources";
-        break;
+        return "Using medical equipment takes half the normal time and resources";
 
     case Trait::observant:
-        out = "You can spot hidden traps and doors from two cells away, and you are "
-              "more likely to spot hidden monsters and objects";
-        break;
+        return "You can spot hidden traps and doors from two cells away, and you are "
+               "more likely to spot hidden monsters and objects";
 
     case Trait::perceptive:
-        out = "You can spot hidden traps and doors from three cells away, and you are "
-              "more likely to spot hidden monsters and objects";
-        break;
+        return "You can spot hidden traps and doors from three cells away, and you are "
+               "more likely to spot hidden monsters and objects";
 
     case Trait::vigilant:
-        out = "You cannot be backstabbed - hidden monsters gets no melee attack bonus "
-              "against you, and their attacks can be dodged";
-        break;
+        return "You cannot be backstabbed - hidden monsters gets no melee attack bonus "
+               "against you, and their attacks can be dodged";
 
     case Trait::rapid_recoverer:
-        out = "Increased Hit Point regeneration rate";
-        break;
+        return "Increased Hit Point regeneration rate";
 
     case Trait::survivalist:
-        out = "Increased Hit Point regeneration rate, disease only lowers your Hit "
-              "Points by 25% (instead of 50%)";
-        break;
+        return "Increased Hit Point regeneration rate, disease only lowers your Hit "
+               "Points by 25% (instead of 50%)";
 
     case Trait::perseverant:
-        out = "When your Hit Points are reduced to 25% or less, you gain +50% chance to "
-              "dodge melee attacks, and +30% hit chance with melee and ranged attacks";
-        break;
+        return "When your Hit Points are reduced to 25% or less, you gain +50% chance to "
+               "dodge melee attacks, and +30% hit chance with melee and ranged attacks";
 
     case Trait::self_aware:
-        out = "You cannot become confused, the number of remaining turns for status "
-              "effects are displayed";
-        break;
+        return "You cannot become confused, the number of remaining turns for status "
+               "effects are displayed";
 
     case Trait::stout_spirit:
-        out = "+2 Spirit Points, increased Spirit regeneration rate";
-        break;
+        return "+2 Spirit Points, increased Spirit regeneration rate";
 
     case Trait::strong_spirit:
-        out = "+2 Spirit Points, increased Spirit regeneration rate";
-        break;
+        return "+2 Spirit Points, increased Spirit regeneration rate";
 
     case Trait::mighty_spirit:
-        out = "+2 Spirit Points, increased Spirit regeneration rate";
-        break;
+        return "+2 Spirit Points, increased Spirit regeneration rate";
 
     case Trait::stealthy:
-        out = "You are more likely to avoid detection";
-        break;
+        return "You are more likely to avoid detection";
 
     case Trait::imperceptible:
-        out = "You are more likely to avoid detection";
-        break;
+        return "You are more likely to avoid detection";
 
     case Trait::vicious:
-        out = "+50% backstab damage";
-        break;
+        return "+50% backstab damage";
 
     case Trait::treasure_hunter:
-        out = "You tend to find more items";
-        break;
+        return "You tend to find more items";
 
     case Trait::undead_bane:
-        out = "+2 melee and ranged attack damage against undead monsters. Attacks "
-              "against ethereal undead monsters (e.g. Ghosts) never pass through them "
-              "(although you can still miss in the ordinary way)";
-        break;
+        return "+2 melee and ranged attack damage against undead monsters. Attacks "
+               "against ethereal undead monsters (e.g. Ghosts) never pass through them "
+               "(although you can still miss in the ordinary way)";
 
-    case Trait::END: {}
+    case Trait::END:
         break;
     }
+
+    assert(false);
+
+    return "[TRAIT DESCRIPTION MISSING]";
 }
 
-void trait_prereqs(const Trait id, vector<Trait>& traits_ref, Bg& bg_ref)
+void trait_prereqs(const Trait id, std::vector<Trait>& traits_ref, Bg& bg_ref)
 {
     traits_ref.clear();
     bg_ref = Bg::END;
@@ -590,15 +633,15 @@ void trait_prereqs(const Trait id, vector<Trait>& traits_ref, Bg& bg_ref)
     //Sort lexicographically
     sort(traits_ref.begin(), traits_ref.end(), [](const Trait & t1, const Trait & t2)
     {
-        string str1 = ""; trait_title(t1, str1);
-        string str2 = ""; trait_title(t2, str2);
+        const std::string str1 = trait_title(t1);
+        const std::string str2 = trait_title(t2);
         return str1 < str2;
     });
 }
 
 Bg bg() {return bg_;}
 
-void pickable_bgs(vector<Bg>& bgs_ref)
+void pickable_bgs(std::vector<Bg>& bgs_ref)
 {
     bgs_ref.clear();
 
@@ -607,13 +650,13 @@ void pickable_bgs(vector<Bg>& bgs_ref)
     //Sort lexicographically
     sort(bgs_ref.begin(), bgs_ref.end(), [](const Bg & bg1, const Bg & bg2)
     {
-        string str1 = ""; bg_title(bg1, str1);
-        string str2 = ""; bg_title(bg2, str2);
+        const std::string str1 = bg_title(bg1);
+        const std::string str2 = bg_title(bg2);
         return str1 < str2;
     });
 }
 
-void pickable_traits(vector<Trait>& traits_ref)
+void pickable_traits(std::vector<Trait>& traits_ref)
 {
     traits_ref.clear();
 
@@ -621,7 +664,7 @@ void pickable_traits(vector<Trait>& traits_ref)
     {
         if (!traits[i])
         {
-            vector<Trait> trait_prereq_list;
+            std::vector<Trait> trait_prereq_list;
             Bg bg_prereq = Bg::END;
 
             trait_prereqs(Trait(i), trait_prereq_list, bg_prereq);
@@ -646,14 +689,13 @@ void pickable_traits(vector<Trait>& traits_ref)
     //Limit the number of trait choices (due to screen space constraints)
     random_shuffle(traits_ref.begin(), traits_ref.end());
     const int MAX_NR_TRAIT_CHOICES = 16;
-    traits_ref.resize(min(int(traits_ref.size()), MAX_NR_TRAIT_CHOICES));
+    traits_ref.resize(std::min(int(traits_ref.size()), MAX_NR_TRAIT_CHOICES));
 
     //Sort lexicographically
-    sort(traits_ref.begin(), traits_ref.end(),
-         [](const Trait & t1, const Trait & t2)
+    sort(traits_ref.begin(), traits_ref.end(), [](const Trait & t1, const Trait & t2)
     {
-        string str1 = ""; trait_title(t1, str1);
-        string str2 = ""; trait_title(t2, str2);
+        const std::string str1 = trait_title(t1);
+        const std::string str2 = trait_title(t2);
         return str1 < str2;
     });
 }
@@ -666,9 +708,15 @@ void pick_bg(const Bg bg)
 
     switch (bg_)
     {
+    case Bg::ghoul:
+        map::player->prop_handler().try_add_prop(
+            new Prop_rDisease(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
+        map::player->change_max_hp(4, Verbosity::silent);
+        break;
+
     case Bg::occultist:
         pick_trait(Trait::stout_spirit);
-        map::player->change_max_hp(-2, false); //Occultist starts with fewer HP
+        map::player->change_max_hp(-2, Verbosity::silent);
         break;
 
     case Bg::rogue:
@@ -681,7 +729,7 @@ void pick_bg(const Bg bg)
         pick_trait(Trait::adept_melee_fighter);
         pick_trait(Trait::adept_marksman);
         pick_trait(Trait::tough);
-        map::player->ins_ += 10; //War Veteran starts a little bit insane
+        map::player->ins_ += 10;
         break;
 
     case Bg::END: {}
@@ -691,7 +739,10 @@ void pick_bg(const Bg bg)
 
 void set_all_traits_to_picked()
 {
-    for (int i = 0; i < int(Trait::END); ++i) {traits[i] = true;}
+    for (int i = 0; i < int(Trait::END); ++i)
+    {
+        traits[i] = true;
+    }
 }
 
 void pick_trait(const Trait id)
@@ -703,57 +754,59 @@ void pick_trait(const Trait id)
     switch (id)
     {
     case Trait::tough:
-        map::player->change_max_hp(2, false);
+        map::player->change_max_hp(2, Verbosity::silent);
         break;
 
     case Trait::rugged:
-        map::player->change_max_hp(2, false);
+        map::player->change_max_hp(2, Verbosity::silent);
         break;
 
     case Trait::unbreakable:
-        map::player->change_max_hp(2, false);
+        map::player->change_max_hp(2, Verbosity::silent);
         break;
 
     case Trait::stout_spirit:
-        map::player->change_max_spi(2, false);
+        map::player->change_max_spi(2, Verbosity::silent);
         break;
 
     case Trait::strong_spirit:
-        map::player->change_max_spi(2, false);
+        map::player->change_max_spi(2, Verbosity::silent);
         break;
 
     case Trait::mighty_spirit:
-        map::player->change_max_spi(2, false);
+        map::player->change_max_spi(2, Verbosity::silent);
         break;
 
     case Trait::self_aware:
-        map::player->prop_handler().try_apply_prop(
-            new Prop_rConfusion(Prop_turns::indefinite), true, Verbosity::silent, true, false);
+        map::player->prop_handler().try_add_prop(
+            new Prop_rConf(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
         break;
 
     case Trait::fearless:
-        map::player->prop_handler().try_apply_prop(
-            new Prop_rFear(Prop_turns::indefinite), true, Verbosity::silent, true, false);
+        map::player->prop_handler().try_add_prop(
+            new Prop_rFear(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
         break;
 
-    default: {}
+    default:
         break;
     }
 }
 
-void all_picked_traits_titles_line(string& out)
+std::string all_picked_traits_titles_line()
 {
-    out = "";
+    std::string out = "";
 
     for (int i = 0; i < int(Trait::END); ++i)
     {
         if (traits[i])
         {
-            string title = "";
-            trait_title(Trait(i), title);
+            const std::string title = trait_title(Trait(i));
+
             out += (out.empty() ? "" : ", ") + title;
         }
     }
+
+    return out;
 }
 
 int spi_occultist_can_cast_at_lvl(const int LVL)

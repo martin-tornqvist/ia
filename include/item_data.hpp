@@ -79,6 +79,7 @@ enum class Item_id
     player_kick,
     player_stomp,
     player_punch,
+    player_ghoul_claw,
 
     bloated_zombie_punch,
     bloated_zombie_spit,

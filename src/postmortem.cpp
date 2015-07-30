@@ -20,8 +20,6 @@
 #include "feature_rigid.hpp"
 #include "utils.hpp"
 
-using namespace std;
-
 namespace postmortem
 {
 
@@ -30,7 +28,7 @@ namespace
 
 struct Str_and_clr
 {
-    Str_and_clr(const string& str_, const Clr clr_) :
+    Str_and_clr(const std::string& str_, const Clr clr_) :
         str(str_),
         clr(clr_) {}
 
@@ -39,18 +37,18 @@ struct Str_and_clr
         clr(clr_white) {}
 
     std::string str;
-    Clr         clr;
+    Clr clr;
 };
 
-void mk_info_lines(vector<Str_and_clr>& out)
+void mk_info_lines(std::vector<Str_and_clr>& out)
 {
     TRACE_FUNC_BEGIN;
 
     const Clr clr_heading  = clr_white_high;
     const Clr clr_info     = clr_white;
 
-    TRACE << "Finding number of killed monsters" << endl;
-    vector<string> unique_killed_names;
+    TRACE << "Finding number of killed monsters" << std::endl;
+    std::vector<std::string> unique_killed_names;
     int nr_kills_tot_all_mon = 0;
 
     for (const auto& d : actor_data::data)
@@ -70,7 +68,7 @@ void mk_info_lines(vector<Str_and_clr>& out)
 
     out.push_back(Str_and_clr("   * Explored to the depth of dungeon level "
                               + to_str(map::dlvl), clr_info));
-    out.push_back(Str_and_clr("   * Was " + to_str(min(100, map::player->ins())) +
+    out.push_back(Str_and_clr("   * Was " + to_str(std::min(100, map::player->ins())) +
                               "% insane", clr_info));
     out.push_back(Str_and_clr("   * Killed " + to_str(nr_kills_tot_all_mon) + " monsters ",
                               clr_info));
@@ -108,10 +106,9 @@ void mk_info_lines(vector<Str_and_clr>& out)
 
     out.push_back(Str_and_clr(" ", clr_info));
 
-    TRACE << "Finding traits gained" << endl;
+    TRACE << "Finding traits gained" << std::endl;
     out.push_back(Str_and_clr(" Traits gained:", clr_heading));
-    string traits_line;
-    player_bon::all_picked_traits_titles_line(traits_line);
+    std::string traits_line = player_bon::all_picked_traits_titles_line();
 
     if (traits_line.empty())
     {
@@ -119,10 +116,10 @@ void mk_info_lines(vector<Str_and_clr>& out)
     }
     else
     {
-        vector<string> abilities_lines;
+        std::vector<std::string> abilities_lines;
         text_format::line_to_lines(traits_line, 60, abilities_lines);
 
-        for (string& str : abilities_lines)
+        for (std::string& str : abilities_lines)
         {
             out.push_back(Str_and_clr("   " + str, clr_info));
         }
@@ -138,7 +135,7 @@ void mk_info_lines(vector<Str_and_clr>& out)
     }
     else
     {
-        for (string& monster_name : unique_killed_names)
+        for (std::string& monster_name : unique_killed_names)
         {
             out.push_back(Str_and_clr("   * " + monster_name, clr_info));
         }
@@ -147,16 +144,16 @@ void mk_info_lines(vector<Str_and_clr>& out)
     out.push_back(Str_and_clr(" ", clr_info));
 
     out.push_back(Str_and_clr(" Last messages:", clr_heading));
-    const vector< vector<Msg> >& history = msg_log::history();
-    int history_element = max(0, int(history.size()) - 20);
+    const std::vector< std::vector<Msg> >& history = msg_log::history();
+    int history_element = std::max(0, int(history.size()) - 20);
 
     for (size_t i = history_element; i < history.size(); ++i)
     {
-        string row = "";
+        std::string row = "";
 
         for (size_t ii = 0; ii < history[i].size(); ii++)
         {
-            string msg_str = "";
+            std::string msg_str = "";
             history[i][ii].str_with_repeats(msg_str);
             row += msg_str + " ";
         }
@@ -166,7 +163,7 @@ void mk_info_lines(vector<Str_and_clr>& out)
 
     out.push_back(Str_and_clr(" ", clr_info));
 
-    TRACE << "Drawing the final map" << endl;
+    TRACE << "Drawing the final map" << std::endl;
     out.push_back(Str_and_clr(" The final moment:", clr_heading));
 
     for (int x = 0; x < MAP_W; ++x)
@@ -195,7 +192,7 @@ void mk_info_lines(vector<Str_and_clr>& out)
 
     for (int y = 0; y < MAP_H; ++y)
     {
-        string cur_row = "";
+        std::string cur_row = "";
 
         for (int x = 0; x < MAP_W; ++x)
         {
@@ -243,11 +240,11 @@ void mk_info_lines(vector<Str_and_clr>& out)
     TRACE_FUNC_END;
 }
 
-void render(const vector<Str_and_clr>& lines, const int TOP_ELEMENT)
+void render(const std::vector<Str_and_clr>& lines, const int TOP_ELEMENT)
 {
     render::clear_screen();
 
-    const string decoration_line(MAP_W, '-');
+    const std::string decoration_line(MAP_W, '-');
     render::draw_text(decoration_line, Panel::screen, Pos(0, 0), clr_gray);
 
     const int X_LABEL = 3;
@@ -275,7 +272,7 @@ void render(const vector<Str_and_clr>& lines, const int TOP_ELEMENT)
     render::update_screen();
 }
 
-void run_info(const vector<Str_and_clr>& lines)
+void run_info(const std::vector<Str_and_clr>& lines)
 {
     const int LINE_JUMP           = 3;
     const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
@@ -299,12 +296,12 @@ void run_info(const vector<Str_and_clr>& lines)
             }
             else
             {
-                top_nr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, top_nr);
+                top_nr = std::min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, top_nr);
             }
         }
         else if (d.sdl_key == SDLK_UP || d.key == '8' || d.key == 'k')
         {
-            top_nr = max(0, top_nr - LINE_JUMP);
+            top_nr = std::max(0, top_nr - LINE_JUMP);
         }
         else if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)
         {
@@ -313,18 +310,18 @@ void run_info(const vector<Str_and_clr>& lines)
     }
 }
 
-void mk_memorial_file(const vector<Str_and_clr>& lines)
+void mk_memorial_file(const std::vector<Str_and_clr>& lines)
 {
-    const string time_stamp =
+    const std::string time_stamp =
         dungeon_master::start_time().time_str(Time_type::second, false);
-    const string memorial_file_name = map::player->name_a() + "_" + time_stamp + ".txt";
-    const string memorial_file_path = "data/" + memorial_file_name;
+    const std::string memorial_file_name = map::player->name_a() + "_" + time_stamp + ".txt";
+    const std::string memorial_file_path = "data/" + memorial_file_name;
 
     //Add memorial file
-    ofstream file;
-    file.open(memorial_file_path.data(), ios::trunc);
+    std::ofstream file;
+    file.open(memorial_file_path.data(), std::ios::trunc);
 
-    for (const Str_and_clr& line : lines) {file << line.str << endl;}
+    for (const Str_and_clr& line : lines) {file << line.str << std::endl;}
 
     file.close();
 
@@ -335,10 +332,10 @@ void mk_memorial_file(const vector<Str_and_clr>& lines)
 
 void render_menu(const Menu_browser& browser)
 {
-    vector<string> ascii_graveyard;
+    std::vector<std::string> ascii_graveyard;
 
-    string cur_line;
-    ifstream file("ascii_graveyard");
+    std::string cur_line;
+    std::ifstream file("ascii_graveyard");
 
     if (file.is_open())
     {
@@ -352,7 +349,7 @@ void render_menu(const Menu_browser& browser)
     }
     else
     {
-        TRACE << "Failed to open ascii graveyard file" << endl;
+        TRACE << "Failed to open ascii graveyard file" << std::endl;
         assert(false);
     }
 
@@ -362,7 +359,7 @@ void render_menu(const Menu_browser& browser)
 
     Pos pos(1, SCREEN_H - ascii_graveyard.size());
 
-    for (const string& line : ascii_graveyard)
+    for (const std::string& line : ascii_graveyard)
     {
         const Uint8 K = Uint8(16 + (180 * ((pos.y * 100) / SCREEN_H) / 100));
         const Clr clr = {K, K, K, 0};
@@ -371,7 +368,7 @@ void render_menu(const Menu_browser& browser)
     }
 
     pos.set(45, 20);
-    const string NAME_STR = map::player->data().name_a;
+    const std::string NAME_STR = map::player->data().name_a;
     render::draw_text_centered(NAME_STR, Panel::screen, pos, clr_white);
 
     //Draw command labels
@@ -407,7 +404,7 @@ void render_menu(const Menu_browser& browser)
 
 void run(bool* const quit_game)
 {
-    vector<Str_and_clr> lines;
+    std::vector<Str_and_clr> lines;
 
     mk_info_lines(lines);
 

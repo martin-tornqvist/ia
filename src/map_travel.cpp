@@ -180,7 +180,7 @@ void go_to_nxt()
     if (map::player->phobias[int(Phobia::deep_places)])
     {
         msg_log::add("I am plagued by my phobia of deep places!");
-        map::player->prop_handler().try_apply_prop(new Prop_terrified(Prop_turns::std));
+        map::player->prop_handler().try_add_prop(new Prop_terrified(Prop_turns::std));
         return;
     }
 

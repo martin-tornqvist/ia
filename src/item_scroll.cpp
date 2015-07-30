@@ -1,7 +1,7 @@
 #include "item_scroll.hpp"
 
 #include <string>
-#include <assert.h>
+#include <cassert>
 
 #include "init.hpp"
 #include "actor_player.hpp"

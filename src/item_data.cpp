@@ -1075,6 +1075,13 @@ void init_data_list()
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
+    d.id = Item_id::player_ghoul_claw;
+    d.melee.att_msgs = {"claw", ""};
+    d.melee.hit_chance_mod = 25;
+    d.melee.dmg = pair<int, int>(2, 5);
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::zombie_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, Actor_id::zombie);

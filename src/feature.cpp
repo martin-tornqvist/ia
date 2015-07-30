@@ -24,10 +24,7 @@ const Feature_data_t& Feature::data() const
 
 void Feature::bump(Actor& actor_bumping)
 {
-    bool props[size_t(Prop_id::END)];
-    actor_bumping.prop_handler().prop_ids(props);
-
-    if (!can_move(props))
+    if (!can_move(actor_bumping))
     {
         if (actor_bumping.is_player())
         {
@@ -48,11 +45,14 @@ void Feature::add_light(bool light[MAP_W][MAP_H]) const
     (void)light;
 }
 
-bool Feature::can_move_cmn() const {return data().move_rules.can_move_cmn();}
-
-bool Feature::can_move(const bool actor_prop_ids[size_t(Prop_id::END)]) const
+bool Feature::can_move_cmn() const
 {
-    return data().move_rules.can_move(actor_prop_ids);
+    return data().move_rules.can_move_cmn();
+}
+
+bool Feature::can_move(Actor& actor) const
+{
+    return data().move_rules.can_move(actor);
 }
 
 void Feature::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)

@@ -1,7 +1,7 @@
 #include "actor_mon.hpp"
 
 #include <vector>
-#include <assert.h>
+#include <cassert>
 
 #include "init.hpp"
 #include "item.hpp"
@@ -55,21 +55,21 @@ Mon::~Mon()
 void Mon::on_actor_turn()
 {
 #ifndef NDEBUG
-
-    //Verify that monster is not outside the map
+    //Sanity check - verify that monster is not outside the map
     if (!utils::is_pos_inside_map(pos, false))
     {
         TRACE << "Monster outside map" << std::endl;
         assert(false);
     }
 
-    //Verify that monster's leader does not have a leader (never allowed)
-    if (leader_ && !is_actor_my_leader(map::player) && static_cast<Mon*>(leader_)->leader_)
+    //Sanity check - verify that monster's leader does not have a leader (never allowed)
+    if (
+        leader_ && !is_actor_my_leader(map::player) &&  //Has a leader which is a monster?
+        static_cast<Mon*>(leader_)->leader_)            //Leader has a leader?
     {
         TRACE << "Two (or more) steps of leader is never allowed" << std::endl;
         assert(false);
     }
-
 #endif // NDEBUG
 
     if (aware_counter_ <= 0 && !is_actor_my_leader(map::player))
@@ -90,10 +90,7 @@ void Mon::on_actor_turn()
     //Pick a target
     std::vector<Actor*> tgt_bucket;
 
-    bool props[size_t(Prop_id::END)];
-    prop_handler_->prop_ids(props);
-
-    if (props[size_t(Prop_id::conflict)])
+    if (prop_handler_->has_prop(Prop_id::conflict))
     {
         //Monster is conflicted (e.g. by player ring/amulet)
         tgt_bucket = game_time::actors_;
@@ -226,7 +223,7 @@ void Mon::on_actor_turn()
     int erratic_move_pct = int(data_->erratic_move_pct);
 
     //Never move erratically if frenzied
-    if (props[size_t(Prop_id::frenzied)])
+    if (prop_handler_->has_prop(Prop_id::frenzied))
     {
         erratic_move_pct = 0;
     }
@@ -238,7 +235,7 @@ void Mon::on_actor_turn()
     }
 
     //Move more erratically if confused
-    if (props[size_t(Prop_id::confused)])
+    if (prop_handler_->has_prop(Prop_id::confused))
     {
         erratic_move_pct *= 2;
     }
@@ -255,7 +252,7 @@ void Mon::on_actor_turn()
         }
     }
 
-    const bool IS_TERRIFIED = props[size_t(Prop_id::terrified)];
+    const bool IS_TERRIFIED = prop_handler_->has_prop(Prop_id::terrified);
 
     if (data_->ai[size_t(Ai_id::moves_to_tgt_when_los)] && !IS_TERRIFIED)
     {
@@ -357,7 +354,7 @@ void Mon::on_hit(int& dmg)
     aware_counter_ = data_->nr_turns_aware;
 }
 
-void Mon::move_dir(Dir dir)
+void Mon::move(Dir dir)
 {
 #ifndef NDEBUG
 
@@ -431,8 +428,8 @@ void Mon::speak_phrase()
 {
     const bool IS_SEEN_BY_PLAYER = map::player->can_see_actor(*this, nullptr);
     const std::string msg = IS_SEEN_BY_PLAYER ?
-                       aggro_phrase_mon_seen() :
-                       aggro_phrase_mon_hidden();
+                            aggro_phrase_mon_seen() :
+                            aggro_phrase_mon_hidden();
     const Sfx_id sfx = IS_SEEN_BY_PLAYER ?
                        aggro_sfx_mon_seen() :
                        aggro_sfx_mon_hidden();
@@ -540,7 +537,7 @@ bool Mon::try_attack(Actor& defender)
         Prop_disabled_ranged* ranged_cooldown_prop =
             new Prop_disabled_ranged(Prop_turns::specific, NR_TURNS_NO_RANGED);
 
-        prop_handler_->try_apply_prop(ranged_cooldown_prop);
+        prop_handler_->try_add_prop(ranged_cooldown_prop);
 
         attack::ranged(this, pos, defender.pos, *att.weapon);
 
@@ -887,8 +884,8 @@ void Zuul::place_hook()
 
         auto* poss_by_zuul_prop     = new Prop_poss_by_zuul(Prop_turns::indefinite);
 
-        priest_prop_handler.try_apply_prop(poss_by_zuul_prop, true);
-        actor->restore_hp(999, false);
+        priest_prop_handler.try_add_prop(poss_by_zuul_prop);
+        actor->restore_hp(999, false, Verbosity::silent);
     }
 }
 
@@ -1039,7 +1036,7 @@ bool Ghost::on_actor_turn_hook()
         }
         else
         {
-            map::player->prop_handler().try_apply_prop(
+            map::player->prop_handler().try_add_prop(
                 new Prop_slowed(Prop_turns::std));
         }
 
@@ -1159,6 +1156,15 @@ void Shadow::mk_start_items()
 void Ghoul::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(Item_id::ghoul_claw));
+}
+
+void Ghoul::place_hook()
+{
+    //If player is Ghoul, then Ghouls are allied to player
+    if (player_bon::bg() == Bg::ghoul)
+    {
+        leader_ = map::player;
+    }
 }
 
 void Mummy::mk_start_items()
@@ -1313,7 +1319,7 @@ bool Ape::on_actor_turn_hook()
 
         const int NR_FRENZY_TURNS = rnd::range(4, 6);
 
-        prop_handler_->try_apply_prop(
+        prop_handler_->try_add_prop(
             new Prop_frenzied(Prop_turns::specific, NR_FRENZY_TURNS));
     }
 
@@ -1462,7 +1468,7 @@ void Leng_elder::mk_start_items()
 
 void Ooze::on_std_turn_hook()
 {
-    restore_hp(1, false);
+    restore_hp(1, false, Verbosity::silent);
 }
 
 void Ooze_black::mk_start_items()
@@ -1501,11 +1507,11 @@ void Color_oo_space::on_std_turn_hook()
     cur_color.g = rnd::range(40, 255);
     cur_color.b = rnd::range(40, 255);
 
-    restore_hp(1, false);
+    restore_hp(1, false, Verbosity::silent);
 
     if (map::player->can_see_actor(*this, nullptr))
     {
-        map::player->prop_handler().try_apply_prop(new Prop_confused(Prop_turns::std));
+        map::player->prop_handler().try_add_prop(new Prop_confused(Prop_turns::std));
     }
 }
 
@@ -1987,8 +1993,8 @@ void The_high_priest_cpy::mk_start_items()
     {
         if (actor->id() == Actor_id::the_high_priest)
         {
-            hp_max_ = std::max(2, actor->hp_max(true)  / 4);
-            hp_     = std::max(1, actor->hp()         / 4);
+            hp_max_ = std::max(2, actor->hp_max(true)   / 4);
+            hp_     = std::max(1, actor->hp()           / 4);
         }
     }
 

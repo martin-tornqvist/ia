@@ -9,7 +9,7 @@ const int TILE_SHEET_Y_CELLS = 11;
 enum class Tile_id
 {
     empty,
-    playerFirearm,
+    player_firearm,
     player_melee,
     zombie_unarmed,
     zombie_armed,

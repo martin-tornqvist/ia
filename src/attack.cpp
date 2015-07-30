@@ -105,12 +105,6 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
             }
         }
 
-        Prop_handler& def_prop_hlr = defender.prop_handler();
-
-        bool def_props[size_t(Prop_id::END)];
-
-        def_prop_hlr.prop_ids(def_props);
-
         //If attacker is aware of the defender, check for extra attack bonuses
         //such as defender being immobilized or blind.
         if (is_attacker_aware)
@@ -150,17 +144,17 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
                 //Check if attacker gets a bonus due to a defender property.
 
                 if (
-                    def_props[int(Prop_id::paralyzed)] ||
-                    def_props[int(Prop_id::nailed)]    ||
-                    def_props[int(Prop_id::fainted)])
+                    defender.has_prop(Prop_id::paralyzed) ||
+                    defender.has_prop(Prop_id::nailed)    ||
+                    defender.has_prop(Prop_id::fainted))
                 {
                     //Give big attack bonus if defender is completely unable to fight.
                     is_big_att_bon = true;
                 }
                 else if (
-                    def_props[int(Prop_id::confused)] ||
-                    def_props[int(Prop_id::slowed)]   ||
-                    def_props[int(Prop_id::burning)])
+                    defender.has_prop(Prop_id::confused) ||
+                    defender.has_prop(Prop_id::slowed)   ||
+                    defender.has_prop(Prop_id::burning))
                 {
                     //Give small attack bonus if defender has problems fighting.
                     is_small_att_bon = true;
@@ -170,7 +164,7 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
             //Give small attack bonus if defender cannot see.
             if (!is_big_att_bon && !is_small_att_bon)
             {
-                if (!def_prop_hlr.allow_see())
+                if (!defender.prop_handler().allow_see())
                 {
                     is_small_att_bon = true;
                 }
@@ -186,7 +180,7 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
                                            player_bon::gets_undead_bane_bon(defender_data);
 
         //Ethereal target missed?
-        if (def_props[int(Prop_id::ethereal)] && !APPLY_UNDEAD_BANE_BON)
+        if (defender.has_prop(Prop_id::ethereal) && !APPLY_UNDEAD_BANE_BON)
         {
             is_ethereal_defender_missed = rnd::fraction(2, 3);
         }
@@ -201,14 +195,7 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
             dmg_plus += 2;
         }
 
-        bool att_props[size_t(Prop_id::END)];
-
-        if (attacker)
-        {
-            attacker->prop_handler().prop_ids(att_props);
-        }
-
-        if (attacker && att_props[int(Prop_id::weakened)])
+        if (attacker && attacker->has_prop(Prop_id::weakened))
         {
             //Weak attack (min damage)
             dmg_roll        = nr_dmg_rolls;
@@ -345,13 +332,10 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
         {
             TRACE_VERBOSE << "Attack roll succeeded" << std::endl;
 
-            bool props[size_t(Prop_id::END)];
-            defender->prop_handler().prop_ids(props);
-
             const bool APPLY_UNDEAD_BANE_BON = attacker == map::player &&
                                                player_bon::gets_undead_bane_bon(defender_data);
 
-            if (props[int(Prop_id::ethereal)] && !APPLY_UNDEAD_BANE_BON)
+            if (defender->has_prop(Prop_id::ethereal) && !APPLY_UNDEAD_BANE_BON)
             {
                 is_ethereal_defender_missed = rnd::fraction(2, 3);
             }
@@ -360,8 +344,7 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
 
             if (attacker == map::player)
             {
-                const Prop* const prop =
-                    attacker->prop_handler().prop(Prop_id::aiming, Prop_src::applied);
+                const Prop* const prop = attacker->prop_handler().prop(Prop_id::aiming);
 
                 if (prop)
                 {
@@ -480,13 +463,10 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
         {
             TRACE_VERBOSE << "Attack roll succeeded" << std::endl;
 
-            bool props[size_t(Prop_id::END)];
-            defender->prop_handler().prop_ids(props);
-
             const bool APPLY_UNDEAD_BANE_BON = attacker == map::player &&
                                                player_bon::gets_undead_bane_bon(defender_data);
 
-            if (props[int(Prop_id::ethereal)] && !APPLY_UNDEAD_BANE_BON)
+            if (defender->has_prop(Prop_id::ethereal) && !APPLY_UNDEAD_BANE_BON)
             {
                 is_ethereal_defender_missed = rnd::fraction(2, 3);
             }
@@ -495,8 +475,7 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
 
             if (attacker == map::player)
             {
-                const Prop* const prop =
-                    attacker->prop_handler().prop(Prop_id::aiming, Prop_src::applied);
+                const Prop* const prop = attacker->prop_handler().prop(Prop_id::aiming);
 
                 if (prop)
                 {
@@ -1099,7 +1078,7 @@ void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_po
                         //Hit properties
                         Prop_handler& defender_prop_handler = proj->actor_hit->prop_handler();
 
-                        defender_prop_handler.try_apply_prop_from_att(wpn, false);
+                        defender_prop_handler.try_add_prop_from_att(wpn, false);
 
                         //Knock-back?
                         if (wpn.data().ranged.knocks_back)
@@ -1493,7 +1472,7 @@ void melee(Actor* const attacker, const Pos& attacker_origin, Actor& defender, c
 
         if (died == Actor_died::no)
         {
-            defender.prop_handler().try_apply_prop_from_att(wpn, true);
+            defender.prop_handler().try_add_prop_from_att(wpn, true);
         }
 
         if (defender.data().can_bleed)

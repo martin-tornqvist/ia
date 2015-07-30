@@ -1,7 +1,7 @@
 #include "actor_factory.hpp"
 
 #include <algorithm>
-#include <assert.h>
+#include <cassert>
 
 #include "actor_mon.hpp"
 #include "actor_player.hpp"

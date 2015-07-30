@@ -171,13 +171,8 @@ bool reload_wielded_wpn(Actor& actor_reloading)
 
                 if (item->id() == ammo_type)
                 {
-                    Prop_handler& prop_hlr = actor_reloading.prop_handler();
-
-                    bool props[size_t(Prop_id::END)];
-                    prop_hlr.prop_ids(props);
-
                     const bool IS_BLIND     = !actor_reloading.prop_handler().allow_see();
-                    const bool IS_TERRIFIED = props[int(Prop_id::terrified)];
+                    const bool IS_TERRIFIED = actor_reloading.has_prop(Prop_id::terrified);
 
                     const int CHANCE_TO_FUMBLE = (IS_BLIND      ? 48 : 0) +
                                                  (IS_TERRIFIED  ? 48 : 0);

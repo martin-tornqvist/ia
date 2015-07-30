@@ -63,19 +63,19 @@ void Smoke::on_new_turn()
         //Blinded by smoke?
         if (!is_protected_blindness && rnd::one_in(4))
         {
-            if (IS_PLAYER) {msg_log::add("I am getting smoke in my eyes.");}
+            if (IS_PLAYER)
+            {
+                msg_log::add("I am getting smoke in my eyes.");
+            }
 
-            actor->prop_handler().try_apply_prop(
+            actor->prop_handler().try_add_prop(
                 new Prop_blind(Prop_turns::specific, rnd::range(1, 3)));
         }
 
         //Choking (this is determined by rBreath)?
         if (rnd::one_in(4))
         {
-            bool props[size_t(Prop_id::END)];
-            actor->prop_handler().prop_ids(props);
-
-            if (!props[int(Prop_id::rBreath)])
+            if (!actor->has_prop(Prop_id::rBreath))
             {
                 string snd_msg = "";
 
@@ -90,8 +90,9 @@ void Smoke::on_new_turn()
 
                 const auto alerts = IS_PLAYER ? Alerts_mon::yes : Alerts_mon::no;
 
-                snd_emit::emit_snd(Snd(snd_msg, Sfx_id::END, Ignore_msg_if_origin_seen::yes, actor->pos,
-                                       actor, Snd_vol::low, alerts));
+                snd_emit::emit_snd(Snd(snd_msg, Sfx_id::END, Ignore_msg_if_origin_seen::yes,
+                                       actor->pos, actor, Snd_vol::low, alerts));
+
                 actor->hit(1, Dmg_type::pure);
             }
         }

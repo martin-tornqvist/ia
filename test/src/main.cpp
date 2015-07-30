@@ -480,13 +480,17 @@ TEST_FIXTURE(Basic_fixture, explosions)
 
     explosion::run_explosion_at(Pos(X0, Y0), Expl_type::apply_prop, Expl_src::misc,
                                 Emit_expl_snd::no, 0, new Prop_burning(Prop_turns::std));
-    CHECK(a1->prop_handler().prop(Prop_id::burning, Prop_src::applied));
-    CHECK(a2->prop_handler().prop(Prop_id::burning, Prop_src::applied));
+    CHECK(a1->prop_handler().prop(Prop_id::burning));
+    CHECK(a2->prop_handler().prop(Prop_id::burning));
+
+    CHECK(a1->has_prop(Prop_id::burning));
+    CHECK(a2->has_prop(Prop_id::burning));
 
     for (int i = 0; i < NR_CORPSES; ++i)
     {
         Prop_handler& prop_hlr = corpses[i]->prop_handler();
-        CHECK(prop_hlr.prop(Prop_id::burning, Prop_src::applied));
+        CHECK(prop_hlr.prop(Prop_id::burning));
+        CHECK(prop_hlr.has_prop(Prop_id::burning));
     }
 
     //Check that the explosion can handle the map edge (e.g. that it does not
@@ -552,10 +556,10 @@ TEST_FIXTURE(Basic_fixture, monster_stuck_in_spider_web)
         //Move the monster into the trap, and back again
         mon->aware_counter_ = 20000; // > 0 req. for triggering trap
         mon->pos = pos_l;
-        mon->move_dir(Dir::right);
+        mon->move(Dir::right);
         CHECK(mon->pos == pos_r);
-        mon->move_dir(Dir::left);
-        mon->move_dir(Dir::left);
+        mon->move(Dir::left);
+        mon->move(Dir::left);
 
         //Check conditions
         if (mon->pos == pos_r)
@@ -602,15 +606,13 @@ TEST_FIXTURE(Basic_fixture, inventory_handling)
     delete body_slot.item;
     body_slot.item = nullptr;
 
-    bool props[size_t(Prop_id::END)];
     Prop_handler& prop_hlr = map::player->prop_handler();
 
     //Check that no props are enabled
-    prop_hlr.prop_ids(props);
-
-    for (int i = 0; i < int(Prop_id::END); ++i)
+    for (size_t i = 0; i < size_t(Prop_id::END); ++i)
     {
-        CHECK(!props[i]);
+        CHECK(!prop_hlr.has_prop(Prop_id(i)));
+        CHECK(!prop_hlr.prop(Prop_id(i)));
     }
 
     //Wear asbesthos suit
@@ -620,34 +622,39 @@ TEST_FIXTURE(Basic_fixture, inventory_handling)
     item->on_equip(*map::player, Verbosity::silent);
 
     //Check that the props are applied
-    prop_hlr.prop_ids(props);
-    int nr_props = 0;
+    size_t nr_props = 0;
 
-    for (int i = 0; i < int(Prop_id::END); ++i)
+    for (size_t i = 0; i < size_t(Prop_id::END); ++i)
     {
-        if (props[i])
+        if (prop_hlr.has_prop(Prop_id(i)))
         {
+            CHECK(prop_hlr.prop(Prop_id(i)));
             ++nr_props;
         }
     }
 
-    CHECK_EQUAL(4, nr_props);
-    CHECK(props[int(Prop_id::rFire)]);
-    CHECK(props[int(Prop_id::rElec)]);
-    CHECK(props[int(Prop_id::rAcid)]);
-    CHECK(props[int(Prop_id::rBreath)]);
+    CHECK_EQUAL(4, int(nr_props));
+
+    CHECK(prop_hlr.prop(Prop_id::rFire));
+    CHECK(prop_hlr.prop(Prop_id::rElec));
+    CHECK(prop_hlr.prop(Prop_id::rAcid));
+    CHECK(prop_hlr.prop(Prop_id::rBreath));
+
+    CHECK(prop_hlr.has_prop(Prop_id::rFire));
+    CHECK(prop_hlr.has_prop(Prop_id::rElec));
+    CHECK(prop_hlr.has_prop(Prop_id::rAcid));
+    CHECK(prop_hlr.has_prop(Prop_id::rBreath));
 
     //Take off asbeshos suit
     inv.move_to_general(Slot_id::body);
-    item->on_unequip();
+    item->on_unequip(*map::player);
     CHECK_EQUAL(item, inv.general_.back());
 
     //Check that the properties are cleared
-    prop_hlr.prop_ids(props);
-
     for (int i = 0; i < int(Prop_id::END); ++i)
     {
-        CHECK(!props[i]);
+        CHECK(!prop_hlr.has_prop(Prop_id(i)));
+        CHECK(!prop_hlr.prop(Prop_id(i)));
     }
 
     //Wear the asbeshos suit again
@@ -657,22 +664,28 @@ TEST_FIXTURE(Basic_fixture, inventory_handling)
     item->on_equip(*map::player, Verbosity::silent);
 
     //Check that the props are applied
-    prop_hlr.prop_ids(props);
     nr_props = 0;
 
     for (int i = 0; i < int(Prop_id::END); ++i)
     {
-        if (props[i])
+        if (prop_hlr.has_prop(Prop_id(i)))
         {
+            CHECK(prop_hlr.prop(Prop_id(i)));
             ++nr_props;
         }
     }
 
-    CHECK_EQUAL(4, nr_props);
-    CHECK(props[int(Prop_id::rFire)]);
-    CHECK(props[int(Prop_id::rElec)]);
-    CHECK(props[int(Prop_id::rAcid)]);
-    CHECK(props[int(Prop_id::rBreath)]);
+    CHECK_EQUAL(4, int(nr_props));
+
+    CHECK(prop_hlr.prop(Prop_id::rFire));
+    CHECK(prop_hlr.prop(Prop_id::rElec));
+    CHECK(prop_hlr.prop(Prop_id::rAcid));
+    CHECK(prop_hlr.prop(Prop_id::rBreath));
+
+    CHECK(prop_hlr.has_prop(Prop_id::rFire));
+    CHECK(prop_hlr.has_prop(Prop_id::rElec));
+    CHECK(prop_hlr.has_prop(Prop_id::rAcid));
+    CHECK(prop_hlr.has_prop(Prop_id::rBreath));
 
     //Drop the asbeshos suit on the ground
     item_drop::try_drop_item_from_inv(*map::player, Inv_type::slots, int(Slot_id::body), 1);
@@ -685,11 +698,9 @@ TEST_FIXTURE(Basic_fixture, inventory_handling)
     CHECK(cell.item);
 
     //Check that the properties are cleared
-    prop_hlr.prop_ids(props);
-
     for (int i = 0; i < int(Prop_id::END); ++i)
     {
-        CHECK(!props[i]);
+        CHECK(!prop_hlr.has_prop(Prop_id(i)));
     }
 
     //Wear the same dropped asbesthos suit again
@@ -699,22 +710,28 @@ TEST_FIXTURE(Basic_fixture, inventory_handling)
     item->on_equip(*map::player, Verbosity::silent);
 
     //Check that the props are applied
-    prop_hlr.prop_ids(props);
     nr_props = 0;
 
     for (int i = 0; i < int(Prop_id::END); ++i)
     {
-        if (props[i])
+        if (prop_hlr.has_prop(Prop_id(i)))
         {
+            CHECK(prop_hlr.prop(Prop_id(i)));
             ++nr_props;
         }
     }
 
-    CHECK_EQUAL(4, nr_props);
-    CHECK(props[int(Prop_id::rFire)]);
-    CHECK(props[int(Prop_id::rElec)]);
-    CHECK(props[int(Prop_id::rAcid)]);
-    CHECK(props[int(Prop_id::rBreath)]);
+    CHECK_EQUAL(4, int(nr_props));
+
+    CHECK(prop_hlr.prop(Prop_id::rFire));
+    CHECK(prop_hlr.prop(Prop_id::rElec));
+    CHECK(prop_hlr.prop(Prop_id::rAcid));
+    CHECK(prop_hlr.prop(Prop_id::rBreath));
+
+    CHECK(prop_hlr.has_prop(Prop_id::rFire));
+    CHECK(prop_hlr.has_prop(Prop_id::rElec));
+    CHECK(prop_hlr.has_prop(Prop_id::rAcid));
+    CHECK(prop_hlr.has_prop(Prop_id::rBreath));
 }
 
 TEST_FIXTURE(Basic_fixture, saving_game)
@@ -784,7 +801,7 @@ TEST_FIXTURE(Basic_fixture, saving_game)
     //Player
     Actor_data_t& def = map::player->data();
     def.name_a = def.name_the = "TEST PLAYER";
-    map::player->change_max_hp(5, false);
+    map::player->change_max_hp(5, Verbosity::silent);
 
     //map
     map::dlvl = 7;
@@ -798,19 +815,19 @@ TEST_FIXTURE(Basic_fixture, saving_game)
 
     //Applied properties
     Prop_handler& prop_hlr = map::player->prop_handler();
-    prop_hlr.try_apply_prop(new Prop_rSleep(Prop_turns::specific, 3));
-    prop_hlr.try_apply_prop(new Prop_diseased(Prop_turns::indefinite));
-    prop_hlr.try_apply_prop(new Prop_blessed(Prop_turns::std));
+    prop_hlr.try_add_prop(new Prop_rSleep(Prop_turns::specific, 3));
+    prop_hlr.try_add_prop(new Prop_diseased(Prop_turns::indefinite));
+    prop_hlr.try_add_prop(new Prop_blessed(Prop_turns::std));
 
     //Check a a few of the props applied
-    Prop* prop = prop_hlr.prop(Prop_id::diseased, Prop_src::applied);
+    Prop* prop = prop_hlr.prop(Prop_id::diseased);
     CHECK(prop);
 
-    prop = prop_hlr.prop(Prop_id::blessed, Prop_src::applied);
+    prop = prop_hlr.prop(Prop_id::blessed);
     CHECK(prop);
 
     //Check a prop that was NOT applied
-    prop = prop_hlr.prop(Prop_id::confused, Prop_src::applied);
+    prop = prop_hlr.prop(Prop_id::confused);
     CHECK(!prop);
 
     //map sequence
@@ -924,44 +941,43 @@ TEST_FIXTURE(Basic_fixture, loading_game)
 
     //Properties
     Prop_handler& prop_hlr = map::player->prop_handler();
-    Prop* prop = prop_hlr.prop(Prop_id::diseased, Prop_src::applied);
+    Prop* prop = prop_hlr.prop(Prop_id::diseased);
     CHECK(prop);
-    CHECK_EQUAL(-1, prop->turns_left_);
+    CHECK(prop_hlr.has_prop(Prop_id::diseased));
+    CHECK_EQUAL(-1, prop->nr_turns_left());
     //Check currrent HP (affected by disease)
     CHECK_EQUAL((map::player->data().hp + 5) / 2, map::player->hp());
 
-    prop = prop_hlr.prop(Prop_id::rSleep, Prop_src::applied);
+    prop = prop_hlr.prop(Prop_id::rSleep);
     CHECK(prop);
-    CHECK_EQUAL(3, prop->turns_left_);
+    CHECK(prop_hlr.has_prop(Prop_id::rSleep));
+    CHECK_EQUAL(3, prop->nr_turns_left());
 
-    prop = prop_hlr.prop(Prop_id::diseased, Prop_src::applied);
+    prop = prop_hlr.prop(Prop_id::blessed);
     CHECK(prop);
-    CHECK_EQUAL(-1, prop->turns_left_);
-
-    prop = prop_hlr.prop(Prop_id::blessed, Prop_src::applied);
-    CHECK(prop);
-    CHECK(prop->turns_left_ > 0);
+    CHECK(prop_hlr.has_prop(Prop_id::blessed));
+    CHECK(prop->nr_turns_left() > 0);
 
     //Properties from worn item
-    prop = prop_hlr.prop(Prop_id::rAcid, Prop_src::inv);
+    prop = prop_hlr.prop(Prop_id::rAcid);
     CHECK(prop);
-    CHECK(prop->turns_left_ == -1);
-    prop = prop_hlr.prop(Prop_id::rFire, Prop_src::inv);
+    CHECK(prop->nr_turns_left() == -1);
+    prop = prop_hlr.prop(Prop_id::rFire);
     CHECK(prop);
-    CHECK(prop->turns_left_ == -1);
+    CHECK(prop->nr_turns_left() == -1);
 
     //map sequence
     auto mapData = map_travel::map_list[3];
-    CHECK(mapData.type          == Map_type::std);
-    CHECK(mapData.is_main_dungeon == Is_main_dungeon::yes);
+    CHECK(mapData.type              == Map_type::std);
+    CHECK(mapData.is_main_dungeon   == Is_main_dungeon::yes);
 
     mapData = map_travel::map_list[5];
-    CHECK(mapData.type          == Map_type::rats_in_the_walls);
-    CHECK(mapData.is_main_dungeon == Is_main_dungeon::yes);
+    CHECK(mapData.type              == Map_type::rats_in_the_walls);
+    CHECK(mapData.is_main_dungeon   == Is_main_dungeon::yes);
 
     mapData = map_travel::map_list[7];
-    CHECK(mapData.type          == Map_type::leng);
-    CHECK(mapData.is_main_dungeon == Is_main_dungeon::no);
+    CHECK(mapData.type              == Map_type::leng);
+    CHECK(mapData.is_main_dungeon   == Is_main_dungeon::no);
 
     //Game time
     CHECK_EQUAL(0, game_time::turn());

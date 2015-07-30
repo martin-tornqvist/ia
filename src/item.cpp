@@ -2,7 +2,7 @@
 
 #include "item.hpp"
 
-#include <assert.h>
+#include <cassert>
 
 #include "map.hpp"
 #include "game_time.hpp"
@@ -243,107 +243,12 @@ void Item::add_carrier_prop(Prop* const prop, Actor& actor, const Verbosity verb
 {
     assert(prop);
 
-    //TODO: This is very hacky (attempting to replicate some of the functionality happening in
-    //the Property handler when a property is applied). Some refactoring would not hurt...
-
-    prop->owning_actor_ = &actor;
-
-    carrier_props_.push_back(prop);
-
-    if (verbosity == Verbosity::verbose)
-    {
-        if (prop->need_update_vision_when_start_or_end())
-        {
-            actor.update_clr();
-            game_time::update_light_map();
-            map::player->update_fov();
-//            render::draw_map_and_interface();
-        }
-
-        if (actor.is_player())
-        {
-            std::string msg = "";
-            prop->msg(prop_msg_on_start_player, msg);
-
-            if (!msg.empty())
-            {
-                msg_log::add(msg, clr_white, true);
-            }
-        }
-        else //Not player
-        {
-            if (map::player->can_see_actor(actor, nullptr))
-            {
-                std::string msg = "";
-                prop->msg(prop_msg_on_start_mon, msg);
-
-                if (!msg.empty())
-                {
-                    msg_log::add(actor.name_the() + " " + msg);
-                }
-            }
-        }
-        msg_log::more_prompt();
-    }
-
-    prop->on_start();
+    actor.prop_handler().add_prop_from_equiped_item(this, prop);
 }
 
-void Item::clear_carrier_props()
+void Item::clear_carrier_props(Actor& actor)
 {
-    //TODO: This is very hacky (attempting to replicate some of the functionality happening in
-    //the Property handler when a property is ended). Some refactoring would not hurt...
-
-    Actor* owning_actor = nullptr;
-
-    //Iterate over the carrier props backwards, and run removal effects for each prop at a time
-    for (int i = carrier_props_.size() - 1; i >= 0; --i)
-    {
-        Prop* const prop = carrier_props_[i];
-
-        owning_actor = prop->owning_actor_;
-
-        assert(owning_actor);
-
-        if (owning_actor->is_player())
-        {
-            std::string msg = "";
-            prop->msg(prop_msg_on_end_player, msg);
-
-            if (!msg.empty())
-            {
-                msg_log::add(msg, clr_white, true);
-            }
-        }
-        else //Not player
-        {
-            if (map::player->can_see_actor(*owning_actor, nullptr))
-            {
-                std::string msg = "";
-                prop->msg(prop_msg_on_end_mon, msg);
-
-                if (!msg.empty())
-                {
-                    msg_log::add(owning_actor->name_the() + " " + msg);
-                }
-            }
-        }
-
-        prop->on_end();
-
-        carrier_props_.pop_back();
-
-        if (prop->need_update_vision_when_start_or_end())
-        {
-            owning_actor->update_clr();
-            game_time::update_light_map();
-            map::player->update_fov();
-        }
-
-        msg_log::more_prompt();
-
-        delete prop;
-    }
+    actor.prop_handler().remove_props_for_item(this);
 }
 
 void Item::add_carrier_spell(Spell* const spell)
@@ -379,15 +284,16 @@ void Armor::setup_from_save_lines(vector<string>& lines)
     lines.erase(begin(lines));
 }
 
-Unequip_allowed Armor::on_unequip()
+Unequip_allowed Armor::on_unequip(Actor& actor)
 {
     render::draw_map_and_interface();
 
-    const Unequip_allowed unequip_allowed = on_unequip_hook();
+    const Unequip_allowed unequip_allowed = on_unequip_hook(actor);
 
     if (unequip_allowed == Unequip_allowed::yes)
     {
         const string armor_name = name(Item_ref_type::plain, Item_ref_inf::none);
+
         msg_log::add("I take off my " + armor_name + ".", clr_white, false,
                      More_prompt_on_msg::yes);
     }
@@ -467,9 +373,9 @@ void Armor_asb_suit::on_equip(Actor& actor, const Verbosity verbosity)
     add_carrier_prop(new Prop_rBreath(Prop_turns::indefinite),  actor, verbosity);
 }
 
-Unequip_allowed Armor_asb_suit::on_unequip_hook()
+Unequip_allowed Armor_asb_suit::on_unequip_hook(Actor& actor)
 {
-    clear_carrier_props();
+    clear_carrier_props(actor);
 
     return Unequip_allowed::yes;
 }
@@ -479,9 +385,9 @@ void Armor_heavy_coat::on_equip(Actor& actor, const Verbosity verbosity)
     add_carrier_prop(new Prop_rCold(Prop_turns::indefinite), actor, verbosity);
 }
 
-Unequip_allowed Armor_heavy_coat::on_unequip_hook()
+Unequip_allowed Armor_heavy_coat::on_unequip_hook(Actor& actor)
 {
-    clear_carrier_props();
+    clear_carrier_props(actor);
 
     return Unequip_allowed::yes;
 }
@@ -519,8 +425,10 @@ void Armor_mi_go::on_equip(Actor& actor, const Verbosity verbosity)
     }
 }
 
-Unequip_allowed Armor_mi_go::on_unequip_hook()
+Unequip_allowed Armor_mi_go::on_unequip_hook(Actor& actor)
 {
+    (void)actor;
+
     render::draw_map_and_interface();
     msg_log::add("I attempt to tear off the armor, it rips my skin!", clr_msg_bad, false,
                  More_prompt_on_msg::yes);
@@ -685,7 +593,12 @@ void Medical_bag::on_pickup_to_backpack(Inventory& inv)
 
 Consume_item Medical_bag::activate(Actor* const actor)
 {
-    (void)actor;
+    if (player_bon::bg() == Bg::ghoul)
+    {
+        msg_log::add("It is of no use to me.");
+        cur_action_ = Med_bag_action::END;
+        return Consume_item::no;
+    }
 
     vector<Actor*> seen_foes;
     map::player->seen_foes(seen_foes);
@@ -707,9 +620,6 @@ Consume_item Medical_bag::activate(Actor* const actor)
     }
 
     //Check if chosen action can be done
-    bool props[size_t(Prop_id::END)];
-    map::player->prop_handler().prop_ids(props);
-
     switch (cur_action_)
     {
     case Med_bag_action::treat_wounds:
@@ -723,7 +633,7 @@ Consume_item Medical_bag::activate(Actor* const actor)
         break;
 
     case Med_bag_action::sanitize_infection:
-        if (!props[int(Prop_id::infected)])
+        if (!actor->has_prop(Prop_id::infected))
         {
             msg_log::add("I have no infection to sanitize.");
             cur_action_ = Med_bag_action::END;
@@ -783,11 +693,8 @@ Med_bag_action Medical_bag::choose_action() const
 {
     msg_log::clear();
 
-    bool props[size_t(Prop_id::END)];
-    map::player->prop_handler().prop_ids(props);
-
     //Infections are treated first
-    if (props[int(Prop_id::infected)])
+    if (map::player->has_prop(Prop_id::infected))
     {
         return Med_bag_action::sanitize_infection;
     }
@@ -843,7 +750,7 @@ void Medical_bag::continue_action()
 
             if (game_time::turn() % NR_TRN_PER_HP_W_BON == 0)
             {
-                player.restore_hp(1, false);
+                player.restore_hp(1, false, Verbosity::silent);
             }
 
             //The rate of supply use is consistent (this means that with the healer
@@ -901,7 +808,7 @@ void Medical_bag::finish_cur_action()
     {
     case Med_bag_action::sanitize_infection:
     {
-        map::player->prop_handler().end_applied_prop(Prop_id::infected);
+        map::player->prop_handler().end_prop(Prop_id::infected);
         nr_supplies_ -= tot_suppl_for_sanitize();
     } break;
 
@@ -968,7 +875,7 @@ int Medical_bag::tot_suppl_for_sanitize() const
 //            {
 //                if (rnd::one_in(4) && actor->can_see_actor(*map::player, blocked_los))
 //                {
-//                    actor->prop_handler().try_apply_prop(
+//                    actor->prop_handler().try_add_prop(
 //                        new Prop_terrified(Prop_turns::std));
 //                }
 //            }
@@ -982,9 +889,9 @@ void Gas_mask::on_equip(Actor& actor, const Verbosity verbosity)
     add_carrier_prop(new Prop_rBreath(Prop_turns::indefinite), actor, verbosity);
 }
 
-Unequip_allowed Gas_mask::on_unequip()
+Unequip_allowed Gas_mask::on_unequip(Actor& actor)
 {
-    clear_carrier_props();
+    clear_carrier_props(actor);
 
     return Unequip_allowed::yes;
 }

@@ -3,7 +3,7 @@
 
 #include "debug_mode.hpp"
 
-#include <assert.h>
+#include <cassert>
 #include <iostream>
 
 //-----------------------------------------------------------------------------

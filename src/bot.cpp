@@ -2,7 +2,7 @@
 
 #include "bot.hpp"
 
-#include <assert.h>
+#include <cassert>
 #include <algorithm>
 #include <vector>
 
@@ -142,10 +142,10 @@ void act()
         actor_factory::summon(map::player->pos, {Actor_id::mi_go}, false, map::player);
     }
 
-    //Occasionally apply RFear (to avoid getting stuck on fear-causing monsters)
+    //Occasionally apply rFear (to avoid getting stuck on fear-causing monsters)
     if (rnd::one_in(7))
     {
-        prop_handler.try_apply_prop(new Prop_rFear(Prop_turns::specific, 4), true);
+        prop_handler.try_add_prop(new Prop_rFear(Prop_turns::specific, 4));
     }
 
     //Occasionally apply Burning to a random actor (helps to avoid getting stuck)
@@ -156,7 +156,7 @@ void act()
 
         if (actor != map::player)
         {
-            actor->prop_handler().try_apply_prop(new Prop_burning(Prop_turns::std), true);
+            actor->prop_handler().try_add_prop(new Prop_burning(Prop_turns::std));
         }
     }
 
@@ -174,7 +174,7 @@ void act()
     }
 
     //Occasionally apply a random property to exercise the prop code
-    if (rnd::one_in(10))
+    if (rnd::one_in(20))
     {
         vector<Prop_id> prop_bucket;
 
@@ -186,10 +186,10 @@ void act()
             }
         }
 
-        Prop_id prop_id = prop_bucket[rnd::range(0, prop_bucket.size() - 1)];
-        Prop* const prop = prop_handler.mk_prop(prop_id, Prop_turns::specific, 5);
+        Prop_id     prop_id = prop_bucket[rnd::range(0, prop_bucket.size() - 1)];
+        Prop* const prop    = prop_handler.mk_prop(prop_id, Prop_turns::specific, 5);
 
-        prop_handler.try_apply_prop(prop, true);
+        prop_handler.try_add_prop(prop);
     }
 
     //Handle blocking door
@@ -215,10 +215,7 @@ void act()
     }
 
     //If we are terrified, wait in place
-    bool props[size_t(Prop_id::END)];
-    map::player->prop_handler().prop_ids(props);
-
-    if (props[int(Prop_id::terrified)])
+    if (map::player->has_prop(Prop_id::terrified))
     {
         if (walk_to_adj_cell(map::player->pos))
         {

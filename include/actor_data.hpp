@@ -114,18 +114,18 @@ struct Actor_data_t
     int hp, spi, dmg_melee, dmg_ranged;
     Actor_speed speed;
     Ability_vals ability_vals;
-    bool intr_props[size_t(Prop_id::END)];
+    bool natural_props[size_t(Prop_id::END)];
     int ranged_cooldown_turns, spell_cooldown_turns;
     bool ai[int(Ai_id::END)];
     int nr_turns_aware;
     int spawn_min_dLVL, spawn_max_dLVL;
     Actor_size actor_size;
     bool is_humanoid;
+    bool is_infra_visible;
     bool is_auto_descr_allowed;
     std::string death_msg_override;
     int nr_kills;
     bool can_open_doors, can_bash_doors;
-    bool can_see_in_darkness;
     //NOTE: Knockback may be prevented even if this is false, e.g. if monster is ethereal
     bool prevent_knockback;
     int nr_left_allowed_to_spawn;

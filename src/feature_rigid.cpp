@@ -65,7 +65,7 @@ void Rigid::on_new_turn()
             if (rnd::one_in(4))
             {
                 auto& prop_handler = actor->prop_handler();
-                prop_handler.try_apply_prop(new Prop_burning(Prop_turns::std));
+                prop_handler.try_add_prop(new Prop_burning(Prop_turns::std));
             }
             else
             {
@@ -219,7 +219,7 @@ void Rigid::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* act
             {
                 msg_log::add("I am off-balance.");
 
-                actor->prop_handler().try_apply_prop(
+                actor->prop_handler().try_add_prop(
                     new Prop_paralyzed(Prop_turns::specific, 2));
             }
 
@@ -786,10 +786,7 @@ void Statue::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor*
     {
         assert(actor);
 
-        bool props[size_t(Prop_id::END)];
-        actor->prop_handler().prop_ids(props);
-
-        if (props[int(Prop_id::weakened)])
+        if (actor->has_prop(Prop_id::weakened))
         {
             msg_log::add("It wiggles a bit.");
             return;
@@ -821,10 +818,7 @@ void Statue::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor*
 
         if (actor_behind && actor_behind->is_alive())
         {
-            bool props_actor_behind[size_t(Prop_id::END)];
-            actor_behind->prop_handler().prop_ids(props_actor_behind);
-
-            if (!props_actor_behind[int(Prop_id::ethereal)])
+            if (!actor_behind->has_prop(Prop_id::ethereal))
             {
                 if (actor_behind == map::player)
                 {
@@ -1037,12 +1031,9 @@ void Liquid_shallow::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method
 
 void Liquid_shallow::bump(Actor& actor_bumping)
 {
-    bool props[size_t(Prop_id::END)];
-    actor_bumping.prop_handler().prop_ids(props);
-
-    if (!props[int(Prop_id::ethereal)] && !props[int(Prop_id::flying)])
+    if (!actor_bumping.has_prop(Prop_id::ethereal) && !actor_bumping.has_prop(Prop_id::flying))
     {
-        actor_bumping.prop_handler().try_apply_prop(new Prop_waiting(Prop_turns::std));
+        actor_bumping.prop_handler().try_add_prop(new Prop_waiting(Prop_turns::std));
 
         if (actor_bumping.is_player())
         {
@@ -1818,12 +1809,10 @@ void Tomb::bump(Actor& actor_bumping)
             {
                 msg_log::add("I attempt to push the lid.");
 
-                bool props[size_t(Prop_id::END)];
-                map::player->prop_handler().prop_ids(props);
-
-                if (props[int(Prop_id::weakened)])
+                if (actor_bumping.has_prop(Prop_id::weakened))
                 {
                     try_sprain_player();
+
                     msg_log::add("It seems futile.", clr_msg_note, false,
                                  More_prompt_on_msg::yes);
                 }
@@ -1979,7 +1968,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
         break;
 
     case Tomb_trait::cursed:
-        map::player->prop_handler().try_apply_prop(new Prop_cursed(Prop_turns::std));
+        map::player->prop_handler().try_add_prop(new Prop_cursed(Prop_turns::std));
         did_trigger_trap = Did_trigger_trap::yes;
         break;
 
@@ -2014,7 +2003,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
             else
             {
                 prop = new Prop_paralyzed(Prop_turns::std);
-                prop->turns_left_ *= 2;
+                prop->set_nr_turns_left(prop->nr_turns_left() * 2);
             }
 
             explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc,
@@ -2027,7 +2016,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
                 const Actor_data_t& d = actor_data::data[i];
 
                 if (
-                    d.intr_props[int(Prop_id::ooze)] &&
+                    d.natural_props[int(Prop_id::ooze)] &&
                     d.is_auto_spawn_allowed  &&
                     !d.is_unique)
                 {
@@ -2042,7 +2031,8 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
         did_trigger_trap = Did_trigger_trap::yes;
         break;
 
-    case Tomb_trait::END: {} break;
+    case Tomb_trait::END:
+        break;
     }
 
     if (!actor_bucket.empty())
@@ -2197,8 +2187,6 @@ Did_open Chest::open(Actor* const actor_opening)
 
 void Chest::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
 {
-    (void)actor;
-
     switch (dmg_type)
     {
     case Dmg_type::physical:
@@ -2223,12 +2211,11 @@ void Chest::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* con
             }
             else
             {
+                assert(actor);
+
                 msg_log::add("I kick the lid.");
 
-                bool props[size_t(Prop_id::END)];
-                map::player->prop_handler().prop_ids(props);
-
-                if (props[int(Prop_id::weakened)] || matl_ == Chest_matl::iron)
+                if (actor->has_prop(Prop_id::weakened) || matl_ == Chest_matl::iron)
                 {
                     try_sprain_player();
                     msg_log::add("It seems futile.", clr_msg_note, false, More_prompt_on_msg::yes);
@@ -2236,8 +2223,8 @@ void Chest::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* con
                 else
                 {
                     if (
-                        !props[int(Prop_id::blessed)] &&
-                        (props[int(Prop_id::cursed)] || rnd::one_in(3)))
+                        !actor->has_prop(Prop_id::blessed) &&
+                        (actor->has_prop(Prop_id::cursed) || rnd::one_in(3)))
                     {
                         item_container_.destroy_single_fragile();
                     }
@@ -2404,6 +2391,17 @@ void Chest::disarm()
 
 Did_trigger_trap Chest::trigger_trap(Actor* const actor)
 {
+    //TODO: This function seems to assume that an actor is opening (not nullptr). But could it not
+    //be openened by e.g. by a spell of opening? Make sure this function handles that.
+
+    assert(actor);
+
+    if (!actor) //Robustness for release builds, but see "TODO" above.
+    {
+        is_trap_status_known_ = true;
+        return Did_trigger_trap::no;
+    }
+
     //Chest is not trapped? (Either already triggered, or chest were created wihout trap)
     if (!is_trapped_)
     {
@@ -2423,11 +2421,8 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
     is_trapped_             = false;
 
     //Nothing happens?
-    bool player_props[size_t(Prop_id::END)];
-    map::player->prop_handler().prop_ids(player_props);
-
-    const int TRAP_NO_ACTION_ONE_IN_N = player_props[int(Prop_id::blessed)] ? 2 :
-                                        player_props[int(Prop_id::cursed)]  ? 20 : 4;
+    const int TRAP_NO_ACTION_ONE_IN_N = actor->has_prop(Prop_id::blessed) ? 2 :
+                                        actor->has_prop(Prop_id::cursed)  ? 20 : 4;
 
     if (rnd::one_in(TRAP_NO_ACTION_ONE_IN_N))
     {
@@ -2466,12 +2461,12 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
         if (map::dlvl < MIN_DLVL_HARDER_TRAPS)
         {
             //Weak poison
-            actor->prop_handler().try_apply_prop(new Prop_poisoned(Prop_turns::specific,
+            actor->prop_handler().try_add_prop(new Prop_poisoned(Prop_turns::specific,
                                                  POISON_DMG_N_TURN * 3));
         }
         else //We're at the deep end of the pool now, apply strong poison
         {
-            actor->prop_handler().try_apply_prop(new Prop_poisoned(Prop_turns::std));
+            actor->prop_handler().try_add_prop(new Prop_poisoned(Prop_turns::std));
         }
     }
     else //Is monster, or cointoss is false
@@ -2506,7 +2501,7 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
         else
         {
             prop = new Prop_paralyzed(Prop_turns::std);
-            prop->turns_left_ *= 2;
+            prop->set_nr_turns_left(prop->nr_turns_left() * 2);
         }
 
         explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc,
@@ -2699,89 +2694,89 @@ void Fountain::bump(Actor& actor_bumping)
             case Fountain_effect::refreshing:
             {
                 msg_log::add("It's very refreshing.");
-                map::player->restore_hp(1, false);
-                map::player->restore_spi(1, false);
+                map::player->restore_hp(1, false, Verbosity::silent);
+                map::player->restore_spi(1, false, Verbosity::silent);
                 map::player->restore_shock(5, false);
             } break;
 
             case Fountain_effect::curse:
             {
-                prop_hlr.try_apply_prop(new Prop_cursed(Prop_turns::std));
+                prop_hlr.try_add_prop(new Prop_cursed(Prop_turns::std));
             } break;
 
             case Fountain_effect::spirit:
             {
-                map::player->restore_spi(2, true, true);
+                map::player->restore_spi(2, true);
             } break;
 
             case Fountain_effect::vitality:
             {
-                map::player->restore_hp(2, true, true);
+                map::player->restore_hp(2, true);
             } break;
 
             case Fountain_effect::disease:
             {
-                prop_hlr.try_apply_prop(new Prop_diseased(Prop_turns::specific, 50));
+                prop_hlr.try_add_prop(new Prop_diseased(Prop_turns::specific, 50));
             } break;
 
             case Fountain_effect::poison:
             {
-                prop_hlr.try_apply_prop(new Prop_poisoned(Prop_turns::std));
+                prop_hlr.try_add_prop(new Prop_poisoned(Prop_turns::std));
             } break;
 
             case Fountain_effect::frenzy:
             {
-                prop_hlr.try_apply_prop(new Prop_frenzied(Prop_turns::std));
+                prop_hlr.try_add_prop(new Prop_frenzied(Prop_turns::std));
             } break;
 
             case Fountain_effect::paralyze:
             {
-                prop_hlr.try_apply_prop(new Prop_paralyzed(Prop_turns::std));
+                prop_hlr.try_add_prop(new Prop_paralyzed(Prop_turns::std));
             } break;
 
             case Fountain_effect::blind:
             {
-                prop_hlr.try_apply_prop(new Prop_blind(Prop_turns::std));
+                prop_hlr.try_add_prop(new Prop_blind(Prop_turns::std));
             } break;
 
             case Fountain_effect::faint:
             {
-                prop_hlr.try_apply_prop(new Prop_fainted(Prop_turns::specific, 10));
+                prop_hlr.try_add_prop(new Prop_fainted(Prop_turns::specific, 10));
             } break;
 
             case Fountain_effect::rFire:
             {
                 Prop* const prop = new Prop_rFire(Prop_turns::std);
-                prop->turns_left_ *= 2;
-                prop_hlr.try_apply_prop(prop);
+                prop->set_nr_turns_left(prop->nr_turns_left() * 2);
+                prop_hlr.try_add_prop(prop);
             } break;
 
             case Fountain_effect::rCold:
             {
                 Prop* const prop = new Prop_rCold(Prop_turns::std);
-                prop->turns_left_ *= 2;
-                prop_hlr.try_apply_prop(prop);
+                prop->set_nr_turns_left(prop->nr_turns_left() * 2);
+                prop_hlr.try_add_prop(prop);
             } break;
 
             case Fountain_effect::rElec:
             {
                 Prop* const prop = new Prop_rElec(Prop_turns::std);
-                prop->turns_left_ *= 2;
-                prop_hlr.try_apply_prop(prop);
+                prop->set_nr_turns_left(prop->nr_turns_left() * 2);
+                prop_hlr.try_add_prop(prop);
             } break;
 
             case Fountain_effect::rConf:
             {
-                Prop* const prop = new Prop_rConfusion(Prop_turns::std);
-                prop->turns_left_ *= 2;
-                prop_hlr.try_apply_prop(prop);
+                Prop* const prop = new Prop_rConf(Prop_turns::std);
+                prop->set_nr_turns_left(prop->nr_turns_left() * 2);
+                prop_hlr.try_add_prop(prop);
             } break;
 
             case Fountain_effect::rFear:
             {
                 Prop* const prop = new Prop_rFear(Prop_turns::std);
-                prop->turns_left_ *= 2;
-                prop_hlr.try_apply_prop(prop);
+                prop->set_nr_turns_left(prop->nr_turns_left() * 2);
+                prop_hlr.try_add_prop(prop);
             } break;
 
             case Fountain_effect::END: {}
@@ -2954,7 +2949,7 @@ void Cocoon::bump(Actor& actor_bumping)
         {
             if (map::player->phobias[int(Phobia::spider)])
             {
-                map::player->prop_handler().try_apply_prop(
+                map::player->prop_handler().try_add_prop(
                     new Prop_terrified(Prop_turns::std));
             }
 

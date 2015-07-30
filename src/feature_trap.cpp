@@ -1,7 +1,7 @@
 #include "feature_trap.hpp"
 
 #include <algorithm>
-#include <assert.h>
+#include <cassert>
 
 #include "init.hpp"
 #include "feature_data.hpp"
@@ -265,10 +265,7 @@ void Trap::bump(Actor& actor_bumping)
 
     const Actor_data_t& d = actor_bumping.data();
 
-    bool props[size_t(Prop_id::END)];
-    actor_bumping.prop_handler().prop_ids(props);
-
-    if (props[int(Prop_id::ethereal)] || props[int(Prop_id::flying)])
+    if (actor_bumping.has_prop(Prop_id::ethereal) || actor_bumping.has_prop(Prop_id::flying))
     {
         TRACE_FUNC_END_VERBOSE;
         return;
@@ -369,7 +366,7 @@ void Trap::disarm()
         }
     }
 
-    const bool IS_OCCULTIST   = player_bon::bg() == Bg::occultist;
+    const bool IS_OCCULTIST = player_bon::bg() == Bg::occultist;
 
     if (is_magical() && !IS_OCCULTIST)
     {
@@ -377,11 +374,8 @@ void Trap::disarm()
         return;
     }
 
-    bool props[size_t(Prop_id::END)];
-    map::player->prop_handler().prop_ids(props);
-
-    const bool IS_BLESSED = props[int(Prop_id::blessed)];
-    const bool IS_CURSED  = props[int(Prop_id::cursed)];
+    const bool IS_BLESSED = map::player->has_prop(Prop_id::blessed);
+    const bool IS_CURSED  = map::player->has_prop(Prop_id::cursed);
 
     int         disarm_numerator    = 6;
     const int   DISARM_DENOMINATOR  = 10;
@@ -1133,7 +1127,7 @@ Dir Trap_web::actor_try_leave(Actor& actor, const Dir dir)
         {
             msg_log::add("I break free.");
         }
-        else
+        else //Is monster
         {
             if (PLAYER_CAN_SEE_ACTOR)
             {

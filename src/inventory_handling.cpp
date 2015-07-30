@@ -287,7 +287,7 @@ void run_inv_screen()
                 {
                     msg_log::clear();
 
-                    const Unequip_allowed unequip_allowed = slot.item->on_unequip();
+                    const Unequip_allowed unequip_allowed = slot.item->on_unequip(*map::player);
 
                     if (unequip_allowed == Unequip_allowed::yes)
                     {

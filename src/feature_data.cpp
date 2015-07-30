@@ -65,17 +65,21 @@ Range Feature_room_spawn_rules::dlvls_allowed() const
 }
 
 //--------------------------------------------------------- MOVE RULES
-bool Move_rules::can_move(const bool actor_prop_ids[size_t(Prop_id::END)]) const
+bool Move_rules::can_move(Actor& actor) const
 {
     if (can_move_cmn_)
     {
         return true;
     }
 
+    auto& prop_handler = actor.prop_handler();
+
     //If not allowing normal move, check if any property overrides this
-    for (int i = 0; i < int(Prop_id::END); ++i)
+    for (size_t i = 0; i < size_t(Prop_id::END); ++i)
     {
-        if (actor_prop_ids[i] && can_move_if_have_prop_[i])
+        const Prop_id id = Prop_id(i);
+
+        if (prop_handler.has_prop(id) && can_move_if_have_prop_[i])
         {
             return true;
         }

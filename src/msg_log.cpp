@@ -140,10 +140,7 @@ void add(const string&              str,
 #endif
 
     //If frenzied, change message
-    bool props[size_t(Prop_id::END)];
-    map::player->prop_handler().prop_ids(props);
-
-    if (props[size_t(Prop_id::frenzied)])
+    if (map::player->has_prop(Prop_id::frenzied))
     {
         string frenzied_str = str;
 

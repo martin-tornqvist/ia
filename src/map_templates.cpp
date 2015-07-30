@@ -3,7 +3,7 @@
 #include "init.hpp"
 
 #include <vector>
-#include <assert.h>
+#include <cassert>
 
 using namespace std;
 

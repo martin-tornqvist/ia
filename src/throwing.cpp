@@ -1,7 +1,7 @@
 #include "throwing.hpp"
 
 #include <vector>
-#include <assert.h>
+#include <cassert>
 
 #include "item.hpp"
 #include "item_potion.hpp"

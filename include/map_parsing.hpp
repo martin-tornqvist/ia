@@ -56,7 +56,10 @@ private:
 class Blocks_actor : public Check
 {
 public:
-    Blocks_actor(Actor& actor, bool is_actors_blocking);
+    Blocks_actor(Actor& actor, bool is_actors_blocking) :
+        Check(),
+        IS_ACTORS_BLOCKING_ (is_actors_blocking),
+        actor_              (actor) {}
     bool is_checking_cells()        const override {return true;}
     bool is_checking_mobs()         const override {return true;}
     bool is_checking_actors()       const override {return IS_ACTORS_BLOCKING_;}
@@ -65,7 +68,7 @@ public:
     bool check(const Actor& a)      const override;
 private:
     const bool IS_ACTORS_BLOCKING_;
-    bool actors_props_[size_t(Prop_id::END)];
+    Actor& actor_;
 };
 
 class Blocks_projectiles : public Check

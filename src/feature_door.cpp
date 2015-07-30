@@ -36,47 +36,40 @@ Door::Door(const Pos& feature_pos, const Rigid* const mimic_feature,
     switch (Door_spawn_state(door_state))
     {
     case Door_spawn_state::open:
-    {
         is_open_   = true;
         is_stuck_  = false;
         is_secret_ = false;
-    } break;
+        break;
 
     case Door_spawn_state::closed:
-    {
         is_open_   = false;
         is_stuck_  = false;
         is_secret_ = false;
-    } break;
+        break;
 
     case Door_spawn_state::stuck:
-    {
         is_open_   = false;
         is_stuck_  = true;
         is_secret_ = false;
-    } break;
+        break;
 
     case Door_spawn_state::secret:
-    {
         is_open_   = false;
         is_stuck_  = false;
         is_secret_ = true;
-    } break;
+        break;
 
     case Door_spawn_state::secret_and_stuck:
-    {
         is_open_   = false;
         is_stuck_  = true;
         is_secret_ = true;
-    } break;
+        break;
 
     case Door_spawn_state::any:
-    {
         assert(false && "Should not happen");
         is_open_   = false;
         is_stuck_  = false;
         is_secret_ = false;
-    }
     }
 
     matl_ = Matl::wood;
@@ -84,7 +77,10 @@ Door::Door(const Pos& feature_pos, const Rigid* const mimic_feature,
 
 Door::~Door()
 {
-    if (mimic_feature_) {delete mimic_feature_;}
+    if (mimic_feature_)
+    {
+        delete mimic_feature_;
+    }
 }
 
 void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
@@ -185,7 +181,8 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
             case Matl::fluid:
             case Matl::plant:
             case Matl::stone:
-            case Matl::metal: {} break;
+            case Matl::metal:
+                break;
             }
         }
 
@@ -196,12 +193,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 
             const bool IS_PLAYER    = actor == map::player;
             const bool IS_CELL_SEEN = map::is_pos_seen_by_player(pos_);
-
-            bool props[size_t(Prop_id::END)];
-
-            if (actor) {actor->prop_handler().prop_ids(props);}
-
-            const bool IS_WEAK = props[int(Prop_id::weakened)];
+            const bool IS_WEAK      = actor->has_prop(Prop_id::weakened);
 
             switch (matl_)
             {
@@ -319,7 +311,8 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
             {
                 if (IS_PLAYER && IS_CELL_SEEN && !is_secret_)
                 {
-                    msg_log::add("It seems futile.", clr_msg_note, false, More_prompt_on_msg::yes);
+                    msg_log::add("It seems futile.", clr_msg_note, false,
+                                 More_prompt_on_msg::yes);
                 }
             } break;
 
@@ -432,16 +425,19 @@ Was_destroyed Door::on_finished_burning()
     return Was_destroyed::yes;
 }
 
-bool Door::can_move_cmn() const {return is_open_;}
+bool Door::can_move_cmn() const
+{
+    return is_open_;
+}
 
-bool Door::can_move(const bool actor_prop_ids[size_t(Prop_id::END)]) const
+bool Door::can_move(Actor& actor) const
 {
     if (is_open_)
     {
         return true;
     }
 
-    if (actor_prop_ids[int(Prop_id::ethereal)] || actor_prop_ids[int(Prop_id::ooze)])
+    if (actor.has_prop(Prop_id::ethereal) || actor.has_prop(Prop_id::ooze))
     {
         return true;
     }
@@ -449,9 +445,21 @@ bool Door::can_move(const bool actor_prop_ids[size_t(Prop_id::END)]) const
     return is_open_;
 }
 
-bool Door::is_los_passable()     const {return is_open_;}
-bool Door::is_projectile_passable() const {return is_open_;}
-bool Door::is_smoke_passable()      const {return is_open_;}
+bool Door::is_los_passable() const
+{
+    return is_open_;
+}
+
+bool Door::is_projectile_passable() const
+{
+    return is_open_;
+}
+
+bool Door::is_smoke_passable() const
+{
+    return is_open_;
+}
+
 
 string Door::name(const Article article) const
 {
@@ -485,15 +493,21 @@ Clr Door::clr_default() const
     {
         switch (matl_)
         {
-        case Matl::wood:      return clr_brown_drk; break;
+        case Matl::wood:
+            return clr_brown_drk;
+            break;
 
-        case Matl::metal:     return clr_gray;     break;
+        case Matl::metal:
+            return clr_gray;
+            break;
 
         case Matl::empty:
         case Matl::cloth:
         case Matl::fluid:
         case Matl::plant:
-        case Matl::stone:     return clr_yellow;   break;
+        case Matl::stone:
+            return clr_yellow;
+            break;
         }
     }
 

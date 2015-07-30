@@ -2,7 +2,7 @@
 
 #include <algorithm>
 #include <vector>
-#include <assert.h>
+#include <cassert>
 
 #include "converters.hpp"
 #include "game_time.hpp"

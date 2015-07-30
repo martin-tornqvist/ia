@@ -83,15 +83,15 @@ void handle_map_mode_key_press(const Key_data& d)
 
             if (d.is_shift_held)
             {
-                map::player->move_dir(Dir::up_right);
+                map::player->move(Dir::up_right);
             }
             else if (d.is_ctrl_held)
             {
-                map::player->move_dir(Dir::down_right);
+                map::player->move(Dir::down_right);
             }
             else
             {
-                map::player->move_dir(Dir::right);
+                map::player->move(Dir::right);
             }
         }
 
@@ -103,7 +103,7 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive())
         {
             msg_log::clear();
-            map::player->move_dir(Dir::down);
+            map::player->move(Dir::down);
         }
 
         clear_events();
@@ -117,15 +117,15 @@ void handle_map_mode_key_press(const Key_data& d)
 
             if (d.is_shift_held)
             {
-                map::player->move_dir(Dir::up_left);
+                map::player->move(Dir::up_left);
             }
             else if (d.is_ctrl_held)
             {
-                map::player->move_dir(Dir::down_left);
+                map::player->move(Dir::down_left);
             }
             else
             {
-                map::player->move_dir(Dir::left);
+                map::player->move(Dir::left);
             }
         }
 
@@ -137,7 +137,7 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive())
         {
             msg_log::clear();
-            map::player->move_dir(Dir::up);
+            map::player->move(Dir::up);
         }
 
         clear_events();
@@ -148,7 +148,7 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive())
         {
             msg_log::clear();
-            map::player->move_dir(Dir::up_right);
+            map::player->move(Dir::up_right);
         }
 
         clear_events();
@@ -159,7 +159,7 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive())
         {
             msg_log::clear();
-            map::player->move_dir(Dir::down_right);
+            map::player->move(Dir::down_right);
         }
 
         clear_events();
@@ -170,7 +170,7 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive())
         {
             msg_log::clear();
-            map::player->move_dir(Dir::down_left);
+            map::player->move(Dir::down_left);
         }
 
         clear_events();
@@ -181,7 +181,7 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive())
         {
             msg_log::clear();
-            map::player->move_dir(Dir::up_left);
+            map::player->move(Dir::up_left);
         }
 
         clear_events();
@@ -201,8 +201,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
                 if (player_bon::traits[int(Trait::sharp_shooter)])
                 {
-                    Prop* const prop_aiming_old =
-                        prop_hlr.prop(Prop_id::aiming, Prop_src::applied);
+                    Prop* const prop_aiming_old = prop_hlr.prop(Prop_id::aiming);
 
                     if (prop_aiming_old)
                     {
@@ -213,10 +212,10 @@ void handle_map_mode_key_press(const Key_data& d)
 
                 Prop_aiming* const aiming = new Prop_aiming(Prop_turns::specific, 1);
                 aiming->nr_turns_aiming += nr_turns_aiming_old;
-                prop_hlr.try_apply_prop(aiming);
+                prop_hlr.try_add_prop(aiming);
             }
 
-            map::player->move_dir(Dir::center);
+            map::player->move(Dir::center);
         }
 
         clear_events();
@@ -377,13 +376,10 @@ void handle_map_mode_key_press(const Key_data& d)
                                 !actor->is_player() &&
                                 map::player->can_see_actor(*actor, nullptr))
                             {
-                                bool tgt_props[size_t(Prop_id::END)];
-                                actor->prop_handler().prop_ids(tgt_props);
-
                                 const bool GETS_UNDEAD_BANE_BON =
                                     player_bon::gets_undead_bane_bon(actor->data());
 
-                                if (!tgt_props[int(Prop_id::ethereal)] || GETS_UNDEAD_BANE_BON)
+                                if (!actor->has_prop(Prop_id::ethereal) || GETS_UNDEAD_BANE_BON)
                                 {
                                     Ranged_att_data data(map::player,
                                                          map::player->pos,  //Origin
@@ -599,18 +595,15 @@ void handle_map_mode_key_press(const Key_data& d)
                 msg_log::add("Not while blind.");
                 render::draw_map_and_interface();
             }
-            else
+            else //Can see
             {
-                bool props[size_t(Prop_id::END)];
-                map::player->prop_handler().prop_ids(props);
-
-                if (props[int(Prop_id::poisoned)])
+                if (map::player->has_prop(Prop_id::poisoned))
                 {
                     //Player is poisoned
                     msg_log::add("Not while poisoned.");
                     render::draw_map_and_interface();
                 }
-                else if (props[int(Prop_id::confused)])
+                else if (map::player->has_prop(Prop_id::confused))
                 {
                     //Player is confused
                     msg_log::add("Not while confused.");
@@ -701,13 +694,10 @@ void handle_map_mode_key_press(const Key_data& d)
                                 !actor->is_player() &&
                                 map::player->can_see_actor(*actor, nullptr))
                             {
-                                bool tgt_props[size_t(Prop_id::END)];
-                                actor->prop_handler().prop_ids(tgt_props);
-
                                 const bool GETS_UNDEAD_BANE_BON =
                                     player_bon::gets_undead_bane_bon(actor->data());
 
-                                if (!tgt_props[int(Prop_id::ethereal)] || GETS_UNDEAD_BANE_BON)
+                                if (!actor->has_prop(Prop_id::ethereal) || GETS_UNDEAD_BANE_BON)
                                 {
                                     Throw_att_data data(map::player,
                                                         actor->pos,     //Aim pos
@@ -1134,7 +1124,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         if (IS_DEBUG_MODE)
         {
-            map::player->prop_handler().try_apply_prop(new Prop_infected(Prop_turns::std));
+            map::player->prop_handler().try_add_prop(new Prop_infected(Prop_turns::std));
             clear_events();
         }
 

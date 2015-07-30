@@ -6,6 +6,6 @@ namespace character_descr
 
 void run();
 
-} //namespace
+} //character_descr
 
 #endif

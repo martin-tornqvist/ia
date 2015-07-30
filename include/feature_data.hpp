@@ -77,7 +77,10 @@ class Actor;
 class Move_rules
 {
 public:
-    Move_rules() {reset();}
+    Move_rules()
+    {
+        reset();
+    }
 
     ~Move_rules() {}
 
@@ -91,12 +94,22 @@ public:
         }
     }
 
-    void set_prop_can_move(const Prop_id id) {can_move_if_have_prop_[int(id)] = true;}
-    void set_can_move_cmn() {can_move_cmn_ = true;}
+    void set_prop_can_move(const Prop_id id)
+    {
+        can_move_if_have_prop_[int(id)] = true;
+    }
 
-    bool can_move_cmn() const {return can_move_cmn_;}
+    void set_can_move_cmn()
+    {
+        can_move_cmn_ = true;
+    }
 
-    bool can_move(const bool actor_prop_ids[size_t(Prop_id::END)]) const;
+    bool can_move_cmn() const
+    {
+        return can_move_cmn_;
+    }
+
+    bool can_move(Actor& actor) const;
 
 private:
     bool can_move_cmn_;

@@ -1,6 +1,6 @@
 #include "map_parsing.hpp"
 
-#include <assert.h>
+#include <cassert>
 #include <algorithm>
 
 #include "map.hpp"
@@ -10,15 +10,14 @@
 #include "feature_rigid.hpp"
 #include "feature_mob.hpp"
 
-using namespace std;
-
 //------------------------------------------------------------ CELL CHECKS
 namespace cell_check
 {
 
 bool Blocks_los::check(const Cell& c)  const
 {
-    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->is_los_passable();
+    return !utils::is_pos_inside_map(c.pos, false) ||
+           !c.rigid->is_los_passable();
 }
 
 bool Blocks_los::check(const Mob& f) const
@@ -28,7 +27,8 @@ bool Blocks_los::check(const Mob& f) const
 
 bool Blocks_move_cmn::check(const Cell& c) const
 {
-    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->can_move_cmn();
+    return !utils::is_pos_inside_map(c.pos, false) ||
+           !c.rigid->can_move_cmn();
 }
 
 bool Blocks_move_cmn::check(const Mob& f) const
@@ -41,21 +41,15 @@ bool Blocks_move_cmn::check(const Actor& a) const
     return a.is_alive();
 }
 
-Blocks_actor::Blocks_actor(Actor& actor, bool is_actors_blocking) :
-    Check(),
-    IS_ACTORS_BLOCKING_(is_actors_blocking)
-{
-    actor.prop_handler().prop_ids(actors_props_);
-}
-
 bool Blocks_actor::check(const Cell& c) const
 {
-    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->can_move(actors_props_);
+    return !utils::is_pos_inside_map(c.pos, false) ||
+           !c.rigid->can_move(actor_);
 }
 
 bool Blocks_actor::check(const Mob& f) const
 {
-    return !f.can_move(actors_props_);
+    return !f.can_move(actor_);
 }
 
 bool Blocks_actor::check(const Actor& a) const
@@ -65,7 +59,8 @@ bool Blocks_actor::check(const Actor& a) const
 
 bool Blocks_projectiles::check(const Cell& c)  const
 {
-    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->is_projectile_passable();
+    return !utils::is_pos_inside_map(c.pos, false) ||
+           !c.rigid->is_projectile_passable();
 }
 
 bool Blocks_projectiles::check(const Mob& f)  const
@@ -85,7 +80,8 @@ bool Living_actors_adj_to_pos::check(const Actor& a) const
 
 bool Blocks_items::check(const Cell& c)  const
 {
-    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->can_have_item();
+    return !utils::is_pos_inside_map(c.pos, false) ||
+           !c.rigid->can_have_item();
 }
 
 bool Blocks_items::check(const Mob& f) const
@@ -100,7 +96,13 @@ bool Is_feature::check(const Cell& c) const
 
 bool Is_any_of_features::check(const Cell& c) const
 {
-    for (auto f : features_) {if (f == c.rigid->id()) return true;}
+    for (auto f : features_)
+    {
+        if (f == c.rigid->id())
+        {
+            return true;
+        }
+    }
 
     return false;
 }
@@ -144,9 +146,18 @@ bool All_adj_is_any_of_features::check(const Cell& c) const
 
             bool is_match = false;
 
-            for (auto f : features_) {if (f == cur_id) {is_match = true; break;}}
+            for (auto f : features_)
+            {
+                if (f == cur_id)
+                {
+                    is_match = true; break;
+                }
+            }
 
-            if (!is_match) return false;
+            if (!is_match)
+            {
+                return false;
+            }
         }
     }
 
@@ -179,7 +190,10 @@ bool All_adj_is_none_of_features::check(const Cell& c) const
     const int X = c.pos.x;
     const int Y = c.pos.y;
 
-    if (X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
+    if (X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1)
+    {
+        return false;
+    }
 
     for (int dx = -1; dx <= 1; ++dx)
     {
@@ -187,7 +201,13 @@ bool All_adj_is_none_of_features::check(const Cell& c) const
         {
             const auto cur_id = map::cells[X + dx][Y + dy].rigid->id();
 
-            for (auto f : features_) {if (f == cur_id) {return false;}}
+            for (auto f : features_)
+            {
+                if (f == cur_id)
+                {
+                    return false;
+                }
+            }
         }
     }
 
@@ -244,7 +264,10 @@ void run(const  cell_check::Check& check,
                 {
                     bool& v = out[p.x][p.y];
 
-                    if (!v) {v = IS_MATCH;}
+                    if (!v)
+                    {
+                        v = IS_MATCH;
+                    }
                 }
             }
         }
@@ -264,7 +287,10 @@ void run(const  cell_check::Check& check,
                 {
                     bool& v = out[p.x][p.y];
 
-                    if (!v) {v = IS_MATCH;}
+                    if (!v)
+                    {
+                        v = IS_MATCH;
+                    }
                 }
             }
         }
@@ -292,8 +318,8 @@ void cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MA
             {
                 for (int d = dist_interval.lower; d <= dist_interval.upper; d++)
                 {
-                    Pos p0(max(0,         x_outer - d), max(0,         y_outer - d));
-                    Pos p1(min(MAP_W - 1, x_outer + d), min(MAP_H - 1, y_outer + d));
+                    Pos p0(std::max(0,         x_outer - d), std::max(0,         y_outer - d));
+                    Pos p1(std::min(MAP_W - 1, x_outer + d), std::min(MAP_H - 1, y_outer + d));
 
                     for (int x = p0.x; x <= p1.x; ++x)
                     {
@@ -353,10 +379,10 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
     int cmp_x1 = 0;
     int cmp_y1 = 0;
 
-    const int X0 = max(0,     area_allowed_to_modify.p0.x);
-    const int Y0 = max(0,     area_allowed_to_modify.p0.y);
-    const int X1 = min(MAP_W - 1, area_allowed_to_modify.p1.x);
-    const int Y1 = min(MAP_H - 1, area_allowed_to_modify.p1.y);
+    const int X0 = std::max(0,          area_allowed_to_modify.p0.x);
+    const int Y0 = std::max(0,          area_allowed_to_modify.p0.y);
+    const int X1 = std::min(MAP_W - 1,  area_allowed_to_modify.p1.x);
+    const int Y1 = std::min(MAP_H - 1,  area_allowed_to_modify.p1.y);
 
     for (int x = X0; x <= X1; ++x)
     {
@@ -496,18 +522,20 @@ void run(const Pos& p0,
 {
     utils::reset_array(out);
 
-    vector<Pos> positions;
+    std::vector<Pos> positions;
     positions.clear();
 
-    unsigned int  nr_elements_to_skip   = 0;
-    int           cur_val               = 0;
-    bool          path_exists           = true;
-    bool          is_at_tgt          = false;
-    bool          is_stopping_at_p1     = p1.x != -1;
-    const         Rect bounds(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2));
-    Pos           cur_pos(p0);
+    unsigned int    nr_elements_to_skip = 0;
+    int             cur_val             = 0;
+    bool            path_exists         = true;
+    bool            is_at_tgt           = false;
+    bool            is_stopping_at_p1   = p1.x != -1;
 
-    vector<Pos> dirs {Pos(0, -1), Pos(-1, 0), Pos(0, 1), Pos(1, 0)};
+    const Rect      bounds(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2));
+
+    Pos             cur_pos(p0);
+
+    std::vector<Pos> dirs {Pos(0, -1), Pos(-1, 0), Pos(0, 1), Pos(1, 0)};
 
     if (ALLOW_DIAGONAL)
     {
@@ -554,16 +582,25 @@ void run(const Pos& p0,
 
         if (is_stopping_at_p1)
         {
-            if (positions.size() == nr_elements_to_skip)  {path_exists = false;}
+            if (positions.size() == nr_elements_to_skip)
+            {
+                path_exists = false;
+            }
 
-            if (is_at_tgt || !path_exists)             {done = true;}
+            if (is_at_tgt || !path_exists)
+            {
+                done = true;
+            }
         }
         else if (positions.size() == nr_elements_to_skip)
         {
             done = true;
         }
 
-        if (cur_val == travel_lmt) {done = true;}
+        if (cur_val == travel_lmt)
+        {
+            done = true;
+        }
 
         if (!is_stopping_at_p1 || !is_at_tgt)
         {
@@ -586,7 +623,7 @@ void run(const Pos& p0,
 namespace path_find
 {
 
-void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H], vector<Pos>& out,
+void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H], std::vector<Pos>& out,
          const bool ALLOW_DIAGONAL, const bool RANDOMIZE_STEP_CHOICES)
 {
     out.clear();
@@ -606,13 +643,13 @@ void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H], vector<Pos>& 
         return;
     }
 
-    const vector<Pos>& dirs =  ALLOW_DIAGONAL ?
-                               dir_utils::dir_list :
-                               dir_utils::cardinal_list;
+    const std::vector<Pos>& dirs =  ALLOW_DIAGONAL ?
+                                    dir_utils::dir_list :
+                                    dir_utils::cardinal_list;
 
     const size_t NR_DIRS = dirs.size();
 
-    vector<bool> valid_offsets(NR_DIRS, false); //Corresponds to the elements in "dirs"
+    std::vector<bool> valid_offsets(NR_DIRS, false); //Corresponds to the elements in "dirs"
 
     //The path length will be equal to the flood value at the target cell, so we can
     //reserve that many elements.
@@ -638,19 +675,20 @@ void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H], vector<Pos>& 
                 return;
             }
 
-            const bool IS_INSIDE_MAP  = utils::is_pos_inside_map(adj_pos);
+            const bool IS_INSIDE_MAP = utils::is_pos_inside_map(adj_pos);
 
-            const int VAL_AT_ADJ      = IS_INSIDE_MAP ? flood[adj_pos.x][adj_pos.y] : 0;
-            const int VAL_AT_CUR      =                 flood[cur_pos.x][cur_pos.y];
+            const int VAL_AT_ADJ = IS_INSIDE_MAP ? flood[adj_pos.x][adj_pos.y] : 0;
 
-            valid_offsets[i]           = VAL_AT_ADJ < VAL_AT_CUR && VAL_AT_ADJ != 0;
+            const int VAL_AT_CUR = flood[cur_pos.x][cur_pos.y];
+
+            valid_offsets[i] = VAL_AT_ADJ < VAL_AT_CUR && VAL_AT_ADJ != 0;
         }
 
         //Set the adjacent position to one of the valid offset
         //Either pick one of the valid offsets at random, or iterate over an offset list
         if (RANDOMIZE_STEP_CHOICES)
         {
-            vector<Pos> adj_pos_bucket;
+            std::vector<Pos> adj_pos_bucket;
 
             for (size_t i = 0; i < NR_DIRS; ++i)
             {

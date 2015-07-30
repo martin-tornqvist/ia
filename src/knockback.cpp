@@ -28,14 +28,11 @@ void try_knock_back(Actor&        defender,
     const bool  IS_DEF_MON    = !defender.is_player();
     const auto& defender_data  = defender.data();
 
-    bool props[size_t(Prop_id::END)];
-    defender.prop_handler().prop_ids(props);
-
     if (
-        defender_data.prevent_knockback               ||
-        defender_data.actor_size >= Actor_size::giant  ||
-        props[int(Prop_id::ethereal)]                ||
-        props[int(Prop_id::ooze)]                    ||
+        defender_data.prevent_knockback                 ||
+        defender_data.actor_size >= Actor_size::giant   ||
+        defender.has_prop(Prop_id::ethereal)            ||
+        defender.has_prop(Prop_id::ooze)                ||
         /*Do not knock back if bot is playing*/
         (!IS_DEF_MON && config::is_bot_playing()))
     {
@@ -69,7 +66,7 @@ void try_knock_back(Actor&        defender,
 
                 if (!f->is_los_passable())
                 {
-                    defender.prop_handler().try_apply_prop(
+                    defender.prop_handler().try_add_prop(
                         new Prop_nailed(Prop_turns::indefinite));
                 }
             }
@@ -96,8 +93,7 @@ void try_knock_back(Actor&        defender,
                     }
                 }
 
-                defender.prop_handler().try_apply_prop(
-                    new Prop_paralyzed(Prop_turns::specific, 1), false, Verbosity::verbose);
+                defender.prop_handler().try_add_prop(new Prop_paralyzed(Prop_turns::specific, 1));
             }
 
             defender.pos = new_pos;
@@ -108,7 +104,7 @@ void try_knock_back(Actor&        defender,
                 sdl_wrapper::sleep(config::delay_projectile_draw());
             }
 
-            if (IS_CELL_BOTTOMLESS && !props[int(Prop_id::flying)])
+            if (IS_CELL_BOTTOMLESS && !defender.has_prop(Prop_id::flying))
             {
                 if (IS_DEF_MON && IS_PLAYER_SEE_DEF)
                 {

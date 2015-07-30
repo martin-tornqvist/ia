@@ -56,8 +56,9 @@ public:
         (void)verbosity;
     }
 
-    virtual Unequip_allowed on_unequip()
+    virtual Unequip_allowed on_unequip(Actor& actor)
     {
+        (void)actor;
         return Unequip_allowed::yes;
     }
 
@@ -94,7 +95,7 @@ public:
 
     void on_equip(Actor& actor, const Verbosity verbosity) override;
 
-    Unequip_allowed on_unequip() override final;
+    Unequip_allowed on_unequip(Actor& actor) override final;
 
 protected:
     virtual Prop* mk_prop() const = 0;
@@ -318,7 +319,7 @@ public:
     }
 
     void on_equip(Actor& actor, const Verbosity verbosity) override;
-    Unequip_allowed on_unequip() override;
+    Unequip_allowed on_unequip(Actor& actor) override;
 };
 
 class Jewelry_effect_hp_pen : public Jewelry_effect
@@ -341,7 +342,7 @@ public:
 
     void on_equip(Actor& actor, const Verbosity verbosity) override;
 
-    Unequip_allowed on_unequip() override;
+    Unequip_allowed on_unequip(Actor& actor) override;
 };
 
 class Jewelry_effect_spi_bon : public Jewelry_effect
@@ -363,7 +364,7 @@ public:
     }
 
     void on_equip(Actor& actor, const Verbosity verbosity) override;
-    Unequip_allowed on_unequip() override;
+    Unequip_allowed on_unequip(Actor& actor) override;
 };
 
 class Jewelry_effect_spi_pen : public Jewelry_effect
@@ -385,7 +386,7 @@ public:
     }
 
     void on_equip(Actor& actor, const Verbosity verbosity) override;
-    Unequip_allowed on_unequip() override;
+    Unequip_allowed on_unequip(Actor& actor) override;
 };
 
 class Jewelry_effect_random_tele : public Jewelry_effect
@@ -543,7 +544,7 @@ public:
     }
 
     void on_equip(Actor& actor, const Verbosity verbosity) override;
-    Unequip_allowed on_unequip() override;
+    Unequip_allowed on_unequip(Actor& actor) override;
 };
 
 class Jewelry_effect_hp_regen_pen : public Jewelry_effect
@@ -570,7 +571,7 @@ public:
     }
 
     void on_equip(Actor& actor, const Verbosity verbosity) override;
-    Unequip_allowed on_unequip() override;
+    Unequip_allowed on_unequip(Actor& actor) override;
 };
 
 class Jewelry : public Item
@@ -584,7 +585,7 @@ public:
 
     void on_equip(Actor& actor, const Verbosity verbosity) override final;
 
-    Unequip_allowed on_unequip() override final;
+    Unequip_allowed on_unequip(Actor& actor) override final;
 
     void on_std_turn_in_inv(const Inv_type inv_type) override final;
 

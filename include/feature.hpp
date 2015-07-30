@@ -28,7 +28,7 @@ public:
     virtual void bump(Actor& actor_bumping);
     virtual void on_new_turn() {}
     virtual bool can_move_cmn() const;
-    virtual bool can_move(const bool actor_prop_ids[size_t(Prop_id::END)]) const;
+    virtual bool can_move(Actor& actor) const;
     virtual bool is_sound_passable() const;
     virtual bool is_los_passable() const;
     virtual bool is_projectile_passable() const;

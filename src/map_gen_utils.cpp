@@ -3,7 +3,7 @@
 #include "map_gen.hpp"
 
 #include <vector>
-#include <assert.h>
+#include <cassert>
 
 #include "map.hpp"
 #include "map_parsing.hpp"

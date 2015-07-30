@@ -232,7 +232,7 @@ void try_cast(const Spell_opt& spell_opt)
             if (IS_WARLOCK && rnd::one_in(2))
             {
                 auto* const prop = new Prop_warlock_charged(Prop_turns::std);
-                map::player->prop_handler().try_apply_prop(prop);
+                map::player->prop_handler().try_add_prop(prop);
             }
         }
     }

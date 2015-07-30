@@ -1,7 +1,7 @@
 #include "game_time.hpp"
 
 #include <vector>
-#include <assert.h>
+#include <cassert>
 
 #include "cmn_types.hpp"
 #include "feature_rigid.hpp"
@@ -115,7 +115,7 @@ void run_std_turn_events()
 
                 if (is_spi_regen_this_turn(regen_spi_nTurns))
                 {
-                    actor->restore_spi(1, false);
+                    actor->restore_spi(1, false, Verbosity::silent);
                 }
 
                 actor->on_std_turn();

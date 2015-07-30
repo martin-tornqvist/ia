@@ -2,7 +2,7 @@
 
 #include <algorithm>
 #include <string>
-#include <assert.h>
+#include <cassert>
 
 #include "cmn_types.hpp"
 #include "game_time.hpp"
@@ -54,7 +54,7 @@ void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t 
 
         if (inv_type == Inv_type::slots && IS_WHOLE_STACK_DROPPED)
         {
-            if (item_to_drop->on_unequip() == Unequip_allowed::no)
+            if (item_to_drop->on_unequip(actor) == Unequip_allowed::no)
             {
                 return;
             }

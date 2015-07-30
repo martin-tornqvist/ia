@@ -132,9 +132,9 @@ void Jewelry_property_effect::on_equip(Actor& actor, const Verbosity verbosity)
     jewelry_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_property_effect::on_unequip()
+Unequip_allowed Jewelry_property_effect::on_unequip(Actor& actor)
 {
-    jewelry_->clear_carrier_props();
+    jewelry_->clear_carrier_props(actor);
 
     return Unequip_allowed::yes;
 }
@@ -196,16 +196,15 @@ Prop* Jewelry_effect_haste::mk_prop() const
 //--------------------------------------------------------- EFFECT: HP BONUS
 void Jewelry_effect_hp_bon::on_equip(Actor& actor, const Verbosity verbosity)
 {
-    (void)actor;
     (void)verbosity;
 
-    map::player->change_max_hp(4, true);
+    actor.change_max_hp(4);
     jewelry_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_hp_bon::on_unequip()
+Unequip_allowed Jewelry_effect_hp_bon::on_unequip(Actor& actor)
 {
-    map::player->change_max_hp(-4, true);
+    actor.change_max_hp(-4);
 
     return Unequip_allowed::yes;
 }
@@ -216,13 +215,13 @@ void Jewelry_effect_hp_pen::on_equip(Actor& actor, const Verbosity verbosity)
     (void)actor;
     (void)verbosity;
 
-    map::player->change_max_hp(-4, true);
+    map::player->change_max_hp(-4);
     jewelry_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_hp_pen::on_unequip()
+Unequip_allowed Jewelry_effect_hp_pen::on_unequip(Actor& actor)
 {
-    map::player->change_max_hp(4, true);
+    actor.change_max_hp(4);
 
     return Unequip_allowed::yes;
 }
@@ -230,16 +229,15 @@ Unequip_allowed Jewelry_effect_hp_pen::on_unequip()
 //--------------------------------------------------------- EFFECT: SPI BONUS
 void Jewelry_effect_spi_bon::on_equip(Actor& actor, const Verbosity verbosity)
 {
-    (void)actor;
     (void)verbosity;
 
-    map::player->change_max_spi(4, true);
+    actor.change_max_spi(4);
     jewelry_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_spi_bon::on_unequip()
+Unequip_allowed Jewelry_effect_spi_bon::on_unequip(Actor& actor)
 {
-    map::player->change_max_spi(-4, true);
+    actor.change_max_spi(-4);
 
     return Unequip_allowed::yes;
 }
@@ -247,16 +245,15 @@ Unequip_allowed Jewelry_effect_spi_bon::on_unequip()
 //--------------------------------------------------------- EFFECT: SPI PENALTY
 void Jewelry_effect_spi_pen::on_equip(Actor& actor, const Verbosity verbosity)
 {
-    (void)actor;
     (void)verbosity;
 
-    map::player->change_max_spi(-4, true);
+    actor.change_max_spi(-4);
     jewelry_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_spi_pen::on_unequip()
+Unequip_allowed Jewelry_effect_spi_pen::on_unequip(Actor& actor)
 {
-    map::player->change_max_spi(4, true);
+    actor.change_max_spi(4);
 
     return Unequip_allowed::yes;
 }
@@ -366,7 +363,7 @@ void Jewelry_effect_conflict::on_std_turn_equiped()
             {
                 if (!actor->data().is_unique)
                 {
-                    actor->prop_handler().try_apply_prop(
+                    actor->prop_handler().try_add_prop(
                         new Prop_conflict(Prop_turns::std));
 
                     jewelry_->effect_noticed(id());
@@ -536,8 +533,10 @@ void Jewelry_effect_hp_regen_bon::on_equip(Actor& actor, const Verbosity verbosi
     jewelry_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_hp_regen_bon::on_unequip()
+Unequip_allowed Jewelry_effect_hp_regen_bon::on_unequip(Actor& actor)
 {
+    (void)actor;
+
     msg_log::add("I heal slower.");
     return Unequip_allowed::yes;
 }
@@ -555,8 +554,10 @@ void Jewelry_effect_hp_regen_pen::on_equip(Actor& actor, const Verbosity verbosi
     jewelry_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_hp_regen_pen::on_unequip()
+Unequip_allowed Jewelry_effect_hp_regen_pen::on_unequip(Actor& actor)
 {
+    (void)actor;
+
     msg_log::add("I heal faster.");
     return Unequip_allowed::yes;
 }
@@ -631,13 +632,13 @@ void Jewelry::on_equip(Actor& actor, const Verbosity verbosity)
     }
 }
 
-Unequip_allowed Jewelry::on_unequip()
+Unequip_allowed Jewelry::on_unequip(Actor& actor)
 {
     auto unequip_allowed = Unequip_allowed::yes;
 
     for (auto* const effect : effects_)
     {
-        if (effect->on_unequip() == Unequip_allowed::no)
+        if (effect->on_unequip(actor) == Unequip_allowed::no)
         {
             unequip_allowed = Unequip_allowed::no;
         }

@@ -56,7 +56,14 @@ enum class Trait
     END
 };
 
-enum class Bg {occultist, rogue, war_vet, END};
+enum class Bg
+{
+    ghoul,
+    occultist,
+    rogue,
+    war_vet,
+    END
+};
 
 namespace player_bon
 {
@@ -77,17 +84,17 @@ void trait_prereqs(const Trait id, std::vector<Trait>& traits_ref, Bg& bg_ref);
 
 Bg bg();
 
-void trait_title(const Trait id, std::string& out);
-void trait_descr(const Trait id, std::string& out);
+std::string trait_title(const Trait id);
+std::string trait_descr(const Trait id);
 
-void bg_title(const Bg id, std::string& out);
+std::string bg_title(const Bg id);
 
 //NOTE: The string vector reference parameter set in this function is not formatted in
 //bg_descr. Each line still needs to be formatted by the calling function. The reason
 //for using a vector reference instead of simply a string is only to specify line breaks.
-void bg_descr(const Bg id, std::vector<std::string>& lines_ref);
+void bg_descr(const Bg id, std::vector<std::string>& out);
 
-void all_picked_traits_titles_line(std::string& out);
+std::string all_picked_traits_titles_line();
 
 void pick_trait(const Trait id);
 

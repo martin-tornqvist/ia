@@ -48,7 +48,7 @@ public:
 
     void update_fov();
 
-    void move_dir(Dir dir);
+    void move(Dir dir);
 
     void mk_start_items() override;
     void on_actor_turn() override;
@@ -60,8 +60,7 @@ public:
 
     void incr_shock(const Shock_lvl shock_value, Shock_src shock_src);
     void incr_shock(const int SHOCK, Shock_src shock_src);
-    void restore_shock(const int amount_restored,
-                       const bool IS_TEMP_SHOCK_RESTORED);
+    void restore_shock(const int amount_restored, const bool IS_TEMP_SHOCK_RESTORED);
     void update_tmp_shock();
 
     int shock_tot() const
@@ -87,23 +86,22 @@ public:
     }
 
     int shock_resistance(const Shock_src shock_src) const;
-    double shock_taken_after_mods(const int BASE_SHOCK,
-                                  const Shock_src shock_src) const;
+    double shock_taken_after_mods(const int BASE_SHOCK, const Shock_src shock_src) const;
 
     void store_to_save_lines(std::vector<std::string>& lines) const;
     void setup_from_save_lines(std::vector<std::string>& lines);
 
     void auto_melee();
 
-    void kick_mon(Actor& actor_to_kick);
-    void punch_mon(Actor& actor_to_punch);
+    void kick_mon(Actor& defender);
+    void hand_att(Actor& defender);
 
     void update_clr();
 
     void add_light_hook(bool light_map[MAP_W][MAP_H]) const;
 
-    void on_log_msg_printed(); //Aborts e.g. searching and quick move
-    void interrupt_actions(); //Aborts e.g. healing
+    void on_log_msg_printed();  //Aborts e.g. searching and quick move
+    void interrupt_actions();   //Aborts e.g. healing
 
     int enc_percent() const;
 
