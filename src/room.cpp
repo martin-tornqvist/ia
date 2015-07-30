@@ -28,7 +28,10 @@ void add_to_room_bucket(const Room_type type, const size_t NR)
     {
         room_bucket_.reserve(room_bucket_.size() + NR);
 
-        for (size_t i = 0; i < NR; ++i) {room_bucket_.push_back(type);}
+        for (size_t i = 0; i < NR; ++i)
+        {
+            room_bucket_.push_back(type);
+        }
     }
 }
 
@@ -97,38 +100,52 @@ Room* mk(const Room_type type, const Rect& r)
 {
     switch (type)
     {
-    case Room_type::cave:          return new Cave_room(r);
+    case Room_type::cave:
+        return new Cave_room(r);
 
-    case Room_type::chasm:         return new Chasm_room(r);
+    case Room_type::chasm:
+        return new Chasm_room(r);
 
-    case Room_type::crypt:         return new Crypt_room(r);
+    case Room_type::crypt:
+        return new Crypt_room(r);
 
-    case Room_type::flooded:       return new Flooded_room(r);
+    case Room_type::flooded:
+        return new Flooded_room(r);
 
-    case Room_type::human:         return new Human_room(r);
+    case Room_type::human:
+        return new Human_room(r);
 
-    case Room_type::monster:       return new Monster_room(r);
+    case Room_type::monster:
+        return new Monster_room(r);
 
-    case Room_type::muddy:         return new Muddy_room(r);
+    case Room_type::muddy:
+        return new Muddy_room(r);
 
-    case Room_type::plain:         return new Plain_room(r);
+    case Room_type::plain:
+        return new Plain_room(r);
 
-    case Room_type::ritual:        return new Ritual_room(r);
+    case Room_type::ritual:
+        return new Ritual_room(r);
 
-    case Room_type::spider:        return new Spider_room(r);
+    case Room_type::spider:
+        return new Spider_room(r);
 
-    case Room_type::forest:        return new Forest_room(r);
+    case Room_type::forest:
+        return new Forest_room(r);
 
     case Room_type::END_OF_STD_ROOMS:
         TRACE << "Illegal room type id: " << int (type) << endl;
         assert(false);
         return nullptr;
 
-    case Room_type::corr_link:      return new Corr_link_room(r);
+    case Room_type::corr_link:
+        return new Corr_link_room(r);
 
-    case Room_type::crumble_room:   return new Crumble_room(r);
+    case Room_type::crumble_room:
+        return new Crumble_room(r);
 
-    case Room_type::river:         return new River_room(r);
+    case Room_type::river:
+        return new River_room(r);
     }
 
     TRACE << "Unhandled room type id: " << int (type) << endl;
@@ -154,10 +171,10 @@ Room* mk_random_allowed_std_room(const Rect& r, const bool IS_SUBROOM)
         }
         else
         {
-            const Room_type    room_type  = *room_bucket_it;
-            room                        = mk(room_type, r);
-            room->is_sub_room_            = IS_SUBROOM;
-            Std_room* const    std_room   = static_cast<Std_room*>(room);
+            const Room_type     room_type   = *room_bucket_it;
+            room                            = mk(room_type, r);
+            room->is_sub_room_              = IS_SUBROOM;
+            Std_room* const     std_room    = static_cast<Std_room*>(room);
 
             if (std_room->is_allowed())
             {
@@ -182,9 +199,9 @@ Room* mk_random_allowed_std_room(const Rect& r, const bool IS_SUBROOM)
 
 //------------------------------------------------------------------- ROOM
 Room::Room(Rect r, Room_type type) :
-    r_(r),
-    type_(type),
-    is_sub_room_(false) {}
+    r_              (r),
+    type_           (type),
+    is_sub_room_    (false) {}
 
 void Room::mk_drk() const
 {
@@ -192,12 +209,18 @@ void Room::mk_drk() const
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            if (map::room_map[x][y] == this) {map::cells[x][y].is_dark = true;}
+            if (map::room_map[x][y] == this)
+            {
+                map::cells[x][y].is_dark = true;
+            }
         }
     }
 
     //Also make sub rooms dark
-    for (Room* const sub_room : sub_rooms_) {sub_room->mk_drk();}
+    for (Room* const sub_room : sub_rooms_)
+    {
+        sub_room->mk_drk();
+    }
 }
 
 //------------------------------------------------------------------- STANDARD ROOM
@@ -214,7 +237,9 @@ void Std_room::on_post_connect(bool door_proposals[MAP_W][MAP_H])
 
     //Make dark?
     int pct_chance_dark = base_pct_chance_drk() - 15;
+
     pct_chance_dark += map::dlvl; //Increase with higher dungeon level
+
     set_constr_in_range(0, pct_chance_dark, 100);
 
     if (rnd::percent() < pct_chance_dark)
@@ -408,13 +433,15 @@ void Plain_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 
     map_gen_utils::cut_room_corners(*this);
 
-    if (rnd::fraction(1, 3)) {map_gen_utils::mk_pillars_in_room(*this);}
+    if (rnd::fraction(1, 3))
+    {
+        map_gen_utils::mk_pillars_in_room(*this);
+    }
 }
 
 void Plain_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
-
 }
 
 //------------------------------------------------------------------- HUMAN ROOM
@@ -439,7 +466,10 @@ void Human_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 
     map_gen_utils::cut_room_corners(*this);
 
-    if (rnd::fraction(1, 3)) {map_gen_utils::mk_pillars_in_room(*this);}
+    if (rnd::fraction(1, 3))
+    {
+        map_gen_utils::mk_pillars_in_room(*this);
+    }
 }
 
 void Human_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
@@ -487,7 +517,10 @@ void Ritual_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 
     map_gen_utils::cut_room_corners(*this);
 
-    if (rnd::fraction(1, 3)) {map_gen_utils::mk_pillars_in_room(*this);}
+    if (rnd::fraction(1, 3))
+    {
+        map_gen_utils::mk_pillars_in_room(*this);
+    }
 }
 
 void Ritual_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
@@ -518,7 +551,10 @@ void Ritual_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
                 }
                 else
                 {
-                    if (!blocked[x][y]) {origin_bucket.push_back(Pos(x, y));}
+                    if (!blocked[x][y])
+                    {
+                        origin_bucket.push_back(Pos(x, y));
+                    }
                 }
             }
         }
@@ -619,7 +655,10 @@ void Crypt_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 
     map_gen_utils::cut_room_corners(*this);
 
-    if (rnd::fraction(1, 3)) {map_gen_utils::mk_pillars_in_room(*this);}
+    if (rnd::fraction(1, 3))
+    {
+        map_gen_utils::mk_pillars_in_room(*this);
+    }
 }
 
 void Crypt_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
@@ -1283,20 +1322,31 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
                     const auto p_adj(p + d);
                     const auto* const f = map::cells[p_adj.x][p_adj.y].rigid;
 
-                    if (f->id() == Feature_id::floor)        {nr_cardinal_floor++;}
+                    if (f->id() == Feature_id::floor)
+                    {
+                        nr_cardinal_floor++;
+                    }
 
-                    if (map::room_map[p_adj.x][p_adj.y] == this)  {nr_cardinal_river++;}
+                    if (map::room_map[p_adj.x][p_adj.y] == this)
+                    {
+                        nr_cardinal_river++;
+                    }
                 }
 
                 if (nr_cardinal_floor == 1 && nr_cardinal_river == 1)
                 {
                     switch (sides[x][y])
                     {
-                    case side0:   valid_room_entries0[x][y] = true; break;
+                    case side0:
+                        valid_room_entries0[x][y] = true;
+                        break;
 
-                    case side1:   valid_room_entries1[x][y] = true; break;
+                    case side1:
+                        valid_room_entries1[x][y] = true;
+                        break;
 
-                    case in_river: {} break;
+                    case in_river:
+                        break;
                     }
                 }
             }
@@ -1484,10 +1534,13 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
         {
             for (int y = 0; y < MAP_H; ++y)
             {
-                valid_room_entries[x][y] = valid_room_entries0[x][y] || valid_room_entries1[x][y];
+                valid_room_entries[x][y] =
+                    valid_room_entries0[x][y] || valid_room_entries1[x][y];
 
                 //Convert some remaining valid room entries to floor
-                if (valid_room_entries[x][y] && find(begin(c_built), end(c_built), x) == end(c_built))
+                if (
+                    valid_room_entries[x][y] &&
+                    find(begin(c_built), end(c_built), x) == end(c_built))
                 {
 //          if (rnd::one_in(3))
 //          {

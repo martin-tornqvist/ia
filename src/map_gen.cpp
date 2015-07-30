@@ -172,7 +172,11 @@ void connect_rooms()
             {
                 const Room* const room_here = map::room_map[x][y];
 
-                if (room_here && room_here != room0 && room_here != room1 && !room_here->is_sub_room_)
+                if (
+                    room_here           &&
+                    room_here != room0  &&
+                    room_here != room1  &&
+                    !room_here->is_sub_room_)
                 {
                     is_other_room_in_way = true;
                 }
@@ -232,8 +236,7 @@ void mk_crumble_room(const Rect& room_area_incl_walls, const Pos& event_pos)
 
 //NOTE: The positions and size can be outside map (e.g. negative positions).
 //This function just returns false in that case.
-bool try_mk_aux_room(const Pos& p, const Pos& d, bool blocked[MAP_W][MAP_H],
-                     const Pos& door_p)
+bool try_mk_aux_room(const Pos& p, const Pos& d, bool blocked[MAP_W][MAP_H], const Pos& door_p)
 {
     Rect aux_rect(p, p + d - 1);
     Rect aux_rect_with_border(aux_rect.p0 - 1, aux_rect.p1 + 1);
@@ -398,8 +401,7 @@ void mk_merged_regions_and_rooms(Region regions[3][3])
 
     for (int attempt_cnt = 0; attempt_cnt < NR_ATTEMPTS; ++attempt_cnt)
     {
-
-        Pos reg_i1, reg_i2;
+        Pos reg_idx_1, reg_idx_2;
 
         //Find two non-occupied regions
         int nr_tries_to_find_regions = 100;
@@ -411,21 +413,21 @@ void mk_merged_regions_and_rooms(Region regions[3][3])
 
             if (nr_tries_to_find_regions <= 0) {return;}
 
-            reg_i1 = Pos(rnd::range(0, 2), rnd::range(0, 1));
-            reg_i2 = Pos(reg_i1 + Pos(0, 1));
-            is_good_regions_found = regions[reg_i1.x][reg_i1.y].is_free_ &&
-                                    regions[reg_i2.x][reg_i2.y].is_free_;
+            reg_idx_1 = Pos(rnd::range(0, 2), rnd::range(0, 1));
+            reg_idx_2 = Pos(reg_idx_1 + Pos(0, 1));
+            is_good_regions_found = regions[reg_idx_1.x][reg_idx_1.y].is_free_ &&
+                                    regions[reg_idx_2.x][reg_idx_2.y].is_free_;
         }
 
         //Expand region 1 over both areas
-        auto& reg1    = regions[reg_i1.x][reg_i1.y];
-        auto& reg2    = regions[reg_i2.x][reg_i2.y];
+        auto& reg1      = regions[reg_idx_1.x][reg_idx_1.y];
+        auto& reg2      = regions[reg_idx_2.x][reg_idx_2.y];
 
-        reg1.r_       = Rect(reg1.r_.p0, reg2.r_.p1);
+        reg1.r_         = Rect(reg1.r_.p0, reg2.r_.p1);
 
-        reg2.r_       = Rect(-1, -1, -1, -1);
+        reg2.r_         = Rect(-1, -1, -1, -1);
 
-        reg1.is_free_  = reg2.is_free_ = false;
+        reg1.is_free_   = reg2.is_free_ = false;
 
         //Make a room for region 1
         auto rnd_padding = []() {return rnd::range(0, 4);};
@@ -652,7 +654,7 @@ void mk_sub_rooms()
     TRACE_FUNC_BEGIN;
 
     const int NR_TRIES_TO_MK_ROOM = 40;
-    const int MAX_NR_INNER_ROOMS  = 7;
+    const int MAX_NR_INNER_ROOMS  = rnd::one_in(3) ? 1 : 7;
 
     const Pos min_d(4, 4);
 
@@ -673,7 +675,7 @@ void mk_sub_rooms()
 
             if (max_d >= min_d)
             {
-                for (int nr_rooms = 0; nr_rooms < MAX_NR_INNER_ROOMS; nr_rooms++)
+                for (int nr_rooms = 0; nr_rooms < MAX_NR_INNER_ROOMS; ++nr_rooms)
                 {
                     for (int try_count = 0; try_count < NR_TRIES_TO_MK_ROOM; try_count++)
                     {
@@ -706,17 +708,29 @@ void mk_sub_rooms()
 
                                 if (utils::is_pos_inside(p_check, outer_room_rect))
                                 {
-                                    if (f_id != Feature_id::floor) {is_area_free = false;}
+                                    if (f_id != Feature_id::floor)
+                                    {
+                                        is_area_free = false;
+                                    }
                                 }
                                 else
                                 {
-                                    if (f_id != Feature_id::wall)  {is_area_free = false;}
+                                    if (f_id != Feature_id::wall)
+                                    {
+                                        is_area_free = false;
+                                    }
                                 }
 
-                                if (!is_area_free) {break;}
+                                if (!is_area_free)
+                                {
+                                    break;
+                                }
                             }
 
-                            if (!is_area_free) {break;}
+                            if (!is_area_free)
+                            {
+                                break;
+                            }
                         }
 
                         if (!is_area_free)

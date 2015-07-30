@@ -17,23 +17,50 @@ using namespace std;
 //---------------------------------------------------INHERITED FUNCTIONS
 Door::Door(const Pos& feature_pos, const Rigid* const mimic_feature,
            Door_spawn_state spawn_state) :
-    Rigid(feature_pos),
-    mimic_feature_(mimic_feature),
-    nr_spikes_(0)
+    Rigid                   (feature_pos),
+    mimic_feature_          (mimic_feature),
+    nr_spikes_              (0),
+    is_open_                (false),
+    is_stuck_               (false),
+    is_secret_              (false),
+    is_handled_externally_  (false),
+    matl_                   (Matl::wood)
 {
-    is_handled_externally_ = false;
+    if (spawn_state == Door_spawn_state::any)
+    {
+        //Chance of secret door increases with DLVL
+        if (rnd::percent(10 + ((map::dlvl - 1) * 5)))
+        {
+            if (rnd::one_in(7))
+            {
+                spawn_state = Door_spawn_state::secret_and_stuck;
+            }
+            else //Not stuck
+            {
+                spawn_state = Door_spawn_state::secret;
+            }
+        }
+        else //Not secret
+        {
+            if (rnd::one_in(4))
+            {
+                spawn_state = Door_spawn_state::open;
+            }
+            else //Closed
+            {
+                if (rnd::one_in(5))
+                {
+                    spawn_state = Door_spawn_state::stuck;
+                }
+                else //Not stuck
+                {
+                    spawn_state = Door_spawn_state::closed;
+                }
+            }
+        }
+    }
 
-    const int ROLL = rnd::percent();
-
-    const Door_spawn_state door_state = spawn_state == Door_spawn_state::any ?
-                                        (ROLL < 5  ? Door_spawn_state::secret_and_stuck  :
-                                         ROLL < 40 ? Door_spawn_state::secret          :
-                                         ROLL < 50 ? Door_spawn_state::stuck           :
-                                         ROLL < 75 ? Door_spawn_state::open            :
-                                         Door_spawn_state::closed)                     :
-                                        spawn_state;
-
-    switch (Door_spawn_state(door_state))
+    switch (Door_spawn_state(spawn_state))
     {
     case Door_spawn_state::open:
         is_open_   = true;
@@ -71,8 +98,6 @@ Door::Door(const Pos& feature_pos, const Rigid* const mimic_feature,
         is_stuck_  = false;
         is_secret_ = false;
     }
-
-    matl_ = Matl::wood;
 }
 
 Door::~Door()

@@ -21,20 +21,23 @@ public:
 
 //Spawn-by-id compliant ctor (do not use for normal cases):
     Door(const Pos& feature_pos) :
-        Rigid(feature_pos),
-        mimic_feature_(nullptr),
-        nr_spikes_(0),
-        is_open_(false),
-        is_stuck_(false),
-        is_secret_(false),
-        is_handled_externally_(false),
+        Rigid                   (feature_pos),
+        mimic_feature_          (nullptr),
+        nr_spikes_              (0),
+        is_open_                (false),
+        is_stuck_               (false),
+        is_secret_              (false),
+        is_handled_externally_  (false),
         matl_(Matl::wood) {}
 
     Door() = delete;
 
     ~Door() override;
 
-    Feature_id id() const override {return Feature_id::door;}
+    Feature_id id() const override
+    {
+        return Feature_id::door;
+    }
 
     std::string name(const Article article) const override;
     Was_destroyed on_finished_burning() override;
@@ -54,13 +57,19 @@ public:
     bool is_open() const {return is_open_;}
     bool is_secret() const {return is_secret_;}
     bool is_stuck() const {return is_stuck_;}
-    bool is_handled_externally() const {return is_handled_externally_;}
+    bool is_handled_externally() const
+    {
+        return is_handled_externally_;
+    }
 
     Matl matl() const;
 
     void reveal(const bool ALLOW_MESSAGE);
 
-    void set_to_secret() {is_open_ = is_secret_ = false;}
+    void set_to_secret()
+    {
+        is_open_ = is_secret_ = false;
+    }
 
     virtual Did_open open(Actor* const actor_opening) override;
 
