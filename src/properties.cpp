@@ -824,7 +824,7 @@ void Prop_handler::store_to_save_lines(std::vector<std::string>& lines) const
 
 void Prop_handler::setup_from_save_lines(std::vector<std::string>& lines)
 {
-    //Load temporary properties from file
+    //Load intrinsic properties from file
 
     const int NR_PROPS = to_int(lines.front());
     lines.erase(begin(lines));
@@ -1188,9 +1188,9 @@ Prop* Prop_handler::prop(const Prop_id id) const
 
 void Prop_handler::remove_props_for_item(const Item* const item)
 {
-    for (auto it = begin(props_); it != end(props_); /* No increment */)
+    for (size_t i = 0; i < props_.size(); /* No increment */)
     {
-        Prop* const prop = *it;
+        Prop* const prop = props_[i];
 
         if (prop->item_applying_ == item)
         {
@@ -1199,18 +1199,18 @@ void Prop_handler::remove_props_for_item(const Item* const item)
 
             run_prop_end(prop);
 
-            it = props_.erase(it);
+            props_.erase(begin(props_) + i);
         }
         else //Property was not added by this item
         {
-            ++it;
+            ++i;
         }
     }
 }
 
 void Prop_handler::try_add_prop_from_att(const Wpn& wpn, const bool IS_MELEE)
 {
-    const Item_data_t&  d           = wpn.data();
+    const auto&         d           = wpn.data();
     const auto* const   origin_prop = IS_MELEE ? d.melee.prop_applied : d.ranged.prop_applied;
 
     if (origin_prop)
@@ -1344,19 +1344,21 @@ bool Prop_handler::end_prop(const Prop_id id, const bool RUN_PROP_END_EFFECTS)
 
 void Prop_handler::end_props_by_magic_healing()
 {
-    for (auto it = begin(props_); it != end(props_); /* No increment */)
+    for (size_t i = 0; i < props_.size(); /* No increment */)
     {
-        Prop* const prop = *it;
+        Prop* const prop = props_[i];
 
         if (prop->is_ended_by_magic_healing())
         {
             run_prop_end(prop);
 
-            it = props_.erase(it);
+            delete prop;
+
+            props_.erase(begin(props_) + i);
         }
         else //Property was not added by this item
         {
-            ++it;
+            ++i;
         }
     }
 }
@@ -1373,9 +1375,9 @@ void Prop_handler::apply_actor_turn_prop_buffer()
 
 void Prop_handler::tick(const Prop_turn_mode turn_mode)
 {
-    for (auto it = begin(props_); it != end(props_); /* No increment */)
+    for (size_t i = 0; i < props_.size(); /* No increment */)
     {
-        Prop* prop = *it;
+        Prop* prop = props_[i];
 
         if (prop->turn_mode() == turn_mode)
         {
@@ -1392,7 +1394,7 @@ void Prop_handler::tick(const Prop_turn_mode turn_mode)
             {
                 assert(prop->src_ == Prop_src::intr);
 
-                --prop->nr_turns_left_;
+                prop->nr_turns_left_ -= 1;
             }
 
             if (prop->is_finished())
@@ -1402,7 +1404,7 @@ void Prop_handler::tick(const Prop_turn_mode turn_mode)
                 delete prop;
                 prop = nullptr;
 
-                it = props_.erase(it);
+                props_.erase(begin(props_) + i);
             }
             else //Not finished
             {
@@ -1413,7 +1415,7 @@ void Prop_handler::tick(const Prop_turn_mode turn_mode)
         //Property has not been removed?
         if (prop)
         {
-            ++it;
+            ++i;
         }
     }
 }
