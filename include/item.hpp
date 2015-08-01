@@ -175,6 +175,11 @@ public:
         return armor_points() <= 0;
     }
 
+    virtual void on_destroy(Actor& actor)
+    {
+        on_unequip_hook(actor);
+    }
+
     std::string armor_data_line(const bool WITH_BRACKETS) const;
 
     int take_dur_hit_and_get_reduced_dmg(const int DMG_BEFORE);
