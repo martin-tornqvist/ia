@@ -637,7 +637,7 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
                         armor->name(Item_ref_type::plain, Item_ref_inf::none);
                     msg_log::add("My " + armor_name + " is torn apart!", clr_msg_note);
                 }
-
+                armor->on_destroy(*this);
                 delete armor;
                 armor = nullptr;
                 inv_->slots_[int(Slot_id::body)].item = nullptr;
