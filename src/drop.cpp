@@ -16,8 +16,6 @@
 #include "feature_rigid.hpp"
 #include "render.hpp"
 
-using namespace std;
-
 namespace item_drop
 {
 
@@ -39,8 +37,8 @@ void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t 
     }
     else //Backpack item
     {
-        assert(IDX < inv.general_.size());
-        item_to_drop = inv.general_[IDX];
+        assert(IDX < inv.backpack_.size());
+        item_to_drop = inv.backpack_[IDX];
     }
 
     if (item_to_drop)
@@ -50,11 +48,11 @@ void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t 
         const bool  IS_WHOLE_STACK_DROPPED  = !IS_STACKABLE || NR_ITEMS_TO_DROP == -1 ||
                                               (NR_ITEMS_TO_DROP >= NR_ITEMS_BEFORE_DROP);
 
-        string item_ref = "";
+        std::string item_ref = "";
 
         if (inv_type == Inv_type::slots && IS_WHOLE_STACK_DROPPED)
         {
-            if (item_to_drop->on_unequip(actor) == Unequip_allowed::no)
+            if (item_to_drop->on_unequip() == Unequip_allowed::no)
             {
                 return;
             }
@@ -64,16 +62,22 @@ void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t 
         {
             item_ref = item_to_drop->name(Item_ref_type::plural);
             inv.remove_without_destroying(inv_type, IDX);
+
             drop_item_on_map(actor.pos, *item_to_drop);
+
+            item_to_drop->on_removed_from_inv();
         }
-        else
+        else //Only some items are dropped
         {
             Item* item_to_keep      = item_to_drop;
             item_to_drop            = item_factory::copy_item(*item_to_keep);
             item_to_drop->nr_items_ = NR_ITEMS_TO_DROP;
             item_ref                = item_to_drop->name(Item_ref_type::plural);
             item_to_keep->nr_items_ = NR_ITEMS_BEFORE_DROP - NR_ITEMS_TO_DROP;
+
             drop_item_on_map(actor.pos, *item_to_drop);
+
+            item_to_drop->on_removed_from_inv();
         }
 
         //Messages
@@ -83,7 +87,7 @@ void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t 
             render::draw_map_and_interface();
             msg_log::add("I drop " + item_ref + ".", clr_white, false, More_prompt_on_msg::yes);
         }
-        else
+        else //Is a monster
         {
             bool blocked[MAP_W][MAP_H];
             map_parse::run(cell_check::Blocks_los(), blocked);
@@ -124,7 +128,7 @@ Item* drop_item_on_map(const Pos& intended_pos, Item& item)
         }
     }
 
-    vector<Pos> free_cells;
+    std::vector<Pos> free_cells;
     utils::mk_vector_from_bool_map(true, free_cell_array, free_cells);
 
     //Sort the vector according to distance to origin

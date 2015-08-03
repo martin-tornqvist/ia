@@ -19,7 +19,19 @@ enum class Verbosity
 enum class Inv_type
 {
     slots,
-    general
+    backpack
+};
+
+enum class Consume_item
+{
+    yes,
+    no
+};
+
+enum class Unequip_allowed
+{
+    yes,
+    no
 };
 
 enum class Item_ref_type

@@ -472,7 +472,10 @@ void handle_map_mode_key_press(const Key_data& d)
                 }
             }
 
-            if (!init::quit_to_main_menu) {item_pickup::try_pick();}
+            if (!init::quit_to_main_menu)
+            {
+                item_pickup::try_pick();
+            }
         }
 
         clear_events();
@@ -895,8 +898,8 @@ void handle_map_mode_key_press(const Key_data& d)
     else if (d.key == 'a')
     {
         Inventory&  inv         = map::player->inv();
-        Item*       medical_bag  = inv.first_item_in_backpack_with_id(Item_id::medical_bag);
-        Item*       lantern     = inv.first_item_in_backpack_with_id(Item_id::electric_lantern);
+        Item*       medical_bag  = inv.item_in_backpack(Item_id::medical_bag);
+        Item*       lantern     = inv.item_in_backpack(Item_id::electric_lantern);
 
         msg_log::clear();
 
@@ -940,7 +943,7 @@ void handle_map_mode_key_press(const Key_data& d)
             {
                 msg_log::clear();
 
-                for (Item* const item : map::player->inv().general_)
+                for (Item* const item : map::player->inv().backpack_)
                 {
                     if (item->id() == Item_id::medical_bag)
                     {
@@ -955,7 +958,7 @@ void handle_map_mode_key_press(const Key_data& d)
             {
                 msg_log::clear();
 
-                for (Item* const item : map::player->inv().general_)
+                for (Item* const item : map::player->inv().backpack_)
                 {
                     if (item->id() == Item_id::electric_lantern)
                     {

@@ -29,9 +29,13 @@ public:
     virtual ~Item();
 
     Item_id id() const;
+
     const Item_data_t& data() const;
+
     virtual Clr clr() const;
+
     char glyph() const;
+
     Tile_id tile() const;
 
     virtual Lgt_size lgt_size() const
@@ -78,22 +82,20 @@ public:
         (void)inv_type;
     }
 
-    virtual void on_pickup_to_backpack(Inventory& inv)
-    {
-        (void)inv;
-    }
+    void on_pickup(Actor& actor);
 
-    virtual void on_equip(Actor& actor, const Verbosity verbosity)
-    {
-        (void)actor;
-        (void)verbosity;
-    }
+    //"on_pickup()" should be called before this
+    void on_equip(const Verbosity verbosity);
 
-    virtual Unequip_allowed on_unequip(Actor& actor)
-    {
-        (void)actor;
-        return Unequip_allowed::yes;
-    }
+    Unequip_allowed on_unequip();
+
+    //This is the opposite of "on_pickup()". If this is a wielded item, "on_unequip()" should be
+    //called first.
+    void on_removed_from_inv();
+
+    void add_carrier_prop(Prop* const prop, const Verbosity verbosity);
+
+    void clear_carrier_props();
 
     virtual int hp_regen_change(const Inv_type inv_type) const
     {
@@ -104,9 +106,15 @@ public:
     //Used when attempting to fire or throw an item
     bool is_in_effective_range_lmt(const Pos& p0, const Pos& p1) const;
 
-    void add_carrier_prop(Prop* const prop, Actor& actor, const Verbosity verbosity);
+    Actor* actor_carrying()
+    {
+        return actor_carrying_;
+    }
 
-    void clear_carrier_props(Actor& actor);
+    void clear_actor_carrying()
+    {
+        actor_carrying_ = nullptr;
+    }
 
     const std::vector<Prop*>& carrier_props() const
     {
@@ -133,7 +141,23 @@ protected:
         return "";
     }
 
+    virtual void on_pickup_hook() {}
+
+    virtual void on_equip_hook(const Verbosity verbosity)
+    {
+        (void)verbosity;
+    }
+
+    virtual Unequip_allowed on_unequip_hook()
+    {
+        return Unequip_allowed::yes;
+    }
+
+    virtual void on_removed_from_inv_hook() {}
+
     Item_data_t* data_;
+
+    Actor* actor_carrying_;
 
 private:
     //Properties to apply when wearing something like a ring of fire resistance
@@ -158,8 +182,6 @@ public:
         return clr_gray;
     }
 
-    virtual Unequip_allowed on_unequip(Actor& actor) override final;
-
     int durability() const
     {
         return dur_;
@@ -182,9 +204,8 @@ public:
 protected:
     int armor_points() const;
 
-    virtual Unequip_allowed on_unequip_hook(Actor& actor)
+    virtual Unequip_allowed on_unequip_hook()
     {
-        (void)actor;
         return Unequip_allowed::yes;
     }
 
@@ -204,10 +225,10 @@ public:
 
     ~Armor_asb_suit() {}
 
-    void on_equip(Actor& actor, const Verbosity verbosity) override;
+    void on_equip_hook(const Verbosity verbosity) override;
 
 private:
-    Unequip_allowed on_unequip_hook(Actor& actor) override;
+    Unequip_allowed on_unequip_hook() override;
 };
 
 class Armor_heavy_coat: public Armor
@@ -218,10 +239,10 @@ public:
 
     ~Armor_heavy_coat() {}
 
-    void on_equip(Actor& actor, const Verbosity verbosity) override;
+    void on_equip_hook(const Verbosity verbosity) override;
 
 private:
-    Unequip_allowed on_unequip_hook(Actor& actor) override;
+    Unequip_allowed on_unequip_hook() override;
 };
 
 class Armor_mi_go: public Armor
@@ -234,11 +255,11 @@ public:
 
     void on_std_turn_in_inv(const Inv_type inv_type) override;
 
-    void on_equip(Actor& actor, const Verbosity verbosity) override;
+    void on_equip_hook(const Verbosity verbosity) override;
 
 private:
 
-    Unequip_allowed on_unequip_hook(Actor& actor) override;
+    Unequip_allowed on_unequip_hook() override;
 };
 
 class Wpn: public Item
@@ -403,7 +424,7 @@ public:
 
     ~Medical_bag() {}
 
-    void on_pickup_to_backpack(Inventory& inv) override;
+    void on_pickup_hook() override;
 
     Consume_item activate(Actor* const actor) override;
 
@@ -464,8 +485,9 @@ public:
         Headwear        (item_data),
         nr_turns_left_  (60) {}
 
-    void on_equip(Actor& actor, const Verbosity verbosity) override;
-    Unequip_allowed on_unequip(Actor& actor) override;
+    void on_equip_hook(const Verbosity verbosity) override;
+
+    Unequip_allowed on_unequip_hook() override;
 
     void decr_turns_left(Inventory& carrier_inv);
 

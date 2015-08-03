@@ -601,7 +601,7 @@ void Mon::avail_attacks(Actor& defender, Ai_avail_attacks_data& dst)
                             wpn->nr_ammo_loaded_ == 0 &&
                             !wpn->data().ranged.has_infinite_ammo)
                         {
-                            if (inv_->has_ammo_forFirearm_in_inventory())
+                            if (inv_->has_ammo_for_firearm_in_inventory())
                             {
                                 dst.is_time_to_reload = true;
                             }
@@ -751,7 +751,7 @@ void Cultist::mk_start_items()
 
         if (rnd::one_in(5))
         {
-            inv_->put_in_general(item_factory::mk(Item_id::pistol_clip));
+            inv_->put_in_backpack(item_factory::mk(Item_id::pistol_clip));
         }
     }
     else if (RND <= PUMP_SHOTGUN)
@@ -767,7 +767,7 @@ void Cultist::mk_start_items()
         {
             item            = item_factory::mk(Item_id::shotgun_shell);
             item->nr_items_ = rnd::range(1, 8);
-            inv_->put_in_general(item);
+            inv_->put_in_backpack(item);
         }
     }
     else if (RND <= SAWN_SHOTGUN)
@@ -778,7 +778,7 @@ void Cultist::mk_start_items()
         {
             Item* item      = item_factory::mk(Item_id::shotgun_shell);
             item->nr_items_ = rnd::range(1, 8);
-            inv_->put_in_general(item);
+            inv_->put_in_backpack(item);
         }
     }
     else //Machine gun
@@ -795,7 +795,7 @@ void Cultist::mk_start_items()
 
     if (rnd::one_in(3))
     {
-        inv_->put_in_general(item_factory::mk_random_scroll_or_potion(true, true));
+        inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
     }
 
     if (rnd::one_in(12))
@@ -816,7 +816,7 @@ void Cultist_electric::mk_start_items()
 
     if (rnd::one_in(3))
     {
-        inv_->put_in_general(item_factory::mk_random_scroll_or_potion(true, true));
+        inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
     }
 
     if (rnd::one_in(3))
@@ -838,7 +838,7 @@ void Cultist_spike_gun::mk_start_items()
     {
         item = item_factory::mk(Item_id::iron_spike);
         item->nr_items_ = rnd::range(4, 12);
-        inv_->put_in_general(item);
+        inv_->put_in_backpack(item);
     }
 }
 
@@ -848,8 +848,8 @@ void Cultist_priest::mk_start_items()
     item->melee_dmg_plus_ = 2;
     inv_->put_in_slot(Slot_id::wielded, item);
 
-    inv_->put_in_general(item_factory::mk_random_scroll_or_potion(true, true));
-    inv_->put_in_general(item_factory::mk_random_scroll_or_potion(true, true));
+    inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
+    inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
 
     const int NR_SPELLS = 3;
 
@@ -1090,7 +1090,7 @@ void Mi_go::mk_start_items()
 
     if (rnd::one_in(9))
     {
-        inv_->put_in_general(item_factory::mk(Item_id::mi_go_gun_ammo));
+        inv_->put_in_backpack(item_factory::mk(Item_id::mi_go_gun_ammo));
     }
 
     spells_known_.push_back(new Spell_teleport);
@@ -1406,7 +1406,7 @@ void Keziah_mason::mk_start_items()
     spells_known_.push_back(spell_handling::random_spell_for_mon());
 
     for (int i = rnd::range(2, 3); i > 0; --i)
-        inv_->put_in_general(item_factory::mk_random_scroll_or_potion(true, true));
+        inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
 }
 
 void Leng_elder::on_std_turn_hook()
@@ -1452,7 +1452,7 @@ void Leng_elder::on_std_turn_hook()
 
                 //auto& inv = map::player->inv();
                 //TODO: Which item to give?
-                //inv.put_in_general(item_factory::mk(Item_id::hideous_mask));
+                //inv.put_in_backpack(item_factory::mk(Item_id::hideous_mask));
 
                 has_given_item_to_player_ = true;
                 nr_turns_to_hostile_     = rnd::range(9, 11);

@@ -165,9 +165,9 @@ bool reload_wielded_wpn(Actor& actor_reloading)
 
         if (wpn->nr_ammo_loaded_ < WPN_MAX_AMMO)
         {
-            for (size_t i = 0; i < inv.general_.size(); ++i)
+            for (size_t i = 0; i < inv.backpack_.size(); ++i)
             {
-                item = inv.general_[i];
+                item = inv.backpack_[i];
 
                 if (item->id() == ammo_type)
                 {
@@ -208,7 +208,7 @@ bool reload_wielded_wpn(Actor& actor_reloading)
                                 item = item_factory::mk(ammo_type);
                                 clip_item = static_cast<Ammo_clip*>(item);
                                 clip_item->ammo_ = previous_ammo_count;
-                                inv.put_in_general(clip_item);
+                                inv.put_in_backpack(clip_item);
                             }
                         }
                         else //Ammo is not clip
@@ -219,7 +219,7 @@ bool reload_wielded_wpn(Actor& actor_reloading)
                                                    is_swift_reload);
 
                             //Decrease ammo item number
-                            inv.decr_item_in_general(i);
+                            inv.decr_item_in_backpack(i);
                         }
                     }
                     break;

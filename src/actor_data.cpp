@@ -2671,6 +2671,8 @@ void init_data_list()
     d.can_bleed = false;
     d.can_be_summoned = true;
     d.is_infra_visible = false;
+    d.is_humanoid = true;
+    d.can_leave_corpse = false;
     d.mon_shock_lvl = Mon_shock_lvl::mind_shattering;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::cave);

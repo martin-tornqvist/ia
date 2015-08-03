@@ -152,9 +152,9 @@ void run_std_turn_events()
     //Run new turn events on all player items
     auto& player_inv = map::player->inv();
 
-    for (Item* const item : player_inv.general_)
+    for (Item* const item : player_inv.backpack_)
     {
-        item->on_std_turn_in_inv(Inv_type::general);
+        item->on_std_turn_in_inv(Inv_type::backpack);
     }
 
     for (Inv_slot& slot : player_inv.slots_)
@@ -287,9 +287,9 @@ void tick(const bool IS_FREE_TURN)
         //Run new turn events on all player items
         auto& inv = map::player->inv();
 
-        for (Item* const item : inv.general_)
+        for (Item* const item : inv.backpack_)
         {
-            item->on_actor_turn_in_inv(Inv_type::general);
+            item->on_actor_turn_in_inv(Inv_type::backpack);
         }
 
         for (Inv_slot& slot : inv.slots_)

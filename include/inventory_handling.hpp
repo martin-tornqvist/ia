@@ -3,18 +3,19 @@
 
 #include "inventory.hpp"
 
-enum class Inv_scr_id       {inv, equip, END};
-
-enum class Consume_item     {yes, no};
-
-enum class Unequip_allowed  {yes, no};
+enum class Inv_scr
+{
+    inv,
+    equip,
+    END
+};
 
 namespace inv_handling
 {
 
-extern Inv_scr_id   scr_to_open_after_drop;
-extern Inv_slot*    equip_slot_to_open_after_drop;
-extern int          browser_idx_to_set_after_drop;
+extern Inv_scr      scr_to_open_on_new_turn;
+extern Inv_slot*    equip_slot_to_open_on_new_turn;
+extern int          browser_idx_to_set_on_new_turn;
 
 void init();
 

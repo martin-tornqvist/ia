@@ -134,7 +134,7 @@ void draw_browse_inv(const Menu_browser& browser)
 
     const auto* const item    = IS_IN_EQP ?
                                 inv.slots_[BROWSER_Y].item :
-                                inv.general_[INV_ELEMENT];
+                                inv.backpack_[INV_ELEMENT];
 
     const std::string query_eq_str   = item ? "unequip" : "equip";
     const std::string query_base_str = "[enter] to " + (IS_IN_EQP ? query_eq_str : "apply item");
@@ -207,7 +207,7 @@ void draw_browse_inv(const Menu_browser& browser)
         ++p.y;
     }
 
-    const size_t  NR_INV_ITEMS  = inv.general_.size();
+    const size_t  NR_INV_ITEMS  = inv.backpack_.size();
 
     size_t inv_top_idx = 0;
 
@@ -251,7 +251,7 @@ void draw_browse_inv(const Menu_browser& browser)
     for (size_t i = inv_top_idx; i < NR_INV_ITEMS; ++i)
     {
         const bool IS_CUR_POS = !IS_IN_EQP && INV_ELEMENT == i;
-        Item* const cur_item   = inv.general_[i];
+        Item* const cur_item   = inv.backpack_[i];
 
         const Clr clr = IS_CUR_POS ? clr_white_high : cur_item->interface_clr();
 
@@ -391,7 +391,7 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
         const bool IS_CUR_POS = browser.pos().y == int(i);
         p.x = 0;
 
-        Item* const item = inv.general_[gen_inv_indexes[i]];
+        Item* const item = inv.backpack_[gen_inv_indexes[i]];
 
         draw_item_symbol(*item, p);
         p.x += 2;

@@ -181,7 +181,7 @@ public:
     void try_add_prop_from_att(const Wpn& wpn, const bool IS_MELEE);
 
     //The following two methods are supposed to be called by items
-    void add_prop_from_equiped_item(const Item* const item, Prop* const prop);
+    void add_prop_from_equipped_item(const Item* const item, Prop* const prop);
 
     void remove_props_for_item(const Item* const item);
 

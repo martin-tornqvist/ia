@@ -473,7 +473,7 @@ void Potion_insight::quaff_impl(Actor& actor)
         }
     }
 
-    vector<Item*>& general = inv.general_;
+    vector<Item*>& general = inv.backpack_;
 
     for (Item* item : general)
     {

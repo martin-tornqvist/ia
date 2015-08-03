@@ -591,9 +591,6 @@ TEST_FIXTURE(Basic_fixture, monster_stuck_in_spider_web)
     CHECK(tested_loose_web_destroyed);
 }
 
-//TODO: This test shows some weakness in the inventory handling functionality. Notice how
-//on_equip() and on_unequip() has to be called manually here. This is because they
-//are called from stupid places in the game code - They SHOULD be called by Inventory!
 TEST_FIXTURE(Basic_fixture, inventory_handling)
 {
     const Pos p(10, 10);
@@ -617,9 +614,8 @@ TEST_FIXTURE(Basic_fixture, inventory_handling)
 
     //Wear asbesthos suit
     Item* item = item_factory::mk(Item_id::armor_asb_suit);
-    inv.put_in_slot(Slot_id::body, item);
 
-    item->on_equip(*map::player, Verbosity::silent);
+    inv.put_in_slot(Slot_id::body, item);
 
     //Check that the props are applied
     size_t nr_props = 0;
@@ -646,9 +642,9 @@ TEST_FIXTURE(Basic_fixture, inventory_handling)
     CHECK(prop_hlr.has_prop(Prop_id::rBreath));
 
     //Take off asbeshos suit
-    inv.move_to_general(Slot_id::body);
-    item->on_unequip(*map::player);
-    CHECK_EQUAL(item, inv.general_.back());
+    inv.try_unequip_slot(Slot_id::body);
+
+    CHECK(inv.backpack_idx(Item_id::armor_asb_suit) != -1);
 
     //Check that the properties are cleared
     for (int i = 0; i < int(Prop_id::END); ++i)
@@ -658,10 +654,9 @@ TEST_FIXTURE(Basic_fixture, inventory_handling)
     }
 
     //Wear the asbeshos suit again
-    inv.equip_general_item(inv.general_.size() - 1, Slot_id::body);
-    game_time::tick();
+    inv.equip_backpack_item(inv.backpack_idx(Item_id::armor_asb_suit), Slot_id::body);
 
-    item->on_equip(*map::player, Verbosity::silent);
+    game_time::tick();
 
     //Check that the props are applied
     nr_props = 0;
@@ -701,13 +696,13 @@ TEST_FIXTURE(Basic_fixture, inventory_handling)
     for (int i = 0; i < int(Prop_id::END); ++i)
     {
         CHECK(!prop_hlr.has_prop(Prop_id(i)));
+        CHECK(!prop_hlr.prop(Prop_id(i)));
     }
 
     //Wear the same dropped asbesthos suit again
     inv.put_in_slot(Slot_id::body, cell.item);
-    cell.item = nullptr;
 
-    item->on_equip(*map::player, Verbosity::silent);
+    cell.item = nullptr;
 
     //Check that the props are applied
     nr_props = 0;
@@ -732,6 +727,24 @@ TEST_FIXTURE(Basic_fixture, inventory_handling)
     CHECK(prop_hlr.has_prop(Prop_id::rElec));
     CHECK(prop_hlr.has_prop(Prop_id::rAcid));
     CHECK(prop_hlr.has_prop(Prop_id::rBreath));
+
+    //Destroy the asbesthos suit
+    map::player->restore_hp(99999, true /* Restoring above max */);
+
+    for (int i = 0; i < 10; ++i)
+    {
+        explosion::run_explosion_at(map::player->pos, Expl_type::expl);
+    }
+
+    //Check that the asbesthos suit is destroyed
+    CHECK(!body_slot.item);
+
+    //Check that the properties are cleared
+    for (int i = 0; i < int(Prop_id::END); ++i)
+    {
+        CHECK(!prop_hlr.has_prop(Prop_id(i)));
+        CHECK(!prop_hlr.prop(Prop_id(i)));
+    }
 }
 
 TEST_FIXTURE(Basic_fixture, saving_game)
@@ -748,7 +761,7 @@ TEST_FIXTURE(Basic_fixture, saving_game)
     Inventory& inv = map::player->inv();
 
     //First, remove all present items
-    std::vector<Item*>& gen = inv.general_;
+    std::vector<Item*>& gen = inv.backpack_;
 
     for (Item* item : gen)
     {
@@ -777,26 +790,26 @@ TEST_FIXTURE(Basic_fixture, saving_game)
     inv.put_in_slot(Slot_id::body, item);
     item = item_factory::mk(Item_id::pistol_clip);
     static_cast<Ammo_clip*>(item)->ammo_ = 1;
-    inv.put_in_general(item);
+    inv.put_in_backpack(item);
     item = item_factory::mk(Item_id::pistol_clip);
     static_cast<Ammo_clip*>(item)->ammo_ = 2;
-    inv.put_in_general(item);
+    inv.put_in_backpack(item);
     item = item_factory::mk(Item_id::pistol_clip);
     static_cast<Ammo_clip*>(item)->ammo_ = 3;
-    inv.put_in_general(item);
+    inv.put_in_backpack(item);
     item = item_factory::mk(Item_id::pistol_clip);
     static_cast<Ammo_clip*>(item)->ammo_ = 3;
-    inv.put_in_general(item);
+    inv.put_in_backpack(item);
     item = item_factory::mk(Item_id::device_blaster);
     static_cast<Strange_device*>(item)->condition_ = Condition::shoddy;
-    inv.put_in_general(item);
+    inv.put_in_backpack(item);
     item = item_factory::mk(Item_id::electric_lantern);
     Device_lantern* lantern         = static_cast<Device_lantern*>(item);
     lantern->nr_turns_left_         = 789;
     lantern->nr_flicker_turns_left_ = 456;
     lantern->working_state_         = Lantern_working_state::flicker;
     lantern->is_activated_          = true;
-    inv.put_in_general(item);
+    inv.put_in_backpack(item);
 
     //Player
     Actor_data_t& def = map::player->data();
@@ -861,7 +874,7 @@ TEST_FIXTURE(Basic_fixture, loading_game)
 
     //Player inventory
     Inventory& inv  = map::player->inv();
-    auto& genInv    = inv.general_;
+    auto& genInv    = inv.backpack_;
 
     CHECK_EQUAL(6, int(genInv.size()));
     CHECK_EQUAL(int(Item_id::mi_go_gun), int(inv.item_in_slot(Slot_id::wielded)->data().id));

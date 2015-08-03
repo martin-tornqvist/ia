@@ -148,9 +148,9 @@ public:
 
     ~Device_lantern() override {}
 
-    Consume_item activate(Actor* const actor)            override;
+    Consume_item activate(Actor* const actor) override;
     void          on_std_turn_in_inv(const Inv_type inv_type) override;
-    void          on_pickup_to_backpack(Inventory& inv)    override;
+    void          on_pickup_hook()    override;
 
     Lgt_size lgt_size() const override;
 

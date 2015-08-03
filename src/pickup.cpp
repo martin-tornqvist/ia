@@ -62,7 +62,9 @@ void try_pick()
         msg_log::clear();
         msg_log::add("I pick up " + ITEM_NAME + ".");
 
-        player_inv.put_in_general(item);
+        //Calls the itemps ickup hook
+        //NOTE: This may destroy the item (e.g. combine with others)
+        player_inv.put_in_backpack(item);
 
         map::cells[pos.x][pos.y].item = nullptr;
 
@@ -128,7 +130,9 @@ void try_unload_wpn_or_pickup_ammo()
 
                     msg_log::add("I unload " + wpn_name + ".");
 
-                    map::player->inv().put_in_general(spawned_ammo);
+                    //Calls items pickup hook
+                    //NOTE: This may destroy the item (e.g. combine with others)
+                    map::player->inv().put_in_backpack(spawned_ammo);
 
                     game_time::tick();
                     return;

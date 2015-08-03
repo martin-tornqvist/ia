@@ -353,10 +353,14 @@ void Device_lantern::setup_from_save_lines(std::vector<std::string>& lines)
     lines.erase(begin(lines));
 }
 
-void Device_lantern::on_pickup_to_backpack(Inventory& inv)
+void Device_lantern::on_pickup_hook()
 {
+    assert(actor_carrying_);
+
     //Check for existing electric lantern in inventory
-    for (Item* const other : inv.general_)
+    Inventory& inv = actor_carrying_->inv();
+
+    for (Item* const other : inv.backpack_)
     {
         if (other != this && other->id() == id())
         {

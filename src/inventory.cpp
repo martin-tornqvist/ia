@@ -47,7 +47,7 @@ Inventory::~Inventory()
         }
     }
 
-    for (Item* item : general_)
+    for (Item* item : backpack_)
     {
         delete item;
     }
@@ -76,9 +76,9 @@ void Inventory::store_to_save_lines(std::vector<std::string>& lines) const
         }
     }
 
-    lines.push_back(to_str(general_.size()));
+    lines.push_back(to_str(backpack_.size()));
 
-    for (Item* item : general_)
+    for (Item* item : backpack_)
     {
         lines.push_back(to_str(int(item->id())));
         lines.push_back(to_str(item->nr_items_));
@@ -112,19 +112,20 @@ void Inventory::setup_from_save_lines(std::vector<std::string>& lines)
 
             //When loading the game, wear the item to apply properties from wearing
             assert(owning_actor_);
-            item->on_equip(*owning_actor_, Verbosity::silent);
+            item->on_pickup(*owning_actor_);
+            item->on_equip(Verbosity::silent);
         }
     }
 
-    while (general_.size() != 0)
+    while (backpack_.size() != 0)
     {
         remove_item_in_backpack_with_idx(0, true);
     }
 
-    const int NR_OF_GENERAL = to_int(lines.front());
+    const int BACKPACK_SIZE = to_int(lines.front());
     lines.erase(begin(lines));
 
-    for (int i = 0; i < NR_OF_GENERAL; ++i)
+    for (int i = 0; i < BACKPACK_SIZE; ++i)
     {
         const Item_id id = Item_id(to_int(lines.front()));
         lines.erase(begin(lines));
@@ -132,29 +133,29 @@ void Inventory::setup_from_save_lines(std::vector<std::string>& lines)
         item->nr_items_ = to_int(lines.front());
         lines.erase(begin(lines));
         item->setup_from_save_lines(lines);
-        general_.push_back(item);
+        backpack_.push_back(item);
     }
 }
 
 bool Inventory::has_item_in_backpack(const Item_id id) const
 {
-    auto it = std::find_if(begin(general_), end(general_), [id](Item * item)
+    auto it = std::find_if(begin(backpack_), end(backpack_), [id](Item * item)
     {
         return item->id() == id;
     });
 
-    return it != end(general_);
+    return it != end(backpack_);
 }
 
-int Inventory::item_stack_size_in_general(const Item_id id) const
+int Inventory::item_stack_size_in_backpack(const Item_id id) const
 {
-    for (size_t i = 0; i < general_.size(); ++i)
+    for (size_t i = 0; i < backpack_.size(); ++i)
     {
-        if (general_[i]->data().id == id)
+        if (backpack_[i]->data().id == id)
         {
-            if (general_[i]->data().is_stackable)
+            if (backpack_[i]->data().is_stackable)
             {
-                return general_[i]->nr_items_;
+                return backpack_[i]->nr_items_;
             }
             else //Not stackable
             {
@@ -166,16 +167,14 @@ int Inventory::item_stack_size_in_general(const Item_id id) const
     return 0;
 }
 
-void Inventory::put_in_general(Item* item)
+bool Inventory::try_stack_in_backpack(Item* item)
 {
-    bool is_stacked = false;
-
-    //If item stacks, see if there is other items of same type
+    //If item stacks, see if there are other items of same type
     if (item->data().is_stackable)
     {
-        for (size_t i = 0; i < general_.size(); ++i)
+        for (size_t i = 0; i < backpack_.size(); ++i)
         {
-            Item* const other = general_[i];
+            Item* const other = backpack_[i];
 
             if (other->id() == item->id())
             {
@@ -183,20 +182,30 @@ void Inventory::put_in_general(Item* item)
                 //(then the parameter pointer is still valid).
                 item->nr_items_ += other->nr_items_;
                 delete other;
-                general_[i] = item;
-                is_stacked   = true;
-                break;
+                backpack_[i] = item;
+
+                return true;
             }
         }
     }
 
+    return false;
+}
+
+void Inventory::put_in_backpack(Item* item)
+{
+    assert(!item->actor_carrying());
+
+    bool is_stacked = try_stack_in_backpack(item);
+
     if (!is_stacked)
     {
-        general_.push_back(item);
+        backpack_.push_back(item);
+        sort_backpack();
     }
 
-    //NOTE: May destroy the item (e.g. a Medical Bag combining with another)
-    item->on_pickup_to_backpack(*this);
+    //NOTE: This may destroy the item (e.g. a Medical bag combining with another)
+    item->on_pickup(*owning_actor_);
 }
 
 void Inventory::drop_all_non_intrinsic(const Pos& pos)
@@ -210,31 +219,26 @@ void Inventory::drop_all_non_intrinsic(const Pos& pos)
 
         if (item)
         {
+            item->on_removed_from_inv();
+
             item_drop::drop_item_on_map(pos, *item);
 
             slot.item = nullptr;
         }
     }
 
-    //Drop from general
-    size_t i = 0;
-
-    while (i < general_.size())
+    //Drop from backpack
+    for (Item* item : backpack_)
     {
-        item = general_[i];
+        item->on_removed_from_inv();
 
-        if (item)
-        {
-            item_drop::drop_item_on_map(pos, *item);
-
-            general_.erase(begin(general_) + i);
-        }
-
-        i++;
+        item_drop::drop_item_on_map(pos, *item);
     }
+
+    backpack_.resize(0);
 }
 
-bool Inventory::has_ammo_forFirearm_in_inventory()
+bool Inventory::has_ammo_for_firearm_in_inventory()
 {
     Wpn* weapon = static_cast<Wpn*>(item_in_slot(Slot_id::wielded));
 
@@ -250,9 +254,9 @@ bool Inventory::has_ammo_forFirearm_in_inventory()
             const Item_id ammo_id = weapon->data().ranged.ammo_item_id;
 
             //Look for that ammo type in inventory
-            for (size_t i = 0; i < general_.size(); ++i)
+            for (size_t i = 0; i < backpack_.size(); ++i)
             {
-                if (general_[i]->data().id == ammo_id)
+                if (backpack_[i]->data().id == ammo_id)
                 {
                     return true;
                 }
@@ -288,20 +292,20 @@ void Inventory::decr_item_in_slot(Slot_id slot_id)
 
 void Inventory::remove_item_in_backpack_with_idx(const size_t IDX, const bool DELETE_ITEM)
 {
-    if (general_.size() > IDX)
+    if (backpack_.size() > IDX)
     {
         if (DELETE_ITEM)
         {
-            delete general_[IDX];
+            delete backpack_[IDX];
         }
 
-        general_.erase(begin(general_) + IDX);
+        backpack_.erase(begin(backpack_) + IDX);
     }
 }
 
 void Inventory::remove_item_in_backpack_with_ptr(Item* const item, const bool DELETE_ITEM)
 {
-    for (auto it = begin(general_); it < end(general_); ++it)
+    for (auto it = begin(backpack_); it < end(backpack_); ++it)
     {
         if (*it == item)
         {
@@ -310,7 +314,7 @@ void Inventory::remove_item_in_backpack_with_ptr(Item* const item, const bool DE
                 delete *it;
             }
 
-            general_.erase(it);
+            backpack_.erase(it);
             return;
         }
     }
@@ -319,9 +323,9 @@ void Inventory::remove_item_in_backpack_with_ptr(Item* const item, const bool DE
     assert(false);
 }
 
-void Inventory::decr_item_in_general(const size_t IDX)
+void Inventory::decr_item_in_backpack(const size_t IDX)
 {
-    Item* item              = general_[IDX];
+    Item* item              = backpack_[IDX];
     bool  is_stackable       = item->data().is_stackable;
     bool  should_delete_item  = true;
 
@@ -333,18 +337,18 @@ void Inventory::decr_item_in_general(const size_t IDX)
 
     if (should_delete_item)
     {
-        general_.erase(begin(general_) + IDX);
+        backpack_.erase(begin(backpack_) + IDX);
         delete item;
     }
 }
 
-void Inventory::decr_item_type_in_general(const Item_id id)
+void Inventory::decr_item_type_in_backpack(const Item_id id)
 {
-    for (size_t i = 0; i < general_.size(); ++i)
+    for (size_t i = 0; i < backpack_.size(); ++i)
     {
-        if (general_[i]->data().id == id)
+        if (backpack_[i]->data().id == id)
         {
-            decr_item_in_general(i);
+            decr_item_in_backpack(i);
             return;
         }
     }
@@ -361,49 +365,93 @@ void Inventory::decr_item(Item* const item)
         }
     }
 
-    for (size_t i = 0; i < general_.size(); ++i)
+    for (size_t i = 0; i < backpack_.size(); ++i)
     {
-        if (general_[i] == item)
+        if (backpack_[i] == item)
         {
-            decr_item_in_general(i);
+            decr_item_in_backpack(i);
             return;
         }
     }
 }
 
-void Inventory::move_item_to_slot(Inv_slot& slot, const size_t GEN_IDX)
+void Inventory::move_from_backpack_to_slot(const Slot_id id, const size_t BACKPACK_IDX)
 {
-    bool general_slot_exists  = GEN_IDX < general_.size();
-    Item* item              = nullptr;
-    Item* slot_item          = slot.item;
+    assert(id != Slot_id::END);
 
-    if (general_slot_exists) {item = general_[GEN_IDX];}
+    auto& slot = slots_[size_t(id)];
 
-    if (general_slot_exists && item)
+    const bool BACKPACK_SLOT_EXISTS = BACKPACK_IDX < backpack_.size();
+
+    assert(BACKPACK_SLOT_EXISTS);
+
+    if (BACKPACK_SLOT_EXISTS)
     {
-        if (slot_item)
+        Item* item              = backpack_[BACKPACK_IDX];
+        Item* slot_item_before  = slot.item;
+
+        backpack_.erase(begin(backpack_) + BACKPACK_IDX);
+
+        //If there is an item in this slot already, move it to backpack
+        auto unequip_allowed_result = Unequip_allowed::yes;
+
+        if (slot_item_before)
         {
-            general_.erase(begin(general_) + GEN_IDX);
-            general_.push_back(slot_item);
-            slot.item = item;
+            unequip_allowed_result = try_move_from_slot_to_backpack(id);
         }
-        else
+
+        if (unequip_allowed_result == Unequip_allowed::yes)
         {
             slot.item = item;
-            general_.erase(begin(general_) + GEN_IDX);
+
+            item->on_equip(Verbosity::verbose);
         }
     }
+
+    sort_backpack();
 }
 
-void Inventory::equip_general_item(const size_t GEN_IDX, const Slot_id slot_id)
+Unequip_allowed Inventory::try_move_from_slot_to_backpack(const Slot_id id)
+{
+    assert(id != Slot_id::END);
+
+    auto& slot = slots_[size_t(id)];
+
+    Item* const item = slot.item;
+
+    auto unequip_allowed_result = Unequip_allowed::no;
+
+    if (item)
+    {
+        unequip_allowed_result = item->on_unequip();
+
+        if (unequip_allowed_result == Unequip_allowed::yes)
+        {
+            slot.item = nullptr;
+
+            bool is_stacked = try_stack_in_backpack(item);
+
+            if (!is_stacked)
+            {
+                backpack_.push_back(item);
+                sort_backpack();
+            }
+        }
+    }
+
+    return unequip_allowed_result;
+}
+
+void Inventory::equip_backpack_item(const size_t BACKPACK_IDX, const Slot_id slot_id)
 {
     assert(slot_id != Slot_id::END);
+    assert(owning_actor_);
 
-    move_item_to_slot(slots_[int(slot_id)], GEN_IDX);
+    render::draw_map_and_interface();
 
-    const bool IS_PLAYER  = this == &map::player->inv();
+    move_from_backpack_to_slot(slot_id, BACKPACK_IDX);
 
-    if (IS_PLAYER)
+    if (owning_actor_->is_player())
     {
         Item* const         item_after  = item_in_slot(slot_id);
         const std::string   name        = item_after->name(Item_ref_type::plural);
@@ -451,8 +499,75 @@ void Inventory::equip_general_item(const size_t GEN_IDX, const Slot_id slot_id)
     }
 }
 
-void Inventory::swap_wielded_and_prepared(
-    const bool IS_FREE_TURN)
+Unequip_allowed Inventory::try_unequip_slot(const Slot_id id)
+{
+    auto& slot = slots_[size_t(id)];
+
+    Item* item = slot.item;
+
+    assert(item);
+
+    render::draw_map_and_interface();
+
+    auto unequip_allowed_result = try_move_from_slot_to_backpack(slot.id);
+
+    if (owning_actor_->is_player() && unequip_allowed_result == Unequip_allowed::yes)
+    {
+        //The message should be of the form "... my [item]", so we never want the item name to be
+        //"A [item]". Then we use plural form for stacks of items, and plain form for single items.
+        const auto item_ref_type = item->nr_items_ > 1 ?
+                                   Item_ref_type::plural :
+                                   Item_ref_type::plain;
+
+        const std::string name = item->name(item_ref_type);
+
+        std::string msg = "";
+
+        switch (id)
+        {
+        case Slot_id::wielded:
+            msg = "I put away my " + name + ".";
+            break;
+
+        case Slot_id::wielded_alt:
+            msg = "I put away my " + name + ".";
+            break;
+
+        case Slot_id::thrown:
+            msg = "I put away my " + name + ".";
+            break;
+
+        case Slot_id::body:
+            msg = "I have taken off my " + name + ".";
+            break;
+
+        case Slot_id::head:
+            msg = "I have taken off my " + name + ".";
+            break;
+
+        case Slot_id::neck:
+            msg = "I have taken off my " + name + ".";
+            break;
+
+        case Slot_id::ring1:
+            msg = "I have taken off my " + name + ".";
+            break;
+
+        case Slot_id::ring2:
+            msg = "I have taken off my " + name + ".";
+            break;
+
+        case Slot_id::END:
+            break;
+        }
+
+        msg_log::add(msg, clr_white, false, More_prompt_on_msg::yes);
+    }
+
+    return unequip_allowed_result;
+}
+
+void Inventory::swap_wielded_and_prepared(const bool IS_FREE_TURN)
 {
     auto& slot1 = slots_[int(Slot_id::wielded)];
     auto& slot2 = slots_[int(Slot_id::wielded_alt)];
@@ -464,41 +579,6 @@ void Inventory::swap_wielded_and_prepared(
     render::draw_map_and_interface();
 
     game_time::tick(IS_FREE_TURN);
-}
-
-void Inventory::move_from_general_to_intrinsics(const size_t GEN_IDX)
-{
-    bool general_slot_exists = GEN_IDX < general_.size();
-
-    if (general_slot_exists)
-    {
-        Item* item = general_[GEN_IDX];
-        bool item_exists_in_general_slot = item;
-
-        if (item_exists_in_general_slot)
-        {
-            intrinsics_.push_back(item);
-            general_.erase(begin(general_) + GEN_IDX);
-        }
-    }
-}
-
-bool Inventory::move_to_general(const Slot_id id)
-{
-    assert(id != Slot_id::END);
-
-    auto& slot = slots_[size_t(id)];
-
-    Item* const item = slot.item;
-
-    if (item)
-    {
-        slot.item = nullptr;
-        put_in_general(item);
-        return true;
-    }
-
-    return false;
 }
 
 bool Inventory::has_item_in_slot(Slot_id id) const
@@ -516,19 +596,19 @@ void Inventory::remove_without_destroying(const Inv_type inv_type, const size_t 
     }
     else
     {
-        assert(IDX < general_.size());
-        general_.erase(begin(general_) + IDX);
+        assert(IDX < backpack_.size());
+        backpack_.erase(begin(backpack_) + IDX);
     }
 }
 
-Item* Inventory::first_item_in_backpack_with_id(const Item_id id)
+Item* Inventory::item_in_backpack(const Item_id id)
 {
-    auto it = std::find_if(begin(general_), end(general_), [id](Item * item)
+    auto it = std::find_if(begin(backpack_), end(backpack_), [id](Item * item)
     {
         return item->id() == id;
     });
 
-    if (it == end(general_))
+    if (it == end(backpack_))
     {
         return nullptr;
     }
@@ -536,11 +616,11 @@ Item* Inventory::first_item_in_backpack_with_id(const Item_id id)
     return *it;
 }
 
-int Inventory::backpack_idx_with_item_id(const Item_id id) const
+int Inventory::backpack_idx(const Item_id id) const
 {
-    for (size_t i = 0; i < general_.size(); ++i)
+    for (size_t i = 0; i < backpack_.size(); ++i)
     {
-        if (general_[i]->id() == id)
+        if (backpack_[i]->id() == id)
         {
             return i;
         }
@@ -571,36 +651,44 @@ void Inventory::put_in_intrinsics(Item* item)
            item->data().type == Item_type::ranged_wpn_intr);
 
     intrinsics_.push_back(item);
+
+    item->on_pickup(*owning_actor_);
 }
 
-Item* Inventory::last_item_in_general()
+Item* Inventory::last_item_in_backpack()
 {
-    if (!general_.empty()) {return general_[general_.size() - 1];}
+    if (!backpack_.empty()) {return backpack_[backpack_.size() - 1];}
 
     return nullptr;
 }
 
 void Inventory::put_in_slot(const Slot_id id, Item* item)
 {
+    assert(!item->actor_carrying());
+
+    assert(id != Slot_id::END);
+
     for (Inv_slot& slot : slots_)
     {
         if (slot.id == id)
         {
             if (slot.item)
             {
-                general_.push_back(item);
+                put_in_backpack(item);
             }
-            else
+            else //Slot not occupied
             {
                 slot.item = item;
-            }
 
+                item->on_pickup(*owning_actor_);
+                item->on_equip(Verbosity::silent);
+            }
             return;
         }
     }
 
-    general_.push_back(item);
-    assert(false && "Bad slot id");
+    //Should never happen
+    assert(false);
 }
 
 int Inventory::total_item_weight() const
@@ -612,9 +700,9 @@ int Inventory::total_item_weight() const
         if (slots_[i].item) {weight += slots_[i].item->weight();}
     }
 
-    for (size_t i = 0; i < general_.size(); ++i)
+    for (size_t i = 0; i < backpack_.size(); ++i)
     {
-        weight += general_[i]->weight();
+        weight += backpack_[i]->weight();
     }
 
     return weight;
@@ -633,12 +721,12 @@ struct Lexicograhical_compare_items
     }
 };
 
-void Inventory::sort_general_inventory()
+void Inventory::sort_backpack()
 {
     std::vector< std::vector<Item*> > sort_buffer;
 
     //Sort according to item interface color first
-    for (Item* item : general_)
+    for (Item* item : backpack_)
     {
 
         bool is_added_to_buffer = false;
@@ -678,13 +766,13 @@ void Inventory::sort_general_inventory()
     }
 
     //Set the inventory from the sorting buffer
-    general_.clear();
+    backpack_.clear();
 
     for (size_t i = 0; i < sort_buffer.size(); ++i)
     {
         for (size_t ii = 0; ii < sort_buffer[i].size(); ii++)
         {
-            general_.push_back(sort_buffer[i][ii]);
+            backpack_.push_back(sort_buffer[i][ii]);
         }
     }
 }

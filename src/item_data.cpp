@@ -19,7 +19,7 @@ using namespace std;
 
 Item_data_t::Item_data_t() :
     id                                  (Item_id::END),
-    type                                (Item_type::general),
+    type                                (Item_type::general      ),
     value                               (Item_value::normal),
     weight                              (Item_weight::none),
     allow_spawn                         (true),

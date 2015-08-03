@@ -38,8 +38,22 @@ Actor::Actor() :
 
 Actor::~Actor()
 {
-    delete prop_handler_;
+    //Free all items owning actors
+    for (Item* item : inv_->backpack_)
+    {
+        item->clear_actor_carrying();
+    }
+
+    for (auto& slot : inv_->slots_)
+    {
+        if (slot.item)
+        {
+            slot.item->clear_actor_carrying();
+        }
+    }
+
     delete inv_;
+    delete prop_handler_;
 }
 
 bool Actor::has_prop(const Prop_id id) const
@@ -560,6 +574,8 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
     //destroyed with a random chance
     if (is_corpse() && !is_player())
     {
+        assert(data_->can_leave_corpse);
+
         if (rnd::fraction(5, 8) || dmg >= ((hp_max(true) * 2) / 3))
         {
             if (method == Dmg_method::kick)
@@ -579,6 +595,10 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
 
             if (map::cells[pos.x][pos.y].is_seen_by_player)
             {
+                const std::string corpse_name = corpse_name_the();
+
+                assert(!corpse_name.empty());
+
                 msg_log::add(corpse_name_the() + " is destroyed.");
             }
         }

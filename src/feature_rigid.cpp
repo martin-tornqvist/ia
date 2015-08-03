@@ -1586,7 +1586,7 @@ void Item_container::open(const Pos& feature_pos, Actor* const actor_opening)
                 }
                 else //Item does not stack with current thrown weapon
                 {
-                    inv.put_in_general(item);
+                    inv.put_in_backpack(item);
                 }
             }
             else if (answer == Yes_no_answer::no)
@@ -1604,7 +1604,7 @@ void Item_container::open(const Pos& feature_pos, Actor* const actor_opening)
 
                 Ammo* const spawned_ammo = item_pickup::unload_ranged_wpn(*wpn);
 
-                map::player->inv().put_in_general(spawned_ammo);
+                map::player->inv().put_in_backpack(spawned_ammo);
 
                 item_drop::drop_item_on_map(feature_pos, *wpn);
             }

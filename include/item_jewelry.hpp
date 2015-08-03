@@ -50,20 +50,18 @@ public:
 
     virtual Jewelry_effect_id id() const = 0;
 
-    virtual void on_equip(Actor& actor, const Verbosity verbosity)
+    virtual void on_equip(const Verbosity verbosity)
     {
-        (void)actor;
         (void)verbosity;
     }
 
-    virtual Unequip_allowed on_unequip(Actor& actor)
+    virtual Unequip_allowed on_unequip()
     {
-        (void)actor;
         return Unequip_allowed::yes;
     }
 
-    virtual void on_std_turn_equiped() {}
-    virtual void on_actor_turn_equiped() {}
+    virtual void on_std_turn_equipped() {}
+    virtual void on_actor_turn_equipped() {}
 
     virtual void change_item_weight(int& weight_ref)
     {
@@ -93,9 +91,9 @@ public:
 
     virtual ~Jewelry_property_effect() {}
 
-    void on_equip(Actor& actor, const Verbosity verbosity) override;
+    void on_equip(const Verbosity verbosity) override;
 
-    Unequip_allowed on_unequip(Actor& actor) override final;
+    Unequip_allowed on_unequip() override final;
 
 protected:
     virtual Prop* mk_prop() const = 0;
@@ -318,8 +316,8 @@ public:
         return "It grants stronger vitality.";
     }
 
-    void on_equip(Actor& actor, const Verbosity verbosity) override;
-    Unequip_allowed on_unequip(Actor& actor) override;
+    void on_equip(const Verbosity verbosity) override;
+    Unequip_allowed on_unequip() override;
 };
 
 class Jewelry_effect_hp_pen : public Jewelry_effect
@@ -340,9 +338,9 @@ public:
         return "It makes the wearer frailer.";
     }
 
-    void on_equip(Actor& actor, const Verbosity verbosity) override;
+    void on_equip(const Verbosity verbosity) override;
 
-    Unequip_allowed on_unequip(Actor& actor) override;
+    Unequip_allowed on_unequip() override;
 };
 
 class Jewelry_effect_spi_bon : public Jewelry_effect
@@ -363,8 +361,8 @@ public:
         return "It strengthens the spirit of the wearer.";
     }
 
-    void on_equip(Actor& actor, const Verbosity verbosity) override;
-    Unequip_allowed on_unequip(Actor& actor) override;
+    void on_equip(const Verbosity verbosity) override;
+    Unequip_allowed on_unequip() override;
 };
 
 class Jewelry_effect_spi_pen : public Jewelry_effect
@@ -385,8 +383,8 @@ public:
         return "It weakens the spirit of the wearer.";
     }
 
-    void on_equip(Actor& actor, const Verbosity verbosity) override;
-    Unequip_allowed on_unequip(Actor& actor) override;
+    void on_equip(const Verbosity verbosity) override;
+    Unequip_allowed on_unequip() override;
 };
 
 class Jewelry_effect_random_tele : public Jewelry_effect
@@ -407,7 +405,7 @@ public:
         return "It occasionally teleports the wearer.";
     }
 
-    void on_std_turn_equiped() override;
+    void on_std_turn_equipped() override;
 };
 
 class Jewelry_effect_summon_mon : public Jewelry_effect
@@ -429,7 +427,7 @@ public:
                "wearer.";
     }
 
-    void on_std_turn_equiped() override;
+    void on_std_turn_equipped() override;
 };
 
 class Jewelry_effect_fire : public Jewelry_effect
@@ -450,7 +448,7 @@ public:
         return "It spontaneously sets objects around the caster on fire.";
     }
 
-    void on_std_turn_equiped() override;
+    void on_std_turn_equipped() override;
 };
 
 class Jewelry_effect_shriek : public Jewelry_effect
@@ -470,7 +468,7 @@ public:
         return "It occasionally emits a disembodied voice in a horrible shrieking tone.";
     }
 
-    void on_std_turn_equiped() override;
+    void on_std_turn_equipped() override;
 
 private:
     std::vector<std::string> words_;
@@ -495,7 +493,7 @@ public:
                "against each other.";
     }
 
-    void on_std_turn_equiped() override;
+    void on_std_turn_equipped() override;
 };
 
 class Jewelry_effect_burden : public Jewelry_effect
@@ -516,7 +514,7 @@ public:
         return "It burdens the wearer, as if there was an invisible weight to carry.";
     }
 
-    void on_equip(Actor& actor, const Verbosity verbosity) override;
+    void on_equip(const Verbosity verbosity) override;
     void change_item_weight(int& weight_ref) override;
 };
 
@@ -543,8 +541,8 @@ public:
         return "The wounds of the wearer heal faster.";
     }
 
-    void on_equip(Actor& actor, const Verbosity verbosity) override;
-    Unequip_allowed on_unequip(Actor& actor) override;
+    void on_equip(const Verbosity verbosity) override;
+    Unequip_allowed on_unequip() override;
 };
 
 class Jewelry_effect_hp_regen_pen : public Jewelry_effect
@@ -570,8 +568,8 @@ public:
         return "The wounds of the wearer heal slower.";
     }
 
-    void on_equip(Actor& actor, const Verbosity verbosity) override;
-    Unequip_allowed on_unequip(Actor& actor) override;
+    void on_equip(const Verbosity verbosity) override;
+    Unequip_allowed on_unequip() override;
 };
 
 class Jewelry : public Item
@@ -583,9 +581,9 @@ public:
 
     std::vector<std::string> descr() const override final;
 
-    void on_equip(Actor& actor, const Verbosity verbosity) override final;
+    void on_equip_hook(const Verbosity verbosity) override final;
 
-    Unequip_allowed on_unequip(Actor& actor) override final;
+    Unequip_allowed on_unequip_hook() override final;
 
     void on_std_turn_in_inv(const Inv_type inv_type) override final;
 

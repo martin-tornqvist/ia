@@ -112,7 +112,7 @@ void Player::mk_start_items()
         //(Both are identified.)
         Item* scroll = item_factory::mk(Item_id::scroll_darkbolt);
         static_cast<Scroll*>(scroll)->identify(Verbosity::silent);
-        inv_->put_in_general(scroll);
+        inv_->put_in_backpack(scroll);
 
         while (true)
         {
@@ -128,7 +128,7 @@ void Player::mk_start_items()
             if (IS_AVAIL && SPI_COST_OK && spell_id != Spell_id::darkbolt)
             {
                 static_cast<Scroll*>(scroll)->identify(Verbosity::silent);
-                inv_->put_in_general(scroll);
+                inv_->put_in_backpack(scroll);
                 break;
             }
         }
@@ -140,7 +140,7 @@ void Player::mk_start_items()
         {
             Item* const potion = item_factory::mk_random_scroll_or_potion(false, true);
             static_cast<Potion*>(potion)->identify(Verbosity::silent);
-            inv_->put_in_general(potion);
+            inv_->put_in_backpack(potion);
         }
     }
     break;
@@ -155,18 +155,18 @@ void Player::mk_start_items()
 
         static_cast<Wpn*>(dagger)->melee_dmg_plus_ = 1;
 
-        inv_->slots_[int(Slot_id::wielded)].item = dagger;
+        inv_->put_in_slot(Slot_id::wielded, dagger);
 
         //Rogue starts with some iron spikes (useful tool)
-        inv_->put_in_general(item_factory::mk(Item_id::iron_spike, 8));
+        inv_->put_in_backpack(item_factory::mk(Item_id::iron_spike, 8));
     }
     break;
 
     case Bg::war_vet:
     {
         //War Veteran starts with some smoke grenades and a gas mask
-        inv_->put_in_general(item_factory::mk(Item_id::smoke_grenade, 4));
-        inv_->put_in_general(item_factory::mk(Item_id::gas_mask));
+        inv_->put_in_backpack(item_factory::mk(Item_id::smoke_grenade, 4));
+        inv_->put_in_backpack(item_factory::mk(Item_id::gas_mask));
     }
     break;
 
@@ -229,17 +229,17 @@ void Player::mk_start_items()
 
     for (int i = 0; i < nr_cartridges; ++i)
     {
-        inv_->put_in_general(item_factory::mk(Item_id::pistol_clip));
+        inv_->put_in_backpack(item_factory::mk(Item_id::pistol_clip));
     }
 
     if (nr_dynamite > 0)
     {
-        inv_->put_in_general(item_factory::mk(Item_id::dynamite,  nr_dynamite));
+        inv_->put_in_backpack(item_factory::mk(Item_id::dynamite,  nr_dynamite));
     }
 
     if (nr_molotov > 0)
     {
-        inv_->put_in_general(item_factory::mk(Item_id::molotov,   nr_molotov));
+        inv_->put_in_backpack(item_factory::mk(Item_id::molotov,   nr_molotov));
     }
 
     if (nr_thr_knives > 0)
@@ -249,12 +249,12 @@ void Player::mk_start_items()
 
     if (has_lantern)
     {
-        inv_->put_in_general(item_factory::mk(Item_id::electric_lantern));
+        inv_->put_in_backpack(item_factory::mk(Item_id::electric_lantern));
     }
 
     if (has_medbag)
     {
-        inv_->put_in_general(item_factory::mk(Item_id::medical_bag));
+        inv_->put_in_backpack(item_factory::mk(Item_id::medical_bag));
     }
 
     if (has_leather_jacket)
@@ -941,35 +941,35 @@ void Player::on_actor_turn()
         tgt_ = nullptr;
     }
 
-    //If player dropped item, check if should go back to inventory screen
-    const auto inv_scr_after_drop = inv_handling::scr_to_open_after_drop;
+    //Check if we should go back to inventory screen
+    const auto inv_scr_on_new_turn = inv_handling::scr_to_open_on_new_turn;
 
-    if (inv_scr_after_drop != Inv_scr_id::END)
+    if (inv_scr_on_new_turn != Inv_scr::END)
     {
         std::vector<Actor*> my_seen_foes;
         seen_foes(my_seen_foes);
 
         if (my_seen_foes.empty())
         {
-            switch (inv_scr_after_drop)
+            switch (inv_scr_on_new_turn)
             {
-            case Inv_scr_id::inv:
+            case Inv_scr::inv:
                 inv_handling::run_inv_screen();
                 break;
 
-            case Inv_scr_id::equip:
-                inv_handling::run_equip_screen(*inv_handling::equip_slot_to_open_after_drop);
+            case Inv_scr::equip:
+                inv_handling::run_equip_screen(*inv_handling::equip_slot_to_open_on_new_turn);
                 break;
 
-            case Inv_scr_id::END: {} break;
+            case Inv_scr::END: {} break;
             }
 
             return;
         }
         else //There are seen monsters
         {
-            inv_handling::scr_to_open_after_drop    = Inv_scr_id::END;
-            inv_handling::browser_idx_to_set_after_drop = 0;
+            inv_handling::scr_to_open_on_new_turn    = Inv_scr::END;
+            inv_handling::browser_idx_to_set_on_new_turn = 0;
         }
     }
 
@@ -1060,7 +1060,7 @@ void Player::update_tmp_shock()
         }
     }
 
-    for (const Item* const item : inv_->general_)
+    for (const Item* const item : inv_->backpack_)
     {
         const int BASE_SHOCK = item->data().shock_while_in_backpack;
 
@@ -1279,9 +1279,9 @@ void Player::on_std_turn()
                 }
             }
 
-            for (const Item* const item : inv_->general_)
+            for (const Item* const item : inv_->backpack_)
             {
-                nr_turns_per_hp += item->hp_regen_change(Inv_type::general);
+                nr_turns_per_hp += item->hp_regen_change(Inv_type::backpack);
             }
 
             const int TURN = game_time::turn();
@@ -1344,8 +1344,8 @@ void Player::interrupt_actions()
     render::draw_map_and_interface();
 
     //Abort browsing inventory
-    inv_handling::scr_to_open_after_drop    = Inv_scr_id::END;
-    inv_handling::browser_idx_to_set_after_drop = 0;
+    inv_handling::scr_to_open_on_new_turn    = Inv_scr::END;
+    inv_handling::browser_idx_to_set_on_new_turn = 0;
 
     //Abort waiting
     if (wait_turns_left > 0)
@@ -1681,7 +1681,7 @@ void Player::add_light_hook(bool light_map[MAP_W][MAP_H]) const
 
     if (lgt_size != Lgt_size::fov)
     {
-        for (Item* const item : inv_->general_)
+        for (Item* const item : inv_->backpack_)
         {
             Lgt_size item_lgt_size = item->lgt_size();
 

@@ -837,7 +837,10 @@ void Prop_handler::setup_from_save_lines(std::vector<std::string>& lines)
         const int NR_TURNS = to_int(lines.front());
         lines.erase(begin(lines));
 
-        auto* const prop = mk_prop(prop_id, Prop_turns::specific, NR_TURNS);
+        const auto turns_init = NR_TURNS == -1 ? Prop_turns::indefinite : Prop_turns::specific;
+
+        auto* const prop = mk_prop(prop_id, turns_init, NR_TURNS);
+
         try_add_prop(prop, Prop_src::intr, true, Verbosity::silent);
     }
 }
@@ -1166,7 +1169,7 @@ void Prop_handler::try_add_prop(Prop* const prop,
     incr_active_props_info(prop->id());
 }
 
-void Prop_handler::add_prop_from_equiped_item(const Item* const item, Prop* const prop)
+void Prop_handler::add_prop_from_equipped_item(const Item* const item, Prop* const prop)
 {
     prop->item_applying_ = item;
 

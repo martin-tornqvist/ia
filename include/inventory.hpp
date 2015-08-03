@@ -48,32 +48,35 @@ public:
 
     ~Inventory();
 
-    void drop_all_non_intrinsic(const Pos& pos);
+    void store_to_save_lines(std::vector<std::string>& lines) const;
+    void setup_from_save_lines(std::vector<std::string>& lines);
 
-    bool has_item_in_slot(Slot_id id) const;
+    //Equip item from backpack
+    void equip_backpack_item(const size_t BACKPACK_IDX, const Slot_id slot_id);
 
-    //NOTE: This will put the item in general if the slot is occupied
+    //Attempt to unequip item from slot
+    Unequip_allowed try_unequip_slot(const Slot_id id);
+
+    //NOTE: All "put_in_*" functions should NEVER be called on items already in the inventory.
+
+    //Item will be put in backpack if the slot is occupied.
     void put_in_slot(const Slot_id id, Item* item);
 
-    void put_in_general(Item* item);
+    void put_in_backpack(Item* item);
 
     void put_in_intrinsics(Item* item);
 
-    bool move_to_general(const Slot_id id);
-
-    void move_from_general_to_intrinsics(const size_t GEN_IDX);
-
-    void move_item_to_slot(Inv_slot& slot, const size_t GEN_IDX);
-
-    void equip_general_item(const size_t GEN_IDX, const Slot_id slot_id);
+    void drop_all_non_intrinsic(const Pos& pos);
 
     void swap_wielded_and_prepared(const bool IS_FREE_TURN);
 
-    bool has_ammo_forFirearm_in_inventory();
+    bool has_item_in_slot(Slot_id id) const;
 
-    Item* first_item_in_backpack_with_id(const Item_id id);
+    bool has_ammo_for_firearm_in_inventory();
 
-    int backpack_idx_with_item_id(const Item_id item_id) const;
+    Item* item_in_backpack(const Item_id id);
+
+    int backpack_idx(const Item_id item_id) const;
 
     Item* item_in_slot(const Slot_id id) const;
 
@@ -81,11 +84,11 @@ public:
 
     void decr_item_in_slot(Slot_id slot_id);
 
-    void decr_item_in_general(const size_t IDX);
+    void decr_item_in_backpack(const size_t IDX);
 
     void decr_item(Item* const item);
 
-    void decr_item_type_in_general(const Item_id item_id);
+    void decr_item_type_in_backpack(const Item_id item_id);
 
     void remove_item_in_backpack_with_idx(const size_t IDX, const bool DELETE_ITEM);
     void remove_item_in_backpack_with_ptr(Item* const item, const bool DELETE_ITEM);
@@ -94,24 +97,30 @@ public:
 
     Item* intrinsic_in_element(const int IDX) const;
 
-    Item* last_item_in_general();
+    Item* last_item_in_backpack();
 
     bool has_item_in_backpack(const Item_id id) const;
 
-    int item_stack_size_in_general(const Item_id id) const;
+    int item_stack_size_in_backpack(const Item_id id) const;
 
-    void sort_general_inventory();
+    void sort_backpack();
 
     int total_item_weight() const;
 
-    void store_to_save_lines(std::vector<std::string>& lines) const;
-    void setup_from_save_lines(std::vector<std::string>& lines);
-
     Inv_slot slots_[int(Slot_id::END)];
-    std::vector<Item*> general_;
+    std::vector<Item*> backpack_;
     std::vector<Item*> intrinsics_;
 
 private:
+    void move_from_backpack_to_slot(const Slot_id id, const size_t BACKPACK_IDX);
+
+    Unequip_allowed try_move_from_slot_to_backpack(const Slot_id id);
+
+    //This checks if the item is stackable, and if so attempts to stack it with another item
+    //of the same type in the backpack. The item pointer is still valid if a stack occurs
+    //(it is the other item that gets destroyed)
+    bool try_stack_in_backpack(Item* item);
+
     Actor* const owning_actor_;
 };
 

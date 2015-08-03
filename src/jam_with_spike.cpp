@@ -29,9 +29,10 @@ void player_jam_feature(Feature* const feature)
 
             jamable_object_found = true;
 
-            map::player->inv().decr_item_type_in_general(Item_id::iron_spike);
+            map::player->inv().decr_item_type_in_backpack (Item_id::iron_spike);
+
             const int SPIKES_LEFT =
-                map::player->inv().item_stack_size_in_general(Item_id::iron_spike);
+                map::player->inv().item_stack_size_in_backpack(Item_id::iron_spike);
 
             if (SPIKES_LEFT == 0)
             {

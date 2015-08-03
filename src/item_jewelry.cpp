@@ -121,20 +121,20 @@ Jewelry_effect* mk_effect(const Jewelry_effect_id id, Jewelry* const jewelry)
 } //namespace
 
 //--------------------------------------------------------- JEWELRY PROPERTY EFFECT
-void Jewelry_property_effect::on_equip(Actor& actor, const Verbosity verbosity)
+void Jewelry_property_effect::on_equip(const Verbosity verbosity)
 {
     Prop* const prop = mk_prop();
 
     assert(prop);
 
-    jewelry_->add_carrier_prop(prop, actor, verbosity);
+    jewelry_->add_carrier_prop(prop, verbosity);
 
     jewelry_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_property_effect::on_unequip(Actor& actor)
+Unequip_allowed Jewelry_property_effect::on_unequip()
 {
-    jewelry_->clear_carrier_props(actor);
+    jewelry_->clear_carrier_props();
 
     return Unequip_allowed::yes;
 }
@@ -194,72 +194,71 @@ Prop* Jewelry_effect_haste::mk_prop() const
 }
 
 //--------------------------------------------------------- EFFECT: HP BONUS
-void Jewelry_effect_hp_bon::on_equip(Actor& actor, const Verbosity verbosity)
+void Jewelry_effect_hp_bon::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
 
-    actor.change_max_hp(4);
+    jewelry_->actor_carrying()->change_max_hp(4);
     jewelry_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_hp_bon::on_unequip(Actor& actor)
+Unequip_allowed Jewelry_effect_hp_bon::on_unequip()
 {
-    actor.change_max_hp(-4);
+    jewelry_->actor_carrying()->change_max_hp(-4);
 
     return Unequip_allowed::yes;
 }
 
 //--------------------------------------------------------- EFFECT: HP PENALTY
-void Jewelry_effect_hp_pen::on_equip(Actor& actor, const Verbosity verbosity)
+void Jewelry_effect_hp_pen::on_equip(const Verbosity verbosity)
 {
-    (void)actor;
     (void)verbosity;
 
-    map::player->change_max_hp(-4);
+    jewelry_->actor_carrying()->change_max_hp(-4);
     jewelry_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_hp_pen::on_unequip(Actor& actor)
+Unequip_allowed Jewelry_effect_hp_pen::on_unequip()
 {
-    actor.change_max_hp(4);
+    jewelry_->actor_carrying()->change_max_hp(4);
 
     return Unequip_allowed::yes;
 }
 
 //--------------------------------------------------------- EFFECT: SPI BONUS
-void Jewelry_effect_spi_bon::on_equip(Actor& actor, const Verbosity verbosity)
+void Jewelry_effect_spi_bon::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
 
-    actor.change_max_spi(4);
+    jewelry_->actor_carrying()->change_max_spi(4);
     jewelry_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_spi_bon::on_unequip(Actor& actor)
+Unequip_allowed Jewelry_effect_spi_bon::on_unequip()
 {
-    actor.change_max_spi(-4);
+    jewelry_->actor_carrying()->change_max_spi(-4);
 
     return Unequip_allowed::yes;
 }
 
 //--------------------------------------------------------- EFFECT: SPI PENALTY
-void Jewelry_effect_spi_pen::on_equip(Actor& actor, const Verbosity verbosity)
+void Jewelry_effect_spi_pen::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
 
-    actor.change_max_spi(-4);
+    jewelry_->actor_carrying()->change_max_spi(-4);
     jewelry_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_spi_pen::on_unequip(Actor& actor)
+Unequip_allowed Jewelry_effect_spi_pen::on_unequip()
 {
-    actor.change_max_spi(4);
+    jewelry_->actor_carrying()->change_max_spi(4);
 
     return Unequip_allowed::yes;
 }
 
 //--------------------------------------------------------- EFFECT: RANDOM TELEPORTATION
-void Jewelry_effect_random_tele::on_std_turn_equiped()
+void Jewelry_effect_random_tele::on_std_turn_equipped()
 {
     auto& prop_handler = map::player->prop_handler();
 
@@ -274,7 +273,7 @@ void Jewelry_effect_random_tele::on_std_turn_equiped()
 }
 
 //--------------------------------------------------------- EFFECT: SUMMON MON
-void Jewelry_effect_summon_mon::on_std_turn_equiped()
+void Jewelry_effect_summon_mon::on_std_turn_equipped()
 {
     const int SOUND_ONE_IN_N  = 250;
 
@@ -312,7 +311,7 @@ void Jewelry_effect_summon_mon::on_std_turn_equiped()
 }
 
 //--------------------------------------------------------- EFFECT: FIRE
-void Jewelry_effect_fire::on_std_turn_equiped()
+void Jewelry_effect_fire::on_std_turn_equipped()
 {
     const int FIRE_ONE_IN_N = 300;
 
@@ -346,7 +345,7 @@ void Jewelry_effect_fire::on_std_turn_equiped()
 }
 
 //--------------------------------------------------------- EFFECT: CONFLICT
-void Jewelry_effect_conflict::on_std_turn_equiped()
+void Jewelry_effect_conflict::on_std_turn_equipped()
 {
     const int CONFLICT_ONE_IN_N = 50;
 
@@ -454,7 +453,7 @@ Jewelry_effect_shriek::Jewelry_effect_shriek(Jewelry* const jewelry) :
     };
 }
 
-void Jewelry_effect_shriek::on_std_turn_equiped()
+void Jewelry_effect_shriek::on_std_turn_equipped()
 {
     const int NOISE_ONE_IN_N = 300;
 
@@ -496,10 +495,8 @@ void Jewelry_effect_shriek::on_std_turn_equiped()
 }
 
 //--------------------------------------------------------- EFFECT: BURDEN
-void Jewelry_effect_burden::on_equip(Actor& actor, const Verbosity verbosity)
+void Jewelry_effect_burden::on_equip(const Verbosity verbosity)
 {
-    (void)actor;
-
     if (!effects_known_[size_t(id())])
     {
         if (verbosity == Verbosity::verbose)
@@ -521,10 +518,8 @@ void Jewelry_effect_burden::change_item_weight(int& weight_ref)
 }
 
 //--------------------------------------------------------- EFFECT: HP REGEN BONUS
-void Jewelry_effect_hp_regen_bon::on_equip(Actor& actor, const Verbosity verbosity)
+void Jewelry_effect_hp_regen_bon::on_equip(const Verbosity verbosity)
 {
-    (void)actor;
-
     if (verbosity == Verbosity::verbose)
     {
         msg_log::add("I heal faster.");
@@ -533,19 +528,15 @@ void Jewelry_effect_hp_regen_bon::on_equip(Actor& actor, const Verbosity verbosi
     jewelry_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_hp_regen_bon::on_unequip(Actor& actor)
+Unequip_allowed Jewelry_effect_hp_regen_bon::on_unequip()
 {
-    (void)actor;
-
     msg_log::add("I heal slower.");
     return Unequip_allowed::yes;
 }
 
 //--------------------------------------------------------- EFFECT: HP REGEN PENALTY
-void Jewelry_effect_hp_regen_pen::on_equip(Actor& actor, const Verbosity verbosity)
+void Jewelry_effect_hp_regen_pen::on_equip(const Verbosity verbosity)
 {
-    (void)actor;
-
     if (verbosity == Verbosity::verbose)
     {
         msg_log::add("I heal slower.");
@@ -554,10 +545,8 @@ void Jewelry_effect_hp_regen_pen::on_equip(Actor& actor, const Verbosity verbosi
     jewelry_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_hp_regen_pen::on_unequip(Actor& actor)
+Unequip_allowed Jewelry_effect_hp_regen_pen::on_unequip()
 {
-    (void)actor;
-
     msg_log::add("I heal faster.");
     return Unequip_allowed::yes;
 }
@@ -618,12 +607,12 @@ std::string Jewelry::name_inf() const
     return data_->is_identified ? "{Known}" : "";
 }
 
-void Jewelry::on_equip(Actor& actor, const Verbosity verbosity)
+void Jewelry::on_equip_hook(const Verbosity verbosity)
 {
     for (auto* const effect : effects_)
     {
         //This may cause the effect to set up carrier properties (e.g. fire resistance)
-        effect->on_equip(actor, verbosity);
+        effect->on_equip(verbosity);
     }
 
     if (verbosity == Verbosity::verbose)
@@ -632,13 +621,13 @@ void Jewelry::on_equip(Actor& actor, const Verbosity verbosity)
     }
 }
 
-Unequip_allowed Jewelry::on_unequip(Actor& actor)
+Unequip_allowed Jewelry::on_unequip_hook()
 {
     auto unequip_allowed = Unequip_allowed::yes;
 
     for (auto* const effect : effects_)
     {
-        if (effect->on_unequip(actor) == Unequip_allowed::no)
+        if (effect->on_unequip() == Unequip_allowed::no)
         {
             unequip_allowed = Unequip_allowed::no;
         }
@@ -655,7 +644,7 @@ void Jewelry::on_std_turn_in_inv(const Inv_type inv_type)
     {
         for (auto* const effect : effects_)
         {
-            effect->on_std_turn_equiped();
+            effect->on_std_turn_equipped();
         }
     }
 }
@@ -666,7 +655,7 @@ void Jewelry::on_actor_turn_in_inv(const Inv_type inv_type)
     {
         for (auto* const effect : effects_)
         {
-            effect->on_actor_turn_equiped();
+            effect->on_actor_turn_equipped();
         }
     }
 }

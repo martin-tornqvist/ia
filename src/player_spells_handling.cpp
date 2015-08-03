@@ -159,7 +159,7 @@ void spells_avail(vector<Spell_opt>& out)
         }
     }
 
-    for (Item* item : inv.general_)
+    for (Item* item : inv.backpack_)
     {
         const std::vector<Spell*>& carrier_spells = item->carrier_spells();
 
