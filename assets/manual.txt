@@ -126,7 +126,7 @@ When various disturbing events occur, the shock value rises. When shock hits 100
    * The shock value is restored a bit
    * Insanity rises
 
-Each time you travel to the next dungeon level, shock is completely restored (you have escaped the horrors above, and is bestowed with a sense of progress).
+Each time you travel to the next dungeon level, half your shock is restored (you have escaped the horrors above, and is bestowed with a sense of progress).
 
 If your Insanity reaches 100%, you are hopelessly lost, and the game is over.
 
