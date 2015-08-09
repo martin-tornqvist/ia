@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ "x$1" = "x-h" ]; then
-    echo "Usage: run-with-valgrind.sh [-s]"
+    echo "Usage: valgrind.sh [-s]"
     echo "  -s        generate suppressions"
     exit 0
 fi    
