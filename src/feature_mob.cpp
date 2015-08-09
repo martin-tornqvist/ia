@@ -14,8 +14,7 @@
 #include "inventory.hpp"
 #include "item.hpp"
 #include "msg_log.hpp"
-
-using namespace std;
+#include "map_parsing.hpp"
 
 //------------------------------------------------------------------- SMOKE
 void Smoke::on_new_turn()
@@ -77,7 +76,7 @@ void Smoke::on_new_turn()
         {
             if (!actor->has_prop(Prop_id::rBreath))
             {
-                string snd_msg = "";
+                std::string snd_msg = "";
 
                 if (IS_PLAYER)
                 {
@@ -105,9 +104,9 @@ void Smoke::on_new_turn()
     }
 }
 
-string Smoke::name(const Article article)  const
+std::string Smoke::name(const Article article)  const
 {
-    string ret = "";
+    std::string ret = "";
 
     if (article == Article::the) {ret += "the ";}
 
@@ -140,9 +139,9 @@ void Lit_dynamite::on_new_turn()
     }
 }
 
-string Lit_dynamite::name(const Article article)  const
+std::string Lit_dynamite::name(const Article article)  const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
     return ret + "lit stick of dynamite";
 }
 
@@ -161,35 +160,35 @@ void Lit_flare::on_new_turn()
 
 void Lit_flare::add_light(bool light[MAP_W][MAP_H]) const
 {
-    bool my_light[MAP_W][MAP_H];
-    utils::reset_array(my_light, false);
     const int R = FOV_STD_RADI_INT; //light_radius();
-    Pos p0(max(0,         pos_.x - R),  max(0,          pos_.y - R));
-    Pos p1(min(MAP_W - 1, pos_.x + R),  min(MAP_H - 1,  pos_.y + R));
-    bool blocked_los[MAP_W][MAP_H];
+
+    Pos p0(std::max(0,         pos_.x - R),  std::max(0,          pos_.y - R));
+    Pos p1(std::min(MAP_W - 1, pos_.x + R),  std::min(MAP_H - 1,  pos_.y + R));
+
+    bool hard_blocked[MAP_W][MAP_H];
+
+    map_parse::run(cell_check::Blocks_los(), hard_blocked, Map_parse_mode::overwrite,
+                   Rect(p0, p1));
+
+    Los_result fov[MAP_W][MAP_H];
+
+    fov::run(pos_, hard_blocked, fov);
 
     for (int y = p0.y; y <= p1.y; ++y)
     {
         for (int x = p0.x; x <= p1.x; ++x)
         {
-            blocked_los[x][y] = !map::cells[x][y].rigid->is_los_passable();
-        }
-    }
-
-    fov::run_fov_on_array(blocked_los, pos_, my_light, false);
-
-    for (int y = p0.y; y <= p1.y; ++y)
-    {
-        for (int x = p0.x; x <= p1.x; ++x)
-        {
-            if (my_light[x][y]) {light[x][y] = true;}
+            if (!fov[x][y].is_blocked_hard)
+            {
+                light[x][y] = true;
+            }
         }
     }
 }
 
-string Lit_flare::name(const Article article)  const
+std::string Lit_flare::name(const Article article)  const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
     return ret + "lit flare";
 }
 

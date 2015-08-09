@@ -301,7 +301,7 @@ void Jewelry_effect_summon_mon::on_std_turn_equipped()
 
         const Mon* const mon = summoned_mon[0];
 
-        if (map::player->can_see_actor(*mon, nullptr))
+        if (map::player->can_see_actor(*mon))
         {
             msg_log::add(mon->name_a() + " appears!", clr_white, true, More_prompt_on_msg::yes);
         }

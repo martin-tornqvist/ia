@@ -374,7 +374,7 @@ void handle_map_mode_key_press(const Key_data& d)
                             if (
                                 actor               &&
                                 !actor->is_player() &&
-                                map::player->can_see_actor(*actor, nullptr))
+                                map::player->can_see_actor(*actor))
                             {
                                 const bool GETS_UNDEAD_BANE_BON =
                                     player_bon::gets_undead_bane_bon(actor->data());
@@ -406,7 +406,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
                                     if (
                                         actor &&
-                                        map::player->can_see_actor(*actor, nullptr))
+                                        map::player->can_see_actor(*actor))
                                     {
                                         map::player->tgt_ = actor;
                                     }
@@ -636,6 +636,23 @@ void handle_map_mode_key_press(const Key_data& d)
         return;
     }
 
+    else if (d.key == 'E' && player_bon::bg() == Bg::ghoul)
+    {
+        //----------------------------------- EAT CORPSE (GHOUL)
+        msg_log::clear();
+
+        if (map::player->is_alive())
+        {
+            if (map::player->try_eat_corpse() == Did_action::yes)
+            {
+                game_time::tick();
+            }
+        }
+
+        clear_events();
+        return;
+    }
+
     //----------------------------------- THROW ITEM
     else if (d.key == 't')
     {
@@ -695,7 +712,7 @@ void handle_map_mode_key_press(const Key_data& d)
                             if (
                                 actor               &&
                                 !actor->is_player() &&
-                                map::player->can_see_actor(*actor, nullptr))
+                                map::player->can_see_actor(*actor))
                             {
                                 const bool GETS_UNDEAD_BANE_BON =
                                     player_bon::gets_undead_bane_bon(actor->data());
@@ -787,7 +804,7 @@ void handle_map_mode_key_press(const Key_data& d)
                     if (
                         actor                   &&
                         actor != map::player    &&
-                        map::player->can_see_actor(*actor, nullptr))
+                        map::player->can_see_actor(*actor))
                     {
                         msg_log::add("[v] for description");
                     }
@@ -804,7 +821,7 @@ void handle_map_mode_key_press(const Key_data& d)
                         if (
                             actor                   &&
                             actor != map::player    &&
-                            map::player->can_see_actor(*actor, nullptr))
+                            map::player->can_see_actor(*actor))
                         {
                             msg_log::clear();
 
@@ -1055,8 +1072,8 @@ void handle_map_mode_key_press(const Key_data& d)
                 {
                     for (int y = 0; y < MAP_H; ++y)
                     {
-                        map::cells[x][y].is_seen_by_player = false;
-                        map::cells[x][y].is_explored     = false;
+                        map::cells[x][y].is_seen_by_player  = false;
+                        map::cells[x][y].is_explored        = false;
                     }
                 }
 

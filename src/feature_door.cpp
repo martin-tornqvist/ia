@@ -310,7 +310,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                                 Snd_vol::high, Alerts_mon::no);
                         snd_emit::emit_snd(snd);
 
-                        if (map::player->can_see_actor(*actor, nullptr))
+                        if (map::player->can_see_actor(*actor))
                         {
                             msg_log::add("The door crashes open!");
                         }
@@ -410,7 +410,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 //                Sfx_id::door_break, Ignore_msg_if_origin_seen::yes, pos_, &actor,
 //                Snd_vol::high, Alerts_mon::no);
 //        snd_emit::emit_snd(snd);
-//        if(map::player->can_see_actor(actor, nullptr)) {
+//        if(map::player->can_see_actor(actor)) {
 //          msg_log::add("The door crashes open!");
 //        } else if(map::cells[pos_.x][pos_.y].is_seen_by_player) {
 //          msg_log::add("A door crashes open!");
@@ -429,7 +429,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 //                Sfx_id::door_bang, Ignore_msg_if_origin_seen::yes, actor.pos,
 //                &actor, Snd_vol::low, Alerts_mon::no);
 //        snd_emit::emit_snd(snd);
-//        if(map::player->can_see_actor(actor, nullptr)) {
+//        if(map::player->can_see_actor(actor)) {
 //          msg_log::add(actor.name_the() + " bashes at a door!");
 //        }
 //      }
@@ -647,14 +647,11 @@ bool Door::try_spike(Actor* actor_trying)
 
 void Door::try_close(Actor* actor_trying)
 {
-    const bool IS_PLAYER = actor_trying == map::player;
-    const bool TRYER_IS_BLIND = !actor_trying->prop_handler().allow_see();
-    //const bool PLAYER_SEE_DOOR    = map::player_vision[pos_.x][pos_.y];
-    bool blocked[MAP_W][MAP_H];
-    map_parse::run(cell_check::Blocks_los(), blocked);
+    const bool IS_PLAYER        = actor_trying == map::player;
+    const bool TRYER_IS_BLIND   = !actor_trying->prop_handler().allow_see();
 
     const bool PLAYER_SEE_TRYER = IS_PLAYER ? true :
-                                  map::player->can_see_actor(*actor_trying, blocked);
+                                  map::player->can_see_actor(*actor_trying);
 
     bool is_closable = true;
 
@@ -677,13 +674,13 @@ void Door::try_close(Actor* actor_trying)
 
         if (IS_PLAYER)
         {
-            if (!TRYER_IS_BLIND)
-            {
-                msg_log::add("I see nothing there to close.");
-            }
-            else
+            if (TRYER_IS_BLIND)
             {
                 msg_log::add("I find nothing there to close.");
+            }
+            else //Can see
+            {
+                msg_log::add("I see nothing there to close.");
             }
         }
     }
@@ -708,13 +705,13 @@ void Door::try_close(Actor* actor_trying)
 
             if (IS_PLAYER)
             {
-                if (!TRYER_IS_BLIND)
-                {
-                    msg_log::add("The door is blocked.");
-                }
-                else
+                if (TRYER_IS_BLIND)
                 {
                     msg_log::add("Something is blocking the door.");
+                }
+                else //Can see
+                {
+                    msg_log::add("The door is blocked.");
                 }
             }
         }
@@ -735,7 +732,7 @@ void Door::try_close(Actor* actor_trying)
                 snd_emit::emit_snd(snd);
                 msg_log::add("I close the door.");
             }
-            else
+            else //Is a monster closing
             {
                 Snd snd("I hear a door closing.",
                         Sfx_id::door_close, Ignore_msg_if_origin_seen::yes, pos_, actor_trying,
@@ -748,7 +745,7 @@ void Door::try_close(Actor* actor_trying)
                 }
             }
         }
-        else
+        else //Cannot see
         {
             if (rnd::percent() < 50)
             {
@@ -761,7 +758,7 @@ void Door::try_close(Actor* actor_trying)
                     snd_emit::emit_snd(snd);
                     msg_log::add("I fumble with a door and succeed to close it.");
                 }
-                else
+                else //Monster closing
                 {
                     Snd snd("I hear a door closing.",
                             Sfx_id::door_close, Ignore_msg_if_origin_seen::yes, pos_, actor_trying,
@@ -775,14 +772,13 @@ void Door::try_close(Actor* actor_trying)
                     }
                 }
             }
-            else
+            else //Fail to close
             {
                 if (IS_PLAYER)
                 {
-                    msg_log::add(
-                        "I fumble blindly with a door and fail to close it.");
+                    msg_log::add("I fumble blindly with a door and fail to close it.");
                 }
-                else
+                else //Monster failing to close
                 {
                     if (PLAYER_SEE_TRYER)
                     {
@@ -794,7 +790,12 @@ void Door::try_close(Actor* actor_trying)
         }
     }
 
-    if (!is_open_ && is_closable) {game_time::tick();}
+    //TODO: This seems wrong - it doesn't seem like a turn is spent if player is blind and fail
+    //to close the door
+    if (!is_open_ && is_closable)
+    {
+        game_time::tick();
+    }
 }
 
 void Door::try_open(Actor* actor_trying)
@@ -802,11 +803,9 @@ void Door::try_open(Actor* actor_trying)
     TRACE_FUNC_BEGIN;
     const bool IS_PLAYER        = actor_trying == map::player;
     const bool PLAYER_SEE_DOOR  = map::cells[pos_.x][pos_.y].is_seen_by_player;
-    bool blocked[MAP_W][MAP_H];
-    map_parse::run(cell_check::Blocks_los(), blocked);
 
-    const bool PLAYER_SEE_TRYER =
-        IS_PLAYER ? true : map::player->can_see_actor(*actor_trying, blocked);
+    const bool PLAYER_SEE_TRYER = IS_PLAYER ? true :
+                                  map::player->can_see_actor(*actor_trying);
 
     if (is_handled_externally_)
     {

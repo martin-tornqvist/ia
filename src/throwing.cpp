@@ -68,7 +68,7 @@ void player_throw_lit_explosive(const Pos& aim_cell)
                 {
                     render::draw_tile(explosive->tile(), Panel::map, p, clr);
                 }
-                else //ASCII mode
+                else //Text mode
                 {
                     render::draw_glyph(explosive->glyph(), Panel::map, p, clr);
                 }
@@ -153,7 +153,7 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
 
                 const Clr hit_message_clr = actor_here == map::player ? clr_msg_bad : clr_msg_good;
 
-                const bool CAN_SEE_ACTOR = map::player->can_see_actor(*actor_here, nullptr);
+                const bool CAN_SEE_ACTOR = map::player->can_see_actor(*actor_here);
 
                 const string defender_name = CAN_SEE_ACTOR ? actor_here->name_the() : "It";
 

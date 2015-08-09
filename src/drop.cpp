@@ -87,12 +87,9 @@ void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t 
             render::draw_map_and_interface();
             msg_log::add("I drop " + item_ref + ".", clr_white, false, More_prompt_on_msg::yes);
         }
-        else //Is a monster
+        else //Monster is dropping item
         {
-            bool blocked[MAP_W][MAP_H];
-            map_parse::run(cell_check::Blocks_los(), blocked);
-
-            if (map::player->can_see_actor(actor, blocked))
+            if (map::player->can_see_actor(actor))
             {
                 msg_log::add(actor.name_the() + " drops " + item_ref + ".");
             }

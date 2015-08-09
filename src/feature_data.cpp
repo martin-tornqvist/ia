@@ -150,7 +150,7 @@ void init_data_list()
     //---------------------------------------------------------------------------
     d.id = Feature_id::wall;
     d.mk_obj = [](const Pos & p) {return new Wall(p);};
-    d.glyph = config::is_ascii_wall_full_square() ? 10 : '#';
+    d.glyph = config::is_text_mode_wall_full_square() ? 10 : '#';
     d.tile = Tile_id::wall_top;
     d.move_rules.set_prop_can_move(Prop_id::ethereal);
     d.move_rules.set_prop_can_move(Prop_id::burrowing);

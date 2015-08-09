@@ -393,7 +393,7 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
         is_warlock_charged = caster->has_prop(Prop_id::warlock_charged);
     }
 
-    if (map::player->can_see_actor(*tgt, nullptr))
+    if (map::player->can_see_actor(*tgt))
     {
         msg_log::add(tgt_str + " struck by a blast!", msg_clr);
     }
@@ -463,7 +463,7 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
             if (map::player->is_leader_of(tgt)) {msg_clr = clr_white;}
         }
 
-        if (map::player->can_see_actor(*tgt, nullptr))
+        if (map::player->can_see_actor(*tgt))
         {
             msg_log::add(tgt_str + " is struck by a roaring blast!", msg_clr);
         }
@@ -492,7 +492,7 @@ Spell_effect_noticed Spell_mayhem::cast_impl(Actor* const caster) const
 {
     const bool IS_PLAYER = caster->is_player();
 
-    if (map::player->can_see_actor(*caster, nullptr))
+    if (map::player->can_see_actor(*caster))
     {
         string caster_name = IS_PLAYER ? "me" : caster->name_the();
         msg_log::add("Destruction rages around " + caster_name + "!");
@@ -620,7 +620,7 @@ Spell_effect_noticed Spell_pest::cast_impl(Actor* const caster) const
     {
         mon->nr_turns_until_unsummoned_ = NR_TURNS_SUMMONED;
 
-        if (map::player->can_see_actor(*mon, nullptr))
+        if (map::player->can_see_actor(*mon))
         {
             is_any_seen_by_player = true;
         }
@@ -698,7 +698,7 @@ Spell_effect_noticed Spell_pharaoh_staff::cast_impl(Actor* const caster) const
 
     const Mon* const mon = summoned_mon[0];
 
-    if (map::player->can_see_actor(*mon, nullptr))
+    if (map::player->can_see_actor(*mon))
     {
         msg_log::add(mon->name_a() + " appears!");
 
@@ -1055,7 +1055,7 @@ Spell_effect_noticed Spell_knock_back::cast_impl(Actor* const caster) const
         if (map::player->is_leader_of(tgt)) {msg_clr = clr_white;}
     }
 
-    if (map::player->can_see_actor(*tgt, nullptr))
+    if (map::player->can_see_actor(*tgt))
     {
         msg_log::add("A force pushes " + tgt_str + "!", msg_clr);
     }
@@ -1136,7 +1136,7 @@ Spell_effect_noticed Spell_disease::cast_impl(Actor* const caster) const
         actor_name = tgt->name_the();
     }
 
-    if (map::player->can_see_actor(*tgt, nullptr))
+    if (map::player->can_see_actor(*tgt))
     {
         msg_log::add("A horrible disease is starting to afflict " + actor_name + "!");
     }
@@ -1264,7 +1264,7 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
     Mon* const mon                = mon_summoned[0];
     mon->nr_turns_until_unsummoned_  = rnd::range(40, 70);;
 
-    if (map::player->can_see_actor(*mon, nullptr))
+    if (map::player->can_see_actor(*mon))
     {
         msg_log::add(mon->name_a() + " appears!");
 
@@ -1375,7 +1375,7 @@ Spell_effect_noticed Spell_burn::cast_impl(Actor* const caster) const
         tgt_str = tgt->name_the();
     }
 
-    if (map::player->can_see_actor(*tgt, nullptr))
+    if (map::player->can_see_actor(*tgt))
     {
         msg_log::add("Flames are rising around " + tgt_str + "!");
     }

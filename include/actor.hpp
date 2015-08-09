@@ -65,7 +65,7 @@ public:
     //within FOV, or if the actor is actually hidden or not. It merely tests the
     //sneak skill of the actor, and various conditions such as light/dark. It
     //has no side effects - it merely does a randomized check.
-    bool is_spotting_hidden_actor(Actor& actor);
+    bool is_spotting_sneaking_actor(Actor& actor);
 
     void place(const Pos& pos_, Actor_data_t& data);
 
@@ -88,7 +88,7 @@ public:
     void die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW_DROP_ITEMS);
 
     //Used by Ghoul class and Ghoul monsters
-    void try_eat_corpse();
+    Did_action try_eat_corpse();
 
     virtual void on_actor_turn() {}
     virtual void on_std_turn() {}
@@ -96,10 +96,6 @@ public:
     virtual void move(Dir dir) = 0;
 
     virtual void update_clr();
-
-    //Function taking into account FOV, invisibility, status, etc.
-    //NOTE: This is the final word on whether an actor can visually perceive another actor.
-    bool can_see_actor(const Actor& other, const bool blocked_los[MAP_W][MAP_H]) const;
 
     void seen_foes(std::vector<Actor*>& out);
 

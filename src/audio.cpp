@@ -165,7 +165,10 @@ void cleanup()
 {
     TRACE_FUNC_BEGIN;
 
-    for (Mix_Chunk* chunk : audio_chunks) {Mix_FreeChunk(chunk);}
+    for (Mix_Chunk* chunk : audio_chunks)
+    {
+        Mix_FreeChunk(chunk);
+    }
 
     audio_chunks.clear();
 

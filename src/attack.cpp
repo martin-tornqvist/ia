@@ -51,7 +51,7 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
     {
         if (attacker)
         {
-            is_defender_aware = map::player->can_see_actor(*attacker, nullptr) ||
+            is_defender_aware = map::player->can_see_actor(*attacker) ||
                                 player_bon::traits[int(Trait::vigilant)];
         }
         else //No attacker actor (e.g. a trap)
@@ -96,7 +96,7 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
         {
             if (attacker->is_player())
             {
-                is_attacker_aware = map::player->can_see_actor(defender, nullptr);
+                is_attacker_aware = map::player->can_see_actor(defender);
             }
             else //Attacker is monster
             {
@@ -540,7 +540,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
 
             if (att_data.attacker)
             {
-                if (map::player->can_see_actor(*att_data.attacker, nullptr))
+                if (map::player->can_see_actor(*att_data.attacker))
                 {
                     other_name = att_data.attacker->name_the();
                 }
@@ -557,7 +557,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
         else //Defender is monster
         {
             const bool PLAYER_SEE_DEFENDER =
-                map::player->can_see_actor(*att_data.defender, nullptr);
+                map::player->can_see_actor(*att_data.defender);
 
             if (att_data.attacker == map::player)
             {
@@ -612,7 +612,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
         {
             if (att_data.defender->is_player())
             {
-                if (map::player->can_see_actor(*att_data.attacker, nullptr))
+                if (map::player->can_see_actor(*att_data.attacker))
                 {
                     other_name = att_data.attacker->name_the();
                 }
@@ -648,7 +648,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
             //---------------------------------------------------------- MISSED ETHEREAL TARGET
             if (att_data.attacker == map::player)
             {
-                if (map::player->can_see_actor(*att_data.defender, nullptr))
+                if (map::player->can_see_actor(*att_data.defender))
                 {
                     other_name = att_data.defender->name_the();
                 }
@@ -663,7 +663,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
             {
                 if (att_data.defender->is_player())
                 {
-                    if (map::player->can_see_actor(*att_data.attacker, nullptr))
+                    if (map::player->can_see_actor(*att_data.attacker))
                     {
                         other_name = att_data.attacker->name_the();
                     }
@@ -724,7 +724,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
             {
                 const std::string wpn_verb = wpn.data().melee.att_msgs.player;
 
-                if (map::player->can_see_actor(*att_data.defender, nullptr))
+                if (map::player->can_see_actor(*att_data.defender))
                 {
                     other_name = att_data.defender->name_the();
                 }
@@ -759,7 +759,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
                 {
                     const std::string wpn_verb = wpn.data().melee.att_msgs.other;
 
-                    if (map::player->can_see_actor(*att_data.attacker, nullptr))
+                    if (map::player->can_see_actor(*att_data.attacker))
                     {
                         other_name = att_data.attacker->name_the();
                     }
@@ -779,7 +779,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
                 }
                 else //Defender is monster
                 {
-                    if (map::player->can_see_actor(*att_data.defender, nullptr))
+                    if (map::player->can_see_actor(*att_data.defender))
                     {
                         other_name = att_data.defender->name_the();
 
@@ -878,7 +878,7 @@ void print_proj_at_actor_msgs(const Ranged_att_data& data, const bool IS_HIT, co
         {
             std::string other_name = "It";
 
-            if (map::player->can_see_actor(*data.defender, nullptr))
+            if (map::player->can_see_actor(*data.defender))
             {
                 other_name = data.defender->name_the();
             }
@@ -1144,7 +1144,7 @@ void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_po
                             render::draw_projectiles(projectiles, !LEAVE_TRAIL);
                             sdl_wrapper::sleep(DELAY / 2);
                         }
-                        else //ASCII mode
+                        else //Text mode
                         {
                             proj->set_glyph('*', clr_yellow);
                             render::draw_projectiles(projectiles, !LEAVE_TRAIL);
@@ -1186,7 +1186,7 @@ void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_po
                             render::draw_projectiles(projectiles, !LEAVE_TRAIL);
                             sdl_wrapper::sleep(DELAY / 2);
                         }
-                        else //ASCII mode
+                        else //Text mode
                         {
                             proj->set_glyph('*', clr_yellow);
                             render::draw_projectiles(projectiles, !LEAVE_TRAIL);
@@ -1203,7 +1203,7 @@ void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_po
                         proj->set_tile(projectile_tile, projectile_clr);
                         render::draw_projectiles(projectiles, !LEAVE_TRAIL);
                     }
-                    else //ASCII mode
+                    else //Text mode
                     {
                         proj->set_glyph(projectile_glyph, projectile_clr);
                         render::draw_projectiles(projectiles, !LEAVE_TRAIL);
@@ -1347,7 +1347,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aim_pos)
                             render::draw_tile(Tile_id::blast2, Panel::map, cur_pos,
                                               clr_red_lgt);
                         }
-                        else //ASCII mode
+                        else //Text mode
                         {
                             render::draw_glyph('*', Panel::map, cur_pos, clr_red_lgt);
                         }
@@ -1408,7 +1408,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aim_pos)
                 {
                     render::draw_tile(Tile_id::blast2, Panel::map, cur_pos, clr_yellow);
                 }
-                else //ASCII mode
+                else //Text mode
                 {
                     render::draw_glyph('*', Panel::map, cur_pos, clr_yellow);
                 }
@@ -1498,7 +1498,7 @@ void melee(Actor* const attacker, const Pos& attacker_origin, Actor& defender, c
     {
         if (IS_HIT && att_data.attacker)
         {
-            static_cast<Mon*>(att_data.attacker)->is_stealth_ = false;
+            static_cast<Mon*>(att_data.attacker)->is_sneaking_ = false;
         }
     }
     else //Defender is monster

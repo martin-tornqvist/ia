@@ -27,6 +27,7 @@
 #include "knockback.hpp"
 #include "explosion.hpp"
 #include "popup.hpp"
+#include "fov.hpp"
 
 Mon::Mon() :
     Actor                       (),
@@ -36,7 +37,7 @@ Mon::Mon() :
     last_dir_moved_             (Dir::center),
     spell_cool_down_cur_        (0),
     is_roaming_allowed_         (true),
-    is_stealth_                 (false),
+    is_sneaking_                 (false),
     leader_                     (nullptr),
     tgt_                        (nullptr),
     waiting_                    (false),
@@ -95,18 +96,21 @@ void Mon::on_actor_turn()
         //Monster is conflicted (e.g. by player ring/amulet)
         tgt_bucket = game_time::actors_;
 
-        bool blocked_los[MAP_W][MAP_H];
+        bool hard_blocked_los[MAP_W][MAP_H];
 
-        map_parse::run(cell_check::Blocks_los(), blocked_los);
+        const Rect fov_lmt = fov::get_fov_rect(pos);
+
+        map_parse::run(cell_check::Blocks_los(), hard_blocked_los, Map_parse_mode::overwrite,
+                       fov_lmt);
 
         //Remove self and all unseen actors from vector
         for (auto it = begin(tgt_bucket); it != end(tgt_bucket);)
         {
-            if (*it == this || !can_see_actor(**it, blocked_los))
+            if (*it == this || !can_see_actor(**it, hard_blocked_los))
             {
                 tgt_bucket.erase(it);
             }
-            else
+            else //Is a seen actor
             {
                 ++it;
             }
@@ -155,9 +159,9 @@ void Mon::on_actor_turn()
         }
     }
 
-    is_stealth_ = !is_actor_my_leader(map::player)          &&
-                  ability(Ability_id::stealth, true) > 0    &&
-                  !map::player->can_see_actor(*this, nullptr);
+    is_sneaking_ = !is_actor_my_leader(map::player)         &&
+                   ability(Ability_id::stealth, true) > 0    &&
+                   !map::player->can_see_actor(*this);
 
     //Array used for AI purposes, e.g. to prevent tactically bad positions,
     //or prevent certain monsters from walking on a certain type of cells, etc.
@@ -287,7 +291,7 @@ void Mon::on_actor_turn()
 
     if (data_->ai[size_t(Ai_id::moves_to_leader)] && !IS_TERRIFIED)
     {
-        ai::info::set_path_to_leader_if_no_los_toleader(*this, path);
+        ai::info::set_path_to_leader_if_no_los_to_leader(*this, path);
 
         if (ai::action::step_path(*this, path))
         {
@@ -327,6 +331,51 @@ void Mon::on_actor_turn()
     game_time::tick();
 }
 
+bool Mon::can_see_actor(const Actor& other, const bool hard_blocked_los[MAP_W][MAP_H]) const
+{
+    if (this == &other || !other.is_alive())
+    {
+        return true;
+    }
+
+    if (!fov::is_in_fov_range(pos, other.pos))
+    {
+        //Other actor is outside FOV range
+        return false;
+    }
+
+    //Monster allied to player looking at other monster which is hidden?
+    if (
+        is_actor_my_leader(map::player) &&
+        !other.is_player()              &&
+        static_cast<const Mon*>(&other)->is_sneaking_)
+    {
+        return false;
+    }
+
+    if (!prop_handler_->allow_see())
+    {
+        return false;
+    }
+
+    if (hard_blocked_los)
+    {
+        const Los_result los = fov::check_cell(pos, other.pos, hard_blocked_los);
+
+        if (los.is_blocked_hard)
+        {
+            return false;
+        }
+
+        bool        HAS_INFRAVIS            = prop_handler_->has_prop(Prop_id::infravis);
+        const bool  IS_OTHER_INFRA_VISIBLE  = other.data().is_infra_visible;
+
+        return !los.is_blocked_by_drk || (HAS_INFRAVIS && IS_OTHER_INFRA_VISIBLE);
+    }
+
+    return false;
+}
+
 void Mon::on_std_turn()
 {
     if (nr_turns_until_unsummoned_ > 0)
@@ -335,7 +384,7 @@ void Mon::on_std_turn()
 
         if (nr_turns_until_unsummoned_ <= 0)
         {
-            if (map::player->can_see_actor(*this, nullptr))
+            if (map::player->can_see_actor(*this))
             {
                 msg_log::add(name_the() + " suddenly disappears!");
             }
@@ -426,7 +475,7 @@ void Mon::hear_sound(const Snd& snd)
 
 void Mon::speak_phrase()
 {
-    const bool IS_SEEN_BY_PLAYER = map::player->can_see_actor(*this, nullptr);
+    const bool IS_SEEN_BY_PLAYER = map::player->can_see_actor(*this);
     const std::string msg = IS_SEEN_BY_PLAYER ?
                             aggro_phrase_mon_seen() :
                             aggro_phrase_mon_hidden();
@@ -448,7 +497,7 @@ void Mon::become_aware(const bool IS_FROM_SEEING)
 
         if (AWARENESS_CNT_BEFORE <= 0)
         {
-            if (IS_FROM_SEEING && map::player->can_see_actor(*this, nullptr))
+            if (IS_FROM_SEEING && map::player->can_see_actor(*this))
             {
                 map::player->update_fov();
                 render::draw_map_and_interface(true);
@@ -942,7 +991,7 @@ bool Vortex::on_actor_turn_hook()
             {
                 TRACE << "I am seeing the player" << std::endl;
 
-                if (map::player->can_see_actor(*this, nullptr))
+                if (map::player->can_see_actor(*this))
                 {
                     msg_log::add("The Vortex attempts to pull me in!");
                 }
@@ -1017,11 +1066,8 @@ bool Ghost::on_actor_turn_hook()
         utils::is_pos_adj(pos, map::player->pos, false) &&
         rnd::percent() < 30)
     {
-        bool blocked[MAP_W][MAP_H];
-        map_parse::run(cell_check::Blocks_los(), blocked);
-
-        const bool PLAYER_SEES_ME = map::player->can_see_actor(*this, blocked);
-        const std::string refer        = PLAYER_SEES_ME ? name_the() : "It";
+        const bool          PLAYER_SEES_ME  = map::player->can_see_actor(*this);
+        const std::string   refer           = PLAYER_SEES_ME ? name_the() : "It";
 
         msg_log::add(refer + " reaches for me... ");
 
@@ -1206,7 +1252,7 @@ bool Mummy::on_actor_turn_hook()
 //
 //        if (can_see_actor(*map::player, blocked_los))
 //        {
-//            if (map::player->can_see_actor(*this, nullptr))
+//            if (map::player->can_see_actor(*this))
 //            {
 //                const std::string name = name_the();
 //
@@ -1435,7 +1481,7 @@ void Leng_elder::on_std_turn_hook()
         }
         else //Has not given item to player
         {
-            const bool IS_PLAYER_SEE_ME = map::player->can_see_actor(*this, nullptr);
+            const bool IS_PLAYER_SEE_ME = map::player->can_see_actor(*this);
             const bool IS_PLAYER_ADJ    = utils::is_pos_adj(pos, map::player->pos, false);
 
             if (IS_PLAYER_SEE_ME && IS_PLAYER_ADJ)
@@ -1509,7 +1555,7 @@ void Color_oo_space::on_std_turn_hook()
 
     restore_hp(1, false, Verbosity::silent);
 
-    if (map::player->can_see_actor(*this, nullptr))
+    if (map::player->can_see_actor(*this))
     {
         map::player->prop_handler().try_add_prop(new Prop_confused(Prop_turns::std));
     }
@@ -1642,7 +1688,7 @@ bool Lord_of_spiders::on_actor_turn_hook()
     {
         const Pos player_pos = map::player->pos;
 
-        if (map::player->can_see_actor(*this, nullptr))
+        if (map::player->can_see_actor(*this))
         {
             msg_log::add(data_->spell_cast_msg);
         }

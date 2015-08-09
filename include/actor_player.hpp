@@ -46,7 +46,12 @@ public:
     Player();
     ~Player();
 
+    void store_to_save_lines(std::vector<std::string>& lines) const;
+    void setup_from_save_lines(std::vector<std::string>& lines);
+
     void update_fov();
+
+    bool can_see_actor(const Actor& other) const;
 
     void move(Dir dir);
 
@@ -88,9 +93,6 @@ public:
     int shock_resistance(const Shock_src shock_src) const;
     double shock_taken_after_mods(const int BASE_SHOCK, const Shock_src shock_src) const;
 
-    void store_to_save_lines(std::vector<std::string>& lines) const;
-    void setup_from_save_lines(std::vector<std::string>& lines);
-
     void auto_melee();
 
     void kick_mon(Actor& defender);
@@ -129,7 +131,7 @@ private:
 
     void on_hit(int& dmg) override;
 
-    void FOVhack();
+    void fov_hack();
 
     bool is_standing_in_open_space() const;
 

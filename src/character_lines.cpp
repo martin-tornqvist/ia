@@ -99,7 +99,7 @@ void draw()
         {
             render::draw_tile(item_wielded->tile(), Panel::char_lines, pos, item_clr);
         }
-        else //ASCII mode
+        else //Text mode
         {
             render::draw_glyph(item_wielded->glyph(), Panel::char_lines, pos, item_clr);
         }

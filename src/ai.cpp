@@ -12,8 +12,6 @@
 #include "game_time.hpp"
 #include "fov.hpp"
 
-using namespace std;
-
 namespace ai
 {
 
@@ -31,9 +29,9 @@ bool try_cast_random_spell(Mon& mon)
         return false;
     }
 
-    vector<Spell*> spell_bucket = mon.spells_known_;
+    std::vector<Spell*> spell_bucket = mon.spells_known_;
 
-    random_shuffle(begin(spell_bucket), end(spell_bucket));
+    std::random_shuffle(begin(spell_bucket), end(spell_bucket));
 
     while (!spell_bucket.empty())
     {
@@ -62,7 +60,7 @@ bool try_cast_random_spell(Mon& mon)
                 CUR_HP < (MAX_HP / 3)               &&
                 rnd::one_in(20))
             {
-                if (map::player->can_see_actor(mon, nullptr))
+                if (map::player->can_see_actor(mon))
                 {
                     msg_log::add(mon.name_the() + " looks desperate.");
                 }
@@ -82,7 +80,7 @@ bool try_cast_random_spell(Mon& mon)
     return false;
 }
 
-bool handle_closed_blocking_door(Mon& mon, vector<Pos> path)
+bool handle_closed_blocking_door(Mon& mon, std::vector<Pos> path)
 {
     if (!mon.is_alive() || path.empty())
     {
@@ -135,7 +133,7 @@ namespace
 //Check if acting monster is on a line between player and other monster
 bool check_if_blocking_mon(const Pos& pos, Mon& other)
 {
-    vector<Pos> line;
+    std::vector<Pos> line;
     line_calc::calc_new_line(other.pos, map::player->pos, true, 9999, false, line);
 
     for (const Pos& pos_in_line : line) {if (pos_in_line == pos) {return true;}}
@@ -145,7 +143,7 @@ bool check_if_blocking_mon(const Pos& pos, Mon& other)
 
 //Returns all free positions around the acting monster that is further
 //from the player than the monster's current position
-void move_bucket(Mon& self, vector<Pos>& dirs_to_mk)
+void move_bucket(Mon& self, std::vector<Pos>& dirs_to_mk)
 {
 
     dirs_to_mk.clear();
@@ -233,7 +231,7 @@ bool make_room_for_friend(Mon& mon)
                         if (check_if_blocking_mon(mon.pos, *other) || is_other_adj_with_no_los)
                         {
                             // Get a list of neighbouring free cells
-                            vector<Pos> pos_bucket;
+                            std::vector<Pos> pos_bucket;
                             move_bucket(mon, pos_bucket);
 
                             //Sort the list by closeness to player
@@ -333,7 +331,7 @@ Dir dir_to_rnd_adj_free_cell(Mon& mon)
     }
 
     //Attempt to find a random non-blocked adjacent cell
-    vector<Dir> dir_bucket;
+    std::vector<Dir> dir_bucket;
     dir_bucket.clear();
 
     for (int dx = -1; dx <= 1; ++dx)
@@ -411,7 +409,7 @@ bool move_to_tgt_simple(Mon& mon)
     return false;
 }
 
-bool step_path(Mon& mon, vector<Pos>& path)
+bool step_path(Mon& mon, std::vector<Pos>& path)
 {
     if (mon.is_alive())
     {
@@ -426,29 +424,32 @@ bool step_path(Mon& mon, vector<Pos>& path)
     return false;
 }
 
-bool step_to_lair_if_los(Mon& mon, const Pos& lair_cell)
+bool step_to_lair_if_los(Mon& mon, const Pos& lair_p)
 {
     if (mon.is_alive())
     {
         bool blocked[MAP_W][MAP_H];
-        map_parse::run(cell_check::Blocks_los(), blocked);
-        const bool HAS_LOS_TO_LAIR = fov::check_cell(blocked, lair_cell, mon.pos, true);
 
-        if (HAS_LOS_TO_LAIR)
+        map_parse::run(cell_check::Blocks_los(), blocked);
+
+        const Los_result los = fov::check_cell(mon.pos, lair_p, blocked);
+
+        if (!los.is_blocked_hard)
         {
-            Pos delta = lair_cell - mon.pos;
+            Pos delta = lair_p - mon.pos;
 
             delta.x = delta.x == 0 ? 0 : (delta.x > 0 ? 1 : -1);
             delta.y = delta.y == 0 ? 0 : (delta.y > 0 ? 1 : -1);
+
             const Pos new_pos = mon.pos + delta;
 
-            map_parse::run(cell_check::Blocks_los(), blocked);
+            map_parse::run(cell_check::Blocks_actor(mon, true), blocked);
 
             if (blocked[new_pos.x][new_pos.y])
             {
                 return false;
             }
-            else
+            else //Step is not blocked
             {
                 mon.move(dir_utils::dir(delta));
                 return true;
@@ -473,7 +474,7 @@ bool look_become_player_aware(Mon& mon)
 
     const bool WAS_AWARE_BEFORE = mon.aware_counter_ > 0;
 
-    vector<Actor*> seen_foes;
+    std::vector<Actor*> seen_foes;
     mon.seen_foes(seen_foes);
 
     if (!seen_foes.empty() && WAS_AWARE_BEFORE)
@@ -486,7 +487,7 @@ bool look_become_player_aware(Mon& mon)
     {
         if (actor->is_player())
         {
-            if (mon.is_spotting_hidden_actor(*actor))
+            if (mon.is_spotting_sneaking_actor(*actor))
             {
                 mon.become_aware(true);
 
@@ -520,15 +521,20 @@ bool look_become_player_aware(Mon& mon)
     return false;
 }
 
-void set_path_to_lair_if_no_los(Mon& mon, vector<Pos>& path,
-                                const Pos& lair_cell)
+void set_path_to_lair_if_no_los(Mon& mon, std::vector<Pos>& path,
+                                const Pos& lair_p)
 {
     if (mon.is_alive())
     {
         bool blocked[MAP_W][MAP_H];
-        map_parse::run(cell_check::Blocks_los(), blocked);
 
-        if (fov::check_cell(blocked, lair_cell, mon.pos, true))
+        const Rect fov_lmt = fov::get_fov_rect(mon.pos);
+
+        map_parse::run(cell_check::Blocks_los(), blocked, Map_parse_mode::overwrite, fov_lmt);
+
+        const Los_result los = fov::check_cell(mon.pos, lair_p, blocked);
+
+        if (!los.is_blocked_hard)
         {
             path.clear();
             return;
@@ -539,14 +545,14 @@ void set_path_to_lair_if_no_los(Mon& mon, vector<Pos>& path,
         map_parse::run(cell_check::Living_actors_adj_to_pos(mon.pos),
                        blocked, Map_parse_mode::append);
 
-        path_find::run(mon.pos, lair_cell, blocked, path);
+        path_find::run(mon.pos, lair_p, blocked, path);
         return;
     }
 
     path.clear();
 }
 
-void set_path_to_leader_if_no_los_toleader(Mon& mon, vector<Pos>& path)
+void set_path_to_leader_if_no_los_to_leader(Mon& mon, std::vector<Pos>& path)
 {
     if (mon.is_alive())
     {
@@ -557,9 +563,15 @@ void set_path_to_leader_if_no_los_toleader(Mon& mon, vector<Pos>& path)
             if (leader->is_alive())
             {
                 bool blocked[MAP_W][MAP_H];
-                map_parse::run(cell_check::Blocks_los(), blocked);
 
-                if (fov::check_cell(blocked, leader->pos, mon.pos, true))
+                const Rect fov_lmt = fov::get_fov_rect(mon.pos);
+
+                map_parse::run(cell_check::Blocks_los(), blocked, Map_parse_mode::overwrite,
+                               fov_lmt);
+
+                const Los_result los = fov::check_cell(mon.pos, leader->pos, blocked);
+
+                if (!los.is_blocked_hard)
                 {
                     path.clear();
                     return;
@@ -579,7 +591,7 @@ void set_path_to_leader_if_no_los_toleader(Mon& mon, vector<Pos>& path)
     path.clear();
 }
 
-void set_path_to_player_if_aware(Mon& mon, vector<Pos>& path)
+void set_path_to_player_if_aware(Mon& mon, std::vector<Pos>& path)
 {
     if (!mon.is_alive() || mon.aware_counter_ <= 0)
     {

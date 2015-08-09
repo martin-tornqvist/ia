@@ -48,6 +48,8 @@ public:
     Mon();
     virtual ~Mon();
 
+    bool can_see_actor(const Actor& other, const bool hard_blocked_los[MAP_W][MAP_H]) const;
+
     void move(Dir dir);
 
     void avail_attacks(Actor& defender, Ai_avail_attacks_data& dst);
@@ -99,7 +101,7 @@ public:
     std::vector<Spell*> spells_known_;
     int                 spell_cool_down_cur_;
     bool                is_roaming_allowed_;
-    bool                is_stealth_;
+    bool                is_sneaking_;
     Actor*              leader_;
     Actor*              tgt_;
     bool                waiting_;

@@ -30,7 +30,7 @@ const int OPT_Y0      = 1;
 string  font_name_                      = "";
 bool    is_fullscr_                     = false;
 bool    is_tiles_wall_full_square_      = false;
-bool    is_ascii_wall_full_square_      = false;
+bool    is_text_mode_wall_full_square_  = false;
 bool    is_ranged_wpn_meleee_prompt_    = false;
 bool    is_ranged_wpn_auto_reload_      = false;
 bool    is_intro_lvl_skipped_           = false;
@@ -114,7 +114,7 @@ void set_default_variables()
     set_cell_px_dims_from_font_name();
     is_fullscr_                     = false;
     is_tiles_wall_full_square_      = false;
-    is_ascii_wall_full_square_      = true;
+    is_text_mode_wall_full_square_      = true;
     is_intro_lvl_skipped_           = false;
     is_ranged_wpn_meleee_prompt_    = true;
     is_ranged_wpn_auto_reload_      = false;
@@ -193,7 +193,7 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
         break;
 
     case 5:
-        is_ascii_wall_full_square_ = !is_ascii_wall_full_square_;
+        is_text_mode_wall_full_square_ = !is_text_mode_wall_full_square_;
         break;
 
     case 6:
@@ -329,14 +329,14 @@ void draw(const Menu_browser* const browser, const int OPTION_VALUES_X_POS)
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
-    str = "Ascii mode wall symbol";
+    str = "Text mode wall symbol";
     render::draw_text(str, Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
                       browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
                       browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
-    str = is_ascii_wall_full_square_ ? "Full square" : "Hash sign";
+    str = is_text_mode_wall_full_square_ ? "Full square" : "Hash sign";
     render::draw_text(str, Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
                       browser->pos().y == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
@@ -430,7 +430,7 @@ void draw(const Menu_browser* const browser, const int OPTION_VALUES_X_POS)
                       clr_white);
 
     str  = "Tile set requires resolution 1280x720 or higher. ";
-    str += "Using ASCII mode for smaller";
+    str += "Using Text mode for smaller";
     render::draw_text(str, Panel::screen, Pos(X0, SCREEN_H - 2), clr_gray);
     str = "resolutions is recommended (fonts of different sizes are available).";
     render::draw_text(str, Panel::screen, Pos(X0, SCREEN_H - 1), clr_gray);
@@ -497,7 +497,7 @@ void set_all_variables_from_lines(vector<string>& lines)
     lines.erase(begin(lines));
 
     cur_line = lines.front();
-    is_ascii_wall_full_square_ = cur_line == "1";
+    is_text_mode_wall_full_square_ = cur_line == "1";
     lines.erase(begin(lines));
 
     cur_line = lines.front();
@@ -551,7 +551,7 @@ void collect_lines_from_variables(vector<string>& lines)
     lines.push_back(font_name_);
     lines.push_back(is_fullscr_                  ? "1" : "0");
     lines.push_back(is_tiles_wall_full_square_      ? "1" : "0");
-    lines.push_back(is_ascii_wall_full_square_      ? "1" : "0");
+    lines.push_back(is_text_mode_wall_full_square_      ? "1" : "0");
     lines.push_back(is_intro_lvl_skipped_           ? "1" : "0");
     lines.push_back(is_ranged_wpn_meleee_prompt_    ? "1" : "0");
     lines.push_back(is_ranged_wpn_auto_reload_      ? "1" : "0");
@@ -608,7 +608,7 @@ int     map_px_h()                      {return map_px_h_;}
 int     map_px_offset_h()               {return map_px_offset_h_;}
 int     char_lines_px_offset_h()        {return char_lines_px_offset_h_;}
 int     char_lines_px_h()               {return char_lines_px_h_;}
-bool    is_ascii_wall_full_square()     {return is_ascii_wall_full_square_;}
+bool    is_text_mode_wall_full_square() {return is_text_mode_wall_full_square_;}
 bool    is_tiles_wall_full_square()     {return is_tiles_wall_full_square_;}
 bool    is_audio_enabled()              {return is_audio_enabled_;}
 bool    is_bot_playing()                {return is_bot_playing_;}
@@ -641,7 +641,7 @@ void run_options_menu()
 
         case Menu_action::esc:
         case Menu_action::space:
-            //Since ASCII mode wall symbol may have changed,
+            //Since Text mode wall symbol may have changed,
             //we need to redefine the feature data list
             feature_data::init();
             return;

@@ -291,7 +291,7 @@ void summon(const Pos& origin, const vector<Actor_id>& monster_ids, const bool M
             mon->aware_counter_ = mon->data().nr_turns_aware;
         }
 
-        if (map::player->can_see_actor(*actor, nullptr))
+        if (map::player->can_see_actor(*actor))
         {
             positions_to_animate.push_back(pos);
         }

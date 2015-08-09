@@ -10,6 +10,7 @@
 #include "feature.hpp"
 #include "config.hpp"
 #include "actor_player.hpp"
+#include "fov.hpp"
 
 class Save_handler;
 class Rigid;
@@ -22,6 +23,7 @@ struct Cell
     void reset();
 
     bool                is_explored, is_seen_by_player, is_lit, is_dark;
+    Los_result          player_los; //Updated when player updates FOV
     Item*               item;
     Rigid*              rigid;
     Cell_render_data    player_visual_memory;
@@ -62,7 +64,7 @@ Rigid* put(Rigid* const rigid);
 //Makes a copy of the renderers current array
 //TODO: This is weird, and it's unclear how it should be used. Remove?
 //Can it not be copied in the map drawing function instead?
-void update_visual_memory();
+void cpy_render_array_to_visual_memory();
 
 void mk_blood(const Pos& origin);
 void mk_gore(const Pos& origin);

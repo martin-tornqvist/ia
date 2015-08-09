@@ -76,7 +76,7 @@ void try_knock_back(Actor&        defender,
         else //Target cell is free
         {
             const bool IS_PLAYER_SEE_DEF = IS_DEF_MON ?
-                                           map::player->can_see_actor(defender, nullptr) :
+                                           map::player->can_see_actor(defender) :
                                            true;
 
             if (i == 0)

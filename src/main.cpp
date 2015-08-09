@@ -112,8 +112,8 @@ int main(int argc, char* argv[])
                     //on the actor, but instead placed in a buffer. This is to ensure
                     //that e.g. a property set to last one turn actually covers one turn
                     //(and not applied after the actor acts, and ends before the actor's
-                    //next turn)
-                    //The contents of the buffer are moved to the applied properties here
+                    //next turn).
+                    //The contents of the buffer are moved to the applied properties here.
                     actor->prop_handler().apply_actor_turn_prop_buffer();
 
                     actor->update_clr();

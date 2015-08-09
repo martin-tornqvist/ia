@@ -365,23 +365,43 @@ TEST_FIXTURE(Basic_fixture, fov)
 
     map::player->pos = Pos(X, Y);
 
-    fov::run_player_fov(blocked, map::player->pos);
+    Los_result fov[MAP_W][MAP_H];
+
+    fov::run(map::player->pos, blocked, fov);
 
     const int R = FOV_STD_RADI_INT;
 
-    CHECK(map::cells[X    ][Y    ].is_seen_by_player);
-    CHECK(map::cells[X + 1][Y    ].is_seen_by_player);
-    CHECK(map::cells[X - 1][Y    ].is_seen_by_player);
-    CHECK(map::cells[X    ][Y + 1].is_seen_by_player);
-    CHECK(map::cells[X    ][Y - 1].is_seen_by_player);
-    CHECK(map::cells[X + 2][Y + 2].is_seen_by_player);
-    CHECK(map::cells[X - 2][Y + 2].is_seen_by_player);
-    CHECK(map::cells[X + 2][Y - 2].is_seen_by_player);
-    CHECK(map::cells[X - 2][Y - 2].is_seen_by_player);
-    CHECK(map::cells[X + R][Y    ].is_seen_by_player);
-    CHECK(map::cells[X - R][Y    ].is_seen_by_player);
-    CHECK(map::cells[X    ][Y + R].is_seen_by_player);
-    CHECK(map::cells[X    ][Y - R].is_seen_by_player);
+    //Not blocked
+    CHECK(!fov[X    ][Y    ].is_blocked_hard);
+    CHECK(!fov[X + 1][Y    ].is_blocked_hard);
+    CHECK(!fov[X - 1][Y    ].is_blocked_hard);
+    CHECK(!fov[X    ][Y + 1].is_blocked_hard);
+    CHECK(!fov[X    ][Y - 1].is_blocked_hard);
+    CHECK(!fov[X + 2][Y + 2].is_blocked_hard);
+    CHECK(!fov[X - 2][Y + 2].is_blocked_hard);
+    CHECK(!fov[X + 2][Y - 2].is_blocked_hard);
+    CHECK(!fov[X - 2][Y - 2].is_blocked_hard);
+    CHECK(!fov[X + R][Y    ].is_blocked_hard);
+    CHECK(!fov[X - R][Y    ].is_blocked_hard);
+    CHECK(!fov[X    ][Y + R].is_blocked_hard);
+    CHECK(!fov[X    ][Y - R].is_blocked_hard);
+
+    //Blocked (not within FOV range)
+    CHECK(fov[X + R + 1][Y        ].is_blocked_hard);
+    CHECK(fov[X - R - 1][Y        ].is_blocked_hard);
+    CHECK(fov[X        ][Y + R + 1].is_blocked_hard);
+    CHECK(fov[X        ][Y - R - 1].is_blocked_hard);
+
+    //Corners
+    CHECK(fov[X + R][Y - R].is_blocked_hard);
+    CHECK(fov[X - R][Y - R].is_blocked_hard);
+    CHECK(fov[X + R][Y + R].is_blocked_hard);
+    CHECK(fov[X - R][Y + R].is_blocked_hard);
+
+    CHECK(fov[X + R - 1][Y - R + 1].is_blocked_hard);
+    CHECK(fov[X - R + 1][Y - R + 1].is_blocked_hard);
+    CHECK(fov[X + R - 1][Y + R - 1].is_blocked_hard);
+    CHECK(fov[X - R + 1][Y + R - 1].is_blocked_hard);
 }
 
 TEST_FIXTURE(Basic_fixture, throw_items)

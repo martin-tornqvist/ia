@@ -16,8 +16,7 @@ namespace cell_check
 
 bool Blocks_los::check(const Cell& c)  const
 {
-    return !utils::is_pos_inside_map(c.pos, false) ||
-           !c.rigid->is_los_passable();
+    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->is_los_passable();
 }
 
 bool Blocks_los::check(const Mob& f) const
@@ -27,8 +26,7 @@ bool Blocks_los::check(const Mob& f) const
 
 bool Blocks_move_cmn::check(const Cell& c) const
 {
-    return !utils::is_pos_inside_map(c.pos, false) ||
-           !c.rigid->can_move_cmn();
+    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->can_move_cmn();
 }
 
 bool Blocks_move_cmn::check(const Mob& f) const
@@ -43,8 +41,7 @@ bool Blocks_move_cmn::check(const Actor& a) const
 
 bool Blocks_actor::check(const Cell& c) const
 {
-    return !utils::is_pos_inside_map(c.pos, false) ||
-           !c.rigid->can_move(actor_);
+    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->can_move(actor_);
 }
 
 bool Blocks_actor::check(const Mob& f) const
@@ -59,8 +56,7 @@ bool Blocks_actor::check(const Actor& a) const
 
 bool Blocks_projectiles::check(const Cell& c)  const
 {
-    return !utils::is_pos_inside_map(c.pos, false) ||
-           !c.rigid->is_projectile_passable();
+    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->is_projectile_passable();
 }
 
 bool Blocks_projectiles::check(const Mob& f)  const
@@ -80,8 +76,7 @@ bool Living_actors_adj_to_pos::check(const Actor& a) const
 
 bool Blocks_items::check(const Cell& c)  const
 {
-    return !utils::is_pos_inside_map(c.pos, false) ||
-           !c.rigid->can_have_item();
+    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->can_have_item();
 }
 
 bool Blocks_items::check(const Mob& f) const
@@ -136,7 +131,10 @@ bool All_adj_is_any_of_features::check(const Cell& c) const
     const int X = c.pos.x;
     const int Y = c.pos.y;
 
-    if (X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
+    if (X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1)
+    {
+        return false;
+    }
 
     for (int dx = -1; dx <= 1; ++dx)
     {
@@ -150,7 +148,8 @@ bool All_adj_is_any_of_features::check(const Cell& c) const
             {
                 if (f == cur_id)
                 {
-                    is_match = true; break;
+                    is_match = true;
+                    break;
                 }
             }
 
@@ -169,7 +168,10 @@ bool All_adj_is_not_feature::check(const Cell& c) const
     const int X = c.pos.x;
     const int Y = c.pos.y;
 
-    if (X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
+    if (X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1)
+    {
+        return false;
+    }
 
     for (int dx = -1; dx <= 1; ++dx)
     {
@@ -353,7 +355,10 @@ bool is_val_in_area(const Rect& area, const bool in[MAP_W][MAP_H],
     {
         for (int x = area.p0.x; x <= area.p1.x; ++x)
         {
-            if (in[x][y] == VAL) {return true;}
+            if (in[x][y] == VAL)
+            {
+                return true;
+            }
         }
     }
 

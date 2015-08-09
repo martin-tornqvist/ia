@@ -66,7 +66,7 @@ int Actor::ability(const Ability_id id, const bool IS_AFFECTED_BY_PROPS) const
     return data_->ability_vals.val(id, IS_AFFECTED_BY_PROPS, *this);
 }
 
-bool Actor::is_spotting_hidden_actor(Actor& other)
+bool Actor::is_spotting_sneaking_actor(Actor& other)
 {
     const Pos& other_pos = other.pos;
 
@@ -125,60 +125,6 @@ Actor_speed Actor::speed() const
     return Actor_speed(speed_int);
 }
 
-bool Actor::can_see_actor(const Actor& other, const bool blocked_los[MAP_W][MAP_H]) const
-{
-    if (this == &other || !other.is_alive())
-    {
-        return true;
-    }
-
-    if (is_player())
-    {
-        return map::cells[other.pos.x][other.pos.y].is_seen_by_player &&
-               !static_cast<const Mon*>(&other)->is_stealth_;
-    }
-
-    //This point reached means its a monster checking
-
-    if (
-        pos.x - other.pos.x > FOV_STD_RADI_INT ||
-        other.pos.x - pos.x > FOV_STD_RADI_INT ||
-        other.pos.y - pos.y > FOV_STD_RADI_INT ||
-        pos.y - other.pos.y > FOV_STD_RADI_INT)
-    {
-        return false;
-    }
-
-    //Monster allied to player looking at other monster?
-    if (
-        is_actor_my_leader(map::player) &&
-        !other.is_player()              &&
-        static_cast<const Mon*>(&other)->is_stealth_)
-    {
-        return false;
-    }
-
-    if (!prop_handler_->allow_see())
-    {
-        return false;
-    }
-
-    if (blocked_los)
-    {
-        const bool  IS_OTHER_INFRA_VISIBLE  = other.data().is_infra_visible;
-        bool        is_affected_by_dark     = true;
-
-        if (IS_OTHER_INFRA_VISIBLE)
-        {
-            is_affected_by_dark = !prop_handler_->has_prop(Prop_id::infravis);
-        }
-
-        return fov::check_cell(blocked_los, other.pos, pos, is_affected_by_dark);
-    }
-
-    return false;
-}
-
 void Actor::seen_foes(std::vector<Actor*>& out)
 {
     out.clear();
@@ -202,7 +148,7 @@ void Actor::seen_foes(std::vector<Actor*>& out)
         {
             if (is_player())
             {
-                if (can_see_actor(*actor, nullptr) && !is_leader_of(actor))
+                if (map::player->can_see_actor(*actor) && !is_leader_of(actor))
                 {
                     out.push_back(actor);
                 }
@@ -210,19 +156,17 @@ void Actor::seen_foes(std::vector<Actor*>& out)
             else //Not player
             {
                 const bool IS_HOSTILE_TO_PLAYER = !is_actor_my_leader(map::player);
-                const bool IS_OTHER_HOSTILE_TO_PLAYER =
-                    actor->is_player() ? false : !actor->is_actor_my_leader(map::player);
 
-                //"IS_OTHER_HOSTILE_TO_PLAYER" is false if other IS the player, there is
-                //no need to check if "IS_HOSTILE_TO_PLAYER && IS_OTHER_PLAYER"
-                if (
-                    (IS_HOSTILE_TO_PLAYER  && !IS_OTHER_HOSTILE_TO_PLAYER) ||
-                    (!IS_HOSTILE_TO_PLAYER &&  IS_OTHER_HOSTILE_TO_PLAYER))
+                const bool IS_OTHER_HOSTILE_TO_PLAYER = actor->is_player() ? false :
+                                                        !actor->is_actor_my_leader(map::player);
+
+                const bool IS_ENEMIES = IS_HOSTILE_TO_PLAYER != IS_OTHER_HOSTILE_TO_PLAYER;
+
+                const Mon* const mon = static_cast<const Mon*>(this);
+
+                if (IS_ENEMIES && mon->can_see_actor(*actor, blocked_los))
                 {
-                    if (can_see_actor(*actor, blocked_los))
-                    {
-                        out.push_back(actor);
-                    }
+                    out.push_back(actor);
                 }
             }
         }
@@ -269,7 +213,7 @@ void Actor::teleport()
         return;
     }
 
-    if (!is_player() && map::player->can_see_actor(*this, nullptr))
+    if (!is_player() && map::player->can_see_actor(*this))
     {
         msg_log::add(name_the() + " suddenly disappears!");
     }
@@ -281,7 +225,7 @@ void Actor::teleport()
     {
         map::player->update_fov();
         render::draw_map_and_interface();
-        map::update_visual_memory();
+        map::cpy_render_array_to_visual_memory();
 
         //Teleport control?
 
@@ -348,7 +292,7 @@ void Actor::teleport()
             }
         }
     }
-    else
+    else //Is a monster
     {
         static_cast<Mon*>(this)->player_aware_of_me_counter_ = 0;
     }
@@ -359,7 +303,7 @@ void Actor::teleport()
     {
         map::player->update_fov();
         render::draw_map_and_interface();
-        map::update_visual_memory();
+        map::cpy_render_array_to_visual_memory();
 
         if (!player_has_tele_control)
         {
@@ -422,7 +366,7 @@ bool Actor::restore_hp(const int HP_RESTORED, const bool IS_ALLOWED_ABOVE_MAX,
         }
         else //Is a monster
         {
-            if (map::player->can_see_actor(*this, nullptr))
+            if (map::player->can_see_actor(*this))
             {
                 msg_log::add(data_->name_the + " looks healthier.");
             }
@@ -464,7 +408,7 @@ bool Actor::restore_spi(const int SPI_RESTORED, const bool IS_ALLOWED_ABOVE_MAX,
         }
         else
         {
-            if (map::player->can_see_actor(*this, nullptr))
+            if (map::player->can_see_actor(*this))
             {
                 msg_log::add(data_->name_the + " looks more spirited.");
             }
@@ -496,7 +440,7 @@ void Actor::change_max_hp(const int CHANGE, const Verbosity verbosity)
         }
         else //Is monster
         {
-            if (map::player->can_see_actor(*this, nullptr))
+            if (map::player->can_see_actor(*this))
             {
                 if (CHANGE > 0)
                 {
@@ -531,7 +475,7 @@ void Actor::change_max_spi(const int CHANGE, const Verbosity verbosity)
         }
         else //Is monster
         {
-            if (map::player->can_see_actor(*this, nullptr))
+            if (map::player->can_see_actor(*this))
             {
                 if (CHANGE > 0)
                 {
@@ -716,7 +660,7 @@ Actor_died Actor::hit_spi(const int DMG, const Verbosity verbosity)
         }
         else //Is monster
         {
-            if (map::player->can_see_actor(*this, nullptr))
+            if (map::player->can_see_actor(*this))
             {
                 msg_log::add(name_the() + " has no spirit left!");
             }
@@ -756,7 +700,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
         }
 
         //Print death messages
-        if (map::player->can_see_actor(*this, nullptr))
+        if (map::player->can_see_actor(*this))
         {
             is_player_see_dying_actor = true;
 
@@ -850,12 +794,14 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
     render::draw_map_and_interface();
 }
 
-void Actor::try_eat_corpse()
+Did_action Actor::try_eat_corpse()
 {
     if (hp() >= hp_max(true))
     {
         //Not "hungry"
-        return;
+        msg_log::add("I am satiated.");
+
+        return Did_action::no;
     }
 
     Actor* corpse = utils::actor_at_pos(pos, Actor_state::corpse);
@@ -892,7 +838,7 @@ void Actor::try_eat_corpse()
         }
         else //Is monster
         {
-            if (map::player->can_see_actor(*this, nullptr))
+            if (map::player->can_see_actor(*this))
             {
                 const std::string name = name_the();
                 msg_log::add(name + " feeds on " + corpse_name + "!");
@@ -905,7 +851,15 @@ void Actor::try_eat_corpse()
             map::mk_gore(pos);
             map::mk_blood(pos);
         }
+
+        return Did_action::yes;
     }
+    else if (is_player())
+    {
+        msg_log::add("I find nothing here to feed on.");
+    }
+
+    return Did_action::no;
 }
 
 void Actor::add_light(bool light_map[MAP_W][MAP_H]) const
@@ -915,30 +869,21 @@ void Actor::add_light(bool light_map[MAP_W][MAP_H]) const
         //TODO: Much of the code below is duplicated from Actor_player::add_light_hook(), some
         //refactoring is needed.
 
-        bool my_light[MAP_W][MAP_H];
-        utils::reset_array(my_light, false);
-        const int RADI = FOV_STD_RADI_INT;
-        Pos p0(std::max(0, pos.x - RADI), std::max(0, pos.y - RADI));
-        Pos p1(std::min(MAP_W - 1, pos.x + RADI), std::min(MAP_H - 1, pos.y + RADI));
+        bool hard_blocked[MAP_W][MAP_H];
 
-        bool blocked_los[MAP_W][MAP_H];
+        const Rect fov_lmt = fov::get_fov_rect(pos);
 
-        for (int y = p0.y; y <= p1.y; ++y)
+        map_parse::run(cell_check::Blocks_los(), hard_blocked, Map_parse_mode::overwrite, fov_lmt);
+
+        Los_result fov[MAP_W][MAP_H];
+
+        fov::run(pos, hard_blocked, fov);
+
+        for (int y = fov_lmt.p0.y; y <= fov_lmt.p1.y; ++y)
         {
-            for (int x = p0.x; x <= p1.x; ++x)
+            for (int x = fov_lmt.p0.x; x <= fov_lmt.p1.x; ++x)
             {
-                const auto* const f = map::cells[x][y].rigid;
-                blocked_los[x][y]    = !f->is_los_passable();
-            }
-        }
-
-        fov::run_fov_on_array(blocked_los, pos, my_light, false);
-
-        for (int y = p0.y; y <= p1.y; ++y)
-        {
-            for (int x = p0.x; x <= p1.x; ++x)
-            {
-                if (my_light[x][y])
+                if (!fov[x][y].is_blocked_hard)
                 {
                     light_map[x][y] = true;
                 }

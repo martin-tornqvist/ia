@@ -13,190 +13,129 @@
 namespace fov
 {
 
-namespace
+Rect get_fov_rect(const Pos& p)
 {
+    const int R = FOV_STD_RADI_INT;
 
-void check_one_cell_of_many(const bool obstructions[MAP_W][MAP_H],
-                            const Pos& cell_to_check,
-                            const Pos& origin,
-                            bool values[MAP_W][MAP_H],
-                            const bool IS_AFFECTED_BY_DARKNESS)
+    const Pos p0(std::max(0, p.x - R),
+                 std::max(0, p.y - R));
+
+    const Pos p1(std::min(MAP_W - 1, p.x + R),
+                 std::min(MAP_H - 1, p.y + R));
+
+    return Rect(p0, p1);
+}
+
+bool is_in_fov_range(const Pos& p0, const Pos& p1)
 {
-    const Pos delta_to_tgt(cell_to_check.x - origin.x, cell_to_check.y - origin.y);
+    return utils::king_dist(p0, p1) <= FOV_STD_RADI_INT;
+}
+
+Los_result check_cell(const Pos& p0,
+                      const Pos& p1,
+                      const bool hard_blocked[MAP_W][MAP_H])
+{
+    Los_result los_result;
+
+    los_result.is_blocked_hard      = true; //Assume we are blocked initially
+    los_result.is_blocked_by_drk    = false;
+
+    if (!is_in_fov_range(p0, p1) || !utils::is_pos_inside_map(p1))
+    {
+        //Target too far away, return the hard blocked result
+        return los_result;
+    }
+
+    const Pos delta(p1 - p0);
 
     const std::vector<Pos>* path_deltas_ptr =
-        line_calc::fov_delta_line(delta_to_tgt, FOV_STD_RADI_DB);
+        line_calc::fov_delta_line(delta, FOV_STD_RADI_DB);
 
     if (!path_deltas_ptr)
     {
-        return;
+        //No valid line to target, return the hard blocked result
+        return los_result;
     }
 
     const std::vector<Pos>& path_deltas = *path_deltas_ptr;
 
-    const bool TGT_IS_LGT = map::cells[cell_to_check.x][cell_to_check.y].is_lit;
+    const bool TGT_IS_LGT = map::cells[p1.x][p1.y].is_lit;
 
-    Pos cur_pos;
-    Pos prev_pos;
+    //Ok, target is in range and we have a line - let's go
+    los_result.is_blocked_hard = false;
+
+    Pos cur_p;
+    Pos pre_p;
+
     const size_t PATH_SIZE = path_deltas.size();
 
     for (size_t i = 0; i < PATH_SIZE; ++i)
     {
-        cur_pos.set(origin + path_deltas[i]);
+        cur_p.set(p0 + path_deltas[i]);
 
         if (i > 1)
         {
-            prev_pos.set(origin + path_deltas[i - 1]);
-            const bool PRE_CELL_IS_DRK = map::cells[prev_pos.x][prev_pos.y].is_dark;
-            const bool CUR_CELL_IS_DRK = map::cells[cur_pos.x][cur_pos.y].is_dark;
-            const bool CUR_CELL_IS_LGT = map::cells[cur_pos.x][cur_pos.y].is_lit;
+            //Check if we are blocked
+
+            pre_p.set(p0 + path_deltas[i - 1]);
+
+            const auto& pre_cell = map::cells[pre_p.x][pre_p.y];
+            const auto& cur_cell = map::cells[cur_p.x][cur_p.y];
+
+            const bool CUR_CELL_IS_LGT = cur_cell.is_lit;
+            const bool CUR_CELL_IS_DRK = cur_cell.is_dark;
+            const bool PRE_CELL_IS_DRK = pre_cell.is_dark;
 
             if (
-                !CUR_CELL_IS_LGT                      &&
-                !TGT_IS_LGT                           &&
-                (PRE_CELL_IS_DRK || CUR_CELL_IS_DRK)  &&
-                IS_AFFECTED_BY_DARKNESS)
+                !CUR_CELL_IS_LGT    &&
+                !TGT_IS_LGT         &&
+                (CUR_CELL_IS_DRK || PRE_CELL_IS_DRK))
             {
-                return;
+                los_result.is_blocked_by_drk = true;
             }
         }
 
-        if (cur_pos == cell_to_check)
+        if (cur_p == p1)
         {
-            values[cell_to_check.x][cell_to_check.y] = true;
-            return;
+            break;
         }
 
-        if (i > 0)
+        if (i > 0 && hard_blocked[cur_p.x][cur_p.y])
         {
-            if (obstructions[cur_pos.x][cur_pos.y])
-            {
-                return;
-            }
+            los_result.is_blocked_hard = true;
+            break;
         }
     }
+
+    return los_result;
 }
 
-} //namespace
-
-bool check_cell(const bool obstructions[MAP_W][MAP_H],
-                const Pos& cell_to_check,
-                const Pos& origin,
-                const bool IS_AFFECTED_BY_DARKNESS)
+void run(const Pos& p0,
+         const bool hard_blocked[MAP_W][MAP_H],
+         Los_result out[MAP_W][MAP_H])
 {
-    if (
-        !utils::is_pos_inside_map(cell_to_check) ||
-        utils::king_dist(origin, cell_to_check) > FOV_STD_RADI_INT)
-    {
-        return false;
-    }
-
-    const Pos delta_to_tgt(cell_to_check - origin);
-
-    const std::vector<Pos>* path_deltas_ptr =
-        line_calc::fov_delta_line(delta_to_tgt, FOV_STD_RADI_DB);
-
-    if (!path_deltas_ptr)
-    {
-        return false;
-    }
-
-    const std::vector<Pos>& path_deltas = *path_deltas_ptr;
-
-    const bool TGT_IS_LGT = map::cells[cell_to_check.x][cell_to_check.y].is_lit;
-
-    Pos cur_pos;
-    Pos prev_pos;
-    const size_t PATH_SIZE = path_deltas.size();
-
-    for (size_t i = 0; i < PATH_SIZE; ++i)
-    {
-        cur_pos.set(origin + path_deltas[i]);
-
-        if (i > 1)
-        {
-            prev_pos.set(origin + path_deltas[i - 1]);
-            const bool PRE_CELL_IS_DRK = map::cells[prev_pos.x][prev_pos.y].is_dark;
-            const bool CUR_CELL_IS_DRK = map::cells[cur_pos.x][cur_pos.y].is_dark;
-            const bool CUR_CELL_IS_LGT = map::cells[cur_pos.x][cur_pos.y].is_lit;
-
-            if (
-                !CUR_CELL_IS_LGT                      &&
-                !TGT_IS_LGT                           &&
-                (PRE_CELL_IS_DRK || CUR_CELL_IS_DRK)  &&
-                IS_AFFECTED_BY_DARKNESS)
-            {
-                return false;
-            }
-        }
-
-        if (cur_pos == cell_to_check) {return true;}
-
-        if (i > 0 && obstructions[cur_pos.x][cur_pos.y]) {return false;}
-    }
-
-    return false;
-}
-
-void run_fov_on_array(const bool obstructions[MAP_W][MAP_H],
-                      const Pos& origin,
-                      bool values[MAP_W][MAP_H],
-                      const bool IS_AFFECTED_BY_DARKNESS)
-{
-    utils::reset_array(values, false);
-
-    values[origin.x][origin.y] = true;
-
-    const int check_x_end = std::min(MAP_W - 1, origin.x + FOV_STD_RADI_INT);
-    const int check_y_end = std::min(MAP_H - 1, origin.y + FOV_STD_RADI_INT);
-
-    int check_x = std::max(0, origin.x - FOV_STD_RADI_INT);
-
-    while (check_x <= check_x_end)
-    {
-        int check_y = std::max(0, origin.y - FOV_STD_RADI_INT);
-
-        while (check_y <= check_y_end)
-        {
-            check_one_cell_of_many(obstructions, Pos(check_x, check_y), origin, values,
-                                   IS_AFFECTED_BY_DARKNESS);
-            check_y++;
-        }
-
-        check_x++;
-    }
-}
-
-void run_player_fov(const bool obstructions[MAP_W][MAP_H], const Pos& origin)
-{
-    bool fov_tmp[MAP_W][MAP_H];
-
     for (int x = 0; x < MAP_W; ++x)
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            map::cells[x][y].is_seen_by_player = false;
-            fov_tmp[x][y] = false;
+            Los_result& los = out[x][y];
+
+            los.is_blocked_hard     = true;
+            los.is_blocked_by_drk   = false;
         }
     }
 
-    map::cells[origin.x][origin.y].is_seen_by_player = true;
-    fov_tmp[origin.x][origin.y] = true;
+    const Rect r = get_fov_rect(p0);
 
-    const int R = FOV_STD_RADI_INT;
-    const int X0 = constr_in_range(0, origin.x - R, MAP_W - 1);
-    const int Y0 = constr_in_range(0, origin.y - R, MAP_H - 1);
-    const int X1 = constr_in_range(0, origin.x + R, MAP_W - 1);
-    const int Y1 = constr_in_range(0, origin.y + R, MAP_H - 1);
-
-    for (int y = Y0; y <= Y1; ++y)
+    for (int x = r.p0.x; x <= r.p1.x; ++x)
     {
-        for (int x = X0; x <= X1; ++x)
+        for (int y = r.p0.y; y <= r.p1.y; ++y)
         {
-            check_one_cell_of_many(obstructions, Pos(x, y), origin, fov_tmp, true);
-            map::cells[x][y].is_seen_by_player = fov_tmp[x][y];
+            out[x][y] = check_cell(p0, {x, y}, hard_blocked);
         }
     }
+
+    out[p0.x][p0.y].is_blocked_hard = false;
 }
 
 } //fov

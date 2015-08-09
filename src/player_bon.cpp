@@ -237,9 +237,9 @@ void bg_descr(const Bg id, std::vector<std::string>& out)
         out.push_back(" ");
         out.push_back("Is immune to Disease and Infections");
         out.push_back(" ");
-        out.push_back("TODO: Has Infravision");
+        out.push_back("Has Infravision");
         out.push_back(" ");
-        out.push_back("TODO: -50% shock taken from seeing monsters");
+        out.push_back("-50% shock taken from seeing monsters");
         out.push_back(" ");
         out.push_back("All Ghouls are allied to you");
     }
@@ -639,7 +639,10 @@ void trait_prereqs(const Trait id, std::vector<Trait>& traits_ref, Bg& bg_ref)
     });
 }
 
-Bg bg() {return bg_;}
+Bg bg()
+{
+    return bg_;
+}
 
 void pickable_bgs(std::vector<Bg>& bgs_ref)
 {
@@ -711,6 +714,10 @@ void pick_bg(const Bg bg)
     case Bg::ghoul:
         map::player->prop_handler().try_add_prop(
             new Prop_rDisease(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
+
+        map::player->prop_handler().try_add_prop(
+            new Prop_infravis(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
+
         map::player->change_max_hp(4, Verbosity::silent);
         break;
 

@@ -83,7 +83,7 @@ void player_disarm()
         //Abort if trap blocked by monster
         if (actor_on_trap)
         {
-            if (map::player->can_see_actor(*actor_on_trap, nullptr))
+            if (map::player->can_see_actor(*actor_on_trap))
             {
                 msg_log::add("It's blocked.");
             }

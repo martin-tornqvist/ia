@@ -150,7 +150,7 @@ void Potion_vitality::quaff_impl(Actor& actor)
 
     actor.restore_hp(HP_RESTORED);
 
-    if (map::player->can_see_actor(actor, nullptr))
+    if (map::player->can_see_actor(actor))
     {
         identify(Verbosity::verbose);
     }
@@ -175,7 +175,7 @@ void Potion_spirit::quaff_impl(Actor& actor)
 
     actor.restore_spi(SPI_RESTORED, true);
 
-    if (map::player->can_see_actor(actor, nullptr))
+    if (map::player->can_see_actor(actor))
     {
         identify(Verbosity::verbose);
     }
@@ -195,7 +195,7 @@ void Potion_blindness::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_add_prop(new Prop_blind(Prop_turns::std));
 
-    if (map::player->can_see_actor(actor, nullptr))
+    if (map::player->can_see_actor(actor))
     {
         identify(Verbosity::verbose);
     }
@@ -215,7 +215,7 @@ void Potion_paral::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_add_prop(new Prop_paralyzed(Prop_turns::std));
 
-    if (map::player->can_see_actor(actor, nullptr))
+    if (map::player->can_see_actor(actor))
     {
         identify(Verbosity::verbose);
     }
@@ -236,7 +236,7 @@ void Potion_disease::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_add_prop(new Prop_diseased(Prop_turns::std));
 
-    if (map::player->can_see_actor(actor, nullptr))
+    if (map::player->can_see_actor(actor))
     {
         identify(Verbosity::verbose);
     }
@@ -246,7 +246,7 @@ void Potion_conf::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_add_prop(new Prop_confused(Prop_turns::std));
 
-    if (map::player->can_see_actor(actor, nullptr))
+    if (map::player->can_see_actor(actor))
     {
         identify(Verbosity::verbose);
     }
@@ -266,7 +266,7 @@ void Potion_frenzy::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_add_prop(new Prop_frenzied(Prop_turns::std));
 
-    if (map::player->can_see_actor(actor, nullptr))
+    if (map::player->can_see_actor(actor))
     {
         identify(Verbosity::verbose);
     }
@@ -335,7 +335,7 @@ void Potion_fortitude::quaff_impl(Actor& actor)
         msg_log::add("I feel more at ease.");
     }
 
-    if (map::player->can_see_actor(actor, nullptr))
+    if (map::player->can_see_actor(actor))
     {
         identify(Verbosity::verbose);
     }
@@ -355,7 +355,7 @@ void Potion_poison::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_add_prop(new Prop_poisoned(Prop_turns::std));
 
-    if (map::player->can_see_actor(actor, nullptr))
+    if (map::player->can_see_actor(actor))
     {
         identify(Verbosity::verbose);
     }
@@ -375,7 +375,7 @@ void Potion_rFire::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_add_prop(new Prop_rFire(Prop_turns::std));
 
-    if (map::player->can_see_actor(actor, nullptr))
+    if (map::player->can_see_actor(actor))
     {
         identify(Verbosity::verbose);
     }
@@ -395,7 +395,7 @@ void Potion_antidote::quaff_impl(Actor& actor)
 {
     const bool WAS_POISONED = actor.prop_handler().end_prop(Prop_id::poisoned);
 
-    if (WAS_POISONED && map::player->can_see_actor(actor, nullptr))
+    if (WAS_POISONED && map::player->can_see_actor(actor))
     {
         identify(Verbosity::verbose);
     }
@@ -415,7 +415,7 @@ void Potion_rElec::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_add_prop(new Prop_rElec(Prop_turns::std));
 
-    if (map::player->can_see_actor(actor, nullptr))
+    if (map::player->can_see_actor(actor))
     {
         identify(Verbosity::verbose);
     }
@@ -435,7 +435,7 @@ void Potion_rAcid::quaff_impl(Actor& actor)
 {
     actor.prop_handler().try_add_prop(new Prop_rAcid(Prop_turns::std));
 
-    if (map::player->can_see_actor(actor, nullptr))
+    if (map::player->can_see_actor(actor))
     {
         identify(Verbosity::verbose);
     }
@@ -552,7 +552,7 @@ void Potion_clairv::quaff_impl(Actor& actor)
         }
 
         render::draw_map_and_interface(false);
-//    map::update_visual_memory();
+
         map::player->update_fov();
 
         render::draw_blast_at_cells(anim_cells, clr_white);

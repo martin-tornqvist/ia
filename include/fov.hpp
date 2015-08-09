@@ -4,20 +4,30 @@
 #include "cmn_data.hpp"
 #include "cmn_types.hpp"
 
+struct Los_result
+{
+    Los_result() :
+        is_blocked_hard     (false),
+        is_blocked_by_drk   (false) {}
+
+    bool is_blocked_hard;
+    bool is_blocked_by_drk;
+};
+
 namespace fov
 {
 
-bool check_cell(const bool obstructions[MAP_W][MAP_H],
-                const Pos& cell_to_check,
-                const Pos& origin,
-                const bool IS_AFFECTED_BY_DARKNESS);
+Rect get_fov_rect(const Pos& p);
 
-void run_player_fov(const bool obstructions[MAP_W][MAP_H], const Pos& origin);
+bool is_in_fov_range(const Pos& p0, const Pos& p1);
 
-void run_fov_on_array(const bool obstructions[MAP_W][MAP_H],
-                      const Pos& origin,
-                      bool values[MAP_W][MAP_H],
-                      const bool IS_AFFECTED_BY_DARKNESS);
+Los_result check_cell(const Pos& p0,
+                      const Pos& p1,
+                      const bool hard_blocked[MAP_W][MAP_H]);
+
+void run(const Pos& p0,
+         const bool hard_blocked[MAP_W][MAP_H],
+         Los_result out[MAP_W][MAP_H]);
 
 } //fov
 

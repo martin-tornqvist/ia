@@ -19,15 +19,13 @@
 #include "feature_mob.hpp"
 #include "feature_rigid.hpp"
 
-using namespace std;
-
 namespace auto_descr_actor
 {
 
 namespace
 {
 
-string normal_group_size_str(const Actor_data_t& def)
+std::string normal_group_size_str(const Actor_data_t& def)
 {
     const Mon_group_size s = def.group_size;
 
@@ -38,7 +36,7 @@ string normal_group_size_str(const Actor_data_t& def)
         s == Mon_group_size::horde  ? "in hordes"       : "in swarms";
 }
 
-string speed_str(const Actor_data_t& def)
+std::string speed_str(const Actor_data_t& def)
 {
     switch (def.speed)
     {
@@ -58,14 +56,14 @@ string speed_str(const Actor_data_t& def)
     return "";
 }
 
-string dwelling_lvl_str(const Actor_data_t& def)
+std::string dwelling_lvl_str(const Actor_data_t& def)
 {
-    return to_str(max(1, def.spawn_min_dLVL - 1));
+    return to_str(std::max(1, def.spawn_min_dLVL - 1));
 }
 
 } //namespace
 
-void add_auto_description_lines(const Actor& actor, string& line)
+void add_auto_description_lines(const Actor& actor, std::string& line)
 {
     const Actor_data_t& def = actor.data();
 
@@ -93,14 +91,20 @@ namespace look
 
 void print_location_info_msgs(const Pos& pos)
 {
+    bool did_see_something = false;
+
     const Cell& cell = map::cells[pos.x][pos.y];
+
+    const std::string i_see_here_str = "I see here:";
 
     if (map::cells[pos.x][pos.y].is_seen_by_player)
     {
-        msg_log::add("I see here:");
+        did_see_something = true;
+
+        msg_log::add(i_see_here_str);
 
         //Describe rigid.
-        string str = cell.rigid->name(Article::a);
+        std::string str = cell.rigid->name(Article::a);
 
         text_format::first_to_upper(str);
 
@@ -145,26 +149,30 @@ void print_location_info_msgs(const Pos& pos)
             }
         }
 
-        //Describe living actor.
-        Actor* actor = utils::actor_at_pos(pos);
+    }
 
-        if (actor && actor != map::player)
+    //Describe living actor.
+    Actor* actor = utils::actor_at_pos(pos);
+
+    if (actor && !actor->is_player() && actor->is_alive() && map::player->can_see_actor(*actor))
+    {
+        if (!did_see_something)
         {
-            if (actor->is_alive())
-            {
-                if (map::player->can_see_actor(*actor, nullptr))
-                {
-                    str = actor->name_a();
-
-                    text_format::first_to_upper(str);
-
-                    msg_log::add(str + ".");
-                }
-            }
+            //The player only sees the actor but not the cell (e.g. through infravision)
+            //Print the initial "I see here" message.
+            msg_log::add(i_see_here_str);
         }
 
+        did_see_something = true;
+
+        std::string str = actor->name_a();
+
+        text_format::first_to_upper(str);
+
+        msg_log::add(str + ".");
     }
-    else //Cell not seen
+
+    if (!did_see_something)
     {
         msg_log::add("I have no vision here.");
     }
@@ -173,7 +181,7 @@ void print_location_info_msgs(const Pos& pos)
 void print_detailed_actor_descr(const Actor& actor)
 {
     //Add written description.
-    string descr = actor.data().descr;
+    std::string descr = actor.data().descr;
 
     //Add auto-description.
     if (actor.data().is_auto_descr_allowed)
@@ -181,7 +189,7 @@ void print_detailed_actor_descr(const Actor& actor)
         auto_descr_actor::add_auto_description_lines(actor, descr);
     }
 
-    vector<string> formatted_text;
+    std::vector<std::string> formatted_text;
     text_format::line_to_lines(descr, MAP_W - 1, formatted_text);
 
     const size_t NR_OF_LINES = formatted_text.size();
@@ -190,7 +198,7 @@ void print_detailed_actor_descr(const Actor& actor)
 
     int y = 1;
 
-    for (string& s : formatted_text)
+    for (std::string& s : formatted_text)
     {
         render::draw_text(s, Panel::screen, Pos(0, y), clr_white_high);
         y++;

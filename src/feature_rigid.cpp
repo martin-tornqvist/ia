@@ -44,10 +44,9 @@ void Rigid::on_new_turn()
             }
             else
             {
-                if (map::player->can_see_actor(actor, nullptr))
+                if (map::player->can_see_actor(actor))
                 {
-                    msg_log::add(actor.name_the() + " is scorched by flames.",
-                                 clr_msg_good);
+                    msg_log::add(actor.name_the() + " is scorched by flames.", clr_msg_good);
                 }
             }
 
@@ -368,11 +367,17 @@ string Floor::name(const Article article) const
 
         switch (type_)
         {
-        case Floor_type::cmn:        ret += "stone floor";   break;
+        case Floor_type::cmn:
+            ret += "stone floor";
+            break;
 
-        case Floor_type::cave:       ret += "cavern floor";  break;
+        case Floor_type::cave:
+            ret += "cavern floor";
+            break;
 
-        case Floor_type::stone_path:  ret += "stone path";    break;
+        case Floor_type::stone_path:
+            ret += "stone path";
+            break;
         }
     }
 
@@ -535,7 +540,7 @@ Clr Wall::clr_default() const
 
 char Wall::glyph() const
 {
-    return config::is_ascii_wall_full_square() ? 10 : '#';
+    return config::is_text_mode_wall_full_square() ? 10 : '#';
 }
 
 Tile_id Wall::front_wall_tile() const
@@ -824,7 +829,7 @@ void Statue::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor*
                 {
                     msg_log::add("It falls on me!");
                 }
-                else if (map::player->can_see_actor(*actor_behind, nullptr))
+                else if (map::player->can_see_actor(*actor_behind))
                 {
                     msg_log::add("It falls on " + actor_behind->name_a() + ".");
                 }

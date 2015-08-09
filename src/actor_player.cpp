@@ -332,6 +332,49 @@ void Player::setup_from_save_lines(std::vector<std::string>& lines)
     }
 }
 
+bool Player::can_see_actor(const Actor& other) const
+{
+    if (this == &other)
+    {
+        return true;
+    }
+
+    const Cell& cell = map::cells[other.pos.x][other.pos.y];
+
+    if (!other.is_alive() && cell.is_seen_by_player)
+    {
+        return true;
+    }
+
+    if (!prop_handler_->allow_see())
+    {
+        return false;
+    }
+
+    const Mon* const mon = static_cast<const Mon*>(&other);
+
+    //See monster with infravision?
+    if (!cell.player_los.is_blocked_hard)
+    {
+        bool        HAS_INFRAVIS            = prop_handler_->has_prop(Prop_id::infravis);
+        const bool  IS_OTHER_INFRA_VISIBLE  = other.data().is_infra_visible;
+
+        if (HAS_INFRAVIS && IS_OTHER_INFRA_VISIBLE)
+        {
+            return true;
+        }
+    }
+
+    if (mon->is_sneaking_)
+    {
+        return false;
+    }
+
+    //Monster is in FOV range, not sneaking, player can see, etc -> Player can see the monster
+    //if the map cell is seen.
+    return cell.is_seen_by_player;
+}
+
 void Player::on_hit(int& dmg)
 {
     (void)dmg;
@@ -374,21 +417,38 @@ int Player::shock_resistance(const Shock_src shock_src) const
 {
     int res = 0;
 
-    if (player_bon::traits[int(Trait::fearless)])    {res += 5;}
+    if (player_bon::traits[int(Trait::fearless)])
+    {
+        res += 5;
+    }
 
-    if (player_bon::traits[int(Trait::cool_headed)])  {res += 20;}
+    if (player_bon::traits[int(Trait::cool_headed)])
+    {
+        res += 20;
+    }
 
-    if (player_bon::traits[int(Trait::courageous)])  {res += 20;}
+    if (player_bon::traits[int(Trait::courageous)])
+    {
+        res += 20;
+    }
 
     switch (shock_src)
     {
     case Shock_src::use_strange_item:
-        if (player_bon::bg() == Bg::occultist) {res += 50;}
+        if (player_bon::bg() == Bg::occultist)
+        {
+            res += 50;
+        }
+        break;
 
+    case Shock_src::see_mon:
+        if (player_bon::bg() == Bg::ghoul)
+        {
+            res += 50;
+        }
         break;
 
     case Shock_src::cast_intr_spell:
-    case Shock_src::see_mon:
     case Shock_src::time:
     case Shock_src::misc:
     case Shock_src::END: {}
@@ -1074,9 +1134,15 @@ void Player::on_std_turn()
 {
     update_tmp_shock();
 
-    if (active_explosive)   {active_explosive->on_std_turn_player_hold_ignited();}
+    if (active_explosive)
+    {
+        active_explosive->on_std_turn_player_hold_ignited();
+    }
 
-    if (!active_medical_bag) {test_phobias();}
+    if (!active_medical_bag)
+    {
+        test_phobias();
+    }
 
     std::vector<Actor*> my_seen_foes;
     seen_foes(my_seen_foes);
@@ -1113,7 +1179,8 @@ void Player::on_std_turn()
                 mon->shock_caused_cur_ = std::min(mon->shock_caused_cur_ + 0.75,  3.0);
                 break;
 
-            default: {} break;
+            default:
+                break;
             }
 
             if (shock_from_mon_cur_player_turn < 2.5)
@@ -1197,10 +1264,12 @@ void Player::on_std_turn()
         if (!actor->is_player() && !map::player->is_leader_of(actor) && actor->is_alive())
         {
             Mon& mon                = *static_cast<Mon*>(actor);
-            const bool IS_MON_SEEN  = can_see_actor(*actor, nullptr);
+            const bool IS_MON_SEEN  = can_see_actor(*actor);
 
             if (IS_MON_SEEN)
             {
+                mon.is_sneaking_ = false;
+
                 if (!mon.is_msg_mon_in_view_printed_)
                 {
                     if (
@@ -1220,17 +1289,23 @@ void Player::on_std_turn()
                 mon.is_msg_mon_in_view_printed_ = false;
 
                 //Is the monster sneaking? Try to spot it
-                if (
-                    map::cells[mon.pos.x][mon.pos.y].is_seen_by_player &&
-                    mon.is_stealth_                                  &&
-                    is_spotting_hidden_actor(mon))
+                //NOTE: Infravision is irrelevant here, since the monster would have been
+                //completely seen already.
+                if (map::cells[mon.pos.x][mon.pos.y].is_seen_by_player && mon.is_sneaking_)
                 {
-                    mon.is_stealth_ = false;
-                    update_fov();
-                    render::draw_map_and_interface();
-                    const std::string mon_name = mon.name_a();
-                    msg_log::add("I spot " + mon_name + "!", clr_msg_note, true,
-                                 More_prompt_on_msg::yes);
+                    const bool DID_SPOT_SNEAKING = is_spotting_sneaking_actor(mon);
+
+                    if (DID_SPOT_SNEAKING)
+                    {
+                        mon.is_sneaking_ = false;
+
+                        render::draw_map_and_interface();
+
+                        const std::string mon_name = mon.name_a();
+
+                        msg_log::add("I spot " + mon_name + "!", clr_msg_note, true,
+                                     More_prompt_on_msg::yes);
+                    }
                 }
             }
         }
@@ -1242,7 +1317,7 @@ void Player::on_std_turn()
     {
         if (game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
         {
-            hp_--;
+            --hp_;
         }
     }
 
@@ -1250,7 +1325,7 @@ void Player::on_std_turn()
     {
         if (game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
         {
-            spi_--;
+            --spi_;
         }
     }
 
@@ -1448,7 +1523,7 @@ void Player::move(Dir dir)
                     {
                         if (
                             config::is_ranged_wpn_meleee_prompt()   &&
-                            can_see_actor(*mon_at_dest, nullptr)    &&
+                            can_see_actor(*mon_at_dest)             &&
                             wpn->data().ranged.is_ranged_wpn)
                         {
                             const std::string wpn_name = wpn->name(Item_ref_type::a);
@@ -1588,17 +1663,6 @@ void Player::move(Dir dir)
     //action has occurred)
     if (pos == dest)
     {
-        //Ghoul feeding?
-        if (player_bon::bg() == Bg::ghoul)
-        {
-            //NOTE: If a trait is added to allow eating while moving, simply modify the following
-            //statement:
-            if (dir == Dir::center)
-            {
-                try_eat_corpse();
-            }
-        }
-
         game_time::tick(is_free_turn);
         return;
     }
@@ -1610,7 +1674,7 @@ void Player::auto_melee()
         tgt_                                        &&
         tgt_->state() == Actor_state::alive         &&
         utils::is_pos_adj(pos, tgt_->pos, false)    &&
-        can_see_actor(*tgt_, nullptr))
+        can_see_actor(*tgt_))
     {
         move(dir_utils::dir(tgt_->pos - pos));
         return;
@@ -1621,7 +1685,7 @@ void Player::auto_melee()
     {
         Actor* const actor = utils::actor_at_pos(pos + d);
 
-        if (actor && !is_leader_of(actor) && can_see_actor(*actor, nullptr))
+        if (actor && !is_leader_of(actor) && can_see_actor(*actor))
         {
             tgt_ = actor;
             move(dir_utils::dir(d));
@@ -1696,38 +1760,27 @@ void Player::add_light_hook(bool light_map[MAP_W][MAP_H]) const
     {
     case Lgt_size::fov:
     {
-        bool my_light[MAP_W][MAP_H];
-        utils::reset_array(my_light, false);
+        bool hard_blocked[MAP_W][MAP_H];
 
-        const int R = FOV_STD_RADI_INT;
+        const Rect fov_lmt = fov::get_fov_rect(pos);
 
-        Pos p0(std::max(0,         pos.x - R), std::max(0,         pos.y - R));
-        Pos p1(std::min(MAP_W - 1, pos.x + R), std::min(MAP_H - 1, pos.y + R));
+        map_parse::run(cell_check::Blocks_los(), hard_blocked, Map_parse_mode::overwrite,
+                       fov_lmt);
 
-        bool blocked_los[MAP_W][MAP_H];
+        Los_result fov[MAP_W][MAP_H];
 
-        for (int y = p0.y; y <= p1.y; ++y)
+        fov::run(pos, hard_blocked, fov);
+
+        for (int y = fov_lmt.p0.y; y <= fov_lmt.p1.y; ++y)
         {
-            for (int x = p0.x; x <= p1.x; ++x)
+            for (int x = fov_lmt.p0.x; x <= fov_lmt.p1.x; ++x)
             {
-                const auto* const f = map::cells[x][y].rigid;
-                blocked_los[x][y]    = !f->is_los_passable();
-            }
-        }
-
-        fov::run_fov_on_array(blocked_los, pos, my_light, false);
-
-        for (int y = p0.y; y <= p1.y; ++y)
-        {
-            for (int x = p0.x; x <= p1.x; ++x)
-            {
-                if (my_light[x][y])
+                if (!fov[x][y].is_blocked_hard)
                 {
                     light_map[x][y] = true;
                 }
             }
         }
-
     }
     break;
 
@@ -1753,19 +1806,43 @@ void Player::update_fov()
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            map::cells[x][y].is_seen_by_player = false;
+            Cell& cell = map::cells[x][y];
+
+            cell.is_seen_by_player              = false;
+            cell.player_los.is_blocked_hard     = true;
+            cell.player_los.is_blocked_by_drk   = false;
         }
     }
 
     if (prop_handler_->allow_see())
     {
-        bool blocked[MAP_W][MAP_H];
-        map_parse::run(cell_check::Blocks_los(), blocked);
-        fov::run_player_fov(blocked, pos);
-        map::cells[pos.x][pos.y].is_seen_by_player = true;
-    }
+        bool hard_blocked[MAP_W][MAP_H];
 
-    if (prop_handler_->allow_see()) {FOVhack();}
+        const Rect fov_lmt = fov::get_fov_rect(pos);
+
+        map_parse::run(cell_check::Blocks_los(), hard_blocked, Map_parse_mode::overwrite,
+                       fov_lmt);
+
+        Los_result fov[MAP_W][MAP_H];
+
+        fov::run(pos, hard_blocked, fov);
+
+        for (int x = fov_lmt.p0.x; x <= fov_lmt.p1.x; ++x)
+        {
+            for (int y = fov_lmt.p0.y; y <= fov_lmt.p1.y; ++y)
+            {
+                const Los_result&   los     = fov[x][y];
+                Cell&               cell    = map::cells[x][y];
+
+                cell.is_seen_by_player      = !los.is_blocked_hard && !los.is_blocked_by_drk;
+                cell.player_los             = los;
+            }
+        }
+
+        map::cells[pos.x][pos.y].is_seen_by_player = true;
+
+        fov_hack();
+    }
 
     if (init::is_cheat_vision_enabled)
     {
@@ -1795,7 +1872,7 @@ void Player::update_fov()
     }
 }
 
-void Player::FOVhack()
+void Player::fov_hack()
 {
     bool blocked_los[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_los(), blocked_los);
@@ -1824,7 +1901,10 @@ void Player::FOVhack()
                             (!adj_cell.is_dark || adj_cell.is_lit)  &&
                             !blocked[p_adj.x][p_adj.y])
                         {
-                            map::cells[x][y].is_seen_by_player = true;
+                            Cell& cell                      = map::cells[x][y];
+                            cell.is_seen_by_player          = true;
+                            cell.player_los.is_blocked_hard = false;
+
                             break;
                         }
                     }

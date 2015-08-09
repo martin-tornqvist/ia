@@ -28,7 +28,7 @@ bool move_to_tgt_simple(Mon& mon);
 
 bool step_path(Mon& mon, std::vector<Pos>& path);
 
-bool step_to_lair_if_los(Mon& mon, const Pos& lair_cell);
+bool step_to_lair_if_los(Mon& mon, const Pos& lair_p);
 
 } //action
 
@@ -37,9 +37,9 @@ namespace info
 
 bool look_become_player_aware(Mon& mon);
 
-void set_path_to_lair_if_no_los(Mon& mon, std::vector<Pos>& path, const Pos& lair_cell);
+void set_path_to_lair_if_no_los(Mon& mon, std::vector<Pos>& path, const Pos& lair_p);
 
-void set_path_to_leader_if_no_los_toleader(Mon& mon, std::vector<Pos>& path);
+void set_path_to_leader_if_no_los_to_leader(Mon& mon, std::vector<Pos>& path);
 
 void set_path_to_player_if_aware(Mon& mon, std::vector<Pos>& path);
 

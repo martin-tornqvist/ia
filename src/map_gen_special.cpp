@@ -279,10 +279,10 @@ void mk_forest_trees()
         bool blocked[MAP_W][MAP_H];
         map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
-        bool fov[MAP_W][MAP_H];
+        Los_result fov[MAP_W][MAP_H];
 
-        const int SEARCH_RADI = FOV_STD_RADI_INT - 2;
-        const int TRY_PLACE_EVERY_N_STEP = 2;
+        const int SEARCH_RADI               = FOV_STD_RADI_INT - 2;
+        const int TRY_PLACE_EVERY_N_STEP    = 2;
 
         std::vector<Pos> grave_cells;
 
@@ -292,7 +292,7 @@ void mk_forest_trees()
         {
             if (path_walk_count == TRY_PLACE_EVERY_N_STEP)
             {
-                fov::run_fov_on_array(blocked, path[i], fov, false);
+                fov::run(path[i], blocked, fov);
 
                 for (int dy = -SEARCH_RADI; dy <= SEARCH_RADI; ++dy)
                 {
@@ -303,6 +303,7 @@ void mk_forest_trees()
 
                         const bool IS_LEFT_OF_CHURCH =
                             X < church_pos.x - (SEARCH_RADI) + 2;
+
                         const bool IS_ON_STONE_PATH =
                             map::cells[X][Y].rigid->id() == Feature_id::floor;
 
@@ -313,9 +314,9 @@ void mk_forest_trees()
                             is_left_of_prev = X < grave_cells.back().x;
                         }
 
-                        bool is_pos_ok = fov[X][Y]         &&
-                                         IS_LEFT_OF_CHURCH &&
-                                         !IS_ON_STONE_PATH &&
+                        bool is_pos_ok = !fov[X][Y].is_blocked_hard &&
+                                         IS_LEFT_OF_CHURCH          &&
+                                         !IS_ON_STONE_PATH          &&
                                          is_left_of_prev;
 
                         if (is_pos_ok)

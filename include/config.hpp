@@ -22,7 +22,7 @@ int             map_px_h();
 int             map_px_offset_h();
 int             char_lines_px_offset_h();
 int             char_lines_px_h();
-bool            is_ascii_wall_full_square();
+bool            is_text_mode_wall_full_square();
 bool            is_tiles_wall_full_square();
 bool            is_audio_enabled();
 bool            is_bot_playing();

@@ -102,7 +102,7 @@ void print_msg_and_play_sfx(Actor& actor_reloading, Wpn* const wpn,
         }
         else
         {
-            if (map::player->can_see_actor(actor_reloading, nullptr))
+            if (map::player->can_see_actor(actor_reloading))
             {
                 msg_log::add(actor_name + swift_str + " reloads.");
             }
@@ -116,7 +116,7 @@ void print_msg_and_play_sfx(Actor& actor_reloading, Wpn* const wpn,
         }
         else
         {
-            if (map::player->can_see_actor(actor_reloading, nullptr))
+            if (map::player->can_see_actor(actor_reloading))
             {
                 msg_log::add(actor_name + " fumbles with " + ammo_name + ".");
             }

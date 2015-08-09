@@ -314,12 +314,12 @@ void Trap::bump(Actor& actor_bumping)
             TRACE_VERBOSE << "Humanoid monster bumping" << std::endl;
             Mon* const mon = static_cast<Mon*>(&actor_bumping);
 
-            if (mon->aware_counter_ > 0 && !mon->is_stealth_)
+            if (mon->aware_counter_ > 0 && !mon->is_sneaking_)
             {
                 TRACE_VERBOSE << "Monster eligible for triggering trap" << std::endl;
 
                 const bool IS_ACTOR_SEEN_BY_PLAYER =
-                    map::player->can_see_actor(actor_bumping, nullptr);
+                    map::player->can_see_actor(actor_bumping);
 
                 const int CHANCE_TO_AVOID = BASE_CHANCE_TO_AVOID + DODGE_SKILL;
                 const Ability_roll_result result = ability_roll::roll(CHANCE_TO_AVOID);
@@ -866,7 +866,7 @@ void Trap_teleport::trigger()
 
     const bool          IS_PLAYER               = actor_here->is_player();
     const bool          CAN_SEE                 = actor_here->prop_handler().allow_see();
-    const bool          CAN_PLAYER_SEE_ACTOR    = map::player->can_see_actor(*actor_here, nullptr);
+    const bool          CAN_PLAYER_SEE_ACTOR    = map::player->can_see_actor(*actor_here);
     const std::string   actor_name              = actor_here->name_the();
     const bool          IS_HIDDEN               = base_trap_->is_hidden();
 
@@ -1050,7 +1050,7 @@ void Trap_web::trigger()
 
     const bool          IS_PLAYER               = actor_here->is_player();
     const bool          CAN_SEE                 = actor_here->prop_handler().allow_see();
-    const bool          CAN_PLAYER_SEE_ACTOR    = map::player->can_see_actor(*actor_here, nullptr);
+    const bool          CAN_PLAYER_SEE_ACTOR    = map::player->can_see_actor(*actor_here);
     const std::string   actor_name              = actor_here->name_the();
 
     if (IS_PLAYER)
@@ -1110,7 +1110,7 @@ Dir Trap_web::actor_try_leave(Actor& actor, const Dir dir)
     TRACE_VERBOSE << "Is holding actor" << std::endl;
 
     const bool          PLAYER_CAN_SEE          = map::player->prop_handler().allow_see();
-    const bool          PLAYER_CAN_SEE_ACTOR    = map::player->can_see_actor(actor, nullptr);
+    const bool          PLAYER_CAN_SEE_ACTOR    = map::player->can_see_actor(actor);
     const std::string   actor_name              = actor.name_the();
 
     TRACE_VERBOSE << "Name of actor held: " << actor_name << std::endl;

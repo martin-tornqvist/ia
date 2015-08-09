@@ -22,6 +22,12 @@ enum class Inv_type
     backpack
 };
 
+enum class Did_action
+{
+    yes,
+    no
+};
+
 enum class Consume_item
 {
     yes,
@@ -125,7 +131,61 @@ enum class Shock_lvl
     heavy  = 12
 };
 
-enum class Game_entry_mode {new_game, load_game};
+enum class Game_entry_mode
+{
+    new_game,
+    load_game
+};
+
+enum class Spawn_rate
+{
+    never,
+    extremely_rare,
+    very_rare,
+    rare,
+    common,
+    very_common
+};
+
+enum class Dir
+{
+    down_left   = 1,
+    down       = 2,
+    down_right  = 3,
+    left       = 4,
+    center     = 5,
+    right      = 6,
+    up_left     = 7,
+    up         = 8,
+    up_right    = 9,
+    END
+};
+
+enum class Actor_state
+{
+    alive,
+    corpse,
+    destroyed
+};
+
+enum class Axis
+{
+    hor,
+    ver
+};
+
+enum class Lgt_size
+{
+    none,
+    small, //3x3
+    fov
+};
+
+enum class More_prompt_on_msg
+{
+    no,
+    yes
+};
 
 struct Cell_render_data
 {
@@ -351,56 +411,6 @@ struct Item_att_msgs
         other(other_) {}
 
     std::string player, other;
-};
-
-enum class Spawn_rate
-{
-    never,
-    extremely_rare,
-    very_rare,
-    rare,
-    common,
-    very_common
-};
-
-enum class Dir
-{
-    down_left   = 1,
-    down       = 2,
-    down_right  = 3,
-    left       = 4,
-    center     = 5,
-    right      = 6,
-    up_left     = 7,
-    up         = 8,
-    up_right    = 9,
-    END
-};
-
-enum class Actor_state
-{
-    alive,
-    corpse,
-    destroyed
-};
-
-enum class Axis
-{
-    hor,
-    ver
-};
-
-enum class Lgt_size
-{
-    none,
-    small, //3x3
-    fov
-};
-
-enum class More_prompt_on_msg
-{
-    no,
-    yes
 };
 
 #endif

@@ -282,7 +282,7 @@ void tick(const bool IS_FREE_TURN)
     {
         map::player->update_fov();
         render::draw_map_and_interface();
-        map::update_visual_memory();
+        map::cpy_render_array_to_visual_memory();
 
         //Run new turn events on all player items
         auto& inv = map::player->inv();
@@ -369,9 +369,8 @@ void tick(const bool IS_FREE_TURN)
                 break;
 
             case Actor_speed::END:
-            {
                 assert(false);
-            } break;
+                break;
             }
         }
     }

@@ -19,12 +19,13 @@
 using namespace std;
 
 Cell::Cell() :
-    is_explored(false),
-    is_seen_by_player(false),
-    is_lit(false),
-    is_dark(false),
-    item(nullptr),
-    rigid(nullptr),
+    is_explored         (false),
+    is_seen_by_player   (false),
+    is_lit              (false),
+    is_dark             (false),
+    player_los          (),
+    item                (nullptr),
+    rigid               (nullptr),
     player_visual_memory(Cell_render_data()),
     pos(Pos(-1, -1)) {}
 
@@ -44,6 +45,9 @@ Cell::~Cell()
 void Cell::reset()
 {
     is_explored = is_seen_by_player = is_lit = is_dark = false;
+
+    player_los.is_blocked_hard      = true;
+    player_los.is_blocked_by_drk    = false;
 
     player_visual_memory = Cell_render_data();
 
@@ -227,13 +231,18 @@ Rigid* put(Rigid* const f)
     return f;
 }
 
-void update_visual_memory()
+void cpy_render_array_to_visual_memory()
 {
     for (int x = 0; x < MAP_W; ++x)
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            cells[x][y].player_visual_memory = render::render_array_no_actors[x][y];
+            const Cell_render_data render_data = render::render_array_no_actors[x][y];
+
+            assert(!render_data.is_aware_of_mon_here);
+            assert(!render_data.is_living_actor_seen_here);
+
+            cells[x][y].player_visual_memory = render_data;
         }
     }
 }

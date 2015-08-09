@@ -23,6 +23,7 @@
    d      Disarm trap
    D      Jam door with an iron spike
    e      Quick move (automatically move in some direction until interrupted)
+   E      Eat corpse (Ghoul only)
    f      Aim/fire wielded firearm
    g      Pick up item
    G      Unload or pick up ammunition from the ground

@@ -567,7 +567,7 @@ void init_data_list()
     d.id = Prop_id::infravis;
     d.std_rnd_turns = Range(40, 60);
     d.name = "Infravision";
-    d.name_short = "Infravisn";
+    d.name_short = "Infravis";
     d.msg[size_t(Prop_msg::start_player)] = "I can see warm bodied creatures very clearly.";
     d.msg[size_t(Prop_msg::end_player)] = "I no longer have infravision.";
     d.msg[size_t(Prop_msg::res_player)] = "";
@@ -1028,7 +1028,7 @@ void Prop_handler::try_add_prop(Prop* const prop,
     prop->src_          = src;
 
     const bool IS_PLAYER        = owning_actor_->is_player();
-    const bool PLAYER_SEE_OWNER = map::player->can_see_actor(*owning_actor_, nullptr);
+    const bool PLAYER_SEE_OWNER = map::player->can_see_actor(*owning_actor_);
 
     //Check if property is resisted
     if (!FORCE_EFFECT)
@@ -1289,7 +1289,7 @@ void Prop_handler::run_prop_end(Prop* const prop)
         }
         else //Not player
         {
-            if (map::player->can_see_actor(*owning_actor_, nullptr))
+            if (map::player->can_see_actor(*owning_actor_))
             {
                 std::string msg = "";
 
@@ -1804,7 +1804,7 @@ void Prop_poisoned::on_new_turn()
             }
             else //Is monster
             {
-                if (map::player->can_see_actor(*owning_actor_, nullptr))
+                if (map::player->can_see_actor(*owning_actor_))
                 {
                     msg_log::add(owning_actor_->name_the() + " suffers from poisoning!");
                 }
@@ -1856,7 +1856,7 @@ void Prop_nailed::change_move_dir(const Pos& actor_pos, Dir& dir)
         }
         else //Is monster
         {
-            if (map::player->can_see_actor(*owning_actor_, nullptr))
+            if (map::player->can_see_actor(*owning_actor_))
             {
                 msg_log::add(owning_actor_->name_the() +  " struggles in pain!",
                              clr_msg_good);
@@ -1882,7 +1882,7 @@ void Prop_nailed::change_move_dir(const Pos& actor_pos, Dir& dir)
                     }
                     else //Is monster
                     {
-                        if (map::player->can_see_actor(*owning_actor_, nullptr))
+                        if (map::player->can_see_actor(*owning_actor_))
                         {
                             msg_log::add(owning_actor_->name_the() + " tears out a spike!");
                         }
@@ -2178,7 +2178,7 @@ bool Prop_rAcid::try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosi
             {
                 msg_log::add("I feel a faint burning sensation.");
             }
-            else if (map::player->can_see_actor(*owning_actor_, nullptr))
+            else if (map::player->can_see_actor(*owning_actor_))
             {
                 msg_log::add(owning_actor_->name_the() + " seems unaffected.");
             }
@@ -2200,7 +2200,7 @@ bool Prop_rCold::try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosi
             {
                 msg_log::add("I feel chilly.");
             }
-            else if (map::player->can_see_actor(*owning_actor_, nullptr))
+            else if (map::player->can_see_actor(*owning_actor_))
             {
                 msg_log::add(owning_actor_->name_the() + " seems unaffected.");
             }
@@ -2222,7 +2222,7 @@ bool Prop_rElec::try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosi
             {
                 msg_log::add("I feel a faint tingle.");
             }
-            else if (map::player->can_see_actor(*owning_actor_, nullptr))
+            else if (map::player->can_see_actor(*owning_actor_))
             {
                 msg_log::add(owning_actor_->name_the() + " seems unaffected.");
             }
@@ -2275,7 +2275,7 @@ bool Prop_rPhys::try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosi
             {
                 msg_log::add("I resist harm.");
             }
-            else if (map::player->can_see_actor(*owning_actor_, nullptr))
+            else if (map::player->can_see_actor(*owning_actor_))
             {
                 msg_log::add(owning_actor_->name_the() + " seems unaffected.");
             }
@@ -2307,7 +2307,7 @@ bool Prop_rFire::try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosi
             {
                 msg_log::add("I feel hot.");
             }
-            else if (map::player->can_see_actor(*owning_actor_, nullptr))
+            else if (map::player->can_see_actor(*owning_actor_))
             {
                 msg_log::add(owning_actor_->name_the() + " seems unaffected.");
             }
