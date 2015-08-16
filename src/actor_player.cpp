@@ -451,7 +451,7 @@ int Player::shock_resistance(const Shock_src shock_src) const
     case Shock_src::cast_intr_spell:
     case Shock_src::time:
     case Shock_src::misc:
-    case Shock_src::END:
+    case Shock_src::END: {}
         break;
     }
 
@@ -461,10 +461,7 @@ int Player::shock_resistance(const Shock_src shock_src) const
 double Player::shock_taken_after_mods(const int BASE_SHOCK,
                                       const Shock_src shock_src) const
 {
-    if (BASE_SHOCK == 0)
-    {
-        return 0.0;
-    }
+    if (BASE_SHOCK == 0) {return 0.0;}
 
     const double SHOCK_RES_DB   = double(shock_resistance(shock_src));
     const double BASE_SHOCK_DB  = double(BASE_SHOCK);
@@ -475,7 +472,7 @@ void Player::incr_shock(const int SHOCK, Shock_src shock_src)
 {
     const double SHOCK_AFTER_MODS = shock_taken_after_mods(SHOCK, shock_src);
 
-    shock_                      += SHOCK_AFTER_MODS;
+    shock_                  += SHOCK_AFTER_MODS;
     perm_shock_taken_cur_turn_  += SHOCK_AFTER_MODS;
 
     set_constr_in_range(0.0, shock_, 100.0);

@@ -160,7 +160,7 @@ void go_to_nxt()
 
     mk_lvl(map_data.type);
 
-    map::player->restore_shock(map::player->shock_ / 2, true);
+    map::player->restore_shock(999, true);
 
     map::player->tgt_ = nullptr;
     game_time::update_light_map();
