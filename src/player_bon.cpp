@@ -11,6 +11,7 @@
 #include "player_spells_handling.hpp"
 #include "map.hpp"
 #include "map_parsing.hpp"
+#include "create_character.hpp"
 
 namespace player_bon
 {
@@ -246,7 +247,7 @@ void bg_descr(const Bg id, std::vector<std::string>& out)
     break;
 
     case Bg::occultist:
-        out.push_back("Can learn spells cast from manuscripts");
+        out.push_back("Can learn spells by heart when casting from manuscripts");
         out.push_back(" ");
         out.push_back("-50% shock taken from using and identifying "
                       "strange items (e.g. potions)");
@@ -299,7 +300,7 @@ void bg_descr(const Bg id, std::vector<std::string>& out)
         out.push_back(trait_descr(Trait::tough));
         break;
 
-    case Bg::END: {}
+    case Bg::END:
         break;
     }
 }
@@ -463,7 +464,7 @@ void trait_prereqs(const Trait id, std::vector<Trait>& traits_ref, Bg& bg_ref)
 
     switch (id)
     {
-    case Trait::adept_melee_fighter: {}
+    case Trait::adept_melee_fighter:
         break;
 
     case Trait::expert_melee_fighter:
@@ -474,7 +475,7 @@ void trait_prereqs(const Trait id, std::vector<Trait>& traits_ref, Bg& bg_ref)
         traits_ref.push_back(Trait::expert_melee_fighter);
         break;
 
-    case Trait::adept_marksman: {}
+    case Trait::adept_marksman:
         break;
 
     case Trait::expert_marksman:
@@ -496,10 +497,10 @@ void trait_prereqs(const Trait id, std::vector<Trait>& traits_ref, Bg& bg_ref)
         bg_ref = Bg::war_vet;
         break;
 
-    case Trait::dem_expert: {}
+    case Trait::dem_expert:
         break;
 
-    case Trait::cool_headed: {}
+    case Trait::cool_headed:
         break;
 
     case Trait::courageous:
@@ -529,7 +530,7 @@ void trait_prereqs(const Trait id, std::vector<Trait>& traits_ref, Bg& bg_ref)
         bg_ref = Bg::occultist;
         break;
 
-    case Trait::tough: {}
+    case Trait::tough:
         break;
 
     case Trait::rugged:
@@ -544,7 +545,7 @@ void trait_prereqs(const Trait id, std::vector<Trait>& traits_ref, Bg& bg_ref)
         traits_ref.push_back(Trait::tough);
         break;
 
-    case Trait::dexterous: {}
+    case Trait::dexterous:
         break;
 
     case Trait::lithe:
@@ -559,10 +560,10 @@ void trait_prereqs(const Trait id, std::vector<Trait>& traits_ref, Bg& bg_ref)
         traits_ref.push_back(Trait::cool_headed);
         break;
 
-    case Trait::healer: {}
+    case Trait::healer:
         break;
 
-    case Trait::observant: {}
+    case Trait::observant:
         break;
 
     case Trait::perceptive:
@@ -592,7 +593,7 @@ void trait_prereqs(const Trait id, std::vector<Trait>& traits_ref, Bg& bg_ref)
         traits_ref.push_back(Trait::observant);
         break;
 
-    case Trait::stout_spirit: {}
+    case Trait::stout_spirit:
         break;
 
     case Trait::strong_spirit:
@@ -604,7 +605,7 @@ void trait_prereqs(const Trait id, std::vector<Trait>& traits_ref, Bg& bg_ref)
         bg_ref = Bg::occultist;
         break;
 
-    case Trait::stealthy: {}
+    case Trait::stealthy:
         break;
 
     case Trait::imperceptible:
@@ -626,7 +627,7 @@ void trait_prereqs(const Trait id, std::vector<Trait>& traits_ref, Bg& bg_ref)
         traits_ref.push_back(Trait::stout_spirit);
         break;
 
-    case Trait::END: {}
+    case Trait::END:
         break;
     }
 
@@ -648,7 +649,10 @@ void pickable_bgs(std::vector<Bg>& bgs_ref)
 {
     bgs_ref.clear();
 
-    for (int i = 0; i < int(Bg::END); ++i) {bgs_ref.push_back(Bg(i));}
+    for (int i = 0; i < int(Bg::END); ++i)
+    {
+        bgs_ref.push_back(Bg(i));
+    }
 
     //Sort lexicographically
     sort(bgs_ref.begin(), bgs_ref.end(), [](const Bg & bg1, const Bg & bg2)
@@ -663,7 +667,7 @@ void pickable_traits(std::vector<Trait>& traits_ref)
 {
     traits_ref.clear();
 
-    for (int i = 0; i < int(Trait::END); ++i)
+    for (size_t i = 0; i < size_t(Trait::END); ++i)
     {
         if (!traits[i])
         {
@@ -676,7 +680,7 @@ void pickable_traits(std::vector<Trait>& traits_ref)
 
             for (Trait prereq : trait_prereq_list)
             {
-                if (!traits[int(prereq)])
+                if (!traits[size_t(prereq)])
                 {
                     is_pickable = false;
                     break;
@@ -685,14 +689,20 @@ void pickable_traits(std::vector<Trait>& traits_ref)
 
             is_pickable = is_pickable && (bg_ == bg_prereq || bg_prereq == Bg::END);
 
-            if (is_pickable) {traits_ref.push_back(Trait(i));}
+            if (is_pickable)
+            {
+                traits_ref.push_back(Trait(i));
+            }
         }
     }
 
     //Limit the number of trait choices (due to screen space constraints)
     random_shuffle(traits_ref.begin(), traits_ref.end());
-    const int MAX_NR_TRAIT_CHOICES = 16;
-    traits_ref.resize(std::min(int(traits_ref.size()), MAX_NR_TRAIT_CHOICES));
+
+    const size_t NR_PICKABLE            = size_t(traits_ref.size());
+    const size_t MAX_NR_TRAIT_CHOICES   = create_character::OPT_H;
+
+    traits_ref.resize(std::min(NR_PICKABLE, MAX_NR_TRAIT_CHOICES));
 
     //Sort lexicographically
     sort(traits_ref.begin(), traits_ref.end(), [](const Trait & t1, const Trait & t2)
@@ -739,7 +749,7 @@ void pick_bg(const Bg bg)
         map::player->ins_ += 10;
         break;
 
-    case Bg::END: {}
+    case Bg::END:
         break;
     }
 }

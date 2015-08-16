@@ -220,7 +220,7 @@ void draw(const Menu_browser& browser)
     TRACE << "Calling clear_window()" << endl;
     render::clear_screen();
 
-    render::draw_popup_box(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+    render::draw_box(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
     if (config::is_tiles_mode())
     {
@@ -333,7 +333,7 @@ void draw(const Menu_browser& browser)
     const int BOX_W_HALF  = 10;
     const int BOX_X0      = pos.x - BOX_W_HALF;
     const int BOX_X1      = pos.x + BOX_W_HALF;
-    render::draw_popup_box(Rect(Pos(BOX_X0, BOX_Y0), Pos(BOX_X1, BOX_Y1)),
+    render::draw_box(Rect(Pos(BOX_X0, BOX_Y0), Pos(BOX_X1, BOX_Y1)),
                            Panel::screen);
 
     render::draw_text_centered(

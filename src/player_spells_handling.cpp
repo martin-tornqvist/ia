@@ -128,7 +128,7 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
         }
     }
 
-    render::draw_popup_box(Rect(Pos(0, 1), Pos(DESCR_X0 - 1, SCREEN_H - 1)));
+    render::draw_box(Rect(Pos(0, 1), Pos(DESCR_X0 - 1, SCREEN_H - 1)));
 
     render::update_screen();
 }

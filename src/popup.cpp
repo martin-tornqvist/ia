@@ -33,7 +33,7 @@ int print_box_and_get_title_y_pos(const int TEXT_H_TOT, const int TEXT_W)
     const int Y1          = Y0 + BOX_H - 1;
 
     render::cover_area(Panel::map, Pos(X0, Y0), Pos(BOX_W, BOX_H));
-    render::draw_popup_box(Rect(X0, Y0, X1, Y1), Panel::map);
+    render::draw_box(Rect(X0, Y0, X1, Y1), Panel::map);
 
     return Y0 + 1;
 }

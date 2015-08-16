@@ -289,8 +289,8 @@ void draw_browse_inv(const Menu_browser& browser)
     const Rect eqp_rect(0, EQP_Y0 - 1, DESCR_X0 - 1, EQP_Y1 + 1);
     const Rect inv_rect(0, INV_Y0 - 1, DESCR_X0 - 1, INV_Y1 + 1);
 
-    render::draw_popup_box(eqp_rect, panel, clr_popup_box, false);
-    render::draw_popup_box(inv_rect, panel, clr_popup_box, false);
+    render::draw_box(eqp_rect, panel, clr_popup_box, false);
+    render::draw_box(inv_rect, panel, clr_popup_box, false);
 
     if (config::is_tiles_mode())
     {

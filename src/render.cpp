@@ -1023,7 +1023,7 @@ void draw_projectiles(std::vector<Projectile*>& projectiles,
     update_screen();
 }
 
-void draw_popup_box(const Rect& border, const Panel panel, const Clr& clr, const bool COVER_AREA)
+void draw_box(const Rect& border, const Panel panel, const Clr& clr, const bool COVER_AREA)
 {
     if (COVER_AREA)
     {

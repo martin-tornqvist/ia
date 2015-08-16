@@ -11,8 +11,28 @@
 namespace create_character
 {
 
+const int OPT_X0    = 1;
+const int OPT_Y0    = 2;
+const int OPT_X1    = 22;
+const int OPT_Y1    = SCREEN_H - 2;
+const int OPT_H     = OPT_Y1 - OPT_Y0 + 1;
+
 namespace
 {
+
+const int DESCR_X0  = OPT_X1 + 2;
+const int DESCR_Y0  = OPT_Y0;
+const int DESCR_X1  = SCREEN_W - 1;
+const int DESCR_Y1  = OPT_Y1;
+
+const int DESCR_W   = DESCR_X1 - DESCR_Y1 + 1;
+
+void draw_opt_box()
+{
+    const Rect r(OPT_X0 - 1, OPT_Y0 - 1, OPT_X1 + 1, OPT_Y1 + 1);
+
+    render::draw_box(r);
+}
 
 namespace enter_name
 {
@@ -20,20 +40,25 @@ namespace enter_name
 void draw(const std::string& cur_string)
 {
     render::clear_screen();
-    render::draw_popup_box(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+
+    render::draw_box(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
     render::draw_text_centered("What is your name?", Panel::screen,
                                Pos(MAP_W_HALF, 0), clr_white);
     const int Y_NAME = 2;
-    const std::string NAME_STR =
-        cur_string.size() < PLAYER_NAME_MAX_LEN ? cur_string + "_" :
-        cur_string;
+
+    const std::string NAME_STR = cur_string.size() < PLAYER_NAME_MAX_LEN ?
+                                 cur_string + "_" : cur_string;
+
     const size_t NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LEN / 2);
     const size_t NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LEN - 1;
-    render::draw_text(NAME_STR, Panel::screen, Pos(NAME_X0, Y_NAME),
-                      clr_menu_highlight);
+
+    render::draw_text(NAME_STR, Panel::screen, Pos(NAME_X0, Y_NAME), clr_menu_highlight);
+
     Rect box_rect(Pos(NAME_X0 - 1, Y_NAME - 1), Pos(NAME_X1 + 1, Y_NAME + 1));
-    render::draw_popup_box(box_rect);
+
+    render::draw_box(box_rect);
+
     render::update_screen();
 }
 
@@ -108,55 +133,43 @@ void run()
 void draw_pick_bg(const std::vector<Bg>& bgs, const Menu_browser& browser)
 {
     render::clear_screen();
-    render::draw_popup_box(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+
+    draw_opt_box();
 
     render::draw_text_centered("Choose your background", Panel::screen,
                                Pos(MAP_W_HALF, 0), clr_white, clr_black, true);
 
-    const Pos& browser_pos = browser.pos();
+    int y = OPT_Y0;
 
-    const int Y0_BGS = 2;
-
-    int y = Y0_BGS;
-
-    const Bg marked_bg = bgs[browser_pos.y];
-
-    const int NR_BGS = bgs.size();
+    const Bg bg_marked = bgs[browser.y()];
 
     //------------------------------------------------------------- BACKGROUNDS
-    for (int i = 0; i < NR_BGS; ++i)
+    for (const Bg bg : bgs)
     {
-        const Bg            bg          = bgs[i];
-        const std::string   name        = player_bon::bg_title(bg);
-        const bool          IS_MARKED   = bg == marked_bg;
+        const std::string   bg_name     = player_bon::bg_title(bg);
+        const bool          IS_MARKED   = bg == bg_marked;
         const Clr&          drw_clr     = IS_MARKED ? clr_menu_highlight : clr_menu_drk;
-        render::draw_text_centered(name, Panel::screen, Pos(MAP_W_HALF, y), drw_clr);
-        y++;
+
+        render::draw_text(bg_name, Panel::screen, Pos(OPT_X0, y), drw_clr);
+        ++y;
     }
 
-    y++;
-
-    const int BGS_BOX_W_HALF = 7;
-    Rect box_rect(Pos(MAP_W_HALF - BGS_BOX_W_HALF, Y0_BGS - 1),
-                  Pos(MAP_W_HALF + BGS_BOX_W_HALF, Y0_BGS + NR_BGS));
-    render::draw_popup_box(box_rect);
-
     //------------------------------------------------------------- DESCRIPTION
-    const int MARGIN_W_DESCR  = 12;
-    const int X0_DESCR        = MARGIN_W_DESCR;
-    const int MAX_W_DESCR     = MAP_W - (MARGIN_W_DESCR * 2);
+    y = DESCR_Y0;
 
     std::vector<std::string> raw_descr_lines;
-    player_bon::bg_descr(marked_bg, raw_descr_lines);
 
-    for (std::string& raw_line : raw_descr_lines)
+    player_bon::bg_descr(bg_marked, raw_descr_lines);
+
+    for (const std::string& raw_line : raw_descr_lines)
     {
         std::vector<std::string> formatted_lines;
-        text_format::line_to_lines(raw_line, MAX_W_DESCR, formatted_lines);
 
-        for (std::string& line : formatted_lines)
+        text_format::line_to_lines(raw_line, DESCR_W, formatted_lines);
+
+        for (const std::string& line : formatted_lines)
         {
-            render::draw_text(line, Panel::screen, Pos(X0_DESCR, y), clr_white);
+            render::draw_text(line, Panel::screen, Pos(DESCR_X0, y), clr_white);
             y++;
         }
     }
@@ -170,12 +183,13 @@ void pick_bg()
     {
         player_bon::pick_bg(Bg(rnd::range(0, int(Bg::END) - 1)));
     }
-    else
+    else //Human playing
     {
         std::vector<Bg> bgs;
         player_bon::pickable_bgs(bgs);
 
         Menu_browser browser(bgs.size(), 0);
+
         draw_pick_bg(bgs, browser);
 
         while (true)
@@ -184,49 +198,30 @@ void pick_bg()
 
             switch (action)
             {
-            case Menu_action::browsed: {draw_pick_bg(bgs, browser);} break;
-
-            case Menu_action::esc:
-            case Menu_action::space: {} break;
+            case Menu_action::browsed:
+                draw_pick_bg(bgs, browser);
+                break;
 
             case Menu_action::selected:
-            {
-                player_bon::pick_bg(bgs[browser.pos().y]);
+                player_bon::pick_bg(bgs[browser.y()]);
                 return;
-            } break;
 
-            case Menu_action::selected_shift: {} break;
+            case Menu_action::esc:
+            case Menu_action::space:
+            case Menu_action::selected_shift:
+                break;
             }
         }
     }
 }
 
-void draw_pick_trait(
-    const std::vector<Trait>& traits1, const std::vector<Trait>& traits2,
-    const Menu_browser& browser, const bool IS_CHARACTER_CREATION)
+void draw_pick_trait(const std::vector<Trait>& traits,
+                     const Menu_browser& browser,
+                     const bool IS_CHARACTER_CREATION)
 {
-
     render::clear_screen();
-    render::draw_popup_box(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
-    const int NR_TRAITS_1 = traits1.size();
-    const int NR_TRAITS_2 = traits2.size();
-
-    int len_of_longest_in_col2 = -1;
-
-    for (const Trait& id : traits2)
-    {
-        std::string title = player_bon::trait_title(id);
-
-        const int CUR_LEN = title.length();
-
-        if (CUR_LEN > len_of_longest_in_col2) {len_of_longest_in_col2 = CUR_LEN;}
-    }
-
-    const int MARGIN_W        = 19;
-    const int X_COL_ONE       = MARGIN_W;
-    const int X_COL_TWO_RIGHT = MAP_W - MARGIN_W - 1;
-    const int X_COL_TWO       = X_COL_TWO_RIGHT - len_of_longest_in_col2 + 1;
+    draw_opt_box();
 
     std::string title = IS_CHARACTER_CREATION ?
                         "Which additional trait do you start with?" :
@@ -235,78 +230,53 @@ void draw_pick_trait(
     render::draw_text_centered(title, Panel::screen, Pos(MAP_W_HALF, 0),
                                clr_white, clr_black, true);
 
-    const Pos& browser_pos = browser.pos();
+    const Trait trait_marked = traits[browser.y()];
 
     //------------------------------------------------------------- TRAITS
-    const int Y0_TRAITS = 2;
-    int y = Y0_TRAITS;
+    int y = OPT_Y0;
 
-    for (int i = 0; i < NR_TRAITS_1; ++i)
+    for (const Trait trait : traits)
     {
-        const Trait trait = traits1[i];
+        std::string     trait_name  = player_bon::trait_title(trait);
+        const bool      IS_MARKED   = trait == trait_marked;
+        const Clr&      drw_clr     = IS_MARKED ? clr_menu_highlight : clr_menu_drk;
 
-        std::string name = player_bon::trait_title(trait);
+        render::draw_text(trait_name, Panel::screen, Pos(OPT_X0, y), drw_clr);
 
-        const bool  IS_MARKED   = browser_pos.x == 0 && browser_pos.y == int(i);
-        const Clr&  drw_clr     = IS_MARKED ? clr_menu_highlight : clr_menu_drk;
-        render::draw_text(name, Panel::screen, Pos(X_COL_ONE, y), drw_clr);
-        y++;
+        ++y;
     }
-
-    y = Y0_TRAITS;
-
-    for (int i = 0; i < NR_TRAITS_2; ++i)
-    {
-        const Trait trait   = traits2[i];
-        std::string name    = player_bon::trait_title(trait);
-
-        const bool  IS_MARKED   = browser_pos.x == 1 && browser_pos.y == int(i);
-        const Clr&  drw_clr     = IS_MARKED ? clr_menu_highlight : clr_menu_drk;
-
-        render::draw_text(name, Panel::screen, Pos(X_COL_TWO, y), drw_clr);
-        y++;
-    }
-
-    //Draw frame around traits
-    Rect box_rect(
-        Pos(MARGIN_W - 2, Y0_TRAITS - 1),
-        Pos(X_COL_TWO_RIGHT + 2, Y0_TRAITS + traits1.size()));
-    render::draw_popup_box(box_rect);
 
     //------------------------------------------------------------- DESCRIPTION
-    const int Y0_DESCR = Y0_TRAITS + NR_TRAITS_1 + 1;
-    const int X0_DESCR = X_COL_ONE;
-    y = Y0_DESCR;
+    y = DESCR_Y0;
 
-    const Trait marked_trait = browser_pos.x == 0 ?
-                               traits1[browser_pos.y] :
-                               traits2[browser_pos.y];
+    std::string descr = player_bon::trait_descr(trait_marked);
 
-    std::string descr = player_bon::trait_descr(marked_trait);
-
-    const int MAX_W_DESCR = X_COL_TWO_RIGHT - X_COL_ONE + 1;
     std::vector<std::string> descr_lines;
-    text_format::line_to_lines(
-        "Effect(s): " + descr, MAX_W_DESCR, descr_lines);
+
+    text_format::line_to_lines("Effect(s): " + descr, DESCR_W, descr_lines);
 
     for (const std::string& str : descr_lines)
     {
-        render::draw_text(str, Panel::screen, Pos(X0_DESCR, y), clr_white);
-        y++;
+        render::draw_text(str, Panel::screen, Pos(DESCR_X0, y), clr_white);
+        ++y;
     }
 
     //------------------------------------------------------------- PREREQUISITES
     const int Y0_PREREQS = 17;
+
     y = Y0_PREREQS;
+
     std::vector<Trait> trait_prereqs;
+
     Bg bg_prereq = Bg::END;
-    player_bon::trait_prereqs(marked_trait, trait_prereqs, bg_prereq);
+
+    player_bon::trait_prereqs(trait_marked, trait_prereqs, bg_prereq);
 
     if (!trait_prereqs.empty() || bg_prereq != Bg::END)
     {
         render::draw_text("This trait had the following prerequisite(s):",
-                          Panel::screen, Pos(X0_DESCR, y), clr_white);
-        y++;
+                          Panel::screen, Pos(DESCR_X0, y), clr_white);
+        ++y;
 
         std::string prereq_str = "";
 
@@ -323,31 +293,31 @@ void draw_pick_trait(
         }
 
         std::vector<std::string> prereq_lines;
-        text_format::line_to_lines(prereq_str, MAX_W_DESCR, prereq_lines);
+        text_format::line_to_lines(prereq_str, DESCR_W, prereq_lines);
 
         for (const std::string& str : prereq_lines)
         {
-            render::draw_text(str, Panel::screen, Pos(X0_DESCR, y), clr_white);
-            y++;
+            render::draw_text(str, Panel::screen, Pos(DESCR_X0, y), clr_white);
+            ++y;
         }
     }
 
     //------------------------------------------------------------- PREVIOUS
     y = Y0_PREREQS + 4;
-    const int MAX_W_PREV_PICKS  = SCREEN_W - 2;
 
     std::string picked_str = player_bon::all_picked_traits_titles_line();
 
     if (picked_str != "")
     {
         picked_str = "Trait(s) gained: " + picked_str;
+
         std::vector<std::string> picked_lines;
-        text_format::line_to_lines(picked_str, MAX_W_PREV_PICKS, picked_lines);
+        text_format::line_to_lines(picked_str, DESCR_W, picked_lines);
 
         for (const std::string& str : picked_lines)
         {
-            render::draw_text(str, Panel::screen, Pos(1, y), clr_white);
-            y++;
+            render::draw_text(str, Panel::screen, Pos(DESCR_X0, y), clr_white);
+            ++y;
         }
     }
 
@@ -365,64 +335,44 @@ void create_character()
 
 void pick_new_trait(const bool IS_CHARACTER_CREATION)
 {
-    if (!config::is_bot_playing())
+    if (config::is_bot_playing())
     {
-        std::vector<Trait> pickable_traits;
-        player_bon::pickable_traits(pickable_traits);
+        return;
+    }
 
-        if (!pickable_traits.empty())
+    std::vector<Trait> pickable_traits;
+    player_bon::pickable_traits(pickable_traits);
+
+    if (!pickable_traits.empty())
+    {
+        Menu_browser browser(pickable_traits.size(), 0);
+
+        draw_pick_trait(pickable_traits, browser, IS_CHARACTER_CREATION);
+
+        while (true)
         {
+            const Menu_action action = menu_input_handling::action(browser);
 
-            const int NR_TRAITS_TOT = int(pickable_traits.size());
-            const int NR_TRAITS_2   = NR_TRAITS_TOT / 2;
-            const int NR_TRAITS_1   = NR_TRAITS_TOT - NR_TRAITS_2;
-
-            std::vector<Trait> traits1; traits1.clear();
-            std::vector<Trait> traits2; traits2.clear();
-
-            for (int i = 0; i < NR_TRAITS_TOT; ++i)
+            switch (action)
             {
-                const Trait trait = pickable_traits[i];
+            case Menu_action::browsed:
+                draw_pick_trait(pickable_traits, browser, IS_CHARACTER_CREATION);
+                break;
 
-                if (i < NR_TRAITS_1)
+            case Menu_action::selected:
+                player_bon::pick_trait(pickable_traits[browser.y()]);
+
+                if (!IS_CHARACTER_CREATION)
                 {
-                    traits1.push_back(trait);
+                    render::draw_map_and_interface();
                 }
-                else
-                {
-                    traits2.push_back(trait);
-                }
-            }
 
-            Menu_browser browser(traits1.size(), traits2.size());
-            draw_pick_trait(traits1, traits2, browser, IS_CHARACTER_CREATION);
+                return;
 
-            while (true)
-            {
-                const Menu_action action = menu_input_handling::action(browser);
-
-                switch (action)
-                {
-                case Menu_action::browsed:
-                {
-                    draw_pick_trait(traits1, traits2, browser, IS_CHARACTER_CREATION);
-                } break;
-
-                case Menu_action::esc:
-                case Menu_action::space: {} break;
-
-                case Menu_action::selected:
-                {
-                    const Pos pos = browser.pos();
-                    player_bon::pick_trait(pos.x == 0 ? traits1[pos.y] : traits2[pos.y]);
-
-                    if (!IS_CHARACTER_CREATION) {render::draw_map_and_interface();}
-
-                    return;
-                } break;
-
-                case Menu_action::selected_shift: {} break;
-                }
+            case Menu_action::esc:
+            case Menu_action::space:
+            case Menu_action::selected_shift:
+                break;
             }
         }
     }
