@@ -15,29 +15,29 @@
 #include "create_character.hpp"
 #include "actor_mon.hpp"
 
-using namespace std;
-
 namespace dungeon_master
 {
 
 namespace
 {
 
-int       xp_for_lvl_[PLAYER_MAX_CLVL + 1];
-int       clvl_  = 0;
-int       xp_    = 0;
-Time_data  time_started_;
+int         xp_for_lvl_[PLAYER_MAX_CLVL + 1];
+int         clvl_  = 0;
+int         xp_    = 0;
+Time_data   time_started_;
 
 void player_gain_lvl()
 {
     if (map::player->is_alive())
     {
-        clvl_++;
+        ++clvl_;
 
         msg_log::add("Welcome to level " + to_str(clvl_) + "!", clr_green, false,
                      More_prompt_on_msg::yes);
 
-        create_character::pick_new_trait(false);
+        create_character::pick_new_trait();
+
+        render::draw_map_and_interface();
 
         map::player->restore_hp(999, false, Verbosity::silent);
         map::player->change_max_hp(HP_PER_LVL);
@@ -67,7 +67,7 @@ void init()
     init_xp_array();
 }
 
-void store_to_save_lines(vector<string>& lines)
+void store_to_save_lines(std::vector<std::string>& lines)
 {
     lines.push_back(to_str(clvl_));
     lines.push_back(to_str(xp_));
@@ -79,7 +79,7 @@ void store_to_save_lines(vector<string>& lines)
     lines.push_back(to_str(time_started_.second_));
 }
 
-void setup_from_save_lines(vector<string>& lines)
+void setup_from_save_lines(std::vector<std::string>& lines)
 {
     clvl_ = to_int(lines.front());
     lines.erase(begin(lines));
@@ -129,14 +129,11 @@ void player_gain_xp(const int XP_GAINED)
     {
         for (int i = 0; i < XP_GAINED; ++i)
         {
-            xp_++;
+            ++xp_;
 
-            if (clvl_ < PLAYER_MAX_CLVL)
+            if (clvl_ < PLAYER_MAX_CLVL && xp_ >= xp_for_lvl_[clvl_ + 1])
             {
-                if (xp_ >= xp_for_lvl_[clvl_ + 1])
-                {
-                    player_gain_lvl();
-                }
+                player_gain_lvl();
             }
         }
     }
@@ -144,7 +141,8 @@ void player_gain_xp(const int XP_GAINED)
 
 int xp_to_next_lvl()
 {
-    if (clvl_ == PLAYER_MAX_CLVL) {return -1;}
+    if (clvl_ == PLAYER_MAX_CLVL) {
+            return -1;}
 
     return xp_for_lvl_[clvl_ + 1] - xp_;
 }
@@ -161,7 +159,7 @@ void win_game()
     render::cover_panel(Panel::screen);
     render::update_screen();
 
-    const vector<string> win_msg =
+    const std::vector<std::string> win_msg =
     {
         "As I touch the crystal, there is a jolt of electricity. A surreal glow "
         "suddenly illuminates the area. I feel as if I have stirred something. I notice "
@@ -189,12 +187,12 @@ void win_game()
 
     int y = 2;
 
-    for (const string& section_msg : win_msg)
+    for (const std::string& section_msg : win_msg)
     {
-        vector<string> section_lines;
+        std::vector<std::string> section_lines;
         text_format::line_to_lines(section_msg, MAX_W, section_lines);
 
-        for (const string& line : section_lines)
+        for (const std::string& line : section_lines)
         {
             render::draw_text(line, Panel::screen, Pos(X0, y), clr_white, clr_black);
 
@@ -208,7 +206,7 @@ void win_game()
 
     ++y;
 
-    const string CMD_LABEL =
+    const std::string CMD_LABEL =
         "[space/esc/enter] to record high score and return to main menu";
 
     render::draw_text_centered(CMD_LABEL, Panel::screen, Pos(MAP_W_HALF, y), clr_menu_medium,
@@ -227,7 +225,7 @@ void on_mon_killed(Actor& actor)
 
     if (d.hp >= 3 && map::player->obsessions[int(Obsession::sadism)])
     {
-        map::player->shock_ = max(0.0, map::player->shock_ - 3.0);
+        map::player->shock_ = std::max(0.0, map::player->shock_ - 3.0);
     }
 
     Mon* const  mon = static_cast<Mon*>(&actor);
@@ -236,7 +234,7 @@ void on_mon_killed(Actor& actor)
     {
         const int MON_XP_TOT    = mon_tot_xp_worth(d);
         const int XP_GAINED     = mon->has_given_xp_for_spotting_ ?
-                                  max(1, MON_XP_TOT / 2) : MON_XP_TOT;
+                                  std::max(1, MON_XP_TOT / 2) : MON_XP_TOT;
         player_gain_xp(XP_GAINED);
     }
 }

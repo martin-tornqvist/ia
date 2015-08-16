@@ -579,6 +579,46 @@ void Potion_descent::quaff_impl(Actor& actor)
     identify(Verbosity::verbose);
 }
 
+void Potion_invis::quaff_impl(Actor& actor)
+{
+    actor.prop_handler().try_add_prop(new Prop_invisible(Prop_turns::std));
+
+    if (map::player->can_see_actor(actor))
+    {
+        identify(Verbosity::verbose);
+    }
+}
+
+void Potion_invis::collide_hook(const Pos& pos, Actor* const actor)
+{
+    (void)pos;
+
+    if (actor)
+    {
+        quaff_impl(*actor);
+    }
+}
+
+void Potion_seeing::quaff_impl(Actor& actor)
+{
+    actor.prop_handler().try_add_prop(new Prop_seeing(Prop_turns::std));
+
+    if (map::player->can_see_actor(actor))
+    {
+        identify(Verbosity::verbose);
+    }
+}
+
+void Potion_seeing::collide_hook(const Pos& pos, Actor* const actor)
+{
+    (void)pos;
+
+    if (actor)
+    {
+        quaff_impl(*actor);
+    }
+}
+
 namespace potion_handling
 {
 

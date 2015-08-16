@@ -388,21 +388,24 @@ bool move_to_random_adj_cell(Mon& mon)
 
 bool move_to_tgt_simple(Mon& mon)
 {
-    if (mon.is_alive() && mon.tgt_)
+    if (!mon.is_alive() || !mon.tgt_)
     {
-        if (mon.aware_counter_ > 0 || map::player->is_leader_of(&mon))
-        {
-            const Pos offset  = mon.tgt_->pos - mon.pos;
-            const Pos signs   = offset.signs();
-            bool blocked[MAP_W][MAP_H];
-            map_parse::run(cell_check::Blocks_actor(mon, true), blocked);
-            const Pos new_pos(mon.pos + signs);
+        return false;
+    }
 
-            if (!blocked[new_pos.x][new_pos.y])
-            {
-                mon.move(dir_utils::dir(signs));
-                return true;
-            }
+    if (mon.aware_counter_ > 0 || map::player->is_leader_of(&mon))
+    {
+        const Pos offset  = mon.tgt_->pos - mon.pos;
+        const Pos signs   = offset.signs();
+
+        const Pos new_pos(mon.pos + signs);
+
+        const bool IS_BLOCKED = map_parse::cell(cell_check::Blocks_actor(mon, true), new_pos);
+
+        if (!IS_BLOCKED)
+        {
+            mon.move(dir_utils::dir(signs));
+            return true;
         }
     }
 
@@ -521,8 +524,8 @@ bool look_become_player_aware(Mon& mon)
     return false;
 }
 
-void set_path_to_lair_if_no_los(Mon& mon, std::vector<Pos>& path,
-                                const Pos& lair_p)
+void try_set_path_to_lair_if_no_los(Mon& mon, std::vector<Pos>& path,
+                                    const Pos& lair_p)
 {
     if (mon.is_alive())
     {
@@ -552,7 +555,7 @@ void set_path_to_lair_if_no_los(Mon& mon, std::vector<Pos>& path,
     path.clear();
 }
 
-void set_path_to_leader_if_no_los_to_leader(Mon& mon, std::vector<Pos>& path)
+void try_set_path_to_leader(Mon& mon, std::vector<Pos>& path)
 {
     if (mon.is_alive())
     {
@@ -591,7 +594,7 @@ void set_path_to_leader_if_no_los_to_leader(Mon& mon, std::vector<Pos>& path)
     path.clear();
 }
 
-void set_path_to_player_if_aware(Mon& mon, std::vector<Pos>& path)
+void try_set_path_to_player(Mon& mon, std::vector<Pos>& path)
 {
     if (!mon.is_alive() || mon.aware_counter_ <= 0)
     {
@@ -607,6 +610,7 @@ void set_path_to_player_if_aware(Mon& mon, std::vector<Pos>& path)
     const int X1 = MAP_W - 1;
     const int Y1 = MAP_H - 1;
 
+    //Mark blocking features in the blocking array
     for (int x = X0; x < X1; ++x)
     {
         for (int y = Y0; y < Y1; ++y)
@@ -617,18 +621,19 @@ void set_path_to_player_if_aware(Mon& mon, std::vector<Pos>& path)
             {
                 if (f->id() == Feature_id::door)
                 {
-                    const Door* const door = static_cast<const Door*>(f);
+                    //Mark doors as blocked depending on if the monster can bash or open doors,
 
                     const Actor_data_t& d = mon.data();
 
-                    if (
-                        (!d.can_open_doors && !d.can_bash_doors) ||
-                        door->is_handled_externally())
+                    //TODO: What if there is a monster that can open doors but not bash them,
+                    //and the door is stuck?
+
+                    if (!d.can_open_doors && !d.can_bash_doors)
                     {
                         blocked[x][y] = true;
                     }
                 }
-                else //Not a door
+                else //Not a door (e.g. a wall)
                 {
                     blocked[x][y] = true;
                 }
@@ -636,11 +641,26 @@ void set_path_to_player_if_aware(Mon& mon, std::vector<Pos>& path)
         }
     }
 
-    //Append living adjacent actors to the blocking array
-    map_parse::run(cell_check::Living_actors_adj_to_pos(mon.pos), blocked,
-                   Map_parse_mode::append);
+    //If there is an unblocked LOS between the monster and the player we cancel the pathfinding.
+    //The monster should not use the pathfinder to move towards the player in this case. If the
+    //player is invisible for example, we DO want pathfinding as long as the monster is aware,
+    //and is around corner (they are guided by sound or something else) - but when they come into
+    //LOS of an invisible player, they should not approach further.
+    //This creates a pretty cool effect, where monsters appear a bit confused that they cannot see
+    //anyone when they should have come into sight.
+    const Pos& player_pos = map::player->pos;
 
-    path_find::run(mon.pos, map::player->pos, blocked, path);
+    Los_result los_result = fov::check_cell(mon.pos, player_pos, blocked);
+
+    if (los_result.is_blocked_hard || los_result.is_blocked_by_drk)
+    {
+        //Append living adjacent actors to the blocking array
+        map_parse::run(cell_check::Living_actors_adj_to_pos(mon.pos), blocked,
+                       Map_parse_mode::append);
+
+        //Find a path
+        path_find::run(mon.pos, player_pos, blocked, path);
+    }
 }
 
 void set_special_blocked_cells(Mon& mon, bool a[MAP_W][MAP_H])

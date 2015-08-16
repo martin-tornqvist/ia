@@ -23,6 +23,137 @@ namespace
 
 Bg bg_ = Bg::END;
 
+bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
+{
+    switch (trait)
+    {
+    case Trait::adept_melee_fighter:
+        break;
+
+    case Trait::expert_melee_fighter:
+        break;
+
+    case Trait::master_melee_fighter:
+        break;
+
+    case Trait::adept_marksman:
+        break;
+
+    case Trait::expert_marksman:
+        break;
+
+    case Trait::master_marksman:
+        break;
+
+    case Trait::steady_aimer:
+        break;
+
+    case Trait::sharp_shooter:
+        break;
+
+    case Trait::dem_expert:
+        //Too much character theme mismatch
+        return bg == Bg::occultist || bg == Bg::ghoul;
+
+    case Trait::cool_headed:
+        break;
+
+    case Trait::courageous:
+        break;
+
+    case Trait::warlock:
+        break;
+
+    case Trait::summoner:
+        break;
+
+    case Trait::blood_sorcerer:
+        break;
+
+    case Trait::seer:
+        break;
+
+    case Trait::tough:
+        break;
+
+    case Trait::rugged:
+        break;
+
+    case Trait::unbreakable:
+        break;
+
+    case Trait::strong_backed:
+        break;
+
+    case Trait::dexterous:
+        break;
+
+    case Trait::lithe:
+        break;
+
+    case Trait::mobile:
+        break;
+
+    case Trait::fearless:
+        break;
+
+    case Trait::healer:
+        //Cannot use Medial Bag
+        return bg == Bg::ghoul;
+
+    case Trait::observant:
+        break;
+
+    case Trait::perceptive:
+        break;
+
+    case Trait::vigilant:
+        break;
+
+    case Trait::rapid_recoverer:
+        break;
+
+    case Trait::survivalist:
+        //Has RDISEASE already, so trait is partly useless
+        return bg == Bg::ghoul;
+
+    case Trait::perseverant:
+        break;
+
+    case Trait::self_aware:
+        break;
+
+    case Trait::stout_spirit:
+        break;
+
+    case Trait::strong_spirit:
+        break;
+
+    case Trait::mighty_spirit:
+        break;
+
+    case Trait::stealthy:
+        break;
+
+    case Trait::imperceptible:
+        break;
+
+    case Trait::vicious:
+        break;
+
+    case Trait::treasure_hunter:
+        break;
+
+    case Trait::undead_bane:
+        break;
+
+    case Trait::END:
+        break;
+    }
+
+    return false;
+}
+
 } //Namespace
 
 void init()
@@ -380,14 +511,14 @@ std::string trait_descr(const Trait id)
 
     case Trait::dexterous:
         return "+25% chance to dodge melee attacks, better chances to evade traps, "
-               "every fifth move is a free action";
+               "every fifth step is a free action";
 
     case Trait::lithe:
         return "+25% chance to dodge melee attacks, better chances to evade traps, "
-               "every fourth move is a free action";
+               "every fourth step is a free action";
 
     case Trait::mobile:
-        return "Every second move is a free action";
+        return "Every second step is a free action";
 
     case Trait::fearless:
         return "You cannot become terrified, +5% shock resistance";
@@ -457,12 +588,15 @@ std::string trait_descr(const Trait id)
     return "[TRAIT DESCRIPTION MISSING]";
 }
 
-void trait_prereqs(const Trait id, std::vector<Trait>& traits_ref, Bg& bg_ref)
+void trait_prereqs(const Trait trait,
+                   const Bg bg,
+                   std::vector<Trait>& traits_ref,
+                   Bg& bg_ref)
 {
     traits_ref.clear();
     bg_ref = Bg::END;
 
-    switch (id)
+    switch (trait)
     {
     case Trait::adept_melee_fighter:
         break;
@@ -631,6 +765,21 @@ void trait_prereqs(const Trait id, std::vector<Trait>& traits_ref, Bg& bg_ref)
         break;
     }
 
+    //Remove traits which are blocked for this background (prerequisites are considered fulfilled)
+    for (auto it = begin(traits_ref); it != end(traits_ref); /* No increment */)
+    {
+        const Trait trait = *it;
+
+        if (is_trait_blocked_for_bg(trait, bg))
+        {
+            it = traits_ref.erase(it);
+        }
+        else //Not blocked
+        {
+            ++it;
+        }
+    }
+
     //Sort lexicographically
     sort(traits_ref.begin(), traits_ref.end(), [](const Trait & t1, const Trait & t2)
     {
@@ -663,18 +812,27 @@ void pickable_bgs(std::vector<Bg>& bgs_ref)
     });
 }
 
-void pickable_traits(std::vector<Trait>& traits_ref)
+void pickable_traits(const Bg bg, std::vector<Trait>& traits_ref)
 {
     traits_ref.clear();
 
     for (size_t i = 0; i < size_t(Trait::END); ++i)
     {
-        if (!traits[i])
+        const Trait trait = Trait(i);
+
+        //Only allow picking trait if not already picked, and not blocked for this background
+        const bool IS_PICKED            = traits[i];
+        const bool IS_BLOCKED_FOR_BG    = is_trait_blocked_for_bg(trait, bg);
+
+        if (!IS_PICKED && !IS_BLOCKED_FOR_BG)
         {
+            //Check trait prerequisites (traits and background)
+            //NOTE: Traits blocked for the current background are not considered prerequisites
+
             std::vector<Trait> trait_prereq_list;
             Bg bg_prereq = Bg::END;
 
-            trait_prereqs(Trait(i), trait_prereq_list, bg_prereq);
+            trait_prereqs(trait, bg, trait_prereq_list, bg_prereq);
 
             bool is_pickable = true;
 
@@ -691,18 +849,22 @@ void pickable_traits(std::vector<Trait>& traits_ref)
 
             if (is_pickable)
             {
-                traits_ref.push_back(Trait(i));
+                traits_ref.push_back(trait);
             }
         }
     }
 
     //Limit the number of trait choices (due to screen space constraints)
-    random_shuffle(traits_ref.begin(), traits_ref.end());
+    const size_t NR_PICKABLE    = size_t(traits_ref.size());
+    const size_t MAX_NR_CHOICES = create_character::OPT_H;
 
-    const size_t NR_PICKABLE            = size_t(traits_ref.size());
-    const size_t MAX_NR_TRAIT_CHOICES   = create_character::OPT_H;
+    if (NR_PICKABLE > MAX_NR_CHOICES)
+    {
+        //Limit the traits by random removal
+        random_shuffle(traits_ref.begin(), traits_ref.end());
 
-    traits_ref.resize(std::min(NR_PICKABLE, MAX_NR_TRAIT_CHOICES));
+        traits_ref.resize(MAX_NR_CHOICES);
+    }
 
     //Sort lexicographically
     sort(traits_ref.begin(), traits_ref.end(), [](const Trait & t1, const Trait & t2)

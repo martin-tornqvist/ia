@@ -136,7 +136,10 @@ void Mon::on_actor_turn()
 
     tgt_ = utils::random_closest_actor(pos, tgt_bucket);
 
-    if (spell_cool_down_cur_ != 0) {spell_cool_down_cur_--;}
+    if (spell_cool_down_cur_ != 0)
+    {
+        spell_cool_down_cur_--;
+    }
 
     if (aware_counter_ > 0)
     {
@@ -146,8 +149,7 @@ void Mon::on_actor_turn()
         {
             if (leader_->is_alive() && !is_actor_my_leader(map::player))
             {
-                static_cast<Mon*>(leader_)->aware_counter_ =
-                    leader_->data().nr_turns_aware;
+                static_cast<Mon*>(leader_)->aware_counter_ = leader_->data().nr_turns_aware;
             }
         }
         else //Monster does not have a leader
@@ -160,7 +162,7 @@ void Mon::on_actor_turn()
     }
 
     is_sneaking_ = !is_actor_my_leader(map::player)         &&
-                   ability(Ability_id::stealth, true) > 0    &&
+                   ability(Ability_id::stealth, true) > 0   &&
                    !map::player->can_see_actor(*this);
 
     //Array used for AI purposes, e.g. to prevent tactically bad positions,
@@ -203,7 +205,7 @@ void Mon::on_actor_turn()
         }
     }
 
-    if (rnd::one_in(6))
+    if (rnd::one_in(5))
     {
         if (ai::action::try_cast_random_spell(*this))
         {
@@ -273,7 +275,7 @@ void Mon::on_actor_turn()
         leader_ != map::player                              &&
         !IS_TERRIFIED)
     {
-        ai::info::set_path_to_player_if_aware(*this, path);
+        ai::info::try_set_path_to_player(*this, path);
     }
 
     if (leader_ != map::player)
@@ -291,7 +293,7 @@ void Mon::on_actor_turn()
 
     if (data_->ai[size_t(Ai_id::moves_to_leader)] && !IS_TERRIFIED)
     {
-        ai::info::set_path_to_leader_if_no_los_to_leader(*this, path);
+        ai::info::try_set_path_to_leader(*this, path);
 
         if (ai::action::step_path(*this, path))
         {
@@ -311,7 +313,7 @@ void Mon::on_actor_turn()
         else //No LOS to lair
         {
             //Try to use pathfinder to travel to lair
-            ai::info::set_path_to_lair_if_no_los(*this, path, lair_cell_);
+            ai::info::try_set_path_to_lair_if_no_los(*this, path, lair_cell_);
 
             if (ai::action::step_path(*this, path))
             {
@@ -338,6 +340,7 @@ bool Mon::can_see_actor(const Actor& other, const bool hard_blocked_los[MAP_W][M
         return true;
     }
 
+    //Outside FOV range?
     if (!fov::is_in_fov_range(pos, other.pos))
     {
         //Other actor is outside FOV range
@@ -353,27 +356,43 @@ bool Mon::can_see_actor(const Actor& other, const bool hard_blocked_los[MAP_W][M
         return false;
     }
 
+    //Monster is blind?
     if (!prop_handler_->allow_see())
     {
         return false;
     }
 
-    if (hard_blocked_los)
+    const Los_result los = fov::check_cell(pos, other.pos, hard_blocked_los);
+
+    //LOS blocked hard (e.g. a wall)?
+    if (los.is_blocked_hard)
     {
-        const Los_result los = fov::check_cell(pos, other.pos, hard_blocked_los);
-
-        if (los.is_blocked_hard)
-        {
-            return false;
-        }
-
-        bool        HAS_INFRAVIS            = prop_handler_->has_prop(Prop_id::infravis);
-        const bool  IS_OTHER_INFRA_VISIBLE  = other.data().is_infra_visible;
-
-        return !los.is_blocked_by_drk || (HAS_INFRAVIS && IS_OTHER_INFRA_VISIBLE);
+        return false;
     }
 
-    return false;
+    const bool CAN_SEE_INVIS = has_prop(Prop_id::seeing);
+
+    //Actor is invisible, and monster cannot see invisible?
+    if (other.has_prop(Prop_id::invis) && !CAN_SEE_INVIS)
+    {
+        return false;
+    }
+
+    bool        HAS_INFRAVIS                = has_prop(Prop_id::infravis);
+    const bool  IS_OTHER_INFRA_VISIBLE      = other.data().is_infra_visible;
+
+    const bool  CAN_SEE_ACTOR_WITH_INFRAVIS = HAS_INFRAVIS && IS_OTHER_INFRA_VISIBLE;
+
+    const bool  CAN_SEE_OTHER_IN_DRK        = CAN_SEE_INVIS || CAN_SEE_ACTOR_WITH_INFRAVIS;
+
+    //Blocked by darkness, and not seeing actor with infravision?
+    if (los.is_blocked_by_drk && !CAN_SEE_OTHER_IN_DRK)
+    {
+        return false;
+    }
+
+    //OK, all checks passed, actor can bee seen!
+    return true;
 }
 
 void Mon::on_std_turn()
@@ -493,7 +512,7 @@ void Mon::become_aware(const bool IS_FROM_SEEING)
     if (is_alive())
     {
         const int AWARENESS_CNT_BEFORE  = aware_counter_;
-        aware_counter_                   = data_->nr_turns_aware;
+        aware_counter_                  = data_->nr_turns_aware;
 
         if (AWARENESS_CNT_BEFORE <= 0)
         {
@@ -969,13 +988,25 @@ bool Vortex::on_actor_turn_hook()
         const Pos   delta               = player_pos - pos;
         Pos         knock_back_from_pos    = player_pos;
 
-        if (delta.x >  1) {knock_back_from_pos.x++;}
+        if (delta.x >  1)
+        {
+            knock_back_from_pos.x++;
+        }
 
-        if (delta.x < -1) {knock_back_from_pos.x--;}
+        if (delta.x < -1)
+        {
+            knock_back_from_pos.x--;
+        }
 
-        if (delta.y >  1) {knock_back_from_pos.y++;}
+        if (delta.y >  1)
+        {
+            knock_back_from_pos.y++;
+        }
 
-        if (delta.y < -1) {knock_back_from_pos.y--;}
+        if (delta.y < -1)
+        {
+            knock_back_from_pos.y--;
+        }
 
         if (knock_back_from_pos != player_pos)
         {
@@ -1322,8 +1353,9 @@ bool Khephren::on_actor_turn_hook()
                 {
                     Actor* const actor  = actor_factory::mk(Actor_id::locust, free_cells[0]);
                     Mon* const mon      = static_cast<Mon*>(actor);
-                    mon->aware_counter_  = 999;
+                    mon->aware_counter_ = 999;
                     mon->leader_        = leader_ ? leader_ : this;
+
                     free_cells.erase(begin(free_cells));
                 }
 
@@ -1357,8 +1389,8 @@ bool Ape::on_actor_turn_hook()
     }
 
     if (
-        frenzy_cool_down_ <= 0    &&
-        tgt_                    &&
+        frenzy_cool_down_ <= 0      &&
+        tgt_                        &&
         (hp() <= hp_max(true) / 2))
     {
         frenzy_cool_down_ = 30;
@@ -1430,8 +1462,8 @@ bool Keziah_mason::on_actor_turn_hook()
                     Mon* jenkin           = static_cast<Mon*>(actor);
                     render::draw_map_and_interface();
                     has_summoned_jenkin     = true;
-                    jenkin->aware_counter_ = 999;
-                    jenkin->leader_       = leader_ ? leader_ : this;
+                    jenkin->aware_counter_  = 999;
+                    jenkin->leader_         = leader_ ? leader_ : this;
                     game_time::tick();
                     return true;
                 }
@@ -1614,12 +1646,12 @@ bool Worm_mass::on_actor_turn_hook()
 
             if (!blocked[p_adj.x][p_adj.y])
             {
-                Actor* const    actor   = actor_factory::mk(data_->id, p_adj);
-                Worm_mass* const worm    = static_cast<Worm_mass*>(actor);
+                Actor* const    actor       = actor_factory::mk(data_->id, p_adj);
+                Worm_mass* const worm       = static_cast<Worm_mass*>(actor);
                 spawn_new_one_in_n += 8;
                 worm->spawn_new_one_in_n    = spawn_new_one_in_n;
-                worm->aware_counter_     = aware_counter_;
-                worm->leader_           = leader_ ? leader_ : this;
+                worm->aware_counter_        = aware_counter_;
+                worm->leader_               = leader_ ? leader_ : this;
                 game_time::tick();
                 return true;
             }

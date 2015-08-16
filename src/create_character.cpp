@@ -7,6 +7,7 @@
 #include "text_format.hpp"
 #include "utils.hpp"
 #include "map.hpp"
+#include "dungeon_master.hpp"
 
 namespace create_character
 {
@@ -41,19 +42,17 @@ void draw(const std::string& cur_string)
 {
     render::clear_screen();
 
-    render::draw_box(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
-
     render::draw_text_centered("What is your name?", Panel::screen,
                                Pos(MAP_W_HALF, 0), clr_white);
-    const int Y_NAME = 2;
+    const int Y_NAME = 3;
 
-    const std::string NAME_STR = cur_string.size() < PLAYER_NAME_MAX_LEN ?
+    const std::string name_str = cur_string.size() < PLAYER_NAME_MAX_LEN ?
                                  cur_string + "_" : cur_string;
 
     const size_t NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LEN / 2);
     const size_t NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LEN - 1;
 
-    render::draw_text(NAME_STR, Panel::screen, Pos(NAME_X0, Y_NAME), clr_menu_highlight);
+    render::draw_text(name_str, Panel::screen, Pos(NAME_X0, Y_NAME), clr_menu_highlight);
 
     Rect box_rect(Pos(NAME_X0 - 1, Y_NAME - 1), Pos(NAME_X1 + 1, Y_NAME + 1));
 
@@ -215,15 +214,15 @@ void pick_bg()
     }
 }
 
-void draw_pick_trait(const std::vector<Trait>& traits,
-                     const Menu_browser& browser,
-                     const bool IS_CHARACTER_CREATION)
+void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& browser)
 {
     render::clear_screen();
 
     draw_opt_box();
 
-    std::string title = IS_CHARACTER_CREATION ?
+    const int CLVL = dungeon_master::clvl();
+
+    std::string title = CLVL == 1 ?
                         "Which additional trait do you start with?" :
                         "You have reached a new level! Which trait do you gain?";
 
@@ -266,11 +265,13 @@ void draw_pick_trait(const std::vector<Trait>& traits,
 
     y = Y0_PREREQS;
 
+    const Bg player_bg = player_bon::bg();
+
     std::vector<Trait> trait_prereqs;
 
     Bg bg_prereq = Bg::END;
 
-    player_bon::trait_prereqs(trait_marked, trait_prereqs, bg_prereq);
+    player_bon::trait_prereqs(trait_marked, player_bg, trait_prereqs, bg_prereq);
 
     if (!trait_prereqs.empty() || bg_prereq != Bg::END)
     {
@@ -329,25 +330,27 @@ void draw_pick_trait(const std::vector<Trait>& traits,
 void create_character()
 {
     pick_bg();
-    pick_new_trait(true);
+    pick_new_trait();
     enter_name::run();
 }
 
-void pick_new_trait(const bool IS_CHARACTER_CREATION)
+void pick_new_trait()
 {
     if (config::is_bot_playing())
     {
         return;
     }
 
+    const Bg player_bg = player_bon::bg();
+
     std::vector<Trait> pickable_traits;
-    player_bon::pickable_traits(pickable_traits);
+    player_bon::pickable_traits(player_bg, pickable_traits);
 
     if (!pickable_traits.empty())
     {
         Menu_browser browser(pickable_traits.size(), 0);
 
-        draw_pick_trait(pickable_traits, browser, IS_CHARACTER_CREATION);
+        draw_pick_trait(pickable_traits, browser);
 
         while (true)
         {
@@ -356,17 +359,11 @@ void pick_new_trait(const bool IS_CHARACTER_CREATION)
             switch (action)
             {
             case Menu_action::browsed:
-                draw_pick_trait(pickable_traits, browser, IS_CHARACTER_CREATION);
+                draw_pick_trait(pickable_traits, browser);
                 break;
 
             case Menu_action::selected:
                 player_bon::pick_trait(pickable_traits[browser.y()]);
-
-                if (!IS_CHARACTER_CREATION)
-                {
-                    render::draw_map_and_interface();
-                }
-
                 return;
 
             case Menu_action::esc:

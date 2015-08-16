@@ -160,11 +160,11 @@ void Actor::seen_foes(std::vector<Actor*>& out)
                 const bool IS_OTHER_HOSTILE_TO_PLAYER = actor->is_player() ? false :
                                                         !actor->is_actor_my_leader(map::player);
 
-                const bool IS_ENEMIES = IS_HOSTILE_TO_PLAYER != IS_OTHER_HOSTILE_TO_PLAYER;
+                const bool IS_ENEMY = IS_HOSTILE_TO_PLAYER != IS_OTHER_HOSTILE_TO_PLAYER;
 
                 const Mon* const mon = static_cast<const Mon*>(this);
 
-                if (IS_ENEMIES && mon->can_see_actor(*actor, blocked_los))
+                if (IS_ENEMY && mon->can_see_actor(*actor, blocked_los))
                 {
                     out.push_back(actor);
                 }

@@ -27,6 +27,8 @@ enum class Prop_id
     fainted,
     burning,
     radiant,
+    invis,
+    seeing, //Can see invisible/sneaking actors, and hidden traps/doors, etc
     infravis,
     poisoned,
     paralyzed,
@@ -649,6 +651,30 @@ class Prop_radiant: public Prop
 public:
     Prop_radiant(Prop_turns turns_init, int nr_turns = -1) :
         Prop(Prop_id::radiant, turns_init, nr_turns) {}
+};
+
+class Prop_invisible: public Prop
+{
+public:
+    Prop_invisible(Prop_turns turns_init, int nr_turns = -1) :
+        Prop(Prop_id::invis, turns_init, nr_turns) {}
+
+    bool change_actor_clr(Clr& clr) const override
+    {
+        clr = clr_gray;
+        return true;
+    }
+};
+
+class Prop_seeing: public Prop
+{
+public:
+    Prop_seeing(Prop_turns turns_init, int nr_turns = -1) :
+        Prop(Prop_id::seeing, turns_init, nr_turns) {}
+
+    void on_start() override;
+
+    bool is_resisting_other_prop(const Prop_id prop_id) const override;
 };
 
 class Prop_infravis: public Prop

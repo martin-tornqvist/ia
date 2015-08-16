@@ -101,23 +101,6 @@ public:
     bool check(const Mob& f)        const override;
 };
 
-//class Corridor : public Check {
-//public:
-//  Corridor() : Check() {}
-//  bool is_checking_cells()        const override {return true;}
-//  bool check(const Cell& c)       const override;
-//};
-
-// E.g. ##
-//      #.
-//      ##
-//class Nook : public Check {
-//public:
-//  Nook() : Check() {}
-//  bool is_checking_cells()        const override {return true;}
-//  bool check(const Cell& c)       const override;
-//};
-
 class Is_feature : public Check
 {
 public:
@@ -204,9 +187,12 @@ namespace map_parse
 
 extern const Rect map_rect;
 
-void run(const cell_check::Check& check, bool out[MAP_W][MAP_H],
+void run(const cell_check::Check& method,
+         bool out[MAP_W][MAP_H],
          const Map_parse_mode write_rule = Map_parse_mode::overwrite,
          const Rect& area_to_check_cells = map_rect);
+
+bool cell(const cell_check::Check& method, const Pos& p);
 
 //Given a map array of booleans, this will fill a second map array of boolens
 //where the cells are set to true if they are within the specified distance

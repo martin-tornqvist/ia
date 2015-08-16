@@ -78,9 +78,12 @@ void setup_from_save_lines(std::vector<std::string>& lines);
 
 void pickable_bgs(std::vector<Bg>& bgs_ref);
 
-void pickable_traits(std::vector<Trait>& traits_ref);
+void pickable_traits(const Bg bg, std::vector<Trait>& traits_ref);
 
-void trait_prereqs(const Trait id, std::vector<Trait>& traits_ref, Bg& bg_ref);
+void trait_prereqs(const Trait id,
+                   const Bg bg,
+                   std::vector<Trait>& traits_ref,
+                   Bg& bg_ref);
 
 Bg bg();
 

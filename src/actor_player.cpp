@@ -341,11 +341,13 @@ bool Player::can_see_actor(const Actor& other) const
 
     const Cell& cell = map::cells[other.pos.x][other.pos.y];
 
+    //Dead actors are seen if the cell is seen
     if (!other.is_alive() && cell.is_seen_by_player)
     {
         return true;
     }
 
+    //Player is blind?
     if (!prop_handler_->allow_see())
     {
         return false;
@@ -353,26 +355,41 @@ bool Player::can_see_actor(const Actor& other) const
 
     const Mon* const mon = static_cast<const Mon*>(&other);
 
-    //See monster with infravision?
-    if (!cell.player_los.is_blocked_hard)
-    {
-        bool        HAS_INFRAVIS            = prop_handler_->has_prop(Prop_id::infravis);
-        const bool  IS_OTHER_INFRA_VISIBLE  = other.data().is_infra_visible;
-
-        if (HAS_INFRAVIS && IS_OTHER_INFRA_VISIBLE)
-        {
-            return true;
-        }
-    }
-
-    if (mon->is_sneaking_)
+    //LOS blocked hard (e.g. a wall)?
+    if (cell.player_los.is_blocked_hard)
     {
         return false;
     }
 
-    //Monster is in FOV range, not sneaking, player can see, etc -> Player can see the monster
-    //if the map cell is seen.
-    return cell.is_seen_by_player;
+    const bool CAN_SEE_INVIS = has_prop(Prop_id::seeing);
+
+    //Monster is invisible, and player cannot see invisible?
+    if (other.has_prop(Prop_id::invis) && !CAN_SEE_INVIS)
+    {
+        return false;
+    }
+
+    //Blocked by darkness, and not seeing monster with infravision?
+    bool        HAS_INFRAVIS                = prop_handler_->has_prop(Prop_id::infravis);
+    const bool  IS_OTHER_INFRA_VISIBLE      = other.data().is_infra_visible;
+
+    const bool  CAN_SEE_OTHER_WITH_INFRAVIS = HAS_INFRAVIS && IS_OTHER_INFRA_VISIBLE;
+
+    const bool  CAN_SEE_OTHER_IN_DRK        = CAN_SEE_INVIS || CAN_SEE_OTHER_WITH_INFRAVIS;
+
+    if (cell.player_los.is_blocked_by_drk && !CAN_SEE_OTHER_IN_DRK)
+    {
+        return false;
+    }
+
+    //Monster is sneaking, and we cannot see it with infravision or magic seeing?
+    if (mon->is_sneaking_ && !CAN_SEE_OTHER_WITH_INFRAVIS && !CAN_SEE_INVIS)
+    {
+        return false;
+    }
+
+    //OK, all checks passed, actor can bee seen!
+    return true;
 }
 
 void Player::on_hit(int& dmg)

@@ -652,9 +652,9 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
                 {
                     other_name = att_data.defender->name_the();
                 }
-                else
+                else //Cannot see defender
                 {
-                    other_name = "It ";
+                    other_name = "It";
                 }
 
                 msg_log::add("My attack passes right through " + other_name + "!");

@@ -1263,7 +1263,7 @@ void init_data_list()
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::phantasm_sickle;
-    d.melee.att_msgs = {"", "slices me with a sickle"};
+    d.melee.att_msgs = {"", "slices me with an ethereal sickle"};
     set_dmg_from_mon_id(d, Actor_id::phantasm);
     d.melee.prop_applied = new Prop_terrified(Prop_turns::specific, 4);
     d.melee.dmg_type = Dmg_type::spirit;
@@ -1766,6 +1766,14 @@ void init_data_list()
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_descent;
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::potion);
+    d.id = Item_id::potion_invis;
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::potion);
+    d.id = Item_id::potion_seeing;
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::device);

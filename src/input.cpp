@@ -1151,6 +1151,19 @@ void handle_map_mode_key_press(const Key_data& d)
         return;
     }
 
+    //----------------------------------- INVISIBLE
+    else if (d.sdl_key == SDLK_F9)
+    {
+        if (IS_DEBUG_MODE)
+        {
+            map::player->prop_handler().try_add_prop(new Prop_invisible(Prop_turns::std));
+
+            clear_events();
+        }
+
+        return;
+    }
+
     //----------------------------------- UNDEFINED COMMANDS
     else if (d.key != -1)
     {

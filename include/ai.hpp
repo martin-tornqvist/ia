@@ -37,11 +37,11 @@ namespace info
 
 bool look_become_player_aware(Mon& mon);
 
-void set_path_to_lair_if_no_los(Mon& mon, std::vector<Pos>& path, const Pos& lair_p);
+void try_set_path_to_lair_if_no_los(Mon& mon, std::vector<Pos>& path, const Pos& lair_p);
 
-void set_path_to_leader_if_no_los_to_leader(Mon& mon, std::vector<Pos>& path);
+void try_set_path_to_leader(Mon& mon, std::vector<Pos>& path);
 
-void set_path_to_player_if_aware(Mon& mon, std::vector<Pos>& path);
+void try_set_path_to_player(Mon& mon, std::vector<Pos>& path);
 
 void set_special_blocked_cells(Mon& mon, bool a[MAP_W][MAP_H]);
 

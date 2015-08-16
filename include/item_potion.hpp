@@ -378,6 +378,48 @@ private:
     }
 };
 
+class Potion_invis: public Potion
+{
+public:
+    Potion_invis(Item_data_t* const item_data) :
+        Potion(item_data) {}
+    ~Potion_invis() {}
+
+    void quaff_impl(Actor& actor) override;
+
+    const std::string real_name() const override {return "Invisibility";}
+
+private:
+    std::vector<std::string> descr_identified() const override
+    {
+        return {"Makes the consumer invisible to normal vision."};
+    }
+
+    void collide_hook(const Pos& pos, Actor* const actor) override;
+};
+
+class Potion_seeing: public Potion
+{
+public:
+    Potion_seeing(Item_data_t* const item_data) :
+        Potion(item_data) {}
+    ~Potion_seeing() {}
+
+    void quaff_impl(Actor& actor) override;
+
+    const std::string real_name() const override {return "Seeing";}
+
+private:
+    std::vector<std::string> descr_identified() const override
+    {
+        return {"Grants the consumer extraordinary vision, including the ability to see that "
+                "which is normally invisible."
+               };
+    }
+
+    void collide_hook(const Pos& pos, Actor* const actor) override;
+};
+
 struct Potion_look
 {
     std::string name_plain;

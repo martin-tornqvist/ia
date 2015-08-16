@@ -173,6 +173,8 @@ enum class Item_id
     potion_rFire,
     potion_antidote,
     potion_descent,
+    potion_invis,
+    potion_seeing,
 
     device_blaster,
     device_shockwave,

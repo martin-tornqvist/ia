@@ -565,6 +565,38 @@ void init_data_list()
     d.alignment = Prop_alignment::neutral;
     add_prop_data(d);
 
+    d.id = Prop_id::invis;
+    d.std_rnd_turns = Range(50, 100);
+    d.name = "Invisible";
+    d.name_short = "Invis";
+    d.msg[size_t(Prop_msg::start_player)] = "I am out of sight for normal eyes!";
+    d.msg[size_t(Prop_msg::start_mon)] = " is out of sight for normal eyes!";
+    d.msg[size_t(Prop_msg::end_player)] = "I am visible to normal eyes.";
+    d.msg[size_t(Prop_msg::end_mon)] = " is visible to normal eyes.";
+    d.is_making_mon_aware = false;
+    d.allow_display_turns = true;
+    d.allow_apply_more_while_active = true;
+    d.update_vision_when_start_or_end = true;
+    d.allow_test_on_bot = true;
+    d.alignment = Prop_alignment::good;
+    add_prop_data(d);
+
+    d.id = Prop_id::seeing;
+    d.std_rnd_turns = Range(50, 100);
+    d.name = "Seeing";
+    d.name_short = "Seeing";
+    d.msg[size_t(Prop_msg::start_player)] = "I see very clearly.";
+    d.msg[size_t(Prop_msg::start_mon)] = " seems to see very clearly.";
+    d.msg[size_t(Prop_msg::end_player)] = "I see less clearly.";
+    d.msg[size_t(Prop_msg::end_mon)] = " seems to see less clearly.";
+    d.is_making_mon_aware = false;
+    d.allow_display_turns = true;
+    d.allow_apply_more_while_active = true;
+    d.update_vision_when_start_or_end = true;
+    d.allow_test_on_bot = true;
+    d.alignment = Prop_alignment::good;
+    add_prop_data(d);
+
     d.id = Prop_id::infravis;
     d.std_rnd_turns = Range(50, 100);
     d.name = "Infravision";
@@ -998,6 +1030,12 @@ Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init, const int N
 
     case Prop_id::conflict:
         return new Prop_conflict(turns_init, NR_TURNS);
+
+    case Prop_id::invis:
+        return new Prop_invisible(turns_init, NR_TURNS);
+
+    case Prop_id::seeing:
+        return new Prop_seeing(turns_init, NR_TURNS);
 
     case Prop_id::END:
         break;
@@ -1685,15 +1723,25 @@ int Prop_handler::ability_mod(const Ability_id ability) const
 
 bool Prop_handler::change_actor_clr(Clr& clr) const
 {
+    bool did_change_clr = false;
+
     for (Prop* prop : props_)
     {
         if (prop->change_actor_clr(clr))
         {
-            return true;
+            did_change_clr = true;
+
+            //It's probably more likely that a color change due to a bad property is critical
+            //information (e.g. burning), so then we stop searching and use this color. If it's
+            //a good or neutral property that affected the color, then we keep searching.
+            if (prop->alignment() == Prop_alignment::bad)
+            {
+                break;
+            }
         }
     }
 
-    return false;
+    return did_change_clr;
 }
 
 //-----------------------------------------------------------------------------
@@ -2379,6 +2427,16 @@ void Prop_rDisease::on_start()
 {
     owning_actor_->prop_handler().end_prop(Prop_id::diseased);
     owning_actor_->prop_handler().end_prop(Prop_id::infected);
+}
+
+bool Prop_seeing::is_resisting_other_prop(const Prop_id prop_id) const
+{
+    return prop_id == Prop_id::blind;
+}
+
+void Prop_seeing::on_start()
+{
+    owning_actor_->prop_handler().end_prop(Prop_id::blind);
 }
 
 void Prop_burrowing::on_new_turn()

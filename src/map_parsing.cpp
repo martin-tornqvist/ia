@@ -224,25 +224,25 @@ namespace map_parse
 
 const Rect map_rect(0, 0, MAP_W - 1, MAP_H - 1);
 
-void run(const  cell_check::Check& check,
+void run(const  cell_check::Check& method,
          bool   out[MAP_W][MAP_H],
          const  Map_parse_mode write_rule,
          const  Rect& area_to_check_cells)
 {
-    assert(check.is_checking_cells()  ||
-           check.is_checking_mobs()   ||
-           check.is_checking_actors());
+    assert(method.is_checking_cells()  ||
+           method.is_checking_mobs()   ||
+           method.is_checking_actors());
 
     const bool ALLOW_WRITE_FALSE = write_rule == Map_parse_mode::overwrite;
 
-    if (check.is_checking_cells())
+    if (method.is_checking_cells())
     {
         for (int x = area_to_check_cells.p0.x; x <= area_to_check_cells.p1.x; ++x)
         {
             for (int y = area_to_check_cells.p0.y; y <= area_to_check_cells.p1.y; ++y)
             {
                 const auto& c         = map::cells[x][y];
-                const bool  IS_MATCH  = check.check(c);
+                const bool  IS_MATCH  = method.check(c);
 
                 if (IS_MATCH || ALLOW_WRITE_FALSE)
                 {
@@ -252,7 +252,7 @@ void run(const  cell_check::Check& check,
         }
     }
 
-    if (check.is_checking_mobs())
+    if (method.is_checking_mobs())
     {
         for (Mob* mob : game_time::mobs_)
         {
@@ -260,7 +260,7 @@ void run(const  cell_check::Check& check,
 
             if (utils::is_pos_inside(p, area_to_check_cells))
             {
-                const bool IS_MATCH = check.check(*mob);
+                const bool IS_MATCH = method.check(*mob);
 
                 if (IS_MATCH || ALLOW_WRITE_FALSE)
                 {
@@ -275,7 +275,7 @@ void run(const  cell_check::Check& check,
         }
     }
 
-    if (check.is_checking_actors())
+    if (method.is_checking_actors())
     {
         for (Actor* actor : game_time::actors_)
         {
@@ -283,7 +283,7 @@ void run(const  cell_check::Check& check,
 
             if (utils::is_pos_inside(p, area_to_check_cells))
             {
-                const bool IS_MATCH = check.check(*actor);
+                const bool IS_MATCH = method.check(*actor);
 
                 if (IS_MATCH || ALLOW_WRITE_FALSE)
                 {
@@ -297,6 +297,66 @@ void run(const  cell_check::Check& check,
             }
         }
     }
+}
+
+bool cell(const cell_check::Check& method, const Pos& p)
+{
+    assert(method.is_checking_cells()  ||
+           method.is_checking_mobs()   ||
+           method.is_checking_actors());
+
+    bool r = false;
+
+    if (method.is_checking_cells())
+    {
+        const auto& c         = map::cells[p.x][p.y];
+        const bool  IS_MATCH  = method.check(c);
+
+        if (IS_MATCH)
+        {
+            r = true;
+        }
+    }
+
+    if (method.is_checking_mobs())
+    {
+        for (Mob* mob : game_time::mobs_)
+        {
+            const Pos& mob_p = mob->pos();
+
+            if (mob_p == p)
+            {
+                const bool IS_MATCH = method.check(*mob);
+
+                if (IS_MATCH)
+                {
+                    r = true;
+                }
+            }
+        }
+    }
+
+    if (method.is_checking_actors())
+    {
+        for (Actor* actor : game_time::actors_)
+        {
+            const Pos& actor_p = actor->pos;
+
+            if (actor_p == p)
+            {
+                const bool IS_MATCH = method.check(*actor);
+
+                if (IS_MATCH)
+                {
+                    r = true;
+                }
+
+                break;
+            }
+        }
+    }
+
+    return r;
 }
 
 void cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
