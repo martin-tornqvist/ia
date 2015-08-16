@@ -101,9 +101,13 @@ enum class Prop_alignment
 
 enum class Prop_src
 {
-    intr,   //Properties applied by potions, spells, etc, "natural" properties that monsters can
-            //start with (e.g. flying), or player properties gained by traits
-    inv,    //Properties applied by items carried in inventory
+    //Properties applied by potions, spells, etc, "natural" properties that monsters can
+    //start with (e.g. flying), or player properties gained by traits
+    intr,
+
+    //Properties applied by items carried in inventory
+    inv,
+
     END
 };
 
@@ -235,10 +239,10 @@ public:
 private:
     bool try_resist_prop(const Prop_id id) const;
 
-    //This runs appropriate effects when a property is ending (decrements the active props info,
-    //prints messages, updates FOV, updaties screen, etc) - but it does not remove the property
-    //from the vector. The caller is responsible for that.
-    void run_prop_end(Prop* const prop);
+    //This prints messages, updates FOV, etc, and also calls the on_end() property hook. It does
+    //NOT remove the property from the vector or decrement the active property info. The caller is
+    //responsible for this.
+    void on_prop_end(Prop* const prop);
 
     void incr_active_props_info(const Prop_id id);
     void decr_active_props_info(const Prop_id id);
@@ -248,7 +252,7 @@ private:
 
     //This array is only used for optimization and convenience of asking the property handler which
     //properties are currently active (see the "has_prop()" method above). It is used as a cache,
-    //so that we can search through the vector as little as possible.
+    //so that we need to search through the vector as little as possible.
     int active_props_info_[size_t(Prop_id::END)];
 
     Actor* owning_actor_;
@@ -432,6 +436,11 @@ public:
     Prop_turns turns_init_type() const
     {
         return turns_init_type_;
+    }
+
+    Prop_src src() const
+    {
+        return src_;
     }
 
 protected:

@@ -1997,13 +1997,13 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
 
             if (map::dlvl >= MIN_DLVL_HARDER_TRAPS && RND < 20)
             {
-                prop    = new Prop_poisoned(Prop_turns::std);
-                fume_clr = clr_green_lgt;
+                prop        = new Prop_poisoned(Prop_turns::std);
+                fume_clr    = clr_green_lgt;
             }
             else if (RND < 40)
             {
-                prop    = new Prop_diseased(Prop_turns::specific, 50);
-                fume_clr = clr_green;
+                prop        = new Prop_diseased(Prop_turns::std);
+                fume_clr    = clr_green;
             }
             else
             {
@@ -2500,7 +2500,7 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
         }
         else if (RND < 40)
         {
-            prop        = new Prop_diseased(Prop_turns::specific, 50);
+            prop        = new Prop_diseased(Prop_turns::std);
             fume_clr    = clr_green;
         }
         else
@@ -2721,7 +2721,7 @@ void Fountain::bump(Actor& actor_bumping)
 
             case Fountain_effect::disease:
             {
-                prop_hlr.try_add_prop(new Prop_diseased(Prop_turns::specific, 50));
+                prop_hlr.try_add_prop(new Prop_diseased(Prop_turns::std));
             } break;
 
             case Fountain_effect::poison:

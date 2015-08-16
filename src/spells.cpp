@@ -1141,7 +1141,7 @@ Spell_effect_noticed Spell_disease::cast_impl(Actor* const caster) const
         msg_log::add("A horrible disease is starting to afflict " + actor_name + "!");
     }
 
-    tgt->prop_handler().try_add_prop(new Prop_diseased(Prop_turns::specific, 50));
+    tgt->prop_handler().try_add_prop(new Prop_diseased(Prop_turns::std));
     return Spell_effect_noticed::no;
 }
 

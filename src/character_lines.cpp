@@ -17,8 +17,6 @@
 #include "item_device.hpp"
 #include "utils.hpp"
 
-using namespace std;
-
 namespace character_lines
 {
 
@@ -46,13 +44,13 @@ void draw()
 
     //Name
     pos.x = X_NAME;
-    string str = player.name_a();
+    std::string str = player.name_a();
     render::draw_text(str, Panel::char_lines, pos, clr_white);
 
     //Health
     pos.x = X_HP;
-    const string hp     = to_str(player.hp());
-    const string hp_max = to_str(player.hp_max(true));
+    const std::string hp     = to_str(player.hp());
+    const std::string hp_max = to_str(player.hp_max(true));
     str = "H:";
     render::draw_text(str, Panel::char_lines, pos, clr_menu_drk);
     pos.x += str.length();
@@ -61,8 +59,8 @@ void draw()
 
     //Spirit
     pos.x = X_SPI;
-    const string spi        = to_str(player.spi());
-    const string spi_max    = to_str(player.spi_max());
+    const std::string spi        = to_str(player.spi());
+    const std::string spi_max    = to_str(player.spi_max());
     str = "S:";
     render::draw_text(str, Panel::char_lines, pos, clr_menu_drk);
     pos.x += str.length();
@@ -206,8 +204,10 @@ void draw()
     ++pos.y;
     pos.x = 0;
 
-    vector<Str_and_clr> props_line;
+    std::vector<Str_and_clr> props_line;
+
     map::player->prop_handler().props_interface_line(props_line);
+
     const int NR_PROPS = props_line.size();
 
     for (int i = 0; i < NR_PROPS; ++i)

@@ -20,6 +20,7 @@
 #include "feature_rigid.hpp"
 #include "feature_mob.hpp"
 #include "item.hpp"
+#include "text_format.hpp"
 
 namespace prop_data
 {
@@ -41,7 +42,7 @@ void init_data_list()
     Prop_data_t d;
 
     d.id = Prop_id::rPhys;
-    d.std_rnd_turns = Range(40, 60);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Physical Resistance";
     d.name_short = "rPhys";
     d.msg[size_t(Prop_msg::start_player)] = "I feel resistant to physical harm.";
@@ -57,7 +58,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::rFire;
-    d.std_rnd_turns = Range(40, 60);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Fire resistance";
     d.name_short = "rFire";
     d.msg[size_t(Prop_msg::start_player)] = "I feel resistant to fire.";
@@ -73,7 +74,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::rCold;
-    d.std_rnd_turns = Range(40, 60);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Cold resistance";
     d.name_short = "rCold";
     d.msg[size_t(Prop_msg::start_player)] = "I feel resistant to cold.";
@@ -89,7 +90,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::rPoison;
-    d.std_rnd_turns = Range(40, 60);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Poison resistance";
     d.name_short = "rPoison";
     d.msg[size_t(Prop_msg::start_player)] = "I feel resistant to poison.";
@@ -105,7 +106,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::rElec;
-    d.std_rnd_turns = Range(40, 60);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Electric resistance";
     d.name_short = "rElec";
     d.msg[size_t(Prop_msg::start_player)] = "I feel resistant to electricity.";
@@ -121,7 +122,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::rAcid;
-    d.std_rnd_turns = Range(40, 60);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Acid resistance";
     d.name_short = "rAcid";
     d.msg[size_t(Prop_msg::start_player)] = "I feel resistant to acid.";
@@ -137,7 +138,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::rSleep;
-    d.std_rnd_turns = Range(40, 60);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Sleep resistance";
     d.name_short = "rSleep";
     d.msg[size_t(Prop_msg::start_player)] = "I feel resistant to sleep.";
@@ -153,7 +154,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::rFear;
-    d.std_rnd_turns = Range(40, 60);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Fear resistance";
     d.name_short = "rFear";
     d.msg[size_t(Prop_msg::start_player)] = "I feel resistant to fear.";
@@ -169,7 +170,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::rConf;
-    d.std_rnd_turns = Range(40, 50);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Confusion resistance";
     d.name_short = "rConf";
     d.msg[size_t(Prop_msg::start_player)] = "I feel resistant to confusion.";
@@ -185,7 +186,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::rDisease;
-    d.std_rnd_turns = Range(40, 60);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Disease resistance";
     d.name_short = "rDisease";
     d.msg[size_t(Prop_msg::start_player)] = "I feel resistant to disease.";
@@ -201,7 +202,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::rBreath;
-    d.std_rnd_turns = Range(40, 60);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Breath resistance";
     d.name_short = "rBreath";
     d.msg[size_t(Prop_msg::start_player)] = "I can breath without harm.";
@@ -215,7 +216,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::lgtSens;
-    d.std_rnd_turns = Range(40, 60);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Light sensitive";
     d.name_short = "lgtSensitive";
     d.msg[size_t(Prop_msg::start_player)] = "I feel vulnerable to light!";
@@ -466,7 +467,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::diseased;
-    d.std_rnd_turns = Range(400, 600);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Diseased";
     d.name_short = "Diseased";
     d.msg[size_t(Prop_msg::start_player)] = "I am diseased!";
@@ -504,7 +505,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::frenzied;
-    d.std_rnd_turns = Range(30, 60);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Frenzied";
     d.name_short = "Frenzied";
     d.msg[size_t(Prop_msg::start_player)] = "I feel ferocious!";
@@ -536,7 +537,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::cursed;
-    d.std_rnd_turns = Range(400, 600);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Cursed";
     d.name_short = "Cursed";
     d.msg[size_t(Prop_msg::start_player)] = "I feel misfortunate.";
@@ -551,7 +552,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::radiant;
-    d.std_rnd_turns = Range(40, 60);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Radiant";
     d.name_short = "Radiant";
     d.msg[size_t(Prop_msg::start_player)] = "A bright light shines around me.";
@@ -565,7 +566,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::infravis;
-    d.std_rnd_turns = Range(40, 60);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Infravision";
     d.name_short = "Infravis";
     d.msg[size_t(Prop_msg::start_player)] = "I can see warm bodied creatures very clearly.";
@@ -581,7 +582,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::tele_ctrl;
-    d.std_rnd_turns = Range(40, 60);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Teleport Control";
     d.name_short = "TeleCtrl";
     d.msg[size_t(Prop_msg::start_player)] = "I feel in control.";
@@ -595,7 +596,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::spell_reflect;
-    d.std_rnd_turns = Range(40, 60);
+    d.std_rnd_turns = Range(50, 100);
     d.name = "Spell Reflection";
     d.name_short = "SpellRefl";
     d.msg[size_t(Prop_msg::start_player)] = "Spells reflect off me!";
@@ -848,6 +849,12 @@ void Prop_handler::setup_from_save_lines(std::vector<std::string>& lines)
 Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init, const int NR_TURNS) const
 {
     assert(id != Prop_id::END);
+
+    //Prop turns init type should either be:
+    // * "specific", and number of turns specified (> 0), OR
+    // * NOT "specific" (i.e. "indefinite" or "std"), and number of turns NOT specified (-1)
+    assert((turns_init == Prop_turns::specific && NR_TURNS > 0) ||
+           (turns_init != Prop_turns::specific && NR_TURNS == -1));
 
     switch (id)
     {
@@ -1200,9 +1207,11 @@ void Prop_handler::remove_props_for_item(const Item* const item)
             assert(prop->src_ == Prop_src::inv);
             assert(prop->turns_init_type_ == Prop_turns::indefinite);
 
-            run_prop_end(prop);
-
             props_.erase(begin(props_) + i);
+
+            decr_active_props_info(prop->id());
+
+            on_prop_end(prop);
         }
         else //Property was not added by this item
         {
@@ -1214,19 +1223,26 @@ void Prop_handler::remove_props_for_item(const Item* const item)
 void Prop_handler::try_add_prop_from_att(const Wpn& wpn, const bool IS_MELEE)
 {
     const auto&         d           = wpn.data();
-    const auto* const   origin_prop = IS_MELEE ? d.melee.prop_applied : d.ranged.prop_applied;
+    const auto* const   origin_prop = IS_MELEE ?
+                                      d.melee.prop_applied : d.ranged.prop_applied;
 
     if (origin_prop)
     {
         //If weapon damage is resisted by the defender, the property is automatically resisted
-        const Dmg_type dmg_type = IS_MELEE ? d.melee.dmg_type : d.ranged.dmg_type;
+        const Dmg_type dmg_type = IS_MELEE ?
+                                  d.melee.dmg_type : d.ranged.dmg_type;
 
         if (!try_resist_dmg(dmg_type, Verbosity::silent))
         {
+            const auto turns_init_type = origin_prop->turns_init_type();
+
+            const int NR_TURNS = turns_init_type == Prop_turns::specific ?
+                                 origin_prop->nr_turns_left_ : -1;
+
             //Make a copy of the weapon effect
-            auto* const prop_cpy = mk_prop(origin_prop->id(),
-                                           Prop_turns::specific,
-                                           origin_prop->nr_turns_left_);
+            auto * const prop_cpy = mk_prop(origin_prop->id(),
+                                            origin_prop->turns_init_type_,
+                                            NR_TURNS);
 
             try_add_prop(prop_cpy);
         }
@@ -1263,7 +1279,7 @@ void Prop_handler::decr_active_props_info(const Prop_id id)
     --v;
 }
 
-void Prop_handler::run_prop_end(Prop* const prop)
+void Prop_handler::on_prop_end(Prop* const prop)
 {
     if (prop->need_update_vision_when_start_or_end())
     {
@@ -1274,7 +1290,7 @@ void Prop_handler::run_prop_end(Prop* const prop)
     }
 
     //Print property end message if this is the last active property of this type
-    if (active_props_info_[size_t(prop->id_)] == 1)
+    if (active_props_info_[size_t(prop->id_)] == 0)
     {
         if (owning_actor_->is_player())
         {
@@ -1304,8 +1320,6 @@ void Prop_handler::run_prop_end(Prop* const prop)
     }
 
     prop->on_end();
-
-    decr_active_props_info(prop->id());
 }
 
 bool Prop_handler::end_prop(const Prop_id id, const bool RUN_PROP_END_EFFECTS)
@@ -1331,14 +1345,11 @@ bool Prop_handler::end_prop(const Prop_id id, const bool RUN_PROP_END_EFFECTS)
 
     props_.erase(begin(props_) + idx);
 
+    decr_active_props_info(prop->id());
+
     if (RUN_PROP_END_EFFECTS)
     {
-        run_prop_end(prop);
-    }
-    else //Caller wants to end the property silently
-    {
-        //We need to decrement property info here, instead of through "run_prop_end()"
-        decr_active_props_info(id);
+        on_prop_end(prop);
     }
 
     delete prop;
@@ -1353,11 +1364,13 @@ void Prop_handler::end_props_by_magic_healing()
 
         if (prop->is_ended_by_magic_healing())
         {
-            run_prop_end(prop);
+            props_.erase(begin(props_) + i);
+
+            decr_active_props_info(prop->id());
+
+            on_prop_end(prop);
 
             delete prop;
-
-            props_.erase(begin(props_) + i);
         }
         else //Property was not added by this item
         {
@@ -1402,12 +1415,14 @@ void Prop_handler::tick(const Prop_turn_mode turn_mode)
 
             if (prop->is_finished())
             {
-                run_prop_end(prop);
+                props_.erase(begin(props_) + i);
+
+                decr_active_props_info(prop->id());
+
+                on_prop_end(prop);
 
                 delete prop;
                 prop = nullptr;
-
-                props_.erase(begin(props_) + i);
             }
             else //Not finished
             {
@@ -1427,25 +1442,37 @@ void Prop_handler::props_interface_line(std::vector<Str_and_clr>& line) const
 {
     line.clear();
 
-    const bool IS_SELF_AWARE = player_bon::traits[int(Trait::self_aware)];
-
     for (Prop* prop : props_)
     {
-        const std::string prop_name = prop->name_short();
+        std::string str = prop->name_short();
 
-        if (!prop_name.empty())
+        if (!str.empty())
         {
-            const Prop_alignment    alignment   = prop->alignment();
-            const int               TURNS_LEFT  = prop->nr_turns_left_;
+            const int TURNS_LEFT  = prop->nr_turns_left_;
 
-            const std::string turns_str = TURNS_LEFT > 0 && IS_SELF_AWARE ?
-                                          ("(" + to_str(TURNS_LEFT) + ")") : "";
+            if (TURNS_LEFT > 0)
+            {
+                if (player_bon::traits[int(Trait::self_aware)])
+                {
+                    str += "(" + to_str(TURNS_LEFT) + ")";
+                }
+            }
+            else //Property is indefinite
+            {
+                if (prop->src() == Prop_src::intr)
+                {
+                    //Indefinite intrinsic properties are printed in all upper case
+                    text_format::all_to_upper(str);
+                }
+            }
 
-            line.push_back(
-                Str_and_clr(prop_name + turns_str,
-                            alignment == Prop_alignment::good ? clr_msg_good :
+            const Prop_alignment alignment = prop->alignment();
+
+            const Clr clr = alignment == Prop_alignment::good ? clr_msg_good :
                             alignment == Prop_alignment::bad  ? clr_msg_bad :
-                            clr_white));
+                            clr_white;
+
+            line.push_back(Str_and_clr(str, clr));
         }
     }
 }
@@ -1741,8 +1768,11 @@ void Prop_infected::on_new_turn()
     if (rnd::one_in(165))
     {
         Prop_handler& prop_hlr = owning_actor_->prop_handler();
-        prop_hlr.try_add_prop(new Prop_diseased(Prop_turns::std));
+
+        prop_hlr.try_add_prop(new Prop_diseased(Prop_turns::indefinite));
+
         prop_hlr.end_prop(Prop_id::infected, false);
+
         msg_log::more_prompt();
     }
 }
@@ -1751,9 +1781,10 @@ int Prop_diseased::change_max_hp(const int HP_MAX) const
 {
     if (owning_actor_->is_player() && player_bon::traits[int(Trait::survivalist)])
     {
-        return (HP_MAX * 3) / 4; //Survavlist makes you lose only 25% instead of 50%
+        //Survavlist makes you lose only 25% instead of 50%
+        return (HP_MAX * 3) / 4;
     }
-    else
+    else //Not survivalist
     {
         return HP_MAX / 2;
     }

@@ -1332,7 +1332,7 @@ void init_data_list()
     d.id = Item_id::mummy_maul;
     d.melee.att_msgs = {"", "mauls me"};
     set_dmg_from_mon_id(d, Actor_id::mummy);
-    d.melee.prop_applied = new Prop_cursed(Prop_turns::std);
+    d.melee.prop_applied = new Prop_cursed(Prop_turns::indefinite);
     d.melee.knocks_back = true;
     data[size_t(d.id)] = d;
 
