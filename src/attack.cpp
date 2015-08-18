@@ -528,8 +528,15 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
         snd_alerts_mon = Alerts_mon::yes;
     }
 
-    //TODO: This message is not always appropriate (e.g. spear traps)
-    const std::string snd_msg = "I hear fighting.";
+    std::string snd_msg = "";
+
+    //Only print a message if player is not involved
+    if (att_data.defender != map::player && att_data.attacker != map::player)
+    {
+        //TODO: This message is not always appropriate (e.g. spear traps)
+        snd_msg = "I hear fighting.";
+    }
+
 
     if (att_data.is_defender_dodging)
     {

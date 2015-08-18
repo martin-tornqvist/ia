@@ -1118,6 +1118,24 @@ void init_data_list()
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
+    d.id = Item_id::crawling_intestines_strangle;
+    d.melee.att_msgs = {"", "strangles me"};
+    set_dmg_from_mon_id(d, Actor_id::crawling_intestines);
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::melee_wpn_intr);
+    d.id = Item_id::crawling_hand_strangle;
+    d.melee.att_msgs = {"", "strangles me"};
+    set_dmg_from_mon_id(d, Actor_id::crawling_hand);
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::melee_wpn_intr);
+    d.id = Item_id::thing_strangle;
+    d.melee.att_msgs = {"", "strangles me"};
+    set_dmg_from_mon_id(d, Actor_id::thing);
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::rat_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::rat);
@@ -1275,6 +1293,13 @@ void init_data_list()
     set_dmg_from_mon_id(d, Actor_id::wraith);
     d.melee.prop_applied = new Prop_terrified(Prop_turns::specific, 4);
     d.melee.dmg_type = Dmg_type::spirit;
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::melee_wpn_intr);
+    d.id = Item_id::raven_peck;
+    d.melee.att_msgs = {"", "pecks at me"};
+    set_dmg_from_mon_id(d, Actor_id::raven);
+    d.melee.prop_applied = new Prop_blind(Prop_turns::specific, 3);
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);

@@ -15,6 +15,8 @@ enum class Actor_id
 {
     player,
     zombie, zombie_axe, bloated_zombie,
+    crawling_intestines,
+    crawling_hand, thing,
     cultist, cultist_electric, cultist_spike_gun,
     cultist_priest,
     rat, rat_thing,
@@ -26,6 +28,7 @@ enum class Actor_id
     shadow,
     wolf, fire_hound, frost_hound, zuul,
     ghost, phantasm, wraith,
+    raven,
     giant_bat, byakhee,
     giant_mantis, locust,
     mummy, croc_head_mummy, khephren, nitokris,
@@ -118,7 +121,7 @@ struct Actor_data_t
     int ranged_cooldown_turns, spell_cooldown_turns;
     bool ai[int(Ai_id::END)];
     int nr_turns_aware;
-    int spawn_min_dLVL, spawn_max_dLVL;
+    int spawn_min_dlvl, spawn_max_dlvl;
     Actor_size actor_size;
     bool is_humanoid;
     bool is_infra_visible;

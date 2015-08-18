@@ -58,7 +58,7 @@ std::string speed_str(const Actor_data_t& def)
 
 std::string dwelling_lvl_str(const Actor_data_t& def)
 {
-    return to_str(std::max(1, def.spawn_min_dLVL - 1));
+    return to_str(std::max(1, def.spawn_min_dlvl - 1));
 }
 
 } //namespace
@@ -69,7 +69,7 @@ void add_auto_description_lines(const Actor& actor, std::string& line)
 
     if (def.is_unique)
     {
-        if (def.spawn_min_dLVL < DLVL_LAST)
+        if (def.spawn_min_dlvl < DLVL_LAST)
         {
             line += " " + def.name_the + " is normally found beneath level " +
                     dwelling_lvl_str(def) + ". ";

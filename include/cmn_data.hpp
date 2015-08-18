@@ -70,11 +70,11 @@ const int ENC_IMMOBILE_LVL = 125;
 const int NR_MG_PROJECTILES                     = 5;
 const int NR_CELL_JUMPS_BETWEEN_MG_PROJECTILES  = 2;
 
-//NOTE: Explosion damage is reduced with distance from center
+//NOTE: Number of rolls is reduced by one for each step away from the explosion center
 const int EXPL_DMG_ROLLS  = 5;
 const int EXPL_DMG_SIDES  = 6;
 const int EXPL_DMG_PLUS   = 10;
-const int EXPL_MAX_DMG    = (EXPL_DMG_ROLLS* EXPL_DMG_SIDES) + EXPL_DMG_PLUS;
+const int EXPL_MAX_DMG    = (EXPL_DMG_ROLLS * EXPL_DMG_SIDES) + EXPL_DMG_PLUS;
 
 const int POISON_DMG_N_TURN = 3;
 

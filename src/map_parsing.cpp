@@ -331,6 +331,7 @@ bool cell(const cell_check::Check& method, const Pos& p)
                 if (IS_MATCH)
                 {
                     r = true;
+                    break;
                 }
             }
         }
@@ -349,9 +350,8 @@ bool cell(const cell_check::Check& method, const Pos& p)
                 if (IS_MATCH)
                 {
                     r = true;
+                    break;
                 }
-
-                break;
             }
         }
     }

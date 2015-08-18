@@ -1235,10 +1235,10 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
             else //Caster is monster
             {
                 //Compare caster and summoned monster's allowed spawning DLVL.
-                dlvl_max = caster->data().spawn_min_dLVL;
+                dlvl_max = caster->data().spawn_min_dlvl;
             }
 
-            if (data.spawn_min_dLVL <= dlvl_max)
+            if (data.spawn_min_dlvl <= dlvl_max)
             {
                 summon_bucket.push_back(Actor_id(i));
             }

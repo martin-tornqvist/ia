@@ -3,8 +3,8 @@
 
 const int FONT_SHEET_X_CELLS = 16;
 const int FONT_SHEET_Y_CELLS = 7;
-const int TILE_SHEET_X_CELLS = 19;
-const int TILE_SHEET_Y_CELLS = 11;
+const int TILE_SHEET_X_CELLS = 21;
+const int TILE_SHEET_Y_CELLS = 13;
 
 enum class Tile_id
 {
@@ -26,6 +26,10 @@ enum class Tile_id
     ape,
     croc_head_mummy,
     the_high_priest,
+    floating_head,
+    crawling_hand,
+    crawling_intestines,
+    raven,
     armor,
     potion,
     ammo,

@@ -424,9 +424,9 @@ bool mk_egypt_lvl()
 {
     map::reset_map();
 
-    const map_templ& templ     = map_templ_handling::templ(Map_templ_id::egypt);
-    const Pos       templ_dims = templ.dims();
-    const int       STAIR_VAL = rnd::range(2, 3);
+    const map_templ& templ      = map_templ_handling::templ(Map_templ_id::egypt);
+    const Pos       templ_dims  = templ.dims();
+    const int       STAIR_VAL   = rnd::range(2, 3);
 
     for (int x = 0; x < templ_dims.x; ++x)
     {

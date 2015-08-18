@@ -1404,6 +1404,11 @@ bool Ape::on_actor_turn_hook()
     return false;
 }
 
+void Raven::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(Item_id::raven_peck));
+}
+
 void Giant_bat::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(Item_id::giant_bat_bite));
@@ -1687,9 +1692,9 @@ bool Giant_locust::on_actor_turn_hook()
                 Actor* const    actor     = actor_factory::mk(data_->id, p_adj);
                 Giant_locust* const locust = static_cast<Giant_locust*>(actor);
                 spawn_new_one_in_n += 3;
-                locust->spawn_new_one_in_n    = spawn_new_one_in_n;
-                locust->aware_counter_     = aware_counter_;
-                locust->leader_           = leader_ ? leader_ : this;
+                locust->spawn_new_one_in_n  = spawn_new_one_in_n;
+                locust->aware_counter_      = aware_counter_;
+                locust->leader_             = leader_ ? leader_ : this;
                 game_time::tick();
                 return true;
             }
@@ -1810,11 +1815,17 @@ bool Major_clapham_lee::on_actor_turn_hook()
 
                 switch (ZOMBIE_TYPE)
                 {
-                case 1: mon_id = Actor_id::zombie;        break;
+                case 1:
+                    mon_id = Actor_id::zombie;
+                    break;
 
-                case 2: mon_id = Actor_id::zombie_axe;     break;
+                case 2:
+                    mon_id = Actor_id::zombie_axe;
+                    break;
 
-                case 3: mon_id = Actor_id::bloated_zombie; break;
+                case 3:
+                    mon_id = Actor_id::bloated_zombie;
+                    break;
                 }
 
                 mon_ids.push_back(mon_id);
@@ -1880,6 +1891,53 @@ void Zombie::on_death()
         map::mk_blood(pos);
         map::mk_gore(pos);
     }
+
+    //If corpse is destroyed, occasionally spawn Zombie parts. Spawning is only allowed if the
+    //corpse is not destroyed "too hard" (e.g. by a near explosion or a sledge hammer). This also
+    //serves to reward heavy weapons, since they will more often prevent spawning nasty stuff.
+
+    const int SUMMON_ONE_IN_N = 4;
+
+    if (state_ == Actor_state::destroyed && hp_ > -10 && rnd::one_in(SUMMON_ONE_IN_N))
+    {
+        Actor_id id_to_spawn = Actor_id::END;
+
+        const int ROLL = rnd::range(1, 2);
+
+        const std::string my_name = name_the();
+
+        std::string spawn_msg = "";
+
+        if (ROLL == 1)
+        {
+            id_to_spawn = Actor_id::crawling_hand;
+
+            spawn_msg = "The hand of " + my_name + " comes off and starts crawling around!";
+        }
+        else
+        {
+            id_to_spawn = Actor_id::crawling_intestines;
+
+            spawn_msg = "The intestines of " + my_name + " starts crawling around!";
+        }
+
+        if (map::cells[pos.x][pos.y].is_seen_by_player)
+        {
+            assert(!spawn_msg.empty());
+
+            msg_log::add(spawn_msg);
+        }
+
+        assert(id_to_spawn != Actor_id::END);
+
+        Mon* const mon = static_cast<Mon*>(actor_factory::mk(id_to_spawn, pos));
+
+        mon->leader_ = leader_;
+
+        mon->become_aware(false);
+
+        render::draw_map_and_interface();
+    }
 }
 
 void Zombie_claw::mk_start_items()
@@ -1890,7 +1948,7 @@ void Zombie_claw::mk_start_items()
     {
         item = item_factory::mk(Item_id::zombie_claw_diseased);
     }
-    else
+    else //Not diseased
     {
         item = item_factory::mk(Item_id::zombie_claw);
     }
@@ -1907,6 +1965,22 @@ void Bloated_zombie::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(Item_id::bloated_zombie_punch));
     inv_->put_in_intrinsics(item_factory::mk(Item_id::bloated_zombie_spit));
+}
+
+void Crawling_intestines::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(Item_id::crawling_intestines_strangle));
+}
+
+void Crawling_hand::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(Item_id::crawling_hand_strangle));
+}
+
+void Thing::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(Item_id::thing_strangle));
+    spells_known_.push_back(new Spell_teleport);
 }
 
 bool Mold::on_actor_turn_hook()
@@ -1928,7 +2002,7 @@ bool Mold::on_actor_turn_hook()
             {
                 Actor* const  actor     = actor_factory::mk(data_->id, adj_pos);
                 Mold* const   mold      = static_cast<Mold*>(actor);
-                mold->aware_counter_     = aware_counter_;
+                mold->aware_counter_    = aware_counter_;
                 mold->leader_           = leader_ ? leader_ : this;
                 game_time::tick();
                 return true;

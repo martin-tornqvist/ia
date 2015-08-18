@@ -141,6 +141,10 @@ Pos column_and_row_tile(const Tile_id tile)
     case Tile_id::ape:                          return Pos(14, 0);
     case Tile_id::croc_head_mummy:              return Pos(15, 0);
     case Tile_id::the_high_priest:              return Pos(16, 0);
+    case Tile_id::floating_head:                return Pos(17, 0);
+    case Tile_id::crawling_hand:                return Pos(18, 0);
+    case Tile_id::crawling_intestines:          return Pos(19, 0);
+    case Tile_id::raven:                        return Pos(20, 0);
     case Tile_id::armor:                        return Pos(0, 1);
     case Tile_id::potion:                       return Pos(2, 1);
     case Tile_id::ammo:                         return Pos(4, 1);

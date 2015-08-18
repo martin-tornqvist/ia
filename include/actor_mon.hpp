@@ -253,6 +253,30 @@ public:
     ~Dean_halsey() {}
 };
 
+class Crawling_intestines: public Mon
+{
+public:
+    Crawling_intestines() : Mon() {}
+    ~Crawling_intestines() {}
+    virtual void mk_start_items() override;
+};
+
+class Crawling_hand: public Mon
+{
+public:
+    Crawling_hand() : Mon() {}
+    ~Crawling_hand() {}
+    virtual void mk_start_items() override;
+};
+
+class Thing: public Mon
+{
+public:
+    Thing() : Mon() {}
+    ~Thing() {}
+    virtual void mk_start_items() override;
+};
+
 class Keziah_mason: public Mon
 {
 public:
@@ -409,6 +433,14 @@ class Wraith: public Ghost
 public:
     Wraith() : Ghost() {}
     ~Wraith() {}
+    void mk_start_items() override;
+};
+
+class Raven: public Mon
+{
+public:
+    Raven() : Mon() {}
+    ~Raven() {}
     void mk_start_items() override;
 };
 

@@ -967,7 +967,7 @@ void Trap_summon_mon::trigger()
     {
         const Actor_data_t& data = actor_data::data[i];
 
-        if (data.can_be_summoned && data.spawn_min_dLVL <= map::dlvl + 3)
+        if (data.can_be_summoned && data.spawn_min_dlvl <= map::dlvl + 3)
         {
             summon_bucket.push_back(Actor_id(i));
         }

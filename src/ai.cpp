@@ -369,17 +369,19 @@ Dir dir_to_rnd_adj_free_cell(Mon& mon)
 
 bool move_to_random_adj_cell(Mon& mon)
 {
-    if (mon.is_alive())
+    if (!mon.is_alive())
     {
-        if (mon.is_roaming_allowed_ || mon.aware_counter_ > 0)
-        {
-            const Dir dir = dir_to_rnd_adj_free_cell(mon);
+        return false;
+    }
 
-            if (dir != Dir::center)
-            {
-                mon.move(dir);
-                return true;
-            }
+    if (mon.is_roaming_allowed_ || mon.aware_counter_ > 0)
+    {
+        const Dir dir = dir_to_rnd_adj_free_cell(mon);
+
+        if (dir != Dir::center)
+        {
+            mon.move(dir);
+            return true;
         }
     }
 

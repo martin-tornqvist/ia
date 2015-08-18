@@ -795,13 +795,18 @@ void Player::incr_insanity()
             if (ins_ > 8)
             {
                 msg += "The shadows are closing in on me!";
+
                 popup::show_msg(msg, true, "Haunted by shadows!", Sfx_id::insanity_rise);
+
                 const int NR_SHADOWS_LOWER = 2;
+
                 const int NR_SHADOWS_UPPER =
-                    constr_in_range(2, (map::dlvl + 1) / 2, 6);
-                const int NR =
-                    rnd::range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
+                    constr_in_range(NR_SHADOWS_LOWER, map::dlvl - 2, 8);
+
+                const int NR = rnd::range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
+
                 actor_factory::summon(pos, std::vector<Actor_id>(NR, Actor_id::shadow), true);
+
                 return;
             }
         } break;

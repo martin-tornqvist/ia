@@ -42,6 +42,15 @@ Actor* mk_actor_from_id(const Actor_id id)
     case Actor_id::dean_halsey:
         return new Dean_halsey();
 
+    case Actor_id::crawling_intestines:
+        return new Crawling_intestines();
+
+    case Actor_id::crawling_hand:
+        return new Crawling_hand();
+
+    case Actor_id::thing:
+        return new Thing();
+
     case Actor_id::rat:
         return new Rat();
 
@@ -83,6 +92,9 @@ Actor* mk_actor_from_id(const Actor_id id)
 
     case Actor_id::phantasm:
         return new Phantasm();
+
+    case Actor_id::raven:
+        return new Raven();
 
     case Actor_id::giant_bat:
         return new Giant_bat();
