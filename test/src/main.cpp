@@ -95,25 +95,25 @@ TEST(roll_dice)
 
 TEST(constrain_val_in_range)
 {
-    int val = constr_in_range(5, 9, 10);
+    int val = utils::constr_in_range(5, 9, 10);
     CHECK_EQUAL(val, 9);
-    val = constr_in_range(5, 11, 10);
+    val = utils::constr_in_range(5, 11, 10);
     CHECK_EQUAL(val, 10);
-    val = constr_in_range(5, 4, 10);
+    val = utils::constr_in_range(5, 4, 10);
     CHECK_EQUAL(val, 5);
 
-    set_constr_in_range(2, val, 8);
+    utils::set_constr_in_range(2, val, 8);
     CHECK_EQUAL(val, 5);
-    set_constr_in_range(2, val, 4);
+    utils::set_constr_in_range(2, val, 4);
     CHECK_EQUAL(val, 4);
-    set_constr_in_range(18, val, 22);
+    utils::set_constr_in_range(18, val, 22);
     CHECK_EQUAL(val, 18);
 
     //Test faulty paramters
-    val = constr_in_range(9, 4, 2);   //Min > Max -> return -1
+    val = utils::constr_in_range(9, 4, 2);   //Min > Max -> return -1
     CHECK_EQUAL(val, -1);
     val = 10;
-    set_constr_in_range(20, val, 3);   //Min > Max -> do nothing
+    utils::set_constr_in_range(20, val, 3);   //Min > Max -> do nothing
     CHECK_EQUAL(val, 10);
 }
 

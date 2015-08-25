@@ -19,7 +19,9 @@ using namespace std;
 
 Item_data_t::Item_data_t() :
     id                                  (Item_id::END),
-    type                                (Item_type::general      ),
+    type                                (Item_type::general),
+    has_std_activate                    (false),
+    is_prio_in_backpack_list            (false),
     value                               (Item_value::normal),
     weight                              (Item_weight::none),
     allow_spawn                         (true),
@@ -174,7 +176,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.ranged.is_ranged_wpn = true;
         d.ranged.projectile_glyph = '/';
         d.ranged.projectile_clr = clr_white;
-        d.spawn_std_range.upper = DLVL_LAST_MID_GAME;
+        d.spawn_std_range.max = DLVL_LAST_MID_GAME;
         d.melee.hit_small_sfx = Sfx_id::hit_small;
         d.melee.hit_medium_sfx = Sfx_id::hit_medium;
         d.melee.hit_hard_sfx = Sfx_id::hit_hard;
@@ -199,7 +201,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.type = Item_type::throwing_wpn;
         d.weight = Item_weight::extra_light;
         d.is_stackable = true;
-        d.spawn_std_range.upper = DLVL_LAST_MID_GAME;
+        d.spawn_std_range.max = DLVL_LAST_MID_GAME;
         d.ranged.snd_vol = Snd_vol::low;
         break;
 
@@ -210,7 +212,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.glyph = '{';
         d.clr = clr_white;
         d.tile = Tile_id::ammo;
-        d.spawn_std_range.upper = DLVL_LAST_MID_GAME;
+        d.spawn_std_range.max = DLVL_LAST_MID_GAME;
         break;
 
     case Item_type::ammo_clip:
@@ -218,12 +220,13 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.type = Item_type::ammo_clip;
         d.weight = Item_weight::light;
         d.is_stackable = false;
-        d.spawn_std_range.upper = DLVL_LAST_MID_GAME;
+        d.spawn_std_range.max = DLVL_LAST_MID_GAME;
         break;
 
     case Item_type::scroll:
         reset_data(d, Item_type::general);
         d.type = Item_type::scroll;
+        d.has_std_activate = true;
         d.base_descr =
         {
             "A short transcription of an eldritch incantation. There is a strange aura "
@@ -248,6 +251,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
     case Item_type::potion:
         reset_data(d, Item_type::general);
         d.type = Item_type::potion;
+        d.has_std_activate = true;
         d.base_descr =
         {
             "A small glass bottle containing a mysterious concoction."
@@ -271,6 +275,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
     case Item_type::device:
         reset_data(d, Item_type::general);
         d.type = Item_type::device;
+        d.has_std_activate = true;
         d.base_name_un_id = {"Strange Device", "Strange Devices", "a Strange Device"};
         d.base_descr =
         {
@@ -338,6 +343,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
     case Item_type::explosive:
         reset_data(d, Item_type::general);
         d.type = Item_type::explosive;
+        d.has_std_activate = true;
         d.weight = Item_weight::light;
         d.glyph = '-';
         d.max_stack_at_spawn = 2;
@@ -468,7 +474,7 @@ void init_data_list()
     d.ranged.snd_msg = "I hear the blast of a launched missile.";
     d.ranged.projectile_glyph = '*';
     d.ranged.projectile_clr = clr_red_lgt;
-    d.spawn_std_range.lower = 5;
+    d.spawn_std_range.min = 5;
     d.chance_to_incl_in_floor_spawn_list = 25;
     add_feature_found_in(d, Feature_id::chest, 25);
     add_feature_found_in(d, Feature_id::cabinet, 25);
@@ -486,7 +492,7 @@ void init_data_list()
         "Ammunition designed for Incinerators."
     };
     d.weight = Item_weight::light;
-    d.spawn_std_range.lower = 5;
+    d.spawn_std_range.min = 5;
     d.max_stack_at_spawn = 1;
     d.ranged.max_ammo = data[size_t(Item_id::incinerator)].ranged.max_ammo;
     d.chance_to_incl_in_floor_spawn_list = 25;
@@ -672,7 +678,7 @@ void init_data_list()
     d.ranged.makes_ricochet_snd = true;
     d.ranged.projectile_glyph = '/';
     d.ranged.projectile_clr = clr_gray;
-    d.spawn_std_range.lower = 4;
+    d.spawn_std_range.min = 4;
     d.ranged.att_sfx = Sfx_id::spike_gun;
     d.ranged.snd_vol = Snd_vol::low;
     add_feature_found_in(d, Feature_id::chest, 50);
@@ -1478,7 +1484,7 @@ void init_data_list()
     };
     d.weight = Item_weight::light;
     d.clr = clr_brown;
-    d.spawn_std_range.lower = 1;
+    d.spawn_std_range.min = 1;
     d.armor.armor_points = 1;
     d.armor.dmg_to_durability_factor = 1.0;
     d.land_on_hard_snd_msg = "";
@@ -1504,7 +1510,7 @@ void init_data_list()
     d.ability_mods_while_equipped[int(Ability_id::searching)]  = -6;
     d.weight = Item_weight::heavy;
     d.clr = clr_white;
-    d.spawn_std_range.lower = 2;
+    d.spawn_std_range.min = 2;
     d.armor.armor_points = 5;
     d.armor.dmg_to_durability_factor = 0.3;
     d.land_on_hard_snd_msg = "I hear a crashing sound.";
@@ -1524,7 +1530,7 @@ void init_data_list()
     d.ability_mods_while_equipped[int(Ability_id::dodge_trap)]  = -20;
     d.weight = Item_weight::medium;
     d.clr = clr_green;
-    d.spawn_std_range.lower = 3;
+    d.spawn_std_range.min = 3;
     d.armor.armor_points = 3;
     d.armor.dmg_to_durability_factor = 0.5;
     d.land_on_hard_snd_msg = "I hear a thudding sound.";
@@ -1552,7 +1558,7 @@ void init_data_list()
     d.ability_mods_while_equipped[int(Ability_id::searching)]  = -6;
     d.weight = Item_weight::medium;
     d.clr = clr_red_lgt;
-    d.spawn_std_range.lower = 3;
+    d.spawn_std_range.min = 3;
     d.armor.armor_points = 1;
     d.armor.dmg_to_durability_factor = 1.0;
     d.land_on_hard_snd_msg = "";
@@ -1575,7 +1581,7 @@ void init_data_list()
     d.ability_mods_while_equipped[int(Ability_id::dodge_trap)]  = -15;
     d.weight = Item_weight::medium;
     d.clr = clr_blue_lgt;
-    d.spawn_std_range.lower = 3;
+    d.spawn_std_range.min = 3;
     d.armor.armor_points = 2;
     d.armor.dmg_to_durability_factor = 1.0;
     d.land_on_hard_snd_msg = "";
@@ -1865,6 +1871,7 @@ void init_data_list()
 
     reset_data(d, Item_type::device);
     d.id = Item_id::electric_lantern;
+    d.is_prio_in_backpack_list = true;
     d.base_name = {"Electric Lantern", "Electric Lanterns", "an Electric Lantern"};
     d.base_descr =
     {
@@ -1884,6 +1891,8 @@ void init_data_list()
 
     reset_data(d, Item_type::general);
     d.id = Item_id::medical_bag;
+    d.has_std_activate = true;
+    d.is_prio_in_backpack_list = true;
     d.base_name = {"Medical Bag", "Medical Bags", "a Medical Bag"};
     d.base_descr =
     {

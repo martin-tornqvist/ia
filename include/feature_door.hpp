@@ -52,11 +52,23 @@ public:
 
     void try_open(Actor* actor_trying);
     void try_close(Actor* actor_trying);
-    bool try_spike(Actor* actor_trying);
+    bool try_jam(Actor* actor_trying);
 
-    bool is_open() const {return is_open_;}
-    bool is_secret() const {return is_secret_;}
-    bool is_stuck() const {return is_stuck_;}
+    bool is_open() const
+    {
+        return is_open_;
+    }
+
+    bool is_secret() const
+    {
+        return is_secret_;
+    }
+
+    bool is_stuck() const
+    {
+        return is_stuck_;
+    }
+
     bool is_handled_externally() const
     {
         return is_handled_externally_;

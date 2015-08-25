@@ -6,8 +6,6 @@
 
 #include "map.hpp"
 
-using namespace std;
-
 //This includes forest intro level, rats in the walls level, etc (every level that
 //increments the DLVL number).
 enum Is_main_dungeon {no, yes};

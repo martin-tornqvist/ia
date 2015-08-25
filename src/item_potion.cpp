@@ -42,14 +42,14 @@ void Potion::identify(const Verbosity verbosity)
 
         if (verbosity == Verbosity::verbose)
         {
-            const string potion_name = name(Item_ref_type::a, Item_ref_inf::none);
+            const std::string potion_name = name(Item_ref_type::a, Item_ref_inf::none);
             msg_log::add("It was " + potion_name + ".");
             map::player->incr_shock(Shock_lvl::heavy, Shock_src::use_strange_item);
         }
     }
 }
 
-vector<string> Potion::descr() const
+std::vector<std::string> Potion::descr() const
 {
     if (data_->is_identified)
     {
@@ -114,12 +114,12 @@ void Potion::quaff(Actor& actor)
 
         if (data_->is_identified)
         {
-            const string potion_name = name(Item_ref_type::a, Item_ref_inf::none);
+            const std::string potion_name = name(Item_ref_type::a, Item_ref_inf::none);
             msg_log::add("I drink " + potion_name + "...");
         }
         else //Unidentified
         {
-            const string potion_name = name(Item_ref_type::plain, Item_ref_inf::none);
+            const std::string potion_name = name(Item_ref_type::plain, Item_ref_inf::none);
             msg_log::add("I drink an unknown " + potion_name + "...");
         }
 
@@ -134,7 +134,7 @@ void Potion::quaff(Actor& actor)
     }
 }
 
-string Potion::name_inf() const
+std::string Potion::name_inf() const
 {
     return (data_->is_tried && !data_->is_identified) ? "{Tried}" : "";
 }
@@ -457,7 +457,7 @@ void Potion_insight::quaff_impl(Actor& actor)
 
     auto& inv = map::player->inv();
 
-    vector<Item*> identify_bucket;
+    std::vector<Item*> identify_bucket;
 
     auto& slots = inv.slots_;
 
@@ -473,7 +473,7 @@ void Potion_insight::quaff_impl(Actor& actor)
         }
     }
 
-    vector<Item*>& general = inv.backpack_;
+    std::vector<Item*>& general = inv.backpack_;
 
     for (Item* item : general)
     {
@@ -489,16 +489,16 @@ void Potion_insight::quaff_impl(Actor& actor)
 
     if (NR_ELEMENTS > 0)
     {
-        const int     IDX             = rnd::range(0, NR_ELEMENTS - 1);
-        Item* const   item            = identify_bucket[IDX];
-        const string  item_name_before  = item->name(Item_ref_type::a, Item_ref_inf::none);
+        const int     IDX                   = rnd::range(0, NR_ELEMENTS - 1);
+        Item* const   item                  = identify_bucket[IDX];
+        const std::string  item_name_before = item->name(Item_ref_type::a, Item_ref_inf::none);
 
         msg_log::add("I gain intuitions about " + item_name_before + "...", clr_white, false,
                      More_prompt_on_msg::yes);
 
         item->identify(Verbosity::silent);
 
-        const string item_name_after = item->name(Item_ref_type::a, Item_ref_inf::none);
+        const std::string item_name_after = item->name(Item_ref_type::a, Item_ref_inf::none);
 
         render::draw_map_and_interface(true);
 
@@ -530,7 +530,7 @@ void Potion_clairv::quaff_impl(Actor& actor)
     {
         msg_log::add("I see far and wide!");
 
-        vector<Pos> anim_cells;
+        std::vector<Pos> anim_cells;
         anim_cells.clear();
 
         bool blocked[MAP_W][MAP_H];
@@ -625,7 +625,7 @@ namespace potion_handling
 namespace
 {
 
-vector<Potion_look> potion_looks_;
+std::vector<Potion_look> potion_looks_;
 
 } //namespace
 
@@ -658,7 +658,7 @@ void init()
     potion_looks_.push_back(Potion_look {"Moldy",    "a Moldy",    clr_brown});
     potion_looks_.push_back(Potion_look {"Frothy",   "a Frothy",   clr_white});
 
-    TRACE << "Init potion names" << endl;
+    TRACE << "Init potion names" << std::endl;
 
     for (auto& d : item_data::data)
     {
@@ -680,13 +680,13 @@ void init()
             const Potion* const potion =
                 static_cast<const Potion*>(item_factory::mk(d.id, 1));
 
-            const string REAL_TYPE_NAME = potion->real_name();
+            const std::string REAL_TYPE_NAME = potion->real_name();
 
             delete potion;
 
-            const string REAL_NAME        = "Potion of "    + REAL_TYPE_NAME;
-            const string REAL_NAME_PLURAL = "Potions of "   + REAL_TYPE_NAME;
-            const string REAL_NAME_A      = "a potion of "  + REAL_TYPE_NAME;
+            const std::string REAL_NAME        = "Potion of "    + REAL_TYPE_NAME;
+            const std::string REAL_NAME_PLURAL = "Potions of "   + REAL_TYPE_NAME;
+            const std::string REAL_NAME_A      = "a potion of "  + REAL_TYPE_NAME;
 
             d.base_name.names[int(Item_ref_type::plain)]  = REAL_NAME;
             d.base_name.names[int(Item_ref_type::plural)] = REAL_NAME_PLURAL;
@@ -697,7 +697,7 @@ void init()
     TRACE_FUNC_END;
 }
 
-void store_to_save_lines(vector<string>& lines)
+void store_to_save_lines(std::vector<std::string>& lines)
 {
     for (int i = 0; i < int(Item_id::END); ++i)
     {
@@ -715,7 +715,7 @@ void store_to_save_lines(vector<string>& lines)
     }
 }
 
-void setup_from_save_lines(vector<string>& lines)
+void setup_from_save_lines(std::vector<std::string>& lines)
 {
     for (int i = 0; i < int(Item_id::END); ++i)
     {

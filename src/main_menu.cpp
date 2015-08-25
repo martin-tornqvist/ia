@@ -5,7 +5,7 @@
 #include "init.hpp"
 #include "colors.hpp"
 #include "render.hpp"
-#include "menu_input_handling.hpp"
+#include "menu_input.hpp"
 #include "save_handling.hpp"
 #include "highscore.hpp"
 #include "manual.hpp"
@@ -20,7 +20,6 @@
 #include "utils.hpp"
 #include "map.hpp"
 
-using namespace std;
 
 namespace main_menu
 {
@@ -28,12 +27,12 @@ namespace main_menu
 namespace
 {
 
-string quote = "";
+std::string quote = "";
 
-string hpl_quote()
+std::string hpl_quote()
 {
-    vector<string> quotes;
-    quotes.clear();
+    std::vector<std::string> quotes;
+
     quotes.push_back(
         "Happy is the tomb where no wizard hath lain and happy the town at night "
         "whose wizards are all ashes.");
@@ -131,9 +130,6 @@ string hpl_quote()
         "constitution and environment. Through certain modes of thought and "
         "training it can be elevated tremendously, yet there is always a limit.");
     quotes.push_back(
-        "As human beings, our only sensible scale of values is one based on "
-        "lessening the agony of existence.");
-    quotes.push_back(
         "The oldest and strongest emotion of mankind is fear, and the oldest and "
         "strongest kind of fear is fear of the unknown.");
     quotes.push_back(
@@ -217,20 +213,20 @@ void draw(const Menu_browser& browser)
 
     Pos pos(MAP_W_HALF, 3);
 
-    TRACE << "Calling clear_window()" << endl;
+    TRACE << "Calling clear_window()" << std::endl;
     render::clear_screen();
 
     render::draw_box(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
     if (config::is_tiles_mode())
     {
-        TRACE << "Calling draw_main_menu_logo()" << endl;
+        TRACE << "Calling draw_main_menu_logo()" << std::endl;
         render::draw_main_menu_logo(0);
         pos.y += 10;
     }
     else
     {
-        vector<string> logo;
+        std::vector<std::string> logo;
 
         if (!config::is_tiles_mode())
         {
@@ -243,7 +239,7 @@ void draw(const Menu_browser& browser)
 
         const int LOGO_X_POS_LEFT = (MAP_W - logo[0].size()) / 2;
 
-        for (const string& row : logo)
+        for (const std::string& row : logo)
         {
             pos.x = LOGO_X_POS_LEFT;
 
@@ -252,89 +248,104 @@ void draw(const Menu_browser& browser)
                 if (glyph != ' ')
                 {
                     Clr clr = clr_green_lgt;
+
                     clr.g += rnd::range(-50, 100);
-                    clr.g = max(0, min(254, int(clr.g)));
+
+                    utils::constr_in_range(0, int(clr.g), 254);
+
                     render::draw_glyph(glyph, Panel::screen, pos, clr);
                 }
-
                 pos.x++;
             }
-
             pos.y += 1;
         }
-
         pos.y += 3;
     }
 
     if (IS_DEBUG_MODE)
     {
-        render::draw_text(
-            "## DEBUG MODE ##", Panel::screen, Pos(1, 1), clr_yellow);
+        render::draw_text("## DEBUG MODE ##", Panel::screen, Pos(1, 1), clr_yellow);
     }
 
-    TRACE << "Drawing HPL quote" << endl;
+    TRACE << "Drawing main menu" << std::endl;
+
+    pos.set(48, 13);
+
+    render::draw_text("New journey", Panel::screen, pos,
+                      browser.is_at_idx(0) ? clr_menu_highlight : clr_menu_drk);
+    pos += 1;
+
+    render::draw_text("Resurrect", Panel::screen, pos,
+                      browser.is_at_idx(1) ? clr_menu_highlight : clr_menu_drk);
+    pos += 1;
+
+    render::draw_text("Tome of Wisdom", Panel::screen, pos,
+                      browser.is_at_idx(2) ? clr_menu_highlight : clr_menu_drk);
+    pos += 1;
+
+    render::draw_text("Options", Panel::screen, pos,
+                      browser.is_at_idx(3) ? clr_menu_highlight : clr_menu_drk);
+    pos += 1;
+
+    render::draw_text("Credits", Panel::screen, pos,
+                      browser.is_at_idx(4) ? clr_menu_highlight : clr_menu_drk);
+    pos += 1;
+
+    render::draw_text("Graveyard", Panel::screen, pos,
+                      browser.is_at_idx(5) ? clr_menu_highlight : clr_menu_drk);
+    pos += 1;
+
+    render::draw_text("Escape to reality", Panel::screen, pos,
+                      browser.is_at_idx(6) ? clr_menu_highlight : clr_menu_drk);
+    pos += 1;
+
+    if (IS_DEBUG_MODE)
+    {
+        render::draw_text("DEBUG: RUN BOT", Panel::screen, pos,
+                          browser.is_at_idx(7) ? clr_menu_highlight : clr_menu_drk);
+        pos += 1;
+    }
+
+
+    TRACE << "Drawing quote" << std::endl;
     Clr quote_clr = clr_gray;
     quote_clr.r /= 7;
     quote_clr.g /= 7;
     quote_clr.b /= 7;
 
-    vector<string> quote_lines;
-    text_format::line_to_lines(quote, 28, quote_lines);
-    Pos quote_pos(15, pos.y - 1);
+    std::vector<std::string> quote_lines;
 
-    for (string& quote_line : quote_lines)
+    int quote_w = 45;
+
+    //Decrease quote width until we find a width that doesn't leave a tiny string on the last line
+    //(looks very ugly),
+    while (quote_w != 0)
     {
-        render::draw_text_centered(quote_line, Panel::screen, quote_pos, quote_clr);
-        quote_pos.y++;
+        text_format::line_to_lines(quote, quote_w, quote_lines);
+
+        const size_t MIN_STR_W_LAST_LINE = 20;
+
+        const std::string& last_line = quote_lines.back();
+
+        //Is the length of the current last line at least as long as the minimum required?
+        if (last_line.length() >= MIN_STR_W_LAST_LINE)
+        {
+            break;
+        }
+
+        --quote_w;
     }
 
-    TRACE << "Drawing main menu" << endl;
-
-    pos.x = MAP_W_HALF;
-
-    const int BOX_Y0 = pos.y - 1;
-
-    render::draw_text_centered("New journey", Panel::screen, pos,
-                               browser.is_at_idx(0) ? clr_menu_highlight : clr_menu_drk);
-    pos.y++;
-
-    render::draw_text_centered("Resurrect", Panel::screen, pos,
-                               browser.is_at_idx(1) ? clr_menu_highlight : clr_menu_drk);
-    pos.y++;
-
-    render::draw_text_centered("Tome of Wisdom", Panel::screen, pos,
-                               browser.is_at_idx(2) ? clr_menu_highlight : clr_menu_drk);
-    pos.y++;
-
-    render::draw_text_centered("Options", Panel::screen, pos,
-                               browser.is_at_idx(3) ? clr_menu_highlight : clr_menu_drk);
-    pos.y++;
-
-    render::draw_text_centered("Credits", Panel::screen, pos,
-                               browser.is_at_idx(4) ? clr_menu_highlight : clr_menu_drk);
-    pos.y++;
-
-    render::draw_text_centered("Graveyard", Panel::screen, pos,
-                               browser.is_at_idx(5) ? clr_menu_highlight : clr_menu_drk);
-    pos.y++;
-
-    render::draw_text_centered("Escape to reality", Panel::screen, pos,
-                               browser.is_at_idx(6) ? clr_menu_highlight : clr_menu_drk);
-    pos.y++;
-
-    if (IS_DEBUG_MODE)
+    if (quote_w > 0)
     {
-        render::draw_text_centered("DEBUG: RUN BOT", Panel::screen, pos,
-                                   browser.is_at_idx(7) ? clr_menu_highlight : clr_menu_drk);
-        pos.y++;
-    }
+        pos.set((quote_w / 2) + 2, 15);
 
-    const int BOX_Y1      = pos.y;
-    const int BOX_W_HALF  = 10;
-    const int BOX_X0      = pos.x - BOX_W_HALF;
-    const int BOX_X1      = pos.x + BOX_W_HALF;
-    render::draw_box(Rect(Pos(BOX_X0, BOX_Y0), Pos(BOX_X1, BOX_Y1)),
-                           Panel::screen);
+        for (const std::string& line : quote_lines)
+        {
+            render::draw_text_centered(line, Panel::screen, pos, quote_clr);
+            ++pos.y;
+        }
+    }
 
     render::draw_text_centered(
         game_version_str + " - " + __DATE__ + " (c) 2011-2015 Martin Tornqvist",
@@ -353,7 +364,7 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
 
     quote = hpl_quote();
 
-    Menu_browser browser(IS_DEBUG_MODE ? 8 : 7, 0);
+    Menu_browser browser(IS_DEBUG_MODE ? 8 : 7);
 
     intro_mus_channel = audio::play(Sfx_id::mus_cthulhiana_Madness);
 
@@ -361,27 +372,24 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
 
     while (true)
     {
-        const Menu_action action = menu_input_handling::action(browser);
+        const Menu_action action = menu_input:: action(browser, Menu_input_mode::scroll);
 
         switch (action)
         {
-        case Menu_action::browsed:
-        {
+        case Menu_action::moved:
             draw(browser);
-        } break;
+            break;
 
         case Menu_action::esc:
-        {
-            quit    = true;
+            quit = true;
             TRACE_FUNC_END;
             return Game_entry_mode::new_game;
-        } break;
 
         case Menu_action::space:
-        case Menu_action::selected_shift: {} break;
+            break;
 
         case Menu_action::selected:
-        {
+        case Menu_action::selected_shift:
             if (browser.is_at_idx(0))
             {
                 TRACE_FUNC_END;
@@ -397,7 +405,7 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
                     TRACE_FUNC_END;
                     return Game_entry_mode::load_game;
                 }
-                else
+                else //No save available
                 {
                     popup::show_msg("No saved game found", false);
                     draw(browser);
@@ -444,7 +452,7 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
                     return Game_entry_mode::new_game;
                 }
             }
-        } break;
+            break;
         }
     }
 

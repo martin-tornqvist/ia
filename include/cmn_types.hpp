@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <string>
+#include <cassert>
 
 #include "colors.hpp"
 #include "art.hpp"
@@ -150,15 +151,21 @@ enum class Spawn_rate
 enum class Dir
 {
     down_left   = 1,
-    down       = 2,
+    down        = 2,
     down_right  = 3,
-    left       = 4,
-    center     = 5,
-    right      = 6,
+    left        = 4,
+    center      = 5,
+    right       = 6,
     up_left     = 7,
-    up         = 8,
+    up          = 8,
     up_right    = 9,
     END
+};
+
+enum class Ver_dir
+{
+    up,
+    down
 };
 
 enum class Actor_state
@@ -332,13 +339,36 @@ struct Dice_param
 
 struct Range
 {
-    Range() : lower(-1), upper(-1) {}
+    Range() :
+        min(-1),
+        max(-1) {}
 
-    Range(const int LOWER, const int UPPER) : lower(LOWER), upper(UPPER) {}
+    Range(const int MIN, const int MAX) :
+        min(MIN),
+        max(MAX) {}
 
-    Range(const Range& other) : lower(other.lower), upper(other.upper) {}
+    Range(const Range& other) :
+        Range(other.min, other.max) {}
 
-    int lower, upper;
+    int len() const
+    {
+        return max - min + 1;
+    }
+
+    bool is_in_range(const int V) const
+    {
+        assert(max >= min);
+
+        return V >= min && V <= max;
+    }
+
+    void set(const int MIN, const int MAX)
+    {
+        min = MIN;
+        max = MAX;
+    }
+
+    int min, max;
 };
 
 struct Fraction

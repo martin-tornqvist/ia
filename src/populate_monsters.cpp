@@ -474,10 +474,10 @@ void mk_sorted_free_cells_vector(const Pos& origin,
     vector_ref.clear();
 
     const int RADI = 10;
-    const int X0 = constr_in_range(1, origin.x - RADI, MAP_W - 2);
-    const int Y0 = constr_in_range(1, origin.y - RADI, MAP_H - 2);
-    const int X1 = constr_in_range(1, origin.x + RADI, MAP_W - 2);
-    const int Y1 = constr_in_range(1, origin.y + RADI, MAP_H - 2);
+    const int X0 = utils::constr_in_range(1, origin.x - RADI, MAP_W - 2);
+    const int Y0 = utils::constr_in_range(1, origin.y - RADI, MAP_H - 2);
+    const int X1 = utils::constr_in_range(1, origin.x + RADI, MAP_W - 2);
+    const int Y1 = utils::constr_in_range(1, origin.y + RADI, MAP_H - 2);
 
     for (int y = Y0; y <= Y1; ++y)
     {

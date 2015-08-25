@@ -265,9 +265,16 @@ std::string Item::name(const Item_ref_type ref_type,
         }
     }
 
-    const auto& names_used = data_->is_identified ? data_->base_name : data_->base_name_un_id;
+    const auto& names_used = data_->is_identified ?
+                             data_->base_name : data_->base_name_un_id;
 
-    return nr_str + names_used.names[int(ref_type_used)] + att_str + inf_str;
+    const std::string base_name = names_used.names[int(ref_type_used)];
+
+    const std::string ret = nr_str + base_name + att_str + inf_str;
+
+    assert(!ret.empty());
+
+    return ret;
 }
 
 bool Item::is_in_effective_range_lmt(const Pos& p0, const Pos& p1) const

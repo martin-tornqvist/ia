@@ -1095,7 +1095,7 @@ void draw_box(const Rect& border, const Panel panel, const Clr& clr, const bool 
 
 void draw_descr_box(const std::vector<Str_and_clr>& lines)
 {
-    const int DESCR_Y0  = 2;
+    const int DESCR_Y0  = 1;
     const int DESCR_X1  = MAP_W - 1;
     cover_area(Panel::screen, Rect(DESCR_X0, DESCR_Y0, DESCR_X1, SCREEN_H - 1));
 
@@ -1120,20 +1120,22 @@ void draw_descr_box(const std::vector<Str_and_clr>& lines)
 
 void draw_map_and_interface(const bool SHOULD_UPDATE_SCREEN)
 {
-    if (is_inited())
+    if (!is_inited())
     {
-        clear_screen();
+        return;
+    }
 
-        draw_map();
+    clear_screen();
 
-        character_lines::draw();
+    draw_map();
 
-        msg_log::draw(false);
+    character_lines::draw();
 
-        if (SHOULD_UPDATE_SCREEN)
-        {
-            update_screen();
-        }
+    msg_log::draw(false);
+
+    if (SHOULD_UPDATE_SCREEN)
+    {
+        update_screen();
     }
 }
 

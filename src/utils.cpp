@@ -89,7 +89,7 @@ int range(const int MIN, const int MAX)
 
 int range(const Range& value_range)
 {
-    return range(value_range.lower, value_range.upper);
+    return range(value_range.min, value_range.max);
 }
 
 int percent()
@@ -106,6 +106,42 @@ bool percent(const int PCT_CHANCE)
 
 namespace utils
 {
+
+void set_constr_in_range(const int MIN, int& val, const int MAX)
+{
+    if (MAX >= MIN)
+    {
+        val = std::min(MAX, std::max(val, MIN));
+    }
+}
+
+void set_constr_in_range(const double MIN, double& val, const double MAX)
+{
+    if (MAX > MIN)
+    {
+        val = std::min(MAX, std::max(val, MIN));
+    }
+}
+
+int constr_in_range(const int MIN, const int VAL, const int MAX)
+{
+    if (MAX < MIN)
+    {
+        return -1;
+    }
+
+    return std::min(MAX, std::max(VAL, MIN));
+}
+
+int constr_in_range(const double MIN, const double VAL, const double MAX)
+{
+    if (MAX < MIN)
+    {
+        return -1;
+    }
+
+    return std::min(MAX, std::max(VAL, MIN));
+}
 
 bool is_clr_eq(const Clr& clr1, const Clr& clr2)
 {
@@ -372,18 +408,17 @@ bool is_pos_adj(const Pos& pos1, const Pos& pos2, const bool COUNT_SAME_CELL_AS_
     return true;
 }
 
+bool is_val_in_range(const int V, const Range range)
+{
+    return range.is_in_range(V);
+}
+
 Time_data cur_time()
 {
     time_t      t   = time(nullptr);
     struct tm*  now = localtime(&t);
     return Time_data(now->tm_year + 1900, now->tm_mon + 1, now->tm_mday,
                      now->tm_hour, now->tm_min, now->tm_sec);
-}
-
-bool is_val_in_range(const int VAL, const Range& range)
-{
-    assert(range.upper >= range.lower);
-    return (unsigned int)(VAL - range.lower) <= (unsigned int)(range.upper - range.lower);
 }
 
 } //utils

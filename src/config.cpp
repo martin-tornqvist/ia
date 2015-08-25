@@ -6,8 +6,7 @@
 #include <SDL_image.h>
 
 #include "converters.hpp"
-#include "menu_input_handling.hpp"
-#include "menu_browser.hpp"
+#include "menu_input.hpp"
 #include "query.hpp"
 #include "render.hpp"
 #include "input.hpp"
@@ -126,7 +125,7 @@ void set_default_variables()
 
 void player_sets_option(const Menu_browser* const browser, const int OPTION_VALUES_X_POS)
 {
-    switch (browser->pos().y)
+    switch (browser->y())
     {
     case 0:
         is_audio_enabled_ = !is_audio_enabled_;
@@ -210,7 +209,7 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
 
     case 9:
     {
-        const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->pos().y);
+        const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->y());
         const int NR = query::number(p, clr_menu_highlight, 1, 3, delay_projectile_draw_, true);
 
         if (NR != -1)
@@ -221,7 +220,7 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
 
     case 10:
     {
-        const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->pos().y);
+        const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->y());
         const int NR =
             query::number(p, clr_menu_highlight, 1, 3, delay_shotgun_, true);
 
@@ -230,7 +229,7 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
 
     case 11:
     {
-        const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->pos().y);
+        const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->y());
         const int NR = query::number(p, clr_menu_highlight, 1, 3, delay_explosion_, true);
 
         if (NR != -1)
@@ -265,164 +264,164 @@ void draw(const Menu_browser* const browser, const int OPTION_VALUES_X_POS)
     render::draw_text("-Options-", Panel::screen, Pos(X0, 0), clr_white);
 
     render::draw_text("Play audio", Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     str = is_audio_enabled_ ? "Yes" : "No";
     render::draw_text(str, Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     render::draw_text("Use tile set", Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     str = is_tiles_mode_ ? "Yes" : "No";
     render::draw_text(str, Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     render::draw_text("Font", Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     string font_disp_name;
     text_format::replace_all(font_name_,      "images/",  "",   font_disp_name);
     text_format::replace_all(font_disp_name,  "_",        " ",  font_disp_name);
     text_format::replace_all(font_disp_name,  ".png",     "",   font_disp_name);
     render::draw_text(font_disp_name, Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     render::draw_text("Fullscreen (experimental)", Panel::screen,
                       Pos(X0, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(is_fullscr_ ? "Yes" : "No",
                       Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     str = "Tiles mode wall symbol";
     render::draw_text(str, Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     str = is_tiles_wall_full_square_ ? "Full square" : "Pseudo-3D";
     render::draw_text(str, Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     str = "Text mode wall symbol";
     render::draw_text(str, Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     str = is_text_mode_wall_full_square_ ? "Full square" : "Hash sign";
     render::draw_text(str, Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     render::draw_text("Skip intro level", Panel::screen,
                       Pos(X0, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     str = is_intro_lvl_skipped_ ? "Yes" : "No";
     render::draw_text(str, Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     str = "Ranged weapon melee attack warning";
     render::draw_text(str, Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     str = is_ranged_wpn_meleee_prompt_ ? "Yes" : "No";
     render::draw_text(str, Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     str = "Ranged weapon auto reload";
     render::draw_text(str, Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     str = is_ranged_wpn_auto_reload_ ? "Yes" : "No";
     render::draw_text(str, Panel::screen, Pos(X1, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     str = "Projectile delay (ms)";
     render::draw_text(str, Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(to_str(delay_projectile_draw_), Panel::screen,
                       Pos(X1, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     str = "Shotgun delay (ms)";
     render::draw_text(str, Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(to_str(delay_shotgun_), Panel::screen,
                       Pos(X1, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     str = "Explosion delay (ms)";
     render::draw_text(str, Panel::screen, Pos(X0, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     render::draw_text(to_str(delay_explosion_), Panel::screen,
                       Pos(X1, OPT_Y0 + opt_nr),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
     str = "Reset to defaults";
     render::draw_text(str, Panel::screen, Pos(X0, OPT_Y0 + opt_nr + 1),
-                      browser->pos().y == opt_nr ?
+                      browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
 
     str = "[space/esc] to confirm changes";
@@ -622,7 +621,7 @@ int     delay_explosion()               {return delay_explosion_;}
 
 void run_options_menu()
 {
-    Menu_browser browser(NR_OPTIONS, 0);
+    Menu_browser browser(NR_OPTIONS);
     vector<string> lines;
 
     const int OPTION_VALUES_X_POS = 40;
@@ -631,11 +630,11 @@ void run_options_menu()
 
     while (true)
     {
-        const Menu_action action = menu_input_handling::action(browser);
+        const Menu_action action = menu_input::action(browser);
 
         switch (action)
         {
-        case Menu_action::browsed:
+        case Menu_action::moved:
             draw(&browser, OPTION_VALUES_X_POS);
             break;
 

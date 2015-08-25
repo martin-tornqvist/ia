@@ -15,25 +15,24 @@
    Q      Quit
    Space  Cancel, proceed
    Enter  Select something in a menu, confirm
-   o      Alternative Enter key (intended for use with Vi-keys)
+   o      Alternative Enter key (intended to be used with Vi-keys)
    @      Display character information
    TAB    Melee attack adjacent known monster
-   a      Shortcut for using the Medical Bag or Electric Lantern
-   c      Close door
+   a      Activate, read or consume an item (can also be done via [i])
+   c      Close a door, or jam a closed door with an iron spike
    d      Disarm trap
-   D      Jam door with an iron spike
    e      Quick move (automatically move in some direction until interrupted)
    E      Eat corpse (Ghoul only)
    f      Aim/fire wielded firearm
    g      Pick up item
    G      Unload or pick up ammunition from the ground
+   i      Inventory (handle equipment or use items)
    m      Display message history
-   q      Kick
+   q      Kick, bash doors, or destroy corpses
    r      Reload wielded firearm
    s      Wait and search a few turns
    t      Throw something from the "Thrown" slot, or throw held explosive
    v      View descriptions of things on the map
-   w      Inventory (use items or handle equipment)
    x      Cast previous spell
    X      Select and cast any memorized spell
    z      Swap to alternative weapon

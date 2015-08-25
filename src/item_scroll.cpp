@@ -173,7 +173,7 @@ void init()
     false_names_.push_back("Domus-bhaava");
     false_names_.push_back("Acerbus-shatruex");
     false_names_.push_back("Pretaanluxis");
-    false_names_.push_back("Praa_nsilenux");
+    false_names_.push_back("Praansilenux");
     false_names_.push_back("Quodpipax");
     false_names_.push_back("Lokemundux");
     false_names_.push_back("Profanuxes");

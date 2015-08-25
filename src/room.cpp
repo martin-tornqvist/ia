@@ -15,12 +15,10 @@
 #include "sdl_wrapper.hpp"
 #endif // DEMO_MODE
 
-using namespace std;
-
 namespace
 {
 
-vector<Room_type> room_bucket_;
+std::vector<Room_type> room_bucket_;
 
 void add_to_room_bucket(const Room_type type, const size_t NR)
 {
@@ -134,7 +132,7 @@ Room* mk(const Room_type type, const Rect& r)
         return new Forest_room(r);
 
     case Room_type::END_OF_STD_ROOMS:
-        TRACE << "Illegal room type id: " << int (type) << endl;
+        TRACE << "Illegal room type id: " << int (type) << std::endl;
         assert(false);
         return nullptr;
 
@@ -148,7 +146,7 @@ Room* mk(const Room_type type, const Rect& r)
         return new River_room(r);
     }
 
-    TRACE << "Unhandled room type id: " << int (type) << endl;
+    TRACE << "Unhandled room type id: " << int (type) << std::endl;
     assert(false);
     return nullptr;
 }
@@ -180,7 +178,7 @@ Room* mk_random_allowed_std_room(const Rect& r, const bool IS_SUBROOM)
             {
                 room_bucket_.erase(room_bucket_it);
 
-                TRACE_FUNC_END_VERBOSE << "Made room type: " << int (room_type) << endl;
+                TRACE_FUNC_END_VERBOSE << "Made room type: " << int (room_type) << std::endl;
                 break;
             }
             else //Room not allowed (e.g. wrong dimensions)
@@ -240,7 +238,7 @@ void Std_room::on_post_connect(bool door_proposals[MAP_W][MAP_H])
 
     pct_chance_dark += map::dlvl; //Increase with higher dungeon level
 
-    set_constr_in_range(0, pct_chance_dark, 100);
+    utils::set_constr_in_range(0, pct_chance_dark, 100);
 
     if (rnd::percent() < pct_chance_dark)
     {
@@ -249,8 +247,8 @@ void Std_room::on_post_connect(bool door_proposals[MAP_W][MAP_H])
 }
 
 size_t Std_room::try_auto_feature_placement(
-    const vector<Pos>& adj_to_walls, const vector<Pos>& away_from_walls,
-    const vector<const Feature_data_t*>& feature_data_bucket, Pos& pos_ref) const
+    const std::vector<Pos>& adj_to_walls, const std::vector<Pos>& away_from_walls,
+    const std::vector<const Feature_data_t*>& feature_data_bucket, Pos& pos_ref) const
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
@@ -265,7 +263,7 @@ size_t Std_room::try_auto_feature_placement(
 
     if (!IS_ADJ_TO_WALLS_AVAIL && !IS_AWAY_FROM_WALLS_AVAIL)
     {
-        TRACE_FUNC_END_VERBOSE << "No eligible cells found" << endl;
+        TRACE_FUNC_END_VERBOSE << "No eligible cells found" << std::endl;
         pos_ref = Pos(-1, -1);
         return 0;
     }
@@ -330,27 +328,27 @@ int Std_room::place_auto_features()
 {
     TRACE_FUNC_BEGIN;
 
-    vector<const Feature_data_t*> feature_bucket;
+    std::vector<const Feature_data_t*> feature_bucket;
 
     for (int i = 0; i < int (Feature_id::END); ++i)
     {
         const auto& d           = feature_data::data((Feature_id)(i));
-        const auto& spawn_rules  = d.room_spawn_rules;
+        const auto& spawn_rules = d.room_spawn_rules;
 
         if (
             spawn_rules.is_belonging_to_room_type(type_) &&
-            utils::is_val_in_range(map::dlvl, spawn_rules.dlvls_allowed()))
+            spawn_rules.dlvls_allowed().is_in_range(map::dlvl))
         {
             feature_bucket.push_back(&d);
         }
     }
 
-    vector<Pos> adj_to_walls;
-    vector<Pos> away_from_walls;
+    std::vector<Pos> adj_to_walls;
+    std::vector<Pos> away_from_walls;
 
     map_patterns::cells_in_room(*this, adj_to_walls, away_from_walls);
 
-    vector<int> spawn_count(feature_bucket.size(), 0);
+    std::vector<int> spawn_count(feature_bucket.size(), 0);
 
     int nr_features_left_to_place = rnd::range(nr_auto_features_allowed());
     int nr_features_placed      = 0;
@@ -359,7 +357,7 @@ int Std_room::place_auto_features()
     {
         if (nr_features_left_to_place == 0)
         {
-            TRACE_FUNC_END << "Placed enough features" << endl;
+            TRACE_FUNC_END << "Placed enough features" << std::endl;
             return nr_features_placed;
         }
 
@@ -374,7 +372,7 @@ int Std_room::place_auto_features()
 
             const Feature_data_t* d = feature_bucket[FEATURE_IDX];
 
-            TRACE << "Placing feature" << endl;
+            TRACE << "Placing feature" << std::endl;
             map::put(static_cast<Rigid*>(d->mk_obj(pos)));
             ++spawn_count[FEATURE_IDX];
 
@@ -389,7 +387,7 @@ int Std_room::place_auto_features()
 
                 if (feature_bucket.empty())
                 {
-                    TRACE_FUNC_END << "No more features to place" << endl;
+                    TRACE_FUNC_END << "No more features to place" << std::endl;
                     return nr_features_placed;
                 }
             }
@@ -403,7 +401,7 @@ int Std_room::place_auto_features()
         }
         else //No good feature placement found
         {
-            TRACE_FUNC_END << "No remaining positions to place feature" << endl;
+            TRACE_FUNC_END << "No remaining positions to place feature" << std::endl;
             return nr_features_placed;
         }
     }
@@ -537,7 +535,7 @@ void Ritual_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
     if (rnd::percent() < BLOODY_CHAMBER_PCT)
     {
         Pos origin(-1, -1);
-        vector<Pos> origin_bucket;
+        std::vector<Pos> origin_bucket;
 
         for (int y = r_.p0.y; y <= r_.p1.y; ++y)
         {
@@ -801,7 +799,7 @@ void Flooded_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
                     id == Feature_id::cabinet  ||
                     id == Feature_id::fountain)
                 {
-                    TRACE << "Illegal feature found in room" << endl;
+                    TRACE << "Illegal feature found in room" << std::endl;
                     assert(false);
                 }
             }
@@ -868,7 +866,7 @@ void Muddy_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
                     id == Feature_id::cabinet  ||
                     id == Feature_id::fountain)
                 {
-                    TRACE << "Illegal feature found in room" << endl;
+                    TRACE << "Illegal feature found in room" << std::endl;
                     assert(false);
                 }
             }
@@ -986,7 +984,7 @@ void Forest_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
-    vector<Pos> tree_pos_bucket;
+    std::vector<Pos> tree_pos_bucket;
 
     for (int x = r_.p0.x; x <= r_.p1.x; ++x)
     {
@@ -1123,7 +1121,7 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
 
     const bool IS_HOR = axis_ == Axis::hor;
 
-    TRACE << "Finding room centers" << endl;
+    TRACE << "Finding room centers" << std::endl;
     bool centers[MAP_W][MAP_H];
     utils::reset_array(centers, false);
 
@@ -1137,7 +1135,7 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
     }
 
     TRACE << "Finding closest room center coordinates on both sides "
-          << "(y coordinate if horizontal river, x if vertical)" << endl;
+          << "(y coordinate if horizontal river, x if vertical)" << std::endl;
     int closest_center0 = -1;
     int closest_center1 = -1;
 
@@ -1149,9 +1147,9 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
         auto find_closest_center0 =
             [&](const Range & r_outer, const Range & r_inner, int& i_outer, int& i_inner)
         {
-            for (i_outer = r_outer.lower; i_outer >= r_outer.upper; --i_outer)
+            for (i_outer = r_outer.min; i_outer >= r_outer.max; --i_outer)
             {
-                for (i_inner = r_inner.lower; i_inner <= r_inner.upper; ++i_inner)
+                for (i_inner = r_inner.min; i_inner <= r_inner.max; ++i_inner)
                 {
                     if (centers[x][y])
                     {
@@ -1170,9 +1168,9 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
         auto find_closest_center1 =
             [&](const Range & r_outer, const Range & r_inner, int& i_outer, int& i_inner)
         {
-            for (i_outer = r_outer.lower; i_outer <= r_outer.upper; ++i_outer)
+            for (i_outer = r_outer.min; i_outer <= r_outer.max; ++i_outer)
             {
-                for (i_inner = r_inner.lower; i_inner <= r_inner.upper; ++i_inner)
+                for (i_inner = r_inner.min; i_inner <= r_inner.max; ++i_inner)
                 {
                     if (centers[x][y])
                     {
@@ -1199,7 +1197,7 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
         }
     }
 
-    TRACE << "Expanding and filling river" << endl;
+    TRACE << "Expanding and filling river" << std::endl;
 
     bool blocked[MAP_W][MAP_H];
 
@@ -1241,15 +1239,15 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
 //        liquid->type_             = Liquid_type::water;
                 map::put(new Chasm(p));
                 map::room_map[x][y] = this;
-                r_.p0.x = min(r_.p0.x, x);
-                r_.p0.y = min(r_.p0.y, y);
-                r_.p1.x = max(r_.p1.x, x);
-                r_.p1.y = max(r_.p1.y, y);
+                r_.p0.x = std::min(r_.p0.x, x);
+                r_.p0.y = std::min(r_.p0.y, y);
+                r_.p1.x = std::max(r_.p1.x, x);
+                r_.p1.y = std::max(r_.p1.y, y);
             }
         }
     }
 
-    TRACE << "Making bridge(s)" << endl;
+    TRACE << "Making bridge(s)" << std::endl;
 
     //Mark which side each cell belongs to
     enum Side {in_river, side0, side1};
@@ -1263,11 +1261,11 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
         auto mark_sides =
             [&](const Range & r_outer, const Range & r_inner, int& i_outer, int& i_inner)
         {
-            for (i_outer = r_outer.lower; i_outer <= r_outer.upper; ++i_outer)
+            for (i_outer = r_outer.min; i_outer <= r_outer.max; ++i_outer)
             {
                 bool is_on_side0 = true;
 
-                for (i_inner = r_inner.lower; i_inner <= r_inner.upper; ++i_inner)
+                for (i_inner = r_inner.min; i_inner <= r_inner.max; ++i_inner)
                 {
                     if (map::room_map[x][y] == this)
                     {
@@ -1382,11 +1380,11 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
 
 #endif // DEMO_MODE
 
-    vector<int> coordinates(IS_HOR ? MAP_W : MAP_H);
+    std::vector<int> coordinates(IS_HOR ? MAP_W : MAP_H);
     iota(begin(coordinates), end(coordinates), 0);
     random_shuffle(coordinates.begin(), coordinates.end());
 
-    vector<int> c_built;
+    std::vector<int> c_built;
 
     const int MIN_EDGE_DIST   = 6;
     const int MAX_NR_BRIDGES  = rnd::range(1, 3);
@@ -1474,8 +1472,8 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
 
             TRACE << "Found valid connection pair at: "
                   << room_con0.x << "," << room_con0.y << " / "
-                  << room_con1.x << "," << room_con1.y << endl
-                  << "Making bridge at pos: " << BRIDGE_C << endl;
+                  << room_con1.x << "," << room_con1.y << std::endl
+                  << "Making bridge at pos: " << BRIDGE_C << std::endl;
 
             if (IS_HOR)
             {
@@ -1515,12 +1513,12 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
 
         if (int (c_built.size()) >= MAX_NR_BRIDGES)
         {
-            TRACE << "Enough bridges built" << endl;
+            TRACE << "Enough bridges built" << std::endl;
             break;
         }
     }
 
-    TRACE << "Bridges built/attempted: " << c_built.size() << "/" << MAX_NR_BRIDGES << endl;
+    TRACE << "Bridges built/attempted: " << c_built.size() << "/" << MAX_NR_BRIDGES << std::endl;
 
     if (c_built.empty())
     {

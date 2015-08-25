@@ -6,8 +6,7 @@
 #include "msg_log.hpp"
 #include "query.hpp"
 #include "cmn_types.hpp"
-#include "menu_browser.hpp"
-#include "menu_input_handling.hpp"
+#include "menu_input.hpp"
 #include "audio.hpp"
 
 using namespace std;
@@ -197,22 +196,22 @@ int show_menu_msg(const string&           msg,
 
     const int TEXT_H_TOT = TITLE_H + NR_MSG_LINES + NR_BLANK_LINES + NR_CHOICES;
 
-    Menu_browser browser(NR_CHOICES, 0);
+    Menu_browser browser(NR_CHOICES);
 
     if (sfx != Sfx_id::END) {audio::play(sfx);}
 
-    menu_msg_drawing_helper(lines, choices, DRAW_MAP_AND_INTERFACE, browser.pos().y,
+    menu_msg_drawing_helper(lines, choices, DRAW_MAP_AND_INTERFACE, browser.y(),
                             TEXT_X0_STD, TEXT_H_TOT, title);
 
     while (true)
     {
-        const Menu_action action = menu_input_handling::action(browser);
+        const Menu_action action = menu_input::action(browser, Menu_input_mode::scroll);
 
         switch (action)
         {
-        case Menu_action::browsed:
+        case Menu_action::moved:
             menu_msg_drawing_helper(lines, choices, DRAW_MAP_AND_INTERFACE,
-                                    browser.pos().y, TEXT_X0_STD, TEXT_H_TOT, title);
+                                    browser.y(), TEXT_X0_STD, TEXT_H_TOT, title);
             break;
 
         case Menu_action::esc:
@@ -224,16 +223,14 @@ int show_menu_msg(const string&           msg,
 
             return NR_CHOICES - 1;
 
-        case Menu_action::selected_shift: {}
-            break;
-
         case Menu_action::selected:
+        case Menu_action::selected_shift:
             if (DRAW_MAP_AND_INTERFACE)
             {
                 render::draw_map_and_interface();
             }
 
-            return browser.pos().y;
+            return browser.y();
         }
     }
 }

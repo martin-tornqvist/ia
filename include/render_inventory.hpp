@@ -4,22 +4,22 @@
 #include "inventory_handling.hpp"
 
 #include "item_data.hpp"
-#include "menu_browser.hpp"
 
-namespace render_inventory
+class Menu_browser;
+
+namespace render_inv
 {
 
-const int EQP_Y0  = 2;
-const int EQP_Y1  = EQP_Y0 + int(Slot_id::END) - 1;
-const int INV_Y0  = EQP_Y1 + 2;
-const int INV_Y1  = SCREEN_H - 2;
-const int INV_H   = INV_Y1 - INV_Y0 + 1;
+extern const int INV_H;
 
-void draw_browse_inv(const Menu_browser& browser);
+void draw_inv(const Menu_browser& browser);
+
+void draw_apply(const Menu_browser& browser,
+                const std::vector<size_t>& gen_inv_indexes);
 
 void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
                 const std::vector<size_t>& gen_inv_indexes);
 
-} //render_inventory
+} //render_inv
 
 #endif

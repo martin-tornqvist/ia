@@ -6,9 +6,7 @@ class Feature;
 namespace close
 {
 
-void player_close();
-
-void player_close_feature(Feature* const feature);
+void player_try_close_or_jam();
 
 } //Close
 

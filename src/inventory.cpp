@@ -697,7 +697,10 @@ int Inventory::total_item_weight() const
 
     for (size_t i = 0; i < size_t(Slot_id::END); ++i)
     {
-        if (slots_[i].item) {weight += slots_[i].item->weight();}
+        if (slots_[i].item)
+        {
+            weight += slots_[i].item->weight();
+        }
     }
 
     for (size_t i = 0; i < backpack_.size(); ++i)
@@ -723,12 +726,39 @@ struct Lexicograhical_compare_items
 
 void Inventory::sort_backpack()
 {
+    Lexicograhical_compare_items lex_cmp;
+
+    //First, take out prioritized items
+    std::vector<Item*> prio_items;
+
+    for (auto it = begin(backpack_); it != end(backpack_); /* No increment */)
+    {
+        Item* const item = *it;
+
+        if (item->data().is_prio_in_backpack_list)
+        {
+            prio_items.push_back(item);
+
+            it = backpack_.erase(it);
+        }
+        else //Item not prioritized
+        {
+            ++it;
+        }
+    }
+
+    //Sort the prioritized items lexicographically
+    if (!prio_items.empty())
+    {
+        std::sort(begin(prio_items), end(prio_items), lex_cmp);
+    }
+
+    //Categorize the remaining items
     std::vector< std::vector<Item*> > sort_buffer;
 
     //Sort according to item interface color first
     for (Item* item : backpack_)
     {
-
         bool is_added_to_buffer = false;
 
         //Check if item should be added to any existing color group
@@ -748,25 +778,21 @@ void Inventory::sort_backpack()
         {
             continue;
         }
-        else
-        {
-            //Item is a new color, create a new color group
-            std::vector<Item*> new_group;
-            new_group.push_back(item);
-            sort_buffer.push_back(new_group);
-        }
+
+        //Item is a new color, create a new color group
+        std::vector<Item*> new_group;
+        new_group.push_back(item);
+        sort_buffer.push_back(new_group);
     }
 
     //Sort lexicographically secondarily
-    Lexicograhical_compare_items cmp;
-
     for (auto& group : sort_buffer)
     {
-        std::sort(group.begin(), group.end(), cmp);
+        std::sort(begin(group), end(group), lex_cmp);
     }
 
-    //Set the inventory from the sorting buffer
-    backpack_.clear();
+    //Add the sorted items to the backpack
+    backpack_ = prio_items; //NOTE: prio_items may be empty
 
     for (size_t i = 0; i < sort_buffer.size(); ++i)
     {

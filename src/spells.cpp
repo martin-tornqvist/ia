@@ -414,7 +414,7 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
     tgt->prop_handler().try_add_prop(new Prop_paralyzed(Prop_turns::specific, 2));
 
     Range dmg_range(4, 10);
-    const int DMG = is_warlock_charged ? dmg_range.upper : rnd::range(dmg_range);
+    const int DMG = is_warlock_charged ? dmg_range.max : rnd::range(dmg_range);
 
     tgt->hit(DMG, Dmg_type::physical);
 
@@ -483,7 +483,7 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
 
         tgt->prop_handler().try_add_prop(new Prop_paralyzed(Prop_turns::specific, 2));
 
-        const int DMG = is_warlock_charged ? dmg_range.upper : rnd::range(dmg_range);
+        const int DMG = is_warlock_charged ? dmg_range.max : rnd::range(dmg_range);
 
         tgt->hit(DMG, Dmg_type::physical);
 

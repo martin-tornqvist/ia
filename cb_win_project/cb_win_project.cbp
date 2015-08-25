@@ -33,7 +33,6 @@
 					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\libvorbis-0.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
 					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\libvorbisfile-3.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
 					<Add after='cmd /c xcopy /y &quot;$(PROJECT_DIR)..\API\SDL2\SDL2_mixer.dll&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
-					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
 			<Target title="UT">
@@ -169,7 +168,6 @@
 		<Unit filename="../include/item_jewelry.hpp" />
 		<Unit filename="../include/item_potion.hpp" />
 		<Unit filename="../include/item_scroll.hpp" />
-		<Unit filename="../include/jam_with_spike.hpp" />
 		<Unit filename="../include/kick.hpp" />
 		<Unit filename="../include/knockback.hpp" />
 		<Unit filename="../include/line_calc.hpp" />
@@ -183,8 +181,7 @@
 		<Unit filename="../include/map_templates.hpp" />
 		<Unit filename="../include/map_travel.hpp" />
 		<Unit filename="../include/marker.hpp" />
-		<Unit filename="../include/menu_browser.hpp" />
-		<Unit filename="../include/menu_input_handling.hpp" />
+		<Unit filename="../include/menu_input.hpp" />
 		<Unit filename="../include/mersenne_twister.hpp" />
 		<Unit filename="../include/msg_log.hpp" />
 		<Unit filename="../include/pickup.hpp" />
@@ -252,7 +249,6 @@
 		<Unit filename="../src/item_jewelry.cpp" />
 		<Unit filename="../src/item_potion.cpp" />
 		<Unit filename="../src/item_scroll.cpp" />
-		<Unit filename="../src/jam_with_spike.cpp" />
 		<Unit filename="../src/kick.cpp" />
 		<Unit filename="../src/knockback.cpp" />
 		<Unit filename="../src/line_calc.cpp" />
@@ -272,8 +268,7 @@
 		<Unit filename="../src/map_templates.cpp" />
 		<Unit filename="../src/map_travel.cpp" />
 		<Unit filename="../src/marker.cpp" />
-		<Unit filename="../src/menu_browser.cpp" />
-		<Unit filename="../src/menu_input_handling.cpp" />
+		<Unit filename="../src/menu_input.cpp" />
 		<Unit filename="../src/msg_log.cpp" />
 		<Unit filename="../src/pickup.cpp" />
 		<Unit filename="../src/player_bon.cpp" />

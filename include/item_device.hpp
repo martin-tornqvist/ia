@@ -149,18 +149,18 @@ public:
     ~Device_lantern() override {}
 
     Consume_item activate(Actor* const actor) override;
-    void          on_std_turn_in_inv(const Inv_type inv_type) override;
-    void          on_pickup_hook()    override;
+    void on_std_turn_in_inv(const Inv_type inv_type) override;
+    void on_pickup_hook() override;
 
     Lgt_size lgt_size() const override;
 
     void store_to_save_lines(std::vector<std::string>& lines) override;
     void setup_from_save_lines(std::vector<std::string>& lines) override;
 
-    int                 nr_turns_left_;
-    int                 nr_flicker_turns_left_;
+    int nr_turns_left_;
+    int nr_flicker_turns_left_;
     Lantern_working_state working_state_;
-    bool                is_activated_;
+    bool is_activated_;
 
 private:
     void toggle();

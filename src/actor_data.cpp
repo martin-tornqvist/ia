@@ -2189,8 +2189,6 @@ void init_data_list()
     d.actor_size = Actor_size::humanoid;
     d.nr_turns_aware = 5;
     d.is_auto_descr_allowed = true;
-    d.can_open_doors = false;
-    d.can_bash_doors = true;
     d.descr = "A spinning force of destruction. It seems to move with some "
               "manner of purpose.";
     d.aggro_text_mon_hidden = "I hear a howling wind.";
@@ -2235,8 +2233,6 @@ void init_data_list()
     d.actor_size = Actor_size::humanoid;
     d.nr_turns_aware = 5;
     d.is_auto_descr_allowed = true;
-    d.can_open_doors = false;
-    d.can_bash_doors = true;
     d.descr = "A spinning force of fire and destruction. It seems to move with "
               "some manner of purpose.";
     d.aggro_text_mon_hidden = "I hear a howling wind.";
@@ -2280,8 +2276,6 @@ void init_data_list()
     d.actor_size = Actor_size::humanoid;
     d.nr_turns_aware = 5;
     d.is_auto_descr_allowed = true;
-    d.can_open_doors = false;
-    d.can_bash_doors = true;
     d.descr = "A spinning force of ice and destruction. It seems to move with "
               "some manner of purpose.";
     d.aggro_text_mon_hidden = "I hear a howling wind.";

@@ -3,7 +3,7 @@
 #include "render.hpp"
 #include "actor_player.hpp"
 #include "input.hpp"
-#include "menu_input_handling.hpp"
+#include "menu_input.hpp"
 #include "text_format.hpp"
 #include "utils.hpp"
 #include "map.hpp"
@@ -12,7 +12,7 @@
 namespace create_character
 {
 
-const int OPT_X0    = 1;
+const int OPT_X0    = 0;
 const int OPT_Y0    = 2;
 const int OPT_X1    = 22;
 const int OPT_Y1    = SCREEN_H - 2;
@@ -28,13 +28,6 @@ const int DESCR_Y1  = OPT_Y1;
 
 const int DESCR_W   = DESCR_X1 - DESCR_Y1 + 1;
 
-void draw_opt_box()
-{
-    const Rect r(OPT_X0 - 1, OPT_Y0 - 1, OPT_X1 + 1, OPT_Y1 + 1);
-
-    render::draw_box(r);
-}
-
 namespace enter_name
 {
 
@@ -43,7 +36,7 @@ void draw(const std::string& cur_string)
     render::clear_screen();
 
     render::draw_text_centered("What is your name?", Panel::screen,
-                               Pos(MAP_W_HALF, 0), clr_white);
+                               Pos(MAP_W_HALF, 0), clr_orange);
     const int Y_NAME = 3;
 
     const std::string name_str = cur_string.size() < PLAYER_NAME_MAX_LEN ?
@@ -114,7 +107,7 @@ void run()
     {
         if (config::is_bot_playing())
         {
-            name = "AZATHOTH";
+            name = "Bot";
             is_done = true;
         }
         else
@@ -133,24 +126,25 @@ void draw_pick_bg(const std::vector<Bg>& bgs, const Menu_browser& browser)
 {
     render::clear_screen();
 
-    draw_opt_box();
-
-    render::draw_text_centered("Choose your background", Panel::screen,
-                               Pos(MAP_W_HALF, 0), clr_white, clr_black, true);
+    render::draw_text_centered("What is your background?", Panel::screen,
+                               Pos(MAP_W_HALF, 0), clr_orange, clr_black, true);
 
     int y = OPT_Y0;
 
     const Bg bg_marked = bgs[browser.y()];
 
     //------------------------------------------------------------- BACKGROUNDS
+    std::string key_str = "a) ";
+
     for (const Bg bg : bgs)
     {
         const std::string   bg_name     = player_bon::bg_title(bg);
         const bool          IS_MARKED   = bg == bg_marked;
         const Clr&          drw_clr     = IS_MARKED ? clr_menu_highlight : clr_menu_drk;
 
-        render::draw_text(bg_name, Panel::screen, Pos(OPT_X0, y), drw_clr);
+        render::draw_text(key_str + bg_name, Panel::screen, Pos(OPT_X0, y), drw_clr);
         ++y;
+        ++key_str[0];
     }
 
     //------------------------------------------------------------- DESCRIPTION
@@ -187,27 +181,27 @@ void pick_bg()
         std::vector<Bg> bgs;
         player_bon::pickable_bgs(bgs);
 
-        Menu_browser browser(bgs.size(), 0);
+        Menu_browser browser(bgs.size());
 
         draw_pick_bg(bgs, browser);
 
         while (true)
         {
-            const Menu_action action = menu_input_handling::action(browser);
+            const Menu_action action = menu_input::action(browser);
 
             switch (action)
             {
-            case Menu_action::browsed:
+            case Menu_action::moved:
                 draw_pick_bg(bgs, browser);
                 break;
 
             case Menu_action::selected:
+            case Menu_action::selected_shift:
                 player_bon::pick_bg(bgs[browser.y()]);
                 return;
 
             case Menu_action::esc:
             case Menu_action::space:
-            case Menu_action::selected_shift:
                 break;
             }
         }
@@ -218,8 +212,6 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
 {
     render::clear_screen();
 
-    draw_opt_box();
-
     const int CLVL = dungeon_master::clvl();
 
     std::string title = CLVL == 1 ?
@@ -227,12 +219,14 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
                         "You have reached a new level! Which trait do you gain?";
 
     render::draw_text_centered(title, Panel::screen, Pos(MAP_W_HALF, 0),
-                               clr_white, clr_black, true);
+                               clr_orange, clr_black, true);
 
     const Trait trait_marked = traits[browser.y()];
 
     //------------------------------------------------------------- TRAITS
     int y = OPT_Y0;
+
+    std::string key_str = "a) ";
 
     for (const Trait trait : traits)
     {
@@ -240,9 +234,10 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
         const bool      IS_MARKED   = trait == trait_marked;
         const Clr&      drw_clr     = IS_MARKED ? clr_menu_highlight : clr_menu_drk;
 
-        render::draw_text(trait_name, Panel::screen, Pos(OPT_X0, y), drw_clr);
+        render::draw_text(key_str + trait_name, Panel::screen, Pos(OPT_X0, y), drw_clr);
 
         ++y;
+        ++key_str[0];
     }
 
     //------------------------------------------------------------- DESCRIPTION
@@ -348,27 +343,27 @@ void pick_new_trait()
 
     if (!pickable_traits.empty())
     {
-        Menu_browser browser(pickable_traits.size(), 0);
+        Menu_browser browser(pickable_traits.size());
 
         draw_pick_trait(pickable_traits, browser);
 
         while (true)
         {
-            const Menu_action action = menu_input_handling::action(browser);
+            const Menu_action action = menu_input::action(browser);
 
             switch (action)
             {
-            case Menu_action::browsed:
+            case Menu_action::moved:
                 draw_pick_trait(pickable_traits, browser);
                 break;
 
             case Menu_action::selected:
+            case Menu_action::selected_shift:
                 player_bon::pick_trait(pickable_traits[browser.y()]);
                 return;
 
             case Menu_action::esc:
             case Menu_action::space:
-            case Menu_action::selected_shift:
                 break;
             }
         }

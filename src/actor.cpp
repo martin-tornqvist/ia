@@ -78,11 +78,11 @@ bool Actor::is_spotting_sneaking_actor(Actor& other)
     const int   SNEAK_SKILL         = abilities_other.val(Ability_id::stealth, true, other);
 
     const int   DIST                = utils::king_dist(pos, other_pos);
-    const int   SNEAK_DIST_MOD      = constr_in_range(0, (DIST - 1) * 10, 60);
+    const int   SNEAK_DIST_MOD      = utils::constr_in_range(0, (DIST - 1) * 10, 60);
     const Cell& cell                = map::cells[other_pos.x][other_pos.y];
     const int   SNEAK_LGT_MOD       = cell.is_lit                     ? -40 : 0;
     const int   SNEAK_DRK_MOD       = (cell.is_dark && ! cell.is_lit) ?  40 : 0;
-    const int   SNEAK_TOT           = constr_in_range(
+    const int   SNEAK_TOT           = utils::constr_in_range(
                                           0,
                                           SNEAK_SKILL     +
                                           SNEAK_DIST_MOD  +
@@ -238,7 +238,7 @@ void Actor::teleport()
             auto chance_of_tele_success = [](const Pos & tgt)
             {
                 const int DIST = utils::king_dist(map::player->pos, tgt);
-                return constr_in_range(25, 100 - DIST, 95);
+                return utils::constr_in_range(25, 100 - DIST, 95);
             };
 
             auto on_marker_at_pos = [chance_of_tele_success](const Pos & p)
@@ -812,7 +812,7 @@ Did_action Actor::try_eat_corpse()
 
         const bool          IS_PLAYER       = is_player();
         const int           CORPSE_MAX_HP   = corpse->hp_max(false);
-        const int           DESTR_ONE_IN_N  = constr_in_range(1, CORPSE_MAX_HP / 4, 20);
+        const int           DESTR_ONE_IN_N  = utils::constr_in_range(1, CORPSE_MAX_HP / 4, 20);
         const bool          IS_DESTROYED    = rnd::one_in(DESTR_ONE_IN_N);
         const std::string   corpse_name     = corpse->corpse_name_the();
 

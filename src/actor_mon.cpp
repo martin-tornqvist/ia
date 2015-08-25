@@ -246,7 +246,7 @@ void Mon::on_actor_turn()
         erratic_move_pct *= 2;
     }
 
-    set_constr_in_range(0, erratic_move_pct, 95);
+    utils::set_constr_in_range(0, erratic_move_pct, 95);
 
     if (
         data_->ai[size_t(Ai_id::moves_to_random_when_unaware)] &&

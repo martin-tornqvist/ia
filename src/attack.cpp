@@ -324,7 +324,7 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
                                   SIZE_MOD          +
                                   unaware_def_mod);
 
-        set_constr_in_range(5, hit_chance_tot, 99);
+        utils::set_constr_in_range(5, hit_chance_tot, 99);
 
         attack_result = ability_roll::roll(hit_chance_tot);
 

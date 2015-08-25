@@ -216,15 +216,15 @@ enum class Item_id
 struct Item_container_spawn_rule
 {
     Item_container_spawn_rule() :
-        feature_id(Feature_id::END),
-        pct_chance_to_incl(0) {}
+        feature_id          (Feature_id::END),
+        pct_chance_to_incl  (0) {}
 
     Item_container_spawn_rule(Feature_id feature_id_, int pct_chance_to_incl_) :
-        feature_id(feature_id_),
-        pct_chance_to_incl(pct_chance_to_incl_) {}
+        feature_id          (feature_id_),
+        pct_chance_to_incl  (pct_chance_to_incl_) {}
 
-    Feature_id  feature_id;
-    int         pct_chance_to_incl;
+    Feature_id feature_id;
+    int pct_chance_to_incl;
 };
 
 class Item_data_t
@@ -236,6 +236,8 @@ public:
 
     Item_id                     id;
     Item_type                   type;
+    bool                        has_std_activate; //E.g. potions and scrolls
+    bool                        is_prio_in_backpack_list; //E.g. Medical Bag
     Item_value                  value;
     Item_weight                 weight;
     bool                        allow_spawn;

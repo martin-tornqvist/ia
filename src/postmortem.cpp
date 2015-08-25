@@ -12,11 +12,10 @@
 #include "dungeon_master.hpp"
 #include "map.hpp"
 #include "msg_log.hpp"
-#include "menu_input_handling.hpp"
+#include "menu_input.hpp"
 #include "highscore.hpp"
 #include "player_bon.hpp"
 #include "text_format.hpp"
-#include "menu_browser.hpp"
 #include "feature_rigid.hpp"
 #include "utils.hpp"
 
@@ -408,27 +407,26 @@ void run(bool* const quit_game)
 
     mk_info_lines(lines);
 
-    Menu_browser browser(6, 0);
+    Menu_browser browser(6);
 
     render_menu(browser);
 
     while (true)
     {
-        const Menu_action action = menu_input_handling::action(browser);
+        const Menu_action action = menu_input::action(browser);
 
         switch (action)
         {
         case Menu_action::esc:
         case Menu_action::space:
-        case Menu_action::selected_shift: {} break;
+            break;
 
-        case Menu_action::browsed:
-        {
+        case Menu_action::moved:
             render_menu(browser);
-        } break;
+            break;
 
         case Menu_action::selected:
-        {
+        case Menu_action::selected_shift:
             if (browser.is_at_idx(0))
             {
                 run_info(lines);
@@ -457,7 +455,7 @@ void run(bool* const quit_game)
                 *quit_game = true;
                 return;
             }
-        } break;
+            break;
         }
     }
 }

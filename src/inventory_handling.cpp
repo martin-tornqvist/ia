@@ -7,10 +7,9 @@
 #include "item_scroll.hpp"
 #include "actor_player.hpp"
 #include "item_potion.hpp"
-#include "menu_browser.hpp"
 #include "msg_log.hpp"
 #include "render_inventory.hpp"
-#include "menu_input_handling.hpp"
+#include "menu_input.hpp"
 #include "render.hpp"
 #include "drop.hpp"
 #include "query.hpp"
@@ -18,37 +17,35 @@
 #include "audio.hpp"
 #include "map.hpp"
 
-using namespace std;
-
 namespace inv_handling
 {
 
-Inv_scr     scr_to_open_on_new_turn          = Inv_scr::END;
+Inv_scr     scr_to_open_on_new_turn          = Inv_scr::none;
 Inv_slot*   equip_slot_to_open_on_new_turn   = nullptr;
 int         browser_idx_to_set_on_new_turn   = 0;
 
 namespace
 {
 
-//The values in this vector refer to backpack inventory elements
-vector<size_t> backpack_items_to_show_;
+std::vector<size_t> backpack_indexes_to_show_;
 
-bool run_drop_screen(const Inv_type inv_type, const size_t ELEMENT)
+//IDX can mean Slot index or Backpack Index (both start from zero)
+bool run_drop_query(const Inv_type inv_type, const size_t IDX)
 {
     TRACE_FUNC_BEGIN;
 
-    Inventory& inv  = map::player->inv();
-    Item* item      = nullptr;
+    Inventory&  inv     = map::player->inv();
+    Item*       item    = nullptr;
 
     if (inv_type == Inv_type::slots)
     {
-        assert(ELEMENT != int(Slot_id::END));
-        item = inv.slots_[ELEMENT].item;
+        assert(IDX < int(Slot_id::END));
+        item = inv.slots_[IDX].item;
     }
-    else
+    else //Backpack
     {
-        assert(ELEMENT < inv.backpack_.size());
-        item = inv.backpack_[ELEMENT];
+        assert(IDX < inv.backpack_.size());
+        item = inv.backpack_[IDX];
     }
 
     if (!item)
@@ -63,37 +60,45 @@ bool run_drop_screen(const Inv_type inv_type, const size_t ELEMENT)
 
     if (data.is_stackable && item->nr_items_ > 1)
     {
-        TRACE << "Item is stackable and more than one" << endl;
+        TRACE << "Item is stackable and more than one" << std::endl;
+
         render::draw_map_and_interface(false);
-        const string nr_str = "1-" + to_str(item->nr_items_);
-        string drop_str = "Drop how many (" + nr_str + ")?:";
+
+        const std::string nr_str    = "1-" + to_str(item->nr_items_);
+        const std::string drop_str  = "Drop how many (" + nr_str + ")?:";
+
         render::draw_text(drop_str, Panel::screen, Pos(0, 0), clr_white_high);
+
         render::update_screen();
-        const Pos nr_query_pos(drop_str.size() + 1, 0);
-        const int MAX_DIGITS = 3;
-        const Pos done_inf_pos = nr_query_pos + Pos(MAX_DIGITS + 2, 0);
+
+        const Pos   nr_query_pos(drop_str.size() + 1, 0);
+
+        const int   MAX_DIGITS      = 3;
+        const Pos   done_inf_pos    = nr_query_pos + Pos(MAX_DIGITS + 2, 0);
+
         render::draw_text("[enter] to drop" + cancel_info_str, Panel::screen, done_inf_pos,
                           clr_white_high);
-        const int NR_TO_DROP = query::number(nr_query_pos, clr_white_high, 0, 3,
-                                             item->nr_items_, false);
+
+        const int NR_TO_DROP = query::number(nr_query_pos, clr_white_high, 0, 3, item->nr_items_,
+                                             false);
 
         if (NR_TO_DROP <= 0)
         {
-            TRACE << "Nr to drop <= 0, nothing to be done" << endl;
+            TRACE << "Nr to drop <= 0, nothing to be done" << std::endl;
             TRACE_FUNC_END;
             return false;
         }
-        else
+        else //Number to drop is at least one
         {
-            item_drop::try_drop_item_from_inv(*map::player, inv_type, ELEMENT, NR_TO_DROP);
+            item_drop::try_drop_item_from_inv(*map::player, inv_type, IDX, NR_TO_DROP);
             TRACE_FUNC_END;
             return true;
         }
     }
     else //Not a stack
     {
-        TRACE << "Item not stackable, or only one item" << endl;
-        item_drop::try_drop_item_from_inv(*map::player, inv_type, ELEMENT);
+        TRACE << "Item not stackable, or only one item" << std::endl;
+        item_drop::try_drop_item_from_inv(*map::player, inv_type, IDX);
         TRACE_FUNC_END;
         return true;
     }
@@ -106,69 +111,68 @@ void filter_player_backpack_equip(const Slot_id slot_to_equip)
 {
     assert(slot_to_equip != Slot_id::END);
 
-    const auto& inv     = map::player->inv();
-    const auto& backpack = inv.backpack_;
+    const auto& inv         = map::player->inv();
+    const auto& backpack    = inv.backpack_;
 
-    backpack_items_to_show_.clear();
+    backpack_indexes_to_show_.clear();
 
     for (size_t i = 0; i < backpack.size(); ++i)
     {
-        const auto* const item = backpack[i];
-        const auto&       data = item->data();
+        const auto* const   item    = backpack[i];
+        const auto&         data    = item->data();
 
         switch (slot_to_equip)
         {
         case Slot_id::wielded:
             if (data.melee.is_melee_wpn || data.ranged.is_ranged_wpn)
             {
-                backpack_items_to_show_.push_back(i);
+                backpack_indexes_to_show_.push_back(i);
             }
             break;
 
         case Slot_id::wielded_alt:
             if (data.melee.is_melee_wpn || data.ranged.is_ranged_wpn)
             {
-                backpack_items_to_show_.push_back(i);
+                backpack_indexes_to_show_.push_back(i);
             }
             break;
 
         case Slot_id::thrown:
-            backpack_items_to_show_.push_back(i);
+            backpack_indexes_to_show_.push_back(i);
             break;
 
         case Slot_id::body:
             if (data.type == Item_type::armor)
             {
-                backpack_items_to_show_.push_back(i);
+                backpack_indexes_to_show_.push_back(i);
             }
-
             break;
 
         case Slot_id::head:
             if (data.type == Item_type::head_wear)
             {
-                backpack_items_to_show_.push_back(i);
+                backpack_indexes_to_show_.push_back(i);
             }
             break;
 
         case Slot_id::neck:
             if (data.type == Item_type::amulet)
             {
-                backpack_items_to_show_.push_back(i);
+                backpack_indexes_to_show_.push_back(i);
             }
             break;
 
         case Slot_id::ring1:
             if (data.type == Item_type::ring)
             {
-                backpack_items_to_show_.push_back(i);
+                backpack_indexes_to_show_.push_back(i);
             }
             break;
 
         case Slot_id::ring2:
             if (data.type == Item_type::ring)
             {
-                backpack_items_to_show_.push_back(i);
+                backpack_indexes_to_show_.push_back(i);
             }
             break;
 
@@ -181,10 +185,36 @@ void filter_player_backpack_equip(const Slot_id slot_to_equip)
 void filter_player_backpack_show_all()
 {
     auto& backpack = map::player->inv().backpack_;
-    backpack_items_to_show_.clear();
-    const int NR_GEN = backpack.size();
 
-    for (int i = 0; i < NR_GEN; ++i) {backpack_items_to_show_.push_back(i);}
+    backpack_indexes_to_show_.clear();
+
+    const size_t NR_GEN = backpack.size();
+
+    for (size_t i = 0; i < NR_GEN; ++i)
+    {
+        backpack_indexes_to_show_.push_back(i);
+    }
+}
+
+void filter_player_backpack_apply()
+{
+    auto& backpack = map::player->inv().backpack_;
+
+    backpack_indexes_to_show_.clear();
+
+    const size_t NR_GEN = backpack.size();
+
+    for (size_t i = 0; i < NR_GEN; ++i)
+    {
+        const Item* const item  = backpack[i];
+
+        const Item_data_t& d    = item->data();
+
+        if (d.has_std_activate)
+        {
+            backpack_indexes_to_show_.push_back(i);
+        }
+    }
 }
 
 void swap_items(Item** item1, Item** item2)
@@ -198,7 +228,7 @@ void swap_items(Item** item1, Item** item2)
 
 void init()
 {
-    scr_to_open_on_new_turn         = Inv_scr::END;
+    scr_to_open_on_new_turn         = Inv_scr::none;
     equip_slot_to_open_on_new_turn  = nullptr;
     browser_idx_to_set_on_new_turn  = 0;
 }
@@ -218,70 +248,49 @@ void run_inv_screen()
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    scr_to_open_on_new_turn = Inv_scr::END;
+    scr_to_open_on_new_turn = Inv_scr::none;
     render::draw_map_and_interface();
 
     Inventory& inv = map::player->inv();
 
     inv.sort_backpack();
 
-    const int SLOTS_SIZE  = int(Slot_id::END);
-    const int INV_H       = render_inventory::INV_H;
+    const int GEN_SIZE = int(inv.backpack_.size());
 
-    auto mk_browser = [](const Inventory & inventory)
-    {
-        const int GEN_SIZE        = int(inventory.backpack_.size());
-        const int ELEM_ON_WRAP_UP = GEN_SIZE > INV_H ? (SLOTS_SIZE + INV_H - 2) : -1;
-        return Menu_browser(int(Slot_id::END) + GEN_SIZE, 0, ELEM_ON_WRAP_UP);
-    };
+    Menu_browser browser(int(Slot_id::END) + GEN_SIZE, render_inv::INV_H);
 
-    Menu_browser browser = mk_browser(inv);
+    browser.set_y(browser_idx_to_set_on_new_turn);
 
-    browser.set_pos(Pos(0, browser_idx_to_set_on_new_turn));
     browser_idx_to_set_on_new_turn = 0;
-    render_inventory::draw_browse_inv(browser);
+
+    render_inv::draw_inv(browser);
+
+    auto inv_type = [&]()
+    {
+        return browser.y() < int(Slot_id::END) ?
+               Inv_type::slots : Inv_type::backpack;
+    };
 
     while (true)
     {
         inv.sort_backpack();
 
-        const Inv_type inv_type = browser.pos().y < int(Slot_id::END) ?
-                                  Inv_type::slots : Inv_type::backpack;
-
-        const Menu_action action = menu_input_handling::action(browser);
+        const Menu_action action = menu_input::action(browser);
 
         switch (action)
         {
-        case Menu_action::browsed:
-        {
-            render_inventory::draw_browse_inv(browser);
-        } break;
-
-        case Menu_action::selected_shift:
-        {
-            const int       BROWSER_Y   = browser.pos().y;
-            const size_t    ELEMENT     = inv_type == Inv_type::slots ?
-                                          BROWSER_Y : (BROWSER_Y - int(Slot_id::END));
-
-            if (run_drop_screen(inv_type, ELEMENT))
-            {
-                browser.set_good_pos();
-                browser_idx_to_set_on_new_turn  = browser.y();
-                scr_to_open_on_new_turn         = Inv_scr::inv;
-
-                TRACE_FUNC_END_VERBOSE;
-                return;
-            }
-
-            render_inventory::draw_browse_inv(browser);
-        } break;
+        case Menu_action::moved:
+            render_inv::draw_inv(browser);
+            break;
 
         case Menu_action::selected:
         {
-            if (inv_type == Inv_type::slots)
+            Inv_type cur_inv_type = inv_type();
+
+            if (cur_inv_type == Inv_type::slots)
             {
-                const size_t ELEMENT    = browser.y();
-                Inv_slot& slot          = inv.slots_[ELEMENT];
+                const size_t    BROWSER_Y   = browser.y();
+                Inv_slot&       slot        = inv.slots_[BROWSER_Y];
 
                 if (slot.item)
                 {
@@ -304,6 +313,9 @@ void run_inv_screen()
                 {
                     if (run_equip_screen(slot))
                     {
+                        scr_to_open_on_new_turn         = Inv_scr::inv;
+                        browser_idx_to_set_on_new_turn  = browser.y();
+
                         render::draw_map_and_interface();
 
                         TRACE_FUNC_END_VERBOSE;
@@ -311,18 +323,120 @@ void run_inv_screen()
                     }
                     else //No item equipped
                     {
-                        render_inventory::draw_browse_inv(browser);
+                        render_inv::draw_inv(browser);
                     }
                 }
             }
             else //In backpack inventory
             {
-                const size_t ELEMENT = browser.y() - int(Slot_id::END);
-                activate(ELEMENT);
+                const size_t BROWSER_Y = browser.y() - int(Slot_id::END);
+
+                activate(BROWSER_Y);
+
                 render::draw_map_and_interface();
 
                 TRACE_FUNC_END_VERBOSE;
                 return;
+            }
+        } break;
+
+        case Menu_action::selected_shift:
+        {
+            Inv_type cur_inv_type = inv_type();
+
+            const int       BROWSER_Y   = browser.y();
+            const size_t    IDX         = cur_inv_type == Inv_type::slots ?
+                                          BROWSER_Y : (BROWSER_Y - int(Slot_id::END));
+
+            if (run_drop_query(cur_inv_type, IDX))
+            {
+                browser_idx_to_set_on_new_turn  = BROWSER_Y;
+                scr_to_open_on_new_turn         = Inv_scr::inv;
+
+                TRACE_FUNC_END_VERBOSE;
+                return;
+            }
+
+            render_inv::draw_inv(browser);
+        } break;
+
+        case Menu_action::esc:
+        case Menu_action::space:
+            render::draw_map_and_interface();
+
+            TRACE_FUNC_END_VERBOSE;
+            return;
+        }
+    }
+
+    TRACE_FUNC_END_VERBOSE;
+}
+
+void run_apply_screen()
+{
+    TRACE_FUNC_BEGIN_VERBOSE;
+
+    scr_to_open_on_new_turn = Inv_scr::none;
+    render::draw_map_and_interface();
+
+    Inventory& inv = map::player->inv();
+
+    inv.sort_backpack();
+
+    filter_player_backpack_apply();
+
+    Menu_browser browser(backpack_indexes_to_show_.size(), render_inv::INV_H);
+
+    browser.set_y(browser_idx_to_set_on_new_turn);
+
+    browser_idx_to_set_on_new_turn = 0;
+
+    render_inv::draw_apply(browser, backpack_indexes_to_show_);
+
+    while (true)
+    {
+        inv.sort_backpack();
+
+        const Menu_action action = menu_input::action(browser);
+
+        switch (action)
+        {
+        case Menu_action::moved:
+            render_inv::draw_apply(browser, backpack_indexes_to_show_);
+            break;
+
+        case Menu_action::selected:
+        {
+            if (!backpack_indexes_to_show_.empty())
+            {
+                const size_t IDX = backpack_indexes_to_show_[browser.y()];
+
+                activate(IDX);
+
+                render::draw_map_and_interface();
+
+                TRACE_FUNC_END_VERBOSE;
+                return;
+            }
+        } break;
+
+        case Menu_action::selected_shift:
+        {
+            if (!backpack_indexes_to_show_.empty())
+            {
+                const Inv_type  inv_type    = Inv_type::backpack;
+                const size_t    IDX         = backpack_indexes_to_show_[browser.y()];
+
+                if (run_drop_query(inv_type, IDX))
+                {
+                    browser_idx_to_set_on_new_turn   = browser.y();
+                    scr_to_open_on_new_turn          = Inv_scr::apply;
+
+                    TRACE_FUNC_END_VERBOSE;
+                    return;
+                }
+
+                render_inv::draw_apply(browser, backpack_indexes_to_show_);
             }
         } break;
 
@@ -342,7 +456,7 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    scr_to_open_on_new_turn          = Inv_scr::END;
+    scr_to_open_on_new_turn          = Inv_scr::none;
     equip_slot_to_open_on_new_turn   = &slot_to_equip;
     render::draw_map_and_interface();
 
@@ -352,39 +466,36 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
 
     filter_player_backpack_equip(slot_to_equip.id);
 
-    Menu_browser browser(backpack_items_to_show_.size(), 0);
-    browser.set_pos(Pos(0, browser_idx_to_set_on_new_turn));
-    browser_idx_to_set_on_new_turn = 0;
+    Menu_browser browser(backpack_indexes_to_show_.size(), render_inv::INV_H);
+
+    browser.set_y(0);
 
     audio::play(Sfx_id::backpack);
 
-    render_inventory::draw_equip(browser, slot_to_equip.id, backpack_items_to_show_);
+    render_inv::draw_equip(browser, slot_to_equip.id, backpack_indexes_to_show_);
 
     while (true)
     {
-        const Menu_action action = menu_input_handling::action(browser);
+        const Menu_action action = menu_input::action(browser);
 
         switch (action)
         {
-        case Menu_action::browsed:
-        {
-            render_inventory::draw_equip(browser, slot_to_equip.id, backpack_items_to_show_);
-        }
-        break;
+        case Menu_action::moved:
+            render_inv::draw_equip(browser, slot_to_equip.id, backpack_indexes_to_show_);
+            break;
 
         case Menu_action::selected:
         {
-            if (!backpack_items_to_show_.empty())
+            if (!backpack_indexes_to_show_.empty())
             {
-                const int ELEMENT = backpack_items_to_show_[browser.y()];
+                const int       BROWSER_Y = browser.y();
+                const size_t    IDX       = backpack_indexes_to_show_[BROWSER_Y];
+
                 render::draw_map_and_interface();
 
-                inv.equip_backpack_item(ELEMENT, slot_to_equip.id); //Calls the items equip hook
+                inv.equip_backpack_item(IDX, slot_to_equip.id); //Calls the items equip hook
 
                 game_time::tick();
-
-                browser_idx_to_set_on_new_turn   = int(slot_to_equip.id);
-                scr_to_open_on_new_turn          = Inv_scr::inv;
 
                 TRACE_FUNC_END_VERBOSE;
                 return true;
@@ -394,17 +505,19 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
 
         case Menu_action::selected_shift:
         {
-            if (run_drop_screen(Inv_type::backpack, backpack_items_to_show_[browser.y()]))
+            if (!backpack_indexes_to_show_.empty())
             {
-                browser.set_good_pos();
-                browser_idx_to_set_on_new_turn   = browser.y();
-                scr_to_open_on_new_turn          = Inv_scr::equip;
+                const Inv_type  inv_type    = Inv_type::backpack;
+                const size_t    IDX         = backpack_indexes_to_show_[browser.y()];
 
-                TRACE_FUNC_END_VERBOSE;
-                return true;
+                if (run_drop_query(inv_type, IDX))
+                {
+                    TRACE_FUNC_END_VERBOSE;
+                    return true;
+                }
+
+                render_inv::draw_equip(browser, slot_to_equip.id, backpack_indexes_to_show_);
             }
-
-            render_inventory::draw_equip(browser, slot_to_equip.id, backpack_items_to_show_);
         }
         break;
 
@@ -417,4 +530,4 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
     TRACE_FUNC_END_VERBOSE;
 }
 
-} //Inv_handling
+} //inv_handling

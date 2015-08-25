@@ -76,6 +76,12 @@ struct Time_data
 namespace utils
 {
 
+//The following functions will first raise val to at least MIN, then lower val to at most MAX
+void set_constr_in_range(const int MIN, int& val, const int MAX);
+void set_constr_in_range(const double MIN, double& val, const double MAX);
+int constr_in_range(const int MIN, const int VAL, const int MAX);
+int constr_in_range(const double MIN, const double VAL, const double MAX);
+
 bool is_clr_eq(const Clr& clr1, const Clr& clr2);
 
 void reset_array(int a[MAP_W][MAP_H]);
@@ -128,7 +134,7 @@ int king_dist(const int X0, const int Y0, const int X1, const int Y1);
 int king_dist(const Pos& p0, const Pos& p1);
 int taxicab_dist(const Pos& p0, const Pos& p1);
 
-bool is_val_in_range(const int VAL, const Range& range);
+bool is_val_in_range(const int V, const Range range);
 
 Time_data cur_time();
 

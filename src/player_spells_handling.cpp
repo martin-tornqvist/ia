@@ -7,7 +7,7 @@
 #include "item_scroll.hpp"
 #include "actor_player.hpp"
 #include "msg_log.hpp"
-#include "menu_input_handling.hpp"
+#include "menu_input.hpp"
 #include "render.hpp"
 #include "inventory.hpp"
 #include "item_factory.hpp"
@@ -80,9 +80,9 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
         string  info_str = "SPI: ";
 
         const Range spi_cost = spell->spi_cost(false, map::player);
-        const string lower_str = to_str(spi_cost.lower);
-        const string upper_str = to_str(spi_cost.upper);
-        info_str += spi_cost.upper == 1 ? "1" : (lower_str +  "-" + upper_str);
+        const string lower_str = to_str(spi_cost.min);
+        const string upper_str = to_str(spi_cost.max);
+        info_str += spi_cost.max == 1 ? "1" : (lower_str +  "-" + upper_str);
 
         render::draw_text(info_str, Panel::screen, Pos(x, Y), clr_white);
 
@@ -185,7 +185,7 @@ void try_cast(const Spell_opt& spell_opt)
 
         const Range spi_cost_range = spell->spi_cost(false, map::player);
 
-        if (spi_cost_range.upper >= map::player->spi())
+        if (spi_cost_range.max >= map::player->spi())
         {
             msg_log::add("Cast spell and risk depleting your spirit [y/n]?",
                          clr_white_high);
@@ -291,7 +291,7 @@ void player_select_spell_to_cast()
 
         sort(spell_opts.begin(), spell_opts.end(), spell_opt_sort);
 
-        Menu_browser browser(spell_opts.size(), 0);
+        Menu_browser browser(spell_opts.size());
 
         render::draw_map_and_interface();
 
@@ -299,11 +299,11 @@ void player_select_spell_to_cast()
 
         while (true)
         {
-            const Menu_action action = menu_input_handling::action(browser);
+            const Menu_action action = menu_input::action(browser);
 
             switch (action)
             {
-            case Menu_action::browsed:
+            case Menu_action::moved:
                 draw(browser, spell_opts);
                 break;
 
@@ -314,7 +314,7 @@ void player_select_spell_to_cast()
                 return;
 
             case Menu_action::selected:
-                try_cast(spell_opts[browser.pos().y]);
+                try_cast(spell_opts[browser.y()]);
                 return;
 
             default: {}

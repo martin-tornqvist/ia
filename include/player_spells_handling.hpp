@@ -3,7 +3,6 @@
 
 #include <vector>
 
-#include "menu_browser.hpp"
 #include "spells.hpp"
 
 class Spell;

@@ -40,7 +40,7 @@ bool try_cast_random_spell(Mon& mon)
         if (spell->allow_mon_cast_now(mon))
         {
             const int CUR_SPI = mon.spi();
-            const int SPELL_MAX_SPI = spell->spi_cost(false, &mon).upper;
+            const int SPELL_MAX_SPI = spell->spi_cost(false, &mon).max;
 
             //Cast spell if max spirit cost is lower than current spirit,
             if (SPELL_MAX_SPI < CUR_SPI)

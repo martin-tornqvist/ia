@@ -378,7 +378,7 @@ void cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MA
         {
             if (!out[x_outer][y_outer])
             {
-                for (int d = dist_interval.lower; d <= dist_interval.upper; d++)
+                for (int d = dist_interval.min; d <= dist_interval.max; d++)
                 {
                     Pos p0(std::max(0,         x_outer - d), std::max(0,         y_outer - d));
                     Pos p1(std::min(MAP_W - 1, x_outer + d), std::min(MAP_H - 1, y_outer + d));

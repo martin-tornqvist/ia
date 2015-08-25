@@ -121,7 +121,7 @@ void Player::mk_start_items()
             Spell_id        spell_id    = scroll->data().spell_cast_from_scroll;
             Spell* const    spell       = spell_handling::mk_spell_from_id(spell_id);
             const bool      IS_AVAIL    = spell->is_avail_for_player();
-            const bool      SPI_COST_OK = spell->spi_cost(true).upper <=
+            const bool      SPI_COST_OK = spell->spi_cost(true).max <=
                                           player_bon::spi_occultist_can_cast_at_lvl(4);
             delete spell;
 
@@ -472,7 +472,7 @@ int Player::shock_resistance(const Shock_src shock_src) const
         break;
     }
 
-    return constr_in_range(0, res, 100);
+    return utils::constr_in_range(0, res, 100);
 }
 
 double Player::shock_taken_after_mods(const int BASE_SHOCK,
@@ -489,10 +489,10 @@ void Player::incr_shock(const int SHOCK, Shock_src shock_src)
 {
     const double SHOCK_AFTER_MODS = shock_taken_after_mods(SHOCK, shock_src);
 
-    shock_                  += SHOCK_AFTER_MODS;
+    shock_                      += SHOCK_AFTER_MODS;
     perm_shock_taken_cur_turn_  += SHOCK_AFTER_MODS;
 
-    set_constr_in_range(0.0, shock_, 100.0);
+    utils::set_constr_in_range(0.0, shock_, 100.0);
 }
 
 void Player::incr_shock(const Shock_lvl shock_value, Shock_src shock_src)
@@ -801,7 +801,7 @@ void Player::incr_insanity()
                 const int NR_SHADOWS_LOWER = 2;
 
                 const int NR_SHADOWS_UPPER =
-                    constr_in_range(NR_SHADOWS_LOWER, map::dlvl - 2, 8);
+                    utils::constr_in_range(NR_SHADOWS_LOWER, map::dlvl - 2, 8);
 
                 const int NR = rnd::range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
 
@@ -1026,7 +1026,7 @@ void Player::on_actor_turn()
     //Check if we should go back to inventory screen
     const auto inv_scr_on_new_turn = inv_handling::scr_to_open_on_new_turn;
 
-    if (inv_scr_on_new_turn != Inv_scr::END)
+    if (inv_scr_on_new_turn != Inv_scr::none)
     {
         std::vector<Actor*> my_seen_foes;
         seen_foes(my_seen_foes);
@@ -1039,19 +1039,24 @@ void Player::on_actor_turn()
                 inv_handling::run_inv_screen();
                 break;
 
+            case Inv_scr::apply:
+                inv_handling::run_apply_screen();
+                break;
+
             case Inv_scr::equip:
                 inv_handling::run_equip_screen(*inv_handling::equip_slot_to_open_on_new_turn);
                 break;
 
-            case Inv_scr::END: {} break;
+            case Inv_scr::none:
+                break;
             }
 
             return;
         }
         else //There are seen monsters
         {
-            inv_handling::scr_to_open_on_new_turn    = Inv_scr::END;
-            inv_handling::browser_idx_to_set_on_new_turn = 0;
+            inv_handling::scr_to_open_on_new_turn           = Inv_scr::none;
+            inv_handling::browser_idx_to_set_on_new_turn    = 0;
         }
     }
 
@@ -1441,8 +1446,8 @@ void Player::interrupt_actions()
     render::draw_map_and_interface();
 
     //Abort browsing inventory
-    inv_handling::scr_to_open_on_new_turn    = Inv_scr::END;
-    inv_handling::browser_idx_to_set_on_new_turn = 0;
+    inv_handling::scr_to_open_on_new_turn           = Inv_scr::none;
+    inv_handling::browser_idx_to_set_on_new_turn    = 0;
 
     //Abort waiting
     if (wait_turns_left > 0)

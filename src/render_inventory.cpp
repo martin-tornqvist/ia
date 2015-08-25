@@ -10,9 +10,18 @@
 #include "map.hpp"
 #include "item.hpp"
 #include "text_format.hpp"
+#include "menu_input.hpp"
+
+namespace render_inv
+{
 
 namespace
 {
+
+const int TOP_MORE_Y    = 0;
+const int BTM_MORE_Y    = SCREEN_H - 1;
+const int INV_Y0        = TOP_MORE_Y + 1;
+const int INV_Y1        = BTM_MORE_Y - 1;
 
 void draw_item_symbol(const Item& item, const Pos& p)
 {
@@ -28,22 +37,31 @@ void draw_item_symbol(const Item& item, const Pos& p)
     }
 }
 
-void draw_weight_pct(const int Y, const int ITEM_NAME_X, const size_t ITEM_NAME_LEN,
-                     const Item& item, const Clr& item_name_clr, const bool IS_SELECTED)
+void draw_weight_pct_and_dots(const Pos item_pos,
+                              const size_t ITEM_NAME_LEN,
+                              const Item& item,
+                              const Clr& item_name_clr,
+                              const bool IS_MARKED)
 {
     const int WEIGHT_CARRIED_TOT = map::player->inv().total_item_weight();
-    const int WEIGHT_PCT         = (item.weight() * 100) / WEIGHT_CARRIED_TOT;
 
-    std::string weight_str  = to_str(WEIGHT_PCT) + "%";
+    int item_weight_pct = 0;
+
+    if (WEIGHT_CARRIED_TOT > 0)
+    {
+        item_weight_pct = (item.weight() * 100) / WEIGHT_CARRIED_TOT;
+    }
+
+    std::string weight_str  = to_str(item_weight_pct) + "%";
     int         weight_x    = DESCR_X0 - 1 - weight_str.size();
 
-    assert(WEIGHT_PCT >= 0 && WEIGHT_PCT <= 100);
+    assert(item_weight_pct >= 0 && item_weight_pct <= 100);
 
-    if (WEIGHT_PCT > 0 && WEIGHT_PCT < 100)
+    if (item_weight_pct > 0 && item_weight_pct < 100)
     {
-        const Pos weight_pos(weight_x, Y);
+        const Pos weight_pos(weight_x, item_pos.y);
 
-        const Clr weight_clr = IS_SELECTED ? clr_white : clr_gray_drk;
+        const Clr weight_clr = IS_MARKED ? clr_white : clr_gray_drk;
 
         render::draw_text(weight_str, Panel::screen, weight_pos, weight_clr);
     }
@@ -53,7 +71,7 @@ void draw_weight_pct(const int Y, const int ITEM_NAME_X, const size_t ITEM_NAME_
         weight_x    = DESCR_X0 - 1;
     }
 
-    int dots_x = ITEM_NAME_X + ITEM_NAME_LEN;
+    int dots_x = item_pos.x + ITEM_NAME_LEN;
     int dots_w = weight_x - dots_x;
 
     if (dots_w <= 0)
@@ -65,16 +83,17 @@ void draw_weight_pct(const int Y, const int ITEM_NAME_X, const size_t ITEM_NAME_
     }
 
     const std::string   dots_str(dots_w, '.');
-    Clr                 dots_clr = IS_SELECTED ? clr_white : item_name_clr;
+    Clr                 dots_clr = IS_MARKED ?
+                                   clr_white : item_name_clr;
 
-    if (!IS_SELECTED)
+    if (!IS_MARKED)
     {
         dots_clr.r /= 2;
         dots_clr.g /= 2;
         dots_clr.b /= 2;
     }
 
-    render::draw_text(dots_str, Panel::screen, Pos(dots_x, Y), dots_clr);
+    render::draw_text(dots_str, Panel::screen, Pos(dots_x, item_pos.y), dots_clr);
 }
 
 void draw_detailed_item_descr(const Item* const item)
@@ -100,11 +119,19 @@ void draw_detailed_item_descr(const Item* const item)
         lines.push_back({weight_str, clr_green});
 
         const int WEIGHT_CARRIED_TOT = map::player->inv().total_item_weight();
-        const int WEIGHT_PCT         = (item->weight() * 100) / WEIGHT_CARRIED_TOT;
 
-        if (WEIGHT_PCT > 0 && WEIGHT_PCT < 100)
+        int weight_pct = 0;
+
+        if (WEIGHT_CARRIED_TOT > 0)
         {
-            const std::string pct_str = "(" + to_str(WEIGHT_PCT) + "% of total carried weight)";
+            weight_pct = (item->weight() * 100) / WEIGHT_CARRIED_TOT;
+        }
+
+        assert(weight_pct >= 0 && weight_pct <= 100);
+
+        if (weight_pct > 0 && weight_pct < 100)
+        {
+            const std::string pct_str = "(" + to_str(weight_pct) + "% of total carried weight)";
             lines.push_back({pct_str, clr_green});
         }
     }
@@ -116,190 +143,238 @@ void draw_detailed_item_descr(const Item* const item)
 
 } //Namespace
 
-namespace render_inventory
-{
+const int INV_H = INV_Y1 - INV_Y0 + 1;
 
-void draw_browse_inv(const Menu_browser& browser)
+void draw_inv(const Menu_browser& browser)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
     render::clear_screen();
 
-    const int     BROWSER_Y   = browser.y();
-    const auto&   inv         = map::player->inv();
-    const size_t  NR_SLOTS    = size_t(Slot_id::END);
+    const int           BROWSER_Y           = browser.y();
+    const auto&         inv                 = map::player->inv();
+    const size_t        NR_SLOTS            = size_t(Slot_id::END);
+    const bool          IS_ANY_SLOT_MARKED  = BROWSER_Y < int(NR_SLOTS);
+    const Panel         panel               = Panel::screen;
 
-    const bool    IS_IN_EQP   = BROWSER_Y < int(NR_SLOTS);
-    const size_t  INV_ELEMENT = IS_IN_EQP ? 0 : (size_t(BROWSER_Y) - NR_SLOTS);
+    const auto* const item_marked = IS_ANY_SLOT_MARKED ?
+                                    inv.slots_[BROWSER_Y].item :
+                                    inv.backpack_[size_t(BROWSER_Y) - NR_SLOTS];
 
-    const auto* const item    = IS_IN_EQP ?
-                                inv.slots_[BROWSER_Y].item :
-                                inv.backpack_[INV_ELEMENT];
+    std::string str = "Inventory";
 
-    const std::string query_eq_str   = item ? "unequip" : "equip";
-    const std::string query_base_str = "[enter] to " + (IS_IN_EQP ? query_eq_str : "apply item");
-    const std::string query_drop_str = item ? " [shift+enter] to drop" : "";
+    Pos p(SCREEN_W / 2, 0);
 
-    std::string str = query_base_str + query_drop_str + " [space/esc] to exit";
+    render::draw_text_centered(str, panel, p, clr_orange);
 
-    render::draw_text(str, Panel::screen, Pos(0, 0), clr_white_high);
+    const Range idx_range_shown = browser.range_shown();
 
-    Pos p(1, EQP_Y0);
+    p.set(0, INV_Y0);
 
-    const Panel panel = Panel::screen;
+    std::string key_str = "a)";
 
-    for (size_t i = 0; i < NR_SLOTS; ++i)
+    for (int i = idx_range_shown.min; i <= idx_range_shown.max; ++i)
     {
-        const bool          IS_CUR_POS  = IS_IN_EQP && BROWSER_Y == int(i);
-        const Inv_slot&     slot        = inv.slots_[i];
-        const std::string   slot_name   = slot.name;
+        p.x = 0;
 
-        p.x = 1;
+        const bool IS_IDX_MARKED = BROWSER_Y == i;
 
-        render::draw_text(slot_name, panel, p, IS_CUR_POS ? clr_white_high : clr_menu_drk);
+        Clr clr = IS_IDX_MARKED ? clr_white_high : clr_menu_drk;
 
-        p.x += 9; //Offset to leave room for slot label
+        render::draw_text(key_str, panel, p, clr);
 
-        const auto* const cur_item = slot.item;
+        ++key_str[0];
 
-        if (cur_item)
+        p.x += 3;
+
+        if (i < int(NR_SLOTS))
         {
-            draw_item_symbol(*cur_item, p);
+            //This index is a slot
+            const Inv_slot&     slot        = inv.slots_[i];
+            const std::string   slot_name   = slot.name;
+
+            render::draw_text(slot_name, panel, p, clr);
+
+            p.x += 9; //Offset to leave room for slot label
+
+            const Item* const item = slot.item;
+
+            if (item)
+            {
+                //An item is equipped here
+                draw_item_symbol(*item, p);
+                p.x += 2;
+
+                const Item_data_t&  d       = item->data();
+                Item_ref_att_inf    att_inf = Item_ref_att_inf::none;
+
+                if (slot.id == Slot_id::wielded || slot.id == Slot_id::wielded_alt)
+                {
+                    //Thrown weapons are forced to show melee info instead
+                    att_inf = d.main_att_mode == Main_att_mode::thrown ?
+                              Item_ref_att_inf::melee : Item_ref_att_inf::wpn_context;
+                }
+                else if (slot.id == Slot_id::thrown)
+                {
+                    att_inf = Item_ref_att_inf::thrown;
+                }
+
+                Item_ref_type ref_type = Item_ref_type::plain;
+
+                if (slot.id == Slot_id::thrown)
+                {
+                    ref_type = Item_ref_type::plural;
+                }
+
+                std::string item_name = item->name(ref_type, Item_ref_inf::yes, att_inf);
+
+                assert(!item_name.empty());
+
+                text_format::first_to_upper(item_name);
+
+                Clr clr = IS_IDX_MARKED ?
+                          clr_white_high : item->interface_clr();
+
+                render::draw_text(item_name, panel, p, clr);
+
+                draw_weight_pct_and_dots(p, item_name.size(), *item, clr, IS_IDX_MARKED);
+            }
+            else //No item in this slot
+            {
+                p.x += 2;
+                render::draw_text("<empty>", panel, p, clr);
+            }
+        }
+        else //This index is in backpack
+        {
+            const size_t BACKPACK_IDX = i - NR_SLOTS;
+
+            const Item* const item = inv.backpack_[BACKPACK_IDX];
+
+            draw_item_symbol(*item, p);
             p.x += 2;
 
-            const Clr clr = IS_CUR_POS ? clr_white_high : cur_item->interface_clr();
-
-            const Item_data_t&  d       = cur_item->data();
-            Item_ref_att_inf    att_inf = Item_ref_att_inf::none;
-
-            if (slot.id == Slot_id::wielded || slot.id == Slot_id::wielded_alt)
-            {
-                //Thrown weapons are forced to show melee info instead
-                att_inf = d.main_att_mode == Main_att_mode::thrown ? Item_ref_att_inf::melee :
-                          Item_ref_att_inf::wpn_context;
-            }
-            else if (slot.id == Slot_id::thrown)
-            {
-                att_inf = Item_ref_att_inf::thrown;
-            }
-
-            Item_ref_type ref_type = Item_ref_type::plain;
-
-            if (slot.id == Slot_id::thrown)
-            {
-                ref_type = Item_ref_type::plural;
-            }
-
-            std::string item_name = cur_item->name(ref_type, Item_ref_inf::yes, att_inf);
+            std::string item_name = item->name(Item_ref_type::plural, Item_ref_inf::yes,
+                                               Item_ref_att_inf::wpn_context);
 
             text_format::first_to_upper(item_name);
 
+            clr = IS_IDX_MARKED ?
+                  clr_white_high : item->interface_clr();
+
             render::draw_text(item_name, panel, p, clr);
 
-            draw_weight_pct(p.y, p.x, item_name.size(), *cur_item, clr, IS_CUR_POS);
-        }
-        else //No item in this slot
-        {
-            p.x += 2;
-            render::draw_text("<empty>", panel, p, IS_CUR_POS ? clr_white_high : clr_menu_drk);
+            draw_weight_pct_and_dots(p, item_name.size(), *item, clr, IS_IDX_MARKED);
         }
 
         ++p.y;
     }
 
-    const size_t  NR_INV_ITEMS  = inv.backpack_.size();
-
-    size_t inv_top_idx = 0;
-
-    if (!IS_IN_EQP && NR_INV_ITEMS > 0)
+    //Draw "more" labels
+    if (!browser.is_on_top_page())
     {
-        auto is_browser_pos_on_scr = [&](const bool IS_FIRST_SCR)
-        {
-            const int MORE_LABEL_H = IS_FIRST_SCR ? 1 : 2;
-            return int(INV_ELEMENT) < (int(inv_top_idx + INV_H) - MORE_LABEL_H);
-        };
-
-        if (int(NR_INV_ITEMS) > INV_H && !is_browser_pos_on_scr(true))
-        {
-            inv_top_idx = INV_H - 1;
-
-            while (true)
-            {
-                //Check if this is the bottom screen
-                if (int(NR_INV_ITEMS - inv_top_idx) + 1 <= INV_H)
-                {
-                    break;
-                }
-
-                //Check if current browser pos is currently on screen
-                if (is_browser_pos_on_scr(false))
-                {
-                    break;
-                }
-
-                inv_top_idx += INV_H - 2;
-            }
-        }
+        render::draw_text("(More - Page Up)", panel, {0, TOP_MORE_Y}, clr_white_high);
     }
 
-    const int INV_X0  = 1;
-
-    p = Pos(INV_X0, INV_Y0);
-
-    const int INV_ITEM_NAME_X = INV_X0 + 2;
-
-    for (size_t i = inv_top_idx; i < NR_INV_ITEMS; ++i)
+    if (!browser.is_on_btm_page())
     {
-        const bool IS_CUR_POS = !IS_IN_EQP && INV_ELEMENT == i;
-        Item* const cur_item   = inv.backpack_[i];
+        render::draw_text("(More - Page Down)", panel, {0, BTM_MORE_Y}, clr_white_high);
+    }
 
-        const Clr clr = IS_CUR_POS ? clr_white_high : cur_item->interface_clr();
+    draw_detailed_item_descr(item_marked);
 
-        if (i == inv_top_idx && inv_top_idx > 0)
-        {
-            p.x = INV_ITEM_NAME_X;
-            render::draw_text("(more)", panel, p, clr_black, clr_gray);
-            ++p.y;
-        }
+    render::update_screen();
 
-        p.x = INV_X0;
+    TRACE_FUNC_END_VERBOSE;
+}
 
-        draw_item_symbol(*cur_item, p);
+void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_indexes)
+{
+    TRACE_FUNC_BEGIN_VERBOSE;
 
-        p.x = INV_ITEM_NAME_X;
+    if (gen_inv_indexes.empty())
+    {
+        render::draw_text("I carry nothing to apply." + cancel_info_str, Panel::screen, Pos(0, 0),
+                          clr_white_high);
 
-        std::string item_name = cur_item->name(Item_ref_type::plural, Item_ref_inf::yes,
-                                               Item_ref_att_inf::wpn_context);
+        render::update_screen();
+
+        return;
+    }
+
+    render::clear_screen();
+
+    const int           BROWSER_Y           = browser.y();
+    const auto&         inv                 = map::player->inv();
+    const size_t        BACKPACK_IDX_MARKED = gen_inv_indexes[size_t(BROWSER_Y)];
+    const auto* const   item_marked         = inv.backpack_[BACKPACK_IDX_MARKED];
+    const Panel         panel               = Panel::screen;
+
+    std::string str = "Apply item";
+
+    Pos p(SCREEN_W / 2, 0);
+
+    render::draw_text_centered(str, panel, p, clr_orange);
+
+    const Range idx_range_shown = browser.range_shown();
+
+    p.set(0, INV_Y0);
+
+    std::string key_str = "a)";
+
+    for (int i = idx_range_shown.min; i <= idx_range_shown.max; ++i)
+    {
+        p.x = 0;
+
+        const bool IS_IDX_MARKED = BROWSER_Y == i;
+
+        Clr clr = IS_IDX_MARKED ?
+                  clr_white_high : clr_menu_drk;
+
+        render::draw_text(key_str, panel, p, clr);
+
+        ++key_str[0];
+
+        p.x += 3;
+
+        const size_t BACKPACK_IDX = gen_inv_indexes[i];
+
+        const Item* const item = inv.backpack_[BACKPACK_IDX];
+
+        draw_item_symbol(*item, p);
+        p.x += 2;
+
+        std::string item_name = item->name(Item_ref_type::plural, Item_ref_inf::yes,
+                                           Item_ref_att_inf::wpn_context);
+
+        assert(!item_name.empty());
 
         text_format::first_to_upper(item_name);
 
+        clr = IS_IDX_MARKED ?
+              clr_white_high : item->interface_clr();
+
         render::draw_text(item_name, panel, p, clr);
 
-        draw_weight_pct(p.y, INV_ITEM_NAME_X, item_name.size(), *cur_item, clr, IS_CUR_POS);
+        const size_t ITEM_NAME_LEN = item_name.size();
+
+        draw_weight_pct_and_dots(p, ITEM_NAME_LEN, *item, clr, IS_IDX_MARKED);
 
         ++p.y;
-
-        if (p.y == INV_Y1 && ((i + 1) < (NR_INV_ITEMS - 1)))
-        {
-            render::draw_text("(more)", panel, p, clr_black, clr_gray);
-            break;
-        }
     }
 
-    const Rect eqp_rect(0, EQP_Y0 - 1, DESCR_X0 - 1, EQP_Y1 + 1);
-    const Rect inv_rect(0, INV_Y0 - 1, DESCR_X0 - 1, INV_Y1 + 1);
-
-    render::draw_box(eqp_rect, panel, clr_popup_box, false);
-    render::draw_box(inv_rect, panel, clr_popup_box, false);
-
-    if (config::is_tiles_mode())
+    //Draw "more" labels
+    if (!browser.is_on_top_page())
     {
-        render::draw_tile(Tile_id::popup_ver_r, panel, inv_rect.p0, clr_popup_box);
-        render::draw_tile(Tile_id::popup_ver_l, panel, Pos(inv_rect.p1.x, inv_rect.p0.y),
-                          clr_popup_box);
+        render::draw_text("(More - Page Up)", panel, {0, TOP_MORE_Y}, clr_white_high);
     }
 
-    draw_detailed_item_descr(item);
+    if (!browser.is_on_btm_page())
+    {
+        render::draw_text("(More - Page Down)", panel, {0, BTM_MORE_Y}, clr_white_high);
+    }
+
+    draw_detailed_item_descr(item_marked);
 
     render::update_screen();
 
@@ -312,11 +387,6 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
     TRACE_FUNC_BEGIN_VERBOSE;
 
     assert(slot_id_to_equip != Slot_id::END);
-
-    Pos p(0, 0);
-
-    const int NR_ITEMS = browser.nr_of_items_in_first_list();
-    render::cover_area(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 1));
 
     const bool HAS_ITEM = !gen_inv_indexes.empty();
 
@@ -373,51 +443,86 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
 
     if (HAS_ITEM)
     {
+        render::clear_screen();
+
         str += " [shift+enter] to drop";
     }
 
     str += cancel_info_str;
 
+    Pos p(0, 0);
+
     render::draw_text(str, Panel::screen, p, clr_white_high);
 
-    ++p.y;
-
-    Inventory& inv = map::player->inv();
-
-    const int NR_INDEXES = gen_inv_indexes.size();
-
-    for (int i = 0; i < NR_INDEXES; ++i)
+    if (HAS_ITEM)
     {
-        const bool IS_CUR_POS = browser.pos().y == int(i);
-        p.x = 0;
+        const int           BROWSER_Y           = browser.y();
+        const auto&         inv                 = map::player->inv();
+        const size_t        BACKPACK_IDX_MARKED = gen_inv_indexes[size_t(BROWSER_Y)];
+        const auto* const   item_marked         = inv.backpack_[BACKPACK_IDX_MARKED];
+        const Panel         panel               = Panel::screen;
 
-        Item* const item = inv.backpack_[gen_inv_indexes[i]];
+        const Range idx_range_shown = browser.range_shown();
 
-        draw_item_symbol(*item, p);
-        p.x += 2;
+        p.set(0, INV_Y0);
 
-        const Clr item_interf_clr = IS_CUR_POS ? clr_white_high : item->interface_clr();
+        std::string key_str = "a)";
 
-        const Item_data_t& d    = item->data();
-        Item_ref_att_inf att_inf  = Item_ref_att_inf::none;
-
-        if (slot_id_to_equip == Slot_id::wielded || slot_id_to_equip == Slot_id::wielded_alt)
+        for (int i = idx_range_shown.min; i <= idx_range_shown.max; ++i)
         {
-            //Thrown weapons are forced to show melee info instead
-            att_inf = d.main_att_mode == Main_att_mode::thrown ? Item_ref_att_inf::melee :
-                      Item_ref_att_inf::wpn_context;
+            p.x = 0;
+
+            const bool IS_IDX_MARKED = BROWSER_Y == i;
+
+            Clr clr = IS_IDX_MARKED ?
+                      clr_white_high : clr_menu_drk;
+
+            render::draw_text(key_str, panel, p, clr);
+
+            ++key_str[0];
+
+            p.x += 3;
+
+            const size_t BACKPACK_IDX = gen_inv_indexes[i];
+
+            Item* const item = inv.backpack_[BACKPACK_IDX];
+
+            draw_item_symbol(*item, p);
+            p.x += 2;
+
+            const Item_data_t&  d       = item->data();
+            Item_ref_att_inf    att_inf = Item_ref_att_inf::none;
+
+            if (slot_id_to_equip == Slot_id::wielded || slot_id_to_equip == Slot_id::wielded_alt)
+            {
+                //Thrown weapons are forced to show melee info instead
+                att_inf = d.main_att_mode == Main_att_mode::thrown ?
+                          Item_ref_att_inf::melee : Item_ref_att_inf::wpn_context;
+            }
+            else if (slot_id_to_equip == Slot_id::thrown)
+            {
+                att_inf = Item_ref_att_inf::thrown;
+            }
+
+            std::string item_name = item->name(Item_ref_type::plural, Item_ref_inf::yes, att_inf);
+
+            assert(!item_name.empty());
+
+            text_format::first_to_upper(item_name);
+
+            clr = IS_IDX_MARKED ?
+                  clr_white_high : item->interface_clr();
+
+            render::draw_text(item_name, Panel::screen, p, clr);
+
+            const size_t ITEM_NAME_LEN = item_name.size();
+
+            draw_weight_pct_and_dots(p, ITEM_NAME_LEN, *item, clr, IS_IDX_MARKED);
+
+            ++p.y;
         }
-        else if (slot_id_to_equip == Slot_id::thrown)
-        {
-            att_inf = Item_ref_att_inf::thrown;
-        }
 
-        str = item->name(Item_ref_type::plural, Item_ref_inf::yes, att_inf);
-
-        text_format::first_to_upper(str);
-
-        render::draw_text(str, Panel::screen, p, item_interf_clr);
-        ++p.y;
+        draw_detailed_item_descr(item_marked);
     }
 
     render::update_screen();
@@ -425,4 +530,4 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
     TRACE_FUNC_END_VERBOSE;
 }
 
-} //render_inventory
+} //render_inv

@@ -615,7 +615,7 @@ void Door::player_try_spot_hidden()
     }
 }
 
-bool Door::try_spike(Actor* actor_trying)
+bool Door::try_jam(Actor* actor_trying)
 {
     const bool IS_PLAYER = actor_trying == map::player;
     const bool TRYER_IS_BLIND = !actor_trying->prop_handler().allow_see();
@@ -626,7 +626,7 @@ bool Door::try_spike(Actor* actor_trying)
     }
 
     //Door is in correct state for spiking (known, closed)
-    nr_spikes_++;
+    ++nr_spikes_;
     is_stuck_ = true;
 
     if (IS_PLAYER)
@@ -790,8 +790,7 @@ void Door::try_close(Actor* actor_trying)
         }
     }
 
-    //TODO: This seems wrong - it doesn't seem like a turn is spent if player is blind and fail
-    //to close the door
+    //TODO: It doesn't seem like a turn is spent if player is blind and fail to close the door?
     if (!is_open_ && is_closable)
     {
         game_time::tick();

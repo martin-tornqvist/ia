@@ -10,7 +10,6 @@
 #include "kick.hpp"
 #include "render.hpp"
 #include "close.hpp"
-#include "jam_with_spike.hpp"
 #include "pickup.hpp"
 #include "inventory_handling.hpp"
 #include "marker.hpp"
@@ -276,21 +275,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
         if (map::player->is_alive())
         {
-            close::player_close();
-        }
-
-        clear_events();
-        return;
-    }
-
-    //----------------------------------- JAM
-    else if (d.key == 'D')
-    {
-        msg_log::clear();
-
-        if (map::player->is_alive())
-        {
-            jam_with_spike::player_jam();
+            close::player_try_close_or_jam();
         }
 
         clear_events();
@@ -483,13 +468,27 @@ void handle_map_mode_key_press(const Key_data& d)
     }
 
     //----------------------------------- INVENTORY SCREEN
-    else if (d.key == 'w')
+    else if (d.key == 'i')
     {
         msg_log::clear();
 
         if (map::player->is_alive())
         {
             inv_handling::run_inv_screen();
+        }
+
+        clear_events();
+        return;
+    }
+
+    //----------------------------------- APPLY ITEM
+    else if (d.key == 'a')
+    {
+        msg_log::clear();
+
+        if (map::player->is_alive())
+        {
+            inv_handling::run_apply_screen();
         }
 
         clear_events();
@@ -911,87 +910,6 @@ void handle_map_mode_key_press(const Key_data& d)
         return;
     }
 
-    //----------------------------------- ITEM SHORTCUTS
-    else if (d.key == 'a')
-    {
-        Inventory&  inv         = map::player->inv();
-        Item*       medical_bag  = inv.item_in_backpack(Item_id::medical_bag);
-        Item*       lantern     = inv.item_in_backpack(Item_id::electric_lantern);
-
-        msg_log::clear();
-
-        if (!medical_bag && !lantern)
-        {
-            msg_log::add("No item with shortcut carried.");
-            render::draw_map_and_interface();
-            clear_events();
-            return;
-        }
-
-        msg_log::add("Use which item?",          clr_white_high);
-
-        if (medical_bag)
-        {
-            msg_log::add("[a] Medical Bag",        clr_white_high);
-        }
-
-        if (lantern)
-        {
-            msg_log::add("[e] Electric Lantern",   clr_white_high);
-        }
-
-        msg_log::add(cancel_info_str_no_space,       clr_white_high);
-
-        render::draw_map_and_interface();
-
-        while (true)
-        {
-            const Key_data shortcut_key_data = query::letter(true);
-
-            if (
-                shortcut_key_data.sdl_key == SDLK_ESCAPE ||
-                shortcut_key_data.sdl_key == SDLK_SPACE)
-            {
-                msg_log::clear();
-                render::draw_map_and_interface();
-                break;
-            }
-            else if (medical_bag && shortcut_key_data.key == 'a')
-            {
-                msg_log::clear();
-
-                for (Item* const item : map::player->inv().backpack_)
-                {
-                    if (item->id() == Item_id::medical_bag)
-                    {
-                        item->activate(map::player);
-                        break;
-                    }
-                }
-
-                break;
-            }
-            else if (lantern && shortcut_key_data.key == 'e')
-            {
-                msg_log::clear();
-
-                for (Item* const item : map::player->inv().backpack_)
-                {
-                    if (item->id() == Item_id::electric_lantern)
-                    {
-                        item->activate(map::player);
-                        break;
-                    }
-                }
-
-                break;
-            }
-        }
-
-        clear_events();
-        return;
-    }
-
     //----------------------------------- MENU
     else if (d.sdl_key == SDLK_ESCAPE)
     {
@@ -1328,7 +1246,7 @@ Key_data input(const bool IS_O_RETURN)
             if ((c == 'o' || c == 'O') && IS_O_RETURN)
             {
                 const bool IS_SHIFT_HELD = c == 'O';
-                ret = Key_data(-1, SDLK_RETURN, IS_SHIFT_HELD, false);
+                ret = Key_data(c, SDLK_RETURN, IS_SHIFT_HELD, false);
                 is_done = true;
             }
             else if (c >= 33 && c < 126)

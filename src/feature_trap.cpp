@@ -390,7 +390,7 @@ void Trap::disarm()
         disarm_numerator -= 3;
     }
 
-    set_constr_in_range(1, disarm_numerator, DISARM_DENOMINATOR - 1);
+    utils::set_constr_in_range(1, disarm_numerator, DISARM_DENOMINATOR - 1);
 
     const bool IS_DISARMED = is_auto_succeed ||
                              rnd::fraction(disarm_numerator, DISARM_DENOMINATOR);
