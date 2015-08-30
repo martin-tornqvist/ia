@@ -32,7 +32,7 @@ void Feature::bump(Actor& actor_bumping)
             {
                 msg_log::add(data().msg_on_player_blocked);
             }
-            else
+            else //Actor cannot see
             {
                 msg_log::add(data().msg_on_player_blocked_blind);
             }

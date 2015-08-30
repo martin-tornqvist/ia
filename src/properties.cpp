@@ -1328,7 +1328,9 @@ void Prop_handler::on_prop_end(Prop* const prop)
     }
 
     //Print property end message if this is the last active property of this type
-    if (active_props_info_[size_t(prop->id_)] == 0)
+    if (
+        owning_actor_->state() == Actor_state::alive &&
+        active_props_info_[size_t(prop->id_)] == 0)
     {
         if (owning_actor_->is_player())
         {

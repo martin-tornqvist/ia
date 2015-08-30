@@ -1097,7 +1097,8 @@ void draw_descr_box(const std::vector<Str_and_clr>& lines)
 {
     const int DESCR_Y0  = 1;
     const int DESCR_X1  = MAP_W - 1;
-    cover_area(Panel::screen, Rect(DESCR_X0, DESCR_Y0, DESCR_X1, SCREEN_H - 1));
+
+    cover_area(Panel::screen, Rect(DESCR_X0 - 1, DESCR_Y0, DESCR_X1, SCREEN_H - 1));
 
     const int MAX_W = DESCR_X1 - DESCR_X0 + 1;
 
@@ -1502,7 +1503,7 @@ void draw_map()
 
     //---------------- DRAW PLAYER CHARACTER
     const Pos&  pos         = map::player->pos;
-    Item*       item        = map::player->inv().item_in_slot(Slot_id::wielded);
+    Item*       item        = map::player->inv().item_in_slot(Slot_id::wpn);
     const bool  IS_GHOUL    = player_bon::bg() == Bg::ghoul;
 
     if (IS_TILES)

@@ -629,7 +629,7 @@ void Mon::avail_attacks(Actor& defender, Ai_avail_attacks_data& dst)
             if (prop_handler_->allow_attack_melee(Verbosity::silent))
             {
                 //Melee weapon in wielded slot?
-                wpn = static_cast<Wpn*>(inv_->item_in_slot(Slot_id::wielded));
+                wpn = static_cast<Wpn*>(inv_->item_in_slot(Slot_id::wpn));
 
                 if (wpn)
                 {
@@ -656,7 +656,7 @@ void Mon::avail_attacks(Actor& defender, Ai_avail_attacks_data& dst)
             if (prop_handler_->allow_attack_ranged(Verbosity::silent))
             {
                 //Ranged weapon in wielded slot?
-                wpn = static_cast<Wpn*>(inv_->item_in_slot(Slot_id::wielded));
+                wpn = static_cast<Wpn*>(inv_->item_in_slot(Slot_id::wpn));
 
                 if (wpn)
                 {
@@ -815,9 +815,9 @@ void Cultist::mk_start_items()
         const int AMMO_CAP      = wpn->data().ranged.max_ammo;
         wpn->nr_ammo_loaded_    = rnd::range(AMMO_CAP / 4, AMMO_CAP);
 
-        inv_->put_in_slot(Slot_id::wielded, item);
+        inv_->put_in_slot(Slot_id::wpn, item);
 
-        if (rnd::one_in(5))
+        if (rnd::one_in(6))
         {
             inv_->put_in_backpack(item_factory::mk(Item_id::pistol_clip));
         }
@@ -829,7 +829,7 @@ void Cultist::mk_start_items()
         const int AMMO_CAP      = wpn->data().ranged.max_ammo;
         wpn->nr_ammo_loaded_    = rnd::range(AMMO_CAP / 4, AMMO_CAP);
 
-        inv_->put_in_slot(Slot_id::wielded, item);
+        inv_->put_in_slot(Slot_id::wpn, item);
 
         if (rnd::one_in(4))
         {
@@ -840,7 +840,7 @@ void Cultist::mk_start_items()
     }
     else if (RND <= SAWN_SHOTGUN)
     {
-        inv_->put_in_slot(Slot_id::wielded, item_factory::mk(Item_id::sawed_off));
+        inv_->put_in_slot(Slot_id::wpn, item_factory::mk(Item_id::sawed_off));
 
         if (rnd::one_in(4))
         {
@@ -858,10 +858,10 @@ void Cultist::mk_start_items()
         const int   CAP_SCALED  = wpn->data().ranged.max_ammo / NR_MG_PROJECTILES;
         const int   MIN_SCALED  = CAP_SCALED / 4;
         wpn->nr_ammo_loaded_    = rnd::range(MIN_SCALED, CAP_SCALED) * NR_MG_PROJECTILES;
-        inv_->put_in_slot(Slot_id::wielded, item);
+        inv_->put_in_slot(Slot_id::wpn, item);
     }
 
-    if (rnd::one_in(3))
+    if (rnd::one_in(6))
     {
         inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
     }
@@ -880,7 +880,7 @@ void Cultist_electric::mk_start_items()
 
     wpn->nr_ammo_loaded_     = rnd::range(AMMO_CAP / 4, AMMO_CAP);
 
-    inv_->put_in_slot(Slot_id::wielded, item);
+    inv_->put_in_slot(Slot_id::wpn, item);
 
     if (rnd::one_in(3))
     {
@@ -900,7 +900,7 @@ void Cultist_spike_gun::mk_start_items()
     const int   AMMO_CAP    = wpn->data().ranged.max_ammo;
     wpn->nr_ammo_loaded_    = rnd::range(AMMO_CAP / 4, AMMO_CAP);
 
-    inv_->put_in_slot(Slot_id::wielded, item);
+    inv_->put_in_slot(Slot_id::wpn, item);
 
     if (rnd::one_in(4))
     {
@@ -914,7 +914,7 @@ void Cultist_priest::mk_start_items()
 {
     Item* item = item_factory::mk(Item_id::dagger);
     item->melee_dmg_plus_ = 2;
-    inv_->put_in_slot(Slot_id::wielded, item);
+    inv_->put_in_slot(Slot_id::wpn, item);
 
     inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
     inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
@@ -1102,10 +1102,11 @@ bool Ghost::on_actor_turn_hook()
 
         msg_log::add(refer + " reaches for me... ");
 
-        const Ability_roll_result roll_result =
-            ability_roll::roll(map::player->ability(Ability_id::dodge_att, true));
+        const int DODGE_SKILL = map::player->ability(Ability_id::dodge_att, true);
 
-        const bool PLAYER_DODGES = roll_result >= success_small;
+        const Ability_roll_result roll_result = ability_roll::roll(DODGE_SKILL, map::player);
+
+        const bool PLAYER_DODGES = roll_result >= success;
 
         if (PLAYER_DODGES)
         {
@@ -1149,7 +1150,7 @@ void Mi_go::mk_start_items()
 
     wpn->nr_ammo_loaded_ = rnd::range(AMMO_CAP / 4, AMMO_CAP);
 
-    inv_->put_in_slot(Slot_id::wielded, item);
+    inv_->put_in_slot(Slot_id::wpn, item);
 
     if (id() == Actor_id::mi_go)
     {
@@ -1274,7 +1275,7 @@ bool Mummy::on_actor_turn_hook()
 //        return false;
 //    }
 //
-//    const Item* const player_wpn = map::player->inv().item_in_slot(Slot_id::wielded);
+//    const Item* const player_wpn = map::player->inv().item_in_slot(Slot_id::wpn);
 //
 //    if (player_wpn && player_wpn->id() == Item_id::pharaoh_staff)
 //    {

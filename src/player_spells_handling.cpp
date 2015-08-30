@@ -16,8 +16,6 @@
 #include "utils.hpp"
 #include "map.hpp"
 
-using namespace std;
-
 namespace player_spells_handling
 {
 
@@ -27,83 +25,112 @@ namespace
 struct Spell_opt
 {
     Spell_opt() :
-        spell(nullptr),
-        src_item(nullptr) {}
+        spell       (nullptr),
+        src_item    (nullptr) {}
 
     Spell_opt(Spell* spell_, Item* src_item_) :
-        spell(spell_),
-        src_item(src_item_) {}
+        spell       (spell_),
+        src_item    (src_item_) {}
 
     Spell*  spell;
     Item*   src_item;
 };
 
-vector<Spell*>  known_spells_;
+std::vector<Spell*>  known_spells_;
 Spell_opt        prev_cast_;
 
-void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
+void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
 {
     const int NR_SPELLS = spell_opts.size();
 
     render::clear_screen();
 
-    const string label = "Invoke which power? [enter] to cast " + cancel_info_str;
-    render::draw_text(label, Panel::screen, Pos(0, 0), clr_white_high);
+    render::draw_text_centered("Invoke power", Panel::screen, Pos(SCREEN_W / 2, 0), clr_orange);
+
+    Pos p(0, 1);
+
+    std::string key_str = "a) ";
 
     for (int i = 0; i < NR_SPELLS; ++i)
     {
-        const int     CURRENT_ELEMENT = i;
-        Scroll        scroll(nullptr);
-        Clr           scroll_clr   = scroll.interface_clr();
-        const bool    IS_SELECTED = browser.is_at_idx(CURRENT_ELEMENT);
-        const Clr     clr         = IS_SELECTED ? clr_white : scroll_clr;
-        Spell_opt      spell_opt    = spell_opts[i];
-        Spell* const  spell       = spell_opt.spell;
-        string        name        = spell->name();
-        const int     NAME_X      = 1;
-        const int     SPI_X       = 26;
-        const int     SHOCK_X     = SPI_X + 10;
-        const int     Y           = 2 + i;
+        const int       CUR_IDX         = i;
+        Scroll          scroll(nullptr);
+        Clr             scroll_clr      = scroll.interface_clr();
+        const bool      IS_IDX_MARKED   = browser.is_at_idx(CUR_IDX);
+        Spell_opt       spell_opt       = spell_opts[i];
+        Spell* const    spell           = spell_opt.spell;
+        std::string     name            = spell->name();
+        const int       SPI_X           = 25;
+        const int       SHOCK_X         = SPI_X + 10;
 
-        render::draw_text(name, Panel::screen, Pos(NAME_X, Y), clr);
+        p.x = 0;
 
-        string fill_str = "";
-        const size_t FILL_SIZE = SPI_X - NAME_X - name.size();
+        Clr clr = IS_IDX_MARKED ? clr_white_high : clr_menu_drk;
 
-        for (size_t ii = 0; ii < FILL_SIZE; ii++) {fill_str.push_back('.');}
+        render::draw_text(key_str, Panel::screen, p, clr);
+
+        ++key_str[0];
+
+        clr = IS_IDX_MARKED ? clr_white : scroll_clr;
+
+        p.x = key_str.size();
+
+        render::draw_text(name, Panel::screen, p, clr);
+
+        std::string fill_str = "";
+
+        const size_t FILL_SIZE = SPI_X - p.x - name.size();
+
+        for (size_t ii = 0; ii < FILL_SIZE; ii++)
+        {
+            fill_str.push_back('.');
+        }
 
         Clr fill_clr = clr_gray;
-        fill_clr.r /= 3; fill_clr.g /= 3; fill_clr.b /= 3;
-        render::draw_text(fill_str, Panel::screen, Pos(NAME_X + name.size(), Y), fill_clr);
 
-        int     x       = SPI_X;
-        string  info_str = "SPI: ";
+        fill_clr.r /= 3;
+        fill_clr.g /= 3;
+        fill_clr.b /= 3;
+
+        render::draw_text(fill_str, Panel::screen, Pos(p.x + name.size(), p.y), fill_clr);
+
+        p.x = SPI_X;
+
+        std::string  info_str = "SPI: ";
 
         const Range spi_cost = spell->spi_cost(false, map::player);
-        const string lower_str = to_str(spi_cost.min);
-        const string upper_str = to_str(spi_cost.max);
+        const std::string lower_str = to_str(spi_cost.min);
+        const std::string upper_str = to_str(spi_cost.max);
+
         info_str += spi_cost.max == 1 ? "1" : (lower_str +  "-" + upper_str);
 
-        render::draw_text(info_str, Panel::screen, Pos(x, Y), clr_white);
+        render::draw_text(info_str, Panel::screen, p, clr_white);
 
-        x = SHOCK_X;
+        p.x = SHOCK_X;
+
         const Intr_spell_shock shock_type = spell->shock_type_intr_cast();
 
         switch (shock_type)
         {
-        case Intr_spell_shock::mild:        info_str = "Mild";       break;
+        case Intr_spell_shock::mild:
+            info_str = "Mild";
+            break;
 
-        case Intr_spell_shock::disturbing:  info_str = "Disturbing"; break;
+        case Intr_spell_shock::disturbing:
+            info_str = "Disturbing";
+            break;
 
-        case Intr_spell_shock::severe:      info_str = "Severe";     break;
+        case Intr_spell_shock::severe:
+            info_str = "Severe";
+            break;
         }
 
-        render::draw_text(info_str, Panel::screen, Pos(x, Y), clr_white);
+        render::draw_text(info_str, Panel::screen, p, clr_white);
 
-        if (IS_SELECTED)
+        if (IS_IDX_MARKED)
         {
             const auto descr = spell->descr();
-            vector<Str_and_clr> lines;
+            std::vector<Str_and_clr> lines;
 
             if (!descr.empty())
             {
@@ -116,8 +143,9 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
             //If spell source is an item, add info about this
             if (spell_opt.src_item)
             {
-                const string item_name =
+                const std::string item_name =
                     spell_opt.src_item->name(Item_ref_type::plain, Item_ref_inf::none);
+
                 lines.push_back({"Spell granted by " + item_name + ".", clr_green});
             }
 
@@ -126,14 +154,14 @@ void draw(Menu_browser& browser, const vector<Spell_opt>& spell_opts)
                 render::draw_descr_box(lines);
             }
         }
-    }
 
-    render::draw_box(Rect(Pos(0, 1), Pos(DESCR_X0 - 1, SCREEN_H - 1)));
+        ++p.y;
+    }
 
     render::update_screen();
 }
 
-void spells_avail(vector<Spell_opt>& out)
+void spells_avail(std::vector<Spell_opt>& out)
 {
     out.clear();
 
@@ -253,16 +281,20 @@ void cleanup()
     prev_cast_ = Spell_opt();
 }
 
-void store_to_save_lines(vector<string>& lines)
+void store_to_save_lines(std::vector<std::string>& lines)
 {
     lines.push_back(to_str(known_spells_.size()));
 
-    for (Spell* s : known_spells_) {lines.push_back(to_str(int(s->id())));}
+    for (Spell* s : known_spells_)
+    {
+        lines.push_back(to_str(int(s->id())));
+    }
 }
 
-void setup_from_save_lines(vector<string>& lines)
+void setup_from_save_lines(std::vector<std::string>& lines)
 {
     const int NR_SPELLS = to_int(lines.front());
+
     lines.erase(begin(lines));
 
     for (int i = 0; i < NR_SPELLS; ++i)
@@ -275,7 +307,7 @@ void setup_from_save_lines(vector<string>& lines)
 
 void player_select_spell_to_cast()
 {
-    vector<Spell_opt> spell_opts;
+    std::vector<Spell_opt> spell_opts;
     spells_avail(spell_opts);
 
     if (spell_opts.empty())
@@ -334,7 +366,7 @@ void try_cast_prev_spell()
     {
         //Checking if previous spell is still available (it could for example have been
         //granted by an item that was dropped)
-        vector<Spell_opt> spell_opts;
+        std::vector<Spell_opt> spell_opts;
         spells_avail(spell_opts);
 
         auto spell_opt_cmp = [&](const Spell_opt & opt) {return opt.spell == prev_cast_.spell;};
@@ -345,12 +377,12 @@ void try_cast_prev_spell()
 
     if (is_prev_spell_ok)
     {
-        TRACE << "Previous spell is available, casting" << endl;
+        TRACE << "Previous spell is available, casting" << std::endl;
         try_cast(prev_cast_);
     }
     else
     {
-        TRACE << "No previous spell set, player picks spell instead" << endl;
+        TRACE << "No previous spell set, player picks spell instead" << std::endl;
         player_select_spell_to_cast();
     }
 

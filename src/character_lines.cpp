@@ -87,7 +87,7 @@ void draw()
     //Wielded weapon
     pos.x = X_WIELDED;
 
-    Item* item_wielded = map::player->inv().item_in_slot(Slot_id::wielded);
+    Item* item_wielded = map::player->inv().item_in_slot(Slot_id::wpn);
 
     if (item_wielded)
     {

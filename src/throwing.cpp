@@ -142,7 +142,7 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
         {
             data = Throw_att_data(&actor_throwing, tgt_cell, cur_pos, item_thrown, aim_lvl);
 
-            if (data.attack_result >= success_small && !data.is_ethereal_defender_missed)
+            if (data.att_result >= success && !data.is_ethereal_defender_missed)
             {
                 if (map::cells[cur_pos.x][cur_pos.y].is_seen_by_player)
                 {

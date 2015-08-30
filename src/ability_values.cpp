@@ -46,7 +46,6 @@ int Ability_vals::val(const Ability_id id,
                 ret += 4;
             }
 
-
             break;
 
         case Ability_id::melee:
@@ -196,47 +195,53 @@ void Ability_vals::change_val(const Ability_id ability, const int CHANGE)
 namespace ability_roll
 {
 
-Ability_roll_result roll(const int TOT_SKILL_VALUE)
+Ability_roll_result roll(const int TOT_SKILL_VALUE, const Actor* const actor_rolling)
 {
     const int ROLL = rnd::percent();
 
-    const int SUCC_CRI_LMT = int(ceil(float(TOT_SKILL_VALUE) / 20.0));
-    const int SUCC_BIG_LMT = int(ceil(float(TOT_SKILL_VALUE) / 5.0));
-    const int SUCC_NRM_LMT = int(ceil(float(TOT_SKILL_VALUE) * 4.0 / 5.0));
-    const int SUCC_SML_LMT = TOT_SKILL_VALUE;
-    const int FAIL_SML_LMT = 2 * TOT_SKILL_VALUE - SUCC_NRM_LMT;
-    const int FAIL_NRM_LMT = 2 * TOT_SKILL_VALUE - SUCC_BIG_LMT;
-    const int FAIL_BIG_LMT = 98;
+    const bool IS_CURSED    = actor_rolling && actor_rolling->has_prop(Prop_id::cursed);
+    const bool IS_BLESSED   = actor_rolling && actor_rolling->has_prop(Prop_id::blessed);
 
-    if (ROLL <= SUCC_CRI_LMT) return success_critical;
+    //Critical success?
+    Range crit_success_range(1, 2);
 
-    if (ROLL <= SUCC_BIG_LMT) return success_big;
+    if (IS_BLESSED)
+    {
+        //Increase critical success range while blessed
+        crit_success_range.max = 5;
+    }
+    else if (IS_CURSED)
+    {
+        //Never critically succeed while cursed
+        crit_success_range.set(-1, -1);
+    }
 
-    if (ROLL <= SUCC_NRM_LMT) return success_normal;
+    if (utils::is_val_in_range(ROLL, crit_success_range))
+    {
+        return Ability_roll_result::success_critical;
+    }
 
-    if (ROLL <= SUCC_SML_LMT) return success_small;
+    //Critical fail?
+    Range crit_fail_range(99, 100);
 
-    if (ROLL <= FAIL_SML_LMT) return fail_small;
+    if (IS_BLESSED)
+    {
+        //Never critically fail while blessed
+        crit_fail_range.set(-1, -1);
+    }
+    else if (IS_CURSED)
+    {
+        //Increase critical fail range while cursed
+        crit_fail_range.min = 95;
+    }
 
-    if (ROLL <= FAIL_NRM_LMT) return fail_normal;
+    if (utils::is_val_in_range(ROLL, crit_fail_range))
+    {
+        return Ability_roll_result::fail_critical;
+    }
 
-    if (ROLL <= FAIL_BIG_LMT) return fail_big;
-
-    return fail_critical;
-
-    /* Example:
-    -----------
-    Ability = 50
-
-    Roll:
-    1  -   3: Critical  success
-    4  -  10: Big       success
-    11 -  40: Normal    success
-    41 -  50: Small     Success
-    51 -  60: Small     Fail
-    61 -  90: Normal    Fail
-    91 -  98: Big       Fail
-    99 - 100: Critical  Fail */
+    return ROLL <= TOT_SKILL_VALUE ?
+           Ability_roll_result::success : Ability_roll_result::fail;
 }
 
 } //ability_roll

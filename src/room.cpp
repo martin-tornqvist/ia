@@ -49,21 +49,22 @@ void init_room_bucket()
 
     if (DLVL <= DLVL_LAST_EARLY_GAME)
     {
-        add_to_room_bucket(Room_type::human,    rnd::range(2, 4));
-        add_to_room_bucket(Room_type::ritual,   rnd::range(1, 1));
-        add_to_room_bucket(Room_type::spider,   rnd::range(0, 3));
-        add_to_room_bucket(Room_type::crypt,    rnd::range(1, 4));
-        add_to_room_bucket(Room_type::monster,  rnd::range(0, 3));
+        add_to_room_bucket(Room_type::human,    rnd::range(0, 4));
+        add_to_room_bucket(Room_type::ritual,   rnd::range(0, 1));
+        add_to_room_bucket(Room_type::spider,   rnd::range(0, 2));
+        add_to_room_bucket(Room_type::crypt,    rnd::range(0, 4));
+        add_to_room_bucket(Room_type::monster,  rnd::range(0, 2));
         add_to_room_bucket(Room_type::flooded,  rnd::range(0, 1));
         add_to_room_bucket(Room_type::muddy,    rnd::range(0, 1));
 
-        const size_t NR_PLAIN_ROOM_PER_THEMED = 1;
+        //Add one plain room for every non-plain room
+        const size_t NR_PLAIN_ROOMS = room_bucket_.size();
 
-        add_to_room_bucket(Room_type::plain, room_bucket_.size() * NR_PLAIN_ROOM_PER_THEMED);
+        add_to_room_bucket(Room_type::plain, NR_PLAIN_ROOMS);
     }
     else if (DLVL <= DLVL_LAST_MID_GAME)
     {
-        add_to_room_bucket(Room_type::human,    rnd::range(1, 3));
+        add_to_room_bucket(Room_type::human,    rnd::range(0, 2));
         add_to_room_bucket(Room_type::ritual,   rnd::range(1, 1));
         add_to_room_bucket(Room_type::spider,   rnd::range(0, 3));
         add_to_room_bucket(Room_type::crypt,    rnd::range(0, 4));
@@ -74,9 +75,10 @@ void init_room_bucket()
         add_to_room_bucket(Room_type::chasm,    rnd::range(0, 2));
         add_to_room_bucket(Room_type::forest,   rnd::range(1, 4));
 
-        const size_t NR_PLAIN_ROOM_PER_THEMED = 1;
+        //Add one plain room for every non-plain room
+        const size_t NR_PLAIN_ROOMS = room_bucket_.size();
 
-        add_to_room_bucket(Room_type::plain, room_bucket_.size() * NR_PLAIN_ROOM_PER_THEMED);
+        add_to_room_bucket(Room_type::plain, NR_PLAIN_ROOMS);
     }
     else
     {
@@ -85,7 +87,7 @@ void init_room_bucket()
         add_to_room_bucket(Room_type::flooded,  rnd::range(0, 2));
         add_to_room_bucket(Room_type::muddy,    rnd::range(0, 2));
         add_to_room_bucket(Room_type::cave,     rnd::range(3, 4));
-        add_to_room_bucket(Room_type::chasm,    rnd::range(0, 2));
+        add_to_room_bucket(Room_type::chasm,    rnd::range(0, 3));
         add_to_room_bucket(Room_type::forest,   rnd::range(1, 4));
     }
 

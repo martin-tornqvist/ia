@@ -1361,7 +1361,7 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::dodge_att, 75);
     d.natural_props[int(Prop_id::flying)] = true;
     d.natural_props[int(Prop_id::infravis)] = true;
-    d.spawn_min_dlvl = 0;
+    d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = 10;
     d.group_size = Mon_group_size::few;
     d.actor_size = Actor_size::floor;

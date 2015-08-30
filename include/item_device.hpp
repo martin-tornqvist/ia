@@ -15,9 +15,15 @@ public:
 
     virtual Consume_item activate(Actor* const actor) override = 0;
 
-    Clr interface_clr() const override final {return clr_cyan;}
+    Clr interface_clr() const override final
+    {
+        return clr_cyan;
+    }
 
-    virtual void on_std_turn_in_inv(const Inv_type inv_type) override {(void)inv_type;}
+    virtual void on_std_turn_in_inv(const Inv_type inv_type) override
+    {
+        (void)inv_type;
+    }
 
     void identify(const Verbosity verbosity) override;
 };
@@ -33,8 +39,8 @@ public:
 
     virtual std::string name_inf() const override;
 
-    virtual void store_to_save_lines(std::vector<std::string>& lines)    override;
-    virtual void setup_from_save_lines(std::vector<std::string>& lines)  override;
+    virtual void store_to_save_lines(std::vector<std::string>& lines) override;
+    virtual void setup_from_save_lines(std::vector<std::string>& lines) override;
 
     Condition condition_;
 

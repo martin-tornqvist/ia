@@ -9,21 +9,19 @@
 #include "map_parsing.hpp"
 #include "utils.hpp"
 
-using namespace std;
-
 namespace populate_items
 {
 
 void mk_items_on_floor()
 {
-    int nr_spawns = rnd::range(6, 8);
+    int nr_spawns = rnd::range(3, 5);
 
     if (player_bon::traits[int(Trait::treasure_hunter)])
     {
         nr_spawns += 2;
     }
 
-    vector<Item_id> item_bucket;
+    std::vector<Item_id> item_bucket;
     item_bucket.clear();
 
     for (int i = 0; i < int(Item_id::END); ++i)
@@ -47,7 +45,7 @@ void mk_items_on_floor()
 
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_items(), blocked);
-    vector<Pos> free_cells;
+    std::vector<Pos> free_cells;
     utils::mk_vector_from_bool_map(false, blocked, free_cells);
 
     for (int i = 0; i < nr_spawns; ++i)

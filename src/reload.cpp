@@ -133,7 +133,7 @@ bool reload_wielded_wpn(Actor& actor_reloading)
     bool did_act = false;
 
     Inventory& inv          = actor_reloading.inv();
-    Item* const wpn_item    = inv.item_in_slot(Slot_id::wielded);
+    Item* const wpn_item    = inv.item_in_slot(Slot_id::wpn);
 
     if (!wpn_item)
     {

@@ -91,7 +91,7 @@ bool Actor::is_spotting_sneaking_actor(Actor& other)
                                           PLAYER_SEARCH_MOD,
                                           99);
 
-    return ability_roll::roll(SNEAK_TOT) <= fail_small;
+    return ability_roll::roll(SNEAK_TOT, &other) <= fail;
 }
 
 int Actor::hp_max(const bool WITH_MODIFIERS) const

@@ -359,7 +359,7 @@ void bg_descr(const Bg id, std::vector<std::string>& out)
         const std::string att_mod_str = to_str(claw_data.melee.hit_chance_mod) + "%";
 
         out.push_back("Cannot use medical equipment, but can instead regenerate Hit Points by "
-                      "feeding on corpses (press [E] to eat)");
+                      "feeding on corpses (press [E])");
         out.push_back(" ");
         out.push_back("Has powerful claws (" + dmg_str + ", +" + att_mod_str + " to hit)");
         out.push_back(" ");

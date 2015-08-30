@@ -288,9 +288,9 @@ void Trap::bump(Actor& actor_bumping)
             chance_to_avoid = std::max(10, chance_to_avoid / 2);
         }
 
-        const Ability_roll_result result = ability_roll::roll(chance_to_avoid);
+        const Ability_roll_result result = ability_roll::roll(chance_to_avoid, &actor_bumping);
 
-        if (result >= success_small)
+        if (result >= success)
         {
             if (!is_hidden_ && ACTOR_CAN_SEE)
             {
@@ -321,10 +321,11 @@ void Trap::bump(Actor& actor_bumping)
                 const bool IS_ACTOR_SEEN_BY_PLAYER =
                     map::player->can_see_actor(actor_bumping);
 
-                const int CHANCE_TO_AVOID = BASE_CHANCE_TO_AVOID + DODGE_SKILL;
-                const Ability_roll_result result = ability_roll::roll(CHANCE_TO_AVOID);
+                const int AVOID_SKILL = BASE_CHANCE_TO_AVOID + DODGE_SKILL;
 
-                if (result >= success_small)
+                const Ability_roll_result result = ability_roll::roll(AVOID_SKILL, &actor_bumping);
+
+                if (result >= success)
                 {
                     if (!is_hidden_ && IS_ACTOR_SEEN_BY_PLAYER)
                     {
@@ -358,7 +359,7 @@ void Trap::disarm()
 
     if (trap_type() == Trap_id::web)
     {
-        Item* item = map::player->inv().item_in_slot(Slot_id::wielded);
+        Item* item = map::player->inv().item_in_slot(Slot_id::wpn);
 
         if (item)
         {
@@ -489,7 +490,7 @@ void Trap::player_try_spot_hidden()
 
         const int SKILL = abilities.val(Ability_id::searching, true, *(map::player));
 
-        if (ability_roll::roll(SKILL) >= success_small)
+        if (ability_roll::roll(SKILL, map::player) >= success)
         {
             reveal(true);
         }
@@ -1057,7 +1058,7 @@ void Trap_web::trigger()
     {
         TRACE << "Checking if player has machete" << std::endl;
         const auto& player_inv      = map::player->inv();
-        Item* const item_wielded    = player_inv.item_in_slot(Slot_id::wielded);
+        Item* const item_wielded    = player_inv.item_in_slot(Slot_id::wpn);
         const bool  HAS_MACHETE     = item_wielded && item_wielded->data().id == Item_id::machete;
 
         if (HAS_MACHETE)

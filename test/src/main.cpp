@@ -803,7 +803,7 @@ TEST_FIXTURE(Basic_fixture, saving_game)
 
     //Put new items
     Item* item = item_factory::mk(Item_id::mi_go_gun);
-    inv.put_in_slot(Slot_id::wielded, item);
+    inv.put_in_slot(Slot_id::wpn, item);
 
     //Wear asbestos suit to test properties from wearing items
     item = item_factory::mk(Item_id::armor_asb_suit);
@@ -897,7 +897,7 @@ TEST_FIXTURE(Basic_fixture, loading_game)
     auto& genInv    = inv.backpack_;
 
     CHECK_EQUAL(6, int(genInv.size()));
-    CHECK_EQUAL(int(Item_id::mi_go_gun), int(inv.item_in_slot(Slot_id::wielded)->data().id));
+    CHECK_EQUAL(int(Item_id::mi_go_gun), int(inv.item_in_slot(Slot_id::wpn)->data().id));
     CHECK_EQUAL(int(Item_id::armor_asb_suit), int(inv.item_in_slot(Slot_id::body)->data().id));
 
     int nr_clip_with_1 = 0;

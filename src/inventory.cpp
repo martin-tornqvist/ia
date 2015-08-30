@@ -25,14 +25,14 @@ Inventory::Inventory(Actor* const owning_actor) :
         slots_[int(id)] = {id, name};
     };
 
-    set_slot(Slot_id::wielded,      "Wielding");
-    set_slot(Slot_id::wielded_alt,  "Prepared");
-    set_slot(Slot_id::thrown,       "Thrown");
-    set_slot(Slot_id::body,         "Body");
-    set_slot(Slot_id::head,         "Head");
-    set_slot(Slot_id::neck,         "Neck");
-    set_slot(Slot_id::ring1,        "Ring");
-    set_slot(Slot_id::ring2,        "Ring");
+    set_slot(Slot_id::wpn,      "Wielded");
+    set_slot(Slot_id::wpn_alt,  "Prepared");
+    set_slot(Slot_id::thrown,   "Thrown");
+    set_slot(Slot_id::body,     "Body");
+    set_slot(Slot_id::head,     "Head");
+    set_slot(Slot_id::neck,     "Neck");
+    set_slot(Slot_id::ring1,    "Ring");
+    set_slot(Slot_id::ring2,    "Ring");
 }
 
 Inventory::~Inventory()
@@ -240,7 +240,7 @@ void Inventory::drop_all_non_intrinsic(const Pos& pos)
 
 bool Inventory::has_ammo_for_firearm_in_inventory()
 {
-    Wpn* weapon = static_cast<Wpn*>(item_in_slot(Slot_id::wielded));
+    Wpn* weapon = static_cast<Wpn*>(item_in_slot(Slot_id::wpn));
 
     //If weapon found
     if (weapon)
@@ -459,11 +459,11 @@ void Inventory::equip_backpack_item(const size_t BACKPACK_IDX, const Slot_id slo
 
         switch (slot_id)
         {
-        case Slot_id::wielded:
+        case Slot_id::wpn:
             msg = "I am now wielding " + name + ".";
             break;
 
-        case Slot_id::wielded_alt:
+        case Slot_id::wpn_alt:
             msg = "I am now using " + name + " as a prepared weapon.";
             break;
 
@@ -525,11 +525,11 @@ Unequip_allowed Inventory::try_unequip_slot(const Slot_id id)
 
         switch (id)
         {
-        case Slot_id::wielded:
+        case Slot_id::wpn:
             msg = "I put away my " + name + ".";
             break;
 
-        case Slot_id::wielded_alt:
+        case Slot_id::wpn_alt:
             msg = "I put away my " + name + ".";
             break;
 
@@ -569,8 +569,8 @@ Unequip_allowed Inventory::try_unequip_slot(const Slot_id id)
 
 void Inventory::swap_wielded_and_prepared(const bool IS_FREE_TURN)
 {
-    auto& slot1 = slots_[int(Slot_id::wielded)];
-    auto& slot2 = slots_[int(Slot_id::wielded_alt)];
+    auto& slot1 = slots_[int(Slot_id::wpn)];
+    auto& slot2 = slots_[int(Slot_id::wpn_alt)];
     Item* item1 = slot1.item;
     Item* item2 = slot2.item;
     slot1.item  = item2;
@@ -689,6 +689,33 @@ void Inventory::put_in_slot(const Slot_id id, Item* item)
 
     //Should never happen
     assert(false);
+}
+
+Item* Inventory::remove_from_slot(const Slot_id id)
+{
+    assert(id != Slot_id::END);
+
+    for (Inv_slot& slot : slots_)
+    {
+        if (slot.id == id)
+        {
+            Item* item = slot.item;
+
+            if (item)
+            {
+                assert(item->actor_carrying());
+
+                slot.item = nullptr;
+
+                item->on_unequip();
+                item->on_removed_from_inv();
+
+                return item;
+            }
+        }
+    }
+
+    return nullptr;
 }
 
 int Inventory::total_item_weight() const

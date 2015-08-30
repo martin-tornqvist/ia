@@ -608,7 +608,7 @@ void Door::player_try_spot_hidden()
     {
         const int PLAYER_SKILL = map::player->ability(Ability_id::searching, true);
 
-        if (ability_roll::roll(PLAYER_SKILL) >= success_small)
+        if (ability_roll::roll(PLAYER_SKILL, map::player) >= success)
         {
             reveal(true);
         }

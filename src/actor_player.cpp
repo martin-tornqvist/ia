@@ -86,8 +86,8 @@ void Player::mk_start_items()
     }
 
     bool has_pistol         = true;
-    bool has_lantern        = true;
     bool has_medbag         = true;
+    bool has_lantern        = true;
     bool has_leather_jacket = true;
 
     int nr_cartridges   = 2;
@@ -155,7 +155,7 @@ void Player::mk_start_items()
 
         static_cast<Wpn*>(dagger)->melee_dmg_plus_ = 1;
 
-        inv_->put_in_slot(Slot_id::wielded, dagger);
+        inv_->put_in_slot(Slot_id::wpn, dagger);
 
         //Rogue starts with some iron spikes (useful tool)
         inv_->put_in_backpack(item_factory::mk(Item_id::iron_spike, 8));
@@ -174,8 +174,8 @@ void Player::mk_start_items()
     {
         //Ghoul starts with no items
         has_pistol          = false;
-        has_lantern         = false;
         has_medbag          = false;
+        has_lantern         = false;
         has_leather_jacket  = false;
 
         nr_cartridges   = 0;
@@ -219,12 +219,12 @@ void Player::mk_start_items()
             break;
         }
 
-        inv_->put_in_slot(Slot_id::wielded, item_factory::mk(weapon_id));
+        inv_->put_in_slot(Slot_id::wpn, item_factory::mk(weapon_id));
     }
 
     if (has_pistol)
     {
-        inv_->put_in_slot(Slot_id::wielded_alt, item_factory::mk(Item_id::pistol));
+        inv_->put_in_slot(Slot_id::wpn_alt, item_factory::mk(Item_id::pistol));
     }
 
     for (int i = 0; i < nr_cartridges; ++i)
@@ -247,14 +247,14 @@ void Player::mk_start_items()
         inv_->put_in_slot(Slot_id::thrown, item_factory::mk(Item_id::thr_knife, nr_thr_knives));
     }
 
-    if (has_lantern)
-    {
-        inv_->put_in_backpack(item_factory::mk(Item_id::electric_lantern));
-    }
-
     if (has_medbag)
     {
         inv_->put_in_backpack(item_factory::mk(Item_id::medical_bag));
+    }
+
+    if (has_lantern)
+    {
+        inv_->put_in_backpack(item_factory::mk(Item_id::electric_lantern));
     }
 
     if (has_leather_jacket)
@@ -1232,21 +1232,27 @@ void Player::on_std_turn()
 
         if (TURN % turn_nr_incr_shock == 0 && TURN > 1)
         {
+            //Occasionally cause a sudden shock spike, to make it less predictable
             if (rnd::one_in(850))
             {
+                std::string msg = "";
+
                 if (rnd::coin_toss())
                 {
-                    popup::show_msg("I have a bad feeling about this...", true);
+                    msg = "I have a bad feeling about this...";
                 }
                 else
                 {
-                    popup::show_msg("A chill runs down my spine...", true);
+                    msg = "A chill runs down my spine...";
                 }
 
+                msg_log::add(msg, clr_msg_note, false, More_prompt_on_msg::yes);
+
                 incr_shock(Shock_lvl::heavy, Shock_src::misc);
+
                 render::draw_map_and_interface();
             }
-            else
+            else //No randomized shock spike
             {
                 if (map::dlvl != 0)
                 {
@@ -1540,7 +1546,7 @@ void Player::move(Dir dir)
         {
             if (prop_handler_->allow_attack_melee(Verbosity::verbose))
             {
-                Item* const item = inv_->item_in_slot(Slot_id::wielded);
+                Item* const item = inv_->item_in_slot(Slot_id::wpn);
 
                 if (item)
                 {

@@ -19,13 +19,14 @@
 #include "render.hpp"
 #include "sdl_wrapper.hpp"
 #include "knockback.hpp"
+#include "drop.hpp"
 
 Att_data::Att_data(Actor* const attacker,
                    Actor* const defender,
                    const Item& att_item) :
     attacker        (attacker),
     defender        (defender),
-    attack_result   (fail_small),
+    att_result      (fail),
     nr_dmg_rolls    (0),
     nr_dmg_sides    (0),
     dmg_plus        (0),
@@ -74,7 +75,7 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
 
         if (DODGE_CHANCE_TOT > 0)
         {
-            is_defender_dodging = ability_roll::roll(DODGE_CHANCE_TOT) >= success_small;
+            is_defender_dodging = ability_roll::roll(DODGE_CHANCE_TOT, &defender) >= success;
         }
     }
 
@@ -174,7 +175,7 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
             hit_chance += is_big_att_bon ? 50 : (is_small_att_bon ? 20 : 0);
         }
 
-        attack_result = ability_roll::roll(hit_chance);
+        att_result = ability_roll::roll(hit_chance, attacker);
 
         const bool APPLY_UNDEAD_BANE_BON = attacker == map::player &&
                                            player_bon::gets_undead_bane_bon(defender_data);
@@ -204,15 +205,14 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
         }
         else //Attacker not weakened, or not an actor attacking (e.g. an attack from a trap)
         {
-            if (attack_result == success_critical)
+            if (att_result == success_critical)
             {
                 //Critical hit (max damage)
                 dmg_roll    = nr_dmg_rolls * nr_dmg_sides;
                 dmg         = std::max(0, dmg_roll + dmg_plus);
             }
-            else
+            else //Not critical hit
             {
-                //Normal hit
                 dmg_roll    = rnd::dice(nr_dmg_rolls, nr_dmg_sides);
                 dmg         = std::max(0, dmg_roll + dmg_plus);
             }
@@ -326,9 +326,9 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
 
         utils::set_constr_in_range(5, hit_chance_tot, 99);
 
-        attack_result = ability_roll::roll(hit_chance_tot);
+        att_result = ability_roll::roll(hit_chance_tot, attacker);
 
-        if (attack_result >= success_small)
+        if (att_result >= success)
         {
             TRACE_VERBOSE << "Attack roll succeeded" << std::endl;
 
@@ -457,9 +457,9 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
                                   SIZE_MOD          +
                                   unaware_def_mod);
 
-        attack_result = ability_roll::roll(hit_chance_tot);
+        att_result = ability_roll::roll(hit_chance_tot, attacker);
 
-        if (attack_result >= success_small)
+        if (att_result >= success)
         {
             TRACE_VERBOSE << "Attack roll succeeded" << std::endl;
 
@@ -563,8 +563,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
         }
         else //Defender is monster
         {
-            const bool PLAYER_SEE_DEFENDER =
-                map::player->can_see_actor(*att_data.defender);
+            const bool PLAYER_SEE_DEFENDER = map::player->can_see_actor(*att_data.defender);
 
             if (att_data.attacker == map::player)
             {
@@ -597,22 +596,22 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
 
         snd_emit::emit_snd(snd);
     }
-    else if (att_data.attack_result <= fail_small)
+    else if (att_data.att_result <= fail)
     {
+        Sfx_id sfx = wpn.data().melee.miss_sfx;
+
         //---------------------------------------------------------- BAD AIMING
         if (att_data.attacker == map::player)
         {
-            if (att_data.attack_result == fail_small)
+            if (att_data.att_result == fail_critical)
             {
-                msg_log::add("I barely miss!");
+                msg_log::add("I botch the attack completely!");
+
+                sfx = Sfx_id::END;
             }
-            else if (att_data.attack_result == fail_normal)
+            else //Not critical fail
             {
                 msg_log::add("I miss.");
-            }
-            else if (att_data.attack_result == fail_big)
-            {
-                msg_log::add("I miss completely.");
             }
         }
         else if (att_data.attacker) //Attacker is monster
@@ -628,23 +627,12 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
                     other_name = "It";
                 }
 
-                if (att_data.attack_result == fail_small)
-                {
-                    msg_log::add(other_name + " barely misses me!", clr_white, true);
-                }
-                else if (att_data.attack_result == fail_normal)
-                {
-                    msg_log::add(other_name + " misses me.", clr_white, true);
-                }
-                else if (att_data.attack_result == fail_big)
-                {
-                    msg_log::add(other_name + " misses me completely.", clr_white, true);
-                }
+                msg_log::add(other_name + " misses me.", clr_white, true);
             }
         };
 
-        Snd snd(snd_msg, wpn.data().melee.miss_sfx, Ignore_msg_if_origin_seen::yes,
-                att_data.defender->pos, att_data.attacker, Snd_vol::low, snd_alerts_mon);
+        Snd snd(snd_msg, sfx, Ignore_msg_if_origin_seen::yes, att_data.defender->pos,
+                att_data.attacker, Snd_vol::low, snd_alerts_mon);
 
         snd_emit::emit_snd(snd);
     }
@@ -1044,7 +1032,7 @@ void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_po
                     att_data.defender                       &&
                     !proj->is_obstructed                    &&
                     !att_data.is_ethereal_defender_missed   &&
-                    att_data.attack_result >= success_small &&
+                    att_data.att_result >= success &&
                     (att_data.defender_size >= Actor_size::humanoid || IS_ACTOR_AIMED_FOR))
                 {
                     //RENDER ACTOR HIT
@@ -1092,7 +1080,7 @@ void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_po
                         {
                             const Att_data* const cur_data = proj->att_data;
 
-                            if (cur_data->attack_result >= success_small)
+                            if (cur_data->att_result >= success)
                             {
                                 const bool IS_SPIKE_GUN = wpn.data().id == Item_id::spike_gun;
 
@@ -1342,7 +1330,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aim_pos)
                                        wpn,
                                        intended_aim_lvl);
 
-                if (data.attack_result >= success_small && !data.is_ethereal_defender_missed)
+                if (data.att_result >= success && !data.is_ethereal_defender_missed)
                 {
                     if (map::cells[cur_pos.x][cur_pos.y].is_seen_by_player)
                     {
@@ -1469,7 +1457,7 @@ void melee(Actor* const attacker, const Pos& attacker_origin, Actor& defender, c
 
     print_melee_msg_and_mk_snd(att_data, wpn);
 
-    const bool IS_HIT = att_data.attack_result >= success_small &&
+    const bool IS_HIT = att_data.att_result >= success          &&
                         !att_data.is_ethereal_defender_missed   &&
                         !att_data.is_defender_dodging;
 
@@ -1491,14 +1479,119 @@ void melee(Actor* const attacker, const Pos& attacker_origin, Actor& defender, c
         {
             knock_back::try_knock_back(defender, attacker_origin, false);
         }
+    }
 
-//        if (int(wpn.data().weight) > int(Item_weight::light) && !att_data.is_intrinsic_att)
-//        {
-//            Snd snd("", Sfx_id::END, Ignore_msg_if_origin_seen::yes, defender.pos, nullptr,
-//                    Snd_vol::low, Alerts_mon::yes);
-//
-//            snd_emit::emit_snd(snd);
-//        }
+    if (attacker == map::player)
+    {
+        //Player critically fails melee attack?
+        if (att_data.att_result == fail_critical)
+        {
+            Player& player = *map::player;
+
+            const int ROLL = rnd::range(1, 7);
+
+            switch (ROLL)
+            {
+            //Exhausted (weakened)
+            case 1:
+            {
+                Prop* prop = new Prop_weakened(Prop_turns::specific, rnd::range(4, 7));
+
+                player.prop_handler().try_add_prop(prop, Prop_src::intr, false, Verbosity::silent);
+
+                msg_log::add("I am exhausted.", clr_msg_note, true, More_prompt_on_msg::yes);
+            }
+            break;
+
+            //Off-balance
+            case 2:
+            {
+                msg_log::add("I am off-balance.", clr_msg_note, true, More_prompt_on_msg::yes);
+
+                Prop* prop = new Prop_paralyzed(Prop_turns::specific, rnd::range(1, 2));
+
+                player.prop_handler().try_add_prop(prop, Prop_src::intr, false, Verbosity::silent);
+            }
+            break;
+
+            //Drop weaon
+            case 3:
+            {
+                Item* item = player.inv().remove_from_slot(Slot_id::wpn);
+
+                if (item)
+                {
+                    std::string item_name = item->name(Item_ref_type::plain, Item_ref_inf::none);
+
+                    bool blocked[MAP_W][MAP_H];
+
+                    const Pos fov_p = player.pos;
+
+                    Rect fov_rect = fov::get_fov_rect(fov_p);
+
+                    map_parse::run(cell_check::Blocks_move_cmn(false), blocked,
+                                   Map_parse_mode::overwrite, fov_rect);
+
+                    Los_result fov_result[MAP_W][MAP_H];
+
+                    fov::run(fov_p, blocked, fov_result);
+
+                    std::vector<Pos> p_bucket;
+
+                    for (int x = fov_rect.p0.x; x <= fov_rect.p1.x; ++x)
+                    {
+                        for (int y = fov_rect.p0.y; y <= fov_rect.p1.y; ++y)
+                        {
+                            if (!fov_result[x][y].is_blocked_hard)
+                            {
+                                p_bucket.push_back(Pos(x, y));
+                            }
+                        }
+                    }
+
+                    Pos item_p(map::player->pos);
+
+                    if (!p_bucket.empty())
+                    {
+                        const int IDX = size_t(rnd::range(0, p_bucket.size() - 1));
+
+                        item_p = p_bucket[IDX];
+                    }
+
+                    msg_log::add("The " + item_name + " flies from my hands!", clr_msg_note, true,
+                                 More_prompt_on_msg::yes);
+
+                    item_drop::drop_item_on_map(item_p, *item);
+                }
+            }
+            break;
+
+            //Weapon breaks
+            case 4:
+            {
+                //Don't allow item breaking on intro level
+                if (map::dlvl != 0)
+                {
+                    Item* item = player.inv().remove_from_slot(Slot_id::wpn);
+
+                    if (item)
+                    {
+                        std::string item_name = item->name(Item_ref_type::plain,
+                                                           Item_ref_inf::none);
+
+                        msg_log::add("My " + item_name + " breaks!", clr_msg_note, true,
+                                     More_prompt_on_msg::yes);
+                        delete item;
+                    }
+                }
+            }
+            break;
+
+            //5 to 7 = Nothing happens
+            default:
+                break;
+            }
+        }
     }
 
     if (defender.is_player())
@@ -1510,7 +1603,7 @@ void melee(Actor* const attacker, const Pos& attacker_origin, Actor& defender, c
     }
     else //Defender is monster
     {
-        Mon* const mon = static_cast<Mon*>(&defender);
+        Mon* const mon      = static_cast<Mon*>(&defender);
         mon->aware_counter_ = mon->data().nr_turns_aware;
     }
 

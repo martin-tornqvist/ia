@@ -53,11 +53,17 @@ std::vector<std::string> Strange_device::descr() const
 
         switch (condition_)
         {
-        case Condition::fine:     cond_str += "to be in fine condition.";    break;
+        case Condition::fine:
+            cond_str += "to be in fine condition.";
+            break;
 
-        case Condition::shoddy:   cond_str += "to be in shoddy condition.";  break;
+        case Condition::shoddy:
+            cond_str += "to be in shoddy condition.";
+            break;
 
-        case Condition::breaking: cond_str += "almost broken.";              break;
+        case Condition::breaking:
+            cond_str += "almost broken.";
+            break;
         }
 
         descr.push_back(cond_str);
@@ -76,16 +82,18 @@ Consume_item Strange_device::activate(Actor* const actor)
 
     if (data_->is_identified)
     {
-        const std::string item_name   = name(Item_ref_type::plain, Item_ref_inf::none);
-        const std::string item_name_a  = name(Item_ref_type::a, Item_ref_inf::none);
+        const std::string item_name     = name(Item_ref_type::plain, Item_ref_inf::none);
+        const std::string item_name_a   = name(Item_ref_type::a, Item_ref_inf::none);
 
         msg_log::add("I activate " + item_name_a + "...");
 
         //Damage user? Fail to run effect? Condition degrade? Warning?
         const std::string hurt_msg  = "It hits me with a jolt of electricity!";
+
         bool is_effect_failed   = false;
         bool is_cond_degrade    = false;
-        bool is_warning        = false;
+        bool is_warning         = false;
+
         int bon = 0;
 
         if (actor->has_prop(Prop_id::blessed))
@@ -110,9 +118,9 @@ Consume_item Strange_device::activate(Actor* const actor)
                 actor->hit(rnd::dice(2, 4), Dmg_type::electric);
             }
 
-            is_effect_failed  = RND == 3 || RND == 4;
-            is_cond_degrade   = RND <= 2;
-            is_warning       = RND == 7 || RND == 8;
+            is_effect_failed    = RND == 3 || RND == 4;
+            is_cond_degrade     = RND <= 2;
+            is_warning          = RND == 7 || RND == 8;
         } break;
 
         case Condition::shoddy:
@@ -123,15 +131,15 @@ Consume_item Strange_device::activate(Actor* const actor)
                 actor->hit(rnd::dice(1, 4), Dmg_type::electric);
             }
 
-            is_effect_failed  = RND == 3;
-            is_cond_degrade   = RND <= 2;
-            is_warning       = RND == 5 || RND == 6;
+            is_effect_failed    = RND == 3;
+            is_cond_degrade     = RND <= 2;
+            is_warning          = RND == 5 || RND == 6;
         } break;
 
         case Condition::fine:
         {
-            is_cond_degrade   = RND <= 2;
-            is_warning       = RND == 3 || RND == 4;
+            is_cond_degrade     = RND <= 2;
+            is_warning          = RND == 3 || RND == 4;
         } break;
         }
 

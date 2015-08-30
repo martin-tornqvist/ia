@@ -70,7 +70,10 @@ Item_data_t::Item_melee_data::Item_melee_data() :
 
 Item_data_t::Item_melee_data::~Item_melee_data()
 {
-    if (prop_applied) {delete prop_applied;}
+    if (prop_applied)
+    {
+        delete prop_applied;
+    }
 }
 
 Item_data_t::Item_ranged_data::Item_ranged_data() :
@@ -401,6 +404,7 @@ void init_data_list()
     d.melee.att_msgs = {"strike", "strikes me with a shotgun"};
     d.ranged.max_ammo = 2;
     d.ranged.dmg = Dice_param(8, 3);
+    d.ranged.hit_chance_mod = -5;
     d.ranged.effective_range = 3;
     d.ranged.ammo_item_id = Item_id::shotgun_shell;
     d.ranged.att_msgs = {"fire", "fires a shotgun"};
@@ -429,6 +433,7 @@ void init_data_list()
     d.melee.att_msgs = {"strike", "strikes me with a shotgun"};
     d.ranged.max_ammo = 8;
     d.ranged.dmg = Dice_param(6, 3);
+    d.ranged.hit_chance_mod = 5;
     d.ranged.effective_range = 5;
     d.ranged.ammo_item_id = Item_id::shotgun_shell;
     d.ranged.att_msgs = {"fire", "fires a shotgun"};
@@ -585,7 +590,7 @@ void init_data_list()
     d.id = Item_id::mi_go_gun;
     d.base_name =
     {
-        "Mi-go Electric Gun", "Mi-go Electric Gun", "a Mi-go Electric Gun"
+        "Electric Gun", "Electric Gun", "an Electric Gun"
     };
     d.base_descr =
     {

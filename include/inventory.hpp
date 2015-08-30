@@ -13,8 +13,8 @@ enum class Item_id;
 
 enum class Slot_id
 {
-    wielded,
-    wielded_alt,
+    wpn,
+    wpn_alt,
     thrown,
     body,
     head,
@@ -32,7 +32,7 @@ struct Inv_slot
         item    (nullptr) {}
 
     Inv_slot() :
-        id      (Slot_id::wielded),
+        id      (Slot_id::wpn),
         name    (""),
         item    (nullptr) {}
 
@@ -59,8 +59,10 @@ public:
 
     //NOTE: All "put_in_*" functions should NEVER be called on items already in the inventory.
 
-    //Item will be put in backpack if the slot is occupied.
+    //NOTE: Item will be put in backpack if the slot is occupied.
     void put_in_slot(const Slot_id id, Item* item);
+
+    Item* remove_from_slot(const Slot_id id);
 
     void put_in_backpack(Item* item);
 

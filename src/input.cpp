@@ -319,7 +319,7 @@ void handle_map_mode_key_press(const Key_data& d)
             map::player->is_alive() &&
             map::player->prop_handler().allow_attack_ranged(Verbosity::verbose))
         {
-            auto* const item = map::player->inv().item_in_slot(Slot_id::wielded);
+            auto* const item = map::player->inv().item_in_slot(Slot_id::wpn);
 
             if (item)
             {
@@ -509,8 +509,8 @@ void handle_map_mode_key_press(const Key_data& d)
 
             Inventory& inv = map::player->inv();
 
-            Item* const wielded   = inv.item_in_slot(Slot_id::wielded);
-            Item* const alt       = inv.item_in_slot(Slot_id::wielded_alt);
+            Item* const wielded   = inv.item_in_slot(Slot_id::wpn);
+            Item* const alt       = inv.item_in_slot(Slot_id::wpn_alt);
             const string ALT_NAME = alt ? alt->name(Item_ref_type::a) : "";
 
             if (wielded || alt)

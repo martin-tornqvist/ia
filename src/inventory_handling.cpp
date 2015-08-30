@@ -123,14 +123,14 @@ void filter_player_backpack_equip(const Slot_id slot_to_equip)
 
         switch (slot_to_equip)
         {
-        case Slot_id::wielded:
+        case Slot_id::wpn:
             if (data.melee.is_melee_wpn || data.ranged.is_ranged_wpn)
             {
                 backpack_indexes_to_show_.push_back(i);
             }
             break;
 
-        case Slot_id::wielded_alt:
+        case Slot_id::wpn_alt:
             if (data.melee.is_melee_wpn || data.ranged.is_ranged_wpn)
             {
                 backpack_indexes_to_show_.push_back(i);

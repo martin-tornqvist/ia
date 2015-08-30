@@ -48,27 +48,18 @@ private:
     int ability_list[int(Ability_id::END)];
 };
 
-//TODO: Is this really necessary? Most functionality nowadays just roll their own chances.
-//Probably the only case where fail_small and fail_big is used is for melee attack messages.
-//It seems simpler and more transparent to just use the rnd functions for rolling,
-//together with Ability_vals::val() for retrieving abilities to roll against.
 enum Ability_roll_result
 {
     fail_critical,
-    fail_big,
-    fail_normal,
-    fail_small,
-    success_small,
-    success_normal,
-    success_big,
+    fail,
+    success,
     success_critical
 };
 
-//TODO: See comment above for Ability_roll_result
 namespace ability_roll
 {
 
-Ability_roll_result roll(const int TOT_SKILL_VALUE);
+Ability_roll_result roll(const int TOT_SKILL_VALUE, const Actor* const actor_rolling);
 
 } //ability_roll
 

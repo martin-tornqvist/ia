@@ -218,8 +218,9 @@ void Rigid::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* act
             {
                 msg_log::add("I am off-balance.");
 
-                actor->prop_handler().try_add_prop(
-                    new Prop_paralyzed(Prop_turns::specific, 2));
+                Prop* prop = new Prop_paralyzed(Prop_turns::specific, rnd::range(1, 3));
+
+                actor->prop_handler().try_add_prop(prop, Prop_src::intr, false, Verbosity::silent);
             }
 
         }
@@ -1112,7 +1113,10 @@ string Liquid_shallow::name(const Article article) const
 {
     string ret = "";
 
-    if (article == Article::the) {ret += "the ";}
+    if (article == Article::the)
+    {
+        ret += "the ";
+    }
 
     ret += "a pool of ";
 
@@ -2393,7 +2397,7 @@ void Chest::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* con
 
     //TODO: Force lock with weapon
 //      Inventory& inv    = map::player->inv();
-//      Item* const item  = inv.item_in_slot(Slot_id::wielded);
+//      Item* const item  = inv.item_in_slot(Slot_id::wpn);
 //
 //      if(!item) {
 //        msg_log::add(
@@ -2412,7 +2416,7 @@ void Chest::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* con
 //          if(wpn->melee_dmg_plus == 0) {
 //            msg_log::add("My " + wpn_name + " breaks!");
 //            delete wpn;
-//            inv.slot(Slot_id::wielded)->item = nullptr;
+//            inv.slot(Slot_id::wpn)->item = nullptr;
 //          } else {
 //            msg_log::add("My " + wpn_name + " is damaged!");
 //            wpn->melee_dmg_plus--;

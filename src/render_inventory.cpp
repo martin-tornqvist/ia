@@ -83,8 +83,7 @@ void draw_weight_pct_and_dots(const Pos item_pos,
     }
 
     const std::string   dots_str(dots_w, '.');
-    Clr                 dots_clr = IS_MARKED ?
-                                   clr_white : item_name_clr;
+    Clr                 dots_clr = IS_MARKED ? clr_white : item_name_clr;
 
     if (!IS_MARKED)
     {
@@ -171,7 +170,7 @@ void draw_inv(const Menu_browser& browser)
 
     p.set(0, INV_Y0);
 
-    std::string key_str = "a)";
+    std::string key_str = "a) ";
 
     for (int i = idx_range_shown.min; i <= idx_range_shown.max; ++i)
     {
@@ -208,7 +207,7 @@ void draw_inv(const Menu_browser& browser)
                 const Item_data_t&  d       = item->data();
                 Item_ref_att_inf    att_inf = Item_ref_att_inf::none;
 
-                if (slot.id == Slot_id::wielded || slot.id == Slot_id::wielded_alt)
+                if (slot.id == Slot_id::wpn || slot.id == Slot_id::wpn_alt)
                 {
                     //Thrown weapons are forced to show melee info instead
                     att_inf = d.main_att_mode == Main_att_mode::thrown ?
@@ -320,7 +319,7 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
 
     p.set(0, INV_Y0);
 
-    std::string key_str = "a)";
+    std::string key_str = "a) ";
 
     for (int i = idx_range_shown.min; i <= idx_range_shown.max; ++i)
     {
@@ -328,8 +327,7 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
 
         const bool IS_IDX_MARKED = BROWSER_Y == i;
 
-        Clr clr = IS_IDX_MARKED ?
-                  clr_white_high : clr_menu_drk;
+        Clr clr = IS_IDX_MARKED ? clr_white_high : clr_menu_drk;
 
         render::draw_text(key_str, panel, p, clr);
 
@@ -351,8 +349,7 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
 
         text_format::first_to_upper(item_name);
 
-        clr = IS_IDX_MARKED ?
-              clr_white_high : item->interface_clr();
+        clr = IS_IDX_MARKED ? clr_white_high : item->interface_clr();
 
         render::draw_text(item_name, panel, p, clr);
 
@@ -394,13 +391,13 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
 
     switch (slot_id_to_equip)
     {
-    case Slot_id::wielded:
+    case Slot_id::wpn:
         str = HAS_ITEM ?
               "Wield which item?" :
               "I carry no weapon to wield.";
         break;
 
-    case Slot_id::wielded_alt:
+    case Slot_id::wpn_alt:
         str = HAS_ITEM ?
               "Prepare which weapon?" :
               "I carry no weapon to wield.";
@@ -466,7 +463,7 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
 
         p.set(0, INV_Y0);
 
-        std::string key_str = "a)";
+        std::string key_str = "a) ";
 
         for (int i = idx_range_shown.min; i <= idx_range_shown.max; ++i)
         {
@@ -474,8 +471,7 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
 
             const bool IS_IDX_MARKED = BROWSER_Y == i;
 
-            Clr clr = IS_IDX_MARKED ?
-                      clr_white_high : clr_menu_drk;
+            Clr clr = IS_IDX_MARKED ? clr_white_high : clr_menu_drk;
 
             render::draw_text(key_str, panel, p, clr);
 
@@ -493,7 +489,7 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
             const Item_data_t&  d       = item->data();
             Item_ref_att_inf    att_inf = Item_ref_att_inf::none;
 
-            if (slot_id_to_equip == Slot_id::wielded || slot_id_to_equip == Slot_id::wielded_alt)
+            if (slot_id_to_equip == Slot_id::wpn || slot_id_to_equip == Slot_id::wpn_alt)
             {
                 //Thrown weapons are forced to show melee info instead
                 att_inf = d.main_att_mode == Main_att_mode::thrown ?
@@ -510,8 +506,7 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
 
             text_format::first_to_upper(item_name);
 
-            clr = IS_IDX_MARKED ?
-                  clr_white_high : item->interface_clr();
+            clr = IS_IDX_MARKED ? clr_white_high : item->interface_clr();
 
             render::draw_text(item_name, Panel::screen, p, clr);
 
