@@ -12,7 +12,7 @@
 
 enum class Snd_vol;
 
-enum class Item_weight
+enum Item_weight
 {
     none        = 0,
     extra_light = 1,  //E.g. ammo

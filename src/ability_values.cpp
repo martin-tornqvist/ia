@@ -203,7 +203,7 @@ Ability_roll_result roll(const int TOT_SKILL_VALUE, const Actor* const actor_rol
     const bool IS_BLESSED   = actor_rolling && actor_rolling->has_prop(Prop_id::blessed);
 
     //Critical success?
-    Range crit_success_range(1, 2);
+    Range crit_success_range(1, 1);
 
     if (IS_BLESSED)
     {
@@ -222,7 +222,7 @@ Ability_roll_result roll(const int TOT_SKILL_VALUE, const Actor* const actor_rol
     }
 
     //Critical fail?
-    Range crit_fail_range(99, 100);
+    Range crit_fail_range(100, 100);
 
     if (IS_BLESSED)
     {

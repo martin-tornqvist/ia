@@ -1846,37 +1846,43 @@ bool Major_clapham_lee::on_actor_turn_hook()
 
 bool Zombie::try_resurrect()
 {
-    if (is_corpse() && !has_resurrected)
+    if (!is_corpse() || has_resurrected)
     {
-        const int NR_TURNS_TO_CAN_RISE = 5;
+        return false;
+    }
 
-        if (dead_turn_counter < NR_TURNS_TO_CAN_RISE)
-        {
-            ++dead_turn_counter;
-        }
+    const int MIN_NR_TURNS_UNTIL_RISE   = 3;
+    const int RISE_ONE_IN_N_TURNS       = 8;
 
-        if (dead_turn_counter >= NR_TURNS_TO_CAN_RISE)
+    if (dead_turn_counter < MIN_NR_TURNS_UNTIL_RISE)
+    {
+        ++dead_turn_counter;
+    }
+    else if (rnd::one_in(RISE_ONE_IN_N_TURNS))
+    {
+        Actor* actor = utils::actor_at_pos(pos);
+
+        if (!actor)
         {
-            if (pos != map::player->pos && rnd::one_in(14))
+            state_  = Actor_state::alive;
+            hp_     = (hp_max(true) * 3) / 4;
+            glyph_  = data_->glyph;
+            tile_   = data_->tile;
+            clr_    = data_->color;
+
+            has_resurrected = true;
+
+            data_->nr_kills--;
+
+            if (map::cells[pos.x][pos.y].is_seen_by_player)
             {
-                state_  = Actor_state::alive;
-                hp_     = (hp_max(true) * 3) / 4;
-                glyph_  = data_->glyph;
-                tile_   = data_->tile;
-                clr_    = data_->color;
-                has_resurrected = true;
-                data_->nr_kills--;
-
-                if (map::cells[pos.x][pos.y].is_seen_by_player)
-                {
-                    msg_log::add(corpse_name_the() + " rises again!!", clr_white, true);
-                    map::player->incr_shock(Shock_lvl::some, Shock_src::misc);
-                }
-
-                aware_counter_ = data_->nr_turns_aware * 2;
-                game_time::tick();
-                return true;
+                msg_log::add(corpse_name_the() + " rises again!!", clr_white, true);
+                map::player->incr_shock(Shock_lvl::some, Shock_src::misc);
             }
+
+            aware_counter_ = data_->nr_turns_aware * 2;
+            game_time::tick();
+            return true;
         }
     }
 

@@ -467,7 +467,7 @@ void init_data_list()
         "This hellish, experimental weapon launches an explosive fireball. Best used "
         "with extreme caution."
     };
-    d.weight = Item_weight::heavy;
+    d.weight = Item_weight((Item_weight::medium + Item_weight::heavy) / 2);
     d.tile = Tile_id::incinerator;
     d.melee.att_msgs = {"strike", "strikes me with an Incinerator"};
     d.ranged.max_ammo = 5;
@@ -554,7 +554,7 @@ void init_data_list()
     {
         "A semi-automatic, magazine-fed pistol chambered for the .45 ACP cartridge."
     };
-    d.weight = Item_weight::light;
+    d.weight = Item_weight((Item_weight::light + Item_weight::medium) / 2);
     d.tile = Tile_id::pistol;
     d.ranged.max_ammo = 7;
     d.ranged.dmg = Dice_param(1, 8, 4);
@@ -642,7 +642,7 @@ void init_data_list()
     {
         "Launches flares. Not designed to function as a weapon."
     };
-    d.weight = Item_weight::light;
+    d.weight = Item_weight((Item_weight::light + Item_weight::medium) / 2);
     d.tile = Tile_id::flare_gun;
     d.ranged.max_ammo = 1;
     d.ranged.dmg = Dice_param(1, 3, 0);
@@ -1064,7 +1064,7 @@ void init_data_list()
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::player_kick;
     d.melee.att_msgs = {"kick", ""};
-    d.melee.hit_chance_mod = 20;
+    d.melee.hit_chance_mod = 15;
     d.melee.dmg = pair<int, int>(1, 3);
     d.melee.knocks_back = true;
     d.melee.miss_sfx = Sfx_id::miss_medium;
@@ -1073,16 +1073,18 @@ void init_data_list()
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::player_stomp;
     d.melee.att_msgs = {"stomp", ""};
-    d.melee.hit_chance_mod = 20;
-    d.melee.dmg = pair<int, int>(1, 3);
+    d.melee.hit_chance_mod = data[size_t(Item_id::player_kick)].melee.hit_chance_mod;
+    d.melee.dmg = data[size_t(Item_id::player_kick)].melee.dmg;
+    d.melee.miss_sfx = data[size_t(Item_id::player_kick)].melee.miss_sfx;
     d.melee.knocks_back = false;
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::player_punch;
     d.melee.att_msgs = {"punch", ""};
-    d.melee.hit_chance_mod = 25;
-    d.melee.dmg = pair<int, int>(1, 2);
+    d.melee.hit_chance_mod = 20;
+    d.melee.dmg = pair<int, int>(1, 1);
+    d.melee.miss_sfx = Sfx_id::miss_light;
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);

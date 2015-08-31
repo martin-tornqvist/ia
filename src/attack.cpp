@@ -1517,51 +1517,56 @@ void melee(Actor* const attacker, const Pos& attacker_origin, Actor& defender, c
             //Drop weaon
             case 3:
             {
-                Item* item = player.inv().remove_from_slot(Slot_id::wpn);
-
-                if (item)
+                //Only drop weapon if attacking with wielded weapon (and not e.g. a Kick)
+                if (player.inv().item_in_slot(Slot_id::wpn) == &wpn)
                 {
-                    std::string item_name = item->name(Item_ref_type::plain, Item_ref_inf::none);
+                    Item* item = player.inv().remove_from_slot(Slot_id::wpn);
 
-                    bool blocked[MAP_W][MAP_H];
-
-                    const Pos fov_p = player.pos;
-
-                    Rect fov_rect = fov::get_fov_rect(fov_p);
-
-                    map_parse::run(cell_check::Blocks_move_cmn(false), blocked,
-                                   Map_parse_mode::overwrite, fov_rect);
-
-                    Los_result fov_result[MAP_W][MAP_H];
-
-                    fov::run(fov_p, blocked, fov_result);
-
-                    std::vector<Pos> p_bucket;
-
-                    for (int x = fov_rect.p0.x; x <= fov_rect.p1.x; ++x)
+                    if (item)
                     {
-                        for (int y = fov_rect.p0.y; y <= fov_rect.p1.y; ++y)
+                        std::string item_name = item->name(Item_ref_type::plain,
+                                                           Item_ref_inf::none);
+
+                        bool blocked[MAP_W][MAP_H];
+
+                        const Pos fov_p = player.pos;
+
+                        Rect fov_rect = fov::get_fov_rect(fov_p);
+
+                        map_parse::run(cell_check::Blocks_move_cmn(false), blocked,
+                                       Map_parse_mode::overwrite, fov_rect);
+
+                        Los_result fov_result[MAP_W][MAP_H];
+
+                        fov::run(fov_p, blocked, fov_result);
+
+                        std::vector<Pos> p_bucket;
+
+                        for (int x = fov_rect.p0.x; x <= fov_rect.p1.x; ++x)
                         {
-                            if (!fov_result[x][y].is_blocked_hard)
+                            for (int y = fov_rect.p0.y; y <= fov_rect.p1.y; ++y)
                             {
-                                p_bucket.push_back(Pos(x, y));
+                                if (!fov_result[x][y].is_blocked_hard)
+                                {
+                                    p_bucket.push_back(Pos(x, y));
+                                }
                             }
                         }
+
+                        Pos item_p(map::player->pos);
+
+                        if (!p_bucket.empty())
+                        {
+                            const int IDX = size_t(rnd::range(0, p_bucket.size() - 1));
+
+                            item_p = p_bucket[IDX];
+                        }
+
+                        msg_log::add("The " + item_name + " flies from my hands!", clr_msg_note,
+                                     true, More_prompt_on_msg::yes);
+
+                        item_drop::drop_item_on_map(item_p, *item);
                     }
-
-                    Pos item_p(map::player->pos);
-
-                    if (!p_bucket.empty())
-                    {
-                        const int IDX = size_t(rnd::range(0, p_bucket.size() - 1));
-
-                        item_p = p_bucket[IDX];
-                    }
-
-                    msg_log::add("The " + item_name + " flies from my hands!", clr_msg_note, true,
-                                 More_prompt_on_msg::yes);
-
-                    item_drop::drop_item_on_map(item_p, *item);
                 }
             }
             break;
@@ -1569,8 +1574,9 @@ void melee(Actor* const attacker, const Pos& attacker_origin, Actor& defender, c
             //Weapon breaks
             case 4:
             {
+                //Only break weapon if attacking with wielded weapon (and not e.g. a Kick)
                 //Don't allow item breaking on intro level
-                if (map::dlvl != 0)
+                if (player.inv().item_in_slot(Slot_id::wpn) == &wpn && map::dlvl != 0)
                 {
                     Item* item = player.inv().remove_from_slot(Slot_id::wpn);
 

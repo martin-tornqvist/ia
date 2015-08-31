@@ -142,6 +142,10 @@ Trap_impl* Trap::mk_trap_impl_from_id(const Trap_id trap_id) const
         return new Trap_summon_mon(pos_, this);
         break;
 
+    case Trap_id::wpn_destr:
+        return new Trap_wpn_destr(pos_, this);
+        break;
+
     case Trap_id::smoke:
         return new Trap_smoke(pos_, this);
         break;
@@ -552,7 +556,7 @@ Matl Trap::matl() const
 
 //------------------------------------------------------------- TRAP IMPLEMENTATIONS
 Trap_dart::Trap_dart(Pos pos, const Trap* const base_trap) :
-    Trap_impl                   (pos, Trap_id::dart, base_trap),
+    Mech_trap_impl              (pos, Trap_id::dart, base_trap),
     is_poisoned_                (map::dlvl >= MIN_DLVL_HARDER_TRAPS && rnd::one_in(3)),
     dart_origin_                (),
     is_dart_origin_destroyed_   (false) {}
@@ -672,7 +676,7 @@ void Trap_dart::trigger()
 }
 
 Trap_spear::Trap_spear(Pos pos, const Trap* const base_trap) :
-    Trap_impl                   (pos, Trap_id::spear, base_trap),
+    Mech_trap_impl              (pos, Trap_id::spear, base_trap),
     is_poisoned_                (map::dlvl >= MIN_DLVL_HARDER_TRAPS && rnd::one_in(4)),
     spear_origin_               (),
     is_spear_origin_destroyed_  (false) {}
@@ -993,6 +997,113 @@ void Trap_summon_mon::trigger()
 
     TRACE_FUNC_END_VERBOSE;
 }
+
+void Trap_wpn_destr::trigger()
+{
+    TRACE_FUNC_BEGIN_VERBOSE;
+
+    Actor* const actor_here = utils::actor_at_pos(pos_);
+
+    assert(actor_here);
+
+    if (!actor_here)
+    {
+        //Should never happen
+        return;
+    }
+
+    const bool IS_PLAYER = actor_here->is_player();
+    const bool IS_HIDDEN = base_trap_->is_hidden();
+
+    TRACE_VERBOSE << "Is player: " << IS_PLAYER << std::endl;
+
+    if (!IS_PLAYER)
+    {
+        TRACE_VERBOSE << "Not triggered by player" << std::endl;
+        TRACE_FUNC_END_VERBOSE;
+        return;
+    }
+
+    const bool CAN_SEE = actor_here->prop_handler().allow_see();
+    TRACE_VERBOSE << "Actor can see: " << CAN_SEE << std::endl;
+
+    const std::string actor_name = actor_here->name_the();
+    TRACE_VERBOSE << "Actor name: " << actor_name << std::endl;
+
+    if (CAN_SEE)
+    {
+        std::string msg = "A beam of light shoots out from";
+
+        if (!IS_HIDDEN)
+        {
+            msg += " a curious shape on";
+        }
+
+        msg += " the floor!";
+
+        msg_log::add(msg, clr_white, false, More_prompt_on_msg::yes);
+    }
+    else //Cannot see
+    {
+        msg_log::add("I feel a peculiar energy around me!", clr_white, false,
+                     More_prompt_on_msg::yes);
+    }
+
+    TRACE << "Attempting to destroy player weapon" << std::endl;
+    Inventory& inv = map::player->inv();
+
+    Item* item = nullptr;
+
+    std::vector<size_t> backpack_idx_bucket;
+
+    for (size_t i = 0; i < inv.backpack_.size(); ++i)
+    {
+        Item* backpack_item = inv.backpack_[i];
+
+        const Item_data_t& data = backpack_item->data();
+
+        if (data.type == Item_type::melee_wpn || data.type == Item_type::ranged_wpn)
+        {
+            backpack_idx_bucket.push_back(i);
+        }
+    }
+
+    if (!backpack_idx_bucket.empty())
+    {
+        const size_t BUCKET_IDX     = rnd::range(0, backpack_idx_bucket.size() - 1);
+        const size_t BACKPACK_IDX   = backpack_idx_bucket[BUCKET_IDX];
+
+        item = inv.remove_item_in_backpack_with_idx(BACKPACK_IDX, false);
+    }
+
+    if (!item)
+    {
+        //Failed to destroy item in backpack, try Prepared slot
+        item = inv.remove_from_slot(Slot_id::wpn_alt);
+    }
+
+    if (!item)
+    {
+        //Failed to destroy item in Prepared slot, try Wielded slot
+        item = inv.remove_from_slot(Slot_id::wpn);
+    }
+
+    if (item)
+    {
+        const std::string wpn_name = item->name(Item_ref_type::plain, Item_ref_inf::none);
+
+        msg_log::add("My " + wpn_name + " breaks!", clr_msg_note, false, More_prompt_on_msg::yes);
+
+        delete item;
+    }
+    else //No item found to destroy
+    {
+        msg_log::add("I feel a stinging sensation in my hands.");
+    }
+
+    TRACE_FUNC_END_VERBOSE;
+}
+
 
 void Trap_smoke::trigger()
 {

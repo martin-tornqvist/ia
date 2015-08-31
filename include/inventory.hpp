@@ -92,8 +92,8 @@ public:
 
     void decr_item_type_in_backpack(const Item_id item_id);
 
-    void remove_item_in_backpack_with_idx(const size_t IDX, const bool DELETE_ITEM);
-    void remove_item_in_backpack_with_ptr(Item* const item, const bool DELETE_ITEM);
+    Item* remove_item_in_backpack_with_idx(const size_t IDX, const bool DELETE_ITEM);
+    Item* remove_item_in_backpack_with_ptr(Item* const item, const bool DELETE_ITEM);
 
     int intrinsics_size() const {return intrinsics_.size();}
 

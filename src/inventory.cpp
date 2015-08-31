@@ -290,37 +290,41 @@ void Inventory::decr_item_in_slot(Slot_id slot_id)
     }
 }
 
-void Inventory::remove_item_in_backpack_with_idx(const size_t IDX, const bool DELETE_ITEM)
+Item* Inventory::remove_item_in_backpack_with_idx(const size_t IDX, const bool DELETE_ITEM)
 {
-    if (backpack_.size() > IDX)
-    {
-        if (DELETE_ITEM)
-        {
-            delete backpack_[IDX];
-        }
+    assert(IDX < backpack_.size());
 
-        backpack_.erase(begin(backpack_) + IDX);
+    Item* item = backpack_[IDX];
+
+    backpack_.erase(begin(backpack_) + IDX);
+
+    item->on_removed_from_inv();
+
+    if (DELETE_ITEM)
+    {
+        delete item;
+        item = nullptr;
     }
+
+    return item;
 }
 
-void Inventory::remove_item_in_backpack_with_ptr(Item* const item, const bool DELETE_ITEM)
+Item* Inventory::remove_item_in_backpack_with_ptr(Item* const item, const bool DELETE_ITEM)
 {
-    for (auto it = begin(backpack_); it < end(backpack_); ++it)
+    for (size_t i = 0; i < backpack_.size(); ++i)
     {
-        if (*it == item)
-        {
-            if (DELETE_ITEM)
-            {
-                delete *it;
-            }
+        const Item* const cur_item = backpack_[i];
 
-            backpack_.erase(it);
-            return;
+        if (cur_item == item)
+        {
+            return remove_item_in_backpack_with_idx(i, DELETE_ITEM);
         }
     }
 
     TRACE << "Parameter item not in backpack" << std::endl;
     assert(false);
+
+    return nullptr;
 }
 
 void Inventory::decr_item_in_backpack(const size_t IDX)
