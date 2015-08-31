@@ -212,7 +212,7 @@ void Trap::trigger_start(const Actor* actor)
 
     if (is_magical())
     {
-        //TODO: Play sound for magic traps?
+        //TODO: Play sfx for magic traps (if player)
     }
     else //Not magical
     {
@@ -275,31 +275,33 @@ void Trap::bump(Actor& actor_bumping)
         return;
     }
 
-    const bool          ACTOR_CAN_SEE           = actor_bumping.prop_handler().allow_see();
-    Ability_vals&       abilities               = actor_bumping.data().ability_vals;
-    const int           BASE_CHANCE_TO_AVOID    = 30;
-    const std::string   trap_name               = trap_impl_->title();
+    const bool          ACTOR_CAN_SEE   = actor_bumping.prop_handler().allow_see();
+    Ability_vals&       abilities       = actor_bumping.data().ability_vals;
+    const std::string   trap_name       = trap_impl_->title();
 
     const int DODGE_SKILL = abilities.val(Ability_id::dodge_trap, true, actor_bumping);
 
     if (actor_bumping.is_player())
     {
         TRACE_VERBOSE << "Player bumping" << std::endl;
-        int chance_to_avoid = BASE_CHANCE_TO_AVOID + DODGE_SKILL;
+
+        int avoid_skill = 30 + DODGE_SKILL;
 
         if (is_hidden_)
         {
-            chance_to_avoid = std::max(10, chance_to_avoid / 2);
+            avoid_skill = std::max(10, avoid_skill / 2);
         }
 
-        const Ability_roll_result result = ability_roll::roll(chance_to_avoid, &actor_bumping);
+        const Ability_roll_result result = ability_roll::roll(avoid_skill, &actor_bumping);
 
         if (result >= success)
         {
             if (!is_hidden_ && ACTOR_CAN_SEE)
             {
                 map::player->update_fov();
+
                 render::draw_map_and_interface();
+
                 msg_log::add("I avoid a " + trap_name + ".", clr_msg_good, false,
                              More_prompt_on_msg::yes);
             }
@@ -325,7 +327,7 @@ void Trap::bump(Actor& actor_bumping)
                 const bool IS_ACTOR_SEEN_BY_PLAYER =
                     map::player->can_see_actor(actor_bumping);
 
-                const int AVOID_SKILL = BASE_CHANCE_TO_AVOID + DODGE_SKILL;
+                const int AVOID_SKILL = 60 + DODGE_SKILL;
 
                 const Ability_roll_result result = ability_roll::roll(AVOID_SKILL, &actor_bumping);
 
@@ -334,6 +336,7 @@ void Trap::bump(Actor& actor_bumping)
                     if (!is_hidden_ && IS_ACTOR_SEEN_BY_PLAYER)
                     {
                         const std::string actor_name = actor_bumping.name_the();
+
                         msg_log::add(actor_name + " avoids a " + trap_name + ".");
                     }
                 }
@@ -477,9 +480,20 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES)
 
         if (PRINT_MESSSAGE_WHEN_PLAYER_SEES)
         {
+            std::string msg = "";
+
             const std::string trap_name = trap_impl_->title();
-            msg_log::add("I spot a " + trap_name + ".", clr_msg_note, false,
-                         More_prompt_on_msg::yes);
+
+            if (pos_ == map::player->pos)
+            {
+                msg += "There is a " + trap_name + " here!";
+            }
+            else //Trap is not at player position
+            {
+                msg = "I spot a " + trap_name + ".";
+            }
+
+            msg_log::add(msg, clr_msg_note, false, More_prompt_on_msg::yes);
         }
     }
 

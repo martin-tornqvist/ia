@@ -352,7 +352,7 @@ void set_item_randomized_properties(Item* item)
 
     if (d.id == Item_id::pharaoh_staff)
     {
-        //TODO: This is a really hacky, temporary fix that shouldn't be here - refactor.
+        //TODO: This is a really hacky fix that shouldn't be here - refactor.
         item->melee_dmg_plus_ = 4;
     }
     else //Not Staff of the Pharohs

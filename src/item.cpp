@@ -531,14 +531,19 @@ Clr Wpn::clr() const
 
 void Wpn::set_random_melee_plus()
 {
+    //TODO: This should probably be done with some kind of distribution model instead...
+
     melee_dmg_plus_ = 0;
 
-    int chance = 45;
+    const int PLUS_LMT = 6;
 
-    while (rnd::percent(chance) && melee_dmg_plus_ < 3)
+    int chance_to_raise = 65;
+
+    while (rnd::percent(chance_to_raise) && melee_dmg_plus_ < PLUS_LMT)
     {
-        melee_dmg_plus_++;
-        chance -= 5;
+        ++melee_dmg_plus_;
+
+        chance_to_raise -= 5;
     }
 }
 

@@ -45,7 +45,6 @@ int Ability_vals::val(const Ability_id id,
             {
                 ret += 4;
             }
-
             break;
 
         case Ability_id::melee:
@@ -70,7 +69,6 @@ int Ability_vals::val(const Ability_id id,
             {
                 ret += 30;
             }
-
             break;
 
         case Ability_id::ranged:
@@ -100,7 +98,6 @@ int Ability_vals::val(const Ability_id id,
             {
                 ret -= 15;
             }
-
             break;
 
         case Ability_id::dodge_trap:
@@ -115,7 +112,6 @@ int Ability_vals::val(const Ability_id id,
             {
                 ret += 25;
             }
-
             break;
 
         case Ability_id::dodge_att:
@@ -135,7 +131,6 @@ int Ability_vals::val(const Ability_id id,
             {
                 ret += 50;
             }
-
             break;
 
         case Ability_id::stealth:
@@ -150,7 +145,6 @@ int Ability_vals::val(const Ability_id id,
             {
                 ret += 30;
             }
-
             break;
 
         case Ability_id::empty:
