@@ -98,10 +98,10 @@ void Mon::on_actor_turn()
 
         bool hard_blocked_los[MAP_W][MAP_H];
 
-        const Rect fov_lmt = fov::get_fov_rect(pos);
+        const Rect fov_rect = fov::get_fov_rect(pos);
 
         map_parse::run(cell_check::Blocks_los(), hard_blocked_los, Map_parse_mode::overwrite,
-                       fov_lmt);
+                       fov_rect);
 
         //Remove self and all unseen actors from vector
         for (auto it = begin(tgt_bucket); it != end(tgt_bucket);)
@@ -1015,8 +1015,13 @@ bool Vortex::on_actor_turn_hook()
             TRACE << knock_back_from_pos.y << ")" << std::endl;
             TRACE << "Player position: ";
             TRACE << player_pos.x << "," << player_pos.y << ")" << std::endl;
+
             bool blocked_los[MAP_W][MAP_H];
-            map_parse::run(cell_check::Blocks_los(), blocked_los);
+
+            const Rect fov_rect = fov::get_fov_rect(pos);
+
+            map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite,
+                           fov_rect);
 
             if (can_see_actor(*(map::player), blocked_los))
             {
@@ -1231,6 +1236,11 @@ void Shadow::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::shadow_claw));
 }
 
+void Invis_stalker::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(Item_id::invis_stalker_claw));
+}
+
 void Ghoul::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(Item_id::ghoul_claw));
@@ -1322,7 +1332,10 @@ bool Khephren::on_actor_turn_hook()
     if (is_alive() && aware_counter_ > 0 && !has_summoned_locusts)
     {
         bool blocked[MAP_W][MAP_H];
-        map_parse::run(cell_check::Blocks_los(), blocked);
+
+        const Rect fov_rect = fov::get_fov_rect(pos);
+
+        map_parse::run(cell_check::Blocks_los(), blocked, Map_parse_mode::overwrite, fov_rect);
 
         if (can_see_actor(*(map::player), blocked))
         {
@@ -1445,7 +1458,10 @@ bool Keziah_mason::on_actor_turn_hook()
     if (is_alive() && aware_counter_ > 0 && !has_summoned_jenkin)
     {
         bool blocked_los[MAP_W][MAP_H];
-        map_parse::run(cell_check::Blocks_los(), blocked_los);
+
+        const Rect fov_rect = fov::get_fov_rect(pos);
+
+        map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite, fov_rect);
 
         if (can_see_actor(*(map::player), blocked_los))
         {
@@ -1502,7 +1518,11 @@ void Leng_elder::on_std_turn_hook()
         if (has_given_item_to_player_)
         {
             bool blocked_los[MAP_W][MAP_H];
-            map_parse::run(cell_check::Blocks_los(), blocked_los);
+
+            const Rect fov_rect = fov::get_fov_rect(pos);
+
+            map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite,
+                           fov_rect);
 
             if (can_see_actor(*map::player, blocked_los))
             {
@@ -1797,7 +1817,10 @@ bool Major_clapham_lee::on_actor_turn_hook()
     if (is_alive() && aware_counter_ > 0 && !has_summoned_tomb_legions)
     {
         bool blocked_los[MAP_W][MAP_H];
-        map_parse::run(cell_check::Blocks_los(), blocked_los);
+
+        const Rect fov_rect = fov::get_fov_rect(pos);
+
+        map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite, fov_rect);
 
         if (can_see_actor(*(map::player), blocked_los))
         {
@@ -1877,7 +1900,8 @@ bool Zombie::try_resurrect()
             if (map::cells[pos.x][pos.y].is_seen_by_player)
             {
                 msg_log::add(corpse_name_the() + " rises again!!", clr_white, true);
-                map::player->incr_shock(Shock_lvl::some, Shock_src::misc);
+
+                map::player->incr_shock(Shock_lvl::some, Shock_src::see_mon);
             }
 
             aware_counter_ = data_->nr_turns_aware * 2;
@@ -1909,7 +1933,8 @@ void Zombie::on_death()
     {
         Actor_id id_to_spawn = Actor_id::END;
 
-        const int ROLL = rnd::range(1, 2);
+        //With a small chance, spawn a Floating Head, otherwise spawn Hands or Intestines
+        const int ROLL = rnd::one_in(50) ? 3 : rnd::range(1, 2);
 
         const std::string my_name = name_the();
 
@@ -1921,11 +1946,17 @@ void Zombie::on_death()
 
             spawn_msg = "The hand of " + my_name + " comes off and starts crawling around!";
         }
-        else
+        else if (ROLL == 2)
         {
             id_to_spawn = Actor_id::crawling_intestines;
 
             spawn_msg = "The intestines of " + my_name + " starts crawling around!";
+        }
+        else
+        {
+            id_to_spawn = Actor_id::floating_head;
+
+            spawn_msg = "The head of " + my_name + " starts floating around!";
         }
 
         if (map::cells[pos.x][pos.y].is_seen_by_player)
@@ -1933,6 +1964,8 @@ void Zombie::on_death()
             assert(!spawn_msg.empty());
 
             msg_log::add(spawn_msg);
+
+            map::player->incr_shock(Shock_lvl::some, Shock_src::see_mon);
         }
 
         assert(id_to_spawn != Actor_id::END);
@@ -1988,6 +2021,47 @@ void Thing::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(Item_id::thing_strangle));
     spells_known_.push_back(new Spell_teleport);
+}
+
+void Floating_head::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(Item_id::floating_head_bite));
+}
+
+bool Floating_head::on_actor_turn_hook()
+{
+    if (is_alive() && rnd::one_in(12))
+    {
+        bool blocked_los[MAP_W][MAP_H];
+
+        const Rect fov_rect = fov::get_fov_rect(pos);
+
+        map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite, fov_rect);
+
+        if (can_see_actor(*map::player, blocked_los))
+        {
+            const std::string name = name_the();
+
+            const bool PLAYER_SEE_ME = map::player->can_see_actor(*this);
+
+            std::string snd_msg = PLAYER_SEE_ME ? name : "Someone";
+
+            snd_msg += " spews forth a litany of curses.";
+
+            Snd snd(snd_msg, Sfx_id::END, Ignore_msg_if_origin_seen::no, pos, this, Snd_vol::high,
+                    Alerts_mon::no);
+
+            snd_emit::emit_snd(snd);
+
+            Prop* const prop = new Prop_cursed(Prop_turns::std);
+
+            map::player->prop_handler().try_add_prop(prop, Prop_src::intr);
+
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool Mold::on_actor_turn_hook()
@@ -2088,7 +2162,10 @@ bool The_high_priest::on_actor_turn_hook()
     }
 
     bool blocked_los[MAP_W][MAP_H];
-    map_parse::run(cell_check::Blocks_los(), blocked_los);
+
+    const Rect fov_rect = fov::get_fov_rect(pos);
+
+    map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite, fov_rect);
 
     if (nr_turns_until_next_cpy_ > 0 && can_see_actor(*map::player, blocked_los))
     {

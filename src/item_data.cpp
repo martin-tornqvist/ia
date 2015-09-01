@@ -1137,6 +1137,12 @@ void init_data_list()
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
+    d.id = Item_id::floating_head_bite;
+    d.melee.att_msgs = {"", "bites me"};
+    set_dmg_from_mon_id(d, Actor_id::floating_head);
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::crawling_hand_strangle;
     d.melee.att_msgs = {"", "strangles me"};
     set_dmg_from_mon_id(d, Actor_id::crawling_hand);
@@ -1346,6 +1352,12 @@ void init_data_list()
     d.id = Item_id::shadow_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, Actor_id::shadow);
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::melee_wpn_intr);
+    d.id = Item_id::invis_stalker_claw;
+    d.melee.att_msgs = {"", "claws me"};
+    set_dmg_from_mon_id(d, Actor_id::invis_stalker);
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);

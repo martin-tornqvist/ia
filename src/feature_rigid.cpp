@@ -1854,7 +1854,7 @@ void Tomb::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 string Tomb::name(const Article article) const
 {
     const bool    IS_EMPTY  = is_open_ && item_container_.items_.empty();
-    const string  empty_str  = IS_EMPTY                ? "empty " : "";
+    const string  empty_str  = IS_EMPTY                 ? "empty " : "";
     const string  open_str   = (is_open_ && !IS_EMPTY)  ? "open "  : "";
 
     string a = "";
@@ -2085,6 +2085,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
                 Actor_id::mummy,
                 Actor_id::zombie,
                 Actor_id::zombie_axe,
+                Actor_id::floating_head,
             };
 
             if (rnd::one_in(10))

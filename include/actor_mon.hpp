@@ -112,7 +112,11 @@ public:
 protected:
     virtual void on_hit(int& dmg) override;
 
-    virtual bool on_actor_turn_hook() {return false;}
+    virtual bool on_actor_turn_hook()
+    {
+        return false;
+    }
+
     virtual void on_std_turn_hook() {}
 
     int group_size();
@@ -201,6 +205,7 @@ public:
     virtual ~Zombie() {}
     virtual bool on_actor_turn_hook() override;
     void on_death() override;
+
 protected:
     bool try_resurrect();
     int dead_turn_counter;
@@ -242,6 +247,7 @@ public:
     ~Major_clapham_lee() {}
 
     bool on_actor_turn_hook() override;
+
 private:
     bool has_summoned_tomb_legions;
 };
@@ -258,7 +264,8 @@ class Crawling_intestines: public Mon
 public:
     Crawling_intestines() : Mon() {}
     ~Crawling_intestines() {}
-    virtual void mk_start_items() override;
+
+    void mk_start_items() override;
 };
 
 class Crawling_hand: public Mon
@@ -266,7 +273,8 @@ class Crawling_hand: public Mon
 public:
     Crawling_hand() : Mon() {}
     ~Crawling_hand() {}
-    virtual void mk_start_items() override;
+
+    void mk_start_items() override;
 };
 
 class Thing: public Mon
@@ -274,7 +282,19 @@ class Thing: public Mon
 public:
     Thing() : Mon() {}
     ~Thing() {}
-    virtual void mk_start_items() override;
+
+    void mk_start_items() override;
+};
+
+class Floating_head: public Mon
+{
+public:
+    Floating_head() : Mon() {}
+    ~Floating_head() {}
+
+    void mk_start_items() override;
+
+    bool on_actor_turn_hook() override;
 };
 
 class Keziah_mason: public Mon
@@ -284,6 +304,7 @@ public:
     ~Keziah_mason() {}
     bool on_actor_turn_hook() override;
     void mk_start_items() override;
+
 private:
     bool has_summoned_jenkin;
 };
@@ -296,7 +317,9 @@ public:
         has_given_item_to_player_(false),
         nr_turns_to_hostile_(-1) {}
     ~Leng_elder() {}
+
     void mk_start_items() override;
+
 private:
     void on_std_turn_hook()    override;
     bool  has_given_item_to_player_;
@@ -616,6 +639,15 @@ class Shadow: public Mon
 public:
     Shadow() : Mon() {}
     ~Shadow() {}
+
+    virtual void mk_start_items() override;
+};
+
+class Invis_stalker: public Mon
+{
+public:
+    Invis_stalker() : Mon() {}
+    ~Invis_stalker() {}
 
     virtual void mk_start_items() override;
 };

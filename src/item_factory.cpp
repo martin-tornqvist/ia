@@ -52,6 +52,7 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
     case Item_id::crawling_intestines_strangle:
     case Item_id::crawling_hand_strangle:
     case Item_id::thing_strangle:
+    case Item_id::floating_head_bite:
     case Item_id::rat_bite:
     case Item_id::rat_bite_diseased:
     case Item_id::rat_thing_bite:
@@ -77,6 +78,7 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
     case Item_id::greater_polyp_tentacle:
     case Item_id::ghoul_claw:
     case Item_id::shadow_claw:
+    case Item_id::invis_stalker_claw:
     case Item_id::byakhee_claw:
     case Item_id::giant_mantis_claw:
     case Item_id::giant_locust_bite:
