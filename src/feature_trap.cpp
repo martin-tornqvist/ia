@@ -146,8 +146,16 @@ Trap_impl* Trap::mk_trap_impl_from_id(const Trap_id trap_id) const
         return new Trap_wpn_destr(pos_, this);
         break;
 
+    case Trap_id::spi_drain:
+        return new Trap_spi_drain(pos_, this);
+        break;
+
     case Trap_id::smoke:
         return new Trap_smoke(pos_, this);
+        break;
+
+    case Trap_id::fire:
+        return new Trap_fire(pos_, this);
         break;
 
     case Trap_id::alarm:
@@ -799,8 +807,8 @@ void Trap_gas_confusion::trigger()
 
     snd_emit::emit_snd(snd);
 
-    explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no, 0,
-                                new Prop_confused(Prop_turns::std), &clr_magenta);
+    explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
+                                -1, new Prop_confused(Prop_turns::std), &clr_magenta);
 
     TRACE_FUNC_END_VERBOSE;
 }
@@ -822,8 +830,8 @@ void Trap_gas_paralyzation::trigger()
 
     snd_emit::emit_snd(snd);
 
-    explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no, 0,
-                                new Prop_paralyzed(Prop_turns::std), &clr_magenta);
+    explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
+                                -1, new Prop_paralyzed(Prop_turns::std), &clr_magenta);
 
     TRACE_FUNC_END_VERBOSE;
 }
@@ -845,8 +853,8 @@ void Trap_gas_fear::trigger()
 
     snd_emit::emit_snd(snd);
 
-    explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no, 0,
-                                new Prop_terrified(Prop_turns::std), &clr_magenta);
+    explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
+                                -1, new Prop_terrified(Prop_turns::std), &clr_magenta);
 
     TRACE_FUNC_END_VERBOSE;
 }
@@ -1070,7 +1078,9 @@ void Trap_wpn_destr::trigger()
 
     std::vector<size_t> backpack_idx_bucket;
 
-    for (size_t i = 0; i < inv.backpack_.size(); ++i)
+    const size_t BACKPACK_SIZE = inv.backpack_.size();
+
+    for (size_t i = 0; i < BACKPACK_SIZE; ++i)
     {
         Item* backpack_item = inv.backpack_[i];
 
@@ -1082,24 +1092,42 @@ void Trap_wpn_destr::trigger()
         }
     }
 
-    if (!backpack_idx_bucket.empty())
-    {
-        const size_t BUCKET_IDX     = rnd::range(0, backpack_idx_bucket.size() - 1);
-        const size_t BACKPACK_IDX   = backpack_idx_bucket[BUCKET_IDX];
+    //The following two elements represents Wielded and Prepared slots, respectively
+    backpack_idx_bucket.push_back(BACKPACK_SIZE);
+    backpack_idx_bucket.push_back(BACKPACK_SIZE + 1);
 
-        item = inv.remove_item_in_backpack_with_idx(BACKPACK_IDX, false);
-    }
+    std::random_shuffle(begin(backpack_idx_bucket), end(backpack_idx_bucket));
 
-    if (!item)
+    for (size_t bucket_idx = 0; bucket_idx < backpack_idx_bucket.size(); ++bucket_idx)
     {
-        //Failed to destroy item in backpack, try Prepared slot
-        item = inv.remove_from_slot(Slot_id::wpn_alt);
-    }
+        const size_t BACKPACK_IDX = backpack_idx_bucket[bucket_idx];
 
-    if (!item)
-    {
-        //Failed to destroy item in Prepared slot, try Wielded slot
-        item = inv.remove_from_slot(Slot_id::wpn);
+        if (BACKPACK_IDX < BACKPACK_SIZE)
+        {
+            item = inv.remove_item_in_backpack_with_idx(BACKPACK_IDX, false);
+        }
+        else if (BACKPACK_IDX == BACKPACK_SIZE)
+        {
+            //Bucket index correpsonds to Wielded slot
+            item = inv.remove_from_slot(Slot_id::wpn);
+        }
+        else if (BACKPACK_IDX == BACKPACK_SIZE + 1)
+        {
+            //Bucket index correpsonds to Prepared slot
+            item = inv.remove_from_slot(Slot_id::wpn_alt);
+        }
+        else //Should never happen
+        {
+            TRACE << "Bad backpack index: " << BACKPACK_IDX << std::endl;
+            assert(false);
+            break;
+        }
+
+        if (item)
+        {
+            //An item was removed from inventory!
+            break;
+        }
     }
 
     if (item)
@@ -1112,12 +1140,75 @@ void Trap_wpn_destr::trigger()
     }
     else //No item found to destroy
     {
-        msg_log::add("I feel a stinging sensation in my hands.");
+        msg_log::add("I feel a faint stinging sensation in my hands.");
     }
 
     TRACE_FUNC_END_VERBOSE;
 }
 
+void Trap_spi_drain::trigger()
+{
+    TRACE_FUNC_BEGIN_VERBOSE;
+
+    Actor* const actor_here = utils::actor_at_pos(pos_);
+
+    assert(actor_here);
+
+    if (!actor_here)
+    {
+        //Should never happen
+        return;
+    }
+
+    const bool IS_PLAYER = actor_here->is_player();
+    const bool IS_HIDDEN = base_trap_->is_hidden();
+
+    TRACE_VERBOSE << "Is player: " << IS_PLAYER << std::endl;
+
+    if (!IS_PLAYER)
+    {
+        TRACE_VERBOSE << "Not triggered by player" << std::endl;
+        TRACE_FUNC_END_VERBOSE;
+        return;
+    }
+
+    const bool CAN_SEE = actor_here->prop_handler().allow_see();
+    TRACE_VERBOSE << "Actor can see: " << CAN_SEE << std::endl;
+
+    const std::string actor_name = actor_here->name_the();
+    TRACE_VERBOSE << "Actor name: " << actor_name << std::endl;
+
+    if (CAN_SEE)
+    {
+        std::string msg = "A beam of light shoots out from";
+
+        if (!IS_HIDDEN)
+        {
+            msg += " a curious shape on";
+        }
+
+        msg += " the floor!";
+
+        msg_log::add(msg, clr_white, false, More_prompt_on_msg::yes);
+    }
+    else //Cannot see
+    {
+        msg_log::add("I feel a peculiar energy around me!", clr_white, false,
+                     More_prompt_on_msg::yes);
+    }
+
+    TRACE << "Draining player spirit" << std::endl;
+
+    //Allow draining more than starting spirit if this is DLVL depth after harder traps
+    const bool ALLOW_OVER_START_SPI = map::dlvl >= MIN_DLVL_HARDER_TRAPS;
+    const int D                     = SPI_PER_LVL * 2;
+    const int MAX                   = PLAYER_START_SPI + (ALLOW_OVER_START_SPI ? D : -D);
+    const int SPI_DRAINED           = rnd::range(1, MAX);
+
+    map::player->hit_spi(SPI_DRAINED);
+
+    TRACE_FUNC_END_VERBOSE;
+}
 
 void Trap_smoke::trigger()
 {
@@ -1137,6 +1228,29 @@ void Trap_smoke::trigger()
     snd_emit::emit_snd(snd);
 
     explosion::run_smoke_explosion_at(pos_);
+
+    TRACE_FUNC_END_VERBOSE;
+}
+
+void Trap_fire::trigger()
+{
+    TRACE_FUNC_BEGIN_VERBOSE;
+
+    if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+    {
+        msg_log::add("Flames burst out from a vent in the floor!",
+                     clr_white, false, More_prompt_on_msg::yes);
+
+        msg_log::more_prompt();
+    }
+
+    Snd snd("I hear a burst of flames.", Sfx_id::END, Ignore_msg_if_origin_seen::yes, pos_,
+            nullptr, Snd_vol::low, Alerts_mon::yes);
+
+    snd_emit::emit_snd(snd);
+
+    explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
+                                -1, new Prop_burning(Prop_turns::std));
 
     TRACE_FUNC_END_VERBOSE;
 }

@@ -1033,7 +1033,7 @@ void Molotov::on_player_ignite() const
 
 void Molotov::on_std_turn_player_hold_ignited()
 {
-    fuse_turns_--;
+    --fuse_turns_;
 
     if (fuse_turns_ <= 0)
     {

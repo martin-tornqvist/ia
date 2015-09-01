@@ -17,12 +17,14 @@ enum class Trap_id
     gas_fear,
     gas_paralyze,
     smoke,
+    fire,
     alarm,
     spear,
     web,
     teleport,
     summon,
     wpn_destr,
+    spi_drain,
     END,
     any
 };
@@ -247,7 +249,7 @@ protected:
 
     virtual Clr clr() const override
     {
-        return clr_violet;
+        return clr_yellow;
     }
 
     virtual Tile_id tile() const override
@@ -397,6 +399,22 @@ private:
     }
 };
 
+class Trap_fire: public Mech_trap_impl
+{
+private:
+    friend class Trap;
+
+    Trap_fire(Pos pos, const Trap* const base_trap) :
+        Mech_trap_impl(pos, Trap_id::smoke, base_trap) {}
+
+    void trigger();
+
+    Range nr_turns_range_to_trigger() const override
+    {
+        return {3, 4};
+    }
+};
+
 class Trap_alarm: public Mech_trap_impl
 {
 private:
@@ -451,6 +469,22 @@ private:
     friend class Trap;
 
     Trap_wpn_destr(Pos pos, const Trap* const base_trap) :
+        Magic_trap_impl(pos, Trap_id::summon, base_trap) {}
+
+    void trigger();
+
+    Range nr_turns_range_to_trigger() const override
+    {
+        return {0, 0};
+    }
+};
+
+class Trap_spi_drain: public Magic_trap_impl
+{
+private:
+    friend class Trap;
+
+    Trap_spi_drain(Pos pos, const Trap* const base_trap) :
         Magic_trap_impl(pos, Trap_id::summon, base_trap) {}
 
     void trigger();

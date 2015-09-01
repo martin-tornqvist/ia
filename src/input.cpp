@@ -701,6 +701,8 @@ void handle_map_mode_key_press(const Key_data& d)
                         Item* item_to_throw         = item_factory::copy_item(*item_stack);
                         item_to_throw->nr_items_    = 1;
 
+                        item_to_throw->clear_actor_carrying();
+
                         auto on_marker_at_pos = [&](const Pos & p)
                         {
                             msg_log::clear();
@@ -751,6 +753,7 @@ void handle_map_mode_key_press(const Key_data& d)
                                     }
 
                                     throwing::throw_item(*map::player, p, *item_to_throw);
+
                                     player_inv.decr_item_in_slot(Slot_id::thrown);
                                 }
 

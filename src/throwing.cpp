@@ -22,8 +22,6 @@
 #include "feature_rigid.hpp"
 #include "feature_mob.hpp"
 
-using namespace std;
-
 namespace throwing
 {
 
@@ -31,7 +29,7 @@ void player_throw_lit_explosive(const Pos& aim_cell)
 {
     assert(map::player->active_explosive);
 
-    vector<Pos> path;
+    std::vector<Pos> path;
     line_calc::calc_new_line(map::player->pos, aim_cell, true, THROW_RANGE_LMT, false, path);
 
     //Remove cells after blocked cells
@@ -96,12 +94,12 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
 
     const Actor_size aim_lvl = data.intended_aim_lvl;
 
-    vector<Pos> path;
+    std::vector<Pos> path;
     line_calc::calc_new_line(actor_throwing.pos, tgt_cell, false, THROW_RANGE_LMT, false, path);
 
     const auto& item_thrown_data = item_thrown.data();
 
-    const string item_name_a = item_thrown.name(Item_ref_type::a);
+    const std::string item_name_a = item_thrown.name(Item_ref_type::a);
 
     if (&actor_throwing == map::player)
     {
@@ -155,7 +153,7 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
 
                 const bool CAN_SEE_ACTOR = map::player->can_see_actor(*actor_here);
 
-                const string defender_name = CAN_SEE_ACTOR ? actor_here->name_the() : "It";
+                const std::string defender_name = CAN_SEE_ACTOR ? actor_here->name_the() : "It";
 
                 msg_log::add(defender_name + " is hit.", hit_message_clr);
 
