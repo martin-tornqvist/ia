@@ -42,7 +42,7 @@ enum class Sfx_id
     //User interface sounds
     backpack,
     pickup,
-    electric_lantern,
+    lantern,
     potion_quaff,
     spell_generic,
     insanity_rise,

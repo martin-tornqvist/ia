@@ -124,7 +124,6 @@ void init_data_list()
     d.group_size = Mon_group_size::group;
     d.actor_size = Actor_size::humanoid;
     d.natural_props[int(Prop_id::infravis)] = true;
-    d.is_humanoid = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 12;
     d.descr = "This rotting thing appears to have been brought back to life "
@@ -137,6 +136,7 @@ void init_data_list()
     d.erratic_move_pct = Actor_erratic_freq::somewhat;
     d.mon_shock_lvl = Mon_shock_lvl::scary;
     d.is_undead = true;
+    d.is_humanoid = true;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::monster);
     d.native_rooms.push_back(Room_type::crypt);
@@ -1850,6 +1850,7 @@ void init_data_list()
     d.erratic_move_pct = Actor_erratic_freq::somewhat;
     d.mon_shock_lvl = Mon_shock_lvl::terrifying;
     d.is_infra_visible = false;
+    d.is_humanoid = true;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::monster);
     d.native_rooms.push_back(Room_type::crypt);
@@ -1896,6 +1897,7 @@ void init_data_list()
     d.descr = "A living shadow.";
     d.is_auto_descr_allowed = false;
     d.is_infra_visible = false;
+    d.is_humanoid = true;
     d.erratic_move_pct = Actor_erratic_freq::somewhat;
     d.mon_shock_lvl = Mon_shock_lvl::scary;
     d.native_rooms.push_back(Room_type::plain);
@@ -1939,6 +1941,7 @@ void init_data_list()
     d.descr = "A mysterious humanoid figure stalking for prey. It is invisible to normal eyes.";
     d.is_auto_descr_allowed = true;
     d.is_infra_visible = false;
+    d.is_humanoid = true;
     d.erratic_move_pct = Actor_erratic_freq::somewhat;
     d.mon_shock_lvl = Mon_shock_lvl::scary;
     d.native_rooms.push_back(Room_type::plain);

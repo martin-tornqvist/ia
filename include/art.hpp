@@ -39,7 +39,7 @@ enum class Tile_id
     chest_open,
     amulet,
     ring,
-    electric_lantern,
+    lantern,
     medical_bag,
     mask,
     rat,
@@ -165,7 +165,9 @@ enum class Tile_id
     popup_hor_up,
     popup_ver_r,
     popup_ver_l,
-    stalagmite
+    stalagmite,
+    heart,
+    brain
 };
 
 

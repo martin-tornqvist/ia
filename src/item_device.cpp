@@ -328,7 +328,10 @@ std::string Device_lantern::name_inf() const
 {
     std::string inf = "{" + to_str(nr_turns_left_);
 
-    if (is_activated_) {inf += ", Lit";}
+    if (is_activated_)
+    {
+        inf += ", Lit";
+    }
 
     return inf + "}";
 }
@@ -384,13 +387,17 @@ void Device_lantern::on_pickup_hook()
 void Device_lantern::toggle()
 {
     const std::string toggle_str = is_activated_ ? "I turn off" : "I turn on";
+
     msg_log::add(toggle_str + " an Electric Lantern.");
 
     is_activated_ = !is_activated_;
 
-    audio::play(Sfx_id::electric_lantern);
+    audio::play(Sfx_id::lantern);
+
     game_time::update_light_map();
+
     map::player->update_fov();
+
     render::draw_map_and_interface();
 }
 
@@ -418,11 +425,6 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
             render::draw_map_and_interface();
 
             return;
-        }
-        else if (nr_turns_left_ <= 3)
-        {
-            msg_log::add("My Electric Lantern is breaking.", clr_msg_note, true,
-                         More_prompt_on_msg::yes);
         }
 
         //This point reached means the lantern is not destroyed
@@ -453,7 +455,7 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
                 map::player->update_fov();
                 render::draw_map_and_interface();
             }
-            else
+            else //Not flickering
             {
                 working_state_ = Lantern_working_state::working;
             }
@@ -467,9 +469,11 @@ Lgt_size Device_lantern::lgt_size() const
     {
         switch (working_state_)
         {
-        case Lantern_working_state::working: return Lgt_size::fov;
+        case Lantern_working_state::working:
+            return Lgt_size::fov;
 
-        case Lantern_working_state::flicker: return Lgt_size::small;
+        case Lantern_working_state::flicker:
+            return Lgt_size::small;
         }
     }
 

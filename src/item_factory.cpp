@@ -299,7 +299,7 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
         r = new Device_sentry_drone(d);
         break;
 
-    case Item_id::electric_lantern:
+    case Item_id::lantern:
         r = new Device_lantern(d);
         break;
 

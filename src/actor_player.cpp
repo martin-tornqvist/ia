@@ -254,7 +254,7 @@ void Player::mk_start_items()
 
     if (has_lantern)
     {
-        inv_->put_in_backpack(item_factory::mk(Item_id::electric_lantern));
+        inv_->put_in_backpack(item_factory::mk(Item_id::lantern));
     }
 
     if (has_leather_jacket)

@@ -197,7 +197,7 @@ public:
         return armor_points() <= 0;
     }
 
-    std::string armor_data_line(const bool WITH_BRACKETS) const;
+    std::string armor_points_str(const bool WITH_BRACKETS) const;
 
     int take_dur_hit_and_get_reduced_dmg(const int DMG_BEFORE);
 
@@ -211,7 +211,7 @@ protected:
 
     std::string name_inf() const override
     {
-        return armor_data_line(true);
+        return armor_points_str(true);
     }
 
     int dur_;
@@ -444,7 +444,10 @@ public:
         lines.erase(begin(lines));
     }
 
-    int nr_supplies() const {return nr_supplies_;}
+    int nr_supplies() const
+    {
+        return nr_supplies_;
+    }
 
 protected:
     Med_bag_action choose_action() const;
@@ -452,7 +455,10 @@ protected:
     int tot_turns_for_sanitize() const;
     int tot_suppl_for_sanitize() const;
 
-    std::string name_inf() const override {return "{" + to_str(nr_supplies_) + "}";}
+    std::string name_inf() const override
+    {
+        return "{" + to_str(nr_supplies_) + "}";
+    }
 
     int nr_supplies_;
 
@@ -467,7 +473,10 @@ class Headwear: public Item
 public:
     Headwear(Item_data_t* item_data) : Item(item_data) {}
 
-    Clr interface_clr() const override {return clr_brown;}
+    Clr interface_clr() const override
+    {
+        return clr_brown;
+    }
 };
 
 //class Hideous_mask: public Headwear

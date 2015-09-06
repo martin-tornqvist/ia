@@ -135,7 +135,7 @@ void init()
         //User interface sounds
         load_audio_file(Sfx_id::backpack,               "sfx_backpack.ogg");
         load_audio_file(Sfx_id::pickup,                 "sfx_pickup.ogg");
-        load_audio_file(Sfx_id::electric_lantern,       "sfx_electric_lantern.ogg");
+        load_audio_file(Sfx_id::lantern,                "sfx_electric_lantern.ogg");
         load_audio_file(Sfx_id::potion_quaff,           "sfx_potion_quaff.ogg");
         load_audio_file(Sfx_id::spell_generic,          "sfx_spell_generic.ogg");
         load_audio_file(Sfx_id::insanity_rise,          "sfx_insanity_rising.ogg");

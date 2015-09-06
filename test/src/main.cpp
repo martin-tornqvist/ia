@@ -823,7 +823,7 @@ TEST_FIXTURE(Basic_fixture, saving_game)
     item = item_factory::mk(Item_id::device_blaster);
     static_cast<Strange_device*>(item)->condition_ = Condition::shoddy;
     inv.put_in_backpack(item);
-    item = item_factory::mk(Item_id::electric_lantern);
+    item = item_factory::mk(Item_id::lantern);
     Device_lantern* lantern         = static_cast<Device_lantern*>(item);
     lantern->nr_turns_left_         = 789;
     lantern->nr_flicker_turns_left_ = 456;
@@ -904,7 +904,7 @@ TEST_FIXTURE(Basic_fixture, loading_game)
     int nr_clip_with_2 = 0;
     int nr_clip_with_3 = 0;
     bool is_sentry_device_found     = false;
-    bool is_electric_lantern_found  = false;
+    bool is_lantern_found  = false;
 
     for (Item* item : genInv)
     {
@@ -936,9 +936,9 @@ TEST_FIXTURE(Basic_fixture, loading_game)
             CHECK_EQUAL(int(Condition::shoddy),
                         int(static_cast<Strange_device*>(item)->condition_));
         }
-        else if (id == Item_id::electric_lantern)
+        else if (id == Item_id::lantern)
         {
-            is_electric_lantern_found = true;
+            is_lantern_found = true;
             Device_lantern* lantern = static_cast<Device_lantern*>(item);
             CHECK_EQUAL(789, lantern->nr_turns_left_);
             CHECK_EQUAL(456, lantern->nr_flicker_turns_left_);
@@ -951,7 +951,7 @@ TEST_FIXTURE(Basic_fixture, loading_game)
     CHECK_EQUAL(1, nr_clip_with_2);
     CHECK_EQUAL(2, nr_clip_with_3);
     CHECK(is_sentry_device_found);
-    CHECK(is_electric_lantern_found);
+    CHECK(is_lantern_found);
 
     //Player
     Actor_data_t& def = map::player->data();

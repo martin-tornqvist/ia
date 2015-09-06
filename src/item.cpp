@@ -330,10 +330,10 @@ void Armor::setup_from_save_lines(std::vector<std::string>& lines)
     lines.erase(begin(lines));
 }
 
-std::string Armor::armor_data_line(const bool WITH_BRACKETS) const
+std::string Armor::armor_points_str(const bool WITH_BRACKETS) const
 {
     const int           AP      = armor_points();
-    const std::string   ap_str  = to_str(std::max(0, AP));
+    const std::string   ap_str  = to_str(std::max(1, AP));
 
     return WITH_BRACKETS ? ("[" + ap_str + "]") : ap_str;
 }
@@ -388,20 +388,20 @@ int Armor::armor_points() const
 
     if (dur_ > 40)
     {
-        return std::max(0, AP_MAX - 1);
+        return std::max(1, AP_MAX - 1);
     }
 
     if (dur_ > 25)
     {
-        return std::max(0, AP_MAX - 2);
+        return std::max(1, AP_MAX - 2);
     }
 
     if (dur_ > 15)
     {
-        return std::max(0, AP_MAX - 3);
+        return std::max(1, AP_MAX - 3);
     }
 
-    return 0;
+    return 1;
 }
 
 void Armor_asb_suit::on_equip_hook(const Verbosity verbosity)

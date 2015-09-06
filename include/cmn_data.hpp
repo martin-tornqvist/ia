@@ -3,12 +3,12 @@
 
 #include <string>
 
-const size_t PLAYER_NAME_MAX_LEN = 12;
+const size_t PLAYER_NAME_MAX_LEN = 14;
 
-const std::string game_version_str = "v17.0";
+const std::string game_version_str          = "v17.0";
 
-const std::string tiles_img_name         = "images/gfx_16x24.png";
-const std::string main_menu_logo_img_name  = "images/main_menu_logo.png";
+const std::string tiles_img_name            = "images/gfx_16x24.png";
+const std::string main_menu_logo_img_name   = "images/main_menu_logo.png";
 
 const int SCREEN_BPP = 32;
 

@@ -154,7 +154,7 @@ Pos column_and_row_tile(const Tile_id tile)
     case Tile_id::chest_open:                   return Pos(12, 1);
     case Tile_id::amulet:                       return Pos(14, 1);
     case Tile_id::ring:                         return Pos(15, 1);
-    case Tile_id::electric_lantern:             return Pos(16, 1);
+    case Tile_id::lantern:                      return Pos(16, 1);
     case Tile_id::medical_bag:                  return Pos(17, 1);
     case Tile_id::mask:                         return Pos(18, 1);
     case Tile_id::rat:                          return Pos(1, 2);
@@ -281,6 +281,8 @@ Pos column_and_row_tile(const Tile_id tile)
     case Tile_id::popup_ver_l:                  return Pos(12, 10);
     case Tile_id::stalagmite:                   return Pos(13, 10);
     case Tile_id::trap_general:                 return Pos(14, 10);
+    case Tile_id::heart:                        return Pos(0, 11);
+    case Tile_id::brain:                        return Pos(1, 11);
 
     case Tile_id::empty:
     default:                                    return Pos(18, 10);

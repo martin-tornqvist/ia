@@ -15,8 +15,6 @@
 #include "item_device.hpp"
 #include "map.hpp"
 
-using namespace std;
-
 Item_data_t::Item_data_t() :
     id                                  (Item_id::END),
     type                                (Item_type::general),
@@ -57,7 +55,7 @@ Item_data_t::Item_data_t() :
 
 Item_data_t::Item_melee_data::Item_melee_data() :
     is_melee_wpn                        (false),
-    dmg                                 (pair<int, int>(0, 0)),
+    dmg                                 (std::pair<int, int>(0, 0)),
     hit_chance_mod                      (0),
     att_msgs                            (Item_att_msgs()),
     prop_applied                        (nullptr),
@@ -174,7 +172,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.glyph = '}';
         d.clr = clr_white;
         d.melee.is_melee_wpn = true;
-        d.melee.dmg = pair<int, int>(1, 6);
+        d.melee.dmg = std::pair<int, int>(1, 6);
         d.main_att_mode = Main_att_mode::ranged;
         d.ranged.is_ranged_wpn = true;
         d.ranged.projectile_glyph = '/';
@@ -361,7 +359,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
 void set_dmg_from_mon_id(Item_data_t& item_data, const Actor_id id)
 {
     const auto& actor_data      = actor_data::data[int(id)];
-    item_data.melee.dmg         = pair<int, int>(1, actor_data.dmg_melee);
+    item_data.melee.dmg         = std::pair<int, int>(1, actor_data.dmg_melee);
     item_data.ranged.dmg        = Dice_param(1, actor_data.dmg_ranged, 0);
     item_data.ranged.throw_dmg  = Dice_param(1, actor_data.dmg_ranged, 0);
 }
@@ -713,7 +711,7 @@ void init_data_list()
     d.id = Item_id::trap_spear;
     d.allow_spawn = false;
     d.weight = Item_weight::heavy;
-    d.melee.dmg = pair<int, int>(2, 6);
+    d.melee.dmg = std::pair<int, int>(2, 6);
     d.melee.hit_chance_mod = 85;
     d.melee.hit_small_sfx = Sfx_id::hit_sharp;
     d.melee.hit_medium_sfx = Sfx_id::hit_sharp;
@@ -852,7 +850,7 @@ void init_data_list()
     d.weight = Item_weight::light;
     d.tile = Tile_id::dagger;
     d.melee.att_msgs = {"stab", "stabs me with a Dagger"};
-    d.melee.dmg = pair<int, int>(1, 4);
+    d.melee.dmg = std::pair<int, int>(1, 4);
     d.melee.hit_chance_mod = 20;
     d.melee.hit_medium_sfx = Sfx_id::hit_sharp;
     d.melee.hit_hard_sfx = Sfx_id::hit_sharp;
@@ -877,7 +875,7 @@ void init_data_list()
     d.weight = Item_weight::light;
     d.tile = Tile_id::axe;
     d.melee.att_msgs = {"strike", "strikes me with a Hatchet"};
-    d.melee.dmg = pair<int, int>(1, 5);
+    d.melee.dmg = std::pair<int, int>(1, 5);
     d.melee.hit_chance_mod = 15;
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.throw_dmg = Dice_param(1, 10);
@@ -903,7 +901,7 @@ void init_data_list()
     d.tile = Tile_id::club;
     d.clr = clr_brown;
     d.melee.att_msgs = {"strike", "strikes me with a Club"};
-    d.melee.dmg = pair<int, int>(2, 3);
+    d.melee.dmg = std::pair<int, int>(2, 3);
     d.melee.hit_chance_mod = 10;
     d.melee.miss_sfx = Sfx_id::miss_medium;
     data[size_t(d.id)] = d;
@@ -921,7 +919,7 @@ void init_data_list()
     d.weight = Item_weight::medium;
     d.tile = Tile_id::hammer;
     d.melee.att_msgs = {"strike", "strikes me with a Hammer"};
-    d.melee.dmg = pair<int, int>(2, 4);
+    d.melee.dmg = std::pair<int, int>(2, 4);
     d.melee.hit_chance_mod = 5;
     d.melee.miss_sfx = Sfx_id::miss_medium;
     add_feature_found_in(d, Feature_id::cabinet);
@@ -940,7 +938,7 @@ void init_data_list()
     d.weight = Item_weight::medium;
     d.tile = Tile_id::machete;
     d.melee.att_msgs = {"strike", "strikes me with a Machete"};
-    d.melee.dmg = pair<int, int>(2, 5);
+    d.melee.dmg = std::pair<int, int>(2, 5);
     d.melee.hit_chance_mod = 0;
     d.melee.hit_small_sfx = Sfx_id::hit_sharp;
     d.melee.hit_medium_sfx = Sfx_id::hit_sharp;
@@ -963,7 +961,7 @@ void init_data_list()
     d.weight = Item_weight::medium;
     d.tile = Tile_id::axe;
     d.melee.att_msgs = {"strike", "strikes me with an axe"};
-    d.melee.dmg = pair<int, int>(2, 6);
+    d.melee.dmg = std::pair<int, int>(2, 6);
     d.melee.hit_chance_mod = -5;
     d.melee.miss_sfx = Sfx_id::miss_medium;
     add_feature_found_in(d, Feature_id::cabinet);
@@ -982,7 +980,7 @@ void init_data_list()
     d.weight = Item_weight::heavy;
     d.tile = Tile_id::pitchfork;
     d.melee.att_msgs = {"strike", "strikes me with a Pitchfork"};
-    d.melee.dmg = pair<int, int>(3, 4);
+    d.melee.dmg = std::pair<int, int>(3, 4);
     d.melee.hit_chance_mod = -5;
     d.melee.knocks_back = true;
     d.melee.hit_small_sfx = Sfx_id::hit_sharp;
@@ -1004,7 +1002,7 @@ void init_data_list()
     d.weight = Item_weight::heavy;
     d.tile = Tile_id::sledge_hammer;
     d.melee.att_msgs = {"strike", "strikes me with a Sledgehammer"};
-    d.melee.dmg = pair<int, int>(3, 5);
+    d.melee.dmg = std::pair<int, int>(3, 5);
     d.melee.hit_chance_mod = -10;
     d.melee.knocks_back = true;
     d.melee.miss_sfx = Sfx_id::miss_heavy;
@@ -1028,7 +1026,7 @@ void init_data_list()
     d.weight = Item_weight::medium;
     d.tile = Tile_id::pharaoh_staff;
     d.melee.att_msgs = {"strike", "strikes me with the Staff of the Pharaohs"};
-    d.melee.dmg = pair<int, int>(2, 4);
+    d.melee.dmg = std::pair<int, int>(2, 4);
     d.melee.hit_chance_mod = 0;
     d.melee.miss_sfx = Sfx_id::miss_medium;
     d.chance_to_incl_in_floor_spawn_list = 1;
@@ -1065,7 +1063,7 @@ void init_data_list()
     d.id = Item_id::player_kick;
     d.melee.att_msgs = {"kick", ""};
     d.melee.hit_chance_mod = 15;
-    d.melee.dmg = pair<int, int>(1, 3);
+    d.melee.dmg = std::pair<int, int>(1, 2);
     d.melee.knocks_back = true;
     d.melee.miss_sfx = Sfx_id::miss_medium;
     data[size_t(d.id)] = d;
@@ -1083,7 +1081,7 @@ void init_data_list()
     d.id = Item_id::player_punch;
     d.melee.att_msgs = {"punch", ""};
     d.melee.hit_chance_mod = 20;
-    d.melee.dmg = pair<int, int>(1, 1);
+    d.melee.dmg = std::pair<int, int>(1, 1);
     d.melee.miss_sfx = Sfx_id::miss_light;
     data[size_t(d.id)] = d;
 
@@ -1091,7 +1089,7 @@ void init_data_list()
     d.id = Item_id::player_ghoul_claw;
     d.melee.att_msgs = {"claw", ""};
     d.melee.hit_chance_mod = 25;
-    d.melee.dmg = pair<int, int>(2, 5);
+    d.melee.dmg = std::pair<int, int>(2, 5);
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
@@ -1889,7 +1887,7 @@ void init_data_list()
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::device);
-    d.id = Item_id::electric_lantern;
+    d.id = Item_id::lantern;
     d.is_prio_in_backpack_list = true;
     d.base_name = {"Electric Lantern", "Electric Lanterns", "an Electric Lantern"};
     d.base_descr =
@@ -1901,7 +1899,7 @@ void init_data_list()
     d.spawn_std_range = Range(1, 10);
     d.chance_to_incl_in_floor_spawn_list = 50;
     d.is_identified = true;
-    d.tile = Tile_id::electric_lantern;
+    d.tile = Tile_id::lantern;
     d.clr = clr_yellow;
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
@@ -2079,7 +2077,7 @@ void cleanup()
 }
 
 
-void store_to_save_lines(vector<string>& lines)
+void store_to_save_lines(std::vector<std::string>& lines)
 {
     for (int i = 0; i < int(Item_id::END); ++i)
     {
@@ -2095,7 +2093,7 @@ void store_to_save_lines(vector<string>& lines)
     }
 }
 
-void setup_from_save_lines(vector<string>& lines)
+void setup_from_save_lines(std::vector<std::string>& lines)
 {
     for (int i = 0; i < int(Item_id::END); ++i)
     {

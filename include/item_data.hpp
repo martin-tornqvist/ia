@@ -184,7 +184,7 @@ enum class Item_id
     device_translocator,
     device_sentry_drone,
 
-    electric_lantern,
+    lantern,
 
     medical_bag,
 
