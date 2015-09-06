@@ -468,7 +468,7 @@ int Player::shock_resistance(const Shock_src shock_src) const
     case Shock_src::cast_intr_spell:
     case Shock_src::time:
     case Shock_src::misc:
-    case Shock_src::END: {}
+    case Shock_src::END:
         break;
     }
 
@@ -478,7 +478,10 @@ int Player::shock_resistance(const Shock_src shock_src) const
 double Player::shock_taken_after_mods(const int BASE_SHOCK,
                                       const Shock_src shock_src) const
 {
-    if (BASE_SHOCK == 0) {return 0.0;}
+    if (BASE_SHOCK == 0)
+    {
+        return 0.0;
+    }
 
     const double SHOCK_RES_DB   = double(shock_resistance(shock_src));
     const double BASE_SHOCK_DB  = double(BASE_SHOCK);
@@ -784,7 +787,8 @@ void Player::incr_insanity()
                         return;
                     } break;
 
-                    default: {} break;
+                    default:
+                        break;
                     }
                 }
             }
@@ -842,7 +846,10 @@ bool Player::is_standing_in_open_space() const
     {
         for (int y = pos.y - 1; y <= pos.y + 1; ++y)
         {
-            if (blocked[x][y]) {return false;}
+            if (blocked[x][y])
+            {
+                return false;
+            }
         }
     }
 
@@ -863,7 +870,10 @@ bool Player::is_standing_in_cramped_space() const
             {
                 block_count++;
 
-                if (block_count >= 6) {return true;}
+                if (block_count >= 6)
+                {
+                    return true;
+                }
             }
         }
     }
@@ -1832,10 +1842,9 @@ void Player::add_light_hook(bool light_map[MAP_W][MAP_H]) const
                 light_map[x][y] = true;
             }
         }
-
         break;
 
-    case Lgt_size::none: {}
+    case Lgt_size::none:
         break;
     }
 }

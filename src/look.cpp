@@ -30,7 +30,7 @@ std::string normal_group_size_str(const Actor_data_t& def)
     const Mon_group_size s = def.group_size;
 
     return
-        s == Mon_group_size::alone ? "alone"           :
+        s == Mon_group_size::alone  ? "alone"           :
         s == Mon_group_size::few    ? "in small groups" :
         s == Mon_group_size::group  ? "in groups"       :
         s == Mon_group_size::horde  ? "in hordes"       : "in swarms";
@@ -40,17 +40,23 @@ std::string speed_str(const Actor_data_t& def)
 {
     switch (def.speed)
     {
-    case Actor_speed::sluggish:   {return "sluggishly";}
+    case Actor_speed::sluggish:
+        return "sluggishly";
 
-    case Actor_speed::slow:       {return "slowly";}
+    case Actor_speed::slow:
+        return "slowly";
 
-    case Actor_speed::normal:     {return "at normal speed";}
+    case Actor_speed::normal:
+        return "at normal speed";
 
-    case Actor_speed::fast:       {return "fast";}
+    case Actor_speed::fast:
+        return "fast";
 
-    case Actor_speed::fastest:    {return "very fast";}
+    case Actor_speed::fastest:
+        return "very fast";
 
-    case Actor_speed::END: {} break;
+    case Actor_speed::END:
+        break;
     }
 
     return "";

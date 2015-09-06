@@ -70,7 +70,10 @@ public:
 
     virtual Consume_item activate(Actor* const actor);
 
-    virtual Clr interface_clr() const {return clr_brown;}
+    virtual Clr interface_clr() const
+    {
+        return clr_brown;
+    }
 
     virtual void on_std_turn_in_inv(const Inv_type inv_type)
     {
@@ -401,7 +404,10 @@ public:
     }
 
 protected:
-    std::string name_inf() const override {return "{" + to_str(ammo_) + "}";}
+    std::string name_inf() const override
+    {
+        return "{" + to_str(ammo_) + "}";
+    }
 };
 
 enum class Med_bag_action
@@ -432,7 +438,10 @@ public:
     void interrupted();
     void finish_cur_action();
 
-    Clr interface_clr() const override {return clr_green;}
+    Clr interface_clr() const override
+    {
+        return clr_green;
+    }
 
     void store_to_save_lines(std::vector<std::string>& lines) override
     {
@@ -517,7 +526,10 @@ public:
     Explosive() = delete;
 
     Consume_item activate(Actor* const actor) override final;
-    Clr interface_clr() const override final {return clr_red_lgt;}
+    Clr interface_clr() const override final
+    {
+        return clr_red_lgt;
+    }
 
     virtual void on_std_turn_player_hold_ignited() = 0;
     virtual void on_thrown_ignited_landing(const Pos& p) = 0;
@@ -585,7 +597,10 @@ public:
     }
 
 protected:
-    int std_fuse_turns() const override {return 12;}
+    int std_fuse_turns() const override
+    {
+        return 12;
+    }
     void on_player_ignite() const override;
 };
 
@@ -609,7 +624,10 @@ public:
     }
 
 protected:
-    int std_fuse_turns() const override {return 200;}
+    int std_fuse_turns() const override
+    {
+        return 200;
+    }
     void on_player_ignite() const override;
 };
 

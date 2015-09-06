@@ -653,7 +653,8 @@ void run_options_menu()
             draw(&browser, OPTION_VALUES_X_POS);
             break;
 
-        default: {} break;
+        default:
+            break;
         }
     }
 }

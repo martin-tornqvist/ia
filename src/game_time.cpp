@@ -389,7 +389,10 @@ void update_light_map()
     }
 
     //Do not add light on Leng
-    if (map_travel::map_type() == Map_type::leng) {return;}
+    if (map_travel::map_type() == Map_type::leng)
+    {
+        return;
+    }
 
     for (const auto* const a : actors_)  {a->add_light(light_tmp);}
 

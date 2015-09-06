@@ -118,7 +118,10 @@ void calc_new_line(const Pos& origin, const Pos& tgt,
 
         cur_pos.set(floor(cur_x_db), floor(cur_y_db));
 
-        if (!ALLOW_OUTSIDE_MAP && !utils::is_pos_inside_map(cur_pos)) {return;}
+        if (!ALLOW_OUTSIDE_MAP && !utils::is_pos_inside_map(cur_pos))
+        {
+            return;
+        }
 
         bool is_pos_ok_to_add = false;
 

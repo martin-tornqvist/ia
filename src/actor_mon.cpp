@@ -598,7 +598,10 @@ bool Mon::try_attack(Actor& defender)
             }
         }
 
-        if (is_blocked_by_friend) {return false;}
+        if (is_blocked_by_friend)
+        {
+            return false;
+        }
 
         const int NR_TURNS_NO_RANGED = data_->ranged_cooldown_turns;
 
@@ -861,7 +864,7 @@ void Cultist::mk_start_items()
         inv_->put_in_slot(Slot_id::wpn, item);
     }
 
-    if (rnd::one_in(6))
+    if (rnd::one_in(8))
     {
         inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
     }
@@ -882,7 +885,7 @@ void Cultist_electric::mk_start_items()
 
     inv_->put_in_slot(Slot_id::wpn, item);
 
-    if (rnd::one_in(3))
+    if (rnd::one_in(5))
     {
         inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
     }
@@ -1506,7 +1509,9 @@ void Keziah_mason::mk_start_items()
     spells_known_.push_back(spell_handling::random_spell_for_mon());
 
     for (int i = rnd::range(2, 3); i > 0; --i)
+    {
         inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
+    }
 }
 
 void Leng_elder::on_std_turn_hook()

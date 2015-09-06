@@ -661,7 +661,10 @@ void Inventory::put_in_intrinsics(Item* item)
 
 Item* Inventory::last_item_in_backpack()
 {
-    if (!backpack_.empty()) {return backpack_[backpack_.size() - 1];}
+    if (!backpack_.empty())
+    {
+        return backpack_[backpack_.size() - 1];
+    }
 
     return nullptr;
 }

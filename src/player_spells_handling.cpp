@@ -314,7 +314,7 @@ void player_select_spell_to_cast()
     {
         msg_log::add("I do not know any spells to invoke.");
     }
-    else
+    else //Has spells
     {
         auto spell_opt_sort = [](const Spell_opt & opt1, const Spell_opt & opt2)
         {
@@ -349,7 +349,7 @@ void player_select_spell_to_cast()
                 try_cast(spell_opts[browser.y()]);
                 return;
 
-            default: {}
+            default:
                 break;
             }
         }
@@ -369,7 +369,10 @@ void try_cast_prev_spell()
         std::vector<Spell_opt> spell_opts;
         spells_avail(spell_opts);
 
-        auto spell_opt_cmp = [&](const Spell_opt & opt) {return opt.spell == prev_cast_.spell;};
+        auto spell_opt_cmp = [&](const Spell_opt & opt)
+        {
+            return opt.spell == prev_cast_.spell;
+        };
 
         is_prev_spell_ok = find_if(begin(spell_opts), end(spell_opts), spell_opt_cmp) !=
                            end(spell_opts);
@@ -391,7 +394,13 @@ void try_cast_prev_spell()
 
 bool is_spell_learned(const Spell_id id)
 {
-    for (auto* s : known_spells_) {if (s->id() == id) {return true;}}
+    for (auto* s : known_spells_)
+    {
+        if (s->id() == id)
+        {
+            return true;
+        }
+    }
 
     return false;
 }

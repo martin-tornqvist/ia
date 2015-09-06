@@ -123,7 +123,10 @@ void mk_pillars_in_room(const Room& room)
             {
                 const auto* const f = map::cells[p.x + dx][p.y + dy].rigid;
 
-                if (f->id() == Feature_id::wall) {return false;}
+                if (f->id() == Feature_id::wall)
+                {
+                    return false;
+                }
             }
         }
 
@@ -133,7 +136,10 @@ void mk_pillars_in_room(const Room& room)
     if (rnd::fraction(2, 3))
     {
         //Place pillars in rows and columns (but occasionally skip a pillar)
-        auto step_size = []() {return rnd::range(1, 2);};
+        auto step_size = []()
+        {
+            return rnd::range(1, 2);
+        };
         const int DX = step_size();
         const int DY = step_size();
 

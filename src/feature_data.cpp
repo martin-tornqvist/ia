@@ -10,8 +10,6 @@
 #include "feature_event.hpp"
 #include "feature_door.hpp"
 
-using namespace std;
-
 //--------------------------------------------------------- FEATURE ROOM SPAWN RULES
 Feature_room_spawn_rules::Feature_room_spawn_rules() :
     max_nr_in_room_(-1),
@@ -135,7 +133,10 @@ void init_data_list()
 
     //---------------------------------------------------------------------------
     d.id = Feature_id::floor;
-    d.mk_obj = [](const Pos & p) {return new Floor(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Floor(p);
+    };
     d.glyph = '.';
     d.tile = Tile_id::floor;
     d.move_rules.set_can_move_cmn();
@@ -143,13 +144,19 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::bridge;
-    d.mk_obj = [](const Pos & p) {return new Bridge(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Bridge(p);
+    };
     d.move_rules.set_can_move_cmn();
     d.matl_type = Matl::wood;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::wall;
-    d.mk_obj = [](const Pos & p) {return new Wall(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Wall(p);
+    };
     d.glyph = config::is_text_mode_wall_full_square() ? 10 : '#';
     d.tile = Tile_id::wall_top;
     d.move_rules.set_prop_can_move(Prop_id::ethereal);
@@ -166,7 +173,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::tree;
-    d.mk_obj = [](const Pos & p) {return new Tree(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Tree(p);
+    };
     d.glyph = '|';
     d.tile = Tile_id::tree;
     d.move_rules.set_prop_can_move(Prop_id::ethereal);
@@ -185,7 +195,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::grass;
-    d.mk_obj = [](const Pos & p) {return new Grass(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Grass(p);
+    };
     d.glyph = '.';
     d.tile = Tile_id::floor;
     d.move_rules.set_can_move_cmn();
@@ -193,7 +206,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::bush;
-    d.mk_obj = [](const Pos & p) {return new Bush(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Bush(p);
+    };
     d.glyph = '"';
     d.tile = Tile_id::bush;
     d.move_rules.set_can_move_cmn();
@@ -201,7 +217,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::stairs;
-    d.mk_obj = [](const Pos & p) {return new Stairs(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Stairs(p);
+    };
     d.glyph = '>';
     d.tile = Tile_id::stairs_down;
     d.can_have_blood = false;
@@ -213,7 +232,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::lever;
-    d.mk_obj = [](const Pos & p) {return new Lever(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Lever(p);
+    };
     d.glyph = '%';
     d.tile = Tile_id::lever_left;
     d.can_have_blood = false;
@@ -225,7 +247,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::brazier;
-    d.mk_obj = [](const Pos & p) {return new Brazier(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Brazier(p);
+    };
     d.glyph = '0';
     d.tile = Tile_id::brazier;
     d.move_rules.set_can_move_cmn();
@@ -242,7 +267,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::liquid_shallow;
-    d.mk_obj = [](const Pos & p) {return new Liquid_shallow(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Liquid_shallow(p);
+    };
     d.glyph = '~';
     d.tile = Tile_id::water1;
     d.move_rules.set_can_move_cmn();
@@ -254,7 +282,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::liquid_deep;
-    d.mk_obj = [](const Pos & p) {return new Liquid_deep(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Liquid_deep(p);
+    };
     d.glyph = '~';
     d.tile = Tile_id::water1;
     d.move_rules.set_prop_can_move(Prop_id::ethereal);
@@ -266,7 +297,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::chasm;
-    d.mk_obj = [](const Pos & p) {return new Chasm(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Chasm(p);
+    };
     d.glyph = ' ';
     d.move_rules.set_prop_can_move(Prop_id::ethereal);
     d.move_rules.set_prop_can_move(Prop_id::flying);
@@ -283,7 +317,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::gravestone;
-    d.mk_obj = [](const Pos & p) {return new Grave_stone(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Grave_stone(p);
+    };
     d.glyph = '&';
     d.tile = Tile_id::grave_stone;
     d.move_rules.set_prop_can_move(Prop_id::ethereal);
@@ -298,7 +335,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::church_bench;
-    d.mk_obj = [](const Pos & p) {return new Church_bench(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Church_bench(p);
+    };
     d.glyph = '[';
     d.tile = Tile_id::church_bench;
     d.move_rules.set_prop_can_move(Prop_id::ethereal);
@@ -315,7 +355,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::carpet;
-    d.mk_obj = [](const Pos & p) {return new Carpet(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Carpet(p);
+    };
     d.glyph = '.';
     d.tile = Tile_id::floor;
     d.can_have_rigid = false;
@@ -324,7 +367,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::rubble_high;
-    d.mk_obj = [](const Pos & p) {return new Rubble_high(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Rubble_high(p);
+    };
     d.glyph = 8;
     d.tile = Tile_id::rubble_high;
     d.move_rules.set_prop_can_move(Prop_id::ethereal);
@@ -342,7 +388,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::rubble_low;
-    d.mk_obj = [](const Pos & p) {return new Rubble_low(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Rubble_low(p);
+    };
     d.glyph = ',';
     d.tile = Tile_id::rubble_low;
     d.move_rules.set_can_move_cmn();
@@ -354,7 +403,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::bones;
-    d.mk_obj = [](const Pos & p) {return new Bones(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Bones(p);
+    };
     d.glyph = '&';
     d.tile = Tile_id::corpse2;
     d.move_rules.set_can_move_cmn();
@@ -366,7 +418,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::statue;
-    d.mk_obj = [](const Pos & p) {return new Statue(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Statue(p);
+    };
     d.glyph = 5; //Paragraph sign
     d.tile = Tile_id::witch_or_warlock;
     d.is_projectile_passable = false;
@@ -384,7 +439,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::cocoon;
-    d.mk_obj = [](const Pos & p) {return new Cocoon(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Cocoon(p);
+    };
     d.glyph = '8';
     d.tile = Tile_id::cocoon_closed;
     d.is_projectile_passable = true;
@@ -400,7 +458,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::chest;
-    d.mk_obj = [](const Pos & p) {return new Chest(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Chest(p);
+    };
     d.glyph = '+';
     d.tile = Tile_id::chest_closed;
     d.can_have_blood = false;
@@ -415,7 +476,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::cabinet;
-    d.mk_obj = [](const Pos & p) {return new Cabinet(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Cabinet(p);
+    };
     d.glyph = '7';
     d.tile = Tile_id::cabinet_closed;
     d.is_projectile_passable = false;
@@ -433,7 +497,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::fountain;
-    d.mk_obj = [](const Pos & p) {return new Fountain(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Fountain(p);
+    };
     d.glyph = '%';
     d.tile = Tile_id::fountain;
     d.is_projectile_passable = false;
@@ -451,7 +518,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::pillar;
-    d.mk_obj = [](const Pos & p) {return new Pillar(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Pillar(p);
+    };
     d.glyph = '|';
     d.tile = Tile_id::pillar;
     d.is_projectile_passable = false;
@@ -469,7 +539,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::monolith;
-    d.mk_obj = [](const Pos & p) {return new Monolith(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Monolith(p);
+    };
     d.glyph = '|';
     d.tile = Tile_id::monolith;
     d.is_projectile_passable = false;
@@ -487,7 +560,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::stalagmite;
-    d.mk_obj = [](const Pos & p) {return new Stalagmite(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Stalagmite(p);
+    };
     d.glyph = ':';
     d.tile = Tile_id::stalagmite;
     d.is_projectile_passable = false;
@@ -505,7 +581,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::altar;
-    d.mk_obj = [](const Pos & p) {return new Altar(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Altar(p);
+    };
     d.glyph = '_';
     d.tile = Tile_id::altar;
     d.can_have_blood = false;
@@ -522,7 +601,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::tomb;
-    d.mk_obj = [](const Pos & p) {return new Tomb(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Tomb(p);
+    };
     d.glyph = '&';
     d.tile = Tile_id::tomb_closed;
     d.move_rules.set_prop_can_move(Prop_id::ethereal);
@@ -541,7 +623,10 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::door;
-    d.mk_obj = [](const Pos & p) {return new Door(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Door(p);
+    };
     d.can_have_blood = false;
     d.can_have_gore = false;
     d.can_have_corpse = false;
@@ -550,13 +635,19 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::trap;
-    d.mk_obj = [](const Pos & p) {return new Trap(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Trap(p);
+    };
     d.move_rules.set_can_move_cmn();
     d.can_have_rigid = false;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::lit_dynamite;
-    d.mk_obj = [](const Pos & p) {return new Lit_dynamite(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Lit_dynamite(p);
+    };
     d.glyph = '/';
     d.tile = Tile_id::dynamite_lit;
     d.move_rules.set_can_move_cmn();
@@ -567,14 +658,20 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::lit_flare;
-    d.mk_obj = [](const Pos & p) {return new Lit_flare(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Lit_flare(p);
+    };
     d.glyph = '/';
     d.tile = Tile_id::flare_lit;
     d.move_rules.set_can_move_cmn();
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::smoke;
-    d.mk_obj = [](const Pos & p) {return new Smoke(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Smoke(p);
+    };
     d.glyph = '*';
     d.tile = Tile_id::smoke;
     d.move_rules.set_can_move_cmn();
@@ -582,12 +679,18 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::event_wall_crumble;
-    d.mk_obj = [](const Pos & p) {return new Event_wall_crumble(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Event_wall_crumble(p);
+    };
     d.move_rules.set_can_move_cmn();
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::event_rats_in_the_walls_discovery;
-    d.mk_obj = [](const Pos & p) {return new Event_rats_in_the_walls_discovery(p);};
+    d.mk_obj = [](const Pos & p)
+    {
+        return new Event_rats_in_the_walls_discovery(p);
+    };
     d.move_rules.set_can_move_cmn();
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------

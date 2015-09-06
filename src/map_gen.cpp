@@ -411,7 +411,10 @@ void mk_merged_regions_and_rooms(Region regions[3][3])
         {
             --nr_tries_to_find_regions;
 
-            if (nr_tries_to_find_regions <= 0) {return;}
+            if (nr_tries_to_find_regions <= 0)
+            {
+                return;
+            }
 
             reg_idx_1 = Pos(rnd::range(0, 2), rnd::range(0, 1));
             reg_idx_2 = Pos(reg_idx_1 + Pos(0, 1));
@@ -430,7 +433,10 @@ void mk_merged_regions_and_rooms(Region regions[3][3])
         reg1.is_free_   = reg2.is_free_ = false;
 
         //Make a room for region 1
-        auto rnd_padding = []() {return rnd::range(0, 4);};
+        auto rnd_padding = []()
+        {
+            return rnd::range(0, 4);
+        };
         const Rect padding(rnd_padding(), rnd_padding(), rnd_padding(), rnd_padding());
 
         const Rect room_rect(reg1.r_.p0 + padding.p0, reg1.r_.p1 - padding.p1);
@@ -606,7 +612,10 @@ void place_door_at_pos_if_allowed(const Pos& p)
             {
                 const Cell& cell = map::cells[check_pos.x][check_pos.y];
 
-                if (cell.rigid->id() == Feature_id::door) {return;}
+                if (cell.rigid->id() == Feature_id::door)
+                {
+                    return;
+                }
             }
         }
     }
@@ -870,7 +879,10 @@ void fill_dead_ends()
     }
 
     std::sort(flood_fill_vector.begin(), flood_fill_vector.end(),
-    [](const Pos_and_val & a, const Pos_and_val & b) {return a.val < b.val;});
+              [](const Pos_and_val & a, const Pos_and_val & b)
+    {
+        return a.val < b.val;
+    });
 
     //Fill all positions with only one cardinal floor neighbour
     for (int i = int(flood_fill_vector.size()) - 1; i >= 0; --i)

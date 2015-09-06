@@ -151,7 +151,10 @@ void mk_forest_tree_patch()
                 cur_pos.y += rnd::coin_toss() ? -1 : 1;
             }
 
-            if (!utils::is_pos_inside_map(cur_pos)) {return;}
+            if (!utils::is_pos_inside_map(cur_pos))
+            {
+                return;
+            }
         }
     }
 }
@@ -545,7 +548,7 @@ bool mk_leng_lvl()
             }
             break;
 
-            default: {}
+            default:
                 break;
             }
         }
@@ -635,7 +638,7 @@ bool mk_rats_in_the_walls_lvl()
                 game_time::add_mob(new Event_rats_in_the_walls_discovery(p));
                 break;
 
-            default: {}
+            default:
                 break;
             }
         }
@@ -715,7 +718,7 @@ bool mk_boss_lvl()
                 map::player->pos = p;
                 break;
 
-            default: {}
+            default:
                 break;
             }
         }
@@ -776,7 +779,7 @@ bool mk_trapezohedron_lvl()
                 map::player->pos = p;
                 break;
 
-            default: {}
+            default:
                 break;
             }
         }

@@ -87,43 +87,39 @@ void Event_wall_crumble::on_new_turn()
             }
 
             //Spawn things
-            int       nr_mon_limit_except_adj_to_entry  = 9999;
-            Actor_id   mon_type                     = Actor_id::zombie;
-            const int RND                         = rnd::range(1, 5);
+            int         nr_mon_limit_except_adj_to_entry    = 9999;
+            Actor_id    mon_type                            = Actor_id::zombie;
+            const int   RND                                 = rnd::range(1, 5);
 
             switch (RND)
             {
             case 1:
-            {
                 mon_type = Actor_id::zombie;
                 nr_mon_limit_except_adj_to_entry = 4;
-            } break;
+                break;
 
             case 2:
-            {
                 mon_type = Actor_id::zombie_axe;
                 nr_mon_limit_except_adj_to_entry = 3;
-            } break;
+                break;
 
             case 3:
-            {
                 mon_type = Actor_id::bloated_zombie;
                 nr_mon_limit_except_adj_to_entry = 1;
-            } break;
+                break;
 
             case 4:
-            {
                 mon_type = Actor_id::rat;
                 nr_mon_limit_except_adj_to_entry = 30;
-            } break;
+                break;
 
             case 5:
-            {
                 mon_type = Actor_id::rat_thing;
                 nr_mon_limit_except_adj_to_entry = 20;
-            } break;
+                break;
 
-            default: {} break;
+            default:
+                break;
             }
 
             int nr_mon_spawned = 0;

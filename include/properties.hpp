@@ -639,7 +639,8 @@ public:
         case Ability_id::dodge_att:
             return -50;
 
-        default: {} break;
+        default:
+            break;
         }
 
         return 0;
@@ -1001,13 +1002,17 @@ public:
     {
         switch (ability)
         {
-        case Ability_id::dodge_att: return -30;
+        case Ability_id::dodge_att:
+            return -30;
 
-        case Ability_id::ranged:    return -10;
+        case Ability_id::ranged:
+            return -10;
 
-        case Ability_id::melee:     return -10;
+        case Ability_id::melee:
+            return -10;
 
-        default: {} break;
+        default:
+            break;
         }
 
         return 0;
@@ -1035,7 +1040,8 @@ public:
         case Ability_id::melee:
             return 5;
 
-        default: {} break;
+        default:
+            break;
         }
 
         return 0;

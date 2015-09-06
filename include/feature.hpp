@@ -46,7 +46,10 @@ public:
     virtual Matl matl() const;
 
     int shock_when_adj() const;
-    Pos pos() const {return pos_;}
+    Pos pos() const
+    {
+        return pos_;
+    }
 
 protected:
     Pos pos_;

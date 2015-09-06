@@ -1786,9 +1786,8 @@ Tomb::Tomb(const Pos& feature_pos) :
     trait_(Tomb_trait::END)
 {
     //Contained items
-    const int NR_ITEMS_MIN  = rnd::one_in(3) ? 0 : 1;
-    const int NR_ITEMS_MAX  = NR_ITEMS_MIN +
-                              (player_bon::traits[int(Trait::treasure_hunter)] ? 1 : 0);
+    const int NR_ITEMS_MIN  = 0;
+    const int NR_ITEMS_MAX  = player_bon::traits[int(Trait::treasure_hunter)] ? 2 : 1;
 
     item_container_.init(Feature_id::tomb, rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 
@@ -1909,7 +1908,7 @@ Clr Tomb::clr_default() const
     case Tomb_appearance::marvelous:
         return clr_yellow;
 
-    case Tomb_appearance::END: {}
+    case Tomb_appearance::END:
         break;
     }
 
@@ -2192,8 +2191,8 @@ Chest::Chest(const Pos& feature_pos) :
     TRAP_DET_LVL(rnd::range(0, 2))
 {
     const bool  IS_TREASURE_HUNTER  = player_bon::traits[int(Trait::treasure_hunter)];
-    const int   NR_ITEMS_MIN        = rnd::one_in(10)      ? 0 : 1;
-    const int   NR_ITEMS_MAX        = IS_TREASURE_HUNTER  ? 3 : 2;
+    const int   NR_ITEMS_MIN        = 0;
+    const int   NR_ITEMS_MAX        = IS_TREASURE_HUNTER    ? 3 : 2;
 
     item_container_.init(Feature_id::chest, rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 
@@ -2352,7 +2351,7 @@ void Chest::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* con
                     try_sprain_player();
                     msg_log::add("It seems futile.", clr_msg_note, false, More_prompt_on_msg::yes);
                 }
-                else
+                else //Chest can be bashed open
                 {
                     if (
                         !actor->has_prop(Prop_id::blessed) &&
@@ -2384,14 +2383,14 @@ void Chest::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* con
         }
         break; //Kick
 
-        default: {}
+        default:
             break;
 
         } //dmg_method
 
     } //Physical damage
 
-    default: {}
+    default:
         break;
 
     } //dmg_type
@@ -2487,7 +2486,7 @@ void Chest::disarm()
                          More_prompt_on_msg::yes);
             msg_log::clear();
 
-            const Fraction disarm_chance(3, 5);
+            const Fraction disarm_chance(4, 5);
 
             if (rnd::fraction(disarm_chance))
             {

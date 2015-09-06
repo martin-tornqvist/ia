@@ -222,7 +222,8 @@ Actor* mk_actor_from_id(const Actor_id id)
     case Actor_id::the_high_priest_cpy:
         return new The_high_priest_cpy();
 
-    case Actor_id::END: {} break;
+    case Actor_id::END:
+        break;
     }
 
     return nullptr;

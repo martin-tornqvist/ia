@@ -18,7 +18,10 @@ public:
         return "";
     }
 
-    Clr clr() const override final {return clr_black;}
+    Clr clr() const override final
+    {
+        return clr_black;
+    }
 
 protected:
     Event(const Pos&);
@@ -32,7 +35,10 @@ public:
     //Spawn-by-id compliant ctor (do not use for normal cases):
     Event_wall_crumble(const Pos& feature_pos) : Event(feature_pos) {}
 
-    Feature_id id() const override {return Feature_id::event_wall_crumble;}
+    Feature_id id() const override
+    {
+        return Feature_id::event_wall_crumble;
+    }
 
     void on_new_turn() override;
 
@@ -46,7 +52,10 @@ class Event_rats_in_the_walls_discovery: public Event
 public:
     Event_rats_in_the_walls_discovery(const Pos& feature_pos);
 
-    Feature_id id() const override {return Feature_id::event_rats_in_the_walls_discovery;}
+    Feature_id id() const override
+    {
+        return Feature_id::event_rats_in_the_walls_discovery;
+    }
 
     void on_new_turn() override;
 };

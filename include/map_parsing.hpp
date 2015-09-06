@@ -18,11 +18,11 @@ class Check
 {
 public:
     virtual ~Check() {}
-    virtual bool is_checking_cells() const {return false;}
+    virtual bool is_checking_cells()        const {return false;}
     virtual bool is_checking_mobs()         const {return false;}
     virtual bool is_checking_actors()       const {return false;}
     virtual bool check(const Cell& c)       const {(void)c; return false;}
-    virtual bool check(const Mob& f) const {(void)f; return false;}
+    virtual bool check(const Mob& f)        const {(void)f; return false;}
     virtual bool check(const Actor& a)      const {(void)a; return false;}
 protected:
     Check() {}

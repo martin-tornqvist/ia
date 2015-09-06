@@ -395,7 +395,10 @@ int Std_room::place_auto_features()
             }
 
             //Erase all adjacent positions
-            auto is_adj = [&](const Pos & p) {return utils::is_pos_adj(p, pos, true);};
+            auto is_adj = [&](const Pos & p)
+            {
+                return utils::is_pos_adj(p, pos, true);
+            };
             adj_to_walls   .erase(remove_if(begin(adj_to_walls),    end(adj_to_walls),    is_adj),
                                   end(adj_to_walls));
             away_from_walls.erase(remove_if(begin(away_from_walls), end(away_from_walls), is_adj),

@@ -18,9 +18,14 @@
 
 using namespace std;
 
-High_score_entry::High_score_entry(std::string entry_date_and_time, std::string player_name,
-                                   int player_xp, int player_lvl, int player_dlvl,
-                                   int player_insanity, bool is_win_game, Bg player_bg) :
+High_score_entry::High_score_entry(std::string entry_date_and_time,
+                                   std::string player_name,
+                                   int player_xp,
+                                   int player_lvl,
+                                   int player_dlvl,
+                                   int player_insanity,
+                                   bool is_win_game,
+                                   Bg player_bg) :
     date_and_time_  (entry_date_and_time),
     name_           (player_name),
     xp_             (player_xp),

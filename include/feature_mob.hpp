@@ -12,11 +12,16 @@ public:
 
     virtual ~Mob() {}
 
-    virtual Feature_id   id()                         const override = 0;
-    virtual std::string name(const Article article)  const override = 0;
-    Clr                 clr()                        const override = 0;
+    virtual Feature_id id() const override = 0;
 
-    Clr clr_bg() const override final {return clr_black;}
+    virtual std::string name(const Article article) const override = 0;
+
+    Clr clr() const override = 0;
+
+    Clr clr_bg() const override final
+    {
+        return clr_black;
+    }
 };
 
 class Smoke: public Mob
@@ -31,10 +36,13 @@ public:
     Smoke() = delete;
     ~Smoke() {}
 
-    Feature_id id() const override {return Feature_id::smoke;}
+    Feature_id id() const override
+    {
+        return Feature_id::smoke;
+    }
 
     std::string name(const Article article)  const override;
-    Clr         clr()                        const override;
+    Clr clr() const override;
 
     void on_new_turn() override;
 
@@ -55,10 +63,14 @@ public:
 
     ~Lit_dynamite() {}
 
-    Feature_id id() const override {return Feature_id::lit_dynamite;}
+    Feature_id id() const override
+    {
+        return Feature_id::lit_dynamite;
+    }
 
-    std::string name(const Article article)  const override;
-    Clr         clr()                        const override;
+    std::string name(const Article article) const override;
+
+    Clr clr() const override;
 
     //TODO: Lit dynamite should add light on their own cell (just one cell)
     //void add_light(bool light[MAP_W][MAP_H]) const;
@@ -82,10 +94,14 @@ public:
 
     ~Lit_flare() {}
 
-    Feature_id id() const override {return Feature_id::lit_flare;}
+    Feature_id id() const override
+    {
+        return Feature_id::lit_flare;
+    }
 
-    std::string name(const Article article)  const override;
-    Clr         clr()                        const override;
+    std::string name(const Article article) const override;
+
+    Clr clr() const override;
 
     void on_new_turn() override;
 

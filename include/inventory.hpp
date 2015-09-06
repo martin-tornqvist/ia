@@ -95,7 +95,10 @@ public:
     Item* remove_item_in_backpack_with_idx(const size_t IDX, const bool DELETE_ITEM);
     Item* remove_item_in_backpack_with_ptr(Item* const item, const bool DELETE_ITEM);
 
-    int intrinsics_size() const {return intrinsics_.size();}
+    int intrinsics_size() const
+    {
+        return intrinsics_.size();
+    }
 
     Item* intrinsic_in_element(const int IDX) const;
 

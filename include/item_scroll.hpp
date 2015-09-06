@@ -14,7 +14,10 @@ public:
 
     ~Scroll() {}
 
-    Clr interface_clr() const override {return clr_magenta;}
+    Clr interface_clr() const override
+    {
+        return clr_magenta;
+    }
 
     Consume_item activate(Actor* const actor) override;
 

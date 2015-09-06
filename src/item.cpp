@@ -725,7 +725,8 @@ Consume_item Medical_bag::activate(Actor* const actor)
         nr_turns_left_sanitize_ = tot_turns_for_sanitize();
         break;
 
-    case Med_bag_action::END: {} break;
+    case Med_bag_action::END:
+        break;
     }
 
     game_time::tick();

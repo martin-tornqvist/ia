@@ -148,7 +148,8 @@ int Ability_vals::val(const Ability_id id,
             break;
 
         case Ability_id::empty:
-        case Ability_id::END: {} break;
+        case Ability_id::END:
+            break;
         }
 
         if (id == Ability_id::searching)

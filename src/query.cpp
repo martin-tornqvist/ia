@@ -34,7 +34,10 @@ void wait_for_key_press()
 
 Yes_no_answer yes_or_no(char key_for_special_event)
 {
-    if (!is_inited_ || config::is_bot_playing()) {return Yes_no_answer::yes;}
+    if (!is_inited_ || config::is_bot_playing())
+    {
+        return Yes_no_answer::yes;
+    }
 
     Key_data d = input::input();
 
@@ -63,7 +66,10 @@ Yes_no_answer yes_or_no(char key_for_special_event)
 
 Key_data letter(const bool ACCEPT_ENTER)
 {
-    if (!is_inited_ || config::is_bot_playing()) {return 'a';}
+    if (!is_inited_ || config::is_bot_playing())
+    {
+        return 'a';
+    }
 
     while (true)
     {
@@ -85,7 +91,10 @@ Key_data letter(const bool ACCEPT_ENTER)
 int number(const Pos& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS,
            const int DEFAULT, const bool CANCEL_RETURNS_DEFAULT)
 {
-    if (!is_inited_ || config::is_bot_playing()) {return 0;}
+    if (!is_inited_ || config::is_bot_playing())
+    {
+        return 0;
+    }
 
     int ret_num = max(MIN, DEFAULT);
     render::cover_area(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));

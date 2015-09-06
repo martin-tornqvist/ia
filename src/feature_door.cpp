@@ -129,7 +129,6 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                 switch (matl_)
                 {
                 case Matl::wood:
-                {
                     if (rnd::fraction(7, 10))
                     {
                         if (map::is_pos_seen_by_player(pos_))
@@ -140,14 +139,15 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 
                         map::put(new Rubble_low(pos_));
                     }
-                } break;
+                    break;
 
                 case Matl::empty:
                 case Matl::cloth:
                 case Matl::fluid:
                 case Matl::plant:
                 case Matl::stone:
-                case Matl::metal: {} break;
+                case Matl::metal:
+                    break;
                 }
             }
         }
@@ -192,7 +192,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 
                     }
                 }
-                else
+                else //Is monster
                 {
                     if (rnd::fraction(destr_chance))
                     {
@@ -333,19 +333,19 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
             } break;
 
             case Matl::metal:
-            {
                 if (IS_PLAYER && IS_CELL_SEEN && !is_secret_)
                 {
                     msg_log::add("It seems futile.", clr_msg_note, false,
                                  More_prompt_on_msg::yes);
                 }
-            } break;
+                break;
 
             case Matl::empty:
             case Matl::cloth:
             case Matl::fluid:
             case Matl::plant:
-            case Matl::stone: {} break;
+            case Matl::stone:
+                break;
             }
         }
     }
@@ -488,7 +488,10 @@ bool Door::is_smoke_passable() const
 
 string Door::name(const Article article) const
 {
-    if (is_secret_) {return mimic_feature_->name(article);}
+    if (is_secret_)
+    {
+        return mimic_feature_->name(article);
+    }
 
     string ret = "";
 

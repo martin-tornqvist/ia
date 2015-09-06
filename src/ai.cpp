@@ -136,7 +136,13 @@ bool check_if_blocking_mon(const Pos& pos, Mon& other)
     std::vector<Pos> line;
     line_calc::calc_new_line(other.pos, map::player->pos, true, 9999, false, line);
 
-    for (const Pos& pos_in_line : line) {if (pos_in_line == pos) {return true;}}
+    for (const Pos& pos_in_line : line)
+    {
+        if (pos_in_line == pos)
+        {
+            return true;
+        }
+    }
 
     return false;
 }
@@ -190,7 +196,10 @@ bool is_adj_and_no_vision(const Mon& self, Mon& other,
     if (utils::is_pos_adj(self.pos, other.pos, false))
     {
         //If pal does not see player
-        if (!other.can_see_actor(*map::player, blocked_los)) {return true;}
+        if (!other.can_see_actor(*map::player, blocked_los))
+        {
+            return true;
+        }
     }
 
     return false;

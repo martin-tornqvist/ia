@@ -96,7 +96,10 @@ public:
     void on_pre_connect(bool door_proposals[MAP_W][MAP_H]) override final;
     void on_post_connect(bool door_proposals[MAP_W][MAP_H]) override final;
 
-    virtual bool is_allowed() const {return true;}
+    virtual bool is_allowed() const
+    {
+        return true;
+    }
 
 protected:
     virtual Range nr_auto_features_allowed() const = 0;

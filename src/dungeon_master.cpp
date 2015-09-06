@@ -99,9 +99,18 @@ void setup_from_save_lines(std::vector<std::string>& lines)
     lines.erase(begin(lines));
 }
 
-int         clvl()       {return clvl_;}
-int         xp()         {return xp_;}
-Time_data    start_time()  {return time_started_;}
+int         clvl()
+{
+    return clvl_;
+}
+int         xp()
+{
+    return xp_;
+}
+Time_data    start_time()
+{
+    return time_started_;
+}
 
 int mon_tot_xp_worth(const Actor_data_t& d)
 {
@@ -141,8 +150,10 @@ void player_gain_xp(const int XP_GAINED)
 
 int xp_to_next_lvl()
 {
-    if (clvl_ == PLAYER_MAX_CLVL) {
-            return -1;}
+    if (clvl_ == PLAYER_MAX_CLVL)
+    {
+        return -1;
+    }
 
     return xp_for_lvl_[clvl_ + 1] - xp_;
 }

@@ -26,7 +26,10 @@ const string          more_str = "-More-";
 
 int x_after_msg(const Msg* const msg)
 {
-    if (!msg) {return 0;}
+    if (!msg)
+    {
+        return 0;
+    }
 
     string str = "";
     msg->str_with_repeats(str);

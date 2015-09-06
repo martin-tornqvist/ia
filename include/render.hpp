@@ -85,7 +85,7 @@ void draw_projectiles(std::vector<Projectile*>& projectiles,
                       const bool SHOULD_DRAW_MAP_BEFORE);
 
 void draw_box(const Rect& area, const Panel panel = Panel::screen,
-                    const Clr& clr = clr_popup_box, const bool COVER_AREA = false);
+              const Clr& clr = clr_popup_box, const bool COVER_AREA = false);
 
 //Draws a description "box" for items, spells, etc. The parameter lines may be empty,
 //in which case an empty area is drawn.
