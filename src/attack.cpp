@@ -1041,16 +1041,23 @@ void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_po
                         if (config::is_tiles_mode())
                         {
                             proj->set_tile(Tile_id::blast1, clr_red_lgt);
+
                             render::draw_projectiles(projectiles, !LEAVE_TRAIL);
+
                             sdl_wrapper::sleep(DELAY / 2);
+
                             proj->set_tile(Tile_id::blast2, clr_red_lgt);
+
                             render::draw_projectiles(projectiles, !LEAVE_TRAIL);
+
                             sdl_wrapper::sleep(DELAY / 2);
                         }
-                        else //Not tile mode
+                        else //Text mode
                         {
                             proj->set_glyph('*', clr_red_lgt);
+
                             render::draw_projectiles(projectiles, !LEAVE_TRAIL);
+
                             sdl_wrapper::sleep(DELAY);
                         }
 
