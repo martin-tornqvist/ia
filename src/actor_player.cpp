@@ -1270,10 +1270,17 @@ void Player::on_std_turn()
         if (nr_turns_until_ins_ > 0)
         {
             render::draw_map_and_interface(true);
-            msg_log::add("I feel my sanity slipping...", clr_msg_note, true,
-                         More_prompt_on_msg::yes);
+
+            const bool  IS_LAST_WARNING = nr_turns_until_ins_ == 1;
+
+            const Clr   clr             = IS_LAST_WARNING ? clr_msg_note : clr_white;
+
+            const auto  more_prompt     = IS_LAST_WARNING ?
+                                          More_prompt_on_msg::yes : More_prompt_on_msg::no;
+
+            msg_log::add("I feel my sanity slipping...", clr, true, more_prompt);
         }
-        else
+        else //Time to go crazy!
         {
             nr_turns_until_ins_ = -1;
             incr_insanity();
