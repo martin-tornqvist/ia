@@ -862,7 +862,8 @@ void Medical_bag::finish_cur_action()
         msg_log::add("I finish treating my wounds.");
     } break;
 
-    case Med_bag_action::END: {} break;
+    case Med_bag_action::END:
+        break;
     }
 
     cur_action_ = Med_bag_action::END;

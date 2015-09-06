@@ -22,6 +22,7 @@
 #include "player_bon.hpp"
 #include "item_factory.hpp"
 #include "attack.hpp"
+#include "dungeon_master.hpp"
 
 namespace
 {
@@ -414,6 +415,8 @@ void Trap::disarm()
     if (IS_DISARMED)
     {
         msg_log::add(trap_impl_->disarm_msg());
+
+        dungeon_master::incr_player_xp(XP_FOR_DISRM_TRAP);
     }
     else //Not disarmed
     {

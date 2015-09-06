@@ -111,7 +111,8 @@ Jewelry_effect* mk_effect(const Jewelry_effect_id id, Jewelry* const jewelry)
         break;
 
     case Jewelry_effect_id::START_OF_SECONDARY_EFFECTS:
-    case Jewelry_effect_id::END: {} break;
+    case Jewelry_effect_id::END:
+        break;
     }
 
     assert(ret);

@@ -136,7 +136,8 @@ int walk_blockers_in_dir(const Dir dir, const Pos& pos)
     case Dir::up_left:
     case Dir::up_right:
     case Dir::center:
-    case Dir::END: {} break;
+    case Dir::END:
+        break;
     }
 
     return nr_blockers;

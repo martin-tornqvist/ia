@@ -586,7 +586,7 @@ void init_data_list()
     d.name = "Seeing";
     d.name_short = "Seeing";
     d.msg[size_t(Prop_msg::start_player)] = "I see very clearly.";
-    d.msg[size_t(Prop_msg::start_mon)] = " seems to see very clearly.";
+    d.msg[size_t(Prop_msg::start_mon)] = "seems to see very clearly.";
     d.msg[size_t(Prop_msg::end_player)] = "I see less clearly.";
     d.msg[size_t(Prop_msg::end_mon)] = " seems to see less clearly.";
     d.is_making_mon_aware = false;

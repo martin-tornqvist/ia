@@ -975,7 +975,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         if (IS_DEBUG_MODE)
         {
-            dungeon_master::player_gain_xp(100);
+            dungeon_master::incr_player_xp(100);
             clear_events();
         }
 

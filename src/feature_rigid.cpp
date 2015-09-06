@@ -19,8 +19,7 @@
 #include "actor_mon.hpp"
 #include "query.hpp"
 #include "pickup.hpp"
-
-using namespace std;
+#include "dungeon_master.hpp"
 
 //--------------------------------------------------------------------- RIGID
 Rigid::Rigid(const Pos& feature_pos) :
@@ -162,7 +161,7 @@ void Rigid::try_start_burning(const bool IS_MSG_ALLOWED)
     {
         if (map::is_pos_seen_by_player(pos_) && IS_MSG_ALLOWED)
         {
-            string str = name(Article::the) + " catches fire.";
+            std::string str = name(Article::the) + " catches fire.";
             str[0] = toupper(str[0]);
             msg_log::add(str);
         }
@@ -205,7 +204,7 @@ void Rigid::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* act
 
         if (IS_BLOCKING)
         {
-            const string rigid_name = IS_BLIND ? "something" : name(Article::a);
+            const std::string rigid_name = IS_BLIND ? "something" : name(Article::a);
             msg_log::add("I kick " + rigid_name + "!");
 
             if (rnd::one_in(4))
@@ -383,9 +382,9 @@ Tile_id Floor::tile() const
            data().tile;
 }
 
-string Floor::name(const Article article) const
+std::string Floor::name(const Article article) const
 {
-    string ret = article == Article::a ? "" : "the ";
+    std::string ret = article == Article::a ? "" : "the ";
 
     if (burn_state() == Burn_state::burning)
     {
@@ -513,9 +512,9 @@ bool Wall::is_tile_any_wall_top(const Tile_id tile)
         tile == Tile_id::rubble_high;
 }
 
-string Wall::name(const Article article) const
+std::string Wall::name(const Article article) const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
 
     if (is_mossy_) {ret += "moss-grown ";}
 
@@ -691,9 +690,9 @@ void Rubble_high::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
     }
 }
 
-string Rubble_high::name(const Article article) const
+std::string Rubble_high::name(const Article article) const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
     return ret + "big pile of debris";
 }
 
@@ -717,9 +716,9 @@ void Rubble_low::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
     }
 }
 
-string Rubble_low::name(const Article article) const
+std::string Rubble_low::name(const Article article) const
 {
-    string ret = "";
+    std::string ret = "";
 
     if (article == Article::the)
     {
@@ -751,9 +750,9 @@ void Bones::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
     (void)actor;
 }
 
-string Bones::name(const Article article) const
+std::string Bones::name(const Article article) const
 {
-    string ret = "";
+    std::string ret = "";
 
     if (article == Article::the)
     {
@@ -786,10 +785,10 @@ void Grave_stone::bump(Actor& actor_bumping)
     }
 }
 
-string Grave_stone::name(const Article article) const
+std::string Grave_stone::name(const Article article) const
 {
-    const string ret = article == Article::a ?
-                       "a " : "the ";
+    const std::string ret = article == Article::a ?
+                            "a " : "the ";
 
     return ret + "gravestone; " + inscr_;
 }
@@ -810,10 +809,10 @@ void Church_bench::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
     (void)actor;
 }
 
-string Church_bench::name(const Article article) const
+std::string Church_bench::name(const Article article) const
 {
-    const string ret = article == Article::a ?
-                       "a " : "the ";
+    const std::string ret = article == Article::a ?
+                            "a " : "the ";
 
     return ret + "church bench";
 }
@@ -900,9 +899,9 @@ void Statue::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor*
     }
 }
 
-string Statue::name(const Article article) const
+std::string Statue::name(const Article article) const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
 
     switch (type_)
     {
@@ -940,9 +939,9 @@ void Pillar::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor*
     (void)actor;
 }
 
-string Pillar::name(const Article article) const
+std::string Pillar::name(const Article article) const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
     return ret + "pillar";
 }
 
@@ -962,9 +961,9 @@ void Monolith::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Acto
     (void)actor;
 }
 
-string Monolith::name(const Article article) const
+std::string Monolith::name(const Article article) const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
     return ret + "monolith";
 }
 
@@ -984,9 +983,9 @@ void Stalagmite::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Ac
     (void)actor;
 }
 
-string Stalagmite::name(const Article article) const
+std::string Stalagmite::name(const Article article) const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
     return ret + "stalagmite";
 }
 
@@ -1015,8 +1014,8 @@ void Stairs::bump(Actor& actor_bumping)
 {
     if (actor_bumping.is_player())
     {
-        const vector<string> choices {"Descend", "Save and quit", "Cancel"};
-        const string title  = "A staircase leading downwards";
+        const std::vector<std::string> choices {"Descend", "Save and quit", "Cancel"};
+        const std::string title  = "A staircase leading downwards";
         const int CHOICE    =  popup::show_menu_msg("", true, choices, title);
 
         switch (CHOICE)
@@ -1043,9 +1042,9 @@ void Stairs::bump(Actor& actor_bumping)
     }
 }
 
-string Stairs::name(const Article article) const
+std::string Stairs::name(const Article article) const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
     return ret + "downward staircase";
 }
 
@@ -1072,9 +1071,9 @@ char Bridge::glyph() const
     return axis_ == Axis::hor ? '|' : '=';
 }
 
-string Bridge::name(const Article article) const
+std::string Bridge::name(const Article article) const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
     return ret + "bridge";
 }
 
@@ -1109,9 +1108,9 @@ void Liquid_shallow::bump(Actor& actor_bumping)
     }
 }
 
-string Liquid_shallow::name(const Article article) const
+std::string Liquid_shallow::name(const Article article) const
 {
-    string ret = "";
+    std::string ret = "";
 
     if (article == Article::the)
     {
@@ -1193,9 +1192,9 @@ void Liquid_deep::bump(Actor& actor_bumping)
     (void)actor_bumping;
 }
 
-string Liquid_deep::name(const Article article) const
+std::string Liquid_deep::name(const Article article) const
 {
-    string ret = "";
+    std::string ret = "";
 
     if (article == Article::the) {ret += "the ";}
 
@@ -1268,9 +1267,9 @@ void Chasm::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* 
 }
 
 
-string Chasm::name(const Article article) const
+std::string Chasm::name(const Article article) const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
     return ret + "chasm";
 }
 
@@ -1290,9 +1289,9 @@ void Lever::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* 
     (void)dmg_type; (void)dmg_method; (void)actor;
 }
 
-string Lever::name(const Article article) const
+std::string Lever::name(const Article article) const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
     return ret + "lever";
 }
 
@@ -1315,7 +1314,7 @@ void Lever::pull()
     //"is_open_" etc directly.
 
 //  if(!door_linked_to_->is_broken_) {
-//    TRACE << "Door linked to is not broken" << endl;
+//    TRACE << "Door linked to is not broken" << std::endl;
 //    if(!door_linked_to_->is_open_) {door_linked_to_->reveal(true);}
 //    door_linked_to_->is_open_  = !door_linked_to_->is_open_;
 //    door_linked_to_->is_stuck_ = false;
@@ -1334,9 +1333,9 @@ void Altar::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* 
     (void)dmg_type; (void)dmg_method; (void)actor;
 }
 
-string Altar::name(const Article article) const
+std::string Altar::name(const Article article) const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
     return ret + "altar";
 }
 
@@ -1366,9 +1365,9 @@ Was_destroyed Carpet::on_finished_burning()
     return Was_destroyed::yes;
 }
 
-string Carpet::name(const Article article) const
+std::string Carpet::name(const Article article) const
 {
-    string ret = article == Article::a ? "" : "the ";
+    std::string ret = article == Article::a ? "" : "the ";
     return ret + "carpet";
 }
 
@@ -1402,9 +1401,9 @@ Tile_id Grass::tile() const
            data().tile;
 }
 
-string Grass::name(const Article article) const
+std::string Grass::name(const Article article) const
 {
-    string ret = "";
+    std::string ret = "";
 
     if (article == Article::the) {ret += "the ";}
 
@@ -1474,9 +1473,9 @@ Was_destroyed Bush::on_finished_burning()
     return Was_destroyed::yes;
 }
 
-string Bush::name(const Article article) const
+std::string Bush::name(const Article article) const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
 
     switch (burn_state())
     {
@@ -1549,9 +1548,9 @@ Was_destroyed Tree::on_finished_burning()
     return Was_destroyed::no;
 }
 
-string Tree::name(const Article article) const
+std::string Tree::name(const Article article) const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
 
     switch (burn_state())
     {
@@ -1576,9 +1575,9 @@ Clr Tree::clr_default() const
 }
 
 //--------------------------------------------------------------------- BRAZIER
-string Brazier::name(const Article article) const
+std::string Brazier::name(const Article article) const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
     return ret + "brazier";
 }
 
@@ -1627,7 +1626,7 @@ void Item_container::init(const Feature_id feature_id, const int NR_ITEMS_TO_ATT
     {
         while (items_.empty())
         {
-            vector<Item_id> item_bucket;
+            std::vector<Item_id> item_bucket;
 
             for (size_t i = 0; i < size_t(Item_id::END); ++i)
             {
@@ -1680,8 +1679,8 @@ void Item_container::open(const Pos& feature_pos, Actor* const actor_opening)
         {
             msg_log::clear();
 
-            const string name = item->name(Item_ref_type::plural, Item_ref_inf::yes,
-                                           Item_ref_att_inf::wpn_context);
+            const std::string name = item->name(Item_ref_type::plural, Item_ref_inf::yes,
+                                                Item_ref_att_inf::wpn_context);
 
             msg_log::add("Pick up " + name + "? [y/n]");
 
@@ -1850,13 +1849,13 @@ void Tomb::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
     (void)dmg_type; (void)dmg_method; (void)actor;
 }
 
-string Tomb::name(const Article article) const
+std::string Tomb::name(const Article article) const
 {
     const bool    IS_EMPTY  = is_open_ && item_container_.items_.empty();
-    const string  empty_str  = IS_EMPTY                 ? "empty " : "";
-    const string  open_str   = (is_open_ && !IS_EMPTY)  ? "open "  : "";
+    const std::string  empty_str  = IS_EMPTY                 ? "empty " : "";
+    const std::string  open_str   = (is_open_ && !IS_EMPTY)  ? "open "  : "";
 
-    string a = "";
+    std::string a = "";
 
     if (article == Article::a)
     {
@@ -1867,7 +1866,7 @@ string Tomb::name(const Article article) const
         a = "the ";
     }
 
-    string appear_str = "";
+    std::string appear_str = "";
 
     if (!IS_EMPTY)
     {
@@ -1954,14 +1953,14 @@ void Tomb::bump(Actor& actor_bumping)
                         player_bon::traits[int(Trait::tough)]        ? 4   : 0;
 
                     TRACE << "Base chance to push lid is: 1 in "
-                          << push_lid_one_in_n_ << endl;
+                          << push_lid_one_in_n_ << std::endl;
 
                     TRACE << "Bonus to roll: "
-                          << BON << endl;
+                          << BON << std::endl;
 
                     const int ROLL_TOT = rnd::range(1, push_lid_one_in_n_) + BON;
 
-                    TRACE << "Roll + bonus = " << ROLL_TOT << endl;
+                    TRACE << "Roll + bonus = " << ROLL_TOT << std::endl;
 
                     bool is_success = false;
 
@@ -2064,7 +2063,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
 
     Did_trigger_trap did_trigger_trap = Did_trigger_trap::no;
 
-    vector<Actor_id> actor_bucket;
+    std::vector<Actor_id> actor_bucket;
 
     switch (trait_)
     {
@@ -2408,7 +2407,7 @@ void Chest::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* con
 //        const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
 //
 //        if(rnd::percent() < CHANCE_TO_DMG_WPN) {
-//          const string wpn_name = item_data::item_ref(
+//          const std::string wpn_name = item_data::item_ref(
 //                                   *item, Item_ref_type::plain, true);
 //
 //          Wpn* const wpn = static_cast<Wpn*>(item);
@@ -2493,6 +2492,8 @@ void Chest::disarm()
                 msg_log::add("I successfully disarm it!");
                 render::draw_map_and_interface();
                 is_trapped_ = false;
+
+                dungeon_master::incr_player_xp(XP_FOR_DISRM_TRAP);
             }
             else //Failed to disarm
             {
@@ -2642,16 +2643,16 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
     return Did_trigger_trap::yes;
 }
 
-string Chest::name(const Article article) const
+std::string Chest::name(const Article article) const
 {
     const bool      IS_EMPTY        = item_container_.items_.empty() && is_open_;
     const bool      IS_KNOWN_TRAP   = is_trapped_ && is_trap_status_known_;
-    const string    locked_str      = is_locked_                ? "locked "   : "";
-    const string    empty_str       = IS_EMPTY                  ? "empty "    : "";
-    const string    trap_str        = IS_KNOWN_TRAP             ? "trapped "  : "";
-    const string    open_str        = (is_open_ && !IS_EMPTY)   ? "open "     : "";
+    const std::string    locked_str      = is_locked_                ? "locked "   : "";
+    const std::string    empty_str       = IS_EMPTY                  ? "empty "    : "";
+    const std::string    trap_str        = IS_KNOWN_TRAP             ? "trapped "  : "";
+    const std::string    open_str        = (is_open_ && !IS_EMPTY)   ? "open "     : "";
 
-    string a = "";
+    std::string a = "";
 
     if (article == Article::a)
     {
@@ -2666,7 +2667,7 @@ string Chest::name(const Article article) const
         a = "the ";
     }
 
-    const string matl_str =
+    const std::string matl_str =
         is_open_ ? "" : matl_ == Chest_matl::wood ? "wooden " : "iron ";
 
     return a + locked_str + empty_str + open_str + trap_str + matl_str + "chest";
@@ -2685,7 +2686,7 @@ Clr Chest::clr_default() const
 //--------------------------------------------------------------------- FOUNTAIN
 Fountain::Fountain(const Pos& feature_pos) :
     Rigid(feature_pos),
-    fountain_effects_(vector<Fountain_effect>()),
+    fountain_effects_(std::vector<Fountain_effect>()),
     fountain_matl_(Fountain_matl::stone),
     nr_drinks_left_(rnd::range(3, 4))
 {
@@ -2711,7 +2712,7 @@ Fountain::Fountain(const Pos& feature_pos) :
         break;
 
     case Fountain_matl::gold:
-        vector<Fountain_effect> effect_bucket
+        std::vector<Fountain_effect> effect_bucket
         {
             Fountain_effect::refreshing,
             Fountain_effect::spirit,
@@ -2762,9 +2763,9 @@ Clr Fountain::clr_default() const
     return clr_black;
 }
 
-string Fountain::name(const Article article) const
+std::string Fountain::name(const Article article) const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
 
     switch (fountain_matl_)
     {
@@ -2823,71 +2824,63 @@ void Fountain::bump(Actor& actor_bumping)
             switch (effect)
             {
             case Fountain_effect::refreshing:
-            {
                 msg_log::add("It's very refreshing.");
                 map::player->restore_hp(1, false, Verbosity::silent);
                 map::player->restore_spi(1, false, Verbosity::silent);
                 map::player->restore_shock(5, false);
-            } break;
+                break;
 
             case Fountain_effect::curse:
-            {
                 prop_hlr.try_add_prop(new Prop_cursed(Prop_turns::std));
-            } break;
+                break;
 
             case Fountain_effect::spirit:
-            {
                 map::player->restore_spi(2, true);
-            } break;
+                break;
 
             case Fountain_effect::vitality:
-            {
                 map::player->restore_hp(2, true);
-            } break;
+                break;
 
             case Fountain_effect::disease:
-            {
                 prop_hlr.try_add_prop(new Prop_diseased(Prop_turns::std));
-            } break;
+                break;
 
             case Fountain_effect::poison:
-            {
                 prop_hlr.try_add_prop(new Prop_poisoned(Prop_turns::std));
-            } break;
+                break;
 
             case Fountain_effect::frenzy:
-            {
                 prop_hlr.try_add_prop(new Prop_frenzied(Prop_turns::std));
-            } break;
+                break;
 
             case Fountain_effect::paralyze:
-            {
                 prop_hlr.try_add_prop(new Prop_paralyzed(Prop_turns::std));
-            } break;
+                break;
 
             case Fountain_effect::blind:
-            {
                 prop_hlr.try_add_prop(new Prop_blind(Prop_turns::std));
-            } break;
+                break;
 
             case Fountain_effect::faint:
-            {
                 prop_hlr.try_add_prop(new Prop_fainted(Prop_turns::specific, 10));
-            } break;
+                break;
 
             case Fountain_effect::rFire:
             {
                 Prop* const prop = new Prop_rFire(Prop_turns::std);
                 prop->set_nr_turns_left(prop->nr_turns_left() * 2);
                 prop_hlr.try_add_prop(prop);
-            } break;
+            }
+            break;
 
             case Fountain_effect::rCold:
             {
                 Prop* const prop = new Prop_rCold(Prop_turns::std);
                 prop->set_nr_turns_left(prop->nr_turns_left() * 2);
                 prop_hlr.try_add_prop(prop);
-            } break;
+            }
+            break;
 
             case Fountain_effect::rElec:
             {
@@ -2901,16 +2894,18 @@ void Fountain::bump(Actor& actor_bumping)
                 Prop* const prop = new Prop_rConf(Prop_turns::std);
                 prop->set_nr_turns_left(prop->nr_turns_left() * 2);
                 prop_hlr.try_add_prop(prop);
-            } break;
+            }
+            break;
 
             case Fountain_effect::rFear:
             {
                 Prop* const prop = new Prop_rFear(Prop_turns::std);
                 prop->set_nr_turns_left(prop->nr_turns_left() * 2);
                 prop_hlr.try_add_prop(prop);
-            } break;
+            }
+            break;
 
-            case Fountain_effect::END: {}
+            case Fountain_effect::END:
                 break;
             }
         }
@@ -3014,9 +3009,9 @@ Did_open Cabinet::open(Actor* const actor_opening)
     }
 }
 
-string Cabinet::name(const Article article) const
+std::string Cabinet::name(const Article article) const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
 
     if (burn_state() == Burn_state::burning)
     {
@@ -3115,8 +3110,8 @@ Did_trigger_trap Cocoon::trigger_trap(Actor* const actor)
         else if (RND < 50)
         {
             //Spiders
-            TRACE << "Attempting to spawn spiders" << endl;
-            vector<Actor_id> spawn_bucket;
+            TRACE << "Attempting to spawn spiders" << std::endl;
+            std::vector<Actor_id> spawn_bucket;
 
             for (int i = 0; i < int(Actor_id::END); ++i)
             {
@@ -3136,12 +3131,16 @@ Did_trigger_trap Cocoon::trigger_trap(Actor* const actor)
 
             if (NR_CANDIDATES > 0)
             {
-                TRACE << "Spawn candidates found, attempting to place" << endl;
+                TRACE << "Spawn candidates found, attempting to place" << std::endl;
                 msg_log::add("There are spiders inside!");
                 const int NR_SPIDERS          = rnd::range(2, 5);
                 const int IDX                 = rnd::range(0, NR_CANDIDATES - 1);
                 const Actor_id actor_id_to_summon = spawn_bucket[IDX];
-                actor_factory::summon(pos_, vector<Actor_id>(NR_SPIDERS, actor_id_to_summon), true);
+
+                const std::vector<Actor_id> ids_to_summon(NR_SPIDERS, actor_id_to_summon);
+
+                actor_factory::summon(pos_, ids_to_summon, true);
+
                 is_trapped_ = false;
                 return Did_trigger_trap::yes;
             }
@@ -3190,9 +3189,9 @@ Did_open Cocoon::open(Actor* const actor_opening)
     }
 }
 
-string Cocoon::name(const Article article) const
+std::string Cocoon::name(const Article article) const
 {
-    string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "a " : "the ";
 
     if (burn_state() == Burn_state::burning)
     {

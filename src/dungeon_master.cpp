@@ -132,7 +132,7 @@ int mon_tot_xp_worth(const Actor_data_t& d)
     return ceil(K * HP * SPEED_FACTOR * SHOCK_FACTOR * UNIQUE_FACTOR);
 }
 
-void player_gain_xp(const int XP_GAINED)
+void incr_player_xp(const int XP_GAINED)
 {
     if (map::player->is_alive())
     {
@@ -246,7 +246,7 @@ void on_mon_killed(Actor& actor)
         const int MON_XP_TOT    = mon_tot_xp_worth(d);
         const int XP_GAINED     = mon->has_given_xp_for_spotting_ ?
                                   std::max(1, MON_XP_TOT / 2) : MON_XP_TOT;
-        player_gain_xp(XP_GAINED);
+        incr_player_xp(XP_GAINED);
     }
 }
 
@@ -257,7 +257,7 @@ void on_mon_seen(Actor& actor)
     if (!mon->has_given_xp_for_spotting_)
     {
         mon->has_given_xp_for_spotting_ = true;
-        player_gain_xp(mon_tot_xp_worth(mon->data()) / 2);
+        incr_player_xp(mon_tot_xp_worth(mon->data()) / 2);
     }
 }
 

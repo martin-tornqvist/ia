@@ -15,8 +15,7 @@ namespace disarm
 
 void player_disarm()
 {
-    //TODO: It would probably be more fun if examine were allowed while blind,
-    //with some potentially horrible results
+    //TODO: Disarming should be allowed while blind
 
     //Abort if blind
     if (!map::player->prop_handler().allow_see())
@@ -66,7 +65,7 @@ void player_disarm()
         msg_log::clear();
         render::draw_map_and_interface();
     }
-    else
+    else //Not player position
     {
         //Abort if cell is unseen
         if (!map::cells[pos.x][pos.y].is_seen_by_player)

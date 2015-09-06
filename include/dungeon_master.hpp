@@ -33,7 +33,7 @@ int mon_tot_xp_worth(const Actor_data_t& d);
 
 int xp_to_next_lvl();
 
-void player_gain_xp(const int XP_GAINED);
+void incr_player_xp(const int XP_GAINED);
 
 } //Dungeon_master
 

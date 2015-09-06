@@ -5,7 +5,7 @@
 
 const size_t PLAYER_NAME_MAX_LEN = 14;
 
-const std::string game_version_str          = "v17.0";
+const std::string game_version_str          = "v18.0";
 
 const std::string tiles_img_name            = "images/gfx_16x24.png";
 const std::string main_menu_logo_img_name   = "images/main_menu_logo.png";
@@ -47,6 +47,8 @@ const int PLAYER_START_HP   = 16;
 const int PLAYER_START_SPI  = 6;
 const int HP_PER_LVL        = 2;
 const int SPI_PER_LVL       = 1;
+
+const int XP_FOR_DISRM_TRAP = 1;
 
 const int     FOV_STD_RADI_INT  = 8;
 const int     FOV_STD_W_INT     = (FOV_STD_RADI_INT * 2) + 1;
