@@ -81,6 +81,8 @@ void draw_blast_at_seen_actors(const std::vector<Actor*>& actors, const Clr& clr
 
 void draw_main_menu_logo(const int Y_POS);
 
+void draw_skull(const Pos& p);
+
 void draw_projectiles(std::vector<Projectile*>& projectiles,
                       const bool SHOULD_DRAW_MAP_BEFORE);
 

@@ -37,6 +37,7 @@ SDL_Surface*    scr_srf_            = nullptr;
 SDL_Texture*    scr_texture_        = nullptr;
 
 SDL_Surface*    main_menu_logo_srf_ = nullptr;
+SDL_Surface*    skull_srf_          = nullptr;
 
 const size_t PIXEL_DATA_W = 400;
 const size_t PIXEL_DATA_H = 400;
@@ -144,17 +145,27 @@ void blit_surface(SDL_Surface& srf, const Pos& px_pos)
     SDL_BlitSurface(&srf, nullptr, scr_srf_, &dst_rect);
 }
 
-void load_main_menu_logo()
+void load_pictures()
 {
     TRACE_FUNC_BEGIN;
 
-    SDL_Surface* main_menu_logo_srf_tmp = IMG_Load(main_menu_logo_img_name.c_str());
+    //Main menu logo
+    SDL_Surface* tmp_srf = IMG_Load(main_menu_logo_img_name.c_str());
 
-    assert(main_menu_logo_srf_tmp && "Failed to load main menu logo");
+    assert(tmp_srf && "Failed to load main menu logo image");
 
-    main_menu_logo_srf_ = SDL_ConvertSurface(main_menu_logo_srf_tmp, scr_srf_->format, 0);
+    main_menu_logo_srf_ = SDL_ConvertSurface(tmp_srf, scr_srf_->format, 0);
 
-    SDL_FreeSurface(main_menu_logo_srf_tmp);
+    SDL_FreeSurface(tmp_srf);
+
+    //Skull
+    tmp_srf = IMG_Load(skull_img_name.c_str());
+
+    assert(tmp_srf && "Failed to load skull image");
+
+    skull_srf_ = SDL_ConvertSurface(tmp_srf, scr_srf_->format, 0);
+
+    SDL_FreeSurface(tmp_srf);
 
     TRACE_FUNC_END;
 }
@@ -475,7 +486,7 @@ void init()
     if (config::is_tiles_mode())
     {
         load_tiles();
-        load_main_menu_logo();
+        load_pictures();
     }
 
     load_contour(config::is_tiles_mode() ? tile_px_data_ : font_px_data_);
@@ -515,6 +526,12 @@ void cleanup()
     {
         SDL_FreeSurface(main_menu_logo_srf_);
         main_menu_logo_srf_ = nullptr;
+    }
+
+    if (skull_srf_)
+    {
+        SDL_FreeSurface(skull_srf_);
+        skull_srf_ = nullptr;
     }
 
     TRACE_FUNC_END;
@@ -561,6 +578,16 @@ void draw_main_menu_logo(const int Y_POS)
     const Pos px_pos((SCR_PX_W - LOGO_PX_H) / 2, CELL_PX_H * Y_POS);
 
     blit_surface(*main_menu_logo_srf_, px_pos);
+}
+
+void draw_skull(const Pos& p)
+{
+    const int CELL_PX_W = config::cell_px_w();
+    const int CELL_PX_H = config::cell_px_h();
+
+    const Pos px_pos(p * Pos(CELL_PX_W, CELL_PX_H));
+
+    blit_surface(*skull_srf_, px_pos);
 }
 
 void draw_marker(const Pos& p, const std::vector<Pos>& trail, const int EFFECTIVE_RANGE)

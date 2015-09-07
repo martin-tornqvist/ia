@@ -63,12 +63,14 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
         }
     }
 
-    out.push_back(Str_and_clr(" " + map::player->name_a(), clr_heading));
+    out.push_back(Str_and_clr(map::player->name_a(), clr_heading));
 
     out.push_back(Str_and_clr("   * Explored to the depth of dungeon level "
                               + to_str(map::dlvl), clr_info));
+
     out.push_back(Str_and_clr("   * Was " + to_str(std::min(100, map::player->ins())) +
                               "% insane", clr_info));
+
     out.push_back(Str_and_clr("   * Killed " + to_str(nr_kills_tot_all_mon) + " monsters ",
                               clr_info));
 
@@ -106,7 +108,7 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
     out.push_back(Str_and_clr(" ", clr_info));
 
     TRACE << "Finding traits gained" << std::endl;
-    out.push_back(Str_and_clr(" Traits gained:", clr_heading));
+    out.push_back(Str_and_clr("Traits gained:", clr_heading));
     std::string traits_line = player_bon::all_picked_traits_titles_line();
 
     if (traits_line.empty())
@@ -126,7 +128,7 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
 
     out.push_back(Str_and_clr(" ", clr_info));
 
-    out.push_back(Str_and_clr(" Unique monsters killed:", clr_heading));
+    out.push_back(Str_and_clr("Unique monsters killed:", clr_heading));
 
     if (unique_killed_names.empty())
     {
@@ -142,7 +144,7 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
 
     out.push_back(Str_and_clr(" ", clr_info));
 
-    out.push_back(Str_and_clr(" Last messages:", clr_heading));
+    out.push_back(Str_and_clr("Last messages:", clr_heading));
     const std::vector< std::vector<Msg> >& history = msg_log::history();
     int history_element = std::max(0, int(history.size()) - 20);
 
@@ -163,7 +165,7 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
     out.push_back(Str_and_clr(" ", clr_info));
 
     TRACE << "Drawing the final map" << std::endl;
-    out.push_back(Str_and_clr(" The final moment:", clr_heading));
+    out.push_back(Str_and_clr("The final moment:", clr_heading));
 
     for (int x = 0; x < MAP_W; ++x)
     {
@@ -199,7 +201,7 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
             {
                 cur_row.push_back('@');
             }
-            else
+            else //Not player pos
             {
                 if (
                     render::render_array[x][y].glyph == ' ' &&
@@ -248,7 +250,7 @@ void render(const std::vector<Str_and_clr>& lines, const int TOP_ELEMENT)
 
     const int X_LABEL = 3;
 
-    render::draw_text(" Displaying postmortem information ", Panel::screen,
+    render::draw_text("Displaying game summary", Panel::screen,
                       Pos(X_LABEL, 0), clr_gray);
 
     render::draw_text(decoration_line, Panel::screen, Pos(0, SCREEN_H - 1),
@@ -313,88 +315,63 @@ void mk_memorial_file(const std::vector<Str_and_clr>& lines)
 {
     const std::string time_stamp =
         dungeon_master::start_time().time_str(Time_type::second, false);
-    const std::string memorial_file_name = map::player->name_a() + "_" + time_stamp + ".txt";
-    const std::string memorial_file_path = "data/" + memorial_file_name;
 
-    //Add memorial file
+    const std::string file_name = map::player->name_a() + "_" + time_stamp + ".txt";
+
+    const std::string file_path = "data/" + file_name;
+
+    //Write memorial file
     std::ofstream file;
-    file.open(memorial_file_path.data(), std::ios::trunc);
+    file.open(file_path.data(), std::ios::trunc);
 
-    for (const Str_and_clr& line : lines) {file << line.str << std::endl;}
+    for (const Str_and_clr& line : lines)
+    {
+        file << line.str << std::endl;
+    }
 
     file.close();
 
-    render::draw_text("Wrote file: data/" + memorial_file_name, Panel::screen, Pos(0, 0),
-                      clr_white_high);
+    render::draw_text("Wrote file: " + file_path, Panel::screen, Pos(0, 0), clr_white_high);
     render::update_screen();
 }
 
 void render_menu(const Menu_browser& browser)
 {
-    std::vector<std::string> ascii_graveyard;
-
-    std::string cur_line;
-    std::ifstream file("ascii_graveyard");
-
-    if (file.is_open())
-    {
-        while (getline(file, cur_line))
-        {
-            if (cur_line.size() > 0)
-            {
-                ascii_graveyard.push_back(cur_line);
-            }
-        }
-    }
-    else
-    {
-        TRACE << "Failed to open ascii graveyard file" << std::endl;
-        assert(false);
-    }
-
-    file.close();
-
     render::cover_panel(Panel::screen);
 
-    Pos pos(1, SCREEN_H - ascii_graveyard.size());
+    Pos pos(SCREEN_W / 2, 10);
 
-    for (const std::string& line : ascii_graveyard)
+    //Draw options
+    render::draw_text_centered("Show game summary", Panel::screen, pos,
+                               browser.is_at_idx(0) ? clr_menu_highlight : clr_menu_drk);
+    ++pos.y;
+
+    render::draw_text_centered("Write memorial file", Panel::screen, pos,
+                               browser.is_at_idx(1) ? clr_menu_highlight : clr_menu_drk);
+    ++pos.y;
+
+    render::draw_text_centered("View High Scores", Panel::screen, pos,
+                               browser.is_at_idx(2) ? clr_menu_highlight : clr_menu_drk);
+    ++pos.y;
+
+    render::draw_text_centered("View message log", Panel::screen, pos,
+                               browser.is_at_idx(3) ? clr_menu_highlight : clr_menu_drk);
+    ++pos.y;
+
+    render::draw_text_centered("Return to main menu", Panel::screen, pos,
+                               browser.is_at_idx(4) ? clr_menu_highlight : clr_menu_drk);
+    ++pos.y;
+
+    render::draw_text_centered("Quit the game", Panel::screen, pos,
+                               browser.is_at_idx(5) ? clr_menu_highlight : clr_menu_drk);
+    ++pos.y;
+
+    if (config::is_tiles_mode())
     {
-        const Uint8 K = Uint8(16 + (180 * ((pos.y * 100) / SCREEN_H) / 100));
-        const Clr clr = {K, K, K, 0};
-        render::draw_text(line, Panel::screen, pos, clr);
-        pos.y++;
+        render::draw_skull({10, 2});
     }
 
-    pos.set(45, 20);
-    const std::string NAME_STR = map::player->data().name_a;
-    render::draw_text_centered(NAME_STR, Panel::screen, pos, clr_white);
-
-    //Draw command labels
-    pos.set(55, 13);
-    render::draw_text("Information", Panel::screen, pos,
-                      browser.is_at_idx(0) ? clr_menu_highlight : clr_menu_drk);
-    pos.y++;
-
-    render::draw_text("Write memorial file", Panel::screen, pos,
-                      browser.is_at_idx(1) ? clr_menu_highlight : clr_menu_drk);
-    pos.y++;
-
-    render::draw_text("View High Scores", Panel::screen, pos,
-                      browser.is_at_idx(2) ? clr_menu_highlight : clr_menu_drk);
-    pos.y++;
-
-    render::draw_text("View message log", Panel::screen, pos,
-                      browser.is_at_idx(3) ? clr_menu_highlight : clr_menu_drk);
-    pos.y++;
-
-    render::draw_text("Return to main menu", Panel::screen, pos,
-                      browser.is_at_idx(4) ? clr_menu_highlight : clr_menu_drk);
-    pos.y++;
-
-    render::draw_text("Quit the game", Panel::screen, pos,
-                      browser.is_at_idx(5) ? clr_menu_highlight : clr_menu_drk);
-    pos.y++;
+    render::draw_box({0, 0, SCREEN_W - 1, SCREEN_H - 1});
 
     render::update_screen();
 }

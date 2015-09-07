@@ -9,6 +9,7 @@ const std::string game_version_str          = "v18.0";
 
 const std::string tiles_img_name            = "images/gfx_16x24.png";
 const std::string main_menu_logo_img_name   = "images/main_menu_logo.png";
+const std::string skull_img_name            = "images/skull.png";
 
 const int SCREEN_BPP = 32;
 
