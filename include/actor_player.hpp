@@ -46,8 +46,8 @@ public:
     Player();
     ~Player();
 
-    void store_to_save_lines(std::vector<std::string>& lines) const;
-    void setup_from_save_lines(std::vector<std::string>& lines);
+    void save() const;
+    void load();
 
     void update_fov();
 

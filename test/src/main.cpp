@@ -867,7 +867,7 @@ TEST_FIXTURE(Basic_fixture, saving_game)
     map_travel::map_list[5] = {Map_type::rats_in_the_walls, Is_main_dungeon::yes};
     map_travel::map_list[7] = {Map_type::leng,              Is_main_dungeon::no};
 
-    save_handling::save();
+    save_handling::save_game();
     CHECK(save_handling::is_save_available());
 }
 
@@ -877,7 +877,7 @@ TEST_FIXTURE(Basic_fixture, loading_game)
 
     const int PLAYER_MAX_HP_BEFORE_LOAD = map::player->hp_max(true);
 
-    save_handling::load();
+    save_handling::load_game();
 
     //Item data
     CHECK_EQUAL(true,  item_data::data[int(Item_id::scroll_telep)].is_tried);

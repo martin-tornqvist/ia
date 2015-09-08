@@ -48,8 +48,8 @@ public:
 
     ~Inventory();
 
-    void store_to_save_lines(std::vector<std::string>& lines) const;
-    void setup_from_save_lines(std::vector<std::string>& lines);
+    void save() const;
+    void load();
 
     //Equip item from backpack
     void equip_backpack_item(const size_t BACKPACK_IDX, const Slot_id slot_id);

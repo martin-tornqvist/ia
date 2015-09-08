@@ -1030,7 +1030,7 @@ void Stairs::bump(Actor& actor_bumping)
 
         case 1:
             map::player->pos = pos_;
-            save_handling::save();
+            save_handling::save_game();
             init::quit_to_main_menu = true;
             break;
 

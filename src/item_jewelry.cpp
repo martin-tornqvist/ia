@@ -11,6 +11,7 @@
 #include "text_format.hpp"
 #include "actor_factory.hpp"
 #include "feature_rigid.hpp"
+#include "save_handling.hpp"
 
 namespace
 {
@@ -937,23 +938,21 @@ void init()
     }
 }
 
-void store_to_save_lines(std::vector<std::string>& lines)
+void save()
 {
     for (size_t i = 0; i < size_t(Jewelry_effect_id::END); ++i)
     {
-        lines.push_back(to_str(int(effect_list_[i])));
-        lines.push_back(effects_known_[i] ? "1" : "0");
+        save_handling::put_int(int(effect_list_[i]));
+        save_handling::put_bool(effects_known_[i]);
     }
 }
 
-void setup_from_save_lines(std::vector<std::string>& lines)
+void load()
 {
     for (size_t i = 0; i < size_t(Jewelry_effect_id::END); ++i)
     {
-        effect_list_[i] = Item_id(to_int(lines.front()));
-        lines.erase(begin(lines));
-        effects_known_[i] = lines.front() == "1";
-        lines.erase(begin(lines));
+        effect_list_[i]     = Item_id(save_handling::get_int());
+        effects_known_[i]   = save_handling::get_bool();
     }
 }
 

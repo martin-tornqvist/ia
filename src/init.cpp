@@ -21,8 +21,7 @@
 #include "map_travel.hpp"
 #include "query.hpp"
 #include "item_jewelry.hpp"
-
-using namespace std;
+#include "save_handling.hpp"
 
 namespace init
 {
@@ -31,7 +30,7 @@ bool is_cheat_vision_enabled = false;
 bool quit_to_main_menu       = false;
 
 //NOTE: Initialization order matters in some cases
-void init_iO()
+void init_io()
 {
     TRACE_FUNC_BEGIN;
     sdl_wrapper::init();
@@ -43,7 +42,7 @@ void init_iO()
     TRACE_FUNC_END;
 }
 
-void cleanup_iO()
+void cleanup_io()
 {
     TRACE_FUNC_BEGIN;
     audio::cleanup();
@@ -57,6 +56,7 @@ void cleanup_iO()
 void init_game()
 {
     TRACE_FUNC_BEGIN;
+    save_handling::init();
     line_calc::init();
     gods::init();
     manual::init();

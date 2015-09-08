@@ -333,8 +333,8 @@ extern Item_data_t data[int(Item_id::END)];
 void init();
 void cleanup();
 
-void store_to_save_lines(std::vector<std::string>& lines);
-void setup_from_save_lines(std::vector<std::string>& lines);
+void save();
+void load();
 
 } //Item_data
 

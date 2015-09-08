@@ -13,8 +13,8 @@ namespace dungeon_master
 
 void init();
 
-void store_to_save_lines(std::vector<std::string>& lines);
-void setup_from_save_lines(std::vector<std::string>& lines);
+void save();
+void load();
 
 int clvl();
 int xp();

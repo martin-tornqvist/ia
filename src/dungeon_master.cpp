@@ -14,6 +14,7 @@
 #include "utils.hpp"
 #include "create_character.hpp"
 #include "actor_mon.hpp"
+#include "save_handling.hpp"
 
 namespace dungeon_master
 {
@@ -67,43 +68,36 @@ void init()
     init_xp_array();
 }
 
-void store_to_save_lines(std::vector<std::string>& lines)
+void save()
 {
-    lines.push_back(to_str(clvl_));
-    lines.push_back(to_str(xp_));
-    lines.push_back(to_str(time_started_.year_));
-    lines.push_back(to_str(time_started_.month_));
-    lines.push_back(to_str(time_started_.day_));
-    lines.push_back(to_str(time_started_.hour_));
-    lines.push_back(to_str(time_started_.minute_));
-    lines.push_back(to_str(time_started_.second_));
+
+    save_handling::put_int(clvl_);
+    save_handling::put_int(xp_);
+    save_handling::put_int(time_started_.year_);
+    save_handling::put_int(time_started_.month_);
+    save_handling::put_int(time_started_.day_);
+    save_handling::put_int(time_started_.hour_);
+    save_handling::put_int(time_started_.minute_);
+    save_handling::put_int(time_started_.second_);
 }
 
-void setup_from_save_lines(std::vector<std::string>& lines)
+void load()
 {
-    clvl_ = to_int(lines.front());
-    lines.erase(begin(lines));
-    xp_ = to_int(lines.front());
-    lines.erase(begin(lines));
-    time_started_.year_ = to_int(lines.front());
-    lines.erase(begin(lines));
-    time_started_.month_ = to_int(lines.front());
-    lines.erase(begin(lines));
-    time_started_.day_ = to_int(lines.front());
-    lines.erase(begin(lines));
-    time_started_.hour_ = to_int(lines.front());
-    lines.erase(begin(lines));
-    time_started_.minute_ = to_int(lines.front());
-    lines.erase(begin(lines));
-    time_started_.second_ = to_int(lines.front());
-    lines.erase(begin(lines));
+    clvl_                   = save_handling::get_int();
+    xp_                     = save_handling::get_int();
+    time_started_.year_     = save_handling::get_int();
+    time_started_.month_    = save_handling::get_int();
+    time_started_.day_      = save_handling::get_int();
+    time_started_.hour_     = save_handling::get_int();
+    time_started_.minute_   = save_handling::get_int();
+    time_started_.second_   = save_handling::get_int();
 }
 
-int         clvl()
+int clvl()
 {
     return clvl_;
 }
-int         xp()
+int xp()
 {
     return xp_;
 }

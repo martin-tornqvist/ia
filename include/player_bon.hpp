@@ -72,9 +72,9 @@ extern bool traits[int(Trait::END)];
 
 void init();
 
-void store_to_save_lines(std::vector<std::string>& lines);
+void save();
 
-void setup_from_save_lines(std::vector<std::string>& lines);
+void load();
 
 void pickable_bgs(std::vector<Bg>& bgs_ref);
 

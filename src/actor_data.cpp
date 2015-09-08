@@ -9,8 +9,7 @@
 #include "cmn_types.hpp"
 #include "converters.hpp"
 #include "item.hpp"
-
-using namespace std;
+#include "save_handling.hpp"
 
 void Actor_data_t::reset()
 {
@@ -2997,28 +2996,25 @@ void init()
     TRACE_FUNC_END;
 }
 
-void store_to_save_lines(vector<string>& lines)
+void save()
 {
     for (int i = 0; i < int(Actor_id::END); ++i)
     {
         const auto& d = data[i];
 
-        lines.push_back(to_str(d.nr_left_allowed_to_spawn));
-        lines.push_back(to_str(d.nr_kills));
+        save_handling::put_int(d.nr_left_allowed_to_spawn);
+        save_handling::put_int(d.nr_kills);
     }
 }
 
-void setup_from_save_lines(vector<string>& lines)
+void load()
 {
     for (int i = 0; i < int(Actor_id::END); ++i)
     {
         auto& d = data[i];
 
-        d.nr_left_allowed_to_spawn = to_int(lines.front());
-        lines.erase(begin(lines));
-
-        d.nr_kills = to_int(lines.front());
-        lines.erase(begin(lines));
+        d.nr_left_allowed_to_spawn  = save_handling::get_int();
+        d.nr_kills                  = save_handling::get_int();
     }
 }
 

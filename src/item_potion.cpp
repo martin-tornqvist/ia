@@ -1,7 +1,5 @@
 #include "item_potion.hpp"
 
-#include <climits>
-
 #include "init.hpp"
 #include "properties.hpp"
 #include "actor_player.hpp"
@@ -19,6 +17,7 @@
 #include "utils.hpp"
 #include "feature_rigid.hpp"
 #include "item_factory.hpp"
+#include "save_handling.hpp"
 
 Consume_item Potion::activate(Actor* const actor)
 {
@@ -469,7 +468,10 @@ void Potion_insight::quaff_impl(Actor& actor)
         {
             const Item_data_t& d = item->data();
 
-            if (!d.is_identified) {identify_bucket.push_back(item);}
+            if (!d.is_identified)
+            {
+                identify_bucket.push_back(item);
+            }
         }
     }
 
@@ -481,7 +483,10 @@ void Potion_insight::quaff_impl(Actor& actor)
         {
             const Item_data_t& d = item->data();
 
-            if (!d.is_identified) {identify_bucket.push_back(item);}
+            if (!d.is_identified)
+            {
+                identify_bucket.push_back(item);
+            }
         }
     }
 
@@ -697,7 +702,7 @@ void init()
     TRACE_FUNC_END;
 }
 
-void store_to_save_lines(std::vector<std::string>& lines)
+void save()
 {
     for (int i = 0; i < int(Item_id::END); ++i)
     {
@@ -705,17 +710,18 @@ void store_to_save_lines(std::vector<std::string>& lines)
 
         if (d.type == Item_type::potion)
         {
-            lines.push_back(d.base_name_un_id.names[int(Item_ref_type::plain)]);
-            lines.push_back(d.base_name_un_id.names[int(Item_ref_type::plural)]);
-            lines.push_back(d.base_name_un_id.names[int(Item_ref_type::a)]);
-            lines.push_back(to_str(d.clr.r));
-            lines.push_back(to_str(d.clr.g));
-            lines.push_back(to_str(d.clr.b));
+            save_handling::put_str(d.base_name_un_id.names[int(Item_ref_type::plain)]);
+            save_handling::put_str(d.base_name_un_id.names[int(Item_ref_type::plural)]);
+            save_handling::put_str(d.base_name_un_id.names[int(Item_ref_type::a)]);
+
+            save_handling::put_int(d.clr.r);
+            save_handling::put_int(d.clr.g);
+            save_handling::put_int(d.clr.b);
         }
     }
 }
 
-void setup_from_save_lines(std::vector<std::string>& lines)
+void load()
 {
     for (int i = 0; i < int(Item_id::END); ++i)
     {
@@ -723,20 +729,15 @@ void setup_from_save_lines(std::vector<std::string>& lines)
 
         if (d.type == Item_type::potion)
         {
-            d.base_name_un_id.names[int(Item_ref_type::plain)]  = lines.front();
-            lines.erase(begin(lines));
-            d.base_name_un_id.names[int(Item_ref_type::plural)] = lines.front();
-            lines.erase(begin(lines));
-            d.base_name_un_id.names[int(Item_ref_type::a)]      = lines.front();
-            lines.erase(begin(lines));
-            d.clr.r = to_int(lines.front());
-            lines.erase(begin(lines));
-            d.clr.g = to_int(lines.front());
-            lines.erase(begin(lines));
-            d.clr.b = to_int(lines.front());
-            lines.erase(begin(lines));
+            d.base_name_un_id.names[int(Item_ref_type::plain)]  = save_handling::get_str();
+            d.base_name_un_id.names[int(Item_ref_type::plural)] = save_handling::get_str();
+            d.base_name_un_id.names[int(Item_ref_type::a)]      = save_handling::get_str();
+
+            d.clr.r = save_handling::get_int();
+            d.clr.g = save_handling::get_int();
+            d.clr.b = save_handling::get_int();
         }
     }
 }
 
-} //Potion_handling
+} //potion_handling

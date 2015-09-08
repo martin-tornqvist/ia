@@ -15,6 +15,7 @@
 #include "utils.hpp"
 #include "feature_rigid.hpp"
 #include "actor_factory.hpp"
+#include "save_handling.hpp"
 
 //---------------------------------------------------- DEVICE
 Device::Device(Item_data_t* const item_data) :
@@ -32,15 +33,14 @@ Strange_device::Strange_device(Item_data_t* const item_data) :
     Device(item_data),
     condition_(rnd::coin_toss() ? Condition::fine : Condition::shoddy) {}
 
-void Strange_device::store_to_save_lines(std::vector<std::string>& lines)
+void Strange_device::save()
 {
-    lines.push_back(to_str(int(condition_)));
+    save_handling::put_int(int(condition_));
 }
 
-void Strange_device::setup_from_save_lines(std::vector<std::string>& lines)
+void Strange_device::load()
 {
-    condition_ = Condition(to_int(lines.front()));
-    lines.erase(begin(lines));
+    condition_ = Condition(save_handling::get_int());
 }
 
 std::vector<std::string> Strange_device::descr() const
@@ -344,24 +344,20 @@ Consume_item Device_lantern::activate(Actor* const actor)
     return Consume_item::no;
 }
 
-void Device_lantern::store_to_save_lines(std::vector<std::string>& lines)
+void Device_lantern::save()
 {
-    lines.push_back(to_str(nr_turns_left_));
-    lines.push_back(to_str(nr_flicker_turns_left_));
-    lines.push_back(to_str(int(working_state_)));
-    lines.push_back(is_activated_ ? "1" : "0");
+    save_handling::put_int(nr_turns_left_);
+    save_handling::put_int(nr_flicker_turns_left_);
+    save_handling::put_int(int(working_state_));
+    save_handling::put_bool(is_activated_);
 }
 
-void Device_lantern::setup_from_save_lines(std::vector<std::string>& lines)
+void Device_lantern::load()
 {
-    nr_turns_left_          = to_int(lines.front());
-    lines.erase(begin(lines));
-    nr_flicker_turns_left_   = to_int(lines.front());
-    lines.erase(begin(lines));
-    working_state_         = Lantern_working_state(to_int(lines.front()));
-    lines.erase(begin(lines));
-    is_activated_          = lines.front() == "1";
-    lines.erase(begin(lines));
+    nr_turns_left_          = save_handling::get_int();
+    nr_flicker_turns_left_  = save_handling::get_int();
+    working_state_          = Lantern_working_state(save_handling::get_int());
+    is_activated_           = save_handling::get_bool();
 }
 
 void Device_lantern::on_pickup_hook()

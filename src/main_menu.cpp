@@ -400,7 +400,7 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
             {
                 if (save_handling::is_save_available())
                 {
-                    save_handling::load();
+                    save_handling::load_game();
                     map_travel::go_to_nxt();
                     TRACE_FUNC_END;
                     return Game_entry_mode::load_game;

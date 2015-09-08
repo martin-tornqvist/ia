@@ -18,12 +18,25 @@
 #include "text_format.hpp"
 #include "feature_rigid.hpp"
 #include "utils.hpp"
+#include "save_handling.hpp"
 
 namespace postmortem
 {
 
 namespace
 {
+
+struct History_Event
+{
+    History_Event(const std::string msg, const int TURN_NR) :
+        msg     (msg),
+        TURN_NR (TURN_NR) {}
+
+    const std::string msg;
+    const int TURN_NR;
+};
+
+std::vector<History_Event> events_;
 
 struct Str_and_clr
 {
@@ -203,32 +216,25 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
             }
             else //Not player pos
             {
-                if (
-                    render::render_array[x][y].glyph == ' ' &&
-                    (y == 0 || x == 0 || y == MAP_H - 1 || x == MAP_W - 1))
-                {
-                    cur_row.push_back('*');
-                }
-                else
-                {
-                    const auto& wall_d       = feature_data::data(Feature_id::wall);
-                    const auto& rubble_high_d = feature_data::data(Feature_id::rubble_high);
-                    const auto& statue_d     = feature_data::data(Feature_id::statue);
+                const auto& wall_d          = feature_data::data(Feature_id::wall);
+                const auto& rubble_high_d   = feature_data::data(Feature_id::rubble_high);
+                const auto& statue_d        = feature_data::data(Feature_id::statue);
 
-                    if (
-                        render::render_array[x][y].glyph == wall_d.glyph ||
-                        render::render_array[x][y].glyph == rubble_high_d.glyph)
-                    {
-                        cur_row.push_back('#');
-                    }
-                    else if (render::render_array[x][y].glyph == statue_d.glyph)
-                    {
-                        cur_row.push_back('M');
-                    }
-                    else
-                    {
-                        cur_row.push_back(render::render_array[x][y].glyph);
-                    }
+                auto& cur_render_data = render::render_array[x][y];
+
+                if (
+                    cur_render_data.glyph == wall_d.glyph ||
+                    cur_render_data.glyph == rubble_high_d.glyph)
+                {
+                    cur_row.push_back('#');
+                }
+                else if (cur_render_data.glyph == statue_d.glyph)
+                {
+                    cur_row.push_back('M');
+                }
+                else //Not wall, rubble or statue
+                {
+                    cur_row.push_back(cur_render_data.glyph);
                 }
             }
         }
@@ -331,7 +337,7 @@ void mk_memorial_file(const std::vector<Str_and_clr>& lines)
 
     file.close();
 
-    render::draw_text("Wrote file: " + file_path, Panel::screen, Pos(0, 0), clr_white_high);
+    render::draw_text("Wrote file: " + file_path, Panel::screen, Pos(1, 1), clr_white_high);
     render::update_screen();
 }
 
@@ -377,6 +383,42 @@ void render_menu(const Menu_browser& browser)
 }
 
 } //namespace
+
+void init()
+{
+    events_.clear();
+}
+
+void save()
+{
+    save_handling::put_int(events_.size());
+
+    for (const History_Event& event : events_)
+    {
+        save_handling::put_str(event.msg);
+        save_handling::put_int(event.TURN_NR);
+    }
+}
+
+void load()
+{
+    const int NR_EVENTS = save_handling::get_int();
+
+    for (int i = 0; i < NR_EVENTS; ++i)
+    {
+        const std::string   msg     = save_handling::get_str();
+        const int           TURN_NR = save_handling::get_int();
+
+        events_.push_back({msg, TURN_NR});
+    }
+}
+
+void add_history_event(const std::string msg)
+{
+    const int TURN_NR = game_time::turn();
+
+    events_.push_back({msg, TURN_NR});
+}
 
 void run(bool* const quit_game)
 {

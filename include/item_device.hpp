@@ -39,8 +39,8 @@ public:
 
     virtual std::string name_inf() const override;
 
-    virtual void store_to_save_lines(std::vector<std::string>& lines) override;
-    virtual void setup_from_save_lines(std::vector<std::string>& lines) override;
+    virtual void save() override;
+    virtual void load() override;
 
     Condition condition_;
 
@@ -160,8 +160,8 @@ public:
 
     Lgt_size lgt_size() const override;
 
-    void store_to_save_lines(std::vector<std::string>& lines) override;
-    void setup_from_save_lines(std::vector<std::string>& lines) override;
+    void save() override;
+    void load() override;
 
     int nr_turns_left_;
     int nr_flicker_turns_left_;

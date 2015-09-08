@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
     (void)argc;
     (void)argv;
 
-    init::init_iO();
+    init::init_io();
     init::init_game();
 
     bool quit_game = false;
@@ -153,7 +153,7 @@ int main(int argc, char* argv[])
     }
 
     init::cleanup_game();
-    init::cleanup_iO();
+    init::cleanup_io();
 
     TRACE_FUNC_END;
 

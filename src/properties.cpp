@@ -21,6 +21,7 @@
 #include "feature_mob.hpp"
 #include "item.hpp"
 #include "text_format.hpp"
+#include "save_handling.hpp"
 
 namespace prop_data
 {
@@ -829,7 +830,7 @@ Prop_handler::~Prop_handler()
     }
 }
 
-void Prop_handler::store_to_save_lines(std::vector<std::string>& lines) const
+void Prop_handler::save() const
 {
     //Save intrinsic properties to file
 
@@ -843,34 +844,32 @@ void Prop_handler::store_to_save_lines(std::vector<std::string>& lines) const
         }
     }
 
-    lines.push_back(to_str(nr_intr_props_));
+    save_handling::put_int(nr_intr_props_);
 
     for (Prop* prop : props_)
     {
         if (prop->src_ == Prop_src::intr)
         {
-            lines.push_back(to_str(int(prop->id())));
-            lines.push_back(to_str(prop->nr_turns_left_));
+            save_handling::put_int(int(prop->id()));
+            save_handling::put_int(prop->nr_turns_left_);
         }
     }
 }
 
-void Prop_handler::setup_from_save_lines(std::vector<std::string>& lines)
+void Prop_handler::load()
 {
     //Load intrinsic properties from file
 
-    const int NR_PROPS = to_int(lines.front());
-    lines.erase(begin(lines));
+    const int NR_PROPS = save_handling::get_int();
 
     for (int i = 0; i < NR_PROPS; ++i)
     {
-        const auto prop_id = Prop_id(to_int(lines.front()));
-        lines.erase(begin(lines));
+        const auto prop_id = Prop_id(save_handling::get_int());
 
-        const int NR_TURNS = to_int(lines.front());
-        lines.erase(begin(lines));
+        const int NR_TURNS = save_handling::get_int();
 
-        const auto turns_init = NR_TURNS == -1 ? Prop_turns::indefinite : Prop_turns::specific;
+        const auto turns_init = NR_TURNS == -1 ?
+                                Prop_turns::indefinite : Prop_turns::specific;
 
         auto* const prop = mk_prop(prop_id, turns_init, NR_TURNS);
 

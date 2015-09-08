@@ -173,9 +173,9 @@ public:
     //Adds all natural properties set in the actor data
     void init_natural_props();
 
-    void store_to_save_lines(std::vector<std::string>& lines) const;
+    void save() const;
 
-    void setup_from_save_lines(std::vector<std::string>& lines);
+    void load();
 
     //All properties must be added through this function (can also be done via the other "add"
     //methods, which will then call "try_add_prop()")

@@ -18,6 +18,7 @@
 #include "feature_mob.hpp"
 #include "feature_rigid.hpp"
 #include "item_data.hpp"
+#include "save_handling.hpp"
 
 //---------------------------------------------------------- ITEM
 Item::Item(Item_data_t* item_data) :
@@ -284,6 +285,9 @@ bool Item::is_in_effective_range_lmt(const Pos& p0, const Pos& p1) const
 
 void Item::add_carrier_prop(Prop* const prop, const Verbosity verbosity)
 {
+    //TODO: Perhaps wearing some items such as Asbesthos suite should not print property messages.
+    (void)verbosity;
+
     assert(actor_carrying_);
     assert(prop);
 
@@ -319,15 +323,14 @@ Armor::Armor(Item_data_t* const item_data) :
     Item    (item_data),
     dur_    (rnd::range(80, 100)) {}
 
-void Armor::store_to_save_lines(std::vector<std::string>& lines)
+void Armor::save()
 {
-    lines.push_back(to_str(dur_));
+    save_handling::put_int(dur_);
 }
 
-void Armor::setup_from_save_lines(std::vector<std::string>& lines)
+void Armor::load()
 {
-    dur_ = to_int(lines.front());
-    lines.erase(begin(lines));
+    dur_ = save_handling::get_int();
 }
 
 std::string Armor::armor_points_str(const bool WITH_BRACKETS) const
@@ -379,6 +382,8 @@ int Armor::take_dur_hit_and_get_reduced_dmg(const int DMG_BEFORE)
 
 int Armor::armor_points() const
 {
+    //NOTE: AP must be able to reach zero, otherwise the armor will never count as destroyed.
+
     const int AP_MAX = data_->armor.armor_points;
 
     if (dur_ > 60)
@@ -388,20 +393,20 @@ int Armor::armor_points() const
 
     if (dur_ > 40)
     {
-        return std::max(1, AP_MAX - 1);
+        return std::max(0, AP_MAX - 1);
     }
 
     if (dur_ > 25)
     {
-        return std::max(1, AP_MAX - 2);
+        return std::max(0, AP_MAX - 2);
     }
 
     if (dur_ > 15)
     {
-        return std::max(1, AP_MAX - 3);
+        return std::max(0, AP_MAX - 3);
     }
 
-    return 1;
+    return 0;
 }
 
 void Armor_asb_suit::on_equip_hook(const Verbosity verbosity)
@@ -498,18 +503,16 @@ Wpn::Wpn(Item_data_t* const item_data) :
     }
 }
 
-void Wpn::store_to_save_lines(std::vector<std::string>& lines)
+void Wpn::save()
 {
-    lines.push_back(to_str(melee_dmg_plus_));
-    lines.push_back(to_str(nr_ammo_loaded_));
+    save_handling::put_int(melee_dmg_plus_);
+    save_handling::put_int(nr_ammo_loaded_);
 }
 
-void Wpn::setup_from_save_lines(std::vector<std::string>& lines)
+void Wpn::load()
 {
-    melee_dmg_plus_ = to_int(lines.front());
-    lines.erase(begin(lines));
-    nr_ammo_loaded_ = to_int(lines.front());
-    lines.erase(begin(lines));
+    melee_dmg_plus_ = save_handling::get_int();
+    nr_ammo_loaded_ = save_handling::get_int();
 }
 
 Clr Wpn::clr() const
@@ -610,6 +613,16 @@ Ammo_clip::Ammo_clip(Item_data_t* const item_data) : Ammo(item_data)
     set_full_ammo();
 }
 
+void Ammo_clip::save()
+{
+    save_handling::put_int(ammo_);
+}
+
+void Ammo_clip::load()
+{
+    ammo_ = save_handling::get_int();
+}
+
 void Ammo_clip::set_full_ammo()
 {
     ammo_ = data_->ranged.max_ammo;
@@ -633,6 +646,16 @@ void Medical_bag::on_pickup_hook()
             return;
         }
     }
+}
+
+void Medical_bag::save()
+{
+    save_handling::put_int(nr_supplies_);
+}
+
+void Medical_bag::load()
+{
+    nr_supplies_ = save_handling::get_int();
 }
 
 Consume_item Medical_bag::activate(Actor* const actor)
@@ -987,7 +1010,10 @@ void Dynamite::on_std_turn_player_hold_ignited()
     {
         std::string fuse_msg = "***F";
 
-        for (int i = 0; i < fuse_turns_; ++i) {fuse_msg += "Z";}
+        for (int i = 0; i < fuse_turns_; ++i)
+        {
+            fuse_msg += "Z";
+        }
 
         fuse_msg += "***";
         msg_log::add(fuse_msg, clr_yellow);
@@ -1016,7 +1042,10 @@ void Dynamite::on_player_paralyzed()
     const Pos& p = map::player->pos;
     auto* const f = map::cells[p.x][p.y].rigid;
 
-    if (!f->is_bottomless()) {game_time::add_mob(new Lit_dynamite(p, fuse_turns_));}
+    if (!f->is_bottomless())
+    {
+        game_time::add_mob(new Lit_dynamite(p, fuse_turns_));
+    }
 
     delete this;
 }
@@ -1133,7 +1162,10 @@ void Flare::on_player_paralyzed()
     const Pos&  p = map::player->pos;
     auto* const f = map::cells[p.x][p.y].rigid;
 
-    if (!f->is_bottomless()) {game_time::add_mob(new Lit_flare(p, fuse_turns_));}
+    if (!f->is_bottomless())
+    {
+        game_time::add_mob(new Lit_flare(p, fuse_turns_));
+    }
 
     game_time::update_light_map();
     map::player->update_fov();
@@ -1186,7 +1218,10 @@ void Smoke_grenade::on_player_paralyzed()
     const Pos&  p = map::player->pos;
     auto* const f = map::cells[p.x][p.y].rigid;
 
-    if (!f->is_bottomless()) {explosion::run_smoke_explosion_at(map::player->pos);}
+    if (!f->is_bottomless())
+    {
+        explosion::run_smoke_explosion_at(map::player->pos);
+    }
 
     map::player->update_fov();
     render::draw_map_and_interface();

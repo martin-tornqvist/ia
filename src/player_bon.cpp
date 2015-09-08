@@ -12,6 +12,7 @@
 #include "map.hpp"
 #include "map_parsing.hpp"
 #include "create_character.hpp"
+#include "save_handling.hpp"
 
 namespace player_bon
 {
@@ -166,25 +167,23 @@ void init()
     bg_ = Bg::END;
 }
 
-void store_to_save_lines(std::vector<std::string>& lines)
+void save()
 {
-    lines.push_back(to_str(int(bg_)));
+    save_handling::put_int(int(bg_));
 
     for (int i = 0; i < int(Trait::END); ++i)
     {
-        lines.push_back(traits[i] ? "1" : "0");
+        save_handling::put_bool(traits[i]);
     }
 }
 
-void setup_from_save_lines(std::vector<std::string>& lines)
+void load()
 {
-    bg_ = Bg(to_int(lines.front()));
-    lines.erase(begin(lines));
+    bg_ = Bg(save_handling::get_int());
 
     for (int i = 0; i < int(Trait::END); ++i)
     {
-        traits[i] = lines.front() == "1";
-        lines.erase(begin(lines));
+        traits[i] = save_handling::get_bool();
     }
 }
 

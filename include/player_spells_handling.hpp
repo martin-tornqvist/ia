@@ -13,8 +13,8 @@ namespace player_spells_handling
 void init();
 void cleanup();
 
-void store_to_save_lines(std::vector<std::string>& lines);
-void setup_from_save_lines(std::vector<std::string>& lines);
+void save();
+void load();
 
 void player_select_spell_to_cast();
 

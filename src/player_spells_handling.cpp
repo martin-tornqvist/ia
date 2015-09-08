@@ -15,6 +15,7 @@
 #include "query.hpp"
 #include "utils.hpp"
 #include "map.hpp"
+#include "save_handling.hpp"
 
 namespace player_spells_handling
 {
@@ -281,27 +282,25 @@ void cleanup()
     prev_cast_ = Spell_opt();
 }
 
-void store_to_save_lines(std::vector<std::string>& lines)
+void save()
 {
-    lines.push_back(to_str(known_spells_.size()));
+    save_handling::put_int(known_spells_.size());
 
     for (Spell* s : known_spells_)
     {
-        lines.push_back(to_str(int(s->id())));
+        save_handling::put_int(int(s->id()));
     }
 }
 
-void setup_from_save_lines(std::vector<std::string>& lines)
+void load()
 {
-    const int NR_SPELLS = to_int(lines.front());
-
-    lines.erase(begin(lines));
+    const int NR_SPELLS = save_handling::get_int();
 
     for (int i = 0; i < NR_SPELLS; ++i)
     {
-        const int ID = to_int(lines.front());
-        lines.erase(begin(lines));
-        known_spells_.push_back(spell_handling::mk_spell_from_id(Spell_id(ID)));
+        const Spell_id id = Spell_id(save_handling::get_int());
+
+        known_spells_.push_back(spell_handling::mk_spell_from_id(id));
     }
 }
 

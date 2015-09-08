@@ -11,12 +11,11 @@
 #include "item.hpp"
 #include "utils.hpp"
 #include "feature_rigid.hpp"
+#include "save_handling.hpp"
 
 #ifdef DEMO_MODE
 #include "sdl_wrapper.hpp"
 #endif // DEMO_MODE
-
-using namespace std;
 
 Cell::Cell() :
     is_explored         (false),
@@ -69,13 +68,12 @@ void Cell::reset()
 namespace map
 {
 
-Player*         player  = nullptr;
-int             dlvl    = 0;
-Cell            cells[MAP_W][MAP_H];
-vector<Room*>   room_list;
-Room*           room_map[MAP_W][MAP_H];
-
-Clr             wall_clr;
+Player*             player  = nullptr;
+int                 dlvl    = 0;
+Cell                cells[MAP_W][MAP_H];
+std::vector<Room*>  room_list;
+Room*               room_map[MAP_W][MAP_H];
+Clr                 wall_clr;
 
 namespace
 {
@@ -143,15 +141,14 @@ void cleanup()
     }
 }
 
-void store_to_save_lines(vector<string>& lines)
+void save()
 {
-    lines.push_back(to_str(dlvl));
+    save_handling::put_int(dlvl);
 }
 
-void setup_from_save_lines(vector<string>& lines)
+void load()
 {
-    dlvl = to_int(lines.front());
-    lines.erase(begin(lines));
+    dlvl = save_handling::get_int();
 }
 
 void reset_map()
@@ -172,7 +169,7 @@ void reset_map()
     //Occasionally set wall color to something unusual
     if (rnd::one_in(7))
     {
-        vector<Clr> wall_clr_bucket =
+        std::vector<Clr> wall_clr_bucket =
         {
             clr_nosf_sepia,
             clr_nosf_sepia_drk,

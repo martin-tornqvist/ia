@@ -23,8 +23,8 @@ extern std::vector<map_data> map_list;
 
 void init();
 
-void store_to_save_lines(std::vector<std::string>& lines);
-void setup_from_save_lines(std::vector<std::string>& lines);
+void save();
+void load();
 
 void try_use_down_stairs();
 

@@ -20,22 +20,22 @@
 #include "utils.hpp"
 #include "map_travel.hpp"
 #include "item.hpp"
-
-using namespace std;
+#include "save_handling.hpp"
 
 namespace game_time
 {
 
-vector<Actor*>      actors_;
-vector<Mob*> mobs_;
+std::vector<Actor*> actors_;
+std::vector<Mob*>   mobs_;
 
 namespace
 {
 
-vector<Actor_speed>  turn_type_vector_;
-int                 cur_turn_type_pos_   = 0;
-size_t              cur_actor_index_    = 0;
-int                 turn_nr_             = 0;
+std::vector<Actor_speed> turn_type_vector_;
+
+int     cur_turn_type_pos_  = 0;
+size_t  cur_actor_index_    = 0;
+int     turn_nr_            = 0;
 
 bool is_spi_regen_this_turn(const int REGEN_N_TURNS)
 {
@@ -47,7 +47,7 @@ void run_std_turn_events()
 {
     ++turn_nr_;
 
-    int regen_spi_nTurns = 12;
+    int regen_spi_n_turns = 12;
 
     for (size_t i = 0; i < actors_.size(); ++i)
     {
@@ -70,9 +70,12 @@ void run_std_turn_events()
             delete actor;
 
             actors_.erase(actors_.begin() + i);
-            i--;
+            --i;
 
-            if (cur_actor_index_ >= actors_.size()) {cur_actor_index_ = 0;}
+            if (cur_actor_index_ >= actors_.size())
+            {
+                cur_actor_index_ = 0;
+            }
         }
         else  //Actor is alive or is a corpse
         {
@@ -102,18 +105,18 @@ void run_std_turn_events()
                 if (actor == map::player)
                 {
                     if (player_bon::traits[int(Trait::stout_spirit)])
-                        regen_spi_nTurns -= 2;
+                        regen_spi_n_turns -= 2;
 
                     if (player_bon::traits[int(Trait::strong_spirit)])
-                        regen_spi_nTurns -= 2;
+                        regen_spi_n_turns -= 2;
 
                     if (player_bon::traits[int(Trait::mighty_spirit)])
-                        regen_spi_nTurns -= 2;
+                        regen_spi_n_turns -= 2;
                 }
 
-                regen_spi_nTurns = max(2, regen_spi_nTurns);
+                regen_spi_n_turns = std::max(2, regen_spi_n_turns);
 
-                if (is_spi_regen_this_turn(regen_spi_nTurns))
+                if (is_spi_regen_this_turn(regen_spi_n_turns))
                 {
                     actor->restore_spi(1, false, Verbosity::silent);
                 }
@@ -133,9 +136,12 @@ void run_std_turn_events()
     }
 
     //New turn for mobs (using a copied vector, since mobs may get destroyed)
-    const vector<Mob*> mobs_cpy = mobs_;
+    const std::vector<Mob*> mobs_cpy = mobs_;
 
-    for (auto* f : mobs_cpy) {f->on_new_turn();}
+    for (auto* f : mobs_cpy)
+    {
+        f->on_new_turn();
+    }
 
     //Spawn more monsters?
     //(If an unexplored cell is selected, the spawn is canceled)
@@ -189,24 +195,29 @@ void init()
 
 void cleanup()
 {
-    for (Actor* a : actors_) {delete a;}
+    for (Actor* a : actors_)
+    {
+        delete a;
+    }
 
     actors_.clear();
 
-    for (auto* f : mobs_) {delete f;}
+    for (auto* f : mobs_)
+    {
+        delete f;
+    }
 
     mobs_.clear();
 }
 
-void store_to_save_lines(vector<string>& lines)
+void save()
 {
-    lines.push_back(to_str(turn_nr_));
+    save_handling::put_int(turn_nr_);
 }
 
-void setup_from_save_lines(vector<string>& lines)
+void load()
 {
-    turn_nr_ = to_int(lines.front());
-    lines.erase(begin(lines));
+    turn_nr_ = save_handling::get_int();
 }
 
 int turn()
@@ -214,11 +225,17 @@ int turn()
     return turn_nr_;
 }
 
-void mobs_at_pos(const Pos& p, vector<Mob*>& vector_ref)
+void mobs_at_pos(const Pos& p, std::vector<Mob*>& vector_ref)
 {
     vector_ref.clear();
 
-    for (auto* m : mobs_) {if (m->pos() == p) {vector_ref.push_back(m);}}
+    for (auto* m : mobs_)
+    {
+        if (m->pos() == p)
+        {
+            vector_ref.push_back(m);
+        }
+    }
 }
 
 void add_mob(Mob* const f)
@@ -232,7 +249,10 @@ void erase_mob(Mob* const f, const bool DESTROY_OBJECT)
     {
         if (*it == f)
         {
-            if (DESTROY_OBJECT) {delete f;}
+            if (DESTROY_OBJECT)
+            {
+                delete f;
+            }
 
             mobs_.erase(it);
             return;
@@ -242,7 +262,10 @@ void erase_mob(Mob* const f, const bool DESTROY_OBJECT)
 
 void erase_all_mobs()
 {
-    for (auto* m : mobs_) {delete m;}
+    for (auto* m : mobs_)
+    {
+        delete m;
+    }
 
     mobs_.clear();
 }

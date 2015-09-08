@@ -75,8 +75,8 @@ public:
 
     virtual std::string descr() const = 0;
 
-    void store_to_save_lines(std::vector<std::string>& lines);
-    void setup_from_save_lines(std::vector<std::string>& lines);
+    void save();
+    void load();
 
 protected:
     Jewelry* const jewelry_;
@@ -614,8 +614,8 @@ namespace jewelry_handling
 
 void init();
 
-void store_to_save_lines(std::vector<std::string>& lines);
-void setup_from_save_lines(std::vector<std::string>& lines);
+void save();
+void load();
 
 } //Jewelry_handling
 

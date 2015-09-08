@@ -1,18 +1,26 @@
 #ifndef SAVE_HANDLING
 #define SAVE_HANDLING
 
+#include <string>
+
 namespace save_handling
 {
 
-void save();
-void load();
+void init();
+
+void save_game();
+void load_game();
 
 bool is_save_available();
 
-//  void collect_lines_from_game(std::vector<std::string>& lines);
-//  void setup_game_from_lines(std::vector<std::string>& lines) const;
-//  void read_file(std::vector<std::string>& lines);
-//  void write_file(const std::vector<std::string>& lines) const;
+//Functions called by modules when saving and loading. The get functions will erase the value.
+void put_str(const std::string str);
+void put_int(const int V);
+void put_bool(const bool V);
+
+std::string get_str();
+int         get_int();
+bool        get_bool();
 
 } //Save_handling
 

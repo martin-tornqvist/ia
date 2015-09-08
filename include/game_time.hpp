@@ -27,8 +27,8 @@ extern std::vector<Mob*> mobs_;
 void init();
 void cleanup();
 
-void store_to_save_lines(std::vector<std::string>& lines);
-void setup_from_save_lines(std::vector<std::string>& lines);
+void save();
+void load();
 
 void add_actor(Actor* actor);
 

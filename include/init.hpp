@@ -61,8 +61,8 @@ namespace init
 extern bool is_cheat_vision_enabled;
 extern bool quit_to_main_menu;
 
-void init_iO();
-void cleanup_iO();
+void init_io();
+void cleanup_io();
 
 void init_game();
 void cleanup_game();

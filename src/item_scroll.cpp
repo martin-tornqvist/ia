@@ -13,18 +13,20 @@
 #include "render.hpp"
 #include "utils.hpp"
 #include "item_factory.hpp"
+#include "save_handling.hpp"
 
-using namespace std;
-
-const string Scroll::real_name() const
+const std::string Scroll::real_name() const
 {
-    Spell* spell                = spell_handling::mk_spell_from_id(data_->spell_cast_from_scroll);
-    const string scroll_name    = spell->name();
+    Spell* spell = spell_handling::mk_spell_from_id(data_->spell_cast_from_scroll);
+
+    const std::string scroll_name = spell->name();
+
     delete spell;
+
     return scroll_name;
 }
 
-vector<string> Scroll::descr() const
+std::vector<std::string> Scroll::descr() const
 {
     if (data_->is_identified)
     {
@@ -67,7 +69,7 @@ void Scroll::identify(const Verbosity verbosity)
 
         if (verbosity == Verbosity::verbose)
         {
-            const string scroll_name = name(Item_ref_type::a, Item_ref_inf::none);
+            const std::string scroll_name = name(Item_ref_type::a, Item_ref_inf::none);
             msg_log::add("It was " + scroll_name + ".");
             render::draw_map_and_interface();
         }
@@ -106,11 +108,11 @@ Consume_item Scroll::read()
 
     auto* const spell = mk_spell();
 
-    const string crumble_str = "It crumbles to dust.";
+    const std::string crumble_str = "It crumbles to dust.";
 
     if (data_->is_identified)
     {
-        const string scroll_name = name(Item_ref_type::a, Item_ref_inf::none);
+        const std::string scroll_name = name(Item_ref_type::a, Item_ref_inf::none);
 
         msg_log::add("I read " + scroll_name + "...");
 
@@ -141,7 +143,7 @@ Consume_item Scroll::read()
     return Consume_item::yes;
 }
 
-string Scroll::name_inf() const
+std::string Scroll::name_inf() const
 {
     return (data_->is_tried && !data_->is_identified) ? "{Tried}" : "";
 }
@@ -152,7 +154,7 @@ namespace scroll_handling
 namespace
 {
 
-vector<string> false_names_;
+std::vector<std::string> false_names_;
 
 } //namespace
 
@@ -186,7 +188,7 @@ void init()
     false_names_.push_back("Maravita");
     false_names_.push_back("Infirmux");
 
-    vector<string> cmb;
+    std::vector<std::string> cmb;
     cmb.clear();
     cmb.push_back("Cruo");
     cmb.push_back("Cruonit");
@@ -226,7 +228,7 @@ void init()
         }
     }
 
-    TRACE << "Init scroll names" << endl;
+    TRACE << "Init scroll names" << std::endl;
 
     for (auto& d : item_data::data)
     {
@@ -236,7 +238,7 @@ void init()
             const int NR_ELEMENTS = false_names_.size();
             const int ELEMENT     = rnd::range(0, NR_ELEMENTS - 1);
 
-            const string& TITLE = false_names_[ELEMENT];
+            const std::string& TITLE = false_names_[ELEMENT];
 
             d.base_name_un_id.names[int(Item_ref_type::plain)] =
                 "Manuscript titled "    + TITLE;
@@ -253,13 +255,13 @@ void init()
             const Scroll* const scroll =
                 static_cast<const Scroll*>(item_factory::mk(d.id, 1));
 
-            const string REAL_TYPE_NAME = scroll->real_name();
+            const std::string REAL_TYPE_NAME = scroll->real_name();
 
             delete scroll;
 
-            const string REAL_NAME        = "Manuscript of "    + REAL_TYPE_NAME;
-            const string REAL_NAME_PLURAL = "Manuscripts of "   + REAL_TYPE_NAME;
-            const string REAL_NAME_A      = "a Manuscript of "  + REAL_TYPE_NAME;
+            const std::string REAL_NAME        = "Manuscript of "    + REAL_TYPE_NAME;
+            const std::string REAL_NAME_PLURAL = "Manuscripts of "   + REAL_TYPE_NAME;
+            const std::string REAL_NAME_A      = "a Manuscript of "  + REAL_TYPE_NAME;
 
             d.base_name.names[int(Item_ref_type::plain)]  = REAL_NAME;
             d.base_name.names[int(Item_ref_type::plural)] = REAL_NAME_PLURAL;
@@ -270,33 +272,32 @@ void init()
     TRACE_FUNC_END;
 }
 
-void store_to_save_lines(vector<string>& lines)
+void save()
 {
     for (int i = 0; i < int(Item_id::END); ++i)
     {
         if (item_data::data[i].type == Item_type::scroll)
         {
             auto& base_name_un_id = item_data::data[i].base_name_un_id;
-            lines.push_back(base_name_un_id.names[int(Item_ref_type::plain)]);
-            lines.push_back(base_name_un_id.names[int(Item_ref_type::plural)]);
-            lines.push_back(base_name_un_id.names[int(Item_ref_type::a)]);
+
+            save_handling::put_str(base_name_un_id.names[int(Item_ref_type::plain)]);
+            save_handling::put_str(base_name_un_id.names[int(Item_ref_type::plural)]);
+            save_handling::put_str(base_name_un_id.names[int(Item_ref_type::a)]);
         }
     }
 }
 
-void setup_from_save_lines(vector<string>& lines)
+void load()
 {
     for (int i = 0; i < int(Item_id::END); ++i)
     {
         if (item_data::data[i].type == Item_type::scroll)
         {
             auto& base_name_un_id = item_data::data[i].base_name_un_id;
-            base_name_un_id.names[int(Item_ref_type::plain)]  = lines.front();
-            lines.erase(begin(lines));
-            base_name_un_id.names[int(Item_ref_type::plural)] = lines.front();
-            lines.erase(begin(lines));
-            base_name_un_id.names[int(Item_ref_type::a)]      = lines.front();
-            lines.erase(begin(lines));
+
+            base_name_un_id.names[int(Item_ref_type::plain)]  = save_handling::get_str();
+            base_name_un_id.names[int(Item_ref_type::plural)] = save_handling::get_str();
+            base_name_un_id.names[int(Item_ref_type::a)]      = save_handling::get_str();
         }
     }
 }

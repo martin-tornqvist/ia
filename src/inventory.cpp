@@ -16,6 +16,7 @@
 #include "player_bon.hpp"
 #include "map.hpp"
 #include "utils.hpp"
+#include "save_handling.hpp"
 
 Inventory::Inventory(Actor* const owning_actor) :
     owning_actor_(owning_actor)
@@ -58,7 +59,7 @@ Inventory::~Inventory()
     }
 }
 
-void Inventory::store_to_save_lines(std::vector<std::string>& lines) const
+void Inventory::save() const
 {
     for (const Inv_slot& slot : slots_)
     {
@@ -66,31 +67,33 @@ void Inventory::store_to_save_lines(std::vector<std::string>& lines) const
 
         if (item)
         {
-            lines.push_back(to_str(int(item->id())));
-            lines.push_back(to_str(item->nr_items_));
-            item->store_to_save_lines(lines);
+            save_handling::put_int(int(item->id()));
+            save_handling::put_int(item->nr_items_);
+
+            item->save();
         }
         else //No item in this slot
         {
-            lines.push_back(to_str(int(Item_id::END)));
+            save_handling::put_int(int(Item_id::END));
         }
     }
 
-    lines.push_back(to_str(backpack_.size()));
+    save_handling::put_int(backpack_.size());
 
     for (Item* item : backpack_)
     {
-        lines.push_back(to_str(int(item->id())));
-        lines.push_back(to_str(item->nr_items_));
-        item->store_to_save_lines(lines);
+        save_handling::put_int(int(item->id()));
+        save_handling::put_int(item->nr_items_);
+
+        item->save();
     }
 }
 
-void Inventory::setup_from_save_lines(std::vector<std::string>& lines)
+void Inventory::load()
 {
     for (Inv_slot& slot : slots_)
     {
-        //Previous item is destroyed
+        //Any previous item is destroyed
         Item* item = slot.item;
 
         if (item)
@@ -99,18 +102,19 @@ void Inventory::setup_from_save_lines(std::vector<std::string>& lines)
             slot.item = nullptr;
         }
 
-        const Item_id id = Item_id(to_int(lines.front()));
-        lines.erase(begin(lines));
+        const Item_id id = Item_id(save_handling::get_int());
 
         if (id != Item_id::END)
         {
             item = item_factory::mk(id);
-            item->nr_items_ = to_int(lines.front());
-            lines.erase(begin(lines));
-            item->setup_from_save_lines(lines);
+
+            item->nr_items_ = save_handling::get_int();
+
+            item->load();
+
             slot.item = item;
 
-            //When loading the game, wear the item to apply properties from wearing
+            //When loading the game, "wear" the item to apply properties from wearing
             assert(owning_actor_);
             item->on_pickup(*owning_actor_);
             item->on_equip(Verbosity::silent);
@@ -122,17 +126,18 @@ void Inventory::setup_from_save_lines(std::vector<std::string>& lines)
         remove_item_in_backpack_with_idx(0, true);
     }
 
-    const int BACKPACK_SIZE = to_int(lines.front());
-    lines.erase(begin(lines));
+    const int BACKPACK_SIZE = save_handling::get_int();
 
     for (int i = 0; i < BACKPACK_SIZE; ++i)
     {
-        const Item_id id = Item_id(to_int(lines.front()));
-        lines.erase(begin(lines));
+        const Item_id id = Item_id(save_handling::get_int());
+
         Item* item = item_factory::mk(id);
-        item->nr_items_ = to_int(lines.front());
-        lines.erase(begin(lines));
-        item->setup_from_save_lines(lines);
+
+        item->nr_items_ = save_handling::get_int();
+
+        item->load();
+
         backpack_.push_back(item);
     }
 }

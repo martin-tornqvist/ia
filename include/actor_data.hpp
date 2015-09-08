@@ -158,8 +158,8 @@ extern Actor_data_t data[int(Actor_id::END)];
 
 void init();
 
-void store_to_save_lines(std::vector<std::string>& lines);
-void setup_from_save_lines(std::vector<std::string>& lines);
+void save();
+void load();
 
 } //actor_data
 

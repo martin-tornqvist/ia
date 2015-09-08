@@ -33,6 +33,7 @@
 #include "item_potion.hpp"
 #include "text_format.hpp"
 #include "utils.hpp"
+#include "save_handling.hpp"
 
 const int SHOCK_FROM_OBSESSION = 30;
 
@@ -263,72 +264,65 @@ void Player::mk_start_items()
     }
 }
 
-void Player::store_to_save_lines(std::vector<std::string>& lines) const
+void Player::save() const
 {
-    prop_handler_->store_to_save_lines(lines);
+    prop_handler_->save();
 
-    lines.push_back(to_str(ins_));
-    lines.push_back(to_str(int(shock_)));
-    lines.push_back(to_str(hp_));
-    lines.push_back(to_str(hp_max_));
-    lines.push_back(to_str(spi_));
-    lines.push_back(to_str(spi_max_));
-    lines.push_back(to_str(pos.x));
-    lines.push_back(to_str(pos.y));
+    save_handling::put_int(ins_);
+    save_handling::put_int(int(shock_));
+    save_handling::put_int(hp_);
+    save_handling::put_int(hp_max_);
+    save_handling::put_int(spi_);
+    save_handling::put_int(spi_max_);
+    save_handling::put_int(pos.x);
+    save_handling::put_int(pos.y);
 
     for (int i = 0; i < int(Ability_id::END); ++i)
     {
-        lines.push_back(to_str(data_->ability_vals.raw_val(Ability_id(i))));
+        const int V = data_->ability_vals.raw_val(Ability_id(i));
+
+        save_handling::put_int(V);
     }
 
     for (int i = 0; i < int(Phobia::END); ++i)
     {
-        lines.push_back(phobias[i] == 0 ? "0" : "1");
+        save_handling::put_bool(phobias[i]);
     }
 
     for (int i = 0; i < int(Obsession::END); ++i)
     {
-        lines.push_back(obsessions[i] == 0 ? "0" : "1");
+        save_handling::put_bool(obsessions[i]);
     }
 }
 
-void Player::setup_from_save_lines(std::vector<std::string>& lines)
+void Player::load()
 {
-    prop_handler_->setup_from_save_lines(lines);
+    prop_handler_->load();
 
-    ins_ = to_int(lines.front());
-    lines.erase(begin(lines));
-    shock_ = double(to_int(lines.front()));
-    lines.erase(begin(lines));
-    hp_ = to_int(lines.front());
-    lines.erase(begin(lines));
-    hp_max_ = to_int(lines.front());
-    lines.erase(begin(lines));
-    spi_ = to_int(lines.front());
-    lines.erase(begin(lines));
-    spi_max_ = to_int(lines.front());
-    lines.erase(begin(lines));
-    pos.x = to_int(lines.front());
-    lines.erase(begin(lines));
-    pos.y = to_int(lines.front());
-    lines.erase(begin(lines));
+    ins_        = save_handling::get_int();
+    shock_      = double(save_handling::get_int());
+    hp_         = save_handling::get_int();
+    hp_max_     = save_handling::get_int();
+    spi_        = save_handling::get_int();
+    spi_max_    = save_handling::get_int();
+    pos.x       = save_handling::get_int();
+    pos.y       = save_handling::get_int();
 
     for (int i = 0; i < int(Ability_id::END); ++i)
     {
-        data_->ability_vals.set_val(Ability_id(i), to_int(lines.front()));
-        lines.erase(begin(lines));
+        const int V = save_handling::get_int();
+
+        data_->ability_vals.set_val(Ability_id(i), V);
     }
 
     for (int i = 0; i < int(Phobia::END); ++i)
     {
-        phobias[i] = lines.front() == "0" ? false : true;
-        lines.erase(begin(lines));
+        phobias[i] = save_handling::get_bool();
     }
 
     for (int i = 0; i < int(Obsession::END); ++i)
     {
-        obsessions[i] = lines.front() == "0" ? false : true;
-        lines.erase(begin(lines));
+        obsessions[i] = save_handling::get_bool();
     }
 }
 

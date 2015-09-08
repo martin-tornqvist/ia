@@ -54,15 +54,9 @@ public:
         (void)verbosity;
     }
 
-    virtual void store_to_save_lines(std::vector<std::string>& lines)
-    {
-        (void)lines;
-    }
+    virtual void save() {}
 
-    virtual void setup_from_save_lines(std::vector<std::string>& lines)
-    {
-        (void)lines;
-    }
+    virtual void load() {}
 
     virtual int weight() const;
 
@@ -177,8 +171,8 @@ public:
 
     ~Armor() {}
 
-    void store_to_save_lines(std::vector<std::string>& lines) override;
-    void setup_from_save_lines(std::vector<std::string>& lines) override;
+    void save() override;
+    void load() override;
 
     Clr interface_clr() const override
     {
@@ -276,8 +270,8 @@ public:
 
     void set_random_melee_plus();
 
-    void store_to_save_lines(std::vector<std::string>& lines) override;
-    void setup_from_save_lines(std::vector<std::string>& lines) override;
+    void save() override;
+    void load() override;
 
     Clr clr() const override;
 
@@ -392,16 +386,9 @@ public:
 
     void set_full_ammo();
 
-    void store_to_save_lines(std::vector<std::string>& lines) override
-    {
-        lines.push_back(to_str(ammo_));
-    }
+    void save() override;
 
-    void setup_from_save_lines(std::vector<std::string>& lines)
-    {
-        ammo_ = to_int(lines.front());
-        lines.erase(begin(lines));
-    }
+    void load();
 
 protected:
     std::string name_inf() const override
@@ -443,15 +430,9 @@ public:
         return clr_green;
     }
 
-    void store_to_save_lines(std::vector<std::string>& lines) override
-    {
-        lines.push_back(to_str(nr_supplies_));
-    }
-    void setup_from_save_lines(std::vector<std::string>& lines) override
-    {
-        nr_supplies_ = to_int(lines.front());
-        lines.erase(begin(lines));
-    }
+    void save() override;
+
+    void load() override;
 
     int nr_supplies() const
     {

@@ -14,6 +14,7 @@
 #include "sound.hpp"
 #include "item_device.hpp"
 #include "map.hpp"
+#include "save_handling.hpp"
 
 Item_data_t::Item_data_t() :
     id                                  (Item_id::END),
@@ -2077,38 +2078,34 @@ void cleanup()
 }
 
 
-void store_to_save_lines(std::vector<std::string>& lines)
+void save()
 {
     for (int i = 0; i < int(Item_id::END); ++i)
     {
-        lines.push_back(data[i].is_identified ? "1" : "0");
-        lines.push_back(data[i].allow_spawn   ? "1" : "0");
+        const Item_data_t& d = data[i];
 
-        if (
-            data[i].type == Item_type::scroll ||
-            data[i].type == Item_type::potion)
+        save_handling::put_bool(d.is_identified);
+        save_handling::put_bool(d.allow_spawn);
+
+        if (d.type == Item_type::scroll || d.type == Item_type::potion)
         {
-            lines.push_back(data[i].is_tried ? "1" : "0");
+            save_handling::put_bool(d.is_tried);
         }
     }
 }
 
-void setup_from_save_lines(std::vector<std::string>& lines)
+void load()
 {
     for (int i = 0; i < int(Item_id::END); ++i)
     {
-        data[i].is_identified = lines.front() == "0" ? false : true;
-        lines.erase(begin(lines));
+        Item_data_t& d = data[i];
 
-        data[i].allow_spawn = lines.front()   == "0" ? false : true;
-        lines.erase(begin(lines));
+        d.is_identified   = save_handling::get_bool();
+        d.allow_spawn     = save_handling::get_bool();
 
-        if (
-            data[i].type == Item_type::scroll ||
-            data[i].type == Item_type::potion)
+        if (d.type == Item_type::scroll || d.type == Item_type::potion)
         {
-            data[i].is_tried = lines.front() == "0" ? false : true;
-            lines.erase(begin(lines));
+            d.is_tried = save_handling::get_bool();
         }
     }
 }

@@ -15,13 +15,12 @@
 #include "msg_log.hpp"
 #include "feature_rigid.hpp"
 #include "utils.hpp"
-
-using namespace std;
+#include "save_handling.hpp"
 
 namespace map_travel
 {
 
-vector<map_data> map_list;
+std::vector<map_data> map_list;
 
 namespace
 {
@@ -34,7 +33,7 @@ void mk_lvl(const Map_type& map_type)
 
 #ifndef NDEBUG
     int   nr_attempts  = 0;
-    auto  start_time   = chrono::steady_clock::now();
+    auto  start_time   = std::chrono::steady_clock::now();
 #endif
 
     //TODO: When the map is invalid, any unique items spawned are lost forever.
@@ -81,11 +80,11 @@ void mk_lvl(const Map_type& map_type)
     }
 
 #ifndef NDEBUG
-    auto diff_time = chrono::steady_clock::now() - start_time;
+    auto diff_time = std::chrono::steady_clock::now() - start_time;
 
-    TRACE << "map built after   " << nr_attempts << " attempt(s). " << endl
+    TRACE << "map built after   " << nr_attempts << " attempt(s). " << std::endl
           << "Total time taken: "
-          << chrono::duration <double, milli> (diff_time).count() << " ms" << endl;
+          << std::chrono::duration<double, std::milli>(diff_time).count() << " ms" << std::endl;
 #endif
 
     TRACE_FUNC_END;
@@ -98,7 +97,7 @@ void init()
     //Forest + dungeon + boss + trapezohedron
     const size_t NR_LVL_TOT = DLVL_LAST + 3;
 
-    map_list = vector<map_data>(NR_LVL_TOT, {Map_type::std, Is_main_dungeon::yes});
+    map_list = std::vector<map_data>(NR_LVL_TOT, {Map_type::std, Is_main_dungeon::yes});
 
     //Forest intro level
     map_list[0] = {Map_type::intro, Is_main_dungeon::yes};
@@ -117,32 +116,27 @@ void init()
     map_list[DLVL_LAST + 2] = {Map_type::trapezohedron,  Is_main_dungeon::yes};
 }
 
-void store_to_save_lines(std::vector<std::string>& lines)
+void save()
 {
-    lines.push_back(to_str(map_list.size()));
+    save_handling::put_int(map_list.size());
 
     for (const auto& map_data : map_list)
     {
-        lines.push_back(to_str(int(map_data.type)));
-        lines.push_back(map_data.is_main_dungeon == Is_main_dungeon::yes ? "1" : "0");
+        save_handling::put_int(int(map_data.type));
+        save_handling::put_int(int(map_data.is_main_dungeon));
     }
 }
 
-void setup_from_save_lines(std::vector<std::string>& lines)
+void load()
 {
-    const int NR_MAPS = to_int(lines.front());
-    lines.erase(begin(lines));
+    const int NR_MAPS = save_handling::get_int();
 
     map_list.resize(size_t(NR_MAPS));
 
     for (auto& map_data : map_list)
     {
-        map_data.type = Map_type(to_int(lines.front()));
-        lines.erase(begin(lines));
-
-        map_data.is_main_dungeon = lines.front() == "1" ?
-                                   Is_main_dungeon::yes : Is_main_dungeon::no;
-        lines.erase(begin(lines));
+        map_data.type               = Map_type(save_handling::get_int());
+        map_data.is_main_dungeon    = Is_main_dungeon(save_handling::get_int());
     }
 }
 
