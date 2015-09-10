@@ -14,9 +14,6 @@
 #include "text_format.hpp"
 #include "utils.hpp"
 
-
-using namespace std;
-
 namespace config
 {
 
@@ -26,7 +23,7 @@ namespace
 const int NR_OPTIONS  = 13;
 const int OPT_Y0      = 1;
 
-string  font_name_                      = "";
+std::string  font_name_                 = "";
 bool    is_fullscr_                     = false;
 bool    is_tiles_wall_full_square_      = false;
 bool    is_text_mode_wall_full_square_  = false;
@@ -49,7 +46,7 @@ bool    is_tiles_mode_                  = false;
 int     cell_px_w_                      = -1;
 int     cell_px_h_                      = -1;
 
-vector<string> font_image_names;
+std::vector<std::string> font_image_names;
 
 void set_cell_px_dim_dependent_variables()
 {
@@ -65,7 +62,7 @@ void set_cell_px_dim_dependent_variables()
 void set_cell_px_dims_from_font_name()
 {
     TRACE_FUNC_BEGIN;
-    string font_name = font_name_;
+    std::string font_name = font_name_;
 
     char ch = 'a';
 
@@ -75,7 +72,7 @@ void set_cell_px_dims_from_font_name()
         ch = font_name[0];
     }
 
-    string w_str = "";
+    std::string w_str = "";
 
     while (ch != 'x')
     {
@@ -87,7 +84,7 @@ void set_cell_px_dims_from_font_name()
     font_name.erase(begin(font_name));
     ch = font_name[0];
 
-    string h_str = "";
+    std::string h_str = "";
 
     while (ch != '_' && ch != '.')
     {
@@ -97,7 +94,7 @@ void set_cell_px_dims_from_font_name()
     }
 
     TRACE << "Parsed font image name, found dims: "
-          << w_str << "x" << h_str << endl;
+          << w_str << "x" << h_str << std::endl;
 
     cell_px_w_ = to_int(w_str);
     cell_px_h_ = to_int(h_str);
@@ -210,6 +207,7 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
     case 9:
     {
         const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->y());
+
         const int NR = query::number(p, clr_menu_highlight, 1, 3, delay_projectile_draw_, true);
 
         if (NR != -1)
@@ -221,10 +219,13 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
     case 10:
     {
         const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->y());
-        const int NR =
-            query::number(p, clr_menu_highlight, 1, 3, delay_shotgun_, true);
 
-        if (NR != -1) {delay_shotgun_ = NR;}
+        const int NR = query::number(p, clr_menu_highlight, 1, 3, delay_shotgun_, true);
+
+        if (NR != -1)
+        {
+            delay_shotgun_ = NR;
+        }
     } break;
 
     case 11:
@@ -259,7 +260,7 @@ void draw(const Menu_browser* const browser, const int OPTION_VALUES_X_POS)
     const int X0 = 0;
     const int X1 = OPTION_VALUES_X_POS;
 
-    string str = "";
+    std::string str = "";
 
     render::draw_text("-Options-", Panel::screen, Pos(X0, 0), clr_white);
 
@@ -293,7 +294,7 @@ void draw(const Menu_browser* const browser, const int OPTION_VALUES_X_POS)
     render::draw_text(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + opt_nr),
                       browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
-    string font_disp_name;
+    std::string font_disp_name;
     text_format::replace_all(font_name_,      "images/",  "",   font_disp_name);
     text_format::replace_all(font_disp_name,  "_",        " ",  font_disp_name);
     text_format::replace_all(font_disp_name,  ".png",     "",   font_disp_name);
@@ -437,14 +438,14 @@ void draw(const Menu_browser* const browser, const int OPTION_VALUES_X_POS)
     render::update_screen();
 }
 
-void read_file(vector<string>& lines)
+void read_file(std::vector<std::string>& lines)
 {
-    ifstream file;
+    std::ifstream file;
     file.open("data/config");
 
     if (file.is_open())
     {
-        string line;
+        std::string line;
 
         while (getline(file, line))
         {
@@ -455,11 +456,11 @@ void read_file(vector<string>& lines)
     }
 }
 
-void set_all_variables_from_lines(vector<string>& lines)
+void set_all_variables_from_lines(std::vector<std::string>& lines)
 {
     TRACE_FUNC_BEGIN;
 
-    string cur_line = lines.front();
+    std::string cur_line = lines.front();
     is_audio_enabled_ = cur_line == "1";
     lines.erase(begin(lines));
 
@@ -526,31 +527,34 @@ void set_all_variables_from_lines(vector<string>& lines)
     TRACE_FUNC_END;
 }
 
-void write_lines_to_file(vector<string>& lines)
+void write_lines_to_file(std::vector<std::string>& lines)
 {
-    ofstream file;
-    file.open("data/config", ios::trunc);
+    std::ofstream file;
+    file.open("data/config", std::ios::trunc);
 
     for (size_t i = 0; i < lines.size(); ++i)
     {
         file << lines[i];
 
-        if (i != lines.size() - 1) {file << endl;}
+        if (i != lines.size() - 1)
+        {
+            file << std::endl;
+        }
     }
 
     file.close();
 }
 
-void collect_lines_from_variables(vector<string>& lines)
+void collect_lines_from_variables(std::vector<std::string>& lines)
 {
     TRACE_FUNC_BEGIN;
     lines.clear();
     lines.push_back(is_audio_enabled_               ? "1" : "0");
     lines.push_back(is_tiles_mode_                  ? "1" : "0");
     lines.push_back(font_name_);
-    lines.push_back(is_fullscr_                  ? "1" : "0");
+    lines.push_back(is_fullscr_                     ? "1" : "0");
     lines.push_back(is_tiles_wall_full_square_      ? "1" : "0");
-    lines.push_back(is_text_mode_wall_full_square_      ? "1" : "0");
+    lines.push_back(is_text_mode_wall_full_square_  ? "1" : "0");
     lines.push_back(is_intro_lvl_skipped_           ? "1" : "0");
     lines.push_back(is_ranged_wpn_meleee_prompt_    ? "1" : "0");
     lines.push_back(is_ranged_wpn_auto_reload_      ? "1" : "0");
@@ -576,11 +580,12 @@ void init()
     font_image_names.push_back("images/16x24_v2.png");
     font_image_names.push_back("images/16x24_v3.png");
     font_image_names.push_back("images/16x24_DOS.png");
-    font_image_names.push_back("images/16x24_typewriter.png");
+    font_image_names.push_back("images/16x24_typewriter_v1.png");
+    font_image_names.push_back("images/16x24_typewriter_v2.png");
 
     set_default_variables();
 
-    vector<string> lines;
+    std::vector<std::string> lines;
     read_file(lines);
 
     if (lines.empty())
@@ -595,34 +600,34 @@ void init()
     set_cell_px_dim_dependent_variables();
 }
 
-bool    is_tiles_mode()                 {return is_tiles_mode_;}
-string  font_name()                     {return font_name_;}
-bool    is_fullscreen()                 {return is_fullscr_;}
-int     scr_px_w()                      {return scr_px_w_;}
-int     scr_px_h()                      {return scr_px_h_;}
-int     cell_px_w()                     {return cell_px_w_;}
-int     cell_px_h()                     {return cell_px_h_;}
-int     log_px_h()                      {return log_px_h_;}
-int     map_px_h()                      {return map_px_h_;}
-int     map_px_offset_h()               {return map_px_offset_h_;}
-int     char_lines_px_offset_h()        {return char_lines_px_offset_h_;}
-int     char_lines_px_h()               {return char_lines_px_h_;}
-bool    is_text_mode_wall_full_square() {return is_text_mode_wall_full_square_;}
-bool    is_tiles_wall_full_square()     {return is_tiles_wall_full_square_;}
-bool    is_audio_enabled()              {return is_audio_enabled_;}
-bool    is_bot_playing()                {return is_bot_playing_;}
-void    toggle_bot_playing()            {is_bot_playing_ = !is_bot_playing_;}
-bool    is_ranged_wpn_meleee_prompt()   {return is_ranged_wpn_meleee_prompt_;}
-bool    is_ranged_wpn_auto_reload()     {return is_ranged_wpn_auto_reload_;}
-bool    is_intro_lvl_skipped()          {return is_intro_lvl_skipped_;}
-int     delay_projectile_draw()         {return delay_projectile_draw_;}
-int     delay_shotgun()                 {return delay_shotgun_;}
-int     delay_explosion()               {return delay_explosion_;}
+bool        is_tiles_mode()                 {return is_tiles_mode_;}
+std::string font_name()                     {return font_name_;}
+bool        is_fullscreen()                 {return is_fullscr_;}
+int         scr_px_w()                      {return scr_px_w_;}
+int         scr_px_h()                      {return scr_px_h_;}
+int         cell_px_w()                     {return cell_px_w_;}
+int         cell_px_h()                     {return cell_px_h_;}
+int         log_px_h()                      {return log_px_h_;}
+int         map_px_h()                      {return map_px_h_;}
+int         map_px_offset_h()               {return map_px_offset_h_;}
+int         char_lines_px_offset_h()        {return char_lines_px_offset_h_;}
+int         char_lines_px_h()               {return char_lines_px_h_;}
+bool        is_text_mode_wall_full_square() {return is_text_mode_wall_full_square_;}
+bool        is_tiles_wall_full_square()     {return is_tiles_wall_full_square_;}
+bool        is_audio_enabled()              {return is_audio_enabled_;}
+bool        is_bot_playing()                {return is_bot_playing_;}
+void        toggle_bot_playing()            {is_bot_playing_ = !is_bot_playing_;}
+bool        is_ranged_wpn_meleee_prompt()   {return is_ranged_wpn_meleee_prompt_;}
+bool        is_ranged_wpn_auto_reload()     {return is_ranged_wpn_auto_reload_;}
+bool        is_intro_lvl_skipped()          {return is_intro_lvl_skipped_;}
+int         delay_projectile_draw()         {return delay_projectile_draw_;}
+int         delay_shotgun()                 {return delay_shotgun_;}
+int         delay_explosion()               {return delay_explosion_;}
 
 void run_options_menu()
 {
     Menu_browser browser(NR_OPTIONS);
-    vector<string> lines;
+    std::vector<std::string> lines;
 
     const int OPTION_VALUES_X_POS = 40;
 
@@ -667,7 +672,7 @@ void toggle_fullscreen()
 
     render::on_toggle_fullscreen();
 
-    vector<string> lines;
+    std::vector<std::string> lines;
     collect_lines_from_variables(lines);
     write_lines_to_file(lines);
 }
