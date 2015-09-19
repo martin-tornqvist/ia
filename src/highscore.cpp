@@ -16,16 +16,14 @@
 #include "render.hpp"
 #include "utils.hpp"
 
-using namespace std;
-
-High_score_entry::High_score_entry(std::string entry_date_and_time,
-                                   std::string player_name,
-                                   int player_xp,
-                                   int player_lvl,
-                                   int player_dlvl,
-                                   int player_insanity,
-                                   bool is_win_game,
-                                   Bg player_bg) :
+Highscore_entry::Highscore_entry(std::string entry_date_and_time,
+                                 std::string player_name,
+                                 int player_xp,
+                                 int player_lvl,
+                                 int player_dlvl,
+                                 int player_insanity,
+                                 bool is_win_game,
+                                 Bg player_bg) :
     date_and_time_  (entry_date_and_time),
     name_           (player_name),
     xp_             (player_xp),
@@ -35,23 +33,26 @@ High_score_entry::High_score_entry(std::string entry_date_and_time,
     is_win_         (is_win_game),
     bg_             (player_bg) {}
 
-int High_score_entry::score() const
+int Highscore_entry::score() const
 {
     const double DLVL_DB      = double(dlvl_);
     const double DLVL_LAST_DB = double(DLVL_LAST);
     const double XP_DB        = double(xp_);
 
-    const double FACTOR_XP    = 1.0 + XP_DB + (is_win_ ? (XP_DB / 5.0) : 0.0);
-    const double FACTOR_DLVL  = 1.0 + (DLVL_DB / DLVL_LAST_DB);
+    const double XP_FACTOR    = 1.0 + XP_DB + (is_win_ ? (XP_DB / 5.0) : 0.0);
+    const double DLVL_FACTOR  = 1.0 + (DLVL_DB / DLVL_LAST_DB);
 
-    return int(FACTOR_XP * FACTOR_DLVL);
+    return int(XP_FACTOR * DLVL_FACTOR);
 }
 
-namespace high_score
+namespace highscore
 {
 
 namespace
 {
+
+//Set at game over
+Highscore_entry* final_score_ = nullptr;
 
 const int X_POS_DATE    = 0;
 const int X_POS_NAME    = X_POS_DATE  + 19;
@@ -61,9 +62,9 @@ const int X_POS_INS     = X_POS_DLVL  + 7;
 const int X_POS_WIN     = X_POS_INS   + 10;
 const int X_POS_SCORE   = X_POS_WIN   + 5;
 
-void sort_entries(vector<High_score_entry>& entries)
+void sort_entries(std::vector<Highscore_entry>& entries)
 {
-    auto cmp = [](const High_score_entry & e1, const High_score_entry & e2)
+    auto cmp = [](const Highscore_entry & e1, const Highscore_entry & e2)
     {
         return e1.score() > e2.score();
     };
@@ -71,52 +72,52 @@ void sort_entries(vector<High_score_entry>& entries)
     sort(entries.begin(), entries.end(), cmp);
 }
 
-void write_file(vector<High_score_entry>& entries)
+void write_file(std::vector<Highscore_entry>& entries)
 {
-    ofstream file;
-    file.open("data/highscores", ios::trunc);
+    std::ofstream file;
+    file.open("data/highscores", std::ios::trunc);
 
     for (const auto entry : entries)
     {
-        const string WIN_STR = entry.is_win() ? "W" : "0";
+        const std::string WIN_STR = entry.is_win() ? "W" : "0";
 
-        file << WIN_STR                 << endl;
-        file << entry.date_and_time()   << endl;
-        file << entry.name()            << endl;
-        file << entry.xp()              << endl;
-        file << entry.lvl()             << endl;
-        file << entry.dlvl()            << endl;
-        file << entry.insanity()        << endl;
-        file << int(entry.bg())         << endl;
+        file << WIN_STR                 << std::endl;
+        file << entry.date_and_time()   << std::endl;
+        file << entry.name()            << std::endl;
+        file << entry.xp()              << std::endl;
+        file << entry.lvl()             << std::endl;
+        file << entry.dlvl()            << std::endl;
+        file << entry.ins()             << std::endl;
+        file << int(entry.bg())         << std::endl;
     }
 }
 
-void read_file(vector<High_score_entry>& entries)
+void read_file(std::vector<Highscore_entry>& entries)
 {
-    ifstream file;
+    std::ifstream file;
     file.open("data/highscores");
 
     if (file.is_open())
     {
-        string line = "";
+        std::string line = "";
 
         while (getline(file, line))
         {
-            bool is_win                = line[0] == 'W';
+            bool is_win                     = line[0] == 'W';
             getline(file, line);
-            const string date_and_time  = line;
+            const std::string date_and_time = line;
             getline(file, line);
-            const string name         = line;
+            const std::string name          = line;
             getline(file, line);
-            const int XP              = to_int(line);
+            const int XP                    = to_int(line);
             getline(file, line);
-            const int LVL             = to_int(line);
+            const int LVL                   = to_int(line);
             getline(file, line);
-            const int DLVL            = to_int(line);
+            const int DLVL                  = to_int(line);
             getline(file, line);
-            const int INS             = to_int(line);
+            const int INS                   = to_int(line);
             getline(file, line);
-            Bg bg                     = Bg(to_int(line));
+            Bg bg                           = Bg(to_int(line));
 
             entries.push_back({date_and_time, name, XP, LVL, DLVL, INS, is_win, bg});
         }
@@ -125,7 +126,7 @@ void read_file(vector<High_score_entry>& entries)
     }
 }
 
-void draw(const vector<High_score_entry>& entries, const int TOP_ELEMENT)
+void draw(const std::vector<Highscore_entry>& entries, const int TOP_ELEMENT)
 {
     TRACE_FUNC_BEGIN;
 
@@ -134,7 +135,7 @@ void draw(const vector<High_score_entry>& entries, const int TOP_ELEMENT)
     const Panel panel   = Panel::screen;
     const int   X_LABEL = 3;
 
-    const string decoration_line(MAP_W, '-');
+    const std::string decoration_line(MAP_W, '-');
 
     render::draw_text(decoration_line, panel, Pos(0, 0), clr_gray);
 
@@ -167,13 +168,13 @@ void draw(const vector<High_score_entry>& entries, const int TOP_ELEMENT)
     {
         const auto entry = entries[i];
 
-        const string date_and_time  = entry.date_and_time();
-        const string name           = entry.name();
-        const string lvl            = to_str(entry.lvl());
-        const string dlvl           = to_str(entry.dlvl());
-        const string ins            = to_str(entry.insanity());
-        const string win            = entry.is_win() ? "Yes" : "No";
-        const string score          = to_str(entry.score());
+        const std::string date_and_time  = entry.date_and_time();
+        const std::string name           = entry.name();
+        const std::string lvl            = to_str(entry.lvl());
+        const std::string dlvl           = to_str(entry.dlvl());
+        const std::string ins            = to_str(entry.ins());
+        const std::string win            = entry.is_win() ? "Yes" : "No";
+        const std::string score          = to_str(entry.score());
 
         const Clr& clr = clr_white;
 
@@ -194,9 +195,21 @@ void draw(const vector<High_score_entry>& entries, const int TOP_ELEMENT)
 
 } //namespace
 
-void run_high_score_screen()
+void init()
 {
-    vector<High_score_entry> entries;
+    final_score_ = nullptr;
+}
+
+void cleanup()
+{
+    delete final_score_;
+
+    final_score_ = nullptr;
+}
+
+void run_highscore_screen()
+{
+    std::vector<Highscore_entry> entries;
     read_file(entries);
 
     if (entries.empty())
@@ -231,13 +244,13 @@ void run_high_score_screen()
             }
             else
             {
-                top_nr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, top_nr);
+                top_nr = std::min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, top_nr);
             }
         }
 
         if (d.key == '8' || d.sdl_key == SDLK_UP || d.key == 'k')
         {
-            top_nr = max(0, top_nr - LINE_JUMP);
+            top_nr = std::max(0, top_nr - LINE_JUMP);
         }
 
         if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)
@@ -247,30 +260,34 @@ void run_high_score_screen()
     }
 }
 
+const Highscore_entry* final_score()
+{
+    return final_score_;
+}
+
 void on_game_over(const bool IS_WIN)
 {
-    vector<High_score_entry> entries = entries_sorted();
+    std::vector<Highscore_entry> entries = entries_sorted();
 
-    High_score_entry cur_player(
-        utils::cur_time().time_str(Time_type::minute, true),
-        map::player->name_a(),
-        dungeon_master::xp(),
-        dungeon_master::clvl(),
-        map::dlvl,
-        map::player->ins(),
-        IS_WIN,
-        player_bon::bg());
+    final_score_ = new Highscore_entry(utils::cur_time().time_str(Time_type::minute, true),
+                                       map::player->name_a(),
+                                       dungeon_master::xp(),
+                                       dungeon_master::clvl(),
+                                       map::dlvl,
+                                       map::player->ins(),
+                                       IS_WIN,
+                                       player_bon::bg());
 
-    entries.push_back(cur_player);
+    entries.push_back(*final_score_);
 
     sort_entries(entries);
 
     write_file(entries);
 }
 
-vector<High_score_entry> entries_sorted()
+std::vector<Highscore_entry> entries_sorted()
 {
-    vector<High_score_entry> entries;
+    std::vector<Highscore_entry> entries;
     read_file(entries);
 
     if (!entries.empty())
@@ -281,4 +298,4 @@ vector<High_score_entry> entries_sorted()
     return entries;
 }
 
-} //High_score
+} //highscore

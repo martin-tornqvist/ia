@@ -75,10 +75,12 @@ public:
 
     Actor_died hit_spi(const int DMG, const Verbosity verbosity = Verbosity::verbose);
 
-    bool restore_hp(const int HP_RESTORED, const bool IS_ALLOWED_ABOVE_MAX = false,
+    bool restore_hp(const int HP_RESTORED,
+                    const bool IS_ALLOWED_ABOVE_MAX = false,
                     const Verbosity verbosity = Verbosity::verbose);
 
-    bool restore_spi(const int SPI_RESTORED, const bool IS_ALLOWED_ABOVE_MAX = false,
+    bool restore_spi(const int SPI_RESTORED,
+                     const bool IS_ALLOWED_ABOVE_MAX = false,
                      const Verbosity verbosity = Verbosity::verbose);
 
     void change_max_hp(const int CHANGE, const Verbosity verbosity = Verbosity::verbose);

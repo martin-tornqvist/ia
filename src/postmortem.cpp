@@ -26,38 +26,15 @@ namespace postmortem
 namespace
 {
 
-struct History_Event
-{
-    History_Event(const std::string msg, const int TURN_NR) :
-        msg     (msg),
-        TURN_NR (TURN_NR) {}
-
-    const std::string msg;
-    const int TURN_NR;
-};
-
-std::vector<History_Event> events_;
-
-struct Str_and_clr
-{
-    Str_and_clr(const std::string& str_, const Clr clr_) :
-        str(str_),
-        clr(clr_) {}
-
-    Str_and_clr() :
-        str(""),
-        clr(clr_white) {}
-
-    std::string str;
-    Clr clr;
-};
-
 void mk_info_lines(std::vector<Str_and_clr>& out)
 {
     TRACE_FUNC_BEGIN;
 
     const Clr clr_heading  = clr_white_high;
     const Clr clr_info     = clr_white;
+
+    const std::string offset            = "   ";
+    const std::string bullet_point_str  = offset + "* ";
 
     TRACE << "Finding number of killed monsters" << std::endl;
     std::vector<std::string> unique_killed_names;
@@ -76,57 +53,52 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
         }
     }
 
-    out.push_back(Str_and_clr(map::player->name_a(), clr_heading));
+    const Highscore_entry* const score = highscore::final_score();
 
-    out.push_back(Str_and_clr("   * Explored to the depth of dungeon level "
-                              + to_str(map::dlvl), clr_info));
+    assert(score);
 
-    out.push_back(Str_and_clr("   * Was " + to_str(std::min(100, map::player->ins())) +
-                              "% insane", clr_info));
+    out.push_back({map::player->name_a(), clr_heading});
 
-    out.push_back(Str_and_clr("   * Killed " + to_str(nr_kills_tot_all_mon) + " monsters ",
-                              clr_info));
+    out.push_back({bullet_point_str + "Explored to the depth of dungeon level " +
+                   to_str(score->dlvl()), clr_info
+                  });
 
-    //TODO: This is ugly as hell
-    if (map::player->phobias[int(Phobia::dog)])
-        out.push_back(Str_and_clr("   * Had a phobia of dogs", clr_info));
+    out.push_back({bullet_point_str + "Was " + to_str(score->ins()) + "% insane", clr_info
+                  });
 
-    if (map::player->phobias[int(Phobia::rat)])
-        out.push_back(Str_and_clr("   * Had a phobia of rats", clr_info));
+    out.push_back({bullet_point_str + "Killed " + to_str(nr_kills_tot_all_mon) + " monsters",
+                   clr_info
+                  });
 
-    if (map::player->phobias[int(Phobia::spider)])
-        out.push_back(Str_and_clr("   * Had a phobia of spiders", clr_info));
+    out.push_back({bullet_point_str + "Gained " + to_str(score->xp()) + " experience points",
+                   clr_info
+                  });
 
-    if (map::player->phobias[int(Phobia::undead)])
-        out.push_back(Str_and_clr("   * Had a phobia of the dead", clr_info));
+    out.push_back({bullet_point_str + "Gained a score of " + to_str(score->score()), clr_info
+                  });
 
-    if (map::player->phobias[int(Phobia::cramped_place)])
-        out.push_back(Str_and_clr("   * Had a phobia of cramped spaces", clr_info));
+    const std::vector<const Ins_sympt*> sympts = insanity::active_sympts();
 
-    if (map::player->phobias[int(Phobia::open_place)])
-        out.push_back(Str_and_clr("   * Had a phobia of open places", clr_info));
+    if (!sympts.empty())
+    {
+        for (const Ins_sympt* const sympt : sympts)
+        {
+            const std::string sympt_descr = sympt->char_descr_msg();
 
-    if (map::player->phobias[int(Phobia::deep_places)])
-        out.push_back(Str_and_clr("   * Had a phobia of deep places", clr_info));
+            if (!sympt_descr.empty())
+            {
+                out.push_back({bullet_point_str + sympt_descr, clr_info});
+            }
+        }
+    }
 
-    if (map::player->phobias[int(Phobia::dark)])
-        out.push_back(Str_and_clr("   * Had a phobia of darkness", clr_info));
-
-    if (map::player->obsessions[int(Obsession::masochism)])
-        out.push_back(Str_and_clr("   * Had a masochistic obsession", clr_info));
-
-    if (map::player->obsessions[int(Obsession::sadism)])
-        out.push_back(Str_and_clr("   * Had a sadistic obsession", clr_info));
-
-    out.push_back(Str_and_clr(" ", clr_info));
-
-    TRACE << "Finding traits gained" << std::endl;
-    out.push_back(Str_and_clr("Traits gained:", clr_heading));
+    out.push_back({"", clr_info});
+    out.push_back({"Traits gained:", clr_heading});
     std::string traits_line = player_bon::all_picked_traits_titles_line();
 
     if (traits_line.empty())
     {
-        out.push_back(Str_and_clr("   * None", clr_info));
+        out.push_back({bullet_point_str + "None", clr_info});
     }
     else
     {
@@ -135,30 +107,47 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
 
         for (std::string& str : abilities_lines)
         {
-            out.push_back(Str_and_clr("   " + str, clr_info));
+            out.push_back({offset + str, clr_info});
         }
     }
 
-    out.push_back(Str_and_clr(" ", clr_info));
-
-    out.push_back(Str_and_clr("Unique monsters killed:", clr_heading));
+    out.push_back({"", clr_info});
+    out.push_back({"Unique monsters killed:", clr_heading});
 
     if (unique_killed_names.empty())
     {
-        out.push_back(Str_and_clr("   * None", clr_info));
+        out.push_back({bullet_point_str + "None", clr_info});
     }
     else
     {
         for (std::string& monster_name : unique_killed_names)
         {
-            out.push_back(Str_and_clr("   * " + monster_name, clr_info));
+            out.push_back({bullet_point_str + "" + monster_name, clr_info});
         }
     }
 
-    out.push_back(Str_and_clr(" ", clr_info));
+    out.push_back({"", clr_info});
+    out.push_back({"History of " + map::player->name_the(), clr_heading});
 
-    out.push_back(Str_and_clr("Last messages:", clr_heading));
+    const std::vector<History_event>& events = dungeon_master::history();
+
+    for (const auto& event : events)
+    {
+        std::string ev_str = to_str(event.TURN);
+
+        const int TURN_STR_MAX_W = 10;
+
+        text_format::pad_before_to(ev_str, TURN_STR_MAX_W);
+
+        ev_str += ": " + event.msg;
+
+        out.push_back({offset + ev_str, clr_info});
+    }
+
+    out.push_back({"", clr_info});
+    out.push_back({"Last messages:", clr_heading});
     const std::vector< std::vector<Msg> >& history = msg_log::history();
+
     int history_element = std::max(0, int(history.size()) - 20);
 
     for (size_t i = history_element; i < history.size(); ++i)
@@ -172,13 +161,13 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
             row += msg_str + " ";
         }
 
-        out.push_back(Str_and_clr("   " + row, clr_info));
+        out.push_back({offset + row, clr_info});
     }
 
-    out.push_back(Str_and_clr(" ", clr_info));
+    out.push_back({"", clr_info});
 
     TRACE << "Drawing the final map" << std::endl;
-    out.push_back(Str_and_clr("The final moment:", clr_heading));
+    out.push_back({"The final moment:", clr_heading});
 
     for (int x = 0; x < MAP_W; ++x)
     {
@@ -239,7 +228,7 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
             }
         }
 
-        out.push_back(Str_and_clr(cur_row, clr_info));
+        out.push_back({cur_row, clr_info});
         cur_row.clear();
     }
 
@@ -384,42 +373,6 @@ void render_menu(const Menu_browser& browser)
 
 } //namespace
 
-void init()
-{
-    events_.clear();
-}
-
-void save()
-{
-    save_handling::put_int(events_.size());
-
-    for (const History_Event& event : events_)
-    {
-        save_handling::put_str(event.msg);
-        save_handling::put_int(event.TURN_NR);
-    }
-}
-
-void load()
-{
-    const int NR_EVENTS = save_handling::get_int();
-
-    for (int i = 0; i < NR_EVENTS; ++i)
-    {
-        const std::string   msg     = save_handling::get_str();
-        const int           TURN_NR = save_handling::get_int();
-
-        events_.push_back({msg, TURN_NR});
-    }
-}
-
-void add_history_event(const std::string msg)
-{
-    const int TURN_NR = game_time::turn();
-
-    events_.push_back({msg, TURN_NR});
-}
-
 void run(bool* const quit_game)
 {
     std::vector<Str_and_clr> lines;
@@ -457,7 +410,7 @@ void run(bool* const quit_game)
             }
             else if (browser.is_at_idx(2))
             {
-                high_score::run_high_score_screen();
+                highscore::run_highscore_screen();
                 render_menu(browser);
             }
             else if (browser.is_at_idx(3))

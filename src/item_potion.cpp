@@ -18,6 +18,7 @@
 #include "feature_rigid.hpp"
 #include "item_factory.hpp"
 #include "save_handling.hpp"
+#include "dungeon_master.hpp"
 
 Consume_item Potion::activate(Actor* const actor)
 {
@@ -41,9 +42,11 @@ void Potion::identify(const Verbosity verbosity)
 
         if (verbosity == Verbosity::verbose)
         {
-            const std::string potion_name = name(Item_ref_type::a, Item_ref_inf::none);
-            msg_log::add("It was " + potion_name + ".");
-            map::player->incr_shock(Shock_lvl::heavy, Shock_src::use_strange_item);
+            const std::string name_after = name(Item_ref_type::a, Item_ref_inf::none);
+
+            msg_log::add("I have identified " + name_after + ".");
+
+            dungeon_master::add_history_event("Identified " + name_after + ".");
         }
     }
 }
@@ -147,7 +150,7 @@ void Potion_vitality::quaff_impl(Actor& actor)
     const int HP_MAX      = actor.hp_max(true);
     const int HP_RESTORED = std::max(20, HP_MAX - HP);
 
-    actor.restore_hp(HP_RESTORED);
+    actor.restore_hp(HP_RESTORED, true);
 
     if (map::player->can_see_actor(actor))
     {
@@ -285,7 +288,7 @@ void Potion_fortitude::quaff_impl(Actor& actor)
 {
     Prop_handler& prop_handler = actor.prop_handler();
 
-    Prop_rFear* const   rFear   = new Prop_rFear(Prop_turns::std);
+    Prop_rFear* const rFear = new Prop_rFear(Prop_turns::std);
 
     const int NR_TURNS_LEFT = rFear->nr_turns_left();
 
@@ -298,39 +301,18 @@ void Potion_fortitude::quaff_impl(Actor& actor)
 
     if (actor.is_player())
     {
-        bool is_phobias_cured = false;
+        const std::vector<const Ins_sympt*> sympts = insanity::active_sympts();
 
-        for (int i = 0; i < int(Phobia::END); ++i)
+        if (!sympts.empty())
         {
-            if (map::player->phobias[i])
-            {
-                map::player->phobias[i] = false;
-                is_phobias_cured = true;
-            }
-        }
+            const size_t        IDX = rnd::range(0, sympts.size() - 1);
+            const Ins_sympt_id  id  = sympts[IDX]->id();
 
-        if (is_phobias_cured)
-        {
-            msg_log::add("All my phobias are cured!");
-        }
-
-        bool is_obsessions_cured = false;
-
-        for (int i = 0; i < int(Obsession::END); ++i)
-        {
-            if (map::player->obsessions[i])
-            {
-                map::player->obsessions[i] = false;
-                is_obsessions_cured = true;
-            }
-        }
-
-        if (is_obsessions_cured)
-        {
-            msg_log::add("All my obsessions are cured!");
+            insanity::end_sympt(id);
         }
 
         map::player->restore_shock(999, false);
+
         msg_log::add("I feel more at ease.");
     }
 
@@ -498,32 +480,12 @@ void Potion_insight::quaff_impl(Actor& actor)
         Item* const   item                  = identify_bucket[IDX];
         const std::string  item_name_before = item->name(Item_ref_type::a, Item_ref_inf::none);
 
-        msg_log::add("I gain intuitions about " + item_name_before + "...", clr_white, false,
-                     More_prompt_on_msg::yes);
+        msg_log::add("I gain intuitions about " + item_name_before + "...",
+                     clr_white, false, More_prompt_on_msg::yes);
 
-        item->identify(Verbosity::silent);
+        item->identify(Verbosity::verbose);
 
         const std::string item_name_after = item->name(Item_ref_type::a, Item_ref_inf::none);
-
-        render::draw_map_and_interface(true);
-
-        if (item_name_before != item_name_after)
-        {
-            msg_log::add("It is identified as " + item_name_after + "!");
-        }
-        else //Item name is same as before
-        {
-            //Typically, items that change names when identified have a "nonsense" name
-            //first (e.g. "A Green Potion"), that change into something more descriptive
-            //(e.g. "A Potion of Fire Resistance"). In those cases, the message can be
-            //something like "Aha, [old name] is a [new name]!". But when the name is the
-            //same, the message needs to be different, (e.g. "An Iron Ring"). Then we
-            //print a message like "Aha, I understand it now".
-
-            //TODO: This is hacky and fragile, but it works for now.
-
-            msg_log::add("All its properties are known to me.");
-        }
     }
 
     identify(Verbosity::verbose);

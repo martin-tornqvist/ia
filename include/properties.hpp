@@ -187,7 +187,9 @@ public:
     void try_add_prop_from_att(const Wpn& wpn, const bool IS_MELEE);
 
     //The following two methods are supposed to be called by items
-    void add_prop_from_equipped_item(const Item* const item, Prop* const prop);
+    void add_prop_from_equipped_item(const Item* const item,
+                                     Prop* const prop,
+                                     const Verbosity verbosity);
 
     void remove_props_for_item(const Item* const item);
 
@@ -519,6 +521,7 @@ public:
     bool is_resisting_other_prop(const Prop_id prop_id) const override;
 
     void on_start() override;
+    void on_end() override;
 };
 
 class Prop_flying: public Prop
@@ -710,13 +713,15 @@ public:
     Prop_cursed(Prop_turns turns_init, int nr_turns = -1) :
         Prop(Prop_id::cursed, turns_init, nr_turns) {}
 
-    void on_start() override;
-
     int ability_mod(const Ability_id ability) const override
     {
         (void)ability;
         return -10;
     }
+
+    void on_start() override;
+
+    void on_end() override;
 };
 
 class Prop_burning: public Prop
@@ -736,8 +741,7 @@ public:
 
     bool allow_attack_ranged(const Verbosity verbosity) const override;
 
-    void on_start()      override;
-    void on_new_turn()    override;
+    void on_new_turn() override;
 };
 
 class Prop_flared: public Prop

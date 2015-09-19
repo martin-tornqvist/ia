@@ -3,6 +3,8 @@
 
 #include <string>
 
+//TODO "Converters" seems like a weird file separation - this should be put in the utils file...
+
 std::string to_str(const int IN);
 
 int to_int(const std::string& in);

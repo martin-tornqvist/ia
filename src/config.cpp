@@ -456,7 +456,7 @@ void read_file(std::vector<std::string>& lines)
     }
 }
 
-void set_all_variables_from_lines(std::vector<std::string>& lines)
+void set_variables_from_lines(std::vector<std::string>& lines)
 {
     TRACE_FUNC_BEGIN;
 
@@ -545,7 +545,7 @@ void write_lines_to_file(std::vector<std::string>& lines)
     file.close();
 }
 
-void collect_lines_from_variables(std::vector<std::string>& lines)
+void set_lines_from_variables(std::vector<std::string>& lines)
 {
     TRACE_FUNC_BEGIN;
     lines.clear();
@@ -586,15 +586,17 @@ void init()
     set_default_variables();
 
     std::vector<std::string> lines;
+
+    //Load config file, if it exists
     read_file(lines);
 
     if (lines.empty())
     {
-        collect_lines_from_variables(lines);
+        set_lines_from_variables(lines);
     }
-    else
+    else //A configuration did exist
     {
-        set_all_variables_from_lines(lines);
+        set_variables_from_lines(lines);
     }
 
     set_cell_px_dim_dependent_variables();
@@ -653,7 +655,7 @@ void run_options_menu()
         case Menu_action::selected:
             draw(&browser, OPTION_VALUES_X_POS);
             player_sets_option(&browser, OPTION_VALUES_X_POS);
-            collect_lines_from_variables(lines);
+            set_lines_from_variables(lines);
             write_lines_to_file(lines);
             draw(&browser, OPTION_VALUES_X_POS);
             break;
@@ -673,7 +675,7 @@ void toggle_fullscreen()
     render::on_toggle_fullscreen();
 
     std::vector<std::string> lines;
-    collect_lines_from_variables(lines);
+    set_lines_from_variables(lines);
     write_lines_to_file(lines);
 }
 

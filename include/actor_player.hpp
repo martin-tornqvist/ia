@@ -5,6 +5,7 @@
 
 #include "actor.hpp"
 #include "cmn_data.hpp"
+#include "insanity.hpp"
 
 enum class Phobia
 {
@@ -36,7 +37,6 @@ enum class Shock_src
     END
 };
 
-class Mon;
 class Medical_bag;
 class Explosive;
 
@@ -114,8 +114,9 @@ public:
     bool is_leader_of(const Actor* const actor) const override;
     bool is_actor_my_leader(const Actor* const actor) const override;
 
-    bool phobias[int(Phobia::END)];
-    bool obsessions[int(Obsession::END)];
+    bool is_standing_in_open_place() const;
+
+    bool is_standing_in_cramped_place() const;
 
     Medical_bag* active_medical_bag;
     Explosive* active_explosive;
@@ -127,15 +128,9 @@ public:
 private:
     void incr_insanity();
 
-    void test_phobias();
-
     void on_hit(int& dmg) override;
 
     void fov_hack();
-
-    bool is_standing_in_open_space() const;
-
-    bool is_standing_in_cramped_space() const;
 
     int nr_moves_until_free_action_;
     int nr_turns_until_ins_;

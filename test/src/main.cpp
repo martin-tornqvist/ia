@@ -438,7 +438,7 @@ TEST_FIXTURE(Basic_fixture, explosions)
     //Check wall destruction
     for (int i = 0; i < 2; ++i)
     {
-        explosion::run_explosion_at(Pos(X0, Y0), Expl_type::expl);
+        explosion::run(Pos(X0, Y0), Expl_type::expl);
 
         //Cells around the center, at a distance of 1, should be destroyed
         int r = 1;
@@ -465,7 +465,7 @@ TEST_FIXTURE(Basic_fixture, explosions)
 
     //Check damage to actors
     Actor* a1 = actor_factory::mk(Actor_id::rat, Pos(X0 + 1, Y0));
-    explosion::run_explosion_at(Pos(X0, Y0), Expl_type::expl);
+    explosion::run(Pos(X0, Y0), Expl_type::expl);
     CHECK_EQUAL(int(Actor_state::destroyed), int(a1->state()));
 
     //Check that corpses can be destroyed, and do not block living actors
@@ -479,7 +479,7 @@ TEST_FIXTURE(Basic_fixture, explosions)
     }
 
     a1 = actor_factory::mk(Actor_id::rat, Pos(X0 + 1, Y0));
-    explosion::run_explosion_at(Pos(X0, Y0), Expl_type::expl);
+    explosion::run(Pos(X0, Y0), Expl_type::expl);
 
     for (int i = 0; i < NR_CORPSES; ++i)
     {
@@ -498,7 +498,7 @@ TEST_FIXTURE(Basic_fixture, explosions)
         corpses[i]->die(false, false, false);
     }
 
-    explosion::run_explosion_at(Pos(X0, Y0), Expl_type::apply_prop, Expl_src::misc,
+    explosion::run(Pos(X0, Y0), Expl_type::apply_prop, Expl_src::misc,
                                 Emit_expl_snd::no, 0, new Prop_burning(Prop_turns::std));
     CHECK(a1->prop_handler().prop(Prop_id::burning));
     CHECK(a2->prop_handler().prop(Prop_id::burning));
@@ -520,7 +520,7 @@ TEST_FIXTURE(Basic_fixture, explosions)
     int x = 1;
     int y = 1;
     map::put(new Floor(Pos(x, y)));
-    explosion::run_explosion_at(Pos(x, y), Expl_type::expl);
+    explosion::run(Pos(x, y), Expl_type::expl);
     CHECK(map::cells[x + 1][y    ].rigid->id() != Feature_id::wall);
     CHECK(map::cells[x    ][y + 1].rigid->id() != Feature_id::wall);
     CHECK(map::cells[x - 1][y    ].rigid->id() == Feature_id::wall);
@@ -530,7 +530,7 @@ TEST_FIXTURE(Basic_fixture, explosions)
     x = MAP_W - 2;
     y = MAP_H - 2;
     map::put(new Floor(Pos(x, y)));
-    explosion::run_explosion_at(Pos(x, y), Expl_type::expl);
+    explosion::run(Pos(x, y), Expl_type::expl);
     CHECK(map::cells[x - 1][y    ].rigid->id() != Feature_id::wall);
     CHECK(map::cells[x    ][y - 1].rigid->id() != Feature_id::wall);
     CHECK(map::cells[x + 1][y    ].rigid->id() == Feature_id::wall);
@@ -753,7 +753,7 @@ TEST_FIXTURE(Basic_fixture, inventory_handling)
 
     for (int i = 0; i < 10; ++i)
     {
-        explosion::run_explosion_at(map::player->pos, Expl_type::expl);
+        explosion::run(map::player->pos, Expl_type::expl);
     }
 
     //Check that the asbesthos suit is destroyed
@@ -1434,13 +1434,13 @@ TEST_FIXTURE(Basic_fixture, map_parse_cells_within_dist_of_others)
 //-----------------------------------------------------------------------------
 // Some code exercise - Ichi! Ni! San!
 //-----------------------------------------------------------------------------
-TEST_FIXTURE(Basic_fixture, mapGenStd)
-{
+//TEST_FIXTURE(Basic_fixture, mapGenStd)
+//{
 //    for (int i = 0; i < 100; ++i)
 //    {
 //        map_gen::mk_std_lvl();
 //    }
-}
+//}
 
 #ifdef _WIN32
 #undef main

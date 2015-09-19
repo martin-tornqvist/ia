@@ -12,6 +12,7 @@
 #include "actor_factory.hpp"
 #include "feature_rigid.hpp"
 #include "save_handling.hpp"
+#include "dungeon_master.hpp"
 
 namespace
 {
@@ -664,16 +665,29 @@ void Jewelry::on_actor_turn_in_inv(const Inv_type inv_type)
 
 void Jewelry::identify(const Verbosity verbosity)
 {
-    (void)verbosity;
-
-    for (auto* effect : effects_)
+    if (!data_->is_identified)
     {
-        const size_t EFFECT_IDX = size_t(effect->id());
+        data_->is_identified = true;
 
-        effects_known_[EFFECT_IDX] = true;
+        for (auto* effect : effects_)
+        {
+            const size_t EFFECT_IDX = size_t(effect->id());
+
+            effects_known_[EFFECT_IDX] = true;
+        }
+
+        if (verbosity == Verbosity::verbose)
+        {
+            const std::string name_plain = name(Item_ref_type::plain, Item_ref_inf::none);
+
+            msg_log::add("I feel like all properties of the " + name_plain +
+                         " are known to me.", clr_white, false, More_prompt_on_msg::yes);
+
+            const std::string name_a = name(Item_ref_type::a, Item_ref_inf::none);
+
+            dungeon_master::add_history_event("Learned all the properties of " + name_a + ".");
+        }
     }
-
-    data_->is_identified = true;
 }
 
 int Jewelry::weight() const
@@ -726,19 +740,27 @@ void Jewelry::effect_noticed(const Jewelry_effect_id effect_id)
 
         assert(nr_effects_known_this_item <= MAX_NR_EFFECTS_ON_ITEM);
 
-        const std::string jewelry_name = name(Item_ref_type::plain, Item_ref_inf::none);
+        const std::string name_plain = name(Item_ref_type::plain, Item_ref_inf::none);
 
-        msg_log::add("I gained new knowledge about the " + jewelry_name + ".", clr_white,
+        msg_log::add("I gained new knowledge about the " + name_plain + ".", clr_white,
                      false, More_prompt_on_msg::yes);
 
         if (nr_effects_known_this_item == MAX_NR_EFFECTS_ON_ITEM)
         {
-            msg_log::add("I feel like all properties of the " + jewelry_name +
-                         " are known to me.", clr_white, false, More_prompt_on_msg::yes);
-            data_->is_identified = true;
+            //Jewelry is completely identified - print id message and set id status in item data
+            identify(Verbosity::verbose);
         }
+        else //Not all properties are known
+        {
+            //NOTE: The identify method adds a history event about learning *all* properties,
+            //so we only add an event about learning a property if it is not yet fully identified
+            //(i.e. when we don't call the identify method) - otherwise the history would contain
+            //something like "Learned a property" immediately followed by "Learned all properties",
+            //which would look weird and redundant.
+            const std::string name_a = name(Item_ref_type::a, Item_ref_inf::none);
 
-        map::player->incr_shock(Shock_lvl::heavy, Shock_src::use_strange_item);
+            dungeon_master::add_history_event("Learned a new property of " + name_a + ".");
+        }
     }
 }
 

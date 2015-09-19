@@ -84,6 +84,8 @@ const int POISON_DMG_N_TURN = 3;
 const int MEDICAL_BAG_NR_TRN_BEFORE_HEAL    = 10;
 const int MEDICAL_BAG_NR_TRN_PER_HP         = 2;
 
+const int SHOCK_FROM_OBSESSION = 30;
+
 //Value used for limiting spawning over time and "breeder" monsters. The actual number of actors
 //may sometimes go a bit above this number, e.g. due to a group of monsters spawning when the
 //number of actors is near the limit. Summoning spells does not check this number at all (because

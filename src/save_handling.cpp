@@ -18,6 +18,7 @@
 #include "player_spells_handling.hpp"
 #include "item_jewelry.hpp"
 #include "postmortem.hpp"
+#include "insanity.hpp"
 
 namespace save_handling
 {
@@ -54,13 +55,13 @@ void save_modules()
     jewelry_handling::save();
     map::player->inv().save();
     map::player->save();
+    insanity::save();
     player_bon::save();
     map_travel::save();
     map::save();
     actor_data::save();
     game_time::save();
     player_spells_handling::save();
-    postmortem::save();
 
     TRACE_FUNC_END;
 }
@@ -85,13 +86,13 @@ void load_modules()
     jewelry_handling::load();
     map::player->inv().load();
     map::player->load();
+    insanity::load();
     player_bon::load();
     map_travel::load();
     map::load();
     actor_data::load();
     game_time::load();
     player_spells_handling::load();
-    postmortem::load();
 
     TRACE_FUNC_END;
 }

@@ -16,6 +16,7 @@
 #include "feature_rigid.hpp"
 #include "actor_factory.hpp"
 #include "save_handling.hpp"
+#include "dungeon_master.hpp"
 
 //---------------------------------------------------- DEVICE
 Device::Device(Item_data_t* const item_data) :
@@ -23,9 +24,21 @@ Device::Device(Item_data_t* const item_data) :
 
 void Device::identify(const Verbosity verbosity)
 {
-    (void)verbosity;
+    if (!data_->is_identified)
+    {
+        data_->is_identified = true;
 
-    data_->is_identified = true;
+        if (verbosity == Verbosity::verbose)
+        {
+            const std::string name_after = name(Item_ref_type::a, Item_ref_inf::none);
+
+            msg_log::add("I have identified " + name_after + ".");
+
+            msg_log::add("All its properties are now known to me.");
+
+            dungeon_master::add_history_event("Comprehended " + name_after + ".");
+        }
+    }
 }
 
 //---------------------------------------------------- STRANGE DEVICE

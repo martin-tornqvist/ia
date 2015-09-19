@@ -18,6 +18,9 @@ void space_separated_list(const std::string& line, std::vector<std::string>& out
 void replace_all(const std::string& line, const std::string& from, const std::string& to,
                  std::string& out);
 
+void pad_before_to(std::string& str, const size_t TOT_W, const char c = ' ');
+void pad_after_to(std::string& str, const size_t TOT_W, const char c = ' ');
+
 void first_to_lower(std::string& str);
 void first_to_upper(std::string& str);
 void all_to_upper(std::string& str);

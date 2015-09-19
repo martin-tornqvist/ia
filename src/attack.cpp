@@ -591,8 +591,12 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
             }
         }
 
-        Snd snd(snd_msg, wpn.data().melee.miss_sfx, Ignore_msg_if_origin_seen::yes,
-                att_data.defender->pos, att_data.attacker, Snd_vol::low, snd_alerts_mon);
+        Snd snd(snd_msg, wpn.data().melee.miss_sfx,
+                Ignore_msg_if_origin_seen::yes,
+                att_data.defender->pos,
+                att_data.attacker,
+                Snd_vol::low,
+                snd_alerts_mon);
 
         snd_emit::emit_snd(snd);
     }

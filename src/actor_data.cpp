@@ -932,7 +932,7 @@ void init_data_list()
     d.is_infra_visible = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
-    d.descr = "A faint shadow of a huge spider, lurking in my periphery.";
+    d.descr = "A faint shadow of a huge spider, lurking in the periphery.";
     d.erratic_move_pct = Actor_erratic_freq::somewhat;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::spider);
@@ -2061,7 +2061,7 @@ void init_data_list()
     d.can_open_doors = true;
     d.nr_turns_aware = 9999;
     d.descr = "The mummified fourth dynasty Egyptian pharaoh Khephren. How he "
-              "came to dwell here is beyond my guess. His name means "
+              "came to dwell here is beyond anyones guess. His name means "
               "\"Rise, Ra!\"";
     d.spell_cast_msg = "casts a spell.";
     d.erratic_move_pct = Actor_erratic_freq::rare;
@@ -2104,7 +2104,7 @@ void init_data_list()
     d.can_open_doors = true;
     d.nr_turns_aware = 9999;
     d.descr = "The mummified sixth dynasty Egyptian pharaoh Nitokris. How she "
-              "came to dwell here is beyond my guess. Her name is found in the "
+              "came to dwell here is beyond anyones guess. Her name is found in the "
               "histories of Herodotus and writings of Manetho. According to the "
               "writings of the former, she took the throne by inviting her "
               "brothers murderers to a banquet. Then killed them by flooding the "

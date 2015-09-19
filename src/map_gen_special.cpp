@@ -266,10 +266,10 @@ void mk_forest_trees()
     }
 
     //Place graves
-    std::vector<High_score_entry> entries = high_score::entries_sorted();
+    std::vector<Highscore_entry> entries = highscore::entries_sorted();
 
     const int NR_NON_WIN =
-        count_if(begin(entries), end(entries), [](const High_score_entry & e)
+        count_if(begin(entries), end(entries), [](const Highscore_entry & e)
     {
         return !e.is_win();
     });
@@ -363,7 +363,7 @@ void mk_forest_trees()
         for (size_t grave_pos_idx = 0; grave_pos_idx < grave_cells.size(); ++grave_pos_idx)
         {
             Grave_stone*     grave = new Grave_stone(grave_cells[grave_pos_idx]);
-            High_score_entry  entry = entries[entry_idx];
+            Highscore_entry  entry = entries[entry_idx];
 
             //Skip winning entries
             while (entry.is_win())

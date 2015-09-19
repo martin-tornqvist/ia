@@ -7,10 +7,10 @@
 #include "cmn_data.hpp"
 #include "player_bon.hpp"
 
-class High_score_entry
+class Highscore_entry
 {
 public:
-    High_score_entry(std::string entry_date_and_time,
+    Highscore_entry(std::string entry_date_and_time,
                      std::string player_name,
                      int player_xp,
                      int player_lvl,
@@ -19,7 +19,7 @@ public:
                      bool is_win_game,
                      Bg player_bg);
 
-    ~High_score_entry() {}
+    ~Highscore_entry() {}
 
     int score() const;
 
@@ -48,7 +48,7 @@ public:
         return dlvl_;
     }
 
-    int insanity() const
+    int ins() const
     {
         return ins_;
     }
@@ -70,16 +70,20 @@ private:
     Bg bg_;
 };
 
-namespace high_score
+namespace highscore
 {
 
-void run_high_score_screen();
+void init();
+void cleanup();
+
+void run_highscore_screen();
 
 void on_game_over(const bool IS_WIN);
 
-std::vector<High_score_entry> entries_sorted();
+std::vector<Highscore_entry> entries_sorted();
 
-} //High_score
+const Highscore_entry* final_score();
 
+} //highscore
 
 #endif

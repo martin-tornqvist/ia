@@ -810,7 +810,7 @@ void Trap_gas_confusion::trigger()
 
     snd_emit::emit_snd(snd);
 
-    explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
+    explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
                                 -1, new Prop_confused(Prop_turns::std), &clr_magenta);
 
     TRACE_FUNC_END_VERBOSE;
@@ -833,7 +833,7 @@ void Trap_gas_paralyzation::trigger()
 
     snd_emit::emit_snd(snd);
 
-    explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
+    explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
                                 -1, new Prop_paralyzed(Prop_turns::std), &clr_magenta);
 
     TRACE_FUNC_END_VERBOSE;
@@ -856,7 +856,7 @@ void Trap_gas_fear::trigger()
 
     snd_emit::emit_snd(snd);
 
-    explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
+    explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
                                 -1, new Prop_terrified(Prop_turns::std), &clr_magenta);
 
     TRACE_FUNC_END_VERBOSE;
@@ -874,7 +874,7 @@ void Trap_blinding_flash::trigger()
         msg_log::more_prompt();
     }
 
-    explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
+    explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
                                 -1, new Prop_blind(Prop_turns::std), &clr_yellow);
 
     TRACE_FUNC_END_VERBOSE;
@@ -1252,7 +1252,7 @@ void Trap_fire::trigger()
 
     snd_emit::emit_snd(snd);
 
-    explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
+    explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
                                 -1, new Prop_burning(Prop_turns::std));
 
     TRACE_FUNC_END_VERBOSE;

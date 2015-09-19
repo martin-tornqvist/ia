@@ -432,7 +432,7 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
 
             if (browser.is_at_idx(5))
             {
-                high_score::run_high_score_screen();
+                highscore::run_highscore_screen();
                 draw(browser);
             }
 

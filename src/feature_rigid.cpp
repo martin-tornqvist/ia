@@ -2136,7 +2136,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
                 prop->set_nr_turns_left(prop->nr_turns_left() * 2);
             }
 
-            explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc,
+            explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc,
                                         Emit_expl_snd::no, 0, prop, &fume_clr);
         }
         else //Not fumes
@@ -2578,7 +2578,7 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
                          More_prompt_on_msg::yes);
         }
 
-        explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc,
+        explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc,
                                     Emit_expl_snd::yes, 0, new Prop_burning(Prop_turns::std));
 
         return Did_trigger_trap::yes;
@@ -2636,7 +2636,7 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
             prop->set_nr_turns_left(prop->nr_turns_left() * 2);
         }
 
-        explosion::run_explosion_at(pos_, Expl_type::apply_prop, Expl_src::misc,
+        explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc,
                                     Emit_expl_snd::no, 0, prop, &fume_clr);
     }
 
@@ -3073,10 +3073,9 @@ void Cocoon::bump(Actor& actor_bumping)
         }
         else //Player can see
         {
-            if (map::player->phobias[int(Phobia::spider)])
+            if (insanity::has_sympt(Ins_sympt_id::phobia_spider))
             {
-                map::player->prop_handler().try_add_prop(
-                    new Prop_terrified(Prop_turns::std));
+                map::player->prop_handler().try_add_prop( new Prop_terrified(Prop_turns::std));
             }
 
             if (is_open_)

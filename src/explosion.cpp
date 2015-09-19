@@ -12,13 +12,12 @@
 #include "player_bon.hpp"
 #include "feature_rigid.hpp"
 #include "feature_mob.hpp"
-
-using namespace std;
+#include "dungeon_master.hpp"
 
 namespace
 {
 
-void draw(const vector< vector<Pos> >& pos_lists, bool blocked[MAP_W][MAP_H],
+void draw(const std::vector< std::vector<Pos> >& pos_lists, bool blocked[MAP_W][MAP_H],
           const Clr* const clr_override)
 {
     render::draw_map_and_interface();
@@ -41,7 +40,7 @@ void draw(const vector< vector<Pos> >& pos_lists, bool blocked[MAP_W][MAP_H],
         for (int i_outer = 0; i_outer < NR_OUTER; i_outer++)
         {
             const Clr& clr = i_outer == NR_OUTER - 1 ? clr_outer : clr_inner;
-            const vector<Pos>& inner = pos_lists[i_outer];
+            const std::vector<Pos>& inner = pos_lists[i_outer];
 
             for (const Pos& pos : inner)
             {
@@ -71,15 +70,15 @@ void draw(const vector< vector<Pos> >& pos_lists, bool blocked[MAP_W][MAP_H],
 
 void explosion_area(const Pos& c, const int RADI, Rect& rect_ref)
 {
-    rect_ref = Rect(Pos(max(c.x - RADI, 1),         max(c.y - RADI, 1)),
-                    Pos(min(c.x + RADI, MAP_W - 2), min(c.y + RADI, MAP_H - 2)));
+    rect_ref = Rect(Pos(std::max(c.x - RADI, 1),         std::max(c.y - RADI, 1)),
+                    Pos(std::min(c.x + RADI, MAP_W - 2), std::min(c.y + RADI, MAP_H - 2)));
 }
 
 void cells_reached(const Rect& area, const Pos& origin,
                    bool blocked[MAP_W][MAP_H],
-                   vector< vector<Pos> >& pos_list_ref)
+                   std::vector< std::vector<Pos> >& pos_list_ref)
 {
-    vector<Pos> line;
+    std::vector<Pos> line;
 
     for (int y = area.p0.y; y <= area.p1.y; ++y)
     {
@@ -119,7 +118,7 @@ void cells_reached(const Rect& area, const Pos& origin,
 namespace explosion
 {
 
-void run_explosion_at(const Pos&            origin,
+void run(const Pos&            origin,
                       const Expl_type       expl_type,
                       const Expl_src        expl_src,
                       const Emit_expl_snd   emit_expl_snd,
@@ -134,7 +133,7 @@ void run_explosion_at(const Pos&            origin,
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_projectiles(), blocked);
 
-    vector< vector<Pos> > pos_lists;
+    std::vector< std::vector<Pos> > pos_lists;
     cells_reached(area, origin, blocked, pos_lists);
 
     if (emit_expl_snd == Emit_expl_snd::yes)
@@ -151,7 +150,7 @@ void run_explosion_at(const Pos&            origin,
     //Do damage, apply effect
 
     Actor* living_actors[MAP_W][MAP_H];
-    vector<Actor*> corpses[MAP_W][MAP_H];
+    std::vector<Actor*> corpses[MAP_W][MAP_H];
 
     for (int x = 0; x < MAP_W; ++x)
     {
@@ -182,13 +181,13 @@ void run_explosion_at(const Pos&            origin,
 
     for (int cur_radi = 0; cur_radi < NR_OUTER; cur_radi++)
     {
-        const vector<Pos>& positions_at_cur_radi = pos_lists[cur_radi];
+        const std::vector<Pos>& positions_at_cur_radi = pos_lists[cur_radi];
 
         for (const Pos& pos : positions_at_cur_radi)
         {
 
-            Actor* living_actor          = living_actors[pos.x][pos.y];
-            vector<Actor*> corpses_here  = corpses[pos.x][pos.y];
+            Actor* living_actor                 = living_actors[pos.x][pos.y];
+            std::vector<Actor*> corpses_here    = corpses[pos.x][pos.y];
 
             if (expl_type == Expl_type::expl)
             {
@@ -202,12 +201,18 @@ void run_explosion_at(const Pos&            origin,
                 //Damage living actor
                 if (living_actor)
                 {
-                    if (living_actor == map::player)
+                    if (living_actor->is_player())
                     {
                         msg_log::add("I am hit by an explosion!", clr_msg_bad);
                     }
 
                     living_actor->hit(DMG, Dmg_type::physical);
+
+                    if (living_actor->is_alive() && living_actor->is_player())
+                    {
+                        //Player survived being hit by an explosion, that's pretty cool!
+                        dungeon_master::add_history_event("Survived an explosion.");
+                    }
                 }
 
                 //Damage dead actors
@@ -265,7 +270,7 @@ void run_explosion_at(const Pos&            origin,
     if (prop) {delete prop;}
 }
 
-void run_smoke_explosion_at(const Pos& origin/*, const int SMOKE_DURATION*/)
+void run_smoke_explosion_at(const Pos& origin)
 {
     Rect area;
     const int RADI = EXPLOSION_STD_RADI;
@@ -274,7 +279,7 @@ void run_smoke_explosion_at(const Pos& origin/*, const int SMOKE_DURATION*/)
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_projectiles(), blocked);
 
-    vector< vector<Pos> > pos_lists;
+    std::vector< std::vector<Pos> > pos_lists;
     cells_reached(area, origin, blocked, pos_lists);
 
     //TODO: Sound message?
@@ -282,7 +287,7 @@ void run_smoke_explosion_at(const Pos& origin/*, const int SMOKE_DURATION*/)
             Snd_vol::low, Alerts_mon::yes);
     snd_emit::emit_snd(snd);
 
-    for (const vector<Pos>& inner : pos_lists)
+    for (const std::vector<Pos>& inner : pos_lists)
     {
         for (const Pos& pos : inner)
         {

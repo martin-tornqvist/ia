@@ -171,7 +171,7 @@ void go_to_nxt()
 
     audio::try_play_amb(1);
 
-    if (map::player->phobias[int(Phobia::deep_places)])
+    if (insanity::has_sympt(Ins_sympt_id::phobia_deep))
     {
         msg_log::add("I am plagued by my phobia of deep places!");
         map::player->prop_handler().try_add_prop(new Prop_terrified(Prop_turns::std));

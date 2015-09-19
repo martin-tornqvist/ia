@@ -19,7 +19,7 @@ namespace explosion
 
 //NOTE: If "emit_expl_sound" is set to "no", this typically means that the caller should
 //      emit a custom sound before running the explosion (e.g. molotov explosion sound).
-void run_explosion_at(
+void run(
     const Pos&              origin,
     const Expl_type         expl_type,
     const Expl_src          expl_src        = Expl_src::misc,

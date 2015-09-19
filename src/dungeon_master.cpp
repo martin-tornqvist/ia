@@ -27,6 +27,8 @@ int         clvl_  = 0;
 int         xp_    = 0;
 Time_data   time_started_;
 
+std::vector<History_event> history_events_;
+
 void player_gain_lvl()
 {
     if (map::player->is_alive())
@@ -66,11 +68,12 @@ void init()
     clvl_ = 1;
     xp_   = 0;
     init_xp_array();
+
+    history_events_.clear();
 }
 
 void save()
 {
-
     save_handling::put_int(clvl_);
     save_handling::put_int(xp_);
     save_handling::put_int(time_started_.year_);
@@ -79,6 +82,14 @@ void save()
     save_handling::put_int(time_started_.hour_);
     save_handling::put_int(time_started_.minute_);
     save_handling::put_int(time_started_.second_);
+
+    save_handling::put_int(history_events_.size());
+
+    for (const History_event& event : history_events_)
+    {
+        save_handling::put_str(event.msg);
+        save_handling::put_int(event.TURN);
+    }
 }
 
 void load()
@@ -91,6 +102,16 @@ void load()
     time_started_.hour_     = save_handling::get_int();
     time_started_.minute_   = save_handling::get_int();
     time_started_.second_   = save_handling::get_int();
+
+    const int NR_EVENTS = save_handling::get_int();
+
+    for (int i = 0; i < NR_EVENTS; ++i)
+    {
+        const std::string   msg     = save_handling::get_str();
+        const int           TURN    = save_handling::get_int();
+
+        history_events_.push_back({msg, TURN});
+    }
 }
 
 int clvl()
@@ -159,7 +180,7 @@ void player_lose_xp_percent(const int PERCENT)
 
 void win_game()
 {
-    high_score::on_game_over(true);
+    highscore::on_game_over(true);
 
     render::cover_panel(Panel::screen);
     render::update_screen();
@@ -228,7 +249,7 @@ void on_mon_killed(Actor& actor)
 
     d.nr_kills += 1;
 
-    if (d.hp >= 3 && map::player->obsessions[int(Obsession::sadism)])
+    if (d.hp >= 3 && insanity::has_sympt(Ins_sympt_id::sadism))
     {
         map::player->shock_ = std::max(0.0, map::player->shock_ - 3.0);
     }
@@ -241,6 +262,13 @@ void on_mon_killed(Actor& actor)
         const int XP_GAINED     = mon->has_given_xp_for_spotting_ ?
                                   std::max(1, MON_XP_TOT / 2) : MON_XP_TOT;
         incr_player_xp(XP_GAINED);
+    }
+
+    if (d.is_unique)
+    {
+        const std::string name = actor.name_the();
+
+        add_history_event("Defeated " + name + ".");
     }
 }
 
@@ -258,6 +286,18 @@ void on_mon_seen(Actor& actor)
 void set_time_started_to_now()
 {
     time_started_ = utils::cur_time();
+}
+
+void add_history_event(const std::string msg)
+{
+    const int TURN_NR = game_time::turn();
+
+    history_events_.push_back({msg, TURN_NR});
+}
+
+const std::vector<History_event>& history()
+{
+    return history_events_;
 }
 
 } //Dungeon_master

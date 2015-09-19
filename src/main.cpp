@@ -21,8 +21,6 @@
 #include "map.hpp"
 #include "utils.hpp"
 
-using namespace std;
-
 #ifdef _WIN32
 #undef main
 #endif
@@ -75,7 +73,7 @@ int main(int argc, char* argv[])
                 dungeon_master::set_time_started_to_now();
                 const Time_data& t = dungeon_master::start_time();
                 TRACE << "Game started on: " << t.time_str(Time_type::minute, true)
-                      << endl;
+                      << std::endl;
             }
 
             audio::fade_out_channel(intro_mus_chan);
@@ -83,22 +81,27 @@ int main(int argc, char* argv[])
             map::player->update_fov();
             render::draw_map_and_interface();
 
-            if (game_entry_type == Game_entry_mode::new_game && !config::is_intro_lvl_skipped())
+            if (game_entry_type == Game_entry_mode::new_game)
             {
-                const string msg =
-                    "I stand on a cobbled forest path, ahead lies a shunned and "
-                    "decrepit old church. In countless dreams this place "
-                    "appeared to me - I know of the things that dwell below, and of the "
-                    "Cult of Starry Wisdom and the monstrous sacrifices dedicated "
-                    "to their overlords. But now they are nothing - only a few deranged "
-                    "fanatics shamble about the corridors, grasping at false "
-                    "promises. I will enter these sprawling catacombs and rob them of "
-                    "treasures and knowledge. But at the depths of the abyss "
-                    "lies my true destiny, an artifact of non-human origin called "
-                    "\"The shining Trapezohedron\" - a window to all secrets of the "
-                    "universe.";
+                if (!config::is_intro_lvl_skipped())
+                {
+                    const std::string msg =
+                        "I stand on a cobbled forest path, ahead lies a shunned and "
+                        "decrepit old church. In countless dreams this place "
+                        "appeared to me - I know of the things that dwell below, and of the "
+                        "Cult of Starry Wisdom and the monstrous sacrifices dedicated "
+                        "to their overlords. But now they are nothing - only a few deranged "
+                        "fanatics shamble about the corridors, grasping at false "
+                        "promises. I will enter these sprawling catacombs and rob them of "
+                        "treasures and knowledge. But at the depths of the abyss "
+                        "lies my true destiny, an artifact of non-human origin called "
+                        "\"The shining Trapezohedron\" - a window to all secrets of the "
+                        "universe.";
 
-                popup::show_msg(msg, true, "The story so far...", Sfx_id::END, 1);
+                    popup::show_msg(msg, true, "The story so far...", Sfx_id::END, 1);
+                }
+
+                dungeon_master::add_history_event("Started journey.");
             }
 
             //========== M A I N   L O O P ==========
@@ -142,7 +145,7 @@ int main(int argc, char* argv[])
                     audio::play(Sfx_id::death);
                     msg_log::add("I am dead...", clr_msg_bad, false, More_prompt_on_msg::yes);
                     msg_log::clear();
-                    high_score::on_game_over(false);
+                    highscore::on_game_over(false);
                     postmortem::run(&quit_game);
                     init::quit_to_main_menu = true;
                 }

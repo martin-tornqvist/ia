@@ -495,15 +495,23 @@ void Mon::hear_sound(const Snd& snd)
 void Mon::speak_phrase()
 {
     const bool IS_SEEN_BY_PLAYER = map::player->can_see_actor(*this);
+
     const std::string msg = IS_SEEN_BY_PLAYER ?
                             aggro_phrase_mon_seen() :
                             aggro_phrase_mon_hidden();
+
     const Sfx_id sfx = IS_SEEN_BY_PLAYER ?
                        aggro_sfx_mon_seen() :
                        aggro_sfx_mon_hidden();
 
-    Snd snd(msg, sfx, Ignore_msg_if_origin_seen::no, pos, this,
-            Snd_vol::low, Alerts_mon::yes);
+    Snd snd(msg,
+            sfx,
+            Ignore_msg_if_origin_seen::no,
+            pos,
+            this,
+            Snd_vol::low,
+            Alerts_mon::yes);
+
     snd_emit::emit_snd(snd);
 }
 
@@ -1023,7 +1031,9 @@ bool Vortex::on_actor_turn_hook()
 
             const Rect fov_rect = fov::get_fov_rect(pos);
 
-            map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite,
+            map_parse::run(cell_check::Blocks_los(),
+                           blocked_los,
+                           Map_parse_mode::overwrite,
                            fov_rect);
 
             if (can_see_actor(*(map::player), blocked_los))
@@ -1040,8 +1050,7 @@ bool Vortex::on_actor_turn_hook()
                 }
 
                 TRACE << "Attempt pull (knockback)" << std::endl;
-                knock_back::try_knock_back(*(map::player), knock_back_from_pos,
-                                           false, false);
+                knock_back::try_knock_back(*(map::player), knock_back_from_pos, false, false);
                 pull_cooldown = 5;
                 game_time::tick();
                 return true;
@@ -1055,13 +1064,23 @@ bool Vortex::on_actor_turn_hook()
 void Dust_vortex::on_death()
 {
     //TODO: Make a sound effect for this
-    Snd snd("", Sfx_id::END, Ignore_msg_if_origin_seen::yes, pos, this, Snd_vol::high,
+    Snd snd("",
+            Sfx_id::END,
+            Ignore_msg_if_origin_seen::yes,
+            pos,
+            this,
+            Snd_vol::high,
             Alerts_mon::yes);
 
     snd_emit::emit_snd(snd);
 
-    explosion::run_explosion_at(pos, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no, 0,
-                                new Prop_blind(Prop_turns::std), &clr_gray);
+    explosion::run(pos,
+                   Expl_type::apply_prop,
+                   Expl_src::misc,
+                   Emit_expl_snd::no,
+                   0,
+                   new Prop_blind(Prop_turns::std),
+                   &clr_gray);
 }
 
 void Dust_vortex::mk_start_items()
@@ -1072,13 +1091,23 @@ void Dust_vortex::mk_start_items()
 void Fire_vortex::on_death()
 {
     //TODO: Make a sound effect for this
-    Snd snd("", Sfx_id::END, Ignore_msg_if_origin_seen::yes, pos, this, Snd_vol::high,
+    Snd snd("",
+            Sfx_id::END,
+            Ignore_msg_if_origin_seen::yes,
+            pos,
+            this,
+            Snd_vol::high,
             Alerts_mon::yes);
 
     snd_emit::emit_snd(snd);
 
-    explosion::run_explosion_at(pos, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no, 0,
-                                new Prop_burning(Prop_turns::std), &clr_gray);
+    explosion::run(pos,
+                   Expl_type::apply_prop,
+                   Expl_src::misc,
+                   Emit_expl_snd::no,
+                   0,
+                   new Prop_burning(Prop_turns::std),
+                   &clr_gray);
 }
 
 void Fire_vortex::mk_start_items()
@@ -1414,8 +1443,7 @@ bool Ape::on_actor_turn_hook()
 
         const int NR_FRENZY_TURNS = rnd::range(4, 6);
 
-        prop_handler_->try_add_prop(
-            new Prop_frenzied(Prop_turns::specific, NR_FRENZY_TURNS));
+        prop_handler_->try_add_prop(new Prop_frenzied(Prop_turns::specific, NR_FRENZY_TURNS));
     }
 
     return false;
@@ -1464,7 +1492,10 @@ bool Keziah_mason::on_actor_turn_hook()
 
         const Rect fov_rect = fov::get_fov_rect(pos);
 
-        map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite, fov_rect);
+        map_parse::run(cell_check::Blocks_los(),
+                       blocked_los,
+                       Map_parse_mode::overwrite,
+                       fov_rect);
 
         if (can_see_actor(*(map::player), blocked_los))
         {
@@ -1483,8 +1514,8 @@ bool Keziah_mason::on_actor_turn_hook()
                 {
                     //TODO: Use the generalized summoning functionality
                     msg_log::add("Keziah summons Brown Jenkin!");
-                    Actor* const actor    = actor_factory::mk(Actor_id::brown_jenkin, c);
-                    Mon* jenkin           = static_cast<Mon*>(actor);
+                    Actor* const actor      = actor_factory::mk(Actor_id::brown_jenkin, c);
+                    Mon* jenkin             = static_cast<Mon*>(actor);
                     render::draw_map_and_interface();
                     has_summoned_jenkin     = true;
                     jenkin->aware_counter_  = 999;
@@ -1526,7 +1557,9 @@ void Leng_elder::on_std_turn_hook()
 
             const Rect fov_rect = fov::get_fov_rect(pos);
 
-            map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite,
+            map_parse::run(cell_check::Blocks_los(),
+                           blocked_los,
+                           Map_parse_mode::overwrite,
                            fov_rect);
 
             if (can_see_actor(*map::player, blocked_los))
@@ -2041,7 +2074,10 @@ bool Floating_head::on_actor_turn_hook()
 
         const Rect fov_rect = fov::get_fov_rect(pos);
 
-        map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite, fov_rect);
+        map_parse::run(cell_check::Blocks_los(),
+                       blocked_los,
+                       Map_parse_mode::overwrite,
+                       fov_rect);
 
         if (can_see_actor(*map::player, blocked_los))
         {
@@ -2053,7 +2089,11 @@ bool Floating_head::on_actor_turn_hook()
 
             snd_msg += " spews forth a litany of curses.";
 
-            Snd snd(snd_msg, Sfx_id::END, Ignore_msg_if_origin_seen::no, pos, this, Snd_vol::high,
+            Snd snd(snd_msg, Sfx_id::END,
+                    Ignore_msg_if_origin_seen::no,
+                    pos,
+                    this,
+                    Snd_vol::high,
                     Alerts_mon::no);
 
             snd_emit::emit_snd(snd);
@@ -2106,7 +2146,7 @@ void Mold::mk_start_items()
 
 void Gas_spore::on_death()
 {
-    explosion::run_explosion_at(pos, Expl_type::expl);
+    explosion::run(pos, Expl_type::expl);
 }
 
 The_high_priest::The_high_priest() :

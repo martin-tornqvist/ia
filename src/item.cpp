@@ -285,13 +285,10 @@ bool Item::is_in_effective_range_lmt(const Pos& p0, const Pos& p1) const
 
 void Item::add_carrier_prop(Prop* const prop, const Verbosity verbosity)
 {
-    //TODO: Perhaps wearing some items such as Asbesthos suite should not print property messages.
-    (void)verbosity;
-
     assert(actor_carrying_);
     assert(prop);
 
-    actor_carrying_->prop_handler().add_prop_from_equipped_item(this, prop);
+    actor_carrying_->prop_handler().add_prop_from_equipped_item(this, prop, verbosity);
 }
 
 void Item::clear_carrier_props()
@@ -411,10 +408,12 @@ int Armor::armor_points() const
 
 void Armor_asb_suit::on_equip_hook(const Verbosity verbosity)
 {
-    add_carrier_prop(new Prop_rFire(Prop_turns::indefinite),    verbosity);
-    add_carrier_prop(new Prop_rAcid(Prop_turns::indefinite),    verbosity);
-    add_carrier_prop(new Prop_rElec(Prop_turns::indefinite),    verbosity);
-    add_carrier_prop(new Prop_rBreath(Prop_turns::indefinite),  verbosity);
+    (void)verbosity;
+
+    add_carrier_prop(new Prop_rFire(Prop_turns::indefinite),    Verbosity::silent);
+    add_carrier_prop(new Prop_rAcid(Prop_turns::indefinite),    Verbosity::silent);
+    add_carrier_prop(new Prop_rElec(Prop_turns::indefinite),    Verbosity::silent);
+    add_carrier_prop(new Prop_rBreath(Prop_turns::indefinite),  Verbosity::silent);
 }
 
 Unequip_allowed Armor_asb_suit::on_unequip_hook()
@@ -426,7 +425,9 @@ Unequip_allowed Armor_asb_suit::on_unequip_hook()
 
 void Armor_heavy_coat::on_equip_hook(const Verbosity verbosity)
 {
-    add_carrier_prop(new Prop_rCold(Prop_turns::indefinite), verbosity);
+    (void)verbosity;
+
+    add_carrier_prop(new Prop_rCold(Prop_turns::indefinite), Verbosity::silent);
 }
 
 Unequip_allowed Armor_heavy_coat::on_unequip_hook()
@@ -604,7 +605,7 @@ void Incinerator::on_projectile_blocked(
     const Pos& pos, Actor* actor_hit)
 {
     (void)actor_hit;
-    explosion::run_explosion_at(pos, Expl_type::expl);
+    explosion::run(pos, Expl_type::expl);
 }
 
 //---------------------------------------------------------- AMMO CLIP
@@ -955,7 +956,9 @@ int Medical_bag::tot_suppl_for_sanitize() const
 //---------------------------------------------------------- GAS MASK
 void Gas_mask::on_equip_hook(const Verbosity verbosity)
 {
-    add_carrier_prop(new Prop_rBreath(Prop_turns::indefinite), verbosity);
+    (void)verbosity;
+
+    add_carrier_prop(new Prop_rBreath(Prop_turns::indefinite), Verbosity::silent);
 }
 
 Unequip_allowed Gas_mask::on_unequip_hook()
@@ -1022,7 +1025,7 @@ void Dynamite::on_std_turn_player_hold_ignited()
     {
         msg_log::add("The dynamite explodes in my hand!");
         map::player->active_explosive = nullptr;
-        explosion::run_explosion_at(map::player->pos, Expl_type::expl);
+        explosion::run(map::player->pos, Expl_type::expl);
         map::player->update_clr();
         fuse_turns_ = -1;
         delete this;
@@ -1079,7 +1082,7 @@ void Molotov::on_std_turn_player_hold_ignited()
 
         snd_emit::emit_snd(snd);
 
-        explosion::run_explosion_at(player_pos, Expl_type::apply_prop, Expl_src::misc,
+        explosion::run(player_pos, Expl_type::apply_prop, Expl_src::misc,
                                     Emit_expl_snd::no, 0, new Prop_burning(Prop_turns::std));
 
         delete this;
@@ -1095,7 +1098,7 @@ void Molotov::on_thrown_ignited_landing(const Pos& p)
 
     snd_emit::emit_snd(snd);
 
-    explosion::run_explosion_at(p, Expl_type::apply_prop, Expl_src::player_use_moltv_intended,
+    explosion::run(p, Expl_type::apply_prop, Expl_src::player_use_moltv_intended,
                                 Emit_expl_snd::no, D , new Prop_burning(Prop_turns::std));
 }
 
@@ -1113,7 +1116,7 @@ void Molotov::on_player_paralyzed()
 
     snd_emit::emit_snd(snd);
 
-    explosion::run_explosion_at(player_pos, Expl_type::apply_prop, Expl_src::misc,
+    explosion::run(player_pos, Expl_type::apply_prop, Expl_src::misc,
                                 Emit_expl_snd::no, 0, new Prop_burning(Prop_turns::std));
 
     delete this;

@@ -123,6 +123,22 @@ void replace_all(const string& line, const string& from, const string& to, strin
     }
 }
 
+void pad_before_to(std::string& str, const size_t TOT_W, const char c)
+{
+    if (TOT_W > str.size())
+    {
+        str.insert(0, TOT_W - str.size(), c);
+    }
+}
+
+void pad_after_to(std::string& str, const size_t TOT_W, const char c)
+{
+    if (TOT_W > str.size())
+    {
+        str.insert(str.size(), TOT_W, c);
+    }
+}
+
 void first_to_lower(std::string& str)
 {
     if (!str.empty())

@@ -159,6 +159,7 @@
 		<Unit filename="../include/highscore.hpp" />
 		<Unit filename="../include/init.hpp" />
 		<Unit filename="../include/input.hpp" />
+		<Unit filename="../include/insanity.hpp" />
 		<Unit filename="../include/inventory.hpp" />
 		<Unit filename="../include/inventory_handling.hpp" />
 		<Unit filename="../include/item.hpp" />
@@ -240,6 +241,7 @@
 		<Unit filename="../src/highscore.cpp" />
 		<Unit filename="../src/init.cpp" />
 		<Unit filename="../src/input.cpp" />
+		<Unit filename="../src/insanity.cpp" />
 		<Unit filename="../src/inventory.cpp" />
 		<Unit filename="../src/inventory_handling.cpp" />
 		<Unit filename="../src/item.cpp" />
@@ -253,10 +255,7 @@
 		<Unit filename="../src/knockback.cpp" />
 		<Unit filename="../src/line_calc.cpp" />
 		<Unit filename="../src/look.cpp" />
-		<Unit filename="../src/main.cpp">
-			<Option target="Debug" />
-			<Option target="Release" />
-		</Unit>
+		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/main_menu.cpp" />
 		<Unit filename="../src/manual.cpp" />
 		<Unit filename="../src/map.cpp" />

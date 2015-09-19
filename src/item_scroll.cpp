@@ -14,6 +14,7 @@
 #include "utils.hpp"
 #include "item_factory.hpp"
 #include "save_handling.hpp"
+#include "dungeon_master.hpp"
 
 const std::string Scroll::real_name() const
 {
@@ -35,7 +36,7 @@ std::vector<std::string> Scroll::descr() const
         delete spell;
         return descr;
     }
-    else
+    else //Not identified
     {
         return data_->base_descr;
     }
@@ -69,9 +70,13 @@ void Scroll::identify(const Verbosity verbosity)
 
         if (verbosity == Verbosity::verbose)
         {
-            const std::string scroll_name = name(Item_ref_type::a, Item_ref_inf::none);
-            msg_log::add("It was " + scroll_name + ".");
+            const std::string name_after = name(Item_ref_type::a, Item_ref_inf::none);
+
+            msg_log::add("I have identified " + name_after + ".");
+
             render::draw_map_and_interface();
+
+            dungeon_master::add_history_event("Identified " + name_after + ".");
         }
     }
 }

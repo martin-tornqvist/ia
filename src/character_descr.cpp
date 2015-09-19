@@ -12,6 +12,7 @@
 #include "item_factory.hpp"
 #include "item.hpp"
 #include "map.hpp"
+#include "dungeon_master.hpp"
 
 namespace character_descr
 {
@@ -30,71 +31,66 @@ void mk_lines()
     const Clr& clr_text      = clr_white;
     const Clr& clr_text_dark  = clr_gray;
 
-    lines_.push_back({map::player->name_the(), clr_menu_highlight});
-    lines_.push_back({" ", clr_text});
+    lines_.push_back({"History of " + map::player->name_the(), clr_heading});
+
+    const std::vector<History_event>& events = dungeon_master::history();
+
+    for (const auto& event : events)
+    {
+        std::string ev_str = to_str(event.TURN);
+
+        const int TURN_STR_MAX_W = 10;
+
+        text_format::pad_before_to(ev_str, TURN_STR_MAX_W);
+
+        ev_str += ": " + event.msg;
+
+        lines_.push_back({offset + ev_str, clr_text});
+    }
+
+    lines_.push_back({"", clr_text});
 
     const Ability_vals& abilities = map::player->data().ability_vals;
 
     lines_.push_back({"Combat skills", clr_heading});
 
-    const int BASE_MELEE          = std::min(100, abilities.val(Ability_id::melee,
-                                    true, *(map::player)));
+    const int BASE_MELEE            = std::min(100,
+                                      abilities.val(Ability_id::melee, true, *(map::player)));
 
-    const int BASE_RANGED         = std::min(100, abilities.val(Ability_id::ranged,
-                                    true, *(map::player)));
+    const int BASE_RANGED           = std::min(100,
+                                      abilities.val(Ability_id::ranged, true, *(map::player)));
 
-    const int BASE_DODGE_ATTACKS  = std::min(100, abilities.val(Ability_id::dodge_att,
-                                    true, *(map::player)));
+    const int BASE_DODGE_ATTACKS    = std::min(100,
+                                      abilities.val(Ability_id::dodge_att, true, *(map::player)));
 
-    lines_.push_back({offset + "Melee    : " + to_str(BASE_MELEE)         + "%", clr_text});
-    lines_.push_back({offset + "Ranged   : " + to_str(BASE_RANGED)        + "%", clr_text});
-    lines_.push_back({offset + "Dodging  : " + to_str(BASE_DODGE_ATTACKS) + "%", clr_text});
+    lines_.push_back({offset + "Melee    " + to_str(BASE_MELEE)         + "%", clr_text});
+    lines_.push_back({offset + "Ranged   " + to_str(BASE_RANGED)        + "%", clr_text});
+    lines_.push_back({offset + "Dodging  " + to_str(BASE_DODGE_ATTACKS) + "%", clr_text});
 
-    lines_.push_back({" ", clr_text});
+    lines_.push_back({"", clr_text});
 
-    lines_.push_back({"Mental conditions", clr_heading});
-    const int NR_LINES_BEFORE_MENTAL = lines_.size();
+    lines_.push_back({"Mental disorders", clr_heading});
 
-    const auto& phobias = map::player->phobias;
+    const std::vector<const Ins_sympt*> sympts = insanity::active_sympts();
 
-    if (phobias[int(Phobia::dog)])
-        lines_.push_back({offset + "Phobia of dogs",            clr_text});
-
-    if (phobias[int(Phobia::rat)])
-        lines_.push_back({offset + "Phobia of rats",            clr_text});
-
-    if (phobias[int(Phobia::spider)])
-        lines_.push_back({offset + "Phobia of spiders",         clr_text});
-
-    if (phobias[int(Phobia::undead)])
-        lines_.push_back({offset + "Phobia of the dead",        clr_text});
-
-    if (phobias[int(Phobia::cramped_place)])
-        lines_.push_back({offset + "Phobia of cramped spaces",  clr_text});
-
-    if (phobias[int(Phobia::open_place)])
-        lines_.push_back({offset + "Phobia of open places",     clr_text});
-
-    if (phobias[int(Phobia::deep_places)])
-        lines_.push_back({offset + "Phobia of deep places",     clr_text});
-
-    if (phobias[int(Phobia::dark)])
-        lines_.push_back({offset + "Phobia of darkness",        clr_text});
-
-    if (map::player->obsessions[int(Obsession::masochism)])
-        lines_.push_back({offset + "Masochistic obsession",     clr_text});
-
-    if (map::player->obsessions[int(Obsession::sadism)])
-        lines_.push_back({offset + "Sadistic obsession",        clr_text});
-
-    const int NR_LINES_AFTER_MENTAL = lines_.size();
-
-    if (NR_LINES_BEFORE_MENTAL == NR_LINES_AFTER_MENTAL)
+    if (sympts.empty())
     {
-        lines_.push_back({offset + "No special symptoms", clr_text});
+        lines_.push_back({offset + "None", clr_text});
+    }
+    else // Has insanity symptoms
+    {
+        for (const Ins_sympt* const sympt : sympts)
+        {
+            const std::string sympt_descr = sympt->char_descr_msg();
+
+            if (!sympt_descr.empty())
+            {
+                lines_.push_back({offset + sympt_descr, clr_text});
+            }
+        }
     }
 
-    lines_.push_back({" ", clr_text});
+    lines_.push_back({"", clr_text});
 
     lines_.push_back({"Potion knowledge", clr_heading});
     std::vector<Str_and_clr> potion_list;
@@ -104,19 +100,26 @@ void mk_lines()
     {
         const Item_data_t& d = item_data::data[i];
 
-        if (d.type == Item_type::potion && (d.is_tried || d.is_identified))
+        if (d.is_tried || d.is_identified)
         {
-            Item* item = item_factory::mk(d.id);
-            potion_list.push_back({offset + item->name(Item_ref_type::plain), d.clr});
-            delete item;
-        }
-        else
-        {
-            if (d.type == Item_type::scroll && (d.is_tried || d.is_identified))
+            if (d.type == Item_type::potion)
             {
                 Item* item = item_factory::mk(d.id);
-                manuscript_list.push_back( Str_and_clr(offset + item->name(Item_ref_type::plain),
-                                                       item->interface_clr()));
+
+                const std::string name = item->name(Item_ref_type::plain);
+
+                potion_list.push_back({offset + name, d.clr});
+
+                delete item;
+            }
+            else if (d.type == Item_type::scroll)
+            {
+                Item* item = item_factory::mk(d.id);
+
+                const std::string name = item->name(Item_ref_type::plain);
+
+                manuscript_list.push_back( Str_and_clr(offset + name, item->interface_clr()));
+
                 delete item;
             }
         }
@@ -138,7 +141,7 @@ void mk_lines()
         for (Str_and_clr& e : potion_list) {lines_.push_back(e);}
     }
 
-    lines_.push_back({" ", clr_text});
+    lines_.push_back({"", clr_text});
 
 
     lines_.push_back({"Manuscript knowledge", clr_heading});
@@ -154,7 +157,7 @@ void mk_lines()
         for (Str_and_clr& e : manuscript_list) {lines_.push_back(e);}
     }
 
-    lines_.push_back({" ", clr_text});
+    lines_.push_back({"", clr_text});
 
     lines_.push_back({"Traits gained", clr_heading});
 
@@ -178,7 +181,7 @@ void mk_lines()
                 lines_.push_back({offset + descr_line, clr_text_dark});
             }
 
-            lines_.push_back({" ", clr_text});
+            lines_.push_back({"", clr_text});
         }
     }
 }

@@ -22,6 +22,7 @@
 #include "item.hpp"
 #include "text_format.hpp"
 #include "save_handling.hpp"
+#include "dungeon_master.hpp"
 
 namespace prop_data
 {
@@ -871,9 +872,13 @@ void Prop_handler::load()
         const auto turns_init = NR_TURNS == -1 ?
                                 Prop_turns::indefinite : Prop_turns::specific;
 
-        auto* const prop = mk_prop(prop_id, turns_init, NR_TURNS);
+        Prop* const prop = mk_prop(prop_id, turns_init, NR_TURNS);
 
-        try_add_prop(prop, Prop_src::intr, true, Verbosity::silent);
+        prop->src_ = Prop_src::intr;
+
+        props_.push_back(prop);
+
+        incr_active_props_info(prop_id);
     }
 }
 
@@ -1213,11 +1218,13 @@ void Prop_handler::try_add_prop(Prop* const prop,
     incr_active_props_info(prop->id());
 }
 
-void Prop_handler::add_prop_from_equipped_item(const Item* const item, Prop* const prop)
+void Prop_handler::add_prop_from_equipped_item(const Item* const item,
+                                               Prop* const prop,
+                                               const Verbosity verbosity)
 {
     prop->item_applying_ = item;
 
-    try_add_prop(prop, Prop_src::inv, true, Verbosity::verbose);
+    try_add_prop(prop, Prop_src::inv, true, verbosity);
 }
 
 Prop* Prop_handler::prop(const Prop_id id) const
@@ -1800,6 +1807,21 @@ void Prop_blessed::on_start()
 void Prop_cursed::on_start()
 {
     owning_actor_->prop_handler().end_prop(Prop_id::blessed, false);
+
+    //If this is a permanent curse that the player caught, log it as a historic event
+    if (owning_actor_->is_player() && turns_init_type_ == Prop_turns::indefinite)
+    {
+        dungeon_master::add_history_event("A terrible curse was put upon me.");
+    }
+}
+
+void Prop_cursed::on_end()
+{
+    //If this is a permanent curse that the player caught, log it as a historic event
+    if (owning_actor_->is_player() && turns_init_type_ == Prop_turns::indefinite)
+    {
+        dungeon_master::add_history_event("A terrible curse was lifted from me.");
+    }
 }
 
 void Prop_slowed::on_start()
@@ -1845,6 +1867,21 @@ void Prop_diseased::on_start()
     int& hp = owning_actor_->hp_;
 
     hp = std::min(map::player->hp_max(true), hp);
+
+    //If this is a permanent disease that the player caught, log it as a historic event
+    if (owning_actor_->is_player() && turns_init_type_ == Prop_turns::indefinite)
+    {
+        dungeon_master::add_history_event("Caught a horrible disease.");
+    }
+}
+
+void Prop_diseased::on_end()
+{
+    //If this is a permanent disease that the player caught, log it as a historic event
+    if (owning_actor_->is_player() && turns_init_type_ == Prop_turns::indefinite)
+    {
+        dungeon_master::add_history_event("My body was cured from a horrible disease.");
+    }
 }
 
 bool Prop_diseased::is_resisting_other_prop(const Prop_id prop_id) const
@@ -2165,11 +2202,6 @@ bool Prop_frenzied::allow_cast_spell(const Verbosity verbosity) const
     }
 
     return false;
-}
-
-void Prop_burning::on_start()
-{
-//  owning_actor_->add_light(map::light);
 }
 
 void Prop_burning::on_new_turn()

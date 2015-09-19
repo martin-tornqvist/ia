@@ -22,14 +22,15 @@
 #include "query.hpp"
 #include "item_jewelry.hpp"
 #include "save_handling.hpp"
+#include "insanity.hpp"
+#include "highscore.hpp"
 
 namespace init
 {
 
-bool is_cheat_vision_enabled = false;
-bool quit_to_main_menu       = false;
+bool is_cheat_vision_enabled    = false;
+bool quit_to_main_menu          = false;
 
-//NOTE: Initialization order matters in some cases
 void init_io()
 {
     TRACE_FUNC_BEGIN;
@@ -52,7 +53,6 @@ void cleanup_io()
     TRACE_FUNC_END;
 }
 
-//NOTE: Initialization order matters in some cases
 void init_game()
 {
     TRACE_FUNC_BEGIN;
@@ -72,7 +72,6 @@ void cleanup_game()
     TRACE_FUNC_END;
 }
 
-//NOTE: Initialization order matters in some cases
 void init_session()
 {
     TRACE_FUNC_BEGIN;
@@ -87,18 +86,22 @@ void init_session()
     map_travel::init();
     map::init();
     player_bon::init();
+    insanity::init();
     msg_log::init();
     dungeon_master::init();
     bot::init();
     player_spells_handling::init();
     jewelry_handling::init();
+    highscore::init();
     TRACE_FUNC_END;
 }
 
 void cleanup_session()
 {
     TRACE_FUNC_BEGIN;
+    highscore::cleanup();
     player_spells_handling::cleanup();
+    insanity::cleanup();
     map::cleanup();
     game_time::cleanup();
     item_data::cleanup();

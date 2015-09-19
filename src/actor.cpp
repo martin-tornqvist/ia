@@ -138,8 +138,7 @@ void Actor::seen_foes(std::vector<Actor*>& out)
                       std::min(MAP_W - 1, pos.x + FOV_STD_RADI_INT),
                       std::min(MAP_H - 1, pos.y + FOV_STD_RADI_INT));
 
-        map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite,
-                       los_rect);
+        map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite, los_rect);
     }
 
     for (Actor* actor : game_time::actors_)
@@ -524,8 +523,13 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
         {
             if (method == Dmg_method::kick)
             {
-                Snd snd("*Crack!*", Sfx_id::hit_corpse_break, Ignore_msg_if_origin_seen::yes,
-                        pos, nullptr, Snd_vol::low, Alerts_mon::yes);
+                Snd snd("*Crack!*",
+                        Sfx_id::hit_corpse_break,
+                        Ignore_msg_if_origin_seen::yes,
+                        pos,
+                        nullptr,
+                        Snd_vol::low,
+                        Alerts_mon::yes);
 
                 snd_emit::emit_snd(snd);
             }
@@ -550,8 +554,13 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
         {
             if (method == Dmg_method::kick)
             {
-                Snd snd("*Thud*", Sfx_id::hit_medium, Ignore_msg_if_origin_seen::yes, pos,
-                        nullptr, Snd_vol::low, Alerts_mon::yes);
+                Snd snd("*Thud*",
+                        Sfx_id::hit_medium,
+                        Ignore_msg_if_origin_seen::yes,
+                        pos,
+                        nullptr,
+                        Snd_vol::low,
+                        Alerts_mon::yes);
 
                 snd_emit::emit_snd(snd);
             }
@@ -599,6 +608,7 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
                 {
                     const std::string armor_name =
                         armor->name(Item_ref_type::plain, Item_ref_inf::none);
+
                     msg_log::add("My " + armor_name + " is torn apart!", clr_msg_note);
                 }
 
@@ -822,8 +832,14 @@ Did_action Actor::try_eat_corpse()
                            Sfx_id::hit_corpse_break :
                            Sfx_id::END;  //TODO: Make a chewing sound effect
 
-        Snd snd("I hear ripping and chewing.", sfx, Ignore_msg_if_origin_seen::yes,
-                pos, this, Snd_vol::low, alerts, More_prompt_on_msg::no);
+        Snd snd("I hear ripping and chewing.",
+                sfx,
+                Ignore_msg_if_origin_seen::yes,
+                pos,
+                this,
+                Snd_vol::low,
+                alerts,
+                More_prompt_on_msg::no);
 
         snd_emit::emit_snd(snd);
 
