@@ -8,6 +8,7 @@ typedef SDL_Color Clr;
 const Clr clr_black             = {  0,   0,   0, 0};
 const Clr clr_gray              = {128, 128, 128, 0};
 const Clr clr_gray_drk          = { 48,  48,  48, 0};
+const Clr clr_gray_xdrk         = { 30,  30,  30, 0};
 const Clr clr_white             = {192, 192, 192, 0};
 const Clr clr_white_high        = {255, 255, 255, 0};
 

@@ -59,9 +59,19 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
 
     out.push_back({map::player->name_a(), clr_heading});
 
-    out.push_back({bullet_point_str + "Explored to the depth of dungeon level " +
-                   to_str(score->dlvl()), clr_info
-                  });
+    const int DLVL = score->dlvl();
+
+    if (DLVL == 0)
+    {
+        out.push_back({bullet_point_str + "Died before entering the dungeon" , clr_info});
+    }
+    else //DLVL is at least 1
+    {
+        out.push_back({bullet_point_str + "Explored to the depth of dungeon level " +
+                       to_str(DLVL), clr_info
+                      });
+
+    }
 
     out.push_back({bullet_point_str + "Was " + to_str(score->ins()) + "% insane", clr_info
                   });

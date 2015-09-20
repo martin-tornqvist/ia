@@ -255,7 +255,10 @@
 		<Unit filename="../src/knockback.cpp" />
 		<Unit filename="../src/line_calc.cpp" />
 		<Unit filename="../src/look.cpp" />
-		<Unit filename="../src/main.cpp" />
+		<Unit filename="../src/main.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
 		<Unit filename="../src/main_menu.cpp" />
 		<Unit filename="../src/manual.cpp" />
 		<Unit filename="../src/map.cpp" />

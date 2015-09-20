@@ -283,6 +283,9 @@ Pos column_and_row_tile(const Tile_id tile)
     case Tile_id::trap_general:                 return Pos(14, 10);
     case Tile_id::heart:                        return Pos(0, 11);
     case Tile_id::brain:                        return Pos(1, 11);
+    case Tile_id::weight:                       return Pos(2, 11);
+    case Tile_id::spirit:                       return Pos(3, 11);
+    case Tile_id::stopwatch:                    return Pos(4, 11);
 
     case Tile_id::empty:
     default:                                    return Pos(18, 10);

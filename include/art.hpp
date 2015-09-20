@@ -167,7 +167,10 @@ enum class Tile_id
     popup_ver_l,
     stalagmite,
     heart,
-    brain
+    brain,
+    weight,
+    spirit,
+    stopwatch,
 };
 
 
