@@ -624,7 +624,6 @@ void init_data_list()
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
-    d.is_ended_by_magic_healing = false;
     d.allow_test_on_bot = false;
     d.alignment = Prop_alignment::good;
     add_prop_data(d);
@@ -638,7 +637,6 @@ void init_data_list()
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
-    d.is_ended_by_magic_healing = false;
     d.allow_test_on_bot = true;
     d.alignment = Prop_alignment::good;
     add_prop_data(d);
@@ -681,7 +679,6 @@ void init_data_list()
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = false;
     d.update_vision_when_start_or_end = true;
-    d.is_ended_by_magic_healing = false;
     d.allow_test_on_bot = true;
     d.alignment = Prop_alignment::neutral;
     add_prop_data(d);
@@ -691,7 +688,6 @@ void init_data_list()
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
-    d.is_ended_by_magic_healing = false;
     d.allow_test_on_bot = false;
     d.alignment = Prop_alignment::neutral;
     add_prop_data(d);
@@ -701,7 +697,6 @@ void init_data_list()
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
-    d.is_ended_by_magic_healing = false;
     d.allow_test_on_bot = false;
     d.alignment = Prop_alignment::neutral;
     add_prop_data(d);
@@ -711,7 +706,6 @@ void init_data_list()
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
-    d.is_ended_by_magic_healing = false;
     d.allow_test_on_bot = false;
     d.alignment = Prop_alignment::neutral;
     add_prop_data(d);
@@ -721,7 +715,6 @@ void init_data_list()
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
-    d.is_ended_by_magic_healing = false;
     d.allow_test_on_bot = false;
     d.alignment = Prop_alignment::neutral;
     add_prop_data(d);
@@ -1402,8 +1395,10 @@ bool Prop_handler::end_prop(const Prop_id id, const bool RUN_PROP_END_EFFECTS)
     return true;
 }
 
-void Prop_handler::end_props_by_magic_healing()
+bool Prop_handler::end_props_by_magic_healing()
 {
+    bool is_any_ended = false;
+
     for (size_t i = 0; i < props_.size(); /* No increment */)
     {
         Prop* const prop = props_[i];
@@ -1417,12 +1412,16 @@ void Prop_handler::end_props_by_magic_healing()
             on_prop_end(prop);
 
             delete prop;
+
+            is_any_ended = true;
         }
         else //Property was not added by this item
         {
             ++i;
         }
     }
+
+    return is_any_ended;
 }
 
 void Prop_handler::apply_actor_turn_prop_buffer()

@@ -172,7 +172,7 @@ enum class Item_id
     potion_insight,
     potion_clairv,
     potion_rFire,
-    potion_antidote,
+    potion_curing,
     potion_descent,
     potion_invis,
     potion_seeing,

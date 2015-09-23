@@ -370,17 +370,29 @@ void Potion_rFire::collide_hook(const Pos& pos, Actor* const actor)
     }
 }
 
-void Potion_antidote::quaff_impl(Actor& actor)
+void Potion_curing::quaff_impl(Actor& actor)
 {
-    const bool WAS_POISONED = actor.prop_handler().end_prop(Prop_id::poisoned);
+    bool is_noticable = actor.prop_handler().end_props_by_magic_healing();
 
-    if (WAS_POISONED && map::player->can_see_actor(actor))
+    if (actor.restore_hp(3, false /*Not allowed above max*/))
+    {
+        is_noticable = true;
+    }
+
+    if (!is_noticable && actor.is_player())
+    {
+        msg_log::add("I feel fine.");
+
+        is_noticable = true;
+    }
+
+    if (is_noticable && map::player->can_see_actor(actor))
     {
         identify(Verbosity::verbose);
     }
 }
 
-void Potion_antidote::collide_hook(const Pos& pos, Actor* const actor)
+void Potion_curing::collide_hook(const Pos& pos, Actor* const actor)
 {
     (void)pos;
 

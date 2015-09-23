@@ -14,16 +14,27 @@
 #include "actor_mon.hpp"
 #include "render.hpp"
 #include "feature_rigid.hpp"
+#include "save_handling.hpp"
+
+void Rod::save()
+{
+    save_handling::put_int(nr_charge_turns_left_);
+}
+
+void Rod::load()
+{
+    nr_charge_turns_left_ = save_handling::get_int();
+}
 
 Consume_item Rod::activate(Actor* const actor)
 {
-    assert(actor);
+    (void)actor;
 
     if (nr_charge_turns_left_ > 0)
     {
-        const std::string rod_name_the = name(Item_ref_type::plain, Item_ref_inf::none);
+        const std::string rod_name = name(Item_ref_type::plain, Item_ref_inf::none);
 
-        msg_log::add("The " + rod_name_the + " is still charging.");
+        msg_log::add("The " + rod_name + " is still charging.");
 
         return Consume_item::no;
     }
@@ -60,6 +71,26 @@ Consume_item Rod::activate(Actor* const actor)
     }
 
     return Consume_item::no;
+}
+
+void Rod::on_std_turn_in_inv(const Inv_type inv_type)
+{
+    (void)inv_type;
+
+    if (nr_charge_turns_left_ > 0)
+    {
+        --nr_charge_turns_left_;
+
+        if (nr_charge_turns_left_ == 0)
+        {
+            const std::string rod_name = name(Item_ref_type::plain, Item_ref_inf::none);
+
+            msg_log::add("The " + rod_name + " has finished charging.",
+                         clr_msg_note,
+                         false,
+                         More_prompt_on_msg::yes);
+        }
+    }
 }
 
 std::vector<std::string> Rod::descr() const
@@ -182,27 +213,19 @@ void Rod_curing::activate_impl()
 {
     Player& player = *map::player;
 
-    Prop_handler& props = player.prop_handler();
+    bool is_something_healed = player.prop_handler().end_props_by_magic_healing();
 
-    bool is_effect_noticed  = props.end_prop(Prop_id::poisoned);
-
-    is_effect_noticed       = props.end_prop(Prop_id::diseased) || is_effect_noticed;
-
-    is_effect_noticed       = props.end_prop(Prop_id::infected) || is_effect_noticed;
-
-    is_effect_noticed       = props.end_prop(Prop_id::weakened) || is_effect_noticed;
-
-    if (player.hp() < player.hp_max(true))
+    if (player.restore_hp(3, false /* Not allowed above max */))
     {
-        player.restore_hp(3, false /* Not allowed above max */);
-
-        is_effect_noticed = true;
+        is_something_healed = true;
     }
 
-    if (is_effect_noticed)
+    if (!is_something_healed)
     {
-        identify(Verbosity::verbose);
+        msg_log::add("I feel fine.");
     }
+
+    identify(Verbosity::verbose);
 }
 
 void Rod_opening::activate_impl()

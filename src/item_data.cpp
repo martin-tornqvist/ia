@@ -284,7 +284,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
             "no hope of understanding the purpose or function of it through normal means."
         };
         d.value = Item_value::minor_treasure;
-        d.chance_to_incl_in_floor_spawn_list = 10;
+        d.chance_to_incl_in_floor_spawn_list = 12;
         d.weight = Item_weight::light;
         d.is_identified = false;
         d.glyph = '~';
@@ -306,7 +306,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
             "on the side."
         };
         d.value = Item_value::major_treasure;
-        d.chance_to_incl_in_floor_spawn_list = 10;
+        d.chance_to_incl_in_floor_spawn_list = 12;
         d.weight = Item_weight::light;
         d.is_identified = false;
         d.glyph = '-';
@@ -412,7 +412,7 @@ void init_data_list()
     d.id = Item_id::sawed_off;
     d.base_name =
     {
-        "Sawed - off Shotgun", "Sawed - off shotguns", "a Sawed - off Shotgun"
+        "Sawed-off Shotgun", "Sawed-off shotguns", "a Sawed-off Shotgun"
     };
     d.base_descr =
     {
@@ -1833,7 +1833,7 @@ void init_data_list()
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::potion);
-    d.id = Item_id::potion_antidote;
+    d.id = Item_id::potion_curing;
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::potion);

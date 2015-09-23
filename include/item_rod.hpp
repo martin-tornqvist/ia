@@ -13,6 +13,10 @@ public:
 
     virtual ~Rod() {}
 
+    void save() override final;
+
+    void load() override final;
+
     Consume_item activate(Actor* const actor) override final;
 
     Clr interface_clr() const override final
@@ -20,15 +24,7 @@ public:
         return clr_violet;
     }
 
-    void on_std_turn_in_inv(const Inv_type inv_type) override final
-    {
-        (void)inv_type;
-
-        if (nr_charge_turns_left_ > 0)
-        {
-            --nr_charge_turns_left_;
-        }
-    }
+    void on_std_turn_in_inv(const Inv_type inv_type) override final;
 
     std::vector<std::string> descr() const override final;
 
@@ -86,8 +82,8 @@ public:
 protected:
     std::string descr_identified() const override
     {
-        return "When activated, this device cures Poisoning, Diseases, Infections, and Weakening. "
-               "It also provides a small amount of healing of the users wounds.";
+        return "When activated, this device cures any physical illness, and heals the users "
+               "wounds by a small amount.";
     }
 
     void activate_impl() override;

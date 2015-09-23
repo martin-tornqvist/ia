@@ -203,7 +203,7 @@ public:
 
     bool end_prop(const Prop_id id, const bool RUN_PROP_END_EFFECTS = true);
 
-    void end_props_by_magic_healing();
+    bool end_props_by_magic_healing();
 
     void props_interface_line(std::vector<Str_and_clr>& line) const;
 

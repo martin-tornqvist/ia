@@ -258,8 +258,8 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
         r = new Potion_rFire(d);
         break;
 
-    case Item_id::potion_antidote:
-        r = new Potion_antidote(d);
+    case Item_id::potion_curing:
+        r = new Potion_curing(d);
         break;
 
     case Item_id::potion_descent:

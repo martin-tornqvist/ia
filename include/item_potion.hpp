@@ -59,7 +59,8 @@ public:
 private:
     std::string descr_identified() const override
     {
-        return "This elixir heals all wounds and physical maladies.";
+        return "This elixir heals all wounds and physical maladies, and can even temporarily "
+               "raise the consumers condition past normal levels.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override;
@@ -329,24 +330,24 @@ private:
     void collide_hook(const Pos& pos, Actor* const actor) override;
 };
 
-class Potion_antidote: public Potion
+class Potion_curing: public Potion
 {
 public:
-    Potion_antidote(Item_data_t* const item_data) :
+    Potion_curing(Item_data_t* const item_data) :
         Potion(item_data) {}
-    ~Potion_antidote() {}
+    ~Potion_curing() {}
 
     void quaff_impl(Actor& actor) override;
 
     const std::string real_name() const override
     {
-        return "Antidote";
+        return "Curing";
     }
 
 private:
     std::string descr_identified() const override
     {
-        return "Cures poisoning.";
+        return "Cures any physical illness, and heals the consumers wounds by a small amount.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override;
