@@ -82,14 +82,7 @@ Los_result check_cell(const Pos& p0,
             const auto& pre_cell = map::cells[pre_p.x][pre_p.y];
             const auto& cur_cell = map::cells[cur_p.x][cur_p.y];
 
-            const bool CUR_CELL_IS_LGT = cur_cell.is_lit;
-            const bool CUR_CELL_IS_DRK = cur_cell.is_dark;
-            const bool PRE_CELL_IS_DRK = pre_cell.is_dark;
-
-            if (
-                !CUR_CELL_IS_LGT    &&
-                !TGT_IS_LGT         &&
-                (CUR_CELL_IS_DRK || PRE_CELL_IS_DRK))
+            if (!TGT_IS_LGT && !cur_cell.is_lit && (cur_cell.is_dark || pre_cell.is_dark))
             {
                 los_result.is_blocked_by_drk = true;
             }

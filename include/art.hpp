@@ -74,6 +74,7 @@ enum class Tile_id
     flare_lit,
     dagger,
     crowbar,
+    rod,
     axe,
     club,
     hammer,

@@ -8,8 +8,6 @@
 #include "item.hpp"
 #include "cmn_data.hpp"
 #include "actor_data.hpp"
-#include "item_scroll.hpp"
-#include "item_potion.hpp"
 #include "actor_player.hpp"
 #include "sound.hpp"
 #include "item_device.hpp"
@@ -24,7 +22,7 @@ Item_data_t::Item_data_t() :
     value                               (Item_value::normal),
     weight                              (Item_weight::none),
     allow_spawn                         (true),
-    spawn_std_range                     (Range(1, INT_MAX)),
+    spawn_std_range                     (Range(1, DLVL_LAST)),
     max_stack_at_spawn                  (1),
     chance_to_incl_in_floor_spawn_list  (100),
     is_stackable                        (true),
@@ -285,7 +283,8 @@ void reset_data(Item_data_t& d, Item_type const item_type)
             "human mind. Even for its small size, it seems incredibly complex. There is "
             "no hope of understanding the purpose or function of it through normal means."
         };
-        d.chance_to_incl_in_floor_spawn_list = 12;
+        d.value = Item_value::minor_treasure;
+        d.chance_to_incl_in_floor_spawn_list = 10;
         d.weight = Item_weight::light;
         d.is_identified = false;
         d.glyph = '~';
@@ -293,7 +292,31 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.is_stackable = false;
         d.land_on_hard_snd_msg = "I hear a clanking sound.";
         d.land_on_hard_sfx = Sfx_id::metal_clank;
-        add_feature_found_in(d, Feature_id::chest, 10);
+        add_feature_found_in(d, Feature_id::chest, 15);
+        add_feature_found_in(d, Feature_id::cocoon, 15);
+        break;
+
+    case Item_type::rod:
+        reset_data(d, Item_type::general);
+        d.type = Item_type::rod;
+        d.has_std_activate = true;
+        d.base_descr =
+        {
+            "A peculiar metallic device of cylindrical shape. The only detail is a single button "
+            "on the side."
+        };
+        d.value = Item_value::major_treasure;
+        d.chance_to_incl_in_floor_spawn_list = 10;
+        d.weight = Item_weight::light;
+        d.is_identified = false;
+        d.glyph = '-';
+        d.tile = Tile_id::rod;
+        d.is_stackable = false;
+        d.land_on_hard_snd_msg = "I hear a clanking sound.";
+        d.land_on_hard_sfx = Sfx_id::metal_clank;
+        add_feature_found_in(d, Feature_id::chest, 15);
+        add_feature_found_in(d, Feature_id::cocoon, 15);
+        add_feature_found_in(d, Feature_id::tomb, 15);
         break;
 
     case Item_type::armor:
@@ -389,11 +412,11 @@ void init_data_list()
     d.id = Item_id::sawed_off;
     d.base_name =
     {
-        "Sawed-off Shotgun", "Sawed-off shotguns", "a Sawed-off Shotgun"
+        "Sawed - off Shotgun", "Sawed - off shotguns", "a Sawed - off Shotgun"
     };
     d.base_descr =
     {
-        "Compared to a standard shotgun, the sawed-off has a shorter effective range. "
+        "Compared to a standard shotgun, the sawed - off has a shorter effective range. "
         "At close range it is more devastating however. It holds two barrels, and needs "
         "to be reloaded after both are discharged"
     };
@@ -421,7 +444,7 @@ void init_data_list()
     d.base_name = {"Pump Shotgun", "Pump shotguns", "a Pump Shotgun"};
     d.base_descr =
     {
-        "A pump-action shotgun has a handgrip that can be pumped back and forth in "
+        "A pump - action shotgun has a handgrip that can be pumped back and forth in "
         "order to eject a spent round of ammunition and to chamber a fresh one. It has "
         "a single barrel above a tube magazine into which shells are inserted. The "
         "magazine has a capacity of 8 shells."
@@ -1905,6 +1928,23 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::rod);
+    d.id = Item_id::rod_purge_invis;
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::rod);
+    d.id = Item_id::rod_curing;
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::rod);
+    d.id = Item_id::rod_opening;
+    d.spawn_std_range.max = DLVL_FIRST_MID_GAME;
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::rod);
+    d.id = Item_id::rod_bless;
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::general);

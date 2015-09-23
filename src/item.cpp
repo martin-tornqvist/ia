@@ -153,6 +153,7 @@ std::string Item::name(const Item_ref_type ref_type,
 {
     Item_ref_type ref_type_used = ref_type;
 
+    //If requested ref type is "plural" and this is a single item, use ref type "a" instead.
     if (ref_type == Item_ref_type::plural && (!data_->is_stackable || nr_items_ == 1))
     {
         ref_type_used = Item_ref_type::a;

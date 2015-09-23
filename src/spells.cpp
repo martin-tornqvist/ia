@@ -167,7 +167,10 @@ Range Spell::spi_cost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
         bool IS_SEER        = player_bon::traits[int(Trait::seer)];
         bool IS_SUMMONER    = player_bon::traits[int(Trait::summoner)];
 
-        if (IS_BLOOD_SORC) {cost_max--;}
+        if (IS_BLOOD_SORC)
+        {
+            --cost_max;
+        }
 
         switch (id())
         {

@@ -60,7 +60,9 @@ std::vector<std::string> Strange_device::descr() const
 {
     if (data_->is_identified)
     {
-        auto descr = descr_identified();
+        const std::string descr = descr_identified();
+
+        std::vector<std::string> out = {descr};
 
         std::string cond_str = "It seems ";
 
@@ -79,9 +81,9 @@ std::vector<std::string> Strange_device::descr() const
             break;
         }
 
-        descr.push_back(cond_str);
+        out.push_back(cond_str);
 
-        return descr;
+        return out;
     }
     else //Not identified
     {

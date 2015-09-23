@@ -10,6 +10,7 @@
 #include "dungeon_master.hpp"
 #include "item_scroll.hpp"
 #include "item_potion.hpp"
+#include "item_rod.hpp"
 #include "player_bon.hpp"
 #include "map.hpp"
 #include "map_travel.hpp"
@@ -51,6 +52,7 @@ void save_modules()
     dungeon_master::save();
     scroll_handling::save();
     potion_handling::save();
+    rod_handling::save();
     item_data::save();
     jewelry_handling::save();
     map::player->inv().save();
@@ -82,6 +84,7 @@ void load_modules()
     dungeon_master::load();
     scroll_handling::load();
     potion_handling::load();
+    rod_handling::load();
     item_data::load();
     jewelry_handling::load();
     map::player->inv().load();

@@ -140,7 +140,6 @@ enum class Item_id
     armor_mi_go,
 
     gas_mask,
-//    hideous_mask,
 
     scroll_pest,
     scroll_telep,
@@ -183,6 +182,11 @@ enum class Item_id
     device_rejuvenator,
     device_translocator,
     device_sentry_drone,
+
+    rod_purge_invis,
+    rod_curing,
+    rod_opening,
+    rod_bless,
 
     lantern,
 

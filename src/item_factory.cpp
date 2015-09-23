@@ -3,13 +3,12 @@
 #include "init.hpp"
 #include "item_scroll.hpp"
 #include "item_potion.hpp"
+#include "item_rod.hpp"
 #include "item_jewelry.hpp"
 #include "drop.hpp"
 #include "item_device.hpp"
 #include "utils.hpp"
 #include "item_data.hpp"
-
-using namespace std;
 
 namespace item_factory
 {
@@ -190,10 +189,6 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
         r = new Gas_mask(d);
         break;
 
-//    case Item_id::hideous_mask:
-//        r = new Hideous_mask(d);
-//        break;
-
     case Item_id::scroll_mayhem:
     case Item_id::scroll_telep:
     case Item_id::scroll_pest:
@@ -303,6 +298,22 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
         r = new Device_lantern(d);
         break;
 
+    case Item_id::rod_purge_invis:
+        r = new Rod_purge_invis(d);
+        break;
+
+    case Item_id::rod_curing:
+        r = new Rod_curing(d);
+        break;
+
+    case Item_id::rod_opening:
+        r = new Rod_opening(d);
+        break;
+
+    case Item_id::rod_bless:
+        r = new Rod_bless(d);
+        break;
+
     case Item_id::medical_bag:
         r = new Medical_bag(d);
         break;
@@ -339,7 +350,7 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
     {
         TRACE << "Specified number of items (" + to_str(NR_ITEMS) + ") != 1 for "
               << "non-stackable item: "
-              << int(d->id) << ", " << r->name(Item_ref_type::plain) << endl;
+              << int(d->id) << ", " << r->name(Item_ref_type::plain) << std::endl;
         assert(false);
     }
 
@@ -420,7 +431,7 @@ Item* copy_item(const Item& item_to_copy)
 
 Item* mk_random_scroll_or_potion(const bool ALLOW_SCROLLS, const bool ALLOW_POTIONS)
 {
-    vector<Item_id> item_bucket;
+    std::vector<Item_id> item_bucket;
 
     for (int i = 0; i < int(Item_id::END); ++i)
     {

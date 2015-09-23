@@ -21,8 +21,6 @@ public:
 
     Consume_item activate(Actor* const actor) override;
 
-    Consume_item read();
-
     const std::string real_name() const;
 
     std::vector<std::string> descr() const override;

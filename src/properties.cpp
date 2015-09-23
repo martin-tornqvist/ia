@@ -572,9 +572,9 @@ void init_data_list()
     d.name = "Invisible";
     d.name_short = "Invis";
     d.msg[size_t(Prop_msg::start_player)] = "I am out of sight for normal eyes!";
-    d.msg[size_t(Prop_msg::start_mon)] = " is out of sight for normal eyes!";
+    d.msg[size_t(Prop_msg::start_mon)] = "is out of sight for normal eyes!";
     d.msg[size_t(Prop_msg::end_player)] = "I am visible to normal eyes.";
-    d.msg[size_t(Prop_msg::end_mon)] = " is visible to normal eyes.";
+    d.msg[size_t(Prop_msg::end_mon)] = "is visible to normal eyes.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -590,7 +590,7 @@ void init_data_list()
     d.msg[size_t(Prop_msg::start_player)] = "I see very clearly.";
     d.msg[size_t(Prop_msg::start_mon)] = "seems to see very clearly.";
     d.msg[size_t(Prop_msg::end_player)] = "I see less clearly.";
-    d.msg[size_t(Prop_msg::end_mon)] = " seems to see less clearly.";
+    d.msg[size_t(Prop_msg::end_mon)] = "seems to see less clearly.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;

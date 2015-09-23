@@ -1180,7 +1180,7 @@ void init_data_list()
     d.speed = Actor_speed::fast;
     d.ranged_cooldown_turns = 0;
     d.glyph = 'G';
-    d.color = clr_gray_drk;
+    d.color = clr_gray;
     d.tile = Tile_id::phantasm;
     d.hp = 9;
     d.spi = 12;

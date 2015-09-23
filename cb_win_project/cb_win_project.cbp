@@ -168,6 +168,7 @@
 		<Unit filename="../include/item_factory.hpp" />
 		<Unit filename="../include/item_jewelry.hpp" />
 		<Unit filename="../include/item_potion.hpp" />
+		<Unit filename="../include/item_rod.hpp" />
 		<Unit filename="../include/item_scroll.hpp" />
 		<Unit filename="../include/kick.hpp" />
 		<Unit filename="../include/knockback.hpp" />
@@ -250,6 +251,7 @@
 		<Unit filename="../src/item_factory.cpp" />
 		<Unit filename="../src/item_jewelry.cpp" />
 		<Unit filename="../src/item_potion.cpp" />
+		<Unit filename="../src/item_rod.cpp" />
 		<Unit filename="../src/item_scroll.cpp" />
 		<Unit filename="../src/kick.cpp" />
 		<Unit filename="../src/knockback.cpp" />

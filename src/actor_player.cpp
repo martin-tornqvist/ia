@@ -911,8 +911,7 @@ void Player::on_std_turn()
                         wait_turns_left > 0   ||
                         nr_quick_move_steps_left_ > 0)
                     {
-                        msg_log::add(actor->name_a() + " comes into my view.", clr_white,
-                                     true);
+                        msg_log::add(actor->name_a() + " comes into my view.", clr_white, true);
                     }
 
                     mon.is_msg_mon_in_view_printed_ = true;
@@ -1082,9 +1081,9 @@ void Player::hear_sound(const Snd& snd,
                         const Dir dir_to_origin,
                         const int PERCENT_AUDIBLE_DISTANCE)
 {
-    const Sfx_id    sfx         = snd.sfx();
-    const std::string&   msg         = snd.msg();
-    const bool      HAS_SND_MSG = !msg.empty() && msg != " ";
+    const Sfx_id        sfx         = snd.sfx();
+    const std::string&  msg         = snd.msg();
+    const bool          HAS_SND_MSG = !msg.empty() && msg != " ";
 
     if (HAS_SND_MSG)
     {

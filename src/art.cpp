@@ -189,6 +189,7 @@ Pos column_and_row_tile(const Tile_id tile)
     case Tile_id::flare_lit:                    return Pos(12, 3);
     case Tile_id::dagger:                       return Pos(0, 4);
     case Tile_id::crowbar:                      return Pos(3, 4);
+    case Tile_id::rod:                          return Pos(6, 4);
     case Tile_id::axe:                          return Pos(9, 4);
     case Tile_id::club:                         return Pos(10, 4);
     case Tile_id::hammer:                       return Pos(11, 4);

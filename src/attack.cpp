@@ -609,7 +609,10 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
         {
             if (att_data.att_result == fail_critical)
             {
-                msg_log::add("I botch the attack completely!");
+                msg_log::add("I botch the attack completely!",
+                             clr_msg_note,
+                             true,
+                             More_prompt_on_msg::yes);
 
                 sfx = Sfx_id::END;
             }
@@ -1506,7 +1509,7 @@ void melee(Actor* const attacker, const Pos& attacker_origin, Actor& defender, c
             //Exhausted (weakened)
             case 1:
             {
-                Prop* prop = new Prop_weakened(Prop_turns::specific, rnd::range(4, 7));
+                Prop* prop = new Prop_weakened(Prop_turns::specific, rnd::range(6, 12));
 
                 player.prop_handler().try_add_prop(prop, Prop_src::intr, false, Verbosity::silent);
 

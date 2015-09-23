@@ -24,8 +24,6 @@ public:
 
     std::vector<std::string> descr() const override final;
 
-    void quaff(Actor& actor);
-
     void on_collide(const Pos& pos, Actor* actor);
 
     void identify(const Verbosity verbosity) override final;
@@ -33,7 +31,7 @@ public:
     virtual const std::string real_name() const = 0;
 
 protected:
-    virtual std::vector<std::string> descr_identified() const = 0;
+    virtual std::string descr_identified() const = 0;
 
     //TODO: *All* potions do nothing but run the quaff implementation when this
     //is called. That should probably be moved up to the base collide function
@@ -59,12 +57,9 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "This elixir heals all wounds and physical maladies."
-        };
+        return "This elixir heals all wounds and physical maladies.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override;
@@ -85,12 +80,9 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "Restores the spirit."
-        };
+        return "Restores the spirit.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override;
@@ -111,12 +103,9 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "Causes temporary loss of vision."
-        };
+        return "Causes temporary loss of vision.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override;
@@ -137,12 +126,9 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "Causes paralysis."
-        };
+        return "Causes paralysis.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override;
@@ -163,12 +149,9 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "This foul liquid causes a horrible disease."
-        };
+        return "This foul liquid causes a horrible disease.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override
@@ -192,12 +175,9 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "Causes confusion."
-        };
+        return "Causes confusion.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override;
@@ -218,12 +198,9 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "Causes uncontrollable fury."
-        };
+        return "Causes uncontrollable fury.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override;
@@ -244,12 +221,9 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "Gives the consumer complete peace of mind."
-        };
+        return "Gives the consumer complete peace of mind.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override;
@@ -270,12 +244,9 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "A deadly brew."
-        };
+        return "A deadly brew.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override;
@@ -296,12 +267,9 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "This strange concoction causes a sudden flash of intuition."
-        };
+        return "This strange concoction causes a sudden flash of intuition.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override
@@ -326,12 +294,9 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "Bestows visions of the surrounding area."
-        };
+        return "Bestows visions of the surrounding area.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override
@@ -356,12 +321,9 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "Protects the consumer from fire."
-        };
+        return "Protects the consumer from fire.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override;
@@ -382,12 +344,9 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "Cures poisoning."
-        };
+        return "Cures poisoning.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override;
@@ -408,12 +367,9 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "Protects the consumer from electricity."
-        };
+        return "Protects the consumer from electricity.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override;
@@ -434,12 +390,9 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "Protects the consumer from acid."
-        };
+        return "Protects the consumer from acid.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override;
@@ -460,13 +413,10 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "A bizarre liquid that causes the consumer to dematerialize and sink "
-            "through the ground."
-        };
+        return "A bizarre liquid that causes the consumer to dematerialize and sink "
+               "through the ground.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override
@@ -491,12 +441,9 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "Makes the consumer invisible to normal vision."
-        };
+        return "Makes the consumer invisible to normal vision.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override;
@@ -517,17 +464,17 @@ public:
     }
 
 private:
-    std::vector<std::string> descr_identified() const override
+    std::string descr_identified() const override
     {
-        return
-        {
-            "Grants the consumer extraordinary vision, including the ability to see that "
-            "which is normally invisible."
-        };
+        return "Grants the consumer extraordinary vision, including the ability to see that "
+               "which is normally invisible.";
     }
 
     void collide_hook(const Pos& pos, Actor* const actor) override;
 };
+
+namespace potion_handling
+{
 
 struct Potion_look
 {
@@ -535,9 +482,6 @@ struct Potion_look
     std::string name_a;
     Clr clr;
 };
-
-namespace potion_handling
-{
 
 void init();
 

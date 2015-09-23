@@ -14,7 +14,7 @@ namespace populate_items
 
 void mk_items_on_floor()
 {
-    int nr_spawns = rnd::range(4, 5);
+    int nr_spawns = rnd::range(4, 7);
 
     if (player_bon::traits[int(Trait::treasure_hunter)])
     {

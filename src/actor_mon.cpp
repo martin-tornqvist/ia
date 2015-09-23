@@ -2089,7 +2089,8 @@ bool Floating_head::on_actor_turn_hook()
 
             snd_msg += " spews forth a litany of curses.";
 
-            Snd snd(snd_msg, Sfx_id::END,
+            Snd snd(snd_msg,
+                    Sfx_id::END,
                     Ignore_msg_if_origin_seen::no,
                     pos,
                     this,

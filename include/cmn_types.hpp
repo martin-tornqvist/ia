@@ -401,6 +401,7 @@ enum class Item_type
     scroll,
     potion,
     device,
+    rod,
     armor,
     head_wear,
     amulet,

@@ -45,7 +45,7 @@ public:
     Condition condition_;
 
 private:
-    virtual std::vector<std::string> descr_identified() const = 0;
+    virtual std::string descr_identified() const = 0;
 
     virtual Consume_item trigger_effect() = 0;
 };
@@ -59,11 +59,9 @@ public:
     ~Device_blaster() override {}
 
 private:
-    std::vector<std::string> descr_identified() const
+    std::string descr_identified() const
     {
-        return {"When activated, this strange device blasts all visible enemies with "
-                "infernal power."
-               };
+        return "When activated, this device blasts all visible enemies with infernal power.";
     }
 
     Consume_item trigger_effect() override;
@@ -78,11 +76,10 @@ public:
     ~Device_shockwave() override {}
 
 private:
-    std::vector<std::string> descr_identified() const
+    std::string descr_identified() const
     {
-        return {"When activated, this strange device generates a shock wave which violently "
-                "pushes away any adjacent creatures and destroys structures."
-               };
+        return "When activated, this device generates a shock wave which violently "
+               "pushes away any adjacent creatures and destroys structures.";
     }
 
     Consume_item trigger_effect() override;
@@ -97,11 +94,9 @@ public:
     ~Device_rejuvenator() override {}
 
 private:
-    std::vector<std::string> descr_identified() const
+    std::string descr_identified() const
     {
-        return {"When activated, this strange device heals all wounds and physical "
-                "maladies."
-               };
+        return "When activated, this device heals all wounds and physical maladies.";
     }
 
     Consume_item trigger_effect() override;
@@ -116,11 +111,10 @@ public:
     ~Device_translocator() override {}
 
 private:
-    std::vector<std::string> descr_identified() const
+    std::string descr_identified() const
     {
-        return {"When activated, this strange device teleports all visible enemies to "
-                "different locations."
-               };
+        return "When activated, this device teleports all visible enemies to "
+               "different locations.";
     }
 
     Consume_item trigger_effect() override;
@@ -135,11 +129,9 @@ public:
     ~Device_sentry_drone() override {}
 
 private:
-    std::vector<std::string> descr_identified() const
+    std::string descr_identified() const
     {
-        return {"When activated, this strange device will \"come alive\" and guard the "
-                "user."
-               };
+        return "When activated, this device will \"come alive\" and guard the user.";
     }
 
     Consume_item trigger_effect() override;

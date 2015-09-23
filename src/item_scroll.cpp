@@ -51,7 +51,49 @@ Consume_item Scroll::activate(Actor* const actor)
         prop_handler.allow_read(Verbosity::verbose)         &&
         prop_handler.allow_speak(Verbosity::verbose))
     {
-        return read();
+        render::draw_map_and_interface();
+
+        if (!map::player->prop_handler().allow_see())
+        {
+            msg_log::add("I cannot read while blind.");
+            return Consume_item::no;
+        }
+
+        auto* const spell = mk_spell();
+
+        const std::string crumble_str = "It crumbles to dust.";
+
+        if (data_->is_identified)
+        {
+            const std::string scroll_name = name(Item_ref_type::a, Item_ref_inf::none);
+
+            msg_log::add("I read " + scroll_name + "...");
+
+            spell->cast(map::player, false);
+
+            msg_log::add(crumble_str);
+
+            try_learn();
+        }
+        else //Not already identified
+        {
+            msg_log::add("I recite the forbidden incantations on the manuscript...");
+
+            data_->is_tried = true;
+
+            const auto is_noticed = spell->cast(map::player, false);
+
+            msg_log::add(crumble_str);
+
+            if (is_noticed == Spell_effect_noticed::yes)
+            {
+                identify(Verbosity::verbose);
+            }
+        }
+
+        delete spell;
+
+        return Consume_item::yes;
     }
 
     return Consume_item::no;
@@ -99,53 +141,6 @@ void Scroll::try_learn()
             delete spell;
         }
     }
-}
-
-Consume_item Scroll::read()
-{
-    render::draw_map_and_interface();
-
-    if (!map::player->prop_handler().allow_see())
-    {
-        msg_log::add("I cannot read while blind.");
-        return Consume_item::no;
-    }
-
-    auto* const spell = mk_spell();
-
-    const std::string crumble_str = "It crumbles to dust.";
-
-    if (data_->is_identified)
-    {
-        const std::string scroll_name = name(Item_ref_type::a, Item_ref_inf::none);
-
-        msg_log::add("I read " + scroll_name + "...");
-
-        spell->cast(map::player, false);
-
-        msg_log::add(crumble_str);
-
-        try_learn();
-    }
-    else //Not already identified
-    {
-        msg_log::add("I recite the forbidden incantations on the manuscript...");
-
-        data_->is_tried = true;
-
-        const auto is_noticed = spell->cast(map::player, false);
-
-        msg_log::add(crumble_str);
-
-        if (is_noticed == Spell_effect_noticed::yes)
-        {
-            identify(Verbosity::verbose);
-        }
-    }
-
-    delete spell;
-
-    return Consume_item::yes;
 }
 
 std::string Scroll::name_inf() const
@@ -233,17 +228,14 @@ void init()
         }
     }
 
-    TRACE << "Init scroll names" << std::endl;
-
     for (auto& d : item_data::data)
     {
         if (d.type == Item_type::scroll)
         {
             //False name
-            const int NR_ELEMENTS = false_names_.size();
-            const int ELEMENT     = rnd::range(0, NR_ELEMENTS - 1);
+            const size_t IDX = rnd::range(0, false_names_.size() - 1);
 
-            const std::string& TITLE = false_names_[ELEMENT];
+            const std::string& TITLE = false_names_[IDX];
 
             d.base_name_un_id.names[int(Item_ref_type::plain)] =
                 "Manuscript titled "    + TITLE;
@@ -254,11 +246,10 @@ void init()
             d.base_name_un_id.names[int(Item_ref_type::a)] =
                 "a Manuscript titled "  + TITLE;
 
-            false_names_.erase(false_names_.begin() + ELEMENT);
+            false_names_.erase(false_names_.begin() + IDX);
 
             //True name
-            const Scroll* const scroll =
-                static_cast<const Scroll*>(item_factory::mk(d.id, 1));
+            const Scroll* const scroll = static_cast<const Scroll*>(item_factory::mk(d.id, 1));
 
             const std::string REAL_TYPE_NAME = scroll->real_name();
 

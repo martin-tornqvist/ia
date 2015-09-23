@@ -26,9 +26,34 @@ Consume_item Potion::activate(Actor* const actor)
 
     if (actor->prop_handler().allow_eat(Verbosity::verbose))
     {
-        quaff(*actor);
-        return Consume_item::yes;
+        if (actor->is_player())
+        {
+            data_->is_tried = true;
 
+            audio::play(Sfx_id::potion_quaff);
+
+            if (data_->is_identified)
+            {
+                const std::string potion_name = name(Item_ref_type::a, Item_ref_inf::none);
+                msg_log::add("I drink " + potion_name + "...");
+            }
+            else //Not identified
+            {
+                const std::string potion_name = name(Item_ref_type::plain, Item_ref_inf::none);
+                msg_log::add("I drink an unknown " + potion_name + "...");
+            }
+
+            map::player->incr_shock(Shock_lvl::heavy, Shock_src::use_strange_item);
+        }
+
+        quaff_impl(*actor);
+
+        if (map::player->is_alive())
+        {
+            game_time::tick();
+        }
+
+        return Consume_item::yes;
     }
 
     return Consume_item::no;
@@ -55,9 +80,12 @@ std::vector<std::string> Potion::descr() const
 {
     if (data_->is_identified)
     {
-        return descr_identified();
+        return
+        {
+            descr_identified()
+        };
     }
-    else
+    else //Not identified
     {
         return data_->base_descr;
     }
@@ -103,36 +131,6 @@ void Potion::on_collide(const Pos& pos, Actor* const actor)
                 }
             }
         }
-    }
-}
-
-void Potion::quaff(Actor& actor)
-{
-    if (actor.is_player())
-    {
-        data_->is_tried = true;
-
-        audio::play(Sfx_id::potion_quaff);
-
-        if (data_->is_identified)
-        {
-            const std::string potion_name = name(Item_ref_type::a, Item_ref_inf::none);
-            msg_log::add("I drink " + potion_name + "...");
-        }
-        else //Unidentified
-        {
-            const std::string potion_name = name(Item_ref_type::plain, Item_ref_inf::none);
-            msg_log::add("I drink an unknown " + potion_name + "...");
-        }
-
-        map::player->incr_shock(Shock_lvl::heavy, Shock_src::use_strange_item);
-    }
-
-    quaff_impl(actor);
-
-    if (map::player->is_alive())
-    {
-        game_time::tick();
     }
 }
 
@@ -625,23 +623,21 @@ void init()
     potion_looks_.push_back(Potion_look {"Moldy",    "a Moldy",    clr_brown});
     potion_looks_.push_back(Potion_look {"Frothy",   "a Frothy",   clr_white});
 
-    TRACE << "Init potion names" << std::endl;
-
     for (auto& d : item_data::data)
     {
         if (d.type == Item_type::potion)
         {
             //Color and false name
-            const int ELEMENT = rnd::range(0, potion_looks_.size() - 1);
+            const size_t IDX = rnd::range(0, potion_looks_.size() - 1);
 
-            Potion_look& look = potion_looks_[ELEMENT];
+            Potion_look& look = potion_looks_[IDX];
 
-            d.base_name_un_id.names[int(Item_ref_type::plain)]   = look.name_plain + " potion";
-            d.base_name_un_id.names[int(Item_ref_type::plural)]  = look.name_plain + " potions";
-            d.base_name_un_id.names[int(Item_ref_type::a)]       = look.name_a     + " potion";
+            d.base_name_un_id.names[int(Item_ref_type::plain)]   = look.name_plain + " Potion";
+            d.base_name_un_id.names[int(Item_ref_type::plural)]  = look.name_plain + " Potions";
+            d.base_name_un_id.names[int(Item_ref_type::a)]       = look.name_a     + " Potion";
             d.clr = look.clr;
 
-            potion_looks_.erase(potion_looks_.begin() + ELEMENT);
+            potion_looks_.erase(potion_looks_.begin() + IDX);
 
             //True name
             const Potion* const potion =
@@ -653,7 +649,7 @@ void init()
 
             const std::string REAL_NAME        = "Potion of "    + REAL_TYPE_NAME;
             const std::string REAL_NAME_PLURAL = "Potions of "   + REAL_TYPE_NAME;
-            const std::string REAL_NAME_A      = "a potion of "  + REAL_TYPE_NAME;
+            const std::string REAL_NAME_A      = "a Potion of "  + REAL_TYPE_NAME;
 
             d.base_name.names[int(Item_ref_type::plain)]  = REAL_NAME;
             d.base_name.names[int(Item_ref_type::plural)] = REAL_NAME_PLURAL;

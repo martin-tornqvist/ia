@@ -309,9 +309,9 @@ void draw(const Menu_browser& browser)
 
     TRACE << "Drawing quote" << std::endl;
     Clr quote_clr = clr_gray;
-    quote_clr.r /= 7;
-    quote_clr.g /= 7;
-    quote_clr.b /= 7;
+    quote_clr.r /= 8;
+    quote_clr.g /= 8;
+    quote_clr.b /= 8;
 
     std::vector<std::string> quote_lines;
 

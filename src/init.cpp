@@ -10,6 +10,7 @@
 #include "gods.hpp"
 #include "item_scroll.hpp"
 #include "item_potion.hpp"
+#include "item_rod.hpp"
 #include "map.hpp"
 #include "msg_log.hpp"
 #include "dungeon_master.hpp"
@@ -81,6 +82,7 @@ void init_session()
     item_data::init();
     scroll_handling::init();
     potion_handling::init();
+    rod_handling::init();
     inv_handling::init();
     game_time::init();
     map_travel::init();
