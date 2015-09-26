@@ -284,7 +284,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
             "no hope of understanding the purpose or function of it through normal means."
         };
         d.value = Item_value::minor_treasure;
-        d.chance_to_incl_in_floor_spawn_list = 12;
+        d.chance_to_incl_in_floor_spawn_list = 9;
         d.weight = Item_weight::light;
         d.is_identified = false;
         d.glyph = '~';
@@ -292,8 +292,8 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.is_stackable = false;
         d.land_on_hard_snd_msg = "I hear a clanking sound.";
         d.land_on_hard_sfx = Sfx_id::metal_clank;
-        add_feature_found_in(d, Feature_id::chest, 15);
-        add_feature_found_in(d, Feature_id::cocoon, 15);
+        add_feature_found_in(d, Feature_id::chest, 12);
+        add_feature_found_in(d, Feature_id::cocoon, 12);
         break;
 
     case Item_type::rod:
@@ -306,7 +306,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
             "on the side."
         };
         d.value = Item_value::major_treasure;
-        d.chance_to_incl_in_floor_spawn_list = 12;
+        d.chance_to_incl_in_floor_spawn_list = 9;
         d.weight = Item_weight::light;
         d.is_identified = false;
         d.glyph = '-';
@@ -314,9 +314,9 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.is_stackable = false;
         d.land_on_hard_snd_msg = "I hear a clanking sound.";
         d.land_on_hard_sfx = Sfx_id::metal_clank;
-        add_feature_found_in(d, Feature_id::chest, 15);
-        add_feature_found_in(d, Feature_id::cocoon, 15);
-        add_feature_found_in(d, Feature_id::tomb, 15);
+        add_feature_found_in(d, Feature_id::chest, 12);
+        add_feature_found_in(d, Feature_id::cocoon, 12);
+        add_feature_found_in(d, Feature_id::tomb, 12);
         break;
 
     case Item_type::armor:
@@ -371,7 +371,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.has_std_activate = true;
         d.weight = Item_weight::light;
         d.glyph = '-';
-        d.max_stack_at_spawn = 2;
+        d.max_stack_at_spawn = 3;
         d.land_on_hard_snd_msg = "";
         break;
 
@@ -1751,6 +1751,7 @@ void init_data_list()
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_opening;
+    d.spawn_std_range.max = DLVL_FIRST_MID_GAME;
     d.spell_cast_from_scroll = Spell_id::opening;
     data[size_t(d.id)] = d;
 

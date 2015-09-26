@@ -536,20 +536,42 @@ Clr Wpn::clr() const
 
 void Wpn::set_random_melee_plus()
 {
-    //TODO: This should probably be done with some kind of distribution model instead...
+    const bool IS_LOW_DLVL = map::dlvl < 6;
 
-    melee_dmg_plus_ = 0;
-
-    const int PLUS_LMT = 6;
-
-    int chance_to_raise = 65;
-
-    while (rnd::percent(chance_to_raise) && melee_dmg_plus_ < PLUS_LMT)
+    //Element corresponds to plus damage value (+0, +1, +2, etc)
+    const std::vector<int> weights =
     {
-        ++melee_dmg_plus_;
+        100,                    //          100
+        220,                    //          320
+        120,                    //          450
+        70,                     //          520
+        IS_LOW_DLVL ? 20 : 40,  //          540 or 560
+        IS_LOW_DLVL ? 2  : 20,  //          542 or 580
+        IS_LOW_DLVL ? 1  : 10   //Total:    543 or 590
+    };
 
-        chance_to_raise -= 5;
+    const int SUM = std::accumulate(begin(weights), end(weights), 0);
+
+    int rnd = rnd::range(0, SUM - 1);
+
+    for (size_t i = 0; i < weights.size(); ++i)
+    {
+        const int WEIGHT = weights[i];
+
+        if (rnd < WEIGHT)
+        {
+            melee_dmg_plus_ = i;
+
+            return;
+        }
+
+        rnd -= WEIGHT;
     }
+
+    TRACE << "Error in melee damage plus damage calculation" << std::endl;
+    assert(false);
+
+    melee_dmg_plus_ = 0; //Robustness for release builds
 }
 
 std::string Wpn::name_inf() const
@@ -1084,7 +1106,7 @@ void Molotov::on_std_turn_player_hold_ignited()
         snd_emit::emit_snd(snd);
 
         explosion::run(player_pos, Expl_type::apply_prop, Expl_src::misc,
-                                    Emit_expl_snd::no, 0, new Prop_burning(Prop_turns::std));
+                       Emit_expl_snd::no, 0, new Prop_burning(Prop_turns::std));
 
         delete this;
     }
@@ -1100,7 +1122,7 @@ void Molotov::on_thrown_ignited_landing(const Pos& p)
     snd_emit::emit_snd(snd);
 
     explosion::run(p, Expl_type::apply_prop, Expl_src::player_use_moltv_intended,
-                                Emit_expl_snd::no, D , new Prop_burning(Prop_turns::std));
+                   Emit_expl_snd::no, D , new Prop_burning(Prop_turns::std));
 }
 
 
@@ -1118,7 +1140,7 @@ void Molotov::on_player_paralyzed()
     snd_emit::emit_snd(snd);
 
     explosion::run(player_pos, Expl_type::apply_prop, Expl_src::misc,
-                                Emit_expl_snd::no, 0, new Prop_burning(Prop_turns::std));
+                   Emit_expl_snd::no, 0, new Prop_burning(Prop_turns::std));
 
     delete this;
 }

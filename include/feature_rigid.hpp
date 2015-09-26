@@ -799,7 +799,7 @@ private:
 
     bool is_open_, is_locked_, is_trapped_, is_trap_status_known_;
 
-    const Chest_matl matl_;
+    Chest_matl matl_;
 
 //How hard the trap is to detect (0 - 2)
 // 0: Requires nothing

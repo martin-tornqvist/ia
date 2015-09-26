@@ -2181,14 +2181,19 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
 
 //--------------------------------------------------------------------- CHEST
 Chest::Chest(const Pos& feature_pos) :
-    Rigid(feature_pos),
-    is_open_(false),
-    is_locked_(false),
-    is_trapped_(false),
-    is_trap_status_known_(false),
-    matl_(Chest_matl(rnd::range(0, int(Chest_matl::END) - 1))),
-    TRAP_DET_LVL(rnd::range(0, 2))
+    Rigid                   (feature_pos),
+    is_open_                (false),
+    is_locked_              (false),
+    is_trapped_             (false),
+    is_trap_status_known_   (false),
+    matl_                   (Chest_matl::wood),
+    TRAP_DET_LVL            (rnd::range(0, 2))
 {
+    if (map::dlvl >= 3 && rnd::coin_toss())
+    {
+        matl_ = Chest_matl::iron;
+    }
+
     const bool  IS_TREASURE_HUNTER  = player_bon::traits[int(Trait::treasure_hunter)];
     const int   NR_ITEMS_MIN        = 0;
     const int   NR_ITEMS_MAX        = IS_TREASURE_HUNTER    ? 3 : 2;
@@ -2289,8 +2294,8 @@ void Chest::player_loot()
 
 Did_open Chest::open(Actor* const actor_opening)
 {
-    is_locked_           = false;
-    is_trap_status_known_  = true;
+    is_locked_              = false;
+    is_trap_status_known_   = true;
 
     if (is_open_)
     {
@@ -2645,12 +2650,12 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
 
 std::string Chest::name(const Article article) const
 {
-    const bool      IS_EMPTY        = item_container_.items_.empty() && is_open_;
-    const bool      IS_KNOWN_TRAP   = is_trapped_ && is_trap_status_known_;
-    const std::string    locked_str      = is_locked_                ? "locked "   : "";
-    const std::string    empty_str       = IS_EMPTY                  ? "empty "    : "";
-    const std::string    trap_str        = IS_KNOWN_TRAP             ? "trapped "  : "";
-    const std::string    open_str        = (is_open_ && !IS_EMPTY)   ? "open "     : "";
+    const bool          IS_EMPTY        = item_container_.items_.empty() && is_open_;
+    const bool          IS_KNOWN_TRAP   = is_trapped_ && is_trap_status_known_;
+    const std::string   locked_str      = is_locked_                ? "locked "   : "";
+    const std::string   empty_str       = IS_EMPTY                  ? "empty "    : "";
+    const std::string   trap_str        = IS_KNOWN_TRAP             ? "trapped "  : "";
+    const std::string   open_str        = (is_open_ && !IS_EMPTY)   ? "open "     : "";
 
     std::string a = "";
 
@@ -2667,8 +2672,7 @@ std::string Chest::name(const Article article) const
         a = "the ";
     }
 
-    const std::string matl_str =
-        is_open_ ? "" : matl_ == Chest_matl::wood ? "wooden " : "iron ";
+    const std::string matl_str = is_open_ ? "" : matl_ == Chest_matl::wood ? "wooden " : "iron ";
 
     return a + locked_str + empty_str + open_str + trap_str + matl_str + "chest";
 }
