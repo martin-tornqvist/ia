@@ -32,11 +32,11 @@ const int PLAYER_START_Y      = MAP_H_HALF;
 
 const int PLAYER_MAX_CLVL     = 10;
 
-const int DLVL_LAST_EARLY_GAME  = 9;
+const int DLVL_LAST_EARLY_GAME  = 9;                            //Early = DLVL 1  - 9
 const int DLVL_FIRST_MID_GAME   = DLVL_LAST_EARLY_GAME + 1;
-const int DLVL_LAST_MID_GAME    = 19;
+const int DLVL_LAST_MID_GAME    = 19;                           //Mid   = DLVL 10 - 19
 const int DLVL_FIRST_LATE_GAME  = DLVL_LAST_MID_GAME + 1;
-const int DLVL_LAST             = 30;
+const int DLVL_LAST             = 30;                           //Late  = DLVL 20 - 30
 
 const int MIN_DLVL_HARDER_TRAPS = 6;
 

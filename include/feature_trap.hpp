@@ -23,7 +23,6 @@ enum class Trap_id
     web,
     teleport,
     summon,
-    wpn_destr,
     spi_drain,
     END,
     any
@@ -453,22 +452,6 @@ private:
     friend class Trap;
 
     Trap_summon_mon(Pos pos, const Trap* const base_trap) :
-        Magic_trap_impl(pos, Trap_id::summon, base_trap) {}
-
-    void trigger();
-
-    Range nr_turns_range_to_trigger() const override
-    {
-        return {0, 0};
-    }
-};
-
-class Trap_wpn_destr: public Magic_trap_impl
-{
-private:
-    friend class Trap;
-
-    Trap_wpn_destr(Pos pos, const Trap* const base_trap) :
         Magic_trap_impl(pos, Trap_id::summon, base_trap) {}
 
     void trigger();
