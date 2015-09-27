@@ -52,7 +52,7 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
     {
         if (attacker)
         {
-            is_defender_aware = map::player->can_see_actor(*attacker) ||
+            is_defender_aware = static_cast<Mon*>(attacker)->player_aware_of_me_counter_ > 0 ||
                                 player_bon::traits[int(Trait::vigilant)];
         }
         else //No attacker actor (e.g. a trap)
@@ -97,7 +97,8 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
         {
             if (attacker->is_player())
             {
-                is_attacker_aware = map::player->can_see_actor(defender);
+                Mon& mon = static_cast<Mon&>(defender);
+                is_attacker_aware = mon.player_aware_of_me_counter_ > 0;
             }
             else //Attacker is monster
             {
@@ -289,23 +290,29 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
 
         const Actor_data_t& defender_data = defender->data();
 
-        const int ATTACKER_SKILL    = attacker ?
-                                      attacker->ability(Ability_id::ranged, true) :
-                                      50;
-        const int WPN_MOD           = wpn.data().ranged.hit_chance_mod;
         const Pos& def_pos(defender->pos);
-        const int DIST_TO_TGT       = utils::king_dist(attacker_orign, def_pos);
-        const int DIST_MOD          = 15 - (DIST_TO_TGT * 5);
+
+        const int ATT_SKILL     = attacker ? attacker->ability(Ability_id::ranged, true) : 50;
+
+        const int WPN_MOD       = wpn.data().ranged.hit_chance_mod;
+
+        const int DIST_TO_TGT   = utils::king_dist(attacker_orign, def_pos);
+
+        const int DIST_MOD      = 15 - (DIST_TO_TGT * 5);
+
         const Actor_speed def_speed = defender_data.speed;
-        const int SPEED_MOD =
-            def_speed == Actor_speed::sluggish ?  20 :
-            def_speed == Actor_speed::slow     ?  10 :
-            def_speed == Actor_speed::normal   ?   0 :
-            def_speed == Actor_speed::fast     ? -10 : -30;
+
+        const int SPEED_MOD = def_speed == Actor_speed::sluggish ?  20 :
+                              def_speed == Actor_speed::slow     ?  10 :
+                              def_speed == Actor_speed::normal   ?   0 :
+                              def_speed == Actor_speed::fast     ? -10 : -30;
+
         defender_size       = defender_data.actor_size;
+
         const int SIZE_MOD  = defender_size == Actor_size::floor ? -10 : 0;
 
         int unaware_def_mod = 0;
+
         const bool IS_ROGUE = player_bon::bg() == Bg::rogue;
 
         if (attacker == map::player && defender != map::player && IS_ROGUE)
@@ -317,7 +324,7 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
         }
 
         hit_chance_tot = std::max(5,
-                                  ATTACKER_SKILL    +
+                                  ATT_SKILL         +
                                   WPN_MOD           +
                                   DIST_MOD          +
                                   SPEED_MOD         +
@@ -417,7 +424,7 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
 
         const Actor_data_t& defender_data   = defender->data();
 
-        const int           ATTACKER_SKILL  = attacker->ability(Ability_id::ranged, true);
+        const int           ATT_SKILL       = attacker->ability(Ability_id::ranged, true);
 
         const int           WPN_MOD         = item.data().ranged.throw_hit_chance_mod;
 
@@ -429,17 +436,18 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
         const int           DIST_MOD        = 15 - (DIST_TO_TGT * 5);
         const Actor_speed   def_speed       = defender_data.speed;
 
-        const int SPEED_MOD =
-            def_speed == Actor_speed::sluggish ?  20 :
-            def_speed == Actor_speed::slow     ?  10 :
-            def_speed == Actor_speed::normal   ?   0 :
-            def_speed == Actor_speed::fast     ? -15 : -35;
+        const int SPEED_MOD = def_speed == Actor_speed::sluggish ?  20 :
+                              def_speed == Actor_speed::slow     ?  10 :
+                              def_speed == Actor_speed::normal   ?   0 :
+                              def_speed == Actor_speed::fast     ? -15 : -35;
 
-        defender_size                       = defender_data.actor_size;
-        const int           SIZE_MOD        = defender_size == Actor_size::floor ? -15 : 0;
+        defender_size       = defender_data.actor_size;
 
-        int                 unaware_def_mod = 0;
-        const bool          IS_ROGUE        = player_bon::bg() == Bg::rogue;
+        const int SIZE_MOD  = defender_size == Actor_size::floor ? -15 : 0;
+
+        const bool IS_ROGUE = player_bon::bg() == Bg::rogue;
+
+        int unaware_def_mod = 0;
 
         if (attacker == map::player && defender != map::player && IS_ROGUE)
         {
@@ -450,7 +458,7 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
         }
 
         hit_chance_tot = std::max(5,
-                                  ATTACKER_SKILL    +
+                                  ATT_SKILL         +
                                   WPN_MOD           +
                                   DIST_MOD          +
                                   SPEED_MOD         +
@@ -988,6 +996,7 @@ void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_po
             if (path_element == 1)
             {
                 std::string snd_msg = wpn.data().ranged.snd_msg;
+
                 const Sfx_id sfx = wpn.data().ranged.att_sfx;
 
                 if (!snd_msg.empty())
@@ -999,9 +1008,15 @@ void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_po
 
                     const Snd_vol vol = wpn.data().ranged.snd_vol;
 
-                    snd_emit::emit_snd({snd_msg, sfx, Ignore_msg_if_origin_seen::yes,
-                                        origin, attacker, vol, Alerts_mon::yes
-                                       });
+                    Snd snd(snd_msg,
+                            sfx,
+                            Ignore_msg_if_origin_seen::yes,
+                            origin,
+                            attacker,
+                            vol,
+                            Alerts_mon::yes);
+
+                    snd_emit::emit_snd(snd);
                 }
             }
 
@@ -1613,17 +1628,20 @@ void melee(Actor* const attacker, const Pos& attacker_origin, Actor& defender, c
         }
     }
 
-    if (defender.is_player())
+    if (att_data.attacker)
     {
-        if (IS_HIT && att_data.attacker)
+        if (defender.is_player())
         {
-            static_cast<Mon*>(att_data.attacker)->is_sneaking_ = false;
+            Mon* const mon = static_cast<Mon*>(att_data.attacker);
+
+            mon->set_player_aware_of_me();
+
+            mon->is_sneaking_ = false;
         }
-    }
-    else //Defender is monster
-    {
-        Mon* const mon      = static_cast<Mon*>(&defender);
-        mon->aware_counter_ = mon->data().nr_turns_aware;
+        else //Defender is monster
+        {
+            static_cast<Mon&>(defender).become_aware(false);
+        }
     }
 
     game_time::tick();

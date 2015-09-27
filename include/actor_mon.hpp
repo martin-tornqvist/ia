@@ -64,7 +64,7 @@ public:
 
     void become_aware(const bool IS_FROM_SEEING);
 
-    void player_become_aware_of_me(const int DURATION_FACTOR = 1);
+    void set_player_aware_of_me(const int DURATION_FACTOR = 1);
 
     void on_actor_turn() override;
 

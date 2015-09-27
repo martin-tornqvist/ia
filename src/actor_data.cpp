@@ -55,7 +55,7 @@ void Actor_data_t::reset()
     nr_left_allowed_to_spawn = -1;
     is_unique = false;
     is_auto_spawn_allowed = true;
-    spell_cast_msg = "[SPELL MESSAGE HERE]";
+    spell_cast_msg = "";
     erratic_move_pct = Actor_erratic_freq::rare;
     mon_shock_lvl = Mon_shock_lvl::none;
     is_rat = is_canine = is_spider = is_undead = is_ghost = false;
@@ -511,7 +511,7 @@ void init_data_list()
     d.can_bash_doors = true;
     d.nr_turns_aware = 25;
     d.descr = "A fanatic cultist, madly gibbering in some half - lost language.";
-    d.spell_cast_msg = "makes strange gestures in the air.";
+    d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = Actor_erratic_freq::rare;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::human);
@@ -551,7 +551,7 @@ void init_data_list()
     d.nr_turns_aware = 25;
     d.descr = "A fanatic cultist, madly gibbering in some half - lost language. It is "
               "wielding an Electric Gun, presumably a gift from the Mi - go.";
-    d.spell_cast_msg = "makes strange gestures in the air.";
+    d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = Actor_erratic_freq::rare;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::human);
@@ -591,7 +591,7 @@ void init_data_list()
     d.nr_turns_aware = 25;
     d.descr = "A fanatic cultist, madly gibbering in some half - lost language. It is "
               "wielding a Spike gun.";
-    d.spell_cast_msg = "makes strange gestures in the air.";
+    d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = Actor_erratic_freq::rare;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::human);
@@ -637,7 +637,7 @@ void init_data_list()
               "voice\". She has an animal familiar; the rat Brown Jenkin, which "
               "she trusts to carry messages between her and the devil. She feeds "
               "this creature on her blood.";
-    d.spell_cast_msg = "makes strange gestures in the air.";
+    d.spell_cast_msg = "croaks incantations.";
     d.aggro_text_mon_seen = d.name_the + " chortles at me in a croaking voice.";
     d.aggro_text_mon_hidden = "I hear a repulsive croaking voice.";
     d.nr_turns_aware = 999;
@@ -785,7 +785,7 @@ void init_data_list()
     d.nr_turns_aware = 25;
     d.descr = "A fanatic cultist of the priest rank, madly gibbering in some "
               "half-lost language.";
-    d.spell_cast_msg = "makes strange gestures in the air.";
+    d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = Actor_erratic_freq::rare;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::human);
@@ -1138,10 +1138,10 @@ void init_data_list()
     d.glyph = 'G';
     d.color = clr_white_high;
     d.tile = Tile_id::ghost;
-    d.hp = 3;
+    d.hp = 4;
     d.spi = 12;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(Ability_id::melee, 30);
+    d.ability_vals.set_val(Ability_id::melee, 40);
     d.natural_props[int(Prop_id::ethereal)] = true;
     d.natural_props[int(Prop_id::rFear)] = true;
     d.natural_props[int(Prop_id::rConf)] = true;
@@ -1182,10 +1182,10 @@ void init_data_list()
     d.glyph = 'G';
     d.color = clr_gray;
     d.tile = Tile_id::phantasm;
-    d.hp = 8;
+    d.hp = 9;
     d.spi = 12;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(Ability_id::melee, 40);
+    d.ability_vals.set_val(Ability_id::melee, 45);
     d.natural_props[int(Prop_id::ethereal)] = true;
     d.natural_props[int(Prop_id::rFear)] = true;
     d.natural_props[int(Prop_id::rConf)] = true;
@@ -1229,10 +1229,10 @@ void init_data_list()
     d.glyph = 'G';
     d.color = clr_red;
     d.tile = Tile_id::wraith;
-    d.hp = 13;
+    d.hp = 15;
     d.spi = 30;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(Ability_id::melee, 45);
+    d.ability_vals.set_val(Ability_id::melee, 50);
     d.natural_props[int(Prop_id::ethereal)] = true;
     d.natural_props[int(Prop_id::rFear)] = true;
     d.natural_props[int(Prop_id::rConf)] = true;
@@ -1240,7 +1240,7 @@ void init_data_list()
     d.natural_props[int(Prop_id::invis)] = true;
     d.spawn_min_dlvl = DLVL_FIRST_LATE_GAME;
     d.group_size = Mon_group_size::alone;
-    d.spell_cast_msg = "casts a spell.";
+    d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.actor_size = Actor_size::humanoid;
     d.nr_turns_aware = 5;
     d.descr = "A powerful spirit.";
@@ -1637,7 +1637,7 @@ void init_data_list()
         "much more robust than the average human, they rely upon their "
         "superior science to subdue any primitives who stumble upon their "
         "mines and outposts.";
-    d.spell_cast_msg = "makes strange gestures in the air.";
+    d.spell_cast_msg = "speaks incantations in a droning voice.";
     d.aggro_text_mon_seen = d.name_the + " speaks at me in a droning voice.";
     d.aggro_text_mon_hidden = "I hear a droning voice.";
     d.erratic_move_pct = Actor_erratic_freq::rare;
@@ -1681,7 +1681,7 @@ void init_data_list()
     d.can_open_doors = true;
     d.nr_turns_aware = 12;
     d.descr = data[size_t(Actor_id::mi_go)].descr;
-    d.spell_cast_msg = "makes strange gestures in the air.";
+    d.spell_cast_msg = "speaks incantations in a droning voice.";
     d.aggro_text_mon_seen = d.name_the + " speaks at me in a droning voice.";
     d.aggro_text_mon_hidden = "I hear a droning voice.";
     d.erratic_move_pct = Actor_erratic_freq::rare;
@@ -1787,7 +1787,7 @@ void init_data_list()
     d.natural_props[int(Prop_id::rSleep)] = true;
     d.natural_props[int(Prop_id::flying)] = true;
     d.natural_props[int(Prop_id::invis)] = true;
-    d.natural_props[int(Prop_id::seeing)] = true;
+    d.natural_props[int(Prop_id::see_invis)] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = DLVL_LAST - 4;
     d.group_size = Mon_group_size::alone;
@@ -1977,7 +1977,7 @@ void init_data_list()
     d.can_open_doors = true;
     d.nr_turns_aware = 9999;
     d.descr = "A mummified human being, possibly dating back millennia.";
-    d.spell_cast_msg = "casts a spell.";
+    d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = Actor_erratic_freq::rare;
     d.mon_shock_lvl = Mon_shock_lvl::scary;
     d.is_undead = true;
@@ -2063,7 +2063,7 @@ void init_data_list()
     d.descr = "The mummified fourth dynasty Egyptian pharaoh Khephren. How he "
               "came to dwell here is beyond anyones guess. His name means "
               "\"Rise, Ra!\"";
-    d.spell_cast_msg = "casts a spell.";
+    d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = Actor_erratic_freq::rare;
     d.mon_shock_lvl = Mon_shock_lvl::terrifying;
     d.is_undead = true;
@@ -2109,7 +2109,7 @@ void init_data_list()
               "writings of the former, she took the throne by inviting her "
               "brothers murderers to a banquet. Then killed them by flooding the "
               "sealed room with the Nile.";
-    d.spell_cast_msg = "casts a spell.";
+    d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = Actor_erratic_freq::rare;
     d.mon_shock_lvl = Mon_shock_lvl::terrifying;
     d.is_undead = true;
@@ -2665,7 +2665,7 @@ void init_data_list()
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 12;
     d.group_size = Mon_group_size::alone;
-    d.actor_size = Actor_size::humanoid;
+    d.actor_size = Actor_size::giant;
     d.nr_turns_aware = 5;
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
@@ -2679,7 +2679,7 @@ void init_data_list()
     d.aggro_sfx_mon_hidden = Sfx_id::END;
     d.can_bleed = true;
     d.can_be_summoned = false;
-    d.mon_shock_lvl = Mon_shock_lvl::mind_shattering;
+    d.mon_shock_lvl = Mon_shock_lvl::terrifying;
     d.erratic_move_pct = Actor_erratic_freq::somewhat;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::cave);
@@ -2729,7 +2729,7 @@ void init_data_list()
         "guard. It hovers around, constantly searching the area with beaming "
         "spotlights, ready to blast any interloper on sight. It appears to have "
         "some organic parts, and may even be a conscious living being.";
-    d.spell_cast_msg = "shifts and rotates madly.";
+    d.spell_cast_msg = "makes buzzing sounds in peculiar frequencies.";
     d.aggro_text_mon_seen = d.name_the + " makes a deep buzzing sound.";
     d.aggro_text_mon_hidden = "I hear a deep buzzing sound.";
     d.is_infra_visible = false;
@@ -2971,7 +2971,7 @@ void init_data_list()
         "from his skeletal frame, his bony fingers extends into razor sharp claws, and "
         "he has a grim expression on his face.";
     d.is_auto_descr_allowed = false;
-    d.spell_cast_msg = "makes strange gestures in the air.";
+    d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = Actor_erratic_freq::never;
     d.mon_shock_lvl = Mon_shock_lvl::scary;
     d.is_humanoid = true;

@@ -301,7 +301,17 @@ void Actor::teleport()
     if (is_player())
     {
         map::player->update_fov();
+
+        std::vector<Actor*> player_seen_foes;
+        map::player->seen_foes(player_seen_foes);
+
+        for (Actor* const actor : player_seen_foes)
+        {
+            static_cast<Mon*>(actor)->set_player_aware_of_me();
+        }
+
         render::draw_map_and_interface();
+
         map::cpy_render_array_to_visual_memory();
 
         if (!player_has_tele_control)

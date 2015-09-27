@@ -534,8 +534,8 @@ std::string trait_descr(const Trait id)
                "more likely to spot hidden monsters and objects";
 
     case Trait::vigilant:
-        return "You cannot be backstabbed - hidden monsters gets no melee attack bonus "
-               "against you, and their attacks can be dodged";
+        return "You cannot be backstabbed - monsters that you are unaware of gets no melee attack "
+               "bonus against you, and their attacks can be dodged";
 
     case Trait::rapid_recoverer:
         return "Increased Hit Point regeneration rate";

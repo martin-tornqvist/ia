@@ -175,7 +175,7 @@ enum class Item_id
     potion_curing,
     potion_descent,
     potion_invis,
-    potion_seeing,
+    potion_see_invis,
 
     device_blaster,
     device_shockwave,

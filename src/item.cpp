@@ -550,28 +550,7 @@ void Wpn::set_random_melee_plus()
         IS_LOW_DLVL ? 1  : 10   //Total:    543 or 590
     };
 
-    const int SUM = std::accumulate(begin(weights), end(weights), 0);
-
-    int rnd = rnd::range(0, SUM - 1);
-
-    for (size_t i = 0; i < weights.size(); ++i)
-    {
-        const int WEIGHT = weights[i];
-
-        if (rnd < WEIGHT)
-        {
-            melee_dmg_plus_ = i;
-
-            return;
-        }
-
-        rnd -= WEIGHT;
-    }
-
-    TRACE << "Error in melee damage plus damage calculation" << std::endl;
-    assert(false);
-
-    melee_dmg_plus_ = 0; //Robustness for release builds
+    melee_dmg_plus_ = rnd::weighted_choice(weights);
 }
 
 std::string Wpn::name_inf() const

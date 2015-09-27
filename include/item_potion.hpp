@@ -450,18 +450,18 @@ private:
     void collide_hook(const Pos& pos, Actor* const actor) override;
 };
 
-class Potion_seeing: public Potion
+class Potion_see_invis: public Potion
 {
 public:
-    Potion_seeing(Item_data_t* const item_data) :
+    Potion_see_invis(Item_data_t* const item_data) :
         Potion(item_data) {}
-    ~Potion_seeing() {}
+    ~Potion_see_invis() {}
 
     void quaff_impl(Actor& actor) override;
 
     const std::string real_name() const override
     {
-        return "Seeing";
+        return "See Invisible";
     }
 
 private:

@@ -576,9 +576,9 @@ void Potion_invis::collide_hook(const Pos& pos, Actor* const actor)
     }
 }
 
-void Potion_seeing::quaff_impl(Actor& actor)
+void Potion_see_invis::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().try_add_prop(new Prop_seeing(Prop_turns::std));
+    actor.prop_handler().try_add_prop(new Prop_see_invis(Prop_turns::std));
 
     if (map::player->can_see_actor(actor))
     {
@@ -586,7 +586,7 @@ void Potion_seeing::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_seeing::collide_hook(const Pos& pos, Actor* const actor)
+void Potion_see_invis::collide_hook(const Pos& pos, Actor* const actor)
 {
     (void)pos;
 

@@ -489,6 +489,7 @@ bool look_become_player_aware(Mon& mon)
     const bool WAS_AWARE_BEFORE = mon.aware_counter_ > 0;
 
     std::vector<Actor*> seen_foes;
+
     mon.seen_foes(seen_foes);
 
     if (!seen_foes.empty() && WAS_AWARE_BEFORE)

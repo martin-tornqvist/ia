@@ -28,7 +28,7 @@ enum class Prop_id
     burning,
     radiant,
     invis,
-    seeing, //Can see invisible/sneaking actors, and hidden traps/doors, etc
+    see_invis, //Can see invisible and sneaking actors
     infravis,
     poisoned,
     paralyzed,
@@ -670,11 +670,11 @@ public:
     }
 };
 
-class Prop_seeing: public Prop
+class Prop_see_invis: public Prop
 {
 public:
-    Prop_seeing(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::seeing, turns_init, nr_turns) {}
+    Prop_see_invis(Prop_turns turns_init, int nr_turns = -1) :
+        Prop(Prop_id::see_invis, turns_init, nr_turns) {}
 
     void on_start() override;
 

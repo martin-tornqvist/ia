@@ -38,6 +38,8 @@ int percent();
 
 bool percent(const int PCT_CHANCE);
 
+int weighted_choice(const std::vector<int> weights);
+
 } //rnd
 
 enum class Time_type

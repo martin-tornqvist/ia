@@ -309,7 +309,7 @@ bool Player::can_see_actor(const Actor& other) const
         return false;
     }
 
-    const bool CAN_SEE_INVIS = has_prop(Prop_id::seeing);
+    const bool CAN_SEE_INVIS = has_prop(Prop_id::see_invis);
 
     //Monster is invisible, and player cannot see invisible?
     if (other.has_prop(Prop_id::invis) && !CAN_SEE_INVIS)
@@ -588,8 +588,8 @@ void Player::update_clr()
 
 void Player::set_quick_move(const Dir dir)
 {
-    nr_quick_move_steps_left_ = 10;
-    quick_move_dir_         = dir;
+    nr_quick_move_steps_left_   = 10;
+    quick_move_dir_             = dir;
 }
 
 void Player::on_actor_turn()
@@ -611,7 +611,7 @@ void Player::on_actor_turn()
 
     if (wait_turns_left > 0)
     {
-        wait_turns_left--;
+        --wait_turns_left;
         game_time::tick();
         return;
     }
@@ -623,6 +623,11 @@ void Player::on_actor_turn()
 
     std::vector<Actor*> my_seen_foes;
     seen_foes(my_seen_foes);
+
+    for (Actor* const actor : my_seen_foes)
+    {
+        static_cast<Mon*>(actor)->set_player_aware_of_me();
+    }
 
     insanity::on_new_player_turn(my_seen_foes);
 
@@ -666,9 +671,9 @@ void Player::on_actor_turn()
         //NOTE: There is no need to check for items here, since the message from stepping
         //on an item will interrupt player actions.
 
-        const Pos dest_pos(pos + dir_utils::offset(quick_move_dir_));
+        const Pos tgt(pos + dir_utils::offset(quick_move_dir_));
 
-        const Cell&         tgt_cell   = map::cells[dest_pos.x][dest_pos.y];
+        const Cell&         tgt_cell   = map::cells[tgt.x][tgt.y];
         const Rigid* const  tgt_rigid  = tgt_cell.rigid;
 
         const bool IS_TGT_KNOWN_TRAP  = tgt_rigid->id() == Feature_id::trap &&
@@ -776,7 +781,7 @@ void Player::on_std_turn()
 
         Mon* mon = static_cast<Mon*>(actor);
 
-        mon->player_become_aware_of_me();
+        mon->set_player_aware_of_me();
 
         const Actor_data_t& mon_data = mon->data();
 
@@ -932,6 +937,8 @@ void Player::on_std_turn()
                     {
                         mon.is_sneaking_ = false;
 
+                        mon.set_player_aware_of_me();
+
                         render::draw_map_and_interface();
 
                         const std::string mon_name = mon.name_a();
@@ -946,20 +953,14 @@ void Player::on_std_turn()
 
     const int DECR_ABOVE_MAX_N_TURNS = 7;
 
-    if (hp() > hp_max(true))
+    if (hp() > hp_max(true) && game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
     {
-        if (game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
-        {
-            --hp_;
-        }
+        --hp_;
     }
 
-    if (spi() > spi_max())
+    if (spi() > spi_max() && game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
     {
-        if (game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
-        {
-            --spi_;
-        }
+        --spi_;
     }
 
     if (!active_medical_bag)
@@ -968,12 +969,12 @@ void Player::on_std_turn()
         {
             int nr_turns_per_hp = 40;
 
-            if (player_bon::traits[int(Trait::rapid_recoverer)])
+            if (player_bon::traits[size_t(Trait::rapid_recoverer)])
             {
                 nr_turns_per_hp -= 12;
             }
 
-            if (player_bon::traits[int(Trait::survivalist)])
+            if (player_bon::traits[size_t(Trait::survivalist)])
             {
                 nr_turns_per_hp -= 12;
             }
@@ -1000,10 +1001,11 @@ void Player::on_std_turn()
             }
         }
 
+        //Try to spot hidden traps and doors
         if (!has_prop(Prop_id::confused) && prop_handler_->allow_see())
         {
-            const int R = player_bon::traits[int(Trait::perceptive)] ? 3 :
-                          (player_bon::traits[int(Trait::observant)] ? 2 : 1);
+            const int R = player_bon::traits[size_t(Trait::perceptive)] ? 3 :
+                          (player_bon::traits[size_t(Trait::observant)] ? 2 : 1);
 
             int x0 = std::max(0, pos.x - R);
             int y0 = std::max(0, pos.y - R);
@@ -1104,7 +1106,7 @@ void Player::hear_sound(const Snd& snd,
 
         if (actor_who_made_snd && actor_who_made_snd != this)
         {
-            static_cast<Mon*>(actor_who_made_snd)->player_become_aware_of_me();
+            static_cast<Mon*>(actor_who_made_snd)->set_player_aware_of_me();
         }
     }
 }
@@ -1132,71 +1134,17 @@ void Player::move(Dir dir)
 
     bool is_free_turn = false;
 
-    //Destination position
-    const Pos dest(pos + dir_utils::offset(dir));
+    const Pos tgt(pos + dir_utils::offset(dir));
 
-    //Attacking, bumping stuff, staggering from encumbrance, etc...
-    //NOTE: This is only run if we are (still) trying to move a direction (not center)
+    //Attacking, bumping stuff, staggering from encumbrance, etc?
     if (dir != Dir::center)
     {
-        Mon* const mon_at_dest = static_cast<Mon*>(utils::actor_at_pos(dest));
-
-        //Attack?
-        if (mon_at_dest && !is_leader_of(mon_at_dest))
-        {
-            if (prop_handler_->allow_attack_melee(Verbosity::verbose))
-            {
-                Item* const item = inv_->item_in_slot(Slot_id::wpn);
-
-                if (item)
-                {
-                    Wpn* const wpn = static_cast<Wpn*>(item);
-
-                    if (wpn->data().melee.is_melee_wpn)
-                    {
-                        if (
-                            config::is_ranged_wpn_meleee_prompt()   &&
-                            can_see_actor(*mon_at_dest)             &&
-                            wpn->data().ranged.is_ranged_wpn)
-                        {
-                            const std::string wpn_name = wpn->name(Item_ref_type::a);
-
-                            msg_log::add("Attack " + mon_at_dest->name_the() +
-                                         " with " + wpn_name + " ? [y/n]",
-                                         clr_white_high);
-
-                            render::draw_map_and_interface();
-
-                            if (query::yes_or_no() == Yes_no_answer::no)
-                            {
-                                msg_log::clear();
-                                render::draw_map_and_interface();
-                                return;
-                            }
-                        }
-
-                        attack::melee(this, pos, *mon_at_dest, *wpn);
-                        tgt_ = mon_at_dest;
-                        return;
-                    }
-                }
-                else //No melee weapon wielded
-                {
-                    hand_att(*mon_at_dest);
-                }
-            }
-
-            return;
-        }
-
-        //This point reached means no actor in the destination cell.
-
-        //Blocking mobile or rigid?
-        Cell& cell = map::cells[dest.x][dest.y];
+        //Check if map features are blocking (used later)
+        Cell& cell = map::cells[tgt.x][tgt.y];
         bool is_features_allow_move = cell.rigid->can_move(*this);
 
         std::vector<Mob*> mobs;
-        game_time::mobs_at_pos(dest, mobs);
+        game_time::mobs_at_pos(tgt, mobs);
 
         if (is_features_allow_move)
         {
@@ -1207,6 +1155,93 @@ void Player::move(Dir dir)
                     is_features_allow_move = false;
                     break;
                 }
+            }
+        }
+
+        Mon* const mon = static_cast<Mon*>(utils::actor_at_pos(tgt));
+
+        //Hostile monster here?
+        if (mon && !is_leader_of(mon))
+        {
+            const bool CAN_SEE_MON      = map::player->can_see_actor(*mon);
+            const bool IS_AWARE_OF_MON  = mon->player_aware_of_me_counter_ > 0;
+
+            //If monster is seen, player should be aware of it, otherwise something is very wrong.
+            assert(!(CAN_SEE_MON && !IS_AWARE_OF_MON));
+
+            if (IS_AWARE_OF_MON)
+            {
+                if (prop_handler_->allow_attack_melee(Verbosity::verbose))
+                {
+                    Item* const wpn_item = inv_->item_in_slot(Slot_id::wpn);
+
+                    if (wpn_item)
+                    {
+                        Wpn* const wpn = static_cast<Wpn*>(wpn_item);
+
+                        //If this is also a ranged weapon, ask if player really intended to
+                        //use it as melee weapon
+                        if (
+                            wpn->data().ranged.is_ranged_wpn &&
+                            config::is_ranged_wpn_meleee_prompt())
+                        {
+                            const std::string wpn_name = wpn->name(Item_ref_type::a);
+
+                            const std::string mon_name = CAN_SEE_MON ? mon->name_the() : "it";
+
+                            msg_log::add("Attack " + mon_name + " with " + wpn_name + "? [y/n]",
+                                         clr_white_high);
+
+                            render::draw_map_and_interface();
+
+                            if (query::yes_or_no() == Yes_no_answer::no)
+                            {
+                                msg_log::clear();
+                                render::draw_map_and_interface();
+
+                                return;
+                            }
+                        }
+
+                        attack::melee(this, pos, *mon, *wpn);
+                        tgt_ = mon;
+
+                        return;
+                    }
+                    else //No melee weapon wielded
+                    {
+                        hand_att(*mon);
+                    }
+                }
+
+                return;
+            }
+            else //There is a monster here that player is unaware of
+            {
+                if (is_features_allow_move)
+                {
+                    //Cell is not blocked, reveal that there is a monster here and return
+
+                    mon->set_player_aware_of_me();
+
+                    render::draw_map_and_interface();
+
+                    const Actor_data_t& d = mon->data();
+
+                    const std::string mon_ref = d.is_ghost      ? "some foul entity" :
+                                                (d.is_humanoid  ? "someone" : "a creature");
+
+                    msg_log::add("There is " + mon_ref + " here!",
+                                 clr_msg_note,
+                                 false,
+                                 More_prompt_on_msg::yes);
+
+                    return;
+                }
+
+                //NOTE: This point reached means the target is blocked by map features. Do NOT
+                //reveal the monster - just act like the monster isn't there, and let the code
+                //below handle the situation.
             }
         }
 
@@ -1228,13 +1263,13 @@ void Player::move(Dir dir)
             }
 
             //Displace allied monster
-            if (mon_at_dest && is_leader_of(mon_at_dest))
+            if (mon && is_leader_of(mon))
             {
-                msg_log::add("I displace " + mon_at_dest->name_a() + ".");
-                mon_at_dest->pos = pos;
+                msg_log::add("I displace " + mon->name_a() + ".");
+                mon->pos = pos;
             }
 
-            pos = dest;
+            pos = tgt;
 
             const int FREE_MOVE_EVERY_N_TURN =
                 player_bon::traits[int(Trait::mobile)]     ? 2 :
@@ -1285,7 +1320,7 @@ void Player::move(Dir dir)
             mob->bump(*this);
         }
 
-        map::cells[dest.x][dest.y].rigid->bump(*this);
+        map::cells[tgt.x][tgt.y].rigid->bump(*this);
     }
 
     //If position equals the destination at this point, it means that player either:
@@ -1294,10 +1329,9 @@ void Player::move(Dir dir)
     // * that the player was stuck (e.g. in a spider web)
     //In either case, the game time is ticked here (since no melee attack or other "time advancing"
     //action has occurred)
-    if (pos == dest)
+    if (pos == tgt)
     {
         game_time::tick(is_free_turn);
-        return;
     }
 }
 
@@ -1452,7 +1486,9 @@ void Player::update_fov()
 
         const Rect fov_lmt = fov::get_fov_rect(pos);
 
-        map_parse::run(cell_check::Blocks_los(), hard_blocked, Map_parse_mode::overwrite,
+        map_parse::run(cell_check::Blocks_los(),
+                       hard_blocked,
+                       Map_parse_mode::overwrite,
                        fov_lmt);
 
         Los_result fov[MAP_W][MAP_H];

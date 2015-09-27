@@ -959,128 +959,114 @@ void handle_map_mode_key_press(const Key_data& d)
     }
 
     //----------------------------------- DESCEND CHEAT
-    else if (d.sdl_key == SDLK_F2)
+    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F2)
     {
-        if (IS_DEBUG_MODE)
-        {
-            map_travel::go_to_nxt();
-            clear_events();
-        }
+        map_travel::go_to_nxt();
+        clear_events();
 
         return;
     }
 
     //----------------------------------- XP CHEAT
-    else if (d.sdl_key == SDLK_F3)
+    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F3)
     {
-        if (IS_DEBUG_MODE)
-        {
-            dungeon_master::incr_player_xp(100);
-            clear_events();
-        }
+        dungeon_master::incr_player_xp(100);
+        clear_events();
 
         return;
     }
 
     //----------------------------------- VISION CHEAT
-    else if (d.sdl_key == SDLK_F4)
+    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F4)
     {
-        if (IS_DEBUG_MODE)
+        if (init::is_cheat_vision_enabled)
         {
-            if (init::is_cheat_vision_enabled)
+            for (int x = 0; x < MAP_W; ++x)
             {
-                for (int x = 0; x < MAP_W; ++x)
+                for (int y = 0; y < MAP_H; ++y)
                 {
-                    for (int y = 0; y < MAP_H; ++y)
-                    {
-                        map::cells[x][y].is_seen_by_player  = false;
-                        map::cells[x][y].is_explored        = false;
-                    }
+                    map::cells[x][y].is_seen_by_player  = false;
+                    map::cells[x][y].is_explored        = false;
                 }
-
-                init::is_cheat_vision_enabled = false;
-            }
-            else
-            {
-                init::is_cheat_vision_enabled = true;
             }
 
-            map::player->update_fov();
-            render::draw_map_and_interface();
+            init::is_cheat_vision_enabled = false;
         }
+        else //Cheat vision was not enabled
+        {
+            init::is_cheat_vision_enabled = true;
+        }
+
+        map::player->update_fov();
+        render::draw_map_and_interface();
 
         clear_events();
     }
 
     //----------------------------------- INSANITY CHEAT
-    else if (d.sdl_key == SDLK_F5)
+    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F5)
     {
-        if (IS_DEBUG_MODE)
-        {
-            map::player->incr_shock(50, Shock_src::misc);
-            clear_events();
-        }
+        map::player->incr_shock(50, Shock_src::misc);
+        clear_events();
 
         return;
     }
 
     //----------------------------------- DROP ITEMS AROUND PLAYER
-    else if (d.sdl_key == SDLK_F6)
+    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F6)
     {
-        if (IS_DEBUG_MODE)
+        item_factory::mk_item_on_floor(Item_id::gas_mask, map::player->pos);
+
+        for (int i = 0; i < int(Item_id::END); ++i)
         {
-            item_factory::mk_item_on_floor(Item_id::gas_mask, map::player->pos);
+            const auto& item_data = item_data::data[i];
 
-            for (int i = 0; i < int(Item_id::END); ++i)
+            if (item_data.value != Item_value::normal && item_data.allow_spawn)
             {
-                const auto& item_data = item_data::data[i];
-
-                if (item_data.value != Item_value::normal && item_data.allow_spawn)
-                {
-                    item_factory::mk_item_on_floor(Item_id(i), map::player->pos);
-                }
+                item_factory::mk_item_on_floor(Item_id(i), map::player->pos);
             }
-
-            clear_events();
         }
+
+        clear_events();
 
         return;
     }
 
     //----------------------------------- TELEPORT
-    else if (d.sdl_key == SDLK_F7)
+    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F7)
     {
-        if (IS_DEBUG_MODE)
-        {
-            msg_log::clear();
-            map::player->teleport();
-            clear_events();
-        }
+        msg_log::clear();
+        map::player->teleport();
+        clear_events();
 
         return;
     }
 
     //----------------------------------- INFECTED
-    else if (d.sdl_key == SDLK_F8)
+    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F8)
     {
-        if (IS_DEBUG_MODE)
-        {
-            map::player->prop_handler().try_add_prop(new Prop_infected(Prop_turns::std));
-            clear_events();
-        }
+        map::player->prop_handler().try_add_prop(new Prop_infected(Prop_turns::std));
+        clear_events();
 
         return;
     }
 
     //----------------------------------- INVISIBLE
-    else if (d.sdl_key == SDLK_F9)
+    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F9)
     {
-        if (IS_DEBUG_MODE)
-        {
-            map::player->prop_handler().try_add_prop(new Prop_invisible(Prop_turns::std));
+        map::player->prop_handler().try_add_prop(new Prop_invisible(Prop_turns::std));
 
-            clear_events();
-        }
+        clear_events();
+
+        return;
+    }
+
+    //----------------------------------- HASTED
+    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F10)
+    {
+        map::player->prop_handler().try_add_prop(new Prop_hasted(Prop_turns::std));
+
+        clear_events();
 
         return;
     }

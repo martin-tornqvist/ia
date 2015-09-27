@@ -270,8 +270,8 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
         r = new Potion_invis(d);
         break;
 
-    case Item_id::potion_seeing:
-        r = new Potion_seeing(d);
+    case Item_id::potion_see_invis:
+        r = new Potion_see_invis(d);
         break;
 
     case Item_id::device_blaster:

@@ -120,7 +120,7 @@ void Mon::on_actor_turn()
     {
         seen_foes(tgt_bucket);
 
-        // If not aware, remove player from target bucket
+        //If not aware, remove player from target bucket
         if (aware_counter_ <= 0)
         {
             for (auto it = begin(tgt_bucket); it != end(tgt_bucket); ++it)
@@ -138,7 +138,7 @@ void Mon::on_actor_turn()
 
     if (spell_cool_down_cur_ != 0)
     {
-        spell_cool_down_cur_--;
+        --spell_cool_down_cur_;
     }
 
     if (aware_counter_ > 0)
@@ -370,7 +370,7 @@ bool Mon::can_see_actor(const Actor& other, const bool hard_blocked_los[MAP_W][M
         return false;
     }
 
-    const bool CAN_SEE_INVIS = has_prop(Prop_id::seeing);
+    const bool CAN_SEE_INVIS = has_prop(Prop_id::see_invis);
 
     //Actor is invisible, and monster cannot see invisible?
     if (other.has_prop(Prop_id::invis) && !CAN_SEE_INVIS)
@@ -539,7 +539,7 @@ void Mon::become_aware(const bool IS_FROM_SEEING)
     }
 }
 
-void Mon::player_become_aware_of_me(const int DURATION_FACTOR)
+void Mon::set_player_aware_of_me(const int DURATION_FACTOR)
 {
     const int LOWER             = 4 * DURATION_FACTOR;
     const int UPPER             = 6 * DURATION_FACTOR;
@@ -1038,7 +1038,9 @@ bool Vortex::on_actor_turn_hook()
 
             if (can_see_actor(*(map::player), blocked_los))
             {
-                TRACE << "I am seeing the player" << std::endl;
+                TRACE << "Is seeing player" << std::endl;
+
+                set_player_aware_of_me();
 
                 if (map::player->can_see_actor(*this))
                 {
@@ -1050,9 +1052,13 @@ bool Vortex::on_actor_turn_hook()
                 }
 
                 TRACE << "Attempt pull (knockback)" << std::endl;
+
                 knock_back::try_knock_back(*(map::player), knock_back_from_pos, false, false);
+
                 pull_cooldown = 5;
+
                 game_time::tick();
+
                 return true;
             }
         }
@@ -1132,12 +1138,14 @@ bool Ghost::on_actor_turn_hook()
         is_alive()                                      &&
         aware_counter_ > 0                              &&
         utils::is_pos_adj(pos, map::player->pos, false) &&
-        rnd::percent() < 30)
+        rnd::one_in(4))
     {
-        const bool          PLAYER_SEES_ME  = map::player->can_see_actor(*this);
-        const std::string   refer           = PLAYER_SEES_ME ? name_the() : "It";
+        set_player_aware_of_me();
 
-        msg_log::add(refer + " reaches for me... ");
+        const bool          PLAYER_SEES_ME  = map::player->can_see_actor(*this);
+        const std::string   name            = PLAYER_SEES_ME ? name_the() : "It";
+
+        msg_log::add(name + " reaches for me...");
 
         const int DODGE_SKILL = map::player->ability(Ability_id::dodge_att, true);
 
@@ -1151,11 +1159,11 @@ bool Ghost::on_actor_turn_hook()
         }
         else
         {
-            map::player->prop_handler().try_add_prop(
-                new Prop_slowed(Prop_turns::std));
+            map::player->prop_handler().try_add_prop(new Prop_slowed(Prop_turns::std));
         }
 
         game_time::tick();
+
         return true;
     }
 
@@ -1513,10 +1521,16 @@ bool Keziah_mason::on_actor_turn_hook()
                 if (!blocked_los[c.x][c.y])
                 {
                     //TODO: Use the generalized summoning functionality
+                    set_player_aware_of_me();
+
                     msg_log::add("Keziah summons Brown Jenkin!");
+
                     Actor* const actor      = actor_factory::mk(Actor_id::brown_jenkin, c);
+
                     Mon* jenkin             = static_cast<Mon*>(actor);
+
                     render::draw_map_and_interface();
+
                     has_summoned_jenkin     = true;
                     jenkin->aware_counter_  = 999;
                     jenkin->leader_         = leader_ ? leader_ : this;
@@ -1701,8 +1715,11 @@ bool Worm_mass::on_actor_turn_hook()
         rnd::one_in(spawn_new_one_in_n))
     {
         bool blocked[MAP_W][MAP_H];
-        map_parse::run(cell_check::Blocks_actor(*this, true), blocked,
-                       Map_parse_mode::overwrite, Rect(pos - 1, pos + 1));
+
+        map_parse::run(cell_check::Blocks_actor(*this, true),
+                       blocked,
+                       Map_parse_mode::overwrite,
+                       Rect(pos - 1, pos + 1));
 
         for (const Pos& d : dir_utils::dir_list)
         {
@@ -1710,13 +1727,18 @@ bool Worm_mass::on_actor_turn_hook()
 
             if (!blocked[p_adj.x][p_adj.y])
             {
-                Actor* const    actor       = actor_factory::mk(data_->id, p_adj);
-                Worm_mass* const worm       = static_cast<Worm_mass*>(actor);
+                Actor* const actor = actor_factory::mk(data_->id, p_adj);
+
+                Worm_mass* const worm = static_cast<Worm_mass*>(actor);
+
                 spawn_new_one_in_n += 8;
+
                 worm->spawn_new_one_in_n    = spawn_new_one_in_n;
                 worm->aware_counter_        = aware_counter_;
                 worm->leader_               = leader_ ? leader_ : this;
+
                 game_time::tick();
+
                 return true;
             }
         }
@@ -1739,8 +1761,11 @@ bool Giant_locust::on_actor_turn_hook()
         rnd::one_in(spawn_new_one_in_n))
     {
         bool blocked[MAP_W][MAP_H];
-        map_parse::run(cell_check::Blocks_actor(*this, true), blocked,
-                       Map_parse_mode::overwrite, Rect(pos - 1, pos + 1));
+
+        map_parse::run(cell_check::Blocks_actor(*this, true),
+                       blocked,
+                       Map_parse_mode::overwrite,
+                       Rect(pos - 1, pos + 1));
 
         for (const Pos& d : dir_utils::dir_list)
         {
@@ -1748,13 +1773,18 @@ bool Giant_locust::on_actor_turn_hook()
 
             if (!blocked[p_adj.x][p_adj.y])
             {
-                Actor* const    actor     = actor_factory::mk(data_->id, p_adj);
+                Actor* const actor = actor_factory::mk(data_->id, p_adj);
+
                 Giant_locust* const locust = static_cast<Giant_locust*>(actor);
+
                 spawn_new_one_in_n += 3;
+
                 locust->spawn_new_one_in_n  = spawn_new_one_in_n;
                 locust->aware_counter_      = aware_counter_;
                 locust->leader_             = leader_ ? leader_ : this;
+
                 game_time::tick();
+
                 return true;
             }
         }
@@ -1862,17 +1892,18 @@ bool Major_clapham_lee::on_actor_turn_hook()
 
         if (can_see_actor(*(map::player), blocked_los))
         {
-            msg_log::add("Major Clapham Lee calls forth his Tomb-Legions!");
-            std::vector<Actor_id> mon_ids;
-            mon_ids.clear();
+            set_player_aware_of_me();
 
-            mon_ids.push_back(Actor_id::dean_halsey);
+            msg_log::add("Major Clapham Lee calls forth his Tomb-Legions!");
+
+            std::vector<Actor_id> mon_ids = {Actor_id::dean_halsey};
 
             const int NR_OF_EXTRA_SPAWNS = 4;
 
             for (int i = 0; i < NR_OF_EXTRA_SPAWNS; ++i)
             {
                 const int ZOMBIE_TYPE = rnd::range(1, 3);
+
                 Actor_id mon_id = Actor_id::zombie;
 
                 switch (ZOMBIE_TYPE)
@@ -1894,10 +1925,15 @@ bool Major_clapham_lee::on_actor_turn_hook()
             }
 
             actor_factory::summon(pos, mon_ids, true, this);
+
             render::draw_map_and_interface();
+
             has_summoned_tomb_legions = true;
+
             map::player->incr_shock(Shock_lvl::heavy, Shock_src::misc);
+
             game_time::tick();
+
             return true;
         }
     }
@@ -1943,7 +1979,9 @@ bool Zombie::try_resurrect()
             }
 
             aware_counter_ = data_->nr_turns_aware * 2;
+
             game_time::tick();
+
             return true;
         }
     }
@@ -2175,6 +2213,7 @@ void The_high_priest::on_death()
     msg_log::add("The ground rumbles...", clr_white, false, More_prompt_on_msg::yes);
 
     const Pos stair_pos(MAP_W - 2, 11);
+
     map::put(new Stairs(stair_pos));
     map::put(new Rubble_low(stair_pos - Pos(1, 0)));
 
@@ -2199,19 +2238,25 @@ bool The_high_priest::on_actor_turn_hook()
         map::player->update_fov();
         render::draw_map_and_interface();
 
-        msg_log::add("A booming voice echoes through the halls.", clr_white, false,
+        msg_log::add("A booming voice echoes through the halls.",
+                     clr_white,
+                     false,
                      More_prompt_on_msg::yes);
+
         audio::play(Sfx_id::boss_voice1);
 
         has_greeted_player_ = true;
-        aware_counter_     = data_->nr_turns_aware;
+        aware_counter_      = data_->nr_turns_aware;
     }
 
     bool blocked_los[MAP_W][MAP_H];
 
     const Rect fov_rect = fov::get_fov_rect(pos);
 
-    map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite, fov_rect);
+    map_parse::run(cell_check::Blocks_los(),
+                   blocked_los,
+                   Map_parse_mode::overwrite,
+                   fov_rect);
 
     if (nr_turns_until_next_cpy_ > 0 && can_see_actor(*map::player, blocked_los))
     {

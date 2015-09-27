@@ -583,13 +583,13 @@ void init_data_list()
     d.alignment = Prop_alignment::good;
     add_prop_data(d);
 
-    d.id = Prop_id::seeing;
+    d.id = Prop_id::see_invis;
     d.std_rnd_turns = Range(50, 100);
-    d.name = "Seeing";
-    d.name_short = "Seeing";
-    d.msg[size_t(Prop_msg::start_player)] = "I see very clearly.";
+    d.name = "See Invisible";
+    d.name_short = "SeeInvis";
+    d.msg[size_t(Prop_msg::start_player)] = "My eyes perceive the invisible.";
     d.msg[size_t(Prop_msg::start_mon)] = "seems to see very clearly.";
-    d.msg[size_t(Prop_msg::end_player)] = "I see less clearly.";
+    d.msg[size_t(Prop_msg::end_player)] = "My eyes can no longer perceive the invisible.";
     d.msg[size_t(Prop_msg::end_mon)] = "seems to see less clearly.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
@@ -603,7 +603,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Infravision";
     d.name_short = "Infravis";
-    d.msg[size_t(Prop_msg::start_player)] = "I can see warm bodied creatures very clearly.";
+    d.msg[size_t(Prop_msg::start_player)] = "I have infravision.";
     d.msg[size_t(Prop_msg::end_player)] = "I no longer have infravision.";
     d.msg[size_t(Prop_msg::res_player)] = "";
     d.msg[size_t(Prop_msg::res_mon)] = "";
@@ -1031,8 +1031,8 @@ Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init, const int N
     case Prop_id::invis:
         return new Prop_invisible(turns_init, NR_TURNS);
 
-    case Prop_id::seeing:
-        return new Prop_seeing(turns_init, NR_TURNS);
+    case Prop_id::see_invis:
+        return new Prop_see_invis(turns_init, NR_TURNS);
 
     case Prop_id::END:
         break;
@@ -1212,8 +1212,8 @@ void Prop_handler::try_add_prop(Prop* const prop,
 }
 
 void Prop_handler::add_prop_from_equipped_item(const Item* const item,
-                                               Prop* const prop,
-                                               const Verbosity verbosity)
+        Prop* const prop,
+        const Verbosity verbosity)
 {
     prop->item_applying_ = item;
 
@@ -2461,12 +2461,12 @@ void Prop_rDisease::on_start()
     owning_actor_->prop_handler().end_prop(Prop_id::infected);
 }
 
-bool Prop_seeing::is_resisting_other_prop(const Prop_id prop_id) const
+bool Prop_see_invis::is_resisting_other_prop(const Prop_id prop_id) const
 {
     return prop_id == Prop_id::blind;
 }
 
-void Prop_seeing::on_start()
+void Prop_see_invis::on_start()
 {
     owning_actor_->prop_handler().end_prop(Prop_id::blind);
 }

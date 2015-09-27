@@ -269,51 +269,66 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
 {
     TRACE_FUNC_BEGIN;
 
+    assert(caster);
+
     if (caster->prop_handler().allow_cast_spell(Verbosity::verbose))
     {
         if (caster->is_player())
         {
             TRACE << "Player casting spell" << std::endl;
+
             const Shock_src shock_src = IS_INTRINSIC ?
                                         Shock_src::cast_intr_spell :
                                         Shock_src::use_strange_item;
+
             const int SHOCK_VALUE = IS_INTRINSIC ? shock_lvl_intr_cast() : 10;
+
             map::player->incr_shock(SHOCK_VALUE, shock_src);
 
-            if (map::player->is_alive())
-            {
-                audio::play(Sfx_id::spell_generic);
-            }
+            Snd snd("",
+                    Sfx_id::spell_generic,
+                    Ignore_msg_if_origin_seen::yes,
+                    caster->pos,
+                    caster,
+                    Snd_vol::low,
+                    Alerts_mon::yes);
+
+            snd_emit::emit_snd(snd);
         }
-        else //Caster is not player
+        else //Caster is monster
         {
             TRACE << "Monster casting spell" << std::endl;
             Mon* const mon = static_cast<Mon*>(caster);
 
             const bool IS_MON_SEEN = map::player->can_see_actor(*mon);
 
-            const std::string spell_str = mon->data().spell_cast_msg;
+            std::string spell_str = mon->data().spell_cast_msg;
 
             if (!spell_str.empty())
             {
+                std::string mon_name = "";
+
                 if (IS_MON_SEEN)
                 {
-                    const std::string mon_name = mon->name_the();
-
-                    msg_log::add(mon_name + " " + spell_str);
+                    mon_name = mon->name_the();
                 }
                 else //Cannot see monster
                 {
-                    const bool IS_HUMANOID = mon->data().is_humanoid;
-
-                    //NOTE: It's somewhat weird that the player knows if it's a humanoid casting,
-                    //but this makes the message very atmospheric, so...
-
-                    const std::string ref_str = IS_HUMANOID ? "Someone" : "Something";
-
-                    msg_log::add(ref_str + " casts a spell.");
+                    mon_name = mon->data().is_humanoid ? "Someone" : "Something";
                 }
+
+                spell_str = mon_name + " " + spell_str;
             }
+
+            Snd snd(spell_str,
+                    Sfx_id::END,
+                    Ignore_msg_if_origin_seen::no,
+                    caster->pos,
+                    caster,
+                    Snd_vol::low,
+                    Alerts_mon::no);
+
+            snd_emit::emit_snd(snd);
 
             mon->spell_cool_down_cur_ = mon->data().spell_cooldown_turns;
         }
@@ -321,6 +336,7 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
         if (IS_INTRINSIC)
         {
             const Range cost = spi_cost(false, caster);
+
             caster->hit_spi(rnd::range(cost), Verbosity::silent);
         }
 
@@ -848,7 +864,7 @@ Spell_effect_noticed Spell_det_mon::cast_impl(Actor* const caster) const
     {
         if (!actor->is_player())
         {
-            static_cast<Mon*>(actor)->player_become_aware_of_me(MULTIPLIER);
+            static_cast<Mon*>(actor)->set_player_aware_of_me(MULTIPLIER);
             is_noticed = Spell_effect_noticed::yes;
         }
     }

@@ -102,6 +102,37 @@ bool percent(const int PCT_CHANCE)
     return PCT_CHANCE >= roll(1, 100);
 }
 
+int weighted_choice(const std::vector<int> weights)
+{
+#ifndef NDEBUG
+    for (const int WEIGHT : weights)
+    {
+        assert(WEIGHT > 0);
+    }
+#endif // NDEBUG
+
+    const int SUM = std::accumulate(begin(weights), end(weights), 0);
+
+    int rnd = rnd::range(0, SUM - 1);
+
+    for (size_t i = 0; i < weights.size(); ++i)
+    {
+        const int WEIGHT = weights[i];
+
+        if (rnd < WEIGHT)
+        {
+            return i;
+        }
+
+        rnd -= WEIGHT;
+    }
+
+    //This point should never be reached
+    assert(false);
+
+    return 0;
+}
+
 } //rnd
 
 namespace utils

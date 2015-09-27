@@ -1776,13 +1776,13 @@ void Item_container::destroy_single_fragile()
 
 //--------------------------------------------------------------------- TOMB
 Tomb::Tomb(const Pos& feature_pos) :
-    Rigid(feature_pos),
-    is_open_(false),
-    is_trait_known_(false),
-    push_lid_one_in_n_(rnd::range(6, 14)),
-    appearance_(Tomb_appearance::common),
-    is_random_appearance_(false),
-    trait_(Tomb_trait::END)
+    Rigid                   (feature_pos),
+    is_open_                (false),
+    is_trait_known_         (false),
+    push_lid_one_in_n_      (rnd::range(6, 14)),
+    appearance_             (Tomb_appearance::common),
+    is_random_appearance_   (false),
+    trait_                  (Tomb_trait::END)
 {
     //Contained items
     const int NR_ITEMS_MIN  = 0;
@@ -1818,42 +1818,36 @@ Tomb::Tomb(const Pos& feature_pos) :
         }
     }
 
-    if (!item_container_.items_.empty())
+    if (appearance_ == Tomb_appearance::marvelous && !is_random_appearance_)
     {
-        if (appearance_ == Tomb_appearance::marvelous && !is_random_appearance_)
-        {
-            trait_ = Tomb_trait::undead;
-        }
-        else //Randomize trait
-        {
-            const int RND = rnd::percent();
+        trait_ = Tomb_trait::ghost; //NOTE: Wraith is always chosen
+    }
+    else //Randomized trait
+    {
+        std::vector<int> weights(size_t(Tomb_trait::END) + 1, 0);
 
-            if (RND < 15)
-            {
-                trait_ = Tomb_trait::cursed;
-            }
-            else if (RND < 45)
-            {
-                trait_ = Tomb_trait::stench;
-            }
-            else if (RND < 75)
-            {
-                trait_ = Tomb_trait::undead;
-            }
-        }
+        weights[size_t(Tomb_trait::ghost)]          = 5;
+        weights[size_t(Tomb_trait::other_undead)]   = 3;
+        weights[size_t(Tomb_trait::stench)]         = 2;
+        weights[size_t(Tomb_trait::cursed)]         = 1;
+        weights[size_t(Tomb_trait::END)]            = 2;
+
+        trait_ = Tomb_trait(rnd::weighted_choice(weights));
     }
 }
 
 void Tomb::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
 {
-    (void)dmg_type; (void)dmg_method; (void)actor;
+    (void)dmg_type;
+    (void)dmg_method;
+    (void)actor;
 }
 
 std::string Tomb::name(const Article article) const
 {
-    const bool    IS_EMPTY  = is_open_ && item_container_.items_.empty();
-    const std::string  empty_str  = IS_EMPTY                 ? "empty " : "";
-    const std::string  open_str   = (is_open_ && !IS_EMPTY)  ? "open "  : "";
+    const bool          IS_EMPTY    = is_open_ && item_container_.items_.empty();
+    const std::string   empty_str   = IS_EMPTY                 ? "empty " : "";
+    const std::string   open_str    = (is_open_ && !IS_EMPTY)  ? "open "  : "";
 
     std::string a = "";
 
@@ -2063,46 +2057,69 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
 
     Did_trigger_trap did_trigger_trap = Did_trigger_trap::no;
 
-    std::vector<Actor_id> actor_bucket;
+    Actor_id mon_to_spawn = Actor_id::END;
 
     switch (trait_)
     {
-    case Tomb_trait::undead:
-
+    case Tomb_trait::ghost:
+    {
         //Tomb contains major treasure?
         if (appearance_ == Tomb_appearance::marvelous && !is_random_appearance_)
         {
-            actor_bucket = {Actor_id::wraith};
+            mon_to_spawn = Actor_id::wraith;
         }
         else //Not containing major treasure
         {
-            actor_bucket =
+            std::vector<Actor_id> mon_bucket =
             {
                 Actor_id::ghost,
                 Actor_id::phantasm,
-                Actor_id::mummy,
-                Actor_id::zombie,
-                Actor_id::zombie_axe,
-                Actor_id::floating_head,
             };
 
-            if (rnd::one_in(10))
-            {
-                actor_bucket.push_back(Actor_id::croc_head_mummy);
-            }
+            const size_t IDX = rnd::range(0, mon_bucket.size() - 1);
+
+            mon_to_spawn = mon_bucket[IDX];
         }
 
-        msg_log::add("Something rises from the tomb!", clr_white, false,
-                     More_prompt_on_msg::yes);
-        did_trigger_trap = Did_trigger_trap::yes;
-        break;
+        const std::string msg = "The air feels colder.";
 
-    case Tomb_trait::cursed:
-        map::player->prop_handler().try_add_prop(new Prop_cursed(Prop_turns::std));
+        msg_log::add(msg,
+                     clr_white,
+                     false,
+                     More_prompt_on_msg::yes);
+
         did_trigger_trap = Did_trigger_trap::yes;
-        break;
+    }
+    break;
+
+    case Tomb_trait::other_undead:
+    {
+        std::vector<Actor_id> mon_bucket =
+        {
+            Actor_id::mummy,
+            Actor_id::croc_head_mummy,
+            Actor_id::zombie,
+            Actor_id::zombie_axe,
+            Actor_id::floating_head
+        };
+
+        const size_t IDX = rnd::range(0, mon_bucket.size() - 1);
+
+        mon_to_spawn = mon_bucket[IDX];
+
+        const std::string msg = "Something rises from the tomb!";
+
+        msg_log::add(msg,
+                     clr_white,
+                     false,
+                     More_prompt_on_msg::yes);
+
+        did_trigger_trap = Did_trigger_trap::yes;
+    }
+    break;
 
     case Tomb_trait::stench:
+    {
         if (rnd::coin_toss())
         {
             if (map::cells[pos_.x][pos_.y].is_seen_by_player)
@@ -2137,40 +2154,59 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
             }
 
             explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc,
-                                        Emit_expl_snd::no, 0, prop, &fume_clr);
+                           Emit_expl_snd::no, 0, prop, &fume_clr);
         }
         else //Not fumes
         {
-            for (int i = 0; i < int(Actor_id::END); ++i)
+            std::vector<Actor_id> mon_bucket;
+
+            for (size_t i = 0; i < size_t(Actor_id::END); ++i)
             {
                 const Actor_data_t& d = actor_data::data[i];
 
                 if (
-                    d.natural_props[int(Prop_id::ooze)] &&
-                    d.is_auto_spawn_allowed  &&
+                    d.natural_props[size_t(Prop_id::ooze)]  &&
+                    d.is_auto_spawn_allowed                 &&
                     !d.is_unique)
                 {
-                    actor_bucket.push_back(Actor_id(i));
+                    mon_bucket.push_back(Actor_id(i));
                 }
             }
 
-            msg_log::add("Something creeps up from the tomb!", clr_white, false,
+            const size_t IDX = rnd::range(0, mon_bucket.size() - 1);
+
+            mon_to_spawn = mon_bucket[IDX];
+
+            msg_log::add("Something repulsive creeps up from the tomb!",
+                         clr_white,
+                         false,
                          More_prompt_on_msg::yes);
         }
 
         did_trigger_trap = Did_trigger_trap::yes;
-        break;
+    }
+    break;
+
+    case Tomb_trait::cursed:
+    {
+        map::player->prop_handler().try_add_prop(new Prop_cursed(Prop_turns::std));
+        did_trigger_trap = Did_trigger_trap::yes;
+    }
+    break;
 
     case Tomb_trait::END:
         break;
     }
 
-    if (!actor_bucket.empty())
+    if (mon_to_spawn != Actor_id::END)
     {
-        const size_t  IDX             = rnd::range(0, actor_bucket.size() - 1);
-        const Actor_id actor_id_to_spawn  = actor_bucket[IDX];
-        Actor* const  mon             = actor_factory::mk(actor_id_to_spawn, pos_);
-        static_cast<Mon*>(mon)->become_aware(false);
+        Actor* const actor = actor_factory::mk(mon_to_spawn, pos_);
+
+        Mon* const mon = static_cast<Mon*>(actor);
+
+        mon->become_aware(false);
+
+        mon->prop_handler().try_add_prop(new Prop_disabled_attack(Prop_turns::specific, 1));
     }
 
     trait_        = Tomb_trait::END;
@@ -2584,7 +2620,7 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
         }
 
         explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc,
-                                    Emit_expl_snd::yes, 0, new Prop_burning(Prop_turns::std));
+                       Emit_expl_snd::yes, 0, new Prop_burning(Prop_turns::std));
 
         return Did_trigger_trap::yes;
     }
@@ -2642,7 +2678,7 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
         }
 
         explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc,
-                                    Emit_expl_snd::no, 0, prop, &fume_clr);
+                       Emit_expl_snd::no, 0, prop, &fume_clr);
     }
 
     return Did_trigger_trap::yes;

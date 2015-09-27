@@ -704,17 +704,18 @@ public:
 //Maybe some sort of hint will be re-implemented (e.g. via the "Detect Traps" spell).
 enum class Tomb_trait
 {
-    stench, //Fumes, Ooze-type monster
-    undead, //Ghosts, Mummies, ...
+    ghost,
+    other_undead,   //Zombies, Mummies, ...
+    stench,         //Fumes, Ooze-type monster
     cursed,
     END
 };
 
 enum class Tomb_appearance
 {
-    common, //Common items
-    ornate, //Minor treasure
-    marvelous, //Major treasure
+    common,     //Common items
+    ornate,     //Minor treasure
+    marvelous,  //Major treasure
     END
 };
 
