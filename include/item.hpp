@@ -58,6 +58,8 @@ public:
 
     virtual void load() {}
 
+    Dice_param dmg(const Att_mode att_mode, const Actor* const actor) const;
+
     virtual int weight() const;
 
     std::string weight_str() const;
@@ -268,8 +270,6 @@ public:
 
     Wpn& operator=(const Wpn& other) = delete;
 
-    void set_random_melee_plus();
-
     void save() override;
     void load() override;
 
@@ -279,6 +279,8 @@ public:
     {
         return clr_gray;
     }
+
+    void set_random_melee_plus();
 
     const Item_data_t& ammo_data()
     {

@@ -47,7 +47,7 @@ void run_std_turn_events()
 {
     ++turn_nr_;
 
-    int regen_spi_n_turns = 12;
+    int regen_spi_n_turns = 15;
 
     for (size_t i = 0; i < actors_.size(); ++i)
     {
@@ -104,14 +104,20 @@ void run_std_turn_events()
                 //Regen Spi
                 if (actor == map::player)
                 {
-                    if (player_bon::traits[int(Trait::stout_spirit)])
-                        regen_spi_n_turns -= 2;
+                    if (player_bon::traits[size_t(Trait::stout_spirit)])
+                    {
+                        regen_spi_n_turns -= 3;
+                    }
 
-                    if (player_bon::traits[int(Trait::strong_spirit)])
-                        regen_spi_n_turns -= 2;
+                    if (player_bon::traits[size_t(Trait::strong_spirit)])
+                    {
+                        regen_spi_n_turns -= 3;
+                    }
 
-                    if (player_bon::traits[int(Trait::mighty_spirit)])
-                        regen_spi_n_turns -= 2;
+                    if (player_bon::traits[size_t(Trait::mighty_spirit)])
+                    {
+                        regen_spi_n_turns -= 3;
+                    }
                 }
 
                 regen_spi_n_turns = std::max(2, regen_spi_n_turns);

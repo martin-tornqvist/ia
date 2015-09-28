@@ -11,8 +11,6 @@
 #include "map_templates.hpp"
 #include "feature_rigid.hpp"
 
-using namespace std;
-
 namespace map_gen
 {
 
@@ -29,7 +27,7 @@ namespace
 Feature_id backup[MAP_W][MAP_H];
 
 void floor_cells_in_room(const Room& room, const bool floor[MAP_W][MAP_H],
-                         vector<Pos>& out)
+                         std::vector<Pos>& out)
 {
     assert(utils::is_area_inside_map(room.r_));
 
@@ -187,7 +185,7 @@ void cavify_room(Room& room)
 
     Rect& room_rect = room.r_;
 
-    vector<Pos> origin_bucket;
+    std::vector<Pos> origin_bucket;
 
     const auto& r = room.r_;
 
@@ -258,7 +256,7 @@ void cavify_room(Room& room)
     }
 }
 
-void valid_room_corr_entries(const Room& room, vector<Pos>& out)
+void valid_room_corr_entries(const Room& room, std::vector<Pos>& out)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     //Find all cells that meets all of the following criteria:
@@ -332,35 +330,36 @@ void valid_room_corr_entries(const Room& room, vector<Pos>& out)
 void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
 {
     TRACE_FUNC_BEGIN_VERBOSE << "Making corridor between rooms "
-                             << &r0 << " and " << &r1 << endl;
+                             << &r0 << " and " << &r1 << std::endl;
 
     assert(utils::is_area_inside_map(r0.r_));
     assert(utils::is_area_inside_map(r1.r_));
 
-    vector<Pos> p0Bucket;
-    vector<Pos> p1Bucket;
-    valid_room_corr_entries(r0, p0Bucket);
-    valid_room_corr_entries(r1, p1Bucket);
+    std::vector<Pos> p0_bucket;
+    std::vector<Pos> p1_bucket;
 
-    if (p0Bucket.empty())
+    valid_room_corr_entries(r0, p0_bucket);
+    valid_room_corr_entries(r1, p1_bucket);
+
+    if (p0_bucket.empty())
     {
-        TRACE_FUNC_END_VERBOSE << "No entry points found in room 0" << endl;
+        TRACE_FUNC_END_VERBOSE << "No entry points found in room 0" << std::endl;
         return;
     }
 
-    if (p1Bucket.empty())
+    if (p1_bucket.empty())
     {
-        TRACE_FUNC_END_VERBOSE << "No entry points found in room 1" << endl;
+        TRACE_FUNC_END_VERBOSE << "No entry points found in room 1" << std::endl;
         return;
     }
 
     int shortest_dist = INT_MAX;
 
-    TRACE_VERBOSE << "Finding shortest possible dist between entries" << endl;
+    TRACE_VERBOSE << "Finding shortest possible dist between entries" << std::endl;
 
-    for (const Pos& p0 : p0Bucket)
+    for (const Pos& p0 : p0_bucket)
     {
-        for (const Pos& p1 : p1Bucket)
+        for (const Pos& p1 : p1_bucket)
         {
             const int CUR_DIST = utils::king_dist(p0, p1);
 
@@ -369,29 +368,32 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
     }
 
     TRACE_VERBOSE << "Storing entry pairs with shortest dist (" << shortest_dist << ")"
-                  << endl;
-    vector< pair<Pos, Pos> > entries_bucket;
+                  << std::endl;
 
-    for (const Pos& p0 : p0Bucket)
+    std::vector< std::pair<Pos, Pos> > entries_bucket;
+
+    for (const Pos& p0 : p0_bucket)
     {
-        for (const Pos& p1 : p1Bucket)
+        for (const Pos& p1 : p1_bucket)
         {
             const int CUR_DIST = utils::king_dist(p0, p1);
 
             if (CUR_DIST == shortest_dist)
             {
-                entries_bucket.push_back(pair<Pos, Pos>(p0, p1));
+                entries_bucket.push_back(std::pair<Pos, Pos>(p0, p1));
             }
         }
     }
 
-    TRACE_VERBOSE << "Picking a random stored entry pair" << endl;
-    const size_t            IDX     = rnd::range(0, entries_bucket.size() - 1);
-    const pair<Pos, Pos>&   entries = entries_bucket[IDX];
-    const Pos&              p0      = entries.first;
-    const Pos&              p1      = entries.second;
+    TRACE_VERBOSE << "Picking a random stored entry pair" << std::endl;
+    const size_t IDX = rnd::range(0, entries_bucket.size() - 1);
 
-    vector<Pos> path;
+    const std::pair<Pos, Pos>& entries = entries_bucket[IDX];
+
+    const Pos& p0 = entries.first;
+    const Pos& p1 = entries.second;
+
+    std::vector<Pos> path;
     bool blocked_expanded[MAP_W][MAP_H];
 
     //Is entry points same cell (rooms are adjacent)? Then simply use that
@@ -433,8 +435,8 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
         path.push_back(p0);
 
         TRACE_VERBOSE << "Check that the path doesn't circle around the origin or targt "
-                      << "room (looks bad)" << endl;
-        vector<Room*> rooms {&r0, &r1};
+                      << "room (looks bad)" << std::endl;
+        std::vector<Room*> rooms {&r0, &r1};
 
         for (Room* room : rooms)
         {
@@ -457,20 +459,20 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
             if ((is_left_of_room && is_right_of_room) || (is_above_room && is_below_room))
             {
                 TRACE_FUNC_END_VERBOSE << "Path circled around room, aborting corridor"
-                                       << endl;
+                                       << std::endl;
                 return;
             }
         }
 
-        vector<Room*> prev_links;
+        std::vector<Room*> prev_links;
 
         for (size_t i = 0; i < path.size(); ++i)
         {
             const Pos& p(path[i]);
 
-            //If this is a late game level, put floor in 3x3 cells around each point in
-            //the path (wide corridors for more "open" level).
-            if (map::dlvl >= DLVL_FIRST_LATE_GAME && rnd::fraction(4, 5))
+            //If this is a late game level, ocassionally put floor in 3x3 cells around each point
+            //in the path (wide corridors for more "open" level).
+            if (map::dlvl >= DLVL_FIRST_LATE_GAME && rnd::fraction(2, 5))
             {
                 for (int dx = -1; dx <= 1; ++dx)
                 {
@@ -517,11 +519,11 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
 
         r0.rooms_con_to_.push_back(&r1);
         r1.rooms_con_to_.push_back(&r0);
-        TRACE_FUNC_END_VERBOSE << "Successfully connected roooms" << endl;
+        TRACE_FUNC_END_VERBOSE << "Successfully connected roooms" << std::endl;
         return;
     }
 
-    TRACE_FUNC_END_VERBOSE << "Failed to connect roooms" << endl;
+    TRACE_FUNC_END_VERBOSE << "Failed to connect roooms" << std::endl;
 }
 
 void backup_map()
@@ -547,17 +549,18 @@ void restore_map()
     }
 }
 
-void pathfinder_walk(const Pos& p0, const Pos& p1, std::vector<Pos>& pos_list_ref,
+void pathfinder_walk(const Pos& p0, const Pos& p1,
+                     std::vector<Pos>& pos_list_ref,
                      const bool IS_SMOOTH)
 {
     pos_list_ref.clear();
 
     bool blocked[MAP_W][MAP_H];
     utils::reset_array(blocked, false);
-    vector<Pos> path;
+    std::vector<Pos> path;
     path_find::run(p0, p1, blocked, path);
 
-    vector<Pos> rnd_walk_buffer;
+    std::vector<Pos> rnd_walk_buffer;
 
     for (const Pos& p : path)
     {
@@ -577,7 +580,9 @@ void rnd_walk(const Pos& p0, int len, std::vector<Pos>& pos_list_ref,
 {
     pos_list_ref.clear();
 
-    const vector<Pos>& d_list = ALLOW_DIAGONAL ? dir_utils::dir_list : dir_utils::cardinal_list;
+    const std::vector<Pos>& d_list = ALLOW_DIAGONAL ?
+                                     dir_utils::dir_list : dir_utils::cardinal_list;
+
     const int D_LIST_SIZE = d_list.size();
 
     Pos p(p0);
@@ -585,7 +590,7 @@ void rnd_walk(const Pos& p0, int len, std::vector<Pos>& pos_list_ref,
     while (len > 0)
     {
         pos_list_ref.push_back(p);
-        len--;
+        --len;
 
         while (true)
         {

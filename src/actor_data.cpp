@@ -2060,9 +2060,8 @@ void init_data_list()
     d.can_bash_doors = true;
     d.can_open_doors = true;
     d.nr_turns_aware = 9999;
-    d.descr = "The mummified fourth dynasty Egyptian pharaoh Khephren. How he "
-              "came to dwell here is beyond anyones guess. His name means "
-              "\"Rise, Ra!\"";
+    d.descr = "The mummified fourth dynasty Egyptian pharaoh Khephren. How he came to dwell here "
+              "is beyond anyones guess.";
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = Actor_erratic_freq::rare;
     d.mon_shock_lvl = Mon_shock_lvl::terrifying;

@@ -21,14 +21,6 @@ enum Item_weight
     heavy       = 110 //E.g. heavy armor, heavy weapons
 };
 
-enum class Main_att_mode
-{
-    none,
-    melee,
-    thrown,
-    ranged
-};
-
 enum class Item_value
 {
     normal,
@@ -256,7 +248,7 @@ public:
     char                        glyph;
     Clr                         clr;
     Tile_id                     tile;
-    Main_att_mode               main_att_mode;
+    Att_mode                    main_att_mode;
     Spell_id                    spell_cast_from_scroll;
     std::string                 land_on_hard_snd_msg;
     Sfx_id                      land_on_hard_sfx;

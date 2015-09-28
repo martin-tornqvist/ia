@@ -27,10 +27,6 @@ Att_data::Att_data(Actor* const attacker,
     attacker        (attacker),
     defender        (defender),
     att_result      (fail),
-    nr_dmg_rolls    (0),
-    nr_dmg_sides    (0),
-    dmg_plus        (0),
-    dmg_roll        (0),
     dmg             (0),
     is_intrinsic_att(att_item.data().type == Item_type::melee_wpn_intr ||
                      att_item.data().type == Item_type::ranged_wpn_intr),
@@ -53,7 +49,7 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
         if (attacker)
         {
             is_defender_aware = static_cast<Mon*>(attacker)->player_aware_of_me_counter_ > 0 ||
-                                player_bon::traits[int(Trait::vigilant)];
+                                player_bon::traits[size_t(Trait::vigilant)];
         }
         else //No attacker actor (e.g. a trap)
         {
@@ -188,20 +184,17 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
         }
 
         //--------------------------------------- DETERMINE DAMAGE
-        nr_dmg_rolls    = wpn.data().melee.dmg.first;
-        nr_dmg_sides    = wpn.data().melee.dmg.second;
-        dmg_plus        = wpn.melee_dmg_plus_;
+        Dice_param dmg_dice = wpn.dmg(Att_mode::melee, attacker);
 
         if (APPLY_UNDEAD_BANE_BON)
         {
-            dmg_plus += 2;
+            dmg_dice.plus += 2;
         }
 
         if (attacker && attacker->has_prop(Prop_id::weakened))
         {
             //Weak attack (min damage)
-            dmg_roll        = nr_dmg_rolls;
-            dmg             = dmg_roll + dmg_plus;
+            dmg             = dmg_dice.rolls + dmg_dice.plus;
             is_weak_attack  = true;
         }
         else //Attacker not weakened, or not an actor attacking (e.g. an attack from a trap)
@@ -209,13 +202,11 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
             if (att_result == success_critical)
             {
                 //Critical hit (max damage)
-                dmg_roll    = nr_dmg_rolls * nr_dmg_sides;
-                dmg         = std::max(0, dmg_roll + dmg_plus);
+                dmg = std::max(1, (dmg_dice.rolls * dmg_dice.sides) + dmg_dice.plus);
             }
             else //Not critical hit
             {
-                dmg_roll    = rnd::dice(nr_dmg_rolls, nr_dmg_sides);
-                dmg         = std::max(0, dmg_roll + dmg_plus);
+                dmg = std::max(1, rnd::dice(dmg_dice));
             }
 
             if (attacker && is_attacker_aware && !is_defender_aware)
@@ -224,22 +215,19 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
 
                 int dmg_pct = 150;
 
+                //+50% if player and has the "Vicious" trait.
+                if (attacker == map::player && player_bon::traits[size_t(Trait::vicious)])
+                {
+                    dmg_pct += 50;
+                }
+
                 //Double damage percent if attacking with a dagger.
                 if (wpn.data().id == Item_id::dagger)
                 {
                     dmg_pct *= 2;
                 }
 
-                //+50% if player and has the "Vicious" trait.
-                if (attacker == map::player)
-                {
-                    if (player_bon::traits[int(Trait::vicious)])
-                    {
-                        dmg_pct += 50;
-                    }
-                }
-
-                dmg         = ((dmg_roll + dmg_plus) * dmg_pct) / 100;
+                dmg         = (dmg * dmg_pct) / 100;
                 is_backstab = true;
             }
         }
@@ -347,39 +335,21 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
                 is_ethereal_defender_missed = rnd::fraction(2, 3);
             }
 
-            bool player_aim_x3 = false;
-
-            if (attacker == map::player)
-            {
-                const Prop* const prop = attacker->prop_handler().prop(Prop_id::aiming);
-
-                if (prop)
-                {
-                    player_aim_x3 = static_cast<const Prop_aiming*>(prop)->is_max_ranged_dmg();
-                }
-            }
-
-            nr_dmg_rolls    = wpn.data().ranged.dmg.rolls;
-            nr_dmg_sides    = wpn.data().ranged.dmg.sides;
-            dmg_plus        = wpn.data().ranged.dmg.plus;
+            Dice_param dmg_dice = wpn.dmg(Att_mode::ranged, attacker);
 
             if (attacker == map::player && player_bon::gets_undead_bane_bon(defender_data))
             {
-                dmg_plus += 2;
+                dmg_dice.plus += 2;
             }
 
-            dmg_roll = player_aim_x3 ? (nr_dmg_rolls * nr_dmg_sides) :
-                       rnd::dice(nr_dmg_rolls, nr_dmg_sides);
+            dmg = rnd::dice(dmg_dice);
 
             //Outside effective range limit?
             if (!wpn.is_in_effective_range_lmt(attacker_orign, defender->pos))
             {
                 TRACE_VERBOSE << "Outside effetive range limit" << std::endl;
-                dmg_roll = std::max(1, dmg_roll / 2);
-                dmg_plus /= 2;
+                dmg = std::max(1, dmg / 2);
             }
-
-            dmg = dmg_roll + dmg_plus;
         }
     }
 }
@@ -389,10 +359,10 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
                                const Pos& cur_pos,
                                const Item& item,
                                Actor_size aim_lvl) :
-    Att_data(attacker, nullptr, item),
-    hit_chance_tot(0),
-    intended_aim_lvl(Actor_size::none),
-    defender_size(Actor_size::none)
+    Att_data            (attacker, nullptr, item),
+    hit_chance_tot      (0),
+    intended_aim_lvl    (Actor_size::none),
+    defender_size       (Actor_size::none)
 {
     Actor* const actor_aimed_at = utils::actor_at_pos(aim_pos);
 
@@ -479,40 +449,21 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
                 is_ethereal_defender_missed = rnd::fraction(2, 3);
             }
 
-            bool player_aim_x3 = false;
-
-            if (attacker == map::player)
-            {
-                const Prop* const prop = attacker->prop_handler().prop(Prop_id::aiming);
-
-                if (prop)
-                {
-                    player_aim_x3 = static_cast<const Prop_aiming*>(prop)->is_max_ranged_dmg();
-                }
-            }
-
-            nr_dmg_rolls    = item.data().ranged.throw_dmg.rolls;
-            nr_dmg_sides    = item.data().ranged.throw_dmg.sides;
-            dmg_plus        = item.data().ranged.throw_dmg.plus;
-
+            Dice_param dmg_dice = item.dmg(Att_mode::thrown, attacker);
 
             if (APPLY_UNDEAD_BANE_BON)
             {
-                dmg_plus += 2;
+                dmg_dice.plus += 2;
             }
 
-            dmg_roll = player_aim_x3 ? (nr_dmg_rolls * nr_dmg_sides) :
-                       rnd::dice(nr_dmg_rolls, nr_dmg_sides);
+            dmg = rnd::dice(dmg_dice);
 
             //Outside effective range limit?
             if (!item.is_in_effective_range_lmt(attacker->pos, defender->pos))
             {
                 TRACE_VERBOSE << "Outside effetive range limit" << std::endl;
-                dmg_roll = std::max(1, dmg_roll / 2);
-                dmg_plus /= 2;
+                dmg = std::max(1, dmg / 2);
             }
-
-            dmg = dmg_roll + dmg_plus;
         }
     }
 }
@@ -696,8 +647,9 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
         {
             //---------------------------------------------------------- ATTACK HITS TARGET
             //Determine the relative "size" of the hit
-            const auto& wpn_dmg  = wpn.data().melee.dmg;
-            const int   MAX_DMG = (wpn_dmg.first * wpn_dmg.second) + wpn.melee_dmg_plus_;
+            const Dice_param dmg_dice = wpn.dmg(Att_mode::melee, att_data.attacker);
+
+            const int MAX_DMG = (dmg_dice.rolls * dmg_dice.sides) + dmg_dice.plus;
 
             Melee_hit_size hit_size = Melee_hit_size::small;
 
@@ -869,8 +821,9 @@ void print_proj_at_actor_msgs(const Ranged_att_data& data, const bool IS_HIT, co
     if (IS_HIT && map::cells[defender_pos.x][defender_pos.y].is_seen_by_player)
     {
         //Punctuation depends on attack strength
-        const auto& wpn_dmg = wpn.data().ranged.dmg;
-        const int   MAX_DMG = (wpn_dmg.rolls * wpn_dmg.sides) + wpn_dmg.plus;
+        const Dice_param dmg_dice = wpn.dmg(Att_mode::ranged, data.attacker);
+
+        const int   MAX_DMG = (dmg_dice.rolls * dmg_dice.sides) + dmg_dice.plus;
 
         std::string dmg_punct = ".";
 
@@ -1702,10 +1655,39 @@ bool ranged(Actor* const attacker, const Pos& origin, const Pos& aim_pos, Wpn& w
 
     if (did_attack)
     {
-        game_time::tick();
+        bool is_free_turn = false;
+
+        if (attacker == map::player)
+        {
+            Prop_handler& props = map::player->prop_handler();
+
+            if (
+                wpn.data().type == Item_type::ranged_wpn &&
+                player_bon::traits[size_t(Trait::fast_shooter)])
+            {
+                const bool IS_FAST_SHOOTING = props.has_prop(Prop_id::fast_shooting);
+
+                if (IS_FAST_SHOOTING)
+                {
+                    is_free_turn = true;
+                }
+                else //Not fast shooting
+                {
+                    props.try_add_prop(new Prop_fast_shooting(Prop_turns::std));
+                }
+            }
+        }
+
+        //Only pass time if an actor is attacking (not if it's a trap or something)
+        if (attacker)
+        {
+            game_time::tick(is_free_turn);
+        }
+
+        return true;
     }
 
-    return did_attack;
+    return false;
 }
 
 } //Attack

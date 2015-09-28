@@ -124,6 +124,14 @@ enum class Dmg_method
     END
 };
 
+enum class Att_mode
+{
+    none,
+    melee,
+    thrown,
+    ranged
+};
+
 enum class Shock_lvl
 {
     none   = 0,

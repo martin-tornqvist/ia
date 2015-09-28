@@ -162,10 +162,10 @@ Range Spell::spi_cost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
             }
         }
 
-        bool IS_WARLOCK     = player_bon::traits[int(Trait::warlock)];
-        bool IS_BLOOD_SORC  = player_bon::traits[int(Trait::blood_sorcerer)];
-        bool IS_SEER        = player_bon::traits[int(Trait::seer)];
-        bool IS_SUMMONER    = player_bon::traits[int(Trait::summoner)];
+        bool IS_WARLOCK     = player_bon::traits[size_t(Trait::warlock)];
+        bool IS_BLOOD_SORC  = player_bon::traits[size_t(Trait::blood_sorcerer)];
+        bool IS_SEER        = player_bon::traits[size_t(Trait::seer)];
+        bool IS_SUMMONER    = player_bon::traits[size_t(Trait::summoner)];
 
         if (IS_BLOOD_SORC)
         {
@@ -630,7 +630,7 @@ Spell_effect_noticed Spell_pest::cast_impl(Actor* const caster) const
     if (caster->is_player())
     {
         const int N             = SUMMON_HOSTILE_ONE_IN_N *
-                                  (player_bon::traits[int(Trait::summoner)] ? 2 : 1);
+                                  (player_bon::traits[size_t(Trait::summoner)] ? 2 : 1);
         did_player_summon_hostile  = rnd::one_in(N);
         leader                  = did_player_summon_hostile ? nullptr : caster;
     }
@@ -712,7 +712,7 @@ Spell_effect_noticed Spell_pharaoh_staff::cast_impl(Actor* const caster) const
     if (caster->is_player())
     {
         const int N = SUMMON_HOSTILE_ONE_IN_N *
-                      (player_bon::traits[int(Trait::summoner)] ? 2 : 1);
+                      (player_bon::traits[size_t(Trait::summoner)] ? 2 : 1);
         did_player_summon_hostile = rnd::one_in(N);
         leader = did_player_summon_hostile ? nullptr : caster;
     }
@@ -856,7 +856,7 @@ Spell_effect_noticed Spell_det_mon::cast_impl(Actor* const caster) const
 {
     (void)caster;
 
-    bool                is_seer      = player_bon::traits[int(Trait::seer)];
+    bool                is_seer      = player_bon::traits[size_t(Trait::seer)];
     const int           MULTIPLIER  = 6 * (is_seer ? 3 : 1);
     Spell_effect_noticed  is_noticed   = Spell_effect_noticed::no;
 
@@ -1279,7 +1279,7 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
     if (caster->is_player())
     {
         const int N             = SUMMON_HOSTILE_ONE_IN_N *
-                                  (player_bon::traits[int(Trait::summoner)] ? 2 : 1);
+                                  (player_bon::traits[size_t(Trait::summoner)] ? 2 : 1);
         did_player_summon_hostile  = rnd::one_in(N);
         leader                  = did_player_summon_hostile ? nullptr : caster;
     }

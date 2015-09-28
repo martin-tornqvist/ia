@@ -16,7 +16,7 @@ void mk_items_on_floor()
 {
     int nr_spawns = rnd::range(4, 6);
 
-    if (player_bon::traits[int(Trait::treasure_hunter)])
+    if (player_bon::traits[size_t(Trait::treasure_hunter)])
     {
         nr_spawns += 2;
     }

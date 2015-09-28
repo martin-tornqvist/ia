@@ -775,7 +775,7 @@ TEST_FIXTURE(Basic_fixture, saving_game)
 
     //Bonus
     player_bon::pick_bg(Bg::rogue);
-    player_bon::traits[int(Trait::healer)] = true;
+    player_bon::traits[size_t(Trait::healer)] = true;
 
     //Player inventory
     Inventory& inv = map::player->inv();
@@ -889,8 +889,8 @@ TEST_FIXTURE(Basic_fixture, loading_game)
 
     //Bonus
     CHECK_EQUAL(int(Bg::rogue), int(player_bon::bg()));
-    CHECK(player_bon::traits[int(Trait::healer)]);
-    CHECK(!player_bon::traits[int(Trait::sharp_shooter)]);
+    CHECK(player_bon::traits[size_t(Trait::healer)]);
+    CHECK(!player_bon::traits[size_t(Trait::sharp_shooter)]);
 
     //Player inventory
     Inventory& inv  = map::player->inv();

@@ -172,17 +172,17 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 
                 if (actor == map::player)
                 {
-                    if (player_bon::traits[int(Trait::tough)])
+                    if (player_bon::traits[size_t(Trait::tough)])
                     {
                         destr_chance.numerator += 2;
                     }
 
-                    if (player_bon::traits[int(Trait::rugged)])
+                    if (player_bon::traits[size_t(Trait::rugged)])
                     {
                         destr_chance.numerator += 2;
                     }
 
-                    if (player_bon::traits[int(Trait::unbreakable)])
+                    if (player_bon::traits[size_t(Trait::unbreakable)])
                     {
                         destr_chance.numerator += 2;
                     }
@@ -229,17 +229,17 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                     Fraction destr_chance(4 - nr_spikes_, 10);
                     destr_chance.numerator = max(1, destr_chance.numerator);
 
-                    if (player_bon::traits[int(Trait::tough)])
+                    if (player_bon::traits[size_t(Trait::tough)])
                     {
                         destr_chance.numerator += 2;
                     }
 
-                    if (player_bon::traits[int(Trait::rugged)])
+                    if (player_bon::traits[size_t(Trait::rugged)])
                     {
                         destr_chance.numerator += 2;
                     }
 
-                    if (player_bon::traits[int(Trait::unbreakable)])
+                    if (player_bon::traits[size_t(Trait::unbreakable)])
                     {
                         destr_chance.numerator += 2;
                     }
@@ -371,7 +371,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 //
 //      if(!IS_BASHER_WEAK) {
 //        if(IS_PLAYER) {
-//          const int BON   = player_bon::traits[int(Trait::tough)] ? 20 : 0;
+//          const int BON   = player_bon::traits[size_t(Trait::tough)] ? 20 : 0;
 //          skill_value_bash  = 40 + BON - min(58, nr_spikes_ * 20);
 //        } else {
 //          skill_value_bash  = 10 - min(9, nr_spikes_ * 3);

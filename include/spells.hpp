@@ -678,7 +678,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(1) - (SPI_PER_LVL * 2);
+        return 5;
     }
 };
 

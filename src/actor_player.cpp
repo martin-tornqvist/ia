@@ -362,10 +362,10 @@ int Player::enc_percent() const
 
 int Player::carry_weight_lmt() const
 {
-    const bool IS_TOUGH         = player_bon::traits[int(Trait::tough)];
-    const bool IS_RUGGED        = player_bon::traits[int(Trait::rugged)];
-    const bool IS_UNBREAKABLE   = player_bon::traits[int(Trait::unbreakable)];
-    const bool IS_STRONG_BACKED = player_bon::traits[int(Trait::strong_backed)];
+    const bool IS_TOUGH         = player_bon::traits[size_t(Trait::tough)];
+    const bool IS_RUGGED        = player_bon::traits[size_t(Trait::rugged)];
+    const bool IS_UNBREAKABLE   = player_bon::traits[size_t(Trait::unbreakable)];
+    const bool IS_STRONG_BACKED = player_bon::traits[size_t(Trait::strong_backed)];
 
     const bool IS_WEAKENED      = has_prop(Prop_id::weakened);
 
@@ -382,17 +382,17 @@ int Player::shock_resistance(const Shock_src shock_src) const
 {
     int res = 0;
 
-    if (player_bon::traits[int(Trait::fearless)])
+    if (player_bon::traits[size_t(Trait::fearless)])
     {
         res += 5;
     }
 
-    if (player_bon::traits[int(Trait::cool_headed)])
+    if (player_bon::traits[size_t(Trait::cool_headed)])
     {
         res += 20;
     }
 
-    if (player_bon::traits[int(Trait::courageous)])
+    if (player_bon::traits[size_t(Trait::courageous)])
     {
         res += 20;
     }
@@ -1272,9 +1272,9 @@ void Player::move(Dir dir)
             pos = tgt;
 
             const int FREE_MOVE_EVERY_N_TURN =
-                player_bon::traits[int(Trait::mobile)]     ? 2 :
-                player_bon::traits[int(Trait::lithe)]      ? 4 :
-                player_bon::traits[int(Trait::dexterous)]  ? 5 : 0;
+                player_bon::traits[size_t(Trait::mobile)]     ? 3 :
+                player_bon::traits[size_t(Trait::lithe)]      ? 4 :
+                player_bon::traits[size_t(Trait::dexterous)]  ? 5 : 0;
 
             if (FREE_MOVE_EVERY_N_TURN > 0)
             {

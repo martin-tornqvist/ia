@@ -148,7 +148,7 @@ bool reload_wielded_wpn(Actor& actor_reloading)
 
     if (actor_reloading.is_player())
     {
-        is_swift_reload = player_bon::traits[int(Trait::expert_marksman)] && rnd::coin_toss();
+        is_swift_reload = player_bon::traits[size_t(Trait::expert_marksman)] && rnd::coin_toss();
     }
 
     const int WPN_MAX_AMMO = wpn->data().ranged.max_ammo;

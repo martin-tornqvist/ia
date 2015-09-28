@@ -210,7 +210,7 @@ void draw_inv(const Menu_browser& browser)
                 if (slot.id == Slot_id::wpn || slot.id == Slot_id::wpn_alt)
                 {
                     //Thrown weapons are forced to show melee info instead
-                    att_inf = d.main_att_mode == Main_att_mode::thrown ?
+                    att_inf = d.main_att_mode == Att_mode::thrown ?
                               Item_ref_att_inf::melee : Item_ref_att_inf::wpn_context;
                 }
                 else if (slot.id == Slot_id::thrown)
@@ -492,7 +492,7 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
             if (slot_id_to_equip == Slot_id::wpn || slot_id_to_equip == Slot_id::wpn_alt)
             {
                 //Thrown weapons are forced to show melee info instead
-                att_inf = d.main_att_mode == Main_att_mode::thrown ?
+                att_inf = d.main_att_mode == Att_mode::thrown ?
                           Item_ref_att_inf::melee : Item_ref_att_inf::wpn_context;
             }
             else if (slot_id_to_equip == Slot_id::thrown)

@@ -46,10 +46,7 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
     case Trait::master_marksman:
         break;
 
-    case Trait::steady_aimer:
-        break;
-
-    case Trait::sharp_shooter:
+    case Trait::fast_shooter:
         break;
 
     case Trait::dem_expert:
@@ -267,11 +264,8 @@ std::string trait_title(const Trait id)
     case Trait::master_marksman:
         return "Master Marksman";
 
-    case Trait::steady_aimer:
-        return "Steady Aimer";
-
-    case Trait::sharp_shooter:
-        return "Sharpshooter";
+    case Trait::fast_shooter:
+        return "Fast Shooter";
 
     case Trait::observant:
         return "Observant";
@@ -440,30 +434,26 @@ std::string trait_descr(const Trait id)
     switch (id)
     {
     case Trait::adept_melee_fighter:
-        return "+10% hit chance with melee attacks";
+        return "+10% hit chance and +1 damage with melee attacks";
 
     case Trait::expert_melee_fighter:
-        return "+10% hit chance with melee attacks";
+        return "+10% hit chance and +1 damage with melee attacks";
 
     case Trait::master_melee_fighter:
-        return "+10% hit chance with melee attacks";
+        return "+10% hit chance and +1 damage with melee attacks";
 
     case Trait::adept_marksman:
-        return "+10% hit chance with firearms and thrown weapons";
+        return "+10% hit chance and +1 damage with firearms and thrown weapons";
 
     case Trait::expert_marksman:
-        return "+10% hit chance with firearms and thrown weapons, you occasionally "
+        return "+10% hit chance and +1 damage with firearms and thrown weapons, you occasionally "
                "reload instantly";
 
     case Trait::master_marksman:
-        return "+10% hit chance with firearms and thrown weapons";
+        return "+10% hit chance and +1 damage with firearms and thrown weapons";
 
-    case Trait::steady_aimer:
-        return "Standing still gives ranged attacks +20% hit chance on the following turn";
-
-    case Trait::sharp_shooter:
-        return "Standing still for three turns gives ranged attacks maximum hit chance "
-               "and damage on the following turn";
+    case Trait::fast_shooter:
+        return "Every second consecutive shot is a free action (not applicable to thrown weapons)";
 
     case Trait::dem_expert:
         return "+1 radius for explosives (be careful), you are not harmed by your own "
@@ -517,7 +507,7 @@ std::string trait_descr(const Trait id)
                "every fourth step is a free action";
 
     case Trait::mobile:
-        return "Every second step is a free action";
+        return "Every third step is a free action";
 
     case Trait::fearless:
         return "You cannot become terrified, +5% shock resistance";
@@ -620,13 +610,9 @@ void trait_prereqs(const Trait trait,
         bg_ref = Bg::war_vet;
         break;
 
-    case Trait::steady_aimer:
-        traits_ref.push_back(Trait::adept_marksman);
-        break;
-
-    case Trait::sharp_shooter:
-        traits_ref.push_back(Trait::steady_aimer);
+    case Trait::fast_shooter:
         traits_ref.push_back(Trait::expert_marksman);
+        traits_ref.push_back(Trait::dexterous);
         bg_ref = Bg::war_vet;
         break;
 
@@ -997,7 +983,7 @@ int spi_occultist_can_cast_at_lvl(const int LVL)
 
 bool gets_undead_bane_bon(const Actor_data_t& actor_data)
 {
-    return player_bon::traits[int(Trait::undead_bane)] && actor_data.is_undead;
+    return player_bon::traits[size_t(Trait::undead_bane)] && actor_data.is_undead;
 }
 
 } //player_bon

@@ -78,10 +78,14 @@ bool Actor::is_spotting_sneaking_actor(Actor& other)
     const int   SNEAK_SKILL         = abilities_other.val(Ability_id::stealth, true, other);
 
     const int   DIST                = utils::king_dist(pos, other_pos);
+
     const int   SNEAK_DIST_MOD      = utils::constr_in_range(0, (DIST - 1) * 10, 60);
+
     const Cell& cell                = map::cells[other_pos.x][other_pos.y];
+
     const int   SNEAK_LGT_MOD       = cell.is_lit                     ? -40 : 0;
     const int   SNEAK_DRK_MOD       = (cell.is_dark && ! cell.is_lit) ?  40 : 0;
+
     const int   SNEAK_TOT           = utils::constr_in_range(
                                           0,
                                           SNEAK_SKILL     +

@@ -84,11 +84,11 @@ void init_room_bucket()
     {
         add_to_room_bucket(Room_type::monster,  rnd::range(0, 3));
         add_to_room_bucket(Room_type::spider,   rnd::range(0, 3));
-        add_to_room_bucket(Room_type::flooded,  rnd::range(0, 2));
-        add_to_room_bucket(Room_type::muddy,    rnd::range(0, 2));
+        add_to_room_bucket(Room_type::flooded,  rnd::range(1, 2));
+        add_to_room_bucket(Room_type::muddy,    rnd::range(1, 2));
         add_to_room_bucket(Room_type::cave,     rnd::range(3, 4));
         add_to_room_bucket(Room_type::chasm,    rnd::range(0, 3));
-        add_to_room_bucket(Room_type::forest,   rnd::range(1, 4));
+        add_to_room_bucket(Room_type::forest,   rnd::range(1, 3));
     }
 
     std::random_shuffle(begin(room_bucket_), end(room_bucket_));

@@ -641,11 +641,10 @@ void init_data_list()
     d.alignment = Prop_alignment::good;
     add_prop_data(d);
 
-    d.id = Prop_id::aiming;
+    d.id = Prop_id::fast_shooting;
     d.std_rnd_turns = Range(1, 1);
-    d.name = "Aiming";
-    d.name_short = "Aiming";
-    d.is_making_mon_aware = false;
+    d.name = "";
+    d.name_short = "";
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
@@ -941,8 +940,8 @@ Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init, const int N
     case Prop_id::frenzied:
         return new Prop_frenzied(turns_init, NR_TURNS);
 
-    case Prop_id::aiming:
-        return new Prop_aiming(turns_init, NR_TURNS);
+    case Prop_id::fast_shooting:
+        return new Prop_fast_shooting(turns_init, NR_TURNS);
 
     case Prop_id::disabled_attack:
         return new Prop_disabled_attack(turns_init, NR_TURNS);
@@ -1497,7 +1496,7 @@ void Prop_handler::props_interface_line(std::vector<Str_and_clr>& line) const
 
             if (TURNS_LEFT > 0)
             {
-                if (player_bon::traits[int(Trait::self_aware)])
+                if (player_bon::traits[size_t(Trait::self_aware)])
                 {
                     str += "(" + to_str(TURNS_LEFT) + ")";
                 }
@@ -1849,7 +1848,7 @@ void Prop_infected::on_new_turn()
 
 int Prop_diseased::change_max_hp(const int HP_MAX) const
 {
-    if (owning_actor_->is_player() && player_bon::traits[int(Trait::survivalist)])
+    if (owning_actor_->is_player() && player_bon::traits[size_t(Trait::survivalist)])
     {
         //Survavlist makes you lose only 25% instead of 50%
         return (HP_MAX * 3) / 4;

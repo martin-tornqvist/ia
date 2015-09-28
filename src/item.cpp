@@ -79,6 +79,67 @@ std::vector<std::string> Item::descr() const
     return data_->base_descr;
 }
 
+Dice_param Item::dmg(const Att_mode att_mode, const Actor* const actor) const
+{
+    Dice_param out;
+
+    switch (att_mode)
+    {
+    case Att_mode::melee:
+        out.rolls   = data_->melee.dmg.first;
+        out.sides   = data_->melee.dmg.second;
+        out.plus    = melee_dmg_plus_;
+
+        if (actor == map::player)
+        {
+            if (player_bon::traits[size_t(Trait::adept_melee_fighter)])
+            {
+                ++out.plus;
+            }
+
+            if (player_bon::traits[size_t(Trait::expert_melee_fighter)])
+            {
+                ++out.plus;
+            }
+
+            if (player_bon::traits[size_t(Trait::master_melee_fighter)])
+            {
+                ++out.plus;
+            }
+        }
+        break;
+
+    case Att_mode::ranged:
+    case Att_mode::thrown:
+        out = data_->ranged.dmg;
+
+        if (actor == map::player)
+        {
+            if (player_bon::traits[size_t(Trait::adept_marksman)])
+            {
+                ++out.plus;
+            }
+
+            if (player_bon::traits[size_t(Trait::expert_marksman)])
+            {
+                ++out.plus;
+            }
+
+            if (player_bon::traits[size_t(Trait::master_marksman)])
+            {
+                ++out.plus;
+            }
+        }
+        break;
+
+    case Att_mode::none:
+        assert(false);
+        break;
+    }
+
+    return out;
+}
+
 int Item::weight() const
 {
     return int(data_->weight) * nr_items_;
@@ -174,19 +235,19 @@ std::string Item::name(const Item_ref_type ref_type,
     {
         switch (data_->main_att_mode)
         {
-        case Main_att_mode::melee:
+        case Att_mode::melee:
             att_inf_used = Item_ref_att_inf::melee;
             break;
 
-        case Main_att_mode::ranged:
+        case Att_mode::ranged:
             att_inf_used = Item_ref_att_inf::ranged;
             break;
 
-        case Main_att_mode::thrown:
+        case Att_mode::thrown:
             att_inf_used = Item_ref_att_inf::thrown;
             break;
 
-        case Main_att_mode::none:
+        case Att_mode::none:
             att_inf_used = Item_ref_att_inf::none;
             break;
         }
@@ -194,13 +255,18 @@ std::string Item::name(const Item_ref_type ref_type,
 
     if (att_inf_used == Item_ref_att_inf::melee)
     {
-        const std::string   rolls_str       = to_str(data_->melee.dmg.first);
-        const std::string   sides_str       = to_str(data_->melee.dmg.second);
-        const int           PLUS            = melee_dmg_plus_;
+        const Dice_param dmg_dice = dmg(Att_mode::melee, map::player);
+
+        const std::string   rolls_str       = to_str(dmg_dice.rolls);
+        const std::string   sides_str       = to_str(dmg_dice.sides);
+
+        const int           PLUS            = dmg_dice.plus;
+
         const std::string   plus_str        = PLUS == 0 ? "" :
                                               PLUS  > 0 ?
                                               ("+" + to_str(PLUS)) :
                                               ("-" + to_str(PLUS));
+
         const int           ITEM_SKILL      = data_->melee.hit_chance_mod;
         const int           MELEE_SKILL     = map::player->ability(Ability_id::melee, true);
         const int           SKILL_TOT       = std::max(0, std::min(100, ITEM_SKILL + MELEE_SKILL));
@@ -217,11 +283,13 @@ std::string Item::name(const Item_ref_type ref_type,
 
         if (dmg_str.empty())
         {
+            const Dice_param dmg_dice = dmg(Att_mode::ranged, map::player);
+
             const int MULTIPL = data_->ranged.is_machine_gun ? NR_MG_PROJECTILES : 1;
 
-            const std::string   rolls_str   = to_str(data_->ranged.dmg.rolls * MULTIPL);
-            const std::string   sides_str   = to_str(data_->ranged.dmg.sides);
-            const int           PLUS        = data_->ranged.dmg.plus * MULTIPL;
+            const std::string   rolls_str   = to_str(dmg_dice.rolls * MULTIPL);
+            const std::string   sides_str   = to_str(dmg_dice.sides);
+            const int           PLUS        = dmg_dice.plus * MULTIPL;
 
             const std::string   plus_str    = PLUS ==  0 ? "" :
                                               PLUS  > 0  ?
@@ -240,9 +308,11 @@ std::string Item::name(const Item_ref_type ref_type,
 
     if (att_inf_used == Item_ref_att_inf::thrown)
     {
-        const std::string   rolls_str       = to_str(data_->ranged.throw_dmg.rolls);
-        const std::string   sides_str       = to_str(data_->ranged.throw_dmg.sides);
-        const int           PLUS            = data_->ranged.throw_dmg.plus;
+        const Dice_param dmg_dice = dmg(Att_mode::thrown, map::player);
+
+        const std::string   rolls_str       = to_str(dmg_dice.rolls);
+        const std::string   sides_str       = to_str(dmg_dice.sides);
+        const int           PLUS            = dmg_dice.plus;
 
         const std::string   plus_str        = PLUS ==  0 ? "" :
                                               PLUS  > 0 ? "+" :
@@ -270,7 +340,7 @@ std::string Item::name(const Item_ref_type ref_type,
     const auto& names_used = data_->is_identified ?
                              data_->base_name : data_->base_name_un_id;
 
-    const std::string base_name = names_used.names[int(ref_type_used)];
+    const std::string base_name = names_used.names[size_t(ref_type_used)];
 
     const std::string ret = nr_str + base_name + att_str + inf_str;
 
@@ -807,7 +877,7 @@ void Medical_bag::continue_action()
 
         auto& player = *map::player;
 
-        const bool IS_HEALER = player_bon::traits[int(Trait::healer)];
+        const bool IS_HEALER = player_bon::traits[size_t(Trait::healer)];
 
         if (nr_turns_until_heal_wounds_ > 0)
         {
@@ -912,12 +982,12 @@ void Medical_bag::interrupted()
 
 int Medical_bag::tot_turns_for_sanitize() const
 {
-    return player_bon::traits[int(Trait::healer)] ? 10 : 20;
+    return player_bon::traits[size_t(Trait::healer)] ? 10 : 20;
 }
 
 int Medical_bag::tot_suppl_for_sanitize() const
 {
-    return player_bon::traits[int(Trait::healer)] ? 3 : 6;
+    return player_bon::traits[size_t(Trait::healer)] ? 3 : 6;
 }
 
 //---------------------------------------------------------- HIDEOUS MASK
@@ -999,7 +1069,7 @@ Consume_item Explosive::activate(Actor* const actor)
 //---------------------------------------------------------- DYNAMITE
 void Dynamite::on_player_ignite() const
 {
-    const bool IS_SWIFT   = player_bon::traits[int(Trait::dem_expert)] && rnd::coin_toss();
+    const bool IS_SWIFT   = player_bon::traits[size_t(Trait::dem_expert)] && rnd::coin_toss();
     const std::string swift_str = IS_SWIFT ? "swiftly " : "";
 
     msg_log::add("I " + swift_str + "light a dynamite stick.");
@@ -1058,7 +1128,7 @@ void Dynamite::on_player_paralyzed()
 //---------------------------------------------------------- MOLOTOV
 void Molotov::on_player_ignite() const
 {
-    const bool IS_SWIFT   = player_bon::traits[int(Trait::dem_expert)] &&
+    const bool IS_SWIFT   = player_bon::traits[size_t(Trait::dem_expert)] &&
                             rnd::coin_toss();
     const std::string swift_str = IS_SWIFT ? "swiftly " : "";
 
@@ -1093,7 +1163,7 @@ void Molotov::on_std_turn_player_hold_ignited()
 
 void Molotov::on_thrown_ignited_landing(const Pos& p)
 {
-    const int D = player_bon::traits[int(Trait::dem_expert)] ? 1 : 0;
+    const int D = player_bon::traits[size_t(Trait::dem_expert)] ? 1 : 0;
 
     Snd snd("I hear an explosion!", Sfx_id::explosion_molotov, Ignore_msg_if_origin_seen::yes,
             p, nullptr, Snd_vol::high, Alerts_mon::yes);
@@ -1127,7 +1197,7 @@ void Molotov::on_player_paralyzed()
 //---------------------------------------------------------- FLARE
 void Flare::on_player_ignite() const
 {
-    const bool IS_SWIFT   = player_bon::traits[int(Trait::dem_expert)] &&
+    const bool IS_SWIFT   = player_bon::traits[size_t(Trait::dem_expert)] &&
                             rnd::coin_toss();
     const std::string swift_str = IS_SWIFT ? "swiftly " : "";
 
@@ -1181,8 +1251,8 @@ void Flare::on_player_paralyzed()
 //---------------------------------------------------------- SMOKE GRENADE
 void Smoke_grenade::on_player_ignite() const
 {
-    const bool IS_SWIFT   = player_bon::traits[int(Trait::dem_expert)] &&
-                            rnd::coin_toss();
+    const bool IS_SWIFT   = player_bon::traits[size_t(Trait::dem_expert)] && rnd::coin_toss();
+
     const std::string swift_str = IS_SWIFT ? "swiftly " : "";
 
     msg_log::add("I " + swift_str + "ignite a smoke grenade.");

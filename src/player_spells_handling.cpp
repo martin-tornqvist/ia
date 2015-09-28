@@ -231,8 +231,8 @@ void try_cast(const Spell_opt& spell_opt)
             msg_log::clear();
         }
 
-        const bool IS_BLOOD_SORC = player_bon::traits[int(Trait::blood_sorcerer)];
-        const bool IS_WARLOCK    = player_bon::traits[int(Trait::warlock)];
+        const bool IS_BLOOD_SORC = player_bon::traits[size_t(Trait::blood_sorcerer)];
+        const bool IS_WARLOCK    = player_bon::traits[size_t(Trait::warlock)];
 
         const int BLOOD_SORC_HP_DRAINED = 2;
 

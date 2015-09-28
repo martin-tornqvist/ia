@@ -175,7 +175,7 @@ void run(const Pos&            origin,
         }
     }
 
-    const bool IS_DEM_EXP = player_bon::traits[int(Trait::dem_expert)];
+    const bool IS_DEM_EXP = player_bon::traits[size_t(Trait::dem_expert)];
 
     const int NR_OUTER = pos_lists.size();
 

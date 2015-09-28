@@ -152,9 +152,10 @@ void draw()
 
         const auto& data = item_wielded->data();
 
-        //If thrown weapon, force melee info - otherwise use weapon context.
-        const Item_ref_att_inf att_inf = data.main_att_mode == Main_att_mode::thrown ?
-                                         Item_ref_att_inf::melee : Item_ref_att_inf::wpn_context;
+        //If mainly a thrown weapon, force melee info - otherwise use weapon context.
+        const Item_ref_att_inf att_inf = data.main_att_mode == Att_mode::thrown ?
+                                         Item_ref_att_inf::melee :
+                                         Item_ref_att_inf::wpn_context;
 
         str = item_wielded->name(Item_ref_type::plain, Item_ref_inf::yes, att_inf);
 

@@ -125,7 +125,7 @@ void Lit_dynamite::on_new_turn()
 
     if (nr_turns_left_ <= 0)
     {
-        const int D = player_bon::traits[int(Trait::dem_expert)] ? 1 : 0;
+        const int D = player_bon::traits[size_t(Trait::dem_expert)] ? 1 : 0;
 
         const Pos p(pos_);
 

@@ -36,12 +36,12 @@ int Ability_vals::val(const Ability_id id,
         case Ability_id::searching:
             ret += 8;
 
-            if (player_bon::traits[int(Trait::observant)])
+            if (player_bon::traits[size_t(Trait::observant)])
             {
                 ret += 4;
             }
 
-            if (player_bon::traits[int(Trait::perceptive)])
+            if (player_bon::traits[size_t(Trait::perceptive)])
             {
                 ret += 4;
             }
@@ -50,22 +50,22 @@ int Ability_vals::val(const Ability_id id,
         case Ability_id::melee:
             ret += 45;
 
-            if (player_bon::traits[int(Trait::adept_melee_fighter)])
+            if (player_bon::traits[size_t(Trait::adept_melee_fighter)])
             {
                 ret += 10;
             }
 
-            if (player_bon::traits[int(Trait::expert_melee_fighter)])
+            if (player_bon::traits[size_t(Trait::expert_melee_fighter)])
             {
                 ret += 10;
             }
 
-            if (player_bon::traits[int(Trait::master_melee_fighter)])
+            if (player_bon::traits[size_t(Trait::master_melee_fighter)])
             {
                 ret += 10;
             }
 
-            if (player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25)
+            if (player_bon::traits[size_t(Trait::perseverant)] && HP_PCT <= 25)
             {
                 ret += 30;
             }
@@ -74,22 +74,22 @@ int Ability_vals::val(const Ability_id id,
         case Ability_id::ranged:
             ret += 50;
 
-            if (player_bon::traits[int(Trait::adept_marksman)])
+            if (player_bon::traits[size_t(Trait::adept_marksman)])
             {
                 ret += 10;
             }
 
-            if (player_bon::traits[int(Trait::expert_marksman)])
+            if (player_bon::traits[size_t(Trait::expert_marksman)])
             {
                 ret += 10;
             }
 
-            if (player_bon::traits[int(Trait::master_marksman)])
+            if (player_bon::traits[size_t(Trait::master_marksman)])
             {
                 ret += 10;
             }
 
-            if (player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25)
+            if (player_bon::traits[size_t(Trait::perseverant)] && HP_PCT <= 25)
             {
                 ret += 30;
             }
@@ -103,12 +103,12 @@ int Ability_vals::val(const Ability_id id,
         case Ability_id::dodge_trap:
             ret += 5;
 
-            if (player_bon::traits[int(Trait::dexterous)])
+            if (player_bon::traits[size_t(Trait::dexterous)])
             {
                 ret += 25;
             }
 
-            if (player_bon::traits[int(Trait::lithe)])
+            if (player_bon::traits[size_t(Trait::lithe)])
             {
                 ret += 25;
             }
@@ -117,17 +117,17 @@ int Ability_vals::val(const Ability_id id,
         case Ability_id::dodge_att:
             ret += 10;
 
-            if (player_bon::traits[int(Trait::dexterous)])
+            if (player_bon::traits[size_t(Trait::dexterous)])
             {
                 ret += 25;
             }
 
-            if (player_bon::traits[int(Trait::lithe)])
+            if (player_bon::traits[size_t(Trait::lithe)])
             {
                 ret += 25;
             }
 
-            if (player_bon::traits[int(Trait::perseverant)] && HP_PCT <= 25)
+            if (player_bon::traits[size_t(Trait::perseverant)] && HP_PCT <= 25)
             {
                 ret += 50;
             }
@@ -136,12 +136,12 @@ int Ability_vals::val(const Ability_id id,
         case Ability_id::stealth:
             ret += 10;
 
-            if (player_bon::traits[int(Trait::stealthy)])
+            if (player_bon::traits[size_t(Trait::stealthy)])
             {
-                ret += 50;
+                ret += 30;
             }
 
-            if (player_bon::traits[int(Trait::imperceptible)])
+            if (player_bon::traits[size_t(Trait::imperceptible)])
             {
                 ret += 30;
             }

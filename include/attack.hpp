@@ -18,8 +18,7 @@ public:
     Actor*              attacker;
     Actor*              defender;
     Ability_roll_result att_result;
-    int                 nr_dmg_rolls, nr_dmg_sides, dmg_plus;
-    int                 dmg_roll, dmg;
+    int                 dmg;
     bool                is_intrinsic_att;
     bool                is_ethereal_defender_missed;
 

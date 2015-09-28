@@ -32,7 +32,7 @@ Item_data_t::Item_data_t() :
     glyph                               ('X'),
     clr                                 (clr_white),
     tile                                (Tile_id::empty),
-    main_att_mode                       (Main_att_mode::none),
+    main_att_mode                       (Att_mode::none),
     spell_cast_from_scroll              (Spell_id::END),
     land_on_hard_snd_msg                ("I hear a thudding sound."),
     land_on_hard_sfx                    (),
@@ -143,7 +143,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.weight = Item_weight::medium;
         d.glyph = '(';
         d.clr = clr_white;
-        d.main_att_mode = Main_att_mode::melee;
+        d.main_att_mode = Att_mode::melee;
         d.melee.is_melee_wpn = true;
         d.melee.miss_sfx = Sfx_id::miss_medium;
         d.melee.hit_small_sfx = Sfx_id::hit_small;
@@ -172,7 +172,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.clr = clr_white;
         d.melee.is_melee_wpn = true;
         d.melee.dmg = std::pair<int, int>(1, 6);
-        d.main_att_mode = Main_att_mode::ranged;
+        d.main_att_mode = Att_mode::ranged;
         d.ranged.is_ranged_wpn = true;
         d.ranged.projectile_glyph = '/';
         d.ranged.projectile_clr = clr_white;
@@ -831,7 +831,7 @@ void init_data_list()
     d.max_stack_at_spawn = 8;
     d.land_on_hard_snd_msg = "I hear a clanking sound.";
     d.land_on_hard_sfx = Sfx_id::metal_clank;
-    d.main_att_mode = Main_att_mode::thrown;
+    d.main_att_mode = Att_mode::thrown;
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
@@ -853,7 +853,7 @@ void init_data_list()
     d.ranged.throw_dmg = Dice_param(1, 3);
     d.ranged.effective_range = 4;
     d.max_stack_at_spawn = 6;
-    d.main_att_mode = Main_att_mode::thrown;
+    d.main_att_mode = Att_mode::thrown;
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
     data[size_t(d.id)] = d;
@@ -1078,7 +1078,7 @@ void init_data_list()
     d.max_stack_at_spawn = 12;
     d.land_on_hard_snd_msg = "I hear a clanking sound.";
     d.land_on_hard_sfx = Sfx_id::metal_clank;
-    d.main_att_mode = Main_att_mode::thrown;
+    d.main_att_mode = Att_mode::thrown;
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
     data[size_t(d.id)] = d;
