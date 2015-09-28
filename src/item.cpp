@@ -110,8 +110,29 @@ Dice_param Item::dmg(const Att_mode att_mode, const Actor* const actor) const
         break;
 
     case Att_mode::ranged:
-    case Att_mode::thrown:
         out = data_->ranged.dmg;
+
+        if (actor == map::player)
+        {
+            if (player_bon::traits[size_t(Trait::adept_marksman)])
+            {
+                ++out.plus;
+            }
+
+            if (player_bon::traits[size_t(Trait::expert_marksman)])
+            {
+                ++out.plus;
+            }
+
+            if (player_bon::traits[size_t(Trait::master_marksman)])
+            {
+                ++out.plus;
+            }
+        }
+        break;
+
+    case Att_mode::thrown:
+        out = data_->ranged.throw_dmg;
 
         if (actor == map::player)
         {
@@ -291,8 +312,8 @@ std::string Item::name(const Item_ref_type ref_type,
             const std::string   sides_str   = to_str(dmg_dice.sides);
             const int           PLUS        = dmg_dice.plus * MULTIPL;
 
-            const std::string   plus_str    = PLUS ==  0 ? "" :
-                                              PLUS  > 0  ?
+            const std::string   plus_str    = PLUS == 0 ? "" :
+                                              PLUS  > 0 ?
                                               ("+" + to_str(PLUS)) :
                                               ("-" + to_str(PLUS));
 
@@ -314,8 +335,9 @@ std::string Item::name(const Item_ref_type ref_type,
         const std::string   sides_str       = to_str(dmg_dice.sides);
         const int           PLUS            = dmg_dice.plus;
 
-        const std::string   plus_str        = PLUS ==  0 ? "" :
-                                              PLUS  > 0 ? "+" :
+        const std::string   plus_str        = PLUS == 0 ? "" :
+                                              PLUS  > 0 ?
+                                              ("+" + to_str(PLUS)) :
                                               ("-" + to_str(PLUS));
 
         const int           ITEM_SKILL      = data_->ranged.throw_hit_chance_mod;
