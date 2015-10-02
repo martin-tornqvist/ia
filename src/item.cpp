@@ -1221,10 +1221,13 @@ void Flare::on_player_ignite() const
 {
     const bool IS_SWIFT   = player_bon::traits[size_t(Trait::dem_expert)] &&
                             rnd::coin_toss();
+
     const std::string swift_str = IS_SWIFT ? "swiftly " : "";
 
     msg_log::add("I " + swift_str + "light a Flare.");
+
     game_time::update_light_map();
+
     map::player->update_fov();
     render::draw_map_and_interface();
     game_time::tick(IS_SWIFT);

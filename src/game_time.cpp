@@ -192,6 +192,21 @@ void run_std_turn_events()
 
 void run_atomic_turn_events()
 {
+    //Stop burning for any actor standing in liquid
+    for (auto* const actor : actors_)
+    {
+        const Pos& p = actor->pos;
+
+        const Rigid* const rigid = map::cells[p.x][p.y].rigid;
+
+        if (rigid->data().matl_type == Matl::fluid)
+        {
+            actor->prop_handler().end_prop(Prop_id::burning);
+        }
+    }
+
+    //NOTE: We add light AFTER ending burning for actors in liquid, since those actors shouldn't
+    //add light.
     update_light_map();
 }
 
@@ -428,9 +443,15 @@ void update_light_map()
         return;
     }
 
-    for (const auto* const a : actors_)  {a->add_light(light_tmp);}
+    for (const auto* const a : actors_)
+    {
+        a->add_light(light_tmp);
+    }
 
-    for (const auto* const m : mobs_)    {m->add_light(light_tmp);}
+    for (const auto* const m : mobs_)
+    {
+        m->add_light(light_tmp);
+    }
 
     for (int x = 0; x < MAP_W; ++x)
     {

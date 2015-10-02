@@ -1114,8 +1114,6 @@ void Liquid_shallow::bump(Actor& actor_bumping)
 
             snd_emit::emit_snd(snd);
         }
-
-        actor_bumping.prop_handler().end_prop(Prop_id::burning);
     }
 }
 
