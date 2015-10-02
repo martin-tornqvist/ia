@@ -201,7 +201,7 @@ Pos column_and_row_tile(const Tile_id tile)
     case Tile_id::pharaoh_staff:                return Pos(17, 4);
     case Tile_id::lockpick:                     return Pos(17, 4);
     case Tile_id::hunting_horror:               return Pos(4, 5);
-    case Tile_id::spider_leng:                  return Pos(10, 5);
+    case Tile_id::giant_spider:                 return Pos(10, 5);
     case Tile_id::chthonian:                    return Pos(0, 5);
     case Tile_id::mi_go:                        return Pos(12, 5);
     case Tile_id::floor:                        return Pos(1, 6);

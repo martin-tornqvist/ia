@@ -81,9 +81,24 @@ enum class Actor_erratic_freq
     very     = 50
 };
 
-enum class Actor_size {none, floor, humanoid, giant};
+enum class Actor_size
+{
+    none,
+    floor,
+    humanoid,
+    giant
+}
+;
 
-enum class Mon_shock_lvl {none, unsettling, scary, terrifying, mind_shattering, END};
+enum class Mon_shock_lvl
+{
+    none,
+    unsettling,
+    scary,
+    terrifying,
+    mind_shattering,
+    END
+};
 
 enum class Ai_id
 {

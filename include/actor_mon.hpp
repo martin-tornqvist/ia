@@ -797,8 +797,9 @@ class The_high_priest: public Mon
 public:
     The_high_priest();
     ~The_high_priest() {}
+
     void mk_start_items() override;
-    void on_death()      override;
+    void on_death() override;
     bool on_actor_turn_hook() override;
 private:
     void on_std_turn_hook()   override;

@@ -916,7 +916,7 @@ void init_data_list()
     d.ranged_cooldown_turns = 0;
     d.glyph = 's';
     d.color = clr_gray;
-    d.tile = Tile_id::spider_leng;
+    d.tile = Tile_id::giant_spider;
     d.hp = 8;
     d.dmg_melee = 3;
     d.ability_vals.set_val(Ability_id::melee, 40);
@@ -956,7 +956,7 @@ void init_data_list()
     d.ranged_cooldown_turns = 0;
     d.glyph = 'S';
     d.color = clr_magenta;
-    d.tile = Tile_id::spider_leng;
+    d.tile = Tile_id::giant_spider;
     d.hp = 30;
     d.dmg_melee = 8;
 //  d.dmg_ranged = 1;
@@ -966,7 +966,7 @@ void init_data_list()
     d.natural_props[int(Prop_id::infravis)] = true;
     d.group_size = Mon_group_size::few;
     d.nr_turns_aware = 20;
-    d.actor_size = Actor_size::giant;
+    d.actor_size = Actor_size::humanoid;
     d.descr = "Leng spiders are huge, purplish arachnids, with pustulent bloated "
               "bodies and long, bristly legs. Native to the Dreamlands, the "
               "spiders of Leng are intelligent, dangerous, and gigantic.";
@@ -1154,7 +1154,7 @@ void init_data_list()
     d.nr_turns_aware = 5;
     d.descr = "A restless spirit.";
     d.erratic_move_pct = Actor_erratic_freq::somewhat;
-    d.mon_shock_lvl = Mon_shock_lvl::terrifying;
+    d.mon_shock_lvl = Mon_shock_lvl::scary;
     d.is_undead = true;
     d.is_ghost = true;
     d.is_infra_visible = false;
@@ -1847,7 +1847,7 @@ void init_data_list()
     d.aggro_sfx_mon_seen = Sfx_id::ghoul_growl;
     d.aggro_sfx_mon_hidden = Sfx_id::wolf_howl;
     d.erratic_move_pct = Actor_erratic_freq::somewhat;
-    d.mon_shock_lvl = Mon_shock_lvl::terrifying;
+    d.mon_shock_lvl = Mon_shock_lvl::scary;
     d.is_infra_visible = false;
     d.is_humanoid = true;
     d.native_rooms.push_back(Room_type::plain);
@@ -2020,7 +2020,7 @@ void init_data_list()
         "of a crocodile. It is wielding a spear.";
     d.spell_cast_msg = "casts a spell.";
     d.erratic_move_pct = Actor_erratic_freq::somewhat;
-    d.mon_shock_lvl = Mon_shock_lvl::terrifying;
+    d.mon_shock_lvl = Mon_shock_lvl::scary;
     d.is_undead = true;
     d.is_humanoid = true;
     d.is_infra_visible = false;
@@ -2194,9 +2194,8 @@ void init_data_list()
     d.can_open_doors = false;
     d.nr_turns_aware = 6;
     d.descr =
-        "An extremely aggressive species of great ape. Their pale skin and excellent "
-        "night vision indicates that they adapted to subterranean life a very long time "
-        "ago.";
+        "An extremely aggressive species of great ape. Their pale skin and excellent night vision "
+        "indicates that they adapted to subterranean life a very long time ago.";
     d.aggro_text_mon_hidden = "I hear a beast howling.";
     d.aggro_text_mon_seen = d.name_the + " howls at me.";
     d.aggro_sfx_mon_seen = Sfx_id::ape;
@@ -2599,7 +2598,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_tgt_when_los)] = true;
     d.ai[int(Ai_id::moves_to_lair)] = false;
     d.ai[int(Ai_id::moves_to_leader)] = true;
-    d.speed = Actor_speed::sluggish;
+    d.speed = Actor_speed::slow;
     d.ranged_cooldown_turns = 0;
     d.glyph = 'O';
     d.color = clr_green_lgt;
@@ -2972,7 +2971,7 @@ void init_data_list()
     d.is_auto_descr_allowed = false;
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = Actor_erratic_freq::never;
-    d.mon_shock_lvl = Mon_shock_lvl::scary;
+    d.mon_shock_lvl = Mon_shock_lvl::terrifying;
     d.is_humanoid = true;
     d.can_leave_corpse = false;
     d.can_bleed = false;

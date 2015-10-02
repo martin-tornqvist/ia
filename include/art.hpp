@@ -86,7 +86,7 @@ enum class Tile_id
     pharaoh_staff,
     lockpick,
     hunting_horror,
-    spider_leng,
+    giant_spider,
     chthonian,
     mi_go,
     floor,

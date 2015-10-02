@@ -2190,9 +2190,9 @@ void Gas_spore::on_death()
 
 The_high_priest::The_high_priest() :
     Mon(),
-    has_greeted_player_(false),
-    NR_TURNS_BETWEEN_CPY_(15),
-    nr_turns_until_next_cpy_(0) {}
+    has_greeted_player_         (false),
+    NR_TURNS_BETWEEN_CPY_       (15),
+    nr_turns_until_next_cpy_    (0) {}
 
 void The_high_priest::mk_start_items()
 {
