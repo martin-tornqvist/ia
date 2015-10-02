@@ -405,9 +405,9 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
 
     render::draw_blast_at_cells({tgt->pos}, clr_magenta);
 
-    bool    is_warlock_charged  = false;
-    Clr     msg_clr            = clr_msg_good;
-    std::string  tgt_str            = "I am";
+    bool        is_warlock_charged  = false;
+    Clr         msg_clr             = clr_msg_good;
+    std::string tgt_str             = "I am";
 
     if (tgt->is_player())
     {
@@ -609,15 +609,14 @@ Spell_effect_noticed Spell_mayhem::cast_impl(Actor* const caster) const
 
 bool Spell_mayhem::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.aware_counter_ > 0  &&
-           rnd::coin_toss()        &&
-           (mon.tgt_ || rnd::one_in(20));
+    return mon.aware_counter_ > 0 && rnd::coin_toss() && (mon.tgt_ || rnd::one_in(20));
 }
 
 //------------------------------------------------------------ PESTILENCE
 Spell_effect_noticed Spell_pest::cast_impl(Actor* const caster) const
 {
     const int RND = rnd::range(1, 3);
+
     const Actor_id monster_id = RND == 1 ? Actor_id::green_spider :
                                 RND == 2 ? Actor_id::red_spider   :
                                 Actor_id::rat;
@@ -682,9 +681,7 @@ Spell_effect_noticed Spell_pest::cast_impl(Actor* const caster) const
 
 bool Spell_pest::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_         &&
-           rnd::coin_toss()  &&
-           (mon.tgt_ || rnd::one_in(20));
+    return mon.tgt_ && rnd::coin_toss() && (mon.tgt_ || rnd::one_in(20));
 }
 
 //------------------------------------------------------------ PHARAOH STAFF
@@ -1026,9 +1023,9 @@ Spell_effect_noticed Spell_teleport::cast_impl(Actor* const caster) const
 
 bool Spell_teleport::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_                             &&
-           mon.hp() <= (mon.hp_max(true) / 2)   &&
-           rnd::coin_toss();
+    const bool IS_LOW_HP = mon.hp() <= (mon.hp_max(true) / 2);
+
+    return mon.tgt_ && IS_LOW_HP && rnd::coin_toss();
 }
 
 //------------------------------------------------------------ ELEMENTAL RES
@@ -1099,7 +1096,7 @@ Spell_effect_noticed Spell_knock_back::cast_impl(Actor* const caster) const
 
 bool Spell_knock_back::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_;
+    return mon.tgt_ && rnd::coin_toss();
 }
 
 //------------------------------------------------------------ PROP ON OTHERS
@@ -1143,7 +1140,7 @@ bool Spell_prop_on_mon::allow_mon_cast_now(Mon& mon) const
 
 bool Spell_paralyze_mon::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && rnd::one_in(3);
+    return mon.tgt_ && rnd::one_in(4);
 }
 
 //------------------------------------------------------------ DISEASE
@@ -1313,9 +1310,8 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
 
 bool Spell_summon_mon::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.aware_counter_ > 0  &&
-           rnd::coin_toss()        &&
-           (mon.tgt_ || rnd::one_in(20));
+    //NOTE: Checking awareness instead of target, to allow summoning even with broken LOS
+    return (mon.aware_counter_ > 0) && rnd::coin_toss() && (mon.tgt_ || rnd::one_in(18));
 }
 
 //------------------------------------------------------------ HEAL SELF
@@ -1380,7 +1376,7 @@ Spell_effect_noticed Spell_mi_go_hypno::cast_impl(Actor* const caster) const
 
 bool Spell_mi_go_hypno::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && mon.tgt_->is_player() && rnd::one_in(4);
+    return mon.tgt_ && mon.tgt_->is_player() && rnd::one_in(3);
 }
 
 //------------------------------------------------------------ IMMOLATION

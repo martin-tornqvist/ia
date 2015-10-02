@@ -133,7 +133,7 @@ private:
 
     void fov_hack();
 
-    int nr_moves_until_free_action_;
+    int nr_steps_until_free_action_;
     int nr_turns_until_ins_;
 
     int nr_quick_move_steps_left_;

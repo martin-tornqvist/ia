@@ -47,8 +47,6 @@ void run_std_turn_events()
 {
     ++turn_nr_;
 
-    int regen_spi_n_turns = 15;
-
     for (size_t i = 0; i < actors_.size(); ++i)
     {
         Actor* const actor = actors_[i];
@@ -87,7 +85,7 @@ void run_std_turn_events()
 
                 if (mon->player_aware_of_me_counter_ > 0)
                 {
-                    mon->player_aware_of_me_counter_--;
+                    --(mon->player_aware_of_me_counter_);
                 }
             }
 
@@ -102,7 +100,10 @@ void run_std_turn_events()
             if (actor->is_alive())
             {
                 //Regen Spi
-                if (actor == map::player)
+
+                int regen_spi_n_turns = 15;
+
+                if (actor->is_player())
                 {
                     if (player_bon::traits[size_t(Trait::stout_spirit)])
                     {
@@ -119,8 +120,12 @@ void run_std_turn_events()
                         regen_spi_n_turns -= 3;
                     }
                 }
-
-                regen_spi_n_turns = std::max(2, regen_spi_n_turns);
+                else //Is monster
+                {
+                    //Monsters regen spirit very quickly, so spell casters don't suddenly get
+                    //completely handicapped
+                    regen_spi_n_turns = 2;
+                }
 
                 if (is_spi_regen_this_turn(regen_spi_n_turns))
                 {

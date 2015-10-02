@@ -45,7 +45,7 @@ Player::Player() :
     shock_                      (0.0),
     shock_tmp_                  (0.0),
     perm_shock_taken_cur_turn_  (0.0),
-    nr_moves_until_free_action_ (-1),
+    nr_steps_until_free_action_ (-1),
     nr_turns_until_ins_         (-1),
     nr_quick_move_steps_left_   (-1),
     quick_move_dir_             (Dir::END),
@@ -1271,29 +1271,29 @@ void Player::move(Dir dir)
 
             pos = tgt;
 
-            const int FREE_MOVE_EVERY_N_TURN =
+            const int FREE_STEP_EVERY_N_TURN =
                 player_bon::traits[size_t(Trait::mobile)]     ? 3 :
                 player_bon::traits[size_t(Trait::lithe)]      ? 4 :
                 player_bon::traits[size_t(Trait::dexterous)]  ? 5 : 0;
 
-            if (FREE_MOVE_EVERY_N_TURN > 0)
+            if (FREE_STEP_EVERY_N_TURN > 0)
             {
-                if (nr_moves_until_free_action_ == -1)
+                if (nr_steps_until_free_action_ == -1)
                 {
                     //Steps until free action has not been initialized before (e.g. player recently
                     //picked dexterous)
-                    nr_moves_until_free_action_ = FREE_MOVE_EVERY_N_TURN - 2;
+                    nr_steps_until_free_action_ = FREE_STEP_EVERY_N_TURN - 2;
                 }
-                else if (nr_moves_until_free_action_ == 0)
+                else if (nr_steps_until_free_action_ == 0)
                 {
                     //Time for a free move!
-                    nr_moves_until_free_action_ = FREE_MOVE_EVERY_N_TURN - 1;
+                    nr_steps_until_free_action_ = FREE_STEP_EVERY_N_TURN - 1;
                     is_free_turn = true;
                 }
                 else
                 {
                     //Not yet free move
-                    --nr_moves_until_free_action_;
+                    --nr_steps_until_free_action_;
                 }
             }
 
@@ -1341,7 +1341,7 @@ void Player::move(Dir dir)
 
 bool Player::is_free_step_turn() const
 {
-    return nr_moves_until_free_action_ == 0;
+    return nr_steps_until_free_action_ == 0;
 }
 
 void Player::auto_melee()

@@ -32,6 +32,7 @@ void Actor_data_t::reset()
     }
 
     ranged_cooldown_turns = spell_cooldown_turns = 0;
+
     ability_vals.reset();
 
     for (int i = 0; i < int(Ai_id::END); ++i)
@@ -494,7 +495,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::slow;
     d.ranged_cooldown_turns = 3;
-    d.spell_cooldown_turns = 4;
+    d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_gray;
     d.tile = Tile_id::cultist_firearm;
@@ -533,7 +534,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
     d.ranged_cooldown_turns = 3;
-    d.spell_cooldown_turns = 4;
+    d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_yellow;
     d.tile = Tile_id::cultist_firearm;
@@ -573,7 +574,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
     d.ranged_cooldown_turns = 3;
-    d.spell_cooldown_turns = 4;
+    d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_blue_lgt;
     d.tile = Tile_id::cultist_firearm;
@@ -612,7 +613,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
     d.ranged_cooldown_turns = 0;
-    d.spell_cooldown_turns = 2;
+    d.spell_cooldown_turns = 1;
     d.glyph = 'P';
     d.color = clr_magenta;
     d.tile = Tile_id::witch_or_warlock;
@@ -663,7 +664,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
     d.ranged_cooldown_turns = 0;
-    d.spell_cooldown_turns = 4;
+    d.spell_cooldown_turns = 3;
     d.glyph = 'r';
     d.color = clr_magenta;
     d.tile = Tile_id::rat_thing;
@@ -768,7 +769,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::slow;
     d.ranged_cooldown_turns = 0;
-    d.spell_cooldown_turns = 2;
+    d.spell_cooldown_turns = 1;
     d.glyph = 'P';
     d.color = clr_cyan_lgt;
     d.tile = Tile_id::cultist_dagger;
@@ -1962,7 +1963,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::slow;
     d.ranged_cooldown_turns = 0;
-    d.spell_cooldown_turns = 3;
+    d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_magenta;
     d.tile = Tile_id::mummy;
@@ -2043,7 +2044,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::slow;
     d.ranged_cooldown_turns = 0;
-    d.spell_cooldown_turns = 3;
+    d.spell_cooldown_turns = 2;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
     d.glyph = 'P';
@@ -2052,7 +2053,7 @@ void init_data_list()
     d.hp = 70;
     d.spi = 60;
     d.dmg_melee = 6;
-    d.ability_vals.set_val(Ability_id::melee, 40);
+    d.ability_vals.set_val(Ability_id::melee, 60);
     d.spawn_min_dlvl = DLVL_LAST_MID_GAME;
     d.is_auto_spawn_allowed = false;
     d.group_size = Mon_group_size::alone;
@@ -2086,7 +2087,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::slow;
     d.ranged_cooldown_turns = 0;
-    d.spell_cooldown_turns = 3;
+    d.spell_cooldown_turns = 2;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 1;
     d.glyph = 'P';
@@ -2095,7 +2096,7 @@ void init_data_list()
     d.hp = 70;
     d.spi = 60;
     d.dmg_melee = 6;
-    d.ability_vals.set_val(Ability_id::melee, 40);
+    d.ability_vals.set_val(Ability_id::melee, 60);
     d.spawn_min_dlvl = 11;
     d.group_size = Mon_group_size::alone;
     d.actor_size = Actor_size::humanoid;
@@ -2942,13 +2943,13 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
     d.ranged_cooldown_turns = 0;
-    d.spell_cooldown_turns = 7;
+    d.spell_cooldown_turns = 3;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
     d.glyph = 'P';
     d.color = clr_red;
     d.tile = Tile_id::the_high_priest;
-    d.hp = 250;
+    d.hp = 275;
     d.spi = 99999;
     d.natural_props[int(Prop_id::rConf)] = true;
     d.natural_props[int(Prop_id::rFear)] = true;
