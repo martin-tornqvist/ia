@@ -133,7 +133,7 @@ void draw()
     //Wielded weapon
     pos.x = X_WIELDED;
 
-    Item* item_wielded = map::player->inv().item_in_slot(Slot_id::wpn);
+    Item* item_wielded = player.inv().item_in_slot(Slot_id::wpn);
 
     if (item_wielded)
     {
@@ -219,7 +219,7 @@ void draw()
     render::draw_text(str, panel, pos, clr_white);
 
     //Armor
-    const Item* const body_item = map::player->inv().item_in_slot(Slot_id::body);
+    const Item* const body_item = player.inv().item_in_slot(Slot_id::body);
 
     if (body_item)
     {
@@ -263,7 +263,7 @@ void draw()
 
     ++pos.x;
 
-    const int ENC = map::player->enc_percent();
+    const int ENC = player.enc_percent();
 
     str = to_str(ENC) + "%";
 
@@ -273,7 +273,7 @@ void draw()
     render::draw_text(str, panel, pos, enc_clr);
 
     //Lantern
-    const Item* const lantern_item = map::player->inv().item_in_backpack(Item_id::lantern);
+    const Item* const lantern_item = player.inv().item_in_backpack(Item_id::lantern);
 
     if (lantern_item)
     {
@@ -306,7 +306,7 @@ void draw()
     }
 
     //Medical bag
-    const Item* const medical_item = map::player->inv().item_in_backpack(Item_id::medical_bag);
+    const Item* const medical_item = player.inv().item_in_backpack(Item_id::medical_bag);
 
     if (medical_item)
     {
@@ -341,7 +341,7 @@ void draw()
     //Thrown item
     pos.x = X_THROWN;
 
-    auto* const thr_item = map::player->inv().item_in_slot(Slot_id::thrown);
+    auto* const thr_item = player.inv().item_in_slot(Slot_id::thrown);
 
     if (thr_item)
     {
@@ -373,7 +373,7 @@ void draw()
 
     std::vector<Str_and_clr> props_line;
 
-    map::player->prop_handler().props_interface_line(props_line);
+    player.prop_handler().props_interface_line(props_line);
 
     const int NR_PROPS = props_line.size();
 
@@ -401,7 +401,12 @@ void draw()
 
     ++pos.x;
 
-    render::draw_text(turn_str, panel, pos, clr_white);
+    const bool IS_FREE_STEP_TURN = player.is_free_step_turn();
+
+    const Clr turn_clr      = IS_FREE_STEP_TURN ? clr_black     : clr_white;
+    const Clr turn_bg_clr   = IS_FREE_STEP_TURN ? clr_green_lgt : clr_black;
+
+    render::draw_text(turn_str, panel, pos, turn_clr, turn_bg_clr);
 }
 
 } //Character_lines

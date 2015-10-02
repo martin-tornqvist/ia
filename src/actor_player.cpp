@@ -1280,15 +1280,19 @@ void Player::move(Dir dir)
             {
                 if (nr_moves_until_free_action_ == -1)
                 {
+                    //Steps until free action has not been initialized before (e.g. player recently
+                    //picked dexterous)
                     nr_moves_until_free_action_ = FREE_MOVE_EVERY_N_TURN - 2;
                 }
                 else if (nr_moves_until_free_action_ == 0)
                 {
+                    //Time for a free move!
                     nr_moves_until_free_action_ = FREE_MOVE_EVERY_N_TURN - 1;
                     is_free_turn = true;
                 }
                 else
                 {
+                    //Not yet free move
                     --nr_moves_until_free_action_;
                 }
             }
@@ -1333,6 +1337,11 @@ void Player::move(Dir dir)
     {
         game_time::tick(is_free_turn);
     }
+}
+
+bool Player::is_free_step_turn() const
+{
+    return nr_moves_until_free_action_ == 0;
 }
 
 void Player::auto_melee()

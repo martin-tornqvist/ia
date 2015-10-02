@@ -78,8 +78,7 @@ public:
         return std::min(100, ins_);
     }
 
-    //The following is used for determining if '!'-marks should be drawn on the
-    //player map symbol
+    //Used for determining if '!'-marks should be drawn on the player map symbol
     double perm_shock_taken_cur_turn() const
     {
         return perm_shock_taken_cur_turn_;
@@ -117,6 +116,8 @@ public:
     bool is_standing_in_open_place() const;
 
     bool is_standing_in_cramped_place() const;
+
+    bool is_free_step_turn() const;
 
     Medical_bag* active_medical_bag;
     Explosive* active_explosive;
