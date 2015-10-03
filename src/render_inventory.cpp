@@ -111,9 +111,40 @@ void draw_detailed_item_descr(const Item* const item)
             }
         }
 
-        const bool          IS_PLURAL   = item->nr_items_ > 1 && item->data().is_stackable;
-        const std::string   weight_str  = (IS_PLURAL ? "They are " : "It is ") +
-                                          item->weight_str() + " to carry.";
+        const bool IS_PLURAL = item->nr_items_ > 1 && item->data().is_stackable;
+
+        const std::string ref_str = IS_PLURAL ? "They are " : "It is ";
+
+        const Item_data_t& d = item->data();
+
+        std::string disturb_str = "";
+
+        const std::string disturb_base_str = ref_str + "a burden on my mind to ";
+
+        if (d.is_ins_raied_while_carried)
+        {
+            disturb_str = disturb_base_str + "carry";
+        }
+        else if (d.is_ins_raied_while_equiped)
+        {
+            if (d.type == Item_type::melee_wpn || d.type == Item_type::ranged_wpn)
+            {
+                disturb_str = disturb_base_str + "wield.";
+            }
+            else //Not a wieldable item
+            {
+                disturb_str = disturb_base_str + "wear.";
+            }
+        }
+
+        if (!disturb_str.empty())
+        {
+            disturb_str += " (+" + to_str(INS_FROM_DISTURBING_ITEMS) + "% insanity)";
+
+            lines.push_back({disturb_str, clr_magenta});
+        }
+
+        const std::string weight_str = ref_str + item->weight_str() + " to carry.";
 
         lines.push_back({weight_str, clr_green});
 
@@ -131,6 +162,7 @@ void draw_detailed_item_descr(const Item* const item)
         if (weight_pct > 0 && weight_pct < 100)
         {
             const std::string pct_str = "(" + to_str(weight_pct) + "% of total carried weight)";
+
             lines.push_back({pct_str, clr_green});
         }
     }

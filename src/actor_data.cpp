@@ -1565,7 +1565,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_lair)] = false;
     d.ai[int(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::fast;
-    d.glyph = 'I';
+    d.glyph = 'i';
     d.color = clr_brown;
     d.tile = Tile_id::locust;
     d.hp = 3;
@@ -1822,7 +1822,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
     d.ranged_cooldown_turns = 0;
-    d.glyph = 'A';
+    d.glyph = 'M';
     d.color = clr_green;
     d.tile = Tile_id::ghoul;
     d.hp = 21;

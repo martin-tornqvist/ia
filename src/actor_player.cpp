@@ -469,7 +469,8 @@ void Player::incr_insanity()
 
     if (!config::is_bot_playing())
     {
-        const int INS_INCR = 6;
+        const int INS_INCR = 5;
+
         ins_ += INS_INCR;
     }
 
@@ -739,25 +740,37 @@ void Player::update_tmp_shock()
         shock_tmp_ += shock_taken_after_mods(BASE_SHOCK, Shock_src::misc);
     }
 
-    //Temporary shock from items
+    shock_tmp_ = std::min(99.0, shock_tmp_);
+}
+
+int Player::ins() const
+{
+    int out = ins_;
+
+    //INS from items
     for (auto& slot : inv_->slots_)
     {
         if (slot.item)
         {
-            const int BASE_SHOCK = slot.item->data().shock_while_equipped;
+            const Item_data_t& d = slot.item->data();
 
-            shock_tmp_ += shock_taken_after_mods(BASE_SHOCK, Shock_src::use_strange_item);
+            //NOTE: Having an item equiped also counts as carrying it
+            if (d.is_ins_raied_while_carried || d.is_ins_raied_while_equiped)
+            {
+                out += INS_FROM_DISTURBING_ITEMS;
+            }
         }
     }
 
     for (const Item* const item : inv_->backpack_)
     {
-        const int BASE_SHOCK = item->data().shock_while_in_backpack;
-
-        shock_tmp_ += shock_taken_after_mods(BASE_SHOCK, Shock_src::use_strange_item);
+        if (item->data().is_ins_raied_while_carried)
+        {
+            out += INS_FROM_DISTURBING_ITEMS;
+        }
     }
 
-    shock_tmp_ = std::min(99.0, shock_tmp_);
+    return std::min(100, out);
 }
 
 void Player::on_std_turn()

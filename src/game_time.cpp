@@ -355,7 +355,7 @@ void tick(const bool IS_FREE_TURN)
 
         if (mon->aware_counter_ > 0)
         {
-            --mon->aware_counter_;
+            --(mon->aware_counter_);
         }
     }
 

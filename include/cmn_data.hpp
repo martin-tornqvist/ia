@@ -86,6 +86,8 @@ const int MEDICAL_BAG_NR_TRN_PER_HP         = 2;
 
 const int SHOCK_FROM_OBSESSION = 30;
 
+const int INS_FROM_DISTURBING_ITEMS = 5;
+
 //Value used for limiting spawning over time and "breeder" monsters. The actual number of actors
 //may sometimes go a bit above this number, e.g. due to a group of monsters spawning when the
 //number of actors is near the limit. Summoning spells does not check this number at all (because
@@ -93,8 +95,7 @@ const int SHOCK_FROM_OBSESSION = 30;
 //actors above the limit. This number is treated as a soft limit.
 const size_t MAX_NR_ACTORS_ON_MAP = 125;
 
-const std::string info_scr_cmd_info =
-    " [2/8 down/up j/k] to navigate [space/esc] to exit ";
+const std::string info_scr_cmd_info = " [2/8 down/up j/k] to navigate [space/esc] to exit ";
 
 const std::string cancel_info_str_no_space  = "[space/esc] to cancel";
 const std::string cancel_info_str           = " " + cancel_info_str_no_space;
@@ -102,6 +103,5 @@ const std::string msg_disarm_no_trap        = "I find nothing there to disarm.";
 const std::string msg_mon_prevent_cmd       = "Not while an enemy is near.";
 const std::string spell_reflect_msg         = "The spell is reflected!";
 const std::string spell_reflect_self_msg    = "There is a faint echo...";
-const std::string item_carry_shock_descr    = "This item is disturbing to carry.";
 
 #endif

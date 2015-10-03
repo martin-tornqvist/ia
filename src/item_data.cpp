@@ -36,8 +36,8 @@ Item_data_t::Item_data_t() :
     spell_cast_from_scroll              (Spell_id::END),
     land_on_hard_snd_msg                ("I hear a thudding sound."),
     land_on_hard_sfx                    (),
-    shock_while_in_backpack             (0),
-    shock_while_equipped                (0),
+    is_ins_raied_while_carried          (false),
+    is_ins_raied_while_equiped          (false),
     melee                               (Item_melee_data()),
     ranged                              (Item_ranged_data()),
     armor                               (Item_armor_data())
@@ -339,7 +339,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         reset_data(d, Item_type::general);
         d.type = Item_type::amulet;
         d.value = Item_value::major_treasure;
-        d.shock_while_in_backpack = d.shock_while_equipped = 10;
+        d.is_ins_raied_while_carried = true;
         d.tile = Tile_id::amulet;
         d.glyph = '\"';
         d.weight = Item_weight::light;
@@ -354,7 +354,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         reset_data(d, Item_type::general);
         d.type = Item_type::ring;
         d.value = Item_value::major_treasure;
-        d.shock_while_in_backpack = d.shock_while_equipped = 10;
+        d.is_ins_raied_while_carried = true;
         d.tile = Tile_id::ring;
         d.glyph = '=';
         d.weight = Item_weight::extra_light;
@@ -1042,9 +1042,7 @@ void init_data_list()
     d.base_descr =
     {
         "Once wielded by long-forgotten kings in ancient times, this powerful artifact "
-        "grants the power to call up a loyal servant from the dead.",
-
-        item_carry_shock_descr
+        "grants the power to call up a loyal servant from the dead."
     };
     d.clr = clr_magenta;
     d.weight = Item_weight::medium;
@@ -1055,7 +1053,7 @@ void init_data_list()
     d.melee.miss_sfx = Sfx_id::miss_medium;
     d.chance_to_incl_in_floor_spawn_list = 1;
     d.value = Item_value::major_treasure;
-    d.shock_while_in_backpack = d.shock_while_equipped = 15;
+    d.is_ins_raied_while_carried = true;
     add_feature_found_in(d, Feature_id::tomb, 20);
     data[size_t(d.id)] = d;
 
@@ -1634,13 +1632,11 @@ void init_data_list()
     d.base_name = {"Mi-go Bio-armor", "", "a Mi-go Bio-armor"};
     d.base_descr =
     {
-        "A self-repairing biological armor created by the Mi-go.",
-
-        "It is very disturbing for a human to wear."
+        "A self-repairing biological armor created by the Mi-go."
     };
     d.spawn_std_range = Range(-1, -1);
     d.weight = Item_weight::medium;
-    d.shock_while_equipped = 15;
+    d.is_ins_raied_while_equiped = true;
     d.clr = clr_magenta;
     d.tile = Tile_id::mi_go_armor;
     d.armor.armor_points = 2;

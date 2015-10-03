@@ -252,13 +252,13 @@ public:
     Spell_id                    spell_cast_from_scroll;
     std::string                 land_on_hard_snd_msg;
     Sfx_id                      land_on_hard_sfx;
-    int                         shock_while_in_backpack;
-    int                         shock_while_equipped;
+    bool                        is_ins_raied_while_carried;
+    bool                        is_ins_raied_while_equiped;
 
     std::vector<Room_type>                  native_rooms;
     std::vector<Item_container_spawn_rule>  container_spawn_rules;
 
-    int ability_mods_while_equipped[int(Ability_id::END)];
+    int ability_mods_while_equipped[size_t(Ability_id::END)];
 
     struct Item_melee_data
     {
@@ -324,7 +324,7 @@ class Item;
 namespace item_data
 {
 
-extern Item_data_t data[int(Item_id::END)];
+extern Item_data_t data[size_t(Item_id::END)];
 
 void init();
 void cleanup();

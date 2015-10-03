@@ -73,10 +73,7 @@ public:
         return int(floor(shock_ + shock_tmp_));
     }
 
-    int ins() const
-    {
-        return std::min(100, ins_);
-    }
+    int ins() const;
 
     //Used for determining if '!'-marks should be drawn on the player map symbol
     double perm_shock_taken_cur_turn() const

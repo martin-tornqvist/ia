@@ -600,8 +600,6 @@ std::vector<std::string> Jewelry::descr() const
         ret.push_back("All properties of the " + jewelry_name + " are known to me.");
     }
 
-    ret.push_back(item_carry_shock_descr);
-
     return ret;
 }
 
