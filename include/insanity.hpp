@@ -25,6 +25,7 @@ enum class Ins_sympt_id
     sadism,
     shadows,
     confusion,
+    frenzy,
     strange_sensation,
     END
 };
@@ -795,6 +796,38 @@ protected:
     std::string history_msg() const override
     {
         return "Suddenly felt deeply confused for no reason.";
+    }
+};
+
+class Ins_frenzy : public Ins_sympt
+{
+public:
+    Ins_frenzy() :
+        Ins_sympt(Ins_sympt_id::frenzy) {}
+
+    bool is_permanent() const override
+    {
+        return false;
+    }
+
+    bool allow_gain() const override;
+
+protected:
+    void on_start_hook() override;
+
+    std::string start_msg() const override
+    {
+        return "I fall into an uncontrollable rage!";
+    }
+
+    std::string start_heading() const override
+    {
+        return "Frenzy!";
+    }
+
+    std::string history_msg() const override
+    {
+        return "Fell into an uncontrollable rage.";
     }
 };
 

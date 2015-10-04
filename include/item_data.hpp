@@ -153,7 +153,6 @@ enum class Item_id
     potion_vitality,
     potion_spirit,
     potion_blindness,
-    potion_frenzy,
     potion_fortitude,
     potion_paralyze,
     potion_rElec,

@@ -184,29 +184,6 @@ private:
     void collide_hook(const Pos& pos, Actor* const actor) override;
 };
 
-class Potion_frenzy: public Potion
-{
-public:
-    Potion_frenzy(Item_data_t* const item_data) :
-        Potion(item_data) {}
-    ~Potion_frenzy() {}
-
-    void quaff_impl(Actor& actor) override;
-
-    const std::string real_name() const override
-    {
-        return "Frenzy";
-    }
-
-private:
-    std::string descr_identified() const override
-    {
-        return "Causes uncontrollable fury.";
-    }
-
-    void collide_hook(const Pos& pos, Actor* const actor) override;
-};
-
 class Potion_fortitude: public Potion
 {
 public:

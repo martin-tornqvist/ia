@@ -262,26 +262,6 @@ void Potion_conf::collide_hook(const Pos& pos, Actor* const actor)
     }
 }
 
-void Potion_frenzy::quaff_impl(Actor& actor)
-{
-    actor.prop_handler().try_add_prop(new Prop_frenzied(Prop_turns::std));
-
-    if (map::player->can_see_actor(actor))
-    {
-        identify(Verbosity::verbose);
-    }
-}
-
-void Potion_frenzy::collide_hook(const Pos& pos, Actor* const actor)
-{
-    (void)pos;
-
-    if (actor)
-    {
-        quaff_impl(*actor);
-    }
-}
-
 void Potion_fortitude::quaff_impl(Actor& actor)
 {
     Prop_handler& prop_handler = actor.prop_handler();
@@ -297,6 +277,9 @@ void Potion_fortitude::quaff_impl(Actor& actor)
     prop_handler.try_add_prop(rConf);
     prop_handler.try_add_prop(rSleep);
 
+    prop_handler.end_prop(Prop_id::frenzied);
+
+    //Remove a random insanity symptom if this is the player
     if (actor.is_player())
     {
         const std::vector<const Ins_sympt*> sympts = insanity::active_sympts();

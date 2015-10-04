@@ -353,6 +353,16 @@ void Ins_confusion::on_start_hook()
     map::player->prop_handler().try_add_prop(new Prop_confused(Prop_turns::std));
 }
 
+bool Ins_frenzy::allow_gain() const
+{
+    return true;
+}
+
+void Ins_frenzy::on_start_hook()
+{
+    map::player->prop_handler().try_add_prop(new Prop_frenzied(Prop_turns::std));
+}
+
 
 //-----------------------------------------------------------------------------
 // Insanity handling
@@ -416,6 +426,9 @@ Ins_sympt* mk_sympt(const Ins_sympt_id id)
 
     case Ins_sympt_id::confusion:
         return new Ins_confusion();
+
+    case Ins_sympt_id::frenzy:
+        return new Ins_frenzy();
 
     case Ins_sympt_id::strange_sensation:
         return new Ins_strange_sensation();

@@ -1479,7 +1479,7 @@ void Prop_handler::props_interface_line(std::vector<Str_and_clr>& line) const
             {
                 if (player_bon::traits[size_t(Trait::self_aware)])
                 {
-                    str += "(" + to_str(TURNS_LEFT) + ")";
+                    str += "/" + to_str(TURNS_LEFT);
                 }
             }
             else //Property is indefinite

@@ -1748,10 +1748,6 @@ void init_data_list()
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::potion);
-    d.id = Item_id::potion_frenzy;
-    data[size_t(d.id)] = d;
-
-    reset_data(d, Item_type::potion);
     d.id = Item_id::potion_fortitude;
     data[size_t(d.id)] = d;
 

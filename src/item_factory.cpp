@@ -215,10 +215,6 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
         r = new Potion_blindness(d);
         break;
 
-    case Item_id::potion_frenzy:
-        r = new Potion_frenzy(d);
-        break;
-
     case Item_id::potion_fortitude:
         r = new Potion_fortitude(d);
         break;
