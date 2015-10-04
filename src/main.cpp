@@ -142,11 +142,17 @@ int main(int argc, char* argv[])
                 {
                     //Run postmortem, then return to main menu
                     static_cast<Player*>(map::player)->wait_turns_left = -1;
+
                     audio::play(Sfx_id::death);
+
                     msg_log::add("I am dead...", clr_msg_bad, false, More_prompt_on_msg::yes);
+
                     msg_log::clear();
+
                     highscore::on_game_over(false);
+
                     postmortem::run(&quit_game);
+
                     init::quit_to_main_menu = true;
                 }
             }

@@ -1541,23 +1541,23 @@ bool Prop_handler::allow_see() const
     return true;
 }
 
-int Prop_handler::change_max_hp(const int HP_MAX) const
+int Prop_handler::affect_max_hp(const int HP_MAX) const
 {
     int new_hp_max = HP_MAX;
 
     for (Prop* prop : props_)
     {
-        new_hp_max = prop->change_max_hp(new_hp_max);
+        new_hp_max = prop->affect_max_hp(new_hp_max);
     }
 
     return new_hp_max;
 }
 
-void Prop_handler::change_move_dir(const Pos& actor_pos, Dir& dir) const
+void Prop_handler::affect_move_dir(const Pos& actor_pos, Dir& dir) const
 {
     for (Prop* prop : props_)
     {
-        prop->change_move_dir(actor_pos, dir);
+        prop->affect_move_dir(actor_pos, dir);
     }
 }
 
@@ -1708,15 +1708,15 @@ int Prop_handler::ability_mod(const Ability_id ability) const
     return modifier;
 }
 
-bool Prop_handler::change_actor_clr(Clr& clr) const
+bool Prop_handler::affect_actor_clr(Clr& clr) const
 {
-    bool did_change_clr = false;
+    bool did_affect_clr = false;
 
     for (Prop* prop : props_)
     {
-        if (prop->change_actor_clr(clr))
+        if (prop->affect_actor_clr(clr))
         {
-            did_change_clr = true;
+            did_affect_clr = true;
 
             //It's probably more likely that a color change due to a bad property is critical
             //information (e.g. burning), so then we stop searching and use this color. If it's
@@ -1728,7 +1728,7 @@ bool Prop_handler::change_actor_clr(Clr& clr) const
         }
     }
 
-    return did_change_clr;
+    return did_affect_clr;
 }
 
 //-----------------------------------------------------------------------------
@@ -1815,7 +1815,11 @@ void Prop_hasted::on_start()
 
 void Prop_infected::on_new_turn()
 {
-    if (rnd::one_in(165))
+    const int MAX_TURNS_LEFT_ALLOW_DISEASE  = 50;
+
+    const int APPLY_DISEASE_ONE_IN          = nr_turns_left_ - 1;
+
+    if (nr_turns_left_ <= MAX_TURNS_LEFT_ALLOW_DISEASE && rnd::one_in(APPLY_DISEASE_ONE_IN))
     {
         Prop_handler& prop_hlr = owning_actor_->prop_handler();
 
@@ -1827,7 +1831,7 @@ void Prop_infected::on_new_turn()
     }
 }
 
-int Prop_diseased::change_max_hp(const int HP_MAX) const
+int Prop_diseased::affect_max_hp(const int HP_MAX) const
 {
     if (owning_actor_->is_player() && player_bon::traits[size_t(Trait::survivalist)])
     {
@@ -1842,11 +1846,6 @@ int Prop_diseased::change_max_hp(const int HP_MAX) const
 
 void Prop_diseased::on_start()
 {
-    //Actor::hp_max() will now return a decreased value. Cap current HP to the new (lower) maximum.
-    int& hp = owning_actor_->hp_;
-
-    hp = std::min(map::player->hp_max(true), hp);
-
     //If this is a permanent disease that the player caught, log it as a historic event
     if (owning_actor_->is_player() && turns_init_type_ == Prop_turns::indefinite)
     {
@@ -1940,7 +1939,7 @@ void Prop_terrified::on_start()
     }
 }
 
-void Prop_nailed::change_move_dir(const Pos& actor_pos, Dir& dir)
+void Prop_nailed::affect_move_dir(const Pos& actor_pos, Dir& dir)
 {
     (void)actor_pos;
 
@@ -2035,7 +2034,7 @@ bool Prop_confused::allow_attack_ranged(const Verbosity verbosity) const
     return true;
 }
 
-void Prop_confused::change_move_dir(const Pos& actor_pos, Dir& dir)
+void Prop_confused::affect_move_dir(const Pos& actor_pos, Dir& dir)
 {
     if (dir != Dir::center)
     {
@@ -2095,7 +2094,7 @@ bool Prop_strangled::allow_eat(const Verbosity verbosity) const
     return false;
 }
 
-void Prop_frenzied::change_move_dir(const Pos& actor_pos, Dir& dir)
+void Prop_frenzied::affect_move_dir(const Pos& actor_pos, Dir& dir)
 {
     if (owning_actor_->is_player())
     {

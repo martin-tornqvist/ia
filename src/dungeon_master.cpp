@@ -35,17 +35,21 @@ void player_gain_lvl()
     {
         ++clvl_;
 
-        msg_log::add("Welcome to level " + to_str(clvl_) + "!", clr_green, false,
+        msg_log::add("Welcome to level " + to_str(clvl_) + "!",
+                     clr_green,
+                     false,
                      More_prompt_on_msg::yes);
 
         create_character::pick_new_trait();
 
         render::draw_map_and_interface();
 
-        map::player->restore_hp(999, false, Verbosity::silent);
         map::player->change_max_hp(HP_PER_LVL);
-        map::player->restore_spi(999, false, Verbosity::silent);
+        map::player->restore_hp(999, false, Verbosity::silent);
+
         map::player->change_max_spi(SPI_PER_LVL);
+        map::player->restore_spi(999, false, Verbosity::silent);
+
         map::player->restore_shock(999, false);
     }
 }

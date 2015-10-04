@@ -100,7 +100,7 @@ bool Actor::is_spotting_sneaking_actor(Actor& other)
 
 int Actor::hp_max(const bool WITH_MODIFIERS) const
 {
-    return WITH_MODIFIERS ? prop_handler_->change_max_hp(hp_max_) : hp_max_;
+    return WITH_MODIFIERS ? prop_handler_->affect_max_hp(hp_max_) : hp_max_;
 }
 
 Actor_speed Actor::speed() const
@@ -201,6 +201,65 @@ void Actor::place(const Pos& pos_, Actor_data_t& actor_data)
     place_hook();
 
     update_clr();
+}
+
+void Actor::on_std_turn_common()
+{
+    //Do light damage if in lit cell
+    if (map::cells[pos.x][pos.y].is_lit)
+    {
+        hit(1, Dmg_type::light);
+    }
+
+    if (is_alive())
+    {
+        //Slowly decrease current HP/spirit if above max
+        const int DECR_ABOVE_MAX_N_TURNS = 7;
+
+        if (hp() > hp_max(true) && game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
+        {
+            --hp_;
+        }
+
+        if (spi() > spi_max() && game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
+        {
+            --spi_;
+        }
+
+        //Regenerate spirit
+        int regen_spi_n_turns = 15;
+
+        if (is_player())
+        {
+            if (player_bon::traits[size_t(Trait::stout_spirit)])
+            {
+                regen_spi_n_turns -= 3;
+            }
+
+            if (player_bon::traits[size_t(Trait::strong_spirit)])
+            {
+                regen_spi_n_turns -= 3;
+            }
+
+            if (player_bon::traits[size_t(Trait::mighty_spirit)])
+            {
+                regen_spi_n_turns -= 3;
+            }
+        }
+        else //Is monster
+        {
+            //Monsters regen spirit very quickly, so spell casters don't suddenly get
+            //completely handicapped
+            regen_spi_n_turns = 2;
+        }
+
+        if (game_time::turn() % regen_spi_n_turns == 0)
+        {
+            restore_spi(1, false, Verbosity::silent);
+        }
+    }
+
+    on_std_turn();
 }
 
 void Actor::teleport()
@@ -334,7 +393,7 @@ void Actor::update_clr()
         return;
     }
 
-    if (prop_handler_->change_actor_clr(clr_))
+    if (prop_handler_->affect_actor_clr(clr_))
     {
         return;
     }
@@ -433,10 +492,15 @@ bool Actor::restore_spi(const int SPI_RESTORED, const bool IS_ALLOWED_ABOVE_MAX,
     return is_spi_gained;
 }
 
+void Actor::set_hp_and_spi_to_max()
+{
+    hp_     = hp_max(true);
+    spi_    = spi_max();
+}
+
 void Actor::change_max_hp(const int CHANGE, const Verbosity verbosity)
 {
     hp_max_ = std::max(1, hp_max_ + CHANGE);
-    hp_     = std::max(1, hp_ + CHANGE);
 
     if (verbosity == Verbosity::verbose)
     {
@@ -470,8 +534,7 @@ void Actor::change_max_hp(const int CHANGE, const Verbosity verbosity)
 
 void Actor::change_max_spi(const int CHANGE, const Verbosity verbosity)
 {
-    spi_max_    = std::max(1, spi_max_ + CHANGE);
-    spi_        = std::max(1, spi_ + CHANGE);
+    spi_max_ = std::max(1, spi_max_ + CHANGE);
 
     if (verbosity == Verbosity::verbose)
     {

@@ -68,7 +68,7 @@ public:
 
     void on_actor_turn() override;
 
-    virtual void on_std_turn() override final;
+    void on_std_turn() override final;
 
     virtual std::string aggro_phrase_mon_seen() const
     {

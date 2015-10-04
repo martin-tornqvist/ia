@@ -780,7 +780,7 @@ TEST_FIXTURE(Basic_fixture, saving_game)
     //Player inventory
     Inventory& inv = map::player->inv();
 
-    //First, remove all present items
+    //First, remove all present items to get a clean state
     std::vector<Item*>& gen = inv.backpack_;
 
     for (Item* item : gen)
@@ -808,39 +808,50 @@ TEST_FIXTURE(Basic_fixture, saving_game)
     //Wear asbestos suit to test properties from wearing items
     item = item_factory::mk(Item_id::armor_asb_suit);
     inv.put_in_slot(Slot_id::body, item);
+
     item = item_factory::mk(Item_id::pistol_clip);
     static_cast<Ammo_clip*>(item)->ammo_ = 1;
     inv.put_in_backpack(item);
+
     item = item_factory::mk(Item_id::pistol_clip);
     static_cast<Ammo_clip*>(item)->ammo_ = 2;
     inv.put_in_backpack(item);
+
     item = item_factory::mk(Item_id::pistol_clip);
     static_cast<Ammo_clip*>(item)->ammo_ = 3;
     inv.put_in_backpack(item);
+
     item = item_factory::mk(Item_id::pistol_clip);
     static_cast<Ammo_clip*>(item)->ammo_ = 3;
     inv.put_in_backpack(item);
+
     item = item_factory::mk(Item_id::device_blaster);
     static_cast<Strange_device*>(item)->condition_ = Condition::shoddy;
     inv.put_in_backpack(item);
+
     item = item_factory::mk(Item_id::lantern);
-    Device_lantern* lantern         = static_cast<Device_lantern*>(item);
+
+    Device_lantern* lantern = static_cast<Device_lantern*>(item);
+
     lantern->nr_turns_left_         = 789;
     lantern->nr_flicker_turns_left_ = 456;
     lantern->working_state_         = Lantern_working_state::flicker;
     lantern->is_activated_          = true;
+
     inv.put_in_backpack(item);
 
     //Player
     Actor_data_t& def = map::player->data();
+
     def.name_a = def.name_the = "TEST PLAYER";
+
     map::player->change_max_hp(5, Verbosity::silent);
 
     //map
     map::dlvl = 7;
 
     //Actor data
-    actor_data::data[int(Actor_id::END) - 1].nr_kills = 123;
+    actor_data::data[size_t(Actor_id::END) - 1].nr_kills = 123;
 
     //Learned spells
     player_spells_handling::learn_spell_if_not_known(Spell_id::bless);
@@ -890,7 +901,7 @@ TEST_FIXTURE(Basic_fixture, loading_game)
     //Bonus
     CHECK_EQUAL(int(Bg::rogue), int(player_bon::bg()));
     CHECK(player_bon::traits[size_t(Trait::healer)]);
-    CHECK(!player_bon::traits[size_t(Trait::sharp_shooter)]);
+    CHECK(!player_bon::traits[size_t(Trait::fast_shooter)]);
 
     //Player inventory
     Inventory& inv  = map::player->inv();
@@ -903,8 +914,8 @@ TEST_FIXTURE(Basic_fixture, loading_game)
     int nr_clip_with_1 = 0;
     int nr_clip_with_2 = 0;
     int nr_clip_with_3 = 0;
-    bool is_sentry_device_found     = false;
-    bool is_lantern_found  = false;
+    bool is_sentry_device_found = false;
+    bool is_lantern_found       = false;
 
     for (Item* item : genInv)
     {
@@ -915,15 +926,15 @@ TEST_FIXTURE(Basic_fixture, loading_game)
             switch (static_cast<Ammo_clip*>(item)->ammo_)
             {
             case 1:
-                nr_clip_with_1++;
+                ++nr_clip_with_1;
                 break;
 
             case 2:
-                nr_clip_with_2++;
+                ++nr_clip_with_2;
                 break;
 
             case 3:
-                nr_clip_with_3++;
+                ++nr_clip_with_3;
                 break;
 
             default:
@@ -955,9 +966,10 @@ TEST_FIXTURE(Basic_fixture, loading_game)
 
     //Player
     Actor_data_t& def = map::player->data();
-    def.name_a = def.name_the = "TEST PLAYER";
+
     CHECK_EQUAL("TEST PLAYER", def.name_a);
     CHECK_EQUAL("TEST PLAYER", def.name_the);
+
     //Check max HP (affected by disease)
     CHECK_EQUAL((PLAYER_MAX_HP_BEFORE_LOAD + 5) / 2, map::player->hp_max(true));
 
@@ -978,8 +990,9 @@ TEST_FIXTURE(Basic_fixture, loading_game)
     CHECK(prop);
     CHECK(prop_hlr.has_prop(Prop_id::diseased));
     CHECK_EQUAL(-1, prop->nr_turns_left());
-    //Check currrent HP (affected by disease)
-    CHECK_EQUAL((map::player->data().hp + 5) / 2, map::player->hp());
+
+    //Check currrent HP (should not be affected)
+    CHECK_EQUAL(map::player->data().hp, map::player->hp());
 
     prop = prop_hlr.prop(Prop_id::rSleep);
     CHECK(prop);

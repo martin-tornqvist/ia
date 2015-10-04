@@ -397,19 +397,22 @@ bool Mon::can_see_actor(const Actor& other, const bool hard_blocked_los[MAP_W][M
 
 void Mon::on_std_turn()
 {
-    if (nr_turns_until_unsummoned_ > 0)
+    if (is_alive())
     {
-        --nr_turns_until_unsummoned_;
-
-        if (nr_turns_until_unsummoned_ <= 0)
+        if (nr_turns_until_unsummoned_ > 0)
         {
-            if (map::player->can_see_actor(*this))
-            {
-                msg_log::add(name_the() + " suddenly disappears!");
-            }
+            --nr_turns_until_unsummoned_;
 
-            state_ = Actor_state::destroyed;
-            return;
+            if (nr_turns_until_unsummoned_ <= 0)
+            {
+                if (map::player->can_see_actor(*this))
+                {
+                    msg_log::add(name_the() + " suddenly disappears!");
+                }
+
+                state_ = Actor_state::destroyed;
+                return;
+            }
         }
     }
 
@@ -440,7 +443,7 @@ void Mon::move(Dir dir)
 
 #endif // NDEBUG
 
-    prop_handler().change_move_dir(pos, dir);
+    prop_handler().affect_move_dir(pos, dir);
 
     //Trap affects leaving?
     if (dir != Dir::center)
@@ -1607,7 +1610,10 @@ void Leng_elder::mk_start_items()
 
 void Ooze::on_std_turn_hook()
 {
-    restore_hp(1, false, Verbosity::silent);
+    if (is_alive())
+    {
+        restore_hp(1, false, Verbosity::silent);
+    }
 }
 
 void Ooze_black::mk_start_items()
@@ -1642,15 +1648,18 @@ const Clr& Color_oo_space::clr()
 
 void Color_oo_space::on_std_turn_hook()
 {
-    cur_color.r = rnd::range(40, 255);
-    cur_color.g = rnd::range(40, 255);
-    cur_color.b = rnd::range(40, 255);
-
-    restore_hp(1, false, Verbosity::silent);
-
-    if (map::player->can_see_actor(*this))
+    if (is_alive())
     {
-        map::player->prop_handler().try_add_prop(new Prop_confused(Prop_turns::std));
+        cur_color.r = rnd::range(40, 255);
+        cur_color.g = rnd::range(40, 255);
+        cur_color.b = rnd::range(40, 255);
+
+        restore_hp(1, false, Verbosity::silent);
+
+        if (map::player->can_see_actor(*this))
+        {
+            map::player->prop_handler().try_add_prop(new Prop_confused(Prop_turns::std));
+        }
     }
 }
 

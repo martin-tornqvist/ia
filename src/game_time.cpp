@@ -34,22 +34,16 @@ namespace
 std::vector<Actor_speed> turn_type_vector_;
 
 int     cur_turn_type_pos_  = 0;
-size_t  cur_actor_index_    = 0;
+size_t  cur_actor_idx_      = 0;
 int     turn_nr_            = 0;
-
-bool is_spi_regen_this_turn(const int REGEN_N_TURNS)
-{
-    assert(REGEN_N_TURNS != 0);
-    return turn_nr_ == (turn_nr_ / REGEN_N_TURNS) * REGEN_N_TURNS;
-}
 
 void run_std_turn_events()
 {
     ++turn_nr_;
 
-    for (size_t i = 0; i < actors_.size(); ++i)
+    for (auto it = begin(actors_); it != end(actors_); /* No increment */)
     {
-        Actor* const actor = actors_[i];
+        Actor* const actor = *it;
 
         //Delete destroyed actors
         if (actor->state() == Actor_state::destroyed)
@@ -67,20 +61,20 @@ void run_std_turn_events()
 
             delete actor;
 
-            actors_.erase(actors_.begin() + i);
-            --i;
+            it = actors_.erase(it);
 
-            if (cur_actor_index_ >= actors_.size())
+            if (cur_actor_idx_ >= actors_.size())
             {
-                cur_actor_index_ = 0;
+                cur_actor_idx_ = 0;
             }
         }
-        else  //Actor is alive or is a corpse
+        else  //Actor is alive or a corpse
         {
             actor->prop_handler().tick(Prop_turn_mode::std);
 
             if (!actor->is_player())
             {
+                //Count down monster awareness
                 Mon* const mon = static_cast<Mon*>(actor);
 
                 if (mon->player_aware_of_me_counter_ > 0)
@@ -89,51 +83,9 @@ void run_std_turn_events()
                 }
             }
 
-            //Do light damage if actor in lit cell
-            const Pos& pos = actor->pos;
+            actor->on_std_turn_common();
 
-            if (map::cells[pos.x][pos.y].is_lit)
-            {
-                actor->hit(1, Dmg_type::light);
-            }
-
-            if (actor->is_alive())
-            {
-                //Regen Spi
-
-                int regen_spi_n_turns = 15;
-
-                if (actor->is_player())
-                {
-                    if (player_bon::traits[size_t(Trait::stout_spirit)])
-                    {
-                        regen_spi_n_turns -= 3;
-                    }
-
-                    if (player_bon::traits[size_t(Trait::strong_spirit)])
-                    {
-                        regen_spi_n_turns -= 3;
-                    }
-
-                    if (player_bon::traits[size_t(Trait::mighty_spirit)])
-                    {
-                        regen_spi_n_turns -= 3;
-                    }
-                }
-                else //Is monster
-                {
-                    //Monsters regen spirit very quickly, so spell casters don't suddenly get
-                    //completely handicapped
-                    regen_spi_n_turns = 2;
-                }
-
-                if (is_spi_regen_this_turn(regen_spi_n_turns))
-                {
-                    actor->restore_spi(1, false, Verbosity::silent);
-                }
-
-                actor->on_std_turn();
-            }
+            ++it;
         }
     }
 
@@ -214,7 +166,7 @@ void run_atomic_turn_events()
 
 void init()
 {
-    cur_turn_type_pos_ = cur_actor_index_ = turn_nr_ = 0;
+    cur_turn_type_pos_ = cur_actor_idx_ = turn_nr_ = 0;
     actors_.clear();
     mobs_  .clear();
 }
@@ -314,7 +266,7 @@ void add_actor(Actor* actor)
 
 void reset_turn_type_and_actor_counters()
 {
-    cur_turn_type_pos_ = cur_actor_index_ = 0;
+    cur_turn_type_pos_ = cur_actor_idx_ = 0;
 }
 
 //For every turn type step, run through all actors and let those who can act during this
@@ -370,11 +322,11 @@ void tick(const bool IS_FREE_TURN)
         {
             auto cur_turn_type = Turn_type(cur_turn_type_pos_);
 
-            ++cur_actor_index_;
+            ++cur_actor_idx_;
 
-            if (cur_actor_index_ >= actors_.size())
+            if (cur_actor_idx_ >= actors_.size())
             {
-                cur_actor_index_ = 0;
+                cur_actor_idx_ = 0;
 
                 ++cur_turn_type_pos_;
 
@@ -474,7 +426,7 @@ void update_light_map()
 
 Actor* cur_actor()
 {
-    Actor* const actor = actors_[cur_actor_index_];
+    Actor* const actor = actors_[cur_actor_idx_];
 
     //Sanity check actor retrieved
     assert(utils::is_pos_inside_map(actor->pos));

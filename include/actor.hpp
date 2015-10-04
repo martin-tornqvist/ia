@@ -83,6 +83,8 @@ public:
                      const bool IS_ALLOWED_ABOVE_MAX = false,
                      const Verbosity verbosity = Verbosity::verbose);
 
+    void set_hp_and_spi_to_max();
+
     void change_max_hp(const int CHANGE, const Verbosity verbosity = Verbosity::verbose);
 
     void change_max_spi(const int CHANGE, const Verbosity verbosity = Verbosity::verbose);
@@ -91,6 +93,8 @@ public:
 
     //Used by Ghoul class and Ghoul monsters
     Did_action try_eat_corpse();
+
+    void on_std_turn_common();
 
     virtual void on_actor_turn() {}
     virtual void on_std_turn() {}

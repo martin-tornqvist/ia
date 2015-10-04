@@ -565,7 +565,7 @@ void Player::update_clr()
         return;
     }
 
-    if (prop_handler_->change_actor_clr(clr_))
+    if (prop_handler_->affect_actor_clr(clr_))
     {
         return;
     }
@@ -775,6 +775,11 @@ int Player::ins() const
 
 void Player::on_std_turn()
 {
+    if (!is_alive())
+    {
+        return;
+    }
+
     update_tmp_shock();
 
     if (active_explosive)
@@ -956,24 +961,14 @@ void Player::on_std_turn()
 
                         const std::string mon_name = mon.name_a();
 
-                        msg_log::add("I spot " + mon_name + "!", clr_msg_note, true,
+                        msg_log::add("I spot " + mon_name + "!",
+                                     clr_msg_note,
+                                     true,
                                      More_prompt_on_msg::yes);
                     }
                 }
             }
         }
-    }
-
-    const int DECR_ABOVE_MAX_N_TURNS = 7;
-
-    if (hp() > hp_max(true) && game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
-    {
-        --hp_;
-    }
-
-    if (spi() > spi_max() && game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
-    {
-        --spi_;
     }
 
     if (!active_medical_bag)
@@ -1131,7 +1126,7 @@ void Player::move(Dir dir)
         return;
     }
 
-    prop_handler_->change_move_dir(pos, dir);
+    prop_handler_->affect_move_dir(pos, dir);
 
     //Trap affects leaving?
     if (dir != Dir::center)

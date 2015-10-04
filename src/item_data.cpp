@@ -347,7 +347,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.is_identified = false;
         d.is_stackable = false;
         d.chance_to_incl_in_floor_spawn_list = 1;
-        add_feature_found_in(d, Feature_id::tomb, 12);
+        add_feature_found_in(d, Feature_id::tomb, 10);
         add_feature_found_in(d, Feature_id::chest, 4);
         break;
 
@@ -362,7 +362,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.is_identified = false;
         d.is_stackable = false;
         d.chance_to_incl_in_floor_spawn_list = 1;
-        add_feature_found_in(d, Feature_id::tomb, 12);
+        add_feature_found_in(d, Feature_id::tomb, 10);
         add_feature_found_in(d, Feature_id::chest, 4);
         break;
 

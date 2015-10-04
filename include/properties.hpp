@@ -213,9 +213,9 @@ public:
     //-----------------------------------------------------------------------------
     // Hooks called from various places
     //-----------------------------------------------------------------------------
-    void change_move_dir(const Pos& actor_pos, Dir& dir) const;
+    void affect_move_dir(const Pos& actor_pos, Dir& dir) const;
 
-    int change_max_hp(const int HP_MAX) const;
+    int affect_max_hp(const int HP_MAX) const;
 
     bool allow_attack(const Verbosity verbosity) const;
     bool allow_attack_melee(const Verbosity verbosity) const;
@@ -233,7 +233,7 @@ public:
 
     int ability_mod(const Ability_id ability) const;
 
-    bool change_actor_clr(Clr& clr) const;
+    bool affect_actor_clr(Clr& clr) const;
 
     void tick(const Prop_turn_mode turn_mode);
 
@@ -359,12 +359,12 @@ public:
         (void)IS_PLAYER_SEE_OWNING_ACTOR;
     }
 
-    virtual int change_max_hp(const int HP_MAX) const
+    virtual int affect_max_hp(const int HP_MAX) const
     {
         return HP_MAX;
     }
 
-    virtual bool change_actor_clr(Clr& clr) const
+    virtual bool affect_actor_clr(Clr& clr) const
     {
         (void)clr;
         return false;
@@ -412,7 +412,7 @@ public:
         return 0;
     }
 
-    virtual void change_move_dir(const Pos& actor_pos, Dir& dir)
+    virtual void affect_move_dir(const Pos& actor_pos, Dir& dir)
     {
         (void)actor_pos;
         (void)dir;
@@ -515,7 +515,7 @@ public:
     Prop_diseased(Prop_turns turns_init, int nr_turns = -1) :
         Prop(Prop_id::diseased, turns_init, nr_turns) {}
 
-    int change_max_hp(const int HP_MAX) const override;
+    int affect_max_hp(const int HP_MAX) const override;
 
     bool is_resisting_other_prop(const Prop_id prop_id) const override;
 
@@ -561,7 +561,7 @@ public:
 
     void on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR) override;
 
-    int change_max_hp(const int HP_MAX) const override
+    int affect_max_hp(const int HP_MAX) const override
     {
         return HP_MAX * 2;
     }
@@ -639,7 +639,7 @@ public:
     Prop_invisible(Prop_turns turns_init, int nr_turns = -1) :
         Prop(Prop_id::invis, turns_init, nr_turns) {}
 
-    bool change_actor_clr(Clr& clr) const override
+    bool affect_actor_clr(Clr& clr) const override
     {
         clr = clr_gray;
         return true;
@@ -709,7 +709,7 @@ public:
     bool allow_read(const Verbosity verbosity) const override;
     bool allow_cast_spell(const Verbosity verbosity) const override;
 
-    bool change_actor_clr(Clr& clr) const override
+    bool affect_actor_clr(Clr& clr) const override
     {
         clr = clr_red_lgt;
         return true;
@@ -747,7 +747,7 @@ public:
     Prop_confused(Prop_turns turns_init, int nr_turns = -1) :
         Prop(Prop_id::confused, turns_init, nr_turns) {}
 
-    void change_move_dir(const Pos& actor_pos, Dir& dir) override;
+    void affect_move_dir(const Pos& actor_pos, Dir& dir) override;
 
     bool allow_read(const Verbosity verbosity) const override;
     bool allow_cast_spell(const Verbosity verbosity) const override;
@@ -773,7 +773,7 @@ public:
         return "Nailed(" + to_str(nr_spikes_) + ")";
     }
 
-    void change_move_dir(const Pos& actor_pos, Dir& dir) override;
+    void affect_move_dir(const Pos& actor_pos, Dir& dir) override;
 
     void on_more() override
     {
@@ -1037,7 +1037,7 @@ public:
     void on_start() override;
     void on_end() override;
 
-    void change_move_dir(const Pos& actor_pos, Dir& dir) override;
+    void affect_move_dir(const Pos& actor_pos, Dir& dir) override;
 
     bool allow_read(const Verbosity verbosity) const override;
     bool allow_cast_spell(const Verbosity verbosity) const override;

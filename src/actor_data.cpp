@@ -2857,7 +2857,7 @@ void init_data_list()
     d.glyph = 'P';
     d.color = clr_red;
     d.tile = Tile_id::the_high_priest;
-    d.hp = 275;
+    d.hp = 200;
     d.spi = 99999;
     d.natural_props[int(Prop_id::rConf)] = true;
     d.natural_props[int(Prop_id::rFear)] = true;

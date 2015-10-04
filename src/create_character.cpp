@@ -326,6 +326,11 @@ void create_character()
 {
     pick_bg();
     pick_new_trait();
+
+    //Some backgrounds and traits may have affected maximum HP and SPI (either positively or
+    //negatively), so here we need to set the current HP and SPI equal to the maximum values.
+    map::player->set_hp_and_spi_to_max();
+
     enter_name::run();
 }
 
