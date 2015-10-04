@@ -75,22 +75,6 @@ void init_data_list()
     d.alignment = Prop_alignment::good;
     add_prop_data(d);
 
-    d.id = Prop_id::rCold;
-    d.std_rnd_turns = Range(50, 100);
-    d.name = "Cold resistance";
-    d.name_short = "rCold";
-    d.msg[size_t(Prop_msg::start_player)] = "I feel resistant to cold.";
-    d.msg[size_t(Prop_msg::start_mon)] = "is resistant to cold.";
-    d.msg[size_t(Prop_msg::end_player)] = "I feel vulnerable to cold.";
-    d.msg[size_t(Prop_msg::end_mon)] = "is vulnerable to cold.";
-    d.is_making_mon_aware = false;
-    d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
-    d.update_vision_when_start_or_end = false;
-    d.allow_test_on_bot = true;
-    d.alignment = Prop_alignment::good;
-    add_prop_data(d);
-
     d.id = Prop_id::rPoison;
     d.std_rnd_turns = Range(50, 100);
     d.name = "Poison resistance";
@@ -960,9 +944,6 @@ Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init, const int N
 
     case Prop_id::rAcid:
         return new Prop_rAcid(turns_init, NR_TURNS);
-
-    case Prop_id::rCold:
-        return new Prop_rCold(turns_init, NR_TURNS);
 
     case Prop_id::rConf:
         return new Prop_rConf(turns_init, NR_TURNS);
@@ -2287,28 +2268,6 @@ bool Prop_rAcid::try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosi
             if (owning_actor_->is_player())
             {
                 msg_log::add("I feel a faint burning sensation.");
-            }
-            else if (map::player->can_see_actor(*owning_actor_))
-            {
-                msg_log::add(owning_actor_->name_the() + " seems unaffected.");
-            }
-        }
-
-        return true;
-    }
-
-    return false;
-}
-
-bool Prop_rCold::try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const
-{
-    if (dmg_type == Dmg_type::cold)
-    {
-        if (verbosity == Verbosity::verbose)
-        {
-            if (owning_actor_->is_player())
-            {
-                msg_log::add("I feel chilly.");
             }
             else if (map::player->can_see_actor(*owning_actor_))
             {

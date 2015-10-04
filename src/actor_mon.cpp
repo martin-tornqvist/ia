@@ -944,12 +944,6 @@ void Fire_hound::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::fire_hound_bite));
 }
 
-void Frost_hound::mk_start_items()
-{
-    inv_->put_in_intrinsics(item_factory::mk(Item_id::frost_hound_breath));
-    inv_->put_in_intrinsics(item_factory::mk(Item_id::frost_hound_bite));
-}
-
 void Zuul::place_hook()
 {
     if (actor_data::data[size_t(Actor_id::zuul)].nr_left_allowed_to_spawn > 0)
@@ -1119,17 +1113,6 @@ void Fire_vortex::on_death()
 void Fire_vortex::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(Item_id::fire_vortex_engulf));
-}
-
-void Frost_vortex::on_death()
-{
-    //TODO: Add explosion with cold damage
-    //TODO: Make a sound effect for this
-}
-
-void Frost_vortex::mk_start_items()
-{
-    inv_->put_in_intrinsics(item_factory::mk(Item_id::frost_vortex_engulf));
 }
 
 bool Ghost::on_actor_turn_hook()

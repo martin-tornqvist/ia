@@ -32,10 +32,6 @@ Jewelry_effect* mk_effect(const Jewelry_effect_id id, Jewelry* const jewelry)
         ret = new Jewelry_effect_rFire(jewelry);
         break;
 
-    case Jewelry_effect_id::rCold:
-        ret = new Jewelry_effect_rCold(jewelry);
-        break;
-
     case Jewelry_effect_id::rElec:
         ret = new Jewelry_effect_rElec(jewelry);
         break;
@@ -142,61 +138,55 @@ Unequip_allowed Jewelry_property_effect::on_unequip()
     return Unequip_allowed::yes;
 }
 
-//--------------------------------------------------------- EFFECT: FIRE RESISTANCE
+//--------------------------------------------------------- FIRE RESISTANCE
 Prop* Jewelry_effect_rFire::mk_prop() const
 {
     return new Prop_rFire(Prop_turns::indefinite);
 }
 
-//--------------------------------------------------------- EFFECT: COLD RESISTANCE
-Prop* Jewelry_effect_rCold::mk_prop() const
-{
-    return new Prop_rCold(Prop_turns::indefinite);
-}
-
-//--------------------------------------------------------- EFFECT: ELEC RESISTANCE
+//--------------------------------------------------------- ELEC RESISTANCE
 Prop* Jewelry_effect_rElec::mk_prop() const
 {
     return new Prop_rElec(Prop_turns::indefinite);
 }
 
-//--------------------------------------------------------- EFFECT: POISON RESISTANCE
+//--------------------------------------------------------- POISON RESISTANCE
 Prop* Jewelry_effect_rPoison::mk_prop() const
 {
     return new Prop_rPoison(Prop_turns::indefinite);
 }
 
-//--------------------------------------------------------- EFFECT: DISEASE RESISTANCE
+//--------------------------------------------------------- DISEASE RESISTANCE
 Prop* Jewelry_effect_rDisease::mk_prop() const
 {
     return new Prop_rDisease(Prop_turns::indefinite);
 }
 
-//--------------------------------------------------------- EFFECT: TELEPORT CONTROL
+//--------------------------------------------------------- TELEPORT CONTROL
 Prop* Jewelry_effect_tele_control::mk_prop() const
 {
     return new Prop_tele_control(Prop_turns::indefinite);
 }
 
-//--------------------------------------------------------- EFFECT: LIGHT
+//--------------------------------------------------------- LIGHT
 Prop* Jewelry_effect_light::mk_prop() const
 {
     return new Prop_radiant(Prop_turns::indefinite);
 }
 
-//--------------------------------------------------------- EFFECT: SPELL REFLECTION
+//--------------------------------------------------------- SPELL REFLECTION
 Prop* Jewelry_effect_spell_reflect::mk_prop() const
 {
     return new Prop_spell_reflect(Prop_turns::indefinite);
 }
 
-//--------------------------------------------------------- EFFECT: HASTE
+//--------------------------------------------------------- HASTE
 Prop* Jewelry_effect_haste::mk_prop() const
 {
     return new Prop_hasted(Prop_turns::indefinite);
 }
 
-//--------------------------------------------------------- EFFECT: HP BONUS
+//--------------------------------------------------------- HP BONUS
 void Jewelry_effect_hp_bon::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
@@ -212,7 +202,7 @@ Unequip_allowed Jewelry_effect_hp_bon::on_unequip()
     return Unequip_allowed::yes;
 }
 
-//--------------------------------------------------------- EFFECT: HP PENALTY
+//--------------------------------------------------------- HP PENALTY
 void Jewelry_effect_hp_pen::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
@@ -228,7 +218,7 @@ Unequip_allowed Jewelry_effect_hp_pen::on_unequip()
     return Unequip_allowed::yes;
 }
 
-//--------------------------------------------------------- EFFECT: SPI BONUS
+//--------------------------------------------------------- SPI BONUS
 void Jewelry_effect_spi_bon::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
@@ -244,7 +234,7 @@ Unequip_allowed Jewelry_effect_spi_bon::on_unequip()
     return Unequip_allowed::yes;
 }
 
-//--------------------------------------------------------- EFFECT: SPI PENALTY
+//--------------------------------------------------------- SPI PENALTY
 void Jewelry_effect_spi_pen::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
@@ -260,7 +250,7 @@ Unequip_allowed Jewelry_effect_spi_pen::on_unequip()
     return Unequip_allowed::yes;
 }
 
-//--------------------------------------------------------- EFFECT: RANDOM TELEPORTATION
+//--------------------------------------------------------- RANDOM TELEPORTATION
 void Jewelry_effect_random_tele::on_std_turn_equipped()
 {
     auto& prop_handler = map::player->prop_handler();
@@ -275,7 +265,7 @@ void Jewelry_effect_random_tele::on_std_turn_equipped()
     }
 }
 
-//--------------------------------------------------------- EFFECT: SUMMON MON
+//--------------------------------------------------------- SUMMON MON
 void Jewelry_effect_summon_mon::on_std_turn_equipped()
 {
     const int SOUND_ONE_IN_N  = 250;
@@ -313,7 +303,7 @@ void Jewelry_effect_summon_mon::on_std_turn_equipped()
     }
 }
 
-//--------------------------------------------------------- EFFECT: FIRE
+//--------------------------------------------------------- FIRE
 void Jewelry_effect_fire::on_std_turn_equipped()
 {
     const int FIRE_ONE_IN_N = 300;
@@ -347,7 +337,7 @@ void Jewelry_effect_fire::on_std_turn_equipped()
     }
 }
 
-//--------------------------------------------------------- EFFECT: CONFLICT
+//--------------------------------------------------------- CONFLICT
 void Jewelry_effect_conflict::on_std_turn_equipped()
 {
     const int CONFLICT_ONE_IN_N = 50;
@@ -377,7 +367,7 @@ void Jewelry_effect_conflict::on_std_turn_equipped()
     }
 }
 
-//--------------------------------------------------------- EFFECT: SHRIEK
+//--------------------------------------------------------- SHRIEK
 Jewelry_effect_shriek::Jewelry_effect_shriek(Jewelry* const jewelry) :
     Jewelry_effect(jewelry)
 {
@@ -497,7 +487,7 @@ void Jewelry_effect_shriek::on_std_turn_equipped()
     }
 }
 
-//--------------------------------------------------------- EFFECT: BURDEN
+//--------------------------------------------------------- BURDEN
 void Jewelry_effect_burden::on_equip(const Verbosity verbosity)
 {
     if (!effects_known_[size_t(id())])
@@ -520,7 +510,7 @@ void Jewelry_effect_burden::change_item_weight(int& weight_ref)
     }
 }
 
-//--------------------------------------------------------- EFFECT: HP REGEN BONUS
+//--------------------------------------------------------- HP REGEN BONUS
 void Jewelry_effect_hp_regen_bon::on_equip(const Verbosity verbosity)
 {
     if (verbosity == Verbosity::verbose)
@@ -537,7 +527,7 @@ Unequip_allowed Jewelry_effect_hp_regen_bon::on_unequip()
     return Unequip_allowed::yes;
 }
 
-//--------------------------------------------------------- EFFECT: HP REGEN PENALTY
+//--------------------------------------------------------- HP REGEN PENALTY
 void Jewelry_effect_hp_regen_pen::on_equip(const Verbosity verbosity)
 {
     if (verbosity == Verbosity::verbose)
@@ -814,7 +804,6 @@ bool can_effects_be_combined(const Jewelry_effect_id id1,
     case Id::light:
     case Id::conflict:
     case Id::rFire:
-    case Id::rCold:
     case Id::rElec:
     case Id::rPoison:
     case Id::burden:
@@ -920,7 +909,7 @@ void init()
     random_shuffle(begin(primary_effect_bucket),   end(primary_effect_bucket));
     random_shuffle(begin(secondary_effect_bucket), end(secondary_effect_bucket));
 
-    //Assuming there are more jewelry than primary or secondary effects (if this changes,
+    //Assuming there are more jewelry items than primary or secondary effects (if this changes,
     //just add more amulets and rings to the item data)
     assert(item_bucket.size() > primary_effect_bucket.size());
     assert(item_bucket.size() > secondary_effect_bucket.size());

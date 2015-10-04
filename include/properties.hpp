@@ -13,7 +13,6 @@ enum class Prop_id
 {
     rPhys,
     rFire,
-    rCold,
     rPoison,
     rElec,
     rAcid,
@@ -1066,15 +1065,6 @@ class Prop_rAcid: public Prop
 public:
     Prop_rAcid(Prop_turns turns_init, int nr_turns = -1) :
         Prop(Prop_id::rAcid, turns_init, nr_turns) {}
-
-    bool try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const override;
-};
-
-class Prop_rCold: public Prop
-{
-public:
-    Prop_rCold(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::rCold, turns_init, nr_turns) {}
 
     bool try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const override;
 };

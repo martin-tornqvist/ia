@@ -516,20 +516,6 @@ Unequip_allowed Armor_asb_suit::on_unequip_hook()
     return Unequip_allowed::yes;
 }
 
-void Armor_heavy_coat::on_equip_hook(const Verbosity verbosity)
-{
-    (void)verbosity;
-
-    add_carrier_prop(new Prop_rCold(Prop_turns::indefinite), Verbosity::silent);
-}
-
-Unequip_allowed Armor_heavy_coat::on_unequip_hook()
-{
-    clear_carrier_props();
-
-    return Unequip_allowed::yes;
-}
-
 void Armor_mi_go::on_std_turn_in_inv(const Inv_type inv_type)
 {
     (void)inv_type;
@@ -545,7 +531,10 @@ void Armor_mi_go::on_std_turn_in_inv(const Inv_type inv_type)
         if (AP_AFTER > AP_BEFORE)
         {
             const std::string armor_name = name(Item_ref_type::plain, Item_ref_inf::none);
-            msg_log::add("My " + armor_name + " reconstructs itself.", clr_msg_note, false,
+
+            msg_log::add("My " + armor_name + " reconstructs itself.",
+                         clr_msg_note,
+                         false,
                          More_prompt_on_msg::yes);
         }
     }

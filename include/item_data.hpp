@@ -15,10 +15,10 @@ enum class Snd_vol;
 enum Item_weight
 {
     none        = 0,
-    extra_light = 1,  //E.g. ammo
-    light       = 10, //E.g. dynamite, daggers
-    medium      = 50, //E.g. most firearms
-    heavy       = 110 //E.g. heavy armor, heavy weapons
+    extra_light = 1,    //E.g. ammo
+    light       = 10,   //E.g. dynamite, daggers
+    medium      = 50,   //E.g. most firearms
+    heavy       = 100,  //E.g. heavy armor, heavy weapons
 };
 
 enum class Item_value
@@ -89,8 +89,7 @@ enum class Item_id
     byakhee_claw,
     giant_mantis_claw,
     giant_locust_bite,
-    fire_hound_breath, frost_hound_breath,
-    fire_hound_bite, frost_hound_bite, zuul_bite,
+    fire_hound_breath, fire_hound_bite, zuul_bite,
     raven_peck,
     giant_bat_bite,
     zombie_axe, zombie_claw, zombie_claw_diseased,
@@ -119,7 +118,7 @@ enum class Item_id
     chthonian_bite,
     death_fiend_claw,
     hunting_horror_bite,
-    dust_vortex_engulf, fire_vortex_engulf, frost_vortex_engulf,
+    dust_vortex_engulf, fire_vortex_engulf,
     mold_spores,
     mi_go_sting, mi_go_commander_sting,
     the_high_priest_claw,
@@ -128,7 +127,6 @@ enum class Item_id
     armor_iron_suit,
     armor_flack_jacket,
     armor_asb_suit,
-    armor_heavy_coat,
     armor_mi_go,
 
     gas_mask,
@@ -148,7 +146,7 @@ enum class Item_id
     scroll_opening,
     scroll_sacr_life,
     scroll_sacr_spi,
-    scroll_elem_res,
+    scroll_res,
     scroll_summon_mon,
     scroll_light,
 

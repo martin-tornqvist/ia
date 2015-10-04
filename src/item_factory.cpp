@@ -63,9 +63,7 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
     case Item_id::shadow_spider_bite:
     case Item_id::leng_spider_bite:
     case Item_id::fire_hound_breath:
-    case Item_id::frost_hound_breath:
     case Item_id::fire_hound_bite:
-    case Item_id::frost_hound_bite:
     case Item_id::zuul_bite:
     case Item_id::raven_peck:
     case Item_id::giant_bat_bite:
@@ -96,7 +94,6 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
     case Item_id::hunting_horror_bite:
     case Item_id::dust_vortex_engulf:
     case Item_id::fire_vortex_engulf:
-    case Item_id::frost_vortex_engulf:
     case Item_id::mold_spores:
     case Item_id::mi_go_sting:
     case Item_id::mi_go_commander_sting:
@@ -177,10 +174,6 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
         r = new Armor_asb_suit(d);
         break;
 
-    case Item_id::armor_heavy_coat:
-        r = new Armor_heavy_coat(d);
-        break;
-
     case Item_id::armor_mi_go:
         r = new Armor_mi_go(d);
         break;
@@ -204,7 +197,7 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
     case Item_id::scroll_opening:
     case Item_id::scroll_sacr_life:
     case Item_id::scroll_sacr_spi:
-    case Item_id::scroll_elem_res:
+    case Item_id::scroll_res:
     case Item_id::scroll_summon_mon:
     case Item_id::scroll_light:
         r = new Scroll(d);

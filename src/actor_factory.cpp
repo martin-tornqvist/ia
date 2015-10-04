@@ -12,8 +12,6 @@
 #include "actor.hpp"
 #include "feature_rigid.hpp"
 
-using namespace std;
-
 namespace actor_factory
 {
 
@@ -80,9 +78,6 @@ Actor* mk_actor_from_id(const Actor_id id)
 
     case Actor_id::fire_hound:
         return new Fire_hound();
-
-    case Actor_id::frost_hound:
-        return new Frost_hound();
 
     case Actor_id::zuul:
         return new Zuul();
@@ -180,9 +175,6 @@ Actor* mk_actor_from_id(const Actor_id id)
     case Actor_id::fire_vortex:
         return new Fire_vortex();
 
-    case Actor_id::frost_vortex:
-        return new Frost_vortex();
-
     case Actor_id::ooze_black:
         return new Ooze_black();
 
@@ -255,7 +247,7 @@ Actor* mk(const Actor_id id, const Pos& pos)
 
 void delete_all_mon()
 {
-    vector<Actor*>& actors = game_time::actors_;
+    std::vector<Actor*>& actors = game_time::actors_;
 
     for (size_t i = 0; i < actors.size(); ++i)
     {
@@ -267,24 +259,27 @@ void delete_all_mon()
     }
 }
 
-void summon(const Pos& origin, const vector<Actor_id>& monster_ids, const bool MAKE_MONSTERS_AWARE,
-            Actor* const actor_to_set_as_leader, vector<Mon*>* monsters_ret)
+void summon(const Pos& origin,
+            const std::vector<Actor_id>& monster_ids,
+            const bool MAKE_MONSTERS_AWARE,
+            Actor* const actor_to_set_as_leader,
+            std::vector<Mon*>* monsters_ret)
 {
     if (monsters_ret) {monsters_ret->clear();}
 
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
-    vector<Pos> free_cells;
+    std::vector<Pos> free_cells;
     utils::mk_vector_from_bool_map(false, blocked, free_cells);
 
-    sort(begin(free_cells), end(free_cells), Is_closer_to_pos(origin));
+    std::sort(begin(free_cells), end(free_cells), Is_closer_to_pos(origin));
 
     const size_t    NR_FREE_CELLS   = free_cells.size();
     const size_t    NR_MONSTER_IDS  = monster_ids.size();
-    const int       NR_TO_SPAWN     = min(NR_FREE_CELLS, NR_MONSTER_IDS);
+    const int       NR_TO_SPAWN     = std::min(NR_FREE_CELLS, NR_MONSTER_IDS);
 
-    vector<Pos> positions_to_animate;
+    std::vector<Pos> positions_to_animate;
 
     for (int i = 0; i < NR_TO_SPAWN; ++i)
     {
@@ -319,4 +314,4 @@ void summon(const Pos& origin, const vector<Actor_id>& monster_ids, const bool M
     render::draw_blast_at_seen_cells(positions_to_animate, clr_magenta);
 }
 
-} //Actor_factory
+} //actor_factory

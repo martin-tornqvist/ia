@@ -13,7 +13,6 @@ enum class Jewelry_effect_id
 {
     //Primary effects (i.e. one of these must be on the jewelry)
     rFire,
-    rCold,
     rElec,
     rPoison,
     rDisease,
@@ -116,28 +115,6 @@ public:
     std::string descr() const override
     {
         return "It shields the wearer against fire.";
-    }
-
-protected:
-    Prop* mk_prop() const override;
-};
-
-class Jewelry_effect_rCold : public Jewelry_property_effect
-{
-public:
-    Jewelry_effect_rCold(Jewelry* const jewelry) :
-        Jewelry_property_effect(jewelry) {}
-
-    ~Jewelry_effect_rCold() {}
-
-    Jewelry_effect_id id() const override
-    {
-        return Jewelry_effect_id::rCold;
-    }
-
-    std::string descr() const override
-    {
-        return "It shields the wearer against cold.";
     }
 
 protected:

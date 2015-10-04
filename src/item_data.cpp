@@ -275,6 +275,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
     case Item_type::device:
         reset_data(d, Item_type::general);
         d.type = Item_type::device;
+        d.value = Item_value::minor_treasure;
         d.has_std_activate = true;
         d.base_name_un_id = {"Strange Device", "Strange Devices", "a Strange Device"};
         d.base_descr =
@@ -283,8 +284,6 @@ void reset_data(Item_data_t& d, Item_type const item_type)
             "human mind. Even for its small size, it seems incredibly complex. There is "
             "no hope of understanding the purpose or function of it through normal means."
         };
-        d.value = Item_value::minor_treasure;
-        d.chance_to_incl_in_floor_spawn_list = 9;
         d.weight = Item_weight::light;
         d.is_identified = false;
         d.glyph = '~';
@@ -292,6 +291,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.is_stackable = false;
         d.land_on_hard_snd_msg = "I hear a clanking sound.";
         d.land_on_hard_sfx = Sfx_id::metal_clank;
+        d.chance_to_incl_in_floor_spawn_list = 9;
         add_feature_found_in(d, Feature_id::chest, 12);
         add_feature_found_in(d, Feature_id::cocoon, 12);
         break;
@@ -299,13 +299,14 @@ void reset_data(Item_data_t& d, Item_type const item_type)
     case Item_type::rod:
         reset_data(d, Item_type::general);
         d.type = Item_type::rod;
+        d.value = Item_value::major_treasure;
+        d.is_ins_raied_while_carried = true;
         d.has_std_activate = true;
         d.base_descr =
         {
             "A peculiar metallic device of cylindrical shape. The only detail is a single button "
             "on the side."
         };
-        d.value = Item_value::major_treasure;
         d.chance_to_incl_in_floor_spawn_list = 9;
         d.weight = Item_weight::light;
         d.is_identified = false;
@@ -314,9 +315,9 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.is_stackable = false;
         d.land_on_hard_snd_msg = "I hear a clanking sound.";
         d.land_on_hard_sfx = Sfx_id::metal_clank;
+        d.chance_to_incl_in_floor_spawn_list = 9;
         add_feature_found_in(d, Feature_id::chest, 12);
         add_feature_found_in(d, Feature_id::cocoon, 12);
-        add_feature_found_in(d, Feature_id::tomb, 12);
         break;
 
     case Item_type::armor:
@@ -346,8 +347,8 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.is_identified = false;
         d.is_stackable = false;
         d.chance_to_incl_in_floor_spawn_list = 1;
-        add_feature_found_in(d, Feature_id::tomb, 16);
-        add_feature_found_in(d, Feature_id::chest, 5);
+        add_feature_found_in(d, Feature_id::tomb, 12);
+        add_feature_found_in(d, Feature_id::chest, 4);
         break;
 
     case Item_type::ring:
@@ -361,8 +362,8 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.is_identified = false;
         d.is_stackable = false;
         d.chance_to_incl_in_floor_spawn_list = 1;
-        add_feature_found_in(d, Feature_id::tomb, 16);
-        add_feature_found_in(d, Feature_id::chest, 5);
+        add_feature_found_in(d, Feature_id::tomb, 12);
+        add_feature_found_in(d, Feature_id::chest, 4);
         break;
 
     case Item_type::explosive:
@@ -1264,25 +1265,6 @@ void init_data_list()
     d.melee.dmg_type = Dmg_type::fire;
     data[size_t(d.id)] = d;
 
-    reset_data(d, Item_type::ranged_wpn_intr);
-    d.id = Item_id::frost_hound_breath;
-    d.ranged.att_msgs = {"", "breaths frost at me"};
-    d.ranged.snd_msg = "I hear a chilling sound.";
-    set_dmg_from_mon_id(d, Actor_id::frost_hound);
-    d.ranged.projectile_clr = clr_blue_lgt;
-    d.ranged.projectile_glyph = '*';
-    d.ranged.projectile_leaves_trail = true;
-    d.ranged.projectile_leaves_smoke = true;
-    d.ranged.dmg_type = Dmg_type::cold;
-    data[size_t(d.id)] = d;
-
-    reset_data(d, Item_type::melee_wpn_intr);
-    d.id = Item_id::frost_hound_bite;
-    d.melee.att_msgs = {"", "bites me"};
-    set_dmg_from_mon_id(d, Actor_id::frost_hound);
-    d.melee.dmg_type = Dmg_type::cold;
-    data[size_t(d.id)] = d;
-
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::zuul_bite;
     d.melee.att_msgs = {"", "bites me"};
@@ -1302,12 +1284,6 @@ void init_data_list()
     d.melee.att_msgs = {"", "engulfs me"};
     set_dmg_from_mon_id(d, Actor_id::fire_vortex);
     d.melee.prop_applied = new Prop_burning(Prop_turns::std);
-    data[size_t(d.id)] = d;
-
-    reset_data(d, Item_type::melee_wpn_intr);
-    d.id = Item_id::frost_vortex_engulf;
-    d.melee.att_msgs = {"", "engulfs me"};
-    set_dmg_from_mon_id(d, Actor_id::frost_vortex);
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
@@ -1606,28 +1582,6 @@ void init_data_list()
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::armor);
-    d.id = Item_id::armor_heavy_coat;
-    d.base_name = {"Heavy Coat", "", "a Heavy Coat"};
-    d.base_descr =
-    {
-        "A very thick coat. It gives more protection against physical harm than a "
-        "leather jacket, and it also protects against cold.",
-
-        "Sneaking and dodging is slightly more difficult due to its higher weight."
-    };
-    d.ability_mods_while_equipped[int(Ability_id::stealth)]    = -15;
-    d.ability_mods_while_equipped[int(Ability_id::dodge_att)]   = -15;
-    d.ability_mods_while_equipped[int(Ability_id::dodge_trap)]  = -15;
-    d.weight = Item_weight::medium;
-    d.clr = clr_blue_lgt;
-    d.spawn_std_range.min = 3;
-    d.armor.armor_points = 2;
-    d.armor.dmg_to_durability_factor = 1.0;
-    d.land_on_hard_snd_msg = "";
-    add_feature_found_in(d, Feature_id::cabinet);
-    data[size_t(d.id)] = d;
-
-    reset_data(d, Item_type::armor);
     d.id = Item_id::armor_mi_go;
     d.base_name = {"Mi-go Bio-armor", "", "a Mi-go Bio-armor"};
     d.base_descr =
@@ -1767,8 +1721,8 @@ void init_data_list()
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::scroll);
-    d.id = Item_id::scroll_elem_res;
-    d.spell_cast_from_scroll = Spell_id::elem_res;
+    d.id = Item_id::scroll_res;
+    d.spell_cast_from_scroll = Spell_id::res;
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::scroll);

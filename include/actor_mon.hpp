@@ -415,14 +415,6 @@ public:
     void mk_start_items() override;
 };
 
-class Frost_hound: public Mon
-{
-public:
-    Frost_hound() : Mon() {}
-    ~Frost_hound() {}
-    void mk_start_items() override;
-};
-
 class Zuul: public Mon
 {
 public:
@@ -702,15 +694,6 @@ class Fire_vortex: public Vortex
 public:
     Fire_vortex() : Vortex() {}
     ~Fire_vortex() {}
-    void mk_start_items() override;
-    void on_death();
-};
-
-class Frost_vortex: public Vortex
-{
-public:
-    Frost_vortex() : Vortex() {}
-    ~Frost_vortex() {}
     void mk_start_items() override;
     void on_death();
 };

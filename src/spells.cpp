@@ -42,12 +42,18 @@ Spell* random_spell_for_mon()
     {
         Spell* const spell = mk_spell_from_id(Spell_id(i));
 
-        if (spell->is_avail_for_all_mon()) {bucket.push_back(Spell_id(i));}
+        if (spell->is_avail_for_all_mon())
+        {
+            bucket.push_back(Spell_id(i));
+        }
 
         delete spell;
     }
 
+    assert(!bucket.empty());
+
     const int ELEMENT = rnd::range(0, bucket.size() - 1);
+
     return mk_spell_from_id(bucket[ELEMENT]);
 }
 
@@ -121,8 +127,8 @@ Spell* mk_spell_from_id(const Spell_id spell_id)
     case Spell_id::burn:
         return new Spell_burn;
 
-    case Spell_id::elem_res:
-        return new Spell_elem_res;
+    case Spell_id::res:
+        return new Spell_res;
 
     case Spell_id::pharaoh_staff:
         return new Spell_pharaoh_staff;
@@ -1028,8 +1034,8 @@ bool Spell_teleport::allow_mon_cast_now(Mon& mon) const
     return mon.tgt_ && IS_LOW_HP && rnd::coin_toss();
 }
 
-//------------------------------------------------------------ ELEMENTAL RES
-Spell_effect_noticed Spell_elem_res::cast_impl(Actor* const caster) const
+//------------------------------------------------------------ RESISTANCE
+Spell_effect_noticed Spell_res::cast_impl(Actor* const caster) const
 {
     //Spell reflection?
     if (caster->has_prop(Prop_id::spell_reflect))
@@ -1043,14 +1049,16 @@ Spell_effect_noticed Spell_elem_res::cast_impl(Actor* const caster) const
     }
 
     const int DURATION = 20;
+
     Prop_handler& prop_hlr = caster->prop_handler();
+
     prop_hlr.try_add_prop(new Prop_rFire(Prop_turns::specific, DURATION));
     prop_hlr.try_add_prop(new Prop_rElec(Prop_turns::specific, DURATION));
-    prop_hlr.try_add_prop(new Prop_rCold(Prop_turns::specific, DURATION));
+
     return Spell_effect_noticed::yes;
 }
 
-bool Spell_elem_res::allow_mon_cast_now(Mon& mon) const
+bool Spell_res::allow_mon_cast_now(Mon& mon) const
 {
     return mon.tgt_ && rnd::one_in(3);
 }

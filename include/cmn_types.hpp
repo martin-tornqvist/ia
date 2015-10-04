@@ -101,7 +101,6 @@ enum class Dmg_type
 {
     physical,
     fire,
-    cold,
     acid,
     electric,
     spirit,

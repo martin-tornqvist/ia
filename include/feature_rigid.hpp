@@ -851,20 +851,24 @@ enum class Fountain_effect
     blind,
     faint,
     rFire,
-    rCold,
     rElec,
     rFear,
     rConf,
     END
 };
 
-enum class Fountain_matl {stone, gold};
+enum class Fountain_matl
+{
+    stone, gold
+};
 
 class Fountain: public Rigid
 {
 public:
     Fountain(const Pos& pos);
+
     Fountain() = delete;
+
     ~Fountain() {}
 
     Feature_id id() const override
@@ -873,13 +877,13 @@ public:
     }
 
     std::string name(const Article article) const override;
+
     void bump(Actor& actor_bumping) override;
 
 private:
     Clr clr_default() const override;
 
-    void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-                Actor* const actor) override;
+    void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor) override;
 
     std::vector<Fountain_effect> fountain_effects_;
     Fountain_matl fountain_matl_;
@@ -890,7 +894,9 @@ class Cocoon: public Rigid
 {
 public:
     Cocoon(const Pos& pos);
+
     Cocoon() = delete;
+
     ~Cocoon() {}
 
     Feature_id id() const override
@@ -899,15 +905,17 @@ public:
     }
 
     std::string name(const Article article) const override;
+
     Tile_id tile() const override;
+
     void bump(Actor& actor_bumping) override;
+
     Did_open open(Actor* const actor_opening) override;
 
 private:
     Clr clr_default() const override;
 
-    void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-                Actor* const actor) override;
+    void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor) override;
 
     void player_loot();
 

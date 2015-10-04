@@ -2734,10 +2734,10 @@ Clr Chest::clr_default() const
 
 //--------------------------------------------------------------------- FOUNTAIN
 Fountain::Fountain(const Pos& feature_pos) :
-    Rigid(feature_pos),
-    fountain_effects_(std::vector<Fountain_effect>()),
-    fountain_matl_(Fountain_matl::stone),
-    nr_drinks_left_(rnd::range(3, 4))
+    Rigid               (feature_pos),
+    fountain_effects_   (std::vector<Fountain_effect>()),
+    fountain_matl_      (Fountain_matl::stone),
+    nr_drinks_left_     (rnd::range(3, 4))
 {
     if (rnd::one_in(16))
     {
@@ -2757,7 +2757,6 @@ Fountain::Fountain(const Pos& feature_pos) :
             const auto  effect    = Fountain_effect(rnd::range(0, NR_TYPES - 1));
             fountain_effects_.push_back(effect);
         }
-
         break;
 
     case Fountain_matl::gold:
@@ -2767,7 +2766,6 @@ Fountain::Fountain(const Pos& feature_pos) :
             Fountain_effect::spirit,
             Fountain_effect::vitality,
             Fountain_effect::rFire,
-            Fountain_effect::rCold,
             Fountain_effect::rElec,
             Fountain_effect::rFear,
             Fountain_effect::rConf
@@ -2781,7 +2779,6 @@ Fountain::Fountain(const Pos& feature_pos) :
         {
             fountain_effects_.push_back(effect_bucket[i]);
         }
-
         break;
     }
 }
@@ -2918,14 +2915,6 @@ void Fountain::bump(Actor& actor_bumping)
             case Fountain_effect::rFire:
             {
                 Prop* const prop = new Prop_rFire(Prop_turns::std);
-                prop->set_nr_turns_left(prop->nr_turns_left() * 2);
-                prop_hlr.try_add_prop(prop);
-            }
-            break;
-
-            case Fountain_effect::rCold:
-            {
-                Prop* const prop = new Prop_rCold(Prop_turns::std);
                 prop->set_nr_turns_left(prop->nr_turns_left() * 2);
                 prop_hlr.try_add_prop(prop);
             }

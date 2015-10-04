@@ -230,20 +230,6 @@ private:
     Unequip_allowed on_unequip_hook() override;
 };
 
-class Armor_heavy_coat: public Armor
-{
-public:
-    Armor_heavy_coat(Item_data_t* const item_data) :
-        Armor(item_data) {}
-
-    ~Armor_heavy_coat() {}
-
-    void on_equip_hook(const Verbosity verbosity) override;
-
-private:
-    Unequip_allowed on_unequip_hook() override;
-};
-
 class Armor_mi_go: public Armor
 {
 public:

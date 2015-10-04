@@ -36,7 +36,7 @@ enum class Spell_id
     opening,
     sacr_life,
     sacr_spi,
-    elem_res,
+    res,
     light,
     bless,
 
@@ -856,10 +856,10 @@ private:
     }
 };
 
-class Spell_elem_res: public Spell
+class Spell_res: public Spell
 {
 public:
-    Spell_elem_res() : Spell() {}
+    Spell_res() : Spell() {}
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
@@ -875,12 +875,12 @@ public:
 
     std::string name() const override
     {
-        return "Elemental Resistance";
+        return "Resistance";
     }
 
     Spell_id id() const override
     {
-        return Spell_id::elem_res;
+        return Spell_id::res;
     }
 
     Intr_spell_shock shock_type_intr_cast() const override
@@ -892,8 +892,7 @@ public:
     {
         return
         {
-            "For a brief time, the caster is completely shielded from fire, cold and "
-            "electricity."
+            "For a brief time, the caster is completely shielded from fire and electricity."
         };
     }
 private:
