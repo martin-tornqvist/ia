@@ -1867,72 +1867,6 @@ bool Zombie::on_actor_turn_hook()
     return try_resurrect();
 }
 
-bool Major_clapham_lee::on_actor_turn_hook()
-{
-    if (try_resurrect())
-    {
-        return true;
-    }
-
-    if (is_alive() && aware_counter_ > 0 && !has_summoned_tomb_legions)
-    {
-        bool blocked_los[MAP_W][MAP_H];
-
-        const Rect fov_rect = fov::get_fov_rect(pos);
-
-        map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite, fov_rect);
-
-        if (can_see_actor(*(map::player), blocked_los))
-        {
-            set_player_aware_of_me();
-
-            msg_log::add("Major Clapham Lee calls forth his Tomb-Legions!");
-
-            std::vector<Actor_id> mon_ids = {Actor_id::dean_halsey};
-
-            const int NR_OF_EXTRA_SPAWNS = 4;
-
-            for (int i = 0; i < NR_OF_EXTRA_SPAWNS; ++i)
-            {
-                const int ZOMBIE_TYPE = rnd::range(1, 3);
-
-                Actor_id mon_id = Actor_id::zombie;
-
-                switch (ZOMBIE_TYPE)
-                {
-                case 1:
-                    mon_id = Actor_id::zombie;
-                    break;
-
-                case 2:
-                    mon_id = Actor_id::zombie_axe;
-                    break;
-
-                case 3:
-                    mon_id = Actor_id::bloated_zombie;
-                    break;
-                }
-
-                mon_ids.push_back(mon_id);
-            }
-
-            actor_factory::summon(pos, mon_ids, true, this);
-
-            render::draw_map_and_interface();
-
-            has_summoned_tomb_legions = true;
-
-            map::player->incr_shock(Shock_lvl::heavy, Shock_src::misc);
-
-            game_time::tick();
-
-            return true;
-        }
-    }
-
-    return false;
-}
-
 bool Zombie::try_resurrect()
 {
     if (!is_corpse() || has_resurrected)
@@ -1995,7 +1929,7 @@ void Zombie::on_death()
     //corpse is not destroyed "too hard" (e.g. by a near explosion or a sledge hammer). This also
     //serves to reward heavy weapons, since they will more often prevent spawning nasty stuff.
 
-    const int SUMMON_ONE_IN_N = 4;
+    const int SUMMON_ONE_IN_N = 7;
 
     if (state_ == Actor_state::destroyed && hp_ > -10 && rnd::one_in(SUMMON_ONE_IN_N))
     {
@@ -2073,6 +2007,72 @@ void Bloated_zombie::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(Item_id::bloated_zombie_punch));
     inv_->put_in_intrinsics(item_factory::mk(Item_id::bloated_zombie_spit));
+}
+
+bool Major_clapham_lee::on_actor_turn_hook()
+{
+    if (try_resurrect())
+    {
+        return true;
+    }
+
+    if (is_alive() && aware_counter_ > 0 && !has_summoned_tomb_legions)
+    {
+        bool blocked_los[MAP_W][MAP_H];
+
+        const Rect fov_rect = fov::get_fov_rect(pos);
+
+        map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite, fov_rect);
+
+        if (can_see_actor(*(map::player), blocked_los))
+        {
+            set_player_aware_of_me();
+
+            msg_log::add("Major Clapham Lee calls forth his Tomb-Legions!");
+
+            std::vector<Actor_id> mon_ids = {Actor_id::dean_halsey};
+
+            const int NR_OF_EXTRA_SPAWNS = 4;
+
+            for (int i = 0; i < NR_OF_EXTRA_SPAWNS; ++i)
+            {
+                const int ZOMBIE_TYPE = rnd::range(1, 3);
+
+                Actor_id mon_id = Actor_id::zombie;
+
+                switch (ZOMBIE_TYPE)
+                {
+                case 1:
+                    mon_id = Actor_id::zombie;
+                    break;
+
+                case 2:
+                    mon_id = Actor_id::zombie_axe;
+                    break;
+
+                case 3:
+                    mon_id = Actor_id::bloated_zombie;
+                    break;
+                }
+
+                mon_ids.push_back(mon_id);
+            }
+
+            actor_factory::summon(pos, mon_ids, true, this);
+
+            render::draw_map_and_interface();
+
+            has_summoned_tomb_legions = true;
+
+            map::player->incr_shock(Shock_lvl::heavy, Shock_src::misc);
+
+            game_time::tick();
+
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void Crawling_intestines::mk_start_items()

@@ -379,13 +379,13 @@ void tick(const bool IS_FREE_TURN)
 
 void update_light_map()
 {
-    bool light_tmp[MAP_W][MAP_H];
+    bool light[MAP_W][MAP_H];
 
     for (int x = 0; x < MAP_W; ++x)
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            map::cells[x][y].is_lit = light_tmp[x][y] = false;
+            map::cells[x][y].is_lit = light[x][y] = false;
         }
     }
 
@@ -397,29 +397,29 @@ void update_light_map()
 
     for (const auto* const a : actors_)
     {
-        a->add_light(light_tmp);
+        a->add_light(light);
     }
 
     for (const auto* const m : mobs_)
     {
-        m->add_light(light_tmp);
+        m->add_light(light);
     }
 
     for (int x = 0; x < MAP_W; ++x)
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            auto* rigid = map::cells[x][y].rigid;
+            map::cells[x][y].rigid->add_light(light);
+        }
+    }
 
-            if (rigid->burn_state() == Burn_state::burning)
-            {
-                light_tmp[x][y] = true;
-            }
-
-            rigid->add_light(light_tmp);
-
-            //Copy the temp values to the real light map.
-            map::cells[x][y].is_lit = light_tmp[x][y];
+    //Copy the temp values to the real light map
+    //NOTE: This must be done separately - it can not be done in the map loop above
+    for (int x = 0; x < MAP_W; ++x)
+    {
+        for (int y = 0; y < MAP_H; ++y)
+        {
+            map::cells[x][y].is_lit = light[x][y];
         }
     }
 }

@@ -49,7 +49,7 @@ Player::Player() :
     nr_turns_until_ins_         (-1),
     nr_quick_move_steps_left_   (-1),
     quick_move_dir_             (Dir::END),
-    CARRY_WEIGHT_BASE_          (450) {}
+    CARRY_WEIGHT_BASE_          (500) {}
 
 Player::~Player()
 {

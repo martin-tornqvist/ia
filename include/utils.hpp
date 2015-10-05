@@ -148,13 +148,35 @@ namespace dir_utils
 //Useful lists to iterate over (e.g. in map generation)
 const std::vector<Pos> cardinal_list
 {
-    Pos(-1, 0), Pos(1, 0), Pos(0, -1), Pos(0, 1)
+    Pos(-1,  0),
+    Pos( 1,  0),
+    Pos( 0, -1),
+    Pos( 0,  1)
 };
 
 const std::vector<Pos> dir_list
 {
-    Pos(-1,  0), Pos(1, 0), Pos(0, -1), Pos(0, 1),
-    Pos(-1, -1), Pos(-1, 1), Pos(1, -1), Pos(1, 1)
+    Pos(-1,  0),
+    Pos( 1,  0),
+    Pos( 0, -1),
+    Pos( 0,  1),
+    Pos(-1, -1),
+    Pos(-1,  1),
+    Pos( 1, -1),
+    Pos( 1,  1)
+};
+
+const std::vector<Pos> dir_list_w_center
+{
+    Pos( 0,  0),
+    Pos(-1,  0),
+    Pos( 1,  0),
+    Pos( 0, -1),
+    Pos( 0,  1),
+    Pos(-1, -1),
+    Pos(-1,  1),
+    Pos( 1, -1),
+    Pos( 1,  1)
 };
 
 Dir dir(const Pos& offset_values);

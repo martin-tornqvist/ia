@@ -1176,13 +1176,22 @@ void Molotov::on_thrown_ignited_landing(const Pos& p)
 {
     const int D = player_bon::traits[size_t(Trait::dem_expert)] ? 1 : 0;
 
-    Snd snd("I hear an explosion!", Sfx_id::explosion_molotov, Ignore_msg_if_origin_seen::yes,
-            p, nullptr, Snd_vol::high, Alerts_mon::yes);
+    Snd snd("I hear an explosion!",
+            Sfx_id::explosion_molotov,
+            Ignore_msg_if_origin_seen::yes,
+            p,
+            nullptr,
+            Snd_vol::high,
+            Alerts_mon::yes);
 
     snd_emit::emit_snd(snd);
 
-    explosion::run(p, Expl_type::apply_prop, Expl_src::player_use_moltv_intended,
-                   Emit_expl_snd::no, D , new Prop_burning(Prop_turns::std));
+    explosion::run(p,
+                   Expl_type::apply_prop,
+                   Expl_src::player_use_moltv_intended,
+                   Emit_expl_snd::no,
+                   D,
+                   new Prop_burning(Prop_turns::std));
 }
 
 

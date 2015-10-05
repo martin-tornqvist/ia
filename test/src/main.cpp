@@ -404,6 +404,69 @@ TEST_FIXTURE(Basic_fixture, fov)
     CHECK(fov[X - R + 1][Y + R - 1].is_blocked_hard);
 }
 
+TEST_FIXTURE(Basic_fixture, light_map)
+{
+    //Put walls on the edge of the map, and floor in all other cells, and make all cells dark
+    for(int x = 0; x < MAP_W; ++x)
+    {
+        for(int y = 0; y < MAP_H; ++y)
+        {
+            const Pos p(x, y);
+
+            Cell& cell = map::cells[p.x][p.y];
+
+            cell.is_dark    = true;
+            cell.is_lit     = false;
+
+            if (utils::is_pos_inside_map(p, false))
+            {
+                map::put(new Floor(p));
+            }
+            else //Is on edge of map
+            {
+                map::put(new Wall(p));
+            }
+        }
+    }
+
+    map::player->pos.set(40, 12);
+
+    const Pos burn_pos(40, 10);
+
+    Rigid* const burn_rigid = map::cells[burn_pos.x][burn_pos.y].rigid;
+
+    while (burn_rigid->burn_state() != Burn_state::burning)
+    {
+        burn_rigid->hit(Dmg_type::fire, Dmg_method::elemental);
+    }
+
+    game_time::update_light_map();
+
+    map::player->update_fov();
+
+    //Check that the cells around the burning floor is lit
+    CHECK(map::cells[burn_pos.x    ][burn_pos.y    ].is_lit);
+    CHECK(map::cells[burn_pos.x    ][burn_pos.y + 1].is_lit);
+    CHECK(map::cells[burn_pos.x    ][burn_pos.y - 1].is_lit);
+    CHECK(map::cells[burn_pos.x - 1][burn_pos.y    ].is_lit);
+    CHECK(map::cells[burn_pos.x - 1][burn_pos.y + 1].is_lit);
+    CHECK(map::cells[burn_pos.x - 1][burn_pos.y - 1].is_lit);
+    CHECK(map::cells[burn_pos.x + 1][burn_pos.y    ].is_lit);
+    CHECK(map::cells[burn_pos.x + 1][burn_pos.y + 1].is_lit);
+    CHECK(map::cells[burn_pos.x + 1][burn_pos.y - 1].is_lit);
+
+    //The cells around the burning floor should still be "dark" (not affected by light)
+    CHECK(map::cells[burn_pos.x    ][burn_pos.y    ].is_dark);
+    CHECK(map::cells[burn_pos.x    ][burn_pos.y + 1].is_dark);
+    CHECK(map::cells[burn_pos.x    ][burn_pos.y - 1].is_dark);
+    CHECK(map::cells[burn_pos.x - 1][burn_pos.y    ].is_dark);
+    CHECK(map::cells[burn_pos.x - 1][burn_pos.y + 1].is_dark);
+    CHECK(map::cells[burn_pos.x - 1][burn_pos.y - 1].is_dark);
+    CHECK(map::cells[burn_pos.x + 1][burn_pos.y    ].is_dark);
+    CHECK(map::cells[burn_pos.x + 1][burn_pos.y + 1].is_dark);
+    CHECK(map::cells[burn_pos.x + 1][burn_pos.y - 1].is_dark);
+}
+
 TEST_FIXTURE(Basic_fixture, throw_items)
 {
     //-----------------------------------------------------------------
@@ -432,7 +495,6 @@ TEST_FIXTURE(Basic_fixture, explosions)
     const int X0 = 5;
     const int Y0 = 7;
 
-    //auto* const floor = new Floor(Pos(X0, Y0));
     map::put(new Floor(Pos(X0, Y0)));
 
     //Check wall destruction

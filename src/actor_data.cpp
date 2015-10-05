@@ -613,7 +613,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
     d.ranged_cooldown_turns = 0;
-    d.spell_cooldown_turns = 1;
+    d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_magenta;
     d.tile = Tile_id::witch_or_warlock;
@@ -715,7 +715,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_leader)] = false;
     d.speed = Actor_speed::slow;
     d.ranged_cooldown_turns = 0;
-    d.spell_cooldown_turns = 1;
+    d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_yellow;
     d.tile = Tile_id::leng_elder;
@@ -769,7 +769,7 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::slow;
     d.ranged_cooldown_turns = 0;
-    d.spell_cooldown_turns = 1;
+    d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_cyan_lgt;
     d.tile = Tile_id::cultist_dagger;
@@ -1350,13 +1350,13 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::fastest;
     d.glyph = 'b';
-    d.color = clr_gray;
+    d.color = clr_gray_drk;
     d.tile = Tile_id::raven;
     d.hp = 2;
     d.spi = 6;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(Ability_id::melee, 15);
-    d.ability_vals.set_val(Ability_id::dodge_att, 75);
+    d.ability_vals.set_val(Ability_id::melee, 12);
+    d.ability_vals.set_val(Ability_id::dodge_att, 40);
     d.natural_props[int(Prop_id::flying)] = true;
     d.natural_props[int(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 2;

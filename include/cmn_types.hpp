@@ -204,15 +204,15 @@ enum class More_prompt_on_msg
 struct Cell_render_data
 {
     Cell_render_data() :
-        clr(clr_black),
-        clr_bg(clr_black),
-        tile(Tile_id::empty),
-        glyph(' '),
-        lifebar_length(-1),
-        is_light_fade_allowed(true),
-        is_marked_lit(false),
-        is_living_actor_seen_here(false),
-        is_aware_of_mon_here(false) {}
+        clr                         (clr_black),
+        clr_bg                      (clr_black),
+        tile                        (Tile_id::empty),
+        glyph                       (' '),
+        lifebar_length              (-1),
+        is_light_fade_allowed       (true),
+        is_marked_lit               (false),
+        is_living_actor_seen_here   (false),
+        is_aware_of_mon_here        (false) {}
 
     Clr     clr;
     Clr     clr_bg;

@@ -3,7 +3,12 @@
 
 #include "feature.hpp"
 
-enum class Burn_state       {not_burned, burning, has_burned};
+enum class Burn_state
+{
+    not_burned,
+    burning,
+    has_burned
+};
 
 enum class Was_destroyed    {no, yes};
 enum class Did_trigger_trap {no, yes};
@@ -28,7 +33,8 @@ public:
 
     virtual Clr clr_bg() const override final;
 
-    virtual void hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
+    virtual void hit(const Dmg_type dmg_type,
+                     const Dmg_method dmg_method,
                      Actor* const actor = nullptr);
 
     virtual int shock_when_adj() const;
@@ -50,6 +56,8 @@ public:
     virtual Did_open open(Actor* const actor_opening);
 
     virtual void disarm();
+
+    void add_light(bool light[MAP_W][MAP_H]) const override final;
 
     void mk_bloody()
     {
@@ -80,8 +88,15 @@ protected:
     }
 
     void try_start_burning(const bool IS_MSG_ALLOWED);
+
     virtual Was_destroyed on_finished_burning();
+
     virtual Did_trigger_trap trigger_trap(Actor* const actor);
+
+    virtual void add_light_hook(bool light[MAP_W][MAP_H]) const
+    {
+        (void)light;
+    }
 
     Tile_id gore_tile_;
     char gore_glyph_;
@@ -218,6 +233,8 @@ private:
 
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
                 Actor* const actor) override;
+
+    void add_light_hook(bool light[MAP_W][MAP_H]) const override;
 };
 
 enum class Wall_type {cmn, cmn_alt, cave, egypt, cliff, leng_monestary};

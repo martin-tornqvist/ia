@@ -358,10 +358,28 @@ void Rigid::clear_gore()
     is_bloody_   = false;
 }
 
+void Rigid::add_light(bool light[MAP_W][MAP_H]) const
+{
+    if (burn_state_ == Burn_state::burning)
+    {
+        for (const Pos& d : dir_utils::dir_list_w_center)
+        {
+            const Pos p(pos_ + d);
+
+            if (utils::is_pos_inside_map(p, true))
+            {
+                light[p.x][p.y] = true;
+            }
+        }
+    }
+
+    add_light_hook(light);
+}
+
 //--------------------------------------------------------------------- FLOOR
 Floor::Floor(const Pos& feature_pos) :
-    Rigid(feature_pos),
-    type_(Floor_type::cmn) {}
+    Rigid   (feature_pos),
+    type_   (Floor_type::cmn) {}
 
 void Floor::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
 {
@@ -854,8 +872,13 @@ void Statue::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor*
             msg_log::add("It topples over.");
         }
 
-        Snd snd("I hear a crash.", Sfx_id::END, Ignore_msg_if_origin_seen::yes,
-                pos_, actor, Snd_vol::low, alerts_mon);
+        Snd snd("I hear a crash.",
+                Sfx_id::END,
+                Ignore_msg_if_origin_seen::yes,
+                pos_,
+                actor,
+                Snd_vol::low,
+                alerts_mon);
 
         snd_emit::emit_snd(snd);
 
@@ -864,8 +887,8 @@ void Statue::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor*
         map::put(new Rubble_low(pos_)); //NOTE: "this" is now deleted!
 
         map::player->update_fov();
-        render::draw_map_and_interface();
 
+        render::draw_map_and_interface();
 
         Actor* const actor_behind = utils::actor_at_pos(dst_pos);
 
@@ -1590,12 +1613,83 @@ std::string Brazier::name(const Article article) const
     return ret + "brazier";
 }
 
-void Brazier::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
-                     Actor* const actor)
+void Brazier::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
 {
-    (void)dmg_type;
-    (void)dmg_method;
-    (void)actor;
+    if (dmg_type == Dmg_type::physical && dmg_method == Dmg_method::kick)
+    {
+        assert(actor);
+
+        if (actor->has_prop(Prop_id::weakened))
+        {
+            msg_log::add("It wiggles a bit.");
+            return;
+        }
+
+        const Alerts_mon alerts_mon = actor == map::player ?
+                                      Alerts_mon::yes :
+                                      Alerts_mon::no;
+
+        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        {
+            msg_log::add("It topples over.");
+        }
+
+        Snd snd("I hear a crash.",
+                Sfx_id::END,
+                Ignore_msg_if_origin_seen::yes,
+                pos_,
+                actor,
+                Snd_vol::low,
+                alerts_mon);
+
+        snd_emit::emit_snd(snd);
+
+        const Pos dst_pos = pos_ + (pos_ - actor->pos);
+
+        const Pos my_pos = pos_;
+
+        map::put(new Rubble_low(pos_)); //NOTE: "this" is now deleted!
+
+        map::player->update_fov();
+        render::draw_map_and_interface();
+
+        Rigid* const dst_rigid = map::cells[dst_pos.x][dst_pos.y].rigid;
+
+        if (!dst_rigid->data().is_bottomless)
+        {
+            Pos expl_pos;
+
+            int expl_d = 0;
+
+            if (dst_rigid->is_projectile_passable())
+            {
+                expl_pos    = dst_pos;
+                expl_d      = -1;
+            }
+            else
+            {
+                expl_pos    = my_pos;
+                expl_d      = -2;
+            }
+
+            explosion::run(expl_pos,
+                           Expl_type::apply_prop,
+                           Expl_src::misc,
+                           Emit_expl_snd::no,
+                           expl_d,
+                           new Prop_burning(Prop_turns::std));
+        }
+    }
+}
+
+void Brazier::add_light_hook(bool light[MAP_W][MAP_H]) const
+{
+    for (const Pos& d : dir_utils::dir_list_w_center)
+    {
+        const Pos p(pos_ + d);
+
+        light[p.x][p.y] = true;
+    }
 }
 
 Clr Brazier::clr_default() const

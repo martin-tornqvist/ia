@@ -596,7 +596,7 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
     {
         assert(data_->can_leave_corpse);
 
-        if (rnd::fraction(5, 8) || dmg >= ((hp_max(true) * 2) / 3))
+        if (rnd::fraction(3, 4) || dmg >= ((hp_max(true) * 2) / 3))
         {
             if (method == Dmg_method::kick)
             {

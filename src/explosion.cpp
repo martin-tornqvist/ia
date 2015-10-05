@@ -17,7 +17,8 @@
 namespace
 {
 
-void draw(const std::vector< std::vector<Pos> >& pos_lists, bool blocked[MAP_W][MAP_H],
+void draw(const std::vector< std::vector<Pos> >& pos_lists,
+          bool blocked[MAP_W][MAP_H],
           const Clr* const clr_override)
 {
     render::draw_map_and_interface();
@@ -118,15 +119,16 @@ void cells_reached(const Rect& area, const Pos& origin,
 namespace explosion
 {
 
-void run(const Pos&            origin,
-                      const Expl_type       expl_type,
-                      const Expl_src        expl_src,
-                      const Emit_expl_snd   emit_expl_snd,
-                      const int             RADI_CHANGE,
-                      Prop* const           prop,
-                      const Clr* const      clr_override)
+void run(const Pos& origin,
+         const Expl_type expl_type,
+         const Expl_src expl_src,
+         const Emit_expl_snd emit_expl_snd,
+         const int RADI_CHANGE,
+         Prop* const prop,
+         const Clr* const clr_override)
 {
     Rect area;
+
     const int RADI = EXPLOSION_STD_RADI + RADI_CHANGE;
     explosion_area(origin, RADI, area);
 
@@ -138,8 +140,13 @@ void run(const Pos&            origin,
 
     if (emit_expl_snd == Emit_expl_snd::yes)
     {
-        Snd snd("I hear an explosion!", Sfx_id::explosion, Ignore_msg_if_origin_seen::yes,
-                origin, nullptr, Snd_vol::high, Alerts_mon::yes);
+        Snd snd("I hear an explosion!",
+                Sfx_id::explosion,
+                Ignore_msg_if_origin_seen::yes,
+                origin,
+                nullptr,
+                Snd_vol::high,
+                Alerts_mon::yes);
 
         snd_emit::emit_snd(snd);
     }
@@ -264,10 +271,16 @@ void run(const Pos&            origin,
         }
     }
 
+    game_time::update_light_map();
+
     map::player->update_fov();
+
     render::draw_map_and_interface();
 
-    if (prop) {delete prop;}
+    if (prop)
+    {
+        delete prop;
+    }
 }
 
 void run_smoke_explosion_at(const Pos& origin)
@@ -299,6 +312,7 @@ void run_smoke_explosion_at(const Pos& origin)
     }
 
     map::player->update_fov();
+
     render::draw_map_and_interface();
 }
 

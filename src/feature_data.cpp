@@ -253,7 +253,6 @@ void init_data_list()
     };
     d.glyph = '0';
     d.tile = Tile_id::brazier;
-    d.move_rules.set_can_move_cmn();
     d.can_have_blood = false;
     d.can_have_gore = false;
     d.can_have_corpse = false;
@@ -262,7 +261,7 @@ void init_data_list()
     d.matl_type = Matl::metal;
     d.room_spawn_rules.set(3, {0, DLVL_LAST_MID_GAME}, Placement_rule::either,
     {
-        Room_type::ritual
+        Room_type::ritual, Room_type::plain,
     });
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------

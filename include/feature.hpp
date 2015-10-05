@@ -36,7 +36,6 @@ public:
     virtual bool is_bottomless() const;
     virtual char glyph() const;
     virtual Tile_id tile() const;
-    virtual void add_light(bool light[MAP_W][MAP_H]) const;
     virtual bool can_have_corpse() const;
     virtual bool can_have_rigid() const;
     virtual bool can_have_blood() const;
@@ -46,6 +45,9 @@ public:
     virtual Matl matl() const;
 
     int shock_when_adj() const;
+
+    virtual void add_light(bool light[MAP_W][MAP_H]) const;
+
     Pos pos() const
     {
         return pos_;

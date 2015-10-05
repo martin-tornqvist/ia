@@ -1217,7 +1217,7 @@ void draw_map()
                     cur_render_data->clr   = clr_red;
                 }
 
-                if (map::cells[x][y].is_lit && f->can_move_cmn())
+                if (map::cells[x][y].is_lit && f->is_los_passable())
                 {
                     cur_render_data->is_marked_lit = true;
                 }
@@ -1264,12 +1264,13 @@ void draw_map()
                 //Copy array to player memory (before living actors and mobile features)
                 render_array_no_actors[x][y] = render_array[x][y];
 
-                //Color cells marked as lit yellow
+                //Color cells slightly yellow when marked as lit
                 if (cur_render_data->is_marked_lit)
                 {
-                    cur_render_data->clr.r = std::min(255, cur_render_data->clr.r + 70);
-                    cur_render_data->clr.g = std::min(255, cur_render_data->clr.g + 70);
-                    cur_render_data->clr.b = std::min(255, cur_render_data->clr.b + 20);
+                    cur_render_data->clr.r = std::min(255, cur_render_data->clr.r + 40);
+                    cur_render_data->clr.g = std::min(255, cur_render_data->clr.g + 40);
+
+                    cur_render_data->is_light_fade_allowed = false;
                 }
             }
         }
@@ -1358,7 +1359,7 @@ void draw_map()
                     if (DIST_FROM_PLAYER > 1)
                     {
                         const double DIV =
-                            std::min(2.0, 1.0 + (double(DIST_FROM_PLAYER - 1) * 0.33));
+                            std::min(2.0, 1.0 + ((double(DIST_FROM_PLAYER - 1) * 0.33)));
 
                         div_clr(tmp_render_data.clr,    DIV);
                         div_clr(tmp_render_data.clr_bg, DIV);
