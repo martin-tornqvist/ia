@@ -441,11 +441,17 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
     Range dmg_range(4, 10);
     const int DMG = is_warlock_charged ? dmg_range.max : rnd::range(dmg_range);
 
-    tgt->hit(DMG, Dmg_type::physical);
+    tgt->hit(DMG, Dmg_type::physical, Dmg_method::END, Allow_wound::no);
 
-    snd_emit::emit_snd({"", Sfx_id::END, Ignore_msg_if_origin_seen::yes, tgt->pos, nullptr,
-                        Snd_vol::low, Alerts_mon::yes
-                       });
+    Snd snd("",
+            Sfx_id::END,
+            Ignore_msg_if_origin_seen::yes,
+            tgt->pos,
+            nullptr,
+            Snd_vol::low,
+            Alerts_mon::yes);
+
+    snd_emit::emit_snd(snd);
 
     return Spell_effect_noticed::yes;
 }
@@ -482,7 +488,11 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
         //Spell reflection?
         if (tgt->has_prop(Prop_id::spell_reflect))
         {
-            msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+            msg_log::add(spell_reflect_msg,
+                         clr_white,
+                         false,
+                         More_prompt_on_msg::yes);
+
             cast_impl(tgt);
             continue;
         }
@@ -498,7 +508,8 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
         {
             tgt_str = tgt->name_the();
 
-            if (map::player->is_leader_of(tgt)) {msg_clr = clr_white;}
+            if (map::player->is_leader_of(tgt)) {
+                    msg_clr = clr_white;}
         }
 
         if (map::player->can_see_actor(*tgt))
@@ -510,11 +521,16 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
 
         const int DMG = is_warlock_charged ? dmg_range.max : rnd::range(dmg_range);
 
-        tgt->hit(DMG, Dmg_type::physical);
+        tgt->hit(DMG, Dmg_type::physical, Dmg_method::END, Allow_wound::no);
 
-        snd_emit::emit_snd({"", Sfx_id::END, Ignore_msg_if_origin_seen::yes, tgt->pos, nullptr,
-                            Snd_vol::high, Alerts_mon::yes
-                           });
+        Snd snd("",
+                Sfx_id::END,
+                Ignore_msg_if_origin_seen::yes,
+                tgt->pos,
+                nullptr,
+                Snd_vol::high, Alerts_mon::yes);
+
+        snd_emit::emit_snd(snd);
     }
 
     return Spell_effect_noticed::yes;

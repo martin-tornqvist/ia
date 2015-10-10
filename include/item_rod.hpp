@@ -82,8 +82,8 @@ public:
 protected:
     std::string descr_identified() const override
     {
-        return "When activated, this device cures any physical illness, and heals the users "
-               "wounds by a small amount.";
+        return "When activated, this device cures blindness, poisoning, infections, disease, "
+               "and weakening, and restores the consumers health by a small amount.";
     }
 
     void activate_impl() override;

@@ -81,9 +81,6 @@ const int EXPL_MAX_DMG    = (EXPL_DMG_ROLLS * EXPL_DMG_SIDES) + EXPL_DMG_PLUS;
 
 const int POISON_DMG_N_TURN = 3;
 
-const int MEDICAL_BAG_NR_TRN_BEFORE_HEAL    = 10;
-const int MEDICAL_BAG_NR_TRN_PER_HP         = 2;
-
 const int SHOCK_FROM_OBSESSION = 30;
 
 const int INS_FROM_DISTURBING_ITEMS = 5;

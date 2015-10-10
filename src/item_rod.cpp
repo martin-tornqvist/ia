@@ -213,7 +213,24 @@ void Rod_curing::activate_impl()
 {
     Player& player = *map::player;
 
-    bool is_something_healed = player.prop_handler().end_props_by_magic_healing();
+    std::vector<Prop_id> props_can_heal =
+    {
+        Prop_id::blind,
+        Prop_id::poisoned,
+        Prop_id::infected,
+        Prop_id::diseased,
+        Prop_id::weakened,
+    };
+
+    bool is_something_healed = false;
+
+    for (Prop_id prop_id : props_can_heal)
+    {
+        if (player.prop_handler().end_prop(prop_id))
+        {
+            is_something_healed = true;
+        }
+    }
 
     if (player.restore_hp(3, false /* Not allowed above max */))
     {

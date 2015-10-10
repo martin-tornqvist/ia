@@ -141,7 +141,20 @@ std::string Potion::name_inf() const
 
 void Potion_vitality::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().end_props_by_magic_healing();
+    std::vector<Prop_id> props_can_heal =
+    {
+        Prop_id::blind,
+        Prop_id::poisoned,
+        Prop_id::infected,
+        Prop_id::diseased,
+        Prop_id::weakened,
+        Prop_id::wound
+    };
+
+    for (Prop_id prop_id : props_can_heal)
+    {
+        actor.prop_handler().end_prop(prop_id);
+    }
 
     //HP is always restored at least up to maximum HP, but can go beyond
     const int HP          = actor.hp();
@@ -355,7 +368,24 @@ void Potion_rFire::collide_hook(const Pos& pos, Actor* const actor)
 
 void Potion_curing::quaff_impl(Actor& actor)
 {
-    bool is_noticable = actor.prop_handler().end_props_by_magic_healing();
+    std::vector<Prop_id> props_can_heal =
+    {
+        Prop_id::blind,
+        Prop_id::poisoned,
+        Prop_id::infected,
+        Prop_id::diseased,
+        Prop_id::weakened,
+    };
+
+    bool is_noticable = false;
+
+    for (Prop_id prop_id : props_can_heal)
+    {
+        if (actor.prop_handler().end_prop(prop_id))
+        {
+            is_noticable = true;
+        }
+    }
 
     if (actor.restore_hp(3, false /*Not allowed above max*/))
     {

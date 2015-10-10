@@ -126,7 +126,10 @@ public:
 private:
     void incr_insanity();
 
-    void on_hit(int& dmg) override;
+    void on_hit(int& dmg,
+                const Dmg_type dmg_type,
+                const Dmg_method method,
+                const Allow_wound allow_wound) override;
 
     void fov_hack();
 

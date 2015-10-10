@@ -566,7 +566,10 @@ void Actor::change_max_spi(const int CHANGE, const Verbosity verbosity)
     }
 }
 
-Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
+Actor_died Actor::hit(int dmg,
+                      const Dmg_type dmg_type,
+                      const Dmg_method method,
+                      const Allow_wound allow_wound)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
@@ -661,12 +664,9 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
         return Actor_died::no;
     }
 
-    on_hit(dmg);
-    TRACE_VERBOSE << "Damage after on_hit(): " << dmg << std::endl;
-
+    //Filter damage through worn armor
     dmg = std::max(1, dmg);
 
-    //Filter damage through worn armor
     if (dmg_type == Dmg_type::physical && is_humanoid())
     {
         Armor* armor = static_cast<Armor*>(inv_->item_in_slot(Slot_id::body));
@@ -696,7 +696,13 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
         }
     }
 
+    on_hit(dmg, dmg_type, method, allow_wound);
+
+    TRACE_VERBOSE << "Damage after on_hit(): " << dmg << std::endl;
+
     prop_handler_->on_hit();
+
+    dmg = std::max(1, dmg);
 
     if (!is_player() || !config::is_bot_playing())
     {
@@ -706,12 +712,15 @@ Actor_died Actor::hit(int dmg, const Dmg_type dmg_type, Dmg_method method)
     if (hp() <= 0)
     {
         const bool IS_ON_BOTTOMLESS = map::cells[pos.x][pos.y].rigid->is_bottomless();
+
         const bool IS_DMG_ENOUGH_TO_DESTROY = dmg > ((hp_max(true) * 5) / 4);
+
         const bool IS_DESTROYED = !data_->can_leave_corpse  ||
                                   IS_ON_BOTTOMLESS          ||
                                   IS_DMG_ENOUGH_TO_DESTROY;
 
         die(IS_DESTROYED, !IS_ON_BOTTOMLESS, !IS_ON_BOTTOMLESS);
+
         TRACE_FUNC_END_VERBOSE;
         return Actor_died::yes;
     }

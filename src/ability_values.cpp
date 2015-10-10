@@ -48,7 +48,7 @@ int Ability_vals::val(const Ability_id id,
             break;
 
         case Ability_id::melee:
-            ret += 45;
+            ret += 60;
 
             if (player_bon::traits[size_t(Trait::adept_melee_fighter)])
             {

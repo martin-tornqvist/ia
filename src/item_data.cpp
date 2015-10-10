@@ -1586,15 +1586,15 @@ void init_data_list()
     d.base_name = {"Mi-go Bio-armor", "", "a Mi-go Bio-armor"};
     d.base_descr =
     {
-        "A self-repairing biological armor created by the Mi-go."
+        "An extremely durable biological armor created by the Mi-go."
     };
     d.spawn_std_range = Range(-1, -1);
     d.weight = Item_weight::medium;
     d.is_ins_raied_while_equiped = true;
     d.clr = clr_magenta;
     d.tile = Tile_id::mi_go_armor;
-    d.armor.armor_points = 2;
-    d.armor.dmg_to_durability_factor = 1.5;
+    d.armor.armor_points = 3;
+    d.armor.dmg_to_durability_factor = 0.1;
     d.land_on_hard_snd_msg = "";
     data[size_t(d.id)] = d;
 

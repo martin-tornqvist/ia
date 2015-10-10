@@ -131,6 +131,12 @@ enum class Att_mode
     ranged
 };
 
+enum class Allow_wound
+{
+    no,
+    yes
+};
+
 enum class Shock_lvl
 {
     none   = 0,

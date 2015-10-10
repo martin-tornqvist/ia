@@ -510,7 +510,7 @@ public:
 
     int hp_regen_change() const override
     {
-        return -12;
+        return -2;
     }
 
     std::string descr() const override
@@ -537,7 +537,7 @@ public:
 
     int hp_regen_change() const override
     {
-        return 12;
+        return 2;
     }
 
     std::string descr() const override

@@ -238,8 +238,6 @@ public:
 
     ~Armor_mi_go() {}
 
-    void on_std_turn_in_inv(const Inv_type inv_type) override;
-
     void on_equip_hook(const Verbosity verbosity) override;
 
 private:
@@ -387,40 +385,36 @@ protected:
 
 enum class Med_bag_action
 {
+    treat_wound,
     sanitize_infection,
-    //Take_morphine,
-    treat_wounds,
     END
 };
 
 class Medical_bag: public Item
 {
 public:
-    Medical_bag(Item_data_t* const item_data) :
-        Item(item_data),
-        nr_supplies_(40),
-        nr_turns_until_heal_wounds_(-1),
-        nr_turns_left_sanitize_(-1),
-        cur_action_(Med_bag_action::END) {}
+    Medical_bag(Item_data_t* const item_data);
 
     ~Medical_bag() {}
+
+    void save() override;
+
+    void load() override;
 
     void on_pickup_hook() override;
 
     Consume_item activate(Actor* const actor) override;
 
     void continue_action();
+
     void interrupted();
+
     void finish_cur_action();
 
     Clr interface_clr() const override
     {
         return clr_green;
     }
-
-    void save() override;
-
-    void load() override;
 
     int nr_supplies() const
     {
@@ -430,8 +424,9 @@ public:
 protected:
     Med_bag_action choose_action() const;
 
-    int tot_turns_for_sanitize() const;
-    int tot_suppl_for_sanitize() const;
+    int tot_suppl_for_action(const Med_bag_action action) const;
+
+    int tot_turns_for_action(const Med_bag_action action) const;
 
     std::string name_inf() const override
     {
@@ -440,8 +435,7 @@ protected:
 
     int nr_supplies_;
 
-    int nr_turns_until_heal_wounds_;
-    int nr_turns_left_sanitize_;
+    int nr_turns_left_action_;
 
     Med_bag_action cur_action_;
 };
@@ -449,7 +443,8 @@ protected:
 class Headwear: public Item
 {
 public:
-    Headwear(Item_data_t* item_data) : Item(item_data) {}
+    Headwear(Item_data_t* item_data) :
+        Item(item_data) {}
 
     Clr interface_clr() const override
     {

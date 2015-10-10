@@ -638,8 +638,13 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
                 }
             }
 
-            Snd snd(snd_msg, wpn.data().melee.miss_sfx, Ignore_msg_if_origin_seen::yes,
-                    att_data.defender->pos, att_data.attacker, Snd_vol::low, snd_alerts_mon);
+            Snd snd(snd_msg,
+                    wpn.data().melee.miss_sfx,
+                    Ignore_msg_if_origin_seen::yes,
+                    att_data.defender->pos,
+                    att_data.attacker,
+                    Snd_vol::low,
+                    snd_alerts_mon);
 
             snd_emit::emit_snd(snd);
         }
@@ -776,8 +781,12 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
                 break;
             }
 
-            Snd snd(snd_msg, hit_sfx, Ignore_msg_if_origin_seen::yes, att_data.defender->pos,
-                    att_data.attacker, Snd_vol::low, snd_alerts_mon);
+            Snd snd(snd_msg, hit_sfx,
+                    Ignore_msg_if_origin_seen::yes,
+                    att_data.defender->pos,
+                    att_data.attacker,
+                    Snd_vol::low,
+                    snd_alerts_mon);
 
             snd_emit::emit_snd(snd);
         }
@@ -1445,7 +1454,15 @@ void melee(Actor* const attacker, const Pos& attacker_origin, Actor& defender, c
 
     if (IS_HIT)
     {
-        const Actor_died died = defender.hit(att_data.dmg, wpn.data().melee.dmg_type);
+        const bool IS_RANGED_WPN = wpn.data().type == Item_type::ranged_wpn;
+
+        const Allow_wound allow_wound = IS_RANGED_WPN ?
+                                        Allow_wound::no : Allow_wound::yes;
+
+        const Actor_died died = defender.hit(att_data.dmg,
+                                             wpn.data().melee.dmg_type,
+                                             Dmg_method::END,
+                                             allow_wound);
 
         if (died == Actor_died::no)
         {

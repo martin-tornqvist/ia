@@ -231,7 +231,6 @@ void init_data_list()
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
-    d.is_ended_by_magic_healing = true;
     d.allow_test_on_bot = true;
     d.alignment = Prop_alignment::bad;
     add_prop_data(d);
@@ -254,7 +253,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::burning;
-    d.std_rnd_turns = Range(5, 10);
+    d.std_rnd_turns = Range(7, 11);
     d.name = "Burning";
     d.name_short = "Burning";
     d.msg[size_t(Prop_msg::start_player)] = "I am Burning!";
@@ -285,7 +284,6 @@ void init_data_list()
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
-    d.is_ended_by_magic_healing = true;
     d.allow_test_on_bot = true;
     d.alignment = Prop_alignment::bad;
     add_prop_data(d);
@@ -304,7 +302,6 @@ void init_data_list()
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = false;
     d.update_vision_when_start_or_end = false;
-    d.is_ended_by_magic_healing = true;
     d.allow_test_on_bot = true;
     d.alignment = Prop_alignment::bad;
     add_prop_data(d);
@@ -359,7 +356,6 @@ void init_data_list()
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
-    d.is_ended_by_magic_healing = true;
     d.allow_test_on_bot = true;
     d.alignment = Prop_alignment::bad;
     add_prop_data(d);
@@ -421,6 +417,19 @@ void init_data_list()
     d.alignment = Prop_alignment::bad;
     add_prop_data(d);
 
+    d.id = Prop_id::wound;
+    d.name = "Wound";
+    d.name_short = "Wound";
+    d.msg[size_t(Prop_msg::start_player)] = "I am wounded!";
+    d.msg[size_t(Prop_msg::res_player)] = "I resist wounding!";
+    d.is_making_mon_aware = false;
+    d.allow_display_turns = false;
+    d.allow_apply_more_while_active = true;
+    d.update_vision_when_start_or_end = false;
+    d.allow_test_on_bot = false;
+    d.alignment = Prop_alignment::bad;
+    add_prop_data(d);
+
     d.id = Prop_id::warlock_charged;
     d.std_rnd_turns = Range(1, 1);
     d.name = "Charged";
@@ -447,7 +456,6 @@ void init_data_list()
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
-    d.is_ended_by_magic_healing = true;
     d.allow_test_on_bot = true;
     d.alignment = Prop_alignment::bad;
     add_prop_data(d);
@@ -466,7 +474,6 @@ void init_data_list()
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
-    d.is_ended_by_magic_healing = true;
     d.allow_test_on_bot = true;
     d.alignment = Prop_alignment::bad;
     add_prop_data(d);
@@ -485,7 +492,6 @@ void init_data_list()
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
-    d.is_ended_by_magic_healing = true;
     d.allow_test_on_bot = true;
     d.alignment = Prop_alignment::bad;
     add_prop_data(d);
@@ -829,6 +835,8 @@ void Prop_handler::save() const
         {
             save_handling::put_int(int(prop->id()));
             save_handling::put_int(prop->nr_turns_left_);
+
+            prop->save();
         }
     }
 }
@@ -855,6 +863,8 @@ void Prop_handler::load()
         props_.push_back(prop);
 
         incr_active_props_info(prop_id);
+
+        prop->load();
     }
 }
 
@@ -872,6 +882,9 @@ Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init, const int N
     {
     case Prop_id::nailed:
         return new Prop_nailed(turns_init, NR_TURNS);
+
+    case Prop_id::wound:
+        return new Prop_wound(turns_init, NR_TURNS);
 
     case Prop_id::warlock_charged:
         return new Prop_warlock_charged(turns_init, NR_TURNS);
@@ -1375,35 +1388,6 @@ bool Prop_handler::end_prop(const Prop_id id, const bool RUN_PROP_END_EFFECTS)
     return true;
 }
 
-bool Prop_handler::end_props_by_magic_healing()
-{
-    bool is_any_ended = false;
-
-    for (size_t i = 0; i < props_.size(); /* No increment */)
-    {
-        Prop* const prop = props_[i];
-
-        if (prop->is_ended_by_magic_healing())
-        {
-            props_.erase(begin(props_) + i);
-
-            decr_active_props_info(prop->id());
-
-            on_prop_end(prop);
-
-            delete prop;
-
-            is_any_ended = true;
-        }
-        else //Property was not added by this item
-        {
-            ++i;
-        }
-    }
-
-    return is_any_ended;
-}
-
 void Prop_handler::apply_actor_turn_prop_buffer()
 {
     for (Prop* prop : actor_turn_prop_buffer_)
@@ -1833,15 +1817,7 @@ void Prop_infected::on_new_turn()
 
 int Prop_diseased::affect_max_hp(const int HP_MAX) const
 {
-    if (owning_actor_->is_player() && player_bon::traits[size_t(Trait::survivalist)])
-    {
-        //Survavlist makes you lose only 25% instead of 50%
-        return (HP_MAX * 3) / 4;
-    }
-    else //Not survivalist
-    {
-        return HP_MAX / 2;
-    }
+    return HP_MAX / 2;
 }
 
 void Prop_diseased::on_start()
@@ -1988,6 +1964,91 @@ void Prop_nailed::affect_move_dir(const Pos& actor_pos, Dir& dir)
 
         dir = Dir::center;
     }
+}
+
+void Prop_wound::save() const
+{
+    save_handling::put_int(nr_wounds_);
+}
+
+void Prop_wound::load()
+{
+    nr_wounds_ = save_handling::get_int();
+}
+
+void Prop_wound::msg(const Prop_msg msg_type, std::string& msg_ref) const
+{
+    switch (msg_type)
+    {
+    case Prop_msg::start_player:
+    case Prop_msg::res_player:
+        msg_ref = data_.msg[size_t(msg_type)];
+        break;
+
+    case Prop_msg::end_player:
+        msg_ref = nr_wounds_ > 1 ?
+                  "All my wounds are healed!" :
+                  "A wound is healed!";
+        break;
+
+    case Prop_msg::start_mon:
+    case Prop_msg::end_mon:
+    case Prop_msg::res_mon:
+    case Prop_msg::END:
+        msg_ref = "";
+        break;
+    }
+}
+
+int Prop_wound::ability_mod(const Ability_id ability) const
+{
+    const bool IS_SURVIVALIST = owning_actor_->is_player() &&
+                                player_bon::traits[size_t(Trait::survivalist)];
+
+    const int DIV = IS_SURVIVALIST ? 2 : 1;
+
+    const int K = std::min(4, nr_wounds_);
+
+    if (ability == Ability_id::melee)
+    {
+        return (K * -10) / DIV;
+    }
+    else if (ability == Ability_id::ranged)
+    {
+        return (K *  -5) / DIV;
+    }
+    else if (ability == Ability_id::dodge_att)
+    {
+        return (K * -10) / DIV;
+    }
+    else if (ability == Ability_id::dodge_trap)
+    {
+        return (K * -10) / DIV;
+    }
+
+    return 0;
+}
+
+void Prop_wound::heal_one_wound()
+{
+    assert(nr_wounds_ > 0);
+
+    --nr_wounds_;
+
+    if (nr_wounds_ > 0)
+    {
+        msg_log::add("A wound is healed!");
+    }
+    else //This was the last wound
+    {
+        //End self
+        owning_actor_->prop_handler().end_prop(Prop_id::wound);
+    }
+}
+
+void Prop_wound::on_more()
+{
+    ++nr_wounds_;
 }
 
 bool Prop_confused::allow_read(const Verbosity verbosity) const

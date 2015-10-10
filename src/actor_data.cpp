@@ -1437,9 +1437,8 @@ void init_data_list()
     d.tile = Tile_id::byakhee;
     d.hp = 14;
     d.spi = 20;
-    d.dmg_melee = 4;
-    d.ability_vals.set_val(Ability_id::melee, 40);
-    d.ability_vals.set_val(Ability_id::ranged, 40);
+    d.dmg_melee = 6;
+    d.ability_vals.set_val(Ability_id::melee, 45);
     d.ability_vals.set_val(Ability_id::dodge_att, 40);
     d.natural_props[int(Prop_id::flying)] = true;
     d.natural_props[int(Prop_id::infravis)] = true;
@@ -1780,7 +1779,7 @@ void init_data_list()
     d.hp = 21;
     d.spi = 20;
     d.dmg_melee = 4;
-    d.ability_vals.set_val(Ability_id::melee, 50);
+    d.ability_vals.set_val(Ability_id::melee, 55);
     d.natural_props[int(Prop_id::rDisease)] = true;
     d.natural_props[int(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 5;

@@ -65,6 +65,7 @@ enum class Prop_id
     nailed,
     flared,
     warlock_charged,
+    wound,
 
     END
 };
@@ -123,7 +124,6 @@ struct Prop_data_t
         allow_display_turns             (true),
         allow_apply_more_while_active   (true),
         update_vision_when_start_or_end (false),
-        is_ended_by_magic_healing       (false),
         allow_test_on_bot               (false),
         alignment                       (Prop_alignment::bad)
     {
@@ -142,7 +142,6 @@ struct Prop_data_t
     bool            allow_display_turns;
     bool            allow_apply_more_while_active;
     bool            update_vision_when_start_or_end;
-    bool            is_ended_by_magic_healing;
     bool            allow_test_on_bot;
     Prop_alignment  alignment;
 };
@@ -201,8 +200,6 @@ public:
     Prop* prop(const Prop_id id) const;
 
     bool end_prop(const Prop_id id, const bool RUN_PROP_END_EFFECTS = true);
-
-    bool end_props_by_magic_healing();
 
     void props_interface_line(std::vector<Str_and_clr>& line) const;
 
@@ -268,6 +265,10 @@ public:
 
     virtual ~Prop() {}
 
+    virtual void save() const {}
+
+    virtual void load() {}
+
     Prop_id id() const
     {
         return id_;
@@ -326,11 +327,6 @@ public:
     virtual bool need_update_vision_when_start_or_end() const
     {
         return data_.update_vision_when_start_or_end;
-    }
-
-    virtual bool is_ended_by_magic_healing() const
-    {
-        return data_.is_ended_by_magic_healing;
     }
 
     virtual bool allow_see() const
@@ -766,7 +762,8 @@ class Prop_nailed: public Prop
 {
 public:
     Prop_nailed(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::nailed, turns_init, nr_turns), nr_spikes_(1) {}
+        Prop        (Prop_id::nailed, turns_init, nr_turns),
+        nr_spikes_  (1) {}
 
     std::string name_short() const override
     {
@@ -787,6 +784,44 @@ public:
 
 private:
     int nr_spikes_;
+};
+
+class Prop_wound: public Prop
+{
+public:
+    Prop_wound(Prop_turns turns_init, int nr_turns = -1) :
+        Prop        (Prop_id::wound, turns_init, nr_turns),
+        nr_wounds_  (1) {}
+
+    void save() const;
+
+    void load();
+
+    void msg(const Prop_msg msg_type, std::string& msg_ref) const override;
+
+    std::string name_short() const override
+    {
+        return "Wound(" + to_str(nr_wounds_) + ")";
+    }
+
+    int ability_mod(const Ability_id ability) const override;
+
+    void on_more() override;
+
+    bool is_finished() const override
+    {
+        return nr_wounds_ <= 0;
+    }
+
+    int nr_wounds() const
+    {
+        return nr_wounds_;
+    }
+
+    void heal_one_wound();
+
+private:
+    int nr_wounds_;
 };
 
 class Prop_waiting: public Prop

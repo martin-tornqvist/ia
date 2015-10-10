@@ -110,7 +110,10 @@ public:
     int                 nr_turns_until_unsummoned_;
 
 protected:
-    virtual void on_hit(int& dmg) override;
+    virtual void on_hit(int& dmg,
+                        const Dmg_type dmg_type,
+                        const Dmg_method method,
+                        const Allow_wound allow_wound) override;
 
     virtual bool on_actor_turn_hook()
     {

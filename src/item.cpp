@@ -440,19 +440,27 @@ int Armor::take_dur_hit_and_get_reduced_dmg(const int DMG_BEFORE)
     //DFF: Damage (to) Durability Factor
     //     A factor of how much damage the armor durability takes per attack damage point
 
-    const int       AP_BEFORE   = armor_points();
-    const double    DDF_BASE    = data_->armor.dmg_to_durability_factor;
+    const int AP_BEFORE = armor_points();
 
     //TODO: Add check for if wearer is player!
 
-    const double DDF_WAR_VET_MOD    = player_bon::bg() == Bg::war_vet ? 0.5 : 1.0;
-    const double DDF_K              = 1.5;
-    const double DMG_BEFORE_DB      = double(DMG_BEFORE);
+    //Damage factor
+    const double DMG_BEFORE_DB = double(DMG_BEFORE);
 
-    dur_ -= int(DMG_BEFORE_DB * DDF_BASE * DDF_WAR_VET_MOD * DDF_K);
+    //Adjustment factor
+    const double DDF_K = 2.0;
 
-    dur_                = std::max(0, dur_);
-    const int AP_AFTER  = armor_points();
+    //Armor durability factor
+    const double DDF_BASE = data_->armor.dmg_to_durability_factor;
+
+    //Armor lasts twice as long for War Vets
+    const double DDF_WAR_VET_MOD = (player_bon::bg() == Bg::war_vet) ? 0.5 : 1.0;
+
+    dur_ -= int(DMG_BEFORE_DB * DDF_K * DDF_BASE * DDF_WAR_VET_MOD);
+
+    dur_ = std::max(0, dur_);
+
+    const int AP_AFTER = armor_points();
 
     if (AP_AFTER < AP_BEFORE && AP_AFTER != 0)
     {
@@ -516,30 +524,6 @@ Unequip_allowed Armor_asb_suit::on_unequip_hook()
     return Unequip_allowed::yes;
 }
 
-void Armor_mi_go::on_std_turn_in_inv(const Inv_type inv_type)
-{
-    (void)inv_type;
-
-    if (dur_ < 100)
-    {
-        const int AP_BEFORE = armor_points();
-
-        dur_ = 100;
-
-        const int AP_AFTER  = armor_points();
-
-        if (AP_AFTER > AP_BEFORE)
-        {
-            const std::string armor_name = name(Item_ref_type::plain, Item_ref_inf::none);
-
-            msg_log::add("My " + armor_name + " reconstructs itself.",
-                         clr_msg_note,
-                         false,
-                         More_prompt_on_msg::yes);
-        }
-    }
-}
-
 void Armor_mi_go::on_equip_hook(const Verbosity verbosity)
 {
     if (verbosity == Verbosity::verbose)
@@ -553,7 +537,10 @@ void Armor_mi_go::on_equip_hook(const Verbosity verbosity)
 Unequip_allowed Armor_mi_go::on_unequip_hook()
 {
     render::draw_map_and_interface();
-    msg_log::add("I attempt to tear off the armor, it rips my skin!", clr_msg_bad, false,
+
+    msg_log::add("I attempt to tear off the armor, it rips my skin!",
+                 clr_msg_bad,
+                 false,
                  More_prompt_on_msg::yes);
 
     map::player->hit(rnd::range(1, 3), Dmg_type::pure);
@@ -566,7 +553,11 @@ Unequip_allowed Armor_mi_go::on_unequip_hook()
     }
     else //Armor is stuck
     {
-        msg_log::add("I fail to tear it off.", clr_white, false, More_prompt_on_msg::yes);
+        msg_log::add("I fail to tear it off.",
+                     clr_white,
+                     false,
+                     More_prompt_on_msg::yes);
+
         return Unequip_allowed::no;
     }
 }
@@ -713,6 +704,22 @@ void Ammo_clip::set_full_ammo()
 }
 
 //---------------------------------------------------------- MEDICAL BAG
+Medical_bag::Medical_bag(Item_data_t* const item_data) :
+    Item                    (item_data),
+    nr_supplies_            (60),
+    nr_turns_left_action_   (-1),
+    cur_action_             (Med_bag_action::END) {}
+
+void Medical_bag::save()
+{
+    save_handling::put_int(nr_supplies_);
+}
+
+void Medical_bag::load()
+{
+    nr_supplies_ = save_handling::get_int();
+}
+
 void Medical_bag::on_pickup_hook()
 {
     assert(actor_carrying_);
@@ -726,24 +733,18 @@ void Medical_bag::on_pickup_hook()
         {
             //Add my turns left to the other medical bag, then destroy self
             static_cast<Medical_bag*>(other)->nr_supplies_ += nr_supplies_;
+
             inv.remove_item_in_backpack_with_ptr(this, true);
+
             return;
         }
     }
 }
 
-void Medical_bag::save()
-{
-    save_handling::put_int(nr_supplies_);
-}
-
-void Medical_bag::load()
-{
-    nr_supplies_ = save_handling::get_int();
-}
-
 Consume_item Medical_bag::activate(Actor* const actor)
 {
+    (void)actor;
+
     if (player_bon::bg() == Bg::ghoul)
     {
         msg_log::add("It is of no use to me.");
@@ -752,6 +753,7 @@ Consume_item Medical_bag::activate(Actor* const actor)
     }
 
     std::vector<Actor*> seen_foes;
+
     map::player->seen_foes(seen_foes);
 
     if (!seen_foes.empty())
@@ -763,56 +765,21 @@ Consume_item Medical_bag::activate(Actor* const actor)
 
     cur_action_ = choose_action();
 
-    msg_log::clear();
-
     if (cur_action_ == Med_bag_action::END)
     {
+        msg_log::clear();
+
+        msg_log::add("I have no wounds to treat.");
+
         return Consume_item::no;
     }
 
-    //Check if chosen action can be done
-    switch (cur_action_)
+    const int   NR_SUPPLIES_NEEDED  = tot_suppl_for_action(cur_action_);
+    const bool  IS_ENOUGH_SUPPLIES  = nr_supplies_ >= NR_SUPPLIES_NEEDED;
+
+    if (!IS_ENOUGH_SUPPLIES)
     {
-    case Med_bag_action::treat_wounds:
-        if (map::player->hp() >= map::player->hp_max(true))
-        {
-            msg_log::add("I have no wounds to treat.");
-            cur_action_ = Med_bag_action::END;
-            return Consume_item::no;
-        }
-
-        break;
-
-    case Med_bag_action::sanitize_infection:
-        if (!actor->has_prop(Prop_id::infected))
-        {
-            msg_log::add("I have no infection to sanitize.");
-            cur_action_ = Med_bag_action::END;
-            return Consume_item::no;
-        }
-
-        break;
-
-    case Med_bag_action::END: {}
-        break;
-    }
-
-    bool is_enough_suppl = true;
-
-    switch (cur_action_)
-    {
-    case Med_bag_action::sanitize_infection:
-        is_enough_suppl = tot_suppl_for_sanitize() <= nr_supplies_;
-        break;
-
-    case Med_bag_action::treat_wounds: //Costs one supply per turn
-    case Med_bag_action::END: {}
-        break;
-    }
-
-    if (!is_enough_suppl)
-    {
-        msg_log::add("I do not have enough supplies for that.");
+        msg_log::add("I do not have enough medical supplies.");
         cur_action_ = Med_bag_action::END;
         return Consume_item::no;
     }
@@ -820,21 +787,28 @@ Consume_item Medical_bag::activate(Actor* const actor)
     //Action can be done
     map::player->active_medical_bag = this;
 
+    nr_turns_left_action_ = tot_turns_for_action(cur_action_);
+
+    std::string start_msg = "";
+
     switch (cur_action_)
     {
-    case Med_bag_action::treat_wounds:
-        msg_log::add("I start treating my wounds...");
-        nr_turns_until_heal_wounds_ = MEDICAL_BAG_NR_TRN_BEFORE_HEAL;
+    case Med_bag_action::treat_wound:
+        start_msg = "I start treating a wound";
         break;
 
     case Med_bag_action::sanitize_infection:
-        msg_log::add("I start to sanitize an infection...");
-        nr_turns_left_sanitize_ = tot_turns_for_sanitize();
+        start_msg = "I start to sanitize an infection";
         break;
 
     case Med_bag_action::END:
+        assert(false);
         break;
     }
+
+    start_msg += " (" + to_str(nr_turns_left_action_) + " turns)...";
+
+    msg_log::add(start_msg);
 
     game_time::tick();
 
@@ -843,112 +817,34 @@ Consume_item Medical_bag::activate(Actor* const actor)
 
 Med_bag_action Medical_bag::choose_action() const
 {
-    msg_log::clear();
-
-    //Infections are treated first
+    //Infection?
     if (map::player->has_prop(Prop_id::infected))
     {
         return Med_bag_action::sanitize_infection;
     }
 
-    return Med_bag_action::treat_wounds;
+    //Wound?
+    if (map::player->has_prop(Prop_id::wound))
+    {
+        return Med_bag_action::treat_wound;
+    }
 
-
-//  msg_log::add("Use Medical Bag how? [h/enter] Treat wounds [s] Sanitize infection",
-//              clr_white_high);
-
-//  render::draw_map_and_interface(true);
-//
-//  while (true)
-//  {
-//    const Key_data d = query::letter(true);
-//    if (d.sdl_key == SDLK_ESCAPE || d.sdl_key == SDLK_SPACE)
-//    {
-//      return Med_bag_action::END;
-//    }
-//    else if (d.sdl_key == SDLK_RETURN || d.key == 'h')
-//    {
-//      return Med_bag_action::treat_wounds;
-//    }
-//    else if (d.key == 's')
-//    {
-//      return Med_bag_action::sanitize_infection;
-//    }
-//  }
-//
-//  return Med_bag_action(Med_bag_action::END);
+    return Med_bag_action::END;
 }
 
 void Medical_bag::continue_action()
 {
-    switch (cur_action_)
+    assert(cur_action_ != Med_bag_action::END);
+
+    --nr_turns_left_action_;
+
+    if (nr_turns_left_action_ <= 0)
     {
-    case Med_bag_action::treat_wounds:
-    {
-
-        auto& player = *map::player;
-
-        const bool IS_HEALER = player_bon::traits[size_t(Trait::healer)];
-
-        if (nr_turns_until_heal_wounds_ > 0)
-        {
-            nr_turns_until_heal_wounds_ -= IS_HEALER ? 2 : 1;
-        }
-        else
-        {
-            //If player is healer, double the rate of HP healing.
-            const int NR_TRN_PER_HP_W_BON = IS_HEALER ? (MEDICAL_BAG_NR_TRN_PER_HP / 2) :
-                                            MEDICAL_BAG_NR_TRN_PER_HP;
-
-            if (game_time::turn() % NR_TRN_PER_HP_W_BON == 0)
-            {
-                player.restore_hp(1, false, Verbosity::silent);
-            }
-
-            //The rate of supply use is consistent (this means that with the healer
-            // trait, you spend half the time and supplies, as per the description).
-            if (game_time::turn() % MEDICAL_BAG_NR_TRN_PER_HP == 0)
-            {
-                --nr_supplies_;
-            }
-        }
-
-        if (nr_supplies_ <= 0)
-        {
-            msg_log::add("No more medical supplies.");
-            finish_cur_action();
-            return;
-        }
-
-        if (player.hp() >= player.hp_max(true))
-        {
-            finish_cur_action();
-            return;
-        }
-
-        game_time::tick();
-
-    } break;
-
-    case Med_bag_action::sanitize_infection:
-    {
-        --nr_turns_left_sanitize_;
-
-        if (nr_turns_left_sanitize_ <= 0)
-        {
-            finish_cur_action();
-        }
-        else
-        {
-            game_time::tick();
-        }
-    } break;
-
-    case Med_bag_action::END:
-    {
-        assert(false && "Illegal action");
+        finish_cur_action();
     }
-    break;
+    else //Time still remaining on the current action
+    {
+        game_time::tick();
     }
 }
 
@@ -958,20 +854,25 @@ void Medical_bag::finish_cur_action()
 
     switch (cur_action_)
     {
+    case Med_bag_action::treat_wound:
+    {
+//        msg_log::add("I finish treating my wounds.");
+        map::player->prop_handler().end_prop(Prop_id::wound);
+    }
+    break;
+
     case Med_bag_action::sanitize_infection:
     {
         map::player->prop_handler().end_prop(Prop_id::infected);
-        nr_supplies_ -= tot_suppl_for_sanitize();
-    } break;
-
-    case Med_bag_action::treat_wounds:
-    {
-        msg_log::add("I finish treating my wounds.");
-    } break;
+    }
+    break;
 
     case Med_bag_action::END:
+        assert(false);
         break;
     }
+
+    nr_supplies_ -= tot_suppl_for_action(cur_action_);
 
     cur_action_ = Med_bag_action::END;
 
@@ -983,22 +884,57 @@ void Medical_bag::finish_cur_action()
 
 void Medical_bag::interrupted()
 {
-    msg_log::add("My healing is disrupted.", clr_white, false);
+    msg_log::add("My healing is disrupted.");
 
-    nr_turns_until_heal_wounds_ = -1;
-    nr_turns_left_sanitize_    = -1;
+    cur_action_ = Med_bag_action::END;
+
+    nr_turns_left_action_ = -1;
 
     map::player->active_medical_bag = nullptr;
 }
 
-int Medical_bag::tot_turns_for_sanitize() const
+int Medical_bag::tot_suppl_for_action(const Med_bag_action action) const
 {
-    return player_bon::traits[size_t(Trait::healer)] ? 10 : 20;
+    const bool  IS_HEALER   = player_bon::traits[size_t(Trait::healer)];
+    const int   DIV         = IS_HEALER ? 2 : 1;
+
+    switch (action)
+    {
+    case Med_bag_action::treat_wound:
+        return 8 / DIV;
+
+    case Med_bag_action::sanitize_infection:
+        return 2 / DIV;
+
+    case Med_bag_action::END:
+        break;
+    }
+
+    assert(false);
+
+    return 0;
 }
 
-int Medical_bag::tot_suppl_for_sanitize() const
+int Medical_bag::tot_turns_for_action(const Med_bag_action action) const
 {
-    return player_bon::traits[size_t(Trait::healer)] ? 3 : 6;
+    const bool  IS_HEALER   = player_bon::traits[size_t(Trait::healer)];
+    const int   DIV         = IS_HEALER ? 2 : 1;
+
+    switch (action)
+    {
+    case Med_bag_action::treat_wound:
+        return 80 / DIV;
+
+    case Med_bag_action::sanitize_infection:
+        return 20 / DIV;
+
+    case Med_bag_action::END:
+        break;
+    }
+
+    assert(false);
+
+    return 0;
 }
 
 //---------------------------------------------------------- HIDEOUS MASK

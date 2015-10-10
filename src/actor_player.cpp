@@ -340,13 +340,33 @@ bool Player::can_see_actor(const Actor& other) const
     return true;
 }
 
-void Player::on_hit(int& dmg)
+void Player::on_hit(int& dmg,
+                    const Dmg_type dmg_type,
+                    const Dmg_method method,
+                    const Allow_wound allow_wound)
 {
-    (void)dmg;
+    (void)method;
 
     if (!insanity::has_sympt(Ins_sympt_id::masoch))
     {
         incr_shock(1, Shock_src::misc);
+    }
+
+    const bool IS_ENOUGH_DMG_FOR_WOUND  = dmg >= 5;
+    const bool IS_PHYSICAL              = dmg_type == Dmg_type::physical;
+
+    if (
+        allow_wound == Allow_wound::yes &&
+        IS_ENOUGH_DMG_FOR_WOUND         &&
+        IS_PHYSICAL                     &&
+        !config::is_bot_playing())
+    {
+        //Log wound as historic event
+        dungeon_master::add_history_event("Sustained a severe wound.");
+
+        Prop* const prop = new Prop_wound(Prop_turns::indefinite);
+
+        prop_handler_->try_add_prop(prop);
     }
 
     render::draw_map_and_interface();
@@ -971,72 +991,88 @@ void Player::on_std_turn()
         }
     }
 
-    if (!active_medical_bag)
+    if (!has_prop(Prop_id::poisoned))
     {
-        if (!has_prop(Prop_id::poisoned))
+        int nr_turns_per_hp = 10;
+
+        //Wounds affect HP regen?
+        int nr_wounds = 0;
+
+        if (prop_handler_->has_prop(Prop_id::wound))
         {
-            int nr_turns_per_hp = 40;
+            Prop* const prop = prop_handler_->prop(Prop_id::wound);
 
-            if (player_bon::traits[size_t(Trait::rapid_recoverer)])
+            nr_wounds = static_cast<Prop_wound*>(prop)->nr_wounds();
+        }
+
+        const bool IS_SURVIVALIST = player_bon::traits[size_t(Trait::survivalist)];
+
+        const int WOUND_EFFECT_DIV = IS_SURVIVALIST ? 2 : 1;
+
+        nr_turns_per_hp += ((nr_wounds * 2) / WOUND_EFFECT_DIV);
+
+        //Items affect HP regen?
+        for (const auto& slot : inv_->slots_)
+        {
+            if (slot.item)
             {
-                nr_turns_per_hp -= 12;
-            }
-
-            if (player_bon::traits[size_t(Trait::survivalist)])
-            {
-                nr_turns_per_hp -= 12;
-            }
-
-            //Items affect HP regen?
-            for (const auto& slot : inv_->slots_)
-            {
-                if (slot.item)
-                {
-                    nr_turns_per_hp += slot.item->hp_regen_change(Inv_type::slots);
-                }
-            }
-
-            for (const Item* const item : inv_->backpack_)
-            {
-                nr_turns_per_hp += item->hp_regen_change(Inv_type::backpack);
-            }
-
-            const int TURN = game_time::turn();
-
-            if (hp() < hp_max(true) && (TURN % nr_turns_per_hp == 0)  && TURN > 1)
-            {
-                ++hp_;
+                nr_turns_per_hp += slot.item->hp_regen_change(Inv_type::slots);
             }
         }
 
-        //Try to spot hidden traps and doors
-        if (!has_prop(Prop_id::confused) && prop_handler_->allow_see())
+        for (const Item* const item : inv_->backpack_)
         {
-            const int R = player_bon::traits[size_t(Trait::perceptive)] ? 3 :
-                          (player_bon::traits[size_t(Trait::observant)] ? 2 : 1);
+            nr_turns_per_hp += item->hp_regen_change(Inv_type::backpack);
+        }
 
-            int x0 = std::max(0, pos.x - R);
-            int y0 = std::max(0, pos.y - R);
-            int x1 = std::min(MAP_W - 1, pos.x + R);
-            int y1 = std::min(MAP_H - 1, pos.y + R);
+        //Rapid Recoverer trait affects HP regen?
+        const bool IS_RAPID_RECOVER = player_bon::traits[size_t(Trait::rapid_recoverer)];
 
-            for (int y = y0; y <= y1; ++y)
+        if (IS_RAPID_RECOVER)
+        {
+            nr_turns_per_hp /= 2;
+        }
+
+        const int TURN      = game_time::turn();
+        const int HP        = hp();
+        const int HP_MAX    = hp_max(true);
+
+        if (
+            (HP < HP_MAX)                   &&
+            ((TURN % nr_turns_per_hp) == 0) &&
+            TURN > 1)
+        {
+            ++hp_;
+        }
+    }
+
+    //Try to spot hidden traps and doors
+    if (!has_prop(Prop_id::confused) && prop_handler_->allow_see())
+    {
+        const int R = player_bon::traits[size_t(Trait::perceptive)] ? 3 :
+                      (player_bon::traits[size_t(Trait::observant)] ? 2 : 1);
+
+        int x0 = std::max(0, pos.x - R);
+        int y0 = std::max(0, pos.y - R);
+        int x1 = std::min(MAP_W - 1, pos.x + R);
+        int y1 = std::min(MAP_H - 1, pos.y + R);
+
+        for (int y = y0; y <= y1; ++y)
+        {
+            for (int x = x0; x <= x1; ++x)
             {
-                for (int x = x0; x <= x1; ++x)
+                if (map::cells[x][y].is_seen_by_player)
                 {
-                    if (map::cells[x][y].is_seen_by_player)
+                    auto* f = map::cells[x][y].rigid;
+
+                    if (f->id() == Feature_id::trap)
                     {
-                        auto* f = map::cells[x][y].rigid;
+                        static_cast<Trap*>(f)->player_try_spot_hidden();
+                    }
 
-                        if (f->id() == Feature_id::trap)
-                        {
-                            static_cast<Trap*>(f)->player_try_spot_hidden();
-                        }
-
-                        if (f->id() == Feature_id::door)
-                        {
-                            static_cast<Door*>(f)->player_try_spot_hidden();
-                        }
+                    if (f->id() == Feature_id::door)
+                    {
+                        static_cast<Door*>(f)->player_try_spot_hidden();
                     }
                 }
             }

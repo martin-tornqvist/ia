@@ -71,7 +71,10 @@ public:
 
     virtual void place_hook() {}
 
-    Actor_died hit(int dmg, const Dmg_type dmg_type, const Dmg_method method = Dmg_method::END);
+    Actor_died hit(int dmg,
+                   const Dmg_type dmg_type,
+                   const Dmg_method method = Dmg_method::END,
+                   const Allow_wound allow_wound = Allow_wound::yes);
 
     Actor_died hit_spi(const int DMG, const Verbosity verbosity = Verbosity::verbose);
 
@@ -209,9 +212,15 @@ protected:
 
     virtual void on_death() {}
 
-    virtual void on_hit(int& dmg)
+    virtual void on_hit(int& dmg,
+                        const Dmg_type dmg_type,
+                        const Dmg_method method,
+                        const Allow_wound allow_wound)
     {
         (void)dmg;
+        (void)dmg_type;
+        (void)method;
+        (void)allow_wound;
     }
 
     virtual void mk_start_items() = 0;

@@ -419,9 +419,16 @@ void Mon::on_std_turn()
     on_std_turn_hook();
 }
 
-void Mon::on_hit(int& dmg)
+void Mon::on_hit(int& dmg,
+                 const Dmg_type dmg_type,
+                 const Dmg_method method,
+                 const Allow_wound allow_wound)
 {
     (void)dmg;
+    (void)dmg_type;
+    (void)method;
+    (void)allow_wound;
+
     aware_counter_ = data_->nr_turns_aware;
 }
 

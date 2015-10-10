@@ -294,8 +294,24 @@ Consume_item Device_shockwave::trigger_effect()
 Consume_item Device_rejuvenator::trigger_effect()
 {
     msg_log::add("It repairs my body.");
-    map::player->prop_handler().end_props_by_magic_healing();
+
+    std::vector<Prop_id> props_can_heal =
+    {
+        Prop_id::blind,
+        Prop_id::poisoned,
+        Prop_id::infected,
+        Prop_id::diseased,
+        Prop_id::weakened,
+        Prop_id::wound
+    };
+
+    for (Prop_id prop_id : props_can_heal)
+    {
+        map::player->prop_handler().end_prop(prop_id);
+    }
+
     map::player->restore_hp(999);
+
     return Consume_item::no;
 }
 

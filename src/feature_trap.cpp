@@ -796,18 +796,30 @@ void Trap_gas_confusion::trigger()
     if (map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
         msg_log::add("A burst of gas is released from a vent in the floor!",
-                     clr_white, false, More_prompt_on_msg::yes);
+                     clr_white,
+                     false,
+                     More_prompt_on_msg::yes);
 
         msg_log::more_prompt();
     }
 
-    Snd snd("I hear a burst of gas.", Sfx_id::gas, Ignore_msg_if_origin_seen::yes, pos_, nullptr,
-            Snd_vol::low, Alerts_mon::yes);
+    Snd snd("I hear a burst of gas.",
+            Sfx_id::gas,
+            Ignore_msg_if_origin_seen::yes,
+            pos_,
+            nullptr,
+            Snd_vol::low,
+            Alerts_mon::yes);
 
     snd_emit::emit_snd(snd);
 
-    explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
-                                -1, new Prop_confused(Prop_turns::std), &clr_magenta);
+    explosion::run(pos_,
+                   Expl_type::apply_prop,
+                   Expl_src::misc,
+                   Emit_expl_snd::no,
+                   -1,
+                   new Prop_confused(Prop_turns::std),
+                   &clr_magenta);
 
     TRACE_FUNC_END_VERBOSE;
 }
@@ -819,18 +831,29 @@ void Trap_gas_paralyzation::trigger()
     if (map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
         msg_log::add("A burst of gas is released from a vent in the floor!",
-                     clr_white, false, More_prompt_on_msg::yes);
+                     clr_white,
+                     false,
+                     More_prompt_on_msg::yes);
 
         msg_log::more_prompt();
     }
 
-    Snd snd("I hear a burst of gas.", Sfx_id::gas, Ignore_msg_if_origin_seen::yes, pos_, nullptr,
+    Snd snd("I hear a burst of gas.",
+            Sfx_id::gas,
+            Ignore_msg_if_origin_seen::yes,
+            pos_,
+            nullptr,
             Snd_vol::low, Alerts_mon::yes);
 
     snd_emit::emit_snd(snd);
 
-    explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
-                                -1, new Prop_paralyzed(Prop_turns::std), &clr_magenta);
+    explosion::run(pos_,
+                   Expl_type::apply_prop,
+                   Expl_src::misc,
+                   Emit_expl_snd::no,
+                   -1,
+                   new Prop_paralyzed(Prop_turns::std),
+                   &clr_magenta);
 
     TRACE_FUNC_END_VERBOSE;
 }
@@ -842,18 +865,30 @@ void Trap_gas_fear::trigger()
     if (map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
         msg_log::add("A burst of gas is released from a vent in the floor!",
-                     clr_white, false, More_prompt_on_msg::yes);
+                     clr_white,
+                     false,
+                     More_prompt_on_msg::yes);
 
         msg_log::more_prompt();
     }
 
-    Snd snd("I hear a burst of gas.", Sfx_id::gas, Ignore_msg_if_origin_seen::yes, pos_, nullptr,
-            Snd_vol::low, Alerts_mon::yes);
+    Snd snd("I hear a burst of gas.",
+            Sfx_id::gas,
+            Ignore_msg_if_origin_seen::yes,
+            pos_,
+            nullptr,
+            Snd_vol::low,
+            Alerts_mon::yes);
 
     snd_emit::emit_snd(snd);
 
-    explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
-                                -1, new Prop_terrified(Prop_turns::std), &clr_magenta);
+    explosion::run(pos_,
+                   Expl_type::apply_prop,
+                   Expl_src::misc,
+                   Emit_expl_snd::no,
+                   -1,
+                   new Prop_terrified(Prop_turns::std),
+                   &clr_magenta);
 
     TRACE_FUNC_END_VERBOSE;
 }
@@ -864,14 +899,16 @@ void Trap_blinding_flash::trigger()
 
     if (map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
-        msg_log::add("There is an intense flash of light!", clr_white, false,
+        msg_log::add("There is an intense flash of light!",
+                     clr_white,
+                     false,
                      More_prompt_on_msg::yes);
 
         msg_log::more_prompt();
     }
 
     explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
-                                -1, new Prop_blind(Prop_turns::std), &clr_yellow);
+                   -1, new Prop_blind(Prop_turns::std), &clr_yellow);
 
     TRACE_FUNC_END_VERBOSE;
 }
@@ -1062,11 +1099,16 @@ void Trap_spi_drain::trigger()
 
         msg += " the floor!";
 
-        msg_log::add(msg, clr_white, false, More_prompt_on_msg::yes);
+        msg_log::add(msg,
+                     clr_white,
+                     false,
+                     More_prompt_on_msg::yes);
     }
     else //Cannot see
     {
-        msg_log::add("I feel a peculiar energy around me!", clr_white, false,
+        msg_log::add("I feel a peculiar energy around me!",
+                     clr_white,
+                     false,
                      More_prompt_on_msg::yes);
     }
 
@@ -1090,13 +1132,20 @@ void Trap_smoke::trigger()
     if (map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
         msg_log::add("A burst of smoke is released from a vent in the floor!",
-                     clr_white, false, More_prompt_on_msg::yes);
+                     clr_white,
+                     false,
+                     More_prompt_on_msg::yes);
 
         msg_log::more_prompt();
     }
 
-    Snd snd("I hear a burst of gas.", Sfx_id::gas, Ignore_msg_if_origin_seen::yes, pos_, nullptr,
-            Snd_vol::low, Alerts_mon::yes);
+    Snd snd("I hear a burst of gas.",
+            Sfx_id::gas,
+            Ignore_msg_if_origin_seen::yes,
+            pos_,
+            nullptr,
+            Snd_vol::low,
+            Alerts_mon::yes);
 
     snd_emit::emit_snd(snd);
 
@@ -1112,18 +1161,29 @@ void Trap_fire::trigger()
     if (map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
         msg_log::add("Flames burst out from a vent in the floor!",
-                     clr_white, false, More_prompt_on_msg::yes);
+                     clr_white,
+                     false,
+                     More_prompt_on_msg::yes);
 
         msg_log::more_prompt();
     }
 
-    Snd snd("I hear a burst of flames.", Sfx_id::END, Ignore_msg_if_origin_seen::yes, pos_,
-            nullptr, Snd_vol::low, Alerts_mon::yes);
+    Snd snd("I hear a burst of flames.",
+            Sfx_id::END,
+            Ignore_msg_if_origin_seen::yes,
+            pos_,
+            nullptr,
+            Snd_vol::low,
+            Alerts_mon::yes);
 
     snd_emit::emit_snd(snd);
 
-    explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
-                                -1, new Prop_burning(Prop_turns::std));
+    explosion::run(pos_,
+                   Expl_type::apply_prop,
+                   Expl_src::misc,
+                   Emit_expl_snd::no,
+                   -1,
+                   new Prop_burning(Prop_turns::std));
 
     TRACE_FUNC_END_VERBOSE;
 }
@@ -1134,11 +1194,19 @@ void Trap_alarm::trigger()
 
     if (map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
-        msg_log::add("An alarm sounds!", clr_white, false, More_prompt_on_msg::yes);
+        msg_log::add("An alarm sounds!",
+                     clr_white,
+                     false,
+                     More_prompt_on_msg::yes);
     }
 
-    Snd snd("I hear an alarm sounding!", Sfx_id::END, Ignore_msg_if_origin_seen::yes, pos_,
-            nullptr, Snd_vol::high, Alerts_mon::yes);
+    Snd snd("I hear an alarm sounding!",
+            Sfx_id::END,
+            Ignore_msg_if_origin_seen::yes,
+            pos_,
+            nullptr,
+            Snd_vol::high,
+            Alerts_mon::yes);
 
     snd_emit::emit_snd(snd);
 

@@ -109,10 +109,12 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         break;
 
     case Trait::rapid_recoverer:
+        //Should heal by eating
+        return bg == Bg::ghoul;
         break;
 
     case Trait::survivalist:
-        //Has RDISEASE already, so trait is partly useless
+        //Has RDISEASE already, so this trait is partly useless
         return bg == Bg::ghoul;
 
     case Trait::perseverant:
@@ -528,11 +530,10 @@ std::string trait_descr(const Trait id)
                "bonus against you, and their attacks can be dodged";
 
     case Trait::rapid_recoverer:
-        return "Increased Hit Point regeneration rate";
+        return "Double Hit Point regeneration rate";
 
     case Trait::survivalist:
-        return "Increased Hit Point regeneration rate, disease only lowers your Hit "
-               "Points by 25% (instead of 50%)";
+        return "You cannot become diseased, negative effects from wounds reduced by 50%";
 
     case Trait::perseverant:
         return "When your Hit Points are reduced to 25% or less, you gain +50% chance to "
@@ -699,7 +700,8 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::survivalist:
-        traits_ref.push_back(Trait::rapid_recoverer);
+        traits_ref.push_back(Trait::tough);
+        traits_ref.push_back(Trait::healer);
         break;
 
     case Trait::perseverant:
@@ -944,6 +946,11 @@ void pick_trait(const Trait id)
     case Trait::self_aware:
         map::player->prop_handler().try_add_prop(
             new Prop_rConf(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
+        break;
+
+    case Trait::survivalist:
+        map::player->prop_handler().try_add_prop(
+            new Prop_rDisease(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
         break;
 
     case Trait::fearless:
