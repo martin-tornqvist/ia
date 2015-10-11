@@ -640,8 +640,9 @@ int Inventory::backpack_idx(const Item_id id) const
 
 Item* Inventory::item_in_slot(Slot_id id) const
 {
-    assert(id != Slot_id::END && "Illegal slot id");
-    return slots_[int(id)].item;
+    assert(id != Slot_id::END);
+
+    return slots_[size_t(id)].item;
 }
 
 Item* Inventory::intrinsic_in_element(int idx) const

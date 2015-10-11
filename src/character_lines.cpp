@@ -109,10 +109,6 @@ void draw()
 
     ++pos.x;
 
-//    render::draw_text(":", panel, pos, clr_menu_drk);
-
-//    ++pos.x;
-
     const int SHOCK = player.shock_tot();
     const int INS = player.ins();
 
@@ -380,7 +376,9 @@ void draw()
     for (int i = 0; i < NR_PROPS; ++i)
     {
         const Str_and_clr& cur_prop_label = props_line[i];
+
         render::draw_text(cur_prop_label.str, panel, pos, cur_prop_label.clr);
+
         pos.x += cur_prop_label.str.length() + 1;
     }
 

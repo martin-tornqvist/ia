@@ -193,7 +193,7 @@ void Trap::on_new_turn_hook()
     {
         --nr_turns_until_trigger_;
 
-        TRACE_VERBOSE << "nr_turns_until_trigger_: " << nr_turns_until_trigger_ << std::endl;
+        TRACE_VERBOSE << "Number of turns until trigger: " << nr_turns_until_trigger_ << std::endl;
 
         if (nr_turns_until_trigger_ == 0)
         {
@@ -454,12 +454,15 @@ Did_trigger_trap Trap::trigger_trap(Actor* const actor)
 
     (void)actor;
 
-    TRACE_VERBOSE << "Name of trap: " << trap_impl_->title() << std::endl;
-
-    TRACE_VERBOSE << "Calling trigger in trap implementation" << std::endl;
-    trap_impl_->trigger();
+    TRACE_VERBOSE << "Name of trap triggering: " << trap_impl_->title() << std::endl;
 
     nr_turns_until_trigger_ = -1;
+
+    TRACE_VERBOSE << "Calling trigger in trap implementation" << std::endl;
+
+    trap_impl_->trigger();
+
+    //NOTE: This object may now be deleted (e.g. a web was torn down)!
 
     TRACE_FUNC_END_VERBOSE;
     return Did_trigger_trap::yes;
