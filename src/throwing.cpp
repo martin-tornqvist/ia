@@ -98,7 +98,7 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
 
     line_calc::calc_new_line(actor_throwing.pos, tgt_cell, false, THROW_RANGE_LMT, false, path);
 
-    const auto& item_thrown_data = item_thrown.data();
+    const Item_data_t& item_thrown_data = item_thrown.data();
 
     const std::string item_name_a = item_thrown.name(Item_ref_type::a);
 
@@ -119,10 +119,10 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
 
     render::draw_map_and_interface(true);
 
-    int         blocked_in_element      = -1;
+    int         blocked_idx             = -1;
     bool        is_actor_hit            = false;
     const Clr   item_clr                = item_thrown.clr();
-    int         chance_to_destroy_item  = 0;
+    int         break_item_one_in_n     = -1;
 
     Pos pos(-1, -1);
 
@@ -136,7 +136,7 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
 
         if (
             actor_here &&
-            (pos == tgt_cell || actor_here->data().actor_size >= Actor_size::humanoid))
+            (pos == tgt_cell || (actor_here->data().actor_size >= Actor_size::humanoid)))
         {
             att_data = Throw_att_data(&actor_throwing, tgt_cell, pos, item_thrown, aim_lvl);
 
@@ -176,8 +176,14 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
                     return;
                 }
 
-                blocked_in_element      = i;
-                chance_to_destroy_item  = 25;
+                blocked_idx = i;
+
+
+                if (item_thrown_data.type == Item_type::throwing_wpn)
+                {
+                    break_item_one_in_n = 4;
+                }
+
                 break;
             }
         }
@@ -202,13 +208,13 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
 
         if (!feature_here->is_projectile_passable())
         {
-            blocked_in_element = item_thrown_data.type == Item_type::potion ? i : i - 1;
+            blocked_idx = (item_thrown_data.type == Item_type::potion) ? i : (i - 1);
             break;
         }
 
         if (pos == tgt_cell && att_data.intended_aim_lvl == Actor_size::floor)
         {
-            blocked_in_element = i;
+            blocked_idx = i;
             break;
         }
     }
@@ -216,7 +222,7 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
     //If potion, collide it on the landscape
     if (item_thrown_data.type == Item_type::potion)
     {
-        if (blocked_in_element >= 0)
+        if (blocked_idx >= 0)
         {
             const Clr hit_clr = item_clr;
 
@@ -224,7 +230,7 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
 
             Potion* const potion = static_cast<Potion*>(&item_thrown);
 
-            potion->on_collide(path[blocked_in_element], nullptr);
+            potion->on_collide(path[blocked_idx], nullptr);
 
             delete &item_thrown;
 
@@ -234,17 +240,18 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
         }
     }
 
-    if (rnd::percent(chance_to_destroy_item))
+    const int   FINAL_IDX   = blocked_idx == -1 ?
+                              (path.size() - 1) : blocked_idx;
+
+    const Pos   final_pos   = path[FINAL_IDX];
+
+    if (break_item_one_in_n != -1 && rnd::one_in(break_item_one_in_n))
     {
         delete &item_thrown;
     }
     else //Thrown item not destroyed
     {
-        const int   DROP_ELEMENT        = blocked_in_element == -1 ?
-                                          path.size() - 1 : blocked_in_element;
-
-        const Pos   drop_pos            = path[DROP_ELEMENT];
-        const Matl  matl_at_drop_pos    = map::cells[drop_pos.x][drop_pos.y].rigid->matl();
+        const Matl  matl_at_drop_pos    = map::cells[final_pos.x][final_pos.y].rigid->matl();
         bool        is_noisy            = false;
 
         switch (matl_at_drop_pos)
@@ -286,14 +293,19 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
 
             if (!is_actor_hit)
             {
-                Snd snd(item_thrown_data.land_on_hard_snd_msg, item_thrown_data.land_on_hard_sfx,
-                        Ignore_msg_if_origin_seen::yes, drop_pos, nullptr, Snd_vol::low, alerts);
+                Snd snd(item_thrown_data.land_on_hard_snd_msg,
+                        item_thrown_data.land_on_hard_sfx,
+                        Ignore_msg_if_origin_seen::yes,
+                        final_pos,
+                        nullptr,
+                        Snd_vol::low,
+                        alerts);
 
                 snd_emit::emit_snd(snd);
             }
         }
 
-        item_drop::drop_item_on_map(drop_pos, item_thrown);
+        item_drop::drop_item_on_map(final_pos, item_thrown);
     }
 
     render::draw_map_and_interface();

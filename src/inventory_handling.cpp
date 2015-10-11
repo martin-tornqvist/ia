@@ -138,7 +138,10 @@ void filter_player_backpack_equip(const Slot_id slot_to_equip)
             break;
 
         case Slot_id::thrown:
-            backpack_indexes_to_show_.push_back(i);
+            if (data.ranged.is_throwable_wpn)
+            {
+                backpack_indexes_to_show_.push_back(i);
+            }
             break;
 
         case Slot_id::body:
@@ -206,9 +209,8 @@ void filter_player_backpack_apply()
 
     for (size_t i = 0; i < NR_GEN; ++i)
     {
-        const Item* const item  = backpack[i];
-
-        const Item_data_t& d    = item->data();
+        const Item* const   item    = backpack[i];
+        const Item_data_t&  d       = item->data();
 
         if (d.has_std_activate)
         {

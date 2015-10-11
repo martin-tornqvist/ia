@@ -3056,13 +3056,12 @@ void Fountain::bump(Actor& actor_bumping)
 
 //--------------------------------------------------------------------- CABINET
 Cabinet::Cabinet(const Pos& feature_pos) :
-    Rigid(feature_pos),
-    is_open_(false)
+    Rigid       (feature_pos),
+    is_open_    (false)
 {
     const int IS_EMPTY_N_IN_10  = 5;
     const int NR_ITEMS_MIN      = rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
-    const int NR_ITEMS_MAX      = player_bon::traits[size_t(Trait::treasure_hunter)] ?
-                                  2 : 1;
+    const int NR_ITEMS_MAX      = player_bon::traits[size_t(Trait::treasure_hunter)] ? 2 : 1;
 
     item_container_.init(Feature_id::cabinet, rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 }
@@ -3175,12 +3174,14 @@ Cocoon::Cocoon(const Pos& feature_pos) :
     }
     else
     {
-        const bool  IS_TREASURE_HUNTER =
-            player_bon::traits[size_t(Trait::treasure_hunter)];
+        const bool IS_TREASURE_HUNTER = player_bon::traits[size_t(Trait::treasure_hunter)];
 
-        const int IS_EMPTY_N_IN_10  = 6;
-        const int NR_ITEMS_MIN      = rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
-        const int NR_ITEMS_MAX      = NR_ITEMS_MIN + (IS_TREASURE_HUNTER ? 1 : 0);
+        const Fraction fraction_empty(6, 10);
+
+        const int NR_ITEMS_MIN = rnd::fraction(fraction_empty) ? 0 : 1;
+
+        const int NR_ITEMS_MAX = NR_ITEMS_MIN + (IS_TREASURE_HUNTER ? 1 : 0);
+
         item_container_.init(Feature_id::cocoon, rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
     }
 }

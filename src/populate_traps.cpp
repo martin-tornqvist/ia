@@ -51,7 +51,7 @@ void populate_std_lvl()
 
         if (type != Room_type::plain)
         {
-            Fraction chance_for_trapped_room(0, 0);
+            Fraction chance_for_trapped_room(-1, -1);
 
             switch (type)
             {
@@ -91,7 +91,7 @@ void populate_std_lvl()
                 break;
             }
 
-            if (rnd::fraction(chance_for_trapped_room))
+            if (chance_for_trapped_room.numerator != -1 && rnd::fraction(chance_for_trapped_room))
             {
                 TRACE_VERBOSE << "Trapping non-plain room" << std::endl;
 

@@ -26,7 +26,7 @@ bool coin_toss();
 
 bool fraction(const int NUMERATOR, const int DENOMINATOR);
 
-bool fraction(const Fraction& fraction_vals);
+bool fraction(const Fraction& f);
 
 bool one_in(const int N);
 

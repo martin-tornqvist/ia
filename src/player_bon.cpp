@@ -348,8 +348,8 @@ void bg_descr(const Bg id, std::vector<std::string>& out)
     {
         Item_data_t& claw_data = item_data::data[size_t(Item_id::player_ghoul_claw)];
 
-        const std::string dmg_str = to_str(claw_data.melee.dmg.first) + "d" +
-                                    to_str(claw_data.melee.dmg.second);
+        const std::string dmg_str = to_str(claw_data.melee.dmg.rolls) + "d" +
+                                    to_str(claw_data.melee.dmg.sides);
 
         const std::string att_mod_str = to_str(claw_data.melee.hit_chance_mod) + "%";
 

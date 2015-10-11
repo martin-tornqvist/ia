@@ -86,8 +86,8 @@ Dice_param Item::dmg(const Att_mode att_mode, const Actor* const actor) const
     switch (att_mode)
     {
     case Att_mode::melee:
-        out.rolls   = data_->melee.dmg.first;
-        out.sides   = data_->melee.dmg.second;
+    {
+        out         = data_->melee.dmg;
         out.plus    = melee_dmg_plus_;
 
         if (actor == map::player)
@@ -107,9 +107,11 @@ Dice_param Item::dmg(const Att_mode att_mode, const Actor* const actor) const
                 ++out.plus;
             }
         }
-        break;
+    }
+    break;
 
     case Att_mode::ranged:
+    {
         out = data_->ranged.dmg;
 
         if (actor == map::player)
@@ -129,10 +131,23 @@ Dice_param Item::dmg(const Att_mode att_mode, const Actor* const actor) const
                 ++out.plus;
             }
         }
-        break;
+    }
+    break;
 
     case Att_mode::thrown:
-        out = data_->ranged.throw_dmg;
+    {
+        const bool IS_MELEE_WPN = data_->type == Item_type::melee_wpn;
+
+        //Melee weapons do throw damage based on their melee damage
+        if (IS_MELEE_WPN)
+        {
+            out         = data_->melee.dmg;
+            out.plus    = melee_dmg_plus_;
+        }
+        else //Not a melee weapon
+        {
+            out = data_->ranged.throw_dmg;
+        }
 
         if (actor == map::player)
         {
@@ -151,11 +166,14 @@ Dice_param Item::dmg(const Att_mode att_mode, const Actor* const actor) const
                 ++out.plus;
             }
         }
-        break;
+    }
+    break;
 
     case Att_mode::none:
+    {
         assert(false);
         break;
+    }
     }
 
     return out;

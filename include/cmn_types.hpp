@@ -329,13 +329,20 @@ struct Pos_and_val
 
 struct Dice_param
 {
-    Dice_param() : rolls(0), sides(0), plus(0) {}
+    Dice_param() :
+        rolls   (0),
+        sides   (0),
+        plus    (0) {}
 
     Dice_param(const int ROLLS, const int SIDES, const int PLUS = 0) :
-        rolls(ROLLS), sides(SIDES), plus(PLUS) {}
+        rolls   (ROLLS),
+        sides   (SIDES),
+        plus    (PLUS) {}
 
     Dice_param(const Dice_param& other) :
-        rolls(other.rolls), sides(other.sides), plus(other.plus) {}
+        rolls   (other.rolls),
+        sides   (other.sides),
+        plus    (other.plus) {}
 
     Dice_param& operator=(const Dice_param& other)
     {

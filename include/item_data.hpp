@@ -263,7 +263,9 @@ public:
         ~Item_melee_data();
 
         bool                    is_melee_wpn;
-        std::pair<int, int>     dmg;
+        //NOTE: The "plus" field is ignored in the melee damage data, since melee weapons have
+        //individual plus damages stored in the weapon objects.
+        Dice_param              dmg;
         int                     hit_chance_mod;
         Item_att_msgs           att_msgs;
         Prop*                   prop_applied;
@@ -280,10 +282,12 @@ public:
         Item_ranged_data();
         ~Item_ranged_data();
 
-        bool                    is_ranged_wpn, is_machine_gun, is_shotgun;
-        //NOTE: This property should be set on ranged weapons (using ammo) and clips
+        bool                    is_ranged_wpn, is_throwable_wpn, is_machine_gun, is_shotgun;
+        //NOTE: This property should be set on ranged weapons (using ammo) AND clips:
         int                     max_ammo;
         Dice_param              dmg;
+        //NOTE: "Pure" melee weapons do not have to (should not) set this value - they do throw
+        //damage based on their melee damage instead.
         Dice_param              throw_dmg;
         int                     hit_chance_mod;
         int                     throw_hit_chance_mod;
