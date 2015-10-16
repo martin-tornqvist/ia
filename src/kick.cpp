@@ -23,7 +23,7 @@ void player_kick()
     msg_log::clear();
     msg_log::add("Which direction?" + cancel_info_str, clr_white_high);
     render::draw_map_and_interface();
-    Pos kick_pos(map::player->pos + dir_utils::offset(query::dir()));
+    P kick_pos(map::player->pos + dir_utils::offset(query::dir()));
     msg_log::clear();
 
     if (kick_pos != map::player->pos)

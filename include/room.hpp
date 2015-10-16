@@ -107,10 +107,10 @@ protected:
     virtual int base_pct_chance_drk() const = 0;
 
     size_t try_auto_feature_placement(
-        const std::vector<Pos>& adj_to_walls,
-        const std::vector<Pos>& away_from_walls,
+        const std::vector<P>& adj_to_walls,
+        const std::vector<P>& away_from_walls,
         const std::vector<const Feature_data_t*>& feature_data_bucket,
-        Pos& pos_ref) const;
+        P& pos_ref) const;
 
     int place_auto_features();
 

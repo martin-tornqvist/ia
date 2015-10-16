@@ -224,7 +224,7 @@ void win_game()
 
         for (const std::string& line : section_lines)
         {
-            render::draw_text(line, Panel::screen, Pos(X0, y), clr_white, clr_black);
+            render::draw_text(line, Panel::screen, P(X0, y), clr_white, clr_black);
 
             render::update_screen();
             sdl_wrapper::sleep(LINE_DELAY);
@@ -239,7 +239,7 @@ void win_game()
     const std::string CMD_LABEL =
         "[space/esc/enter] to record high score and return to main menu";
 
-    render::draw_text_centered(CMD_LABEL, Panel::screen, Pos(MAP_W_HALF, y), clr_menu_medium,
+    render::draw_text_centered(CMD_LABEL, Panel::screen, P(MAP_W_HALF, y), clr_menu_medium,
                                clr_black, true);
 
     render::update_screen();

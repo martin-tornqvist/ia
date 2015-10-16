@@ -68,7 +68,7 @@ public:
 
     void put_in_intrinsics(Item* item);
 
-    void drop_all_non_intrinsic(const Pos& pos);
+    void drop_all_non_intrinsic(const P& pos);
 
     void swap_wielded_and_prepared(const bool IS_FREE_TURN);
 

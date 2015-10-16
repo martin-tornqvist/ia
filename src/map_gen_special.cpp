@@ -29,7 +29,7 @@ namespace
 
 void mk_forest_limit()
 {
-    auto put_tree = [](const int X, const int Y) {map::put(new Tree(Pos(X, Y)));};
+    auto put_tree = [](const int X, const int Y) {map::put(new Tree(P(X, Y)));};
 
     for (int y = 0; y < MAP_H; ++y)
     {
@@ -62,7 +62,7 @@ void mk_forest_outer_treeline()
         {
             if (rnd::range(1, 4) > 1 || x == 0)
             {
-                map::put(new Tree(Pos(x, y)));
+                map::put(new Tree(P(x, y)));
             }
             else
             {
@@ -77,7 +77,7 @@ void mk_forest_outer_treeline()
         {
             if (rnd::range(1, 4) > 1 || y == 0)
             {
-                map::put(new Tree(Pos(x, y)));
+                map::put(new Tree(P(x, y)));
             }
             else
             {
@@ -92,7 +92,7 @@ void mk_forest_outer_treeline()
         {
             if (rnd::range(1, 4) > 1 || x == MAP_W - 1)
             {
-                map::put(new Tree(Pos(x, y)));
+                map::put(new Tree(P(x, y)));
             }
             else
             {
@@ -107,7 +107,7 @@ void mk_forest_outer_treeline()
         {
             if (rnd::range(1, 4) > 1 || y == MAP_H - 1)
             {
-                map::put(new Tree(Pos(x, y)));
+                map::put(new Tree(P(x, y)));
             }
             else
             {
@@ -121,7 +121,7 @@ void mk_forest_tree_patch()
 {
     const int NR_TREES_TO_PUT = rnd::range(5, 17);
 
-    Pos cur_pos(rnd::range(1, MAP_W - 2), rnd::range(1, MAP_H - 2));
+    P cur_pos(rnd::range(1, MAP_W - 2), rnd::range(1, MAP_H - 2));
 
     int nr_trees_created = 0;
 
@@ -163,11 +163,11 @@ void mk_forest_trees()
 {
     map_gen_utils::backup_map();
 
-    const Pos church_pos(MAP_W - 33, 2);
+    const P church_pos(MAP_W - 33, 2);
 
     int nr_forest_patches = rnd::range(40, 55);
 
-    std::vector<Pos> path;
+    std::vector<P> path;
 
     bool proceed = false;
 
@@ -176,7 +176,7 @@ void mk_forest_trees()
         for (int i = 0; i < nr_forest_patches; ++i) {mk_forest_tree_patch();}
 
         const map_templ& templ     = map_templ_handling::templ(Map_templ_id::church);
-        const Pos       templ_dims = templ.dims();
+        const P       templ_dims = templ.dims();
 
         for (int x = 0; x < templ_dims.x; ++x)
         {
@@ -185,7 +185,7 @@ void mk_forest_trees()
                 const auto& templ_cell = templ.cell(x, y);
                 const auto  f_id       = templ_cell.feature_id;
 
-                const Pos p(church_pos + Pos(x, y));
+                const P p(church_pos + P(x, y));
 
                 if (f_id != Feature_id::END)
                 {
@@ -209,7 +209,7 @@ void mk_forest_trees()
         bool blocked[MAP_W][MAP_H];
         map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
-        Pos stairs_pos;
+        P stairs_pos;
 
         for (int x = 0; x < MAP_W; ++x)
         {
@@ -247,13 +247,13 @@ void mk_forest_trees()
     }
 
     //Build path
-    for (const Pos& path_pos : path)
+    for (const P& path_pos : path)
     {
         for (int dx = -1; dx < 1; ++dx)
         {
             for (int dy = -1; dy < 1; ++dy)
             {
-                const Pos p(path_pos + Pos(dx, dy));
+                const P p(path_pos + P(dx, dy));
 
                 if (map::cells[p.x][p.y].rigid->can_have_rigid() && utils::is_pos_inside_map(p))
                 {
@@ -287,7 +287,7 @@ void mk_forest_trees()
         const int SEARCH_RADI               = FOV_STD_RADI_INT - 2;
         const int TRY_PLACE_EVERY_N_STEP    = 2;
 
-        std::vector<Pos> grave_cells;
+        std::vector<P> grave_cells;
 
         int path_walk_count = 0;
 
@@ -337,7 +337,7 @@ void mk_forest_trees()
 
                             if (is_pos_ok)
                             {
-                                grave_cells.push_back(Pos(X, Y));
+                                grave_cells.push_back(P(X, Y));
                                 blocked[X][Y] = true;
 
                                 if (int(grave_cells.size()) == NR_GRAVES_TO_PLACE)
@@ -400,7 +400,7 @@ bool mk_intro_lvl()
     {
         for (int y = 1; y < MAP_H - 1; ++y)
         {
-            const Pos p(x, y);
+            const P p(x, y);
 
             if (rnd::one_in(6))
             {
@@ -428,7 +428,7 @@ bool mk_egypt_lvl()
     map::reset_map();
 
     const map_templ& templ      = map_templ_handling::templ(Map_templ_id::egypt);
-    const Pos       templ_dims  = templ.dims();
+    const P       templ_dims  = templ.dims();
     const int       STAIR_VAL   = rnd::range(2, 3);
 
     for (int x = 0; x < templ_dims.x; ++x)
@@ -436,7 +436,7 @@ bool mk_egypt_lvl()
         for (int y = 0; y < templ_dims.y; ++y)
         {
             const auto& templ_cell = templ.cell(x, y);
-            const Pos p(x, y);
+            const P p(x, y);
 
             if (templ_cell.feature_id != Feature_id::END)
             {
@@ -488,7 +488,7 @@ bool mk_leng_lvl()
     map::reset_map();
 
     const map_templ& templ     = map_templ_handling::templ(Map_templ_id::leng);
-    const Pos       templ_dims = templ.dims();
+    const P       templ_dims = templ.dims();
 
     for (int x = 0; x < templ_dims.x; ++x)
     {
@@ -496,7 +496,7 @@ bool mk_leng_lvl()
         {
             const auto& templ_cell = templ.cell(x, y);
             const auto  f_id       = templ_cell.feature_id;
-            const Pos p(x, y);
+            const P p(x, y);
 
             if (f_id != Feature_id::END)
             {
@@ -563,7 +563,7 @@ bool mk_rats_in_the_walls_lvl()
     map::reset_map();
 
     const map_templ& templ     = map_templ_handling::templ(Map_templ_id::rats_in_the_walls);
-    const Pos       templ_dims = templ.dims();
+    const P       templ_dims = templ.dims();
 
     const int       RAT_THING_ONE_IN_N_RAT = 3;
     const Fraction  bones_one_in_n(1, 2);
@@ -574,7 +574,7 @@ bool mk_rats_in_the_walls_lvl()
         {
             const auto& templ_cell = templ.cell(x, y);
             const auto  f_id       = templ_cell.feature_id;
-            const Pos p(x, y);
+            const P p(x, y);
 
             if (f_id != Feature_id::END)
             {
@@ -654,7 +654,7 @@ bool mk_rats_in_the_walls_lvl()
         {
             if (!blocked[x][y])
             {
-                const Pos p(x, y);
+                const P p(x, y);
 
                 if (rnd::one_in(RAT_THING_ONE_IN_N_RAT))
                 {
@@ -688,7 +688,7 @@ bool mk_boss_lvl()
     map::reset_map();
 
     const map_templ& templ     = map_templ_handling::templ(Map_templ_id::boss_level);
-    const Pos       templ_dims = templ.dims();
+    const P       templ_dims = templ.dims();
 
     for (int x = 0; x < templ_dims.x; ++x)
     {
@@ -699,7 +699,7 @@ bool mk_boss_lvl()
             const auto& templ_cell = templ.cell(x, y);
             const auto  f_id       = templ_cell.feature_id;
 
-            const Pos p(x, y);
+            const P p(x, y);
 
             if (f_id != Feature_id::END)
             {
@@ -709,7 +709,7 @@ bool mk_boss_lvl()
 
             if (templ_cell.actor_id != Actor_id::END)
             {
-                actor_factory::mk(templ_cell.actor_id, Pos(x, y));
+                actor_factory::mk(templ_cell.actor_id, P(x, y));
             }
 
             switch (templ_cell.val)
@@ -748,7 +748,7 @@ bool mk_trapezohedron_lvl()
     const map_templ& templ =
         map_templ_handling::templ(Map_templ_id::trapezohedron_level);
 
-    const Pos templ_dims = templ.dims();
+    const P templ_dims = templ.dims();
 
     for (int x = 0; x < templ_dims.x; ++x)
     {
@@ -760,7 +760,7 @@ bool mk_trapezohedron_lvl()
             const auto  f_id         = templ_cell.feature_id;
             const auto  item_id      = templ_cell.item_id;
 
-            const Pos p(x, y);
+            const P p(x, y);
 
             if (f_id != Feature_id::END)
             {

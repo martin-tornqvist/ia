@@ -36,52 +36,52 @@ void update_screen();
 
 void clear_screen();
 
-void draw_tile(const Tile_id tile, const Panel panel, const Pos& pos,
+void draw_tile(const Tile_id tile, const Panel panel, const P& pos,
                const Clr& clr, const Clr& bg_clr = clr_black);
 
-void draw_glyph(const char GLYPH, const Panel panel, const Pos& pos,
+void draw_glyph(const char GLYPH, const Panel panel, const P& pos,
                 const Clr& clr, const bool DRAW_BG_CLR = true,
                 const Clr& bg_clr = clr_black);
 
-void draw_text(const std::string& str, const Panel panel, const Pos& pos,
+void draw_text(const std::string& str, const Panel panel, const P& pos,
                const Clr& clr, const Clr& bg_clr = clr_black);
 
-int draw_text_centered(const std::string& str, const Panel panel, const Pos& pos,
+int draw_text_centered(const std::string& str, const Panel panel, const P& pos,
                        const Clr& clr, const Clr& bg_clr = clr_black,
                        const bool IS_PIXEL_POS_ADJ_ALLOWED = true);
 
-void cover_cell_in_map(const Pos& pos);
+void cover_cell_in_map(const P& pos);
 
 void cover_panel(const Panel panel);
 
 void cover_area(const Panel panel, const Rect& area);
-void cover_area(const Panel panel, const Pos& pos, const Pos& dims);
+void cover_area(const Panel panel, const P& pos, const P& dims);
 
-void cover_area_px(const Pos& px_pos, const Pos& px_dims);
+void cover_area_px(const P& px_pos, const P& px_dims);
 
-void draw_rectangle_solid(const Pos& px_pos, const Pos& px_dims,
+void draw_rectangle_solid(const P& px_pos, const P& px_dims,
                           const Clr& clr);
 
-void draw_line_hor(const Pos& px_pos, const int W, const Clr& clr);
+void draw_line_hor(const P& px_pos, const int W, const Clr& clr);
 
-void draw_line_ver(const Pos& px_pos, const int H, const Clr& clr);
+void draw_line_ver(const P& px_pos, const int H, const Clr& clr);
 
-void draw_marker(const Pos& p, const std::vector<Pos>& trail,
+void draw_marker(const P& p, const std::vector<P>& trail,
                  const int EFFECTIVE_RANGE = -1);
 
-void draw_blast_at_field(const Pos& center_pos, const int RADIUS,
+void draw_blast_at_field(const P& center_pos, const int RADIUS,
                          bool forbidden_cells[MAP_W][MAP_H], const Clr& clr_inner,
                          const Clr& clr_outer);
 
-void draw_blast_at_cells(const std::vector<Pos>& positions, const Clr& clr);
+void draw_blast_at_cells(const std::vector<P>& positions, const Clr& clr);
 
-void draw_blast_at_seen_cells(const std::vector<Pos>& positions, const Clr& clr);
+void draw_blast_at_seen_cells(const std::vector<P>& positions, const Clr& clr);
 
 void draw_blast_at_seen_actors(const std::vector<Actor*>& actors, const Clr& clr);
 
 void draw_main_menu_logo(const int Y_POS);
 
-void draw_skull(const Pos& p);
+void draw_skull(const P& p);
 
 void draw_projectiles(std::vector<Projectile*>& projectiles,
                       const bool SHOULD_DRAW_MAP_BEFORE);

@@ -11,13 +11,13 @@ class Highscore_entry
 {
 public:
     Highscore_entry(std::string entry_date_and_time,
-                     std::string player_name,
-                     int player_xp,
-                     int player_lvl,
-                     int player_dlvl,
-                     int player_insanity,
-                     bool is_win_game,
-                     Bg player_bg);
+                    std::string player_name,
+                    int player_xp,
+                    int player_lvl,
+                    int player_dlvl,
+                    int player_insanity,
+                    bool is_win_game,
+                    Bg player_bg);
 
     ~Highscore_entry() {}
 

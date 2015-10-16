@@ -256,7 +256,7 @@ void run(const  cell_check::Check& method,
     {
         for (Mob* mob : game_time::mobs_)
         {
-            const Pos& p = mob->pos();
+            const P& p = mob->pos();
 
             if (utils::is_pos_inside(p, area_to_check_cells))
             {
@@ -279,7 +279,7 @@ void run(const  cell_check::Check& method,
     {
         for (Actor* actor : game_time::actors_)
         {
-            const Pos& p = actor->pos;
+            const P& p = actor->pos;
 
             if (utils::is_pos_inside(p, area_to_check_cells))
             {
@@ -299,7 +299,7 @@ void run(const  cell_check::Check& method,
     }
 }
 
-bool cell(const cell_check::Check& method, const Pos& p)
+bool cell(const cell_check::Check& method, const P& p)
 {
     assert(method.is_checking_cells()  ||
            method.is_checking_mobs()   ||
@@ -322,7 +322,7 @@ bool cell(const cell_check::Check& method, const Pos& p)
     {
         for (Mob* mob : game_time::mobs_)
         {
-            const Pos& mob_p = mob->pos();
+            const P& mob_p = mob->pos();
 
             if (mob_p == p)
             {
@@ -341,7 +341,7 @@ bool cell(const cell_check::Check& method, const Pos& p)
     {
         for (Actor* actor : game_time::actors_)
         {
-            const Pos& actor_p = actor->pos;
+            const P& actor_p = actor->pos;
 
             if (actor_p == p)
             {
@@ -380,8 +380,8 @@ void cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MA
             {
                 for (int d = dist_interval.min; d <= dist_interval.max; d++)
                 {
-                    Pos p0(std::max(0,         x_outer - d), std::max(0,         y_outer - d));
-                    Pos p1(std::min(MAP_W - 1, x_outer + d), std::min(MAP_H - 1, y_outer + d));
+                    P p0(std::max(0,         x_outer - d), std::max(0,         y_outer - d));
+                    P p1(std::min(MAP_W - 1, x_outer + d), std::min(MAP_H - 1, y_outer + d));
 
                     for (int x = p0.x; x <= p1.x; ++x)
                     {
@@ -524,7 +524,7 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST)
 
 bool is_map_connected(const bool blocked[MAP_W][MAP_H])
 {
-    Pos origin(-1, -1);
+    P origin(-1, -1);
 
     for (int x = 1; x < MAP_W - 1; ++x)
     {
@@ -546,7 +546,7 @@ bool is_map_connected(const bool blocked[MAP_W][MAP_H])
     assert(utils::is_pos_inside_map(origin, false));
 
     int flood_fill[MAP_W][MAP_H];
-    flood_fill::run(origin, blocked, flood_fill, INT_MAX, Pos(-1, -1), true);
+    flood_fill::run(origin, blocked, flood_fill, INT_MAX, P(-1, -1), true);
 
     //NOTE: We can skip to origin.x immediately, since this is guaranteed to be the
     //leftmost non-blocked cell.
@@ -554,7 +554,7 @@ bool is_map_connected(const bool blocked[MAP_W][MAP_H])
     {
         for (int y = 1; y < MAP_H - 1; ++y)
         {
-            if (flood_fill[x][y] == 0 && !blocked[x][y] && Pos(x, y) != origin)
+            if (flood_fill[x][y] == 0 && !blocked[x][y] && P(x, y) != origin)
             {
                 return false;
             }
@@ -567,7 +567,7 @@ bool is_map_connected(const bool blocked[MAP_W][MAP_H])
 } //map_parse
 
 //------------------------------------------------------------ IS CLOSER TO POS
-bool Is_closer_to_pos::operator()(const Pos& p1, const Pos& p2)
+bool Is_closer_to_pos::operator()(const P& p1, const P& p2)
 {
     const int king_dist1 = utils::king_dist(p_.x, p_.y, p1.x, p1.y);
     const int king_dist2 = utils::king_dist(p_.x, p_.y, p2.x, p2.y);
@@ -578,16 +578,16 @@ bool Is_closer_to_pos::operator()(const Pos& p1, const Pos& p2)
 namespace flood_fill
 {
 
-void run(const Pos& p0,
+void run(const P& p0,
          const bool blocked[MAP_W][MAP_H],
          int out[MAP_W][MAP_H],
          int travel_lmt,
-         const Pos& p1,
+         const P& p1,
          const bool ALLOW_DIAGONAL)
 {
     utils::reset_array(out);
 
-    std::vector<Pos> positions;
+    std::vector<P> positions;
     positions.clear();
 
     unsigned int    nr_elements_to_skip = 0;
@@ -596,18 +596,24 @@ void run(const Pos& p0,
     bool            is_at_tgt           = false;
     bool            is_stopping_at_p1   = p1.x != -1;
 
-    const Rect      bounds(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2));
+    const Rect bounds(P(1, 1), P(MAP_W - 2, MAP_H - 2));
 
-    Pos             cur_pos(p0);
+    P cur_pos(p0);
 
-    std::vector<Pos> dirs {Pos(0, -1), Pos(-1, 0), Pos(0, 1), Pos(1, 0)};
+    std::vector<P> dirs
+    {
+        P( 0, -1),
+        P(-1,  0),
+        P( 0,  1),
+        P( 1,  0)
+    };
 
     if (ALLOW_DIAGONAL)
     {
-        dirs.push_back(Pos(-1, -1));
-        dirs.push_back(Pos(-1, 1));
-        dirs.push_back(Pos(1, -1));
-        dirs.push_back(Pos(1, 1));
+        dirs.push_back(P(-1, -1));
+        dirs.push_back(P(-1, 1));
+        dirs.push_back(P(1, -1));
+        dirs.push_back(P(1, 1));
     }
 
     bool done = false;
@@ -615,11 +621,11 @@ void run(const Pos& p0,
     while (!done)
     {
 
-        for (const Pos& d : dirs)
+        for (const P& d : dirs)
         {
             if ((d != 0))
             {
-                const Pos new_pos(cur_pos + d);
+                const P new_pos(cur_pos + d);
 
                 if (
                     !blocked[new_pos.x][new_pos.y]          &&
@@ -629,7 +635,10 @@ void run(const Pos& p0,
                 {
                     cur_val = out[cur_pos.x][cur_pos.y];
 
-                    if (cur_val < travel_lmt) {out[new_pos.x][new_pos.y] = cur_val + 1;}
+                    if (cur_val < travel_lmt)
+                    {
+                        out[new_pos.x][new_pos.y] = cur_val + 1;
+                    }
 
                     if (is_stopping_at_p1 && cur_pos == p1 - d)
                     {
@@ -688,7 +697,7 @@ void run(const Pos& p0,
 namespace path_find
 {
 
-void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H], std::vector<Pos>& out,
+void run(const P& p0, const P& p1, bool blocked[MAP_W][MAP_H], std::vector<P>& out,
          const bool ALLOW_DIAGONAL, const bool RANDOMIZE_STEP_CHOICES)
 {
     out.clear();
@@ -708,9 +717,9 @@ void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H], std::vector<P
         return;
     }
 
-    const std::vector<Pos>& dirs =  ALLOW_DIAGONAL ?
-                                    dir_utils::dir_list :
-                                    dir_utils::cardinal_list;
+    const std::vector<P>& dirs =  ALLOW_DIAGONAL ?
+                                  dir_utils::dir_list :
+                                  dir_utils::cardinal_list;
 
     const size_t NR_DIRS = dirs.size();
 
@@ -720,17 +729,17 @@ void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H], std::vector<P
     //reserve that many elements.
     out.reserve(flood[p1.x][p1.y]);
 
-    Pos cur_pos(p1);
+    P cur_pos(p1);
     out.push_back(cur_pos);
 
     while (true)
     {
-        Pos adj_pos;
+        P adj_pos;
 
         //Find valid offsets, and check if origin is reached
         for (size_t i = 0; i < NR_DIRS; ++i)
         {
-            const Pos& d(dirs[i]);
+            const P& d(dirs[i]);
 
             adj_pos = cur_pos + d;
 
@@ -753,7 +762,7 @@ void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H], std::vector<P
         //Either pick one of the valid offsets at random, or iterate over an offset list
         if (RANDOMIZE_STEP_CHOICES)
         {
-            std::vector<Pos> adj_pos_bucket;
+            std::vector<P> adj_pos_bucket;
 
             for (size_t i = 0; i < NR_DIRS; ++i)
             {

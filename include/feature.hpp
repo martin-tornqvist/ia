@@ -12,7 +12,8 @@ class Actor;
 class Feature
 {
 public:
-    Feature(const Pos& feature_pos) : pos_(feature_pos) {}
+    Feature(const P& feature_pos) :
+        pos_(feature_pos) {}
 
     virtual ~Feature() {}
 
@@ -48,13 +49,13 @@ public:
 
     virtual void add_light(bool light[MAP_W][MAP_H]) const;
 
-    Pos pos() const
+    P pos() const
     {
         return pos_;
     }
 
 protected:
-    Pos pos_;
+    P pos_;
 };
 
 #endif

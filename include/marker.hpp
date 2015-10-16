@@ -15,11 +15,11 @@ enum class Marker_use_player_tgt    {no, yes};
 namespace marker
 {
 
-Pos run(const Marker_draw_tail draw_tail,
-        const Marker_use_player_tgt use_tgt,
-        std::function<void(const Pos&)> on_marker_at_pos,
-        std::function<Marker_done(const Pos&, const Key_data&)> on_key_press,
-        const int EFFECTIVE_RANGE_LMT = INT_MAX);
+P run(const Marker_draw_tail draw_tail,
+      const Marker_use_player_tgt use_tgt,
+      std::function<void(const P&)> on_marker_at_pos,
+      std::function<Marker_done(const P&, const Key_data&)> on_key_press,
+      const int EFFECTIVE_RANGE_LMT = INT_MAX);
 
 } //marker
 

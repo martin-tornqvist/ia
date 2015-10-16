@@ -135,7 +135,7 @@ void put_px(const SDL_Surface& srf, const int PIXEL_X, const int PIXEL_Y, Uint32
     }
 }
 
-void blit_surface(SDL_Surface& srf, const Pos& px_pos)
+void blit_surface(SDL_Surface& srf, const P& px_pos)
 {
     SDL_Rect dst_rect
     {
@@ -218,7 +218,7 @@ void load_tiles()
 
 void load_contour(const bool base[PIXEL_DATA_W][PIXEL_DATA_H])
 {
-    const Pos cell_dims(config::cell_px_w(), config::cell_px_h());
+    const P cell_dims(config::cell_px_w(), config::cell_px_h());
 
     for (size_t px_x = 0; px_x < PIXEL_DATA_W; ++px_x)
     {
@@ -232,14 +232,14 @@ void load_contour(const bool base[PIXEL_DATA_W][PIXEL_DATA_H])
             if (!base[px_x][px_y])
             {
                 //Position interval to check for this pixel is constrained within current image
-                const Pos cur_img_px_p0((Pos(px_x, px_y) / cell_dims) * cell_dims);
-                const Pos cur_img_px_p1(cur_img_px_p0 + cell_dims - 1);
+                const P cur_img_px_p0((P(px_x, px_y) / cell_dims) * cell_dims);
+                const P cur_img_px_p1(cur_img_px_p0 + cell_dims - 1);
 
-                const Pos px_p0(std::max(cur_img_px_p0.x, int(px_x - 1)),
-                                std::max(cur_img_px_p0.y, int(px_y - 1)));
+                const P px_p0(std::max(cur_img_px_p0.x, int(px_x - 1)),
+                              std::max(cur_img_px_p0.y, int(px_y - 1)));
 
-                const Pos px_p1(std::min(cur_img_px_p1.x, int(px_x + 1)),
-                                std::min(cur_img_px_p1.y, int(px_y + 1)));
+                const P px_p1(std::min(cur_img_px_p1.x, int(px_x + 1)),
+                              std::min(cur_img_px_p1.y, int(px_y + 1)));
 
                 for (int px_check_x = px_p0.x; px_check_x <= px_p1.x; ++px_check_x)
                 {
@@ -263,7 +263,7 @@ void load_contour(const bool base[PIXEL_DATA_W][PIXEL_DATA_H])
 }
 
 void put_pixels_on_scr(const bool px_data[PIXEL_DATA_W][PIXEL_DATA_H],
-                       const Pos& sheet_pos, const Pos& scr_px_pos, const Clr& clr)
+                       const P& sheet_pos, const P& scr_px_pos, const Clr& clr)
 {
     if (is_inited())
     {
@@ -297,36 +297,36 @@ void put_pixels_on_scr(const bool px_data[PIXEL_DATA_W][PIXEL_DATA_H],
     }
 }
 
-void put_pixels_on_scr_for_tile(const Tile_id tile, const Pos& scr_px_pos, const Clr& clr)
+void put_pixels_on_scr_for_tile(const Tile_id tile, const P& scr_px_pos, const Clr& clr)
 {
     put_pixels_on_scr(tile_px_data_, art::tile_pos(tile), scr_px_pos, clr);
 }
 
-void put_pixels_on_scr_for_glyph(const char GLYPH, const Pos& scr_px_pos, const Clr& clr)
+void put_pixels_on_scr_for_glyph(const char GLYPH, const P& scr_px_pos, const Clr& clr)
 {
     put_pixels_on_scr(font_px_data_, art::glyph_pos(GLYPH), scr_px_pos, clr);
 }
 
-Pos px_pos_for_cell_in_panel(const Panel panel, const Pos& pos)
+P px_pos_for_cell_in_panel(const Panel panel, const P& pos)
 {
-    const Pos cell_dims(config::cell_px_w(), config::cell_px_h());
+    const P cell_dims(config::cell_px_w(), config::cell_px_h());
 
     switch (panel)
     {
     case Panel::screen:
-        return Pos(pos.x * cell_dims.x, pos.y * cell_dims.y);
+        return P(pos.x * cell_dims.x, pos.y * cell_dims.y);
 
     case Panel::map:
-        return (pos * cell_dims) + Pos(0, config::map_px_offset_h());
+        return (pos * cell_dims) + P(0, config::map_px_offset_h());
 
     case Panel::log:
         return pos * cell_dims;
 
     case Panel::char_lines:
-        return (pos * cell_dims) + Pos(0, config::char_lines_px_offset_h());
+        return (pos * cell_dims) + P(0, config::char_lines_px_offset_h());
     }
 
-    return Pos();
+    return P();
 }
 
 int lifebar_length(const Actor& actor)
@@ -343,35 +343,35 @@ int lifebar_length(const Actor& actor)
     return -1;
 }
 
-void draw_life_bar(const Pos& pos, const int LENGTH)
+void draw_life_bar(const P& pos, const int LENGTH)
 {
     if (LENGTH >= 0)
     {
-        const Pos cell_dims(config::cell_px_w(),  config::cell_px_h());
+        const P cell_dims(config::cell_px_w(),  config::cell_px_h());
         const int W_GREEN   = LENGTH;
         const int W_BAR_TOT = cell_dims.x - 2;
         const int W_RED     = W_BAR_TOT - W_GREEN;
-        const Pos px_pos    = px_pos_for_cell_in_panel(Panel::map, pos + Pos(0, 1)) - Pos(0, 2);
+        const P px_pos    = px_pos_for_cell_in_panel(Panel::map, pos + P(0, 1)) - P(0, 2);
         const int X0_GREEN  = px_pos.x + 1;
         const int X0_RED    = X0_GREEN + W_GREEN;
 
         if (W_GREEN > 0)
         {
-            draw_line_hor(Pos(X0_GREEN, px_pos.y), W_GREEN, clr_green_lgt);
+            draw_line_hor(P(X0_GREEN, px_pos.y), W_GREEN, clr_green_lgt);
         }
 
         if (W_RED > 0)
         {
-            draw_line_hor(Pos(X0_RED, px_pos.y), W_RED, clr_red_lgt);
+            draw_line_hor(P(X0_RED, px_pos.y), W_RED, clr_red_lgt);
         }
     }
 }
 
-void draw_excl_mark_at(const Pos& px_pos)
+void draw_excl_mark_at(const P& px_pos)
 {
-    draw_rectangle_solid(px_pos, Pos(3, 12), clr_black);
-    draw_line_ver(px_pos + Pos(1,  1), 6, clr_magenta_lgt);
-    draw_line_ver(px_pos + Pos(1,  9), 2, clr_magenta_lgt);
+    draw_rectangle_solid(px_pos, P(3, 12), clr_black);
+    draw_line_ver(px_pos + P(1,  1), 6, clr_magenta_lgt);
+    draw_line_ver(px_pos + P(1,  9), 2, clr_magenta_lgt);
 }
 
 void draw_player_shock_excl_marks()
@@ -381,22 +381,22 @@ void draw_player_shock_excl_marks()
 
     if (NR_EXCL > 0)
     {
-        const Pos& player_pos = map::player->pos;
-        const Pos px_pos_right = px_pos_for_cell_in_panel(Panel::map, player_pos);
+        const P& player_pos = map::player->pos;
+        const P px_pos_right = px_pos_for_cell_in_panel(Panel::map, player_pos);
 
         for (int i = 0; i < NR_EXCL; ++i)
         {
-            draw_excl_mark_at(px_pos_right + Pos(i * 3, 0));
+            draw_excl_mark_at(px_pos_right + P(i * 3, 0));
         }
     }
 }
 
-void draw_glyph_at_px(const char GLYPH, const Pos& px_pos, const Clr& clr,
+void draw_glyph_at_px(const char GLYPH, const P& px_pos, const Clr& clr,
                       const bool DRAW_BG_CLR, const Clr& bg_clr = clr_black)
 {
     if (DRAW_BG_CLR)
     {
-        const Pos cell_dims(config::cell_px_w(), config::cell_px_h());
+        const P cell_dims(config::cell_px_w(), config::cell_px_h());
 
         draw_rectangle_solid(px_pos, cell_dims, bg_clr);
 
@@ -575,28 +575,28 @@ void draw_main_menu_logo(const int Y_POS)
     const int LOGO_PX_H = main_menu_logo_srf_->w;
     const int CELL_PX_H = config::cell_px_h();
 
-    const Pos px_pos((SCR_PX_W - LOGO_PX_H) / 2, CELL_PX_H * Y_POS);
+    const P px_pos((SCR_PX_W - LOGO_PX_H) / 2, CELL_PX_H * Y_POS);
 
     blit_surface(*main_menu_logo_srf_, px_pos);
 }
 
-void draw_skull(const Pos& p)
+void draw_skull(const P& p)
 {
     const int CELL_PX_W = config::cell_px_w();
     const int CELL_PX_H = config::cell_px_h();
 
-    const Pos px_pos(p * Pos(CELL_PX_W, CELL_PX_H));
+    const P px_pos(p * P(CELL_PX_W, CELL_PX_H));
 
     blit_surface(*skull_srf_, px_pos);
 }
 
-void draw_marker(const Pos& p, const std::vector<Pos>& trail, const int EFFECTIVE_RANGE)
+void draw_marker(const P& p, const std::vector<P>& trail, const int EFFECTIVE_RANGE)
 {
     if (trail.size() > 2)
     {
         for (size_t i = 1; i < trail.size(); ++i)
         {
-            const Pos& pos = trail[i];
+            const P& pos = trail[i];
             cover_cell_in_map(pos);
 
             Clr clr = clr_green_lgt;
@@ -647,7 +647,7 @@ void draw_marker(const Pos& p, const std::vector<Pos>& trail, const int EFFECTIV
     }
 }
 
-void draw_blast_at_field(const Pos& center_pos, const int RADIUS,
+void draw_blast_at_field(const P& center_pos, const int RADIUS,
                          bool forbidden_cells[MAP_W][MAP_H], const Clr& clr_inner,
                          const Clr& clr_outer)
 {
@@ -659,7 +659,7 @@ void draw_blast_at_field(const Pos& center_pos, const int RADIUS,
 
         bool is_any_blast_rendered = false;
 
-        Pos pos;
+        P pos;
 
         for (
             pos.y = std::max(1, center_pos.y - RADIUS);
@@ -737,7 +737,7 @@ void draw_blast_at_field(const Pos& center_pos, const int RADIUS,
     TRACE_FUNC_END;
 }
 
-void draw_blast_at_cells(const std::vector<Pos>& positions, const Clr& clr)
+void draw_blast_at_cells(const std::vector<P>& positions, const Clr& clr)
 {
     TRACE_FUNC_BEGIN;
 
@@ -745,7 +745,7 @@ void draw_blast_at_cells(const std::vector<Pos>& positions, const Clr& clr)
     {
         draw_map_and_interface();
 
-        for (const Pos& pos : positions)
+        for (const P& pos : positions)
         {
             if (config::is_tiles_mode())
             {
@@ -760,7 +760,7 @@ void draw_blast_at_cells(const std::vector<Pos>& positions, const Clr& clr)
         update_screen();
         sdl_wrapper::sleep(config::delay_explosion() / 2);
 
-        for (const Pos& pos : positions)
+        for (const P& pos : positions)
         {
             if (config::is_tiles_mode())
             {
@@ -780,13 +780,13 @@ void draw_blast_at_cells(const std::vector<Pos>& positions, const Clr& clr)
     TRACE_FUNC_END;
 }
 
-void draw_blast_at_seen_cells(const std::vector<Pos>& positions, const Clr& clr)
+void draw_blast_at_seen_cells(const std::vector<P>& positions, const Clr& clr)
 {
     if (is_inited())
     {
-        std::vector<Pos> positions_with_vision;
+        std::vector<P> positions_with_vision;
 
-        for (const Pos& p : positions)
+        for (const P& p : positions)
         {
             if (map::cells[p.x][p.y].is_seen_by_player)
             {
@@ -805,7 +805,7 @@ void draw_blast_at_seen_actors(const std::vector<Actor*>& actors, const Clr& clr
 {
     if (is_inited())
     {
-        std::vector<Pos> positions;
+        std::vector<P> positions;
 
         for (Actor* const actor : actors)
         {
@@ -816,13 +816,13 @@ void draw_blast_at_seen_actors(const std::vector<Actor*>& actors, const Clr& clr
     }
 }
 
-void draw_tile(const Tile_id tile, const Panel panel, const Pos& pos, const Clr& clr,
+void draw_tile(const Tile_id tile, const Panel panel, const P& pos, const Clr& clr,
                const Clr& bg_clr)
 {
     if (is_inited())
     {
-        const Pos px_pos = px_pos_for_cell_in_panel(panel, pos);
-        const Pos cell_dims(config::cell_px_w(), config::cell_px_h());
+        const P px_pos = px_pos_for_cell_in_panel(panel, pos);
+        const P cell_dims(config::cell_px_w(), config::cell_px_h());
 
         draw_rectangle_solid(px_pos, cell_dims, bg_clr);
 
@@ -835,22 +835,22 @@ void draw_tile(const Tile_id tile, const Panel panel, const Pos& pos, const Clr&
     }
 }
 
-void draw_glyph(const char GLYPH, const Panel panel, const Pos& pos, const Clr& clr,
+void draw_glyph(const char GLYPH, const Panel panel, const P& pos, const Clr& clr,
                 const bool DRAW_BG_CLR, const Clr& bg_clr)
 {
     if (is_inited())
     {
-        const Pos px_pos = px_pos_for_cell_in_panel(panel, pos);
+        const P px_pos = px_pos_for_cell_in_panel(panel, pos);
         draw_glyph_at_px(GLYPH, px_pos, clr, DRAW_BG_CLR, bg_clr);
     }
 }
 
-void draw_text(const std::string& str, const Panel panel, const Pos& pos, const Clr& clr,
+void draw_text(const std::string& str, const Panel panel, const P& pos, const Clr& clr,
                const Clr& bg_clr)
 {
     if (is_inited())
     {
-        Pos px_pos = px_pos_for_cell_in_panel(panel, pos);
+        P px_pos = px_pos_for_cell_in_panel(panel, pos);
 
         if (px_pos.y < 0 || px_pos.y >= config::scr_px_h())
         {
@@ -895,7 +895,7 @@ void draw_text(const std::string& str, const Panel panel, const Pos& pos, const 
     }
 }
 
-int draw_text_centered(const std::string& str, const Panel panel, const Pos& pos,
+int draw_text_centered(const std::string& str, const Panel panel, const P& pos,
                        const Clr& clr, const Clr& bg_clr,
                        const bool IS_PIXEL_POS_ADJ_ALLOWED)
 {
@@ -908,14 +908,14 @@ int draw_text_centered(const std::string& str, const Panel panel, const Pos& pos
     const int LEN_HALF    = LEN / 2;
     const int X_POS_LEFT  = pos.x - LEN_HALF;
 
-    const Pos cell_dims(config::cell_px_w(), config::cell_px_h());
+    const P cell_dims(config::cell_px_w(), config::cell_px_h());
 
-    Pos px_pos = px_pos_for_cell_in_panel(panel, Pos(X_POS_LEFT, pos.y));
+    P px_pos = px_pos_for_cell_in_panel(panel, P(X_POS_LEFT, pos.y));
 
     if (IS_PIXEL_POS_ADJ_ALLOWED)
     {
         const int PIXEL_X_ADJ = LEN_HALF * 2 == LEN ? cell_dims.x / 2 : 0;
-        px_pos += Pos(PIXEL_X_ADJ, 0);
+        px_pos += P(PIXEL_X_ADJ, 0);
     }
 
     const int W_TOT_PIXEL = LEN * cell_dims.x;
@@ -951,19 +951,19 @@ void cover_panel(const Panel panel)
     {
     case Panel::char_lines:
     {
-        const Pos px_pos = px_pos_for_cell_in_panel(panel, Pos(0, 0));
-        cover_area_px(px_pos, Pos(SCREEN_PIXEL_W, config::char_lines_px_h()));
+        const P px_pos = px_pos_for_cell_in_panel(panel, P(0, 0));
+        cover_area_px(px_pos, P(SCREEN_PIXEL_W, config::char_lines_px_h()));
     }
     break;
 
     case Panel::log:
-        cover_area_px(Pos(0, 0), Pos(SCREEN_PIXEL_W, config::log_px_h()));
+        cover_area_px(P(0, 0), P(SCREEN_PIXEL_W, config::log_px_h()));
         break;
 
     case Panel::map:
     {
-        const Pos px_pos = px_pos_for_cell_in_panel(panel, Pos(0, 0));
-        cover_area_px(px_pos, Pos(SCREEN_PIXEL_W, config::map_px_h()));
+        const P px_pos = px_pos_for_cell_in_panel(panel, P(0, 0));
+        cover_area_px(px_pos, P(SCREEN_PIXEL_W, config::map_px_h()));
     }
     break;
 
@@ -978,36 +978,36 @@ void cover_area(const Panel panel, const Rect& area)
     cover_area(panel, area.p0, area.p1 - area.p0 + 1);
 }
 
-void cover_area(const Panel panel, const Pos& pos, const Pos& dims)
+void cover_area(const Panel panel, const P& pos, const P& dims)
 {
-    const Pos px_pos = px_pos_for_cell_in_panel(panel, pos);
-    const Pos cell_dims(config::cell_px_w(), config::cell_px_h());
+    const P px_pos = px_pos_for_cell_in_panel(panel, pos);
+    const P cell_dims(config::cell_px_w(), config::cell_px_h());
     cover_area_px(px_pos, dims * cell_dims);
 }
 
-void cover_area_px(const Pos& px_pos, const Pos& px_dims)
+void cover_area_px(const P& px_pos, const P& px_dims)
 {
     draw_rectangle_solid(px_pos, px_dims, clr_black);
 }
 
-void cover_cell_in_map(const Pos& pos)
+void cover_cell_in_map(const P& pos)
 {
-    const Pos cell_dims(config::cell_px_w(), config::cell_px_h());
-    Pos px_pos = px_pos_for_cell_in_panel(Panel::map, pos);
+    const P cell_dims(config::cell_px_w(), config::cell_px_h());
+    P px_pos = px_pos_for_cell_in_panel(Panel::map, pos);
     cover_area_px(px_pos, cell_dims);
 }
 
-void draw_line_hor(const Pos& px_pos, const int W, const Clr& clr)
+void draw_line_hor(const P& px_pos, const int W, const Clr& clr)
 {
-    draw_rectangle_solid(px_pos, Pos(W, 2), clr);
+    draw_rectangle_solid(px_pos, P(W, 2), clr);
 }
 
-void draw_line_ver(const Pos& px_pos, const int H, const Clr& clr)
+void draw_line_ver(const P& px_pos, const int H, const Clr& clr)
 {
-    draw_rectangle_solid(px_pos, Pos(1, H), clr);
+    draw_rectangle_solid(px_pos, P(1, H), clr);
 }
 
-void draw_rectangle_solid(const Pos& px_pos, const Pos& px_dims, const Clr& clr)
+void draw_rectangle_solid(const P& px_pos, const P& px_dims, const Clr& clr)
 {
     if (is_inited())
     {
@@ -1067,13 +1067,13 @@ void draw_box(const Rect& border, const Panel panel, const Clr& clr, const bool 
     {
         if (IS_TILES)
         {
-            draw_tile(Tile_id::popup_ver, panel, Pos(border.p0.x, y), clr, clr_black);
-            draw_tile(Tile_id::popup_ver, panel, Pos(border.p1.x, y), clr, clr_black);
+            draw_tile(Tile_id::popup_ver, panel, P(border.p0.x, y), clr, clr_black);
+            draw_tile(Tile_id::popup_ver, panel, P(border.p1.x, y), clr, clr_black);
         }
         else
         {
-            draw_glyph('|', panel, Pos(border.p0.x, y), clr, true, clr_black);
-            draw_glyph('|', panel, Pos(border.p1.x, y), clr, true, clr_black);
+            draw_glyph('|', panel, P(border.p0.x, y), clr, true, clr_black);
+            draw_glyph('|', panel, P(border.p1.x, y), clr, true, clr_black);
         }
     }
 
@@ -1085,17 +1085,17 @@ void draw_box(const Rect& border, const Panel panel, const Clr& clr, const bool 
     {
         if (IS_TILES)
         {
-            draw_tile(Tile_id::popup_hor, panel, Pos(x, border.p0.y), clr, clr_black);
-            draw_tile(Tile_id::popup_hor, panel, Pos(x, border.p1.y), clr, clr_black);
+            draw_tile(Tile_id::popup_hor, panel, P(x, border.p0.y), clr, clr_black);
+            draw_tile(Tile_id::popup_hor, panel, P(x, border.p1.y), clr, clr_black);
         }
         else
         {
-            draw_glyph('-', panel, Pos(x, border.p0.y), clr, true, clr_black);
-            draw_glyph('-', panel, Pos(x, border.p1.y), clr, true, clr_black);
+            draw_glyph('-', panel, P(x, border.p0.y), clr, true, clr_black);
+            draw_glyph('-', panel, P(x, border.p1.y), clr, true, clr_black);
         }
     }
 
-    const std::vector<Pos> corners
+    const std::vector<P> corners
     {
         {border.p0.x, border.p0.y}, //Top left
         {border.p1.x, border.p0.y}, //Top right
@@ -1129,7 +1129,7 @@ void draw_descr_box(const std::vector<Str_and_clr>& lines)
 
     const int MAX_W = DESCR_X1 - DESCR_X0 + 1;
 
-    Pos p(DESCR_X0, DESCR_Y0);
+    P p(DESCR_X0, DESCR_Y0);
 
     for (const auto& line : lines)
     {
@@ -1228,7 +1228,7 @@ void draw_map()
     //---------------- INSERT DEAD ACTORS INTO ARRAY
     for (Actor* actor : game_time::actors_)
     {
-        const Pos& p(actor->pos);
+        const P& p(actor->pos);
 
         if (
             actor->is_corpse()                      &&
@@ -1279,7 +1279,7 @@ void draw_map()
     //---------------- INSERT MOBILE FEATURES INTO ARRAY
     for (auto* mob : game_time::mobs_)
     {
-        const Pos& p            = mob->pos();
+        const P& p            = mob->pos();
         const Tile_id  mob_tile   = mob->tile();
         const char    mob_glyph  = mob->glyph();
 
@@ -1299,7 +1299,7 @@ void draw_map()
     {
         if (!actor->is_player() && actor->is_alive())
         {
-            const Pos& p = actor->pos;
+            const P& p = actor->pos;
 
             cur_render_data = &render_array[p.x][p.y];
 
@@ -1354,7 +1354,7 @@ void draw_map()
                 if (tmp_render_data.is_light_fade_allowed)
                 {
                     const int DIST_FROM_PLAYER =
-                        utils::king_dist(map::player->pos, Pos(x, y));
+                        utils::king_dist(map::player->pos, P(x, y));
 
                     if (DIST_FROM_PLAYER > 1)
                     {
@@ -1490,7 +1490,7 @@ void draw_map()
                 }
             }
 
-            const Pos pos(x, y);
+            const P pos(x, y);
 
             if (tmp_render_data.is_aware_of_mon_here)
             {
@@ -1530,7 +1530,7 @@ void draw_map()
     }
 
     //---------------- DRAW PLAYER CHARACTER
-    const Pos&  pos         = map::player->pos;
+    const P&  pos         = map::player->pos;
     Item*       item        = map::player->inv().item_in_slot(Slot_id::wpn);
     const bool  IS_GHOUL    = player_bon::bg() == Bg::ghoul;
 

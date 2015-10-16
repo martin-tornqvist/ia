@@ -97,7 +97,7 @@ namespace
 
 void reset_data(Feature_data_t& d)
 {
-    d.mk_obj = [](const Pos & p) {(void)p; return nullptr;};
+    d.mk_obj = [](const P & p) {(void)p; return nullptr;};
     d.id = Feature_id::END;
     d.glyph = ' ';
     d.tile = Tile_id::empty;
@@ -133,7 +133,7 @@ void init_data_list()
 
     //---------------------------------------------------------------------------
     d.id = Feature_id::floor;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Floor(p);
     };
@@ -144,7 +144,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::bridge;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Bridge(p);
     };
@@ -153,7 +153,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::wall;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Wall(p);
     };
@@ -173,7 +173,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::tree;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Tree(p);
     };
@@ -195,7 +195,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::grass;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Grass(p);
     };
@@ -206,7 +206,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::bush;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Bush(p);
     };
@@ -217,7 +217,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::stairs;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Stairs(p);
     };
@@ -232,7 +232,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::lever;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Lever(p);
     };
@@ -247,7 +247,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::brazier;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Brazier(p);
     };
@@ -266,7 +266,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::liquid_shallow;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Liquid_shallow(p);
     };
@@ -281,7 +281,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::liquid_deep;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Liquid_deep(p);
     };
@@ -296,7 +296,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::chasm;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Chasm(p);
     };
@@ -316,7 +316,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::gravestone;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Grave_stone(p);
     };
@@ -334,7 +334,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::church_bench;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Church_bench(p);
     };
@@ -354,7 +354,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::carpet;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Carpet(p);
     };
@@ -366,7 +366,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::rubble_high;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Rubble_high(p);
     };
@@ -387,7 +387,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::rubble_low;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Rubble_low(p);
     };
@@ -402,7 +402,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::bones;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Bones(p);
     };
@@ -417,7 +417,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::statue;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Statue(p);
     };
@@ -438,7 +438,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::cocoon;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Cocoon(p);
     };
@@ -457,7 +457,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::chest;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Chest(p);
     };
@@ -475,7 +475,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::cabinet;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Cabinet(p);
     };
@@ -496,7 +496,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::fountain;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Fountain(p);
     };
@@ -517,7 +517,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::pillar;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Pillar(p);
     };
@@ -538,7 +538,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::monolith;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Monolith(p);
     };
@@ -559,7 +559,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::stalagmite;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Stalagmite(p);
     };
@@ -580,7 +580,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::altar;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Altar(p);
     };
@@ -600,7 +600,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::tomb;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Tomb(p);
     };
@@ -622,7 +622,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::door;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Door(p);
     };
@@ -634,7 +634,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::trap;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Trap(p);
     };
@@ -643,7 +643,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::lit_dynamite;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Lit_dynamite(p);
     };
@@ -657,7 +657,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::lit_flare;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Lit_flare(p);
     };
@@ -667,7 +667,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::smoke;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Smoke(p);
     };
@@ -678,7 +678,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::event_wall_crumble;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Event_wall_crumble(p);
     };
@@ -686,7 +686,7 @@ void init_data_list()
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::event_rats_in_the_walls_discovery;
-    d.mk_obj = [](const Pos & p)
+    d.mk_obj = [](const P & p)
     {
         return new Event_rats_in_the_walls_discovery(p);
     };

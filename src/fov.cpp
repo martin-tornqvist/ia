@@ -13,26 +13,26 @@
 namespace fov
 {
 
-Rect get_fov_rect(const Pos& p)
+Rect get_fov_rect(const P& p)
 {
     const int R = FOV_STD_RADI_INT;
 
-    const Pos p0(std::max(0, p.x - R),
-                 std::max(0, p.y - R));
+    const P p0(std::max(0, p.x - R),
+               std::max(0, p.y - R));
 
-    const Pos p1(std::min(MAP_W - 1, p.x + R),
-                 std::min(MAP_H - 1, p.y + R));
+    const P p1(std::min(MAP_W - 1, p.x + R),
+               std::min(MAP_H - 1, p.y + R));
 
     return Rect(p0, p1);
 }
 
-bool is_in_fov_range(const Pos& p0, const Pos& p1)
+bool is_in_fov_range(const P& p0, const P& p1)
 {
     return utils::king_dist(p0, p1) <= FOV_STD_RADI_INT;
 }
 
-Los_result check_cell(const Pos& p0,
-                      const Pos& p1,
+Los_result check_cell(const P& p0,
+                      const P& p1,
                       const bool hard_blocked[MAP_W][MAP_H])
 {
     Los_result los_result;
@@ -46,9 +46,9 @@ Los_result check_cell(const Pos& p0,
         return los_result;
     }
 
-    const Pos delta(p1 - p0);
+    const P delta(p1 - p0);
 
-    const std::vector<Pos>* path_deltas_ptr =
+    const std::vector<P>* path_deltas_ptr =
         line_calc::fov_delta_line(delta, FOV_STD_RADI_DB);
 
     if (!path_deltas_ptr)
@@ -57,15 +57,15 @@ Los_result check_cell(const Pos& p0,
         return los_result;
     }
 
-    const std::vector<Pos>& path_deltas = *path_deltas_ptr;
+    const std::vector<P>& path_deltas = *path_deltas_ptr;
 
     const bool TGT_IS_LGT = map::cells[p1.x][p1.y].is_lit;
 
     //Ok, target is in range and we have a line - let's go
     los_result.is_blocked_hard = false;
 
-    Pos cur_p;
-    Pos pre_p;
+    P cur_p;
+    P pre_p;
 
     const size_t PATH_SIZE = path_deltas.size();
 
@@ -103,7 +103,7 @@ Los_result check_cell(const Pos& p0,
     return los_result;
 }
 
-void run(const Pos& p0,
+void run(const P& p0,
          const bool hard_blocked[MAP_W][MAP_H],
          Los_result out[MAP_W][MAP_H])
 {

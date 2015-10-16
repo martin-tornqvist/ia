@@ -33,10 +33,10 @@ enum class Trap_placement_valid {no, yes};
 class Trap: public Rigid
 {
 public:
-    Trap(const Pos& feature_pos, const Rigid* const mimic_feature, Trap_id id);
+    Trap(const P& feature_pos, const Rigid* const mimic_feature, Trap_id id);
 
     //Spawn-by-id compliant ctor (do not use for normal cases):
-    Trap(const Pos& feature_pos) :
+    Trap(const P& feature_pos) :
         Rigid                   (feature_pos),
         mimic_feature_          (nullptr),
         is_hidden_              (false),
@@ -131,7 +131,7 @@ class Trap_impl
 {
 protected:
     friend class Trap;
-    Trap_impl(Pos pos, Trap_id trap_type, const Trap* const base_trap) :
+    Trap_impl(P pos, Trap_id trap_type, const Trap* const base_trap) :
         pos_        (pos),
         trap_type_  (trap_type),
         base_trap_  (base_trap) {}
@@ -182,10 +182,10 @@ protected:
 
     virtual std::string disarm_fail_msg() const = 0;
 
-    Pos pos_;
+    P pos_;
     Trap_id trap_type_;
 
-    Pos dart_origin_pos_;
+    P dart_origin_pos_;
 
     const Trap* const base_trap_;
 };
@@ -195,7 +195,7 @@ class Mech_trap_impl : public Trap_impl
 protected:
     friend class Trap;
 
-    Mech_trap_impl(Pos pos, Trap_id trap_type, const Trap* const base_trap) :
+    Mech_trap_impl(P pos, Trap_id trap_type, const Trap* const base_trap) :
         Trap_impl(pos, trap_type, base_trap) {}
 
     virtual ~Mech_trap_impl() {}
@@ -236,7 +236,7 @@ class Magic_trap_impl : public Trap_impl
 protected:
     friend class Trap;
 
-    Magic_trap_impl(Pos pos, Trap_id trap_type, const Trap* const base_trap) :
+    Magic_trap_impl(P pos, Trap_id trap_type, const Trap* const base_trap) :
         Trap_impl(pos, trap_type, base_trap) {}
 
     virtual ~Magic_trap_impl() {}
@@ -277,7 +277,7 @@ class Trap_dart: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_dart(Pos pos, const Trap* const base_trap);
+    Trap_dart(P pos, const Trap* const base_trap);
 
     void trigger();
 
@@ -290,7 +290,7 @@ private:
 
     bool is_poisoned_;
 
-    Pos dart_origin_;
+    P dart_origin_;
 
     bool is_dart_origin_destroyed_;
 };
@@ -300,7 +300,7 @@ class Trap_spear: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_spear(Pos pos, const Trap* const base_trap);
+    Trap_spear(P pos, const Trap* const base_trap);
 
     void trigger();
 
@@ -313,7 +313,7 @@ private:
 
     bool is_poisoned_;
 
-    Pos spear_origin_;
+    P spear_origin_;
 
     bool is_spear_origin_destroyed_;
 };
@@ -323,7 +323,7 @@ class Trap_gas_confusion: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_gas_confusion(Pos pos, const Trap* const base_trap) :
+    Trap_gas_confusion(P pos, const Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::gas_confusion, base_trap) {}
 
     void trigger();
@@ -339,7 +339,7 @@ class Trap_gas_paralyzation: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_gas_paralyzation(Pos pos, const Trap* const base_trap) :
+    Trap_gas_paralyzation(P pos, const Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::gas_paralyze, base_trap) {}
 
     void trigger();
@@ -355,7 +355,7 @@ class Trap_gas_fear: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_gas_fear(Pos pos, const Trap* const base_trap) :
+    Trap_gas_fear(P pos, const Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::gas_fear, base_trap) {}
 
     void trigger();
@@ -371,7 +371,7 @@ class Trap_blinding_flash: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_blinding_flash(Pos pos, const Trap* const base_trap) :
+    Trap_blinding_flash(P pos, const Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::blinding, base_trap) {}
 
     void trigger();
@@ -387,7 +387,7 @@ class Trap_smoke: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_smoke(Pos pos, const Trap* const base_trap) :
+    Trap_smoke(P pos, const Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::smoke, base_trap) {}
 
     void trigger();
@@ -403,7 +403,7 @@ class Trap_fire: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_fire(Pos pos, const Trap* const base_trap) :
+    Trap_fire(P pos, const Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::smoke, base_trap) {}
 
     void trigger();
@@ -419,7 +419,7 @@ class Trap_alarm: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_alarm(Pos pos, const Trap* const base_trap) :
+    Trap_alarm(P pos, const Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::alarm, base_trap) {}
 
     void trigger();
@@ -435,7 +435,7 @@ class Trap_teleport: public Magic_trap_impl
 private:
     friend class Trap;
 
-    Trap_teleport(Pos pos, const Trap* const base_trap) :
+    Trap_teleport(P pos, const Trap* const base_trap) :
         Magic_trap_impl(pos, Trap_id::teleport, base_trap) {}
 
     void trigger();
@@ -451,7 +451,7 @@ class Trap_summon_mon: public Magic_trap_impl
 private:
     friend class Trap;
 
-    Trap_summon_mon(Pos pos, const Trap* const base_trap) :
+    Trap_summon_mon(P pos, const Trap* const base_trap) :
         Magic_trap_impl(pos, Trap_id::summon, base_trap) {}
 
     void trigger();
@@ -467,7 +467,7 @@ class Trap_spi_drain: public Magic_trap_impl
 private:
     friend class Trap;
 
-    Trap_spi_drain(Pos pos, const Trap* const base_trap) :
+    Trap_spi_drain(P pos, const Trap* const base_trap) :
         Magic_trap_impl(pos, Trap_id::summon, base_trap) {}
 
     void trigger();
@@ -491,7 +491,7 @@ public:
 private:
     friend class Trap;
 
-    Trap_web(Pos pos, const Trap* const base_trap) :
+    Trap_web(P pos, const Trap* const base_trap) :
         Mech_trap_impl      (pos, Trap_id::web, base_trap),
         is_holding_actor_   (false) {}
 

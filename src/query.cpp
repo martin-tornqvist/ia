@@ -88,7 +88,7 @@ Key_data letter(const bool ACCEPT_ENTER)
     return Key_data();
 }
 
-int number(const Pos& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS,
+int number(const P& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS,
            const int DEFAULT, const bool CANCEL_RETURNS_DEFAULT)
 {
     if (!is_inited_ || config::is_bot_playing())
@@ -97,7 +97,7 @@ int number(const Pos& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS
     }
 
     int ret_num = max(MIN, DEFAULT);
-    render::cover_area(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
+    render::cover_area(Panel::screen, pos, P(MAX_NR_DIGITS + 1, 1));
     const string str = (ret_num == 0 ? "" : to_str(ret_num)) + "_";
     render::draw_text(str, Panel::screen, pos, clr);
     render::update_screen();
@@ -129,7 +129,7 @@ int number(const Pos& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS
         if (d.sdl_key == SDLK_BACKSPACE)
         {
             ret_num = ret_num / 10;
-            render::cover_area(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
+            render::cover_area(Panel::screen, pos, P(MAX_NR_DIGITS + 1, 1));
             render::draw_text((ret_num == 0 ? "" : to_str(ret_num)) + "_",
                               Panel::screen, pos, clr);
             render::update_screen();
@@ -140,7 +140,7 @@ int number(const Pos& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS
         {
             int cur_digit = d.key - '0';
             ret_num = max(MIN, ret_num * 10 + cur_digit);
-            render::cover_area(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
+            render::cover_area(Panel::screen, pos, P(MAX_NR_DIGITS + 1, 1));
             render::draw_text((ret_num == 0 ? "" : to_str(ret_num)) + "_",
                               Panel::screen, pos, clr);
             render::update_screen();

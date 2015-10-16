@@ -90,7 +90,7 @@ void Smoke::on_new_turn()
                 const auto alerts = IS_PLAYER ? Alerts_mon::yes : Alerts_mon::no;
 
                 snd_emit::run(Snd(snd_msg, Sfx_id::END, Ignore_msg_if_origin_seen::yes,
-                                       actor->pos, actor, Snd_vol::low, alerts));
+                                  actor->pos, actor, Snd_vol::low, alerts));
 
                 actor->hit(1, Dmg_type::pure);
             }
@@ -127,7 +127,7 @@ void Lit_dynamite::on_new_turn()
     {
         const int D = player_bon::traits[size_t(Trait::dem_expert)] ? 1 : 0;
 
-        const Pos p(pos_);
+        const P p(pos_);
 
         //Removing the dynamite before the explosion, so it won't be rendered after the
         //explosion (could happen for example if there are "more" prompts).
@@ -162,8 +162,8 @@ void Lit_flare::add_light(bool light[MAP_W][MAP_H]) const
 {
     const int R = FOV_STD_RADI_INT; //light_radius();
 
-    Pos p0(std::max(0,         pos_.x - R),  std::max(0,          pos_.y - R));
-    Pos p1(std::min(MAP_W - 1, pos_.x + R),  std::min(MAP_H - 1,  pos_.y + R));
+    P p0(std::max(0,         pos_.x - R),  std::max(0,          pos_.y - R));
+    P p1(std::min(MAP_W - 1, pos_.x + R),  std::min(MAP_H - 1,  pos_.y + R));
 
     bool hard_blocked[MAP_W][MAP_H];
 

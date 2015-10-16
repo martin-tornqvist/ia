@@ -223,15 +223,15 @@ void draw_interface()
 
     const int X_LABEL = 3;
 
-    render::draw_text(decoration_line, Panel::screen, Pos(0, 0), clr_gray);
+    render::draw_text(decoration_line, Panel::screen, P(0, 0), clr_gray);
 
     render::draw_text(" Displaying character description ", Panel::screen,
-                      Pos(X_LABEL, 0), clr_white);
+                      P(X_LABEL, 0), clr_white);
 
-    render::draw_text(decoration_line, Panel::screen, Pos(0, SCREEN_H - 1),
+    render::draw_text(decoration_line, Panel::screen, P(0, SCREEN_H - 1),
                       clr_gray);
 
-    render::draw_text(info_scr_cmd_info, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clr_white);
+    render::draw_text(info_scr_cmd_info, Panel::screen, P(X_LABEL, SCREEN_H - 1), clr_white);
 }
 
 } //namespace
@@ -256,7 +256,7 @@ void run()
         for (int i = top_nr; i <= btm_nr; ++i)
         {
             const Str_and_clr& line = lines_[i];
-            render::draw_text(line.str , Panel::screen, Pos(0, y_pos++), line.clr);
+            render::draw_text(line.str , Panel::screen, P(0, y_pos++), line.clr);
         }
 
         render::update_screen();

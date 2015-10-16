@@ -80,14 +80,14 @@ bool try_cast_random_spell(Mon& mon)
     return false;
 }
 
-bool handle_closed_blocking_door(Mon& mon, std::vector<Pos> path)
+bool handle_closed_blocking_door(Mon& mon, std::vector<P> path)
 {
     if (!mon.is_alive() || path.empty())
     {
         return false;
     }
 
-    const Pos& p = path.back();
+    const P& p = path.back();
     Feature* const f = map::cells[p.x][p.y].rigid;
 
     if (f->id() == Feature_id::door)
@@ -131,12 +131,12 @@ namespace
 {
 
 //Check if acting monster is on a line between player and other monster
-bool check_if_blocking_mon(const Pos& pos, Mon& other)
+bool check_if_blocking_mon(const P& pos, Mon& other)
 {
-    std::vector<Pos> line;
+    std::vector<P> line;
     line_calc::calc_new_line(other.pos, map::player->pos, true, 9999, false, line);
 
-    for (const Pos& pos_in_line : line)
+    for (const P& pos_in_line : line)
     {
         if (pos_in_line == pos)
         {
@@ -149,7 +149,7 @@ bool check_if_blocking_mon(const Pos& pos, Mon& other)
 
 //Returns all free positions around the acting monster that is further
 //from the player than the monster's current position
-void move_bucket(Mon& self, std::vector<Pos>& dirs_to_mk)
+void move_bucket(Mon& self, std::vector<P>& dirs_to_mk)
 {
 
     dirs_to_mk.clear();
@@ -175,7 +175,7 @@ void move_bucket(Mon& self, std::vector<Pos>& dirs_to_mk)
 
                 if (DIST_NEW <= DIST_CUR)
                 {
-                    if (!blocked[NEW_X][NEW_Y]) {dirs_to_mk.push_back(Pos(NEW_X, NEW_Y));}
+                    if (!blocked[NEW_X][NEW_Y]) {dirs_to_mk.push_back(P(NEW_X, NEW_Y));}
                 }
             }
         }
@@ -240,7 +240,7 @@ bool make_room_for_friend(Mon& mon)
                         if (check_if_blocking_mon(mon.pos, *other) || is_other_adj_with_no_los)
                         {
                             // Get a list of neighbouring free cells
-                            std::vector<Pos> pos_bucket;
+                            std::vector<P> pos_bucket;
                             move_bucket(mon, pos_bucket);
 
                             //Sort the list by closeness to player
@@ -275,7 +275,7 @@ bool make_room_for_friend(Mon& mon)
 
                                 if (is_good_candidate_found)
                                 {
-                                    const Pos offset = tgt_pos - mon.pos;
+                                    const P offset = tgt_pos - mon.pos;
                                     mon.move(dir_utils::dir(offset));
                                     return true;
                                 }
@@ -299,37 +299,37 @@ Dir dir_to_rnd_adj_free_cell(Mon& mon)
     bool blocked[MAP_W][MAP_H];
     cell_check::Blocks_actor cellcheck(mon, true);
 
-    const Pos& mon_pos = mon.pos;
+    const P& mon_pos = mon.pos;
 
     for (int dx = -1; dx <= 1; ++dx)
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const Pos p(mon_pos.x + dx, mon_pos.y + dy);
+            const P p(mon_pos.x + dx, mon_pos.y + dy);
             blocked[p.x][p.y] = cellcheck.check(map::cells[p.x][p.y]);
         }
     }
 
     for (Actor* actor : game_time::actors_)
     {
-        const Pos& p = actor->pos;
+        const P& p = actor->pos;
         blocked[p.x][p.y] = true;
     }
 
     for (Mob* mob : game_time::mobs_)
     {
-        const Pos& p = mob->pos();
+        const P& p = mob->pos();
         blocked[p.x][p.y] = cellcheck.check(*mob);
     }
 
-    const Rect area_allowed(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2));
+    const Rect area_allowed(P(1, 1), P(MAP_W - 2, MAP_H - 2));
 
     //First, try the same direction as last travelled
     const Dir last_dir_travelled = mon.last_dir_moved_;
 
     if (last_dir_travelled != Dir::center && last_dir_travelled != Dir::END)
     {
-        const Pos tgt_cell(mon_pos + dir_utils::offset(last_dir_travelled));
+        const P tgt_cell(mon_pos + dir_utils::offset(last_dir_travelled));
 
         if (
             !blocked[tgt_cell.x][tgt_cell.y] &&
@@ -349,8 +349,8 @@ Dir dir_to_rnd_adj_free_cell(Mon& mon)
         {
             if (dx != 0 || dy != 0)
             {
-                const Pos offset(dx, dy);
-                const Pos tgt_cell(mon_pos + offset);
+                const P offset(dx, dy);
+                const P tgt_cell(mon_pos + offset);
 
                 if (
                     !blocked[tgt_cell.x][tgt_cell.y] &&
@@ -406,10 +406,10 @@ bool move_to_tgt_simple(Mon& mon)
 
     if (mon.aware_counter_ > 0 || map::player->is_leader_of(&mon))
     {
-        const Pos offset  = mon.tgt_->pos - mon.pos;
-        const Pos signs   = offset.signs();
+        const P offset  = mon.tgt_->pos - mon.pos;
+        const P signs   = offset.signs();
 
-        const Pos new_pos(mon.pos + signs);
+        const P new_pos(mon.pos + signs);
 
         const bool IS_BLOCKED = map_parse::cell(cell_check::Blocks_actor(mon, true), new_pos);
 
@@ -423,13 +423,13 @@ bool move_to_tgt_simple(Mon& mon)
     return false;
 }
 
-bool step_path(Mon& mon, std::vector<Pos>& path)
+bool step_path(Mon& mon, std::vector<P>& path)
 {
     if (mon.is_alive())
     {
         if (!path.empty())
         {
-            const Pos delta = path.back() - mon.pos;
+            const P delta = path.back() - mon.pos;
             mon.move(dir_utils::dir(delta));
             return true;
         }
@@ -438,7 +438,7 @@ bool step_path(Mon& mon, std::vector<Pos>& path)
     return false;
 }
 
-bool step_to_lair_if_los(Mon& mon, const Pos& lair_p)
+bool step_to_lair_if_los(Mon& mon, const P& lair_p)
 {
     if (mon.is_alive())
     {
@@ -450,12 +450,12 @@ bool step_to_lair_if_los(Mon& mon, const Pos& lair_p)
 
         if (!los.is_blocked_hard)
         {
-            Pos delta = lair_p - mon.pos;
+            P delta = lair_p - mon.pos;
 
             delta.x = delta.x == 0 ? 0 : (delta.x > 0 ? 1 : -1);
             delta.y = delta.y == 0 ? 0 : (delta.y > 0 ? 1 : -1);
 
-            const Pos new_pos = mon.pos + delta;
+            const P new_pos = mon.pos + delta;
 
             map_parse::run(cell_check::Blocks_actor(mon, true), blocked);
 
@@ -536,8 +536,8 @@ bool look_become_player_aware(Mon& mon)
     return false;
 }
 
-void try_set_path_to_lair_if_no_los(Mon& mon, std::vector<Pos>& path,
-                                    const Pos& lair_p)
+void try_set_path_to_lair_if_no_los(Mon& mon, std::vector<P>& path,
+                                    const P& lair_p)
 {
     if (mon.is_alive())
     {
@@ -567,7 +567,7 @@ void try_set_path_to_lair_if_no_los(Mon& mon, std::vector<Pos>& path,
     path.clear();
 }
 
-void try_set_path_to_leader(Mon& mon, std::vector<Pos>& path)
+void try_set_path_to_leader(Mon& mon, std::vector<P>& path)
 {
     if (mon.is_alive())
     {
@@ -606,7 +606,7 @@ void try_set_path_to_leader(Mon& mon, std::vector<Pos>& path)
     path.clear();
 }
 
-void try_set_path_to_player(Mon& mon, std::vector<Pos>& path)
+void try_set_path_to_player(Mon& mon, std::vector<P>& path)
 {
     if (!mon.is_alive() || mon.aware_counter_ <= 0)
     {
@@ -660,7 +660,7 @@ void try_set_path_to_player(Mon& mon, std::vector<Pos>& path)
     //LOS of an invisible player, they should not approach further.
     //This creates a pretty cool effect, where monsters appear a bit confused that they cannot see
     //anyone when they should have come into sight.
-    const Pos& player_pos = map::player->pos;
+    const P& player_pos = map::player->pos;
 
     Los_result los_result = fov::check_cell(mon.pos, player_pos, blocked);
 

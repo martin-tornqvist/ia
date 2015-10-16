@@ -62,22 +62,22 @@ void run()
 
     const int X_LABEL = 3;
 
-    render::draw_text(decoration_line, Panel::screen, Pos(0, 0), clr_gray);
+    render::draw_text(decoration_line, Panel::screen, P(0, 0), clr_gray);
 
     render::draw_text(" Displaying credits.txt ", Panel::screen,
-                      Pos(X_LABEL, 0), clr_gray);
+                      P(X_LABEL, 0), clr_gray);
 
-    render::draw_text(decoration_line, Panel::screen, Pos(0, SCREEN_H - 1),
+    render::draw_text(decoration_line, Panel::screen, P(0, SCREEN_H - 1),
                       clr_gray);
 
     render::draw_text(" [space/esc] to exit ", Panel::screen,
-                      Pos(X_LABEL, SCREEN_H - 1), clr_gray);
+                      P(X_LABEL, SCREEN_H - 1), clr_gray);
 
     int y_pos = 1;
 
     for (string& line : lines_)
     {
-        render::draw_text(line, Panel::screen, Pos(0, y_pos++), clr_white);
+        render::draw_text(line, Panel::screen, P(0, y_pos++), clr_white);
     }
 
     render::update_screen();

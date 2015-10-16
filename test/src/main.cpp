@@ -40,7 +40,7 @@ struct Basic_fixture
     {
         init::init_game();
         init::init_session();
-        map::player->pos = Pos(1, 1);
+        map::player->pos = P(1, 1);
         map::reset_map(); //Because map generation is not run
     }
 
@@ -119,67 +119,67 @@ TEST(constrain_val_in_range)
 
 TEST(calculate_distances)
 {
-    CHECK_EQUAL(utils::king_dist(Pos(1, 2), Pos(2, 3)), 1);
-    CHECK_EQUAL(utils::king_dist(Pos(1, 2), Pos(2, 4)), 2);
-    CHECK_EQUAL(utils::king_dist(Pos(1, 2), Pos(1, 2)), 0);
-    CHECK_EQUAL(utils::king_dist(Pos(10, 3), Pos(1, 4)), 9);
+    CHECK_EQUAL(utils::king_dist(P(1, 2), P(2, 3)), 1);
+    CHECK_EQUAL(utils::king_dist(P(1, 2), P(2, 4)), 2);
+    CHECK_EQUAL(utils::king_dist(P(1, 2), P(1, 2)), 0);
+    CHECK_EQUAL(utils::king_dist(P(10, 3), P(1, 4)), 9);
 }
 
 TEST(directions)
 {
     const int X0 = 20;
     const int Y0 = 20;
-    const Pos from_pos(X0, Y0);
+    const P from_pos(X0, Y0);
     std::string str = "";
-    dir_utils::compass_dir_name(from_pos, Pos(X0 + 1, Y0), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 + 1, Y0), str);
     CHECK_EQUAL("E", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0 + 1, Y0 + 1), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 + 1, Y0 + 1), str);
     CHECK_EQUAL("SE", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0    , Y0 + 1), str);
+    dir_utils::compass_dir_name(from_pos, P(X0    , Y0 + 1), str);
     CHECK_EQUAL("S", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0 - 1, Y0 + 1), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 - 1, Y0 + 1), str);
     CHECK_EQUAL("SW", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0 - 1, Y0), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 - 1, Y0), str);
     CHECK_EQUAL("W", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0 - 1, Y0 - 1), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 - 1, Y0 - 1), str);
     CHECK_EQUAL("NW", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0    , Y0 - 1), str);
+    dir_utils::compass_dir_name(from_pos, P(X0    , Y0 - 1), str);
     CHECK_EQUAL("N", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0 + 1, Y0 - 1), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 + 1, Y0 - 1), str);
     CHECK_EQUAL("NE", str);
 
-    dir_utils::compass_dir_name(from_pos, Pos(X0 + 3, Y0 + 1), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 + 3, Y0 + 1), str);
     CHECK_EQUAL("E", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0 + 2, Y0 + 3), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 + 2, Y0 + 3), str);
     CHECK_EQUAL("SE", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0 + 1, Y0 + 3), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 + 1, Y0 + 3), str);
     CHECK_EQUAL("S", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0 - 3, Y0 + 2), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 - 3, Y0 + 2), str);
     CHECK_EQUAL("SW", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0 - 3, Y0 + 1), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 - 3, Y0 + 1), str);
     CHECK_EQUAL("W", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0 - 3, Y0 - 2), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 - 3, Y0 - 2), str);
     CHECK_EQUAL("NW", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0 + 1, Y0 - 3), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 + 1, Y0 - 3), str);
     CHECK_EQUAL("N", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0 + 3, Y0 - 2), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 + 3, Y0 - 2), str);
     CHECK_EQUAL("NE", str);
 
-    dir_utils::compass_dir_name(from_pos, Pos(X0 + 10000, Y0), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 + 10000, Y0), str);
     CHECK_EQUAL("E", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0 + 10000, Y0 + 10000), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 + 10000, Y0 + 10000), str);
     CHECK_EQUAL("SE", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0        , Y0 + 10000), str);
+    dir_utils::compass_dir_name(from_pos, P(X0        , Y0 + 10000), str);
     CHECK_EQUAL("S", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0 - 10000, Y0 + 10000), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 - 10000, Y0 + 10000), str);
     CHECK_EQUAL("SW", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0 - 10000, Y0), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 - 10000, Y0), str);
     CHECK_EQUAL("W", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0 - 10000, Y0 - 10000), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 - 10000, Y0 - 10000), str);
     CHECK_EQUAL("NW", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0        , Y0 - 10000), str);
+    dir_utils::compass_dir_name(from_pos, P(X0        , Y0 - 10000), str);
     CHECK_EQUAL("N", str);
-    dir_utils::compass_dir_name(from_pos, Pos(X0 + 10000, Y0 - 10000), str);
+    dir_utils::compass_dir_name(from_pos, P(X0 + 10000, Y0 - 10000), str);
     CHECK_EQUAL("NE", str);
 }
 
@@ -237,120 +237,120 @@ TEST(format_text)
 
 TEST_FIXTURE(Basic_fixture, line_calculation)
 {
-    Pos origin(0, 0);
-    std::vector<Pos> line;
+    P origin(0, 0);
+    std::vector<P> line;
 
-    line_calc::calc_new_line(origin, Pos(3, 0), true, 999, true, line);
+    line_calc::calc_new_line(origin, P(3, 0), true, 999, true, line);
     CHECK(line.size() == 4);
     CHECK(line[0] == origin);
-    CHECK(line[1] == Pos(1, 0));
-    CHECK(line[2] == Pos(2, 0));
-    CHECK(line[3] == Pos(3, 0));
+    CHECK(line[1] == P(1, 0));
+    CHECK(line[2] == P(2, 0));
+    CHECK(line[3] == P(3, 0));
 
-    line_calc::calc_new_line(origin, Pos(-3, 0), true, 999, true, line);
+    line_calc::calc_new_line(origin, P(-3, 0), true, 999, true, line);
     CHECK(line.size() == 4);
     CHECK(line[0] == origin);
-    CHECK(line[1] == Pos(-1, 0));
-    CHECK(line[2] == Pos(-2, 0));
-    CHECK(line[3] == Pos(-3, 0));
+    CHECK(line[1] == P(-1, 0));
+    CHECK(line[2] == P(-2, 0));
+    CHECK(line[3] == P(-3, 0));
 
-    line_calc::calc_new_line(origin, Pos(0, 3), true, 999, true, line);
+    line_calc::calc_new_line(origin, P(0, 3), true, 999, true, line);
     CHECK(line.size() == 4);
     CHECK(line[0] == origin);
-    CHECK(line[1] == Pos(0, 1));
-    CHECK(line[2] == Pos(0, 2));
-    CHECK(line[3] == Pos(0, 3));
+    CHECK(line[1] == P(0, 1));
+    CHECK(line[2] == P(0, 2));
+    CHECK(line[3] == P(0, 3));
 
-    line_calc::calc_new_line(origin, Pos(0, -3), true, 999, true, line);
+    line_calc::calc_new_line(origin, P(0, -3), true, 999, true, line);
     CHECK(line.size() == 4);
     CHECK(line[0] == origin);
-    CHECK(line[1] == Pos(0, -1));
-    CHECK(line[2] == Pos(0, -2));
-    CHECK(line[3] == Pos(0, -3));
+    CHECK(line[1] == P(0, -1));
+    CHECK(line[2] == P(0, -2));
+    CHECK(line[3] == P(0, -3));
 
-    line_calc::calc_new_line(origin, Pos(3, 3), true, 999, true, line);
+    line_calc::calc_new_line(origin, P(3, 3), true, 999, true, line);
     CHECK(line.size() == 4);
     CHECK(line[0] == origin);
-    CHECK(line[1] == Pos(1, 1));
-    CHECK(line[2] == Pos(2, 2));
-    CHECK(line[3] == Pos(3, 3));
+    CHECK(line[1] == P(1, 1));
+    CHECK(line[2] == P(2, 2));
+    CHECK(line[3] == P(3, 3));
 
-    line_calc::calc_new_line(Pos(9, 9), Pos(6, 12), true, 999, true, line);
+    line_calc::calc_new_line(P(9, 9), P(6, 12), true, 999, true, line);
     CHECK(line.size() == 4);
-    CHECK(line[0] == Pos(9, 9));
-    CHECK(line[1] == Pos(8, 10));
-    CHECK(line[2] == Pos(7, 11));
-    CHECK(line[3] == Pos(6, 12));
+    CHECK(line[0] == P(9, 9));
+    CHECK(line[1] == P(8, 10));
+    CHECK(line[2] == P(7, 11));
+    CHECK(line[3] == P(6, 12));
 
-    line_calc::calc_new_line(origin, Pos(-3, 3), true, 999, true, line);
-    CHECK(line.size() == 4);
-    CHECK(line[0] == origin);
-    CHECK(line[1] == Pos(-1, 1));
-    CHECK(line[2] == Pos(-2, 2));
-    CHECK(line[3] == Pos(-3, 3));
-
-    line_calc::calc_new_line(origin, Pos(3, -3), true, 999, true, line);
+    line_calc::calc_new_line(origin, P(-3, 3), true, 999, true, line);
     CHECK(line.size() == 4);
     CHECK(line[0] == origin);
-    CHECK(line[1] == Pos(1, -1));
-    CHECK(line[2] == Pos(2, -2));
-    CHECK(line[3] == Pos(3, -3));
+    CHECK(line[1] == P(-1, 1));
+    CHECK(line[2] == P(-2, 2));
+    CHECK(line[3] == P(-3, 3));
 
-    line_calc::calc_new_line(origin, Pos(-3, -3), true, 999, true, line);
+    line_calc::calc_new_line(origin, P(3, -3), true, 999, true, line);
     CHECK(line.size() == 4);
     CHECK(line[0] == origin);
-    CHECK(line[1] == Pos(-1, -1));
-    CHECK(line[2] == Pos(-2, -2));
-    CHECK(line[3] == Pos(-3, -3));
+    CHECK(line[1] == P(1, -1));
+    CHECK(line[2] == P(2, -2));
+    CHECK(line[3] == P(3, -3));
+
+    line_calc::calc_new_line(origin, P(-3, -3), true, 999, true, line);
+    CHECK(line.size() == 4);
+    CHECK(line[0] == origin);
+    CHECK(line[1] == P(-1, -1));
+    CHECK(line[2] == P(-2, -2));
+    CHECK(line[3] == P(-3, -3));
 
     //Test disallowing outside map
-    line_calc::calc_new_line(Pos(1, 0), Pos(-9, 0), true, 999, false, line);
+    line_calc::calc_new_line(P(1, 0), P(-9, 0), true, 999, false, line);
     CHECK(line.size() == 2);
-    CHECK(line[0] == Pos(1, 0));
-    CHECK(line[1] == Pos(0, 0));
+    CHECK(line[0] == P(1, 0));
+    CHECK(line[1] == P(0, 0));
 
     //Test travel limit parameter
-    line_calc::calc_new_line(origin, Pos(20, 0), true, 2, true, line);
+    line_calc::calc_new_line(origin, P(20, 0), true, 2, true, line);
     CHECK(line.size() == 3);
     CHECK(line[0] == origin);
-    CHECK(line[1] == Pos(1, 0));
-    CHECK(line[2] == Pos(2, 0));
+    CHECK(line[1] == P(1, 0));
+    CHECK(line[2] == P(2, 0));
 
     //Test precalculated FOV line offsets
-    const std::vector<Pos>* delta_line = line_calc::fov_delta_line(Pos(3, 3), FOV_STD_RADI_DB);
+    const std::vector<P>* delta_line = line_calc::fov_delta_line(P(3, 3), FOV_STD_RADI_DB);
     CHECK(delta_line->size() == 4);
-    CHECK(delta_line->at(0) == Pos(0, 0));
-    CHECK(delta_line->at(1) == Pos(1, 1));
-    CHECK(delta_line->at(2) == Pos(2, 2));
-    CHECK(delta_line->at(3) == Pos(3, 3));
+    CHECK(delta_line->at(0) == P(0, 0));
+    CHECK(delta_line->at(1) == P(1, 1));
+    CHECK(delta_line->at(2) == P(2, 2));
+    CHECK(delta_line->at(3) == P(3, 3));
 
-    delta_line = line_calc::fov_delta_line(Pos(-3, 3), FOV_STD_RADI_DB);
+    delta_line = line_calc::fov_delta_line(P(-3, 3), FOV_STD_RADI_DB);
     CHECK(delta_line->size() == 4);
-    CHECK(delta_line->at(0) == Pos(0, 0));
-    CHECK(delta_line->at(1) == Pos(-1, 1));
-    CHECK(delta_line->at(2) == Pos(-2, 2));
-    CHECK(delta_line->at(3) == Pos(-3, 3));
+    CHECK(delta_line->at(0) == P(0, 0));
+    CHECK(delta_line->at(1) == P(-1, 1));
+    CHECK(delta_line->at(2) == P(-2, 2));
+    CHECK(delta_line->at(3) == P(-3, 3));
 
-    delta_line = line_calc::fov_delta_line(Pos(3, -3), FOV_STD_RADI_DB);
+    delta_line = line_calc::fov_delta_line(P(3, -3), FOV_STD_RADI_DB);
     CHECK(delta_line->size() == 4);
-    CHECK(delta_line->at(0) == Pos(0, 0));
-    CHECK(delta_line->at(1) == Pos(1, -1));
-    CHECK(delta_line->at(2) == Pos(2, -2));
-    CHECK(delta_line->at(3) == Pos(3, -3));
+    CHECK(delta_line->at(0) == P(0, 0));
+    CHECK(delta_line->at(1) == P(1, -1));
+    CHECK(delta_line->at(2) == P(2, -2));
+    CHECK(delta_line->at(3) == P(3, -3));
 
-    delta_line = line_calc::fov_delta_line(Pos(-3, -3), FOV_STD_RADI_DB);
+    delta_line = line_calc::fov_delta_line(P(-3, -3), FOV_STD_RADI_DB);
     CHECK(delta_line->size() == 4);
-    CHECK(delta_line->at(0) == Pos(0, 0));
-    CHECK(delta_line->at(1) == Pos(-1, -1));
-    CHECK(delta_line->at(2) == Pos(-2, -2));
-    CHECK(delta_line->at(3) == Pos(-3, -3));
+    CHECK(delta_line->at(0) == P(0, 0));
+    CHECK(delta_line->at(1) == P(-1, -1));
+    CHECK(delta_line->at(2) == P(-2, -2));
+    CHECK(delta_line->at(3) == P(-3, -3));
 
     //Check constraints for retrieving FOV offset lines
     //Delta > parameter max distance
-    delta_line = line_calc::fov_delta_line(Pos(3, 0), 2);
+    delta_line = line_calc::fov_delta_line(P(3, 0), 2);
     CHECK(!delta_line);
     //Delta > limit of precalculated
-    delta_line = line_calc::fov_delta_line(Pos(50, 0), 999);
+    delta_line = line_calc::fov_delta_line(P(50, 0), 999);
     CHECK(!delta_line);
 }
 
@@ -363,7 +363,7 @@ TEST_FIXTURE(Basic_fixture, fov)
     const int X = MAP_W_HALF;
     const int Y = MAP_H_HALF;
 
-    map::player->pos = Pos(X, Y);
+    map::player->pos = P(X, Y);
 
     Los_result fov[MAP_W][MAP_H];
 
@@ -407,11 +407,11 @@ TEST_FIXTURE(Basic_fixture, fov)
 TEST_FIXTURE(Basic_fixture, light_map)
 {
     //Put walls on the edge of the map, and floor in all other cells, and make all cells dark
-    for(int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < MAP_W; ++x)
     {
-        for(int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < MAP_H; ++y)
         {
-            const Pos p(x, y);
+            const P p(x, y);
 
             Cell& cell = map::cells[p.x][p.y];
 
@@ -431,7 +431,7 @@ TEST_FIXTURE(Basic_fixture, light_map)
 
     map::player->pos.set(40, 12);
 
-    const Pos burn_pos(40, 10);
+    const P burn_pos(40, 10);
 
     Rigid* const burn_rigid = map::cells[burn_pos.x][burn_pos.y].rigid;
 
@@ -480,11 +480,11 @@ TEST_FIXTURE(Basic_fixture, throw_items)
     // @ <- Player position (5, 10).
     //-----------------------------------------------------------------
 
-    map::put(new Floor(Pos(5, 7)));
-    map::put(new Floor(Pos(5, 9)));
-    map::put(new Floor(Pos(5, 10)));
-    map::player->pos = Pos(5, 10);
-    Pos tgt(5, 8);
+    map::put(new Floor(P(5, 7)));
+    map::put(new Floor(P(5, 9)));
+    map::put(new Floor(P(5, 10)));
+    map::player->pos = P(5, 10);
+    P tgt(5, 8);
     Item* item = item_factory::mk(Item_id::thr_knife);
     throwing::throw_item(*(map::player), tgt, *item);
     CHECK(map::cells[5][9].item);
@@ -495,12 +495,12 @@ TEST_FIXTURE(Basic_fixture, explosions)
     const int X0 = 5;
     const int Y0 = 7;
 
-    map::put(new Floor(Pos(X0, Y0)));
+    map::put(new Floor(P(X0, Y0)));
 
     //Check wall destruction
     for (int i = 0; i < 2; ++i)
     {
-        explosion::run(Pos(X0, Y0), Expl_type::expl);
+        explosion::run(P(X0, Y0), Expl_type::expl);
 
         //Cells around the center, at a distance of 1, should be destroyed
         int r = 1;
@@ -526,8 +526,8 @@ TEST_FIXTURE(Basic_fixture, explosions)
     }
 
     //Check damage to actors
-    Actor* a1 = actor_factory::mk(Actor_id::rat, Pos(X0 + 1, Y0));
-    explosion::run(Pos(X0, Y0), Expl_type::expl);
+    Actor* a1 = actor_factory::mk(Actor_id::rat, P(X0 + 1, Y0));
+    explosion::run(P(X0, Y0), Expl_type::expl);
     CHECK_EQUAL(int(Actor_state::destroyed), int(a1->state()));
 
     //Check that corpses can be destroyed, and do not block living actors
@@ -536,12 +536,12 @@ TEST_FIXTURE(Basic_fixture, explosions)
 
     for (int i = 0; i < NR_CORPSES; ++i)
     {
-        corpses[i] = actor_factory::mk(Actor_id::rat, Pos(X0 + 1, Y0));
+        corpses[i] = actor_factory::mk(Actor_id::rat, P(X0 + 1, Y0));
         corpses[i]->die(false, false, false);
     }
 
-    a1 = actor_factory::mk(Actor_id::rat, Pos(X0 + 1, Y0));
-    explosion::run(Pos(X0, Y0), Expl_type::expl);
+    a1 = actor_factory::mk(Actor_id::rat, P(X0 + 1, Y0));
+    explosion::run(P(X0, Y0), Expl_type::expl);
 
     for (int i = 0; i < NR_CORPSES; ++i)
     {
@@ -551,17 +551,17 @@ TEST_FIXTURE(Basic_fixture, explosions)
     CHECK_EQUAL(int(Actor_state::destroyed), int(a1->state()));
 
     //Check explosion applying Burning to living and dead actors
-    a1        = actor_factory::mk(Actor_id::rat, Pos(X0 - 1, Y0));
-    Actor* a2 = actor_factory::mk(Actor_id::rat, Pos(X0 + 1, Y0));
+    a1        = actor_factory::mk(Actor_id::rat, P(X0 - 1, Y0));
+    Actor* a2 = actor_factory::mk(Actor_id::rat, P(X0 + 1, Y0));
 
     for (int i = 0; i < NR_CORPSES; ++i)
     {
-        corpses[i] = actor_factory::mk(Actor_id::rat, Pos(X0 + 1, Y0));
+        corpses[i] = actor_factory::mk(Actor_id::rat, P(X0 + 1, Y0));
         corpses[i]->die(false, false, false);
     }
 
-    explosion::run(Pos(X0, Y0), Expl_type::apply_prop, Expl_src::misc,
-                                Emit_expl_snd::no, 0, new Prop_burning(Prop_turns::std));
+    explosion::run(P(X0, Y0), Expl_type::apply_prop, Expl_src::misc,
+                   Emit_expl_snd::no, 0, new Prop_burning(Prop_turns::std));
     CHECK(a1->prop_handler().prop(Prop_id::burning));
     CHECK(a2->prop_handler().prop(Prop_id::burning));
 
@@ -581,8 +581,8 @@ TEST_FIXTURE(Basic_fixture, explosions)
     //North-west edge
     int x = 1;
     int y = 1;
-    map::put(new Floor(Pos(x, y)));
-    explosion::run(Pos(x, y), Expl_type::expl);
+    map::put(new Floor(P(x, y)));
+    explosion::run(P(x, y), Expl_type::expl);
     CHECK(map::cells[x + 1][y    ].rigid->id() != Feature_id::wall);
     CHECK(map::cells[x    ][y + 1].rigid->id() != Feature_id::wall);
     CHECK(map::cells[x - 1][y    ].rigid->id() == Feature_id::wall);
@@ -591,8 +591,8 @@ TEST_FIXTURE(Basic_fixture, explosions)
     //South-east edge
     x = MAP_W - 2;
     y = MAP_H - 2;
-    map::put(new Floor(Pos(x, y)));
-    explosion::run(Pos(x, y), Expl_type::expl);
+    map::put(new Floor(P(x, y)));
+    explosion::run(P(x, y), Expl_type::expl);
     CHECK(map::cells[x - 1][y    ].rigid->id() != Feature_id::wall);
     CHECK(map::cells[x    ][y - 1].rigid->id() != Feature_id::wall);
     CHECK(map::cells[x + 1][y    ].rigid->id() == Feature_id::wall);
@@ -608,8 +608,8 @@ TEST_FIXTURE(Basic_fixture, monster_stuck_in_spider_web)
     // * the web can get destroyed
     //-----------------------------------------------------------------
 
-    const Pos pos_l(1, 4);
-    const Pos pos_r(2, 4);
+    const P pos_l(1, 4);
+    const P pos_r(2, 4);
 
     //Spawn left floor cell
     map::put(new Floor(pos_l));
@@ -675,7 +675,7 @@ TEST_FIXTURE(Basic_fixture, monster_stuck_in_spider_web)
 
 TEST_FIXTURE(Basic_fixture, inventory_handling)
 {
-    const Pos p(10, 10);
+    const P p(10, 10);
     map::put(new Floor(p));
     map::player->pos = p;
 
@@ -1107,7 +1107,7 @@ TEST_FIXTURE(Basic_fixture, flood_filling)
     }
 
     int flood[MAP_W][MAP_H];
-    flood_fill::run(Pos(20, 10), b, flood, 999, Pos(-1, -1), true);
+    flood_fill::run(P(20, 10), b, flood, 999, P(-1, -1), true);
 
     CHECK_EQUAL(0, flood[20][10]);
     CHECK_EQUAL(1, flood[19][10]);
@@ -1123,7 +1123,7 @@ TEST_FIXTURE(Basic_fixture, flood_filling)
 
 TEST_FIXTURE(Basic_fixture, path_finding)
 {
-    std::vector<Pos> path;
+    std::vector<P> path;
     bool b[MAP_W][MAP_H];
     utils::reset_array(b, false);
 
@@ -1137,60 +1137,60 @@ TEST_FIXTURE(Basic_fixture, path_finding)
         b[x][0] = b[x][MAP_H - 1] = false;
     }
 
-    path_find::run(Pos(20, 10), Pos(25, 10), b, path);
+    path_find::run(P(20, 10), P(25, 10), b, path);
 
     CHECK(!path.empty());
-    CHECK(path.back() != Pos(20, 10));
+    CHECK(path.back() != P(20, 10));
     CHECK_EQUAL(25, path.front().x);
     CHECK_EQUAL(10, path.front().y);
     CHECK_EQUAL(5, int(path.size()));
 
-    path_find::run(Pos(20, 10), Pos(5, 3), b, path);
+    path_find::run(P(20, 10), P(5, 3), b, path);
 
     CHECK(!path.empty());
-    CHECK(path.back() != Pos(20, 10));
+    CHECK(path.back() != P(20, 10));
     CHECK_EQUAL(5, path.front().x);
     CHECK_EQUAL(3, path.front().y);
     CHECK_EQUAL(15, int(path.size()));
 
     b[10][5] = true;
 
-    path_find::run(Pos(7, 5), Pos(20, 5), b, path);
+    path_find::run(P(7, 5), P(20, 5), b, path);
 
     CHECK(!path.empty());
-    CHECK(path.back() != Pos(7, 5));
+    CHECK(path.back() != P(7, 5));
     CHECK_EQUAL(20, path.front().x);
     CHECK_EQUAL(5, path.front().y);
     CHECK_EQUAL(13, int(path.size()));
-    CHECK(find(begin(path), end(path), Pos(10, 5)) == end(path));
+    CHECK(find(begin(path), end(path), P(10, 5)) == end(path));
 
     b[19][4] = b[19][5] =  b[19][6] = true;
 
-    path_find::run(Pos(7, 5), Pos(20, 5), b, path);
+    path_find::run(P(7, 5), P(20, 5), b, path);
 
     CHECK(!path.empty());
-    CHECK(path.back() != Pos(7, 5));
+    CHECK(path.back() != P(7, 5));
     CHECK_EQUAL(20, path.front().x);
     CHECK_EQUAL(5, path.front().y);
     CHECK_EQUAL(14, int(path.size()));
-    CHECK(find(begin(path), end(path), Pos(19, 4)) == end(path));
-    CHECK(find(begin(path), end(path), Pos(19, 5)) == end(path));
-    CHECK(find(begin(path), end(path), Pos(19, 6)) == end(path));
+    CHECK(find(begin(path), end(path), P(19, 4)) == end(path));
+    CHECK(find(begin(path), end(path), P(19, 5)) == end(path));
+    CHECK(find(begin(path), end(path), P(19, 6)) == end(path));
 
-    path_find::run(Pos(40, 10), Pos(43, 15), b, path, false);
+    path_find::run(P(40, 10), P(43, 15), b, path, false);
 
     CHECK(!path.empty());
-    CHECK(path.back() != Pos(40, 10));
+    CHECK(path.back() != P(40, 10));
     CHECK_EQUAL(43, path.front().x);
     CHECK_EQUAL(15, path.front().y);
     CHECK_EQUAL(8, int(path.size()));
 
     b[41][10] = b[40][11]  = true;
 
-    path_find::run(Pos(40, 10), Pos(43, 15), b, path, false);
+    path_find::run(P(40, 10), P(43, 15), b, path, false);
 
     CHECK(!path.empty());
-    CHECK(path.back() != Pos(40, 10));
+    CHECK(path.back() != P(40, 10));
     CHECK_EQUAL(43, path.front().x);
     CHECK_EQUAL(15, path.front().y);
     CHECK_EQUAL(10, int(path.size()));
@@ -1256,12 +1256,12 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     {
         for (int x = roomRect.p0.x; x <= roomRect.p1.x; ++x)
         {
-            map::put(new Floor(Pos(x, y)));
+            map::put(new Floor(P(x, y)));
             map::room_map[x][y] = room;
         }
     }
 
-    std::vector<Pos> entry_list;
+    std::vector<P> entry_list;
     map_gen_utils::valid_room_corr_entries(*room, entry_list);
     bool entry_map[MAP_W][MAP_H];
     utils::mk_bool_map_from_vector(entry_list, entry_map);
@@ -1287,7 +1287,7 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
 
     //The cell should also not be an entry if it's a wall and belonging to the room
     map::room_map[25][7] = room;
-    map::put(new Wall(Pos(25, 7)));
+    map::put(new Wall(P(25, 7)));
     map_gen_utils::valid_room_corr_entries(*room, entry_list);
     utils::mk_bool_map_from_vector(entry_list, entry_map);
 
@@ -1309,7 +1309,7 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     {
         for (int x = roomRect.p0.x; x <= roomRect.p1.x; ++x)
         {
-            map::put(new Floor(Pos(x, y)));
+            map::put(new Floor(P(x, y)));
             map::room_map[x][y] = nearby_room;
         }
     }
@@ -1317,7 +1317,7 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     map_gen_utils::valid_room_corr_entries(*room, entry_list);
     utils::mk_bool_map_from_vector(entry_list, entry_map);
 
-    std::vector<Pos> entry_list_nearby_room;
+    std::vector<P> entry_list_nearby_room;
     map_gen_utils::valid_room_corr_entries(*nearby_room, entry_list_nearby_room);
     bool entry_map_near_room[MAP_W][MAP_H];
     utils::mk_bool_map_from_vector(entry_list_nearby_room, entry_map_near_room);
@@ -1333,7 +1333,7 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     //------------------------------------------------ Room with only one cell
     delete room;
     room = room_factory::mk(Room_type::plain, {60, 10, 60, 10});
-    map::put(new Floor(Pos(60, 10)));
+    map::put(new Floor(P(60, 10)));
     map::room_map[60][10] = room;
     map_gen_utils::valid_room_corr_entries(*room, entry_list);
     utils::mk_bool_map_from_vector(entry_list, entry_map);
@@ -1357,7 +1357,7 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     // #  .  # 9
     // #  .  # 10
     // #  #  # 11
-    map::put(new Floor(Pos(60, 9)));
+    map::put(new Floor(P(60, 9)));
     map_gen_utils::valid_room_corr_entries(*room, entry_list);
     utils::mk_bool_map_from_vector(entry_list, entry_map);
 
@@ -1395,7 +1395,7 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     // #  .  .  # 10
     // #  #  #  # 11
     room->r_.p0.x = 59;
-    map::put(new Floor(Pos(59, 10)));
+    map::put(new Floor(P(59, 10)));
     map::room_map[59][10] = room;
     map_gen_utils::valid_room_corr_entries(*room, entry_list);
     utils::mk_bool_map_from_vector(entry_list, entry_map);
@@ -1421,8 +1421,8 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
 
 TEST_FIXTURE(Basic_fixture, connect_rooms_with_corridor)
 {
-    Rect room_area_1(Pos(1, 1), Pos(10, 10));
-    Rect room_area_2(Pos(15, 4), Pos(23, 14));
+    Rect room_area_1(P(1, 1), P(10, 10));
+    Rect room_area_2(P(15, 4), P(23, 14));
 
     Room* room0 = room_factory::mk(Room_type::plain, room_area_1);
     Room* room1 = room_factory::mk(Room_type::plain, room_area_2);
@@ -1431,7 +1431,7 @@ TEST_FIXTURE(Basic_fixture, connect_rooms_with_corridor)
     {
         for (int y = room_area_1.p0.y; y <= room_area_1.p1.y; ++y)
         {
-            map::put(new Floor(Pos(x, y)));
+            map::put(new Floor(P(x, y)));
             map::room_map[x][y] = room0;
         }
     }
@@ -1440,7 +1440,7 @@ TEST_FIXTURE(Basic_fixture, connect_rooms_with_corridor)
     {
         for (int y = room_area_2.p0.y; y <= room_area_2.p1.y; ++y)
         {
-            map::put(new Floor(Pos(x, y)));
+            map::put(new Floor(P(x, y)));
             map::room_map[x][y] = room1;
         }
     }

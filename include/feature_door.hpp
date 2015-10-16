@@ -16,11 +16,11 @@ enum class Door_spawn_state
 class Door: public Rigid
 {
 public:
-    Door(const Pos& feature_pos, const Rigid* const mimic_feature,
+    Door(const P& feature_pos, const Rigid* const mimic_feature,
          Door_spawn_state spawn_state = Door_spawn_state::any);
 
 //Spawn-by-id compliant ctor (do not use for normal cases):
-    Door(const Pos& feature_pos) :
+    Door(const P& feature_pos) :
         Rigid                   (feature_pos),
         mimic_feature_          (nullptr),
         nr_spikes_              (0),

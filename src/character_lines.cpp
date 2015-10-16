@@ -44,7 +44,7 @@ void draw()
 
     Player& player = *map::player;
 
-    Pos pos(0, 0);
+    P pos(0, 0);
 
     //Name
     pos.x = X_NAME;

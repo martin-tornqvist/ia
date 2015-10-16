@@ -24,16 +24,16 @@ public:
     }
 
 protected:
-    Event(const Pos&);
+    Event(const P&);
 };
 
 class Event_wall_crumble: public Event
 {
 public:
-    Event_wall_crumble(const Pos&, std::vector<Pos>& walls, std::vector<Pos>& inner);
+    Event_wall_crumble(const P&, std::vector<P>& walls, std::vector<P>& inner);
 
     //Spawn-by-id compliant ctor (do not use for normal cases):
-    Event_wall_crumble(const Pos& feature_pos) : Event(feature_pos) {}
+    Event_wall_crumble(const P& feature_pos) : Event(feature_pos) {}
 
     Feature_id id() const override
     {
@@ -43,14 +43,14 @@ public:
     void on_new_turn() override;
 
 private:
-    std::vector<Pos> wall_cells_;
-    std::vector<Pos> inner_cells_;
+    std::vector<P> wall_cells_;
+    std::vector<P> inner_cells_;
 };
 
 class Event_rats_in_the_walls_discovery: public Event
 {
 public:
-    Event_rats_in_the_walls_discovery(const Pos& feature_pos);
+    Event_rats_in_the_walls_discovery(const P& feature_pos);
 
     Feature_id id() const override
     {

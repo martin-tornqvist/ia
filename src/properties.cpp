@@ -1554,7 +1554,7 @@ int Prop_handler::affect_max_hp(const int HP_MAX) const
     return new_hp_max;
 }
 
-void Prop_handler::affect_move_dir(const Pos& actor_pos, Dir& dir) const
+void Prop_handler::affect_move_dir(const P& actor_pos, Dir& dir) const
 {
     for (Prop* prop : props_)
     {
@@ -1871,7 +1871,7 @@ void Prop_poss_by_zuul::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
     }
 
     owning_actor_->state_  = Actor_state::destroyed;
-    const Pos& pos        = owning_actor_->pos;
+    const P& pos        = owning_actor_->pos;
     map::mk_gore(pos);
     map::mk_blood(pos);
     actor_factory::summon(pos, std::vector<Actor_id> {Actor_id::zuul}, true);
@@ -1932,7 +1932,7 @@ void Prop_terrified::on_start()
     }
 }
 
-void Prop_nailed::affect_move_dir(const Pos& actor_pos, Dir& dir)
+void Prop_nailed::affect_move_dir(const P& actor_pos, Dir& dir)
 {
     (void)actor_pos;
 
@@ -2112,7 +2112,7 @@ bool Prop_confused::allow_attack_ranged(const Verbosity verbosity) const
     return true;
 }
 
-void Prop_confused::affect_move_dir(const Pos& actor_pos, Dir& dir)
+void Prop_confused::affect_move_dir(const P& actor_pos, Dir& dir)
 {
     if (dir != Dir::center)
     {
@@ -2127,11 +2127,11 @@ void Prop_confused::affect_move_dir(const Pos& actor_pos, Dir& dir)
             while (tries_left != 0)
             {
                 //-1 to 1 for x and y
-                const Pos delta(rnd::range(-1, 1), rnd::range(-1, 1));
+                const P delta(rnd::range(-1, 1), rnd::range(-1, 1));
 
                 if (delta.x != 0 || delta.y != 0)
                 {
-                    const Pos c = actor_pos + delta;
+                    const P c = actor_pos + delta;
 
                     if (!blocked[c.x][c.y])
                     {
@@ -2172,7 +2172,7 @@ bool Prop_strangled::allow_eat(const Verbosity verbosity) const
     return false;
 }
 
-void Prop_frenzied::affect_move_dir(const Pos& actor_pos, Dir& dir)
+void Prop_frenzied::affect_move_dir(const P& actor_pos, Dir& dir)
 {
     if (owning_actor_->is_player())
     {
@@ -2184,7 +2184,7 @@ void Prop_frenzied::affect_move_dir(const Pos& actor_pos, Dir& dir)
             return;
         }
 
-        std::vector<Pos> seen_foes_cells;
+        std::vector<P> seen_foes_cells;
 
         seen_foes_cells.clear();
 
@@ -2195,17 +2195,17 @@ void Prop_frenzied::affect_move_dir(const Pos& actor_pos, Dir& dir)
 
         sort(begin(seen_foes_cells), end(seen_foes_cells), Is_closer_to_pos(actor_pos));
 
-        const Pos& closest_mon_pos = seen_foes_cells[0];
+        const P& closest_mon_pos = seen_foes_cells[0];
 
         bool blocked[MAP_W][MAP_H];
         map_parse::run(cell_check::Blocks_actor(*owning_actor_, false), blocked);
 
-        std::vector<Pos> line;
+        std::vector<P> line;
         line_calc::calc_new_line(actor_pos, closest_mon_pos, true, 999, false, line);
 
         if (line.size() > 1)
         {
-            for (Pos& pos : line)
+            for (P& pos : line)
             {
                 if (blocked[pos.x][pos.y])
                 {
@@ -2508,6 +2508,6 @@ void Prop_see_invis::on_start()
 
 void Prop_burrowing::on_new_turn()
 {
-    const Pos& p = owning_actor_->pos;
+    const P& p = owning_actor_->pos;
     map::cells[p.x][p.y].rigid->hit(Dmg_type::physical, Dmg_method::forced);
 }

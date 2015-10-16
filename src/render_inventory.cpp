@@ -23,7 +23,7 @@ const int BTM_MORE_Y    = SCREEN_H - 1;
 const int INV_Y0        = TOP_MORE_Y + 1;
 const int INV_Y1        = BTM_MORE_Y - 1;
 
-void draw_item_symbol(const Item& item, const Pos& p)
+void draw_item_symbol(const Item& item, const P& p)
 {
     const Clr item_clr = item.clr();
 
@@ -37,7 +37,7 @@ void draw_item_symbol(const Item& item, const Pos& p)
     }
 }
 
-void draw_weight_pct_and_dots(const Pos item_pos,
+void draw_weight_pct_and_dots(const P item_pos,
                               const size_t ITEM_NAME_LEN,
                               const Item& item,
                               const Clr& item_name_clr,
@@ -59,7 +59,7 @@ void draw_weight_pct_and_dots(const Pos item_pos,
 
     if (item_weight_pct > 0 && item_weight_pct < 100)
     {
-        const Pos weight_pos(weight_x, item_pos.y);
+        const P weight_pos(weight_x, item_pos.y);
 
         const Clr weight_clr = IS_MARKED ? clr_white : clr_gray_drk;
 
@@ -92,7 +92,7 @@ void draw_weight_pct_and_dots(const Pos item_pos,
         dots_clr.b /= 2;
     }
 
-    render::draw_text(dots_str, Panel::screen, Pos(dots_x, item_pos.y), dots_clr);
+    render::draw_text(dots_str, Panel::screen, P(dots_x, item_pos.y), dots_clr);
 }
 
 void draw_detailed_item_descr(const Item* const item)
@@ -194,7 +194,7 @@ void draw_inv(const Menu_browser& browser)
 
     std::string str = "Inventory";
 
-    Pos p(SCREEN_W / 2, 0);
+    P p(SCREEN_W / 2, 0);
 
     render::draw_text_centered(str, panel, p, clr_orange);
 
@@ -325,7 +325,7 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
 
     if (gen_inv_indexes.empty())
     {
-        render::draw_text("I carry nothing to apply." + cancel_info_str, Panel::screen, Pos(0, 0),
+        render::draw_text("I carry nothing to apply." + cancel_info_str, Panel::screen, P(0, 0),
                           clr_white_high);
 
         render::update_screen();
@@ -343,7 +343,7 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
 
     std::string str = "Apply item";
 
-    Pos p(SCREEN_W / 2, 0);
+    P p(SCREEN_W / 2, 0);
 
     render::draw_text_centered(str, panel, p, clr_orange);
 
@@ -479,7 +479,7 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
 
     str += cancel_info_str;
 
-    Pos p(0, 0);
+    P p(0, 0);
 
     render::draw_text(str, Panel::screen, p, clr_white_high);
 

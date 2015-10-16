@@ -105,36 +105,36 @@ void reverse_bool_array(bool array[MAP_W][MAP_H]);
 void copy_bool_array(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]);
 
 void mk_vector_from_bool_map(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_H],
-                             std::vector<Pos>& out);
+                             std::vector<P>& out);
 
-void mk_bool_map_from_vector(const std::vector<Pos>& positions, bool out[MAP_W][MAP_H]);
+void mk_bool_map_from_vector(const std::vector<P>& positions, bool out[MAP_W][MAP_H]);
 
-Actor* actor_at_pos(const Pos& pos, Actor_state state = Actor_state::alive);
+Actor* actor_at_pos(const P& pos, Actor_state state = Actor_state::alive);
 
-Mob* first_mob_at_pos(const Pos& pos);
+Mob* first_mob_at_pos(const P& pos);
 
-void actor_cells(const std::vector<Actor*>& actors, std::vector<Pos>& out);
+void actor_cells(const std::vector<Actor*>& actors, std::vector<P>& out);
 
 void mk_actor_array(Actor* a[MAP_W][MAP_H]);
 
-bool is_pos_inside_map(const Pos& pos, const bool COUNT_EDGE_AS_INSIDE = true);
+bool is_pos_inside_map(const P& pos, const bool COUNT_EDGE_AS_INSIDE = true);
 
-bool is_pos_inside(const Pos& pos, const Rect& area);
+bool is_pos_inside(const P& pos, const Rect& area);
 
 bool is_area_inside_other(const Rect& inner, const Rect& outer,
                           const bool COUNT_EQUAL_AS_INSIDE);
 
 bool is_area_inside_map(const Rect& area);
 
-bool is_pos_adj(const Pos& pos1, const Pos& pos2, const bool COUNT_SAME_CELL_AS_ADJ);
+bool is_pos_adj(const P& pos1, const P& pos2, const bool COUNT_SAME_CELL_AS_ADJ);
 
-Pos closest_pos(const Pos& p, const std::vector<Pos>& positions);
+P closest_pos(const P& p, const std::vector<P>& positions);
 
-Actor* random_closest_actor(const Pos& c, const std::vector<Actor*>& actors);
+Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors);
 
 int king_dist(const int X0, const int Y0, const int X1, const int Y1);
-int king_dist(const Pos& p0, const Pos& p1);
-int taxicab_dist(const Pos& p0, const Pos& p1);
+int king_dist(const P& p0, const P& p1);
+int taxicab_dist(const P& p0, const P& p1);
 
 bool is_val_in_range(const int V, const Range range);
 
@@ -146,52 +146,52 @@ namespace dir_utils
 {
 
 //Useful lists to iterate over (e.g. in map generation)
-const std::vector<Pos> cardinal_list
+const std::vector<P> cardinal_list
 {
-    Pos(-1,  0),
-    Pos( 1,  0),
-    Pos( 0, -1),
-    Pos( 0,  1)
+    P(-1,  0),
+    P( 1,  0),
+    P( 0, -1),
+    P( 0,  1)
 };
 
-const std::vector<Pos> dir_list
+const std::vector<P> dir_list
 {
-    Pos(-1,  0),
-    Pos( 1,  0),
-    Pos( 0, -1),
-    Pos( 0,  1),
-    Pos(-1, -1),
-    Pos(-1,  1),
-    Pos( 1, -1),
-    Pos( 1,  1)
+    P(-1,  0),
+    P( 1,  0),
+    P( 0, -1),
+    P( 0,  1),
+    P(-1, -1),
+    P(-1,  1),
+    P( 1, -1),
+    P( 1,  1)
 };
 
-const std::vector<Pos> dir_list_w_center
+const std::vector<P> dir_list_w_center
 {
-    Pos( 0,  0),
-    Pos(-1,  0),
-    Pos( 1,  0),
-    Pos( 0, -1),
-    Pos( 0,  1),
-    Pos(-1, -1),
-    Pos(-1,  1),
-    Pos( 1, -1),
-    Pos( 1,  1)
+    P( 0,  0),
+    P(-1,  0),
+    P( 1,  0),
+    P( 0, -1),
+    P( 0,  1),
+    P(-1, -1),
+    P(-1,  1),
+    P( 1, -1),
+    P( 1,  1)
 };
 
-Dir dir(const Pos& offset_values);
+Dir dir(const P& offset_values);
 
-Pos offset(const Dir dir);
+P offset(const Dir dir);
 
-Pos rnd_adj_pos(const Pos& origin, const bool IS_ORIGIN_ALLOWED);
+P rnd_adj_pos(const P& origin, const bool IS_ORIGIN_ALLOWED);
 
-void compass_dir_name(const Pos& from_pos, const Pos& to_pos, std::string& dst);
+void compass_dir_name(const P& from_pos, const P& to_pos, std::string& dst);
 
 void compass_dir_name(const Dir dir, std::string& dst);
 
-void compass_dir_name(const Pos& offs, std::string& dst);
+void compass_dir_name(const P& offs, std::string& dst);
 
-bool is_cardinal(const Pos& d);
+bool is_cardinal(const P& d);
 
 } //dir_utils
 

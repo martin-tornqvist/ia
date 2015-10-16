@@ -187,7 +187,7 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
             {
                 for (int dy = -1; dy <= 1; ++dy)
                 {
-                    if (utils::is_pos_inside_map(Pos(x + dx, y + dy)))
+                    if (utils::is_pos_inside_map(P(x + dx, y + dy)))
                     {
                         const auto* const f = map::cells[x + dx][y + dy].rigid;
 
@@ -209,7 +209,7 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
 
         for (int x = 0; x < MAP_W; ++x)
         {
-            if (Pos(x, y) == map::player->pos)
+            if (P(x, y) == map::player->pos)
             {
                 cur_row.push_back('@');
             }
@@ -251,17 +251,17 @@ void render(const std::vector<Str_and_clr>& lines, const int TOP_ELEMENT)
     render::clear_screen();
 
     const std::string decoration_line(MAP_W, '-');
-    render::draw_text(decoration_line, Panel::screen, Pos(0, 0), clr_gray);
+    render::draw_text(decoration_line, Panel::screen, P(0, 0), clr_gray);
 
     const int X_LABEL = 3;
 
     render::draw_text("Displaying game summary", Panel::screen,
-                      Pos(X_LABEL, 0), clr_gray);
+                      P(X_LABEL, 0), clr_gray);
 
-    render::draw_text(decoration_line, Panel::screen, Pos(0, SCREEN_H - 1),
+    render::draw_text(decoration_line, Panel::screen, P(0, SCREEN_H - 1),
                       clr_gray);
 
-    render::draw_text(info_scr_cmd_info, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clr_gray);
+    render::draw_text(info_scr_cmd_info, Panel::screen, P(X_LABEL, SCREEN_H - 1), clr_gray);
 
     const int NR_LINES_TOT = int(lines.size());
     const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
@@ -272,7 +272,7 @@ void render(const std::vector<Str_and_clr>& lines, const int TOP_ELEMENT)
         i < NR_LINES_TOT && ((i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR);
         ++i)
     {
-        render::draw_text(lines[i].str, Panel::screen, Pos(0, y_pos++), lines[i].clr);
+        render::draw_text(lines[i].str, Panel::screen, P(0, y_pos++), lines[i].clr);
     }
 
     render::update_screen();
@@ -336,7 +336,7 @@ void mk_memorial_file(const std::vector<Str_and_clr>& lines)
 
     file.close();
 
-    render::draw_text("Wrote file: " + file_path, Panel::screen, Pos(1, 1), clr_white_high);
+    render::draw_text("Wrote file: " + file_path, Panel::screen, P(1, 1), clr_white_high);
     render::update_screen();
 }
 
@@ -344,7 +344,7 @@ void render_menu(const Menu_browser& browser)
 {
     render::cover_panel(Panel::screen);
 
-    Pos pos(SCREEN_W / 2, 10);
+    P pos(SCREEN_W / 2, 10);
 
     //Draw options
     render::draw_text_centered("Show game summary", Panel::screen, pos,

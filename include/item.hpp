@@ -103,7 +103,7 @@ public:
     }
 
     //Used when attempting to fire or throw an item
-    bool is_in_effective_range_lmt(const Pos& p0, const Pos& p1) const;
+    bool is_in_effective_range_lmt(const P& p0, const P& p1) const;
 
     Actor* actor_carrying()
     {
@@ -271,7 +271,7 @@ public:
         return *ammo_data_;
     }
 
-    virtual void on_projectile_blocked(const Pos& pos, Actor* actor)
+    virtual void on_projectile_blocked(const P& pos, Actor* actor)
     {
         (void)pos;
         (void)actor;
@@ -331,7 +331,7 @@ class Incinerator: public Wpn
 {
 public:
     Incinerator(Item_data_t* const item_data);
-    void on_projectile_blocked(const Pos& pos, Actor* actor_hit);
+    void on_projectile_blocked(const P& pos, Actor* actor_hit);
     ~Incinerator() {}
 };
 
@@ -496,7 +496,7 @@ public:
     }
 
     virtual void on_std_turn_player_hold_ignited() = 0;
-    virtual void on_thrown_ignited_landing(const Pos& p) = 0;
+    virtual void on_thrown_ignited_landing(const P& p) = 0;
     virtual void on_player_paralyzed() = 0;
     virtual Clr ignited_projectile_clr() const = 0;
     virtual std::string str_on_player_throw() const = 0;
@@ -518,7 +518,7 @@ public:
     Dynamite(Item_data_t* const item_data) :
         Explosive(item_data) {}
 
-    void on_thrown_ignited_landing(const Pos& p) override;
+    void on_thrown_ignited_landing(const P& p) override;
     void on_std_turn_player_hold_ignited() override;
     void on_player_paralyzed() override;
 
@@ -546,7 +546,7 @@ class Molotov: public Explosive
 public:
     Molotov(Item_data_t* const item_data) : Explosive(item_data) {}
 
-    void on_thrown_ignited_landing(const Pos& p) override;
+    void on_thrown_ignited_landing(const P& p) override;
     void on_std_turn_player_hold_ignited() override;
     void on_player_paralyzed() override;
 
@@ -573,7 +573,7 @@ class Flare: public Explosive
 public:
     Flare(Item_data_t* const item_data) : Explosive(item_data) {}
 
-    void on_thrown_ignited_landing(const Pos& p) override;
+    void on_thrown_ignited_landing(const P& p) override;
     void on_std_turn_player_hold_ignited() override;
     void on_player_paralyzed() override;
 
@@ -600,7 +600,7 @@ class Smoke_grenade: public Explosive
 public:
     Smoke_grenade(Item_data_t* const item_data) : Explosive(item_data) {}
 
-    void on_thrown_ignited_landing(const Pos& p) override;
+    void on_thrown_ignited_landing(const P& p) override;
     void on_std_turn_player_hold_ignited() override;
     void on_player_paralyzed() override;
     Clr ignited_projectile_clr() const override;

@@ -44,9 +44,9 @@ class Ranged_att_data: public Att_data
 {
 public:
     Ranged_att_data(Actor* const attacker,
-                    const Pos& attacker_orign,
-                    const Pos& aim_pos,
-                    const Pos& cur_pos,
+                    const P& attacker_orign,
+                    const P& aim_pos,
+                    const P& cur_pos,
                     const Wpn& wpn,
                     Actor_size aim_lvl = Actor_size::none);
     int         hit_chance_tot;
@@ -60,8 +60,8 @@ class Throw_att_data: public Att_data
 {
 public:
     Throw_att_data(Actor* const attacker,
-                   const Pos& aim_pos,
-                   const Pos& cur_pos,
+                   const P& aim_pos,
+                   const P& cur_pos,
                    const Item& item,
                    Actor_size aim_lvl = Actor_size::none);
     int         hit_chance_tot;
@@ -72,7 +72,7 @@ public:
 struct Projectile
 {
     Projectile() :
-        pos                     (Pos(-1, -1)),
+        pos                     (P(-1, -1)),
         is_obstructed           (false),
         is_seen_by_player       (true),
         actor_hit               (nullptr),
@@ -107,7 +107,7 @@ struct Projectile
         clr   = clr_to_render;
     }
 
-    Pos                 pos;
+    P                 pos;
     bool                is_obstructed;
     bool                is_seen_by_player;
     Actor*              actor_hit;
@@ -130,9 +130,9 @@ namespace attack
 {
 
 //NOTE: Attacker origin is needed since attacker may be a NULL pointer.
-void melee(Actor* const attacker, const Pos& attacker_origin, Actor& defender, const Wpn& wpn);
+void melee(Actor* const attacker, const P& attacker_origin, Actor& defender, const Wpn& wpn);
 
-bool ranged(Actor* const attacker, const Pos& origin, const Pos& aim_pos, Wpn& wpn);
+bool ranged(Actor* const attacker, const P& origin, const P& aim_pos, Wpn& wpn);
 
 void ranged_hit_chance(const Actor& attacker, const Actor& defender, const Wpn& wpn);
 

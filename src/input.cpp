@@ -326,7 +326,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
                     if (wpn->nr_ammo_loaded_ >= 1 || item_data.ranged.has_infinite_ammo)
                     {
-                        auto on_marker_at_pos = [&](const Pos & p)
+                        auto on_marker_at_pos = [&](const P & p)
                         {
                             msg_log::clear();
                             look::print_location_info_msgs(p);
@@ -355,7 +355,7 @@ void handle_map_mode_key_press(const Key_data& d)
                             msg_log::add("[f] to fire" + cancel_info_str);
                         };
 
-                        auto on_key_press = [&](const Pos & p, const Key_data & d_)
+                        auto on_key_press = [&](const P & p, const Key_data & d_)
                         {
                             if (d_.key == 'f')
                             {
@@ -422,7 +422,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
         if (map::player->is_alive())
         {
-            const Pos& p = map::player->pos;
+            const P& p = map::player->pos;
             Item* const item_at_player = map::cells[p.x][p.y].item;
 
             if (item_at_player)
@@ -638,14 +638,14 @@ void handle_map_mode_key_press(const Key_data& d)
         {
             if (map::player->active_explosive)
             {
-                auto on_marker_at_pos = [](const Pos & p)
+                auto on_marker_at_pos = [](const P & p)
                 {
                     msg_log::clear();
                     look::print_location_info_msgs(p);
                     msg_log::add("[t] to throw." + cancel_info_str);
                 };
 
-                auto on_key_press = [](const Pos & p, const Key_data & d_)
+                auto on_key_press = [](const P & p, const Key_data & d_)
                 {
                     if (d_.sdl_key == SDLK_RETURN || d_.key == 't')
                     {
@@ -680,7 +680,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
                         item_to_throw->clear_actor_carrying();
 
-                        auto on_marker_at_pos = [&](const Pos & p)
+                        auto on_marker_at_pos = [&](const P & p)
                         {
                             msg_log::clear();
                             look::print_location_info_msgs(p);
@@ -709,7 +709,7 @@ void handle_map_mode_key_press(const Key_data& d)
                             msg_log::add("[t] to throw");
                         };
 
-                        auto on_key_press = [&](const Pos & p, const Key_data & d_)
+                        auto on_key_press = [&](const P & p, const Key_data & d_)
                         {
                             if (d_.sdl_key == SDLK_RETURN || d_.key == 't')
                             {
@@ -773,7 +773,7 @@ void handle_map_mode_key_press(const Key_data& d)
         {
             if (map::player->prop_handler().allow_see())
             {
-                auto on_marker_at_pos = [&](const Pos & p)
+                auto on_marker_at_pos = [&](const P & p)
                 {
                     msg_log::clear();
                     look::print_location_info_msgs(p);
@@ -791,7 +791,7 @@ void handle_map_mode_key_press(const Key_data& d)
                     msg_log::add(cancel_info_str_no_space);
                 };
 
-                auto on_key_press = [&](const Pos & p, const Key_data & d_)
+                auto on_key_press = [&](const P & p, const Key_data & d_)
                 {
                     if (d_.key == 'v')
                     {
@@ -948,9 +948,9 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         const std::string query_str = "Summon monster id:";
 
-        render::draw_text(query_str, Panel::screen, Pos(0, 0), clr_orange);
+        render::draw_text(query_str, Panel::screen, P(0, 0), clr_orange);
 
-        const int IDX = query::number(Pos(query_str.size(), 0),
+        const int IDX = query::number(P(query_str.size(), 0),
                                       clr_white_high,
                                       0,
                                       int(Actor_id::END),

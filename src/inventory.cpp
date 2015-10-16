@@ -213,7 +213,7 @@ void Inventory::put_in_backpack(Item* item)
     item->on_pickup(*owning_actor_);
 }
 
-void Inventory::drop_all_non_intrinsic(const Pos& pos)
+void Inventory::drop_all_non_intrinsic(const P& pos)
 {
     Item* item;
 

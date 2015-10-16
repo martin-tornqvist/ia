@@ -389,7 +389,7 @@ std::string Item::name(const Item_ref_type ref_type,
     return ret;
 }
 
-bool Item::is_in_effective_range_lmt(const Pos& p0, const Pos& p1) const
+bool Item::is_in_effective_range_lmt(const P& p0, const P& p1) const
 {
     return utils::king_dist(p0, p1) <= data_->ranged.effective_range;
 }
@@ -694,7 +694,7 @@ Incinerator::Incinerator(Item_data_t* const item_data) :
     Wpn(item_data) {}
 
 void Incinerator::on_projectile_blocked(
-    const Pos& pos, Actor* actor_hit)
+    const P& pos, Actor* actor_hit)
 {
     (void)actor_hit;
     explosion::run(pos, Expl_type::expl);
@@ -966,7 +966,7 @@ int Medical_bag::tot_turns_for_action(const Med_bag_action action) const
 //    if (inv_type == Inv_type::slots)
 //    {
 //        std::vector<Actor*> adj_actors;
-//        const Pos p(map::player->pos);
+//        const P p(map::player->pos);
 //        for (auto* const actor : game_time::actors_)
 //        {
 //            if (actor->is_alive() && utils::is_pos_adj(p, actor->pos, false))
@@ -1069,7 +1069,7 @@ void Dynamite::on_std_turn_player_hold_ignited()
     }
 }
 
-void Dynamite::on_thrown_ignited_landing(const Pos& p)
+void Dynamite::on_thrown_ignited_landing(const P& p)
 {
     game_time::add_mob(new Lit_dynamite(p, fuse_turns_));
 }
@@ -1079,7 +1079,7 @@ void Dynamite::on_player_paralyzed()
     msg_log::add("The lit Dynamite stick falls from my hand!");
     map::player->active_explosive = nullptr;
     map::player->update_clr();
-    const Pos& p = map::player->pos;
+    const P& p = map::player->pos;
     auto* const f = map::cells[p.x][p.y].rigid;
 
     if (!f->is_bottomless())
@@ -1112,7 +1112,7 @@ void Molotov::on_std_turn_player_hold_ignited()
         map::player->active_explosive = nullptr;
         map::player->update_clr();
 
-        const Pos player_pos = map::player->pos;
+        const P player_pos = map::player->pos;
 
         Snd snd("I hear an explosion!", Sfx_id::explosion_molotov, Ignore_msg_if_origin_seen::yes,
                 player_pos, nullptr, Snd_vol::high, Alerts_mon::yes);
@@ -1126,7 +1126,7 @@ void Molotov::on_std_turn_player_hold_ignited()
     }
 }
 
-void Molotov::on_thrown_ignited_landing(const Pos& p)
+void Molotov::on_thrown_ignited_landing(const P& p)
 {
     const int D = player_bon::traits[size_t(Trait::dem_expert)] ? 1 : 0;
 
@@ -1155,7 +1155,7 @@ void Molotov::on_player_paralyzed()
     map::player->active_explosive = nullptr;
     map::player->update_clr();
 
-    const Pos player_pos = map::player->pos;
+    const P player_pos = map::player->pos;
 
     Snd snd("I hear an explosion!", Sfx_id::explosion_molotov, Ignore_msg_if_origin_seen::yes,
             player_pos, nullptr, Snd_vol::high, Alerts_mon::yes);
@@ -1198,7 +1198,7 @@ void Flare::on_std_turn_player_hold_ignited()
     }
 }
 
-void Flare::on_thrown_ignited_landing(const Pos& p)
+void Flare::on_thrown_ignited_landing(const P& p)
 {
     game_time::add_mob(new Lit_flare(p, fuse_turns_));
     game_time::update_light_map();
@@ -1211,7 +1211,7 @@ void Flare::on_player_paralyzed()
     msg_log::add("The lit Flare falls from my hand!");
     map::player->active_explosive = nullptr;
     map::player->update_clr();
-    const Pos&  p = map::player->pos;
+    const P&  p = map::player->pos;
     auto* const f = map::cells[p.x][p.y].rigid;
 
     if (!f->is_bottomless())
@@ -1255,7 +1255,7 @@ void Smoke_grenade::on_std_turn_player_hold_ignited()
     }
 }
 
-void Smoke_grenade::on_thrown_ignited_landing(const Pos& p)
+void Smoke_grenade::on_thrown_ignited_landing(const P& p)
 {
     explosion::run_smoke_explosion_at(p);
     map::player->update_fov();
@@ -1267,7 +1267,7 @@ void Smoke_grenade::on_player_paralyzed()
     msg_log::add("The ignited smoke grenade falls from my hand!");
     map::player->active_explosive = nullptr;
     map::player->update_clr();
-    const Pos&  p = map::player->pos;
+    const P&  p = map::player->pos;
     auto* const f = map::cells[p.x][p.y].rigid;
 
     if (!f->is_bottomless())

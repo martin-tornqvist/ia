@@ -12,11 +12,11 @@ using namespace std;
 namespace map_patterns
 {
 
-void cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,
-                   std::vector<Pos>& away_from_walls)
+void cells_in_room(const Room& room, std::vector<P>& adj_to_walls,
+                   std::vector<P>& away_from_walls)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
-    vector<Pos> pos_bucket;
+    vector<P> pos_bucket;
     pos_bucket.clear();
 
     const Rect& r = room.r_;
@@ -31,7 +31,7 @@ void cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,
 
                 if (f->can_move_cmn() && f->can_have_rigid())
                 {
-                    pos_bucket.push_back(Pos(x, y));
+                    pos_bucket.push_back(P(x, y));
                 }
             }
         }
@@ -40,7 +40,7 @@ void cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,
     adj_to_walls.clear();
     away_from_walls.clear();
 
-    for (Pos& pos : pos_bucket)
+    for (P& pos : pos_bucket)
     {
         const int NR_BLK_R = walk_blockers_in_dir(Dir::right, pos);
         const int NR_BLK_D = walk_blockers_in_dir(Dir::down, pos);
@@ -85,7 +85,7 @@ void cells_in_room(const Room& room, std::vector<Pos>& adj_to_walls,
     TRACE_FUNC_END_VERBOSE;
 }
 
-int walk_blockers_in_dir(const Dir dir, const Pos& pos)
+int walk_blockers_in_dir(const Dir dir, const P& pos)
 {
     int nr_blockers = 0;
 

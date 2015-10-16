@@ -27,7 +27,7 @@ namespace
 Feature_id backup[MAP_W][MAP_H];
 
 void floor_cells_in_room(const Room& room, const bool floor[MAP_W][MAP_H],
-                         std::vector<Pos>& out)
+                         std::vector<P>& out)
 {
     assert(utils::is_area_inside_map(room.r_));
 
@@ -35,7 +35,7 @@ void floor_cells_in_room(const Room& room, const bool floor[MAP_W][MAP_H],
     {
         for (int x = room.r_.p0.x; x <= room.r_.p1.x; ++x)
         {
-            if (floor[x][y]) {out.push_back(Pos(x, y));}
+            if (floor[x][y]) {out.push_back(P(x, y));}
         }
     }
 }
@@ -49,17 +49,17 @@ void cut_room_corners(const Room& room)
         return;
     }
 
-    const Pos max_dims(room.r_.dims() - 4);
+    const P max_dims(room.r_.dims() - 4);
 
-    const Pos room_p0(room.r_.p0);
-    const Pos room_p1(room.r_.p1);
+    const P room_p0(room.r_.p0);
+    const P room_p1(room.r_.p1);
 
-    const Pos cross_dims(rnd::range(2, max_dims.x), rnd::range(2, max_dims.y));
+    const P cross_dims(rnd::range(2, max_dims.x), rnd::range(2, max_dims.y));
 
-    const Pos cross_x0Y0(rnd::range(room_p0.x + 2, room_p1.x - cross_dims.x - 1),
-                         rnd::range(room_p0.y + 2, room_p1.y - cross_dims.y - 1));
+    const P cross_x0Y0(rnd::range(room_p0.x + 2, room_p1.x - cross_dims.x - 1),
+                       rnd::range(room_p0.y + 2, room_p1.y - cross_dims.y - 1));
 
-    const Pos cross_x1Y1(cross_x0Y0 + cross_dims - 1);
+    const P cross_x1Y1(cross_x0Y0 + cross_dims - 1);
 
     //Which corners to place - up-left, up-right, down-left, down-right
     bool c[4] = {true, true, true, true};
@@ -101,7 +101,7 @@ void cut_room_corners(const Room& room)
 
             if (X_OK && Y_OK)
             {
-                map::put(new Wall(Pos(x, y)));
+                map::put(new Wall(P(x, y)));
                 map::room_map[x][y] = nullptr;
             }
         }
@@ -110,10 +110,10 @@ void cut_room_corners(const Room& room)
 
 void mk_pillars_in_room(const Room& room)
 {
-    const Pos& room_p0(room.r_.p0);
-    const Pos& room_p1(room.r_.p1);
+    const P& room_p0(room.r_.p0);
+    const P& room_p1(room.r_.p1);
 
-    auto is_free = [](const Pos & p)
+    auto is_free = [](const P & p)
     {
         for (int dx = -1; dx <= 1; ++dx)
         {
@@ -145,7 +145,7 @@ void mk_pillars_in_room(const Room& room)
         {
             for (int x = room_p0.x + 1; x <= room_p1.x - 1; x += DX)
             {
-                const Pos p(x, y);
+                const P p(x, y);
 
                 if (is_free(p) && rnd::fraction(2, 3)) {map::put(new Wall(p));}
             }
@@ -158,7 +158,7 @@ void mk_pillars_in_room(const Room& room)
         {
             for (int x = room_p0.x + 1; x <= room_p1.x - 1; ++x)
             {
-                const Pos p(x + rnd::range(-1, 1), y + rnd::range(-1, 1));
+                const P p(x + rnd::range(-1, 1), y + rnd::range(-1, 1));
 
                 if (is_free(p) && rnd::one_in(5)) {map::put(new Wall(p));}
             }
@@ -185,7 +185,7 @@ void cavify_room(Room& room)
 
     Rect& room_rect = room.r_;
 
-    std::vector<Pos> origin_bucket;
+    std::vector<P> origin_bucket;
 
     const auto& r = room.r_;
 
@@ -206,7 +206,7 @@ void cavify_room(Room& room)
         }
     }
 
-    for (const Pos& origin : origin_bucket)
+    for (const P& origin : origin_bucket)
     {
         if (blocked[origin.x][origin.y] || map::room_map[origin.x][origin.y] != &room)
         {
@@ -256,7 +256,7 @@ void cavify_room(Room& room)
     }
 }
 
-void valid_room_corr_entries(const Room& room, std::vector<Pos>& out)
+void valid_room_corr_entries(const Room& room, std::vector<P>& out)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     //Find all cells that meets all of the following criteria:
@@ -284,7 +284,7 @@ void valid_room_corr_entries(const Room& room, std::vector<Pos>& out)
 
     bool room_cells_expanded[MAP_W][MAP_H];
     map_parse::expand(room_cells, room_cells_expanded,
-                      Rect(Pos(room.r_.p0 - 2), Pos(room.r_.p1 + 2)));
+                      Rect(P(room.r_.p0 - 2), P(room.r_.p1 + 2)));
 
     for (int y = room.r_.p0.y - 1; y <= room.r_.p1.y + 1; ++y)
     {
@@ -302,13 +302,13 @@ void valid_room_corr_entries(const Room& room, std::vector<Pos>& out)
             bool is_adj_to_floor_in_room = false;
             bool is_adj_to_cell_outside = false;
 
-            const Pos p(x, y);
+            const P p(x, y);
 
             bool is_adj_to_floor_not_in_room = false;
 
-            for (const Pos& d : dir_utils::cardinal_list)
+            for (const P& d : dir_utils::cardinal_list)
             {
-                const Pos& p_adj(p + d);
+                const P& p_adj(p + d);
 
                 //Condition (4)
                 if (room_floor_cells[p_adj.x][p_adj.y])      {is_adj_to_floor_in_room = true;}
@@ -335,8 +335,8 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
     assert(utils::is_area_inside_map(r0.r_));
     assert(utils::is_area_inside_map(r1.r_));
 
-    std::vector<Pos> p0_bucket;
-    std::vector<Pos> p1_bucket;
+    std::vector<P> p0_bucket;
+    std::vector<P> p1_bucket;
 
     valid_room_corr_entries(r0, p0_bucket);
     valid_room_corr_entries(r1, p1_bucket);
@@ -357,9 +357,9 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
 
     TRACE_VERBOSE << "Finding shortest possible dist between entries" << std::endl;
 
-    for (const Pos& p0 : p0_bucket)
+    for (const P& p0 : p0_bucket)
     {
-        for (const Pos& p1 : p1_bucket)
+        for (const P& p1 : p1_bucket)
         {
             const int CUR_DIST = utils::king_dist(p0, p1);
 
@@ -370,17 +370,17 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
     TRACE_VERBOSE << "Storing entry pairs with shortest dist (" << shortest_dist << ")"
                   << std::endl;
 
-    std::vector< std::pair<Pos, Pos> > entries_bucket;
+    std::vector< std::pair<P, P> > entries_bucket;
 
-    for (const Pos& p0 : p0_bucket)
+    for (const P& p0 : p0_bucket)
     {
-        for (const Pos& p1 : p1_bucket)
+        for (const P& p1 : p1_bucket)
         {
             const int CUR_DIST = utils::king_dist(p0, p1);
 
             if (CUR_DIST == shortest_dist)
             {
-                entries_bucket.push_back(std::pair<Pos, Pos>(p0, p1));
+                entries_bucket.push_back(std::pair<P, P>(p0, p1));
             }
         }
     }
@@ -388,12 +388,12 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
     TRACE_VERBOSE << "Picking a random stored entry pair" << std::endl;
     const size_t IDX = rnd::range(0, entries_bucket.size() - 1);
 
-    const std::pair<Pos, Pos>& entries = entries_bucket[IDX];
+    const std::pair<P, P>& entries = entries_bucket[IDX];
 
-    const Pos& p0 = entries.first;
-    const Pos& p1 = entries.second;
+    const P& p0 = entries.first;
+    const P& p1 = entries.second;
 
-    std::vector<Pos> path;
+    std::vector<P> path;
     bool blocked_expanded[MAP_W][MAP_H];
 
     //Is entry points same cell (rooms are adjacent)? Then simply use that
@@ -445,7 +445,7 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
             bool is_above_room    = false;
             bool is_below_room    = false;
 
-            for (const Pos& p : path)
+            for (const P& p : path)
             {
                 if (p.x < room->r_.p0.x) {is_left_of_room   = true;}
 
@@ -468,7 +468,7 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
 
         for (size_t i = 0; i < path.size(); ++i)
         {
-            const Pos& p(path[i]);
+            const P& p(path[i]);
 
             //If this is a late game level, ocassionally put floor in 3x3 cells around each point
             //in the path (wide corridors for more "open" level).
@@ -478,7 +478,7 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
                 {
                     for (int dy = -1; dy <= 1; ++dy)
                     {
-                        const Pos p_adj(p + Pos(dx, dy));
+                        const P p_adj(p + P(dx, dy));
 
                         if (
                             utils::is_pos_inside_map(p_adj, false) &&
@@ -544,25 +544,25 @@ void restore_map()
         for (int y = 0; y < MAP_H; ++y)
         {
             const auto& data = feature_data::data(backup[x][y]);
-            map::put(static_cast<Rigid*>(data.mk_obj(Pos(x, y))));
+            map::put(static_cast<Rigid*>(data.mk_obj(P(x, y))));
         }
     }
 }
 
-void pathfinder_walk(const Pos& p0, const Pos& p1,
-                     std::vector<Pos>& pos_list_ref,
+void pathfinder_walk(const P& p0, const P& p1,
+                     std::vector<P>& pos_list_ref,
                      const bool IS_SMOOTH)
 {
     pos_list_ref.clear();
 
     bool blocked[MAP_W][MAP_H];
     utils::reset_array(blocked, false);
-    std::vector<Pos> path;
+    std::vector<P> path;
     path_find::run(p0, p1, blocked, path);
 
-    std::vector<Pos> rnd_walk_buffer;
+    std::vector<P> rnd_walk_buffer;
 
-    for (const Pos& p : path)
+    for (const P& p : path)
     {
         pos_list_ref.push_back(p);
 
@@ -575,17 +575,17 @@ void pathfinder_walk(const Pos& p0, const Pos& p1,
     }
 }
 
-void rnd_walk(const Pos& p0, int len, std::vector<Pos>& pos_list_ref,
+void rnd_walk(const P& p0, int len, std::vector<P>& pos_list_ref,
               const bool ALLOW_DIAGONAL, Rect area)
 {
     pos_list_ref.clear();
 
-    const std::vector<Pos>& d_list = ALLOW_DIAGONAL ?
-                                     dir_utils::dir_list : dir_utils::cardinal_list;
+    const std::vector<P>& d_list = ALLOW_DIAGONAL ?
+                                   dir_utils::dir_list : dir_utils::cardinal_list;
 
     const int D_LIST_SIZE = d_list.size();
 
-    Pos p(p0);
+    P p(p0);
 
     while (len > 0)
     {
@@ -594,7 +594,7 @@ void rnd_walk(const Pos& p0, int len, std::vector<Pos>& pos_list_ref,
 
         while (true)
         {
-            const Pos nxt_pos = p + d_list[rnd::range(0, D_LIST_SIZE - 1)];
+            const P nxt_pos = p + d_list[rnd::range(0, D_LIST_SIZE - 1)];
 
             if (utils::is_pos_inside(nxt_pos, area))
             {

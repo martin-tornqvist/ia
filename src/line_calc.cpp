@@ -14,7 +14,7 @@ namespace
 {
 
 double      fov_abs_distances_[FOV_MAX_W_INT][FOV_MAX_W_INT];
-vector<Pos> fov_delta_lines_[FOV_MAX_W_INT][FOV_MAX_W_INT];
+vector<P> fov_delta_lines_[FOV_MAX_W_INT][FOV_MAX_W_INT];
 
 } //Namespace
 
@@ -58,17 +58,17 @@ void init()
     {
         for (int delta_y = -R_INT; delta_y <= R_INT; delta_y++)
         {
-            const Pos origin(0, 0);
-            const Pos tgt(Pos(delta_x, delta_y));
-            vector<Pos> cur_line;
+            const P origin(0, 0);
+            const P tgt(P(delta_x, delta_y));
+            vector<P> cur_line;
             calc_new_line(origin, tgt, true, 999, true, cur_line);
             fov_delta_lines_[delta_x + R_INT][delta_y + R_INT] = cur_line;
         }
     }
 }
 
-const vector<Pos>* fov_delta_line(const Pos& delta,
-                                  const double& MAX_DIST_ABS)
+const vector<P>* fov_delta_line(const P& delta,
+                                const double& MAX_DIST_ABS)
 {
     const int X = delta.x + FOV_MAX_RADI_INT;
     const int Y = delta.y + FOV_MAX_RADI_INT;
@@ -84,9 +84,9 @@ const vector<Pos>* fov_delta_line(const Pos& delta,
     return nullptr;
 }
 
-void calc_new_line(const Pos& origin, const Pos& tgt,
+void calc_new_line(const P& origin, const P& tgt,
                    const bool SHOULD_STOP_AT_TARGET, const int CHEB_TRAVEL_LIMIT,
-                   const bool ALLOW_OUTSIDE_MAP, vector<Pos>& line_ref)
+                   const bool ALLOW_OUTSIDE_MAP, vector<P>& line_ref)
 {
     line_ref.clear();
 
@@ -107,7 +107,7 @@ void calc_new_line(const Pos& origin, const Pos& tgt,
     double cur_x_db = double(origin.x) + 0.5;
     double cur_y_db = double(origin.y) + 0.5;
 
-    Pos cur_pos = Pos(int(cur_x_db), int(cur_y_db));
+    P cur_pos = P(int(cur_x_db), int(cur_y_db));
 
     const double STEP_SIZE_DB = 0.04;
 

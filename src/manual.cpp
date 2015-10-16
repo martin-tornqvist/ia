@@ -76,10 +76,10 @@ void draw_manual_interface()
     const int   X_LABEL = 3;
     const auto  panel   = Panel::screen;
 
-    render::draw_text(decoration_line, panel, Pos(0, 0), clr_gray);
-    render::draw_text(" Browsing the Tome of Wisdom ", panel, Pos(X_LABEL, 0), clr_gray);
-    render::draw_text(decoration_line, panel, Pos(0, SCREEN_H - 1), clr_gray);
-    render::draw_text(info_scr_cmd_info, panel, Pos(X_LABEL, SCREEN_H - 1), clr_gray);
+    render::draw_text(decoration_line, panel, P(0, 0), clr_gray);
+    render::draw_text(" Browsing the Tome of Wisdom ", panel, P(X_LABEL, 0), clr_gray);
+    render::draw_text(decoration_line, panel, P(0, SCREEN_H - 1), clr_gray);
+    render::draw_text(info_scr_cmd_info, panel, P(X_LABEL, SCREEN_H - 1), clr_gray);
 }
 
 } //namespace
@@ -107,7 +107,7 @@ void run()
 
         for (int i = top_nr; i <= btm_nr; ++i)
         {
-            render::draw_text(lines_[i], Panel::screen, Pos(0, y_pos++),
+            render::draw_text(lines_[i], Panel::screen, P(0, y_pos++),
                               clr_white);
         }
 

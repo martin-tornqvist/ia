@@ -40,7 +40,7 @@ Actor* cur_actor();
 
 void erase_actor_in_element(const size_t i);
 
-void mobs_at_pos(const Pos& pos, std::vector<Mob*>& vector_ref);
+void mobs_at_pos(const P& pos, std::vector<Mob*>& vector_ref);
 
 void add_mob(Mob* const f);
 

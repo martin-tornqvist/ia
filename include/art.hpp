@@ -175,13 +175,13 @@ enum class Tile_id
 };
 
 
-struct Pos;
+class P;
 
 namespace art
 {
 
-Pos glyph_pos(const char glyph);
-Pos tile_pos(const Tile_id tile);
+P glyph_pos(const char glyph);
+P tile_pos(const Tile_id tile);
 
 } //Art
 

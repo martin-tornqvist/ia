@@ -15,7 +15,7 @@ Snd::Snd(
     const std::string&              msg,
     const Sfx_id                    sfx,
     const Ignore_msg_if_origin_seen ignore_msg_if_origin_seen,
-    const Pos&                      origin,
+    const P&                      origin,
     Actor* const                    actor_who_made_sound,
     const Snd_vol                   vol,
     const Alerts_mon                alerting_mon,
@@ -67,9 +67,9 @@ void run(Snd snd)
 
     int flood_fill[MAP_W][MAP_H];
 
-    const Pos& origin = snd.origin();
+    const P& origin = snd.origin();
 
-    flood_fill::run(origin, blocked, flood_fill, 999, Pos(-1, -1), true);
+    flood_fill::run(origin, blocked, flood_fill, 999, P(-1, -1), true);
 
     flood_fill[origin.x][origin.y] = 0;
 
@@ -94,7 +94,7 @@ void run(Snd snd)
                     snd.clear_msg();
                 }
 
-                const Pos& player_pos = map::player->pos;
+                const P& player_pos = map::player->pos;
 
                 if (!snd.msg().empty())
                 {
@@ -113,7 +113,7 @@ void run(Snd snd)
 
                 const int PCT_DIST      = (FLOOD_VAL_AT_ACTOR * 100) / SND_MAX_DIST;
 
-                const Pos offset = (origin - player_pos).signs();
+                const P offset = (origin - player_pos).signs();
 
                 const Dir dir_to_origin = dir_utils::dir(offset);
 

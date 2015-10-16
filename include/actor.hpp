@@ -67,7 +67,7 @@ public:
     //has no side effects - it merely does a randomized check.
     bool is_spotting_sneaking_actor(Actor& actor);
 
-    void place(const Pos& pos_, Actor_data_t& data);
+    void place(const P& pos_, Actor_data_t& data);
 
     virtual void place_hook() {}
 
@@ -201,7 +201,7 @@ public:
 
     bool is_player() const;
 
-    Pos pos;
+    P pos;
 
 protected:
     //TODO: Try to get rid of these friend declarations
@@ -232,7 +232,7 @@ protected:
 
     int hp_, hp_max_, spi_, spi_max_;
 
-    Pos lair_cell_;
+    P lair_cell_;
 
     Prop_handler* prop_handler_;
     Actor_data_t* data_;

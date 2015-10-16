@@ -16,7 +16,7 @@ namespace populate_traps
 namespace
 {
 
-Trap* mk_trap(const Trap_id id, const Pos& pos)
+Trap* mk_trap(const Trap_id id, const P& pos)
 {
     const auto* const   f       = map::cells[pos.x][pos.y].rigid;
     const auto&         d       = feature_data::data(f->id());
@@ -95,10 +95,10 @@ void populate_std_lvl()
             {
                 TRACE_VERBOSE << "Trapping non-plain room" << std::endl;
 
-                std::vector<Pos> trap_pos_bucket;
+                std::vector<P> trap_pos_bucket;
 
-                const Pos& p0 = room->r_.p0;
-                const Pos& p1 = room->r_.p1;
+                const P& p0 = room->r_.p0;
+                const P& p1 = room->r_.p1;
 
                 for (int y = p0.y; y <= p1.y; ++y)
                 {
@@ -106,7 +106,7 @@ void populate_std_lvl()
                     {
                         if (!blocked[x][y] && map::cells[x][y].rigid->can_have_rigid())
                         {
-                            trap_pos_bucket.push_back(Pos(x, y));
+                            trap_pos_bucket.push_back(P(x, y));
                         }
                     }
                 }
@@ -128,7 +128,7 @@ void populate_std_lvl()
                                               Trap_id::any;
 
                     const int ELEMENT   = rnd::range(0, trap_pos_bucket.size() - 1);
-                    const Pos pos       = trap_pos_bucket[ELEMENT];
+                    const P pos       = trap_pos_bucket[ELEMENT];
 
                     blocked[pos.x][pos.y] = true;
 
@@ -158,7 +158,7 @@ void populate_std_lvl()
                         for (int i_adj = 0; i_adj < NR_ADJ; ++i_adj)
                         {
                             //Make additional traps with the same id as the original trap
-                            const Pos adj_pos = trap_pos_bucket.front();
+                            const P adj_pos = trap_pos_bucket.front();
 
                             blocked[adj_pos.x][adj_pos.y] = true;
 
@@ -191,7 +191,7 @@ void populate_std_lvl()
     {
         TRACE_VERBOSE << "Trapping plain room" << std::endl;
 
-        std::vector<Pos> trap_pos_bucket;
+        std::vector<P> trap_pos_bucket;
 
         for (int x = 1; x < MAP_W - 1; ++x)
         {
@@ -204,7 +204,7 @@ void populate_std_lvl()
                         map::room_map[x][y]->type_ == Room_type::plain  &&
                         map::cells[x][y].rigid->can_have_rigid())
                     {
-                        trap_pos_bucket.push_back(Pos(x, y));
+                        trap_pos_bucket.push_back(P(x, y));
                     }
                 }
             }
@@ -221,7 +221,7 @@ void populate_std_lvl()
 
             const int ELEMENT = rnd::range(0, trap_pos_bucket.size() - 1);
 
-            const Pos pos = trap_pos_bucket[ELEMENT];
+            const P pos = trap_pos_bucket[ELEMENT];
 
             TRACE_VERBOSE << "Placing base trap" << std::endl;
 
@@ -252,7 +252,7 @@ void populate_std_lvl()
                 for (int i_adj = 0; i_adj < NR_ADJ; ++i_adj)
                 {
                     //Make additional traps with the same id as the original trap
-                    const Pos adj_pos = trap_pos_bucket.front();
+                    const P adj_pos = trap_pos_bucket.front();
 
                     blocked[adj_pos.x][adj_pos.y] = true;
 

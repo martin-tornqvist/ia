@@ -19,7 +19,7 @@ void add_auto_description_lines(const Actor& actor, std::string& line);
 namespace look
 {
 
-void print_location_info_msgs(const Pos& pos);
+void print_location_info_msgs(const P& pos);
 
 void print_detailed_actor_descr(const Actor& actor);
 

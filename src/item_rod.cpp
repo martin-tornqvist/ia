@@ -166,7 +166,7 @@ void Rod_purge_invis::activate_impl()
         if (!actor->is_player())
         {
             //Reveal invisible monsters
-            const Pos& p(actor->pos);
+            const P& p(actor->pos);
 
             const Los_result& los = fov[p.x][p.y];
 

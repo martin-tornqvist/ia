@@ -137,25 +137,25 @@ void draw(const std::vector<Highscore_entry>& entries, const int TOP_ELEMENT)
 
     const std::string decoration_line(MAP_W, '-');
 
-    render::draw_text(decoration_line, panel, Pos(0, 0), clr_gray);
+    render::draw_text(decoration_line, panel, P(0, 0), clr_gray);
 
-    render::draw_text(" Displaying High Scores ", panel, Pos(X_LABEL, 0), clr_gray);
+    render::draw_text(" Displaying High Scores ", panel, P(X_LABEL, 0), clr_gray);
 
-    render::draw_text(decoration_line, panel, Pos(0, SCREEN_H - 1), clr_gray);
+    render::draw_text(decoration_line, panel, P(0, SCREEN_H - 1), clr_gray);
 
-    render::draw_text(info_scr_cmd_info, panel, Pos(X_LABEL, SCREEN_H - 1), clr_gray);
+    render::draw_text(info_scr_cmd_info, panel, P(X_LABEL, SCREEN_H - 1), clr_gray);
 
     int y_pos = 1;
 
     const Clr& label_clr = clr_white_high;
 
-    render::draw_text("Ended",       panel, Pos(X_POS_DATE,    y_pos), label_clr);
-    render::draw_text("Name",        panel, Pos(X_POS_NAME,    y_pos), label_clr);
-    render::draw_text("Level",       panel, Pos(X_POS_LVL,     y_pos), label_clr);
-    render::draw_text("Depth",       panel, Pos(X_POS_DLVL,    y_pos), label_clr);
-    render::draw_text("Insanity",    panel, Pos(X_POS_INS,     y_pos), label_clr);
-    render::draw_text("Win",         panel, Pos(X_POS_WIN,     y_pos), label_clr);
-    render::draw_text("Score",       panel, Pos(X_POS_SCORE,   y_pos), label_clr);
+    render::draw_text("Ended",       panel, P(X_POS_DATE,    y_pos), label_clr);
+    render::draw_text("Name",        panel, P(X_POS_NAME,    y_pos), label_clr);
+    render::draw_text("Level",       panel, P(X_POS_LVL,     y_pos), label_clr);
+    render::draw_text("Depth",       panel, P(X_POS_DLVL,    y_pos), label_clr);
+    render::draw_text("Insanity",    panel, P(X_POS_INS,     y_pos), label_clr);
+    render::draw_text("Win",         panel, P(X_POS_WIN,     y_pos), label_clr);
+    render::draw_text("Score",       panel, P(X_POS_SCORE,   y_pos), label_clr);
 
     y_pos++;
 
@@ -178,13 +178,13 @@ void draw(const std::vector<Highscore_entry>& entries, const int TOP_ELEMENT)
 
         const Clr& clr = clr_white;
 
-        render::draw_text(date_and_time,    panel, Pos(X_POS_DATE,    y_pos), clr);
-        render::draw_text(name,             panel, Pos(X_POS_NAME,    y_pos), clr);
-        render::draw_text(lvl,              panel, Pos(X_POS_LVL,     y_pos), clr);
-        render::draw_text(dlvl,             panel, Pos(X_POS_DLVL,    y_pos), clr);
-        render::draw_text(ins + "%",        panel, Pos(X_POS_INS,     y_pos), clr);
-        render::draw_text(win,              panel, Pos(X_POS_WIN,     y_pos), clr);
-        render::draw_text(score,            panel, Pos(X_POS_SCORE,   y_pos), clr);
+        render::draw_text(date_and_time,    panel, P(X_POS_DATE,    y_pos), clr);
+        render::draw_text(name,             panel, P(X_POS_NAME,    y_pos), clr);
+        render::draw_text(lvl,              panel, P(X_POS_LVL,     y_pos), clr);
+        render::draw_text(dlvl,             panel, P(X_POS_DLVL,    y_pos), clr);
+        render::draw_text(ins + "%",        panel, P(X_POS_INS,     y_pos), clr);
+        render::draw_text(win,              panel, P(X_POS_WIN,     y_pos), clr);
+        render::draw_text(score,            panel, P(X_POS_SCORE,   y_pos), clr);
         y_pos++;
     }
 

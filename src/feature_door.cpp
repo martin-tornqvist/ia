@@ -15,7 +15,7 @@
 using namespace std;
 
 //---------------------------------------------------INHERITED FUNCTIONS
-Door::Door(const Pos& feature_pos, const Rigid* const mimic_feature,
+Door::Door(const P& feature_pos, const Rigid* const mimic_feature,
            Door_spawn_state spawn_state) :
     Rigid                   (feature_pos),
     mimic_feature_          (mimic_feature),

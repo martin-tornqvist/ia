@@ -31,7 +31,7 @@ void pickup_effects(Actor* actor, Item* item)
 
 void try_pick()
 {
-    const Pos&  pos   = map::player->pos;
+    const P&  pos   = map::player->pos;
     Item* const item  = map::cells[pos.x][pos.y].item;
 
     if (item)

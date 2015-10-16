@@ -42,7 +42,7 @@ Alerts_mon is_trigger_snd_alerting_monsters(const Actor* const actor)
 } // namespace
 
 //------------------------------------------------------------- TRAP
-Trap::Trap(const Pos& feature_pos, const Rigid* const mimic_feature, Trap_id id) :
+Trap::Trap(const P& feature_pos, const Rigid* const mimic_feature, Trap_id id) :
     Rigid                   (feature_pos),
     mimic_feature_          (mimic_feature),
     is_hidden_              (true),
@@ -579,7 +579,7 @@ Matl Trap::matl() const
 }
 
 //------------------------------------------------------------- TRAP IMPLEMENTATIONS
-Trap_dart::Trap_dart(Pos pos, const Trap* const base_trap) :
+Trap_dart::Trap_dart(P pos, const Trap* const base_trap) :
     Mech_trap_impl              (pos, Trap_id::dart, base_trap),
     is_poisoned_                (map::dlvl >= MIN_DLVL_HARDER_TRAPS && rnd::one_in(3)),
     dart_origin_                (),
@@ -596,9 +596,9 @@ Trap_placement_valid Trap_dart::on_place()
 
     auto trap_plament_valid = Trap_placement_valid::no;
 
-    for (const Pos& d : offsets)
+    for (const P& d : offsets)
     {
-        Pos p = pos_;
+        P p = pos_;
 
         for (int i = 0; i <= NR_STEPS_MAX; ++i)
         {
@@ -661,7 +661,7 @@ void Trap_dart::trigger()
     }
 
     //Aim target is the wall on the other side of the map
-    Pos aim_pos = dart_origin_;
+    P aim_pos = dart_origin_;
 
     if (dart_origin_.x == pos_.x)
     {
@@ -699,7 +699,7 @@ void Trap_dart::trigger()
     TRACE_FUNC_END_VERBOSE;
 }
 
-Trap_spear::Trap_spear(Pos pos, const Trap* const base_trap) :
+Trap_spear::Trap_spear(P pos, const Trap* const base_trap) :
     Mech_trap_impl              (pos, Trap_id::spear, base_trap),
     is_poisoned_                (map::dlvl >= MIN_DLVL_HARDER_TRAPS && rnd::one_in(4)),
     spear_origin_               (),
@@ -713,9 +713,9 @@ Trap_placement_valid Trap_spear::on_place()
 
     auto trap_plament_valid = Trap_placement_valid::no;
 
-    for (const Pos& d : offsets)
+    for (const P& d : offsets)
     {
-        const Pos p = pos_ + d;
+        const P p = pos_ + d;
 
         const Rigid* const  rigid       = map::cells[p.x][p.y].rigid;
         const bool          IS_WALL     = rigid->id() == Feature_id::wall;

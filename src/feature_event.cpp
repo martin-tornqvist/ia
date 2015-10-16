@@ -16,12 +16,12 @@
 using namespace std;
 
 //------------------------------------------------------------------- EVENT
-Event::Event(const Pos& feature_pos) :
+Event::Event(const P& feature_pos) :
     Mob(feature_pos) {}
 
 //------------------------------------------------------------------- WALL CRUMBLE
-Event_wall_crumble::Event_wall_crumble(const Pos& feature_pos, vector<Pos>& walls,
-                                       vector<Pos>& inner) :
+Event_wall_crumble::Event_wall_crumble(const P& feature_pos, vector<P>& walls,
+                                       vector<P>& inner) :
     Event(feature_pos),
     wall_cells_(walls),
     inner_cells_(inner) {}
@@ -31,9 +31,9 @@ void Event_wall_crumble::on_new_turn()
     if (utils::is_pos_adj(map::player->pos, pos_, true))
     {
         //Check that it still makes sense to run the crumbling
-        auto check_cells_have_wall = [](const vector<Pos>& cells)
+        auto check_cells_have_wall = [](const vector<P>& cells)
         {
-            for (const Pos& p : cells)
+            for (const P& p : cells)
             {
                 const auto f_id = map::cells[p.x][p.y].rigid->id();
 
@@ -59,9 +59,9 @@ void Event_wall_crumble::on_new_turn()
 
             while (!done)
             {
-                for (const Pos& p : wall_cells_)
+                for (const P& p : wall_cells_)
                 {
-                    if (utils::is_pos_inside(p, Rect(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2))))
+                    if (utils::is_pos_inside(p, Rect(P(1, 1), P(MAP_W - 2, MAP_H - 2))))
                     {
                         auto* const f = map::cells[p.x][p.y].rigid;
                         f->hit(Dmg_type::physical, Dmg_method::forced, nullptr);
@@ -70,7 +70,7 @@ void Event_wall_crumble::on_new_turn()
 
                 bool is_opening_made = true;
 
-                for (const Pos& p : wall_cells_)
+                for (const P& p : wall_cells_)
                 {
                     if (utils::is_pos_adj(map::player->pos, p, true))
                     {
@@ -126,7 +126,7 @@ void Event_wall_crumble::on_new_turn()
 
             random_shuffle(begin(inner_cells_), end(inner_cells_));
 
-            for (const Pos& p : inner_cells_)
+            for (const P& p : inner_cells_)
             {
                 map::put(new Floor(p));
 
@@ -156,7 +156,7 @@ void Event_wall_crumble::on_new_turn()
 }
 
 //------------------------------------------------------------------- RITW DISCOVERY
-Event_rats_in_the_walls_discovery::Event_rats_in_the_walls_discovery(const Pos& feature_pos) :
+Event_rats_in_the_walls_discovery::Event_rats_in_the_walls_discovery(const P& feature_pos) :
     Event(feature_pos) {}
 
 void Event_rats_in_the_walls_discovery::on_new_turn()

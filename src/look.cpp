@@ -95,7 +95,7 @@ void add_auto_description_lines(const Actor& actor, std::string& line)
 namespace look
 {
 
-void print_location_info_msgs(const Pos& pos)
+void print_location_info_msgs(const P& pos)
 {
     bool did_see_something = false;
 
@@ -200,13 +200,13 @@ void print_detailed_actor_descr(const Actor& actor)
 
     const size_t NR_OF_LINES = formatted_text.size();
 
-    render::cover_area(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_OF_LINES));
+    render::cover_area(Panel::screen, P(0, 1), P(MAP_W, NR_OF_LINES));
 
     int y = 1;
 
     for (std::string& s : formatted_text)
     {
-        render::draw_text(s, Panel::screen, Pos(0, y), clr_white_high);
+        render::draw_text(s, Panel::screen, P(0, y), clr_white_high);
         y++;
     }
 

@@ -402,7 +402,7 @@ void set_item_randomized_properties(Item* item)
     }
 }
 
-Item* mk_item_on_floor(const Item_id item_id, const Pos& pos)
+Item* mk_item_on_floor(const Item_id item_id, const P& pos)
 {
     Item* item = mk(item_id);
     set_item_randomized_properties(item);

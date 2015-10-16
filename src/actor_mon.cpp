@@ -268,7 +268,7 @@ void Mon::on_actor_turn()
         }
     }
 
-    std::vector<Pos> path;
+    std::vector<P> path;
 
     if (
         data_->ai[size_t(Ai_id::paths_to_tgt_when_aware)]   &&
@@ -473,7 +473,7 @@ void Mon::move(Dir dir)
     // Movement direction is stored for AI purposes
     last_dir_moved_ = dir;
 
-    const Pos tgt_cell(pos + dir_utils::offset(dir));
+    const P tgt_cell(pos + dir_utils::offset(dir));
 
     if (dir != Dir::center && utils::is_pos_inside_map(tgt_cell, false))
     {
@@ -598,10 +598,10 @@ bool Mon::try_attack(Actor& defender)
 
         if (rnd::fraction(4, 5))
         {
-            std::vector<Pos> line;
+            std::vector<P> line;
             line_calc::calc_new_line(pos, defender.pos, true, 9999, false, line);
 
-            for (Pos& line_pos : line)
+            for (P& line_pos : line)
             {
                 if (line_pos != pos && line_pos != defender.pos)
                 {
@@ -994,14 +994,14 @@ bool Vortex::on_actor_turn_hook()
         return false;
     }
 
-    const Pos& player_pos = map::player->pos;
+    const P& player_pos = map::player->pos;
 
     if (!utils::is_pos_adj(pos, player_pos, true) && rnd::one_in(4))
     {
         TRACE << "Vortex attempting to pull player" << std::endl;
 
-        const Pos   delta               = player_pos - pos;
-        Pos         knock_back_from_pos    = player_pos;
+        const P   delta               = player_pos - pos;
+        P         knock_back_from_pos    = player_pos;
 
         if (delta.x >  1)
         {
@@ -1384,7 +1384,7 @@ bool Khephren::on_actor_turn_hook()
                 }
             }
 
-            std::vector<Pos> free_cells;
+            std::vector<P> free_cells;
             utils::mk_vector_from_bool_map(false, blocked, free_cells);
 
             sort(begin(free_cells), end(free_cells), Is_closer_to_pos(pos));
@@ -1502,14 +1502,14 @@ bool Keziah_mason::on_actor_turn_hook()
         {
             map_parse::run(cell_check::Blocks_move_cmn(true), blocked_los);
 
-            std::vector<Pos> line;
+            std::vector<P> line;
             line_calc::calc_new_line(pos, map::player->pos, true, 9999, false, line);
 
             const int LINE_SIZE = line.size();
 
             for (int i = 0; i < LINE_SIZE; ++i)
             {
-                const Pos c = line[i];
+                const P c = line[i];
 
                 if (!blocked_los[c.x][c.y])
                 {
@@ -1720,9 +1720,9 @@ bool Worm_mass::on_actor_turn_hook()
                        Map_parse_mode::overwrite,
                        Rect(pos - 1, pos + 1));
 
-        for (const Pos& d : dir_utils::dir_list)
+        for (const P& d : dir_utils::dir_list)
         {
-            const Pos p_adj(pos + d);
+            const P p_adj(pos + d);
 
             if (!blocked[p_adj.x][p_adj.y])
             {
@@ -1766,9 +1766,9 @@ bool Giant_locust::on_actor_turn_hook()
                        Map_parse_mode::overwrite,
                        Rect(pos - 1, pos + 1));
 
-        for (const Pos& d : dir_utils::dir_list)
+        for (const P& d : dir_utils::dir_list)
         {
-            const Pos p_adj(pos + d);
+            const P p_adj(pos + d);
 
             if (!blocked[p_adj.x][p_adj.y])
             {
@@ -1811,7 +1811,7 @@ bool Lord_of_spiders::on_actor_turn_hook()
 {
     if (is_alive() && aware_counter_ > 0 && rnd::coin_toss())
     {
-        const Pos player_pos = map::player->pos;
+        const P player_pos = map::player->pos;
 
         if (map::player->can_see_actor(*this))
         {
@@ -1825,7 +1825,7 @@ bool Lord_of_spiders::on_actor_turn_hook()
                 if (rnd::fraction(3, 4))
                 {
 
-                    const Pos p(player_pos + Pos(dx, dy));
+                    const P p(player_pos + P(dx, dy));
                     const auto* const feature_here = map::cells[p.x][p.y].rigid;
 
                     if (feature_here->can_have_rigid())
@@ -2158,9 +2158,9 @@ bool Mold::on_actor_turn_hook()
         map_parse::run(cell_check::Blocks_actor(*this, true), blocked,
                        Map_parse_mode::overwrite, Rect(pos - 1, pos + 1));
 
-        for (const Pos& d : dir_utils::dir_list)
+        for (const P& d : dir_utils::dir_list)
         {
-            const Pos adj_pos(pos + d);
+            const P adj_pos(pos + d);
 
             if (!blocked[adj_pos.x][adj_pos.y])
             {
@@ -2211,10 +2211,10 @@ void The_high_priest::on_death()
 {
     msg_log::add("The ground rumbles...", clr_white, false, More_prompt_on_msg::yes);
 
-    const Pos stair_pos(MAP_W - 2, 11);
+    const P stair_pos(MAP_W - 2, 11);
 
     map::put(new Stairs(stair_pos));
-    map::put(new Rubble_low(stair_pos - Pos(1, 0)));
+    map::put(new Rubble_low(stair_pos - P(1, 0)));
 
     map::player->update_fov();
     render::draw_map_and_interface();
@@ -2268,7 +2268,7 @@ bool The_high_priest::on_actor_turn_hook()
         bool blocked[MAP_W][MAP_H];
         map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
-        std::vector<Pos> free_cells;
+        std::vector<P> free_cells;
         utils::mk_vector_from_bool_map(false, blocked, free_cells);
 
         const int NR_SUMMONED = std::min(3, int(free_cells.size()));
@@ -2277,7 +2277,7 @@ bool The_high_priest::on_actor_turn_hook()
         {
             const int CELL_IDX = rnd::range(0, int(free_cells.size()));
 
-            const Pos& p(CELL_IDX);
+            const P& p(CELL_IDX);
 
             std::vector<Mon*> summoned;
             actor_factory::summon(p, {Actor_id::the_high_priest_cpy}, true, this, &summoned);

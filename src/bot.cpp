@@ -30,7 +30,7 @@ namespace bot
 namespace
 {
 
-std::vector<Pos> cur_path_;
+std::vector<P> cur_path_;
 
 void find_path_to_stairs()
 {
@@ -39,7 +39,7 @@ void find_path_to_stairs()
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
-    Pos stair_pos(-1, -1);
+    P stair_pos(-1, -1);
 
     for (int x = 0; x < MAP_W; ++x)
     {
@@ -59,7 +59,7 @@ void find_path_to_stairs()
         }
     }
 
-    assert(stair_pos != Pos(-1, -1));
+    assert(stair_pos != P(-1, -1));
 
     path_find::run(map::player->pos, stair_pos, blocked, cur_path_);
 
@@ -67,7 +67,7 @@ void find_path_to_stairs()
     assert(cur_path_.front() == stair_pos);
 }
 
-bool walk_to_adj_cell(const Pos& p)
+bool walk_to_adj_cell(const P& p)
 {
     assert(utils::is_pos_adj(map::player->pos, p, true));
 
@@ -197,7 +197,7 @@ void act()
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const Pos p(map::player->pos + Pos(dx, dy));
+            const P p(map::player->pos + P(dx, dy));
             auto* const f = map::cells[p.x][p.y].rigid;
 
             if (f->id() == Feature_id::door)

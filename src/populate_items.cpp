@@ -45,7 +45,7 @@ void mk_items_on_floor()
 
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_items(), blocked);
-    std::vector<Pos> free_cells;
+    std::vector<P> free_cells;
     utils::mk_vector_from_bool_map(false, blocked, free_cells);
 
     for (int i = 0; i < nr_spawns; ++i)
@@ -56,7 +56,7 @@ void mk_items_on_floor()
         }
 
         const size_t    CELL_IDX    = rnd::range(0, free_cells.size() - 1);
-        const Pos&      pos         = free_cells[CELL_IDX];
+        const P&      pos         = free_cells[CELL_IDX];
         const size_t    ITEM_IDX    = rnd::range(0, item_bucket.size() - 1);
         const Item_id   id          = item_bucket[ITEM_IDX];
 

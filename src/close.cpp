@@ -88,7 +88,7 @@ void player_try_close_or_jam()
 
     const Dir input_dir = query::dir();
 
-    const Pos p(map::player->pos + dir_utils::offset(input_dir));
+    const P p(map::player->pos + dir_utils::offset(input_dir));
 
     msg_log::clear();
 

@@ -24,7 +24,7 @@ public:
 
     std::vector<std::string> descr() const override final;
 
-    void on_collide(const Pos& pos, Actor* actor);
+    void on_collide(const P& pos, Actor* actor);
 
     void identify(const Verbosity verbosity) override final;
 
@@ -35,7 +35,7 @@ protected:
 
     //TODO: *All* potions do nothing but run the quaff implementation when this
     //is called. That should probably be moved up to the base collide function
-    virtual void collide_hook(const Pos& pos, Actor* const actor) = 0;
+    virtual void collide_hook(const P& pos, Actor* const actor) = 0;
 
     virtual void quaff_impl(Actor& actor) = 0;
 
@@ -64,7 +64,7 @@ private:
                "levels.";
     }
 
-    void collide_hook(const Pos& pos, Actor* const actor) override;
+    void collide_hook(const P& pos, Actor* const actor) override;
 };
 
 class Potion_spirit: public Potion
@@ -87,7 +87,7 @@ private:
         return "Restores the spirit.";
     }
 
-    void collide_hook(const Pos& pos, Actor* const actor) override;
+    void collide_hook(const P& pos, Actor* const actor) override;
 };
 
 class Potion_blindness: public Potion
@@ -110,7 +110,7 @@ private:
         return "Causes temporary loss of vision.";
     }
 
-    void collide_hook(const Pos& pos, Actor* const actor) override;
+    void collide_hook(const P& pos, Actor* const actor) override;
 };
 
 class Potion_paral: public Potion
@@ -133,7 +133,7 @@ private:
         return "Causes paralysis.";
     }
 
-    void collide_hook(const Pos& pos, Actor* const actor) override;
+    void collide_hook(const P& pos, Actor* const actor) override;
 };
 
 class Potion_disease: public Potion
@@ -156,7 +156,7 @@ private:
         return "This foul liquid causes a horrible disease.";
     }
 
-    void collide_hook(const Pos& pos, Actor* const actor) override
+    void collide_hook(const P& pos, Actor* const actor) override
     {
         (void)pos;
         (void)actor;
@@ -182,7 +182,7 @@ private:
         return "Causes confusion.";
     }
 
-    void collide_hook(const Pos& pos, Actor* const actor) override;
+    void collide_hook(const P& pos, Actor* const actor) override;
 };
 
 class Potion_fortitude: public Potion
@@ -206,7 +206,7 @@ private:
         return "Gives the consumer complete peace of mind.";
     }
 
-    void collide_hook(const Pos& pos, Actor* const actor) override;
+    void collide_hook(const P& pos, Actor* const actor) override;
 };
 
 class Potion_poison: public Potion
@@ -229,7 +229,7 @@ private:
         return "A deadly brew.";
     }
 
-    void collide_hook(const Pos& pos, Actor* const actor) override;
+    void collide_hook(const P& pos, Actor* const actor) override;
 };
 
 class Potion_insight: public Potion
@@ -252,7 +252,7 @@ private:
         return "This strange concoction causes a sudden flash of intuition.";
     }
 
-    void collide_hook(const Pos& pos, Actor* const actor) override
+    void collide_hook(const P& pos, Actor* const actor) override
     {
         (void)pos;
         (void)actor;
@@ -279,7 +279,7 @@ private:
         return "Bestows visions of the surrounding area.";
     }
 
-    void collide_hook(const Pos& pos, Actor* const actor) override
+    void collide_hook(const P& pos, Actor* const actor) override
     {
         (void)pos;
         (void)actor;
@@ -306,7 +306,7 @@ private:
         return "Protects the consumer from fire.";
     }
 
-    void collide_hook(const Pos& pos, Actor* const actor) override;
+    void collide_hook(const P& pos, Actor* const actor) override;
 };
 
 class Potion_curing: public Potion
@@ -330,7 +330,7 @@ private:
                "consumers health by a small amount.";
     }
 
-    void collide_hook(const Pos& pos, Actor* const actor) override;
+    void collide_hook(const P& pos, Actor* const actor) override;
 };
 
 class Potion_rElec: public Potion
@@ -353,7 +353,7 @@ private:
         return "Protects the consumer from electricity.";
     }
 
-    void collide_hook(const Pos& pos, Actor* const actor) override;
+    void collide_hook(const P& pos, Actor* const actor) override;
 };
 
 class Potion_rAcid: public Potion
@@ -376,7 +376,7 @@ private:
         return "Protects the consumer from acid.";
     }
 
-    void collide_hook(const Pos& pos, Actor* const actor) override;
+    void collide_hook(const P& pos, Actor* const actor) override;
 };
 
 class Potion_descent: public Potion
@@ -400,7 +400,7 @@ private:
                "through the ground.";
     }
 
-    void collide_hook(const Pos& pos, Actor* const actor) override
+    void collide_hook(const P& pos, Actor* const actor) override
     {
         (void)pos;
         (void)actor;
@@ -427,7 +427,7 @@ private:
         return "Makes the consumer invisible to normal vision.";
     }
 
-    void collide_hook(const Pos& pos, Actor* const actor) override;
+    void collide_hook(const P& pos, Actor* const actor) override;
 };
 
 class Potion_see_invis: public Potion
@@ -451,7 +451,7 @@ private:
                "which is normally invisible.";
     }
 
-    void collide_hook(const Pos& pos, Actor* const actor) override;
+    void collide_hook(const P& pos, Actor* const actor) override;
 };
 
 namespace potion_handling

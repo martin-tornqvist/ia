@@ -693,7 +693,7 @@ void Player::on_actor_turn()
         //NOTE: There is no need to check for items here, since the message from stepping
         //on an item will interrupt player actions.
 
-        const Pos tgt(pos + dir_utils::offset(quick_move_dir_));
+        const P tgt(pos + dir_utils::offset(quick_move_dir_));
 
         const Cell&         tgt_cell   = map::cells[tgt.x][tgt.y];
         const Rigid* const  tgt_rigid  = tgt_cell.rigid;
@@ -752,9 +752,9 @@ void Player::update_tmp_shock()
     }
 
     //Temporary shock from features
-    for (const Pos& d : dir_utils::dir_list)
+    for (const P& d : dir_utils::dir_list)
     {
-        const Pos p(pos + d);
+        const P p(pos + d);
 
         const int BASE_SHOCK = map::cells[p.x][p.y].rigid->shock_when_adj();
 
@@ -1222,7 +1222,7 @@ void Player::move(Dir dir)
 
     bool is_free_turn = false;
 
-    const Pos tgt(pos + dir_utils::offset(dir));
+    const P tgt(pos + dir_utils::offset(dir));
 
     //Attacking, bumping stuff, staggering from encumbrance, etc?
     if (dir != Dir::center)
@@ -1445,7 +1445,7 @@ void Player::auto_melee()
     }
 
     //If this line reached, there is no adjacent cur target.
-    for (const Pos& d : dir_utils::dir_list)
+    for (const P& d : dir_utils::dir_list)
     {
         Actor* const actor = utils::actor_at_pos(pos + d);
 
@@ -1651,11 +1651,11 @@ void Player::fov_hack()
         {
             if (blocked_los[x][y] && blocked[x][y])
             {
-                const Pos p(x, y);
+                const P p(x, y);
 
-                for (const Pos& d : dir_utils::dir_list)
+                for (const P& d : dir_utils::dir_list)
                 {
-                    const Pos p_adj(p + d);
+                    const P p_adj(p + d);
 
                     if (utils::is_pos_inside_map(p_adj))
                     {

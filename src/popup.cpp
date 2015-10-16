@@ -31,7 +31,7 @@ int print_box_and_get_title_y_pos(const int TEXT_H_TOT, const int TEXT_W)
     const int X1          = X0 + BOX_W - 1;
     const int Y1          = Y0 + BOX_H - 1;
 
-    render::cover_area(Panel::map, Pos(X0, Y0), Pos(BOX_W, BOX_H));
+    render::cover_area(Panel::map, P(X0, Y0), P(BOX_W, BOX_H));
     render::draw_box(Rect(X0, Y0, X1, Y1), Panel::map);
 
     return Y0 + 1;
@@ -69,7 +69,7 @@ void menu_msg_drawing_helper(const vector<string>& lines,
 
     if (!title.empty())
     {
-        render::draw_text_centered(title, Panel::map, Pos(MAP_W_HALF, y), clr_popup_title,
+        render::draw_text_centered(title, Panel::map, P(MAP_W_HALF, y), clr_popup_title,
                                    clr_black, true);
     }
 
@@ -81,12 +81,12 @@ void menu_msg_drawing_helper(const vector<string>& lines,
 
         if (SHOW_MSG_CENTERED)
         {
-            render::draw_text_centered(line, Panel::map, Pos(MAP_W_HALF, y), clr_white,
+            render::draw_text_centered(line, Panel::map, P(MAP_W_HALF, y), clr_white,
                                        clr_black, true);
         }
         else //Draw the message with left alignment
         {
-            render::draw_text(line, Panel::map, Pos(TEXT_X0, y), clr_white);
+            render::draw_text(line, Panel::map, P(TEXT_X0, y), clr_white);
         }
 
         msg_log::add_line_to_history(line);
@@ -101,7 +101,7 @@ void menu_msg_drawing_helper(const vector<string>& lines,
     {
         Clr clr = i == cur_choice ? clr_menu_highlight : clr_menu_drk;
 
-        render::draw_text_centered(choices[i], Panel::map, Pos(MAP_W_HALF, y),
+        render::draw_text_centered(choices[i], Panel::map, P(MAP_W_HALF, y),
                                    clr, clr_black, true);
         y++;
     }
@@ -138,7 +138,7 @@ void show_msg(const std::string& msg,
 
     if (!title.empty())
     {
-        render::draw_text_centered(title, Panel::map, Pos(MAP_W_HALF, y), clr_popup_title,
+        render::draw_text_centered(title, Panel::map, P(MAP_W_HALF, y), clr_popup_title,
                                    clr_black, true);
     }
 
@@ -150,14 +150,14 @@ void show_msg(const std::string& msg,
 
         if (SHOW_MSG_CENTERED)
         {
-            render::draw_text_centered(line, Panel::map, Pos(MAP_W_HALF, y),
+            render::draw_text_centered(line, Panel::map, P(MAP_W_HALF, y),
                                        clr_white, clr_black, true);
         }
         else
         {
             const int TEXT_X0 = TEXT_X0_STD - ((W_CHANGE + 1) / 2);
 
-            render::draw_text(line, Panel::map, Pos(TEXT_X0, y), clr_white);
+            render::draw_text(line, Panel::map, P(TEXT_X0, y), clr_white);
         }
 
         msg_log::add_line_to_history(line);
@@ -165,7 +165,7 @@ void show_msg(const std::string& msg,
 
     y += 2;
 
-    render::draw_text_centered("[space/esc/enter] to close", Panel::map, Pos(MAP_W_HALF, y),
+    render::draw_text_centered("[space/esc/enter] to close", Panel::map, P(MAP_W_HALF, y),
                                clr_menu_medium);
 
     render::update_screen();

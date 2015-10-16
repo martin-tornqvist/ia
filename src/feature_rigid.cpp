@@ -23,7 +23,7 @@
 #include "sound.hpp"
 
 //--------------------------------------------------------------------- RIGID
-Rigid::Rigid(const Pos& feature_pos) :
+Rigid::Rigid(const P& feature_pos) :
     Feature(feature_pos),
     gore_tile_(Tile_id::empty),
     gore_glyph_(0),
@@ -123,7 +123,7 @@ void Rigid::on_new_turn()
         //Hit adjacent features and actors?
         if (rnd::one_in(hit_adjacent_one_in_n))
         {
-            const Pos p(dir_utils::rnd_adj_pos(pos_, false));
+            const P p(dir_utils::rnd_adj_pos(pos_, false));
 
             if (utils::is_pos_inside_map(p))
             {
@@ -138,7 +138,7 @@ void Rigid::on_new_turn()
         //Create smoke?
         if (rnd::one_in(20))
         {
-            const Pos p(dir_utils::rnd_adj_pos(pos_, true));
+            const P p(dir_utils::rnd_adj_pos(pos_, true));
 
             if (utils::is_pos_inside_map(p))
             {
@@ -362,9 +362,9 @@ void Rigid::add_light(bool light[MAP_W][MAP_H]) const
 {
     if (burn_state_ == Burn_state::burning)
     {
-        for (const Pos& d : dir_utils::dir_list_w_center)
+        for (const P& d : dir_utils::dir_list_w_center)
         {
-            const Pos p(pos_ + d);
+            const P p(pos_ + d);
 
             if (utils::is_pos_inside_map(p, true))
             {
@@ -377,7 +377,7 @@ void Rigid::add_light(bool light[MAP_W][MAP_H]) const
 }
 
 //--------------------------------------------------------------------- FLOOR
-Floor::Floor(const Pos& feature_pos) :
+Floor::Floor(const P& feature_pos) :
     Rigid   (feature_pos),
     type_   (Floor_type::cmn) {}
 
@@ -438,7 +438,7 @@ Clr Floor::clr_default() const
 }
 
 //--------------------------------------------------------------------- WALL
-Wall::Wall(const Pos& feature_pos) :
+Wall::Wall(const P& feature_pos) :
     Rigid(feature_pos),
     type_(Wall_type::cmn),
     is_mossy_(false) {}
@@ -449,9 +449,9 @@ void Wall::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 
     auto destr_adj_doors = [&]()
     {
-        for (const Pos& d : dir_utils::cardinal_list)
+        for (const P& d : dir_utils::cardinal_list)
         {
-            const Pos p(pos_ + d);
+            const P p(pos_ + d);
 
             if (utils::is_pos_inside_map(p))
             {
@@ -465,7 +465,7 @@ void Wall::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 
     auto mk_low_rubble_and_rocks = [&]()
     {
-        const Pos p(pos_);
+        const P p(pos_);
         map::put(new Rubble_low(p)); //NOTE: "this" is now deleted!
 
         if (rnd::coin_toss()) {item_factory::mk_item_on_floor(Item_id::rock, p);}
@@ -673,7 +673,7 @@ void Wall::set_random_is_moss_grown()
 }
 
 //--------------------------------------------------------------------- HIGH RUBBLE
-Rubble_high::Rubble_high(const Pos& feature_pos) :
+Rubble_high::Rubble_high(const P& feature_pos) :
     Rigid(feature_pos) {}
 
 void Rubble_high::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
@@ -683,7 +683,7 @@ void Rubble_high::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
 
     auto mk_low_rubble_and_rocks = [&]()
     {
-        const Pos p(pos_);
+        const P p(pos_);
         map::put(new Rubble_low(p)); //NOTE: "this" is now deleted!
 
         if (rnd::coin_toss()) {item_factory::mk_item_on_floor(Item_id::rock, p);}
@@ -721,7 +721,7 @@ Clr Rubble_high::clr_default() const
 }
 
 //--------------------------------------------------------------------- LOW RUBBLE
-Rubble_low::Rubble_low(const Pos& feature_pos) :
+Rubble_low::Rubble_low(const P& feature_pos) :
     Rigid(feature_pos) {}
 
 void Rubble_low::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
@@ -758,7 +758,7 @@ Clr Rubble_low::clr_default() const
 }
 
 //--------------------------------------------------------------------- BONES
-Bones::Bones(const Pos& feature_pos) :
+Bones::Bones(const P& feature_pos) :
     Rigid(feature_pos) {}
 
 void Bones::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
@@ -787,7 +787,7 @@ Clr Bones::clr_default() const
 }
 
 //--------------------------------------------------------------------- GRAVE
-Grave_stone::Grave_stone(const Pos& feature_pos) :
+Grave_stone::Grave_stone(const P& feature_pos) :
     Rigid(feature_pos) {}
 
 void Grave_stone::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
@@ -818,7 +818,7 @@ Clr Grave_stone::clr_default() const
 }
 
 //--------------------------------------------------------------------- CHURCH BENCH
-Church_bench::Church_bench(const Pos& feature_pos) : Rigid(feature_pos) {}
+Church_bench::Church_bench(const P& feature_pos) : Rigid(feature_pos) {}
 
 void Church_bench::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
                           Actor* const actor)
@@ -842,7 +842,7 @@ Clr Church_bench::clr_default() const
 }
 
 //--------------------------------------------------------------------- STATUE
-Statue::Statue(const Pos& feature_pos) :
+Statue::Statue(const P& feature_pos) :
     Rigid   (feature_pos),
     type_   (rnd::one_in(8) ? Statue_type::ghoul : Statue_type::cmn) {}
 
@@ -882,7 +882,7 @@ void Statue::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor*
 
         snd_emit::run(snd);
 
-        const Pos dst_pos = pos_ + (pos_ - actor->pos);
+        const P dst_pos = pos_ + (pos_ - actor->pos);
 
         map::put(new Rubble_low(pos_)); //NOTE: "this" is now deleted!
 
@@ -953,7 +953,7 @@ Clr Statue::clr_default() const
 }
 
 //--------------------------------------------------------------------- PILLAR
-Pillar::Pillar(const Pos& feature_pos) :
+Pillar::Pillar(const P& feature_pos) :
     Rigid(feature_pos) {}
 
 void Pillar::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
@@ -975,7 +975,7 @@ Clr Pillar::clr_default() const
 }
 
 //--------------------------------------------------------------------- MONOLITH
-Monolith::Monolith(const Pos& feature_pos) :
+Monolith::Monolith(const P& feature_pos) :
     Rigid(feature_pos) {}
 
 void Monolith::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
@@ -997,7 +997,7 @@ Clr Monolith::clr_default() const
 }
 
 //--------------------------------------------------------------------- STALAGMITE
-Stalagmite::Stalagmite(const Pos& feature_pos) :
+Stalagmite::Stalagmite(const P& feature_pos) :
     Rigid(feature_pos) {}
 
 void Stalagmite::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
@@ -1019,7 +1019,7 @@ Clr Stalagmite::clr_default() const
 }
 
 //--------------------------------------------------------------------- STAIRS
-Stairs::Stairs(const Pos& feature_pos) :
+Stairs::Stairs(const P& feature_pos) :
     Rigid(feature_pos) {}
 
 void Stairs::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
@@ -1107,7 +1107,7 @@ Clr Bridge::clr_default() const
 }
 
 //--------------------------------------------------------------------- SHALLOW LIQUID
-Liquid_shallow::Liquid_shallow(const Pos& feature_pos) :
+Liquid_shallow::Liquid_shallow(const P& feature_pos) :
     Rigid   (feature_pos),
     type_   (Liquid_type::water) {}
 
@@ -1207,7 +1207,7 @@ Clr Liquid_shallow::clr_default() const
 }
 
 //--------------------------------------------------------------------- DEEP LIQUID
-Liquid_deep::Liquid_deep(const Pos& feature_pos) :
+Liquid_deep::Liquid_deep(const P& feature_pos) :
     Rigid(feature_pos),
     type_(Liquid_type::water) {}
 
@@ -1288,7 +1288,7 @@ Clr Liquid_deep::clr_default() const
 }
 
 //--------------------------------------------------------------------- CHASM
-Chasm::Chasm(const Pos& feature_pos) :
+Chasm::Chasm(const P& feature_pos) :
     Rigid(feature_pos) {}
 
 void Chasm::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
@@ -1311,7 +1311,7 @@ Clr Chasm::clr_default() const
 }
 
 //--------------------------------------------------------------------- LEVER
-Lever::Lever(const Pos& feature_pos) :
+Lever::Lever(const P& feature_pos) :
     Rigid(feature_pos),
     is_position_left_(true),
     door_linked_to_(nullptr)  {}
@@ -1357,7 +1357,7 @@ void Lever::pull()
 }
 
 //--------------------------------------------------------------------- ALTAR
-Altar::Altar(const Pos& feature_pos) :
+Altar::Altar(const P& feature_pos) :
     Rigid(feature_pos) {}
 
 void Altar::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
@@ -1377,7 +1377,7 @@ Clr Altar::clr_default() const
 }
 
 //--------------------------------------------------------------------- CARPET
-Carpet::Carpet(const Pos& feature_pos) :
+Carpet::Carpet(const P& feature_pos) :
     Rigid(feature_pos) {}
 
 void Carpet::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
@@ -1409,7 +1409,7 @@ Clr Carpet::clr_default() const
 }
 
 //--------------------------------------------------------------------- GRASS
-Grass::Grass(const Pos& feature_pos) :
+Grass::Grass(const P& feature_pos) :
     Rigid(feature_pos),
     type_(Grass_type::cmn)
 {
@@ -1481,7 +1481,7 @@ Clr Grass::clr_default() const
 }
 
 //--------------------------------------------------------------------- BUSH
-Bush::Bush(const Pos& feature_pos) :
+Bush::Bush(const P& feature_pos) :
     Rigid(feature_pos),
     type_(Grass_type::cmn)
 {
@@ -1551,7 +1551,7 @@ Clr Bush::clr_default() const
 }
 
 //--------------------------------------------------------------------- TREE
-Tree::Tree(const Pos& feature_pos) :
+Tree::Tree(const P& feature_pos) :
     Rigid(feature_pos) {}
 
 void Tree::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
@@ -1644,9 +1644,9 @@ void Brazier::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor
 
         snd_emit::run(snd);
 
-        const Pos dst_pos = pos_ + (pos_ - actor->pos);
+        const P dst_pos = pos_ + (pos_ - actor->pos);
 
-        const Pos my_pos = pos_;
+        const P my_pos = pos_;
 
         map::put(new Rubble_low(pos_));
 
@@ -1659,7 +1659,7 @@ void Brazier::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor
 
         if (!dst_rigid->data().is_bottomless)
         {
-            Pos expl_pos;
+            P expl_pos;
 
             int expl_d = 0;
 
@@ -1688,9 +1688,9 @@ void Brazier::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor
 
 void Brazier::add_light_hook(bool light[MAP_W][MAP_H]) const
 {
-    for (const Pos& d : dir_utils::dir_list_w_center)
+    for (const P& d : dir_utils::dir_list_w_center)
     {
-        const Pos p(pos_ + d);
+        const P p(pos_ + d);
 
         light[p.x][p.y] = true;
     }
@@ -1778,7 +1778,7 @@ void Item_container::init(const Feature_id feature_id, const int NR_ITEMS_TO_ATT
     }
 }
 
-void Item_container::open(const Pos& feature_pos, Actor* const actor_opening)
+void Item_container::open(const P& feature_pos, Actor* const actor_opening)
 {
     if (actor_opening)
     {
@@ -1882,7 +1882,7 @@ void Item_container::destroy_single_fragile()
 }
 
 //--------------------------------------------------------------------- TOMB
-Tomb::Tomb(const Pos& feature_pos) :
+Tomb::Tomb(const P& feature_pos) :
     Rigid                   (feature_pos),
     is_open_                (false),
     is_trait_known_         (false),
@@ -2323,7 +2323,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
 }
 
 //--------------------------------------------------------------------- CHEST
-Chest::Chest(const Pos& feature_pos) :
+Chest::Chest(const P& feature_pos) :
     Rigid                   (feature_pos),
     is_open_                (false),
     is_locked_              (false),
@@ -2854,7 +2854,7 @@ Clr Chest::clr_default() const
 }
 
 //--------------------------------------------------------------------- FOUNTAIN
-Fountain::Fountain(const Pos& feature_pos) :
+Fountain::Fountain(const P& feature_pos) :
     Rigid               (feature_pos),
     fountain_effects_   (std::vector<Fountain_effect>()),
     fountain_matl_      (Fountain_matl::stone),
@@ -3082,7 +3082,7 @@ void Fountain::bump(Actor& actor_bumping)
 }
 
 //--------------------------------------------------------------------- CABINET
-Cabinet::Cabinet(const Pos& feature_pos) :
+Cabinet::Cabinet(const P& feature_pos) :
     Rigid       (feature_pos),
     is_open_    (false)
 {
@@ -3190,7 +3190,7 @@ Clr Cabinet::clr_default() const
 }
 
 //--------------------------------------------------------------------- COCOON
-Cocoon::Cocoon(const Pos& feature_pos) :
+Cocoon::Cocoon(const P& feature_pos) :
     Rigid(feature_pos),
     is_trapped_(rnd::fraction(6, 10)),
     is_open_(false)

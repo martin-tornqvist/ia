@@ -20,7 +20,7 @@ public:
     Snd(const std::string&              msg,
         const Sfx_id                    sfx,
         const Ignore_msg_if_origin_seen ignore_msg_if_origin_seen,
-        const Pos&                      origin,
+        const P&                      origin,
         Actor* const                    actor_who_made_sound,
         const Snd_vol                   vol,
         const Alerts_mon                alerting_mon,
@@ -65,7 +65,7 @@ public:
         return force_player_hear_snd_;
     }
 
-    Pos origin() const
+    P origin() const
     {
         return origin_;
     }
@@ -89,7 +89,7 @@ private:
     std::string msg_;
     Sfx_id sfx_;
     Ignore_msg_if_origin_seen is_msg_ignored_if_origin_seen_;
-    Pos origin_;
+    P origin_;
     Actor* actor_who_made_sound_;
     Snd_vol vol_;
     Alerts_mon is_alerting_mon_;

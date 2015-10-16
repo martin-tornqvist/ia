@@ -102,7 +102,7 @@ void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t 
 
 //TODO: This function is really weirdly written, and seems to even be doing
 //wrong things. It should be refactored.
-Item* drop_item_on_map(const Pos& intended_pos, Item& item)
+Item* drop_item_on_map(const P& intended_pos, Item& item)
 {
     //If target cell is bottomless, just destroy the item
     const auto* const tgt_rigid = map::cells[intended_pos.x][intended_pos.y].rigid;
@@ -125,15 +125,15 @@ Item* drop_item_on_map(const Pos& intended_pos, Item& item)
         }
     }
 
-    std::vector<Pos> free_cells;
+    std::vector<P> free_cells;
     utils::mk_vector_from_bool_map(true, free_cell_array, free_cells);
 
     //Sort the vector according to distance to origin
     Is_closer_to_pos is_closer_to_origin(intended_pos);
     sort(begin(free_cells), end(free_cells), is_closer_to_origin);
 
-    Pos cur_pos;
-    Pos stack_pos;
+    P cur_pos;
+    P stack_pos;
     const bool IS_STACKABLE_TYPE = item.data().is_stackable;
 
     size_t          ii          = 0;

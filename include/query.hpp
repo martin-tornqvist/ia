@@ -22,7 +22,7 @@ void wait_forConfirm();
 
 Key_data letter(const bool ACCEPT_ENTER);
 
-int number(const Pos& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS,
+int number(const P& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS,
            const int DEFAULT, const bool CANCEL_RETURNS_DEFAULT);
 
 } //Query

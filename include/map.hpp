@@ -27,7 +27,7 @@ struct Cell
     Item*               item;
     Rigid*              rigid;
     Cell_render_data    player_visual_memory;
-    Pos                 pos;
+    P                 pos;
 };
 
 enum class Map_type
@@ -67,12 +67,12 @@ Rigid* put(Rigid* const rigid);
 //Can it not be copied in the map drawing function instead?
 void cpy_render_array_to_visual_memory();
 
-void mk_blood(const Pos& origin);
-void mk_gore(const Pos& origin);
+void mk_blood(const P& origin);
+void mk_gore(const P& origin);
 
 void delete_and_remove_room_from_list(Room* const room);
 
-bool is_pos_seen_by_player(const Pos& p);
+bool is_pos_seen_by_player(const P& p);
 
 } //map
 

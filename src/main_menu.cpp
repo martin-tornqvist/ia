@@ -211,12 +211,12 @@ void draw(const Menu_browser& browser)
 {
     TRACE_FUNC_BEGIN;
 
-    Pos pos(MAP_W_HALF, 3);
+    P pos(MAP_W_HALF, 3);
 
     TRACE << "Calling clear_window()" << std::endl;
     render::clear_screen();
 
-    render::draw_box(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+    render::draw_box(Rect(P(0, 0), P(SCREEN_W - 1, SCREEN_H - 1)));
 
     if (config::is_tiles_mode())
     {
@@ -264,7 +264,7 @@ void draw(const Menu_browser& browser)
 
     if (IS_DEBUG_MODE)
     {
-        render::draw_text("## DEBUG MODE ##", Panel::screen, Pos(1, 1), clr_yellow);
+        render::draw_text("## DEBUG MODE ##", Panel::screen, P(1, 1), clr_yellow);
     }
 
     TRACE << "Drawing main menu" << std::endl;
@@ -349,7 +349,7 @@ void draw(const Menu_browser& browser)
 
     render::draw_text_centered(
         game_version_str + " - " + __DATE__ + " (c) 2011-2015 Martin Tornqvist",
-        Panel::screen, Pos(MAP_W_HALF, SCREEN_H - 1), clr_gray_drk);
+        Panel::screen, P(MAP_W_HALF, SCREEN_H - 1), clr_gray_drk);
 
     render::update_screen();
 

@@ -211,7 +211,7 @@ public:
     //-----------------------------------------------------------------------------
     // Hooks called from various places
     //-----------------------------------------------------------------------------
-    void affect_move_dir(const Pos& actor_pos, Dir& dir) const;
+    void affect_move_dir(const P& actor_pos, Dir& dir) const;
 
     int affect_max_hp(const int HP_MAX) const;
 
@@ -409,7 +409,7 @@ public:
         return 0;
     }
 
-    virtual void affect_move_dir(const Pos& actor_pos, Dir& dir)
+    virtual void affect_move_dir(const P& actor_pos, Dir& dir)
     {
         (void)actor_pos;
         (void)dir;
@@ -744,7 +744,7 @@ public:
     Prop_confused(Prop_turns turns_init, int nr_turns = -1) :
         Prop(Prop_id::confused, turns_init, nr_turns) {}
 
-    void affect_move_dir(const Pos& actor_pos, Dir& dir) override;
+    void affect_move_dir(const P& actor_pos, Dir& dir) override;
 
     bool allow_read(const Verbosity verbosity) const override;
     bool allow_cast_spell(const Verbosity verbosity) const override;
@@ -771,7 +771,7 @@ public:
         return "Nailed(" + to_str(nr_spikes_) + ")";
     }
 
-    void affect_move_dir(const Pos& actor_pos, Dir& dir) override;
+    void affect_move_dir(const P& actor_pos, Dir& dir) override;
 
     void on_more() override
     {
@@ -1073,7 +1073,7 @@ public:
     void on_start() override;
     void on_end() override;
 
-    void affect_move_dir(const Pos& actor_pos, Dir& dir) override;
+    void affect_move_dir(const P& actor_pos, Dir& dir) override;
 
     bool allow_read(const Verbosity verbosity) const override;
     bool allow_cast_spell(const Verbosity verbosity) const override;

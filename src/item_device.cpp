@@ -253,13 +253,13 @@ Consume_item Device_shockwave::trigger_effect()
 {
     msg_log::add("It triggers a shock wave around me.");
 
-    const Pos& player_pos = map::player->pos;
+    const P& player_pos = map::player->pos;
 
     for (int dx = -1; dx <= 1; ++dx)
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const Pos p(player_pos + Pos(dx, dy));
+            const P p(player_pos + P(dx, dy));
             Rigid* const rigid = map::cells[p.x][p.y].rigid;
             rigid->hit(Dmg_type::physical, Dmg_method::explosion);
 
@@ -273,7 +273,7 @@ Consume_item Device_shockwave::trigger_effect()
     {
         if (actor != map::player && actor->is_alive())
         {
-            const Pos& other_pos = actor->pos;
+            const P& other_pos = actor->pos;
 
             if (utils::is_pos_adj(player_pos, other_pos, false))
             {
@@ -331,7 +331,7 @@ Consume_item Device_translocator::trigger_effect()
         for (Actor* actor : seen_foes)
         {
             msg_log::add(actor->name_the() + " is teleported.");
-            render::draw_blast_at_cells(std::vector<Pos> {actor->pos}, clr_yellow);
+            render::draw_blast_at_cells(std::vector<P> {actor->pos}, clr_yellow);
             actor->teleport();
         }
     }

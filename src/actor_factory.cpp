@@ -223,7 +223,7 @@ Actor* mk_actor_from_id(const Actor_id id)
 
 } //namespace
 
-Actor* mk(const Actor_id id, const Pos& pos)
+Actor* mk(const Actor_id id, const P& pos)
 {
     assert(
         !map::cells[pos.x][pos.y].rigid ||
@@ -259,7 +259,7 @@ void delete_all_mon()
     }
 }
 
-void summon(const Pos& origin,
+void summon(const P& origin,
             const std::vector<Actor_id>& monster_ids,
             const bool MAKE_MONSTERS_AWARE,
             Actor* const actor_to_set_as_leader,
@@ -270,7 +270,7 @@ void summon(const Pos& origin,
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
-    std::vector<Pos> free_cells;
+    std::vector<P> free_cells;
     utils::mk_vector_from_bool_map(false, blocked, free_cells);
 
     std::sort(begin(free_cells), end(free_cells), Is_closer_to_pos(origin));
@@ -279,11 +279,11 @@ void summon(const Pos& origin,
     const size_t    NR_MONSTER_IDS  = monster_ids.size();
     const int       NR_TO_SPAWN     = std::min(NR_FREE_CELLS, NR_MONSTER_IDS);
 
-    std::vector<Pos> positions_to_animate;
+    std::vector<P> positions_to_animate;
 
     for (int i = 0; i < NR_TO_SPAWN; ++i)
     {
-        const Pos&    pos   = free_cells[i];
+        const P&    pos   = free_cells[i];
         const Actor_id id    = monster_ids[i];
         Actor* const  actor = mk(id, pos);
         Mon* const    mon   = static_cast<Mon*>(actor);

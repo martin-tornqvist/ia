@@ -286,9 +286,9 @@ void Ins_phobia_deep::on_new_player_turn(const std::vector<Actor*>& seen_foes)
 
     if (rnd::one_in(10))
     {
-        for (const Pos& d : dir_utils::dir_list)
+        for (const P& d : dir_utils::dir_list)
         {
-            const Pos p(map::player->pos + d);
+            const P p(map::player->pos + d);
 
             if (map::cells[p.x][p.y].rigid->is_bottomless())
             {
@@ -314,9 +314,9 @@ void Ins_phobia_dark::on_new_player_turn(const std::vector<Actor*>& seen_foes)
 
     if (rnd::one_in(10))
     {
-        for (const Pos& d : dir_utils::dir_list)
+        for (const P& d : dir_utils::dir_list)
         {
-            const Pos p(map::player->pos + d);
+            const P p(map::player->pos + d);
 
             if (map::cells[p.x][p.y].is_dark && !map::cells[p.x][p.y].is_lit)
             {

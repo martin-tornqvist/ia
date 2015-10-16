@@ -84,11 +84,11 @@ public:
 class Living_actors_adj_to_pos : public Check
 {
 public:
-    Living_actors_adj_to_pos(const Pos& pos) :
+    Living_actors_adj_to_pos(const P& pos) :
         Check(), pos_(pos) {}
     bool is_checking_actors()       const override {return true;}
     bool check(const Actor& a)      const override;
-    const Pos& pos_;
+    const P& pos_;
 };
 
 class Blocks_items : public Check
@@ -192,7 +192,7 @@ void run(const cell_check::Check& method,
          const Map_parse_mode write_rule = Map_parse_mode::overwrite,
          const Rect& area_to_check_cells = map_rect);
 
-bool cell(const cell_check::Check& method, const Pos& p);
+bool cell(const cell_check::Check& method, const P& p);
 
 //Given a map array of booleans, this will fill a second map array of boolens
 //where the cells are set to true if they are within the specified distance
@@ -220,16 +220,16 @@ bool is_map_connected(const bool blocked[MAP_W][MAP_H]);
 struct Is_closer_to_pos
 {
 public:
-    Is_closer_to_pos(const Pos& p) : p_(p) {}
-    bool operator()(const Pos& p1, const Pos& p2);
-    Pos p_;
+    Is_closer_to_pos(const P& p) : p_(p) {}
+    bool operator()(const P& p1, const P& p2);
+    P p_;
 };
 
 namespace flood_fill
 {
 
-void run(const Pos& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
-         int travel_lmt, const Pos& p1, const bool ALLOW_DIAGONAL);
+void run(const P& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
+         int travel_lmt, const P& p1, const bool ALLOW_DIAGONAL);
 
 } //Flood_fill
 
@@ -244,7 +244,7 @@ namespace path_find
 //                        more optimized and is the default behavior (best for e.g. AI),
 //                        while the randomized method can produces nicer results in some
 //                        cases (e.g. corridors).
-void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H], std::vector<Pos>&  out,
+void run(const P& p0, const P& p1, bool blocked[MAP_W][MAP_H], std::vector<P>&  out,
          const bool ALLOW_DIAGONAL = true, const bool RANDOMIZE_STEP_CHOICES = false);
 
 } //path_find

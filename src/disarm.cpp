@@ -26,7 +26,7 @@ void player_disarm()
     }
 
     //Abort if held by spider web
-    const Pos player_pos = map::player->pos;
+    const P player_pos = map::player->pos;
     const auto* const feature_at_player =
         map::cells[player_pos.x][player_pos.y].rigid;
 
@@ -58,7 +58,7 @@ void player_disarm()
     msg_log::add("Which direction?" + cancel_info_str, clr_white_high);
     render::draw_map_and_interface();
 
-    const Pos pos(map::player->pos + dir_utils::offset(query::dir()));
+    const P pos(map::player->pos + dir_utils::offset(query::dir()));
 
     if (pos == map::player->pos)
     {

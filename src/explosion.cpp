@@ -17,7 +17,7 @@
 namespace
 {
 
-void draw(const std::vector< std::vector<Pos> >& pos_lists,
+void draw(const std::vector< std::vector<P> >& pos_lists,
           bool blocked[MAP_W][MAP_H],
           const Clr* const clr_override)
 {
@@ -41,9 +41,9 @@ void draw(const std::vector< std::vector<Pos> >& pos_lists,
         for (int i_outer = 0; i_outer < NR_OUTER; i_outer++)
         {
             const Clr& clr = i_outer == NR_OUTER - 1 ? clr_outer : clr_inner;
-            const std::vector<Pos>& inner = pos_lists[i_outer];
+            const std::vector<P>& inner = pos_lists[i_outer];
 
-            for (const Pos& pos : inner)
+            for (const P& pos : inner)
             {
                 if (map::cells[pos.x][pos.y].is_seen_by_player && !blocked[pos.x][pos.y])
                 {
@@ -69,23 +69,23 @@ void draw(const std::vector< std::vector<Pos> >& pos_lists,
     }
 }
 
-void explosion_area(const Pos& c, const int RADI, Rect& rect_ref)
+void explosion_area(const P& c, const int RADI, Rect& rect_ref)
 {
-    rect_ref = Rect(Pos(std::max(c.x - RADI, 1),         std::max(c.y - RADI, 1)),
-                    Pos(std::min(c.x + RADI, MAP_W - 2), std::min(c.y + RADI, MAP_H - 2)));
+    rect_ref = Rect(P(std::max(c.x - RADI, 1),         std::max(c.y - RADI, 1)),
+                    P(std::min(c.x + RADI, MAP_W - 2), std::min(c.y + RADI, MAP_H - 2)));
 }
 
-void cells_reached(const Rect& area, const Pos& origin,
+void cells_reached(const Rect& area, const P& origin,
                    bool blocked[MAP_W][MAP_H],
-                   std::vector< std::vector<Pos> >& pos_list_ref)
+                   std::vector< std::vector<P> >& pos_list_ref)
 {
-    std::vector<Pos> line;
+    std::vector<P> line;
 
     for (int y = area.p0.y; y <= area.p1.y; ++y)
     {
         for (int x = area.p0.x; x <= area.p1.x; ++x)
         {
-            const Pos pos(x, y);
+            const P pos(x, y);
             const int DIST = utils::king_dist(pos, origin);
             bool is_reached = true;
 
@@ -93,7 +93,7 @@ void cells_reached(const Rect& area, const Pos& origin,
             {
                 line_calc::calc_new_line(origin, pos, true, 999, false, line);
 
-                for (Pos& pos_check_block : line)
+                for (P& pos_check_block : line)
                 {
                     if (blocked[pos_check_block.x][pos_check_block.y])
                     {
@@ -119,7 +119,7 @@ void cells_reached(const Rect& area, const Pos& origin,
 namespace explosion
 {
 
-void run(const Pos& origin,
+void run(const P& origin,
          const Expl_type expl_type,
          const Expl_src expl_src,
          const Emit_expl_snd emit_expl_snd,
@@ -135,7 +135,7 @@ void run(const Pos& origin,
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_projectiles(), blocked);
 
-    std::vector< std::vector<Pos> > pos_lists;
+    std::vector< std::vector<P> > pos_lists;
     cells_reached(area, origin, blocked, pos_lists);
 
     if (emit_expl_snd == Emit_expl_snd::yes)
@@ -170,7 +170,7 @@ void run(const Pos& origin,
 
     for (Actor* actor : game_time::actors_)
     {
-        const Pos& pos = actor->pos;
+        const P& pos = actor->pos;
 
         if (actor->is_alive())
         {
@@ -188,9 +188,9 @@ void run(const Pos& origin,
 
     for (int cur_radi = 0; cur_radi < NR_OUTER; cur_radi++)
     {
-        const std::vector<Pos>& positions_at_cur_radi = pos_lists[cur_radi];
+        const std::vector<P>& positions_at_cur_radi = pos_lists[cur_radi];
 
-        for (const Pos& pos : positions_at_cur_radi)
+        for (const P& pos : positions_at_cur_radi)
         {
 
             Actor* living_actor                 = living_actors[pos.x][pos.y];
@@ -283,7 +283,7 @@ void run(const Pos& origin,
     }
 }
 
-void run_smoke_explosion_at(const Pos& origin)
+void run_smoke_explosion_at(const P& origin)
 {
     Rect area;
     const int RADI = EXPLOSION_STD_RADI;
@@ -292,7 +292,7 @@ void run_smoke_explosion_at(const Pos& origin)
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_projectiles(), blocked);
 
-    std::vector< std::vector<Pos> > pos_lists;
+    std::vector< std::vector<P> > pos_lists;
     cells_reached(area, origin, blocked, pos_lists);
 
     //TODO: Sound message?
@@ -300,9 +300,9 @@ void run_smoke_explosion_at(const Pos& origin)
             Snd_vol::low, Alerts_mon::yes);
     snd_emit::run(snd);
 
-    for (const std::vector<Pos>& inner : pos_lists)
+    for (const std::vector<P>& inner : pos_lists)
     {
-        for (const Pos& pos : inner)
+        for (const P& pos : inner)
         {
             if (!blocked[pos.x][pos.y])
             {

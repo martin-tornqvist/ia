@@ -26,7 +26,7 @@ Cell::Cell() :
     item                (nullptr),
     rigid               (nullptr),
     player_visual_memory(Cell_render_data()),
-    pos(Pos(-1, -1)) {}
+    pos(P(-1, -1)) {}
 
 Cell::~Cell()
 {
@@ -85,7 +85,7 @@ void reset_cells(const bool MAKE_STONE_WALLS)
         for (int y = 0; y < MAP_H; ++y)
         {
             cells[x][y].reset();
-            cells[x][y].pos = Pos(x, y);
+            cells[x][y].pos = P(x, y);
 
             room_map[x][y]   = nullptr;
 
@@ -94,7 +94,7 @@ void reset_cells(const bool MAKE_STONE_WALLS)
 
             if (MAKE_STONE_WALLS)
             {
-                put(new Wall(Pos(x, y)));
+                put(new Wall(P(x, y)));
             }
         }
     }
@@ -116,7 +116,7 @@ void init()
         player = nullptr;
     }
 
-    const Pos player_pos(PLAYER_START_X, PLAYER_START_Y);
+    const P player_pos(PLAYER_START_X, PLAYER_START_Y);
     player = static_cast<Player*>(actor_factory::mk(Actor_id::player, player_pos));
 
     actor_factory::delete_all_mon();
@@ -198,7 +198,7 @@ Rigid* put(Rigid* const f)
 {
     assert(f);
 
-    const Pos p     = f->pos();
+    const P p     = f->pos();
     Cell&     cell  = cells[p.x][p.y];
 
     delete cell.rigid;
@@ -244,13 +244,13 @@ void cpy_render_array_to_visual_memory()
     }
 }
 
-void mk_blood(const Pos& origin)
+void mk_blood(const P& origin)
 {
     for (int dx = -1; dx <= 1; ++dx)
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const Pos       c   = origin + Pos(dx, dy);
+            const P       c   = origin + P(dx, dy);
             Rigid* const    f   = cells[c.x][c.y].rigid;
 
             if (f->can_have_blood())
@@ -264,13 +264,13 @@ void mk_blood(const Pos& origin)
     }
 }
 
-void mk_gore(const Pos& origin)
+void mk_gore(const P& origin)
 {
     for (int dx = -1; dx <= 1; ++dx)
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const Pos c = origin + Pos(dx, dy);
+            const P c = origin + P(dx, dy);
 
             if (rnd::one_in(3))
             {
@@ -295,7 +295,7 @@ void delete_and_remove_room_from_list(Room* const room)
     assert(false && "Tried to remove non-existing room");
 }
 
-bool is_pos_seen_by_player(const Pos& p)
+bool is_pos_seen_by_player(const P& p)
 {
     assert(utils::is_pos_inside_map(p));
     return cells[p.x][p.y].is_seen_by_player;

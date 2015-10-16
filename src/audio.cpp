@@ -26,7 +26,7 @@ void load_audio_file(const Sfx_id sfx, const std::string& filename)
 
     const std::string file_rel_path  = "audio/" + filename;
 
-    render::draw_text("Loading " + file_rel_path + "...", Panel::screen, Pos(0, 0), clr_white);
+    render::draw_text("Loading " + file_rel_path + "...", Panel::screen, P(0, 0), clr_white);
 
     render::update_screen();
 

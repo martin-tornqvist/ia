@@ -420,7 +420,7 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
         return Spell_effect_noticed::yes;
     }
 
-    std::vector<Pos> line;
+    std::vector<P> line;
 
     line_calc::calc_new_line(caster->pos, tgt->pos, true, 999, false, line);
 
@@ -430,7 +430,7 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
 
     for (size_t i = 1; i < LINE_SIZE; ++i)
     {
-        const Pos& p = line[i];
+        const P& p = line[i];
 
         if (config::is_tiles_mode())
         {
@@ -601,7 +601,7 @@ Spell_effect_noticed Spell_mayhem::cast_impl(Actor* const caster) const
         msg_log::add("Destruction rages around " + caster_name + "!");
     }
 
-    const Pos& caster_pos = caster->pos;
+    const P& caster_pos = caster->pos;
 
     const int NR_SWEEPS = 5;
     const int RADI      = FOV_STD_RADI_INT;
@@ -857,7 +857,7 @@ Spell_effect_noticed Spell_det_items::cast_impl(Actor* const caster) const
     const int X1      = std::min(MAP_W - 1, ORIG_X + RADI);
     const int Y1      = std::min(MAP_H - 1, ORIG_Y + RADI);
 
-    std::vector<Pos> items_revealed_cells;
+    std::vector<P> items_revealed_cells;
 
     for (int y = Y0; y < Y1; ++y)
     {
@@ -869,7 +869,7 @@ Spell_effect_noticed Spell_det_items::cast_impl(Actor* const caster) const
             {
                 map::cells[x][y].is_seen_by_player = true;
                 map::cells[x][y].is_explored     = true;
-                items_revealed_cells.push_back(Pos(x, y));
+                items_revealed_cells.push_back(P(x, y));
             }
         }
     }
@@ -902,7 +902,7 @@ Spell_effect_noticed Spell_det_traps::cast_impl(Actor* const caster) const
 {
     (void)caster;
 
-    std::vector<Pos> traps_revealed_cells;
+    std::vector<P> traps_revealed_cells;
 
     for (int x = 0; x < MAP_W; ++x)
     {
@@ -916,7 +916,7 @@ Spell_effect_noticed Spell_det_traps::cast_impl(Actor* const caster) const
                 {
                     auto* const trap = static_cast<Trap*>(f);
                     trap->reveal(false);
-                    traps_revealed_cells.push_back(Pos(x, y));
+                    traps_revealed_cells.push_back(P(x, y));
                 }
             }
         }
@@ -1289,9 +1289,9 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
-    std::vector<Pos> free_cells_seen_by_player;
+    std::vector<P> free_cells_seen_by_player;
     const int RADI = FOV_STD_RADI_INT;
-    const Pos player_pos(map::player->pos);
+    const P player_pos(map::player->pos);
     const int X0 = std::max(0, player_pos.x - RADI);
     const int Y0 = std::max(0, player_pos.y - RADI);
     const int X1 = std::min(MAP_W, player_pos.x + RADI) - 1;
@@ -1303,17 +1303,17 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
         {
             if (!blocked[x][y] && map::cells[x][y].is_seen_by_player)
             {
-                free_cells_seen_by_player.push_back(Pos(x, y));
+                free_cells_seen_by_player.push_back(P(x, y));
             }
         }
     }
 
-    Pos summon_pos(-1, -1);
+    P summon_pos(-1, -1);
 
     if (free_cells_seen_by_player.empty())
     {
         //No free cells seen by player, instead summon near the caster.
-        std::vector<Pos> free_cells_vector;
+        std::vector<P> free_cells_vector;
         utils::mk_vector_from_bool_map(false, blocked, free_cells_vector);
 
         if (!free_cells_vector.empty())

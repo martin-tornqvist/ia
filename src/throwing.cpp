@@ -25,17 +25,17 @@
 namespace throwing
 {
 
-void player_throw_lit_explosive(const Pos& aim_cell)
+void player_throw_lit_explosive(const P& aim_cell)
 {
     assert(map::player->active_explosive);
 
-    std::vector<Pos> path;
+    std::vector<P> path;
     line_calc::calc_new_line(map::player->pos, aim_cell, true, THROW_RANGE_LMT, false, path);
 
     //Remove cells after blocked cells
     for (size_t i = 1; i < path.size(); ++i)
     {
-        const Pos   p = path[i];
+        const P   p = path[i];
         const auto* f = map::cells[p.x][p.y].rigid;
 
         if (!f->is_projectile_passable())
@@ -45,7 +45,7 @@ void player_throw_lit_explosive(const Pos& aim_cell)
         }
     }
 
-    const Pos end_pos(path.empty() ? Pos() : path.back());
+    const P end_pos(path.empty() ? P() : path.back());
 
     auto* const explosive = map::player->active_explosive;
 
@@ -56,7 +56,7 @@ void player_throw_lit_explosive(const Pos& aim_cell)
     {
         const auto  clr = explosive->ignited_projectile_clr();
 
-        for (const Pos& p : path)
+        for (const P& p : path)
         {
             render::draw_map_and_interface(false);
 
@@ -88,13 +88,13 @@ void player_throw_lit_explosive(const Pos& aim_cell)
     game_time::tick();
 }
 
-void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
+void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
 {
     Throw_att_data att_data(&actor_throwing, tgt_cell, actor_throwing.pos, item_thrown);
 
     const Actor_size aim_lvl = att_data.intended_aim_lvl;
 
-    std::vector<Pos> path;
+    std::vector<P> path;
 
     line_calc::calc_new_line(actor_throwing.pos, tgt_cell, false, THROW_RANGE_LMT, false, path);
 
@@ -109,7 +109,7 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
     }
     else //Monster throwing
     {
-        const Pos& p = path.front();
+        const P& p = path.front();
 
         if (map::cells[p.x][p.y].is_seen_by_player)
         {
@@ -124,7 +124,7 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
     const Clr   item_clr                = item_thrown.clr();
     int         break_item_one_in_n     = -1;
 
-    Pos pos(-1, -1);
+    P pos(-1, -1);
 
     for (size_t i = 1; i < path.size(); ++i)
     {
@@ -243,7 +243,7 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
     const int   FINAL_IDX   = blocked_idx == -1 ?
                               (path.size() - 1) : blocked_idx;
 
-    const Pos   final_pos   = path[FINAL_IDX];
+    const P   final_pos   = path[FINAL_IDX];
 
     if (break_item_one_in_n != -1 && rnd::one_in(break_item_one_in_n))
     {

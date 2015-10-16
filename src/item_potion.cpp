@@ -91,7 +91,7 @@ std::vector<std::string> Potion::descr() const
     }
 }
 
-void Potion::on_collide(const Pos& pos, Actor* const actor)
+void Potion::on_collide(const P& pos, Actor* const actor)
 {
     if (!map::cells[pos.x][pos.y].rigid->is_bottomless() || actor)
     {
@@ -169,7 +169,7 @@ void Potion_vitality::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_vitality::collide_hook(const Pos& pos, Actor* const actor)
+void Potion_vitality::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -194,7 +194,7 @@ void Potion_spirit::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_spirit::collide_hook(const Pos& pos, Actor* const actor)
+void Potion_spirit::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -214,7 +214,7 @@ void Potion_blindness::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_blindness::collide_hook(const Pos& pos, Actor* const actor)
+void Potion_blindness::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -234,7 +234,7 @@ void Potion_paral::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_paral::collide_hook(const Pos& pos, Actor* const actor)
+void Potion_paral::collide_hook(const P& pos, Actor* const actor)
 {
 
     (void)pos;
@@ -265,7 +265,7 @@ void Potion_conf::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_conf::collide_hook(const Pos& pos, Actor* const actor)
+void Potion_conf::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -316,7 +316,7 @@ void Potion_fortitude::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_fortitude::collide_hook(const Pos& pos, Actor* const actor)
+void Potion_fortitude::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -336,7 +336,7 @@ void Potion_poison::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_poison::collide_hook(const Pos& pos, Actor* const actor)
+void Potion_poison::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -356,7 +356,7 @@ void Potion_rFire::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_rFire::collide_hook(const Pos& pos, Actor* const actor)
+void Potion_rFire::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -405,7 +405,7 @@ void Potion_curing::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_curing::collide_hook(const Pos& pos, Actor* const actor)
+void Potion_curing::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -425,7 +425,7 @@ void Potion_rElec::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_rElec::collide_hook(const Pos& pos, Actor* const actor)
+void Potion_rElec::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -445,7 +445,7 @@ void Potion_rAcid::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_rAcid::collide_hook(const Pos& pos, Actor* const actor)
+void Potion_rAcid::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -520,7 +520,7 @@ void Potion_clairv::quaff_impl(Actor& actor)
     {
         msg_log::add("I see far and wide!");
 
-        std::vector<Pos> anim_cells;
+        std::vector<P> anim_cells;
         anim_cells.clear();
 
         bool blocked[MAP_W][MAP_H];
@@ -536,7 +536,7 @@ void Potion_clairv::quaff_impl(Actor& actor)
                 {
                     cell.is_explored = true;
                     cell.is_seen_by_player = true;
-                    anim_cells.push_back(Pos(x, y));
+                    anim_cells.push_back(P(x, y));
                 }
             }
         }
@@ -579,7 +579,7 @@ void Potion_invis::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_invis::collide_hook(const Pos& pos, Actor* const actor)
+void Potion_invis::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -599,7 +599,7 @@ void Potion_see_invis::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_see_invis::collide_hook(const Pos& pos, Actor* const actor)
+void Potion_see_invis::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 

@@ -120,7 +120,7 @@ class Feature;
 
 struct Feature_data_t
 {
-    std::function<Feature*(const Pos& p)> mk_obj;
+    std::function<Feature*(const P& p)> mk_obj;
     Feature_id id;
     char glyph;
     Tile_id tile;

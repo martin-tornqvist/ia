@@ -147,7 +147,7 @@ void run_atomic_turn_events()
     //Stop burning for any actor standing in liquid
     for (auto* const actor : actors_)
     {
-        const Pos& p = actor->pos;
+        const P& p = actor->pos;
 
         const Rigid* const rigid = map::cells[p.x][p.y].rigid;
 
@@ -203,7 +203,7 @@ int turn()
     return turn_nr_;
 }
 
-void mobs_at_pos(const Pos& p, std::vector<Mob*>& vector_ref)
+void mobs_at_pos(const P& p, std::vector<Mob*>& vector_ref)
 {
     vector_ref.clear();
 

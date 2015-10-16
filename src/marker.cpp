@@ -25,13 +25,13 @@ namespace marker
 namespace
 {
 
-Pos pos_;
+P pos_;
 
 void set_pos_to_closest_enemy_if_visible()
 {
     vector<Actor*> seen_foes;
     map::player->seen_foes(seen_foes);
-    vector<Pos> seen_foes_cells;
+    vector<P> seen_foes_cells;
 
     utils::actor_cells(seen_foes, seen_foes_cells);
 
@@ -46,7 +46,7 @@ void set_pos_to_closest_enemy_if_visible()
 
 void try_move(const Dir dir)
 {
-    const Pos new_pos(pos_ + dir_utils::offset(dir));
+    const P new_pos(pos_ + dir_utils::offset(dir));
 
     if (utils::is_pos_inside_map(new_pos)) {pos_ = new_pos;}
 }
@@ -78,11 +78,11 @@ bool set_pos_to_tgt_if_visible()
 
 } //namespace
 
-Pos run(const Marker_draw_tail draw_trail,
-        const Marker_use_player_tgt use_tgt,
-        function<void(const Pos&)> on_marker_at_pos,
-        function<Marker_done(const Pos&, const Key_data&)> on_key_press,
-        const int EFFECTIVE_RANGE_LMT)
+P run(const Marker_draw_tail draw_trail,
+      const Marker_use_player_tgt use_tgt,
+      function<void(const P&)> on_marker_at_pos,
+      function<Marker_done(const P&, const Key_data&)> on_key_press,
+      const int EFFECTIVE_RANGE_LMT)
 {
     pos_ = map::player->pos;
 
@@ -107,11 +107,11 @@ Pos run(const Marker_draw_tail draw_trail,
 
         render::draw_map_and_interface(false);
 
-        vector<Pos> trail;
+        vector<P> trail;
 
         if (draw_trail == Marker_draw_tail::yes)
         {
-            const Pos origin(map::player->pos);
+            const P origin(map::player->pos);
             line_calc::calc_new_line(origin, pos_, true, INT_MAX, false, trail);
         }
 

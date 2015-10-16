@@ -40,7 +40,7 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
     is_backstab         (false),
     is_weak_attack      (false)
 {
-    const Pos&          def_pos             = defender.pos;
+    const P&          def_pos             = defender.pos;
     bool                is_defender_aware   = true;
     const Actor_data_t& defender_data       = defender.data();
 
@@ -235,9 +235,9 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
 }
 
 Ranged_att_data::Ranged_att_data(Actor* const attacker,
-                                 const Pos& attacker_orign,
-                                 const Pos& aim_pos,
-                                 const Pos& cur_pos,
+                                 const P& attacker_orign,
+                                 const P& aim_pos,
+                                 const P& cur_pos,
                                  const Wpn& wpn,
                                  Actor_size aim_lvl) :
     Att_data            (attacker, nullptr, wpn),
@@ -278,7 +278,7 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
 
         const Actor_data_t& defender_data = defender->data();
 
-        const Pos& def_pos(defender->pos);
+        const P& def_pos(defender->pos);
 
         const int ATT_SKILL     = attacker ? attacker->ability(Ability_id::ranged, true) : 50;
 
@@ -355,8 +355,8 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
 }
 
 Throw_att_data::Throw_att_data(Actor* const attacker,
-                               const Pos& aim_pos,
-                               const Pos& cur_pos,
+                               const P& aim_pos,
+                               const P& cur_pos,
                                const Item& item,
                                Actor_size aim_lvl) :
     Att_data            (attacker, nullptr, item),
@@ -398,8 +398,8 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
 
         const int           WPN_MOD         = item.data().ranged.throw_hit_chance_mod;
 
-        const Pos&          att_pos(attacker->pos);
-        const Pos&          def_pos(defender->pos);
+        const P&          att_pos(attacker->pos);
+        const P&          def_pos(defender->pos);
 
         const int DIST_TO_TGT = utils::king_dist(att_pos.x, att_pos.y, def_pos.x, def_pos.y);
 
@@ -807,7 +807,7 @@ void print_ranged_initiate_msgs(const Ranged_att_data& data)
     }
     else //Attacker is monster
     {
-        const Pos& p = data.attacker->pos;
+        const P& p = data.attacker->pos;
 
         if (map::cells[p.x][p.y].is_seen_by_player)
         {
@@ -825,7 +825,7 @@ void print_proj_at_actor_msgs(const Ranged_att_data& data, const bool IS_HIT, co
     //Print messages if player can see the cell (note that the player does not have to see the
     //actual actor being hit - it will simply say "it" is hit otherwise)
 
-    const Pos& defender_pos = data.defender->pos;
+    const P& defender_pos = data.defender->pos;
 
     if (IS_HIT && map::cells[defender_pos.x][defender_pos.y].is_seen_by_player)
     {
@@ -860,7 +860,7 @@ void print_proj_at_actor_msgs(const Ranged_att_data& data, const bool IS_HIT, co
     }
 }
 
-void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_pos, Wpn& wpn)
+void projectile_fire(Actor* const attacker, const P& origin, const P& aim_pos, Wpn& wpn)
 {
     std::vector<Projectile*> projectiles;
 
@@ -891,7 +891,7 @@ void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_po
     const int cheb_trvl_lim = 30;
 
     //Get projectile path
-    std::vector<Pos> path;
+    std::vector<P> path;
     line_calc::calc_new_line(origin, aim_pos, stop_at_tgt, cheb_trvl_lim, false, path);
 
     const Clr projectile_clr = wpn.data().ranged.projectile_clr;
@@ -1005,7 +1005,7 @@ void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_po
 
                 proj->set_att_data(atta_data);
 
-                const Pos draw_pos(proj->pos);
+                const P draw_pos(proj->pos);
 
                 //HIT ACTOR?
                 const bool IS_ACTOR_AIMED_FOR = proj->pos == aim_pos;
@@ -1201,7 +1201,7 @@ void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_po
         //If any projectile can be seen and not obstructed, delay
         for (Projectile* projectile : projectiles)
         {
-            const Pos& pos = projectile->pos;
+            const P& pos = projectile->pos;
 
             if ( map::cells[pos.x][pos.y].is_seen_by_player && !projectile->is_obstructed)
             {
@@ -1232,7 +1232,7 @@ void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_po
     if (first_projectile->is_obstructed)
     {
         const int element = first_projectile->obstructed_in_element;
-        const Pos& pos = path[element];
+        const P& pos = path[element];
         wpn.on_projectile_blocked(pos, first_projectile->actor_hit);
     }
     else
@@ -1249,7 +1249,7 @@ void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_po
     render::draw_map_and_interface();
 }
 
-void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aim_pos)
+void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
 {
     Ranged_att_data data = Ranged_att_data(&attacker, attacker.pos, aim_pos, attacker.pos, wpn);
 
@@ -1263,8 +1263,8 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aim_pos)
     Actor* actor_array[MAP_W][MAP_H];
     utils::mk_actor_array(actor_array);
 
-    const Pos origin = attacker.pos;
-    std::vector<Pos> path;
+    const P origin = attacker.pos;
+    std::vector<P> path;
     line_calc::calc_new_line(origin, aim_pos, false, 9999, false, path);
 
     int nr_actors_hit = 0;
@@ -1303,7 +1303,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aim_pos)
             break;
         }
 
-        const Pos cur_pos(path[i]);
+        const P cur_pos(path[i]);
 
         if (actor_array[cur_pos.x][cur_pos.y])
         {
@@ -1442,7 +1442,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aim_pos)
 
 } //namespace
 
-void melee(Actor* const attacker, const Pos& attacker_origin, Actor& defender, const Wpn& wpn)
+void melee(Actor* const attacker, const P& attacker_origin, Actor& defender, const Wpn& wpn)
 {
     const Melee_att_data att_data(attacker, defender, wpn);
 
@@ -1526,7 +1526,7 @@ void melee(Actor* const attacker, const Pos& attacker_origin, Actor& defender, c
 
                     bool blocked[MAP_W][MAP_H];
 
-                    const Pos fov_p = player.pos;
+                    const P fov_p = player.pos;
 
                     Rect fov_rect = fov::get_fov_rect(fov_p);
 
@@ -1537,7 +1537,7 @@ void melee(Actor* const attacker, const Pos& attacker_origin, Actor& defender, c
 
                     fov::run(fov_p, blocked, fov_result);
 
-                    std::vector<Pos> p_bucket;
+                    std::vector<P> p_bucket;
 
                     for (int x = fov_rect.p0.x; x <= fov_rect.p1.x; ++x)
                     {
@@ -1545,12 +1545,12 @@ void melee(Actor* const attacker, const Pos& attacker_origin, Actor& defender, c
                         {
                             if (!fov_result[x][y].is_blocked_hard)
                             {
-                                p_bucket.push_back(Pos(x, y));
+                                p_bucket.push_back(P(x, y));
                             }
                         }
                     }
 
-                    Pos item_p(map::player->pos);
+                    P item_p(map::player->pos);
 
                     if (!p_bucket.empty())
                     {
@@ -1617,7 +1617,7 @@ void melee(Actor* const attacker, const Pos& attacker_origin, Actor& defender, c
     game_time::tick();
 }
 
-bool ranged(Actor* const attacker, const Pos& origin, const Pos& aim_pos, Wpn& wpn)
+bool ranged(Actor* const attacker, const P& origin, const P& aim_pos, Wpn& wpn)
 {
     bool did_attack = false;
 

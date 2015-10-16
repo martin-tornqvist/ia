@@ -242,7 +242,7 @@ void copy_bool_array(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H])
 }
 
 void mk_vector_from_bool_map(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_H],
-                             std::vector<Pos>& out)
+                             std::vector<P>& out)
 {
     out.clear();
 
@@ -252,23 +252,23 @@ void mk_vector_from_bool_map(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_
         {
             if (a[x][y] == VALUE_TO_STORE)
             {
-                out.push_back(Pos(x, y));
+                out.push_back(P(x, y));
             }
         }
     }
 }
 
-void mk_bool_map_from_vector(const std::vector<Pos>& positions, bool out[MAP_W][MAP_H])
+void mk_bool_map_from_vector(const std::vector<P>& positions, bool out[MAP_W][MAP_H])
 {
     reset_array(out, false);
 
-    for (const Pos& p : positions)
+    for (const P& p : positions)
     {
         out[p.x][p.y] = true;
     }
 }
 
-void actor_cells(const std::vector<Actor*>& actors, std::vector<Pos>& out)
+void actor_cells(const std::vector<Actor*>& actors, std::vector<P>& out)
 {
     out.clear();
 
@@ -278,7 +278,7 @@ void actor_cells(const std::vector<Actor*>& actors, std::vector<Pos>& out)
     }
 }
 
-Actor* actor_at_pos(const Pos& pos, Actor_state state)
+Actor* actor_at_pos(const P& pos, Actor_state state)
 {
     for (auto* const actor : game_time::actors_)
     {
@@ -291,7 +291,7 @@ Actor* actor_at_pos(const Pos& pos, Actor_state state)
     return nullptr;
 }
 
-Mob* first_mob_at_pos(const Pos& pos)
+Mob* first_mob_at_pos(const P& pos)
 {
     for (auto* const mob : game_time::mobs_)
     {
@@ -310,12 +310,12 @@ void mk_actor_array(Actor* a[MAP_W][MAP_H])
 
     for (Actor* actor : game_time::actors_)
     {
-        const Pos& p = actor->pos;
+        const P& p = actor->pos;
         a[p.x][p.y] = actor;
     }
 }
 
-bool is_pos_inside_map(const Pos& pos, const bool COUNT_EDGE_AS_INSIDE)
+bool is_pos_inside_map(const P& pos, const bool COUNT_EDGE_AS_INSIDE)
 {
     if (COUNT_EDGE_AS_INSIDE)
     {
@@ -327,7 +327,7 @@ bool is_pos_inside_map(const Pos& pos, const bool COUNT_EDGE_AS_INSIDE)
     }
 }
 
-bool is_pos_inside(const Pos& pos, const Rect& area)
+bool is_pos_inside(const P& pos, const Rect& area)
 {
     return
         pos.x >= area.p0.x &&
@@ -365,22 +365,22 @@ int king_dist(const int X0, const int Y0, const int X1, const int Y1)
     return std::max(abs(X1 - X0), abs(Y1 - Y0));
 }
 
-int king_dist(const Pos& p0, const Pos& p1)
+int king_dist(const P& p0, const P& p1)
 {
     return std::max(abs(p1.x - p0.x), abs(p1.y - p0.y));
 }
 
-int taxicab_dist(const Pos& p0, const Pos& p1)
+int taxicab_dist(const P& p0, const P& p1)
 {
     return abs(p1.x - p0.x) + abs(p1.y - p0.y);
 }
 
-Pos closest_pos(const Pos& p, const std::vector<Pos>& positions)
+P closest_pos(const P& p, const std::vector<P>& positions)
 {
     int dist_to_nearest = INT_MAX;
-    Pos closest_pos;
+    P closest_pos;
 
-    for (Pos p_cmp : positions)
+    for (P p_cmp : positions)
     {
         const int CUR_DIST = king_dist(p, p_cmp);
 
@@ -394,7 +394,7 @@ Pos closest_pos(const Pos& p, const std::vector<Pos>& positions)
     return closest_pos;
 }
 
-Actor* random_closest_actor(const Pos& c, const std::vector<Actor*>& actors)
+Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors)
 {
     if (actors.empty())
     {
@@ -439,7 +439,7 @@ Actor* random_closest_actor(const Pos& c, const std::vector<Actor*>& actors)
     return closest_actors[ELEMENT];
 }
 
-bool is_pos_adj(const Pos& pos1, const Pos& pos2, const bool COUNT_SAME_CELL_AS_ADJ)
+bool is_pos_adj(const P& pos1, const P& pos2, const bool COUNT_SAME_CELL_AS_ADJ)
 {
     if (
         pos1.x < pos2.x - 1 ||
@@ -538,7 +538,7 @@ const double edge[4] =
 
 } //namespace
 
-Dir dir(const Pos& offset)
+Dir dir(const P& offset)
 {
     assert(offset.x >= -1 && offset.y >= -1 && offset.x <= 1 && offset.y <= 1);
 
@@ -569,47 +569,47 @@ Dir dir(const Pos& offset)
     return Dir::END;
 }
 
-Pos offset(const Dir dir)
+P offset(const Dir dir)
 {
     assert(dir != Dir::END);
 
     switch (dir)
     {
     case Dir::down_left:
-        return Pos(-1, 1);
+        return P(-1, 1);
 
     case Dir::down:
-        return Pos(0, 1);
+        return P(0, 1);
 
     case Dir::down_right:
-        return Pos(1, 1);
+        return P(1, 1);
 
     case Dir::left:
-        return Pos(-1, 0);
+        return P(-1, 0);
 
     case Dir::center:
-        return Pos(0, 0);
+        return P(0, 0);
 
     case Dir::right:
-        return Pos(1, 0);
+        return P(1, 0);
 
     case Dir::up_left:
-        return Pos(-1, -1);
+        return P(-1, -1);
 
     case Dir::up:
-        return Pos(0, -1);
+        return P(0, -1);
 
     case Dir::up_right:
-        return Pos(1, -1);
+        return P(1, -1);
 
     case Dir::END:
-        return Pos(0, 0);
+        return P(0, 0);
     }
 
-    return Pos(0, 0);
+    return P(0, 0);
 }
 
-Pos rnd_adj_pos(const Pos& origin, const bool IS_ORIGIN_ALLOWED)
+P rnd_adj_pos(const P& origin, const bool IS_ORIGIN_ALLOWED)
 {
     if (IS_ORIGIN_ALLOWED)
     {
@@ -622,12 +622,12 @@ Pos rnd_adj_pos(const Pos& origin, const bool IS_ORIGIN_ALLOWED)
     }
 }
 
-void compass_dir_name(const Pos& from_pos, const Pos& to_pos, std::string& dst)
+void compass_dir_name(const P& from_pos, const P& to_pos, std::string& dst)
 {
 
     dst = "";
 
-    const Pos offset(to_pos - from_pos);
+    const P offset(to_pos - from_pos);
     const double ANGLE_DB = atan2(-offset.y, offset.x);
 
     if (ANGLE_DB        <  -edge[2] && ANGLE_DB >  -edge[3])
@@ -667,16 +667,16 @@ void compass_dir_name(const Pos& from_pos, const Pos& to_pos, std::string& dst)
 void compass_dir_name(const Dir dir, std::string& dst)
 {
 
-    const Pos& o = offset(dir);
+    const P& o = offset(dir);
     dst = compass_dir_names[o.x + 1][o.y + 1];
 }
 
-void compass_dir_name(const Pos& offs, std::string& dst)
+void compass_dir_name(const P& offs, std::string& dst)
 {
     dst = compass_dir_names[offs.x + 1][offs.y + 1];
 }
 
-bool is_cardinal(const Pos& d)
+bool is_cardinal(const P& d)
 {
     assert(d.x >= -1 && d.x <= 1 && d.y >= -1 && d.y <= 1);
     return d != 0 && (d.x == 0 || d.y == 0);

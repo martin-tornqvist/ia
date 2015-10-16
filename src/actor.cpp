@@ -68,7 +68,7 @@ int Actor::ability(const Ability_id id, const bool IS_AFFECTED_BY_PROPS) const
 
 bool Actor::is_spotting_sneaking_actor(Actor& other)
 {
-    const Pos& other_pos = other.pos;
+    const P& other_pos = other.pos;
 
     const int   PLAYER_SEARCH_MOD   = is_player() ?
                                       (ability(Ability_id::searching, true) / 3) : 0;
@@ -176,7 +176,7 @@ void Actor::seen_foes(std::vector<Actor*>& out)
     }
 }
 
-void Actor::place(const Pos& pos_, Actor_data_t& actor_data)
+void Actor::place(const P& pos_, Actor_data_t& actor_data)
 {
     pos         = pos_;
     data_       = &actor_data;
@@ -267,7 +267,7 @@ void Actor::teleport()
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_actor(*this, true), blocked);
 
-    std::vector<Pos> pos_bucket;
+    std::vector<P> pos_bucket;
     utils::mk_vector_from_bool_map(false, blocked, pos_bucket);
 
     if (pos_bucket.empty())
@@ -280,7 +280,7 @@ void Actor::teleport()
         msg_log::add(name_the() + " suddenly disappears!");
     }
 
-    Pos   tgt_pos                   = pos_bucket[rnd::range(0, pos_bucket.size() - 1)];
+    P   tgt_pos                   = pos_bucket[rnd::range(0, pos_bucket.size() - 1)];
     bool  player_has_tele_control   = false;
 
     if (is_player())
@@ -297,13 +297,13 @@ void Actor::teleport()
         {
             player_has_tele_control = true;
 
-            auto chance_of_tele_success = [](const Pos & tgt)
+            auto chance_of_tele_success = [](const P & tgt)
             {
                 const int DIST = utils::king_dist(map::player->pos, tgt);
                 return utils::constr_in_range(25, 100 - DIST, 95);
             };
 
-            auto on_marker_at_pos = [chance_of_tele_success](const Pos & p)
+            auto on_marker_at_pos = [chance_of_tele_success](const P & p)
             {
                 msg_log::clear();
                 look::print_location_info_msgs(p);
@@ -316,7 +316,7 @@ void Actor::teleport()
                 msg_log::add(cancel_info_str_no_space);
             };
 
-            auto on_key_press = [](const Pos & p, const Key_data & key_data)
+            auto on_key_press = [](const P & p, const Key_data & key_data)
             {
                 (void)p;
 
@@ -332,7 +332,7 @@ void Actor::teleport()
             msg_log::add("I have the power to control teleportation.", clr_white, false,
                          More_prompt_on_msg::yes);
 
-            const Pos marker_tgt_pos =
+            const P marker_tgt_pos =
                 marker::run(Marker_draw_tail::yes, Marker_use_player_tgt::no,
                             on_marker_at_pos, on_key_press);
 
@@ -825,9 +825,9 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
     if (!is_player() && is_humanoid())
     {
         snd_emit::run({"I hear agonized screaming.", Sfx_id::END,
-                            Ignore_msg_if_origin_seen::yes, pos, this, Snd_vol::low,
-                            Alerts_mon::no
-                           });
+                       Ignore_msg_if_origin_seen::yes, pos, this, Snd_vol::low,
+                       Alerts_mon::no
+                      });
     }
 
     if (ALLOW_DROP_ITEMS)
@@ -847,7 +847,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
     {
         if (!is_player())
         {
-            Pos new_pos;
+            P new_pos;
             auto* feature_here = map::cells[pos.x][pos.y].rigid;
 
             //TODO: this should be decided with a floodfill instead
@@ -857,7 +857,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
                 {
                     for (int dy = -1; dy <= 1; ++dy)
                     {
-                        new_pos      = pos + Pos(dx, dy);
+                        new_pos      = pos + P(dx, dy);
                         feature_here = map::cells[pos.x + dx][pos.y + dy].rigid;
 
                         if (feature_here->can_have_corpse())

@@ -285,7 +285,7 @@ void Jewelry_effect_summon_mon::on_std_turn_equipped()
         msg_log::add("There is a loud whistling sound.", clr_white, false,
                      More_prompt_on_msg::yes);
 
-        const Pos origin = map::player->pos;
+        const P origin = map::player->pos;
 
         std::vector<Mon*> summoned_mon;
 
@@ -310,7 +310,7 @@ void Jewelry_effect_fire::on_std_turn_equipped()
 
     if (rnd::one_in(FIRE_ONE_IN_N))
     {
-        const Pos& origin   = map::player->pos;
+        const P& origin   = map::player->pos;
         const int D         = FOV_STD_RADI_INT - 2;
         const int X0        = std::max(1,            origin.x - D);
         const int Y0        = std::max(1,            origin.y - D);
@@ -326,7 +326,7 @@ void Jewelry_effect_fire::on_std_turn_equipped()
         {
             for (int y = Y0; y <= Y1; ++y)
             {
-                if (rnd::one_in(FIRE_CELL_ONE_IN_N) && Pos(x, y) != origin)
+                if (rnd::one_in(FIRE_CELL_ONE_IN_N) && P(x, y) != origin)
                 {
                     map::cells[x][y].rigid->hit(Dmg_type::fire, Dmg_method::elemental);
                 }
@@ -476,8 +476,8 @@ void Jewelry_effect_shriek::on_std_turn_equipped()
         phrase += "!!!";
 
         snd_emit::run(Snd(phrase, Sfx_id::END, Ignore_msg_if_origin_seen::no,
-                               map::player->pos, map::player, Snd_vol::high, Alerts_mon::yes
-                              ));
+                          map::player->pos, map::player, Snd_vol::high, Alerts_mon::yes
+                         ));
 
         map::player->incr_shock(Shock_lvl::mild, Shock_src::misc);
 

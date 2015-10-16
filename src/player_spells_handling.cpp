@@ -47,10 +47,10 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
 
     render::draw_text_centered("Invoke power",
                                Panel::screen,
-                               Pos(SCREEN_W / 2, 0),
+                               P(SCREEN_W / 2, 0),
                                clr_orange);
 
-    Pos p(0, 1);
+    P p(0, 1);
 
     std::string key_str = "a) ";
 
@@ -95,7 +95,7 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
         fill_clr.g /= 3;
         fill_clr.b /= 3;
 
-        render::draw_text(fill_str, Panel::screen, Pos(p.x + name.size(), p.y), fill_clr);
+        render::draw_text(fill_str, Panel::screen, P(p.x + name.size(), p.y), fill_clr);
 
         p.x = SPI_X;
 

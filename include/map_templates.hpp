@@ -48,9 +48,9 @@ public:
 
     void add_row(std::vector<map_templ_cell>& row) {cells_.push_back(row);}
 
-    Pos dims() const
+    P dims() const
     {
-        return Pos(cells_.back().size(), cells_.size());
+        return P(cells_.back().size(), cells_.size());
     }
 
 private:

@@ -17,7 +17,7 @@ enum class Did_open         {no, yes};
 class Rigid: public Feature
 {
 public:
-    Rigid(const Pos& feature_pos);
+    Rigid(const P& feature_pos);
 
     Rigid() = delete;
 
@@ -111,7 +111,7 @@ enum class Floor_type {cmn, cave, stone_path};
 class Floor: public Rigid
 {
 public:
-    Floor(const Pos& feature_pos);
+    Floor(const P& feature_pos);
 
     Floor() = delete;
 
@@ -137,7 +137,7 @@ private:
 class Carpet: public Rigid
 {
 public:
-    Carpet(const Pos& feature_pos);
+    Carpet(const P& feature_pos);
 
     Carpet() = delete;
 
@@ -163,7 +163,7 @@ enum class Grass_type {cmn, withered};
 class Grass: public Rigid
 {
 public:
-    Grass(const Pos& feature_pos);
+    Grass(const P& feature_pos);
 
     Grass() = delete;
 
@@ -189,7 +189,7 @@ private:
 class Bush: public Rigid
 {
 public:
-    Bush(const Pos& feature_pos);
+    Bush(const P& feature_pos);
 
     Bush() = delete;
 
@@ -215,7 +215,7 @@ private:
 class Brazier: public Rigid
 {
 public:
-    Brazier(const Pos& feature_pos) : Rigid(feature_pos) {}
+    Brazier(const P& feature_pos) : Rigid(feature_pos) {}
 
     Brazier() = delete;
 
@@ -242,7 +242,7 @@ enum class Wall_type {cmn, cmn_alt, cave, egypt, cliff, leng_monestary};
 class Wall: public Rigid
 {
 public:
-    Wall(const Pos& feature_pos);
+    Wall(const P& feature_pos);
 
     Wall() = delete;
 
@@ -277,7 +277,7 @@ private:
 class Rubble_low: public Rigid
 {
 public:
-    Rubble_low(const Pos& feature_pos);
+    Rubble_low(const P& feature_pos);
 
     Rubble_low() = delete;
 
@@ -300,7 +300,7 @@ private:
 class Bones: public Rigid
 {
 public:
-    Bones(const Pos& feature_pos);
+    Bones(const P& feature_pos);
 
     Bones() = delete;
 
@@ -323,7 +323,7 @@ private:
 class Rubble_high: public Rigid
 {
 public:
-    Rubble_high(const Pos& feature_pos);
+    Rubble_high(const P& feature_pos);
 
     Rubble_high() = delete;
 
@@ -346,7 +346,7 @@ private:
 class Grave_stone: public Rigid
 {
 public:
-    Grave_stone(const Pos& feature_pos);
+    Grave_stone(const P& feature_pos);
 
     Grave_stone() = delete;
 
@@ -378,7 +378,7 @@ private:
 class Church_bench: public Rigid
 {
 public:
-    Church_bench(const Pos& feature_pos);
+    Church_bench(const P& feature_pos);
 
     Church_bench() = delete;
 
@@ -403,7 +403,7 @@ enum class Statue_type {cmn, ghoul};
 class Statue: public Rigid
 {
 public:
-    Statue(const Pos& feature_pos);
+    Statue(const P& feature_pos);
     Statue() = delete;
     ~Statue() {}
 
@@ -430,7 +430,7 @@ private:
 class Pillar: public Rigid
 {
 public:
-    Pillar(const Pos& feature_pos);
+    Pillar(const P& feature_pos);
     Pillar() = delete;
     ~Pillar() {}
 
@@ -451,7 +451,7 @@ private:
 class Monolith: public Rigid
 {
 public:
-    Monolith(const Pos& feature_pos);
+    Monolith(const P& feature_pos);
     Monolith() = delete;
     ~Monolith() {}
 
@@ -472,7 +472,7 @@ private:
 class Stalagmite: public Rigid
 {
 public:
-    Stalagmite(const Pos& feature_pos);
+    Stalagmite(const P& feature_pos);
     Stalagmite() = delete;
     ~Stalagmite() {}
 
@@ -493,7 +493,7 @@ private:
 class Stairs: public Rigid
 {
 public:
-    Stairs(const Pos& feature_pos);
+    Stairs(const P& feature_pos);
     Stairs() = delete;
     ~Stairs() {}
 
@@ -518,7 +518,7 @@ private:
 class Bridge : public Rigid
 {
 public:
-    Bridge(const Pos& feature_pos) :
+    Bridge(const P& feature_pos) :
         Rigid(feature_pos),
         axis_(Axis::hor) {}
     Bridge() = delete;
@@ -550,7 +550,7 @@ private:
 class Liquid_shallow: public Rigid
 {
 public:
-    Liquid_shallow(const Pos& feature_pos);
+    Liquid_shallow(const P& feature_pos);
     Liquid_shallow() = delete;
     ~Liquid_shallow() {}
 
@@ -575,7 +575,7 @@ private:
 class Liquid_deep: public Rigid
 {
 public:
-    Liquid_deep(const Pos& feature_pos);
+    Liquid_deep(const P& feature_pos);
     Liquid_deep() = delete;
     ~Liquid_deep() {}
 
@@ -600,7 +600,7 @@ private:
 class Chasm: public Rigid
 {
 public:
-    Chasm(const Pos& feature_pos);
+    Chasm(const P& feature_pos);
     Chasm() = delete;
     ~Chasm() {}
 
@@ -623,7 +623,7 @@ class Door;
 class Lever: public Rigid
 {
 public:
-    Lever(const Pos& feature_pos);
+    Lever(const P& feature_pos);
 
     Lever() = delete;
 
@@ -654,7 +654,7 @@ private:
 class Altar: public Rigid
 {
 public:
-    Altar(const Pos& feature_pos);
+    Altar(const P& feature_pos);
     Altar() = delete;
     ~Altar() {}
 
@@ -675,7 +675,7 @@ private:
 class Tree: public Rigid
 {
 public:
-    Tree(const Pos& feature_pos);
+    Tree(const P& feature_pos);
     Tree() = delete;
     ~Tree() {}
 
@@ -706,7 +706,7 @@ public:
 
     void init(const Feature_id feature_id, const int NR_ITEMS_TO_ATTEMPT);
 
-    void open(const Pos& feature_pos, Actor* const actor_opening);
+    void open(const P& feature_pos, Actor* const actor_opening);
 
     void destroy_single_fragile();
 
@@ -739,7 +739,7 @@ enum class Tomb_appearance
 class Tomb: public Rigid
 {
 public:
-    Tomb(const Pos& pos);
+    Tomb(const P& pos);
     Tomb() = delete;
     ~Tomb() {}
 
@@ -780,7 +780,7 @@ enum class Chest_matl {wood, iron, END};
 class Chest: public Rigid
 {
 public:
-    Chest(const Pos& pos);
+    Chest(const P& pos);
     Chest() = delete;
     ~Chest() {}
 
@@ -829,7 +829,7 @@ private:
 class Cabinet: public Rigid
 {
 public:
-    Cabinet(const Pos& pos);
+    Cabinet(const P& pos);
     Cabinet() = delete;
     ~Cabinet() {}
 
@@ -882,7 +882,7 @@ enum class Fountain_matl
 class Fountain: public Rigid
 {
 public:
-    Fountain(const Pos& pos);
+    Fountain(const P& pos);
 
     Fountain() = delete;
 
@@ -910,7 +910,7 @@ private:
 class Cocoon: public Rigid
 {
 public:
-    Cocoon(const Pos& pos);
+    Cocoon(const P& pos);
 
     Cocoon() = delete;
 

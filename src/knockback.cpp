@@ -21,7 +21,7 @@ namespace knock_back
 {
 
 void try_knock_back(Actor&        defender,
-                    const Pos&    attacked_from_pos,
+                    const P&    attacked_from_pos,
                     const bool    IS_SPIKE_GUN,
                     const bool    IS_MSG_ALLOWED)
 {
@@ -40,13 +40,13 @@ void try_knock_back(Actor&        defender,
         return;
     }
 
-    const Pos d = (defender.pos - attacked_from_pos).signs();
+    const P d = (defender.pos - attacked_from_pos).signs();
 
     const int KNOCK_RANGE = 2;
 
     for (int i = 0; i < KNOCK_RANGE; ++i)
     {
-        const Pos new_pos = defender.pos + d;
+        const P new_pos = defender.pos + d;
 
         bool blocked[MAP_W][MAP_H];
         map_parse::run(cell_check::Blocks_actor(defender, true), blocked);
