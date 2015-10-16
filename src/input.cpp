@@ -33,8 +33,6 @@
 #include "throwing.hpp"
 #include "utils.hpp"
 
-using namespace std;
-
 namespace input
 {
 
@@ -46,7 +44,8 @@ bool is_inited_ = false;
 
 void query_quit()
 {
-    const vector<string> quit_choices = vector<string> {"yes", "no"};
+    const std::vector<std::string> quit_choices = std::vector<std::string> {"yes", "no"};
+
     const int QUIT_CHOICE = popup::show_menu_msg(
                                 "Save and highscore are not kept.",
                                 false, quit_choices, "Quit the current game?");
@@ -313,8 +312,8 @@ void handle_map_mode_key_press(const Key_data& d)
                         wpn->nr_ammo_loaded_ == 0               &&
                         map::player->hp() > 1)
                     {
-                        const string wpn_name = wpn->name(Item_ref_type::plain,
-                                                          Item_ref_inf::none);
+                        const std::string wpn_name = wpn->name(Item_ref_type::plain,
+                                                               Item_ref_inf::none);
 
                         msg_log::add("The " + wpn_name + " draws power from my essence!",
                                      clr_msg_bad);
@@ -483,13 +482,13 @@ void handle_map_mode_key_press(const Key_data& d)
 
             const bool IS_FREE_TURN = player_bon::bg() == Bg::war_vet;
 
-            const string swift_str = IS_FREE_TURN ? " swiftly" : "";
+            const std::string swift_str = IS_FREE_TURN ? " swiftly" : "";
 
             Inventory& inv = map::player->inv();
 
             Item* const wielded   = inv.item_in_slot(Slot_id::wpn);
             Item* const alt       = inv.item_in_slot(Slot_id::wpn_alt);
-            const string ALT_NAME = alt ? alt->name(Item_ref_type::a) : "";
+            const std::string ALT_NAME = alt ? alt->name(Item_ref_type::a) : "";
 
             if (wielded || alt)
             {
@@ -502,7 +501,7 @@ void handle_map_mode_key_press(const Key_data& d)
                     }
                     else
                     {
-                        const string NAME = wielded->name(Item_ref_type::a);
+                        const std::string NAME = wielded->name(Item_ref_type::a);
                         msg_log::add("I" + swift_str + " put away my weapon (" +
                                      NAME + ").");
                     }
@@ -532,7 +531,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
         if (map::player->is_alive())
         {
-            vector<Actor*> seen_mon;
+            std::vector<Actor*> seen_mon;
             map::player->seen_foes(seen_mon);
 
             if (seen_mon.empty())
@@ -560,7 +559,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
         if (map::player->is_alive())
         {
-            vector<Actor*> seen_mon;
+            std::vector<Actor*> seen_mon;
             map::player->seen_foes(seen_mon);
 
             if (!seen_mon.empty())
@@ -848,22 +847,8 @@ void handle_map_mode_key_press(const Key_data& d)
         return;
     }
 
-    //----------------------------------- RE-CAST PREVIOUS MEMORIZED SPELL
+    //----------------------------------- CAST SPELL
     else if (d.key == 'x')
-    {
-        msg_log::clear();
-
-        if (map::player->is_alive())
-        {
-            player_spells_handling::try_cast_prev_spell();
-        }
-
-        clear_events();
-        return;
-    }
-
-    //----------------------------------- MEMORIZED SPELLS
-    else if (d.key == 'X')
     {
         msg_log::clear();
 
@@ -891,6 +876,27 @@ void handle_map_mode_key_press(const Key_data& d)
         return;
     }
 
+    //----------------------------------- MAKE NOISE
+    else if (d.key == 'N')
+    {
+        msg_log::add("I make some noise...");
+
+        Snd snd("",
+                Sfx_id::END,
+                Ignore_msg_if_origin_seen::yes,
+                map::player->pos,
+                map::player,
+                Snd_vol::low,
+                Alerts_mon::yes);
+
+        snd_emit::run(snd);
+
+        game_time::tick();
+
+        clear_events();
+        return;
+    }
+
     //----------------------------------- MENU
     else if (d.sdl_key == SDLK_ESCAPE)
     {
@@ -898,7 +904,8 @@ void handle_map_mode_key_press(const Key_data& d)
         {
             msg_log::clear();
 
-            const vector<string> choices {"Options", "Tome of Wisdom", "Quit", "Cancel"};
+            const std::vector<std::string> choices {"Options", "Tome of Wisdom", "Quit", "Cancel"};
+
             const int CHOICE = popup::show_menu_msg("", true, choices);
 
             if (CHOICE == 0)
@@ -1065,7 +1072,7 @@ void handle_map_mode_key_press(const Key_data& d)
     //----------------------------------- UNDEFINED COMMANDS
     else if (d.key != -1)
     {
-        string cmd_tried = " ";
+        std::string cmd_tried = " ";
         cmd_tried[0] = d.key;
         msg_log::clear();
         msg_log::add("Unknown command '" + cmd_tried + "'.");

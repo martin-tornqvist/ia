@@ -18,13 +18,11 @@ void load();
 
 void player_select_spell_to_cast();
 
-void try_cast_prev_spell();
-
 void learn_spell_if_not_known(Spell* const spell);
 void learn_spell_if_not_known(const Spell_id id);
 
 bool is_spell_learned(const Spell_id id);
 
-} //Player_spells_handling
+} //player_spells_handling
 
 #endif

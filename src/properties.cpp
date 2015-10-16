@@ -344,9 +344,9 @@ void init_data_list()
     d.name_short = "Confused";
     d.msg[size_t(Prop_msg::start_player)] = "I am confused!";
     d.msg[size_t(Prop_msg::start_mon)] = "looks confused.";
-    d.msg[size_t(Prop_msg::end_player)] = "I am no longer confused.";
+    d.msg[size_t(Prop_msg::end_player)] = "I come to my senses.";
     d.msg[size_t(Prop_msg::end_mon)] = "is no longer confused.";
-    d.msg[size_t(Prop_msg::res_player)] = "I resist confusion.";
+    d.msg[size_t(Prop_msg::res_player)] = "I manage to keep my head together.";
     d.msg[size_t(Prop_msg::res_mon)] = "resists confusion.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;

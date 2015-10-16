@@ -28,13 +28,13 @@
    G      Unload or pick up ammunition from the ground
    i      Inventory (handle equipment or use items)
    m      Display message history
+   N      Make some noise (to lure monsters)
    q      Kick, bash doors, or destroy corpses
    r      Reload wielded firearm
    s      Wait and search a few turns
    t      Throw something from the "Thrown" slot, or throw held explosive
    v      View descriptions of things on the map
-   x      Cast previous spell
-   X      Select and cast any memorized spell
+   x      Cast spell
    z      Swap to alternative weapon
 
 

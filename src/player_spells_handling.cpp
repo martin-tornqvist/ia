@@ -37,8 +37,7 @@ struct Spell_opt
     Item*   src_item;
 };
 
-std::vector<Spell*>  known_spells_;
-Spell_opt        prev_cast_;
+std::vector<Spell*> known_spells_;
 
 void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
 {
@@ -46,7 +45,10 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
 
     render::clear_screen();
 
-    render::draw_text_centered("Invoke power", Panel::screen, Pos(SCREEN_W / 2, 0), clr_orange);
+    render::draw_text_centered("Invoke power",
+                               Panel::screen,
+                               Pos(SCREEN_W / 2, 0),
+                               clr_orange);
 
     Pos p(0, 1);
 
@@ -256,11 +258,11 @@ void try_cast(const Spell_opt& spell_opt)
         if (map::player->is_alive())
         {
             spell->cast(map::player, true);
-            prev_cast_ = spell_opt;
 
             if (IS_WARLOCK && rnd::one_in(2))
             {
                 auto* const prop = new Prop_warlock_charged(Prop_turns::std);
+
                 map::player->prop_handler().try_add_prop(prop);
             }
         }
@@ -279,7 +281,6 @@ void cleanup()
     for (Spell* spell : known_spells_) {delete spell;}
 
     known_spells_.clear();
-    prev_cast_ = Spell_opt();
 }
 
 void save()
@@ -355,42 +356,6 @@ void player_select_spell_to_cast()
     }
 }
 
-void try_cast_prev_spell()
-{
-    TRACE_FUNC_BEGIN;
-
-    bool is_prev_spell_ok = false;
-
-    if (prev_cast_.spell)
-    {
-        //Checking if previous spell is still available (it could for example have been
-        //granted by an item that was dropped)
-        std::vector<Spell_opt> spell_opts;
-        spells_avail(spell_opts);
-
-        auto spell_opt_cmp = [&](const Spell_opt & opt)
-        {
-            return opt.spell == prev_cast_.spell;
-        };
-
-        is_prev_spell_ok = find_if(begin(spell_opts), end(spell_opts), spell_opt_cmp) !=
-                           end(spell_opts);
-    }
-
-    if (is_prev_spell_ok)
-    {
-        TRACE << "Previous spell is available, casting" << std::endl;
-        try_cast(prev_cast_);
-    }
-    else
-    {
-        TRACE << "No previous spell set, player picks spell instead" << std::endl;
-        player_select_spell_to_cast();
-    }
-
-    TRACE_FUNC_END;
-}
-
 bool is_spell_learned(const Spell_id id)
 {
     for (auto* s : known_spells_)
@@ -432,4 +397,4 @@ void learn_spell_if_not_known(Spell* const spell)
     }
 }
 
-} //Player_spells_handling
+} //player_spells_handling
