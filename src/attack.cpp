@@ -557,7 +557,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
                 Snd_vol::low,
                 snd_alerts_mon);
 
-        snd_emit::emit_snd(snd);
+        snd_emit::run(snd);
     }
     else if (att_data.att_result <= fail)
     {
@@ -600,7 +600,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
         Snd snd(snd_msg, sfx, Ignore_msg_if_origin_seen::yes, att_data.defender->pos,
                 att_data.attacker, Snd_vol::low, snd_alerts_mon);
 
-        snd_emit::emit_snd(snd);
+        snd_emit::run(snd);
     }
     else //Aim is ok
     {
@@ -615,7 +615,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
                 }
                 else //Cannot see defender
                 {
-                    other_name = "It";
+                    other_name = "it";
                 }
 
                 msg_log::add("My attack passes right through " + other_name + "!");
@@ -630,7 +630,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
                     }
                     else //Player cannot see attacker
                     {
-                        other_name = "It";
+                        other_name = "it";
                     }
 
                     msg_log::add("The attack of " + other_name + " passes right through me!",
@@ -646,7 +646,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
                     Snd_vol::low,
                     snd_alerts_mon);
 
-            snd_emit::emit_snd(snd);
+            snd_emit::run(snd);
         }
         else //Target was hit (not ethereal)
         {
@@ -788,7 +788,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
                     Snd_vol::low,
                     snd_alerts_mon);
 
-            snd_emit::emit_snd(snd);
+            snd_emit::run(snd);
         }
     }
 }
@@ -978,7 +978,7 @@ void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_po
                             vol,
                             Alerts_mon::yes);
 
-                    snd_emit::emit_snd(snd);
+                    snd_emit::run(snd);
                 }
             }
 
@@ -1115,7 +1115,7 @@ void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_po
                                 Snd_vol::low,
                                 Alerts_mon::yes);
 
-                        snd_emit::emit_snd(snd);
+                        snd_emit::run(snd);
                     }
 
                     //RENDER FEATURE HIT
@@ -1157,7 +1157,7 @@ void projectile_fire(Actor* const attacker, const Pos& origin, const Pos& aim_po
                                 Snd_vol::low,
                                 Alerts_mon::yes);
 
-                        snd_emit::emit_snd(snd);
+                        snd_emit::run(snd);
                     }
 
                     //RENDER GROUND HITS
@@ -1292,7 +1292,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aim_pos)
                 vol,
                 Alerts_mon::yes);
 
-        snd_emit::emit_snd(snd);
+        snd_emit::run(snd);
     }
 
     for (size_t i = 1; i < path.size(); ++i)
@@ -1381,7 +1381,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aim_pos)
 
             Snd snd("I hear a ricochet.", Sfx_id::ricochet, Ignore_msg_if_origin_seen::yes,
                     cur_pos, nullptr, Snd_vol::low, Alerts_mon::yes);
-            snd_emit::emit_snd(snd);
+            snd_emit::run(snd);
 
             Cell& cell = map::cells[cur_pos.x][cur_pos.y];
 
@@ -1414,7 +1414,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aim_pos)
         {
             Snd snd("I hear a ricochet.", Sfx_id::ricochet, Ignore_msg_if_origin_seen::yes,
                     cur_pos, nullptr, Snd_vol::low, Alerts_mon::yes);
-            snd_emit::emit_snd(snd);
+            snd_emit::run(snd);
 
             if (map::cells[cur_pos.x][cur_pos.y].is_seen_by_player)
             {

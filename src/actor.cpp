@@ -611,7 +611,7 @@ Actor_died Actor::hit(int dmg,
                         Snd_vol::low,
                         Alerts_mon::yes);
 
-                snd_emit::emit_snd(snd);
+                snd_emit::run(snd);
             }
 
             state_ = Actor_state::destroyed;
@@ -642,7 +642,7 @@ Actor_died Actor::hit(int dmg,
                         Snd_vol::low,
                         Alerts_mon::yes);
 
-                snd_emit::emit_snd(snd);
+                snd_emit::run(snd);
             }
         }
 
@@ -824,7 +824,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
 
     if (!is_player() && is_humanoid())
     {
-        snd_emit::emit_snd({"I hear agonized screaming.", Sfx_id::END,
+        snd_emit::run({"I hear agonized screaming.", Sfx_id::END,
                             Ignore_msg_if_origin_seen::yes, pos, this, Snd_vol::low,
                             Alerts_mon::no
                            });
@@ -927,7 +927,7 @@ Did_action Actor::try_eat_corpse()
                 alerts,
                 More_prompt_on_msg::no);
 
-        snd_emit::emit_snd(snd);
+        snd_emit::run(snd);
 
         if (is_player())
         {

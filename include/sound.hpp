@@ -100,7 +100,7 @@ private:
 namespace snd_emit
 {
 
-void emit_snd(Snd snd);
+void run(Snd snd);
 
 void reset_nr_snd_msg_printed_cur_turn();
 

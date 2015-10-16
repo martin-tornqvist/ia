@@ -201,6 +201,20 @@ void init_data_list()
     d.alignment = Prop_alignment::good;
     add_prop_data(d);
 
+    d.id = Prop_id::rSpell;
+    d.name = "Spell Resistance";
+    d.name_short = "rSpell";
+    d.msg[size_t(Prop_msg::start_player)] = "I defy harmful spells!";
+    d.msg[size_t(Prop_msg::start_mon)] = "is defying harmful magic spells.";
+    d.msg[size_t(Prop_msg::end_player)] = "I feel vulnerable to magic spells.";
+    d.msg[size_t(Prop_msg::end_mon)] = "is vulnerable to magic spells.";
+    d.is_making_mon_aware = false;
+    d.allow_apply_more_while_active = true;
+    d.update_vision_when_start_or_end = false;
+    d.allow_test_on_bot = false; //NOTE: This prop is tested anyway
+    d.alignment = Prop_alignment::good;
+    add_prop_data(d);
+
     d.id = Prop_id::lgtSens;
     d.std_rnd_turns = Range(50, 100);
     d.name = "Light sensitive";
@@ -974,6 +988,9 @@ Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init, const int N
         return new Prop_rPhys(turns_init, NR_TURNS);
 
     case Prop_id::rFire:
+        return new Prop_rFire(turns_init, NR_TURNS);
+
+    case Prop_id::rSpell:
         return new Prop_rFire(turns_init, NR_TURNS);
 
     case Prop_id::rPoison:

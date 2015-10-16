@@ -475,7 +475,7 @@ void Jewelry_effect_shriek::on_std_turn_equipped()
 
         phrase += "!!!";
 
-        snd_emit::emit_snd(Snd(phrase, Sfx_id::END, Ignore_msg_if_origin_seen::no,
+        snd_emit::run(Snd(phrase, Sfx_id::END, Ignore_msg_if_origin_seen::no,
                                map::player->pos, map::player, Snd_vol::high, Alerts_mon::yes
                               ));
 

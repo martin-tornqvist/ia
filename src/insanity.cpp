@@ -77,7 +77,7 @@ void Ins_scream::on_start_hook()
             Snd_vol::high,
             Alerts_mon::yes);
 
-    snd_emit::emit_snd(snd);
+    snd_emit::run(snd);
 }
 
 std::string Ins_scream::start_msg() const
@@ -109,7 +109,7 @@ void Ins_babbling::on_start_hook()
             Snd_vol::low,
             Alerts_mon::yes);
 
-    snd_emit::emit_snd(snd);
+    snd_emit::run(snd);
 }
 
 void Ins_babbling::on_new_player_turn(const std::vector<Actor*>& seen_foes)
@@ -139,7 +139,7 @@ void Ins_laugh::on_start_hook()
             Snd_vol::low,
             Alerts_mon::yes);
 
-    snd_emit::emit_snd(snd);
+    snd_emit::run(snd);
 }
 
 bool Ins_phobia_rat::allow_gain() const

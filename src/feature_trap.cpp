@@ -239,7 +239,7 @@ void Trap::trigger_start(const Actor* actor)
             Snd snd(msg, Sfx_id::END, Ignore_msg_if_origin_seen::no, pos_, nullptr, Snd_vol::low,
                     Alerts_mon::yes, more_prompt_on_msg);
 
-            snd_emit::emit_snd(snd);
+            snd_emit::run(snd);
         }
     }
 
@@ -814,7 +814,7 @@ void Trap_gas_confusion::trigger()
             Snd_vol::low,
             Alerts_mon::yes);
 
-    snd_emit::emit_snd(snd);
+    snd_emit::run(snd);
 
     explosion::run(pos_,
                    Expl_type::apply_prop,
@@ -848,7 +848,7 @@ void Trap_gas_paralyzation::trigger()
             nullptr,
             Snd_vol::low, Alerts_mon::yes);
 
-    snd_emit::emit_snd(snd);
+    snd_emit::run(snd);
 
     explosion::run(pos_,
                    Expl_type::apply_prop,
@@ -883,7 +883,7 @@ void Trap_gas_fear::trigger()
             Snd_vol::low,
             Alerts_mon::yes);
 
-    snd_emit::emit_snd(snd);
+    snd_emit::run(snd);
 
     explosion::run(pos_,
                    Expl_type::apply_prop,
@@ -1150,7 +1150,7 @@ void Trap_smoke::trigger()
             Snd_vol::low,
             Alerts_mon::yes);
 
-    snd_emit::emit_snd(snd);
+    snd_emit::run(snd);
 
     explosion::run_smoke_explosion_at(pos_);
 
@@ -1179,7 +1179,7 @@ void Trap_fire::trigger()
             Snd_vol::low,
             Alerts_mon::yes);
 
-    snd_emit::emit_snd(snd);
+    snd_emit::run(snd);
 
     explosion::run(pos_,
                    Expl_type::apply_prop,
@@ -1211,7 +1211,7 @@ void Trap_alarm::trigger()
             Snd_vol::high,
             Alerts_mon::yes);
 
-    snd_emit::emit_snd(snd);
+    snd_emit::run(snd);
 
     TRACE_FUNC_END_VERBOSE;
 }

@@ -21,6 +21,7 @@ enum class Prop_id
     rConf,
     rBreath,
     rDisease,
+    rSpell,
     lgtSens,
     blind,
     fainted,
@@ -1215,6 +1216,13 @@ public:
     Prop_tele_control(Prop_turns turns_init, int nr_turns = -1) :
         Prop(Prop_id::tele_ctrl, turns_init, nr_turns) {}
     ~Prop_tele_control() override {}
+};
+
+class Prop_rSpell: public Prop
+{
+public:
+    Prop_rSpell(Prop_turns turns_init, int nr_turns = -1) :
+        Prop(Prop_id::rSpell, turns_init, nr_turns) {}
 };
 
 class Prop_spell_reflect: public Prop

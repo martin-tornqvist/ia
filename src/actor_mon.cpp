@@ -522,7 +522,7 @@ void Mon::speak_phrase()
             Snd_vol::low,
             Alerts_mon::yes);
 
-    snd_emit::emit_snd(snd);
+    snd_emit::run(snd);
 }
 
 void Mon::become_aware(const bool IS_FROM_SEEING)
@@ -1082,7 +1082,7 @@ void Dust_vortex::on_death()
             Snd_vol::high,
             Alerts_mon::yes);
 
-    snd_emit::emit_snd(snd);
+    snd_emit::run(snd);
 
     explosion::run(pos,
                    Expl_type::apply_prop,
@@ -1109,7 +1109,7 @@ void Fire_vortex::on_death()
             Snd_vol::high,
             Alerts_mon::yes);
 
-    snd_emit::emit_snd(snd);
+    snd_emit::run(snd);
 
     explosion::run(pos,
                    Expl_type::apply_prop,
@@ -2134,7 +2134,7 @@ bool Floating_head::on_actor_turn_hook()
                     Snd_vol::high,
                     Alerts_mon::no);
 
-            snd_emit::emit_snd(snd);
+            snd_emit::run(snd);
 
             Prop* const prop = new Prop_cursed(Prop_turns::std);
 

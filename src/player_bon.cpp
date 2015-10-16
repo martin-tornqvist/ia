@@ -127,7 +127,8 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         break;
 
     case Trait::strong_spirit:
-        break;
+        //Have very little use for spirit, aside from Spell Resistance
+        return bg == Bg::ghoul || bg == Bg::war_vet;
 
     case Trait::mighty_spirit:
         break;
@@ -544,13 +545,16 @@ std::string trait_descr(const Trait id)
                "effects are displayed";
 
     case Trait::stout_spirit:
-        return "+2 Spirit Points, increased Spirit regeneration rate";
+        return "+2 Spirit Points, increased Spirit regeneration rate, you can defy harmful "
+               "spells (it takes a certain number of turns to regain spell resistance)";
 
     case Trait::strong_spirit:
-        return "+2 Spirit Points, increased Spirit regeneration rate";
+        return "+2 Spirit Points, increased Spirit regeneration rate, you can defy harmful spells "
+               "- the number of turns to regain spell resistance is reduced";
 
     case Trait::mighty_spirit:
-        return "+2 Spirit Points, increased Spirit regeneration rate";
+        return "+2 Spirit Points, increased Spirit regeneration rate, you can defy harmful spells "
+               "- the number of turns to regain spell resistance is reduced";
 
     case Trait::stealthy:
         return "You are more likely to avoid detection";
@@ -933,6 +937,9 @@ void pick_trait(const Trait id)
 
     case Trait::stout_spirit:
         map::player->change_max_spi(2, Verbosity::silent);
+
+        map::player->prop_handler().try_add_prop(
+            new Prop_rSpell(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
         break;
 
     case Trait::strong_spirit:

@@ -252,7 +252,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                         {
                             Snd snd("", Sfx_id::door_break, Ignore_msg_if_origin_seen::yes, pos_,
                                     actor, Snd_vol::low, Alerts_mon::yes);
-                            snd_emit::emit_snd(snd);
+                            snd_emit::run(snd);
 
                             if (IS_CELL_SEEN)
                             {
@@ -279,7 +279,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                             Snd snd("", sfx, Ignore_msg_if_origin_seen::no, pos_, actor,
                                     Snd_vol::low, Alerts_mon::yes);
 
-                            snd_emit::emit_snd(snd);
+                            snd_emit::run(snd);
                         }
                     }
                     else //No chance of success
@@ -289,7 +289,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                             Snd snd("", Sfx_id::door_bang, Ignore_msg_if_origin_seen::no, pos_,
                                     actor, Snd_vol::low, Alerts_mon::yes);
 
-                            snd_emit::emit_snd(snd);
+                            snd_emit::run(snd);
 
                             msg_log::add("It seems futile.", clr_msg_note, false,
                                          More_prompt_on_msg::yes);
@@ -308,7 +308,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                         Snd snd("I hear a door crashing open!",
                                 Sfx_id::door_break, Ignore_msg_if_origin_seen::yes, pos_, actor,
                                 Snd_vol::high, Alerts_mon::no);
-                        snd_emit::emit_snd(snd);
+                        snd_emit::run(snd);
 
                         if (map::player->can_see_actor(*actor))
                         {
@@ -326,7 +326,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                         Snd snd("I hear a loud banging on a door.",
                                 Sfx_id::door_bang, Ignore_msg_if_origin_seen::no, pos_,
                                 actor, Snd_vol::low, Alerts_mon::no);
-                        snd_emit::emit_snd(snd);
+                        snd_emit::run(snd);
                     }
                 }
 
@@ -395,7 +395,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 //      if(IS_PLAYER) {
 //        Snd snd("", Sfx_id::door_break, Ignore_msg_if_origin_seen::yes, pos_,
 //                &actor, Snd_vol::low, Alerts_mon::yes);
-//        snd_emit::emit_snd(snd);
+//        snd_emit::run(snd);
 //        if(!actor.prop_handler().allow_see()) {
 //          msg_log::add("I feel a door crashing open!");
 //        } else {
@@ -409,7 +409,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 //        Snd snd("I hear a door crashing open!",
 //                Sfx_id::door_break, Ignore_msg_if_origin_seen::yes, pos_, &actor,
 //                Snd_vol::high, Alerts_mon::no);
-//        snd_emit::emit_snd(snd);
+//        snd_emit::run(snd);
 //        if(map::player->can_see_actor(actor)) {
 //          msg_log::add("The door crashes open!");
 //        } else if(map::cells[pos_.x][pos_.y].is_seen_by_player) {
@@ -421,14 +421,14 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 //        const Sfx_id sfx = is_secret_ ? Sfx_id::END : Sfx_id::door_bang;
 //        Snd snd("", sfx, Ignore_msg_if_origin_seen::yes, actor.pos,
 //                &actor, Snd_vol::low, Alerts_mon::yes);
-//        snd_emit::emit_snd(snd);
+//        snd_emit::run(snd);
 //      } else {
 //        //Emitting the sound from the actor instead of the door, because the
 //        //sound message should be received even if the door is seen
 //        Snd snd("I hear a loud banging on a door.",
 //                Sfx_id::door_bang, Ignore_msg_if_origin_seen::yes, actor.pos,
 //                &actor, Snd_vol::low, Alerts_mon::no);
-//        snd_emit::emit_snd(snd);
+//        snd_emit::run(snd);
 //        if(map::player->can_see_actor(actor)) {
 //          msg_log::add(actor.name_the() + " bashes at a door!");
 //        }
@@ -732,7 +732,7 @@ void Door::try_close(Actor* actor_trying)
             {
                 Snd snd("", Sfx_id::door_close, Ignore_msg_if_origin_seen::yes, pos_,
                         actor_trying, Snd_vol::low, Alerts_mon::yes);
-                snd_emit::emit_snd(snd);
+                snd_emit::run(snd);
                 msg_log::add("I close the door.");
             }
             else //Is a monster closing
@@ -740,7 +740,7 @@ void Door::try_close(Actor* actor_trying)
                 Snd snd("I hear a door closing.",
                         Sfx_id::door_close, Ignore_msg_if_origin_seen::yes, pos_, actor_trying,
                         Snd_vol::low, Alerts_mon::no);
-                snd_emit::emit_snd(snd);
+                snd_emit::run(snd);
 
                 if (PLAYER_SEE_TRYER)
                 {
@@ -758,7 +758,7 @@ void Door::try_close(Actor* actor_trying)
                 {
                     Snd snd("", Sfx_id::door_close, Ignore_msg_if_origin_seen::yes, pos_,
                             actor_trying, Snd_vol::low, Alerts_mon::yes);
-                    snd_emit::emit_snd(snd);
+                    snd_emit::run(snd);
                     msg_log::add("I fumble with a door and succeed to close it.");
                 }
                 else //Monster closing
@@ -766,7 +766,7 @@ void Door::try_close(Actor* actor_trying)
                     Snd snd("I hear a door closing.",
                             Sfx_id::door_close, Ignore_msg_if_origin_seen::yes, pos_, actor_trying,
                             Snd_vol::low, Alerts_mon::no);
-                    snd_emit::emit_snd(snd);
+                    snd_emit::run(snd);
 
                     if (PLAYER_SEE_TRYER)
                     {
@@ -846,7 +846,7 @@ void Door::try_open(Actor* actor_trying)
             {
                 Snd snd("", Sfx_id::door_open, Ignore_msg_if_origin_seen::yes, pos_,
                         actor_trying, Snd_vol::low, Alerts_mon::yes);
-                snd_emit::emit_snd(snd);
+                snd_emit::run(snd);
                 msg_log::add("I open the door.");
             }
             else //Is monster
@@ -854,7 +854,7 @@ void Door::try_open(Actor* actor_trying)
                 Snd snd("I hear a door open.", Sfx_id::door_open,
                         Ignore_msg_if_origin_seen::yes, pos_, actor_trying, Snd_vol::low,
                         Alerts_mon::no);
-                snd_emit::emit_snd(snd);
+                snd_emit::run(snd);
 
                 if (PLAYER_SEE_TRYER)
                 {
@@ -877,7 +877,7 @@ void Door::try_open(Actor* actor_trying)
                 {
                     Snd snd("", Sfx_id::door_open, Ignore_msg_if_origin_seen::yes, pos_,
                             actor_trying, Snd_vol::low, Alerts_mon::yes);
-                    snd_emit::emit_snd(snd);
+                    snd_emit::run(snd);
                     msg_log::add("I fumble with a door and succeed to open it.");
                 }
                 else //Is monster
@@ -885,7 +885,7 @@ void Door::try_open(Actor* actor_trying)
                     Snd snd("I hear something open a door clumsily.", Sfx_id::door_open,
                             Ignore_msg_if_origin_seen::yes, pos_, actor_trying, Snd_vol::low,
                             Alerts_mon::no);
-                    snd_emit::emit_snd(snd);
+                    snd_emit::run(snd);
 
                     if (PLAYER_SEE_TRYER)
                     {
@@ -906,7 +906,7 @@ void Door::try_open(Actor* actor_trying)
                 {
                     Snd snd("", Sfx_id::END, Ignore_msg_if_origin_seen::yes, pos_,
                             actor_trying, Snd_vol::low, Alerts_mon::yes);
-                    snd_emit::emit_snd(snd);
+                    snd_emit::run(snd);
                     msg_log::add("I fumble blindly with a door and fail to open it.");
                 }
                 else
@@ -916,7 +916,7 @@ void Door::try_open(Actor* actor_trying)
                     Snd snd("I hear something attempting to open a door.", Sfx_id::END,
                             Ignore_msg_if_origin_seen::yes, actor_trying->pos, actor_trying,
                             Snd_vol::low, Alerts_mon::no);
-                    snd_emit::emit_snd(snd);
+                    snd_emit::run(snd);
 
                     if (PLAYER_SEE_TRYER)
                     {

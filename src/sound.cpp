@@ -52,7 +52,7 @@ void reset_nr_snd_msg_printed_cur_turn()
     nr_snd_msg_printed_cur_turn_ = 0;
 }
 
-void emit_snd(Snd snd)
+void run(Snd snd)
 {
     bool blocked[MAP_W][MAP_H];
 

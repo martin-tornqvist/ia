@@ -880,7 +880,7 @@ void Statue::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor*
                 Snd_vol::low,
                 alerts_mon);
 
-        snd_emit::emit_snd(snd);
+        snd_emit::run(snd);
 
         const Pos dst_pos = pos_ + (pos_ - actor->pos);
 
@@ -1135,7 +1135,7 @@ void Liquid_shallow::bump(Actor& actor_bumping)
                     Snd_vol::low,
                     Alerts_mon::yes);
 
-            snd_emit::emit_snd(snd);
+            snd_emit::run(snd);
         }
     }
 }
@@ -1642,13 +1642,15 @@ void Brazier::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor
                 Snd_vol::low,
                 alerts_mon);
 
-        snd_emit::emit_snd(snd);
+        snd_emit::run(snd);
 
         const Pos dst_pos = pos_ + (pos_ - actor->pos);
 
         const Pos my_pos = pos_;
 
-        map::put(new Rubble_low(pos_)); //NOTE: "this" is now deleted!
+        map::put(new Rubble_low(pos_));
+
+        //NOTE: "this" is now deleted!
 
         map::player->update_fov();
         render::draw_map_and_interface();
@@ -1671,6 +1673,8 @@ void Brazier::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor
                 expl_pos    = my_pos;
                 expl_d      = -2;
             }
+
+            //TODO: Emit sound from explosion center
 
             explosion::run(expl_pos,
                            Expl_type::apply_prop,
@@ -2136,10 +2140,10 @@ Did_open Tomb::open(Actor* const actor_opening)
     {
         is_open_ = true;
 
-        snd_emit::emit_snd({"I hear heavy stone sliding.", Sfx_id::tomb_open,
-                            Ignore_msg_if_origin_seen::yes, pos_, nullptr, Snd_vol::high,
-                            Alerts_mon::yes
-                           });
+        snd_emit::run({"I hear heavy stone sliding.", Sfx_id::tomb_open,
+                       Ignore_msg_if_origin_seen::yes, pos_, nullptr, Snd_vol::high,
+                       Alerts_mon::yes
+                      });
 
         if (map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
@@ -2234,7 +2238,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
             Snd snd("I hear a burst of gas.", Sfx_id::gas, Ignore_msg_if_origin_seen::yes, pos_,
                     nullptr, Snd_vol::low, Alerts_mon::yes);
 
-            snd_emit::emit_snd(snd);
+            snd_emit::run(snd);
 
             Prop*       prop        = nullptr;
             Clr         fume_clr    = clr_magenta;
@@ -2689,7 +2693,9 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
 
     if (IS_SEEN)
     {
-        msg_log::add("A hidden trap on the chest triggers...", clr_white, false,
+        msg_log::add("A hidden trap on the chest triggers...",
+                     clr_white,
+                     false,
                      More_prompt_on_msg::yes);
     }
 
@@ -2718,12 +2724,18 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
         if (IS_SEEN)
         {
             msg_log::clear();
-            msg_log::add("Flames burst out from the chest!", clr_white, false,
+            msg_log::add("Flames burst out from the chest!",
+                         clr_white,
+                         false,
                          More_prompt_on_msg::yes);
         }
 
-        explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc,
-                       Emit_expl_snd::yes, 0, new Prop_burning(Prop_turns::std));
+        explosion::run(pos_,
+                       Expl_type::apply_prop,
+                       Expl_src::misc,
+                       Emit_expl_snd::yes,
+                       0,
+                       new Prop_burning(Prop_turns::std));
 
         return Did_trigger_trap::yes;
     }
@@ -2731,7 +2743,10 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
     if (actor == map::player && rnd::coin_toss())
     {
         //Needle
-        msg_log::add("A needle pierces my skin!", clr_msg_bad, true);
+        msg_log::add("A needle pierces my skin!",
+                     clr_msg_bad,
+                     true);
+
         actor->hit(rnd::range(1, 3), Dmg_type::physical);
 
         if (map::dlvl < MIN_DLVL_HARDER_TRAPS)
@@ -2751,14 +2766,21 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
         if (IS_SEEN)
         {
             msg_log::clear();
-            msg_log::add("Fumes burst out from the chest!", clr_white, false,
+            msg_log::add("Fumes burst out from the chest!",
+                         clr_white,
+                         false,
                          More_prompt_on_msg::yes);
         }
 
-        Snd snd("I hear a burst of gas.", Sfx_id::gas, Ignore_msg_if_origin_seen::yes, pos_,
-                nullptr, Snd_vol::low, Alerts_mon::yes);
+        Snd snd("I hear a burst of gas.",
+                Sfx_id::gas,
+                Ignore_msg_if_origin_seen::yes,
+                pos_,
+                nullptr,
+                Snd_vol::low,
+                Alerts_mon::yes);
 
-        snd_emit::emit_snd(snd);
+        snd_emit::run(snd);
 
         Prop*       prop        = nullptr;
         Clr         fume_clr    = clr_magenta;
@@ -2780,8 +2802,13 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
             prop->set_nr_turns_left(prop->nr_turns_left() * 2);
         }
 
-        explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc,
-                       Emit_expl_snd::no, 0, prop, &fume_clr);
+        explosion::run(pos_,
+                       Expl_type::apply_prop,
+                       Expl_src::misc,
+                       Emit_expl_snd::no,
+                       0,
+                       prop,
+                       &fume_clr);
     }
 
     return Did_trigger_trap::yes;

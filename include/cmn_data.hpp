@@ -98,6 +98,7 @@ const std::string cancel_info_str_no_space  = "[space/esc] to cancel";
 const std::string cancel_info_str           = " " + cancel_info_str_no_space;
 const std::string msg_disarm_no_trap        = "I find nothing there to disarm.";
 const std::string msg_mon_prevent_cmd       = "Not while an enemy is near.";
+const std::string spell_resist_msg          = "The spell is resisted!";
 const std::string spell_reflect_msg         = "The spell is reflected!";
 const std::string spell_reflect_self_msg    = "There is a faint echo...";
 

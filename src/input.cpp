@@ -936,6 +936,29 @@ void handle_map_mode_key_press(const Key_data& d)
         return;
     }
 
+    //----------------------------------- SUMMON MONSTER
+    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F1)
+    {
+        const std::string query_str = "Summon monster id:";
+
+        render::draw_text(query_str, Panel::screen, Pos(0, 0), clr_orange);
+
+        const int IDX = query::number(Pos(query_str.size(), 0),
+                                      clr_white_high,
+                                      0,
+                                      int(Actor_id::END),
+                                      0,
+                                      false);
+
+        const Actor_id mon_id = Actor_id(IDX);
+
+        actor_factory::summon(map::player->pos, {mon_id}, false);
+
+        clear_events();
+
+        return;
+    }
+
     //----------------------------------- DESCEND CHEAT
     else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F2)
     {
@@ -1033,16 +1056,6 @@ void handle_map_mode_key_press(const Key_data& d)
     else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F9)
     {
         map::player->prop_handler().try_add_prop(new Prop_invisible(Prop_turns::std));
-
-        clear_events();
-
-        return;
-    }
-
-    //----------------------------------- HASTED
-    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F10)
-    {
-        map::player->prop_handler().try_add_prop(new Prop_hasted(Prop_turns::std));
 
         clear_events();
 

@@ -301,7 +301,7 @@ void throw_item(Actor& actor_throwing, const Pos& tgt_cell, Item& item_thrown)
                         Snd_vol::low,
                         alerts);
 
-                snd_emit::emit_snd(snd);
+                snd_emit::run(snd);
             }
         }
 

@@ -1117,7 +1117,7 @@ void Molotov::on_std_turn_player_hold_ignited()
         Snd snd("I hear an explosion!", Sfx_id::explosion_molotov, Ignore_msg_if_origin_seen::yes,
                 player_pos, nullptr, Snd_vol::high, Alerts_mon::yes);
 
-        snd_emit::emit_snd(snd);
+        snd_emit::run(snd);
 
         explosion::run(player_pos, Expl_type::apply_prop, Expl_src::misc,
                        Emit_expl_snd::no, 0, new Prop_burning(Prop_turns::std));
@@ -1138,7 +1138,7 @@ void Molotov::on_thrown_ignited_landing(const Pos& p)
             Snd_vol::high,
             Alerts_mon::yes);
 
-    snd_emit::emit_snd(snd);
+    snd_emit::run(snd);
 
     explosion::run(p,
                    Expl_type::apply_prop,
@@ -1160,7 +1160,7 @@ void Molotov::on_player_paralyzed()
     Snd snd("I hear an explosion!", Sfx_id::explosion_molotov, Ignore_msg_if_origin_seen::yes,
             player_pos, nullptr, Snd_vol::high, Alerts_mon::yes);
 
-    snd_emit::emit_snd(snd);
+    snd_emit::run(snd);
 
     explosion::run(player_pos, Expl_type::apply_prop, Expl_src::misc,
                    Emit_expl_snd::no, 0, new Prop_burning(Prop_turns::std));

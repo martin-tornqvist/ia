@@ -67,12 +67,17 @@ Spell* mk_spell_from_id(const Spell_id spell_id);
 
 } //spell_handling
 
-enum class Spell_effect_noticed {no, yes};
+enum class Spell_effect_noticed
+{
+    no,
+    yes
+};
 
 class Spell
 {
 public:
     Spell() {}
+
     virtual ~Spell() {}
 
     Spell_effect_noticed cast(Actor* const caster, const bool IS_INTRINSIC) const;
@@ -116,6 +121,8 @@ protected:
     virtual Spell_effect_noticed cast_impl(Actor* const caster) const = 0;
 
     virtual int max_spi_cost() const = 0;
+
+    void on_resist(Actor& target) const;
 };
 
 class Spell_darkbolt: public Spell

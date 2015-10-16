@@ -45,6 +45,7 @@ enum class Sfx_id
     lantern,
     potion_quaff,
     spell_generic,
+    spell_shield_break,
     insanity_rise,
     glop,
     death,
@@ -70,8 +71,7 @@ void init();
 void cleanup();
 
 //Returns channel playing on
-int play(const Sfx_id sfx, const int VOL_PERCENT_TOT = 100,
-         const int VOL_PERCENT_L = 50);
+int play(const Sfx_id sfx, const int VOL_PERCENT_TOT = 100, const int VOL_PERCENT_L = 50);
 
 void play(const Sfx_id sfx, const Dir dir, const int DISTANCE_PERCENT);
 

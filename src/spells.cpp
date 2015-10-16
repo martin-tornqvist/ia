@@ -299,7 +299,7 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
                     Snd_vol::low,
                     Alerts_mon::yes);
 
-            snd_emit::emit_snd(snd);
+            snd_emit::run(snd);
         }
         else //Caster is monster
         {
@@ -334,7 +334,7 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
                     Snd_vol::low,
                     Alerts_mon::no);
 
-            snd_emit::emit_snd(snd);
+            snd_emit::run(snd);
 
             mon->spell_cool_down_cur_ = mon->data().spell_cooldown_turns;
         }
@@ -362,6 +362,30 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
     return Spell_effect_noticed::no;
 }
 
+void Spell::on_resist(Actor& target) const
+{
+    const bool IS_PLAYER        = target.is_player();
+    const bool PLAYER_SEE_TGT   = map::player->can_see_actor(target);
+
+    if (PLAYER_SEE_TGT)
+    {
+        msg_log::add(spell_resist_msg);
+
+        if (IS_PLAYER)
+        {
+            audio::play(Sfx_id::spell_shield_break);
+        }
+
+        render::draw_blast_at_cells({target.pos}, clr_white);
+    }
+
+    if (IS_PLAYER)
+    {
+        target.prop_handler().end_prop(Prop_id::rSpell);
+    }
+
+}
+
 //------------------------------------------------------------ DARKBOLT
 Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
 {
@@ -380,8 +404,20 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
     //Spell reflection?
     if (tgt->has_prop(Prop_id::spell_reflect))
     {
-        msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+        if (map::player->can_see_actor(*tgt))
+        {
+            msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+        }
+
         return cast_impl(tgt);
+    }
+
+    //Spell resistance?
+    if (tgt->has_prop(Prop_id::rSpell))
+    {
+        on_resist(*tgt);
+
+        return Spell_effect_noticed::yes;
     }
 
     std::vector<Pos> line;
@@ -451,7 +487,7 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
             Snd_vol::low,
             Alerts_mon::yes);
 
-    snd_emit::emit_snd(snd);
+    snd_emit::run(snd);
 
     return Spell_effect_noticed::yes;
 }
@@ -467,7 +503,7 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
     Range dmg_range(4, 8);
     bool  is_warlock_charged = false;
 
-    std::vector<Actor*>  tgts;
+    std::vector<Actor*> tgts;
     caster->seen_foes(tgts);
 
     if (tgts.empty())
@@ -488,17 +524,28 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
         //Spell reflection?
         if (tgt->has_prop(Prop_id::spell_reflect))
         {
-            msg_log::add(spell_reflect_msg,
-                         clr_white,
-                         false,
-                         More_prompt_on_msg::yes);
+            if (map::player->can_see_actor(*tgt))
+            {
+                msg_log::add(spell_reflect_msg,
+                             clr_white,
+                             false,
+                             More_prompt_on_msg::yes);
+            }
 
             cast_impl(tgt);
             continue;
         }
 
-        std::string  tgt_str  = "I am";
-        Clr     msg_clr  = clr_msg_good;
+        //Spell resistance?
+        if (tgt->has_prop(Prop_id::rSpell))
+        {
+            on_resist(*tgt);
+
+            continue;
+        }
+
+        std::string     tgt_str = "I am";
+        Clr             msg_clr = clr_msg_good;
 
         if (tgt->is_player())
         {
@@ -508,8 +555,10 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
         {
             tgt_str = tgt->name_the();
 
-            if (map::player->is_leader_of(tgt)) {
-                    msg_clr = clr_white;}
+            if (map::player->is_leader_of(tgt))
+            {
+                msg_clr = clr_white;
+            }
         }
 
         if (map::player->can_see_actor(*tgt))
@@ -530,7 +579,7 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
                 nullptr,
                 Snd_vol::high, Alerts_mon::yes);
 
-        snd_emit::emit_snd(snd);
+        snd_emit::run(snd);
     }
 
     return Spell_effect_noticed::yes;
@@ -614,17 +663,38 @@ Spell_effect_noticed Spell_mayhem::cast_impl(Actor* const caster) const
         //Spell reflection?
         if (tgt->has_prop(Prop_id::spell_reflect))
         {
-            msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+            if (map::player->can_see_actor(*tgt))
+            {
+                msg_log::add(spell_reflect_msg,
+                             clr_white,
+                             false,
+                             More_prompt_on_msg::yes);
+            }
+
             cast_impl(tgt);
+            continue;
+        }
+
+        //Spell resistance?
+        if (tgt->has_prop(Prop_id::rSpell))
+        {
+            on_resist(*tgt);
+
             continue;
         }
 
         tgt->prop_handler().try_add_prop(new Prop_burning(Prop_turns::std));
     }
 
-    snd_emit::emit_snd({"", Sfx_id::END, Ignore_msg_if_origin_seen::yes, caster_pos, nullptr,
-                        Snd_vol::high, Alerts_mon::yes
-                       });
+    Snd snd("",
+            Sfx_id::END,
+            Ignore_msg_if_origin_seen::yes,
+            caster_pos,
+            nullptr,
+            Snd_vol::high,
+            Alerts_mon::yes);
+
+    snd_emit::run(snd);
 
     return Spell_effect_noticed::yes;
 }
@@ -645,20 +715,23 @@ Spell_effect_noticed Spell_pest::cast_impl(Actor* const caster) const
 
     const size_t NR_MON = rnd::range(7, 10);
 
-    Actor*  leader                  = nullptr;
-    bool    did_player_summon_hostile  = false;
+    Actor* leader = nullptr;
+
+    bool did_player_summon_hostile = false;
 
     if (caster->is_player())
     {
-        const int N             = SUMMON_HOSTILE_ONE_IN_N *
-                                  (player_bon::traits[size_t(Trait::summoner)] ? 2 : 1);
-        did_player_summon_hostile  = rnd::one_in(N);
-        leader                  = did_player_summon_hostile ? nullptr : caster;
+        const int N = SUMMON_HOSTILE_ONE_IN_N *
+                      (player_bon::traits[size_t(Trait::summoner)] ? 2 : 1);
+        did_player_summon_hostile = rnd::one_in(N);
+
+        leader = did_player_summon_hostile ? nullptr : caster;
     }
     else //Caster is monster
     {
         Actor* const caster_leader = static_cast<Mon*>(caster)->leader_;
-        leader                    = caster_leader ? caster_leader : caster;
+
+        leader = caster_leader ? caster_leader : caster;
     }
 
     std::vector<Mon*> mon_summoned;
@@ -725,13 +798,15 @@ Spell_effect_noticed Spell_pharaoh_staff::cast_impl(Actor* const caster) const
     }
 
     //This point reached means no mummy controlled, summon a new one
-    Actor*  leader                      = nullptr;
-    bool    did_player_summon_hostile   = false;
+    Actor* leader = nullptr;
+
+    bool did_player_summon_hostile = false;
 
     if (caster->is_player())
     {
         const int N = SUMMON_HOSTILE_ONE_IN_N *
                       (player_bon::traits[size_t(Trait::summoner)] ? 2 : 1);
+
         did_player_summon_hostile = rnd::one_in(N);
         leader = did_player_summon_hostile ? nullptr : caster;
     }
@@ -875,9 +950,11 @@ Spell_effect_noticed Spell_det_mon::cast_impl(Actor* const caster) const
 {
     (void)caster;
 
-    bool                is_seer      = player_bon::traits[size_t(Trait::seer)];
-    const int           MULTIPLIER  = 6 * (is_seer ? 3 : 1);
-    Spell_effect_noticed  is_noticed   = Spell_effect_noticed::no;
+    bool is_seer = player_bon::traits[size_t(Trait::seer)];
+
+    const int MULTIPLIER  = 6 * (is_seer ? 3 : 1);
+
+    Spell_effect_noticed is_noticed = Spell_effect_noticed::no;
 
     for (Actor* actor : game_time::actors_)
     {
@@ -934,22 +1011,20 @@ Spell_effect_noticed Spell_opening::cast_impl(Actor* const caster) const
 //------------------------------------------------------------ SACRIFICE LIFE
 Spell_effect_noticed Spell_sacr_life::cast_impl(Actor* const caster) const
 {
-    //Convert every 2 HP to 1 SPI
+    (void)caster;
 
-    //Spell reflection?
-    if (caster->has_prop(Prop_id::spell_reflect))
-    {
-        msg_log::add(spell_reflect_self_msg, clr_white, false, More_prompt_on_msg::yes);
-        return Spell_effect_noticed::no;
-    }
+    //Convert every 2 HP to 1 SPI
 
     const int PLAYER_HP_CUR = map::player->hp();
 
     if (PLAYER_HP_CUR > 2)
     {
         const int HP_DRAINED = ((PLAYER_HP_CUR - 1) / 2) * 2;
+
         map::player->hit(HP_DRAINED, Dmg_type::pure);
+
         map::player->restore_spi(HP_DRAINED, true);
+
         return Spell_effect_noticed::yes;
     }
 
@@ -959,22 +1034,20 @@ Spell_effect_noticed Spell_sacr_life::cast_impl(Actor* const caster) const
 //------------------------------------------------------------ SACRIFICE SPIRIT
 Spell_effect_noticed Spell_sacr_spi::cast_impl(Actor* const caster) const
 {
-    //Convert all SPI to HP
+    (void)caster;
 
-    //Spell reflection?
-    if (caster->has_prop(Prop_id::spell_reflect))
-    {
-        msg_log::add(spell_reflect_self_msg, clr_white, false, More_prompt_on_msg::yes);
-        return Spell_effect_noticed::no;
-    }
+    //Convert all SPI to HP
 
     const int PLAYER_SPI_CUR = map::player->spi();
 
     if (PLAYER_SPI_CUR > 0)
     {
         const int HP_DRAINED = PLAYER_SPI_CUR - 1;
+
         map::player->hit_spi(HP_DRAINED);
+
         map::player->restore_hp(HP_DRAINED);
+
         return Spell_effect_noticed::yes;
     }
 
@@ -984,8 +1057,8 @@ Spell_effect_noticed Spell_sacr_spi::cast_impl(Actor* const caster) const
 //------------------------------------------------------------ ROGUE HIDE
 Spell_effect_noticed Spell_cloud_minds::cast_impl(Actor* const caster) const
 {
-
     (void)caster;
+
     msg_log::add("I vanish from the minds of my enemies.");
 
     for (Actor* actor : game_time::actors_)
@@ -1003,17 +1076,6 @@ Spell_effect_noticed Spell_cloud_minds::cast_impl(Actor* const caster) const
 //------------------------------------------------------------ BLESS
 Spell_effect_noticed Spell_bless::cast_impl(Actor* const caster) const
 {
-    //Spell reflection?
-    if (caster->has_prop(Prop_id::spell_reflect))
-    {
-        if (caster->is_player())
-        {
-            msg_log::add(spell_reflect_self_msg, clr_white, false, More_prompt_on_msg::yes);
-        }
-
-        return Spell_effect_noticed::no;
-    }
-
     caster->prop_handler().try_add_prop(new Prop_blessed(Prop_turns::std));
     return Spell_effect_noticed::yes;
 }
@@ -1028,18 +1090,8 @@ Spell_effect_noticed Spell_light::cast_impl(Actor* const caster) const
 //------------------------------------------------------------ TELEPORT
 Spell_effect_noticed Spell_teleport::cast_impl(Actor* const caster) const
 {
-    //Spell reflection?
-    if (caster->has_prop(Prop_id::spell_reflect))
-    {
-        if (caster->is_player())
-        {
-            msg_log::add(spell_reflect_self_msg, clr_white, false, More_prompt_on_msg::yes);
-        }
-
-        return Spell_effect_noticed::no;
-    }
-
     caster->teleport();
+
     return Spell_effect_noticed::yes;
 }
 
@@ -1053,17 +1105,6 @@ bool Spell_teleport::allow_mon_cast_now(Mon& mon) const
 //------------------------------------------------------------ RESISTANCE
 Spell_effect_noticed Spell_res::cast_impl(Actor* const caster) const
 {
-    //Spell reflection?
-    if (caster->has_prop(Prop_id::spell_reflect))
-    {
-        if (caster->is_player())
-        {
-            msg_log::add(spell_reflect_self_msg, clr_white, false, More_prompt_on_msg::yes);
-        }
-
-        return Spell_effect_noticed::no;
-    }
-
     const int DURATION = 20;
 
     Prop_handler& prop_hlr = caster->prop_handler();
@@ -1084,17 +1125,29 @@ Spell_effect_noticed Spell_knock_back::cast_impl(Actor* const caster) const
 {
     assert(!caster->is_player());
 
-    Clr     msg_clr     = clr_msg_good;
-    std::string  tgt_str     = "me";
-    Actor*  caster_used = caster;
-    Actor*  tgt         = static_cast<Mon*>(caster_used)->tgt_;
+    Clr             msg_clr     = clr_msg_good;
+    std::string     tgt_str     = "me";
+    Actor*          caster_used = caster;
+    Actor*          tgt         = static_cast<Mon*>(caster_used)->tgt_;
     assert(tgt);
 
     //Spell reflection?
     if (tgt->has_prop(Prop_id::spell_reflect))
     {
-        msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+        if (map::player->can_see_actor(*tgt))
+        {
+            msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+        }
+
         std::swap(caster_used, tgt);
+    }
+
+    //Spell resistance?
+    if (tgt->has_prop(Prop_id::rSpell))
+    {
+        on_resist(*tgt);
+
+        return Spell_effect_noticed::yes;
     }
 
     if (tgt->is_player())
@@ -1145,8 +1198,20 @@ Spell_effect_noticed Spell_prop_on_mon::cast_impl(Actor* const caster) const
         //Spell reflection?
         if (tgt->has_prop(Prop_id::spell_reflect))
         {
-            msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+            if (map::player->can_see_actor(*tgt))
+            {
+                msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+            }
+
             cast_impl(tgt);
+            continue;
+        }
+
+        //Spell resistance?
+        if (tgt->has_prop(Prop_id::rSpell))
+        {
+            on_resist(*tgt);
+
             continue;
         }
 
@@ -1178,8 +1243,20 @@ Spell_effect_noticed Spell_disease::cast_impl(Actor* const caster) const
     //Spell reflection?
     if (tgt->has_prop(Prop_id::spell_reflect))
     {
-        msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+        if (map::player->can_see_actor(*tgt))
+        {
+            msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+        }
+
         std::swap(caster_used, tgt);
+    }
+
+    //Spell resistance?
+    if (tgt->has_prop(Prop_id::rSpell))
+    {
+        on_resist(*tgt);
+
+        return Spell_effect_noticed::yes;
     }
 
     std::string actor_name = "me";
@@ -1341,17 +1418,6 @@ bool Spell_summon_mon::allow_mon_cast_now(Mon& mon) const
 //------------------------------------------------------------ HEAL SELF
 Spell_effect_noticed Spell_heal_self::cast_impl(Actor* const caster) const
 {
-    //Spell reflection?
-    if (caster->has_prop(Prop_id::spell_reflect))
-    {
-        if (caster->is_player())
-        {
-            msg_log::add(spell_reflect_self_msg, clr_white, false, More_prompt_on_msg::yes);
-        }
-
-        return Spell_effect_noticed::no;
-    }
-
     //The spell effect is noticed if any hit points were restored
     const bool IS_ANY_HP_HEALED = caster->restore_hp(999);
 
@@ -1376,8 +1442,20 @@ Spell_effect_noticed Spell_mi_go_hypno::cast_impl(Actor* const caster) const
     //Spell reflection?
     if (tgt->has_prop(Prop_id::spell_reflect))
     {
-        msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+        if (map::player->can_see_actor(*tgt))
+        {
+            msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+        }
+
         std::swap(caster_used, tgt);
+    }
+
+    //Spell resistance?
+    if (tgt->has_prop(Prop_id::rSpell))
+    {
+        on_resist(*tgt);
+
+        return Spell_effect_noticed::yes;
     }
 
     if (tgt->is_player())
@@ -1416,8 +1494,20 @@ Spell_effect_noticed Spell_burn::cast_impl(Actor* const caster) const
     //Spell reflection?
     if (tgt->has_prop(Prop_id::spell_reflect))
     {
-        msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+        if (map::player->can_see_actor(*tgt))
+        {
+            msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+        }
+
         std::swap(caster_used, tgt);
+    }
+
+    //Spell resistance?
+    if (tgt->has_prop(Prop_id::rSpell))
+    {
+        on_resist(*tgt);
+
+        return Spell_effect_noticed::yes;
     }
 
     std::string tgt_str = "me";

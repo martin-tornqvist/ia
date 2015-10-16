@@ -139,6 +139,8 @@ private:
     int nr_quick_move_steps_left_;
     Dir quick_move_dir_;
 
+    int nr_turns_until_rspell_;
+
     const int CARRY_WEIGHT_BASE_;
 };
 

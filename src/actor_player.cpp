@@ -49,6 +49,7 @@ Player::Player() :
     nr_turns_until_ins_         (-1),
     nr_quick_move_steps_left_   (-1),
     quick_move_dir_             (Dir::END),
+    nr_turns_until_rspell_      (-1),
     CARRY_WEIGHT_BASE_          (500) {}
 
 Player::~Player()
@@ -801,6 +802,47 @@ void Player::on_std_turn()
     }
 
     update_tmp_shock();
+
+    //Spell resistance
+    const int SPI_TRAIT_LVL = player_bon::traits[size_t(Trait::mighty_spirit)] ? 3 :
+                              player_bon::traits[size_t(Trait::strong_spirit)] ? 2 :
+                              player_bon::traits[size_t(Trait::stout_spirit)]  ? 1 : 0;
+
+    if (SPI_TRAIT_LVL > 0 && !prop_handler_->has_prop(Prop_id::rSpell))
+    {
+        if (nr_turns_until_rspell_ == 3)
+        {
+            msg_log::add("I start to feel like I can thwart magic spells...",
+                         clr_msg_note,
+                         false,
+                         More_prompt_on_msg::yes);
+        }
+
+        if (nr_turns_until_rspell_ <= 0)
+        {
+            //Cooldown has finished, OR countdown has not yet been initialized
+
+            if (nr_turns_until_rspell_ == 0)
+            {
+                //Cooldown has finished
+                prop_handler_->try_add_prop(new Prop_rSpell(Prop_turns::indefinite));
+
+                msg_log::more_prompt();
+            }
+
+            const int NR_TURNS_BASE = 125 + rnd::range(0, 25);
+
+            const int NR_TURNS_BON  = (SPI_TRAIT_LVL - 1) * 50;
+
+            nr_turns_until_rspell_  = std::max(10, NR_TURNS_BASE - NR_TURNS_BON);
+        }
+
+        if (!prop_handler_->has_prop(Prop_id::rSpell) && nr_turns_until_rspell_ > 0)
+        {
+            //Spell resistance is in cooldown state, decrement number of remaining turns
+            --nr_turns_until_rspell_;
+        }
+    }
 
     if (active_explosive)
     {

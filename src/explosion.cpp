@@ -148,7 +148,7 @@ void run(const Pos& origin,
                 Snd_vol::high,
                 Alerts_mon::yes);
 
-        snd_emit::emit_snd(snd);
+        snd_emit::run(snd);
     }
 
     draw(pos_lists, blocked, clr_override);
@@ -298,7 +298,7 @@ void run_smoke_explosion_at(const Pos& origin)
     //TODO: Sound message?
     Snd snd("", Sfx_id::END, Ignore_msg_if_origin_seen::yes, origin, nullptr,
             Snd_vol::low, Alerts_mon::yes);
-    snd_emit::emit_snd(snd);
+    snd_emit::run(snd);
 
     for (const std::vector<Pos>& inner : pos_lists)
     {

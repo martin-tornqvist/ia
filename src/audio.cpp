@@ -9,27 +9,24 @@
 #include "render.hpp"
 #include "utils.hpp"
 
-using namespace std;
-
 namespace audio
 {
 
 namespace
 {
 
-vector<Mix_Chunk*> audio_chunks;
+std::vector<Mix_Chunk*> audio_chunks;
 
 int cur_channel_     = 0;
 int time_at_last_amb_  = -1;
 
-void load_audio_file(const Sfx_id sfx, const string& filename)
+void load_audio_file(const Sfx_id sfx, const std::string& filename)
 {
     render::clear_screen();
 
-    const string file_rel_path  = "audio/" + filename;
+    const std::string file_rel_path  = "audio/" + filename;
 
-    render::draw_text("Loading " + file_rel_path + "...", Panel::screen, Pos(0, 0),
-                      clr_white);
+    render::draw_text("Loading " + file_rel_path + "...", Panel::screen, Pos(0, 0), clr_white);
 
     render::update_screen();
 
@@ -37,8 +34,8 @@ void load_audio_file(const Sfx_id sfx, const string& filename)
 
     if (!audio_chunks[int(sfx)])
     {
-        TRACE << "Problem loading audio file with name: "   << filename         << endl
-              << "Mix_GetError(): "                         << Mix_GetError()   << endl;
+        TRACE << "Problem loading audio file with name: "   << filename         << std::endl
+              << "Mix_GetError(): "                         << Mix_GetError()   << std::endl;
         assert(false);
     }
 }
@@ -138,25 +135,31 @@ void init()
         load_audio_file(Sfx_id::lantern,                "sfx_electric_lantern.ogg");
         load_audio_file(Sfx_id::potion_quaff,           "sfx_potion_quaff.ogg");
         load_audio_file(Sfx_id::spell_generic,          "sfx_spell_generic.ogg");
+        load_audio_file(Sfx_id::spell_shield_break,     "sfx_spell_shield_break.ogg");
         load_audio_file(Sfx_id::insanity_rise,          "sfx_insanity_rising.ogg");
         load_audio_file(Sfx_id::glop,                   "sfx_glop.ogg");
         load_audio_file(Sfx_id::death,                  "sfx_death.ogg");
 
         int a = 1;
+
         const int FIRST = int(Sfx_id::AMB_START) + 1;
         const int LAST  = int(Sfx_id::AMB_END)   - 1;
 
         for (int i = FIRST; i <= LAST; ++i)
         {
-            const string index_str = to_str(a);
-            const string index_str_padded =
-                a < 10  ? "00" + index_str : a < 100 ? "0"  + index_str : index_str;
-            load_audio_file(Sfx_id(i), "amb_" + index_str_padded + ".ogg");
-            a++;
+            const std::string padding_str   = (a < 10)    ? "00"  :
+                                              (a < 100)   ? "0"   : "";
+
+            const std::string idx_str       = to_str(a);
+
+            const std::string file_name = "amb_" + padding_str + idx_str + ".ogg";
+
+            load_audio_file(Sfx_id(i), file_name);
+
+            ++a;
         }
 
-        load_audio_file(Sfx_id::mus_cthulhiana_Madness,
-                        "musica_cthulhiana-fragment-madness.ogg");
+        load_audio_file(Sfx_id::mus_cthulhiana_Madness, "musica_cthulhiana-fragment-madness.ogg");
     }
     TRACE_FUNC_END;
 }

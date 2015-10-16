@@ -89,7 +89,7 @@ void Smoke::on_new_turn()
 
                 const auto alerts = IS_PLAYER ? Alerts_mon::yes : Alerts_mon::no;
 
-                snd_emit::emit_snd(Snd(snd_msg, Sfx_id::END, Ignore_msg_if_origin_seen::yes,
+                snd_emit::run(Snd(snd_msg, Sfx_id::END, Ignore_msg_if_origin_seen::yes,
                                        actor->pos, actor, Snd_vol::low, alerts));
 
                 actor->hit(1, Dmg_type::pure);
