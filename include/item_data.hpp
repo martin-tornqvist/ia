@@ -186,21 +186,14 @@ enum class Item_id
     spider_amulet,
     eye_amulet,
     moon_amulet,
-    bat_amulet,
     scarab_amulet,
     dagger_amulet,
-
-    golden_ring,
-    silver_ring,
-    carnelian_ring,
-    garnet_ring,
-    iron_ring,
-    jade_ring,
-    moonstone_ring,
-    obsidian_ring,
-    onyx_ring,
-    topaz_ring,
-    emerald_ring,
+    bat_winged_amulet,
+    golden_amulet,
+    silver_amulet,
+    obsidian_amulet,
+    jade_amulet,
+    rune_amulet,
 
     END
 };

@@ -19,8 +19,6 @@ enum class Slot_id
     body,
     head,
     neck,
-    ring1,
-    ring2,
     END
 };
 

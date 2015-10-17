@@ -449,7 +449,6 @@ enum class Item_type
     armor,
     head_wear,
     amulet,
-    ring,
     explosive,
 
     END_OF_EXTR_ITEMS,

@@ -31,9 +31,7 @@ Inventory::Inventory(Actor* const owning_actor) :
     set_slot(Slot_id::thrown,   "Thrown");
     set_slot(Slot_id::body,     "Body");
     set_slot(Slot_id::head,     "Head");
-    set_slot(Slot_id::neck,     "Neck");
-    set_slot(Slot_id::ring1,    "Ring");
-    set_slot(Slot_id::ring2,    "Ring");
+    set_slot(Slot_id::neck,     "Amulet");
 }
 
 Inventory::~Inventory()
@@ -492,14 +490,6 @@ void Inventory::equip_backpack_item(const size_t BACKPACK_IDX, const Slot_id slo
             msg = "I am now wearing " + name + ".";
             break;
 
-        case Slot_id::ring1:
-            msg = "I am now wearing " + name + ".";
-            break;
-
-        case Slot_id::ring2:
-            msg = "I am now wearing " + name + ".";
-            break;
-
         case Slot_id::END: {}
             break;
         }
@@ -555,14 +545,6 @@ Unequip_allowed Inventory::try_unequip_slot(const Slot_id id)
             break;
 
         case Slot_id::neck:
-            msg = "I have taken off my " + name + ".";
-            break;
-
-        case Slot_id::ring1:
-            msg = "I have taken off my " + name + ".";
-            break;
-
-        case Slot_id::ring2:
             msg = "I have taken off my " + name + ".";
             break;
 

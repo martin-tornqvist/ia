@@ -281,6 +281,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         reset_data(d, Item_type::general);
         d.type = Item_type::device;
         d.value = Item_value::minor_treasure;
+        d.is_ins_raied_while_carried = true;
         d.has_std_activate = true;
         d.base_name_un_id = {"Strange Device", "Strange Devices", "a Strange Device"};
         d.base_descr =
@@ -349,21 +350,6 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.tile = Tile_id::amulet;
         d.glyph = '\"';
         d.weight = Item_weight::light;
-        d.is_identified = false;
-        d.is_stackable = false;
-        d.chance_to_incl_in_floor_spawn_list = 1;
-        add_feature_found_in(d, Feature_id::tomb, 10);
-        add_feature_found_in(d, Feature_id::chest, 4);
-        break;
-
-    case Item_type::ring:
-        reset_data(d, Item_type::general);
-        d.type = Item_type::ring;
-        d.value = Item_value::major_treasure;
-        d.is_ins_raied_while_carried = true;
-        d.tile = Tile_id::ring;
-        d.glyph = '=';
-        d.weight = Item_weight::extra_light;
         d.is_identified = false;
         d.is_stackable = false;
         d.chance_to_incl_in_floor_spawn_list = 1;
@@ -1966,13 +1952,6 @@ void init_data_list()
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::amulet);
-    d.id = Item_id::bat_amulet;
-    d.base_name = {"Bat Amulet", "", "a Bat Amulet"};
-    d.base_name_un_id = d.base_name;
-    d.clr = clr_white;
-    data[size_t(d.id)] = d;
-
-    reset_data(d, Item_type::amulet);
     d.id = Item_id::scarab_amulet;
     d.base_name = {"Scarab Amulet", "", "a Scarab Amulet"};
     d.base_name_un_id = d.base_name;
@@ -1986,81 +1965,46 @@ void init_data_list()
     d.clr = clr_white;
     data[size_t(d.id)] = d;
 
-    reset_data(d, Item_type::ring);
-    d.id = Item_id::golden_ring;
-    d.base_name = {"Golden Ring", "", "a Golden Ring"};
-    d.base_name_un_id = d.base_name;
-    d.clr = clr_yellow;
-    data[size_t(d.id)] = d;
-
-    reset_data(d, Item_type::ring);
-    d.id = Item_id::silver_ring;
-    d.base_name = {"Silver Ring", "", "a Silver Ring"};
+    reset_data(d, Item_type::amulet);
+    d.id = Item_id::bat_winged_amulet;
+    d.base_name = {"Bat-winged Amulet", "", "a Bat-winged Amulet"};
     d.base_name_un_id = d.base_name;
     d.clr = clr_white;
     data[size_t(d.id)] = d;
 
-    reset_data(d, Item_type::ring);
-    d.id = Item_id::carnelian_ring;
-    d.base_name = {"Carnelian Ring", "", "a Carnelian Ring"};
+    reset_data(d, Item_type::amulet);
+    d.id = Item_id::golden_amulet;
+    d.base_name = {"Golden Amulet", "", "a Golden Amulet"};
     d.base_name_un_id = d.base_name;
-    d.clr = clr_red_lgt;
+    d.clr = clr_yellow;
     data[size_t(d.id)] = d;
 
-    reset_data(d, Item_type::ring);
-    d.id = Item_id::garnet_ring;
-    d.base_name = {"Garnet Ring", "", "a Garnet Ring"};
+    reset_data(d, Item_type::amulet);
+    d.id = Item_id::silver_amulet;
+    d.base_name = {"Silver Amulet", "", "a Silver Amulet"};
     d.base_name_un_id = d.base_name;
-    d.clr = clr_red_lgt;
+    d.clr = clr_white;
     data[size_t(d.id)] = d;
 
-    reset_data(d, Item_type::ring);
-    d.id = Item_id::iron_ring;
-    d.base_name = {"Iron Ring", "", "an Iron Ring"};
+    reset_data(d, Item_type::amulet);
+    d.id = Item_id::obsidian_amulet;
+    d.base_name = {"Obsidian Amulet", "", "an Obsidian Amulet"};
     d.base_name_un_id = d.base_name;
     d.clr = clr_gray;
     data[size_t(d.id)] = d;
 
-    reset_data(d, Item_type::ring);
-    d.id = Item_id::jade_ring;
-    d.base_name = {"Jade Ring", "", "a Jade Ring"};
+    reset_data(d, Item_type::amulet);
+    d.id = Item_id::jade_amulet;
+    d.base_name = {"Jade Amulet", "", "a Jade Amulet"};
     d.base_name_un_id = d.base_name;
     d.clr = clr_green_lgt;
     data[size_t(d.id)] = d;
 
-    reset_data(d, Item_type::ring);
-    d.id = Item_id::moonstone_ring;
-    d.base_name = {"Moonstone Ring", "", "a Moonstone Ring"};
+    reset_data(d, Item_type::amulet);
+    d.id = Item_id::rune_amulet;
+    d.base_name = {"Rune Amulet", "", "a Rune Amulet"};
     d.base_name_un_id = d.base_name;
-    d.clr = clr_blue_lgt;
-    data[size_t(d.id)] = d;
-
-    reset_data(d, Item_type::ring);
-    d.id = Item_id::obsidian_ring;
-    d.base_name = {"Obsidian Ring", "", "an Obsidian Ring"};
-    d.base_name_un_id = d.base_name;
-    d.clr = clr_gray;
-    data[size_t(d.id)] = d;
-
-    reset_data(d, Item_type::ring);
-    d.id = Item_id::onyx_ring;
-    d.base_name = {"Onyx Ring", "", "an Onyx Ring"};
-    d.base_name_un_id = d.base_name;
-    d.clr = clr_gray;
-    data[size_t(d.id)] = d;
-
-    reset_data(d, Item_type::ring);
-    d.id = Item_id::topaz_ring;
-    d.base_name = {"Topaz Ring", "", "a Topaz Ring"};
-    d.base_name_un_id = d.base_name;
-    d.clr = clr_blue_lgt;
-    data[size_t(d.id)] = d;
-
-    reset_data(d, Item_type::ring);
-    d.id = Item_id::emerald_ring;
-    d.base_name = {"Emerald Ring", "", "an Emerald Ring"};
-    d.base_name_un_id = d.base_name;
-    d.clr = clr_green_lgt;
+    d.clr = clr_white;
     data[size_t(d.id)] = d;
 }
 

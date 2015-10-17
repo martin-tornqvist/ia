@@ -165,20 +165,6 @@ void filter_player_backpack_equip(const Slot_id slot_to_equip)
             }
             break;
 
-        case Slot_id::ring1:
-            if (data.type == Item_type::ring)
-            {
-                backpack_indexes_to_show_.push_back(i);
-            }
-            break;
-
-        case Slot_id::ring2:
-            if (data.type == Item_type::ring)
-            {
-                backpack_indexes_to_show_.push_back(i);
-            }
-            break;
-
         case Slot_id::END:
             break;
         }

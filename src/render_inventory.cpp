@@ -459,14 +459,7 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
               "I carry nothing to wear around the neck.";
         break;
 
-    case Slot_id::ring1:
-    case Slot_id::ring2:
-        str = HAS_ITEM ?
-              "Wear what ring?" :
-              "I carry no ring.";
-        break;
-
-    case Slot_id::END: {}
+    case Slot_id::END:
         break;
     }
 

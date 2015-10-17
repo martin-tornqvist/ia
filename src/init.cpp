@@ -21,7 +21,7 @@
 #include "map_templates.hpp"
 #include "map_travel.hpp"
 #include "query.hpp"
-#include "item_jewelry.hpp"
+#include "item_amulet.hpp"
 #include "save_handling.hpp"
 #include "insanity.hpp"
 #include "highscore.hpp"
@@ -93,7 +93,7 @@ void init_session()
     dungeon_master::init();
     bot::init();
     player_spells_handling::init();
-    jewelry_handling::init();
+    amulet_handling::init();
     highscore::init();
     TRACE_FUNC_END;
 }

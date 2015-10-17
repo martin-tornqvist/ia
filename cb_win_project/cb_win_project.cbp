@@ -163,10 +163,10 @@
 		<Unit filename="../include/inventory.hpp" />
 		<Unit filename="../include/inventory_handling.hpp" />
 		<Unit filename="../include/item.hpp" />
+		<Unit filename="../include/item_amulet.hpp" />
 		<Unit filename="../include/item_data.hpp" />
 		<Unit filename="../include/item_device.hpp" />
 		<Unit filename="../include/item_factory.hpp" />
-		<Unit filename="../include/item_jewelry.hpp" />
 		<Unit filename="../include/item_potion.hpp" />
 		<Unit filename="../include/item_rod.hpp" />
 		<Unit filename="../include/item_scroll.hpp" />
@@ -246,10 +246,10 @@
 		<Unit filename="../src/inventory.cpp" />
 		<Unit filename="../src/inventory_handling.cpp" />
 		<Unit filename="../src/item.cpp" />
+		<Unit filename="../src/item_amulet.cpp" />
 		<Unit filename="../src/item_data.cpp" />
 		<Unit filename="../src/item_device.cpp" />
 		<Unit filename="../src/item_factory.cpp" />
-		<Unit filename="../src/item_jewelry.cpp" />
 		<Unit filename="../src/item_potion.cpp" />
 		<Unit filename="../src/item_rod.cpp" />
 		<Unit filename="../src/item_scroll.cpp" />

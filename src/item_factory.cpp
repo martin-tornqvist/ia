@@ -4,7 +4,7 @@
 #include "item_scroll.hpp"
 #include "item_potion.hpp"
 #include "item_rod.hpp"
-#include "item_jewelry.hpp"
+#include "item_amulet.hpp"
 #include "drop.hpp"
 #include "item_device.hpp"
 #include "utils.hpp"
@@ -312,21 +312,15 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
     case Item_id::spider_amulet:
     case Item_id::eye_amulet:
     case Item_id::moon_amulet:
-    case Item_id::bat_amulet:
     case Item_id::scarab_amulet:
     case Item_id::dagger_amulet:
-    case Item_id::golden_ring:
-    case Item_id::silver_ring:
-    case Item_id::carnelian_ring:
-    case Item_id::garnet_ring:
-    case Item_id::iron_ring:
-    case Item_id::jade_ring:
-    case Item_id::moonstone_ring:
-    case Item_id::obsidian_ring:
-    case Item_id::onyx_ring:
-    case Item_id::topaz_ring:
-    case Item_id::emerald_ring:
-        r = new Jewelry(d);
+    case Item_id::bat_winged_amulet:
+    case Item_id::golden_amulet:
+    case Item_id::silver_amulet:
+    case Item_id::obsidian_amulet:
+    case Item_id::jade_amulet:
+    case Item_id::rune_amulet:
+        r = new Amulet(d);
         break;
 
     case Item_id::END:

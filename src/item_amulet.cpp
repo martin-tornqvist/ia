@@ -1,6 +1,6 @@
 #include "init.hpp"
 
-#include "item_jewelry.hpp"
+#include "item_amulet.hpp"
 
 #include "map.hpp"
 #include "utils.hpp"
@@ -17,99 +17,99 @@
 namespace
 {
 
-Item_id     effect_list_    [size_t(Jewelry_effect_id::END)];
-bool        effects_known_  [size_t(Jewelry_effect_id::END)];
+Item_id     effect_list_    [size_t(Amulet_effect_id::END)];
+bool        effects_known_  [size_t(Amulet_effect_id::END)];
 
-Jewelry_effect* mk_effect(const Jewelry_effect_id id, Jewelry* const jewelry)
+Amulet_effect* mk_effect(const Amulet_effect_id id, Amulet* const amulet)
 {
-    assert(id != Jewelry_effect_id::END);
+    assert(id != Amulet_effect_id::END);
 
-    Jewelry_effect* ret = nullptr;
+    Amulet_effect* ret = nullptr;
 
     switch (id)
     {
-    case Jewelry_effect_id::rFire:
-        ret = new Jewelry_effect_rFire(jewelry);
+    case Amulet_effect_id::rFire:
+        ret = new Amulet_effect_rFire(amulet);
         break;
 
-    case Jewelry_effect_id::rElec:
-        ret = new Jewelry_effect_rElec(jewelry);
+    case Amulet_effect_id::rElec:
+        ret = new Amulet_effect_rElec(amulet);
         break;
 
-    case Jewelry_effect_id::rPoison:
-        ret = new Jewelry_effect_rPoison(jewelry);
+    case Amulet_effect_id::rPoison:
+        ret = new Amulet_effect_rPoison(amulet);
         break;
 
-    case Jewelry_effect_id::rDisease:
-        ret = new Jewelry_effect_rDisease(jewelry);
+    case Amulet_effect_id::rDisease:
+        ret = new Amulet_effect_rDisease(amulet);
         break;
 
-    case Jewelry_effect_id::tele_ctrl:
-        ret = new Jewelry_effect_tele_control(jewelry);
+    case Amulet_effect_id::tele_ctrl:
+        ret = new Amulet_effect_tele_control(amulet);
         break;
 
-    case Jewelry_effect_id::summon:
-        ret = new Jewelry_effect_summon_mon(jewelry);
+    case Amulet_effect_id::summon:
+        ret = new Amulet_effect_summon_mon(amulet);
         break;
 
-    case Jewelry_effect_id::light:
-        ret = new Jewelry_effect_light(jewelry);
+    case Amulet_effect_id::light:
+        ret = new Amulet_effect_light(amulet);
         break;
 
-    case Jewelry_effect_id::spell_reflect:
-        ret = new Jewelry_effect_spell_reflect(jewelry);
+    case Amulet_effect_id::spell_reflect:
+        ret = new Amulet_effect_spell_reflect(amulet);
         break;
 
-    case Jewelry_effect_id::hp_bon:
-        ret = new Jewelry_effect_hp_bon(jewelry);
+    case Amulet_effect_id::hp_bon:
+        ret = new Amulet_effect_hp_bon(amulet);
         break;
 
-    case Jewelry_effect_id::hp_pen:
-        ret = new Jewelry_effect_hp_pen(jewelry);
+    case Amulet_effect_id::hp_pen:
+        ret = new Amulet_effect_hp_pen(amulet);
         break;
 
-    case Jewelry_effect_id::spi_bon:
-        ret = new Jewelry_effect_spi_bon(jewelry);
+    case Amulet_effect_id::spi_bon:
+        ret = new Amulet_effect_spi_bon(amulet);
         break;
 
-    case Jewelry_effect_id::spi_pen:
-        ret = new Jewelry_effect_spi_pen(jewelry);
+    case Amulet_effect_id::spi_pen:
+        ret = new Amulet_effect_spi_pen(amulet);
         break;
 
-    case Jewelry_effect_id::random_tele:
-        ret = new Jewelry_effect_random_tele(jewelry);
+    case Amulet_effect_id::random_tele:
+        ret = new Amulet_effect_random_tele(amulet);
         break;
 
-    case Jewelry_effect_id::fire:
-        ret = new Jewelry_effect_fire(jewelry);
+    case Amulet_effect_id::fire:
+        ret = new Amulet_effect_fire(amulet);
         break;
 
-    case Jewelry_effect_id::conflict:
-        ret = new Jewelry_effect_conflict(jewelry);
+    case Amulet_effect_id::conflict:
+        ret = new Amulet_effect_conflict(amulet);
         break;
 
-    case Jewelry_effect_id::burden:
-        ret = new Jewelry_effect_burden(jewelry);
+    case Amulet_effect_id::burden:
+        ret = new Amulet_effect_burden(amulet);
         break;
 
-    case Jewelry_effect_id::hp_regen_bon:
-        ret = new Jewelry_effect_hp_regen_bon(jewelry);
+    case Amulet_effect_id::hp_regen_bon:
+        ret = new Amulet_effect_hp_regen_bon(amulet);
         break;
 
-    case Jewelry_effect_id::hp_regen_pen:
-        ret = new Jewelry_effect_hp_regen_pen(jewelry);
+    case Amulet_effect_id::hp_regen_pen:
+        ret = new Amulet_effect_hp_regen_pen(amulet);
         break;
 
-    case Jewelry_effect_id::haste:
-        ret = new Jewelry_effect_haste(jewelry);
+    case Amulet_effect_id::haste:
+        ret = new Amulet_effect_haste(amulet);
         break;
 
-    case Jewelry_effect_id::shriek:
-        ret = new Jewelry_effect_shriek(jewelry);
+    case Amulet_effect_id::shriek:
+        ret = new Amulet_effect_shriek(amulet);
         break;
 
-    case Jewelry_effect_id::START_OF_SECONDARY_EFFECTS:
-    case Jewelry_effect_id::END:
+    case Amulet_effect_id::START_OF_SECONDARY_EFFECTS:
+    case Amulet_effect_id::END:
         break;
     }
 
@@ -119,139 +119,139 @@ Jewelry_effect* mk_effect(const Jewelry_effect_id id, Jewelry* const jewelry)
 
 } //namespace
 
-//--------------------------------------------------------- JEWELRY PROPERTY EFFECT
-void Jewelry_property_effect::on_equip(const Verbosity verbosity)
+//--------------------------------------------------------- AMULET PROPERTY EFFECT
+void Amulet_property_effect::on_equip(const Verbosity verbosity)
 {
     Prop* const prop = mk_prop();
 
     assert(prop);
 
-    jewelry_->add_carrier_prop(prop, verbosity);
+    amulet_->add_carrier_prop(prop, verbosity);
 
-    jewelry_->effect_noticed(id());
+    amulet_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_property_effect::on_unequip()
+Unequip_allowed Amulet_property_effect::on_unequip()
 {
-    jewelry_->clear_carrier_props();
+    amulet_->clear_carrier_props();
 
     return Unequip_allowed::yes;
 }
 
 //--------------------------------------------------------- FIRE RESISTANCE
-Prop* Jewelry_effect_rFire::mk_prop() const
+Prop* Amulet_effect_rFire::mk_prop() const
 {
     return new Prop_rFire(Prop_turns::indefinite);
 }
 
 //--------------------------------------------------------- ELEC RESISTANCE
-Prop* Jewelry_effect_rElec::mk_prop() const
+Prop* Amulet_effect_rElec::mk_prop() const
 {
     return new Prop_rElec(Prop_turns::indefinite);
 }
 
 //--------------------------------------------------------- POISON RESISTANCE
-Prop* Jewelry_effect_rPoison::mk_prop() const
+Prop* Amulet_effect_rPoison::mk_prop() const
 {
     return new Prop_rPoison(Prop_turns::indefinite);
 }
 
 //--------------------------------------------------------- DISEASE RESISTANCE
-Prop* Jewelry_effect_rDisease::mk_prop() const
+Prop* Amulet_effect_rDisease::mk_prop() const
 {
     return new Prop_rDisease(Prop_turns::indefinite);
 }
 
 //--------------------------------------------------------- TELEPORT CONTROL
-Prop* Jewelry_effect_tele_control::mk_prop() const
+Prop* Amulet_effect_tele_control::mk_prop() const
 {
     return new Prop_tele_control(Prop_turns::indefinite);
 }
 
 //--------------------------------------------------------- LIGHT
-Prop* Jewelry_effect_light::mk_prop() const
+Prop* Amulet_effect_light::mk_prop() const
 {
     return new Prop_radiant(Prop_turns::indefinite);
 }
 
 //--------------------------------------------------------- SPELL REFLECTION
-Prop* Jewelry_effect_spell_reflect::mk_prop() const
+Prop* Amulet_effect_spell_reflect::mk_prop() const
 {
     return new Prop_spell_reflect(Prop_turns::indefinite);
 }
 
 //--------------------------------------------------------- HASTE
-Prop* Jewelry_effect_haste::mk_prop() const
+Prop* Amulet_effect_haste::mk_prop() const
 {
     return new Prop_hasted(Prop_turns::indefinite);
 }
 
 //--------------------------------------------------------- HP BONUS
-void Jewelry_effect_hp_bon::on_equip(const Verbosity verbosity)
+void Amulet_effect_hp_bon::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
 
-    jewelry_->actor_carrying()->change_max_hp(4);
-    jewelry_->effect_noticed(id());
+    amulet_->actor_carrying()->change_max_hp(4);
+    amulet_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_hp_bon::on_unequip()
+Unequip_allowed Amulet_effect_hp_bon::on_unequip()
 {
-    jewelry_->actor_carrying()->change_max_hp(-4);
+    amulet_->actor_carrying()->change_max_hp(-4);
 
     return Unequip_allowed::yes;
 }
 
 //--------------------------------------------------------- HP PENALTY
-void Jewelry_effect_hp_pen::on_equip(const Verbosity verbosity)
+void Amulet_effect_hp_pen::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
 
-    jewelry_->actor_carrying()->change_max_hp(-4);
-    jewelry_->effect_noticed(id());
+    amulet_->actor_carrying()->change_max_hp(-4);
+    amulet_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_hp_pen::on_unequip()
+Unequip_allowed Amulet_effect_hp_pen::on_unequip()
 {
-    jewelry_->actor_carrying()->change_max_hp(4);
+    amulet_->actor_carrying()->change_max_hp(4);
 
     return Unequip_allowed::yes;
 }
 
 //--------------------------------------------------------- SPI BONUS
-void Jewelry_effect_spi_bon::on_equip(const Verbosity verbosity)
+void Amulet_effect_spi_bon::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
 
-    jewelry_->actor_carrying()->change_max_spi(4);
-    jewelry_->effect_noticed(id());
+    amulet_->actor_carrying()->change_max_spi(4);
+    amulet_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_spi_bon::on_unequip()
+Unequip_allowed Amulet_effect_spi_bon::on_unequip()
 {
-    jewelry_->actor_carrying()->change_max_spi(-4);
+    amulet_->actor_carrying()->change_max_spi(-4);
 
     return Unequip_allowed::yes;
 }
 
 //--------------------------------------------------------- SPI PENALTY
-void Jewelry_effect_spi_pen::on_equip(const Verbosity verbosity)
+void Amulet_effect_spi_pen::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
 
-    jewelry_->actor_carrying()->change_max_spi(-4);
-    jewelry_->effect_noticed(id());
+    amulet_->actor_carrying()->change_max_spi(-4);
+    amulet_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_spi_pen::on_unequip()
+Unequip_allowed Amulet_effect_spi_pen::on_unequip()
 {
-    jewelry_->actor_carrying()->change_max_spi(4);
+    amulet_->actor_carrying()->change_max_spi(4);
 
     return Unequip_allowed::yes;
 }
 
 //--------------------------------------------------------- RANDOM TELEPORTATION
-void Jewelry_effect_random_tele::on_std_turn_equipped()
+void Amulet_effect_random_tele::on_std_turn_equipped()
 {
     auto& prop_handler = map::player->prop_handler();
 
@@ -261,12 +261,12 @@ void Jewelry_effect_random_tele::on_std_turn_equipped()
     {
         msg_log::add("I am being teleported...", clr_white, true, More_prompt_on_msg::yes);
         map::player->teleport();
-        jewelry_->effect_noticed(id());
+        amulet_->effect_noticed(id());
     }
 }
 
 //--------------------------------------------------------- SUMMON MON
-void Jewelry_effect_summon_mon::on_std_turn_equipped()
+void Amulet_effect_summon_mon::on_std_turn_equipped()
 {
     const int SOUND_ONE_IN_N  = 250;
 
@@ -299,12 +299,12 @@ void Jewelry_effect_summon_mon::on_std_turn_equipped()
             msg_log::add(mon->name_a() + " appears!", clr_white, true, More_prompt_on_msg::yes);
         }
 
-        jewelry_->effect_noticed(id());
+        amulet_->effect_noticed(id());
     }
 }
 
 //--------------------------------------------------------- FIRE
-void Jewelry_effect_fire::on_std_turn_equipped()
+void Amulet_effect_fire::on_std_turn_equipped()
 {
     const int FIRE_ONE_IN_N = 300;
 
@@ -333,12 +333,12 @@ void Jewelry_effect_fire::on_std_turn_equipped()
             }
         }
 
-        jewelry_->effect_noticed(id());
+        amulet_->effect_noticed(id());
     }
 }
 
 //--------------------------------------------------------- CONFLICT
-void Jewelry_effect_conflict::on_std_turn_equipped()
+void Amulet_effect_conflict::on_std_turn_equipped()
 {
     const int CONFLICT_ONE_IN_N = 50;
 
@@ -358,7 +358,7 @@ void Jewelry_effect_conflict::on_std_turn_equipped()
                     actor->prop_handler().try_add_prop(
                         new Prop_conflict(Prop_turns::std));
 
-                    jewelry_->effect_noticed(id());
+                    amulet_->effect_noticed(id());
 
                     break;
                 }
@@ -368,8 +368,8 @@ void Jewelry_effect_conflict::on_std_turn_equipped()
 }
 
 //--------------------------------------------------------- SHRIEK
-Jewelry_effect_shriek::Jewelry_effect_shriek(Jewelry* const jewelry) :
-    Jewelry_effect(jewelry)
+Amulet_effect_shriek::Amulet_effect_shriek(Amulet* const amulet) :
+    Amulet_effect(amulet)
 {
     std::string player_name = map::player->name_the();
 
@@ -390,7 +390,7 @@ Jewelry_effect_shriek::Jewelry_effect_shriek(Jewelry* const jewelry) :
         "DEATH",
         "DYING",
         "TAKE",
-        "Bl_oOD",
+        "BLOOD",
         "END",
         "SACRIFICE",
         "POSSESSED",
@@ -446,13 +446,13 @@ Jewelry_effect_shriek::Jewelry_effect_shriek(Jewelry* const jewelry) :
     };
 }
 
-void Jewelry_effect_shriek::on_std_turn_equipped()
+void Amulet_effect_shriek::on_std_turn_equipped()
 {
     const int NOISE_ONE_IN_N = 300;
 
     if (rnd::one_in(NOISE_ONE_IN_N))
     {
-        const std::string name = jewelry_->name(Item_ref_type::plain, Item_ref_inf::none);
+        const std::string name = amulet_->name(Item_ref_type::plain, Item_ref_inf::none);
 
         msg_log::add("The " + name + " shrieks...", clr_white, false, More_prompt_on_msg::yes);
 
@@ -483,12 +483,12 @@ void Jewelry_effect_shriek::on_std_turn_equipped()
 
         msg_log::more_prompt();
 
-        jewelry_->effect_noticed(id());
+        amulet_->effect_noticed(id());
     }
 }
 
 //--------------------------------------------------------- BURDEN
-void Jewelry_effect_burden::on_equip(const Verbosity verbosity)
+void Amulet_effect_burden::on_equip(const Verbosity verbosity)
 {
     if (!effects_known_[size_t(id())])
     {
@@ -497,11 +497,11 @@ void Jewelry_effect_burden::on_equip(const Verbosity verbosity)
             msg_log::add("I suddenly feel more burdened.");
         }
 
-        jewelry_->effect_noticed(id());
+        amulet_->effect_noticed(id());
     }
 }
 
-void Jewelry_effect_burden::change_item_weight(int& weight_ref)
+void Amulet_effect_burden::change_item_weight(int& weight_ref)
 {
     if (effects_known_[size_t(id())])
     {
@@ -511,48 +511,48 @@ void Jewelry_effect_burden::change_item_weight(int& weight_ref)
 }
 
 //--------------------------------------------------------- HP REGEN BONUS
-void Jewelry_effect_hp_regen_bon::on_equip(const Verbosity verbosity)
+void Amulet_effect_hp_regen_bon::on_equip(const Verbosity verbosity)
 {
     if (verbosity == Verbosity::verbose)
     {
         msg_log::add("I heal faster.");
     }
 
-    jewelry_->effect_noticed(id());
+    amulet_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_hp_regen_bon::on_unequip()
+Unequip_allowed Amulet_effect_hp_regen_bon::on_unequip()
 {
     msg_log::add("I heal slower.");
     return Unequip_allowed::yes;
 }
 
 //--------------------------------------------------------- HP REGEN PENALTY
-void Jewelry_effect_hp_regen_pen::on_equip(const Verbosity verbosity)
+void Amulet_effect_hp_regen_pen::on_equip(const Verbosity verbosity)
 {
     if (verbosity == Verbosity::verbose)
     {
         msg_log::add("I heal slower.");
     }
 
-    jewelry_->effect_noticed(id());
+    amulet_->effect_noticed(id());
 }
 
-Unequip_allowed Jewelry_effect_hp_regen_pen::on_unequip()
+Unequip_allowed Amulet_effect_hp_regen_pen::on_unequip()
 {
     msg_log::add("I heal faster.");
     return Unequip_allowed::yes;
 }
 
-//--------------------------------------------------------- JEWELRY
-Jewelry::Jewelry(Item_data_t* const item_data) :
+//--------------------------------------------------------- AMULET
+Amulet::Amulet(Item_data_t* const item_data) :
     Item(item_data)
 {
-    for (size_t i = 0; i < int(Jewelry_effect_id::END); ++i)
+    for (size_t i = 0; i < int(Amulet_effect_id::END); ++i)
     {
         if (effect_list_[i] == item_data->id)
         {
-            auto* const effect = mk_effect(Jewelry_effect_id(i), this);
+            auto* const effect = mk_effect(Amulet_effect_id(i), this);
             effects_.push_back(effect);
         }
     }
@@ -561,7 +561,7 @@ Jewelry::Jewelry(Item_data_t* const item_data) :
     data_->allow_spawn = false;
 }
 
-Jewelry::~Jewelry()
+Amulet::~Amulet()
 {
     for (auto* const effect : effects_)
     {
@@ -569,7 +569,7 @@ Jewelry::~Jewelry()
     }
 }
 
-std::vector<std::string> Jewelry::descr() const
+std::vector<std::string> Amulet::descr() const
 {
     std::vector<std::string> ret;
 
@@ -585,20 +585,20 @@ std::vector<std::string> Jewelry::descr() const
 
     if (data_->is_identified)
     {
-        const std::string jewelry_name = name(Item_ref_type::plain, Item_ref_inf::none);
+        const std::string amulet_name = name(Item_ref_type::plain, Item_ref_inf::none);
 
-        ret.push_back("All properties of the " + jewelry_name + " are known to me.");
+        ret.push_back("All properties of the " + amulet_name + " are known to me.");
     }
 
     return ret;
 }
 
-std::string Jewelry::name_inf() const
+std::string Amulet::name_inf() const
 {
     return data_->is_identified ? "{Known}" : "";
 }
 
-void Jewelry::on_equip_hook(const Verbosity verbosity)
+void Amulet::on_equip_hook(const Verbosity verbosity)
 {
     for (auto* const effect : effects_)
     {
@@ -612,7 +612,7 @@ void Jewelry::on_equip_hook(const Verbosity verbosity)
     }
 }
 
-Unequip_allowed Jewelry::on_unequip_hook()
+Unequip_allowed Amulet::on_unequip_hook()
 {
     auto unequip_allowed = Unequip_allowed::yes;
 
@@ -629,7 +629,7 @@ Unequip_allowed Jewelry::on_unequip_hook()
     return unequip_allowed;
 }
 
-void Jewelry::on_std_turn_in_inv(const Inv_type inv_type)
+void Amulet::on_std_turn_in_inv(const Inv_type inv_type)
 {
     if (inv_type == Inv_type::slots)
     {
@@ -640,7 +640,7 @@ void Jewelry::on_std_turn_in_inv(const Inv_type inv_type)
     }
 }
 
-void Jewelry::on_actor_turn_in_inv(const Inv_type inv_type)
+void Amulet::on_actor_turn_in_inv(const Inv_type inv_type)
 {
     if (inv_type == Inv_type::slots)
     {
@@ -651,7 +651,7 @@ void Jewelry::on_actor_turn_in_inv(const Inv_type inv_type)
     }
 }
 
-void Jewelry::identify(const Verbosity verbosity)
+void Amulet::identify(const Verbosity verbosity)
 {
     if (!data_->is_identified)
     {
@@ -678,7 +678,7 @@ void Jewelry::identify(const Verbosity verbosity)
     }
 }
 
-int Jewelry::weight() const
+int Amulet::weight() const
 {
     int weight = Item::weight();
 
@@ -690,7 +690,7 @@ int Jewelry::weight() const
     return weight;
 }
 
-int Jewelry::hp_regen_change(const Inv_type inv_type) const
+int Amulet::hp_regen_change(const Inv_type inv_type) const
 {
     int change = 0;
 
@@ -705,7 +705,7 @@ int Jewelry::hp_regen_change(const Inv_type inv_type) const
     return change;
 }
 
-void Jewelry::effect_noticed(const Jewelry_effect_id effect_id)
+void Amulet::effect_noticed(const Amulet_effect_id effect_id)
 {
     const size_t EFFECT_IDX = size_t(effect_id);
 
@@ -730,12 +730,14 @@ void Jewelry::effect_noticed(const Jewelry_effect_id effect_id)
 
         const std::string name_plain = name(Item_ref_type::plain, Item_ref_inf::none);
 
-        msg_log::add("I gained new knowledge about the " + name_plain + ".", clr_white,
-                     false, More_prompt_on_msg::yes);
+        msg_log::add("I gained new knowledge about the " + name_plain + ".",
+                     clr_white,
+                     false,
+                     More_prompt_on_msg::yes);
 
         if (nr_effects_known_this_item == MAX_NR_EFFECTS_ON_ITEM)
         {
-            //Jewelry is completely identified - print id message and set id status in item data
+            //Amulet is completely identified - print id message and set id status in item data
             identify(Verbosity::verbose);
         }
         else //Not all properties are known
@@ -744,7 +746,7 @@ void Jewelry::effect_noticed(const Jewelry_effect_id effect_id)
             //so we only add an event about learning a property if it is not yet fully identified
             //(i.e. when we don't call the identify method) - otherwise the history would contain
             //something like "Learned a property" immediately followed by "Learned all properties",
-            //which would look weird and redundant.
+            //which would be redundant.
             const std::string name_a = name(Item_ref_type::a, Item_ref_inf::none);
 
             dungeon_master::add_history_event("Learned a new property of " + name_a + ".");
@@ -752,14 +754,14 @@ void Jewelry::effect_noticed(const Jewelry_effect_id effect_id)
     }
 }
 
-//--------------------------------------------------------- JEWELRY HANDLING
+//--------------------------------------------------------- AMULET HANDLING
 namespace
 {
 
-bool can_effects_be_combined(const Jewelry_effect_id id1,
-                             const Jewelry_effect_id id2)
+bool can_effects_be_combined(const Amulet_effect_id id1,
+                             const Amulet_effect_id id2)
 {
-    typedef Jewelry_effect_id Id;
+    typedef Amulet_effect_id Id;
 
     assert(id1 != Id::END && id2 != Id::END);
 
@@ -812,7 +814,7 @@ bool can_effects_be_combined(const Jewelry_effect_id id1,
     case Id::fire:
         return true;
 
-    case Jewelry_effect_id::START_OF_SECONDARY_EFFECTS:
+    case Amulet_effect_id::START_OF_SECONDARY_EFFECTS:
     case Id::END:
         assert(false);
         return false;
@@ -821,7 +823,7 @@ bool can_effects_be_combined(const Jewelry_effect_id id1,
     return false;
 }
 
-int rnd_item_bucket_idx_for_effect(const Jewelry_effect_id  effect_to_assign,
+int rnd_item_bucket_idx_for_effect(const Amulet_effect_id  effect_to_assign,
                                    const std::vector<Item_id>&  item_bucket)
 {
     std::vector<int> item_idx_bucket;
@@ -832,17 +834,21 @@ int rnd_item_bucket_idx_for_effect(const Jewelry_effect_id  effect_to_assign,
 
         //Verify that the effect can be placed on this item by checking if it can
         //be combined with every effect currently assigned to this item.
-        for (int i = 0; i < int(Jewelry_effect_id::END); ++i)
+        for (size_t i = 0; i < size_t(Amulet_effect_id::END); ++i)
         {
-            const Jewelry_effect_id cur_effect = Jewelry_effect_id(i);
+            const Amulet_effect_id cur_effect = Amulet_effect_id(i);
 
-            if (
-                effect_list_[i] == item_bucket[item_bucket_idx] &&
-                !can_effects_be_combined(effect_to_assign, cur_effect))
+            if (effect_list_[i] == item_bucket[item_bucket_idx])
             {
-                //Combination with effect already assigned on item not allowed
-                can_be_placed_on_item = false;
-                break;
+                const bool CAN_EFFECTS_BE_COMBINED =
+                    can_effects_be_combined(effect_to_assign, cur_effect);
+
+                if (!CAN_EFFECTS_BE_COMBINED)
+                {
+                    //Combination with effect already assigned on item not allowed
+                    can_be_placed_on_item = false;
+                    break;
+                }
             }
         }
 
@@ -863,13 +869,13 @@ int rnd_item_bucket_idx_for_effect(const Jewelry_effect_id  effect_to_assign,
 
 } //namespace
 
-namespace jewelry_handling
+namespace amulet_handling
 {
 
 void init()
 {
     //Reset the effect list and knowledge status list
-    for (size_t i = 0; i < size_t(Jewelry_effect_id::END); ++i)
+    for (size_t i = 0; i < size_t(Amulet_effect_id::END); ++i)
     {
         effect_list_   [i] = Item_id::END;
         effects_known_ [i] = false;
@@ -879,9 +885,7 @@ void init()
 
     for (auto& data : item_data::data)
     {
-        const auto type = data.type;
-
-        if (type == Item_type::amulet || type == Item_type::ring)
+        if (data.type == Item_type::amulet)
         {
             item_bucket.push_back(data.id);
         }
@@ -889,18 +893,18 @@ void init()
 
     std::random_shuffle(begin(item_bucket), end(item_bucket));
 
-    std::vector<Jewelry_effect_id> primary_effect_bucket;
-    std::vector<Jewelry_effect_id> secondary_effect_bucket;
+    std::vector<Amulet_effect_id> primary_effect_bucket;
+    std::vector<Amulet_effect_id> secondary_effect_bucket;
 
-    for (size_t i = 0; i < size_t(Jewelry_effect_id::END); ++i)
+    for (int i = 0; i < int(Amulet_effect_id::END); ++i)
     {
-        const auto id = Jewelry_effect_id(i);
+        const Amulet_effect_id id = Amulet_effect_id(i);
 
-        if (id <  Jewelry_effect_id::START_OF_SECONDARY_EFFECTS)
+        if (id <  Amulet_effect_id::START_OF_SECONDARY_EFFECTS)
         {
             primary_effect_bucket.push_back(id);
         }
-        else if (id >  Jewelry_effect_id::START_OF_SECONDARY_EFFECTS)
+        else if (id >  Amulet_effect_id::START_OF_SECONDARY_EFFECTS)
         {
             secondary_effect_bucket.push_back(id);
         }
@@ -909,8 +913,8 @@ void init()
     random_shuffle(begin(primary_effect_bucket),   end(primary_effect_bucket));
     random_shuffle(begin(secondary_effect_bucket), end(secondary_effect_bucket));
 
-    //Assuming there are more jewelry items than primary or secondary effects (if this changes,
-    //just add more amulets and rings to the item data)
+    //Assuming there are more amulet items than primary or secondary effects (if this changes,
+    //just add more amulets to the item data)
     assert(item_bucket.size() > primary_effect_bucket.size());
     assert(item_bucket.size() > secondary_effect_bucket.size());
 
@@ -949,7 +953,7 @@ void init()
 
 void save()
 {
-    for (size_t i = 0; i < size_t(Jewelry_effect_id::END); ++i)
+    for (int i = 0; i < int(Amulet_effect_id::END); ++i)
     {
         save_handling::put_int(int(effect_list_[i]));
         save_handling::put_bool(effects_known_[i]);
@@ -958,11 +962,11 @@ void save()
 
 void load()
 {
-    for (size_t i = 0; i < size_t(Jewelry_effect_id::END); ++i)
+    for (int i = 0; i < int(Amulet_effect_id::END); ++i)
     {
         effect_list_[i]     = Item_id(save_handling::get_int());
         effects_known_[i]   = save_handling::get_bool();
     }
 }
 
-} //Jewelry_handling
+} //amulet_handling
