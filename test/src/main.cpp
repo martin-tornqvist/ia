@@ -765,7 +765,10 @@ TEST_FIXTURE(Basic_fixture, inventory_handling)
     CHECK(prop_hlr.has_prop(Prop_id::rBreath));
 
     //Drop the asbeshos suit on the ground
-    item_drop::try_drop_item_from_inv(*map::player, Inv_type::slots, int(Slot_id::body), 1);
+    item_drop::try_drop_item_from_inv(*map::player,
+                                      Inv_type::slots,
+                                      int(Slot_id::body),
+                                      1);
 
     //Check that no item exists in body slot
     CHECK(!body_slot.item);
@@ -821,7 +824,10 @@ TEST_FIXTURE(Basic_fixture, inventory_handling)
     //Check that the asbesthos suit is destroyed
     CHECK(!body_slot.item);
 
-    //Check that the properties are cleared
+    //Clear wound property
+    prop_hlr.end_prop(Prop_id::wound);
+
+    //Check that all properties from asbesthos suit are cleared
     for (int i = 0; i < int(Prop_id::END); ++i)
     {
         CHECK(!prop_hlr.has_prop(Prop_id(i)));
