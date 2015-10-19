@@ -109,12 +109,10 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         break;
 
     case Trait::rapid_recoverer:
-        //Should heal by eating
-        return bg == Bg::ghoul;
         break;
 
     case Trait::survivalist:
-        //Has RDISEASE already, so this trait is partly useless
+        //Has RDISEASE already, so this trait is partly useless + a bit of theme mismatch
         return bg == Bg::ghoul;
 
     case Trait::perseverant:
@@ -127,11 +125,9 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         break;
 
     case Trait::strong_spirit:
+    case Trait::mighty_spirit:
         //Have very little use for spirit, aside from Spell Resistance
         return bg == Bg::ghoul || bg == Bg::war_vet;
-
-    case Trait::mighty_spirit:
-        break;
 
     case Trait::stealthy:
         break;
@@ -146,6 +142,9 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         break;
 
     case Trait::undead_bane:
+        break;
+
+    case Trait::ravenous_hunger:
         break;
 
     case Trait::END:
@@ -329,6 +328,9 @@ std::string trait_title(const Trait id)
 
     case Trait::undead_bane:
         return "Bane of the Undead";
+
+    case Trait::ravenous_hunger:
+        return "Ravenous Hunger";
 
     case Trait::END:
         break;
@@ -573,6 +575,9 @@ std::string trait_descr(const Trait id)
                "against ethereal undead monsters (e.g. Ghosts) never pass through them "
                "(although you can still miss in the ordinary way)";
 
+    case Trait::ravenous_hunger:
+        return "You can feed on living victims when attacking with your claws (50% chance).";
+
     case Trait::END:
         break;
     }
@@ -726,8 +731,6 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::mighty_spirit:
-        traits_ref.push_back(Trait::strong_spirit);
-        bg_ref = Bg::occultist;
         break;
 
     case Trait::stealthy:
@@ -751,6 +754,11 @@ void trait_prereqs(const Trait trait,
         traits_ref.push_back(Trait::fearless);
         traits_ref.push_back(Trait::stout_spirit);
         break;
+
+    case Trait::ravenous_hunger:
+        traits_ref.push_back(Trait::adept_melee_fighter);
+        traits_ref.push_back(Trait::dexterous);
+        bg_ref = Bg::ghoul;
 
     case Trait::END:
         break;

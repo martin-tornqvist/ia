@@ -2043,8 +2043,7 @@ void Tomb::bump(Actor& actor_bumping)
                 {
                     try_sprain_player();
 
-                    msg_log::add("It seems futile.", clr_msg_note, false,
-                                 More_prompt_on_msg::yes);
+                    msg_log::add("It seems futile.", clr_msg_note, false, More_prompt_on_msg::yes);
                 }
                 else //Not weakened
                 {
@@ -2123,7 +2122,9 @@ void Tomb::player_loot()
     }
     else
     {
-        msg_log::add("There are some items inside.", clr_white, false,
+        msg_log::add("There are some items inside.",
+                     clr_white,
+                     false,
                      More_prompt_on_msg::yes);
 
         item_container_.open(pos_, map::player);

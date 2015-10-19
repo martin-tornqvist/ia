@@ -40,7 +40,7 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
     is_backstab         (false),
     is_weak_attack      (false)
 {
-    const P&          def_pos             = defender.pos;
+    const P&            def_pos             = defender.pos;
     bool                is_defender_aware   = true;
     const Actor_data_t& defender_data       = defender.data();
 
@@ -1478,6 +1478,17 @@ void melee(Actor* const attacker, const P& attacker_origin, Actor& defender, con
         {
             knock_back::try_knock_back(defender, attacker_origin, false);
         }
+
+        //Ravenous hunger feeding
+        if (
+            attacker == map::player                             &&
+            player_bon::traits[size_t(Trait::ravenous_hunger)]  &&
+            wpn.id() == Item_id::ghoul_claw                     &&
+            rnd::coin_toss())
+        {
+//#error This statement cannot be reached for some reason(?)
+            attacker->on_feed();
+        }
     }
 
     //Player critically fails melee attack?
@@ -1491,106 +1502,106 @@ void melee(Actor* const attacker, const P& attacker_origin, Actor& defender, con
         {
         //Exhausted (weakened)
         case 1:
-        {
-            Prop* prop = new Prop_weakened(Prop_turns::specific, rnd::range(6, 12));
+            {
+                Prop* prop = new Prop_weakened(Prop_turns::specific, rnd::range(6, 12));
 
-            player.prop_handler().try_add_prop(prop, Prop_src::intr, false, Verbosity::silent);
+                player.prop_handler().try_add_prop(prop, Prop_src::intr, false, Verbosity::silent);
 
-            msg_log::add("I am exhausted.", clr_msg_note, true, More_prompt_on_msg::yes);
-        }
-        break;
+                msg_log::add("I am exhausted.", clr_msg_note, true, More_prompt_on_msg::yes);
+            }
+            break;
 
         //Off-balance
         case 2:
-        {
-            msg_log::add("I am off-balance.", clr_msg_note, true, More_prompt_on_msg::yes);
+            {
+                msg_log::add("I am off-balance.", clr_msg_note, true, More_prompt_on_msg::yes);
 
-            Prop* prop = new Prop_paralyzed(Prop_turns::specific, rnd::range(1, 2));
+                Prop* prop = new Prop_paralyzed(Prop_turns::specific, rnd::range(1, 2));
 
-            player.prop_handler().try_add_prop(prop, Prop_src::intr, false, Verbosity::silent);
-        }
-        break;
+                player.prop_handler().try_add_prop(prop, Prop_src::intr, false, Verbosity::silent);
+            }
+            break;
 
         //Drop weaon
         case 3:
-        {
-            //Only drop weapon if attacking with wielded weapon (and not e.g. a Kick)
-            if (player.inv().item_in_slot(Slot_id::wpn) == &wpn)
             {
-                Item* item = player.inv().remove_from_slot(Slot_id::wpn);
-
-                if (item)
+                //Only drop weapon if attacking with wielded weapon (and not e.g. a Kick)
+                if (player.inv().item_in_slot(Slot_id::wpn) == &wpn)
                 {
-                    std::string item_name = item->name(Item_ref_type::plain,
-                                                       Item_ref_inf::none);
+                    Item* item = player.inv().remove_from_slot(Slot_id::wpn);
 
-                    bool blocked[MAP_W][MAP_H];
-
-                    const P fov_p = player.pos;
-
-                    Rect fov_rect = fov::get_fov_rect(fov_p);
-
-                    map_parse::run(cell_check::Blocks_move_cmn(false), blocked,
-                                   Map_parse_mode::overwrite, fov_rect);
-
-                    Los_result fov_result[MAP_W][MAP_H];
-
-                    fov::run(fov_p, blocked, fov_result);
-
-                    std::vector<P> p_bucket;
-
-                    for (int x = fov_rect.p0.x; x <= fov_rect.p1.x; ++x)
+                    if (item)
                     {
-                        for (int y = fov_rect.p0.y; y <= fov_rect.p1.y; ++y)
+                        std::string item_name = item->name(Item_ref_type::plain,
+                                                           Item_ref_inf::none);
+
+                        bool blocked[MAP_W][MAP_H];
+
+                        const P fov_p = player.pos;
+
+                        Rect fov_rect = fov::get_fov_rect(fov_p);
+
+                        map_parse::run(cell_check::Blocks_move_cmn(false), blocked,
+                                       Map_parse_mode::overwrite, fov_rect);
+
+                        Los_result fov_result[MAP_W][MAP_H];
+
+                        fov::run(fov_p, blocked, fov_result);
+
+                        std::vector<P> p_bucket;
+
+                        for (int x = fov_rect.p0.x; x <= fov_rect.p1.x; ++x)
                         {
-                            if (!fov_result[x][y].is_blocked_hard)
+                            for (int y = fov_rect.p0.y; y <= fov_rect.p1.y; ++y)
                             {
-                                p_bucket.push_back(P(x, y));
+                                if (!fov_result[x][y].is_blocked_hard)
+                                {
+                                    p_bucket.push_back(P(x, y));
+                                }
                             }
                         }
+
+                        P item_p(map::player->pos);
+
+                        if (!p_bucket.empty())
+                        {
+                            const int IDX = size_t(rnd::range(0, p_bucket.size() - 1));
+
+                            item_p = p_bucket[IDX];
+                        }
+
+                        msg_log::add("The " + item_name + " flies from my hands!", clr_msg_note,
+                                     true, More_prompt_on_msg::yes);
+
+                        item_drop::drop_item_on_map(item_p, *item);
                     }
-
-                    P item_p(map::player->pos);
-
-                    if (!p_bucket.empty())
-                    {
-                        const int IDX = size_t(rnd::range(0, p_bucket.size() - 1));
-
-                        item_p = p_bucket[IDX];
-                    }
-
-                    msg_log::add("The " + item_name + " flies from my hands!", clr_msg_note,
-                                 true, More_prompt_on_msg::yes);
-
-                    item_drop::drop_item_on_map(item_p, *item);
                 }
             }
-        }
-        break;
+            break;
 
         //Weapon breaks?
         case 4:
-        {
-            //Only break weapon if:
-            //* Player is Cursed, and
-            //* Player is attacking with wielded weapon (and not e.g. a Kick)
-            if (
-                player.has_prop(Prop_id::cursed) &&
-                player.inv().item_in_slot(Slot_id::wpn) == &wpn)
             {
-                Item* item = player.inv().remove_from_slot(Slot_id::wpn);
-
-                if (item)
+                //Only break weapon if:
+                //* Player is Cursed, and
+                //* Player is attacking with wielded weapon (and not e.g. a Kick)
+                if (
+                    player.has_prop(Prop_id::cursed) &&
+                    player.inv().item_in_slot(Slot_id::wpn) == &wpn)
                 {
-                    std::string item_name = item->name(Item_ref_type::plain, Item_ref_inf::none);
+                    Item* item = player.inv().remove_from_slot(Slot_id::wpn);
 
-                    msg_log::add("My " + item_name + " breaks!", clr_msg_note, true,
-                                 More_prompt_on_msg::yes);
-                    delete item;
+                    if (item)
+                    {
+                        std::string item_name = item->name(Item_ref_type::plain, Item_ref_inf::none);
+
+                        msg_log::add("My " + item_name + " breaks!", clr_msg_note, true,
+                                     More_prompt_on_msg::yes);
+                        delete item;
+                    }
                 }
             }
-        }
-        break;
+            break;
 
         //5 to 7 = Nothing happens
         default:

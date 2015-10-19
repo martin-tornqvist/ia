@@ -85,6 +85,9 @@ const int SHOCK_FROM_OBSESSION = 30;
 
 const int INS_FROM_DISTURBING_ITEMS = 5;
 
+//How many "units" of weight the player can carry, without trait modifiers etc
+const int PLAYER_CARRY_WEIGHT_BASE = 500;
+
 //Value used for limiting spawning over time and "breeder" monsters. The actual number of actors
 //may sometimes go a bit above this number, e.g. due to a group of monsters spawning when the
 //number of actors is near the limit. Summoning spells does not check this number at all (because

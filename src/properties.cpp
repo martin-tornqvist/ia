@@ -2003,7 +2003,7 @@ void Prop_wound::msg(const Prop_msg msg_type, std::string& msg_ref) const
         break;
 
     case Prop_msg::end_player:
-        msg_ref = nr_wounds_ > 1 ?
+        msg_ref = (nr_wounds_ > 1) ?
                   "All my wounds are healed!" :
                   "A wound is healed!";
         break;
@@ -2054,7 +2054,7 @@ void Prop_wound::heal_one_wound()
 
     if (nr_wounds_ > 0)
     {
-        msg_log::add("A wound is healed!");
+        msg_log::add("A wound is healed.");
     }
     else //This was the last wound
     {

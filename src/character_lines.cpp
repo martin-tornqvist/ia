@@ -129,45 +129,39 @@ void draw()
     //Wielded weapon
     pos.x = X_WIELDED;
 
-    Item* item_wielded = player.inv().item_in_slot(Slot_id::wpn);
+    const Item* wpn = player.inv().item_in_slot(Slot_id::wpn);
 
-    if (item_wielded)
+    if (!wpn)
     {
-        const Clr item_clr = item_wielded->clr();
-
-        if (config::is_tiles_mode())
-        {
-            render::draw_tile(item_wielded->tile(), panel, pos, item_clr);
-        }
-        else //Text mode
-        {
-            render::draw_glyph(item_wielded->glyph(), panel, pos, item_clr);
-        }
-
-        pos.x += 2;
-
-        const auto& data = item_wielded->data();
-
-        //If mainly a thrown weapon, force melee info - otherwise use weapon context.
-        const Item_ref_att_inf att_inf = data.main_att_mode == Att_mode::thrown ?
-                                         Item_ref_att_inf::melee :
-                                         Item_ref_att_inf::wpn_context;
-
-        str = item_wielded->name(Item_ref_type::plain, Item_ref_inf::yes, att_inf);
-
-        text_format::first_to_upper(str);
-
-        render::draw_text(str, panel, pos, clr_white);
-        pos.x += str.length() + 1;
+        wpn = &player.unarmed_wpn();
     }
-    else //Not wielding a weapon
+
+    const Clr item_clr = wpn->clr();
+
+    if (config::is_tiles_mode())
     {
-        //TODO: Draw player unarmed weapon instead of "Unarmed"
-
-        str = "Unarmed";
-        render::draw_text(str, panel, pos, clr_gray);
-        pos.x += str.length() + 1;
+        render::draw_tile(wpn->tile(), panel, pos, item_clr);
     }
+    else //Text mode
+    {
+        render::draw_glyph(wpn->glyph(), panel, pos, item_clr);
+    }
+
+    pos.x += 2;
+
+    const auto& data = wpn->data();
+
+    //If mainly a thrown weapon, force melee info - otherwise use weapon context.
+    const Item_ref_att_inf att_inf = data.main_att_mode == Att_mode::thrown ?
+                                     Item_ref_att_inf::melee :
+                                     Item_ref_att_inf::wpn_context;
+
+    str = wpn->name(Item_ref_type::plain, Item_ref_inf::yes, att_inf);
+
+    text_format::first_to_upper(str);
+
+    render::draw_text(str, panel, pos, clr_white);
+    pos.x += str.length() + 1;
 
     //----------------------------------------------------------------------------- SECOND ROW
     ++pos.y;

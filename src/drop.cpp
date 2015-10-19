@@ -24,7 +24,9 @@ void drop_all_characters_items(Actor& actor)
     actor.inv().drop_all_non_intrinsic(actor.pos);
 }
 
-void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t IDX,
+void try_drop_item_from_inv(Actor& actor,
+                            const Inv_type inv_type,
+                            const size_t IDX,
                             const int NR_ITEMS_TO_DROP)
 {
     Inventory&  inv             = actor.inv();
@@ -32,7 +34,7 @@ void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t 
 
     if (inv_type == Inv_type::slots)
     {
-        assert(IDX != int(Slot_id::END));
+        assert(IDX != size_t(Slot_id::END));
         item_to_drop = inv.slots_[IDX].item;
     }
     else //Backpack item
@@ -43,9 +45,13 @@ void try_drop_item_from_inv(Actor& actor, const Inv_type inv_type, const size_t 
 
     if (item_to_drop)
     {
-        const bool  IS_STACKABLE            = item_to_drop->data().is_stackable;
+        const Item_data_t&  data = item_to_drop->data();
+
+        const bool  IS_STACKABLE            = data.is_stackable;
         const int   NR_ITEMS_BEFORE_DROP    = item_to_drop->nr_items_;
-        const bool  IS_WHOLE_STACK_DROPPED  = !IS_STACKABLE || NR_ITEMS_TO_DROP == -1 ||
+
+        const bool  IS_WHOLE_STACK_DROPPED  = !IS_STACKABLE             ||
+                                              NR_ITEMS_TO_DROP == -1    ||
                                               (NR_ITEMS_TO_DROP >= NR_ITEMS_BEFORE_DROP);
 
         std::string item_ref = "";

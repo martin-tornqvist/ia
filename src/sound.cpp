@@ -19,8 +19,7 @@ Snd::Snd(
     Actor* const                    actor_who_made_sound,
     const Snd_vol                   vol,
     const Alerts_mon                alerting_mon,
-    const More_prompt_on_msg        add_more_prompt_on_msg,
-    const Force_player_hear_snd     force_player_hear_snd) :
+    const More_prompt_on_msg        add_more_prompt_on_msg) :
 
     msg_                            (msg),
     sfx_                            (sfx),
@@ -29,8 +28,7 @@ Snd::Snd(
     actor_who_made_sound_           (actor_who_made_sound),
     vol_                            (vol),
     is_alerting_mon_                (alerting_mon),
-    add_more_prompt_on_msg_         (add_more_prompt_on_msg),
-    force_player_hear_snd_          (force_player_hear_snd) {}
+    add_more_prompt_on_msg_         (add_more_prompt_on_msg) {}
 
 namespace snd_emit
 {
@@ -80,15 +78,12 @@ void run(Snd snd)
         const bool IS_ORIGIN_SEEN_BY_PLAYER =
             map::cells[origin.x][origin.y].is_seen_by_player;
 
-//        const bool FORCE_HEAR =
-
         if (is_snd_heard_at_range(FLOOD_VAL_AT_ACTOR, snd))
         {
             if (actor->is_player())
             {
                 //Various conditions may clear the sound message
                 if (
-//                    nr_snd_msg_printed_cur_turn_ >= 1 ||
                     (IS_ORIGIN_SEEN_BY_PLAYER && snd.is_msg_ignored_if_origin_seen()))
                 {
                     snd.clear_msg();
@@ -105,8 +100,6 @@ void run(Snd snd)
                         dir_utils::compass_dir_name(player_pos, origin, dir_str);
                         snd.add_string("(" + dir_str + ")");
                     }
-
-//                    ++nr_snd_msg_printed_cur_turn_;
                 }
 
                 const int SND_MAX_DIST  = snd.is_loud() ? SND_DIST_LOUD : SND_DIST_NORMAL;

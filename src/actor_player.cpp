@@ -49,12 +49,12 @@ Player::Player() :
     nr_turns_until_ins_         (-1),
     nr_quick_move_steps_left_   (-1),
     quick_move_dir_             (Dir::END),
-    nr_turns_until_rspell_      (-1),
-    CARRY_WEIGHT_BASE_          (500) {}
+    nr_turns_until_rspell_      (-1) {}
 
 Player::~Player()
 {
     delete active_explosive;
+    delete unarmed_wpn_;
 }
 
 void Player::mk_start_items()
@@ -196,6 +196,16 @@ void Player::mk_start_items()
         }
 
         inv_->put_in_slot(Slot_id::wpn, item_factory::mk(weapon_id));
+    }
+
+    //Unarmed attack
+    if (player_bon::bg() == Bg::ghoul)
+    {
+        unarmed_wpn_ = static_cast<Wpn*>(item_factory::mk(Item_id::player_ghoul_claw));
+    }
+    else //Not ghoul
+    {
+        unarmed_wpn_ = static_cast<Wpn*>(item_factory::mk(Item_id::player_punch));
     }
 
     if (has_pistol)
@@ -396,7 +406,7 @@ int Player::carry_weight_lmt() const
                                  (IS_STRONG_BACKED * 30) -
                                  (IS_WEAKENED      * 15);
 
-    return (CARRY_WEIGHT_BASE_ * (CARRY_WEIGHT_MOD + 100)) / 100;
+    return (PLAYER_CARRY_WEIGHT_BASE * (CARRY_WEIGHT_MOD + 100)) / 100;
 }
 
 int Player::shock_resistance(const Shock_src shock_src) const
@@ -1033,6 +1043,7 @@ void Player::on_std_turn()
         }
     }
 
+    //HP regen
     if (!has_prop(Prop_id::poisoned))
     {
         int nr_turns_per_hp = 14;
@@ -1338,13 +1349,24 @@ void Player::move(Dir dir)
             //Encumbrance
             const int ENC = enc_percent();
 
+            Prop* const wound_prop = prop_handler_->prop(Prop_id::wound);
+
+            int nr_wounds = 0;
+
+            if (wound_prop)
+            {
+                nr_wounds = static_cast<Prop_wound*>(wound_prop)->nr_wounds();
+            }
+
+            const int MIN_NR_WOUNDS_FOR_STAGGER = 3;
+
             if (ENC >= ENC_IMMOBILE_LVL)
             {
                 msg_log::add("I am too encumbered to move!");
                 render::draw_map_and_interface();
                 return;
             }
-            else if (ENC >= 100)
+            else if (ENC >= 100 || nr_wounds >= MIN_NR_WOUNDS_FOR_STAGGER)
             {
                 msg_log::add("I stagger.", clr_msg_note);
                 prop_handler_->try_add_prop(new Prop_waiting(Prop_turns::std));
@@ -1477,22 +1499,18 @@ void Player::kick_mon(Actor& defender)
     delete kick_wpn;
 }
 
+const Wpn& Player::unarmed_wpn()
+{
+    assert(unarmed_wpn_);
+
+    return *unarmed_wpn_;
+}
+
 void Player::hand_att(Actor& defender)
 {
-    //Spawn a temporary punch weapon to attack with
-    Wpn* wpn = nullptr;
+    const Wpn& wpn = unarmed_wpn();
 
-    if (player_bon::bg() == Bg::ghoul)
-    {
-        wpn = static_cast<Wpn*>(item_factory::mk(Item_id::player_ghoul_claw));
-    }
-    else //Not ghoul
-    {
-        wpn = static_cast<Wpn*>(item_factory::mk(Item_id::player_punch));
-    }
-
-    attack::melee(this, pos, defender, *wpn);
-    delete wpn;
+    attack::melee(this, pos, defender, wpn);
 }
 
 void Player::add_light_hook(bool light_map[MAP_W][MAP_H]) const

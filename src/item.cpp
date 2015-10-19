@@ -874,8 +874,13 @@ void Medical_bag::finish_cur_action()
     {
     case Med_bag_action::treat_wound:
     {
-//        msg_log::add("I finish treating my wounds.");
-        map::player->prop_handler().end_prop(Prop_id::wound);
+        Prop* const wound_prop = map::player->prop_handler().prop(Prop_id::wound);
+
+        assert(wound_prop);
+
+        Prop_wound* const wound = static_cast<Prop_wound*>(wound_prop);
+
+        wound->heal_one_wound();
     }
     break;
 

@@ -151,6 +151,8 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.melee.hit_medium_sfx = Sfx_id::hit_medium;
         d.melee.hit_hard_sfx = Sfx_id::hit_hard;
         d.ranged.is_throwable_wpn = true;
+        d.land_on_hard_snd_msg = "I hear a clanking sound.";
+        d.land_on_hard_sfx = Sfx_id::metal_clank;
         break;
 
     case Item_type::melee_wpn_intr:
@@ -922,6 +924,8 @@ void init_data_list()
     d.melee.miss_sfx = Sfx_id::miss_medium;
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.effective_range = 4;
+    d.land_on_hard_snd_msg = "I hear a thudding sound.";
+    d.land_on_hard_sfx = Sfx_id::END;
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn);
@@ -929,8 +933,7 @@ void init_data_list()
     d.base_name = {"Hammer", "Hammers", "a Hammer"};
     d.base_descr =
     {
-        "Typically used for construction, but can be quite devastating when wielded as "
-        "a weapon.",
+        "Typically used for construction, but can be quite devastating when wielded as a weapon.",
 
         "Melee attacks with hammers are noisy."
     };
@@ -1107,6 +1110,7 @@ void init_data_list()
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::player_punch;
+    d.base_name = {"Punch", "", ""};
     d.melee.att_msgs = {"punch", ""};
     d.melee.hit_chance_mod = 20;
     d.melee.dmg = Dice_param(1, 1);
@@ -1115,9 +1119,10 @@ void init_data_list()
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::player_ghoul_claw;
+    d.base_name = {"Claw", "", ""};
     d.melee.att_msgs = {"claw", ""};
-    d.melee.hit_chance_mod = 25;
-    d.melee.dmg = Dice_param(2, 5);
+    d.melee.hit_chance_mod = 20;
+    d.melee.dmg = Dice_param(1, 8);
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
@@ -2023,6 +2028,16 @@ void cleanup()
 {
     TRACE_FUNC_BEGIN;
 
+    for (size_t i = 0; i < size_t(Item_id::END); ++i)
+    {
+        Item_data_t& d = data[i];
+
+        delete d.melee.prop_applied;
+        d.melee.prop_applied = nullptr;
+
+        delete d.ranged.prop_applied;
+        d.ranged.prop_applied = nullptr;
+    }
 
     TRACE_FUNC_END;
 }

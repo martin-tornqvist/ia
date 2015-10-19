@@ -14,15 +14,13 @@ struct Actor_data_t;
 
 enum class Trait
 {
+    //Common (except some traits can be blocked for certain backgrounds)
     adept_melee_fighter,
     expert_melee_fighter,
     master_melee_fighter,
     adept_marksman,
     expert_marksman,
-    master_marksman,
-    fast_shooter,
     cool_headed,
-    courageous,
     dem_expert,
     dexterous,
     fearless,
@@ -31,10 +29,6 @@ enum class Trait
     stealthy,
     mobile,
     lithe,
-    warlock,
-    summoner,
-    blood_sorcerer,
-    seer,
     observant,
     perceptive,
     vigilant,
@@ -52,6 +46,23 @@ enum class Trait
     unbreakable,
     strong_backed,
     undead_bane,
+
+    //Unique for Ghoul
+    ravenous_hunger,
+
+    //Unique for Occultist
+    warlock,
+    summoner,
+    blood_sorcerer,
+    seer,
+
+    //Unique for Rogue
+
+    //Unique for War veteran
+    master_marksman,
+    fast_shooter,
+    courageous,
+
     END
 };
 

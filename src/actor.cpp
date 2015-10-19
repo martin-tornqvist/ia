@@ -892,7 +892,16 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
 
 Did_action Actor::try_eat_corpse()
 {
-    if (hp() >= hp_max(true))
+    Prop* const wound_prop = prop_handler_->prop(Prop_id::wound);
+
+    Prop_wound* wound = nullptr;
+
+    if (wound_prop)
+    {
+        wound = static_cast<Prop_wound*>(wound_prop);
+    }
+
+    if (hp() >= hp_max(true) && !wound)
     {
         //Not "hungry"
         msg_log::add("I am satiated.");
@@ -904,8 +913,6 @@ Did_action Actor::try_eat_corpse()
 
     if (corpse)
     {
-        restore_hp(1, false, Verbosity::silent);
-
         const bool          IS_PLAYER       = is_player();
         const int           CORPSE_MAX_HP   = corpse->hp_max(false);
         const int           DESTR_ONE_IN_N  = utils::constr_in_range(1, CORPSE_MAX_HP / 4, 20);
@@ -954,6 +961,9 @@ Did_action Actor::try_eat_corpse()
             map::mk_blood(pos);
         }
 
+        //Heal
+        on_feed();
+
         return Did_action::yes;
     }
     else if (is_player())
@@ -962,6 +972,25 @@ Did_action Actor::try_eat_corpse()
     }
 
     return Did_action::no;
+}
+
+void Actor::on_feed()
+{
+    restore_hp(1, false, Verbosity::silent);
+
+    Prop* const wound_prop = prop_handler_->prop(Prop_id::wound);
+
+    Prop_wound* wound = nullptr;
+
+    if (wound_prop)
+    {
+        wound = static_cast<Prop_wound*>(wound_prop);
+    }
+
+    if (wound && rnd::one_in(10))
+    {
+        wound->heal_one_wound();
+    }
 }
 
 void Actor::add_light(bool light_map[MAP_W][MAP_H]) const

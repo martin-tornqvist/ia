@@ -879,7 +879,15 @@ void handle_map_mode_key_press(const Key_data& d)
     //----------------------------------- MAKE NOISE
     else if (d.key == 'N')
     {
-        msg_log::add("I make some noise...");
+        if (player_bon::bg() == Bg::ghoul)
+        {
+            msg_log::add("I let out a chilling howl.");
+        }
+        else //Not ghoul
+        {
+            msg_log::add("I make some noise.");
+        }
+
 
         Snd snd("",
                 Sfx_id::END,

@@ -96,6 +96,7 @@ public:
 
     //Used by Ghoul class and Ghoul monsters
     Did_action try_eat_corpse();
+    void on_feed();
 
     void on_std_turn_common();
 

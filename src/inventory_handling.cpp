@@ -332,9 +332,10 @@ void run_inv_screen()
         {
             Inv_type cur_inv_type = inv_type();
 
-            const int       BROWSER_Y   = browser.y();
-            const size_t    IDX         = cur_inv_type == Inv_type::slots ?
-                                          BROWSER_Y : (BROWSER_Y - int(Slot_id::END));
+            const int BROWSER_Y = browser.y();
+
+            const size_t IDX = cur_inv_type == Inv_type::slots ?
+                               BROWSER_Y : (BROWSER_Y - int(Slot_id::END));
 
             if (run_drop_query(cur_inv_type, IDX))
             {

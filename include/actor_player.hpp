@@ -39,6 +39,7 @@ enum class Shock_src
 
 class Medical_bag;
 class Explosive;
+class Wpn;
 
 class Player: public Actor
 {
@@ -91,6 +92,8 @@ public:
 
     void auto_melee();
 
+    const Wpn& unarmed_wpn();
+
     void kick_mon(Actor& defender);
     void hand_att(Actor& defender);
 
@@ -141,7 +144,7 @@ private:
 
     int nr_turns_until_rspell_;
 
-    const int CARRY_WEIGHT_BASE_;
+    Wpn* unarmed_wpn_;
 };
 
 
