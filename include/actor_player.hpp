@@ -92,7 +92,7 @@ public:
 
     void auto_melee();
 
-    const Wpn& unarmed_wpn();
+    Wpn& unarmed_wpn();
 
     void kick_mon(Actor& defender);
     void hand_att(Actor& defender);

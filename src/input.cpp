@@ -967,7 +967,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
         const Actor_id mon_id = Actor_id(IDX);
 
-        actor_factory::summon(map::player->pos, {mon_id}, false);
+        actor_factory::summon(map::player->pos, {mon_id}, Make_mon_aware::no);
 
         clear_events();
 

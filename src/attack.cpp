@@ -1442,7 +1442,10 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
 
 } //namespace
 
-void melee(Actor* const attacker, const P& attacker_origin, Actor& defender, const Wpn& wpn)
+void melee(Actor* const attacker,
+           const P& attacker_origin,
+           Actor& defender,
+           Wpn& wpn)
 {
     const Melee_att_data att_data(attacker, defender, wpn);
 
@@ -1459,34 +1462,34 @@ void melee(Actor* const attacker, const P& attacker_origin, Actor& defender, con
         const Allow_wound allow_wound = IS_RANGED_WPN ?
                                         Allow_wound::no : Allow_wound::yes;
 
-        const Actor_died died = defender.hit(att_data.dmg,
-                                             wpn.data().melee.dmg_type,
-                                             Dmg_method::END,
-                                             allow_wound);
-
-        if (died == Actor_died::no)
-        {
-            defender.prop_handler().try_add_prop_from_att(wpn, true);
-        }
+        defender.hit(att_data.dmg,
+                     wpn.data().melee.dmg_type,
+                     Dmg_method::END,
+                     allow_wound);
 
         if (defender.data().can_bleed)
         {
             map::mk_blood(defender.pos);
         }
 
-        if (died == Actor_died::no && wpn.data().melee.knocks_back)
-        {
-            knock_back::try_knock_back(defender, attacker_origin, false);
-        }
+        //NOTE: This is run regardless of if defender died or not, it is the hook implementors
+        //responsibility to check this when it matters.
+        wpn.on_melee_hit(defender);
 
-        //Ravenous hunger feeding
-        if (
-          attacker == map::player                             &&
-          player_bon::traits[size_t(Trait::ravenous_hunger)]  &&
-          wpn.id() == Item_id::player_ghoul_claw              &&
-          rnd::coin_toss())
+        if (defender.is_alive())
         {
-            attacker->on_feed();
+          defender.prop_handler().try_add_prop_from_att(wpn, true);
+
+          if (wpn.data().melee.knocks_back)
+          {
+              knock_back::try_knock_back(defender, attacker_origin, false);
+          }
+        }
+        else //Defender was killed
+        {
+          //NOTE: Destroyed actors are purged on standard turns, so it's no problem calling this
+          //function even if defender was destroyed (we haven't "ticked" game time yet)
+          wpn.on_melee_kill(defender);
         }
     }
 
@@ -1627,7 +1630,10 @@ void melee(Actor* const attacker, const P& attacker_origin, Actor& defender, con
     game_time::tick();
 }
 
-bool ranged(Actor* const attacker, const P& origin, const P& aim_pos, Wpn& wpn)
+bool ranged(Actor* const attacker,
+            const P& origin,
+            const P& aim_pos,
+            Wpn& wpn)
 {
     bool did_attack = false;
 
@@ -1717,4 +1723,4 @@ bool ranged(Actor* const attacker, const P& origin, const P& aim_pos, Wpn& wpn)
     return false;
 }
 
-} //Attack
+} //attack

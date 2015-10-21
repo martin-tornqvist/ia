@@ -277,12 +277,34 @@ public:
         (void)actor;
     }
 
+    virtual void on_melee_hit(Actor& actor_hit)
+    {
+      (void)actor_hit;
+    }
+
+    virtual void on_melee_kill(Actor& actor_killed)
+    {
+      (void)actor_killed;
+    }
+
     int nr_ammo_loaded_;
 
 protected:
     std::string name_inf() const override;
 
     Item_data_t* ammo_data_;
+};
+
+class Player_ghoul_claw : public Wpn
+{
+public:
+  Player_ghoul_claw(Item_data_t* const item_data) :
+    Wpn(item_data) {}
+
+private:
+    void on_melee_hit(Actor& actor_hit) override;
+
+    void on_melee_kill(Actor& actor_killed) override;
 };
 
 class Pharaoh_staff: public Wpn

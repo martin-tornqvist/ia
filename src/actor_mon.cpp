@@ -1979,11 +1979,12 @@ void Zombie::on_death()
 
         assert(id_to_spawn != Actor_id::END);
 
-        Mon* const mon = static_cast<Mon*>(actor_factory::mk(id_to_spawn, pos));
-
-        mon->leader_ = leader_;
-
-        mon->become_aware(false);
+        actor_factory::summon(pos,
+                              {id_to_spawn},
+                              Make_mon_aware::yes,
+                              nullptr,
+                              nullptr,
+                              Verbosity::silent);
 
         render::draw_map_and_interface();
     }
@@ -2065,7 +2066,7 @@ bool Major_clapham_lee::on_actor_turn_hook()
                 mon_ids.push_back(mon_id);
             }
 
-            actor_factory::summon(pos, mon_ids, true, this);
+            actor_factory::summon(pos, mon_ids, Make_mon_aware::yes, this);
 
             render::draw_map_and_interface();
 
@@ -2280,7 +2281,12 @@ bool The_high_priest::on_actor_turn_hook()
             const P& p(CELL_IDX);
 
             std::vector<Mon*> summoned;
-            actor_factory::summon(p, {Actor_id::the_high_priest_cpy}, true, this, &summoned);
+
+            actor_factory::summon(p,
+                                  {Actor_id::the_high_priest_cpy},
+                                  Make_mon_aware::yes,
+                                  this,
+                                  &summoned);
 
             assert(summoned.size() == 1);
 

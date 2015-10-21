@@ -19,6 +19,7 @@
 #include "feature_rigid.hpp"
 #include "item_data.hpp"
 #include "save_handling.hpp"
+#include "actor_factory.hpp"
 
 //---------------------------------------------------------- ITEM
 Item::Item(Item_data_t* item_data) :
@@ -653,8 +654,69 @@ std::string Wpn::name_inf() const
     return "";
 }
 
+//---------------------------------------------------------- PLAYER GHOUL CLAW
+void Player_ghoul_claw::on_melee_hit(Actor& actor_hit)
+{
+  //TODO: If some "constructed" monster is added (something not made of flesh, e.g. a golem),
+  //then a Ghoul player would be able to feed from it, which would be a problem. In that case,
+  //there should probably be a field in the actor data called something like either
+  //"is_flesh_body", or "is_construct".
+
+  const Actor_data_t& d = actor_hit.data();
+
+  const bool IS_ETHEREAL = actor_hit.has_prop(Prop_id::ethereal);
+
+  if (!IS_ETHEREAL && d.can_leave_corpse)
+  {
+    //Ghoul feeding from Ravenous trait?
+    if (player_bon::traits[size_t(Trait::ravenous)] && rnd::coin_toss())
+    {
+      map::player->on_feed();
+    }
+
+    //Poison victim from Ghoul Toxic trait?
+    if (
+        player_bon::traits[size_t(Trait::toxic)]  &&
+        actor_hit.state() == Actor_state::alive   &&
+        rnd::one_in(4))
+    {
+      Prop* const poison = new Prop_poisoned(Prop_turns::std);
+
+      actor_hit.prop_handler().try_add_prop(poison);
+    }
+  }
+}
+
+void Player_ghoul_claw::on_melee_kill(Actor& actor_killed)
+{
+  //TODO: See TODO note in melee hit hook for Ghoul claw concerning "constructed monsters".
+
+  const Actor_data_t& d = actor_killed.data();
+
+  const bool IS_ETHEREAL = actor_killed.has_prop(Prop_id::ethereal);
+
+  if (
+      player_bon::traits[size_t(Trait::foul)] &&
+      !IS_ETHEREAL                            &&
+      d.can_leave_corpse                      &&
+      rnd::one_in(5))
+  {
+    const int NR_WORMS = rnd::range(2, 3);
+
+    std::vector<Actor_id> ids(NR_WORMS, Actor_id::worm_mass);
+
+    actor_factory::summon(actor_killed.pos,
+                          ids,
+                          Make_mon_aware::yes,
+                          map::player,
+                          nullptr,
+                          Verbosity::silent);
+  }
+}
+
 //---------------------------------------------------------- STAFF OF THE PHARAOHS
-Pharaoh_staff::Pharaoh_staff(Item_data_t* const item_data) : Wpn(item_data)
+Pharaoh_staff::Pharaoh_staff(Item_data_t* const item_data) :
+  Wpn(item_data)
 {
     item_data->allow_spawn = false;
 

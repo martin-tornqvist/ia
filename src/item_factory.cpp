@@ -42,7 +42,6 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
     case Item_id::player_kick:
     case Item_id::player_stomp:
     case Item_id::player_punch:
-    case Item_id::player_ghoul_claw:
     case Item_id::zombie_axe:
     case Item_id::zombie_claw:
     case Item_id::zombie_claw_diseased:
@@ -103,6 +102,10 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
 
     case Item_id::pharaoh_staff:
         r = new Pharaoh_staff(d);
+        break;
+
+    case Item_id::player_ghoul_claw:
+        r = new Player_ghoul_claw(d);
         break;
 
     case Item_id::dynamite:

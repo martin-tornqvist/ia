@@ -137,7 +137,10 @@ void act()
 
     if (!has_allied_mon)
     {
-        actor_factory::summon(map::player->pos, {Actor_id::mi_go}, false, map::player);
+        actor_factory::summon(map::player->pos,
+                              {Actor_id::mi_go},
+                              Make_mon_aware::yes,
+                              map::player);
     }
 
     //Occasionally apply rFear (to avoid getting stuck on fear-causing monsters)

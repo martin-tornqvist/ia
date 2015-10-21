@@ -1500,7 +1500,7 @@ void Player::kick_mon(Actor& defender)
     delete kick_wpn;
 }
 
-const Wpn& Player::unarmed_wpn()
+Wpn& Player::unarmed_wpn()
 {
     assert(unarmed_wpn_);
 
@@ -1509,7 +1509,7 @@ const Wpn& Player::unarmed_wpn()
 
 void Player::hand_att(Actor& defender)
 {
-    const Wpn& wpn = unarmed_wpn();
+    Wpn& wpn = unarmed_wpn();
 
     attack::melee(this, pos, defender, wpn);
 }

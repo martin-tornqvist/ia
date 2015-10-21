@@ -3299,7 +3299,7 @@ Did_trigger_trap Cocoon::trigger_trap(Actor* const actor)
 
                 const std::vector<Actor_id> ids_to_summon(NR_SPIDERS, actor_id_to_summon);
 
-                actor_factory::summon(pos_, ids_to_summon, true);
+                actor_factory::summon(pos_, ids_to_summon, Make_mon_aware::yes);
 
                 is_trapped_ = false;
                 return Did_trigger_trap::yes;

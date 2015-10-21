@@ -1052,7 +1052,7 @@ void Trap_summon_mon::trigger()
         const Actor_id  id_to_summon    = summon_bucket[ELEMENT];
         TRACE << "Actor id: " << int(id_to_summon) << std::endl;
 
-        actor_factory::summon(pos_, {1, id_to_summon}, true);
+        actor_factory::summon(pos_, {1, id_to_summon}, Make_mon_aware::yes);
         TRACE << "Monster was summoned" << std::endl;
     }
 

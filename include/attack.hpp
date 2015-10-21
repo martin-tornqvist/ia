@@ -130,13 +130,21 @@ namespace attack
 {
 
 //NOTE: Attacker origin is needed since attacker may be a NULL pointer.
-void melee(Actor* const attacker, const P& attacker_origin, Actor& defender, const Wpn& wpn);
+void melee(Actor* const attacker,
+           const P& attacker_origin,
+           Actor& defender,
+           Wpn& wpn);
 
-bool ranged(Actor* const attacker, const P& origin, const P& aim_pos, Wpn& wpn);
+bool ranged(Actor* const attacker,
+            const P& origin,
+            const P& aim_pos,
+            Wpn& wpn);
 
-void ranged_hit_chance(const Actor& attacker, const Actor& defender, const Wpn& wpn);
+void ranged_hit_chance(const Actor& attacker,
+                       const Actor& defender,
+                       const Wpn& wpn);
 
-} //Attack
+} //attack
 
 #endif
 

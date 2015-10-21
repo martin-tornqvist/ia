@@ -470,7 +470,7 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
         {
             const P& p(path[i]);
 
-            //If this is a late game level, ocassionally put floor in 3x3 cells around each point
+            //If this is a late game level, occasionally put floor in 3x3 cells around each point
             //in the path (wide corridors for more "open" level).
             if (map::dlvl >= DLVL_FIRST_LATE_GAME && rnd::fraction(2, 5))
             {

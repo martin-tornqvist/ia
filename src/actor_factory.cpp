@@ -261,11 +261,15 @@ void delete_all_mon()
 
 void summon(const P& origin,
             const std::vector<Actor_id>& monster_ids,
-            const bool MAKE_MONSTERS_AWARE,
+            const Make_mon_aware make_aware,
             Actor* const actor_to_set_as_leader,
-            std::vector<Mon*>* monsters_ret)
+            std::vector<Mon*>* monsters_ret,
+            Verbosity verbosity)
 {
-    if (monsters_ret) {monsters_ret->clear();}
+    if (monsters_ret)
+    {
+      monsters_ret->clear();
+    }
 
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
@@ -300,18 +304,21 @@ void summon(const P& origin,
             mon->leader_ = actor_to_set_as_leader;
         }
 
-        if (MAKE_MONSTERS_AWARE)
+        if (make_aware == Make_mon_aware::yes)
         {
             mon->aware_counter_ = mon->data().nr_turns_aware;
         }
 
-        if (map::player->can_see_actor(*actor))
+        if (verbosity == Verbosity::verbose && map::player->can_see_actor(*actor))
         {
             positions_to_animate.push_back(pos);
         }
     }
 
-    render::draw_blast_at_seen_cells(positions_to_animate, clr_magenta);
+    if (verbosity == Verbosity::verbose)
+    {
+      render::draw_blast_at_seen_cells(positions_to_animate, clr_magenta);
+    }
 }
 
 } //actor_factory

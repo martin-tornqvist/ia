@@ -339,7 +339,9 @@ void Ins_shadows::on_start_hook()
 
     const int NR = rnd::range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
 
-    actor_factory::summon(map::player->pos, std::vector<Actor_id>(NR, Actor_id::shadow), true);
+    actor_factory::summon(map::player->pos,
+                          std::vector<Actor_id>(NR, Actor_id::shadow),
+                          Make_mon_aware::yes);
 }
 
 bool Ins_confusion::allow_gain() const

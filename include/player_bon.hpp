@@ -48,7 +48,9 @@ enum class Trait
     undead_bane,
 
     //Unique for Ghoul
-    ravenous_hunger,
+    ravenous,
+    foul,
+    toxic,
 
     //Unique for Occultist
     warlock,

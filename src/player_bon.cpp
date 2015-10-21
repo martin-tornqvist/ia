@@ -144,7 +144,13 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
     case Trait::undead_bane:
         break;
 
-    case Trait::ravenous_hunger:
+    case Trait::ravenous:
+        break;
+
+    case Trait::foul:
+        break;
+
+    case Trait::toxic:
         break;
 
     case Trait::END:
@@ -329,8 +335,14 @@ std::string trait_title(const Trait id)
     case Trait::undead_bane:
         return "Bane of the Undead";
 
-    case Trait::ravenous_hunger:
-        return "Ravenous Hunger";
+    case Trait::ravenous:
+        return "Ravenous";
+
+    case Trait::foul:
+        return "Foul";
+
+    case Trait::toxic:
+        return "Toxic";
 
     case Trait::END:
         break;
@@ -359,7 +371,7 @@ void bg_descr(const Bg id, std::vector<std::string>& out)
         out.push_back("Cannot use medical equipment, but can instead regenerate Hit Points by "
                       "feeding on corpses (press [E])");
         out.push_back(" ");
-        out.push_back("Has powerful claws (" + dmg_str + ", +" + att_mod_str + " to hit)");
+        out.push_back("Has a powerful clawing melee attack");
         out.push_back(" ");
         out.push_back("-15% hit chance with firearms and thrown weapons");
         out.push_back(" ");
@@ -575,8 +587,15 @@ std::string trait_descr(const Trait id)
                "against ethereal undead monsters (e.g. Ghosts) never pass through them "
                "(although you can still miss in the ordinary way)";
 
-    case Trait::ravenous_hunger:
-        return "You can feed on living victims when attacking with your claws (50% chance).";
+    case Trait::ravenous:
+        return "You occasionally feed on living victims when attacking with your claws.";
+
+    case Trait::foul:
+        return "You have particularly filthy and verminous claws - vicious worms occasionally "
+               "burst out from the corpses of your victims to attack your enemies.";
+
+    case Trait::toxic:
+        return "Attacks with your claws occasionally poison your victims.";
 
     case Trait::END:
         break;
@@ -756,10 +775,19 @@ void trait_prereqs(const Trait trait,
         traits_ref.push_back(Trait::stout_spirit);
         break;
 
-    case Trait::ravenous_hunger:
-        traits_ref.push_back(Trait::adept_melee_fighter);
-        traits_ref.push_back(Trait::dexterous);
+    case Trait::ravenous:
+        traits_ref.push_back(Trait::expert_melee_fighter);
         bg_ref = Bg::ghoul;
+        break;
+
+    case Trait::foul:
+        bg_ref = Bg::ghoul;
+        break;
+
+    case Trait::toxic:
+        traits_ref.push_back(Trait::foul);
+        bg_ref = Bg::ghoul;
+        break;
 
     case Trait::END:
         break;

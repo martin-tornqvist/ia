@@ -8,6 +8,12 @@
 class Actor;
 class Mon;
 
+enum class Make_mon_aware
+{
+  no,
+  yes
+};
+
 namespace actor_factory
 {
 
@@ -17,10 +23,11 @@ Actor* mk(const Actor_id id, const P& pos);
 
 void summon(const P& origin,
             const std::vector<Actor_id>& monster_ids,
-            const bool MAKE_MONSTERS_AWARE,
+            const Make_mon_aware make_aware = Make_mon_aware::yes,
             Actor* const actor_to_set_as_leader = nullptr,
-            std::vector<Mon*>* monsters_ret = nullptr);
+            std::vector<Mon*>* monsters_ret = nullptr,
+            Verbosity verbosity = Verbosity::verbose);
 
-} //Actor_factory
+} //actor_factory
 
 #endif

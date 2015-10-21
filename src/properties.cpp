@@ -1874,7 +1874,9 @@ void Prop_poss_by_zuul::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
     const P& pos        = owning_actor_->pos;
     map::mk_gore(pos);
     map::mk_blood(pos);
-    actor_factory::summon(pos, std::vector<Actor_id> {Actor_id::zuul}, true);
+    actor_factory::summon(pos,
+                          std::vector<Actor_id> {Actor_id::zuul},
+                          Make_mon_aware::yes);
 
     //Zuul is now free, allow him to spawn.
     actor_data::data[size_t(Actor_id::zuul)].nr_left_allowed_to_spawn = -1;

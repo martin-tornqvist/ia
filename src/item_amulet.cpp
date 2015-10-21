@@ -289,14 +289,20 @@ void Amulet_effect_summon_mon::on_std_turn_equipped()
 
         std::vector<Mon*> summoned_mon;
 
-        actor_factory::summon(origin, {Actor_id::greater_polyp}, false, nullptr,
+        actor_factory::summon(origin,
+                              {Actor_id::greater_polyp},
+                              Make_mon_aware::no,
+                              nullptr,
                               &summoned_mon);
 
         const Mon* const mon = summoned_mon[0];
 
         if (map::player->can_see_actor(*mon))
         {
-            msg_log::add(mon->name_a() + " appears!", clr_white, true, More_prompt_on_msg::yes);
+            msg_log::add(mon->name_a() + " appears!",
+                         clr_white,
+                         true,
+                         More_prompt_on_msg::yes);
         }
 
         amulet_->effect_noticed(id());

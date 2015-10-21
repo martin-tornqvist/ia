@@ -343,17 +343,20 @@ Consume_item Device_translocator::trigger_effect()
 Consume_item Device_sentry_drone::trigger_effect()
 {
     msg_log::add("The Sentry Drone awakens!");
-    actor_factory::summon(map::player->pos, {Actor_id::sentry_drone}, true, map::player);
+    actor_factory::summon(map::player->pos,
+                          {Actor_id::sentry_drone},
+                          Make_mon_aware::yes,
+                          map::player);
     return Consume_item::yes;
 }
 
 //---------------------------------------------------- ELECTRIC LANTERN
 Device_lantern::Device_lantern(Item_data_t* const item_data) :
-    Device(item_data),
-    nr_turns_left_(500),
-    nr_flicker_turns_left_(-1),
-    working_state_(Lantern_working_state::working),
-    is_activated_(false) {}
+    Device                  (item_data),
+    nr_turns_left_          (500),
+    nr_flicker_turns_left_  (-1),
+    working_state_          (Lantern_working_state::working),
+    is_activated_           (false) {}
 
 std::string Device_lantern::name_inf() const
 {
