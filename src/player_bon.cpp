@@ -731,6 +731,7 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::mighty_spirit:
+      traits_ref.push_back(Trait::strong_spirit);
         break;
 
     case Trait::stealthy:
