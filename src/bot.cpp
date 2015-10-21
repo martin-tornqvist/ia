@@ -22,8 +22,6 @@
 #include "game_time.hpp"
 #include "map_travel.hpp"
 
-using namespace std;
-
 namespace bot
 {
 
@@ -117,7 +115,7 @@ void act()
     //Check if we are finished with the current run, if so, go back to DLVL 1
     if (map::dlvl >= DLVL_LAST)
     {
-        TRACE << "Starting new run on first dungeon level" << endl;
+        TRACE << "Starting new run on first dungeon level" << std::endl;
         map_travel::init();
         map::dlvl = 1;
         return;
@@ -176,7 +174,7 @@ void act()
     //Occasionally apply a random property to exercise the prop code
     if (rnd::one_in(20))
     {
-        vector<Prop_id> prop_bucket;
+        std::vector<Prop_id> prop_bucket;
 
         for (size_t i = 0; i < size_t(Prop_id::END); ++i)
         {
@@ -190,6 +188,13 @@ void act()
         Prop* const prop    = prop_handler.mk_prop(prop_id, Prop_turns::specific, 5);
 
         prop_handler.try_add_prop(prop);
+    }
+
+    //Occasionally swap weapon (just some code exercise)
+    if (rnd::one_in(50))
+    {
+      input::handle_map_mode_key_press(Key_data('z'));
+      return;
     }
 
     //Handle blocking door

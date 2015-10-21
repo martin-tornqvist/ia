@@ -49,7 +49,8 @@ Player::Player() :
     nr_turns_until_ins_         (-1),
     nr_quick_move_steps_left_   (-1),
     quick_move_dir_             (Dir::END),
-    nr_turns_until_rspell_      (-1) {}
+    nr_turns_until_rspell_      (-1),
+    unarmed_wpn_                (nullptr) {}
 
 Player::~Player()
 {

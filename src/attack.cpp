@@ -1481,12 +1481,11 @@ void melee(Actor* const attacker, const P& attacker_origin, Actor& defender, con
 
         //Ravenous hunger feeding
         if (
-            attacker == map::player                             &&
-            player_bon::traits[size_t(Trait::ravenous_hunger)]  &&
-            wpn.id() == Item_id::ghoul_claw                     &&
-            rnd::coin_toss())
+          attacker == map::player                             &&
+          player_bon::traits[size_t(Trait::ravenous_hunger)]  &&
+          wpn.id() == Item_id::player_ghoul_claw              &&
+          rnd::coin_toss())
         {
-//#error This statement cannot be reached for some reason(?)
             attacker->on_feed();
         }
     }
