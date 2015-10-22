@@ -71,7 +71,7 @@ void run(Snd snd)
 
     flood_fill[origin.x][origin.y] = 0;
 
-    for (Actor* actor : game_time::actors_)
+    for (Actor* actor : game_time::actors)
     {
         const int FLOOD_VAL_AT_ACTOR = flood_fill[actor->pos.x][actor->pos.y];
 

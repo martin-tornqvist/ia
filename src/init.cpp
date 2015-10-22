@@ -110,4 +110,4 @@ void cleanup_session()
     TRACE_FUNC_END;
 }
 
-} //Init
+} //init

@@ -94,7 +94,7 @@ void act()
     //=======================================================================
     // TESTS
     //=======================================================================
-    for (Actor* actor : game_time::actors_)
+    for (Actor* actor : game_time::actors)
     {
 #ifdef NDEBUG
         (void)actor;
@@ -126,7 +126,7 @@ void act()
     //Keep an allied Mi-go around to help getting out of sticky situations
     bool has_allied_mon = false;
 
-    for (const Actor* const actor : game_time::actors_)
+    for (const Actor* const actor : game_time::actors)
     {
         if (map::player->is_leader_of(actor))
         {
@@ -152,8 +152,8 @@ void act()
     //Occasionally apply Burning to a random actor (helps to avoid getting stuck)
     if (rnd::one_in(10))
     {
-        const int ELEMENT = rnd::range(0, game_time::actors_.size() - 1);
-        Actor* const actor = game_time::actors_[ELEMENT];
+        const int ELEMENT = rnd::range(0, game_time::actors.size() - 1);
+        Actor* const actor = game_time::actors[ELEMENT];
 
         if (actor != map::player)
         {

@@ -1034,7 +1034,7 @@ int Medical_bag::tot_turns_for_action(const Med_bag_action action) const
 //    {
 //        std::vector<Actor*> adj_actors;
 //        const P p(map::player->pos);
-//        for (auto* const actor : game_time::actors_)
+//        for (auto* const actor : game_time::actors)
 //        {
 //            if (actor->is_alive() && utils::is_pos_adj(p, actor->pos, false))
 //            {

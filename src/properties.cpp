@@ -766,7 +766,7 @@ void init()
     init_data_list();
 }
 
-} //Prop_data
+} //prop_data
 
 //-----------------------------------------------------------------------------
 // Property handler
@@ -831,6 +831,8 @@ void Prop_handler::save() const
 {
     //Save intrinsic properties to file
 
+    assert(owning_actor_);
+
     int nr_intr_props_ = 0;
 
     for (Prop* prop : props_)
@@ -859,6 +861,8 @@ void Prop_handler::load()
 {
     //Load intrinsic properties from file
 
+    assert(owning_actor_);
+
     const int NR_PROPS = save_handling::get_int();
 
     for (int i = 0; i < NR_PROPS; ++i)
@@ -871,6 +875,8 @@ void Prop_handler::load()
                                 Prop_turns::indefinite : Prop_turns::specific;
 
         Prop* const prop = mk_prop(prop_id, turns_init, NR_TURNS);
+
+        prop->owning_actor_ = owning_actor_;
 
         prop->src_ = Prop_src::intr;
 
@@ -991,7 +997,7 @@ Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init, const int N
         return new Prop_rFire(turns_init, NR_TURNS);
 
     case Prop_id::rSpell:
-        return new Prop_rFire(turns_init, NR_TURNS);
+        return new Prop_rSpell(turns_init, NR_TURNS);
 
     case Prop_id::rPoison:
         return new Prop_rPoison(turns_init, NR_TURNS);

@@ -161,7 +161,7 @@ void Rod_purge_invis::activate_impl()
 
     bool is_effect_noticed = false;
 
-    for (Actor* const actor : game_time::actors_)
+    for (Actor* const actor : game_time::actors)
     {
         if (!actor->is_player())
         {

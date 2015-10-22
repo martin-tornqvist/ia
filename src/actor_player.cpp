@@ -262,6 +262,12 @@ void Player::save() const
     save_handling::put_int(spi_max_);
     save_handling::put_int(pos.x);
     save_handling::put_int(pos.y);
+    save_handling::put_int(nr_steps_until_free_action_);
+    save_handling::put_int(nr_turns_until_rspell_);
+
+    assert(unarmed_wpn_);
+
+    save_handling::put_int(int(unarmed_wpn_->id()));
 
     for (int i = 0; i < int(Ability_id::END); ++i)
     {
@@ -275,14 +281,28 @@ void Player::load()
 {
     prop_handler_->load();
 
-    ins_        = save_handling::get_int();
-    shock_      = double(save_handling::get_int());
-    hp_         = save_handling::get_int();
-    hp_max_     = save_handling::get_int();
-    spi_        = save_handling::get_int();
-    spi_max_    = save_handling::get_int();
-    pos.x       = save_handling::get_int();
-    pos.y       = save_handling::get_int();
+    ins_                        = save_handling::get_int();
+    shock_                      = double(save_handling::get_int());
+    hp_                         = save_handling::get_int();
+    hp_max_                     = save_handling::get_int();
+    spi_                        = save_handling::get_int();
+    spi_max_                    = save_handling::get_int();
+    pos.x                       = save_handling::get_int();
+    pos.y                       = save_handling::get_int();
+    nr_steps_until_free_action_ = save_handling::get_int();
+    nr_turns_until_rspell_      = save_handling::get_int();
+
+    assert(!unarmed_wpn_);
+
+    Item_id unarmed_wpn_id = Item_id(save_handling::get_int());
+
+    assert(unarmed_wpn_id < Item_id::END);
+
+    Item* const unarmed_item = item_factory::mk(unarmed_wpn_id);
+
+    assert(unarmed_item);
+
+    unarmed_wpn_ = static_cast<Wpn*>(unarmed_item);
 
     for (int i = 0; i < int(Ability_id::END); ++i)
     {
@@ -989,7 +1009,7 @@ void Player::on_std_turn()
     }
 
     //Check for monsters coming into view, and try to spot hidden monsters.
-    for (Actor* actor : game_time::actors_)
+    for (Actor* actor : game_time::actors)
     {
         if (!actor->is_player() && !map::player->is_leader_of(actor) && actor->is_alive())
         {

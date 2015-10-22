@@ -25,8 +25,8 @@
 namespace game_time
 {
 
-std::vector<Actor*> actors_;
-std::vector<Mob*>   mobs_;
+std::vector<Actor*> actors;
+std::vector<Mob*>   mobs;
 
 namespace
 {
@@ -41,7 +41,7 @@ void run_std_turn_events()
 {
     ++turn_nr_;
 
-    for (auto it = begin(actors_); it != end(actors_); /* No increment */)
+    for (auto it = begin(actors); it != end(actors); /* No increment */)
     {
         Actor* const actor = *it;
 
@@ -61,9 +61,9 @@ void run_std_turn_events()
 
             delete actor;
 
-            it = actors_.erase(it);
+            it = actors.erase(it);
 
-            if (cur_actor_idx_ >= actors_.size())
+            if (cur_actor_idx_ >= actors.size())
             {
                 cur_actor_idx_ = 0;
             }
@@ -99,7 +99,7 @@ void run_std_turn_events()
     }
 
     //New turn for mobs (using a copied vector, since mobs may get destroyed)
-    const std::vector<Mob*> mobs_cpy = mobs_;
+    const std::vector<Mob*> mobs_cpy = mobs;
 
     for (auto* f : mobs_cpy)
     {
@@ -145,7 +145,7 @@ void run_std_turn_events()
 void run_atomic_turn_events()
 {
     //Stop burning for any actor standing in liquid
-    for (auto* const actor : actors_)
+    for (auto* const actor : actors)
     {
         const P& p = actor->pos;
 
@@ -167,25 +167,25 @@ void run_atomic_turn_events()
 void init()
 {
     cur_turn_type_pos_ = cur_actor_idx_ = turn_nr_ = 0;
-    actors_.clear();
-    mobs_  .clear();
+    actors.clear();
+    mobs  .clear();
 }
 
 void cleanup()
 {
-    for (Actor* a : actors_)
+    for (Actor* a : actors)
     {
         delete a;
     }
 
-    actors_.clear();
+    actors.clear();
 
-    for (auto* f : mobs_)
+    for (auto* f : mobs)
     {
         delete f;
     }
 
-    mobs_.clear();
+    mobs.clear();
 }
 
 void save()
@@ -207,7 +207,7 @@ void mobs_at_pos(const P& p, std::vector<Mob*>& vector_ref)
 {
     vector_ref.clear();
 
-    for (auto* m : mobs_)
+    for (auto* m : mobs)
     {
         if (m->pos() == p)
         {
@@ -218,12 +218,12 @@ void mobs_at_pos(const P& p, std::vector<Mob*>& vector_ref)
 
 void add_mob(Mob* const f)
 {
-    mobs_.push_back(f);
+    mobs.push_back(f);
 }
 
 void erase_mob(Mob* const f, const bool DESTROY_OBJECT)
 {
-    for (auto it = mobs_.begin(); it != mobs_.end(); ++it)
+    for (auto it = mobs.begin(); it != mobs.end(); ++it)
     {
         if (*it == f)
         {
@@ -232,7 +232,7 @@ void erase_mob(Mob* const f, const bool DESTROY_OBJECT)
                 delete f;
             }
 
-            mobs_.erase(it);
+            mobs.erase(it);
             return;
         }
     }
@@ -240,28 +240,19 @@ void erase_mob(Mob* const f, const bool DESTROY_OBJECT)
 
 void erase_all_mobs()
 {
-    for (auto* m : mobs_)
+    for (auto* m : mobs)
     {
         delete m;
     }
 
-    mobs_.clear();
-}
-
-void erase_actor_in_element(const size_t i)
-{
-    if (!actors_.empty())
-    {
-        delete actors_[i];
-        actors_.erase(actors_.begin() + i);
-    }
+    mobs.clear();
 }
 
 void add_actor(Actor* actor)
 {
     //Sanity check actor inserted
     assert(utils::is_pos_inside_map(actor->pos));
-    actors_.push_back(actor);
+    actors.push_back(actor);
 }
 
 void reset_turn_type_and_actor_counters()
@@ -324,7 +315,7 @@ void tick(const bool IS_FREE_TURN)
 
             ++cur_actor_idx_;
 
-            if (cur_actor_idx_ >= actors_.size())
+            if (cur_actor_idx_ >= actors.size())
             {
                 cur_actor_idx_ = 0;
 
@@ -395,12 +386,12 @@ void update_light_map()
         return;
     }
 
-    for (const auto* const a : actors_)
+    for (const auto* const a : actors)
     {
         a->add_light(light);
     }
 
-    for (const auto* const m : mobs_)
+    for (const auto* const m : mobs)
     {
         m->add_light(light);
     }
@@ -426,7 +417,7 @@ void update_light_map()
 
 Actor* cur_actor()
 {
-    Actor* const actor = actors_[cur_actor_idx_];
+    Actor* const actor = actors[cur_actor_idx_];
 
     //Sanity check actor retrieved
     assert(utils::is_pos_inside_map(actor->pos));

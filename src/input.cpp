@@ -1033,7 +1033,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         item_factory::mk_item_on_floor(Item_id::gas_mask, map::player->pos);
 
-        for (int i = 0; i < int(Item_id::END); ++i)
+        for (size_t i = 0; i < size_t(Item_id::END); ++i)
         {
             const auto& item_data = item_data::data[i];
 

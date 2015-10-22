@@ -1024,7 +1024,7 @@ void allowed_stair_cells(bool out[MAP_W][MAP_H])
     }
 
     //Block cells with actors
-    for (const auto* const actor : game_time::actors_)
+    for (const auto* const actor : game_time::actors)
     {
         const P& p(actor->pos);
         out[p.x][p.y] = false;

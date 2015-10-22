@@ -117,7 +117,7 @@ void print_location_info_msgs(const P& pos)
         msg_log::add(str + ".");
 
         //Describe mobile features.
-        for (auto* mob : game_time::mobs_)
+        for (auto* mob : game_time::mobs)
         {
             if (mob->pos() == pos)
             {
@@ -143,7 +143,7 @@ void print_location_info_msgs(const P& pos)
         }
 
         //Describe dead actors.
-        for (Actor* actor : game_time::actors_)
+        for (Actor* actor : game_time::actors)
         {
             if (actor->is_corpse() && actor->pos == pos)
             {

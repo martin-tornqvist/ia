@@ -16,7 +16,7 @@ namespace item_factory
 Item* mk(const Item_id item_id, const int NR_ITEMS)
 {
     Item*           r = nullptr;
-    Item_data_t*    d = &item_data::data[int(item_id)];
+    Item_data_t*    d = &item_data::data[size_t(item_id)];
 
     switch (item_id)
     {

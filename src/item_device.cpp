@@ -269,7 +269,7 @@ Consume_item Device_shockwave::trigger_effect()
         }
     }
 
-    for (Actor* actor : game_time::actors_)
+    for (Actor* actor : game_time::actors)
     {
         if (actor != map::player && actor->is_alive())
         {

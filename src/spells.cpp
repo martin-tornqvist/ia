@@ -787,7 +787,7 @@ bool Spell_pest::allow_mon_cast_now(Mon& mon) const
 Spell_effect_noticed Spell_pharaoh_staff::cast_impl(Actor* const caster) const
 {
     //First check for a friendly mummy and heal it (as per the spell description)
-    for (Actor* const actor : game_time::actors_)
+    for (Actor* const actor : game_time::actors)
     {
         const auto actor_id = actor->data().id;
 
@@ -967,7 +967,7 @@ Spell_effect_noticed Spell_det_mon::cast_impl(Actor* const caster) const
 
     Spell_effect_noticed is_noticed = Spell_effect_noticed::no;
 
-    for (Actor* actor : game_time::actors_)
+    for (Actor* actor : game_time::actors)
     {
         if (!actor->is_player())
         {
@@ -1072,7 +1072,7 @@ Spell_effect_noticed Spell_cloud_minds::cast_impl(Actor* const caster) const
 
     msg_log::add("I vanish from the minds of my enemies.");
 
-    for (Actor* actor : game_time::actors_)
+    for (Actor* actor : game_time::actors)
     {
         if (!actor->is_player())
         {

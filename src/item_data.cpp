@@ -2045,34 +2045,26 @@ void cleanup()
 
 void save()
 {
-    for (int i = 0; i < int(Item_id::END); ++i)
+    for (size_t i = 0; i < size_t(Item_id::END); ++i)
     {
         const Item_data_t& d = data[i];
 
         save_handling::put_bool(d.is_identified);
         save_handling::put_bool(d.allow_spawn);
-
-        if (d.type == Item_type::scroll || d.type == Item_type::potion)
-        {
-            save_handling::put_bool(d.is_tried);
-        }
+        save_handling::put_bool(d.is_tried);
     }
 }
 
 void load()
 {
-    for (int i = 0; i < int(Item_id::END); ++i)
+    for (size_t i = 0; i < size_t(Item_id::END); ++i)
     {
         Item_data_t& d = data[i];
 
         d.is_identified   = save_handling::get_bool();
         d.allow_spawn     = save_handling::get_bool();
-
-        if (d.type == Item_type::scroll || d.type == Item_type::potion)
-        {
-            d.is_tried = save_handling::get_bool();
-        }
+        d.is_tried        = save_handling::get_bool();
     }
 }
 
-} //Item_data
+} //item_data

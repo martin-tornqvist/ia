@@ -106,7 +106,10 @@ void init()
     if (rnd::one_in(3))
     {
         map_list[DLVL_FIRST_LATE_GAME - 1] =
-        {Map_type::rats_in_the_walls, Is_main_dungeon::yes};
+        {
+          Map_type::rats_in_the_walls,
+          Is_main_dungeon::yes
+        };
     }
 
     //"Pharaoh chamber" is the first late game level

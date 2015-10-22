@@ -54,7 +54,7 @@ void mk_list_of_mon_can_auto_spawn(const int NR_LVLS_OUT_OF_DEPTH,
 
     for (bool& v : spawned_ids) {v = false;}
 
-    for (const auto* const actor : game_time::actors_)
+    for (const auto* const actor : game_time::actors)
     {
         spawned_ids[size_t(actor->id())] = true;
     }
@@ -143,7 +143,7 @@ void try_spawn_due_to_time_passed()
 {
     TRACE_FUNC_BEGIN;
 
-    if (game_time::actors_.size() >= MAX_NR_ACTORS_ON_MAP)
+    if (game_time::actors.size() >= MAX_NR_ACTORS_ON_MAP)
     {
         return;
     }

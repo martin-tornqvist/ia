@@ -94,7 +94,7 @@ void Mon::on_actor_turn()
     if (prop_handler_->has_prop(Prop_id::conflict))
     {
         //Monster is conflicted (e.g. by player ring/amulet)
-        tgt_bucket = game_time::actors_;
+        tgt_bucket = game_time::actors;
 
         bool hard_blocked_los[MAP_W][MAP_H];
 
@@ -749,7 +749,7 @@ int Mon::group_size()
 
     int ret = 1; //Starting at one to include leader
 
-    for (const Actor* const actor : game_time::actors_)
+    for (const Actor* const actor : game_time::actors)
     {
         if (actor->is_actor_my_leader(group_leader))
         {
@@ -1710,7 +1710,7 @@ bool Worm_mass::on_actor_turn_hook()
     if (
         is_alive()                                       &&
         aware_counter_ > 0                               &&
-        game_time::actors_.size() < MAX_NR_ACTORS_ON_MAP &&
+        game_time::actors.size() < MAX_NR_ACTORS_ON_MAP &&
         rnd::one_in(spawn_new_one_in_n))
     {
         bool blocked[MAP_W][MAP_H];
@@ -1756,7 +1756,7 @@ bool Giant_locust::on_actor_turn_hook()
     if (
         is_alive()                                       &&
         aware_counter_ > 0                               &&
-        game_time::actors_.size() < MAX_NR_ACTORS_ON_MAP &&
+        game_time::actors.size() < MAX_NR_ACTORS_ON_MAP &&
         rnd::one_in(spawn_new_one_in_n))
     {
         bool blocked[MAP_W][MAP_H];
@@ -2152,7 +2152,7 @@ bool Mold::on_actor_turn_hook()
 {
     if (
         is_alive()                                       &&
-        game_time::actors_.size() < MAX_NR_ACTORS_ON_MAP &&
+        game_time::actors.size() < MAX_NR_ACTORS_ON_MAP &&
         rnd::one_in(spawn_new_one_in_n))
     {
         bool blocked[MAP_W][MAP_H];
@@ -2321,7 +2321,7 @@ void The_high_priest_cpy::mk_start_items()
 {
     has_given_xp_for_spotting_ = true;
 
-    for (Actor* const actor : game_time::actors_)
+    for (Actor* const actor : game_time::actors)
     {
         if (actor->id() == Actor_id::the_high_priest)
         {

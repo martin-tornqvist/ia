@@ -554,7 +554,7 @@ Unequip_allowed Amulet_effect_hp_regen_pen::on_unequip()
 Amulet::Amulet(Item_data_t* const item_data) :
     Item(item_data)
 {
-    for (size_t i = 0; i < int(Amulet_effect_id::END); ++i)
+    for (size_t i = 0; i < size_t(Amulet_effect_id::END); ++i)
     {
         if (effect_list_[i] == item_data->id)
         {
@@ -916,13 +916,13 @@ void init()
         }
     }
 
-    random_shuffle(begin(primary_effect_bucket),   end(primary_effect_bucket));
-    random_shuffle(begin(secondary_effect_bucket), end(secondary_effect_bucket));
-
     //Assuming there are more amulet items than primary or secondary effects (if this changes,
     //just add more amulets to the item data)
     assert(item_bucket.size() > primary_effect_bucket.size());
     assert(item_bucket.size() > secondary_effect_bucket.size());
+
+    random_shuffle(begin(primary_effect_bucket),   end(primary_effect_bucket));
+    random_shuffle(begin(secondary_effect_bucket), end(secondary_effect_bucket));
 
     //Assign primary effects
     for (size_t i = 0; i < item_bucket.size(); ++i)
@@ -935,23 +935,32 @@ void init()
 
             effect_list_[size_t(effect_id)] = item_id;
         }
-        else //All primary effects are assigned
+        else //All primary effects have been assigned
         {
+            //Prevent the remaining amulet data entries from spawning
             item_data::data[size_t(item_id)].allow_spawn = false;
         }
     }
 
-    //Remove all items without a primary effect from the item bucket
+    //Remove all items without a primary effect from the item bucket (this is why we assert that
+    //there are more amulet items than primary effects above)
     item_bucket.resize(primary_effect_bucket.size());
 
     //Assign secondary effects
     for (const auto secondary_effect_id : secondary_effect_bucket)
     {
+        assert(secondary_effect_id != Amulet_effect_id::START_OF_SECONDARY_EFFECTS);
+        assert(secondary_effect_id != Amulet_effect_id::END);
+
         const int ITEM_IDX = rnd_item_bucket_idx_for_effect(secondary_effect_id, item_bucket);
 
         if (ITEM_IDX >= 0)
         {
-            effect_list_[size_t(secondary_effect_id)] = item_bucket[size_t(ITEM_IDX)];
+            const Item_id id = item_bucket[size_t(ITEM_IDX)];
+
+            assert(item_data::data[size_t(id)].type == Item_type::amulet);
+
+            effect_list_[size_t(secondary_effect_id)] = id;
             item_bucket.erase(begin(item_bucket) + size_t(ITEM_IDX));
         }
     }
@@ -959,7 +968,7 @@ void init()
 
 void save()
 {
-    for (int i = 0; i < int(Amulet_effect_id::END); ++i)
+    for (size_t i = 0; i < size_t(Amulet_effect_id::END); ++i)
     {
         save_handling::put_int(int(effect_list_[i]));
         save_handling::put_bool(effects_known_[i]);
@@ -968,10 +977,10 @@ void save()
 
 void load()
 {
-    for (int i = 0; i < int(Amulet_effect_id::END); ++i)
+    for (size_t i = 0; i < size_t(Amulet_effect_id::END); ++i)
     {
-        effect_list_[i]     = Item_id(save_handling::get_int());
-        effects_known_[i]   = save_handling::get_bool();
+        effect_list_[i]   = Item_id(save_handling::get_int());
+        effects_known_[i] = save_handling::get_bool();
     }
 }
 

@@ -1226,7 +1226,7 @@ void draw_map()
     }
 
     //---------------- INSERT DEAD ACTORS INTO ARRAY
-    for (Actor* actor : game_time::actors_)
+    for (Actor* actor : game_time::actors)
     {
         const P& p(actor->pos);
 
@@ -1277,7 +1277,7 @@ void draw_map()
     }
 
     //---------------- INSERT MOBILE FEATURES INTO ARRAY
-    for (auto* mob : game_time::mobs_)
+    for (auto* mob : game_time::mobs)
     {
         const P& p            = mob->pos();
         const Tile_id  mob_tile   = mob->tile();
@@ -1295,7 +1295,7 @@ void draw_map()
     }
 
     //---------------- INSERT LIVING ACTORS INTO ARRAY
-    for (auto* actor : game_time::actors_)
+    for (auto* actor : game_time::actors)
     {
         if (!actor->is_player() && actor->is_alive())
         {

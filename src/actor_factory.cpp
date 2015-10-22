@@ -231,7 +231,7 @@ Actor* mk(const Actor_id id, const P& pos)
 
     Actor* const actor = mk_actor_from_id(id);
 
-    actor->place(pos, actor_data::data[int(id)]);
+    actor->place(pos, actor_data::data[size_t(id)]);
 
     auto& data = actor->data();
 
@@ -247,14 +247,21 @@ Actor* mk(const Actor_id id, const P& pos)
 
 void delete_all_mon()
 {
-    std::vector<Actor*>& actors = game_time::actors_;
+    std::vector<Actor*>& actors = game_time::actors;
 
-    for (size_t i = 0; i < actors.size(); ++i)
+    for (auto it = begin(actors); it != end(actors); /* No increment */)
     {
-        if (actors[i] != map::player)
+        Actor* const actor = *it;
+
+        if (actor == map::player)
         {
-            game_time::erase_actor_in_element(i);
-            --i;
+          ++it;
+        }
+        else //Is monster
+        {
+          delete actor;
+
+          it = actors.erase(it);
         }
     }
 }

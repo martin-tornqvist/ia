@@ -693,7 +693,7 @@ void Door::try_close(Actor* actor_trying)
     {
         bool isblocked_by_actor = false;
 
-        for (Actor* actor : game_time::actors_)
+        for (Actor* actor : game_time::actors)
         {
             if (actor->pos == pos_)
             {

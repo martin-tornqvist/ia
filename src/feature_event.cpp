@@ -179,7 +179,7 @@ void Event_rats_in_the_walls_discovery::on_new_turn()
 
         map::player->incr_shock(100, Shock_src::misc);
 
-        for (Actor* const actor : game_time::actors_)
+        for (Actor* const actor : game_time::actors)
         {
             if (!actor->is_player())
             {

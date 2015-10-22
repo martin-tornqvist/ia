@@ -87,7 +87,7 @@ void reset_cells(const bool MAKE_STONE_WALLS)
             cells[x][y].reset();
             cells[x][y].pos = P(x, y);
 
-            room_map[x][y]   = nullptr;
+            room_map[x][y] = nullptr;
 
             render::render_array[x][y]              = Cell_render_data();
             render::render_array_no_actors[x][y]    = Cell_render_data();
@@ -100,7 +100,7 @@ void reset_cells(const bool MAKE_STONE_WALLS)
     }
 }
 
-} //Namespace
+} //namespace
 
 void init()
 {
@@ -110,25 +110,13 @@ void init()
 
     reset_cells(false);
 
-    if (player)
-    {
-        delete player;
-        player = nullptr;
-    }
-
     const P player_pos(PLAYER_START_X, PLAYER_START_Y);
+
     player = static_cast<Player*>(actor_factory::mk(Actor_id::player, player_pos));
-
-    actor_factory::delete_all_mon();
-
-    game_time::erase_all_mobs();
-    game_time::reset_turn_type_and_actor_counters();
 }
 
 void cleanup()
 {
-    player = nullptr; //NOTE: game_time has deleted player at this point
-
     reset_map();
 
     for (int x = 0; x < MAP_W; ++x)
@@ -139,6 +127,9 @@ void cleanup()
             cells[x][y].rigid = nullptr;
         }
     }
+
+    //NOTE: game_time deletes the player object (the actor list is the owner of this memory)
+    player = nullptr;
 }
 
 void save()

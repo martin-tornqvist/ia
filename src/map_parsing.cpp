@@ -254,7 +254,7 @@ void run(const  cell_check::Check& method,
 
     if (method.is_checking_mobs())
     {
-        for (Mob* mob : game_time::mobs_)
+        for (Mob* mob : game_time::mobs)
         {
             const P& p = mob->pos();
 
@@ -277,7 +277,7 @@ void run(const  cell_check::Check& method,
 
     if (method.is_checking_actors())
     {
-        for (Actor* actor : game_time::actors_)
+        for (Actor* actor : game_time::actors)
         {
             const P& p = actor->pos;
 
@@ -320,7 +320,7 @@ bool cell(const cell_check::Check& method, const P& p)
 
     if (method.is_checking_mobs())
     {
-        for (Mob* mob : game_time::mobs_)
+        for (Mob* mob : game_time::mobs)
         {
             const P& mob_p = mob->pos();
 
@@ -339,7 +339,7 @@ bool cell(const cell_check::Check& method, const P& p)
 
     if (method.is_checking_actors())
     {
-        for (Actor* actor : game_time::actors_)
+        for (Actor* actor : game_time::actors)
         {
             const P& actor_p = actor->pos;
 

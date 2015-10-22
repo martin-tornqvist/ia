@@ -145,7 +145,7 @@ void Actor::seen_foes(std::vector<Actor*>& out)
         map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite, los_rect);
     }
 
-    for (Actor* actor : game_time::actors_)
+    for (Actor* actor : game_time::actors)
     {
         if (actor != this && actor->is_alive())
         {
@@ -777,7 +777,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
     assert(data_->can_leave_corpse || IS_DESTROYED);
 
     //Check all monsters and unset this actor as leader
-    for (Actor* actor : game_time::actors_)
+    for (Actor* actor : game_time::actors)
     {
         if (actor != this && !actor->is_player() && is_leader_of(actor))
         {

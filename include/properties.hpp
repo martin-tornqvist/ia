@@ -1230,6 +1230,7 @@ class Prop_spell_reflect: public Prop
 public:
     Prop_spell_reflect(Prop_turns turns_init, int nr_turns = -1) :
         Prop(Prop_id::spell_reflect, turns_init, nr_turns) {}
+
     ~Prop_spell_reflect() override {}
 };
 

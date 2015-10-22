@@ -669,7 +669,7 @@ bool mk_rats_in_the_walls_lvl()
     }
 
     //Set all actors to non-roaming (will be set to roaming by the discovery event)
-    for (Actor* const actor : game_time::actors_)
+    for (Actor* const actor : game_time::actors)
     {
         if (!actor->is_player())
         {

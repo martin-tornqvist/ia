@@ -94,11 +94,8 @@ void Inventory::load()
         //Any previous item is destroyed
         Item* item = slot.item;
 
-        if (item)
-        {
-            delete item;
-            slot.item = nullptr;
-        }
+        delete item;
+        slot.item = nullptr;
 
         const Item_id id = Item_id(save_handling::get_int());
 
@@ -112,7 +109,8 @@ void Inventory::load()
 
             slot.item = item;
 
-            //When loading the game, "wear" the item to apply properties from wearing
+            //When loading the game, "wear" the item to apply properties from wearing and set
+            //owning actor
             assert(owning_actor_);
             item->on_pickup(*owning_actor_);
             item->on_equip(Verbosity::silent);
@@ -137,6 +135,10 @@ void Inventory::load()
         item->load();
 
         backpack_.push_back(item);
+
+        //When loading the game, "pick up" the item again to set owning actor
+        assert(owning_actor_);
+        item->on_pickup(*owning_actor_);
     }
 }
 

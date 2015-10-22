@@ -280,7 +280,7 @@ void actor_cells(const std::vector<Actor*>& actors, std::vector<P>& out)
 
 Actor* actor_at_pos(const P& pos, Actor_state state)
 {
-    for (auto* const actor : game_time::actors_)
+    for (auto* const actor : game_time::actors)
     {
         if (actor->pos == pos && actor->state() == state)
         {
@@ -293,7 +293,7 @@ Actor* actor_at_pos(const P& pos, Actor_state state)
 
 Mob* first_mob_at_pos(const P& pos)
 {
-    for (auto* const mob : game_time::mobs_)
+    for (auto* const mob : game_time::mobs)
     {
         if (mob->pos() == pos)
         {
@@ -308,7 +308,7 @@ void mk_actor_array(Actor* a[MAP_W][MAP_H])
 {
     reset_array(a);
 
-    for (Actor* actor : game_time::actors_)
+    for (Actor* actor : game_time::actors)
     {
         const P& p = actor->pos;
         a[p.x][p.y] = actor;

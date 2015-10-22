@@ -217,7 +217,7 @@ bool make_room_for_friend(Mon& mon)
         if (mon.can_see_actor(*map::player, blocked_los))
         {
             //Loop through all actors
-            for (Actor* actor : game_time::actors_)
+            for (Actor* actor : game_time::actors)
             {
                 if (actor != map::player && actor != &mon && actor->is_alive())
                 {
@@ -253,7 +253,7 @@ bool make_room_for_friend(Mon& mon)
                             {
                                 bool is_good_candidate_found = true;
 
-                                for (Actor* actor2 : game_time::actors_)
+                                for (Actor* actor2 : game_time::actors)
                                 {
                                     if (!actor2->is_player() && actor2 != &mon)
                                     {
@@ -310,13 +310,13 @@ Dir dir_to_rnd_adj_free_cell(Mon& mon)
         }
     }
 
-    for (Actor* actor : game_time::actors_)
+    for (Actor* actor : game_time::actors)
     {
         const P& p = actor->pos;
         blocked[p.x][p.y] = true;
     }
 
-    for (Mob* mob : game_time::mobs_)
+    for (Mob* mob : game_time::mobs)
     {
         const P& p = mob->pos();
         blocked[p.x][p.y] = cellcheck.check(*mob);

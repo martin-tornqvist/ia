@@ -168,7 +168,7 @@ void run(const P& origin,
         }
     }
 
-    for (Actor* actor : game_time::actors_)
+    for (Actor* actor : game_time::actors)
     {
         const P& pos = actor->pos;
 

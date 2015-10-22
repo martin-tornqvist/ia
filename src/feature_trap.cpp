@@ -474,7 +474,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES)
     is_hidden_ = false;
 
     //Destroy any corpse on the trap
-    for (Actor* actor : game_time::actors_)
+    for (Actor* actor : game_time::actors)
     {
         if (actor->pos == pos_ && actor->is_corpse())
         {

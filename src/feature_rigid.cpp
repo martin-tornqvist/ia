@@ -466,9 +466,14 @@ void Wall::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
     auto mk_low_rubble_and_rocks = [&]()
     {
         const P p(pos_);
-        map::put(new Rubble_low(p)); //NOTE: "this" is now deleted!
+        map::put(new Rubble_low(p));
 
-        if (rnd::coin_toss()) {item_factory::mk_item_on_floor(Item_id::rock, p);}
+        //NOTE: object is now deleted!
+
+        if (rnd::coin_toss())
+        {
+            item_factory::mk_item_on_floor(Item_id::rock, p);
+        }
     };
 
     if (dmg_type == Dmg_type::physical)
@@ -1760,18 +1765,17 @@ void Item_container::init(const Feature_id feature_id, const int NR_ITEMS_TO_ATT
                 }
 
                 const int     IDX = rnd::range(0, item_bucket.size() - 1);
-                const Item_id  id  = item_bucket[IDX];
+                const Item_id id  = item_bucket[IDX];
 
-                //Check if this item is no longer allowed to spawn (e.g. a unique item)
-                if (!item_data::data[int(id)].allow_spawn)
-                {
-                    item_bucket.erase(begin(item_bucket) + IDX);
-                }
-                else
+                if (item_data::data[size_t(id)].allow_spawn)
                 {
                     Item* item = item_factory::mk(item_bucket[IDX]);
                     item_factory::set_item_randomized_properties(item);
                     items_.push_back(item);
+                }
+                else //Not allowed to spawn
+                {
+                    item_bucket.erase(begin(item_bucket) + IDX);
                 }
             }
         }
