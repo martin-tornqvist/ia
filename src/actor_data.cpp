@@ -2302,7 +2302,7 @@ void init_data_list()
     d.tile = Tile_id::ooze;
     d.hp = 14;
     d.spi = 12;
-    d.dmg_melee = 6;
+    d.dmg_melee = 4;
     d.ability_vals.set_val(Ability_id::melee, 50);
     d.natural_props[int(Prop_id::ooze)] = true;
     d.natural_props[int(Prop_id::rFear)] = true;
@@ -2354,7 +2354,7 @@ void init_data_list()
     d.tile = Tile_id::ooze;
     d.hp = 8;
     d.spi = 12;
-    d.dmg_melee = 6;
+    d.dmg_melee = 4;
     d.ability_vals.set_val(Ability_id::melee, 50);
     d.ability_vals.set_val(Ability_id::stealth, 90);
     d.natural_props[int(Prop_id::ooze)] = true;

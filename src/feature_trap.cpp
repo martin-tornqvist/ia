@@ -424,10 +424,7 @@ void Trap::disarm()
 
         if (rnd::one_in(TRIGGER_ONE_IN_N))
         {
-            if (trap_type() == Trap_id::web)
-            {
-                map::player->pos = pos_;
-            }
+            map::player->pos = pos_;
 
             trigger_trap(map::player);
         }
