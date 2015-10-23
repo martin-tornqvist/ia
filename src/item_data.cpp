@@ -299,9 +299,9 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.is_stackable = false;
         d.land_on_hard_snd_msg = "I hear a clanking sound.";
         d.land_on_hard_sfx = Sfx_id::metal_clank;
-        d.chance_to_incl_in_floor_spawn_list = 9;
-        add_feature_found_in(d, Feature_id::chest, 12);
-        add_feature_found_in(d, Feature_id::cocoon, 12);
+        d.chance_to_incl_in_floor_spawn_list = 4;
+        add_feature_found_in(d, Feature_id::chest, 8);
+        add_feature_found_in(d, Feature_id::cocoon, 8);
         break;
 
     case Item_type::rod:
@@ -323,9 +323,9 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.is_stackable = false;
         d.land_on_hard_snd_msg = "I hear a clanking sound.";
         d.land_on_hard_sfx = Sfx_id::metal_clank;
-        d.chance_to_incl_in_floor_spawn_list = 9;
-        add_feature_found_in(d, Feature_id::chest, 12);
-        add_feature_found_in(d, Feature_id::cocoon, 12);
+        d.chance_to_incl_in_floor_spawn_list = 4;
+        add_feature_found_in(d, Feature_id::chest, 8);
+        add_feature_found_in(d, Feature_id::cocoon, 8);
         break;
 
     case Item_type::armor:
@@ -355,8 +355,8 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.is_identified = false;
         d.is_stackable = false;
         d.chance_to_incl_in_floor_spawn_list = 1;
-        add_feature_found_in(d, Feature_id::tomb, 10);
-        add_feature_found_in(d, Feature_id::chest, 4);
+        add_feature_found_in(d, Feature_id::tomb, 5);
+        add_feature_found_in(d, Feature_id::chest, 1);
         break;
 
     case Item_type::explosive:

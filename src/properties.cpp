@@ -2337,7 +2337,7 @@ void Prop_flared::on_new_turn()
 {
     owning_actor_->hit(1, Dmg_type::fire);
 
-    if (nr_turns_left_ == 0)
+    if (nr_turns_left_ <= 1)
     {
         owning_actor_->prop_handler().try_add_prop(new Prop_burning(Prop_turns::std));
         owning_actor_->prop_handler().end_prop(Prop_id::flared);
