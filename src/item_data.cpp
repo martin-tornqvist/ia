@@ -35,7 +35,7 @@ Item_data_t::Item_data_t() :
     main_att_mode                       (Att_mode::none),
     spell_cast_from_scroll              (Spell_id::END),
     land_on_hard_snd_msg                ("I hear a thudding sound."),
-    land_on_hard_sfx                    (),
+    land_on_hard_sfx                    (Sfx_id::END),
     is_ins_raied_while_carried          (false),
     is_ins_raied_while_equiped          (false),
     melee                               (Item_melee_data()),
