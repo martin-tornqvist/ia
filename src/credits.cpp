@@ -37,7 +37,7 @@ void read_file()
             }
             else
             {
-                text_format::line_to_lines(cur_line, MAP_W - 2, formatted_lines);
+                text_format::split(cur_line, MAP_W - 2, formatted_lines);
 
                 for (string& line : formatted_lines) {lines_.push_back(line);}
             }

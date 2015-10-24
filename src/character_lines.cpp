@@ -20,114 +20,95 @@
 namespace character_lines
 {
 
-const int X_NAME    = 0;
-const int X_HP      = PLAYER_NAME_MAX_LEN + 1;
-const int X_SPI     = X_HP  + 8;
-const int X_INS     = X_SPI + 8;
-
-const int X_WIELDED = 43;
-
-const int X_XP      = 0;
-const int X_DLVL    = X_XP      + 9;
-const int X_ENC     = X_DLVL    + 5;
-const int X_ARM     = X_ENC     + 7;
-const int X_LANTERN = X_ARM     + 4;
-const int X_MEDICAL = X_LANTERN + 12;
-
-const int X_THROWN  = X_WIELDED;
-
-void draw()
+namespace
 {
+
+void draw_classic_mode()
+{
+    const int       X_WIELDED_DEFAULT           = 43;
+    const size_t    MIN_NR_STEPS_TO_NXT_LABEL   = 3;
+
     const Panel panel = Panel::char_lines;
 
     render::cover_panel(panel);
 
     Player& player = *map::player;
 
-    P pos(0, 0);
+    //Hit points
+    P p(0, 0);
 
-    //Name
-    pos.x = X_NAME;
+    std::string str = "HP:";
+    render::draw_text(str, panel, p, clr_gray_drk);
 
-    std::string str = player.name_a();
+    p.x += str.size();
 
-    render::draw_text(str, panel, pos, clr_white);
+    str = to_str(player.hp()) + "/" + to_str(player.hp_max(true));
 
-    //Health
-    pos.x = X_HP;
-
-    if (config::is_tiles_mode())
-    {
-        render::draw_tile(Tile_id::heart, panel, pos, clr_red_lgt);
-    }
-    else //Text mode
-    {
-        render::draw_text("H", panel, pos, clr_gray, clr_gray_xdrk);
-    }
-
-    ++pos.x;
-
-    const std::string hp     = to_str(player.hp());
-    const std::string hp_max = to_str(player.hp_max(true));
-
-    str = hp + "/" + hp_max;
-
-    render::draw_text(str, panel, pos, clr_red_lgt);
+    render::draw_text(str, panel, p, clr_red_lgt);
 
     //Spirit
-    pos.x = X_SPI;
+    p.x += std::max(str.size() + 1, MIN_NR_STEPS_TO_NXT_LABEL);
 
-    if (config::is_tiles_mode())
-    {
-        render::draw_tile(Tile_id::spirit, panel, pos, clr_magenta);
-    }
-    else //Text mode
-    {
-        render::draw_text("S", panel, pos, clr_gray, clr_gray_xdrk);
-    }
+    str = "SP:";
 
-    ++pos.x;
+    render::draw_text(str, panel, p, clr_gray_drk);
 
-    const std::string spi       = to_str(player.spi());
-    const std::string spi_max   = to_str(player.spi_max());
+    p.x += str.size();
 
-    str = spi + "/" + spi_max;
+    str = to_str(player.spi()) + "/" + to_str(player.spi_max());
 
-    render::draw_text(str, panel, pos, clr_magenta);
+    render::draw_text(str, panel, p, clr_magenta);
 
     //Insanity
-    pos.x = X_INS;
+    p.x += std::max(str.size() + 1, MIN_NR_STEPS_TO_NXT_LABEL);
 
-    if (config::is_tiles_mode())
-    {
-        render::draw_tile(Tile_id::brain, panel, pos, clr_blue_lgt);
-    }
-    else //Text mode
-    {
-        render::draw_text("I", panel, pos, clr_gray, clr_gray_xdrk);
-    }
+    str = "Ins:";
 
-    ++pos.x;
+    render::draw_text(str, panel, p, clr_gray_drk);
+
+    p.x += str.size();
 
     const int SHOCK = player.shock_tot();
-    const int INS = player.ins();
+    const int INS   = player.ins();
 
     const Clr short_san_clr =
-        SHOCK < 50  ? clr_green_lgt :
-        SHOCK < 75  ? clr_yellow   :
-        SHOCK < 100 ? clr_magenta  : clr_red_lgt;
+        SHOCK < 50  ? clr_green     :
+        SHOCK < 75  ? clr_yellow    :
+        SHOCK < 100 ? clr_magenta   : clr_red_lgt;
 
     str = to_str(SHOCK) + "%/";
 
-    render::draw_text(str, panel, pos, short_san_clr);
+    render::draw_text(str, panel, p, short_san_clr);
 
-    pos.x += str.length();
+    p.x += str.size();
+
     str = to_str(INS) + "%";
 
-    render::draw_text(str, panel, pos, clr_magenta);
+    render::draw_text(str, panel, p, clr_magenta);
+
+    // Experience
+    p.x += std::max(str.size() + 1, MIN_NR_STEPS_TO_NXT_LABEL);
+
+    str = "Exp:";
+
+    render::draw_text(str, panel, p, clr_gray_drk);
+
+    p.x += str.size();
+
+    str = to_str(dungeon_master::clvl());
+
+    if (dungeon_master::clvl() < PLAYER_MAX_CLVL)
+    {
+        //Not at maximum character level
+        str += "(" + to_str(dungeon_master::xp_to_next_lvl()) + ")";
+    }
+
+    render::draw_text(str, panel, p, clr_white);
 
     //Wielded weapon
-    pos.x = X_WIELDED;
+    p.x = std::max(X_WIELDED_DEFAULT, int(p.x + str.size() + 1));
+
+    int x_wielded = p.x;
 
     const Item* wpn = player.inv().item_in_slot(Slot_id::wpn);
 
@@ -140,14 +121,14 @@ void draw()
 
     if (config::is_tiles_mode())
     {
-        render::draw_tile(wpn->tile(), panel, pos, item_clr);
+        render::draw_tile(wpn->tile(), panel, p, item_clr);
     }
     else //Text mode
     {
-        render::draw_glyph(wpn->glyph(), panel, pos, item_clr);
+        render::draw_glyph(wpn->glyph(), panel, p, item_clr);
     }
 
-    pos.x += 2;
+    p.x += 2;
 
     const auto& data = wpn->data();
 
@@ -156,64 +137,35 @@ void draw()
                                      Item_ref_att_inf::melee :
                                      Item_ref_att_inf::wpn_context;
 
-    str = wpn->name(Item_ref_type::plain, Item_ref_inf::yes, att_inf);
+    str = wpn->name(Item_ref_type::plain,
+                    Item_ref_inf::yes,
+                    att_inf);
 
     text_format::first_to_upper(str);
 
-    render::draw_text(str, panel, pos, clr_white);
-    pos.x += str.length() + 1;
+    render::draw_text(str, panel, p, clr_white);
 
     //----------------------------------------------------------------------------- SECOND ROW
-    ++pos.y;
-
-    // Level and xp
-    pos.x = X_XP;
-
-    if (config::is_tiles_mode())
-    {
-        render::draw_tile(Tile_id::elder_sign, panel, pos, clr_white);
-    }
-    else //Text mode
-    {
-        render::draw_text("L", panel, pos, clr_gray, clr_gray_xdrk);
-    }
-
-    ++pos.x;
-
-    str = to_str(dungeon_master::clvl());
-
-    if (dungeon_master::clvl() < PLAYER_MAX_CLVL)
-    {
-        //Not at maximum character level
-        str += "(" + to_str(dungeon_master::xp_to_next_lvl()) + ")";
-    }
-
-    render::draw_text(str, panel, pos, clr_white);
+    ++p.y;
+    p.x = 0;
 
     //Dungeon level
-    pos.x = X_DLVL;
+    str = "Dlvl:";
 
-    if (config::is_tiles_mode())
-    {
-        render::draw_tile(Tile_id::stairs_down, panel, pos, clr_gray);
-    }
-    else //Text mode
-    {
-        render::draw_text(">", panel, pos, clr_gray, clr_gray_xdrk);
-    }
+    render::draw_text(str, panel, p, clr_gray_drk);
 
-    ++pos.x;
+    p.x += str.size();
 
     str = map::dlvl > 0 ? to_str(map::dlvl) : "-";
 
-    render::draw_text(str, panel, pos, clr_white);
+    render::draw_text(str, panel, p, clr_white);
 
     //Armor
     const Item* const body_item = player.inv().item_in_slot(Slot_id::body);
 
     if (body_item)
     {
-        pos.x = X_ARM;
+        p.x += std::max(str.size() + 1, MIN_NR_STEPS_TO_NXT_LABEL);
 
         const Clr clr = body_item->clr();
 
@@ -221,37 +173,38 @@ void draw()
         {
             const Tile_id tile = body_item->tile();
 
-            render::draw_tile(tile, panel, pos, clr);
+            render::draw_tile(tile, panel, p, clr);
         }
         else //Text mode
         {
             str = body_item->glyph();
 
-            render::draw_text(str, panel, pos, clr, clr_gray_xdrk);
+            render::draw_text(str, panel, p, clr);
         }
 
-        ++pos.x;
+        ++p.x;
+
+        str = ":";
+
+        render::draw_text(str, panel, p, clr_gray_drk);
+
+        p.x += str.size();
 
         const Armor* const armor = static_cast<const Armor*>(body_item);
 
         str = armor->armor_points_str(false /* Do not include brackets */);
 
-        render::draw_text(str, panel, pos, clr_white);
+        render::draw_text(str, panel, p, clr_white);
     }
 
     //Encumbrance
-    pos.x = X_ENC;
+    p.x += std::max(str.size() + 1, MIN_NR_STEPS_TO_NXT_LABEL);
 
-    if (config::is_tiles_mode())
-    {
-        render::draw_tile(Tile_id::weight, panel, pos, clr_white);
-    }
-    else //Text mode
-    {
-        render::draw_text("W", panel, pos, clr_gray, clr_gray_xdrk);
-    }
+    str = "W:";
 
-    ++pos.x;
+    render::draw_text(str, panel, p, clr_gray_drk);
+
+    p.x += str.size();
 
     const int ENC = player.enc_percent();
 
@@ -260,14 +213,14 @@ void draw()
     const Clr enc_clr = ENC < 100 ? clr_white :
                         ENC < ENC_IMMOBILE_LVL ? clr_yellow : clr_red_lgt;
 
-    render::draw_text(str, panel, pos, enc_clr);
+    render::draw_text(str, panel, p, enc_clr);
 
     //Lantern
     const Item* const lantern_item = player.inv().item_in_backpack(Item_id::lantern);
 
     if (lantern_item)
     {
-        pos.x = X_LANTERN;
+        p.x += std::max(str.size() + 1, MIN_NR_STEPS_TO_NXT_LABEL);
 
         const Device_lantern* const lantern = static_cast<const Device_lantern*>(lantern_item);
 
@@ -275,24 +228,30 @@ void draw()
         {
             const Tile_id tile = lantern_item->tile();
 
-            render::draw_tile(tile, panel, pos, clr_yellow);
+            render::draw_tile(tile, panel, p, clr_yellow);
         }
         else //Text mode
         {
             str = lantern_item->glyph();
 
-            render::draw_text(str, panel, pos, clr_yellow, clr_gray_xdrk);
+            render::draw_text(str, panel, p, clr_yellow);
         }
 
-        ++pos.x;
+        ++p.x;
 
-        const Clr clr = lantern->is_activated_ ? clr_yellow : clr_menu_drk;
+        str = ":";
+
+        render::draw_text(str, panel, p, clr_gray_drk);
+
+        p.x += str.size();
+
+        const Clr clr = lantern->is_activated_ ? clr_yellow : clr_white;
 
         str = lantern->is_activated_ ? "On" : "Off";
 
         str += "(" + to_str(lantern->nr_turns_left_) + ")";
 
-        render::draw_text(str, panel, pos, clr);
+        render::draw_text(str, panel, p, clr);
     }
 
     //Medical bag
@@ -300,7 +259,7 @@ void draw()
 
     if (medical_item)
     {
-        pos.x = X_MEDICAL;
+        p.x += std::max(str.size() + 1, MIN_NR_STEPS_TO_NXT_LABEL);
 
         const Clr clr = medical_item->clr();
 
@@ -308,16 +267,22 @@ void draw()
         {
             const Tile_id tile = medical_item->tile();
 
-            render::draw_tile(tile, panel, pos, clr);
+            render::draw_tile(tile, panel, p, clr);
         }
         else //Text mode
         {
             str = medical_item->glyph();
 
-            render::draw_text(str, panel, pos, clr, clr_gray_xdrk);
+            render::draw_text(str, panel, p, clr);
         }
 
-        ++pos.x;
+        ++p.x;
+
+        str = ":";
+
+        render::draw_text(str, panel, p, clr_gray_drk);
+
+        p.x += str.size();
 
         const Medical_bag* const medical_bag = static_cast<const Medical_bag*>(medical_item);
 
@@ -325,11 +290,11 @@ void draw()
 
         str = to_str(NR_SUPPL);
 
-        render::draw_text(str, panel, pos, clr_white);
+        render::draw_text(str, panel, p, clr_white);
     }
 
     //Thrown item
-    pos.x = X_THROWN;
+    p.x = x_wielded;
 
     auto* const thr_item = player.inv().item_in_slot(Slot_id::thrown);
 
@@ -339,27 +304,27 @@ void draw()
 
         if (config::is_tiles_mode())
         {
-            render::draw_tile(thr_item->tile(), panel, pos, item_clr);
+            render::draw_tile(thr_item->tile(), panel, p, item_clr);
         }
         else //Text mode
         {
-            render::draw_glyph(thr_item->glyph(), panel, pos, item_clr);
+            render::draw_glyph(thr_item->glyph(), panel, p, item_clr);
         }
 
-        pos.x += 2;
+        p.x += 2;
 
-        str = thr_item->name(Item_ref_type::plural, Item_ref_inf::yes,
+        str = thr_item->name(Item_ref_type::plural,
+                             Item_ref_inf::yes,
                              Item_ref_att_inf::thrown);
 
         text_format::first_to_upper(str);
 
-        render::draw_text(str, panel, pos, clr_white);
-        pos.x += str.length() + 1;
+        render::draw_text(str, panel, p, clr_white);
     }
 
     //----------------------------------------------------------------------------- THIRD ROW
-    ++pos.y;
-    pos.x = 0;
+    ++p.y;
+    p.x = 0;
 
     std::vector<Str_and_clr> props_line;
 
@@ -371,34 +336,420 @@ void draw()
     {
         const Str_and_clr& cur_prop_label = props_line[i];
 
-        render::draw_text(cur_prop_label.str, panel, pos, cur_prop_label.clr);
+        render::draw_text(cur_prop_label.str, panel, p, cur_prop_label.clr);
 
-        pos.x += cur_prop_label.str.length() + 1;
+        p.x += cur_prop_label.str.size() + 1;
     }
 
     //Turn number
     const int           TURN        = game_time::turn();
     const std::string   turn_str    = to_str(TURN);
 
-    pos.x = SCREEN_W - turn_str.size() - 1;
+    str = "T:";
 
-    if (config::is_tiles_mode())
-    {
-        render::draw_tile(Tile_id::stopwatch, panel, pos, clr_white);
-    }
-    else //Text mode
-    {
-        render::draw_text("T", panel, pos, clr_gray, clr_gray_xdrk);
-    }
+    p.x = SCREEN_W - turn_str.size() - str.size();
 
-    ++pos.x;
+    render::draw_text(str, panel, p, clr_gray_drk);
+
+    p.x += str.size();
 
     const bool IS_FREE_STEP_TURN = player.is_free_step_turn();
 
-    const Clr turn_clr      = IS_FREE_STEP_TURN ? clr_black     : clr_white;
-    const Clr turn_bg_clr   = IS_FREE_STEP_TURN ? clr_green_lgt : clr_black;
+    const Clr turn_clr      = IS_FREE_STEP_TURN ? clr_black : clr_white;
+    const Clr turn_bg_clr   = IS_FREE_STEP_TURN ? clr_green : clr_black;
 
-    render::draw_text(turn_str, panel, pos, turn_clr, turn_bg_clr);
+    render::draw_text(turn_str, panel, p, turn_clr, turn_bg_clr);
+}
+
+void draw_icon_mode()
+{
+    const int X_NAME    = 0;
+    const int X_HP      = PLAYER_NAME_MAX_LEN + 1;
+    const int X_SP      = X_HP  + 8;
+    const int X_INS     = X_SP  + 8;
+
+    const int X_WIELDED = 43;
+
+    const int X_XP      = 0;
+    const int X_DLVL    = X_XP      + 9;
+    const int X_ENC     = X_DLVL    + 5;
+    const int X_ARM     = X_ENC     + 7;
+    const int X_LANTERN = X_ARM     + 4;
+    const int X_MEDICAL = X_LANTERN + 12;
+
+    const int X_THROWN  = X_WIELDED;
+
+    const Panel panel = Panel::char_lines;
+
+    render::cover_panel(panel);
+
+    Player& player = *map::player;
+
+    P p(0, 0);
+
+    //Name
+    p.x = X_NAME;
+
+    std::string str = player.name_a();
+
+    render::draw_text(str, panel, p, clr_white);
+
+    //Hit points
+    p.x = X_HP;
+
+    if (config::is_tiles_mode())
+    {
+        render::draw_tile(Tile_id::heart, panel, p, clr_red_lgt);
+    }
+    else //Text mode
+    {
+        render::draw_text("H", panel, p, clr_gray, clr_gray_xdrk);
+    }
+
+    ++p.x;
+
+    str = to_str(player.hp()) + "/" + to_str(player.hp_max(true));
+
+    render::draw_text(str, panel, p, clr_red_lgt);
+
+    //Spirit
+    p.x = X_SP;
+
+    if (config::is_tiles_mode())
+    {
+        render::draw_tile(Tile_id::spirit, panel, p, clr_magenta);
+    }
+    else //Text mode
+    {
+        render::draw_text("S", panel, p, clr_gray, clr_gray_xdrk);
+    }
+
+    ++p.x;
+
+    str = to_str(player.spi()) + "/" + to_str(player.spi_max());
+
+    render::draw_text(str, panel, p, clr_magenta);
+
+    //Insanity
+    p.x = X_INS;
+
+    if (config::is_tiles_mode())
+    {
+        render::draw_tile(Tile_id::brain, panel, p, clr_blue_lgt);
+    }
+    else //Text mode
+    {
+        render::draw_text("I", panel, p, clr_gray, clr_gray_xdrk);
+    }
+
+    ++p.x;
+
+    const int SHOCK = player.shock_tot();
+    const int INS = player.ins();
+
+    const Clr short_san_clr =
+        SHOCK < 50  ? clr_green     :
+        SHOCK < 75  ? clr_yellow    :
+        SHOCK < 100 ? clr_magenta   : clr_red_lgt;
+
+    str = to_str(SHOCK) + "%/";
+
+    render::draw_text(str, panel, p, short_san_clr);
+
+    p.x += str.size();
+    str = to_str(INS) + "%";
+
+    render::draw_text(str, panel, p, clr_magenta);
+
+    //Wielded weapon
+    p.x = X_WIELDED;
+
+    const Item* wpn = player.inv().item_in_slot(Slot_id::wpn);
+
+    if (!wpn)
+    {
+        wpn = &player.unarmed_wpn();
+    }
+
+    const Clr item_clr = wpn->clr();
+
+    if (config::is_tiles_mode())
+    {
+        render::draw_tile(wpn->tile(), panel, p, item_clr);
+    }
+    else //Text mode
+    {
+        render::draw_glyph(wpn->glyph(), panel, p, item_clr);
+    }
+
+    p.x += 2;
+
+    const auto& data = wpn->data();
+
+    //If mainly a thrown weapon, force melee info - otherwise use weapon context.
+    const Item_ref_att_inf att_inf = data.main_att_mode == Att_mode::thrown ?
+                                     Item_ref_att_inf::melee :
+                                     Item_ref_att_inf::wpn_context;
+
+    str = wpn->name(Item_ref_type::plain,
+                    Item_ref_inf::yes,
+                    att_inf);
+
+    text_format::first_to_upper(str);
+
+    render::draw_text(str, panel, p, clr_white);
+    p.x += str.size() + 1;
+
+    //----------------------------------------------------------------------------- SECOND ROW
+    ++p.y;
+
+    // Experience
+    p.x = X_XP;
+
+    if (config::is_tiles_mode())
+    {
+        render::draw_tile(Tile_id::elder_sign, panel, p, clr_white);
+    }
+    else //Text mode
+    {
+        render::draw_text("L", panel, p, clr_gray, clr_gray_xdrk);
+    }
+
+    ++p.x;
+
+    str = to_str(dungeon_master::clvl());
+
+    if (dungeon_master::clvl() < PLAYER_MAX_CLVL)
+    {
+        //Not at maximum character level
+        str += "(" + to_str(dungeon_master::xp_to_next_lvl()) + ")";
+    }
+
+    render::draw_text(str, panel, p, clr_white);
+
+    //Dungeon level
+    p.x = X_DLVL;
+
+    if (config::is_tiles_mode())
+    {
+        render::draw_tile(Tile_id::stairs_down, panel, p, clr_gray);
+    }
+    else //Text mode
+    {
+        render::draw_text(">", panel, p, clr_gray, clr_gray_xdrk);
+    }
+
+    ++p.x;
+
+    str = map::dlvl > 0 ? to_str(map::dlvl) : "-";
+
+    render::draw_text(str, panel, p, clr_white);
+
+    //Armor
+    const Item* const body_item = player.inv().item_in_slot(Slot_id::body);
+
+    if (body_item)
+    {
+        p.x = X_ARM;
+
+        const Clr clr = body_item->clr();
+
+        if (config::is_tiles_mode())
+        {
+            const Tile_id tile = body_item->tile();
+
+            render::draw_tile(tile, panel, p, clr);
+        }
+        else //Text mode
+        {
+            str = body_item->glyph();
+
+            render::draw_text(str, panel, p, clr, clr_gray_xdrk);
+        }
+
+        ++p.x;
+
+        const Armor* const armor = static_cast<const Armor*>(body_item);
+
+        str = armor->armor_points_str(false /* Do not include brackets */);
+
+        render::draw_text(str, panel, p, clr_white);
+    }
+
+    //Encumbrance
+    p.x = X_ENC;
+
+    if (config::is_tiles_mode())
+    {
+        render::draw_tile(Tile_id::weight, panel, p, clr_white);
+    }
+    else //Text mode
+    {
+        render::draw_text("W", panel, p, clr_gray, clr_gray_xdrk);
+    }
+
+    ++p.x;
+
+    const int ENC = player.enc_percent();
+
+    str = to_str(ENC) + "%";
+
+    const Clr enc_clr = ENC < 100 ? clr_white :
+                        ENC < ENC_IMMOBILE_LVL ? clr_yellow : clr_red_lgt;
+
+    render::draw_text(str, panel, p, enc_clr);
+
+    //Lantern
+    const Item* const lantern_item = player.inv().item_in_backpack(Item_id::lantern);
+
+    if (lantern_item)
+    {
+        p.x = X_LANTERN;
+
+        const Device_lantern* const lantern = static_cast<const Device_lantern*>(lantern_item);
+
+        if (config::is_tiles_mode())
+        {
+            const Tile_id tile = lantern_item->tile();
+
+            render::draw_tile(tile, panel, p, clr_yellow);
+        }
+        else //Text mode
+        {
+            str = lantern_item->glyph();
+
+            render::draw_text(str, panel, p, clr_yellow, clr_gray_xdrk);
+        }
+
+        ++p.x;
+
+        const Clr clr = lantern->is_activated_ ? clr_yellow : clr_menu_drk;
+
+        str = lantern->is_activated_ ? "On" : "Off";
+
+        str += "(" + to_str(lantern->nr_turns_left_) + ")";
+
+        render::draw_text(str, panel, p, clr);
+    }
+
+    //Medical bag
+    const Item* const medical_item = player.inv().item_in_backpack(Item_id::medical_bag);
+
+    if (medical_item)
+    {
+        p.x = X_MEDICAL;
+
+        const Clr clr = medical_item->clr();
+
+        if (config::is_tiles_mode())
+        {
+            const Tile_id tile = medical_item->tile();
+
+            render::draw_tile(tile, panel, p, clr);
+        }
+        else //Text mode
+        {
+            str = medical_item->glyph();
+
+            render::draw_text(str, panel, p, clr, clr_gray_xdrk);
+        }
+
+        ++p.x;
+
+        const Medical_bag* const medical_bag = static_cast<const Medical_bag*>(medical_item);
+
+        const int NR_SUPPL = medical_bag->nr_supplies();
+
+        str = to_str(NR_SUPPL);
+
+        render::draw_text(str, panel, p, clr_white);
+    }
+
+    //Thrown item
+    p.x = X_THROWN;
+
+    auto* const thr_item = player.inv().item_in_slot(Slot_id::thrown);
+
+    if (thr_item)
+    {
+        const Clr item_clr = thr_item->clr();
+
+        if (config::is_tiles_mode())
+        {
+            render::draw_tile(thr_item->tile(), panel, p, item_clr);
+        }
+        else //Text mode
+        {
+            render::draw_glyph(thr_item->glyph(), panel, p, item_clr);
+        }
+
+        p.x += 2;
+
+        str = thr_item->name(Item_ref_type::plural,
+                             Item_ref_inf::yes,
+                             Item_ref_att_inf::thrown);
+
+        text_format::first_to_upper(str);
+
+        render::draw_text(str, panel, p, clr_white);
+    }
+
+    //----------------------------------------------------------------------------- THIRD ROW
+    ++p.y;
+    p.x = 0;
+
+    std::vector<Str_and_clr> props_line;
+
+    player.prop_handler().props_interface_line(props_line);
+
+    const int NR_PROPS = props_line.size();
+
+    for (int i = 0; i < NR_PROPS; ++i)
+    {
+        const Str_and_clr& cur_prop_label = props_line[i];
+
+        render::draw_text(cur_prop_label.str, panel, p, cur_prop_label.clr);
+
+        p.x += cur_prop_label.str.size() + 1;
+    }
+
+    //Turn number
+    const int           TURN        = game_time::turn();
+    const std::string   turn_str    = to_str(TURN);
+
+    p.x = SCREEN_W - turn_str.size() - 1;
+
+    if (config::is_tiles_mode())
+    {
+        render::draw_tile(Tile_id::stopwatch, panel, p, clr_white);
+    }
+    else //Text mode
+    {
+        render::draw_text("T", panel, p, clr_gray, clr_gray_xdrk);
+    }
+
+    ++p.x;
+
+    const bool IS_FREE_STEP_TURN = player.is_free_step_turn();
+
+    const Clr turn_clr      = IS_FREE_STEP_TURN ? clr_black : clr_white;
+    const Clr turn_bg_clr   = IS_FREE_STEP_TURN ? clr_green : clr_black;
+
+    render::draw_text(turn_str, panel, p, turn_clr, turn_bg_clr);
+}
+
+} //namespace
+
+void draw()
+{
+    if (config::is_char_lines_icon_mode())
+    {
+        draw_icon_mode();
+    }
+    else //Not using icons
+    {
+        draw_classic_mode();
+    }
 }
 
 } //Character_lines

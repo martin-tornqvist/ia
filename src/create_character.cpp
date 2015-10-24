@@ -158,7 +158,7 @@ void draw_pick_bg(const std::vector<Bg>& bgs, const Menu_browser& browser)
     {
         std::vector<std::string> formatted_lines;
 
-        text_format::line_to_lines(raw_line, DESCR_W, formatted_lines);
+        text_format::split(raw_line, DESCR_W, formatted_lines);
 
         for (const std::string& line : formatted_lines)
         {
@@ -247,7 +247,7 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
 
     std::vector<std::string> descr_lines;
 
-    text_format::line_to_lines("Effect(s): " + descr, DESCR_W, descr_lines);
+    text_format::split("Effect(s): " + descr, DESCR_W, descr_lines);
 
     for (const std::string& str : descr_lines)
     {
@@ -289,7 +289,7 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
         }
 
         std::vector<std::string> prereq_lines;
-        text_format::line_to_lines(prereq_str, DESCR_W, prereq_lines);
+        text_format::split(prereq_str, DESCR_W, prereq_lines);
 
         for (const std::string& str : prereq_lines)
         {
@@ -308,7 +308,7 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
         picked_str = "Trait(s) gained: " + picked_str;
 
         std::vector<std::string> picked_lines;
-        text_format::line_to_lines(picked_str, DESCR_W, picked_lines);
+        text_format::split(picked_str, DESCR_W, picked_lines);
 
         for (const std::string& str : picked_lines)
         {

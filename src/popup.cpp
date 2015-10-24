@@ -125,7 +125,7 @@ void show_msg(const std::string& msg,
     const int TEXT_W = TEXT_W_STD + W_CHANGE;
 
     vector<string> lines;
-    text_format::line_to_lines(msg, TEXT_W, lines);
+    text_format::split(msg, TEXT_W, lines);
 
     const int TEXT_H_TOT =  int(lines.size()) + 3;
 
@@ -187,7 +187,7 @@ int show_menu_msg(const string&           msg,
     }
 
     vector<string> lines;
-    text_format::line_to_lines(msg, TEXT_W_STD, lines);
+    text_format::split(msg, TEXT_W_STD, lines);
 
     const int TITLE_H         = title.empty() ? 0 : 1;
     const int NR_MSG_LINES    = int(lines.size());

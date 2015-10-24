@@ -321,7 +321,7 @@ void draw(const Menu_browser& browser)
     //(looks very ugly),
     while (quote_w != 0)
     {
-        text_format::line_to_lines(quote, quote_w, quote_lines);
+        text_format::split(quote, quote_w, quote_lines);
 
         const size_t MIN_STR_W_LAST_LINE = 20;
 

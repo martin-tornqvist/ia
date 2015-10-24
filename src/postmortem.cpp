@@ -113,7 +113,7 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
     else
     {
         std::vector<std::string> abilities_lines;
-        text_format::line_to_lines(traits_line, 60, abilities_lines);
+        text_format::split(traits_line, 60, abilities_lines);
 
         for (std::string& str : abilities_lines)
         {

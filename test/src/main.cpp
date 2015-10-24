@@ -190,48 +190,48 @@ TEST(format_text)
     std::vector<std::string> formatted_lines;
 
     int lines_max_w = 100;
-    text_format::line_to_lines(str, lines_max_w, formatted_lines);
+    text_format::split(str, lines_max_w, formatted_lines);
     CHECK_EQUAL(str, formatted_lines[0]);
     CHECK_EQUAL(1, int(formatted_lines.size()));
 
     lines_max_w = 18;
-    text_format::line_to_lines(str, lines_max_w, formatted_lines);
+    text_format::split(str, lines_max_w, formatted_lines);
     CHECK_EQUAL("one two three four", formatted_lines[0]);
     CHECK_EQUAL(1, int(formatted_lines.size()));
 
     lines_max_w = 17;
-    text_format::line_to_lines(str, lines_max_w, formatted_lines);
+    text_format::split(str, lines_max_w, formatted_lines);
     CHECK_EQUAL("one two three",    formatted_lines[0]);
     CHECK_EQUAL("four",             formatted_lines[1]);
     CHECK_EQUAL(2, int(formatted_lines.size()));
 
     lines_max_w = 15;
-    text_format::line_to_lines(str, lines_max_w, formatted_lines);
+    text_format::split(str, lines_max_w, formatted_lines);
     CHECK_EQUAL("one two three",    formatted_lines[0]);
     CHECK_EQUAL("four",             formatted_lines[1]);
     CHECK_EQUAL(2, int(formatted_lines.size()));
 
     lines_max_w = 11;
-    text_format::line_to_lines(str, lines_max_w, formatted_lines);
+    text_format::split(str, lines_max_w, formatted_lines);
     CHECK_EQUAL("one two",          formatted_lines[0]);
     CHECK_EQUAL("three four",       formatted_lines[1]);
     CHECK_EQUAL(2, int(formatted_lines.size()));
 
     lines_max_w    = 4;
     str         = "123456";
-    text_format::line_to_lines(str, lines_max_w, formatted_lines);
+    text_format::split(str, lines_max_w, formatted_lines);
     CHECK_EQUAL("123456",           formatted_lines[0]);
     CHECK_EQUAL(1, int(formatted_lines.size()));
 
     lines_max_w    = 4;
     str         = "12 345678";
-    text_format::line_to_lines(str, lines_max_w, formatted_lines);
+    text_format::split(str, lines_max_w, formatted_lines);
     CHECK_EQUAL("12",               formatted_lines[0]);
     CHECK_EQUAL("345678",           formatted_lines[1]);
     CHECK_EQUAL(2, int(formatted_lines.size()));
 
     str = "";
-    text_format::line_to_lines(str, lines_max_w, formatted_lines);
+    text_format::split(str, lines_max_w, formatted_lines);
     CHECK(formatted_lines.empty());
 }
 

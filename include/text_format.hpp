@@ -11,7 +11,7 @@ namespace text_format
 //given maximum width. If any single word in the "line" parameter is longer than the
 //maximum width, we do not bother to split that word (the entire word is simply added
 //to the output vector, breaking the maximum width).
-void line_to_lines(std::string line, const int MAX_W, std::vector<std::string>& out);
+void split(std::string line, const int MAX_W, std::vector<std::string>& out);
 
 void space_separated_list(const std::string& line, std::vector<std::string>& out);
 

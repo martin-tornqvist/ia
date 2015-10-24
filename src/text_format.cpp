@@ -40,7 +40,7 @@ bool is_word_fit(const string& cur_string, const string& word_to_fit, const size
 namespace text_format
 {
 
-void line_to_lines(string line, const int MAX_W, vector<string>& out)
+void split(string line, const int MAX_W, vector<string>& out)
 {
     out.clear();
 

@@ -196,7 +196,7 @@ void print_detailed_actor_descr(const Actor& actor)
     }
 
     std::vector<std::string> formatted_text;
-    text_format::line_to_lines(descr, MAP_W - 1, formatted_text);
+    text_format::split(descr, MAP_W - 1, formatted_text);
 
     const size_t NR_OF_LINES = formatted_text.size();
 

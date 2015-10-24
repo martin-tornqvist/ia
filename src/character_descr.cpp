@@ -174,7 +174,7 @@ void mk_lines()
 
             lines_.push_back({offset + title, clr_text});
             std::vector<std::string> descr_lines;
-            text_format::line_to_lines(descr, MAX_W_DESCR, descr_lines);
+            text_format::split(descr, MAX_W_DESCR, descr_lines);
 
             for (std::string& descr_line : descr_lines)
             {

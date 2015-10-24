@@ -220,7 +220,7 @@ void win_game()
     for (const std::string& section_msg : win_msg)
     {
         std::vector<std::string> section_lines;
-        text_format::line_to_lines(section_msg, MAX_W, section_lines);
+        text_format::split(section_msg, MAX_W, section_lines);
 
         for (const std::string& line : section_lines)
         {

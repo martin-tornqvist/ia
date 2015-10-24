@@ -20,11 +20,12 @@ namespace config
 namespace
 {
 
-const int NR_OPTIONS  = 13;
+const int NR_OPTIONS  = 14;
 const int OPT_Y0      = 1;
 
 std::string  font_name_                 = "";
 bool    is_fullscr_                     = false;
+bool    is_char_lines_icon_mode_        = false;
 bool    is_tiles_wall_full_square_      = false;
 bool    is_text_mode_wall_full_square_  = false;
 bool    is_ranged_wpn_meleee_prompt_    = false;
@@ -109,8 +110,9 @@ void set_default_variables()
     font_name_                      = "images/16x24_v1.png";
     set_cell_px_dims_from_font_name();
     is_fullscr_                     = false;
+    is_char_lines_icon_mode_        = false;
     is_tiles_wall_full_square_      = false;
-    is_text_mode_wall_full_square_      = true;
+    is_text_mode_wall_full_square_  = true;
     is_intro_lvl_skipped_           = false;
     is_ranged_wpn_meleee_prompt_    = true;
     is_ranged_wpn_auto_reload_      = false;
@@ -185,26 +187,30 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
         break;
 
     case 4:
-        is_tiles_wall_full_square_ = !is_tiles_wall_full_square_;
+        is_char_lines_icon_mode_ = !is_char_lines_icon_mode_;
         break;
 
     case 5:
-        is_text_mode_wall_full_square_ = !is_text_mode_wall_full_square_;
+        is_tiles_wall_full_square_ = !is_tiles_wall_full_square_;
         break;
 
     case 6:
-        is_intro_lvl_skipped_ = !is_intro_lvl_skipped_;
+        is_text_mode_wall_full_square_ = !is_text_mode_wall_full_square_;
         break;
 
     case 7:
-        is_ranged_wpn_meleee_prompt_ = !is_ranged_wpn_meleee_prompt_;
+        is_intro_lvl_skipped_ = !is_intro_lvl_skipped_;
         break;
 
     case 8:
-        is_ranged_wpn_auto_reload_ = !is_ranged_wpn_auto_reload_;
+        is_ranged_wpn_meleee_prompt_ = !is_ranged_wpn_meleee_prompt_;
         break;
 
     case 9:
+        is_ranged_wpn_auto_reload_ = !is_ranged_wpn_auto_reload_;
+        break;
+
+    case 10:
     {
         const P p(OPTION_VALUES_X_POS, OPT_Y0 + browser->y());
 
@@ -216,7 +222,7 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
         }
     } break;
 
-    case 10:
+    case 11:
     {
         const P p(OPTION_VALUES_X_POS, OPT_Y0 + browser->y());
 
@@ -228,7 +234,7 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
         }
     } break;
 
-    case 11:
+    case 12:
     {
         const P p(OPTION_VALUES_X_POS, OPT_Y0 + browser->y());
         const int NR = query::number(p, clr_menu_highlight, 1, 3, delay_explosion_, true);
@@ -239,7 +245,7 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
         }
     } break;
 
-    case 12:
+    case 13:
         set_default_variables();
         set_cell_px_dims_from_font_name();
         set_cell_px_dim_dependent_variables();
@@ -247,7 +253,10 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
         audio::init();
         break;
 
-    default: {assert(false && "Illegal option number");} break;
+    default:
+        TRACE << "Bad option number" << std::endl;
+        assert(false);
+        break;
     }
 }
 
@@ -257,43 +266,48 @@ void draw(const Menu_browser* const browser, const int OPTION_VALUES_X_POS)
 
     int opt_nr = 0;
 
-    const int X0 = 0;
     const int X1 = OPTION_VALUES_X_POS;
 
     std::string str = "";
 
-    render::draw_text("-Options-", Panel::screen, P(X0, 0), clr_white);
+    render::draw_text("-Options-", Panel::screen, P(0, 0), clr_white);
 
-    render::draw_text("Play audio", Panel::screen, P(X0, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
-    render::draw_text(":", Panel::screen, P(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+    render::draw_text("Play audio",
+                      Panel::screen,
+                      P(0, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(":", Panel::screen,
+                      P(X1 - 2, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     str = is_audio_enabled_ ? "Yes" : "No";
-    render::draw_text(str, Panel::screen, P(X1, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+    render::draw_text(str,
+                      Panel::screen,
+                      P(X1, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
-    render::draw_text("Use tile set", Panel::screen, P(X0, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
-    render::draw_text(":", Panel::screen, P(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+    render::draw_text("Use tile set",
+                      Panel::screen,
+                      P(0, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(":", Panel::screen,
+                      P(X1 - 2, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     str = is_tiles_mode_ ? "Yes" : "No";
-    render::draw_text(str, Panel::screen, P(X1, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+    render::draw_text(str,
+                      Panel::screen,
+                      P(X1, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
-    render::draw_text("Font", Panel::screen, P(X0, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
-    render::draw_text(":", Panel::screen, P(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+    render::draw_text("Font",
+                      Panel::screen,
+                      P(0, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(":",
+                      Panel::screen,
+                      P(X1 - 2, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     std::string font_disp_name;
     text_format::replace_all(font_name_,      "images/",  "",   font_disp_name);
     text_format::replace_all(font_disp_name,  "_",        " ",  font_disp_name);
@@ -303,137 +317,176 @@ void draw(const Menu_browser* const browser, const int OPTION_VALUES_X_POS)
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
-    render::draw_text("Fullscreen (experimental)", Panel::screen,
-                      P(X0, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
-    render::draw_text(":", Panel::screen, P(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+    render::draw_text("Fullscreen",
+                      Panel::screen,
+                      P(0, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(":",
+                      Panel::screen,
+                      P(X1 - 2, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     render::draw_text(is_fullscr_ ? "Yes" : "No",
-                      Panel::screen, P(X1, OPT_Y0 + opt_nr),
+                      Panel::screen,
+                      P(X1, OPT_Y0 + opt_nr),
                       browser->y() == opt_nr ?
                       clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
-    str = "Tiles mode wall symbol";
-    render::draw_text(str, Panel::screen, P(X0, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
-    render::draw_text(":", Panel::screen, P(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+    render::draw_text("Use icons in character lines",
+                      Panel::screen,
+                      P(0, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(":",
+                      Panel::screen,
+                      P(X1 - 2, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(is_char_lines_icon_mode_ ? "Yes" : "No",
+                      Panel::screen,
+                      P(X1, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    opt_nr++;
+
+    render::draw_text("Tiles mode wall symbol",
+                      Panel::screen,
+                      P(0, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(":",
+                      Panel::screen,
+                      P(X1 - 2, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     str = is_tiles_wall_full_square_ ? "Full square" : "Pseudo-3D";
-    render::draw_text(str, Panel::screen, P(X1, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+    render::draw_text(str,
+                      Panel::screen,
+                      P(X1, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
-    str = "Text mode wall symbol";
-    render::draw_text(str, Panel::screen, P(X0, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
-    render::draw_text(":", Panel::screen, P(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+    render::draw_text("Text mode wall symbol",
+                      Panel::screen,
+                      P(0, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(":",
+                      Panel::screen,
+                      P(X1 - 2, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     str = is_text_mode_wall_full_square_ ? "Full square" : "Hash sign";
-    render::draw_text(str, Panel::screen, P(X1, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+    render::draw_text(str,
+                      Panel::screen,
+                      P(X1, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
-    render::draw_text("Skip intro level", Panel::screen,
-                      P(X0, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
-    render::draw_text(":", Panel::screen, P(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+    render::draw_text("Skip intro level",
+                      Panel::screen,
+                      P(0, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(":",
+                      Panel::screen,
+                      P(X1 - 2, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     str = is_intro_lvl_skipped_ ? "Yes" : "No";
-    render::draw_text(str, Panel::screen, P(X1, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+    render::draw_text(str,
+                      Panel::screen,
+                      P(X1, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
-    str = "Ranged weapon melee attack warning";
-    render::draw_text(str, Panel::screen, P(X0, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
-    render::draw_text(":", Panel::screen, P(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+    render::draw_text("Ranged weapon melee attack warning",
+                      Panel::screen,
+                      P(0, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(":",
+                      Panel::screen,
+                      P(X1 - 2, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     str = is_ranged_wpn_meleee_prompt_ ? "Yes" : "No";
-    render::draw_text(str, Panel::screen, P(X1, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+    render::draw_text(str,
+                      Panel::screen,
+                      P(X1, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
-    str = "Ranged weapon auto reload";
-    render::draw_text(str, Panel::screen, P(X0, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
-    render::draw_text(":", Panel::screen, P(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+    render::draw_text("Ranged weapon auto reload",
+                      Panel::screen,
+                      P(0, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(":",
+                      Panel::screen,
+                      P(X1 - 2, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     str = is_ranged_wpn_auto_reload_ ? "Yes" : "No";
-    render::draw_text(str, Panel::screen, P(X1, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
-    opt_nr++;
-
-    str = "Projectile delay (ms)";
-    render::draw_text(str, Panel::screen, P(X0, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
-    render::draw_text(":", Panel::screen, P(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
-    render::draw_text(to_str(delay_projectile_draw_), Panel::screen,
+    render::draw_text(str,
+                      Panel::screen,
                       P(X1, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
-    str = "Shotgun delay (ms)";
-    render::draw_text(str, Panel::screen, P(X0, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
-    render::draw_text(":", Panel::screen, P(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
-    render::draw_text(to_str(delay_shotgun_), Panel::screen,
+    render::draw_text("Projectile delay (ms)",
+                      Panel::screen,
+                      P(0, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(":",
+                      Panel::screen,
+                      P(X1 - 2, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(to_str(delay_projectile_draw_),
+                      Panel::screen,
                       P(X1, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
-    str = "Explosion delay (ms)";
-    render::draw_text(str, Panel::screen, P(X0, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
-    render::draw_text(":", Panel::screen, P(X1 - 2, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
-    render::draw_text(to_str(delay_explosion_), Panel::screen,
+    render::draw_text("Shotgun delay (ms)",
+                      Panel::screen,
+                      P(0, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(":",
+                      Panel::screen,
+                      P(X1 - 2, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(to_str(delay_shotgun_),
+                      Panel::screen,
                       P(X1, OPT_Y0 + opt_nr),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
-    str = "Reset to defaults";
-    render::draw_text(str, Panel::screen, P(X0, OPT_Y0 + opt_nr + 1),
-                      browser->y() == opt_nr ?
-                      clr_menu_highlight : clr_menu_drk);
+    render::draw_text("Explosion delay (ms)",
+                      Panel::screen,
+                      P(0, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(":",
+                      Panel::screen,
+                      P(X1 - 2, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(to_str(delay_explosion_),
+                      Panel::screen,
+                      P(X1, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    opt_nr++;
 
-    str = "[space/esc] to confirm changes";
-    render::draw_text(str, Panel::screen, P(X0, OPT_Y0 + opt_nr + 4),
+    render::draw_text("Reset to defaults",
+                      Panel::screen,
+                      P(0, OPT_Y0 + opt_nr + 1),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+
+    render::draw_text("[space/esc] to confirm changes",
+                      Panel::screen,
+                      P(0, OPT_Y0 + opt_nr + 4),
                       clr_white);
 
-    str  = "Tile set requires resolution 1280x720 or higher. ";
-    str += "Using Text mode for smaller";
-    render::draw_text(str, Panel::screen, P(X0, SCREEN_H - 2), clr_gray);
-    str = "resolutions is recommended (fonts of different sizes are available).";
-    render::draw_text(str, Panel::screen, P(X0, SCREEN_H - 1), clr_gray);
+    str = "Note: Tile set requires resolution 1280x720 or higher. Using Text mode for smaller "
+          "resolutions is recommended (fonts of different sizes are available)";
+
+    std::vector<std::string> lines;
+
+    text_format::split(str, SCREEN_W, lines);
+
+    int y = SCREEN_H - lines.size();
+
+    for (const std::string& line : lines)
+    {
+        render::draw_text(line, Panel::screen, P(0, y), clr_gray);
+        ++y;
+    }
 
     render::update_screen();
 }
@@ -490,6 +543,10 @@ void set_variables_from_lines(std::vector<std::string>& lines)
 
     cur_line = lines.front();
     is_fullscr_ = cur_line == "1";
+    lines.erase(begin(lines));
+
+    cur_line = lines.front();
+    is_char_lines_icon_mode_ = cur_line == "1";
     lines.erase(begin(lines));
 
     cur_line = lines.front();
@@ -553,6 +610,7 @@ void set_lines_from_variables(std::vector<std::string>& lines)
     lines.push_back(is_tiles_mode_                  ? "1" : "0");
     lines.push_back(font_name_);
     lines.push_back(is_fullscr_                     ? "1" : "0");
+    lines.push_back(is_char_lines_icon_mode_        ? "1" : "0");
     lines.push_back(is_tiles_wall_full_square_      ? "1" : "0");
     lines.push_back(is_text_mode_wall_full_square_  ? "1" : "0");
     lines.push_back(is_intro_lvl_skipped_           ? "1" : "0");
@@ -605,6 +663,7 @@ void init()
 bool        is_tiles_mode()                 {return is_tiles_mode_;}
 std::string font_name()                     {return font_name_;}
 bool        is_fullscreen()                 {return is_fullscr_;}
+bool        is_char_lines_icon_mode()       {return is_char_lines_icon_mode_;}
 int         scr_px_w()                      {return scr_px_w_;}
 int         scr_px_h()                      {return scr_px_h_;}
 int         cell_px_w()                     {return cell_px_w_;}

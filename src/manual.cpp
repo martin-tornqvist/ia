@@ -52,7 +52,7 @@ void read_file()
 
             if (should_format_line)
             {
-                text_format::line_to_lines(cur_line, MAP_W, formatted);
+                text_format::split(cur_line, MAP_W, formatted);
 
                 for (const auto& line : formatted)
                 {

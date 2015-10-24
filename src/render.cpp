@@ -1134,7 +1134,7 @@ void draw_descr_box(const std::vector<Str_and_clr>& lines)
     for (const auto& line : lines)
     {
         std::vector<std::string> formatted;
-        text_format::line_to_lines(line.str, MAX_W, formatted);
+        text_format::split(line.str, MAX_W, formatted);
 
         for (const auto& line_in_formatted : formatted)
         {
