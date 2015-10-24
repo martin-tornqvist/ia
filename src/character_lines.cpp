@@ -160,6 +160,24 @@ void draw_classic_mode()
 
     render::draw_text(str, panel, p, clr_white);
 
+    //Encumbrance
+    p.x += std::max(str.size() + 1, MIN_NR_STEPS_TO_NXT_LABEL);
+
+    str = "W:";
+
+    render::draw_text(str, panel, p, clr_gray_drk);
+
+    p.x += str.size();
+
+    const int ENC = player.enc_percent();
+
+    str = to_str(ENC) + "%";
+
+    const Clr enc_clr = ENC < 100 ? clr_white :
+                        ENC < ENC_IMMOBILE_LVL ? clr_yellow : clr_red_lgt;
+
+    render::draw_text(str, panel, p, enc_clr);
+
     //Armor
     const Item* const body_item = player.inv().item_in_slot(Slot_id::body);
 
@@ -196,24 +214,6 @@ void draw_classic_mode()
 
         render::draw_text(str, panel, p, clr_white);
     }
-
-    //Encumbrance
-    p.x += std::max(str.size() + 1, MIN_NR_STEPS_TO_NXT_LABEL);
-
-    str = "W:";
-
-    render::draw_text(str, panel, p, clr_gray_drk);
-
-    p.x += str.size();
-
-    const int ENC = player.enc_percent();
-
-    str = to_str(ENC) + "%";
-
-    const Clr enc_clr = ENC < 100 ? clr_white :
-                        ENC < ENC_IMMOBILE_LVL ? clr_yellow : clr_red_lgt;
-
-    render::draw_text(str, panel, p, enc_clr);
 
     //Lantern
     const Item* const lantern_item = player.inv().item_in_backpack(Item_id::lantern);
@@ -545,6 +545,29 @@ void draw_icon_mode()
 
     render::draw_text(str, panel, p, clr_white);
 
+    //Encumbrance
+    p.x = X_ENC;
+
+    if (config::is_tiles_mode())
+    {
+        render::draw_tile(Tile_id::weight, panel, p, clr_white);
+    }
+    else //Text mode
+    {
+        render::draw_text("W", panel, p, clr_gray, clr_gray_xdrk);
+    }
+
+    ++p.x;
+
+    const int ENC = player.enc_percent();
+
+    str = to_str(ENC) + "%";
+
+    const Clr enc_clr = ENC < 100 ? clr_white :
+                        ENC < ENC_IMMOBILE_LVL ? clr_yellow : clr_red_lgt;
+
+    render::draw_text(str, panel, p, enc_clr);
+
     //Armor
     const Item* const body_item = player.inv().item_in_slot(Slot_id::body);
 
@@ -575,29 +598,6 @@ void draw_icon_mode()
 
         render::draw_text(str, panel, p, clr_white);
     }
-
-    //Encumbrance
-    p.x = X_ENC;
-
-    if (config::is_tiles_mode())
-    {
-        render::draw_tile(Tile_id::weight, panel, p, clr_white);
-    }
-    else //Text mode
-    {
-        render::draw_text("W", panel, p, clr_gray, clr_gray_xdrk);
-    }
-
-    ++p.x;
-
-    const int ENC = player.enc_percent();
-
-    str = to_str(ENC) + "%";
-
-    const Clr enc_clr = ENC < 100 ? clr_white :
-                        ENC < ENC_IMMOBILE_LVL ? clr_yellow : clr_red_lgt;
-
-    render::draw_text(str, panel, p, enc_clr);
 
     //Lantern
     const Item* const lantern_item = player.inv().item_in_backpack(Item_id::lantern);
