@@ -37,6 +37,7 @@ enum class Room_type
     human,
     ritual,
     spider,
+    snake_pit,
     crypt,
     monster,
     flooded,
@@ -178,6 +179,27 @@ public:
 
 protected:
     Range nr_auto_features_allowed() const override;
+    int base_pct_chance_drk() const override;
+    void on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
+    void on_post_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
+};
+
+class Snake_pit_room: public Std_room
+{
+public:
+    Snake_pit_room(Rect r) :
+        Std_room(r, Room_type::monster) {}
+
+    ~Snake_pit_room() {}
+
+    bool is_allowed() const override;
+
+protected:
+    Range nr_auto_features_allowed() const override
+    {
+        return Range(0, 0);
+    }
+
     int base_pct_chance_drk() const override;
     void on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
     void on_post_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;

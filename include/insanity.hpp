@@ -15,6 +15,7 @@ enum class Ins_sympt_id
     laugh,
     phobia_rat,
     phobia_spider,
+//    phobia_snake,
     phobia_canine,
     phobia_dead,
     phobia_open,

@@ -8,6 +8,7 @@ enum class Sfx_id
     //Monster sounds
     dog_snarl,
     wolf_howl,
+    hiss,
     zombie_growl,
     ghoul_growl,
     ooze_gurgle,

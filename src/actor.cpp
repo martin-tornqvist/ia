@@ -31,7 +31,7 @@ Actor::Actor() :
     hp_max_         (-1),
     spi_            (-1),
     spi_max_        (-1),
-    lair_cell_      (),
+    lair_pos_      (),
     prop_handler_   (nullptr),
     data_           (nullptr),
     inv_            (nullptr) {}
@@ -186,7 +186,7 @@ void Actor::place(const P& pos_, Actor_data_t& actor_data)
     tile_       = data_->tile;
     hp_         = hp_max_  = data_->hp;
     spi_        = spi_max_ = data_->spi;
-    lair_cell_  = pos;
+    lair_pos_   = pos;
 
     inv_ = new Inventory(this);
 

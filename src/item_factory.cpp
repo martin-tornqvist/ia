@@ -61,6 +61,10 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
     case Item_id::red_spider_bite:
     case Item_id::shadow_spider_bite:
     case Item_id::leng_spider_bite:
+    case Item_id::pit_viper_bite:
+    case Item_id::spitting_cobra_bite:
+    case Item_id::spitting_cobra_spit:
+    case Item_id::black_mamba_bite:
     case Item_id::fire_hound_breath:
     case Item_id::fire_hound_bite:
     case Item_id::zuul_bite:
@@ -348,6 +352,8 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
 void set_item_randomized_properties(Item* item)
 {
     const Item_data_t& d = item->data();
+
+    assert(d.type != Item_type::melee_wpn_intr && d.type != Item_type::ranged_wpn_intr);
 
     if (d.id == Item_id::pharaoh_staff)
     {

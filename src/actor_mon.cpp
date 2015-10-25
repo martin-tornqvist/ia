@@ -37,7 +37,7 @@ Mon::Mon() :
     last_dir_moved_             (Dir::center),
     spell_cool_down_cur_        (0),
     is_roaming_allowed_         (true),
-    is_sneaking_                 (false),
+    is_sneaking_                (false),
     leader_                     (nullptr),
     tgt_                        (nullptr),
     waiting_                    (false),
@@ -100,7 +100,9 @@ void Mon::on_actor_turn()
 
         const Rect fov_rect = fov::get_fov_rect(pos);
 
-        map_parse::run(cell_check::Blocks_los(), hard_blocked_los, Map_parse_mode::overwrite,
+        map_parse::run(cell_check::Blocks_los(),
+                       hard_blocked_los,
+                       Map_parse_mode::overwrite,
                        fov_rect);
 
         //Remove self and all unseen actors from vector
@@ -154,9 +156,9 @@ void Mon::on_actor_turn()
         }
         else //Monster does not have a leader
         {
-            if (is_alive() && rnd::one_in(14))
+            if (is_alive() && rnd::one_in(12))
             {
-                speak_phrase();
+                speak_phrase(Alerts_mon::no);
             }
         }
     }
@@ -184,7 +186,8 @@ void Mon::on_actor_turn()
 
     //------------------------------ COMMON ACTIONS
     //                               (MOVING, ATTACKING, CASTING SPELLS...)
-    //Looking is as an action if monster not aware before, and became aware from looking.
+
+    //Looking is as an action if monster was not aware before, and became aware from looking.
     //(This is to give the monsters some reaction time, and not instantly attack)
     if (
         data_->ai[size_t(Ai_id::looks)] &&
@@ -248,9 +251,11 @@ void Mon::on_actor_turn()
 
     utils::set_constr_in_range(0, erratic_move_pct, 95);
 
+    //Occasionally move erratically - *unless* this monster uses a lair and is at their lair pos
     if (
         data_->ai[size_t(Ai_id::moves_to_random_when_unaware)] &&
-        rnd::percent(erratic_move_pct))
+        rnd::percent(erratic_move_pct) &&
+        !(data_->ai[size_t(Ai_id::moves_to_lair)] && pos == lair_pos_))
     {
         if (ai::action::move_to_random_adj_cell(*this))
         {
@@ -306,14 +311,14 @@ void Mon::on_actor_turn()
         leader_ != map::player                  &&
         (tgt_ == nullptr || tgt_ == map::player))
     {
-        if (ai::action::step_to_lair_if_los(*this, lair_cell_))
+        if (ai::action::step_to_lair_if_los(*this, lair_pos_))
         {
             return;
         }
         else //No LOS to lair
         {
             //Try to use pathfinder to travel to lair
-            ai::info::try_set_path_to_lair_if_no_los(*this, path, lair_cell_);
+            ai::info::try_set_path_to_lair_if_no_los(*this, path, lair_pos_);
 
             if (ai::action::step_path(*this, path))
             {
@@ -322,7 +327,10 @@ void Mon::on_actor_turn()
         }
     }
 
-    if (data_->ai[size_t(Ai_id::moves_to_random_when_unaware)])
+    //When unaware move randomly - *unless* this monster uses a lair and is at their lair pos
+    if (
+        data_->ai[size_t(Ai_id::moves_to_random_when_unaware)] &&
+        !(data_->ai[size_t(Ai_id::moves_to_lair)] && pos == lair_pos_))
     {
         if (ai::action::move_to_random_adj_cell(*this))
         {
@@ -330,6 +338,7 @@ void Mon::on_actor_turn()
         }
     }
 
+    //No action could be performed, just let someone else act
     game_time::tick();
 }
 
@@ -493,16 +502,13 @@ void Mon::move(Dir dir)
 
 void Mon::hear_sound(const Snd& snd)
 {
-    if (is_alive())
+    if (is_alive() && snd.is_alerting_mon())
     {
-        if (snd.is_alerting_mon())
-        {
-            become_aware(false);
-        }
+        become_aware(false);
     }
 }
 
-void Mon::speak_phrase()
+void Mon::speak_phrase(const Alerts_mon alerts_others)
 {
     const bool IS_SEEN_BY_PLAYER = map::player->can_see_actor(*this);
 
@@ -520,7 +526,7 @@ void Mon::speak_phrase()
             pos,
             this,
             Snd_vol::low,
-            Alerts_mon::yes);
+            alerts_others);
 
     snd_emit::run(snd);
 }
@@ -543,7 +549,7 @@ void Mon::become_aware(const bool IS_FROM_SEEING)
 
             if (rnd::coin_toss())
             {
-                speak_phrase();
+                speak_phrase(Alerts_mon::yes);
             }
         }
     }
@@ -1700,6 +1706,22 @@ void Leng_spider::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::leng_spider_bite));
 }
 
+void Pit_viper::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(Item_id::pit_viper_bite));
+}
+
+void Spitting_cobra::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(Item_id::spitting_cobra_bite));
+    inv_->put_in_intrinsics(item_factory::mk(Item_id::spitting_cobra_spit));
+}
+
+void Black_mamba::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(Item_id::black_mamba_bite));
+}
+
 void Wolf::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(Item_id::wolf_bite));
@@ -1980,11 +2002,11 @@ void Zombie::on_death()
         assert(id_to_spawn != Actor_id::END);
 
         actor_factory::summon(pos,
-                              {id_to_spawn},
-                              Make_mon_aware::yes,
-                              nullptr,
-                              nullptr,
-                              Verbosity::silent);
+        {id_to_spawn},
+        Make_mon_aware::yes,
+        nullptr,
+        nullptr,
+        Verbosity::silent);
 
         render::draw_map_and_interface();
     }
@@ -2283,10 +2305,10 @@ bool The_high_priest::on_actor_turn_hook()
             std::vector<Mon*> summoned;
 
             actor_factory::summon(p,
-                                  {Actor_id::the_high_priest_cpy},
-                                  Make_mon_aware::yes,
-                                  this,
-                                  &summoned);
+            {Actor_id::the_high_priest_cpy},
+            Make_mon_aware::yes,
+            this,
+            &summoned);
 
             assert(summoned.size() == 1);
 

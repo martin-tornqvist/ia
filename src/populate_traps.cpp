@@ -79,6 +79,7 @@ void populate_std_lvl()
                 chance_for_trapped_room.set(1, 4);
                 break;
 
+            case Room_type::snake_pit:
             case Room_type::forest:
             case Room_type::plain:
             case Room_type::flooded:

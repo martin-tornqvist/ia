@@ -82,9 +82,7 @@ void run(Snd snd)
         {
             if (actor->is_player())
             {
-                //Various conditions may clear the sound message
-                if (
-                    (IS_ORIGIN_SEEN_BY_PLAYER && snd.is_msg_ignored_if_origin_seen()))
+                if ((IS_ORIGIN_SEEN_BY_PLAYER && snd.is_msg_ignored_if_origin_seen()))
                 {
                     snd.clear_msg();
                 }

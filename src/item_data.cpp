@@ -376,7 +376,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
 
 void set_dmg_from_mon_id(Item_data_t& item_data, const Actor_id id)
 {
-    const auto& actor_data      = actor_data::data[int(id)];
+    const auto& actor_data      = actor_data::data[size_t(id)];
     item_data.melee.dmg         = Dice_param(1, actor_data.dmg_melee);
     item_data.ranged.dmg        = Dice_param(1, actor_data.dmg_ranged);
     item_data.ranged.throw_dmg  = Dice_param(1, actor_data.dmg_ranged);
@@ -1255,6 +1255,38 @@ void init_data_list()
     set_dmg_from_mon_id(d, Actor_id::leng_spider);
     data[size_t(d.id)] = d;
 
+    reset_data(d, Item_type::melee_wpn_intr);
+    d.id = Item_id::pit_viper_bite;
+    d.melee.att_msgs = {"", "bites me"};
+    set_dmg_from_mon_id(d, Actor_id::pit_viper);
+    d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, POISON_DMG_N_TURN * 4);
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::melee_wpn_intr);
+    d.id = Item_id::spitting_cobra_bite;
+    d.melee.att_msgs = {"", "bites me"};
+    set_dmg_from_mon_id(d, Actor_id::spitting_cobra);
+    d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, POISON_DMG_N_TURN * 4);
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::ranged_wpn_intr);
+    d.id = Item_id::spitting_cobra_spit;
+    d.ranged.att_msgs = {"", "spits venom at me"};
+    set_dmg_from_mon_id(d, Actor_id::spitting_cobra);
+    d.ranged.snd_msg = "I hear hissing and spitting.";
+    d.ranged.projectile_clr = clr_green_lgt;
+    d.ranged.dmg_type = Dmg_type::physical;
+    d.ranged.prop_applied = new Prop_blind(Prop_turns::specific, 10);
+    d.ranged.projectile_glyph = '*';
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::melee_wpn_intr);
+    d.id = Item_id::black_mamba_bite;
+    d.melee.att_msgs = {"", "bites me"};
+    set_dmg_from_mon_id(d, Actor_id::black_mamba);
+    d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, POISON_DMG_N_TURN * 4);
+    data[size_t(d.id)] = d;
+
     reset_data(d, Item_type::ranged_wpn_intr);
     d.id = Item_id::fire_hound_breath;
     d.ranged.att_msgs = {"", "breaths fire at me"};
@@ -1624,7 +1656,7 @@ void init_data_list()
     d.ability_mods_while_equipped[int(Ability_id::searching)]  = -6;
     d.is_stackable = false;
     d.clr = clr_brown;
-    d.tile = Tile_id::mask;
+    d.tile = Tile_id::gas_mask;
     d.glyph = '[';
     d.spawn_std_range = Range(1, DLVL_LAST_EARLY_GAME);
     d.chance_to_incl_in_floor_spawn_list = 50;

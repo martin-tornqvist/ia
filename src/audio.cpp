@@ -87,13 +87,14 @@ void init()
         audio_chunks.resize(int(Sfx_id::END));
 
         //Monster sounds
-        load_audio_file(Sfx_id::dog_snarl,             "sfx_dog_snarl.ogg");
-        load_audio_file(Sfx_id::wolf_howl,             "sfx_wolf_howl.ogg");
-        load_audio_file(Sfx_id::zombie_growl,          "sfx_zombie_growl.ogg");
-        load_audio_file(Sfx_id::ghoul_growl,           "sfx_ghoul_growl.ogg");
-        load_audio_file(Sfx_id::ooze_gurgle,           "sfx_ooze_gurgle.ogg");
-        load_audio_file(Sfx_id::flapping_wings,        "sfx_flapping_wings.ogg");
-        load_audio_file(Sfx_id::ape,                   "sfx_ape.ogg");
+        load_audio_file(Sfx_id::dog_snarl,              "sfx_dog_snarl.ogg");
+        load_audio_file(Sfx_id::wolf_howl,              "sfx_wolf_howl.ogg");
+        load_audio_file(Sfx_id::hiss,                   "sfx_hiss.ogg");
+        load_audio_file(Sfx_id::zombie_growl,           "sfx_zombie_growl.ogg");
+        load_audio_file(Sfx_id::ghoul_growl,            "sfx_ghoul_growl.ogg");
+        load_audio_file(Sfx_id::ooze_gurgle,            "sfx_ooze_gurgle.ogg");
+        load_audio_file(Sfx_id::flapping_wings,         "sfx_flapping_wings.ogg");
+        load_audio_file(Sfx_id::ape,                    "sfx_ape.ogg");
 
         //Weapon and attack sounds
         load_audio_file(Sfx_id::hit_small,              "sfx_hit_small.ogg");

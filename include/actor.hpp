@@ -233,7 +233,7 @@ protected:
 
     int hp_, hp_max_, spi_, spi_max_;
 
-    P lair_cell_;
+    P lair_pos_;
 
     Prop_handler* prop_handler_;
     Actor_data_t* data_;

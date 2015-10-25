@@ -76,6 +76,15 @@ Actor* mk_actor_from_id(const Actor_id id)
     case Actor_id::leng_spider:
         return new Leng_spider();
 
+    case Actor_id::pit_viper:
+        return new Pit_viper();
+
+    case Actor_id::spitting_cobra:
+        return new Spitting_cobra();
+
+    case Actor_id::black_mamba:
+        return new Black_mamba();
+
     case Actor_id::fire_hound:
         return new Fire_hound();
 

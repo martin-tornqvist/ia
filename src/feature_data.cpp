@@ -685,6 +685,14 @@ void init_data_list()
     d.move_rules.set_can_move_cmn();
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
+    d.id = Feature_id::event_snake_emerge;
+    d.mk_obj = [](const P & p)
+    {
+        return new Event_snake_emerge(p);
+    };
+    d.move_rules.set_can_move_cmn();
+    add_to_list_and_reset(d);
+    //---------------------------------------------------------------------------
     d.id = Feature_id::event_rats_in_the_walls_discovery;
     d.mk_obj = [](const P & p)
     {

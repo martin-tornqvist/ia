@@ -467,15 +467,15 @@ int Armor::take_dur_hit_and_get_reduced_dmg(const int DMG_BEFORE)
     const double DMG_BEFORE_DB = double(DMG_BEFORE);
 
     //Adjustment factor
-    const double DDF_K = 2.0;
+    const double K = 2.0;
 
     //Armor durability factor
-    const double DDF_BASE = data_->armor.dmg_to_durability_factor;
+    const double ARMOR_DDF = data_->armor.dmg_to_durability_factor;
 
     //Armor lasts twice as long for War Vets
-    const double DDF_WAR_VET_MOD = (player_bon::bg() == Bg::war_vet) ? 0.5 : 1.0;
+    const double WAR_VET_DDF = (player_bon::bg() == Bg::war_vet) ? 0.5 : 1.0;
 
-    dur_ -= int(DMG_BEFORE_DB * DDF_K * DDF_BASE * DDF_WAR_VET_MOD);
+    dur_ -= int(DMG_BEFORE_DB * K * ARMOR_DDF * WAR_VET_DDF);
 
     dur_ = std::max(0, dur_);
 

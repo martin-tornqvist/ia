@@ -44,6 +44,7 @@ enum class Feature_id
     trap,
     smoke,
     event_wall_crumble,
+    event_snake_emerge,
     event_rats_in_the_walls_discovery,
 
     END

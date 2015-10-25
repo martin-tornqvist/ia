@@ -90,7 +90,7 @@ public:
         return data_->aggro_sfx_mon_hidden;
     }
 
-    void speak_phrase();
+    void speak_phrase(const Alerts_mon alerts_others);
 
     bool is_leader_of(const Actor* const actor) const override;
     bool is_actor_my_leader(const Actor* const actor) const override;
@@ -194,6 +194,30 @@ class Leng_spider: public Spider
 public:
     Leng_spider() : Spider() {}
     ~Leng_spider() {}
+    void mk_start_items() override;
+};
+
+class Pit_viper: public Mon
+{
+public:
+    Pit_viper() : Mon() {}
+    virtual ~Pit_viper() {}
+    void mk_start_items() override;
+};
+
+class Spitting_cobra: public Mon
+{
+public:
+    Spitting_cobra() : Mon() {}
+    virtual ~Spitting_cobra() {}
+    void mk_start_items() override;
+};
+
+class Black_mamba: public Mon
+{
+public:
+    Black_mamba() : Mon() {}
+    virtual ~Black_mamba() {}
     void mk_start_items() override;
 };
 

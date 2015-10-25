@@ -9,6 +9,7 @@
 #include "feature_rigid.hpp"
 #include "map_gen.hpp"
 #include "gods.hpp"
+#include "actor_factory.hpp"
 
 #ifdef DEMO_MODE
 #include "render.hpp"
@@ -49,13 +50,14 @@ void init_room_bucket()
 
     if (DLVL <= DLVL_LAST_EARLY_GAME)
     {
-        add_to_room_bucket(Room_type::human,    rnd::range(0, 4));
-        add_to_room_bucket(Room_type::ritual,   rnd::range(0, 1));
-        add_to_room_bucket(Room_type::spider,   rnd::range(0, 2));
-        add_to_room_bucket(Room_type::crypt,    rnd::range(0, 4));
-        add_to_room_bucket(Room_type::monster,  rnd::range(0, 2));
-        add_to_room_bucket(Room_type::flooded,  rnd::range(0, 1));
-        add_to_room_bucket(Room_type::muddy,    rnd::range(0, 1));
+        add_to_room_bucket(Room_type::human,        4);
+        add_to_room_bucket(Room_type::ritual,       1);
+        add_to_room_bucket(Room_type::spider,       2);
+        add_to_room_bucket(Room_type::snake_pit,    1);
+        add_to_room_bucket(Room_type::crypt,        4);
+        add_to_room_bucket(Room_type::monster,      2);
+        add_to_room_bucket(Room_type::flooded,      1);
+        add_to_room_bucket(Room_type::muddy,        1);
 
         //Add one plain room for every non-plain room
         const size_t NR_PLAIN_ROOMS = room_bucket_.size();
@@ -64,16 +66,17 @@ void init_room_bucket()
     }
     else if (DLVL <= DLVL_LAST_MID_GAME)
     {
-        add_to_room_bucket(Room_type::human,    rnd::range(0, 2));
-        add_to_room_bucket(Room_type::ritual,   rnd::range(1, 1));
-        add_to_room_bucket(Room_type::spider,   rnd::range(0, 3));
-        add_to_room_bucket(Room_type::crypt,    rnd::range(0, 4));
-        add_to_room_bucket(Room_type::monster,  rnd::range(0, 3));
-        add_to_room_bucket(Room_type::flooded,  rnd::range(0, 2));
-        add_to_room_bucket(Room_type::muddy,    rnd::range(0, 2));
-        add_to_room_bucket(Room_type::cave,     rnd::range(1, 4));
-        add_to_room_bucket(Room_type::chasm,    rnd::range(0, 2));
-        add_to_room_bucket(Room_type::forest,   rnd::range(1, 4));
+        add_to_room_bucket(Room_type::human,        2);
+        add_to_room_bucket(Room_type::ritual,       1);
+        add_to_room_bucket(Room_type::spider,       2);
+        add_to_room_bucket(Room_type::snake_pit,    1);
+        add_to_room_bucket(Room_type::crypt,        4);
+        add_to_room_bucket(Room_type::monster,      3);
+        add_to_room_bucket(Room_type::flooded,      2);
+        add_to_room_bucket(Room_type::muddy,        2);
+        add_to_room_bucket(Room_type::cave,         3);
+        add_to_room_bucket(Room_type::chasm,        1);
+        add_to_room_bucket(Room_type::forest,       2);
 
         //Add one plain room for every non-plain room
         const size_t NR_PLAIN_ROOMS = room_bucket_.size();
@@ -82,13 +85,14 @@ void init_room_bucket()
     }
     else
     {
-        add_to_room_bucket(Room_type::monster,  rnd::range(0, 3));
-        add_to_room_bucket(Room_type::spider,   rnd::range(0, 3));
-        add_to_room_bucket(Room_type::flooded,  rnd::range(1, 2));
-        add_to_room_bucket(Room_type::muddy,    rnd::range(1, 2));
-        add_to_room_bucket(Room_type::cave,     rnd::range(3, 4));
-        add_to_room_bucket(Room_type::chasm,    rnd::range(0, 3));
-        add_to_room_bucket(Room_type::forest,   rnd::range(1, 3));
+        add_to_room_bucket(Room_type::monster,      2);
+        add_to_room_bucket(Room_type::spider,       1);
+        add_to_room_bucket(Room_type::snake_pit,    1);
+        add_to_room_bucket(Room_type::flooded,      1);
+        add_to_room_bucket(Room_type::muddy,        1);
+        add_to_room_bucket(Room_type::cave,         3);
+        add_to_room_bucket(Room_type::chasm,        2);
+        add_to_room_bucket(Room_type::forest,       2);
     }
 
     std::random_shuffle(begin(room_bucket_), end(room_bucket_));
@@ -117,6 +121,9 @@ Room* mk(const Room_type type, const Rect& r)
 
     case Room_type::monster:
         return new Monster_room(r);
+
+    case Room_type::snake_pit:
+        return new Snake_pit_room(r);
 
     case Room_type::muddy:
         return new Muddy_room(r);
@@ -636,6 +643,89 @@ void Spider_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
     (void)door_proposals;
 }
 
+//------------------------------------------------------------------- SNAKE PIT ROOM
+int Snake_pit_room::base_pct_chance_drk() const
+{
+    return 50;
+}
+
+bool Snake_pit_room::is_allowed() const
+{
+    if (r_.min_dim() < 3)
+    {
+        return false;
+    }
+
+    if (map::dlvl <= DLVL_LAST_EARLY_GAME)
+    {
+        return r_.max_dim() <= 4;
+    }
+    else //Is mid or late game
+    {
+        //Allow bigger snake pits
+        return r_.max_dim() <= 6;
+    }
+}
+
+void Snake_pit_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
+{
+    (void)door_proposals;
+
+    const bool IS_EARLY = map::dlvl <= DLVL_LAST_EARLY_GAME;
+    const bool IS_MID   = !IS_EARLY && map::dlvl <= DLVL_LAST_MID_GAME;
+
+    if (IS_EARLY || IS_MID)
+    {
+        if (rnd::fraction(3, 4))
+        {
+            map_gen_utils::mk_pillars_in_room(*this);
+        }
+    }
+    else //Is late game
+    {
+        map_gen_utils::cavify_room(*this);
+    }
+}
+
+void Snake_pit_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
+{
+    (void)door_proposals;
+
+    std::vector<Actor_id> snake_bucket;
+
+    for (size_t i = 0; i < size_t(Actor_id::END); ++i)
+    {
+        const Actor_data_t& d = actor_data::data[i];
+
+        if (d.is_snake)
+        {
+            snake_bucket.push_back(d.id);
+        }
+    }
+
+    const size_t    IDX         = rnd::range(0, snake_bucket.size() - 1);
+    const Actor_id  actor_id    = Actor_id(snake_bucket[IDX]);
+
+    bool blocked[MAP_W][MAP_H];
+
+    map_parse::run(cell_check::Blocks_move_cmn(false),
+                   blocked,
+                   Map_parse_mode::overwrite,
+                   r_);
+
+    //Fill the room with snakes
+    for (int x = r_.p0.x; x <= r_.p1.x; ++x)
+    {
+        for (int y = r_.p0.y; y <= r_.p1.y; ++y)
+        {
+            if (!blocked[x][y] && map::room_map[x][y] == this)
+            {
+                actor_factory::mk(actor_id, P(x, y));
+            }
+        }
+    }
+}
+
 //------------------------------------------------------------------- CRYPT ROOM
 Range Crypt_room::nr_auto_features_allowed() const
 {
@@ -972,7 +1062,7 @@ int Forest_room::base_pct_chance_drk() const
 
 bool Forest_room::is_allowed() const
 {
-    return !is_sub_room_;
+    return !is_sub_room_ && r_.min_dim() >= 5;
 }
 
 void Forest_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
@@ -1240,8 +1330,6 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
 
             if (flood[x][y] > 0 || p == origin)
             {
-//        Liquid_deep* const liquid  = new Liquid_deep(p);
-//        liquid->type_             = Liquid_type::water;
                 map::put(new Chasm(p));
                 map::room_map[x][y] = this;
                 r_.p0.x = std::min(r_.p0.x, x);
@@ -1486,8 +1574,6 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
                 {
                     if (map::room_map[BRIDGE_C][y] == this)
                     {
-//            auto* const bridge = new Bridge(P(BRIDGE_C, y));
-//            bridge->set_dir(ver);
                         auto* const floor = new Floor({BRIDGE_C, y});
                         floor->type_ = Floor_type::cmn;
                         map::put(floor);
@@ -1500,8 +1586,6 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
                 {
                     if (map::room_map[x][BRIDGE_C] == this)
                     {
-//            auto* const bridge = new Bridge(P(x, BRIDGE_C));
-//            bridge->set_dir(hor);
                         auto* const floor = new Floor({x, BRIDGE_C});
                         floor->type_ = Floor_type::cmn;
                         map::put(floor);
@@ -1545,11 +1629,8 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
                     valid_room_entries[x][y] &&
                     find(begin(c_built), end(c_built), x) == end(c_built))
                 {
-//          if (rnd::one_in(3))
-//          {
                     map::put(new Floor(P(x, y)));
                     map::room_map[x][y] = this;
-//          }
                 }
             }
         }

@@ -1466,6 +1466,28 @@ bool mk_std_lvl()
 
     if (is_map_valid)
     {
+        //Occasionally place some snake emerge events
+        const int NR_SNAKE_EMERGE_EVENTS_TO_TRY =
+            rnd::one_in(20) ? 2 :
+            rnd::one_in(4)  ? 1 : 0;
+
+        for (int i = 0; i < NR_SNAKE_EMERGE_EVENTS_TO_TRY; ++i)
+        {
+            Event_snake_emerge* const event = new Event_snake_emerge();
+
+            if (event->try_find_p())
+            {
+                game_time::add_mob(event);
+            }
+            else
+            {
+                delete event;
+            }
+        }
+    }
+
+    if (is_map_valid)
+    {
         const int LAST_LVL_TO_REVEAL_STAIRS_PATH = 9;
 
         if (map::dlvl <= LAST_LVL_TO_REVEAL_STAIRS_PATH)

@@ -319,6 +319,11 @@ bool Player::can_see_actor(const Actor& other) const
         return true;
     }
 
+    if (init::is_cheat_vision_enabled)
+    {
+        return true;
+    }
+
     const Cell& cell = map::cells[other.pos.x][other.pos.y];
 
     //Dead actors are seen if the cell is seen
@@ -1203,6 +1208,8 @@ void Player::hear_sound(const Snd& snd,
                         const Dir dir_to_origin,
                         const int PERCENT_AUDIBLE_DISTANCE)
 {
+    (void)IS_ORIGIN_SEEN_BY_PLAYER;
+
     const Sfx_id        sfx         = snd.sfx();
     const std::string&  msg         = snd.msg();
     const bool          HAS_SND_MSG = !msg.empty() && msg != " ";
@@ -1213,12 +1220,7 @@ void Player::hear_sound(const Snd& snd,
     }
 
     //Play audio after message to ensure sync between audio and animation.
-
-    //If origin is hidden, we only play the sound if there is a message.
-    if (HAS_SND_MSG || IS_ORIGIN_SEEN_BY_PLAYER)
-    {
-        audio::play(sfx, dir_to_origin, PERCENT_AUDIBLE_DISTANCE);
-    }
+    audio::play(sfx, dir_to_origin, PERCENT_AUDIBLE_DISTANCE);
 
     if (HAS_SND_MSG)
     {
