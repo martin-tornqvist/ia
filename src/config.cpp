@@ -116,9 +116,9 @@ void set_default_variables()
     is_intro_lvl_skipped_           = false;
     is_ranged_wpn_meleee_prompt_    = true;
     is_ranged_wpn_auto_reload_      = false;
-    delay_projectile_draw_          = 50;
-    delay_shotgun_                  = 120;
-    delay_explosion_                = 300;
+    delay_projectile_draw_          = 25;
+    delay_shotgun_                  = 75;
+    delay_explosion_                = 225;
     TRACE_FUNC_END;
 }
 

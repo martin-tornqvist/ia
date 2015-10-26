@@ -251,11 +251,10 @@ void Mon::on_actor_turn()
 
     utils::set_constr_in_range(0, erratic_move_pct, 95);
 
-    //Occasionally move erratically - *unless* this monster uses a lair and is at their lair pos
+    //Occasionally move erratically
     if (
         data_->ai[size_t(Ai_id::moves_to_random_when_unaware)] &&
-        rnd::percent(erratic_move_pct) &&
-        !(data_->ai[size_t(Ai_id::moves_to_lair)] && pos == lair_pos_))
+        rnd::percent(erratic_move_pct))
     {
         if (ai::action::move_to_random_adj_cell(*this))
         {
@@ -327,10 +326,8 @@ void Mon::on_actor_turn()
         }
     }
 
-    //When unaware move randomly - *unless* this monster uses a lair and is at their lair pos
-    if (
-        data_->ai[size_t(Ai_id::moves_to_random_when_unaware)] &&
-        !(data_->ai[size_t(Ai_id::moves_to_lair)] && pos == lair_pos_))
+    //When unaware, move randomly
+    if (data_->ai[size_t(Ai_id::moves_to_random_when_unaware)])
     {
         if (ai::action::move_to_random_adj_cell(*this))
         {

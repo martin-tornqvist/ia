@@ -405,16 +405,16 @@ void init_data_list()
     d.ai[int(Ai_id::moves_to_tgt_when_los)] = true;
     d.ai[int(Ai_id::moves_to_lair)] = false;
     d.ai[int(Ai_id::moves_to_leader)] = false;
-    d.speed = Actor_speed::fast;
+    d.speed = Actor_speed::fastest;
     d.ranged_cooldown_turns = 0;
     d.spell_cooldown_turns = 2;
     d.glyph = 'z';
     d.color = clr_magenta;
     d.tile = Tile_id::crawling_hand;
-    d.hp = 22;
+    d.hp = 25;
     d.spi = 25;
-    d.dmg_melee = 6;
-    d.ability_vals.set_val(Ability_id::melee, 60);
+    d.dmg_melee = 4;
+    d.ability_vals.set_val(Ability_id::melee, 80);
     d.ability_vals.set_val(Ability_id::stealth, 90);
     d.nr_left_allowed_to_spawn = 1;
     d.is_unique = true;
@@ -985,7 +985,7 @@ void init_data_list()
     d.hp = 7;
     d.dmg_melee = 2;
     d.ability_vals.set_val(Ability_id::melee, 40);
-    d.ability_vals.set_val(Ability_id::dodge_att, 20);
+    d.ability_vals.set_val(Ability_id::dodge_att, 12);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
     d.natural_props[int(Prop_id::infravis)] = true;
@@ -1031,7 +1031,7 @@ void init_data_list()
     d.ranged_cooldown_turns = 150;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::ranged, 85);
-    d.ability_vals.set_val(Ability_id::dodge_att, 20);
+    d.ability_vals.set_val(Ability_id::dodge_att, 12);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
     d.natural_props[int(Prop_id::infravis)] = true;
@@ -1074,7 +1074,7 @@ void init_data_list()
     d.hp = 7;
     d.dmg_melee = 2;
     d.ability_vals.set_val(Ability_id::melee, 40);
-    d.ability_vals.set_val(Ability_id::dodge_att, 20);
+    d.ability_vals.set_val(Ability_id::dodge_att, 12);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
     d.natural_props[int(Prop_id::infravis)] = true;

@@ -15,10 +15,12 @@ namespace audio
 namespace
 {
 
-std::vector<Mix_Chunk*> audio_chunks;
+std::vector<Mix_Chunk*> audio_chunks_;
 
-int cur_channel_     = 0;
-int time_at_last_amb_  = -1;
+size_t ms_at_sfx_played_[size_t(Sfx_id::END)];
+
+int cur_channel_            = 0;
+int seconds_at_amb_played_  = -1;
 
 void load_audio_file(const Sfx_id sfx, const std::string& filename)
 {
@@ -30,9 +32,9 @@ void load_audio_file(const Sfx_id sfx, const std::string& filename)
 
     render::update_screen();
 
-    audio_chunks[int(sfx)] = Mix_LoadWAV(file_rel_path.c_str());
+    audio_chunks_[size_t(sfx)] = Mix_LoadWAV(file_rel_path.c_str());
 
-    if (!audio_chunks[int(sfx)])
+    if (!audio_chunks_[size_t(sfx)])
     {
         TRACE << "Problem loading audio file with name: "   << filename         << std::endl
               << "Mix_GetError(): "                         << Mix_GetError()   << std::endl;
@@ -84,7 +86,7 @@ void init()
 
     if (config::is_audio_enabled())
     {
-        audio_chunks.resize(int(Sfx_id::END));
+        audio_chunks_.resize(size_t(Sfx_id::END));
 
         //Monster sounds
         load_audio_file(Sfx_id::dog_snarl,              "sfx_dog_snarl.ogg");
@@ -169,41 +171,51 @@ void cleanup()
 {
     TRACE_FUNC_BEGIN;
 
-    for (Mix_Chunk* chunk : audio_chunks)
+    for (size_t i = 0; i < size_t(Sfx_id::END); ++i)
+    {
+        ms_at_sfx_played_[i] = 0;
+    }
+
+    for (Mix_Chunk* chunk : audio_chunks_)
     {
         Mix_FreeChunk(chunk);
     }
 
-    audio_chunks.clear();
+    audio_chunks_.clear();
 
-    cur_channel_        =  0;
-    time_at_last_amb_   = -1;
+    cur_channel_            =  0;
+    seconds_at_amb_played_  = -1;
 
     TRACE_FUNC_END;
 }
 
-int play(const Sfx_id sfx, const int VOL_PERCENT_TOT, const int VOL_PERCENT_L)
+int play(const Sfx_id sfx, const int VOL_PCT_TOT, const int VOL_PCT_L)
 {
     if (
-        !audio_chunks.empty()    &&
-        sfx != Sfx_id::AMB_START &&
-        sfx != Sfx_id::AMB_END   &&
-        sfx != Sfx_id::END       &&
+        !audio_chunks_.empty()      &&
+        sfx != Sfx_id::AMB_START    &&
+        sfx != Sfx_id::AMB_END      &&
+        sfx != Sfx_id::END          &&
         !config::is_bot_playing())
     {
-        const int FREE_CHANNEL = free_channel(cur_channel_);
+        const int       FREE_CHANNEL    = free_channel(cur_channel_);
+        const size_t    MS_NOW          = SDL_GetTicks();
+        size_t&         ms_last         = ms_at_sfx_played_[size_t(sfx)];
+        const size_t    MS_DIFF         = MS_NOW - ms_last;
 
-        if (FREE_CHANNEL >= 0)
+        if (FREE_CHANNEL >= 0 && MS_DIFF >= MIN_MS_BETWEEN_SAME_SFX)
         {
             cur_channel_ = FREE_CHANNEL;
 
-            const int VOL_TOT   = (255 * VOL_PERCENT_TOT)   / 100;
-            const int VOL_L     = (VOL_PERCENT_L * VOL_TOT) / 100;
+            const int VOL_TOT   = (255 * VOL_PCT_TOT)   / 100;
+            const int VOL_L     = (VOL_PCT_L * VOL_TOT) / 100;
             const int VOL_R     = VOL_TOT - VOL_L;
 
             Mix_SetPanning(cur_channel_, VOL_L, VOL_R);
 
-            Mix_PlayChannel(cur_channel_, audio_chunks[int(sfx)], 0);
+            Mix_PlayChannel(cur_channel_, audio_chunks_[size_t(sfx)], 0);
+
+            ms_last = SDL_GetTicks();
 
             return cur_channel_;
         }
@@ -212,64 +224,86 @@ int play(const Sfx_id sfx, const int VOL_PERCENT_TOT, const int VOL_PERCENT_L)
     return -1;
 }
 
-void play(const Sfx_id sfx, const Dir dir, const int DISTANCE_PERCENT)
+void play(const Sfx_id sfx, const Dir dir, const int DISTANCE_PCT)
 {
-    if (!audio_chunks.empty() && dir != Dir::END)
+    if (!audio_chunks_.empty() && dir != Dir::END)
     {
         //The distance value is scaled down to avoid too much volume degradation
-        const int VOL_PERCENT_TOT = 100 - ((DISTANCE_PERCENT * 2) / 3);
+        const int VOL_PCT_TOT = 100 - ((DISTANCE_PCT * 2) / 3);
 
-        int vol_percent_l = 0;
+        int vol_pct_l = 0;
 
         switch (dir)
         {
-        case Dir::left:       vol_percent_l = 85;  break;
+        case Dir::left:
+            vol_pct_l = 85;
+            break;
 
-        case Dir::up_left:     vol_percent_l = 75;  break;
+        case Dir::up_left:
+            vol_pct_l = 75;
+            break;
 
-        case Dir::down_left:   vol_percent_l = 75;  break;
+        case Dir::down_left:
+            vol_pct_l = 75;
+            break;
 
-        case Dir::up:         vol_percent_l = 50;  break;
+        case Dir::up:
+            vol_pct_l = 50;
+            break;
 
-        case Dir::center:     vol_percent_l = 50;  break;
+        case Dir::center:
+            vol_pct_l = 50;
+            break;
 
-        case Dir::down:       vol_percent_l = 50;  break;
+        case Dir::down:
+            vol_pct_l = 50;
+            break;
 
-        case Dir::up_right:    vol_percent_l = 25;  break;
+        case Dir::up_right:
+            vol_pct_l = 25;
+            break;
 
-        case Dir::down_right:  vol_percent_l = 25;  break;
+        case Dir::down_right:
+            vol_pct_l = 25;
+            break;
 
-        case Dir::right:      vol_percent_l = 15;  break;
+        case Dir::right:
+            vol_pct_l = 15;
+            break;
 
-        case Dir::END:        vol_percent_l = 50;  break;
+        case Dir::END:
+            vol_pct_l = 50;
+            break;
         }
 
-        play(sfx, VOL_PERCENT_TOT, vol_percent_l);
+        play(sfx, VOL_PCT_TOT, vol_pct_l);
     }
 }
 
 void try_play_amb(const int ONE_IN_N_CHANCE_TO_PLAY)
 {
-    if (!audio_chunks.empty() && rnd::one_in(ONE_IN_N_CHANCE_TO_PLAY))
+    if (!audio_chunks_.empty() && rnd::one_in(ONE_IN_N_CHANCE_TO_PLAY))
     {
-        const int TIME_NOW                  = time(nullptr);
+        const int SECONDS_NOW               = time(nullptr);
         const int TIME_REQ_BETWEEN_AMB_SFX  = 20;
 
-        if ((TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX) > time_at_last_amb_)
+        if ((SECONDS_NOW - TIME_REQ_BETWEEN_AMB_SFX) > seconds_at_amb_played_)
         {
-            time_at_last_amb_          = TIME_NOW;
-            const int   VOL_PERCENT = rnd::one_in(5) ? rnd::range(50,  99) : 100;
-            const int   FIRST_INT   = int(Sfx_id::AMB_START) + 1;
-            const int   LAST_INT    = int(Sfx_id::AMB_END)   - 1;
-            const Sfx_id sfx         = Sfx_id(rnd::range(FIRST_INT, LAST_INT));
-            play(sfx , VOL_PERCENT);
+            seconds_at_amb_played_ = SECONDS_NOW;
+
+            const int       VOL_PCT     = rnd::one_in(5) ? rnd::range(50,  99) : 100;
+            const int       FIRST_INT   = int(Sfx_id::AMB_START) + 1;
+            const int       LAST_INT    = int(Sfx_id::AMB_END)   - 1;
+            const Sfx_id    sfx         = Sfx_id(rnd::range(FIRST_INT, LAST_INT));
+
+            play(sfx , VOL_PCT);
         }
     }
 }
 
 void fade_out_channel(const int CHANNEL_NR)
 {
-    if (!audio_chunks.empty())
+    if (!audio_chunks_.empty())
     {
         Mix_FadeOutChannel(CHANNEL_NR, 5000);
     }

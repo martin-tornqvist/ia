@@ -132,7 +132,7 @@ int main(int argc, char* argv[])
                     {
                         if (actor->is_player())
                         {
-                            sdl_wrapper::sleep(DELAY_PLAYER_UNABLE_TO_ACT);
+                            sdl_wrapper::sleep(MS_DELAY_PLAYER_UNABLE_TO_ACT);
                         }
 
                         game_time::tick();

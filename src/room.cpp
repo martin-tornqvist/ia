@@ -646,7 +646,7 @@ void Spider_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
 //------------------------------------------------------------------- SNAKE PIT ROOM
 int Snake_pit_room::base_pct_chance_drk() const
 {
-    return 50;
+    return 75;
 }
 
 bool Snake_pit_room::is_allowed() const
@@ -658,11 +658,16 @@ bool Snake_pit_room::is_allowed() const
 
     if (map::dlvl <= DLVL_LAST_EARLY_GAME)
     {
-        return r_.max_dim() <= 4;
+        return r_.max_dim() <= 3;
     }
-    else //Is mid or late game
+    if (map::dlvl <= DLVL_LAST_MID_GAME)
     {
         //Allow bigger snake pits
+        return r_.max_dim() <= 4;
+    }
+    else  //Is late game
+    {
+        //Allow huge snake pits
         return r_.max_dim() <= 6;
     }
 }
@@ -697,7 +702,9 @@ void Snake_pit_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
     {
         const Actor_data_t& d = actor_data::data[i];
 
-        if (d.is_snake)
+        //NOTE: We don't allow Spitting Cobras in snake pits, because it's very tedious to fight
+        //swarms of them (attack, get blinded, back away, repeat...)
+        if (d.is_snake && d.id != Actor_id::spitting_cobra)
         {
             snake_bucket.push_back(d.id);
         }
@@ -720,7 +727,15 @@ void Snake_pit_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
         {
             if (!blocked[x][y] && map::room_map[x][y] == this)
             {
-                actor_factory::mk(actor_id, P(x, y));
+                const P p(x, y);
+
+                actor_factory::mk(actor_id, p);
+
+                //Put rubble on every "snake position", to make the room more pit like
+                if (map::cells[x][y].rigid->can_have_rigid())
+                {
+                    map::put(new Rubble_low(p));
+                }
             }
         }
     }

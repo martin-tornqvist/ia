@@ -1226,7 +1226,7 @@ void init_data_list()
     d.id = Item_id::green_spider_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::green_spider);
-    d.melee.prop_applied = new Prop_blind(Prop_turns::specific, 4);
+    d.melee.prop_applied = new Prop_blind(Prop_turns::specific, 3);
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
@@ -1276,7 +1276,7 @@ void init_data_list()
     d.ranged.snd_msg = "I hear hissing and spitting.";
     d.ranged.projectile_clr = clr_green_lgt;
     d.ranged.dmg_type = Dmg_type::physical;
-    d.ranged.prop_applied = new Prop_blind(Prop_turns::specific, 10);
+    d.ranged.prop_applied = new Prop_blind(Prop_turns::specific, 7);
     d.ranged.projectile_glyph = '*';
     data[size_t(d.id)] = d;
 

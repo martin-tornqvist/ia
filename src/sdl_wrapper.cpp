@@ -9,8 +9,6 @@
 #include "cmn_data.hpp"
 #include "config.hpp"
 
-using namespace std;
-
 namespace sdl_wrapper
 {
 
@@ -29,13 +27,13 @@ void init()
 
     if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
     {
-        TRACE << "Failed to init SDL" << endl;
+        TRACE << "Failed to init SDL" << std::endl;
         assert(false);
     }
 
     if (IMG_Init(IMG_INIT_PNG) == -1)
     {
-        TRACE << "Failed to init SDL_image" << endl;
+        TRACE << "Failed to init SDL_image" << std::endl;
         assert(false);
     }
 
@@ -46,7 +44,7 @@ void init()
 
     if (Mix_OpenAudio(AUDIO_FREQ, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS) == -1)
     {
-        TRACE << "Failed to init SDL_mixer" << endl;
+        TRACE << "Failed to init SDL_mixer" << std::endl;
         assert(false);
     }
 
@@ -72,11 +70,14 @@ void sleep(const Uint32 DURATION)
         {
             SDL_Delay(DURATION);
         }
-        else
+        else //Duration longer than 1 ms
         {
             const Uint32 WAIT_UNTIL = SDL_GetTicks() + DURATION;
 
-            while (SDL_GetTicks() < WAIT_UNTIL) {SDL_PumpEvents();}
+            while (SDL_GetTicks() < WAIT_UNTIL)
+            {
+                SDL_PumpEvents();
+            }
         }
     }
 }
