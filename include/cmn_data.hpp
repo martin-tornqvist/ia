@@ -30,7 +30,7 @@ const int DESCR_X0            = MAP_W - 31;
 const int PLAYER_START_X      = 10;
 const int PLAYER_START_Y      = MAP_H_HALF;
 
-const int PLAYER_MAX_CLVL     = 10;
+const int PLAYER_MAX_CLVL     = 12;
 
 const int DLVL_LAST_EARLY_GAME  = 9;                            //Early = DLVL 1  - 9
 const int DLVL_FIRST_MID_GAME   = DLVL_LAST_EARLY_GAME + 1;     //
