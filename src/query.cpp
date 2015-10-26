@@ -150,7 +150,7 @@ int number(const P& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS,
     return -1;
 }
 
-void wait_forConfirm()
+void wait_for_confirm()
 {
     if (is_inited_ && !config::is_bot_playing())
     {

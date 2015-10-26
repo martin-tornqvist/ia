@@ -29,22 +29,25 @@
 #define TRACE_FUNC_BEGIN_VERBOSE  if (1) ; else std::cerr
 #define TRACE_FUNC_END_VERBOSE    if (1) ; else std::cerr
 
-#else
+#else //NDEBUG not defined
 
 #define TRACE if (TRACE_LVL < 1) ; else std::cerr \
   << std::endl \
+  << "T:" << to_str(game_time::turn()) << " " \
   << __FILE__ << ", " \
   << __LINE__ << ", " \
   << __func__ << "():" << std::endl
 
 #define TRACE_FUNC_BEGIN if (TRACE_LVL < 1) ; else std::cerr \
   << std::endl \
+  << "T:" << to_str(game_time::turn()) << " " \
   << __FILE__ << ", " \
   << __LINE__ << ", " \
   << __func__ << "()..." << std::endl
 
 #define TRACE_FUNC_END if (TRACE_LVL < 1) ; else std::cerr \
   << std::endl \
+  << "T:" << to_str(game_time::turn()) << " " \
   << __FILE__ << ", " \
   << __LINE__ << ", " \
   << __func__ << "() [DONE]" << std::endl
@@ -53,7 +56,7 @@
 #define TRACE_FUNC_BEGIN_VERBOSE  if (TRACE_LVL < 2) ; else TRACE_FUNC_BEGIN
 #define TRACE_FUNC_END_VERBOSE    if (TRACE_LVL < 2) ; else TRACE_FUNC_END
 
-#endif
+#endif //NDEBUG
 
 namespace init
 {

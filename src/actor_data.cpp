@@ -10,6 +10,7 @@
 #include "converters.hpp"
 #include "item.hpp"
 #include "save_handling.hpp"
+#include "game_time.hpp"
 
 void Actor_data_t::reset()
 {
@@ -1513,7 +1514,7 @@ void init_data_list()
     d.spi = 6;
     d.dmg_melee = 2;
     d.ability_vals.set_val(Ability_id::melee, 40);
-    d.ability_vals.set_val(Ability_id::dodge_att, 75);
+    d.ability_vals.set_val(Ability_id::dodge_att, 70);
     d.natural_props[int(Prop_id::flying)] = true;
     d.natural_props[int(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 4;

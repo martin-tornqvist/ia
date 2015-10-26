@@ -244,7 +244,7 @@ void win_game()
 
     render::update_screen();
 
-    query::wait_forConfirm();
+    query::wait_for_confirm();
 }
 
 void on_mon_killed(Actor& actor)

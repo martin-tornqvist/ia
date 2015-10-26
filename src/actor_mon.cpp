@@ -1371,7 +1371,10 @@ bool Khephren::on_actor_turn_hook()
 
         const Rect fov_rect = fov::get_fov_rect(pos);
 
-        map_parse::run(cell_check::Blocks_los(), blocked, Map_parse_mode::overwrite, fov_rect);
+        map_parse::run(cell_check::Blocks_los(),
+                       blocked,
+                       Map_parse_mode::overwrite,
+                       fov_rect);
 
         if (can_see_actor(*(map::player), blocked))
         {
@@ -1727,8 +1730,8 @@ void Wolf::mk_start_items()
 bool Worm_mass::on_actor_turn_hook()
 {
     if (
-        is_alive()                                       &&
-        aware_counter_ > 0                               &&
+        is_alive()                                      &&
+        aware_counter_ > 0                              &&
         game_time::actors.size() < MAX_NR_ACTORS_ON_MAP &&
         rnd::one_in(spawn_new_one_in_n))
     {
@@ -1773,8 +1776,8 @@ void Worm_mass::mk_start_items()
 bool Giant_locust::on_actor_turn_hook()
 {
     if (
-        is_alive()                                       &&
-        aware_counter_ > 0                               &&
+        is_alive()                                      &&
+        aware_counter_ > 0                              &&
         game_time::actors.size() < MAX_NR_ACTORS_ON_MAP &&
         rnd::one_in(spawn_new_one_in_n))
     {
@@ -2170,7 +2173,7 @@ bool Floating_head::on_actor_turn_hook()
 bool Mold::on_actor_turn_hook()
 {
     if (
-        is_alive()                                       &&
+        is_alive()                                      &&
         game_time::actors.size() < MAX_NR_ACTORS_ON_MAP &&
         rnd::one_in(spawn_new_one_in_n))
     {

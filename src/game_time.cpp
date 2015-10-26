@@ -273,7 +273,9 @@ void tick(const bool IS_FREE_TURN)
     if (actor == map::player)
     {
         map::player->update_fov();
+
         render::draw_map_and_interface();
+
         map::cpy_render_array_to_visual_memory();
 
         //Run new turn events on all player items

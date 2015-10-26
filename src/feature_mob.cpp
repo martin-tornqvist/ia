@@ -167,7 +167,9 @@ void Lit_flare::add_light(bool light[MAP_W][MAP_H]) const
 
     bool hard_blocked[MAP_W][MAP_H];
 
-    map_parse::run(cell_check::Blocks_los(), hard_blocked, Map_parse_mode::overwrite,
+    map_parse::run(cell_check::Blocks_los(),
+                   hard_blocked,
+                   Map_parse_mode::overwrite,
                    Rect(p0, p1));
 
     Los_result fov[MAP_W][MAP_H];

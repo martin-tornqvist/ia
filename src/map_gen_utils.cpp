@@ -10,6 +10,7 @@
 #include "utils.hpp"
 #include "map_templates.hpp"
 #include "feature_rigid.hpp"
+#include "game_time.hpp"
 
 namespace map_gen
 {

@@ -142,7 +142,10 @@ void Actor::seen_foes(std::vector<Actor*>& out)
                       std::min(MAP_W - 1, pos.x + FOV_STD_RADI_INT),
                       std::min(MAP_H - 1, pos.y + FOV_STD_RADI_INT));
 
-        map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite, los_rect);
+        map_parse::run(cell_check::Blocks_los(),
+                       blocked_los,
+                       Map_parse_mode::overwrite,
+                       los_rect);
     }
 
     for (Actor* actor : game_time::actors)
@@ -1004,7 +1007,10 @@ void Actor::add_light(bool light_map[MAP_W][MAP_H]) const
 
         const Rect fov_lmt = fov::get_fov_rect(pos);
 
-        map_parse::run(cell_check::Blocks_los(), hard_blocked, Map_parse_mode::overwrite, fov_lmt);
+        map_parse::run(cell_check::Blocks_los(),
+                       hard_blocked,
+                       Map_parse_mode::overwrite,
+                       fov_lmt);
 
         Los_result fov[MAP_W][MAP_H];
 

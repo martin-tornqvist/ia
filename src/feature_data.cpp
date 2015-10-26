@@ -9,6 +9,7 @@
 #include "feature_trap.hpp"
 #include "feature_event.hpp"
 #include "feature_door.hpp"
+#include "game_time.hpp"
 
 //--------------------------------------------------------- FEATURE ROOM SPAWN RULES
 Feature_room_spawn_rules::Feature_room_spawn_rules() :

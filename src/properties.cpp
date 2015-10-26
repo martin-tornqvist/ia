@@ -2125,29 +2125,34 @@ void Prop_confused::affect_move_dir(const P& actor_pos, Dir& dir)
     if (dir != Dir::center)
     {
         bool blocked[MAP_W][MAP_H];
+
+        const Rect area_check_blocked(actor_pos - P(1, 1), actor_pos + P(1, 1));
+
         map_parse::run(cell_check::Blocks_actor(*owning_actor_, true),
-                       blocked);
+                       blocked,
+                       Map_parse_mode::overwrite,
+                       area_check_blocked);
 
         if (rnd::one_in(8))
         {
-            int tries_left = 100;
+            std::vector<P> d_bucket;
 
-            while (tries_left != 0)
+            for (const P& d : dir_utils::dir_list)
             {
-                //-1 to 1 for x and y
-                const P delta(rnd::range(-1, 1), rnd::range(-1, 1));
+                const P tgt_p(actor_pos + d);
 
-                if (delta.x != 0 || delta.y != 0)
+                if (!blocked[tgt_p.x][tgt_p.y])
                 {
-                    const P c = actor_pos + delta;
-
-                    if (!blocked[c.x][c.y])
-                    {
-                        dir = dir_utils::dir(delta);
-                    }
+                    d_bucket.push_back(d);
                 }
+            }
 
-                tries_left--;
+            if (!d_bucket.empty())
+            {
+                const size_t    IDX = rnd::range(0, d_bucket.size() - 1);
+                const P&        d   = d_bucket[IDX];
+
+                dir = dir_utils::dir(d);
             }
         }
     }
@@ -2206,9 +2211,12 @@ void Prop_frenzied::affect_move_dir(const P& actor_pos, Dir& dir)
         const P& closest_mon_pos = seen_foes_cells[0];
 
         bool blocked[MAP_W][MAP_H];
-        map_parse::run(cell_check::Blocks_actor(*owning_actor_, false), blocked);
+
+        map_parse::run(cell_check::Blocks_actor(*owning_actor_, false),
+                       blocked);
 
         std::vector<P> line;
+
         line_calc::calc_new_line(actor_pos, closest_mon_pos, true, 999, false, line);
 
         if (line.size() > 1)

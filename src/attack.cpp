@@ -258,10 +258,10 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
         }
         else //No actor aimed at
         {
-            bool blocked[MAP_W][MAP_H];
-            map_parse::run(cell_check::Blocks_projectiles(), blocked);
+            const bool IS_CELL_BLOCKED =
+                map_parse::cell(cell_check::Blocks_projectiles(), cur_pos);
 
-            intended_aim_lvl = blocked[cur_pos.x][cur_pos.y] ?
+            intended_aim_lvl = IS_CELL_BLOCKED ?
                                Actor_size::humanoid : Actor_size::floor;
         }
     }
@@ -373,11 +373,12 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
         {
             intended_aim_lvl = actor_aimed_at->data().actor_size;
         }
-        else
+        else //Not aiming at actor
         {
-            bool blocked[MAP_W][MAP_H];
-            map_parse::run(cell_check::Blocks_projectiles(), blocked);
-            intended_aim_lvl = blocked[cur_pos.x][cur_pos.y] ?
+            const bool IS_CELL_BLOCKED =
+                map_parse::cell(cell_check::Blocks_projectiles(), cur_pos);
+
+            intended_aim_lvl = IS_CELL_BLOCKED ?
                                Actor_size::humanoid : Actor_size::floor;
         }
     }
@@ -1478,18 +1479,18 @@ void melee(Actor* const attacker,
 
         if (defender.is_alive())
         {
-          defender.prop_handler().try_add_prop_from_att(wpn, true);
+            defender.prop_handler().try_add_prop_from_att(wpn, true);
 
-          if (wpn.data().melee.knocks_back)
-          {
-              knock_back::try_knock_back(defender, attacker_origin, false);
-          }
+            if (wpn.data().melee.knocks_back)
+            {
+                knock_back::try_knock_back(defender, attacker_origin, false);
+            }
         }
         else //Defender was killed
         {
-          //NOTE: Destroyed actors are purged on standard turns, so it's no problem calling this
-          //function even if defender was destroyed (we haven't "ticked" game time yet)
-          wpn.on_melee_kill(defender);
+            //NOTE: Destroyed actors are purged on standard turns, so it's no problem calling this
+            //function even if defender was destroyed (we haven't "ticked" game time yet)
+            wpn.on_melee_kill(defender);
         }
     }
 
@@ -1504,106 +1505,108 @@ void melee(Actor* const attacker,
         {
         //Exhausted (weakened)
         case 1:
-            {
-                Prop* prop = new Prop_weakened(Prop_turns::specific, rnd::range(6, 12));
+        {
+            Prop* prop = new Prop_weakened(Prop_turns::specific, rnd::range(6, 12));
 
-                player.prop_handler().try_add_prop(prop, Prop_src::intr, false, Verbosity::silent);
+            player.prop_handler().try_add_prop(prop, Prop_src::intr, false, Verbosity::silent);
 
-                msg_log::add("I am exhausted.", clr_msg_note, true, More_prompt_on_msg::yes);
-            }
-            break;
+            msg_log::add("I am exhausted.", clr_msg_note, true, More_prompt_on_msg::yes);
+        }
+        break;
 
         //Off-balance
         case 2:
-            {
-                msg_log::add("I am off-balance.", clr_msg_note, true, More_prompt_on_msg::yes);
+        {
+            msg_log::add("I am off-balance.", clr_msg_note, true, More_prompt_on_msg::yes);
 
-                Prop* prop = new Prop_paralyzed(Prop_turns::specific, rnd::range(1, 2));
+            Prop* prop = new Prop_paralyzed(Prop_turns::specific, rnd::range(1, 2));
 
-                player.prop_handler().try_add_prop(prop, Prop_src::intr, false, Verbosity::silent);
-            }
-            break;
+            player.prop_handler().try_add_prop(prop, Prop_src::intr, false, Verbosity::silent);
+        }
+        break;
 
         //Drop weaon
         case 3:
+        {
+            //Only drop weapon if attacking with wielded weapon (and not e.g. a Kick)
+            if (player.inv().item_in_slot(Slot_id::wpn) == &wpn)
             {
-                //Only drop weapon if attacking with wielded weapon (and not e.g. a Kick)
-                if (player.inv().item_in_slot(Slot_id::wpn) == &wpn)
+                Item* item = player.inv().remove_from_slot(Slot_id::wpn);
+
+                if (item)
                 {
-                    Item* item = player.inv().remove_from_slot(Slot_id::wpn);
+                    std::string item_name = item->name(Item_ref_type::plain,
+                                                       Item_ref_inf::none);
 
-                    if (item)
+                    bool blocked[MAP_W][MAP_H];
+
+                    const P fov_p = player.pos;
+
+                    Rect fov_rect = fov::get_fov_rect(fov_p);
+
+                    map_parse::run(cell_check::Blocks_move_cmn(false),
+                                   blocked,
+                                   Map_parse_mode::overwrite,
+                                   fov_rect);
+
+                    Los_result fov_result[MAP_W][MAP_H];
+
+                    fov::run(fov_p, blocked, fov_result);
+
+                    std::vector<P> p_bucket;
+
+                    for (int x = fov_rect.p0.x; x <= fov_rect.p1.x; ++x)
                     {
-                        std::string item_name = item->name(Item_ref_type::plain,
-                                                           Item_ref_inf::none);
-
-                        bool blocked[MAP_W][MAP_H];
-
-                        const P fov_p = player.pos;
-
-                        Rect fov_rect = fov::get_fov_rect(fov_p);
-
-                        map_parse::run(cell_check::Blocks_move_cmn(false), blocked,
-                                       Map_parse_mode::overwrite, fov_rect);
-
-                        Los_result fov_result[MAP_W][MAP_H];
-
-                        fov::run(fov_p, blocked, fov_result);
-
-                        std::vector<P> p_bucket;
-
-                        for (int x = fov_rect.p0.x; x <= fov_rect.p1.x; ++x)
+                        for (int y = fov_rect.p0.y; y <= fov_rect.p1.y; ++y)
                         {
-                            for (int y = fov_rect.p0.y; y <= fov_rect.p1.y; ++y)
+                            if (!fov_result[x][y].is_blocked_hard)
                             {
-                                if (!fov_result[x][y].is_blocked_hard)
-                                {
-                                    p_bucket.push_back(P(x, y));
-                                }
+                                p_bucket.push_back(P(x, y));
                             }
                         }
-
-                        P item_p(map::player->pos);
-
-                        if (!p_bucket.empty())
-                        {
-                            const int IDX = size_t(rnd::range(0, p_bucket.size() - 1));
-
-                            item_p = p_bucket[IDX];
-                        }
-
-                        msg_log::add("The " + item_name + " flies from my hands!", clr_msg_note,
-                                     true, More_prompt_on_msg::yes);
-
-                        item_drop::drop_item_on_map(item_p, *item);
                     }
+
+                    P item_p(map::player->pos);
+
+                    if (!p_bucket.empty())
+                    {
+                        const int IDX = size_t(rnd::range(0, p_bucket.size() - 1));
+
+                        item_p = p_bucket[IDX];
+                    }
+
+                    msg_log::add("The " + item_name + " flies from my hands!", clr_msg_note,
+                                 true, More_prompt_on_msg::yes);
+
+                    item_drop::drop_item_on_map(item_p, *item);
                 }
             }
-            break;
+        }
+        break;
 
         //Weapon breaks?
         case 4:
+        {
+            //Only break weapon if:
+            //* Player is Cursed, and
+            //* Player is attacking with wielded weapon (and not e.g. a Kick)
+            if (
+                player.has_prop(Prop_id::cursed) &&
+                player.inv().item_in_slot(Slot_id::wpn) == &wpn)
             {
-                //Only break weapon if:
-                //* Player is Cursed, and
-                //* Player is attacking with wielded weapon (and not e.g. a Kick)
-                if (
-                    player.has_prop(Prop_id::cursed) &&
-                    player.inv().item_in_slot(Slot_id::wpn) == &wpn)
+                Item* item = player.inv().remove_from_slot(Slot_id::wpn);
+
+                if (item)
                 {
-                    Item* item = player.inv().remove_from_slot(Slot_id::wpn);
+                    std::string item_name = item->name(Item_ref_type::plain, Item_ref_inf::none);
 
-                    if (item)
-                    {
-                        std::string item_name = item->name(Item_ref_type::plain, Item_ref_inf::none);
-
-                        msg_log::add("My " + item_name + " breaks!", clr_msg_note, true,
-                                     More_prompt_on_msg::yes);
-                        delete item;
-                    }
+                    msg_log::add("My " + item_name + " breaks!", clr_msg_note, true,
+                                 More_prompt_on_msg::yes);
+                    delete item;
                 }
             }
-            break;
+        }
+        break;
 
         //5 to 7 = Nothing happens
         default:

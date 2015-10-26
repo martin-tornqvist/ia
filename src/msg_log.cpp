@@ -12,17 +12,15 @@
 #include "map.hpp"
 #include "text_format.hpp"
 
-using namespace std;
-
 namespace msg_log
 {
 
 namespace
 {
 
-vector<Msg>           lines_[2];
-vector< vector<Msg> > history_;
-const string          more_str = "-More-";
+std::vector<Msg>           lines_[2];
+std::vector< std::vector<Msg> > history_;
+const std::string          more_str = "-More-";
 
 int x_after_msg(const Msg* const msg)
 {
@@ -31,14 +29,14 @@ int x_after_msg(const Msg* const msg)
         return 0;
     }
 
-    string str = "";
+    std::string str = "";
     msg->str_with_repeats(str);
     return msg->x_pos_ + str.size() + 1;
 }
 
 void draw_history_interface(const int TOP_LINE_NR, const int BTM_LINE_NR)
 {
-    const string decoration_line(MAP_W, '-');
+    const std::string decoration_line(MAP_W, '-');
 
     render::draw_text(decoration_line, Panel::screen, P(0, 0), clr_gray);
 
@@ -64,11 +62,11 @@ void draw_history_interface(const int TOP_LINE_NR, const int BTM_LINE_NR)
 }
 
 //Used by normal log and history viewer
-void draw_line(const vector<Msg>& line_to_draw, const int Y_POS)
+void draw_line(const std::vector<Msg>& line_to_draw, const int Y_POS)
 {
     for (const Msg& msg : line_to_draw)
     {
-        string str = "";
+        std::string str = "";
         msg.str_with_repeats(str);
         render::draw_text(str, Panel::log, P(msg.x_pos_, Y_POS), msg.clr_);
     }
@@ -78,7 +76,7 @@ void draw_line(const vector<Msg>& line_to_draw, const int Y_POS)
 
 void init()
 {
-    for (vector<Msg>& line : lines_)
+    for (std::vector<Msg>& line : lines_)
     {
         line.clear();
     }
@@ -88,7 +86,7 @@ void init()
 
 void clear()
 {
-    for (vector<Msg>& line : lines_)
+    for (std::vector<Msg>& line : lines_)
     {
         if (!line.empty())
         {
@@ -125,10 +123,10 @@ void draw(const bool SHOULD_UPDATE_SCREEN)
     }
 }
 
-void add(const string&              str,
-         const Clr&                 clr,
-         const bool                 INTERRUPT_PLAYER_ACTIONS,
-         const More_prompt_on_msg   add_more_prompt_on_msg)
+void add(const std::string& str,
+         const Clr& clr,
+         const bool INTERRUPT_PLAYER_ACTIONS,
+         const More_prompt_on_msg add_more_prompt_on_msg)
 {
     assert(!str.empty());
 
@@ -136,7 +134,7 @@ void add(const string&              str,
 
     if (str[0] == ' ')
     {
-        TRACE << "Message starts with space: \"" << str << "\"" << endl;
+        TRACE << "Message starts with space: \"" << str << "\"" << std::endl;
         assert(false);
     }
 
@@ -145,7 +143,7 @@ void add(const string&              str,
     //If frenzied, change message
     if (map::player->has_prop(Prop_id::frenzied))
     {
-        string frenzied_str = str;
+        std::string frenzied_str = str;
 
         bool has_lower_case = false;
 
@@ -167,7 +165,7 @@ void add(const string&              str,
             text_format::all_to_upper(frenzied_str);
 
             //Do not put "!" if string contains "..."
-            if (frenzied_str.find("...") == string::npos)
+            if (frenzied_str.find("...") == std::string::npos)
             {
                 //Change "." to "!" at the end
                 if (frenzied_str.back() == '.')
@@ -199,7 +197,7 @@ void add(const string&              str,
     //Check if message is identical to previous
     if (add_more_prompt_on_msg == More_prompt_on_msg::no && prev_msg)
     {
-        string prev_str = "";
+        std::string prev_str = "";
         prev_msg->str_raw(prev_str);
 
         if (prev_str.compare(str) == 0)
@@ -285,7 +283,7 @@ void more_prompt()
     render::draw_text(more_str, Panel::log, P(x_pos, line_nr), clr_black, clr_gray);
 
     render::update_screen();
-    query::wait_forConfirm();
+    query::wait_for_confirm();
     clear();
 }
 
@@ -297,8 +295,8 @@ void display_history()
     const int NR_LINES_TOT        = history_.size();
     const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
 
-    int top_nr = max(0, NR_LINES_TOT - MAX_NR_LINES_ON_SCR);
-    int btm_nr = min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
+    int top_nr = std::max(0, NR_LINES_TOT - MAX_NR_LINES_ON_SCR);
+    int btm_nr = std::min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
 
     while (true)
     {
@@ -325,32 +323,32 @@ void display_history()
             }
             else
             {
-                top_nr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, top_nr);
+                top_nr = std::min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, top_nr);
             }
         }
         else if (d.key == '8' || d.sdl_key == SDLK_UP || d.key == 'k')
         {
-            top_nr = max(0, top_nr - LINE_JUMP);
+            top_nr = std::max(0, top_nr - LINE_JUMP);
         }
         else if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)
         {
             break;
         }
 
-        btm_nr = min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
+        btm_nr = std::min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
     }
 
     render::draw_map_and_interface();
 }
 
-void add_line_to_history(const string& line_to_add)
+void add_line_to_history(const std::string& line_to_add)
 {
-    vector<Msg> history_line;
+    std::vector<Msg> history_line;
     history_line.push_back(Msg(line_to_add, clr_white, 0));
     history_.push_back(history_line);
 }
 
-const vector< vector<Msg> >& history()
+const std::vector< std::vector<Msg> >& history()
 {
     return history_;
 }

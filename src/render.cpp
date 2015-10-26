@@ -1017,7 +1017,9 @@ void draw_rectangle_solid(const P& px_pos, const P& px_dims, const Clr& clr)
             (Uint16)px_dims.x, (Uint16)px_dims.y
         };
 
-        SDL_FillRect(scr_srf_, &sdl_rect, SDL_MapRGB(scr_srf_->format, clr.r, clr.g, clr.b));
+        SDL_FillRect(scr_srf_,
+                     &sdl_rect,
+                     SDL_MapRGB(scr_srf_->format, clr.r, clr.g, clr.b));
     }
 }
 
@@ -1025,7 +1027,10 @@ void draw_projectiles(std::vector<Projectile*>& projectiles,
                       const bool SHOULD_DRAW_MAP_BEFORE)
 {
 
-    if (SHOULD_DRAW_MAP_BEFORE) {draw_map_and_interface(false);}
+    if (SHOULD_DRAW_MAP_BEFORE)
+    {
+        draw_map_and_interface(false);
+    }
 
     for (Projectile* p : projectiles)
     {

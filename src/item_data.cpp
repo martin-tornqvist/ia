@@ -13,6 +13,7 @@
 #include "item_device.hpp"
 #include "map.hpp"
 #include "save_handling.hpp"
+#include "game_time.hpp"
 
 Item_data_t::Item_data_t() :
     id                                  (Item_id::END),

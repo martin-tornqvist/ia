@@ -6,8 +6,7 @@
 
 #include "map.hpp"
 #include "feature_rigid.hpp"
-
-using namespace std;
+#include "game_time.hpp"
 
 namespace map_patterns
 {
@@ -16,7 +15,7 @@ void cells_in_room(const Room& room, std::vector<P>& adj_to_walls,
                    std::vector<P>& away_from_walls)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
-    vector<P> pos_bucket;
+    std::vector<P> pos_bucket;
     pos_bucket.clear();
 
     const Rect& r = room.r_;

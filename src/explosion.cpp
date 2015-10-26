@@ -69,10 +69,10 @@ void draw(const std::vector< std::vector<P> >& pos_lists,
     }
 }
 
-void explosion_area(const P& c, const int RADI, Rect& rect_ref)
+Rect explosion_area(const P& c, const int RADI)
 {
-    rect_ref = Rect(P(std::max(c.x - RADI, 1),         std::max(c.y - RADI, 1)),
-                    P(std::min(c.x + RADI, MAP_W - 2), std::min(c.y + RADI, MAP_H - 2)));
+    return Rect(P(std::max(c.x - RADI, 1),         std::max(c.y - RADI, 1)),
+                P(std::min(c.x + RADI, MAP_W - 2), std::min(c.y + RADI, MAP_H - 2)));
 }
 
 void cells_reached(const Rect& area, const P& origin,
@@ -127,13 +127,16 @@ void run(const P& origin,
          Prop* const prop,
          const Clr* const clr_override)
 {
-    Rect area;
-
     const int RADI = EXPLOSION_STD_RADI + RADI_CHANGE;
-    explosion_area(origin, RADI, area);
+
+    const Rect area = explosion_area(origin, RADI);
 
     bool blocked[MAP_W][MAP_H];
-    map_parse::run(cell_check::Blocks_projectiles(), blocked);
+
+    map_parse::run(cell_check::Blocks_projectiles(),
+                   blocked,
+                   Map_parse_mode::overwrite,
+                   area);
 
     std::vector< std::vector<P> > pos_lists;
     cells_reached(area, origin, blocked, pos_lists);
@@ -226,7 +229,10 @@ void run(const P& origin,
                 for (Actor* corpse : corpses_here) {corpse->hit(DMG, Dmg_type::physical);}
 
                 //Add smoke
-                if (rnd::fraction(6, 10)) {game_time::add_mob(new Smoke(pos, rnd::range(2, 4)));}
+                if (rnd::fraction(6, 10))
+                {
+                    game_time::add_mob(new Smoke(pos, rnd::range(2, 4)));
+                }
             }
 
             //Apply property
@@ -285,9 +291,9 @@ void run(const P& origin,
 
 void run_smoke_explosion_at(const P& origin)
 {
-    Rect area;
     const int RADI = EXPLOSION_STD_RADI;
-    explosion_area(origin, RADI, area);
+
+    const Rect area = explosion_area(origin, RADI);
 
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_projectiles(), blocked);
@@ -296,8 +302,14 @@ void run_smoke_explosion_at(const P& origin)
     cells_reached(area, origin, blocked, pos_lists);
 
     //TODO: Sound message?
-    Snd snd("", Sfx_id::END, Ignore_msg_if_origin_seen::yes, origin, nullptr,
-            Snd_vol::low, Alerts_mon::yes);
+    Snd snd("",
+            Sfx_id::END,
+            Ignore_msg_if_origin_seen::yes,
+            origin,
+            nullptr,
+            Snd_vol::low,
+            Alerts_mon::yes);
+
     snd_emit::run(snd);
 
     for (const std::vector<P>& inner : pos_lists)
@@ -316,5 +328,5 @@ void run_smoke_explosion_at(const P& origin)
     render::draw_map_and_interface();
 }
 
-} //Explosion
+} //explosion
 

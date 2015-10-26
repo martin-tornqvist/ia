@@ -170,7 +170,7 @@ void show_msg(const std::string& msg,
 
     render::update_screen();
 
-    query::wait_forConfirm();
+    query::wait_for_confirm();
 
     if (DRAW_MAP_AND_INTERFACE) {render::draw_map_and_interface();}
 }

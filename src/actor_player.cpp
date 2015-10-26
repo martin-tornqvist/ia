@@ -1569,7 +1569,9 @@ void Player::add_light_hook(bool light_map[MAP_W][MAP_H]) const
 
         const Rect fov_lmt = fov::get_fov_rect(pos);
 
-        map_parse::run(cell_check::Blocks_los(), hard_blocked, Map_parse_mode::overwrite,
+        map_parse::run(cell_check::Blocks_los(),
+                       hard_blocked,
+                       Map_parse_mode::overwrite,
                        fov_lmt);
 
         Los_result fov[MAP_W][MAP_H];

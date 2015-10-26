@@ -8,6 +8,7 @@
 #include "init.hpp"
 #include "cmn_data.hpp"
 #include "config.hpp"
+#include "game_time.hpp"
 
 namespace sdl_wrapper
 {

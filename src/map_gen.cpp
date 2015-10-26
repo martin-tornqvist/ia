@@ -41,8 +41,6 @@
 //#define FILL_DEAD_ENDS          1
 #define DECORATE                1
 
-using namespace std;
-
 namespace map_gen
 {
 
@@ -161,10 +159,10 @@ void connect_rooms()
         bool is_other_room_in_way = false;
         const P c0(room0->r_.center_pos());
         const P c1(room1->r_.center_pos());
-        const int X0 = min(c0.x, c1.x);
-        const int Y0 = min(c0.y, c1.y);
-        const int X1 = max(c0.x, c1.x);
-        const int Y1 = max(c0.y, c1.y);
+        const int X0 = std::min(c0.x, c1.x);
+        const int Y0 = std::min(c0.y, c1.y);
+        const int X1 = std::max(c0.x, c1.x);
+        const int Y1 = std::max(c0.y, c1.y);
 
         for (int y = Y0; y <= Y1; ++y)
         {
@@ -207,8 +205,8 @@ void connect_rooms()
 
 void mk_crumble_room(const Rect& room_area_incl_walls, const P& event_pos)
 {
-    vector<P> wall_cells;
-    vector<P> inner_cells;
+    std::vector<P> wall_cells;
+    std::vector<P> inner_cells;
 
     const Rect& a = room_area_incl_walls; //abbreviation
 
@@ -317,7 +315,7 @@ void mk_aux_rooms(Region regions[3][3])
                         {
                             if (try_mk_aux_room(aux_p, aux_d, floor_cells, con_p))
                             {
-                                TRACE_VERBOSE << "Aux room placed right" << endl;
+                                TRACE_VERBOSE << "Aux room placed right" << std:: endl;
                                 break;
                             }
                         }
@@ -338,7 +336,7 @@ void mk_aux_rooms(Region regions[3][3])
                         {
                             if (try_mk_aux_room(aux_p, aux_d, floor_cells, con_p))
                             {
-                                TRACE_VERBOSE << "Aux room placed up" << endl;
+                                TRACE_VERBOSE << "Aux room placed up" << std:: endl;
                                 break;
                             }
                         }
@@ -359,7 +357,7 @@ void mk_aux_rooms(Region regions[3][3])
                         {
                             if (try_mk_aux_room(aux_p, aux_d, floor_cells, con_p))
                             {
-                                TRACE_VERBOSE << "Aux room placed left" << endl;
+                                TRACE_VERBOSE << "Aux room placed left" << std:: endl;
                                 break;
                             }
                         }
@@ -380,7 +378,7 @@ void mk_aux_rooms(Region regions[3][3])
                         {
                             if (try_mk_aux_room(aux_p, aux_d, floor_cells, con_p))
                             {
-                                TRACE_VERBOSE << "Aux room placed down" << endl;
+                                TRACE_VERBOSE << "Aux room placed down" << std:: endl;
                                 break;
                             }
                         }
@@ -453,20 +451,20 @@ void randomly_block_regions(Region regions[3][3])
 {
     TRACE_FUNC_BEGIN << "Marking some (possibly zero) regions as built, to "
                      << "prevent rooms there (so it's not always 3x3 rooms)"
-                     << endl;
+                     << std:: endl;
     //NOTE: The max number to try can go above the hard limit of regions that
     //could ever be blocked (i.e five regions - blocking is only allowed if
     //no cardinally adjacent region is already blocked). However, this will push
     //the number of attempts towards the upper limit, and increase the chance
     //of a higher number of attempts.
-    const int MAX_NR_TO_TRY_BLOCK = max(1, map::dlvl / 3);
-    const int NR_TO_TRY_BLOCK     = min(rnd::range(0, MAX_NR_TO_TRY_BLOCK), 5);
+    const int MAX_NR_TO_TRY_BLOCK = std::max(1, map::dlvl / 3);
+    const int NR_TO_TRY_BLOCK     = std::min(rnd::range(0, MAX_NR_TO_TRY_BLOCK), 5);
 
     for (int i = 0; i < NR_TO_TRY_BLOCK; ++i)
     {
         TRACE_VERBOSE << "Attempting to block region " << i + 1 << "/"
-                      << NR_TO_TRY_BLOCK << endl;
-        vector<P> block_bucket;
+                      << NR_TO_TRY_BLOCK << std:: endl;
+        std::vector<P> block_bucket;
 
         for (int y = 0; y < 3; ++y)
         {
@@ -499,13 +497,13 @@ void randomly_block_regions(Region regions[3][3])
         if (block_bucket.empty())
         {
             TRACE_VERBOSE << "Failed to find eligible regions to block, after "
-                          << "blocking " << i << " regions" << endl;
+                          << "blocking " << i << " regions" << std:: endl;
             break;
         }
         else
         {
             const P& p(block_bucket[rnd::range(0, block_bucket.size() - 1)]);
-            TRACE_VERBOSE << "Blocking region at " << p.x << "," << p.y << endl;
+            TRACE_VERBOSE << "Blocking region at " << p.x << "," << p.y << std:: endl;
             regions[p.x][p.y].is_free_ = false;
         }
     }
@@ -572,7 +570,7 @@ void reserve_river(Region regions[3][3])
     {
         TRACE_VERBOSE << "Reserving river space with floor cells "
                       << "X0: " << X0 << " X1: " << X1 << " Y0: " << Y0 << " Y1: " << Y1
-                      << endl;
+                      << std:: endl;
 
         for (int y = Y0; y <= Y1; ++y)
         {
@@ -680,7 +678,7 @@ void mk_sub_rooms()
 
         if (IS_STD_ROOM && (IS_ROOM_BIG || rnd::one_in(4)))
         {
-            const P max_d(min(16, outer_room_d.x),  min(16, outer_room_d.y));
+            const P max_d(std::min(16, outer_room_d.x),  std::min(16, outer_room_d.y));
 
             if (max_d >= min_d)
             {
@@ -755,7 +753,7 @@ void mk_sub_rooms()
 
                         outer_room->sub_rooms_.push_back(room);
 
-                        vector<P> door_bucket;
+                        std::vector<P> door_bucket;
 
                         for (int y = p0.y; y <= p1.y; ++y)
                         {
@@ -797,7 +795,7 @@ void mk_sub_rooms()
                         }
                         else
                         {
-                            vector<P> positions_with_door;
+                            std::vector<P> positions_with_door;
                             const int NR_TRIES = rnd::range(1, 10);
 
                             for (int j = 0; j < NR_TRIES; j++)
@@ -865,7 +863,7 @@ void fill_dead_ends()
     //Floodfill from origin, then sort the positions for flood value
     int flood_fill[MAP_W][MAP_H];
     flood_fill::run(origin, blocked, flood_fill, INT_MAX, P(-1, -1), true);
-    vector<Pos_and_val> flood_fill_vector;
+    std::vector<Pos_and_val> flood_fill_vector;
 
     for (int y = 1; y < MAP_H - 1; ++y)
     {
@@ -1007,7 +1005,7 @@ void allowed_stair_cells(bool out[MAP_W][MAP_H])
     TRACE_FUNC_BEGIN;
 
     //Mark cells as free if all adjacent feature types are allowed
-    vector<Feature_id> feat_ids_ok {Feature_id::floor, Feature_id::carpet, Feature_id::grass};
+    std::vector<Feature_id> feat_ids_ok {Feature_id::floor, Feature_id::carpet, Feature_id::grass};
 
     map_parse::run(cell_check::All_adj_is_any_of_features(feat_ids_ok), out);
 
@@ -1040,7 +1038,7 @@ P place_stairs()
     bool allowed_cells[MAP_W][MAP_H];
     allowed_stair_cells(allowed_cells);
 
-    vector<P> allowed_cells_list;
+    std::vector<P> allowed_cells_list;
     utils::mk_vector_from_bool_map(true, allowed_cells, allowed_cells_list);
 
     const int NR_OK_CELLS = allowed_cells_list.size();
@@ -1050,7 +1048,7 @@ P place_stairs()
     if (NR_OK_CELLS < MIN_NR_OK_CELLS_REQ)
     {
         TRACE << "Nr available cells to place stairs too low "
-              << "(" << NR_OK_CELLS << "), discarding map" << endl;
+              << "(" << NR_OK_CELLS << "), discarding map" << std:: endl;
         is_map_valid = false;
 #ifdef DEMO_MODE
         render::cover_panel(Panel::log);
@@ -1064,14 +1062,14 @@ P place_stairs()
     }
 
     TRACE << "Sorting the allowed cells vector "
-          << "(" << allowed_cells_list.size() << " cells)" << endl;
+          << "(" << allowed_cells_list.size() << " cells)" << std:: endl;
     Is_closer_to_pos is_closer_to_origin(map::player->pos);
     sort(allowed_cells_list.begin(), allowed_cells_list.end(), is_closer_to_origin);
 
-    TRACE << "Picking furthest cell" << endl;
+    TRACE << "Picking furthest cell" << std:: endl;
     const P stairs_pos(allowed_cells_list[NR_OK_CELLS - 1]);
 
-    TRACE << "Spawning stairs at chosen cell" << endl;
+    TRACE << "Spawning stairs at chosen cell" << std:: endl;
     map::put(new Stairs(stairs_pos));
 
     TRACE_FUNC_END;
@@ -1085,7 +1083,7 @@ void move_player_to_nearest_allowed_pos()
     bool allowed_cells[MAP_W][MAP_H];
     allowed_stair_cells(allowed_cells);
 
-    vector<P> allowed_cells_list;
+    std::vector<P> allowed_cells_list;
     utils::mk_vector_from_bool_map(true, allowed_cells, allowed_cells_list);
 
     if (allowed_cells_list.empty())
@@ -1095,7 +1093,7 @@ void move_player_to_nearest_allowed_pos()
     else
     {
         TRACE << "Sorting the allowed cells vector "
-              << "(" << allowed_cells_list.size() << " cells)" << endl;
+              << "(" << allowed_cells_list.size() << " cells)" << std:: endl;
         Is_closer_to_pos is_closer_to_origin(map::player->pos);
         sort(allowed_cells_list.begin(), allowed_cells_list.end(), is_closer_to_origin);
 
@@ -1109,7 +1107,7 @@ void move_player_to_nearest_allowed_pos()
 //void mk_levers() {
 //  TRACE_FUNC_BEGIN;
 //
-//  TRACE << "Picking a random door" << endl;
+//  TRACE << "Picking a random door" << std:: endl;
 //  vector<Door*> door_bucket;
 //  for(int y = 1; y < MAP_H - 1; ++y) {
 //    for(int x = 1; x < MAP_W - 1; ++x) {
@@ -1122,7 +1120,7 @@ void move_player_to_nearest_allowed_pos()
 //  }
 //  Door* const door_to_link = door_bucket[rnd::range(0, door_bucket.size() - 1)];
 //
-//  TRACE << "Making floodfill and keeping only positions with lower value than the door" << endl;
+//  TRACE << "Making floodfill and keeping only positions with lower value than the door" << std:: endl;
 //  bool blocked[MAP_W][MAP_H];
 //  eng.map_tests->mk_move_blocker_array_for_body_type_features_only(body_type_normal, blocked);
 //  for(int y = 1; y < MAP_H - 1; ++y) {
@@ -1152,16 +1150,16 @@ void move_player_to_nearest_allowed_pos()
 //    const P lever_pos(lever_pos_bucket[IDX]);
 //    spawn_lever_adapt_and_link_door(lever_pos, *door_to_link);
 //  } else {
-//    TRACE << "Failed to find position to place lever" << endl;
+//    TRACE << "Failed to find position to place lever" << std:: endl;
 //  }
 //  TRACE_FUNC_END;
 //}
 
 //void spawn_lever_adapt_and_link_door(const P& lever_pos, Door& door) {
-//  TRACE << "Spawning lever and linking it to the door" << endl;
+//  TRACE << "Spawning lever and linking it to the door" << std:: endl;
 //  Feature_factory::mk(Feature_id::lever, lever_pos, new Lever_spawn_data(&door));
 //
-//  TRACE << "Changing door properties" << endl;
+//  TRACE << "Changing door properties" << std:: endl;
 //  door.matl_ = Door_type::metal;
 //  door.is_open_ = false;
 //  door.is_stuck_ = false;
@@ -1188,12 +1186,12 @@ void reveal_doors_on_path_to_stairs(const P& stairs_pos)
         }
     }
 
-    vector<P> path;
+    std::vector<P> path;
     path_find::run(map::player->pos, stairs_pos, blocked, path);
 
     assert(!path.empty());
 
-    TRACE << "Travelling along path and revealing all doors" << endl;
+    TRACE << "Travelling along path and revealing all doors" << std:: endl;
 
     for (P& pos : path)
     {
@@ -1221,7 +1219,7 @@ bool mk_std_lvl()
 
     map::reset_map();
 
-    TRACE << "Resetting helper arrays" << endl;
+    TRACE << "Resetting helper arrays" << std:: endl;
 
     for (int x = 0; x < MAP_W; ++x)
     {
@@ -1234,7 +1232,7 @@ bool mk_std_lvl()
     //NOTE: This must be called before any rooms are created
     room_factory::init_room_bucket();
 
-    TRACE << "Init regions" << endl;
+    TRACE << "Init regions" << std:: endl;
     const int MAP_W_THIRD = MAP_W / 3;
     const int MAP_H_THIRD = MAP_H / 3;
     const int SPL_X0      = MAP_W_THIRD;
@@ -1282,7 +1280,7 @@ bool mk_std_lvl()
 
     if (is_map_valid)
     {
-        TRACE << "Making main rooms" << endl;
+        TRACE << "Making main rooms" << std:: endl;
 
         for (int x = 0; x < 3; ++x)
         {
@@ -1335,7 +1333,7 @@ bool mk_std_lvl()
 
     if (is_map_valid)
     {
-        TRACE << "Sorting the room list according to room type" << endl;
+        TRACE << "Sorting the room list according to room type" << std:: endl;
         //NOTE: This allows common rooms to assume that they are rectangular and
         //have their walls untouched when their reshaping functions run.
         auto cmp = [](const Room * r0, const Room * r1)
@@ -1345,7 +1343,7 @@ bool mk_std_lvl()
         sort(map::room_list.begin(), map::room_list.end(), cmp);
     }
 
-    TRACE << "Running pre-connect functions for all rooms" << endl;
+    TRACE << "Running pre-connect functions for all rooms" << std:: endl;
 
     if (is_map_valid)
     {
@@ -1380,7 +1378,7 @@ bool mk_std_lvl()
         connect_rooms();
     }
 
-    TRACE << "Running post-connect functions for all rooms" << endl;
+    TRACE << "Running post-connect functions for all rooms" << std:: endl;
 
     if (is_map_valid)
     {
@@ -1416,7 +1414,7 @@ bool mk_std_lvl()
 
     if (is_map_valid && map::dlvl <= DLVL_LAST_MID_GAME)
     {
-        TRACE << "Placing doors" << endl;
+        TRACE << "Placing doors" << std:: endl;
 
         for (int x = 0; x < MAP_W; ++x)
         {

@@ -1,11 +1,10 @@
 #include "map_templates.hpp"
 
 #include "init.hpp"
+#include "game_time.hpp"
 
 #include <vector>
 #include <cassert>
-
-using namespace std;
 
 namespace map_templ_handling
 {
@@ -25,7 +24,7 @@ struct Translation
     const map_templ_cell  cell;
 };
 
-map_templ_cell ch_to_cell(const char CH, const vector<Translation>& translations)
+map_templ_cell ch_to_cell(const char CH, const std::vector<Translation>& translations)
 {
     for (const Translation& translation : translations)
     {
@@ -35,17 +34,17 @@ map_templ_cell ch_to_cell(const char CH, const vector<Translation>& translations
         }
     }
 
-    TRACE << "Failed to translate char: " <<  CH << endl;
+    TRACE << "Failed to translate char: " <<  CH << std::endl;
     assert(false);
     return map_templ_cell();
 }
 
-void mk_templ(const string& str, const Map_templ_id id,
-              const vector<Translation>& translations)
+void mk_templ(const std::string& str, const Map_templ_id id,
+              const std::vector<Translation>& translations)
 {
     map_templ& templ = templates_[int(id)];
 
-    vector<map_templ_cell> inner;
+    std::vector<map_templ_cell> inner;
 
     for (const auto ch : str)
     {
@@ -57,13 +56,21 @@ void mk_templ(const string& str, const Map_templ_id id,
             inner.clear();
             break;
 
-        case '#': inner.push_back({Feature_id::wall});           break;
+        case '#':
+            inner.push_back({Feature_id::wall});
+            break;
 
-        case '.': inner.push_back({Feature_id::floor});          break;
+        case '.':
+            inner.push_back({Feature_id::floor});
+            break;
 
-        case ' ': inner.push_back({});                          break;
+        case ' ':
+            inner.push_back({});
+            break;
 
-        default:  inner.push_back(ch_to_cell(ch, translations));  break;
+        default:
+            inner.push_back(ch_to_cell(ch, translations));
+            break;
         }
     }
 }
@@ -119,7 +126,7 @@ void init_templs()
 //  "################################################################################;";
 
     //----------------------------------------------------------------- CHURCH
-    string str =
+    std::string str =
         "             ,,,,,,,,,,,     ;"
         "          ,,,,,######,,,,    ;"
         " ,,,,,,,,,,,,,,#v..v#,,,,,   ;"
@@ -138,7 +145,7 @@ void init_templs()
         "         ,,,,,,######,,,,    ;"
         "            ,,,,,,,,,,,,     ;";
 
-    mk_templ(str, Map_templ_id::church, vector<Translation>
+    mk_templ(str, Map_templ_id::church, std::vector<Translation>
     {
         {',', {Feature_id::grass}},
         {'v', {Feature_id::brazier}},
@@ -174,7 +181,7 @@ void init_templs()
         "###...############################v....................##############|...|######;"
         "################################################################################;";
 
-    mk_templ(str, Map_templ_id::egypt, vector<Translation>
+    mk_templ(str, Map_templ_id::egypt, std::vector<Translation>
     {
         {'@', {Feature_id::floor, Actor_id::END, Item_id::END, 1}},  //Start
         {'v', {Feature_id::brazier}},
@@ -212,7 +219,7 @@ void init_templs()
         "%%%%%%--%---%--%%%-%--%%%%%%%-%-%%%--%%--%-%%%x,,,,,,,,,,,,,,,x,,,xxxxxxxxxx,,,x;"
         "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;";
 
-    mk_templ(str, Map_templ_id::leng, vector<Translation>
+    mk_templ(str, Map_templ_id::leng, std::vector<Translation>
     {
         {'@', {Feature_id::floor,  Actor_id::END,       Item_id::END, 1}}, //Start
         {'%', {Feature_id::wall,   Actor_id::END,       Item_id::END, 2}},
@@ -252,7 +259,7 @@ void init_templs()
         "###################:,,####xxxxxxxxxxxxx##r#####rr###r###r#rrr###################;"
         "################################################################################;";
 
-    mk_templ(str, Map_templ_id::rats_in_the_walls, vector<Translation>
+    mk_templ(str, Map_templ_id::rats_in_the_walls, std::vector<Translation>
     {
         {'@', {Feature_id::floor,  Actor_id::END,     Item_id::END, 1}}, //Start
         {'x', {Feature_id::wall,   Actor_id::END,     Item_id::END, 2}}, //Constructed walls
@@ -290,7 +297,7 @@ void init_templs()
         "############################...................................................#;"
         "################################################################################;";
 
-    mk_templ(str, Map_templ_id::boss_level, vector<Translation>
+    mk_templ(str, Map_templ_id::boss_level, std::vector<Translation>
     {
         {'@', {Feature_id::floor,    Actor_id::END,           Item_id::END, 1}}, //Start
         {'M', {Feature_id::floor,    Actor_id::the_high_priest, Item_id::END}},    //Boss
@@ -324,7 +331,7 @@ void init_templs()
         "################################################################################;"
         "################################################################################;";
 
-    mk_templ(str, Map_templ_id::trapezohedron_level, vector<Translation>
+    mk_templ(str, Map_templ_id::trapezohedron_level, std::vector<Translation>
     {
         {'@', {Feature_id::floor,    Actor_id::END,         Item_id::END, 1}}, //Start
         {'|', {Feature_id::pillar,   Actor_id::END,         Item_id::END}},

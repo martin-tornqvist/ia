@@ -10,6 +10,7 @@
 #include "map_gen.hpp"
 #include "gods.hpp"
 #include "actor_factory.hpp"
+#include "game_time.hpp"
 
 #ifdef DEMO_MODE
 #include "render.hpp"
