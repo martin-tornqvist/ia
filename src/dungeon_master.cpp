@@ -280,7 +280,7 @@ void on_mon_seen(Actor& actor)
 {
     Mon* const mon = static_cast<Mon*>(&actor);
 
-    if (!mon->has_given_xp_for_spotting_)
+    if (!map::player->is_leader_of(mon) && !mon->has_given_xp_for_spotting_)
     {
         mon->has_given_xp_for_spotting_ = true;
         incr_player_xp(mon_tot_xp_worth(mon->data()) / 2);
