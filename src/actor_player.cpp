@@ -652,6 +652,12 @@ void Player::set_quick_move(const Dir dir)
 
 void Player::on_actor_turn()
 {
+#ifndef NDEBUG
+    //Sanity check: Disease and infection should never be active at the same time
+    assert(!prop_handler_->has_prop(Prop_id::diseased) ||
+           !prop_handler_->has_prop(Prop_id::infected));
+#endif // NDEBUG
+
     render::draw_map_and_interface();
 
     reset_perm_shock_taken_cur_turn();
@@ -832,6 +838,12 @@ int Player::ins() const
 
 void Player::on_std_turn()
 {
+#ifndef NDEBUG
+    //Sanity check: Disease and infection should never be active at the same time
+    assert(!prop_handler_->has_prop(Prop_id::diseased) ||
+           !prop_handler_->has_prop(Prop_id::infected));
+#endif // NDEBUG
+
     if (!is_alive())
     {
         return;

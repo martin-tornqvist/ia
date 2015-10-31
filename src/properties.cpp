@@ -1822,6 +1822,10 @@ void Prop_hasted::on_start()
 
 void Prop_infected::on_new_turn()
 {
+#ifndef NDEBUG
+    assert(!owning_actor_->prop_handler().has_prop(Prop_id::diseased));
+#endif // NDEBUG
+
     const int MAX_TURNS_LEFT_ALLOW_DISEASE  = 50;
 
     const int APPLY_DISEASE_ONE_IN          = nr_turns_left_ - 1;
@@ -1840,6 +1844,10 @@ void Prop_infected::on_new_turn()
 
 int Prop_diseased::affect_max_hp(const int HP_MAX) const
 {
+#ifndef NDEBUG
+    assert(!owning_actor_->prop_handler().has_prop(Prop_id::infected));
+#endif // NDEBUG
+
     return HP_MAX / 2;
 }
 
@@ -1854,6 +1862,10 @@ void Prop_diseased::on_start()
 
 void Prop_diseased::on_end()
 {
+#ifndef NDEBUG
+    assert(!owning_actor_->prop_handler().has_prop(Prop_id::infected));
+#endif // NDEBUG
+
     //If this is a permanent disease that the player caught, log it as a historic event
     if (owning_actor_->is_player() && turns_init_type_ == Prop_turns::indefinite)
     {
@@ -1863,6 +1875,10 @@ void Prop_diseased::on_end()
 
 bool Prop_diseased::is_resisting_other_prop(const Prop_id prop_id) const
 {
+#ifndef NDEBUG
+    assert(!owning_actor_->prop_handler().has_prop(Prop_id::infected));
+#endif // NDEBUG
+
     //Getting infected while already diseased is just annoying
     return prop_id == Prop_id::infected;
 }
