@@ -1088,30 +1088,48 @@ void Gas_mask::decr_turns_left(Inventory& carrier_inv)
 Consume_item Explosive::activate(Actor* const actor)
 {
     (void)actor;
+
+    const Explosive* const held_explosive = map::player->active_explosive;
+
+    if (held_explosive)
+    {
+        const std::string name_held = held_explosive->name(Item_ref_type::a, Item_ref_inf::none);
+
+        msg_log::add("I am already holding " + name_held + ".");
+
+        return Consume_item::no;
+    }
+
     //Make a copy to use as the held ignited explosive.
     auto* cpy = static_cast<Explosive*>(item_factory::mk(data().id, 1));
 
     cpy->fuse_turns_               = std_fuse_turns();
     map::player->active_explosive  = cpy;
+
     map::player->update_clr();
+
     cpy->on_player_ignite();
+
     return Consume_item::yes;
 }
 
 //---------------------------------------------------------- DYNAMITE
 void Dynamite::on_player_ignite() const
 {
-    const bool IS_SWIFT   = player_bon::traits[size_t(Trait::dem_expert)] && rnd::coin_toss();
+    const bool IS_SWIFT = player_bon::traits[size_t(Trait::dem_expert)] && rnd::coin_toss();
+
     const std::string swift_str = IS_SWIFT ? "swiftly " : "";
 
     msg_log::add("I " + swift_str + "light a dynamite stick.");
+
     render::draw_map_and_interface();
+
     game_time::tick(IS_SWIFT);
 }
 
 void Dynamite::on_std_turn_player_hold_ignited()
 {
-    fuse_turns_--;
+    --fuse_turns_;
 
     if (fuse_turns_ > 0)
     {
@@ -1123,15 +1141,21 @@ void Dynamite::on_std_turn_player_hold_ignited()
         }
 
         fuse_msg += "***";
+
         msg_log::add(fuse_msg, clr_yellow);
     }
-    else
+    else //Fuse has run out
     {
         msg_log::add("The dynamite explodes in my hand!");
+
         map::player->active_explosive = nullptr;
+
         explosion::run(map::player->pos, Expl_type::expl);
+
         map::player->update_clr();
+
         fuse_turns_ = -1;
+
         delete this;
     }
 }
@@ -1144,9 +1168,13 @@ void Dynamite::on_thrown_ignited_landing(const P& p)
 void Dynamite::on_player_paralyzed()
 {
     msg_log::add("The lit Dynamite stick falls from my hand!");
+
     map::player->active_explosive = nullptr;
+
     map::player->update_clr();
+
     const P& p = map::player->pos;
+
     auto* const f = map::cells[p.x][p.y].rigid;
 
     if (!f->is_bottomless())
@@ -1160,12 +1188,14 @@ void Dynamite::on_player_paralyzed()
 //---------------------------------------------------------- MOLOTOV
 void Molotov::on_player_ignite() const
 {
-    const bool IS_SWIFT   = player_bon::traits[size_t(Trait::dem_expert)] &&
-                            rnd::coin_toss();
+    const bool IS_SWIFT = player_bon::traits[size_t(Trait::dem_expert)] && rnd::coin_toss();
+
     const std::string swift_str = IS_SWIFT ? "swiftly " : "";
 
     msg_log::add("I " + swift_str + "light a Molotov Cocktail.");
+
     render::draw_map_and_interface();
+
     game_time::tick(IS_SWIFT);
 }
 
@@ -1176,18 +1206,29 @@ void Molotov::on_std_turn_player_hold_ignited()
     if (fuse_turns_ <= 0)
     {
         msg_log::add("The Molotov Cocktail explodes in my hand!");
+
         map::player->active_explosive = nullptr;
+
         map::player->update_clr();
 
         const P player_pos = map::player->pos;
 
-        Snd snd("I hear an explosion!", Sfx_id::explosion_molotov, Ignore_msg_if_origin_seen::yes,
-                player_pos, nullptr, Snd_vol::high, Alerts_mon::yes);
+        Snd snd("I hear an explosion!",
+                Sfx_id::explosion_molotov,
+                Ignore_msg_if_origin_seen::yes,
+                player_pos,
+                nullptr,
+                Snd_vol::high,
+                Alerts_mon::yes);
 
         snd_emit::run(snd);
 
-        explosion::run(player_pos, Expl_type::apply_prop, Expl_src::misc,
-                       Emit_expl_snd::no, 0, new Prop_burning(Prop_turns::std));
+        explosion::run(player_pos,
+                       Expl_type::apply_prop,
+                       Expl_src::misc,
+                       Emit_expl_snd::no,
+                       0,
+                       new Prop_burning(Prop_turns::std));
 
         delete this;
     }
@@ -1224,13 +1265,22 @@ void Molotov::on_player_paralyzed()
 
     const P player_pos = map::player->pos;
 
-    Snd snd("I hear an explosion!", Sfx_id::explosion_molotov, Ignore_msg_if_origin_seen::yes,
-            player_pos, nullptr, Snd_vol::high, Alerts_mon::yes);
+    Snd snd("I hear an explosion!",
+            Sfx_id::explosion_molotov,
+            Ignore_msg_if_origin_seen::yes,
+            player_pos,
+            nullptr,
+            Snd_vol::high,
+            Alerts_mon::yes);
 
     snd_emit::run(snd);
 
-    explosion::run(player_pos, Expl_type::apply_prop, Expl_src::misc,
-                   Emit_expl_snd::no, 0, new Prop_burning(Prop_turns::std));
+    explosion::run(player_pos,
+                   Expl_type::apply_prop,
+                   Expl_src::misc,
+                   Emit_expl_snd::no,
+                   0,
+                   new Prop_burning(Prop_turns::std));
 
     delete this;
 }
@@ -1238,8 +1288,7 @@ void Molotov::on_player_paralyzed()
 //---------------------------------------------------------- FLARE
 void Flare::on_player_ignite() const
 {
-    const bool IS_SWIFT   = player_bon::traits[size_t(Trait::dem_expert)] &&
-                            rnd::coin_toss();
+    const bool IS_SWIFT   = player_bon::traits[size_t(Trait::dem_expert)] && rnd::coin_toss();
 
     const std::string swift_str = IS_SWIFT ? "swiftly " : "";
 
@@ -1248,13 +1297,15 @@ void Flare::on_player_ignite() const
     game_time::update_light_map();
 
     map::player->update_fov();
+
     render::draw_map_and_interface();
+
     game_time::tick(IS_SWIFT);
 }
 
 void Flare::on_std_turn_player_hold_ignited()
 {
-    fuse_turns_--;
+    --fuse_turns_;
 
     if (fuse_turns_ <= 0)
     {
@@ -1268,18 +1319,24 @@ void Flare::on_std_turn_player_hold_ignited()
 void Flare::on_thrown_ignited_landing(const P& p)
 {
     game_time::add_mob(new Lit_flare(p, fuse_turns_));
+
     game_time::update_light_map();
+
     map::player->update_fov();
+
     render::draw_map_and_interface();
 }
 
 void Flare::on_player_paralyzed()
 {
     msg_log::add("The lit Flare falls from my hand!");
+
     map::player->active_explosive = nullptr;
+
     map::player->update_clr();
-    const P&  p = map::player->pos;
-    auto* const f = map::cells[p.x][p.y].rigid;
+
+    const P&    p   = map::player->pos;
+    auto* const f   = map::cells[p.x][p.y].rigid;
 
     if (!f->is_bottomless())
     {
@@ -1300,7 +1357,9 @@ void Smoke_grenade::on_player_ignite() const
     const std::string swift_str = IS_SWIFT ? "swiftly " : "";
 
     msg_log::add("I " + swift_str + "ignite a smoke grenade.");
+
     render::draw_map_and_interface();
+
     game_time::tick(IS_SWIFT);
 }
 
@@ -1311,13 +1370,16 @@ void Smoke_grenade::on_std_turn_player_hold_ignited()
         explosion::run_smoke_explosion_at(map::player->pos);
     }
 
-    fuse_turns_--;
+    --fuse_turns_;
 
     if (fuse_turns_ <= 0)
     {
         msg_log::add("The smoke grenade is extinguished.");
+
         map::player->active_explosive = nullptr;
+
         map::player->update_clr();
+
         delete this;
     }
 }
@@ -1332,10 +1394,13 @@ void Smoke_grenade::on_thrown_ignited_landing(const P& p)
 void Smoke_grenade::on_player_paralyzed()
 {
     msg_log::add("The ignited smoke grenade falls from my hand!");
+
     map::player->active_explosive = nullptr;
+
     map::player->update_clr();
-    const P&  p = map::player->pos;
-    auto* const f = map::cells[p.x][p.y].rigid;
+
+    const P&    p   = map::player->pos;
+    auto* const f   = map::cells[p.x][p.y].rigid;
 
     if (!f->is_bottomless())
     {
@@ -1343,7 +1408,9 @@ void Smoke_grenade::on_player_paralyzed()
     }
 
     map::player->update_fov();
+
     render::draw_map_and_interface();
+
     delete this;
 }
 
@@ -1351,4 +1418,3 @@ Clr Smoke_grenade::ignited_projectile_clr() const
 {
     return data().clr;
 }
-
