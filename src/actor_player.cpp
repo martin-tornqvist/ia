@@ -389,7 +389,7 @@ void Player::on_hit(int& dmg,
         incr_shock(1, Shock_src::misc);
     }
 
-    const bool IS_ENOUGH_DMG_FOR_WOUND  = dmg >= 5;
+    const bool IS_ENOUGH_DMG_FOR_WOUND  = dmg >= MIN_DMG_TO_WOUND;
     const bool IS_PHYSICAL              = dmg_type == Dmg_type::physical;
 
     if (

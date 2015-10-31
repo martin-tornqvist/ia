@@ -50,6 +50,8 @@ const int PLAYER_START_SPI  = 6;
 const int HP_PER_LVL        = 2;
 const int SPI_PER_LVL       = 1;
 
+const int MIN_DMG_TO_WOUND = 5;
+
 const int XP_FOR_DISRM_TRAP = 1;
 
 const int     FOV_STD_RADI_INT  = 8;
