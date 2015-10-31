@@ -24,6 +24,8 @@ namespace game_time
 extern std::vector<Actor*> actors;
 extern std::vector<Mob*> mobs;
 
+extern bool is_magic_descend_nxt_std_turn;
+
 void init();
 void cleanup();
 

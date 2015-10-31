@@ -21,12 +21,15 @@
 #include "map_travel.hpp"
 #include "item.hpp"
 #include "save_handling.hpp"
+#include "msg_log.hpp"
 
 namespace game_time
 {
 
 std::vector<Actor*> actors;
 std::vector<Mob*>   mobs;
+
+bool is_magic_descend_nxt_std_turn;
 
 namespace
 {
@@ -39,6 +42,19 @@ int     turn_nr_            = 0;
 
 void run_std_turn_events()
 {
+    if (is_magic_descend_nxt_std_turn)
+    {
+        render::draw_map_and_interface();
+
+        msg_log::add("I sink downwards!",
+                     clr_white,
+                     false,
+                     More_prompt_on_msg::yes);
+
+        map_travel::go_to_nxt();
+        return;
+    }
+
     ++turn_nr_;
 
     for (auto it = begin(actors); it != end(actors); /* No increment */)
@@ -79,7 +95,7 @@ void run_std_turn_events()
 
                 if (mon->player_aware_of_me_counter_ > 0)
                 {
-                    --(mon->player_aware_of_me_counter_);
+                    --mon->player_aware_of_me_counter_;
                 }
             }
 
@@ -167,8 +183,11 @@ void run_atomic_turn_events()
 void init()
 {
     cur_turn_type_pos_ = cur_actor_idx_ = turn_nr_ = 0;
+
     actors.clear();
     mobs  .clear();
+
+    is_magic_descend_nxt_std_turn = false;
 }
 
 void cleanup()
@@ -186,6 +205,8 @@ void cleanup()
     }
 
     mobs.clear();
+
+    is_magic_descend_nxt_std_turn = false;
 }
 
 void save()

@@ -43,7 +43,7 @@ Item_data_t::Item_data_t() :
     ranged                              (Item_ranged_data()),
     armor                               (Item_armor_data())
 {
-    for (int i = 0; i < int(Ability_id::END); ++i)
+    for (size_t i = 0; i < size_t(Ability_id::END); ++i)
     {
         ability_mods_while_equipped[i] = 0;
     }
@@ -112,8 +112,8 @@ Item_data_t::Item_ranged_data::~Item_ranged_data()
 }
 
 Item_data_t::Item_armor_data::Item_armor_data() :
-    armor_points(0),
-    dmg_to_durability_factor(0.0) {}
+    armor_points                (0),
+    dmg_to_durability_factor    (0.0) {}
 
 namespace item_data
 {
@@ -123,10 +123,23 @@ Item_data_t data[int(Item_id::END)];
 namespace
 {
 
-void add_feature_found_in(Item_data_t& data, const Feature_id feature_id,
+void add_feature_found_in(Item_data_t& data,
+                          const Feature_id feature_id,
                           const int CHANCE_TO_INCL = 100)
 {
     data.container_spawn_rules.push_back({feature_id, CHANCE_TO_INCL});
+}
+
+void mod_spawn_chances(Item_data_t& data, const double FACTOR)
+{
+    data.chance_to_incl_in_floor_spawn_list =
+        int(double(data.chance_to_incl_in_floor_spawn_list) * FACTOR);
+
+    for (Item_container_spawn_rule& container_rule : data.container_spawn_rules)
+    {
+        container_rule.pct_chance_to_incl =
+            int(double(container_rule.pct_chance_to_incl) * FACTOR);
+    }
 }
 
 //------------------------------- ITEM ARCHETYPES (DEFAULTS)
@@ -1808,6 +1821,7 @@ void init_data_list()
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_poison;
+    mod_spawn_chances(d, 0.33);
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::potion);
@@ -1828,6 +1842,7 @@ void init_data_list()
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_descent;
+    mod_spawn_chances(d, 0.5);
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::potion);

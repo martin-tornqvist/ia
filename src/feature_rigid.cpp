@@ -1043,9 +1043,15 @@ void Stairs::bump(Actor& actor_bumping)
 {
     if (actor_bumping.is_player())
     {
-        const std::vector<std::string> choices {"Descend", "Save and quit", "Cancel"};
-        const std::string title  = "A staircase leading downwards";
-        const int CHOICE    =  popup::show_menu_msg("", true, choices, title);
+        const std::vector<std::string> choices
+        {
+            "Descend",
+            "Save and quit",
+            "Cancel"
+        };
+
+        const std::string   title   = "A staircase leading downwards";
+        const int           CHOICE  =  popup::show_menu_msg("", true, choices, title);
 
         switch (CHOICE)
         {

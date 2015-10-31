@@ -148,6 +148,7 @@ void go_to_nxt()
     TRACE_FUNC_BEGIN;
 
     map_list.erase(map_list.begin());
+
     const auto& map_data = map_list.front();
 
     if (map_data.is_main_dungeon == Is_main_dungeon::yes)
@@ -156,6 +157,10 @@ void go_to_nxt()
     }
 
     mk_lvl(map_data.type);
+
+    map::player->prop_handler().end_prop(Prop_id::descend, false);
+
+    game_time::is_magic_descend_nxt_std_turn = false;
 
     map::player->restore_shock(999, true);
 
@@ -167,8 +172,11 @@ void go_to_nxt()
 
     if (map_data.is_main_dungeon == Is_main_dungeon::yes && map::dlvl == DLVL_LAST - 1)
     {
-        msg_log::add("An ominous voice thunders in my ears.", clr_white, false,
+        msg_log::add("An ominous voice thunders in my ears.",
+                     clr_white,
+                     false,
                      More_prompt_on_msg::yes);
+
         audio::play(Sfx_id::boss_voice2);
     }
 
@@ -177,6 +185,7 @@ void go_to_nxt()
     if (insanity::has_sympt(Ins_sympt_id::phobia_deep))
     {
         msg_log::add("I am plagued by my phobia of deep places!");
+
         map::player->prop_handler().try_add_prop(new Prop_terrified(Prop_turns::std));
         return;
     }

@@ -23,6 +23,7 @@
 #include "text_format.hpp"
 #include "save_handling.hpp"
 #include "dungeon_master.hpp"
+#include "map_travel.hpp"
 
 namespace prop_data
 {
@@ -467,7 +468,7 @@ void init_data_list()
     d.msg[size_t(Prop_msg::res_player)] = "";
     d.msg[size_t(Prop_msg::res_mon)] = "";
     d.is_making_mon_aware = true;
-    d.allow_display_turns = true;
+    d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
@@ -490,6 +491,21 @@ void init_data_list()
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = Prop_alignment::bad;
+    add_prop_data(d);
+
+    d.id = Prop_id::descend;
+    d.std_rnd_turns = Range(50, 100);
+    d.name = "Descending";
+    d.name_short = "Descend";
+    d.msg[size_t(Prop_msg::start_player)] = "I feel a sinking sensation.";
+    d.msg[size_t(Prop_msg::end_player)] = "";
+    d.msg[size_t(Prop_msg::res_player)] = "";
+    d.is_making_mon_aware = false;
+    d.allow_display_turns = true;
+    d.allow_apply_more_while_active = false;
+    d.update_vision_when_start_or_end = false;
+    d.allow_test_on_bot = false;
+    d.alignment = Prop_alignment::neutral;
     add_prop_data(d);
 
     d.id = Prop_id::weakened;
@@ -947,6 +963,9 @@ Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init, const int N
 
     case Prop_id::diseased:
         return new Prop_diseased(turns_init, NR_TURNS);
+
+    case Prop_id::descend:
+        return new Prop_descend(turns_init, NR_TURNS);
 
     case Prop_id::poisoned:
         return new Prop_poisoned(turns_init, NR_TURNS);
@@ -1442,7 +1461,7 @@ void Prop_handler::tick(const Prop_turn_mode turn_mode)
             {
                 assert(prop->src_ == Prop_src::intr);
 
-                prop->nr_turns_left_ -= 1;
+                --prop->nr_turns_left_;
             }
 
             if (prop->is_finished())
@@ -1458,13 +1477,13 @@ void Prop_handler::tick(const Prop_turn_mode turn_mode)
             }
             else //Not finished
             {
-                prop->on_new_turn();
+                prop = prop->on_new_turn();
             }
         }
 
-        //Property has not been removed?
         if (prop)
         {
+            //Property has not been removed
             ++i;
         }
     }
@@ -1820,7 +1839,7 @@ void Prop_hasted::on_start()
     owning_actor_->prop_handler().end_prop(Prop_id::slowed, false);
 }
 
-void Prop_infected::on_new_turn()
+Prop* Prop_infected::on_new_turn()
 {
 #ifndef NDEBUG
     assert(!owning_actor_->prop_handler().has_prop(Prop_id::diseased));
@@ -1839,7 +1858,11 @@ void Prop_infected::on_new_turn()
         prop_hlr.end_prop(Prop_id::infected, false);
 
         msg_log::more_prompt();
+
+        return nullptr;
     }
+
+    return this;
 }
 
 int Prop_diseased::affect_max_hp(const int HP_MAX) const
@@ -1883,6 +1906,18 @@ bool Prop_diseased::is_resisting_other_prop(const Prop_id prop_id) const
     return prop_id == Prop_id::infected;
 }
 
+Prop* Prop_descend::on_new_turn()
+{
+    assert(owning_actor_->is_player());
+
+    if (nr_turns_left_ <= 1)
+    {
+        game_time::is_magic_descend_nxt_std_turn = true;
+    }
+
+    return this;
+}
+
 void Prop_poss_by_zuul::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
 {
     if (IS_PLAYER_SEE_OWNING_ACTOR)
@@ -1904,7 +1939,7 @@ void Prop_poss_by_zuul::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
     actor_data::data[size_t(Actor_id::zuul)].nr_left_allowed_to_spawn = -1;
 }
 
-void Prop_poisoned::on_new_turn()
+Prop* Prop_poisoned::on_new_turn()
 {
     if (owning_actor_->is_alive())
     {
@@ -1925,6 +1960,8 @@ void Prop_poisoned::on_new_turn()
             owning_actor_->hit(1, Dmg_type::pure);
         }
     }
+
+    return this;
 }
 
 bool Prop_terrified::allow_attack_melee(const Verbosity verbosity) const
@@ -2083,7 +2120,7 @@ void Prop_wound::heal_one_wound()
     else //This was the last wound
     {
         //End self
-        owning_actor_->prop_handler().end_prop(Prop_id::wound);
+        owning_actor_->prop_handler().end_prop(id());
     }
 }
 
@@ -2174,11 +2211,13 @@ void Prop_confused::affect_move_dir(const P& actor_pos, Dir& dir)
     }
 }
 
-void Prop_strangled::on_new_turn()
+Prop* Prop_strangled::on_new_turn()
 {
     const int DMG = rnd::range(3, 4);
 
     owning_actor_->hit(DMG, Dmg_type::pure, Dmg_method::forced);
+
+    return this;
 }
 
 bool Prop_strangled::allow_speak(const Verbosity verbosity) const
@@ -2292,7 +2331,7 @@ bool Prop_frenzied::allow_cast_spell(const Verbosity verbosity) const
     return false;
 }
 
-void Prop_burning::on_new_turn()
+Prop* Prop_burning::on_new_turn()
 {
     if (owning_actor_->is_player())
     {
@@ -2300,6 +2339,8 @@ void Prop_burning::on_new_turn()
     }
 
     owning_actor_->hit(rnd::dice(1, 2), Dmg_type::fire);
+
+    return this;
 }
 
 bool Prop_burning::allow_read(const Verbosity verbosity) const
@@ -2357,15 +2398,19 @@ bool Prop_fainted::need_update_vision_when_start_or_end() const
     return owning_actor_->is_player();
 }
 
-void Prop_flared::on_new_turn()
+Prop* Prop_flared::on_new_turn()
 {
     owning_actor_->hit(1, Dmg_type::fire);
 
     if (nr_turns_left_ <= 1)
     {
         owning_actor_->prop_handler().try_add_prop(new Prop_burning(Prop_turns::std));
-        owning_actor_->prop_handler().end_prop(Prop_id::flared);
+        owning_actor_->prop_handler().end_prop(id());
+
+        return nullptr;
     }
+
+    return this;
 }
 
 bool Prop_rAcid::try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const
@@ -2538,8 +2583,10 @@ void Prop_see_invis::on_start()
     owning_actor_->prop_handler().end_prop(Prop_id::blind);
 }
 
-void Prop_burrowing::on_new_turn()
+Prop* Prop_burrowing::on_new_turn()
 {
     const P& p = owning_actor_->pos;
     map::cells[p.x][p.y].rigid->hit(Dmg_type::physical, Dmg_method::forced);
+
+    return this;
 }

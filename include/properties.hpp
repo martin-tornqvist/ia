@@ -47,6 +47,7 @@ enum class Prop_id
     spell_reflect,
     strangled,
     conflict,
+    descend,
 
     //Properties describing the actors body and/or method of moving around
     flying,
@@ -346,7 +347,13 @@ public:
     }
 
     virtual void on_hit() {}
-    virtual void on_new_turn() {}
+
+    //Returns a pointer to the property if it's still active, otherwise nullptr is returned
+    virtual Prop* on_new_turn()
+    {
+        return this;
+    }
+
     virtual void on_start() {}
     virtual void on_end() {}
     virtual void on_more() {}
@@ -503,7 +510,7 @@ public:
     Prop_infected(Prop_turns turns_init, int nr_turns = -1) :
         Prop(Prop_id::infected, turns_init, nr_turns) {}
 
-    void on_new_turn() override;
+    Prop* on_new_turn() override;
 };
 
 class Prop_diseased: public Prop
@@ -518,6 +525,15 @@ public:
 
     void on_start() override;
     void on_end() override;
+};
+
+class Prop_descend: public Prop
+{
+public:
+    Prop_descend(Prop_turns turns_init, int nr_turns = -1) :
+        Prop(Prop_id::descend, turns_init, nr_turns) {}
+
+    Prop* on_new_turn() override;
 };
 
 class Prop_flying: public Prop
@@ -547,7 +563,7 @@ public:
     Prop_burrowing(Prop_turns turns_init, int nr_turns = -1) :
         Prop(Prop_id::burrowing, turns_init, nr_turns) {}
 
-    void on_new_turn() override;
+    Prop* on_new_turn() override;
 };
 
 class Prop_poss_by_zuul: public Prop
@@ -570,7 +586,7 @@ public:
     Prop_poisoned(Prop_turns turns_init, int nr_turns = -1) :
         Prop(Prop_id::poisoned, turns_init, nr_turns) {}
 
-    void on_new_turn() override;
+    Prop* on_new_turn() override;
 };
 
 class Prop_fast_shooting: public Prop
@@ -714,7 +730,7 @@ public:
 
     bool allow_attack_ranged(const Verbosity verbosity) const override;
 
-    void on_new_turn() override;
+    Prop* on_new_turn() override;
 };
 
 class Prop_flared: public Prop
@@ -723,7 +739,7 @@ public:
     Prop_flared(Prop_turns turns_init, int nr_turns = -1) :
         Prop(Prop_id::flared, turns_init, nr_turns) {}
 
-    void on_new_turn() override;
+    Prop* on_new_turn() override;
 };
 
 class Prop_warlock_charged: public Prop
@@ -1253,7 +1269,7 @@ public:
         return Prop_turn_mode::actor;
     }
 
-    void on_new_turn() override;
+    Prop* on_new_turn() override;
 
     bool allow_speak(const Verbosity verbosity) const override;
     bool allow_eat(const Verbosity verbosity) const override;

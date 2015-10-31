@@ -12,7 +12,6 @@
 #include "audio.hpp"
 #include "render.hpp"
 #include "inventory.hpp"
-#include "map_travel.hpp"
 #include "map_parsing.hpp"
 #include "utils.hpp"
 #include "feature_rigid.hpp"
@@ -557,13 +556,11 @@ void Potion_descent::quaff_impl(Actor& actor)
 
     if (map::dlvl < DLVL_LAST - 1)
     {
-        render::draw_map_and_interface();
-        msg_log::add("I sink downwards!", clr_white, false, More_prompt_on_msg::yes);
-        map_travel::go_to_nxt();
+        map::player->prop_handler().try_add_prop(new Prop_descend(Prop_turns::std));
     }
     else
     {
-        msg_log::add("I feel a faint sinking sensation.");
+        msg_log::add("I feel a faint sinking sensation, but it quickly disappears...");
     }
 
     identify(Verbosity::verbose);
