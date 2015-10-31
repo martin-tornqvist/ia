@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
                     //Build first dungeon level
                     map_travel::go_to_nxt();
                 }
-                else
+                else //Using intro level
                 {
                     //Build forest.
                     render::clear_screen();

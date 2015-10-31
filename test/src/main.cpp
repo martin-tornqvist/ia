@@ -40,6 +40,7 @@ struct Basic_fixture
     {
         init::init_game();
         init::init_session();
+        map::player->mk_start_items();
         map::player->pos = P(1, 1);
         map::reset_map(); //Because map generation is not run
     }
