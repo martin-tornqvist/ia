@@ -981,7 +981,7 @@ void init_data_list()
     d.speed = Actor_speed::fast;
     d.ranged_cooldown_turns = 0;
     d.glyph = 'S';
-    d.color = clr_green;
+    d.color = clr_green_lgt;
     d.tile = Tile_id::snake;
     d.hp = 7;
     d.dmg_melee = 2;

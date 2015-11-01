@@ -737,19 +737,15 @@ Spell_effect_noticed Spell_pest::cast_impl(Actor* const caster) const
     std::vector<Mon*> mon_summoned;
 
     actor_factory::summon(caster->pos,
-                          {NR_MON, monster_id},
-                          Make_mon_aware::yes,
-                          leader,
-                          &mon_summoned);
+    {NR_MON, monster_id},
+    Make_mon_aware::yes,
+    leader,
+    &mon_summoned);
 
     bool is_any_seen_by_player = false;
 
-    const int NR_TURNS_SUMMONED = rnd::range(40, 70);
-
     for (Mon* const mon : mon_summoned)
     {
-        mon->nr_turns_until_unsummoned_ = NR_TURNS_SUMMONED;
-
         if (map::player->can_see_actor(*mon))
         {
             is_any_seen_by_player = true;
@@ -825,10 +821,10 @@ Spell_effect_noticed Spell_pharaoh_staff::cast_impl(Actor* const caster) const
     const auto actor_id = rnd::coin_toss() ? Actor_id::mummy : Actor_id::croc_head_mummy;
 
     actor_factory::summon(caster->pos,
-                          {actor_id},
-                          Make_mon_aware::yes,
-                          leader,
-                          &summoned_mon);
+    {actor_id},
+    Make_mon_aware::yes,
+    leader,
+    &summoned_mon);
 
     const Mon* const mon = summoned_mon[0];
 
@@ -1394,20 +1390,19 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
     }
     else //Caster is monster
     {
-        Actor* const caster_leader = static_cast<Mon*>(caster)->leader_;
-        leader                    = caster_leader ? caster_leader : caster;
+        Actor* const caster_leader  = static_cast<Mon*>(caster)->leader_;
+        leader                      = caster_leader ? caster_leader : caster;
     }
 
     std::vector<Mon*> mon_summoned;
 
     actor_factory::summon(summon_pos,
-                          {mon_id},
-                          Make_mon_aware::yes,
-                          leader,
-                          &mon_summoned);
+    {mon_id},
+    Make_mon_aware::yes,
+    leader,
+    &mon_summoned);
 
     Mon* const mon = mon_summoned[0];
-    mon->nr_turns_until_unsummoned_ = rnd::range(40, 70);;
 
     if (map::player->can_see_actor(*mon))
     {
@@ -1430,7 +1425,9 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
 bool Spell_summon_mon::allow_mon_cast_now(Mon& mon) const
 {
     //NOTE: Checking awareness instead of target, to allow summoning even with broken LOS
-    return (mon.aware_counter_ > 0) && rnd::coin_toss() && (mon.tgt_ || rnd::one_in(18));
+    return (mon.aware_counter_ > 0) &&
+           rnd::coin_toss()         &&
+           (mon.tgt_ || rnd::one_in(18));
 }
 
 //------------------------------------------------------------ HEAL SELF
@@ -1496,7 +1493,9 @@ Spell_effect_noticed Spell_mi_go_hypno::cast_impl(Actor* const caster) const
 
 bool Spell_mi_go_hypno::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && mon.tgt_->is_player() && rnd::one_in(3);
+    return mon.tgt_                 &&
+           mon.tgt_->is_player()    &&
+           rnd::one_in(3);
 }
 
 //------------------------------------------------------------ IMMOLATION

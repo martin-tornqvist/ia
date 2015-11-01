@@ -42,8 +42,7 @@ Mon::Mon() :
     tgt_                        (nullptr),
     waiting_                    (false),
     shock_caused_cur_           (0.0),
-    has_given_xp_for_spotting_  (false),
-    nr_turns_until_unsummoned_  (-1) {}
+    has_given_xp_for_spotting_  (false) {}
 
 Mon::~Mon()
 {
@@ -403,25 +402,6 @@ bool Mon::can_see_actor(const Actor& other, const bool hard_blocked_los[MAP_W][M
 
 void Mon::on_std_turn()
 {
-    if (is_alive())
-    {
-        if (nr_turns_until_unsummoned_ > 0)
-        {
-            --nr_turns_until_unsummoned_;
-
-            if (nr_turns_until_unsummoned_ <= 0)
-            {
-                if (map::player->can_see_actor(*this))
-                {
-                    msg_log::add(name_the() + " suddenly disappears!");
-                }
-
-                state_ = Actor_state::destroyed;
-                return;
-            }
-        }
-    }
-
     on_std_turn_hook();
 }
 
@@ -2305,16 +2285,14 @@ bool The_high_priest::on_actor_turn_hook()
             std::vector<Mon*> summoned;
 
             actor_factory::summon(p,
-            {Actor_id::the_high_priest_cpy},
-            Make_mon_aware::yes,
-            this,
-            &summoned);
+                                  std::vector<Actor_id>(1, Actor_id::the_high_priest_cpy),
+                                  Make_mon_aware::yes,
+                                  this,
+                                  &summoned);
 
             assert(summoned.size() == 1);
 
             Mon* const mon = summoned.front();
-
-            mon->nr_turns_until_unsummoned_ = rnd::range(6, 12);
 
             if (i == 0)
             {

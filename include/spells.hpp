@@ -350,6 +350,7 @@ public:
     {
         return "Summon Mummy servant";
     }
+
     virtual Spell_id id() const override
     {
         return Spell_id::pharaoh_staff;

@@ -107,7 +107,6 @@ public:
     bool                waiting_;
     double              shock_caused_cur_;
     bool                has_given_xp_for_spotting_;
-    int                 nr_turns_until_unsummoned_;
 
 protected:
     virtual void on_hit(int& dmg,

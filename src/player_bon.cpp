@@ -488,8 +488,7 @@ std::string trait_descr(const Trait id)
                "maximum damage";
 
     case Trait::summoner:
-        return "-1 Spirit cost for summoning spells, halved risk that called creatures "
-               "are hostile";
+        return "-1 Spirit cost for summoning spells, halved risk that called creatures are hostile";
 
     case Trait::blood_sorcerer:
         return "-1 Spirit cost for all spells, casting a spell drains 2 Hit Points";

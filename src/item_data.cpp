@@ -1303,7 +1303,7 @@ void init_data_list()
 
     reset_data(d, Item_type::ranged_wpn_intr);
     d.id = Item_id::fire_hound_breath;
-    d.ranged.att_msgs = {"", "breaths fire at me"};
+    d.ranged.att_msgs = {"", "breathes fire at me"};
     d.ranged.snd_msg = "I hear a burst of flames.";
     set_dmg_from_mon_id(d, Actor_id::fire_hound);
     d.ranged.prop_applied = new Prop_burning(Prop_turns::std);

@@ -15,12 +15,13 @@ class Wpn;
 class Att_data
 {
 public:
+    virtual ~Att_data() {}
+
     Actor*              attacker;
     Actor*              defender;
     Ability_roll_result att_result;
     int                 dmg;
-    bool                is_intrinsic_att;
-    bool                is_ethereal_defender_missed;
+    bool                is_intrinsic_att, is_ethereal_defender_missed;
 
 protected:
     //Never use this class directly (only through inheritance)
@@ -35,9 +36,10 @@ public:
     Melee_att_data(Actor* const attacker,
                    Actor& defender,
                    const Wpn& wpn);
-    bool is_defender_dodging;
-    bool is_backstab;
-    bool is_weak_attack;
+
+    ~Melee_att_data() {}
+
+    bool is_defender_dodging, is_backstab, is_weak_attack;
 };
 
 class Ranged_att_data: public Att_data
@@ -49,11 +51,13 @@ public:
                     const P& cur_pos,
                     const Wpn& wpn,
                     Actor_size aim_lvl = Actor_size::none);
-    int         hit_chance_tot;
-    Actor_size  intended_aim_lvl;
-    Actor_size  defender_size;
-    std::string verb_player_attacks;
-    std::string verb_other_attacks;
+
+    ~Ranged_att_data() {}
+
+    P               aim_pos;
+    int             hit_chance_tot;
+    Actor_size      intended_aim_lvl, defender_size;
+    std::string     verb_player_attacks, verb_other_attacks;
 };
 
 class Throw_att_data: public Att_data
@@ -65,8 +69,7 @@ public:
                    const Item& item,
                    Actor_size aim_lvl = Actor_size::none);
     int         hit_chance_tot;
-    Actor_size  intended_aim_lvl;
-    Actor_size  defender_size;
+    Actor_size  intended_aim_lvl, defender_size;
 };
 
 struct Projectile

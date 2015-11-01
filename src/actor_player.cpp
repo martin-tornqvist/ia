@@ -1084,7 +1084,7 @@ void Player::on_std_turn()
     //HP regen
     if (!has_prop(Prop_id::poisoned))
     {
-        int nr_turns_per_hp = 14;
+        int nr_turns_per_hp = 12;
 
         //Wounds affect HP regen?
         int nr_wounds = 0;

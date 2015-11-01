@@ -241,6 +241,7 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
                                  const Wpn& wpn,
                                  Actor_size aim_lvl) :
     Att_data            (attacker, nullptr, wpn),
+    aim_pos             (aim_pos),
     hit_chance_tot      (0),
     intended_aim_lvl    (Actor_size::none),
     defender_size       (Actor_size::none),
@@ -258,8 +259,7 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
         }
         else //No actor aimed at
         {
-            const bool IS_CELL_BLOCKED =
-                map_parse::cell(cell_check::Blocks_projectiles(), cur_pos);
+            const bool IS_CELL_BLOCKED = map_parse::cell(cell_check::Blocks_projectiles(), cur_pos);
 
             intended_aim_lvl = IS_CELL_BLOCKED ?
                                Actor_size::humanoid : Actor_size::floor;
@@ -479,16 +479,14 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
 {
     assert(att_data.defender);
 
-    std::string other_name = "";
-
-    auto snd_alerts_mon = Alerts_mon::no;
+    std::string other_name      = "";
+    std::string snd_msg         = "";
+    auto        snd_alerts_mon  = Alerts_mon::no;
 
     if ((int(wpn.data().weight) > int(Item_weight::light)) && !att_data.is_intrinsic_att)
     {
         snd_alerts_mon = Alerts_mon::yes;
     }
-
-    std::string snd_msg = "";
 
     //Only print a message if player is not involved
     if (att_data.defender != map::player && att_data.attacker != map::player)
@@ -496,7 +494,6 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
         //TODO: This message is not always appropriate (e.g. spear traps)
         snd_msg = "I hear fighting.";
     }
-
 
     if (att_data.is_defender_dodging)
     {
@@ -794,7 +791,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
     }
 }
 
-void print_ranged_initiate_msgs(const Ranged_att_data& data)
+void print_ranged_init_msgs(const Ranged_att_data& data)
 {
     if (!data.attacker)
     {
@@ -804,17 +801,25 @@ void print_ranged_initiate_msgs(const Ranged_att_data& data)
 
     if (data.attacker == map::player)
     {
+        //Player is attacking
         msg_log::add("I " + data.verb_player_attacks + ".");
     }
     else //Attacker is monster
     {
-        const P& p = data.attacker->pos;
-
-        if (map::cells[p.x][p.y].is_seen_by_player)
+        //Only print message if aiming at player
+        if (data.aim_pos == map::player->pos)
         {
-            const std::string attacker_name = data.attacker->name_the();
-            const std::string attack_verb = data.verb_other_attacks;
-            msg_log::add(attacker_name + " " + attack_verb + ".", clr_white, true);
+            const P& p = data.attacker->pos;
+
+            if (map::cells[p.x][p.y].is_seen_by_player)
+            {
+                const std::string attacker_name = data.attacker->name_the();
+                const std::string attack_verb   = data.verb_other_attacks;
+
+                msg_log::add(attacker_name + " " + attack_verb + ".",
+                             clr_white,
+                             true);
+            }
         }
     }
 }
@@ -886,14 +891,19 @@ void projectile_fire(Actor* const attacker, const P& origin, const P& aim_pos, W
 
     const int DELAY = config::delay_projectile_draw() / (IS_MACHINE_GUN ? 2 : 1);
 
-    print_ranged_initiate_msgs(*projectiles[0]->att_data);
+    print_ranged_init_msgs(*projectiles[0]->att_data);
 
     const bool stop_at_tgt = aim_lvl == Actor_size::floor;
     const int cheb_trvl_lim = 30;
 
     //Get projectile path
     std::vector<P> path;
-    line_calc::calc_new_line(origin, aim_pos, stop_at_tgt, cheb_trvl_lim, false, path);
+    line_calc::calc_new_line(origin,
+                             aim_pos,
+                             stop_at_tgt,
+                             cheb_trvl_lim,
+                             false,
+                             path);
 
     const Clr projectile_clr = wpn.data().ranged.projectile_clr;
     char projectile_glyph    = wpn.data().ranged.projectile_glyph;
@@ -1254,7 +1264,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
 {
     Ranged_att_data data = Ranged_att_data(&attacker, attacker.pos, aim_pos, attacker.pos, wpn);
 
-    print_ranged_initiate_msgs(data);
+    print_ranged_init_msgs(data);
 
     const Actor_size intended_aim_lvl = data.intended_aim_lvl;
 
@@ -1506,22 +1516,36 @@ void melee(Actor* const attacker,
         //Exhausted (weakened)
         case 1:
         {
-            Prop* prop = new Prop_weakened(Prop_turns::specific, rnd::range(6, 12));
+            Prop* prop = new Prop_weakened(Prop_turns::specific,
+                                           rnd::range(6, 12));
 
-            player.prop_handler().try_add_prop(prop, Prop_src::intr, false, Verbosity::silent);
+            player.prop_handler().try_add_prop(prop,
+                                               Prop_src::intr,
+                                               false,
+                                               Verbosity::silent);
 
-            msg_log::add("I am exhausted.", clr_msg_note, true, More_prompt_on_msg::yes);
+            msg_log::add("I am exhausted.",
+                         clr_msg_note,
+                         true,
+                         More_prompt_on_msg::yes);
         }
         break;
 
         //Off-balance
         case 2:
         {
-            msg_log::add("I am off-balance.", clr_msg_note, true, More_prompt_on_msg::yes);
+            msg_log::add("I am off-balance.",
+                         clr_msg_note,
+                         true,
+                         More_prompt_on_msg::yes);
 
-            Prop* prop = new Prop_paralyzed(Prop_turns::specific, rnd::range(1, 2));
+            Prop* prop = new Prop_paralyzed(Prop_turns::specific,
+                                            rnd::range(1, 2));
 
-            player.prop_handler().try_add_prop(prop, Prop_src::intr, false, Verbosity::silent);
+            player.prop_handler().try_add_prop(prop,
+                                               Prop_src::intr,
+                                               false,
+                                               Verbosity::silent);
         }
         break;
 
@@ -1575,8 +1599,10 @@ void melee(Actor* const attacker,
                         item_p = p_bucket[IDX];
                     }
 
-                    msg_log::add("The " + item_name + " flies from my hands!", clr_msg_note,
-                                 true, More_prompt_on_msg::yes);
+                    msg_log::add("The " + item_name + " flies from my hands!",
+                                 clr_msg_note,
+                                 true,
+                                 More_prompt_on_msg::yes);
 
                     item_drop::drop_item_on_map(item_p, *item);
                 }
@@ -1600,8 +1626,11 @@ void melee(Actor* const attacker,
                 {
                     std::string item_name = item->name(Item_ref_type::plain, Item_ref_inf::none);
 
-                    msg_log::add("My " + item_name + " breaks!", clr_msg_note, true,
+                    msg_log::add("My " + item_name + " breaks!",
+                                 clr_msg_note,
+                                 true,
                                  More_prompt_on_msg::yes);
+
                     delete item;
                 }
             }
