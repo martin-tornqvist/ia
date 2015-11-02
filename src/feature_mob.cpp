@@ -31,36 +31,30 @@ void Smoke::on_new_turn()
 
         //Perhaps add some variable like "has_eyes"?
 
-        bool is_protected_blindness = false;
+        bool is_blind_prot = false;
 
         if (IS_PLAYER)
         {
-            auto&       inv             = map::player->inv();
-            auto* const player_head_item  = inv.slots_[int(Slot_id::head)].item;
-            auto* const player_body_item  = inv.slots_[int(Slot_id::body)].item;
+            auto&       inv                 = map::player->inv();
+            auto* const player_head_item    = inv.slots_[int(Slot_id::head)].item;
+            auto* const player_body_item    = inv.slots_[int(Slot_id::body)].item;
 
-            if (player_head_item)
+            if (player_head_item && player_head_item->data().id == Item_id::gas_mask)
             {
-                if (player_head_item->data().id == Item_id::gas_mask)
-                {
-                    is_protected_blindness = true;
+                is_blind_prot = true;
 
-                    //This may destroy the gasmask
-                    static_cast<Gas_mask*>(player_head_item)->decr_turns_left(inv);
-                }
+                //This may destroy the gasmask
+                static_cast<Gas_mask*>(player_head_item)->decr_turns_left(inv);
             }
 
-            if (player_body_item)
+            if (player_body_item && player_body_item->data().id == Item_id::armor_asb_suit)
             {
-                if (player_body_item->data().id == Item_id::armor_asb_suit)
-                {
-                    is_protected_blindness = true;
-                }
+                is_blind_prot = true;
             }
         }
 
-        //Blinded by smoke?
-        if (!is_protected_blindness && rnd::one_in(4))
+        //Blinded?
+        if (!is_blind_prot && rnd::one_in(4))
         {
             if (IS_PLAYER)
             {
@@ -71,36 +65,44 @@ void Smoke::on_new_turn()
                 new Prop_blind(Prop_turns::specific, rnd::range(1, 3)));
         }
 
-        //Choking (this is determined by rBreath)?
-        if (rnd::one_in(4))
+        //Coughing?
+        if (rnd::one_in(4) && !actor->has_prop(Prop_id::rBreath))
         {
-            if (!actor->has_prop(Prop_id::rBreath))
+            std::string snd_msg = "";
+
+            if (IS_PLAYER)
             {
-                std::string snd_msg = "";
-
-                if (IS_PLAYER)
-                {
-                    msg_log::add("I am choking!", clr_msg_bad);
-                }
-                else
-                {
-                    if (actor->is_humanoid()) {snd_msg = "I hear choking.";}
-                }
-
-                const auto alerts = IS_PLAYER ? Alerts_mon::yes : Alerts_mon::no;
-
-                snd_emit::run(Snd(snd_msg, Sfx_id::END, Ignore_msg_if_origin_seen::yes,
-                                  actor->pos, actor, Snd_vol::low, alerts));
-
-                actor->hit(1, Dmg_type::pure);
+                msg_log::add("I cough.", clr_msg_bad);
             }
+            else //Is monster
+            {
+                if (actor->is_humanoid())
+                {
+                    snd_msg = "I hear coughing.";
+                }
+            }
+
+            const auto alerts = IS_PLAYER ? Alerts_mon::yes : Alerts_mon::no;
+
+            snd_emit::run(Snd(snd_msg,
+                              Sfx_id::END,
+                              Ignore_msg_if_origin_seen::yes,
+                              actor->pos,
+                              actor,
+                              Snd_vol::low,
+                              alerts));
         }
     }
 
     //If not permanent, count down turns left and possibly erase self
     if (nr_turns_left_ > -1)
     {
-        if (--nr_turns_left_ <= 0) {game_time::erase_mob(this, true);}
+        --nr_turns_left_;
+
+        if (nr_turns_left_ <= 0)
+        {
+            game_time::erase_mob(this, true);
+        }
     }
 }
 
@@ -108,7 +110,10 @@ std::string Smoke::name(const Article article)  const
 {
     std::string ret = "";
 
-    if (article == Article::the) {ret += "the ";}
+    if (article == Article::the)
+    {
+        ret += "the ";
+    }
 
     return ret + "smoke";
 }
@@ -135,13 +140,18 @@ void Lit_dynamite::on_new_turn()
 
         //NOTE: The dynamite is now deleted. Do not use member variable after this point.
 
-        explosion::run(p, Expl_type::expl, Expl_src::misc, Emit_expl_snd::yes, D);
+        explosion::run(p,
+                       Expl_type::expl,
+                       Expl_src::misc,
+                       Emit_expl_snd::yes,
+                       D);
     }
 }
 
 std::string Lit_dynamite::name(const Article article)  const
 {
     std::string ret = article == Article::a ? "a " : "the ";
+
     return ret + "lit stick of dynamite";
 }
 
@@ -153,9 +163,12 @@ Clr Lit_dynamite::clr() const
 //------------------------------------------------------------------- FLARE
 void Lit_flare::on_new_turn()
 {
-    nr_turns_left_--;
+    --nr_turns_left_;
 
-    if (nr_turns_left_ <= 0) {game_time::erase_mob(this, true);}
+    if (nr_turns_left_ <= 0)
+    {
+        game_time::erase_mob(this, true);
+    }
 }
 
 void Lit_flare::add_light(bool light[MAP_W][MAP_H]) const
@@ -191,6 +204,7 @@ void Lit_flare::add_light(bool light[MAP_W][MAP_H]) const
 std::string Lit_flare::name(const Article article)  const
 {
     std::string ret = article == Article::a ? "a " : "the ";
+
     return ret + "lit flare";
 }
 
