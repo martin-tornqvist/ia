@@ -141,7 +141,6 @@
 		<Unit filename="../include/config.hpp" />
 		<Unit filename="../include/converters.hpp" />
 		<Unit filename="../include/create_character.hpp" />
-		<Unit filename="../include/credits.hpp" />
 		<Unit filename="../include/disarm.hpp" />
 		<Unit filename="../include/drop.hpp" />
 		<Unit filename="../include/dungeon_master.hpp" />
@@ -224,7 +223,6 @@
 		<Unit filename="../src/config.cpp" />
 		<Unit filename="../src/converters.cpp" />
 		<Unit filename="../src/create_character.cpp" />
-		<Unit filename="../src/credits.cpp" />
 		<Unit filename="../src/disarm.cpp" />
 		<Unit filename="../src/drop.cpp" />
 		<Unit filename="../src/dungeon_master.cpp" />

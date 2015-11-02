@@ -11,7 +11,6 @@
 #include "manual.hpp"
 #include "popup.hpp"
 #include "text_format.hpp"
-#include "credits.hpp"
 #include "audio.hpp"
 #include "game_time.hpp"
 #include "map_travel.hpp"
@@ -247,7 +246,7 @@ void draw(const Menu_browser& browser)
             {
                 if (glyph != ' ')
                 {
-                    Clr clr = clr_green_lgt;
+                    Clr clr = clr_violet;
 
                     clr.g += rnd::range(-50, 100);
 
@@ -255,7 +254,7 @@ void draw(const Menu_browser& browser)
 
                     render::draw_glyph(glyph, Panel::screen, pos, clr);
                 }
-                pos.x++;
+                ++pos.x;
             }
             pos.y += 1;
         }
@@ -271,38 +270,41 @@ void draw(const Menu_browser& browser)
 
     pos.set(48, 13);
 
-    render::draw_text("New journey", Panel::screen, pos,
+    render::draw_text("New journey",
+                      Panel::screen, pos,
                       browser.is_at_idx(0) ? clr_menu_highlight : clr_menu_drk);
     pos += 1;
 
-    render::draw_text("Resurrect", Panel::screen, pos,
+    render::draw_text("Resurrect",
+                      Panel::screen, pos,
                       browser.is_at_idx(1) ? clr_menu_highlight : clr_menu_drk);
     pos += 1;
 
-    render::draw_text("Tome of Wisdom", Panel::screen, pos,
+    render::draw_text("Tome of Wisdom",
+                      Panel::screen, pos,
                       browser.is_at_idx(2) ? clr_menu_highlight : clr_menu_drk);
     pos += 1;
 
-    render::draw_text("Options", Panel::screen, pos,
+    render::draw_text("Options",
+                      Panel::screen, pos,
                       browser.is_at_idx(3) ? clr_menu_highlight : clr_menu_drk);
     pos += 1;
 
-    render::draw_text("Credits", Panel::screen, pos,
+    render::draw_text("Graveyard",
+                      Panel::screen, pos,
                       browser.is_at_idx(4) ? clr_menu_highlight : clr_menu_drk);
     pos += 1;
 
-    render::draw_text("Graveyard", Panel::screen, pos,
+    render::draw_text("Escape to reality",
+                      Panel::screen, pos,
                       browser.is_at_idx(5) ? clr_menu_highlight : clr_menu_drk);
-    pos += 1;
-
-    render::draw_text("Escape to reality", Panel::screen, pos,
-                      browser.is_at_idx(6) ? clr_menu_highlight : clr_menu_drk);
     pos += 1;
 
     if (IS_DEBUG_MODE)
     {
-        render::draw_text("DEBUG: RUN BOT", Panel::screen, pos,
-                          browser.is_at_idx(7) ? clr_menu_highlight : clr_menu_drk);
+        render::draw_text("DEBUG: RUN BOT",
+                          Panel::screen, pos,
+                          browser.is_at_idx(6) ? clr_menu_highlight : clr_menu_drk);
         pos += 1;
     }
 
@@ -342,14 +344,15 @@ void draw(const Menu_browser& browser)
 
         for (const std::string& line : quote_lines)
         {
-            render::draw_text_centered(line, Panel::screen, pos, quote_clr);
+            render::draw_text_center(line, Panel::screen, pos, quote_clr);
             ++pos.y;
         }
     }
 
-    render::draw_text_centered(
-        game_version_str + " - " + __DATE__ + " (c) 2011-2015 Martin Tornqvist",
-        Panel::screen, P(MAP_W_HALF, SCREEN_H - 1), clr_gray_drk);
+    render::draw_text_center(version_str + " - " + __DATE__ + " (c) 2011-2015 Martin Tornqvist",
+                             Panel::screen,
+                             P(MAP_W_HALF, SCREEN_H - 1),
+                             clr_gray_drk);
 
     render::update_screen();
 
@@ -364,7 +367,7 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
 
     quote = hpl_quote();
 
-    Menu_browser browser(IS_DEBUG_MODE ? 8 : 7);
+    Menu_browser browser(IS_DEBUG_MODE ? 7 : 6);
 
     intro_mus_channel = audio::play(Sfx_id::mus_cthulhiana_Madness);
 
@@ -426,17 +429,11 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
 
             if (browser.is_at_idx(4))
             {
-                credits::run();
-                draw(browser);
-            }
-
-            if (browser.is_at_idx(5))
-            {
                 highscore::run_highscore_screen();
                 draw(browser);
             }
 
-            if (browser.is_at_idx(6))
+            if (browser.is_at_idx(5))
             {
                 quit    = true;
                 TRACE_FUNC_END;
@@ -445,7 +442,7 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
 
             if (IS_DEBUG_MODE)
             {
-                if (browser.is_at_idx(7))
+                if (browser.is_at_idx(6))
                 {
                     config::toggle_bot_playing();
                     TRACE_FUNC_END;

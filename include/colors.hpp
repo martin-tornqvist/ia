@@ -32,7 +32,7 @@ const Clr clr_cyan_lgt          = {  0, 255, 255, 0};
 
 const Clr clr_brown             = {153, 102,  61, 0};
 const Clr clr_brown_drk         = { 96,  64,  32, 0};
-const Clr clr_brown_gray        = { 92,  84,  78, 0};
+const Clr clr_brown_gray        = { 83,  76,  66, 0};
 
 const Clr clr_violet            = {128,   0, 255, 0};
 const Clr clr_violet_drk        = { 64,   0, 128, 0};
@@ -61,7 +61,6 @@ const Clr clr_menu_highlight    = clr_violet;
 const Clr clr_menu_medium       = clr_violet_drk;
 const Clr clr_menu_drk          = clr_gray_drk;
 
-const Clr clr_popup_box         = clr_gray_drk;
-const Clr clr_popup_title       = clr_orange;
+const Clr clr_title             = clr_brown_gray;
 
 #endif

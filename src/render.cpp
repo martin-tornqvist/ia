@@ -419,7 +419,7 @@ void init()
 
     TRACE << "Setting up rendering window" << std::endl;
 
-    const std::string title = "IA " + game_version_str;
+    const std::string title = "IA " + version_str;
 
     const int SCR_PX_W = config::scr_px_w();
     const int SCR_PX_H = config::scr_px_h();
@@ -647,8 +647,10 @@ void draw_marker(const P& p, const std::vector<P>& trail, const int EFFECTIVE_RA
     }
 }
 
-void draw_blast_at_field(const P& center_pos, const int RADIUS,
-                         bool forbidden_cells[MAP_W][MAP_H], const Clr& clr_inner,
+void draw_blast_at_field(const P& center_pos,
+                         const int RADIUS,
+                         bool forbidden_cells[MAP_W][MAP_H],
+                         const Clr& clr_inner,
                          const Clr& clr_outer)
 {
     TRACE_FUNC_BEGIN;
@@ -895,9 +897,9 @@ void draw_text(const std::string& str, const Panel panel, const P& pos, const Cl
     }
 }
 
-int draw_text_centered(const std::string& str, const Panel panel, const P& pos,
-                       const Clr& clr, const Clr& bg_clr,
-                       const bool IS_PIXEL_POS_ADJ_ALLOWED)
+int draw_text_center(const std::string& str, const Panel panel, const P& pos,
+                     const Clr& clr, const Clr& bg_clr,
+                     const bool IS_PIXEL_POS_ADJ_ALLOWED)
 {
     if (!is_inited())
     {
@@ -1149,6 +1151,51 @@ void draw_descr_box(const std::vector<Str_and_clr>& lines)
 
         ++p.y;
     }
+}
+
+void draw_info_scr_interface(const std::string& title)
+{
+    if (config::is_tiles_mode())
+    {
+        for (int x = 0; x < SCREEN_W; ++x)
+        {
+            render::draw_tile(Tile_id::popup_hor,
+                              Panel::screen,
+                              P(x, 0),
+                              clr_title);
+
+            render::draw_tile(Tile_id::popup_hor,
+                              Panel::screen,
+                              P(x, SCREEN_H - 1),
+                              clr_title);
+        }
+    }
+    else //Text mode
+    {
+        const std::string decoration_line(MAP_W, '-');
+
+        render::draw_text(decoration_line,
+                          Panel::screen,
+                          P(0, 0),
+                          clr_title);
+
+        render::draw_text(decoration_line,
+                          Panel::screen,
+                          P(0, SCREEN_H - 1),
+                          clr_title);
+    }
+
+    const int X_LABEL = 3;
+
+    render::draw_text(" " + title + " ",
+                      Panel::screen,
+                      P(X_LABEL, 0),
+                      clr_title);
+
+    render::draw_text(" " + info_scr_cmd_info + " ",
+                      Panel::screen,
+                      P(X_LABEL, SCREEN_H - 1),
+                      clr_title);
 }
 
 void draw_map_and_interface(const bool SHOULD_UPDATE_SCREEN)

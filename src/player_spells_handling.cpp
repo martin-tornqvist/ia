@@ -45,10 +45,10 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
 
     render::clear_screen();
 
-    render::draw_text_centered("Invoke power",
-                               Panel::screen,
-                               P(SCREEN_W / 2, 0),
-                               clr_orange);
+    render::draw_text_center("Invoke which power?",
+                             Panel::screen,
+                             P(SCREEN_W / 2, 0),
+                             clr_title);
 
     P p(0, 1);
 
@@ -57,8 +57,6 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
     for (int i = 0; i < NR_SPELLS; ++i)
     {
         const int       CUR_IDX         = i;
-        Scroll          scroll(nullptr);
-        Clr             scroll_clr      = scroll.interface_clr();
         const bool      IS_IDX_MARKED   = browser.is_at_idx(CUR_IDX);
         Spell_opt       spell_opt       = spell_opts[i];
         Spell* const    spell           = spell_opt.spell;
@@ -68,13 +66,11 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
 
         p.x = 0;
 
-        Clr clr = IS_IDX_MARKED ? clr_white_high : clr_menu_drk;
+        const Clr clr = IS_IDX_MARKED ? clr_menu_highlight : clr_menu_drk;
 
         render::draw_text(key_str, Panel::screen, p, clr);
 
         ++key_str[0];
-
-        clr = IS_IDX_MARKED ? clr_white : scroll_clr;
 
         p.x = key_str.size();
 
@@ -95,7 +91,10 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
         fill_clr.g /= 3;
         fill_clr.b /= 3;
 
-        render::draw_text(fill_str, Panel::screen, P(p.x + name.size(), p.y), fill_clr);
+        render::draw_text(fill_str,
+                          Panel::screen,
+                          P(p.x + name.size(), p.y),
+                          fill_clr);
 
         p.x = SPI_X;
 

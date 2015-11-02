@@ -40,6 +40,9 @@ void load_audio_file(const Sfx_id sfx, const std::string& filename)
               << "Mix_GetError(): "                         << Mix_GetError()   << std::endl;
         assert(false);
     }
+
+    //Read events, so we don't freeze the game while we load sounds
+    SDL_PumpEvents();
 }
 
 int next_channel(const int FROM)
@@ -162,7 +165,8 @@ void init()
             ++a;
         }
 
-        load_audio_file(Sfx_id::mus_cthulhiana_Madness, "musica_cthulhiana-fragment-madness.ogg");
+        load_audio_file(Sfx_id::mus_cthulhiana_Madness,
+                        "musica_cthulhiana-fragment-madness.ogg");
     }
     TRACE_FUNC_END;
 }

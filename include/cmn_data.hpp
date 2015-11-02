@@ -5,7 +5,7 @@
 
 const size_t PLAYER_NAME_MAX_LEN = 14;
 
-const std::string game_version_str          = "v18.0";
+const std::string version_str = "v18.0";
 
 const std::string tiles_img_name            = "images/gfx_16x24.png";
 const std::string main_menu_logo_img_name   = "images/main_menu_logo.png";
@@ -98,7 +98,7 @@ const int PLAYER_CARRY_WEIGHT_BASE = 500;
 //actors above the limit. This number is treated as a soft limit.
 const size_t MAX_NR_ACTORS_ON_MAP = 125;
 
-const std::string info_scr_cmd_info = " [2/8 down/up j/k] to navigate [space/esc] to exit ";
+const std::string info_scr_cmd_info = "[2/8, down/up, j/k] to scroll [space/esc] to exit";
 
 const std::string cancel_info_str_no_space  = "[space/esc] to cancel";
 const std::string cancel_info_str           = " " + cancel_info_str_no_space;

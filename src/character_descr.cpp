@@ -26,10 +26,10 @@ void mk_lines()
 {
     lines_.clear();
 
-    const std::string offset = "   ";
-    const Clr& clr_heading   = clr_white_high;
-    const Clr& clr_text      = clr_white;
-    const Clr& clr_text_dark  = clr_gray;
+    const std::string   offset          = "   ";
+    const Clr&          clr_heading     = clr_white_high;
+    const Clr&          clr_text        = clr_white;
+    const Clr&          clr_text_dark   = clr_gray;
 
     lines_.push_back({"History of " + map::player->name_the(), clr_heading});
 
@@ -54,14 +54,14 @@ void mk_lines()
 
     lines_.push_back({"Combat skills", clr_heading});
 
-    const int BASE_MELEE            = std::min(100,
-                                      abilities.val(Ability_id::melee, true, *(map::player)));
+    const int BASE_MELEE =
+        std::min(100, abilities.val(Ability_id::melee, true, *(map::player)));
 
-    const int BASE_RANGED           = std::min(100,
-                                      abilities.val(Ability_id::ranged, true, *(map::player)));
+    const int BASE_RANGED =
+        std::min(100, abilities.val(Ability_id::ranged, true, *(map::player)));
 
-    const int BASE_DODGE_ATTACKS    = std::min(100,
-                                      abilities.val(Ability_id::dodge_att, true, *(map::player)));
+    const int BASE_DODGE_ATTACKS =
+        std::min(100, abilities.val(Ability_id::dodge_att, true, *(map::player)));
 
     lines_.push_back({offset + "Melee    " + to_str(BASE_MELEE)         + "%", clr_text});
     lines_.push_back({offset + "Ranged   " + to_str(BASE_RANGED)        + "%", clr_text});
@@ -118,7 +118,7 @@ void mk_lines()
 
                 const std::string name = item->name(Item_ref_type::plain);
 
-                manuscript_list.push_back( Str_and_clr(offset + name, item->interface_clr()));
+                manuscript_list.push_back(Str_and_clr(offset + name, item->interface_clr()));
 
                 delete item;
             }
@@ -173,7 +173,9 @@ void mk_lines()
             const std::string descr = player_bon::trait_descr(trait);
 
             lines_.push_back({offset + title, clr_text});
+
             std::vector<std::string> descr_lines;
+
             text_format::split(descr, MAX_W_DESCR, descr_lines);
 
             for (std::string& descr_line : descr_lines)
@@ -217,23 +219,6 @@ void shock_res_src_title(const Shock_src shock_src, std::string& str_ref)
     }
 }
 
-void draw_interface()
-{
-    const std::string decoration_line(MAP_W, '-');
-
-    const int X_LABEL = 3;
-
-    render::draw_text(decoration_line, Panel::screen, P(0, 0), clr_gray);
-
-    render::draw_text(" Displaying character description ", Panel::screen,
-                      P(X_LABEL, 0), clr_white);
-
-    render::draw_text(decoration_line, Panel::screen, P(0, SCREEN_H - 1),
-                      clr_gray);
-
-    render::draw_text(info_scr_cmd_info, Panel::screen, P(X_LABEL, SCREEN_H - 1), clr_white);
-}
-
 } //namespace
 
 void run()
@@ -250,13 +235,19 @@ void run()
     while (true)
     {
         render::clear_screen();
-        draw_interface();
+
+        render::draw_info_scr_interface("Displaying character description");
+
         int y_pos = 1;
 
         for (int i = top_nr; i <= btm_nr; ++i)
         {
             const Str_and_clr& line = lines_[i];
-            render::draw_text(line.str , Panel::screen, P(0, y_pos++), line.clr);
+
+            render::draw_text(line.str,
+                              Panel::screen,
+                              P(0, y_pos++),
+                              line.clr);
         }
 
         render::update_screen();

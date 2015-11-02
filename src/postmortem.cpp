@@ -250,21 +250,12 @@ void render(const std::vector<Str_and_clr>& lines, const int TOP_ELEMENT)
 {
     render::clear_screen();
 
-    const std::string decoration_line(MAP_W, '-');
-    render::draw_text(decoration_line, Panel::screen, P(0, 0), clr_gray);
-
-    const int X_LABEL = 3;
-
-    render::draw_text("Displaying game summary", Panel::screen,
-                      P(X_LABEL, 0), clr_gray);
-
-    render::draw_text(decoration_line, Panel::screen, P(0, SCREEN_H - 1),
-                      clr_gray);
-
-    render::draw_text(info_scr_cmd_info, Panel::screen, P(X_LABEL, SCREEN_H - 1), clr_gray);
+    render::draw_info_scr_interface("Displaying game summary");
 
     const int NR_LINES_TOT = int(lines.size());
+
     const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
+
     int y_pos = 1;
 
     for (
@@ -272,7 +263,10 @@ void render(const std::vector<Str_and_clr>& lines, const int TOP_ELEMENT)
         i < NR_LINES_TOT && ((i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR);
         ++i)
     {
-        render::draw_text(lines[i].str, Panel::screen, P(0, y_pos++), lines[i].clr);
+        render::draw_text(lines[i].str,
+                          Panel::screen,
+                          P(0, y_pos++),
+                          lines[i].clr);
     }
 
     render::update_screen();
@@ -347,28 +341,28 @@ void render_menu(const Menu_browser& browser)
     P pos(SCREEN_W / 2, 10);
 
     //Draw options
-    render::draw_text_centered("Show game summary", Panel::screen, pos,
-                               browser.is_at_idx(0) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text_center("Show game summary", Panel::screen, pos,
+                             browser.is_at_idx(0) ? clr_menu_highlight : clr_menu_drk);
     ++pos.y;
 
-    render::draw_text_centered("Write memorial file", Panel::screen, pos,
-                               browser.is_at_idx(1) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text_center("Write memorial file", Panel::screen, pos,
+                             browser.is_at_idx(1) ? clr_menu_highlight : clr_menu_drk);
     ++pos.y;
 
-    render::draw_text_centered("View High Scores", Panel::screen, pos,
-                               browser.is_at_idx(2) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text_center("View High Scores", Panel::screen, pos,
+                             browser.is_at_idx(2) ? clr_menu_highlight : clr_menu_drk);
     ++pos.y;
 
-    render::draw_text_centered("View message log", Panel::screen, pos,
-                               browser.is_at_idx(3) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text_center("View message log", Panel::screen, pos,
+                             browser.is_at_idx(3) ? clr_menu_highlight : clr_menu_drk);
     ++pos.y;
 
-    render::draw_text_centered("Return to main menu", Panel::screen, pos,
-                               browser.is_at_idx(4) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text_center("Return to main menu", Panel::screen, pos,
+                             browser.is_at_idx(4) ? clr_menu_highlight : clr_menu_drk);
     ++pos.y;
 
-    render::draw_text_centered("Quit the game", Panel::screen, pos,
-                               browser.is_at_idx(5) ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text_center("Quit the game", Panel::screen, pos,
+                             browser.is_at_idx(5) ? clr_menu_highlight : clr_menu_drk);
     ++pos.y;
 
     if (config::is_tiles_mode())

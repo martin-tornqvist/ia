@@ -63,7 +63,10 @@ void draw_weight_pct_and_dots(const P item_pos,
 
         const Clr weight_clr = IS_MARKED ? clr_white : clr_gray_drk;
 
-        render::draw_text(weight_str, Panel::screen, weight_pos, weight_clr);
+        render::draw_text(weight_str,
+                          Panel::screen,
+                          weight_pos,
+                          weight_clr);
     }
     else //"Zero" weight, or 100% of weight - no weight percent should be displayed
     {
@@ -92,7 +95,10 @@ void draw_weight_pct_and_dots(const P item_pos,
         dots_clr.b /= 2;
     }
 
-    render::draw_text(dots_str, Panel::screen, P(dots_x, item_pos.y), dots_clr);
+    render::draw_text(dots_str,
+                      Panel::screen,
+                      P(dots_x, item_pos.y),
+                      dots_clr);
 }
 
 void draw_detailed_item_descr(const Item* const item)
@@ -192,15 +198,16 @@ void draw_inv(const Menu_browser& browser)
                                     inv.slots_[BROWSER_Y].item :
                                     inv.backpack_[size_t(BROWSER_Y) - NR_SLOTS];
 
-    std::string str = "Inventory";
+    std::string str = "Browsing inventory";
 
-    P p(SCREEN_W / 2, 0);
-
-    render::draw_text_centered(str, panel, p, clr_orange);
+    render::draw_text_center(str,
+                             panel,
+                             P(SCREEN_W / 2, 0),
+                             clr_brown_gray);
 
     const Range idx_range_shown = browser.range_shown();
 
-    p.set(0, INV_Y0);
+    P p(0, INV_Y0);
 
     std::string key_str = "a) ";
 
@@ -257,7 +264,9 @@ void draw_inv(const Menu_browser& browser)
                     ref_type = Item_ref_type::plural;
                 }
 
-                std::string item_name = item->name(ref_type, Item_ref_inf::yes, att_inf);
+                std::string item_name = item->name(ref_type,
+                                                   Item_ref_inf::yes,
+                                                   att_inf);
 
                 assert(!item_name.empty());
 
@@ -268,7 +277,11 @@ void draw_inv(const Menu_browser& browser)
 
                 render::draw_text(item_name, panel, p, clr);
 
-                draw_weight_pct_and_dots(p, item_name.size(), *item, clr, IS_IDX_MARKED);
+                draw_weight_pct_and_dots(p,
+                                         item_name.size(),
+                                         *item,
+                                         clr,
+                                         IS_IDX_MARKED);
             }
             else //No item in this slot
             {
@@ -285,7 +298,8 @@ void draw_inv(const Menu_browser& browser)
             draw_item_symbol(*item, p);
             p.x += 2;
 
-            std::string item_name = item->name(Item_ref_type::plural, Item_ref_inf::yes,
+            std::string item_name = item->name(Item_ref_type::plural,
+                                               Item_ref_inf::yes,
                                                Item_ref_att_inf::wpn_context);
 
             text_format::first_to_upper(item_name);
@@ -295,7 +309,11 @@ void draw_inv(const Menu_browser& browser)
 
             render::draw_text(item_name, panel, p, clr);
 
-            draw_weight_pct_and_dots(p, item_name.size(), *item, clr, IS_IDX_MARKED);
+            draw_weight_pct_and_dots(p,
+                                     item_name.size(),
+                                     *item,
+                                     clr,
+                                     IS_IDX_MARKED);
         }
 
         ++p.y;
@@ -304,12 +322,18 @@ void draw_inv(const Menu_browser& browser)
     //Draw "more" labels
     if (!browser.is_on_top_page())
     {
-        render::draw_text("(More - Page Up)", panel, {0, TOP_MORE_Y}, clr_white_high);
+        render::draw_text("(More - Page Up)",
+                          panel,
+                          P(0, TOP_MORE_Y),
+                          clr_white_high);
     }
 
     if (!browser.is_on_btm_page())
     {
-        render::draw_text("(More - Page Down)", panel, {0, BTM_MORE_Y}, clr_white_high);
+        render::draw_text("(More - Page Down)",
+                          panel,
+                          P(0, BTM_MORE_Y),
+                          clr_white_high);
     }
 
     draw_detailed_item_descr(item_marked);
@@ -323,9 +347,13 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
+    const Panel panel = Panel::screen;
+
     if (gen_inv_indexes.empty())
     {
-        render::draw_text("I carry nothing to apply." + cancel_info_str, Panel::screen, P(0, 0),
+        render::draw_text("I carry nothing to apply." + cancel_info_str,
+                          panel,
+                          P(0, 0),
                           clr_white_high);
 
         render::update_screen();
@@ -339,17 +367,15 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
     const auto&         inv                 = map::player->inv();
     const size_t        BACKPACK_IDX_MARKED = gen_inv_indexes[size_t(BROWSER_Y)];
     const auto* const   item_marked         = inv.backpack_[BACKPACK_IDX_MARKED];
-    const Panel         panel               = Panel::screen;
 
-    std::string str = "Apply item";
-
-    P p(SCREEN_W / 2, 0);
-
-    render::draw_text_centered(str, panel, p, clr_orange);
+    render::draw_text_center("Apply which item?",
+                             panel,
+                             P(SCREEN_W / 2, 0),
+                             clr_brown_gray);
 
     const Range idx_range_shown = browser.range_shown();
 
-    p.set(0, INV_Y0);
+    P p(0, INV_Y0);
 
     std::string key_str = "a) ";
 
@@ -374,7 +400,8 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
         draw_item_symbol(*item, p);
         p.x += 2;
 
-        std::string item_name = item->name(Item_ref_type::plural, Item_ref_inf::yes,
+        std::string item_name = item->name(Item_ref_type::plural,
+                                           Item_ref_inf::yes,
                                            Item_ref_att_inf::wpn_context);
 
         assert(!item_name.empty());
@@ -395,12 +422,18 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
     //Draw "more" labels
     if (!browser.is_on_top_page())
     {
-        render::draw_text("(More - Page Up)", panel, {0, TOP_MORE_Y}, clr_white_high);
+        render::draw_text("(More - Page Up)",
+                          panel,
+                          P(0, TOP_MORE_Y),
+                          clr_white_high);
     }
 
     if (!browser.is_on_btm_page())
     {
-        render::draw_text("(More - Page Down)", panel, {0, BTM_MORE_Y}, clr_white_high);
+        render::draw_text("(More - Page Down)",
+                          panel,
+                          P(0, BTM_MORE_Y),
+                          clr_white_high);
     }
 
     draw_detailed_item_descr(item_marked);
@@ -410,7 +443,8 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
     TRACE_FUNC_END_VERBOSE;
 }
 
-void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
+void draw_equip(const Menu_browser& browser,
+                const Slot_id slot_id_to_equip,
                 const std::vector<size_t>& gen_inv_indexes)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
@@ -418,6 +452,8 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
     assert(slot_id_to_equip != Slot_id::END);
 
     const bool HAS_ITEM = !gen_inv_indexes.empty();
+
+    const Panel panel = Panel::screen;
 
     std::string str = "";
 
@@ -438,7 +474,7 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
     case Slot_id::thrown:
         str = HAS_ITEM ?
               "Use which item as thrown weapon?" :
-              "I carry no weapon to throw." ;
+              "I carry no weapon to throw.";
         break;
 
     case Slot_id::body:
@@ -456,7 +492,7 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
     case Slot_id::neck:
         str = HAS_ITEM ?
               "Wear what around the neck?" :
-              "I carry nothing to wear around the neck.";
+              "I carry no amulet.";
         break;
 
     case Slot_id::END:
@@ -467,14 +503,18 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
     {
         render::clear_screen();
 
-        str += " [shift+enter] to drop";
+        render::draw_text_center(str,
+                                 panel,
+                                 P(SCREEN_W / 2, 0),
+                                 clr_brown_gray);
     }
-
-    str += cancel_info_str;
-
-    P p(0, 0);
-
-    render::draw_text(str, Panel::screen, p, clr_white_high);
+    else
+    {
+        render::draw_text(str + cancel_info_str,
+                          panel,
+                          P(0, 0),
+                          clr_white_high);
+    }
 
     if (HAS_ITEM)
     {
@@ -482,11 +522,10 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
         const auto&         inv                 = map::player->inv();
         const size_t        BACKPACK_IDX_MARKED = gen_inv_indexes[size_t(BROWSER_Y)];
         const auto* const   item_marked         = inv.backpack_[BACKPACK_IDX_MARKED];
-        const Panel         panel               = Panel::screen;
 
         const Range idx_range_shown = browser.range_shown();
 
-        p.set(0, INV_Y0);
+        P p(0, INV_Y0);
 
         std::string key_str = "a) ";
 
@@ -525,7 +564,9 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
                 att_inf = Item_ref_att_inf::thrown;
             }
 
-            std::string item_name = item->name(Item_ref_type::plural, Item_ref_inf::yes, att_inf);
+            std::string item_name = item->name(Item_ref_type::plural,
+                                               Item_ref_inf::yes,
+                                               att_inf);
 
             assert(!item_name.empty());
 
@@ -533,16 +574,37 @@ void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
 
             clr = IS_IDX_MARKED ? clr_white_high : item->interface_clr();
 
-            render::draw_text(item_name, Panel::screen, p, clr);
+            render::draw_text(item_name, panel, p, clr);
 
             const size_t ITEM_NAME_LEN = item_name.size();
 
-            draw_weight_pct_and_dots(p, ITEM_NAME_LEN, *item, clr, IS_IDX_MARKED);
+            draw_weight_pct_and_dots(p,
+                                     ITEM_NAME_LEN,
+                                     *item,
+                                     clr,
+                                     IS_IDX_MARKED);
 
             ++p.y;
         }
 
         draw_detailed_item_descr(item_marked);
+    }
+
+    //Draw "more" labels
+    if (!browser.is_on_top_page())
+    {
+        render::draw_text("(More - Page Up)",
+                          panel,
+                          P(0, TOP_MORE_Y),
+                          clr_white_high);
+    }
+
+    if (!browser.is_on_btm_page())
+    {
+        render::draw_text("(More - Page Down)",
+                          panel,
+                          P(0, BTM_MORE_Y),
+                          clr_white_high);
     }
 
     render::update_screen();

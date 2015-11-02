@@ -132,22 +132,13 @@ void draw(const std::vector<Highscore_entry>& entries, const int TOP_ELEMENT)
 
     render::clear_screen();
 
-    const Panel panel   = Panel::screen;
-    const int   X_LABEL = 3;
-
-    const std::string decoration_line(MAP_W, '-');
-
-    render::draw_text(decoration_line, panel, P(0, 0), clr_gray);
-
-    render::draw_text(" Displaying High Scores ", panel, P(X_LABEL, 0), clr_gray);
-
-    render::draw_text(decoration_line, panel, P(0, SCREEN_H - 1), clr_gray);
-
-    render::draw_text(info_scr_cmd_info, panel, P(X_LABEL, SCREEN_H - 1), clr_gray);
+    render::draw_info_scr_interface("Displaying High Scores");
 
     int y_pos = 1;
 
     const Clr& label_clr = clr_white_high;
+
+    const Panel panel = Panel::screen;
 
     render::draw_text("Ended",       panel, P(X_POS_DATE,    y_pos), label_clr);
     render::draw_text("Name",        panel, P(X_POS_NAME,    y_pos), label_clr);

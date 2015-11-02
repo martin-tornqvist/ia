@@ -34,41 +34,19 @@ int x_after_msg(const Msg* const msg)
     return msg->x_pos_ + str.size() + 1;
 }
 
-void draw_history_interface(const int TOP_LINE_NR, const int BTM_LINE_NR)
-{
-    const std::string decoration_line(MAP_W, '-');
-
-    render::draw_text(decoration_line, Panel::screen, P(0, 0), clr_gray);
-
-    const int X_LABEL = 3;
-
-    if (history_.empty())
-    {
-        render::draw_text(" No message history ", Panel::screen,
-                          P(X_LABEL, 0), clr_gray);
-    }
-    else
-    {
-        render::draw_text(
-            " Displaying messages " + to_str(TOP_LINE_NR + 1) + "-" +
-            to_str(BTM_LINE_NR + 1) + " of " +
-            to_str(history_.size()) + " ", Panel::screen, P(X_LABEL, 0), clr_gray);
-    }
-
-    render::draw_text(decoration_line, Panel::screen, P(0, SCREEN_H - 1), clr_gray);
-
-    render::draw_text(info_scr_cmd_info, Panel::screen, P(X_LABEL, SCREEN_H - 1),
-                      clr_gray);
-}
-
 //Used by normal log and history viewer
 void draw_line(const std::vector<Msg>& line_to_draw, const int Y_POS)
 {
     for (const Msg& msg : line_to_draw)
     {
         std::string str = "";
+
         msg.str_with_repeats(str);
-        render::draw_text(str, Panel::log, P(msg.x_pos_, Y_POS), msg.clr_);
+
+        render::draw_text(str,
+                          Panel::log,
+                          P(msg.x_pos_, Y_POS),
+                          msg.clr_);
     }
 }
 
@@ -109,7 +87,9 @@ void draw(const bool SHOULD_UPDATE_SCREEN)
 
     if (NR_LINES_WITH_CONTENT > 0)
     {
-        render::cover_area(Panel::log, P(0, 0), P(MAP_W, NR_LINES_WITH_CONTENT));
+        render::cover_area(Panel::log,
+                           P(0, 0),
+                           P(MAP_W, NR_LINES_WITH_CONTENT));
 
         for (int i = 0; i < NR_LINES_WITH_CONTENT; ++i)
         {
@@ -177,7 +157,10 @@ void add(const std::string& str,
                 frenzied_str += "!!";
             }
 
-            add(frenzied_str, clr, INTERRUPT_PLAYER_ACTIONS, add_more_prompt_on_msg);
+            add(frenzied_str,
+                clr,
+                INTERRUPT_PLAYER_ACTIONS,
+                add_more_prompt_on_msg);
 
             return;
         }
@@ -280,7 +263,11 @@ void more_prompt()
         }
     }
 
-    render::draw_text(more_str, Panel::log, P(x_pos, line_nr), clr_black, clr_gray);
+    render::draw_text(more_str,
+                      Panel::log,
+                      P(x_pos, line_nr),
+                      clr_black,
+                      clr_gray);
 
     render::update_screen();
     query::wait_for_confirm();
@@ -301,7 +288,25 @@ void display_history()
     while (true)
     {
         render::clear_screen();
-        draw_history_interface(top_nr, btm_nr);
+
+        std::string title = "";
+
+        if (history_.empty())
+        {
+            title = "No message history";
+        }
+        else //History has content
+        {
+            const std::string msg_nr_first  = to_str(top_nr + 1);
+            const std::string msg_nr_last   = to_str(btm_nr + 1);
+
+            title = "Displaying messages " +
+                    msg_nr_first + "-" + msg_nr_last +
+                    " of " + to_str(history_.size());
+        }
+
+        render::draw_info_scr_interface(title);
+
         int y_pos = 1;
 
         for (int i = top_nr; i <= btm_nr; ++i)
@@ -353,4 +358,4 @@ const std::vector< std::vector<Msg> >& history()
     return history_;
 }
 
-} //log
+} //msg_log

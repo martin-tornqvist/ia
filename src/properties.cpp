@@ -1846,16 +1846,17 @@ Prop* Prop_infected::on_new_turn()
 #endif // NDEBUG
 
     const int MAX_TURNS_LEFT_ALLOW_DISEASE  = 50;
-
     const int APPLY_DISEASE_ONE_IN          = nr_turns_left_ - 1;
 
     if (nr_turns_left_ <= MAX_TURNS_LEFT_ALLOW_DISEASE && rnd::one_in(APPLY_DISEASE_ONE_IN))
     {
         Prop_handler& prop_hlr = owning_actor_->prop_handler();
 
-        prop_hlr.try_add_prop(new Prop_diseased(Prop_turns::indefinite));
-
         prop_hlr.end_prop(Prop_id::infected, false);
+
+        //NOTE: Object is now deleted!
+
+        prop_hlr.try_add_prop(new Prop_diseased(Prop_turns::indefinite));
 
         msg_log::more_prompt();
 

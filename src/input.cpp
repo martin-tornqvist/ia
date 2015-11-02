@@ -956,7 +956,7 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         const std::string query_str = "Summon monster id:";
 
-        render::draw_text(query_str, Panel::screen, P(0, 0), clr_orange);
+        render::draw_text(query_str, Panel::screen, P(0, 0), clr_yellow);
 
         const int IDX = query::number(P(query_str.size(), 0),
                                       clr_white_high,

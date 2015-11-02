@@ -239,8 +239,8 @@ void win_game()
     const std::string CMD_LABEL =
         "[space/esc/enter] to record high score and return to main menu";
 
-    render::draw_text_centered(CMD_LABEL, Panel::screen, P(MAP_W_HALF, y), clr_menu_medium,
-                               clr_black, true);
+    render::draw_text_center(CMD_LABEL, Panel::screen, P(MAP_W_HALF, y), clr_menu_medium,
+                             clr_black, true);
 
     render::update_screen();
 

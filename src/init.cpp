@@ -17,7 +17,6 @@
 #include "bot.hpp"
 #include "manual.hpp"
 #include "player_spells_handling.hpp"
-#include "credits.hpp"
 #include "map_templates.hpp"
 #include "map_travel.hpp"
 #include "query.hpp"
@@ -61,7 +60,6 @@ void init_game()
     line_calc::init();
     gods::init();
     manual::init();
-    credits::init();
     map_templ_handling::init();
     TRACE_FUNC_END;
 }

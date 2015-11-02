@@ -166,6 +166,11 @@ void Player::mk_start_items()
         break;
     }
 
+    for (int i = 0; i < 30; ++i)
+    {
+        inv_->put_in_slot(Slot_id::wpn, item_factory::mk(Item_id::dagger));
+    }
+
     //------------------------------------------------------- GENERAL SETUP
     //Randomize a melee weapon if Occultist or War Veteran
     if (bg == Bg::occultist || bg == Bg::war_vet)

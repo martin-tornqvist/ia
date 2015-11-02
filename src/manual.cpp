@@ -9,27 +9,25 @@
 #include "text_format.hpp"
 #include "render.hpp"
 
-using namespace std;
-
 namespace manual
 {
 
 namespace
 {
 
-vector<string> lines_;
+std::vector<std::string> lines_;
 
 void read_file()
 {
-    string cur_line;
-    ifstream file("manual.txt");
+    std::string cur_line;
+    std::ifstream file("manual.txt");
 
     if (!file.is_open())
     {
         return;
     }
 
-    vector<string> formatted;
+    std::vector<std::string> formatted;
 
     while (getline(file, cur_line))
     {
@@ -69,19 +67,6 @@ void read_file()
     file.close();
 }
 
-void draw_manual_interface()
-{
-    const string decoration_line(MAP_W, '-');
-
-    const int   X_LABEL = 3;
-    const auto  panel   = Panel::screen;
-
-    render::draw_text(decoration_line, panel, P(0, 0), clr_gray);
-    render::draw_text(" Browsing the Tome of Wisdom ", panel, P(X_LABEL, 0), clr_gray);
-    render::draw_text(decoration_line, panel, P(0, SCREEN_H - 1), clr_gray);
-    render::draw_text(info_scr_cmd_info, panel, P(X_LABEL, SCREEN_H - 1), clr_gray);
-}
-
 } //namespace
 
 void init()
@@ -96,18 +81,21 @@ void run()
     const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
 
     int top_nr = 0;
-    int btm_nr = min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
+    int btm_nr = std::min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
 
     while (true)
     {
         render::clear_screen();
-        draw_manual_interface();
+
+        render::draw_info_scr_interface("Browsing manual");
 
         int y_pos = 1;
 
         for (int i = top_nr; i <= btm_nr; ++i)
         {
-            render::draw_text(lines_[i], Panel::screen, P(0, y_pos++),
+            render::draw_text(lines_[i],
+                              Panel::screen,
+                              P(0, y_pos++),
                               clr_white);
         }
 
@@ -125,20 +113,20 @@ void run()
             }
             else
             {
-                top_nr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, top_nr);
+                top_nr = std::min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, top_nr);
             }
         }
         else if (d.key == '8' || d.sdl_key == SDLK_UP || d.key == 'k')
         {
-            top_nr = max(0, top_nr - LINE_JUMP);
+            top_nr = std::max(0, top_nr - LINE_JUMP);
         }
         else if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)
         {
             break;
         }
 
-        btm_nr = min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
+        btm_nr = std::min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
     }
 }
 
-} //Manual
+} //manual

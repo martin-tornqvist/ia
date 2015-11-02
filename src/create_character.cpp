@@ -35,8 +35,10 @@ void draw(const std::string& cur_string)
 {
     render::clear_screen();
 
-    render::draw_text_centered("What is your name?", Panel::screen,
-                               P(MAP_W_HALF, 0), clr_orange);
+    render::draw_text_center("What is your name?",
+                               Panel::screen,
+                               P(MAP_W_HALF, 0),
+                               clr_title);
     const int Y_NAME = 3;
 
     const std::string name_str = cur_string.size() < PLAYER_NAME_MAX_LEN ?
@@ -45,9 +47,13 @@ void draw(const std::string& cur_string)
     const size_t NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LEN / 2);
     const size_t NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LEN - 1;
 
-    render::draw_text(name_str, Panel::screen, P(NAME_X0, Y_NAME), clr_menu_highlight);
+    render::draw_text(name_str,
+                      Panel::screen,
+                      P(NAME_X0, Y_NAME),
+                      clr_menu_highlight);
 
-    Rect box_rect(P(NAME_X0 - 1, Y_NAME - 1), P(NAME_X1 + 1, Y_NAME + 1));
+    Rect box_rect(P(NAME_X0 - 1, Y_NAME - 1),
+                  P(NAME_X1 + 1, Y_NAME + 1));
 
     render::draw_box(box_rect);
 
@@ -126,8 +132,12 @@ void draw_pick_bg(const std::vector<Bg>& bgs, const Menu_browser& browser)
 {
     render::clear_screen();
 
-    render::draw_text_centered("What is your background?", Panel::screen,
-                               P(MAP_W_HALF, 0), clr_orange, clr_black, true);
+    render::draw_text_center("What is your background?",
+                               Panel::screen,
+                               P(MAP_W_HALF, 0),
+                               clr_title,
+                               clr_black,
+                               true);
 
     int y = OPT_Y0;
 
@@ -142,7 +152,11 @@ void draw_pick_bg(const std::vector<Bg>& bgs, const Menu_browser& browser)
         const bool          IS_MARKED   = bg == bg_marked;
         const Clr&          drw_clr     = IS_MARKED ? clr_menu_highlight : clr_menu_drk;
 
-        render::draw_text(key_str + bg_name, Panel::screen, P(OPT_X0, y), drw_clr);
+        render::draw_text(key_str + bg_name,
+                          Panel::screen,
+                          P(OPT_X0, y),
+                          drw_clr);
+
         ++y;
         ++key_str[0];
     }
@@ -218,8 +232,12 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
                         "Which additional trait do you start with?" :
                         "You have reached a new level! Which trait do you gain?";
 
-    render::draw_text_centered(title, Panel::screen, P(MAP_W_HALF, 0),
-                               clr_orange, clr_black, true);
+    render::draw_text_center(title,
+                               Panel::screen,
+                               P(MAP_W_HALF, 0),
+                               clr_title,
+                               clr_black,
+                               true);
 
     const Trait trait_marked = traits[browser.y()];
 
@@ -234,7 +252,10 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
         const bool      IS_MARKED   = trait == trait_marked;
         const Clr&      drw_clr     = IS_MARKED ? clr_menu_highlight : clr_menu_drk;
 
-        render::draw_text(key_str + trait_name, Panel::screen, P(OPT_X0, y), drw_clr);
+        render::draw_text(key_str + trait_name,
+                          Panel::screen,
+                          P(OPT_X0, y),
+                          drw_clr);
 
         ++y;
         ++key_str[0];
@@ -251,7 +272,10 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
 
     for (const std::string& str : descr_lines)
     {
-        render::draw_text(str, Panel::screen, P(DESCR_X0, y), clr_white);
+        render::draw_text(str,
+                          Panel::screen,
+                          P(DESCR_X0, y),
+                          clr_white);
         ++y;
     }
 
