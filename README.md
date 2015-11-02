@@ -81,14 +81,11 @@ Some people have successfully built IA on OSX by using the Linux Makefile as it 
 Please tell of your problems or success at the IA webpage, or email me (Martin) - see contact.txt in the game folder (or assets/contact.txt in the IA repository).
 
 ### Building on OS X
-I'm using 10.10.3, ymmv.
+This works on 10.11.1, ymmv.
 
 Install Xcode command line tools.
 
-Install [SDL2.framework](http://www.libsdl.org/download-2.0.php),
-[SDL2\_image.framework](http://www.libsdl.org/projects/SDL_image/),
-[SDL2\_mixer.framework](http://www.libsdl.org/projects/SDL_mixer/) 
-in /Library/Frameworks.
+Install [SDL2.framework](http://www.libsdl.org/download-2.0.php), [SDL2\_image.framework](http://www.libsdl.org/projects/SDL_image/), [SDL2\_mixer.framework](http://www.libsdl.org/projects/SDL_mixer/) in /Library/Frameworks.
 
 Use Makefile\_osx to build:
 

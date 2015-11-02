@@ -95,12 +95,12 @@ void cut_room_corners(const Room& room)
     {
         for (int x = room_p0.x; x <= room_p1.x; ++x)
         {
-            const bool X_OK = x < cross_x0Y0.x ? (c[0] || c[2]) :
+            const bool X_IS_OK = x < cross_x0Y0.x ? (c[0] || c[2]) :
                               x > cross_x1Y1.x ? (c[1] || c[3]) : false;
-            const bool Y_OK = y < cross_x0Y0.y ? (c[0] || c[1]) :
+            const bool Y_IS_OK = y < cross_x0Y0.y ? (c[0] || c[1]) :
                               y > cross_x1Y1.y ? (c[2] || c[3]) : false;
 
-            if (X_OK && Y_OK)
+            if (X_IS_OK && Y_IS_OK)
             {
                 map::put(new Wall(P(x, y)));
                 map::room_map[x][y] = nullptr;
