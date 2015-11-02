@@ -252,7 +252,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
         if (map::player->is_alive())
         {
-            close::player_try_close_or_jam();
+            close_door::player_try_close_or_jam();
         }
 
         clear_events();

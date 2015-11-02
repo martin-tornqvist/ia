@@ -3,7 +3,7 @@
 
 class Feature;
 
-namespace close
+namespace close_door
 {
 
 void player_try_close_or_jam();

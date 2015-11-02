@@ -11,7 +11,7 @@
 #include "render.hpp"
 #include "utils.hpp"
 
-namespace close
+namespace close_door
 {
 
 namespace
