@@ -13,11 +13,11 @@ class Mob;
 namespace rnd
 {
 
-//NOTE: If MTRand is not provided any parameters to the constructor, it will be seeded
-//with current time. So seeding it manually is not necessary for normal gameplay
-//purposes - only if seed should be controlled.
+//NOTE: If no parameters are passed to the MTRand constructor, it will be seeded with current time.
+//Seeding it manually is only necessary if seed should be controlled.
 void seed(const unsigned long val);
 
+//If not called with a positive non-zero number of sides, this will always return zero.
 int dice(const int ROLLS, const int SIDES);
 
 int dice(const Dice_param& p);
@@ -30,7 +30,8 @@ bool fraction(const Fraction& f);
 
 bool one_in(const int N);
 
-int range(const int MIN, const int MAX);
+//Can be called with any range (positive or negative), V2 does *not* have to be bigger than V1.
+int range(const int V1, const int V2);
 
 int range(const Range& value_range);
 

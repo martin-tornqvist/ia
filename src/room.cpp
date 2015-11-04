@@ -56,12 +56,11 @@ void init_room_bucket()
         add_to_room_bucket(Room_type::spider,       2);
         add_to_room_bucket(Room_type::snake_pit,    1);
         add_to_room_bucket(Room_type::crypt,        4);
-        add_to_room_bucket(Room_type::monster,      2);
+        add_to_room_bucket(Room_type::monster,      1);
         add_to_room_bucket(Room_type::flooded,      1);
         add_to_room_bucket(Room_type::muddy,        1);
 
-        //Add one plain room for every non-plain room
-        const size_t NR_PLAIN_ROOMS = room_bucket_.size();
+        const size_t NR_PLAIN_ROOMS = room_bucket_.size() * 2;
 
         add_to_room_bucket(Room_type::plain, NR_PLAIN_ROOMS);
     }
@@ -72,28 +71,30 @@ void init_room_bucket()
         add_to_room_bucket(Room_type::spider,       2);
         add_to_room_bucket(Room_type::snake_pit,    1);
         add_to_room_bucket(Room_type::crypt,        4);
-        add_to_room_bucket(Room_type::monster,      3);
+        add_to_room_bucket(Room_type::monster,      2);
         add_to_room_bucket(Room_type::flooded,      2);
         add_to_room_bucket(Room_type::muddy,        2);
-        add_to_room_bucket(Room_type::cave,         3);
+        add_to_room_bucket(Room_type::cave,         2);
         add_to_room_bucket(Room_type::chasm,        1);
         add_to_room_bucket(Room_type::forest,       2);
 
-        //Add one plain room for every non-plain room
-        const size_t NR_PLAIN_ROOMS = room_bucket_.size();
+        const size_t NR_PLAIN_ROOMS = room_bucket_.size() * 2;
 
         add_to_room_bucket(Room_type::plain, NR_PLAIN_ROOMS);
     }
     else
     {
-        add_to_room_bucket(Room_type::monster,      2);
+        add_to_room_bucket(Room_type::monster,      1);
         add_to_room_bucket(Room_type::spider,       1);
         add_to_room_bucket(Room_type::snake_pit,    1);
         add_to_room_bucket(Room_type::flooded,      1);
         add_to_room_bucket(Room_type::muddy,        1);
-        add_to_room_bucket(Room_type::cave,         3);
         add_to_room_bucket(Room_type::chasm,        2);
         add_to_room_bucket(Room_type::forest,       2);
+
+        const size_t NR_CAVE_ROOMS = room_bucket_.size() * 2;
+
+        add_to_room_bucket(Room_type::cave, NR_CAVE_ROOMS);
     }
 
     std::random_shuffle(begin(room_bucket_), end(room_bucket_));

@@ -181,7 +181,7 @@ bool Event_snake_emerge::try_find_p()
     {
         emerge_p_bucket(p, blocked, emerge_bucket);
 
-        if (emerge_bucket.size() >= MIN_NR_SNAKES)
+        if (emerge_bucket.size() >= MIN_NR_SNAKES_)
         {
             pos_ = p;
             return true;
@@ -280,8 +280,16 @@ void Event_snake_emerge::on_new_turn()
 
     emerge_p_bucket(pos_, blocked, tgt_bucket);
 
-    int max_nr_snakes = MIN_NR_SNAKES + (map::dlvl / 4);
+    if (tgt_bucket.size() < MIN_NR_SNAKES_)
+    {
+        //Not possible to spawn at least minimum required number of snakes
+        return;
+    }
 
+    int max_nr_snakes = MIN_NR_SNAKES_ + (map::dlvl / 4);
+
+    //Cap max number of snakes to the size of the target bucket
+    //NOTE: The target bucket is at least as big as the minimum required number of snakes
     max_nr_snakes = std::min(max_nr_snakes, int(tgt_bucket.size()));
 
     random_shuffle(begin(tgt_bucket), end(tgt_bucket));
@@ -299,7 +307,7 @@ void Event_snake_emerge::on_new_turn()
     const size_t    IDX = rnd::range(0, id_bucket.size() - 1);
     const Actor_id  id  = id_bucket[IDX];
 
-    const size_t NR_SUMMONED = rnd::range(MIN_NR_SNAKES, max_nr_snakes);
+    const size_t NR_SUMMONED = rnd::range(MIN_NR_SNAKES_, max_nr_snakes);
 
     std::vector<P> seen_tgt_positions;
 

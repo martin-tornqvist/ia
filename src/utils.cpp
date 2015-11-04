@@ -100,8 +100,11 @@ bool one_in(const int N)
     return fraction(1, N);
 }
 
-int range(const int MIN, const int MAX)
+int range(const int V1, const int V2)
 {
+    const int MIN = std::min(V1, V2);
+    const int MAX = std::max(V1, V2);
+
     return MIN + roll(1, MAX - MIN + 1) - 1;
 }
 

@@ -81,7 +81,7 @@ private:
 
     const Range allowed_emerge_dist_range = Range(2, FOV_STD_RADI_INT - 1);
 
-    const size_t MIN_NR_SNAKES = 3;
+    const size_t MIN_NR_SNAKES_ = 3;
 };
 
 class Event_rats_in_the_walls_discovery: public Event
