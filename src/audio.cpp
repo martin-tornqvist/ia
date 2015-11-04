@@ -19,18 +19,27 @@ std::vector<Mix_Chunk*> audio_chunks_;
 
 size_t ms_at_sfx_played_[size_t(Sfx_id::END)];
 
-int cur_channel_            = 0;
-int seconds_at_amb_played_  = -1;
+int         cur_channel_            = 0;
+int         seconds_at_amb_played_  = -1;
+
+int         nr_files_loaded_        = 0;
+const int   NR_FILES_TOT            = int(Sfx_id::END) - 2; //Subtracting AMB_START and AMB_END
 
 void load_audio_file(const Sfx_id sfx, const std::string& filename)
 {
+    //Read events, so that we don't freeze the game while we loading sounds
+    SDL_PumpEvents();
+
     render::clear_screen();
 
     const std::string file_rel_path  = "audio/" + filename;
 
-    render::draw_text("Loading " + file_rel_path + "...", Panel::screen, P(0, 0), clr_white);
+    const std::string nr_loaded_str = to_str(nr_files_loaded_) + "/" + to_str(NR_FILES_TOT) ;
 
-    render::update_screen();
+    render::draw_text("Loading audio file " + nr_loaded_str + " (" + file_rel_path + ")...",
+                      Panel::screen,
+                      P(0, 0),
+                      clr_white);
 
     audio_chunks_[size_t(sfx)] = Mix_LoadWAV(file_rel_path.c_str());
 
@@ -41,8 +50,47 @@ void load_audio_file(const Sfx_id sfx, const std::string& filename)
         assert(false);
     }
 
-    //Read events, so we don't freeze the game while we load sounds
-    SDL_PumpEvents();
+    //Draw a loading bar
+    const int PCT_LOADED    = (nr_files_loaded_ * 100) / NR_FILES_TOT;
+    const int BAR_W_TOT     = 32;
+    const int BAR_W_L       = (BAR_W_TOT * PCT_LOADED) / 100;
+    const int BAR_W_R       = BAR_W_TOT - BAR_W_L;
+
+    const P bar_p(1, 2);
+
+    if (BAR_W_L > 0)
+    {
+        const std::string bar_l_str(BAR_W_L, '#');
+
+        render::draw_text(bar_l_str,
+                          Panel::screen,
+                          bar_p,
+                          clr_green);
+    }
+
+    if (BAR_W_R > 0)
+    {
+        const std::string bar_r_str(BAR_W_R, '-');
+
+        render::draw_text(bar_r_str,
+                          Panel::screen,
+                          P(bar_p.x + BAR_W_L, bar_p.y),
+                          clr_gray_drk);
+    }
+
+    render::draw_text("[",
+                      Panel::screen,
+                      P(bar_p.x - 1, bar_p.y),
+                      clr_white);
+
+    render::draw_text("]",
+                      Panel::screen,
+                      P(bar_p.x + BAR_W_TOT - 1, bar_p.y),
+                      clr_white);
+
+    render::update_screen();
+
+    ++nr_files_loaded_;
 }
 
 int next_channel(const int FROM)
@@ -167,7 +215,10 @@ void init()
 
         load_audio_file(Sfx_id::mus_cthulhiana_Madness,
                         "musica_cthulhiana-fragment-madness.ogg");
+
+        assert(nr_files_loaded_ == NR_FILES_TOT);
     }
+
     TRACE_FUNC_END;
 }
 
@@ -189,6 +240,8 @@ void cleanup()
 
     cur_channel_            =  0;
     seconds_at_amb_played_  = -1;
+
+    nr_files_loaded_ = 0;
 
     TRACE_FUNC_END;
 }
