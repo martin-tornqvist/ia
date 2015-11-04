@@ -1398,36 +1398,28 @@ void Prop_handler::on_prop_end(Prop* const prop)
 
 bool Prop_handler::end_prop(const Prop_id id, const bool RUN_PROP_END_EFFECTS)
 {
-    int     idx     = -1;
-    Prop*   prop    = nullptr;
-
-    for (size_t i = 0; i < props_.size(); ++i)
+    for (auto it = begin(props_); it != end(props_); ++it)
     {
-        prop = props_[i];
+        Prop* const prop = *it;
 
-        if (prop->id() == id && prop->src_ == Prop_src::intr)
+        if (prop->id_ == id && prop->src_ == Prop_src::intr)
         {
-            idx = i;
-            break;
+            props_.erase(it);
+
+            decr_active_props_info(prop->id_);
+
+            if (RUN_PROP_END_EFFECTS)
+            {
+                on_prop_end(prop);
+            }
+
+            delete prop;
+
+            return true;
         }
     }
 
-    if (idx == -1)
-    {
-        return false;
-    }
-
-    props_.erase(begin(props_) + idx);
-
-    decr_active_props_info(prop->id());
-
-    if (RUN_PROP_END_EFFECTS)
-    {
-        on_prop_end(prop);
-    }
-
-    delete prop;
-    return true;
+    return false;
 }
 
 void Prop_handler::apply_actor_turn_prop_buffer()
@@ -1477,6 +1469,7 @@ void Prop_handler::tick(const Prop_turn_mode turn_mode)
             }
             else //Not finished
             {
+                //NOTE: "prop" may be set to nullptr here (if the property removed itself)
                 prop = prop->on_new_turn();
             }
         }
@@ -1852,11 +1845,9 @@ Prop* Prop_infected::on_new_turn()
     {
         Prop_handler& prop_hlr = owning_actor_->prop_handler();
 
-        prop_hlr.end_prop(Prop_id::infected, false);
-
-        //NOTE: Object is now deleted!
-
         prop_hlr.try_add_prop(new Prop_diseased(Prop_turns::indefinite));
+
+        //NOTE: Disease ends infection, this property object is now deleted!
 
         msg_log::more_prompt();
 
@@ -1877,6 +1868,9 @@ int Prop_diseased::affect_max_hp(const int HP_MAX) const
 
 void Prop_diseased::on_start()
 {
+    //End infection
+    owning_actor_->prop_handler().end_prop(Prop_id::infected, false);
+
     //If this is a permanent disease that the player caught, log it as a historic event
     if (owning_actor_->is_player() && turns_init_type_ == Prop_turns::indefinite)
     {
