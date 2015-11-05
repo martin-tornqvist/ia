@@ -85,7 +85,7 @@ void load_audio_file(const Sfx_id sfx, const std::string& filename)
 
     render::draw_text("]",
                       Panel::screen,
-                      P(bar_p.x + BAR_W_TOT - 1, bar_p.y),
+                      P(bar_p.x + BAR_W_TOT, bar_p.y),
                       clr_white);
 
     render::update_screen();

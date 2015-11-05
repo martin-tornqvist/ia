@@ -1028,13 +1028,19 @@ void Player::on_std_turn()
     //Check for monsters coming into view, and try to spot hidden monsters.
     for (Actor* actor : game_time::actors)
     {
-        if (!actor->is_player() && !map::player->is_leader_of(actor) && actor->is_alive())
+        if (
+            !actor->is_player()                 &&
+            !map::player->is_leader_of(actor)   &&
+            actor->is_alive())
         {
             Mon& mon                = *static_cast<Mon*>(actor);
             const bool IS_MON_SEEN  = can_see_actor(*actor);
 
             if (IS_MON_SEEN)
             {
+                //If monster is seen, player should also be aware of it
+                assert(mon.player_aware_of_me_counter_ > 0);
+
                 mon.is_sneaking_ = false;
 
                 if (!mon.is_msg_mon_in_view_printed_)
@@ -1044,7 +1050,9 @@ void Player::on_std_turn()
                         wait_turns_left > 0   ||
                         nr_quick_move_steps_left_ > 0)
                     {
-                        msg_log::add(actor->name_a() + " comes into my view.", clr_white, true);
+                        msg_log::add(actor->name_a() + " comes into my view.",
+                                     clr_white,
+                                     true);
                     }
 
                     mon.is_msg_mon_in_view_printed_ = true;
@@ -1300,9 +1308,6 @@ void Player::move(Dir dir)
             const bool CAN_SEE_MON      = map::player->can_see_actor(*mon);
             const bool IS_AWARE_OF_MON  = mon->player_aware_of_me_counter_ > 0;
 
-            //If monster is seen, player should be aware of it, otherwise something is very wrong.
-            assert(!(CAN_SEE_MON && !IS_AWARE_OF_MON));
-
             if (IS_AWARE_OF_MON)
             {
                 if (prop_handler_->allow_attack_melee(Verbosity::verbose))
@@ -1352,6 +1357,9 @@ void Player::move(Dir dir)
             }
             else //There is a monster here that player is unaware of
             {
+                //If player is unaware of the monster, it should never be seen
+                assert(!CAN_SEE_MON);
+
                 if (is_features_allow_move)
                 {
                     //Cell is not blocked, reveal that there is a monster here and return
