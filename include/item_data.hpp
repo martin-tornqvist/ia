@@ -55,7 +55,7 @@ enum class Item_id
     drum_of_bullets,
     incinerator_ammo,
     pistol,
-    pistol_clip,
+    pistol_mag,
     flare_gun,
 
     trap_dart,
@@ -273,7 +273,7 @@ public:
         ~Item_ranged_data();
 
         bool                    is_ranged_wpn, is_throwable_wpn, is_machine_gun, is_shotgun;
-        //NOTE: This property should be set on ranged weapons (using ammo) AND clips:
+        //NOTE: This property should be set on ranged weapons (using ammo) AND mags:
         int                     max_ammo;
         Dice_param              dmg;
         //NOTE: "Pure" melee weapons do not have to (should not) set this value - they do throw

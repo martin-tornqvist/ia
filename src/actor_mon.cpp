@@ -552,27 +552,28 @@ bool Mon::try_attack(Actor& defender)
 
     const Ai_att_data att = choose_att(my_avail_attacks);
 
-    if (!att.weapon)
+    if (!att.wpn)
     {
         return false;
     }
 
     if (att.is_melee)
     {
-        if (att.weapon->data().melee.is_melee_wpn)
+        if (att.wpn->data().melee.is_melee_wpn)
         {
-            attack::melee(this, pos, defender, *att.weapon);
+            attack::melee(this, pos, defender, *att.wpn);
             return true;
         }
 
         return false;
     }
 
-    if (att.weapon->data().ranged.is_ranged_wpn)
+    if (att.wpn->data().ranged.is_ranged_wpn)
     {
-        if (my_avail_attacks.is_time_to_reload)
+        if (my_avail_attacks.is_reload_needed)
         {
-            reload::reload_wielded_wpn(*this);
+            reload::try_reload(*this, att.wpn);
+
             return true;
         }
 
@@ -611,7 +612,7 @@ bool Mon::try_attack(Actor& defender)
 
         prop_handler_->try_add_prop(ranged_cooldown_prop);
 
-        attack::ranged(this, pos, defender.pos, *att.weapon);
+        attack::ranged(this, pos, defender.pos, *att.wpn);
 
         return true;
     }
@@ -675,7 +676,7 @@ void Mon::avail_attacks(Actor& defender, Ai_avail_attacks_data& dst)
                         {
                             if (inv_->has_ammo_for_firearm_in_inventory())
                             {
-                                dst.is_time_to_reload = true;
+                                dst.is_reload_needed = true;
                             }
                         }
                     }
@@ -707,7 +708,7 @@ Ai_att_data Mon::choose_att(const Ai_avail_attacks_data& mon_avail_attacks)
 
     const size_t IDX = rnd::range(0, mon_avail_attacks.weapons.size() - 1);
 
-    att.weapon = mon_avail_attacks.weapons[IDX];
+    att.wpn = mon_avail_attacks.weapons[IDX];
 
     return att;
 }
@@ -823,7 +824,7 @@ void Cultist::mk_start_items()
 
         if (rnd::one_in(6))
         {
-            inv_->put_in_backpack(item_factory::mk(Item_id::pistol_clip));
+            inv_->put_in_backpack(item_factory::mk(Item_id::pistol_mag));
         }
     }
     else if (RND <= PUMP_SHOTGUN)

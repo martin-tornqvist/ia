@@ -383,12 +383,12 @@ public:
     }
 };
 
-class Ammo_clip: public Ammo
+class Ammo_mag: public Ammo
 {
 public:
-    Ammo_clip(Item_data_t* const item_data);
+    Ammo_mag(Item_data_t* const item_data);
 
-    ~Ammo_clip() {}
+    ~Ammo_mag() {}
 
     int ammo_;
 

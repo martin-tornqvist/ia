@@ -167,7 +167,7 @@ void reset_map()
             clr_red,
             clr_brown,
             clr_brown_drk,
-            clr_brown_gray
+            clr_brown_gray,
         };
 
         const size_t IDX = rnd::range(0, wall_clr_bucket.size() - 1);

@@ -560,7 +560,7 @@ Unequip_allowed Inventory::try_unequip_slot(const Slot_id id)
     return unequip_allowed_result;
 }
 
-void Inventory::swap_wielded_and_prepared(const bool IS_FREE_TURN)
+void Inventory::swap_wielded_and_prepared(const Pass_time pass_time)
 {
     auto& slot1 = slots_[int(Slot_id::wpn)];
     auto& slot2 = slots_[int(Slot_id::wpn_alt)];
@@ -571,7 +571,7 @@ void Inventory::swap_wielded_and_prepared(const bool IS_FREE_TURN)
 
     render::draw_map_and_interface();
 
-    game_time::tick(IS_FREE_TURN);
+    game_time::tick(pass_time);
 }
 
 bool Inventory::has_item_in_slot(Slot_id id) const
@@ -587,7 +587,7 @@ void Inventory::remove_without_destroying(const Inv_type inv_type, const size_t 
         assert(IDX != int(Slot_id::END));
         slots_[IDX].item = nullptr;
     }
-    else
+    else //Backpack
     {
         assert(IDX < backpack_.size());
         backpack_.erase(begin(backpack_) + IDX);

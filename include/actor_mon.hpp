@@ -9,35 +9,35 @@
 
 struct Ai_att_data
 {
-    Ai_att_data(Wpn* weapon_to_use, bool is_melee_att) :
-        weapon(weapon_to_use),
-        is_melee(is_melee_att) {}
+    Ai_att_data(Wpn* wpn, bool is_melee) :
+        wpn         (wpn),
+        is_melee    (is_melee) {}
 
-    Wpn* weapon;
+    Wpn* wpn;
     bool is_melee;
 };
 
 struct Ai_avail_attacks_data
 {
     Ai_avail_attacks_data() :
-        is_time_to_reload(false),
-        is_melee(true) {}
+        is_reload_needed    (false),
+        is_melee            (true) {}
 
     Ai_avail_attacks_data(const Ai_avail_attacks_data& other) :
-        weapons(other.weapons),
-        is_time_to_reload(other.is_time_to_reload),
-        is_melee(other.is_melee) {}
+        weapons             (other.weapons),
+        is_reload_needed    (other.is_reload_needed),
+        is_melee            (other.is_melee) {}
 
     Ai_avail_attacks_data& operator=(const Ai_avail_attacks_data& other)
     {
-        weapons = other.weapons;
-        is_time_to_reload = other.is_time_to_reload;
-        is_melee = other.is_melee;
+        weapons             = other.weapons;
+        is_reload_needed    = other.is_reload_needed;
+        is_melee            = other.is_melee;
         return *this;
     }
 
     std::vector<Wpn*> weapons;
-    bool is_time_to_reload, is_melee;
+    bool is_reload_needed, is_melee;
 };
 
 class Wpn;

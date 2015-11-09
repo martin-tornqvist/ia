@@ -68,7 +68,7 @@ public:
 
     void drop_all_non_intrinsic(const P& pos);
 
-    void swap_wielded_and_prepared(const bool IS_FREE_TURN);
+    void swap_wielded_and_prepared(const Pass_time pass_time);
 
     bool has_item_in_slot(Slot_id id) const;
 

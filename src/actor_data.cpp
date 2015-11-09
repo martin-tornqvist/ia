@@ -2417,7 +2417,7 @@ void init_data_list()
     d.glyph = 'o';
     d.color = clr_gray_drk;
     d.tile = Tile_id::ooze;
-    d.hp = 14;
+    d.hp = 18;
     d.spi = 12;
     d.dmg_melee = MIN_DMG_TO_WOUND - 1;
     d.ability_vals.set_val(Ability_id::melee, 50);
@@ -2469,7 +2469,7 @@ void init_data_list()
     d.glyph = 'o';
     d.color = clr_white_high;
     d.tile = Tile_id::ooze;
-    d.hp = 8;
+    d.hp = 10;
     d.spi = 12;
     d.dmg_melee = MIN_DMG_TO_WOUND - 2;
     d.ability_vals.set_val(Ability_id::melee, 50);
@@ -2522,7 +2522,7 @@ void init_data_list()
     d.glyph = 'o';
     d.color = clr_green;
     d.tile = Tile_id::ooze;
-    d.hp = 14;
+    d.hp = 18;
     d.spi = 12;
     d.dmg_melee = MIN_DMG_TO_WOUND;
     d.ability_vals.set_val(Ability_id::melee, 50);
@@ -2575,7 +2575,7 @@ void init_data_list()
     d.glyph = 'o';
     d.color = clr_green_lgt;
     d.tile = Tile_id::ooze;
-    d.hp = 16;
+    d.hp = 18;
     d.spi = 12;
     d.dmg_melee = MIN_DMG_TO_WOUND;
     d.ability_vals.set_val(Ability_id::melee, 50);
@@ -2776,7 +2776,7 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::melee, 7);
     d.natural_props[int(Prop_id::infravis)] = true;
     d.speed = Actor_speed::slow;
-    d.ai[int(Ai_id::looks)] = true;
+    d.ai[int(Ai_id::looks)] = false;
     d.ai[int(Ai_id::attacks)] = true;
     d.ai[int(Ai_id::moves_to_random_when_unaware)] = false;
     d.prevent_knockback = true;

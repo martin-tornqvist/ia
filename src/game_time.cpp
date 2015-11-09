@@ -285,7 +285,7 @@ void reset_turn_type_and_actor_counters()
 //type of turn act. When all actors who can act on this phase have acted, and if this is
 //a normal speed phase - consider it a standard turn (update properties, update features,
 //spawn more monsters etc.)
-void tick(const bool IS_FREE_TURN)
+void tick(const Pass_time pass_time)
 {
     run_atomic_turn_events();
 
@@ -321,14 +321,15 @@ void tick(const bool IS_FREE_TURN)
 
         if (mon->aware_counter_ > 0)
         {
-            --(mon->aware_counter_);
+            --mon->aware_counter_;
         }
     }
 
     //Tick properties running on actor turns
     actor->prop_handler().tick(Prop_turn_mode::actor);
 
-    if (!IS_FREE_TURN)
+    //Should time move forward?
+    if (pass_time == Pass_time::yes)
     {
         bool can_act = false;
 
@@ -349,6 +350,8 @@ void tick(const bool IS_FREE_TURN)
                     cur_turn_type_pos_ = 0;
                 }
 
+                //Every turn type except "fast" and "fastest" are standard turns
+                //(i.e. we increment the turn counter, and run standard turn events)
                 if (cur_turn_type != Turn_type::fast && cur_turn_type != Turn_type::fastest)
                 {
                     run_std_turn_events();

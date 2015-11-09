@@ -34,6 +34,7 @@
 #include "utils.hpp"
 #include "save_handling.hpp"
 #include "insanity.hpp"
+#include "reload.hpp"
 
 Player::Player() :
     Actor(),
@@ -216,7 +217,7 @@ void Player::mk_start_items()
 
     for (int i = 0; i < nr_cartridges; ++i)
     {
-        inv_->put_in_backpack(item_factory::mk(Item_id::pistol_clip));
+        inv_->put_in_backpack(item_factory::mk(Item_id::pistol_mag));
     }
 
     if (nr_dynamite > 0)
@@ -1274,7 +1275,7 @@ void Player::move(Dir dir)
         }
     }
 
-    bool is_free_turn = false;
+    Pass_time pass_time = Pass_time::yes;
 
     const P tgt(pos + dir_utils::offset(dir));
 
@@ -1441,7 +1442,8 @@ void Player::move(Dir dir)
                 {
                     //Time for a free move!
                     nr_steps_until_free_action_ = FREE_STEP_EVERY_N_TURN - 1;
-                    is_free_turn = true;
+
+                    pass_time = Pass_time::no;
                 }
                 else
                 {
@@ -1462,7 +1464,8 @@ void Player::move(Dir dir)
                              "I try to feel what is lying here...",
                              clr_white, true);
 
-                std::string item_name = item->name(Item_ref_type::plural, Item_ref_inf::yes,
+                std::string item_name = item->name(Item_ref_type::plural,
+                                                   Item_ref_inf::yes,
                                                    Item_ref_att_inf::wpn_context);
 
                 text_format::first_to_upper(item_name);
@@ -1488,7 +1491,7 @@ void Player::move(Dir dir)
     //action has occurred)
     if (pos == tgt)
     {
-        game_time::tick(is_free_turn);
+        game_time::tick(pass_time);
     }
 }
 

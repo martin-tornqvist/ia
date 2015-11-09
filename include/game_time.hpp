@@ -34,7 +34,7 @@ void load();
 
 void add_actor(Actor* actor);
 
-void tick(const bool IS_FREE_TURN = false);
+void tick(const Pass_time pass_time = Pass_time::yes);
 
 int turn();
 

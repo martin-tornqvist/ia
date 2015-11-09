@@ -2,22 +2,15 @@
 #define RELOAD_H
 
 class Actor;
-
-enum class Reload_result
-{
-    success,
-    no_ammo,
-    not_carrying_wpn,
-    already_full,
-    wpn_not_using_ammo,
-    fumble
-};
+class Item;
 
 namespace reload
 {
 
-bool reload_wielded_wpn(Actor& actor_reloading);
+void try_reload(Actor& actor, Item* const item_to_reload);
 
-} //Reload
+void player_arrange_pistol_mags();
+
+} //reload
 
 #endif

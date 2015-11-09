@@ -235,9 +235,9 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.spawn_std_range.max = DLVL_LAST_MID_GAME;
         break;
 
-    case Item_type::ammo_clip:
+    case Item_type::ammo_mag:
         reset_data(d, Item_type::ammo);
-        d.type = Item_type::ammo_clip;
+        d.type = Item_type::ammo_mag;
         d.weight = Item_weight::light;
         d.is_stackable = false;
         d.spawn_std_range.max = DLVL_LAST_MID_GAME;
@@ -509,14 +509,13 @@ void init_data_list()
     d.ranged.snd_msg = "I hear the blast of a launched missile.";
     d.ranged.projectile_glyph = '*';
     d.ranged.projectile_clr = clr_red_lgt;
-    d.spawn_std_range.min = 5;
-    d.chance_to_incl_in_floor_spawn_list = 25;
-    add_feature_found_in(d, Feature_id::chest, 25);
-    add_feature_found_in(d, Feature_id::cabinet, 25);
-    add_feature_found_in(d, Feature_id::cocoon, 25);
+    d.spawn_std_range.min = DLVL_FIRST_MID_GAME;
+    add_feature_found_in(d, Feature_id::chest);
+    add_feature_found_in(d, Feature_id::cabinet);
+    add_feature_found_in(d, Feature_id::cocoon);
     data[size_t(d.id)] = d;
 
-    reset_data(d, Item_type::ammo_clip);
+    reset_data(d, Item_type::ammo_mag);
     d.id = Item_id::incinerator_ammo;
     d.base_name =
     {
@@ -564,7 +563,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::cocoon);
     data[size_t(d.id)] = d;
 
-    reset_data(d, Item_type::ammo_clip);
+    reset_data(d, Item_type::ammo_mag);
     d.id = Item_id::drum_of_bullets;
     d.base_name = {"Drum of .45 ACP", "Drums of .45 ACP", "a Drum of .45 ACP"};
     d.base_descr =
@@ -589,7 +588,7 @@ void init_data_list()
     d.ranged.max_ammo = 7;
     d.ranged.dmg = Dice_param(1, 8, 4);
     d.ranged.effective_range = 6;
-    d.ranged.ammo_item_id = Item_id::pistol_clip;
+    d.ranged.ammo_item_id = Item_id::pistol_mag;
     d.melee.att_msgs = {"strike", "strikes me with a pistol"};
     d.ranged.att_msgs = {"fire", "fires a pistol"};
     d.ranged.snd_msg = "I hear a pistol being fired.";
@@ -601,11 +600,9 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::cocoon);
     data[size_t(d.id)] = d;
 
-    reset_data(d, Item_type::ammo_clip);
-    d.id = Item_id::pistol_clip;
-    d.base_name = {".45ACP Colt cartridge", ".45ACP Colt cartridges",
-                   "a .45ACP Colt cartridge"
-                  };
+    reset_data(d, Item_type::ammo_mag);
+    d.id = Item_id::pistol_mag;
+    d.base_name = {".45ACP Colt cartridge", ".45ACP Colt cartridges", "a .45ACP Colt cartridge"};
     d.base_descr =
     {
         "Ammunition used by Colt pistols."
@@ -650,7 +647,7 @@ void init_data_list()
     d.ranged.makes_ricochet_snd = false;
     data[size_t(d.id)] = d;
 
-    reset_data(d, Item_type::ammo_clip);
+    reset_data(d, Item_type::ammo_mag);
     d.id = Item_id::mi_go_gun_ammo;
     d.base_name =
     {

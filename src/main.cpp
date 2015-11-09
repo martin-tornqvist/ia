@@ -145,7 +145,7 @@ int main(int argc, char* argv[])
 
                     audio::play(Sfx_id::death);
 
-                    msg_log::add("Death has triumphed.",
+                    msg_log::add("I am dead!",
                                  clr_msg_bad,
                                  false,
                                  More_prompt_on_msg::yes);

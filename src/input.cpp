@@ -223,7 +223,23 @@ void handle_map_mode_key_press(const Key_data& d)
 
         if (map::player->is_alive())
         {
-            reload::reload_wielded_wpn(*(map::player));
+            Item* const wpn = map::player->inv().item_in_slot(Slot_id::wpn);
+
+            reload::try_reload(*map::player, wpn);
+        }
+
+        clear_events();
+        return;
+    }
+
+    //----------------------------------- ARRANGE PISTOL MAGAZINES
+    else if (d.key == 'R')
+    {
+        msg_log::clear();
+
+        if (map::player->is_alive())
+        {
+            reload::player_arrange_pistol_mags();
         }
 
         clear_events();
@@ -393,7 +409,7 @@ void handle_map_mode_key_press(const Key_data& d)
                     }
                     else /* Not enough ammo loaded */ if (config::is_ranged_wpn_auto_reload())
                     {
-                        reload::reload_wielded_wpn(*(map::player));
+                        reload::try_reload(*map::player, item);
                     }
                     else // Not enough ammo loaded, and auto reloading is disabled
                     {
@@ -480,9 +496,10 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive())
         {
 
-            const bool IS_FREE_TURN = player_bon::bg() == Bg::war_vet;
+            const Pass_time pass_time = (player_bon::bg() == Bg::war_vet) ?
+                                            Pass_time::no : Pass_time::yes;
 
-            const std::string swift_str = IS_FREE_TURN ? " swiftly" : "";
+            const std::string swift_str = (pass_time == Pass_time::no) ? " swiftly" : "";
 
             Inventory& inv = map::player->inv();
 
@@ -496,25 +513,26 @@ void handle_map_mode_key_press(const Key_data& d)
                 {
                     if (alt)
                     {
-                        msg_log::add("I" + swift_str + " swap to my prepared weapon (" +
-                                     ALT_NAME + ").");
+                        msg_log::add(
+                            "I" + swift_str + " swap to my prepared weapon (" + ALT_NAME + ").");
                     }
-                    else
+                    else //No current alt weapon
                     {
                         const std::string NAME = wielded->name(Item_ref_type::a);
-                        msg_log::add("I" + swift_str + " put away my weapon (" +
-                                     NAME + ").");
+
+                        msg_log::add(
+                            "I" + swift_str + " put away my weapon (" + NAME + ").");
                     }
                 }
-                else
+                else //No current wielded item
                 {
-                    msg_log::add("I" + swift_str + " wield my prepared weapon (" +
-                                 ALT_NAME + ").");
+                    msg_log::add(
+                        "I" + swift_str + " wield my prepared weapon (" + ALT_NAME + ").");
                 }
 
-                inv.swap_wielded_and_prepared(IS_FREE_TURN);
+                inv.swap_wielded_and_prepared(pass_time);
             }
-            else
+            else //No wielded weapon and no alt weapon
             {
                 msg_log::add("I have neither a wielded nor a prepared weapon.");
             }

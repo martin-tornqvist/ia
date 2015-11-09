@@ -29,6 +29,12 @@ enum class Did_action
     no
 };
 
+enum class Pass_time
+{
+    yes,
+    no
+};
+
 enum class Consume_item
 {
     yes,
@@ -441,7 +447,7 @@ enum class Item_type
     ranged_wpn,
     throwing_wpn,
     ammo,
-    ammo_clip,
+    ammo_mag,
     scroll,
     potion,
     device,
@@ -461,20 +467,20 @@ struct Item_name
     Item_name(const std::string& NAME, const std::string& NAME_PL,
               const std::string& NAME_A)
     {
-        names[int(Item_ref_type::plain)]   = NAME;
-        names[int(Item_ref_type::plural)]  = NAME_PL;
-        names[int(Item_ref_type::a)]       = NAME_A;
+        names[size_t(Item_ref_type::plain)]   = NAME;
+        names[size_t(Item_ref_type::plural)]  = NAME_PL;
+        names[size_t(Item_ref_type::a)]       = NAME_A;
     }
 
     Item_name()
     {
-        for (int i = 0; i < int(Item_ref_type::END); i++)
+        for (size_t i = 0; i < size_t(Item_ref_type::END); i++)
         {
             names[i] = "";
         }
     }
 
-    std::string names[int(Item_ref_type::END)];
+    std::string names[size_t(Item_ref_type::END)];
 };
 
 struct Item_att_msgs

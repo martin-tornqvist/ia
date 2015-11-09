@@ -653,25 +653,7 @@ int Snake_pit_room::base_pct_chance_drk() const
 
 bool Snake_pit_room::is_allowed() const
 {
-    if (r_.min_dim() < 3)
-    {
-        return false;
-    }
-
-    if (map::dlvl <= DLVL_LAST_EARLY_GAME)
-    {
-        return r_.max_dim() <= 3;
-    }
-    if (map::dlvl <= DLVL_LAST_MID_GAME)
-    {
-        //Allow bigger snake pits
-        return r_.max_dim() <= 4;
-    }
-    else  //Is late game
-    {
-        //Allow huge snake pits
-        return r_.max_dim() <= 6;
-    }
+    return (r_.min_dim() >= 3) && (r_.max_dim() <= 4);
 }
 
 void Snake_pit_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])

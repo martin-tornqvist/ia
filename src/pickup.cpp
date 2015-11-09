@@ -92,10 +92,10 @@ Ammo* unload_ranged_wpn(Wpn& wpn)
     Item_data_t&    ammo_data       = item_data::data[int(ammo_id)];
     Item*           spawned_ammo    = item_factory::mk(ammo_id);
 
-    if (ammo_data.type == Item_type::ammo_clip)
+    if (ammo_data.type == Item_type::ammo_mag)
     {
-        //Unload a clip
-        static_cast<Ammo_clip*>(spawned_ammo)->ammo_ = NR_AMMO_LOADED;
+        //Unload a mag
+        static_cast<Ammo_mag*>(spawned_ammo)->ammo_ = NR_AMMO_LOADED;
     }
     else
     {
@@ -143,7 +143,7 @@ void try_unload_wpn_or_pickup_ammo()
         {
             if (
                 item->data().type == Item_type::ammo ||
-                item->data().type == Item_type::ammo_clip)
+                item->data().type == Item_type::ammo_mag)
             {
                 try_pick();
                 return;

@@ -878,20 +878,20 @@ TEST_FIXTURE(Basic_fixture, saving_game)
     item = item_factory::mk(Item_id::armor_asb_suit);
     inv.put_in_slot(Slot_id::body, item);
 
-    item = item_factory::mk(Item_id::pistol_clip);
-    static_cast<Ammo_clip*>(item)->ammo_ = 1;
+    item = item_factory::mk(Item_id::pistol_mag);
+    static_cast<Ammo_mag*>(item)->ammo_ = 1;
     inv.put_in_backpack(item);
 
-    item = item_factory::mk(Item_id::pistol_clip);
-    static_cast<Ammo_clip*>(item)->ammo_ = 2;
+    item = item_factory::mk(Item_id::pistol_mag);
+    static_cast<Ammo_mag*>(item)->ammo_ = 2;
     inv.put_in_backpack(item);
 
-    item = item_factory::mk(Item_id::pistol_clip);
-    static_cast<Ammo_clip*>(item)->ammo_ = 3;
+    item = item_factory::mk(Item_id::pistol_mag);
+    static_cast<Ammo_mag*>(item)->ammo_ = 3;
     inv.put_in_backpack(item);
 
-    item = item_factory::mk(Item_id::pistol_clip);
-    static_cast<Ammo_clip*>(item)->ammo_ = 3;
+    item = item_factory::mk(Item_id::pistol_mag);
+    static_cast<Ammo_mag*>(item)->ammo_ = 3;
     inv.put_in_backpack(item);
 
     item = item_factory::mk(Item_id::device_blaster);
@@ -980,9 +980,9 @@ TEST_FIXTURE(Basic_fixture, loading_game)
     CHECK_EQUAL(int(Item_id::mi_go_gun), int(inv.item_in_slot(Slot_id::wpn)->data().id));
     CHECK_EQUAL(int(Item_id::armor_asb_suit), int(inv.item_in_slot(Slot_id::body)->data().id));
 
-    int nr_clip_with_1 = 0;
-    int nr_clip_with_2 = 0;
-    int nr_clip_with_3 = 0;
+    int nr_mag_with_1 = 0;
+    int nr_mag_with_2 = 0;
+    int nr_mag_with_3 = 0;
     bool is_sentry_device_found = false;
     bool is_lantern_found       = false;
 
@@ -990,20 +990,20 @@ TEST_FIXTURE(Basic_fixture, loading_game)
     {
         Item_id id = item->id();
 
-        if (id == Item_id::pistol_clip)
+        if (id == Item_id::pistol_mag)
         {
-            switch (static_cast<Ammo_clip*>(item)->ammo_)
+            switch (static_cast<Ammo_mag*>(item)->ammo_)
             {
             case 1:
-                ++nr_clip_with_1;
+                ++nr_mag_with_1;
                 break;
 
             case 2:
-                ++nr_clip_with_2;
+                ++nr_mag_with_2;
                 break;
 
             case 3:
-                ++nr_clip_with_3;
+                ++nr_mag_with_3;
                 break;
 
             default:
@@ -1027,9 +1027,9 @@ TEST_FIXTURE(Basic_fixture, loading_game)
         }
     }
 
-    CHECK_EQUAL(1, nr_clip_with_1);
-    CHECK_EQUAL(1, nr_clip_with_2);
-    CHECK_EQUAL(2, nr_clip_with_3);
+    CHECK_EQUAL(1, nr_mag_with_1);
+    CHECK_EQUAL(1, nr_mag_with_2);
+    CHECK_EQUAL(2, nr_mag_with_3);
     CHECK(is_sentry_device_found);
     CHECK(is_lantern_found);
 

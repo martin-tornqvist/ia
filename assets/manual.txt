@@ -31,6 +31,7 @@
    N      Make some noise (to lure monsters)
    q      Kick, bash doors, or destroy corpses
    r      Reload wielded firearm
+   R      Organize Colt magazines
    s      Wait and search a few turns
    t      Throw something from the "Thrown" slot, or throw held explosive
    v      View descriptions of things on the map

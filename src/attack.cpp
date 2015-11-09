@@ -898,6 +898,7 @@ void projectile_fire(Actor* const attacker, const P& origin, const P& aim_pos, W
 
     //Get projectile path
     std::vector<P> path;
+
     line_calc::calc_new_line(origin,
                              aim_pos,
                              stop_at_tgt,
@@ -1720,7 +1721,7 @@ bool ranged(Actor* const attacker,
 
     if (did_attack)
     {
-        bool is_free_turn = false;
+        Pass_time pass_time = Pass_time::yes;
 
         if (attacker == map::player)
         {
@@ -1734,7 +1735,7 @@ bool ranged(Actor* const attacker,
 
                 if (IS_FAST_SHOOTING)
                 {
-                    is_free_turn = true;
+                    pass_time = Pass_time::no;
                 }
                 else //Not fast shooting
                 {
@@ -1746,7 +1747,7 @@ bool ranged(Actor* const attacker,
         //Only pass time if an actor is attacking (not if it's a trap or something)
         if (attacker)
         {
-            game_time::tick(is_free_turn);
+            game_time::tick(pass_time);
         }
 
         return true;
