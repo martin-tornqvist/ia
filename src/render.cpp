@@ -436,8 +436,8 @@ void init()
     if (!config::is_fullscreen() || !sdl_window_)
     {
         sdl_window_ = SDL_CreateWindow(title.c_str(),
-                                       SDL_WINDOWPOS_UNDEFINED,
-                                       SDL_WINDOWPOS_UNDEFINED,
+                                       SDL_WINDOWPOS_CENTERED,
+                                       SDL_WINDOWPOS_CENTERED,
                                        SCR_PX_W, SCR_PX_H,
                                        SDL_WINDOW_SHOWN);
     }
