@@ -191,6 +191,28 @@ void handle_map_mode_key_press(const Key_data& d)
         {
             msg_log::clear();
 
+            if (player_bon::traits[size_t(Trait::steady_aimer)])
+            {
+                Prop_handler& prop_hlr = map::player->prop_handler();
+
+                int nr_turns_aiming_old = 0;
+
+                if (player_bon::traits[size_t(Trait::sharpshooter)])
+                {
+                    Prop* const prop_aiming_old = prop_hlr.prop(Prop_id::aiming);
+
+                    if (prop_aiming_old)
+                    {
+                        nr_turns_aiming_old =
+                            static_cast<Prop_aiming*>(prop_aiming_old)->nr_turns_aiming;
+                    }
+                }
+
+                Prop_aiming* const aiming = new Prop_aiming(Prop_turns::specific, 1);
+                aiming->nr_turns_aiming += nr_turns_aiming_old;
+                prop_hlr.try_add_prop(aiming);
+            }
+
             map::player->move(Dir::center);
         }
 
@@ -497,7 +519,7 @@ void handle_map_mode_key_press(const Key_data& d)
         {
 
             const Pass_time pass_time = (player_bon::bg() == Bg::war_vet) ?
-                                            Pass_time::no : Pass_time::yes;
+                                        Pass_time::no : Pass_time::yes;
 
             const std::string swift_str = (pass_time == Pass_time::no) ? " swiftly" : "";
 

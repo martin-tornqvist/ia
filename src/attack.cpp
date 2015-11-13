@@ -259,7 +259,8 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
         }
         else //No actor aimed at
         {
-            const bool IS_CELL_BLOCKED = map_parse::cell(cell_check::Blocks_projectiles(), cur_pos);
+            const bool IS_CELL_BLOCKED =
+                map_parse::cell(cell_check::Blocks_projectiles(), cur_pos);
 
             intended_aim_lvl = IS_CELL_BLOCKED ?
                                Actor_size::humanoid : Actor_size::floor;
@@ -335,6 +336,18 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
                 is_ethereal_defender_missed = rnd::fraction(2, 3);
             }
 
+            bool player_aim_x3 = false;
+
+            if (attacker == map::player)
+            {
+                const Prop* const prop = attacker->prop_handler().prop(Prop_id::aiming);
+
+                if (prop)
+                {
+                    player_aim_x3 = static_cast<const Prop_aiming*>(prop)->is_max_ranged_dmg();
+                }
+            }
+
             Dice_param dmg_dice = wpn.dmg(Att_mode::ranged, attacker);
 
             if (attacker == map::player && player_bon::gets_undead_bane_bon(defender_data))
@@ -342,7 +355,7 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
                 dmg_dice.plus += 2;
             }
 
-            dmg = rnd::dice(dmg_dice);
+            dmg = player_aim_x3 ? dmg_dice.max() : rnd::dice(dmg_dice);
 
             //Outside effective range limit?
             if (!wpn.is_in_effective_range_lmt(attacker_orign, defender->pos))
@@ -450,6 +463,18 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
                 is_ethereal_defender_missed = rnd::fraction(2, 3);
             }
 
+            bool player_aim_x3 = false;
+
+            if (attacker == map::player)
+            {
+                const Prop* const prop = attacker->prop_handler().prop(Prop_id::aiming);
+
+                if (prop)
+                {
+                    player_aim_x3 = static_cast<const Prop_aiming*>(prop)->is_max_ranged_dmg();
+                }
+            }
+
             Dice_param dmg_dice = item.dmg(Att_mode::thrown, attacker);
 
             if (APPLY_UNDEAD_BANE_BON)
@@ -457,7 +482,7 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
                 dmg_dice.plus += 2;
             }
 
-            dmg = rnd::dice(dmg_dice);
+            dmg = player_aim_x3 ? dmg_dice.max() : rnd::dice(dmg_dice);
 
             //Outside effective range limit?
             if (!item.is_in_effective_range_lmt(attacker->pos, defender->pos))

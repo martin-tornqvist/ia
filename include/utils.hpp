@@ -24,7 +24,7 @@ int dice(const Dice_param& p);
 
 bool coin_toss();
 
-bool fraction(const int NUMERATOR, const int DENOMINATOR);
+bool fraction(const int NUMER, const int DENOM);
 
 bool fraction(const Fraction& f);
 

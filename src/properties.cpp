@@ -661,6 +661,16 @@ void init_data_list()
     d.alignment = Prop_alignment::good;
     add_prop_data(d);
 
+    d.id = Prop_id::aiming;
+    d.std_rnd_turns = Range(1, 1);
+    d.name = "Aiming";
+    d.name_short = "Aiming";
+    d.allow_display_turns = false;
+    d.allow_apply_more_while_active = true;
+    d.update_vision_when_start_or_end = false;
+    d.alignment = Prop_alignment::good;
+    add_prop_data(d);
+
     d.id = Prop_id::fast_shooting;
     d.std_rnd_turns = Range(1, 1);
     d.name = "";
@@ -975,6 +985,9 @@ Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init, const int N
 
     case Prop_id::frenzied:
         return new Prop_frenzied(turns_init, NR_TURNS);
+
+    case Prop_id::aiming:
+        return new Prop_aiming(turns_init, NR_TURNS);
 
     case Prop_id::fast_shooting:
         return new Prop_fast_shooting(turns_init, NR_TURNS);

@@ -63,6 +63,7 @@ enum class Prop_id
 
     //Special (for supporting very specific game mechanics)
     poss_by_zuul,
+    aiming,
     fast_shooting,
     nailed,
     flared,
@@ -587,6 +588,41 @@ public:
         Prop(Prop_id::poisoned, turns_init, nr_turns) {}
 
     Prop* on_new_turn() override;
+};
+
+class Prop_aiming: public Prop
+{
+public:
+    Prop_aiming(Prop_turns turns_init, int nr_turns = -1) :
+        Prop            (Prop_id::aiming, turns_init, nr_turns),
+        nr_turns_aiming (1) {}
+
+    Prop_turn_mode turn_mode() const override
+    {
+        return Prop_turn_mode::actor;
+    }
+
+    std::string name_short() const override
+    {
+        return data_.name_short + (nr_turns_aiming >= 3 ? "(3)" : "");
+    }
+
+    int ability_mod(const Ability_id ability) const override
+    {
+        if (ability == Ability_id::ranged)
+        {
+            return nr_turns_aiming >= 3 ? 999 : 20;
+        }
+
+        return 0;
+    }
+
+    bool is_max_ranged_dmg() const
+    {
+        return nr_turns_aiming >= 3;
+    }
+
+    int nr_turns_aiming;
 };
 
 class Prop_fast_shooting: public Prop

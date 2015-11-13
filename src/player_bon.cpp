@@ -46,6 +46,12 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
     case Trait::master_marksman:
         break;
 
+    case Trait::steady_aimer:
+        break;
+
+    case Trait::sharpshooter:
+        break;
+
     case Trait::fast_shooter:
         break;
 
@@ -272,6 +278,12 @@ std::string trait_title(const Trait id)
     case Trait::master_marksman:
         return "Master Marksman";
 
+    case Trait::steady_aimer:
+        return "Steady Aimer";
+
+    case Trait::sharpshooter:
+        return "Sharpshooter";
+
     case Trait::fast_shooter:
         return "Fast Shooter";
 
@@ -460,14 +472,23 @@ std::string trait_descr(const Trait id)
         return "+10% hit chance and +1 damage with melee attacks";
 
     case Trait::adept_marksman:
-        return "+10% hit chance and +1 damage with firearms and thrown weapons";
-
-    case Trait::expert_marksman:
         return "+10% hit chance and +1 damage with firearms and thrown weapons, you occasionally "
                "reload instantly";
 
+    case Trait::expert_marksman:
+        return "+10% hit chance and +1 damage with firearms and thrown weapons, you often "
+               "reload instantly";
+
     case Trait::master_marksman:
-        return "+10% hit chance and +1 damage with firearms and thrown weapons";
+        return "+10% hit chance and +1 damage with firearms and thrown weapons, you usually "
+               "reload instantly";
+
+    case Trait::steady_aimer:
+        return "Standing still gives ranged attacks +20% hit chance on the following turn";
+
+    case Trait::sharpshooter:
+        return "Standing still for three turns gives ranged attacks maximum hit chance "
+               "and damage on the following turn";
 
     case Trait::fast_shooter:
         return "Every second consecutive shot is a free action (not applicable to thrown weapons)";
@@ -638,6 +659,16 @@ void trait_prereqs(const Trait trait,
         bg_ref = Bg::war_vet;
         break;
 
+    case Trait::steady_aimer:
+        bg_ref = Bg::war_vet;
+        break;
+
+    case Trait::sharpshooter:
+        traits_ref.push_back(Trait::steady_aimer);
+        traits_ref.push_back(Trait::expert_marksman);
+        bg_ref = Bg::war_vet;
+        break;
+
     case Trait::fast_shooter:
         traits_ref.push_back(Trait::expert_marksman);
         traits_ref.push_back(Trait::dexterous);
@@ -749,7 +780,7 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::mighty_spirit:
-      traits_ref.push_back(Trait::strong_spirit);
+        traits_ref.push_back(Trait::strong_spirit);
         break;
 
     case Trait::stealthy:

@@ -64,6 +64,8 @@ enum class Trait
     master_marksman,
     fast_shooter,
     courageous,
+    steady_aimer,
+    sharpshooter,
 
     END
 };

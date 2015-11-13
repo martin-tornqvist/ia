@@ -197,10 +197,12 @@ void try_reload(Actor& actor, Item* const item_to_reload)
     {
         if (actor.is_player())
         {
-            const bool IS_EXP_MARK = player_bon::traits[size_t(Trait::expert_marksman)];
+            const int SWIFT_RELOAD_N_IN_10 =
+                player_bon::traits[size_t(Trait::master_marksman)]  ? 7 :
+                player_bon::traits[size_t(Trait::expert_marksman)]  ? 5 :
+                player_bon::traits[size_t(Trait::adept_marksman)]   ? 3 : 0;
 
-            pass_time = (IS_EXP_MARK && rnd::coin_toss()) ?
-                          Pass_time::no : Pass_time::yes;
+            pass_time = rnd::fraction(SWIFT_RELOAD_N_IN_10, 10) ? Pass_time::no : Pass_time::yes;
         }
 
         bool is_mag = ammo_item->data().type == Item_type::ammo_mag;

@@ -62,32 +62,35 @@ bool coin_toss()
     return roll(1, 2) == 2;
 }
 
-bool fraction(const int NUMERATOR, const int DENOMINATOR)
+bool fraction(const int NUMER, const int DENOM)
 {
     //This function should never be called with a denominator less than one, because it's unclear
     //what it means that something should happen "N times in 0".
-    assert(DENOMINATOR >= 1);
+    assert(DENOM >= 1);
 
     //If numerator is bigger than denominator, it's most likely a bug (should something occur e.g.
-    //5 times in 3 ???) - don't allow this.
-    assert(NUMERATOR <= DENOMINATOR);
+    //5 times in 3 ???) - don't allow this...
+    assert(NUMER <= DENOM);
 
-    assert(NUMERATOR >= 0);
+    //A negative numerator is of course nonsense
+    assert(NUMER >= 0);
 
-    //If any of the rules above are broken on a release build (and was never caught in debug mode),
-    //try to perform the action that was *probably* intended.
+    //If any of the rules above are broken on a release build, try to perform the action that was
+    //*probably* intended.
 
-    if ((NUMERATOR <= 0) || (DENOMINATOR <= 0))
+    //NOTE: A numerator of 0 is always allowed (it simply means "no chance")
+
+    if ((NUMER <= 0) || (DENOM <= 0))
     {
         return false;
     }
 
-    if ((NUMERATOR >= DENOMINATOR) || (DENOMINATOR == 1))
+    if ((NUMER >= DENOM) || (DENOM == 1))
     {
         return true;
     }
 
-    return roll(1, DENOMINATOR) <= NUMERATOR;
+    return roll(1, DENOM) <= NUMER;
 }
 
 bool fraction(const Fraction& f)

@@ -382,7 +382,7 @@ struct Dice_param
         return *this;
     }
 
-    int highest() const
+    int max() const
     {
         return (rolls * sides) + plus;
     }
