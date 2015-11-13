@@ -126,7 +126,9 @@ int main(int argc, char* argv[])
 
                     if (ALLOW_ACT && !IS_GIBBED)
                     {
-                        actor->on_actor_turn();
+                        //Tell actor to "do something". If this is the player, input is read from
+                        //either the human player or the bot. If it's a monster, the AI handles it.
+                        actor->act();
                     }
                     else //Actor cannot act
                     {

@@ -303,10 +303,10 @@ void summon(const P& origin,
 
     for (int i = 0; i < NR_TO_SPAWN; ++i)
     {
-        const P&    pos   = free_cells[i];
-        const Actor_id id    = monster_ids[i];
-        Actor* const  actor = mk(id, pos);
-        Mon* const    mon   = static_cast<Mon*>(actor);
+        const P&        pos     = free_cells[i];
+        const Actor_id  id      = monster_ids[i];
+        Actor* const    actor   = mk(id, pos);
+        Mon* const      mon     = static_cast<Mon*>(actor);
 
         assert(utils::is_pos_inside_map(pos, false));
 

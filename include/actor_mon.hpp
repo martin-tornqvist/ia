@@ -50,6 +50,8 @@ public:
 
     bool can_see_actor(const Actor& other, const bool hard_blocked_los[MAP_W][MAP_H]) const;
 
+    void act() override;
+
     void move(Dir dir);
 
     void avail_attacks(Actor& defender, Ai_avail_attacks_data& dst);
@@ -114,7 +116,7 @@ protected:
                         const Dmg_method method,
                         const Allow_wound allow_wound) override;
 
-    virtual bool on_actor_turn_hook()
+    virtual bool on_act()
     {
         return false;
     }
@@ -153,7 +155,7 @@ class Spider: public Mon
 public:
     Spider() : Mon() {}
     virtual ~Spider() {}
-    bool on_actor_turn_hook() override;
+    bool on_act() override;
 };
 
 class Green_spider: public Spider
@@ -229,7 +231,7 @@ public:
         has_resurrected = false;
     }
     virtual ~Zombie() {}
-    virtual bool on_actor_turn_hook() override;
+    virtual bool on_act() override;
     void on_death() override;
 
 protected:
@@ -272,7 +274,7 @@ public:
     }
     ~Major_clapham_lee() {}
 
-    bool on_actor_turn_hook() override;
+    bool on_act() override;
 
 private:
     bool has_summoned_tomb_legions;
@@ -320,7 +322,7 @@ public:
 
     void mk_start_items() override;
 
-    bool on_actor_turn_hook() override;
+    bool on_act() override;
 };
 
 class Keziah_mason: public Mon
@@ -328,7 +330,7 @@ class Keziah_mason: public Mon
 public:
     Keziah_mason() : Mon(), has_summoned_jenkin(false) {}
     ~Keziah_mason() {}
-    bool on_actor_turn_hook() override;
+    bool on_act() override;
     void mk_start_items() override;
 
 private:
@@ -402,7 +404,7 @@ class Lord_of_shadows: public Mon
 public:
     Lord_of_shadows() : Mon() {}
     ~Lord_of_shadows() {}
-    bool on_actor_turn_hook() override;
+    bool on_act() override;
     void mk_start_items() override;
 };
 
@@ -411,7 +413,7 @@ class Lord_of_spiders: public Mon
 public:
     Lord_of_spiders() : Mon() {}
     ~Lord_of_spiders() {}
-    bool on_actor_turn_hook() override;
+    bool on_act() override;
     void mk_start_items() override;
 };
 
@@ -420,7 +422,7 @@ class Lord_of_spirits: public Mon
 public:
     Lord_of_spirits() : Mon() {}
     ~Lord_of_spirits() {}
-    bool on_actor_turn_hook() override;
+    bool on_act() override;
     void mk_start_items() override;
 };
 
@@ -429,7 +431,7 @@ class Lord_of_pestilence: public Mon
 public:
     Lord_of_pestilence() : Mon() {}
     ~Lord_of_pestilence() {}
-    bool on_actor_turn_hook() override;
+    bool on_act() override;
     void mk_start_items() override;
 };
 
@@ -457,7 +459,7 @@ class Ghost: public Mon
 public:
     Ghost() : Mon() {}
     ~Ghost() {}
-    bool on_actor_turn_hook() override;
+    bool on_act() override;
     virtual void mk_start_items() override;
 };
 
@@ -608,7 +610,7 @@ public:
     Ape() : Mon(), frenzy_cool_down_(0) {}
     ~Ape() {}
     void mk_start_items() override;
-    bool on_actor_turn_hook() override;
+    bool on_act() override;
 private:
     int frenzy_cool_down_;
 };
@@ -620,7 +622,7 @@ public:
     ~Mummy() {}
     virtual void mk_start_items() override;
 
-    virtual bool on_actor_turn_hook() override;
+    virtual bool on_act() override;
 };
 
 class Mummy_croc_head: public Mummy
@@ -647,7 +649,7 @@ public:
         has_summoned_locusts(false) {}
     ~Khephren() {}
 
-    bool on_actor_turn_hook() override;
+    bool on_act() override;
 private:
     bool has_summoned_locusts;
 };
@@ -675,7 +677,7 @@ class Worm_mass: public Mon
 public:
     Worm_mass() : Mon(), spawn_new_one_in_n(10) {}
     ~Worm_mass() {}
-    bool on_actor_turn_hook() override;
+    bool on_act() override;
     void mk_start_items() override;
 private:
     int spawn_new_one_in_n;
@@ -686,7 +688,7 @@ class Giant_locust: public Mon
 public:
     Giant_locust() : Mon(), spawn_new_one_in_n(40) {}
     ~Giant_locust() {}
-    bool on_actor_turn_hook() override;
+    bool on_act() override;
     void mk_start_items() override;
 private:
     int spawn_new_one_in_n;
@@ -698,7 +700,7 @@ public:
     Vortex() : Mon(), pull_cooldown(0) {}
     virtual ~Vortex() {}
 
-    bool on_actor_turn_hook() override;
+    bool on_act() override;
 
     virtual void mk_start_items() = 0;
     virtual void on_death() = 0;
@@ -784,7 +786,7 @@ class Mold: public Mon
 public:
     Mold() : Mon(), spawn_new_one_in_n(28) {}
     ~Mold() {}
-    bool on_actor_turn_hook() override;
+    bool on_act() override;
     void mk_start_items() override;
 private:
     int spawn_new_one_in_n;
@@ -809,7 +811,7 @@ public:
 
     void mk_start_items() override;
     void on_death() override;
-    bool on_actor_turn_hook() override;
+    bool on_act() override;
 private:
     void on_std_turn_hook()   override;
 

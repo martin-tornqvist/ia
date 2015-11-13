@@ -54,9 +54,12 @@ public:
 
     bool can_see_actor(const Actor& other) const;
 
+    void act() override;
+
     void move(Dir dir);
 
     void mk_start_items() override;
+
     void on_actor_turn() override;
     void on_std_turn() override;
 

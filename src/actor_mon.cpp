@@ -54,6 +54,17 @@ Mon::~Mon()
 
 void Mon::on_actor_turn()
 {
+    if (aware_counter_ > 0)
+    {
+        --aware_counter_;
+    }
+}
+
+//TODO: Some of the things done in this function should probably be moved to
+//"on_actor_turn()" instead. The purpose of this function ("act()") is only to
+//tell the actor to "do something".
+void Mon::act()
+{
 #ifndef NDEBUG
     //Sanity check - verify that monster is not outside the map
     if (!utils::is_pos_inside_map(pos, false))
@@ -150,7 +161,8 @@ void Mon::on_actor_turn()
         {
             if (leader_->is_alive() && !is_actor_my_leader(map::player))
             {
-                static_cast<Mon*>(leader_)->aware_counter_ = leader_->data().nr_turns_aware;
+                static_cast<Mon*>(leader_)->aware_counter_ =
+                    leader_->data().nr_turns_aware;
             }
         }
         else //Monster does not have a leader
@@ -177,7 +189,7 @@ void Mon::on_actor_turn()
     //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
     if (leader_ != map::player && (tgt_ == nullptr || tgt_ == map::player))
     {
-        if (on_actor_turn_hook())
+        if (on_act())
         {
             return;
         }
@@ -542,7 +554,9 @@ void Mon::set_player_aware_of_me(const int DURATION_FACTOR)
 
 bool Mon::try_attack(Actor& defender)
 {
-    if (state_ != Actor_state::alive || (aware_counter_ <= 0 && leader_ != map::player))
+    if (
+        state_ != Actor_state::alive ||
+        (aware_counter_ <= 0 && leader_ != map::player))
     {
         return false;
     }
@@ -961,7 +975,7 @@ void Zuul::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::zuul_bite));
 }
 
-bool Vortex::on_actor_turn_hook()
+bool Vortex::on_act()
 {
     if (!is_alive())
     {
@@ -1109,7 +1123,7 @@ void Fire_vortex::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::fire_vortex_engulf));
 }
 
-bool Ghost::on_actor_turn_hook()
+bool Ghost::on_act()
 {
     if (
         is_alive()                                      &&
@@ -1286,7 +1300,7 @@ void Mummy::mk_start_items()
     }
 }
 
-bool Mummy::on_actor_turn_hook()
+bool Mummy::on_act()
 {
     //TODO: Below is an implementation for mummies turning friendly if player is wielding
     //the Staff of the Pharoh. It is commented out at least until after v17.0 is released.
@@ -1344,7 +1358,7 @@ void Mummy_unique::mk_start_items()
     spells_known_.push_back(spell_handling::random_spell_for_mon());
 }
 
-bool Khephren::on_actor_turn_hook()
+bool Khephren::on_act()
 {
     if (is_alive() && aware_counter_ > 0 && !has_summoned_locusts)
     {
@@ -1415,7 +1429,7 @@ void Ape::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::ape_maul));
 }
 
-bool Ape::on_actor_turn_hook()
+bool Ape::on_act()
 {
     if (frenzy_cool_down_ > 0)
     {
@@ -1472,7 +1486,7 @@ void Hunting_horror::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::hunting_horror_bite));
 }
 
-bool Keziah_mason::on_actor_turn_hook()
+bool Keziah_mason::on_act()
 {
     if (is_alive() && aware_counter_ > 0 && !has_summoned_jenkin)
     {
@@ -1657,7 +1671,7 @@ void Color_oo_space::on_std_turn_hook()
     }
 }
 
-bool Spider::on_actor_turn_hook()
+bool Spider::on_act()
 {
     return false;
 }
@@ -1708,7 +1722,7 @@ void Wolf::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::wolf_bite));
 }
 
-bool Worm_mass::on_actor_turn_hook()
+bool Worm_mass::on_act()
 {
     if (
         is_alive()                                      &&
@@ -1754,7 +1768,7 @@ void Worm_mass::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::worm_mass_bite));
 }
 
-bool Giant_locust::on_actor_turn_hook()
+bool Giant_locust::on_act()
 {
     if (
         is_alive()                                      &&
@@ -1800,7 +1814,7 @@ void Giant_locust::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::giant_locust_bite));
 }
 
-bool Lord_of_shadows::on_actor_turn_hook()
+bool Lord_of_shadows::on_act()
 {
     return false;
 }
@@ -1810,7 +1824,7 @@ void Lord_of_shadows::mk_start_items()
 
 }
 
-bool Lord_of_spiders::on_actor_turn_hook()
+bool Lord_of_spiders::on_act()
 {
     if (is_alive() && aware_counter_ > 0 && rnd::coin_toss())
     {
@@ -1852,7 +1866,7 @@ void Lord_of_spiders::mk_start_items()
 
 }
 
-bool Lord_of_spirits::on_actor_turn_hook()
+bool Lord_of_spirits::on_act()
 {
     return false;
 }
@@ -1862,7 +1876,7 @@ void Lord_of_spirits::mk_start_items()
 
 }
 
-bool Lord_of_pestilence::on_actor_turn_hook()
+bool Lord_of_pestilence::on_act()
 {
     return false;
 }
@@ -1872,7 +1886,7 @@ void Lord_of_pestilence::mk_start_items()
 
 }
 
-bool Zombie::on_actor_turn_hook()
+bool Zombie::on_act()
 {
     return try_resurrect();
 }
@@ -2020,7 +2034,7 @@ void Bloated_zombie::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::bloated_zombie_spit));
 }
 
-bool Major_clapham_lee::on_actor_turn_hook()
+bool Major_clapham_lee::on_act()
 {
     if (try_resurrect())
     {
@@ -2107,7 +2121,7 @@ void Floating_head::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::floating_head_bite));
 }
 
-bool Floating_head::on_actor_turn_hook()
+bool Floating_head::on_act()
 {
     if (is_alive() && rnd::one_in(12))
     {
@@ -2151,7 +2165,7 @@ bool Floating_head::on_actor_turn_hook()
     return false;
 }
 
-bool Mold::on_actor_turn_hook()
+bool Mold::on_act()
 {
     if (
         is_alive()                                      &&
@@ -2229,7 +2243,7 @@ void The_high_priest::on_std_turn_hook()
 
 }
 
-bool The_high_priest::on_actor_turn_hook()
+bool The_high_priest::on_act()
 {
     if (!is_alive())
     {

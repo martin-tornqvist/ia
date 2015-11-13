@@ -832,6 +832,13 @@ Consume_item Medical_bag::activate(Actor* const actor)
         return Consume_item::no;
     }
 
+    if (map::player->has_prop(Prop_id::poisoned))
+    {
+        msg_log::add("Not while poisoned.");
+        cur_action_ = Med_bag_action::END;
+        return Consume_item::no;
+    }
+
     std::vector<Actor*> seen_foes;
 
     map::player->seen_foes(seen_foes);

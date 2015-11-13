@@ -399,12 +399,45 @@ void Player::on_hit(int& dmg,
         IS_PHYSICAL                     &&
         !config::is_bot_playing())
     {
-        //Log wound as historic event
-        dungeon_master::add_history_event("Sustained a severe wound.");
-
         Prop* const prop = new Prop_wound(Prop_turns::indefinite);
 
+        auto nr_wounds = [&]()
+        {
+            if (prop_handler_->has_prop(Prop_id::wound))
+            {
+                const Prop* const prop = prop_handler_->prop(Prop_id::wound);
+
+                const Prop_wound* const wound = static_cast<const Prop_wound*>(prop);
+
+                return wound->nr_wounds();
+            }
+
+            return 0;
+        };
+
+        const int NR_WOUNDS_BEFORE = nr_wounds();
+
         prop_handler_->try_add_prop(prop);
+
+        const int NR_WOUNDS_AFTER = nr_wounds();
+
+        if (NR_WOUNDS_AFTER > NR_WOUNDS_BEFORE)
+        {
+            if (insanity::has_sympt(Ins_sympt_id::masoch))
+            {
+                dungeon_master::add_history_event("Experienced a very pleasant wound.");
+
+                msg_log::add("Hehehe...");
+
+                const double SHOCK_RESTORED = 10.0;
+
+                shock_ = std::max(0.0, shock_ - SHOCK_RESTORED);
+            }
+            else //Not masochistic
+            {
+                dungeon_master::add_history_event("Sustained a severe wound.");
+            }
+        }
     }
 
     render::draw_map_and_interface();
@@ -651,7 +684,7 @@ void Player::set_quick_move(const Dir dir)
     quick_move_dir_             = dir;
 }
 
-void Player::on_actor_turn()
+void Player::act()
 {
 #ifndef NDEBUG
     //Sanity check: Disease and infection should never be active at the same time
@@ -661,11 +694,17 @@ void Player::on_actor_turn()
 
     render::draw_map_and_interface();
 
-    reset_perm_shock_taken_cur_turn();
-
     if (!is_alive())
     {
         return;
+    }
+
+    std::vector<Actor*> my_seen_foes;
+    seen_foes(my_seen_foes);
+
+    for (Actor* const actor : my_seen_foes)
+    {
+        static_cast<Mon*>(actor)->set_player_aware_of_me();
     }
 
     if (active_medical_bag)
@@ -679,55 +718,6 @@ void Player::on_actor_turn()
         --wait_turns_left;
         game_time::tick();
         return;
-    }
-
-    if (tgt_ && tgt_->state() != Actor_state::alive)
-    {
-        tgt_ = nullptr;
-    }
-
-    std::vector<Actor*> my_seen_foes;
-    seen_foes(my_seen_foes);
-
-    for (Actor* const actor : my_seen_foes)
-    {
-        static_cast<Mon*>(actor)->set_player_aware_of_me();
-    }
-
-    insanity::on_new_player_turn(my_seen_foes);
-
-    //Check if we should go back to inventory screen
-    const auto inv_scr_on_new_turn = inv_handling::scr_to_open_on_new_turn;
-
-    if (inv_scr_on_new_turn != Inv_scr::none)
-    {
-        if (my_seen_foes.empty())
-        {
-            switch (inv_scr_on_new_turn)
-            {
-            case Inv_scr::inv:
-                inv_handling::run_inv_screen();
-                break;
-
-            case Inv_scr::apply:
-                inv_handling::run_apply_screen();
-                break;
-
-            case Inv_scr::equip:
-                inv_handling::run_equip_screen(*inv_handling::equip_slot_to_open_on_new_turn);
-                break;
-
-            case Inv_scr::none:
-                break;
-            }
-
-            return;
-        }
-        else //There are seen monsters
-        {
-            inv_handling::scr_to_open_on_new_turn           = Inv_scr::none;
-            inv_handling::browser_idx_to_set_on_new_turn    = 0;
-        }
     }
 
     //Quick move
@@ -771,6 +761,77 @@ void Player::on_actor_turn()
     {
         input::clear_events();
         input::map_mode_input();
+    }
+}
+
+void Player::on_actor_turn()
+{
+    reset_perm_shock_taken_cur_turn();
+
+    map::player->update_fov();
+
+    render::draw_map_and_interface();
+
+    map::cpy_render_array_to_visual_memory();
+
+    if (tgt_ && tgt_->state() != Actor_state::alive)
+    {
+        tgt_ = nullptr;
+    }
+
+    std::vector<Actor*> my_seen_foes;
+    seen_foes(my_seen_foes);
+
+    //Check if we should go back to inventory screen
+    const auto inv_scr_on_new_turn = inv_handling::scr_to_open_on_new_turn;
+
+    if (inv_scr_on_new_turn != Inv_scr::none)
+    {
+        if (my_seen_foes.empty())
+        {
+            switch (inv_scr_on_new_turn)
+            {
+            case Inv_scr::inv:
+                inv_handling::run_inv_screen();
+                break;
+
+            case Inv_scr::apply:
+                inv_handling::run_apply_screen();
+                break;
+
+            case Inv_scr::equip:
+                inv_handling::run_equip_screen(*inv_handling::equip_slot_to_open_on_new_turn);
+                break;
+
+            case Inv_scr::none:
+                break;
+            }
+
+            return;
+        }
+        else //There are seen monsters
+        {
+            inv_handling::scr_to_open_on_new_turn           = Inv_scr::none;
+            inv_handling::browser_idx_to_set_on_new_turn    = 0;
+        }
+    }
+
+    insanity::on_new_player_turn(my_seen_foes);
+
+    //Run new turn events on all items
+    auto& inv = map::player->inv();
+
+    for (Item* const item : inv.backpack_)
+    {
+        item->on_actor_turn_in_inv(Inv_type::backpack);
+    }
+
+    for (Inv_slot& slot : inv.slots_)
+    {
+        if (slot.item)
+        {
+            slot.item->on_actor_turn_in_inv(Inv_type::slots);
+        }
     }
 }
 
@@ -859,14 +920,6 @@ void Player::on_std_turn()
 
     if (SPI_TRAIT_LVL > 0 && !prop_handler_->has_prop(Prop_id::rSpell))
     {
-        if (nr_turns_until_rspell_ == 3)
-        {
-            msg_log::add("I start to feel like I can thwart magic spells...",
-                         clr_msg_note,
-                         false,
-                         More_prompt_on_msg::yes);
-        }
-
         if (nr_turns_until_rspell_ <= 0)
         {
             //Cooldown has finished, OR countdown has not yet been initialized
@@ -899,7 +952,6 @@ void Player::on_std_turn()
     }
 
     std::vector<Actor*> my_seen_foes;
-
     seen_foes(my_seen_foes);
 
     double shock_from_mon_cur_player_turn = 0.0;
@@ -999,14 +1051,10 @@ void Player::on_std_turn()
         {
             render::draw_map_and_interface(true);
 
-            const bool  IS_LAST_WARNING = nr_turns_until_ins_ == 1;
-
-            const Clr   clr             = IS_LAST_WARNING ? clr_msg_note : clr_white;
-
-            const auto  more_prompt     = IS_LAST_WARNING ?
-                                          More_prompt_on_msg::yes : More_prompt_on_msg::no;
-
-            msg_log::add("I feel my sanity slipping...", clr, true, more_prompt);
+            msg_log::add("I feel my sanity slipping...",
+                         clr_msg_note,
+                         true,
+                         More_prompt_on_msg::yes);
         }
         else //Time to go crazy!
         {
@@ -1039,9 +1087,6 @@ void Player::on_std_turn()
 
             if (IS_MON_SEEN)
             {
-                //If monster is seen, player should also be aware of it
-                assert(mon.player_aware_of_me_counter_ > 0);
-
                 mon.is_sneaking_ = false;
 
                 if (!mon.is_msg_mon_in_view_printed_)

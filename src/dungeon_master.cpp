@@ -253,7 +253,9 @@ void on_mon_killed(Actor& actor)
 
     d.nr_kills += 1;
 
-    if (d.hp >= 3 && insanity::has_sympt(Ins_sympt_id::sadism))
+    const int MIN_HP_FOR_SADISM_BON = 4;
+
+    if (d.hp >= MIN_HP_FOR_SADISM_BON && insanity::has_sympt(Ins_sympt_id::sadism))
     {
         map::player->shock_ = std::max(0.0, map::player->shock_ - 3.0);
     }

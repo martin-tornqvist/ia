@@ -291,39 +291,7 @@ void tick(const Pass_time pass_time)
 
     auto* actor = cur_actor();
 
-    if (actor == map::player)
-    {
-        map::player->update_fov();
-
-        render::draw_map_and_interface();
-
-        map::cpy_render_array_to_visual_memory();
-
-        //Run new turn events on all player items
-        auto& inv = map::player->inv();
-
-        for (Item* const item : inv.backpack_)
-        {
-            item->on_actor_turn_in_inv(Inv_type::backpack);
-        }
-
-        for (Inv_slot& slot : inv.slots_)
-        {
-            if (slot.item)
-            {
-                slot.item->on_actor_turn_in_inv(Inv_type::slots);
-            }
-        }
-    }
-    else //Actor is monster
-    {
-        auto* mon = static_cast<Mon*>(actor);
-
-        if (mon->aware_counter_ > 0)
-        {
-            --mon->aware_counter_;
-        }
-    }
+    actor->on_actor_turn();
 
     //Tick properties running on actor turns
     actor->prop_handler().tick(Prop_turn_mode::actor);

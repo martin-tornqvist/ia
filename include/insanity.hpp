@@ -661,9 +661,8 @@ protected:
     std::string start_msg() const override
     {
         return "To my alarm, I find myself encouraged by the sensation of pain. Physical "
-               "suffering does not bother me at all. However, my depraved mind can never find "
-               "complete peace (no shock from taking damage, but permanent +" +
-               to_str(SHOCK_FROM_OBSESSION) + "% shock).";
+               "suffering does not bother me at all, and severe wounds even thrill me. However, "
+               "my depraved mind will never find complete peace.";
     }
 
     std::string start_heading() const override
@@ -712,8 +711,8 @@ protected:
     std::string start_msg() const override
     {
         return "To my alarm, I find myself encouraged by the pain I cause in others. For every "
-               "life I take, I find a little relief. However, my depraved mind can no longer "
-               "find complete peace (permanent +" + to_str(SHOCK_FROM_OBSESSION) + "% shock).";
+               "significant life I take, I find a little relief. However, my depraved mind will "
+               "never find complete peace.";
     }
 
     std::string start_heading() const override

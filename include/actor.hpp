@@ -100,10 +100,12 @@ public:
 
     void on_std_turn_common();
 
-    virtual void on_actor_turn() {}
-    virtual void on_std_turn() {}
+    virtual void act() {}
 
     virtual void move(Dir dir) = 0;
+
+    virtual void on_actor_turn() {}
+    virtual void on_std_turn() {}
 
     virtual void update_clr();
 

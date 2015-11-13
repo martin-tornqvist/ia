@@ -813,8 +813,7 @@ void Door::try_open(Actor* actor_trying)
     {
         if (IS_PLAYER)
         {
-            msg_log::add(
-                "I see no way to open this door, perhaps it is opened elsewhere?");
+            msg_log::add("I see no way to open this door, perhaps it is opened elsewhere.");
             render::draw_map_and_interface();
         }
 
@@ -844,16 +843,27 @@ void Door::try_open(Actor* actor_trying)
 
             if (IS_PLAYER)
             {
-                Snd snd("", Sfx_id::door_open, Ignore_msg_if_origin_seen::yes, pos_,
-                        actor_trying, Snd_vol::low, Alerts_mon::yes);
+                Snd snd("",
+                        Sfx_id::door_open,
+                        Ignore_msg_if_origin_seen::yes,
+                        pos_,
+                        actor_trying,
+                        Snd_vol::low,
+                        Alerts_mon::yes);
+
                 snd_emit::run(snd);
                 msg_log::add("I open the door.");
             }
             else //Is monster
             {
-                Snd snd("I hear a door open.", Sfx_id::door_open,
-                        Ignore_msg_if_origin_seen::yes, pos_, actor_trying, Snd_vol::low,
+                Snd snd("I hear a door open.",
+                        Sfx_id::door_open,
+                        Ignore_msg_if_origin_seen::yes,
+                        pos_,
+                        actor_trying,
+                        Snd_vol::low,
                         Alerts_mon::no);
+
                 snd_emit::run(snd);
 
                 if (PLAYER_SEE_TRYER)
@@ -875,16 +885,28 @@ void Door::try_open(Actor* actor_trying)
 
                 if (IS_PLAYER)
                 {
-                    Snd snd("", Sfx_id::door_open, Ignore_msg_if_origin_seen::yes, pos_,
-                            actor_trying, Snd_vol::low, Alerts_mon::yes);
+                    Snd snd("",
+                            Sfx_id::door_open,
+                            Ignore_msg_if_origin_seen::yes,
+                            pos_,
+                            actor_trying,
+                            Snd_vol::low,
+                            Alerts_mon::yes);
+
                     snd_emit::run(snd);
+
                     msg_log::add("I fumble with a door and succeed to open it.");
                 }
                 else //Is monster
                 {
-                    Snd snd("I hear something open a door clumsily.", Sfx_id::door_open,
-                            Ignore_msg_if_origin_seen::yes, pos_, actor_trying, Snd_vol::low,
+                    Snd snd("I hear something open a door clumsily.",
+                            Sfx_id::door_open,
+                            Ignore_msg_if_origin_seen::yes,
+                            pos_,
+                            actor_trying,
+                            Snd_vol::low,
                             Alerts_mon::no);
+
                     snd_emit::run(snd);
 
                     if (PLAYER_SEE_TRYER)
@@ -904,18 +926,30 @@ void Door::try_open(Actor* actor_trying)
 
                 if (IS_PLAYER)
                 {
-                    Snd snd("", Sfx_id::END, Ignore_msg_if_origin_seen::yes, pos_,
-                            actor_trying, Snd_vol::low, Alerts_mon::yes);
+                    Snd snd("",
+                            Sfx_id::END,
+                            Ignore_msg_if_origin_seen::yes,
+                            pos_,
+                            actor_trying,
+                            Snd_vol::low,
+                            Alerts_mon::yes);
+
                     snd_emit::run(snd);
+
                     msg_log::add("I fumble blindly with a door and fail to open it.");
                 }
-                else
+                else //Is monster
                 {
                     //Emitting the sound from the actor instead of the door, because the
                     //sound message should be received even if the door is seen
-                    Snd snd("I hear something attempting to open a door.", Sfx_id::END,
-                            Ignore_msg_if_origin_seen::yes, actor_trying->pos, actor_trying,
-                            Snd_vol::low, Alerts_mon::no);
+                    Snd snd("I hear something attempting to open a door.",
+                            Sfx_id::END,
+                            Ignore_msg_if_origin_seen::yes,
+                            actor_trying->pos,
+                            actor_trying,
+                            Snd_vol::low,
+                            Alerts_mon::no);
+
                     snd_emit::run(snd);
 
                     if (PLAYER_SEE_TRYER)
