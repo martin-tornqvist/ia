@@ -187,7 +187,7 @@ void print_location_info_msgs(const P& pos)
 void print_detailed_actor_descr(const Actor& actor)
 {
     //Add written description.
-    std::string descr = actor.data().descr;
+    std::string descr = actor.descr();
 
     //Add auto-description.
     if (actor.data().is_auto_descr_allowed)

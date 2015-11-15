@@ -97,6 +97,9 @@ Spell* mk_spell_from_id(const Spell_id spell_id)
     case Spell_id::pest:
         return new Spell_pest;
 
+    case Spell_id::anim_wpns:
+        return new Spell_anim_wpns;
+
     case Spell_id::det_items:
         return new Spell_det_items;
 
@@ -777,6 +780,65 @@ Spell_effect_noticed Spell_pest::cast_impl(Actor* const caster) const
 bool Spell_pest::allow_mon_cast_now(Mon& mon) const
 {
     return mon.tgt_ && rnd::coin_toss() && (mon.tgt_ || rnd::one_in(20));
+}
+
+//------------------------------------------------------------ ANIMATE WEAPONS
+Spell_effect_noticed Spell_anim_wpns::cast_impl(Actor* const caster) const
+{
+    bool is_any_animated = false;
+
+    if (caster->is_player())
+    {
+        for (int x = 0; x < MAP_W; ++x)
+        {
+            for (int y = 0; y < MAP_H; ++y)
+            {
+                Cell& cell = map::cells[x][y];
+
+                Item* const item = cell.item;
+
+                if (
+                    cell.is_seen_by_player  &&
+                    item                    &&
+                    item->data().type == Item_type::melee_wpn)
+                {
+                    cell.item = nullptr;
+
+                    const P p(x, y);
+
+                    std::vector<Mon*> summoned;
+
+                    actor_factory::summon(p,
+                                          std::vector<Actor_id>(1, Actor_id::animated_wpn),
+                                          Make_mon_aware::no,
+                                          map::player,
+                                          &summoned,
+                                          Verbosity::silent);
+
+                    assert(summoned.size() == 1);
+
+                    Mon* const anim_wpn = summoned[0];
+
+                    Inventory& inv = anim_wpn->inv();
+
+                    assert(!inv.item_in_slot(Slot_id::wpn));
+
+                    inv.put_in_slot(Slot_id::wpn, item);
+
+                    const std::string item_name = item->name(Item_ref_type::plain,
+                                                  Item_ref_inf::yes,
+                                                  Item_ref_att_inf::none);
+
+                    msg_log::add("The " + item_name + " rises into thin air!");
+
+                    is_any_animated = true;
+                }
+            }
+        }
+    }
+
+    return is_any_animated ?
+           Spell_effect_noticed::yes : Spell_effect_noticed::no;
 }
 
 //------------------------------------------------------------ PHARAOH STAFF

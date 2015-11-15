@@ -60,8 +60,6 @@ public:
 
     bool try_attack(Actor& defender);
 
-    virtual void mk_start_items() override = 0;
-
     void hear_sound(const Snd& snd);
 
     void become_aware(const bool IS_FROM_SEEING);
@@ -452,6 +450,11 @@ public:
     void place_hook() override;
 
     void mk_start_items() override;
+
+    std::string death_msg() const override
+    {
+        return "Zuul vanishes...";
+    }
 };
 
 class Ghost: public Mon
@@ -461,6 +464,11 @@ public:
     ~Ghost() {}
     bool on_act() override;
     virtual void mk_start_items() override;
+
+    std::string death_msg() const override
+    {
+        return "The Ghost is put to rest.";
+    }
 };
 
 class Phantasm: public Ghost
@@ -469,6 +477,11 @@ public:
     Phantasm() : Ghost() {}
     ~Phantasm() {}
     void mk_start_items() override;
+
+    std::string death_msg() const override
+    {
+        return "The Phantasm is put to rest.";
+    }
 };
 
 class Wraith: public Ghost
@@ -477,6 +490,11 @@ public:
     Wraith() : Ghost() {}
     ~Wraith() {}
     void mk_start_items() override;
+
+    std::string death_msg() const override
+    {
+        return "The Wraith is put to rest.";
+    }
 };
 
 class Raven: public Mon
@@ -661,6 +679,11 @@ public:
     ~Shadow() {}
 
     virtual void mk_start_items() override;
+
+    std::string death_msg() const override
+    {
+        return "The shadow fades.";
+    }
 };
 
 class Invis_stalker: public Mon
@@ -732,6 +755,12 @@ public:
     Ooze() : Mon() {}
     ~Ooze() {}
     virtual void mk_start_items() = 0;
+
+    std::string death_msg() const override
+    {
+        return "The Ooze disintegrates.";
+    }
+
 private:
     virtual void on_std_turn_hook() override;
 };
@@ -773,9 +802,18 @@ class Color_oo_space: public Ooze
 public:
     Color_oo_space() : Ooze(),
         cur_color(clr_magenta_lgt) {}
+
     ~Color_oo_space() {}
+
     void mk_start_items() override;
-    const Clr& clr();
+
+    Clr clr();
+
+    std::string death_msg() const override
+    {
+        return "The Color disintegrates.";
+    }
+
 private:
     void on_std_turn_hook() override;
     Clr cur_color;
@@ -786,8 +824,16 @@ class Mold: public Mon
 public:
     Mold() : Mon(), spawn_new_one_in_n(28) {}
     ~Mold() {}
+
     bool on_act() override;
+
     void mk_start_items() override;
+
+    std::string death_msg() const override
+    {
+        return "The Mold is destroyed.";
+    }
+
 private:
     int spawn_new_one_in_n;
 };
@@ -823,9 +869,44 @@ private:
 class The_high_priest_cpy: public Mon
 {
 public:
-    The_high_priest_cpy() {}
+    The_high_priest_cpy() :
+        Mon() {}
+
     ~The_high_priest_cpy() {}
+
     void mk_start_items() override;
+
+    std::string death_msg() const override
+    {
+        return "The Copy vanishes.";
+    }
+};
+
+class Animated_wpn: public Mon
+{
+public:
+    Animated_wpn();
+
+    ~Animated_wpn() {}
+
+    std::string name_the() const override;
+
+    std::string name_a() const override;
+
+    char glyph() const override;
+
+    Clr clr() override;
+
+    Tile_id tile() const override;
+
+    std::string descr() const override;
+
+    std::string death_msg() const override;
+
+    void on_std_turn_hook() override;
+
+private:
+    int nr_turns_until_drop_;
 };
 
 #endif

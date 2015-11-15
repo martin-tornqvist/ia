@@ -69,7 +69,6 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
     case Item_id::fire_hound_breath:
     case Item_id::fire_hound_bite:
     case Item_id::zuul_bite:
-    case Item_id::raven_peck:
     case Item_id::giant_bat_bite:
     case Item_id::wolf_bite:
     case Item_id::ghost_claw:
@@ -168,6 +167,9 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
         r = new Spike_gun(d);
         break;
 
+    case Item_id::raven_peck:
+        r = new Raven_peck(d);
+
     case Item_id::mi_go_gun:
         r = new Mi_go_gun(d);
         break;
@@ -208,6 +210,7 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
     case Item_id::scroll_res:
     case Item_id::scroll_summon_mon:
     case Item_id::scroll_light:
+    case Item_id::scroll_anim_wpns:
         r = new Scroll(d);
         break;
 

@@ -21,14 +21,16 @@ enum class Prop_id
     rConf,
     rBreath,
     rDisease,
-    rSpell,
+    //NOTE: The purpose of this is only to prevent blindness for "eyeless" monsters (e.g.
+    //constructs such as animated weapons), and is only intended as a natural property.
+    rBlind,
     lgtSens,
     blind,
     fainted,
     burning,
     radiant,
     invis,
-    see_invis, //Can see invisible and sneaking actors
+    see_invis,
     infravis,
     poisoned,
     paralyzed,
@@ -43,7 +45,7 @@ enum class Prop_id
     frenzied,
     blessed,
     cursed,
-    tele_ctrl, //NOTE: This only makes sense for the player
+    tele_ctrl,
     spell_reflect,
     strangled,
     conflict,
@@ -69,6 +71,7 @@ enum class Prop_id
     flared,
     warlock_charged,
     wound,
+    rSpell,
 
     END
 };
@@ -1241,6 +1244,17 @@ class Prop_rDisease: public Prop
 public:
     Prop_rDisease(Prop_turns turns_init, int nr_turns = -1) :
         Prop(Prop_id::rDisease, turns_init, nr_turns) {}
+
+    void on_start() override;
+
+    bool is_resisting_other_prop(const Prop_id prop_id) const override;
+};
+
+class Prop_rBlind: public Prop
+{
+public:
+    Prop_rBlind(Prop_turns turns_init, int nr_turns = -1) :
+        Prop(Prop_id::rBlind, turns_init, nr_turns) {}
 
     void on_start() override;
 

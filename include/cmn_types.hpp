@@ -464,12 +464,13 @@ enum class Item_type
 
 struct Item_name
 {
-    Item_name(const std::string& NAME, const std::string& NAME_PL,
-              const std::string& NAME_A)
+    Item_name(const std::string& name,
+              const std::string& name_pl,
+              const std::string& name_a)
     {
-        names[size_t(Item_ref_type::plain)]   = NAME;
-        names[size_t(Item_ref_type::plural)]  = NAME_PL;
-        names[size_t(Item_ref_type::a)]       = NAME_A;
+        names[size_t(Item_ref_type::plain)]   = name;
+        names[size_t(Item_ref_type::plural)]  = name_pl;
+        names[size_t(Item_ref_type::a)]       = name_a;
     }
 
     Item_name()

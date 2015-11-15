@@ -1311,5 +1311,4 @@ Key_data input(const bool IS_O_RETURN)
     return ret;
 }
 
-} //Input
-
+} //input

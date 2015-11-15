@@ -39,6 +39,7 @@ enum class Spell_id
     res,
     light,
     bless,
+    anim_wpns,
 
     cloud_minds,
 
@@ -319,6 +320,56 @@ public:
             summon_warning_str
         };
     }
+private:
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
+
+    int max_spi_cost() const override
+    {
+        return player_bon::spi_occultist_can_cast_at_lvl(2);
+    }
+};
+
+class Spell_anim_wpns: public Spell
+{
+public:
+    Spell_anim_wpns() : Spell() {}
+
+    bool is_avail_for_all_mon() const override
+    {
+        return false;
+    }
+
+    bool is_avail_for_player() const override
+    {
+        return true;
+    }
+
+    std::string name() const override
+    {
+        return "Animate Weapons";
+    }
+
+    Spell_id id() const override
+    {
+        return Spell_id::anim_wpns;
+    }
+
+    Intr_spell_shock shock_type_intr_cast() const override
+    {
+        return Intr_spell_shock::mild;
+    }
+
+    std::vector<std::string> descr() const override
+    {
+        return
+        {
+            "Infuses lifeless weapons with a spirit of their own, causing them to rise up into the "
+            "air and protect their master (for a while). It is only possible to animate basic "
+            "melee weapons however - \"modern\" mechanisms such as pistols or machine guns are far "
+            "too complex."
+        };
+    }
+
 private:
     Spell_effect_noticed cast_impl(Actor* const caster) const override;
 

@@ -371,6 +371,18 @@ public:
     ~Spike_gun() {}
 };
 
+//Things which protects the eyes (such as gas masks) should protect against blindness
+//from Raven pecks - so we need to handle that as a special case here.
+class Raven_peck : public Wpn
+{
+public:
+  Raven_peck(Item_data_t* const item_data) :
+    Wpn(item_data) {}
+
+private:
+    void on_melee_hit(Actor& actor_hit) override;
+};
+
 class Ammo: public Item
 {
 public:

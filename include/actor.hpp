@@ -135,12 +135,12 @@ public:
 
     Actor_speed speed() const;
 
-    std::string name_the() const
+    virtual std::string name_the() const
     {
         return data_->name_the;
     }
 
-    std::string name_a() const
+    virtual std::string name_a() const
     {
         return data_->name_a;
     }
@@ -155,22 +155,27 @@ public:
         return data_->corpse_name_the;
     }
 
+    virtual std::string descr() const
+    {
+        return data_->descr;
+    }
+
     bool is_humanoid() const
     {
         return data_->is_humanoid;
     }
 
-    char glyph() const
+    virtual char glyph() const
     {
         return glyph_;
     }
 
-    virtual const Clr& clr()
+    virtual Clr clr()
     {
         return clr_;
     }
 
-    const Tile_id& tile() const
+    virtual Tile_id tile() const
     {
         return tile_;
     }
@@ -215,6 +220,8 @@ protected:
 
     virtual void on_death() {}
 
+    virtual std::string death_msg() const;
+
     virtual void on_hit(int& dmg,
                         const Dmg_type dmg_type,
                         const Dmg_method method,
@@ -226,7 +233,7 @@ protected:
         (void)allow_wound;
     }
 
-    virtual void mk_start_items() = 0;
+    virtual void mk_start_items() {}
 
     Actor_state  state_;
     Clr clr_;

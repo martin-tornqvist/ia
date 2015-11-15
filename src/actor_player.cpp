@@ -699,8 +699,51 @@ void Player::act()
         return;
     }
 
+    render::draw_map_and_interface();
+
+    map::cpy_render_array_to_visual_memory();
+
+    if (tgt_ && tgt_->state() != Actor_state::alive)
+    {
+        tgt_ = nullptr;
+    }
+
     std::vector<Actor*> my_seen_foes;
     seen_foes(my_seen_foes);
+
+    //Check if we should go back to inventory screen
+    const auto inv_scr_on_new_turn = inv_handling::scr_to_open_on_new_turn;
+
+    if (inv_scr_on_new_turn != Inv_scr::none)
+    {
+        if (my_seen_foes.empty())
+        {
+            switch (inv_scr_on_new_turn)
+            {
+            case Inv_scr::inv:
+                inv_handling::run_inv_screen();
+                break;
+
+            case Inv_scr::apply:
+                inv_handling::run_apply_screen();
+                break;
+
+            case Inv_scr::equip:
+                inv_handling::run_equip_screen(*inv_handling::equip_slot_to_open_on_new_turn);
+                break;
+
+            case Inv_scr::none:
+                break;
+            }
+
+            return;
+        }
+        else //There are seen monsters
+        {
+            inv_handling::scr_to_open_on_new_turn           = Inv_scr::none;
+            inv_handling::browser_idx_to_set_on_new_turn    = 0;
+        }
+    }
 
     for (Actor* const actor : my_seen_foes)
     {
@@ -770,51 +813,8 @@ void Player::on_actor_turn()
 
     map::player->update_fov();
 
-    render::draw_map_and_interface();
-
-    map::cpy_render_array_to_visual_memory();
-
-    if (tgt_ && tgt_->state() != Actor_state::alive)
-    {
-        tgt_ = nullptr;
-    }
-
     std::vector<Actor*> my_seen_foes;
     seen_foes(my_seen_foes);
-
-    //Check if we should go back to inventory screen
-    const auto inv_scr_on_new_turn = inv_handling::scr_to_open_on_new_turn;
-
-    if (inv_scr_on_new_turn != Inv_scr::none)
-    {
-        if (my_seen_foes.empty())
-        {
-            switch (inv_scr_on_new_turn)
-            {
-            case Inv_scr::inv:
-                inv_handling::run_inv_screen();
-                break;
-
-            case Inv_scr::apply:
-                inv_handling::run_apply_screen();
-                break;
-
-            case Inv_scr::equip:
-                inv_handling::run_equip_screen(*inv_handling::equip_slot_to_open_on_new_turn);
-                break;
-
-            case Inv_scr::none:
-                break;
-            }
-
-            return;
-        }
-        else //There are seen monsters
-        {
-            inv_handling::scr_to_open_on_new_turn           = Inv_scr::none;
-            inv_handling::browser_idx_to_set_on_new_turn    = 0;
-        }
-    }
 
     insanity::on_new_player_turn(my_seen_foes);
 
@@ -1242,8 +1242,6 @@ void Player::on_log_msg_printed()
 
 void Player::interrupt_actions()
 {
-    render::draw_map_and_interface();
-
     //Abort browsing inventory
     inv_handling::scr_to_open_on_new_turn           = Inv_scr::none;
     inv_handling::browser_idx_to_set_on_new_turn    = 0;
@@ -1507,7 +1505,8 @@ void Player::move(Dir dir)
                 msg_log::add(CAN_SEE ?
                              "I see here:" :
                              "I try to feel what is lying here...",
-                             clr_white, true);
+                             clr_white,
+                             true);
 
                 std::string item_name = item->name(Item_ref_type::plural,
                                                    Item_ref_inf::yes,

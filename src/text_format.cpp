@@ -4,13 +4,11 @@
 
 #include <algorithm>
 
-using namespace std;
-
 namespace
 {
 
 //Reads and removes the first word of the string.
-void read_and_remove_word(string& line, string& word_ref)
+void read_and_remove_word(std::string& line, std::string& word_ref)
 {
     word_ref = "";
 
@@ -29,7 +27,9 @@ void read_and_remove_word(string& line, string& word_ref)
     }
 }
 
-bool is_word_fit(const string& cur_string, const string& word_to_fit, const size_t MAX_W)
+bool is_word_fit(const std::string& cur_string,
+                 const std::string& word_to_fit,
+                 const size_t MAX_W)
 {
     return (cur_string.size() + word_to_fit.size() + 1) <= MAX_W;
 }
@@ -40,7 +40,9 @@ bool is_word_fit(const string& cur_string, const string& word_to_fit, const size
 namespace text_format
 {
 
-void split(string line, const int MAX_W, vector<string>& out)
+void split(std::string line,
+           const int MAX_W,
+           std::vector<std::string>& out)
 {
     out.clear();
 
@@ -49,7 +51,7 @@ void split(string line, const int MAX_W, vector<string>& out)
         return;
     }
 
-    string cur_word = "";
+    std::string cur_word = "";
 
     read_and_remove_word(line, cur_word);
 
@@ -86,9 +88,10 @@ void split(string line, const int MAX_W, vector<string>& out)
     }
 }
 
-void space_separated_list(const string& line, vector<string>& out)
+void space_separated_list(const std::string& line,
+                          std::vector<std::string>& out)
 {
-    string cur_line = "";
+    std::string cur_line = "";
 
     for (char c : line)
     {
@@ -104,7 +107,10 @@ void space_separated_list(const string& line, vector<string>& out)
     }
 }
 
-void replace_all(const string& line, const string& from, const string& to, string& out)
+void replace_all(const std::string& line,
+                 const std::string& from,
+                 const std::string& to,
+                 std::string& out)
 {
     if (from.empty())
     {
@@ -115,7 +121,7 @@ void replace_all(const string& line, const string& from, const string& to, strin
 
     size_t start_pos = 0;
 
-    while ((start_pos = out.find(from, start_pos)) != string::npos)
+    while ((start_pos = out.find(from, start_pos)) != std::string::npos)
     {
         out.replace(start_pos, from.length(), to);
         //In case 'to' contains 'from', like replacing 'x' with 'yx'
@@ -123,7 +129,9 @@ void replace_all(const string& line, const string& from, const string& to, strin
     }
 }
 
-void pad_before_to(std::string& str, const size_t TOT_W, const char c)
+void pad_before_to(std::string& str,
+                   const size_t TOT_W,
+                   const char c)
 {
     if (TOT_W > str.size())
     {
@@ -131,7 +139,9 @@ void pad_before_to(std::string& str, const size_t TOT_W, const char c)
     }
 }
 
-void pad_after_to(std::string& str, const size_t TOT_W, const char c)
+void pad_after_to(std::string& str,
+                  const size_t TOT_W,
+                  const char c)
 {
     if (TOT_W > str.size())
     {
@@ -147,7 +157,7 @@ void first_to_lower(std::string& str)
     }
 }
 
-void first_to_upper(string& str)
+void first_to_upper(std::string& str)
 {
     if (!str.empty())
     {
@@ -155,7 +165,7 @@ void first_to_upper(string& str)
     }
 }
 
-void all_to_upper(string& str)
+void all_to_upper(std::string& str)
 {
     transform(begin(str), end(str), begin(str), ::toupper);
 }

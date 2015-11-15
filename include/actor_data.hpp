@@ -47,6 +47,7 @@ enum class Actor_id
     chthonian,
     hunting_horror,
     sentry_drone,
+    animated_wpn,
     mold,
     gas_spore,
     death_fiend,
@@ -144,7 +145,6 @@ struct Actor_data_t
     bool is_humanoid;
     bool is_infra_visible;
     bool is_auto_descr_allowed;
-    std::string death_msg_override;
     int nr_kills;
     bool can_open_doors, can_bash_doors;
     //NOTE: Knockback may be prevented even if this is false, e.g. if monster is ethereal

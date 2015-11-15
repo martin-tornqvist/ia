@@ -803,15 +803,11 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
         {
             is_player_see_dying_actor = true;
 
-            const std::string& death_msg_override = data_->death_msg_override;
+            const std::string msg = death_msg();
 
-            if (!death_msg_override.empty())
+            if (!msg.empty())
             {
-                msg_log::add(death_msg_override);
-            }
-            else
-            {
-                msg_log::add(name_the() + " dies.");
+                msg_log::add(msg);
             }
         }
     }
@@ -827,10 +823,15 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
 
     if (!is_player() && is_humanoid())
     {
-        snd_emit::run({"I hear agonized screaming.", Sfx_id::END,
-                       Ignore_msg_if_origin_seen::yes, pos, this, Snd_vol::low,
-                       Alerts_mon::no
-                      });
+        Snd snd("I hear agonized screaming.",
+                Sfx_id::END,
+                Ignore_msg_if_origin_seen::yes,
+                pos,
+                this,
+                Snd_vol::low,
+                Alerts_mon::no);
+
+        snd_emit::run(snd);
     }
 
     if (ALLOW_DROP_ITEMS)
@@ -891,6 +892,11 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
     }
 
     render::draw_map_and_interface();
+}
+
+std::string Actor::death_msg() const
+{
+    return name_the() + " dies.";
 }
 
 Did_action Actor::try_eat_corpse()

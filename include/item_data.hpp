@@ -146,6 +146,7 @@ enum class Item_id
     scroll_res,
     scroll_summon_mon,
     scroll_light,
+    scroll_anim_wpns,
 
     potion_vitality,
     potion_spirit,

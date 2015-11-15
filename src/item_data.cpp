@@ -1367,7 +1367,6 @@ void init_data_list()
     d.id = Item_id::raven_peck;
     d.melee.att_msgs = {"", "pecks at me"};
     set_dmg_from_mon_id(d, Actor_id::raven);
-    d.melee.prop_applied = new Prop_blind(Prop_turns::specific, 3);
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
@@ -1786,6 +1785,11 @@ void init_data_list()
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_light;
     d.spell_cast_from_scroll = Spell_id::light;
+    data[size_t(d.id)] = d;
+
+    reset_data(d, Item_type::scroll);
+    d.id = Item_id::scroll_anim_wpns;
+    d.spell_cast_from_scroll = Spell_id::anim_wpns;
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::potion);

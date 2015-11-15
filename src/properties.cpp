@@ -188,6 +188,21 @@ void init_data_list()
     d.alignment = Prop_alignment::good;
     add_prop_data(d);
 
+    d.id = Prop_id::rBlind;
+    d.name = "";
+    d.name_short = "";
+    d.msg[size_t(Prop_msg::start_player)] = "";
+    d.msg[size_t(Prop_msg::start_mon)] = "";
+    d.msg[size_t(Prop_msg::end_player)] = "";
+    d.msg[size_t(Prop_msg::end_mon)] = "";
+    d.is_making_mon_aware = false;
+    d.allow_display_turns = false;
+    d.allow_apply_more_while_active = true;
+    d.update_vision_when_start_or_end = false;
+    d.allow_test_on_bot = false;
+    d.alignment = Prop_alignment::good;
+    add_prop_data(d);
+
     d.id = Prop_id::rBreath;
     d.std_rnd_turns = Range(50, 100);
     d.name = "Breath resistance";
@@ -241,8 +256,8 @@ void init_data_list()
     d.msg[size_t(Prop_msg::start_mon)] = "is blinded.";
     d.msg[size_t(Prop_msg::end_player)] = "I can see again!";
     d.msg[size_t(Prop_msg::end_mon)] = "can see again.";
-    d.msg[size_t(Prop_msg::res_player)] = "I resist blindness.";
-    d.msg[size_t(Prop_msg::res_mon)] = "resists blindness.";
+    d.msg[size_t(Prop_msg::res_player)] = "";
+    d.msg[size_t(Prop_msg::res_mon)] = "";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -1063,6 +1078,9 @@ Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init, const int N
 
     case Prop_id::rDisease:
         return new Prop_rDisease(turns_init, NR_TURNS);
+
+    case Prop_id::rBlind:
+        return new Prop_rBlind(turns_init, NR_TURNS);
 
     case Prop_id::tele_ctrl:
         return new Prop_tele_control(turns_init, NR_TURNS);
@@ -2579,6 +2597,16 @@ void Prop_rDisease::on_start()
 {
     owning_actor_->prop_handler().end_prop(Prop_id::diseased);
     owning_actor_->prop_handler().end_prop(Prop_id::infected);
+}
+
+bool Prop_rBlind::is_resisting_other_prop(const Prop_id prop_id) const
+{
+    return prop_id == Prop_id::blind;
+}
+
+void Prop_rBlind::on_start()
+{
+    owning_actor_->prop_handler().end_prop(Prop_id::blind);
 }
 
 bool Prop_see_invis::is_resisting_other_prop(const Prop_id prop_id) const

@@ -28,6 +28,7 @@
 #include "explosion.hpp"
 #include "popup.hpp"
 #include "fov.hpp"
+#include "text_format.hpp"
 
 Mon::Mon() :
     Actor                       (),
@@ -1649,7 +1650,7 @@ void Color_oo_space::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::color_oo_space_touch));
 }
 
-const Clr& Color_oo_space::clr()
+Clr Color_oo_space::clr()
 {
     return cur_color;
 }
@@ -2346,4 +2347,112 @@ void The_high_priest_cpy::mk_start_items()
     }
 
     inv_->put_in_intrinsics(item_factory::mk(Item_id::the_high_priest_claw));
+}
+
+Animated_wpn::Animated_wpn() :
+    Mon                     (),
+    nr_turns_until_drop_    (rnd::range(75, 125)) {}
+
+std::string Animated_wpn::name_the() const
+{
+    Item* item = inv_->item_in_slot(Slot_id::wpn);
+
+    assert(item);
+
+    const std::string name = item->name(Item_ref_type::plain,
+                                        Item_ref_inf::yes,
+                                        Item_ref_att_inf::none);
+
+    return "The floating " + name;
+}
+
+std::string Animated_wpn::name_a() const
+{
+    Item* item = inv_->item_in_slot(Slot_id::wpn);
+
+    assert(item);
+
+    const std::string name = item->name(Item_ref_type::plain,
+                                        Item_ref_inf::yes,
+                                        Item_ref_att_inf::none);
+
+    return "A floating " + name;
+}
+
+char Animated_wpn::glyph() const
+{
+    Item* item = inv_->item_in_slot(Slot_id::wpn);
+
+    assert(item);
+
+    return item->glyph();
+}
+
+Clr Animated_wpn::clr()
+{
+    Item* item = inv_->item_in_slot(Slot_id::wpn);
+
+    assert(item);
+
+    return item->clr();
+}
+
+Tile_id Animated_wpn::tile() const
+{
+    Item* item = inv_->item_in_slot(Slot_id::wpn);
+
+    assert(item);
+
+    return item->tile();
+}
+
+std::string Animated_wpn::descr() const
+{
+    Item* item = inv_->item_in_slot(Slot_id::wpn);
+
+    assert(item);
+
+    std::string name = item->name(Item_ref_type::a,
+                                  Item_ref_inf::yes,
+                                  Item_ref_att_inf::none);
+
+    text_format::first_to_upper(name);
+
+    return name + ", floating through the air as if wielded by some invisible hand.";
+}
+
+std::string Animated_wpn::death_msg() const
+{
+    Item* item = inv_->item_in_slot(Slot_id::wpn);
+
+    if (!item)
+    {
+        assert(false);
+
+        //Release build robustness
+        return "";
+    }
+
+    const std::string name = item->name(Item_ref_type::plain,
+                                        Item_ref_inf::yes,
+                                        Item_ref_att_inf::none);
+
+    return "The " + name + " suddenly becomes lifeless and drops down.";
+}
+
+void Animated_wpn::on_std_turn_hook()
+{
+    if (!is_alive())
+    {
+        return;
+    }
+
+    if (nr_turns_until_drop_ <= 0)
+    {
+        die(true, false, true);
+    }
+    else //Not yet time to die
+    {
+        --nr_turns_until_drop_;
+    }
 }

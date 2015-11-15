@@ -211,6 +211,9 @@ Actor* mk_actor_from_id(const Actor_id id)
     case Actor_id::sentry_drone:
         return new Sentry_drone();
 
+    case Actor_id::animated_wpn:
+        return new Animated_wpn();
+
     case Actor_id::mold:
         return new Mold();
 

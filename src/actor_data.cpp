@@ -50,7 +50,6 @@ void Actor_data_t::reset()
     is_humanoid = false;
     is_infra_visible = true;
     is_auto_descr_allowed = true;
-    death_msg_override = "";
     nr_kills = 0;
     can_open_doors = can_bash_doors = false;
     prevent_knockback = false;
@@ -983,8 +982,8 @@ void init_data_list()
     d.glyph = 'S';
     d.color = clr_green_lgt;
     d.tile = Tile_id::snake;
-    d.hp = 7;
-    d.dmg_melee = 2;
+    d.hp = 5;
+    d.dmg_melee = 1;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::dodge_att, 12);
     d.spawn_min_dlvl = 2;
@@ -1026,8 +1025,8 @@ void init_data_list()
     d.glyph = 'S';
     d.color = clr_red;
     d.tile = Tile_id::snake;
-    d.hp = 7;
-    d.dmg_melee = 2;
+    d.hp = 5;
+    d.dmg_melee = 1;
     d.dmg_ranged = 1;
     d.ranged_cooldown_turns = 150;
     d.ability_vals.set_val(Ability_id::melee, 40);
@@ -1072,8 +1071,8 @@ void init_data_list()
     d.glyph = 'S';
     d.color = clr_gray;
     d.tile = Tile_id::snake;
-    d.hp = 7;
-    d.dmg_melee = 2;
+    d.hp = 5;
+    d.dmg_melee = 1;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::dodge_att, 12);
     d.spawn_min_dlvl = 2;
@@ -1177,7 +1176,6 @@ void init_data_list()
     d.descr = "Zuul the Gatekeeper of Gozer is a demigod and minion of Gozer. It "
               "was worshiped by the Sumerians and Hittites in 6000 BC, along "
               "with Gozer.";
-    d.death_msg_override = "Zuul vanishes...";
     d.aggro_text_mon_seen = d.name_the + " snarls at me.";
     d.aggro_text_mon_hidden = "I hear a snarl.";
     d.aggro_sfx_mon_seen = Sfx_id::dog_snarl;
@@ -1233,7 +1231,6 @@ void init_data_list()
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
-    d.death_msg_override = "The Ghost is put to rest.";
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::crypt);
     data[size_t(d.id)] = d;
@@ -1279,7 +1276,6 @@ void init_data_list()
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
-    d.death_msg_override = "The Phantasm is put to rest.";
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::crypt);
     data[size_t(d.id)] = d;
@@ -1324,7 +1320,6 @@ void init_data_list()
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
-    d.death_msg_override = "The Wraith is put to rest.";
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::crypt);
     data[size_t(d.id)] = d;
@@ -1960,7 +1955,6 @@ void init_data_list()
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
-    d.death_msg_override = "The shadow fades.";
     d.nr_turns_aware = 25;
     d.descr = "A living shadow.";
     d.is_auto_descr_allowed = false;
@@ -2436,7 +2430,6 @@ void init_data_list()
     d.can_open_doors = false;
     d.can_bash_doors = false;
     d.descr = "It's just a mass of gunk, but it seems sentient.";
-    d.death_msg_override = "The Ooze disintegrates.";
     d.aggro_text_mon_seen = d.name_the + " makes a gurgling noise.";
     d.aggro_text_mon_hidden = "I hear a gurgling noise.";
     d.aggro_sfx_mon_seen = Sfx_id::ooze_gurgle;
@@ -2489,7 +2482,6 @@ void init_data_list()
     d.can_open_doors = false;
     d.can_bash_doors = false;
     d.descr = "It's a clear mass of gunk. They can be hard to spot.";
-    d.death_msg_override = "The Ooze disintegrates.";
     d.aggro_text_mon_seen = d.name_the + " makes a gurgling noise.";
     d.aggro_text_mon_hidden = "I hear a gurgling noise.";
     d.aggro_sfx_mon_seen = Sfx_id::ooze_gurgle;
@@ -2542,7 +2534,6 @@ void init_data_list()
     d.can_bash_doors = false;
     d.descr = "It's just a mass of gunk, but it seems sentient. It stinks like "
               "rotting cadavers.";
-    d.death_msg_override = "The Ooze disintegrates.";
     d.aggro_text_mon_seen = d.name_the + " makes a gurgling noise.";
     d.aggro_text_mon_hidden = "I hear a gurgling noise.";
     d.aggro_sfx_mon_seen = Sfx_id::ooze_gurgle;
@@ -2595,7 +2586,6 @@ void init_data_list()
     d.can_bash_doors = false;
     d.descr = "It's just a mass of gunk, but it seems sentient. It drips and "
               "sizzles with poison.";
-    d.death_msg_override = "The Ooze disintegrates.";
     d.aggro_text_mon_seen = d.name_the + " makes a gurgling noise.";
     d.aggro_text_mon_hidden = "I hear a gurgling noise.";
     d.aggro_sfx_mon_seen = Sfx_id::ooze_gurgle;
@@ -2613,8 +2603,8 @@ void init_data_list()
     data[size_t(d.id)] = d;
     d.reset();
 
-    d.name_a = "A Colour out of space";
-    d.name_the = "The Colour out of space";
+    d.name_a = "A Color out of space";
+    d.name_the = "The Color out of space";
     d.id = Actor_id::color_oo_space;
     d.ai[int(Ai_id::looks)] = true;
     d.ai[int(Ai_id::makes_room_for_friend)] = true;
@@ -2645,10 +2635,9 @@ void init_data_list()
     d.nr_turns_aware = 250;
     d.can_open_doors = false;
     d.can_bash_doors = false;
-    d.descr = "A very peculiar floating speck of strange and shifting colours. "
-              "It is hard to tell what colour it is exactly.";
+    d.descr = "A very peculiar floating speck of strange and shifting colors. "
+              "It is hard to tell what color it is exactly.";
     d.is_auto_descr_allowed = false;
-    d.death_msg_override = "The Colour disintegrates.";
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
@@ -2761,6 +2750,41 @@ void init_data_list()
     data[size_t(d.id)] = d;
     d.reset();
 
+    d.id = Actor_id::animated_wpn;
+    d.ai[int(Ai_id::looks)] = true;
+    d.ai[int(Ai_id::makes_room_for_friend)] = true;
+    d.ai[int(Ai_id::attacks)] = true;
+    d.ai[int(Ai_id::paths_to_tgt_when_aware)] = true;
+    d.ai[int(Ai_id::moves_to_tgt_when_los)] = true;
+    d.ai[int(Ai_id::moves_to_lair)] = false;
+    d.ai[int(Ai_id::moves_to_leader)] = true;
+    d.speed = Actor_speed::normal;
+    d.hp = 18;
+    d.spi = 40;
+    d.ability_vals.set_val(Ability_id::melee, 50);
+    d.natural_props[int(Prop_id::flying)] = true;
+    d.natural_props[int(Prop_id::rFear)] = true;
+    d.natural_props[int(Prop_id::rBreath)] = true;
+    d.natural_props[int(Prop_id::rPoison)] = true;
+    d.natural_props[int(Prop_id::rSleep)] = true;
+    d.natural_props[int(Prop_id::rDisease)] = true;
+    d.natural_props[int(Prop_id::rConf)] = true;
+    d.natural_props[int(Prop_id::rFire)] = true;
+    d.natural_props[int(Prop_id::rElec)] = true;
+    d.natural_props[int(Prop_id::rBlind)] = true;
+    d.actor_size = Actor_size::humanoid;
+    d.is_auto_descr_allowed = false;
+    d.can_bash_doors = true;
+    d.can_open_doors = false;
+    d.nr_turns_aware = 25;
+    d.aggro_text_mon_seen = "";
+    d.aggro_text_mon_hidden = "";
+    d.is_infra_visible = false;
+    d.erratic_move_pct = Actor_erratic_freq::rare;
+    d.mon_shock_lvl = Mon_shock_lvl::unsettling;
+    data[size_t(d.id)] = d;
+    d.reset();
+
     d.id = Actor_id::mold;
     d.name_a = "Mold";
     d.name_the = "The Mold";
@@ -2784,7 +2808,6 @@ void init_data_list()
     d.spawn_min_dlvl = 3;
     d.actor_size = Actor_size::floor;
     d.is_auto_descr_allowed = false;
-    d.death_msg_override = "The Mold is destroyed.";
     d.erratic_move_pct = Actor_erratic_freq::never;
     d.can_bleed = false;
     d.can_leave_corpse = false;
@@ -3004,7 +3027,6 @@ void init_data_list()
 
     d = data[size_t(Actor_id::the_high_priest)]; // NOTE: Copy of The High Priest
     d.id = Actor_id::the_high_priest_cpy;
-    d.death_msg_override = "The Copy vanishes.";
     data[size_t(d.id)] = d;
     d.reset();
 }

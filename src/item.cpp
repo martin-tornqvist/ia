@@ -762,6 +762,23 @@ void Incinerator::on_projectile_blocked(
     explosion::run(pos, Expl_type::expl);
 }
 
+//---------------------------------------------------------- RAVEN PECK
+void Raven_peck::on_melee_hit(Actor& actor_hit)
+{
+    //Gas mask protects against blindness
+
+    Item* const head_item = actor_hit.inv().item_in_slot(Slot_id::head);
+
+    if (head_item && head_item->id() == Item_id::gas_mask)
+    {
+        return;
+    }
+
+    Prop* const prop = new Prop_blind(Prop_turns::specific, 3);
+
+    actor_hit.prop_handler().try_add_prop(prop);
+}
+
 //---------------------------------------------------------- AMMO MAG
 Ammo_mag::Ammo_mag(Item_data_t* const item_data) : Ammo(item_data)
 {
@@ -983,6 +1000,8 @@ void Medical_bag::interrupted()
     nr_turns_left_action_ = -1;
 
     map::player->active_medical_bag = nullptr;
+
+    render::draw_map_and_interface();
 }
 
 int Medical_bag::tot_suppl_for_action(const Med_bag_action action) const
@@ -1126,7 +1145,7 @@ void Dynamite::on_player_ignite() const
     const bool IS_DEM_EXP = player_bon::traits[size_t(Trait::dem_expert)];
 
     const Pass_time pass_time = (IS_DEM_EXP && rnd::coin_toss()) ?
-                                    Pass_time::no : Pass_time::yes;
+                                Pass_time::no : Pass_time::yes;
 
     const std::string swift_str = (pass_time == Pass_time::no) ? "swiftly " : "";
 
@@ -1201,7 +1220,7 @@ void Molotov::on_player_ignite() const
     const bool IS_DEM_EXP = player_bon::traits[size_t(Trait::dem_expert)];
 
     const Pass_time pass_time = (IS_DEM_EXP && rnd::coin_toss()) ?
-                                    Pass_time::no : Pass_time::yes;
+                                Pass_time::no : Pass_time::yes;
 
     const std::string swift_str = (pass_time == Pass_time::no) ? "swiftly " : "";
 
@@ -1304,7 +1323,7 @@ void Flare::on_player_ignite() const
     const bool IS_DEM_EXP = player_bon::traits[size_t(Trait::dem_expert)];
 
     const Pass_time pass_time = (IS_DEM_EXP && rnd::coin_toss()) ?
-                                    Pass_time::no : Pass_time::yes;
+                                Pass_time::no : Pass_time::yes;
 
     const std::string swift_str = (pass_time == Pass_time::no) ? "swiftly " : "";
 
@@ -1371,7 +1390,7 @@ void Smoke_grenade::on_player_ignite() const
     const bool IS_DEM_EXP = player_bon::traits[size_t(Trait::dem_expert)];
 
     const Pass_time pass_time = (IS_DEM_EXP && rnd::coin_toss()) ?
-                                    Pass_time::no : Pass_time::yes;
+                                Pass_time::no : Pass_time::yes;
 
     const std::string swift_str = (pass_time == Pass_time::no) ? "swiftly " : "";
 

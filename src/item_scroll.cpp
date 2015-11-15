@@ -61,7 +61,7 @@ Consume_item Scroll::activate(Actor* const actor)
 
         auto* const spell = mk_spell();
 
-        const std::string crumble_str = "It crumbles to dust.";
+        const std::string crumble_str = "The Manuscript crumbles to dust.";
 
         if (data_->is_identified)
         {

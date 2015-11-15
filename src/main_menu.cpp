@@ -186,7 +186,7 @@ std::string hpl_quote()
         "And where Nyarlathotep went, rest vanished, for the small hours were "
         "rent with the screams of nightmare.");
     quotes.push_back(
-        "It was just a colour out of space - a frightful messenger from unformed "
+        "It was just a color out of space - a frightful messenger from unformed "
         "realms of infinity beyond all Nature as we know it; from realms whose "
         "mere existence stuns the brain and numbs us with the black extra-cosmic "
         "gulfs it throws open before our frenzied eyes.");
