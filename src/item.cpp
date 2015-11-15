@@ -765,8 +765,12 @@ void Incinerator::on_projectile_blocked(
 //---------------------------------------------------------- RAVEN PECK
 void Raven_peck::on_melee_hit(Actor& actor_hit)
 {
-    //Gas mask protects against blindness
+    if (!actor_hit.is_alive())
+    {
+        return;
+    }
 
+    //Gas mask protects against blindness
     Item* const head_item = actor_hit.inv().item_in_slot(Slot_id::head);
 
     if (head_item && head_item->id() == Item_id::gas_mask)

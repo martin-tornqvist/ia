@@ -25,18 +25,7 @@ namespace auto_descr_actor
 namespace
 {
 
-std::string normal_group_size_str(const Actor_data_t& def)
-{
-    const Mon_group_size s = def.group_size;
-
-    return
-        s == Mon_group_size::alone  ? "alone"           :
-        s == Mon_group_size::few    ? "in small groups" :
-        s == Mon_group_size::group  ? "in groups"       :
-        s == Mon_group_size::horde  ? "in hordes"       : "in swarms";
-}
-
-std::string speed_str(const Actor_data_t& def)
+std::string mon_speed_str(const Actor_data_t& def)
 {
     switch (def.speed)
     {
@@ -47,13 +36,13 @@ std::string speed_str(const Actor_data_t& def)
         return "slowly";
 
     case Actor_speed::normal:
-        return "at normal speed";
+        return "";
 
     case Actor_speed::fast:
-        return "fast";
+        return "swiftly";
 
     case Actor_speed::fastest:
-        return "very fast";
+        return "very swiftly";
 
     case Actor_speed::END:
         break;
@@ -62,9 +51,49 @@ std::string speed_str(const Actor_data_t& def)
     return "";
 }
 
-std::string dwelling_lvl_str(const Actor_data_t& def)
+std::string mon_dwell_lvl_str(const Actor_data_t& def)
 {
+    if (def.spawn_max_dlvl >= DLVL_LAST)
+    {
+        return "";
+    }
+
     return to_str(std::max(1, def.spawn_min_dlvl - 1));
+}
+
+void mon_shock_str(const Actor_data_t& def,
+                   std::string& shock_str_out,
+                   std::string& punct_str_out)
+{
+    shock_str_out = "";
+    punct_str_out = "";
+
+    switch (def.mon_shock_lvl)
+    {
+    case Mon_shock_lvl::unsettling:
+        shock_str_out = "unsettling";
+        punct_str_out = ".";
+        break;
+
+    case Mon_shock_lvl::frightening:
+        shock_str_out = "frightening";
+        punct_str_out = ".";
+        break;
+
+    case Mon_shock_lvl::terrifying:
+        shock_str_out = "terrifying";
+        punct_str_out = "!";
+        break;
+
+    case Mon_shock_lvl::mind_shattering:
+        shock_str_out = "mind shattering";
+        punct_str_out = "!";
+        break;
+
+    case Mon_shock_lvl::none:
+    case Mon_shock_lvl::END:
+        break;
+    }
 }
 
 } //namespace
@@ -75,22 +104,81 @@ void add_auto_description_lines(const Actor& actor, std::string& line)
 
     if (def.is_unique)
     {
-        if (def.spawn_min_dlvl < DLVL_LAST)
+        const std::string dwell_str = mon_dwell_lvl_str(def);
+
+        if (!dwell_str.empty())
         {
-            line += " " + def.name_the + " is normally found beneath level " +
-                    dwelling_lvl_str(def) + ". ";
+            line += " " + def.name_the + " usually dwells beneath level " + dwell_str + ".";
+        }
+
+        const std::string speed_str = mon_speed_str(def);
+
+        if (!speed_str.empty())
+        {
+            line += " " + def.name_the + " appears to move " + speed_str + ".";
         }
     }
-    else
+    else //Not unique
     {
-        line += " They tend to dwell " + normal_group_size_str(def) + ",";
-        line += " and usually stay at depths beneath level " +
-                dwelling_lvl_str(def) + ".";
-        line += " They appear to move " + speed_str(def) + ". ";
+        const std::string dwell_str = mon_dwell_lvl_str(def);
+
+        if (!dwell_str.empty())
+        {
+            line += " They usually dwell beneath level " + dwell_str + ".";
+        }
+
+        const std::string speed_str = mon_speed_str(def);
+
+        if (!speed_str.empty())
+        {
+            line += " They appear to move " + speed_str + ".";
+        }
+    }
+
+    const int NR_TURNS_AWARE = def.nr_turns_aware;
+
+    const std::string name_a = actor.name_a();
+
+    if (NR_TURNS_AWARE > 0)
+    {
+        if (NR_TURNS_AWARE < 50)
+        {
+            const std::string nr_turns_aware_str = to_str(NR_TURNS_AWARE);
+
+            line += " " + name_a + " will remember hostile creatures for at least " +
+                    nr_turns_aware_str + " turns.";
+        }
+        else //Very high number of turns awareness
+        {
+            line += " " + name_a +
+                    " remembers hostile creatures for a very long time.";
+        }
+    }
+
+    if (def.is_undead)
+    {
+        line += " This creature is undead.";
+    }
+
+    std::string shock_str       = "";
+    std::string shock_punct_str = "";
+
+    mon_shock_str(def, shock_str, shock_punct_str);
+
+    if (!shock_str.empty())
+    {
+        if (def.is_unique)
+        {
+            line += " " + def.name_the + " is " + shock_str + " to behold" + shock_punct_str;
+        }
+        else //Not unique
+        {
+            line += " They are " + shock_str + " to behold" + shock_punct_str;
+        }
     }
 }
 
-} //Auto_descr_actor
+} //auto_descr_actor
 
 namespace look
 {

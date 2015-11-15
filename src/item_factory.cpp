@@ -169,6 +169,7 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
 
     case Item_id::raven_peck:
         r = new Raven_peck(d);
+        break;
 
     case Item_id::mi_go_gun:
         r = new Mi_go_gun(d);

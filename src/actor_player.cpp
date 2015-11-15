@@ -974,7 +974,7 @@ void Player::on_std_turn()
                 mon->shock_caused_cur_ = std::min(mon->shock_caused_cur_ + 0.05,  1.0);
                 break;
 
-            case Mon_shock_lvl::scary:
+            case Mon_shock_lvl::frightening:
                 mon->shock_caused_cur_ = std::min(mon->shock_caused_cur_ + 0.1,   1.0);
                 break;
 

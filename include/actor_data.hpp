@@ -89,14 +89,13 @@ enum class Actor_size
     floor,
     humanoid,
     giant
-}
-;
+};
 
 enum class Mon_shock_lvl
 {
     none,
     unsettling,
-    scary,
+    frightening,
     terrifying,
     mind_shattering,
     END
