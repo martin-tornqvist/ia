@@ -425,8 +425,10 @@ void handle_map_mode_key_press(const Key_data& d)
                             return Marker_done::no;
                         };
 
-                        marker::run(Marker_draw_tail::yes, Marker_use_player_tgt::yes,
-                                    on_marker_at_pos, on_key_press,
+                        marker::run(Marker_use_player_tgt::yes,
+                                    on_marker_at_pos,
+                                    on_key_press,
+                                    Marker_show_blocked::yes,
                                     wpn->data().ranged.effective_range);
                     }
                     else /* Not enough ammo loaded */ if (config::is_ranged_wpn_auto_reload())
@@ -703,8 +705,10 @@ void handle_map_mode_key_press(const Key_data& d)
                     return Marker_done::no;
                 };
 
-                marker::run(Marker_draw_tail::yes, Marker_use_player_tgt::no, on_marker_at_pos,
-                            on_key_press);
+                marker::run(Marker_use_player_tgt::no,
+                            on_marker_at_pos,
+                            on_key_press,
+                            Marker_show_blocked::yes);
             }
             else //Not holding explosive
             {
@@ -787,14 +791,15 @@ void handle_map_mode_key_press(const Key_data& d)
                             return Marker_done::no;
                         };
 
-                        marker::run(Marker_draw_tail::yes, Marker_use_player_tgt::yes,
-                                    on_marker_at_pos, on_key_press,
+                        marker::run(Marker_use_player_tgt::yes,
+                                    on_marker_at_pos,
+                                    on_key_press,
+                                    Marker_show_blocked::yes,
                                     item_to_throw->data().ranged.effective_range);
                     }
                     else //No item equipped
                     {
-                        msg_log::add(
-                            "I have no missiles chosen for throwing (press 'w').");
+                        msg_log::add("I have no missiles chosen for throwing (press 'w').");
                     }
                 }
             }
@@ -860,10 +865,12 @@ void handle_map_mode_key_press(const Key_data& d)
                     return Marker_done::no;
                 };
 
-                marker::run(Marker_draw_tail::yes, Marker_use_player_tgt::yes, on_marker_at_pos,
-                            on_key_press);
+                marker::run(Marker_use_player_tgt::yes,
+                            on_marker_at_pos,
+                            on_key_press,
+                            Marker_show_blocked::no);
             }
-            else
+            else //Cannot see
             {
                 msg_log::add("I cannot see.");
             }

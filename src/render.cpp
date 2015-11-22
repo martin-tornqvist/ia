@@ -590,60 +590,74 @@ void draw_skull(const P& p)
     blit_surface(*skull_srf_, px_pos);
 }
 
-void draw_marker(const P& p, const std::vector<P>& trail, const int EFFECTIVE_RANGE)
+void draw_marker(const P& p,
+                 const std::vector<P>& trail,
+                 const int EFFECTIVE_RANGE,
+                 const int BLOCKED_FROM_IDX)
 {
-    if (trail.size() > 2)
-    {
-        for (size_t i = 1; i < trail.size(); ++i)
-        {
-            const P& pos = trail[i];
-            cover_cell_in_map(pos);
-
-            Clr clr = clr_green_lgt;
-
-            if (EFFECTIVE_RANGE != -1)
-            {
-                const int CHEB_DIST = utils::king_dist(trail[0], pos);
-
-                if (CHEB_DIST > EFFECTIVE_RANGE)
-                {
-                    clr = clr_orange;
-                }
-            }
-
-            if (config::is_tiles_mode())
-            {
-                draw_tile(Tile_id::aim_marker_trail, Panel::map, pos, clr, clr_black);
-            }
-            else
-            {
-                draw_glyph('*', Panel::map, pos, clr, true, clr_black);
-            }
-        }
-    }
-
     Clr clr = clr_green_lgt;
 
-    if (trail.size() > 2)
+    //Tail
+    for (size_t i = 1; i < trail.size(); ++i)
     {
-        if (EFFECTIVE_RANGE != -1)
+        const P& pos = trail[i];
+
+        if (BLOCKED_FROM_IDX != -1 && int(i) >= BLOCKED_FROM_IDX)
         {
-            const int CHEB_DIST = utils::king_dist(trail[0], p);
+            clr = clr_red_lgt;
+        }
+        else if (EFFECTIVE_RANGE != -1)
+        {
+            const int CHEB_DIST = utils::king_dist(trail[0], pos);
 
             if (CHEB_DIST > EFFECTIVE_RANGE)
             {
                 clr = clr_orange;
             }
         }
+
+        //Do not draw tail graphics at the end
+        if (i < trail.size() - 1)
+        {
+            cover_cell_in_map(pos);
+
+            if (config::is_tiles_mode())
+            {
+                draw_tile(Tile_id::aim_marker_trail,
+                          Panel::map,
+                          pos,
+                          clr,
+                          clr_black);
+            }
+            else //Text mode
+            {
+                draw_glyph('*',
+                           Panel::map,
+                           pos,
+                           clr,
+                           true,
+                           clr_black);
+            }
+        }
     }
 
+    //Head
     if (config::is_tiles_mode())
     {
-        draw_tile(Tile_id::aim_marker_head, Panel::map, p, clr, clr_black);
+        draw_tile(Tile_id::aim_marker_head,
+                  Panel::map,
+                  p,
+                  clr,
+                  clr_black);
     }
-    else
+    else //Text mode
     {
-        draw_glyph('X', Panel::map, p, clr, true, clr_black);
+        draw_glyph('X',
+                   Panel::map,
+                   p,
+                   clr,
+                   true,
+                   clr_black);
     }
 }
 

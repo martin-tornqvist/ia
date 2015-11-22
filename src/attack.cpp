@@ -535,7 +535,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
                 }
                 else //Player cannot see attacker
                 {
-                    other_name = "It";
+                    other_name = "it";
                 }
 
                 msg += " an attack from " + other_name;

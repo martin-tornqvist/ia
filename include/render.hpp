@@ -78,8 +78,10 @@ void draw_line_hor(const P& px_pos, const int W, const Clr& clr);
 
 void draw_line_ver(const P& px_pos, const int H, const Clr& clr);
 
-void draw_marker(const P& p, const std::vector<P>& trail,
-                 const int EFFECTIVE_RANGE = -1);
+void draw_marker(const P& p,
+                 const std::vector<P>& trail,
+                 const int EFFECTIVE_RANGE = -1,
+                 const int BLOCKED_FROM_IDX = -1);
 
 void draw_blast_at_field(const P& center_pos,
                          const int RADIUS,

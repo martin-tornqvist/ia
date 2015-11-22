@@ -16,8 +16,7 @@
 #include "line_calc.hpp"
 #include "utils.hpp"
 #include "config.hpp"
-
-using namespace std;
+#include "feature_rigid.hpp"
 
 namespace marker
 {
@@ -29,9 +28,9 @@ P pos_;
 
 void set_pos_to_closest_enemy_if_visible()
 {
-    vector<Actor*> seen_foes;
+    std::vector<Actor*> seen_foes;
     map::player->seen_foes(seen_foes);
-    vector<P> seen_foes_cells;
+    std::vector<P> seen_foes_cells;
 
     utils::actor_cells(seen_foes, seen_foes_cells);
 
@@ -57,7 +56,7 @@ bool set_pos_to_tgt_if_visible()
 
     if (tgt)
     {
-        vector<Actor*> seen_foes;
+        std::vector<Actor*> seen_foes;
         map::player->seen_foes(seen_foes);
 
         if (!seen_foes.empty())
@@ -78,10 +77,10 @@ bool set_pos_to_tgt_if_visible()
 
 } //namespace
 
-P run(const Marker_draw_tail draw_trail,
-      const Marker_use_player_tgt use_tgt,
-      function<void(const P&)> on_marker_at_pos,
-      function<Marker_done(const P&, const Key_data&)> on_key_press,
+P run(const Marker_use_player_tgt use_tgt,
+      std::function<void(const P&)> on_marker_at_pos,
+      std::function<Marker_done(const P&, const Key_data&)> on_key_press,
+      Marker_show_blocked show_blocked,
       const int EFFECTIVE_RANGE_LMT)
 {
     pos_ = map::player->pos;
@@ -107,15 +106,36 @@ P run(const Marker_draw_tail draw_trail,
 
         render::draw_map_and_interface(false);
 
-        vector<P> trail;
+        std::vector<P> trail;
 
-        if (draw_trail == Marker_draw_tail::yes)
+        const P origin(map::player->pos);
+
+        line_calc::calc_new_line(origin,
+                                 pos_,
+                                 true,
+                                 INT_MAX,
+                                 false,
+                                 trail);
+
+        int blocked_from_idx = -1;
+
+        if (show_blocked == Marker_show_blocked::yes)
         {
-            const P origin(map::player->pos);
-            line_calc::calc_new_line(origin, pos_, true, INT_MAX, false, trail);
+            for (size_t i = 0; i < trail.size(); ++i)
+            {
+                const P& p(trail[i]);
+
+                const Cell& c = map::cells[p.x][p.y];
+
+                if (c.is_seen_by_player && !c.rigid->is_projectile_passable())
+                {
+                    blocked_from_idx = i;
+                    break;
+                }
+            }
         }
 
-        render::draw_marker(pos_, trail, EFFECTIVE_RANGE_LMT);
+        render::draw_marker(pos_, trail, EFFECTIVE_RANGE_LMT, blocked_from_idx);
 
         render::update_screen();
 

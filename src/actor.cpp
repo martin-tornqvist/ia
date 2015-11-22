@@ -332,17 +332,22 @@ void Actor::teleport()
                 return Marker_done::no;
             };
 
-            msg_log::add("I have the power to control teleportation.", clr_white, false,
+            msg_log::add("I have the power to control teleportation.",
+                         clr_white,
+                         false,
                          More_prompt_on_msg::yes);
 
-            const P marker_tgt_pos =
-                marker::run(Marker_draw_tail::yes, Marker_use_player_tgt::no,
-                            on_marker_at_pos, on_key_press);
+            const P marker_tgt_pos = marker::run(Marker_use_player_tgt::no,
+                                                 on_marker_at_pos,
+                                                 on_key_press,
+                                                 Marker_show_blocked::no);
 
             if (blocked[marker_tgt_pos.x][marker_tgt_pos.y])
             {
                 //Blocked
-                msg_log::add("Something is blocking me...", clr_white, false,
+                msg_log::add("Something is blocking me...",
+                             clr_white,
+                             false,
                              More_prompt_on_msg::yes);
             }
             else if (rnd::percent(chance_of_tele_success(marker_tgt_pos)))
@@ -352,7 +357,9 @@ void Actor::teleport()
             }
             else //Distance roll failed
             {
-                msg_log::add("I failed to go there...", clr_white, false,
+                msg_log::add("I failed to go there...",
+                             clr_white,
+                             false,
                              More_prompt_on_msg::yes);
             }
         }
