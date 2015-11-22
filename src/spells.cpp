@@ -452,7 +452,7 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
 
     bool        is_warlock_charged  = false;
     Clr         msg_clr             = clr_msg_good;
-    std::string tgt_str             = "I am";
+    std::string str_begin           = "I am";
 
     if (tgt->is_player())
     {
@@ -460,9 +460,12 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
     }
     else //Target is monster
     {
-        tgt_str = tgt->name_the() + " is";
+        str_begin = tgt->name_the() + " is";
 
-        if (map::player->is_leader_of(tgt)) {msg_clr = clr_white;}
+        if (map::player->is_leader_of(tgt))
+        {
+            msg_clr = clr_white;
+        }
     }
 
     if (caster->is_player())
@@ -472,7 +475,7 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
 
     if (map::player->can_see_actor(*tgt))
     {
-        msg_log::add(tgt_str + " struck by a blast!", msg_clr);
+        msg_log::add(str_begin + " struck by a blast!", msg_clr);
     }
 
     tgt->prop_handler().try_add_prop(new Prop_paralyzed(Prop_turns::specific, 2));
@@ -547,8 +550,8 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
             continue;
         }
 
-        std::string     tgt_str = "I am";
-        Clr             msg_clr = clr_msg_good;
+        std::string     str_begin   = "I am";
+        Clr             msg_clr     = clr_msg_good;
 
         if (tgt->is_player())
         {
@@ -556,7 +559,7 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
         }
         else //Target is monster
         {
-            tgt_str = tgt->name_the();
+            str_begin = tgt->name_the() + " is";
 
             if (map::player->is_leader_of(tgt))
             {
@@ -566,7 +569,7 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
 
         if (map::player->can_see_actor(*tgt))
         {
-            msg_log::add(tgt_str + " is struck by a roaring blast!", msg_clr);
+            msg_log::add(str_begin + " struck by a roaring blast!", msg_clr);
         }
 
         tgt->prop_handler().try_add_prop(new Prop_paralyzed(Prop_turns::specific, 2));
