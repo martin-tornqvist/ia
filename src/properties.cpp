@@ -509,7 +509,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::descend;
-    d.std_rnd_turns = Range(50, 100);
+    d.std_rnd_turns = Range(20, 30);
     d.name = "Descending";
     d.name_short = "Descend";
     d.msg[size_t(Prop_msg::start_player)] = "I feel a sinking sensation.";

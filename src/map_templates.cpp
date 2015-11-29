@@ -12,65 +12,57 @@ namespace map_templ_handling
 namespace
 {
 
-map_templ templates_[int(Map_templ_id::END)];
+Map_templ templates_[size_t(Map_templ_id::END)];
 
-struct Translation
+Map_templ_cell ch_to_cell(const char CH,
+                          const std::vector<Map_templ_cell>& prototypes)
 {
-    Translation(char c, const map_templ_cell& map_templ_cell) :
-        CH(c),
-        cell(map_templ_cell) {}
-
-    const char          CH;
-    const map_templ_cell  cell;
-};
-
-map_templ_cell ch_to_cell(const char CH, const std::vector<Translation>& translations)
-{
-    for (const Translation& translation : translations)
+    for (const Map_templ_cell& proto : prototypes)
     {
-        if (translation.CH == CH)
+        if (proto.ch == CH)
         {
-            return translation.cell;
+            return proto;
         }
     }
 
-    TRACE << "Failed to translate char: " <<  CH << std::endl;
+    TRACE << "Failed to make map template cell from char: " <<  CH << std::endl;
     assert(false);
-    return map_templ_cell();
+    return Map_templ_cell(0);
 }
 
-void mk_templ(const std::string& str, const Map_templ_id id,
-              const std::vector<Translation>& translations)
+void mk_templ(const std::string& str,
+              const Map_templ_id id,
+              const std::vector<Map_templ_cell>& prototypes)
 {
-    map_templ& templ = templates_[int(id)];
+    Map_templ& templ = templates_[size_t(id)];
 
-    std::vector<map_templ_cell> inner;
+    std::vector<Map_templ_cell> inner;
 
     for (const auto ch : str)
     {
         switch (ch)
         {
         case ';':
+        {
             //Delimiting character (";") found, inner vector is pushed to outer
             templ.add_row(inner);
             inner.clear();
-            break;
-
-        case '#':
-            inner.push_back({Feature_id::wall});
-            break;
-
-        case '.':
-            inner.push_back({Feature_id::floor});
-            break;
+        }
+        break;
 
         case ' ':
-            inner.push_back({});
-            break;
+        {
+            inner.push_back(Map_templ_cell(0));
+        }
+        break;
 
         default:
-            inner.push_back(ch_to_cell(ch, translations));
-            break;
+        {
+            Map_templ_cell templ_cell = ch_to_cell(ch, prototypes);
+
+            inner.push_back(templ_cell);
+        }
+        break;
         }
     }
 }
@@ -125,35 +117,48 @@ void init_templs()
 //  "################################################################################;"
 //  "################################################################################;";
 
-    //----------------------------------------------------------------- CHURCH
+    //----------------------------------------------------------------- FOREST
     std::string str =
-        "             ,,,,,,,,,,,     ;"
-        "          ,,,,,######,,,,    ;"
-        " ,,,,,,,,,,,,,,#v..v#,,,,,   ;"
-        ",,,,,,,,,,,,,###....###,,,,  ;"
-        ",,#####,#,,#,#.#....#.#,,,,, ;"
-        ",,#v.v########.#....#.######,;"
-        "..#...#v.................v##,;"
-        ".,#.#.#..[.[.[.[...[.[....>#,;"
-        "..+...+*****************-..#,;"
-        ".,#.#.#..[.[.[.[...[.[.....#,;"
-        ".,#...#v.................v##,;"
-        ",,#v.v########.#....#.######,;"
-        ",,#####,#,,#,#.#....#.#,,,,, ;"
-        ",,,,,,,,,,,,,###....###,,,,  ;"
-        " ,,,,,,,,,,,,,,#v..v#,,,,,   ;"
-        "         ,,,,,,######,,,,    ;"
-        "            ,,,,,,,,,,,,     ;";
+        "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt;"
+        "tttttttttttttttttt,,,,,,,,,,tttttttt~~~~~~~~tttttttttt,,,tt,t,,t,,ttt,,ttttttttt;"
+        "tttt,=,,,,ttttttt,,,,,t,,,,tttt~,~,~~~,,,~~~~,,~~ttttttt,,,,,,________,,,ttttttt;"
+        "ttt,,,@,,,,,tttttt,,,,,,,,,,,,,,~,~~~,,t,,~,~~,,,,,,,,,,,,,,___________,,,,,,ttt;"
+        "ttt,,,,=,,,,,tttttttt,,,,,,,,,,,,~~,~~,,,~~,~,,,,,,,,,,,,,_____######____,,ttttt;"
+        "tt,,,,,,=,,,,tttttttttttt,,,,,,,,,~,~~,~~~,~,,,,,______________#....#_____,,,,tt;"
+        "tt,,,,,,,=,t,tt,ttt,tttt,,,,,,,,,,,,,,,,,,,,,,,,_____________###....###____,,,tt;"
+        "tttt,t,,,,=,,,,,,,,,t,,,,,,,,,,,,,,,,,,,,,,,,,,,__#####_#__#_#.#....#.#______,,t;"
+        "tttttttt,,,========,,,,t,t,,,,,,,,,,,,,,,,,,t,,,__#...########.#....#.######_,tt;"
+        "ttttttttt,,,,,,,,,,===,,tt,,,,,,,,,,,,,,,t,,,,,,__#...#...................##_,,t;"
+        "ttttt,,ttttt,tt,tt,,,,=,,tt,,,,,,,,,tt,,,,,,&,&___#.#.#..[.[.[.[...[.[....>#_,tt;"
+        "tt,,,,,,,,tttttttttt,,,=,,t,,tttt,,t,,,,,,,=======+...+*****************-..#_,tt;"
+        "tttt,,,,,,,,,t,,,tttt,,&=,,,,,,ttt,ttt,,,,=,t,,___#.#.#..[.[.[.[...[.[.....#_,,t;"
+        "ttttt,,,,,t,,,,,,,,,,,,,,=&,,,ttttttt,,,,=&,t,,,__#...#...................##_,tt;"
+        "ttttt,,,,,,,t,,t,,,,,t,,,,=&,,,,tttttt,&=,,t,t,,__#...########.#....#.######_,tt;"
+        "tttttt,,,t,,,,,,,,,,,,t,,,,=,t,ttt,tt,,=,,,tt,,,__#####_#__#_#,#....#.#_____,,,t;"
+        "tttttt,,,,,,,,,tttt,,,,,,,,,===========,,,,ttt,,_____________###....###____,,ttt;"
+        "tttttt,,,t,,,tttttt,,,,ttt,ttt,,t,t,,ttt,,,,t,,,,______________#....#_____,,,ttt;"
+        "ttttttt,,,,,,,ttt,,,,,,,,tttt,,,,tt,t,,,,,,,,,,,,,,,,,,,,______######____,,,tttt;"
+        "ttttttt,ttt,tttt,,,,,,,,,,,tttt,,,,tt,,,,tt,,t,,,,,,,,,,,,,,___________,,,t,,,tt;"
+        "ttttttttttttttttt,,,t,,,ttttttttt,,,,,,,,,ttttt,,,,ttt,,t,,,,,,,,,,,,,,,tttttttt;"
+        "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt;";
 
-    mk_templ(str, Map_templ_id::church, std::vector<Translation>
+    mk_templ(str, Map_templ_id::intro_forest, std::vector<Map_templ_cell>
     {
-        {',', {Feature_id::grass}},
-        {'v', {Feature_id::brazier}},
-        {'[', {Feature_id::church_bench}},
-        {'-', {Feature_id::altar}},
-        {'*', {Feature_id::carpet}},
-        {'>', {Feature_id::stairs}},
-        {'+', {Feature_id::floor,  Actor_id::END, Item_id::END, 1}} //Doors
+        {'@', Feature_id::floor},           //Start pos + stone path
+        {'.', Feature_id::floor},           //Stone floor with some grass/shrubs
+        {'#', Feature_id::wall},            //Stone wall with some low/high rubble
+        {',', Feature_id::grass},           //Random grass and bushes
+        {'&', Feature_id::grass},           //Graves, or random grass and bushes
+        {'_', Feature_id::grass},           //Withered grass
+        {'=', Feature_id::floor},           //Stone path
+        {'~', Feature_id::liquid_shallow},  //Shallow water
+        {'t', Feature_id::tree},
+        {'v', Feature_id::brazier},
+        {'[', Feature_id::church_bench},
+        {'-', Feature_id::altar},
+        {'*', Feature_id::carpet},
+        {'>', Feature_id::stairs},
+        {'+', Feature_id::floor}            //Doors
     });
 
     //----------------------------------------------------------------- EGYPT
@@ -181,57 +186,59 @@ void init_templs()
         "###...############################v....................##############|...|######;"
         "################################################################################;";
 
-    mk_templ(str, Map_templ_id::egypt, std::vector<Translation>
+    mk_templ(str, Map_templ_id::egypt, std::vector<Map_templ_cell>
     {
-        {'@', {Feature_id::floor, Actor_id::END, Item_id::END, 1}},  //Start
-        {'v', {Feature_id::brazier}},
-        {'|', {Feature_id::pillar}},
-        {'S', {Feature_id::statue}},
-        {'P', {Feature_id::floor, Actor_id::khephren}},
-        {'M', {Feature_id::floor, Actor_id::mummy}},
-        {'C', {Feature_id::floor, Actor_id::croc_head_mummy}},
-        {'1', {Feature_id::floor, Actor_id::END, Item_id::END, 2}},  //Stair candidate #1
-        {'2', {Feature_id::floor, Actor_id::END, Item_id::END, 3}}   //Stair candidate #2
+        {'@', Feature_id::floor},
+        {'.', Feature_id::floor},
+        {'#', Feature_id::wall},
+        {'v', Feature_id::brazier},
+        {'|', Feature_id::pillar},
+        {'S', Feature_id::statue},
+        {'P', Feature_id::floor, Actor_id::khephren},
+        {'M', Feature_id::floor, Actor_id::mummy},
+        {'C', Feature_id::floor, Actor_id::croc_head_mummy},
+        {'1', Feature_id::floor},   //Stair candidate #1
+        {'2', Feature_id::floor}    //Stair candidate #2
     });
 
     //----------------------------------------------------------------- LENG
     str =
-        "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;"
-        "%%%%%%%%%%-%%--%--%%--%%%--%%--%%-%-%%%--%-%%-x,,,,,x,,,,,x,,,,,x,,,,,,,,,,,,,,x;"
-        "%@----%--------%---%---%--------%----%-----%--x,,,,,x,,,,,x,,,,,x,,,,,,,,,,,,,,x;"
-        "%%--------------------------------------------xxx,xxxxx,xxxxx,xxx,,,,,,,,,,,,,,x;"
-        "%-------------%--------------------------%----x,,,,,,,,,,,,,,,,,x,,,,,,,,,,,,,,x;"
-        "%%------------%-------------------------------x,,,xxx,xxxxx,xxx,,,,,,,,,,,,,,,,x;"
-        "%%---------------------%%%--------------%-----x,,,x,,,,,x,,,,,xxxxxxxxxxxxxxxxxx;"
-        "%%%----%%---------------S%--------------------x,,,x,,,,,x,,,,,xxxxxxxxxxxxxxxxxx;"
-        "%%%------------------%%-S%S------%------------x,,,xxxxxxxxxxxxxxxx,,,,,,,,,,,,xx;"
-        "%%%%-----------------%--%%-%----%%------------x,,,,,,x,,,x,,,,,,xx,,,,,$,,,,,,xx;"
-        "%%%--------------------%%S--------------------xx,xxx,x,,,x,,,,,,xxx,$,,,,,$,,,xx;"
-        "%%------------------%-%%S---------------------+,,,,,,x,,,xxxxxx,,,4,,,,,,,,,E,xx;"
-        "%%%-------------------S%%S-%------------------xx,xxx,x,,,x,,,,,,xxx,$,,,,,$,,,xx;"
-        "%%-------------------%-S%%-%----%-------------x,,,x,,xxx,x,xxxxxxx,,,,,$,,,,,,xx;"
-        "%%---------------------S%%S-------------------x,,,x,,,,,,x,,,,,,xx,,,,,,,,,,,,xx;"
-        "%%%------------------%-%%---------------%-----x,xxxxxxxxxxxxxxx,xxxxxxxxxxxxx5xx;"
-        "%%-----%---------------------------%----------x,x,,,,,,,,,,,,,,,xxxxxxxxxxxxx,xx;"
-        "%%%---------%---------------------------------x,x,xxx,xxx,xxx,x,xxxx,,,,xxxxx,,x;"
-        "%%--%-----------------------------------------x,x,xxx,xxx,xxx,x,xx,,,xx,,,xxxx,x;"
-        "%%%--------------%----------------%---%-----%-x,x,xxx,xxx,xxx,x,x,,xxxxxx,,,,x,x;"
-        "%%%%%%--%---%--%%%-%--%%%%%%%-%-%%%--%%--%-%%%x,,,,,,,,,,,,,,,x,,,xxxxxxxxxx,,,x;"
-        "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;";
+        "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%##################################;"
+        "%%%%%%%%%%-%%--%--%%--%%%--%%--%%-%-%%%--%-%%-#.....#.....#.....#..............#;"
+        "%@----%--------%---%---%--------%----%-----%--#.....#.....#.....#..............#;"
+        "%%--------------------------------------------###.#####.#####.###..............#;"
+        "%-------------%--------------------------%----#.................#..............#;"
+        "%%------------%-------------------------------#...###.#####.###................#;"
+        "%%---------------------%%%--------------%-----#...#.....#.....##################;"
+        "%%%----%%---------------S%--------------------#...#.....#.....##################;"
+        "%%%------------------%%-S%S------%------------#...################............##;"
+        "%%%%-----------------%--%%-%----%%------------#......#...#......##.....$......##;"
+        "%%%--------------------%%S--------------------##.###.#...#......###.$.....$...##;"
+        "%%------------------%-%%S---------------------+......#...######...1.........E.##;"
+        "%%%-------------------S%%S-%------------------##.###.#...#......###.$.....$...##;"
+        "%%-------------------%-S%%-%----%-------------#...#..###.#.#######.....$......##;"
+        "%%---------------------S%%S-------------------#...#......#......##............##;"
+        "%%%------------------%-%%---------------%-----#.###############.#############2##;"
+        "%%-----%---------------------------%----------#.#...............#############.##;"
+        "%%%---------%---------------------------------#.#.###.###.###.#.####....#####..#;"
+        "%%--%-----------------------------------------#.#.###.###.###.#.##...##...####.#;"
+        "%%%--------------%----------------%---%-----%-#.#.###.###.###.#.#..######....#.#;"
+        "%%%%%%--%---%--%%%-%--%%%%%%%-%-%%%--%%--%-%%%#...............#...##########...#;"
+        "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%##################################;";
 
-    mk_templ(str, Map_templ_id::leng, std::vector<Translation>
+    mk_templ(str, Map_templ_id::leng, std::vector<Map_templ_cell>
     {
-        {'@', {Feature_id::floor,  Actor_id::END,       Item_id::END, 1}}, //Start
-        {'%', {Feature_id::wall,   Actor_id::END,       Item_id::END, 2}},
-        {'x', {Feature_id::wall,   Actor_id::END,       Item_id::END, 3}},
-        {',', {Feature_id::floor,  Actor_id::END,       Item_id::END, 3}},
-        {'E', {Feature_id::floor,  Actor_id::leng_elder, Item_id::END, 3}},
-        {'4', {Feature_id::floor,  Actor_id::END,       Item_id::END, 4}},
-        {'5', {Feature_id::wall,   Actor_id::END,       Item_id::END, 5}},
-        {'$', {Feature_id::altar}},
-        {'-', {Feature_id::grass}},
-        {'+', {Feature_id::floor,  Actor_id::END,       Item_id::END, 6}}, //Door
-        {'S', {Feature_id::grass,  Actor_id::leng_spider}}
+        {'@', Feature_id::floor},
+        {'%', Feature_id::wall},
+        {'.', Feature_id::floor},
+        {'#', Feature_id::wall},
+        {'E', Feature_id::floor, Actor_id::leng_elder},
+        {'1', Feature_id::floor},
+        {'2', Feature_id::wall},
+        {'$', Feature_id::altar},
+        {'-', Feature_id::grass},
+        {'+', Feature_id::floor}, //Door
+        {'S', Feature_id::grass, Actor_id::leng_spider}
     });
 
     //----------------------------------------------------------------- RATS IN THE WALLS
@@ -244,32 +251,34 @@ void init_templs()
         "###:...#######,,,,,,xx,xxxx,,,,,,,xrrrxrrx,,,xrrxrrr,,,,,,,,:,,,,,,:,,,,,,######;"
         "##&..:..#####,,,,,,,,,,,,,xxxx,xxxx,r,xxxx,,,x,xx,,,,,,,,,,,,,,,,,,,,,,,,,######;"
         "####.&.:####,,,,,,,,,,,,,,,:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,:,,,,,####;"
-        "####..##&:3.,,,,,,,,,:,,,,,,,,,,:,,,,,,,,,,,1,,,:,,,xxx,xx,xxx,,,,,,,,,,,,,#####;"
-        "#####..&:.#,,,,,,,,,,,,,,,x,x,x,x,x,x,,,,1,,,,,1,,,rx,,,,,,,,x,,,,:,,,,,,,######;"
+        "####..##&:1.,,,,,,,,,:,,,,,,,,,,:,,,,,,,,,,,|,,,:,,,xxx,xx,xxx,,,,,,,,,,,,,#####;"
+        "#####..&:.#,,,,,,,,,,,,,,,x,x,x,x,x,x,,,,|,,,,,|,,,rx,,,,,,,,x,,,,:,,,,,,,######;"
         "###########,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,x,rrrrr,,x,,,,,,,,,,,#######;"
-        "###########,,,,,,,,1,,,,,,,,,,,,,,,,:,,,1,,,,,,,1,,rr,,,,,r,,,,,,,#,,,,,########;"
-        "###########,,,,,1,,,,,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,x,r,rr,,,x,,####,,,,,#######;"
-        "###########,,,,,,,,,,,,,,,x,x,x,x,x,x,,,,1,,,,,1,,,rx,,rrr,,,x,,,,##############;"
-        "############,,,1,,,,,,,1,,,,,,,,,,,,,,,,,,,,1,,,,,x,x,r,,r,,,x,,,###############;"
+        "###########,,,,,,,,|,,,,,,,,,,,,,,,,:,,,|,,,,,,,|,,rr,,,,,r,,,,,,,#,,,,,########;"
+        "###########,,,,,|,,,,,|,,,,,,,,,,,,,,,,,,,,,,,,,,,,,x,r,rr,,,x,,####,,,,,#######;"
+        "###########,,,,,,,,,,,,,,,x,x,x,x,x,x,,,,|,,,,,|,,,rx,,rrr,,,x,,,,##############;"
+        "############,,,|,,,,,,,|,,,,,,,,,,,,,,,,,,,,|,,,,,x,x,r,,r,,,x,,,###############;"
         "############,,,,,,,,,,,,,,,,,,,,:,,,,,,,,,,,,,,,,,rr,,,rr,,,,x,:##xxxxxx########;"
-        "#############,,,1,,,,,1,,,xxx,xxxxx,xxx,,,:,,,,r,,,rx,rr,,,,,x,,,,x....x########;"
-        "##############,,,,,1,,,,,,x,,,,,xrrrrrx,,,,,,,,,,,r,x,r,,,,,rx,,,,...>.x########;"
+        "#############,,,|,,,,,|,,,xxx,xxxxx,xxx,,,:,,,,r,,,rx,rr,,,,,x,,,,x....x########;"
+        "##############,,,,,|,,,,,,x,,,,,xrrrrrx,,,,,,,,,,,r,x,r,,,,,rx,,,,...>.x########;"
         "#################,,,,,,:,,x,,,,,xrr,,rxrr,rr,rr,r,,,xxxxxxxxxx,:,,x....x########;"
         "################:,,,,,,,,,x,,,,,xrrrrrxrrrr##rrr,r,,rr,rr,rr,r,##:xxxxxx########;"
         "###################:,,####xxxxxxxxxxxxx##r#####rr###r###r#rrr###################;"
         "################################################################################;";
 
-    mk_templ(str, Map_templ_id::rats_in_the_walls, std::vector<Translation>
+    mk_templ(str, Map_templ_id::rats_in_the_walls, std::vector<Map_templ_cell>
     {
-        {'@', {Feature_id::floor,  Actor_id::END,     Item_id::END, 1}}, //Start
-        {'x', {Feature_id::wall,   Actor_id::END,     Item_id::END, 2}}, //Constructed walls
-        {'&', {Feature_id::bones,  Actor_id::END,     Item_id::END}},
-        {'3', {Feature_id::floor,  Actor_id::END,     Item_id::END, 3}}, //Discovery event
-        {',', {Feature_id::floor,  Actor_id::END,     Item_id::END, 4}}, //Random bones
-        {'r', {Feature_id::floor,  Actor_id::rat,     Item_id::END, 4}}, //Random bones + rat
-        {'>', {Feature_id::stairs}},
-        {'1', {Feature_id::monolith}},
-        {':', {Feature_id::stalagmite}}
+        {'@', Feature_id::floor},
+        {'.', Feature_id::floor},
+        {'#', Feature_id::wall},
+        {'x', Feature_id::wall},                    //Constructed walls
+        {'&', Feature_id::bones},
+        {'1', Feature_id::floor},                   //Discovery event
+        {',', Feature_id::floor},                   //Random bones
+        {'r', Feature_id::floor, Actor_id::rat},    //Random bones + rat
+        {'>', Feature_id::stairs},
+        {'|', Feature_id::monolith},
+        {':', Feature_id::stalagmite}
     });
 
     //----------------------------------------------------------------- BOSS LEVEL
@@ -279,31 +288,33 @@ void init_templs()
         "############################...................................................#;"
         "############################...#.....#...#.....#...#.....#...#.....#...........#;"
         "############################...###.###...###.###...###.###...###.###...........#;"
-        "##############v..v#########......###.......###.......###.......###.............#;"
+        "##############....#########......###.......###.......###.......###.............#;"
         "##############....#########....###.###...###.###...###.###...###.###...........#;"
-        "############.#....#.#######....#.....#...#.....#...#.....#...#.....#...........#;"
-        "#v.v########.#....#.#######.................................................####;"
-        "#...#v.................v#v#.......|....|....|....|....|....|....|...|...|...####;"
-        "#.#.#.............................................................v...v...v..###;"
+        "############...##...#######....#.....#...#.....#...#.....#...#.....#...........#;"
+        "#...########.v.##.v.#######.................................................####;"
+        "#...#...................#.#.......|....|....|....|....|....|....|...|...|...####;"
+        "#.v.#.............................................................v...v...v..###;"
         "#@..........................................................................M###;"
-        "#.#.#.............................................................v...v...v..###;"
-        "#...#v.................v#v#.......|....|....|....|....|....|....|...|...|...####;"
-        "#v.v########.#....#.#######.................................................####;"
-        "############.#....#.#######....#.....#...#.....#...#.....#...#.....#...........#;"
+        "#.v.#.............................................................v...v...v..###;"
+        "#...#...................#.#.......|....|....|....|....|....|....|...|...|...####;"
+        "#...########.v.##.v.#######.................................................####;"
+        "############...##...#######....#.....#...#.....#...#.....#...#.....#...........#;"
         "##############....#########....###.###...###.###...###.###...###.###...........#;"
-        "##############v..v#########......###.......###.......###.......###.............#;"
+        "##############....#########......###.......###.......###.......###.............#;"
         "############################...###.###...###.###...###.###...###.###...........#;"
         "############################...#.....#...#.....#...##...##...#.....#...........#;"
         "############################...................................................#;"
         "################################################################################;";
 
-    mk_templ(str, Map_templ_id::boss_level, std::vector<Translation>
+    mk_templ(str, Map_templ_id::boss_level, std::vector<Map_templ_cell>
     {
-        {'@', {Feature_id::floor,    Actor_id::END,           Item_id::END, 1}}, //Start
-        {'M', {Feature_id::floor,    Actor_id::the_high_priest, Item_id::END}},    //Boss
-        {'|', {Feature_id::pillar,   Actor_id::END,           Item_id::END}},
-        {'v', {Feature_id::brazier,  Actor_id::END,           Item_id::END}},
-        {'>', {Feature_id::stairs,   Actor_id::END,           Item_id::END}}
+        {'@', Feature_id::floor},
+        {'.', Feature_id::floor},
+        {'#', Feature_id::wall},
+        {'M', Feature_id::floor, Actor_id::the_high_priest},
+        {'|', Feature_id::pillar},
+        {'v', Feature_id::brazier},
+        {'>', Feature_id::stairs}
     });
 
     //----------------------------------------------------------------- BOSS LEVEL
@@ -331,12 +342,14 @@ void init_templs()
         "################################################################################;"
         "################################################################################;";
 
-    mk_templ(str, Map_templ_id::trapezohedron_level, std::vector<Translation>
+    mk_templ(str, Map_templ_id::trapez_level, std::vector<Map_templ_cell>
     {
-        {'@', {Feature_id::floor,    Actor_id::END,         Item_id::END, 1}}, //Start
-        {'|', {Feature_id::pillar,   Actor_id::END,         Item_id::END}},
-        {'v', {Feature_id::brazier,  Actor_id::END,         Item_id::END}},
-        {'o', {Feature_id::floor,    Actor_id::END,         Item_id::trapezohedron}}
+        {'@', Feature_id::floor},
+        {'.', Feature_id::floor},
+        {'#', Feature_id::wall},
+        {'|', Feature_id::pillar},
+        {'v', Feature_id::brazier},
+        {'o', Feature_id::floor, Actor_id::END, Item_id::trapez}
     });
 }
 
@@ -347,7 +360,7 @@ void init()
     init_templs();
 }
 
-const map_templ& templ(const Map_templ_id id)
+const Map_templ& templ(const Map_templ_id id)
 {
     assert(id != Map_templ_id::END);
     return templates_[int(id)];

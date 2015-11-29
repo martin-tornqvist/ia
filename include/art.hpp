@@ -152,7 +152,7 @@ enum class Tile_id
     gore7,
     gore8,
     smoke,
-    trapezohedron,
+    trapez,
     pit,
     popup_top_l,
     popup_top_r,

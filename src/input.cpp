@@ -467,7 +467,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
             if (item_at_player)
             {
-                if (item_at_player->data().id == Item_id::trapezohedron)
+                if (item_at_player->data().id == Item_id::trapez)
                 {
                     dungeon_master::win_game();
                     init::quit_to_main_menu = true;

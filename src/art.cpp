@@ -250,7 +250,7 @@ P column_and_row_tile(const Tile_id tile)
     case Tile_id::smoke:                        return P(9, 8);
     case Tile_id::wall_front_alt1:              return P(1, 9);
     case Tile_id::wall_front_alt2:              return P(0, 9);
-    case Tile_id::trapezohedron:                return P(11, 8);
+    case Tile_id::trapez:                return P(11, 8);
     case Tile_id::pit:                          return P(12, 8);
     case Tile_id::lever_right:                  return P(13, 8);
     case Tile_id::lever_left:                   return P(14, 8);

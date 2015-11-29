@@ -24,11 +24,11 @@
 
 //--------------------------------------------------------------------- RIGID
 Rigid::Rigid(const P& feature_pos) :
-    Feature(feature_pos),
-    gore_tile_(Tile_id::empty),
-    gore_glyph_(0),
-    is_bloody_(false),
-    burn_state_(Burn_state::not_burned) {}
+    Feature     (feature_pos),
+    gore_tile_  (Tile_id::empty),
+    gore_glyph_ (0),
+    is_bloody_  (false),
+    burn_state_ (Burn_state::not_burned) {}
 
 void Rigid::on_new_turn()
 {
@@ -411,7 +411,10 @@ std::string Floor::name(const Article article) const
     }
     else
     {
-        if (burn_state() == Burn_state::has_burned) {ret += "scorched ";}
+        if (burn_state() == Burn_state::has_burned)
+        {
+            ret += "scorched ";
+        }
 
         switch (type_)
         {
@@ -424,6 +427,11 @@ std::string Floor::name(const Article article) const
             break;
 
         case Floor_type::stone_path:
+            if (article == Article::a)
+            {
+                ret.insert(0, "a ");
+            }
+
             ret += "stone path";
             break;
         }
@@ -1378,7 +1386,7 @@ void Altar::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* 
 
 std::string Altar::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "a " : "the ";
+    std::string ret = article == Article::a ? "an " : "the ";
     return ret + "altar";
 }
 

@@ -402,7 +402,7 @@ void init_data_list()
     Item_data_t d;
 
     reset_data(d, Item_type::general);
-    d.id = Item_id::trapezohedron;;
+    d.id = Item_id::trapez;;
     d.base_name =
     {
         "Shining Trapezohedron", "Shining Trapezohedrons", "The Shining Trapezohedron"
@@ -413,7 +413,7 @@ void init_data_list()
     d.is_stackable = false;
     d.glyph = '*';
     d.clr = clr_red_lgt;
-    d.tile = Tile_id::trapezohedron;
+    d.tile = Tile_id::trapez;
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::ranged_wpn);

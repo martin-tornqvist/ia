@@ -69,8 +69,8 @@ void mk_lvl(const Map_type& map_type)
             is_lvl_built = map_gen::mk_rats_in_the_walls_lvl();
             break;
 
-        case Map_type::trapezohedron:
-            is_lvl_built = map_gen::mk_trapezohedron_lvl();
+        case Map_type::trapez:
+            is_lvl_built = map_gen::mk_trapez_lvl();
             break;
 
         case Map_type::boss:
@@ -116,7 +116,7 @@ void init()
     map_list[DLVL_FIRST_LATE_GAME] = {Map_type::egypt, Is_main_dungeon::yes};
 
     map_list[DLVL_LAST + 1] = {Map_type::boss,           Is_main_dungeon::yes};
-    map_list[DLVL_LAST + 2] = {Map_type::trapezohedron,  Is_main_dungeon::yes};
+    map_list[DLVL_LAST + 2] = {Map_type::trapez,  Is_main_dungeon::yes};
 }
 
 void save()

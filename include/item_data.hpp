@@ -30,7 +30,7 @@ enum class Item_value
 
 enum class Item_id
 {
-    trapezohedron,
+    trapez,
 
     thr_knife,
     rock,

@@ -21,7 +21,7 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
 
     switch (item_id)
     {
-    case Item_id::trapezohedron:
+    case Item_id::trapez:
         r = new Item(d);
         break;
 

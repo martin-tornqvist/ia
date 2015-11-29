@@ -63,7 +63,7 @@ bool mk_std_lvl();
 bool mk_egypt_lvl();
 bool mk_leng_lvl();
 bool mk_rats_in_the_walls_lvl();
-bool mk_trapezohedron_lvl();
+bool mk_trapez_lvl();
 bool mk_boss_lvl();
 
 } //map_gen

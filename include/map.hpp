@@ -38,7 +38,7 @@ enum class Map_type
     leng,
     rats_in_the_walls,
     boss,
-    trapezohedron
+    trapez
 };
 
 namespace map
