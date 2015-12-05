@@ -213,6 +213,12 @@ enum class More_prompt_on_msg
     yes
 };
 
+enum class Inf_screen_type
+{
+    scrolling,
+    single_screen
+};
+
 struct Cell_render_data
 {
     Cell_render_data() :

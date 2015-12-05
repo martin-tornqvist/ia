@@ -300,12 +300,12 @@ void display_history()
             const std::string msg_nr_first  = to_str(top_nr + 1);
             const std::string msg_nr_last   = to_str(btm_nr + 1);
 
-            title = "Displaying messages " +
+            title = "Messages " +
                     msg_nr_first + "-" + msg_nr_last +
                     " of " + to_str(history_.size());
         }
 
-        render::draw_info_scr_interface(title);
+        render::draw_info_scr_interface(title, Inf_screen_type::scrolling);
 
         int y_pos = 1;
 

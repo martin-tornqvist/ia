@@ -87,7 +87,8 @@ void run()
     {
         render::clear_screen();
 
-        render::draw_info_scr_interface("Browsing manual");
+        render::draw_info_scr_interface("Browsing manual",
+                                        Inf_screen_type::scrolling);
 
         int y_pos = 1;
 

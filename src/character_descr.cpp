@@ -236,7 +236,8 @@ void run()
     {
         render::clear_screen();
 
-        render::draw_info_scr_interface("Displaying character description");
+        render::draw_info_scr_interface("Character description",
+                                        Inf_screen_type::scrolling);
 
         int y_pos = 1;
 

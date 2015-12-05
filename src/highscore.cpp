@@ -132,7 +132,8 @@ void draw(const std::vector<Highscore_entry>& entries, const int TOP_ELEMENT)
 
     render::clear_screen();
 
-    render::draw_info_scr_interface("Displaying High Scores");
+    render::draw_info_scr_interface("High Scores",
+                                    Inf_screen_type::scrolling);
 
     int y_pos = 1;
 

@@ -511,7 +511,7 @@ void init_data_list()
     d.can_open_doors = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 25;
-    d.descr = "A fanatic cultist, madly gibbering in some half - lost language.";
+    d.descr = "A fanatic cultist, madly gibbering in some half-lost language.";
     d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = Actor_erratic_freq::rare;
     d.native_rooms.push_back(Room_type::plain);
@@ -550,8 +550,8 @@ void init_data_list()
     d.can_open_doors = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 25;
-    d.descr = "A fanatic cultist, madly gibbering in some half - lost language. It is "
-              "wielding an Electric Gun, presumably a gift from the Mi - go.";
+    d.descr = "A fanatic cultist, madly gibbering in some half-lost language. It is "
+              "wielding an Electric Gun, presumably a gift from the Mi-go.";
     d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = Actor_erratic_freq::rare;
     d.native_rooms.push_back(Room_type::plain);
@@ -590,7 +590,7 @@ void init_data_list()
     d.can_open_doors = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 25;
-    d.descr = "A fanatic cultist, madly gibbering in some half - lost language. It is "
+    d.descr = "A fanatic cultist, madly gibbering in some half-lost language. It is "
               "wielding a Spike gun.";
     d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = Actor_erratic_freq::rare;

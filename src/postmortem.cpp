@@ -250,7 +250,8 @@ void render(const std::vector<Str_and_clr>& lines, const int TOP_ELEMENT)
 {
     render::clear_screen();
 
-    render::draw_info_scr_interface("Displaying game summary");
+    render::draw_info_scr_interface("Game summary",
+                                    Inf_screen_type::scrolling);
 
     const int NR_LINES_TOT = int(lines.size());
 

@@ -111,7 +111,8 @@ void draw_box(const Rect& area,
 //in which case an empty area is drawn.
 void draw_descr_box(const std::vector<Str_and_clr>& lines);
 
-void draw_info_scr_interface(const std::string& title);
+void draw_info_scr_interface(const std::string& title,
+                             const Inf_screen_type screen_type);
 
 void draw_map();
 

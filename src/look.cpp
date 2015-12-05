@@ -274,6 +274,11 @@ void print_location_info_msgs(const P& pos)
 
 void print_detailed_actor_descr(const Actor& actor)
 {
+    render::clear_screen();
+
+    render::draw_info_scr_interface("Monster info",
+                                    Inf_screen_type::single_screen);
+
     //Add written description.
     std::string descr = actor.descr();
 

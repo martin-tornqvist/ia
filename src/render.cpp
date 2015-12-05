@@ -1167,7 +1167,8 @@ void draw_descr_box(const std::vector<Str_and_clr>& lines)
     }
 }
 
-void draw_info_scr_interface(const std::string& title)
+void draw_info_scr_interface(const std::string& title,
+                             const Inf_screen_type screen_type)
 {
     if (config::is_tiles_mode())
     {
@@ -1206,7 +1207,10 @@ void draw_info_scr_interface(const std::string& title)
                       P(X_LABEL, 0),
                       clr_title);
 
-    render::draw_text(" " + info_scr_cmd_info + " ",
+    const std::string cmd_info = screen_type == Inf_screen_type::scrolling ?
+                                 info_scr_cmd_str_scrollable : info_scr_cmd_str;
+
+    render::draw_text(" " + cmd_info + " ",
                       Panel::screen,
                       P(X_LABEL, SCREEN_H - 1),
                       clr_title);

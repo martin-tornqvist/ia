@@ -98,7 +98,8 @@ const int PLAYER_CARRY_WEIGHT_BASE = 500;
 //actors above the limit. This number is treated as a soft limit.
 const size_t MAX_NR_ACTORS_ON_MAP = 125;
 
-const std::string info_scr_cmd_info = "[2/8, down/up, j/k] to scroll [space/esc] to exit";
+const std::string info_scr_cmd_str              = "[space/esc] to exit";
+const std::string info_scr_cmd_str_scrollable   = "[2/8, down/up, j/k] " + info_scr_cmd_str;
 
 const std::string cancel_info_str_no_space  = "[space/esc] to cancel";
 const std::string cancel_info_str           = " " + cancel_info_str_no_space;
