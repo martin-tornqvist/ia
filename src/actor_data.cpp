@@ -437,10 +437,10 @@ void init_data_list()
     data[size_t(d.id)] = d;
     d.reset();
 
-    d.name_a = "A Floating Head";
-    d.name_the = "The Floating Head";
-    d.corpse_name_a = "A severed Head";
-    d.corpse_name_the = "The severed Head";
+    d.name_a = "A Floating head";
+    d.name_the = "The Floating head";
+    d.corpse_name_a = "A Severed head";
+    d.corpse_name_the = "The Severed head";
     d.id = Actor_id::floating_head;
     d.ai[size_t(Ai_id::looks)] = true;
     d.ai[size_t(Ai_id::makes_room_for_friend)] = true;
@@ -1467,7 +1467,7 @@ void init_data_list()
     d.hp = 2;
     d.spi = 6;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(Ability_id::melee, 12);
+    d.ability_vals.set_val(Ability_id::melee, 20);
     d.ability_vals.set_val(Ability_id::dodge_att, 40);
     d.natural_props[size_t(Prop_id::flying)] = true;
     d.natural_props[size_t(Prop_id::infravis)] = true;

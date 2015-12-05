@@ -1001,7 +1001,6 @@ void Trap_summon_mon::trigger()
     const std::string actor_name = actor_here->name_the();
     TRACE_VERBOSE << "Actor name: " << actor_name << std::endl;
 
-    map::player->incr_shock(5, Shock_src::misc);
     map::player->update_fov();
 
     if (CAN_SEE)
@@ -1015,11 +1014,16 @@ void Trap_summon_mon::trigger()
 
         msg += " the floor!";
 
-        msg_log::add(msg, clr_white, false, More_prompt_on_msg::yes);
+        msg_log::add(msg,
+                     clr_white,
+                     false,
+                     More_prompt_on_msg::yes);
     }
     else //Cannot see
     {
-        msg_log::add("I feel a peculiar energy around me!", clr_white, false,
+        msg_log::add("I feel a peculiar energy around me!",
+                     clr_white,
+                     false,
                      More_prompt_on_msg::yes);
     }
 
@@ -1036,21 +1040,36 @@ void Trap_summon_mon::trigger()
         }
     }
 
-    const size_t NR_ELEMENTS = summon_bucket.size();
-    TRACE << "Nr candidates: " << NR_ELEMENTS << std::endl;
-
-    if (NR_ELEMENTS == 0)
+    if (summon_bucket.empty())
     {
-        TRACE << "No eligible candidates found" << std::endl;
+        TRACE_VERBOSE << "No eligible candidates found" << std::endl;
     }
-    else //Eligible candidates found
+    else //Eligible monsters found
     {
-        const int       ELEMENT         = rnd::range(0, NR_ELEMENTS - 1);
-        const Actor_id  id_to_summon    = summon_bucket[ELEMENT];
-        TRACE << "Actor id: " << int(id_to_summon) << std::endl;
+        const size_t    IDX             = rnd::range(0, summon_bucket.size() - 1);
+        const Actor_id  id_to_summon    = summon_bucket[IDX];
+        TRACE_VERBOSE << "Actor id: " << int(id_to_summon) << std::endl;
 
-        actor_factory::summon(pos_, {1, id_to_summon}, Make_mon_aware::yes);
-        TRACE << "Monster was summoned" << std::endl;
+        std::vector<Mon*> summoned;
+
+        actor_factory::summon(pos_,
+                              std::vector<Actor_id>(1, id_to_summon),
+                              Make_mon_aware::yes,
+                              nullptr,
+                              &summoned);
+
+        assert(summoned.size() == 1);
+
+        TRACE_VERBOSE << "Monster was summoned" << std::endl;
+
+        Mon* const mon = summoned[0];
+
+        if (map::player->can_see_actor(*mon))
+        {
+            msg_log::add(mon->name_a() + " appears!");
+        }
+
+        map::player->incr_shock(5, Shock_src::misc);
     }
 
     TRACE_FUNC_END_VERBOSE;
