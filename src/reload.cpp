@@ -303,7 +303,7 @@ void player_arrange_pistol_mags()
             wpn->nr_ammo_loaded_ < PISTOL_MAX_AMMO)
         {
             --min_mag->ammo_;
-            ++wielded_pistol->nr_ammo_loaded_;
+            ++wpn->nr_ammo_loaded_;
 
             if (min_mag->ammo_ == 0)
             {
