@@ -28,7 +28,7 @@ void Feature::bump(Actor& actor_bumping)
     {
         if (actor_bumping.is_player())
         {
-            if (map::player->prop_handler().allow_see())
+            if (map::cells[pos_.x][pos_.y].is_seen_by_player)
             {
                 msg_log::add(data().msg_on_player_blocked);
             }
