@@ -206,7 +206,7 @@ void Rigid::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* act
 
     if (actor == map::player && dmg_method == Dmg_method::kick)
     {
-        const bool IS_BLIND    = !map::player->prop_handler().allow_see();
+        const bool IS_BLIND    = !map::cells[pos_.x][pos_.y].is_seen_by_player;
         const bool IS_BLOCKING = !can_move_cmn() && id() != Feature_id::stairs;
 
         if (IS_BLOCKING)
@@ -2075,7 +2075,7 @@ void Tomb::bump(Actor& actor_bumping)
         {
             msg_log::add("The tomb is empty.");
         }
-        else if (!map::player->prop_handler().allow_see())
+        else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
             msg_log::add("There is a stone box here.");
             render::draw_map_and_interface();
@@ -2411,7 +2411,7 @@ void Chest::bump(Actor& actor_bumping)
             msg_log::add("The chest is empty.");
             render::draw_map_and_interface();
         }
-        else if (!map::player->prop_handler().allow_see())
+        else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
             msg_log::add("There is a chest here.");
             render::draw_map_and_interface();
@@ -2525,7 +2525,7 @@ void Chest::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* con
         {
         case Dmg_method::kick:
         {
-            if (!map::player->prop_handler().allow_see())
+            if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
             {
                 //If player is blind, call the parent hit function instead
                 //(generic kicking)
@@ -3011,7 +3011,7 @@ void Fountain::bump(Actor& actor_bumping)
     {
         Prop_handler& prop_hlr = map::player->prop_handler();
 
-        if (!prop_hlr.allow_see())
+        if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
             msg_log::clear();
             msg_log::add("There is a fountain here. Drink from it? [y/n]");
@@ -3159,7 +3159,7 @@ void Cabinet::bump(Actor& actor_bumping)
         {
             msg_log::add("The cabinet is empty.");
         }
-        else if (!map::player->prop_handler().allow_see())
+        else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
             msg_log::add("There is a cabinet here.");
             render::draw_map_and_interface();
@@ -3278,7 +3278,7 @@ void Cocoon::bump(Actor& actor_bumping)
         {
             msg_log::add("The cocoon is empty.");
         }
-        else if (!map::player->prop_handler().allow_see())
+        else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
             msg_log::add("There is a cocoon here.");
             render::draw_map_and_interface();
