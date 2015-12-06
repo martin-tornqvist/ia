@@ -190,7 +190,7 @@ void Mon::act()
     //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
     if (leader_ != map::player && (tgt_ == nullptr || tgt_ == map::player))
     {
-        if (on_act())
+        if (on_act() == Did_action::yes)
         {
             return;
         }
@@ -976,11 +976,11 @@ void Zuul::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::zuul_bite));
 }
 
-bool Vortex::on_act()
+Did_action Vortex::on_act()
 {
     if (!is_alive())
     {
-        return false;
+        return Did_action::no;
     }
 
     if (pull_cooldown > 0)
@@ -990,7 +990,7 @@ bool Vortex::on_act()
 
     if (aware_counter_ <= 0 || pull_cooldown > 0)
     {
-        return false;
+        return Did_action::no;
     }
 
     const P& player_pos = map::player->pos;
@@ -1062,12 +1062,12 @@ bool Vortex::on_act()
 
                 game_time::tick();
 
-                return true;
+                return Did_action::yes;
             }
         }
     }
 
-    return false;
+    return Did_action::no;
 }
 
 void Dust_vortex::on_death()
@@ -1124,7 +1124,7 @@ void Fire_vortex::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::fire_vortex_engulf));
 }
 
-bool Ghost::on_act()
+Did_action Ghost::on_act()
 {
     if (
         is_alive()                                      &&
@@ -1156,10 +1156,10 @@ bool Ghost::on_act()
 
         game_time::tick();
 
-        return true;
+        return Did_action::yes;
     }
 
-    return false;
+    return Did_action::no;
 }
 
 void Ghost::mk_start_items()
@@ -1301,7 +1301,7 @@ void Mummy::mk_start_items()
     }
 }
 
-bool Mummy::on_act()
+Did_action Mummy::on_act()
 {
     //TODO: Below is an implementation for mummies turning friendly if player is wielding
     //the Staff of the Pharoh. It is commented out at least until after v17.0 is released.
@@ -1340,7 +1340,7 @@ bool Mummy::on_act()
 //        }
 //    }
 
-    return false;
+    return Did_action::no;
 }
 
 void Mummy_croc_head::mk_start_items()
@@ -1359,7 +1359,7 @@ void Mummy_unique::mk_start_items()
     spells_known_.push_back(spell_handling::random_spell_for_mon());
 }
 
-bool Khephren::on_act()
+Did_action Khephren::on_act()
 {
     if (is_alive() && aware_counter_ > 0 && !has_summoned_locusts)
     {
@@ -1411,12 +1411,12 @@ bool Khephren::on_act()
                 render::draw_map_and_interface();
                 has_summoned_locusts = true;
                 game_time::tick();
-                return true;
+                return Did_action::yes;
             }
         }
     }
 
-    return false;
+    return Did_action::no;
 }
 
 void Deep_one::mk_start_items()
@@ -1430,7 +1430,7 @@ void Ape::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::ape_maul));
 }
 
-bool Ape::on_act()
+Did_action Ape::on_act()
 {
     if (frenzy_cool_down_ > 0)
     {
@@ -1449,7 +1449,7 @@ bool Ape::on_act()
         prop_handler_->try_add_prop(new Prop_frenzied(Prop_turns::specific, NR_FRENZY_TURNS));
     }
 
-    return false;
+    return Did_action::no;
 }
 
 void Raven::mk_start_items()
@@ -1487,7 +1487,7 @@ void Hunting_horror::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::hunting_horror_bite));
 }
 
-bool Keziah_mason::on_act()
+Did_action Keziah_mason::on_act()
 {
     if (is_alive() && aware_counter_ > 0 && !has_summoned_jenkin)
     {
@@ -1530,13 +1530,13 @@ bool Keziah_mason::on_act()
                     jenkin->aware_counter_  = 999;
                     jenkin->leader_         = leader_ ? leader_ : this;
                     game_time::tick();
-                    return true;
+                    return Did_action::yes;
                 }
             }
         }
     }
 
-    return false;
+    return Did_action::no;
 }
 
 void Keziah_mason::mk_start_items()
@@ -1650,19 +1650,30 @@ void Color_oo_space::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::color_oo_space_touch));
 }
 
+Did_action Color_oo_space::on_act()
+{
+    Rigid* r = map::cells[pos.x][pos.y].rigid;
+
+    r->corrupt_color();
+
+    return Did_action::no;
+}
+
 Clr Color_oo_space::clr()
 {
-    return cur_color;
+    Clr clr = clr_magenta_lgt;
+
+    clr.r = rnd::range(40, 255);
+    clr.g = rnd::range(40, 255);
+    clr.b = rnd::range(40, 255);
+
+    return clr;
 }
 
 void Color_oo_space::on_std_turn_hook()
 {
     if (is_alive())
     {
-        cur_color.r = rnd::range(40, 255);
-        cur_color.g = rnd::range(40, 255);
-        cur_color.b = rnd::range(40, 255);
-
         restore_hp(1, false, Verbosity::silent);
 
         if (map::player->can_see_actor(*this))
@@ -1672,9 +1683,9 @@ void Color_oo_space::on_std_turn_hook()
     }
 }
 
-bool Spider::on_act()
+Did_action Spider::on_act()
 {
-    return false;
+    return Did_action::no;
 }
 
 void Green_spider::mk_start_items()
@@ -1723,7 +1734,7 @@ void Wolf::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::wolf_bite));
 }
 
-bool Worm_mass::on_act()
+Did_action Worm_mass::on_act()
 {
     if (
         is_alive()                                      &&
@@ -1756,12 +1767,12 @@ bool Worm_mass::on_act()
 
                 game_time::tick();
 
-                return true;
+                return Did_action::yes;
             }
         }
     }
 
-    return false;
+    return Did_action::no;
 }
 
 void Worm_mass::mk_start_items()
@@ -1769,7 +1780,7 @@ void Worm_mass::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::worm_mass_bite));
 }
 
-bool Giant_locust::on_act()
+Did_action Giant_locust::on_act()
 {
     if (
         is_alive()                                      &&
@@ -1802,12 +1813,12 @@ bool Giant_locust::on_act()
 
                 game_time::tick();
 
-                return true;
+                return Did_action::yes;
             }
         }
     }
 
-    return false;
+    return Did_action::no;
 }
 
 void Giant_locust::mk_start_items()
@@ -1815,9 +1826,9 @@ void Giant_locust::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::giant_locust_bite));
 }
 
-bool Lord_of_shadows::on_act()
+Did_action Lord_of_shadows::on_act()
 {
-    return false;
+    return Did_action::no;
 }
 
 void Lord_of_shadows::mk_start_items()
@@ -1825,7 +1836,7 @@ void Lord_of_shadows::mk_start_items()
 
 }
 
-bool Lord_of_spiders::on_act()
+Did_action Lord_of_spiders::on_act()
 {
     if (is_alive() && aware_counter_ > 0 && rnd::coin_toss())
     {
@@ -1859,7 +1870,7 @@ bool Lord_of_spiders::on_act()
         }
     }
 
-    return false;
+    return Did_action::no;
 }
 
 void Lord_of_spiders::mk_start_items()
@@ -1867,9 +1878,9 @@ void Lord_of_spiders::mk_start_items()
 
 }
 
-bool Lord_of_spirits::on_act()
+Did_action Lord_of_spirits::on_act()
 {
-    return false;
+    return Did_action::no;
 }
 
 void Lord_of_spirits::mk_start_items()
@@ -1877,9 +1888,9 @@ void Lord_of_spirits::mk_start_items()
 
 }
 
-bool Lord_of_pestilence::on_act()
+Did_action Lord_of_pestilence::on_act()
 {
-    return false;
+    return Did_action::no;
 }
 
 void Lord_of_pestilence::mk_start_items()
@@ -1887,16 +1898,16 @@ void Lord_of_pestilence::mk_start_items()
 
 }
 
-bool Zombie::on_act()
+Did_action Zombie::on_act()
 {
     return try_resurrect();
 }
 
-bool Zombie::try_resurrect()
+Did_action Zombie::try_resurrect()
 {
     if (!is_corpse() || has_resurrected)
     {
-        return false;
+        return Did_action::no;
     }
 
     const int MIN_NR_TURNS_UNTIL_RISE   = 3;
@@ -1933,11 +1944,11 @@ bool Zombie::try_resurrect()
 
             game_time::tick();
 
-            return true;
+            return Did_action::yes;
         }
     }
 
-    return false;
+    return Did_action::no;
 }
 
 void Zombie::on_death()
@@ -2035,11 +2046,11 @@ void Bloated_zombie::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::bloated_zombie_spit));
 }
 
-bool Major_clapham_lee::on_act()
+Did_action Major_clapham_lee::on_act()
 {
-    if (try_resurrect())
+    if (try_resurrect() == Did_action::yes)
     {
-        return true;
+        return Did_action::yes;
     }
 
     if (is_alive() && aware_counter_ > 0 && !has_summoned_tomb_legions)
@@ -2094,11 +2105,11 @@ bool Major_clapham_lee::on_act()
 
             game_time::tick();
 
-            return true;
+            return Did_action::yes;
         }
     }
 
-    return false;
+    return Did_action::no;
 }
 
 void Crawling_intestines::mk_start_items()
@@ -2122,7 +2133,7 @@ void Floating_head::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::floating_head_bite));
 }
 
-bool Floating_head::on_act()
+Did_action Floating_head::on_act()
 {
     if (is_alive() && rnd::one_in(12))
     {
@@ -2159,14 +2170,14 @@ bool Floating_head::on_act()
 
             map::player->prop_handler().try_add_prop(prop, Prop_src::intr);
 
-            return true;
+            return Did_action::yes;
         }
     }
 
-    return false;
+    return Did_action::no;
 }
 
-bool Mold::on_act()
+Did_action Mold::on_act()
 {
     if (
         is_alive()                                      &&
@@ -2174,8 +2185,11 @@ bool Mold::on_act()
         rnd::one_in(spawn_new_one_in_n))
     {
         bool blocked[MAP_W][MAP_H];
-        map_parse::run(cell_check::Blocks_actor(*this, true), blocked,
-                       Map_parse_mode::overwrite, Rect(pos - 1, pos + 1));
+
+        map_parse::run(cell_check::Blocks_actor(*this, true),
+                       blocked,
+                       Map_parse_mode::overwrite,
+                       Rect(pos - 1, pos + 1));
 
         for (const P& d : dir_utils::dir_list)
         {
@@ -2188,12 +2202,12 @@ bool Mold::on_act()
                 mold->aware_counter_    = aware_counter_;
                 mold->leader_           = leader_ ? leader_ : this;
                 game_time::tick();
-                return true;
+                return Did_action::yes;
             }
         }
     }
 
-    return false;
+    return Did_action::no;
 }
 
 void Mold::mk_start_items()
@@ -2207,20 +2221,16 @@ void Gas_spore::on_death()
 }
 
 The_high_priest::The_high_priest() :
-    Mon(),
-    has_greeted_player_         (false),
-    NR_TURNS_BETWEEN_CPY_       (15),
-    nr_turns_until_next_cpy_    (0) {}
+    Mon                 (),
+    has_greeted_player_ (false) {}
 
 void The_high_priest::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(Item_id::the_high_priest_claw));
 
-    spells_known_.push_back(new Spell_terrify_mon());
-    spells_known_.push_back(new Spell_disease());
+    spells_known_.push_back(new Spell_summon_mon());
     spells_known_.push_back(new Spell_burn());
     spells_known_.push_back(new Spell_paralyze_mon());
-    spells_known_.push_back(new Spell_slow_mon());
     spells_known_.push_back(new Spell_mi_go_hypno());
     spells_known_.push_back(new Spell_pest());
     spells_known_.push_back(new Spell_knock_back());
@@ -2228,7 +2238,10 @@ void The_high_priest::mk_start_items()
 
 void The_high_priest::on_death()
 {
-    msg_log::add("The ground rumbles...", clr_white, false, More_prompt_on_msg::yes);
+    msg_log::add("The ground rumbles...",
+                 clr_white,
+                 false,
+                 More_prompt_on_msg::yes);
 
     const P stair_pos(MAP_W - 2, 11);
 
@@ -2244,11 +2257,11 @@ void The_high_priest::on_std_turn_hook()
 
 }
 
-bool The_high_priest::on_act()
+Did_action The_high_priest::on_act()
 {
     if (!is_alive())
     {
-        return false;
+        return Did_action::no;
     }
 
     if (!has_greeted_player_)
@@ -2267,86 +2280,13 @@ bool The_high_priest::on_act()
         aware_counter_      = data_->nr_turns_aware;
     }
 
-    bool blocked_los[MAP_W][MAP_H];
-
-    const Rect fov_rect = fov::get_fov_rect(pos);
-
-    map_parse::run(cell_check::Blocks_los(),
-                   blocked_los,
-                   Map_parse_mode::overwrite,
-                   fov_rect);
-
-    if (nr_turns_until_next_cpy_ > 0 && can_see_actor(*map::player, blocked_los))
-    {
-        --nr_turns_until_next_cpy_;
-    }
-
-    //Summon copies, change position with one of them.
-    if (nr_turns_until_next_cpy_ <= 0 && tgt_)
-    {
-        bool blocked[MAP_W][MAP_H];
-        map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
-
-        std::vector<P> free_cells;
-        utils::mk_vector_from_bool_map(false, blocked, free_cells);
-
-        const int NR_SUMMONED = std::min(3, int(free_cells.size()));
-
-        for (int i = 0; i < NR_SUMMONED; ++i)
-        {
-            const int CELL_IDX = rnd::range(0, int(free_cells.size()));
-
-            const P& p(CELL_IDX);
-
-            std::vector<Mon*> summoned;
-
-            actor_factory::summon(p,
-                                  std::vector<Actor_id>(1, Actor_id::the_high_priest_cpy),
-                                  Make_mon_aware::yes,
-                                  this,
-                                  &summoned);
-
-            assert(summoned.size() == 1);
-
-            Mon* const mon = summoned.front();
-
-            if (i == 0)
-            {
-                pos.swap(mon->pos);
-                assert(pos != mon->pos);
-            }
-        }
-
-        game_time::tick();
-
-        nr_turns_until_next_cpy_ = NR_TURNS_BETWEEN_CPY_ + rnd::range(-5, 5);
-
-        return true;
-    }
-
     if (rnd::coin_toss())
     {
         map::cells[pos.x][pos.y].rigid->mk_bloody();
         map::cells[pos.x][pos.y].rigid->try_put_gore();
     }
 
-    return false;
-}
-
-void The_high_priest_cpy::mk_start_items()
-{
-    has_given_xp_for_spotting_ = true;
-
-    for (Actor* const actor : game_time::actors)
-    {
-        if (actor->id() == Actor_id::the_high_priest)
-        {
-            hp_max_ = std::max(2, actor->hp_max(true)   / 4);
-            hp_     = std::max(1, actor->hp()           / 4);
-        }
-    }
-
-    inv_->put_in_intrinsics(item_factory::mk(Item_id::the_high_priest_claw));
+    return Did_action::no;
 }
 
 Animated_wpn::Animated_wpn() :

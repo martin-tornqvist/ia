@@ -2617,12 +2617,13 @@ void init_data_list()
     d.glyph = 'O';
     d.color = clr_green_lgt;
     d.tile = Tile_id::ooze;
-    d.hp = 70;
+    d.hp = 35;
     d.spi = 40;
     d.dmg_melee = 10;
     d.ability_vals.set_val(Ability_id::melee, 50);
     d.natural_props[size_t(Prop_id::ooze)] = true;
     d.natural_props[size_t(Prop_id::ethereal)] = true;
+    d.natural_props[size_t(Prop_id::rPhys)] = true;
     d.natural_props[size_t(Prop_id::rFear)] = true;
     d.natural_props[size_t(Prop_id::rConf)] = true;
     d.natural_props[size_t(Prop_id::rPoison)] = true;
@@ -2634,9 +2635,11 @@ void init_data_list()
     d.nr_turns_aware = 250;
     d.can_open_doors = false;
     d.can_bash_doors = false;
-    d.descr = "A very peculiar floating speck of strange and shifting colors. "
-              "It is hard to tell what color it is exactly.";
-    d.is_auto_descr_allowed = false;
+    d.descr = "A peculiar floating speck of strange shifting colors. It is very confusing to "
+              "look at. Wherever they pass, they corrupt the environment around them. They are "
+              "invulnerable to attacks from common materials like iron or steel, but can be "
+              "destroyed by other forms of damage, such as fire or electricity.";
+    d.is_auto_descr_allowed = true;
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
@@ -2982,9 +2985,9 @@ void init_data_list()
     d.ai[size_t(Ai_id::looks)] = true;
     d.ai[size_t(Ai_id::makes_room_for_friend)] = false;
     d.ai[size_t(Ai_id::attacks)] = true;
-    d.ai[size_t(Ai_id::paths_to_tgt_when_aware)] = true;
+    d.ai[size_t(Ai_id::paths_to_tgt_when_aware)] = false;
     d.ai[size_t(Ai_id::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(Ai_id::moves_to_lair)] = false;
+    d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
     d.ranged_cooldown_turns = 0;
@@ -3021,11 +3024,6 @@ void init_data_list()
     d.is_humanoid = true;
     d.can_leave_corpse = false;
     d.can_bleed = false;
-    data[size_t(d.id)] = d;
-    d.reset();
-
-    d = data[size_t(Actor_id::the_high_priest)]; // NOTE: Copy of The High Priest
-    d.id = Actor_id::the_high_priest_cpy;
     data[size_t(d.id)] = d;
     d.reset();
 }

@@ -856,7 +856,7 @@ void Player::update_tmp_shock()
     }
 
     //Temporary shock from features
-    for (const P& d : dir_utils::dir_list)
+    for (const P& d : dir_utils::dir_list_w_center)
     {
         const P p(pos + d);
 

@@ -782,7 +782,9 @@ Spell_effect_noticed Spell_pest::cast_impl(Actor* const caster) const
 
 bool Spell_pest::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && rnd::coin_toss() && (mon.tgt_ || rnd::one_in(20));
+    return mon.tgt_         &&
+           rnd::one_in(3)   &&
+           (mon.tgt_ || rnd::one_in(30));
 }
 
 //------------------------------------------------------------ ANIMATE WEAPONS

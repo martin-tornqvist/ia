@@ -51,7 +51,7 @@ enum class Actor_id
     mold,
     gas_spore,
     death_fiend,
-    the_high_priest, the_high_priest_cpy,
+    the_high_priest,
 
     END
 };
