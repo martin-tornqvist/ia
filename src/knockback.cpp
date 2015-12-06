@@ -81,9 +81,9 @@ void try_knock_back(Actor&        defender,
 
             if (i == 0)
             {
-                if (IS_MSG_ALLOWED)
+                if (IS_MSG_ALLOWED && IS_PLAYER_SEE_DEF)
                 {
-                    if (IS_DEF_MON && IS_PLAYER_SEE_DEF)
+                    if (IS_DEF_MON)
                     {
                         msg_log::add(defender.name_the() + " is knocked back!");
                     }
