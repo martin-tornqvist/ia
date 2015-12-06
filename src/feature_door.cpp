@@ -564,16 +564,17 @@ void Door::bump(Actor& actor_bumping)
     if (actor_bumping.is_player())
     {
         if (is_secret_)
+        //In this case the door should be pretending to be a wall. To that end it should act exactly like a wall would in this situation.
         {
-            if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+            if (map::player->prop_handler().allow_see())
             {
                 TRACE << "Player bumped into secret door, with vision in cell" << endl;
-                msg_log::add("That way is blocked.");
+                msg_log::add(feature_data::data(Feature_id::wall).msg_on_player_blocked);
             }
             else
             {
                 TRACE << "Player bumped into secret door, without vision in cell" << endl;
-                msg_log::add("I bump into something.");
+                msg_log::add(feature_data::data(Feature_id::wall).msg_on_player_blocked_blind);
             }
 
             return;
