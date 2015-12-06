@@ -37,7 +37,7 @@ public:
                      const Dmg_method dmg_method,
                      Actor* const actor = nullptr);
 
-    virtual int shock_when_adj() const;
+    int shock_when_adj() const;
 
     void try_put_gore();
 
@@ -74,10 +74,13 @@ public:
         return burn_state_;
     }
 
+    void corrupt_color();
+
 protected:
     virtual void on_new_turn_hook() {}
 
-    virtual void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
+    virtual void on_hit(const Dmg_type dmg_type,
+                        const Dmg_method dmg_method,
                         Actor* const actor) = 0;
 
     virtual Clr clr_default() const = 0;
@@ -98,12 +101,17 @@ protected:
         (void)light;
     }
 
+    virtual int base_shock_when_adj() const;
+
     Tile_id gore_tile_;
     char gore_glyph_;
 
 private:
     bool is_bloody_;
     Burn_state burn_state_;
+
+    //Corrupted by Color out of space
+    int nr_turns_color_corrupted_;
 };
 
 enum class Floor_type {cmn, cave, stone_path};
@@ -398,7 +406,11 @@ private:
                 Actor* const actor) override;
 };
 
-enum class Statue_type {cmn, ghoul};
+enum class Statue_type
+{
+    cmn,
+    ghoul
+};
 
 class Statue: public Rigid
 {
@@ -412,8 +424,6 @@ public:
         return Feature_id::statue;
     }
 
-    int shock_when_adj() const override;
-
     std::string name(const Article article) const override;
 
     Tile_id tile() const override;
@@ -423,8 +433,11 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
+    void on_hit(const Dmg_type dmg_type,
+                const Dmg_method dmg_method,
                 Actor* const actor) override;
+
+    int base_shock_when_adj() const override;
 };
 
 class Pillar: public Rigid

@@ -24,14 +24,20 @@
 
 //--------------------------------------------------------------------- RIGID
 Rigid::Rigid(const P& feature_pos) :
-    Feature     (feature_pos),
-    gore_tile_  (Tile_id::empty),
-    gore_glyph_ (0),
-    is_bloody_  (false),
-    burn_state_ (Burn_state::not_burned) {}
+    Feature                     (feature_pos),
+    gore_tile_                  (Tile_id::empty),
+    gore_glyph_                 (0),
+    is_bloody_                  (false),
+    burn_state_                 (Burn_state::not_burned),
+    nr_turns_color_corrupted_   (-1) {}
 
 void Rigid::on_new_turn()
 {
+    if (nr_turns_color_corrupted_ > 0)
+    {
+        --nr_turns_color_corrupted_;
+    }
+
     if (burn_state_ == Burn_state::burning)
     {
         clear_gore();
@@ -246,6 +252,18 @@ void Rigid::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* act
 
 int Rigid::shock_when_adj() const
 {
+    int shock = base_shock_when_adj();
+
+    if (nr_turns_color_corrupted_ > 0)
+    {
+        shock += 5;
+    }
+
+    return shock;
+}
+
+int Rigid::base_shock_when_adj() const
+{
     return data().shock_when_adjacent;
 }
 
@@ -313,6 +331,11 @@ void Rigid::try_put_gore()
     }
 }
 
+void Rigid::corrupt_color()
+{
+    nr_turns_color_corrupted_ = rnd::range(200, 220);
+}
+
 Clr Rigid::clr() const
 {
     if (burn_state_ == Burn_state::burning)
@@ -321,7 +344,17 @@ Clr Rigid::clr() const
     }
     else
     {
-        if (is_bloody_)
+        if (nr_turns_color_corrupted_ > 0)
+        {
+            Clr clr = clr_magenta_lgt;
+
+            clr.r = rnd::range(40, 255);
+            clr.g = rnd::range(40, 255);
+            clr.b = rnd::range(40, 255);
+
+            return clr;
+        }
+        else if (is_bloody_)
         {
             return clr_red_lgt;
         }
@@ -859,7 +892,7 @@ Statue::Statue(const P& feature_pos) :
     Rigid   (feature_pos),
     type_   (rnd::one_in(8) ? Statue_type::ghoul : Statue_type::cmn) {}
 
-int Statue::shock_when_adj() const
+int Statue::base_shock_when_adj() const
 {
     return type_ == Statue_type::ghoul ? 15 : 0;
 }

@@ -114,9 +114,9 @@ protected:
                         const Dmg_method method,
                         const Allow_wound allow_wound) override;
 
-    virtual bool on_act()
+    virtual Did_action on_act()
     {
-        return false;
+        return Did_action::no;
     }
 
     virtual void on_std_turn_hook() {}
@@ -153,7 +153,9 @@ class Spider: public Mon
 public:
     Spider() : Mon() {}
     virtual ~Spider() {}
-    bool on_act() override;
+
+private:
+    Did_action on_act() override;
 };
 
 class Green_spider: public Spider
@@ -229,11 +231,11 @@ public:
         has_resurrected = false;
     }
     virtual ~Zombie() {}
-    virtual bool on_act() override;
     void on_death() override;
 
 protected:
-    bool try_resurrect();
+    virtual Did_action on_act() override;
+    Did_action try_resurrect();
     int dead_turn_counter;
     bool has_resurrected;
 };
@@ -267,14 +269,12 @@ class Major_clapham_lee: public Zombie_claw
 {
 public:
     Major_clapham_lee() :
-        Zombie_claw(), has_summoned_tomb_legions(false)
-    {
-    }
+        Zombie_claw(), has_summoned_tomb_legions(false) {}
     ~Major_clapham_lee() {}
 
-    bool on_act() override;
-
 private:
+    Did_action on_act() override;
+
     bool has_summoned_tomb_legions;
 };
 
@@ -320,7 +320,8 @@ public:
 
     void mk_start_items() override;
 
-    bool on_act() override;
+private:
+    Did_action on_act() override;
 };
 
 class Keziah_mason: public Mon
@@ -328,10 +329,12 @@ class Keziah_mason: public Mon
 public:
     Keziah_mason() : Mon(), has_summoned_jenkin(false) {}
     ~Keziah_mason() {}
-    bool on_act() override;
+
     void mk_start_items() override;
 
 private:
+    Did_action on_act() override;
+
     bool has_summoned_jenkin;
 };
 
@@ -402,8 +405,10 @@ class Lord_of_shadows: public Mon
 public:
     Lord_of_shadows() : Mon() {}
     ~Lord_of_shadows() {}
-    bool on_act() override;
     void mk_start_items() override;
+
+private:
+    Did_action on_act() override;
 };
 
 class Lord_of_spiders: public Mon
@@ -411,8 +416,11 @@ class Lord_of_spiders: public Mon
 public:
     Lord_of_spiders() : Mon() {}
     ~Lord_of_spiders() {}
-    bool on_act() override;
+
     void mk_start_items() override;
+
+private:
+    Did_action on_act() override;
 };
 
 class Lord_of_spirits: public Mon
@@ -420,8 +428,11 @@ class Lord_of_spirits: public Mon
 public:
     Lord_of_spirits() : Mon() {}
     ~Lord_of_spirits() {}
-    bool on_act() override;
+
     void mk_start_items() override;
+
+private:
+    Did_action on_act() override;
 };
 
 class Lord_of_pestilence: public Mon
@@ -429,8 +440,10 @@ class Lord_of_pestilence: public Mon
 public:
     Lord_of_pestilence() : Mon() {}
     ~Lord_of_pestilence() {}
-    bool on_act() override;
     void mk_start_items() override;
+
+private:
+    Did_action on_act() override;
 };
 
 class Fire_hound: public Mon
@@ -462,13 +475,16 @@ class Ghost: public Mon
 public:
     Ghost() : Mon() {}
     ~Ghost() {}
-    bool on_act() override;
+
     virtual void mk_start_items() override;
 
     std::string death_msg() const override
     {
         return "The Ghost is put to rest.";
     }
+
+private:
+    Did_action on_act() override;
 };
 
 class Phantasm: public Ghost
@@ -628,8 +644,10 @@ public:
     Ape() : Mon(), frenzy_cool_down_(0) {}
     ~Ape() {}
     void mk_start_items() override;
-    bool on_act() override;
+
 private:
+    Did_action on_act() override;
+
     int frenzy_cool_down_;
 };
 
@@ -640,7 +658,8 @@ public:
     ~Mummy() {}
     virtual void mk_start_items() override;
 
-    virtual bool on_act() override;
+private:
+    virtual Did_action on_act() override;
 };
 
 class Mummy_croc_head: public Mummy
@@ -667,8 +686,9 @@ public:
         has_summoned_locusts(false) {}
     ~Khephren() {}
 
-    bool on_act() override;
 private:
+    Did_action on_act() override;
+
     bool has_summoned_locusts;
 };
 
@@ -700,9 +720,12 @@ class Worm_mass: public Mon
 public:
     Worm_mass() : Mon(), spawn_new_one_in_n(10) {}
     ~Worm_mass() {}
-    bool on_act() override;
+
     void mk_start_items() override;
+
 private:
+    Did_action on_act() override;
+
     int spawn_new_one_in_n;
 };
 
@@ -711,9 +734,11 @@ class Giant_locust: public Mon
 public:
     Giant_locust() : Mon(), spawn_new_one_in_n(40) {}
     ~Giant_locust() {}
-    bool on_act() override;
+
     void mk_start_items() override;
+
 private:
+    Did_action on_act() override;
     int spawn_new_one_in_n;
 };
 
@@ -723,11 +748,12 @@ public:
     Vortex() : Mon(), pull_cooldown(0) {}
     virtual ~Vortex() {}
 
-    bool on_act() override;
-
     virtual void mk_start_items() = 0;
     virtual void on_death() = 0;
+
 private:
+    Did_action on_act() override;
+
     int pull_cooldown;
 };
 
@@ -800,8 +826,7 @@ public:
 class Color_oo_space: public Ooze
 {
 public:
-    Color_oo_space() : Ooze(),
-        cur_color(clr_magenta_lgt) {}
+    Color_oo_space() : Ooze() {}
 
     ~Color_oo_space() {}
 
@@ -815,8 +840,8 @@ public:
     }
 
 private:
+    Did_action on_act() override;
     void on_std_turn_hook() override;
-    Clr cur_color;
 };
 
 class Mold: public Mon
@@ -824,8 +849,6 @@ class Mold: public Mon
 public:
     Mold() : Mon(), spawn_new_one_in_n(28) {}
     ~Mold() {}
-
-    bool on_act() override;
 
     void mk_start_items() override;
 
@@ -835,6 +858,8 @@ public:
     }
 
 private:
+    Did_action on_act() override;
+
     int spawn_new_one_in_n;
 };
 
@@ -857,29 +882,13 @@ public:
 
     void mk_start_items() override;
     void on_death() override;
-    bool on_act() override;
+
 private:
-    void on_std_turn_hook()   override;
+    Did_action on_act() override;
 
-    bool      has_greeted_player_;
-    const int NR_TURNS_BETWEEN_CPY_;
-    int       nr_turns_until_next_cpy_;
-};
+    void on_std_turn_hook() override;
 
-class The_high_priest_cpy: public Mon
-{
-public:
-    The_high_priest_cpy() :
-        Mon() {}
-
-    ~The_high_priest_cpy() {}
-
-    void mk_start_items() override;
-
-    std::string death_msg() const override
-    {
-        return "The Copy vanishes.";
-    }
+    bool has_greeted_player_;
 };
 
 class Animated_wpn: public Mon
