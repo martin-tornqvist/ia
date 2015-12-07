@@ -104,9 +104,9 @@ void try_knock_back(Actor&        defender,
                 sdl_wrapper::sleep(config::delay_projectile_draw());
             }
 
-            if (IS_CELL_BOTTOMLESS && !defender.has_prop(Prop_id::flying))
+            if (IS_CELL_BOTTOMLESS && !defender.has_prop(Prop_id::flying) && IS_PLAYER_SEE_DEF)
             {
-                if (IS_DEF_MON && IS_PLAYER_SEE_DEF)
+                if (IS_DEF_MON)
                 {
                     msg_log::add(defender.name_the() + " plummets down the depths.",
                                  clr_msg_good);
