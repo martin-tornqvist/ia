@@ -187,14 +187,14 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                         destr_chance.numerator += 2;
                     }
 
-                    if (rnd::fraction(destr_chance))
+                    if (destr_chance.roll())
                     {
 
                     }
                 }
                 else //Is monster
                 {
-                    if (rnd::fraction(destr_chance))
+                    if (destr_chance.roll())
                     {
 
                     }
@@ -248,7 +248,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 
                     if (destr_chance.numerator > 0)
                     {
-                        if (rnd::fraction(destr_chance))
+                        if (destr_chance.roll())
                         {
                             Snd snd("", Sfx_id::door_break, Ignore_msg_if_origin_seen::yes, pos_,
                                     actor, Snd_vol::low, Alerts_mon::yes);
@@ -303,7 +303,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 
                     if (IS_WEAK) {destr_chance.numerator = 0;}
 
-                    if (rnd::fraction(destr_chance))
+                    if (destr_chance.roll())
                     {
                         Snd snd("I hear a door crashing open!",
                                 Sfx_id::door_break, Ignore_msg_if_origin_seen::yes, pos_, actor,

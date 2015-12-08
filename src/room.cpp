@@ -361,7 +361,7 @@ int Std_room::place_auto_features()
 
     std::vector<int> spawn_count(feature_bucket.size(), 0);
 
-    int nr_features_left_to_place   = rnd::range(nr_auto_features_allowed());
+    int nr_features_left_to_place   = nr_auto_features_allowed().roll();
     int nr_features_placed          = 0;
 
     while (true)

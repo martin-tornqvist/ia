@@ -1805,7 +1805,7 @@ Prop::Prop(Prop_id id, Prop_turns turns_init, int nr_turns) :
         }
 #endif // NDEBUG
         assert(nr_turns_left_ == -1);
-        nr_turns_left_ = rnd::range(data_.std_rnd_turns);
+        nr_turns_left_ = data_.std_rnd_turns.roll();
         break;
 
     case Prop_turns::indefinite:

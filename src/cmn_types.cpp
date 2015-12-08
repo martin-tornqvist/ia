@@ -1,4 +1,5 @@
 #include "cmn_types.hpp"
+#include "utils.hpp"
 
 //============ Cell_render_data ===============================
 Cell_render_data::Cell_render_data() :
@@ -142,6 +143,16 @@ int Dice_param::max() const
     return (rolls * sides) + plus;
 }
 
+int Dice_param::min() const
+{
+    return (rolls + plus);
+}
+
+int Dice_param::roll() const
+{
+    return rnd::dice(rolls,sides) + plus;
+}
+
 //============ Range ==========================================
 Range::Range() :
     min(-1),
@@ -172,6 +183,11 @@ void Range::set(const int MIN, const int MAX)
     max = MAX;
 }
 
+int Range::roll() const
+{
+    return rnd::range(min,max);
+}
+
 //============ Fraction =======================================
 Fraction::Fraction() : numerator(-1), denominator(-1) {}
 
@@ -182,6 +198,11 @@ void Fraction::set(const int NUMERATOR, const int DENOMINATOR)
 {
     numerator   = NUMERATOR;
     denominator = DENOMINATOR;
+}
+
+bool Fraction::roll() const
+{
+    return rnd::fraction(numerator, denominator);
 }
 
 //============ Item_name =======================================

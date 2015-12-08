@@ -245,7 +245,7 @@ void Trap::trigger_start(const Actor* actor)
 
     //Get a randomized value for number of remaining turns
     const Range turns_range     = trap_impl_->nr_turns_range_to_trigger();
-    const int   RND_NR_TURNS    = rnd::range(turns_range);
+    const int   RND_NR_TURNS    = turns_range.roll();
 
     //Set number of remaining turns to the randomized value if number of turns
     //was not already set, or if the new value will make it trigger sooner.

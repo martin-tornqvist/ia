@@ -346,7 +346,7 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
         {
             const Range cost = spi_cost(false, caster);
 
-            caster->hit_spi(rnd::range(cost), Verbosity::silent);
+            caster->hit_spi(cost.roll(), Verbosity::silent);
         }
 
         Spell_effect_noticed is_noticed = Spell_effect_noticed::no;
@@ -481,7 +481,7 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
     tgt->prop_handler().try_add_prop(new Prop_paralyzed(Prop_turns::specific, 2));
 
     Range dmg_range(4, 10);
-    const int DMG = is_warlock_charged ? dmg_range.max : rnd::range(dmg_range);
+    const int DMG = is_warlock_charged ? dmg_range.max : dmg_range.roll();
 
     tgt->hit(DMG, Dmg_type::physical, Dmg_method::END, Allow_wound::no);
 
@@ -574,7 +574,7 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
 
         tgt->prop_handler().try_add_prop(new Prop_paralyzed(Prop_turns::specific, 2));
 
-        const int DMG = is_warlock_charged ? dmg_range.max : rnd::range(dmg_range);
+        const int DMG = is_warlock_charged ? dmg_range.max : dmg_range.roll();
 
         tgt->hit(DMG, Dmg_type::physical, Dmg_method::END, Allow_wound::no);
 

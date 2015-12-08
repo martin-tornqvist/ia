@@ -52,11 +52,6 @@ int dice(const int ROLLS, const int SIDES)
     return roll(ROLLS, SIDES);
 }
 
-int dice(const Dice_param& p)
-{
-    return roll(p.rolls, p.sides);
-}
-
 bool coin_toss()
 {
     return roll(1, 2) == 2;
@@ -93,11 +88,6 @@ bool fraction(const int NUMER, const int DENOM)
     return roll(1, DENOM) <= NUMER;
 }
 
-bool fraction(const Fraction& f)
-{
-    return fraction(f.numerator, f.denominator);
-}
-
 bool one_in(const int N)
 {
     return fraction(1, N);
@@ -109,11 +99,6 @@ int range(const int V1, const int V2)
     const int MAX = std::max(V1, V2);
 
     return MIN + roll(1, MAX - MIN + 1) - 1;
-}
-
-int range(const Range& value_range)
-{
-    return range(value_range.min, value_range.max);
 }
 
 int percent()

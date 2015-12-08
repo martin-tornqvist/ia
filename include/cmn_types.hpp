@@ -336,6 +336,10 @@ struct Dice_param
 
     int max() const;
 
+    int min() const;
+
+    int roll() const;
+
     int rolls, sides, plus;
 };
 
@@ -353,6 +357,8 @@ struct Range
 
     void set(const int MIN, const int MAX);
 
+    int roll() const;
+
     int min, max;
 };
 
@@ -363,6 +369,8 @@ struct Fraction
     Fraction(const int NUMERATOR, const int DENOMINATOR);
 
     void set(const int NUMERATOR, const int DENOMINATOR);
+
+    bool roll() const;
 
     int numerator, denominator;
 };

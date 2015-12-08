@@ -419,7 +419,7 @@ bool mk_rats_in_the_walls_lvl()
                 {
                     if (
                         (templ_cell.ch == ',' || templ_cell.ch == 'r') &&
-                        rnd::fraction(bones_one_in_n))
+                        bones_one_in_n.roll())
                     {
                         map::put(new Bones(p));
                     }
@@ -470,7 +470,7 @@ bool mk_rats_in_the_walls_lvl()
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            if (!blocked[x][y] && rnd::fraction(fraction_spawned))
+            if (!blocked[x][y] && fraction_spawned.roll())
             {
                 const P p(x, y);
 
