@@ -221,16 +221,7 @@ enum class Inf_screen_type
 
 struct Cell_render_data
 {
-    Cell_render_data() :
-        clr                         (clr_black),
-        clr_bg                      (clr_black),
-        tile                        (Tile_id::empty),
-        glyph                       (' '),
-        lifebar_length              (-1),
-        is_light_fade_allowed       (true),
-        is_marked_lit               (false),
-        is_living_actor_seen_here   (false),
-        is_aware_of_mon_here        (false) {}
+    Cell_render_data();
 
     Clr     clr;
     Clr     clr_bg;
@@ -243,17 +234,11 @@ struct Cell_render_data
 
 struct Str_and_clr
 {
-    Str_and_clr() : str(""), clr(clr_black) {}
+    Str_and_clr();
 
-    Str_and_clr(const std::string& text, const Clr& color) :
-        str(text), clr(color) {}
+    Str_and_clr(const std::string& text, const Clr& color);
 
-    Str_and_clr& operator=(const Str_and_clr& other)
-    {
-        str = other.str;
-        clr = other.clr;
-        return *this;
-    }
+    Str_and_clr& operator=(const Str_and_clr& other);
 
     std::string str;
     Clr clr;
@@ -262,57 +247,45 @@ struct Str_and_clr
 class P
 {
 public:
-    P() :
-        x(0),
-        y(0) {}
+    P();
 
-    P(const int X, const int Y) :
-        x(X),
-        y(Y) {}
+    P(const int X, const int Y);
 
-    P(const P& p) :
-        x(p.x),
-        y(p.y) {}
+    P(const P& p);
 
-    P(const int V) :
-        x(V),
-        y(V) {}
+    P(const int V);
 
-    P& operator=        (const P&   p) {x = p.x;  y = p.y;  return *this;}
-    P& operator/=       (const int  V) {x /= V;   y /= V;   return *this;}
-    P& operator+=       (const P&   o) {x += o.x; y += o.y; return *this;}
-    P& operator-=       (const P&   o) {x -= o.x; y -= o.y; return *this;}
+    P& operator=        (const P&   p);
+    P& operator/=       (const int  V);
+    P& operator+=       (const P&   o);
+    P& operator-=       (const P&   o);
 
-    P       operator+   (const P&   p) const {return P(x + p.x, y + p.y);}
-    P       operator+   (const int  V) const {return P(x + V,   y + V);}
-    P       operator-   (const P&   p) const {return P(x - p.x, y - p.y);}
-    P       operator-   (const int  V) const {return P(x - V,   y - V);}
-    P       operator/   (const int  V) const {return P(x / V,   y / V);}
-    P       operator/   (const P&   p) const {return P(x / p.x, y / p.y);}
-    P       operator*   (const int  V) const {return P(x * V,   y * V);}
-    P       operator*   (const P&   p) const {return P(x * p.x, y * p.y);}
+    P       operator+   (const P&   p) const;
+    P       operator+   (const int  V) const;
+    P       operator-   (const P&   p) const;
+    P       operator-   (const int  V) const;
+    P       operator/   (const int  V) const;
+    P       operator/   (const P&   p) const;
+    P       operator*   (const int  V) const;
+    P       operator*   (const P&   p) const;
 
-    bool    operator==  (const P&   p) const {return x == p.x && y == p.y;}
-    bool    operator!=  (const P&   p) const {return x != p.x || y != p.y;}
-    bool    operator!=  (const int  V) const {return x != V   || y != V;}
-    bool    operator>   (const P&   p) const {return x >  p.x && y > p.y;}
-    bool    operator>   (const int  V) const {return x >  V   && y > V;}
-    bool    operator<   (const P&   p) const {return x <  p.x && y < p.y;}
-    bool    operator<   (const int  V) const {return x <  V   && y < V;}
-    bool    operator>=  (const P&   p) const {return x >= p.x && y >= p.y;}
-    bool    operator>=  (const int  V) const {return x >= V   && y >= V;}
-    bool    operator<=  (const P&   p) const {return x <= p.x && y <= p.y;}
-    bool    operator<=  (const int  V) const {return x <= V   && y <= V;}
+    bool    operator==  (const P&   p) const;
+    bool    operator!=  (const P&   p) const;
+    bool    operator!=  (const int  V) const;
+    bool    operator>   (const P&   p) const;
+    bool    operator>   (const int  V) const;
+    bool    operator<   (const P&   p) const;
+    bool    operator<   (const int  V) const;
+    bool    operator>=  (const P&   p) const;
+    bool    operator>=  (const int  V) const;
+    bool    operator<=  (const P&   p) const;
+    bool    operator<=  (const int  V) const;
 
-    P signs() const
-    {
-        return P(x == 0 ? 0 : x > 0 ? 1 : -1,
-                 y == 0 ? 0 : y > 0 ? 1 : -1);
-    }
+    P signs() const;
 
-    void set(const int x_, const int y_)    {x = x_;  y = y_;}
-    void set(const P& p)                    {x = p.x; y = p.y;}
-    void swap(P& p)                         {P p_temp(p); p = *this; set(p_temp);}
+    void set(const int x_, const int y_);
+    void set(const P& p);
+    void swap(P& p);
 
     int x, y;
 };
@@ -320,28 +293,20 @@ public:
 class Rect
 {
 public:
-    Rect() :
-        p0(P()),
-        p1(P()) {}
+    Rect();
 
-    Rect(const P& p0_, const P& p1_) :
-        p0(p0_),
-        p1(p1_) {}
+    Rect(const P& p0_, const P& p1_);
 
-    Rect(const int X0, const int Y0, const int X1, const int Y1) :
-        p0(P(X0, Y0)),
-        p1(P(X1, Y1)) {}
+    Rect(const int X0, const int Y0, const int X1, const int Y1);
 
-    Rect(const Rect& r) :
-        p0(r.p0),
-        p1(r.p1) {}
+    Rect(const Rect& r);
 
-    int w()         const {return p1.x - p0.x + 1;}
-    int h()         const {return p1.y - p0.y + 1;}
-    P dims()        const {return {w(), h()};}
-    int min_dim()   const {return std::min(w(), h());}
-    int max_dim()   const {return std::max(w(), h());}
-    P center_pos()  const {return ((p1 + p0) / 2);}
+    int w()         const;
+    int h()         const;
+    P dims()        const;
+    int min_dim()   const;
+    int max_dim()   const;
+    P center_pos()  const;
 
     P p0;
     P p1;
@@ -349,15 +314,11 @@ public:
 
 struct Pos_and_val
 {
-    Pos_and_val() : pos(P()), val(-1) {}
+    Pos_and_val();
 
-    Pos_and_val(const P& pos_, const int val_) :
-        pos     (pos_),
-        val     (val_) {}
+    Pos_and_val(const P& pos_, const int val_);
 
-    Pos_and_val(const Pos_and_val& other) :
-        pos     (other.pos),
-        val     (other.val) {}
+    Pos_and_val(const Pos_and_val& other);
 
     P pos;
     int val;
@@ -365,83 +326,43 @@ struct Pos_and_val
 
 struct Dice_param
 {
-    Dice_param() :
-        rolls   (0),
-        sides   (0),
-        plus    (0) {}
+    Dice_param();
 
-    Dice_param(const int ROLLS, const int SIDES, const int PLUS = 0) :
-        rolls   (ROLLS),
-        sides   (SIDES),
-        plus    (PLUS) {}
+    Dice_param(const int ROLLS, const int SIDES, const int PLUS = 0);
 
-    Dice_param(const Dice_param& other) :
-        rolls   (other.rolls),
-        sides   (other.sides),
-        plus    (other.plus) {}
+    Dice_param(const Dice_param& other);
 
-    Dice_param& operator=(const Dice_param& other)
-    {
-        rolls = other.rolls;
-        sides = other.sides;
-        plus  = other.plus;
-        return *this;
-    }
+    Dice_param& operator=(const Dice_param& other);
 
-    int max() const
-    {
-        return (rolls * sides) + plus;
-    }
+    int max() const;
 
     int rolls, sides, plus;
 };
 
 struct Range
 {
-    Range() :
-        min(-1),
-        max(-1) {}
+    Range();
 
-    Range(const int MIN, const int MAX) :
-        min(MIN),
-        max(MAX) {}
+    Range(const int MIN, const int MAX);
 
-    Range(const Range& other) :
-        Range(other.min, other.max) {}
+    Range(const Range& other);
 
-    int len() const
-    {
-        return max - min + 1;
-    }
+    int len() const;
 
-    bool is_in_range(const int V) const
-    {
-        assert(max >= min);
+    bool is_in_range(const int V) const;
 
-        return V >= min && V <= max;
-    }
-
-    void set(const int MIN, const int MAX)
-    {
-        min = MIN;
-        max = MAX;
-    }
+    void set(const int MIN, const int MAX);
 
     int min, max;
 };
 
 struct Fraction
 {
-    Fraction() : numerator(-1), denominator(-1) {}
+    Fraction();
 
-    Fraction(const int NUMERATOR, const int DENOMINATOR) :
-        numerator(NUMERATOR), denominator(DENOMINATOR) {}
+    Fraction(const int NUMERATOR, const int DENOMINATOR);
 
-    void set(const int NUMERATOR, const int DENOMINATOR)
-    {
-        numerator   = NUMERATOR;
-        denominator = DENOMINATOR;
-    }
+    void set(const int NUMERATOR, const int DENOMINATOR);
 
     int numerator, denominator;
 };
@@ -472,33 +393,18 @@ struct Item_name
 {
     Item_name(const std::string& name,
               const std::string& name_pl,
-              const std::string& name_a)
-    {
-        names[size_t(Item_ref_type::plain)]   = name;
-        names[size_t(Item_ref_type::plural)]  = name_pl;
-        names[size_t(Item_ref_type::a)]       = name_a;
-    }
+              const std::string& name_a);
 
-    Item_name()
-    {
-        for (size_t i = 0; i < size_t(Item_ref_type::END); i++)
-        {
-            names[i] = "";
-        }
-    }
+    Item_name();
 
     std::string names[size_t(Item_ref_type::END)];
 };
 
 struct Item_att_msgs
 {
-    Item_att_msgs() :
-        player(""),
-        other("") {}
+    Item_att_msgs();
 
-    Item_att_msgs(const std::string& player_, const std::string& other_) :
-        player(player_),
-        other(other_) {}
+    Item_att_msgs(const std::string& player_, const std::string& other_);
 
     std::string player, other;
 };
