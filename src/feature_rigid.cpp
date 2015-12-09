@@ -206,12 +206,13 @@ void Rigid::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* act
 
     if (actor == map::player && dmg_method == Dmg_method::kick)
     {
-        const bool IS_BLIND    = !map::cells[pos_.x][pos_.y].is_seen_by_player;
-        const bool IS_BLOCKING = !can_move_cmn() && id() != Feature_id::stairs;
+        const bool CAN_SEE_FEATURE  = !map::cells[pos_.x][pos_.y].is_seen_by_player;
+        const bool IS_BLOCKING      = !can_move_cmn() && id() != Feature_id::stairs;
 
         if (IS_BLOCKING)
         {
-            const std::string rigid_name = IS_BLIND ? "something" : name(Article::a);
+            const std::string rigid_name = CAN_SEE_FEATURE ? "something" : name(Article::a);
+
             msg_log::add("I kick " + rigid_name + "!");
 
             if (rnd::one_in(4))
@@ -836,7 +837,8 @@ Clr Bones::clr_default() const
 Grave_stone::Grave_stone(const P& feature_pos) :
     Rigid(feature_pos) {}
 
-void Grave_stone::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
+void Grave_stone::on_hit(const Dmg_type dmg_type,
+                         const Dmg_method dmg_method,
                          Actor* const actor)
 {
     (void)dmg_type; (void)dmg_method; (void)actor;

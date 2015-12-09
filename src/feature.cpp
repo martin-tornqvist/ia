@@ -15,8 +15,6 @@
 #include "map.hpp"
 #include "feature_data.hpp"
 
-using namespace std;
-
 const Feature_data_t& Feature::data() const
 {
     return feature_data::data(id());

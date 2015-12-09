@@ -220,6 +220,7 @@
 		<Unit filename="../src/character_descr.cpp" />
 		<Unit filename="../src/character_lines.cpp" />
 		<Unit filename="../src/close.cpp" />
+		<Unit filename="../src/cmn_types.cpp" />
 		<Unit filename="../src/config.cpp" />
 		<Unit filename="../src/converters.cpp" />
 		<Unit filename="../src/create_character.cpp" />

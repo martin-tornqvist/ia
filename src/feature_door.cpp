@@ -276,8 +276,13 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                         {
                             const Sfx_id sfx = is_secret_ ? Sfx_id::END : Sfx_id::door_bang;
 
-                            Snd snd("", sfx, Ignore_msg_if_origin_seen::no, pos_, actor,
-                                    Snd_vol::low, Alerts_mon::yes);
+                            Snd snd("",
+                                    sfx,
+                                    Ignore_msg_if_origin_seen::no,
+                                    pos_,
+                                    actor,
+                                    Snd_vol::low,
+                                    Alerts_mon::yes);
 
                             snd_emit::run(snd);
                         }
@@ -286,12 +291,19 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                     {
                         if (IS_CELL_SEEN && !is_secret_)
                         {
-                            Snd snd("", Sfx_id::door_bang, Ignore_msg_if_origin_seen::no, pos_,
-                                    actor, Snd_vol::low, Alerts_mon::yes);
+                            Snd snd("",
+                                    Sfx_id::door_bang,
+                                    Ignore_msg_if_origin_seen::no,
+                                    pos_,
+                                    actor,
+                                    Snd_vol::low,
+                                    Alerts_mon::yes);
 
                             snd_emit::run(snd);
 
-                            msg_log::add("It seems futile.", clr_msg_note, false,
+                            msg_log::add("It seems futile.",
+                                         clr_msg_note,
+                                         false,
                                          More_prompt_on_msg::yes);
                         }
                     }
@@ -306,8 +318,13 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                     if (destr_chance.roll())
                     {
                         Snd snd("I hear a door crashing open!",
-                                Sfx_id::door_break, Ignore_msg_if_origin_seen::yes, pos_, actor,
-                                Snd_vol::high, Alerts_mon::no);
+                                Sfx_id::door_break,
+                                Ignore_msg_if_origin_seen::yes,
+                                pos_,
+                                actor,
+                                Snd_vol::high,
+                                Alerts_mon::no);
+
                         snd_emit::run(snd);
 
                         if (map::player->can_see_actor(*actor))
@@ -324,8 +341,13 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                     else //Not broken
                     {
                         Snd snd("I hear a loud banging on a door.",
-                                Sfx_id::door_bang, Ignore_msg_if_origin_seen::no, pos_,
-                                actor, Snd_vol::low, Alerts_mon::no);
+                                Sfx_id::door_bang,
+                                Ignore_msg_if_origin_seen::no,
+                                pos_,
+                                actor,
+                                Snd_vol::low,
+                                Alerts_mon::no);
+
                         snd_emit::run(snd);
                     }
                 }
@@ -335,7 +357,9 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
             case Matl::metal:
                 if (IS_PLAYER && IS_CELL_SEEN && !is_secret_)
                 {
-                    msg_log::add("It seems futile.", clr_msg_note, false,
+                    msg_log::add("It seems futile.",
+                                 clr_msg_note,
+                                 false,
                                  More_prompt_on_msg::yes);
                 }
                 break;
@@ -564,14 +588,15 @@ void Door::bump(Actor& actor_bumping)
     if (actor_bumping.is_player())
     {
         if (is_secret_)
-        //In this case the door should be pretending to be a wall. To that end it should act exactly like a wall would in this situation.
         {
+            //Print messages as if this was a wall
+
             if (map::cells[pos_.x][pos_.y].is_seen_by_player)
             {
                 TRACE << "Player bumped into secret door, with vision in cell" << endl;
                 msg_log::add(feature_data::data(Feature_id::wall).msg_on_player_blocked);
             }
-            else
+            else //Not seen by player
             {
                 TRACE << "Player bumped into secret door, without vision in cell" << endl;
                 msg_log::add(feature_data::data(Feature_id::wall).msg_on_player_blocked_blind);
