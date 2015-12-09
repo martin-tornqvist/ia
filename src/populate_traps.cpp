@@ -93,7 +93,7 @@ void populate_std_lvl()
                 break;
             }
 
-            if (chance_for_trapped_room.numerator != -1 && rnd::fraction(chance_for_trapped_room))
+            if (chance_for_trapped_room.numerator != -1 && chance_for_trapped_room.roll())
             {
                 TRACE_VERBOSE << "Trapping non-plain room" << std::endl;
 

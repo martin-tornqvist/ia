@@ -194,7 +194,7 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
         if (attacker && attacker->has_prop(Prop_id::weakened))
         {
             //Weak attack (min damage)
-            dmg             = dmg_dice.rolls + dmg_dice.plus;
+            dmg             = dmg_dice.min();
             is_weak_attack  = true;
         }
         else //Attacker not weakened, or not an actor attacking (e.g. an attack from a trap)
@@ -202,11 +202,11 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
             if (att_result == success_critical)
             {
                 //Critical hit (max damage)
-                dmg = std::max(1, (dmg_dice.rolls * dmg_dice.sides) + dmg_dice.plus);
+                dmg = std::max(1, dmg_dice.max());
             }
             else //Not critical hit
             {
-                dmg = std::max(1, rnd::dice(dmg_dice));
+                dmg = std::max(1, dmg_dice.roll());
             }
 
             if (attacker && is_attacker_aware && !is_defender_aware)
@@ -355,7 +355,7 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
                 dmg_dice.plus += 2;
             }
 
-            dmg = player_aim_x3 ? dmg_dice.max() : rnd::dice(dmg_dice);
+            dmg = player_aim_x3 ? dmg_dice.max() : dmg_dice.roll();
 
             //Outside effective range limit?
             if (!wpn.is_in_effective_range_lmt(attacker_orign, defender->pos))
@@ -482,7 +482,7 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
                 dmg_dice.plus += 2;
             }
 
-            dmg = player_aim_x3 ? dmg_dice.max() : rnd::dice(dmg_dice);
+            dmg = player_aim_x3 ? dmg_dice.max() : dmg_dice.roll();
 
             //Outside effective range limit?
             if (!item.is_in_effective_range_lmt(attacker->pos, defender->pos))
@@ -677,7 +677,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
             //Determine the relative "size" of the hit
             const Dice_param dmg_dice = wpn.dmg(Att_mode::melee, att_data.attacker);
 
-            const int MAX_DMG = (dmg_dice.rolls * dmg_dice.sides) + dmg_dice.plus;
+            const int MAX_DMG = dmg_dice.max();
 
             Melee_hit_size hit_size = Melee_hit_size::small;
 
@@ -863,7 +863,7 @@ void print_proj_at_actor_msgs(const Ranged_att_data& data, const bool IS_HIT, co
         //Punctuation depends on attack strength
         const Dice_param dmg_dice = wpn.dmg(Att_mode::ranged, data.attacker);
 
-        const int   MAX_DMG = (dmg_dice.rolls * dmg_dice.sides) + dmg_dice.plus;
+        const int   MAX_DMG = dmg_dice.max();
 
         std::string dmg_punct = ".";
 

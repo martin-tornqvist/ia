@@ -20,20 +20,14 @@ void seed(const unsigned long val);
 //If not called with a positive non-zero number of sides, this will always return zero.
 int dice(const int ROLLS, const int SIDES);
 
-int dice(const Dice_param& p);
-
 bool coin_toss();
 
 bool fraction(const int NUMER, const int DENOM);
-
-bool fraction(const Fraction& f);
 
 bool one_in(const int N);
 
 //Can be called with any range (positive or negative), V2 does *not* have to be bigger than V1.
 int range(const int V1, const int V2);
-
-int range(const Range& value_range);
 
 int percent();
 

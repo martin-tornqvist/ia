@@ -2687,7 +2687,7 @@ void Chest::disarm()
 
             const Fraction disarm_chance(4, 5);
 
-            if (rnd::fraction(disarm_chance))
+            if (disarm_chance.roll())
             {
                 msg_log::add("I successfully disarm it!");
                 render::draw_map_and_interface();
@@ -3257,7 +3257,7 @@ Cocoon::Cocoon(const P& feature_pos) :
 
         const Fraction fraction_empty(6, 10);
 
-        const int NR_ITEMS_MIN = rnd::fraction(fraction_empty) ? 0 : 1;
+        const int NR_ITEMS_MIN = fraction_empty.roll() ? 0 : 1;
 
         const int NR_ITEMS_MAX = NR_ITEMS_MIN + (IS_TREASURE_HUNTER ? 1 : 0);
 

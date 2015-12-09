@@ -69,7 +69,7 @@ void player_kick()
 
             delete kick_item;
 
-            const int KICK_DMG = rnd::dice(kick_dmg_dice);
+            const int KICK_DMG = kick_dmg_dice.roll();
 
             dead_actor->hit(KICK_DMG, Dmg_type::physical, Dmg_method::kick);
 
