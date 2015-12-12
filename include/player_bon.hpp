@@ -51,6 +51,7 @@ enum class Trait
     ravenous,
     foul,
     toxic,
+    indomitable_fury,
 
     //Unique for Occultist
     warlock,

@@ -227,6 +227,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                 if (IS_PLAYER)
                 {
                     Fraction destr_chance(4 - nr_spikes_, 10);
+
                     destr_chance.numerator = max(1, destr_chance.numerator);
 
                     if (player_bon::traits[size_t(Trait::tough)])
@@ -244,14 +245,32 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                         destr_chance.numerator += 2;
                     }
 
-                    if (IS_WEAK) {destr_chance.numerator = 0;}
+                    if (actor->has_prop(Prop_id::frenzied))
+                    {
+                        destr_chance.numerator += 4;
+                    }
+
+                    if (IS_WEAK)
+                    {
+                        destr_chance.numerator = 0;
+                    }
+
+                    //Cap numerator to denominator
+                    destr_chance.numerator =
+                        std::min(destr_chance.numerator, destr_chance.denominator);
 
                     if (destr_chance.numerator > 0)
                     {
                         if (destr_chance.roll())
                         {
-                            Snd snd("", Sfx_id::door_break, Ignore_msg_if_origin_seen::yes, pos_,
-                                    actor, Snd_vol::low, Alerts_mon::yes);
+                            Snd snd("",
+                                    Sfx_id::door_break,
+                                    Ignore_msg_if_origin_seen::yes,
+                                    pos_,
+                                    actor,
+                                    Snd_vol::low,
+                                    Alerts_mon::yes);
+
                             snd_emit::run(snd);
 
                             if (IS_CELL_SEEN)
@@ -311,9 +330,13 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                 else //Not player
                 {
                     Fraction destr_chance(10 - (nr_spikes_ * 3), 100);
+
                     destr_chance.numerator = max(1, destr_chance.numerator);
 
-                    if (IS_WEAK) {destr_chance.numerator = 0;}
+                    if (IS_WEAK)
+                    {
+                        destr_chance.numerator = 0;
+                    }
 
                     if (destr_chance.roll())
                     {
@@ -352,7 +375,8 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                     }
                 }
 
-            } break;
+            }
+            break;
 
             case Matl::metal:
                 if (IS_PLAYER && IS_CELL_SEEN && !is_secret_)

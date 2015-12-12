@@ -437,6 +437,13 @@ struct Range
         max = MAX;
     }
 
+    Range& operator/=(const int V)
+    {
+        min /= V;
+        max /= V;
+        return *this;
+    }
+
     int roll() const;
 
     int min, max;

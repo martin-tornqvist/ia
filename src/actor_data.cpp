@@ -112,7 +112,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'Z';
     d.color = clr_brown;
     d.tile = Tile_id::zombie_unarmed;
@@ -156,7 +155,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'Z';
     d.color = clr_gray;
     d.tile = Tile_id::zombie_armed;
@@ -243,7 +241,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'Z';
     d.color = clr_cyan_lgt;
     d.tile = Tile_id::zombie_unarmed;
@@ -286,7 +283,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'Z';
     d.color = clr_cyan;
     d.tile = Tile_id::zombie_unarmed;
@@ -329,7 +325,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = false;
     d.speed = Actor_speed::slow;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'z';
     d.color = clr_red_lgt;
     d.tile = Tile_id::crawling_intestines;
@@ -367,7 +362,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = false;
     d.speed = Actor_speed::fast;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'z';
     d.color = clr_brown;
     d.tile = Tile_id::crawling_hand;
@@ -406,7 +400,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = false;
     d.speed = Actor_speed::fastest;
-    d.ranged_cooldown_turns = 0;
     d.spell_cooldown_turns = 2;
     d.glyph = 'z';
     d.color = clr_magenta;
@@ -457,7 +450,7 @@ void init_data_list()
     d.spi = 16;
     d.dmg_melee = MIN_DMG_TO_WOUND - 1;
     d.ability_vals.set_val(Ability_id::melee, 50);
-    d.ability_vals.set_val(Ability_id::dodge_att, 80);
+    d.ability_vals.set_val(Ability_id::dodge_att, 60);
     d.natural_props[size_t(Prop_id::flying)] = true;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 3;
@@ -494,7 +487,7 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::slow;
-    d.ranged_cooldown_turns = 3;
+    d.ranged_cooldown_turns = 2;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_gray;
@@ -533,7 +526,7 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
-    d.ranged_cooldown_turns = 3;
+    d.ranged_cooldown_turns = 2;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_yellow;
@@ -573,7 +566,7 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
-    d.ranged_cooldown_turns = 3;
+    d.ranged_cooldown_turns = 2;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_blue_lgt;
@@ -612,7 +605,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
-    d.ranged_cooldown_turns = 0;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_magenta;
@@ -663,7 +655,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
-    d.ranged_cooldown_turns = 0;
     d.spell_cooldown_turns = 3;
     d.glyph = 'r';
     d.color = clr_magenta;
@@ -714,7 +705,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = false;
     d.speed = Actor_speed::slow;
-    d.ranged_cooldown_turns = 0;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_yellow;
@@ -752,7 +742,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::slow;
-    d.ranged_cooldown_turns = 0;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_cyan_lgt;
@@ -792,7 +781,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'a';
     d.color = clr_green_lgt;
     d.tile = Tile_id::spider;
@@ -828,7 +816,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'a';
     d.color = clr_white_high;
     d.tile = Tile_id::spider;
@@ -864,7 +851,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'a';
     d.color = clr_red_lgt;
     d.tile = Tile_id::spider;
@@ -898,7 +884,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'a';
     d.color = clr_gray;
     d.tile = Tile_id::giant_spider;
@@ -938,7 +923,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::fast;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'A';
     d.color = clr_magenta;
     d.tile = Tile_id::giant_spider;
@@ -978,7 +962,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = false;
     d.speed = Actor_speed::fast;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'S';
     d.color = clr_green_lgt;
     d.tile = Tile_id::snake;
@@ -1021,7 +1004,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = false;
     d.speed = Actor_speed::fast;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'S';
     d.color = clr_red;
     d.tile = Tile_id::snake;
@@ -1067,7 +1049,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = false;
     d.speed = Actor_speed::fastest;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'S';
     d.color = clr_gray;
     d.tile = Tile_id::snake;
@@ -1204,7 +1185,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::slow;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'G';
     d.color = clr_white_high;
     d.tile = Tile_id::ghost;
@@ -1247,7 +1227,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::fast;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'G';
     d.color = clr_gray;
     d.tile = Tile_id::phantasm;
@@ -1292,7 +1271,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::fast;
-    d.ranged_cooldown_turns = 0;
     d.spell_cooldown_turns = 4;
     d.glyph = 'G';
     d.color = clr_red;
@@ -1338,7 +1316,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = false;
     d.speed = Actor_speed::sluggish;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'r';
     d.color = clr_gray;
     d.tile = Tile_id::rat;
@@ -1375,7 +1352,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = false;
     d.speed = Actor_speed::normal;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'r';
     d.color = clr_brown_drk;
     d.tile = Tile_id::rat_thing;
@@ -1420,7 +1396,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::fast;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'd';
     d.color = clr_gray;
     d.tile = Tile_id::wolf;
@@ -1884,7 +1859,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'M';
     d.color = clr_green;
     d.tile = Tile_id::ghoul;
@@ -1932,7 +1906,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::slow;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'M';
     d.color = clr_gray;
     d.tile = Tile_id::shadow;
@@ -1977,7 +1950,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::slow;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'M';
     d.color = clr_violet;
     d.tile = Tile_id::shadow;
@@ -2024,7 +1996,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::slow;
-    d.ranged_cooldown_turns = 0;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_magenta;
@@ -2064,7 +2035,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::slow;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'P';
     d.color = clr_gray;
     d.tile = Tile_id::croc_head_mummy;
@@ -2105,7 +2075,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::slow;
-    d.ranged_cooldown_turns = 0;
     d.spell_cooldown_turns = 2;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
@@ -2147,7 +2116,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::slow;
-    d.ranged_cooldown_turns = 0;
     d.spell_cooldown_turns = 2;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 1;
@@ -2281,7 +2249,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = false;
     d.speed = Actor_speed::slow;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'w';
     d.color = clr_white;
     d.tile = Tile_id::mass_of_worms;
@@ -2319,7 +2286,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = false;
     d.speed = Actor_speed::normal;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'V';
     d.color = clr_gray;
     d.tile = Tile_id::vortex;
@@ -2363,7 +2329,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = false;
     d.speed = Actor_speed::normal ;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'V';
     d.color = clr_red;
     d.tile = Tile_id::vortex;
@@ -2406,7 +2371,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::sluggish;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'o';
     d.color = clr_gray_drk;
     d.tile = Tile_id::ooze;
@@ -2457,7 +2421,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::sluggish;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'o';
     d.color = clr_white_high;
     d.tile = Tile_id::ooze;
@@ -2509,7 +2472,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::sluggish;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'o';
     d.color = clr_green;
     d.tile = Tile_id::ooze;
@@ -2561,7 +2523,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::sluggish;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'o';
     d.color = clr_green_lgt;
     d.tile = Tile_id::ooze;
@@ -2613,7 +2574,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::slow;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'O';
     d.color = clr_green_lgt;
     d.tile = Tile_id::ooze;
@@ -2840,7 +2800,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = false;
     d.speed = Actor_speed::slow;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'E';
     d.color = clr_red;
     d.tile = Tile_id::gas_spore;
@@ -2888,7 +2847,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = false;
     d.speed = Actor_speed::fastest;
-    d.ranged_cooldown_turns = 0;
     d.glyph = 'W';
     d.color = clr_gray_drk;
     d.tile = Tile_id::hunting_horror;
@@ -2990,7 +2948,6 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::normal;
-    d.ranged_cooldown_turns = 0;
     d.spell_cooldown_turns = 3;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;

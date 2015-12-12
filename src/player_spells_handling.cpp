@@ -262,7 +262,7 @@ void try_cast(const Spell_opt& spell_opt)
             {
                 auto* const prop = new Prop_warlock_charged(Prop_turns::std);
 
-                map::player->prop_handler().try_add_prop(prop);
+                map::player->prop_handler().try_add(prop);
             }
         }
     }

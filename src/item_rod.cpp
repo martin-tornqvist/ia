@@ -282,7 +282,7 @@ void Rod_bless::activate_impl()
 
     Prop* const prop = new Prop_blessed(Prop_turns::specific, NR_TURNS);
 
-    map::player->prop_handler().try_add_prop(prop);
+    map::player->prop_handler().try_add(prop);
 
     identify(Verbosity::verbose);
 }

@@ -66,7 +66,7 @@ void try_knock_back(Actor&        defender,
 
                 if (!f->is_los_passable())
                 {
-                    defender.prop_handler().try_add_prop(
+                    defender.prop_handler().try_add(
                         new Prop_nailed(Prop_turns::indefinite));
                 }
             }
@@ -93,7 +93,7 @@ void try_knock_back(Actor&        defender,
                     }
                 }
 
-                defender.prop_handler().try_add_prop(new Prop_paralyzed(Prop_turns::specific, 1));
+                defender.prop_handler().try_add(new Prop_paralyzed(Prop_turns::specific, 1));
             }
 
             defender.pos = new_pos;

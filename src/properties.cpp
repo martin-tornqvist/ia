@@ -834,7 +834,7 @@ void Prop_handler::init_natural_props()
         if (d.natural_props[i])
         {
             Prop* const prop = mk_prop(Prop_id(i), Prop_turns::indefinite);
-            try_add_prop(prop, Prop_src::intr, true, Verbosity::silent);
+            try_add(prop, Prop_src::intr, true, Verbosity::silent);
         }
     }
 }
@@ -1107,7 +1107,7 @@ Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init, const int N
     return nullptr;
 }
 
-void Prop_handler::try_add_prop(Prop* const prop,
+void Prop_handler::try_add(Prop* const prop,
                                 Prop_src src,
                                 const bool FORCE_EFFECT,
                                 const Verbosity verbosity)
@@ -1283,7 +1283,7 @@ void Prop_handler::add_prop_from_equipped_item(const Item* const item,
 {
     prop->item_applying_ = item;
 
-    try_add_prop(prop, Prop_src::inv, true, verbosity);
+    try_add(prop, Prop_src::inv, true, verbosity);
 }
 
 Prop* Prop_handler::prop(const Prop_id id) const
@@ -1323,7 +1323,7 @@ void Prop_handler::remove_props_for_item(const Item* const item)
     }
 }
 
-void Prop_handler::try_add_prop_from_att(const Wpn& wpn, const bool IS_MELEE)
+void Prop_handler::try_add_from_att(const Wpn& wpn, const bool IS_MELEE)
 {
     const auto&         d           = wpn.data();
     const auto* const   origin_prop = IS_MELEE ?
@@ -1347,7 +1347,7 @@ void Prop_handler::try_add_prop_from_att(const Wpn& wpn, const bool IS_MELEE)
                                             origin_prop->turns_init_type_,
                                             NR_TURNS);
 
-            try_add_prop(prop_cpy);
+            try_add(prop_cpy);
         }
     }
 }
@@ -1457,7 +1457,7 @@ void Prop_handler::apply_actor_turn_prop_buffer()
 {
     for (Prop* prop : actor_turn_prop_buffer_)
     {
-        try_add_prop(prop);
+        try_add(prop);
     }
 
     actor_turn_prop_buffer_.clear();
@@ -1876,7 +1876,7 @@ Prop* Prop_infected::on_new_turn()
     {
         Prop_handler& prop_hlr = owning_actor_->prop_handler();
 
-        prop_hlr.try_add_prop(new Prop_diseased(Prop_turns::indefinite));
+        prop_hlr.try_add(new Prop_diseased(Prop_turns::indefinite));
 
         //NOTE: Disease ends infection, this property object is now deleted!
 
@@ -2330,11 +2330,25 @@ void Prop_frenzied::on_start()
 
 void Prop_frenzied::on_end()
 {
-    //Only the player gets tired after a frenzy (it looks weird for monsters)
-    if (owning_actor_->is_player())
+    //Only the player (except for Ghoul background) gets tired after a frenzy
+    //(it looks weird for monsters)
+    if (owning_actor_->is_player() && player_bon::bg() != Bg::ghoul)
     {
-        owning_actor_->prop_handler().try_add_prop(new Prop_weakened(Prop_turns::std));
+        owning_actor_->prop_handler().try_add(new Prop_weakened(Prop_turns::std));
     }
+}
+
+bool Prop_frenzied::try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const
+{
+    (void)verbosity;
+
+    //Ghoul trait "Indomitable Fury" blocks physical damage while Frenzied
+    if (dmg_type == Dmg_type::physical && player_bon::traits[size_t(Trait::indomitable_fury)])
+    {
+        return true;
+    }
+
+    return false;
 }
 
 bool Prop_frenzied::allow_read(const Verbosity verbosity) const
@@ -2430,7 +2444,7 @@ Prop* Prop_flared::on_new_turn()
 
     if (nr_turns_left_ <= 1)
     {
-        owning_actor_->prop_handler().try_add_prop(new Prop_burning(Prop_turns::std));
+        owning_actor_->prop_handler().try_add(new Prop_burning(Prop_turns::std));
         owning_actor_->prop_handler().end_prop(id());
 
         return nullptr;

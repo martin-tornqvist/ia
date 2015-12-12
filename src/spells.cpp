@@ -121,6 +121,9 @@ Spell* mk_spell_from_id(const Spell_id spell_id)
     case Spell_id::cloud_minds:
         return new Spell_cloud_minds;
 
+    case Spell_id::frenzy:
+        return new Spell_frenzy;
+
     case Spell_id::bless:
         return new Spell_bless;
 
@@ -269,7 +272,7 @@ Range Spell::spi_cost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
     }
 
     cost_max            = std::max(1, cost_max);
-    const int COST_MIN  = std::max(1, cost_max / 2);
+    const int COST_MIN  = std::max(1, (cost_max + 1) / 2);
 
     return Range(COST_MIN, cost_max);
 }
@@ -478,7 +481,7 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
         msg_log::add(str_begin + " struck by a blast!", msg_clr);
     }
 
-    tgt->prop_handler().try_add_prop(new Prop_paralyzed(Prop_turns::specific, 2));
+    tgt->prop_handler().try_add(new Prop_paralyzed(Prop_turns::specific, 2));
 
     Range dmg_range(4, 10);
     const int DMG = is_warlock_charged ? dmg_range.max : dmg_range.roll();
@@ -572,7 +575,7 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
             msg_log::add(str_begin + " struck by a roaring blast!", msg_clr);
         }
 
-        tgt->prop_handler().try_add_prop(new Prop_paralyzed(Prop_turns::specific, 2));
+        tgt->prop_handler().try_add(new Prop_paralyzed(Prop_turns::specific, 2));
 
         const int DMG = is_warlock_charged ? dmg_range.max : dmg_range.roll();
 
@@ -689,7 +692,7 @@ Spell_effect_noticed Spell_mayhem::cast_impl(Actor* const caster) const
             continue;
         }
 
-        tgt->prop_handler().try_add_prop(new Prop_burning(Prop_turns::std));
+        tgt->prop_handler().try_add(new Prop_burning(Prop_turns::std));
     }
 
     Snd snd("",
@@ -1128,7 +1131,7 @@ Spell_effect_noticed Spell_sacr_spi::cast_impl(Actor* const caster) const
     return Spell_effect_noticed::no;
 }
 
-//------------------------------------------------------------ ROGUE HIDE
+//------------------------------------------------------------ ROGUE CLOUD MINDS
 Spell_effect_noticed Spell_cloud_minds::cast_impl(Actor* const caster) const
 {
     (void)caster;
@@ -1147,17 +1150,30 @@ Spell_effect_noticed Spell_cloud_minds::cast_impl(Actor* const caster) const
     return Spell_effect_noticed::yes;
 }
 
+//------------------------------------------------------------ GHOUL FRENZY
+Spell_effect_noticed Spell_frenzy::cast_impl(Actor* const caster) const
+{
+    const int NR_TURNS = rnd::range(12, 18);
+
+    Prop_frenzied* frenzy = new Prop_frenzied(Prop_turns::specific, NR_TURNS);
+
+    caster->prop_handler().try_add(frenzy);
+
+    return Spell_effect_noticed::yes;
+}
+
 //------------------------------------------------------------ BLESS
 Spell_effect_noticed Spell_bless::cast_impl(Actor* const caster) const
 {
-    caster->prop_handler().try_add_prop(new Prop_blessed(Prop_turns::std));
+    caster->prop_handler().try_add(new Prop_blessed(Prop_turns::std));
+
     return Spell_effect_noticed::yes;
 }
 
 //------------------------------------------------------------ LIGHT
 Spell_effect_noticed Spell_light::cast_impl(Actor* const caster) const
 {
-    caster->prop_handler().try_add_prop(new Prop_radiant(Prop_turns::std));
+    caster->prop_handler().try_add(new Prop_radiant(Prop_turns::std));
     return Spell_effect_noticed::yes;
 }
 
@@ -1183,8 +1199,8 @@ Spell_effect_noticed Spell_res::cast_impl(Actor* const caster) const
 
     Prop_handler& prop_hlr = caster->prop_handler();
 
-    prop_hlr.try_add_prop(new Prop_rFire(Prop_turns::specific, DURATION));
-    prop_hlr.try_add_prop(new Prop_rElec(Prop_turns::specific, DURATION));
+    prop_hlr.try_add(new Prop_rFire(Prop_turns::specific, DURATION));
+    prop_hlr.try_add(new Prop_rElec(Prop_turns::specific, DURATION));
 
     return Spell_effect_noticed::yes;
 }
@@ -1290,7 +1306,7 @@ Spell_effect_noticed Spell_prop_on_mon::cast_impl(Actor* const caster) const
         }
 
         Prop* const prop = prop_handler.mk_prop(prop_id, Prop_turns::std);
-        prop_handler.try_add_prop(prop);
+        prop_handler.try_add(prop);
     }
 
     return Spell_effect_noticed::yes;
@@ -1345,7 +1361,7 @@ Spell_effect_noticed Spell_disease::cast_impl(Actor* const caster) const
         msg_log::add("A horrible disease is starting to afflict " + actor_name + "!");
     }
 
-    tgt->prop_handler().try_add_prop(new Prop_diseased(Prop_turns::std));
+    tgt->prop_handler().try_add(new Prop_diseased(Prop_turns::std));
     return Spell_effect_noticed::no;
 }
 
@@ -1548,7 +1564,7 @@ Spell_effect_noticed Spell_mi_go_hypno::cast_impl(Actor* const caster) const
     if (rnd::coin_toss())
     {
         Prop* const prop = new Prop_fainted(Prop_turns::specific, rnd::range(2, 10));
-        tgt->prop_handler().try_add_prop(prop);
+        tgt->prop_handler().try_add(prop);
     }
     else
     {
@@ -1607,7 +1623,7 @@ Spell_effect_noticed Spell_burn::cast_impl(Actor* const caster) const
     }
 
     Prop* const prop = new Prop_burning(Prop_turns::specific, rnd::range(3, 4));
-    tgt->prop_handler().try_add_prop(prop);
+    tgt->prop_handler().try_add(prop);
 
     return Spell_effect_noticed::yes;
 }

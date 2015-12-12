@@ -417,7 +417,7 @@ void Player::on_hit(int& dmg,
 
         const int NR_WOUNDS_BEFORE = nr_wounds();
 
-        prop_handler_->try_add_prop(prop);
+        prop_handler_->try_add(prop);
 
         const int NR_WOUNDS_AFTER = nr_wounds();
 
@@ -927,7 +927,7 @@ void Player::on_std_turn()
             if (nr_turns_until_rspell_ == 0)
             {
                 //Cooldown has finished
-                prop_handler_->try_add_prop(new Prop_rSpell(Prop_turns::indefinite));
+                prop_handler_->try_add(new Prop_rSpell(Prop_turns::indefinite));
 
                 msg_log::more_prompt();
             }
@@ -1136,7 +1136,7 @@ void Player::on_std_turn()
     }
 
     //HP regen
-    if (!has_prop(Prop_id::poisoned))
+    if (!has_prop(Prop_id::poisoned) && player_bon::bg() != Bg::ghoul)
     {
         int nr_turns_per_hp = 12;
 
@@ -1154,7 +1154,7 @@ void Player::on_std_turn()
 
         const int WOUND_EFFECT_DIV = IS_SURVIVALIST ? 2 : 1;
 
-        nr_turns_per_hp += ((nr_wounds * 2) / WOUND_EFFECT_DIV);
+        nr_turns_per_hp += ((nr_wounds * 4) / WOUND_EFFECT_DIV);
 
         //Items affect HP regen?
         for (const auto& slot : inv_->slots_)
@@ -1456,7 +1456,7 @@ void Player::move(Dir dir)
             else if (ENC >= 100 || nr_wounds >= MIN_NR_WOUNDS_FOR_STAGGER)
             {
                 msg_log::add("I stagger.", clr_msg_note);
-                prop_handler_->try_add_prop(new Prop_waiting(Prop_turns::std));
+                prop_handler_->try_add(new Prop_waiting(Prop_turns::std));
             }
 
             //Displace allied monster

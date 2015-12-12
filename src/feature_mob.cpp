@@ -61,7 +61,7 @@ void Smoke::on_new_turn()
                 msg_log::add("I am getting smoke in my eyes.");
             }
 
-            actor->prop_handler().try_add_prop(
+            actor->prop_handler().try_add(
                 new Prop_blind(Prop_turns::specific, rnd::range(1, 3)));
         }
 

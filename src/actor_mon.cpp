@@ -625,7 +625,7 @@ bool Mon::try_attack(Actor& defender)
         Prop_disabled_ranged* ranged_cooldown_prop =
             new Prop_disabled_ranged(Prop_turns::specific, NR_TURNS_NO_RANGED);
 
-        prop_handler_->try_add_prop(ranged_cooldown_prop);
+        prop_handler_->try_add(ranged_cooldown_prop);
 
         attack::ranged(this, pos, defender.pos, *att.wpn);
 
@@ -966,7 +966,7 @@ void Zuul::place_hook()
 
         auto* poss_by_zuul_prop     = new Prop_poss_by_zuul(Prop_turns::indefinite);
 
-        priest_prop_handler.try_add_prop(poss_by_zuul_prop);
+        priest_prop_handler.try_add(poss_by_zuul_prop);
         actor->restore_hp(999, false, Verbosity::silent);
     }
 }
@@ -1151,7 +1151,7 @@ Did_action Ghost::on_act()
         }
         else
         {
-            map::player->prop_handler().try_add_prop(new Prop_slowed(Prop_turns::std));
+            map::player->prop_handler().try_add(new Prop_slowed(Prop_turns::std));
         }
 
         game_time::tick();
@@ -1446,7 +1446,7 @@ Did_action Ape::on_act()
 
         const int NR_FRENZY_TURNS = rnd::range(4, 6);
 
-        prop_handler_->try_add_prop(new Prop_frenzied(Prop_turns::specific, NR_FRENZY_TURNS));
+        prop_handler_->try_add(new Prop_frenzied(Prop_turns::specific, NR_FRENZY_TURNS));
     }
 
     return Did_action::no;
@@ -1678,7 +1678,7 @@ void Color_oo_space::on_std_turn_hook()
 
         if (map::player->can_see_actor(*this))
         {
-            map::player->prop_handler().try_add_prop(new Prop_confused(Prop_turns::std));
+            map::player->prop_handler().try_add(new Prop_confused(Prop_turns::std));
         }
     }
 }
@@ -2168,7 +2168,7 @@ Did_action Floating_head::on_act()
 
             Prop* const prop = new Prop_cursed(Prop_turns::std);
 
-            map::player->prop_handler().try_add_prop(prop, Prop_src::intr);
+            map::player->prop_handler().try_add(prop, Prop_src::intr);
 
             return Did_action::yes;
         }

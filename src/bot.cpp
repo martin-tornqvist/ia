@@ -146,7 +146,7 @@ void act()
     //Occasionally apply rFear (to avoid getting stuck on fear-causing monsters)
     if (rnd::one_in(7))
     {
-        prop_handler.try_add_prop(new Prop_rFear(Prop_turns::specific, 4));
+        prop_handler.try_add(new Prop_rFear(Prop_turns::specific, 4));
     }
 
     //Occasionally apply Burning to a random actor (helps to avoid getting stuck)
@@ -157,7 +157,7 @@ void act()
 
         if (actor != map::player)
         {
-            actor->prop_handler().try_add_prop(new Prop_burning(Prop_turns::std));
+            actor->prop_handler().try_add(new Prop_burning(Prop_turns::std));
         }
     }
 
@@ -190,7 +190,7 @@ void act()
         Prop_id     prop_id = prop_bucket[rnd::range(0, prop_bucket.size() - 1)];
         Prop* const prop    = prop_handler.mk_prop(prop_id, Prop_turns::specific, 5);
 
-        prop_handler.try_add_prop(prop);
+        prop_handler.try_add(prop);
     }
 
     //Occasionally swap weapon (just some code exercise)

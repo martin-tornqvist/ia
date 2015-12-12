@@ -108,6 +108,12 @@ Dice_param Item::dmg(const Att_mode att_mode, const Actor* const actor) const
                 ++out.plus;
             }
         }
+
+        //Bonus damage from being frenzied?
+        if (actor && actor->has_prop(Prop_id::frenzied))
+        {
+            ++out.plus;
+        }
     }
     break;
 
@@ -669,7 +675,7 @@ void Player_ghoul_claw::on_melee_hit(Actor& actor_hit)
     if (!IS_ETHEREAL && d.can_leave_corpse)
     {
         //Ghoul feeding from Ravenous trait?
-        if (player_bon::traits[size_t(Trait::ravenous)] && rnd::coin_toss())
+        if (player_bon::traits[size_t(Trait::ravenous)] && rnd::one_in(4))
         {
             map::player->on_feed();
         }
@@ -682,7 +688,7 @@ void Player_ghoul_claw::on_melee_hit(Actor& actor_hit)
         {
             Prop* const poison = new Prop_poisoned(Prop_turns::std);
 
-            actor_hit.prop_handler().try_add_prop(poison);
+            actor_hit.prop_handler().try_add(poison);
         }
     }
 }
@@ -780,7 +786,7 @@ void Raven_peck::on_melee_hit(Actor& actor_hit)
 
     Prop* const prop = new Prop_blind(Prop_turns::specific, 3);
 
-    actor_hit.prop_handler().try_add_prop(prop);
+    actor_hit.prop_handler().try_add(prop);
 }
 
 //---------------------------------------------------------- AMMO MAG
@@ -1079,7 +1085,7 @@ int Medical_bag::tot_turns_for_action(const Med_bag_action action) const
 //            {
 //                if (rnd::one_in(4) && actor->can_see_actor(*map::player, blocked_los))
 //                {
-//                    actor->prop_handler().try_add_prop(
+//                    actor->prop_handler().try_add(
 //                        new Prop_terrified(Prop_turns::std));
 //                }
 //            }

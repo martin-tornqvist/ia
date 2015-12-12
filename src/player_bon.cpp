@@ -159,6 +159,9 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
     case Trait::toxic:
         break;
 
+    case Trait::indomitable_fury:
+        break;
+
     case Trait::END:
         break;
     }
@@ -356,6 +359,9 @@ std::string trait_title(const Trait id)
     case Trait::toxic:
         return "Toxic";
 
+    case Trait::indomitable_fury:
+        return "Indomitable Fury";
+
     case Trait::END:
         break;
     }
@@ -373,21 +379,19 @@ void bg_descr(const Bg id, std::vector<std::string>& out)
     {
     case Bg::ghoul:
     {
-        Item_data_t& claw_data = item_data::data[size_t(Item_id::player_ghoul_claw)];
-
-        const std::string dmg_str = to_str(claw_data.melee.dmg.rolls) + "d" +
-                                    to_str(claw_data.melee.dmg.sides);
-
-        const std::string att_mod_str = to_str(claw_data.melee.hit_chance_mod) + "%";
-
-        out.push_back("Cannot use medical equipment, but can instead regenerate Hit Points by "
-                      "feeding on corpses (press [E])");
+        out.push_back("Does not regenerate Hit Points and cannot use medical equipment - must "
+                      "instead heal by feeding on corpses (press [w])");
         out.push_back(" ");
-        out.push_back("Has a powerful clawing melee attack");
+        out.push_back("Has an arcane ability to incite Frenzy at will (increased speed, "
+                      "+10% melee hit chance, +1 melee damage, must move towards monsters).");
+        out.push_back(" ");
+        out.push_back("Does not become Weakened when Frenzy ends");
+        out.push_back(" ");
+        out.push_back("Has powerful claws to attack with");
         out.push_back(" ");
         out.push_back("-15% hit chance with firearms and thrown weapons");
         out.push_back(" ");
-        out.push_back("Starts with +4 Hit Points");
+        out.push_back("Starts with +6 Hit Points");
         out.push_back(" ");
         out.push_back("Is immune to Disease and Infections");
         out.push_back(" ");
@@ -395,15 +399,14 @@ void bg_descr(const Bg id, std::vector<std::string>& out)
         out.push_back(" ");
         out.push_back("-50% shock taken from seeing monsters");
         out.push_back(" ");
-        out.push_back("All Ghouls are allied to you");
+        out.push_back("All Ghouls are allied");
     }
     break;
 
     case Bg::occultist:
         out.push_back("Can learn spells by heart when casting from manuscripts");
         out.push_back(" ");
-        out.push_back("-50% shock taken from using and identifying "
-                      "strange items (e.g. potions)");
+        out.push_back("-50% shock taken from using and identifying strange items (e.g. potions)");
         out.push_back(" ");
         out.push_back("Can dispel magic traps");
         out.push_back(" ");
@@ -416,14 +419,12 @@ void bg_descr(const Bg id, std::vector<std::string>& out)
         break;
 
     case Bg::rogue:
-        out.push_back("Has an arcane ability to cloud the minds of "
-                      "enemies, causing them to forget their pursuit "
-                      "(press [x])");
+        out.push_back("Has an arcane ability to cloud the minds of enemies, causing them to "
+                      "forget their pursuit");
         out.push_back(" ");
         out.push_back("+25% hit chance with ranged attacks vs unaware targets");
         out.push_back(" ");
-        out.push_back("The rate of shock recieved passively over time "
-                      "is reduced by half");
+        out.push_back("The rate of shock recieved passively over time is reduced by half");
         out.push_back(" ");
         out.push_back("Starts with the following trait(s):");
         out.push_back(" ");
@@ -616,6 +617,9 @@ std::string trait_descr(const Trait id)
 
     case Trait::toxic:
         return "Attacks with your claws occasionally poison your victims.";
+
+    case Trait::indomitable_fury:
+        return "You are immune to physical damage while Frenzied.";
 
     case Trait::END:
         break;
@@ -819,6 +823,12 @@ void trait_prereqs(const Trait trait,
         bg_ref = Bg::ghoul;
         break;
 
+    case Trait::indomitable_fury:
+        traits_ref.push_back(Trait::expert_melee_fighter);
+        traits_ref.push_back(Trait::tough);
+        bg_ref = Bg::ghoul;
+        break;
+
     case Trait::END:
         break;
     }
@@ -942,13 +952,19 @@ void pick_bg(const Bg bg)
     switch (bg_)
     {
     case Bg::ghoul:
-        map::player->prop_handler().try_add_prop(
-            new Prop_rDisease(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
+        map::player->prop_handler().try_add(new Prop_rDisease(Prop_turns::indefinite),
+                                            Prop_src::intr,
+                                            true,
+                                            Verbosity::silent);
 
-        map::player->prop_handler().try_add_prop(
-            new Prop_infravis(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
+        map::player->prop_handler().try_add(new Prop_infravis(Prop_turns::indefinite),
+                                            Prop_src::intr,
+                                            true,
+                                            Verbosity::silent);
 
-        map::player->change_max_hp(4, Verbosity::silent);
+        player_spells_handling::learn_spell_if_not_known(Spell_id::frenzy);
+
+        map::player->change_max_hp(6, Verbosity::silent);
         break;
 
     case Bg::occultist:
@@ -1005,7 +1021,7 @@ void pick_trait(const Trait id)
     case Trait::stout_spirit:
         map::player->change_max_spi(2, Verbosity::silent);
 
-        map::player->prop_handler().try_add_prop(
+        map::player->prop_handler().try_add(
             new Prop_rSpell(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
         break;
 
@@ -1018,17 +1034,17 @@ void pick_trait(const Trait id)
         break;
 
     case Trait::self_aware:
-        map::player->prop_handler().try_add_prop(
+        map::player->prop_handler().try_add(
             new Prop_rConf(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
         break;
 
     case Trait::survivalist:
-        map::player->prop_handler().try_add_prop(
+        map::player->prop_handler().try_add(
             new Prop_rDisease(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
         break;
 
     case Trait::fearless:
-        map::player->prop_handler().try_add_prop(
+        map::player->prop_handler().try_add(
             new Prop_rFear(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
         break;
 

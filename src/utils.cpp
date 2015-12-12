@@ -59,7 +59,7 @@ bool coin_toss()
 
 bool fraction(const int NUMER, const int DENOM)
 {
-    //This function should never be called with a denominator less than one, because it's unclear
+    //This function should never be called with a denominator less than one, since it's unclear
     //what it means that something should happen "N times in 0".
     assert(DENOM >= 1);
 

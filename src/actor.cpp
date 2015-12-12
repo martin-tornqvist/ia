@@ -390,7 +390,7 @@ void Actor::teleport()
         if (!player_has_tele_control)
         {
             msg_log::add("I suddenly find myself in a different location!");
-            prop_handler_->try_add_prop(new Prop_confused(Prop_turns::specific, 8));
+            prop_handler_->try_add(new Prop_confused(Prop_turns::specific, 8));
         }
     }
 }
@@ -723,7 +723,7 @@ Actor_died Actor::hit(int dmg,
     {
         const bool IS_ON_BOTTOMLESS = map::cells[pos.x][pos.y].rigid->is_bottomless();
 
-        const bool IS_DMG_ENOUGH_TO_DESTROY = dmg > ((hp_max(true) * 5) / 4);
+        const bool IS_DMG_ENOUGH_TO_DESTROY = dmg > ((hp_max(true) * 3) / 2);
 
         const bool IS_DESTROYED = !data_->can_leave_corpse  ||
                                   IS_ON_BOTTOMLESS          ||
@@ -992,7 +992,9 @@ Did_action Actor::try_eat_corpse()
 
 void Actor::on_feed()
 {
-    restore_hp(1, false, Verbosity::silent);
+    const int HP_RESTORED = rnd::range(1, 6);
+
+    restore_hp(HP_RESTORED, false, Verbosity::silent);
 
     Prop* const wound_prop = prop_handler_->prop(Prop_id::wound);
 

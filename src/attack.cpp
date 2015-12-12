@@ -1101,7 +1101,7 @@ void projectile_fire(Actor* const attacker, const P& origin, const P& aim_pos, W
                         //Hit properties
                         Prop_handler& defender_prop_handler = proj->actor_hit->prop_handler();
 
-                        defender_prop_handler.try_add_prop_from_att(wpn, false);
+                        defender_prop_handler.try_add_from_att(wpn, false);
 
                         //Knock-back?
                         if (wpn.data().ranged.knocks_back)
@@ -1515,7 +1515,7 @@ void melee(Actor* const attacker,
 
         if (defender.is_alive())
         {
-            defender.prop_handler().try_add_prop_from_att(wpn, true);
+            defender.prop_handler().try_add_from_att(wpn, true);
 
             if (wpn.data().melee.knocks_back)
             {
@@ -1545,7 +1545,7 @@ void melee(Actor* const attacker,
             Prop* prop = new Prop_weakened(Prop_turns::specific,
                                            rnd::range(6, 12));
 
-            player.prop_handler().try_add_prop(prop,
+            player.prop_handler().try_add(prop,
                                                Prop_src::intr,
                                                false,
                                                Verbosity::silent);
@@ -1568,7 +1568,7 @@ void melee(Actor* const attacker,
             Prop* prop = new Prop_paralyzed(Prop_turns::specific,
                                             rnd::range(1, 2));
 
-            player.prop_handler().try_add_prop(prop,
+            player.prop_handler().try_add(prop,
                                                Prop_src::intr,
                                                false,
                                                Verbosity::silent);
@@ -1764,7 +1764,7 @@ bool ranged(Actor* const attacker,
                 }
                 else //Not fast shooting
                 {
-                    props.try_add_prop(new Prop_fast_shooting(Prop_turns::std));
+                    props.try_add(new Prop_fast_shooting(Prop_turns::std));
                 }
             }
         }

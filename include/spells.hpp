@@ -41,7 +41,11 @@ enum class Spell_id
     bless,
     anim_wpns,
 
+    //Rogue background
     cloud_minds,
+
+    //Ghoul background
+    frenzy,
 
     //Monsters only
     disease,
@@ -732,6 +736,54 @@ public:
     {
         return {"All enemies forget your presence."};
     }
+private:
+    Spell_effect_noticed cast_impl(Actor* const caster) const override;
+
+    int max_spi_cost() const override
+    {
+        return 5;
+    }
+};
+
+class Spell_frenzy: public Spell
+{
+public:
+    Spell_frenzy() : Spell() {}
+
+    bool is_avail_for_all_mon() const override
+    {
+        return false;
+    }
+
+    bool is_avail_for_player() const override
+    {
+        return true;
+    }
+
+    std::string name() const override
+    {
+        return "Incite Frenzy";
+    }
+
+    Spell_id id() const override
+    {
+        return Spell_id::frenzy;
+    }
+
+    Intr_spell_shock shock_type_intr_cast() const override
+    {
+        return Intr_spell_shock::mild;
+    }
+
+    std::vector<std::string> descr() const override
+    {
+        return
+        {
+            "Incites a great rage in the caster, which will charge their enemies with a "
+            "terrible, uncontrollable fury."
+        };
+    }
+
 private:
     Spell_effect_noticed cast_impl(Actor* const caster) const override;
 

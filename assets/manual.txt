@@ -1,10 +1,10 @@
+Contents:
 1. Command list
 2. Movement and interaction
 3. The interface
-4. Spirit and spell casting
+4. Spirit and spellcasting
 5. Insanity
 6. Sneaking and backstabbing
-
 
 --------------------------------------------------------------------------------
 1. Command list
@@ -22,7 +22,6 @@
    c      Close a door, or jam a closed door with an iron spike
    d      Disarm trap
    e      Quick move (automatically move in some direction until interrupted)
-   E      Eat corpse (Ghoul only)
    f      Aim/fire wielded firearm
    g      Pick up item
    G      Unload or pick up ammunition from the ground
@@ -35,9 +34,9 @@
    s      Wait and search a few turns
    t      Throw something from the "Thrown" slot, or throw held explosive
    v      View descriptions of things on the map
+   w      Chew on corpse (Ghoul only)
    x      Cast spell
    z      Swap to alternative weapon
-
 
 --------------------------------------------------------------------------------
 2. Movement and interaction
@@ -73,7 +72,6 @@ Certain things can be interacted with by moving into them (i.e. by "bumping" the
    * Move into closed doors, chests, cabinets, etc to open them
    * Move into fountains to drink from them
 
-
 --------------------------------------------------------------------------------
 3. The interface
 --------------------------------------------------------------------------------
@@ -89,9 +87,8 @@ The second line displays character level, experience points needed for next leve
 
 The third line displays properties currently affecting you. This can be temporary properties (e.g. from spells), permanent intrinsic properties, or properties granted by wearing or wielding items.
 
-
 --------------------------------------------------------------------------------
-4. Spirit and spell casting
+4. Spirit and spellcasting
 --------------------------------------------------------------------------------
 In addition to your physical and mental health, you have an "essence" - or Spirit - to preserve. If you lose all your Spirit, you are dead.
 
@@ -107,7 +104,6 @@ As a shortcut, you can also press [x] (lower case) to immediately re-cast the pr
 When casting a spell, you will get a warning if the spell could potentially drain all your remaining Spirit. You can then press y/n to attempt casting or abort. Casting the spell in this situation is a gamble with death, but it could be worth it if you are desperate.
 
 There are also other ways you can lose your Spirit, for example some monsters can drain your Spirit with their attacks.
-
 
 --------------------------------------------------------------------------------
 5. Insanity
@@ -129,7 +125,6 @@ When various disturbing events occur, the shock value rises. When shock hits 100
 Each time you travel to the next dungeon level, half your shock is restored (you have escaped the horrors above, and is bestowed with a sense of progress).
 
 If your Insanity reaches 100%, you are hopelessly lost, and the game is over.
-
 
 --------------------------------------------------------------------------------
 6. Sneaking and backstabbing

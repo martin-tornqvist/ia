@@ -361,7 +361,7 @@ void Amulet_effect_conflict::on_std_turn_equipped()
             {
                 if (!actor->data().is_unique)
                 {
-                    actor->prop_handler().try_add_prop(
+                    actor->prop_handler().try_add(
                         new Prop_conflict(Prop_turns::std));
 
                     amulet_->effect_noticed(id());

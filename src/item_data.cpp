@@ -1134,6 +1134,9 @@ void init_data_list()
     d.melee.att_msgs = {"claw", ""};
     d.melee.hit_chance_mod = 20;
     d.melee.dmg = Dice_param(1, 8);
+    d.melee.hit_small_sfx = Sfx_id::hit_sharp;
+    d.melee.hit_medium_sfx = Sfx_id::hit_sharp;
+    d.melee.miss_sfx = Sfx_id::miss_medium;
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);

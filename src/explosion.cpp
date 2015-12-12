@@ -256,7 +256,7 @@ void run(const P& origin,
                     Prop_handler& prop_hlr = living_actor->prop_handler();
                     Prop* prop_cpy = prop_hlr.mk_prop(prop->id(), Prop_turns::specific,
                                                       prop->nr_turns_left());
-                    prop_hlr.try_add_prop(prop_cpy);
+                    prop_hlr.try_add(prop_cpy);
                 }
 
                 //If property is burning, also apply it to corpses and environment
@@ -270,7 +270,7 @@ void run(const P& origin,
                         Prop_handler& prop_hlr = corpse->prop_handler();
                         Prop* prop_cpy = prop_hlr.mk_prop(prop->id(), Prop_turns::specific,
                                                           prop->nr_turns_left());
-                        prop_hlr.try_add_prop(prop_cpy);
+                        prop_hlr.try_add(prop_cpy);
                     }
                 }
             }
