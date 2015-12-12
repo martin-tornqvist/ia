@@ -115,7 +115,8 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         break;
 
     case Trait::rapid_recoverer:
-        break;
+        //Cannot regen HP passively
+        return bg == Bg::ghoul;
 
     case Trait::survivalist:
         //Has RDISEASE already, so this trait is partly useless + a bit of theme mismatch
@@ -810,7 +811,7 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::ravenous:
-        traits_ref.push_back(Trait::expert_melee_fighter);
+        traits_ref.push_back(Trait::adept_melee_fighter);
         bg_ref = Bg::ghoul;
         break;
 
@@ -824,7 +825,7 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::indomitable_fury:
-        traits_ref.push_back(Trait::expert_melee_fighter);
+        traits_ref.push_back(Trait::adept_melee_fighter);
         traits_ref.push_back(Trait::tough);
         bg_ref = Bg::ghoul;
         break;

@@ -28,6 +28,7 @@ enum class Sfx_id
     machine_gun_reload,
     mi_go_gun_fire,
     spike_gun,
+    bite,
 
     //Environment action sounds
     metal_clank,

@@ -124,7 +124,7 @@ void init_data_list()
     d.actor_size = Actor_size::humanoid;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 12;
+    d.nr_turns_aware = 20;
     d.descr = "This rotting thing appears to have been brought back to life "
               "through some abominable process. It has grown sharp claws to "
               "attack with.";
@@ -169,7 +169,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.is_humanoid = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 10;
+    d.nr_turns_aware = 20;
     d.descr = "This rotting thing appears to have been brought back to life "
               "through some abominable process. It is wielding a rusty axe.";
     d.aggro_text_mon_seen = d.name_the + " growls at me.";
@@ -1385,8 +1385,8 @@ void init_data_list()
 
     d.name_a = "A Wolf";
     d.name_the = "The Wolf";
-    d.corpse_name_a = "A Wolf corpse";
-    d.corpse_name_the = "The Wolf corpse";
+    d.corpse_name_a = "A Wolf carcass";
+    d.corpse_name_the = "The Wolf carcass";
     d.id = Actor_id::wolf;
     d.ai[size_t(Ai_id::looks)] = true;
     d.ai[size_t(Ai_id::makes_room_for_friend)] = true;
@@ -1425,8 +1425,8 @@ void init_data_list()
 
     d.name_a = "A Raven";
     d.name_the = "The Raven";
-    d.corpse_name_a = "A Dead Raven";
-    d.corpse_name_the = "The Dead Raven";
+    d.corpse_name_a = "A Raven carcass";
+    d.corpse_name_the = "The Raven carcass";
     d.id = Actor_id::raven;
     d.ai[size_t(Ai_id::looks)] = true;
     d.ai[size_t(Ai_id::makes_room_for_friend)] = true;

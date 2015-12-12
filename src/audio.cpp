@@ -167,6 +167,7 @@ void init()
         load_audio_file(Sfx_id::machine_gun_reload,     "sfx_machine_gun_reload.ogg");
         load_audio_file(Sfx_id::mi_go_gun_fire,         "sfx_migo_gun.ogg");
         load_audio_file(Sfx_id::spike_gun,              "sfx_spike_gun.ogg");
+        load_audio_file(Sfx_id::bite,                   "sfx_bite.ogg");
 
         //Environment sounds
         load_audio_file(Sfx_id::metal_clank,            "sfx_metal_clank.ogg");

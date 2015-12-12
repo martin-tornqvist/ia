@@ -674,9 +674,27 @@ void Player_ghoul_claw::on_melee_hit(Actor& actor_hit)
 
     if (!IS_ETHEREAL && d.can_leave_corpse)
     {
+        const bool IS_HP_MISSING    = map::player->hp() < map::player->hp_max(true);
+        const bool IS_WOUNDED       = map::player->prop_handler().prop(Prop_id::wound);
+        const bool IS_FEED_NEEDED   = IS_HP_MISSING || IS_WOUNDED;
+
         //Ghoul feeding from Ravenous trait?
-        if (player_bon::traits[size_t(Trait::ravenous)] && rnd::one_in(4))
+        if (
+            player_bon::traits[size_t(Trait::ravenous)] &&
+            IS_FEED_NEEDED                              &&
+            rnd::one_in(4))
         {
+            Snd snd("",
+                    Sfx_id::bite,
+                    Ignore_msg_if_origin_seen::yes,
+                    actor_hit.pos,
+                    map::player,
+                    Snd_vol::low,
+                    Alerts_mon::yes,
+                    More_prompt_on_msg::no);
+
+            snd_emit::run(snd);
+
             map::player->on_feed();
         }
 

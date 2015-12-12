@@ -931,18 +931,14 @@ Did_action Actor::try_eat_corpse()
     {
         const bool          IS_PLAYER       = is_player();
         const int           CORPSE_MAX_HP   = corpse->hp_max(false);
-        const int           DESTR_ONE_IN_N  = utils::constr_in_range(1, CORPSE_MAX_HP / 4, 20);
+        const int           DESTR_ONE_IN_N  = utils::constr_in_range(1, CORPSE_MAX_HP / 4, 8);
         const bool          IS_DESTROYED    = rnd::one_in(DESTR_ONE_IN_N);
         const std::string   corpse_name     = corpse->corpse_name_the();
 
         const Alerts_mon alerts = IS_PLAYER ? Alerts_mon::yes : Alerts_mon::no;
 
-        const Sfx_id sfx = IS_DESTROYED ?
-                           Sfx_id::hit_corpse_break :
-                           Sfx_id::END;  //TODO: Make a chewing sound effect
-
         Snd snd("I hear ripping and chewing.",
-                sfx,
+                Sfx_id::bite,
                 Ignore_msg_if_origin_seen::yes,
                 pos,
                 this,
@@ -1005,7 +1001,7 @@ void Actor::on_feed()
         wound = static_cast<Prop_wound*>(wound_prop);
     }
 
-    if (wound && rnd::one_in(10))
+    if (wound && rnd::one_in(12))
     {
         wound->heal_one_wound();
     }
