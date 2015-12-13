@@ -787,15 +787,15 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
     assert(data_->can_leave_corpse || IS_DESTROYED);
 
     //Check all monsters and unset this actor as leader
-    for (Actor* actor : game_time::actors)
+    for (Actor* other : game_time::actors)
     {
-        if (actor != this && !actor->is_player() && is_leader_of(actor))
+        if (other != this && !other->is_player() && is_leader_of(other))
         {
-            static_cast<Mon*>(actor)->leader_ = nullptr;
+            static_cast<Mon*>(other)->leader_ = nullptr;
         }
     }
 
-    bool is_player_see_dying_actor = true;
+    bool can_player_see_dying_actor = true;
 
     if (!is_player())
     {
@@ -808,7 +808,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
         //Print death messages
         if (map::player->can_see_actor(*this))
         {
-            is_player_see_dying_actor = true;
+            can_player_see_dying_actor = true;
 
             const std::string msg = death_msg();
 
@@ -890,7 +890,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
 
     on_death();
 
-    prop_handler_->on_death(is_player_see_dying_actor);
+    prop_handler_->on_death(can_player_see_dying_actor);
 
     if (!is_player())
     {

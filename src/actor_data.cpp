@@ -2257,12 +2257,12 @@ void init_data_list()
     d.dmg_melee = 2;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.natural_props[size_t(Prop_id::infravis)] = true;
-    d.spawn_min_dlvl = 3;
-    d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
-    d.group_size = Mon_group_size::few;
+    d.spawn_min_dlvl = 2;
+    d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
+    d.group_size = Mon_group_size::horde;
     d.actor_size = Actor_size::floor;
     d.nr_turns_aware = 10;
-    d.descr = "A slithering conglomeration of carnivorous worms. They multiply rapidly.";
+    d.descr = "A slithering conglomeration of carnivorous worms.";
     d.can_be_summoned = true;
     d.is_auto_descr_allowed = false;
     d.erratic_move_pct = Actor_erratic_freq::very;

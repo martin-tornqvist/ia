@@ -1756,50 +1756,39 @@ void Wolf::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(Item_id::wolf_bite));
 }
 
-Did_action Worm_mass::on_act()
-{
-    if (
-        is_alive()                                      &&
-        aware_counter_ > 0                              &&
-        game_time::actors.size() < MAX_NR_ACTORS_ON_MAP &&
-        rnd::one_in(spawn_new_one_in_n))
-    {
-        bool blocked[MAP_W][MAP_H];
-
-        map_parse::run(cell_check::Blocks_actor(*this, true),
-                       blocked,
-                       Map_parse_mode::overwrite,
-                       Rect(pos - 1, pos + 1));
-
-        for (const P& d : dir_utils::dir_list)
-        {
-            const P p_adj(pos + d);
-
-            if (!blocked[p_adj.x][p_adj.y])
-            {
-                Actor* const actor = actor_factory::mk(data_->id, p_adj);
-
-                Worm_mass* const worm = static_cast<Worm_mass*>(actor);
-
-                spawn_new_one_in_n += 8;
-
-                worm->spawn_new_one_in_n    = spawn_new_one_in_n;
-                worm->aware_counter_        = aware_counter_;
-                worm->leader_               = leader_ ? leader_ : this;
-
-                game_time::tick();
-
-                return Did_action::yes;
-            }
-        }
-    }
-
-    return Did_action::no;
-}
-
 void Worm_mass::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(Item_id::worm_mass_bite));
+}
+
+void Worm_mass::on_death()
+{
+    const int PCT_SPLIT = 47;
+
+    if (rnd::percent(PCT_SPLIT) && (game_time::actors.size() < MAX_NR_ACTORS_ON_MAP))
+    {
+        std::vector<Actor_id> worm_ids(2, id());
+
+        //If dying worm has a leader, set that worm as leader for spawned worms
+        Actor* leader = leader_ ? leader_ : nullptr;
+
+        std::vector<Mon*> summoned;
+
+        actor_factory::summon(pos,
+                              worm_ids,
+                              Make_mon_aware::yes,
+                              leader,
+                              &summoned,
+                              Verbosity::silent);
+
+        assert(summoned.size() == 2);
+
+        //If no leader has been set yet, assign the first worm as leader of the second
+        if (!leader && summoned.size() >= 2)
+        {
+            summoned[1]->leader_ = summoned[0];
+        }
+    }
 }
 
 Did_action Giant_locust::on_act()

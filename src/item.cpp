@@ -723,9 +723,9 @@ void Player_ghoul_claw::on_melee_kill(Actor& actor_killed)
         player_bon::traits[size_t(Trait::foul)] &&
         !IS_ETHEREAL                            &&
         d.can_leave_corpse                      &&
-        rnd::one_in(5))
+        rnd::one_in(3))
     {
-        const int NR_WORMS = rnd::range(2, 3);
+        const int NR_WORMS = rnd::range(1, 2);
 
         std::vector<Actor_id> ids(NR_WORMS, Actor_id::worm_mass);
 

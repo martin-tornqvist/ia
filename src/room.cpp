@@ -694,6 +694,9 @@ void Snake_pit_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
         }
     }
 
+    //Hijacking snake pit rooms to make a worm room...
+    snake_bucket.push_back(Actor_id::worm_mass);
+
     const size_t    IDX         = rnd::range(0, snake_bucket.size() - 1);
     const Actor_id  actor_id    = Actor_id(snake_bucket[IDX]);
 

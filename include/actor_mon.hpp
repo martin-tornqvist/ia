@@ -230,12 +230,16 @@ public:
         dead_turn_counter = 0;
         has_resurrected = false;
     }
+
     virtual ~Zombie() {}
-    void on_death() override;
 
 protected:
     virtual Did_action on_act() override;
+
+    void on_death() override;
+
     Did_action try_resurrect();
+
     int dead_turn_counter;
     bool has_resurrected;
 };
@@ -721,15 +725,15 @@ public:
 class Worm_mass: public Mon
 {
 public:
-    Worm_mass() : Mon(), spawn_new_one_in_n(10) {}
+    Worm_mass() :
+        Mon() {}
+
     ~Worm_mass() {}
 
     void mk_start_items() override;
 
 private:
-    Did_action on_act() override;
-
-    int spawn_new_one_in_n;
+    void on_death() override;
 };
 
 class Giant_locust: public Mon
@@ -884,10 +888,11 @@ public:
     ~The_high_priest() {}
 
     void mk_start_items() override;
-    void on_death() override;
 
 private:
     Did_action on_act() override;
+
+    void on_death() override;
 
     void on_std_turn_hook() override;
 
