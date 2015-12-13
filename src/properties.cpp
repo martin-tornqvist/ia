@@ -1108,9 +1108,9 @@ Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init, const int N
 }
 
 void Prop_handler::try_add(Prop* const prop,
-                                Prop_src src,
-                                const bool FORCE_EFFECT,
-                                const Verbosity verbosity)
+                           Prop_src src,
+                           const bool FORCE_EFFECT,
+                           const Verbosity verbosity)
 {
     assert(prop);
 
@@ -1277,9 +1277,10 @@ void Prop_handler::try_add(Prop* const prop,
     incr_active_props_info(prop->id());
 }
 
-void Prop_handler::add_prop_from_equipped_item(const Item* const item,
-        Prop* const prop,
-        const Verbosity verbosity)
+void Prop_handler::add_prop_from_equipped_item(
+    const Item* const item,
+    Prop* const prop,
+    const Verbosity verbosity)
 {
     prop->item_applying_ = item;
 
@@ -1288,11 +1289,14 @@ void Prop_handler::add_prop_from_equipped_item(const Item* const item,
 
 Prop* Prop_handler::prop(const Prop_id id) const
 {
-    for (Prop* const prop : props_)
+    if (has_prop(id))
     {
-        if (prop->id() == id)
+        for (Prop* const prop : props_)
         {
-            return prop;
+            if (prop->id() == id)
+            {
+                return prop;
+            }
         }
     }
 

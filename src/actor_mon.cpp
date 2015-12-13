@@ -1287,6 +1287,28 @@ void Ghoul::place_hook()
     }
 }
 
+Did_action Ghoul::on_act()
+{
+    if (!is_alive())
+    {
+        return Did_action::no;
+    }
+
+    if (rnd::coin_toss())
+    {
+        const auto did_action = try_eat_corpse();
+
+        if (did_action == Did_action::yes)
+        {
+            game_time::tick();
+
+            return did_action;
+        }
+    }
+
+    return Did_action::no;
+}
+
 void Mummy::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(Item_id::mummy_maul));

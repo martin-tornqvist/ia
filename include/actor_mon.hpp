@@ -627,6 +627,9 @@ public:
     void mk_start_items() override;
 
     void place_hook() override;
+
+private:
+    Did_action on_act() override;
 };
 
 class Deep_one: public Mon

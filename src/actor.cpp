@@ -908,19 +908,27 @@ std::string Actor::death_msg() const
 
 Did_action Actor::try_eat_corpse()
 {
-    Prop* const wound_prop = prop_handler_->prop(Prop_id::wound);
+    const bool IS_PLAYER = is_player();
 
     Prop_wound* wound = nullptr;
 
-    if (wound_prop)
+    if (IS_PLAYER)
     {
-        wound = static_cast<Prop_wound*>(wound_prop);
+        Prop* prop = prop_handler_->prop(Prop_id::wound);
+
+        if (prop)
+        {
+            wound = static_cast<Prop_wound*>(prop);
+        }
     }
 
     if (hp() >= hp_max(true) && !wound)
     {
         //Not "hungry"
-        msg_log::add("I am satiated.");
+        if (IS_PLAYER)
+        {
+            msg_log::add("I am satiated.");
+        }
 
         return Did_action::no;
     }
@@ -929,7 +937,6 @@ Did_action Actor::try_eat_corpse()
 
     if (corpse)
     {
-        const bool          IS_PLAYER       = is_player();
         const int           CORPSE_MAX_HP   = corpse->hp_max(false);
         const int           DESTR_ONE_IN_N  = utils::constr_in_range(1, CORPSE_MAX_HP / 4, 8);
         const bool          IS_DESTROYED    = rnd::one_in(DESTR_ONE_IN_N);
@@ -948,7 +955,7 @@ Did_action Actor::try_eat_corpse()
 
         snd_emit::run(snd);
 
-        if (is_player())
+        if (IS_PLAYER)
         {
             msg_log::add("I feed on " + corpse_name + ".");
 
@@ -962,7 +969,8 @@ Did_action Actor::try_eat_corpse()
             if (map::player->can_see_actor(*this))
             {
                 const std::string name = name_the();
-                msg_log::add(name + " feeds on " + corpse_name + "!");
+
+                msg_log::add(name + " feeds on " + corpse_name + ".");
             }
         }
 
@@ -978,7 +986,7 @@ Did_action Actor::try_eat_corpse()
 
         return Did_action::yes;
     }
-    else if (is_player())
+    else if (IS_PLAYER)
     {
         msg_log::add("I find nothing here to feed on.");
     }
@@ -992,18 +1000,16 @@ void Actor::on_feed()
 
     restore_hp(HP_RESTORED, false, Verbosity::silent);
 
-    Prop* const wound_prop = prop_handler_->prop(Prop_id::wound);
-
-    Prop_wound* wound = nullptr;
-
-    if (wound_prop)
+    if (is_player())
     {
-        wound = static_cast<Prop_wound*>(wound_prop);
-    }
+        Prop* const prop = prop_handler_->prop(Prop_id::wound);
 
-    if (wound && rnd::one_in(12))
-    {
-        wound->heal_one_wound();
+        if (prop && rnd::one_in(12))
+        {
+            Prop_wound* const wound = static_cast<Prop_wound*>(prop);
+
+            wound->heal_one_wound();
+        }
     }
 }
 

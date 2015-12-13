@@ -2,7 +2,7 @@ Contents:
 1. Command list
 2. Movement and interaction
 3. The interface
-4. Spirit and spellcasting
+4. Spirit and spell casting
 5. Insanity
 6. Sneaking and backstabbing
 
@@ -88,7 +88,7 @@ The second line displays character level, experience points needed for next leve
 The third line displays properties currently affecting you. This can be temporary properties (e.g. from spells), permanent intrinsic properties, or properties granted by wearing or wielding items.
 
 --------------------------------------------------------------------------------
-4. Spirit and spellcasting
+4. Spirit and spell casting
 --------------------------------------------------------------------------------
 In addition to your physical and mental health, you have an "essence" - or Spirit - to preserve. If you lose all your Spirit, you are dead.
 
