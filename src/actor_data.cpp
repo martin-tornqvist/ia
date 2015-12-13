@@ -2898,6 +2898,7 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::slow;
+    d.spell_cooldown_turns = 3;
     d.glyph = 'Y';
     d.color = clr_red;
     d.tile = Tile_id::fiend;
@@ -2918,10 +2919,9 @@ void init_data_list()
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = true;
-    d.descr = "A living incarnation of death. With its goat-like features, its sinister "
-              "appearance is eerily similar to the imagery of Devils and Demons seen in medieval "
-              "woodcuts. The attack of this entity can bypass any armor, and means almost certain "
-              "death unless avoided.";
+    d.descr = "A living incarnation of death. With its goat-like features, it is eerily similar "
+              "to the imagery of Devils and Demons seen in medieval woodcuts. The attack of this "
+              "entity can bypass any armor, and means almost certain death.";
     d.aggro_sfx_mon_seen = Sfx_id::END;
     d.aggro_sfx_mon_hidden = Sfx_id::END;
     d.can_bleed = false;
@@ -2929,11 +2929,12 @@ void init_data_list()
     d.is_infra_visible = false;
     d.is_humanoid = true;
     d.can_leave_corpse = false;
+    d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.mon_shock_lvl = Mon_shock_lvl::mind_shattering;
+    d.erratic_move_pct = Actor_erratic_freq::never;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::cave);
     d.native_rooms.push_back(Room_type::chasm);
-    d.erratic_move_pct = Actor_erratic_freq::rare;
     data[size_t(d.id)] = d;
     d.reset();
 

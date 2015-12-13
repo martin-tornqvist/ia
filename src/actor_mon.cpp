@@ -1502,6 +1502,10 @@ void Chthonian::mk_start_items()
 void Death_fiend::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(Item_id::death_fiend_claw));
+
+    spells_known_.push_back(new Spell_paralyze_mon);
+    spells_known_.push_back(new Spell_slow_mon);
+    spells_known_.push_back(new Spell_terrify_mon);
 }
 
 void Hunting_horror::mk_start_items()

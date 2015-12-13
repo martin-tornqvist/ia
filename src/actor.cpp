@@ -996,7 +996,7 @@ Did_action Actor::try_eat_corpse()
 
 void Actor::on_feed()
 {
-    const int HP_RESTORED = rnd::range(1, 6);
+    const int HP_RESTORED = rnd::range(3, 6);
 
     restore_hp(HP_RESTORED, false, Verbosity::silent);
 
