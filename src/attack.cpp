@@ -78,27 +78,37 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
     if (!is_defender_dodging)
     {
         //--------------------------------------- DETERMINE ATTACK RESULT
-        int hit_chance = 0;
+        int tot_skill = 0;
 
         if (attacker)
         {
-            hit_chance = attacker->ability(Ability_id::melee, true);
+            tot_skill = attacker->ability(Ability_id::melee, true);
         }
 
-        hit_chance += wpn.data().melee.hit_chance_mod;
+        tot_skill += wpn.data().melee.hit_chance_mod;
 
         bool is_attacker_aware = true;
+
+        //Attacker gets a penalty against unseen targets
+        //NOTE: The AI never attacks unseen targets, so in the case of a
+        //      monster attacker, we can assume the target is seen. We only
+        //      need to check if target is seen when player is attacking.
+        bool can_attacker_see_tgt = true;
 
         if (attacker)
         {
             if (attacker->is_player())
             {
                 Mon& mon = static_cast<Mon&>(defender);
+
                 is_attacker_aware = mon.player_aware_of_me_counter_ > 0;
+
+                can_attacker_see_tgt = map::player->can_see_actor(defender);
             }
             else //Attacker is monster
             {
                 Mon* const mon = static_cast<Mon*>(attacker);
+
                 is_attacker_aware = mon->aware_counter_ > 0;
             }
         }
@@ -169,10 +179,17 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
             }
 
             //Apply the hit chance bonus (if any)
-            hit_chance += is_big_att_bon ? 50 : (is_small_att_bon ? 20 : 0);
+            tot_skill += is_big_att_bon ? 50 : (is_small_att_bon ? 20 : 0);
+
+            //Lower hit chance if attacker cannot see target (e.g. attacking invisible creature)
+            if (!can_attacker_see_tgt)
+            {
+                tot_skill -= 20;
+            }
         }
 
-        att_result = ability_roll::roll(hit_chance, attacker);
+        //NOTE: Total skill may be negative (attacker may still critically hit)
+        att_result = ability_roll::roll(tot_skill, attacker);
 
         const bool APPLY_UNDEAD_BANE_BON = attacker == map::player &&
                                            player_bon::gets_undead_bane_bon(defender_data);
@@ -1546,9 +1563,9 @@ void melee(Actor* const attacker,
                                            rnd::range(6, 12));
 
             player.prop_handler().try_add(prop,
-                                               Prop_src::intr,
-                                               false,
-                                               Verbosity::silent);
+                                          Prop_src::intr,
+                                          false,
+                                          Verbosity::silent);
 
             msg_log::add("I am exhausted.",
                          clr_msg_note,
@@ -1569,9 +1586,9 @@ void melee(Actor* const attacker,
                                             rnd::range(1, 2));
 
             player.prop_handler().try_add(prop,
-                                               Prop_src::intr,
-                                               false,
-                                               Verbosity::silent);
+                                          Prop_src::intr,
+                                          false,
+                                          Verbosity::silent);
         }
         break;
 

@@ -59,7 +59,14 @@ void Actor_data_t::reset()
     spell_cast_msg = "";
     erratic_move_pct = Actor_erratic_freq::rare;
     mon_shock_lvl = Mon_shock_lvl::none;
-    is_rat = is_canine = is_spider = is_snake = is_undead = is_ghost = false;
+    is_rat = false;
+    is_canine = false;
+    is_spider = false;
+    is_undead = false;
+    is_ghost = false;
+    is_snake = false;
+    is_reptile = false;
+    is_amphibian = false;
     can_be_summoned = false;
     can_bleed = true;
     can_leave_corpse = true;
@@ -983,6 +990,7 @@ void init_data_list()
     d.erratic_move_pct = Actor_erratic_freq::somewhat;
     d.is_infra_visible = false;
     d.is_snake = true;
+    d.is_reptile = true;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::cave);
     d.native_rooms.push_back(Room_type::chasm);
@@ -1028,6 +1036,7 @@ void init_data_list()
     d.erratic_move_pct = Actor_erratic_freq::somewhat;
     d.is_infra_visible = false;
     d.is_snake = true;
+    d.is_reptile = true;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::cave);
     d.native_rooms.push_back(Room_type::chasm);
@@ -1070,6 +1079,7 @@ void init_data_list()
     d.erratic_move_pct = Actor_erratic_freq::somewhat;
     d.is_infra_visible = false;
     d.is_snake = true;
+    d.is_reptile = true;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::cave);
     d.native_rooms.push_back(Room_type::chasm);
@@ -1949,14 +1959,14 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_tgt_when_los)] = true;
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
-    d.speed = Actor_speed::slow;
+    d.speed = Actor_speed::normal;
     d.glyph = 'M';
-    d.color = clr_violet;
+    d.color = clr_yellow;
     d.tile = Tile_id::shadow;
     d.hp = 15;
     d.spi = 12;
     d.dmg_melee = MIN_DMG_TO_WOUND - 1;
-    d.ability_vals.set_val(Ability_id::melee, 40);
+    d.ability_vals.set_val(Ability_id::melee, 50);
     d.natural_props[size_t(Prop_id::invis)] = true;
     d.natural_props[size_t(Prop_id::rFear)] = true;
     d.natural_props[size_t(Prop_id::rConf)] = true;
@@ -1976,7 +1986,7 @@ void init_data_list()
     d.is_auto_descr_allowed = true;
     d.is_infra_visible = false;
     d.is_humanoid = true;
-    d.erratic_move_pct = Actor_erratic_freq::somewhat;
+    d.erratic_move_pct = Actor_erratic_freq::rare;
     d.mon_shock_lvl = Mon_shock_lvl::frightening;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::forest);
@@ -2176,6 +2186,7 @@ void init_data_list()
     d.group_size = Mon_group_size::horde;
     d.actor_size = Actor_size::humanoid;
     d.is_humanoid = true;
+    d.is_amphibian = true;
     d.can_bash_doors = true;
     d.can_open_doors = true;
     d.nr_turns_aware = 20;
@@ -2921,7 +2932,7 @@ void init_data_list()
     d.can_bash_doors = true;
     d.descr = "A living incarnation of death. With its goat-like features, it is eerily similar "
               "to the imagery of Devils and Demons seen in medieval woodcuts. The attack of this "
-              "entity can bypass any armor, and means almost certain death.";
+              "entity can bypass any armor, and means almost certain death!";
     d.aggro_sfx_mon_seen = Sfx_id::END;
     d.aggro_sfx_mon_hidden = Sfx_id::END;
     d.can_bleed = false;
@@ -2934,7 +2945,6 @@ void init_data_list()
     d.erratic_move_pct = Actor_erratic_freq::never;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::cave);
-    d.native_rooms.push_back(Room_type::chasm);
     data[size_t(d.id)] = d;
     d.reset();
 

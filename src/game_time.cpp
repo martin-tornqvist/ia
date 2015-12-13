@@ -399,7 +399,7 @@ void update_light_map()
     }
 
     //Copy the temp values to the real light map
-    //NOTE: This must be done separately - it can not be done in the map loop above
+    //NOTE: This must be done separately - it cannot be done in the map loop above
     for (int x = 0; x < MAP_W; ++x)
     {
         for (int y = 0; y < MAP_H; ++y)

@@ -1116,7 +1116,7 @@ void Fire_vortex::on_death()
                    Emit_expl_snd::no,
                    0,
                    new Prop_burning(Prop_turns::std),
-                   &clr_gray);
+                   &clr_red_lgt);
 }
 
 void Fire_vortex::mk_start_items()

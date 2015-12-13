@@ -690,12 +690,6 @@ class Prop_invisible: public Prop
 public:
     Prop_invisible(Prop_turns turns_init, int nr_turns = -1) :
         Prop(Prop_id::invis, turns_init, nr_turns) {}
-
-    bool affect_actor_clr(Clr& clr) const override
-    {
-        clr = clr_gray;
-        return true;
-    }
 };
 
 class Prop_see_invis: public Prop

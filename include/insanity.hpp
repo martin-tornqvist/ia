@@ -15,7 +15,7 @@ enum class Ins_sympt_id
     laugh,
     phobia_rat,
     phobia_spider,
-//    phobia_snake,
+    phobia_reptile_and_amph,
     phobia_canine,
     phobia_dead,
     phobia_open,
@@ -25,6 +25,7 @@ enum class Ins_sympt_id
     masoch,
     sadism,
     shadows,
+    paranoia, //Invisible stalker spawned
     confusion,
     frenzy,
     strange_sensation,
@@ -321,6 +322,58 @@ protected:
     std::string history_msg_end() const override
     {
         return "My phobia of spiders was cured.";
+    }
+};
+
+class Ins_phobia_reptile_and_amph : public Ins_sympt
+{
+public:
+    Ins_phobia_reptile_and_amph() :
+        Ins_sympt(Ins_sympt_id::phobia_reptile_and_amph) {}
+
+    bool is_permanent() const override
+    {
+        return true;
+    }
+
+    void on_new_player_turn(const std::vector<Actor*>& seen_foes) override;
+
+    bool allow_gain() const override;
+
+    std::string char_descr_msg() const override
+    {
+        return "Phobia of reptiles and amphibians";
+    }
+
+    std::string postmortem_msg() const override
+    {
+        return "Had a phobia of reptiles and amphibians";
+    }
+
+protected:
+    std::string start_msg() const override
+    {
+        return "Reptiles and amphibians suddenly seem terrifying.";
+    }
+
+    std::string start_heading() const override
+    {
+        return "Herpetophobia!";
+    }
+
+    std::string end_msg() const override
+    {
+        return "I am no longer terrified of reptiles and amphibians.";
+    }
+
+    std::string history_msg() const override
+    {
+        return "Gained a phobia of reptiles and amphibians.";
+    }
+
+    std::string history_msg_end() const override
+    {
+        return "My phobia of reptiles and amphibians was cured.";
     }
 };
 
@@ -763,6 +816,36 @@ protected:
     std::string history_msg() const override
     {
         return "Was haunted by shadows.";
+    }
+};
+
+class Ins_paranoia : public Ins_sympt
+{
+public:
+    Ins_paranoia() :
+        Ins_sympt(Ins_sympt_id::paranoia) {}
+
+    bool is_permanent() const override
+    {
+        return false;
+    }
+
+protected:
+    void on_start_hook() override;
+
+    std::string start_msg() const override
+    {
+        return "Is there someone following me? Or is it panic taking over?";
+    }
+
+    std::string start_heading() const override
+    {
+        return "Paranoia!";
+    }
+
+    std::string history_msg() const override
+    {
+        return "Had a strong sensation of being followed.";
     }
 };
 

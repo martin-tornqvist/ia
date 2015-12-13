@@ -414,10 +414,17 @@ void Actor::update_clr()
         return;
     }
 
+    if (is_player() && has_prop(Prop_id::invis))
+    {
+        clr_ = clr_gray;
+        return;
+    }
+
     clr_ = data_->color;
 }
 
-bool Actor::restore_hp(const int HP_RESTORED, const bool IS_ALLOWED_ABOVE_MAX,
+bool Actor::restore_hp(const int HP_RESTORED,
+                       const bool IS_ALLOWED_ABOVE_MAX,
                        const Verbosity verbosity)
 {
     bool        is_hp_gained    = IS_ALLOWED_ABOVE_MAX;

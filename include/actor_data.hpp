@@ -21,9 +21,8 @@ enum class Actor_id
     cultist, cultist_electric, cultist_spike_gun,
     cultist_priest,
     rat, rat_thing,
-    green_spider, white_spider, red_spider, shadow_spider,
+    green_spider, white_spider, red_spider, shadow_spider, leng_spider,
     pit_viper, spitting_cobra, black_mamba,
-    leng_spider,
     mi_go, mi_go_commander,
     flying_polyp, greater_polyp,
     ghoul,
@@ -154,7 +153,7 @@ struct Actor_data_t
     std::string spell_cast_msg;
     Actor_erratic_freq erratic_move_pct;
     Mon_shock_lvl mon_shock_lvl;
-    bool is_rat, is_canine, is_spider, is_snake, is_undead, is_ghost;
+    bool is_rat, is_canine, is_spider, is_undead, is_ghost, is_snake, is_reptile, is_amphibian;
     bool can_be_summoned;
     bool can_bleed;
     bool can_leave_corpse;

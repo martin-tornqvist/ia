@@ -63,8 +63,7 @@ void Ins_sympt::on_end()
 
 bool Ins_scream::allow_gain() const
 {
-    //TODO
-    return true;
+    return !map::player->has_prop(Prop_id::rFear);
 }
 
 void Ins_scream::on_start_hook()
@@ -114,13 +113,11 @@ void Ins_babbling::on_start_hook()
 
 void Ins_babbling::on_new_player_turn(const std::vector<Actor*>& seen_foes)
 {
-    //TODO
     (void)seen_foes;
 }
 
 bool Ins_faint::allow_gain() const
 {
-    //TODO
     return true;
 }
 
@@ -144,8 +141,7 @@ void Ins_laugh::on_start_hook()
 
 bool Ins_phobia_rat::allow_gain() const
 {
-    //TODO
-    return true;
+    return !map::player->has_prop(Prop_id::rFear);
 }
 
 void Ins_phobia_rat::on_new_player_turn(const std::vector<Actor*>& seen_foes)
@@ -168,8 +164,7 @@ void Ins_phobia_rat::on_new_player_turn(const std::vector<Actor*>& seen_foes)
 
 bool Ins_phobia_spider::allow_gain() const
 {
-    //TODO
-    return true;
+    return !map::player->has_prop(Prop_id::rFear);
 }
 
 void Ins_phobia_spider::on_new_player_turn(const std::vector<Actor*>& seen_foes)
@@ -190,10 +185,44 @@ void Ins_phobia_spider::on_new_player_turn(const std::vector<Actor*>& seen_foes)
     }
 }
 
+bool Ins_phobia_reptile_and_amph::allow_gain() const
+{
+    return !map::player->has_prop(Prop_id::rFear);
+}
+
+void Ins_phobia_reptile_and_amph::on_new_player_turn(const std::vector<Actor*>& seen_foes)
+{
+    bool is_triggered = false;
+
+    if (rnd::one_in(10))
+    {
+        for (Actor* const actor : seen_foes)
+        {
+            if (actor->data().is_reptile)
+            {
+                msg_log::add("I am plagued by my phobia of reptiles!");
+                is_triggered = true;
+                break;
+            }
+
+            if (actor->data().is_amphibian)
+            {
+                msg_log::add("I am plagued by my phobia of amphibians!");
+                is_triggered = true;
+                break;
+            }
+        }
+    }
+
+    if (is_triggered)
+    {
+        map::player->prop_handler().try_add(new Prop_terrified(Prop_turns::std));
+    }
+}
+
 bool Ins_phobia_canine::allow_gain() const
 {
-    //TODO
-    return true;
+    return !map::player->has_prop(Prop_id::rFear);
 }
 
 void Ins_phobia_canine::on_new_player_turn(const std::vector<Actor*>& seen_foes)
@@ -216,8 +245,7 @@ void Ins_phobia_canine::on_new_player_turn(const std::vector<Actor*>& seen_foes)
 
 bool Ins_phobia_dead::allow_gain() const
 {
-    //TODO
-    return true;
+    return !map::player->has_prop(Prop_id::rFear);
 }
 
 void Ins_phobia_dead::on_new_player_turn(const std::vector<Actor*>& seen_foes)
@@ -240,8 +268,7 @@ void Ins_phobia_dead::on_new_player_turn(const std::vector<Actor*>& seen_foes)
 
 bool Ins_phobia_open::allow_gain() const
 {
-    //TODO
-    return true;
+    return !map::player->has_prop(Prop_id::rFear);
 }
 
 void Ins_phobia_open::on_new_player_turn(const std::vector<Actor*>& seen_foes)
@@ -258,8 +285,7 @@ void Ins_phobia_open::on_new_player_turn(const std::vector<Actor*>& seen_foes)
 
 bool Ins_phobia_confined::allow_gain() const
 {
-    //TODO
-    return true;
+    return !map::player->has_prop(Prop_id::rFear);
 }
 
 void Ins_phobia_confined::on_new_player_turn(const std::vector<Actor*>& seen_foes)
@@ -276,8 +302,7 @@ void Ins_phobia_confined::on_new_player_turn(const std::vector<Actor*>& seen_foe
 
 bool Ins_phobia_deep::allow_gain() const
 {
-    //TODO
-    return true;
+    return !map::player->has_prop(Prop_id::rFear);
 }
 
 void Ins_phobia_deep::on_new_player_turn(const std::vector<Actor*>& seen_foes)
@@ -304,8 +329,7 @@ void Ins_phobia_deep::on_new_player_turn(const std::vector<Actor*>& seen_foes)
 
 bool Ins_phobia_dark::allow_gain() const
 {
-    //TODO
-    return true;
+    return !map::player->has_prop(Prop_id::rFear);
 }
 
 void Ins_phobia_dark::on_new_player_turn(const std::vector<Actor*>& seen_foes)
@@ -334,20 +358,64 @@ void Ins_shadows::on_start_hook()
 {
     const int NR_SHADOWS_LOWER = 2;
 
-    const int NR_SHADOWS_UPPER =
-        utils::constr_in_range(NR_SHADOWS_LOWER, map::dlvl - 2, 8);
+    const int NR_SHADOWS_UPPER = utils::constr_in_range(NR_SHADOWS_LOWER, map::dlvl - 2, 8);
 
     const int NR = rnd::range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
 
+    std::vector<Actor_id> shadow_ids(NR, Actor_id::shadow);
+
+    std::vector<Mon*> summoned;
+
     actor_factory::summon(map::player->pos,
-                          std::vector<Actor_id>(NR, Actor_id::shadow),
-                          Make_mon_aware::yes);
+                          shadow_ids,
+                          Make_mon_aware::yes,
+                          nullptr,
+                          &summoned,
+                          Verbosity::silent);
+
+    assert(!summoned.empty());
+
+    for (Mon* const mon : summoned)
+    {
+        mon->is_sneaking_                   = true;
+        mon->player_aware_of_me_counter_    = 0;
+
+        auto* const disabled_att = new Prop_disabled_attack(Prop_turns::specific, 1);
+
+        mon->prop_handler().try_add(disabled_att);
+    }
+}
+
+void Ins_paranoia::on_start_hook()
+{
+    //Flip a coint to decide if we should spawn a stalker or not
+    //(Maybe it's just paranoia, or maybe it's real)
+    if (rnd::coin_toss())
+    {
+        std::vector<Actor_id> stalker_id(1, Actor_id::invis_stalker);
+
+        std::vector<Mon*> summoned;
+
+        actor_factory::summon(map::player->pos,
+                              stalker_id,
+                              Make_mon_aware::yes,
+                              nullptr,
+                              &summoned,
+                              Verbosity::silent);
+
+        assert(summoned.size() == 1);
+
+        Mon* const mon = summoned[0];
+
+        auto* const disabled_att = new Prop_disabled_attack(Prop_turns::specific, 2);
+
+        mon->prop_handler().try_add(disabled_att);
+    }
 }
 
 bool Ins_confusion::allow_gain() const
 {
-    //TODO
-    return true;
+    return !map::player->has_prop(Prop_id::rConf);
 }
 
 void Ins_confusion::on_start_hook()
@@ -399,6 +467,9 @@ Ins_sympt* mk_sympt(const Ins_sympt_id id)
     case Ins_sympt_id::phobia_spider:
         return new Ins_phobia_spider();
 
+    case Ins_sympt_id::phobia_reptile_and_amph:
+        return new Ins_phobia_reptile_and_amph();
+
     case Ins_sympt_id::phobia_canine:
         return new Ins_phobia_canine();
 
@@ -425,6 +496,9 @@ Ins_sympt* mk_sympt(const Ins_sympt_id id)
 
     case Ins_sympt_id::shadows:
         return new Ins_shadows();
+
+    case Ins_sympt_id::paranoia:
+        return new Ins_paranoia();
 
     case Ins_sympt_id::confusion:
         return new Ins_confusion();
