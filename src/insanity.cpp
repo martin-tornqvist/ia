@@ -254,7 +254,7 @@ void Ins_phobia_dead::on_new_player_turn(const std::vector<Actor*>& seen_foes)
     {
         for (Actor* const actor : seen_foes)
         {
-            if (actor->data().is_rat)
+            if (actor->data().is_undead)
             {
                 msg_log::add("I am plagued by my phobia of the dead!");
 
