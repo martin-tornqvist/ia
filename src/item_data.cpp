@@ -1934,6 +1934,8 @@ void init_data_list()
     d.is_identified = true;
     d.tile = Tile_id::lantern;
     d.clr = clr_yellow;
+    d.is_ins_raied_while_carried = false;
+    d.is_ins_raied_while_equiped = false;
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
