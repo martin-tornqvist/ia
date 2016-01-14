@@ -190,7 +190,7 @@ void init_data_list()
 
     d.id = Prop_id::rBlind;
     d.name = "";
-    d.name_short = "";
+    d.name_short = "rBlind";
     d.msg[size_t(Prop_msg::start_player)] = "";
     d.msg[size_t(Prop_msg::start_mon)] = "";
     d.msg[size_t(Prop_msg::end_player)] = "";
@@ -637,7 +637,7 @@ void init_data_list()
     d.id = Prop_id::infravis;
     d.std_rnd_turns = Range(50, 100);
     d.name = "Infravision";
-    d.name_short = "Infravis";
+    d.name_short = "Infravision";
     d.msg[size_t(Prop_msg::start_player)] = "I have infravision.";
     d.msg[size_t(Prop_msg::end_player)] = "I no longer have infravision.";
     d.msg[size_t(Prop_msg::res_player)] = "";
@@ -708,6 +708,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::conflict;
+    d.name_short = "Conflict";
     d.std_rnd_turns = Range(10, 20);
     d.msg[size_t(Prop_msg::start_mon)] = "Looks conflicted.";
     d.msg[size_t(Prop_msg::end_mon)] = "Looks more determined.";
@@ -728,6 +729,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::flying;
+    d.name_short = "Flying";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
@@ -737,6 +739,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::ethereal;
+    d.name_short = "Ethereal";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
@@ -746,6 +749,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::ooze;
+    d.name_short = "Ooze";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
@@ -755,6 +759,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::burrowing;
+    d.name_short = "Burrow";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
@@ -1531,7 +1536,11 @@ void Prop_handler::props_interface_line(std::vector<Str_and_clr>& line) const
 
             if (TURNS_LEFT > 0)
             {
-                if (player_bon::traits[size_t(Trait::self_aware)])
+                //Player can see number of turns left on own properties with Self-aware?
+                if (
+                    owning_actor_->is_player() &&
+                    player_bon::traits[size_t(Trait::self_aware)] &&
+                    prop->allow_display_turns())
                 {
                     str += ":" + to_str(TURNS_LEFT);
                 }

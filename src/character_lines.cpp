@@ -330,12 +330,8 @@ void draw_classic_mode()
 
     player.prop_handler().props_interface_line(props_line);
 
-    const int NR_PROPS = props_line.size();
-
-    for (int i = 0; i < NR_PROPS; ++i)
+    for (const Str_and_clr& cur_prop_label : props_line)
     {
-        const Str_and_clr& cur_prop_label = props_line[i];
-
         render::draw_text(cur_prop_label.str, panel, p, cur_prop_label.clr);
 
         p.x += cur_prop_label.str.size() + 1;

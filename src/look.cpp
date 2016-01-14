@@ -288,19 +288,44 @@ void print_detailed_actor_descr(const Actor& actor)
         auto_descr_actor::add_auto_description_lines(actor, descr);
     }
 
-    std::vector<std::string> formatted_text;
-    text_format::split(descr, MAP_W - 1, formatted_text);
+    std::vector<std::string> lines;
+    text_format::split(descr, MAP_W - 1, lines);
 
-    const size_t NR_OF_LINES = formatted_text.size();
+    const size_t NR_LINES = lines.size();
 
-    render::cover_area(Panel::screen, P(0, 1), P(MAP_W, NR_OF_LINES));
+    P p(0, 1);
 
-    int y = 1;
+    render::cover_area(Panel::screen, p, P(MAP_W, NR_LINES));
 
-    for (std::string& s : formatted_text)
+    //Draw the description
+    for (std::string& s : lines)
     {
-        render::draw_text(s, Panel::screen, P(0, y), clr_white_high);
-        y++;
+        render::draw_text(s, Panel::screen, p, clr_white_high);
+        ++p.y;
+    }
+
+    //Draw properties line
+    std::vector<Str_and_clr> props_line;
+    actor.prop_handler().props_interface_line(props_line);
+
+    ++p.y;
+
+    render::draw_text("Properties:", Panel::screen, p, clr_white_high);
+
+    ++p.y;
+
+    if (props_line.empty())
+    {
+        render::draw_text("None", Panel::screen, p, clr_white);
+    }
+    else //Has properties
+    {
+        for (const Str_and_clr& cur_prop_label : props_line)
+        {
+            render::draw_text(cur_prop_label.str, Panel::screen, p, cur_prop_label.clr);
+
+            p.x += cur_prop_label.str.size() + 1;
+        }
     }
 
     render::update_screen();

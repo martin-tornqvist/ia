@@ -622,7 +622,6 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::ranged, 40);
     d.nr_left_allowed_to_spawn = 1;
     d.is_unique = true;
-    d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 3;
     d.group_size = Mon_group_size::alone;
     d.actor_size = Actor_size::humanoid;
@@ -2771,7 +2770,6 @@ void init_data_list()
     d.spi = 1;
     d.dmg_melee = 1;
     d.ability_vals.set_val(Ability_id::melee, 7);
-    d.natural_props[size_t(Prop_id::infravis)] = true;
     d.speed = Actor_speed::slow;
     d.ai[size_t(Ai_id::looks)] = false;
     d.ai[size_t(Ai_id::attacks)] = true;
