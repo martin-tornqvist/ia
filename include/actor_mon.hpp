@@ -739,7 +739,10 @@ private:
 class Giant_locust: public Mon
 {
 public:
-    Giant_locust() : Mon(), spawn_new_one_in_n(40) {}
+    Giant_locust() :
+        Mon(),
+        spawn_new_one_in_n(40) {}
+
     ~Giant_locust() {}
 
     void mk_start_items() override;
@@ -752,7 +755,10 @@ private:
 class Vortex: public Mon
 {
 public:
-    Vortex() : Mon(), pull_cooldown(0) {}
+    Vortex() :
+        Mon(),
+        pull_cooldown(0) {}
+
     virtual ~Vortex() {}
 
     virtual void mk_start_items() = 0;

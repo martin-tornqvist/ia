@@ -995,12 +995,14 @@ Did_action Vortex::on_act()
 
     const P& player_pos = map::player->pos;
 
-    if (!utils::is_pos_adj(pos, player_pos, true) && rnd::one_in(4))
+    if (
+        !utils::is_pos_adj(pos, player_pos, true) &&
+        rnd::one_in(3))
     {
         TRACE << "Vortex attempting to pull player" << std::endl;
 
-        const P   delta               = player_pos - pos;
-        P         knock_back_from_pos    = player_pos;
+        const P   delta                 = player_pos - pos;
+        P         knock_back_from_pos   = player_pos;
 
         if (delta.x >  1)
         {
@@ -1047,7 +1049,7 @@ Did_action Vortex::on_act()
 
                 if (map::player->can_see_actor(*this))
                 {
-                    msg_log::add("The Vortex attempts to pull me in!");
+                    msg_log::add("The Vortex pulls me!");
                 }
                 else
                 {
@@ -1056,9 +1058,14 @@ Did_action Vortex::on_act()
 
                 TRACE << "Attempt pull (knockback)" << std::endl;
 
-                knock_back::try_knock_back(*(map::player), knock_back_from_pos, false, false);
+                //TODO: There should be a sfx here
 
-                pull_cooldown = 5;
+                knock_back::try_knock_back(*(map::player),
+                                           knock_back_from_pos,
+                                           false,
+                                           false);
+
+                pull_cooldown = 2;
 
                 game_time::tick();
 
