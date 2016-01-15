@@ -1165,7 +1165,8 @@ Liquid_shallow::Liquid_shallow(const P& feature_pos) :
     Rigid   (feature_pos),
     type_   (Liquid_type::water) {}
 
-void Liquid_shallow::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
+void Liquid_shallow::on_hit(const Dmg_type dmg_type,
+                            const Dmg_method dmg_method,
                             Actor* const actor)
 {
     (void)dmg_type;
@@ -1175,7 +1176,9 @@ void Liquid_shallow::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method
 
 void Liquid_shallow::bump(Actor& actor_bumping)
 {
-    if (!actor_bumping.has_prop(Prop_id::ethereal) && !actor_bumping.has_prop(Prop_id::flying))
+    if (
+        !actor_bumping.has_prop(Prop_id::ethereal) &&
+        !actor_bumping.has_prop(Prop_id::flying))
     {
         actor_bumping.prop_handler().try_add(new Prop_waiting(Prop_turns::std));
 
@@ -2220,6 +2223,8 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
 
     Actor_id mon_to_spawn = Actor_id::END;
 
+    const bool IS_SEEN = map::cells[pos_.x][pos_.y].is_seen_by_player;
+
     switch (trait_)
     {
     case Tomb_trait::ghost:
@@ -2242,7 +2247,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
             mon_to_spawn = mon_bucket[IDX];
         }
 
-        const std::string msg = "The air feels colder.";
+        const std::string msg = "The air suddenly feels colder.";
 
         msg_log::add(msg,
                      clr_white,
@@ -2283,14 +2288,21 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
     {
         if (rnd::coin_toss())
         {
-            if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+            if (IS_SEEN)
             {
-                msg_log::add("Fumes burst out from the tomb!", clr_white, false,
+                msg_log::add("Fumes burst out from the tomb!",
+                             clr_white,
+                             false,
                              More_prompt_on_msg::yes);
             }
 
-            Snd snd("I hear a burst of gas.", Sfx_id::gas, Ignore_msg_if_origin_seen::yes, pos_,
-                    nullptr, Snd_vol::low, Alerts_mon::yes);
+            Snd snd("I hear a burst of gas.",
+                    Sfx_id::gas,
+                    Ignore_msg_if_origin_seen::yes,
+                    pos_,
+                    nullptr,
+                    Snd_vol::low,
+                    Alerts_mon::yes);
 
             snd_emit::run(snd);
 
@@ -2314,8 +2326,13 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
                 prop->set_nr_turns_left(prop->nr_turns_left() * 2);
             }
 
-            explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc,
-                           Emit_expl_snd::no, 0, prop, &fume_clr);
+            explosion::run(pos_,
+                           Expl_type::apply_prop,
+                           Expl_src::misc,
+                           Emit_expl_snd::no,
+                           0,
+                           prop,
+                           &fume_clr);
         }
         else //Not fumes
         {
@@ -2338,10 +2355,13 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
 
             mon_to_spawn = mon_bucket[IDX];
 
-            msg_log::add("Something repulsive creeps up from the tomb!",
-                         clr_white,
-                         false,
-                         More_prompt_on_msg::yes);
+            if (IS_SEEN)
+            {
+                msg_log::add("Something repulsive creeps up from the tomb!",
+                             clr_white,
+                             false,
+                             More_prompt_on_msg::yes);
+            }
         }
 
         did_trigger_trap = Did_trigger_trap::yes;
@@ -2361,16 +2381,16 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
 
     if (mon_to_spawn != Actor_id::END)
     {
-        Actor* const actor = actor_factory::mk(mon_to_spawn, pos_);
+        Actor* const actor_spawned = actor_factory::mk(mon_to_spawn, pos_);
 
-        Mon* const mon = static_cast<Mon*>(actor);
+        Mon* const mon = static_cast<Mon*>(actor_spawned);
 
         mon->become_aware(false);
 
         mon->prop_handler().try_add(new Prop_disabled_attack(Prop_turns::specific, 1));
     }
 
-    trait_        = Tomb_trait::END;
+    trait_          = Tomb_trait::END;
     is_trait_known_ = true;
 
     return did_trigger_trap;
@@ -2498,7 +2518,7 @@ Did_open Chest::open(Actor* const actor_opening)
     {
         return Did_open::no;
     }
-    else //Chest was not already open
+    else //Chest is closed
     {
         is_open_ = true;
 
@@ -2725,27 +2745,19 @@ void Chest::disarm()
 
 Did_trigger_trap Chest::trigger_trap(Actor* const actor)
 {
-    //TODO: This function seems to assume that an actor is opening (not nullptr). But could it not
-    //be openened by e.g. by a spell of opening? Make sure this function handles that.
+    is_trap_status_known_ = true;
 
-    assert(actor);
-
-    if (!actor) //Robustness for release builds, but see "TODO" above.
-    {
-        is_trap_status_known_ = true;
-        return Did_trigger_trap::no;
-    }
-
-    //Chest is not trapped? (Either already triggered, or chest were created wihout trap)
+    //Chest is not trapped?
     if (!is_trapped_)
     {
-        is_trap_status_known_ = true;
         return Did_trigger_trap::no;
     }
+
+    is_trapped_ = false;
 
     const bool IS_SEEN = map::cells[pos_.x][pos_.y].is_seen_by_player;
 
-    if (IS_SEEN)
+    if (actor && IS_SEEN)
     {
         msg_log::add("A hidden trap on the chest triggers...",
                      clr_white,
@@ -2753,21 +2765,30 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
                      More_prompt_on_msg::yes);
     }
 
-    is_trap_status_known_   = true;
-    is_trapped_             = false;
-
     //Nothing happens?
-    const int TRAP_NO_ACTION_ONE_IN_N = actor->has_prop(Prop_id::blessed) ? 2 :
-                                        actor->has_prop(Prop_id::cursed)  ? 20 : 4;
+    int trap_no_action_one_in_n = 4;
 
-    if (rnd::one_in(TRAP_NO_ACTION_ONE_IN_N))
+    if (actor)
     {
-        if (IS_SEEN)
+        if (actor->has_prop(Prop_id::blessed))
+        {
+            trap_no_action_one_in_n = 2;
+        }
+        else if (actor->has_prop(Prop_id::cursed))
+        {
+            trap_no_action_one_in_n = 20;
+        }
+    }
+
+    if (rnd::one_in(trap_no_action_one_in_n))
+    {
+        if (actor && IS_SEEN)
         {
             msg_log::clear();
             msg_log::add("...but nothing happens.");
-            return Did_trigger_trap::no;
         }
+
+        return Did_trigger_trap::no;
     }
 
     //Fire explosion?
@@ -2794,6 +2815,7 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
         return Did_trigger_trap::yes;
     }
 
+    //If player is opening, the trap can be a needle
     if (actor == map::player && rnd::coin_toss())
     {
         //Needle
@@ -2806,15 +2828,15 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
         if (map::dlvl < MIN_DLVL_HARDER_TRAPS)
         {
             //Weak poison
-            actor->prop_handler().try_add(new Prop_poisoned(Prop_turns::specific,
-                                               POISON_DMG_N_TURN * 3));
+            actor->prop_handler().try_add(
+                new Prop_poisoned(Prop_turns::specific, POISON_DMG_N_TURN * 3));
         }
         else //We're at the deep end of the pool now, apply strong poison
         {
             actor->prop_handler().try_add(new Prop_poisoned(Prop_turns::std));
         }
     }
-    else //Is monster, or cointoss is false
+    else //Not needle trap
     {
         //Fumes
         if (IS_SEEN)
@@ -2958,7 +2980,8 @@ Fountain::Fountain(const P& feature_pos) :
     }
 }
 
-void Fountain::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
+void Fountain::on_hit(const Dmg_type dmg_type,
+                      const Dmg_method dmg_method,
                       Actor* const actor)
 {
     (void)dmg_type; (void)dmg_method; (void)actor;

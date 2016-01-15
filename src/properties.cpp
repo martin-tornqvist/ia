@@ -593,7 +593,7 @@ void init_data_list()
     d.name = "Radiant";
     d.name_short = "Radiant";
     d.msg[size_t(Prop_msg::start_player)] = "A bright light shines around me.";
-    d.msg[size_t(Prop_msg::end_player)] = "It suddenly seems darker.";
+    d.msg[size_t(Prop_msg::end_player)] = "It suddenly gets darker.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
