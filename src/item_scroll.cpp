@@ -59,6 +59,16 @@ Consume_item Scroll::activate(Actor* const actor)
             return Consume_item::no;
         }
 
+        const P& player_pos(map::player->pos);
+
+        const Cell& cell = map::cells[player_pos.x][player_pos.y];
+
+        if (cell.is_dark && !cell.is_lit)
+        {
+            msg_log::add("It's too dark to read here.");
+            return Consume_item::no;
+        }
+
         auto* const spell = mk_spell();
 
         const std::string crumble_str = "The Manuscript crumbles to dust.";
