@@ -285,6 +285,19 @@ void run_inv_screen()
 
             if (cur_inv_type == Inv_type::slots)
             {
+                //Forbid equipping/unequipping items while burning
+                if (map::player->prop_handler().has_prop(Prop_id::burning))
+                {
+                    msg_log::add("Not while burning.",
+                                 clr_white,
+                                 false,
+                                 More_prompt_on_msg::yes);
+
+                    render_inv::draw_inv(browser);
+
+                    continue;
+                }
+
                 const size_t    BROWSER_Y   = browser.y();
                 Inv_slot&       slot        = inv.slots_[BROWSER_Y];
 
