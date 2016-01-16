@@ -2746,6 +2746,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::rBlind)] = true;
     d.actor_size = Actor_size::humanoid;
     d.is_auto_descr_allowed = false;
+    d.can_leave_corpse = false;
     d.can_bash_doors = true;
     d.can_open_doors = false;
     d.nr_turns_aware = 25;

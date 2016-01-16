@@ -259,8 +259,13 @@ void Amulet_effect_random_tele::on_std_turn_equipped()
 
     if (rnd::one_in(TELE_ON_IN_N) && prop_handler.allow_act())
     {
-        msg_log::add("I am being teleported...", clr_white, true, More_prompt_on_msg::yes);
+        msg_log::add("I am being teleported...",
+                     clr_white,
+                     true,
+                     More_prompt_on_msg::yes);
+
         map::player->teleport();
+
         amulet_->effect_noticed(id());
     }
 }
@@ -272,7 +277,9 @@ void Amulet_effect_summon_mon::on_std_turn_equipped()
 
     if (effects_known_[size_t(id())] && rnd::one_in(SOUND_ONE_IN_N))
     {
-        msg_log::add("I hear a faint whistling sound coming nearer...", clr_white, false,
+        msg_log::add("I hear a faint whistling sound coming nearer...",
+                     clr_white,
+                     false,
                      More_prompt_on_msg::yes);
 
         map::player->incr_shock(Shock_lvl::mild, Shock_src::misc);
@@ -282,7 +289,9 @@ void Amulet_effect_summon_mon::on_std_turn_equipped()
 
     if (rnd::one_in(SUMMON_ONE_IN_N))
     {
-        msg_log::add("There is a loud whistling sound.", clr_white, false,
+        msg_log::add("There is a loud whistling sound.",
+                     clr_white,
+                     false,
                      More_prompt_on_msg::yes);
 
         const P origin = map::player->pos;
@@ -290,7 +299,7 @@ void Amulet_effect_summon_mon::on_std_turn_equipped()
         std::vector<Mon*> summoned_mon;
 
         actor_factory::summon(origin,
-                              {Actor_id::greater_polyp},
+                              std::vector<Actor_id>(1, Actor_id::greater_polyp),
                               Make_mon_aware::no,
                               nullptr,
                               &summoned_mon);
@@ -481,9 +490,15 @@ void Amulet_effect_shriek::on_std_turn_equipped()
 
         phrase += "!!!";
 
-        snd_emit::run(Snd(phrase, Sfx_id::END, Ignore_msg_if_origin_seen::no,
-                          map::player->pos, map::player, Snd_vol::high, Alerts_mon::yes
-                         ));
+        Snd snd(phrase,
+                Sfx_id::END,
+                Ignore_msg_if_origin_seen::no,
+                map::player->pos,
+                map::player,
+                Snd_vol::high,
+                Alerts_mon::yes);
+
+        snd_emit::run(snd);
 
         map::player->incr_shock(Shock_lvl::mild, Shock_src::misc);
 
@@ -674,8 +689,13 @@ void Amulet::identify(const Verbosity verbosity)
         {
             const std::string name_plain = name(Item_ref_type::plain, Item_ref_inf::none);
 
-            msg_log::add("I feel like all properties of the " + name_plain +
-                         " are known to me.", clr_white, false, More_prompt_on_msg::yes);
+            const std::string msg = "I feel like all properties of the " + name_plain +
+                                    " are known to me.";
+
+            msg_log::add(msg,
+                         clr_white,
+                         false,
+                         More_prompt_on_msg::yes);
 
             const std::string name_a = name(Item_ref_type::a, Item_ref_inf::none);
 
