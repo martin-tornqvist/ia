@@ -739,7 +739,7 @@ void Amulet::effect_noticed(const Amulet_effect_id effect_id)
     {
         effects_known_[EFFECT_IDX] = true;
 
-        const int   MAX_NR_EFFECTS_ON_ITEM  = 2;
+        const int   MAX_NR_EFFECTS_ON_ITEM      = 2;
         int         nr_effects_known_this_item  = 0;
 
         for (auto* effect : effects_)
@@ -784,7 +784,7 @@ void Amulet::effect_noticed(const Amulet_effect_id effect_id)
 namespace
 {
 
-bool can_effects_be_combined(const Amulet_effect_id id1,
+bool allow_combine_effects(const Amulet_effect_id id1,
                              const Amulet_effect_id id2)
 {
     typedef Amulet_effect_id Id;
@@ -866,10 +866,9 @@ int rnd_item_bucket_idx_for_effect(const Amulet_effect_id  effect_to_assign,
 
             if (effect_list_[i] == item_bucket[item_bucket_idx])
             {
-                const bool CAN_EFFECTS_BE_COMBINED =
-                    can_effects_be_combined(effect_to_assign, cur_effect);
+                const bool ALLOW_COMBINE = allow_combine_effects(effect_to_assign, cur_effect);
 
-                if (!CAN_EFFECTS_BE_COMBINED)
+                if (!ALLOW_COMBINE)
                 {
                     //Combination with effect already assigned on item not allowed
                     can_be_placed_on_item = false;

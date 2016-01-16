@@ -215,7 +215,10 @@ void draw(const Menu_browser& browser)
     TRACE << "Calling clear_window()" << std::endl;
     render::clear_screen();
 
-    render::draw_box(Rect(P(0, 0), P(SCREEN_W - 1, SCREEN_H - 1)));
+    if (config::is_tiles_mode())
+    {
+        render::draw_box(Rect(P(0, 0), P(SCREEN_W - 1, SCREEN_H - 1)));
+    }
 
     if (config::is_tiles_mode())
     {

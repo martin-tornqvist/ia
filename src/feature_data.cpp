@@ -321,7 +321,7 @@ void init_data_list()
     {
         return new Grave_stone(p);
     };
-    d.glyph = '&';
+    d.glyph = ']';
     d.tile = Tile_id::grave_stone;
     d.move_rules.set_prop_can_move(Prop_id::ethereal);
     d.move_rules.set_prop_can_move(Prop_id::flying);
@@ -501,7 +501,7 @@ void init_data_list()
     {
         return new Fountain(p);
     };
-    d.glyph = '%';
+    d.glyph = '1';
     d.tile = Tile_id::fountain;
     d.is_projectile_passable = false;
     d.is_los_passable = false;
@@ -605,7 +605,7 @@ void init_data_list()
     {
         return new Tomb(p);
     };
-    d.glyph = '&';
+    d.glyph = ']';
     d.tile = Tile_id::tomb_closed;
     d.move_rules.set_prop_can_move(Prop_id::ethereal);
     d.move_rules.set_prop_can_move(Prop_id::flying);

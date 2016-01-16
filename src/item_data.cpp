@@ -156,7 +156,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.type = Item_type::melee_wpn;
         d.is_stackable = false;
         d.weight = Item_weight::medium;
-        d.glyph = '(';
+        d.glyph = ')';
         d.clr = clr_white;
         d.main_att_mode = Att_mode::melee;
         d.melee.is_melee_wpn = true;
@@ -308,7 +308,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         };
         d.weight = Item_weight::light;
         d.is_identified = false;
-        d.glyph = '~';
+        d.glyph = '%';
         d.tile = Tile_id::device1;
         d.is_stackable = false;
         d.land_on_hard_snd_msg = "I hear a clanking sound.";
@@ -332,7 +332,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.chance_to_incl_in_floor_spawn_list = 9;
         d.weight = Item_weight::light;
         d.is_identified = false;
-        d.glyph = '-';
+        d.glyph = '%';
         d.tile = Tile_id::rod;
         d.is_stackable = false;
         d.land_on_hard_snd_msg = "I hear a clanking sound.";
@@ -708,7 +708,6 @@ void init_data_list()
     d.ranged.att_msgs = {"fire", "fires a Spike Gun"};
     d.ranged.snd_msg = "I hear a very crude weapon being fired.";
     d.ranged.makes_ricochet_snd = true;
-    d.ranged.projectile_glyph = '/';
     d.ranged.projectile_clr = clr_gray;
     d.spawn_std_range.min = 4;
     d.ranged.att_sfx = Sfx_id::spike_gun;
@@ -1970,7 +1969,7 @@ void init_data_list()
     d.weight = Item_weight::medium;
     d.spawn_std_range = Range(1, DLVL_LAST_MID_GAME);
     d.is_stackable = false;
-    d.glyph = '~';
+    d.glyph = '%';
     d.clr = clr_brown_drk;
     d.tile = Tile_id::medical_bag;
     data[size_t(d.id)] = d;

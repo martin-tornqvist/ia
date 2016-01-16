@@ -31,7 +31,7 @@ Inventory::Inventory(Actor* const owning_actor) :
     set_slot(Slot_id::thrown,   "Thrown");
     set_slot(Slot_id::body,     "Body");
     set_slot(Slot_id::head,     "Head");
-    set_slot(Slot_id::neck,     "Amulet");
+    set_slot(Slot_id::neck,     "Neck");
 }
 
 Inventory::~Inventory()
