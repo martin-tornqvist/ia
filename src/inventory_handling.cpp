@@ -67,7 +67,10 @@ bool run_drop_query(const Inv_type inv_type, const size_t IDX)
         const std::string nr_str    = "1-" + to_str(item->nr_items_);
         const std::string drop_str  = "Drop how many (" + nr_str + ")?:";
 
-        render::draw_text(drop_str, Panel::screen, P(0, 0), clr_white_high);
+        render::draw_text(drop_str,
+                          Panel::screen,
+                          P(0, 0),
+                          clr_white_high);
 
         render::update_screen();
 
@@ -76,10 +79,15 @@ bool run_drop_query(const Inv_type inv_type, const size_t IDX)
         const int   MAX_DIGITS      = 3;
         const P   done_inf_pos    = nr_query_pos + P(MAX_DIGITS + 2, 0);
 
-        render::draw_text("[enter] to drop" + cancel_info_str, Panel::screen, done_inf_pos,
+        render::draw_text("[enter] to drop" + cancel_info_str,
+                          Panel::screen,
+                          done_inf_pos,
                           clr_white_high);
 
-        const int NR_TO_DROP = query::number(nr_query_pos, clr_white_high, 0, 3, item->nr_items_,
+        const int NR_TO_DROP = query::number(nr_query_pos,
+                                             clr_white_high,
+                                             0, 3,
+                                             item->nr_items_,
                                              false);
 
         if (NR_TO_DROP <= 0)

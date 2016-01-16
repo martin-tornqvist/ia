@@ -181,7 +181,6 @@ void init_data_list()
     d.glyph = '|';
     d.tile = Tile_id::tree;
     d.move_rules.set_prop_can_move(Prop_id::ethereal);
-    //d.move_rules.set_prop_can_move(Prop_id::flying); //Its hard to notice some monsters
     d.is_sound_passable = false;
     d.is_projectile_passable = false;
     d.is_los_passable = false;

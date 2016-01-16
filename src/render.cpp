@@ -1146,7 +1146,8 @@ void draw_descr_box(const std::vector<Str_and_clr>& lines)
     const int DESCR_Y0  = 1;
     const int DESCR_X1  = MAP_W - 1;
 
-    cover_area(Panel::screen, Rect(DESCR_X0 - 1, DESCR_Y0, DESCR_X1, SCREEN_H - 1));
+    cover_area(Panel::screen,
+               Rect(DESCR_X0 - 1, DESCR_Y0, DESCR_X1, SCREEN_H - 1));
 
     const int MAX_W = DESCR_X1 - DESCR_X0 + 1;
 

@@ -184,7 +184,7 @@ void draw_detailed_item_descr(const Item* const item)
     render::draw_descr_box(lines);
 }
 
-} //Namespace
+} //namespace
 
 const int INV_H = INV_Y1 - INV_Y0 + 1;
 
@@ -204,9 +204,7 @@ void draw_inv(const Menu_browser& browser)
                                     inv.slots_[BROWSER_Y].item :
                                     inv.backpack_[size_t(BROWSER_Y) - NR_SLOTS];
 
-    std::string str = "Browsing inventory";
-
-    render::draw_text_center(str,
+    render::draw_text_center("Browsing inventory" + drop_info_str,
                              panel,
                              P(SCREEN_W / 2, 0),
                              clr_brown_gray);
@@ -374,7 +372,7 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
     const size_t        BACKPACK_IDX_MARKED = gen_inv_indexes[size_t(BROWSER_Y)];
     const auto* const   item_marked         = inv.backpack_[BACKPACK_IDX_MARKED];
 
-    render::draw_text_center("Apply which item?",
+    render::draw_text_center("Apply which item?" + drop_info_str,
                              panel,
                              P(SCREEN_W / 2, 0),
                              clr_brown_gray);
@@ -461,44 +459,44 @@ void draw_equip(const Menu_browser& browser,
 
     const Panel panel = Panel::screen;
 
-    std::string str = "";
+    std::string heading = "";
 
     switch (slot_id_to_equip)
     {
     case Slot_id::wpn:
-        str = HAS_ITEM ?
-              "Wield which item?" :
-              "I carry no weapon to wield.";
+        heading = HAS_ITEM ?
+                  "Wield which item?" :
+                  "I carry no weapon to wield.";
         break;
 
     case Slot_id::wpn_alt:
-        str = HAS_ITEM ?
-              "Prepare which weapon?" :
-              "I carry no weapon to wield.";
+        heading = HAS_ITEM ?
+                  "Prepare which weapon?" :
+                  "I carry no weapon to wield.";
         break;
 
     case Slot_id::thrown:
-        str = HAS_ITEM ?
-              "Use which item as thrown weapon?" :
-              "I carry no weapon to throw.";
+        heading = HAS_ITEM ?
+                  "Use which item as thrown weapon?" :
+                  "I carry no weapon to throw.";
         break;
 
     case Slot_id::body:
-        str = HAS_ITEM ?
-              "Wear which armor?" :
-              "I carry no armor.";
+        heading = HAS_ITEM ?
+                  "Wear which armor?" :
+                  "I carry no armor.";
         break;
 
     case Slot_id::head:
-        str = HAS_ITEM ?
-              "Wear what on head?" :
-              "I carry no headwear.";
+        heading = HAS_ITEM ?
+                  "Wear what on head?" :
+                  "I carry no headwear.";
         break;
 
     case Slot_id::neck:
-        str = HAS_ITEM ?
-              "Wear what around the neck?" :
-              "I carry no amulet.";
+        heading = HAS_ITEM ?
+                  "Wear what around the neck?" :
+                  "I carry nothing to wear around the neck.";
         break;
 
     case Slot_id::END:
@@ -509,14 +507,14 @@ void draw_equip(const Menu_browser& browser,
     {
         render::clear_screen();
 
-        render::draw_text_center(str,
+        render::draw_text_center(heading + drop_info_str,
                                  panel,
                                  P(SCREEN_W / 2, 0),
                                  clr_brown_gray);
     }
     else
     {
-        render::draw_text(str + cancel_info_str,
+        render::draw_text(heading + cancel_info_str,
                           panel,
                           P(0, 0),
                           clr_white_high);

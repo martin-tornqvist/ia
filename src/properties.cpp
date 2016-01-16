@@ -547,8 +547,8 @@ void init_data_list()
     d.name_short = "Frenzied";
     d.msg[size_t(Prop_msg::start_player)] = "I feel ferocious!";
     d.msg[size_t(Prop_msg::start_mon)] = "Looks ferocious!";
-    d.msg[size_t(Prop_msg::end_player)] = "I feel calmer.";
-    d.msg[size_t(Prop_msg::end_mon)] = "Looks calmer.";
+    d.msg[size_t(Prop_msg::end_player)] = "I calm down.";
+    d.msg[size_t(Prop_msg::end_mon)] = "Calms down a little.";
     d.msg[size_t(Prop_msg::res_player)] = "";
     d.msg[size_t(Prop_msg::res_mon)] = "";
     d.is_making_mon_aware = false;

@@ -589,9 +589,9 @@ bool Player::is_standing_in_open_place() const
 
     bool blocked[MAP_W][MAP_H];
 
-    //NOTE: Checking if adjacent cells blocks projectiles is probably the best meassure of if this
-    //is an open place. If the cell check for blocking common movement is used, stuff like chasms
-    //would count as blocking.
+    //NOTE: Checking if adjacent cells blocks projectiles is probably the best
+    //way to determine if this is an open place. If we check for things that
+    //block common movement, stuff like chasms would count as blocking.
     map_parse::run(cell_check::Blocks_projectiles(),
                    blocked,
                    Map_parse_mode::overwrite,
@@ -617,9 +617,9 @@ bool Player::is_standing_in_cramped_place() const
 
     bool blocked[MAP_W][MAP_H];
 
-    //NOTE: Checking if adjacent cells blocks projectiles is probably the best meassure of if this
-    //is an open place. If the cell check for blocking common movement is used, stuff like chasms
-    //would count as blocking.
+    //NOTE: Checking if adjacent cells blocks projectiles is probably the best
+    //way to determine if this is an open place. If we check for things that
+    //block common movement, stuff like chasms would count as blocking.
     map_parse::run(cell_check::Blocks_projectiles(),
                    blocked,
                    Map_parse_mode::overwrite,
