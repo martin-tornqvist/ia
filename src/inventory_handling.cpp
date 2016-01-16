@@ -285,19 +285,6 @@ void run_inv_screen()
 
             if (cur_inv_type == Inv_type::slots)
             {
-                //Forbid equipping/unequipping items while burning
-                if (map::player->prop_handler().has_prop(Prop_id::burning))
-                {
-                    msg_log::add("Not while burning.",
-                                 clr_white,
-                                 false,
-                                 More_prompt_on_msg::yes);
-
-                    render_inv::draw_inv(browser);
-
-                    continue;
-                }
-
                 const size_t    BROWSER_Y   = browser.y();
                 Inv_slot&       slot        = inv.slots_[BROWSER_Y];
 
@@ -320,7 +307,24 @@ void run_inv_screen()
                 }
                 else //No item in slot
                 {
-                    if (run_equip_screen(slot))
+                    //Forbid equipping armor while burning
+                    if (
+                        slot.id == Slot_id::body &&
+                        map::player->prop_handler().has_prop(Prop_id::burning))
+                    {
+                        msg_log::add("Not while burning.",
+                                     clr_white,
+                                     false,
+                                     More_prompt_on_msg::yes);
+
+                        render_inv::draw_inv(browser);
+
+                        continue;
+                    }
+
+                    const bool DID_EQUIP_ITEM = run_equip_screen(slot);
+
+                    if (DID_EQUIP_ITEM)
                     {
                         scr_to_open_on_new_turn         = Inv_scr::inv;
                         browser_idx_to_set_on_new_turn  = browser.y();
