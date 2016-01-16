@@ -988,8 +988,8 @@ void init_data_list()
     d.base_descr =
     {
         "A tool intended for felling trees, splitting timber, etc. Used as a weapon it "
-        "can deliver devastating blows, although it requires some skill to use "
-        "effectively. Also effective for breaching wooden doors.",
+        "can deliver devastating blows, although it requires some skill to use effectively."
+        /*TODO: "Also effective for breaching wooden doors."*/,
 
         "Melee attacks with axes are noisy."
     };
