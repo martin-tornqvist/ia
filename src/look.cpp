@@ -53,12 +53,14 @@ std::string mon_speed_str(const Actor_data_t& def)
 
 std::string mon_dwell_lvl_str(const Actor_data_t& def)
 {
-    if (def.spawn_max_dlvl >= DLVL_LAST)
+    const int MIN_DLVL = def.spawn_min_dlvl;
+
+    if (MIN_DLVL <= 1 || MIN_DLVL >= DLVL_LAST)
     {
         return "";
     }
 
-    return to_str(std::max(1, def.spawn_min_dlvl - 1));
+    return to_str(MIN_DLVL);
 }
 
 void mon_shock_str(const Actor_data_t& def,

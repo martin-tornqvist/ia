@@ -384,7 +384,7 @@ void bg_descr(const Bg id, std::vector<std::string>& out)
                       "instead heal by feeding on corpses (press [w])");
         out.push_back(" ");
         out.push_back("Has an arcane ability to incite Frenzy at will (increased speed, "
-                      "+10% melee hit chance, +1 melee damage, must move towards monsters).");
+                      "+10% melee hit chance, +1 melee damage, must move towards enemies).");
         out.push_back(" ");
         out.push_back("Does not become Weakened when Frenzy ends");
         out.push_back(" ");
@@ -392,7 +392,7 @@ void bg_descr(const Bg id, std::vector<std::string>& out)
         out.push_back(" ");
         out.push_back("-15% hit chance with firearms and thrown weapons");
         out.push_back(" ");
-        out.push_back("Starts with +6 Hit Points");
+        out.push_back("+6 Hit Points");
         out.push_back(" ");
         out.push_back("Is immune to Disease and Infections");
         out.push_back(" ");

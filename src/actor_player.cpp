@@ -998,19 +998,19 @@ void Player::on_std_turn()
         }
     }
 
-    //Some shock is taken every Xth turn
+    //Some shock is taken every Nth turn
     if (prop_handler_->allow_act())
     {
-        int turn_nr_incr_shock = 12;
+        int incr_shock_every_n_turns = 12;
 
         if (player_bon::bg() == Bg::rogue)
         {
-            turn_nr_incr_shock *= 2;
+            incr_shock_every_n_turns *= 2;
         }
 
         const int TURN = game_time::turn();
 
-        if (TURN % turn_nr_incr_shock == 0 && TURN > 1)
+        if ((TURN % incr_shock_every_n_turns == 0) && TURN > 1)
         {
             //Occasionally cause a sudden shock spike, to make it less predictable
             if (rnd::one_in(850))
