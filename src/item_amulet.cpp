@@ -509,26 +509,20 @@ void Amulet_effect_shriek::on_std_turn_equipped()
 }
 
 //--------------------------------------------------------- BURDEN
+Amulet_effect_burden::Amulet_effect_burden(Amulet* const amulet) :
+    Amulet_effect(amulet)
+{
+    effects_known_[size_t(id())] = true;
+}
+
 void Amulet_effect_burden::on_equip(const Verbosity verbosity)
 {
-    if (!effects_known_[size_t(id())])
-    {
-        if (verbosity == Verbosity::verbose)
-        {
-            msg_log::add("I suddenly feel more burdened.");
-        }
-
-        amulet_->effect_noticed(id());
-    }
+    (void)verbosity;
 }
 
 void Amulet_effect_burden::change_item_weight(int& weight_ref)
 {
-    if (effects_known_[size_t(id())])
-    {
-        //If revealed, this item weighs the average of "heavy" and "medium"
-        weight_ref = (int(Item_weight::heavy) + int(Item_weight::medium)) / 2;
-    }
+    weight_ref = int(Item_weight::medium);
 }
 
 //--------------------------------------------------------- HP REGEN BONUS
@@ -785,7 +779,7 @@ namespace
 {
 
 bool allow_combine_effects(const Amulet_effect_id id1,
-                             const Amulet_effect_id id2)
+                           const Amulet_effect_id id2)
 {
     typedef Amulet_effect_id Id;
 
@@ -849,8 +843,8 @@ bool allow_combine_effects(const Amulet_effect_id id1,
     return false;
 }
 
-int rnd_item_bucket_idx_for_effect(const Amulet_effect_id  effect_to_assign,
-                                   const std::vector<Item_id>&  item_bucket)
+int rnd_item_bucket_idx_for_effect(const Amulet_effect_id effect_to_assign,
+                                   const std::vector<Item_id>& item_bucket)
 {
     std::vector<int> item_idx_bucket;
 

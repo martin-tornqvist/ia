@@ -476,8 +476,7 @@ public:
 class Amulet_effect_burden : public Amulet_effect
 {
 public:
-    Amulet_effect_burden(Amulet* const amulet) :
-        Amulet_effect(amulet) {}
+    Amulet_effect_burden(Amulet* const amulet);
 
     ~Amulet_effect_burden() {}
 
@@ -488,7 +487,7 @@ public:
 
     std::string descr() const override
     {
-        return "It burdens the wearer, as if there was an invisible weight to carry.";
+        return "It is inexplicably heavy for its size.";
     }
 
     void on_equip(const Verbosity verbosity) override;
