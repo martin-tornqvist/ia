@@ -847,22 +847,29 @@ void Player::update_tmp_shock()
         shock_tmp_ += double(SHOCK_FROM_OBSESSION);
     }
 
-    //Temporary shock from darkness
-    Cell& cell = map::cells[pos.x][pos.y];
-
-    if (cell.is_dark && !cell.is_lit)
+    if (prop_handler_->allow_see())
     {
-        shock_tmp_ += shock_taken_after_mods(20, Shock_src::misc);
+        //Temporary shock from darkness
+        Cell& cell = map::cells[pos.x][pos.y];
+
+        if (cell.is_dark && !cell.is_lit)
+        {
+            shock_tmp_ += shock_taken_after_mods(20, Shock_src::misc);
+        }
+
+        //Temporary shock from seen features
+        for (const P& d : dir_utils::dir_list_w_center)
+        {
+            const P p(pos + d);
+
+            const int BASE_SHOCK = map::cells[p.x][p.y].rigid->shock_when_adj();
+
+            shock_tmp_ += shock_taken_after_mods(BASE_SHOCK, Shock_src::misc);
+        }
     }
-
-    //Temporary shock from features
-    for (const P& d : dir_utils::dir_list_w_center)
+    else //Is blind
     {
-        const P p(pos + d);
-
-        const int BASE_SHOCK = map::cells[p.x][p.y].rigid->shock_when_adj();
-
-        shock_tmp_ += shock_taken_after_mods(BASE_SHOCK, Shock_src::misc);
+        shock_tmp_ += shock_taken_after_mods(30, Shock_src::misc);
     }
 
     shock_tmp_ = std::min(99.0, shock_tmp_);
