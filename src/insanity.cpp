@@ -338,18 +338,16 @@ void Ins_phobia_dark::on_new_player_turn(const std::vector<Actor*>& seen_foes)
 
     if (rnd::one_in(10))
     {
-        for (const P& d : dir_utils::dir_list)
+        const P             p(map::player->pos);
+        const Prop_handler& props = map::player->prop_handler();
+
+        if (
+            (props.allow_act() && !props.allow_see()) ||
+            (map::cells[p.x][p.y].is_dark && !map::cells[p.x][p.y].is_lit))
         {
-            const P p(map::player->pos + d);
+            msg_log::add("I am plagued by my phobia of the dark!");
 
-            if (map::cells[p.x][p.y].is_dark && !map::cells[p.x][p.y].is_lit)
-            {
-                msg_log::add("I am plagued by my phobia of the dark!");
-
-                map::player->prop_handler().try_add(new Prop_terrified(Prop_turns::std));
-
-                break;
-            }
+            map::player->prop_handler().try_add(new Prop_terrified(Prop_turns::std));
         }
     }
 }
