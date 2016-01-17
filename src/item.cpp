@@ -20,6 +20,7 @@
 #include "item_data.hpp"
 #include "save_handling.hpp"
 #include "actor_factory.hpp"
+#include "dungeon_master.hpp"
 
 //---------------------------------------------------------- ITEM
 Item::Item(Item_data_t* item_data) :
@@ -1016,6 +1017,8 @@ void Medical_bag::finish_cur_action()
     if (nr_supplies_ <= 0)
     {
         map::player->inv().remove_item_in_backpack_with_ptr(this, true);
+
+        dungeon_master::add_history_event("Ran out of medical supplies.");
     }
 }
 

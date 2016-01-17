@@ -137,7 +137,11 @@ private:
     Consume_item trigger_effect() override;
 };
 
-enum class Lantern_working_state {working, flicker};
+enum class Lantern_working_state
+{
+    working,
+    flicker
+};
 
 class Device_lantern : public Device
 {

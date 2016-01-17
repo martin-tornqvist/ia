@@ -444,8 +444,12 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
 
         if (nr_turns_left_ <= 0)
         {
-            msg_log::add("My Electric Lantern breaks!", clr_msg_note, true,
+            msg_log::add("My Electric Lantern has run out.",
+                         clr_msg_note,
+                         true,
                          More_prompt_on_msg::yes);
+
+            dungeon_master::add_history_event("My Electric Lantern ran out.");
 
             //NOTE: The this deletes the object
             map::player->inv().remove_item_in_backpack_with_ptr(this, true);
@@ -462,7 +466,7 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
         if (nr_flicker_turns_left_ > 0)
         {
             //Already flickering, count down instead
-            nr_flicker_turns_left_--;
+            --nr_flicker_turns_left_;
 
             if (nr_flicker_turns_left_ <= 0)
             {
@@ -478,8 +482,8 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
             if (rnd::one_in(40))
             {
                 msg_log::add("My Electric Lantern flickers...");
-                working_state_         = Lantern_working_state::flicker;
-                nr_flicker_turns_left_   = rnd::range(4, 8);
+                working_state_          = Lantern_working_state::flicker;
+                nr_flicker_turns_left_  = rnd::range(4, 8);
 
                 game_time::update_light_map();
                 map::player->update_fov();
