@@ -473,7 +473,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::infected;
-    d.std_rnd_turns = Range(400, 700);
+    d.std_rnd_turns = Range(300, 400);
     d.name = "Infected";
     d.name_short = "Infected";
     d.msg[size_t(Prop_msg::start_player)] = "I am infected!";

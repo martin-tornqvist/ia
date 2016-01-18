@@ -1924,8 +1924,7 @@ void init_data_list()
     d.base_name = {"Electric Lantern", "Electric Lanterns", "an Electric Lantern"};
     d.base_descr =
     {
-        "A portable light source. It is somewhat unreliable as it tends to flicker and "
-        "malfunction often."
+        "A portable light source. It is somewhat unreliable, as it tends to malfunction a lot."
     };
     d.spawn_std_range = Range(1, DLVL_LAST_MID_GAME);
     d.spawn_std_range = Range(1, 10);
@@ -1964,7 +1963,7 @@ void init_data_list()
     d.base_name = {"Medical Bag", "Medical Bags", "a Medical Bag"};
     d.base_descr =
     {
-        "A portable bag of medical supplies."
+        "A portable bag of medical supplies. It can be used to treat Wounds or Infections."
     };
     d.weight = Item_weight::medium;
     d.spawn_std_range = Range(1, DLVL_LAST_MID_GAME);
