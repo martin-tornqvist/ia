@@ -59,7 +59,7 @@ The instructions below are written and tested for Ubuntu 12.10
 
 You will need build tools and SDL:
 
-    $ sudo apt-get install make gcc sdl libsdl1.2-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev
+    $ sudo apt-get install make gcc libsdl2-2.0-0 libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl-ttf2.0-dev
 
 Go to the IA repository directory, and type:
 
