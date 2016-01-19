@@ -736,6 +736,17 @@ private:
     void on_death() override;
 };
 
+class Mind_worms: public Worm_mass
+{
+public:
+    Mind_worms() :
+        Worm_mass() {}
+
+    ~Mind_worms() {}
+
+    void mk_start_items() override;
+};
+
 class Giant_locust: public Mon
 {
 public:

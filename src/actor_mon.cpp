@@ -1802,6 +1802,11 @@ void Worm_mass::on_death()
     }
 }
 
+void Mind_worms::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(Item_id::mind_worms_bite));
+}
+
 Did_action Giant_locust::on_act()
 {
     if (

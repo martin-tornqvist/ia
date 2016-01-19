@@ -178,6 +178,9 @@ Actor* mk_actor_from_id(const Actor_id id)
     case Actor_id::worm_mass:
         return new Worm_mass();
 
+    case Actor_id::mind_worms:
+        return new Mind_worms();
+
     case Actor_id::dust_vortex:
         return new Dust_vortex();
 
@@ -264,13 +267,13 @@ void delete_all_mon()
 
         if (actor == map::player)
         {
-          ++it;
+            ++it;
         }
         else //Is monster
         {
-          delete actor;
+            delete actor;
 
-          it = actors.erase(it);
+            it = actors.erase(it);
         }
     }
 }
@@ -284,7 +287,7 @@ void summon(const P& origin,
 {
     if (monsters_ret)
     {
-      monsters_ret->clear();
+        monsters_ret->clear();
     }
 
     bool blocked[MAP_W][MAP_H];
@@ -333,7 +336,7 @@ void summon(const P& origin,
 
     if (verbosity == Verbosity::verbose)
     {
-      render::draw_blast_at_seen_cells(positions_to_animate, clr_magenta);
+        render::draw_blast_at_seen_cells(positions_to_animate, clr_magenta);
     }
 }
 

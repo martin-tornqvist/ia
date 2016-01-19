@@ -77,7 +77,7 @@ enum class Item_id
     rat_bite_diseased,
     rat_thing_bite,
     brown_jenkin_bite,
-    worm_mass_bite,
+    worm_mass_bite, mind_worms_bite,
     green_spider_bite, white_spider_bite, red_spider_bite, shadow_spider_bite, leng_spider_bite,
     pit_viper_bite, spitting_cobra_bite, spitting_cobra_spit, black_mamba_bite,
     ghoul_claw,

@@ -686,7 +686,7 @@ void Snake_pit_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
     {
         const Actor_data_t& d = actor_data::data[i];
 
-        //NOTE: We don't allow Spitting Cobras in snake pits, because it's very tedious to fight
+        //NOTE: We do not allow Spitting Cobras in snake pits, because it's VERY tedious to fight
         //swarms of them (attack, get blinded, back away, repeat...)
         if (d.is_snake && d.id != Actor_id::spitting_cobra)
         {
@@ -696,6 +696,7 @@ void Snake_pit_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
 
     //Hijacking snake pit rooms to make a worm room...
     snake_bucket.push_back(Actor_id::worm_mass);
+    snake_bucket.push_back(Actor_id::mind_worms);
 
     const size_t    IDX         = rnd::range(0, snake_bucket.size() - 1);
     const Actor_id  actor_id    = Actor_id(snake_bucket[IDX]);

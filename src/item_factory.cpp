@@ -57,6 +57,7 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
     case Item_id::rat_thing_bite:
     case Item_id::brown_jenkin_bite:
     case Item_id::worm_mass_bite:
+    case Item_id::mind_worms_bite:
     case Item_id::green_spider_bite:
     case Item_id::white_spider_bite:
     case Item_id::red_spider_bite:

@@ -39,7 +39,7 @@ enum class Actor_id
     keziah_mason, brown_jenkin,
     leng_elder,
     major_clapham_lee, dean_halsey,
-    worm_mass,
+    worm_mass, mind_worms,
     dust_vortex, fire_vortex,
     ooze_black, ooze_clear, ooze_putrid, ooze_poison,
     color_oo_space,
