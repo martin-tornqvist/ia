@@ -1970,7 +1970,7 @@ void init_data_list()
     d.base_name = {"Medical Bag", "Medical Bags", "a Medical Bag"};
     d.base_descr =
     {
-        "A portable bag of medical supplies. It can be used to treat Wounds or Infections."
+        "A portable bag of medical supplies. Can be used to treat Wounds or Infections."
     };
     d.weight = Item_weight::medium;
     d.spawn_std_range = Range(1, DLVL_LAST_MID_GAME);

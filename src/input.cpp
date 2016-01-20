@@ -269,7 +269,7 @@ void handle_map_mode_key_press(const Key_data& d)
     }
 
     //----------------------------------- KICK
-    else if ((d.key == 'q'))
+    else if ((d.key == 'w'))
     {
         msg_log::clear();
 
@@ -654,7 +654,7 @@ void handle_map_mode_key_press(const Key_data& d)
         return;
     }
 
-    else if (d.key == 'w' && player_bon::bg() == Bg::ghoul)
+    else if (d.key == 'q' && player_bon::bg() == Bg::ghoul)
     {
         //----------------------------------- EAT CORPSE (GHOUL)
         msg_log::clear();

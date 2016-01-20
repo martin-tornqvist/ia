@@ -2,41 +2,42 @@ Contents:
 1. Command list
 2. Movement and interaction
 3. The interface
-4. Spirit and spell casting
-5. Insanity
-6. Sneaking and backstabbing
+4. Hit Points, Wounds and healing
+5. Spirit and spell casting
+6. Insanity
+7. Sneaking and backstabbing
 
 --------------------------------------------------------------------------------
 1. Command list
 --------------------------------------------------------------------------------
-   Esc    Menu (manual, options, quit)
-   ?      Manual
+   Esc    Menu
+   ?      This manual
    =      Options
    Q      Quit
    Space  Cancel, proceed
    Enter  Select something in a menu, confirm
-   o      Alternative Enter key (intended to be used with Vi-keys)
+   o      Alternative Enter key
    @      Display character information
    TAB    Melee attack adjacent known monster
-   a      Activate, read or consume an item (can also be done via [i])
+   a      Activate, read or consume an item
    c      Close a door, or jam a closed door with an iron spike
    d      Disarm trap
    e      Quick move (automatically move in some direction until interrupted)
    f      Aim/fire wielded firearm
    g      Pick up item
    G      Unload or pick up ammunition from the ground
-   i      Inventory (handle equipment or use items)
+   i      Browse inventory
    m      Display message history
    N      Make some noise (to lure monsters)
-   q      Kick, bash doors, or destroy corpses
+   q      Chew on corpse (Ghoul only)
    r      Reload wielded firearm
    R      Organize Colt magazines
-   s      Wait and search a few turns
+   s      Wait (and search) for a few turns
    t      Throw something from the "Thrown" slot, or throw held explosive
    v      View descriptions of things on the map
-   w      Chew on corpse (Ghoul only)
+   w      Kick something, or destroy corpses (*Wham*)
    x      Cast spell
-   z      Swap to alternative weapon
+   z      Swap to readied weapon
 
 --------------------------------------------------------------------------------
 2. Movement and interaction
@@ -75,63 +76,78 @@ Certain things can be interacted with by moving into them (i.e. by "bumping" the
 --------------------------------------------------------------------------------
 3. The interface
 --------------------------------------------------------------------------------
-The following is an example of how the interface lines can look:
+The following is an example of what the interface lines can look like:
 
-   HP:9/16 SPI:8/8 INS:45%/12% ARM:1 L:491  } M1911 Colt 1d8+4 60% 5/7
-   LVL:1 NXT:60 DLVL:2 T:264 ENC:40%        / 7 Throwing Knives 2d4 60%
-   Blind Diseased
+   HP:9/16 SP:8/8 Ins:45%/12% Exp:1(60)     } M1911 Colt 1d8+5 60% 5/7
+   Dlvl:2  W:40% [:1  %:Off(500) %:60       / 7 Throwing Knives 1d6+1 60%
+   Blind Diseased                                                         T:264
 
-From left to right, the first line displays Hit Points (current/max), Spirit Points (see section 4: "Spirit and spell casting"), shock/insanity (see section 5: "Insanity"), armor Points (each point reduces your received physical damage by 1), remaining turns for your Electric Lantern (this number is colored yellow while the Lantern is activated), and your wielded weapon (damage, accuracy, and ammo)
+From left to right, the first line displays Hit Points (current/max - see section 4: "Hit Points, Wounds and healing"), Spirit Points (see section 5: "Spirit and spell casting"), Shock and Insanity (see section 6: "Insanity"), Character Level and remaining Experience Points until next level, and your wielded weapon (damage, accuracy, and ammo)
 
-The second line displays character level, experience points needed for next level, dungeon level, turn number, encumbrance from carrying items (from 100% you move at half speed, and from 125% you cannot move at all), and your thrown weapon.
+The second line displays dungeon level, encumbrance from carrying items (from 100% you move at half speed, and from 125% you cannot move at all), Armor Points (each point reduces physical damage taken by 1), Electric Lantern status (Off or On, and how many turns it can be used for), Medical Bag Supplies (see section 4: "Hit Points, Wounds and healing"), and your thrown weapon.
 
-The third line displays properties currently affecting you. This can be temporary properties (e.g. from spells), permanent intrinsic properties, or properties granted by wearing or wielding items.
+The third line displays properties currently affecting you. This can be temporary properties (e.g. from spells), permanent intrinsic properties, or properties granted by wearing or wielding items. To the far right on the third row the current turn number is displayed. If you have the "Dexterous" trait (occasional free steps), this is marked green when your next step will be free.
 
 --------------------------------------------------------------------------------
-4. Spirit and spell casting
+4. Hit Points, Wounds and healing
+--------------------------------------------------------------------------------
+The state of your physical health is described in two ways:
+
+   (1) Hit Points (HP)
+This represents minor wounds like bruises and sprains, and also general combat morale, fatigue, stance, etc. If your HP reaches 0, it means you received a killing blow, or the circumstances are such that you can no longer fight back (you are fallen, pinned or exhausted). Hit Points usually regenerate automatically over time.
+
+   (2) Wounds
+This represents more serious long-term damage, and is shown as a property at the bottom of the screen. Wounds are received when you take a high amount of damage in one hit. Each Wound reduces your fighting abilities and HP regeneration rate.
+
+There is an item called a "Medical Bag", which has a certain number of "supplies". When activated, it will either Sanitize an infection or treat a Wound.
+
+When bitten or clawed by certain monsters, you can become Infected. You should treat the infection before it becomes a disease! It only takes a few turns and supplies.
+
+Treating a Wound requires many uninterrupted turns, and uses up lots of supplies.
+
+--------------------------------------------------------------------------------
+5. Spirit and spell casting
 --------------------------------------------------------------------------------
 In addition to your physical and mental health, you have an "essence" - or Spirit - to preserve. If you lose all your Spirit, you are dead.
 
-Your Spirit is shown like this:
-   SPI:Current/Max
+Your Spirit Points are shown like this:
+   SP:Current/Max
 
-Some characters have the ability to cast spells intrinsically without using external aids - the Occultist can learn spells from reading manuscripts for example. Casting spells "naturally" will drain some of your spirit.
+Some characters have the ability to cast spells intrinsically without using external tools - the Occultist can learn spells from reading manuscripts for example. Casting spells "naturally" will drain some of your spirit.
 
-To cast intrinsic spells, you can press [X] (upper case) to open a menu for selecting which spell to cast. In this menu you can see the Spirit cost per spell (the cost is a range of values, and the spirit drained is a random value in this range), and roughly how much Shock it will cause.
-
-As a shortcut, you can also press [x] (lower case) to immediately re-cast the previous spell (this is useful for spells typically cast repeatedly, such as Darkbolt).
+To cast intrinsic spells, press [x] to open a menu for selecting which spell to cast. In this menu you can see the Spirit cost per spell (the cost is a range of values, and the spirit drained is a random value in this range), and roughly how much Shock it will cause.
 
 When casting a spell, you will get a warning if the spell could potentially drain all your remaining Spirit. You can then press y/n to attempt casting or abort. Casting the spell in this situation is a gamble with death, but it could be worth it if you are desperate.
 
 There are also other ways you can lose your Spirit, for example some monsters can drain your Spirit with their attacks.
 
 --------------------------------------------------------------------------------
-5. Insanity
+6. Insanity
 --------------------------------------------------------------------------------
 "A few steps more, and our breaths were literally snatched from us by what we saw; so literally that Thornton, the psychic investigator, actually fainted in the arms of the dazed man who stood behind him. Norrys, his plump face utterly white and flabby, simply cried out inarticulately; whilst I think that what I did was to gasp or hiss, and cover my eyes. The man behind me - the only one of the party older than I - croaked the hackneyed "My God!" in the most cracked voice I ever heard. Of seven cultivated men, only Sir William Brinton retained his composure; a thing the more to his credit because he led the party and must have seen the sight first."-H.P. Lovecraft, "Rats in the Walls"
 
 Certain events in this game affects the sanity and composure of your character. One of the main threats to your mental health are the various horrifying creatures that inhabit the game world. When inside your view, some creatures may cause a vague unease, while others are very disturbing to behold. You also lose sanity from using occult powers, and other bizarre events. Finally, there is a slow perpetual draining of your sanity from exploring and dwelling in this ancient haunted dungeon.
 
 Your state of Insanity is shown by two percentage values like this:
-   INS:X%/Y%
+   Ins:X%/Y%
 
 The X-value represents your current state of shock, stress and paranoia, while the Y-value represents your long term Insanity.
 
 When various disturbing events occur, the shock value rises. When shock hits 100%, the following happens:
-   * You do something (scream, laugh, faint, babble, gain a phobia...)
+   * You react somehow (scream, laugh, faint, babble, gain a phobia...)
    * The shock value is restored a bit
    * Insanity rises
 
-Each time you travel to the next dungeon level, half your shock is restored (you have escaped the horrors above, and is bestowed with a sense of progress).
+Each time you travel to the next dungeon level, your shock is restored (you have escaped the horrors above, and is bestowed with a sense of progress).
 
 If your Insanity reaches 100%, you are hopelessly lost, and the game is over.
 
 --------------------------------------------------------------------------------
-6. Sneaking and backstabbing
+7. Sneaking and backstabbing
 --------------------------------------------------------------------------------
 Monsters unaware of your presence have a blue background in their map icon. This is their default mode. While in this state they may roam the map, but they will not actively search for you or purposefully attack you.
 
-For each turn you spend in a monsters visual area, there is a certain chance it will notice you. Most monsters also have other methods of searching, such as listening. Monsters will also disturb nearby monsters when becoming aware, alerting them to your presence.
+For each turn you spend in a monsters visual area, there is a certain chance it will notice you (except for some monsters which lack conventional sight). Monsters also react to noise, and may disturb nearby monsters when becoming aware, alerting them to your presence.
 
 When you stay out of an aware monsters vision for a certain number of turns (and nothing else alerts it), it will "forget" about you. The number of turns this takes depends on the monster; A simple animal may only care for a couple of turns after it loses sight, while a human will remain aware longer.
 

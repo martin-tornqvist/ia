@@ -2299,12 +2299,12 @@ void init_data_list()
     d.glyph = 'w';
     d.color = clr_violet;
     d.tile = Tile_id::mass_of_worms;
-    d.hp = 5;
+    d.hp = 4;
     d.spi = 2;
     d.dmg_melee = 3;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.natural_props[size_t(Prop_id::infravis)] = true;
-    d.spawn_min_dlvl = 5;
+    d.spawn_min_dlvl = 6;
     d.group_size = Mon_group_size::horde;
     d.actor_size = Actor_size::floor;
     d.nr_turns_aware = 10;
