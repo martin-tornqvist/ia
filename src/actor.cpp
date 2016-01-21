@@ -949,15 +949,13 @@ Did_action Actor::try_eat_corpse()
         const bool          IS_DESTROYED    = rnd::one_in(DESTR_ONE_IN_N);
         const std::string   corpse_name     = corpse->corpse_name_the();
 
-        const Alerts_mon alerts = IS_PLAYER ? Alerts_mon::yes : Alerts_mon::no;
-
         Snd snd("I hear ripping and chewing.",
                 Sfx_id::bite,
                 Ignore_msg_if_origin_seen::yes,
                 pos,
                 this,
                 Snd_vol::low,
-                alerts,
+                Alerts_mon::no,
                 More_prompt_on_msg::no);
 
         snd_emit::run(snd);
@@ -1003,7 +1001,7 @@ Did_action Actor::try_eat_corpse()
 
 void Actor::on_feed()
 {
-    const int HP_RESTORED = rnd::range(3, 6);
+    const int HP_RESTORED = rnd::range(4, 8);
 
     restore_hp(HP_RESTORED, false, Verbosity::silent);
 
@@ -1011,7 +1009,7 @@ void Actor::on_feed()
     {
         Prop* const prop = prop_handler_->prop(Prop_id::wound);
 
-        if (prop && rnd::one_in(12))
+        if (prop && rnd::one_in(11))
         {
             Prop_wound* const wound = static_cast<Prop_wound*>(prop);
 

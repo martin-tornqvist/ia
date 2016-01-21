@@ -381,7 +381,7 @@ void bg_descr(const Bg id, std::vector<std::string>& out)
     case Bg::ghoul:
     {
         out.push_back("Does not regenerate Hit Points and cannot use medical equipment - must "
-                      "instead heal by feeding on corpses (press [w])");
+                      "instead heal by feeding on corpses (press [q])");
         out.push_back(" ");
         out.push_back("Has an arcane ability to incite Frenzy at will (increased speed, "
                       "+10% melee hit chance, +1 melee damage, must move towards enemies).");
@@ -392,7 +392,7 @@ void bg_descr(const Bg id, std::vector<std::string>& out)
         out.push_back(" ");
         out.push_back("-15% hit chance with firearms and thrown weapons");
         out.push_back(" ");
-        out.push_back("+6 Hit Points");
+        out.push_back("+10 Hit Points");
         out.push_back(" ");
         out.push_back("Is immune to Disease and Infections");
         out.push_back(" ");
@@ -965,7 +965,7 @@ void pick_bg(const Bg bg)
 
         player_spells_handling::learn_spell_if_not_known(Spell_id::frenzy);
 
-        map::player->change_max_hp(6, Verbosity::silent);
+        map::player->change_max_hp(10, Verbosity::silent);
         break;
 
     case Bg::occultist:
