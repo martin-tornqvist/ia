@@ -51,16 +51,16 @@ void init_room_bucket()
 
     if (DLVL <= DLVL_LAST_EARLY_GAME)
     {
-        add_to_room_bucket(Room_type::human,        4);
+        add_to_room_bucket(Room_type::human,        3);
         add_to_room_bucket(Room_type::ritual,       1);
         add_to_room_bucket(Room_type::spider,       2);
         add_to_room_bucket(Room_type::snake_pit,    1);
-        add_to_room_bucket(Room_type::crypt,        4);
+        add_to_room_bucket(Room_type::crypt,        3);
         add_to_room_bucket(Room_type::monster,      1);
         add_to_room_bucket(Room_type::flooded,      1);
         add_to_room_bucket(Room_type::muddy,        1);
 
-        const size_t NR_PLAIN_ROOMS = room_bucket_.size() * 2;
+        const size_t NR_PLAIN_ROOMS = room_bucket_.size() * 3;
 
         add_to_room_bucket(Room_type::plain, NR_PLAIN_ROOMS);
     }
@@ -78,7 +78,7 @@ void init_room_bucket()
         add_to_room_bucket(Room_type::chasm,        1);
         add_to_room_bucket(Room_type::forest,       2);
 
-        const size_t NR_PLAIN_ROOMS = room_bucket_.size() * 2;
+        const size_t NR_PLAIN_ROOMS = room_bucket_.size() * 3;
 
         add_to_room_bucket(Room_type::plain, NR_PLAIN_ROOMS);
     }
@@ -459,7 +459,7 @@ void Plain_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
 //------------------------------------------------------------------- HUMAN ROOM
 Range Human_room::nr_auto_features_allowed() const
 {
-    return {3, 6};
+    return {2, 6};
 }
 
 int Human_room::base_pct_chance_drk() const

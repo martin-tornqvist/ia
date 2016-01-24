@@ -1583,7 +1583,14 @@ void Player::kick_mon(Actor& defender)
 
     const Actor_data_t& d = defender.data();
 
-    if (d.actor_size == Actor_size::floor && (d.is_spider || d.is_rat))
+    //TODO: This is REALLY hacky, it should be done another way.
+    if (
+        d.actor_size == Actor_size::floor &&
+        (d.is_spider                    ||
+         d.is_rat                       ||
+         d.is_snake                     ||
+         d.id == Actor_id::worm_mass    ||
+         d.id == Actor_id::mind_worms))
     {
         kick_wpn = static_cast<Wpn*>(item_factory::mk(Item_id::player_stomp));
     }

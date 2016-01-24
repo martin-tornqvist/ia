@@ -863,6 +863,8 @@ public:
         return nr_wounds_ <= 0;
     }
 
+    int affect_max_hp(const int HP_MAX) const override;
+
     int nr_wounds() const
     {
         return nr_wounds_;

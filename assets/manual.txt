@@ -94,10 +94,10 @@ The third line displays properties currently affecting you. This can be temporar
 The state of your physical health is described in two ways:
 
    (1) Hit Points (HP)
-This represents minor wounds like bruises and sprains, and also general combat morale, fatigue, stance, etc. If your HP reaches 0, it means you received a killing blow, or the circumstances are such that you can no longer fight back (you are fallen, pinned or exhausted). Hit Points usually regenerate automatically over time.
+This represents minor wounds like bruises and sprains, and also general combat morale, fatigue, stance, etc. If your HP reaches 0, it means you received a killing blow, or the circumstances are such that you can no longer fight back (you are fallen, pinned or completely exhausted). Hit Points usually regenerate automatically over time.
 
    (2) Wounds
-This represents more serious long-term damage, and is shown as a property at the bottom of the screen. Wounds are received when you take a high amount of damage in one hit. Each Wound reduces your fighting abilities and HP regeneration rate.
+This represents more serious long-term damage, and is shown as a property at the bottom of the screen. Wounds are received when you take a high amount of damage in one hit. Each Wound reduces your fighting abilities, maximum HP, and HP regeneration rate.
 
 There is an item called a "Medical Bag", which has a certain number of "supplies". When activated, it will either Sanitize an infection or treat a Wound.
 

@@ -337,7 +337,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::terrified;
-    d.std_rnd_turns = Range(5, 12);
+    d.std_rnd_turns = Range(12, 16);
     d.name = "Terrified";
     d.name_short = "Terrified";
     d.msg[size_t(Prop_msg::start_player)] = "I am terrified!";
@@ -391,7 +391,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::slowed;
-    d.std_rnd_turns = Range(9, 12);
+    d.std_rnd_turns = Range(16, 24);
     d.name = "Slowed";
     d.name_short = "Slowed";
     d.msg[size_t(Prop_msg::start_player)] = "Everything around me seems to speed up.";
@@ -409,7 +409,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::hasted;
-    d.std_rnd_turns = Range(9, 12);
+    d.std_rnd_turns = Range(12, 16);
     d.name = "Hasted";
     d.name_short = "Hasted";
     d.msg[size_t(Prop_msg::start_player)] = "Everything around me seems to slow down.";
@@ -2146,6 +2146,23 @@ int Prop_wound::ability_mod(const Ability_id ability) const
     return 0;
 }
 
+int Prop_wound::affect_max_hp(const int HP_MAX) const
+{
+    const int PEN_PCT_PER_WOUND = 10;
+
+    int hp_pen_pct = nr_wounds_ * PEN_PCT_PER_WOUND;
+
+    const bool IS_SURVIVALIST = owning_actor_->is_player() &&
+                                player_bon::traits[size_t(Trait::survivalist)];
+
+    if (IS_SURVIVALIST)
+    {
+        hp_pen_pct /= 2;
+    }
+
+    return HP_MAX * (100 - hp_pen_pct) / 100;
+}
+
 void Prop_wound::heal_one_wound()
 {
     assert(nr_wounds_ > 0);
@@ -2165,7 +2182,9 @@ void Prop_wound::heal_one_wound()
 
 void Prop_wound::on_more()
 {
-    ++nr_wounds_;
+    const int MAX_NR_WOUNDS = 5;
+
+    nr_wounds_ = std::min(MAX_NR_WOUNDS, nr_wounds_ + 1);
 }
 
 bool Prop_confused::allow_read(const Verbosity verbosity) const

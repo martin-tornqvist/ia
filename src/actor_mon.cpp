@@ -1026,11 +1026,11 @@ Did_action Vortex::on_act()
 
         if (knock_back_from_pos != player_pos)
         {
-            TRACE << "Good pos found to knockback player from (";
-            TRACE << knock_back_from_pos.x << ",";
-            TRACE << knock_back_from_pos.y << ")" << std::endl;
-            TRACE << "Player position: ";
-            TRACE << player_pos.x << "," << player_pos.y << ")" << std::endl;
+            TRACE << "Pos found to knockback player from: "
+                  << knock_back_from_pos.x << ", " << knock_back_from_pos.y << std::endl;
+
+            TRACE << "Player pos: "
+                  << player_pos.x << ", " << player_pos.y << std::endl;
 
             bool blocked_los[MAP_W][MAP_H];
 
@@ -1774,7 +1774,7 @@ void Worm_mass::mk_start_items()
 
 void Worm_mass::on_death()
 {
-    const int PCT_SPLIT = 47;
+    const int PCT_SPLIT = 45;
 
     if (rnd::percent(PCT_SPLIT) && (game_time::actors.size() < MAX_NR_ACTORS_ON_MAP))
     {
@@ -1966,6 +1966,8 @@ Did_action Zombie::try_resurrect()
 
                 map::player->incr_shock(Shock_lvl::some, Shock_src::see_mon);
             }
+
+            prop_handler_->try_add(new Prop_frenzied(Prop_turns::std));
 
             aware_counter_ = data_->nr_turns_aware * 2;
 

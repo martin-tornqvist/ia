@@ -122,7 +122,7 @@ void init_data_list()
     d.glyph = 'Z';
     d.color = clr_brown;
     d.tile = Tile_id::zombie_unarmed;
-    d.hp = 10;
+    d.hp = 11;
     d.dmg_melee = MIN_DMG_TO_WOUND - 1;
     d.ability_vals.set_val(Ability_id::melee, 25);
     d.spawn_min_dlvl = 1;
@@ -165,7 +165,7 @@ void init_data_list()
     d.glyph = 'Z';
     d.color = clr_gray;
     d.tile = Tile_id::zombie_armed;
-    d.hp = 10;
+    d.hp = 11;
     d.dmg_melee = 8;
     d.ability_vals.set_val(Ability_id::melee, 35);
     d.ability_vals.set_val(Ability_id::ranged, 0);
@@ -209,7 +209,7 @@ void init_data_list()
     d.glyph = 'Z';
     d.color = clr_white_high;
     d.tile = Tile_id::zombie_bloated;
-    d.hp = 14;
+    d.hp = 16;
     d.dmg_melee = MIN_DMG_TO_WOUND - 1;
     d.dmg_ranged = 3;
     d.ability_vals.set_val(Ability_id::melee, 40);
@@ -374,13 +374,14 @@ void init_data_list()
     d.tile = Tile_id::crawling_hand;
     d.hp = 4;
     d.spi = 8;
-    d.dmg_melee = MIN_DMG_TO_WOUND - 1;
+    d.dmg_melee = 3;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 15;
     d.group_size = Mon_group_size::few;
     d.actor_size = Actor_size::floor;
+    d.prevent_knockback = true;
     d.nr_turns_aware = 5;
     d.descr = "A disembodied hand, crawling around frantically on its fingertips like a spider.";
     d.erratic_move_pct = Actor_erratic_freq::very;
@@ -979,7 +980,7 @@ void init_data_list()
     d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.group_size = Mon_group_size::alone;
-    d.actor_size = Actor_size::humanoid;
+    d.actor_size = Actor_size::floor;
     d.nr_turns_aware = 5;
     d.descr = "A fierce predator. It hisses menacingly, and venom drips from its fangs.";
     d.aggro_text_mon_seen = d.name_the + " hisses at me.";
@@ -1025,7 +1026,7 @@ void init_data_list()
     d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.group_size = Mon_group_size::alone;
-    d.actor_size = Actor_size::humanoid;
+    d.actor_size = Actor_size::floor;
     d.nr_turns_aware = 5;
     d.descr = "A fierce predator. It hisses menacingly, and venom drips from its fangs.";
     d.aggro_text_mon_seen = d.name_the + " hisses at me.";
@@ -1068,7 +1069,7 @@ void init_data_list()
     d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.group_size = Mon_group_size::alone;
-    d.actor_size = Actor_size::humanoid;
+    d.actor_size = Actor_size::floor;
     d.nr_turns_aware = 5;
     d.descr = "A fierce predator. It hisses menacingly, and venom drips from its fangs.";
     d.aggro_text_mon_seen = d.name_the + " hisses at me.";
@@ -1454,7 +1455,6 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::melee, 20);
     d.ability_vals.set_val(Ability_id::dodge_att, 40);
     d.natural_props[size_t(Prop_id::flying)] = true;
-    d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = 10;
     d.group_size = Mon_group_size::few;
@@ -1965,7 +1965,7 @@ void init_data_list()
     d.hp = 15;
     d.spi = 12;
     d.dmg_melee = MIN_DMG_TO_WOUND - 1;
-    d.ability_vals.set_val(Ability_id::melee, 50);
+    d.ability_vals.set_val(Ability_id::melee, 60);
     d.natural_props[size_t(Prop_id::invis)] = true;
     d.natural_props[size_t(Prop_id::rFear)] = true;
     d.natural_props[size_t(Prop_id::rConf)] = true;
@@ -2265,12 +2265,13 @@ void init_data_list()
     d.hp = 2;
     d.spi = 1;
     d.dmg_melee = 2;
-    d.ability_vals.set_val(Ability_id::melee, 40);
+    d.ability_vals.set_val(Ability_id::melee, 30);
     d.natural_props[size_t(Prop_id::infravis)] = true;
-    d.spawn_min_dlvl = 2;
+    d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
     d.group_size = Mon_group_size::horde;
     d.actor_size = Actor_size::floor;
+    d.prevent_knockback = true;
     d.nr_turns_aware = 10;
     d.descr = "A slithering conglomeration of carnivorous worms.";
     d.can_be_summoned = true;
@@ -2307,6 +2308,7 @@ void init_data_list()
     d.spawn_min_dlvl = 6;
     d.group_size = Mon_group_size::horde;
     d.actor_size = Actor_size::floor;
+    d.prevent_knockback = true;
     d.nr_turns_aware = 10;
     d.descr = "A slithering conglomeration of carnivorous worms. Their bite causes "
               "heavy disorientation.";
@@ -2994,7 +2996,7 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_tgt_when_los)] = true;
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
-    d.speed = Actor_speed::normal;
+    d.speed = Actor_speed::fast;
     d.spell_cooldown_turns = 3;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;

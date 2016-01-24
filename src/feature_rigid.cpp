@@ -2413,7 +2413,7 @@ Chest::Chest(const P& feature_pos) :
 
     const bool  IS_TREASURE_HUNTER  = player_bon::traits[size_t(Trait::treasure_hunter)];
     const int   NR_ITEMS_MIN        = 0;
-    const int   NR_ITEMS_MAX        = IS_TREASURE_HUNTER    ? 3 : 2;
+    const int   NR_ITEMS_MAX        = IS_TREASURE_HUNTER ? 3 : 2;
 
     item_container_.init(Feature_id::chest, rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 

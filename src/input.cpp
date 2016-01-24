@@ -1105,20 +1105,10 @@ void handle_map_mode_key_press(const Key_data& d)
         return;
     }
 
-    //----------------------------------- INFECTED
+    //----------------------------------- PROPERTY
     else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F8)
     {
-        map::player->prop_handler().try_add(new Prop_infected(Prop_turns::std));
-        clear_events();
-
-        return;
-    }
-
-    //----------------------------------- INVISIBLE
-    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F9)
-    {
-        map::player->prop_handler().try_add(new Prop_invisible(Prop_turns::std));
-
+        map::player->prop_handler().try_add(new Prop_wound(Prop_turns::indefinite));
         clear_events();
 
         return;

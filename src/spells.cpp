@@ -1510,7 +1510,7 @@ bool Spell_summon_mon::allow_mon_cast_now(Mon& mon) const
     //NOTE: Checking awareness instead of target, to allow summoning even with broken LOS
     return (mon.aware_counter_ > 0) &&
            rnd::coin_toss()         &&
-           (mon.tgt_ || rnd::one_in(18));
+           (mon.tgt_ || rnd::one_in(21));
 }
 
 //------------------------------------------------------------ HEAL SELF

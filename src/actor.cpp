@@ -100,7 +100,16 @@ bool Actor::is_spotting_sneaking_actor(Actor& other)
 
 int Actor::hp_max(const bool WITH_MODIFIERS) const
 {
-    return WITH_MODIFIERS ? prop_handler_->affect_max_hp(hp_max_) : hp_max_;
+    int result = hp_max_;
+
+    if (WITH_MODIFIERS)
+    {
+        result = prop_handler_->affect_max_hp(result);
+
+        result = std::max(1, result);
+    }
+
+    return result;
 }
 
 Actor_speed Actor::speed() const
@@ -283,8 +292,8 @@ void Actor::teleport()
         msg_log::add(name_the() + " suddenly disappears!");
     }
 
-    P   tgt_pos                   = pos_bucket[rnd::range(0, pos_bucket.size() - 1)];
-    bool  player_has_tele_control   = false;
+    P       tgt_pos                 = pos_bucket[rnd::range(0, pos_bucket.size() - 1)];
+    bool    player_has_tele_control = false;
 
     if (is_player())
     {
@@ -293,7 +302,6 @@ void Actor::teleport()
         map::cpy_render_array_to_visual_memory();
 
         //Teleport control?
-
         if (
             prop_handler_->has_prop(Prop_id::tele_ctrl) &&
             !prop_handler_->has_prop(Prop_id::confused))
@@ -371,22 +379,22 @@ void Actor::teleport()
 
     pos = tgt_pos;
 
+    map::player->update_fov();
+
+    std::vector<Actor*> player_seen_foes;
+    map::player->seen_foes(player_seen_foes);
+
+    for (Actor* const actor : player_seen_foes)
+    {
+        static_cast<Mon*>(actor)->set_player_aware_of_me();
+    }
+
+    render::draw_map_and_interface();
+
+    map::cpy_render_array_to_visual_memory();
+
     if (is_player())
     {
-        map::player->update_fov();
-
-        std::vector<Actor*> player_seen_foes;
-        map::player->seen_foes(player_seen_foes);
-
-        for (Actor* const actor : player_seen_foes)
-        {
-            static_cast<Mon*>(actor)->set_player_aware_of_me();
-        }
-
-        render::draw_map_and_interface();
-
-        map::cpy_render_array_to_visual_memory();
-
         if (!player_has_tele_control)
         {
             msg_log::add("I suddenly find myself in a different location!");
