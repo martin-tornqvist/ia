@@ -393,10 +393,15 @@ void Player::on_hit(int& dmg,
     const bool IS_ENOUGH_DMG_FOR_WOUND  = dmg >= MIN_DMG_TO_WOUND;
     const bool IS_PHYSICAL              = dmg_type == Dmg_type::physical;
 
+    //Ghoul trait Indomitable Fury makes player immune to Wounds while Frenzied
+    const bool IS_GHOUL_RESIST_WOUND = player_bon::traits[size_t(Trait::indomitable_fury)] &&
+                                       prop_handler_->has_prop(Prop_id::frenzied);
+
     if (
         allow_wound == Allow_wound::yes &&
         IS_ENOUGH_DMG_FOR_WOUND         &&
         IS_PHYSICAL                     &&
+        !IS_GHOUL_RESIST_WOUND          &&
         !config::is_bot_playing())
     {
         Prop* const prop = new Prop_wound(Prop_turns::indefinite);

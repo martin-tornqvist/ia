@@ -5,6 +5,9 @@
 
 typedef SDL_Color Clr;
 
+//-----------------------------------------------------------------------------
+//Standard colors
+//-----------------------------------------------------------------------------
 const Clr clr_black             = {  0,   0,   0, 0};
 const Clr clr_gray              = {128, 128, 128, 0};
 const Clr clr_gray_drk          = { 48,  48,  48, 0};
@@ -39,8 +42,9 @@ const Clr clr_violet_drk        = { 64,   0, 128, 0};
 
 const Clr clr_orange            = {255, 128,   0, 0};
 
+//-----------------------------------------------------------------------------
 //Colors taken from Nosferatu movie screen shots
-//-----------------------------------------------------------
+//-----------------------------------------------------------------------------
 const Clr clr_nosf_sepia        = {139, 114,  57, 0};
 const Clr clr_nosf_sepia_lgt    = {225, 205, 154, 0};
 const Clr clr_nosf_sepia_drk    = { 81,  72,  43, 0};
@@ -49,18 +53,25 @@ const Clr clr_nosf_teal         = { 57, 157, 155, 0};
 const Clr clr_nosf_teal_lgt     = { 88, 226, 228, 0};
 const Clr clr_nosf_teal_drk     = { 20,  54,  51, 0};
 
+//-----------------------------------------------------------------------------
 //Message colors
-//-----------------------------------------------------------
+//-----------------------------------------------------------------------------
 const Clr clr_msg_good          = clr_green_lgt;
 const Clr clr_msg_bad           = clr_red_lgt;
 const Clr clr_msg_note          = clr_orange;
 
+//-----------------------------------------------------------------------------
 //Standard interface colors
-//-----------------------------------------------------------
+//-----------------------------------------------------------------------------
 const Clr clr_menu_highlight    = clr_violet;
 const Clr clr_menu_medium       = clr_violet_drk;
 const Clr clr_menu_drk          = clr_gray_drk;
 
 const Clr clr_title             = clr_brown_gray;
+
+//-----------------------------------------------------------------------------
+//Misc
+//-----------------------------------------------------------------------------
+const Clr clr_allied_mon        = clr_green;
 
 #endif

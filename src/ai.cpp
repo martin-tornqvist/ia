@@ -29,14 +29,10 @@ bool try_cast_random_spell(Mon& mon)
         return false;
     }
 
-    std::vector<Spell*> spell_bucket = mon.spells_known_;
+    std::random_shuffle(begin(mon.spells_known_), end(mon.spells_known_));
 
-    std::random_shuffle(begin(spell_bucket), end(spell_bucket));
-
-    while (!spell_bucket.empty())
+    for (Spell* const spell : mon.spells_known_)
     {
-        Spell* const spell = spell_bucket.back();
-
         if (spell->allow_mon_cast_now(mon))
         {
             const int CUR_SPI = mon.spi();
@@ -70,10 +66,6 @@ bool try_cast_random_spell(Mon& mon)
             }
 
             return false;
-        }
-        else //Spell does not allow monster to cast now
-        {
-            spell_bucket.pop_back();
         }
     }
 

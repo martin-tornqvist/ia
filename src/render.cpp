@@ -1390,7 +1390,7 @@ void draw_map()
 
                     if (map::player->is_leader_of(mon))
                     {
-                        cur_render_data->clr_bg = clr_green;
+                        cur_render_data->clr_bg = clr_allied_mon;
                     }
                     else //Player is not leader of monster
                     {
@@ -1403,9 +1403,13 @@ void draw_map()
             }
             else //Player cannot see actor
             {
-                if (mon->player_aware_of_me_counter_ > 0 || map::player->is_leader_of(mon))
+                if (map::player->is_leader_of(mon))
                 {
-                    cur_render_data->is_aware_of_mon_here  = true;
+                    cur_render_data->is_aware_of_allied_mon_here = true;
+                }
+                else if (mon->player_aware_of_me_counter_ > 0) //Player is not leader of monster
+                {
+                    cur_render_data->is_aware_of_hostile_mon_here = true;
                 }
             }
         }
@@ -1424,8 +1428,7 @@ void draw_map()
             {
                 if (tmp_render_data.is_light_fade_allowed)
                 {
-                    const int DIST_FROM_PLAYER =
-                        utils::king_dist(map::player->pos, P(x, y));
+                    const int DIST_FROM_PLAYER = utils::king_dist(map::player->pos, P(x, y));
 
                     if (DIST_FROM_PLAYER > 1)
                     {
@@ -1446,13 +1449,15 @@ void draw_map()
             }
             else if (cell.is_explored && !tmp_render_data.is_living_actor_seen_here)
             {
-                bool is_aware_of_mon_here               = tmp_render_data.is_aware_of_mon_here;
+                bool is_aware_of_hostile_mon_here   = tmp_render_data.is_aware_of_hostile_mon_here;
+                bool is_aware_of_allied_mon_here    = tmp_render_data.is_aware_of_allied_mon_here;
 
                 //Set render array and the temporary render data to the remembered cell
-                render_array[x][y]                      = cell.player_visual_memory;
-                tmp_render_data                         = cell.player_visual_memory;
+                render_array[x][y]  = cell.player_visual_memory;
+                tmp_render_data     = cell.player_visual_memory;
 
-                tmp_render_data.is_aware_of_mon_here    = is_aware_of_mon_here;
+                tmp_render_data.is_aware_of_hostile_mon_here    = is_aware_of_hostile_mon_here;
+                tmp_render_data.is_aware_of_allied_mon_here     = is_aware_of_allied_mon_here;
 
                 const double DIV = 5.0;
                 div_clr(tmp_render_data.clr,    DIV);
@@ -1466,8 +1471,9 @@ void draw_map()
                 //(1) Cell below is explored, and its tile is not a front or top wall.
                 //(2) Cell below is unexplored.
                 if (
-                    !tmp_render_data.is_living_actor_seen_here &&
-                    !tmp_render_data.is_aware_of_mon_here)
+                    !tmp_render_data.is_living_actor_seen_here      &&
+                    !tmp_render_data.is_aware_of_hostile_mon_here   &&
+                    !tmp_render_data.is_aware_of_allied_mon_here)
                 {
                     const auto tile_seen    = render_array_no_actors[x][y].tile;
                     const auto tile_mem     = cell.player_visual_memory.tile;
@@ -1563,9 +1569,18 @@ void draw_map()
 
             const P pos(x, y);
 
-            if (tmp_render_data.is_aware_of_mon_here)
+            if (
+                tmp_render_data.is_aware_of_hostile_mon_here ||
+                tmp_render_data.is_aware_of_allied_mon_here)
             {
-                draw_glyph('!', Panel::map, pos, clr_black, true, clr_nosf_teal_drk);
+                //We should never see both a hostile AND an allied monster in the same cell
+                assert(!tmp_render_data.is_aware_of_hostile_mon_here ||
+                       !tmp_render_data.is_aware_of_allied_mon_here);
+
+                const Clr bg_clr = tmp_render_data.is_aware_of_hostile_mon_here ?
+                                   clr_nosf_teal_drk : clr_allied_mon;
+
+                draw_glyph('!', Panel::map, pos, clr_black, true, bg_clr);
             }
             else if (tmp_render_data.tile != Tile_id::empty && tmp_render_data.glyph != ' ')
             {
@@ -1601,7 +1616,7 @@ void draw_map()
     }
 
     //---------------- DRAW PLAYER CHARACTER
-    const P&  pos         = map::player->pos;
+    const P&    pos         = map::player->pos;
     Item*       item        = map::player->inv().item_in_slot(Slot_id::wpn);
     const bool  IS_GHOUL    = player_bon::bg() == Bg::ghoul;
 

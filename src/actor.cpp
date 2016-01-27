@@ -260,7 +260,7 @@ void Actor::on_std_turn_common()
         }
         else //Is monster
         {
-            //Monsters regen spirit very quickly, so spell casters don't suddenly get
+            //Monsters regen spirit very quickly, so spell casters doesn't suddenly get
             //completely handicapped
             regen_spi_n_turns = 2;
         }
@@ -1009,7 +1009,7 @@ Did_action Actor::try_eat_corpse()
 
 void Actor::on_feed()
 {
-    const int HP_RESTORED = rnd::range(4, 8);
+    const int HP_RESTORED = rnd::range(3, 5);
 
     restore_hp(HP_RESTORED, false, Verbosity::silent);
 
@@ -1017,7 +1017,7 @@ void Actor::on_feed()
     {
         Prop* const prop = prop_handler_->prop(Prop_id::wound);
 
-        if (prop && rnd::one_in(11))
+        if (prop && rnd::one_in(6))
         {
             Prop_wound* const wound = static_cast<Prop_wound*>(prop);
 

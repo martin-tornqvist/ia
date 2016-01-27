@@ -122,22 +122,9 @@ Dice_param Item::dmg(const Att_mode att_mode, const Actor* const actor) const
     {
         out = data_->ranged.dmg;
 
-        if (actor == map::player)
+        if (actor == map::player && player_bon::traits[size_t(Trait::master_marksman)])
         {
-            if (player_bon::traits[size_t(Trait::adept_marksman)])
-            {
-                ++out.plus;
-            }
-
-            if (player_bon::traits[size_t(Trait::expert_marksman)])
-            {
-                ++out.plus;
-            }
-
-            if (player_bon::traits[size_t(Trait::master_marksman)])
-            {
-                ++out.plus;
-            }
+            ++out.plus;
         }
     }
     break;
@@ -157,22 +144,9 @@ Dice_param Item::dmg(const Att_mode att_mode, const Actor* const actor) const
             out = data_->ranged.throw_dmg;
         }
 
-        if (actor == map::player)
+        if (actor == map::player && player_bon::traits[size_t(Trait::master_marksman)])
         {
-            if (player_bon::traits[size_t(Trait::adept_marksman)])
-            {
-                ++out.plus;
-            }
-
-            if (player_bon::traits[size_t(Trait::expert_marksman)])
-            {
-                ++out.plus;
-            }
-
-            if (player_bon::traits[size_t(Trait::master_marksman)])
-            {
-                ++out.plus;
-            }
+            ++out.plus;
         }
     }
     break;
@@ -669,45 +643,61 @@ void Player_ghoul_claw::on_melee_hit(Actor& actor_hit)
     //there should probably be a field in the actor data called something like either
     //"is_flesh_body", or "is_construct".
 
+
+    //Ghoul feeding from Ravenous trait?
+    //NOTE: Player should never feed on monsters such as Ghosts or Shadows. Checking that the
+    //monster is not Ethereal and that it can bleed should be a pretty good rule for this.
+    //We should NOT check if the monster can leave a corpse however, since some monsters such
+    //as Worms don't leave a corpse, and you should be able to feed on those.
     const Actor_data_t& d = actor_hit.data();
 
     const bool IS_ETHEREAL = actor_hit.has_prop(Prop_id::ethereal);
 
-    if (!IS_ETHEREAL && d.can_leave_corpse)
+    const bool IS_HP_MISSING    = map::player->hp() < map::player->hp_max(true);
+    const bool IS_WOUNDED       = map::player->prop_handler().prop(Prop_id::wound);
+    const bool IS_FEED_NEEDED   = IS_HP_MISSING || IS_WOUNDED;
+
+    if (
+        !IS_ETHEREAL                                &&
+        d.can_bleed                                 &&
+        player_bon::traits[size_t(Trait::ravenous)] &&
+        IS_FEED_NEEDED                              &&
+        rnd::one_in(4))
     {
-        const bool IS_HP_MISSING    = map::player->hp() < map::player->hp_max(true);
-        const bool IS_WOUNDED       = map::player->prop_handler().prop(Prop_id::wound);
-        const bool IS_FEED_NEEDED   = IS_HP_MISSING || IS_WOUNDED;
+        Snd snd("",
+                Sfx_id::bite,
+                Ignore_msg_if_origin_seen::yes,
+                actor_hit.pos,
+                map::player,
+                Snd_vol::low,
+                Alerts_mon::yes,
+                More_prompt_on_msg::no);
 
-        //Ghoul feeding from Ravenous trait?
-        if (
-            player_bon::traits[size_t(Trait::ravenous)] &&
-            IS_FEED_NEEDED                              &&
-            rnd::one_in(4))
-        {
-            Snd snd("",
-                    Sfx_id::bite,
-                    Ignore_msg_if_origin_seen::yes,
-                    actor_hit.pos,
-                    map::player,
-                    Snd_vol::low,
-                    Alerts_mon::yes,
-                    More_prompt_on_msg::no);
+        snd_emit::run(snd);
 
-            snd_emit::run(snd);
+        map::player->on_feed();
+    }
 
-            map::player->on_feed();
-        }
-
+    if (actor_hit.state() == Actor_state::alive)
+    {
         //Poison victim from Ghoul Toxic trait?
         if (
-            player_bon::traits[size_t(Trait::toxic)]  &&
-            actor_hit.state() == Actor_state::alive   &&
+            player_bon::traits[size_t(Trait::toxic)] &&
             rnd::one_in(4))
         {
             Prop* const poison = new Prop_poisoned(Prop_turns::std);
 
             actor_hit.prop_handler().try_add(poison);
+        }
+
+        //Terrify victim from Ghoul Indomitable Fury trait?
+        if (
+            player_bon::traits[size_t(Trait::indomitable_fury)] &&
+            map::player->has_prop(Prop_id::frenzied))
+        {
+            Prop* const fear = new Prop_terrified(Prop_turns::std);
+
+            actor_hit.prop_handler().try_add(fear);
         }
     }
 }
@@ -832,7 +822,7 @@ void Ammo_mag::set_full_ammo()
 //---------------------------------------------------------- MEDICAL BAG
 Medical_bag::Medical_bag(Item_data_t* const item_data) :
     Item                    (item_data),
-    nr_supplies_            (50),
+    nr_supplies_            (60),
     nr_turns_left_action_   (-1),
     cur_action_             (Med_bag_action::END) {}
 

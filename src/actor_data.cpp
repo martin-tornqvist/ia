@@ -166,7 +166,7 @@ void init_data_list()
     d.color = clr_gray;
     d.tile = Tile_id::zombie_armed;
     d.hp = 11;
-    d.dmg_melee = 8;
+    d.dmg_melee = MIN_DMG_TO_WOUND + 3;
     d.ability_vals.set_val(Ability_id::melee, 35);
     d.ability_vals.set_val(Ability_id::ranged, 0);
     d.spawn_min_dlvl = 2;
@@ -209,8 +209,8 @@ void init_data_list()
     d.glyph = 'Z';
     d.color = clr_white_high;
     d.tile = Tile_id::zombie_bloated;
-    d.hp = 16;
-    d.dmg_melee = MIN_DMG_TO_WOUND - 1;
+    d.hp = 18;
+    d.dmg_melee = MIN_DMG_TO_WOUND + 2;
     d.dmg_ranged = 3;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::ranged, 50);
@@ -356,7 +356,7 @@ void init_data_list()
     data[size_t(d.id)] = d;
     d.reset();
 
-    d.name_a = "Crawling Hand";
+    d.name_a = "A Crawling Hand";
     d.name_the = "The Crawling Hand";
     d.corpse_name_a = "";
     d.corpse_name_the = "";
@@ -456,8 +456,8 @@ void init_data_list()
     d.tile = Tile_id::floating_head;
     d.hp = 6;
     d.spi = 16;
-    d.dmg_melee = MIN_DMG_TO_WOUND - 1;
-    d.ability_vals.set_val(Ability_id::melee, 50);
+    d.dmg_melee = MIN_DMG_TO_WOUND - 2;
+    d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::dodge_att, 60);
     d.natural_props[size_t(Prop_id::flying)] = true;
     d.natural_props[size_t(Prop_id::infravis)] = true;
@@ -895,7 +895,7 @@ void init_data_list()
     d.color = clr_gray;
     d.tile = Tile_id::giant_spider;
     d.hp = 8;
-    d.dmg_melee = 3;
+    d.dmg_melee = MIN_DMG_TO_WOUND - 1;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::stealth, 90);
     d.natural_props[size_t(Prop_id::lgtSens)] = true;
@@ -967,7 +967,7 @@ void init_data_list()
     d.ai[size_t(Ai_id::paths_to_tgt_when_aware)] = false;
     d.ai[size_t(Ai_id::moves_to_tgt_when_los)] = true;
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
-    d.ai[size_t(Ai_id::moves_to_leader)] = false;
+    d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::fast;
     d.glyph = 'S';
     d.color = clr_green_lgt;
@@ -1010,7 +1010,7 @@ void init_data_list()
     d.ai[size_t(Ai_id::paths_to_tgt_when_aware)] = false;
     d.ai[size_t(Ai_id::moves_to_tgt_when_los)] = true;
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
-    d.ai[size_t(Ai_id::moves_to_leader)] = false;
+    d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::fast;
     d.glyph = 'S';
     d.color = clr_red;
@@ -1056,7 +1056,7 @@ void init_data_list()
     d.ai[size_t(Ai_id::paths_to_tgt_when_aware)] = false;
     d.ai[size_t(Ai_id::moves_to_tgt_when_los)] = true;
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
-    d.ai[size_t(Ai_id::moves_to_leader)] = false;
+    d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::fastest;
     d.glyph = 'S';
     d.color = clr_gray;
@@ -1218,7 +1218,7 @@ void init_data_list()
     d.is_undead = true;
     d.is_ghost = true;
     d.is_infra_visible = false;
-    d.can_be_summoned = true;
+    d.can_be_summoned = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.native_rooms.push_back(Room_type::plain);
@@ -1262,7 +1262,7 @@ void init_data_list()
     d.is_undead = true;
     d.is_ghost = true;
     d.is_infra_visible = false;
-    d.can_be_summoned = true;
+    d.can_be_summoned = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.native_rooms.push_back(Room_type::plain);
@@ -1305,7 +1305,7 @@ void init_data_list()
     d.is_undead = true;
     d.is_ghost = true;
     d.is_infra_visible = false;
-    d.can_be_summoned = true;
+    d.can_be_summoned = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.native_rooms.push_back(Room_type::plain);
@@ -1633,7 +1633,6 @@ void init_data_list()
     d.erratic_move_pct = Actor_erratic_freq::very;
     d.mon_shock_lvl = Mon_shock_lvl::none;
     d.is_infra_visible = false;
-    d.can_bleed = false;
     d.can_be_summoned = false;
     d.native_rooms.push_back(Room_type::plain);
     data[size_t(d.id)] = d;
@@ -2175,7 +2174,7 @@ void init_data_list()
     d.glyph = 'F';
     d.color = clr_white;
     d.tile = Tile_id::deep_one;
-    d.hp = 12;
+    d.hp = 15;
     d.spi = 12;
     d.dmg_melee = MIN_DMG_TO_WOUND;
     d.dmg_ranged = MIN_DMG_TO_WOUND - 1;
@@ -2277,7 +2276,7 @@ void init_data_list()
     d.can_be_summoned = true;
     d.is_auto_descr_allowed = true;
     d.erratic_move_pct = Actor_erratic_freq::very;
-    d.can_bleed = false;
+    d.can_bleed = true;
     d.can_leave_corpse = false;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::monster);
@@ -2315,7 +2314,7 @@ void init_data_list()
     d.can_be_summoned = true;
     d.is_auto_descr_allowed = true;
     d.erratic_move_pct = Actor_erratic_freq::very;
-    d.can_bleed = false;
+    d.can_bleed = true;
     d.can_leave_corpse = false;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::monster);
@@ -2700,7 +2699,6 @@ void init_data_list()
     d.aggro_text_mon_hidden = "";
     d.aggro_sfx_mon_seen = Sfx_id::END;
     d.aggro_sfx_mon_hidden = Sfx_id::END;
-    d.can_bleed = true;
     d.can_be_summoned = false;
     d.mon_shock_lvl = Mon_shock_lvl::terrifying;
     d.erratic_move_pct = Actor_erratic_freq::somewhat;
@@ -2973,8 +2971,7 @@ void init_data_list()
               "entity can bypass any armor, and means almost certain death!";
     d.aggro_sfx_mon_seen = Sfx_id::END;
     d.aggro_sfx_mon_hidden = Sfx_id::END;
-    d.can_bleed = false;
-    d.can_be_summoned = true;
+    d.can_be_summoned = false;
     d.is_infra_visible = false;
     d.is_humanoid = true;
     d.can_leave_corpse = false;
@@ -2997,13 +2994,13 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_lair)] = true;
     d.ai[size_t(Ai_id::moves_to_leader)] = true;
     d.speed = Actor_speed::fast;
-    d.spell_cooldown_turns = 3;
+    d.spell_cooldown_turns = 2;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
     d.glyph = 'P';
     d.color = clr_red;
     d.tile = Tile_id::the_high_priest;
-    d.hp = 200;
+    d.hp = 160;
     d.spi = 99999;
     d.natural_props[size_t(Prop_id::rConf)] = true;
     d.natural_props[size_t(Prop_id::rFear)] = true;
@@ -3029,7 +3026,7 @@ void init_data_list()
     d.mon_shock_lvl = Mon_shock_lvl::terrifying;
     d.is_humanoid = true;
     d.can_leave_corpse = false;
-    d.can_bleed = false;
+    d.can_bleed = true;
     data[size_t(d.id)] = d;
     d.reset();
 }

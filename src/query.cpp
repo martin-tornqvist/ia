@@ -150,13 +150,33 @@ int number(const P& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS,
     return -1;
 }
 
+void wait_for_msg_more()
+{
+    if (is_inited_ && !config::is_bot_playing())
+    {
+        Key_data d = input::input();
+
+        while (
+            d.sdl_key != SDLK_SPACE     &&
+            d.sdl_key != SDLK_ESCAPE    &&
+            d.sdl_key != SDLK_RETURN    &&
+            d.sdl_key != SDLK_TAB)
+        {
+            d = input::input();
+        }
+    }
+}
+
 void wait_for_confirm()
 {
     if (is_inited_ && !config::is_bot_playing())
     {
         Key_data d = input::input();
 
-        while (d.sdl_key != SDLK_SPACE && d.sdl_key != SDLK_ESCAPE && d.sdl_key != SDLK_RETURN)
+        while (
+            d.sdl_key != SDLK_SPACE     &&
+            d.sdl_key != SDLK_ESCAPE    &&
+            d.sdl_key != SDLK_RETURN)
         {
             d = input::input();
         }

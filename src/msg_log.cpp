@@ -270,7 +270,7 @@ void more_prompt()
                       clr_gray);
 
     render::update_screen();
-    query::wait_for_confirm();
+    query::wait_for_msg_more();
     clear();
 }
 

@@ -509,6 +509,7 @@ void init_data_list()
     d.ranged.snd_msg = "I hear the blast of a launched missile.";
     d.ranged.projectile_glyph = '*';
     d.ranged.projectile_clr = clr_red_lgt;
+    d.ranged.reload_sfx = Sfx_id::machine_gun_reload;
     d.spawn_std_range.min = DLVL_FIRST_MID_GAME;
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);

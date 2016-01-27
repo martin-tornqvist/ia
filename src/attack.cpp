@@ -184,7 +184,7 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
             //Lower hit chance if attacker cannot see target (e.g. attacking invisible creature)
             if (!can_attacker_see_tgt)
             {
-                tot_skill -= 20;
+                tot_skill -= 25;
             }
         }
 

@@ -1131,18 +1131,11 @@ public:
 
     bool is_resisting_other_prop(const Prop_id prop_id) const override;
 
-    bool try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const override;
-
     int ability_mod(const Ability_id ability) const override
     {
         if (ability == Ability_id::melee)
         {
             return 10;
-        }
-
-        if (ability == Ability_id::dodge_att || ability == Ability_id::dodge_trap)
-        {
-            return -20;
         }
 
         return 0;

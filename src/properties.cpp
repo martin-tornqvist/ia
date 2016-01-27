@@ -2370,19 +2370,6 @@ void Prop_frenzied::on_end()
     }
 }
 
-bool Prop_frenzied::try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const
-{
-    (void)verbosity;
-
-    //Ghoul trait "Indomitable Fury" blocks physical damage while Frenzied
-    if (dmg_type == Dmg_type::physical && player_bon::traits[size_t(Trait::indomitable_fury)])
-    {
-        return true;
-    }
-
-    return false;
-}
-
 bool Prop_frenzied::allow_read(const Verbosity verbosity) const
 {
     if (owning_actor_->is_player() && verbosity == Verbosity::verbose)

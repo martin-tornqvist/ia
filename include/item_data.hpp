@@ -128,6 +128,7 @@ enum class Item_id
 
     gas_mask,
 
+    scroll_darkbolt,
     scroll_pest,
     scroll_telep,
     scroll_slow_mon,
@@ -138,7 +139,6 @@ enum class Item_id
     scroll_det_mon,
     scroll_bless,
     scroll_mayhem,
-    scroll_darkbolt,
     scroll_aza_wrath,
     scroll_opening,
     scroll_sacr_life,

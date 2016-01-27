@@ -227,7 +227,8 @@ void cpy_render_array_to_visual_memory()
         {
             const Cell_render_data render_data = render::render_array_no_actors[x][y];
 
-            assert(!render_data.is_aware_of_mon_here);
+            assert(!render_data.is_aware_of_hostile_mon_here);
+            assert(!render_data.is_aware_of_allied_mon_here);
             assert(!render_data.is_living_actor_seen_here);
 
             cells[x][y].player_visual_memory = render_data;
@@ -241,7 +242,7 @@ void mk_blood(const P& origin)
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const P       c   = origin + P(dx, dy);
+            const P         c   = origin + P(dx, dy);
             Rigid* const    f   = cells[c.x][c.y].rigid;
 
             if (f->can_have_blood())

@@ -474,11 +474,11 @@ std::string trait_descr(const Trait id)
         return "+10% hit chance and +1 damage with melee attacks";
 
     case Trait::adept_marksman:
-        return "+10% hit chance and +1 damage with firearms and thrown weapons, you occasionally "
+        return "+10% hit chance with firearms and thrown weapons, you occasionally "
                "reload instantly";
 
     case Trait::expert_marksman:
-        return "+10% hit chance and +1 damage with firearms and thrown weapons, you often "
+        return "+10% hit chance with firearms and thrown weapons, you often "
                "reload instantly";
 
     case Trait::master_marksman:
@@ -573,7 +573,7 @@ std::string trait_descr(const Trait id)
         return "You cannot become diseased, negative effects from wounds reduced by 50%";
 
     case Trait::perseverant:
-        return "When your Hit Points are reduced to 25% or less, you gain +50% chance to "
+        return "When your Hit Points are reduced to 30% or less, you gain +50% chance to "
                "dodge melee attacks, and +30% hit chance with melee and ranged attacks";
 
     case Trait::self_aware:
@@ -617,10 +617,11 @@ std::string trait_descr(const Trait id)
                "burst out from the corpses of your victims to attack your enemies.";
 
     case Trait::toxic:
-        return "Attacks with your claws occasionally poison your victims.";
+        return "Attacks with your claws occasionally poisons your victims. "
+               "You are immune to Poison.";
 
     case Trait::indomitable_fury:
-        return "You are immune to physical damage while Frenzied.";
+        return "While Frenzied, you are immune to Wounds, and your attacks causes fear.";
 
     case Trait::END:
         break;
@@ -1048,6 +1049,10 @@ void pick_trait(const Trait id)
         map::player->prop_handler().try_add(
             new Prop_rFear(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
         break;
+
+    case Trait::toxic:
+        map::player->prop_handler().try_add(
+            new Prop_rPoison(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
 
     default:
         break;

@@ -1711,7 +1711,10 @@ void Color_oo_space::on_std_turn_hook()
 
         if (map::player->can_see_actor(*this))
         {
-            map::player->prop_handler().try_add(new Prop_confused(Prop_turns::std));
+            const int NR_TURNS_CONFUSED = rnd::range(8, 12);
+
+            map::player->prop_handler().try_add(
+                new Prop_confused(Prop_turns::specific, NR_TURNS_CONFUSED));
         }
     }
 }
@@ -1774,9 +1777,12 @@ void Worm_mass::mk_start_items()
 
 void Worm_mass::on_death()
 {
-    const int PCT_SPLIT = 45;
+    const int PCT_SPLIT = 44;
 
-    if (rnd::percent(PCT_SPLIT) && (game_time::actors.size() < MAX_NR_ACTORS_ON_MAP))
+    if (
+        !prop_handler_->has_prop(Prop_id::burning)  &&
+        rnd::percent(PCT_SPLIT)                     &&
+        (game_time::actors.size() < MAX_NR_ACTORS_ON_MAP))
     {
         std::vector<Actor_id> worm_ids(2, id());
 
@@ -1966,8 +1972,6 @@ Did_action Zombie::try_resurrect()
 
                 map::player->incr_shock(Shock_lvl::some, Shock_src::see_mon);
             }
-
-            prop_handler_->try_add(new Prop_frenzied(Prop_turns::std));
 
             aware_counter_ = data_->nr_turns_aware * 2;
 
@@ -2262,7 +2266,8 @@ void The_high_priest::mk_start_items()
     spells_known_.push_back(new Spell_paralyze_mon());
     spells_known_.push_back(new Spell_mi_go_hypno());
     spells_known_.push_back(new Spell_pest());
-    spells_known_.push_back(new Spell_knock_back());
+    spells_known_.push_back(new Spell_teleport());
+    spells_known_.push_back(new Spell_aza_wrath());
 }
 
 void The_high_priest::on_death()
@@ -2279,11 +2284,22 @@ void The_high_priest::on_death()
 
     map::player->update_fov();
     render::draw_map_and_interface();
+
+    const int NR_SNAKES = rnd::range(4, 5);
+
+    std::vector<Actor_id> snake_ids(NR_SNAKES, Actor_id::pit_viper);
+
+    actor_factory::summon(pos, snake_ids);
 }
 
 void The_high_priest::on_std_turn_hook()
 {
+    const int REGEN_EVERY_N_TURN = 3;
 
+    if (is_alive() && (game_time::turn() % REGEN_EVERY_N_TURN == 0))
+    {
+        restore_hp(1, false, Verbosity::silent);
+    }
 }
 
 Did_action The_high_priest::on_act()

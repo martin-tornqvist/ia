@@ -767,7 +767,14 @@ Spell_effect_noticed Spell_pest::cast_impl(Actor* const caster) const
 
         if (!caster->is_player())
         {
-            caster_str = caster->name_the();
+            if (map::player->can_see_actor(*caster))
+            {
+                caster_str = caster->name_the();
+            }
+            else
+            {
+                caster_str = "it";
+            }
         }
 
         msg_log::add("Disgusting critters appear around " + caster_str + "!");
@@ -1189,7 +1196,7 @@ bool Spell_teleport::allow_mon_cast_now(Mon& mon) const
 {
     const bool IS_LOW_HP = mon.hp() <= (mon.hp_max(true) / 2);
 
-    return mon.tgt_ && IS_LOW_HP && rnd::coin_toss();
+    return (mon.aware_counter_ > 0) && IS_LOW_HP && rnd::fraction(3, 4);
 }
 
 //------------------------------------------------------------ RESISTANCE
@@ -1207,7 +1214,10 @@ Spell_effect_noticed Spell_res::cast_impl(Actor* const caster) const
 
 bool Spell_res::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && rnd::one_in(3);
+    const bool HAS_RFIRE = mon.prop_handler().has_prop(Prop_id::rFire);
+    const bool HAS_RELEC = mon.prop_handler().has_prop(Prop_id::rElec);
+
+    return (!HAS_RFIRE || !HAS_RELEC) && mon.tgt_ && rnd::coin_toss();
 }
 
 //------------------------------------------------------------ KNOCKBACK
@@ -1415,8 +1425,8 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
     }
     else //There are free cells seen by the player available
     {
-        const size_t IDX  = rnd::range(0, free_cells_seen_by_player.size() - 1);
-        summon_pos         = free_cells_seen_by_player[IDX];
+        const size_t IDX    = rnd::range(0, free_cells_seen_by_player.size() - 1);
+        summon_pos          = free_cells_seen_by_player[IDX];
     }
 
     std::vector<Actor_id> summon_bucket;
@@ -1427,8 +1437,7 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
 
         if (data.can_be_summoned)
         {
-            //Method for finding eligible monsters depends on if player or monster is
-            //casting.
+            //Method for finding eligible monsters depends on if player or monster is casting.
             int dlvl_max = -1;
 
             if (caster->is_player())
@@ -1510,7 +1519,7 @@ bool Spell_summon_mon::allow_mon_cast_now(Mon& mon) const
     //NOTE: Checking awareness instead of target, to allow summoning even with broken LOS
     return (mon.aware_counter_ > 0) &&
            rnd::coin_toss()         &&
-           (mon.tgt_ || rnd::one_in(21));
+           (mon.tgt_ || rnd::one_in(23));
 }
 
 //------------------------------------------------------------ HEAL SELF
