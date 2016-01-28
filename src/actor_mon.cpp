@@ -2041,12 +2041,11 @@ void Zombie::on_death()
 
         assert(id_to_spawn != Actor_id::END);
 
-        actor_factory::summon(pos,
-        {id_to_spawn},
-        Make_mon_aware::yes,
-        nullptr,
-        nullptr,
-        Verbosity::silent);
+        actor_factory::summon(pos, {id_to_spawn},
+                              Make_mon_aware::yes,
+                              nullptr,
+                              nullptr,
+                              Verbosity::silent);
 
         render::draw_map_and_interface();
     }

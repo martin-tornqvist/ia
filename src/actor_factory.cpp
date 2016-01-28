@@ -11,6 +11,8 @@
 #include "utils.hpp"
 #include "actor.hpp"
 #include "feature_rigid.hpp"
+#include "init.hpp"
+#include "render.hpp"
 
 namespace actor_factory
 {
@@ -285,6 +287,8 @@ void summon(const P& origin,
             std::vector<Mon*>* monsters_ret,
             Verbosity verbosity)
 {
+    TRACE_FUNC_BEGIN;
+
     if (monsters_ret)
     {
         monsters_ret->clear();
@@ -338,6 +342,8 @@ void summon(const P& origin,
     {
         render::draw_blast_at_seen_cells(positions_to_animate, clr_magenta);
     }
+
+    TRACE_FUNC_END;
 }
 
 } //actor_factory

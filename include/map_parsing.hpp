@@ -42,7 +42,8 @@ class Blocks_move_cmn : public Check
 {
 public:
     Blocks_move_cmn(bool is_actors_blocking) :
-        Check(), IS_ACTORS_BLOCKING_(is_actors_blocking) {}
+        Check(),
+        IS_ACTORS_BLOCKING_(is_actors_blocking) {}
     bool is_checking_cells()        const override {return true;}
     bool is_checking_mobs()         const override {return true;}
     bool is_checking_actors()       const override {return IS_ACTORS_BLOCKING_;}
@@ -185,7 +186,7 @@ enum class Map_parse_mode {overwrite, append};
 namespace map_parse
 {
 
-extern const Rect map_rect;
+const Rect map_rect(0, 0, MAP_W - 1, MAP_H - 1);
 
 void run(const cell_check::Check& method,
          bool out[MAP_W][MAP_H],
@@ -220,8 +221,11 @@ bool is_map_connected(const bool blocked[MAP_W][MAP_H]);
 struct Is_closer_to_pos
 {
 public:
-    Is_closer_to_pos(const P& p) : p_(p) {}
+    Is_closer_to_pos(const P& p) :
+        p_(p) {}
+
     bool operator()(const P& p1, const P& p2);
+
     P p_;
 };
 

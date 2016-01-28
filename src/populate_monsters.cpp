@@ -74,25 +74,76 @@ void mk_list_of_mon_can_auto_spawn(const int NR_LVLS_OUT_OF_DEPTH,
     }
 }
 
-void mk_group_of_random_at(const std::vector<P>&   sorted_free_cells_vector,
-                           bool                 blocked[MAP_W][MAP_H],
-                           const int            NR_LVLS_OUT_OF_DEPTH_ALLOWED,
-                           const bool           IS_ROAMING_ALLOWED)
+void mk_group_at(const Actor_id id,
+                 const std::vector<P>& sorted_free_cells_vector,
+                 bool blocked_out[MAP_W][MAP_H],
+                 const bool IS_ROAMING_ALLOWED)
 {
-    std::vector<Actor_id> id_bucket;
-    mk_list_of_mon_can_auto_spawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, id_bucket);
+    const Actor_data_t& d = actor_data::data[int(id)];
 
-    if (!id_bucket.empty())
+    int max_nr_in_group = 1;
+
+    switch (d.group_size)
     {
-        const Actor_id id = id_bucket[rnd::range(0, id_bucket.size() - 1)];
-        mk_group_at(id, sorted_free_cells_vector, blocked, IS_ROAMING_ALLOWED);
+    case Mon_group_size::few:
+        max_nr_in_group = rnd::range(1, 2);
+        break;
+
+    case Mon_group_size::group:
+        max_nr_in_group = rnd::range(3, 4);
+        break;
+
+    case Mon_group_size::horde:
+        max_nr_in_group = rnd::range(6, 7);
+        break;
+
+    case Mon_group_size::swarm:
+        max_nr_in_group = rnd::range(10, 12);
+        break;
+
+    default:
+        break;
+    }
+
+    Actor* origin_actor = nullptr;
+
+    const int NR_FREE_CELLS     = sorted_free_cells_vector.size();
+    const int NR_CAN_BE_SPAWNED = std::min(NR_FREE_CELLS, max_nr_in_group);
+
+    for (int i = 0; i < NR_CAN_BE_SPAWNED; ++i)
+    {
+        const P& p = sorted_free_cells_vector[i];
+
+        assert(!blocked_out[p.x][p.y]);
+
+        Actor* const    actor       = actor_factory::mk(id, p);
+        Mon* const      mon         = static_cast<Mon*>(actor);
+        mon->is_roaming_allowed_    = IS_ROAMING_ALLOWED;
+
+        if (i == 0)
+        {
+            origin_actor = actor;
+        }
+        else //Not origin actor
+        {
+            //The monster may have been assigned a leader when placed (e.g. Ghouls being allied
+            //to player Ghoul, or other special case hooks). If not, we assign the origin monster
+            //as leader of this group.
+            if (!mon->leader_)
+            {
+                mon->leader_ = origin_actor;
+            }
+        }
+
+        blocked_out[p.x][p.y] = true;
     }
 }
 
-bool mk_group_of_random_native_to_room_type_at(const Room_type       room_type,
-        const std::vector<P>&   sorted_free_cells_vector,
-        bool                 blocked[MAP_W][MAP_H],
-        const bool           IS_ROAMING_ALLOWED)
+bool mk_group_of_random_native_to_room_type_at(
+    const Room_type room_type,
+    const std::vector<P>& sorted_free_cells_vector,
+    bool blocked_out[MAP_W][MAP_H],
+    const bool IS_ROAMING_ALLOWED)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
@@ -102,8 +153,8 @@ bool mk_group_of_random_native_to_room_type_at(const Room_type       room_type,
 
     for (size_t i = 0; i < id_bucket.size(); ++i)
     {
-        const Actor_data_t& d = actor_data::data[int(id_bucket[i])];
-        bool is_mon_native_to_room = false;
+        const Actor_data_t& d                       = actor_data::data[int(id_bucket[i])];
+        bool                is_mon_native_to_room   = false;
 
         for (const auto native_room_type : d.native_rooms)
         {
@@ -131,10 +182,58 @@ bool mk_group_of_random_native_to_room_type_at(const Room_type       room_type,
     else //Found valid monster IDs
     {
         const Actor_id id = id_bucket[rnd::range(0, id_bucket.size() - 1)];
-        mk_group_at(id, sorted_free_cells_vector, blocked, IS_ROAMING_ALLOWED);
+
+        mk_group_at(id,
+                    sorted_free_cells_vector,
+                    blocked_out,
+                    IS_ROAMING_ALLOWED);
+
         TRACE_FUNC_END_VERBOSE;
         return true;
     }
+}
+
+void mk_group_of_random_at(const std::vector<P>& sorted_free_cells_vector,
+                           bool blocked_out[MAP_W][MAP_H],
+                           const int NR_LVLS_OUT_OF_DEPTH_ALLOWED,
+                           const bool IS_ROAMING_ALLOWED)
+{
+    std::vector<Actor_id> id_bucket;
+    mk_list_of_mon_can_auto_spawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, id_bucket);
+
+    if (!id_bucket.empty())
+    {
+        const Actor_id id = id_bucket[rnd::range(0, id_bucket.size() - 1)];
+
+        mk_group_at(id, sorted_free_cells_vector, blocked_out, IS_ROAMING_ALLOWED);
+    }
+}
+
+void mk_sorted_free_cells_vector(const P& origin,
+                                 const bool blocked[MAP_W][MAP_H],
+                                 std::vector<P>& vector_ref)
+{
+    vector_ref.clear();
+
+    const int RADI = 10;
+    const int X0 = utils::constr_in_range(1, origin.x - RADI, MAP_W - 2);
+    const int Y0 = utils::constr_in_range(1, origin.y - RADI, MAP_H - 2);
+    const int X1 = utils::constr_in_range(1, origin.x + RADI, MAP_W - 2);
+    const int Y1 = utils::constr_in_range(1, origin.y + RADI, MAP_H - 2);
+
+    for (int x = X0; x <= X1; ++x)
+    {
+        for (int y = Y0; y <= Y1; ++y)
+        {
+            if (!blocked[x][y])
+            {
+                vector_ref.push_back(P(x, y));
+            }
+        }
+    }
+
+    Is_closer_to_pos sorter(origin);
+    std::sort(vector_ref.begin(), vector_ref.end(), sorter);
 }
 
 } //namespace
@@ -170,9 +269,9 @@ void try_spawn_due_to_time_passed()
 
     std::vector<P> free_cells_vector;
 
-    for (int y = 1; y < MAP_H - 1; ++y)
+    for (int x = 1; x < MAP_W - 2; ++x)
     {
-        for (int x = 1; x < MAP_W - 1; ++x)
+        for (int y = 1; y < MAP_H - 2; ++y)
         {
             if (!blocked[x][y])
             {
@@ -183,8 +282,8 @@ void try_spawn_due_to_time_passed()
 
     if (!free_cells_vector.empty())
     {
-        const int ELEMENT = rnd::range(0, free_cells_vector.size() - 1);
-        const P& origin = free_cells_vector[ELEMENT];
+        const int   ELEMENT = rnd::range(0, free_cells_vector.size() - 1);
+        const P&    origin  = free_cells_vector[ELEMENT];
 
         mk_sorted_free_cells_vector(origin, blocked, free_cells_vector);
 
@@ -193,7 +292,11 @@ void try_spawn_due_to_time_passed()
             if (map::cells[origin.x][origin.y].is_explored)
             {
                 const int NR_OOD = random_out_of_depth();
-                mk_group_of_random_at(free_cells_vector, blocked, NR_OOD, true);
+
+                mk_group_of_random_at(free_cells_vector,
+                                      blocked,
+                                      NR_OOD,
+                                      true);
             }
         }
     }
@@ -265,7 +368,10 @@ void populate_intro_lvl()
 
             const Actor_id id = ids_can_spawn_intro_lvl[ID_ELEMENT];
 
-            mk_group_at(id, sorted_free_cells_vector, blocked, true);
+            mk_group_at(id,
+                        sorted_free_cells_vector,
+                        blocked,
+                        true);
         }
     }
 }
@@ -275,6 +381,7 @@ void populate_std_lvl()
     TRACE_FUNC_BEGIN;
 
     const int NR_GROUPS_ALLOWED_ON_MAP = rnd::range(5, 9);
+
     int nr_groups_spawned = 0;
 
     bool blocked[MAP_W][MAP_H];
@@ -290,9 +397,9 @@ void populate_std_lvl()
     const int X1 = std::min(MAP_W - 1, player_pos.x + MIN_DIST_FROM_PLAYER);
     const int Y1 = std::min(MAP_H - 1, player_pos.y + MIN_DIST_FROM_PLAYER);
 
-    for (int y = Y0; y <= Y1; ++y)
+    for (int x = X0; x <= X1; ++x)
     {
-        for (int x = X0; x <= X1; ++x)
+        for (int y = Y0; y <= Y1; ++y)
         {
             blocked[x][y] = true;
         }
@@ -333,20 +440,29 @@ void populate_std_lvl()
                 //stop spawning in this room
                 const int NR_ORIGIN_CANDIDATES = origin_bucket.size();
 
-                if (NR_ORIGIN_CANDIDATES < (NR_CELLS_IN_ROOM / 3)) {break;}
+                if (NR_ORIGIN_CANDIDATES < (NR_CELLS_IN_ROOM / 3))
+                {
+                    break;
+                }
 
                 //Spawn monsters in room
                 if (NR_ORIGIN_CANDIDATES > 0)
                 {
-                    const int ELEMENT = rnd::range(0, NR_ORIGIN_CANDIDATES - 1);
-                    const P& origin = origin_bucket[ELEMENT];
+                    const int   ELEMENT = rnd::range(0, NR_ORIGIN_CANDIDATES - 1);
+                    const P&    origin  = origin_bucket[ELEMENT];
+
                     std::vector<P> sorted_free_cells_vector;
                     mk_sorted_free_cells_vector(origin, blocked, sorted_free_cells_vector);
 
-                    if (mk_group_of_random_native_to_room_type_at(
-                                room->type_, sorted_free_cells_vector, blocked, true))
+                    const bool DID_MAKE_GROUP = mk_group_of_random_native_to_room_type_at(
+                                                    room->type_,
+                                                    sorted_free_cells_vector,
+                                                    blocked,
+                                                    true);
+
+                    if (DID_MAKE_GROUP)
                     {
-                        nr_groups_spawned++;
+                        ++nr_groups_spawned;
 
                         if (nr_groups_spawned >= NR_GROUPS_ALLOWED_ON_MAP)
                         {
@@ -369,7 +485,7 @@ void populate_std_lvl()
         }
     }
 
-    //Second, place groups randomly in plain-themed areas until <no more groups to place
+    //Second, place groups randomly in plain-themed areas until no more groups to place
     std::vector<P> origin_bucket;
 
     for (int y = 1; y < MAP_H - 1; ++y)
@@ -391,15 +507,20 @@ void populate_std_lvl()
         while (nr_groups_spawned < NR_GROUPS_ALLOWED_ON_MAP)
         {
             const int   ELEMENT = rnd::range(0, origin_bucket.size() - 1);
-            const P   origin  = origin_bucket[ELEMENT];
+            const P     origin  = origin_bucket[ELEMENT];
 
             std::vector<P> sorted_free_cells_vector;
             mk_sorted_free_cells_vector(origin, blocked, sorted_free_cells_vector);
 
-            if (mk_group_of_random_native_to_room_type_at(
-                        Room_type::plain, sorted_free_cells_vector, blocked, true))
+            const bool DID_MAKE_GROUP = mk_group_of_random_native_to_room_type_at(
+                                            Room_type::plain,
+                                            sorted_free_cells_vector,
+                                            blocked,
+                                            true);
+
+            if (DID_MAKE_GROUP)
             {
-                nr_groups_spawned++;
+                ++nr_groups_spawned;
             }
         }
     }
@@ -407,88 +528,4 @@ void populate_std_lvl()
     TRACE_FUNC_END;
 }
 
-void mk_group_at(const Actor_id id, const std::vector<P>& sorted_free_cells_vector,
-                 bool blocked[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED)
-{
-    const Actor_data_t& d = actor_data::data[int(id)];
-
-    int max_nr_in_group = 1;
-
-    switch (d.group_size)
-    {
-    case Mon_group_size::few:
-        max_nr_in_group = rnd::range(1, 2);
-        break;
-
-    case Mon_group_size::group:
-        max_nr_in_group = rnd::range(3, 4);
-        break;
-
-    case Mon_group_size::horde:
-        max_nr_in_group = rnd::range(6, 7);
-        break;
-
-    case Mon_group_size::swarm:
-        max_nr_in_group = rnd::range(10, 12);
-        break;
-
-    default:
-        break;
-    }
-
-    Actor* origin_actor = nullptr;
-
-    const int NR_FREE_CELLS     = sorted_free_cells_vector.size();
-    const int NR_CAN_BE_SPAWNED = std::min(NR_FREE_CELLS, max_nr_in_group);
-
-    for (int i = 0; i < NR_CAN_BE_SPAWNED; ++i)
-    {
-        const P&      p           = sorted_free_cells_vector[i];
-        Actor* const    actor       = actor_factory::mk(id, p);
-        Mon* const      mon         = static_cast<Mon*>(actor);
-        mon->is_roaming_allowed_    = IS_ROAMING_ALLOWED;
-
-        if (i == 0)
-        {
-            origin_actor = actor;
-        }
-        else //Not origin actor
-        {
-            //The monster may have been assigned a leader when placed (e.g. Ghouls being allied
-            //to player Ghoul, or other special case hooks). If not, we assign the origin monster
-            //as leader of this group.
-            if (!mon->leader_)
-            {
-                mon->leader_ = origin_actor;
-            }
-        }
-
-        blocked[p.x][p.y] = true;
-    }
-}
-
-void mk_sorted_free_cells_vector(const P& origin,
-                                 const bool blocked[MAP_W][MAP_H],
-                                 std::vector<P>& vector_ref)
-{
-    vector_ref.clear();
-
-    const int RADI = 10;
-    const int X0 = utils::constr_in_range(1, origin.x - RADI, MAP_W - 2);
-    const int Y0 = utils::constr_in_range(1, origin.y - RADI, MAP_H - 2);
-    const int X1 = utils::constr_in_range(1, origin.x + RADI, MAP_W - 2);
-    const int Y1 = utils::constr_in_range(1, origin.y + RADI, MAP_H - 2);
-
-    for (int y = Y0; y <= Y1; ++y)
-    {
-        for (int x = X0; x <= X1; ++x)
-        {
-            if (!blocked[x][y]) {vector_ref.push_back(P(x, y));}
-        }
-    }
-
-    Is_closer_to_pos sorter(origin);
-    std::sort(vector_ref.begin(), vector_ref.end(), sorter);
-}
-
-} //Populate_mon
+} //populate_mon

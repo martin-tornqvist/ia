@@ -703,7 +703,7 @@ void Snake_pit_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
 
     bool blocked[MAP_W][MAP_H];
 
-    map_parse::run(cell_check::Blocks_move_cmn(false),
+    map_parse::run(cell_check::Blocks_move_cmn(true),
                    blocked,
                    Map_parse_mode::overwrite,
                    r_);

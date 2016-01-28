@@ -271,8 +271,28 @@ void erase_all_mobs()
 
 void add_actor(Actor* actor)
 {
-    //Sanity check actor inserted
+    //Sanity checks
     assert(utils::is_pos_inside_map(actor->pos));
+
+#ifndef NDEBUG
+    for (Actor* const old_actor : actors)
+    {
+        //Never insert the same actor twice
+        assert(actor != old_actor);
+
+        //Never insert an actor on the same position as an existing living actor
+        //NOTE: Actors could be placed dead, e.g. Zuul can do this (immediately spawns a priest),
+        //so we check if BOTH actors are alive first before we panic.
+        if (actor->is_alive() && old_actor->is_alive())
+        {
+            const P& new_actor_p = actor->pos;
+            const P& old_actor_p = old_actor->pos;
+
+            assert(new_actor_p != old_actor_p);
+        }
+    }
+#endif // NDEBUG
+
     actors.push_back(actor);
 }
 

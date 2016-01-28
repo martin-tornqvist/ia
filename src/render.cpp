@@ -1350,9 +1350,9 @@ void draw_map()
     //---------------- INSERT MOBILE FEATURES INTO ARRAY
     for (auto* mob : game_time::mobs)
     {
-        const P& p            = mob->pos();
-        const Tile_id  mob_tile   = mob->tile();
-        const char    mob_glyph  = mob->glyph();
+        const P& p                  = mob->pos();
+        const Tile_id   mob_tile    = mob->tile();
+        const char      mob_glyph   = mob->glyph();
 
         if (
             mob_tile != Tile_id::empty && mob_glyph != ' ' &&
@@ -1370,9 +1370,16 @@ void draw_map()
     {
         if (!actor->is_player() && actor->is_alive())
         {
+            //There is a living monster here
+
             const P& p = actor->pos;
 
             cur_render_data = &render_array[p.x][p.y];
+
+            //There should NOT already be an actor here which is seen, or that we are aware of
+            assert(!cur_render_data->is_living_actor_seen_here);
+            assert(!cur_render_data->is_aware_of_hostile_mon_here);
+            assert(!cur_render_data->is_aware_of_allied_mon_here);
 
             const auto* const mon = static_cast<const Mon*>(actor);
 

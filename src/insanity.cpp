@@ -12,6 +12,9 @@
 #include "feature_rigid.hpp"
 #include "actor_factory.hpp"
 #include "save_handling.hpp"
+#include "init.hpp"
+#include "game_time.hpp"
+#include "render.hpp"
 
 //-----------------------------------------------------------------------------
 // Insanity symptoms
@@ -354,6 +357,8 @@ void Ins_phobia_dark::on_new_player_turn(const std::vector<Actor*>& seen_foes)
 
 void Ins_shadows::on_start_hook()
 {
+    TRACE_FUNC_BEGIN;
+
     const int NR_SHADOWS_LOWER = 2;
 
     const int NR_SHADOWS_UPPER = utils::constr_in_range(NR_SHADOWS_LOWER, map::dlvl - 2, 8);
@@ -382,6 +387,22 @@ void Ins_shadows::on_start_hook()
 
         mon->prop_handler().try_add(disabled_att);
     }
+
+    map::player->update_fov();
+
+    std::vector<Actor*> player_seen_foes;
+    map::player->seen_foes(player_seen_foes);
+
+    for (Actor* const actor : player_seen_foes)
+    {
+        static_cast<Mon*>(actor)->set_player_aware_of_me();
+    }
+
+    render::draw_map_and_interface();
+
+    map::cpy_render_array_to_visual_memory();
+
+    TRACE_FUNC_END;
 }
 
 void Ins_paranoia::on_start_hook()

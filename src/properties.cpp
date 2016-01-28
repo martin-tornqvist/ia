@@ -1966,8 +1966,8 @@ void Prop_poss_by_zuul::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
         msg_log::add(name1 + " was possessed by " + name2 + "!");
     }
 
-    owning_actor_->state_  = Actor_state::destroyed;
-    const P& pos        = owning_actor_->pos;
+    owning_actor_->state_   = Actor_state::destroyed;
+    const P& pos            = owning_actor_->pos;
     map::mk_gore(pos);
     map::mk_blood(pos);
     actor_factory::summon(pos,

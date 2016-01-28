@@ -222,8 +222,6 @@ bool All_adj_is_none_of_features::check(const Cell& c) const
 namespace map_parse
 {
 
-const Rect map_rect(0, 0, MAP_W - 1, MAP_H - 1);
-
 void run(const  cell_check::Check& method,
          bool   out[MAP_W][MAP_H],
          const  Map_parse_mode write_rule,

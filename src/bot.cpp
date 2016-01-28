@@ -137,8 +137,7 @@ void act()
 
     if (!has_allied_mon)
     {
-        actor_factory::summon(map::player->pos,
-                              {Actor_id::mi_go},
+        actor_factory::summon(map::player->pos, {Actor_id::mi_go},
                               Make_mon_aware::yes,
                               map::player);
     }
@@ -196,8 +195,15 @@ void act()
     //Occasionally swap weapon (just some code exercise)
     if (rnd::one_in(50))
     {
-      input::handle_map_mode_key_press(Key_data('z'));
-      return;
+        input::handle_map_mode_key_press(Key_data('z'));
+        return;
+    }
+
+    //Occasionally cause shock spikes
+    if (rnd::one_in(100))
+    {
+        map::player->incr_shock(200, Shock_src::misc);
+        return;
     }
 
     //Handle blocking door

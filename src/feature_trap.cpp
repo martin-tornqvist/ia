@@ -565,8 +565,6 @@ Tile_id Trap::tile() const
 
 Dir Trap::actor_try_leave(Actor& actor, const Dir dir)
 {
-    TRACE_FUNC_BEGIN_VERBOSE;
-    TRACE_FUNC_END_VERBOSE;
     return trap_impl_->actor_try_leave(actor, dir);
 }
 
@@ -971,7 +969,7 @@ void Trap_teleport::trigger()
 
 void Trap_summon_mon::trigger()
 {
-    TRACE_FUNC_BEGIN_VERBOSE;
+    TRACE_FUNC_BEGIN;
 
     Actor* const actor_here = utils::actor_at_pos(pos_);
 
@@ -1066,13 +1064,17 @@ void Trap_summon_mon::trigger()
 
         if (map::player->can_see_actor(*mon))
         {
+            mon->set_player_aware_of_me();
+
+            render::draw_map_and_interface();
+
             msg_log::add(mon->name_a() + " appears!");
         }
 
         map::player->incr_shock(5, Shock_src::misc);
     }
 
-    TRACE_FUNC_END_VERBOSE;
+    TRACE_FUNC_END;
 }
 
 void Trap_spi_drain::trigger()
