@@ -723,7 +723,7 @@ void init_data_list()
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = false;
-    d.update_vision_when_start_or_end = true;
+    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = Prop_alignment::neutral;
     add_prop_data(d);

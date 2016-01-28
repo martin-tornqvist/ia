@@ -966,7 +966,11 @@ void Zuul::place_hook()
 
         auto* poss_by_zuul_prop     = new Prop_poss_by_zuul(Prop_turns::indefinite);
 
-        priest_prop_handler.try_add(poss_by_zuul_prop);
+        priest_prop_handler.try_add(poss_by_zuul_prop,
+                                    Prop_src::intr,
+                                    true,
+                                    Verbosity::silent);
+
         actor->restore_hp(999, false, Verbosity::silent);
     }
 }
