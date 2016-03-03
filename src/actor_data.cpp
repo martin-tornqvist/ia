@@ -2304,11 +2304,11 @@ void init_data_list()
     d.dmg_melee = 3;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.natural_props[size_t(Prop_id::infravis)] = true;
-    d.spawn_min_dlvl = 6;
+    d.spawn_min_dlvl = 7;
     d.group_size = Mon_group_size::horde;
     d.actor_size = Actor_size::floor;
     d.prevent_knockback = true;
-    d.nr_turns_aware = 10;
+    d.nr_turns_aware = 20;
     d.descr = "A slithering conglomeration of carnivorous worms. Their bite causes "
               "heavy disorientation.";
     d.can_be_summoned = true;

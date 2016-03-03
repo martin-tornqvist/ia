@@ -1792,22 +1792,20 @@ void Worm_mass::on_death()
     {
         std::vector<Actor_id> worm_ids(2, id());
 
-        //If dying worm has a leader, set that worm as leader for spawned worms
-        Actor* leader = leader_ ? leader_ : nullptr;
-
         std::vector<Mon*> summoned;
 
+        //NOTE: If dying worm has a leader, that actor is set as leader for the spawned worms
         actor_factory::summon(pos,
                               worm_ids,
                               Make_mon_aware::yes,
-                              leader,
+                              leader_,
                               &summoned,
                               Verbosity::silent);
 
         IA_ASSERT(summoned.size() == 2);
 
         //If no leader has been set yet, assign the first worm as leader of the second
-        if (!leader && summoned.size() >= 2)
+        if (!leader_ && summoned.size() >= 2)
         {
             summoned[1]->leader_ = summoned[0];
         }
