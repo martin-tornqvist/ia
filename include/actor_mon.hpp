@@ -726,13 +726,16 @@ class Worm_mass: public Mon
 {
 public:
     Worm_mass() :
-        Mon() {}
+        Mon             (),
+        allow_split_    (true) {}
 
     ~Worm_mass() {}
 
     void mk_start_items() override;
 
 private:
+    bool allow_split_;
+
     void on_death() override;
 };
 

@@ -1780,11 +1780,14 @@ void Worm_mass::mk_start_items()
 
 void Worm_mass::on_death()
 {
-    const int PCT_SPLIT = 44;
+    //Split into other worms on death. Splitting is only allowed if this is an "original" worm,
+    //i.e. not split from another, and if the worm is not destroyed "too hard" (e.g. by a near
+    //explosion or a sledge hammer), and if the worm is not burning.
 
     if (
+        allow_split_                                &&
+        hp_ > -10                                   &&
         !prop_handler_->has_prop(Prop_id::burning)  &&
-        rnd::percent(PCT_SPLIT)                     &&
         (game_time::actors.size() < MAX_NR_ACTORS_ON_MAP))
     {
         std::vector<Actor_id> worm_ids(2, id());
@@ -1807,6 +1810,15 @@ void Worm_mass::on_death()
         if (!leader && summoned.size() >= 2)
         {
             summoned[1]->leader_ = summoned[0];
+        }
+
+        for (Mon* const mon : summoned)
+        {
+            //Do not allow summoned worms to split again
+            static_cast<Worm_mass*>(mon)->allow_split_ = false;
+
+            //Do not allow summoned worms to attack immediately
+            mon->prop_handler().try_add(new Prop_disabled_attack(Prop_turns::specific, 1));
         }
     }
 }

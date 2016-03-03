@@ -1234,7 +1234,7 @@ void init_data_list()
     d.id = Item_id::mind_worms_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::mind_worms);
-    d.melee.prop_applied = new Prop_confused(Prop_turns::std);
+    d.melee.prop_applied = new Prop_confused(Prop_turns::specific, 9);
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
