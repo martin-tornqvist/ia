@@ -255,7 +255,6 @@ bool try_mk_aux_room(const P& p, const P& d, bool blocked[MAP_W][MAP_H], const P
             }
 
 #ifdef MK_CRUMBLE_ROOMS
-
             if (rnd::one_in(10))
             {
                 Room* const room = room_factory::mk(Room_type::crumble_room, aux_rect);

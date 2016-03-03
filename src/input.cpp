@@ -799,7 +799,7 @@ void handle_map_mode_key_press(const Key_data& d)
                     }
                     else //No item equipped
                     {
-                        msg_log::add("I have no missiles chosen for throwing (press 'w').");
+                        msg_log::add("I have no missiles chosen for throwing (press 'i').");
                     }
                 }
             }
