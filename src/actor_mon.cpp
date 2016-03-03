@@ -1655,7 +1655,7 @@ void Leng_elder::mk_start_items()
 
 void Ooze::on_std_turn_hook()
 {
-    if (is_alive())
+    if (is_alive() && !prop_handler_->has_prop(Prop_id::burning))
     {
         restore_hp(1, false, Verbosity::silent);
     }
