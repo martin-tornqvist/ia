@@ -3,7 +3,6 @@
 #include "map_gen.hpp"
 
 #include <vector>
-#include <cassert>
 
 #include "map.hpp"
 #include "map_parsing.hpp"
@@ -30,7 +29,7 @@ Feature_id backup[MAP_W][MAP_H];
 void floor_cells_in_room(const Room& room, const bool floor[MAP_W][MAP_H],
                          std::vector<P>& out)
 {
-    assert(utils::is_area_inside_map(room.r_));
+    IA_ASSERT(utils::is_area_inside_map(room.r_));
 
     for (int y = room.r_.p0.y; y <= room.r_.p1.y; ++y)
     {
@@ -333,8 +332,8 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
     TRACE_FUNC_BEGIN_VERBOSE << "Making corridor between rooms "
                              << &r0 << " and " << &r1 << std::endl;
 
-    assert(utils::is_area_inside_map(r0.r_));
-    assert(utils::is_area_inside_map(r1.r_));
+    IA_ASSERT(utils::is_area_inside_map(r0.r_));
+    IA_ASSERT(utils::is_area_inside_map(r1.r_));
 
     std::vector<P> p0_bucket;
     std::vector<P> p1_bucket;

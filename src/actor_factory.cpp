@@ -1,7 +1,6 @@
 #include "actor_factory.hpp"
 
 #include <algorithm>
-#include <cassert>
 
 #include "actor_mon.hpp"
 #include "actor_player.hpp"
@@ -239,7 +238,7 @@ Actor* mk_actor_from_id(const Actor_id id)
 
 Actor* mk(const Actor_id id, const P& pos)
 {
-    assert(
+    IA_ASSERT(
         !map::cells[pos.x][pos.y].rigid ||
         map::cells[pos.x][pos.y].rigid->id() != Feature_id::stairs);
 
@@ -315,7 +314,7 @@ void summon(const P& origin,
         Actor* const    actor   = mk(id, pos);
         Mon* const      mon     = static_cast<Mon*>(actor);
 
-        assert(utils::is_pos_inside_map(pos, false));
+        IA_ASSERT(utils::is_pos_inside_map(pos, false));
 
         if (monsters_ret)
         {

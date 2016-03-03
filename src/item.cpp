@@ -2,8 +2,6 @@
 
 #include "item.hpp"
 
-#include <cassert>
-
 #include "map.hpp"
 #include "game_time.hpp"
 #include "utils.hpp"
@@ -153,7 +151,7 @@ Dice_param Item::dmg(const Att_mode att_mode, const Actor* const actor) const
 
     case Att_mode::none:
     {
-        assert(false);
+        IA_ASSERT(false);
         break;
     }
     }
@@ -197,7 +195,7 @@ Consume_item Item::activate(Actor* const actor)
 
 void Item::on_pickup(Actor& actor)
 {
-    assert(!actor_carrying_);
+    IA_ASSERT(!actor_carrying_);
 
     actor_carrying_ = &actor;
 
@@ -206,14 +204,14 @@ void Item::on_pickup(Actor& actor)
 
 void Item::on_equip(const Verbosity verbosity)
 {
-    assert(actor_carrying_);
+    IA_ASSERT(actor_carrying_);
 
     on_equip_hook(verbosity);
 }
 
 Unequip_allowed Item::on_unequip()
 {
-    assert(actor_carrying_);
+    IA_ASSERT(actor_carrying_);
 
     return on_unequip_hook();
 }
@@ -366,7 +364,7 @@ std::string Item::name(const Item_ref_type ref_type,
 
     const std::string ret = nr_str + base_name + att_str + inf_str;
 
-    assert(!ret.empty());
+    IA_ASSERT(!ret.empty());
 
     return ret;
 }
@@ -378,22 +376,22 @@ bool Item::is_in_effective_range_lmt(const P& p0, const P& p1) const
 
 void Item::add_carrier_prop(Prop* const prop, const Verbosity verbosity)
 {
-    assert(actor_carrying_);
-    assert(prop);
+    IA_ASSERT(actor_carrying_);
+    IA_ASSERT(prop);
 
     actor_carrying_->prop_handler().add_prop_from_equipped_item(this, prop, verbosity);
 }
 
 void Item::clear_carrier_props()
 {
-    assert(actor_carrying_);
+    IA_ASSERT(actor_carrying_);
 
     actor_carrying_->prop_handler().remove_props_for_item(this);
 }
 
 void Item::add_carrier_spell(Spell* const spell)
 {
-    assert(spell);
+    IA_ASSERT(spell);
 
     carrier_spells_.push_back(spell);
 }
@@ -838,7 +836,7 @@ void Medical_bag::load()
 
 void Medical_bag::on_pickup_hook()
 {
-    assert(actor_carrying_);
+    IA_ASSERT(actor_carrying_);
 
     auto& inv = actor_carrying_->inv();
 
@@ -925,7 +923,7 @@ Consume_item Medical_bag::activate(Actor* const actor)
         break;
 
     case Med_bag_action::END:
-        assert(false);
+        IA_ASSERT(false);
         break;
     }
 
@@ -957,7 +955,7 @@ Med_bag_action Medical_bag::choose_action() const
 
 void Medical_bag::continue_action()
 {
-    assert(cur_action_ != Med_bag_action::END);
+    IA_ASSERT(cur_action_ != Med_bag_action::END);
 
     --nr_turns_left_action_;
 
@@ -981,7 +979,7 @@ void Medical_bag::finish_cur_action()
     {
         Prop* const wound_prop = map::player->prop_handler().prop(Prop_id::wound);
 
-        assert(wound_prop);
+        IA_ASSERT(wound_prop);
 
         Prop_wound* const wound = static_cast<Prop_wound*>(wound_prop);
 
@@ -996,7 +994,7 @@ void Medical_bag::finish_cur_action()
     break;
 
     case Med_bag_action::END:
-        assert(false);
+        IA_ASSERT(false);
         break;
     }
 
@@ -1042,7 +1040,7 @@ int Medical_bag::tot_suppl_for_action(const Med_bag_action action) const
         break;
     }
 
-    assert(false);
+    IA_ASSERT(false);
 
     return 0;
 }
@@ -1064,7 +1062,7 @@ int Medical_bag::tot_turns_for_action(const Med_bag_action action) const
         break;
     }
 
-    assert(false);
+    IA_ASSERT(false);
 
     return 0;
 }

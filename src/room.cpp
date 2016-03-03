@@ -144,7 +144,7 @@ Room* mk(const Room_type type, const Rect& r)
 
     case Room_type::END_OF_STD_ROOMS:
         TRACE << "Illegal room type id: " << int (type) << std::endl;
-        assert(false);
+        IA_ASSERT(false);
         return nullptr;
 
     case Room_type::corr_link:
@@ -158,7 +158,7 @@ Room* mk(const Room_type type, const Rect& r)
     }
 
     TRACE << "Unhandled room type id: " << int (type) << std::endl;
-    assert(false);
+    IA_ASSERT(false);
     return nullptr;
 }
 
@@ -379,7 +379,7 @@ int Std_room::place_auto_features()
 
         if (pos.x >= 0)
         {
-            assert(FEATURE_IDX < feature_bucket.size());
+            IA_ASSERT(FEATURE_IDX < feature_bucket.size());
 
             const Feature_data_t* d = feature_bucket[FEATURE_IDX];
 
@@ -898,7 +898,7 @@ void Flooded_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
                     id == Feature_id::fountain)
                 {
                     TRACE << "Illegal feature found in room" << std::endl;
-                    assert(false);
+                    IA_ASSERT(false);
                 }
             }
         }
@@ -965,7 +965,7 @@ void Muddy_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
                     id == Feature_id::fountain)
                 {
                     TRACE << "Illegal feature found in room" << std::endl;
-                    assert(false);
+                    IA_ASSERT(false);
                 }
             }
         }

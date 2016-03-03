@@ -202,7 +202,7 @@ void spells_avail(std::vector<Spell_opt>& out)
 
 void try_cast(const Spell_opt& spell_opt)
 {
-    assert(spell_opt.spell);
+    IA_ASSERT(spell_opt.spell);
 
     if (
         map::player->prop_handler().allow_cast_spell(Verbosity::verbose) &&

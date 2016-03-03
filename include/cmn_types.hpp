@@ -3,10 +3,10 @@
 
 #include <algorithm>
 #include <string>
-#include <cassert>
 
 #include "colors.hpp"
 #include "art.hpp"
+#include "init.hpp"
 
 //This is typically used for functions such as item identification and property applying to
 //enable/disable printing to the message log and other such "side effects". For example when
@@ -431,7 +431,7 @@ struct Range
 
     bool is_in_range(const int V) const
     {
-        assert(max >= min);
+        IA_ASSERT(max >= min);
 
         return V >= min && V <= max;
     }

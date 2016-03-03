@@ -152,7 +152,7 @@ void load_pictures()
     //Main menu logo
     SDL_Surface* tmp_srf = IMG_Load(main_menu_logo_img_name.c_str());
 
-    assert(tmp_srf && "Failed to load main menu logo image");
+    IA_ASSERT(tmp_srf && "Failed to load main menu logo image");
 
     main_menu_logo_srf_ = SDL_ConvertSurface(tmp_srf, scr_srf_->format, 0);
 
@@ -161,7 +161,7 @@ void load_pictures()
     //Skull
     tmp_srf = IMG_Load(skull_img_name.c_str());
 
-    assert(tmp_srf && "Failed to load skull image");
+    IA_ASSERT(tmp_srf && "Failed to load skull image");
 
     skull_srf_ = SDL_ConvertSurface(tmp_srf, scr_srf_->format, 0);
 
@@ -445,7 +445,7 @@ void init()
     if (!sdl_window_)
     {
         TRACE << "Failed to create window" << std::endl;
-        assert(false);
+        IA_ASSERT(false);
     }
 
     sdl_renderer_ = SDL_CreateRenderer(sdl_window_, -1, SDL_RENDERER_ACCELERATED);
@@ -453,7 +453,7 @@ void init()
     if (!sdl_renderer_)
     {
         TRACE << "Failed to create SDL renderer" << std::endl;
-        assert(false);
+        IA_ASSERT(false);
     }
 
     scr_srf_ = SDL_CreateRGBSurface(0,
@@ -467,7 +467,7 @@ void init()
     if (!scr_srf_)
     {
         TRACE << "Failed to create screen surface" << std::endl;
-        assert(false);
+        IA_ASSERT(false);
     }
 
     scr_texture_ = SDL_CreateTexture(sdl_renderer_,
@@ -478,7 +478,7 @@ void init()
     if (!scr_texture_)
     {
         TRACE << "Failed to create screen texture" << std::endl;
-        assert(false);
+        IA_ASSERT(false);
     }
 
     load_font();
@@ -1379,9 +1379,9 @@ void draw_map()
 
             //There should NOT already be an actor here which is seen, or that we are aware of
             //TODO: The asserts below do fail sometimes - find out what the cause is
-//            assert(!cur_render_data->is_living_actor_seen_here);
-//            assert(!cur_render_data->is_aware_of_hostile_mon_here);
-//            assert(!cur_render_data->is_aware_of_allied_mon_here);
+//            IA_ASSERT(!cur_render_data->is_living_actor_seen_here);
+//            IA_ASSERT(!cur_render_data->is_aware_of_hostile_mon_here);
+//            IA_ASSERT(!cur_render_data->is_aware_of_allied_mon_here);
 
             const auto* const mon = static_cast<const Mon*>(actor);
 
@@ -1583,7 +1583,7 @@ void draw_map()
                 tmp_render_data.is_aware_of_allied_mon_here)
             {
                 //We should never see both a hostile AND an allied monster in the same cell
-                assert(!tmp_render_data.is_aware_of_hostile_mon_here ||
+                IA_ASSERT(!tmp_render_data.is_aware_of_hostile_mon_here ||
                        !tmp_render_data.is_aware_of_allied_mon_here);
 
                 const Clr bg_clr = tmp_render_data.is_aware_of_hostile_mon_here ?

@@ -93,7 +93,7 @@ Door::Door(const P& feature_pos, const Rigid* const mimic_feature,
         break;
 
     case Door_spawn_state::any:
-        assert(false && "Should not happen");
+        IA_ASSERT(false && "Should not happen");
         is_open_   = false;
         is_stuck_  = false;
         is_secret_ = false;
@@ -162,7 +162,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
         //---------------------------------------------------------------------- HEAVY BLUNT
         if (dmg_method == Dmg_method::blunt_heavy)
         {
-            assert(actor);
+            IA_ASSERT(actor);
 
             switch (matl_)
             {
@@ -214,7 +214,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
         //---------------------------------------------------------------------- KICK
         if (dmg_method == Dmg_method::kick)
         {
-            assert(actor);
+            IA_ASSERT(actor);
 
             const bool IS_PLAYER    = actor == map::player;
             const bool IS_CELL_SEEN = map::is_pos_seen_by_player(pos_);
@@ -587,7 +587,7 @@ Clr Door::clr_default() const
         }
     }
 
-    assert(false && "Failed to get door color");
+    IA_ASSERT(false && "Failed to get door color");
     return clr_gray;
 }
 

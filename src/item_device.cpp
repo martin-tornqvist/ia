@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <vector>
-#include <cassert>
 
 #include "actor_player.hpp"
 #include "render.hpp"
@@ -93,7 +92,7 @@ std::vector<std::string> Strange_device::descr() const
 
 Consume_item Strange_device::activate(Actor* const actor)
 {
-    assert(actor);
+    IA_ASSERT(actor);
 
     if (data_->is_identified)
     {
@@ -396,7 +395,7 @@ void Device_lantern::load()
 
 void Device_lantern::on_pickup_hook()
 {
-    assert(actor_carrying_);
+    IA_ASSERT(actor_carrying_);
 
     //Check for existing electric lantern in inventory
     Inventory& inv = actor_carrying_->inv();

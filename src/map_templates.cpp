@@ -4,7 +4,6 @@
 #include "game_time.hpp"
 
 #include <vector>
-#include <cassert>
 
 namespace map_templ_handling
 {
@@ -26,7 +25,7 @@ Map_templ_cell ch_to_cell(const char CH,
     }
 
     TRACE << "Failed to make map template cell from char: " <<  CH << std::endl;
-    assert(false);
+    IA_ASSERT(false);
     return Map_templ_cell(0);
 }
 
@@ -362,7 +361,7 @@ void init()
 
 const Map_templ& templ(const Map_templ_id id)
 {
-    assert(id != Map_templ_id::END);
+    IA_ASSERT(id != Map_templ_id::END);
     return templates_[int(id)];
 }
 

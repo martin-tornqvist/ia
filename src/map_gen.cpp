@@ -65,7 +65,7 @@ void register_room(Room& room)
 
     for (Room* const room_in_list : map::room_list)
     {
-        assert(room_in_list != &room); //Check that the room is not already added
+        IA_ASSERT(room_in_list != &room); //Check that the room is not already added
     }
 
 #endif // NDEBUG
@@ -239,7 +239,7 @@ bool try_mk_aux_room(const P& p, const P& d, bool blocked[MAP_W][MAP_H], const P
     Rect aux_rect(p, p + d - 1);
     Rect aux_rect_with_border(aux_rect.p0 - 1, aux_rect.p1 + 1);
 
-    assert(utils::is_pos_inside(door_p, aux_rect_with_border));
+    IA_ASSERT(utils::is_pos_inside(door_p, aux_rect_with_border));
 
     if (utils::is_area_inside_map(aux_rect_with_border))
     {
@@ -250,7 +250,7 @@ bool try_mk_aux_room(const P& p, const P& d, bool blocked[MAP_W][MAP_H], const P
                 for (int x = aux_rect.p0.x; x <= aux_rect.p1.x; ++x)
                 {
                     blocked[x][y] = true;
-                    assert(!map::room_map[x][y]);
+                    IA_ASSERT(!map::room_map[x][y]);
                 }
             }
 
@@ -530,7 +530,7 @@ void reserve_river(Region regions[3][3])
         breadth0    = C - RESERVED_PADDING;
         breadth1    = C + RESERVED_PADDING;
 
-        assert(utils::is_area_inside_other(room_rect, regions_tot_rect, true));
+        IA_ASSERT(utils::is_area_inside_other(room_rect, regions_tot_rect, true));
 
         len0--; //Extend room rectangle to map edge
         len1++;
@@ -1189,7 +1189,7 @@ void reveal_doors_on_path_to_stairs(const P& stairs_pos)
     std::vector<P> path;
     path_find::run(map::player->pos, stairs_pos, blocked, path);
 
-    assert(!path.empty());
+    IA_ASSERT(!path.empty());
 
     TRACE << "Travelling along path and revealing all doors" << std:: endl;
 

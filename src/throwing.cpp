@@ -1,7 +1,6 @@
 #include "throwing.hpp"
 
 #include <vector>
-#include <cassert>
 
 #include "item.hpp"
 #include "item_potion.hpp"
@@ -27,7 +26,7 @@ namespace throwing
 
 void player_throw_lit_explosive(const P& aim_cell)
 {
-    assert(map::player->active_explosive);
+    IA_ASSERT(map::player->active_explosive);
 
     std::vector<P> path;
     line_calc::calc_new_line(map::player->pos, aim_cell, true, THROW_RANGE_LMT, false, path);

@@ -24,7 +24,7 @@ void Ins_sympt::on_start()
     const std::string heading   = start_heading();
     const std::string msg       = "Insanity draws nearer... " + start_msg();
 
-    assert(!heading.empty() && !msg.empty());
+    IA_ASSERT(!heading.empty() && !msg.empty());
 
     if (!heading.empty() && !msg.empty())
     {
@@ -33,7 +33,7 @@ void Ins_sympt::on_start()
 
     const std::string history_event_msg = history_msg();
 
-    assert(!history_event_msg.empty());
+    IA_ASSERT(!history_event_msg.empty());
 
     if (!history_event_msg.empty())
     {
@@ -47,7 +47,7 @@ void Ins_sympt::on_end()
 {
     const std::string msg = end_msg();
 
-    assert(!msg.empty());
+    IA_ASSERT(!msg.empty());
 
     if (!msg.empty())
     {
@@ -56,7 +56,7 @@ void Ins_sympt::on_end()
 
     const std::string history_event_msg = history_msg_end();
 
-    assert(!history_event_msg.empty());
+    IA_ASSERT(!history_event_msg.empty());
 
     if (!history_event_msg.empty())
     {
@@ -376,7 +376,7 @@ void Ins_shadows::on_start_hook()
                           &summoned,
                           Verbosity::silent);
 
-    assert(!summoned.empty());
+    IA_ASSERT(!summoned.empty());
 
     for (Mon* const mon : summoned)
     {
@@ -422,7 +422,7 @@ void Ins_paranoia::on_start_hook()
                               &summoned,
                               Verbosity::silent);
 
-        assert(summoned.size() == 1);
+        IA_ASSERT(summoned.size() == 1);
 
         Mon* const mon = summoned[0];
 
@@ -532,7 +532,7 @@ Ins_sympt* mk_sympt(const Ins_sympt_id id)
         break;
     }
 
-    assert(false);
+    IA_ASSERT(false);
 
     return nullptr;
 }
@@ -641,7 +641,7 @@ void gain_sympt()
     {
         const size_t SYMPT_IDX = size_t(sympt->id());
 
-        assert(!sympts_[SYMPT_IDX]);
+        IA_ASSERT(!sympts_[SYMPT_IDX]);
 
         sympts_[SYMPT_IDX] = sympt;
     }
@@ -651,7 +651,7 @@ void gain_sympt()
 
 bool has_sympt(const Ins_sympt_id id)
 {
-    assert(id != Ins_sympt_id::END);
+    IA_ASSERT(id != Ins_sympt_id::END);
 
     return sympts_[size_t(id)];
 }
@@ -688,13 +688,13 @@ void on_new_player_turn(const std::vector<Actor*>& seen_foes)
 
 void end_sympt(const Ins_sympt_id id)
 {
-    assert(id != Ins_sympt_id::END);
+    IA_ASSERT(id != Ins_sympt_id::END);
 
     const size_t IDX = size_t(id);
 
     Ins_sympt* const sympt = sympts_[IDX];
 
-    assert(sympt);
+    IA_ASSERT(sympt);
 
     sympts_[IDX] = nullptr;
 

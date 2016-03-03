@@ -46,7 +46,7 @@ void save_modules()
 {
     TRACE_FUNC_BEGIN;
 
-    assert(lines_.empty());
+    IA_ASSERT(lines_.empty());
 
     put_str(map::player->name_a());
     dungeon_master::save();
@@ -72,11 +72,11 @@ void load_modules()
 {
     TRACE_FUNC_BEGIN;
 
-    assert(!lines_.empty());
+    IA_ASSERT(!lines_.empty());
 
     const std::string player_name = get_str();
 
-    assert(!player_name.empty());
+    IA_ASSERT(!player_name.empty());
 
     map::player->data().name_a      = player_name;
     map::player->data().name_the    = player_name;
@@ -139,7 +139,7 @@ void read_file()
     }
     else //Could not open save file
     {
-        assert(false && "Failed to open save file");
+        IA_ASSERT(false && "Failed to open save file");
     }
 }
 
@@ -157,8 +157,8 @@ void init()
 void save_game()
 {
 #ifndef NDEBUG
-    assert(state_ == State::stopped);
-    assert(lines_.empty());
+    IA_ASSERT(state_ == State::stopped);
+    IA_ASSERT(lines_.empty());
 
     state_ = State::saving;
 #endif // NDEBUG
@@ -179,8 +179,8 @@ void save_game()
 void load_game()
 {
 #ifndef NDEBUG
-    assert(state_ == State::stopped);
-    assert(lines_.empty());
+    IA_ASSERT(state_ == State::stopped);
+    IA_ASSERT(lines_.empty());
 
     state_ = State::loading;
 #endif // NDEBUG
@@ -188,7 +188,7 @@ void load_game()
     //Read the save file to the save lines
     read_file();
 
-    assert(!lines_.empty());
+    IA_ASSERT(!lines_.empty());
 
     //Tell all modules to set up their state from the save lines (via this modules read functions)
     load_modules();
@@ -199,7 +199,7 @@ void load_game()
 
     //Since all modules should have read/erased the same number of lines as they saved, the save
     //lines should now be empty (otherwise it's a loading bug)
-    assert(lines_.empty());
+    IA_ASSERT(lines_.empty());
 
     //Loading is finished, write an empty save file to prevent reloading the game
     write_file();
@@ -225,7 +225,7 @@ bool is_save_available()
 void put_str(const std::string str)
 {
 #ifndef NDEBUG
-    assert(state_ == State::saving);
+    IA_ASSERT(state_ == State::saving);
 #endif // NDEBUG
 
     lines_.push_back(str);
@@ -246,7 +246,7 @@ void put_bool(const bool V)
 std::string get_str()
 {
 #ifndef NDEBUG
-    assert(state_ == State::loading);
+    IA_ASSERT(state_ == State::loading);
 #endif // NDEBUG
 
     const std::string str = lines_.front();

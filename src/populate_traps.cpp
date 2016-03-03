@@ -27,7 +27,7 @@ Trap* mk_trap(const Trap_id id, const P& pos)
     {
         TRACE << "Cannot place trap on feature id: " << int(f->id()) << std::endl
               << "Trap id: " << int(id) << std::endl;
-        assert(false);
+        IA_ASSERT(false);
         return nullptr;
     }
 

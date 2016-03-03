@@ -1,7 +1,6 @@
 #include "game_time.hpp"
 
 #include <vector>
-#include <cassert>
 
 #include "cmn_types.hpp"
 #include "feature_rigid.hpp"
@@ -272,13 +271,13 @@ void erase_all_mobs()
 void add_actor(Actor* actor)
 {
     //Sanity checks
-    assert(utils::is_pos_inside_map(actor->pos));
+    IA_ASSERT(utils::is_pos_inside_map(actor->pos));
 
 #ifndef NDEBUG
     for (Actor* const old_actor : actors)
     {
         //Never insert the same actor twice
-        assert(actor != old_actor);
+        IA_ASSERT(actor != old_actor);
 
         //Never insert an actor on the same position as an existing living actor
         //NOTE: Actors could be placed dead, e.g. Zuul can do this (immediately spawns a priest),
@@ -288,7 +287,7 @@ void add_actor(Actor* actor)
             const P& new_actor_p = actor->pos;
             const P& old_actor_p = old_actor->pos;
 
-            assert(new_actor_p != old_actor_p);
+            IA_ASSERT(new_actor_p != old_actor_p);
         }
     }
 #endif // NDEBUG
@@ -375,7 +374,7 @@ void tick(const Pass_time pass_time)
                 break;
 
             case Actor_speed::END:
-                assert(false);
+                IA_ASSERT(false);
                 break;
             }
         }
@@ -434,7 +433,7 @@ Actor* cur_actor()
     Actor* const actor = actors[cur_actor_idx_];
 
     //Sanity check actor retrieved
-    assert(utils::is_pos_inside_map(actor->pos));
+    IA_ASSERT(utils::is_pos_inside_map(actor->pos));
     return actor;
 }
 

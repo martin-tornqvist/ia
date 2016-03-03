@@ -114,7 +114,7 @@ void mk_group_at(const Actor_id id,
     {
         const P& p = sorted_free_cells_vector[i];
 
-        assert(!blocked_out[p.x][p.y]);
+        IA_ASSERT(!blocked_out[p.x][p.y]);
 
         Actor* const    actor       = actor_factory::mk(id, p);
         Mon* const      mon         = static_cast<Mon*>(actor);
@@ -339,7 +339,7 @@ void populate_intro_lvl()
         }
     }
 
-    assert(!ids_can_spawn_intro_lvl.empty());
+    IA_ASSERT(!ids_can_spawn_intro_lvl.empty());
 
     for (int i = 0; i < NR_GROUPS_ALLOWED; ++i)
     {

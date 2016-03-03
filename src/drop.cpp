@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <string>
-#include <cassert>
 
 #include "cmn_types.hpp"
 #include "game_time.hpp"
@@ -34,12 +33,12 @@ void try_drop_item_from_inv(Actor& actor,
 
     if (inv_type == Inv_type::slots)
     {
-        assert(IDX != size_t(Slot_id::END));
+        IA_ASSERT(IDX != size_t(Slot_id::END));
         item_to_drop = inv.slots_[IDX].item;
     }
     else //Backpack item
     {
-        assert(IDX < inv.backpack_.size());
+        IA_ASSERT(IDX < inv.backpack_.size());
         item_to_drop = inv.backpack_[IDX];
     }
 

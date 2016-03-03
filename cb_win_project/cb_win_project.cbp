@@ -46,7 +46,8 @@
 					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="-Wno-unused-value" />
-					<Add directory="../include/release_mode_incl" />
+					<Add option="-DTRACE_LVL=0" />
+					<Add directory="../include/debug_mode_incl" />
 					<Add directory="../test/UnitTest++/src" />
 				</Compiler>
 				<Linker>

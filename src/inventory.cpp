@@ -111,7 +111,7 @@ void Inventory::load()
 
             //When loading the game, "wear" the item to apply properties from wearing and set
             //owning actor
-            assert(owning_actor_);
+            IA_ASSERT(owning_actor_);
             item->on_pickup(*owning_actor_);
             item->on_equip(Verbosity::silent);
         }
@@ -137,7 +137,7 @@ void Inventory::load()
         backpack_.push_back(item);
 
         //When loading the game, "pick up" the item again to set owning actor
-        assert(owning_actor_);
+        IA_ASSERT(owning_actor_);
         item->on_pickup(*owning_actor_);
     }
 }
@@ -199,7 +199,7 @@ bool Inventory::try_stack_in_backpack(Item* item)
 
 void Inventory::put_in_backpack(Item* item)
 {
-    assert(!item->actor_carrying());
+    IA_ASSERT(!item->actor_carrying());
 
     bool is_stacked = try_stack_in_backpack(item);
 
@@ -250,7 +250,7 @@ bool Inventory::has_ammo_for_firearm_in_inventory()
     //If weapon found
     if (weapon)
     {
-        assert(!weapon->data().ranged.has_infinite_ammo); //Should not happen
+        IA_ASSERT(!weapon->data().ranged.has_infinite_ammo); //Should not happen
 
         //If weapon is a firearm
         if (weapon->data().ranged.is_ranged_wpn)
@@ -297,7 +297,7 @@ void Inventory::decr_item_in_slot(Slot_id slot_id)
 
 Item* Inventory::remove_item_in_backpack_with_idx(const size_t IDX, const bool DELETE_ITEM)
 {
-    assert(IDX < backpack_.size());
+    IA_ASSERT(IDX < backpack_.size());
 
     Item* item = backpack_[IDX];
 
@@ -327,7 +327,7 @@ Item* Inventory::remove_item_in_backpack_with_ptr(Item* const item, const bool D
     }
 
     TRACE << "Parameter item not in backpack" << std::endl;
-    assert(false);
+    IA_ASSERT(false);
 
     return nullptr;
 }
@@ -386,13 +386,13 @@ void Inventory::decr_item(Item* const item)
 
 void Inventory::move_from_backpack_to_slot(const Slot_id id, const size_t BACKPACK_IDX)
 {
-    assert(id != Slot_id::END);
+    IA_ASSERT(id != Slot_id::END);
 
     auto& slot = slots_[size_t(id)];
 
     const bool BACKPACK_SLOT_EXISTS = BACKPACK_IDX < backpack_.size();
 
-    assert(BACKPACK_SLOT_EXISTS);
+    IA_ASSERT(BACKPACK_SLOT_EXISTS);
 
     if (BACKPACK_SLOT_EXISTS)
     {
@@ -422,7 +422,7 @@ void Inventory::move_from_backpack_to_slot(const Slot_id id, const size_t BACKPA
 
 Unequip_allowed Inventory::try_move_from_slot_to_backpack(const Slot_id id)
 {
-    assert(id != Slot_id::END);
+    IA_ASSERT(id != Slot_id::END);
 
     auto& slot = slots_[size_t(id)];
 
@@ -453,8 +453,8 @@ Unequip_allowed Inventory::try_move_from_slot_to_backpack(const Slot_id id)
 
 void Inventory::equip_backpack_item(const size_t BACKPACK_IDX, const Slot_id slot_id)
 {
-    assert(slot_id != Slot_id::END);
-    assert(owning_actor_);
+    IA_ASSERT(slot_id != Slot_id::END);
+    IA_ASSERT(owning_actor_);
 
     render::draw_map_and_interface();
 
@@ -506,7 +506,7 @@ Unequip_allowed Inventory::try_unequip_slot(const Slot_id id)
 
     Item* item = slot.item;
 
-    assert(item);
+    IA_ASSERT(item);
 
     render::draw_map_and_interface();
 
@@ -576,7 +576,7 @@ void Inventory::swap_wielded_and_prepared(const Pass_time pass_time)
 
 bool Inventory::has_item_in_slot(Slot_id id) const
 {
-    assert(id != Slot_id::END && "Illegal slot id");
+    IA_ASSERT(id != Slot_id::END && "Illegal slot id");
     return slots_[int(id)].item;
 }
 
@@ -584,12 +584,12 @@ void Inventory::remove_without_destroying(const Inv_type inv_type, const size_t 
 {
     if (inv_type == Inv_type::slots)
     {
-        assert(IDX != int(Slot_id::END));
+        IA_ASSERT(IDX != int(Slot_id::END));
         slots_[IDX].item = nullptr;
     }
     else //Backpack
     {
-        assert(IDX < backpack_.size());
+        IA_ASSERT(IDX < backpack_.size());
         backpack_.erase(begin(backpack_) + IDX);
     }
 }
@@ -624,7 +624,7 @@ int Inventory::backpack_idx(const Item_id id) const
 
 Item* Inventory::item_in_slot(Slot_id id) const
 {
-    assert(id != Slot_id::END);
+    IA_ASSERT(id != Slot_id::END);
 
     return slots_[size_t(id)].item;
 }
@@ -641,7 +641,7 @@ Item* Inventory::intrinsic_in_element(int idx) const
 
 void Inventory::put_in_intrinsics(Item* item)
 {
-    assert(item->data().type == Item_type::melee_wpn_intr ||
+    IA_ASSERT(item->data().type == Item_type::melee_wpn_intr ||
            item->data().type == Item_type::ranged_wpn_intr);
 
     intrinsics_.push_back(item);
@@ -661,9 +661,9 @@ Item* Inventory::last_item_in_backpack()
 
 void Inventory::put_in_slot(const Slot_id id, Item* item)
 {
-    assert(!item->actor_carrying());
+    IA_ASSERT(!item->actor_carrying());
 
-    assert(id != Slot_id::END);
+    IA_ASSERT(id != Slot_id::END);
 
     for (Inv_slot& slot : slots_)
     {
@@ -685,12 +685,12 @@ void Inventory::put_in_slot(const Slot_id id, Item* item)
     }
 
     //Should never happen
-    assert(false);
+    IA_ASSERT(false);
 }
 
 Item* Inventory::remove_from_slot(const Slot_id id)
 {
-    assert(id != Slot_id::END);
+    IA_ASSERT(id != Slot_id::END);
 
     for (Inv_slot& slot : slots_)
     {
@@ -700,7 +700,7 @@ Item* Inventory::remove_from_slot(const Slot_id id)
 
             if (item)
             {
-                assert(item->actor_carrying());
+                IA_ASSERT(item->actor_carrying());
 
                 slot.item = nullptr;
 

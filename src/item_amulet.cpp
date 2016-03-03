@@ -22,7 +22,7 @@ bool        effects_known_  [size_t(Amulet_effect_id::END)];
 
 Amulet_effect* mk_effect(const Amulet_effect_id id, Amulet* const amulet)
 {
-    assert(id != Amulet_effect_id::END);
+    IA_ASSERT(id != Amulet_effect_id::END);
 
     Amulet_effect* ret = nullptr;
 
@@ -113,7 +113,7 @@ Amulet_effect* mk_effect(const Amulet_effect_id id, Amulet* const amulet)
         break;
     }
 
-    assert(ret);
+    IA_ASSERT(ret);
     return ret;
 }
 
@@ -124,7 +124,7 @@ void Amulet_property_effect::on_equip(const Verbosity verbosity)
 {
     Prop* const prop = mk_prop();
 
-    assert(prop);
+    IA_ASSERT(prop);
 
     amulet_->add_carrier_prop(prop, verbosity);
 
@@ -746,7 +746,7 @@ void Amulet::effect_noticed(const Amulet_effect_id effect_id)
             }
         }
 
-        assert(nr_effects_known_this_item <= MAX_NR_EFFECTS_ON_ITEM);
+        IA_ASSERT(nr_effects_known_this_item <= MAX_NR_EFFECTS_ON_ITEM);
 
         const std::string name_plain = name(Item_ref_type::plain, Item_ref_inf::none);
 
@@ -783,7 +783,7 @@ bool allow_combine_effects(const Amulet_effect_id id1,
 {
     typedef Amulet_effect_id Id;
 
-    assert(id1 != Id::END && id2 != Id::END);
+    IA_ASSERT(id1 != Id::END && id2 != Id::END);
 
     if (id1 == id2)
     {
@@ -836,7 +836,7 @@ bool allow_combine_effects(const Amulet_effect_id id1,
 
     case Amulet_effect_id::START_OF_SECONDARY_EFFECTS:
     case Id::END:
-        assert(false);
+        IA_ASSERT(false);
         return false;
     }
 
@@ -931,8 +931,8 @@ void init()
 
     //Assuming there are more amulet items than primary or secondary effects (if this changes,
     //just add more amulets to the item data)
-    assert(item_bucket.size() > primary_effect_bucket.size());
-    assert(item_bucket.size() > secondary_effect_bucket.size());
+    IA_ASSERT(item_bucket.size() > primary_effect_bucket.size());
+    IA_ASSERT(item_bucket.size() > secondary_effect_bucket.size());
 
     random_shuffle(begin(primary_effect_bucket),   end(primary_effect_bucket));
     random_shuffle(begin(secondary_effect_bucket), end(secondary_effect_bucket));
@@ -962,8 +962,8 @@ void init()
     //Assign secondary effects
     for (const auto secondary_effect_id : secondary_effect_bucket)
     {
-        assert(secondary_effect_id != Amulet_effect_id::START_OF_SECONDARY_EFFECTS);
-        assert(secondary_effect_id != Amulet_effect_id::END);
+        IA_ASSERT(secondary_effect_id != Amulet_effect_id::START_OF_SECONDARY_EFFECTS);
+        IA_ASSERT(secondary_effect_id != Amulet_effect_id::END);
 
         const int ITEM_IDX = rnd_item_bucket_idx_for_effect(secondary_effect_id, item_bucket);
 
@@ -971,7 +971,7 @@ void init()
         {
             const Item_id id = item_bucket[size_t(ITEM_IDX)];
 
-            assert(item_data::data[size_t(id)].type == Item_type::amulet);
+            IA_ASSERT(item_data::data[size_t(id)].type == Item_type::amulet);
 
             effect_list_[size_t(secondary_effect_id)] = id;
             item_bucket.erase(begin(item_bucket) + size_t(ITEM_IDX));

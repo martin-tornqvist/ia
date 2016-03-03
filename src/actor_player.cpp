@@ -266,7 +266,7 @@ void Player::save() const
     save_handling::put_int(nr_steps_until_free_action_);
     save_handling::put_int(nr_turns_until_rspell_);
 
-    assert(unarmed_wpn_);
+    IA_ASSERT(unarmed_wpn_);
 
     save_handling::put_int(int(unarmed_wpn_->id()));
 
@@ -293,15 +293,16 @@ void Player::load()
     nr_steps_until_free_action_ = save_handling::get_int();
     nr_turns_until_rspell_      = save_handling::get_int();
 
-    assert(!unarmed_wpn_);
-
     Item_id unarmed_wpn_id = Item_id(save_handling::get_int());
 
-    assert(unarmed_wpn_id < Item_id::END);
+    IA_ASSERT(unarmed_wpn_id < Item_id::END);
+
+    delete unarmed_wpn_;
+    unarmed_wpn_ = nullptr;
 
     Item* const unarmed_item = item_factory::mk(unarmed_wpn_id);
 
-    assert(unarmed_item);
+    IA_ASSERT(unarmed_item);
 
     unarmed_wpn_ = static_cast<Wpn*>(unarmed_item);
 
@@ -693,7 +694,7 @@ void Player::act()
 {
 #ifndef NDEBUG
     //Sanity check: Disease and infection should never be active at the same time
-    assert(!prop_handler_->has_prop(Prop_id::diseased) ||
+    IA_ASSERT(!prop_handler_->has_prop(Prop_id::diseased) ||
            !prop_handler_->has_prop(Prop_id::infected));
 #endif // NDEBUG
 
@@ -914,7 +915,7 @@ void Player::on_std_turn()
 {
 #ifndef NDEBUG
     //Sanity check: Disease and infection should never be active at the same time
-    assert(!prop_handler_->has_prop(Prop_id::diseased) ||
+    IA_ASSERT(!prop_handler_->has_prop(Prop_id::diseased) ||
            !prop_handler_->has_prop(Prop_id::infected));
 #endif // NDEBUG
 
@@ -1414,7 +1415,7 @@ void Player::move(Dir dir)
             else //There is a monster here that player is unaware of
             {
                 //If player is unaware of the monster, it should never be seen
-                assert(!CAN_SEE_MON);
+                IA_ASSERT(!CAN_SEE_MON);
 
                 if (is_features_allow_move)
                 {
@@ -1610,7 +1611,7 @@ void Player::kick_mon(Actor& defender)
 
 Wpn& Player::unarmed_wpn()
 {
-    assert(unarmed_wpn_);
+    IA_ASSERT(unarmed_wpn_);
 
     return *unarmed_wpn_;
 }

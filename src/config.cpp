@@ -255,7 +255,7 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
 
     default:
         TRACE << "Bad option number" << std::endl;
-        assert(false);
+        IA_ASSERT(false);
         break;
     }
 }

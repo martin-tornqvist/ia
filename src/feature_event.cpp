@@ -1,7 +1,5 @@
 #include "feature_event.hpp"
 
-#include <cassert>
-
 #include "actor_player.hpp"
 #include "actor_mon.hpp"
 #include "map.hpp"
@@ -205,7 +203,7 @@ Rect Event_snake_emerge::allowed_emerge_rect(const P& p) const
 
 bool Event_snake_emerge::is_ok_feature_at(const P& p) const
 {
-    assert(utils::is_pos_inside_map(p, true));
+    IA_ASSERT(utils::is_pos_inside_map(p, true));
 
     const Feature_id id = map::cells[p.x][p.y].rigid->id();
 
@@ -313,7 +311,7 @@ void Event_snake_emerge::on_new_turn()
 
     for (size_t i = 0; i < NR_SUMMONED; ++i)
     {
-        assert(i < tgt_bucket.size());
+        IA_ASSERT(i < tgt_bucket.size());
 
         const P& p(tgt_bucket[i]);
 

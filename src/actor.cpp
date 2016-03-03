@@ -133,7 +133,7 @@ Actor_speed Actor::speed() const
         ++speed_int;
     }
 
-    assert(speed_int >= 0 && speed_int < int(Actor_speed::END));
+    IA_ASSERT(speed_int >= 0 && speed_int < int(Actor_speed::END));
 
     return Actor_speed(speed_int);
 }
@@ -622,7 +622,7 @@ Actor_died Actor::hit(int dmg,
     //destroyed with a random chance
     if (is_corpse() && !is_player())
     {
-        assert(data_->can_leave_corpse);
+        IA_ASSERT(data_->can_leave_corpse);
 
         if (rnd::fraction(3, 4) || dmg >= ((hp_max(true) * 2) / 3))
         {
@@ -650,7 +650,7 @@ Actor_died Actor::hit(int dmg,
             {
                 const std::string corpse_name = corpse_name_the();
 
-                assert(!corpse_name.empty());
+                IA_ASSERT(!corpse_name.empty());
 
                 msg_log::add(corpse_name_the() + " is destroyed.");
             }
@@ -799,7 +799,7 @@ Actor_died Actor::hit_spi(const int DMG, const Verbosity verbosity)
 
 void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW_DROP_ITEMS)
 {
-    assert(data_->can_leave_corpse || IS_DESTROYED);
+    IA_ASSERT(data_->can_leave_corpse || IS_DESTROYED);
 
     //Check all monsters and unset this actor as leader
     for (Actor* other : game_time::actors)

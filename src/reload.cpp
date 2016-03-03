@@ -89,7 +89,7 @@ void try_reload(Actor& actor, Item* const item_to_reload)
         return;
     }
 
-    assert(item_to_reload->data().type == Item_type::melee_wpn ||
+    IA_ASSERT(item_to_reload->data().type == Item_type::melee_wpn ||
            item_to_reload->data().type == Item_type::ranged_wpn);
 
     Wpn* const wpn = static_cast<Wpn*>(item_to_reload);

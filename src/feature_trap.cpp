@@ -1,7 +1,6 @@
 #include "feature_trap.hpp"
 
 #include <algorithm>
-#include <cassert>
 
 #include "init.hpp"
 #include "feature_data.hpp"
@@ -49,7 +48,7 @@ Trap::Trap(const P& feature_pos, const Rigid* const mimic_feature, Trap_id id) :
     nr_turns_until_trigger_ (-1),
     trap_impl_              (nullptr)
 {
-    assert(id != Trap_id::END);
+    IA_ASSERT(id != Trap_id::END);
 
     auto* const rigid_here = map::cells[feature_pos.x][feature_pos.y].rigid;
 
@@ -57,7 +56,7 @@ Trap::Trap(const P& feature_pos, const Rigid* const mimic_feature, Trap_id id) :
     {
         TRACE << "Cannot place trap on feature id: " << int(rigid_here->id()) << std::endl
               << "Trap id: " << int(id) << std::endl;
-        assert(false);
+        IA_ASSERT(false);
         return;
     }
 
@@ -176,13 +175,13 @@ void Trap::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 
 Trap_id Trap::trap_type() const
 {
-    assert(trap_impl_);
+    IA_ASSERT(trap_impl_);
     return trap_impl_->trap_type_;
 }
 
 bool Trap::is_magical() const
 {
-    assert(trap_impl_);
+    IA_ASSERT(trap_impl_);
 
     return trap_impl_->is_magical();
 }
@@ -207,7 +206,7 @@ void Trap::trigger_start(const Actor* actor)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    assert(trap_impl_);
+    IA_ASSERT(trap_impl_);
 
     if (actor == map::player)
     {
@@ -256,7 +255,7 @@ void Trap::trigger_start(const Actor* actor)
 
     TRACE_VERBOSE << "nr_turns_until_trigger_: " << nr_turns_until_trigger_ << std::endl;
 
-    assert(nr_turns_until_trigger_ > -1);
+    IA_ASSERT(nr_turns_until_trigger_ > -1);
 
     //If number of remaining turns is zero, trigger immediately
     if (nr_turns_until_trigger_ == 0)
@@ -640,8 +639,8 @@ void Trap_dart::trigger()
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    assert(dart_origin_.x == pos_.x || dart_origin_.y == pos_.y);
-    assert(dart_origin_ != pos_);
+    IA_ASSERT(dart_origin_.x == pos_.x || dart_origin_.y == pos_.y);
+    IA_ASSERT(dart_origin_ != pos_);
 
     const auto& origin_cell = map::cells[dart_origin_.x][dart_origin_.y];
 
@@ -739,8 +738,8 @@ void Trap_spear::trigger()
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    assert(spear_origin_.x == pos_.x || spear_origin_.y == pos_.y);
-    assert(spear_origin_ != pos_);
+    IA_ASSERT(spear_origin_.x == pos_.x || spear_origin_.y == pos_.y);
+    IA_ASSERT(spear_origin_ != pos_);
 
     const auto& origin_cell = map::cells[spear_origin_.x][spear_origin_.y];
 
@@ -917,7 +916,7 @@ void Trap_teleport::trigger()
 
     Actor* const actor_here = utils::actor_at_pos(pos_);
 
-    assert(actor_here);
+    IA_ASSERT(actor_here);
 
     if (!actor_here)
     {
@@ -973,7 +972,7 @@ void Trap_summon_mon::trigger()
 
     Actor* const actor_here = utils::actor_at_pos(pos_);
 
-    assert(actor_here);
+    IA_ASSERT(actor_here);
 
     if (!actor_here)
     {
@@ -1056,7 +1055,7 @@ void Trap_summon_mon::trigger()
                               nullptr,
                               &summoned);
 
-        assert(summoned.size() == 1);
+        IA_ASSERT(summoned.size() == 1);
 
         TRACE_VERBOSE << "Monster was summoned" << std::endl;
 
@@ -1083,7 +1082,7 @@ void Trap_spi_drain::trigger()
 
     Actor* const actor_here = utils::actor_at_pos(pos_);
 
-    assert(actor_here);
+    IA_ASSERT(actor_here);
 
     if (!actor_here)
     {
@@ -1240,7 +1239,7 @@ void Trap_web::trigger()
 
     Actor* const actor_here = utils::actor_at_pos(pos_);
 
-    assert(actor_here);
+    IA_ASSERT(actor_here);
 
     if (!actor_here)
     {

@@ -1,7 +1,6 @@
 #include "actor_mon.hpp"
 
 #include <vector>
-#include <cassert>
 
 #include "init.hpp"
 #include "item.hpp"
@@ -71,7 +70,7 @@ void Mon::act()
     if (!utils::is_pos_inside_map(pos, false))
     {
         TRACE << "Monster outside map" << std::endl;
-        assert(false);
+        IA_ASSERT(false);
     }
 
     //Sanity check - verify that monster's leader does not have a leader (never allowed)
@@ -80,7 +79,7 @@ void Mon::act()
         static_cast<Mon*>(leader_)->leader_)            //Leader has a leader?
     {
         TRACE << "Two (or more) steps of leader is never allowed" << std::endl;
-        assert(false);
+        IA_ASSERT(false);
     }
 #endif // NDEBUG
 
@@ -438,13 +437,13 @@ void Mon::move(Dir dir)
     if (dir == Dir::END)
     {
         TRACE << "Illegal direction parameter" << std::endl;
-        assert(false);
+        IA_ASSERT(false);
     }
 
     if (!utils::is_pos_inside_map(pos, false))
     {
         TRACE << "Monster outside map" << std::endl;
-        assert(false);
+        IA_ASSERT(false);
     }
 
 #endif // NDEBUG
@@ -1802,7 +1801,7 @@ void Worm_mass::on_death()
                               &summoned,
                               Verbosity::silent);
 
-        assert(summoned.size() == 2);
+        IA_ASSERT(summoned.size() == 2);
 
         //If no leader has been set yet, assign the first worm as leader of the second
         if (!leader && summoned.size() >= 2)
@@ -2036,14 +2035,14 @@ void Zombie::on_death()
 
         if (map::cells[pos.x][pos.y].is_seen_by_player)
         {
-            assert(!spawn_msg.empty());
+            IA_ASSERT(!spawn_msg.empty());
 
             msg_log::add(spawn_msg);
 
             map::player->incr_shock(Shock_lvl::some, Shock_src::see_mon);
         }
 
-        assert(id_to_spawn != Actor_id::END);
+        IA_ASSERT(id_to_spawn != Actor_id::END);
 
         actor_factory::summon(pos, {id_to_spawn},
                               Make_mon_aware::yes,
@@ -2345,7 +2344,7 @@ std::string Animated_wpn::name_the() const
 {
     Item* item = inv_->item_in_slot(Slot_id::wpn);
 
-    assert(item);
+    IA_ASSERT(item);
 
     const std::string name = item->name(Item_ref_type::plain,
                                         Item_ref_inf::yes,
@@ -2358,7 +2357,7 @@ std::string Animated_wpn::name_a() const
 {
     Item* item = inv_->item_in_slot(Slot_id::wpn);
 
-    assert(item);
+    IA_ASSERT(item);
 
     const std::string name = item->name(Item_ref_type::plain,
                                         Item_ref_inf::yes,
@@ -2371,7 +2370,7 @@ char Animated_wpn::glyph() const
 {
     Item* item = inv_->item_in_slot(Slot_id::wpn);
 
-    assert(item);
+    IA_ASSERT(item);
 
     return item->glyph();
 }
@@ -2380,7 +2379,7 @@ Clr Animated_wpn::clr()
 {
     Item* item = inv_->item_in_slot(Slot_id::wpn);
 
-    assert(item);
+    IA_ASSERT(item);
 
     return item->clr();
 }
@@ -2389,7 +2388,7 @@ Tile_id Animated_wpn::tile() const
 {
     Item* item = inv_->item_in_slot(Slot_id::wpn);
 
-    assert(item);
+    IA_ASSERT(item);
 
     return item->tile();
 }
@@ -2398,7 +2397,7 @@ std::string Animated_wpn::descr() const
 {
     Item* item = inv_->item_in_slot(Slot_id::wpn);
 
-    assert(item);
+    IA_ASSERT(item);
 
     std::string name = item->name(Item_ref_type::a,
                                   Item_ref_inf::yes,
@@ -2415,7 +2414,7 @@ std::string Animated_wpn::death_msg() const
 
     if (!item)
     {
-        assert(false);
+        IA_ASSERT(false);
 
         //Release build robustness
         return "";

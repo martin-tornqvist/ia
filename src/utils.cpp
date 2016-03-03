@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <vector>
-#include <cassert>
 
 #include "converters.hpp"
 #include "game_time.hpp"
@@ -61,14 +60,14 @@ bool fraction(const int NUMER, const int DENOM)
 {
     //This function should never be called with a denominator less than one, since it's unclear
     //what it means that something should happen "N times in 0".
-    assert(DENOM >= 1);
+    IA_ASSERT(DENOM >= 1);
 
     //If numerator is bigger than denominator, it's most likely a bug (should something occur e.g.
     //5 times in 3 ???) - don't allow this...
-    assert(NUMER <= DENOM);
+    IA_ASSERT(NUMER <= DENOM);
 
     //A negative numerator is of course nonsense
-    assert(NUMER >= 0);
+    IA_ASSERT(NUMER >= 0);
 
     //If any of the rules above are broken on a release build, try to perform the action that was
     //*probably* intended.
@@ -116,7 +115,7 @@ int weighted_choice(const std::vector<int> weights)
 #ifndef NDEBUG
     for (const int WEIGHT : weights)
     {
-        assert(WEIGHT > 0);
+        IA_ASSERT(WEIGHT > 0);
     }
 #endif // NDEBUG
 
@@ -137,7 +136,7 @@ int weighted_choice(const std::vector<int> weights)
     }
 
     //This point should never be reached
-    assert(false);
+    IA_ASSERT(false);
 
     return 0;
 }
@@ -410,7 +409,7 @@ Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors)
         }
     }
 
-    assert(dist_to_nearest != INT_MAX);
+    IA_ASSERT(dist_to_nearest != INT_MAX);
 
     //Store all actors with distance equal to the nearest distance
     std::vector<Actor*> closest_actors;
@@ -423,7 +422,7 @@ Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors)
         }
     }
 
-    assert(!closest_actors.empty());
+    IA_ASSERT(!closest_actors.empty());
 
     const int ELEMENT = rnd::range(0, closest_actors.size() - 1);
 
@@ -531,7 +530,7 @@ const double edge[4] =
 
 Dir dir(const P& offset)
 {
-    assert(offset.x >= -1 && offset.y >= -1 && offset.x <= 1 && offset.y <= 1);
+    IA_ASSERT(offset.x >= -1 && offset.y >= -1 && offset.x <= 1 && offset.y <= 1);
 
     if (offset.y == -1)
     {
@@ -562,7 +561,7 @@ Dir dir(const P& offset)
 
 P offset(const Dir dir)
 {
-    assert(dir != Dir::END);
+    IA_ASSERT(dir != Dir::END);
 
     switch (dir)
     {
@@ -669,7 +668,7 @@ void compass_dir_name(const P& offs, std::string& dst)
 
 bool is_cardinal(const P& d)
 {
-    assert(d.x >= -1 && d.x <= 1 && d.y >= -1 && d.y <= 1);
+    IA_ASSERT(d.x >= -1 && d.x <= 1 && d.y >= -1 && d.y <= 1);
     return d != 0 && (d.x == 0 || d.y == 0);
 }
 

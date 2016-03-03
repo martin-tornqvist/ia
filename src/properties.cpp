@@ -1,7 +1,6 @@
 #include "properties.hpp"
 
 #include <algorithm>
-#include <cassert>
 
 #include "init.hpp"
 #include "actor_player.hpp"
@@ -862,7 +861,7 @@ Prop_handler::~Prop_handler()
         if (active_props_info_[i] != 0)
         {
             TRACE << "Active property info at id " << i << " not zero" << std::endl;
-            assert(false);
+            IA_ASSERT(false);
         }
     }
 #endif // NDEBUG
@@ -877,7 +876,7 @@ void Prop_handler::save() const
 {
     //Save intrinsic properties to file
 
-    assert(owning_actor_);
+    IA_ASSERT(owning_actor_);
 
     int nr_intr_props_ = 0;
 
@@ -907,7 +906,7 @@ void Prop_handler::load()
 {
     //Load intrinsic properties from file
 
-    assert(owning_actor_);
+    IA_ASSERT(owning_actor_);
 
     const int NR_PROPS = save_handling::get_int();
 
@@ -936,12 +935,12 @@ void Prop_handler::load()
 
 Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init, const int NR_TURNS) const
 {
-    assert(id != Prop_id::END);
+    IA_ASSERT(id != Prop_id::END);
 
     //Prop turns init type should either be:
     // * "specific", and number of turns specified (> 0), OR
     // * NOT "specific" (i.e. "indefinite" or "std"), and number of turns NOT specified (-1)
-    assert((turns_init == Prop_turns::specific && NR_TURNS > 0) ||
+    IA_ASSERT((turns_init == Prop_turns::specific && NR_TURNS > 0) ||
            (turns_init != Prop_turns::specific && NR_TURNS == -1));
 
     switch (id)
@@ -1117,7 +1116,7 @@ void Prop_handler::try_add(Prop* const prop,
                            const bool FORCE_EFFECT,
                            const Verbosity verbosity)
 {
-    assert(prop);
+    IA_ASSERT(prop);
 
     //First, if this is a prop that runs on actor turns, check if the actor-turn prop buffer
     //does not already contain the prop:
@@ -1316,8 +1315,8 @@ void Prop_handler::remove_props_for_item(const Item* const item)
 
         if (prop->item_applying_ == item)
         {
-            assert(prop->src_ == Prop_src::inv);
-            assert(prop->turns_init_type_ == Prop_turns::indefinite);
+            IA_ASSERT(prop->src_ == Prop_src::inv);
+            IA_ASSERT(prop->turns_init_type_ == Prop_turns::indefinite);
 
             props_.erase(begin(props_) + i);
 
@@ -1369,7 +1368,7 @@ void Prop_handler::incr_active_props_info(const Prop_id id)
     if (v < 0)
     {
         TRACE << "Tried to increment property with current value " << v << std::endl;
-        assert(false);
+        IA_ASSERT(false);
     }
 #endif // NDEBUG
 
@@ -1384,7 +1383,7 @@ void Prop_handler::decr_active_props_info(const Prop_id id)
     if (v <= 0)
     {
         TRACE << "Tried to decrement property with current value " << v << std::endl;
-        assert(false);
+        IA_ASSERT(false);
     }
 #endif // NDEBUG
 
@@ -1491,7 +1490,7 @@ void Prop_handler::tick(const Prop_turn_mode turn_mode)
             //Count down number of turns
             if (prop->nr_turns_left_ > 0)
             {
-                assert(prop->src_ == Prop_src::intr);
+                IA_ASSERT(prop->src_ == Prop_src::intr);
 
                 --prop->nr_turns_left_;
             }
@@ -1814,10 +1813,10 @@ Prop::Prop(Prop_id id, Prop_turns turns_init, int nr_turns) :
         {
             TRACE << "Prop turns is \"std\", but " << nr_turns_left_ << " turns specified"
                   << std::endl;
-            assert(false);
+            IA_ASSERT(false);
         }
 #endif // NDEBUG
-        assert(nr_turns_left_ == -1);
+        IA_ASSERT(nr_turns_left_ == -1);
         nr_turns_left_ = data_.std_rnd_turns.roll();
         break;
 
@@ -1827,7 +1826,7 @@ Prop::Prop(Prop_id id, Prop_turns turns_init, int nr_turns) :
         {
             TRACE << "Prop turns is \"indefinite\", but " << nr_turns_left_ << " turns specified"
                   << std::endl;
-            assert(false);
+            IA_ASSERT(false);
         }
 #endif // NDEBUG
 
@@ -1836,7 +1835,7 @@ Prop::Prop(Prop_id id, Prop_turns turns_init, int nr_turns) :
 
     case Prop_turns::specific:
         //Use the number of turns specified in the ctor argument
-        assert(nr_turns_left_ > 0);
+        IA_ASSERT(nr_turns_left_ > 0);
         break;
     }
 }
@@ -1879,7 +1878,7 @@ void Prop_hasted::on_start()
 Prop* Prop_infected::on_new_turn()
 {
 #ifndef NDEBUG
-    assert(!owning_actor_->prop_handler().has_prop(Prop_id::diseased));
+    IA_ASSERT(!owning_actor_->prop_handler().has_prop(Prop_id::diseased));
 #endif // NDEBUG
 
     const int MAX_TURNS_LEFT_ALLOW_DISEASE  = 50;
@@ -1904,7 +1903,7 @@ Prop* Prop_infected::on_new_turn()
 int Prop_diseased::affect_max_hp(const int HP_MAX) const
 {
 #ifndef NDEBUG
-    assert(!owning_actor_->prop_handler().has_prop(Prop_id::infected));
+    IA_ASSERT(!owning_actor_->prop_handler().has_prop(Prop_id::infected));
 #endif // NDEBUG
 
     return HP_MAX / 2;
@@ -1925,7 +1924,7 @@ void Prop_diseased::on_start()
 void Prop_diseased::on_end()
 {
 #ifndef NDEBUG
-    assert(!owning_actor_->prop_handler().has_prop(Prop_id::infected));
+    IA_ASSERT(!owning_actor_->prop_handler().has_prop(Prop_id::infected));
 #endif // NDEBUG
 
     //If this is a permanent disease that the player caught, log it as a historic event
@@ -1938,7 +1937,7 @@ void Prop_diseased::on_end()
 bool Prop_diseased::is_resisting_other_prop(const Prop_id prop_id) const
 {
 #ifndef NDEBUG
-    assert(!owning_actor_->prop_handler().has_prop(Prop_id::infected));
+    IA_ASSERT(!owning_actor_->prop_handler().has_prop(Prop_id::infected));
 #endif // NDEBUG
 
     //Getting infected while already diseased is just annoying
@@ -1947,7 +1946,7 @@ bool Prop_diseased::is_resisting_other_prop(const Prop_id prop_id) const
 
 Prop* Prop_descend::on_new_turn()
 {
-    assert(owning_actor_->is_player());
+    IA_ASSERT(owning_actor_->is_player());
 
     if (nr_turns_left_ <= 1)
     {
@@ -2165,7 +2164,7 @@ int Prop_wound::affect_max_hp(const int HP_MAX) const
 
 void Prop_wound::heal_one_wound()
 {
-    assert(nr_wounds_ > 0);
+    IA_ASSERT(nr_wounds_ > 0);
 
     --nr_wounds_;
 

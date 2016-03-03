@@ -347,7 +347,7 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
         TRACE << "Specified number of items (" + to_str(NR_ITEMS) + ") != 1 for "
               << "non-stackable item: "
               << int(d->id) << ", " << r->name(Item_ref_type::plain) << std::endl;
-        assert(false);
+        IA_ASSERT(false);
     }
 
     r->nr_items_ = NR_ITEMS;
@@ -359,7 +359,7 @@ void set_item_randomized_properties(Item* item)
 {
     const Item_data_t& d = item->data();
 
-    assert(d.type != Item_type::melee_wpn_intr && d.type != Item_type::ranged_wpn_intr);
+    IA_ASSERT(d.type != Item_type::melee_wpn_intr && d.type != Item_type::ranged_wpn_intr);
 
     if (d.id == Item_id::pharaoh_staff)
     {

@@ -187,7 +187,7 @@ void reset_map()
 
 Rigid* put(Rigid* const f)
 {
-    assert(f);
+    IA_ASSERT(f);
 
     const P p     = f->pos();
     Cell&     cell  = cells[p.x][p.y];
@@ -227,9 +227,9 @@ void cpy_render_array_to_visual_memory()
         {
             const Cell_render_data render_data = render::render_array_no_actors[x][y];
 
-            assert(!render_data.is_aware_of_hostile_mon_here);
-            assert(!render_data.is_aware_of_allied_mon_here);
-            assert(!render_data.is_living_actor_seen_here);
+            IA_ASSERT(!render_data.is_aware_of_hostile_mon_here);
+            IA_ASSERT(!render_data.is_aware_of_allied_mon_here);
+            IA_ASSERT(!render_data.is_living_actor_seen_here);
 
             cells[x][y].player_visual_memory = render_data;
         }
@@ -284,12 +284,12 @@ void delete_and_remove_room_from_list(Room* const room)
         }
     }
 
-    assert(false && "Tried to remove non-existing room");
+    IA_ASSERT(false && "Tried to remove non-existing room");
 }
 
 bool is_pos_seen_by_player(const P& p)
 {
-    assert(utils::is_pos_inside_map(p));
+    IA_ASSERT(utils::is_pos_inside_map(p));
     return cells[p.x][p.y].is_seen_by_player;
 }
 

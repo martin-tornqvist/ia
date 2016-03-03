@@ -552,17 +552,22 @@ TEST_FIXTURE(Basic_fixture, explosions)
     CHECK_EQUAL(int(Actor_state::destroyed), int(a1->state()));
 
     //Check explosion applying Burning to living and dead actors
-    a1        = actor_factory::mk(Actor_id::rat, P(X0 - 1, Y0));
-    Actor* a2 = actor_factory::mk(Actor_id::rat, P(X0 + 1, Y0));
-
     for (int i = 0; i < NR_CORPSES; ++i)
     {
         corpses[i] = actor_factory::mk(Actor_id::rat, P(X0 + 1, Y0));
         corpses[i]->die(false, false, false);
     }
 
-    explosion::run(P(X0, Y0), Expl_type::apply_prop, Expl_src::misc,
-                   Emit_expl_snd::no, 0, new Prop_burning(Prop_turns::std));
+    a1        = actor_factory::mk(Actor_id::rat, P(X0 - 1, Y0));
+    Actor* a2 = actor_factory::mk(Actor_id::rat, P(X0 + 1, Y0));
+
+    explosion::run(P(X0, Y0),
+                   Expl_type::apply_prop,
+                   Expl_src::misc,
+                   Emit_expl_snd::no,
+                   0,
+                   new Prop_burning(Prop_turns::std));
+
     CHECK(a1->prop_handler().prop(Prop_id::burning));
     CHECK(a2->prop_handler().prop(Prop_id::burning));
 
@@ -572,6 +577,7 @@ TEST_FIXTURE(Basic_fixture, explosions)
     for (int i = 0; i < NR_CORPSES; ++i)
     {
         Prop_handler& prop_hlr = corpses[i]->prop_handler();
+
         CHECK(prop_hlr.prop(Prop_id::burning));
         CHECK(prop_hlr.has_prop(Prop_id::burning));
     }
@@ -737,7 +743,8 @@ TEST_FIXTURE(Basic_fixture, inventory_handling)
     }
 
     //Wear the asbeshos suit again
-    inv.equip_backpack_item(inv.backpack_idx(Item_id::armor_asb_suit), Slot_id::body);
+    inv.equip_backpack_item(inv.backpack_idx(Item_id::armor_asb_suit),
+                            Slot_id::body);
 
     game_time::tick();
 
@@ -1514,15 +1521,62 @@ TEST_FIXTURE(Basic_fixture, map_parse_cells_within_dist_of_others)
 }
 
 //-----------------------------------------------------------------------------
-// Some code exercise - Ichi! Ni! San!
+// Some code exercise
 //-----------------------------------------------------------------------------
-//TEST_FIXTURE(Basic_fixture, mapGenStd)
-//{
-//    for (int i = 0; i < 100; ++i)
+namespace
+{
+
+// Checks that walls are not placed like this:
+// .#
+// #.
+//
+// or like this:
+// #.
+// .#
+void check_wall_placement(const P& origin)
+{
+    //TODO: This is testing the wrong things. It's not enough to check if there is a wall or not,
+    //there could also be rubble for example.
+//#error
+//
+//    bool w[2][2];
+//
+//    for (int x = 0; x < 2; ++x)
 //    {
-//        map_gen::mk_std_lvl();
+//        for (int y = 0; y < 2; ++y)
+//        {
+//            const P map_p = origin + P(x, y);
+//
+//            w[x][y] = map::cells[map_p.x][map_p.y].rigid->id() == Feature_id::wall;
+//        }
 //    }
-//}
+//
+//    bool is_south_east_bad = !w[0][0] &&  w[0][1] &&  w[1][0] && !w[1][1];
+//    bool is_north_east_bad =  w[0][0] && !w[0][1] && !w[1][0] &&  w[1][1];
+//
+//    CHECK(!is_south_east_bad && !is_north_east_bad);
+}
+
+} // namespace
+
+TEST_FIXTURE(Basic_fixture, mapGenStd)
+{
+    for (int i = 0; i < 100; ++i)
+    {
+        map_gen::mk_std_lvl();
+
+        const int X1 = MAP_W - 2;
+        const int Y1 = MAP_H - 2;
+
+        for (int x = 0; x <= X1; ++x)
+        {
+            for (int y = 0; y <= Y1; ++y)
+            {
+                check_wall_placement(P(x, y));
+            }
+        }
+    }
+}
 
 #ifdef _WIN32
 #undef main
