@@ -13,7 +13,6 @@ void toggle_fullscreen();
 bool            is_tiles_mode();
 std::string     font_name();
 bool            is_fullscreen();
-bool            is_char_lines_icon_mode();
 int             scr_px_w();
 int             scr_px_h();
 int             cell_px_w();
