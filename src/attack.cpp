@@ -1113,6 +1113,10 @@ void projectile_fire(Actor* const attacker, const P& origin, const P& aim_pos, W
                     const Actor_died died =
                         proj->actor_hit->hit(att_data.dmg, wpn.data().ranged.dmg_type);
 
+                    //NOTE: This is run regardless of if defender died or not, it is the hook
+                    //implementors responsibility to check this when it matters.
+                    wpn.on_ranged_hit(*proj->actor_hit);
+
                     if (died == Actor_died::no)
                     {
                         //Hit properties

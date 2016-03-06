@@ -1297,7 +1297,6 @@ void init_data_list()
     d.ranged.snd_msg = "I hear hissing and spitting.";
     d.ranged.projectile_clr = clr_green_lgt;
     d.ranged.dmg_type = Dmg_type::physical;
-    d.ranged.prop_applied = new Prop_blind(Prop_turns::specific, 7);
     d.ranged.projectile_glyph = '*';
     data[size_t(d.id)] = d;
 
@@ -1339,7 +1338,6 @@ void init_data_list()
     d.id = Item_id::dust_vortex_engulf;
     d.melee.att_msgs = {"", "engulfs me"};
     set_dmg_from_mon_id(d, Actor_id::dust_vortex);
-    d.melee.prop_applied = new Prop_blind(Prop_turns::std);
     data[size_t(d.id)] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);

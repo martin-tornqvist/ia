@@ -1080,53 +1080,9 @@ Did_action Vortex::on_act()
     return Did_action::no;
 }
 
-void Dust_vortex::on_death()
-{
-    //TODO: Make a sound effect for this
-    Snd snd("",
-            Sfx_id::END,
-            Ignore_msg_if_origin_seen::yes,
-            pos,
-            this,
-            Snd_vol::high,
-            Alerts_mon::yes);
-
-    snd_emit::run(snd);
-
-    explosion::run(pos,
-                   Expl_type::apply_prop,
-                   Expl_src::misc,
-                   Emit_expl_snd::no,
-                   0,
-                   new Prop_blind(Prop_turns::std),
-                   &clr_gray);
-}
-
 void Dust_vortex::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(Item_id::dust_vortex_engulf));
-}
-
-void Fire_vortex::on_death()
-{
-    //TODO: Make a sound effect for this
-    Snd snd("",
-            Sfx_id::END,
-            Ignore_msg_if_origin_seen::yes,
-            pos,
-            this,
-            Snd_vol::high,
-            Alerts_mon::yes);
-
-    snd_emit::run(snd);
-
-    explosion::run(pos,
-                   Expl_type::apply_prop,
-                   Expl_src::misc,
-                   Emit_expl_snd::no,
-                   0,
-                   new Prop_burning(Prop_turns::std),
-                   &clr_red_lgt);
 }
 
 void Fire_vortex::mk_start_items()

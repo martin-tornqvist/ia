@@ -783,15 +783,66 @@ void Raven_peck::on_melee_hit(Actor& actor_hit)
         return;
     }
 
-    //Gas mask protects against blindness
+    //Gas mask and Asbesthos suit protects against blindness
     Item* const head_item = actor_hit.inv().item_in_slot(Slot_id::head);
+    Item* const body_item = actor_hit.inv().item_in_slot(Slot_id::body);
 
-    if (head_item && head_item->id() == Item_id::gas_mask)
+    if (
+        (head_item && head_item->id() == Item_id::gas_mask) ||
+        (body_item && body_item->id() == Item_id::armor_asb_suit))
     {
         return;
     }
 
     Prop* const prop = new Prop_blind(Prop_turns::specific, 3);
+
+    actor_hit.prop_handler().try_add(prop);
+}
+
+//---------------------------------------------------------- DUST VORTEX ENGULF
+void Dust_vortex_engulf::on_melee_hit(Actor& actor_hit)
+{
+    if (!actor_hit.is_alive())
+    {
+        return;
+    }
+
+    //Gas mask and Asbesthos suit protects against blindness
+    Item* const head_item = actor_hit.inv().item_in_slot(Slot_id::head);
+    Item* const body_item = actor_hit.inv().item_in_slot(Slot_id::body);
+
+    if (
+        (head_item && head_item->id() == Item_id::gas_mask) ||
+        (body_item && body_item->id() == Item_id::armor_asb_suit))
+    {
+        return;
+    }
+
+    Prop* const prop = new Prop_blind(Prop_turns::std);
+
+    actor_hit.prop_handler().try_add(prop);
+}
+
+//---------------------------------------------------------- SPITTING COBRA SPIT
+void Spitting_cobra_spit::on_ranged_hit(Actor& actor_hit)
+{
+    if (!actor_hit.is_alive())
+    {
+        return;
+    }
+
+    //Gas mask and Asbesthos suit protects against blindness
+    Item* const head_item = actor_hit.inv().item_in_slot(Slot_id::head);
+    Item* const body_item = actor_hit.inv().item_in_slot(Slot_id::body);
+
+    if (
+        (head_item && head_item->id() == Item_id::gas_mask) ||
+        (body_item && body_item->id() == Item_id::armor_asb_suit))
+    {
+        return;
+    }
+
+    Prop* const prop = new Prop_blind(Prop_turns::specific, 7);
 
     actor_hit.prop_handler().try_add(prop);
 }

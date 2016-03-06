@@ -279,12 +279,17 @@ public:
 
     virtual void on_melee_hit(Actor& actor_hit)
     {
-      (void)actor_hit;
+        (void)actor_hit;
     }
 
     virtual void on_melee_kill(Actor& actor_killed)
     {
-      (void)actor_killed;
+        (void)actor_killed;
+    }
+
+    virtual void on_ranged_hit(Actor& actor_hit)
+    {
+        (void)actor_hit;
     }
 
     int nr_ammo_loaded_;
@@ -298,8 +303,8 @@ protected:
 class Player_ghoul_claw : public Wpn
 {
 public:
-  Player_ghoul_claw(Item_data_t* const item_data) :
-    Wpn(item_data) {}
+    Player_ghoul_claw(Item_data_t* const item_data) :
+        Wpn(item_data) {}
 
 private:
     void on_melee_hit(Actor& actor_hit) override;
@@ -371,16 +376,31 @@ public:
     ~Spike_gun() {}
 };
 
-//Things which protects the eyes (such as gas masks) should protect against blindness
-//from Raven pecks - so we need to handle that as a special case here.
 class Raven_peck : public Wpn
 {
 public:
-  Raven_peck(Item_data_t* const item_data) :
-    Wpn(item_data) {}
+    Raven_peck(Item_data_t* const item_data) :
+        Wpn(item_data) {}
 
-private:
     void on_melee_hit(Actor& actor_hit) override;
+};
+
+class Dust_vortex_engulf : public Wpn
+{
+public:
+    Dust_vortex_engulf(Item_data_t* const item_data) :
+        Wpn(item_data) {}
+
+    void on_melee_hit(Actor& actor_hit) override;
+};
+
+class Spitting_cobra_spit : public Wpn
+{
+public:
+    Spitting_cobra_spit(Item_data_t* const item_data) :
+        Wpn(item_data) {}
+
+    void on_ranged_hit(Actor& actor_hit) override;
 };
 
 class Ammo: public Item

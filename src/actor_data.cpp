@@ -2346,8 +2346,8 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::rConf)] = true;
     d.natural_props[size_t(Prop_id::rPoison)] = true;
     d.prevent_knockback = true;
-    d.spawn_min_dlvl = 8;
-    d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
+    d.spawn_min_dlvl = 5;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_size = Mon_group_size::few;
     d.actor_size = Actor_size::humanoid;
     d.nr_turns_aware = 5;

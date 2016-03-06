@@ -65,7 +65,6 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
     case Item_id::leng_spider_bite:
     case Item_id::pit_viper_bite:
     case Item_id::spitting_cobra_bite:
-    case Item_id::spitting_cobra_spit:
     case Item_id::black_mamba_bite:
     case Item_id::fire_hound_breath:
     case Item_id::fire_hound_bite:
@@ -96,7 +95,6 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
     case Item_id::chthonian_bite:
     case Item_id::death_fiend_claw:
     case Item_id::hunting_horror_bite:
-    case Item_id::dust_vortex_engulf:
     case Item_id::fire_vortex_engulf:
     case Item_id::mold_spores:
     case Item_id::mi_go_sting:
@@ -170,6 +168,14 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
 
     case Item_id::raven_peck:
         r = new Raven_peck(d);
+        break;
+
+    case Item_id::dust_vortex_engulf:
+        r = new Dust_vortex_engulf(d);
+        break;
+
+    case Item_id::spitting_cobra_spit:
+        r = new Spitting_cobra_spit(d);
         break;
 
     case Item_id::mi_go_gun:

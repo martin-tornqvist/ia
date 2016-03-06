@@ -776,7 +776,6 @@ public:
     virtual ~Vortex() {}
 
     virtual void mk_start_items() = 0;
-    virtual void on_death() = 0;
 
 private:
     Did_action on_act() override;
@@ -790,7 +789,6 @@ public:
     Dust_vortex() : Vortex() {}
     ~Dust_vortex() {}
     void mk_start_items() override;
-    void on_death();
 };
 
 class Fire_vortex: public Vortex
@@ -799,7 +797,6 @@ public:
     Fire_vortex() : Vortex() {}
     ~Fire_vortex() {}
     void mk_start_items() override;
-    void on_death();
 };
 
 class Ooze: public Mon
