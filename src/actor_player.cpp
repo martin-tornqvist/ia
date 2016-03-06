@@ -571,11 +571,6 @@ void Player::incr_insanity()
         ins_ += INS_INCR;
     }
 
-    restore_shock(70, false);
-
-    update_clr();
-    render::draw_map_and_interface();
-
     if (ins() >= 100)
     {
         const std::string msg = "My mind can no longer withstand what it has grasped. "
@@ -587,6 +582,11 @@ void Player::incr_insanity()
 
     //This point reached means sanity is below 100%
     insanity::gain_sympt();
+
+    restore_shock(70, false);
+
+    update_clr();
+    render::draw_map_and_interface();
 }
 
 bool Player::is_standing_in_open_place() const
@@ -1260,7 +1260,7 @@ void Player::interrupt_actions()
     inv_handling::browser_idx_to_set_on_new_turn    = 0;
 
     //Abort waiting
-    if (wait_turns_left > 0)
+    if (wait_turns_left > 0 && prop_handler_->allow_act())
     {
         msg_log::add("I stop waiting.", clr_white);
         render::draw_map_and_interface();

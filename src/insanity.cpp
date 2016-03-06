@@ -21,6 +21,8 @@
 //-----------------------------------------------------------------------------
 void Ins_sympt::on_start()
 {
+    msg_log::more_prompt();
+
     const std::string heading   = start_heading();
     const std::string msg       = "Insanity draws nearer... " + start_msg();
 
