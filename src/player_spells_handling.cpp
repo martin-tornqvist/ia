@@ -315,13 +315,6 @@ void player_select_spell_to_cast()
     }
     else //Has spells
     {
-        auto spell_opt_sort = [](const Spell_opt & opt1, const Spell_opt & opt2)
-        {
-            return opt1.spell->name() < opt2.spell->name();
-        };
-
-        sort(spell_opts.begin(), spell_opts.end(), spell_opt_sort);
-
         Menu_browser browser(spell_opts.size());
 
         render::draw_map_and_interface();

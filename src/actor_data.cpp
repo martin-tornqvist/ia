@@ -1088,8 +1088,8 @@ void init_data_list()
     data[size_t(d.id)] = d;
     d.reset();
 
-    d.name_a = "A Fire hound";
-    d.name_the = "The Fire hound";
+    d.name_a = "A Fire Hound";
+    d.name_the = "The Fire Hound";
     d.corpse_name_a = "A Fire Hound corpse";
     d.corpse_name_the = "The Fire Hound corpse";
     d.id = Actor_id::fire_hound;
