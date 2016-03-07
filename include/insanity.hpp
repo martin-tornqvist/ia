@@ -32,20 +32,25 @@ enum class Ins_sympt_id
     END
 };
 
+enum class Ins_sympt_type
+{
+    phobia,
+    obsess,
+    misc
+};
+
 class Actor;
 
 class Ins_sympt
 {
 public:
-    Ins_sympt(const Ins_sympt_id id) :
-        id_ (id) {}
+    Ins_sympt() {}
 
     virtual ~Ins_sympt() {}
 
-    Ins_sympt_id id() const
-    {
-        return id_;
-    }
+    virtual Ins_sympt_id id() const = 0;
+
+    virtual Ins_sympt_type type() const = 0;
 
     virtual void save() const {}
 
@@ -94,15 +99,23 @@ protected:
     {
         return "";
     }
-
-    const Ins_sympt_id id_;
 };
 
 class Ins_scream : public Ins_sympt
 {
 public:
     Ins_scream() :
-        Ins_sympt(Ins_sympt_id::scream) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::scream;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::misc;
+    }
 
     bool is_permanent() const override
     {
@@ -131,7 +144,17 @@ class Ins_babbling : public Ins_sympt
 {
 public:
     Ins_babbling() :
-        Ins_sympt(Ins_sympt_id::babbling) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::babbling;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::misc;
+    }
 
     bool is_permanent() const override
     {
@@ -163,7 +186,17 @@ class Ins_faint : public Ins_sympt
 {
 public:
     Ins_faint() :
-        Ins_sympt(Ins_sympt_id::faint) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::faint;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::misc;
+    }
 
     bool is_permanent() const override
     {
@@ -195,7 +228,17 @@ class Ins_laugh : public Ins_sympt
 {
 public:
     Ins_laugh() :
-        Ins_sympt(Ins_sympt_id::laugh) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::laugh;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::misc;
+    }
 
     bool is_permanent() const override
     {
@@ -225,7 +268,17 @@ class Ins_phobia_rat : public Ins_sympt
 {
 public:
     Ins_phobia_rat() :
-        Ins_sympt(Ins_sympt_id::phobia_rat) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::phobia_rat;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::phobia;
+    }
 
     bool is_permanent() const override
     {
@@ -277,7 +330,17 @@ class Ins_phobia_spider : public Ins_sympt
 {
 public:
     Ins_phobia_spider() :
-        Ins_sympt(Ins_sympt_id::phobia_spider) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::phobia_spider;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::phobia;
+    }
 
     bool is_permanent() const override
     {
@@ -329,7 +392,17 @@ class Ins_phobia_reptile_and_amph : public Ins_sympt
 {
 public:
     Ins_phobia_reptile_and_amph() :
-        Ins_sympt(Ins_sympt_id::phobia_reptile_and_amph) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::phobia_reptile_and_amph;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::phobia;
+    }
 
     bool is_permanent() const override
     {
@@ -381,7 +454,17 @@ class Ins_phobia_canine : public Ins_sympt
 {
 public:
     Ins_phobia_canine() :
-        Ins_sympt(Ins_sympt_id::phobia_canine) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::phobia_canine;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::phobia;
+    }
 
     bool is_permanent() const override
     {
@@ -433,7 +516,17 @@ class Ins_phobia_dead : public Ins_sympt
 {
 public:
     Ins_phobia_dead() :
-        Ins_sympt(Ins_sympt_id::phobia_dead) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::phobia_dead;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::phobia;
+    }
 
     bool is_permanent() const override
     {
@@ -485,7 +578,17 @@ class Ins_phobia_open : public Ins_sympt
 {
 public:
     Ins_phobia_open() :
-        Ins_sympt(Ins_sympt_id::phobia_open) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::phobia_open;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::phobia;
+    }
 
     bool is_permanent() const override
     {
@@ -537,7 +640,17 @@ class Ins_phobia_confined : public Ins_sympt
 {
 public:
     Ins_phobia_confined() :
-        Ins_sympt(Ins_sympt_id::phobia_confined) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::phobia_confined;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::phobia;
+    }
 
     bool is_permanent() const override
     {
@@ -589,7 +702,17 @@ class Ins_phobia_deep : public Ins_sympt
 {
 public:
     Ins_phobia_deep() :
-        Ins_sympt(Ins_sympt_id::phobia_deep) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::phobia_deep;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::phobia;
+    }
 
     bool is_permanent() const override
     {
@@ -641,7 +764,17 @@ class Ins_phobia_dark : public Ins_sympt
 {
 public:
     Ins_phobia_dark() :
-        Ins_sympt(Ins_sympt_id::phobia_dark) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::phobia_dark;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::phobia;
+    }
 
     bool is_permanent() const override
     {
@@ -693,12 +826,24 @@ class Ins_masoch : public Ins_sympt
 {
 public:
     Ins_masoch() :
-        Ins_sympt(Ins_sympt_id::masoch) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::masoch;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::obsess;
+    }
 
     bool is_permanent() const override
     {
         return true;
     }
+
+    bool allow_gain() const override;
 
     std::string char_descr_msg() const override
     {
@@ -743,12 +888,24 @@ class Ins_sadism : public Ins_sympt
 {
 public:
     Ins_sadism() :
-        Ins_sympt(Ins_sympt_id::sadism) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::sadism;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::obsess;
+    }
 
     bool is_permanent() const override
     {
         return true;
     }
+
+    bool allow_gain() const override;
 
     std::string char_descr_msg() const override
     {
@@ -793,7 +950,17 @@ class Ins_shadows : public Ins_sympt
 {
 public:
     Ins_shadows() :
-        Ins_sympt(Ins_sympt_id::shadows) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::shadows;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::misc;
+    }
 
     bool is_permanent() const override
     {
@@ -823,7 +990,17 @@ class Ins_paranoia : public Ins_sympt
 {
 public:
     Ins_paranoia() :
-        Ins_sympt(Ins_sympt_id::paranoia) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::paranoia;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::misc;
+    }
 
     bool is_permanent() const override
     {
@@ -853,7 +1030,17 @@ class Ins_confusion : public Ins_sympt
 {
 public:
     Ins_confusion() :
-        Ins_sympt(Ins_sympt_id::confusion) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::confusion;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::misc;
+    }
 
     bool is_permanent() const override
     {
@@ -886,7 +1073,17 @@ class Ins_frenzy : public Ins_sympt
 {
 public:
     Ins_frenzy() :
-        Ins_sympt(Ins_sympt_id::frenzy) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::frenzy;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::misc;
+    }
 
     bool is_permanent() const override
     {
@@ -918,7 +1115,17 @@ class Ins_strange_sensation : public Ins_sympt
 {
 public:
     Ins_strange_sensation() :
-        Ins_sympt(Ins_sympt_id::strange_sensation) {}
+        Ins_sympt() {}
+
+    Ins_sympt_id id() const override
+    {
+        return Ins_sympt_id::strange_sensation;
+    }
+
+    Ins_sympt_type type() const override
+    {
+        return Ins_sympt_type::misc;
+    }
 
     bool is_permanent() const override
     {
@@ -954,6 +1161,8 @@ void load();
 void gain_sympt();
 
 bool has_sympt(const Ins_sympt_id id);
+
+bool has_sympt_type(const Ins_sympt_type type);
 
 std::vector<const Ins_sympt*> active_sympts();
 

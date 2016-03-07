@@ -1577,12 +1577,12 @@ void init_data_list()
         "difficult. Also, due to the narrow slit of the helmet, aiming is slightly "
         "more difficult, and it is harder to detect sneaking enemies and hidden objects."
     };
-    d.ability_mods_while_equipped[int(Ability_id::stealth)]    = -50;
+    d.ability_mods_while_equipped[int(Ability_id::stealth)]     = -50;
     d.ability_mods_while_equipped[int(Ability_id::dodge_att)]   = -50;
     d.ability_mods_while_equipped[int(Ability_id::dodge_trap)]  = -50;
-    d.ability_mods_while_equipped[int(Ability_id::melee)]      = -10;
-    d.ability_mods_while_equipped[int(Ability_id::ranged)]     = -10;
-    d.ability_mods_while_equipped[int(Ability_id::searching)]  = -6;
+    d.ability_mods_while_equipped[int(Ability_id::melee)]       = -10;
+    d.ability_mods_while_equipped[int(Ability_id::ranged)]      = -10;
+    d.ability_mods_while_equipped[int(Ability_id::searching)]   = -6;
     d.weight = Item_weight::heavy;
     d.clr = clr_white;
     d.spawn_std_range.min = 2;
@@ -1600,7 +1600,7 @@ void init_data_list()
         "An armour consisting of steel plates sewn into a waistcoat. It offers very good "
         "protection for its weight. Sneaking and dodging is slightly more difficult."
     };
-    d.ability_mods_while_equipped[int(Ability_id::stealth)]    = -20;
+    d.ability_mods_while_equipped[int(Ability_id::stealth)]     = -20;
     d.ability_mods_while_equipped[int(Ability_id::dodge_att)]   = -20;
     d.ability_mods_while_equipped[int(Ability_id::dodge_trap)]  = -20;
     d.weight = Item_weight::medium;
@@ -1625,12 +1625,12 @@ void init_data_list()
         "because of the hood and mask, aiming and detecting hidden enemies and objects "
         "is somewhat harder."
     };
-    d.ability_mods_while_equipped[int(Ability_id::stealth)]    = -20;
+    d.ability_mods_while_equipped[int(Ability_id::stealth)]     = -20;
     d.ability_mods_while_equipped[int(Ability_id::dodge_att)]   = -20;
     d.ability_mods_while_equipped[int(Ability_id::dodge_trap)]  = -20;
-    d.ability_mods_while_equipped[int(Ability_id::melee)]      = -10;
-    d.ability_mods_while_equipped[int(Ability_id::ranged)]     = -10;
-    d.ability_mods_while_equipped[int(Ability_id::searching)]  = -6;
+    d.ability_mods_while_equipped[int(Ability_id::melee)]       = -10;
+    d.ability_mods_while_equipped[int(Ability_id::ranged)]      = -10;
+    d.ability_mods_while_equipped[int(Ability_id::searching)]   = -6;
     d.weight = Item_weight::medium;
     d.clr = clr_red_lgt;
     d.spawn_std_range.min = 3;
