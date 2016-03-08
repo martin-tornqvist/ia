@@ -948,7 +948,22 @@ Did_action Actor::try_eat_corpse()
         return Did_action::no;
     }
 
-    Actor* corpse = utils::actor_at_pos(pos, Actor_state::corpse);
+    Actor* corpse = nullptr;
+
+    //Check all corpses here, if this is the player eating, stop at any corpse which is
+    //prioritized for bashing (Zombies)
+    for (Actor* const actor : game_time::actors)
+    {
+        if (actor->pos == pos && actor->state() == Actor_state::corpse)
+        {
+            corpse = actor;
+
+            if (IS_PLAYER && actor->data().prio_corpse_bash)
+            {
+                break;
+            }
+        }
+    }
 
     if (corpse)
     {

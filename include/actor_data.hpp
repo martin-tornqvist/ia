@@ -157,6 +157,7 @@ struct Actor_data_t
     bool can_be_summoned;
     bool can_bleed;
     bool can_leave_corpse;
+    bool prio_corpse_bash;
     std::vector<Room_type> native_rooms;
     std::string descr;
     std::string aggro_text_mon_seen;

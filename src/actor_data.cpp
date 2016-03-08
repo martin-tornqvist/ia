@@ -70,6 +70,7 @@ void Actor_data_t::reset()
     can_be_summoned = false;
     can_bleed = true;
     can_leave_corpse = true;
+    prio_corpse_bash = false;
     native_rooms.clear();
     descr = "";
     aggro_text_mon_seen = "";
@@ -143,6 +144,7 @@ void init_data_list()
     d.mon_shock_lvl = Mon_shock_lvl::frightening;
     d.is_undead = true;
     d.is_humanoid = true;
+    d.prio_corpse_bash = true;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::monster);
     d.native_rooms.push_back(Room_type::crypt);
@@ -174,7 +176,6 @@ void init_data_list()
     d.group_size = Mon_group_size::group;
     d.actor_size = Actor_size::humanoid;
     d.natural_props[size_t(Prop_id::infravis)] = true;
-    d.is_humanoid = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 20;
     d.descr = "This rotting thing appears to have been brought back to life "
@@ -186,6 +187,8 @@ void init_data_list()
     d.erratic_move_pct = Actor_erratic_freq::somewhat;
     d.mon_shock_lvl = Mon_shock_lvl::frightening;
     d.is_undead = true;
+    d.is_humanoid = true;
+    d.prio_corpse_bash = true;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::monster);
     d.native_rooms.push_back(Room_type::crypt);
@@ -219,7 +222,6 @@ void init_data_list()
     d.group_size = Mon_group_size::few;
     d.actor_size = Actor_size::humanoid;
     d.natural_props[size_t(Prop_id::infravis)] = true;
-    d.is_humanoid = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 50;
     d.descr = "This lumbering giant corpse seems to be artificially bloated "
@@ -229,6 +231,8 @@ void init_data_list()
     d.erratic_move_pct = Actor_erratic_freq::rare;
     d.mon_shock_lvl = Mon_shock_lvl::frightening;
     d.is_undead = true;
+    d.is_humanoid = true;
+    d.prio_corpse_bash = true;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::monster);
     d.native_rooms.push_back(Room_type::crypt);
@@ -259,7 +263,6 @@ void init_data_list()
     d.group_size = Mon_group_size::alone;
     d.actor_size = Actor_size::humanoid;
     d.natural_props[size_t(Prop_id::infravis)] = true;
-    d.is_humanoid = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 999;
     d.descr = "Major Sir Eric Moreland Clapham-Lee was once a commanding officer "
@@ -269,7 +272,9 @@ void init_data_list()
     d.erratic_move_pct = Actor_erratic_freq::somewhat;
     d.mon_shock_lvl = Mon_shock_lvl::terrifying;
     d.is_undead = true;
+    d.is_humanoid = true;
     d.is_unique = true;
+    d.prio_corpse_bash = true;
     d.nr_left_allowed_to_spawn = 1;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::monster);
@@ -301,7 +306,6 @@ void init_data_list()
     d.spawn_min_dlvl = 4;
     d.group_size = Mon_group_size::alone;
     d.actor_size = Actor_size::humanoid;
-    d.is_humanoid = true;
     d.can_bash_doors = true;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.nr_turns_aware = 999;
@@ -311,7 +315,9 @@ void init_data_list()
     d.erratic_move_pct = Actor_erratic_freq::rare;
     d.mon_shock_lvl = Mon_shock_lvl::terrifying;
     d.is_undead = true;
+    d.is_humanoid = true;
     d.is_unique = true;
+    d.prio_corpse_bash = true;
     d.nr_left_allowed_to_spawn = 0;
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::monster);
@@ -1105,7 +1111,7 @@ void init_data_list()
     d.glyph = 'd';
     d.color = clr_red;
     d.tile = Tile_id::hound;
-    d.hp = 13;
+    d.hp = 18;
     d.dmg_melee = MIN_DMG_TO_WOUND - 1;
     d.dmg_ranged = MIN_DMG_TO_WOUND - 1;
     d.ability_vals.set_val(Ability_id::melee, 40);
@@ -1579,7 +1585,7 @@ void init_data_list()
     d.glyph = 'I';
     d.color = clr_green_lgt;
     d.tile = Tile_id::mantis;
-    d.hp = 15;
+    d.hp = 20;
     d.spi = 20;
     d.dmg_melee = MIN_DMG_TO_WOUND;
     d.ability_vals.set_val(Ability_id::melee, 50);
@@ -2257,18 +2263,18 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_tgt_when_los)] = true;
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = false;
-    d.speed = Actor_speed::slow;
+    d.speed = Actor_speed::normal;
     d.glyph = 'w';
     d.color = clr_white;
     d.tile = Tile_id::mass_of_worms;
     d.hp = 2;
     d.spi = 1;
     d.dmg_melee = 2;
-    d.ability_vals.set_val(Ability_id::melee, 30);
+    d.ability_vals.set_val(Ability_id::melee, 35);
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
-    d.group_size = Mon_group_size::horde;
+    d.group_size = Mon_group_size::swarm;
     d.actor_size = Actor_size::floor;
     d.prevent_knockback = true;
     d.nr_turns_aware = 10;
@@ -2295,7 +2301,7 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_tgt_when_los)] = true;
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = false;
-    d.speed = Actor_speed::slow;
+    d.speed = Actor_speed::normal;
     d.glyph = 'w';
     d.color = clr_violet;
     d.tile = Tile_id::mass_of_worms;
@@ -2304,8 +2310,8 @@ void init_data_list()
     d.dmg_melee = 3;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.natural_props[size_t(Prop_id::infravis)] = true;
-    d.spawn_min_dlvl = 7;
-    d.group_size = Mon_group_size::horde;
+    d.spawn_min_dlvl = 6;
+    d.group_size = Mon_group_size::swarm;
     d.actor_size = Actor_size::floor;
     d.prevent_knockback = true;
     d.nr_turns_aware = 20;

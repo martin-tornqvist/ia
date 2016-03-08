@@ -50,14 +50,28 @@ void player_kick()
         }
 
         //Kick corpse?
-        Actor* dead_actor = utils::actor_at_pos(kick_pos, Actor_state::corpse);
+        Actor* corpse = nullptr;
 
-        if (dead_actor)
+        //Check all corpses here, stop at any corpse which is prioritized for bashing (Zombies)
+        for (Actor* const actor : game_time::actors)
+        {
+            if (actor->pos == kick_pos && actor->state() == Actor_state::corpse)
+            {
+                corpse = actor;
+
+                if (actor->data().prio_corpse_bash)
+                {
+                    break;
+                }
+            }
+        }
+
+        if (corpse)
         {
             const bool IS_SEEING_CELL = map::cells[kick_pos.x][kick_pos.y].is_seen_by_player;
 
             std::string corpse_name = IS_SEEING_CELL ?
-                                      dead_actor->corpse_name_a() : "a corpse";
+                                      corpse->corpse_name_a() : "a corpse";
 
             text_format::first_to_upper(corpse_name);
 
@@ -71,7 +85,7 @@ void player_kick()
 
             const int KICK_DMG = kick_dmg_dice.roll();
 
-            dead_actor->hit(KICK_DMG, Dmg_type::physical, Dmg_method::kick);
+            corpse->hit(KICK_DMG, Dmg_type::physical, Dmg_method::kick);
 
             game_time::tick();
             TRACE_FUNC_END;
