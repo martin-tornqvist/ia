@@ -1147,7 +1147,8 @@ void Prop_handler::try_add(Prop* const prop,
     {
         if (try_resist_prop(prop->id()))
         {
-            if (verbosity == Verbosity::verbose)
+            //Resist message
+            if (verbosity == Verbosity::verbose && owning_actor_->is_alive())
             {
                 if (IS_PLAYER)
                 {
@@ -1199,8 +1200,8 @@ void Prop_handler::try_add(Prop* const prop,
                 const int TURNS_LEFT_OLD = old_prop->nr_turns_left_;
                 const int TURNS_LEFT_NEW = prop->nr_turns_left_;
 
-                //Print start message (again)
-                if (verbosity == Verbosity::verbose)
+                //Start message
+                if (verbosity == Verbosity::verbose && owning_actor_->is_alive())
                 {
                     if (IS_PLAYER)
                     {
@@ -1243,7 +1244,7 @@ void Prop_handler::try_add(Prop* const prop,
 
     prop->on_start();
 
-    if (verbosity == Verbosity::verbose)
+    if (verbosity == Verbosity::verbose && owning_actor_->is_alive())
     {
         if (prop->need_update_vision_when_start_or_end())
         {
@@ -1253,6 +1254,7 @@ void Prop_handler::try_add(Prop* const prop,
             render::draw_map_and_interface();
         }
 
+        //Start message
         if (IS_PLAYER)
         {
             std::string msg = "";
