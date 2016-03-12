@@ -1486,7 +1486,7 @@ void Prop_handler::tick(const Prop_turn_mode turn_mode)
             {
                 auto* mon = static_cast<Mon*>(owning_actor_);
 
-                mon->become_aware(false);
+                mon->become_aware_player(false);
             }
 
             //Count down number of turns

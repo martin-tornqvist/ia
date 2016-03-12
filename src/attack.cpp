@@ -1702,7 +1702,7 @@ void melee(Actor* const attacker,
         }
         else //Defender is monster
         {
-            static_cast<Mon&>(defender).become_aware(false);
+            static_cast<Mon&>(defender).become_aware_player(false);
         }
     }
 

@@ -1,5 +1,7 @@
 #include "actor_player.hpp"
 
+#include <string>
+
 #include "init.hpp"
 #include "render.hpp"
 #include "audio.hpp"
@@ -695,7 +697,7 @@ void Player::act()
 #ifndef NDEBUG
     //Sanity check: Disease and infection should never be active at the same time
     IA_ASSERT(!prop_handler_->has_prop(Prop_id::diseased) ||
-           !prop_handler_->has_prop(Prop_id::infected));
+              !prop_handler_->has_prop(Prop_id::infected));
 #endif // NDEBUG
 
     render::draw_map_and_interface();
@@ -714,15 +716,31 @@ void Player::act()
         tgt_ = nullptr;
     }
 
-    std::vector<Actor*> my_seen_foes;
-    seen_foes(my_seen_foes);
+    std::vector<Actor*> my_seen_actors;
+    seen_actors(my_seen_actors);
 
     //Check if we should go back to inventory screen
     const auto inv_scr_on_new_turn = inv_handling::scr_to_open_on_new_turn;
 
+    bool is_seeing_foe = false;
+
+    for (Actor* seen_actor : my_seen_actors)
+    {
+        if (!is_leader_of(seen_actor))
+        {
+            is_seeing_foe = true;
+            break;
+        }
+    }
+
     if (inv_scr_on_new_turn != Inv_scr::none)
     {
-        if (my_seen_foes.empty())
+        if (is_seeing_foe)
+        {
+            inv_handling::scr_to_open_on_new_turn           = Inv_scr::none;
+            inv_handling::browser_idx_to_set_on_new_turn    = 0;
+        }
+        else //No seen enemies
         {
             switch (inv_scr_on_new_turn)
             {
@@ -744,14 +762,9 @@ void Player::act()
 
             return;
         }
-        else //There are seen monsters
-        {
-            inv_handling::scr_to_open_on_new_turn           = Inv_scr::none;
-            inv_handling::browser_idx_to_set_on_new_turn    = 0;
-        }
     }
 
-    for (Actor* const actor : my_seen_foes)
+    for (Actor* const actor : my_seen_actors)
     {
         static_cast<Mon*>(actor)->set_player_aware_of_me();
     }
@@ -916,7 +929,7 @@ void Player::on_std_turn()
 #ifndef NDEBUG
     //Sanity check: Disease and infection should never be active at the same time
     IA_ASSERT(!prop_handler_->has_prop(Prop_id::diseased) ||
-           !prop_handler_->has_prop(Prop_id::infected));
+              !prop_handler_->has_prop(Prop_id::infected));
 #endif // NDEBUG
 
     if (!is_alive())
@@ -1475,7 +1488,13 @@ void Player::move(Dir dir)
             //Displace allied monster
             if (mon && is_leader_of(mon))
             {
-                msg_log::add("I displace " + mon->name_a() + ".");
+                if (mon->player_aware_of_me_counter_ > 0)
+                {
+                    std::string mon_name = can_see_actor(*mon) ? mon->name_a() : "it";
+
+                    msg_log::add("I displace " + mon_name + ".");
+                }
+
                 mon->pos = pos;
             }
 

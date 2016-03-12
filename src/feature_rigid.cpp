@@ -2385,7 +2385,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
 
         Mon* const mon = static_cast<Mon*>(actor_spawned);
 
-        mon->become_aware(false);
+        mon->become_aware_player(false);
 
         mon->prop_handler().try_add(new Prop_disabled_attack(Prop_turns::specific, 1));
     }

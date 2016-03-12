@@ -339,7 +339,7 @@ void Event_snake_emerge::on_new_turn()
 
         Actor* const actor = actor_factory::mk(id, p);
 
-        static_cast<Mon*>(actor)->become_aware(false);
+        static_cast<Mon*>(actor)->become_aware_player(false);
     }
 
     render::draw_map_and_interface(true);

@@ -138,6 +138,49 @@ Actor_speed Actor::speed() const
     return Actor_speed(speed_int);
 }
 
+void Actor::seen_actors(std::vector<Actor*>& out)
+{
+    out.clear();
+
+    bool blocked_los[MAP_W][MAP_H];
+
+    if (!is_player())
+    {
+        Rect los_rect(std::max(0,         pos.x - FOV_STD_RADI_INT),
+                      std::max(0,         pos.y - FOV_STD_RADI_INT),
+                      std::min(MAP_W - 1, pos.x + FOV_STD_RADI_INT),
+                      std::min(MAP_H - 1, pos.y + FOV_STD_RADI_INT));
+
+        map_parse::run(cell_check::Blocks_los(),
+                       blocked_los,
+                       Map_parse_mode::overwrite,
+                       los_rect);
+    }
+
+    for (Actor* actor : game_time::actors)
+    {
+        if (actor != this && actor->is_alive())
+        {
+            if (is_player())
+            {
+                if (map::player->can_see_actor(*actor))
+                {
+                    out.push_back(actor);
+                }
+            }
+            else //Not player
+            {
+                const Mon* const mon = static_cast<const Mon*>(this);
+
+                if (mon->can_see_actor(*actor, blocked_los))
+                {
+                    out.push_back(actor);
+                }
+            }
+        }
+    }
+}
+
 void Actor::seen_foes(std::vector<Actor*>& out)
 {
     out.clear();
@@ -381,10 +424,10 @@ void Actor::teleport()
 
     map::player->update_fov();
 
-    std::vector<Actor*> player_seen_foes;
-    map::player->seen_foes(player_seen_foes);
+    std::vector<Actor*> player_seen_actors;
+    map::player->seen_actors(player_seen_actors);
 
-    for (Actor* const actor : player_seen_foes)
+    for (Actor* const actor : player_seen_actors)
     {
         static_cast<Mon*>(actor)->set_player_aware_of_me();
     }

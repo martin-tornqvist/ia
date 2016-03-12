@@ -226,8 +226,8 @@ void run(const  cell_check::Check& method,
          const  Map_parse_mode write_rule,
          const  Rect& area_to_check_cells)
 {
-    IA_ASSERT(method.is_checking_cells()  ||
-           method.is_checking_mobs()   ||
+    IA_ASSERT(method.is_checking_cells()    ||
+           method.is_checking_mobs()        ||
            method.is_checking_actors());
 
     const bool ALLOW_WRITE_FALSE = write_rule == Map_parse_mode::overwrite;

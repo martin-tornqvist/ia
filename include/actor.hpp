@@ -109,6 +109,8 @@ public:
 
     virtual void update_clr();
 
+    void seen_actors(std::vector<Actor*>& out);
+
     void seen_foes(std::vector<Actor*>& out);
 
     Actor_id id() const

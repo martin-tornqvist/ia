@@ -1111,7 +1111,7 @@ void init_data_list()
     d.glyph = 'd';
     d.color = clr_red;
     d.tile = Tile_id::hound;
-    d.hp = 18;
+    d.hp = 22;
     d.dmg_melee = MIN_DMG_TO_WOUND - 1;
     d.dmg_ranged = MIN_DMG_TO_WOUND - 1;
     d.ability_vals.set_val(Ability_id::melee, 40);
@@ -1585,7 +1585,7 @@ void init_data_list()
     d.glyph = 'I';
     d.color = clr_green_lgt;
     d.tile = Tile_id::mantis;
-    d.hp = 20;
+    d.hp = 25;
     d.spi = 20;
     d.dmg_melee = MIN_DMG_TO_WOUND;
     d.ability_vals.set_val(Ability_id::melee, 50);

@@ -481,7 +481,10 @@ void Mon::move(Dir dir)
         std::vector<Mob*> mobs;
         game_time::mobs_at_pos(pos, mobs);
 
-        for (auto* m : mobs) {m->bump(*this);}
+        for (auto* m : mobs)
+        {
+            m->bump(*this);
+        }
 
         map::cells[pos.x][pos.y].rigid->bump(*this);
     }
@@ -493,7 +496,7 @@ void Mon::hear_sound(const Snd& snd)
 {
     if (is_alive() && snd.is_alerting_mon())
     {
-        become_aware(false);
+        become_aware_player(false);
     }
 }
 
@@ -520,26 +523,28 @@ void Mon::speak_phrase(const Alerts_mon alerts_others)
     snd_emit::run(snd);
 }
 
-void Mon::become_aware(const bool IS_FROM_SEEING)
+void Mon::become_aware_player(const bool IS_FROM_SEEING)
 {
-    if (is_alive())
+    if (!is_alive() || is_actor_my_leader(map::player))
     {
-        const int AWARENESS_CNT_BEFORE  = aware_counter_;
-        aware_counter_                  = data_->nr_turns_aware;
+        return;
+    }
 
-        if (AWARENESS_CNT_BEFORE <= 0)
+    const int AWARENESS_CNT_BEFORE  = aware_counter_;
+    aware_counter_                  = data_->nr_turns_aware;
+
+    if (AWARENESS_CNT_BEFORE <= 0)
+    {
+        if (IS_FROM_SEEING && map::player->can_see_actor(*this))
         {
-            if (IS_FROM_SEEING && map::player->can_see_actor(*this))
-            {
-                map::player->update_fov();
-                render::draw_map_and_interface(true);
-                msg_log::add(name_the() + " sees me!");
-            }
+            map::player->update_fov();
+            render::draw_map_and_interface(true);
+            msg_log::add(name_the() + " sees me!");
+        }
 
-            if (rnd::coin_toss())
-            {
-                speak_phrase(Alerts_mon::yes);
-            }
+        if (rnd::coin_toss())
+        {
+            speak_phrase(Alerts_mon::yes);
         }
     }
 }

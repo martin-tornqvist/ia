@@ -248,13 +248,13 @@ bool make_room_for_friend(Mon& mon)
 
                         for (Actor* actor2 : game_time::actors)
                         {
+//#error Shouldn't we check if actor2 is alive here? Investigate!
                             if (!actor2->is_player() && actor2 != &mon)
                             {
                                 other = static_cast<Mon*>(actor2);
 
                                 const bool OTHER_IS_SEEING_PLAYER =
-                                    other->can_see_actor(*map::player,
-                                                         blocked_los);
+                                    other->can_see_actor(*map::player, blocked_los);
 
                                 if (
                                     OTHER_IS_SEEING_PLAYER &&
@@ -303,6 +303,7 @@ Dir dir_to_rnd_adj_free_cell(Mon& mon)
 
     for (Actor* actor : game_time::actors)
     {
+//#error This is a bug - not checking if actor is alive!!!
         const P& p = actor->pos;
         blocked[p.x][p.y] = true;
     }
@@ -417,14 +418,13 @@ bool move_to_tgt_simple(Mon& mon)
 
 bool step_path(Mon& mon, std::vector<P>& path)
 {
-    if (mon.is_alive())
+    if (mon.is_alive() && !path.empty())
     {
-        if (!path.empty())
-        {
-            const P delta = path.back() - mon.pos;
-            mon.move(dir_utils::dir(delta));
-            return true;
-        }
+        const P delta = path.back() - mon.pos;
+
+        mon.move(dir_utils::dir(delta));
+
+        return true;
     }
 
     return false;
@@ -489,7 +489,7 @@ bool look_become_player_aware(Mon& mon)
 
     if (!seen_foes.empty() && WAS_AWARE_BEFORE)
     {
-        mon.become_aware(false);
+        mon.become_aware_player(false);
         return false;
     }
 
@@ -499,7 +499,7 @@ bool look_become_player_aware(Mon& mon)
         {
             if (mon.is_spotting_sneaking_actor(*actor))
             {
-                mon.become_aware(true);
+                mon.become_aware_player(true);
 
                 if (WAS_AWARE_BEFORE)
                 {
@@ -514,7 +514,7 @@ bool look_become_player_aware(Mon& mon)
         }
         else //Other actor is monster
         {
-            mon.become_aware(false);
+            mon.become_aware_player(false);
 
             if (WAS_AWARE_BEFORE)
             {
@@ -531,8 +531,7 @@ bool look_become_player_aware(Mon& mon)
     return false;
 }
 
-void try_set_path_to_lair_if_no_los(Mon& mon, std::vector<P>& path,
-                                    const P& lair_p)
+void try_set_path_to_lair_if_no_los(Mon& mon, std::vector<P>& path, const P& lair_p)
 {
     if (mon.is_alive())
     {
@@ -579,33 +578,33 @@ void try_set_path_to_leader(Mon& mon, std::vector<P>& path)
     {
         Actor* leader = mon.leader_;
 
-        if (leader)
+        if (leader && leader->is_alive())
         {
-            if (leader->is_alive())
+            bool blocked[MAP_W][MAP_H];
+
+            const Rect fov_lmt = fov::get_fov_rect(mon.pos);
+
+            map_parse::run(cell_check::Blocks_los(),
+                           blocked,
+                           Map_parse_mode::overwrite,
+                           fov_lmt);
+
+            const Los_result los = fov::check_cell(mon.pos, leader->pos, blocked);
+
+            if (!los.is_blocked_hard)
             {
-                bool blocked[MAP_W][MAP_H];
-
-                const Rect fov_lmt = fov::get_fov_rect(mon.pos);
-
-                map_parse::run(cell_check::Blocks_los(), blocked, Map_parse_mode::overwrite,
-                               fov_lmt);
-
-                const Los_result los = fov::check_cell(mon.pos, leader->pos, blocked);
-
-                if (!los.is_blocked_hard)
-                {
-                    path.clear();
-                    return;
-                }
-
-                map_parse::run(cell_check::Blocks_actor(mon, false), blocked);
-
-                map_parse::run(cell_check::Living_actors_adj_to_pos(mon.pos),
-                               blocked, Map_parse_mode::append);
-
-                path_find::run(mon.pos, leader->pos, blocked, path);
+                path.clear();
                 return;
             }
+
+            map_parse::run(cell_check::Blocks_actor(mon, false), blocked);
+
+            map_parse::run(cell_check::Living_actors_adj_to_pos(mon.pos),
+                           blocked,
+                           Map_parse_mode::append);
+
+            path_find::run(mon.pos, leader->pos, blocked, path);
+            return;
         }
     }
 

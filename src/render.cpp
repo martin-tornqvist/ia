@@ -51,7 +51,7 @@ bool is_inited()
     return sdl_window_;
 }
 
-void div_clr(Clr & clr, const double DIV)
+void div_clr(Clr& clr, const double DIV)
 {
     clr.r = double(clr.r) / DIV;
     clr.g = double(clr.g) / DIV;
@@ -1412,13 +1412,16 @@ void draw_map()
             }
             else //Player cannot see actor
             {
-                if (map::player->is_leader_of(mon))
+                if (mon->player_aware_of_me_counter_ > 0)
                 {
-                    cur_render_data->is_aware_of_allied_mon_here = true;
-                }
-                else if (mon->player_aware_of_me_counter_ > 0) //Player is not leader of monster
-                {
-                    cur_render_data->is_aware_of_hostile_mon_here = true;
+                    if (map::player->is_leader_of(mon))
+                    {
+                        cur_render_data->is_aware_of_allied_mon_here = true;
+                    }
+                    else //Player is not leader of monster
+                    {
+                        cur_render_data->is_aware_of_hostile_mon_here = true;
+                    }
                 }
             }
         }
@@ -1584,12 +1587,18 @@ void draw_map()
             {
                 //We should never see both a hostile AND an allied monster in the same cell
                 IA_ASSERT(!tmp_render_data.is_aware_of_hostile_mon_here ||
-                       !tmp_render_data.is_aware_of_allied_mon_here);
+                          !tmp_render_data.is_aware_of_allied_mon_here);
 
                 const Clr bg_clr = tmp_render_data.is_aware_of_hostile_mon_here ?
-                                   clr_nosf_teal_drk : clr_allied_mon;
+                                   clr_nosf_teal_drk :
+                                   clr_allied_mon;
 
-                draw_glyph('!', Panel::map, pos, clr_black, true, bg_clr);
+                draw_glyph('!',
+                           Panel::map,
+                           pos,
+                           clr_black,
+                           true,
+                           bg_clr);
             }
             else if (tmp_render_data.tile != Tile_id::empty && tmp_render_data.glyph != ' ')
             {
