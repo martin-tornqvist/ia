@@ -5,22 +5,19 @@
 
 #include "utils.hpp"
 
-using namespace std;
-
 namespace line_calc
 {
 
 namespace
 {
 
-double      fov_abs_distances_[FOV_MAX_W_INT][FOV_MAX_W_INT];
-vector<P> fov_delta_lines_[FOV_MAX_W_INT][FOV_MAX_W_INT];
+double          fov_abs_distances_[FOV_MAX_W_INT][FOV_MAX_W_INT];
+std::vector<P>  fov_delta_lines_[FOV_MAX_W_INT][FOV_MAX_W_INT];
 
-} //Namespace
+} //namespace
 
 void init()
 {
-    //----------------------------------------------------------
     //Calculate FOV absolute distances
     for (int y = 0; y < FOV_MAX_W_INT; ++y)
     {
@@ -52,7 +49,6 @@ void init()
         }
     }
 
-    //----------------------------------------------------------
     //Calculate FOV delta lines
     for (int delta_x = -R_INT; delta_x <= R_INT; delta_x++)
     {
@@ -60,15 +56,15 @@ void init()
         {
             const P origin(0, 0);
             const P tgt(P(delta_x, delta_y));
-            vector<P> cur_line;
+            std::vector<P> cur_line;
             calc_new_line(origin, tgt, true, 999, true, cur_line);
             fov_delta_lines_[delta_x + R_INT][delta_y + R_INT] = cur_line;
         }
     }
 }
 
-const vector<P>* fov_delta_line(const P& delta,
-                                const double& MAX_DIST_ABS)
+const std::vector<P>* fov_delta_line(const P& delta,
+                                     const double& MAX_DIST_ABS)
 {
     const int X = delta.x + FOV_MAX_RADI_INT;
     const int Y = delta.y + FOV_MAX_RADI_INT;
@@ -84,9 +80,12 @@ const vector<P>* fov_delta_line(const P& delta,
     return nullptr;
 }
 
-void calc_new_line(const P& origin, const P& tgt,
-                   const bool SHOULD_STOP_AT_TARGET, const int CHEB_TRAVEL_LIMIT,
-                   const bool ALLOW_OUTSIDE_MAP, vector<P>& line_ref)
+void calc_new_line(const P& origin,
+                   const P& tgt,
+                   const bool SHOULD_STOP_AT_TARGET,
+                   const int CHEB_TRAVEL_LIMIT,
+                   const bool ALLOW_OUTSIDE_MAP,
+                   std::vector<P>& line_ref)
 {
     line_ref.clear();
 

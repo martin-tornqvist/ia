@@ -187,7 +187,9 @@ void Mon::act()
 
     //------------------------------ SPECIAL MONSTER ACTIONS
     //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
-    if (leader_ != map::player && (tgt_ == nullptr || tgt_ == map::player))
+    if (
+        leader_ != map::player &&
+        (tgt_ == nullptr || tgt_ == map::player))
     {
         if (on_act() == Did_action::yes)
         {
@@ -211,7 +213,10 @@ void Mon::act()
         }
     }
 
-    if (data_->ai[size_t(Ai_id::makes_room_for_friend)] && tgt_ == map::player)
+    if (
+        data_->ai[size_t(Ai_id::makes_room_for_friend)] &&
+        leader_ != map::player                          &&
+        tgt_ == map::player)
     {
         if (ai::action::make_room_for_friend(*this))
         {
