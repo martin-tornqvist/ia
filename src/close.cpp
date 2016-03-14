@@ -86,14 +86,15 @@ void player_try_close_or_jam()
 
     render::draw_map_and_interface();
 
-    const Dir input_dir = query::dir();
-
-    const P p(map::player->pos + dir_utils::offset(input_dir));
+    const Dir input_dir = query::dir(Allow_center::no);
 
     msg_log::clear();
 
-    if (p != map::player->pos)
+    if (input_dir != Dir::END && input_dir != Dir::center)
     {
+        //Valid direction
+        const P p(map::player->pos + dir_utils::offset(input_dir));
+
         player_try_close_or_jam_feature(map::cells[p.x][p.y].rigid);
     }
 

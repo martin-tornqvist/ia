@@ -22,34 +22,47 @@ void player_kick()
 
     msg_log::clear();
     msg_log::add("Which direction?" + cancel_info_str, clr_white_high);
+
     render::draw_map_and_interface();
-    P kick_pos(map::player->pos + dir_utils::offset(query::dir()));
+
+    const Dir input_dir = query::dir(Allow_center::yes);
+
     msg_log::clear();
 
-    if (kick_pos != map::player->pos)
+    if (input_dir == Dir::END)
     {
-        //Kick living actor?
-        Actor* living_actor = utils::actor_at_pos(kick_pos, Actor_state::alive);
+        //Invalid direction
+        render::update_screen();
+    }
+    else //Valid direction
+    {
+        P kick_pos(map::player->pos + dir_utils::offset(input_dir));
 
-        if (living_actor)
+        TRACE << "Checking if player is kicking a living actor" << std::endl;
+        if (input_dir != Dir::center)
         {
-            TRACE << "Actor found at kick pos, attempting to kick actor" << std::endl;
+            Actor* living_actor = utils::actor_at_pos(kick_pos, Actor_state::alive);
 
-            if (map::player->prop_handler().allow_attack_melee(Verbosity::verbose))
+            if (living_actor)
             {
-                TRACE << "Player is allowed to do melee attack" << std::endl;
-                bool blocked[MAP_W][MAP_H];
-                map_parse::run(cell_check::Blocks_los(), blocked);
+                TRACE << "Actor found at kick pos, attempting to kick actor" << std::endl;
 
-                TRACE << "Player can see actor" << std::endl;
-                map::player->kick_mon(*living_actor);
+                if (map::player->prop_handler().allow_attack_melee(Verbosity::verbose))
+                {
+                    TRACE << "Player is allowed to do melee attack" << std::endl;
+                    bool blocked[MAP_W][MAP_H];
+                    map_parse::run(cell_check::Blocks_los(), blocked);
+
+                    TRACE << "Player can see actor" << std::endl;
+                    map::player->kick_mon(*living_actor);
+                }
+
+                TRACE_FUNC_END;
+                return;
             }
-
-            TRACE_FUNC_END;
-            return;
         }
 
-        //Kick corpse?
+        TRACE << "Checking if player is kicking a corpse" << std::endl;
         Actor* corpse = nullptr;
 
         //Check all corpses here, stop at any corpse which is prioritized for bashing (Zombies)
@@ -93,12 +106,16 @@ void player_kick()
         }
 
         //Kick feature
-        TRACE << "No actor at kick pos, attempting to kick feature instead" << std::endl;
-        auto* const f = map::cells[kick_pos.x][kick_pos.y].rigid;
-        f->hit(Dmg_type::physical, Dmg_method::kick, map::player);
+        TRACE << "Checking if player is kicking a feature" << std::endl;
+
+        if (input_dir != Dir::center)
+        {
+            auto* const f = map::cells[kick_pos.x][kick_pos.y].rigid;
+            f->hit(Dmg_type::physical, Dmg_method::kick, map::player);
+        }
     }
 
     TRACE_FUNC_END;
 }
 
-} //Kick
+} //kick

@@ -58,15 +58,18 @@ void player_disarm()
     msg_log::add("Which direction?" + cancel_info_str, clr_white_high);
     render::draw_map_and_interface();
 
-    const P pos(map::player->pos + dir_utils::offset(query::dir()));
+    const Dir input_dir = query::dir(Allow_center::no);
 
-    if (pos == map::player->pos)
+    if (input_dir == Dir::END || input_dir == Dir::center)
     {
+        //Invalid direction
         msg_log::clear();
         render::draw_map_and_interface();
     }
-    else //Not player position
+    else //Valid direction
     {
+        const P pos(map::player->pos + dir_utils::offset(input_dir));
+
         //Abort if cell is unseen
         if (!map::cells[pos.x][pos.y].is_seen_by_player)
         {

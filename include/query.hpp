@@ -5,7 +5,18 @@
 
 struct Key_data;
 
-enum class Yes_no_answer {yes, no, special};
+enum class Yes_no_answer
+{
+    no,
+    yes,
+    special
+};
+
+enum class Allow_center
+{
+    no,
+    yes
+};
 
 namespace query
 {
@@ -16,7 +27,7 @@ void wait_for_key_press();
 
 Yes_no_answer yes_or_no(char key_for_special_event = -1);
 
-Dir dir();
+Dir dir(const Allow_center allow_center);
 
 void wait_for_msg_more();
 
@@ -24,9 +35,13 @@ void wait_for_confirm();
 
 Key_data letter(const bool ACCEPT_ENTER);
 
-int number(const P& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS,
-           const int DEFAULT, const bool CANCEL_RETURNS_DEFAULT);
+int number(const P& pos,
+           const Clr clr,
+           const int MIN,
+           const int MAX_NR_DIGITS,
+           const int DEFAULT,
+           const bool CANCEL_RETURNS_DEFAULT);
 
-} //Query
+} //query
 
 #endif

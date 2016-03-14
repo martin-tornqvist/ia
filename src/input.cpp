@@ -634,16 +634,19 @@ void handle_map_mode_key_press(const Key_data& d)
                 {
                     msg_log::add("Which direction?" + cancel_info_str);
                     render::draw_map_and_interface();
-                    const Dir dir = query::dir();
+
+                    const Dir input_dir = query::dir(Allow_center::no);
+
                     msg_log::clear();
 
-                    if (dir == Dir::center)
+                    if (input_dir == Dir::END || input_dir == Dir::center)
                     {
+                        //Invalid direction
                         render::update_screen();
                     }
-                    else
+                    else //Valid direction
                     {
-                        map::player->set_quick_move(dir);
+                        map::player->set_quick_move(input_dir);
                     }
 
                 }
