@@ -2272,7 +2272,7 @@ void init_data_list()
     d.dmg_melee = 2;
     d.ability_vals.set_val(Ability_id::melee, 35);
     d.natural_props[size_t(Prop_id::infravis)] = true;
-    d.spawn_min_dlvl = 3;
+    d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
     d.group_size = Mon_group_size::swarm;
     d.actor_size = Actor_size::floor;
