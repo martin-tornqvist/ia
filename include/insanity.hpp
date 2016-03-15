@@ -35,7 +35,6 @@ enum class Ins_sympt_id
 enum class Ins_sympt_type
 {
     phobia,
-    obsess,
     misc
 };
 
@@ -58,7 +57,7 @@ public:
 
     virtual bool is_permanent() const = 0;
 
-    virtual bool allow_gain() const
+    virtual bool is_allowed() const
     {
         return true;
     }
@@ -71,6 +70,8 @@ public:
     {
         (void)seen_foes;
     }
+
+    virtual void on_permanent_rfear() {}
 
     virtual std::string char_descr_msg() const
     {
@@ -122,7 +123,7 @@ public:
         return false;
     }
 
-    bool allow_gain() const override;
+    bool is_allowed() const override;
 
 protected:
     void on_start_hook() override;
@@ -203,7 +204,7 @@ public:
         return false;
     }
 
-    bool allow_gain() const override;
+    bool is_allowed() const override;
 
 protected:
     void on_start_hook() override;
@@ -287,7 +288,9 @@ public:
 
     void on_new_player_turn(const std::vector<Actor*>& seen_foes) override;
 
-    bool allow_gain() const override;
+    void on_permanent_rfear() override;
+
+    bool is_allowed() const override;
 
     std::string char_descr_msg() const override
     {
@@ -349,7 +352,9 @@ public:
 
     void on_new_player_turn(const std::vector<Actor*>& seen_foes) override;
 
-    bool allow_gain() const override;
+    void on_permanent_rfear() override;
+
+    bool is_allowed() const override;
 
     std::string char_descr_msg() const override
     {
@@ -411,7 +416,9 @@ public:
 
     void on_new_player_turn(const std::vector<Actor*>& seen_foes) override;
 
-    bool allow_gain() const override;
+    void on_permanent_rfear() override;
+
+    bool is_allowed() const override;
 
     std::string char_descr_msg() const override
     {
@@ -473,7 +480,9 @@ public:
 
     void on_new_player_turn(const std::vector<Actor*>& seen_foes) override;
 
-    bool allow_gain() const override;
+    void on_permanent_rfear() override;
+
+    bool is_allowed() const override;
 
     std::string char_descr_msg() const override
     {
@@ -535,7 +544,9 @@ public:
 
     void on_new_player_turn(const std::vector<Actor*>& seen_foes) override;
 
-    bool allow_gain() const override;
+    void on_permanent_rfear() override;
+
+    bool is_allowed() const override;
 
     std::string char_descr_msg() const override
     {
@@ -597,7 +608,9 @@ public:
 
     void on_new_player_turn(const std::vector<Actor*>& seen_foes) override;
 
-    bool allow_gain() const override;
+    void on_permanent_rfear() override;
+
+    bool is_allowed() const override;
 
     std::string char_descr_msg() const override
     {
@@ -659,7 +672,9 @@ public:
 
     void on_new_player_turn(const std::vector<Actor*>& seen_foes) override;
 
-    bool allow_gain() const override;
+    void on_permanent_rfear() override;
+
+    bool is_allowed() const override;
 
     std::string char_descr_msg() const override
     {
@@ -721,7 +736,9 @@ public:
 
     void on_new_player_turn(const std::vector<Actor*>& seen_foes) override;
 
-    bool allow_gain() const override;
+    void on_permanent_rfear() override;
+
+    bool is_allowed() const override;
 
     std::string char_descr_msg() const override
     {
@@ -783,7 +800,9 @@ public:
 
     void on_new_player_turn(const std::vector<Actor*>& seen_foes) override;
 
-    bool allow_gain() const override;
+    void on_permanent_rfear() override;
+
+    bool is_allowed() const override;
 
     std::string char_descr_msg() const override
     {
@@ -835,7 +854,7 @@ public:
 
     Ins_sympt_type type() const override
     {
-        return Ins_sympt_type::obsess;
+        return Ins_sympt_type::misc;
     }
 
     bool is_permanent() const override
@@ -843,7 +862,7 @@ public:
         return true;
     }
 
-    bool allow_gain() const override;
+    bool is_allowed() const override;
 
     std::string char_descr_msg() const override
     {
@@ -897,7 +916,7 @@ public:
 
     Ins_sympt_type type() const override
     {
-        return Ins_sympt_type::obsess;
+        return Ins_sympt_type::misc;
     }
 
     bool is_permanent() const override
@@ -905,7 +924,7 @@ public:
         return true;
     }
 
-    bool allow_gain() const override;
+    bool is_allowed() const override;
 
     std::string char_descr_msg() const override
     {
@@ -1047,7 +1066,7 @@ public:
         return false;
     }
 
-    bool allow_gain() const override;
+    bool is_allowed() const override;
 
 protected:
     void on_start_hook() override;
@@ -1090,7 +1109,7 @@ public:
         return false;
     }
 
-    bool allow_gain() const override;
+    bool is_allowed() const override;
 
 protected:
     void on_start_hook() override;
@@ -1158,7 +1177,7 @@ void cleanup();
 void save();
 void load();
 
-void gain_sympt();
+void run_sympt();
 
 bool has_sympt(const Ins_sympt_id id);
 
@@ -1167,6 +1186,8 @@ bool has_sympt_type(const Ins_sympt_type type);
 std::vector<const Ins_sympt*> active_sympts();
 
 void on_new_player_turn(const std::vector<Actor*>& seen_foes);
+
+void on_permanent_rfear();
 
 void end_sympt(const Ins_sympt_id id);
 

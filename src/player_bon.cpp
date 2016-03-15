@@ -1021,8 +1021,10 @@ void pick_trait(const Trait id)
     case Trait::stout_spirit:
         map::player->change_max_spi(2, Verbosity::silent);
 
-        map::player->prop_handler().try_add(
-            new Prop_rSpell(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
+        map::player->prop_handler().try_add(new Prop_rSpell(Prop_turns::indefinite),
+                                            Prop_src::intr,
+                                            true,
+                                            Verbosity::silent);
         break;
 
     case Trait::strong_spirit:
@@ -1034,23 +1036,31 @@ void pick_trait(const Trait id)
         break;
 
     case Trait::self_aware:
-        map::player->prop_handler().try_add(
-            new Prop_rConf(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
+        map::player->prop_handler().try_add(new Prop_rConf(Prop_turns::indefinite),
+                                            Prop_src::intr,
+                                            true,
+                                            Verbosity::silent);
         break;
 
     case Trait::survivalist:
-        map::player->prop_handler().try_add(
-            new Prop_rDisease(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
+        map::player->prop_handler().try_add(new Prop_rDisease(Prop_turns::indefinite),
+                                            Prop_src::intr,
+                                            true,
+                                            Verbosity::silent);
         break;
 
     case Trait::fearless:
-        map::player->prop_handler().try_add(
-            new Prop_rFear(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
+        map::player->prop_handler().try_add(new Prop_rFear(Prop_turns::indefinite),
+                                            Prop_src::intr,
+                                            true,
+                                            Verbosity::silent);
         break;
 
     case Trait::toxic:
-        map::player->prop_handler().try_add(
-            new Prop_rPoison(Prop_turns::indefinite), Prop_src::intr, true, Verbosity::silent);
+        map::player->prop_handler().try_add(new Prop_rPoison(Prop_turns::indefinite),
+                                            Prop_src::intr,
+                                            true,
+                                            Verbosity::silent);
 
     default:
         break;

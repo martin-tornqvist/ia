@@ -583,7 +583,7 @@ void Player::incr_insanity()
     }
 
     //This point reached means sanity is below 100%
-    insanity::gain_sympt();
+    insanity::run_sympt();
 
     restore_shock(70, false);
 

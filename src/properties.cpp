@@ -2535,6 +2535,11 @@ bool Prop_rFear::is_resisting_other_prop(const Prop_id prop_id) const
 void Prop_rFear::on_start()
 {
     owning_actor_->prop_handler().end_prop(Prop_id::terrified);
+
+    if (turns_init_type_ == Prop_turns::indefinite)
+    {
+        insanity::on_permanent_rfear();
+    }
 }
 
 bool Prop_rPhys::is_resisting_other_prop(const Prop_id prop_id) const
