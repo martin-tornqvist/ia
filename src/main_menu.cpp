@@ -352,7 +352,7 @@ void draw(const Menu_browser& browser)
         }
     }
 
-    render::draw_text_center(version_str + " - " + __DATE__ + " (c) 2011-2015 Martin Tornqvist",
+    render::draw_text_center(version_str + " - " + __DATE__ + " (c) 2011-2016 Martin Tornqvist",
                              Panel::screen,
                              P(MAP_W_HALF, SCREEN_H - 1),
                              clr_gray_drk);
