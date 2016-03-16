@@ -2146,7 +2146,7 @@ void Floating_head::mk_start_items()
 
 Did_action Floating_head::on_act()
 {
-    if (is_alive() && rnd::one_in(12))
+    if (is_alive() && rnd::one_in(8))
     {
         bool blocked_los[MAP_W][MAP_H];
 

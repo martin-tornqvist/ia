@@ -608,10 +608,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
         {
             if (att_data.att_result == fail_critical)
             {
-                msg_log::add("I botch the attack completely!",
-                             clr_msg_note,
-                             true,
-                             More_prompt_on_msg::yes);
+                msg_log::add("I botch the attack completely!");
 
                 sfx = Sfx_id::END;
             }
@@ -1556,7 +1553,7 @@ void melee(Actor* const attacker,
     {
         Player& player = *map::player;
 
-        const int ROLL = rnd::range(1, 7);
+        const int ROLL = rnd::range(1, 9);
 
         switch (ROLL)
         {
@@ -1599,8 +1596,14 @@ void melee(Actor* const attacker,
         //Drop weaon
         case 3:
         {
-            //Only drop weapon if attacking with wielded weapon (and not e.g. a Kick)
-            if (player.inv().item_in_slot(Slot_id::wpn) == &wpn)
+            //Only drop weapon if:
+            // * Player is Cursed, and
+            // * Random roll succeeds (we don't want this to happen too often), and
+            // * Player is attacking with wielded weapon (and not e.g. a Kick)
+            if (
+                player.has_prop(Prop_id::cursed)    &&
+                rnd::coin_toss()                    &&
+                player.inv().item_in_slot(Slot_id::wpn) == &wpn)
             {
                 Item* item = player.inv().remove_from_slot(Slot_id::wpn);
 
@@ -1661,10 +1664,12 @@ void melee(Actor* const attacker,
         case 4:
         {
             //Only break weapon if:
-            //* Player is Cursed, and
-            //* Player is attacking with wielded weapon (and not e.g. a Kick)
+            // * Player is Cursed, and
+            // * Random roll succeeds (we really don't want this to happen often), and
+            // * Player is attacking with wielded weapon (and not e.g. a Kick)
             if (
-                player.has_prop(Prop_id::cursed) &&
+                player.has_prop(Prop_id::cursed)    &&
+                rnd::one_in(4)                      &&
                 player.inv().item_in_slot(Slot_id::wpn) == &wpn)
             {
                 Item* item = player.inv().remove_from_slot(Slot_id::wpn);
@@ -1684,7 +1689,7 @@ void melee(Actor* const attacker,
         }
         break;
 
-        //5 to 7 = Nothing happens
+        //Nothing happens
         default:
             break;
         }

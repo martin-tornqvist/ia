@@ -192,4 +192,4 @@ Item* drop_item_on_map(const P& intended_pos, Item& item)
     return nullptr;
 }
 
-} //Item_drop
+} //item_drop

@@ -1111,7 +1111,7 @@ void handle_map_mode_key_press(const Key_data& d)
     //----------------------------------- PROPERTY
     else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F8)
     {
-        map::player->prop_handler().try_add(new Prop_wound(Prop_turns::indefinite));
+        map::player->prop_handler().try_add(new Prop_cursed(Prop_turns::indefinite));
         clear_events();
 
         return;
