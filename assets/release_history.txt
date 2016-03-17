@@ -1,4 +1,30 @@
 --------------------------------------------------------------
+v18.1 (Mars 17, 2016)
+--------------------------------------------------------------
+Gameplay
+* Worms Masses may now only split once (i.e. the split worms may not also split themselves), they do not split if they are killed with enough damage, they are not allowed to attack immediately after being split, and the confusion effect from Mind Worm bites has a much shorter duration. However, Worms now move at normal speed (instead of slow).
+* Gas Mask and Asbestos Suit now protects against blindness from Ravens, Spitting Cobras, and Dust Vortexes
+* Vortex monsters no longer “explode” when they die
+* Oozes can no longer regenerate HP while burning
+* There is now much smaller chance of gaining multiple phobias, and you can never become both sadistic and masochistic at the same time
+* Picking the Fearless trait immediately ends all active phobias
+* When bashing or eating multiple corpses in the same cell, Zombie-type monsters are now prioritized (since you want to destroy them as soon as possible before they rise)
+* You can now also kick in your own cell (“w”, then “5” or “.”) - to destroy corpses you’re standing on
+* You are no longer “telepathically”aware of where all allied monsters are - if they are out of sight or invisible, you can lose awareness of them
+* You can now only accidentally drop your melee weapon during combat if you are Cursed
+
+Interface
+* Spells in the casting menu now appear in the order that you learned the spells (instead of alphabetically)
+* On turns that you can walk for free due to Dextrous, the “T” is now colored green instead of the number (to be less distracting)
+* Removed the “icon mode” which used a heart, brain, stopwatch etc as symbols in the user interface
+* The message “I stop waiting” is no longer printed when fainting or paralyzed
+
+Bug fixes
+* Fixed some bugs in the monster movement AI (it wasn’t anything critical, but it made them act a bit weird in a few specific situations)
+* Fixed a faulty message when pressing “t” with no item selected for throwing (the message adviced to press “w” to wield a throwing weapon, but the actual key should be “i”)
+* Property messages such as “...is paralyzed” is no longer allowed for dead monsters
+
+--------------------------------------------------------------
 v18.0 (January 28, 2016)
 --------------------------------------------------------------
 Gameplay

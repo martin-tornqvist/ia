@@ -5,7 +5,7 @@
 
 const size_t PLAYER_NAME_MAX_LEN = 14;
 
-const std::string version_str = "v18.0";
+const std::string version_str = "v18.1";
 
 const std::string tiles_img_name            = "images/gfx_16x24.png";
 const std::string main_menu_logo_img_name   = "images/main_menu_logo.png";
