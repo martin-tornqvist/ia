@@ -3,7 +3,6 @@
 
 #include <vector>
 
-#include "cmn_types.hpp"
 #include "config.hpp"
 #include "feature_data.hpp"
 

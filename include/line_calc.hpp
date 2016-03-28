@@ -3,8 +3,7 @@
 
 #include <vector>
 
-#include "cmn_data.hpp"
-#include "cmn_types.hpp"
+#include "rl_utils.hpp"
 
 namespace line_calc
 {

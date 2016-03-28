@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <vector>
 
+#include "init.hpp"
 #include "actor_player.hpp"
 #include "render.hpp"
 #include "game_time.hpp"
@@ -11,7 +12,6 @@
 #include "inventory.hpp"
 #include "map.hpp"
 #include "audio.hpp"
-#include "utils.hpp"
 #include "feature_rigid.hpp"
 #include "actor_factory.hpp"
 #include "save_handling.hpp"
@@ -274,7 +274,7 @@ Consume_item Device_shockwave::trigger_effect()
         {
             const P& other_pos = actor->pos;
 
-            if (utils::is_pos_adj(player_pos, other_pos, false))
+            if (is_pos_adj(player_pos, other_pos, false))
             {
                 actor->hit(rnd::dice(1, 8), Dmg_type::physical);
 

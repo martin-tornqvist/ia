@@ -4,9 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "converters.hpp"
 #include "ability_values.hpp"
-#include "cmn_data.hpp"
+#include "cmn.hpp"
 #include "properties.hpp"
 #include "audio.hpp"
 #include "room.hpp"

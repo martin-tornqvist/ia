@@ -10,7 +10,6 @@
 #include "inventory.hpp"
 #include "player_spells_handling.hpp"
 #include "render.hpp"
-#include "utils.hpp"
 #include "item_factory.hpp"
 #include "save_handling.hpp"
 #include "dungeon_master.hpp"
@@ -176,11 +175,11 @@ void init()
     false_names_.push_back("Cruensseasrjit");
     false_names_.push_back("Rudsceleratus");
     false_names_.push_back("Rudminuox");
-    false_names_.push_back("Cruo-stragara_na");
-    false_names_.push_back("Praya_navita");
-    false_names_.push_back("Pretiacruento");
-    false_names_.push_back("Pestis cruento");
-    false_names_.push_back("Cruento pestis");
+    false_names_.push_back("Cruo stragara-na");
+    false_names_.push_back("Praya navita");
+    false_names_.push_back("Pretia Cruento");
+    false_names_.push_back("Pestis Cruento");
+    false_names_.push_back("Cruento Pestis");
     false_names_.push_back("Domus-bhaava");
     false_names_.push_back("Acerbus-shatruex");
     false_names_.push_back("Pretaanluxis");

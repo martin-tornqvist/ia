@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "colors.hpp"
-#include "converters.hpp"
-#include "cmn_types.hpp"
+#include "rl_utils.hpp"
+#include "cmn.hpp"
 
 class Msg
 {
@@ -34,7 +34,7 @@ public:
 
     void incr_repeat()
     {
-        nr_++;
+        ++nr_;
         repeats_str_ = "(x" + to_str(nr_) + ")";
     }
 

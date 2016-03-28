@@ -13,7 +13,6 @@
 #include "map_parsing.hpp"
 #include "actor.hpp"
 #include "actor_player.hpp"
-#include "utils.hpp"
 #include "msg_log.hpp"
 #include "line_calc.hpp"
 #include "render.hpp"
@@ -265,7 +264,7 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
     verb_player_attacks (wpn.data().ranged.att_msgs.player),
     verb_other_attacks  (wpn.data().ranged.att_msgs.other)
 {
-    Actor* const actor_aimed_at = utils::actor_at_pos(aim_pos);
+    Actor* const actor_aimed_at = map::actor_at_pos(aim_pos);
 
     //If aim level parameter not given, determine intended aim level now
     if (aim_lvl == Actor_size::none)
@@ -288,7 +287,7 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
         intended_aim_lvl = aim_lvl;
     }
 
-    defender = utils::actor_at_pos(cur_pos);
+    defender = map::actor_at_pos(cur_pos);
 
     if (defender)
     {
@@ -302,7 +301,7 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
 
         const int WPN_MOD       = wpn.data().ranged.hit_chance_mod;
 
-        const int DIST_TO_TGT   = utils::king_dist(attacker_orign, def_pos);
+        const int DIST_TO_TGT   = king_dist(attacker_orign, def_pos);
 
         const int DIST_MOD      = 15 - (DIST_TO_TGT * 5);
 
@@ -337,7 +336,7 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
                                   SIZE_MOD          +
                                   unaware_def_mod);
 
-        utils::set_constr_in_range(5, hit_chance_tot, 99);
+        set_constr_in_range(5, hit_chance_tot, 99);
 
         att_result = ability_roll::roll(hit_chance_tot, attacker);
 
@@ -394,7 +393,7 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
     intended_aim_lvl    (Actor_size::none),
     defender_size       (Actor_size::none)
 {
-    Actor* const actor_aimed_at = utils::actor_at_pos(aim_pos);
+    Actor* const actor_aimed_at = map::actor_at_pos(aim_pos);
 
     //If aim level parameter not given, determine intended aim level now
     if (aim_lvl == Actor_size::none)
@@ -417,7 +416,7 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
         intended_aim_lvl = aim_lvl;
     }
 
-    defender = utils::actor_at_pos(cur_pos);
+    defender = map::actor_at_pos(cur_pos);
 
     if (defender)
     {
@@ -432,7 +431,7 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
         const P&          att_pos(attacker->pos);
         const P&          def_pos(defender->pos);
 
-        const int DIST_TO_TGT = utils::king_dist(att_pos.x, att_pos.y, def_pos.x, def_pos.y);
+        const int DIST_TO_TGT = king_dist(att_pos.x, att_pos.y, def_pos.x, def_pos.y);
 
         const int           DIST_MOD        = 15 - (DIST_TO_TGT * 5);
         const Actor_speed   def_speed       = defender_data.speed;
@@ -995,7 +994,7 @@ void projectile_fire(Actor* const attacker, const P& origin, const P& aim_pos, W
     const bool LEAVE_TRAIL = wpn.data().ranged.projectile_leaves_trail;
 
     const int SIZE_OF_PATH_PLUS_ONE =
-        path.size() + (NR_PROJECTILES - 1) * NR_CELL_JUMPS_BETWEEN_MG_PROJECTILES;
+        path.size() + (NR_PROJECTILES - 1) * NR_CELL_JUMPS_MG_PROJECTILES;
 
     for (int i = 1; i < SIZE_OF_PATH_PLUS_ONE; ++i)
     {
@@ -1003,7 +1002,7 @@ void projectile_fire(Actor* const attacker, const P& origin, const P& aim_pos, W
         {
             //Current projectile's place in the path is the current global place (i)
             //minus a certain number of elements
-            int path_element = i - (p_cnt * NR_CELL_JUMPS_BETWEEN_MG_PROJECTILES);
+            int path_element = i - (p_cnt * NR_CELL_JUMPS_MG_PROJECTILES);
 
             //Emit sound
             if (path_element == 1)
@@ -1316,7 +1315,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
     map_parse::run(cell_check::Blocks_projectiles(), feature_blockers);
 
     Actor* actor_array[MAP_W][MAP_H];
-    utils::mk_actor_array(actor_array);
+    map::mk_actor_array(actor_array);
 
     const P origin = attacker.pos;
     std::vector<P> path;

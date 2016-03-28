@@ -3,7 +3,8 @@
 #include <math.h>
 #include <vector>
 
-#include "utils.hpp"
+#include "cmn.hpp"
+#include "map.hpp"
 
 namespace line_calc
 {
@@ -117,7 +118,7 @@ void calc_new_line(const P& origin,
 
         cur_pos.set(floor(cur_x_db), floor(cur_y_db));
 
-        if (!ALLOW_OUTSIDE_MAP && !utils::is_pos_inside_map(cur_pos))
+        if (!ALLOW_OUTSIDE_MAP && !map::is_pos_inside_map(cur_pos))
         {
             return;
         }
@@ -144,7 +145,7 @@ void calc_new_line(const P& origin,
             return;
         }
 
-        const int DISTANCE_TRAVELED = utils::king_dist(origin.x, origin.y, cur_pos.x, cur_pos.y);
+        const int DISTANCE_TRAVELED = king_dist(origin.x, origin.y, cur_pos.x, cur_pos.y);
 
         if (DISTANCE_TRAVELED >= CHEB_TRAVEL_LIMIT)
         {

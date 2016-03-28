@@ -5,7 +5,6 @@
 #include "ability_values.hpp"
 #include "art.hpp"
 #include "feature_rigid.hpp"
-#include "cmn_data.hpp"
 
 class Trap_impl;
 

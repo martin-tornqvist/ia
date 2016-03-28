@@ -7,7 +7,6 @@
 #include "game_time.hpp"
 #include "player_bon.hpp"
 #include "explosion.hpp"
-#include "utils.hpp"
 #include "map.hpp"
 #include "feature_rigid.hpp"
 #include "fov.hpp"
@@ -19,7 +18,7 @@
 //------------------------------------------------------------------- SMOKE
 void Smoke::on_new_turn()
 {
-    auto* actor = utils::actor_at_pos(pos_);
+    auto* actor = map::actor_at_pos(pos_);
 
     if (actor)
     {

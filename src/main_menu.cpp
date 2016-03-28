@@ -16,7 +16,6 @@
 #include "map_travel.hpp"
 #include "actor.hpp"
 #include "actor_player.hpp"
-#include "utils.hpp"
 #include "map.hpp"
 
 
@@ -253,7 +252,7 @@ void draw(const Menu_browser& browser)
 
                     clr.g += rnd::range(-50, 100);
 
-                    utils::constr_in_range(0, int(clr.g), 254);
+                    constr_in_range(0, int(clr.g), 254);
 
                     render::draw_glyph(glyph, Panel::screen, pos, clr);
                 }

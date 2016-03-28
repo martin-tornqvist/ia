@@ -4,7 +4,7 @@
 #include <math.h>
 
 #include "actor.hpp"
-#include "cmn_data.hpp"
+#include "cmn.hpp"
 #include "insanity.hpp"
 
 enum class Phobia

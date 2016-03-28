@@ -1,8 +1,8 @@
 #ifndef FOV_H
 #define FOV_H
 
-#include "cmn_data.hpp"
-#include "cmn_types.hpp"
+#include "rl_utils.hpp"
+#include "cmn.hpp"
 
 struct Los_result
 {

@@ -9,7 +9,6 @@
 #include "msg_log.hpp"
 #include "query.hpp"
 #include "render.hpp"
-#include "utils.hpp"
 
 namespace close_door
 {

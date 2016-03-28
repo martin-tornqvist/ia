@@ -20,7 +20,6 @@
 #include "line_calc.hpp"
 #include "sdl_wrapper.hpp"
 #include "player_bon.hpp"
-#include "utils.hpp"
 #include "dungeon_master.hpp"
 
 namespace
@@ -404,7 +403,7 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
         return Spell_effect_noticed::no;
     }
 
-    tgt = utils::random_closest_actor(caster->pos, seen_actors);
+    tgt = map::random_closest_actor(caster->pos, seen_actors);
 
     //Spell reflection?
     if (tgt->has_prop(Prop_id::spell_reflect))
@@ -1411,7 +1410,7 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
     {
         //No free cells seen by player, instead summon near the caster.
         std::vector<P> free_cells_vector;
-        utils::mk_vector_from_bool_map(false, blocked, free_cells_vector);
+        to_vec((bool*)blocked, false, MAP_W, MAP_H, free_cells_vector);
 
         if (!free_cells_vector.empty())
         {

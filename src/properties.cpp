@@ -15,7 +15,6 @@
 #include "map_parsing.hpp"
 #include "line_calc.hpp"
 #include "actor_factory.hpp"
-#include "utils.hpp"
 #include "feature_rigid.hpp"
 #include "feature_mob.hpp"
 #include "item.hpp"

@@ -10,9 +10,6 @@
 #include "player_bon.hpp"
 #include "render.hpp"
 #include "map_parsing.hpp"
-#include "utils.hpp"
-
-using namespace std;
 
 //---------------------------------------------------INHERITED FUNCTIONS
 Door::Door(const P& feature_pos, const Rigid* const mimic_feature,
@@ -133,7 +130,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                     {
                         if (map::is_pos_seen_by_player(pos_))
                         {
-                            const string a = is_secret_ ? "A" : "The";
+                            const std::string a = is_secret_ ? "A" : "The";
                             msg_log::add(a + " door is blown to splinters!");
                         }
 
@@ -174,17 +171,17 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                 {
                     if (player_bon::traits[size_t(Trait::tough)])
                     {
-                        destr_chance.numerator += 2;
+                        destr_chance.num += 2;
                     }
 
                     if (player_bon::traits[size_t(Trait::rugged)])
                     {
-                        destr_chance.numerator += 2;
+                        destr_chance.num += 2;
                     }
 
                     if (player_bon::traits[size_t(Trait::unbreakable)])
                     {
-                        destr_chance.numerator += 2;
+                        destr_chance.num += 2;
                     }
 
                     if (destr_chance.roll())
@@ -228,38 +225,37 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                 {
                     Fraction destr_chance(4 - nr_spikes_, 10);
 
-                    destr_chance.numerator = max(1, destr_chance.numerator);
+                    destr_chance.num = std::max(1, destr_chance.num);
 
                     if (player_bon::traits[size_t(Trait::tough)])
                     {
-                        destr_chance.numerator += 2;
+                        destr_chance.num += 2;
                     }
 
                     if (player_bon::traits[size_t(Trait::rugged)])
                     {
-                        destr_chance.numerator += 2;
+                        destr_chance.num += 2;
                     }
 
                     if (player_bon::traits[size_t(Trait::unbreakable)])
                     {
-                        destr_chance.numerator += 2;
+                        destr_chance.num += 2;
                     }
 
                     if (actor->has_prop(Prop_id::frenzied))
                     {
-                        destr_chance.numerator += 4;
+                        destr_chance.num += 4;
                     }
 
                     if (IS_WEAK)
                     {
-                        destr_chance.numerator = 0;
+                        destr_chance.num = 0;
                     }
 
                     //Cap numerator to denominator
-                    destr_chance.numerator =
-                        std::min(destr_chance.numerator, destr_chance.denominator);
+                    destr_chance.num = std::min(destr_chance.num, destr_chance.den);
 
-                    if (destr_chance.numerator > 0)
+                    if (destr_chance.num > 0)
                     {
                         if (destr_chance.roll())
                         {
@@ -331,11 +327,11 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                 {
                     Fraction destr_chance(10 - (nr_spikes_ * 3), 100);
 
-                    destr_chance.numerator = max(1, destr_chance.numerator);
+                    destr_chance.num = std::max(1, destr_chance.num);
 
                     if (IS_WEAK)
                     {
-                        destr_chance.numerator = 0;
+                        destr_chance.num = 0;
                     }
 
                     if (destr_chance.roll())
@@ -435,7 +431,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 //    }
 //
 //    if(IS_DOOR_SMASHED) {
-//      TRACE << "Bash successful" << endl;
+//      TRACE << "Bash successful" << std::endl;
 //      const bool IS_SECRET_BEFORE = is_secret_;
 //      is_stuck_  = false;
 //      is_secret_ = false;
@@ -534,14 +530,14 @@ bool Door::is_smoke_passable() const
 }
 
 
-string Door::name(const Article article) const
+std::string Door::name(const Article article) const
 {
     if (is_secret_)
     {
         return mimic_feature_->name(article);
     }
 
-    string ret = "";
+    std::string ret = "";
 
     if (burn_state() == Burn_state::burning)
     {
@@ -617,12 +613,12 @@ void Door::bump(Actor& actor_bumping)
 
             if (map::cells[pos_.x][pos_.y].is_seen_by_player)
             {
-                TRACE << "Player bumped into secret door, with vision in cell" << endl;
+                TRACE << "Player bumped into secret door, with vision in cell" << std::endl;
                 msg_log::add(feature_data::data(Feature_id::wall).msg_on_player_blocked);
             }
             else //Not seen by player
             {
-                TRACE << "Player bumped into secret door, without vision in cell" << endl;
+                TRACE << "Player bumped into secret door, without vision in cell" << std::endl;
                 msg_log::add(feature_data::data(Feature_id::wall).msg_on_player_blocked_blind);
             }
 
@@ -872,7 +868,7 @@ void Door::try_open(Actor* actor_trying)
 
     if (is_stuck_)
     {
-        TRACE << "Is stuck" << endl;
+        TRACE << "Is stuck" << std::endl;
 
         if (IS_PLAYER)
         {
@@ -882,13 +878,13 @@ void Door::try_open(Actor* actor_trying)
     }
     else //Not stuck
     {
-        TRACE << "Is not stuck" << endl;
+        TRACE << "Is not stuck" << std::endl;
 
         const bool TRYER_CAN_SEE = actor_trying->prop_handler().allow_see();
 
         if (TRYER_CAN_SEE)
         {
-            TRACE << "Tryer can see, opening" << endl;
+            TRACE << "Tryer can see, opening" << std::endl;
             is_open_ = true;
 
             if (IS_PLAYER)
@@ -930,7 +926,7 @@ void Door::try_open(Actor* actor_trying)
         {
             if (rnd::percent() < 50)
             {
-                TRACE << "Tryer is blind, but open succeeded anyway" << endl;
+                TRACE << "Tryer is blind, but open succeeded anyway" << std::endl;
                 is_open_ = true;
 
                 if (IS_PLAYER)
@@ -972,7 +968,7 @@ void Door::try_open(Actor* actor_trying)
             }
             else //Failed to open
             {
-                TRACE << "Tryer is blind, and open failed" << endl;
+                TRACE << "Tryer is blind, and open failed" << std::endl;
 
                 if (IS_PLAYER)
                 {
@@ -1016,15 +1012,15 @@ void Door::try_open(Actor* actor_trying)
 
     if (is_open_)
     {
-        TRACE << "Open was successful" << endl;
+        TRACE << "Open was successful" << std::endl;
 
         if (is_secret_)
         {
-            TRACE << "Was secret, now revealing" << endl;
+            TRACE << "Was secret, now revealing" << std::endl;
             reveal(true);
         }
 
-        TRACE << "Calling game_time::end_turn_of_cur_actor()" << endl;
+        TRACE << "Calling game_time::end_turn_of_cur_actor()" << std::endl;
         game_time::tick();
     }
 }

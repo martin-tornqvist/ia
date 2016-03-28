@@ -7,7 +7,6 @@
 #include "map.hpp"
 #include "game_time.hpp"
 #include "dungeon_master.hpp"
-#include "utils.hpp"
 #include "item_factory.hpp"
 #include "fov.hpp"
 #include "map_parsing.hpp"

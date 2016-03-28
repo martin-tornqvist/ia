@@ -19,7 +19,6 @@
 #include "highscore.hpp"
 #include "postmortem.hpp"
 #include "map.hpp"
-#include "utils.hpp"
 
 #ifdef _WIN32
 #undef main
@@ -133,7 +132,7 @@ int main(int argc, char* argv[])
                     {
                         if (actor->is_player())
                         {
-                            sdl_wrapper::sleep(MS_DELAY_PLAYER_UNABLE_TO_ACT);
+                            sdl_wrapper::sleep(MS_DELAY_PLAYER_UNABLE_ACT);
                         }
 
                         game_time::tick();

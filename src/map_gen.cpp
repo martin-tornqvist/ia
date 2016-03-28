@@ -17,11 +17,11 @@
 #include "map.hpp"
 #include "map_parsing.hpp"
 #include "render.hpp"
-#include "utils.hpp"
 #include "populate_monsters.hpp"
 #include "populate_traps.hpp"
 #include "populate_items.hpp"
 #include "gods.hpp"
+#include "rl_utils.hpp"
 
 #ifdef DEMO_MODE
 #include "render.hpp"
@@ -157,8 +157,8 @@ void connect_rooms()
         //Do not connect room 0 and 1 if another room (except for sub rooms) lies anywhere
         //in a rectangle defined by the two center points of those rooms.
         bool is_other_room_in_way = false;
-        const P c0(room0->r_.center_pos());
-        const P c1(room1->r_.center_pos());
+        const P c0(room0->r_.center());
+        const P c1(room1->r_.center());
         const int X0 = std::min(c0.x, c1.x);
         const int Y0 = std::min(c0.y, c1.y);
         const int X1 = std::max(c0.x, c1.x);
@@ -239,9 +239,9 @@ bool try_mk_aux_room(const P& p, const P& d, bool blocked[MAP_W][MAP_H], const P
     Rect aux_rect(p, p + d - 1);
     Rect aux_rect_with_border(aux_rect.p0 - 1, aux_rect.p1 + 1);
 
-    IA_ASSERT(utils::is_pos_inside(door_p, aux_rect_with_border));
+    IA_ASSERT(is_pos_inside(door_p, aux_rect_with_border));
 
-    if (utils::is_area_inside_map(aux_rect_with_border))
+    if (map::is_area_inside_map(aux_rect_with_border))
     {
         if (!map_parse::is_val_in_area(aux_rect_with_border, blocked))
         {
@@ -287,8 +287,22 @@ void mk_aux_rooms(Region regions[3][3])
     };
 
     bool floor_cells[MAP_W][MAP_H];
+
+    //TODO: It would be better with a parse predicate that checks for free cells immediately
+
+    //Get blocked cells
     map_parse::run(cell_check::Blocks_move_cmn(false), floor_cells);
-    utils::reverse_bool_array(floor_cells);
+
+    //Flip the values so that we get free cells
+    for (int x = 0; x < MAP_W; ++x)
+    {
+        for (int y = 0; y < MAP_H; ++y)
+        {
+            bool& v = floor_cells[x][y];
+
+            v = !v;
+        }
+    }
 
     for (int region_y = 0; region_y < 3; region_y++)
     {
@@ -529,7 +543,7 @@ void reserve_river(Region regions[3][3])
         breadth0    = C - RESERVED_PADDING;
         breadth1    = C + RESERVED_PADDING;
 
-        IA_ASSERT(utils::is_area_inside_other(room_rect, regions_tot_rect, true));
+        IA_ASSERT(is_area_inside(room_rect, regions_tot_rect, true));
 
         len0--; //Extend room rectangle to map edge
         len1++;
@@ -605,7 +619,7 @@ void place_door_at_pos_if_allowed(const P& p)
         {
             const P check_pos = p + P(dx, dy);
 
-            if ((dx != 0 || dy != 0) && utils::is_pos_inside_map(check_pos))
+            if ((dx != 0 || dy != 0) && map::is_pos_inside_map(check_pos))
             {
                 const Cell& cell = map::cells[check_pos.x][check_pos.y];
 
@@ -712,7 +726,7 @@ void mk_sub_rooms()
 
                                 const auto& f_id = map::cells[x][y].rigid->id();
 
-                                if (utils::is_pos_inside(p_check, outer_room_rect))
+                                if (is_pos_inside(p_check, outer_room_rect))
                                 {
                                     if (f_id != Feature_id::floor)
                                     {
@@ -807,7 +821,7 @@ void mk_sub_rooms()
 
                                 for (P& pos_with_door : positions_with_door)
                                 {
-                                    if (utils::is_pos_adj(pos_cand, pos_with_door, false))
+                                    if (is_pos_adj(pos_cand, pos_with_door, false))
                                     {
                                         is_pos_ok = false;
                                         break;
@@ -861,8 +875,15 @@ void fill_dead_ends()
 
     //Floodfill from origin, then sort the positions for flood value
     int flood_fill[MAP_W][MAP_H];
-    flood_fill::run(origin, blocked, flood_fill, INT_MAX, P(-1, -1), true);
-    std::vector<Pos_and_val> flood_fill_vector;
+
+    flood_fill::run(origin,
+                    blocked,
+                    flood_fill,
+                    INT_MAX,
+                    P(-1, -1),
+                    true);
+
+    std::vector<Pos_val> flood_fill_vector;
 
     for (int y = 1; y < MAP_H - 1; ++y)
     {
@@ -870,13 +891,13 @@ void fill_dead_ends()
         {
             if (!blocked[x][y])
             {
-                flood_fill_vector.push_back(Pos_and_val(P(x, y), flood_fill[x][y]));
+                flood_fill_vector.push_back(Pos_val(P(x, y), flood_fill[x][y]));
             }
         }
     }
 
     std::sort(flood_fill_vector.begin(), flood_fill_vector.end(),
-              [](const Pos_and_val & a, const Pos_and_val & b)
+              [](const Pos_val & a, const Pos_val & b)
     {
         return a.val < b.val;
     });
@@ -937,7 +958,7 @@ void decorate()
                     {
                         const P p_adj(P(x, y) + d);
 
-                        if (utils::is_pos_inside_map(p_adj))
+                        if (map::is_pos_inside_map(p_adj))
                         {
                             auto& adj_cell = map::cells[p_adj.x][p_adj.y];
 
@@ -1004,7 +1025,12 @@ void allowed_stair_cells(bool out[MAP_W][MAP_H])
     TRACE_FUNC_BEGIN;
 
     //Mark cells as free if all adjacent feature types are allowed
-    std::vector<Feature_id> feat_ids_ok {Feature_id::floor, Feature_id::carpet, Feature_id::grass};
+    std::vector<Feature_id> feat_ids_ok
+    {
+        Feature_id::floor,
+        Feature_id::carpet,
+        Feature_id::grass
+    };
 
     map_parse::run(cell_check::All_adj_is_any_of_features(feat_ids_ok), out);
 
@@ -1038,7 +1064,7 @@ P place_stairs()
     allowed_stair_cells(allowed_cells);
 
     std::vector<P> allowed_cells_list;
-    utils::mk_vector_from_bool_map(true, allowed_cells, allowed_cells_list);
+    to_vec((bool*)allowed_cells, true, MAP_W, MAP_H, allowed_cells_list);
 
     const int NR_OK_CELLS = allowed_cells_list.size();
 
@@ -1083,17 +1109,19 @@ void move_player_to_nearest_allowed_pos()
     allowed_stair_cells(allowed_cells);
 
     std::vector<P> allowed_cells_list;
-    utils::mk_vector_from_bool_map(true, allowed_cells, allowed_cells_list);
+    to_vec((bool*)allowed_cells, true, MAP_W, MAP_H, allowed_cells_list);
 
     if (allowed_cells_list.empty())
     {
         is_map_valid = false;
     }
-    else
+    else //Valid cells exists
     {
         TRACE << "Sorting the allowed cells vector "
               << "(" << allowed_cells_list.size() << " cells)" << std:: endl;
+
         Is_closer_to_pos is_closer_to_origin(map::player->pos);
+
         sort(allowed_cells_list.begin(), allowed_cells_list.end(), is_closer_to_origin);
 
         map::player->pos = allowed_cells_list.front();
@@ -1499,7 +1527,8 @@ bool mk_std_lvl()
     }
 
     map::room_list.clear();
-    utils::reset_array(map::room_map);
+
+    std::fill_n(*map::room_map, NR_MAP_CELLS, nullptr);
 
     TRACE_FUNC_END;
     return is_map_valid;

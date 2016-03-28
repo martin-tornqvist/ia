@@ -3,9 +3,7 @@
 
 #include <string>
 
-#include "cmn_data.hpp"
 #include "item_data.hpp"
-#include "cmn_types.hpp"
 
 class Actor;
 

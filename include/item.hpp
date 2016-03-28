@@ -3,8 +3,7 @@
 
 #include "art.hpp"
 #include "inventory_handling.hpp"
-#include "converters.hpp"
-#include "cmn_data.hpp"
+#include "rl_utils.hpp"
 
 class Item_data_t;
 class Prop;

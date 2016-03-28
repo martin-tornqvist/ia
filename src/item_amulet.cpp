@@ -3,7 +3,6 @@
 #include "item_amulet.hpp"
 
 #include "map.hpp"
-#include "utils.hpp"
 #include "msg_log.hpp"
 #include "game_time.hpp"
 #include "render.hpp"

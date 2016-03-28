@@ -1,9 +1,9 @@
 #include "room.hpp"
 
 #include <algorithm>
+#include <climits>
 
 #include "init.hpp"
-#include "utils.hpp"
 #include "map.hpp"
 #include "map_parsing.hpp"
 #include "feature_rigid.hpp"
@@ -249,7 +249,7 @@ void Std_room::on_post_connect(bool door_proposals[MAP_W][MAP_H])
 
     pct_chance_dark += map::dlvl; //Increase with higher dungeon level
 
-    utils::set_constr_in_range(0, pct_chance_dark, 100);
+    set_constr_in_range(0, pct_chance_dark, 100);
 
     if (rnd::percent() < pct_chance_dark)
     {
@@ -406,7 +406,7 @@ int Std_room::place_auto_features()
             //Erase all adjacent positions
             auto is_adj = [&](const P & p)
             {
-                return utils::is_pos_adj(p, pos, true);
+                return is_pos_adj(p, pos, true);
             };
             adj_to_walls   .erase(remove_if(begin(adj_to_walls),    end(adj_to_walls),    is_adj),
                                   end(adj_to_walls));
@@ -1220,14 +1220,13 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
     const bool IS_HOR = axis_ == Axis::hor;
 
     TRACE << "Finding room centers" << std::endl;
-    bool centers[MAP_W][MAP_H];
-    utils::reset_array(centers, false);
+    bool centers[MAP_W][MAP_H] = {};
 
     for (Room* const room : map::room_list)
     {
         if (room != this)
         {
-            const P c_pos(room->r_.center_pos());
+            const P c_pos(room->r_.center());
             centers[c_pos.x][c_pos.y] = true;
         }
     }
@@ -1322,8 +1321,15 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
     map_parse::expand(blocked, blocked_expanded);
 
     int flood[MAP_W][MAP_H];
-    const P origin(r_.center_pos());
-    flood_fill::run(origin, blocked_expanded, flood, INT_MAX, P(-1, -1), true);
+
+    const P origin(r_.center());
+
+    flood_fill::run(origin,
+                    blocked_expanded,
+                    flood,
+                    INT_MAX,
+                    P(-1, -1),
+                    true);
 
     for (int x = 0; x < MAP_W; ++x)
     {
@@ -1500,7 +1506,7 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
 
         for (int c_other : c_built)
         {
-            if (utils::is_val_in_range(BRIDGE_C, Range(c_other - MIN_D, c_other + MIN_D)))
+            if (is_val_in_range(BRIDGE_C, Range(c_other - MIN_D, c_other + MIN_D)))
             {
                 is_too_close_to_other_bridge = true;
                 break;

@@ -11,7 +11,6 @@
 #include "msg_log.hpp"
 #include "sdl_wrapper.hpp"
 #include "map.hpp"
-#include "utils.hpp"
 #include "create_character.hpp"
 #include "actor_mon.hpp"
 #include "save_handling.hpp"
@@ -291,7 +290,7 @@ void on_mon_seen(Actor& actor)
 
 void set_time_started_to_now()
 {
-    time_started_ = utils::cur_time();
+    time_started_ = cur_time();
 }
 
 void add_history_event(const std::string msg)

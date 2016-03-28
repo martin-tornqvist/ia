@@ -5,7 +5,6 @@
 
 #include "init.hpp"
 #include "input.hpp"
-#include "converters.hpp"
 #include "render.hpp"
 #include "query.hpp"
 #include "actor_player.hpp"

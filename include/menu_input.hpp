@@ -1,7 +1,8 @@
 #ifndef MENU_INPUT_H
 #define MENU_INPUT_H
 
-#include "cmn_types.hpp"
+#include "rl_utils.hpp"
+#include "cmn.hpp"
 
 class Menu_browser
 {

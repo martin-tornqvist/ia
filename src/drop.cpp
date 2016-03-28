@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <string>
 
-#include "cmn_types.hpp"
+#include "init.hpp"
 #include "game_time.hpp"
 #include "actor_player.hpp"
 #include "msg_log.hpp"
@@ -11,9 +11,9 @@
 #include "inventory.hpp"
 #include "item_factory.hpp"
 #include "map_parsing.hpp"
-#include "utils.hpp"
 #include "feature_rigid.hpp"
 #include "render.hpp"
+
 
 namespace item_drop
 {
@@ -131,7 +131,7 @@ Item* drop_item_on_map(const P& intended_pos, Item& item)
     }
 
     std::vector<P> free_cells;
-    utils::mk_vector_from_bool_map(true, free_cell_array, free_cells);
+    to_vec((bool*)free_cell_array, true, MAP_W, MAP_H, free_cells);
 
     //Sort the vector according to distance to origin
     Is_closer_to_pos is_closer_to_origin(intended_pos);

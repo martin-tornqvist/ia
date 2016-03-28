@@ -1,6 +1,5 @@
 #include "character_lines.hpp"
 
-#include "cmn_types.hpp"
 #include "game_time.hpp"
 #include "colors.hpp"
 #include "render.hpp"
@@ -15,7 +14,6 @@
 #include "text_format.hpp"
 #include "item.hpp"
 #include "item_device.hpp"
-#include "utils.hpp"
 
 namespace character_lines
 {

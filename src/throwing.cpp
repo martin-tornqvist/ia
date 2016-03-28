@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "init.hpp"
 #include "item.hpp"
 #include "item_potion.hpp"
 #include "actor_data.hpp"
@@ -16,7 +17,6 @@
 #include "attack.hpp"
 #include "line_calc.hpp"
 #include "player_bon.hpp"
-#include "utils.hpp"
 #include "sdl_wrapper.hpp"
 #include "feature_rigid.hpp"
 #include "feature_mob.hpp"
@@ -29,7 +29,13 @@ void player_throw_lit_explosive(const P& aim_cell)
     IA_ASSERT(map::player->active_explosive);
 
     std::vector<P> path;
-    line_calc::calc_new_line(map::player->pos, aim_cell, true, THROW_RANGE_LMT, false, path);
+
+    line_calc::calc_new_line(map::player->pos,
+                             aim_cell,
+                             true,
+                             THROW_RANGE_LMT,
+                             false,
+                             path);
 
     //Remove cells after blocked cells
     for (size_t i = 1; i < path.size(); ++i)
@@ -131,7 +137,7 @@ void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
 
         pos.set(path[i]);
 
-        Actor* const actor_here = utils::actor_at_pos(pos);
+        Actor* const actor_here = map::actor_at_pos(pos);
 
         if (
             actor_here &&

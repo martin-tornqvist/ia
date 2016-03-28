@@ -31,7 +31,6 @@
 #include "look.hpp"
 #include "attack.hpp"
 #include "throwing.hpp"
-#include "utils.hpp"
 
 namespace input
 {
@@ -369,7 +368,7 @@ void handle_map_mode_key_press(const Key_data& d)
                             msg_log::clear();
                             look::print_location_info_msgs(p);
 
-                            auto* const actor = utils::actor_at_pos(p);
+                            auto* const actor = map::actor_at_pos(p);
 
                             if (
                                 actor               &&
@@ -402,7 +401,7 @@ void handle_map_mode_key_press(const Key_data& d)
                                     msg_log::clear();
                                     render::draw_map_and_interface();
 
-                                    Actor* const actor = utils::actor_at_pos(p);
+                                    Actor* const actor = map::actor_at_pos(p);
 
                                     if (
                                         actor &&
@@ -732,7 +731,7 @@ void handle_map_mode_key_press(const Key_data& d)
                             msg_log::clear();
                             look::print_location_info_msgs(p);
 
-                            auto* const actor = utils::actor_at_pos(p);
+                            auto* const actor = map::actor_at_pos(p);
 
                             if (
                                 actor               &&
@@ -769,7 +768,7 @@ void handle_map_mode_key_press(const Key_data& d)
                                     msg_log::clear();
                                     render::draw_map_and_interface();
 
-                                    Actor* const actor = utils::actor_at_pos(p);
+                                    Actor* const actor = map::actor_at_pos(p);
 
                                     if (actor)
                                     {
@@ -826,7 +825,7 @@ void handle_map_mode_key_press(const Key_data& d)
                     msg_log::clear();
                     look::print_location_info_msgs(p);
 
-                    const auto* const actor = utils::actor_at_pos(p);
+                    const auto* const actor = map::actor_at_pos(p);
 
                     if (
                         actor                   &&
@@ -843,7 +842,7 @@ void handle_map_mode_key_press(const Key_data& d)
                 {
                     if (d_.key == 'v')
                     {
-                        const auto* const actor = utils::actor_at_pos(p);
+                        const auto* const actor = map::actor_at_pos(p);
 
                         if (
                             actor                   &&

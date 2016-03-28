@@ -13,7 +13,6 @@
 #include "render.hpp"
 #include "inventory.hpp"
 #include "map_parsing.hpp"
-#include "utils.hpp"
 #include "feature_rigid.hpp"
 #include "item_factory.hpp"
 #include "save_handling.hpp"

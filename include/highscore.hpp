@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 
-#include "cmn_data.hpp"
 #include "player_bon.hpp"
 
 class Highscore_entry

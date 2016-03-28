@@ -15,7 +15,6 @@
 #include "attack.hpp"
 #include "game_time.hpp"
 #include "render.hpp"
-#include "utils.hpp"
 #include "feature_mob.hpp"
 #include "feature_rigid.hpp"
 
@@ -248,7 +247,7 @@ void print_location_info_msgs(const P& pos)
     }
 
     //Describe living actor.
-    Actor* actor = utils::actor_at_pos(pos);
+    Actor* actor = map::actor_at_pos(pos);
 
     if (actor && !actor->is_player() && actor->is_alive() && map::player->can_see_actor(*actor))
     {

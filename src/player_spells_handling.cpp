@@ -13,7 +13,6 @@
 #include "item_factory.hpp"
 #include "player_bon.hpp"
 #include "query.hpp"
-#include "utils.hpp"
 #include "map.hpp"
 #include "save_handling.hpp"
 

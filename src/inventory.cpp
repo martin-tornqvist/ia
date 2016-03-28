@@ -15,7 +15,6 @@
 #include "dungeon_master.hpp"
 #include "player_bon.hpp"
 #include "map.hpp"
-#include "utils.hpp"
 #include "save_handling.hpp"
 
 Inventory::Inventory(Actor* const owning_actor) :
@@ -790,7 +789,7 @@ void Inventory::sort_backpack()
         {
             const Clr clr_cur_group = group[0]->interface_clr();
 
-            if (utils::is_clr_eq(item->interface_clr(), clr_cur_group))
+            if (is_clr_eq(item->interface_clr(), clr_cur_group))
             {
                 group.push_back(item);
                 is_added_to_buffer = true;

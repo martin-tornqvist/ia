@@ -1,7 +1,9 @@
 #ifndef LOOK_H
 #define LOOK_H
 
-#include "cmn_types.hpp"
+#include <string>
+
+#include "rl_utils.hpp"
 
 class Actor;
 class Item;

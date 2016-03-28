@@ -3,8 +3,6 @@
 
 #include <SDL.h>
 
-#include "cmn_data.hpp"
-
 struct Key_data
 {
     Key_data() :

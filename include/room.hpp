@@ -8,8 +8,8 @@
 #include <numeric>
 #endif
 
-#include "cmn_types.hpp"
-#include "cmn_data.hpp"
+#include "rl_utils.hpp"
+#include "cmn.hpp"
 
 //---------------------------------------------------------------------------------------
 // Room theming occurs both before and after rooms are connected (pre/post-connect).

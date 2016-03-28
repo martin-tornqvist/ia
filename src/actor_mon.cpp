@@ -14,7 +14,6 @@
 #include "properties.hpp"
 #include "render.hpp"
 #include "sound.hpp"
-#include "utils.hpp"
 #include "map.hpp"
 #include "msg_log.hpp"
 #include "map_parsing.hpp"
@@ -67,7 +66,7 @@ void Mon::act()
 {
 #ifndef NDEBUG
     //Sanity check - verify that monster is not outside the map
-    if (!utils::is_pos_inside_map(pos, false))
+    if (!map::is_pos_inside_map(pos, false))
     {
         TRACE << "Monster outside map" << std::endl;
         IA_ASSERT(false);
@@ -146,7 +145,7 @@ void Mon::act()
         }
     }
 
-    tgt_ = utils::random_closest_actor(pos, tgt_bucket);
+    tgt_ = map::random_closest_actor(pos, tgt_bucket);
 
     if (spell_cool_down_cur_ != 0)
     {
@@ -265,7 +264,7 @@ void Mon::act()
         erratic_move_pct *= 2;
     }
 
-    utils::set_constr_in_range(0, erratic_move_pct, 95);
+    set_constr_in_range(0, erratic_move_pct, 95);
 
     //Occasionally move erratically
     if (
@@ -445,7 +444,7 @@ void Mon::move(Dir dir)
         IA_ASSERT(false);
     }
 
-    if (!utils::is_pos_inside_map(pos, false))
+    if (!map::is_pos_inside_map(pos, false))
     {
         TRACE << "Monster outside map" << std::endl;
         IA_ASSERT(false);
@@ -478,7 +477,7 @@ void Mon::move(Dir dir)
 
     const P tgt_cell(pos + dir_utils::offset(dir));
 
-    if (dir != Dir::center && utils::is_pos_inside_map(tgt_cell, false))
+    if (dir != Dir::center && map::is_pos_inside_map(tgt_cell, false))
     {
         pos = tgt_cell;
 
@@ -607,13 +606,19 @@ bool Mon::try_attack(Actor& defender)
         if (rnd::fraction(4, 5))
         {
             std::vector<P> line;
-            line_calc::calc_new_line(pos, defender.pos, true, 9999, false, line);
+
+            line_calc::calc_new_line(pos,
+                                     defender.pos,
+                                     true,
+                                     9999,
+                                     false,
+                                     line);
 
             for (P& line_pos : line)
             {
                 if (line_pos != pos && line_pos != defender.pos)
                 {
-                    Actor* const actor_here = utils::actor_at_pos(line_pos);
+                    Actor* const actor_here = map::actor_at_pos(line_pos);
 
                     if (actor_here)
                     {
@@ -648,7 +653,7 @@ void Mon::avail_attacks(Actor& defender, Ai_avail_attacks_data& dst)
 {
     if (prop_handler_->allow_attack(Verbosity::silent))
     {
-        dst.is_melee = utils::is_pos_adj(pos, defender.pos, false);
+        dst.is_melee = is_pos_adj(pos, defender.pos, false);
 
         Wpn* wpn = nullptr;
         const size_t nr_intrinsics = inv_->intrinsics_size();
@@ -1009,7 +1014,7 @@ Did_action Vortex::on_act()
     const P& player_pos = map::player->pos;
 
     if (
-        !utils::is_pos_adj(pos, player_pos, true) &&
+        !is_pos_adj(pos, player_pos, true) &&
         rnd::one_in(3))
     {
         TRACE << "Vortex attempting to pull player" << std::endl;
@@ -1105,7 +1110,7 @@ Did_action Ghost::on_act()
     if (
         is_alive()                                      &&
         aware_counter_ > 0                              &&
-        utils::is_pos_adj(pos, map::player->pos, false) &&
+        is_pos_adj(pos, map::player->pos, false) &&
         rnd::one_in(4))
     {
         set_player_aware_of_me();
@@ -1385,7 +1390,7 @@ Did_action Khephren::on_act()
             }
 
             std::vector<P> free_cells;
-            utils::mk_vector_from_bool_map(false, blocked, free_cells);
+            to_vec((bool*)blocked, false, MAP_W, MAP_H, free_cells);
 
             sort(begin(free_cells), end(free_cells), Is_closer_to_pos(pos));
 
@@ -1589,7 +1594,7 @@ void Leng_elder::on_std_turn_hook()
         else //Has not given item to player
         {
             const bool IS_PLAYER_SEE_ME = map::player->can_see_actor(*this);
-            const bool IS_PLAYER_ADJ    = utils::is_pos_adj(pos, map::player->pos, false);
+            const bool IS_PLAYER_ADJ    = is_pos_adj(pos, map::player->pos, false);
 
             if (IS_PLAYER_SEE_ME && IS_PLAYER_ADJ)
             {
@@ -1931,7 +1936,7 @@ Did_action Zombie::try_resurrect()
     }
     else if (rnd::one_in(RISE_ONE_IN_N_TURNS))
     {
-        Actor* actor = utils::actor_at_pos(pos);
+        Actor* actor = map::actor_at_pos(pos);
 
         if (!actor)
         {

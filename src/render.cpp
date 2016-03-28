@@ -16,8 +16,6 @@
 #include "feature_mob.hpp"
 #include "feature_door.hpp"
 #include "inventory.hpp"
-#include "utils.hpp"
-#include "cmn_data.hpp"
 #include "sdl_wrapper.hpp"
 #include "text_format.hpp"
 
@@ -150,7 +148,7 @@ void load_pictures()
     TRACE_FUNC_BEGIN;
 
     //Main menu logo
-    SDL_Surface* tmp_srf = IMG_Load(main_menu_logo_img_name.c_str());
+    SDL_Surface* tmp_srf = IMG_Load(logo_img_name.c_str());
 
     IA_ASSERT(tmp_srf && "Failed to load main menu logo image");
 
@@ -401,7 +399,7 @@ void draw_glyph_at_px(const char GLYPH, const P& px_pos, const Clr& clr,
         draw_rectangle_solid(px_pos, cell_dims, bg_clr);
 
         //Only draw contour if neither the foreground or background is black
-        if (!utils::is_clr_eq(clr, clr_black) && !utils::is_clr_eq(bg_clr, clr_black))
+        if (!is_clr_eq(clr, clr_black) && !is_clr_eq(bg_clr, clr_black))
         {
             put_pixels_on_scr(contour_px_data_, art::glyph_pos(GLYPH), px_pos, clr_black);
         }
@@ -608,7 +606,7 @@ void draw_marker(const P& p,
         }
         else if (EFFECTIVE_RANGE != -1)
         {
-            const int CHEB_DIST = utils::king_dist(trail[0], pos);
+            const int CHEB_DIST = king_dist(trail[0], pos);
 
             if (CHEB_DIST > EFFECTIVE_RANGE)
             {
@@ -842,7 +840,7 @@ void draw_tile(const Tile_id tile, const Panel panel, const P& pos, const Clr& c
 
         draw_rectangle_solid(px_pos, cell_dims, bg_clr);
 
-        if (!utils::is_clr_eq(bg_clr, clr_black))
+        if (!is_clr_eq(bg_clr, clr_black))
         {
             put_pixels_on_scr(contour_px_data_, art::tile_pos(tile), px_pos, clr_black);
         }
@@ -1209,7 +1207,7 @@ void draw_info_scr_interface(const std::string& title,
                       clr_title);
 
     const std::string cmd_info = screen_type == Inf_screen_type::scrolling ?
-                                 info_scr_cmd_str_scrollable : info_scr_cmd_str;
+                                 info_scr_tip_scrollable : info_scr_tip;
 
     render::draw_text(" " + cmd_info + " ",
                       Panel::screen,
@@ -1277,7 +1275,7 @@ void draw_map()
                     cur_render_data->clr        = f->clr();
                     const Clr& feature_clr_bg   = f->clr_bg();
 
-                    if (!utils::is_clr_eq(feature_clr_bg, clr_black))
+                    if (!is_clr_eq(feature_clr_bg, clr_black))
                     {
                         cur_render_data->clr_bg = feature_clr_bg;
                     }
@@ -1440,7 +1438,7 @@ void draw_map()
             {
                 if (tmp_render_data.is_light_fade_allowed)
                 {
-                    const int DIST_FROM_PLAYER = utils::king_dist(map::player->pos, P(x, y));
+                    const int DIST_FROM_PLAYER = king_dist(map::player->pos, P(x, y));
 
                     if (DIST_FROM_PLAYER > 1)
                     {

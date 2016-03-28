@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "init.hpp"
-#include "converters.hpp"
 #include "highscore.hpp"
 #include "actor_player.hpp"
 #include "dungeon_master.hpp"
@@ -14,7 +13,6 @@
 #include "popup.hpp"
 #include "input.hpp"
 #include "render.hpp"
-#include "utils.hpp"
 
 Highscore_entry::Highscore_entry(std::string entry_date_and_time,
                                  std::string player_name,
@@ -261,7 +259,7 @@ void on_game_over(const bool IS_WIN)
 {
     std::vector<Highscore_entry> entries = entries_sorted();
 
-    final_score_ = new Highscore_entry(utils::cur_time().time_str(Time_type::minute, true),
+    final_score_ = new Highscore_entry(cur_time().time_str(Time_type::minute, true),
                                        map::player->name_a(),
                                        dungeon_master::xp(),
                                        dungeon_master::clvl(),

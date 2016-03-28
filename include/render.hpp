@@ -6,7 +6,6 @@
 #include <SDL_video.h>
 #include <SDL_image.h>
 
-#include "cmn_data.hpp"
 #include "game_time.hpp"
 #include "config.hpp"
 #include "art.hpp"

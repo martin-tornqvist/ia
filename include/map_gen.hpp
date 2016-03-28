@@ -3,7 +3,6 @@
 
 #include <vector>
 
-#include "cmn_types.hpp"
 #include "map_templates.hpp"
 
 class Room;

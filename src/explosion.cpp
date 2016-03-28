@@ -7,7 +7,6 @@
 #include "sdl_wrapper.hpp"
 #include "line_calc.hpp"
 #include "actor_player.hpp"
-#include "utils.hpp"
 #include "sdl_wrapper.hpp"
 #include "player_bon.hpp"
 #include "feature_rigid.hpp"
@@ -86,7 +85,7 @@ void cells_reached(const Rect& area, const P& origin,
         for (int x = area.p0.x; x <= area.p1.x; ++x)
         {
             const P pos(x, y);
-            const int DIST = utils::king_dist(pos, origin);
+            const int DIST = king_dist(pos, origin);
             bool is_reached = true;
 
             if (DIST > 1)

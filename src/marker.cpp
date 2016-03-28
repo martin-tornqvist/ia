@@ -14,7 +14,6 @@
 #include "map.hpp"
 #include "item_factory.hpp"
 #include "line_calc.hpp"
-#include "utils.hpp"
 #include "config.hpp"
 #include "feature_rigid.hpp"
 
@@ -32,14 +31,14 @@ void set_pos_to_closest_enemy_if_visible()
     map::player->seen_foes(seen_foes);
     std::vector<P> seen_foes_cells;
 
-    utils::actor_cells(seen_foes, seen_foes_cells);
+    map::actor_cells(seen_foes, seen_foes_cells);
 
     //If player sees enemies, suggest one for targeting
     if (!seen_foes_cells.empty())
     {
-        pos_ = utils::closest_pos(map::player->pos, seen_foes_cells);
+        pos_ = closest_pos(map::player->pos, seen_foes_cells);
 
-        map::player->tgt_ = utils::actor_at_pos(pos_);
+        map::player->tgt_ = map::actor_at_pos(pos_);
     }
 }
 
@@ -47,7 +46,7 @@ void try_move(const Dir dir)
 {
     const P new_pos(pos_ + dir_utils::offset(dir));
 
-    if (utils::is_pos_inside_map(new_pos)) {pos_ = new_pos;}
+    if (map::is_pos_inside_map(new_pos)) {pos_ = new_pos;}
 }
 
 bool set_pos_to_tgt_if_visible()

@@ -5,7 +5,6 @@
 #include "config.hpp"
 #include "input.hpp"
 #include "render.hpp"
-#include "converters.hpp"
 
 namespace query
 {

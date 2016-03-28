@@ -9,7 +9,6 @@
 #include "query.hpp"
 #include "render.hpp"
 #include "map_parsing.hpp"
-#include "utils.hpp"
 #include "text_format.hpp"
 #include "item_factory.hpp"
 
@@ -41,7 +40,7 @@ void player_kick()
         TRACE << "Checking if player is kicking a living actor" << std::endl;
         if (input_dir != Dir::center)
         {
-            Actor* living_actor = utils::actor_at_pos(kick_pos, Actor_state::alive);
+            Actor* living_actor = map::actor_at_pos(kick_pos, Actor_state::alive);
 
             if (living_actor)
             {

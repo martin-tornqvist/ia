@@ -113,6 +113,7 @@
 			<Add option="-Wno-long-long" />
 			<Add option="-fno-rtti" />
 			<Add directory="../include" />
+			<Add directory="../rl_utils/include" />
 			<Add directory="../API/SDL2/include" />
 		</Compiler>
 		<Linker>
@@ -136,11 +137,9 @@
 		<Unit filename="../include/character_descr.hpp" />
 		<Unit filename="../include/character_lines.hpp" />
 		<Unit filename="../include/close.hpp" />
-		<Unit filename="../include/cmn_data.hpp" />
-		<Unit filename="../include/cmn_types.hpp" />
+		<Unit filename="../include/cmn.hpp" />
 		<Unit filename="../include/colors.hpp" />
 		<Unit filename="../include/config.hpp" />
-		<Unit filename="../include/converters.hpp" />
 		<Unit filename="../include/create_character.hpp" />
 		<Unit filename="../include/disarm.hpp" />
 		<Unit filename="../include/drop.hpp" />
@@ -184,7 +183,6 @@
 		<Unit filename="../include/map_travel.hpp" />
 		<Unit filename="../include/marker.hpp" />
 		<Unit filename="../include/menu_input.hpp" />
-		<Unit filename="../include/mersenne_twister.hpp" />
 		<Unit filename="../include/msg_log.hpp" />
 		<Unit filename="../include/pickup.hpp" />
 		<Unit filename="../include/player_bon.hpp" />
@@ -206,7 +204,9 @@
 		<Unit filename="../include/spells.hpp" />
 		<Unit filename="../include/text_format.hpp" />
 		<Unit filename="../include/throwing.hpp" />
-		<Unit filename="../include/utils.hpp" />
+		<Unit filename="../rl_utils/include/mersenne_twister.hpp" />
+		<Unit filename="../rl_utils/include/rl_utils.hpp" />
+		<Unit filename="../rl_utils/src/rl_utils.cpp" />
 		<Unit filename="../src/ability_values.cpp" />
 		<Unit filename="../src/actor.cpp" />
 		<Unit filename="../src/actor_data.cpp" />
@@ -221,9 +221,8 @@
 		<Unit filename="../src/character_descr.cpp" />
 		<Unit filename="../src/character_lines.cpp" />
 		<Unit filename="../src/close.cpp" />
-		<Unit filename="../src/cmn_types.cpp" />
+		<Unit filename="../src/colors.cpp" />
 		<Unit filename="../src/config.cpp" />
-		<Unit filename="../src/converters.cpp" />
 		<Unit filename="../src/create_character.cpp" />
 		<Unit filename="../src/disarm.cpp" />
 		<Unit filename="../src/drop.cpp" />
@@ -294,7 +293,6 @@
 		<Unit filename="../src/spells.cpp" />
 		<Unit filename="../src/text_format.cpp" />
 		<Unit filename="../src/throwing.cpp" />
-		<Unit filename="../src/utils.cpp" />
 		<Unit filename="../test/src/main.cpp">
 			<Option target="UT" />
 		</Unit>

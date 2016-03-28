@@ -7,7 +7,6 @@
 #include "query.hpp"
 #include "map.hpp"
 #include "feature_trap.hpp"
-#include "utils.hpp"
 #include "inventory.hpp"
 
 namespace disarm
@@ -80,7 +79,7 @@ void player_disarm()
 
         msg_log::clear();
 
-        Actor* actor_on_trap = utils::actor_at_pos(pos);
+        Actor* actor_on_trap = map::actor_at_pos(pos);
 
         //Abort if trap blocked by monster
         if (actor_on_trap)

@@ -4,9 +4,6 @@
 #include <vector>
 #include <string>
 
-#include "cmn_data.hpp"
-#include "converters.hpp"
-
 enum class Ins_sympt_id
 {
     scream,

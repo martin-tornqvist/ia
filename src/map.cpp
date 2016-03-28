@@ -1,15 +1,17 @@
-#include "init.hpp"
-
 #include "map.hpp"
 
+#include <climits>
+
+#include "init.hpp"
+#include "rl_utils.hpp"
 #include "feature.hpp"
+#include "feature_mob.hpp"
 #include "actor_factory.hpp"
 #include "item_factory.hpp"
 #include "game_time.hpp"
 #include "render.hpp"
 #include "map_gen.hpp"
 #include "item.hpp"
-#include "utils.hpp"
 #include "feature_rigid.hpp"
 #include "save_handling.hpp"
 
@@ -289,8 +291,124 @@ void delete_and_remove_room_from_list(Room* const room)
 
 bool is_pos_seen_by_player(const P& p)
 {
-    IA_ASSERT(utils::is_pos_inside_map(p));
+    IA_ASSERT(map::is_pos_inside_map(p));
     return cells[p.x][p.y].is_seen_by_player;
+}
+
+Actor* actor_at_pos(const P& pos, Actor_state state)
+{
+    for (auto* const actor : game_time::actors)
+    {
+        if (actor->pos == pos && actor->state() == state)
+        {
+            return actor;
+        }
+    }
+
+    return nullptr;
+}
+
+Mob* first_mob_at_pos(const P& pos)
+{
+    for (auto* const mob : game_time::mobs)
+    {
+        if (mob->pos() == pos)
+        {
+            return mob;
+        }
+    }
+
+    return nullptr;
+}
+
+void actor_cells(const std::vector<Actor*>& actors, std::vector<P>& out)
+{
+    out.clear();
+
+    for (const auto* const a : actors)
+    {
+        out.push_back(a->pos);
+    }
+}
+
+void mk_actor_array(Actor* a[MAP_W][MAP_H])
+{
+    std::fill_n(*a, NR_MAP_CELLS, nullptr);
+
+    for (Actor* actor : game_time::actors)
+    {
+        const P& p = actor->pos;
+        a[p.x][p.y] = actor;
+    }
+}
+
+Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors)
+{
+    if (actors.empty())
+    {
+        return nullptr;
+    }
+
+    if (actors.size() == 1)
+    {
+        return actors[0];
+    }
+
+    //Find distance to nearest actor(s)
+    int dist_to_nearest = INT_MAX;
+
+    for (Actor* actor : actors)
+    {
+        const int CUR_DIST = king_dist(c, actor->pos);
+
+        if (CUR_DIST < dist_to_nearest)
+        {
+            dist_to_nearest = CUR_DIST;
+        }
+    }
+
+    IA_ASSERT(dist_to_nearest != INT_MAX);
+
+    //Store all actors with distance equal to the nearest distance
+    std::vector<Actor*> closest_actors;
+
+    for (Actor* actor : actors)
+    {
+        if (king_dist(c, actor->pos) == dist_to_nearest)
+        {
+            closest_actors.push_back(actor);
+        }
+    }
+
+    IA_ASSERT(!closest_actors.empty());
+
+    const int ELEMENT = rnd::range(0, closest_actors.size() - 1);
+
+    return closest_actors[ELEMENT];
+}
+
+bool is_pos_inside_map(const P& pos, const bool COUNT_EDGE_AS_INSIDE)
+{
+    if (COUNT_EDGE_AS_INSIDE)
+    {
+        return pos.x >= 0 &&
+               pos.y >= 0 &&
+               pos.x < MAP_W &&
+               pos.y < MAP_H;
+    }
+    else //Edge counts as outside the map
+    {
+        return pos.x > 0 &&
+               pos.y > 0 &&
+               pos.x < MAP_W - 1 &&
+               pos.y < MAP_H - 1;
+    }
+}
+
+bool is_area_inside_map(const Rect& area)
+{
+    return is_pos_inside_map(area.p0) &&
+           is_pos_inside_map(area.p1);
 }
 
 } //map

@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-#include "cmn_types.hpp"
+#include "cmn.hpp"
 
 class Item;
 class Actor;

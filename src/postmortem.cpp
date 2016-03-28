@@ -17,7 +17,6 @@
 #include "player_bon.hpp"
 #include "text_format.hpp"
 #include "feature_rigid.hpp"
-#include "utils.hpp"
 #include "save_handling.hpp"
 
 namespace postmortem
@@ -187,7 +186,7 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
             {
                 for (int dy = -1; dy <= 1; ++dy)
                 {
-                    if (utils::is_pos_inside_map(P(x + dx, y + dy)))
+                    if (map::is_pos_inside_map(P(x + dx, y + dy)))
                     {
                         const auto* const f = map::cells[x + dx][y + dy].rigid;
 

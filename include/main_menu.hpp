@@ -1,8 +1,7 @@
 #ifndef MAIN_MENU_H
 #define MAIN_MENU_H
 
-#include "cmn_data.hpp"
-#include "cmn_types.hpp"
+#include "cmn.hpp"
 
 namespace main_menu
 {

@@ -7,7 +7,6 @@
 #include "init.hpp"
 #include "map.hpp"
 #include "render.hpp"
-#include "utils.hpp"
 
 namespace audio
 {

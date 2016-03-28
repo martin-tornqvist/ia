@@ -6,7 +6,6 @@
 #include "map.hpp"
 #include "map_gen.hpp"
 #include "map_parsing.hpp"
-#include "utils.hpp"
 #include "feature_data.hpp"
 #include "feature_trap.hpp"
 #include "game_time.hpp"
@@ -93,7 +92,7 @@ void populate_std_lvl()
                 break;
             }
 
-            if (chance_for_trapped_room.numerator != -1 && chance_for_trapped_room.roll())
+            if (chance_for_trapped_room.num != -1 && chance_for_trapped_room.roll())
             {
                 TRACE_VERBOSE << "Trapping non-plain room" << std::endl;
 

@@ -1,8 +1,7 @@
 #ifndef MON_H
 #define MON_H
 
-#include "cmn_data.hpp"
-
+#include "cmn.hpp"
 #include "actor.hpp"
 #include "sound.hpp"
 #include "spells.hpp"

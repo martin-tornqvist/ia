@@ -6,7 +6,6 @@
 #include <algorithm>
 
 #include "ability_values.hpp"
-#include "converters.hpp"
 
 #include <math.h>
 

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "cmn_data.hpp"
+#include "cmn.hpp"
 
 #include "actor_data.hpp"
 #include "sound.hpp"

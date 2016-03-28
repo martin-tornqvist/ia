@@ -1,7 +1,7 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
-#include "cmn_types.hpp"
+#include "rl_utils.hpp"
 
 enum class Sfx_id
 {
@@ -73,9 +73,13 @@ void init();
 void cleanup();
 
 //Returns channel playing on
-int play(const Sfx_id sfx, const int VOL_PERCENT_TOT = 100, const int VOL_PERCENT_L = 50);
+int play(const Sfx_id sfx,
+         const int VOL_PERCENT_TOT = 100,
+         const int VOL_PERCENT_L = 50);
 
-void play(const Sfx_id sfx, const Dir dir, const int DISTANCE_PERCENT);
+void play(const Sfx_id sfx,
+          const Dir dir,
+          const int DISTANCE_PERCENT);
 
 void try_play_amb(const int ONE_IN_N_CHANCE_TO_PLAY);
 

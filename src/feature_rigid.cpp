@@ -6,7 +6,6 @@
 #include "msg_log.hpp"
 #include "render.hpp"
 #include "map.hpp"
-#include "utils.hpp"
 #include "popup.hpp"
 #include "map_travel.hpp"
 #include "save_handling.hpp"
@@ -62,7 +61,7 @@ void Rigid::on_new_turn()
         //TODO: Hit dead actors
 
         //Hit actor standing on feature
-        auto* actor = utils::actor_at_pos(pos_);
+        auto* actor = map::actor_at_pos(pos_);
 
         if (actor)
         {
@@ -131,11 +130,11 @@ void Rigid::on_new_turn()
         {
             const P p(dir_utils::rnd_adj_pos(pos_, false));
 
-            if (utils::is_pos_inside_map(p))
+            if (map::is_pos_inside_map(p))
             {
                 map::cells[p.x][p.y].rigid->hit(Dmg_type::fire, Dmg_method::elemental);
 
-                actor = utils::actor_at_pos(p);
+                actor = map::actor_at_pos(p);
 
                 if (actor) {scorch_actor(*actor);}
             }
@@ -146,7 +145,7 @@ void Rigid::on_new_turn()
         {
             const P p(dir_utils::rnd_adj_pos(pos_, true));
 
-            if (utils::is_pos_inside_map(p))
+            if (map::is_pos_inside_map(p))
             {
                 if (!cell_check::Blocks_move_cmn(false).check(map::cells[p.x][p.y]))
                 {
@@ -400,7 +399,7 @@ void Rigid::add_light(bool light[MAP_W][MAP_H]) const
         {
             const P p(pos_ + d);
 
-            if (utils::is_pos_inside_map(p, true))
+            if (map::is_pos_inside_map(p, true))
             {
                 light[p.x][p.y] = true;
             }
@@ -495,7 +494,7 @@ void Wall::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
         {
             const P p(pos_ + d);
 
-            if (utils::is_pos_inside_map(p))
+            if (map::is_pos_inside_map(p))
             {
                 if (map::cells[p.x][p.y].rigid->id() == Feature_id::door)
                 {
@@ -938,7 +937,7 @@ void Statue::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor*
 
         render::draw_map_and_interface();
 
-        Actor* const actor_behind = utils::actor_at_pos(dst_pos);
+        Actor* const actor_behind = map::actor_at_pos(dst_pos);
 
         if (actor_behind && actor_behind->is_alive())
         {
@@ -1626,7 +1625,7 @@ void Tree::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 
 Was_destroyed Tree::on_finished_burning()
 {
-    if (utils::is_pos_inside_map(pos_, false))
+    if (map::is_pos_inside_map(pos_, false))
     {
         Grass* const grass = new Grass(pos_);
         grass->set_has_burned();

@@ -5,7 +5,6 @@
 #include <string>
 
 #include "item.hpp"
-#include "cmn_data.hpp"
 
 class Potion: public Item
 {

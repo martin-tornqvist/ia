@@ -6,7 +6,6 @@
 #include "actor_factory.hpp"
 #include "msg_log.hpp"
 #include "render.hpp"
-#include "utils.hpp"
 #include "feature_rigid.hpp"
 #include "popup.hpp"
 #include "sdl_wrapper.hpp"
@@ -26,7 +25,7 @@ Event_wall_crumble::Event_wall_crumble(const P& p,
 
 void Event_wall_crumble::on_new_turn()
 {
-    if (utils::is_pos_adj(map::player->pos, pos_, true))
+    if (is_pos_adj(map::player->pos, pos_, true))
     {
         //Check that it still makes sense to run the crumbling
         auto check_cells_have_wall = [](const std::vector<P>& cells)
@@ -61,7 +60,7 @@ void Event_wall_crumble::on_new_turn()
             {
                 for (const P& p : wall_cells_)
                 {
-                    if (utils::is_pos_inside(p, Rect(P(1, 1), P(MAP_W - 2, MAP_H - 2))))
+                    if (is_pos_inside(p, Rect(P(1, 1), P(MAP_W - 2, MAP_H - 2))))
                     {
                         auto* const f = map::cells[p.x][p.y].rigid;
                         f->hit(Dmg_type::physical, Dmg_method::forced, nullptr);
@@ -72,7 +71,7 @@ void Event_wall_crumble::on_new_turn()
 
                 for (const P& p : wall_cells_)
                 {
-                    if (utils::is_pos_adj(map::player->pos, p, true))
+                    if (is_pos_adj(map::player->pos, p, true))
                     {
                         Rigid* const f = map::cells[p.x][p.y].rigid;
 
@@ -138,7 +137,7 @@ void Event_wall_crumble::on_new_turn()
 
                 if (
                     nr_mon_spawned < nr_mon_limit_except_adj_to_entry ||
-                    utils::is_pos_adj(p, pos_, false))
+                    is_pos_adj(p, pos_, false))
                 {
                     Actor*  const actor = actor_factory::mk(mon_type, p);
                     Mon*    const mon   = static_cast<Mon*>(actor);
@@ -169,7 +168,7 @@ bool Event_snake_emerge::try_find_p()
 
     std::vector<P> p_bucket;
 
-    utils::mk_vector_from_bool_map(false, blocked, p_bucket);
+    to_vec((bool*)blocked, false, MAP_W, MAP_H, p_bucket);
 
     random_shuffle(begin(p_bucket), end(p_bucket));
 
@@ -203,7 +202,7 @@ Rect Event_snake_emerge::allowed_emerge_rect(const P& p) const
 
 bool Event_snake_emerge::is_ok_feature_at(const P& p) const
 {
-    IA_ASSERT(utils::is_pos_inside_map(p, true));
+    IA_ASSERT(map::is_pos_inside_map(p, true));
 
     const Feature_id id = map::cells[p.x][p.y].rigid->id();
 
@@ -233,7 +232,7 @@ void Event_snake_emerge::emerge_p_bucket(
             if (
                 !blocked[x][y]              &&
                 !fov[x][y].is_blocked_hard  &&
-                utils::king_dist(p, tgt_p) >= MIN_D)
+                king_dist(p, tgt_p) >= MIN_D)
             {
                 out.push_back(tgt_p);
             }

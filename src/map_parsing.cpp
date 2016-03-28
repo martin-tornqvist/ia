@@ -1,11 +1,12 @@
 #include "map_parsing.hpp"
 
 #include <algorithm>
+#include <climits>
 
+#include "init.hpp"
 #include "map.hpp"
 #include "actor_player.hpp"
 #include "game_time.hpp"
-#include "utils.hpp"
 #include "feature_rigid.hpp"
 #include "feature_mob.hpp"
 
@@ -15,7 +16,7 @@ namespace cell_check
 
 bool Blocks_los::check(const Cell& c)  const
 {
-    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->is_los_passable();
+    return !map::is_pos_inside_map(c.pos, false) || !c.rigid->is_los_passable();
 }
 
 bool Blocks_los::check(const Mob& f) const
@@ -25,7 +26,7 @@ bool Blocks_los::check(const Mob& f) const
 
 bool Blocks_move_cmn::check(const Cell& c) const
 {
-    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->can_move_cmn();
+    return !map::is_pos_inside_map(c.pos, false) || !c.rigid->can_move_cmn();
 }
 
 bool Blocks_move_cmn::check(const Mob& f) const
@@ -40,7 +41,7 @@ bool Blocks_move_cmn::check(const Actor& a) const
 
 bool Blocks_actor::check(const Cell& c) const
 {
-    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->can_move(actor_);
+    return !map::is_pos_inside_map(c.pos, false) || !c.rigid->can_move(actor_);
 }
 
 bool Blocks_actor::check(const Mob& f) const
@@ -55,7 +56,7 @@ bool Blocks_actor::check(const Actor& a) const
 
 bool Blocks_projectiles::check(const Cell& c)  const
 {
-    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->is_projectile_passable();
+    return !map::is_pos_inside_map(c.pos, false) || !c.rigid->is_projectile_passable();
 }
 
 bool Blocks_projectiles::check(const Mob& f)  const
@@ -70,12 +71,12 @@ bool Living_actors_adj_to_pos::check(const Actor& a) const
         return false;
     }
 
-    return utils::is_pos_adj(pos_, a.pos, true);
+    return is_pos_adj(pos_, a.pos, true);
 }
 
 bool Blocks_items::check(const Cell& c)  const
 {
-    return !utils::is_pos_inside_map(c.pos, false) || !c.rigid->can_have_item();
+    return !map::is_pos_inside_map(c.pos, false) || !c.rigid->can_have_item();
 }
 
 bool Blocks_items::check(const Mob& f) const
@@ -106,7 +107,7 @@ bool All_adj_is_feature::check(const Cell& c) const
     const int X = c.pos.x;
     const int Y = c.pos.y;
 
-    if (!utils::is_pos_inside_map(c.pos, false))
+    if (!map::is_pos_inside_map(c.pos, false))
     {
         return false;
     }
@@ -255,7 +256,7 @@ void run(const  cell_check::Check& method,
         {
             const P& p = mob->pos();
 
-            if (utils::is_pos_inside(p, area_to_check_cells))
+            if (is_pos_inside(p, area_to_check_cells))
             {
                 const bool IS_MATCH = method.check(*mob);
 
@@ -278,7 +279,7 @@ void run(const  cell_check::Check& method,
         {
             const P& p = actor->pos;
 
-            if (utils::is_pos_inside(p, area_to_check_cells))
+            if (is_pos_inside(p, area_to_check_cells))
             {
                 const bool IS_MATCH = method.check(*actor);
 
@@ -406,7 +407,7 @@ void cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MA
 bool is_val_in_area(const Rect& area, const bool in[MAP_W][MAP_H],
                     const bool VAL)
 {
-    IA_ASSERT(utils::is_area_inside_map(area));
+    IA_ASSERT(map::is_area_inside_map(area));
 
     for (int y = area.p0.y; y <= area.p1.y; ++y)
     {
@@ -540,10 +541,16 @@ bool is_map_connected(const bool blocked[MAP_W][MAP_H])
         }
     }
 
-    IA_ASSERT(utils::is_pos_inside_map(origin, false));
+    IA_ASSERT(map::is_pos_inside_map(origin, false));
 
     int flood_fill[MAP_W][MAP_H];
-    flood_fill::run(origin, blocked, flood_fill, INT_MAX, P(-1, -1), true);
+
+    flood_fill::run(origin,
+                    blocked,
+                    flood_fill,
+                    INT_MAX,
+                    P(-1, -1),
+                    true);
 
     //NOTE: We can skip to origin.x immediately, since this is guaranteed to be the
     //leftmost non-blocked cell.
@@ -566,8 +573,8 @@ bool is_map_connected(const bool blocked[MAP_W][MAP_H])
 //------------------------------------------------------------ IS CLOSER TO POS
 bool Is_closer_to_pos::operator()(const P& p1, const P& p2)
 {
-    const int king_dist1 = utils::king_dist(p_.x, p_.y, p1.x, p1.y);
-    const int king_dist2 = utils::king_dist(p_.x, p_.y, p2.x, p2.y);
+    const int king_dist1 = king_dist(p_.x, p_.y, p1.x, p1.y);
+    const int king_dist2 = king_dist(p_.x, p_.y, p2.x, p2.y);
     return king_dist1 < king_dist2;
 }
 
@@ -582,10 +589,9 @@ void run(const P& p0,
          const P& p1,
          const bool ALLOW_DIAGONAL)
 {
-    utils::reset_array(out);
+    std::fill_n(*out, NR_MAP_CELLS, 0);
 
     std::vector<P> positions;
-    positions.clear();
 
     unsigned int    nr_elements_to_skip = 0;
     int             cur_val             = 0;
@@ -626,7 +632,7 @@ void run(const P& p0,
 
                 if (
                     !blocked[new_pos.x][new_pos.y]          &&
-                    utils::is_pos_inside(new_pos, bounds)   &&
+                    is_pos_inside(new_pos, bounds)   &&
                     out[new_pos.x][new_pos.y] == 0          &&
                     new_pos != p0)
                 {
@@ -746,7 +752,7 @@ void run(const P& p0, const P& p1, bool blocked[MAP_W][MAP_H], std::vector<P>& o
                 return;
             }
 
-            const bool IS_INSIDE_MAP = utils::is_pos_inside_map(adj_pos);
+            const bool IS_INSIDE_MAP = map::is_pos_inside_map(adj_pos);
 
             const int VAL_AT_ADJ = IS_INSIDE_MAP ? flood[adj_pos.x][adj_pos.y] : 0;
 

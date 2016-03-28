@@ -7,7 +7,6 @@
 #include "item_amulet.hpp"
 #include "drop.hpp"
 #include "item_device.hpp"
-#include "utils.hpp"
 #include "item_data.hpp"
 #include "game_time.hpp"
 

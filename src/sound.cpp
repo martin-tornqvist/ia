@@ -9,7 +9,6 @@
 #include "actor_mon.hpp"
 #include "game_time.hpp"
 #include "map_parsing.hpp"
-#include "utils.hpp"
 
 Snd::Snd(
     const std::string&              msg,

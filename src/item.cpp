@@ -4,7 +4,6 @@
 
 #include "map.hpp"
 #include "game_time.hpp"
-#include "utils.hpp"
 #include "map_parsing.hpp"
 #include "properties.hpp"
 #include "msg_log.hpp"
@@ -371,7 +370,7 @@ std::string Item::name(const Item_ref_type ref_type,
 
 bool Item::is_in_effective_range_lmt(const P& p0, const P& p1) const
 {
-    return utils::king_dist(p0, p1) <= data_->ranged.effective_range;
+    return king_dist(p0, p1) <= data_->ranged.effective_range;
 }
 
 void Item::add_carrier_prop(Prop* const prop, const Verbosity verbosity)
@@ -1132,7 +1131,7 @@ int Medical_bag::tot_turns_for_action(const Med_bag_action action) const
 //        const P p(map::player->pos);
 //        for (auto* const actor : game_time::actors)
 //        {
-//            if (actor->is_alive() && utils::is_pos_adj(p, actor->pos, false))
+//            if (actor->is_alive() && is_pos_adj(p, actor->pos, false))
 //            {
 //                adj_actors.push_back(actor);
 //            }

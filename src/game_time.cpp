@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "cmn_types.hpp"
+#include "init.hpp"
 #include "feature_rigid.hpp"
 #include "feature_mob.hpp"
 #include "actor_player.hpp"
@@ -16,7 +16,6 @@
 #include "audio.hpp"
 #include "map_parsing.hpp"
 #include "render.hpp"
-#include "utils.hpp"
 #include "map_travel.hpp"
 #include "item.hpp"
 #include "save_handling.hpp"
@@ -271,7 +270,7 @@ void erase_all_mobs()
 void add_actor(Actor* actor)
 {
     //Sanity checks
-    IA_ASSERT(utils::is_pos_inside_map(actor->pos));
+    IA_ASSERT(map::is_pos_inside_map(actor->pos));
 
 #ifndef NDEBUG
     for (Actor* const old_actor : actors)
@@ -433,7 +432,7 @@ Actor* cur_actor()
     Actor* const actor = actors[cur_actor_idx_];
 
     //Sanity check actor retrieved
-    IA_ASSERT(utils::is_pos_inside_map(actor->pos));
+    IA_ASSERT(map::is_pos_inside_map(actor->pos));
     return actor;
 }
 

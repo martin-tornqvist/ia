@@ -7,7 +7,6 @@
 #include "map.hpp"
 #include "render.hpp"
 #include "map_parsing.hpp"
-#include "utils.hpp"
 #include "actor.hpp"
 #include "feature_rigid.hpp"
 #include "init.hpp"
@@ -297,7 +296,7 @@ void summon(const P& origin,
     map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
     std::vector<P> free_cells;
-    utils::mk_vector_from_bool_map(false, blocked, free_cells);
+    to_vec((bool*)blocked, false, MAP_W, MAP_H, free_cells);
 
     std::sort(begin(free_cells), end(free_cells), Is_closer_to_pos(origin));
 
@@ -314,7 +313,7 @@ void summon(const P& origin,
         Actor* const    actor   = mk(id, pos);
         Mon* const      mon     = static_cast<Mon*>(actor);
 
-        IA_ASSERT(utils::is_pos_inside_map(pos, false));
+        IA_ASSERT(map::is_pos_inside_map(pos, false));
 
         if (monsters_ret)
         {

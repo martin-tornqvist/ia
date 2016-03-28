@@ -3,8 +3,6 @@
 
 #include <vector>
 
-#include "cmn_data.hpp"
-#include "cmn_types.hpp"
 #include "colors.hpp"
 #include "item_data.hpp"
 #include "feature.hpp"
@@ -14,6 +12,7 @@
 
 class Save_handler;
 class Rigid;
+class Mob;
 
 struct Cell
 {
@@ -27,7 +26,7 @@ struct Cell
     Item*               item;
     Rigid*              rigid;
     Cell_render_data    player_visual_memory;
-    P                 pos;
+    P                   pos;
 };
 
 enum class Map_type
@@ -73,6 +72,20 @@ void mk_gore(const P& origin);
 void delete_and_remove_room_from_list(Room* const room);
 
 bool is_pos_seen_by_player(const P& p);
+
+Actor* actor_at_pos(const P& pos, Actor_state state = Actor_state::alive);
+
+Mob* first_mob_at_pos(const P& pos);
+
+void actor_cells(const std::vector<Actor*>& actors, std::vector<P>& out);
+
+void mk_actor_array(Actor* a[MAP_W][MAP_H]);
+
+Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors);
+
+bool is_pos_inside_map(const P& pos, const bool COUNT_EDGE_AS_INSIDE = true);
+
+bool is_area_inside_map(const Rect& area);
 
 } //map
 

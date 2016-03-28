@@ -3,7 +3,6 @@
 
 #include <functional>
 #include "art.hpp"
-#include "cmn_data.hpp"
 #include "room.hpp"
 #include "map_patterns.hpp"
 #include "properties.hpp"

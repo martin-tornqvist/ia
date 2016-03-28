@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 
-#include "cmn_data.hpp"
 #include "ability_values.hpp"
 #include "spells.hpp"
 #include "feature_data.hpp"

@@ -14,7 +14,6 @@
 #include "render.hpp"
 #include "msg_log.hpp"
 #include "feature_rigid.hpp"
-#include "utils.hpp"
 #include "save_handling.hpp"
 
 namespace map_travel

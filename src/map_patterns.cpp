@@ -11,7 +11,8 @@
 namespace map_patterns
 {
 
-void cells_in_room(const Room& room, std::vector<P>& adj_to_walls,
+void cells_in_room(const Room& room,
+                   std::vector<P>& adj_to_walls,
                    std::vector<P>& away_from_walls)
 {
     TRACE_FUNC_BEGIN_VERBOSE;

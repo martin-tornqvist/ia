@@ -6,7 +6,6 @@
 #include <SDL_mixer.h>
 
 #include "init.hpp"
-#include "cmn_data.hpp"
 #include "config.hpp"
 #include "game_time.hpp"
 

@@ -3,8 +3,6 @@
 
 #include <vector>
 
-#include "cmn_data.hpp"
-#include "cmn_types.hpp"
 #include "colors.hpp"
 #include "audio.hpp"
 

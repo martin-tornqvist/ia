@@ -1,7 +1,8 @@
 #ifndef QUERY_H
 #define QUERY_H
 
-#include "cmn_types.hpp"
+#include "rl_utils.hpp"
+#include "colors.hpp"
 
 struct Key_data;
 

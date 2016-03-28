@@ -7,7 +7,6 @@
 #include "item_factory.hpp"
 #include "player_bon.hpp"
 #include "map_parsing.hpp"
-#include "utils.hpp"
 
 namespace populate_items
 {
@@ -47,7 +46,7 @@ void mk_items_on_floor()
     map_parse::run(cell_check::Blocks_items(), blocked);
 
     std::vector<P> free_cells;
-    utils::mk_vector_from_bool_map(false, blocked, free_cells);
+    to_vec((bool*)blocked, false, MAP_W, MAP_H, free_cells);
 
     for (int i = 0; i < nr_spawns; ++i)
     {

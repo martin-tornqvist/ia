@@ -2,7 +2,6 @@
 
 #include "input.hpp"
 #include "config.hpp"
-#include "utils.hpp"
 
 //---------------------------------------------------------- MENU BROWSER
 Menu_browser::Menu_browser(const int NR_ITEMS, const int LIST_H) :
@@ -99,7 +98,7 @@ void Menu_browser::update_range_shown()
 
 void Menu_browser::set_y_nearest_valid()
 {
-    utils::set_constr_in_range(0, y_, nr_items_ - 1);
+    set_constr_in_range(0, y_, nr_items_ - 1);
 }
 
 int Menu_browser::nr_items_shown() const

@@ -6,8 +6,6 @@
 #include <vector>
 #include <math.h>
 
-#include "cmn_types.hpp"
-#include "converters.hpp"
 #include "item.hpp"
 #include "save_handling.hpp"
 #include "game_time.hpp"

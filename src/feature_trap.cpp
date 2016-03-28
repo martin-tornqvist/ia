@@ -17,7 +17,6 @@
 #include "sound.hpp"
 #include "actor_factory.hpp"
 #include "render.hpp"
-#include "utils.hpp"
 #include "player_bon.hpp"
 #include "item_factory.hpp"
 #include "attack.hpp"
@@ -389,23 +388,23 @@ void Trap::disarm()
     const bool IS_BLESSED = map::player->has_prop(Prop_id::blessed);
     const bool IS_CURSED  = map::player->has_prop(Prop_id::cursed);
 
-    int         disarm_numerator    = 6;
-    const int   DISARM_DENOMINATOR  = 10;
+    int         disarm_num  = 6;
+    const int   DISARM_DEN  = 10;
 
     if (IS_BLESSED)
     {
-        disarm_numerator += 3;
+        disarm_num += 3;
     }
 
     if (IS_CURSED)
     {
-        disarm_numerator -= 3;
+        disarm_num -= 3;
     }
 
-    utils::set_constr_in_range(1, disarm_numerator, DISARM_DENOMINATOR - 1);
+    set_constr_in_range(1, disarm_num, DISARM_DEN - 1);
 
     const bool IS_DISARMED = is_auto_succeed ||
-                             rnd::fraction(disarm_numerator, DISARM_DENOMINATOR);
+                             rnd::fraction(disarm_num, DISARM_DEN);
 
     if (IS_DISARMED)
     {
@@ -761,7 +760,7 @@ void Trap_spear::trigger()
     }
 
     //Is anyone standing on the trap now?
-    Actor* const actor_on_trap = utils::actor_at_pos(pos_);
+    Actor* const actor_on_trap = map::actor_at_pos(pos_);
 
     if (actor_on_trap)
     {
@@ -914,7 +913,7 @@ void Trap_teleport::trigger()
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    Actor* const actor_here = utils::actor_at_pos(pos_);
+    Actor* const actor_here = map::actor_at_pos(pos_);
 
     IA_ASSERT(actor_here);
 
@@ -970,7 +969,7 @@ void Trap_summon_mon::trigger()
 {
     TRACE_FUNC_BEGIN;
 
-    Actor* const actor_here = utils::actor_at_pos(pos_);
+    Actor* const actor_here = map::actor_at_pos(pos_);
 
     IA_ASSERT(actor_here);
 
@@ -1080,7 +1079,7 @@ void Trap_spi_drain::trigger()
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    Actor* const actor_here = utils::actor_at_pos(pos_);
+    Actor* const actor_here = map::actor_at_pos(pos_);
 
     IA_ASSERT(actor_here);
 
@@ -1237,7 +1236,7 @@ void Trap_web::trigger()
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    Actor* const actor_here = utils::actor_at_pos(pos_);
+    Actor* const actor_here = map::actor_at_pos(pos_);
 
     IA_ASSERT(actor_here);
 

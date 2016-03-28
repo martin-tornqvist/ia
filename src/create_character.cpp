@@ -5,7 +5,6 @@
 #include "input.hpp"
 #include "menu_input.hpp"
 #include "text_format.hpp"
-#include "utils.hpp"
 #include "map.hpp"
 #include "dungeon_master.hpp"
 

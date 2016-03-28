@@ -6,7 +6,6 @@
 #include "init.hpp"
 #include "colors.hpp"
 #include "item.hpp"
-#include "cmn_data.hpp"
 #include "actor_data.hpp"
 #include "actor_player.hpp"
 #include "sound.hpp"

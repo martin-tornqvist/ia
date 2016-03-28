@@ -1,6 +1,5 @@
 #include "insanity.hpp"
 
-#include "utils.hpp"
 #include "popup.hpp"
 #include "dungeon_master.hpp"
 #include "sound.hpp"
@@ -449,7 +448,7 @@ void Ins_shadows::on_start_hook()
 
     const int NR_SHADOWS_LOWER = 2;
 
-    const int NR_SHADOWS_UPPER = utils::constr_in_range(NR_SHADOWS_LOWER, map::dlvl - 2, 8);
+    const int NR_SHADOWS_UPPER = constr_in_range(NR_SHADOWS_LOWER, map::dlvl - 2, 8);
 
     const int NR = rnd::range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
 

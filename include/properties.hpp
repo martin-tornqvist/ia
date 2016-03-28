@@ -5,9 +5,8 @@
 #include <vector>
 
 #include "ability_values.hpp"
-#include "cmn_data.hpp"
-#include "converters.hpp"
-#include "cmn_types.hpp"
+#include "rl_utils.hpp"
+#include "cmn.hpp"
 
 enum class Prop_id
 {

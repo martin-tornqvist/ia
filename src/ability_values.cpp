@@ -4,7 +4,6 @@
 
 #include "actor_player.hpp"
 #include "player_bon.hpp"
-#include "utils.hpp"
 #include "properties.hpp"
 #include "map.hpp"
 
@@ -219,7 +218,7 @@ Ability_roll_result roll(const int TOT_SKILL_VALUE, const Actor* const actor_rol
         crit_success_range.set(-1, -1);
     }
 
-    if (utils::is_val_in_range(ROLL, crit_success_range))
+    if (is_val_in_range(ROLL, crit_success_range))
     {
         return Ability_roll_result::success_critical;
     }
@@ -238,7 +237,7 @@ Ability_roll_result roll(const int TOT_SKILL_VALUE, const Actor* const actor_rol
         crit_fail_range.min = 95;
     }
 
-    if (utils::is_val_in_range(ROLL, crit_fail_range))
+    if (is_val_in_range(ROLL, crit_fail_range))
     {
         return Ability_roll_result::fail_critical;
     }

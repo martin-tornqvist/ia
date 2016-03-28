@@ -5,14 +5,12 @@
 #include <fstream>
 #include <SDL_image.h>
 
-#include "converters.hpp"
 #include "menu_input.hpp"
 #include "query.hpp"
 #include "render.hpp"
 #include "input.hpp"
 #include "audio.hpp"
 #include "text_format.hpp"
-#include "utils.hpp"
 
 namespace config
 {

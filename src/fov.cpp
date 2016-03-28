@@ -5,10 +5,8 @@
 #include <math.h>
 #include <vector>
 
-#include "cmn_types.hpp"
 #include "line_calc.hpp"
 #include "map.hpp"
-#include "utils.hpp"
 
 namespace fov
 {
@@ -28,7 +26,7 @@ Rect get_fov_rect(const P& p)
 
 bool is_in_fov_range(const P& p0, const P& p1)
 {
-    return utils::king_dist(p0, p1) <= FOV_STD_RADI_INT;
+    return king_dist(p0, p1) <= FOV_STD_RADI_INT;
 }
 
 Los_result check_cell(const P& p0,
@@ -40,7 +38,7 @@ Los_result check_cell(const P& p0,
     los_result.is_blocked_hard      = true; //Assume we are blocked initially
     los_result.is_blocked_by_drk    = false;
 
-    if (!is_in_fov_range(p0, p1) || !utils::is_pos_inside_map(p1))
+    if (!is_in_fov_range(p0, p1) || !map::is_pos_inside_map(p1))
     {
         //Target too far away, return the hard blocked result
         return los_result;

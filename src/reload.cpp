@@ -1,8 +1,9 @@
 #include "reload.hpp"
 
 #include <string>
+#include <climits>
 
-#include "converters.hpp"
+#include "init.hpp"
 #include "item.hpp"
 #include "actor_player.hpp"
 #include "msg_log.hpp"
@@ -14,7 +15,6 @@
 #include "game_time.hpp"
 #include "audio.hpp"
 #include "render.hpp"
-#include "utils.hpp"
 
 namespace reload
 {
@@ -90,7 +90,7 @@ void try_reload(Actor& actor, Item* const item_to_reload)
     }
 
     IA_ASSERT(item_to_reload->data().type == Item_type::melee_wpn ||
-           item_to_reload->data().type == Item_type::ranged_wpn);
+              item_to_reload->data().type == Item_type::ranged_wpn);
 
     Wpn* const wpn = static_cast<Wpn*>(item_to_reload);
 

@@ -3,8 +3,7 @@
 
 #include <vector>
 
-#include "cmn_types.hpp"
-#include "cmn_data.hpp"
+#include "cmn.hpp"
 
 class Mon;
 

@@ -33,7 +33,6 @@
 #include "item_scroll.hpp"
 #include "item_potion.hpp"
 #include "text_format.hpp"
-#include "utils.hpp"
 #include "save_handling.hpp"
 #include "insanity.hpp"
 #include "reload.hpp"
@@ -519,7 +518,7 @@ int Player::shock_resistance(const Shock_src shock_src) const
         break;
     }
 
-    return utils::constr_in_range(0, res, 100);
+    return constr_in_range(0, res, 100);
 }
 
 double Player::shock_taken_after_mods(const int BASE_SHOCK,
@@ -542,7 +541,7 @@ void Player::incr_shock(const int SHOCK, Shock_src shock_src)
     shock_                      += SHOCK_AFTER_MODS;
     perm_shock_taken_cur_turn_  += SHOCK_AFTER_MODS;
 
-    utils::set_constr_in_range(0.0, shock_, 100.0);
+    set_constr_in_range(0.0, shock_, 100.0);
 }
 
 void Player::incr_shock(const Shock_lvl shock_value, Shock_src shock_src)
@@ -1370,7 +1369,7 @@ void Player::move(Dir dir)
             }
         }
 
-        Mon* const mon = static_cast<Mon*>(utils::actor_at_pos(tgt));
+        Mon* const mon = static_cast<Mon*>(map::actor_at_pos(tgt));
 
         //Hostile monster here?
         if (mon && !is_leader_of(mon))
@@ -1581,7 +1580,7 @@ void Player::auto_melee()
     if (
         tgt_                                        &&
         tgt_->state() == Actor_state::alive         &&
-        utils::is_pos_adj(pos, tgt_->pos, false)    &&
+        is_pos_adj(pos, tgt_->pos, false)    &&
         can_see_actor(*tgt_))
     {
         move(dir_utils::dir(tgt_->pos - pos));
@@ -1591,7 +1590,7 @@ void Player::auto_melee()
     //If this line reached, there is no adjacent cur target.
     for (const P& d : dir_utils::dir_list)
     {
-        Actor* const actor = utils::actor_at_pos(pos + d);
+        Actor* const actor = map::actor_at_pos(pos + d);
 
         if (actor && !is_leader_of(actor) && can_see_actor(*actor))
         {
@@ -1806,7 +1805,7 @@ void Player::fov_hack()
                 {
                     const P p_adj(p + d);
 
-                    if (utils::is_pos_inside_map(p_adj))
+                    if (map::is_pos_inside_map(p_adj))
                     {
                         const Cell& adj_cell = map::cells[p_adj.x][p_adj.y];
 

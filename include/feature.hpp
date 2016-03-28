@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 
-#include "cmn_types.hpp"
 #include "feature_data.hpp"
 
 class Actor;

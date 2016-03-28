@@ -3,7 +3,6 @@
 #include "actor_player.hpp"
 #include "msg_log.hpp"
 #include "map.hpp"
-#include "utils.hpp"
 #include "feature_mob.hpp"
 #include "feature_door.hpp"
 #include "actor_mon.hpp"
@@ -132,7 +131,7 @@ bool is_pos_on_line(const P& p, const P& line_p0, const P& line_p1)
                  std::max(line_p0.x, line_p1.x),
                  std::max(line_p0.y, line_p1.y));
 
-    if (!utils::is_pos_inside(p, r))
+    if (!is_pos_inside(p, r))
     {
         return false;
     }
@@ -181,8 +180,8 @@ void move_bucket(Mon& mon, std::vector<P>& dirs_to_mk)
     {
         const P tgt_p = mon_p + d;
 
-        const int CUR_TO_PLAYER_DIST = utils::king_dist(mon_p, player_p);
-        const int TGT_TO_PLAYER_DIST = utils::king_dist(tgt_p, player_p);
+        const int CUR_TO_PLAYER_DIST = king_dist(mon_p, player_p);
+        const int TGT_TO_PLAYER_DIST = king_dist(tgt_p, player_p);
 
         if (TGT_TO_PLAYER_DIST <= CUR_TO_PLAYER_DIST && !blocked[tgt_p.x][tgt_p.y])
         {
@@ -224,7 +223,7 @@ bool make_room_for_friend(Mon& mon)
             Mon* const other_mon = static_cast<Mon*>(other_actor);
 
             const bool IS_OTHER_ADJ =
-                utils::is_pos_adj(mon.pos, other_mon->pos, false);
+                is_pos_adj(mon.pos, other_mon->pos, false);
 
             //TODO: It's probably better to check LOS than vision here? We don't want to move
             //out of the way for a blind monster.
@@ -363,7 +362,7 @@ Dir dir_to_rnd_adj_free_cell(Mon& mon)
 
         if (
             !blocked[tgt_cell.x][tgt_cell.y] &&
-            utils::is_pos_inside(tgt_cell, area_allowed))
+            is_pos_inside(tgt_cell, area_allowed))
         {
             return last_dir_travelled;
         }
@@ -384,7 +383,7 @@ Dir dir_to_rnd_adj_free_cell(Mon& mon)
 
                 if (
                     !blocked[tgt_cell.x][tgt_cell.y] &&
-                    utils::is_pos_inside(tgt_cell, area_allowed))
+                    is_pos_inside(tgt_cell, area_allowed))
                 {
                     dir_bucket.push_back(dir_utils::dir(offset));
                 }
@@ -655,8 +654,7 @@ void try_set_path_to_player(Mon& mon, std::vector<P>& path)
         return;
     }
 
-    bool blocked[MAP_W][MAP_H];
-    utils::reset_array(blocked, false);
+    bool blocked[MAP_W][MAP_H] = {};
 
     const int X0 = 1;
     const int Y0 = 1;

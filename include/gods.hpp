@@ -7,13 +7,16 @@
 struct God
 {
 public:
-    God(const std::string& god_name, const std::string& god_descr) :
-        name_(god_name), descr_(god_descr) {}
+    God(const std::string& god_name,
+        const std::string& god_descr) :
+        name_(god_name),
+        descr_(god_descr) {}
 
     std::string name()   const
     {
         return name_;
     }
+
     std::string descr()  const
     {
         return descr_;
@@ -37,6 +40,6 @@ void set_random_god();
 
 void set_no_god();
 
-} //Gods
+} //gods
 
 #endif

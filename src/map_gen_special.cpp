@@ -6,7 +6,6 @@
 #include "actor_factory.hpp"
 #include "actor_mon.hpp"
 #include "map.hpp"
-#include "utils.hpp"
 #include "actor_factory.hpp"
 #include "feature_rigid.hpp"
 #include "map_parsing.hpp"

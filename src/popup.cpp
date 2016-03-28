@@ -5,7 +5,6 @@
 #include "text_format.hpp"
 #include "msg_log.hpp"
 #include "query.hpp"
-#include "cmn_types.hpp"
 #include "menu_input.hpp"
 #include "audio.hpp"
 

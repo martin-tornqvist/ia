@@ -17,7 +17,6 @@
 #include "inventory.hpp"
 #include "actor_mon.hpp"
 #include "map_parsing.hpp"
-#include "utils.hpp"
 #include "game_time.hpp"
 #include "map_travel.hpp"
 
@@ -66,7 +65,7 @@ void find_path_to_stairs()
 
 bool walk_to_adj_cell(const P& p)
 {
-    IA_ASSERT(utils::is_pos_adj(map::player->pos, p, true));
+    IA_ASSERT(is_pos_adj(map::player->pos, p, true));
 
     char key = '0' + int(dir_utils::dir(p - map::player->pos));
 
@@ -98,7 +97,7 @@ void act()
 #ifdef NDEBUG
         (void)actor;
 #else
-        IA_ASSERT(utils::is_pos_inside_map(actor->pos));
+        IA_ASSERT(map::is_pos_inside_map(actor->pos));
 #endif
     }
 

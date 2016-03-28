@@ -11,7 +11,6 @@
 #include "query.hpp"
 #include "save_handling.hpp"
 #include "popup.hpp"
-#include "utils.hpp"
 #include "map.hpp"
 #include "feature_data.hpp"
 

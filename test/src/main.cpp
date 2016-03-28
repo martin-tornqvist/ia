@@ -8,7 +8,6 @@
 #include <SDL.h>
 
 #include "config.hpp"
-#include "utils.hpp"
 #include "render.hpp"
 #include "map.hpp"
 #include "actor_player.hpp"
@@ -17,22 +16,20 @@
 #include "text_format.hpp"
 #include "actor_factory.hpp"
 #include "actor_Mon.hpp"
-#include "map_Gen.hpp"
-#include "converters.hpp"
-#include "cmn_Types.hpp"
-#include "map_Parsing.hpp"
+#include "map_gen.hpp"
+#include "map_parsing.hpp"
 #include "fov.hpp"
-#include "line_Calc.hpp"
-#include "save_Handling.hpp"
+#include "line_calc.hpp"
+#include "save_handling.hpp"
 #include "inventory.hpp"
-#include "player_Spells_Handling.hpp"
-#include "player_Bon.hpp"
+#include "player_spells_handling.hpp"
+#include "player_bon.hpp"
 #include "explosion.hpp"
-#include "item_Device.hpp"
-#include "feature_Rigid.hpp"
-#include "feature_Trap.hpp"
+#include "item_device.hpp"
+#include "feature_rigid.hpp"
+#include "feature_trap.hpp"
 #include "drop.hpp"
-#include "map_Travel.hpp"
+#include "map_travel.hpp"
 
 struct Basic_fixture
 {
@@ -55,31 +52,31 @@ struct Basic_fixture
 TEST(Is_Val_In_Range)
 {
     //Check in range
-    CHECK(utils::is_val_in_range(5,    Range(3,  7)));
-    CHECK(utils::is_val_in_range(3,    Range(3,  7)));
-    CHECK(utils::is_val_in_range(7,    Range(3,  7)));
-    CHECK(utils::is_val_in_range(10,   Range(-5, 12)));
-    CHECK(utils::is_val_in_range(-5,   Range(-5, 12)));
-    CHECK(utils::is_val_in_range(12,   Range(-5, 12)));
+    CHECK(is_val_in_range(5,    Range(3,  7)));
+    CHECK(is_val_in_range(3,    Range(3,  7)));
+    CHECK(is_val_in_range(7,    Range(3,  7)));
+    CHECK(is_val_in_range(10,   Range(-5, 12)));
+    CHECK(is_val_in_range(-5,   Range(-5, 12)));
+    CHECK(is_val_in_range(12,   Range(-5, 12)));
 
-    CHECK(utils::is_val_in_range(0,    Range(-1,  1)));
-    CHECK(utils::is_val_in_range(-1,   Range(-1,  1)));
-    CHECK(utils::is_val_in_range(1,    Range(-1,  1)));
+    CHECK(is_val_in_range(0,    Range(-1,  1)));
+    CHECK(is_val_in_range(-1,   Range(-1,  1)));
+    CHECK(is_val_in_range(1,    Range(-1,  1)));
 
-    CHECK(utils::is_val_in_range(5,    Range(5,  5)));
+    CHECK(is_val_in_range(5,    Range(5,  5)));
 
     //Check NOT in range
-    CHECK(!utils::is_val_in_range(2,   Range(3,  7)));
-    CHECK(!utils::is_val_in_range(8,   Range(3,  7)));
-    CHECK(!utils::is_val_in_range(-1,  Range(3,  7)));
+    CHECK(!is_val_in_range(2,   Range(3,  7)));
+    CHECK(!is_val_in_range(8,   Range(3,  7)));
+    CHECK(!is_val_in_range(-1,  Range(3,  7)));
 
-    CHECK(!utils::is_val_in_range(-9,  Range(-5, 12)));
-    CHECK(!utils::is_val_in_range(13,  Range(-5, 12)));
+    CHECK(!is_val_in_range(-9,  Range(-5, 12)));
+    CHECK(!is_val_in_range(13,  Range(-5, 12)));
 
-    CHECK(!utils::is_val_in_range(0,   Range(1,  2)));
+    CHECK(!is_val_in_range(0,   Range(1,  2)));
 
-    CHECK(!utils::is_val_in_range(4,   Range(5,  5)));
-    CHECK(!utils::is_val_in_range(6,   Range(5,  5)));
+    CHECK(!is_val_in_range(4,   Range(5,  5)));
+    CHECK(!is_val_in_range(6,   Range(5,  5)));
 
     //NOTE: Reversed range settings (e.g. Range(7, 3)) will fail an assert on debug builds.
     //For release builds, this will reverse the result - i.e. is_val_in_range(1, Range(7, 3))
@@ -96,34 +93,34 @@ TEST(roll_dice)
 
 TEST(constrain_val_in_range)
 {
-    int val = utils::constr_in_range(5, 9, 10);
+    int val = constr_in_range(5, 9, 10);
     CHECK_EQUAL(val, 9);
-    val = utils::constr_in_range(5, 11, 10);
+    val = constr_in_range(5, 11, 10);
     CHECK_EQUAL(val, 10);
-    val = utils::constr_in_range(5, 4, 10);
+    val = constr_in_range(5, 4, 10);
     CHECK_EQUAL(val, 5);
 
-    utils::set_constr_in_range(2, val, 8);
+    set_constr_in_range(2, val, 8);
     CHECK_EQUAL(val, 5);
-    utils::set_constr_in_range(2, val, 4);
+    set_constr_in_range(2, val, 4);
     CHECK_EQUAL(val, 4);
-    utils::set_constr_in_range(18, val, 22);
+    set_constr_in_range(18, val, 22);
     CHECK_EQUAL(val, 18);
 
     //Test faulty paramters
-    val = utils::constr_in_range(9, 4, 2);   //Min > Max -> return -1
+    val = constr_in_range(9, 4, 2);   //Min > Max -> return -1
     CHECK_EQUAL(val, -1);
     val = 10;
-    utils::set_constr_in_range(20, val, 3);   //Min > Max -> do nothing
+    set_constr_in_range(20, val, 3);   //Min > Max -> do nothing
     CHECK_EQUAL(val, 10);
 }
 
 TEST(calculate_distances)
 {
-    CHECK_EQUAL(utils::king_dist(P(1, 2), P(2, 3)), 1);
-    CHECK_EQUAL(utils::king_dist(P(1, 2), P(2, 4)), 2);
-    CHECK_EQUAL(utils::king_dist(P(1, 2), P(1, 2)), 0);
-    CHECK_EQUAL(utils::king_dist(P(10, 3), P(1, 4)), 9);
+    CHECK_EQUAL(king_dist(P(1, 2), P(2, 3)), 1);
+    CHECK_EQUAL(king_dist(P(1, 2), P(2, 4)), 2);
+    CHECK_EQUAL(king_dist(P(1, 2), P(1, 2)), 0);
+    CHECK_EQUAL(king_dist(P(10, 3), P(1, 4)), 9);
 }
 
 TEST(directions)
@@ -357,9 +354,7 @@ TEST_FIXTURE(Basic_fixture, line_calculation)
 
 TEST_FIXTURE(Basic_fixture, fov)
 {
-    bool blocked[MAP_W][MAP_H];
-
-    utils::reset_array(blocked, false);   //Nothing blocking sight
+    bool blocked[MAP_W][MAP_H] = {};
 
     const int X = MAP_W_HALF;
     const int Y = MAP_H_HALF;
@@ -419,7 +414,7 @@ TEST_FIXTURE(Basic_fixture, light_map)
             cell.is_dark    = true;
             cell.is_lit     = false;
 
-            if (utils::is_pos_inside_map(p, false))
+            if (map::is_pos_inside_map(p, false))
             {
                 map::put(new Floor(p));
             }
@@ -1107,8 +1102,7 @@ TEST_FIXTURE(Basic_fixture, loading_game)
 
 TEST_FIXTURE(Basic_fixture, flood_filling)
 {
-    bool b[MAP_W][MAP_H];
-    utils::reset_array(b, false);
+    bool b[MAP_W][MAP_H] = {};
 
     for (int y = 0; y < MAP_H; ++y)
     {
@@ -1138,8 +1132,7 @@ TEST_FIXTURE(Basic_fixture, flood_filling)
 TEST_FIXTURE(Basic_fixture, path_finding)
 {
     std::vector<P> path;
-    bool b[MAP_W][MAP_H];
-    utils::reset_array(b, false);
+    bool b[MAP_W][MAP_H] = {};
 
     for (int y = 0; y < MAP_H; ++y)
     {
@@ -1212,8 +1205,7 @@ TEST_FIXTURE(Basic_fixture, path_finding)
 
 TEST_FIXTURE(Basic_fixture, map_parse_expand_one)
 {
-    bool in[MAP_W][MAP_H];
-    utils::reset_array(in, false);
+    bool in[MAP_W][MAP_H] = {};
 
     in[10][5] = true;
 
@@ -1248,7 +1240,7 @@ TEST_FIXTURE(Basic_fixture, map_parse_expand_one)
     CHECK(out[12][6]);
 
     //Check that old values are cleared
-    utils::reset_array(in, false);
+    std::fill_n(*in, NR_MAP_CELLS, 0);
     in[40][10] = true;
     map_parse::expand(in, out);
     CHECK(out[39][10]);
@@ -1261,6 +1253,16 @@ TEST_FIXTURE(Basic_fixture, map_parse_expand_one)
 
 TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
 {
+    auto bool_map = [](const std::vector<P>& vec, bool out[MAP_W][MAP_H])
+    {
+        std::fill_n(*out, NR_MAP_CELLS, false);
+
+        for (const P& p : vec)
+        {
+            out[p.x][p.y] = true;
+        }
+    };
+
     //------------------------------------------------ Square, normal sized room
     Rect roomRect(20, 5, 30, 10);
 
@@ -1277,8 +1279,9 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
 
     std::vector<P> entry_list;
     map_gen_utils::valid_room_corr_entries(*room, entry_list);
+
     bool entry_map[MAP_W][MAP_H];
-    utils::mk_bool_map_from_vector(entry_list, entry_map);
+    bool_map(entry_list, entry_map);
 
     CHECK(!entry_map[19][4]);
     CHECK(entry_map[19][5]);
@@ -1295,7 +1298,7 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     //belonging to the room
     map::room_map[25][7] = nullptr;
     map_gen_utils::valid_room_corr_entries(*room, entry_list);
-    utils::mk_bool_map_from_vector(entry_list, entry_map);
+    bool_map(entry_list, entry_map);
 
     CHECK(!entry_map[25][7]);
 
@@ -1303,14 +1306,14 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     map::room_map[25][7] = room;
     map::put(new Wall(P(25, 7)));
     map_gen_utils::valid_room_corr_entries(*room, entry_list);
-    utils::mk_bool_map_from_vector(entry_list, entry_map);
+    bool_map(entry_list, entry_map);
 
     CHECK(!entry_map[25][7]);
 
     //The cell should also not be an entry if it's a wall and not belonging to the room
     map::room_map[25][7] = nullptr;
     map_gen_utils::valid_room_corr_entries(*room, entry_list);
-    utils::mk_bool_map_from_vector(entry_list, entry_map);
+    bool_map(entry_list, entry_map);
 
     CHECK(!entry_map[25][7]);
 
@@ -1329,12 +1332,12 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     }
 
     map_gen_utils::valid_room_corr_entries(*room, entry_list);
-    utils::mk_bool_map_from_vector(entry_list, entry_map);
+    bool_map(entry_list, entry_map);
 
     std::vector<P> entry_list_nearby_room;
     map_gen_utils::valid_room_corr_entries(*nearby_room, entry_list_nearby_room);
     bool entry_map_near_room[MAP_W][MAP_H];
-    utils::mk_bool_map_from_vector(entry_list_nearby_room, entry_map_near_room);
+    bool_map(entry_list_nearby_room, entry_map_near_room);
 
     for (int y = 5; y <= 10; ++y)
     {
@@ -1350,7 +1353,7 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     map::put(new Floor(P(60, 10)));
     map::room_map[60][10] = room;
     map_gen_utils::valid_room_corr_entries(*room, entry_list);
-    utils::mk_bool_map_from_vector(entry_list, entry_map);
+    bool_map(entry_list, entry_map);
 
     // 59 60 61
     // #  #  # 9
@@ -1373,7 +1376,7 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     // #  #  # 11
     map::put(new Floor(P(60, 9)));
     map_gen_utils::valid_room_corr_entries(*room, entry_list);
-    utils::mk_bool_map_from_vector(entry_list, entry_map);
+    bool_map(entry_list, entry_map);
 
     CHECK(!entry_map[59][9]);
     CHECK(!entry_map[60][9]);
@@ -1389,7 +1392,7 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     Room* adj_room = room_factory::mk(Room_type::plain, {60, 9, 60, 9});
     map::room_map[60][9] = adj_room;
     map_gen_utils::valid_room_corr_entries(*room, entry_list);
-    utils::mk_bool_map_from_vector(entry_list, entry_map);
+    bool_map(entry_list, entry_map);
 
     delete adj_room;
 
@@ -1412,7 +1415,7 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     map::put(new Floor(P(59, 10)));
     map::room_map[59][10] = room;
     map_gen_utils::valid_room_corr_entries(*room, entry_list);
-    utils::mk_bool_map_from_vector(entry_list, entry_map);
+    bool_map(entry_list, entry_map);
 
     CHECK(!entry_map[58][9]);
     CHECK(entry_map[59][9]);
@@ -1473,10 +1476,8 @@ TEST_FIXTURE(Basic_fixture, connect_rooms_with_corridor)
 
 TEST_FIXTURE(Basic_fixture, map_parse_cells_within_dist_of_others)
 {
-    bool in[MAP_W][MAP_H];
-    bool out[MAP_W][MAP_H];
-
-    utils::reset_array(in, false);  //Make sure all values are 0
+    bool in[MAP_W][MAP_H]   = {};
+    bool out[MAP_W][MAP_H]  = {};
 
     in[20][10] = true;
 
@@ -1559,7 +1560,7 @@ void check_wall_placement(const P& origin)
 
 } // namespace
 
-TEST_FIXTURE(Basic_fixture, mapGenStd)
+TEST_FIXTURE(Basic_fixture, map_gen_std)
 {
     for (int i = 0; i < 100; ++i)
     {

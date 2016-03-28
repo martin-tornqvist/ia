@@ -3,13 +3,15 @@
 #include "map_gen.hpp"
 
 #include <vector>
+#include <climits>
 
+#include "init.hpp"
 #include "map.hpp"
 #include "map_parsing.hpp"
-#include "utils.hpp"
 #include "map_templates.hpp"
 #include "feature_rigid.hpp"
 #include "game_time.hpp"
+#include "init.hpp"
 
 namespace map_gen
 {
@@ -29,7 +31,7 @@ Feature_id backup[MAP_W][MAP_H];
 void floor_cells_in_room(const Room& room, const bool floor[MAP_W][MAP_H],
                          std::vector<P>& out)
 {
-    IA_ASSERT(utils::is_area_inside_map(room.r_));
+    IA_ASSERT(map::is_area_inside_map(room.r_));
 
     for (int y = room.r_.p0.y; y <= room.r_.p1.y; ++y)
     {
@@ -332,8 +334,8 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
     TRACE_FUNC_BEGIN_VERBOSE << "Making corridor between rooms "
                              << &r0 << " and " << &r1 << std::endl;
 
-    IA_ASSERT(utils::is_area_inside_map(r0.r_));
-    IA_ASSERT(utils::is_area_inside_map(r1.r_));
+    IA_ASSERT(map::is_area_inside_map(r0.r_));
+    IA_ASSERT(map::is_area_inside_map(r1.r_));
 
     std::vector<P> p0_bucket;
     std::vector<P> p1_bucket;
@@ -361,7 +363,7 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
     {
         for (const P& p1 : p1_bucket)
         {
-            const int CUR_DIST = utils::king_dist(p0, p1);
+            const int CUR_DIST = king_dist(p0, p1);
 
             if (CUR_DIST < shortest_dist) {shortest_dist = CUR_DIST;}
         }
@@ -376,7 +378,7 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
     {
         for (const P& p1 : p1_bucket)
         {
-            const int CUR_DIST = utils::king_dist(p0, p1);
+            const int CUR_DIST = king_dist(p0, p1);
 
             if (CUR_DIST == shortest_dist)
             {
@@ -404,8 +406,7 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
     else
     {
         //Else, try to find a path to the other entry point
-        bool blocked[MAP_W][MAP_H];
-        utils::reset_array(blocked, false);
+        bool blocked[MAP_W][MAP_H] = {};
 
         for (int x = 0; x < MAP_W; ++x)
         {
@@ -481,7 +482,7 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
                         const P p_adj(p + P(dx, dy));
 
                         if (
-                            utils::is_pos_inside_map(p_adj, false) &&
+                            map::is_pos_inside_map(p_adj, false) &&
                             !blocked_expanded[p_adj.x][p_adj.y])
                         {
                             map::put(new Floor(p_adj));
@@ -555,8 +556,8 @@ void pathfinder_walk(const P& p0, const P& p1,
 {
     pos_list_ref.clear();
 
-    bool blocked[MAP_W][MAP_H];
-    utils::reset_array(blocked, false);
+    bool blocked[MAP_W][MAP_H] = {};
+
     std::vector<P> path;
     path_find::run(p0, p1, blocked, path);
 
@@ -596,7 +597,7 @@ void rnd_walk(const P& p0, int len, std::vector<P>& pos_list_ref,
         {
             const P nxt_pos = p + d_list[rnd::range(0, D_LIST_SIZE - 1)];
 
-            if (utils::is_pos_inside(nxt_pos, area))
+            if (is_pos_inside(nxt_pos, area))
             {
                 p = nxt_pos;
                 break;
