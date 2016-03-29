@@ -33,12 +33,12 @@ void try_drop_item_from_inv(Actor& actor,
 
     if (inv_type == Inv_type::slots)
     {
-        IA_ASSERT(IDX != size_t(Slot_id::END));
+        ASSERT(IDX != size_t(Slot_id::END));
         item_to_drop = inv.slots_[IDX].item;
     }
     else //Backpack item
     {
-        IA_ASSERT(IDX < inv.backpack_.size());
+        ASSERT(IDX < inv.backpack_.size());
         item_to_drop = inv.backpack_[IDX];
     }
 

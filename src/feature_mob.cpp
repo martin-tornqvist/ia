@@ -172,17 +172,20 @@ void Lit_flare::on_new_turn()
 
 void Lit_flare::add_light(bool light[MAP_W][MAP_H]) const
 {
-    const int R = FOV_STD_RADI_INT; //light_radius();
+    const int RADI = FOV_STD_RADI_INT; //light_radius();
 
-    P p0(std::max(0,         pos_.x - R),  std::max(0,          pos_.y - R));
-    P p1(std::min(MAP_W - 1, pos_.x + R),  std::min(MAP_H - 1,  pos_.y + R));
+    P p0(std::max(0, pos_.x - RADI),
+         std::max(0, pos_.y - RADI));
+
+    P p1(std::min(MAP_W - 1, pos_.x + RADI),
+         std::min(MAP_H - 1, pos_.y + RADI));
 
     bool hard_blocked[MAP_W][MAP_H];
 
     map_parse::run(cell_check::Blocks_los(),
                    hard_blocked,
                    Map_parse_mode::overwrite,
-                   Rect(p0, p1));
+                   R(p0, p1));
 
     Los_result fov[MAP_W][MAP_H];
 

@@ -270,13 +270,13 @@ void erase_all_mobs()
 void add_actor(Actor* actor)
 {
     //Sanity checks
-    IA_ASSERT(map::is_pos_inside_map(actor->pos));
+    ASSERT(map::is_pos_inside_map(actor->pos));
 
 #ifndef NDEBUG
     for (Actor* const old_actor : actors)
     {
         //Never insert the same actor twice
-        IA_ASSERT(actor != old_actor);
+        ASSERT(actor != old_actor);
 
         //Never insert an actor on the same position as an existing living actor
         //NOTE: Actors could be placed dead, e.g. Zuul can do this (immediately spawns a priest),
@@ -286,7 +286,7 @@ void add_actor(Actor* actor)
             const P& new_actor_p = actor->pos;
             const P& old_actor_p = old_actor->pos;
 
-            IA_ASSERT(new_actor_p != old_actor_p);
+            ASSERT(new_actor_p != old_actor_p);
         }
     }
 #endif // NDEBUG
@@ -373,7 +373,7 @@ void tick(const Pass_time pass_time)
                 break;
 
             case Actor_speed::END:
-                IA_ASSERT(false);
+                ASSERT(false);
                 break;
             }
         }
@@ -432,7 +432,7 @@ Actor* cur_actor()
     Actor* const actor = actors[cur_actor_idx_];
 
     //Sanity check actor retrieved
-    IA_ASSERT(map::is_pos_inside_map(actor->pos));
+    ASSERT(map::is_pos_inside_map(actor->pos));
     return actor;
 }
 

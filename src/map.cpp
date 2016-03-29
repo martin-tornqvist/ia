@@ -189,7 +189,7 @@ void reset_map()
 
 Rigid* put(Rigid* const f)
 {
-    IA_ASSERT(f);
+    ASSERT(f);
 
     const P p     = f->pos();
     Cell&     cell  = cells[p.x][p.y];
@@ -229,9 +229,9 @@ void cpy_render_array_to_visual_memory()
         {
             const Cell_render_data render_data = render::render_array_no_actors[x][y];
 
-            IA_ASSERT(!render_data.is_aware_of_hostile_mon_here);
-            IA_ASSERT(!render_data.is_aware_of_allied_mon_here);
-            IA_ASSERT(!render_data.is_living_actor_seen_here);
+            ASSERT(!render_data.is_aware_of_hostile_mon_here);
+            ASSERT(!render_data.is_aware_of_allied_mon_here);
+            ASSERT(!render_data.is_living_actor_seen_here);
 
             cells[x][y].player_visual_memory = render_data;
         }
@@ -286,12 +286,12 @@ void delete_and_remove_room_from_list(Room* const room)
         }
     }
 
-    IA_ASSERT(false && "Tried to remove non-existing room");
+    ASSERT(false && "Tried to remove non-existing room");
 }
 
 bool is_pos_seen_by_player(const P& p)
 {
-    IA_ASSERT(map::is_pos_inside_map(p));
+    ASSERT(map::is_pos_inside_map(p));
     return cells[p.x][p.y].is_seen_by_player;
 }
 
@@ -367,7 +367,7 @@ Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors)
         }
     }
 
-    IA_ASSERT(dist_to_nearest != INT_MAX);
+    ASSERT(dist_to_nearest != INT_MAX);
 
     //Store all actors with distance equal to the nearest distance
     std::vector<Actor*> closest_actors;
@@ -380,7 +380,7 @@ Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors)
         }
     }
 
-    IA_ASSERT(!closest_actors.empty());
+    ASSERT(!closest_actors.empty());
 
     const int ELEMENT = rnd::range(0, closest_actors.size() - 1);
 
@@ -405,7 +405,7 @@ bool is_pos_inside_map(const P& pos, const bool COUNT_EDGE_AS_INSIDE)
     }
 }
 
-bool is_area_inside_map(const Rect& area)
+bool is_area_inside_map(const R& area)
 {
     return is_pos_inside_map(area.p0) &&
            is_pos_inside_map(area.p1);

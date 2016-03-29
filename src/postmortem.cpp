@@ -54,7 +54,7 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
 
     const Highscore_entry* const score = highscore::final_score();
 
-    IA_ASSERT(score);
+    ASSERT(score);
 
     out.push_back({map::player->name_a(), clr_heading});
 

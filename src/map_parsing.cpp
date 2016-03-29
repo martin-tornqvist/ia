@@ -225,9 +225,9 @@ namespace map_parse
 void run(const  cell_check::Check& method,
          bool   out[MAP_W][MAP_H],
          const  Map_parse_mode write_rule,
-         const  Rect& area_to_check_cells)
+         const  R& area_to_check_cells)
 {
-    IA_ASSERT(method.is_checking_cells()    ||
+    ASSERT(method.is_checking_cells()    ||
            method.is_checking_mobs()        ||
            method.is_checking_actors());
 
@@ -299,7 +299,7 @@ void run(const  cell_check::Check& method,
 
 bool cell(const cell_check::Check& method, const P& p)
 {
-    IA_ASSERT(method.is_checking_cells()  ||
+    ASSERT(method.is_checking_cells()  ||
            method.is_checking_mobs()   ||
            method.is_checking_actors());
 
@@ -360,7 +360,7 @@ bool cell(const cell_check::Check& method, const P& p)
 void cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
                                  const Range& dist_interval)
 {
-    IA_ASSERT(in != out);
+    ASSERT(in != out);
 
     for (int x = 0; x < MAP_W; ++x)
     {
@@ -404,10 +404,10 @@ void cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MA
     }
 }
 
-bool is_val_in_area(const Rect& area, const bool in[MAP_W][MAP_H],
+bool is_val_in_area(const R& area, const bool in[MAP_W][MAP_H],
                     const bool VAL)
 {
-    IA_ASSERT(map::is_area_inside_map(area));
+    ASSERT(map::is_area_inside_map(area));
 
     for (int y = area.p0.y; y <= area.p1.y; ++y)
     {
@@ -435,7 +435,7 @@ void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H])
 }
 
 void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
-            const Rect& area_allowed_to_modify)
+            const R& area_allowed_to_modify)
 {
     int cmp_x0 = 0;
     int cmp_y0 = 0;
@@ -541,7 +541,7 @@ bool is_map_connected(const bool blocked[MAP_W][MAP_H])
         }
     }
 
-    IA_ASSERT(map::is_pos_inside_map(origin, false));
+    ASSERT(map::is_pos_inside_map(origin, false));
 
     int flood_fill[MAP_W][MAP_H];
 
@@ -599,7 +599,7 @@ void run(const P& p0,
     bool            is_at_tgt           = false;
     bool            is_stopping_at_p1   = p1.x != -1;
 
-    const Rect bounds(P(1, 1), P(MAP_W - 2, MAP_H - 2));
+    const R bounds(P(1, 1), P(MAP_W - 2, MAP_H - 2));
 
     P cur_pos(p0);
 
@@ -775,7 +775,7 @@ void run(const P& p0, const P& p1, bool blocked[MAP_W][MAP_H], std::vector<P>& o
                 }
             }
 
-            IA_ASSERT(!adj_pos_bucket.empty());
+            ASSERT(!adj_pos_bucket.empty());
 
             adj_pos = adj_pos_bucket[rnd::range(0, adj_pos_bucket.size() - 1)];
         }

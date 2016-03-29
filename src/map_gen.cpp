@@ -65,7 +65,7 @@ void register_room(Room& room)
 
     for (Room* const room_in_list : map::room_list)
     {
-        IA_ASSERT(room_in_list != &room); //Check that the room is not already added
+        ASSERT(room_in_list != &room); //Check that the room is not already added
     }
 
 #endif // NDEBUG
@@ -203,12 +203,12 @@ void connect_rooms()
     TRACE_FUNC_END;
 }
 
-void mk_crumble_room(const Rect& room_area_incl_walls, const P& event_pos)
+void mk_crumble_room(const R& room_area_incl_walls, const P& event_pos)
 {
     std::vector<P> wall_cells;
     std::vector<P> inner_cells;
 
-    const Rect& a = room_area_incl_walls; //abbreviation
+    const R& a = room_area_incl_walls; //abbreviation
 
     for (int y = a.p0.y; y <= a.p1.y; ++y)
     {
@@ -236,10 +236,10 @@ void mk_crumble_room(const Rect& room_area_incl_walls, const P& event_pos)
 //This function just returns false in that case.
 bool try_mk_aux_room(const P& p, const P& d, bool blocked[MAP_W][MAP_H], const P& door_p)
 {
-    Rect aux_rect(p, p + d - 1);
-    Rect aux_rect_with_border(aux_rect.p0 - 1, aux_rect.p1 + 1);
+    R aux_rect(p, p + d - 1);
+    R aux_rect_with_border(aux_rect.p0 - 1, aux_rect.p1 + 1);
 
-    IA_ASSERT(is_pos_inside(door_p, aux_rect_with_border));
+    ASSERT(is_pos_inside(door_p, aux_rect_with_border));
 
     if (map::is_area_inside_map(aux_rect_with_border))
     {
@@ -250,7 +250,7 @@ bool try_mk_aux_room(const P& p, const P& d, bool blocked[MAP_W][MAP_H], const P
                 for (int x = aux_rect.p0.x; x <= aux_rect.p1.x; ++x)
                 {
                     blocked[x][y] = true;
-                    IA_ASSERT(!map::room_map[x][y]);
+                    ASSERT(!map::room_map[x][y]);
                 }
             }
 
@@ -437,9 +437,9 @@ void mk_merged_regions_and_rooms(Region regions[3][3])
         auto& reg1      = regions[reg_idx_1.x][reg_idx_1.y];
         auto& reg2      = regions[reg_idx_2.x][reg_idx_2.y];
 
-        reg1.r_         = Rect(reg1.r_.p0, reg2.r_.p1);
+        reg1.r_         = R(reg1.r_.p0, reg2.r_.p1);
 
-        reg2.r_         = Rect(-1, -1, -1, -1);
+        reg2.r_         = R(-1, -1, -1, -1);
 
         reg1.is_free_   = reg2.is_free_ = false;
 
@@ -448,9 +448,9 @@ void mk_merged_regions_and_rooms(Region regions[3][3])
         {
             return rnd::range(0, 4);
         };
-        const Rect padding(rnd_padding(), rnd_padding(), rnd_padding(), rnd_padding());
+        const R padding(rnd_padding(), rnd_padding(), rnd_padding(), rnd_padding());
 
-        const Rect room_rect(reg1.r_.p0 + padding.p0, reg1.r_.p1 - padding.p1);
+        const R room_rect(reg1.r_.p0 + padding.p0, reg1.r_.p1 - padding.p1);
         Room* const room  = room_factory::mk_random_allowed_std_room(room_rect, false);
         reg1.main_room_    = room;
         register_room(*room);
@@ -528,14 +528,14 @@ void reserve_river(Region regions[3][3])
 {
     TRACE_FUNC_BEGIN;
 
-    Rect      room_rect;
+    R      room_rect;
     Region*   river_region       = nullptr;
     const int RESERVED_PADDING  = 2;
 
     auto init_room_rect = [&](int& len0, int& len1, int& breadth0, int& breadth1,
                               const P & reg0, const P & reg2)
     {
-        const Rect regions_tot_rect(regions[reg0.x][reg0.y].r_.p0,
+        const R regions_tot_rect(regions[reg0.x][reg0.y].r_.p0,
                                     regions[reg2.x][reg2.y].r_.p1);
         room_rect    = regions_tot_rect;
         river_region = &regions[reg0.x][reg0.y];
@@ -543,7 +543,7 @@ void reserve_river(Region regions[3][3])
         breadth0    = C - RESERVED_PADDING;
         breadth1    = C + RESERVED_PADDING;
 
-        IA_ASSERT(is_area_inside(room_rect, regions_tot_rect, true));
+        ASSERT(is_area_inside(room_rect, regions_tot_rect, true));
 
         len0--; //Extend room rectangle to map edge
         len1++;
@@ -682,7 +682,7 @@ void mk_sub_rooms()
     {
         auto* const outer_room     = map::room_list[i];
 
-        const Rect  outer_room_rect = outer_room->r_;
+        const R  outer_room_rect = outer_room->r_;
         const P   outer_room_d    = (outer_room_rect.p1 - outer_room_rect.p0) + 1;
 
         const bool IS_ROOM_BIG = outer_room_d.x > 16 || outer_room_d.y > 8;
@@ -709,7 +709,7 @@ void mk_sub_rooms()
 
                         const P p1(p0 + d - 1);
 
-                        const Rect r(p0, p1);
+                        const R r(p0, p1);
 
                         if (r.p0 == outer_room_rect.p0 && r.p1 == outer_room_rect.p1)
                         {
@@ -758,7 +758,7 @@ void mk_sub_rooms()
                             continue;
                         }
 
-                        const Rect room_rect(r.p0 + 1, r.p1 - 1);
+                        const R room_rect(r.p0 + 1, r.p1 - 1);
 
                         Room* const room =
                             room_factory::mk_random_allowed_std_room(room_rect, true);
@@ -1216,7 +1216,7 @@ void reveal_doors_on_path_to_stairs(const P& stairs_pos)
     std::vector<P> path;
     path_find::run(map::player->pos, stairs_pos, blocked, path);
 
-    IA_ASSERT(!path.empty());
+    ASSERT(!path.empty());
 
     TRACE << "Travelling along path and revealing all doors" << std:: endl;
 
@@ -1273,7 +1273,7 @@ bool mk_std_lvl()
     {
         for (int x = 0; x < 3; ++x)
         {
-            const Rect r(x == 0 ? 1 : x == 1 ? SPL_X0 + 1 : SPL_X1 + 1,
+            const R r(x == 0 ? 1 : x == 1 ? SPL_X0 + 1 : SPL_X1 + 1,
                          y == 0 ? 1 : y == 1 ? SPL_Y0 + 1 : SPL_Y1 + 1,
                          x == 0 ? SPL_X0 - 1 : x == 1 ? SPL_X1 - 1 : MAP_W - 2,
                          y == 0 ? SPL_Y0 - 1 : y == 1 ? SPL_Y1 - 1 : MAP_H - 2);
@@ -1317,7 +1317,7 @@ bool mk_std_lvl()
 
                 if (!region.main_room_ && region.is_free_)
                 {
-                    const Rect room_rect = region.rnd_room_rect();
+                    const R room_rect = region.rnd_room_rect();
                     auto* room = room_factory::mk_random_allowed_std_room(room_rect, false);
                     register_room(*room);
                     mk_floor_in_room(*room);
@@ -1537,7 +1537,7 @@ bool mk_std_lvl()
 } //map_gen
 
 //=============================================================== REGION
-Rect Region::rnd_room_rect() const
+R Region::rnd_room_rect() const
 {
     const bool ALLOW_TINY_W = rnd::coin_toss();
 
@@ -1556,5 +1556,5 @@ Rect Region::rnd_room_rect() const
 
     const P p1(p0.x + W - 1, p0.y + H - 1);
 
-    return Rect(p0, p1);
+    return R(p0, p1);
 }

@@ -25,7 +25,7 @@ void Ins_sympt::on_start()
     const std::string heading   = start_heading();
     const std::string msg       = "Insanity draws nearer... " + start_msg();
 
-    IA_ASSERT(!heading.empty() && !msg.empty());
+    ASSERT(!heading.empty() && !msg.empty());
 
     if (!heading.empty() && !msg.empty())
     {
@@ -34,7 +34,7 @@ void Ins_sympt::on_start()
 
     const std::string history_event_msg = history_msg();
 
-    IA_ASSERT(!history_event_msg.empty());
+    ASSERT(!history_event_msg.empty());
 
     if (!history_event_msg.empty())
     {
@@ -48,7 +48,7 @@ void Ins_sympt::on_end()
 {
     const std::string msg = end_msg();
 
-    IA_ASSERT(!msg.empty());
+    ASSERT(!msg.empty());
 
     if (!msg.empty())
     {
@@ -57,7 +57,7 @@ void Ins_sympt::on_end()
 
     const std::string history_event_msg = history_msg_end();
 
-    IA_ASSERT(!history_event_msg.empty());
+    ASSERT(!history_event_msg.empty());
 
     if (!history_event_msg.empty())
     {
@@ -463,7 +463,7 @@ void Ins_shadows::on_start_hook()
                           &summoned,
                           Verbosity::silent);
 
-    IA_ASSERT(!summoned.empty());
+    ASSERT(!summoned.empty());
 
     for (Mon* const mon : summoned)
     {
@@ -509,7 +509,7 @@ void Ins_paranoia::on_start_hook()
                               &summoned,
                               Verbosity::silent);
 
-        IA_ASSERT(summoned.size() == 1);
+        ASSERT(summoned.size() == 1);
 
         Mon* const mon = summoned[0];
 
@@ -619,7 +619,7 @@ Ins_sympt* mk_sympt(const Ins_sympt_id id)
         break;
     }
 
-    IA_ASSERT(false);
+    ASSERT(false);
 
     return nullptr;
 }
@@ -728,7 +728,7 @@ void run_sympt()
     {
         const size_t SYMPT_IDX = size_t(sympt->id());
 
-        IA_ASSERT(!sympts_[SYMPT_IDX]);
+        ASSERT(!sympts_[SYMPT_IDX]);
 
         sympts_[SYMPT_IDX] = sympt;
     }
@@ -738,7 +738,7 @@ void run_sympt()
 
 bool has_sympt(const Ins_sympt_id id)
 {
-    IA_ASSERT(id != Ins_sympt_id::END);
+    ASSERT(id != Ins_sympt_id::END);
 
     return sympts_[size_t(id)];
 }
@@ -803,13 +803,13 @@ void on_permanent_rfear()
 
 void end_sympt(const Ins_sympt_id id)
 {
-    IA_ASSERT(id != Ins_sympt_id::END);
+    ASSERT(id != Ins_sympt_id::END);
 
     const size_t IDX = size_t(id);
 
     Ins_sympt* const sympt = sympts_[IDX];
 
-    IA_ASSERT(sympt);
+    ASSERT(sympt);
 
     sympts_[IDX] = nullptr;
 

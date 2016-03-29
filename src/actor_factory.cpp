@@ -237,7 +237,7 @@ Actor* mk_actor_from_id(const Actor_id id)
 
 Actor* mk(const Actor_id id, const P& pos)
 {
-    IA_ASSERT(
+    ASSERT(
         !map::cells[pos.x][pos.y].rigid ||
         map::cells[pos.x][pos.y].rigid->id() != Feature_id::stairs);
 
@@ -313,7 +313,7 @@ void summon(const P& origin,
         Actor* const    actor   = mk(id, pos);
         Mon* const      mon     = static_cast<Mon*>(actor);
 
-        IA_ASSERT(map::is_pos_inside_map(pos, false));
+        ASSERT(map::is_pos_inside_map(pos, false));
 
         if (monsters_ret)
         {

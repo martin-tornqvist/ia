@@ -19,7 +19,7 @@ void cells_in_room(const Room& room,
     std::vector<P> pos_bucket;
     pos_bucket.clear();
 
-    const Rect& r = room.r_;
+    const R& r = room.r_;
 
     for (int x = r.p0.x; x <= r.p1.x; ++x)
     {

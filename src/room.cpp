@@ -102,7 +102,7 @@ void init_room_bucket()
     TRACE_FUNC_END;
 }
 
-Room* mk(const Room_type type, const Rect& r)
+Room* mk(const Room_type type, const R& r)
 {
     switch (type)
     {
@@ -144,7 +144,7 @@ Room* mk(const Room_type type, const Rect& r)
 
     case Room_type::END_OF_STD_ROOMS:
         TRACE << "Illegal room type id: " << int (type) << std::endl;
-        IA_ASSERT(false);
+        ASSERT(false);
         return nullptr;
 
     case Room_type::corr_link:
@@ -158,11 +158,11 @@ Room* mk(const Room_type type, const Rect& r)
     }
 
     TRACE << "Unhandled room type id: " << int (type) << std::endl;
-    IA_ASSERT(false);
+    ASSERT(false);
     return nullptr;
 }
 
-Room* mk_random_allowed_std_room(const Rect& r, const bool IS_SUBROOM)
+Room* mk_random_allowed_std_room(const R& r, const bool IS_SUBROOM)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
@@ -207,7 +207,7 @@ Room* mk_random_allowed_std_room(const Rect& r, const bool IS_SUBROOM)
 } //Room_factory
 
 //------------------------------------------------------------------- ROOM
-Room::Room(Rect r, Room_type type) :
+Room::Room(R r, Room_type type) :
     r_              (r),
     type_           (type),
     is_sub_room_    (false) {}
@@ -379,7 +379,7 @@ int Std_room::place_auto_features()
 
         if (pos.x >= 0)
         {
-            IA_ASSERT(FEATURE_IDX < feature_bucket.size());
+            ASSERT(FEATURE_IDX < feature_bucket.size());
 
             const Feature_data_t* d = feature_bucket[FEATURE_IDX];
 
@@ -898,7 +898,7 @@ void Flooded_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
                     id == Feature_id::fountain)
                 {
                     TRACE << "Illegal feature found in room" << std::endl;
-                    IA_ASSERT(false);
+                    ASSERT(false);
                 }
             }
         }
@@ -965,7 +965,7 @@ void Muddy_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
                     id == Feature_id::fountain)
                 {
                     TRACE << "Illegal feature found in room" << std::endl;
-                    IA_ASSERT(false);
+                    ASSERT(false);
                 }
             }
         }

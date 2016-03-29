@@ -26,7 +26,7 @@ namespace throwing
 
 void player_throw_lit_explosive(const P& aim_cell)
 {
-    IA_ASSERT(map::player->active_explosive);
+    ASSERT(map::player->active_explosive);
 
     std::vector<P> path;
 

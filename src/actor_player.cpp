@@ -267,7 +267,7 @@ void Player::save() const
     save_handling::put_int(nr_steps_until_free_action_);
     save_handling::put_int(nr_turns_until_rspell_);
 
-    IA_ASSERT(unarmed_wpn_);
+    ASSERT(unarmed_wpn_);
 
     save_handling::put_int(int(unarmed_wpn_->id()));
 
@@ -296,14 +296,14 @@ void Player::load()
 
     Item_id unarmed_wpn_id = Item_id(save_handling::get_int());
 
-    IA_ASSERT(unarmed_wpn_id < Item_id::END);
+    ASSERT(unarmed_wpn_id < Item_id::END);
 
     delete unarmed_wpn_;
     unarmed_wpn_ = nullptr;
 
     Item* const unarmed_item = item_factory::mk(unarmed_wpn_id);
 
-    IA_ASSERT(unarmed_item);
+    ASSERT(unarmed_item);
 
     unarmed_wpn_ = static_cast<Wpn*>(unarmed_item);
 
@@ -592,7 +592,7 @@ void Player::incr_insanity()
 
 bool Player::is_standing_in_open_place() const
 {
-    const Rect r(pos - 1, pos + 1);
+    const R r(pos - 1, pos + 1);
 
     bool blocked[MAP_W][MAP_H];
 
@@ -620,7 +620,7 @@ bool Player::is_standing_in_open_place() const
 
 bool Player::is_standing_in_cramped_place() const
 {
-    const Rect r(pos - 1, pos + 1);
+    const R r(pos - 1, pos + 1);
 
     bool blocked[MAP_W][MAP_H];
 
@@ -695,7 +695,7 @@ void Player::act()
 {
 #ifndef NDEBUG
     //Sanity check: Disease and infection should never be active at the same time
-    IA_ASSERT(!prop_handler_->has_prop(Prop_id::diseased) ||
+    ASSERT(!prop_handler_->has_prop(Prop_id::diseased) ||
               !prop_handler_->has_prop(Prop_id::infected));
 #endif // NDEBUG
 
@@ -927,7 +927,7 @@ void Player::on_std_turn()
 {
 #ifndef NDEBUG
     //Sanity check: Disease and infection should never be active at the same time
-    IA_ASSERT(!prop_handler_->has_prop(Prop_id::diseased) ||
+    ASSERT(!prop_handler_->has_prop(Prop_id::diseased) ||
               !prop_handler_->has_prop(Prop_id::infected));
 #endif // NDEBUG
 
@@ -1427,7 +1427,7 @@ void Player::move(Dir dir)
             else //There is a monster here that player is unaware of
             {
                 //If player is unaware of the monster, it should never be seen
-                IA_ASSERT(!CAN_SEE_MON);
+                ASSERT(!CAN_SEE_MON);
 
                 if (is_features_allow_move)
                 {
@@ -1629,7 +1629,7 @@ void Player::kick_mon(Actor& defender)
 
 Wpn& Player::unarmed_wpn()
 {
-    IA_ASSERT(unarmed_wpn_);
+    ASSERT(unarmed_wpn_);
 
     return *unarmed_wpn_;
 }
@@ -1672,7 +1672,7 @@ void Player::add_light_hook(bool light_map[MAP_W][MAP_H]) const
     {
         bool hard_blocked[MAP_W][MAP_H];
 
-        const Rect fov_lmt = fov::get_fov_rect(pos);
+        const R fov_lmt = fov::get_fov_rect(pos);
 
         map_parse::run(cell_check::Blocks_los(),
                        hard_blocked,
@@ -1729,7 +1729,7 @@ void Player::update_fov()
     {
         bool hard_blocked[MAP_W][MAP_H];
 
-        const Rect fov_lmt = fov::get_fov_rect(pos);
+        const R fov_lmt = fov::get_fov_rect(pos);
 
         map_parse::run(cell_check::Blocks_los(),
                        hard_blocked,

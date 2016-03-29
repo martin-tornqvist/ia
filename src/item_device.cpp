@@ -92,7 +92,7 @@ std::vector<std::string> Strange_device::descr() const
 
 Consume_item Strange_device::activate(Actor* const actor)
 {
-    IA_ASSERT(actor);
+    ASSERT(actor);
 
     if (data_->is_identified)
     {
@@ -395,7 +395,7 @@ void Device_lantern::load()
 
 void Device_lantern::on_pickup_hook()
 {
-    IA_ASSERT(actor_carrying_);
+    ASSERT(actor_carrying_);
 
     //Check for existing electric lantern in inventory
     Inventory& inv = actor_carrying_->inv();

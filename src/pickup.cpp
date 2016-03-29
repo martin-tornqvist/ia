@@ -79,7 +79,7 @@ void try_pick()
 
 Ammo* unload_ranged_wpn(Wpn& wpn)
 {
-    IA_ASSERT(!wpn.data().ranged.has_infinite_ammo);
+    ASSERT(!wpn.data().ranged.has_infinite_ammo);
 
     const int NR_AMMO_LOADED = wpn.nr_ammo_loaded_;
 

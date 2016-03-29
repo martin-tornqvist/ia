@@ -28,13 +28,13 @@ void init()
     if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
     {
         TRACE << "Failed to init SDL" << std::endl;
-        IA_ASSERT(false);
+        ASSERT(false);
     }
 
     if (IMG_Init(IMG_INIT_PNG) == -1)
     {
         TRACE << "Failed to init SDL_image" << std::endl;
-        IA_ASSERT(false);
+        ASSERT(false);
     }
 
     const int     AUDIO_FREQ      = 44100;
@@ -45,7 +45,7 @@ void init()
     if (Mix_OpenAudio(AUDIO_FREQ, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS) == -1)
     {
         TRACE << "Failed to init SDL_mixer" << std::endl;
-        IA_ASSERT(false);
+        ASSERT(false);
     }
 
     Mix_AllocateChannels(AUDIO_ALLOCATED_CHANNELS);

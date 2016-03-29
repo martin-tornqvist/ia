@@ -220,7 +220,7 @@ std::string bg_title(const Bg id)
         break;
     }
 
-    IA_ASSERT(false);
+    ASSERT(false);
 
     return "[BG TITLE MISSING]";
 }
@@ -365,7 +365,7 @@ std::string trait_title(const Trait id)
         break;
     }
 
-    IA_ASSERT(false);
+    ASSERT(false);
 
     return "[TRAIT TITLE MISSING]";
 }
@@ -625,7 +625,7 @@ std::string trait_descr(const Trait id)
         break;
     }
 
-    IA_ASSERT(false);
+    ASSERT(false);
 
     return "[TRAIT DESCRIPTION MISSING]";
 }
@@ -945,7 +945,7 @@ void pickable_traits(const Bg bg, std::vector<Trait>& traits_ref)
 
 void pick_bg(const Bg bg)
 {
-    IA_ASSERT(bg != Bg::END);
+    ASSERT(bg != Bg::END);
 
     bg_ = bg;
 
@@ -1000,7 +1000,7 @@ void set_all_traits_to_picked()
 
 void pick_trait(const Trait id)
 {
-    IA_ASSERT(id != Trait::END);
+    ASSERT(id != Trait::END);
 
     traits[int(id)] = true;
 
@@ -1086,7 +1086,7 @@ std::string all_picked_traits_titles_line()
 
 int spi_occultist_can_cast_at_lvl(const int LVL)
 {
-    IA_ASSERT(LVL > 0);
+    ASSERT(LVL > 0);
     const int SPI_FROM_START_TRAIT  = 2;
     const int SPI_FROM_LVLS         = (LVL - 1) * SPI_PER_LVL;
     return PLAYER_START_SPI + SPI_FROM_LVLS + SPI_FROM_START_TRAIT - 1;

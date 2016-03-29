@@ -1000,8 +1000,9 @@ void handle_map_mode_key_press(const Key_data& d)
         return;
     }
 
+#ifndef NDEBUG // Some cheat commands...
     //----------------------------------- SUMMON MONSTER
-    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F1)
+    else if (d.sdl_key == SDLK_F1)
     {
         const std::string query_str = "Summon monster id:";
 
@@ -1024,7 +1025,7 @@ void handle_map_mode_key_press(const Key_data& d)
     }
 
     //----------------------------------- DESCEND CHEAT
-    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F2)
+    else if (d.sdl_key == SDLK_F2)
     {
         map_travel::go_to_nxt();
         clear_events();
@@ -1033,7 +1034,7 @@ void handle_map_mode_key_press(const Key_data& d)
     }
 
     //----------------------------------- XP CHEAT
-    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F3)
+    else if (d.sdl_key == SDLK_F3)
     {
         dungeon_master::incr_player_xp(100);
         clear_events();
@@ -1042,7 +1043,7 @@ void handle_map_mode_key_press(const Key_data& d)
     }
 
     //----------------------------------- VISION CHEAT
-    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F4)
+    else if (d.sdl_key == SDLK_F4)
     {
         if (init::is_cheat_vision_enabled)
         {
@@ -1069,7 +1070,7 @@ void handle_map_mode_key_press(const Key_data& d)
     }
 
     //----------------------------------- INSANITY CHEAT
-    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F5)
+    else if (d.sdl_key == SDLK_F5)
     {
         map::player->incr_shock(50, Shock_src::misc);
         clear_events();
@@ -1078,7 +1079,7 @@ void handle_map_mode_key_press(const Key_data& d)
     }
 
     //----------------------------------- DROP ITEMS AROUND PLAYER
-    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F6)
+    else if (d.sdl_key == SDLK_F6)
     {
         item_factory::mk_item_on_floor(Item_id::gas_mask, map::player->pos);
 
@@ -1098,7 +1099,7 @@ void handle_map_mode_key_press(const Key_data& d)
     }
 
     //----------------------------------- TELEPORT
-    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F7)
+    else if (d.sdl_key == SDLK_F7)
     {
         msg_log::clear();
         map::player->teleport();
@@ -1108,13 +1109,14 @@ void handle_map_mode_key_press(const Key_data& d)
     }
 
     //----------------------------------- PROPERTY
-    else if (IS_DEBUG_MODE && d.sdl_key == SDLK_F8)
+    else if (d.sdl_key == SDLK_F8)
     {
         map::player->prop_handler().try_add(new Prop_cursed(Prop_turns::indefinite));
         clear_events();
 
         return;
     }
+#endif // NDEBUG
 
     //----------------------------------- UNDEFINED COMMANDS
     else if (d.key != -1)

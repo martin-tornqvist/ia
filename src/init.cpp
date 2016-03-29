@@ -33,30 +33,6 @@ namespace init
 bool is_cheat_vision_enabled    = false;
 bool quit_to_main_menu          = false;
 
-void ia_assert(const bool check,
-               const char* check_str,
-               const char* file,
-               const int line,
-               const char* func)
-{
-    if (!check)
-    {
-        std::cerr << std::endl
-                  << "T:" << to_str(game_time::turn()) << " "
-                  << file << ", "
-                  << line << ", "
-                  << func << "():"
-                  << std::endl
-                  << std::endl << "*** ASSERTION FAILED! ***"
-                  << std::endl
-                  << std::endl << check_str
-                  << std::endl
-                  << std::endl;
-
-        assert(false);
-    }
-}
-
 void init_io()
 {
     TRACE_FUNC_BEGIN;

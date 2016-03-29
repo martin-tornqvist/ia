@@ -107,14 +107,14 @@ void add(const std::string& str,
          const bool INTERRUPT_PLAYER_ACTIONS,
          const More_prompt_on_msg add_more_prompt_on_msg)
 {
-    IA_ASSERT(!str.empty());
+    ASSERT(!str.empty());
 
 #ifndef NDEBUG
 
     if (str[0] == ' ')
     {
         TRACE << "Message starts with space: \"" << str << "\"" << std::endl;
-        IA_ASSERT(false);
+        ASSERT(false);
     }
 
 #endif

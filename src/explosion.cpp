@@ -68,13 +68,13 @@ void draw(const std::vector< std::vector<P> >& pos_lists,
     }
 }
 
-Rect explosion_area(const P& c, const int RADI)
+R explosion_area(const P& c, const int RADI)
 {
-    return Rect(P(std::max(c.x - RADI, 1),         std::max(c.y - RADI, 1)),
+    return R(P(std::max(c.x - RADI, 1),         std::max(c.y - RADI, 1)),
                 P(std::min(c.x + RADI, MAP_W - 2), std::min(c.y + RADI, MAP_H - 2)));
 }
 
-void cells_reached(const Rect& area, const P& origin,
+void cells_reached(const R& area, const P& origin,
                    bool blocked[MAP_W][MAP_H],
                    std::vector< std::vector<P> >& pos_list_ref)
 {
@@ -128,7 +128,7 @@ void run(const P& origin,
 {
     const int RADI = EXPLOSION_STD_RADI + RADI_CHANGE;
 
-    const Rect area = explosion_area(origin, RADI);
+    const R area = explosion_area(origin, RADI);
 
     bool blocked[MAP_W][MAP_H];
 
@@ -292,7 +292,7 @@ void run_smoke_explosion_at(const P& origin)
 {
     const int RADI = EXPLOSION_STD_RADI;
 
-    const Rect area = explosion_area(origin, RADI);
+    const R area = explosion_area(origin, RADI);
 
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_projectiles(), blocked);

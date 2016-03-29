@@ -216,7 +216,7 @@ void draw(const Menu_browser& browser)
 
     if (config::is_tiles_mode())
     {
-        render::draw_box(Rect(P(0, 0), P(SCREEN_W - 1, SCREEN_H - 1)));
+        render::draw_box(R(P(0, 0), P(SCREEN_W - 1, SCREEN_H - 1)));
     }
 
     if (config::is_tiles_mode())
@@ -263,10 +263,9 @@ void draw(const Menu_browser& browser)
         pos.y += 3;
     }
 
-    if (IS_DEBUG_MODE)
-    {
-        render::draw_text("## DEBUG MODE ##", Panel::screen, P(1, 1), clr_yellow);
-    }
+#ifndef NDEBUG
+    render::draw_text("## DEBUG MODE ##", Panel::screen, P(1, 1), clr_yellow);
+#endif // NDEBUG
 
     TRACE << "Drawing main menu" << std::endl;
 
@@ -302,14 +301,12 @@ void draw(const Menu_browser& browser)
                       browser.is_at_idx(5) ? clr_menu_highlight : clr_menu_drk);
     pos += 1;
 
-    if (IS_DEBUG_MODE)
-    {
-        render::draw_text("DEBUG: RUN BOT",
-                          Panel::screen, pos,
-                          browser.is_at_idx(6) ? clr_menu_highlight : clr_menu_drk);
-        pos += 1;
-    }
-
+#ifndef NDEBUG
+    render::draw_text("DEBUG: RUN BOT",
+                      Panel::screen, pos,
+                      browser.is_at_idx(6) ? clr_menu_highlight : clr_menu_drk);
+    pos += 1;
+#endif // NDEBUG
 
     TRACE << "Drawing quote" << std::endl;
     Clr quote_clr = clr_gray;
@@ -369,7 +366,11 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
 
     quote = hpl_quote();
 
-    Menu_browser browser(IS_DEBUG_MODE ? 7 : 6);
+#ifdef NDEBUG
+    Menu_browser browser(6);
+#else //Debug mode
+    Menu_browser browser(7);
+#endif // NDEBUG
 
     intro_mus_channel = audio::play(Sfx_id::mus_cthulhiana_Madness);
 
@@ -442,18 +443,18 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
                 return Game_entry_mode::new_game;
             }
 
-            if (IS_DEBUG_MODE)
+#ifndef NDEBUG
+            if (browser.is_at_idx(6))
             {
-                if (browser.is_at_idx(6))
-                {
-                    config::toggle_bot_playing();
-                    TRACE_FUNC_END;
-                    return Game_entry_mode::new_game;
-                }
+                config::toggle_bot_playing();
+                TRACE_FUNC_END;
+                return Game_entry_mode::new_game;
             }
+#endif // NDEBUG
+
             break;
-        }
-    }
+        } //switch
+    } //while(true)
 
     TRACE_FUNC_END;
     return Game_entry_mode::new_game;

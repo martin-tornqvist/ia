@@ -518,7 +518,7 @@ namespace
 
 void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
 {
-    IA_ASSERT(att_data.defender);
+    ASSERT(att_data.defender);
 
     std::string other_name      = "";
     std::string snd_msg         = "";
@@ -864,7 +864,7 @@ void print_ranged_init_msgs(const Ranged_att_data& data)
 
 void print_proj_at_actor_msgs(const Ranged_att_data& data, const bool IS_HIT, const Wpn& wpn)
 {
-    IA_ASSERT(data.defender);
+    ASSERT(data.defender);
 
     //Print messages if player can see the cell (note that the player does not have to see the
     //actual actor being hit - it will simply say "it" is hit otherwise)
@@ -1615,7 +1615,7 @@ void melee(Actor* const attacker,
 
                     const P fov_p = player.pos;
 
-                    Rect fov_rect = fov::get_fov_rect(fov_p);
+                    R fov_rect = fov::get_fov_rect(fov_p);
 
                     map_parse::run(cell_check::Blocks_move_cmn(false),
                                    blocked,
@@ -1724,7 +1724,7 @@ bool ranged(Actor* const attacker,
 
     if (wpn.data().ranged.is_shotgun)
     {
-        IA_ASSERT(attacker);
+        ASSERT(attacker);
 
         if (wpn.nr_ammo_loaded_ != 0 || HAS_INF_AMMO)
         {

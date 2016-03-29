@@ -65,7 +65,7 @@ void cover_cell_in_map(const P& pos);
 
 void cover_panel(const Panel panel);
 
-void cover_area(const Panel panel, const Rect& area);
+void cover_area(const Panel panel, const R& area);
 void cover_area(const Panel panel, const P& pos, const P& dims);
 
 void cover_area_px(const P& px_pos, const P& px_dims);
@@ -101,7 +101,7 @@ void draw_skull(const P& p);
 void draw_projectiles(std::vector<Projectile*>& projectiles,
                       const bool SHOULD_DRAW_MAP_BEFORE);
 
-void draw_box(const Rect& area,
+void draw_box(const R& area,
               const Panel panel = Panel::screen,
               const Clr& clr = clr_gray_drk,
               const bool COVER_AREA = false);

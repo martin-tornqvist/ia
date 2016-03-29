@@ -51,7 +51,7 @@ void draw(const std::string& cur_string)
                       P(NAME_X0, Y_NAME),
                       clr_menu_highlight);
 
-    Rect box_rect(P(NAME_X0 - 1, Y_NAME - 1),
+    R box_rect(P(NAME_X0 - 1, Y_NAME - 1),
                   P(NAME_X1 + 1, Y_NAME + 1));
 
     render::draw_box(box_rect);

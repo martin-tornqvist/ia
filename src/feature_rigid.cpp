@@ -380,7 +380,7 @@ Clr Rigid::clr_bg() const
         return clr_bg_default();
     }
 
-    IA_ASSERT(false && "Failed to set color");
+    ASSERT(false && "Failed to set color");
     return clr_yellow;
 }
 
@@ -628,7 +628,7 @@ Clr Wall::clr_default() const
         return clr_red;
     }
 
-    IA_ASSERT(false && "Failed to set color");
+    ASSERT(false && "Failed to set color");
     return clr_yellow;
 }
 
@@ -676,7 +676,7 @@ Tile_id Wall::front_wall_tile() const
         }
     }
 
-    IA_ASSERT(false && "Failed to set front wall tile");
+    ASSERT(false && "Failed to set front wall tile");
     return Tile_id::empty;
 }
 
@@ -697,7 +697,7 @@ Tile_id Wall::top_wall_tile() const
         return Tile_id::egypt_wall_top;
     }
 
-    IA_ASSERT(false && "Failed to set top wall tile");
+    ASSERT(false && "Failed to set top wall tile");
     return Tile_id::empty;
 }
 
@@ -902,7 +902,7 @@ void Statue::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor*
 {
     if (dmg_type == Dmg_type::physical && dmg_method == Dmg_method::kick)
     {
-        IA_ASSERT(actor);
+        ASSERT(actor);
 
         if (actor->has_prop(Prop_id::weakened))
         {
@@ -1078,7 +1078,7 @@ void Stairs::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor*
 
 void Stairs::on_new_turn_hook()
 {
-    IA_ASSERT(!map::cells[pos_.x][pos_.y].item);
+    ASSERT(!map::cells[pos_.x][pos_.y].item);
 }
 
 void Stairs::bump(Actor& actor_bumping)
@@ -1258,7 +1258,7 @@ Clr Liquid_shallow::clr_default() const
         break;
     }
 
-    IA_ASSERT(false && "Failed to set color");
+    ASSERT(false && "Failed to set color");
     return clr_yellow;
 }
 
@@ -1339,7 +1339,7 @@ Clr Liquid_deep::clr_default() const
         break;
     }
 
-    IA_ASSERT(false && "Failed to set color");
+    ASSERT(false && "Failed to set color");
     return clr_yellow;
 }
 
@@ -1515,7 +1515,7 @@ std::string Grass::name(const Article article) const
         return ret + "scorched ground";
     }
 
-    IA_ASSERT("Failed to set name" && false);
+    ASSERT("Failed to set name" && false);
     return "";
 }
 
@@ -1532,7 +1532,7 @@ Clr Grass::clr_default() const
         break;
     }
 
-    IA_ASSERT(false && "Failed to set color");
+    ASSERT(false && "Failed to set color");
     return clr_yellow;
 }
 
@@ -1585,7 +1585,7 @@ std::string Bush::name(const Article article) const
         break;
     }
 
-    IA_ASSERT("Failed to set name" && false);
+    ASSERT("Failed to set name" && false);
     return "";
 }
 
@@ -1602,7 +1602,7 @@ Clr Bush::clr_default() const
         break;
     }
 
-    IA_ASSERT(false && "Failed to set color");
+    ASSERT(false && "Failed to set color");
     return clr_yellow;
 }
 
@@ -1673,7 +1673,7 @@ void Brazier::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor
 {
     if (dmg_type == Dmg_type::physical && dmg_method == Dmg_method::kick)
     {
-        IA_ASSERT(actor);
+        ASSERT(actor);
 
         if (actor->has_prop(Prop_id::weakened))
         {
@@ -1887,10 +1887,10 @@ void Item_container::open(const P& feature_pos, Actor* const actor_opening)
             }
             else //Special key (unload in this case)
             {
-                IA_ASSERT(IS_UNLOADABLE_WPN);
-                IA_ASSERT(wpn);
-                IA_ASSERT(wpn->nr_ammo_loaded_ > 0);
-                IA_ASSERT(!data.ranged.has_infinite_ammo);
+                ASSERT(IS_UNLOADABLE_WPN);
+                ASSERT(wpn);
+                ASSERT(wpn->nr_ammo_loaded_ > 0);
+                ASSERT(!data.ranged.has_infinite_ammo);
 
                 audio::play(Sfx_id::pickup);
 
@@ -2067,7 +2067,7 @@ Clr Tomb::clr_default() const
         break;
     }
 
-    IA_ASSERT("Failed to set Tomb color" && false);
+    ASSERT("Failed to set Tomb color" && false);
     return clr_black;
 }
 
@@ -2463,8 +2463,8 @@ void Chest::bump(Actor& actor_bumping)
 
 void Chest::try_find_trap()
 {
-    IA_ASSERT(is_trapped_);
-    IA_ASSERT(!is_open_);
+    ASSERT(is_trapped_);
+    ASSERT(!is_open_);
 
     const bool CAN_DET_TRAP =
         TRAP_DET_LVL == 0                           ||
@@ -2562,7 +2562,7 @@ void Chest::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* con
             }
             else
             {
-                IA_ASSERT(actor);
+                ASSERT(actor);
 
                 msg_log::add("I kick the lid.");
 
@@ -3002,7 +3002,7 @@ Clr Fountain::clr_default() const
         }
     }
 
-    IA_ASSERT("Failed to get fountain color" && false);
+    ASSERT("Failed to get fountain color" && false);
     return clr_black;
 }
 

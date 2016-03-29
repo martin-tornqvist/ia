@@ -59,16 +59,16 @@ namespace room_factory
 void init_room_bucket();
 
 //NOTE: These functions do not make rooms on the map, they merely create Room objects.
-Room* mk(const Room_type type, const Rect& r);
+Room* mk(const Room_type type, const R& r);
 
-Room* mk_random_allowed_std_room(const Rect& r, const bool IS_SUBROOM);
+Room* mk_random_allowed_std_room(const R& r, const bool IS_SUBROOM);
 
 } //Room_factory
 
 class Room
 {
 public:
-    Room(Rect r, Room_type type);
+    Room(R r, Room_type type);
 
     Room() = delete;
 
@@ -77,7 +77,7 @@ public:
     virtual void on_pre_connect(bool door_proposals[MAP_W][MAP_H]) = 0;
     virtual void on_post_connect(bool door_proposals[MAP_W][MAP_H]) = 0;
 
-    Rect                r_;
+    R                r_;
     const Room_type     type_;
     bool                is_sub_room_;
     std::vector<Room*>  rooms_con_to_;
@@ -90,7 +90,7 @@ protected:
 class Std_room : public Room
 {
 public:
-    Std_room(Rect r, Room_type type) : Room(r, type) {}
+    Std_room(R r, Room_type type) : Room(r, type) {}
 
     virtual ~Std_room() {}
 
@@ -122,7 +122,7 @@ protected:
 class Plain_room: public Std_room
 {
 public:
-    Plain_room(Rect r) : Std_room(r, Room_type::plain) {}
+    Plain_room(R r) : Std_room(r, Room_type::plain) {}
 
     ~Plain_room() {}
 
@@ -136,7 +136,7 @@ protected:
 class Human_room: public Std_room
 {
 public:
-    Human_room(Rect r) :
+    Human_room(R r) :
         Std_room(r, Room_type::human) {}
 
     ~Human_room() {}
@@ -153,7 +153,7 @@ protected:
 class Ritual_room: public Std_room
 {
 public:
-    Ritual_room(Rect r) :
+    Ritual_room(R r) :
         Std_room(r, Room_type::ritual) {}
 
     ~Ritual_room() {}
@@ -170,7 +170,7 @@ protected:
 class Spider_room: public Std_room
 {
 public:
-    Spider_room(Rect r) :
+    Spider_room(R r) :
         Std_room(r, Room_type::spider) {}
 
     ~Spider_room() {}
@@ -187,7 +187,7 @@ protected:
 class Snake_pit_room: public Std_room
 {
 public:
-    Snake_pit_room(Rect r) :
+    Snake_pit_room(R r) :
         Std_room(r, Room_type::monster) {}
 
     ~Snake_pit_room() {}
@@ -208,7 +208,7 @@ protected:
 class Crypt_room: public Std_room
 {
 public:
-    Crypt_room(Rect r) :
+    Crypt_room(R r) :
         Std_room(r, Room_type::crypt) {}
 
     ~Crypt_room() {}
@@ -225,7 +225,7 @@ protected:
 class Monster_room: public Std_room
 {
 public:
-    Monster_room(Rect r) :
+    Monster_room(R r) :
         Std_room(r, Room_type::monster) {}
 
     ~Monster_room() {}
@@ -242,7 +242,7 @@ protected:
 class Flooded_room: public Std_room
 {
 public:
-    Flooded_room(Rect r) :
+    Flooded_room(R r) :
         Std_room(r, Room_type::flooded) {}
 
     ~Flooded_room() {}
@@ -259,7 +259,7 @@ protected:
 class Muddy_room: public Std_room
 {
 public:
-    Muddy_room(Rect r) :
+    Muddy_room(R r) :
         Std_room(r, Room_type::muddy) {}
 
     ~Muddy_room() {}
@@ -276,7 +276,7 @@ protected:
 class Cave_room: public Std_room
 {
 public:
-    Cave_room(Rect r) :
+    Cave_room(R r) :
         Std_room(r, Room_type::cave) {}
 
     ~Cave_room() {}
@@ -293,7 +293,7 @@ protected:
 class Chasm_room: public Std_room
 {
 public:
-    Chasm_room(Rect r) :
+    Chasm_room(R r) :
         Std_room(r, Room_type::chasm) {}
 
     ~Chasm_room() {}
@@ -310,7 +310,7 @@ protected:
 class Forest_room: public Std_room
 {
 public:
-    Forest_room(Rect r) :
+    Forest_room(R r) :
         Std_room(r, Room_type::forest) {}
 
     ~Forest_room() {}
@@ -327,7 +327,7 @@ protected:
 class Corr_link_room: public Room
 {
 public:
-    Corr_link_room(const Rect& r) :
+    Corr_link_room(const R& r) :
         Room(r, Room_type::corr_link) {}
 
     ~Corr_link_room() {}
@@ -346,7 +346,7 @@ public:
 class Crumble_room: public Room
 {
 public:
-    Crumble_room(const Rect& r) :
+    Crumble_room(const R& r) :
         Room(r, Room_type::crumble_room) {}
 
     ~Crumble_room() {}
@@ -365,7 +365,7 @@ public:
 class River_room: public Room
 {
 public:
-    River_room(const Rect& r) :
+    River_room(const R& r) :
         Room    (r, Room_type::river),
         axis_   (Axis::hor) {}
 

@@ -20,7 +20,7 @@
 
 Consume_item Potion::activate(Actor* const actor)
 {
-    IA_ASSERT(actor);
+    ASSERT(actor);
 
     if (actor->prop_handler().allow_eat(Verbosity::verbose))
     {

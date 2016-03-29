@@ -56,7 +56,9 @@ void div_clr(Clr& clr, const double DIV)
     clr.b = double(clr.b) / DIV;
 }
 
-Uint32 px(SDL_Surface& srf, const int PIXEL_X, const int PIXEL_Y)
+Uint32 px(SDL_Surface& srf,
+          const int PIXEL_X,
+          const int PIXEL_Y)
 {
     const int BPP = srf.format->BytesPerPixel;
 
@@ -150,7 +152,7 @@ void load_pictures()
     //Main menu logo
     SDL_Surface* tmp_srf = IMG_Load(logo_img_name.c_str());
 
-    IA_ASSERT(tmp_srf && "Failed to load main menu logo image");
+    ASSERT(tmp_srf && "Failed to load main menu logo image");
 
     main_menu_logo_srf_ = SDL_ConvertSurface(tmp_srf, scr_srf_->format, 0);
 
@@ -159,7 +161,7 @@ void load_pictures()
     //Skull
     tmp_srf = IMG_Load(skull_img_name.c_str());
 
-    IA_ASSERT(tmp_srf && "Failed to load skull image");
+    ASSERT(tmp_srf && "Failed to load skull image");
 
     skull_srf_ = SDL_ConvertSurface(tmp_srf, scr_srf_->format, 0);
 
@@ -261,7 +263,9 @@ void load_contour(const bool base[PIXEL_DATA_W][PIXEL_DATA_H])
 }
 
 void put_pixels_on_scr(const bool px_data[PIXEL_DATA_W][PIXEL_DATA_H],
-                       const P& sheet_pos, const P& scr_px_pos, const Clr& clr)
+                       const P& sheet_pos,
+                       const P& scr_px_pos,
+                       const Clr& clr)
 {
     if (is_inited())
     {
@@ -295,12 +299,16 @@ void put_pixels_on_scr(const bool px_data[PIXEL_DATA_W][PIXEL_DATA_H],
     }
 }
 
-void put_pixels_on_scr_for_tile(const Tile_id tile, const P& scr_px_pos, const Clr& clr)
+void put_pixels_on_scr_for_tile(const Tile_id tile,
+                                const P& scr_px_pos,
+                                const Clr& clr)
 {
     put_pixels_on_scr(tile_px_data_, art::tile_pos(tile), scr_px_pos, clr);
 }
 
-void put_pixels_on_scr_for_glyph(const char GLYPH, const P& scr_px_pos, const Clr& clr)
+void put_pixels_on_scr_for_glyph(const char GLYPH,
+                                 const P& scr_px_pos,
+                                 const Clr& clr)
 {
     put_pixels_on_scr(font_px_data_, art::glyph_pos(GLYPH), scr_px_pos, clr);
 }
@@ -389,8 +397,11 @@ void draw_player_shock_excl_marks()
     }
 }
 
-void draw_glyph_at_px(const char GLYPH, const P& px_pos, const Clr& clr,
-                      const bool DRAW_BG_CLR, const Clr& bg_clr = clr_black)
+void draw_glyph_at_px(const char GLYPH,
+                      const P& px_pos,
+                      const Clr& clr,
+                      const bool DRAW_BG_CLR,
+                      const Clr& bg_clr = clr_black)
 {
     if (DRAW_BG_CLR)
     {
@@ -408,7 +419,7 @@ void draw_glyph_at_px(const char GLYPH, const P& px_pos, const Clr& clr,
     put_pixels_on_scr_for_glyph(GLYPH, px_pos, clr);
 }
 
-} //Namespace
+} //namespace
 
 void init()
 {
@@ -443,7 +454,7 @@ void init()
     if (!sdl_window_)
     {
         TRACE << "Failed to create window" << std::endl;
-        IA_ASSERT(false);
+        ASSERT(false);
     }
 
     sdl_renderer_ = SDL_CreateRenderer(sdl_window_, -1, SDL_RENDERER_ACCELERATED);
@@ -451,7 +462,7 @@ void init()
     if (!sdl_renderer_)
     {
         TRACE << "Failed to create SDL renderer" << std::endl;
-        IA_ASSERT(false);
+        ASSERT(false);
     }
 
     scr_srf_ = SDL_CreateRGBSurface(0,
@@ -465,7 +476,7 @@ void init()
     if (!scr_srf_)
     {
         TRACE << "Failed to create screen surface" << std::endl;
-        IA_ASSERT(false);
+        ASSERT(false);
     }
 
     scr_texture_ = SDL_CreateTexture(sdl_renderer_,
@@ -476,7 +487,7 @@ void init()
     if (!scr_texture_)
     {
         TRACE << "Failed to create screen texture" << std::endl;
-        IA_ASSERT(false);
+        ASSERT(false);
     }
 
     load_font();
@@ -553,8 +564,16 @@ void update_screen()
 {
     if (is_inited())
     {
-        SDL_UpdateTexture(scr_texture_, nullptr, scr_srf_->pixels, scr_srf_->pitch);
-        SDL_RenderCopy(sdl_renderer_, scr_texture_, nullptr, nullptr);
+        SDL_UpdateTexture(scr_texture_,
+                          nullptr,
+                          scr_srf_->pixels,
+                          scr_srf_->pitch);
+
+        SDL_RenderCopy(sdl_renderer_,
+                       scr_texture_,
+                       nullptr,
+                       nullptr);
+
         SDL_RenderPresent(sdl_renderer_);
     }
 }
@@ -563,7 +582,9 @@ void clear_screen()
 {
     if (is_inited())
     {
-        SDL_FillRect(scr_srf_, nullptr, SDL_MapRGB(scr_srf_->format, 0, 0, 0));
+        SDL_FillRect(scr_srf_,
+                     nullptr,
+                     SDL_MapRGB(scr_srf_->format, 0, 0, 0));
     }
 }
 
@@ -849,17 +870,25 @@ void draw_tile(const Tile_id tile, const Panel panel, const P& pos, const Clr& c
     }
 }
 
-void draw_glyph(const char GLYPH, const Panel panel, const P& pos, const Clr& clr,
-                const bool DRAW_BG_CLR, const Clr& bg_clr)
+void draw_glyph(const char GLYPH,
+                const Panel panel,
+                const P& pos,
+                const Clr& clr,
+                const bool DRAW_BG_CLR,
+                const Clr& bg_clr)
 {
     if (is_inited())
     {
         const P px_pos = px_pos_for_cell_in_panel(panel, pos);
+
         draw_glyph_at_px(GLYPH, px_pos, clr, DRAW_BG_CLR, bg_clr);
     }
 }
 
-void draw_text(const std::string& str, const Panel panel, const P& pos, const Clr& clr,
+void draw_text(const std::string& str,
+               const Panel panel,
+               const P& pos,
+               const Clr& clr,
                const Clr& bg_clr)
 {
     if (is_inited())
@@ -987,7 +1016,7 @@ void cover_panel(const Panel panel)
     }
 }
 
-void cover_area(const Panel panel, const Rect& area)
+void cover_area(const Panel panel, const R& area)
 {
     cover_area(panel, area.p0, area.p1 - area.p0 + 1);
 }
@@ -1027,8 +1056,10 @@ void draw_rectangle_solid(const P& px_pos, const P& px_dims, const Clr& clr)
     {
         SDL_Rect sdl_rect =
         {
-            (Sint16)px_pos.x, (Sint16)px_pos.y,
-            (Uint16)px_dims.x, (Uint16)px_dims.y
+            (Sint16)px_pos.x,
+            (Sint16)px_pos.y,
+            (Uint16)px_dims.x,
+            (Uint16)px_dims.y
         };
 
         SDL_FillRect(scr_srf_,
@@ -1069,7 +1100,7 @@ void draw_projectiles(std::vector<Projectile*>& projectiles,
     update_screen();
 }
 
-void draw_box(const Rect& border, const Panel panel, const Clr& clr, const bool COVER_AREA)
+void draw_box(const R& border, const Panel panel, const Clr& clr, const bool COVER_AREA)
 {
     if (COVER_AREA)
     {
@@ -1145,7 +1176,7 @@ void draw_descr_box(const std::vector<Str_and_clr>& lines)
     const int DESCR_X1  = MAP_W - 1;
 
     cover_area(Panel::screen,
-               Rect(DESCR_X0 - 1, DESCR_Y0, DESCR_X1, SCREEN_H - 1));
+               R(DESCR_X0 - 1, DESCR_Y0, DESCR_X1, SCREEN_H - 1));
 
     const int MAX_W = DESCR_X1 - DESCR_X0 + 1;
 
@@ -1377,9 +1408,9 @@ void draw_map()
 
             //There should NOT already be an actor here which is seen, or that we are aware of
             //TODO: The asserts below do fail sometimes - find out what the cause is
-//            IA_ASSERT(!cur_render_data->is_living_actor_seen_here);
-//            IA_ASSERT(!cur_render_data->is_aware_of_hostile_mon_here);
-//            IA_ASSERT(!cur_render_data->is_aware_of_allied_mon_here);
+//            ASSERT(!cur_render_data->is_living_actor_seen_here);
+//            ASSERT(!cur_render_data->is_aware_of_hostile_mon_here);
+//            ASSERT(!cur_render_data->is_aware_of_allied_mon_here);
 
             const auto* const mon = static_cast<const Mon*>(actor);
 
@@ -1584,7 +1615,7 @@ void draw_map()
                 tmp_render_data.is_aware_of_allied_mon_here)
             {
                 //We should never see both a hostile AND an allied monster in the same cell
-                IA_ASSERT(!tmp_render_data.is_aware_of_hostile_mon_here ||
+                ASSERT(!tmp_render_data.is_aware_of_hostile_mon_here ||
                           !tmp_render_data.is_aware_of_allied_mon_here);
 
                 const Clr bg_clr = tmp_render_data.is_aware_of_hostile_mon_here ?

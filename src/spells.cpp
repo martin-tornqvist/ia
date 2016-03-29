@@ -48,7 +48,7 @@ Spell* random_spell_for_mon()
         delete spell;
     }
 
-    IA_ASSERT(!bucket.empty());
+    ASSERT(!bucket.empty());
 
     const int ELEMENT = rnd::range(0, bucket.size() - 1);
 
@@ -144,7 +144,7 @@ Spell* mk_spell_from_id(const Spell_id spell_id)
         break;
     }
 
-    IA_ASSERT(false && "No spell found for ID");
+    ASSERT(false && "No spell found for ID");
     return nullptr;
 }
 
@@ -279,7 +279,7 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
 {
     TRACE_FUNC_BEGIN;
 
-    IA_ASSERT(caster);
+    ASSERT(caster);
 
     if (caster->prop_handler().allow_cast_spell(Verbosity::verbose))
     {
@@ -827,13 +827,13 @@ Spell_effect_noticed Spell_anim_wpns::cast_impl(Actor* const caster) const
                                           &summoned,
                                           Verbosity::silent);
 
-                    IA_ASSERT(summoned.size() == 1);
+                    ASSERT(summoned.size() == 1);
 
                     Mon* const anim_wpn = summoned[0];
 
                     Inventory& inv = anim_wpn->inv();
 
-                    IA_ASSERT(!inv.item_in_slot(Slot_id::wpn));
+                    ASSERT(!inv.item_in_slot(Slot_id::wpn));
 
                     inv.put_in_slot(Slot_id::wpn, item);
 
@@ -1219,13 +1219,13 @@ bool Spell_res::allow_mon_cast_now(Mon& mon) const
 //------------------------------------------------------------ KNOCKBACK
 Spell_effect_noticed Spell_knock_back::cast_impl(Actor* const caster) const
 {
-    IA_ASSERT(!caster->is_player());
+    ASSERT(!caster->is_player());
 
     Clr             msg_clr     = clr_msg_good;
     std::string     tgt_str     = "me";
     Actor*          caster_used = caster;
     Actor*          tgt         = static_cast<Mon*>(caster_used)->tgt_;
-    IA_ASSERT(tgt);
+    ASSERT(tgt);
 
     //Spell reflection?
     if (tgt->has_prop(Prop_id::spell_reflect))
@@ -1331,7 +1331,7 @@ bool Spell_paralyze_mon::allow_mon_cast_now(Mon& mon) const
 //------------------------------------------------------------ DISEASE
 Spell_effect_noticed Spell_disease::cast_impl(Actor* const caster) const
 {
-    IA_ASSERT(!caster->is_player());
+    ASSERT(!caster->is_player());
 
     Actor* caster_used = caster;
     Actor* tgt        = static_cast<Mon*>(caster_used)->tgt_;
@@ -1460,7 +1460,7 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
     if (summon_bucket.empty())
     {
         TRACE << "No elligible monsters found for spawning" << std::endl;
-        IA_ASSERT(false);
+        ASSERT(false);
         return Spell_effect_noticed::no;
     }
 
@@ -1534,12 +1534,12 @@ bool Spell_heal_self::allow_mon_cast_now(Mon& mon) const
 //------------------------------------------------------------ MI-GO HYPNOSIS
 Spell_effect_noticed Spell_mi_go_hypno::cast_impl(Actor* const caster) const
 {
-    IA_ASSERT(!caster->is_player());
+    ASSERT(!caster->is_player());
 
     Actor* caster_used  = caster;
     Actor* tgt          = static_cast<Mon*>(caster_used)->tgt_;
 
-    IA_ASSERT(tgt);
+    ASSERT(tgt);
 
     //Spell reflection?
     if (tgt->has_prop(Prop_id::spell_reflect))
@@ -1588,12 +1588,12 @@ bool Spell_mi_go_hypno::allow_mon_cast_now(Mon& mon) const
 //------------------------------------------------------------ IMMOLATION
 Spell_effect_noticed Spell_burn::cast_impl(Actor* const caster) const
 {
-    IA_ASSERT(!caster->is_player());
+    ASSERT(!caster->is_player());
 
     Actor* caster_used = caster;
     Actor* tgt        = static_cast<Mon*>(caster_used)->tgt_;
 
-    IA_ASSERT(tgt);
+    ASSERT(tgt);
 
     //Spell reflection?
     if (tgt->has_prop(Prop_id::spell_reflect))

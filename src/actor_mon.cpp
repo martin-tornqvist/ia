@@ -69,7 +69,7 @@ void Mon::act()
     if (!map::is_pos_inside_map(pos, false))
     {
         TRACE << "Monster outside map" << std::endl;
-        IA_ASSERT(false);
+        ASSERT(false);
     }
 
     //Sanity check - verify that monster's leader does not have a leader (never allowed)
@@ -78,7 +78,7 @@ void Mon::act()
         static_cast<Mon*>(leader_)->leader_)            //Leader has a leader?
     {
         TRACE << "Two (or more) steps of leader is never allowed" << std::endl;
-        IA_ASSERT(false);
+        ASSERT(false);
     }
 #endif // NDEBUG
 
@@ -107,7 +107,7 @@ void Mon::act()
 
         bool hard_blocked_los[MAP_W][MAP_H];
 
-        const Rect fov_rect = fov::get_fov_rect(pos);
+        const R fov_rect = fov::get_fov_rect(pos);
 
         map_parse::run(cell_check::Blocks_los(),
                        hard_blocked_los,
@@ -441,13 +441,13 @@ void Mon::move(Dir dir)
     if (dir == Dir::END)
     {
         TRACE << "Illegal direction parameter" << std::endl;
-        IA_ASSERT(false);
+        ASSERT(false);
     }
 
     if (!map::is_pos_inside_map(pos, false))
     {
         TRACE << "Monster outside map" << std::endl;
-        IA_ASSERT(false);
+        ASSERT(false);
     }
 
 #endif // NDEBUG
@@ -1052,7 +1052,7 @@ Did_action Vortex::on_act()
 
             bool blocked_los[MAP_W][MAP_H];
 
-            const Rect fov_rect = fov::get_fov_rect(pos);
+            const R fov_rect = fov::get_fov_rect(pos);
 
             map_parse::run(cell_check::Blocks_los(),
                            blocked_los,
@@ -1368,7 +1368,7 @@ Did_action Khephren::on_act()
     {
         bool blocked[MAP_W][MAP_H];
 
-        const Rect fov_rect = fov::get_fov_rect(pos);
+        const R fov_rect = fov::get_fov_rect(pos);
 
         map_parse::run(cell_check::Blocks_los(),
                        blocked,
@@ -1500,7 +1500,7 @@ Did_action Keziah_mason::on_act()
     {
         bool blocked_los[MAP_W][MAP_H];
 
-        const Rect fov_rect = fov::get_fov_rect(pos);
+        const R fov_rect = fov::get_fov_rect(pos);
 
         map_parse::run(cell_check::Blocks_los(),
                        blocked_los,
@@ -1571,7 +1571,7 @@ void Leng_elder::on_std_turn_hook()
         {
             bool blocked_los[MAP_W][MAP_H];
 
-            const Rect fov_rect = fov::get_fov_rect(pos);
+            const R fov_rect = fov::get_fov_rect(pos);
 
             map_parse::run(cell_check::Blocks_los(),
                            blocked_los,
@@ -1773,7 +1773,7 @@ void Worm_mass::on_death()
                               &summoned,
                               Verbosity::silent);
 
-        IA_ASSERT(summoned.size() == 2);
+        ASSERT(summoned.size() == 2);
 
         //If no leader has been set yet, assign the first worm as leader of the second
         if (!leader_ && summoned.size() >= 2)
@@ -1810,7 +1810,7 @@ Did_action Giant_locust::on_act()
         map_parse::run(cell_check::Blocks_actor(*this, true),
                        blocked,
                        Map_parse_mode::overwrite,
-                       Rect(pos - 1, pos + 1));
+                       R(pos - 1, pos + 1));
 
         for (const P& d : dir_utils::dir_list)
         {
@@ -2016,14 +2016,14 @@ void Zombie::on_death()
 
         if (map::cells[pos.x][pos.y].is_seen_by_player)
         {
-            IA_ASSERT(!spawn_msg.empty());
+            ASSERT(!spawn_msg.empty());
 
             msg_log::add(spawn_msg);
 
             map::player->incr_shock(Shock_lvl::some, Shock_src::see_mon);
         }
 
-        IA_ASSERT(id_to_spawn != Actor_id::END);
+        ASSERT(id_to_spawn != Actor_id::END);
 
         actor_factory::summon(pos, {id_to_spawn},
                               Make_mon_aware::yes,
@@ -2073,7 +2073,7 @@ Did_action Major_clapham_lee::on_act()
     {
         bool blocked_los[MAP_W][MAP_H];
 
-        const Rect fov_rect = fov::get_fov_rect(pos);
+        const R fov_rect = fov::get_fov_rect(pos);
 
         map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite, fov_rect);
 
@@ -2155,7 +2155,7 @@ Did_action Floating_head::on_act()
     {
         bool blocked_los[MAP_W][MAP_H];
 
-        const Rect fov_rect = fov::get_fov_rect(pos);
+        const R fov_rect = fov::get_fov_rect(pos);
 
         map_parse::run(cell_check::Blocks_los(),
                        blocked_los,
@@ -2205,7 +2205,7 @@ Did_action Mold::on_act()
         map_parse::run(cell_check::Blocks_actor(*this, true),
                        blocked,
                        Map_parse_mode::overwrite,
-                       Rect(pos - 1, pos + 1));
+                       R(pos - 1, pos + 1));
 
         for (const P& d : dir_utils::dir_list)
         {
@@ -2325,7 +2325,7 @@ std::string Animated_wpn::name_the() const
 {
     Item* item = inv_->item_in_slot(Slot_id::wpn);
 
-    IA_ASSERT(item);
+    ASSERT(item);
 
     const std::string name = item->name(Item_ref_type::plain,
                                         Item_ref_inf::yes,
@@ -2338,7 +2338,7 @@ std::string Animated_wpn::name_a() const
 {
     Item* item = inv_->item_in_slot(Slot_id::wpn);
 
-    IA_ASSERT(item);
+    ASSERT(item);
 
     const std::string name = item->name(Item_ref_type::plain,
                                         Item_ref_inf::yes,
@@ -2351,7 +2351,7 @@ char Animated_wpn::glyph() const
 {
     Item* item = inv_->item_in_slot(Slot_id::wpn);
 
-    IA_ASSERT(item);
+    ASSERT(item);
 
     return item->glyph();
 }
@@ -2360,7 +2360,7 @@ Clr Animated_wpn::clr()
 {
     Item* item = inv_->item_in_slot(Slot_id::wpn);
 
-    IA_ASSERT(item);
+    ASSERT(item);
 
     return item->clr();
 }
@@ -2369,7 +2369,7 @@ Tile_id Animated_wpn::tile() const
 {
     Item* item = inv_->item_in_slot(Slot_id::wpn);
 
-    IA_ASSERT(item);
+    ASSERT(item);
 
     return item->tile();
 }
@@ -2378,7 +2378,7 @@ std::string Animated_wpn::descr() const
 {
     Item* item = inv_->item_in_slot(Slot_id::wpn);
 
-    IA_ASSERT(item);
+    ASSERT(item);
 
     std::string name = item->name(Item_ref_type::a,
                                   Item_ref_inf::yes,
@@ -2395,7 +2395,7 @@ std::string Animated_wpn::death_msg() const
 
     if (!item)
     {
-        IA_ASSERT(false);
+        ASSERT(false);
 
         //Release build robustness
         return "";

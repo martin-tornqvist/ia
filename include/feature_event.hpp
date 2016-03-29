@@ -71,11 +71,11 @@ public:
     void on_new_turn() override;
 
 private:
-    Rect allowed_emerge_rect(const P& p) const;
+    R allowed_emerge_rect(const P& p) const;
 
     bool is_ok_feature_at(const P& p) const;
 
-    void blocked_cells(const Rect& r, bool out[MAP_W][MAP_H]) const;
+    void blocked_cells(const R& r, bool out[MAP_W][MAP_H]) const;
 
     void emerge_p_bucket(const P& p, bool blocked[MAP_W][MAP_H], std::vector<P>& out) const;
 

@@ -31,7 +31,7 @@ Feature_id backup[MAP_W][MAP_H];
 void floor_cells_in_room(const Room& room, const bool floor[MAP_W][MAP_H],
                          std::vector<P>& out)
 {
-    IA_ASSERT(map::is_area_inside_map(room.r_));
+    ASSERT(map::is_area_inside_map(room.r_));
 
     for (int y = room.r_.p0.y; y <= room.r_.p1.y; ++y)
     {
@@ -185,7 +185,7 @@ void cavify_room(Room& room)
 
     map_parse::expand(is_other_room, blocked);
 
-    Rect& room_rect = room.r_;
+    R& room_rect = room.r_;
 
     std::vector<P> origin_bucket;
 
@@ -286,7 +286,7 @@ void valid_room_corr_entries(const Room& room, std::vector<P>& out)
 
     bool room_cells_expanded[MAP_W][MAP_H];
     map_parse::expand(room_cells, room_cells_expanded,
-                      Rect(P(room.r_.p0 - 2), P(room.r_.p1 + 2)));
+                      R(P(room.r_.p0 - 2), P(room.r_.p1 + 2)));
 
     for (int y = room.r_.p0.y - 1; y <= room.r_.p1.y + 1; ++y)
     {
@@ -334,8 +334,8 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
     TRACE_FUNC_BEGIN_VERBOSE << "Making corridor between rooms "
                              << &r0 << " and " << &r1 << std::endl;
 
-    IA_ASSERT(map::is_area_inside_map(r0.r_));
-    IA_ASSERT(map::is_area_inside_map(r1.r_));
+    ASSERT(map::is_area_inside_map(r0.r_));
+    ASSERT(map::is_area_inside_map(r1.r_));
 
     std::vector<P> p0_bucket;
     std::vector<P> p1_bucket;
@@ -495,7 +495,7 @@ void mk_path_find_cor(Room& r0, Room& r1, bool door_proposals[MAP_W][MAP_H])
 
             if (i > 1 && int(i) < int(path.size() - 3) && i % 6 == 0)
             {
-                Room* link = room_factory::mk(Room_type::corr_link, Rect(p, p));
+                Room* link = room_factory::mk(Room_type::corr_link, R(p, p));
                 map::room_list.push_back(link);
                 map::room_map[p.x][p.y] = link;
                 link->rooms_con_to_.push_back(&r0);
@@ -577,7 +577,7 @@ void pathfinder_walk(const P& p0, const P& p1,
 }
 
 void rnd_walk(const P& p0, int len, std::vector<P>& pos_list_ref,
-              const bool ALLOW_DIAGONAL, Rect area)
+              const bool ALLOW_DIAGONAL, R area)
 {
     pos_list_ref.clear();
 

@@ -25,7 +25,7 @@ Map_templ_cell ch_to_cell(const char CH,
     }
 
     TRACE << "Failed to make map template cell from char: " <<  CH << std::endl;
-    IA_ASSERT(false);
+    ASSERT(false);
     return Map_templ_cell(0);
 }
 
@@ -361,7 +361,7 @@ void init()
 
 const Map_templ& templ(const Map_templ_id id)
 {
-    IA_ASSERT(id != Map_templ_id::END);
+    ASSERT(id != Map_templ_id::END);
     return templates_[int(id)];
 }
 

@@ -11,17 +11,17 @@
 namespace fov
 {
 
-Rect get_fov_rect(const P& p)
+R get_fov_rect(const P& p)
 {
-    const int R = FOV_STD_RADI_INT;
+    const int RADI = FOV_STD_RADI_INT;
 
-    const P p0(std::max(0, p.x - R),
-               std::max(0, p.y - R));
+    const P p0(std::max(0, p.x - RADI),
+               std::max(0, p.y - RADI));
 
-    const P p1(std::min(MAP_W - 1, p.x + R),
-               std::min(MAP_H - 1, p.y + R));
+    const P p1(std::min(MAP_W - 1, p.x + RADI),
+               std::min(MAP_H - 1, p.y + RADI));
 
-    return Rect(p0, p1);
+    return R(p0, p1);
 }
 
 bool is_in_fov_range(const P& p0, const P& p1)
@@ -116,7 +116,7 @@ void run(const P& p0,
         }
     }
 
-    const Rect r = get_fov_rect(p0);
+    const R r = get_fov_rect(p0);
 
     for (int x = r.p0.x; x <= r.p1.x; ++x)
     {

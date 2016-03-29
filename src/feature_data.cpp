@@ -714,8 +714,8 @@ void init()
 
 const Feature_data_t& data(const Feature_id id)
 {
-    IA_ASSERT(id != Feature_id::END);
-    IA_ASSERT(id != Feature_id::END);
+    ASSERT(id != Feature_id::END);
+    ASSERT(id != Feature_id::END);
     return data_list[int(id)];
 }
 

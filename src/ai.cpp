@@ -126,7 +126,7 @@ bool is_pos_on_line(const P& p, const P& line_p0, const P& line_p1)
 {
     //First, do a cheaper check and just see if we are outside a rectangle defined by the two
     //points. If we are outside this area, we can't possibly be on a line between the points.
-    const Rect r(std::min(line_p0.x, line_p1.x),
+    const R r(std::min(line_p0.x, line_p1.x),
                  std::min(line_p0.y, line_p1.y),
                  std::max(line_p0.x, line_p1.x),
                  std::max(line_p0.y, line_p1.y));
@@ -169,7 +169,7 @@ void move_bucket(Mon& mon, std::vector<P>& dirs_to_mk)
 
     bool blocked[MAP_W][MAP_H];
 
-    const Rect area_to_check_blocked(mon_p - P(1, 1), mon_p + P(1, 1));
+    const R area_to_check_blocked(mon_p - P(1, 1), mon_p + P(1, 1));
 
     map_parse::run(cell_check::Blocks_actor(mon, true),
                    blocked,
@@ -351,7 +351,7 @@ Dir dir_to_rnd_adj_free_cell(Mon& mon)
         blocked[p.x][p.y] = cellcheck.check(*mob);
     }
 
-    const Rect area_allowed(P(1, 1), P(MAP_W - 2, MAP_H - 2));
+    const R area_allowed(P(1, 1), P(MAP_W - 2, MAP_H - 2));
 
     //First, try the same direction as last travelled
     const Dir last_dir_travelled = mon.last_dir_moved_;
@@ -473,7 +473,7 @@ bool step_to_lair_if_los(Mon& mon, const P& lair_p)
     {
         bool blocked[MAP_W][MAP_H];
 
-        const Rect area_check_blocked = fov::get_fov_rect(mon.pos);
+        const R area_check_blocked = fov::get_fov_rect(mon.pos);
 
         map_parse::run(cell_check::Blocks_los(),
                        blocked,
@@ -574,7 +574,7 @@ void try_set_path_to_lair_if_no_los(Mon& mon, std::vector<P>& path, const P& lai
     {
         bool blocked[MAP_W][MAP_H];
 
-        const Rect fov_lmt = fov::get_fov_rect(mon.pos);
+        const R fov_lmt = fov::get_fov_rect(mon.pos);
 
         map_parse::run(cell_check::Blocks_los(),
                        blocked,
@@ -617,7 +617,7 @@ void try_set_path_to_leader(Mon& mon, std::vector<P>& path)
         {
             bool blocked[MAP_W][MAP_H];
 
-            const Rect fov_lmt = fov::get_fov_rect(mon.pos);
+            const R fov_lmt = fov::get_fov_rect(mon.pos);
 
             map_parse::run(cell_check::Blocks_los(),
                            blocked,

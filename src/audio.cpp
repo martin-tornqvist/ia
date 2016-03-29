@@ -46,7 +46,7 @@ void load_audio_file(const Sfx_id sfx, const std::string& filename)
     {
         TRACE << "Problem loading audio file with name: "   << filename         << std::endl
               << "Mix_GetError(): "                         << Mix_GetError()   << std::endl;
-        IA_ASSERT(false);
+        ASSERT(false);
     }
 
     //Draw a loading bar
@@ -94,7 +94,7 @@ void load_audio_file(const Sfx_id sfx, const std::string& filename)
 
 int next_channel(const int FROM)
 {
-    IA_ASSERT(FROM >= 0 && FROM < AUDIO_ALLOCATED_CHANNELS);
+    ASSERT(FROM >= 0 && FROM < AUDIO_ALLOCATED_CHANNELS);
 
     int ret = FROM + 1;
 
@@ -108,7 +108,7 @@ int next_channel(const int FROM)
 
 int free_channel(const int FROM)
 {
-    IA_ASSERT(FROM >= 0 && FROM < AUDIO_ALLOCATED_CHANNELS);
+    ASSERT(FROM >= 0 && FROM < AUDIO_ALLOCATED_CHANNELS);
 
     int ret = FROM;
 
@@ -216,7 +216,7 @@ void init()
         load_audio_file(Sfx_id::mus_cthulhiana_Madness,
                         "musica_cthulhiana-fragment-madness.ogg");
 
-        IA_ASSERT(nr_files_loaded_ == NR_FILES_TOT);
+        ASSERT(nr_files_loaded_ == NR_FILES_TOT);
     }
 
     TRACE_FUNC_END;

@@ -1264,13 +1264,13 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     };
 
     //------------------------------------------------ Square, normal sized room
-    Rect roomRect(20, 5, 30, 10);
+    R room_rect(20, 5, 30, 10);
 
-    Room* room = room_factory::mk(Room_type::plain, roomRect);
+    Room* room = room_factory::mk(Room_type::plain, room_rect);
 
-    for (int y = roomRect.p0.y; y <= roomRect.p1.y; ++y)
+    for (int y = room_rect.p0.y; y <= room_rect.p1.y; ++y)
     {
-        for (int x = roomRect.p0.x; x <= roomRect.p1.x; ++x)
+        for (int x = room_rect.p0.x; x <= room_rect.p1.x; ++x)
         {
             map::put(new Floor(P(x, y)));
             map::room_map[x][y] = room;
@@ -1318,13 +1318,13 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     CHECK(!entry_map[25][7]);
 
     //Check that the room can share an antry point with a nearby room
-    roomRect = Rect(10, 5, 18, 10);
+    room_rect = R(10, 5, 18, 10);
 
-    Room* nearby_room = room_factory::mk(Room_type::plain, roomRect);
+    Room* nearby_room = room_factory::mk(Room_type::plain, room_rect);
 
-    for (int y = roomRect.p0.y; y <= roomRect.p1.y; ++y)
+    for (int y = room_rect.p0.y; y <= room_rect.p1.y; ++y)
     {
-        for (int x = roomRect.p0.x; x <= roomRect.p1.x; ++x)
+        for (int x = room_rect.p0.x; x <= room_rect.p1.x; ++x)
         {
             map::put(new Floor(P(x, y)));
             map::room_map[x][y] = nearby_room;
@@ -1438,8 +1438,8 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
 
 TEST_FIXTURE(Basic_fixture, connect_rooms_with_corridor)
 {
-    Rect room_area_1(P(1, 1), P(10, 10));
-    Rect room_area_2(P(15, 4), P(23, 14));
+    R room_area_1(P(1, 1), P(10, 10));
+    R room_area_2(P(15, 4), P(23, 14));
 
     Room* room0 = room_factory::mk(Room_type::plain, room_area_1);
     Room* room1 = room_factory::mk(Room_type::plain, room_area_2);

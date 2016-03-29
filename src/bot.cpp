@@ -55,17 +55,17 @@ void find_path_to_stairs()
         }
     }
 
-    IA_ASSERT(stair_pos != P(-1, -1));
+    ASSERT(stair_pos != P(-1, -1));
 
     path_find::run(map::player->pos, stair_pos, blocked, cur_path_);
 
-    IA_ASSERT(!cur_path_.empty());
-    IA_ASSERT(cur_path_.front() == stair_pos);
+    ASSERT(!cur_path_.empty());
+    ASSERT(cur_path_.front() == stair_pos);
 }
 
 bool walk_to_adj_cell(const P& p)
 {
-    IA_ASSERT(is_pos_adj(map::player->pos, p, true));
+    ASSERT(is_pos_adj(map::player->pos, p, true));
 
     char key = '0' + int(dir_utils::dir(p - map::player->pos));
 
@@ -97,7 +97,7 @@ void act()
 #ifdef NDEBUG
         (void)actor;
 #else
-        IA_ASSERT(map::is_pos_inside_map(actor->pos));
+        ASSERT(map::is_pos_inside_map(actor->pos));
 #endif
     }
 

@@ -85,7 +85,7 @@ Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors);
 
 bool is_pos_inside_map(const P& pos, const bool COUNT_EDGE_AS_INSIDE = true);
 
-bool is_area_inside_map(const Rect& area);
+bool is_area_inside_map(const R& area);
 
 } //map
 

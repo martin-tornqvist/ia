@@ -39,12 +39,12 @@ bool run_drop_query(const Inv_type inv_type, const size_t IDX)
 
     if (inv_type == Inv_type::slots)
     {
-        IA_ASSERT(IDX < int(Slot_id::END));
+        ASSERT(IDX < int(Slot_id::END));
         item = inv.slots_[IDX].item;
     }
     else //Backpack
     {
-        IA_ASSERT(IDX < inv.backpack_.size());
+        ASSERT(IDX < inv.backpack_.size());
         item = inv.backpack_[IDX];
     }
 
@@ -117,7 +117,7 @@ bool run_drop_query(const Inv_type inv_type, const size_t IDX)
 
 void filter_player_backpack_equip(const Slot_id slot_to_equip)
 {
-    IA_ASSERT(slot_to_equip != Slot_id::END);
+    ASSERT(slot_to_equip != Slot_id::END);
 
     const auto& inv         = map::player->inv();
     const auto& backpack    = inv.backpack_;

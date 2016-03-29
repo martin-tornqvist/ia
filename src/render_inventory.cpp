@@ -55,7 +55,7 @@ void draw_weight_pct_and_dots(const P item_pos,
     std::string weight_str  = to_str(item_weight_pct) + "%";
     int         weight_x    = DESCR_X0 - 1 - weight_str.size();
 
-    IA_ASSERT(item_weight_pct >= 0 && item_weight_pct <= 100);
+    ASSERT(item_weight_pct >= 0 && item_weight_pct <= 100);
 
     if (item_weight_pct > 0 && item_weight_pct < 100)
     {
@@ -169,7 +169,7 @@ void draw_detailed_item_descr(const Item* const item)
             weight_pct = (item->weight() * 100) / WEIGHT_CARRIED_TOT;
         }
 
-        IA_ASSERT(weight_pct >= 0 && weight_pct <= 100);
+        ASSERT(weight_pct >= 0 && weight_pct <= 100);
 
         if (weight_pct > 0 && weight_pct < 100)
         {
@@ -272,7 +272,7 @@ void draw_inv(const Menu_browser& browser)
                                                    Item_ref_inf::yes,
                                                    att_inf);
 
-                IA_ASSERT(!item_name.empty());
+                ASSERT(!item_name.empty());
 
                 text_format::first_to_upper(item_name);
 
@@ -408,7 +408,7 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
                                            Item_ref_inf::yes,
                                            Item_ref_att_inf::wpn_context);
 
-        IA_ASSERT(!item_name.empty());
+        ASSERT(!item_name.empty());
 
         text_format::first_to_upper(item_name);
 
@@ -453,7 +453,7 @@ void draw_equip(const Menu_browser& browser,
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    IA_ASSERT(slot_id_to_equip != Slot_id::END);
+    ASSERT(slot_id_to_equip != Slot_id::END);
 
     const bool HAS_ITEM = !gen_inv_indexes.empty();
 
@@ -572,7 +572,7 @@ void draw_equip(const Menu_browser& browser,
                                                Item_ref_inf::yes,
                                                att_inf);
 
-            IA_ASSERT(!item_name.empty());
+            ASSERT(!item_name.empty());
 
             text_format::first_to_upper(item_name);
 

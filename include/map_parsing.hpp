@@ -185,12 +185,12 @@ enum class Map_parse_mode {overwrite, append};
 namespace map_parse
 {
 
-const Rect map_rect(0, 0, MAP_W - 1, MAP_H - 1);
+const R map_rect(0, 0, MAP_W - 1, MAP_H - 1);
 
 void run(const cell_check::Check& method,
          bool out[MAP_W][MAP_H],
          const Map_parse_mode write_rule = Map_parse_mode::overwrite,
-         const Rect& area_to_check_cells = map_rect);
+         const R& area_to_check_cells = map_rect);
 
 bool cell(const cell_check::Check& method, const P& p);
 
@@ -201,13 +201,13 @@ bool cell(const cell_check::Check& method, const P& p);
 void cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
                                  const Range& dist_interval);
 
-bool is_val_in_area(const Rect& area, const bool in[MAP_W][MAP_H], const bool VAL = true);
+bool is_val_in_area(const R& area, const bool in[MAP_W][MAP_H], const bool VAL = true);
 
 void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]);
 
 //Optimized for expanding with a distance of one
 void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
-            const Rect& area_allowed_to_modify = Rect(0, 0, MAP_W, MAP_H));
+            const R& area_allowed_to_modify = R(0, 0, MAP_W, MAP_H));
 
 //Slower version that can expand any distance
 void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST);

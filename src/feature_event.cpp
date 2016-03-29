@@ -60,7 +60,7 @@ void Event_wall_crumble::on_new_turn()
             {
                 for (const P& p : wall_cells_)
                 {
-                    if (is_pos_inside(p, Rect(P(1, 1), P(MAP_W - 2, MAP_H - 2))))
+                    if (is_pos_inside(p, R(P(1, 1), P(MAP_W - 2, MAP_H - 2))))
                     {
                         auto* const f = map::cells[p.x][p.y].rigid;
                         f->hit(Dmg_type::physical, Dmg_method::forced, nullptr);
@@ -164,7 +164,7 @@ bool Event_snake_emerge::try_find_p()
 {
     bool blocked[MAP_W][MAP_H];
 
-    blocked_cells(Rect(0, 0, MAP_W - 1, MAP_H - 1), blocked);
+    blocked_cells(R(0, 0, MAP_W - 1, MAP_H - 1), blocked);
 
     std::vector<P> p_bucket;
 
@@ -188,7 +188,7 @@ bool Event_snake_emerge::try_find_p()
     return false;
 }
 
-Rect Event_snake_emerge::allowed_emerge_rect(const P& p) const
+R Event_snake_emerge::allowed_emerge_rect(const P& p) const
 {
     const int MAX_D = allowed_emerge_dist_range.max;
 
@@ -197,12 +197,12 @@ Rect Event_snake_emerge::allowed_emerge_rect(const P& p) const
     const int X1 = std::min(MAP_W - 2,  p.x + MAX_D);
     const int Y1 = std::min(MAP_H - 2,  p.y + MAX_D);
 
-    return Rect(X0, Y0, X1, Y1);
+    return R(X0, Y0, X1, Y1);
 }
 
 bool Event_snake_emerge::is_ok_feature_at(const P& p) const
 {
-    IA_ASSERT(map::is_pos_inside_map(p, true));
+    ASSERT(map::is_pos_inside_map(p, true));
 
     const Feature_id id = map::cells[p.x][p.y].rigid->id();
 
@@ -219,7 +219,7 @@ void Event_snake_emerge::emerge_p_bucket(
 
     fov::run(p, blocked, fov);
 
-    const Rect r = allowed_emerge_rect(p);
+    const R r = allowed_emerge_rect(p);
 
     for (int x = r.p0.x; x <= r.p1.x; ++x)
     {
@@ -240,7 +240,7 @@ void Event_snake_emerge::emerge_p_bucket(
     }
 }
 
-void Event_snake_emerge::blocked_cells(const Rect& r, bool out[MAP_W][MAP_H]) const
+void Event_snake_emerge::blocked_cells(const R& r, bool out[MAP_W][MAP_H]) const
 {
     for (int x = r.p0.x; x <= r.p1.x; ++x)
     {
@@ -267,7 +267,7 @@ void Event_snake_emerge::on_new_turn()
         return;
     }
 
-    const Rect r = allowed_emerge_rect(pos_);
+    const R r = allowed_emerge_rect(pos_);
 
     bool blocked[MAP_W][MAP_H];
 
@@ -310,7 +310,7 @@ void Event_snake_emerge::on_new_turn()
 
     for (size_t i = 0; i < NR_SUMMONED; ++i)
     {
-        IA_ASSERT(i < tgt_bucket.size());
+        ASSERT(i < tgt_bucket.size());
 
         const P& p(tgt_bucket[i]);
 
