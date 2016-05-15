@@ -231,10 +231,14 @@ public:
 namespace flood_fill
 {
 
-void run(const P& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
-         int travel_lmt, const P& p1, const bool ALLOW_DIAGONAL);
+void run(const P& p0,
+         const bool blocked[MAP_W][MAP_H],
+         int out[MAP_W][MAP_H],
+         int travel_lmt,
+         const P& p1,
+         const bool ALLOW_DIAGONAL);
 
-} //Flood_fill
+} //flood_fill
 
 namespace path_find
 {
@@ -247,8 +251,12 @@ namespace path_find
 //                        more optimized and is the default behavior (best for e.g. AI),
 //                        while the randomized method can produces nicer results in some
 //                        cases (e.g. corridors).
-void run(const P& p0, const P& p1, bool blocked[MAP_W][MAP_H], std::vector<P>&  out,
-         const bool ALLOW_DIAGONAL = true, const bool RANDOMIZE_STEP_CHOICES = false);
+void run(const P& p0,
+         const P& p1,
+         const bool blocked[MAP_W][MAP_H],
+         std::vector<P>& out,
+         const bool ALLOW_DIAGONAL = true,
+         const bool RANDOMIZE_STEP_CHOICES = false);
 
 } //path_find
 

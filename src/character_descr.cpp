@@ -146,7 +146,7 @@ void mk_lines()
 
     lines_.push_back({"Manuscript knowledge", clr_heading});
 
-    if (manuscript_list.size() == 0)
+    if (manuscript_list.empty())
     {
         lines_.push_back({offset + "No known manuscripts", clr_text});
     }
@@ -185,37 +185,6 @@ void mk_lines()
 
             lines_.push_back({"", clr_text});
         }
-    }
-}
-
-void shock_res_src_title(const Shock_src shock_src, std::string& str_ref)
-{
-    str_ref = "";
-
-    switch (shock_src)
-    {
-    case Shock_src::time:
-        str_ref = "Time";
-        break;
-
-    case Shock_src::cast_intr_spell:
-        str_ref = "Casting learned spells";
-        break;
-
-    case Shock_src::see_mon:
-        str_ref = "Seeing monsters";
-        break;
-
-    case Shock_src::use_strange_item:
-        str_ref = "Using strange items";
-        break;
-
-    case Shock_src::misc:
-        str_ref = "Other";
-        break;
-
-    case Shock_src::END:
-        break;
     }
 }
 

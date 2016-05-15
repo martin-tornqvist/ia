@@ -631,9 +631,9 @@ void run(const P& p0,
                 const P new_pos(cur_pos + d);
 
                 if (
-                    !blocked[new_pos.x][new_pos.y]          &&
-                    is_pos_inside(new_pos, bounds)   &&
-                    out[new_pos.x][new_pos.y] == 0          &&
+                    !blocked[new_pos.x][new_pos.y]  &&
+                    is_pos_inside(new_pos, bounds)  &&
+                    out[new_pos.x][new_pos.y] == 0  &&
                     new_pos != p0)
                 {
                     cur_val = out[cur_pos.x][cur_pos.y];
@@ -694,14 +694,18 @@ void run(const P& p0,
     }
 }
 
-} //Flood_fill
+} //flood_fill
 
 //------------------------------------------------------------ PATHFINDER
 namespace path_find
 {
 
-void run(const P& p0, const P& p1, bool blocked[MAP_W][MAP_H], std::vector<P>& out,
-         const bool ALLOW_DIAGONAL, const bool RANDOMIZE_STEP_CHOICES)
+void run(const P& p0,
+         const P& p1,
+         const bool blocked[MAP_W][MAP_H],
+         std::vector<P>& out,
+         const bool ALLOW_DIAGONAL,
+         const bool RANDOMIZE_STEP_CHOICES)
 {
     out.clear();
 

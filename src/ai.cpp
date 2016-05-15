@@ -127,9 +127,9 @@ bool is_pos_on_line(const P& p, const P& line_p0, const P& line_p1)
     //First, do a cheaper check and just see if we are outside a rectangle defined by the two
     //points. If we are outside this area, we can't possibly be on a line between the points.
     const R r(std::min(line_p0.x, line_p1.x),
-                 std::min(line_p0.y, line_p1.y),
-                 std::max(line_p0.x, line_p1.x),
-                 std::max(line_p0.y, line_p1.y));
+              std::min(line_p0.y, line_p1.y),
+              std::max(line_p0.x, line_p1.x),
+              std::max(line_p0.y, line_p1.y));
 
     if (!is_pos_inside(p, r))
     {

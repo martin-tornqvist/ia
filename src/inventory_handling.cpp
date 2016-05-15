@@ -179,20 +179,6 @@ void filter_player_backpack_equip(const Slot_id slot_to_equip)
     }
 }
 
-void filter_player_backpack_show_all()
-{
-    auto& backpack = map::player->inv().backpack_;
-
-    backpack_indexes_to_show_.clear();
-
-    const size_t NR_GEN = backpack.size();
-
-    for (size_t i = 0; i < NR_GEN; ++i)
-    {
-        backpack_indexes_to_show_.push_back(i);
-    }
-}
-
 void filter_player_backpack_apply()
 {
     auto& backpack = map::player->inv().backpack_;
@@ -211,13 +197,6 @@ void filter_player_backpack_apply()
             backpack_indexes_to_show_.push_back(i);
         }
     }
-}
-
-void swap_items(Item** item1, Item** item2)
-{
-    Item* buffer  = *item1;
-    *item1        = *item2;
-    *item2        = buffer;
 }
 
 } //namespace

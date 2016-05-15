@@ -1,8 +1,6 @@
 #ifndef PICKUP_H
 #define PICKUP_H
 
-class Item;
-class Actor;
 class Ammo;
 class Wpn;
 
@@ -16,6 +14,6 @@ void try_unload_wpn_or_pickup_ammo();
 
 Ammo* unload_ranged_wpn(Wpn& wpn);
 
-} //Item_pickup
+} //item_pickup
 
 #endif

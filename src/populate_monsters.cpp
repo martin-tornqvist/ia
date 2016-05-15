@@ -44,7 +44,7 @@ void mk_list_of_mon_can_auto_spawn(const int NR_LVLS_OUT_OF_DEPTH,
     list_ref.clear();
 
     const int EFFECTIVE_DLVL =
-        std::max(1, std::min(DLVL_LAST, map::dlvl + NR_LVLS_OUT_OF_DEPTH));
+        constr_in_range(1, map::dlvl + NR_LVLS_OUT_OF_DEPTH, DLVL_LAST);
 
     //Get list of actors currently on the level (to help avoid spawning multiple uniques,
     //note that this could otherwise happen for example with Zuul - he is allowed to
@@ -74,7 +74,7 @@ void mk_list_of_mon_can_auto_spawn(const int NR_LVLS_OUT_OF_DEPTH,
 }
 
 void mk_group_at(const Actor_id id,
-                 const std::vector<P>& sorted_free_cells_vector,
+                 const std::vector<P>& sorted_free_cells,
                  bool blocked_out[MAP_W][MAP_H],
                  const bool IS_ROAMING_ALLOWED)
 {
@@ -106,12 +106,12 @@ void mk_group_at(const Actor_id id,
 
     Actor* origin_actor = nullptr;
 
-    const int NR_FREE_CELLS     = sorted_free_cells_vector.size();
+    const int NR_FREE_CELLS     = sorted_free_cells.size();
     const int NR_CAN_BE_SPAWNED = std::min(NR_FREE_CELLS, max_nr_in_group);
 
     for (int i = 0; i < NR_CAN_BE_SPAWNED; ++i)
     {
-        const P& p = sorted_free_cells_vector[i];
+        const P& p = sorted_free_cells[i];
 
         ASSERT(!blocked_out[p.x][p.y]);
 
@@ -138,11 +138,10 @@ void mk_group_at(const Actor_id id,
     }
 }
 
-bool mk_group_of_random_native_to_room_type_at(
-    const Room_type room_type,
-    const std::vector<P>& sorted_free_cells_vector,
-    bool blocked_out[MAP_W][MAP_H],
-    const bool IS_ROAMING_ALLOWED)
+bool mk_random_group_for_room(const Room_type room_type,
+                              const std::vector<P>& sorted_free_cells,
+                              bool blocked_out[MAP_W][MAP_H],
+                              const bool IS_ROAMING_ALLOWED)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
@@ -152,8 +151,9 @@ bool mk_group_of_random_native_to_room_type_at(
 
     for (size_t i = 0; i < id_bucket.size(); ++i)
     {
-        const Actor_data_t& d                       = actor_data::data[int(id_bucket[i])];
-        bool                is_mon_native_to_room   = false;
+        const Actor_data_t& d = actor_data::data[size_t(id_bucket[i])];
+
+        bool is_mon_native_to_room = false;
 
         for (const auto native_room_type : d.native_rooms)
         {
@@ -183,7 +183,7 @@ bool mk_group_of_random_native_to_room_type_at(
         const Actor_id id = id_bucket[rnd::range(0, id_bucket.size() - 1)];
 
         mk_group_at(id,
-                    sorted_free_cells_vector,
+                    sorted_free_cells,
                     blocked_out,
                     IS_ROAMING_ALLOWED);
 
@@ -192,7 +192,7 @@ bool mk_group_of_random_native_to_room_type_at(
     }
 }
 
-void mk_group_of_random_at(const std::vector<P>& sorted_free_cells_vector,
+void mk_group_of_random_at(const std::vector<P>& sorted_free_cells,
                            bool blocked_out[MAP_W][MAP_H],
                            const int NR_LVLS_OUT_OF_DEPTH_ALLOWED,
                            const bool IS_ROAMING_ALLOWED)
@@ -204,13 +204,13 @@ void mk_group_of_random_at(const std::vector<P>& sorted_free_cells_vector,
     {
         const Actor_id id = id_bucket[rnd::range(0, id_bucket.size() - 1)];
 
-        mk_group_at(id, sorted_free_cells_vector, blocked_out, IS_ROAMING_ALLOWED);
+        mk_group_at(id, sorted_free_cells, blocked_out, IS_ROAMING_ALLOWED);
     }
 }
 
-void mk_sorted_free_cells_vector(const P& origin,
-                                 const bool blocked[MAP_W][MAP_H],
-                                 std::vector<P>& vector_ref)
+void mk_sorted_free_cells(const P& origin,
+                          const bool blocked[MAP_W][MAP_H],
+                          std::vector<P>& vector_ref)
 {
     vector_ref.clear();
 
@@ -284,7 +284,7 @@ void try_spawn_due_to_time_passed()
         const int   ELEMENT = rnd::range(0, free_cells_vector.size() - 1);
         const P&    origin  = free_cells_vector[ELEMENT];
 
-        mk_sorted_free_cells_vector(origin, blocked, free_cells_vector);
+        mk_sorted_free_cells(origin, blocked, free_cells_vector);
 
         if (!free_cells_vector.empty())
         {
@@ -357,18 +357,18 @@ void populate_intro_lvl()
 
         const int ORIGIN_ELEMENT = rnd::range(0, origin_bucket.size() - 1);
         const P origin = origin_bucket[ORIGIN_ELEMENT];
-        std::vector<P> sorted_free_cells_vector;
-        mk_sorted_free_cells_vector(origin, blocked, sorted_free_cells_vector);
+        std::vector<P> sorted_free_cells;
+        mk_sorted_free_cells(origin, blocked, sorted_free_cells);
 
 
-        if (!sorted_free_cells_vector.empty())
+        if (!sorted_free_cells.empty())
         {
             const int ID_ELEMENT = rnd::range(0, ids_can_spawn_intro_lvl.size() - 1);
 
             const Actor_id id = ids_can_spawn_intro_lvl[ID_ELEMENT];
 
             mk_group_at(id,
-                        sorted_free_cells_vector,
+                        sorted_free_cells,
                         blocked,
                         true);
         }
@@ -450,12 +450,12 @@ void populate_std_lvl()
                     const int   ELEMENT = rnd::range(0, NR_ORIGIN_CANDIDATES - 1);
                     const P&    origin  = origin_bucket[ELEMENT];
 
-                    std::vector<P> sorted_free_cells_vector;
-                    mk_sorted_free_cells_vector(origin, blocked, sorted_free_cells_vector);
+                    std::vector<P> sorted_free_cells;
+                    mk_sorted_free_cells(origin, blocked, sorted_free_cells);
 
-                    const bool DID_MAKE_GROUP = mk_group_of_random_native_to_room_type_at(
+                    const bool DID_MAKE_GROUP = mk_random_group_for_room(
                                                     room->type_,
-                                                    sorted_free_cells_vector,
+                                                    sorted_free_cells,
                                                     blocked,
                                                     true);
 
@@ -493,7 +493,9 @@ void populate_std_lvl()
         {
             if (map::room_map[x][y])
             {
-                if (!blocked[x][y] && map::room_map[x][y]->type_ == Room_type::plain)
+                if (
+                    !blocked[x][y] &&
+                    map::room_map[x][y]->type_ == Room_type::plain)
                 {
                     origin_bucket.push_back(P(x, y));
                 }
@@ -508,14 +510,17 @@ void populate_std_lvl()
             const int   ELEMENT = rnd::range(0, origin_bucket.size() - 1);
             const P     origin  = origin_bucket[ELEMENT];
 
-            std::vector<P> sorted_free_cells_vector;
-            mk_sorted_free_cells_vector(origin, blocked, sorted_free_cells_vector);
+            std::vector<P> sorted_free_cells;
 
-            const bool DID_MAKE_GROUP = mk_group_of_random_native_to_room_type_at(
-                                            Room_type::plain,
-                                            sorted_free_cells_vector,
-                                            blocked,
-                                            true);
+            mk_sorted_free_cells(origin,
+                                 blocked,
+                                 sorted_free_cells);
+
+            const bool DID_MAKE_GROUP =
+                mk_random_group_for_room(Room_type::plain,
+                                         sorted_free_cells,
+                                         blocked,
+                                         true);
 
             if (DID_MAKE_GROUP)
             {

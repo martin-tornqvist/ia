@@ -112,10 +112,10 @@ void init()
     }
 
     //"Pharaoh chamber" is the first late game level
-    map_list[DLVL_FIRST_LATE_GAME] = {Map_type::egypt, Is_main_dungeon::yes};
+    map_list[DLVL_FIRST_LATE_GAME] = {Map_type::egypt,  Is_main_dungeon::yes};
 
-    map_list[DLVL_LAST + 1] = {Map_type::boss,           Is_main_dungeon::yes};
-    map_list[DLVL_LAST + 2] = {Map_type::trapez,  Is_main_dungeon::yes};
+    map_list[DLVL_LAST + 1] = {Map_type::boss,          Is_main_dungeon::yes};
+    map_list[DLVL_LAST + 2] = {Map_type::trapez,        Is_main_dungeon::yes};
 }
 
 void save()

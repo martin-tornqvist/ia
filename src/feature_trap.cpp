@@ -22,23 +22,6 @@
 #include "attack.hpp"
 #include "dungeon_master.hpp"
 
-namespace
-{
-
-Alerts_mon is_trigger_snd_alerting_monsters(const Actor* const actor)
-{
-    if (actor && !actor->is_actor_my_leader(map::player))
-    {
-        //Is a monster, and is hostile to player - other monsters are not alerted
-        return Alerts_mon::no;
-    }
-
-    //Is triggered by player, a monster allied to the player, or not by an actor - alert monsters.
-    return Alerts_mon::yes;
-}
-
-} // namespace
-
 //------------------------------------------------------------- TRAP
 Trap::Trap(const P& feature_pos, const Rigid* const mimic_feature, Trap_id id) :
     Rigid                   (feature_pos),

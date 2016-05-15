@@ -13,31 +13,19 @@
 #include "game_time.hpp"
 #include "audio.hpp"
 
-using namespace std;
-
 namespace item_pickup
 {
 
-namespace
-{
-
-void pickup_effects(Actor* actor, Item* item)
-{
-    (void)actor;
-    (void)item;
-}
-
-} //namespace
-
 void try_pick()
 {
-    const P&  pos   = map::player->pos;
-    Item* const item  = map::cells[pos.x][pos.y].item;
+    const P& pos = map::player->pos;
+    Item* const item = map::cells[pos.x][pos.y].item;
 
     if (item)
     {
-        Inventory&      player_inv  = map::player->inv();
-        const string    ITEM_NAME   = item->name(Item_ref_type::plural);
+        Inventory& player_inv = map::player->inv();
+
+        const std::string ITEM_NAME = item->name(Item_ref_type::plural);
 
         //First try to add it to carried item stack in thrown slot.
         Item* const carried_missile = player_inv.item_in_slot(Slot_id::thrown);
@@ -118,7 +106,7 @@ void try_unload_wpn_or_pickup_ammo()
         {
             Wpn* const wpn = static_cast<Wpn*>(item);
 
-            const string wpn_name = wpn->name(Item_ref_type::a, Item_ref_inf::yes);
+            const std::string wpn_name = wpn->name(Item_ref_type::a, Item_ref_inf::yes);
 
             if (!wpn->data().ranged.has_infinite_ammo)
             {

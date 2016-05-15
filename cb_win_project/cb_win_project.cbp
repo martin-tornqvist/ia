@@ -18,7 +18,6 @@
 					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="-fno-exceptions" />
-					<Add directory="../include/debug_mode_incl" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg -lgmon" />
@@ -47,7 +46,6 @@
 					<Add option="-g" />
 					<Add option="-Wno-unused-value" />
 					<Add option="-DTRACE_LVL=0" />
-					<Add directory="../include/debug_mode_incl" />
 					<Add directory="../test/UnitTest++/src" />
 				</Compiler>
 				<Linker>
@@ -73,7 +71,7 @@
 					<Add option="-O2" />
 					<Add option="-Wno-unused-value" />
 					<Add option="-fno-exceptions" />
-					<Add directory="../include/release_mode_incl" />
+					<Add option="-DNDEBUG=1" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />

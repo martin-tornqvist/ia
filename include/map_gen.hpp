@@ -10,14 +10,21 @@ class Room;
 struct Region
 {
 public:
-    Region(const R& r) : main_room_(nullptr), r_(r), is_free_(true) {}
-    Region()              : main_room_(nullptr), r_(),  is_free_(true) {}
+    Region(const R& r) :
+        main_room_  (nullptr),
+        r_          (r),
+        is_free_    (true) {}
+
+    Region() :
+        main_room_  (nullptr),
+        r_          (),
+        is_free_    (true) {}
 
     R rnd_room_rect() const;
 
     Room* main_room_;
-    R  r_;
-    bool  is_free_;
+    R r_;
+    bool is_free_;
 };
 
 namespace map_gen_utils
@@ -37,14 +44,15 @@ void valid_room_corr_entries(const Room& room, std::vector<P>& out);
 void mk_path_find_cor(Room& r0, Room& r1,
                       bool door_proposals[MAP_W][MAP_H] = nullptr);
 
-void backup_map();
-void restore_map();
-
-void rnd_walk(const P& p0, int len, std::vector<P>& pos_list_ref,
+void rnd_walk(const P& p0,
+              int len,
+              std::vector<P>& pos_list_ref,
               const bool ALLOW_DIAGONAL = true,
               R area = R(1, 1, MAP_W - 2, MAP_H - 2));
 
-void pathfinder_walk(const P& p0, const P& p1, std::vector<P>& pos_list_ref,
+void pathfinder_walk(const P& p0,
+                     const P& p1,
+                     std::vector<P>& pos_list_ref,
                      const bool IS_SMOOTH);
 
 } //map_gen_utils

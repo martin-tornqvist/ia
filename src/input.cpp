@@ -43,11 +43,13 @@ bool is_inited_ = false;
 
 void query_quit()
 {
-    const std::vector<std::string> quit_choices = std::vector<std::string> {"yes", "no"};
+    const auto quit_choices = std::vector<std::string> {"yes", "no"};
 
     const int QUIT_CHOICE = popup::show_menu_msg(
                                 "Save and highscore are not kept.",
-                                false, quit_choices, "Quit the current game?");
+                                false,
+                                quit_choices,
+                                "Quit the current game?");
 
     if (QUIT_CHOICE == 0)
     {
@@ -57,7 +59,7 @@ void query_quit()
     }
 }
 
-} //Namespace
+} //namespace
 
 void init()
 {

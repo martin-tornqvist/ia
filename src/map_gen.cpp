@@ -536,7 +536,7 @@ void reserve_river(Region regions[3][3])
                               const P & reg0, const P & reg2)
     {
         const R regions_tot_rect(regions[reg0.x][reg0.y].r_.p0,
-                                    regions[reg2.x][reg2.y].r_.p1);
+                                 regions[reg2.x][reg2.y].r_.p1);
         room_rect    = regions_tot_rect;
         river_region = &regions[reg0.x][reg0.y];
         const int C = (breadth1 + breadth0) / 2;
@@ -870,7 +870,10 @@ void fill_dead_ends()
             }
         }
 
-        if (is_done) {break;}
+        if (is_done)
+        {
+            break;
+        }
     }
 
     //Floodfill from origin, then sort the positions for flood value
@@ -1274,9 +1277,9 @@ bool mk_std_lvl()
         for (int x = 0; x < 3; ++x)
         {
             const R r(x == 0 ? 1 : x == 1 ? SPL_X0 + 1 : SPL_X1 + 1,
-                         y == 0 ? 1 : y == 1 ? SPL_Y0 + 1 : SPL_Y1 + 1,
-                         x == 0 ? SPL_X0 - 1 : x == 1 ? SPL_X1 - 1 : MAP_W - 2,
-                         y == 0 ? SPL_Y0 - 1 : y == 1 ? SPL_Y1 - 1 : MAP_H - 2);
+                      y == 0 ? 1 : y == 1 ? SPL_Y0 + 1 : SPL_Y1 + 1,
+                      x == 0 ? SPL_X0 - 1 : x == 1 ? SPL_X1 - 1 : MAP_W - 2,
+                      y == 0 ? SPL_Y0 - 1 : y == 1 ? SPL_Y1 - 1 : MAP_H - 2);
 
             regions[x][y] = Region(r);
         }
