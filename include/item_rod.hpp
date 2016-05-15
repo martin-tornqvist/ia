@@ -1,5 +1,5 @@
-#ifndef ITEM_ROD
-#define ITEM_ROD
+#ifndef ITEM_ROD_HPP
+#define ITEM_ROD_HPP
 
 #include "item.hpp"
 #include "spells.hpp"
@@ -151,4 +151,4 @@ void load();
 
 } //rod_handling
 
-#endif // ITEM_ROD
+#endif // ITEM_ROD_HPP

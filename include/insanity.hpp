@@ -1,5 +1,5 @@
-#ifndef INSANITY
-#define INSANITY
+#ifndef INSANITY_HPP
+#define INSANITY_HPP
 
 #include <vector>
 #include <string>
@@ -1190,4 +1190,4 @@ void end_sympt(const Ins_sympt_id id);
 
 } //insanity
 
-#endif // INSANITY
+#endif // INSANITY_HPP

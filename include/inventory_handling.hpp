@@ -1,5 +1,5 @@
-#ifndef INV_HANDLING
-#define INV_HANDLING
+#ifndef INV_HANDLING_HPP
+#define INV_HANDLING_HPP
 
 #include "inventory.hpp"
 

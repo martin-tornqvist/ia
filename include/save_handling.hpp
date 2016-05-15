@@ -1,5 +1,5 @@
-#ifndef SAVE_HANDLING
-#define SAVE_HANDLING
+#ifndef SAVE_HANDLING_HPP
+#define SAVE_HANDLING_HPP
 
 #include <string>
 
