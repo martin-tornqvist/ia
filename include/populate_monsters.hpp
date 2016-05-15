@@ -1,5 +1,5 @@
-#ifndef POPULATE_H
-#define POPULATE_H
+#ifndef POPULATE_HPP
+#define POPULATE_HPP
 
 #include <vector>
 

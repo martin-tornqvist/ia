@@ -1,5 +1,5 @@
-#ifndef POSTMORTEM_H
-#define POSTMORTEM_H
+#ifndef POSTMORTEM_HPP
+#define POSTMORTEM_HPP
 
 #include <vector>
 #include <string>

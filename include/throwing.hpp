@@ -1,5 +1,5 @@
-#ifndef THROWING_H
-#define THROWING_H
+#ifndef THROWING_HPP
+#define THROWING_HPP
 
 
 class Item;

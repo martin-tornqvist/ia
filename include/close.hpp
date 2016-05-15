@@ -1,5 +1,5 @@
-#ifndef CLOSE_H
-#define CLOSE_H
+#ifndef CLOSE_HPP
+#define CLOSE_HPP
 
 class Feature;
 

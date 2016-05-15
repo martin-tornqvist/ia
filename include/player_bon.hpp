@@ -1,5 +1,5 @@
-#ifndef PLAYER_BON_H
-#define PLAYER_BON_H
+#ifndef PLAYER_BON_HPP
+#define PLAYER_BON_HPP
 
 #include <string>
 #include <vector>

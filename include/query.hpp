@@ -1,5 +1,5 @@
-#ifndef QUERY_H
-#define QUERY_H
+#ifndef QUERY_HPP
+#define QUERY_HPP
 
 #include "rl_utils.hpp"
 #include "colors.hpp"

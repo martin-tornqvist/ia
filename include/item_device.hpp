@@ -1,5 +1,5 @@
-#ifndef ITEM_DEVICE_H
-#define ITEM_DEVICE_H
+#ifndef ITEM_DEVICE_HPP
+#define ITEM_DEVICE_HPP
 
 #include <vector>
 #include <string>

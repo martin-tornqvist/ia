@@ -1,5 +1,5 @@
-#ifndef GAME_TIME_H
-#define GAME_TIME_H
+#ifndef GAME_TIME_HPP
+#define GAME_TIME_HPP
 
 #include <vector>
 

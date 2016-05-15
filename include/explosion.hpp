@@ -1,5 +1,5 @@
-#ifndef EXPLOSION_H
-#define EXPLOSION_H
+#ifndef EXPLOSION_HPP
+#define EXPLOSION_HPP
 
 #include <vector>
 

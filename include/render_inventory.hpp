@@ -1,5 +1,5 @@
-#ifndef RENDER_INVENTORY_H
-#define RENDER_INVENTORY_H
+#ifndef RENDER_INVENTORY_HPP
+#define RENDER_INVENTORY_HPP
 
 #include "inventory_handling.hpp"
 

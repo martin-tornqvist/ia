@@ -1,5 +1,5 @@
-#ifndef LINE_CALC_H
-#define LINE_CALC_H
+#ifndef LINE_CALC_HPP
+#define LINE_CALC_HPP
 
 #include <vector>
 

@@ -1,5 +1,5 @@
-#ifndef HIGH_SCORE_H
-#define HIGH_SCORE_H
+#ifndef HIGH_SCORE_HPP
+#define HIGH_SCORE_HPP
 
 #include <vector>
 #include <string>

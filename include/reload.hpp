@@ -1,5 +1,5 @@
-#ifndef RELOAD_H
-#define RELOAD_H
+#ifndef RELOAD_HPP
+#define RELOAD_HPP
 
 class Actor;
 class Item;

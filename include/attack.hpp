@@ -1,5 +1,5 @@
-#ifndef ATTACK_H
-#define ATTACK_H
+#ifndef ATTACK_HPP
+#define ATTACK_HPP
 
 #include <vector>
 #include <math.h>

@@ -1,5 +1,5 @@
-#ifndef FEATURE_RIGID_H
-#define FEATURE_RIGID_H
+#ifndef FEATURE_RIGID_HPP
+#define FEATURE_RIGID_HPP
 
 #include "feature.hpp"
 

@@ -1,5 +1,5 @@
-#ifndef FOV_H
-#define FOV_H
+#ifndef FOV_HPP
+#define FOV_HPP
 
 #include "rl_utils.hpp"
 #include "cmn.hpp"

@@ -1,5 +1,5 @@
-#ifndef SDL_WRAPPER_H
-#define SDL_WRAPPER_H
+#ifndef SDL_WRAPPER_HPP
+#define SDL_WRAPPER_HPP
 
 #include <SDL.h>
 

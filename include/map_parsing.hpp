@@ -1,5 +1,5 @@
-#ifndef MAP_PARSING_H
-#define MAP_PARSING_H
+#ifndef MAP_PARSING_HPP
+#define MAP_PARSING_HPP
 
 #include <vector>
 

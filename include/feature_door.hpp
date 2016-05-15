@@ -1,5 +1,5 @@
-#ifndef FEATURE_DOOR_H
-#define FEATURE_DOOR_H
+#ifndef FEATURE_DOOR_HPP
+#define FEATURE_DOOR_HPP
 
 #include "feature_rigid.hpp"
 

@@ -1,5 +1,5 @@
-#ifndef MON_H
-#define MON_H
+#ifndef MON_HPP
+#define MON_HPP
 
 #include "cmn.hpp"
 #include "actor.hpp"

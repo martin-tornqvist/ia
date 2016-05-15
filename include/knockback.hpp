@@ -1,5 +1,5 @@
-#ifndef KNOCKBACK_H
-#define KNOCKBACK_H
+#ifndef KNOCKBACK_HPP
+#define KNOCKBACK_HPP
 
 #include "rl_utils.hpp"
 

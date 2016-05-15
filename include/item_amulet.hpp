@@ -1,5 +1,5 @@
-#ifndef ITEM_AMULET_H
-#define ITEM_AMULET_H
+#ifndef ITEM_AMULET_HPP
+#define ITEM_AMULET_HPP
 
 #include "item.hpp"
 #include "actor_data.hpp"
@@ -595,4 +595,4 @@ void load();
 
 } //amulet_handling
 
-#endif // ITEM_AMULET_H
+#endif // ITEM_AMULET_HPP

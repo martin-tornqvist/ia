@@ -1,5 +1,5 @@
-#ifndef MAP_TRAVEL_H
-#define MAP_TRAVEL_H
+#ifndef MAP_TRAVEL_HPP
+#define MAP_TRAVEL_HPP
 
 #include <vector>
 #include <string>

@@ -1,5 +1,5 @@
-#ifndef MAPBUILD_H
-#define MAPBUILD_H
+#ifndef MAPBUILD_HPP
+#define MAPBUILD_HPP
 
 #include <vector>
 

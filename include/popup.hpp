@@ -1,5 +1,5 @@
-#ifndef POPUP_H
-#define POPUP_H
+#ifndef POPUP_HPP
+#define POPUP_HPP
 
 #include <vector>
 #include <string>

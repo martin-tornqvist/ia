@@ -1,5 +1,5 @@
-#ifndef ACTOR_H
-#define ACTOR_H
+#ifndef ACTOR_HPP
+#define ACTOR_HPP
 
 #include <string>
 #include <vector>

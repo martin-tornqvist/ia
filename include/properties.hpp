@@ -1,5 +1,5 @@
-#ifndef PROPERTIES_H
-#define PROPERTIES_H
+#ifndef PROPERTIES_HPP
+#define PROPERTIES_HPP
 
 #include <string>
 #include <vector>

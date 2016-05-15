@@ -1,5 +1,5 @@
-#ifndef FEATURE_DATA_H
-#define FEATURE_DATA_H
+#ifndef FEATURE_DATA_HPP
+#define FEATURE_DATA_HPP
 
 #include <functional>
 #include "art.hpp"

@@ -1,5 +1,5 @@
-#ifndef PICKUP_H
-#define PICKUP_H
+#ifndef PICKUP_HPP
+#define PICKUP_HPP
 
 class Ammo;
 class Wpn;

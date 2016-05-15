@@ -1,5 +1,5 @@
-#ifndef ABILITY_VALUES_H
-#define ABILITY_VALUES_H
+#ifndef ABILITY_VALUES_HPP
+#define ABILITY_VALUES_HPP
 
 class Actor;
 

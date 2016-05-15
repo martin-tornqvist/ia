@@ -1,5 +1,5 @@
-#ifndef ART_H
-#define ART_H
+#ifndef ART_HPP
+#define ART_HPP
 
 const int FONT_SHEET_X_CELLS = 16;
 const int FONT_SHEET_Y_CELLS = 7;

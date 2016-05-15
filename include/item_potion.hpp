@@ -1,5 +1,5 @@
-#ifndef ITEM_POTION_H
-#define ITEM_POTION_H
+#ifndef ITEM_POTION_HPP
+#define ITEM_POTION_HPP
 
 #include <vector>
 #include <string>

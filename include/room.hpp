@@ -1,7 +1,7 @@
 //NOTE: This file must not define "ROOM_H" for the include guard. That name should be
 //reserved for constants representing room height.
-#ifndef MAPGEN_ROOM_H
-#define MAPGEN_ROOM_H
+#ifndef MAPGEN_ROOM_HPP
+#define MAPGEN_ROOM_HPP
 
 #include <vector>
 #ifdef MACOSX

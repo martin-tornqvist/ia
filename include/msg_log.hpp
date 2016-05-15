@@ -1,5 +1,5 @@
-#ifndef LOG_HANDLER_H
-#define LOG_HANDLER_H
+#ifndef LOG_HANDLER_HPP
+#define LOG_HANDLER_HPP
 
 #include <string>
 #include <vector>

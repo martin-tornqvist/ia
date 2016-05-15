@@ -1,5 +1,5 @@
-#ifndef POPULATE_ITEMS_H
-#define POPULATE_ITEMS_H
+#ifndef POPULATE_ITEMS_HPP
+#define POPULATE_ITEMS_HPP
 
 namespace populate_items
 {

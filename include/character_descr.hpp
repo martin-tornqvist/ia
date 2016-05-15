@@ -1,5 +1,5 @@
-#ifndef CHARACTER_DESCR_H
-#define CHARACTER_DESCR_H
+#ifndef CHARACTER_DESCR_HPP
+#define CHARACTER_DESCR_HPP
 
 namespace character_descr
 {

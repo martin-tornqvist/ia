@@ -1,5 +1,5 @@
-#ifndef ITEM_SCROLL_H
-#define ITEM_SCROLL_H
+#ifndef ITEM_SCROLL_HPP
+#define ITEM_SCROLL_HPP
 
 #include "item.hpp"
 

@@ -1,5 +1,5 @@
-#ifndef MAPTEMPLATES_H
-#define MAPTEMPLATES_H
+#ifndef MAPTEMPLATES_HPP
+#define MAPTEMPLATES_HPP
 
 #include <vector>
 #include <string>

@@ -1,5 +1,5 @@
-#ifndef FEATURE_MOB_H
-#define FEATURE_MOB_H
+#ifndef FEATURE_MOB_HPP
+#define FEATURE_MOB_HPP
 
 #include "feature.hpp"
 

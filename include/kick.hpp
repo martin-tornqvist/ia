@@ -1,5 +1,5 @@
-#ifndef KICK_H
-#define KICK_H
+#ifndef KICK_HPP
+#define KICK_HPP
 
 namespace kick
 {

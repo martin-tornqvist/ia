@@ -1,5 +1,5 @@
-#ifndef MARKER_H
-#define MARKER_H
+#ifndef MARKER_HPP
+#define MARKER_HPP
 
 #include <functional>
 #include <climits>

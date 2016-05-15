@@ -1,5 +1,5 @@
-#ifndef MAIN_MENU_H
-#define MAIN_MENU_H
+#ifndef MAIN_MENU_HPP
+#define MAIN_MENU_HPP
 
 #include "cmn.hpp"
 

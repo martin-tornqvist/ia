@@ -1,5 +1,5 @@
-#ifndef MAP_HANDLER_H
-#define MAP_HANDLER_H
+#ifndef MAP_HPP
+#define MAP_HPP
 
 #include <vector>
 

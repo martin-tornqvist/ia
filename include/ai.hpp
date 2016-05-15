@@ -1,5 +1,5 @@
-#ifndef AI_H
-#define AI_H
+#ifndef AI_HPP
+#define AI_HPP
 
 #include <vector>
 

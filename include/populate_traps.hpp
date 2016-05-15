@@ -1,5 +1,5 @@
-#ifndef POPULATE_TRAPS_H
-#define POPULATE_TRAPS_H
+#ifndef POPULATE_TRAPS_HPP
+#define POPULATE_TRAPS_HPP
 
 namespace populate_traps
 {

@@ -1,5 +1,5 @@
-#ifndef MAP_PATTERNS_H
-#define MAP_PATTERNS_H
+#ifndef MAP_PATTERNS_HPP
+#define MAP_PATTERNS_HPP
 
 #include <vector>
 

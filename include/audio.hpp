@@ -1,5 +1,5 @@
-#ifndef AUDIO_H
-#define AUDIO_H
+#ifndef AUDIO_HPP
+#define AUDIO_HPP
 
 #include "rl_utils.hpp"
 

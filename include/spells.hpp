@@ -1,5 +1,5 @@
-#ifndef SPELLS_H
-#define SPELLS_H
+#ifndef SPELLS_HPP
+#define SPELLS_HPP
 
 #include <vector>
 #include <string>

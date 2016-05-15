@@ -1,5 +1,5 @@
-#ifndef LOOK_H
-#define LOOK_H
+#ifndef LOOK_HPP
+#define LOOK_HPP
 
 #include <string>
 

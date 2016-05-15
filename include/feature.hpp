@@ -1,5 +1,5 @@
-#ifndef FEATURE_H
-#define FEATURE_H
+#ifndef FEATURE_HPP
+#define FEATURE_HPP
 
 #include <vector>
 #include <string>

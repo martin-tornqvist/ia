@@ -1,5 +1,5 @@
-#ifndef MENU_INPUT_H
-#define MENU_INPUT_H
+#ifndef MENU_INPUT_HPP
+#define MENU_INPUT_HPP
 
 #include "rl_utils.hpp"
 #include "cmn.hpp"

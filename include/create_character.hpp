@@ -1,5 +1,5 @@
-#ifndef CREATE_CHARACTER_H
-#define CREATE_CHARACTER_H
+#ifndef CREATE_CHARACTER_HPP
+#define CREATE_CHARACTER_HPP
 
 namespace create_character
 {

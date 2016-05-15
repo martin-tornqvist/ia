@@ -1,5 +1,5 @@
-#ifndef TEXT_FORMATTING_H
-#define TEXT_FORMATTING_H
+#ifndef TEXT_FORMATTING_HPP
+#define TEXT_FORMATTING_HPP
 
 #include <vector>
 #include <string>

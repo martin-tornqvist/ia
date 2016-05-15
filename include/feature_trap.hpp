@@ -1,5 +1,5 @@
-#ifndef FEATURE_TRAPS_H
-#define FEATURE_TRAPS_H
+#ifndef FEATURE_TRAPS_HPP
+#define FEATURE_TRAPS_HPP
 
 #include "feature.hpp"
 #include "ability_values.hpp"

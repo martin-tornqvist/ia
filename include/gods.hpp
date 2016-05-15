@@ -1,5 +1,5 @@
-#ifndef GODS_H
-#define GODS_H
+#ifndef GODS_HPP
+#define GODS_HPP
 
 #include <string>
 #include <vector>

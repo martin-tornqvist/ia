@@ -1,5 +1,5 @@
-#ifndef CMN_H
-#define CMN_H
+#ifndef CMN_HPP
+#define CMN_HPP
 
 #include <string>
 
@@ -420,4 +420,4 @@ struct Item_att_msgs
     std::string player, other;
 };
 
-#endif //CMN_H
+#endif //CMN_HPP

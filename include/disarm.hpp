@@ -1,5 +1,5 @@
-#ifndef DISARM_H
-#define DISARM_H
+#ifndef DISARM_HPP
+#define DISARM_HPP
 
 namespace disarm
 {

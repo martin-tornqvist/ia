@@ -1,5 +1,5 @@
-#ifndef ITEM_H
-#define ITEM_H
+#ifndef ITEM_HPP
+#define ITEM_HPP
 
 #include "art.hpp"
 #include "inventory_handling.hpp"

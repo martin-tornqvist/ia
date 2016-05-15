@@ -1,5 +1,5 @@
-#ifndef DUNGEON_MASTER_H
-#define DUNGEON_MASTER_H
+#ifndef DUNGEON_MASTER_HPP
+#define DUNGEON_MASTER_HPP
 
 #include <vector>
 #include <string>

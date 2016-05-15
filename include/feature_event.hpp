@@ -1,5 +1,5 @@
-#ifndef FEATURE_EVENT_H
-#define FEATURE_EVENT_H
+#ifndef FEATURE_EVENT_HPP
+#define FEATURE_EVENT_HPP
 
 #include <vector>
 
