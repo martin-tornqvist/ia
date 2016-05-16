@@ -840,7 +840,9 @@ Actor_died Actor::hit_spi(const int DMG, const Verbosity verbosity)
     return Actor_died::no;
 }
 
-void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW_DROP_ITEMS)
+void Actor::die(const bool IS_DESTROYED,
+                const bool ALLOW_GORE,
+                const bool ALLOW_DROP_ITEMS)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
@@ -892,24 +894,29 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
         state_ = Actor_state::corpse;
     }
 
-    if (!is_player() && is_humanoid())
+    if (!is_player())
     {
-        TRACE_VERBOSE << "Emitting death sound" << std::endl;
+        //This is a monster
 
-        Snd snd("I hear agonized screaming.",
-                Sfx_id::END,
-                Ignore_msg_if_origin_seen::yes,
-                pos,
-                this,
-                Snd_vol::low,
-                Alerts_mon::no);
+        if (is_humanoid())
+        {
+            TRACE_VERBOSE << "Emitting death sound" << std::endl;
 
-        snd_emit::run(snd);
-    }
+            Snd snd("I hear agonized screaming.",
+                    Sfx_id::END,
+                    Ignore_msg_if_origin_seen::yes,
+                    pos,
+                    this,
+                    Snd_vol::high,
+                    Alerts_mon::no);
 
-    if (ALLOW_DROP_ITEMS)
-    {
-        item_drop::drop_all_characters_items(*this);
+            snd_emit::run(snd);
+        }
+
+        if (ALLOW_DROP_ITEMS)
+        {
+            item_drop::drop_all_characters_items(*this);
+        }
     }
 
     if (IS_DESTROYED)

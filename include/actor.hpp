@@ -88,11 +88,15 @@ public:
 
     void set_hp_and_spi_to_max();
 
-    void change_max_hp(const int CHANGE, const Verbosity verbosity = Verbosity::verbose);
+    void change_max_hp(const int CHANGE,
+                       const Verbosity verbosity = Verbosity::verbose);
 
-    void change_max_spi(const int CHANGE, const Verbosity verbosity = Verbosity::verbose);
+    void change_max_spi(const int CHANGE,
+                        const Verbosity verbosity = Verbosity::verbose);
 
-    void die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW_DROP_ITEMS);
+    void die(const bool IS_DESTROYED,
+             const bool ALLOW_GORE,
+             const bool ALLOW_DROP_ITEMS);
 
     //Used by Ghoul class and Ghoul monsters
     Did_action try_eat_corpse();
