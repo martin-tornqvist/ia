@@ -1329,7 +1329,7 @@ void init_data_list()
     d.ai[size_t(Ai_id::moves_to_tgt_when_los)] = true;
     d.ai[size_t(Ai_id::moves_to_lair)] = false;
     d.ai[size_t(Ai_id::moves_to_leader)] = false;
-    d.speed = Actor_speed::sluggish;
+    d.speed = Actor_speed::normal;
     d.glyph = 'r';
     d.color = clr_gray;
     d.tile = Tile_id::rat;
