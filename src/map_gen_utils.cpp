@@ -23,13 +23,6 @@ bool is_map_valid = true;
 namespace map_gen_utils
 {
 
-namespace
-{
-
-Feature_id backup[MAP_W][MAP_H];
-
-} //namespace
-
 void cut_room_corners(const Room& room)
 {
     if (!room.sub_rooms_.empty() || room.r_.min_dim() < 6)
@@ -44,10 +37,10 @@ void cut_room_corners(const Room& room)
 
     const P cross_dims(rnd::range(2, max_dims.x), rnd::range(2, max_dims.y));
 
-    const P cross_x0Y0(rnd::range(room_p0.x + 2, room_p1.x - cross_dims.x - 1),
+    const P cross_x0y0(rnd::range(room_p0.x + 2, room_p1.x - cross_dims.x - 1),
                        rnd::range(room_p0.y + 2, room_p1.y - cross_dims.y - 1));
 
-    const P cross_x1Y1(cross_x0Y0 + cross_dims - 1);
+    const P cross_x1y1(cross_x0y0 + cross_dims - 1);
 
     //Which corners to place - up-left, up-right, down-left, down-right
     bool c[4] = {true, true, true, true};
@@ -82,10 +75,10 @@ void cut_room_corners(const Room& room)
     {
         for (int x = room_p0.x; x <= room_p1.x; ++x)
         {
-            const bool X_IS_OK = x < cross_x0Y0.x ? (c[0] || c[2]) :
-                                 x > cross_x1Y1.x ? (c[1] || c[3]) : false;
-            const bool Y_IS_OK = y < cross_x0Y0.y ? (c[0] || c[1]) :
-                                 y > cross_x1Y1.y ? (c[2] || c[3]) : false;
+            const bool X_IS_OK = x < cross_x0y0.x ? (c[0] || c[2]) :
+                                 x > cross_x1y1.x ? (c[1] || c[3]) : false;
+            const bool Y_IS_OK = y < cross_x0y0.y ? (c[0] || c[1]) :
+                                 y > cross_x1y1.y ? (c[2] || c[3]) : false;
 
             if (X_IS_OK && Y_IS_OK)
             {

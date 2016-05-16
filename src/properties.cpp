@@ -837,7 +837,11 @@ void Prop_handler::init_natural_props()
         if (d.natural_props[i])
         {
             Prop* const prop = mk_prop(Prop_id(i), Prop_turns::indefinite);
-            try_add(prop, Prop_src::intr, true, Verbosity::silent);
+
+            try_add(prop,
+                    Prop_src::intr,
+                    true,
+                    Verbosity::silent);
         }
     }
 }
@@ -2535,7 +2539,7 @@ void Prop_rFear::on_start()
 {
     owning_actor_->prop_handler().end_prop(Prop_id::terrified);
 
-    if (turns_init_type_ == Prop_turns::indefinite)
+    if (owning_actor_->is_player() && turns_init_type_ == Prop_turns::indefinite)
     {
         insanity::on_permanent_rfear();
     }

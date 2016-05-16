@@ -49,6 +49,7 @@ void save_modules()
     ASSERT(lines_.empty());
 
     put_str(map::player->name_a());
+
     dungeon_master::save();
     scroll_handling::save();
     potion_handling::save();
@@ -190,15 +191,15 @@ void load_game()
 
     ASSERT(!lines_.empty());
 
-    //Tell all modules to set up their state from the save lines (via this modules read functions)
+    //Tell all modules to set up their state from the save lines (via the
+    //read functions of this module)
     load_modules();
 
 #ifndef NDEBUG
     state_ = State::stopped;
 #endif // NDEBUG
 
-    //Since all modules should have read/erased the same number of lines as they saved, the save
-    //lines should now be empty (otherwise it's a loading bug)
+    //Save file corruption check
     ASSERT(lines_.empty());
 
     //Loading is finished, write an empty save file to prevent reloading the game
@@ -249,6 +250,9 @@ std::string get_str()
     ASSERT(state_ == State::loading);
 #endif // NDEBUG
 
+    //Save file corruption check
+    ASSERT(!lines_.empty());
+
     const std::string str = lines_.front();
 
     lines_.erase(begin(lines_));
@@ -266,4 +270,4 @@ bool get_bool()
     return get_str() == "T";
 }
 
-} //Save_handling
+} //save_handling

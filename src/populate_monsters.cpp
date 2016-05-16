@@ -453,11 +453,11 @@ void populate_std_lvl()
                     std::vector<P> sorted_free_cells;
                     mk_sorted_free_cells(origin, blocked, sorted_free_cells);
 
-                    const bool DID_MAKE_GROUP = mk_random_group_for_room(
-                                                    room->type_,
-                                                    sorted_free_cells,
-                                                    blocked,
-                                                    true);
+                    const bool DID_MAKE_GROUP =
+                        mk_random_group_for_room(room->type_,
+                                                 sorted_free_cells,
+                                                 blocked,
+                                                 true);
 
                     if (DID_MAKE_GROUP)
                     {
