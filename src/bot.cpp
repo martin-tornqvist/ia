@@ -19,6 +19,7 @@
 #include "map_parsing.hpp"
 #include "game_time.hpp"
 #include "map_travel.hpp"
+#include "explosion.hpp"
 
 namespace bot
 {
@@ -26,41 +27,44 @@ namespace bot
 namespace
 {
 
-std::vector<P> cur_path_;
+std::vector<P> path_;
 
 void find_path_to_stairs()
 {
-    cur_path_.clear();
+    path_.clear();
 
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
-    P stair_pos(-1, -1);
+    P stair_p(-1, -1);
 
     for (int x = 0; x < MAP_W; ++x)
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            const auto cur_id = map::cells[x][y].rigid->id();
+            const auto id = map::cells[x][y].rigid->id();
 
-            if (cur_id == Feature_id::stairs)
+            if (id == Feature_id::stairs)
             {
                 blocked[x][y] = false;
-                stair_pos.set(x, y);
+                stair_p.set(x, y);
             }
-            else if (cur_id == Feature_id::door)
+            else if (id == Feature_id::door)
             {
                 blocked[x][y] = false;
             }
         }
     }
 
-    ASSERT(stair_pos != P(-1, -1));
+    ASSERT(stair_p.x != -1);
 
-    path_find::run(map::player->pos, stair_pos, blocked, cur_path_);
+    path_find::run(map::player->pos,
+                   stair_p,
+                   blocked,
+                   path_);
 
-    ASSERT(!cur_path_.empty());
-    ASSERT(cur_path_.front() == stair_pos);
+    ASSERT(!path_.empty());
+    ASSERT(path_.front() == stair_p);
 }
 
 bool walk_to_adj_cell(const P& p)
@@ -84,7 +88,7 @@ bool walk_to_adj_cell(const P& p)
 
 void init()
 {
-    cur_path_.clear();
+    path_.clear();
 }
 
 void act()
@@ -92,15 +96,12 @@ void act()
     //=======================================================================
     // TESTS
     //=======================================================================
+#ifndef NDEBUG
     for (Actor* actor : game_time::actors)
     {
-#ifdef NDEBUG
-        (void)actor;
-#else
         ASSERT(map::is_pos_inside_map(actor->pos));
-#endif
     }
-
+#endif
     //=======================================================================
 
     //Abort?
@@ -204,6 +205,17 @@ void act()
         return;
     }
 
+    //Occasionally run an explosion
+    if (rnd::one_in(50))
+    {
+        const P expl_p(rnd::range(1, MAP_W - 2),
+                       rnd::range(1, MAP_H - 2));
+
+        explosion::run(expl_p, Expl_type::expl);
+
+        return;
+    }
+
     //Handle blocking door
     for (int dx = -1; dx <= 1; ++dx)
     {
@@ -237,7 +249,7 @@ void act()
 
     find_path_to_stairs();
 
-    walk_to_adj_cell(cur_path_.back());
+    walk_to_adj_cell(path_.back());
 }
 
 } //Bot

@@ -1407,10 +1407,9 @@ void draw_map()
             cur_render_data = &render_array[p.x][p.y];
 
             //There should NOT already be an actor here which is seen, or that we are aware of
-            //TODO: The asserts below do fail sometimes - find out what the cause is
-//            ASSERT(!cur_render_data->is_living_actor_seen_here);
-//            ASSERT(!cur_render_data->is_aware_of_hostile_mon_here);
-//            ASSERT(!cur_render_data->is_aware_of_allied_mon_here);
+            ASSERT(!cur_render_data->is_living_actor_seen_here);
+            ASSERT(!cur_render_data->is_aware_of_hostile_mon_here);
+            ASSERT(!cur_render_data->is_aware_of_allied_mon_here);
 
             const auto* const mon = static_cast<const Mon*>(actor);
 
@@ -1616,7 +1615,7 @@ void draw_map()
             {
                 //We should never see both a hostile AND an allied monster in the same cell
                 ASSERT(!tmp_render_data.is_aware_of_hostile_mon_here ||
-                          !tmp_render_data.is_aware_of_allied_mon_here);
+                       !tmp_render_data.is_aware_of_allied_mon_here);
 
                 const Clr bg_clr = tmp_render_data.is_aware_of_hostile_mon_here ?
                                    clr_nosf_teal_drk :

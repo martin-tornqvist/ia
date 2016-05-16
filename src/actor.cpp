@@ -146,9 +146,9 @@ void Actor::seen_actors(std::vector<Actor*>& out)
     if (!is_player())
     {
         R los_rect(std::max(0,         pos.x - FOV_STD_RADI_INT),
-                      std::max(0,         pos.y - FOV_STD_RADI_INT),
-                      std::min(MAP_W - 1, pos.x + FOV_STD_RADI_INT),
-                      std::min(MAP_H - 1, pos.y + FOV_STD_RADI_INT));
+                   std::max(0,         pos.y - FOV_STD_RADI_INT),
+                   std::min(MAP_W - 1, pos.x + FOV_STD_RADI_INT),
+                   std::min(MAP_H - 1, pos.y + FOV_STD_RADI_INT));
 
         map_parse::run(cell_check::Blocks_los(),
                        blocked_los,
@@ -189,9 +189,9 @@ void Actor::seen_foes(std::vector<Actor*>& out)
     if (!is_player())
     {
         R los_rect(std::max(0,         pos.x - FOV_STD_RADI_INT),
-                      std::max(0,         pos.y - FOV_STD_RADI_INT),
-                      std::min(MAP_W - 1, pos.x + FOV_STD_RADI_INT),
-                      std::min(MAP_H - 1, pos.y + FOV_STD_RADI_INT));
+                   std::max(0,         pos.y - FOV_STD_RADI_INT),
+                   std::min(MAP_W - 1, pos.x + FOV_STD_RADI_INT),
+                   std::min(MAP_H - 1, pos.y + FOV_STD_RADI_INT));
 
         map_parse::run(cell_check::Blocks_los(),
                        blocked_los,
@@ -758,7 +758,7 @@ Actor_died Actor::hit(int dmg,
 
                 delete armor;
                 armor = nullptr;
-                inv_->slots_[int(Slot_id::body)].item = nullptr;
+                inv_->slots_[(size_t)Slot_id::body].item = nullptr;
             }
         }
     }
@@ -771,10 +771,12 @@ Actor_died Actor::hit(int dmg,
 
     dmg = std::max(1, dmg);
 
-    if (!is_player() || !config::is_bot_playing())
+    if (!(is_player() && config::is_bot_playing()))
     {
         hp_ -= dmg;
     }
+
+    TRACE_VERBOSE << "HP remaining: " << hp_ << std::endl;
 
     if (hp() <= 0)
     {
@@ -791,11 +793,10 @@ Actor_died Actor::hit(int dmg,
         TRACE_FUNC_END_VERBOSE;
         return Actor_died::yes;
     }
-    else //HP is greater than 0
-    {
-        TRACE_FUNC_END_VERBOSE;
-        return Actor_died::no;
-    }
+
+    //HP is greater than 0
+    TRACE_FUNC_END_VERBOSE;
+    return Actor_died::no;
 }
 
 Actor_died Actor::hit_spi(const int DMG, const Verbosity verbosity)
@@ -841,12 +842,17 @@ Actor_died Actor::hit_spi(const int DMG, const Verbosity verbosity)
 
 void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW_DROP_ITEMS)
 {
+    TRACE_FUNC_BEGIN_VERBOSE;
+
     ASSERT(data_->can_leave_corpse || IS_DESTROYED);
 
     //Check all monsters and unset this actor as leader
     for (Actor* other : game_time::actors)
     {
-        if (other != this && !other->is_player() && is_leader_of(other))
+        if (
+            other != this       &&
+            !other->is_player() &&
+            is_leader_of(other))
         {
             static_cast<Mon*>(other)->leader_ = nullptr;
         }
@@ -862,7 +868,8 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
             map::player->tgt_ = nullptr;
         }
 
-        //Print death messages
+        TRACE_VERBOSE << "Printing death message" << std::endl;
+
         if (map::player->can_see_actor(*this))
         {
             can_player_see_dying_actor = true;
@@ -887,6 +894,8 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
 
     if (!is_player() && is_humanoid())
     {
+        TRACE_VERBOSE << "Emitting death sound" << std::endl;
+
         Snd snd("I hear agonized screaming.",
                 Sfx_id::END,
                 Ignore_msg_if_origin_seen::yes,
@@ -956,6 +965,8 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE, const bool ALLOW
     }
 
     render::draw_map_and_interface();
+
+    TRACE_FUNC_END_VERBOSE;
 }
 
 std::string Actor::death_msg() const

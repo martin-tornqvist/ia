@@ -71,7 +71,7 @@ void draw(const std::vector< std::vector<P> >& pos_lists,
 R explosion_area(const P& c, const int RADI)
 {
     return R(P(std::max(c.x - RADI, 1),         std::max(c.y - RADI, 1)),
-                P(std::min(c.x + RADI, MAP_W - 2), std::min(c.y + RADI, MAP_H - 2)));
+             P(std::min(c.x + RADI, MAP_W - 2), std::min(c.y + RADI, MAP_H - 2)));
 }
 
 void cells_reached(const R& area, const P& origin,
@@ -188,13 +188,12 @@ void run(const P& origin,
 
     const int NR_OUTER = pos_lists.size();
 
-    for (int cur_radi = 0; cur_radi < NR_OUTER; cur_radi++)
+    for (int radi = 0; radi < NR_OUTER; ++radi)
     {
-        const std::vector<P>& positions_at_cur_radi = pos_lists[cur_radi];
+        const std::vector<P>& positions_at_radi = pos_lists[radi];
 
-        for (const P& pos : positions_at_cur_radi)
+        for (const P& pos : positions_at_radi)
         {
-
             Actor* living_actor                 = living_actors[pos.x][pos.y];
             std::vector<Actor*> corpses_here    = corpses[pos.x][pos.y];
 
@@ -204,7 +203,7 @@ void run(const P& origin,
                 Cell& cell = map::cells[pos.x][pos.y];
                 cell.rigid->hit(Dmg_type::physical, Dmg_method::explosion, nullptr);
 
-                const int ROLLS = EXPL_DMG_ROLLS - cur_radi;
+                const int ROLLS = EXPL_DMG_ROLLS - radi;
                 const int DMG   = rnd::dice(ROLLS, EXPL_DMG_SIDES) + EXPL_DMG_PLUS;
 
                 //Damage living actor
@@ -225,7 +224,10 @@ void run(const P& origin,
                 }
 
                 //Damage dead actors
-                for (Actor* corpse : corpses_here) {corpse->hit(DMG, Dmg_type::physical);}
+                for (Actor* corpse : corpses_here)
+                {
+                    corpse->hit(DMG, Dmg_type::physical);
+                }
 
                 //Add smoke
                 if (rnd::fraction(6, 10))

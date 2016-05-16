@@ -105,16 +105,21 @@ void try_drop_item_from_inv(Actor& actor,
     }
 }
 
-//TODO: This function is really weirdly written, and seems to even be doing
-//wrong things. It should be refactored.
 Item* drop_item_on_map(const P& intended_pos, Item& item)
 {
+    TRACE_FUNC_BEGIN_VERBOSE;
+
+    ASSERT(map::is_pos_inside_map(intended_pos, false));
+
     //If target cell is bottomless, just destroy the item
-    const auto* const tgt_rigid = map::cells[intended_pos.x][intended_pos.y].rigid;
+    const auto* const tgt_rigid =
+        map::cells[intended_pos.x][intended_pos.y].rigid;
 
     if (tgt_rigid->is_bottomless())
     {
         delete &item;
+
+        TRACE_FUNC_END_VERBOSE;
         return nullptr;
     }
 
@@ -126,6 +131,7 @@ Item* drop_item_on_map(const P& intended_pos, Item& item)
         for (int y = 0; y < MAP_H; ++y)
         {
             Rigid* const f = map::cells[x][y].rigid;
+
             free_cell_array[x][y] = f->can_have_item() && !f->is_bottomless();
         }
     }
@@ -133,62 +139,93 @@ Item* drop_item_on_map(const P& intended_pos, Item& item)
     std::vector<P> free_cells;
     to_vec((bool*)free_cell_array, true, MAP_W, MAP_H, free_cells);
 
+    if (free_cells.empty())
+    {
+        //No cells found were items could be placed - too bad!
+        delete &item;
+
+        TRACE_FUNC_END_VERBOSE;
+        return nullptr;
+    }
+
     //Sort the vector according to distance to origin
     Is_closer_to_pos is_closer_to_origin(intended_pos);
+
     sort(begin(free_cells), end(free_cells), is_closer_to_origin);
 
-    P cur_pos;
-    P stack_pos;
     const bool IS_STACKABLE_TYPE = item.data().is_stackable;
 
-    size_t          ii          = 0;
-    const size_t    VEC_SIZE    = free_cells.size();
+    int dist_searched_stackable = -1;
 
-    for (size_t i = 0; i < VEC_SIZE; ++i)
+    //If the item is stackable, and there is a cell A in which the item can be
+    //stacked, and a cell B which is empty, and A and B are of equal distance
+    //to the origin, then we ALWAYS prefer cell A.
+    //In other words, try to drop as near as possible, but prefer stacking.
+    for (auto outer_it = begin(free_cells); outer_it != end(free_cells); ++outer_it)
     {
-        //First look in all cells that has distance to origin equal to cell i to try and
-        //merge the item if it stacks
+        const P& p = *outer_it;
+
         if (IS_STACKABLE_TYPE)
         {
-            //While ii cell is not further away than i cell
-            while (!is_closer_to_origin(free_cells[i], free_cells[ii]))
-            {
-                stack_pos = free_cells[ii];
-                Item* item_found_on_floor = map::cells[stack_pos.x][stack_pos.y].item;
+            const int DIST = king_dist(intended_pos, p);
 
-                if (item_found_on_floor)
+            ASSERT(DIST >= dist_searched_stackable);
+
+            //Have we searched at this distance before?
+            if (DIST > dist_searched_stackable)
+            {
+                //Search each cell which have equal distance to the current distance
+                for (auto stack_it = outer_it + 1; stack_it != end(free_cells); ++stack_it)
                 {
-                    if (item_found_on_floor->data().id == item.data().id)
+                    const P& stack_p = *stack_it;
+
+                    const int STACK_DIST = king_dist(intended_pos, stack_p);
+
+                    ASSERT(STACK_DIST >= DIST);
+
+                    if (STACK_DIST > DIST)
                     {
-                        item.nr_items_ += item_found_on_floor->nr_items_;
-                        delete item_found_on_floor;
-                        map::cells[stack_pos.x][stack_pos.y].item = &item;
+                        break;
+                    }
+
+                    Item* item_on_floor = map::cells[stack_p.x][stack_p.y].item;
+
+                    if (
+                        item_on_floor &&
+                        item_on_floor->data().id == item.data().id)
+                    {
+                        TRACE_VERBOSE << "Stacking item with item on floor" << std::endl;
+
+                        item.nr_items_ += item_on_floor->nr_items_;
+
+                        delete item_on_floor;
+
+                        map::cells[stack_p.x][stack_p.y].item = &item;
+
+                        TRACE_FUNC_END_VERBOSE;
                         return &item;
                     }
-                }
+                } //Stack position loop
 
-                ++ii;
+                dist_searched_stackable = DIST;
             }
         }
 
-        cur_pos = free_cells[i];
+        // Item has not been stacked at this distance
 
-        if (!map::cells[cur_pos.x][cur_pos.y].item)
+        if (!map::cells[p.x][p.y].item)
         {
-            map::cells[cur_pos.x][cur_pos.y].item = &item;
+            // Alright, this cell is empty, let's put the item here
+            map::cells[p.x][p.y].item = &item;
 
-            //TODO: Won't this cause nullptr to be returned?
-            //Shouldn't a pointer to the item be returned?
-            break;
+            return &item;
         }
+    } //Free cells loop
 
-        if (i == VEC_SIZE - 1)
-        {
-            delete &item;
-            return nullptr;
-        }
-    }
+    //All free cells occupied by other items (and stacking failed) - too bad!
+    delete &item;
 
+    TRACE_FUNC_END_VERBOSE;
     return nullptr;
 }
 

@@ -1356,9 +1356,9 @@ void Prop_handler::try_add_from_att(const Wpn& wpn, const bool IS_MELEE)
                                  origin_prop->nr_turns_left_ : -1;
 
             //Make a copy of the weapon effect
-            auto * const prop_cpy = mk_prop(origin_prop->id(),
-                                            origin_prop->turns_init_type_,
-                                            NR_TURNS);
+            auto* const prop_cpy = mk_prop(origin_prop->id(),
+                                           origin_prop->turns_init_type_,
+                                           NR_TURNS);
 
             try_add(prop_cpy);
         }
@@ -1749,18 +1749,26 @@ bool Prop_handler::allow_eat(const Verbosity verbosity) const
 
 void Prop_handler::on_hit()
 {
+    TRACE_FUNC_BEGIN_VERBOSE;
+
     for (Prop* prop : props_)
     {
         prop->on_hit();
     }
+
+    TRACE_FUNC_END_VERBOSE;
 }
 
 void Prop_handler::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
 {
+    TRACE_FUNC_BEGIN_VERBOSE;
+
     for (Prop* prop : props_)
     {
         prop->on_death(IS_PLAYER_SEE_OWNING_ACTOR);
     }
+
+    TRACE_FUNC_END_VERBOSE;
 }
 
 int Prop_handler::ability_mod(const Ability_id ability) const
@@ -2164,7 +2172,10 @@ int Prop_wound::affect_max_hp(const int HP_MAX) const
         hp_pen_pct /= 2;
     }
 
-    return HP_MAX * (100 - hp_pen_pct) / 100;
+    // Cap the penalty percentage
+    hp_pen_pct = std::max(70, hp_pen_pct);
+
+    return (HP_MAX * (100 - hp_pen_pct)) / 100;
 }
 
 void Prop_wound::heal_one_wound()

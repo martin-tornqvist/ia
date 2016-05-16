@@ -133,7 +133,7 @@ TEST(directions)
     CHECK_EQUAL("E", str);
     dir_utils::compass_dir_name(from_pos, P(X0 + 1, Y0 + 1), str);
     CHECK_EQUAL("SE", str);
-    dir_utils::compass_dir_name(from_pos, P(X0    , Y0 + 1), str);
+    dir_utils::compass_dir_name(from_pos, P(X0, Y0 + 1), str);
     CHECK_EQUAL("S", str);
     dir_utils::compass_dir_name(from_pos, P(X0 - 1, Y0 + 1), str);
     CHECK_EQUAL("SW", str);
@@ -141,7 +141,7 @@ TEST(directions)
     CHECK_EQUAL("W", str);
     dir_utils::compass_dir_name(from_pos, P(X0 - 1, Y0 - 1), str);
     CHECK_EQUAL("NW", str);
-    dir_utils::compass_dir_name(from_pos, P(X0    , Y0 - 1), str);
+    dir_utils::compass_dir_name(from_pos, P(X0, Y0 - 1), str);
     CHECK_EQUAL("N", str);
     dir_utils::compass_dir_name(from_pos, P(X0 + 1, Y0 - 1), str);
     CHECK_EQUAL("NE", str);
@@ -167,7 +167,7 @@ TEST(directions)
     CHECK_EQUAL("E", str);
     dir_utils::compass_dir_name(from_pos, P(X0 + 10000, Y0 + 10000), str);
     CHECK_EQUAL("SE", str);
-    dir_utils::compass_dir_name(from_pos, P(X0        , Y0 + 10000), str);
+    dir_utils::compass_dir_name(from_pos, P(X0, Y0 + 10000), str);
     CHECK_EQUAL("S", str);
     dir_utils::compass_dir_name(from_pos, P(X0 - 10000, Y0 + 10000), str);
     CHECK_EQUAL("SW", str);
@@ -175,7 +175,7 @@ TEST(directions)
     CHECK_EQUAL("W", str);
     dir_utils::compass_dir_name(from_pos, P(X0 - 10000, Y0 - 10000), str);
     CHECK_EQUAL("NW", str);
-    dir_utils::compass_dir_name(from_pos, P(X0        , Y0 - 10000), str);
+    dir_utils::compass_dir_name(from_pos, P(X0, Y0 - 10000), str);
     CHECK_EQUAL("N", str);
     dir_utils::compass_dir_name(from_pos, P(X0 + 10000, Y0 - 10000), str);
     CHECK_EQUAL("NE", str);
@@ -817,21 +817,21 @@ TEST_FIXTURE(Basic_fixture, inventory_handling)
     CHECK(prop_hlr.has_prop(Prop_id::rBreath));
 
     //Destroy the asbesthos suit
-    map::player->restore_hp(99999, true /* Restoring above max */);
-
     for (int i = 0; i < 10; ++i)
     {
+        map::player->restore_hp(99999, true /* Restoring above max */);
+
         explosion::run(map::player->pos, Expl_type::expl);
+
+        //Clear wound property
+        prop_hlr.end_prop(Prop_id::wound);
     }
 
     //Check that the asbesthos suit is destroyed
     CHECK(!body_slot.item);
 
-    //Clear wound property
-    prop_hlr.end_prop(Prop_id::wound);
-
     //Check that all properties from asbesthos suit are cleared
-    for (int i = 0; i < int(Prop_id::END); ++i)
+    for (int i = 0; i < (int)Prop_id::END; ++i)
     {
         CHECK(!prop_hlr.has_prop(Prop_id(i)));
         CHECK(!prop_hlr.prop(Prop_id(i)));
@@ -841,12 +841,12 @@ TEST_FIXTURE(Basic_fixture, inventory_handling)
 TEST_FIXTURE(Basic_fixture, saving_game)
 {
     //Item data
-    item_data::data[int(Item_id::scroll_telep)].is_tried = true;
-    item_data::data[int(Item_id::scroll_opening)].is_identified = true;
+    item_data::data[(size_t)Item_id::scroll_telep].is_tried = true;
+    item_data::data[(size_t)Item_id::scroll_opening].is_identified = true;
 
     //Bonus
     player_bon::pick_bg(Bg::rogue);
-    player_bon::traits[size_t(Trait::healer)] = true;
+    player_bon::traits[(size_t)Trait::healer] = true;
 
     //Player inventory
     Inventory& inv = map::player->inv();
@@ -861,7 +861,7 @@ TEST_FIXTURE(Basic_fixture, saving_game)
 
     gen.clear();
 
-    for (size_t i = 0; i < size_t(Slot_id::END); ++i)
+    for (size_t i = 0; i < (size_t)Slot_id::END; ++i)
     {
         auto& slot = inv.slots_[i];
 
@@ -1527,44 +1527,109 @@ TEST_FIXTURE(Basic_fixture, map_parse_cells_within_dist_of_others)
 namespace
 {
 
-// Checks that walls are not placed like this:
-// .#
-// #.
-//
-// or like this:
-// #.
-// .#
+void check_stair_path()
+{
+    bool blocked[MAP_W][MAP_H];
+    map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
+
+    P stair_p(-1, -1);
+
+    for (int x = 0; x < MAP_W; ++x)
+    {
+        for (int y = 0; y < MAP_H; ++y)
+        {
+            const auto id = map::cells[x][y].rigid->id();
+
+            if (id == Feature_id::stairs)
+            {
+                blocked[x][y] = false;
+
+                stair_p.set(x, y);
+            }
+            else if (id == Feature_id::door)
+            {
+                blocked[x][y] = false;
+            }
+        }
+    }
+
+    std::vector<P> path;
+
+    if (stair_p.x != -1)
+    {
+        path_find::run(map::player->pos,
+                       stair_p,
+                       blocked,
+                       path);
+    }
+
+    P path_front;
+
+    if (!path.empty())
+    {
+        path_front = path.front();
+    }
+
+    //Stairs found?
+    CHECK(stair_p.x != -1);
+
+    //Path to stairs found?
+    CHECK(!path.empty());
+
+    //The end of the path should be the stairs position
+    CHECK(path_front == stair_p);
+}
+
 void check_wall_placement(const P& origin)
 {
-    //TODO: This is testing the wrong things. It's not enough to check if there is a wall or not,
-    //there could also be rubble for example.
-//#error
-//
-//    bool w[2][2];
-//
-//    for (int x = 0; x < 2; ++x)
-//    {
-//        for (int y = 0; y < 2; ++y)
-//        {
-//            const P map_p = origin + P(x, y);
-//
-//            w[x][y] = map::cells[map_p.x][map_p.y].rigid->id() == Feature_id::wall;
-//        }
-//    }
-//
-//    bool is_south_east_bad = !w[0][0] &&  w[0][1] &&  w[1][0] && !w[1][1];
-//    bool is_north_east_bad =  w[0][0] && !w[0][1] && !w[1][0] &&  w[1][1];
-//
-//    CHECK(!is_south_east_bad && !is_north_east_bad);
+    bool w[2][2]; //Wall
+    bool f[2][2]; //Floor
+
+    for (int x = 0; x < 2; ++x)
+    {
+        for (int y = 0; y < 2; ++y)
+        {
+            const P map_p = origin + P(x, y);
+
+            const Feature_id id = map::cells[map_p.x][map_p.y].rigid->id();
+
+            w[x][y] = id == Feature_id::wall;
+            f[x][y] = id == Feature_id::floor;
+        }
+    }
+
+    //Check that walls are not placed like this:
+    // .#
+    // #.
+    bool bad_walls_found = f[0][0] && w[1][0] &&
+                           w[0][1] && f[1][1];
+
+    //Check that walls are not placed like this:
+    // #.
+    // .#
+    bad_walls_found = bad_walls_found       ||
+                      w[0][0] && f[1][0]    &&
+                      f[0][1] && w[1][1];
+
+    CHECK(!bad_walls_found);
 }
 
 } // namespace
 
 TEST_FIXTURE(Basic_fixture, map_gen_std)
 {
-    for (int i = 0; i < 100; ++i)
+    for (int i = 0; i < 200; ++i)
     {
-        map_gen::mk_std_lvl();
+        bool map_ok = false;
+
+        while (!map_ok)
+        {
+            map_ok = map_gen::mk_std_lvl();
+        }
+
+        map::player->teleport();
+
+        check_stair_path();
 
         const int X1 = MAP_W - 2;
         const int Y1 = MAP_H - 2;

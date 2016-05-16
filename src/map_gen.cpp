@@ -1288,7 +1288,10 @@ bool mk_std_lvl()
 #ifdef MK_RIVER
     const int RIVER_ONE_IN_N = 8;
 
-    if (is_map_valid && map::dlvl >= DLVL_FIRST_MID_GAME && rnd::one_in(RIVER_ONE_IN_N))
+    if (
+        is_map_valid                        &&
+        map::dlvl >= DLVL_FIRST_MID_GAME    &&
+        rnd::one_in(RIVER_ONE_IN_N))
     {
         reserve_river(regions);
     }

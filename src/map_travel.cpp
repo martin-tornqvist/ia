@@ -28,7 +28,7 @@ void mk_lvl(const Map_type& map_type)
 {
     TRACE_FUNC_BEGIN;
 
-    bool is_lvl_built = false;
+    bool map_ok = false;
 
 #ifndef NDEBUG
     int   nr_attempts  = 0;
@@ -40,7 +40,7 @@ void mk_lvl(const Map_type& map_type)
     //are found by the player.
     //It is bad design and should be fixed (but "good enough" for v17.0).
 
-    while (!is_lvl_built)
+    while (!map_ok)
     {
 #ifndef NDEBUG
         ++nr_attempts;
@@ -49,31 +49,31 @@ void mk_lvl(const Map_type& map_type)
         switch (map_type)
         {
         case Map_type::intro:
-            is_lvl_built = map_gen::mk_intro_lvl();
+            map_ok = map_gen::mk_intro_lvl();
             break;
 
         case Map_type::std:
-            is_lvl_built = map_gen::mk_std_lvl();
+            map_ok = map_gen::mk_std_lvl();
             break;
 
         case Map_type::egypt:
-            is_lvl_built = map_gen::mk_egypt_lvl();
+            map_ok = map_gen::mk_egypt_lvl();
             break;
 
         case Map_type::leng:
-            is_lvl_built = map_gen::mk_leng_lvl();
+            map_ok = map_gen::mk_leng_lvl();
             break;
 
         case Map_type::rats_in_the_walls:
-            is_lvl_built = map_gen::mk_rats_in_the_walls_lvl();
+            map_ok = map_gen::mk_rats_in_the_walls_lvl();
             break;
 
         case Map_type::trapez:
-            is_lvl_built = map_gen::mk_trapez_lvl();
+            map_ok = map_gen::mk_trapez_lvl();
             break;
 
         case Map_type::boss:
-            is_lvl_built = map_gen::mk_boss_lvl();
+            map_ok = map_gen::mk_boss_lvl();
             break;
         }
     }
