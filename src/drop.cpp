@@ -175,7 +175,7 @@ Item* drop_item_on_map(const P& intended_pos, Item& item)
             if (DIST > dist_searched_stackable)
             {
                 //Search each cell which have equal distance to the current distance
-                for (auto stack_it = outer_it + 1; stack_it != end(free_cells); ++stack_it)
+                for (auto stack_it = outer_it; stack_it != end(free_cells); ++stack_it)
                 {
                     const P& stack_p = *stack_it;
 
