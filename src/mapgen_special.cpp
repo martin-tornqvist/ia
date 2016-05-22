@@ -1,4 +1,4 @@
-#include "map_gen.hpp"
+#include "mapgen.hpp"
 
 #include <vector>
 
@@ -20,7 +20,7 @@
 #include "game_time.hpp"
 #include "init.hpp"
 
-namespace map_gen
+namespace mapgen
 {
 
 //------------------------------------------------------------------- FOREST
@@ -604,4 +604,4 @@ bool mk_trapez_lvl()
     return true;
 }
 
-} //map_gen
+} //mapgen

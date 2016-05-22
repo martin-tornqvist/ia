@@ -198,19 +198,21 @@ bool cell(const cell_check::Check& method, const P& p);
 //where the cells are set to true if they are within the specified distance
 //interval of the first array.
 //This can be used for example to find all cells up to 3 steps from a wall.
-void cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
+void cells_within_dist_of_others(const bool in[MAP_W][MAP_H],
+                                 bool out[MAP_W][MAP_H],
                                  const Range& dist_interval);
-
-bool is_val_in_area(const R& area, const bool in[MAP_W][MAP_H], const bool VAL = true);
 
 void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]);
 
 //Optimized for expanding with a distance of one
-void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
+void expand(const bool in[MAP_W][MAP_H],
+            bool out[MAP_W][MAP_H],
             const R& area_allowed_to_modify = R(0, 0, MAP_W, MAP_H));
 
 //Slower version that can expand any distance
-void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST);
+void expand(const bool in[MAP_W][MAP_H],
+            bool out[MAP_W][MAP_H],
+            const int DIST);
 
 bool is_map_connected(const bool blocked[MAP_W][MAP_H]);
 

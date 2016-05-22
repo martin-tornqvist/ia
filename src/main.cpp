@@ -10,7 +10,7 @@
 #include "bot.hpp"
 #include "create_character.hpp"
 #include "actor_player.hpp"
-#include "map_gen.hpp"
+#include "mapgen.hpp"
 #include "map_travel.hpp"
 #include "dungeon_master.hpp"
 #include "popup.hpp"
@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
                     //Build forest.
                     render::clear_screen();
                     render::update_screen();
-                    map_gen::mk_intro_lvl();
+                    mapgen::mk_intro_lvl();
                 }
 
                 dungeon_master::set_time_started_to_now();

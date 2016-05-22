@@ -5,7 +5,7 @@
 
 #include "rl_utils.hpp"
 
-//TODO: This should be be merged into map_gen_utils or something
+//TODO: This should be be merged into mapgen_utils or something
 //Also, most/all things in here really needs clearer purpose/naming
 
 class Room;

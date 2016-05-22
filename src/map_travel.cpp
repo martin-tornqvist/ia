@@ -9,12 +9,14 @@
 #endif // NDEBUG
 
 #include "map.hpp"
-#include "map_gen.hpp"
+#include "mapgen.hpp"
 #include "populate_items.hpp"
 #include "render.hpp"
 #include "msg_log.hpp"
 #include "feature_rigid.hpp"
 #include "save_handling.hpp"
+
+#include "sdl_wrapper.hpp" // *** Temporary ***
 
 namespace map_travel
 {
@@ -49,31 +51,31 @@ void mk_lvl(const Map_type& map_type)
         switch (map_type)
         {
         case Map_type::intro:
-            map_ok = map_gen::mk_intro_lvl();
+            map_ok = mapgen::mk_intro_lvl();
             break;
 
         case Map_type::std:
-            map_ok = map_gen::mk_std_lvl();
+            map_ok = mapgen::mk_std_lvl();
             break;
 
         case Map_type::egypt:
-            map_ok = map_gen::mk_egypt_lvl();
+            map_ok = mapgen::mk_egypt_lvl();
             break;
 
         case Map_type::leng:
-            map_ok = map_gen::mk_leng_lvl();
+            map_ok = mapgen::mk_leng_lvl();
             break;
 
         case Map_type::rats_in_the_walls:
-            map_ok = map_gen::mk_rats_in_the_walls_lvl();
+            map_ok = mapgen::mk_rats_in_the_walls_lvl();
             break;
 
         case Map_type::trapez:
-            map_ok = map_gen::mk_trapez_lvl();
+            map_ok = mapgen::mk_trapez_lvl();
             break;
 
         case Map_type::boss:
-            map_ok = map_gen::mk_boss_lvl();
+            map_ok = mapgen::mk_boss_lvl();
             break;
         }
     }
@@ -106,8 +108,8 @@ void init()
     {
         map_list[DLVL_FIRST_LATE_GAME - 1] =
         {
-          Map_type::rats_in_the_walls,
-          Is_main_dungeon::yes
+            Map_type::rats_in_the_walls,
+            Is_main_dungeon::yes
         };
     }
 

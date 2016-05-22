@@ -82,4 +82,9 @@ void sleep(const Uint32 DURATION)
     }
 }
 
-} //Sdl_wrapper
+void flush_input()
+{
+    SDL_PumpEvents();
+}
+
+} //sdl_wrapper

@@ -7,7 +7,7 @@
 #include "map.hpp"
 #include "map_parsing.hpp"
 #include "feature_rigid.hpp"
-#include "map_gen.hpp"
+#include "mapgen.hpp"
 #include "gods.hpp"
 #include "actor_factory.hpp"
 #include "game_time.hpp"
@@ -178,7 +178,7 @@ Room* mk_random_allowed_std_room(const R& r, const bool IS_SUBROOM)
             init_room_bucket();
             room_bucket_it = begin(room_bucket_);
         }
-        else
+        else //There are still room types in the bucket
         {
             const Room_type     room_type   = *room_bucket_it;
             room                            = mk(room_type, r);
@@ -443,11 +443,11 @@ void Plain_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
-    map_gen_utils::cut_room_corners(*this);
+    mapgen_utils::cut_room_corners(*this);
 
     if (rnd::fraction(1, 3))
     {
-        map_gen_utils::mk_pillars_in_room(*this);
+        mapgen_utils::mk_pillars_in_room(*this);
     }
 }
 
@@ -476,11 +476,11 @@ void Human_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
-    map_gen_utils::cut_room_corners(*this);
+    mapgen_utils::cut_room_corners(*this);
 
     if (rnd::fraction(1, 3))
     {
-        map_gen_utils::mk_pillars_in_room(*this);
+        mapgen_utils::mk_pillars_in_room(*this);
     }
 }
 
@@ -527,11 +527,11 @@ void Ritual_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
-    map_gen_utils::cut_room_corners(*this);
+    mapgen_utils::cut_room_corners(*this);
 
     if (rnd::fraction(1, 3))
     {
-        map_gen_utils::mk_pillars_in_room(*this);
+        mapgen_utils::mk_pillars_in_room(*this);
     }
 }
 
@@ -627,16 +627,16 @@ void Spider_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 
     if (IS_EARLY || (IS_MID && rnd::coin_toss()))
     {
-        map_gen_utils::cut_room_corners(*this);
+        mapgen_utils::cut_room_corners(*this);
     }
     else
     {
-        map_gen_utils::cavify_room(*this);
+        mapgen_utils::cavify_room(*this);
     }
 
     if ((IS_EARLY || IS_MID) && rnd::fraction(1, 3))
     {
-        map_gen_utils::mk_pillars_in_room(*this);
+        mapgen_utils::mk_pillars_in_room(*this);
     }
 }
 
@@ -667,12 +667,12 @@ void Snake_pit_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
     {
         if (rnd::fraction(3, 4))
         {
-            map_gen_utils::mk_pillars_in_room(*this);
+            mapgen_utils::mk_pillars_in_room(*this);
         }
     }
     else //Is late game
     {
-        map_gen_utils::cavify_room(*this);
+        mapgen_utils::cavify_room(*this);
     }
 }
 
@@ -749,11 +749,11 @@ void Crypt_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
-    map_gen_utils::cut_room_corners(*this);
+    mapgen_utils::cut_room_corners(*this);
 
     if (rnd::fraction(1, 3))
     {
-        map_gen_utils::mk_pillars_in_room(*this);
+        mapgen_utils::mk_pillars_in_room(*this);
     }
 }
 
@@ -789,17 +789,17 @@ void Monster_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
     {
         if (rnd::fraction(3, 4))
         {
-            map_gen_utils::cut_room_corners(*this);
+            mapgen_utils::cut_room_corners(*this);
         }
 
         if (rnd::fraction(1, 3))
         {
-            map_gen_utils::mk_pillars_in_room(*this);
+            mapgen_utils::mk_pillars_in_room(*this);
         }
     }
     else //Is late game
     {
-        map_gen_utils::cavify_room(*this);
+        mapgen_utils::cavify_room(*this);
     }
 }
 
@@ -863,16 +863,16 @@ void Flooded_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 
     if (IS_EARLY || (IS_MID && rnd::coin_toss()))
     {
-        map_gen_utils::cut_room_corners(*this);
+        mapgen_utils::cut_room_corners(*this);
     }
     else
     {
-        map_gen_utils::cavify_room(*this);
+        mapgen_utils::cavify_room(*this);
     }
 
     if ((IS_EARLY || IS_MID) && rnd::fraction(1, 3))
     {
-        map_gen_utils::mk_pillars_in_room(*this);
+        mapgen_utils::mk_pillars_in_room(*this);
     }
 }
 
@@ -981,16 +981,16 @@ void Muddy_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 
     if (IS_EARLY || (IS_MID && rnd::coin_toss()))
     {
-        map_gen_utils::cut_room_corners(*this);
+        mapgen_utils::cut_room_corners(*this);
     }
     else
     {
-        map_gen_utils::cavify_room(*this);
+        mapgen_utils::cavify_room(*this);
     }
 
     if ((IS_EARLY || IS_MID) && rnd::fraction(1, 3))
     {
-        map_gen_utils::mk_pillars_in_room(*this);
+        mapgen_utils::mk_pillars_in_room(*this);
     }
 }
 
@@ -1037,7 +1037,7 @@ void Cave_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
-    map_gen_utils::cavify_room(*this);
+    mapgen_utils::cavify_room(*this);
 }
 
 void Cave_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
@@ -1072,7 +1072,7 @@ void Forest_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
-    map_gen_utils::cavify_room(*this);
+    mapgen_utils::cavify_room(*this);
 }
 
 void Forest_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
@@ -1154,7 +1154,7 @@ void Chasm_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 {
     (void)door_proposals;
 
-    map_gen_utils::cavify_room(*this);
+    mapgen_utils::cavify_room(*this);
 }
 
 void Chasm_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
@@ -1620,7 +1620,7 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
 
     if (c_built.empty())
     {
-        map_gen::is_map_valid = false;
+        mapgen::is_map_valid = false;
     }
     else //map is valid (at least one bridge was built)
     {

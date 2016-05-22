@@ -404,25 +404,6 @@ void cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MA
     }
 }
 
-bool is_val_in_area(const R& area, const bool in[MAP_W][MAP_H],
-                    const bool VAL)
-{
-    ASSERT(map::is_area_inside_map(area));
-
-    for (int y = area.p0.y; y <= area.p1.y; ++y)
-    {
-        for (int x = area.p0.x; x <= area.p1.x; ++x)
-        {
-            if (in[x][y] == VAL)
-            {
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
-
 void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H])
 {
     for (int x = 0; x < MAP_W; ++x)
@@ -434,14 +415,10 @@ void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H])
     }
 }
 
-void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
+void expand(const bool in[MAP_W][MAP_H],
+            bool out[MAP_W][MAP_H],
             const R& area_allowed_to_modify)
 {
-    int cmp_x0 = 0;
-    int cmp_y0 = 0;
-    int cmp_x1 = 0;
-    int cmp_y1 = 0;
-
     const int X0 = std::max(0,          area_allowed_to_modify.p0.x);
     const int Y0 = std::max(0,          area_allowed_to_modify.p0.y);
     const int X1 = std::min(MAP_W - 1,  area_allowed_to_modify.p1.x);
@@ -453,20 +430,22 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
         {
             out[x][y] = false;
 
-            cmp_x0 = x == 0 ? 0 : (x - 1);
-            cmp_y0 = y == 0 ? 0 : (y - 1);
-            cmp_x1 = x == (MAP_W - 1) ? x : (x + 1);
-            cmp_y1 = y == (MAP_H - 1) ? y : (y + 1);
+            //Search all cells adjacent to the current position for any cell
+            //which is "true" in the input arry.
+            const int CMP_X0 = std::max(x - 1, 0);
+            const int CMP_Y0 = std::max(y - 1, 0);
+            const int CMP_X1 = std::min(x + 1, MAP_W - 1);
+            const int CMP_Y1 = std::min(y + 1, MAP_H - 1);
 
-            for (int cmp_y = cmp_y0; cmp_y <= cmp_y1; ++cmp_y)
+            for (int cmp_x = CMP_X0; cmp_x <= CMP_X1; ++cmp_x)
             {
                 bool is_found = false;
 
-                for (int cmp_x = cmp_x0; cmp_x <= cmp_x1; ++cmp_x)
+                for (int cmp_y = CMP_Y0; cmp_y <= CMP_Y1; ++cmp_y)
                 {
                     if (in[cmp_x][cmp_y])
                     {
-                        is_found = out[x][y] = true;
+                        out[x][y] = is_found = true;
                         break;
                     }
                 }
@@ -480,7 +459,9 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
     }
 }
 
-void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST)
+void expand(const bool in[MAP_W][MAP_H],
+            bool out[MAP_W][MAP_H],
+            const int DIST)
 {
     for (int x = 0; x < MAP_W; ++x)
     {

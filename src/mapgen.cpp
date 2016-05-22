@@ -1,4 +1,4 @@
-#include "map_gen.hpp"
+#include "mapgen.hpp"
 
 #include "init.hpp"
 
@@ -6,7 +6,7 @@
 #include <climits>
 
 #include "room.hpp"
-#include "map_gen.hpp"
+#include "mapgen.hpp"
 #include "feature_event.hpp"
 #include "actor_player.hpp"
 #include "feature_door.hpp"
@@ -29,6 +29,7 @@
 #include "query.hpp"
 #endif // DEMO_MODE
 
+
 //-------------------------------------
 //Some options (comment out to disable)
 //-------------------------------------
@@ -41,7 +42,8 @@
 //#define FILL_DEAD_ENDS          1
 #define DECORATE                1
 
-namespace map_gen
+
+namespace mapgen
 {
 
 namespace
@@ -62,12 +64,10 @@ bool is_all_rooms_connected()
 void register_room(Room& room)
 {
 #ifndef NDEBUG
-
     for (Room* const room_in_list : map::room_list)
     {
         ASSERT(room_in_list != &room); //Check that the room is not already added
     }
-
 #endif // NDEBUG
 
     map::room_list.push_back(&room);
@@ -83,9 +83,9 @@ void register_room(Room& room)
 
 void mk_floor_in_room(const Room& room)
 {
-    for (int y = room.r_.p0.y; y <= room.r_.p1.y; ++y)
+    for (int x = room.r_.p0.x; x <= room.r_.p1.x; ++x)
     {
-        for (int x = room.r_.p0.x; x <= room.r_.p1.x; ++x)
+        for (int y = room.r_.p0.y; y <= room.r_.p1.y; ++y)
         {
             map::put(new Floor(P(x, y)));
         }
@@ -106,10 +106,13 @@ void connect_rooms()
 
         if (nr_tries_left == 0)
         {
-            map_gen::is_map_valid = false;
+            mapgen::is_map_valid = false;
 #ifdef DEMO_MODE
             render::cover_panel(Panel::log);
-            render::draw_text("Failed to connect map", Panel::screen, {0, 0}, clr_red_lgt);
+            render::draw_text("Failed to connect map",
+                              Panel::screen,
+                              P(0, 0),
+                              clr_red_lgt);
             render::update_screen();
             sdl_wrapper::sleep(8000);
 #endif // DEMO_MODE
@@ -123,13 +126,15 @@ void connect_rooms()
 
         auto is_std_room = [](const Room & r)
         {
-            return int(r.type_) < int(Room_type::END_OF_STD_ROOMS);
+            return (int)r.type_ < (int)Room_type::END_OF_STD_ROOMS;
         };
 
         Room* room0 = rnd_room();
 
         //Room 0 must be a standard room or corridor link
-        if (!is_std_room(*room0) && room0->type_ != Room_type::corr_link)
+        if (
+            !is_std_room(*room0) &&
+            room0->type_ != Room_type::corr_link)
         {
             continue;
         }
@@ -137,36 +142,44 @@ void connect_rooms()
         //Finding second room to connect to
         Room* room1 = rnd_room();
 
-        //Room 1 must not be the same as room 0, and it must be a standard room (connections
-        //are only allowed between two standard rooms, or from a corridor link to a standard
-        //room - never between two corridor links)
-        while (room1 == room0 || !is_std_room(*room1))
+        //Room 1 must not be the same as room 0, and it must be a standard room
+        //(connections are only allowed between two standard rooms, or from a
+        //corridor link to a standard room - never between two corridor links)
+        while (
+            room1 == room0 ||
+            !is_std_room(*room1))
         {
             room1 = rnd_room();
         }
 
         //Do not allow two rooms to be connected twice
-        const auto& cons_room0 = room0->rooms_con_to_;
+        const auto& room0_connections = room0->rooms_con_to_;
 
-        if (find(cons_room0.begin(), cons_room0.end(), room1) != cons_room0.end())
+        if (
+            find(room0_connections.begin(),
+                 room0_connections.end(),
+                 room1) != room0_connections.end())
         {
             //Rooms are already connected, trying other combination
             continue;
         }
 
-        //Do not connect room 0 and 1 if another room (except for sub rooms) lies anywhere
-        //in a rectangle defined by the two center points of those rooms.
+        //Do not connect room 0 and 1 if another room (except for sub rooms)
+        //lies anywhere in a rectangle defined by the two center points of
+        //those rooms.
         bool is_other_room_in_way = false;
+
         const P c0(room0->r_.center());
         const P c1(room1->r_.center());
+
         const int X0 = std::min(c0.x, c1.x);
         const int Y0 = std::min(c0.y, c1.y);
         const int X1 = std::max(c0.x, c1.x);
         const int Y1 = std::max(c0.y, c1.y);
 
-        for (int y = Y0; y <= Y1; ++y)
+        for (int x = X0; x <= X1; ++x)
         {
-            for (int x = X0; x <= X1; ++x)
+            for (int y = Y0; y <= Y1; ++y)
             {
                 const Room* const room_here = map::room_map[x][y];
 
@@ -177,6 +190,7 @@ void connect_rooms()
                     !room_here->is_sub_room_)
                 {
                     is_other_room_in_way = true;
+                    break;
                 }
             }
 
@@ -192,9 +206,14 @@ void connect_rooms()
             continue;
         }
 
-        map_gen_utils::mk_path_find_cor(*room0, *room1, door_proposals);
+        //Alright, let's try to connect these rooms
+        mapgen_utils::mk_path_find_cor(*room0,
+                                       *room1,
+                                       door_proposals);
 
-        if ((nr_tries_left <= 2 || rnd::one_in(4)) && is_all_rooms_connected())
+        if (
+            (nr_tries_left <= 2 || rnd::one_in(4)) &&
+            is_all_rooms_connected())
         {
             break;
         }
@@ -210,9 +229,9 @@ void mk_crumble_room(const R& room_area_incl_walls, const P& event_pos)
 
     const R& a = room_area_incl_walls; //abbreviation
 
-    for (int y = a.p0.y; y <= a.p1.y; ++y)
+    for (int x = a.p0.x; x <= a.p1.x; ++x)
     {
-        for (int x = a.p0.x; x <= a.p1.x; ++x)
+        for (int y = a.p0.y; y <= a.p1.y; ++y)
         {
             const P p(x, y);
 
@@ -229,48 +248,62 @@ void mk_crumble_room(const R& room_area_incl_walls, const P& event_pos)
         }
     }
 
-    game_time::add_mob(new Event_wall_crumble(event_pos, wall_cells, inner_cells));
+    game_time::add_mob(
+        new Event_wall_crumble(event_pos, wall_cells, inner_cells));
 }
 
 //NOTE: The positions and size can be outside map (e.g. negative positions).
 //This function just returns false in that case.
-bool try_mk_aux_room(const P& p, const P& d, bool blocked[MAP_W][MAP_H], const P& door_p)
+bool try_mk_aux_room(const P& p,
+                     const P& d,
+                     bool blocked[MAP_W][MAP_H],
+                     const P& door_p)
 {
-    R aux_rect(p, p + d - 1);
-    R aux_rect_with_border(aux_rect.p0 - 1, aux_rect.p1 + 1);
+    const R aux_rect(p, p + d - 1);
+    const R aux_rect_with_border(aux_rect.p0 - 1, aux_rect.p1 + 1);
 
     ASSERT(is_pos_inside(door_p, aux_rect_with_border));
 
     if (map::is_area_inside_map(aux_rect_with_border))
     {
-        if (!map_parse::is_val_in_area(aux_rect_with_border, blocked))
+        //Check if area is blocked
+        for (int x = aux_rect_with_border.p0.x; x <= aux_rect_with_border.p1.x; ++x)
+        {
+            for (int y = aux_rect_with_border.p0.y; y <= aux_rect_with_border.p1.y; ++y)
+            {
+                if (blocked[x][y])
+                {
+                    //Can't build here, bye...
+                    return false;
+                }
+            }
+        }
+
+        for (int x = aux_rect.p0.x; x <= aux_rect.p1.x; ++x)
         {
             for (int y = aux_rect.p0.y; y <= aux_rect.p1.y; ++y)
             {
-                for (int x = aux_rect.p0.x; x <= aux_rect.p1.x; ++x)
-                {
-                    blocked[x][y] = true;
-                    ASSERT(!map::room_map[x][y]);
-                }
+                blocked[x][y] = true;
+                ASSERT(!map::room_map[x][y]);
             }
+        }
 
 #ifdef MK_CRUMBLE_ROOMS
-            if (rnd::one_in(10))
-            {
-                Room* const room = room_factory::mk(Room_type::crumble_room, aux_rect);
-                register_room(*room);
-                mk_crumble_room(aux_rect_with_border, door_p);
-            }
-            else
-#endif // MK_CRUMBLE_ROOMS
-            {
-                Room* const room = room_factory::mk_random_allowed_std_room(aux_rect, false);
-                register_room(*room);
-                mk_floor_in_room(*room);
-            }
-
-            return true;
+        if (rnd::one_in(10))
+        {
+            Room* const room = room_factory::mk(Room_type::crumble_room, aux_rect);
+            register_room(*room);
+            mk_crumble_room(aux_rect_with_border, door_p);
         }
+        else
+#endif // MK_CRUMBLE_ROOMS
+        {
+            Room* const room = room_factory::mk_random_allowed_std_room(aux_rect, false);
+            register_room(*room);
+            mk_floor_in_room(*room);
+        }
+
+        return true;
     }
 
     return false;
@@ -304,9 +337,9 @@ void mk_aux_rooms(Region regions[3][3])
         }
     }
 
-    for (int region_y = 0; region_y < 3; region_y++)
+    for (int region_x = 0; region_x < 3; region_x++)
     {
-        for (int region_x = 0; region_x < 3; region_x++)
+        for (int region_y = 0; region_y < 3; region_y++)
         {
             const Region& region = regions[region_x][region_y];
 
@@ -320,9 +353,14 @@ void mk_aux_rooms(Region regions[3][3])
                     for (int i = 0; i < NR_TRIES_PER_SIDE; ++i)
                     {
                         const P con_p(main_r.r_.p1.x + 1,
-                                      rnd::range(main_r.r_.p0.y + 1, main_r.r_.p1.y - 1));
+                                      rnd::range(main_r.r_.p0.y + 1,
+                                                 main_r.r_.p1.y - 1));
+
                         const P aux_d(rnd_aux_room_dim());
-                        const P aux_p(con_p.x + 1, rnd::range(con_p.y - aux_d.y + 1, con_p.y));
+
+                        const P aux_p(con_p.x + 1,
+                                      rnd::range(con_p.y - aux_d.y + 1,
+                                                 con_p.y));
 
                         if (floor_cells[con_p.x - 1][con_p.y])
                         {
@@ -340,10 +378,15 @@ void mk_aux_rooms(Region regions[3][3])
                 {
                     for (int i = 0; i < NR_TRIES_PER_SIDE; ++i)
                     {
-                        const P con_p(rnd::range(main_r.r_.p0.x + 1, main_r.r_.p1.x - 1),
+                        const P con_p(rnd::range(main_r.r_.p0.x + 1,
+                                                 main_r.r_.p1.x - 1),
                                       main_r.r_.p0.y - 1);
+
                         const P aux_d(rnd_aux_room_dim());
-                        const P aux_p(rnd::range(con_p.x - aux_d.x + 1, con_p.x), con_p.y - 1);
+
+                        const P aux_p(rnd::range(con_p.x - aux_d.x + 1,
+                                                 con_p.x),
+                                      con_p.y - 1);
 
                         if (floor_cells[con_p.x][con_p.y + 1])
                         {
@@ -362,9 +405,14 @@ void mk_aux_rooms(Region regions[3][3])
                     for (int i = 0; i < NR_TRIES_PER_SIDE; ++i)
                     {
                         const P con_p(main_r.r_.p0.x - 1,
-                                      rnd::range(main_r.r_.p0.y + 1, main_r.r_.p1.y - 1));
+                                      rnd::range(main_r.r_.p0.y + 1,
+                                                 main_r.r_.p1.y - 1));
+
                         const P aux_d(rnd_aux_room_dim());
-                        const P aux_p(con_p.x - 1, rnd::range(con_p.y - aux_d.y + 1, con_p.y));
+
+                        const P aux_p(con_p.x - 1,
+                                      rnd::range(con_p.y - aux_d.y + 1,
+                                                 con_p.y));
 
                         if (floor_cells[con_p.x + 1][con_p.y])
                         {
@@ -382,10 +430,15 @@ void mk_aux_rooms(Region regions[3][3])
                 {
                     for (int i = 0; i < NR_TRIES_PER_SIDE; ++i)
                     {
-                        const P con_p(rnd::range(main_r.r_.p0.x + 1, main_r.r_.p1.x - 1),
+                        const P con_p(rnd::range(main_r.r_.p0.x + 1,
+                                                 main_r.r_.p1.x - 1),
                                       main_r.r_.p1.y + 1);
+
                         const P aux_d(rnd_aux_room_dim());
-                        const P aux_p(rnd::range(con_p.x - aux_d.x + 1, con_p.x), con_p.y + 1);
+
+                        const P aux_p(rnd::range(con_p.x - aux_d.x + 1,
+                                                 con_p.x),
+                                      con_p.y + 1);
 
                         if (floor_cells[con_p.x][con_p.y - 1])
                         {
@@ -398,8 +451,8 @@ void mk_aux_rooms(Region regions[3][3])
                     }
                 }
             }
-        }
-    }
+        } //Region y loop
+    } //Region x loop
 
     TRACE_FUNC_END;
 }
@@ -429,6 +482,7 @@ void mk_merged_regions_and_rooms(Region regions[3][3])
 
             reg_idx_1 = P(rnd::range(0, 2), rnd::range(0, 1));
             reg_idx_2 = P(reg_idx_1 + P(0, 1));
+
             is_good_regions_found = regions[reg_idx_1.x][reg_idx_1.y].is_free_ &&
                                     regions[reg_idx_2.x][reg_idx_2.y].is_free_;
         }
@@ -448,11 +502,19 @@ void mk_merged_regions_and_rooms(Region regions[3][3])
         {
             return rnd::range(0, 4);
         };
-        const R padding(rnd_padding(), rnd_padding(), rnd_padding(), rnd_padding());
 
-        const R room_rect(reg1.r_.p0 + padding.p0, reg1.r_.p1 - padding.p1);
-        Room* const room  = room_factory::mk_random_allowed_std_room(room_rect, false);
-        reg1.main_room_    = room;
+        const R padding(rnd_padding(),
+                        rnd_padding(),
+                        rnd_padding(),
+                        rnd_padding());
+
+        const R room_rect(reg1.r_.p0 + padding.p0,
+                          reg1.r_.p1 - padding.p1);
+
+        Room* const room =
+            room_factory::mk_random_allowed_std_room(room_rect, false);
+
+        reg1.main_room_ = room;
         register_room(*room);
         mk_floor_in_room(*room);
     }
@@ -477,11 +539,12 @@ void randomly_block_regions(Region regions[3][3])
     {
         TRACE_VERBOSE << "Attempting to block region " << i + 1 << "/"
                       << NR_TO_TRY_BLOCK << std:: endl;
+
         std::vector<P> block_bucket;
 
-        for (int y = 0; y < 3; ++y)
+        for (int x = 0; x < 3; ++x)
         {
-            for (int x = 0; x < 3; ++x)
+            for (int y = 0; y < 3; ++y)
             {
                 if (regions[x][y].is_free_)
                 {
@@ -502,7 +565,10 @@ void randomly_block_regions(Region regions[3][3])
                         }
                     }
 
-                    if (is_all_adj_free) {block_bucket.push_back(p);}
+                    if (is_all_adj_free)
+                    {
+                        block_bucket.push_back(p);
+                    }
                 }
             }
         }
@@ -516,6 +582,7 @@ void randomly_block_regions(Region regions[3][3])
         else
         {
             const P& p(block_bucket[rnd::range(0, block_bucket.size() - 1)]);
+
             TRACE_VERBOSE << "Blocking region at " << p.x << "," << p.y << std:: endl;
             regions[p.x][p.y].is_free_ = false;
         }
@@ -537,11 +604,12 @@ void reserve_river(Region regions[3][3])
     {
         const R regions_tot_rect(regions[reg0.x][reg0.y].r_.p0,
                                  regions[reg2.x][reg2.y].r_.p1);
-        room_rect    = regions_tot_rect;
-        river_region = &regions[reg0.x][reg0.y];
-        const int C = (breadth1 + breadth0) / 2;
-        breadth0    = C - RESERVED_PADDING;
-        breadth1    = C + RESERVED_PADDING;
+
+        room_rect       = regions_tot_rect;
+        river_region    = &regions[reg0.x][reg0.y];
+        const int C     = (breadth1 + breadth0) / 2;
+        breadth0        = C - RESERVED_PADDING;
+        breadth1        = C + RESERVED_PADDING;
 
         ASSERT(is_area_inside(room_rect, regions_tot_rect, true));
 
@@ -553,26 +621,34 @@ void reserve_river(Region regions[3][3])
 
     if (axis == Axis::hor)
     {
-        init_room_rect(room_rect.p0.x, room_rect.p1.x, room_rect.p0.y, room_rect.p1.y,
-                       P(0, 1), P(2, 1));
+        init_room_rect(room_rect.p0.x,
+                       room_rect.p1.x,
+                       room_rect.p0.y,
+                       room_rect.p1.y,
+                       P(0, 1),
+                       P(2, 1));
     }
-    else
+    else //Vertical
     {
-        init_room_rect(room_rect.p0.y, room_rect.p1.y, room_rect.p0.x, room_rect.p1.x,
-                       P(1, 0), P(1, 2));
+        init_room_rect(room_rect.p0.y,
+                       room_rect.p1.y,
+                       room_rect.p0.x,
+                       room_rect.p1.x,
+                       P(1, 0),
+                       P(1, 2));
     }
 
-    Room* const       room      = room_factory::mk(Room_type::river, room_rect);
-    River_room* const  river_room = static_cast<River_room*>(room);
-    river_room->axis_             = axis;
-    river_region->main_room_      = room;
-    river_region->is_free_        = false;
+    Room* const         room        = room_factory::mk(Room_type::river, room_rect);
+    River_room* const   river_room  = static_cast<River_room*>(room);
+    river_room->axis_               = axis;
+    river_region->main_room_        = room;
+    river_region->is_free_          = false;
 
     if (axis == Axis::hor)
     {
         regions[1][1] = regions[2][1] = *river_region;
     }
-    else
+    else //Vertical
     {
         regions[1][1] = regions[1][2] = *river_region;
     }
@@ -585,9 +661,9 @@ void reserve_river(Region regions[3][3])
                       << "X0: " << X0 << " X1: " << X1 << " Y0: " << Y0 << " Y1: " << Y1
                       << std:: endl;
 
-        for (int y = Y0; y <= Y1; ++y)
+        for (int x = X0; x <= X1; ++x)
         {
-            for (int x = X0; x <= X1; ++x)
+            for (int y = Y0; y <= Y1; ++y)
             {
                 //Just put floor for now, river feature will be placed later
                 map::put(new Floor(P(x, y)));
@@ -598,11 +674,17 @@ void reserve_river(Region regions[3][3])
 
     if (axis == Axis::hor)
     {
-        mk(room_rect.p0.x + 1, room_rect.p1.x - 1,  room_rect.p0.y,      room_rect.p1.y);
+        mk(room_rect.p0.x + 1,
+           room_rect.p1.x - 1,
+           room_rect.p0.y,
+           room_rect.p1.y);
     }
     else //Vertical axis
     {
-        mk(room_rect.p0.x,     room_rect.p1.x,      room_rect.p0.y + 1,  room_rect.p1.y - 1);
+        mk(room_rect.p0.x,
+           room_rect.p1.x,
+           room_rect.p0.y + 1,
+           room_rect.p1.y - 1);
     }
 
     TRACE_FUNC_END;
@@ -673,175 +755,226 @@ void mk_sub_rooms()
 {
     TRACE_FUNC_BEGIN;
 
-    const int NR_TRIES_TO_MK_ROOM = 40;
-    const int MAX_NR_INNER_ROOMS  = rnd::one_in(3) ? 1 : 7;
+    const int NR_TRIES_TO_MK_ROOM   = 40;
+    const int MAX_NR_SUB_ROOMS      = rnd::one_in(3) ? 1 : 7;
 
-    const P min_d(4, 4);
+    //Minimum allowed size of the sub room, including the walls
+    const P walls_min_d(4, 4);
 
     for (size_t i = 0; i < map::room_list.size(); ++i)
     {
-        auto* const outer_room     = map::room_list[i];
+        auto* const outer_room = map::room_list[i];
 
-        const R  outer_room_rect = outer_room->r_;
-        const P   outer_room_d    = (outer_room_rect.p1 - outer_room_rect.p0) + 1;
+        const R outer_room_rect = outer_room->r_;
+        const P outer_room_d(outer_room_rect.dims());
 
-        const bool IS_ROOM_BIG = outer_room_d.x > 16 || outer_room_d.y > 8;
+        //Maximum sub room size, including the walls, in this outer room
+        const P walls_max_d(outer_room_d + 2);
 
-        const bool IS_STD_ROOM = int(outer_room->type_) < int(Room_type::END_OF_STD_ROOMS);
-
-        if (IS_STD_ROOM && (IS_ROOM_BIG || rnd::one_in(4)))
+        if (
+            walls_max_d.x < walls_min_d.x ||
+            walls_max_d.y < walls_min_d.y)
         {
-            const P max_d(std::min(16, outer_room_d.x),  std::min(16, outer_room_d.y));
+            //We cannot even build the smallest possible inner room inside this
+            //outer room - no point in trying.
+            continue;
+        }
 
-            if (max_d >= min_d)
+        const bool IS_OUTER_BIG =
+            (outer_room_d.x > 16) || (outer_room_d.y > 8);
+
+        const bool IS_OUTER_STD_ROOM =
+            (int)outer_room->type_ < (int)Room_type::END_OF_STD_ROOMS;
+
+        //To build a room inside a room, the outer room shall:
+        // * Be a standard room, and
+        // * Be a "big room" - but we occasionally allow "small rooms"
+        if (!IS_OUTER_STD_ROOM || (!IS_OUTER_BIG && !rnd::one_in(4)))
+        {
+            //Outer room does not meet dimensions criteria, continue to next room
+            continue;
+        }
+
+        for (int nr_inner = 0; nr_inner < MAX_NR_SUB_ROOMS; ++nr_inner)
+        {
+            for (int try_count = 0; try_count < NR_TRIES_TO_MK_ROOM; ++try_count)
             {
-                for (int nr_rooms = 0; nr_rooms < MAX_NR_INNER_ROOMS; ++nr_rooms)
+                //Determine the rectangle (p0, p1) of the inner room's walls
+
+                //NOTE: The rectangle of the OUTER room is different - there
+                //it only represents the floor area of that room (this is how
+                //room areas are normally represented).
+
+                const P walls_d(rnd::range(walls_min_d.x, walls_max_d.x),
+                                rnd::range(walls_min_d.y, walls_max_d.y));
+
+                const P p0(rnd::range(outer_room_rect.p0.x - 1,
+                                      outer_room_rect.p1.x - walls_d.x + 2),
+                           rnd::range(outer_room_rect.p0.y - 1,
+                                      outer_room_rect.p1.y - walls_d.y + 2));
+
+                const P p1(p0 + walls_d - 1);
+
+                ASSERT(map::is_pos_inside_map(p0, true));
+                ASSERT(map::is_pos_inside_map(p1, true));
+
+                if (
+                    p0.x <= outer_room_rect.p0.x &&
+                    p0.y <= outer_room_rect.p0.y &&
+                    p1.x >= outer_room_rect.p1.x &&
+                    p1.y >= outer_room_rect.p1.y)
                 {
-                    for (int try_count = 0; try_count < NR_TRIES_TO_MK_ROOM; try_count++)
+                    //None of the inner room's walls are inside the edge of the
+                    //outer room - there is no point in building such a room!
+                    continue;
+                }
+
+                //Check if map features allow us to build here
+                bool is_area_free = true;
+
+                for (int x = p0.x - 1; x <= p1.x + 1; ++x)
+                {
+                    for (int y = p0.y - 1; y <= p1.y + 1; ++y)
                     {
-                        const P d(rnd::range(min_d.x, max_d.x),
-                                  rnd::range(min_d.y, max_d.y));
+                        const P p_check(x, y);
 
-                        const P p0(rnd::range(outer_room_rect.p0.x,
-                                              outer_room_rect.p1.x - d.x + 1),
-                                   rnd::range(outer_room_rect.p0.y,
-                                              outer_room_rect.p1.y - d.y + 1));
-
-                        const P p1(p0 + d - 1);
-
-                        const R r(p0, p1);
-
-                        if (r.p0 == outer_room_rect.p0 && r.p1 == outer_room_rect.p1)
+                        if (!map::is_pos_inside_map(p_check, true))
                         {
                             continue;
                         }
 
-                        bool is_area_free = true;
+                        const auto& f_id = map::cells[x][y].rigid->id();
 
-                        for (int x = p0.x - 1; x <= p1.x + 1; ++x)
+                        const Room* const room = map::room_map[x][y];
+
+                        //Rules to allow building:
+                        //* Cells belonging to the outer room must be floor
+                        //* Cells not belonging to the outer room must be walls
+                        if (
+                            (room == outer_room && f_id != Feature_id::floor) ||
+                            (room != outer_room && f_id != Feature_id::wall)
+                        )
                         {
-                            for (int y = p0.y - 1; y <= p1.y + 1; ++y)
+                            is_area_free = false;
+
+                            break;
+                        }
+
+                    } //y loop
+
+                    if (!is_area_free)
+                    {
+                        break;
+                    }
+                } //x loop
+
+                if (!is_area_free)
+                {
+                    //Map features prevents us from building here - next try
+                    continue;
+                }
+
+                //Alright, we can build the inner room!
+
+                //Room area of the inner room.
+                //p0 and p1 represents the inner room's walls, so the actual
+                //room area lies inside these points
+                const R sub_room_rect(p0 + 1, p1 - 1);
+
+                Room* const sub_room =
+                    room_factory::mk_random_allowed_std_room(sub_room_rect, true);
+
+                register_room(*sub_room);
+
+                outer_room->sub_rooms_.push_back(sub_room);
+
+                //Time to make walls and entrance(s) for our new room
+                std::vector<P> entrance_bucket;
+
+                for (int x = p0.x; x <= p1.x; ++x)
+                {
+                    for (int y = p0.y; y <= p1.y; ++y)
+                    {
+                        //Position is on the walls of the inner room?
+                        if (x == p0.x || x == p1.x || y == p0.y || y == p1.y)
+                        {
+                            const P p(x, y);
+
+                            map::put(new Wall(p));
+
+                            //Only consider this position if it is completely
+                            //inside the edge of the inner room
+                            if (p > outer_room_rect.p0 && p < outer_room_rect.p1)
                             {
-                                const P p_check(x, y);
-
-                                const auto& f_id = map::cells[x][y].rigid->id();
-
-                                if (is_pos_inside(p_check, outer_room_rect))
+                                //Do not put entrances on the corners of the
+                                //inner room
+                                if (
+                                    (x != p0.x && x != p1.x) ||
+                                    (y != p0.y && y != p1.y))
                                 {
-                                    if (f_id != Feature_id::floor)
-                                    {
-                                        is_area_free = false;
-                                    }
-                                }
-                                else
-                                {
-                                    if (f_id != Feature_id::wall)
-                                    {
-                                        is_area_free = false;
-                                    }
-                                }
-
-                                if (!is_area_free)
-                                {
-                                    break;
+                                    entrance_bucket.push_back(P(x, y));
                                 }
                             }
+                        }
+                    } //y loop
+                } //x loop
 
-                            if (!is_area_free)
+                if (entrance_bucket.empty())
+                {
+                    //Not possible to place an entrance to the inner room,
+                    //Discard this map!
+                    is_map_valid = false;
+                    return;
+                }
+
+                //Sometimes place one entrance, which may have a door
+                //(always do this if there are very few possible entries)
+                if (rnd::coin_toss() || entrance_bucket.size() <= 4)
+                {
+                    const size_t DOOR_POS_IDX = rnd::range(0, entrance_bucket.size() - 1);
+
+                    const P& door_pos = entrance_bucket[DOOR_POS_IDX];
+
+                    map::put(new Floor(door_pos));
+                    door_proposals[door_pos.x][door_pos.y] = true;
+                }
+                else //Place multiple "doorless" entrances
+                {
+                    std::vector<P> positions_placed;
+                    const int NR_TRIES = rnd::range(1, 10);
+
+                    for (int j = 0; j < NR_TRIES; ++j)
+                    {
+                        const size_t DOOR_POS_IDX = rnd::range(0, entrance_bucket.size() - 1);
+
+                        const P& try_p = entrance_bucket[DOOR_POS_IDX];
+
+                        bool is_pos_ok = true;
+
+                        //Never make an entrance adjacent to an existing
+                        for (P& prev_pos : positions_placed)
+                        {
+                            if (is_pos_adj(try_p, prev_pos, true))
                             {
+                                is_pos_ok = false;
                                 break;
                             }
                         }
 
-                        if (!is_area_free)
+                        if (is_pos_ok)
                         {
-                            continue;
+                            map::put(new Floor(try_p));
+                            positions_placed.push_back(try_p);
                         }
-
-                        const R room_rect(r.p0 + 1, r.p1 - 1);
-
-                        Room* const room =
-                            room_factory::mk_random_allowed_std_room(room_rect, true);
-                        register_room(*room);
-
-                        outer_room->sub_rooms_.push_back(room);
-
-                        std::vector<P> door_bucket;
-
-                        for (int y = p0.y; y <= p1.y; ++y)
-                        {
-                            for (int x = p0.x; x <= p1.x; ++x)
-                            {
-                                if (x == p0.x || x == p1.x || y == p0.y || y == p1.y)
-                                {
-                                    map::put(new Wall(P(x, y)));
-
-                                    if (
-                                        x != outer_room_rect.p0.x - 1 &&
-                                        x != outer_room_rect.p0.x     &&
-                                        x != outer_room_rect.p1.x     &&
-                                        x != outer_room_rect.p1.x + 1 &&
-                                        y != outer_room_rect.p0.y - 1 &&
-                                        y != outer_room_rect.p0.y     &&
-                                        y != outer_room_rect.p1.y     &&
-                                        y != outer_room_rect.p1.y + 1)
-                                    {
-                                        if (
-                                            (x != p0.x && x != p1.x) ||
-                                            (y != p0.y && y != p1.y))
-                                        {
-                                            door_bucket.push_back(P(x, y));
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        if (rnd::coin_toss() || door_bucket.size() <= 2)
-                        {
-                            const int DOOR_POS_IDX =
-                                rnd::range(0, door_bucket.size() - 1);
-                            const P& door_pos = door_bucket[DOOR_POS_IDX];
-
-                            map::put(new Floor(door_pos));
-                            door_proposals[door_pos.x][door_pos.y] = true;
-                        }
-                        else
-                        {
-                            std::vector<P> positions_with_door;
-                            const int NR_TRIES = rnd::range(1, 10);
-
-                            for (int j = 0; j < NR_TRIES; j++)
-                            {
-                                const int DOOR_POS_IDX =
-                                    rnd::range(0, door_bucket.size() - 1);
-                                const P pos_cand = door_bucket[DOOR_POS_IDX];
-
-                                bool is_pos_ok = true;
-
-                                for (P& pos_with_door : positions_with_door)
-                                {
-                                    if (is_pos_adj(pos_cand, pos_with_door, false))
-                                    {
-                                        is_pos_ok = false;
-                                        break;
-                                    }
-                                }
-
-                                if (is_pos_ok)
-                                {
-                                    map::put(new Floor(pos_cand));
-                                    positions_with_door.push_back(pos_cand);
-                                }
-                            }
-                        }
-
-                        break;
                     }
                 }
-            }
-        }
-    }
+
+                //This point reached means the room has been built
+                break;
+
+            } //Try count loop
+        } //Inner room count loop
+    } //Room list loop
 
     TRACE_FUNC_END;
 }
@@ -858,9 +991,9 @@ void fill_dead_ends()
     P origin;
     bool is_done = false;
 
-    for (int y = 2; y < MAP_H - 2; ++y)
+    for (int x = 2; x < MAP_W - 2; ++x)
     {
-        for (int x = 2; x < MAP_W - 2; ++x)
+        for (int y = 2; y < MAP_H - 2; ++y)
         {
             if (!expanded_blockers[x][y])
             {
@@ -888,9 +1021,9 @@ void fill_dead_ends()
 
     std::vector<Pos_val> flood_fill_vector;
 
-    for (int y = 1; y < MAP_H - 1; ++y)
+    for (int x = 1; x < MAP_W - 1; ++x)
     {
-        for (int x = 1; x < MAP_W - 1; ++x)
+        for (int y = 1; y < MAP_H - 1; ++y)
         {
             if (!blocked[x][y])
             {
@@ -906,7 +1039,7 @@ void fill_dead_ends()
     });
 
     //Fill all positions with only one cardinal floor neighbour
-    for (int i = int(flood_fill_vector.size()) - 1; i >= 0; --i)
+    for (int i = (int)flood_fill_vector.size() - 1; i >= 0; --i)
     {
         const P& pos = flood_fill_vector[i].pos;
         const int x = pos.x;
@@ -1006,9 +1139,9 @@ void decorate()
         }
     }
 
-    for (int y = 1; y < MAP_H - 1; ++y)
+    for (int x = 1; x < MAP_W - 1; ++x)
     {
-        for (int x = 1; x < MAP_W - 1; ++x)
+        for (int y = 1; y < MAP_H - 1; ++y)
         {
             if (map::cells[x][y].rigid->id() == Feature_id::floor)
             {
@@ -1081,7 +1214,9 @@ P place_stairs()
 #ifdef DEMO_MODE
         render::cover_panel(Panel::log);
         render::draw_map();
-        render::draw_text("To few cells to place stairs", Panel::screen, {0, 0},
+        render::draw_text("To few cells to place stairs",
+                          Panel::screen,
+                          P(0, 0),
                           clr_red_lgt);
         render::update_screen();
         sdl_wrapper::sleep(8000);
@@ -1272,9 +1407,9 @@ bool mk_std_lvl()
 
     Region regions[3][3];
 
-    for (int y = 0; y < 3; ++y)
+    for (int x = 0; x < 3; ++x)
     {
-        for (int x = 0; x < 3; ++x)
+        for (int y = 0; y < 3; ++y)
         {
             const R r(x == 0 ? 1 : x == 1 ? SPL_X0 + 1 : SPL_X1 + 1,
                       y == 0 ? 1 : y == 1 ? SPL_Y0 + 1 : SPL_Y1 + 1,
@@ -1338,7 +1473,9 @@ bool mk_std_lvl()
 #ifdef DEMO_MODE
     render::cover_panel(Panel::log);
     render::draw_map();
-    render::draw_text("Press any key to make aux rooms...", Panel::screen, {0, 0},
+    render::draw_text("Press any key to make aux rooms...",
+                      Panel::screen,
+                      P(0, 0),
                       clr_white);
     render::update_screen();
     query::wait_for_key_press();
@@ -1355,7 +1492,9 @@ bool mk_std_lvl()
 #ifdef DEMO_MODE
         render::cover_panel(Panel::log);
         render::draw_map();
-        render::draw_text("Press any key to make sub rooms...", Panel::screen, {0, 0},
+        render::draw_text("Press any key to make sub rooms...",
+                          Panel::screen,
+                          P(0, 0),
                           clr_white);
         render::update_screen();
         query::wait_for_key_press();
@@ -1371,7 +1510,7 @@ bool mk_std_lvl()
         //have their walls untouched when their reshaping functions run.
         auto cmp = [](const Room * r0, const Room * r1)
         {
-            return int(r0->type_) < int(r1->type_);
+            return (int)r0->type_ < (int)r1->type_;
         };
         sort(map::room_list.begin(), map::room_list.end(), cmp);
     }
@@ -1384,7 +1523,9 @@ bool mk_std_lvl()
         render::cover_panel(Panel::log);
         render::draw_map();
         render::draw_text("Press any key to run pre-connect functions on rooms...",
-                          Panel::screen, {0, 0}, clr_white);
+                          Panel::screen,
+                          P(0, 0),
+                          clr_white);
         render::update_screen();
         query::wait_for_key_press();
 #endif // DEMO_MODE
@@ -1403,7 +1544,9 @@ bool mk_std_lvl()
 #ifdef DEMO_MODE
         render::cover_panel(Panel::log);
         render::draw_map();
-        render::draw_text("Press any key to connect rooms...", Panel::screen, {0, 0},
+        render::draw_text("Press any key to connect rooms...",
+                          Panel::screen,
+                          P(0, 0),
                           clr_white);
         render::update_screen();
         query::wait_for_key_press();
@@ -1419,7 +1562,9 @@ bool mk_std_lvl()
         render::cover_panel(Panel::log);
         render::draw_map();
         render::draw_text("Press any key to run post-connect functions on rooms...",
-                          Panel::screen, {0, 0}, clr_white);
+                          Panel::screen,
+                          P(0, 0),
+                          clr_white);
         render::update_screen();
         query::wait_for_key_press();
 #endif // DEMO_MODE
@@ -1436,7 +1581,9 @@ bool mk_std_lvl()
 #ifdef DEMO_MODE
         render::cover_panel(Panel::log);
         render::draw_map();
-        render::draw_text("Press any key to fill dead ends...", Panel::screen, {0, 0},
+        render::draw_text("Press any key to fill dead ends...",
+                          Panel::screen,
+                          P(0, 0),
                           clr_white);
         render::update_screen();
         query::wait_for_key_press();
@@ -1540,7 +1687,7 @@ bool mk_std_lvl()
     return is_map_valid;
 }
 
-} //map_gen
+} //mapgen
 
 //=============================================================== REGION
 R Region::rnd_room_rect() const

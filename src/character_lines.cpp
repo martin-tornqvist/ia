@@ -6,7 +6,7 @@
 #include "actor_player.hpp"
 #include "map.hpp"
 #include "dungeon_master.hpp"
-#include "map_gen.hpp"
+#include "mapgen.hpp"
 #include "player_bon.hpp"
 #include "inventory.hpp"
 #include "feature_rigid.hpp"

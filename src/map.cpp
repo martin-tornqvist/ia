@@ -10,7 +10,7 @@
 #include "item_factory.hpp"
 #include "game_time.hpp"
 #include "render.hpp"
-#include "map_gen.hpp"
+#include "mapgen.hpp"
 #include "item.hpp"
 #include "feature_rigid.hpp"
 #include "save_handling.hpp"

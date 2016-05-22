@@ -27,7 +27,7 @@ public:
     bool is_free_;
 };
 
-namespace map_gen_utils
+namespace mapgen_utils
 {
 
 //NOTE: Some of the reshape functions below will never change the boundaries of the room,
@@ -55,9 +55,9 @@ void pathfinder_walk(const P& p0,
                      std::vector<P>& pos_list_ref,
                      const bool IS_SMOOTH);
 
-} //map_gen_utils
+} //mapgen_utils
 
-namespace map_gen
+namespace mapgen
 {
 
 //This variable is checked at certain points to see if the current map
@@ -73,6 +73,6 @@ bool mk_rats_in_the_walls_lvl();
 bool mk_trapez_lvl();
 bool mk_boss_lvl();
 
-} //map_gen
+} //mapgen
 
 #endif

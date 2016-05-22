@@ -11,7 +11,7 @@
 
 //---------------------------------------------------------------------------------------
 // Room theming occurs both before and after rooms are connected (pre/post-connect).
-//   > In pre-connect reshaping is done. The reshaping is called from map_gen_utils
+//   > In pre-connect reshaping is done. The reshaping is called from mapgen_utils
 //     (e.g. plus-shape, cavern-shape, pillars, etc)
 //
 //     When pre-connect starts, it is assumed that all (standard) rooms are rectangular
@@ -75,7 +75,7 @@ public:
     virtual void on_pre_connect(bool door_proposals[MAP_W][MAP_H]) = 0;
     virtual void on_post_connect(bool door_proposals[MAP_W][MAP_H]) = 0;
 
-    R                r_;
+    R                   r_;
     const Room_type     type_;
     bool                is_sub_room_;
     std::vector<Room*>  rooms_con_to_;

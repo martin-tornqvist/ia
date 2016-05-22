@@ -1,6 +1,6 @@
 #include "init.hpp"
 
-#include "map_gen.hpp"
+#include "mapgen.hpp"
 
 #include <vector>
 #include <climits>
@@ -13,19 +13,20 @@
 #include "game_time.hpp"
 #include "init.hpp"
 
-namespace map_gen
+namespace mapgen
 {
 
 bool is_map_valid = true;
 
-} //map_gen
+} //mapgen
 
-namespace map_gen_utils
+namespace mapgen_utils
 {
 
 void cut_room_corners(const Room& room)
 {
-    if (!room.sub_rooms_.empty() || room.r_.min_dim() < 6)
+    //Never cut the room corners if it's a "small" room
+    if (room.r_.min_dim() < 6)
     {
         return;
     }
@@ -35,16 +36,23 @@ void cut_room_corners(const Room& room)
     const P room_p0(room.r_.p0);
     const P room_p1(room.r_.p1);
 
-    const P cross_dims(rnd::range(2, max_dims.x), rnd::range(2, max_dims.y));
+    //NOTE: The "cross" dimensons and coordinates refer to the inner rectangle
+    //of the plus shape.
+    const P cross_dims(rnd::range(2, max_dims.x),
+                       rnd::range(2, max_dims.y));
 
-    const P cross_x0y0(rnd::range(room_p0.x + 2, room_p1.x - cross_dims.x - 1),
-                       rnd::range(room_p0.y + 2, room_p1.y - cross_dims.y - 1));
+    const P cross_x0y0(rnd::range(room_p0.x + 2,
+                                  room_p1.x - cross_dims.x - 1),
+                       rnd::range(room_p0.y + 2,
+                                  room_p1.y - cross_dims.y - 1));
 
     const P cross_x1y1(cross_x0y0 + cross_dims - 1);
 
-    //Which corners to place - up-left, up-right, down-left, down-right
+    //Which corners to place (up-left, up-right, down-left, down-right)
+    //By default, we cut all corners
     bool c[4] = {true, true, true, true};
 
+    //Ocassionally cut only some corners
     if (rnd::fraction(2, 3))
     {
         while (true)
@@ -56,9 +64,9 @@ void cut_room_corners(const Room& room)
                 if (rnd::coin_toss())
                 {
                     c[i] = true;
-                    nr_corners++;
+                    ++nr_corners;
                 }
-                else
+                else //Do not cut this corner
                 {
                     c[i] = false;
                 }
@@ -71,19 +79,87 @@ void cut_room_corners(const Room& room)
         }
     }
 
-    for (int y = room_p0.y; y <= room_p1.y; ++y)
+    for (size_t corner_idx = 0; corner_idx < 4; ++corner_idx)
     {
-        for (int x = room_p0.x; x <= room_p1.x; ++x)
+        //This corner has been marked for skipping?
+        if (!c[corner_idx])
         {
-            const bool X_IS_OK = x < cross_x0y0.x ? (c[0] || c[2]) :
-                                 x > cross_x1y1.x ? (c[1] || c[3]) : false;
-            const bool Y_IS_OK = y < cross_x0y0.y ? (c[0] || c[1]) :
-                                 y > cross_x1y1.y ? (c[2] || c[3]) : false;
+            continue;
+        }
 
-            if (X_IS_OK && Y_IS_OK)
+        R r;
+
+        switch (corner_idx)
+        {
+        //Up left
+        case 0:
+            r.p0 = room_p0;
+            r.p1 = cross_x0y0 - 1;
+            break;
+
+        //Up right
+        case 1:
+            r.p0 = P(cross_x1y1.x + 1, room_p0.y);
+            r.p1 = P(room_p1.x, cross_x0y0.y - 1);
+            break;
+
+        //Down left
+        case 2:
+            r.p0 = P(room_p0.x, cross_x1y1.y + 1);
+            r.p1 = P(cross_x0y0.x - 1, room_p1.y);
+            break;
+
+        //Down right
+        case 3:
+            r.p0 = cross_x1y1 + 1;
+            r.p1 = room_p1;
+            break;
+        }
+
+        //Check if these positions can be cut
+        bool allow_cut = true;
+
+        for (int x = r.p0.x; x <= r.p1.x; ++x)
+        {
+            for (int y = r.p0.y; y <= r.p1.y; ++y)
             {
-                map::put(new Wall(P(x, y)));
-                map::room_map[x][y] = nullptr;
+                for (const P& d : dir_utils::dir_list_w_center)
+                {
+                    const P p(x, y);
+
+                    const P check_p(p + d);
+
+                    const Room* const room_here = map::room_map[check_p.x][check_p.y];
+
+                    const Feature_id id = map::cells[check_p.x][check_p.y].rigid->id();
+
+                    if (
+                        (room_here == &room && id != Feature_id::floor) ||
+                        (room_here != &room && id != Feature_id::wall)
+                    )
+                    {
+                        allow_cut = false;
+                        break;
+                    }
+                }
+
+                if (!allow_cut)
+                {
+                    break;
+                }
+            }
+        }
+
+        if (allow_cut)
+        {
+            //OK, nothing is preventing us from building walls here
+            for (int x = r.p0.x; x <= r.p1.x; ++x)
+            {
+                for (int y = r.p0.y; y <= r.p1.y; ++y)
+                {
+                    map::put(new Wall(P(x, y)));
+                    map::room_map[x][y] = nullptr;
+                }
             }
         }
     }
@@ -96,19 +172,17 @@ void mk_pillars_in_room(const Room& room)
 
     auto is_free = [](const P & p)
     {
-        for (int dx = -1; dx <= 1; ++dx)
+        for (const P& d : dir_utils::dir_list_w_center)
         {
-            for (int dy = -1; dy <= 1; ++dy)
-            {
-                const auto* const f = map::cells[p.x + dx][p.y + dy].rigid;
+            const P check_p(p + d);
 
-                if (f->id() == Feature_id::wall)
-                {
-                    return false;
-                }
+            const Feature_id id = map::cells[check_p.x][check_p.y].rigid->id();
+
+            if (id == Feature_id::wall)
+            {
+                return false;
             }
         }
-
         return true;
     };
 
@@ -119,6 +193,7 @@ void mk_pillars_in_room(const Room& room)
         {
             return rnd::range(1, 2);
         };
+
         const int DX = step_size();
         const int DY = step_size();
 
@@ -128,20 +203,28 @@ void mk_pillars_in_room(const Room& room)
             {
                 const P p(x, y);
 
-                if (is_free(p) && rnd::fraction(2, 3)) {map::put(new Wall(p));}
+                if (is_free(p) && rnd::fraction(2, 3))
+                {
+                    map::put(new Wall(p));
+                }
             }
         }
     }
-    else //Random chance failed
+    else //Scatter pillars randomly
     {
-        //Scatter pillars randomly
         for (int y = room_p0.y + 1; y <= room_p1.y - 1; ++y)
         {
             for (int x = room_p0.x + 1; x <= room_p1.x - 1; ++x)
             {
-                const P p(x + rnd::range(-1, 1), y + rnd::range(-1, 1));
+                const Range d_range(-1, 1);
 
-                if (is_free(p) && rnd::one_in(5)) {map::put(new Wall(p));}
+                const P p(x + d_range.roll(),
+                          y + d_range.roll());
+
+                if (is_free(p) && rnd::one_in(5))
+                {
+                    map::put(new Wall(p));
+                }
             }
         }
     }
@@ -155,8 +238,9 @@ void cavify_room(Room& room)
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            const auto* const room_here  = map::room_map[x][y];
-            is_other_room[x][y]           = room_here && room_here != &room;
+            const auto* const room_here = map::room_map[x][y];
+
+            is_other_room[x][y] = room_here && room_here != &room;
         }
     }
 
@@ -345,21 +429,21 @@ void valid_room_corr_entries(const Room& room, std::vector<P>& out)
     TRACE_FUNC_END_VERBOSE;
 }
 
-void mk_path_find_cor(Room& r0,
-                      Room& r1,
+void mk_path_find_cor(Room& room_0,
+                      Room& room_1,
                       bool door_proposals[MAP_W][MAP_H])
 {
     TRACE_FUNC_BEGIN_VERBOSE << "Making corridor between rooms "
-                             << &r0 << " and " << &r1 << std::endl;
+                             << &room_0 << " and " << &room_1 << std::endl;
 
-    ASSERT(map::is_area_inside_map(r0.r_));
-    ASSERT(map::is_area_inside_map(r1.r_));
+    ASSERT(map::is_area_inside_map(room_0.r_));
+    ASSERT(map::is_area_inside_map(room_1.r_));
 
     std::vector<P> p0_bucket;
     std::vector<P> p1_bucket;
 
-    valid_room_corr_entries(r0, p0_bucket);
-    valid_room_corr_entries(r1, p1_bucket);
+    valid_room_corr_entries(room_0, p0_bucket);
+    valid_room_corr_entries(room_1, p1_bucket);
 
     if (p0_bucket.empty())
     {
@@ -381,11 +465,11 @@ void mk_path_find_cor(Room& r0,
     {
         for (const P& p1 : p1_bucket)
         {
-            const int CUR_DIST = king_dist(p0, p1);
+            const int DIST = king_dist(p0, p1);
 
-            if (CUR_DIST < shortest_dist)
+            if (DIST < shortest_dist)
             {
-                shortest_dist = CUR_DIST;
+                shortest_dist = DIST;
             }
         }
     }
@@ -399,9 +483,9 @@ void mk_path_find_cor(Room& r0,
     {
         for (const P& p1 : p1_bucket)
         {
-            const int CUR_DIST = king_dist(p0, p1);
+            const int DIST = king_dist(p0, p1);
 
-            if (CUR_DIST == shortest_dist)
+            if (DIST == shortest_dist)
             {
                 entries_bucket.push_back(std::pair<P, P>(p0, p1));
             }
@@ -411,7 +495,7 @@ void mk_path_find_cor(Room& r0,
     TRACE_VERBOSE << "Picking a random stored entry pair" << std::endl;
     const size_t IDX = rnd::range(0, entries_bucket.size() - 1);
 
-    const std::pair<P, P>& entries = entries_bucket[IDX];
+    const auto& entries = entries_bucket[IDX];
 
     const P& p0 = entries.first;
     const P& p1 = entries.second;
@@ -419,32 +503,67 @@ void mk_path_find_cor(Room& r0,
     std::vector<P> path;
     bool blocked_expanded[MAP_W][MAP_H];
 
-    //Is entry points same cell (rooms are adjacent)? Then simply use that
+    //Entry points are the same cell (rooms are adjacent)? Then simply use that
     if (p0 == p1)
     {
         path.push_back(p0);
     }
-    else
+    else //Entry points are different cells
     {
-        //Else, try to find a path to the other entry point
+        //Try to find a path to the other entry point
+
         bool blocked[MAP_W][MAP_H] = {};
 
+        //Mark all cells as blocked, which is not a wall, or is a room
         for (int x = 0; x < MAP_W; ++x)
         {
             for (int y = 0; y < MAP_H; ++y)
             {
-                blocked[x][y] = map::room_map[x][y] ||
-                                map::cells[x][y].rigid->id() != Feature_id::wall;
+                const bool IS_WALL =
+                    map::cells[x][y].rigid->id() == Feature_id::wall;
+
+                const auto* const room_ptr = map::room_map[x][y];
+
+                blocked[x][y] = !IS_WALL || room_ptr;
             }
         }
 
+        //Search around p0 and p1, to see if they are actually OK to build from
+        for (const P& d : dir_utils::dir_list)
+        {
+            const P p(p0 + d);
+
+            const auto* const room_ptr = map::room_map[p.x][p.y];
+
+            if (blocked[p.x][p.y] && room_ptr != &room_0)
+            {
+                return;
+            }
+        }
+
+        for (const P& d : dir_utils::dir_list)
+        {
+            const P p(p1 + d);
+
+            const auto* const room_ptr = map::room_map[p.x][p.y];
+
+            if (blocked[p.x][p.y] && room_ptr != &room_1)
+            {
+                return;
+            }
+        }
+
+        //Expand the blocked cells - we do not want to build adjacent to floor
         map_parse::expand(blocked, blocked_expanded);
 
+        //We know from above that p0 and p1 are actually OK - so mark them as
+        //free in the expanded blocking array
         blocked_expanded[p0.x][p0.y] = blocked_expanded[p1.x][p1.y] = false;
 
-        //Allowing diagonal steps makes a more "cave like" path
+        //Allowing diagonal steps creates a more "cave like" path
         const bool ALLOW_DIAGONAL = map::dlvl >= DLVL_FIRST_LATE_GAME;
 
+        //Randomizing steps create more "snaky" paths
         const bool RANDOMIZE_STEP_CHOICES = map::dlvl >= DLVL_FIRST_LATE_GAME ? true :
                                             rnd::one_in(5);
 
@@ -462,7 +581,7 @@ void mk_path_find_cor(Room& r0,
 
         TRACE_VERBOSE << "Check that the path doesn't circle around the origin or targt "
                       << "room (looks bad)" << std::endl;
-        std::vector<Room*> rooms {&r0, &r1};
+        std::vector<Room*> rooms {&room_0, &room_1};
 
         for (Room* room : rooms)
         {
@@ -510,8 +629,8 @@ void mk_path_find_cor(Room& r0,
         {
             const P& p(path[i]);
 
-            //If this is a late game level, occasionally put floor in 3x3 cells around each point
-            //in the path (wide corridors for more "open" level).
+            //If this is a late level, occasionally put floor in 3x3 cells
+            //around each path point (wide corridors for more "open" level).
             if (map::dlvl >= DLVL_FIRST_LATE_GAME && rnd::fraction(2, 5))
             {
                 for (int dx = -1; dx <= 1; ++dx)
@@ -532,15 +651,23 @@ void mk_path_find_cor(Room& r0,
 
             map::put(new Floor(p));
 
-            if (i > 1 && int(i) < int(path.size() - 3) && i % 6 == 0)
+            //Make it possible to branch from the corridor
+            if (
+                (i > 1)                         &&
+                ((int)i < (int)path.size() - 3) &&
+                (i % 6 == 0))
             {
                 Room* link = room_factory::mk(Room_type::corr_link, R(p, p));
+
                 map::room_list.push_back(link);
+
                 map::room_map[p.x][p.y] = link;
-                link->rooms_con_to_.push_back(&r0);
-                link->rooms_con_to_.push_back(&r1);
-                r0.rooms_con_to_.push_back(link);
-                r1.rooms_con_to_.push_back(link);
+
+                link->rooms_con_to_.push_back(&room_0);
+                link->rooms_con_to_.push_back(&room_1);
+
+                room_0.rooms_con_to_.push_back(link);
+                room_1.rooms_con_to_.push_back(link);
 
                 for (Room* prev_link : prev_links)
                 {
@@ -557,8 +684,8 @@ void mk_path_find_cor(Room& r0,
             door_proposals[p0.x][p0.y] = door_proposals[p1.x][p1.y] = true;
         }
 
-        r0.rooms_con_to_.push_back(&r1);
-        r1.rooms_con_to_.push_back(&r0);
+        room_0.rooms_con_to_.push_back(&room_1);
+        room_1.rooms_con_to_.push_back(&room_0);
         TRACE_FUNC_END_VERBOSE << "Successfully connected roooms" << std::endl;
         return;
     }
@@ -590,18 +717,24 @@ void pathfinder_walk(const P& p0,
 
             pos_list_ref.reserve(pos_list_ref.size() + rnd_walk_buffer.size());
 
-            move(begin(rnd_walk_buffer), end(rnd_walk_buffer), back_inserter(pos_list_ref));
+            move(begin(rnd_walk_buffer),
+                 end(rnd_walk_buffer),
+                 back_inserter(pos_list_ref));
         }
     }
 }
 
-void rnd_walk(const P& p0, int len, std::vector<P>& pos_list_ref,
-              const bool ALLOW_DIAGONAL, R area)
+void rnd_walk(const P& p0,
+              int len,
+              std::vector<P>& pos_list_ref,
+              const bool ALLOW_DIAGONAL,
+              R area)
 {
     pos_list_ref.clear();
 
     const std::vector<P>& d_list = ALLOW_DIAGONAL ?
-                                   dir_utils::dir_list : dir_utils::cardinal_list;
+                                   dir_utils::dir_list :
+                                   dir_utils::cardinal_list;
 
     const int D_LIST_SIZE = d_list.size();
 
@@ -625,4 +758,4 @@ void rnd_walk(const P& p0, int len, std::vector<P>& pos_list_ref,
     }
 }
 
-} //map_gen_utils
+} //mapgen_utils

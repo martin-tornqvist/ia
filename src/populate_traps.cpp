@@ -4,7 +4,7 @@
 
 #include "init.hpp"
 #include "map.hpp"
-#include "map_gen.hpp"
+#include "mapgen.hpp"
 #include "map_parsing.hpp"
 #include "feature_data.hpp"
 #include "feature_trap.hpp"
