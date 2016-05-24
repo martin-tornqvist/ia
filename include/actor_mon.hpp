@@ -47,7 +47,8 @@ public:
     Mon();
     virtual ~Mon();
 
-    bool can_see_actor(const Actor& other, const bool hard_blocked_los[MAP_W][MAP_H]) const;
+    bool can_see_actor(const Actor& other,
+                       const bool hard_blocked_los[MAP_W][MAP_H]) const;
 
     void act() override;
 

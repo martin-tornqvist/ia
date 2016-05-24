@@ -15,28 +15,31 @@
 #include "feature_rigid.hpp"
 #include "feature_mob.hpp"
 
-using namespace std;
 
 namespace knock_back
 {
 
-void try_knock_back(Actor&        defender,
-                    const P&    attacked_from_pos,
-                    const bool    IS_SPIKE_GUN,
-                    const bool    IS_MSG_ALLOWED)
+void try_knock_back(Actor& defender,
+                    const P& attacked_from_pos,
+                    const bool IS_SPIKE_GUN,
+                    const bool IS_MSG_ALLOWED)
 {
-    const bool  IS_DEF_MON    = !defender.is_player();
-    const auto& defender_data  = defender.data();
+    TRACE_FUNC_BEGIN;
+
+    const bool  IS_DEFENDER_PLAYER  = defender.is_player();
+    const auto& defender_data       = defender.data();
 
     if (
         defender_data.prevent_knockback                 ||
         defender_data.actor_size >= Actor_size::giant   ||
         defender.has_prop(Prop_id::ethereal)            ||
         defender.has_prop(Prop_id::ooze)                ||
-        /*Do not knock back if bot is playing*/
-        (!IS_DEF_MON && config::is_bot_playing()))
+        //Do not knock back if bot is playing
+        (IS_DEFENDER_PLAYER && config::is_bot_playing()))
     {
         //Defender is not knockable
+
+        TRACE_FUNC_END;
         return;
     }
 
@@ -54,7 +57,7 @@ void try_knock_back(Actor&        defender,
         const bool IS_CELL_BOTTOMLESS =
             map::cells[new_pos.x][new_pos.y].rigid->is_bottomless();
 
-        const bool IS_CELL_BLOCKED    =
+        const bool IS_CELL_BLOCKED =
             blocked[new_pos.x][new_pos.y] && !IS_CELL_BOTTOMLESS;
 
         if (IS_CELL_BLOCKED)
@@ -71,29 +74,31 @@ void try_knock_back(Actor&        defender,
                 }
             }
 
+            TRACE_FUNC_END;
             return;
         }
         else //Target cell is free
         {
-            const bool IS_PLAYER_SEE_DEF = IS_DEF_MON ?
-                                           map::player->can_see_actor(defender) :
-                                           true;
+            const bool PLAYER_SEE_DEFENDER = IS_DEFENDER_PLAYER ?
+                                             true :
+                                             map::player->can_see_actor(defender);
 
             if (i == 0)
             {
-                if (IS_MSG_ALLOWED && IS_PLAYER_SEE_DEF)
+                if (IS_MSG_ALLOWED && PLAYER_SEE_DEFENDER)
                 {
-                    if (IS_DEF_MON)
-                    {
-                        msg_log::add(defender.name_the() + " is knocked back!");
-                    }
-                    else
+                    if (IS_DEFENDER_PLAYER)
                     {
                         msg_log::add("I am knocked back!");
                     }
+                    else
+                    {
+                        msg_log::add(defender.name_the() + " is knocked back!");
+                    }
                 }
 
-                defender.prop_handler().try_add(new Prop_paralyzed(Prop_turns::specific, 1));
+                defender.prop_handler().try_add(
+                    new Prop_paralyzed(Prop_turns::specific, 1));
             }
 
             defender.pos = new_pos;
@@ -104,24 +109,30 @@ void try_knock_back(Actor&        defender,
                 sdl_wrapper::sleep(config::delay_projectile_draw());
             }
 
-            if (IS_CELL_BOTTOMLESS && !defender.has_prop(Prop_id::flying) && IS_PLAYER_SEE_DEF)
+            if (
+                IS_CELL_BOTTOMLESS                  &&
+                !defender.has_prop(Prop_id::flying) &&
+                PLAYER_SEE_DEFENDER)
             {
-                if (IS_DEF_MON)
+                if (IS_DEFENDER_PLAYER)
+                {
+                    msg_log::add("I plummet down the depths!", clr_msg_bad);
+                }
+                else
                 {
                     msg_log::add(defender.name_the() + " plummets down the depths.",
                                  clr_msg_good);
                 }
-                else
-                {
-                    msg_log::add("I plummet down the depths!", clr_msg_bad);
-                }
 
                 defender.die(true, false, false);
+
+                TRACE_FUNC_END;
                 return;
             }
 
-            // Bump features (e.g. so monsters can be knocked back into traps)
-            vector<Mob*> mobs;
+            //Bump features (e.g. so monsters can be knocked back into traps)
+            std::vector<Mob*> mobs;
+
             game_time::mobs_at_pos(defender.pos, mobs);
 
             for (Mob* const mob : mobs)
@@ -131,18 +142,23 @@ void try_knock_back(Actor&        defender,
 
             if (!defender.is_alive())
             {
+                TRACE_FUNC_END;
                 return;
             }
 
             Rigid* const f = map::cells[defender.pos.x][defender.pos.y].rigid;
+
             f->bump(defender);
 
             if (!defender.is_alive())
             {
+                TRACE_FUNC_END;
                 return;
             }
         }
     }
+
+    TRACE_FUNC_END;
 }
 
 } //Knock_back

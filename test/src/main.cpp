@@ -1535,7 +1535,7 @@ TEST_FIXTURE(Basic_fixture, map_parse_cells_within_dist_of_others)
 namespace
 {
 
-void check_stair_path()
+void check_connected()
 {
     bool blocked[MAP_W][MAP_H];
     map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
@@ -1561,6 +1561,7 @@ void check_stair_path()
         }
     }
 
+    //Check path from player to stairs
     std::vector<P> path;
 
     if (stair_p.x != -1)
@@ -1586,6 +1587,11 @@ void check_stair_path()
 
     //The end of the path should be the stairs position
     CHECK(path_front == stair_p);
+
+    //Check that all of the map is connected
+    const bool IS_CONNECTED = map_parse::is_map_connected(blocked);
+
+    CHECK(IS_CONNECTED);
 }
 
 void check_wall_placement(const P& origin)
@@ -1597,7 +1603,7 @@ void check_wall_placement(const P& origin)
     {
         for (int y = 0; y < 2; ++y)
         {
-            const P map_p = origin + P(x, y);
+            const P map_p(origin + P(x, y));
 
             const Feature_id id = map::cells[map_p.x][map_p.y].rigid->id();
 
@@ -1639,7 +1645,7 @@ TEST_FIXTURE(Basic_fixture, mapgen_std)
 
         map::player->teleport();
 
-        check_stair_path();
+        check_connected();
 
         const int X1 = MAP_W - 2;
         const int Y1 = MAP_H - 2;

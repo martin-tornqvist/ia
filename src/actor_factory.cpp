@@ -249,7 +249,7 @@ Actor* mk(const Actor_id id, const P& pos)
 
     if (data.nr_left_allowed_to_spawn > 0)
     {
-        data.nr_left_allowed_to_spawn--;
+        --data.nr_left_allowed_to_spawn;
     }
 
     game_time::add_actor(actor);

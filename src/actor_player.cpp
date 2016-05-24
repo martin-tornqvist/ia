@@ -269,9 +269,9 @@ void Player::save() const
 
     ASSERT(unarmed_wpn_);
 
-    save_handling::put_int(int(unarmed_wpn_->id()));
+    save_handling::put_int((int)unarmed_wpn_->id());
 
-    for (int i = 0; i < int(Ability_id::END); ++i)
+    for (int i = 0; i < (int)Ability_id::END; ++i)
     {
         const int V = data_->ability_vals.raw_val(Ability_id(i));
 
@@ -307,7 +307,7 @@ void Player::load()
 
     unarmed_wpn_ = static_cast<Wpn*>(unarmed_item);
 
-    for (int i = 0; i < int(Ability_id::END); ++i)
+    for (int i = 0; i < (int)Ability_id::END; ++i)
     {
         const int V = save_handling::get_int();
 
@@ -396,7 +396,7 @@ void Player::on_hit(int& dmg,
     const bool IS_PHYSICAL              = dmg_type == Dmg_type::physical;
 
     //Ghoul trait Indomitable Fury makes player immune to Wounds while Frenzied
-    const bool IS_GHOUL_RESIST_WOUND = player_bon::traits[size_t(Trait::indomitable_fury)] &&
+    const bool IS_GHOUL_RESIST_WOUND = player_bon::traits[(size_t)Trait::indomitable_fury] &&
                                        prop_handler_->has_prop(Prop_id::frenzied);
 
     if (
@@ -455,15 +455,15 @@ int Player::enc_percent() const
     const int TOTAL_W = inv_->total_item_weight();
     const int MAX_W   = carry_weight_lmt();
 
-    return int((double(TOTAL_W) / double(MAX_W)) * 100.0);
+    return (int)(((double)TOTAL_W / (double)MAX_W) * 100.0);
 }
 
 int Player::carry_weight_lmt() const
 {
-    const bool IS_TOUGH         = player_bon::traits[size_t(Trait::tough)];
-    const bool IS_RUGGED        = player_bon::traits[size_t(Trait::rugged)];
-    const bool IS_UNBREAKABLE   = player_bon::traits[size_t(Trait::unbreakable)];
-    const bool IS_STRONG_BACKED = player_bon::traits[size_t(Trait::strong_backed)];
+    const bool IS_TOUGH         = player_bon::traits[(size_t)Trait::tough];
+    const bool IS_RUGGED        = player_bon::traits[(size_t)Trait::rugged];
+    const bool IS_UNBREAKABLE   = player_bon::traits[(size_t)Trait::unbreakable];
+    const bool IS_STRONG_BACKED = player_bon::traits[(size_t)Trait::strong_backed];
 
     const bool IS_WEAKENED      = has_prop(Prop_id::weakened);
 
@@ -480,17 +480,17 @@ int Player::shock_resistance(const Shock_src shock_src) const
 {
     int res = 0;
 
-    if (player_bon::traits[size_t(Trait::fearless)])
+    if (player_bon::traits[(size_t)Trait::fearless])
     {
         res += 5;
     }
 
-    if (player_bon::traits[size_t(Trait::cool_headed)])
+    if (player_bon::traits[(size_t)Trait::cool_headed])
     {
         res += 20;
     }
 
-    if (player_bon::traits[size_t(Trait::courageous)])
+    if (player_bon::traits[(size_t)Trait::courageous])
     {
         res += 20;
     }
@@ -546,7 +546,7 @@ void Player::incr_shock(const int SHOCK, Shock_src shock_src)
 
 void Player::incr_shock(const Shock_lvl shock_value, Shock_src shock_src)
 {
-    incr_shock(int(shock_value), shock_src);
+    incr_shock((int)shock_value, shock_src);
 }
 
 void Player::restore_shock(const int amount_restored, const bool IS_TEMP_SHOCK_RESTORED)
@@ -696,7 +696,7 @@ void Player::act()
 #ifndef NDEBUG
     //Sanity check: Disease and infection should never be active at the same time
     ASSERT(!prop_handler_->has_prop(Prop_id::diseased) ||
-              !prop_handler_->has_prop(Prop_id::infected));
+           !prop_handler_->has_prop(Prop_id::infected));
 #endif // NDEBUG
 
     render::draw_map_and_interface();
@@ -928,7 +928,7 @@ void Player::on_std_turn()
 #ifndef NDEBUG
     //Sanity check: Disease and infection should never be active at the same time
     ASSERT(!prop_handler_->has_prop(Prop_id::diseased) ||
-              !prop_handler_->has_prop(Prop_id::infected));
+           !prop_handler_->has_prop(Prop_id::infected));
 #endif // NDEBUG
 
     if (!is_alive())
@@ -939,9 +939,9 @@ void Player::on_std_turn()
     update_tmp_shock();
 
     //Spell resistance
-    const int SPI_TRAIT_LVL = player_bon::traits[size_t(Trait::mighty_spirit)] ? 3 :
-                              player_bon::traits[size_t(Trait::strong_spirit)] ? 2 :
-                              player_bon::traits[size_t(Trait::stout_spirit)]  ? 1 : 0;
+    const int SPI_TRAIT_LVL = player_bon::traits[(size_t)Trait::mighty_spirit] ? 3 :
+                              player_bon::traits[(size_t)Trait::strong_spirit] ? 2 :
+                              player_bon::traits[(size_t)Trait::stout_spirit]  ? 1 : 0;
 
     if (SPI_TRAIT_LVL > 0 && !prop_handler_->has_prop(Prop_id::rSpell))
     {
@@ -1017,7 +1017,8 @@ void Player::on_std_turn()
 
             if (shock_from_mon_cur_player_turn < 2.5)
             {
-                incr_shock(int(floor(mon->shock_caused_cur_)), Shock_src::see_mon);
+                incr_shock((int)floor(mon->shock_caused_cur_), Shock_src::see_mon);
+
                 shock_from_mon_cur_player_turn += mon->shock_caused_cur_;
             }
         }
@@ -1175,7 +1176,7 @@ void Player::on_std_turn()
             nr_wounds = static_cast<Prop_wound*>(prop)->nr_wounds();
         }
 
-        const bool IS_SURVIVALIST = player_bon::traits[size_t(Trait::survivalist)];
+        const bool IS_SURVIVALIST = player_bon::traits[(size_t)Trait::survivalist];
 
         const int WOUND_EFFECT_DIV = IS_SURVIVALIST ? 2 : 1;
 
@@ -1196,7 +1197,7 @@ void Player::on_std_turn()
         }
 
         //Rapid Recoverer trait affects HP regen?
-        const bool IS_RAPID_RECOVER = player_bon::traits[size_t(Trait::rapid_recoverer)];
+        const bool IS_RAPID_RECOVER = player_bon::traits[(size_t)Trait::rapid_recoverer];
 
         if (IS_RAPID_RECOVER)
         {
@@ -1221,8 +1222,8 @@ void Player::on_std_turn()
     //Try to spot hidden traps and doors
     if (!has_prop(Prop_id::confused) && prop_handler_->allow_see())
     {
-        const int R = player_bon::traits[size_t(Trait::perceptive)] ? 3 :
-                      (player_bon::traits[size_t(Trait::observant)] ? 2 : 1);
+        const int R = player_bon::traits[(size_t)Trait::perceptive] ? 3 :
+                      player_bon::traits[(size_t)Trait::observant]  ? 2 : 1;
 
         int x0 = std::max(0, pos.x - R);
         int y0 = std::max(0, pos.y - R);
@@ -1387,8 +1388,8 @@ void Player::move(Dir dir)
                     {
                         Wpn* const wpn = static_cast<Wpn*>(wpn_item);
 
-                        //If this is also a ranged weapon, ask if player really intended to
-                        //use it as melee weapon
+                        //If this is also a ranged weapon, ask if player really
+                        //intended to use it as melee weapon
                         if (
                             wpn->data().ranged.is_ranged_wpn &&
                             config::is_ranged_wpn_meleee_prompt())
@@ -1431,7 +1432,7 @@ void Player::move(Dir dir)
 
                 if (is_features_allow_move)
                 {
-                    //Cell is not blocked, reveal that there is a monster here and return
+                    //Cell is not blocked, reveal monster here and return
 
                     mon->set_player_aware_of_me();
 
@@ -1450,9 +1451,9 @@ void Player::move(Dir dir)
                     return;
                 }
 
-                //NOTE: This point reached means the target is blocked by map features. Do NOT
-                //reveal the monster - just act like the monster isn't there, and let the code
-                //below handle the situation.
+                //NOTE: The target is blocked by map features. Do NOT reveal
+                //the monster - just act like the monster isn't there, and
+                //let the code below handle the situation.
             }
         }
 
@@ -1500,9 +1501,9 @@ void Player::move(Dir dir)
             pos = tgt;
 
             const int FREE_STEP_EVERY_N_TURN =
-                player_bon::traits[size_t(Trait::mobile)]     ? 3 :
-                player_bon::traits[size_t(Trait::lithe)]      ? 4 :
-                player_bon::traits[size_t(Trait::dexterous)]  ? 5 : 0;
+                player_bon::traits[(size_t)Trait::mobile]       ? 3 :
+                player_bon::traits[(size_t)Trait::lithe]        ? 4 :
+                player_bon::traits[(size_t)Trait::dexterous]    ? 5 : 0;
 
             if (FREE_STEP_EVERY_N_TURN > 0)
             {
@@ -1659,7 +1660,7 @@ void Player::add_light_hook(bool light_map[MAP_W][MAP_H]) const
         {
             Lgt_size item_lgt_size = item->lgt_size();
 
-            if (int(lgt_size) < int(item_lgt_size))
+            if ((int)lgt_size < (int)item_lgt_size)
             {
                 lgt_size = item_lgt_size;
             }

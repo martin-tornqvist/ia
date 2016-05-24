@@ -7,6 +7,7 @@
 
 #include "properties.hpp"
 #include "actor.hpp"
+#include "actor_mon.hpp"
 #include "feature.hpp"
 #include "input.hpp"
 #include "map.hpp"
@@ -20,6 +21,8 @@
 #include "game_time.hpp"
 #include "map_travel.hpp"
 #include "explosion.hpp"
+#include "render.hpp"
+#include "sdl_wrapper.hpp"
 
 namespace bot
 {
@@ -29,7 +32,47 @@ namespace
 
 std::vector<P> path_;
 
-void find_path_to_stairs()
+void show_map_and_freeze(const std::string& msg)
+{
+    for (int x = 0; x < MAP_W; ++x)
+    {
+        for (int y = 0; y < MAP_H; ++y)
+        {
+            Cell& cell = map::cells[x][y];
+
+            cell.is_explored = true;
+            cell.is_seen_by_player = true;
+        }
+    }
+
+    for (Actor* const actor : game_time::actors)
+    {
+        if (!actor->is_player())
+        {
+            Mon* const mon = static_cast<Mon*>(actor);
+
+            mon->player_aware_of_me_counter_ = 999;
+        }
+    }
+
+    while (true)
+    {
+        render::draw_map_and_interface(false);
+
+        render::draw_text("[" + msg + "]",
+                          Panel::screen,
+                          P(0, 0),
+                          clr_red_lgt);
+
+        render::update_screen();
+
+        sdl_wrapper::sleep(1);
+
+        sdl_wrapper::flush_input();
+    }
+}
+
+void find_stair_path()
 {
     path_.clear();
 
@@ -56,14 +99,28 @@ void find_path_to_stairs()
         }
     }
 
-    ASSERT(stair_p.x != -1);
+    if (stair_p.x == -1)
+    {
+        show_map_and_freeze("Could not find stairs");
+    }
 
-    path_find::run(map::player->pos,
+    const P& player_p = map::player->pos;
+
+    if (blocked[player_p.x][player_p.y])
+    {
+        show_map_and_freeze("Player on blocked position");
+    }
+
+    path_find::run(player_p,
                    stair_p,
                    blocked,
                    path_);
 
-    ASSERT(!path_.empty());
+    if (path_.empty())
+    {
+        show_map_and_freeze("Could not find path to stairs");
+    }
+
     ASSERT(path_.front() == stair_p);
 }
 
@@ -71,7 +128,7 @@ bool walk_to_adj_cell(const P& p)
 {
     ASSERT(is_pos_adj(map::player->pos, p, true));
 
-    char key = '0' + int(dir_utils::dir(p - map::player->pos));
+    char key = '0' + (int)dir_utils::dir(p - map::player->pos);
 
     //Occasionally randomize movement
     if (rnd::one_in(5))
@@ -97,9 +154,34 @@ void act()
     // TESTS
     //=======================================================================
 #ifndef NDEBUG
-    for (Actor* actor : game_time::actors)
+    for (size_t outer_idx = 0; outer_idx < game_time::actors.size(); ++outer_idx)
     {
+        const Actor* const actor = game_time::actors[outer_idx];
+
         ASSERT(map::is_pos_inside_map(actor->pos));
+
+        for (size_t inner_idx = 0; inner_idx < game_time::actors.size(); ++inner_idx)
+        {
+            const Actor* const other_actor = game_time::actors[inner_idx];
+
+            if (
+                outer_idx != inner_idx  &&
+                actor->is_alive()       &&
+                other_actor->is_alive())
+            {
+                if (actor == other_actor)
+                {
+                    show_map_and_freeze("Same actor encountered twice in list");
+                }
+
+                if (actor->pos == other_actor->pos)
+                {
+                    show_map_and_freeze("Two living actors at same pos (" +
+                                        to_str(actor->pos.x) + ", " +
+                                        to_str(actor->pos.y) + ")");
+                }
+            }
+        }
     }
 #endif
     //=======================================================================
@@ -136,7 +218,8 @@ void act()
 
     if (!has_allied_mon)
     {
-        actor_factory::summon(map::player->pos, {Actor_id::mi_go},
+        actor_factory::summon(map::player->pos,
+                              std::vector<Actor_id>(1, Actor_id::mi_go),
                               Make_mon_aware::yes,
                               map::player);
     }
@@ -177,7 +260,7 @@ void act()
     {
         std::vector<Prop_id> prop_bucket;
 
-        for (size_t i = 0; i < size_t(Prop_id::END); ++i)
+        for (size_t i = 0; i < (size_t)Prop_id::END; ++i)
         {
             if (prop_data::data[i].allow_test_on_bot)
             {
@@ -205,35 +288,30 @@ void act()
         return;
     }
 
-    //Occasionally run an explosion
+    //Occasionally run an explosion around the player
     if (rnd::one_in(50))
     {
-        const P expl_p(rnd::range(1, MAP_W - 2),
-                       rnd::range(1, MAP_H - 2));
-
-        explosion::run(expl_p, Expl_type::expl);
+        explosion::run(map::player->pos, Expl_type::expl);
 
         return;
     }
 
     //Handle blocking door
-    for (int dx = -1; dx <= 1; ++dx)
+    for (const P& d : dir_utils::dir_list)
     {
-        for (int dy = -1; dy <= 1; ++dy)
+        const P p(map::player->pos + d);
+
+        auto* const f = map::cells[p.x][p.y].rigid;
+
+        if (f->id() == Feature_id::door)
         {
-            const P p(map::player->pos + P(dx, dy));
-            auto* const f = map::cells[p.x][p.y].rigid;
+            Door* const door = static_cast<Door*>(f);
+            door->reveal(false);
 
-            if (f->id() == Feature_id::door)
+            if (door->is_stuck())
             {
-                Door* const door = static_cast<Door*>(f);
-                door->reveal(false);
-
-                if (door->is_stuck())
-                {
-                    f->hit(Dmg_type::physical, Dmg_method::kick, map::player);
-                    return;
-                }
+                f->hit(Dmg_type::physical, Dmg_method::kick, map::player);
+                return;
             }
         }
     }
@@ -247,9 +325,9 @@ void act()
         }
     }
 
-    find_path_to_stairs();
+    find_stair_path();
 
     walk_to_adj_cell(path_.back());
 }
 
-} //Bot
+} //bot

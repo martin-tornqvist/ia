@@ -1405,10 +1405,10 @@ void Prop_handler::on_prop_end(Prop* const prop)
         render::draw_map_and_interface();
     }
 
-    //Print property end message if this is the last active property of this type
+    //Print end message if this is the last active property of this type
     if (
         owning_actor_->state() == Actor_state::alive &&
-        active_props_info_[size_t(prop->id_)] == 0)
+        active_props_info_[(size_t)prop->id_] == 0)
     {
         if (owning_actor_->is_player())
         {
@@ -1749,14 +1749,10 @@ bool Prop_handler::allow_eat(const Verbosity verbosity) const
 
 void Prop_handler::on_hit()
 {
-    TRACE_FUNC_BEGIN_VERBOSE;
-
     for (Prop* prop : props_)
     {
         prop->on_hit();
     }
-
-    TRACE_FUNC_END_VERBOSE;
 }
 
 void Prop_handler::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)

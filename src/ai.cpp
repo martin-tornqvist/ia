@@ -183,7 +183,9 @@ void move_bucket(Mon& mon, std::vector<P>& dirs_to_mk)
         const int CUR_TO_PLAYER_DIST = king_dist(mon_p, player_p);
         const int TGT_TO_PLAYER_DIST = king_dist(tgt_p, player_p);
 
-        if (TGT_TO_PLAYER_DIST <= CUR_TO_PLAYER_DIST && !blocked[tgt_p.x][tgt_p.y])
+        if (
+            TGT_TO_PLAYER_DIST <= CUR_TO_PLAYER_DIST &&
+            !blocked[tgt_p.x][tgt_p.y])
         {
             dirs_to_mk.push_back(tgt_p);
         }
@@ -210,7 +212,7 @@ bool make_room_for_friend(Mon& mon)
 
     const P& player_p = map::player->pos;
 
-    //Check if there is an allied monster that we should move out of the way for
+    //Check if there is an allied monster that we should move away for
     for (Actor* other_actor : game_time::actors)
     {
         if (
@@ -225,8 +227,8 @@ bool make_room_for_friend(Mon& mon)
             const bool IS_OTHER_ADJ =
                 is_pos_adj(mon.pos, other_mon->pos, false);
 
-            //TODO: It's probably better to check LOS than vision here? We don't want to move
-            //out of the way for a blind monster.
+            //TODO: It's probably better to check LOS than vision here?
+            //We don't want to move out of the way for a blind monster.
             const bool IS_OTHER_SEEING_PLAYER =
                 other_mon->can_see_actor(*map::player, blocked_los);
 
@@ -240,9 +242,9 @@ bool make_room_for_friend(Mon& mon)
             const bool IS_OTHER_ADJ_WITH_NO_PLAYER_LOS =
                 IS_OTHER_ADJ && !IS_OTHER_SEEING_PLAYER;
 
-            //We consider moving out of the way if EITHER:
-            // * The other monster is seeing the player, AND we are blocking it, or
-            // * The other monster is adjacent to us, but does NOT see the player.
+            //We consider moving out of the way if the other monster EITHER:
+            // * Is seeing the player and we are blocking it, or
+            // * Is adjacent to us, and is not seeing the player.
             if (
                 (IS_OTHER_SEEING_PLAYER && is_pos_on_line(mon.pos, other_mon->pos, player_p)) ||
                 IS_OTHER_ADJ_WITH_NO_PLAYER_LOS)
@@ -251,13 +253,13 @@ bool make_room_for_friend(Mon& mon)
                 // * Is NOT further away from the player than our current position, and
                 // * Is not also blocking another monster
 
-                //NOTE: We do not care whether the target cell has LOS to the player or not.
-                //If we move into a cell without LOS, it will simply appear as if we are dodging in
-                //and out of cover. It lets us advance towards the player with less time in the
-                //player's LOS, and allows blocked ranged monsters to shoot at the player.
-                //On the whole, it's probably an acceptable behavior.
+                //NOTE: We do not care whether the target cell has LOS to the
+                //player or not. If we move into a cell without LOS, it will
+                //appear as if we are dodging in and out of cover. It lets us
+                //move towards the player with less time in the player's LOS,
+                //and allows blocked ranged monsters to shoot at the player.
 
-                // Get a list of neighbouring free cells
+                //Get a list of neighbouring free cells
                 std::vector<P> pos_bucket;
                 move_bucket(mon, pos_bucket);
 
@@ -265,15 +267,16 @@ bool make_room_for_friend(Mon& mon)
                 Is_closer_to_pos cmp(player_p);
                 sort(pos_bucket.begin(), pos_bucket.end(), cmp);
 
-                //Try to find a position which is not blocking a third allied monster
+                //Try to find a position not blocking a third allied monster
                 for (const auto& tgt_p : pos_bucket)
                 {
                     bool is_p_ok = true;
 
                     for (Actor* actor3 : game_time::actors)
                     {
-                        //NOTE: The third actor here can include the original blocked "other" actor,
-                        //since we must also check if we block that actor from the target position.
+                        //NOTE: The third actor here can include the original
+                        //blocked "other" actor, since we must also check if we
+                        //block that actor from the target position.
                         if (
                             actor3 != &mon          &&
                             actor3->is_alive()      &&
@@ -285,9 +288,10 @@ bool make_room_for_friend(Mon& mon)
                             const bool OTHER_IS_SEEING_PLAYER =
                                 mon3->can_see_actor(*map::player, blocked_los);
 
-                            //TODO: We also need to check that we don't move into a cell which
-                            //is adjacent to a third monster, who does not have LOS to player!
-                            //As it is now, we may move out of the way for one such monster,
+                            //TODO: We also need to check that we don't move
+                            //into a cell which is adjacent to a third monster,
+                            //who does not have LOS to player! As it is now,
+                            //we may move out of the way for one such monster,
                             //only to block another in the same way!
 
                             if (
@@ -316,24 +320,24 @@ bool make_room_for_friend(Mon& mon)
     return false;
 }
 
-//Helper function(s) for move_to_random_adj_cell()
-namespace
+bool move_to_random_adj_cell(Mon& mon)
 {
+    if (
+        !mon.is_alive() ||
+        (!mon.is_roaming_allowed_ && mon.aware_counter_ <= 0))
+    {
+        return false;
+    }
 
-Dir dir_to_rnd_adj_free_cell(Mon& mon)
-{
     bool blocked[MAP_W][MAP_H];
+
     cell_check::Blocks_actor cellcheck(mon, true);
 
-    const P& mon_pos = mon.pos;
-
-    for (int dx = -1; dx <= 1; ++dx)
+    for (const P& d : dir_utils::dir_list)
     {
-        for (int dy = -1; dy <= 1; ++dy)
-        {
-            const P p(mon_pos.x + dx, mon_pos.y + dy);
-            blocked[p.x][p.y] = cellcheck.check(map::cells[p.x][p.y]);
-        }
+        const P p(mon.pos + d);
+
+        blocked[p.x][p.y] = cellcheck.check(map::cells[p.x][p.y]);
     }
 
     for (Actor* actor : game_time::actors)
@@ -348,79 +352,61 @@ Dir dir_to_rnd_adj_free_cell(Mon& mon)
     for (Mob* mob : game_time::mobs)
     {
         const P& p = mob->pos();
-        blocked[p.x][p.y] = cellcheck.check(*mob);
+
+        if (cellcheck.check(*mob))
+        {
+            blocked[p.x][p.y] = true;
+        }
     }
 
     const R area_allowed(P(1, 1), P(MAP_W - 2, MAP_H - 2));
 
     //First, try the same direction as last travelled
+    Dir dir = Dir::END;
+
     const Dir last_dir_travelled = mon.last_dir_moved_;
 
     if (last_dir_travelled != Dir::center && last_dir_travelled != Dir::END)
     {
-        const P tgt_cell(mon_pos + dir_utils::offset(last_dir_travelled));
+        const P tgt_p(mon.pos + dir_utils::offset(last_dir_travelled));
 
         if (
-            !blocked[tgt_cell.x][tgt_cell.y] &&
-            is_pos_inside(tgt_cell, area_allowed))
+            !blocked[tgt_p.x][tgt_p.y] &&
+            is_pos_inside(tgt_p, area_allowed))
         {
-            return last_dir_travelled;
+            dir = last_dir_travelled;
         }
     }
 
     //Attempt to find a random non-blocked adjacent cell
-    std::vector<Dir> dir_bucket;
-    dir_bucket.clear();
-
-    for (int dx = -1; dx <= 1; ++dx)
+    if (dir == Dir::END)
     {
-        for (int dy = -1; dy <= 1; ++dy)
-        {
-            if (dx != 0 || dy != 0)
-            {
-                const P offset(dx, dy);
-                const P tgt_cell(mon_pos + offset);
+        std::vector<Dir> dir_bucket;
+        dir_bucket.clear();
 
-                if (
-                    !blocked[tgt_cell.x][tgt_cell.y] &&
-                    is_pos_inside(tgt_cell, area_allowed))
-                {
-                    dir_bucket.push_back(dir_utils::dir(offset));
-                }
+        for (const P& d : dir_utils::dir_list)
+        {
+            const P tgt_p(mon.pos + d);
+
+            if (
+                !blocked[tgt_p.x][tgt_p.y] &&
+                is_pos_inside(tgt_p, area_allowed))
+            {
+                dir_bucket.push_back(dir_utils::dir(d));
             }
         }
-    }
 
-    const int NR_ELEMENTS = dir_bucket.size();
-
-    if (NR_ELEMENTS == 0)
-    {
-        return Dir::center;
-    }
-    else
-    {
-        return dir_bucket[rnd::range(0, NR_ELEMENTS - 1)];
-    }
-}
-
-} //namespace
-
-bool move_to_random_adj_cell(Mon& mon)
-{
-    if (!mon.is_alive())
-    {
-        return false;
-    }
-
-    if (mon.is_roaming_allowed_ || mon.aware_counter_ > 0)
-    {
-        const Dir dir = dir_to_rnd_adj_free_cell(mon);
-
-        if (dir != Dir::center)
+        if (!dir_bucket.empty())
         {
-            mon.move(dir);
-            return true;
+            dir = dir_bucket[rnd::range(0, dir_bucket.size() - 1)];
         }
+    }
+
+    //Valid direction found?
+    if (dir != Dir::END)
+    {
+        mon.move(dir);
+        return true;
     }
 
     return false;

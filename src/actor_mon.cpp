@@ -437,7 +437,6 @@ void Mon::on_hit(int& dmg,
 void Mon::move(Dir dir)
 {
 #ifndef NDEBUG
-
     if (dir == Dir::END)
     {
         TRACE << "Illegal direction parameter" << std::endl;
@@ -449,7 +448,6 @@ void Mon::move(Dir dir)
         TRACE << "Monster outside map" << std::endl;
         ASSERT(false);
     }
-
 #endif // NDEBUG
 
     prop_handler().affect_move_dir(pos, dir);
@@ -472,14 +470,14 @@ void Mon::move(Dir dir)
         }
     }
 
-    // Movement direction is stored for AI purposes
+    //Movement direction is stored for AI purposes
     last_dir_moved_ = dir;
 
-    const P tgt_cell(pos + dir_utils::offset(dir));
+    const P tgt_p(pos + dir_utils::offset(dir));
 
-    if (dir != Dir::center && map::is_pos_inside_map(tgt_cell, false))
+    if (dir != Dir::center && map::is_pos_inside_map(tgt_p, false))
     {
-        pos = tgt_cell;
+        pos = tgt_p;
 
         //Bump features in target cell (i.e. to trigger traps)
         std::vector<Mob*> mobs;
@@ -969,10 +967,10 @@ void Fire_hound::mk_start_items()
 
 void Zuul::place_hook()
 {
-    if (actor_data::data[size_t(Actor_id::zuul)].nr_left_allowed_to_spawn > 0)
+    if (actor_data::data[(size_t)Actor_id::zuul].nr_left_allowed_to_spawn > 0)
     {
-        //NOTE: Do not call die() here - that would have side effects such as player
-        //getting XP. Instead, simply set the dead state to destroyed.
+        //NOTE: Do not call die() here - that would have side effects such as
+        //player getting XP. Instead, simply set the dead state to destroyed.
         state_                      = Actor_state::destroyed;
 
         Actor* actor                = actor_factory::mk(Actor_id::cultist_priest, pos);
@@ -1024,22 +1022,22 @@ Did_action Vortex::on_act()
 
         if (delta.x >  1)
         {
-            knock_back_from_pos.x++;
+            ++knock_back_from_pos.x;
         }
 
         if (delta.x < -1)
         {
-            knock_back_from_pos.x--;
+            --knock_back_from_pos.x;
         }
 
         if (delta.y >  1)
         {
-            knock_back_from_pos.y++;
+            ++knock_back_from_pos.y;
         }
 
         if (delta.y < -1)
         {
-            knock_back_from_pos.y--;
+            --knock_back_from_pos.y;
         }
 
         if (knock_back_from_pos != player_pos)
@@ -1078,7 +1076,7 @@ Did_action Vortex::on_act()
 
                 //TODO: There should be a sfx here
 
-                knock_back::try_knock_back(*(map::player),
+                knock_back::try_knock_back(*map::player,
                                            knock_back_from_pos,
                                            false,
                                            false);
@@ -1379,7 +1377,7 @@ Did_action Khephren::on_act()
         {
             map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
-            const int SPAWN_AFTER_X = map::player->pos.x + FOV_STD_RADI_INT + 1;
+            const int SPAWN_AFTER_X = MAP_W / 2;
 
             for (int y = 0; y  < MAP_H; ++y)
             {
@@ -1390,6 +1388,7 @@ Did_action Khephren::on_act()
             }
 
             std::vector<P> free_cells;
+
             to_vec((bool*)blocked, false, MAP_W, MAP_H, free_cells);
 
             sort(begin(free_cells), end(free_cells), Is_closer_to_pos(pos));
@@ -1399,6 +1398,7 @@ Did_action Khephren::on_act()
             if (free_cells.size() >= NR_OF_SPAWNS + 1)
             {
                 msg_log::add("Khephren calls a plague of Locusts!");
+
                 map::player->incr_shock(Shock_lvl::heavy, Shock_src::misc);
 
                 for (size_t i = 0; i < NR_OF_SPAWNS; ++i)
@@ -1412,8 +1412,11 @@ Did_action Khephren::on_act()
                 }
 
                 render::draw_map_and_interface();
+
                 has_summoned_locusts = true;
+
                 game_time::tick();
+
                 return Did_action::yes;
             }
         }
@@ -2233,7 +2236,11 @@ void Mold::mk_start_items()
 
 void Gas_spore::on_death()
 {
+    TRACE_FUNC_BEGIN;
+
     explosion::run(pos, Expl_type::expl);
+
+    TRACE_FUNC_END;
 }
 
 The_high_priest::The_high_priest() :

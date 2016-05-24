@@ -235,11 +235,11 @@ void load_contour(const bool base[PIXEL_DATA_W][PIXEL_DATA_H])
                 const P cur_img_px_p0((P(px_x, px_y) / cell_dims) * cell_dims);
                 const P cur_img_px_p1(cur_img_px_p0 + cell_dims - 1);
 
-                const P px_p0(std::max(cur_img_px_p0.x, int(px_x - 1)),
-                              std::max(cur_img_px_p0.y, int(px_y - 1)));
+                const P px_p0(std::max(cur_img_px_p0.x, (int)(px_x - 1)),
+                              std::max(cur_img_px_p0.y, (int)(px_y - 1)));
 
-                const P px_p1(std::min(cur_img_px_p1.x, int(px_x + 1)),
-                              std::min(cur_img_px_p1.y, int(px_y + 1)));
+                const P px_p1(std::min(cur_img_px_p1.x, (int)(px_x + 1)),
+                              std::min(cur_img_px_p1.y, (int)(px_y + 1)));
 
                 for (int px_check_x = px_p0.x; px_check_x <= px_p1.x; ++px_check_x)
                 {
@@ -621,7 +621,7 @@ void draw_marker(const P& p,
     {
         const P& pos = trail[i];
 
-        if (BLOCKED_FROM_IDX != -1 && int(i) >= BLOCKED_FROM_IDX)
+        if (BLOCKED_FROM_IDX != -1 && (int)i >= BLOCKED_FROM_IDX)
         {
             clr = clr_red_lgt;
         }
@@ -1274,7 +1274,7 @@ void draw_map()
         return;
     }
 
-    Cell_render_data* cur_render_data = nullptr;
+    Cell_render_data* render_data = nullptr;
 
     const bool IS_TILES = config::is_tiles_mode();
 
@@ -1288,7 +1288,7 @@ void draw_map()
 
             if (map::cells[x][y].is_seen_by_player)
             {
-                cur_render_data                 = &render_array[x][y];
+                render_data                     = &render_array[x][y];
                 const auto* const   f           = map::cells[x][y].rigid;
                 Tile_id             gore_tile   = Tile_id::empty;
                 char                gore_glyph  = 0;
@@ -1301,26 +1301,26 @@ void draw_map()
 
                 if (gore_tile == Tile_id::empty)
                 {
-                    cur_render_data->tile       = f->tile();
-                    cur_render_data->glyph      = f->glyph();
-                    cur_render_data->clr        = f->clr();
+                    render_data->tile   = f->tile();
+                    render_data->glyph  = f->glyph();
+                    render_data->clr    = f->clr();
                     const Clr& feature_clr_bg   = f->clr_bg();
 
                     if (!is_clr_eq(feature_clr_bg, clr_black))
                     {
-                        cur_render_data->clr_bg = feature_clr_bg;
+                        render_data->clr_bg = feature_clr_bg;
                     }
                 }
                 else //Has gore
                 {
-                    cur_render_data->tile  = gore_tile;
-                    cur_render_data->glyph = gore_glyph;
-                    cur_render_data->clr   = clr_red;
+                    render_data->tile  = gore_tile;
+                    render_data->glyph = gore_glyph;
+                    render_data->clr   = clr_red;
                 }
 
                 if (map::cells[x][y].is_lit && f->is_los_passable())
                 {
-                    cur_render_data->is_marked_lit = true;
+                    render_data->is_marked_lit = true;
                 }
             }
         }
@@ -1337,10 +1337,10 @@ void draw_map()
             actor->data().tile != Tile_id::empty    &&
             map::cells[p.x][p.y].is_seen_by_player)
         {
-            cur_render_data        = &render_array[p.x][p.y];
-            cur_render_data->clr   = actor->clr();
-            cur_render_data->tile  = actor->tile();
-            cur_render_data->glyph = actor->glyph();
+            render_data        = &render_array[p.x][p.y];
+            render_data->clr   = actor->clr();
+            render_data->tile  = actor->tile();
+            render_data->glyph = actor->glyph();
         }
     }
 
@@ -1348,7 +1348,7 @@ void draw_map()
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            cur_render_data = &render_array[x][y];
+            render_data = &render_array[x][y];
 
             if (map::cells[x][y].is_seen_by_player)
             {
@@ -1357,21 +1357,21 @@ void draw_map()
 
                 if (item)
                 {
-                    cur_render_data->clr   = item->clr();
-                    cur_render_data->tile  = item->tile();
-                    cur_render_data->glyph = item->glyph();
+                    render_data->clr   = item->clr();
+                    render_data->tile  = item->tile();
+                    render_data->glyph = item->glyph();
                 }
 
                 //Copy array to player memory (before living actors and mobile features)
                 render_array_no_actors[x][y] = render_array[x][y];
 
                 //Color cells slightly yellow when marked as lit
-                if (cur_render_data->is_marked_lit)
+                if (render_data->is_marked_lit)
                 {
-                    cur_render_data->clr.r = std::min(255, cur_render_data->clr.r + 40);
-                    cur_render_data->clr.g = std::min(255, cur_render_data->clr.g + 40);
+                    render_data->clr.r = std::min(255, render_data->clr.r + 40);
+                    render_data->clr.g = std::min(255, render_data->clr.g + 40);
 
-                    cur_render_data->is_light_fade_allowed = false;
+                    render_data->is_light_fade_allowed = false;
                 }
             }
         }
@@ -1388,10 +1388,10 @@ void draw_map()
             mob_tile != Tile_id::empty && mob_glyph != ' ' &&
             map::cells[p.x][p.y].is_seen_by_player)
         {
-            cur_render_data = &render_array[p.x][p.y];
-            cur_render_data->clr   = mob->clr();
-            cur_render_data->tile  = mob_tile;
-            cur_render_data->glyph = mob_glyph;
+            render_data = &render_array[p.x][p.y];
+            render_data->clr   = mob->clr();
+            render_data->tile  = mob_tile;
+            render_data->glyph = mob_glyph;
         }
     }
 
@@ -1404,12 +1404,13 @@ void draw_map()
 
             const P& p = actor->pos;
 
-            cur_render_data = &render_array[p.x][p.y];
+            render_data = &render_array[p.x][p.y];
 
-            //There should NOT already be an actor here which is seen, or that we are aware of
-            ASSERT(!cur_render_data->is_living_actor_seen_here);
-            ASSERT(!cur_render_data->is_aware_of_hostile_mon_here);
-            ASSERT(!cur_render_data->is_aware_of_allied_mon_here);
+            //There should NOT already be an actor here which is seen, or that
+            //we are aware of
+            ASSERT(!render_data->is_living_actor_seen_here);
+            ASSERT(!render_data->is_aware_of_hostile_mon_here);
+            ASSERT(!render_data->is_aware_of_allied_mon_here);
 
             const auto* const mon = static_cast<const Mon*>(actor);
 
@@ -1417,23 +1418,23 @@ void draw_map()
             {
                 if (actor->tile() != Tile_id::empty && actor->glyph() != ' ')
                 {
-                    cur_render_data->clr   = actor->clr();
-                    cur_render_data->tile  = actor->tile();
-                    cur_render_data->glyph = actor->glyph();
+                    render_data->clr   = actor->clr();
+                    render_data->tile  = actor->tile();
+                    render_data->glyph = actor->glyph();
 
-                    cur_render_data->lifebar_length             = lifebar_length(*actor);
-                    cur_render_data->is_living_actor_seen_here  = true;
-                    cur_render_data->is_light_fade_allowed      = false;
+                    render_data->lifebar_length             = lifebar_length(*actor);
+                    render_data->is_living_actor_seen_here  = true;
+                    render_data->is_light_fade_allowed      = false;
 
                     if (map::player->is_leader_of(mon))
                     {
-                        cur_render_data->clr_bg = clr_allied_mon;
+                        render_data->clr_bg = clr_allied_mon;
                     }
                     else //Player is not leader of monster
                     {
                         if (mon->aware_counter_ <= 0)
                         {
-                            cur_render_data->clr_bg = clr_blue;
+                            render_data->clr_bg = clr_blue;
                         }
                     }
                 }
@@ -1444,11 +1445,11 @@ void draw_map()
                 {
                     if (map::player->is_leader_of(mon))
                     {
-                        cur_render_data->is_aware_of_allied_mon_here = true;
+                        render_data->is_aware_of_allied_mon_here = true;
                     }
                     else //Player is not leader of monster
                     {
-                        cur_render_data->is_aware_of_hostile_mon_here = true;
+                        render_data->is_aware_of_hostile_mon_here = true;
                     }
                 }
             }

@@ -638,15 +638,11 @@ Actor_died Actor::hit(int dmg,
                       const Dmg_method method,
                       const Allow_wound allow_wound)
 {
-    TRACE_FUNC_BEGIN_VERBOSE;
-
     if (state_ == Actor_state::destroyed)
     {
         TRACE_FUNC_END_VERBOSE;
         return Actor_died::no;
     }
-
-    TRACE_VERBOSE << "Damage from parameter: " << dmg << std::endl;
 
     //Damage type is "light", and actor is not light sensitive?
     if (dmg_type == Dmg_type::light && !prop_handler_->has_prop(Prop_id::lgtSens))
@@ -713,7 +709,6 @@ Actor_died Actor::hit(int dmg,
             }
         }
 
-        TRACE_FUNC_END_VERBOSE;
         return Actor_died::no;
     }
 
@@ -727,7 +722,6 @@ Actor_died Actor::hit(int dmg,
 
     if (prop_handler_->try_resist_dmg(dmg_type, verbosity))
     {
-        TRACE_FUNC_END_VERBOSE;
         return Actor_died::no;
     }
 
@@ -765,8 +759,6 @@ Actor_died Actor::hit(int dmg,
 
     on_hit(dmg, dmg_type, method, allow_wound);
 
-    TRACE_VERBOSE << "Damage after on_hit(): " << dmg << std::endl;
-
     prop_handler_->on_hit();
 
     dmg = std::max(1, dmg);
@@ -775,8 +767,6 @@ Actor_died Actor::hit(int dmg,
     {
         hp_ -= dmg;
     }
-
-    TRACE_VERBOSE << "HP remaining: " << hp_ << std::endl;
 
     if (hp() <= 0)
     {
@@ -790,12 +780,10 @@ Actor_died Actor::hit(int dmg,
 
         die(IS_DESTROYED, !IS_ON_BOTTOMLESS, !IS_ON_BOTTOMLESS);
 
-        TRACE_FUNC_END_VERBOSE;
         return Actor_died::yes;
     }
 
     //HP is greater than 0
-    TRACE_FUNC_END_VERBOSE;
     return Actor_died::no;
 }
 

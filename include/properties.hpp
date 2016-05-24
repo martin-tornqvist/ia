@@ -329,6 +329,8 @@ public:
         return data_.allow_apply_more_while_active;
     }
 
+    //TODO: This is ridiculous, can't the properties just call rendering,
+    //actor color update etc themselves (whatever is needed per case)?
     virtual bool need_update_vision_when_start_or_end() const
     {
         return data_.update_vision_when_start_or_end;

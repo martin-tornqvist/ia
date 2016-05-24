@@ -88,11 +88,14 @@ void draw_blast_at_field(const P& center_pos,
                          const Clr& clr_inner,
                          const Clr& clr_outer);
 
-void draw_blast_at_cells(const std::vector<P>& positions, const Clr& clr);
+void draw_blast_at_cells(const std::vector<P>& positions,
+                         const Clr& clr);
 
-void draw_blast_at_seen_cells(const std::vector<P>& positions, const Clr& clr);
+void draw_blast_at_seen_cells(const std::vector<P>& positions,
+                              const Clr& clr);
 
-void draw_blast_at_seen_actors(const std::vector<Actor*>& actors, const Clr& clr);
+void draw_blast_at_seen_actors(const std::vector<Actor*>& actors,
+                               const Clr& clr);
 
 void draw_main_menu_logo(const int Y_POS);
 

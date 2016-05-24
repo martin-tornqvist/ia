@@ -21,7 +21,7 @@
 namespace map_travel
 {
 
-std::vector<map_data> map_list;
+std::vector<Map_data> map_list;
 
 namespace
 {
@@ -98,7 +98,8 @@ void init()
     //Forest + dungeon + boss + trapezohedron
     const size_t NR_LVL_TOT = DLVL_LAST + 3;
 
-    map_list = std::vector<map_data>(NR_LVL_TOT, {Map_type::std, Is_main_dungeon::yes});
+    map_list =
+        std::vector<Map_data>(NR_LVL_TOT, {Map_type::std, Is_main_dungeon::yes});
 
     //Forest intro level
     map_list[0] = {Map_type::intro, Is_main_dungeon::yes};

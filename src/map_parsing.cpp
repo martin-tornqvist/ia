@@ -533,13 +533,16 @@ bool is_map_connected(const bool blocked[MAP_W][MAP_H])
                     P(-1, -1),
                     true);
 
-    //NOTE: We can skip to origin.x immediately, since this is guaranteed to be the
-    //leftmost non-blocked cell.
+    //NOTE: We can skip to origin.x immediately, since this is guaranteed to be
+    //the leftmost non-blocked cell.
     for (int x = origin.x; x < MAP_W - 1; ++x)
     {
         for (int y = 1; y < MAP_H - 1; ++y)
         {
-            if (flood_fill[x][y] == 0 && !blocked[x][y] && P(x, y) != origin)
+            if (
+                flood_fill[x][y] == 0   &&
+                !blocked[x][y]          &&
+                P(x, y) != origin)
             {
                 return false;
             }

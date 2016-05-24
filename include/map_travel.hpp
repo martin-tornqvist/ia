@@ -6,11 +6,15 @@
 
 #include "map.hpp"
 
-//This includes forest intro level, rats in the walls level, etc (every level that
-//increments the DLVL number).
-enum Is_main_dungeon {no, yes};
+//This includes forest intro level, rats in the walls level, etc (every level
+//that increments the DLVL number).
+enum Is_main_dungeon
+{
+    no,
+    yes
+};
 
-struct map_data
+struct Map_data
 {
     Map_type        type;
     Is_main_dungeon is_main_dungeon;
@@ -19,7 +23,7 @@ struct map_data
 namespace map_travel
 {
 
-extern std::vector<map_data> map_list;
+extern std::vector<Map_data> map_list;
 
 void init();
 
