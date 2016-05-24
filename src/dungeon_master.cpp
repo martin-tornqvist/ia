@@ -183,53 +183,60 @@ void player_lose_xp_percent(const int PERCENT)
 
 void win_game()
 {
-    highscore::on_game_over(true);
-
     render::cover_panel(Panel::screen);
     render::update_screen();
 
+    highscore::on_game_over(true);
+
     const std::vector<std::string> win_msg =
     {
-        "As I touch the crystal, there is a jolt of electricity. A surreal glow "
-        "suddenly illuminates the area. I feel as if I have stirred something. I notice "
-        "a figure observing me from the edge of the light. It approaches me. There is "
-        "no doubt in my mind concerning the nature of this entity; it is the Faceless "
-        "God who dwells in the depths of the earth, it is the Crawling Chaos - "
-        "Nyarlathotep! I panic for a moment. Why is it I find myself here, stumbling "
-        "around in darkness? But I soon sense that this is all part of a plan, that I "
-        "have proven myself worthy for something. The being beckons me to gaze into the "
-        "stone.",
+        "As I approach the crystal, an eerie glow illuminates the area. "
+        "I notice a figure observing me from the edge of the light. "
+        "There is no doubt in my mind concerning the nature of this entity; "
+        "it is the Faceless God who dwells in the depths of the earth - Nyarlathotep!",
 
-        "In the radiance I see visions beyond eternity, visions of unreal "
-        "reality, visions of the brightest light of day and the darkest night of "
-        "madness. There is only onward now, I demand to attain everything! So I make a "
-        "pact with the Fiend.",
+        "I panic. Why is it I find myself here, stumbling around in darkness? "
+        "Is this all part of a plan? The being beckons me to gaze into the stone.",
 
-        "I now harness the shadows that stride from world to world to sow death and "
-        "madness. The destinies of all things on earth, living and dead, are mine."
+        "In the radiance I see visions beyond eternity, visions of unreal reality, "
+        "visions of the brightest light of day and the darkest night of madness. "
+        "There is only onward now, I demand to attain everything!",
+
+        "So I make a pact with the Fiend.",
+
+        "I now harness the shadows that stride from world to world to sow death and madness. "
+        "The destinies of all things on earth, living and dead, are mine."
     };
 
-    const int X0            = 6;
-    const int MAX_W         = MAP_W - (X0 * 2);
+    const int PADDING       = 9;
 
-    const int LINE_DELAY    = 40;
+    const int X0            = PADDING;
+    const int MAX_W         = MAP_W - (PADDING * 2);
+
+    const int LINE_DELAY    = 50;
 
     int y = 2;
 
     for (const std::string& section_msg : win_msg)
     {
         std::vector<std::string> section_lines;
+
         text_format::split(section_msg, MAX_W, section_lines);
 
         for (const std::string& line : section_lines)
         {
-            render::draw_text(line, Panel::screen, P(X0, y), clr_white, clr_black);
+            render::draw_text(line,
+                              Panel::screen,
+                              P(X0, y),
+                              clr_white,
+                              clr_black);
 
             render::update_screen();
+
             sdl_wrapper::sleep(LINE_DELAY);
+
             ++y;
         }
-
         ++y;
     }
 
@@ -238,8 +245,10 @@ void win_game()
     const std::string CMD_LABEL =
         "[space/esc/enter] to record high score and return to main menu";
 
-    render::draw_text_center(CMD_LABEL, Panel::screen, P(MAP_W_HALF, y), clr_menu_medium,
-                             clr_black, true);
+    render::draw_text(CMD_LABEL, Panel::screen,
+                      P(X0, SCREEN_H - 2),
+                      clr_menu_medium,
+                      clr_black);
 
     render::update_screen();
 
@@ -254,7 +263,9 @@ void on_mon_killed(Actor& actor)
 
     const int MIN_HP_FOR_SADISM_BON = 4;
 
-    if (d.hp >= MIN_HP_FOR_SADISM_BON && insanity::has_sympt(Ins_sympt_id::sadism))
+    if (
+        d.hp >= MIN_HP_FOR_SADISM_BON &&
+        insanity::has_sympt(Ins_sympt_id::sadism))
     {
         map::player->shock_ = std::max(0.0, map::player->shock_ - 3.0);
     }

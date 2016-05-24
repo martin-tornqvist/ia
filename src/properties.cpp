@@ -2168,7 +2168,7 @@ int Prop_wound::affect_max_hp(const int HP_MAX) const
         hp_pen_pct /= 2;
     }
 
-    // Cap the penalty percentage
+    //Cap the penalty percentage
     hp_pen_pct = std::max(70, hp_pen_pct);
 
     return (HP_MAX * (100 - hp_pen_pct)) / 100;
