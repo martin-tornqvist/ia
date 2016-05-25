@@ -2078,7 +2078,10 @@ Did_action Major_clapham_lee::on_act()
 
         const R fov_rect = fov::get_fov_rect(pos);
 
-        map_parse::run(cell_check::Blocks_los(), blocked_los, Map_parse_mode::overwrite, fov_rect);
+        map_parse::run(cell_check::Blocks_los(),
+                       blocked_los,
+                       Map_parse_mode::overwrite,
+                       fov_rect);
 
         if (can_see_actor(*(map::player), blocked_los))
         {
@@ -2114,7 +2117,9 @@ Did_action Major_clapham_lee::on_act()
                 mon_ids.push_back(mon_id);
             }
 
-            actor_factory::summon(pos, mon_ids, Make_mon_aware::yes, this);
+            actor_factory::summon(pos, mon_ids,
+                                  Make_mon_aware::yes,
+                                  this);
 
             render::draw_map_and_interface();
 

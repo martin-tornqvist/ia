@@ -2196,10 +2196,14 @@ Did_open Tomb::open(Actor* const actor_opening)
     {
         is_open_ = true;
 
-        snd_emit::run({"I hear heavy stone sliding.", Sfx_id::tomb_open,
-                       Ignore_msg_if_origin_seen::yes, pos_, nullptr, Snd_vol::high,
-                       Alerts_mon::yes
-                      });
+        snd_emit::run(Snd("I hear heavy stone sliding.",
+                          Sfx_id::tomb_open,
+                          Ignore_msg_if_origin_seen::yes,
+                          pos_,
+                          nullptr,
+                          Snd_vol::high,
+                          Alerts_mon::yes
+                         ));
 
         if (map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
@@ -2216,11 +2220,13 @@ Did_open Tomb::open(Actor* const actor_opening)
 
 Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
 {
+    TRACE_FUNC_BEGIN;
+
     (void)actor;
 
     Did_trigger_trap did_trigger_trap = Did_trigger_trap::no;
 
-    Actor_id mon_to_spawn = Actor_id::END;
+    Actor_id id_to_spawn = Actor_id::END;
 
     const bool IS_SEEN = map::cells[pos_.x][pos_.y].is_seen_by_player;
 
@@ -2231,7 +2237,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
         //Tomb contains major treasure?
         if (appearance_ == Tomb_appearance::marvelous && !is_random_appearance_)
         {
-            mon_to_spawn = Actor_id::wraith;
+            id_to_spawn = Actor_id::wraith;
         }
         else //Not containing major treasure
         {
@@ -2243,7 +2249,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
 
             const size_t IDX = rnd::range(0, mon_bucket.size() - 1);
 
-            mon_to_spawn = mon_bucket[IDX];
+            id_to_spawn = mon_bucket[IDX];
         }
 
         const std::string msg = "The air suddenly feels colder.";
@@ -2270,7 +2276,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
 
         const size_t IDX = rnd::range(0, mon_bucket.size() - 1);
 
-        mon_to_spawn = mon_bucket[IDX];
+        id_to_spawn = mon_bucket[IDX];
 
         const std::string msg = "Something rises from the tomb!";
 
@@ -2352,7 +2358,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
 
             const size_t IDX = rnd::range(0, mon_bucket.size() - 1);
 
-            mon_to_spawn = mon_bucket[IDX];
+            id_to_spawn = mon_bucket[IDX];
 
             if (IS_SEEN)
             {
@@ -2378,19 +2384,82 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
         break;
     }
 
-    if (mon_to_spawn != Actor_id::END)
+    if (id_to_spawn != Actor_id::END)
     {
-        Actor* const actor_spawned = actor_factory::mk(mon_to_spawn, pos_);
+        TRACE << "Summoning monster" << std::endl;
 
-        Mon* const mon = static_cast<Mon*>(actor_spawned);
+        //First, try to spawn monster in an adjacent cell
+        P spawn_pos(-1, -1);
 
-        mon->become_aware_player(false);
+        bool blocked[MAP_W][MAP_H];
 
-        mon->prop_handler().try_add(new Prop_disabled_attack(Prop_turns::specific, 1));
+        map_parse::run(cell_check::Blocks_move_cmn(true),
+                       blocked,
+                       Map_parse_mode::overwrite,
+                       R(pos_ - 1, pos_ + 1));
+
+        auto positions_to_try = dir_utils::dir_list;
+
+        random_shuffle(begin(positions_to_try), end(positions_to_try));
+
+        Mon* mon_spawned = nullptr;
+
+        for (const P& d : positions_to_try)
+        {
+            const P p(pos_ + d);
+
+            if (!blocked[p.x][p.y])
+            {
+                Actor* actor_spawned = actor_factory::mk(id_to_spawn, p);
+
+                mon_spawned = static_cast<Mon*>(actor_spawned);
+
+                mon_spawned->become_aware_player(false);
+
+                break;
+            }
+        }
+
+        if (!mon_spawned)
+        {
+            //All adjacent space is occupied, use the summon method as fallback
+            //(Although the monster could spawn pretty far from the tomb...)
+
+            TRACE << "Could not spawn adjacent monster, using summon method instead"
+                  << std::endl;
+
+            std::vector<Mon*> spawned_list;
+
+            actor_factory::summon(pos_,
+                                  std::vector<Actor_id>(1, id_to_spawn),
+                                  Make_mon_aware::yes,
+                                  nullptr,
+                                  &spawned_list,
+                                  Verbosity::silent);
+
+            ASSERT(spawned_list.size() == 1);
+
+            if (!spawned_list.empty())
+            {
+                mon_spawned = spawned_list[0];
+            }
+        }
+
+        ASSERT(mon_spawned);
+
+        if (mon_spawned)
+        {
+            TRACE << "Setting disabled attack property on summoned monster" << std::endl;
+
+            mon_spawned->prop_handler().try_add(
+                new Prop_disabled_attack(Prop_turns::specific, 1));
+        }
     }
 
     trait_          = Tomb_trait::END;
     is_trait_known_ = true;
+
+    TRACE_FUNC_END;
 
     return did_trigger_trap;
 }
