@@ -58,8 +58,7 @@ enum class Mon_group_size
 {
     alone,
     few,
-    group,
-    horde,
+    pack,
     swarm
 };
 

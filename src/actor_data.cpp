@@ -126,7 +126,7 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::melee, 25);
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
-    d.group_size = Mon_group_size::group;
+    d.group_size = Mon_group_size::pack;
     d.actor_size = Actor_size::humanoid;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.can_bash_doors = true;
@@ -171,7 +171,7 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::ranged, 0);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
-    d.group_size = Mon_group_size::group;
+    d.group_size = Mon_group_size::pack;
     d.actor_size = Actor_size::humanoid;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.can_bash_doors = true;
@@ -801,7 +801,7 @@ void init_data_list()
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.natural_props[size_t(Prop_id::infravis)] = true;
-    d.group_size = Mon_group_size::group;
+    d.group_size = Mon_group_size::pack;
     d.actor_size = Actor_size::floor;
     d.nr_turns_aware = 5;
     d.descr = "A large green spider.";
@@ -836,7 +836,7 @@ void init_data_list()
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.natural_props[size_t(Prop_id::infravis)] = true;
-    d.group_size = Mon_group_size::group;
+    d.group_size = Mon_group_size::pack;
     d.nr_turns_aware = 5;
     d.actor_size = Actor_size::floor;
     d.descr = "A large white spider.";
@@ -871,7 +871,7 @@ void init_data_list()
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.natural_props[size_t(Prop_id::infravis)] = true;
-    d.group_size = Mon_group_size::group;
+    d.group_size = Mon_group_size::pack;
     d.nr_turns_aware = 5;
     d.actor_size = Actor_size::floor;
     d.descr = "A large red spider.";
@@ -906,7 +906,7 @@ void init_data_list()
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
     d.natural_props[size_t(Prop_id::infravis)] = true;
-    d.group_size = Mon_group_size::group;
+    d.group_size = Mon_group_size::pack;
     d.nr_turns_aware = 5;
     d.actor_size = Actor_size::humanoid;
     d.is_spider = true;
@@ -1340,7 +1340,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
-    d.group_size = Mon_group_size::horde;
+    d.group_size = Mon_group_size::pack;
     d.actor_size = Actor_size::floor;
     d.nr_turns_aware = 5;
     d.descr = "A large and aggressive rodent.";
@@ -1377,7 +1377,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 15;
-    d.group_size = Mon_group_size::horde;
+    d.group_size = Mon_group_size::pack;
     d.actor_size = Actor_size::floor;
     d.nr_turns_aware = 5;
     d.descr = "At first sight, a Rat-thing can easily be mistaken for a large, "
@@ -1421,7 +1421,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 0;
     d.spawn_max_dlvl = 10;
-    d.group_size = Mon_group_size::group;
+    d.group_size = Mon_group_size::pack;
     d.actor_size = Actor_size::floor;
     d.nr_turns_aware = 5;
     d.descr = "A large wolf with eyes full of cunning.";
@@ -1501,7 +1501,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::flying)] = true;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 4;
-    d.group_size = Mon_group_size::group;
+    d.group_size = Mon_group_size::pack;
     d.actor_size = Actor_size::humanoid;
     d.can_bash_doors = true;
     d.nr_turns_aware = 5;
@@ -1881,7 +1881,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::rDisease)] = true;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 5;
-    d.group_size = Mon_group_size::group;
+    d.group_size = Mon_group_size::pack;
     d.actor_size = Actor_size::humanoid;
     d.can_bash_doors = true;
     d.can_open_doors = true;
@@ -2185,7 +2185,7 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::melee, 55);
     d.ability_vals.set_val(Ability_id::ranged, 50);
     d.spawn_min_dlvl = 6;
-    d.group_size = Mon_group_size::horde;
+    d.group_size = Mon_group_size::swarm;
     d.actor_size = Actor_size::humanoid;
     d.is_humanoid = true;
     d.is_amphibian = true;
@@ -2230,7 +2230,7 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::dodge_att, 35);
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = DLVL_FIRST_LATE_GAME;
-    d.group_size = Mon_group_size::group;
+    d.group_size = Mon_group_size::pack;
     d.actor_size = Actor_size::humanoid;
     d.is_humanoid = true;
     d.can_bash_doors = true;
@@ -2270,7 +2270,7 @@ void init_data_list()
     d.dmg_melee = 2;
     d.ability_vals.set_val(Ability_id::melee, 35);
     d.natural_props[size_t(Prop_id::infravis)] = true;
-    d.spawn_min_dlvl = 1;
+    d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
     d.group_size = Mon_group_size::swarm;
     d.actor_size = Actor_size::floor;
@@ -2438,7 +2438,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
-    d.group_size = Mon_group_size::horde;
+    d.group_size = Mon_group_size::swarm;
     d.actor_size = Actor_size::floor;
     d.nr_turns_aware = 250;
     d.is_auto_descr_allowed = true;
@@ -2489,7 +2489,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
-    d.group_size = Mon_group_size::horde;
+    d.group_size = Mon_group_size::pack;
     d.actor_size = Actor_size::floor;
     d.nr_turns_aware = 250;
     d.is_auto_descr_allowed = true;
@@ -2539,7 +2539,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 5;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
-    d.group_size = Mon_group_size::horde;
+    d.group_size = Mon_group_size::swarm;
     d.actor_size = Actor_size::floor;
     d.nr_turns_aware = 250;
     d.is_auto_descr_allowed = true;
@@ -2590,7 +2590,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 9;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
-    d.group_size = Mon_group_size::horde;
+    d.group_size = Mon_group_size::swarm;
     d.actor_size = Actor_size::floor;
     d.nr_turns_aware = 250;
     d.is_auto_descr_allowed = true;
@@ -2861,7 +2861,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::rConf)] = true;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 3;
-    d.group_size = Mon_group_size::group;
+    d.group_size = Mon_group_size::pack;
     d.actor_size = Actor_size::humanoid;
     d.nr_turns_aware = 5;
     d.is_auto_descr_allowed = true;

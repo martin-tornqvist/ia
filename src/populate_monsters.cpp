@@ -88,16 +88,12 @@ void mk_group_at(const Actor_id id,
         max_nr_in_group = rnd::range(1, 2);
         break;
 
-    case Mon_group_size::group:
-        max_nr_in_group = rnd::range(3, 4);
-        break;
-
-    case Mon_group_size::horde:
-        max_nr_in_group = rnd::range(6, 7);
+    case Mon_group_size::pack:
+        max_nr_in_group = rnd::range(3, 5);
         break;
 
     case Mon_group_size::swarm:
-        max_nr_in_group = rnd::range(10, 12);
+        max_nr_in_group = rnd::range(7, 9);
         break;
 
     default:
