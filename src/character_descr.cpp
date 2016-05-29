@@ -249,7 +249,7 @@ void run()
         btm_nr = std::min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
     }
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 }
 
 } //character_descr

@@ -525,7 +525,7 @@ void Armor_mi_go::on_equip_hook(const Verbosity verbosity)
 {
     if (verbosity == Verbosity::verbose)
     {
-        render::draw_map_and_interface();
+        render::draw_map_state();
         msg_log::add("The armor joins with my skin!", clr_white, false, More_prompt_on_msg::yes);
         map::player->incr_shock(Shock_lvl::heavy, Shock_src::use_strange_item);
     }
@@ -533,7 +533,7 @@ void Armor_mi_go::on_equip_hook(const Verbosity verbosity)
 
 Unequip_allowed Armor_mi_go::on_unequip_hook()
 {
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     msg_log::add("I attempt to tear off the armor, it rips my skin!",
                  clr_msg_bad,
@@ -1070,7 +1070,7 @@ void Medical_bag::interrupted()
 
     map::player->active_medical_bag = nullptr;
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 }
 
 int Medical_bag::tot_suppl_for_action(const Med_bag_action action) const
@@ -1157,7 +1157,8 @@ void Gas_mask::on_equip_hook(const Verbosity verbosity)
 {
     (void)verbosity;
 
-    add_carrier_prop(new Prop_rBreath(Prop_turns::indefinite), Verbosity::silent);
+    add_carrier_prop(new Prop_rBreath(Prop_turns::indefinite),
+                     Verbosity::silent);
 }
 
 Unequip_allowed Gas_mask::on_unequip_hook()
@@ -1173,8 +1174,13 @@ void Gas_mask::decr_turns_left(Inventory& carrier_inv)
 
     if (nr_turns_left_ <= 0)
     {
-        msg_log::add("My " + name(Item_ref_type::plain, Item_ref_inf::none) + " expires.",
-                     clr_msg_note, true, More_prompt_on_msg::yes);
+        const std::string item_name = name(Item_ref_type::plain, Item_ref_inf::none);
+
+        msg_log::add("My " + item_name + " expires.",
+                     clr_msg_note,
+                     true,
+                     More_prompt_on_msg::yes);
+
         carrier_inv.decr_item(this);
     }
 }
@@ -1188,7 +1194,8 @@ Consume_item Explosive::activate(Actor* const actor)
 
     if (held_explosive)
     {
-        const std::string name_held = held_explosive->name(Item_ref_type::a, Item_ref_inf::none);
+        const std::string name_held =
+            held_explosive->name(Item_ref_type::a, Item_ref_inf::none);
 
         msg_log::add("I am already holding " + name_held + ".");
 
@@ -1211,16 +1218,17 @@ Consume_item Explosive::activate(Actor* const actor)
 //---------------------------------------------------------- DYNAMITE
 void Dynamite::on_player_ignite() const
 {
-    const bool IS_DEM_EXP = player_bon::traits[size_t(Trait::dem_expert)];
+    const bool IS_DEM_EXP = player_bon::traits[(size_t)Trait::dem_expert];
 
     const Pass_time pass_time = (IS_DEM_EXP && rnd::coin_toss()) ?
-                                Pass_time::no : Pass_time::yes;
+                                Pass_time::no :
+                                Pass_time::yes;
 
     const std::string swift_str = (pass_time == Pass_time::no) ? "swiftly " : "";
 
     msg_log::add("I " + swift_str + "light a dynamite stick.");
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     game_time::tick(pass_time);
 }
@@ -1286,16 +1294,17 @@ void Dynamite::on_player_paralyzed()
 //---------------------------------------------------------- MOLOTOV
 void Molotov::on_player_ignite() const
 {
-    const bool IS_DEM_EXP = player_bon::traits[size_t(Trait::dem_expert)];
+    const bool IS_DEM_EXP = player_bon::traits[(size_t)Trait::dem_expert];
 
     const Pass_time pass_time = (IS_DEM_EXP && rnd::coin_toss()) ?
-                                Pass_time::no : Pass_time::yes;
+                                Pass_time::no :
+                                Pass_time::yes;
 
     const std::string swift_str = (pass_time == Pass_time::no) ? "swiftly " : "";
 
     msg_log::add("I " + swift_str + "light a Molotov Cocktail.");
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     game_time::tick(pass_time);
 }
@@ -1337,7 +1346,7 @@ void Molotov::on_std_turn_player_hold_ignited()
 
 void Molotov::on_thrown_ignited_landing(const P& p)
 {
-    const int D = player_bon::traits[size_t(Trait::dem_expert)] ? 1 : 0;
+    const int D = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
 
     Snd snd("I hear an explosion!",
             Sfx_id::explosion_molotov,
@@ -1389,10 +1398,11 @@ void Molotov::on_player_paralyzed()
 //---------------------------------------------------------- FLARE
 void Flare::on_player_ignite() const
 {
-    const bool IS_DEM_EXP = player_bon::traits[size_t(Trait::dem_expert)];
+    const bool IS_DEM_EXP = player_bon::traits[(size_t)Trait::dem_expert];
 
     const Pass_time pass_time = (IS_DEM_EXP && rnd::coin_toss()) ?
-                                Pass_time::no : Pass_time::yes;
+                                Pass_time::no :
+                                Pass_time::yes;
 
     const std::string swift_str = (pass_time == Pass_time::no) ? "swiftly " : "";
 
@@ -1402,7 +1412,7 @@ void Flare::on_player_ignite() const
 
     map::player->update_fov();
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     game_time::tick(pass_time);
 }
@@ -1428,7 +1438,7 @@ void Flare::on_thrown_ignited_landing(const P& p)
 
     map::player->update_fov();
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 }
 
 void Flare::on_player_paralyzed()
@@ -1449,23 +1459,24 @@ void Flare::on_player_paralyzed()
 
     game_time::update_light_map();
     map::player->update_fov();
-    render::draw_map_and_interface();
+    render::draw_map_state();
     delete this;
 }
 
 //---------------------------------------------------------- SMOKE GRENADE
 void Smoke_grenade::on_player_ignite() const
 {
-    const bool IS_DEM_EXP = player_bon::traits[size_t(Trait::dem_expert)];
+    const bool IS_DEM_EXP = player_bon::traits[(size_t)Trait::dem_expert];
 
     const Pass_time pass_time = (IS_DEM_EXP && rnd::coin_toss()) ?
-                                Pass_time::no : Pass_time::yes;
+                                Pass_time::no :
+                                Pass_time::yes;
 
     const std::string swift_str = (pass_time == Pass_time::no) ? "swiftly " : "";
 
     msg_log::add("I " + swift_str + "ignite a smoke grenade.");
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     game_time::tick(pass_time);
 }
@@ -1474,7 +1485,9 @@ void Smoke_grenade::on_std_turn_player_hold_ignited()
 {
     if (fuse_turns_ < std_fuse_turns() && rnd::coin_toss())
     {
-        explosion::run_smoke_explosion_at(map::player->pos);
+        const int D = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
+
+        explosion::run_smoke_explosion_at(map::player->pos, D);
     }
 
     --fuse_turns_;
@@ -1493,9 +1506,13 @@ void Smoke_grenade::on_std_turn_player_hold_ignited()
 
 void Smoke_grenade::on_thrown_ignited_landing(const P& p)
 {
-    explosion::run_smoke_explosion_at(p);
+    const int D = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
+
+    explosion::run_smoke_explosion_at(p, D);
+
     map::player->update_fov();
-    render::draw_map_and_interface();
+
+    render::draw_map_state();
 }
 
 void Smoke_grenade::on_player_paralyzed()
@@ -1516,7 +1533,7 @@ void Smoke_grenade::on_player_paralyzed()
 
     map::player->update_fov();
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     delete this;
 }

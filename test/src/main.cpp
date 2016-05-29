@@ -1634,7 +1634,7 @@ void check_wall_placement(const P& origin)
 
 TEST_FIXTURE(Basic_fixture, mapgen_std)
 {
-    for (int i = 0; i < 2000; ++i)
+    for (int i = 0; i < 200; ++i)
     {
         bool map_ok = false;
 

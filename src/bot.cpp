@@ -57,7 +57,7 @@ void show_map_and_freeze(const std::string& msg)
 
     while (true)
     {
-        render::draw_map_and_interface(false);
+        render::draw_map_state(Update_screen::no);
 
         render::draw_text("[" + msg + "]",
                           Panel::screen,

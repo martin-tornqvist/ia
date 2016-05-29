@@ -811,7 +811,7 @@ void Monster_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
     map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
     int       nr_blood_put  = 0;
-    const int NR_TRIES    = 1000; //TODO: Hacky, needs improving
+    const int NR_TRIES      = 1000; //TODO: Hacky, needs improving
 
     for (int i = 0; i < NR_TRIES; ++i)
     {
@@ -819,7 +819,10 @@ void Monster_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
         {
             for (int y = r_.p0.y; y <= r_.p1.y; ++y)
             {
-                if (!blocked[x][y] && map::room_map[x][y] == this && rnd::fraction(2, 5))
+                if (
+                    !blocked[x][y]              &&
+                    map::room_map[x][y] == this &&
+                    rnd::fraction(2, 5))
                 {
                     map::mk_gore(P(x, y));
                     map::mk_blood(P(x, y));
@@ -881,7 +884,6 @@ void Flooded_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
     (void)door_proposals;
 
 #ifndef NDEBUG
-
     //Sanity check (look for some features that should not exist in this room)
     for (int x = r_.p0.x; x <= r_.p1.x; ++x)
     {
@@ -903,7 +905,6 @@ void Flooded_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
             }
         }
     }
-
 #endif // NDEBUG
 
     bool blocked[MAP_W][MAP_H];
@@ -920,7 +921,9 @@ void Flooded_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
                 rnd::one_in(LIQUID_ONE_IN_N))
             {
                 Liquid_shallow* const liquid = new Liquid_shallow(P(x, y));
+
                 liquid->type_ = Liquid_type::water;
+
                 map::put(liquid);
             }
         }
@@ -948,7 +951,6 @@ void Muddy_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
     (void)door_proposals;
 
 #ifndef NDEBUG
-
     //Sanity check (look for some features that should not exist in this room)
     for (int x = r_.p0.x; x <= r_.p1.x; ++x)
     {
@@ -970,7 +972,6 @@ void Muddy_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
             }
         }
     }
-
 #endif // NDEBUG
 
     //Early game : Always reshape by cutting corners
@@ -1010,7 +1011,9 @@ void Muddy_room::on_post_connect_hook(bool door_proposals[MAP_W][MAP_H])
             if (!blocked[x][y] && map::room_map[x][y] == this && rnd::one_in(LIQUID_ONE_IN_N))
             {
                 Liquid_shallow* const liquid = new Liquid_shallow(P(x, y));
+
                 liquid->type_ = Liquid_type::mud;
+
                 map::put(liquid);
             }
         }

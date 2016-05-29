@@ -63,7 +63,7 @@ void player_throw_lit_explosive(const P& aim_cell)
 
         for (const P& p : path)
         {
-            render::draw_map_and_interface(false);
+            render::draw_map_state(Update_screen::no);
 
             if (map::cells[p.x][p.y].is_seen_by_player)
             {
@@ -122,7 +122,7 @@ void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
         }
     }
 
-    render::draw_map_and_interface(true);
+    render::draw_map_state(Update_screen::yes);
 
     int         blocked_idx             = -1;
     bool        is_actor_hit            = false;
@@ -133,7 +133,7 @@ void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
 
     for (size_t i = 1; i < path.size(); ++i)
     {
-        render::draw_map_and_interface(false);
+        render::draw_map_state(Update_screen::no);
 
         pos.set(path[i]);
 
@@ -313,7 +313,7 @@ void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
         item_drop::drop_item_on_map(final_pos, item_thrown);
     }
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
     game_time::tick();
 }
 

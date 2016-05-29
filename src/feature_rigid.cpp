@@ -184,7 +184,7 @@ Was_destroyed Rigid::on_finished_burning()
 void Rigid::disarm()
 {
     msg_log::add(msg_disarm_no_trap);
-    render::draw_map_and_interface();
+    render::draw_map_state();
 }
 
 Did_open Rigid::open(Actor* const actor_opening)
@@ -935,7 +935,7 @@ void Statue::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor*
 
         map::player->update_fov();
 
-        render::draw_map_and_interface();
+        render::draw_map_state();
 
         Actor* const actor_behind = map::actor_at_pos(dst_pos);
 
@@ -1101,7 +1101,7 @@ void Stairs::bump(Actor& actor_bumping)
             map::player->pos = pos_;
             msg_log::clear();
             msg_log::add("I descend the stairs.");
-            render::draw_map_and_interface();
+            render::draw_map_state();
             map_travel::go_to_nxt();
             break;
 
@@ -1113,7 +1113,7 @@ void Stairs::bump(Actor& actor_bumping)
 
         default:
             msg_log::clear();
-            render::draw_map_and_interface();
+            render::draw_map_state();
             break;
         }
     }
@@ -1408,7 +1408,7 @@ void Lever::pull()
 //    door_linked_to_->is_stuck_ = false;
 //  }
     map::player->update_fov();
-    render::draw_map_and_interface();
+    render::draw_map_state();
     TRACE_FUNC_END;
 }
 
@@ -1709,7 +1709,7 @@ void Brazier::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor
         //NOTE: "this" is now deleted!
 
         map::player->update_fov();
-        render::draw_map_and_interface();
+        render::draw_map_state();
 
         Rigid* const dst_rigid = map::cells[dst_pos.x][dst_pos.y].rigid;
 
@@ -1859,7 +1859,7 @@ void Item_container::open(const P& feature_pos, Actor* const actor_opening)
                 msg_log::add("Unload? [G]");
             }
 
-            render::draw_map_and_interface();
+            render::draw_map_state();
 
             const Yes_no_answer answer = query::yes_or_no(IS_UNLOADABLE_WPN ? 'G' : -1);
 
@@ -1904,7 +1904,7 @@ void Item_container::open(const P& feature_pos, Actor* const actor_opening)
 
         msg_log::clear();
         msg_log::add("There are no more items.");
-        render::draw_map_and_interface();
+        render::draw_map_state();
     }
     else //Not opened by an actor (probably opened by a spell of opening)
     {
@@ -2082,7 +2082,7 @@ void Tomb::bump(Actor& actor_bumping)
         else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
             msg_log::add("There is a stone box here.");
-            render::draw_map_and_interface();
+            render::draw_map_state();
         }
         else //Player can see
         {
@@ -2207,13 +2207,13 @@ Did_open Tomb::open(Actor* const actor_opening)
 
         if (map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
-            render::draw_map_and_interface();
+            render::draw_map_state();
             msg_log::add("The lid comes off.");
         }
 
         trigger_trap(actor_opening);
 
-        render::draw_map_and_interface();
+        render::draw_map_state();
         return Did_open::yes;
     }
 }
@@ -2499,19 +2499,19 @@ void Chest::bump(Actor& actor_bumping)
         if (item_container_.items_.empty() && is_open_)
         {
             msg_log::add("The chest is empty.");
-            render::draw_map_and_interface();
+            render::draw_map_state();
         }
         else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
             msg_log::add("There is a chest here.");
-            render::draw_map_and_interface();
+            render::draw_map_state();
         }
         else //Player can see
         {
             if (is_locked_)
             {
                 msg_log::add("The chest is locked.");
-                render::draw_map_and_interface();
+                render::draw_map_state();
             }
             else //Not locked
             {
@@ -2544,7 +2544,7 @@ void Chest::try_find_trap()
     {
         is_trap_status_known_ = true;
         msg_log::add("There appears to be a hidden trap.");
-        render::draw_map_and_interface();
+        render::draw_map_state();
     }
 }
 
@@ -2595,11 +2595,11 @@ Did_open Chest::open(Actor* const actor_opening)
             msg_log::add("The chest opens.");
         }
 
-        render::draw_map_and_interface();
+        render::draw_map_state();
 
         trigger_trap(actor_opening);
 
-        render::draw_map_and_interface();
+        render::draw_map_state();
 
         return Did_open::yes;
     }
@@ -2740,7 +2740,7 @@ void Chest::disarm()
     if (is_locked_)
     {
         msg_log::add("The chest is locked.");
-        render::draw_map_and_interface();
+        render::draw_map_state();
         return;
     }
 
@@ -2755,14 +2755,14 @@ void Chest::disarm()
             if (is_trap_status_known_)
             {
                 msg_log::add("Attempt to disarm it? [y/n]");
-                render::draw_map_and_interface();
+                render::draw_map_state();
                 const auto answer = query::yes_or_no();
 
                 if (answer == Yes_no_answer::no)
                 {
                     msg_log::clear();
                     msg_log::add("I leave the chest for now.");
-                    render::draw_map_and_interface();
+                    render::draw_map_state();
                     return;
                 }
             }
@@ -2780,7 +2780,7 @@ void Chest::disarm()
             if (disarm_chance.roll())
             {
                 msg_log::add("I successfully disarm it!");
-                render::draw_map_and_interface();
+                render::draw_map_state();
                 is_trapped_ = false;
 
                 dungeon_master::incr_player_xp(XP_FOR_DISRM_TRAP);
@@ -2808,7 +2808,7 @@ void Chest::disarm()
         msg_log::add("The chest is not trapped.");
     }
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 }
 
 Did_trigger_trap Chest::trigger_trap(Actor* const actor)
@@ -3108,7 +3108,7 @@ void Fountain::bump(Actor& actor_bumping)
         {
             msg_log::clear();
             msg_log::add("There is a fountain here. Drink from it? [y/n]");
-            render::draw_map_and_interface();
+            render::draw_map_state();
 
             const auto answer = query::yes_or_no();
 
@@ -3116,7 +3116,7 @@ void Fountain::bump(Actor& actor_bumping)
             {
                 msg_log::clear();
                 msg_log::add("I leave the fountain for now.");
-                render::draw_map_and_interface();
+                render::draw_map_state();
                 return;
             }
         }
@@ -3221,7 +3221,7 @@ void Fountain::bump(Actor& actor_bumping)
             msg_log::add("The fountain dries out.");
         }
 
-        render::draw_map_and_interface();
+        render::draw_map_state();
         game_time::tick();
     }
 }
@@ -3255,7 +3255,7 @@ void Cabinet::bump(Actor& actor_bumping)
         else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
             msg_log::add("There is a cabinet here.");
-            render::draw_map_and_interface();
+            render::draw_map_state();
         }
         else //Can see
         {
@@ -3302,11 +3302,11 @@ Did_open Cabinet::open(Actor* const actor_opening)
 
         if (map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
-            render::draw_map_and_interface();
+            render::draw_map_state();
             msg_log::add("The cabinet opens.");
         }
 
-        render::draw_map_and_interface(true);
+        render::draw_map_state(Update_screen::yes);
 
         return Did_open::yes;
     }
@@ -3374,7 +3374,7 @@ void Cocoon::bump(Actor& actor_bumping)
         else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
             msg_log::add("There is a cocoon here.");
-            render::draw_map_and_interface();
+            render::draw_map_state();
         }
         else //Player can see
         {
@@ -3480,7 +3480,7 @@ Did_open Cocoon::open(Actor* const actor_opening)
     {
         is_open_ = true;
 
-        render::draw_map_and_interface(true);
+        render::draw_map_state(Update_screen::yes);
 
         if (map::cells[pos_.x][pos_.y].is_seen_by_player)
         {

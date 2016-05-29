@@ -540,7 +540,7 @@ void Mon::become_aware_player(const bool IS_FROM_SEEING)
         if (IS_FROM_SEEING && map::player->can_see_actor(*this))
         {
             map::player->update_fov();
-            render::draw_map_and_interface(true);
+            render::draw_map_state(Update_screen::yes);
             msg_log::add(name_the() + " sees me!");
         }
 
@@ -1411,7 +1411,7 @@ Did_action Khephren::on_act()
                     free_cells.erase(begin(free_cells));
                 }
 
-                render::draw_map_and_interface();
+                render::draw_map_state();
 
                 has_summoned_locusts = true;
 
@@ -1534,7 +1534,7 @@ Did_action Keziah_mason::on_act()
 
                     Mon* jenkin             = static_cast<Mon*>(actor);
 
-                    render::draw_map_and_interface();
+                    render::draw_map_state();
 
                     has_summoned_jenkin     = true;
                     jenkin->aware_counter_  = 999;
@@ -2034,7 +2034,7 @@ void Zombie::on_death()
                               nullptr,
                               Verbosity::silent);
 
-        render::draw_map_and_interface();
+        render::draw_map_state();
     }
 }
 
@@ -2121,7 +2121,7 @@ Did_action Major_clapham_lee::on_act()
                                   Make_mon_aware::yes,
                                   this);
 
-            render::draw_map_and_interface();
+            render::draw_map_state();
 
             has_summoned_tomb_legions = true;
 
@@ -2278,7 +2278,7 @@ void The_high_priest::on_death()
     map::put(new Rubble_low(stair_pos - P(1, 0)));
 
     map::player->update_fov();
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     const int NR_SNAKES = rnd::range(4, 5);
 
@@ -2307,7 +2307,7 @@ Did_action The_high_priest::on_act()
     if (!has_greeted_player_)
     {
         map::player->update_fov();
-        render::draw_map_and_interface();
+        render::draw_map_state();
 
         msg_log::add("A booming voice echoes through the halls.",
                      clr_white,

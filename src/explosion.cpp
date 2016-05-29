@@ -16,67 +16,10 @@
 namespace
 {
 
-void draw(const std::vector< std::vector<P> >& pos_lists,
-          bool blocked[MAP_W][MAP_H],
-          const Clr* const clr_override)
-{
-    render::draw_map_and_interface();
-
-    const Clr& clr_inner = clr_override ? *clr_override : clr_yellow;
-    const Clr& clr_outer = clr_override ? *clr_override : clr_red_lgt;
-
-    const bool IS_TILES     = config::is_tiles_mode();
-    const int NR_ANIM_STEPS = IS_TILES ? 2 : 1;
-
-    bool is_any_cell_seen_by_player = false;
-
-    for (int i_anim = 0; i_anim < NR_ANIM_STEPS; i_anim++)
-    {
-
-        const Tile_id tile = i_anim == 0 ? Tile_id::blast1 : Tile_id::blast2;
-
-        const int NR_OUTER = pos_lists.size();
-
-        for (int i_outer = 0; i_outer < NR_OUTER; i_outer++)
-        {
-            const Clr& clr = i_outer == NR_OUTER - 1 ? clr_outer : clr_inner;
-            const std::vector<P>& inner = pos_lists[i_outer];
-
-            for (const P& pos : inner)
-            {
-                if (map::cells[pos.x][pos.y].is_seen_by_player && !blocked[pos.x][pos.y])
-                {
-                    is_any_cell_seen_by_player = true;
-
-                    if (IS_TILES)
-                    {
-                        render::draw_tile(tile, Panel::map, pos, clr, clr_black);
-                    }
-                    else
-                    {
-                        render::draw_glyph('*', Panel::map, pos, clr, true, clr_black);
-                    }
-                }
-            }
-        }
-
-        if (is_any_cell_seen_by_player)
-        {
-            render::update_screen();
-            sdl_wrapper::sleep(config::delay_explosion() / NR_ANIM_STEPS);
-        }
-    }
-}
-
-R explosion_area(const P& c, const int RADI)
-{
-    return R(P(std::max(c.x - RADI, 1),         std::max(c.y - RADI, 1)),
-             P(std::min(c.x + RADI, MAP_W - 2), std::min(c.y + RADI, MAP_H - 2)));
-}
-
-void cells_reached(const R& area, const P& origin,
+void cells_reached(const R& area,
+                   const P& origin,
                    bool blocked[MAP_W][MAP_H],
-                   std::vector< std::vector<P> >& pos_list_ref)
+                   std::vector< std::vector<P> >& out)
 {
     std::vector<P> line;
 
@@ -104,10 +47,66 @@ void cells_reached(const R& area, const P& origin,
 
             if (is_reached)
             {
-                if (int(pos_list_ref.size()) <= DIST) {pos_list_ref.resize(DIST + 1);}
+                if ((int)out.size() <= DIST)
+                {
+                    out.resize(DIST + 1);
+                }
 
-                pos_list_ref[DIST].push_back(pos);
+                out[DIST].push_back(pos);
             }
+        }
+    }
+}
+
+void draw(const std::vector< std::vector<P> >& pos_lists,
+          bool blocked[MAP_W][MAP_H],
+          const Clr* const clr_override)
+{
+    render::draw_map_state();
+
+    const Clr& clr_inner = clr_override ? *clr_override : clr_yellow;
+    const Clr& clr_outer = clr_override ? *clr_override : clr_red_lgt;
+
+    const bool IS_TILES     = config::is_tiles_mode();
+    const int NR_ANIM_STEPS = IS_TILES ? 2 : 1;
+
+    bool is_any_cell_seen_by_player = false;
+
+    for (int i_anim = 0; i_anim < NR_ANIM_STEPS; i_anim++)
+    {
+        const Tile_id tile = i_anim == 0 ? Tile_id::blast1 : Tile_id::blast2;
+
+        const int NR_OUTER = pos_lists.size();
+
+        for (int i_outer = 0; i_outer < NR_OUTER; i_outer++)
+        {
+            const Clr& clr = i_outer == NR_OUTER - 1 ? clr_outer : clr_inner;
+            const std::vector<P>& inner = pos_lists[i_outer];
+
+            for (const P& pos : inner)
+            {
+                if (
+                    map::cells[pos.x][pos.y].is_seen_by_player &&
+                    !blocked[pos.x][pos.y])
+                {
+                    is_any_cell_seen_by_player = true;
+
+                    if (IS_TILES)
+                    {
+                        render::draw_tile(tile, Panel::map, pos, clr, clr_black);
+                    }
+                    else
+                    {
+                        render::draw_glyph('*', Panel::map, pos, clr, true, clr_black);
+                    }
+                }
+            }
+        }
+
+        if (is_any_cell_seen_by_player)
+        {
+            render::update_screen();
+            sdl_wrapper::sleep(config::delay_explosion() / NR_ANIM_STEPS);
         }
     }
 }
@@ -184,7 +183,7 @@ void run(const P& origin,
         }
     }
 
-    const bool IS_DEM_EXP = player_bon::traits[size_t(Trait::dem_expert)];
+    const bool IS_DEM_EXP = player_bon::traits[(size_t)Trait::dem_expert];
 
     const int NR_OUTER = pos_lists.size();
 
@@ -269,7 +268,9 @@ void run(const P& origin,
                     for (Actor* corpse : corpses_here)
                     {
                         Prop_handler& prop_hlr = corpse->prop_handler();
-                        Prop* prop_cpy = prop_hlr.mk_prop(prop->id(), Prop_turns::specific,
+
+                        Prop* prop_cpy = prop_hlr.mk_prop(prop->id(),
+                                                          Prop_turns::specific,
                                                           prop->nr_turns_left());
                         prop_hlr.try_add(prop_cpy);
                     }
@@ -282,7 +283,7 @@ void run(const P& origin,
 
     map::player->update_fov();
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     if (prop)
     {
@@ -290,9 +291,9 @@ void run(const P& origin,
     }
 }
 
-void run_smoke_explosion_at(const P& origin)
+void run_smoke_explosion_at(const P& origin, const int RADI_CHANGE)
 {
-    const int RADI = EXPLOSION_STD_RADI;
+    const int RADI = EXPLOSION_STD_RADI + RADI_CHANGE;
 
     const R area = explosion_area(origin, RADI);
 
@@ -326,8 +327,13 @@ void run_smoke_explosion_at(const P& origin)
 
     map::player->update_fov();
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
+}
+
+R explosion_area(const P& c, const int RADI)
+{
+    return R(P(std::max(c.x - RADI, 1),         std::max(c.y - RADI, 1)),
+             P(std::min(c.x + RADI, MAP_W - 2), std::min(c.y + RADI, MAP_H - 2)));
 }
 
 } //explosion
-

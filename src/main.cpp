@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
             }
 
             map::player->update_fov();
-            render::draw_map_and_interface();
+            render::draw_map_state();
 
             //========== M A I N   L O O P ==========
             while (!init::quit_to_main_menu)

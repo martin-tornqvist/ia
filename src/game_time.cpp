@@ -42,7 +42,7 @@ void run_std_turn_events()
 {
     if (is_magic_descend_nxt_std_turn)
     {
-        render::draw_map_and_interface();
+        render::draw_map_state();
 
         msg_log::add("I sink downwards!",
                      clr_white,

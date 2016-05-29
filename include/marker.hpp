@@ -5,8 +5,10 @@
 #include <climits>
 
 #include "rl_utils.hpp"
+#include "cmn.hpp"
 
 struct Key_data;
+struct Cell_overlay;
 
 enum class Marker_done              {no, yes};
 enum class Marker_use_player_tgt    {no, yes};
@@ -19,8 +21,10 @@ namespace marker
 {
 
 P run(const Marker_use_player_tgt use_tgt,
-      std::function<void(const P&)> on_marker_at_pos,
-      std::function<Marker_done(const P&, const Key_data&)> on_key_press,
+      std::function<void(const P&,
+                         Cell_overlay overlay[MAP_W][MAP_H])> on_marker_at_pos,
+      std::function<Marker_done(const P&,
+                                const Key_data&)> on_key_press,
       Marker_show_blocked show_blocked,
       const int EFFECTIVE_RANGE_LMT = INT_MAX);
 

@@ -20,7 +20,7 @@ void player_disarm()
     if (!map::player->prop_handler().allow_see())
     {
         msg_log::add("Not while blind.");
-        render::draw_map_and_interface();
+        render::draw_map_state();
         return;
     }
 
@@ -40,7 +40,7 @@ void player_disarm()
             if (web->is_holding())
             {
                 msg_log::add("Not while entangled in a spider web.");
-                render::draw_map_and_interface();
+                render::draw_map_state();
                 return;
             }
         }
@@ -50,12 +50,12 @@ void player_disarm()
     if (map::player->enc_percent() >= 100)
     {
         msg_log::add("Not while encumbered.");
-        render::draw_map_and_interface();
+        render::draw_map_state();
         return;
     }
 
     msg_log::add("Which direction?" + cancel_info_str, clr_white_high);
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     const Dir input_dir = query::dir(Allow_center::no);
 
@@ -63,7 +63,7 @@ void player_disarm()
     {
         //Invalid direction
         msg_log::clear();
-        render::draw_map_and_interface();
+        render::draw_map_state();
     }
     else //Valid direction
     {
@@ -73,7 +73,7 @@ void player_disarm()
         if (!map::cells[pos.x][pos.y].is_seen_by_player)
         {
             msg_log::add("I cannot see there.");
-            render::draw_map_and_interface();
+            render::draw_map_state();
             return;
         }
 
@@ -98,7 +98,7 @@ void player_disarm()
             map::cells[pos.x][pos.y].rigid->disarm();
         }
 
-        render::draw_map_and_interface();
+        render::draw_map_state();
     }
 }
 

@@ -539,13 +539,13 @@ void Potion_clairv::quaff_impl(Actor& actor)
             }
         }
 
-        render::draw_map_and_interface(false);
+        render::draw_map_state(Update_screen::no);
 
         map::player->update_fov();
 
         render::draw_blast_at_cells(anim_cells, clr_white);
 
-        render::draw_map_and_interface(true);
+        render::draw_map_state(Update_screen::yes);
     }
 
     identify(Verbosity::verbose);

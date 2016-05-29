@@ -485,7 +485,7 @@ void Ins_shadows::on_start_hook()
         static_cast<Mon*>(actor)->set_player_aware_of_me();
     }
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     map::cpy_render_array_to_visual_memory();
 

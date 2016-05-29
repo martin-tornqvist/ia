@@ -129,15 +129,15 @@ void Lit_dynamite::on_new_turn()
 
     if (nr_turns_left_ <= 0)
     {
-        const int D = player_bon::traits[size_t(Trait::dem_expert)] ? 1 : 0;
+        const int D = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
 
         const P p(pos_);
 
-        //Removing the dynamite before the explosion, so it won't be rendered after the
-        //explosion (could happen for example if there are "more" prompts).
+        //Removing the dynamite before the explosion, so it can't be rendered
+        //after the explosion (e.g. if there are "more" prompts).
         game_time::erase_mob(this, true);
 
-        //NOTE: The dynamite is now deleted. Do not use member variable after this point.
+        //NOTE: This object is now deleted! Do not use member variables!
 
         explosion::run(p,
                        Expl_type::expl,

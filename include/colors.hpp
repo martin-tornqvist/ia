@@ -70,10 +70,15 @@ const Clr clr_menu_drk          = clr_gray_drk;
 const Clr clr_title             = clr_brown_gray;
 
 //-----------------------------------------------------------------------------
-//Misc
+//Misc colors
 //-----------------------------------------------------------------------------
 const Clr clr_allied_mon        = clr_green;
 
-bool is_clr_eq(const Clr& clr1, const Clr& clr2);
+//-----------------------------------------------------------------------------
+//Utils
+//-----------------------------------------------------------------------------
+bool is_clr_equal(const Clr& clr1, const Clr& clr2);
+
+void div_clr(Clr& clr, const double DIV);
 
 #endif

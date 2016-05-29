@@ -83,7 +83,7 @@ void player_try_close_or_jam()
 
     msg_log::add("Which direction?" + cancel_info_str, clr_white_high);
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     const Dir input_dir = query::dir(Allow_center::no);
 
@@ -97,7 +97,7 @@ void player_try_close_or_jam()
         player_try_close_or_jam_feature(map::cells[p.x][p.y].rigid);
     }
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 }
 
 } //close

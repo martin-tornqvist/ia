@@ -36,15 +36,15 @@ int print_box_and_get_title_y_pos(const int TEXT_H_TOT, const int TEXT_W)
 
 void menu_msg_drawing_helper(const std::vector<std::string>& lines,
                              const std::vector<std::string>& choices,
-                             const bool DRAW_MAP_AND_INTERFACE,
+                             const bool draw_map_state,
                              const size_t cur_choice,
                              const int TEXT_X0,
                              const int TEXT_H_TOT,
                              const std::string& title)
 {
-    if (DRAW_MAP_AND_INTERFACE)
+    if (draw_map_state)
     {
-        render::draw_map_and_interface(false);
+        render::draw_map_state(Update_screen::no);
     }
 
     int text_width = TEXT_W_STD;
@@ -124,14 +124,14 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
 } //namespace
 
 void show_msg(const std::string& msg,
-              const bool DRAW_MAP_AND_INTERFACE,
+              const bool draw_map_state,
               const std::string& title,
               const Sfx_id sfx,
               const int W_CHANGE)
 {
-    if (DRAW_MAP_AND_INTERFACE)
+    if (draw_map_state)
     {
-        render::draw_map_and_interface(false);
+        render::draw_map_state(Update_screen::no);
     }
 
     const int TEXT_W = TEXT_W_STD + W_CHANGE;
@@ -196,14 +196,14 @@ void show_msg(const std::string& msg,
 
     query::wait_for_confirm();
 
-    if (DRAW_MAP_AND_INTERFACE)
+    if (draw_map_state)
     {
-        render::draw_map_and_interface();
+        render::draw_map_state();
     }
 }
 
 int show_menu_msg(const std::string& msg,
-                  const bool DRAW_MAP_AND_INTERFACE,
+                  const bool draw_map_state,
                   const std::vector<std::string>& choices,
                   const std::string& title,
                   const Sfx_id sfx)
@@ -229,7 +229,7 @@ int show_menu_msg(const std::string& msg,
 
     menu_msg_drawing_helper(lines,
                             choices,
-                            DRAW_MAP_AND_INTERFACE,
+                            draw_map_state,
                             browser.y(),
                             TEXT_X0_STD,
                             TEXT_H_TOT,
@@ -244,7 +244,7 @@ int show_menu_msg(const std::string& msg,
         case Menu_action::moved:
             menu_msg_drawing_helper(lines,
                                     choices,
-                                    DRAW_MAP_AND_INTERFACE,
+                                    draw_map_state,
                                     browser.y(),
                                     TEXT_X0_STD,
                                     TEXT_H_TOT,
@@ -253,18 +253,18 @@ int show_menu_msg(const std::string& msg,
 
         case Menu_action::esc:
         case Menu_action::space:
-            if (DRAW_MAP_AND_INTERFACE)
+            if (draw_map_state)
             {
-                render::draw_map_and_interface();
+                render::draw_map_state();
             }
 
             return NR_CHOICES - 1;
 
         case Menu_action::selected:
         case Menu_action::selected_shift:
-            if (DRAW_MAP_AND_INTERFACE)
+            if (draw_map_state)
             {
-                render::draw_map_and_interface();
+                render::draw_map_state();
             }
 
             return browser.y();

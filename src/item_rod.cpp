@@ -190,7 +190,7 @@ void Rod_purge_invis::activate_impl()
                 {
                     mon->is_sneaking_ = false;
 
-                    render::draw_map_and_interface();
+                    render::draw_map_state();
 
                     const std::string mon_name = mon->name_a();
 
@@ -269,7 +269,7 @@ void Rod_opening::activate_impl()
     if (is_any_opened)
     {
         map::player->update_fov();
-        render::draw_map_and_interface();
+        render::draw_map_state();
 
         identify(Verbosity::verbose);
     }

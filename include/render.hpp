@@ -20,6 +20,40 @@ enum class Panel
     log
 };
 
+struct Cell_render_data
+{
+    Cell_render_data() :
+        clr                             (clr_black),
+        clr_bg                          (clr_black),
+        tile                            (Tile_id::empty),
+        glyph                           (' '),
+        lifebar_length                  (-1),
+        is_light_fade_allowed           (true),
+        is_marked_lit                   (false),
+        is_living_actor_seen_here       (false),
+        is_aware_of_hostile_mon_here    (false),
+        is_aware_of_allied_mon_here     (false) {}
+
+    Clr     clr;
+    Clr     clr_bg;
+    Tile_id tile;
+    char    glyph;
+    int     lifebar_length;
+    bool    is_light_fade_allowed;
+    bool    is_marked_lit;
+    bool    is_living_actor_seen_here;
+    bool    is_aware_of_hostile_mon_here;
+    bool    is_aware_of_allied_mon_here;
+};
+
+struct Cell_overlay
+{
+    Cell_overlay() :
+        clr_bg(clr_black) {}
+
+    Clr clr_bg;
+};
+
 namespace render
 {
 
@@ -29,7 +63,9 @@ extern Cell_render_data render_array_no_actors[MAP_W][MAP_H];
 void init();
 void cleanup();
 
-void draw_map_and_interface(const bool SHOULD_UPDATE_SCREEN = true);
+//Draws the whole "map state" including character lines, log, etc
+void draw_map_state(const Update_screen update = Update_screen::yes,
+                    Cell_overlay overlay[MAP_W][MAP_H] = nullptr);
 
 void update_screen();
 
@@ -80,7 +116,8 @@ void draw_line_ver(const P& px_pos, const int H, const Clr& clr);
 void draw_marker(const P& p,
                  const std::vector<P>& trail,
                  const int EFFECTIVE_RANGE = -1,
-                 const int BLOCKED_FROM_IDX = -1);
+                 const int BLOCKED_FROM_IDX = -1,
+                 Cell_overlay overlay[MAP_W][MAP_H] = nullptr);
 
 void draw_blast_at_field(const P& center_pos,
                          const int RADIUS,
@@ -102,7 +139,7 @@ void draw_main_menu_logo(const int Y_POS);
 void draw_skull(const P& p);
 
 void draw_projectiles(std::vector<Projectile*>& projectiles,
-                      const bool SHOULD_DRAW_MAP_BEFORE);
+                      const bool DRAW_MAP_BEFORE);
 
 void draw_box(const R& area,
               const Panel panel = Panel::screen,
@@ -116,7 +153,7 @@ void draw_descr_box(const std::vector<Str_and_clr>& lines);
 void draw_info_scr_interface(const std::string& title,
                              const Inf_screen_type screen_type);
 
-void draw_map();
+void draw_map(Cell_overlay overlay[MAP_W][MAP_H] = nullptr);
 
 void on_toggle_fullscreen();
 

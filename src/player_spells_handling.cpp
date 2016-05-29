@@ -208,7 +208,7 @@ void try_cast(const Spell_opt& spell_opt)
         map::player->prop_handler().allow_speak(Verbosity::verbose))
     {
         msg_log::clear();
-        render::draw_map_and_interface();
+        render::draw_map_state();
 
         Spell* const spell = spell_opt.spell;
 
@@ -219,12 +219,12 @@ void try_cast(const Spell_opt& spell_opt)
             msg_log::add("Cast spell and risk depleting your spirit [y/n]?",
                          clr_white_high);
 
-            render::draw_map_and_interface();
+            render::draw_map_state();
 
             if (query::yes_or_no() == Yes_no_answer::no)
             {
                 msg_log::clear();
-                render::draw_map_and_interface();
+                render::draw_map_state();
                 return;
             }
 
@@ -241,7 +241,7 @@ void try_cast(const Spell_opt& spell_opt)
             if (map::player->hp() <= BLOOD_SORC_HP_DRAINED)
             {
                 msg_log::add("I do not have enough life force to cast this spell.");
-                render::draw_map_and_interface();
+                render::draw_map_state();
                 return;
             }
         }
@@ -316,7 +316,7 @@ void player_select_spell_to_cast()
     {
         Menu_browser browser(spell_opts.size());
 
-        render::draw_map_and_interface();
+        render::draw_map_state();
 
         draw(browser, spell_opts);
 
@@ -333,7 +333,7 @@ void player_select_spell_to_cast()
             case Menu_action::esc:
             case Menu_action::space:
                 msg_log::clear();
-                render::draw_map_and_interface();
+                render::draw_map_state();
                 return;
 
             case Menu_action::selected:

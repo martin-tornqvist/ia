@@ -428,7 +428,7 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
 
     line_calc::calc_new_line(caster->pos, tgt->pos, true, 999, false, line);
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     const size_t LINE_SIZE = line.size();
 
@@ -956,10 +956,10 @@ Spell_effect_noticed Spell_det_items::cast_impl(Actor* const caster) const
 
     if (!items_revealed_cells.empty())
     {
-        render::draw_map_and_interface();
+        render::draw_map_state();
         map::player->update_fov();
         render::draw_blast_at_cells(items_revealed_cells, clr_white);
-        render::draw_map_and_interface();
+        render::draw_map_state();
 
         if (items_revealed_cells.size() == 1)
         {
@@ -1004,10 +1004,10 @@ Spell_effect_noticed Spell_det_traps::cast_impl(Actor* const caster) const
 
     if (!traps_revealed_cells.empty())
     {
-        render::draw_map_and_interface();
+        render::draw_map_state();
         map::player->update_fov();
         render::draw_blast_at_cells(traps_revealed_cells, clr_white);
-        render::draw_map_and_interface();
+        render::draw_map_state();
 
         if (traps_revealed_cells.size() == 1)
         {
@@ -1084,7 +1084,7 @@ Spell_effect_noticed Spell_opening::cast_impl(Actor* const caster) const
     }
 
     map::player->update_fov();
-    render::draw_map_and_interface();
+    render::draw_map_state();
     return Spell_effect_noticed::yes;
 }
 

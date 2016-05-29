@@ -459,7 +459,7 @@ void Inventory::equip_backpack_item(const size_t BACKPACK_IDX, const Slot_id slo
     ASSERT(slot_id != Slot_id::END);
     ASSERT(owning_actor_);
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     move_from_backpack_to_slot(slot_id, BACKPACK_IDX);
 
@@ -511,7 +511,7 @@ Unequip_allowed Inventory::try_unequip_slot(const Slot_id id)
 
     ASSERT(item);
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     auto unequip_allowed_result = try_move_from_slot_to_backpack(slot.id);
 
@@ -572,7 +572,7 @@ void Inventory::swap_wielded_and_prepared(const Pass_time pass_time)
     slot1.item  = item2;
     slot2.item  = item1;
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     game_time::tick(pass_time);
 }
@@ -793,7 +793,7 @@ void Inventory::sort_backpack()
         {
             const Clr clr_cur_group = group[0]->interface_clr();
 
-            if (is_clr_eq(item->interface_clr(), clr_cur_group))
+            if (is_clr_equal(item->interface_clr(), clr_cur_group))
             {
                 group.push_back(item);
                 is_added_to_buffer = true;

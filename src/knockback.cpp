@@ -105,7 +105,7 @@ void try_knock_back(Actor& defender,
 
             if (i == KNOCK_RANGE - 1)
             {
-                render::draw_map_and_interface();
+                render::draw_map_state();
                 sdl_wrapper::sleep(config::delay_projectile_draw());
             }
 

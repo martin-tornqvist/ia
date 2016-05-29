@@ -1254,7 +1254,7 @@ void Prop_handler::try_add(Prop* const prop,
             prop->owning_actor_->update_clr();
             game_time::update_light_map();
             map::player->update_fov();
-            render::draw_map_and_interface();
+            render::draw_map_state();
         }
 
         //Start message
@@ -1402,7 +1402,7 @@ void Prop_handler::on_prop_end(Prop* const prop)
         prop->owning_actor_->update_clr();
         game_time::update_light_map();
         map::player->update_fov();
-        render::draw_map_and_interface();
+        render::draw_map_state();
     }
 
     //Print end message if this is the last active property of this type

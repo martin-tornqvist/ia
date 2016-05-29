@@ -5,6 +5,7 @@
 
 #include "colors.hpp"
 #include "audio.hpp"
+#include "cmn.hpp"
 
 class Prop;
 
@@ -40,8 +41,10 @@ void run(
     Prop* const prop = nullptr,
     const Clr* const clr_override = nullptr);
 
-void run_smoke_explosion_at(const P& origin);
+void run_smoke_explosion_at(const P& origin, const int RADI_CHANGE = 0);
 
-} //Explosion
+R explosion_area(const P& c, const int RADI);
+
+} //explosion
 
 #endif

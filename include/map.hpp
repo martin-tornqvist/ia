@@ -9,8 +9,8 @@
 #include "config.hpp"
 #include "actor_player.hpp"
 #include "fov.hpp"
+#include "render.hpp"
 
-class Save_handler;
 class Rigid;
 class Mob;
 

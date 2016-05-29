@@ -41,7 +41,7 @@ void player_gain_lvl()
 
         create_character::pick_new_trait();
 
-        render::draw_map_and_interface();
+        render::draw_map_state();
 
         map::player->change_max_hp(HP_PER_LVL);
         map::player->restore_hp(999, false, Verbosity::silent);

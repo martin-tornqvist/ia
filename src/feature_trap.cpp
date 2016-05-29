@@ -193,7 +193,7 @@ void Trap::trigger_start(const Actor* actor)
     if (actor == map::player)
     {
         map::player->update_fov();
-        render::draw_map_and_interface();
+        render::draw_map_state();
     }
 
     if (is_magical())
@@ -286,7 +286,7 @@ void Trap::bump(Actor& actor_bumping)
             {
                 map::player->update_fov();
 
-                render::draw_map_and_interface();
+                render::draw_map_state();
 
                 msg_log::add("I avoid a " + trap_name + ".", clr_msg_good, false,
                              More_prompt_on_msg::yes);
@@ -343,7 +343,7 @@ void Trap::disarm()
     if (is_hidden())
     {
         msg_log::add(msg_disarm_no_trap);
-        render::draw_map_and_interface();
+        render::draw_map_state();
         return;
     }
 
@@ -399,7 +399,7 @@ void Trap::disarm()
     {
         msg_log::add(trap_impl_->disarm_fail_msg());
 
-        render::draw_map_and_interface();
+        render::draw_map_state();
 
         const int TRIGGER_ONE_IN_N = IS_BLESSED ? 9 : IS_CURSED ? 2 : 6;
 
@@ -464,7 +464,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES)
 
     if (map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
-        render::draw_map_and_interface();
+        render::draw_map_state();
 
         if (PRINT_MESSSAGE_WHEN_PLAYER_SEES)
         {
@@ -1047,7 +1047,7 @@ void Trap_summon_mon::trigger()
         {
             mon->set_player_aware_of_me();
 
-            render::draw_map_and_interface();
+            render::draw_map_state();
 
             msg_log::add(mon->name_a() + " appears!");
         }

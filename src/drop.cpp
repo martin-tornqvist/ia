@@ -89,7 +89,7 @@ void try_drop_item_from_inv(Actor& actor,
         if (&actor == map::player)
         {
             msg_log::clear();
-            render::draw_map_and_interface();
+            render::draw_map_state();
             msg_log::add("I drop " + item_ref + ".", clr_white, false, More_prompt_on_msg::yes);
         }
         else //Monster is dropping item

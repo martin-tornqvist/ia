@@ -147,7 +147,7 @@ void Event_wall_crumble::on_new_turn()
             }
 
             map::player->update_fov();
-            render::draw_map_and_interface();
+            render::draw_map_state();
 
             map::player->incr_shock(Shock_lvl::heavy, Shock_src::see_mon);
         }
@@ -341,7 +341,7 @@ void Event_snake_emerge::on_new_turn()
         static_cast<Mon*>(actor)->become_aware_player(false);
     }
 
-    render::draw_map_and_interface(true);
+    render::draw_map_state(Update_screen::yes);
 
     game_time::erase_mob(this, true);
 }
@@ -358,7 +358,7 @@ void Event_rats_in_the_walls_discovery::on_new_turn()
     if (map::player->pos == pos_ || map::player->pos.x > pos_.x)
     {
         map::player->update_fov();
-        render::draw_map_and_interface();
+        render::draw_map_state();
 
         const std::string str =
             "Before me lies a twilit grotto of enormous height. An insane tangle of human "

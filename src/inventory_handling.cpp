@@ -62,7 +62,7 @@ bool run_drop_query(const Inv_type inv_type, const size_t IDX)
     {
         TRACE << "Item is stackable and more than one" << std::endl;
 
-        render::draw_map_and_interface(false);
+        render::draw_map_state(Update_screen::no);
 
         const std::string nr_str    = "1-" + to_str(item->nr_items_);
         const std::string drop_str  = "Drop how many (" + nr_str + ")?:";
@@ -224,7 +224,7 @@ void run_inv_screen()
     TRACE_FUNC_BEGIN_VERBOSE;
 
     scr_to_open_on_new_turn = Inv_scr::none;
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     Inventory& inv = map::player->inv();
 
@@ -308,7 +308,7 @@ void run_inv_screen()
                         scr_to_open_on_new_turn         = Inv_scr::inv;
                         browser_idx_to_set_on_new_turn  = browser.y();
 
-                        render::draw_map_and_interface();
+                        render::draw_map_state();
 
                         TRACE_FUNC_END_VERBOSE;
                         return;
@@ -325,7 +325,7 @@ void run_inv_screen()
 
                 activate(BROWSER_Y);
 
-                render::draw_map_and_interface();
+                render::draw_map_state();
 
                 TRACE_FUNC_END_VERBOSE;
                 return;
@@ -355,7 +355,7 @@ void run_inv_screen()
 
         case Menu_action::esc:
         case Menu_action::space:
-            render::draw_map_and_interface();
+            render::draw_map_state();
 
             TRACE_FUNC_END_VERBOSE;
             return;
@@ -370,7 +370,7 @@ void run_apply_screen()
     TRACE_FUNC_BEGIN_VERBOSE;
 
     scr_to_open_on_new_turn = Inv_scr::none;
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     Inventory& inv = map::player->inv();
 
@@ -406,7 +406,7 @@ void run_apply_screen()
 
                 activate(IDX);
 
-                render::draw_map_and_interface();
+                render::draw_map_state();
 
                 TRACE_FUNC_END_VERBOSE;
                 return;
@@ -435,7 +435,7 @@ void run_apply_screen()
 
         case Menu_action::esc:
         case Menu_action::space:
-            render::draw_map_and_interface();
+            render::draw_map_state();
 
             TRACE_FUNC_END_VERBOSE;
             return;
@@ -451,7 +451,7 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
 
     scr_to_open_on_new_turn          = Inv_scr::none;
     equip_slot_to_open_on_new_turn   = &slot_to_equip;
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     auto& inv = map::player->inv();
 
@@ -484,7 +484,7 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
                 const int       BROWSER_Y = browser.y();
                 const size_t    IDX       = backpack_indexes_to_show_[BROWSER_Y];
 
-                render::draw_map_and_interface();
+                render::draw_map_state();
 
                 inv.equip_backpack_item(IDX, slot_to_equip.id); //Calls the items equip hook
 

@@ -170,7 +170,7 @@ void go_to_nxt()
     game_time::update_light_map();
     map::player->update_fov();
     map::player->update_clr();
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     if (map_data.is_main_dungeon == Is_main_dungeon::yes && map::dlvl == DLVL_LAST - 1)
     {

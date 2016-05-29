@@ -46,7 +46,10 @@ void try_move(const Dir dir)
 {
     const P new_pos(pos_ + dir_utils::offset(dir));
 
-    if (map::is_pos_inside_map(new_pos)) {pos_ = new_pos;}
+    if (map::is_pos_inside_map(new_pos))
+    {
+        pos_ = new_pos;
+    }
 }
 
 bool set_pos_to_tgt_if_visible()
@@ -77,8 +80,10 @@ bool set_pos_to_tgt_if_visible()
 } //namespace
 
 P run(const Marker_use_player_tgt use_tgt,
-      std::function<void(const P&)> on_marker_at_pos,
-      std::function<Marker_done(const P&, const Key_data&)> on_key_press,
+      std::function<void(const P&,
+                         Cell_overlay overlay[MAP_W][MAP_H])> on_marker_at_pos,
+      std::function<Marker_done(const P&,
+                                const Key_data&)> on_key_press,
       Marker_show_blocked show_blocked,
       const int EFFECTIVE_RANGE_LMT)
 {
@@ -86,11 +91,11 @@ P run(const Marker_use_player_tgt use_tgt,
 
     if (use_tgt == Marker_use_player_tgt::yes)
     {
-        //First, attempt to place marker at target.
+        //First, attempt to place marker at player target.
         if (!set_pos_to_tgt_if_visible())
         {
-            //If no target available, attempt to place marker at closest visible monster.
-            //This sets a new target if successful.
+            //If no target available, attempt to place marker at closest
+            //visible monster. This sets a new player target if successful.
             map::player->tgt_ = nullptr;
             set_pos_to_closest_enemy_if_visible();
         }
@@ -98,12 +103,14 @@ P run(const Marker_use_player_tgt use_tgt,
 
     Marker_done is_done = Marker_done::no;
 
+    Cell_overlay overlay[MAP_W][MAP_H];
+
     while (is_done == Marker_done::no)
     {
         //Print info such as name of actor at current position, etc.
-        on_marker_at_pos(pos_);
+        on_marker_at_pos(pos_, overlay);
 
-        render::draw_map_and_interface(false);
+        render::draw_map_state(Update_screen::no, overlay);
 
         std::vector<P> trail;
 
@@ -134,13 +141,17 @@ P run(const Marker_use_player_tgt use_tgt,
             }
         }
 
-        render::draw_marker(pos_, trail, EFFECTIVE_RANGE_LMT, blocked_from_idx);
+        render::draw_marker(pos_,
+                            trail,
+                            EFFECTIVE_RANGE_LMT,
+                            blocked_from_idx,
+                            overlay);
 
         render::update_screen();
 
         const Key_data& d = input::input();
 
-        if (d.sdl_key == SDLK_RIGHT    || d.key == '6' || d.key == 'l')
+        if (d.sdl_key == SDLK_RIGHT || d.key == '6' || d.key == 'l')
         {
             if (d.is_shift_held)
             {
@@ -158,13 +169,13 @@ P run(const Marker_use_player_tgt use_tgt,
             continue;
         }
 
-        if (d.sdl_key == SDLK_UP       || d.key == '8' || d.key == 'k')
+        if (d.sdl_key == SDLK_UP || d.key == '8' || d.key == 'k')
         {
             try_move(Dir::up);
             continue;
         }
 
-        if (d.sdl_key == SDLK_LEFT     || d.key == '4' || d.key == 'h')
+        if (d.sdl_key == SDLK_LEFT || d.key == '4' || d.key == 'h')
         {
             if (d.is_shift_held)
             {
@@ -174,30 +185,33 @@ P run(const Marker_use_player_tgt use_tgt,
             {
                 try_move(Dir::down_left);
             }
-            else {try_move(Dir::left);}
+            else
+            {
+                try_move(Dir::left);
+            }
 
             continue;
         }
 
-        if (d.sdl_key == SDLK_DOWN     || d.key == '2' || d.key == 'j')
+        if (d.sdl_key == SDLK_DOWN || d.key == '2' || d.key == 'j')
         {
             try_move(Dir::down);
             continue;
         }
 
-        if (d.sdl_key == SDLK_PAGEUP   || d.key == '9' || d.key == 'u')
+        if (d.sdl_key == SDLK_PAGEUP || d.key == '9' || d.key == 'u')
         {
             try_move(Dir::up_right);
             continue;
         }
 
-        if (d.sdl_key == SDLK_HOME     || d.key == '7' || d.key == 'y')
+        if (d.sdl_key == SDLK_HOME || d.key == '7' || d.key == 'y')
         {
             try_move(Dir::up_left);
             continue;
         }
 
-        if (d.sdl_key == SDLK_END      || d.key == '1' || d.key == 'b')
+        if (d.sdl_key == SDLK_END || d.key == '1' || d.key == 'b')
         {
             try_move(Dir::down_left);
             continue;
@@ -214,7 +228,7 @@ P run(const Marker_use_player_tgt use_tgt,
 
         if (is_done == Marker_done::yes)
         {
-            render::draw_map_and_interface();
+            render::draw_map_state();
         }
     }
 

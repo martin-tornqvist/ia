@@ -67,7 +67,7 @@ void output_reloaded(const Actor& actor,
                          to_str(wpn.data().ranged.max_ammo) + ").");
         }
 
-        render::draw_map_and_interface();
+        render::draw_map_state();
     }
     else //Is monster
     {

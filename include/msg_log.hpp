@@ -52,17 +52,17 @@ namespace msg_log
 
 void init();
 
-void add(const std::string&         str,
-         const Clr&                 clr                         = clr_white,
-         const bool                 INTERRUPT_PLAYER_ACTIONS    = false,
-         const More_prompt_on_msg   add_more_prompt_on_msg      = More_prompt_on_msg::no);
+void add(const std::string& str,
+         const Clr& clr = clr_white,
+         const bool INTERRUPT_PLAYER_ACTIONS = false,
+         const More_prompt_on_msg add_more_prompt_on_msg = More_prompt_on_msg::no);
 
 //NOTE: This function can safely be called at any time. If there is content in the log,
 //a "more" prompt will be done, and the log is cleared. If the log happens to be empty,
 //nothing is done.
 void more_prompt();
 
-void draw(const bool SHOULD_UPDATE_SCREEN);
+void draw(const Update_screen update);
 
 void display_history();
 

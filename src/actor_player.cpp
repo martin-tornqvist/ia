@@ -447,7 +447,7 @@ void Player::on_hit(int& dmg,
         }
     }
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 }
 
 int Player::enc_percent() const
@@ -587,7 +587,7 @@ void Player::incr_insanity()
     restore_shock(70, false);
 
     update_clr();
-    render::draw_map_and_interface();
+    render::draw_map_state();
 }
 
 bool Player::is_standing_in_open_place() const
@@ -699,14 +699,14 @@ void Player::act()
            !prop_handler_->has_prop(Prop_id::infected));
 #endif // NDEBUG
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     if (!is_alive())
     {
         return;
     }
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     map::cpy_render_array_to_visual_memory();
 
@@ -1056,7 +1056,7 @@ void Player::on_std_turn()
 
                 incr_shock(Shock_lvl::heavy, Shock_src::misc);
 
-                render::draw_map_and_interface();
+                render::draw_map_state();
             }
             else //No randomized shock spike
             {
@@ -1075,7 +1075,7 @@ void Player::on_std_turn()
 
         if (nr_turns_until_ins_ > 0)
         {
-            render::draw_map_and_interface(true);
+            render::draw_map_state(Update_screen::yes);
 
             msg_log::add("I feel my sanity slipping...",
                          clr_msg_note,
@@ -1147,7 +1147,7 @@ void Player::on_std_turn()
 
                         mon.set_player_aware_of_me();
 
-                        render::draw_map_and_interface();
+                        render::draw_map_state();
 
                         const std::string mon_name = mon.name_a();
 
@@ -1276,7 +1276,7 @@ void Player::interrupt_actions()
     if (wait_turns_left > 0 && prop_handler_->allow_act())
     {
         msg_log::add("I stop waiting.", clr_white);
-        render::draw_map_and_interface();
+        render::draw_map_state();
     }
 
     wait_turns_left = -1;
@@ -1401,12 +1401,12 @@ void Player::move(Dir dir)
                             msg_log::add("Attack " + mon_name + " with " + wpn_name + "? [y/n]",
                                          clr_white_high);
 
-                            render::draw_map_and_interface();
+                            render::draw_map_state();
 
                             if (query::yes_or_no() == Yes_no_answer::no)
                             {
                                 msg_log::clear();
-                                render::draw_map_and_interface();
+                                render::draw_map_state();
 
                                 return;
                             }
@@ -1436,7 +1436,7 @@ void Player::move(Dir dir)
 
                     mon->set_player_aware_of_me();
 
-                    render::draw_map_and_interface();
+                    render::draw_map_state();
 
                     const Actor_data_t& d = mon->data();
 
@@ -1476,7 +1476,7 @@ void Player::move(Dir dir)
             if (ENC >= ENC_IMMOBILE_LVL)
             {
                 msg_log::add("I am too encumbered to move!");
-                render::draw_map_and_interface();
+                render::draw_map_state();
                 return;
             }
             else if (ENC >= 100 || nr_wounds >= MIN_NR_WOUNDS_FOR_STAGGER)

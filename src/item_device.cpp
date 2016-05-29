@@ -264,7 +264,7 @@ Consume_item Device_shockwave::trigger_effect()
 
             //game_time::update_light_map();
             map::player->update_fov();
-            render::draw_map_and_interface();
+            render::draw_map_state();
         }
     }
 
@@ -427,7 +427,7 @@ void Device_lantern::toggle()
 
     map::player->update_fov();
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 }
 
 void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
@@ -455,7 +455,7 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
 
             game_time::update_light_map();
             map::player->update_fov();
-            render::draw_map_and_interface();
+            render::draw_map_state();
 
             return;
         }
@@ -473,7 +473,7 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
 
                 game_time::update_light_map();
                 map::player->update_fov();
-                render::draw_map_and_interface();
+                render::draw_map_state();
             }
         }
         else //Not flickering
@@ -486,7 +486,7 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
 
                 game_time::update_light_map();
                 map::player->update_fov();
-                render::draw_map_and_interface();
+                render::draw_map_state();
             }
             else //Not flickering
             {

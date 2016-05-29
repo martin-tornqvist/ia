@@ -17,9 +17,9 @@ namespace msg_log
 namespace
 {
 
-std::vector<Msg>           lines_[2];
+std::vector<Msg>                lines_[2];
 std::vector< std::vector<Msg> > history_;
-const std::string          more_str = "-More-";
+const std::string               more_str = "-More-";
 
 int x_after_msg(const Msg* const msg)
 {
@@ -79,7 +79,7 @@ void clear()
     }
 }
 
-void draw(const bool SHOULD_UPDATE_SCREEN)
+void draw(const Update_screen update)
 {
     const int NR_LINES_WITH_CONTENT = lines_[0].empty() ? 0 :
                                       lines_[1].empty() ? 1 : 2;
@@ -96,7 +96,7 @@ void draw(const bool SHOULD_UPDATE_SCREEN)
         }
     }
 
-    if (SHOULD_UPDATE_SCREEN)
+    if (update == Update_screen::yes)
     {
         render::update_screen();
     }
@@ -240,9 +240,9 @@ void more_prompt()
         return;
     }
 
-    render::draw_map_and_interface(false);
+    render::draw_map_state(Update_screen::no);
 
-    draw(false);
+    draw(Update_screen::no);
 
     int x_pos    = 0;
     int line_nr = lines_[1].empty() ? 0 : 1;
@@ -342,7 +342,7 @@ void display_history()
         btm_nr = std::min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
     }
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 }
 
 void add_line_to_history(const std::string& line_to_add)

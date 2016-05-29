@@ -1300,7 +1300,7 @@ void projectile_fire(Actor* const attacker, const P& origin, const P& aim_pos, W
         delete projectile;
     }
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 }
 
 void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
@@ -1379,7 +1379,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
                 {
                     if (map::cells[cur_pos.x][cur_pos.y].is_seen_by_player)
                     {
-                        render::draw_map_and_interface(false);
+                        render::draw_map_state(Update_screen::no);
                         render::cover_cell_in_map(cur_pos);
 
                         if (config::is_tiles_mode())
@@ -1404,7 +1404,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
 
                     ++nr_actors_hit;
 
-                    render::draw_map_and_interface();
+                    render::draw_map_state();
 
                     //Special shotgun behavior:
                     //If current defender was killed, and player aimed at humanoid level
@@ -1441,7 +1441,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
 
             if (cell.is_seen_by_player)
             {
-                render::draw_map_and_interface(false);
+                render::draw_map_state(Update_screen::no);
                 render::cover_cell_in_map(cur_pos);
 
                 if (config::is_tiles_mode())
@@ -1455,7 +1455,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
 
                 render::update_screen();
                 sdl_wrapper::sleep(config::delay_shotgun());
-                render::draw_map_and_interface();
+                render::draw_map_state();
             }
 
             cell.rigid->hit(Dmg_type::physical, Dmg_method::shotgun, nullptr);
@@ -1472,7 +1472,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
 
             if (map::cells[cur_pos.x][cur_pos.y].is_seen_by_player)
             {
-                render::draw_map_and_interface(false);
+                render::draw_map_state(Update_screen::no);
                 render::cover_cell_in_map(cur_pos);
 
                 if (config::is_tiles_mode())
@@ -1486,7 +1486,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
 
                 render::update_screen();
                 sdl_wrapper::sleep(config::delay_shotgun());
-                render::draw_map_and_interface();
+                render::draw_map_state();
             }
 
             break;
@@ -1767,7 +1767,7 @@ bool ranged(Actor* const attacker,
         }
     }
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     if (did_attack)
     {

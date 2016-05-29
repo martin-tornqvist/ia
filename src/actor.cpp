@@ -340,7 +340,7 @@ void Actor::teleport()
     if (is_player())
     {
         map::player->update_fov();
-        render::draw_map_and_interface();
+        render::draw_map_state();
         map::cpy_render_array_to_visual_memory();
 
         //Teleport control?
@@ -356,8 +356,11 @@ void Actor::teleport()
                 return constr_in_range(25, 100 - DIST, 95);
             };
 
-            auto on_marker_at_pos = [chance_of_tele_success](const P & p)
+            auto on_marker_at_pos =
+                [chance_of_tele_success](const P & p, Cell_overlay overlay[MAP_W][MAP_H])
             {
+                (void)overlay;
+
                 msg_log::clear();
                 look::print_location_info_msgs(p);
 
@@ -431,7 +434,7 @@ void Actor::teleport()
         static_cast<Mon*>(actor)->set_player_aware_of_me();
     }
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     map::cpy_render_array_to_visual_memory();
 
@@ -511,7 +514,7 @@ bool Actor::restore_hp(const int HP_RESTORED,
             }
         }
 
-        render::draw_map_and_interface();
+        render::draw_map_state();
     }
 
     return is_hp_gained;
@@ -553,7 +556,7 @@ bool Actor::restore_spi(const int SPI_RESTORED, const bool IS_ALLOWED_ABOVE_MAX,
             }
         }
 
-        render::draw_map_and_interface();
+        render::draw_map_state();
     }
 
     return is_spi_gained;
@@ -959,7 +962,7 @@ void Actor::die(const bool IS_DESTROYED,
         static_cast<Mon*>(this)->leader_ = nullptr;
     }
 
-    render::draw_map_and_interface();
+    render::draw_map_state();
 
     TRACE_FUNC_END_VERBOSE;
 }

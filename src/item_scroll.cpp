@@ -49,7 +49,7 @@ Consume_item Scroll::activate(Actor* const actor)
         prop_handler.allow_read(Verbosity::verbose)         &&
         prop_handler.allow_speak(Verbosity::verbose))
     {
-        render::draw_map_and_interface();
+        render::draw_map_state();
 
         if (!map::player->prop_handler().allow_see())
         {
@@ -124,7 +124,7 @@ void Scroll::identify(const Verbosity verbosity)
 
             msg_log::add("I have identified " + name_after + ".");
 
-            render::draw_map_and_interface();
+            render::draw_map_state();
 
             dungeon_master::add_history_event("Identified " + name_after + ".");
         }

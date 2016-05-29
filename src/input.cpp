@@ -31,6 +31,7 @@
 #include "look.hpp"
 #include "attack.hpp"
 #include "throwing.hpp"
+#include "explosion.hpp"
 
 namespace input
 {
@@ -277,7 +278,7 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive())
         {
             kick::player_kick();
-            render::draw_map_and_interface();
+            render::draw_map_state();
         }
 
         clear_events();
@@ -357,7 +358,7 @@ void handle_map_mode_key_press(const Key_data& d)
                         msg_log::add("The " + wpn_name + " draws power from my essence!",
                                      clr_msg_bad);
 
-                        render::draw_map_and_interface();
+                        render::draw_map_state();
                         ++wpn->nr_ammo_loaded_;
                         map::player->hit(1, Dmg_type::pure);
                         return;
@@ -365,8 +366,11 @@ void handle_map_mode_key_press(const Key_data& d)
 
                     if (wpn->nr_ammo_loaded_ >= 1 || item_data.ranged.has_infinite_ammo)
                     {
-                        auto on_marker_at_pos = [&](const P & p)
+                        auto on_marker_at_pos =
+                            [&](const P & p, Cell_overlay overlay[MAP_W][MAP_H])
                         {
+                            (void)overlay;
+
                             msg_log::clear();
                             look::print_location_info_msgs(p);
 
@@ -401,7 +405,7 @@ void handle_map_mode_key_press(const Key_data& d)
                                 if (p != map::player->pos)
                                 {
                                     msg_log::clear();
-                                    render::draw_map_and_interface();
+                                    render::draw_map_state();
 
                                     Actor* const actor = map::actor_at_pos(p);
 
@@ -587,7 +591,7 @@ void handle_map_mode_key_press(const Key_data& d)
             else
             {
                 msg_log::add(msg_mon_prevent_cmd);
-                render::draw_map_and_interface();
+                render::draw_map_state();
             }
         }
 
@@ -609,13 +613,13 @@ void handle_map_mode_key_press(const Key_data& d)
             {
                 //Monster is seen, prevent quick move
                 msg_log::add(msg_mon_prevent_cmd);
-                render::draw_map_and_interface();
+                render::draw_map_state();
             }
             else if (!map::player->prop_handler().allow_see())
             {
                 //Player is blinded
                 msg_log::add("Not while blind.");
-                render::draw_map_and_interface();
+                render::draw_map_state();
             }
             else //Can see
             {
@@ -623,18 +627,18 @@ void handle_map_mode_key_press(const Key_data& d)
                 {
                     //Player is poisoned
                     msg_log::add("Not while poisoned.");
-                    render::draw_map_and_interface();
+                    render::draw_map_state();
                 }
                 else if (map::player->has_prop(Prop_id::confused))
                 {
                     //Player is confused
                     msg_log::add("Not while confused.");
-                    render::draw_map_and_interface();
+                    render::draw_map_state();
                 }
                 else
                 {
                     msg_log::add("Which direction?" + cancel_info_str);
-                    render::draw_map_and_interface();
+                    render::draw_map_state();
 
                     const Dir input_dir = query::dir(Allow_center::no);
 
@@ -682,12 +686,47 @@ void handle_map_mode_key_press(const Key_data& d)
 
         if (map::player->is_alive())
         {
-            if (map::player->active_explosive)
+            const Item* explosive = map::player->active_explosive;
+
+            if (explosive)
             {
-                auto on_marker_at_pos = [](const P & p)
+                auto on_marker_at_pos =
+                    [&](const P & p, Cell_overlay overlay[MAP_W][MAP_H])
                 {
+                    const Item_id id = explosive->id();
+
+                    if (
+                        id == Item_id::dynamite ||
+                        id == Item_id::molotov  ||
+                        id == Item_id::smoke_grenade)
+                    {
+                        std::fill_n(*overlay, NR_MAP_CELLS, Cell_overlay());
+
+                        const int D     = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
+                        const int RADI  = EXPLOSION_STD_RADI + D;
+
+                        const R expl_area = explosion::explosion_area(p, RADI);
+
+                        Clr clr_bg = clr_orange;
+
+                        div_clr(clr_bg, 4.0);
+
+                        for (int x = expl_area.p0.x; x <= expl_area.p1.x; ++x)
+                        {
+                            for (int y = expl_area.p0.y; y <= expl_area.p1.y; ++y)
+                            {
+                                if (map::cells[x][y].is_explored)
+                                {
+                                    overlay[x][y].clr_bg = clr_bg;
+                                }
+                            }
+                        }
+                    }
+
                     msg_log::clear();
+
                     look::print_location_info_msgs(p);
+
                     msg_log::add("[t] to throw." + cancel_info_str);
                 };
 
@@ -696,7 +735,7 @@ void handle_map_mode_key_press(const Key_data& d)
                     if (d_.sdl_key == SDLK_RETURN || d_.key == 't')
                     {
                         msg_log::clear();
-                        render::draw_map_and_interface();
+                        render::draw_map_state();
                         throwing::player_throw_lit_explosive(p);
                         return Marker_done::yes;
                     }
@@ -728,9 +767,13 @@ void handle_map_mode_key_press(const Key_data& d)
 
                         item_to_throw->clear_actor_carrying();
 
-                        auto on_marker_at_pos = [&](const P & p)
+                        auto on_marker_at_pos =
+                            [&](const P & p, Cell_overlay overlay[MAP_W][MAP_H])
                         {
+                            (void)overlay;
+
                             msg_log::clear();
+
                             look::print_location_info_msgs(p);
 
                             auto* const actor = map::actor_at_pos(p);
@@ -768,7 +811,7 @@ void handle_map_mode_key_press(const Key_data& d)
                                 else //Not aiming at player position
                                 {
                                     msg_log::clear();
-                                    render::draw_map_and_interface();
+                                    render::draw_map_state();
 
                                     Actor* const actor = map::actor_at_pos(p);
 
@@ -822,8 +865,11 @@ void handle_map_mode_key_press(const Key_data& d)
         {
             if (map::player->prop_handler().allow_see())
             {
-                auto on_marker_at_pos = [&](const P & p)
+                auto on_marker_at_pos =
+                    [&](const P & p, Cell_overlay overlay[MAP_W][MAP_H])
                 {
+                    (void)overlay;
+
                     msg_log::clear();
                     look::print_location_info_msgs(p);
 
@@ -854,10 +900,6 @@ void handle_map_mode_key_press(const Key_data& d)
                             msg_log::clear();
 
                             look::print_detailed_actor_descr(*actor);
-
-                            render::draw_map_and_interface();
-
-                            on_marker_at_pos(p);
                         }
                     }
                     else if (d_.sdl_key == SDLK_SPACE || d_.sdl_key == SDLK_ESCAPE)
@@ -971,13 +1013,13 @@ void handle_map_mode_key_press(const Key_data& d)
             {
                 //---------------------------- Options
                 config::run_options_menu();
-                render::draw_map_and_interface();
+                render::draw_map_state();
             }
             else if (CHOICE == 1)
             {
                 //---------------------------- Manual
                 manual::run();
-                render::draw_map_and_interface();
+                render::draw_map_state();
             }
             else if (CHOICE == 2)
             {
@@ -1066,7 +1108,7 @@ void handle_map_mode_key_press(const Key_data& d)
         }
 
         map::player->update_fov();
-        render::draw_map_and_interface();
+        render::draw_map_state();
 
         clear_events();
     }
