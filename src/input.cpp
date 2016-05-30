@@ -707,15 +707,21 @@ void handle_map_mode_key_press(const Key_data& d)
 
                         const R expl_area = explosion::explosion_area(p, RADI);
 
-                        Clr clr_bg = clr_orange;
+                        Clr clr_bg = clr_red;
 
-                        div_clr(clr_bg, 4.0);
+                        div_clr(clr_bg, 2.0);
 
+                        //Add explosion radius area overlay
                         for (int x = expl_area.p0.x; x <= expl_area.p1.x; ++x)
                         {
                             for (int y = expl_area.p0.y; y <= expl_area.p1.y; ++y)
                             {
-                                if (map::cells[x][y].is_explored)
+                                Cell& cell = map::cells[x][y];
+
+                                //Add overlay in this cell if explored OR seen
+                                //NOTE: Cells can be seen without being
+                                //explored when standing in dark areas.
+                                if (cell.is_explored || cell.is_seen_by_player)
                                 {
                                     overlay[x][y].clr_bg = clr_bg;
                                 }
