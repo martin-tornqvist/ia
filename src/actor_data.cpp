@@ -1642,10 +1642,10 @@ void init_data_list()
     data[size_t(d.id)] = d;
     d.reset();
 
-    d.name_a = "A Fungi from Yuggoth";
-    d.name_the = "The Fungi from Yuggoth";
-    d.corpse_name_a = "A dead Fungi from Yuggoth";
-    d.corpse_name_the = "The dead Fungi from Yuggoth";
+    d.name_a = "A Fungus from Yuggoth";
+    d.name_the = "The Fungus from Yuggoth";
+    d.corpse_name_a = "A dead Fungus from Yuggoth";
+    d.corpse_name_the = "The dead Fungus from Yuggoth";
     d.id = Actor_id::mi_go;
     d.ai[size_t(Ai_id::looks)] = true;
     d.ai[size_t(Ai_id::makes_room_for_friend)] = true;
@@ -1705,8 +1705,8 @@ void init_data_list()
 
     d.name_a = "A Mi-go Commander";
     d.name_the = "The Mi-go Commander";
-    d.corpse_name_a = "A dead Fungi from Yuggoth";
-    d.corpse_name_the = "The dead Fungi from Yuggoth";
+    d.corpse_name_a = "A dead Fungus from Yuggoth";
+    d.corpse_name_the = "The dead Fungus from Yuggoth";
     d.id = Actor_id::mi_go_commander;
     d.ai[size_t(Ai_id::looks)] = true;
     d.ai[size_t(Ai_id::makes_room_for_friend)] = true;
