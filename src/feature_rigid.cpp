@@ -895,7 +895,13 @@ Statue::Statue(const P& feature_pos) :
 
 int Statue::base_shock_when_adj() const
 {
-    return type_ == Statue_type::ghoul ? 15 : 0;
+    //Non-ghoul players are scared of Ghoul statues
+    if (type_ == Statue_type::ghoul && player_bon::bg() != Bg::ghoul)
+    {
+        return 15;
+    }
+
+    return 0;
 }
 
 void Statue::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
