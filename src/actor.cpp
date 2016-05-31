@@ -648,7 +648,9 @@ Actor_died Actor::hit(int dmg,
     }
 
     //Damage type is "light", and actor is not light sensitive?
-    if (dmg_type == Dmg_type::light && !prop_handler_->has_prop(Prop_id::lgtSens))
+    if (
+        dmg_type == Dmg_type::light &&
+        !prop_handler_->has_prop(Prop_id::lgtSens))
     {
         return Actor_died::no;
     }
@@ -760,7 +762,10 @@ Actor_died Actor::hit(int dmg,
         }
     }
 
-    on_hit(dmg, dmg_type, method, allow_wound);
+    on_hit(dmg,
+           dmg_type,
+           method,
+           allow_wound);
 
     prop_handler_->on_hit();
 
@@ -773,7 +778,8 @@ Actor_died Actor::hit(int dmg,
 
     if (hp() <= 0)
     {
-        const bool IS_ON_BOTTOMLESS = map::cells[pos.x][pos.y].rigid->is_bottomless();
+        const bool IS_ON_BOTTOMLESS =
+            map::cells[pos.x][pos.y].rigid->is_bottomless();
 
         const bool IS_DMG_ENOUGH_TO_DESTROY = dmg > ((hp_max(true) * 3) / 2);
 
