@@ -1933,7 +1933,7 @@ void init_data_list()
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
-    d.group_size = Mon_group_size::few;
+    d.group_size = Mon_group_size::pack;
     d.actor_size = Actor_size::humanoid;
     d.can_bash_doors = false;
     d.can_open_doors = false;

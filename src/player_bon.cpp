@@ -421,8 +421,6 @@ void bg_descr(const Bg id, std::vector<std::string>& out)
         out.push_back("Has an arcane ability to cloud the minds of enemies, causing them to "
                       "forget their pursuit");
         out.push_back(" ");
-        out.push_back("+25% hit chance with ranged attacks vs unaware targets");
-        out.push_back(" ");
         out.push_back("The rate of shock received passively over time is reduced by half");
         out.push_back(" ");
         out.push_back("Starts with the following trait(s):");

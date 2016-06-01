@@ -289,7 +289,7 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
 
     defender = map::actor_at_pos(cur_pos);
 
-    if (defender)
+    if (defender && defender != attacker)
     {
         TRACE_VERBOSE << "Defender found" << std::endl;
 
@@ -318,23 +318,19 @@ Ranged_att_data::Ranged_att_data(Actor* const attacker,
 
         int unaware_def_mod = 0;
 
-        const bool IS_ROGUE = player_bon::bg() == Bg::rogue;
-
-        if (attacker == map::player && defender != map::player && IS_ROGUE)
+        if (
+            attacker->is_player() &&
+            static_cast<Mon*>(defender)->aware_counter_ <= 0)
         {
-            if (static_cast<Mon*>(defender)->aware_counter_ <= 0)
-            {
-                unaware_def_mod = 25;
-            }
+            unaware_def_mod = 25;
         }
 
-        hit_chance_tot = std::max(5,
-                                  ATT_SKILL         +
-                                  WPN_MOD           +
-                                  DIST_MOD          +
-                                  SPEED_MOD         +
-                                  SIZE_MOD          +
-                                  unaware_def_mod);
+        hit_chance_tot = ATT_SKILL  +
+                         WPN_MOD    +
+                         DIST_MOD   +
+                         SPEED_MOD  +
+                         SIZE_MOD   +
+                         unaware_def_mod;
 
         set_constr_in_range(5, hit_chance_tot, 99);
 
@@ -418,7 +414,7 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
 
     defender = map::actor_at_pos(cur_pos);
 
-    if (defender)
+    if (defender && defender != attacker)
     {
         TRACE_VERBOSE << "Defender found" << std::endl;
 
@@ -445,25 +441,23 @@ Throw_att_data::Throw_att_data(Actor* const attacker,
 
         const int SIZE_MOD  = defender_size == Actor_size::floor ? -15 : 0;
 
-        const bool IS_ROGUE = player_bon::bg() == Bg::rogue;
-
         int unaware_def_mod = 0;
 
-        if (attacker == map::player && defender != map::player && IS_ROGUE)
+        if (
+            attacker->is_player() &&
+            static_cast<Mon*>(defender)->aware_counter_ <= 0)
         {
-            if (static_cast<Mon*>(defender)->aware_counter_ <= 0)
-            {
-                unaware_def_mod = 25;
-            }
+            unaware_def_mod = 25;
         }
 
-        hit_chance_tot = std::max(5,
-                                  ATT_SKILL         +
-                                  WPN_MOD           +
-                                  DIST_MOD          +
-                                  SPEED_MOD         +
-                                  SIZE_MOD          +
-                                  unaware_def_mod);
+        hit_chance_tot = ATT_SKILL  +
+                         WPN_MOD    +
+                         DIST_MOD   +
+                         SPEED_MOD  +
+                         SIZE_MOD   +
+                         unaware_def_mod;
+
+        set_constr_in_range(5, hit_chance_tot, 99);
 
         att_result = ability_roll::roll(hit_chance_tot, attacker);
 
