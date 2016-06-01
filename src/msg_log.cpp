@@ -110,60 +110,12 @@ void add(const std::string& str,
     ASSERT(!str.empty());
 
 #ifndef NDEBUG
-
     if (str[0] == ' ')
     {
         TRACE << "Message starts with space: \"" << str << "\"" << std::endl;
         ASSERT(false);
     }
-
 #endif
-
-    //If frenzied, change message
-    if (map::player->has_prop(Prop_id::frenzied))
-    {
-        std::string frenzied_str = str;
-
-        bool has_lower_case = false;
-
-        for (auto c : frenzied_str)
-        {
-            if (c >= 'a' && c <= 'z')
-            {
-                has_lower_case = true;
-                break;
-            }
-        }
-
-        const char LAST           = frenzied_str.back();
-        bool is_ended_by_punctuation = LAST == '.' || LAST == '!';
-
-        if (has_lower_case && is_ended_by_punctuation)
-        {
-            //Convert to upper case
-            text_format::all_to_upper(frenzied_str);
-
-            //Do not put "!" if string contains "..."
-            if (frenzied_str.find("...") == std::string::npos)
-            {
-                //Change "." to "!" at the end
-                if (frenzied_str.back() == '.')
-                {
-                    frenzied_str.back() = '!';
-                }
-
-                //Add some "!"
-                frenzied_str += "!!";
-            }
-
-            add(frenzied_str,
-                clr,
-                INTERRUPT_PLAYER_ACTIONS,
-                add_more_prompt_on_msg);
-
-            return;
-        }
-    }
 
     int cur_line_nr = lines_[1].empty() ? 0 : 1;
 
@@ -198,7 +150,7 @@ void add(const std::string& str,
 
         int x_pos = x_after_msg(prev_msg);
 
-        const bool IS_MSG_FIT = x_pos + int(str.size()) + PADDING_LEN - 1 < MAP_W;
+        const bool IS_MSG_FIT = x_pos + (int)str.size() + PADDING_LEN - 1 < MAP_W;
 
         if (!IS_MSG_FIT)
         {

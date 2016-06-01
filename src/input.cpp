@@ -1161,7 +1161,7 @@ void handle_map_mode_key_press(const Key_data& d)
     //----------------------------------- PROPERTY
     else if (d.sdl_key == SDLK_F8)
     {
-        map::player->prop_handler().try_add(new Prop_cursed(Prop_turns::indefinite));
+        map::player->prop_handler().try_add(new Prop_frenzied(Prop_turns::std));
         clear_events();
 
         return;

@@ -57,9 +57,9 @@ void add(const std::string& str,
          const bool INTERRUPT_PLAYER_ACTIONS = false,
          const More_prompt_on_msg add_more_prompt_on_msg = More_prompt_on_msg::no);
 
-//NOTE: This function can safely be called at any time. If there is content in the log,
-//a "more" prompt will be done, and the log is cleared. If the log happens to be empty,
-//nothing is done.
+//NOTE: This function can safely be called at any time. If there is content in
+//the log, a "more" prompt will be done, and the log is cleared. If the log
+//happens to be empty, nothing is done.
 void more_prompt();
 
 void draw(const Update_screen update);

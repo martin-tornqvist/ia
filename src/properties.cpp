@@ -543,7 +543,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Frenzied";
     d.name_short = "Frenzied";
-    d.msg[size_t(Prop_msg::start_player)] = "I feel ferocious!";
+    d.msg[size_t(Prop_msg::start_player)] = "I feel ferocious!!!";
     d.msg[size_t(Prop_msg::start_mon)] = "Looks ferocious!";
     d.msg[size_t(Prop_msg::end_player)] = "I calm down.";
     d.msg[size_t(Prop_msg::end_mon)] = "Calms down a little.";
