@@ -927,11 +927,15 @@ void Trap_teleport::trigger()
 
             msg += " the floor!";
 
-            msg_log::add(msg, clr_white, false, More_prompt_on_msg::yes);
+            msg_log::add(msg, clr_text,
+                         false,
+                         More_prompt_on_msg::yes);
         }
         else //Cannot see
         {
-            msg_log::add("I feel a peculiar energy around me!", clr_white, false,
+            msg_log::add("I feel a peculiar energy around me!",
+                         clr_text,
+                         false,
                          More_prompt_on_msg::yes);
         }
     }
@@ -1261,13 +1265,17 @@ void Trap_web::trigger()
         {
             if (CAN_SEE)
             {
-                msg_log::add("I am entangled in a spider web!", clr_white, false,
+                msg_log::add("I am entangled in a spider web!",
+                             clr_text,
+                             false,
                              More_prompt_on_msg::yes);
             }
             else //Cannot see
             {
-                msg_log::add("I am entangled in a sticky mass of threads!", clr_white,
-                             false, More_prompt_on_msg::yes);
+                msg_log::add("I am entangled in a sticky mass of threads!",
+                             clr_text,
+                             false,
+                             More_prompt_on_msg::yes);
             }
         }
     }

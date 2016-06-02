@@ -29,179 +29,180 @@ std::string quote = "";
 
 std::string hpl_quote()
 {
-    std::vector<std::string> quotes;
-
-    quotes.push_back(
+    std::vector<std::string> quotes =
+    {
         "Happy is the tomb where no wizard hath lain and happy the town at night "
-        "whose wizards are all ashes.");
-    quotes.push_back(
+        "whose wizards are all ashes.",
+
         "Our means of receiving impressions are absurdly few, and our notions of "
         "surrounding objects infinitely narrow. We see things only as we are "
-        "constructed to see them, and can gain no idea of their absolute nature.");
-    quotes.push_back(
-        "Disintegration is quite painless, I assure you.");
-    quotes.push_back(
+        "constructed to see them, and can gain no idea of their absolute nature.",
+
+        "Disintegration is quite painless, I assure you.",
+
         "I am writing this under an appreciable mental strain, since by tonight I "
-        "shall be no more...");
-    quotes.push_back(
+        "shall be no more...",
+
         "The end is near. I hear a noise at the door, as of some immense slippery "
-        "body lumbering against it. It shall not find me...");
-    quotes.push_back(
+        "body lumbering against it. It shall not find me...",
+
         "Sometimes I believe that this less material life is our truer life, and "
         "that our vain presence on the terraqueous globe is itself the secondary "
-        "or merely virtual phenomenon.");
-    quotes.push_back(
+        "or merely virtual phenomenon.",
+
         "Life is a hideous thing, and from the background behind what we know of "
         "it peer daemoniacal hints of truth which make it sometimes a "
-        "thousandfold more hideous.");
-    quotes.push_back(
+        "thousandfold more hideous.",
+
         "Science, already oppressive with its shocking revelations, will perhaps "
         "be the ultimate exterminator of our human species, if separate species "
         "we be, for its reserve of unguessed horrors could never be borne by "
-        "mortal brains if loosed upon the world....");
-    quotes.push_back(
+        "mortal brains if loosed upon the world....",
+
         "Madness rides the star-wind... claws and teeth sharpened on centuries of "
         "corpses... dripping death astride a bacchanale of bats from nigh-black "
-        "ruins of buried temples of Belial...");
-    quotes.push_back(
-        "Memories and possibilities are ever more hideous than realities.");
-    quotes.push_back(
+        "ruins of buried temples of Belial...",
+
+        "Memories and possibilities are ever more hideous than realities.",
+
         "Yog-Sothoth knows the gate. Yog-Sothoth is the gate. Yog-Sothoth is the "
         "key and guardian of the gate. Past, present, future, all are one in "
         "Yog-Sothoth. He knows where the Old Ones broke through of old, and where "
-        "They shall break through again.");
-    quotes.push_back(
+        "They shall break through again.",
+
         "Slowly but inexorably crawling upon my consciousness and rising above "
         "every other impression, came a dizzying fear of the unknown; not death, "
         "but some nameless, unheard-of thing inexpressibly more ghastly and "
-        "abhorrent.");
-    quotes.push_back(
+        "abhorrent.",
+
         "I felt that some horrible scene or object lurked beyond the silk-hung "
         "walls, and shrank from glancing through the arched, latticed windows "
-        "that opened so bewilderingly on every hand.");
-    quotes.push_back(
+        "that opened so bewilderingly on every hand.",
+
         "There now ensued a series of incidents which transported me to the "
         "opposite extremes of ecstasy and horror; incidents which I tremble to "
-        "recall and dare not seek to interpret...");
-    quotes.push_back(
+        "recall and dare not seek to interpret...",
+
         "From the new-flooded lands it flowed again, uncovering death and decay; "
         "and from its ancient and immemorial bed it trickled loathsomely, "
         "uncovering nighted secrets of the years when Time was young and the gods "
-        "unborn.");
-    quotes.push_back(
+        "unborn.",
+
         "The moon is dark, and the gods dance in the night; there is terror in "
         "the sky, for upon the moon hath sunk an eclipse foretold in no books of "
-        "men or of earth's gods...");
-    quotes.push_back(
+        "men or of earth's gods...",
+
         "May the merciful gods, if indeed there be such, guard those hours when "
         "no power of the will can keep me from the chasm of sleep. With him who "
         "has come back out of the nethermost chambers of night, haggard and "
-        "knowing, peace rests nevermore.");
-    quotes.push_back(
+        "knowing, peace rests nevermore.",
+
         "What I learned and saw in those hours of impious exploration can never "
-        "be told, for want of symbols or suggestions in any language.");
-    quotes.push_back(
-        "From even the greatest of horrors irony is seldom absent.");
-    quotes.push_back(
+        "be told, for want of symbols or suggestions in any language.",
+
+        "From even the greatest of horrors irony is seldom absent.",
+
         "The most merciful thing in the world, I think, is the inability of the "
-        "human mind to correlate all its contents.");
-    quotes.push_back(
-        "In his house at R'lyeh dead Cthulhu waits dreaming.");
-    quotes.push_back(
-        "Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn");
-    quotes.push_back(
+        "human mind to correlate all its contents.",
+
+        "In his house at R'lyeh dead Cthulhu waits dreaming.",
+
+        "Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn",
+
         "They worshipped, so they said, the Great Old Ones who lived ages before "
-        "there were any men, and who came to the young world out of the sky...");
-    quotes.push_back(
+        "there were any men, and who came to the young world out of the sky...",
+
         "That is not dead which can eternal lie, and with strange aeons even "
-        "death may die.");
-    quotes.push_back(
+        "death may die.",
+
         "I have looked upon all that the universe has to hold of horror, and even "
         "the skies of spring and the flowers of summer must ever afterward be "
         "poison to me. But I do not think my life will be long. I know too much, "
-        "and the cult still lives.");
-    quotes.push_back(
+        "and the cult still lives.",
+
         "Something terrible came to the hills and valleys on that meteor, and "
-        "something terrible, though I know not in what proportion, still remains.");
-    quotes.push_back(
+        "something terrible, though I know not in what proportion, still remains.",
+
         "Man's respect for the imponderables varies according to his mental "
         "constitution and environment. Through certain modes of thought and "
-        "training it can be elevated tremendously, yet there is always a limit.");
-    quotes.push_back(
+        "training it can be elevated tremendously, yet there is always a limit.",
+
         "The oldest and strongest emotion of mankind is fear, and the oldest and "
-        "strongest kind of fear is fear of the unknown.");
-    quotes.push_back(
+        "strongest kind of fear is fear of the unknown.",
+
         "I have seen the dark universe yawning, where the black planets roll "
         "without aim, where they roll in their horror unheeded, without "
-        "knowledge, or lustre, or name.");
-    quotes.push_back(
-        "Searchers after horror haunt strange, far places.");
-    quotes.push_back(
+        "knowledge, or lustre, or name.",
+
+        "Searchers after horror haunt strange, far places.",
+
         "The sciences have hitherto harmed us little; but some day the piecing "
         "together of dissociated knowledge will open up such terrifying vistas of "
         "reality, that we shall either go mad from the revelation or flee from "
-        "the deadly light into the peace and safety of a new dark age.");
-    quotes.push_back(
+        "the deadly light into the peace and safety of a new dark age.",
+
         "There are horrors beyond life's edge that we do not suspect, and once in "
-        "a while man's evil prying calls them just within our range.");
-    quotes.push_back(
+        "a while man's evil prying calls them just within our range.",
+
         "We live on a placid island of ignorance in the midst of black seas of "
-        "infinity, and it was not meant that we should voyage far.");
-    quotes.push_back(
+        "infinity, and it was not meant that we should voyage far.",
+
         "There are black zones of shadow close to our daily paths, and now and "
         "then some evil soul breaks a passage through. When that happens, the man "
-        "who knows must strike before reckoning the consequences.");
-    quotes.push_back(
+        "who knows must strike before reckoning the consequences.",
+
         "Non-Euclidean calculus and quantum physics are enough to stretch any "
         "brain; and when one mixes them with folklore, and tries to trace a "
         "strange background of multi-dimensional reality behind the ghoulish "
         "hints of Gothic tales and the wild whispers of the chimney-corner, one "
-        "can hardly expect to be wholly free from mental tension.");
-    quotes.push_back(
+        "can hardly expect to be wholly free from mental tension.",
+
         "I could not help feeling that they were evil things-- mountains of "
         "madness whose farther slopes looked out over some accursed ultimate "
-        "abyss.");
-    quotes.push_back(
+        "abyss.",
+
         "That seething, half luminous cloud background held ineffable suggestions "
         "of a vague, ethereal beyondness far more than terrestrially spatial; "
         "and gave appalling reminders of the utter remoteness, separateness, "
         "desolation, and aeon-long death of this untrodden and unfathomed austral "
-        "world.");
-    quotes.push_back(
+        "world.",
+
         "With five feeble senses we pretend to comprehend the boundlessly complex "
         "cosmos, yet other beings might not only see very differently, but might "
         "see and study whole worlds of matter, energy, and life which lie close "
-        "at hand yet can never be detected with the senses we have.");
-    quotes.push_back(
+        "at hand yet can never be detected with the senses we have.",
+
         "It is absolutely necessary, for the peace and safety of mankind, that "
         "some of earth's dark, dead corners and unplumbed depths be left alone; "
         "lest sleeping abnormalities wake to resurgent life, and blasphemously "
         "surviving nightmares squirm and splash out of their black lairs to newer "
-        "and wider conquests.");
-    quotes.push_back(
+        "and wider conquests.",
+
         "I felt myself on the edge of the world; peering over the rim into a "
-        "fathomless chaos of eternal night.");
-    quotes.push_back(
+        "fathomless chaos of eternal night.",
+
         "And where Nyarlathotep went, rest vanished, for the small hours were "
-        "rent with the screams of nightmare.");
-    quotes.push_back(
+        "rent with the screams of nightmare.",
+
         "It was just a color out of space - a frightful messenger from unformed "
         "realms of infinity beyond all Nature as we know it; from realms whose "
         "mere existence stuns the brain and numbs us with the black extra-cosmic "
-        "gulfs it throws open before our frenzied eyes.");
-    quotes.push_back(
+        "gulfs it throws open before our frenzied eyes.",
+
         "It lumbered slobberingly into sight and gropingly squeezed its "
         "gelatinous green immensity through the black doorway into the tainted "
-        "outside air of that poison city of madness.");
-    quotes.push_back(
+        "outside air of that poison city of madness.",
+
         "The Thing cannot be described - there is no language for such abysms of "
         "shrieking and immemorial lunacy, such eldritch contradictions of all "
-        "matter, force, and cosmic order.");
-    quotes.push_back(
+        "matter, force, and cosmic order.",
+
         "I could tell I was at the gateway of a region half-bewitched through "
         "the piling-up of unbroken time-accumulations; a region where old, "
         "strange things have had a chance to grow and linger because they have "
-        "never been stirred up.");
+        "never been stirred up.",
+    };
+
     return quotes[rnd::range(0, quotes.size() - 1)];
 }
 
@@ -309,17 +310,16 @@ void draw(const Menu_browser& browser)
 #endif // NDEBUG
 
     TRACE << "Drawing quote" << std::endl;
-    Clr quote_clr = clr_gray;
-    quote_clr.r /= 8;
-    quote_clr.g /= 8;
-    quote_clr.b /= 8;
+    Clr quote_clr = clr_brown_gray;
+
+    div_clr(quote_clr, 5);
 
     std::vector<std::string> quote_lines;
 
     int quote_w = 45;
 
-    //Decrease quote width until we find a width that doesn't leave a tiny string on the last line
-    //(looks very ugly),
+    //Decrease quote width until we find a width that doesn't leave a "tiny"
+    //string on the last line (looks very ugly),
     while (quote_w != 0)
     {
         text_format::split(quote, quote_w, quote_lines);

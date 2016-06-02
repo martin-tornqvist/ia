@@ -82,7 +82,7 @@ enum class Bg
 namespace player_bon
 {
 
-extern bool traits[int(Trait::END)];
+extern bool traits[(int)Trait::END];
 
 void init();
 
@@ -106,10 +106,10 @@ std::string trait_descr(const Trait id);
 
 std::string bg_title(const Bg id);
 
-//NOTE: The string vector reference parameter set in this function is not formatted in
-//bg_descr. Each line still needs to be formatted by the calling function. The reason
-//for using a vector reference instead of simply a string is only to specify line breaks.
-void bg_descr(const Bg id, std::vector<std::string>& out);
+//NOTE: The string vector returned is not formatted. Each line still needs to
+//be formatted by the caller. The reason for using a vector instead of a string
+//is to separate the text into paragraphs.
+std::vector<std::string> bg_descr(const Bg id);
 
 std::string all_picked_traits_titles_line();
 

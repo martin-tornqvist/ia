@@ -637,7 +637,7 @@ void handle_map_mode_key_press(const Key_data& d)
                 }
                 else
                 {
-                    msg_log::add("Which direction?" + cancel_info_str);
+                    msg_log::add("Which direction?" + cancel_info_str, clr_white_high);
                     render::draw_map_state();
 
                     const Dir input_dir = query::dir(Allow_center::no);

@@ -15,7 +15,7 @@
 namespace player_bon
 {
 
-bool traits[int(Trait::END)];
+bool traits[(int)Trait::END];
 
 namespace
 {
@@ -370,90 +370,104 @@ std::string trait_title(const Trait id)
     return "[TRAIT TITLE MISSING]";
 }
 
-void bg_descr(const Bg id, std::vector<std::string>& out)
+std::vector<std::string> bg_descr(const Bg id)
 {
-    out.clear();
-
     switch (id)
     {
     case Bg::ghoul:
     {
-        out.push_back("Does not regenerate Hit Points and cannot use medical equipment - must "
-                      "instead heal by feeding on corpses (press [q])");
-        out.push_back(" ");
-        out.push_back("Has an arcane ability to incite Frenzy at will (increased speed, "
-                      "+10% melee hit chance, +1 melee damage, must move towards enemies).");
-        out.push_back(" ");
-        out.push_back("Does not become Weakened when Frenzy ends");
-        out.push_back(" ");
-        out.push_back("Has powerful claws to attack with");
-        out.push_back(" ");
-        out.push_back("-15% hit chance with firearms and thrown weapons");
-        out.push_back(" ");
-        out.push_back("+10 Hit Points");
-        out.push_back(" ");
-        out.push_back("Is immune to Disease and Infections");
-        out.push_back(" ");
-        out.push_back("Has Infravision");
-        out.push_back(" ");
-        out.push_back("-50% shock taken from seeing monsters");
-        out.push_back(" ");
-        out.push_back("All Ghouls are allied");
+        return
+        {
+            "Does not regenerate Hit Points and cannot use medical equipment - must "
+            "instead heal by feeding on corpses (press [q])",
+            "",
+            "Has an arcane ability to incite Frenzy at will (increased speed, "
+            "+10% melee hit chance, +1 melee damage, must move towards enemies).",
+            "",
+            "Does not become Weakened when Frenzy ends",
+            "",
+            "Has powerful claws to attack with",
+            "",
+            "-15% hit chance with firearms and thrown weapons",
+            "",
+            "+10 Hit Points",
+            "",
+            "Is immune to Disease and Infections",
+            "",
+            "Has Infravision",
+            "",
+            "-50% shock taken from seeing monsters",
+            "",
+            "All Ghouls are allied"
+        };
     }
     break;
 
     case Bg::occultist:
-        out.push_back("Can learn spells by heart when casting from manuscripts");
-        out.push_back(" ");
-        out.push_back("-50% shock taken from using and identifying strange items (e.g. potions)");
-        out.push_back(" ");
-        out.push_back("Can dispel magic traps");
-        out.push_back(" ");
-        out.push_back("-2 Hit Points");
-        out.push_back(" ");
-        out.push_back("Starts with the following trait(s):");
-        out.push_back(" ");
-        out.push_back("* " + trait_title(Trait::stout_spirit));
-        out.push_back(trait_descr(Trait::stout_spirit));
+        return
+        {
+            "Can learn spells by heart when casting from manuscripts",
+            "",
+            "-50% shock taken from using and identifying strange items (e.g. potions)",
+            "",
+            "Can dispel magic traps",
+            "",
+            "-2 Hit Points",
+            "",
+            "Starts with the following trait(s):",
+            "",
+            "* " + trait_title(Trait::stout_spirit),
+            trait_descr(Trait::stout_spirit)
+        };
         break;
 
     case Bg::rogue:
-        out.push_back("Has an arcane ability to cloud the minds of enemies, causing them to "
-                      "forget their pursuit");
-        out.push_back(" ");
-        out.push_back("The rate of shock received passively over time is reduced by half");
-        out.push_back(" ");
-        out.push_back("Starts with the following trait(s):");
-        out.push_back(" ");
-        out.push_back("* " + trait_title(Trait::observant));
-        out.push_back(trait_descr(Trait::observant));
-        out.push_back(" ");
-        out.push_back("* " + trait_title(Trait::stealthy));
-        out.push_back(trait_descr(Trait::stealthy));
+        return
+        {
+            "Has an arcane ability to cloud the minds of enemies, causing them to "
+            "forget their pursuit",
+            "",
+            "The rate of shock received passively over time is reduced by half",
+            "",
+            "Starts with the following trait(s):",
+            "",
+            "* " + trait_title(Trait::observant),
+            trait_descr(Trait::observant),
+            "",
+            "* " + trait_title(Trait::stealthy),
+            trait_descr(Trait::stealthy)
+        };
         break;
 
     case Bg::war_vet:
-        out.push_back("Can switch to prepared weapon instantly");
-        out.push_back(" ");
-        out.push_back("Maintains armor twice as long before it breaks");
-        out.push_back(" ");
-        out.push_back("Starts with 10% insanity");
-        out.push_back(" ");
-        out.push_back("Starts with the following trait(s):");
-        out.push_back(" ");
-        out.push_back("* " + trait_title(Trait::adept_marksman));
-        out.push_back(trait_descr(Trait::adept_marksman));
-        out.push_back(" ");
-        out.push_back("* " + trait_title(Trait::adept_melee_fighter));
-        out.push_back(trait_descr(Trait::adept_melee_fighter));
-        out.push_back(" ");
-        out.push_back("* " + trait_title(Trait::tough));
-        out.push_back(trait_descr(Trait::tough));
+        return
+        {
+            "Can switch to prepared weapon instantly",
+            "",
+            "Maintains armor twice as long before it breaks",
+            "",
+            "Starts with 10% insanity",
+            "",
+            "Starts with the following trait(s):",
+            "",
+            "* " + trait_title(Trait::adept_marksman),
+            trait_descr(Trait::adept_marksman),
+            "",
+            "* " + trait_title(Trait::adept_melee_fighter),
+            trait_descr(Trait::adept_melee_fighter),
+            "",
+            "* " + trait_title(Trait::tough),
+            trait_descr(Trait::tough)
+        };
         break;
 
     case Bg::END:
         break;
     }
+
+    ASSERT(false);
+
+    return {};
 }
 
 std::string trait_descr(const Trait id)
@@ -831,7 +845,8 @@ void trait_prereqs(const Trait trait,
         break;
     }
 
-    //Remove traits which are blocked for this background (prerequisites are considered fulfilled)
+    //Remove traits which are blocked for this background (prerequisites are
+    //considered fulfilled)
     for (auto it = begin(traits_ref); it != end(traits_ref); /* No increment */)
     {
         const Trait trait = *it;

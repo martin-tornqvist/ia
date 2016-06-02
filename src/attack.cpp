@@ -623,7 +623,7 @@ void print_melee_msg_and_mk_snd(const Melee_att_data& att_data, const Wpn& wpn)
                     other_name = "It";
                 }
 
-                msg_log::add(other_name + " misses me.", clr_white, true);
+                msg_log::add(other_name + " misses me.", clr_text, true);
             }
         };
 

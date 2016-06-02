@@ -247,8 +247,7 @@ void win_game()
 
     render::draw_text(CMD_LABEL, Panel::screen,
                       P(X0, SCREEN_H - 2),
-                      clr_menu_medium,
-                      clr_black);
+                      clr_popup_label);
 
     render::update_screen();
 

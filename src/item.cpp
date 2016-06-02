@@ -526,7 +526,12 @@ void Armor_mi_go::on_equip_hook(const Verbosity verbosity)
     if (verbosity == Verbosity::verbose)
     {
         render::draw_map_state();
-        msg_log::add("The armor joins with my skin!", clr_white, false, More_prompt_on_msg::yes);
+
+        msg_log::add("The armor joins with my skin!",
+                     clr_text,
+                     false,
+                     More_prompt_on_msg::yes);
+
         map::player->incr_shock(Shock_lvl::heavy, Shock_src::use_strange_item);
     }
 }

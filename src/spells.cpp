@@ -410,7 +410,10 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
     {
         if (map::player->can_see_actor(*tgt))
         {
-            msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+            msg_log::add(spell_reflect_msg,
+                         clr_text,
+                         false,
+                         More_prompt_on_msg::yes);
         }
 
         return cast_impl(tgt);
@@ -1232,7 +1235,10 @@ Spell_effect_noticed Spell_knock_back::cast_impl(Actor* const caster) const
     {
         if (map::player->can_see_actor(*tgt))
         {
-            msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+            msg_log::add(spell_reflect_msg,
+                         clr_text,
+                         false,
+                         More_prompt_on_msg::yes);
         }
 
         std::swap(caster_used, tgt);
@@ -1296,7 +1302,10 @@ Spell_effect_noticed Spell_prop_on_mon::cast_impl(Actor* const caster) const
         {
             if (map::player->can_see_actor(*tgt))
             {
-                msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+                msg_log::add(spell_reflect_msg,
+                             clr_text,
+                             false,
+                             More_prompt_on_msg::yes);
             }
 
             cast_impl(tgt);
@@ -1341,7 +1350,10 @@ Spell_effect_noticed Spell_disease::cast_impl(Actor* const caster) const
     {
         if (map::player->can_see_actor(*tgt))
         {
-            msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+            msg_log::add(spell_reflect_msg,
+                         clr_text,
+                         false,
+                         More_prompt_on_msg::yes);
         }
 
         std::swap(caster_used, tgt);
@@ -1546,7 +1558,10 @@ Spell_effect_noticed Spell_mi_go_hypno::cast_impl(Actor* const caster) const
     {
         if (map::player->can_see_actor(*tgt))
         {
-            msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+            msg_log::add(spell_reflect_msg,
+                         clr_text,
+                         false,
+                         More_prompt_on_msg::yes);
         }
 
         std::swap(caster_used, tgt);
@@ -1600,7 +1615,10 @@ Spell_effect_noticed Spell_burn::cast_impl(Actor* const caster) const
     {
         if (map::player->can_see_actor(*tgt))
         {
-            msg_log::add(spell_reflect_msg, clr_white, false, More_prompt_on_msg::yes);
+            msg_log::add(spell_reflect_msg,
+                         clr_text,
+                         false,
+                         More_prompt_on_msg::yes);
         }
 
         std::swap(caster_used, tgt);

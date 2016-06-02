@@ -499,7 +499,10 @@ void Inventory::equip_backpack_item(const size_t BACKPACK_IDX, const Slot_id slo
             break;
         }
 
-        msg_log::add(msg, clr_white, false, More_prompt_on_msg::yes);
+        msg_log::add(msg,
+                     clr_text,
+                     false,
+                     More_prompt_on_msg::yes);
     }
 }
 
@@ -557,7 +560,10 @@ Unequip_allowed Inventory::try_unequip_slot(const Slot_id id)
             break;
         }
 
-        msg_log::add(msg, clr_white, false, More_prompt_on_msg::yes);
+        msg_log::add(msg,
+                     clr_text,
+                     false,
+                     More_prompt_on_msg::yes);
     }
 
     return unequip_allowed_result;

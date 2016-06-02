@@ -2578,7 +2578,11 @@ void Chest::player_loot()
     }
     else //Not empty
     {
-        msg_log::add("There are some items inside.", clr_white, false, More_prompt_on_msg::yes);
+        msg_log::add("There are some items inside.",
+                     clr_text,
+                     false,
+                     More_prompt_on_msg::yes);
+
         item_container_.open(pos_, map::player);
     }
 }
@@ -2662,8 +2666,11 @@ void Chest::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* con
 
                     if (rnd::one_in(OPEN_ONE_IN_N))
                     {
-                        msg_log::add("The lock breaks!", clr_white, false,
+                        msg_log::add("The lock breaks!",
+                                     clr_text,
+                                     false,
                                      More_prompt_on_msg::yes);
+
                         is_locked_ = false;
                     }
                     else
@@ -2777,7 +2784,9 @@ void Chest::disarm()
         //Try disarming trap
         if (is_trap_status_known_)
         {
-            msg_log::add("I attempt to disarm the chest...", clr_white, false,
+            msg_log::add("I attempt to disarm the chest...",
+                         clr_text,
+                         false,
                          More_prompt_on_msg::yes);
             msg_log::clear();
 
@@ -3287,7 +3296,9 @@ void Cabinet::player_loot()
     }
     else
     {
-        msg_log::add("There are some items inside.", clr_white, false,
+        msg_log::add("There are some items inside.",
+                     clr_text,
+                     false,
                      More_prompt_on_msg::yes);
 
         item_container_.open(pos_, map::player);
@@ -3470,7 +3481,10 @@ void Cocoon::player_loot()
     }
     else
     {
-        msg_log::add("There are some items inside.", clr_white, false, More_prompt_on_msg::yes);
+        msg_log::add("There are some items inside.",
+                     clr_text,
+                     false,
+                     More_prompt_on_msg::yes);
 
         item_container_.open(pos_, map::player);
     }

@@ -190,7 +190,7 @@ void show_msg(const std::string& msg,
     render::draw_text_center("[space/esc/enter] to continue",
                                Panel::map,
                                P(MAP_W_HALF, y),
-                               clr_menu_medium);
+                               clr_popup_label);
 
     render::update_screen();
 

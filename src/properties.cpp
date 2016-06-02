@@ -1160,7 +1160,7 @@ void Prop_handler::try_add(Prop* const prop,
 
                     if (!msg.empty())
                     {
-                        msg_log::add(msg, clr_white, true);
+                        msg_log::add(msg, clr_text, true);
                     }
                 }
                 else //Is a monster
@@ -1213,7 +1213,7 @@ void Prop_handler::try_add(Prop* const prop,
 
                         if (!msg.empty())
                         {
-                            msg_log::add(msg, clr_white, true);
+                            msg_log::add(msg, clr_text, true);
                         }
                     }
                     else //Not player
@@ -1265,7 +1265,7 @@ void Prop_handler::try_add(Prop* const prop,
 
             if (!msg.empty())
             {
-                msg_log::add(msg, clr_white, true);
+                msg_log::add(msg, clr_text, true);
             }
         }
         else //Is monster

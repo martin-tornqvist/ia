@@ -35,9 +35,9 @@ void draw(const std::string& cur_string)
     render::clear_screen();
 
     render::draw_text_center("What is your name?",
-                               Panel::screen,
-                               P(MAP_W_HALF, 0),
-                               clr_title);
+                             Panel::screen,
+                             P(MAP_W_HALF, 0),
+                             clr_title);
     const int Y_NAME = 3;
 
     const std::string name_str = cur_string.size() < PLAYER_NAME_MAX_LEN ?
@@ -49,23 +49,23 @@ void draw(const std::string& cur_string)
     render::draw_text(name_str,
                       Panel::screen,
                       P(NAME_X0, Y_NAME),
-                      clr_menu_highlight);
+                      clr_brown_gray);
 
     R box_rect(P(NAME_X0 - 1, Y_NAME - 1),
-                  P(NAME_X1 + 1, Y_NAME + 1));
+               P(NAME_X1 + 1, Y_NAME + 1));
 
     render::draw_box(box_rect);
 
     render::update_screen();
 }
 
-void read_keys(std::string& cur_string, bool& is_done)
+void read_keys(std::string& cur_string, bool& done)
 {
     const Key_data& d = input::input(false);
 
     if (d.sdl_key == SDLK_RETURN)
     {
-        is_done = true;
+        done = true;
         cur_string = cur_string.empty() ? "Player" : cur_string;
         return;
     }
@@ -105,38 +105,40 @@ void read_keys(std::string& cur_string, bool& is_done)
 void run()
 {
     std::string name = "";
-    draw(name);
-    bool is_done = false;
 
-    while (!is_done)
+    draw(name);
+
+    bool done = false;
+
+    while (!done)
     {
         if (config::is_bot_playing())
         {
             name = "Bot";
-            is_done = true;
+            done = true;
         }
         else
         {
-            read_keys(name, is_done);
+            read_keys(name, done);
         }
     }
 
     Actor_data_t& def = map::player->data();
-    def.name_a      = def.name_the = name;
+    def.name_a = def.name_the = name;
 }
 
-} //Enter_name
+} //enter_name
 
 void draw_pick_bg(const std::vector<Bg>& bgs, const Menu_browser& browser)
 {
     render::clear_screen();
 
     render::draw_text_center("What is your background?",
-                               Panel::screen,
-                               P(MAP_W_HALF, 0),
-                               clr_title,
-                               clr_black,
-                               true);
+                             Panel::screen,
+                             P(MAP_W_HALF, 0),
+                             clr_title,
+                             clr_black,
+                             true);
 
     int y = OPT_Y0;
 
@@ -163,20 +165,30 @@ void draw_pick_bg(const std::vector<Bg>& bgs, const Menu_browser& browser)
     //------------------------------------------------------------- DESCRIPTION
     y = DESCR_Y0;
 
-    std::vector<std::string> raw_descr_lines;
+    const std::vector<std::string> raw_descr_lines =
+        player_bon::bg_descr(bg_marked);
 
-    player_bon::bg_descr(bg_marked, raw_descr_lines);
+    ASSERT(!raw_descr_lines.empty());
 
     for (const std::string& raw_line : raw_descr_lines)
     {
+        if (raw_line.empty())
+        {
+            ++y;
+            continue;
+        }
+
         std::vector<std::string> formatted_lines;
 
         text_format::split(raw_line, DESCR_W, formatted_lines);
 
         for (const std::string& line : formatted_lines)
         {
-            render::draw_text(line, Panel::screen, P(DESCR_X0, y), clr_white);
-            y++;
+            render::draw_text(line,
+                              Panel::screen,
+                              P(DESCR_X0, y),
+                              clr_text);
+            ++y;
         }
     }
 
@@ -187,7 +199,7 @@ void pick_bg()
 {
     if (config::is_bot_playing())
     {
-        player_bon::pick_bg(Bg(rnd::range(0, int(Bg::END) - 1)));
+        player_bon::pick_bg(Bg(rnd::range(0, (int)Bg::END - 1)));
     }
     else //Human playing
     {
@@ -195,6 +207,9 @@ void pick_bg()
         player_bon::pickable_bgs(bgs);
 
         Menu_browser browser(bgs.size());
+
+        //Let the browser start at Rogue, to recommend it as the default choice
+        browser.set_y((int)Bg::rogue);
 
         draw_pick_bg(bgs, browser);
 
@@ -232,11 +247,11 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
                         "You have reached a new level! Which trait do you gain?";
 
     render::draw_text_center(title,
-                               Panel::screen,
-                               P(MAP_W_HALF, 0),
-                               clr_title,
-                               clr_black,
-                               true);
+                             Panel::screen,
+                             P(MAP_W_HALF, 0),
+                             clr_title,
+                             clr_black,
+                             true);
 
     const Trait trait_marked = traits[browser.y()];
 
@@ -350,8 +365,9 @@ void create_character()
     pick_bg();
     pick_new_trait();
 
-    //Some backgrounds and traits may have affected maximum HP and SPI (either positively or
-    //negatively), so here we need to set the current HP and SPI equal to the maximum values.
+    //Some backgrounds and traits may have affected maximum HP and SPI (either
+    //positively or negatively), so here we need to set the current HP and SPI
+    //equal to the maximum values.
     map::player->set_hp_and_spi_to_max();
 
     enter_name::run();
@@ -398,4 +414,4 @@ void pick_new_trait()
     }
 }
 
-} //Create_character
+} //create_character

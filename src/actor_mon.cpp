@@ -1331,7 +1331,7 @@ Did_action Mummy::on_act()
 //            {
 //                const std::string name = name_the();
 //
-//                msg_log::add(name + " bows before me.", clr_white, false, true);
+//                msg_log::add(name + " bows before me.", clr_text, false, true);
 //            }
 //
 //            leader_ = map::player;
@@ -1951,11 +1951,11 @@ Did_action Zombie::try_resurrect()
 
             has_resurrected = true;
 
-            data_->nr_kills--;
+            --data_->nr_kills;
 
             if (map::cells[pos.x][pos.y].is_seen_by_player)
             {
-                msg_log::add(corpse_name_the() + " rises again!!", clr_white, true);
+                msg_log::add(corpse_name_the() + " rises again!!", clr_text, true);
 
                 map::player->incr_shock(Shock_lvl::some, Shock_src::see_mon);
             }

@@ -53,7 +53,7 @@ namespace msg_log
 void init();
 
 void add(const std::string& str,
-         const Clr& clr = clr_white,
+         const Clr& clr = clr_text,
          const bool INTERRUPT_PLAYER_ACTIONS = false,
          const More_prompt_on_msg add_more_prompt_on_msg = More_prompt_on_msg::no);
 

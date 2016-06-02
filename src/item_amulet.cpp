@@ -468,7 +468,10 @@ void Amulet_effect_shriek::on_std_turn_equipped()
     {
         const std::string name = amulet_->name(Item_ref_type::plain, Item_ref_inf::none);
 
-        msg_log::add("The " + name + " shrieks...", clr_white, false, More_prompt_on_msg::yes);
+        msg_log::add("The " + name + " shrieks...",
+                     clr_text,
+                     false,
+                     More_prompt_on_msg::yes);
 
         const int NR_WORDS = 3;
 

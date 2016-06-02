@@ -1275,7 +1275,7 @@ void Player::interrupt_actions()
     //Abort waiting
     if (wait_turns_left > 0 && prop_handler_->allow_act())
     {
-        msg_log::add("I stop waiting.", clr_white);
+        msg_log::add("I stop waiting.");
         render::draw_map_state();
     }
 
@@ -1306,7 +1306,10 @@ void Player::hear_sound(const Snd& snd,
 
     if (HAS_SND_MSG)
     {
-        msg_log::add(msg, clr_white, false, snd.should_add_more_prompt_on_msg());
+        msg_log::add(msg,
+                     clr_text,
+                     false,
+                     snd.should_add_more_prompt_on_msg());
     }
 
     //Play audio after message to ensure sync between audio and animation.

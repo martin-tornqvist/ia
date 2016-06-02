@@ -62,29 +62,45 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
 
     if (DLVL == 0)
     {
-        out.push_back({bullet_point_str + "Died before entering the dungeon" , clr_info});
+        out.push_back(
+        {
+            bullet_point_str + "Died before entering the dungeon",
+            clr_info
+        });
     }
     else //DLVL is at least 1
     {
-        out.push_back({bullet_point_str + "Explored to the depth of dungeon level " +
-                       to_str(DLVL), clr_info
-                      });
+        out.push_back(
+        {
+            bullet_point_str + "Explored to the depth of dungeon level " + to_str(DLVL),
+            clr_info
+        });
 
     }
 
-    out.push_back({bullet_point_str + "Was " + to_str(score->ins()) + "% insane", clr_info
-                  });
+    out.push_back(
+    {
+        bullet_point_str + "Was " + to_str(score->ins()) + "% insane",
+        clr_info
+    });
 
-    out.push_back({bullet_point_str + "Killed " + to_str(nr_kills_tot_all_mon) + " monsters",
-                   clr_info
-                  });
+    out.push_back(
+    {
+        bullet_point_str + "Killed " + to_str(nr_kills_tot_all_mon) + " monsters",
+        clr_info
+    });
 
-    out.push_back({bullet_point_str + "Gained " + to_str(score->xp()) + " experience points",
-                   clr_info
-                  });
+    out.push_back(
+    {
+        bullet_point_str + "Gained " + to_str(score->xp()) + " experience points",
+        clr_info
+    });
 
-    out.push_back({bullet_point_str + "Gained a score of " + to_str(score->score()), clr_info
-                  });
+    out.push_back(
+    {
+        bullet_point_str + "Gained a score of " + to_str(score->score()),
+        clr_info
+    });
 
     const std::vector<const Ins_sympt*> sympts = insanity::active_sympts();
 
@@ -341,27 +357,39 @@ void render_menu(const Menu_browser& browser)
     P pos(SCREEN_W / 2, 10);
 
     //Draw options
-    render::draw_text_center("Show game summary", Panel::screen, pos,
+    render::draw_text_center("Show game summary",
+                             Panel::screen,
+                             pos,
                              browser.is_at_idx(0) ? clr_menu_highlight : clr_menu_drk);
     ++pos.y;
 
-    render::draw_text_center("Write memorial file", Panel::screen, pos,
+    render::draw_text_center("Write memorial file",
+                             Panel::screen,
+                             pos,
                              browser.is_at_idx(1) ? clr_menu_highlight : clr_menu_drk);
     ++pos.y;
 
-    render::draw_text_center("View High Scores", Panel::screen, pos,
+    render::draw_text_center("View High Scores",
+                             Panel::screen,
+                             pos,
                              browser.is_at_idx(2) ? clr_menu_highlight : clr_menu_drk);
     ++pos.y;
 
-    render::draw_text_center("View message log", Panel::screen, pos,
+    render::draw_text_center("View message log",
+                             Panel::screen,
+                             pos,
                              browser.is_at_idx(3) ? clr_menu_highlight : clr_menu_drk);
     ++pos.y;
 
-    render::draw_text_center("Return to main menu", Panel::screen, pos,
+    render::draw_text_center("Return to main menu",
+                             Panel::screen,
+                             pos,
                              browser.is_at_idx(4) ? clr_menu_highlight : clr_menu_drk);
     ++pos.y;
 
-    render::draw_text_center("Quit the game", Panel::screen, pos,
+    render::draw_text_center("Quit the game",
+                             Panel::screen,
+                             pos,
                              browser.is_at_idx(5) ? clr_menu_highlight : clr_menu_drk);
     ++pos.y;
 
