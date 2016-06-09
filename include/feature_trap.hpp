@@ -27,12 +27,16 @@ enum class Trap_id
     any
 };
 
-enum class Trap_placement_valid {no, yes};
+enum class Trap_placement_valid
+{
+    no,
+    yes
+};
 
 class Trap: public Rigid
 {
 public:
-    Trap(const P& feature_pos, const Rigid* const mimic_feature, Trap_id id);
+    Trap(const P& feature_pos, Rigid* const mimic_feature, Trap_id id);
 
     //Spawn-by-id compliant ctor (do not use for normal cases):
     Trap(const P& feature_pos) :
@@ -67,6 +71,10 @@ public:
 
     void disarm() override;
 
+    //Quietly destroys the trap, and either places rubble, or replaces it with
+    //the mimic feature (depending on trap type)
+    void destroy();
+
     void on_new_turn_hook() override;
 
     bool can_have_corpse() const override
@@ -97,7 +105,9 @@ public:
 
     Dir actor_try_leave(Actor& actor, const Dir dir);
 
-    Trap_id trap_type() const;
+    Trap_id type() const;
+
+    bool is_holding_actor() const;
 
     const Trap_impl* trap_impl() const
     {
@@ -107,19 +117,20 @@ public:
     void player_try_spot_hidden();
 
 private:
-    Trap_impl* mk_trap_impl_from_id(const Trap_id trap_id) const;
+    Trap_impl* mk_trap_impl_from_id(const Trap_id trap_id);
 
     Clr clr_default() const override;
     Clr clr_bg_default() const override;
 
-    void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
+    void on_hit(const Dmg_type dmg_type,
+                const Dmg_method dmg_method,
                 Actor* const actor) override;
 
     Did_trigger_trap trigger_trap(Actor* const actor) override;
 
     void trigger_start(const Actor* actor);
 
-    const Rigid* const mimic_feature_;
+    Rigid* mimic_feature_;
     bool is_hidden_;
     int nr_turns_until_trigger_;
 
@@ -130,9 +141,9 @@ class Trap_impl
 {
 protected:
     friend class Trap;
-    Trap_impl(P pos, Trap_id trap_type, const Trap* const base_trap) :
+    Trap_impl(P pos, Trap_id type, Trap* const base_trap) :
         pos_        (pos),
-        trap_type_  (trap_type),
+        type_       (type),
         base_trap_  (base_trap) {}
 
     virtual ~Trap_impl() {}
@@ -153,8 +164,8 @@ protected:
         return dir;
     }
 
-    //NOTE: The trigger may happen several turns after the trap activates, so it's kinds pointless
-    // to provide actor triggering as a parameter here.
+    //NOTE: The trigger may happen several turns after the trap activates, so
+    //it's kinda pointless to provide actor triggering as a parameter here.
     virtual void trigger() = 0;
 
     virtual Range nr_turns_range_to_trigger() const = 0;
@@ -177,16 +188,21 @@ protected:
         return true;
     }
 
+    virtual bool is_holding_actor() const
+    {
+        return false;
+    }
+
     virtual std::string disarm_msg() const = 0;
 
     virtual std::string disarm_fail_msg() const = 0;
 
     P pos_;
-    Trap_id trap_type_;
+    Trap_id type_;
 
     P dart_origin_pos_;
 
-    const Trap* const base_trap_;
+    Trap* const base_trap_;
 };
 
 class Mech_trap_impl : public Trap_impl
@@ -194,8 +210,8 @@ class Mech_trap_impl : public Trap_impl
 protected:
     friend class Trap;
 
-    Mech_trap_impl(P pos, Trap_id trap_type, const Trap* const base_trap) :
-        Trap_impl(pos, trap_type, base_trap) {}
+    Mech_trap_impl(P pos, Trap_id type, Trap* const base_trap) :
+        Trap_impl(pos, type, base_trap) {}
 
     virtual ~Mech_trap_impl() {}
 
@@ -235,8 +251,8 @@ class Magic_trap_impl : public Trap_impl
 protected:
     friend class Trap;
 
-    Magic_trap_impl(P pos, Trap_id trap_type, const Trap* const base_trap) :
-        Trap_impl(pos, trap_type, base_trap) {}
+    Magic_trap_impl(P pos, Trap_id type, Trap* const base_trap) :
+        Trap_impl(pos, type, base_trap) {}
 
     virtual ~Magic_trap_impl() {}
 
@@ -276,7 +292,7 @@ class Trap_dart: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_dart(P pos, const Trap* const base_trap);
+    Trap_dart(P pos, Trap* const base_trap);
 
     void trigger();
 
@@ -299,7 +315,7 @@ class Trap_spear: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_spear(P pos, const Trap* const base_trap);
+    Trap_spear(P pos, Trap* const base_trap);
 
     void trigger();
 
@@ -322,7 +338,7 @@ class Trap_gas_confusion: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_gas_confusion(P pos, const Trap* const base_trap) :
+    Trap_gas_confusion(P pos, Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::gas_confusion, base_trap) {}
 
     void trigger();
@@ -338,7 +354,7 @@ class Trap_gas_paralyzation: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_gas_paralyzation(P pos, const Trap* const base_trap) :
+    Trap_gas_paralyzation(P pos, Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::gas_paralyze, base_trap) {}
 
     void trigger();
@@ -354,7 +370,7 @@ class Trap_gas_fear: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_gas_fear(P pos, const Trap* const base_trap) :
+    Trap_gas_fear(P pos, Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::gas_fear, base_trap) {}
 
     void trigger();
@@ -370,7 +386,7 @@ class Trap_blinding_flash: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_blinding_flash(P pos, const Trap* const base_trap) :
+    Trap_blinding_flash(P pos, Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::blinding, base_trap) {}
 
     void trigger();
@@ -386,7 +402,7 @@ class Trap_smoke: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_smoke(P pos, const Trap* const base_trap) :
+    Trap_smoke(P pos, Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::smoke, base_trap) {}
 
     void trigger();
@@ -402,7 +418,7 @@ class Trap_fire: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_fire(P pos, const Trap* const base_trap) :
+    Trap_fire(P pos, Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::smoke, base_trap) {}
 
     void trigger();
@@ -418,7 +434,7 @@ class Trap_alarm: public Mech_trap_impl
 private:
     friend class Trap;
 
-    Trap_alarm(P pos, const Trap* const base_trap) :
+    Trap_alarm(P pos, Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::alarm, base_trap) {}
 
     void trigger();
@@ -434,7 +450,7 @@ class Trap_teleport: public Magic_trap_impl
 private:
     friend class Trap;
 
-    Trap_teleport(P pos, const Trap* const base_trap) :
+    Trap_teleport(P pos, Trap* const base_trap) :
         Magic_trap_impl(pos, Trap_id::teleport, base_trap) {}
 
     void trigger();
@@ -450,7 +466,7 @@ class Trap_summon_mon: public Magic_trap_impl
 private:
     friend class Trap;
 
-    Trap_summon_mon(P pos, const Trap* const base_trap) :
+    Trap_summon_mon(P pos, Trap* const base_trap) :
         Magic_trap_impl(pos, Trap_id::summon, base_trap) {}
 
     void trigger();
@@ -466,7 +482,7 @@ class Trap_spi_drain: public Magic_trap_impl
 private:
     friend class Trap;
 
-    Trap_spi_drain(P pos, const Trap* const base_trap) :
+    Trap_spi_drain(P pos, Trap* const base_trap) :
         Magic_trap_impl(pos, Trap_id::summon, base_trap) {}
 
     void trigger();
@@ -482,7 +498,7 @@ class Trap_web: public Mech_trap_impl
 public:
     Dir actor_try_leave(Actor& actor, const Dir dir);
 
-    bool is_holding() const
+    bool is_holding_actor() const override
     {
         return is_holding_actor_;
     }
@@ -490,7 +506,7 @@ public:
 private:
     friend class Trap;
 
-    Trap_web(P pos, const Trap* const base_trap) :
+    Trap_web(P pos, Trap* const base_trap) :
         Mech_trap_impl      (pos, Trap_id::web, base_trap),
         is_holding_actor_   (false) {}
 

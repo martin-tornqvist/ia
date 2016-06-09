@@ -104,7 +104,7 @@ void draw(const Update_screen update)
 
 void add(const std::string& str,
          const Clr& clr,
-         const bool INTERRUPT_PLAYER_ACTIONS,
+         const bool INTERRUPT_ALL_PLAYER_ACTIONS,
          const More_prompt_on_msg add_more_prompt_on_msg)
 {
     ASSERT(!str.empty());
@@ -176,11 +176,13 @@ void add(const std::string& str,
     }
 
     //Messages may stop long actions like first aid and quick walk
-    if (INTERRUPT_PLAYER_ACTIONS)
+    if (INTERRUPT_ALL_PLAYER_ACTIONS)
     {
         map::player->interrupt_actions();
     }
 
+    //Some actions are always interrupted by messages, regardless of the
+    //"INTERRUPT_ALL_PLAYER_ACTIONS" parameter
     map::player->on_log_msg_printed();
 }
 

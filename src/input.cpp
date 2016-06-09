@@ -256,20 +256,6 @@ void handle_map_mode_key_press(const Key_data& d)
         return;
     }
 
-    //----------------------------------- ARRANGE PISTOL MAGAZINES
-    else if (d.key == 'R')
-    {
-        msg_log::clear();
-
-        if (map::player->is_alive())
-        {
-            reload::player_arrange_pistol_mags();
-        }
-
-        clear_events();
-        return;
-    }
-
     //----------------------------------- KICK
     else if ((d.key == 'w'))
     {
@@ -583,12 +569,20 @@ void handle_map_mode_key_press(const Key_data& d)
 
             if (seen_mon.empty())
             {
+                //NOTE: We should not print any "wait" message here, since it
+                //will look weird in some cases, e.g. when the waiting is
+                //immediately interrupted by a message from rearranging pistol
+                //magazines.
+
+                //NOTE: Waiting with 's' just performs "move" into the center
+                //position a number of turns (i.e. the same as pressing '5')
                 const int TURNS_TO_APPLY = 5;
-                msg_log::add("I pause for a while...");
+
                 map::player->wait_turns_left = TURNS_TO_APPLY - 1;
+
                 game_time::tick();
             }
-            else
+            else //There are seen monsters
             {
                 msg_log::add(msg_mon_prevent_cmd);
                 render::draw_map_state();

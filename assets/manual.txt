@@ -31,7 +31,6 @@ Contents:
    N      Make some noise (to lure monsters)
    q      Chew on corpse (Ghoul only)
    r      Reload wielded firearm
-   R      Organize Colt magazines
    s      Wait (and search) for a few turns
    t      Throw something from the "Thrown" slot, or throw held explosive
    v      View descriptions of things on the map

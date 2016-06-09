@@ -715,6 +715,8 @@ void Player::act()
         tgt_ = nullptr;
     }
 
+    //NOTE: We cannot just check for "seen_foes()" here, since the result is
+    //also used for setting player awareness below
     std::vector<Actor*> my_seen_actors;
     seen_actors(my_seen_actors);
 
@@ -777,15 +779,19 @@ void Player::act()
     if (wait_turns_left > 0)
     {
         --wait_turns_left;
-        game_time::tick();
+
+        //game_time::tick();
+
+        move(Dir::center);
+
         return;
     }
 
     //Quick move
     if (nr_quick_move_steps_left_ > 0)
     {
-        //NOTE: There is no need to check for items here, since the message from stepping
-        //on an item will interrupt player actions.
+        //NOTE: There is no need to check for items here, since the message
+        //from stepping on an item will interrupt player actions.
 
         const P tgt(pos + dir_utils::offset(quick_move_dir_));
 
@@ -926,7 +932,7 @@ int Player::ins() const
 void Player::on_std_turn()
 {
 #ifndef NDEBUG
-    //Sanity check: Disease and infection should never be active at the same time
+    //Sanity check: Disease and infection should not be active at the same time
     ASSERT(!prop_handler_->has_prop(Prop_id::diseased) ||
            !prop_handler_->has_prop(Prop_id::infected));
 #endif // NDEBUG
@@ -966,7 +972,8 @@ void Player::on_std_turn()
 
         if (!prop_handler_->has_prop(Prop_id::rSpell) && nr_turns_until_rspell_ > 0)
         {
-            //Spell resistance is in cooldown state, decrement number of remaining turns
+            //Spell resistance is in cooldown state, decrement number of
+            //remaining turns
             --nr_turns_until_rspell_;
         }
     }
@@ -1135,9 +1142,11 @@ void Player::on_std_turn()
                 mon.is_msg_mon_in_view_printed_ = false;
 
                 //Is the monster sneaking? Try to spot it
-                //NOTE: Infravision is irrelevant here, since the monster would have been
-                //completely seen already.
-                if (map::cells[mon.pos.x][mon.pos.y].is_seen_by_player && mon.is_sneaking_)
+                //NOTE: Infravision is irrelevant here, since the monster would
+                //have been completely seen already.
+                if (
+                    map::cells[mon.pos.x][mon.pos.y].is_seen_by_player &&
+                    mon.is_sneaking_)
                 {
                     const bool DID_SPOT_SNEAKING = is_spotting_sneaking_actor(mon);
 
@@ -1161,7 +1170,7 @@ void Player::on_std_turn()
         }
     }
 
-    //HP regen
+    //Regenerate Hit Points
     if (!has_prop(Prop_id::poisoned) && player_bon::bg() != Bg::ghoul)
     {
         int nr_turns_per_hp = 12;
@@ -1255,15 +1264,15 @@ void Player::on_std_turn()
 
 void Player::on_log_msg_printed()
 {
-    //NOTE: There cannot be any calls to msg_log::add() in this function, as that would
-    //cause endless recursion.
+    //NOTE: There cannot be any calls to msg_log::add() in this function, as
+    //that would cause infinite recursion!
 
-    //Abort waiting
+    //All messages abort waiting
     wait_turns_left = -1;
 
-    //Abort quick move
-    nr_quick_move_steps_left_ = -1;
-    quick_move_dir_ = Dir::END;
+    //All messages abort quick move
+    nr_quick_move_steps_left_   = -1;
+    quick_move_dir_             = Dir::END;
 }
 
 void Player::interrupt_actions()
@@ -1272,15 +1281,6 @@ void Player::interrupt_actions()
     inv_handling::scr_to_open_on_new_turn           = Inv_scr::none;
     inv_handling::browser_idx_to_set_on_new_turn    = 0;
 
-    //Abort waiting
-    if (wait_turns_left > 0 && prop_handler_->allow_act())
-    {
-        msg_log::add("I stop waiting.");
-        render::draw_map_state();
-    }
-
-    wait_turns_left = -1;
-
     //Abort healing
     if (active_medical_bag)
     {
@@ -1288,9 +1288,12 @@ void Player::interrupt_actions()
         active_medical_bag = nullptr;
     }
 
+    //Abort waiting
+    wait_turns_left = -1;
+
     //Abort quick move
-    nr_quick_move_steps_left_ = -1;
-    quick_move_dir_         = Dir::END;
+    nr_quick_move_steps_left_   = -1;
+    quick_move_dir_             = Dir::END;
 }
 
 void Player::hear_sound(const Snd& snd,
@@ -1332,6 +1335,9 @@ void Player::move(Dir dir)
     {
         return;
     }
+
+    //Store the original intended direction, for use later in this function
+    const Dir intended_dir = dir;
 
     prop_handler_->affect_move_dir(pos, dir);
 
@@ -1512,8 +1518,8 @@ void Player::move(Dir dir)
             {
                 if (nr_steps_until_free_action_ == -1)
                 {
-                    //Steps until free action has not been initialized before (e.g. player recently
-                    //picked dexterous)
+                    //Steps until free action has not been initialized before
+                    //(e.g. player recently picked dexterous)
                     nr_steps_until_free_action_ = FREE_STEP_EVERY_N_TURN - 2;
                 }
                 else if (nr_steps_until_free_action_ == 0)
@@ -1562,14 +1568,42 @@ void Player::move(Dir dir)
         map::cells[tgt.x][tgt.y].rigid->bump(*this);
     }
 
-    //If position equals the destination at this point, it means that player either:
+    //If position is at the destination now, it means that the player either:
     // * did an actual move to another cell, or
     // * that player waited in the current cell on purpose, or
     // * that the player was stuck (e.g. in a spider web)
-    //In either case, the game time is ticked here (since no melee attack or other "time advancing"
-    //action has occurred)
+    //In either case, the game time is ticked here (since no melee attack or
+    //other "time advancing" action has occurred)
     if (pos == tgt)
     {
+        //Here we rearrange the pistol magazines, if:
+        // * Player intended to wait in place (i.e. the parameter
+        //   direction is "center"), and,
+        // * Player is not stuck in a trap, and
+        // * No monsters are seen
+        if (intended_dir == Dir::center)
+        {
+            bool is_stuck = false;
+
+            const Rigid* const rigid = map::cells[pos.x][pos.y].rigid;
+
+            if (rigid->id() == Feature_id::trap)
+            {
+                is_stuck = static_cast<const Trap*>(rigid)->is_holding_actor();
+            }
+
+            if (!is_stuck)
+            {
+                std::vector<Actor*> my_seen_foes;
+                seen_foes(my_seen_foes);
+
+                if (my_seen_foes.empty())
+                {
+                    reload::player_arrange_pistol_mags();
+                }
+            }
+        }
+
         game_time::tick(pass_time);
     }
 }

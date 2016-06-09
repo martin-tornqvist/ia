@@ -23,7 +23,9 @@ public:
 
     const Feature_data_t& data() const;
 
-    virtual void hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor);
+    virtual void hit(const Dmg_type dmg_type,
+                     const Dmg_method dmg_method,
+                     Actor* const actor);
 
     virtual void bump(Actor& actor_bumping);
     virtual void on_new_turn() {}

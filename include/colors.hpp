@@ -36,7 +36,7 @@ const Clr clr_cyan_lgt          = {  0, 255, 255, 0};
 const Clr clr_brown             = {153, 102,  61, 0};
 const Clr clr_brown_drk         = { 96,  64,  32, 0};
 const Clr clr_brown_gray        = { 83,  76,  66, 0};
-const Clr clr_brown_gray_drk    = { 30,  28,  23, 0};
+const Clr clr_brown_gray_drk    = { 34,  32,  26, 0};
 
 const Clr clr_violet            = {128,   0, 255, 0};
 const Clr clr_violet_drk        = { 64,   0, 128, 0};

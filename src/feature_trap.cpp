@@ -23,7 +23,7 @@
 #include "dungeon_master.hpp"
 
 //------------------------------------------------------------- TRAP
-Trap::Trap(const P& feature_pos, const Rigid* const mimic_feature, Trap_id id) :
+Trap::Trap(const P& feature_pos, Rigid* const mimic_feature, Trap_id id) :
     Rigid                   (feature_pos),
     mimic_feature_          (mimic_feature),
     is_hidden_              (true),
@@ -37,7 +37,7 @@ Trap::Trap(const P& feature_pos, const Rigid* const mimic_feature, Trap_id id) :
     if (!rigid_here->can_have_rigid())
     {
         TRACE << "Cannot place trap on feature id: " << int(rigid_here->id()) << std::endl
-              << "Trap id: " << int(id) << std::endl;
+              << "Trap id: " << (int)id << std::endl;
         ASSERT(false);
         return;
     }
@@ -63,7 +63,7 @@ Trap::Trap(const P& feature_pos, const Rigid* const mimic_feature, Trap_id id) :
         //Attempt to set a trap implementation until a valid one is picked
         while (true)
         {
-            const auto random_id = Trap_id(rnd::range(0, int(Trap_id::END) - 1));
+            const auto random_id = Trap_id(rnd::range(0, (int)Trap_id::END - 1));
 
             try_place_trap_or_discard(random_id);
 
@@ -88,7 +88,7 @@ Trap::~Trap()
     delete mimic_feature_;
 }
 
-Trap_impl* Trap::mk_trap_impl_from_id(const Trap_id trap_id) const
+Trap_impl* Trap::mk_trap_impl_from_id(const Trap_id trap_id)
 {
     switch (trap_id)
     {
@@ -148,17 +148,26 @@ Trap_impl* Trap::mk_trap_impl_from_id(const Trap_id trap_id) const
     }
 }
 
-void Trap::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
+void Trap::on_hit(const Dmg_type dmg_type,
+                  const Dmg_method dmg_method,
+                  Actor* const actor)
 {
     (void)dmg_type;
     (void)dmg_method;
     (void)actor;
 }
 
-Trap_id Trap::trap_type() const
+Trap_id Trap::type() const
 {
     ASSERT(trap_impl_);
-    return trap_impl_->trap_type_;
+    return trap_impl_->type_;
+}
+
+bool Trap::is_holding_actor() const
+{
+    ASSERT(trap_impl_);
+
+    return trap_impl_->is_holding_actor();
 }
 
 bool Trap::is_magical() const
@@ -174,7 +183,8 @@ void Trap::on_new_turn_hook()
     {
         --nr_turns_until_trigger_;
 
-        TRACE_VERBOSE << "Number of turns until trigger: " << nr_turns_until_trigger_ << std::endl;
+        TRACE_VERBOSE << "Number of turns until trigger: "
+                      << nr_turns_until_trigger_ << std::endl;
 
         if (nr_turns_until_trigger_ == 0)
         {
@@ -204,7 +214,7 @@ void Trap::trigger_start(const Actor* actor)
     {
         More_prompt_on_msg more_prompt_on_msg = More_prompt_on_msg::no;
 
-        if (trap_type() != Trap_id::web)
+        if (type() != Trap_id::web)
         {
             std::string msg = "I hear a click.";
 
@@ -217,8 +227,14 @@ void Trap::trigger_start(const Actor* actor)
             }
 
             //TODO: Make a sound effect for this
-            Snd snd(msg, Sfx_id::END, Ignore_msg_if_origin_seen::no, pos_, nullptr, Snd_vol::low,
-                    Alerts_mon::yes, more_prompt_on_msg);
+            Snd snd(msg,
+                    Sfx_id::END,
+                    Ignore_msg_if_origin_seen::no,
+                    pos_,
+                    nullptr,
+                    Snd_vol::low,
+                    Alerts_mon::yes,
+                    more_prompt_on_msg);
 
             snd_emit::run(snd);
         }
@@ -230,7 +246,9 @@ void Trap::trigger_start(const Actor* actor)
 
     //Set number of remaining turns to the randomized value if number of turns
     //was not already set, or if the new value will make it trigger sooner.
-    if (nr_turns_until_trigger_ == -1 || RND_NR_TURNS < nr_turns_until_trigger_)
+    if (
+        nr_turns_until_trigger_ == -1 ||
+        RND_NR_TURNS < nr_turns_until_trigger_)
     {
         nr_turns_until_trigger_ = RND_NR_TURNS;
     }
@@ -255,7 +273,9 @@ void Trap::bump(Actor& actor_bumping)
 
     const Actor_data_t& d = actor_bumping.data();
 
-    if (actor_bumping.has_prop(Prop_id::ethereal) || actor_bumping.has_prop(Prop_id::flying))
+    if (
+        actor_bumping.has_prop(Prop_id::ethereal) ||
+        actor_bumping.has_prop(Prop_id::flying))
     {
         TRACE_FUNC_END_VERBOSE;
         return;
@@ -265,7 +285,8 @@ void Trap::bump(Actor& actor_bumping)
     Ability_vals&       abilities       = actor_bumping.data().ability_vals;
     const std::string   trap_name       = trap_impl_->title();
 
-    const int DODGE_SKILL = abilities.val(Ability_id::dodge_trap, true, actor_bumping);
+    const int DODGE_SKILL =
+        abilities.val(Ability_id::dodge_trap, true, actor_bumping);
 
     if (actor_bumping.is_player())
     {
@@ -278,7 +299,8 @@ void Trap::bump(Actor& actor_bumping)
             avoid_skill = std::max(10, avoid_skill / 2);
         }
 
-        const Ability_roll_result result = ability_roll::roll(avoid_skill, &actor_bumping);
+        const Ability_roll_result result =
+            ability_roll::roll(avoid_skill, &actor_bumping);
 
         if (result >= success)
         {
@@ -315,7 +337,8 @@ void Trap::bump(Actor& actor_bumping)
 
                 const int AVOID_SKILL = 60 + DODGE_SKILL;
 
-                const Ability_roll_result result = ability_roll::roll(AVOID_SKILL, &actor_bumping);
+                const Ability_roll_result result =
+                    ability_roll::roll(AVOID_SKILL, &actor_bumping);
 
                 if (result >= success)
                 {
@@ -350,7 +373,7 @@ void Trap::disarm()
     //Spider webs are automatically destroyed if wielding machete
     bool is_auto_succeed = false;
 
-    if (trap_type() == Trap_id::web)
+    if (type() == Trap_id::web)
     {
         Item* item = map::player->inv().item_in_slot(Slot_id::wpn);
 
@@ -415,14 +438,29 @@ void Trap::disarm()
 
     if (IS_DISARMED)
     {
-        if (is_magical() || trap_type() == Trap_id::web)
-        {
-            map::put(new Floor(pos_));
-        }
-        else //"Mechanical" trap
-        {
-            map::put(new Rubble_low(pos_));
-        }
+        destroy();
+    }
+}
+
+void Trap::destroy()
+{
+    ASSERT(mimic_feature_);
+
+    //Magical traps and webs simply "dissapear" (place their mimic feature),
+    //and mechanical traps puts rubble.
+
+    if (is_magical() || type() == Trap_id::web)
+    {
+        Rigid* const f_tmp = mimic_feature_;
+
+        mimic_feature_ = nullptr;
+
+        //NOTE: This call destroys the object!
+        map::put(f_tmp);
+    }
+    else //"Mechanical" trap
+    {
+        map::put(new Rubble_low(pos_));
     }
 }
 
@@ -481,7 +519,10 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES)
                 msg = "I spot a " + trap_name + ".";
             }
 
-            msg_log::add(msg, clr_msg_note, false, More_prompt_on_msg::yes);
+            msg_log::add(msg,
+                         clr_msg_note,
+                         false,
+                         More_prompt_on_msg::yes);
         }
     }
 
@@ -555,7 +596,7 @@ Matl Trap::matl() const
 }
 
 //------------------------------------------------------------- TRAP IMPLEMENTATIONS
-Trap_dart::Trap_dart(P pos, const Trap* const base_trap) :
+Trap_dart::Trap_dart(P pos, Trap* const base_trap) :
     Mech_trap_impl              (pos, Trap_id::dart, base_trap),
     is_poisoned_                (map::dlvl >= MIN_DLVL_HARDER_TRAPS && rnd::one_in(3)),
     dart_origin_                (),
@@ -675,7 +716,7 @@ void Trap_dart::trigger()
     TRACE_FUNC_END_VERBOSE;
 }
 
-Trap_spear::Trap_spear(P pos, const Trap* const base_trap) :
+Trap_spear::Trap_spear(P pos, Trap* const base_trap) :
     Mech_trap_impl              (pos, Trap_id::spear, base_trap),
     is_poisoned_                (map::dlvl >= MIN_DLVL_HARDER_TRAPS && rnd::one_in(4)),
     spear_origin_               (),
@@ -886,8 +927,12 @@ void Trap_blinding_flash::trigger()
         msg_log::more_prompt();
     }
 
-    explosion::run(pos_, Expl_type::apply_prop, Expl_src::misc, Emit_expl_snd::no,
-                   -1, new Prop_blind(Prop_turns::std), &clr_yellow);
+    explosion::run(pos_,
+                   Expl_type::apply_prop,
+                   Expl_src::misc,
+                   Emit_expl_snd::no,
+                   -1,
+                   new Prop_blind(Prop_turns::std), &clr_yellow);
 
     TRACE_FUNC_END_VERBOSE;
 }
@@ -1258,8 +1303,8 @@ void Trap_web::trigger()
                 msg_log::add("I cut down a sticky mass of threads with my machete.");
             }
 
-            TRACE << "Destroyed by Machete, placing floor" << std::endl;
-            map::put(new Floor(pos_));
+            TRACE << "Destroyed by Machete" << std::endl;
+            base_trap_->destroy();
         }
         else //Not wielding machete
         {
@@ -1335,9 +1380,10 @@ Dir Trap_web::actor_try_leave(Actor& actor, const Dir dir)
                 msg_log::add("The web is destroyed.");
             }
 
-            TRACE_VERBOSE << "Web destroyed, placing floor and returning center direction"
-                          << std::endl;
-            map::put(new Floor(pos_));
+            TRACE_VERBOSE << "Web destroyed, returning center direction" << std::endl;
+
+            base_trap_->destroy();
+
             return Dir::center;
         }
     }

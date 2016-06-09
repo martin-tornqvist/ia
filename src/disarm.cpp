@@ -33,16 +33,11 @@ void player_disarm()
     {
         const Trap* const trap = static_cast<const Trap*>(feature_at_player);
 
-        if (trap->trap_type() == Trap_id::web)
+        if (trap->is_holding_actor())
         {
-            const auto* const web = static_cast<const Trap_web*>(trap->trap_impl());
-
-            if (web->is_holding())
-            {
-                msg_log::add("Not while entangled in a spider web.");
-                render::draw_map_state();
-                return;
-            }
+            msg_log::add("Not while stuck.");
+            render::draw_map_state();
+            return;
         }
     }
 

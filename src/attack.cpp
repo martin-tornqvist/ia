@@ -127,21 +127,16 @@ Melee_att_data::Melee_att_data(Actor* const attacker,
 
             if (!is_big_att_bon)
             {
-                //Give big attack bonus if defender is stuck in trap (web).
+                //Give big attack bonus if defender is stuck in trap.
                 const auto* const f = map::cells[def_pos.x][def_pos.y].rigid;
 
                 if (f->id() == Feature_id::trap)
                 {
                     const auto* const t = static_cast<const Trap*>(f);
 
-                    if (t->trap_type() == Trap_id::web)
+                    if (t->is_holding_actor())
                     {
-                        const auto* const web = static_cast<const Trap_web*>(t->trap_impl());
-
-                        if (web->is_holding())
-                        {
-                            is_big_att_bon = true;
-                        }
+                        is_big_att_bon = true;
                     }
                 }
             }

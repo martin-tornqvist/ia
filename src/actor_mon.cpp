@@ -1013,7 +1013,7 @@ Did_action Vortex::on_act()
 
     if (
         !is_pos_adj(pos, player_pos, true) &&
-        rnd::one_in(3))
+        rnd::coin_toss())
     {
         TRACE << "Vortex attempting to pull player" << std::endl;
 
@@ -1106,9 +1106,9 @@ void Fire_vortex::mk_start_items()
 Did_action Ghost::on_act()
 {
     if (
-        is_alive()                                      &&
-        aware_counter_ > 0                              &&
-        is_pos_adj(pos, map::player->pos, false) &&
+        is_alive()                                  &&
+        aware_counter_ > 0                          &&
+        is_pos_adj(pos, map::player->pos, false)    &&
         rnd::one_in(4))
     {
         set_player_aware_of_me();
@@ -1880,9 +1880,13 @@ Did_action Lord_of_spiders::on_act()
                     if (feature_here->can_have_rigid())
                     {
                         auto& d = feature_data::data(feature_here->id());
-                        const auto* const mimic = static_cast<Rigid*>(d.mk_obj(p));
+
+                        auto* const mimic = static_cast<Rigid*>(d.mk_obj(p));
+
                         Trap* const f = new Trap(p, mimic, Trap_id::web);
+
                         map::put(f);
+
                         f->reveal(false);
                     }
                 }

@@ -422,6 +422,23 @@ void Actor::teleport()
         static_cast<Mon*>(this)->player_aware_of_me_counter_ = 0;
     }
 
+    //If actor was held by a spider web, destroy it
+    //TODO: If something like a bear trap is implemented, the code below
+    //needs to be adapted to consider other "hold" type traps
+    Rigid* const rigid = map::cells[pos.x][pos.y].rigid;
+
+    if (rigid->id() == Feature_id::trap)
+    {
+        Trap* const trap = static_cast<Trap*>(rigid);
+
+        if (
+            trap->type() == Trap_id::web &&
+            trap->is_holding_actor())
+        {
+            trap->destroy();
+        }
+    }
+
     pos = tgt_pos;
 
     map::player->update_fov();

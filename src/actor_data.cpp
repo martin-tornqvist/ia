@@ -2350,7 +2350,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::rConf)] = true;
     d.natural_props[size_t(Prop_id::rPoison)] = true;
     d.prevent_knockback = true;
-    d.spawn_min_dlvl = 5;
+    d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_size = Mon_group_size::few;
     d.actor_size = Actor_size::humanoid;
@@ -2394,7 +2394,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::rFire)] = true;
     d.natural_props[size_t(Prop_id::rPoison)] = true;
     d.prevent_knockback = true;
-    d.spawn_min_dlvl = 13;
+    d.spawn_min_dlvl = 8;
     d.group_size = Mon_group_size::few;
     d.actor_size = Actor_size::humanoid;
     d.nr_turns_aware = 5;
@@ -2426,7 +2426,7 @@ void init_data_list()
     d.glyph = 'o';
     d.color = clr_gray_drk;
     d.tile = Tile_id::ooze;
-    d.hp = 18;
+    d.hp = 20;
     d.spi = 12;
     d.dmg_melee = MIN_DMG_TO_WOUND - 1;
     d.ability_vals.set_val(Ability_id::melee, 50);
@@ -2476,7 +2476,7 @@ void init_data_list()
     d.glyph = 'o';
     d.color = clr_white_high;
     d.tile = Tile_id::ooze;
-    d.hp = 10;
+    d.hp = 12;
     d.spi = 12;
     d.dmg_melee = MIN_DMG_TO_WOUND - 2;
     d.ability_vals.set_val(Ability_id::melee, 50);
@@ -2527,7 +2527,7 @@ void init_data_list()
     d.glyph = 'o';
     d.color = clr_green;
     d.tile = Tile_id::ooze;
-    d.hp = 18;
+    d.hp = 20;
     d.spi = 12;
     d.dmg_melee = MIN_DMG_TO_WOUND;
     d.ability_vals.set_val(Ability_id::melee, 50);
@@ -2578,7 +2578,7 @@ void init_data_list()
     d.glyph = 'o';
     d.color = clr_green_lgt;
     d.tile = Tile_id::ooze;
-    d.hp = 18;
+    d.hp = 20;
     d.spi = 12;
     d.dmg_melee = MIN_DMG_TO_WOUND;
     d.ability_vals.set_val(Ability_id::melee, 50);

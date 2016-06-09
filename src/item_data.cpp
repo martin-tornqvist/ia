@@ -413,7 +413,7 @@ void init_data_list()
     d.glyph = '*';
     d.clr = clr_red_lgt;
     d.tile = Tile_id::trapez;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ranged_wpn);
     d.id = Item_id::sawed_off;
@@ -444,7 +444,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ranged_wpn);
     d.id = Item_id::pump_shotgun;
@@ -473,7 +473,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ammo);
     d.id = Item_id::shotgun_shell;
@@ -486,7 +486,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ranged_wpn);
     d.id = Item_id::incinerator;
@@ -513,7 +513,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ammo_mag);
     d.id = Item_id::incinerator_ammo;
@@ -533,7 +533,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest, 25);
     add_feature_found_in(d, Feature_id::cabinet, 25);
     add_feature_found_in(d, Feature_id::cocoon, 25);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ranged_wpn);
     d.id = Item_id::machine_gun;
@@ -561,7 +561,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ammo_mag);
     d.id = Item_id::drum_of_bullets;
@@ -574,7 +574,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ranged_wpn);
     d.id = Item_id::pistol;
@@ -598,7 +598,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ammo_mag);
     d.id = Item_id::pistol_mag;
@@ -611,7 +611,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ranged_wpn);
     d.id = Item_id::mi_go_gun;
@@ -645,7 +645,7 @@ void init_data_list()
     d.ranged.att_sfx = Sfx_id::mi_go_gun_fire;
     d.ranged.reload_sfx = Sfx_id::machine_gun_reload;
     d.ranged.makes_ricochet_snd = false;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ammo_mag);
     d.id = Item_id::mi_go_gun_ammo;
@@ -660,7 +660,7 @@ void init_data_list()
     d.ranged.max_ammo = data[size_t(Item_id::mi_go_gun)].ranged.max_ammo;
     d.clr = clr_yellow;
     d.spawn_std_range = Range(-1, -1);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ranged_wpn);
     d.id = Item_id::flare_gun;
@@ -683,7 +683,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ranged_wpn);
     d.id = Item_id::spike_gun;
@@ -715,7 +715,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest, 50);
     add_feature_found_in(d, Feature_id::cabinet, 50);
     add_feature_found_in(d, Feature_id::cocoon, 50);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ranged_wpn);
     d.id = Item_id::trap_dart;
@@ -727,13 +727,13 @@ void init_data_list()
     d.ranged.snd_msg = "I hear the launching of a projectile.";
     d.ranged.att_sfx = Sfx_id::END; //TODO: Make a sound effect for this
     d.ranged.makes_ricochet_snd = true;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ranged_wpn);
     d = data[size_t(Item_id::trap_dart)];
     d.id = Item_id::trap_dart_poison;
     d.ranged.prop_applied = new Prop_poisoned(Prop_turns::std);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn);
     d.id = Item_id::trap_spear;
@@ -744,13 +744,13 @@ void init_data_list()
     d.melee.hit_small_sfx = Sfx_id::hit_sharp;
     d.melee.hit_medium_sfx = Sfx_id::hit_sharp;
     d.melee.miss_sfx = Sfx_id::miss_heavy;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ranged_wpn);
     d = data[size_t(Item_id::trap_spear)];
     d.id = Item_id::trap_spear_poison;
     d.ranged.prop_applied = new Prop_poisoned(Prop_turns::std);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::explosive);
     d.id = Item_id::dynamite;
@@ -766,7 +766,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::explosive);
     d.id = Item_id::flare;
@@ -782,7 +782,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::explosive);
     d.id = Item_id::molotov;
@@ -799,7 +799,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::explosive);
     d.id = Item_id::smoke_grenade;
@@ -816,7 +816,7 @@ void init_data_list()
     d.clr = clr_green;
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::throwing_wpn);
     d.id = Item_id::thr_knife;
@@ -839,7 +839,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::throwing_wpn);
     d.id = Item_id::rock;
@@ -859,7 +859,7 @@ void init_data_list()
     d.main_att_mode = Att_mode::thrown;
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn);
     d.id = Item_id::dagger;
@@ -888,7 +888,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::tomb);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn);
     d.id = Item_id::hatchet;
@@ -913,7 +913,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn);
     d.id = Item_id::club;
@@ -936,7 +936,7 @@ void init_data_list()
     d.ranged.effective_range = 4;
     d.land_on_hard_snd_msg = "I hear a thudding sound.";
     d.land_on_hard_sfx = Sfx_id::END;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn);
     d.id = Item_id::hammer;
@@ -957,7 +957,7 @@ void init_data_list()
     d.ranged.effective_range = 4;
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn);
     d.id = Item_id::machete;
@@ -980,7 +980,7 @@ void init_data_list()
     d.ranged.effective_range = 4;
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn);
     d.id = Item_id::axe;
@@ -1004,7 +1004,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::tomb);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn);
     d.id = Item_id::pitch_fork;
@@ -1027,7 +1027,7 @@ void init_data_list()
     d.ranged.effective_range = 3;
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn);
     d.id = Item_id::sledge_hammer;
@@ -1048,7 +1048,7 @@ void init_data_list()
     d.ranged.throw_hit_chance_mod = -10;
     d.ranged.effective_range = 3;
     add_feature_found_in(d, Feature_id::cabinet);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn);
     d.id = Item_id::pharaoh_staff;
@@ -1074,7 +1074,7 @@ void init_data_list()
     d.value = Item_value::major_treasure;
     d.is_ins_raied_while_carried = true;
     add_feature_found_in(d, Feature_id::tomb, 20);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::throwing_wpn);
     d.id = Item_id::iron_spike;
@@ -1098,7 +1098,7 @@ void init_data_list()
     d.main_att_mode = Att_mode::thrown;
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::player_kick;
@@ -1107,7 +1107,7 @@ void init_data_list()
     d.melee.dmg = Dice_param(1, 2);
     d.melee.knocks_back = true;
     d.melee.miss_sfx = Sfx_id::miss_medium;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::player_stomp;
@@ -1116,7 +1116,7 @@ void init_data_list()
     d.melee.dmg = data[size_t(Item_id::player_kick)].melee.dmg;
     d.melee.miss_sfx = data[size_t(Item_id::player_kick)].melee.miss_sfx;
     d.melee.knocks_back = false;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::player_punch;
@@ -1125,7 +1125,7 @@ void init_data_list()
     d.melee.hit_chance_mod = 20;
     d.melee.dmg = Dice_param(1, 1);
     d.melee.miss_sfx = Sfx_id::miss_light;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::player_ghoul_claw;
@@ -1136,33 +1136,33 @@ void init_data_list()
     d.melee.hit_small_sfx = Sfx_id::hit_sharp;
     d.melee.hit_medium_sfx = Sfx_id::hit_sharp;
     d.melee.miss_sfx = Sfx_id::miss_medium;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::zombie_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, Actor_id::zombie);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::zombie_claw_diseased;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, Actor_id::zombie);
     d.melee.prop_applied = new Prop_infected(Prop_turns::std);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::zombie_axe;
     d.melee.att_msgs = {"", "chops me with a rusty axe"};
     set_dmg_from_mon_id(d, Actor_id::zombie_axe);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::bloated_zombie_punch;
     d.melee.att_msgs = {"", "mauls me"};
     set_dmg_from_mon_id(d, Actor_id::bloated_zombie);
     d.melee.knocks_back = true;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ranged_wpn_intr);
     d.id = Item_id::bloated_zombie_spit;
@@ -1172,122 +1172,122 @@ void init_data_list()
     d.ranged.projectile_clr = clr_green_lgt;
     d.ranged.dmg_type = Dmg_type::acid;
     d.ranged.projectile_glyph = '*';
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::crawling_intestines_strangle;
     d.melee.att_msgs = {"", "strangles me"};
     set_dmg_from_mon_id(d, Actor_id::crawling_intestines);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::floating_head_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::floating_head);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::crawling_hand_strangle;
     d.melee.att_msgs = {"", "strangles me"};
     set_dmg_from_mon_id(d, Actor_id::crawling_hand);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::thing_strangle;
     d.melee.att_msgs = {"", "strangles me"};
     set_dmg_from_mon_id(d, Actor_id::thing);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::rat_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::rat);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::rat_bite_diseased;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::rat);
     d.melee.prop_applied = new Prop_infected(Prop_turns::std);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::rat_thing_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::rat_thing);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::brown_jenkin_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::brown_jenkin);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::worm_mass_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::worm_mass);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::mind_worms_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::mind_worms);
     d.melee.prop_applied = new Prop_confused(Prop_turns::specific, 9);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::wolf_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::wolf);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::green_spider_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::green_spider);
     d.melee.prop_applied = new Prop_blind(Prop_turns::specific, 3);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::white_spider_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::white_spider);
     d.melee.prop_applied = new Prop_paralyzed(Prop_turns::specific, 2);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::red_spider_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::red_spider);
     d.melee.prop_applied = new Prop_weakened(Prop_turns::std);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::shadow_spider_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::shadow_spider);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::leng_spider_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::leng_spider);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::pit_viper_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::pit_viper);
     d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, POISON_DMG_N_TURN * 4);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::spitting_cobra_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::spitting_cobra);
     d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, POISON_DMG_N_TURN * 4);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ranged_wpn_intr);
     d.id = Item_id::spitting_cobra_spit;
@@ -1297,14 +1297,14 @@ void init_data_list()
     d.ranged.projectile_clr = clr_green_lgt;
     d.ranged.dmg_type = Dmg_type::physical;
     d.ranged.projectile_glyph = '*';
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::black_mamba_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::black_mamba);
     d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, POISON_DMG_N_TURN * 4);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ranged_wpn_intr);
     d.id = Item_id::fire_hound_breath;
@@ -1317,34 +1317,34 @@ void init_data_list()
     d.ranged.projectile_leaves_trail = true;
     d.ranged.projectile_leaves_smoke = true;
     d.ranged.dmg_type = Dmg_type::fire;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::fire_hound_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::fire_hound);
     d.melee.dmg_type = Dmg_type::fire;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::zuul_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::zuul);
     d.melee.dmg_type = Dmg_type::physical;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::dust_vortex_engulf;
     d.melee.att_msgs = {"", "engulfs me"};
     set_dmg_from_mon_id(d, Actor_id::dust_vortex);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::fire_vortex_engulf;
     d.melee.att_msgs = {"", "engulfs me"};
     set_dmg_from_mon_id(d, Actor_id::fire_vortex);
     d.melee.prop_applied = new Prop_burning(Prop_turns::std);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::ghost_claw;
@@ -1352,7 +1352,7 @@ void init_data_list()
     set_dmg_from_mon_id(d, Actor_id::ghost);
     d.melee.prop_applied = new Prop_terrified(Prop_turns::specific, 4);
     d.melee.dmg_type = Dmg_type::spirit;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::phantasm_sickle;
@@ -1360,7 +1360,7 @@ void init_data_list()
     set_dmg_from_mon_id(d, Actor_id::phantasm);
     d.melee.prop_applied = new Prop_terrified(Prop_turns::specific, 4);
     d.melee.dmg_type = Dmg_type::spirit;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::wraith_claw;
@@ -1368,70 +1368,70 @@ void init_data_list()
     set_dmg_from_mon_id(d, Actor_id::wraith);
     d.melee.prop_applied = new Prop_terrified(Prop_turns::specific, 4);
     d.melee.dmg_type = Dmg_type::spirit;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::raven_peck;
     d.melee.att_msgs = {"", "pecks at me"};
     set_dmg_from_mon_id(d, Actor_id::raven);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::giant_bat_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::giant_bat);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::polyp_tentacle;
     d.melee.att_msgs = {"", "grips me with a tentacle"};
     d.melee.prop_applied = new Prop_paralyzed(Prop_turns::specific, 1);
     set_dmg_from_mon_id(d, Actor_id::flying_polyp);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::greater_polyp_tentacle;
     d.melee.att_msgs = {"", "grips me with a tentacle"};
     d.melee.prop_applied = new Prop_paralyzed(Prop_turns::specific, 1);
     set_dmg_from_mon_id(d, Actor_id::greater_polyp);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::ghoul_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, Actor_id::ghoul);
     d.melee.prop_applied = new Prop_infected(Prop_turns::std);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::shadow_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, Actor_id::shadow);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::invis_stalker_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, Actor_id::invis_stalker);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::byakhee_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, Actor_id::byakhee);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::giant_mantis_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, Actor_id::giant_mantis);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::giant_locust_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::locust);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::mummy_maul;
@@ -1439,13 +1439,13 @@ void init_data_list()
     set_dmg_from_mon_id(d, Actor_id::mummy);
     d.melee.prop_applied = new Prop_cursed(Prop_turns::indefinite);
     d.melee.knocks_back = true;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::croc_head_mummy_spear;
     d.melee.att_msgs = {"", "hits me with a spear"};
     set_dmg_from_mon_id(d, Actor_id::croc_head_mummy);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ranged_wpn_intr);
     d.id = Item_id::deep_one_javelin_att;
@@ -1455,99 +1455,99 @@ void init_data_list()
     d.ranged.projectile_clr = clr_brown;
     d.ranged.projectile_glyph = '/';
     d.ranged.snd_vol = Snd_vol::low;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::deep_one_spear_att;
     d.melee.att_msgs = {"", "hits me with a spear"};
     set_dmg_from_mon_id(d, Actor_id::deep_one);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::ape_maul;
     d.melee.att_msgs = {"", "mauls me"};
     set_dmg_from_mon_id(d, Actor_id::ape);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::ooze_black_spew_pus;
     d.melee.att_msgs = {"", "spews pus on me"};
     set_dmg_from_mon_id(d, Actor_id::ooze_black);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::ooze_clear_spew_pus;
     d.melee.att_msgs = {"", "spews pus on me"};
     set_dmg_from_mon_id(d, Actor_id::ooze_clear);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::ooze_putrid_spew_pus;
     d.melee.att_msgs = {"", "spews infected pus on me"};
     set_dmg_from_mon_id(d, Actor_id::ooze_putrid);
     d.melee.prop_applied = new Prop_infected(Prop_turns::std);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::ooze_poison_spew_pus;
     d.melee.att_msgs = {"", "spews poisonous pus on me"};
     set_dmg_from_mon_id(d, Actor_id::ooze_poison);
     d.melee.prop_applied = new Prop_poisoned(Prop_turns::std);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::color_oo_space_touch;
     d.melee.att_msgs = {"", "touches me"};
     set_dmg_from_mon_id(d, Actor_id::color_oo_space);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::chthonian_bite;
     d.melee.att_msgs = {"", "strikes me with a tentacle"};
     d.melee.knocks_back = true;
     set_dmg_from_mon_id(d, Actor_id::chthonian);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::death_fiend_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, Actor_id::death_fiend);
     d.melee.dmg_type = Dmg_type::pure;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::hunting_horror_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::hunting_horror);
     d.melee.prop_applied = new Prop_poisoned(Prop_turns::std);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::mold_spores;
     d.melee.att_msgs = {"", "releases spores at me"};
     set_dmg_from_mon_id(d, Actor_id::mold);
     d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, POISON_DMG_N_TURN * 2);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::mi_go_sting;
     d.melee.att_msgs = {"", "stings me"};
     set_dmg_from_mon_id(d, Actor_id::mi_go);
     d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, POISON_DMG_N_TURN * 2);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::mi_go_commander_sting;
     d.melee.att_msgs = {"", "stings me"};
     set_dmg_from_mon_id(d, Actor_id::mi_go_commander);
     d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, POISON_DMG_N_TURN * 2);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::the_high_priest_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, Actor_id::the_high_priest);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::armor);
     d.id = Item_id::armor_leather_jacket;
@@ -1563,7 +1563,7 @@ void init_data_list()
     d.armor.dmg_to_durability_factor = 1.0;
     d.land_on_hard_snd_msg = "";
     add_feature_found_in(d, Feature_id::cabinet);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::armor);
     d.id = Item_id::armor_iron_suit;
@@ -1589,7 +1589,7 @@ void init_data_list()
     d.armor.dmg_to_durability_factor = 0.3;
     d.land_on_hard_snd_msg = "I hear a crashing sound.";
     add_feature_found_in(d, Feature_id::cabinet);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::armor);
     d.id = Item_id::armor_flack_jacket;
@@ -1609,7 +1609,7 @@ void init_data_list()
     d.armor.dmg_to_durability_factor = 0.5;
     d.land_on_hard_snd_msg = "I hear a thudding sound.";
     add_feature_found_in(d, Feature_id::cabinet);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::armor);
     d.id = Item_id::armor_asb_suit;
@@ -1638,7 +1638,7 @@ void init_data_list()
     d.land_on_hard_snd_msg = "";
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::chest);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::armor);
     d.id = Item_id::armor_mi_go;
@@ -1655,7 +1655,7 @@ void init_data_list()
     d.armor.armor_points = 3;
     d.armor.dmg_to_durability_factor = 0.1;
     d.land_on_hard_snd_msg = "";
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::head_wear);
     d.id = Item_id::gas_mask;
@@ -1679,7 +1679,7 @@ void init_data_list()
     d.chance_to_incl_in_floor_spawn_list = 50;
     d.weight = Item_weight::light;
     d.land_on_hard_snd_msg = "";
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
 //    reset_data(d, Item_type::head_wear);
 //    d.id = Item_id::hideous_mask;
@@ -1701,165 +1701,165 @@ void init_data_list()
 //    d.value = Item_value::major_treasure;
 //    d.shock_while_in_backpack = d.shock_while_equipped = 15;
 //    add_feature_found_in(d, Feature_id::tomb, 8);
-//    data[size_t(d.id)] = d;
+//    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_mayhem;
     d.spell_cast_from_scroll = Spell_id::mayhem;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_telep;
     d.spell_cast_from_scroll = Spell_id::teleport;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_pest;
     d.spell_cast_from_scroll = Spell_id::pest;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_slow_mon;
     d.spell_cast_from_scroll = Spell_id::slow_mon;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_terrify_mon;
     d.spell_cast_from_scroll = Spell_id::terrify_mon;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_paral_mon;
     d.spell_cast_from_scroll = Spell_id::paralyze_mon;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_det_items;
     d.spell_cast_from_scroll = Spell_id::det_items;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_det_traps;
     d.spell_cast_from_scroll = Spell_id::det_traps;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_bless;
     d.spell_cast_from_scroll = Spell_id::bless;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_darkbolt;
     d.spell_cast_from_scroll = Spell_id::darkbolt;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_aza_wrath;
     d.spell_cast_from_scroll = Spell_id::aza_wrath;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_opening;
     d.spawn_std_range.max = DLVL_FIRST_MID_GAME;
     d.spell_cast_from_scroll = Spell_id::opening;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_sacr_life;
     d.spell_cast_from_scroll = Spell_id::sacr_life;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_sacr_spi;
     d.spell_cast_from_scroll = Spell_id::sacr_spi;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_det_mon;
     d.spell_cast_from_scroll = Spell_id::det_mon;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_res;
     d.spell_cast_from_scroll = Spell_id::res;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_summon_mon;
     d.spell_cast_from_scroll = Spell_id::summon;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_light;
     d.spell_cast_from_scroll = Spell_id::light;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_anim_wpns;
     d.spell_cast_from_scroll = Spell_id::anim_wpns;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_vitality;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_spirit;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_blindness;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_fortitude;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_paralyze;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_rElec;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_conf;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_poison;
     mod_spawn_chances(d, 0.33);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_insight;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_clairv;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_rFire;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_curing;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_descent;
     mod_spawn_chances(d, 0.5);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_invis;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::potion);
     d.id = Item_id::potion_see_invis;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::device);
     d.id = Item_id::device_blaster;
@@ -1869,7 +1869,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest, 10);
     add_feature_found_in(d, Feature_id::tomb, 10);
     add_feature_found_in(d, Feature_id::cocoon, 10);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::device);
     d.id = Item_id::device_shockwave;
@@ -1882,7 +1882,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest, 10);
     add_feature_found_in(d, Feature_id::tomb, 10);
     add_feature_found_in(d, Feature_id::cocoon, 10);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::device);
     d.id = Item_id::device_rejuvenator;
@@ -1895,7 +1895,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest, 10);
     add_feature_found_in(d, Feature_id::tomb, 10);
     add_feature_found_in(d, Feature_id::cocoon, 10);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::device);
     d.id = Item_id::device_translocator;
@@ -1908,7 +1908,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest, 10);
     add_feature_found_in(d, Feature_id::tomb, 10);
     add_feature_found_in(d, Feature_id::cocoon, 10);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::device);
     d.id = Item_id::device_sentry_drone;
@@ -1921,7 +1921,7 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest, 10);
     add_feature_found_in(d, Feature_id::tomb, 10);
     add_feature_found_in(d, Feature_id::cocoon, 10);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::device);
     d.id = Item_id::lantern;
@@ -1942,24 +1942,24 @@ void init_data_list()
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::rod);
     d.id = Item_id::rod_purge_invis;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::rod);
     d.id = Item_id::rod_curing;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::rod);
     d.id = Item_id::rod_opening;
     d.spawn_std_range.max = DLVL_FIRST_MID_GAME;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::rod);
     d.id = Item_id::rod_bless;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::general);
     d.id = Item_id::medical_bag;
@@ -1976,98 +1976,98 @@ void init_data_list()
     d.glyph = '%';
     d.clr = clr_brown_drk;
     d.tile = Tile_id::medical_bag;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::amulet);
     d.id = Item_id::star_amulet;
     d.base_name = {"Star Amulet", "", "a Star Amulet"};
     d.base_name_un_id = d.base_name;
     d.clr = clr_white;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::amulet);
     d.id = Item_id::skull_amulet;
     d.base_name = {"Skull Amulet", "", "a Skull Amulet"};
     d.base_name_un_id = d.base_name;
     d.clr = clr_white;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::amulet);
     d.id = Item_id::spider_amulet;
     d.base_name = {"Spider Amulet", "", "a Spider Amulet"};
     d.base_name_un_id = d.base_name;
     d.clr = clr_white;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::amulet);
     d.id = Item_id::eye_amulet;
     d.base_name = {"Eye Amulet", "", "an Eye Amulet"};
     d.base_name_un_id = d.base_name;
     d.clr = clr_white;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::amulet);
     d.id = Item_id::moon_amulet;
     d.base_name = {"Moon Amulet", "", "a Moon Amulet"};
     d.base_name_un_id = d.base_name;
     d.clr = clr_white;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::amulet);
     d.id = Item_id::scarab_amulet;
     d.base_name = {"Scarab Amulet", "", "a Scarab Amulet"};
     d.base_name_un_id = d.base_name;
     d.clr = clr_white;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::amulet);
     d.id = Item_id::dagger_amulet;
     d.base_name = {"Dagger Amulet", "", "a Dagger Amulet"};
     d.base_name_un_id = d.base_name;
     d.clr = clr_white;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::amulet);
     d.id = Item_id::bat_winged_amulet;
     d.base_name = {"Bat-winged Amulet", "", "a Bat-winged Amulet"};
     d.base_name_un_id = d.base_name;
     d.clr = clr_white;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::amulet);
     d.id = Item_id::golden_amulet;
     d.base_name = {"Golden Amulet", "", "a Golden Amulet"};
     d.base_name_un_id = d.base_name;
     d.clr = clr_yellow;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::amulet);
     d.id = Item_id::silver_amulet;
     d.base_name = {"Silver Amulet", "", "a Silver Amulet"};
     d.base_name_un_id = d.base_name;
     d.clr = clr_white;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::amulet);
     d.id = Item_id::obsidian_amulet;
     d.base_name = {"Obsidian Amulet", "", "an Obsidian Amulet"};
     d.base_name_un_id = d.base_name;
     d.clr = clr_gray;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::amulet);
     d.id = Item_id::jade_amulet;
     d.base_name = {"Jade Amulet", "", "a Jade Amulet"};
     d.base_name_un_id = d.base_name;
     d.clr = clr_green_lgt;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::amulet);
     d.id = Item_id::rune_amulet;
     d.base_name = {"Rune Amulet", "", "a Rune Amulet"};
     d.base_name_un_id = d.base_name;
     d.clr = clr_white;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
 }
 
 } //namespace

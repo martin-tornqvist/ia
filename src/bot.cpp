@@ -255,6 +255,13 @@ void act()
         return;
     }
 
+    //Occasionally send a 'wait 5 turns' command (just code exercise)
+    if (rnd::one_in(50))
+    {
+        input::handle_map_mode_key_press(Key_data('s'));
+        return;
+    }
+
     //Occasionally apply a random property to exercise the prop code
     if (rnd::one_in(20))
     {
