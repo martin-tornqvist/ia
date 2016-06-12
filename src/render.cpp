@@ -483,7 +483,8 @@ void init()
     scr_texture_ = SDL_CreateTexture(sdl_renderer_,
                                      SDL_PIXELFORMAT_ARGB8888,
                                      SDL_TEXTUREACCESS_STREAMING,
-                                     SCR_PX_W, SCR_PX_H);
+                                     SCR_PX_W,
+                                     SCR_PX_H);
 
     if (!scr_texture_)
     {

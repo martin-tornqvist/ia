@@ -7,9 +7,15 @@ if [ "x$1" = "x-h" ]; then
 fi    
 
 if [ "x$1" = "x-s" ]; then
-    supp_flag="--gen-suppressions=all"
+    generate_suppressions="--gen-suppressions=all"
 fi
 
 cd target
-valgrind --track-origins=yes --leak-check=full --show-reachable=yes $supp_flag \
-    --suppressions=./../tools/valgrind.supp ./ia
+valgrind \
+  --track-origins=yes \
+  --leak-check=full \
+  --show-possibly-lost=no \
+  --show-reachable=no \
+  $generate_suppressions \
+  --suppressions=./../tools/valgrind.supp \
+  ./ia
