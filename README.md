@@ -8,6 +8,7 @@
 **develop** - No guarantees. It may not even compile.
 
 **NOTE:** Part of the IA source code resides in a Git sub module, which you also need to initialize and update, like so:
+
     $ git submodule init
     $ git submodule update
 
