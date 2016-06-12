@@ -7,6 +7,10 @@
 
 **develop** - No guarantees. It may not even compile.
 
+**NOTE:** Part of the IA source code resides in a Git sub module, which you also need to initialize and update, like so:
+    $ git submodule init
+    $ git submodule update
+
 ## Fetching source
 
 If you aren't familiar with using Git, you can download whole source code directly [as compressed archive](https://github.com/InfraArcana/ia/archive/master.zip).
@@ -59,7 +63,7 @@ The instructions below are written and tested for Ubuntu 12.10
 
 You will need build tools and SDL:
 
-    $ sudo apt-get install make gcc libsdl2-2.0-0 libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl-ttf2.0-dev
+    $ sudo apt-get install make gcc libsdl2-2.0-0 libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
 
 Go to the IA repository directory, and type:
 

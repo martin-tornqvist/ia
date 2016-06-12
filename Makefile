@@ -11,30 +11,50 @@ CXX?=g++
 BUILD?=release
 
 # Directiories
-SRC_DIR=src
-INC_DIR=include
-TARGET_DIR=target
-ASSETS_DIR=assets
+SRC_DIR          = src
+INC_DIR          = include
+TARGET_DIR       = target
+ASSETS_DIR       = assets
+RL_UTILS_SRC_DIR = rl_utils/src
+RL_UTILS_INC_DIR = rl_utils/include
 
 # Includes
-INC_DIR_debug=$(INC_DIR)/debug_mode_incl
-INC_DIR_release=$(INC_DIR)/release_mode_incl
-INCLUDES=-I $(INC_DIR) -I $(INC_DIR_$(BUILD))
+INCLUDES= \
+  -I $(INC_DIR) \
+  -I $(RL_UTILS_INC_DIR) \
+  #
 
-#Flags
-CXXFLAGS_release=-O2
-CXXFLAGS_debug=-O0 -g
-CXXFLAGS=-std=c++11 -Wall -Wextra -fno-rtti -fno-exceptions $(shell sdl2-config --cflags) $(CXXFLAGS_$(BUILD))
+# Flags
+CXXFLAGS_release = \
+  -O2 \
+  -DNDEBUG \
+  #
+
+CXXFLAGS_debug = \
+  -O0 \
+  -g \
+  #
+
+CXXFLAGS= \
+  -std=c++11 \
+  -Wall \
+  -Wextra \
+  -fno-rtti \
+  -fno-exceptions \
+  $(shell sdl2-config --cflags) $(CXXFLAGS_$(BUILD))
+
 # For building 32-bit binaries on x86_64 platform
 # CXXFLAGS+=-m32 -march=i686
-#LDFLAGS=-L/usr/lib/i386-linux-gnu -lSDL -lSDL_image -lSDL_mixer
-LDFLAGS=$(shell sdl2-config --libs) -lSDL2_image -lSDL2_mixer
+
+LD_FLAGS=$(shell sdl2-config --libs) -lSDL2_image -lSDL2_mixer
 
 # Output and sources
-EXECUTABLE=ia
-SOURCES=$(wildcard $(SRC_DIR)/*.cpp)
-OBJECTS=$(SOURCES:.cpp=.o)
-DEPENDS=$(SOURCES:.cpp=.d)
+EXECUTABLE       = ia
+SRC              = $(wildcard $(SRC_DIR)/*.cpp)
+RL_UTILS_SRC     = $(wildcard $(RL_UTILS_SRC_DIR)/*.cpp)
+OBJECTS          = $(SRC:.cpp=.o)
+RL_UTILS_OBJECTS = $(RL_UTILS_SRC:.cpp=.o)
+DEPENDS          = $(SRC:.cpp=.d)
 
 # Various bash commands
 RM=rm -rf
@@ -46,8 +66,8 @@ CAT=cat
 # Make targets
 all: $(EXECUTABLE)
 
-$(EXECUTABLE): $(OBJECTS)
-	$(CXX) $^ -o $@ $(LDFLAGS)
+$(EXECUTABLE): $(RL_UTILS_OBJECTS) $(OBJECTS)
+	$(CXX) $^ -o $@ $(LD_FLAGS)
 	$(RM) $(TARGET_DIR)
 	$(MKDIR) $(TARGET_DIR)
 	$(MV) $(EXECUTABLE) $(TARGET_DIR)
