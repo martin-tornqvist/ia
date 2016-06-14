@@ -7,18 +7,21 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="../target/debug/cb_linux_project" prefix_auto="1" extension_auto="1" />
+				<Option output="../target/debug/ia" prefix_auto="1" extension_auto="1" />
 				<Option object_output="../obj/debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
+				<ExtraCommands>
+					<Add after="cp -r ../assets/* ../target/debug" />
+				</ExtraCommands>
 			</Target>
 			<Target title="Release">
-				<Option output="../target/release/cb_linux_project" prefix_auto="1" extension_auto="1" />
+				<Option output="../target/release/ia" prefix_auto="1" extension_auto="1" />
 				<Option object_output="../obj/release/" />
-				<Option type="1" />
+				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
@@ -26,11 +29,205 @@
 				<Linker>
 					<Add option="-s" />
 				</Linker>
+				<ExtraCommands>
+					<Add after="cp -r ../assets/* ../target/release" />
+				</ExtraCommands>
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-Wnon-virtual-dtor" />
+			<Add option="-Winit-self" />
+			<Add option="-Wredundant-decls" />
+			<Add option="-Wcast-align" />
+			<Add option="-Wundef" />
+			<Add option="-Wfloat-equal" />
+			<Add option="-Winline" />
+			<Add option="-Wunreachable-code" />
+			<Add option="-Wmissing-declarations" />
+			<Add option="-Wmissing-include-dirs" />
+			<Add option="-Wmain" />
+			<Add option="-pedantic-errors" />
+			<Add option="-pedantic" />
+			<Add option="-Wfatal-errors" />
+			<Add option="-Wextra" />
 			<Add option="-Wall" />
+			<Add option="-std=c++11" />
+			<Add option="-fno-rtti" />
+			<Add option="-fno-exceptions" />
+			<Add option="-I/usr/include/SDL2 -D_REENTRANT" />
+			<Add directory="../include" />
+			<Add directory="../rl_utils/include" />
 		</Compiler>
+		<Linker>
+			<Add option="-L/usr/lib/x86_64-linux-gnu -lSDL2 -lSDL2_image -lSDL2_mixer" />
+		</Linker>
+		<Unit filename="../include/ability_values.hpp" />
+		<Unit filename="../include/actor.hpp" />
+		<Unit filename="../include/actor_data.hpp" />
+		<Unit filename="../include/actor_factory.hpp" />
+		<Unit filename="../include/actor_mon.hpp" />
+		<Unit filename="../include/actor_player.hpp" />
+		<Unit filename="../include/ai.hpp" />
+		<Unit filename="../include/art.hpp" />
+		<Unit filename="../include/attack.hpp" />
+		<Unit filename="../include/audio.hpp" />
+		<Unit filename="../include/bot.hpp" />
+		<Unit filename="../include/character_descr.hpp" />
+		<Unit filename="../include/character_lines.hpp" />
+		<Unit filename="../include/close.hpp" />
+		<Unit filename="../include/cmn.hpp" />
+		<Unit filename="../include/colors.hpp" />
+		<Unit filename="../include/config.hpp" />
+		<Unit filename="../include/create_character.hpp" />
+		<Unit filename="../include/disarm.hpp" />
+		<Unit filename="../include/drop.hpp" />
+		<Unit filename="../include/dungeon_master.hpp" />
+		<Unit filename="../include/explosion.hpp" />
+		<Unit filename="../include/feature.hpp" />
+		<Unit filename="../include/feature_data.hpp" />
+		<Unit filename="../include/feature_door.hpp" />
+		<Unit filename="../include/feature_event.hpp" />
+		<Unit filename="../include/feature_mob.hpp" />
+		<Unit filename="../include/feature_rigid.hpp" />
+		<Unit filename="../include/feature_trap.hpp" />
+		<Unit filename="../include/fov.hpp" />
+		<Unit filename="../include/game_time.hpp" />
+		<Unit filename="../include/gods.hpp" />
+		<Unit filename="../include/highscore.hpp" />
+		<Unit filename="../include/init.hpp" />
+		<Unit filename="../include/input.hpp" />
+		<Unit filename="../include/insanity.hpp" />
+		<Unit filename="../include/inventory.hpp" />
+		<Unit filename="../include/inventory_handling.hpp" />
+		<Unit filename="../include/item.hpp" />
+		<Unit filename="../include/item_amulet.hpp" />
+		<Unit filename="../include/item_data.hpp" />
+		<Unit filename="../include/item_device.hpp" />
+		<Unit filename="../include/item_factory.hpp" />
+		<Unit filename="../include/item_potion.hpp" />
+		<Unit filename="../include/item_rod.hpp" />
+		<Unit filename="../include/item_scroll.hpp" />
+		<Unit filename="../include/kick.hpp" />
+		<Unit filename="../include/knockback.hpp" />
+		<Unit filename="../include/line_calc.hpp" />
+		<Unit filename="../include/look.hpp" />
+		<Unit filename="../include/main_menu.hpp" />
+		<Unit filename="../include/manual.hpp" />
+		<Unit filename="../include/map.hpp" />
+		<Unit filename="../include/map_parsing.hpp" />
+		<Unit filename="../include/map_patterns.hpp" />
+		<Unit filename="../include/map_templates.hpp" />
+		<Unit filename="../include/map_travel.hpp" />
+		<Unit filename="../include/mapgen.hpp" />
+		<Unit filename="../include/marker.hpp" />
+		<Unit filename="../include/menu_input.hpp" />
+		<Unit filename="../include/msg_log.hpp" />
+		<Unit filename="../include/pickup.hpp" />
+		<Unit filename="../include/player_bon.hpp" />
+		<Unit filename="../include/player_spells_handling.hpp" />
+		<Unit filename="../include/populate_items.hpp" />
+		<Unit filename="../include/populate_monsters.hpp" />
+		<Unit filename="../include/populate_traps.hpp" />
+		<Unit filename="../include/popup.hpp" />
+		<Unit filename="../include/postmortem.hpp" />
+		<Unit filename="../include/properties.hpp" />
+		<Unit filename="../include/query.hpp" />
+		<Unit filename="../include/reload.hpp" />
+		<Unit filename="../include/render.hpp" />
+		<Unit filename="../include/render_inventory.hpp" />
+		<Unit filename="../include/room.hpp" />
+		<Unit filename="../include/save_handling.hpp" />
+		<Unit filename="../include/sdl_wrapper.hpp" />
+		<Unit filename="../include/sound.hpp" />
+		<Unit filename="../include/spells.hpp" />
+		<Unit filename="../include/text_format.hpp" />
+		<Unit filename="../include/throwing.hpp" />
+		<Unit filename="../rl_utils/include/mersenne_twister.hpp" />
+		<Unit filename="../rl_utils/include/rl_utils.hpp" />
+		<Unit filename="../rl_utils/src/rl_utils.cpp" />
+		<Unit filename="../src/ability_values.cpp" />
+		<Unit filename="../src/actor.cpp" />
+		<Unit filename="../src/actor_data.cpp" />
+		<Unit filename="../src/actor_factory.cpp" />
+		<Unit filename="../src/actor_mon.cpp" />
+		<Unit filename="../src/actor_player.cpp" />
+		<Unit filename="../src/ai.cpp" />
+		<Unit filename="../src/art.cpp" />
+		<Unit filename="../src/attack.cpp" />
+		<Unit filename="../src/audio.cpp" />
+		<Unit filename="../src/bot.cpp" />
+		<Unit filename="../src/character_descr.cpp" />
+		<Unit filename="../src/character_lines.cpp" />
+		<Unit filename="../src/close.cpp" />
+		<Unit filename="../src/colors.cpp" />
+		<Unit filename="../src/config.cpp" />
+		<Unit filename="../src/create_character.cpp" />
+		<Unit filename="../src/disarm.cpp" />
+		<Unit filename="../src/drop.cpp" />
+		<Unit filename="../src/dungeon_master.cpp" />
+		<Unit filename="../src/explosion.cpp" />
+		<Unit filename="../src/feature.cpp" />
+		<Unit filename="../src/feature_data.cpp" />
+		<Unit filename="../src/feature_door.cpp" />
+		<Unit filename="../src/feature_event.cpp" />
+		<Unit filename="../src/feature_mob.cpp" />
+		<Unit filename="../src/feature_rigid.cpp" />
+		<Unit filename="../src/feature_trap.cpp" />
+		<Unit filename="../src/fov.cpp" />
+		<Unit filename="../src/game_time.cpp" />
+		<Unit filename="../src/gods.cpp" />
+		<Unit filename="../src/highscore.cpp" />
+		<Unit filename="../src/init.cpp" />
+		<Unit filename="../src/input.cpp" />
+		<Unit filename="../src/insanity.cpp" />
+		<Unit filename="../src/inventory.cpp" />
+		<Unit filename="../src/inventory_handling.cpp" />
+		<Unit filename="../src/item.cpp" />
+		<Unit filename="../src/item_amulet.cpp" />
+		<Unit filename="../src/item_data.cpp" />
+		<Unit filename="../src/item_device.cpp" />
+		<Unit filename="../src/item_factory.cpp" />
+		<Unit filename="../src/item_potion.cpp" />
+		<Unit filename="../src/item_rod.cpp" />
+		<Unit filename="../src/item_scroll.cpp" />
+		<Unit filename="../src/kick.cpp" />
+		<Unit filename="../src/knockback.cpp" />
+		<Unit filename="../src/line_calc.cpp" />
+		<Unit filename="../src/look.cpp" />
+		<Unit filename="../src/main.cpp" />
+		<Unit filename="../src/main_menu.cpp" />
+		<Unit filename="../src/manual.cpp" />
+		<Unit filename="../src/map.cpp" />
+		<Unit filename="../src/map_parsing.cpp" />
+		<Unit filename="../src/map_patterns.cpp" />
+		<Unit filename="../src/map_templates.cpp" />
+		<Unit filename="../src/map_travel.cpp" />
+		<Unit filename="../src/mapgen.cpp" />
+		<Unit filename="../src/mapgen_special.cpp" />
+		<Unit filename="../src/mapgen_utils.cpp" />
+		<Unit filename="../src/marker.cpp" />
+		<Unit filename="../src/menu_input.cpp" />
+		<Unit filename="../src/msg_log.cpp" />
+		<Unit filename="../src/pickup.cpp" />
+		<Unit filename="../src/player_bon.cpp" />
+		<Unit filename="../src/player_spells_handling.cpp" />
+		<Unit filename="../src/populate_items.cpp" />
+		<Unit filename="../src/populate_monsters.cpp" />
+		<Unit filename="../src/populate_traps.cpp" />
+		<Unit filename="../src/popup.cpp" />
+		<Unit filename="../src/postmortem.cpp" />
+		<Unit filename="../src/properties.cpp" />
+		<Unit filename="../src/query.cpp" />
+		<Unit filename="../src/reload.cpp" />
+		<Unit filename="../src/render.cpp" />
+		<Unit filename="../src/render_inventory.cpp" />
+		<Unit filename="../src/room.cpp" />
+		<Unit filename="../src/save_handling.cpp" />
+		<Unit filename="../src/sdl_wrapper.cpp" />
+		<Unit filename="../src/sound.cpp" />
+		<Unit filename="../src/spells.cpp" />
+		<Unit filename="../src/text_format.cpp" />
+		<Unit filename="../src/throwing.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

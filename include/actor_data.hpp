@@ -132,9 +132,9 @@ struct Actor_data_t
     int hp, spi, dmg_melee, dmg_ranged;
     Actor_speed speed;
     Ability_vals ability_vals;
-    bool natural_props[size_t(Prop_id::END)];
+    bool natural_props[(size_t)Prop_id::END];
     int ranged_cooldown_turns, spell_cooldown_turns;
-    bool ai[int(Ai_id::END)];
+    bool ai[(size_t)Ai_id::END];
     int nr_turns_aware;
     int spawn_min_dlvl, spawn_max_dlvl;
     Actor_size actor_size;
@@ -167,7 +167,7 @@ struct Actor_data_t
 namespace actor_data
 {
 
-extern Actor_data_t data[int(Actor_id::END)];
+extern Actor_data_t data[(size_t)Actor_id::END];
 
 void init();
 
