@@ -972,6 +972,8 @@ void handle_map_mode_key_press(const Key_data& d)
     //----------------------------------- MAKE NOISE
     else if (d.key == 'N')
     {
+        msg_log::clear();
+
         if (player_bon::bg() == Bg::ghoul)
         {
             msg_log::add("I let out a chilling howl.");

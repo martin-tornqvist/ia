@@ -184,17 +184,25 @@ void wait_for_msg_more()
         return;
     }
 
-    while (true)
+    //Determine criteria for confirming more prompt (decided by config)
+    if (config::is_any_key_confirm_more())
     {
-        const Key_data d = input::input();
-
-        if (
-            d.sdl_key == SDLK_SPACE     ||
-            d.sdl_key == SDLK_ESCAPE    ||
-            d.sdl_key == SDLK_RETURN    ||
-            d.sdl_key == SDLK_TAB)
+        wait_for_key_press();
+    }
+    else //Only some keys confirm more prompts
+    {
+        while (true)
         {
-            break;
+            const Key_data d = input::input();
+
+            if (
+                d.sdl_key == SDLK_SPACE     ||
+                d.sdl_key == SDLK_ESCAPE    ||
+                d.sdl_key == SDLK_RETURN    ||
+                d.sdl_key == SDLK_TAB)
+            {
+                break;
+            }
         }
     }
 }

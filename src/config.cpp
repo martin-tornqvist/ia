@@ -18,7 +18,7 @@ namespace config
 namespace
 {
 
-const int NR_OPTIONS  = 13;
+const int NR_OPTIONS  = 14;
 const int OPT_Y0      = 1;
 
 std::string  font_name_                 = "";
@@ -28,6 +28,7 @@ bool    is_text_mode_wall_full_square_  = false;
 bool    is_ranged_wpn_meleee_prompt_    = false;
 bool    is_ranged_wpn_auto_reload_      = false;
 bool    is_intro_lvl_skipped_           = false;
+bool    is_any_key_confirm_more_        = false;
 int     map_px_h_                       = -1;
 int     log_px_h_                       = -1;
 int     map_px_offset_h_                = -1;
@@ -110,6 +111,7 @@ void set_default_variables()
     is_tiles_wall_full_square_      = false;
     is_text_mode_wall_full_square_  = true;
     is_intro_lvl_skipped_           = false;
+    is_any_key_confirm_more_        = false;
     is_ranged_wpn_meleee_prompt_    = true;
     is_ranged_wpn_auto_reload_      = false;
     delay_projectile_draw_          = 25;
@@ -195,14 +197,18 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
         break;
 
     case 7:
-        is_ranged_wpn_meleee_prompt_ = !is_ranged_wpn_meleee_prompt_;
+        is_any_key_confirm_more_ = !is_any_key_confirm_more_;
         break;
 
     case 8:
-        is_ranged_wpn_auto_reload_ = !is_ranged_wpn_auto_reload_;
+        is_ranged_wpn_meleee_prompt_ = !is_ranged_wpn_meleee_prompt_;
         break;
 
     case 9:
+        is_ranged_wpn_auto_reload_ = !is_ranged_wpn_auto_reload_;
+        break;
+
+    case 10:
     {
         const P p(OPTION_VALUES_X_POS, OPT_Y0 + browser->y());
 
@@ -220,7 +226,7 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
     }
     break;
 
-    case 10:
+    case 11:
     {
         const P p(OPTION_VALUES_X_POS, OPT_Y0 + browser->y());
 
@@ -238,7 +244,7 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
     }
     break;
 
-    case 11:
+    case 12:
     {
         const P p(OPTION_VALUES_X_POS, OPT_Y0 + browser->y());
 
@@ -256,7 +262,7 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
     }
     break;
 
-    case 12:
+    case 13:
         set_default_variables();
         set_cell_px_dims_from_font_name();
         set_cell_px_dim_dependent_variables();
@@ -382,6 +388,21 @@ void draw(const Menu_browser* const browser, const int OPTION_VALUES_X_POS)
                       P(X1 - 2, OPT_Y0 + opt_nr),
                       browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     str = is_intro_lvl_skipped_ ? "Yes" : "No";
+    render::draw_text(str,
+                      Panel::screen,
+                      P(X1, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    opt_nr++;
+
+    render::draw_text("Any key confirms \"-More-\" prompts",
+                      Panel::screen,
+                      P(0, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(":",
+                      Panel::screen,
+                      P(X1 - 2, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    str = is_any_key_confirm_more_ ? "Yes" : "No";
     render::draw_text(str,
                       Panel::screen,
                       P(X1, OPT_Y0 + opt_nr),
@@ -555,6 +576,10 @@ void set_variables_from_lines(std::vector<std::string>& lines)
     lines.erase(begin(lines));
 
     cur_line = lines.front();
+    is_any_key_confirm_more_ = cur_line == "1";
+    lines.erase(begin(lines));
+
+    cur_line = lines.front();
     is_ranged_wpn_meleee_prompt_ = cur_line == "1";
     lines.erase(begin(lines));
 
@@ -606,6 +631,7 @@ void set_lines_from_variables(std::vector<std::string>& lines)
     lines.push_back(is_tiles_wall_full_square_      ? "1" : "0");
     lines.push_back(is_text_mode_wall_full_square_  ? "1" : "0");
     lines.push_back(is_intro_lvl_skipped_           ? "1" : "0");
+    lines.push_back(is_any_key_confirm_more_        ? "1" : "0");
     lines.push_back(is_ranged_wpn_meleee_prompt_    ? "1" : "0");
     lines.push_back(is_ranged_wpn_auto_reload_      ? "1" : "0");
     lines.push_back(to_str(delay_projectile_draw_));
@@ -749,6 +775,11 @@ bool is_ranged_wpn_auto_reload()
 bool is_intro_lvl_skipped()
 {
     return is_intro_lvl_skipped_;
+}
+
+bool is_any_key_confirm_more()
+{
+    return is_any_key_confirm_more_;
 }
 
 int delay_projectile_draw()
