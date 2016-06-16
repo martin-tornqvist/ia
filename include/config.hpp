@@ -34,6 +34,6 @@ int             delay_projectile_draw();
 int             delay_shotgun();
 int             delay_explosion();
 
-} //Config
+} //config
 
 #endif

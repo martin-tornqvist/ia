@@ -35,10 +35,14 @@ CXXFLAGS_debug = \
   -g \
   #
 
+# The debug trace system generates warnings for trace levels higher than the
+# compiled level, so sadly Wunused-value cannot be used
 CXXFLAGS= \
   -std=c++11 \
   -Wall \
   -Wextra \
+  -Werror \
+  -Wno-unused-value \
   -fno-rtti \
   -fno-exceptions \
   $(shell sdl2-config --cflags) $(CXXFLAGS_$(BUILD))

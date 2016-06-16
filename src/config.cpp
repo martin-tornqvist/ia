@@ -61,7 +61,7 @@ void set_cell_px_dims_from_font_name()
 {
     TRACE_FUNC_BEGIN;
     std::string font_name = font_name_;
-
+    
     char ch = 'a';
 
     while (ch < '0' || ch > '9')
@@ -206,36 +206,55 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
     {
         const P p(OPTION_VALUES_X_POS, OPT_Y0 + browser->y());
 
-        const int NR = query::number(p, clr_menu_highlight, 1, 3, delay_projectile_draw_, true);
+        const int NR = query::number(p,
+                                     clr_menu_highlight,
+                                     1,
+                                     3,
+                                     delay_projectile_draw_,
+                                     true);
 
         if (NR != -1)
         {
             delay_projectile_draw_ = NR;
         }
-    } break;
+    }
+    break;
 
     case 10:
     {
         const P p(OPTION_VALUES_X_POS, OPT_Y0 + browser->y());
 
-        const int NR = query::number(p, clr_menu_highlight, 1, 3, delay_shotgun_, true);
+        const int NR = query::number(p,
+                                     clr_menu_highlight,
+                                     1,
+                                     3,
+                                     delay_shotgun_,
+                                     true);
 
         if (NR != -1)
         {
             delay_shotgun_ = NR;
         }
-    } break;
+    }
+    break;
 
     case 11:
     {
         const P p(OPTION_VALUES_X_POS, OPT_Y0 + browser->y());
-        const int NR = query::number(p, clr_menu_highlight, 1, 3, delay_explosion_, true);
+
+        const int NR = query::number(p,
+                                     clr_menu_highlight,
+                                     1,
+                                     3,
+                                     delay_explosion_,
+                                     true);
 
         if (NR != -1)
         {
             delay_explosion_ = NR;
         }
-    } break;
+    }
+    break;
 
     case 12:
         set_default_variables();
@@ -595,11 +614,11 @@ void set_lines_from_variables(std::vector<std::string>& lines)
     TRACE_FUNC_END;
 }
 
-} //Namespace
+} //namespace
 
 void init()
 {
-    font_name_     = "";
+    font_name_      = "";
     is_bot_playing_ = false;
 
     font_image_names.clear();
@@ -633,29 +652,118 @@ void init()
     set_cell_px_dim_dependent_variables();
 }
 
-bool        is_tiles_mode()                 {return is_tiles_mode_;}
-std::string font_name()                     {return font_name_;}
-bool        is_fullscreen()                 {return is_fullscr_;}
-int         scr_px_w()                      {return scr_px_w_;}
-int         scr_px_h()                      {return scr_px_h_;}
-int         cell_px_w()                     {return cell_px_w_;}
-int         cell_px_h()                     {return cell_px_h_;}
-int         log_px_h()                      {return log_px_h_;}
-int         map_px_h()                      {return map_px_h_;}
-int         map_px_offset_h()               {return map_px_offset_h_;}
-int         char_lines_px_offset_h()        {return char_lines_px_offset_h_;}
-int         char_lines_px_h()               {return char_lines_px_h_;}
-bool        is_text_mode_wall_full_square() {return is_text_mode_wall_full_square_;}
-bool        is_tiles_wall_full_square()     {return is_tiles_wall_full_square_;}
-bool        is_audio_enabled()              {return is_audio_enabled_;}
-bool        is_bot_playing()                {return is_bot_playing_;}
-void        toggle_bot_playing()            {is_bot_playing_ = !is_bot_playing_;}
-bool        is_ranged_wpn_meleee_prompt()   {return is_ranged_wpn_meleee_prompt_;}
-bool        is_ranged_wpn_auto_reload()     {return is_ranged_wpn_auto_reload_;}
-bool        is_intro_lvl_skipped()          {return is_intro_lvl_skipped_;}
-int         delay_projectile_draw()         {return delay_projectile_draw_;}
-int         delay_shotgun()                 {return delay_shotgun_;}
-int         delay_explosion()               {return delay_explosion_;}
+bool is_tiles_mode()
+{
+    return is_tiles_mode_;
+}
+
+std::string font_name()
+{
+    return font_name_;
+}
+
+bool is_fullscreen()
+{
+    return is_fullscr_;
+}
+
+int scr_px_w()
+{
+    return scr_px_w_;
+}
+
+int scr_px_h()
+{
+    return scr_px_h_;
+}
+
+int cell_px_w()
+{
+    return cell_px_w_;
+}
+
+int cell_px_h()
+{
+    return cell_px_h_;
+}
+
+int log_px_h()
+{
+    return log_px_h_;
+}
+
+int map_px_h()
+{
+    return map_px_h_;
+}
+
+int map_px_offset_h()
+{
+    return map_px_offset_h_;
+}
+
+int char_lines_px_offset_h()
+{
+    return char_lines_px_offset_h_;
+}
+int char_lines_px_h()
+{
+    return char_lines_px_h_;
+}
+
+bool is_text_mode_wall_full_square()
+{
+    return is_text_mode_wall_full_square_;
+}
+
+bool is_tiles_wall_full_square()
+{
+    return is_tiles_wall_full_square_;
+}
+
+bool is_audio_enabled()
+{
+    return is_audio_enabled_;
+}
+
+bool is_bot_playing()
+{
+    return is_bot_playing_;
+}
+
+void toggle_bot_playing()
+{
+    is_bot_playing_ = !is_bot_playing_;
+}
+
+bool is_ranged_wpn_meleee_prompt()
+{
+    return is_ranged_wpn_meleee_prompt_;
+}
+
+bool is_ranged_wpn_auto_reload()
+{
+    return is_ranged_wpn_auto_reload_;
+}
+
+bool is_intro_lvl_skipped()
+{
+    return is_intro_lvl_skipped_;
+}
+
+int delay_projectile_draw()
+{
+    return delay_projectile_draw_;
+}
+int delay_shotgun()
+{
+    return delay_shotgun_;
+}
+
+int delay_explosion()
+{
+    return delay_explosion_;
+}
 
 void run_options_menu()
 {
@@ -678,8 +786,8 @@ void run_options_menu()
 
         case Menu_action::esc:
         case Menu_action::space:
-            //Since Text mode wall symbol may have changed,
-            //we need to redefine the feature data list
+            //Since Text mode wall symbol may have changed, we need to
+            //redefine the feature data list
             feature_data::init();
             return;
 
@@ -710,7 +818,4 @@ void toggle_fullscreen()
     write_lines_to_file(lines);
 }
 
-} //Config
-
-
-
+} //config

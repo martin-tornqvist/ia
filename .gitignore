@@ -11,3 +11,4 @@ CppCheckResults.xml
 *.layout
 *.layout.orig
 *.depend
+*.pyc
