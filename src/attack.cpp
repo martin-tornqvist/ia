@@ -1586,11 +1586,13 @@ void melee(Actor* const attacker,
     }
 
     //Player critically fails melee attack?
-    if (attacker == map::player && att_data.att_result == fail_critical)
+    if (
+        attacker == map::player &&
+        att_data.att_result == fail_critical)
     {
         Player& player = *map::player;
 
-        const int ROLL = rnd::range(1, 9);
+        const int ROLL = rnd::range(1, 8);
 
         switch (ROLL)
         {
@@ -1630,75 +1632,8 @@ void melee(Actor* const attacker,
         }
         break;
 
-        //Drop weaon
-        case 3:
-        {
-            //Only drop weapon if:
-            // * Player is Cursed, and
-            // * Random roll (we don't want this to happen too often), and
-            // * Player is attacking with wielded weapon (and not e.g. a Kick)
-            if (
-                player.has_prop(Prop_id::cursed)    &&
-                rnd::coin_toss()                    &&
-                player.inv().item_in_slot(Slot_id::wpn) == &wpn)
-            {
-                Item* item = player.inv().remove_from_slot(Slot_id::wpn);
-
-                if (item)
-                {
-                    std::string item_name = item->name(Item_ref_type::plain,
-                                                       Item_ref_inf::none);
-
-                    bool blocked[MAP_W][MAP_H];
-
-                    const P fov_p = player.pos;
-
-                    R fov_rect = fov::get_fov_rect(fov_p);
-
-                    map_parse::run(cell_check::Blocks_move_cmn(false),
-                                   blocked,
-                                   Map_parse_mode::overwrite,
-                                   fov_rect);
-
-                    Los_result fov_result[MAP_W][MAP_H];
-
-                    fov::run(fov_p, blocked, fov_result);
-
-                    std::vector<P> p_bucket;
-
-                    for (int x = fov_rect.p0.x; x <= fov_rect.p1.x; ++x)
-                    {
-                        for (int y = fov_rect.p0.y; y <= fov_rect.p1.y; ++y)
-                        {
-                            if (!fov_result[x][y].is_blocked_hard)
-                            {
-                                p_bucket.push_back(P(x, y));
-                            }
-                        }
-                    }
-
-                    P item_p(map::player->pos);
-
-                    if (!p_bucket.empty())
-                    {
-                        const int IDX = (size_t)(rnd::range(0, p_bucket.size() - 1));
-
-                        item_p = p_bucket[IDX];
-                    }
-
-                    msg_log::add("The " + item_name + " flies from my hands!",
-                                 clr_msg_note,
-                                 true,
-                                 More_prompt_on_msg::yes);
-
-                    item_drop::drop_item_on_map(item_p, *item);
-                }
-            }
-        }
-        break;
-
         //Weapon breaks?
-        case 4:
+        case 3:
         {
             //Only break weapon if:
             // * Player is Cursed, and

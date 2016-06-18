@@ -12,3 +12,8 @@ CppCheckResults.xml
 *.layout.orig
 *.depend
 *.pyc
+
+# Emacs gtags
+GPATH
+GRTAGS
+GTAGS
