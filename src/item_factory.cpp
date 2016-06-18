@@ -364,7 +364,8 @@ void set_item_randomized_properties(Item* item)
 {
     const Item_data_t& d = item->data();
 
-    ASSERT(d.type != Item_type::melee_wpn_intr && d.type != Item_type::ranged_wpn_intr);
+    ASSERT(d.type != Item_type::melee_wpn_intr &&
+           d.type != Item_type::ranged_wpn_intr);
 
     if (d.id == Item_id::pharaoh_staff)
     {
@@ -413,6 +414,18 @@ void set_item_randomized_properties(Item* item)
     if (d.is_stackable)
     {
         item->nr_items_ = rnd::range(1, d.max_stack_at_spawn);
+    }
+
+    //Vary number of Medical supplies (mostly just for aesthetic reasons)
+    if (d.id == Item_id::medical_bag)
+    {
+        Medical_bag* const medbag = static_cast<Medical_bag*>(item);
+
+        const int NR_SUPPLIES_MAX = medbag->nr_supplies_;
+
+        const int NR_SUPPLIES_MIN = NR_SUPPLIES_MAX - (NR_SUPPLIES_MAX / 3);
+
+        medbag->nr_supplies_ = rnd::range(NR_SUPPLIES_MIN, NR_SUPPLIES_MAX);
     }
 }
 

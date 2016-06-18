@@ -4,7 +4,7 @@ test/bin
 test/obj
 *.o
 *~
-#*
+\#*
 *.patch
 CppCheckResults.xml
 *.mk

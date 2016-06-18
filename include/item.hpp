@@ -469,10 +469,7 @@ public:
         return clr_green;
     }
 
-    int nr_supplies() const
-    {
-        return nr_supplies_;
-    }
+    int nr_supplies_;
 
 protected:
     Med_bag_action choose_action() const;
@@ -485,8 +482,6 @@ protected:
     {
         return "{" + to_str(nr_supplies_) + "}";
     }
-
-    int nr_supplies_;
 
     int nr_turns_left_action_;
 

@@ -1762,7 +1762,7 @@ void Worm_mass::on_death()
         allow_split_                                &&
         hp_ > -10                                   &&
         !prop_handler_->has_prop(Prop_id::burning)  &&
-        (game_time::actors.size() < MAX_NR_ACTORS_ON_MAP))
+        game_time::actors.size() < MAX_NR_ACTORS_ON_MAP)
     {
         std::vector<Actor_id> worm_ids(2, id());
 
@@ -1805,6 +1805,7 @@ Did_action Giant_locust::on_act()
     if (
         is_alive()                                      &&
         aware_counter_ > 0                              &&
+        !prop_handler_->has_prop(Prop_id::burning)      &&
         game_time::actors.size() < MAX_NR_ACTORS_ON_MAP &&
         rnd::one_in(spawn_new_one_in_n))
     {
@@ -1825,7 +1826,7 @@ Did_action Giant_locust::on_act()
 
                 Giant_locust* const locust = static_cast<Giant_locust*>(actor);
 
-                spawn_new_one_in_n += 3;
+                spawn_new_one_in_n += 4;
 
                 locust->spawn_new_one_in_n  = spawn_new_one_in_n;
                 locust->aware_counter_      = aware_counter_;

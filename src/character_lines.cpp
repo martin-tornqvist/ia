@@ -281,7 +281,7 @@ void draw()
 
         const Medical_bag* const medical_bag = static_cast<const Medical_bag*>(medical_item);
 
-        const int NR_SUPPL = medical_bag->nr_supplies();
+        const int NR_SUPPL = medical_bag->nr_supplies_;
 
         str = to_str(NR_SUPPL);
 

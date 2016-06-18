@@ -1323,6 +1323,7 @@ void init_data_list()
     d.id = Item_id::fire_hound_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::fire_hound);
+    d.melee.prop_applied = new Prop_burning(Prop_turns::std);
     d.melee.dmg_type = Dmg_type::fire;
     data[(size_t)d.id] = d;
 

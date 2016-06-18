@@ -30,7 +30,7 @@ Actor::Actor() :
     hp_max_         (-1),
     spi_            (-1),
     spi_max_        (-1),
-    lair_pos_      (),
+    lair_pos_       (),
     prop_handler_   (nullptr),
     data_           (nullptr),
     inv_            (nullptr) {}
@@ -85,14 +85,13 @@ bool Actor::is_spotting_sneaking_actor(Actor& other)
     const int   SNEAK_LGT_MOD       = cell.is_lit                     ? -40 : 0;
     const int   SNEAK_DRK_MOD       = (cell.is_dark && ! cell.is_lit) ?  40 : 0;
 
-    const int   SNEAK_TOT           = constr_in_range(
-                                          0,
-                                          SNEAK_SKILL     +
-                                          SNEAK_DIST_MOD  +
-                                          SNEAK_LGT_MOD   +
-                                          SNEAK_DRK_MOD   -
-                                          PLAYER_SEARCH_MOD,
-                                          99);
+    const int   SNEAK_TOT           = constr_in_range(0,
+                                                      SNEAK_SKILL     +
+                                                      SNEAK_DIST_MOD  +
+                                                      SNEAK_LGT_MOD   +
+                                                      SNEAK_DRK_MOD   -
+                                                      PLAYER_SEARCH_MOD,
+                                                      99);
 
     return ability_roll::roll(SNEAK_TOT, &other) <= fail;
 }
@@ -118,7 +117,9 @@ Actor_speed Actor::speed() const
     int speed_int = int(base_speed);
 
     //"Slowed" gives speed penalty
-    if (prop_handler_->has_prop(Prop_id::slowed) && speed_int > 0)
+    if (
+        prop_handler_->has_prop(Prop_id::slowed) &&
+        speed_int > 0)
     {
         --speed_int;
     }
@@ -270,12 +271,16 @@ void Actor::on_std_turn_common()
         //Slowly decrease current HP/spirit if above max
         const int DECR_ABOVE_MAX_N_TURNS = 7;
 
-        if (hp() > hp_max(true) && game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
+        if (
+            hp() > hp_max(true) &&
+            game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
         {
             --hp_;
         }
 
-        if (spi() > spi_max() && game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
+        if (
+            spi() > spi_max() &&
+            game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
         {
             --spi_;
         }
@@ -501,7 +506,10 @@ bool Actor::restore_hp(const int HP_RESTORED,
     const int   DIF_FROM_MAX    = hp_max(true) - HP_RESTORED;
 
     //If hp is below limit, but restored hp will push it over the limit, HP is set to max.
-    if (!IS_ALLOWED_ABOVE_MAX && hp() > DIF_FROM_MAX && hp() < hp_max(true))
+    if (
+        !IS_ALLOWED_ABOVE_MAX &&
+        hp() > DIF_FROM_MAX   &&
+        hp() < hp_max(true))
     {
         hp_             = hp_max(true);
         is_hp_gained    = true;
@@ -537,7 +545,8 @@ bool Actor::restore_hp(const int HP_RESTORED,
     return is_hp_gained;
 }
 
-bool Actor::restore_spi(const int SPI_RESTORED, const bool IS_ALLOWED_ABOVE_MAX,
+bool Actor::restore_spi(const int SPI_RESTORED,
+                        const bool IS_ALLOWED_ABOVE_MAX,
                         const Verbosity verbosity)
 {
     bool is_spi_gained = IS_ALLOWED_ABOVE_MAX;

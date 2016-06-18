@@ -755,7 +755,7 @@ class Giant_locust: public Mon
 public:
     Giant_locust() :
         Mon(),
-        spawn_new_one_in_n(40) {}
+        spawn_new_one_in_n(45) {}
 
     ~Giant_locust() {}
 
@@ -871,7 +871,7 @@ private:
 class Mold: public Mon
 {
 public:
-    Mold() : Mon(), spawn_new_one_in_n(28) {}
+    Mold() : Mon(), spawn_new_one_in_n(30) {}
     ~Mold() {}
 
     void mk_start_items() override;
