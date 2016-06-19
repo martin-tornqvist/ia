@@ -17,7 +17,7 @@ public:
     Snd(const std::string&              msg,
         const Sfx_id                    sfx,
         const Ignore_msg_if_origin_seen ignore_msg_if_origin_seen,
-        const P&                      origin,
+        const P&                        origin,
         Actor* const                    actor_who_made_sound,
         const Snd_vol                   vol,
         const Alerts_mon                alerting_mon,

@@ -3,8 +3,18 @@
 	<FileVersion major="1" minor="6" />
 	<Project>
 		<Option title="cb_linux_project" />
+		<Option makefile_is_custom="1" />
+		<Option execution_dir="../../ia" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
+		<MakeCommands>
+			<Build command="" />
+			<CompileFile command="" />
+			<Clean command="" />
+			<DistClean command="$make -f $makefile distclean$target" />
+			<AskRebuildNeeded command="" />
+			<SilentBuild command=" &gt; $(CMD_NULL)" />
+		</MakeCommands>
 		<Build>
 			<Target title="Debug">
 				<Option output="../target/debug/ia" prefix_auto="1" extension_auto="1" />
@@ -17,6 +27,14 @@
 				<ExtraCommands>
 					<Add after="cp -r ../assets/* ../target/debug" />
 				</ExtraCommands>
+				<MakeCommands>
+					<Build command="make -j 8 BUILD=debug" />
+					<CompileFile command="make $file BUILD=debug" />
+					<Clean command="make clean BUILD=debug" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="make -q BUILD=debug" />
+					<SilentBuild command="make -j 8 BUILD=debug &gt; $(CMD_NULL)" />
+				</MakeCommands>
 			</Target>
 			<Target title="Release">
 				<Option output="../target/release/ia" prefix_auto="1" extension_auto="1" />
@@ -32,6 +50,14 @@
 				<ExtraCommands>
 					<Add after="cp -r ../assets/* ../target/release" />
 				</ExtraCommands>
+				<MakeCommands>
+					<Build command="make BUILD=release" />
+					<CompileFile command="make $file BUILD=release" />
+					<Clean command="make clean BUILD=release" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="make -q BUILD=release" />
+					<SilentBuild command="make BUILD=release &gt; $(CMD_NULL)" />
+				</MakeCommands>
 			</Target>
 		</Build>
 		<Compiler>

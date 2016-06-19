@@ -15,8 +15,9 @@ SRC_DIR          = src
 INC_DIR          = include
 TARGET_DIR       = target
 ASSETS_DIR       = assets
-RL_UTILS_SRC_DIR = rl_utils/src
-RL_UTILS_INC_DIR = rl_utils/include
+RL_UTILS_DIR     = rl_utils
+RL_UTILS_SRC_DIR = $(RL_UTILS_DIR)/src
+RL_UTILS_INC_DIR = $(RL_UTILS_DIR)/include
 
 # Includes
 INCLUDES= \
@@ -76,8 +77,27 @@ $(EXECUTABLE): $(RL_UTILS_OBJECTS) $(OBJECTS)
 	$(MV) $(EXECUTABLE) $(TARGET_DIR)
 	$(CP) $(ASSETS_DIR)/* $(TARGET_DIR)
 
-%.o: %.cpp
+%.o: %.cpp | $(RL_UTILS_DIR)
 	$(CXX) -c $(CXXFLAGS) $(INCLUDES) $< -o $@
+
+# Make sure the RL Utils submodule exists
+$(RL_UTILS_DIR) :
+	@if [ ! -d "$(RL_UTILS_DIR)" ]; then \
+	  echo ""; \
+	  echo "**************************************************"; \
+	  echo "Error: Git submodule \"$(RL_UTILS_DIR)\" missing!"; \
+	  echo ""; \
+	  echo "Please execute the following before building IA:"; \
+	  echo ""; \
+	  echo "  $$ git submodule init"; \
+	  echo "  $$ git submodule update"; \
+	  echo ""; \
+	  echo "(Or use the equivalent GUI function)"; \
+	  echo ""; \
+	  echo "**************************************************"; \
+	  echo ""; \
+	  exit 1; \
+	fi
 
 # Optional auto dependency tracking
 -include depends.mk
