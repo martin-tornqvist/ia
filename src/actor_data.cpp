@@ -442,11 +442,11 @@ void init_data_list()
     data[size_t(d.id)] = d;
     d.reset();
 
-    d.name_a = "A Floating head";
-    d.name_the = "The Floating head";
-    d.corpse_name_a = "A Severed head";
-    d.corpse_name_the = "The Severed head";
-    d.id = Actor_id::floating_head;
+    d.name_a = "A Floating Skull";
+    d.name_the = "The Floating Skull";
+    d.corpse_name_a = "A Severed Skull";
+    d.corpse_name_the = "The Severed Skull";
+    d.id = Actor_id::floating_skull;
     d.ai[size_t(Ai_id::looks)] = true;
     d.ai[size_t(Ai_id::makes_room_for_friend)] = true;
     d.ai[size_t(Ai_id::attacks)] = true;
@@ -457,7 +457,7 @@ void init_data_list()
     d.speed = Actor_speed::fast;
     d.glyph = 'z';
     d.color = clr_white_high;
-    d.tile = Tile_id::floating_head;
+    d.tile = Tile_id::floating_skull;
     d.hp = 6;
     d.spi = 16;
     d.dmg_melee = MIN_DMG_TO_WOUND - 2;

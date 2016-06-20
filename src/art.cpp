@@ -141,7 +141,7 @@ P column_and_row_tile(const Tile_id tile)
     case Tile_id::ape:                          return P(14, 0);
     case Tile_id::croc_head_mummy:              return P(15, 0);
     case Tile_id::the_high_priest:              return P(16, 0);
-    case Tile_id::floating_head:                return P(17, 0);
+    case Tile_id::floating_skull:                return P(17, 0);
     case Tile_id::crawling_hand:                return P(18, 0);
     case Tile_id::crawling_intestines:          return P(19, 0);
     case Tile_id::raven:                        return P(20, 0);

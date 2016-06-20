@@ -92,7 +92,7 @@ enum class Item_id
     bloated_zombie_punch, bloated_zombie_spit,
     crawling_intestines_strangle,
     crawling_hand_strangle, thing_strangle,
-    floating_head_bite,
+    floating_skull_bite,
     wolf_bite,
     ghost_claw,
     phantasm_sickle,

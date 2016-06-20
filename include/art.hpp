@@ -26,7 +26,7 @@ enum class Tile_id
     ape,
     croc_head_mummy,
     the_high_priest,
-    floating_head,
+    floating_skull,
     crawling_hand,
     crawling_intestines,
     raven,

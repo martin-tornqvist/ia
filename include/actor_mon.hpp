@@ -316,11 +316,11 @@ public:
     void mk_start_items() override;
 };
 
-class Floating_head: public Mon
+class Floating_skull: public Mon
 {
 public:
-    Floating_head() : Mon() {}
-    ~Floating_head() {}
+    Floating_skull() : Mon() {}
+    ~Floating_skull() {}
 
     void mk_start_items() override;
 

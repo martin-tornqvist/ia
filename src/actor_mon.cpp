@@ -1996,7 +1996,7 @@ void Zombie::on_death()
     {
         Actor_id id_to_spawn = Actor_id::END;
 
-        //With a small chance, spawn a Floating Head, otherwise spawn Hands or Intestines
+        //With a small chance, spawn a Floating Skull, otherwise spawn Hands or Intestines
         const int ROLL = rnd::one_in(50) ? 3 : rnd::range(1, 2);
 
         const std::string my_name = name_the();
@@ -2017,7 +2017,7 @@ void Zombie::on_death()
         }
         else
         {
-            id_to_spawn = Actor_id::floating_head;
+            id_to_spawn = Actor_id::floating_skull;
 
             spawn_msg = "The head of " + my_name + " starts floating around!";
         }
@@ -2157,12 +2157,12 @@ void Thing::mk_start_items()
     spells_known_.push_back(new Spell_teleport);
 }
 
-void Floating_head::mk_start_items()
+void Floating_skull::mk_start_items()
 {
-    inv_->put_in_intrinsics(item_factory::mk(Item_id::floating_head_bite));
+    inv_->put_in_intrinsics(item_factory::mk(Item_id::floating_skull_bite));
 }
 
-Did_action Floating_head::on_act()
+Did_action Floating_skull::on_act()
 {
     if (is_alive() && rnd::one_in(8))
     {

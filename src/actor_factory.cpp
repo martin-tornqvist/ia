@@ -49,8 +49,8 @@ Actor* mk_actor_from_id(const Actor_id id)
     case Actor_id::thing:
         return new Thing();
 
-    case Actor_id::floating_head:
-        return new Floating_head();
+    case Actor_id::floating_skull:
+        return new Floating_skull();
 
     case Actor_id::rat:
         return new Rat();

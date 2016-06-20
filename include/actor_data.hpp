@@ -16,7 +16,7 @@ enum class Actor_id
     zombie, zombie_axe, bloated_zombie,
     crawling_intestines,
     crawling_hand, thing,
-    floating_head,
+    floating_skull,
     cultist, cultist_electric, cultist_spike_gun,
     cultist_priest,
     rat, rat_thing,

@@ -2277,7 +2277,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
             Actor_id::croc_head_mummy,
             Actor_id::zombie,
             Actor_id::zombie_axe,
-            Actor_id::floating_head
+            Actor_id::floating_skull
         };
 
         const size_t IDX = rnd::range(0, mon_bucket.size() - 1);

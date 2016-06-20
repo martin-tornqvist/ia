@@ -1181,9 +1181,9 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
-    d.id = Item_id::floating_head_bite;
+    d.id = Item_id::floating_skull_bite;
     d.melee.att_msgs = {"", "bites me"};
-    set_dmg_from_mon_id(d, Actor_id::floating_head);
+    set_dmg_from_mon_id(d, Actor_id::floating_skull);
     data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
