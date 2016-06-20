@@ -27,7 +27,7 @@
 #include "render.hpp"
 #include "sdl_wrapper.hpp"
 #include "query.hpp"
-#endif // DEMO_MODE
+#endif //DEMO_MODE
 
 
 //-------------------------------------
@@ -68,7 +68,7 @@ void register_room(Room& room)
     {
         ASSERT(room_in_list != &room); //Check that the room is not already added
     }
-#endif // NDEBUG
+#endif //NDEBUG
 
     map::room_list.push_back(&room);
 
@@ -115,7 +115,7 @@ void connect_rooms()
                               clr_red_lgt);
             render::update_screen();
             sdl_wrapper::sleep(8000);
-#endif // DEMO_MODE
+#endif //DEMO_MODE
             break;
         }
 
@@ -222,6 +222,7 @@ void connect_rooms()
     TRACE_FUNC_END;
 }
 
+#ifdef MK_CRUMBLE_ROOMS
 void mk_crumble_room(const R& room_area_incl_walls, const P& event_pos)
 {
     std::vector<P> wall_cells;
@@ -251,7 +252,9 @@ void mk_crumble_room(const R& room_area_incl_walls, const P& event_pos)
     game_time::add_mob(
         new Event_wall_crumble(event_pos, wall_cells, inner_cells));
 }
+#endif //MK_CRUMBLE_ROOMS
 
+#ifdef MK_AUX_ROOMS
 //NOTE: The positions and size can be outside map (e.g. negative positions).
 //This function just returns false in that case.
 bool try_mk_aux_room(const P& p,
@@ -296,7 +299,7 @@ bool try_mk_aux_room(const P& p,
             mk_crumble_room(aux_rect_with_border, door_p);
         }
         else
-#endif // MK_CRUMBLE_ROOMS
+#endif //MK_CRUMBLE_ROOMS
         {
             Room* const room = room_factory::mk_random_allowed_std_room(aux_rect, false);
             register_room(*room);
@@ -456,7 +459,9 @@ void mk_aux_rooms(Region regions[3][3])
 
     TRACE_FUNC_END;
 }
+#endif //MK_AUX_ROOMS
 
+#ifdef MK_MERGED_REGIONS
 void mk_merged_regions_and_rooms(Region regions[3][3])
 {
     TRACE_FUNC_BEGIN;
@@ -521,7 +526,9 @@ void mk_merged_regions_and_rooms(Region regions[3][3])
 
     TRACE_FUNC_END;
 }
+#endif //MK_MERGED_REGIONS
 
+#ifdef RANDOMLY_BLOCK_REGIONS
 void randomly_block_regions(Region regions[3][3])
 {
     TRACE_FUNC_BEGIN << "Marking some (possibly zero) regions as built, to "
@@ -590,7 +597,9 @@ void randomly_block_regions(Region regions[3][3])
 
     TRACE_FUNC_END;
 }
+#endif //RANDOMLY_BLOCK_REGIONS
 
+#ifdef MK_RIVER
 void reserve_river(Region regions[3][3])
 {
     TRACE_FUNC_BEGIN;
@@ -689,6 +698,7 @@ void reserve_river(Region regions[3][3])
 
     TRACE_FUNC_END;
 }
+#endif //MK_RIVER
 
 void place_door_at_pos_if_allowed(const P& p)
 {
@@ -750,6 +760,7 @@ void place_door_at_pos_if_allowed(const P& p)
     }
 }
 
+#ifdef MK_SUB_ROOMS
 //Assumes that all rooms are rectangular
 void mk_sub_rooms()
 {
@@ -978,7 +989,9 @@ void mk_sub_rooms()
 
     TRACE_FUNC_END;
 }
+#endif //MK_SUB_ROOMS
 
+#ifdef FILL_DEAD_ENDS
 void fill_dead_ends()
 {
     //Find an origin with no adjacent walls, to ensure not starting in a dead end
@@ -1054,7 +1067,9 @@ void fill_dead_ends()
         }
     }
 }
+#endif //FILL_DEAD_ENDS
 
+#ifdef DECORATE
 void decorate()
 {
     for (int x = 0; x < MAP_W; ++x)
@@ -1155,6 +1170,7 @@ void decorate()
         }
     }
 }
+#endif //DECORATE
 
 void allowed_stair_cells(bool out[MAP_W][MAP_H])
 {
@@ -1220,7 +1236,7 @@ P place_stairs()
                           clr_red_lgt);
         render::update_screen();
         sdl_wrapper::sleep(8000);
-#endif // DEMO_MODE
+#endif //DEMO_MODE
         return P(-1, -1);
     }
 
@@ -1430,21 +1446,21 @@ bool mk_std_lvl()
     {
         reserve_river(regions);
     }
-#endif // MK_RIVER
+#endif //MK_RIVER
 
 #ifdef MK_MERGED_REGIONS
     if (is_map_valid)
     {
         mk_merged_regions_and_rooms(regions);
     }
-#endif // MK_MERGED_REGIONS
+#endif //MK_MERGED_REGIONS
 
 #ifdef RANDOMLY_BLOCK_REGIONS
     if (is_map_valid)
     {
         randomly_block_regions(regions);
     }
-#endif // RANDOMLY_BLOCK_REGIONS
+#endif //RANDOMLY_BLOCK_REGIONS
 
     if (is_map_valid)
     {
@@ -1479,12 +1495,12 @@ bool mk_std_lvl()
                       clr_white);
     render::update_screen();
     query::wait_for_key_press();
-#endif // DEMO_MODE
+#endif //DEMO_MODE
     if (is_map_valid)
     {
         mk_aux_rooms(regions);
     }
-#endif // MK_AUX_ROOMS
+#endif //MK_AUX_ROOMS
 
 #ifdef MK_SUB_ROOMS
     if (is_map_valid && map::dlvl <= DLVL_LAST_MID_GAME)
@@ -1498,10 +1514,10 @@ bool mk_std_lvl()
                           clr_white);
         render::update_screen();
         query::wait_for_key_press();
-#endif // DEMO_MODE
+#endif //DEMO_MODE
         mk_sub_rooms();
     }
-#endif // MK_SUB_ROOMS
+#endif //MK_SUB_ROOMS
 
     if (is_map_valid)
     {
@@ -1528,7 +1544,7 @@ bool mk_std_lvl()
                           clr_white);
         render::update_screen();
         query::wait_for_key_press();
-#endif // DEMO_MODE
+#endif //DEMO_MODE
 
         gods::set_no_god();
 
@@ -1550,7 +1566,7 @@ bool mk_std_lvl()
                           clr_white);
         render::update_screen();
         query::wait_for_key_press();
-#endif // DEMO_MODE
+#endif //DEMO_MODE
         connect_rooms();
     }
 
@@ -1567,7 +1583,7 @@ bool mk_std_lvl()
                           clr_white);
         render::update_screen();
         query::wait_for_key_press();
-#endif // DEMO_MODE
+#endif //DEMO_MODE
 
         for (Room* room : map::room_list)
         {
@@ -1587,10 +1603,10 @@ bool mk_std_lvl()
                           clr_white);
         render::update_screen();
         query::wait_for_key_press();
-#endif // DEMO_MODE
+#endif //DEMO_MODE
         fill_dead_ends();
     }
-#endif // FILL_DEAD_ENDS
+#endif //FILL_DEAD_ENDS
 
     if (is_map_valid && map::dlvl <= DLVL_LAST_MID_GAME)
     {
@@ -1618,7 +1634,7 @@ bool mk_std_lvl()
     {
         decorate();
     }
-#endif // DECORATE
+#endif //DECORATE
 
     if (is_map_valid)
     {
