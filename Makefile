@@ -77,15 +77,16 @@ $(EXECUTABLE): $(RL_UTILS_OBJECTS) $(OBJECTS)
 	$(MV) $(EXECUTABLE) $(TARGET_DIR)
 	$(CP) $(ASSETS_DIR)/* $(TARGET_DIR)
 
-%.o: %.cpp | $(RL_UTILS_DIR)
+%.o: %.cpp | check-rl-utils
 	$(CXX) -c $(CXXFLAGS) $(INCLUDES) $< -o $@
 
 # Make sure the RL Utils submodule exists
-$(RL_UTILS_DIR) :
-	@if [ ! -d "$(RL_UTILS_DIR)" ]; then \
+check-rl-utils :
+	@echo "Checking..."
+	@if [ -z "$(RL_UTILS_SRC)" ]; then \
 	  echo ""; \
-	  echo "**************************************************"; \
-	  echo "Error: Git submodule \"$(RL_UTILS_DIR)\" missing!"; \
+	  echo "***********************************************************"; \
+	  echo "Error: No source files found in Git submodule \"$(RL_UTILS_DIR)\"!"; \
 	  echo ""; \
 	  echo "Please execute the following before building IA:"; \
 	  echo ""; \
@@ -94,7 +95,7 @@ $(RL_UTILS_DIR) :
 	  echo ""; \
 	  echo "(Or use the equivalent GUI function)"; \
 	  echo ""; \
-	  echo "**************************************************"; \
+	  echo "***********************************************************"; \
 	  echo ""; \
 	  exit 1; \
 	fi
@@ -114,6 +115,6 @@ clean-depends:
 
 # Remove object files
 clean:
-	$(RM) $(TARGET_DIR) $(OBJECTS) $(EXECUTABLE)
+	$(RM) $(TARGET_DIR) $(OBJECTS) $(RL_UTILS_OBJECTS) $(EXECUTABLE)
 
-.PHONY: all depends clean clean-depends
+.PHONY: all depends clean clean-depends check-rl-utils
