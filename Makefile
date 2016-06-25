@@ -93,6 +93,9 @@ release debug: LD_FLAGS = \
   -lSDL2_mixer \
   #
 
+# Executable
+LINUX_EXE = ia
+
 
 ###############################################################################
 # Windows cross compilation specific
@@ -106,7 +109,6 @@ windows-release: INCLUDES += \
   -I $(SDL_IMAGE_INC_DIR) \
   -I $(SDL_MIXER_INC_DIR) \
   #
-
 
 # Windows specific compiler flags
 windows-release: CXXFLAGS += \
@@ -127,13 +129,12 @@ windows-release: LD_FLAGS += \
   -static-libstdc++ \
   #
 
-# Override executable name with Windows suffix
-EXECUTABLE = ia.exe
+WINDOWS_EXE = ia.exe
+
 
 ###############################################################################
-# Output and sources
+# Common output and sources
 ###############################################################################
-EXECUTABLE       ?= ia
 SRC               = $(wildcard $(SRC_DIR)/*.cpp)
 RL_UTILS_SRC      = $(wildcard $(RL_UTILS_SRC_DIR)/*.cpp)
 OBJECTS           = $(SRC:.cpp=.o)
@@ -146,10 +147,10 @@ RL_UTILS_OBJECTS  = $(RL_UTILS_SRC:.cpp=.o)
 ###############################################################################
 all: release
 
-release debug: $(EXECUTABLE)
+release debug: $(LINUX_EXE)
 
 # The Windows version needs to copy some DLLs and licenses
-windows-release: $(EXECUTABLE)
+windows-release: $(WINDOWS_EXE)
 	cp \
 	  $(SDL_BIN_DIR)/SDL2.dll \
 	  $(SDL_IMAGE_BIN_DIR)/SDL2_image.dll \
@@ -164,10 +165,10 @@ windows-release: $(EXECUTABLE)
 	  $(SDL_MIXER_BIN_DIR)/LICENSE.ogg-vorbis.txt \
 	  $(TARGET_DIR)
 
-$(EXECUTABLE): $(RL_UTILS_OBJECTS) $(OBJECTS)
+$(LINUX_EXE) $(WINDOWS_EXE): $(RL_UTILS_OBJECTS) $(OBJECTS)
 	$(CXX) $^ -o $@ $(LD_FLAGS)
 	mkdir -p $(TARGET_DIR)
-	mv -f $(EXECUTABLE) $(TARGET_DIR)
+	mv -f $@ $(TARGET_DIR)
 	cp -r $(ASSETS_DIR)/* $(TARGET_DIR)
 
 %.o: %.cpp | check-rl-utils
@@ -208,6 +209,6 @@ check-rl-utils :
 
 # Remove object files
 clean:
-	rm -rf $(TARGET_DIR) $(OBJECTS) $(RL_UTILS_OBJECTS) $(EXECUTABLE)
+	rm -rf $(TARGET_DIR) $(OBJECTS) $(RL_UTILS_OBJECTS)
 
 .PHONY: all depends clean clean-depends check-rl-utils
