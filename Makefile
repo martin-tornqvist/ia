@@ -52,7 +52,7 @@ INCLUDES = \
 # The debug trace system generates warnings for trace levels higher than the
 # compiled level, so sadly Wunused-value cannot be used
 CXXFLAGS = \
-  -std=c++14 \
+  -std=c++11 \
   -Wall \
   -Wextra \
   -Werror \
