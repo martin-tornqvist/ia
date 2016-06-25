@@ -64,11 +64,15 @@ The instructions below are written and tested for Ubuntu 12.10
 
 You will need build tools and SDL:
 
-    $ sudo apt-get install make gcc libsdl2-2.0-0 libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
+    $ sudo apt-get install make gcc libsdl2-2.0-0 libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev
 
 Go to the IA repository directory, and type:
 
     $ make
+
+Or if you want to do a debug build:
+
+    $ make debug
 
 Go to the “target” folder
 

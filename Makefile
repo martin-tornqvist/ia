@@ -1,81 +1,174 @@
-#
-# When calling this makefile, the "BUILD" variable can be set to either
-# "release", or "debug", e.g.:
-#
-# > make BUILD=debug
-#
-# Running "make" alone will build in release mode
+###############################################################################
+# Targets available:
+# - release (just running "make" will also build this)
+# - debug
+# - windows-release (cross compilation using mingw)
+# - clean
 #
 
-CXX?=g++
-BUILD?=release
 
+###############################################################################
 # Directiories
-SRC_DIR          = src
-INC_DIR          = include
-TARGET_DIR       = target
-ASSETS_DIR       = assets
-RL_UTILS_DIR     = rl_utils
-RL_UTILS_SRC_DIR = $(RL_UTILS_DIR)/src
-RL_UTILS_INC_DIR = $(RL_UTILS_DIR)/include
+###############################################################################
+SRC_DIR            = src
+INC_DIR            = include
+TARGET_DIR         = target
+ASSETS_DIR         = assets
+RL_UTILS_DIR       = rl_utils
+RL_UTILS_SRC_DIR   = $(RL_UTILS_DIR)/src
+RL_UTILS_INC_DIR   = $(RL_UTILS_DIR)/include
 
+# Only used for Windows cross compilation on Linux
+SDL_BASE_DIR       = SDL
+SDL_DIR            = $(SDL_BASE_DIR)/SDL2-2.0.4
+SDL_IMAGE_DIR      = $(SDL_BASE_DIR)/SDL2_image-2.0.1
+SDL_MIXER_DIR      = $(SDL_BASE_DIR)/SDL2_mixer-2.0.1
+
+SDL_ARCH           = i686-w64-mingw32
+
+SDL_INC_DIR        = $(SDL_DIR)/$(SDL_ARCH)/include
+SDL_IMAGE_INC_DIR  = $(SDL_IMAGE_DIR)/$(SDL_ARCH)/include
+SDL_MIXER_INC_DIR  = $(SDL_MIXER_DIR)/$(SDL_ARCH)/include
+
+SDL_LIB_DIR        = $(SDL_DIR)/$(SDL_ARCH)/lib
+SDL_IMAGE_LIB_DIR  = $(SDL_IMAGE_DIR)/$(SDL_ARCH)/lib
+SDL_MIXER_LIB_DIR  = $(SDL_MIXER_DIR)/$(SDL_ARCH)/lib
+
+SDL_BIN_DIR        = $(SDL_DIR)/$(SDL_ARCH)/bin
+SDL_IMAGE_BIN_DIR  = $(SDL_IMAGE_DIR)/$(SDL_ARCH)/bin
+SDL_MIXER_BIN_DIR  = $(SDL_MIXER_DIR)/$(SDL_ARCH)/bin
+
+
+###############################################################################
+# Common setup
+###############################################################################
 # Includes
-INCLUDES= \
+INCLUDES = \
   -I $(INC_DIR) \
   -I $(RL_UTILS_INC_DIR) \
   #
 
-# Flags
-CXXFLAGS_release = \
-  -O2 \
-  -DNDEBUG \
-  #
-
-CXXFLAGS_debug = \
-  -O0 \
-  -g \
-  #
-
+# Compiler flags
 # The debug trace system generates warnings for trace levels higher than the
 # compiled level, so sadly Wunused-value cannot be used
-CXXFLAGS= \
-  -std=c++11 \
+CXXFLAGS = \
+  -std=c++14 \
   -Wall \
   -Wextra \
   -Werror \
   -Wno-unused-value \
   -fno-rtti \
   -fno-exceptions \
-  $(shell sdl2-config --cflags) $(CXXFLAGS_$(BUILD))
+  #
 
-# For building 32-bit binaries on x86_64 platform
-# CXXFLAGS+=-m32 -march=i686
+# Linker flags
+LD_FLAGS =
 
-LD_FLAGS=$(shell sdl2-config --libs) -lSDL2_image -lSDL2_mixer
 
+###############################################################################
+# Linux specific
+###############################################################################
+# Compiler for linux versions
+release debug: CXX ?= g++
+
+# Linux specific compiler flags
+release debug: CXXFLAGS += $(shell sdl2-config --cflags)
+
+# Linux release specific compiler flags
+release: CXXFLAGS += \
+  -O2 \
+  -DNDEBUG \
+  #
+
+# Linux debug specific compiler flags
+debug: CXXFLAGS += \
+  -O0 \
+  -g \
+  #
+
+# Linux specific linker flags
+release debug: LD_FLAGS = \
+  $(shell sdl2-config --libs) \
+  -lSDL2_image \
+  -lSDL2_mixer \
+  #
+
+
+###############################################################################
+# Windows cross compilation specific
+###############################################################################
+# Cross compiler to build Windows releases on Linux
+windows-release: CXX = i686-w64-mingw32-g++-win32
+
+# Windows specific includes
+windows-release: INCLUDES += \
+  -I $(SDL_INC_DIR) \
+  -I $(SDL_IMAGE_INC_DIR) \
+  -I $(SDL_MIXER_INC_DIR) \
+  #
+
+
+# Windows specific compiler flags
+windows-release: CXXFLAGS += \
+  -O2 \
+  -DNDEBUG \
+  #
+
+# Windows specific linker flags
+windows-release: LD_FLAGS += \
+  -L $(SDL_LIB_DIR) \
+  -L $(SDL_IMAGE_LIB_DIR) \
+  -L $(SDL_MIXER_LIB_DIR) \
+  -lSDL2 \
+  -lSDL2main \
+  -lSDL2_image \
+  -lSDL2_mixer \
+  -static-libgcc \
+  -static-libstdc++ \
+  #
+
+# Override executable name with Windows suffix
+EXECUTABLE = ia.exe
+
+###############################################################################
 # Output and sources
-EXECUTABLE       = ia
-SRC              = $(wildcard $(SRC_DIR)/*.cpp)
-RL_UTILS_SRC     = $(wildcard $(RL_UTILS_SRC_DIR)/*.cpp)
-OBJECTS          = $(SRC:.cpp=.o)
-RL_UTILS_OBJECTS = $(RL_UTILS_SRC:.cpp=.o)
-DEPENDS          = $(SRC:.cpp=.d)
+###############################################################################
+EXECUTABLE       ?= ia
+SRC               = $(wildcard $(SRC_DIR)/*.cpp)
+RL_UTILS_SRC      = $(wildcard $(RL_UTILS_SRC_DIR)/*.cpp)
+OBJECTS           = $(SRC:.cpp=.o)
+RL_UTILS_OBJECTS  = $(RL_UTILS_SRC:.cpp=.o)
+# DEPENDS          = $(SRC:.cpp=.d)
 
-# Various bash commands
-RM=rm -rf
-MV=mv -f
-MKDIR=mkdir -p
-CP=cp -r
-CAT=cat
 
-# Make targets
-all: $(EXECUTABLE)
+###############################################################################
+# Targets and recipes
+###############################################################################
+all: release
+
+release debug: $(EXECUTABLE)
+
+# The Windows version needs to copy some DLLs and licenses
+windows-release: $(EXECUTABLE)
+	cp \
+	  $(SDL_BIN_DIR)/SDL2.dll \
+	  $(SDL_IMAGE_BIN_DIR)/SDL2_image.dll \
+	  $(SDL_IMAGE_BIN_DIR)/zlib1.dll \
+	  $(SDL_IMAGE_BIN_DIR)/libpng16-16.dll \
+	  $(SDL_IMAGE_BIN_DIR)/LICENSE.zlib.txt \
+	  $(SDL_IMAGE_BIN_DIR)/LICENSE.png.txt \
+	  $(SDL_MIXER_BIN_DIR)/SDL2_mixer.dll \
+	  $(SDL_MIXER_BIN_DIR)/libogg-0.dll \
+	  $(SDL_MIXER_BIN_DIR)/libvorbis-0.dll \
+	  $(SDL_MIXER_BIN_DIR)/libvorbisfile-3.dll \
+	  $(SDL_MIXER_BIN_DIR)/LICENSE.ogg-vorbis.txt \
+	  $(TARGET_DIR)
 
 $(EXECUTABLE): $(RL_UTILS_OBJECTS) $(OBJECTS)
 	$(CXX) $^ -o $@ $(LD_FLAGS)
-	$(MKDIR) $(TARGET_DIR)
-	$(MV) $(EXECUTABLE) $(TARGET_DIR)
-	$(CP) $(ASSETS_DIR)/* $(TARGET_DIR)
+	mkdir -p $(TARGET_DIR)
+	mv -f $(EXECUTABLE) $(TARGET_DIR)
+	cp -r $(ASSETS_DIR)/* $(TARGET_DIR)
 
 %.o: %.cpp | check-rl-utils
 	$(CXX) -c $(CXXFLAGS) $(INCLUDES) $< -o $@
@@ -101,20 +194,20 @@ check-rl-utils :
 	fi
 
 # Optional auto dependency tracking
--include depends.mk
+#  -include depends.mk
 
-depends: $(DEPENDS)
+# depends: $(DEPENDS)
 
-%.d:
-	$(CXX) -MM $(CXXFLAGS) $(INCLUDES) $(@:.d=.cpp) -MF depends.tmp -MT$(@:.d=.o)
-	$(CAT) depends.tmp >> depends.mk
-	$(RM) depends.tmp
+# %.d:
+# 	$(CXX) -MM $(CXXFLAGS) $(INCLUDES) $(@:.d=.cpp) -MF depends.tmp -MT$(@:.d=.o)
+# 	cat depends.tmp >> depends.mk
+# 	rm -rf depends.tmp
 
-clean-depends:
-	$(RM) depends.mk
+# clean-depends:
+# 	rm -rf depends.mk
 
 # Remove object files
 clean:
-	$(RM) $(TARGET_DIR) $(OBJECTS) $(RL_UTILS_OBJECTS) $(EXECUTABLE)
+	rm -rf $(TARGET_DIR) $(OBJECTS) $(RL_UTILS_OBJECTS) $(EXECUTABLE)
 
 .PHONY: all depends clean clean-depends check-rl-utils
