@@ -696,7 +696,7 @@ void init_data_list()
     };
     d.weight = Item_weight::medium;
     d.tile = Tile_id::tommy_gun;
-    d.clr = clr_blue_lgt;
+    d.clr = clr_brown;
     d.melee.att_msgs = {"strike", "strikes me with a Spike Gun"};
     d.ranged.max_ammo = 12;
     d.ranged.dmg = Dice_param(1, 7, 0);

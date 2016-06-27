@@ -581,14 +581,14 @@ void init_data_list()
     d.ranged_cooldown_turns = 2;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
-    d.color = clr_blue_lgt;
+    d.color = clr_brown;
     d.tile = Tile_id::cultist_firearm;
     d.hp = 6;
     d.spi = 12;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::ranged, 40);
     d.spawn_min_dlvl = 4;
-    d.spawn_max_dlvl = d.spawn_min_dlvl + 1;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 3;
     d.group_size = Mon_group_size::few;
     d.actor_size = Actor_size::humanoid;
     d.is_humanoid = true;
