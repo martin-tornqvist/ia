@@ -82,7 +82,7 @@ enum class Bg
 namespace player_bon
 {
 
-extern bool traits[(int)Trait::END];
+extern bool traits[(size_t)Trait::END];
 
 void init();
 
@@ -90,14 +90,18 @@ void save();
 
 void load();
 
-void pickable_bgs(std::vector<Bg>& bgs_ref);
+void pickable_bgs(std::vector<Bg>& bgs_out);
 
-void pickable_traits(const Bg bg, std::vector<Trait>& traits_ref);
+//Returns a list of all traits in the game, except traits which cannot be
+//picked by the given background
+void trait_list_for_bg(const Bg bg, std::vector<Trait>& traits_out);
 
 void trait_prereqs(const Trait id,
                    const Bg bg,
-                   std::vector<Trait>& traits_ref,
-                   Bg& bg_ref);
+                   std::vector<Trait>& traits_out,
+                   Bg& bg_out);
+
+bool is_prereqs_ok(const Trait id);
 
 Bg bg();
 

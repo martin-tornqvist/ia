@@ -230,9 +230,10 @@ void run_inv_screen()
 
     inv.sort_backpack();
 
-    const int GEN_SIZE = int(inv.backpack_.size());
+    const int GEN_SIZE = (int)inv.backpack_.size();
 
-    Menu_browser browser(int(Slot_id::END) + GEN_SIZE, render_inv::INV_H);
+    Menu_browser browser((int)Slot_id::END + GEN_SIZE,
+                         render_inv::INV_H);
 
     browser.set_y(browser_idx_to_set_on_new_turn);
 

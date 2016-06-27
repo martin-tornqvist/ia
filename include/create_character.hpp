@@ -10,6 +10,6 @@ void create_character();
 
 void pick_new_trait();
 
-} //Create_character
+} //create_character
 
 #endif

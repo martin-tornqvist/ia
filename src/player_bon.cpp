@@ -15,7 +15,7 @@
 namespace player_bon
 {
 
-bool traits[(int)Trait::END];
+bool traits[(size_t)Trait::END];
 
 namespace
 {
@@ -117,7 +117,7 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         return bg == Bg::ghoul;
 
     case Trait::survivalist:
-        //Has RDISEASE already, so this trait is partly useless + a bit of theme mismatch
+        //Has RDISEASE already + a bit of theme mismatch
         return bg == Bg::ghoul;
 
     case Trait::perseverant:
@@ -168,11 +168,11 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
     return false;
 }
 
-} //Namespace
+} //namespace
 
 void init()
 {
-    for (int i = 0; i < int(Trait::END); ++i)
+    for (int i = 0; i < (int)Trait::END; ++i)
     {
         traits[i] = false;
     }
@@ -182,9 +182,9 @@ void init()
 
 void save()
 {
-    save_handling::put_int(int(bg_));
+    save_handling::put_int((int)bg_);
 
-    for (int i = 0; i < int(Trait::END); ++i)
+    for (int i = 0; i < (int)Trait::END; ++i)
     {
         save_handling::put_bool(traits[i]);
     }
@@ -194,7 +194,7 @@ void load()
 {
     bg_ = Bg(save_handling::get_int());
 
-    for (int i = 0; i < int(Trait::END); ++i)
+    for (int i = 0; i < (int)Trait::END; ++i)
     {
         traits[i] = save_handling::get_bool();
     }
@@ -644,11 +644,11 @@ std::string trait_descr(const Trait id)
 
 void trait_prereqs(const Trait trait,
                    const Bg bg,
-                   std::vector<Trait>& traits_ref,
-                   Bg& bg_ref)
+                   std::vector<Trait>& traits_out,
+                   Bg& bg_out)
 {
-    traits_ref.clear();
-    bg_ref = Bg::END;
+    traits_out.clear();
+    bg_out = Bg::END;
 
     switch (trait)
     {
@@ -656,39 +656,39 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::expert_melee_fighter:
-        traits_ref.push_back(Trait::adept_melee_fighter);
+        traits_out.push_back(Trait::adept_melee_fighter);
         break;
 
     case Trait::master_melee_fighter:
-        traits_ref.push_back(Trait::expert_melee_fighter);
+        traits_out.push_back(Trait::expert_melee_fighter);
         break;
 
     case Trait::adept_marksman:
         break;
 
     case Trait::expert_marksman:
-        traits_ref.push_back(Trait::adept_marksman);
+        traits_out.push_back(Trait::adept_marksman);
         break;
 
     case Trait::master_marksman:
-        traits_ref.push_back(Trait::expert_marksman);
-        bg_ref = Bg::war_vet;
+        traits_out.push_back(Trait::expert_marksman);
+        bg_out = Bg::war_vet;
         break;
 
     case Trait::steady_aimer:
-        bg_ref = Bg::war_vet;
+        bg_out = Bg::war_vet;
         break;
 
     case Trait::sharpshooter:
-        traits_ref.push_back(Trait::steady_aimer);
-        traits_ref.push_back(Trait::expert_marksman);
-        bg_ref = Bg::war_vet;
+        traits_out.push_back(Trait::steady_aimer);
+        traits_out.push_back(Trait::expert_marksman);
+        bg_out = Bg::war_vet;
         break;
 
     case Trait::fast_shooter:
-        traits_ref.push_back(Trait::expert_marksman);
-        traits_ref.push_back(Trait::dexterous);
-        bg_ref = Bg::war_vet;
+        traits_out.push_back(Trait::expert_marksman);
+        traits_out.push_back(Trait::dexterous);
+        bg_out = Bg::war_vet;
         break;
 
     case Trait::dem_expert:
@@ -698,60 +698,60 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::courageous:
-        traits_ref.push_back(Trait::cool_headed);
-        bg_ref = Bg::war_vet;
+        traits_out.push_back(Trait::cool_headed);
+        bg_out = Bg::war_vet;
         break;
 
     case Trait::warlock:
-        traits_ref.push_back(Trait::fearless);
-        traits_ref.push_back(Trait::strong_spirit);
-        bg_ref = Bg::occultist;
+        traits_out.push_back(Trait::fearless);
+        traits_out.push_back(Trait::strong_spirit);
+        bg_out = Bg::occultist;
         break;
 
     case Trait::summoner:
-        traits_ref.push_back(Trait::fearless);
-        traits_ref.push_back(Trait::strong_spirit);
-        bg_ref = Bg::occultist;
+        traits_out.push_back(Trait::fearless);
+        traits_out.push_back(Trait::strong_spirit);
+        bg_out = Bg::occultist;
         break;
 
     case Trait::blood_sorcerer:
-        traits_ref.push_back(Trait::tough);
-        bg_ref = Bg::occultist;
+        traits_out.push_back(Trait::tough);
+        bg_out = Bg::occultist;
         break;
 
     case Trait::seer:
-        traits_ref.push_back(Trait::observant);
-        bg_ref = Bg::occultist;
+        traits_out.push_back(Trait::observant);
+        bg_out = Bg::occultist;
         break;
 
     case Trait::tough:
         break;
 
     case Trait::rugged:
-        traits_ref.push_back(Trait::tough);
+        traits_out.push_back(Trait::tough);
         break;
 
     case Trait::unbreakable:
-        traits_ref.push_back(Trait::rugged);
+        traits_out.push_back(Trait::rugged);
         break;
 
     case Trait::strong_backed:
-        traits_ref.push_back(Trait::tough);
+        traits_out.push_back(Trait::tough);
         break;
 
     case Trait::dexterous:
         break;
 
     case Trait::lithe:
-        traits_ref.push_back(Trait::dexterous);
+        traits_out.push_back(Trait::dexterous);
         break;
 
     case Trait::mobile:
-        traits_ref.push_back(Trait::lithe);
+        traits_out.push_back(Trait::lithe);
         break;
 
     case Trait::fearless:
-        traits_ref.push_back(Trait::cool_headed);
+        traits_out.push_back(Trait::cool_headed);
         break;
 
     case Trait::healer:
@@ -761,84 +761,84 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::perceptive:
-        traits_ref.push_back(Trait::observant);
+        traits_out.push_back(Trait::observant);
         break;
 
     case Trait::vigilant:
-        traits_ref.push_back(Trait::observant);
+        traits_out.push_back(Trait::observant);
         break;
 
     case Trait::rapid_recoverer:
-        traits_ref.push_back(Trait::tough);
-        traits_ref.push_back(Trait::healer);
+        traits_out.push_back(Trait::tough);
+        traits_out.push_back(Trait::healer);
         break;
 
     case Trait::survivalist:
-        traits_ref.push_back(Trait::tough);
-        traits_ref.push_back(Trait::healer);
+        traits_out.push_back(Trait::tough);
+        traits_out.push_back(Trait::healer);
         break;
 
     case Trait::perseverant:
-        traits_ref.push_back(Trait::tough);
-        traits_ref.push_back(Trait::fearless);
+        traits_out.push_back(Trait::tough);
+        traits_out.push_back(Trait::fearless);
         break;
 
     case Trait::self_aware:
-        traits_ref.push_back(Trait::stout_spirit);
-        traits_ref.push_back(Trait::observant);
+        traits_out.push_back(Trait::stout_spirit);
+        traits_out.push_back(Trait::observant);
         break;
 
     case Trait::stout_spirit:
         break;
 
     case Trait::strong_spirit:
-        traits_ref.push_back(Trait::stout_spirit);
+        traits_out.push_back(Trait::stout_spirit);
         break;
 
     case Trait::mighty_spirit:
-        traits_ref.push_back(Trait::strong_spirit);
+        traits_out.push_back(Trait::strong_spirit);
         break;
 
     case Trait::stealthy:
         break;
 
     case Trait::imperceptible:
-        traits_ref.push_back(Trait::stealthy);
+        traits_out.push_back(Trait::stealthy);
         break;
 
     case Trait::vicious:
-        traits_ref.push_back(Trait::stealthy);
-        traits_ref.push_back(Trait::dexterous);
+        traits_out.push_back(Trait::stealthy);
+        traits_out.push_back(Trait::dexterous);
         break;
 
     case Trait::treasure_hunter:
-        traits_ref.push_back(Trait::observant);
+        traits_out.push_back(Trait::observant);
         break;
 
     case Trait::undead_bane:
-        traits_ref.push_back(Trait::tough);
-        traits_ref.push_back(Trait::fearless);
-        traits_ref.push_back(Trait::stout_spirit);
+        traits_out.push_back(Trait::tough);
+        traits_out.push_back(Trait::fearless);
+        traits_out.push_back(Trait::stout_spirit);
         break;
 
     case Trait::ravenous:
-        traits_ref.push_back(Trait::adept_melee_fighter);
-        bg_ref = Bg::ghoul;
+        traits_out.push_back(Trait::adept_melee_fighter);
+        bg_out = Bg::ghoul;
         break;
 
     case Trait::foul:
-        bg_ref = Bg::ghoul;
+        bg_out = Bg::ghoul;
         break;
 
     case Trait::toxic:
-        traits_ref.push_back(Trait::foul);
-        bg_ref = Bg::ghoul;
+        traits_out.push_back(Trait::foul);
+        bg_out = Bg::ghoul;
         break;
 
     case Trait::indomitable_fury:
-        traits_ref.push_back(Trait::adept_melee_fighter);
-        traits_ref.push_back(Trait::tough);
-        bg_ref = Bg::ghoul;
+        traits_out.push_back(Trait::adept_melee_fighter);
+        traits_out.push_back(Trait::tough);
+        bg_out = Bg::ghoul;
         break;
 
     case Trait::END:
@@ -847,13 +847,13 @@ void trait_prereqs(const Trait trait,
 
     //Remove traits which are blocked for this background (prerequisites are
     //considered fulfilled)
-    for (auto it = begin(traits_ref); it != end(traits_ref); /* No increment */)
+    for (auto it = begin(traits_out); it != end(traits_out); /* No increment */)
     {
         const Trait trait = *it;
 
         if (is_trait_blocked_for_bg(trait, bg))
         {
-            it = traits_ref.erase(it);
+            it = traits_out.erase(it);
         }
         else //Not blocked
         {
@@ -862,7 +862,7 @@ void trait_prereqs(const Trait trait,
     }
 
     //Sort lexicographically
-    sort(traits_ref.begin(), traits_ref.end(), [](const Trait & t1, const Trait & t2)
+    sort(traits_out.begin(), traits_out.end(), [](const Trait & t1, const Trait & t2)
     {
         const std::string str1 = trait_title(t1);
         const std::string str2 = trait_title(t2);
@@ -870,22 +870,58 @@ void trait_prereqs(const Trait trait,
     });
 }
 
+bool is_prereqs_ok(const Trait id)
+{
+    //If the trait is already picked, of course the prerequisites are OK!
+    if (traits[(size_t)id])
+    {
+        return true;
+    }
+
+    std::vector<Trait> prereq_traits;
+
+    Bg prereq_bg = Bg::END;
+
+    trait_prereqs(id,
+                  bg_,
+                  prereq_traits,
+                  prereq_bg);
+
+    //Background OK?
+    bool is_ok = bg_== prereq_bg || prereq_bg == Bg::END;
+
+    if (is_ok)
+    {
+        //Background is OK, time to check the traits
+        for (Trait prereq_trait : prereq_traits)
+        {
+            if (!traits[(size_t)prereq_trait])
+            {
+                is_ok = false;
+                break;
+            }
+        }
+    }
+
+    return is_ok;
+}
+
 Bg bg()
 {
     return bg_;
 }
 
-void pickable_bgs(std::vector<Bg>& bgs_ref)
+void pickable_bgs(std::vector<Bg>& bgs_out)
 {
-    bgs_ref.clear();
+    bgs_out.clear();
 
-    for (int i = 0; i < int(Bg::END); ++i)
+    for (int i = 0; i < (int)Bg::END; ++i)
     {
-        bgs_ref.push_back(Bg(i));
+        bgs_out.push_back(Bg(i));
     }
 
     //Sort lexicographically
-    sort(bgs_ref.begin(), bgs_ref.end(), [](const Bg & bg1, const Bg & bg2)
+    sort(bgs_out.begin(), bgs_out.end(), [](const Bg & bg1, const Bg & bg2)
     {
         const std::string str1 = bg_title(bg1);
         const std::string str2 = bg_title(bg2);
@@ -893,11 +929,50 @@ void pickable_bgs(std::vector<Bg>& bgs_ref)
     });
 }
 
-void pickable_traits(const Bg bg, std::vector<Trait>& traits_ref)
+void trait_list_for_bg(const Bg bg, std::vector<Trait>& traits_out)
 {
-    traits_ref.clear();
+    traits_out.clear();
 
-    for (size_t i = 0; i < size_t(Trait::END); ++i)
+    for (size_t i = 0; i < (size_t)Trait::END; ++i)
+    {
+        const Trait trait = Trait(i);
+
+        const bool IS_BLOCKED_FOR_BG = is_trait_blocked_for_bg(trait, bg);
+
+        if (!IS_BLOCKED_FOR_BG)
+        {
+            //Check trait prerequisites (traits and background)
+            //NOTE: Traits blocked for the current background are not
+            //considered prerequisites
+
+            std::vector<Trait> trait_prereq_list;
+            Bg bg_prereq = Bg::END;
+
+            trait_prereqs(trait, bg, trait_prereq_list, bg_prereq);
+
+            bool is_pickable = (bg_ == bg_prereq) || (bg_prereq == Bg::END);
+
+            if (is_pickable)
+            {
+                traits_out.push_back(trait);
+            }
+        }
+    }
+
+    //Sort lexicographically
+    sort(traits_out.begin(), traits_out.end(), [](const Trait & t1, const Trait & t2)
+    {
+        const std::string str1 = trait_title(t1);
+        const std::string str2 = trait_title(t2);
+        return str1 < str2;
+    });
+}
+
+void pickable_traits(const Bg bg, std::vector<Trait>& traits_out)
+{
+    traits_out.clear();
+
+    for (size_t i = 0; i < (size_t)Trait::END; ++i)
     {
         const Trait trait = Trait(i);
 
@@ -919,7 +994,7 @@ void pickable_traits(const Bg bg, std::vector<Trait>& traits_ref)
 
             for (Trait prereq : trait_prereq_list)
             {
-                if (!traits[size_t(prereq)])
+                if (!traits[(size_t)prereq])
                 {
                     is_pickable = false;
                     break;
@@ -930,25 +1005,25 @@ void pickable_traits(const Bg bg, std::vector<Trait>& traits_ref)
 
             if (is_pickable)
             {
-                traits_ref.push_back(trait);
+                traits_out.push_back(trait);
             }
         }
     }
 
     //Limit the number of trait choices (due to screen space constraints)
-    const size_t NR_PICKABLE    = size_t(traits_ref.size());
+    const size_t NR_PICKABLE    = (size_t)traits_out.size();
     const size_t MAX_NR_CHOICES = create_character::OPT_H;
 
     if (NR_PICKABLE > MAX_NR_CHOICES)
     {
         //Limit the traits by random removal
-        random_shuffle(traits_ref.begin(), traits_ref.end());
+        random_shuffle(traits_out.begin(), traits_out.end());
 
-        traits_ref.resize(MAX_NR_CHOICES);
+        traits_out.resize(MAX_NR_CHOICES);
     }
 
     //Sort lexicographically
-    sort(traits_ref.begin(), traits_ref.end(), [](const Trait & t1, const Trait & t2)
+    sort(traits_out.begin(), traits_out.end(), [](const Trait & t1, const Trait & t2)
     {
         const std::string str1 = trait_title(t1);
         const std::string str2 = trait_title(t2);
@@ -1005,7 +1080,7 @@ void pick_bg(const Bg bg)
 
 void set_all_traits_to_picked()
 {
-    for (int i = 0; i < int(Trait::END); ++i)
+    for (int i = 0; i < (int)Trait::END; ++i)
     {
         traits[i] = true;
     }
@@ -1015,7 +1090,7 @@ void pick_trait(const Trait id)
 {
     ASSERT(id != Trait::END);
 
-    traits[int(id)] = true;
+    traits[(size_t)id] = true;
 
     switch (id)
     {
@@ -1084,7 +1159,7 @@ std::string all_picked_traits_titles_line()
 {
     std::string out = "";
 
-    for (int i = 0; i < int(Trait::END); ++i)
+    for (int i = 0; i < (int)Trait::END; ++i)
     {
         if (traits[i])
         {
@@ -1107,7 +1182,7 @@ int spi_occultist_can_cast_at_lvl(const int LVL)
 
 bool gets_undead_bane_bon(const Actor_data_t& actor_data)
 {
-    return player_bon::traits[size_t(Trait::undead_bane)] && actor_data.is_undead;
+    return player_bon::traits[(size_t)Trait::undead_bane] && actor_data.is_undead;
 }
 
 } //player_bon

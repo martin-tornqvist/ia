@@ -27,12 +27,12 @@
 					<Add option="-g" />
 				</Compiler>
 				<MakeCommands>
-					<Build command="make -j 4 BUILD=debug" />
-					<CompileFile command="make $file BUILD=debug" />
-					<Clean command="make clean BUILD=debug" />
+					<Build command="make -j 4 debug" />
+					<CompileFile command="make debug" />
+					<Clean command="make clean" />
 					<DistClean command="$make -f $makefile distclean$target" />
-					<AskRebuildNeeded command="make -q BUILD=debug" />
-					<SilentBuild command="make -j 4 BUILD=debug &gt; $(CMD_NULL)" />
+					<AskRebuildNeeded command="make -q debug" />
+					<SilentBuild command="make -j 4 debug &gt; $(CMD_NULL)" />
 				</MakeCommands>
 			</Target>
 			<Target title="Release">
@@ -48,12 +48,12 @@
 					<Add option="-s" />
 				</Linker>
 				<MakeCommands>
-					<Build command="make BUILD=release" />
-					<CompileFile command="make $file BUILD=release" />
-					<Clean command="make clean BUILD=release" />
+					<Build command="make release" />
+					<CompileFile command="make release" />
+					<Clean command="make clean" />
 					<DistClean command="$make -f $makefile distclean$target" />
-					<AskRebuildNeeded command="make -q BUILD=release" />
-					<SilentBuild command="make BUILD=release &gt; $(CMD_NULL)" />
+					<AskRebuildNeeded command="make -q release" />
+					<SilentBuild command="make release &gt; $(CMD_NULL)" />
 				</MakeCommands>
 			</Target>
 		</Build>

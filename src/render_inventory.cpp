@@ -223,7 +223,10 @@ void draw_inv(const Menu_browser& browser)
 
         Clr clr = IS_IDX_MARKED ? clr_white_high : clr_menu_drk;
 
-        render::draw_text(key_str, panel, p, clr);
+        render::draw_text(key_str,
+                          panel,
+                          p,
+                          clr);
 
         ++key_str[0];
 
