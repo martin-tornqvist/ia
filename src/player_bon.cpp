@@ -968,69 +968,6 @@ void trait_list_for_bg(const Bg bg, std::vector<Trait>& traits_out)
     });
 }
 
-void pickable_traits(const Bg bg, std::vector<Trait>& traits_out)
-{
-    traits_out.clear();
-
-    for (size_t i = 0; i < (size_t)Trait::END; ++i)
-    {
-        const Trait trait = Trait(i);
-
-        //Only allow picking trait if not already picked, and not blocked for this background
-        const bool IS_PICKED            = traits[i];
-        const bool IS_BLOCKED_FOR_BG    = is_trait_blocked_for_bg(trait, bg);
-
-        if (!IS_PICKED && !IS_BLOCKED_FOR_BG)
-        {
-            //Check trait prerequisites (traits and background)
-            //NOTE: Traits blocked for the current background are not considered prerequisites
-
-            std::vector<Trait> trait_prereq_list;
-            Bg bg_prereq = Bg::END;
-
-            trait_prereqs(trait, bg, trait_prereq_list, bg_prereq);
-
-            bool is_pickable = true;
-
-            for (Trait prereq : trait_prereq_list)
-            {
-                if (!traits[(size_t)prereq])
-                {
-                    is_pickable = false;
-                    break;
-                }
-            }
-
-            is_pickable = is_pickable && (bg_ == bg_prereq || bg_prereq == Bg::END);
-
-            if (is_pickable)
-            {
-                traits_out.push_back(trait);
-            }
-        }
-    }
-
-    //Limit the number of trait choices (due to screen space constraints)
-    const size_t NR_PICKABLE    = (size_t)traits_out.size();
-    const size_t MAX_NR_CHOICES = create_character::OPT_H;
-
-    if (NR_PICKABLE > MAX_NR_CHOICES)
-    {
-        //Limit the traits by random removal
-        random_shuffle(traits_out.begin(), traits_out.end());
-
-        traits_out.resize(MAX_NR_CHOICES);
-    }
-
-    //Sort lexicographically
-    sort(traits_out.begin(), traits_out.end(), [](const Trait & t1, const Trait & t2)
-    {
-        const std::string str1 = trait_title(t1);
-        const std::string str2 = trait_title(t2);
-        return str1 < str2;
-    });
-}
-
 void pick_bg(const Bg bg)
 {
     ASSERT(bg != Bg::END);

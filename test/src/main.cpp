@@ -621,44 +621,52 @@ TEST_FIXTURE(Basic_fixture, monster_stuck_in_spider_web)
     bool tested_loose_web_interact  = false;
     bool tested_loose_web_destroyed = false;
 
-    while (!tested_stuck || !tested_loose_web_interact || !tested_loose_web_destroyed)
+    while (
+           !tested_stuck              ||
+           !tested_loose_web_interact ||
+           !tested_loose_web_destroyed)
     {
-
         //Spawn right floor cell
         map::put(new Floor(pos_r));
 
         //Spawn a monster that can get stuck in the web
-        Actor* const actor = actor_factory::mk(Actor_id::zombie, pos_l);
-        Mon* const mon = static_cast<Mon*>(actor);
+        Actor* const  actor = actor_factory::mk(Actor_id::zombie, pos_l);
+        Mon* const    mon   = static_cast<Mon*>(actor);
 
         //Create a spider web in the right cell
-        const auto  mimicId     = map::cells[pos_r.x][pos_r.x].rigid->id();
-        const auto& mimic_data  = feature_data::data(mimicId);
-        const auto* const mimic = static_cast<const Rigid*>(mimic_data.mk_obj(pos_r));
+        const auto    mimic_id    = map::cells[pos_r.x][pos_r.y].rigid->id();
+        const auto&   mimic_data  = feature_data::data(mimic_id);
+        auto* const   mimic       = static_cast<Rigid*>(mimic_data.mk_obj(pos_r));
+
         map::put(new Trap(pos_r, mimic, Trap_id::web));
 
         //Move the monster into the trap, and back again
         mon->aware_counter_ = 20000; // > 0 req. for triggering trap
         mon->pos = pos_l;
         mon->move(Dir::right);
+
         CHECK(mon->pos == pos_r);
+
         mon->move(Dir::left);
         mon->move(Dir::left);
 
         //Check conditions
         if (mon->pos == pos_r)
         {
+            //Monster is stuck
             tested_stuck = true;
         }
         else if (mon->pos == pos_l)
         {
-            const auto featureId = map::cells[pos_r.x][pos_r.y].rigid->id();
+            //Monster managed to break free
 
-            if (featureId == Feature_id::floor)
+            const auto feature_id = map::cells[pos_r.x][pos_r.y].rigid->id();
+
+            if (feature_id == Feature_id::floor)
             {
                 tested_loose_web_destroyed = true;
             }
-            else
+            else //Not floor
             {
                 tested_loose_web_interact = true;
             }

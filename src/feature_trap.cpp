@@ -1383,8 +1383,6 @@ Dir Trap_web::actor_try_leave(Actor& actor, const Dir dir)
             TRACE_VERBOSE << "Web destroyed, returning center direction" << std::endl;
 
             base_trap_->destroy();
-
-            return Dir::center;
         }
     }
     else //Failed to break free
