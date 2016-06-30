@@ -2,10 +2,11 @@ Contents:
 1. Command list
 2. Movement and interaction
 3. The interface
-4. Hit Points, Wounds and healing
-5. Spirit and spell casting
-6. Insanity
-7. Sneaking and backstabbing
+4. Inventory handling
+5. Hit Points, Wounds and healing
+6. Spirit and spell casting
+7. Insanity
+8. Sneaking and backstabbing
 
 --------------------------------------------------------------------------------
 1. Command list
@@ -81,14 +82,51 @@ The following is an example of what the interface lines can look like:
    Dlvl:2  W:40% [:1  %:Off(500) %:60       / 7 Throwing Knives 1d6+1 60%
    Blind Diseased                                                         T:264
 
-From left to right, the first line displays Hit Points (current/max - see section 4: "Hit Points, Wounds and healing"), Spirit Points (see section 5: "Spirit and spell casting"), Shock and Insanity (see section 6: "Insanity"), Character Level and remaining Experience Points until next level, and your wielded weapon (damage, accuracy, and ammo)
+From left to right, the first line displays:
+   * Hit Points (current/max - see "Hit Points, Wounds and healing")
+   * Spirit Points (see "Spirit and spell casting")
+   * Shock and Insanity (see "Insanity")
+   * Character Level and remaining Experience Points until next level
+   * Your wielded weapon (damage, accuracy, and ammo)
 
-The second line displays dungeon level, encumbrance from carrying items (from 100% you move at half speed, and from 125% you cannot move at all), Armor Points (each point reduces physical damage taken by 1), Electric Lantern status (Off or On, and how many turns it can be used for), Medical Bag Supplies (see section 4: "Hit Points, Wounds and healing"), and your thrown weapon.
+The second line displays:
+   * Dungeon level
+   * Encumbrance from carrying items (from 100% you move at half speed, and
+     from 125% you cannot move at all)
+   * Armor Points (each point reduces physical damage taken by 1)
+   * Electric Lantern status (Off or On, and how many turns it can be used for)
+   * Medical Bag Supplies (see "Hit Points, Wounds and healing")
+   * Your thrown weapon.
 
-The third line displays properties currently affecting you. This can be temporary properties (e.g. from spells), permanent intrinsic properties, or properties granted by wearing or wielding items. To the far right on the third row the current turn number is displayed. If you have the "Dexterous" trait (occasional free steps), this is marked green when your next step will be free.
+The third line displays properties currently affecting you. This can be temporary properties (e.g. from spells), permanent intrinsic properties, or properties granted by wearing or wielding items. To the far right on the third row the current turn number is displayed. If you are "Dexterous" (occasional free steps), this is marked green when your next step will be free.
 
 --------------------------------------------------------------------------------
-4. Hit Points, Wounds and healing
+4. Inventory handling
+--------------------------------------------------------------------------------
+The inventory can be accessed in two ways:
+
+   (1) Pressing "i" opens a full view of your inventory
+Here, you can see all of your "inventory slots" (see below), and a complete list of your carried items. Selecting an inventory slot (with enter or a letter key), either puts away an existing item from the slot, or opens a list of items that you can equip in the slot.
+
+   (2) Pressing "a" shows only items which wich you can "activate" or consume
+This is merely a convenience feature - you can just as well use items by selecting them from the "i" screen, but with this method you get a nice filtered list so you can see at a glance which consumables you have.
+
+To wear or wield items, they are placed in different inventory slots:
+   * Wielded  - your currently used melee weapon or firearm
+   * Prepared - the weapon to switch to when pressing "z"
+   * Thrown   - the weapon to throw when pressing "t"
+   * Body     - item worn over your body (e.g. an armor or a jacket)
+   * Head     - item worn on your head (e.g. a gas mask)
+   * Neck     - item worn around your neck (an amulet)
+
+Note that the "Thrown" slot is only for throwing attack weapons such as throwing knives or rocks. Explosives are used in a different way; first you must ignite or prime the explosive, this is done by "activating" it (can be done from the "a" inventory screen) - now see your character colored yellow as a warning that you are holding an ignited explosive. In this state, you are ready to throw the explosive - press "t", and aim somewhere with the movement keys (the game will mark the area around your aim position to indicate the explosion radius - be careful though, there may be unseen walls that blocks the throw path). Press "t" again, or enter, to throw the explosive toward the aim position.
+
+To drop an item, select them item while holding shift (i.e. shift + enter, or shift + letter). This can be done from any inventory screen. If you are dropping a stack of something (e.g. a number of Shotgun shells), the game will ask how many to drop, by letting you type in a number.
+
+In any inventory screen, you can see percentage values to the far right of each item. This is how many percent of your total carried weight that each item takes (the numbers roughly adds up to 100%, but there will be rounding errors, since decimals are not shown). So if you are overburdened, an item with a high percentage value might be a good candidate to drop.
+
+--------------------------------------------------------------------------------
+5. Hit Points, Wounds and healing
 --------------------------------------------------------------------------------
 The state of your physical health is described in two ways:
 
@@ -105,7 +143,7 @@ When bitten or clawed by certain monsters, you can become Infected. You should t
 Treating a Wound requires many uninterrupted turns, and uses up lots of supplies.
 
 --------------------------------------------------------------------------------
-5. Spirit and spell casting
+6. Spirit and spell casting
 --------------------------------------------------------------------------------
 In addition to your physical and mental health, you have an "essence" - or Spirit - to preserve. If you lose all your Spirit, you are dead.
 
@@ -121,7 +159,7 @@ When casting a spell, you will get a warning if the spell could potentially drai
 There are also other ways you can lose your Spirit, for example some monsters can drain your Spirit with their attacks.
 
 --------------------------------------------------------------------------------
-6. Insanity
+7. Insanity
 --------------------------------------------------------------------------------
 "A few steps more, and our breaths were literally snatched from us by what we saw; so literally that Thornton, the psychic investigator, actually fainted in the arms of the dazed man who stood behind him. Norrys, his plump face utterly white and flabby, simply cried out inarticulately; whilst I think that what I did was to gasp or hiss, and cover my eyes. The man behind me - the only one of the party older than I - croaked the hackneyed "My God!" in the most cracked voice I ever heard. Of seven cultivated men, only Sir William Brinton retained his composure; a thing the more to his credit because he led the party and must have seen the sight first."-H.P. Lovecraft, "Rats in the Walls"
 
@@ -142,7 +180,7 @@ Each time you travel to the next dungeon level, your shock is restored (you have
 If your Insanity reaches 100%, you are hopelessly lost, and the game is over.
 
 --------------------------------------------------------------------------------
-7. Sneaking and backstabbing
+8. Sneaking and backstabbing
 --------------------------------------------------------------------------------
 Monsters unaware of your presence have a blue background in their map icon. This is their default mode. While in this state they may roam the map, but they will not actively search for you or purposefully attack you.
 

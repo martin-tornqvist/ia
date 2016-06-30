@@ -97,7 +97,7 @@ void run()
             render::draw_text(lines_[i],
                               Panel::screen,
                               P(0, y_pos++),
-                              clr_white);
+                              clr_text);
         }
 
         render::update_screen();
