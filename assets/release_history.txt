@@ -1,28 +1,60 @@
 --------------------------------------------------------------
+v18.2 (July 2, 2016)
+--------------------------------------------------------------
+Gameplay
+* All backgrounds (classes) now have ranged attack bonus vs unaware targets (not just Rogues)
+* Ghoul characters are no longer shocked by Ghoul statues
+* You no longer drop your items when you die
+* Removed the "R" command to rearrange rounds between pistol magazines - this is now instead done when you wait (with "5", "s", or ".")
+* Spider webs are now destroyed when the creature held is teleported away or knocked back
+* Fire Hound bites now also causes Burning (like their ranged attacks)
+* Slightly reduced the number of Medical Bag supplies
+* Critically failing a melee attack can no longer result in dropping the weapon
+
+Interface
+* When picking traits, the game now shows all traits and their prerequisites (no information is hidden)
+* When aiming explosives, the explosion size is marked on the map
+* Added option for confirming "-More-" prompts with any key (off by default)
+* Messages are no longer written in all capitals while Frenzied
+* New menu color scheme
+* Removed some redundant messages to reduce clutter ("I pause for a while...", "I stop waiting.")
+* Added a section in the manual about inventory handling
+
+Bug fixes
+* Fixed a bug that caused monsters with Fear Resistance to end all player phobias when they spawned (this was mistakenly reported to the insanity system as a "player gaining permanent rFear" event)
+* Fixed some buggy item drop code (which may have caused crashes)
+* Fixed some minor bugs in the map generator (the map generator can also do a few new things now, although it's probably subtle)
+* Fixed some errors in Manuscript names (underscores had snuck into a few names for some reason)
+* Fixed a bug that (in some rare specific cases) allowed monsters to move into the position already occupied by another monster
+* Fixed a bug were teleporting or being knocked back while held by a spider web, caused the web to be able to hold any creature that walked into it, regardless of monster type (e.g. ethereal monsters or spiders could then also be held)
+
+
+--------------------------------------------------------------
 v18.1 (Mars 17, 2016)
 --------------------------------------------------------------
 Gameplay
 * Worms Masses may now only split once (i.e. the split worms may not also split themselves), they do not split if they are killed with enough damage, they are not allowed to attack immediately after being split, and the confusion effect from Mind Worm bites has a much shorter duration. However, Worms now move at normal speed (instead of slow).
 * Gas Mask and Asbestos Suit now protects against blindness from Ravens, Spitting Cobras, and Dust Vortexes
-* Vortex monsters no longer “explode” when they die
+* Vortex monsters no longer "explode" when they die
 * Oozes can no longer regenerate HP while burning
 * There is now much smaller chance of gaining multiple phobias, and you can never become both sadistic and masochistic at the same time
 * Picking the Fearless trait immediately ends all active phobias
 * When bashing or eating multiple corpses in the same cell, Zombie-type monsters are now prioritized (since you want to destroy them as soon as possible before they rise)
-* You can now also kick in your own cell (“w”, then “5” or “.”) - to destroy corpses you’re standing on
-* You are no longer “telepathically”aware of where all allied monsters are - if they are out of sight or invisible, you can lose awareness of them
+* You can now also kick in your own cell ("w", then "5" or ".") - to destroy corpses you're standing on
+* You are no longer "telepathically"aware of where all allied monsters are - if they are out of sight or invisible, you can lose awareness of them
 * You can now only accidentally drop your melee weapon during combat if you are Cursed
 
 Interface
 * Spells in the casting menu now appear in the order that you learned the spells (instead of alphabetically)
-* On turns that you can walk for free due to Dextrous, the “T” is now colored green instead of the number (to be less distracting)
-* Removed the “icon mode” which used a heart, brain, stopwatch etc as symbols in the user interface
-* The message “I stop waiting” is no longer printed when fainting or paralyzed
+* On turns that you can walk for free due to Dextrous, the "T" is now colored green instead of the number (to be less distracting)
+* Removed the "icon mode" which used a heart, brain, stopwatch etc as symbols in the user interface
+* The message "I stop waiting" is no longer printed when fainting or paralyzed
 
 Bug fixes
-* Fixed some bugs in the monster movement AI (it wasn’t anything critical, but it made them act a bit weird in a few specific situations)
-* Fixed a faulty message when pressing “t” with no item selected for throwing (the message adviced to press “w” to wield a throwing weapon, but the actual key should be “i”)
-* Property messages such as “...is paralyzed” is no longer allowed for dead monsters
+* Fixed some bugs in the monster movement AI (it wasn't anything critical, but it made them act a bit weird in a few specific situations)
+* Fixed a faulty message when pressing "t" with no item selected for throwing (the message adviced to press "w" to wield a throwing weapon, but the actual key should be "i")
+* Property messages such as "...is paralyzed" is no longer allowed for dead monsters
+
 
 --------------------------------------------------------------
 v18.0 (January 28, 2016)
@@ -32,13 +64,13 @@ Gameplay
 * Added invisibility property
 * Ghost-type monsters and Polyps are invisible.
 * New Potions: Invisibility and See Invisible (can see all invisible and sneaking monsters, prevents blindness)
-* Bumping an unseen monster (sneaking or invisible) that you are unaware of no longer performs a melee attack, instead it prints a message such as “There is someone here!”, and makes you aware of the monster (you see it as a “!” on the map)
+* Bumping an unseen monster (sneaking or invisible) that you are unaware of no longer performs a melee attack, instead it prints a message such as "There is someone here!", and makes you aware of the monster (you see it as a "!" on the map)
 * New background: Ghoul
 * New property: Infravision (the Ghoul background starts with this, and many monsters has it), which allows you to see infra-visible creatures in the dark
 * Made several changes to how traps work - most importantly, when they activate there is usually a delay of a couple of turns from when they activate until the effect occurs - this means that you can (sometimes) avoid the effect by moving away from the trap
 * Added command [R] for organizing Colt magazines (the game will reload your wielded or readied Colt, or move single rounds between magazines, whichever is better)
 * Added command [N] to make noise (for luring monsters)
-* Monsters fighting each other now generates sounds (“I hear fighting.”)
+* Monsters fighting each other now generates sounds ("I hear fighting.")
 * Unequipping any item spends a turn
 * Critical misses for melee attacks (1% chance normally) now cause various bad things to happen, such as becoming exhausted, or dropping the weapon
 * Disarming traps gives a small amount of XP
@@ -46,7 +78,7 @@ Gameplay
 * There is now a delay when quaffing Potion of Descent until the effect happens
 * Changed Potion of Antidote to Potion of Curing, which acts like a light version of Potion of Healing
 * All Potions are now guaranteed to identify when you drink them
-* Added new item class “Rods” - these are similar to Devices, except they never break or malfunction, and instead have a cooldown time before they can be used again
+* Added new item class "Rods" - these are similar to Devices, except they never break or malfunction, and instead have a cooldown time before they can be used again
 * The Wound system (which was removed in v17) is now back again - when you take heavy damage in one hit you receive a Wound - each wound reduces your fighting abilities, maximum HP, and HP regeneration rate - wounds can be healed with the Medical Bag
 * Chests are never made of iron until at least dungeon level 3
 * Added more traits
@@ -72,24 +104,25 @@ Interface
 * The [a] command is no longer a shortcut for Medical Bag and Electric Lantern, instead it opens a filtered inventory view only showing items which can be Applied (read, quaffed, activated, ignited, etc)
 * Changed Inventory key to [i] instead of [w]
 * [w] is now used for kicking/bashing instead of [q] (*Wham*)
-* Intrinsic properties that lasts indefinitely are now spelled with upper case (e.g. you can be “DISEASED” or “Diseased”), to clarify that waiting will not end the effect
+* Intrinsic properties that lasts indefinitely are now spelled with upper case (e.g. you can be "DISEASED" or "Diseased"), to clarify that waiting will not end the effect
 * Added an option for using symbols such as a heart for Hit Points, and a brain for Insanity in the interface (the old text based way is the default option)
 * Reworked background and trait picking screens
-* Removed the [D] command for jamming doors - instead using the “Close” command [c] on an already closed door will now attempt to jam it
+* Removed the [D] command for jamming doors - instead using the "Close" command [c] on an already closed door will now attempt to jam it
 * Removed uppercase [X] command, and instead made lowercase [x] bring up the spell selection menu (instead of re-casting previous spell)
 * Added another typewriter font
-* There is now a log of “historic events” (such as identifying a potion, or killing a unique monster) viewable from the character info screen or from the game info screen after the game is over
+* There is now a log of "historic events" (such as identifying a potion, or killing a unique monster) viewable from the character info screen or from the game info screen after the game is over
 * If you are Dexterous, the turncount is marked green on turns where you will get a free step
 * The monster description pages shows more information (e.g. how many turns they will remember you, how frightening they are, and also their current properties such as terrified, burning, flying, etc)
 * Added more sound effects (events and ambient sounds)
 * While aiming aiming, the marker shows if the path goes through any seen blocking cells
 
 Bug fixes
-* Fixed a bug that could crash the game, especially during map generation (thanks “stevebob”!)
-* Fixed a bug that caused the player’s dodge chance to be calculated the wrong way when Ghosts attempted to “touch” you
+* Fixed a bug that could crash the game, especially during map generation (thanks "stevebob"!)
+* Fixed a bug that caused the player's dodge chance to be calculated the wrong way when Ghosts attempted to "touch" you
 * If you ignited an explosive (Dynamite, Molotov, Flare, Smoke grenade) while already holding another, the first one would just be erased - now the game prevents you from igniting a new explosive instead
 * Fixed a bug that prevented Flare Guns from burning the target
 * Fixed a bug where bumping a hidden door would print a different message than bumping a wall (and thus indicating the presence of the door)
+
 
 --------------------------------------------------------------
 v17.0 (February 18, 2015)
@@ -141,7 +174,7 @@ Interface
 * Added a shortcut key [a] to quickly activate the two most common items - Medical bag and Electric Lantern. When you press [a] the game asks if you want to use [a] Medical Bag or [e] Electric Lantern (perhaps in the future, shortcuts like these could be customized by the player).
 * You no longer choose Medical Bag actions through a popup menu, instead it first sanitizes an infection if you have one, otherwise it restores HP.
 * The "--More--" prompts now only accepts space or esc to proceed, this prompt is also added to more messages, for example triggering or avoiding traps - making it much easier to notice
-* Changed the general color theme of the game’s interface
+* Changed the general color theme of the game's interface
 * When viewing map cells with [v], information is printed for everything in that cell (not just the "top" thing) - e.g.: "I see here: A dart trap. A murky potion"
 * Monster corpses are now included when viewing map cells with [v]
 * Monster corpses are now referred to in more interesting ways, e.g. "A lifeless gruesome corpse" instead of "A body of a Reanimated Corpse"
@@ -167,6 +200,7 @@ Bug fixes
 * The Electric Lantern on/off state is now stored when saving the game
 * Flying monsters can no longer be killed by kicking them into chasms
 * The audio player now attempts to find a free channel, instead of just picking the next channel (this could stop other sounds, which frequently happened with long tracks like the ambient background noises)
+
 
 --------------------------------------------------------------
 v16.0 (April 17, 2014)
