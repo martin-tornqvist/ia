@@ -2485,7 +2485,7 @@ Chest::Chest(const P& feature_pos) :
         matl_ = Chest_matl::iron;
     }
 
-    const bool  IS_TREASURE_HUNTER  = player_bon::traits[size_t(Trait::treasure_hunter)];
+    const bool  IS_TREASURE_HUNTER  = player_bon::traits[(size_t)Trait::treasure_hunter];
     const int   NR_ITEMS_MIN        = 0;
     const int   NR_ITEMS_MAX        = IS_TREASURE_HUNTER ? 3 : 2;
 

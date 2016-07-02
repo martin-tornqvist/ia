@@ -444,8 +444,8 @@ void init_data_list()
 
     d.name_a = "A Floating Skull";
     d.name_the = "The Floating Skull";
-    d.corpse_name_a = "A Severed Skull";
-    d.corpse_name_the = "The Severed Skull";
+    d.corpse_name_a = "A Skull";
+    d.corpse_name_the = "The Skull";
     d.id = Actor_id::floating_skull;
     d.ai[size_t(Ai_id::looks)] = true;
     d.ai[size_t(Ai_id::makes_room_for_friend)] = true;
@@ -479,6 +479,7 @@ void init_data_list()
     d.can_be_summoned = true;
     d.is_undead = true;
     d.is_auto_descr_allowed = false;
+    d.can_bleed = false;
     d.native_rooms.push_back(Room_type::monster);
     d.native_rooms.push_back(Room_type::plain);
     d.native_rooms.push_back(Room_type::ritual);

@@ -160,8 +160,7 @@ void Mon::act()
         {
             if (leader_->is_alive() && !is_actor_my_leader(map::player))
             {
-                static_cast<Mon*>(leader_)->aware_counter_ =
-                    leader_->data().nr_turns_aware;
+                static_cast<Mon*>(leader_)->aware_counter_ = leader_->data().nr_turns_aware;
             }
         }
         else //Monster does not have a leader
@@ -553,6 +552,8 @@ void Mon::become_aware_player(const bool IS_FROM_SEEING)
 
 void Mon::set_player_aware_of_me(const int DURATION_FACTOR)
 {
+    is_sneaking_ = false;
+
     const int LOWER             = 4 * DURATION_FACTOR;
     const int UPPER             = 6 * DURATION_FACTOR;
     const int ROLL              = rnd::range(LOWER, UPPER);

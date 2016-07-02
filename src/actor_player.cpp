@@ -371,7 +371,11 @@ bool Player::can_see_actor(const Actor& other) const
     }
 
     //Monster is sneaking, and we cannot see it with infravision or magic seeing?
-    if (mon->is_sneaking_ && !CAN_SEE_OTHER_WITH_INFRAVIS && !CAN_SEE_INVIS)
+    if (
+        mon->player_aware_of_me_counter_ <= 0   &&
+        mon->is_sneaking_                       &&
+        !CAN_SEE_OTHER_WITH_INFRAVIS            &&
+        !CAN_SEE_INVIS)
     {
         return false;
     }
@@ -1442,7 +1446,6 @@ void Player::move(Dir dir)
                 if (is_features_allow_move)
                 {
                     //Cell is not blocked, reveal monster here and return
-
                     mon->set_player_aware_of_me();
 
                     render::draw_map_state();
