@@ -471,7 +471,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = Prop_id::infected;
-    d.std_rnd_turns = Range(300, 400);
+    d.std_rnd_turns = Range(100, 200);
     d.name = "Infected";
     d.name_short = "Infected";
     d.msg[size_t(Prop_msg::start_player)] = "I am infected!";
@@ -1893,7 +1893,9 @@ Prop* Prop_infected::on_new_turn()
     const int MAX_TURNS_LEFT_ALLOW_DISEASE  = 50;
     const int APPLY_DISEASE_ONE_IN          = nr_turns_left_ - 1;
 
-    if (nr_turns_left_ <= MAX_TURNS_LEFT_ALLOW_DISEASE && rnd::one_in(APPLY_DISEASE_ONE_IN))
+    if (
+        nr_turns_left_ <= MAX_TURNS_LEFT_ALLOW_DISEASE &&
+        rnd::one_in(APPLY_DISEASE_ONE_IN))
     {
         Prop_handler& prop_hlr = owning_actor_->prop_handler();
 
