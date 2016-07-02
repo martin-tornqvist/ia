@@ -186,9 +186,9 @@ void mk_pillars_in_room(const Room& room)
         return true;
     };
 
-    if (rnd::fraction(2, 3))
+    if (rnd::fraction(1, 3))
     {
-        //Place pillars in rows and columns (but occasionally skip a pillar)
+        //Place pillars in rows and columns
         auto step_size = []()
         {
             return rnd::range(1, 2);
@@ -203,7 +203,7 @@ void mk_pillars_in_room(const Room& room)
             {
                 const P p(x, y);
 
-                if (is_free(p) && rnd::fraction(2, 3))
+                if (is_free(p) && rnd::fraction(1, 3))
                 {
                     map::put(new Wall(p));
                 }
@@ -221,7 +221,7 @@ void mk_pillars_in_room(const Room& room)
                 const P p(x + d_range.roll(),
                           y + d_range.roll());
 
-                if (is_free(p) && rnd::one_in(5))
+                if (is_free(p) && rnd::one_in(6))
                 {
                     map::put(new Wall(p));
                 }

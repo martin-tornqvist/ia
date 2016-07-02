@@ -445,7 +445,7 @@ void Plain_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 
     mapgen_utils::cut_room_corners(*this);
 
-    if (rnd::fraction(1, 3))
+    if (rnd::fraction(1, 4))
     {
         mapgen_utils::mk_pillars_in_room(*this);
     }
@@ -478,7 +478,7 @@ void Human_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 
     mapgen_utils::cut_room_corners(*this);
 
-    if (rnd::fraction(1, 3))
+    if (rnd::fraction(1, 4))
     {
         mapgen_utils::mk_pillars_in_room(*this);
     }
@@ -529,7 +529,7 @@ void Ritual_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
 
     mapgen_utils::cut_room_corners(*this);
 
-    if (rnd::fraction(1, 3))
+    if (rnd::fraction(1, 4))
     {
         mapgen_utils::mk_pillars_in_room(*this);
     }
@@ -634,7 +634,7 @@ void Spider_room::on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H])
         mapgen_utils::cavify_room(*this);
     }
 
-    if ((IS_EARLY || IS_MID) && rnd::fraction(1, 3))
+    if ((IS_EARLY || IS_MID) && rnd::fraction(1, 4))
     {
         mapgen_utils::mk_pillars_in_room(*this);
     }
