@@ -84,27 +84,27 @@ Start IA by typing
 
 If you want, you can copy the “target” folder somewhere and rename it
 
-## OSX
+## OS X
 
-Some people have successfully built IA on OSX by using the Linux Makefile as it is. Although building on OSX is not “officially supported”, the goal is to keep the project as portable as possible. It should require little extra effort (or no extra effort at all) to build IA on OSX. So go ahead and try ;)
-Please tell of your problems or success at the IA webpage, or email me (Martin) - see contact.txt in the game folder (or assets/contact.txt in the IA repository).
+The instructions below are written and tested for OS X 10.11.5 and Xcode 7.3.1.
 
 ### Building on OS X
-This works on 10.11.1, ymmv.
 
-Install Xcode command line tools.
+Install Xcode/Xcode command line tools.
 
-Install [SDL2.framework](http://www.libsdl.org/download-2.0.php), [SDL2\_image.framework](http://www.libsdl.org/projects/SDL_image/), [SDL2\_mixer.framework](http://www.libsdl.org/projects/SDL_mixer/) in /Library/Frameworks.
+Copy [SDL2.framework](http://www.libsdl.org/download-2.0.php), [SDL2\_image.framework](http://www.libsdl.org/projects/SDL_image/), and [SDL2\_mixer.framework](http://www.libsdl.org/projects/SDL_mixer/) to /Library/Frameworks (all users) or /Users/Username/Library/Frameworks (this user only).
 
-Use Makefile\_osx to build:
+Release build:
 
-    $ make -f Makefile_osx install
+    $ make osx
 
-or, for a "release" build:
+Debug build:
 
-    $ make -f Makefile_osx RELEASE=1 install
+    $ make osx-debug
 
 Run:
 
     $ cd ./target
     $ ./ia
+
+If you want, you can copy the "target" folder somewhere and rename it.
