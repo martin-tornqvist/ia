@@ -1,4 +1,4 @@
-﻿# Guide for building Infra Arcana
+# Guide for building Infra Arcana
 
 ## Which branch	should I build?
 **master** - If you want to try out new features in a relatively stable and bug free state.
@@ -25,7 +25,7 @@ The instructions below are written and tested for Windows 7.
 [Download Code::blocks](http://www.codeblocks.org/downloads/binaries): (The MinGW version, e.g. "codeblocks-XX.XXmingw-setup.exe")
 
 Install Code::Blocks
-“*Select type of install*", choose "*Standard*"
+"*Select type of install*", choose "*Standard*"
 
 A window should pop up, prompting for compiler choice. Select the GNU GCC Compiler and make it default.
 
@@ -37,18 +37,18 @@ Close Code::Blocks -> "*The perspective has changed, save it?*", check "*Don't a
 
 Go to the cloned Infra Arcana Git repository folder. Open "*cb_win_project*" (stands for "Code::Blocks Windows project"). Open "*cb_win_project.cbp*".
 
-In the top left corner, there should be a button that looks like a yellow cogwheel - to the right of this, there should be a choice for "*Build target*", set this to “*Release*”. Then click the cogwheel button, this will start the build.
+In the top left corner, there should be a button that looks like a yellow cogwheel - to the right of this, there should be a choice for "*Build target*", set this to "*Release*". Then click the cogwheel button, this will start the build.
 
 When the build is done, you should see something like this in the build log:
 
     Process terminated with status 0 (time)
     0 errors, 0 warnings
 
-(Don’t mind it too much if there are some warnings)
+(Don't mind it too much if there are some warnings)
 
 Next to the cogwheel button is a green arrow button. Click it. The game should run now.
 
-The Infra Arcana executable is put in the “target” folder inside the Git repository folder. If you want, you can copy the ‘target’ folder somewhere else and rename it.
+The Infra Arcana executable is put in the "target" folder inside the Git repository folder. If you want, you can copy the "target" folder somewhere else and rename it.
 
 If you get the following error when trying to build:
 
@@ -74,7 +74,7 @@ Or if you want to do a debug build:
 
     $ make debug
 
-Go to the “target” folder
+Go to the "target" folder
 
 Start IA by typing
 
@@ -82,7 +82,7 @@ Start IA by typing
 
 (dot slash ia)
 
-If you want, you can copy the “target” folder somewhere and rename it
+If you want, you can copy the "target" folder somewhere and rename it
 
 ## OS X
 
