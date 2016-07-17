@@ -41,14 +41,14 @@ void cavify_room(Room& room);
 
 void valid_room_corr_entries(const Room& room, std::vector<P>& out);
 
-void mk_path_find_cor(Room& r0, Room& r1,
-                      bool door_proposals[MAP_W][MAP_H] = nullptr);
+void mk_pathfind_cor(Room& r0, Room& r1,
+                      bool door_proposals[map_w][map_h] = nullptr);
 
 void rnd_walk(const P& p0,
               int len,
               std::vector<P>& pos_list_ref,
               const bool ALLOW_DIAGONAL = true,
-              R area = R(1, 1, MAP_W - 2, MAP_H - 2));
+              R area = R(1, 1, map_w - 2, map_h - 2));
 
 void pathfinder_walk(const P& p0,
                      const P& p1,

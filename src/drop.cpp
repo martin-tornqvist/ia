@@ -127,11 +127,11 @@ Item* drop_item_on_map(const P& intended_pos, Item& item)
     }
 
     //Make a vector of all cells on map with no blocking feature
-    bool free_cell_array[MAP_W][MAP_H];
+    bool free_cell_array[map_w][map_h];
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             Rigid* const f = map::cells[x][y].rigid;
 
@@ -140,7 +140,7 @@ Item* drop_item_on_map(const P& intended_pos, Item& item)
     }
 
     std::vector<P> free_cells;
-    to_vec((bool*)free_cell_array, true, MAP_W, MAP_H, free_cells);
+    to_vec((bool*)free_cell_array, true, map_w, map_h, free_cells);
 
     if (free_cells.empty())
     {

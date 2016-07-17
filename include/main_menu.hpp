@@ -1,7 +1,7 @@
 #ifndef MAIN_MENU_HPP
 #define MAIN_MENU_HPP
 
-#include "cmn.hpp"
+#include "global.hpp"
 
 namespace main_menu
 {

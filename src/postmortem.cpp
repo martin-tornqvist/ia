@@ -194,9 +194,9 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
     TRACE << "Drawing the final map" << std::endl;
     out.push_back({"The final moment:", clr_heading});
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             for (int dx = -1; dx <= 1; ++dx)
             {
@@ -218,11 +218,11 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
 
     render::draw_map(); //To set the glyph array
 
-    for (int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < map_h; ++y)
     {
         std::string cur_row = "";
 
-        for (int x = 0; x < MAP_W; ++x)
+        for (int x = 0; x < map_w; ++x)
         {
             if (P(x, y) == map::player->pos)
             {
@@ -270,7 +270,7 @@ void render(const std::vector<Str_and_clr>& lines, const int TOP_ELEMENT)
 
     const int NR_LINES_TOT = int(lines.size());
 
-    const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
+    const int MAX_NR_LINES_ON_SCR = screen_h - 2;
 
     int y_pos = 1;
 
@@ -291,7 +291,7 @@ void render(const std::vector<Str_and_clr>& lines, const int TOP_ELEMENT)
 void run_info(const std::vector<Str_and_clr>& lines)
 {
     const int LINE_JUMP           = 3;
-    const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
+    const int MAX_NR_LINES_ON_SCR = screen_h - 2;
     const int NR_LINES_TOT        = lines.size();
 
     int top_nr = 0;
@@ -354,7 +354,7 @@ void render_menu(const Menu_browser& browser)
 {
     render::cover_panel(Panel::screen);
 
-    P pos(SCREEN_W / 2, 10);
+    P pos(screen_w / 2, 10);
 
     //Draw options
     render::draw_text_center("Show game summary",
@@ -398,7 +398,7 @@ void render_menu(const Menu_browser& browser)
         render::draw_skull({10, 2});
     }
 
-    render::draw_box({0, 0, SCREEN_W - 1, SCREEN_H - 1});
+    render::draw_box({0, 0, screen_w - 1, screen_h - 1});
 
     render::update_screen();
 }

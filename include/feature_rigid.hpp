@@ -35,7 +35,7 @@ public:
 
     virtual void hit(const Dmg_type dmg_type,
                      const Dmg_method dmg_method,
-                     Actor* const actor = nullptr);
+                     Actor* const actor = nullptr) override;
 
     int shock_when_adj() const;
 
@@ -57,7 +57,7 @@ public:
 
     virtual void disarm();
 
-    void add_light(bool light[MAP_W][MAP_H]) const override final;
+    void add_light(bool light[map_w][map_h]) const override final;
 
     void mk_bloody()
     {
@@ -96,7 +96,7 @@ protected:
 
     virtual Did_trigger_trap trigger_trap(Actor* const actor);
 
-    virtual void add_light_hook(bool light[MAP_W][MAP_H]) const
+    virtual void add_light_hook(bool light[map_w][map_h]) const
     {
         (void)light;
     }
@@ -242,7 +242,7 @@ private:
     void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
                 Actor* const actor) override;
 
-    void add_light_hook(bool light[MAP_W][MAP_H]) const override;
+    void add_light_hook(bool light[map_w][map_h]) const override;
 };
 
 enum class Wall_type {cmn, cmn_alt, cave, egypt, cliff, leng_monestary};

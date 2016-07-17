@@ -158,8 +158,8 @@ Range Spell::spi_cost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
     {
         const int X0 = std::max(0, caster->pos.x - 1);
         const int Y0 = std::max(0, caster->pos.y - 1);
-        const int X1 = std::min(MAP_W - 1, caster->pos.x + 1);
-        const int Y1 = std::min(MAP_H - 1, caster->pos.y + 1);
+        const int X1 = std::min(map_w - 1, caster->pos.x + 1);
+        const int Y1 = std::min(map_h - 1, caster->pos.y + 1);
 
         for (int x = X0; x <= X1; ++x)
         {
@@ -614,12 +614,12 @@ Spell_effect_noticed Spell_mayhem::cast_impl(Actor* const caster) const
     const P& caster_pos = caster->pos;
 
     const int NR_SWEEPS = 5;
-    const int RADI      = FOV_STD_RADI_INT;
+    const int RADI      = fov_std_radi_int;
 
     const int X0 = std::max(1, caster_pos.x - RADI);
     const int Y0 = std::max(1, caster_pos.y - RADI);
-    const int X1 = std::min(MAP_W - 1, caster_pos.x + RADI) - 1;
-    const int Y1 = std::min(MAP_H - 1, caster_pos.y + RADI) - 1;
+    const int X1 = std::min(map_w - 1, caster_pos.x + RADI) - 1;
+    const int Y1 = std::min(map_h - 1, caster_pos.y + RADI) - 1;
 
     for (int i = 0; i < NR_SWEEPS; ++i)
     {
@@ -804,9 +804,9 @@ Spell_effect_noticed Spell_anim_wpns::cast_impl(Actor* const caster) const
 
     if (caster->is_player())
     {
-        for (int x = 0; x < MAP_W; ++x)
+        for (int x = 0; x < map_w; ++x)
         {
-            for (int y = 0; y < MAP_H; ++y)
+            for (int y = 0; y < map_h; ++y)
             {
                 Cell& cell = map::cells[x][y];
 
@@ -932,13 +932,13 @@ Spell_effect_noticed Spell_det_items::cast_impl(Actor* const caster) const
 {
     (void)caster;
 
-    const int RADI    = FOV_STD_RADI_INT + 3;
+    const int RADI    = fov_std_radi_int + 3;
     const int ORIG_X  = map::player->pos.x;
     const int ORIG_Y  = map::player->pos.y;
     const int X0      = std::max(0, ORIG_X - RADI);
     const int Y0      = std::max(0, ORIG_Y - RADI);
-    const int X1      = std::min(MAP_W - 1, ORIG_X + RADI);
-    const int Y1      = std::min(MAP_H - 1, ORIG_Y + RADI);
+    const int X1      = std::min(map_w - 1, ORIG_X + RADI);
+    const int Y1      = std::min(map_h - 1, ORIG_Y + RADI);
 
     std::vector<P> items_revealed_cells;
 
@@ -987,9 +987,9 @@ Spell_effect_noticed Spell_det_traps::cast_impl(Actor* const caster) const
 
     std::vector<P> traps_revealed_cells;
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             if (map::cells[x][y].is_seen_by_player)
             {
@@ -1063,9 +1063,9 @@ Spell_effect_noticed Spell_opening::cast_impl(Actor* const caster) const
 
     bool is_any_opened = false;
 
-    for (int y = 1; y < MAP_H - 1; ++y)
+    for (int y = 1; y < map_h - 1; ++y)
     {
-        for (int x = 1; x < MAP_W - 1; ++x)
+        for (int x = 1; x < map_w - 1; ++x)
         {
             const auto& cell = map::cells[x][y];
 
@@ -1394,16 +1394,16 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
     //Try to summon a creature inside the player's FOV (inside the standard range), in a
     //free visible cell. If no such cell is available, instead summon near the caster.
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
     map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
     std::vector<P> free_cells_seen_by_player;
-    const int RADI = FOV_STD_RADI_INT;
+    const int RADI = fov_std_radi_int;
     const P player_pos(map::player->pos);
     const int X0 = std::max(0, player_pos.x - RADI);
     const int Y0 = std::max(0, player_pos.y - RADI);
-    const int X1 = std::min(MAP_W, player_pos.x + RADI) - 1;
-    const int Y1 = std::min(MAP_H, player_pos.y + RADI) - 1;
+    const int X1 = std::min(map_w, player_pos.x + RADI) - 1;
+    const int Y1 = std::min(map_h, player_pos.y + RADI) - 1;
 
     for (int x = X0; x <= X1; ++x)
     {
@@ -1422,7 +1422,7 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
     {
         //No free cells seen by player, instead summon near the caster.
         std::vector<P> free_cells_vector;
-        to_vec((bool*)blocked, false, MAP_W, MAP_H, free_cells_vector);
+        to_vec((bool*)blocked, false, map_w, map_h, free_cells_vector);
 
         if (!free_cells_vector.empty())
         {
@@ -1452,9 +1452,9 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
             {
                 //Compare player CVL with monster's allowed spawning DLVL.
                 const int PLAYER_CLVL     = dungeon_master::clvl();
-                const int PLAYER_CLVL_PCT = (PLAYER_CLVL * 100) / PLAYER_MAX_CLVL;
+                const int PLAYER_CLVL_PCT = (PLAYER_CLVL * 100) / player_max_clvl;
 
-                dlvl_max                   = (PLAYER_CLVL_PCT * DLVL_LAST) / 100;
+                dlvl_max                   = (PLAYER_CLVL_PCT * dlvl_last) / 100;
             }
             else //Caster is monster
             {

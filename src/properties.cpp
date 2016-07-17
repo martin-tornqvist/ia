@@ -1992,7 +1992,7 @@ Prop* Prop_poisoned::on_new_turn()
 {
     if (owning_actor_->is_alive())
     {
-        if (game_time::turn() % POISON_DMG_N_TURN == 0)
+        if (game_time::turn() % poison_dmg_n_turn == 0)
         {
             if (owning_actor_->is_player())
             {
@@ -2248,7 +2248,7 @@ void Prop_confused::affect_move_dir(const P& actor_pos, Dir& dir)
 {
     if (dir != Dir::center)
     {
-        bool blocked[MAP_W][MAP_H];
+        bool blocked[map_w][map_h];
 
         const R area_check_blocked(actor_pos - P(1, 1), actor_pos + P(1, 1));
 
@@ -2336,7 +2336,7 @@ void Prop_frenzied::affect_move_dir(const P& actor_pos, Dir& dir)
 
         const P& closest_mon_pos = seen_foes_cells[0];
 
-        bool blocked[MAP_W][MAP_H];
+        bool blocked[map_w][map_h];
 
         map_parse::run(cell_check::Blocks_actor(*owning_actor_, false),
                        blocked);

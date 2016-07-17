@@ -42,11 +42,11 @@ void mk_items_on_floor()
         }
     }
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
     map_parse::run(cell_check::Blocks_items(), blocked);
 
     std::vector<P> free_cells;
-    to_vec((bool*)blocked, false, MAP_W, MAP_H, free_cells);
+    to_vec((bool*)blocked, false, map_w, map_h, free_cells);
 
     for (int i = 0; i < nr_spawns; ++i)
     {

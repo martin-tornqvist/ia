@@ -325,11 +325,11 @@ void Amulet_effect_fire::on_std_turn_equipped()
     if (rnd::one_in(FIRE_ONE_IN_N))
     {
         const P& origin   = map::player->pos;
-        const int D         = FOV_STD_RADI_INT - 2;
+        const int D         = fov_std_radi_int - 2;
         const int X0        = std::max(1,            origin.x - D);
         const int Y0        = std::max(1,            origin.y - D);
-        const int X1        = std::min(MAP_W - 2,    origin.x + D);
-        const int Y1        = std::min(MAP_H - 2,    origin.y + D);
+        const int X1        = std::min(map_w - 2,    origin.x + D);
+        const int Y1        = std::min(map_h - 2,    origin.y + D);
 
         const int FIRE_CELL_ONE_IN_N = 4;
 

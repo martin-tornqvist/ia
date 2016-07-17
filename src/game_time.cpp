@@ -104,9 +104,9 @@ void run_std_turn_events()
     }
 
     //New turn for rigids
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             map::cells[x][y].rigid->on_new_turn();
         }
@@ -122,7 +122,7 @@ void run_std_turn_events()
 
     //Spawn more monsters?
     //(If an unexplored cell is selected, the spawn is canceled)
-    if (map::dlvl >= 1 && map::dlvl <= DLVL_LAST)
+    if (map::dlvl >= 1 && map::dlvl <= dlvl_last)
     {
         const int SPAWN_N_TURNS = 130;
 
@@ -382,11 +382,11 @@ void tick(const Pass_time pass_time)
 
 void update_light_map()
 {
-    bool light[MAP_W][MAP_H];
+    bool light[map_w][map_h];
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             map::cells[x][y].is_lit = light[x][y] = false;
         }
@@ -408,9 +408,9 @@ void update_light_map()
         m->add_light(light);
     }
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             map::cells[x][y].rigid->add_light(light);
         }
@@ -418,9 +418,9 @@ void update_light_map()
 
     //Copy the temp values to the real light map
     //NOTE: This must be done separately - it cannot be done in the map loop above
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             map::cells[x][y].is_lit = light[x][y];
         }

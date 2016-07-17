@@ -22,8 +22,8 @@
 namespace render
 {
 
-Cell_render_data render_array[MAP_W][MAP_H];
-Cell_render_data render_array_no_actors[MAP_W][MAP_H];
+Cell_render_data render_array[map_w][map_h];
+Cell_render_data render_array_no_actors[map_w][map_h];
 
 namespace
 {
@@ -468,7 +468,7 @@ void init()
 
     scr_srf_ = SDL_CreateRGBSurface(0,
                                     SCR_PX_W, SCR_PX_H,
-                                    SCREEN_BPP,
+                                    screen_bpp,
                                     0x00FF0000,
                                     0x0000FF00,
                                     0x000000FF,
@@ -620,7 +620,7 @@ void draw_marker(const P& p,
                  const std::vector<P>& trail,
                  const int EFFECTIVE_RANGE,
                  const int BLOCKED_FROM_IDX,
-                 Cell_overlay overlay[MAP_W][MAP_H])
+                 Cell_overlay overlay[map_w][map_h])
 {
     Clr clr = clr_green_lgt;
 
@@ -709,7 +709,7 @@ void draw_marker(const P& p,
 
 void draw_blast_at_field(const P& center_pos,
                          const int RADIUS,
-                         bool forbidden_cells[MAP_W][MAP_H],
+                         bool forbidden_cells[map_w][map_h],
                          const Clr& clr_inner,
                          const Clr& clr_outer)
 {
@@ -725,12 +725,12 @@ void draw_blast_at_field(const P& center_pos,
 
         for (
             pos.y = std::max(1, center_pos.y - RADIUS);
-            pos.y <= std::min(MAP_H - 2, center_pos.y + RADIUS);
+            pos.y <= std::min(map_h - 2, center_pos.y + RADIUS);
             pos.y++)
         {
             for (
                 pos.x = std::max(1, center_pos.x - RADIUS);
-                pos.x <= std::min(MAP_W - 2, center_pos.x + RADIUS);
+                pos.x <= std::min(map_w - 2, center_pos.x + RADIUS);
                 pos.x++)
             {
                 if (!forbidden_cells[pos.x][pos.y])
@@ -764,12 +764,12 @@ void draw_blast_at_field(const P& center_pos,
 
         for (
             pos.y = std::max(1, center_pos.y - RADIUS);
-            pos.y <= std::min(MAP_H - 2, center_pos.y + RADIUS);
+            pos.y <= std::min(map_h - 2, center_pos.y + RADIUS);
             pos.y++)
         {
             for (
                 pos.x = std::max(1, center_pos.x - RADIUS);
-                pos.x <= std::min(MAP_W - 2, center_pos.x + RADIUS);
+                pos.x <= std::min(map_w - 2, center_pos.x + RADIUS);
                 pos.x++)
             {
                 if (!forbidden_cells[pos.x][pos.y])
@@ -1218,14 +1218,14 @@ void draw_box(const R& border, const Panel panel, const Clr& clr, const bool COV
 void draw_descr_box(const std::vector<Str_and_clr>& lines)
 {
     const int DESCR_Y0  = 1;
-    const int DESCR_X1  = MAP_W - 1;
+    const int DESCR_X1  = map_w - 1;
 
     cover_area(Panel::screen,
-               R(DESCR_X0 - 1, DESCR_Y0, DESCR_X1, SCREEN_H - 1));
+               R(descr_x0 - 1, DESCR_Y0, DESCR_X1, screen_h - 1));
 
-    const int MAX_W = DESCR_X1 - DESCR_X0 + 1;
+    const int MAX_W = DESCR_X1 - descr_x0 + 1;
 
-    P p(DESCR_X0, DESCR_Y0);
+    P p(descr_x0, DESCR_Y0);
 
     for (const auto& line : lines)
     {
@@ -1247,7 +1247,7 @@ void draw_info_scr_interface(const std::string& title,
 {
     if (config::is_tiles_mode())
     {
-        for (int x = 0; x < SCREEN_W; ++x)
+        for (int x = 0; x < screen_w; ++x)
         {
             render::draw_tile(Tile_id::popup_hor,
                               Panel::screen,
@@ -1256,13 +1256,13 @@ void draw_info_scr_interface(const std::string& title,
 
             render::draw_tile(Tile_id::popup_hor,
                               Panel::screen,
-                              P(x, SCREEN_H - 1),
+                              P(x, screen_h - 1),
                               clr_title);
         }
     }
     else //Text mode
     {
-        const std::string decoration_line(MAP_W, '-');
+        const std::string decoration_line(map_w, '-');
 
         render::draw_text(decoration_line,
                           Panel::screen,
@@ -1271,7 +1271,7 @@ void draw_info_scr_interface(const std::string& title,
 
         render::draw_text(decoration_line,
                           Panel::screen,
-                          P(0, SCREEN_H - 1),
+                          P(0, screen_h - 1),
                           clr_title);
     }
 
@@ -1288,12 +1288,12 @@ void draw_info_scr_interface(const std::string& title,
 
     render::draw_text(" " + cmd_info + " ",
                       Panel::screen,
-                      P(X_LABEL, SCREEN_H - 1),
+                      P(X_LABEL, screen_h - 1),
                       clr_title);
 }
 
 void draw_map_state(const Update_screen update,
-                    Cell_overlay overlay[MAP_W][MAP_H])
+                    Cell_overlay overlay[map_w][map_h])
 {
     if (!is_inited())
     {
@@ -1314,7 +1314,7 @@ void draw_map_state(const Update_screen update,
     }
 }
 
-void draw_map(Cell_overlay overlay[MAP_W][MAP_H])
+void draw_map(Cell_overlay overlay[map_w][map_h])
 {
     if (!is_inited())
     {
@@ -1326,9 +1326,9 @@ void draw_map(Cell_overlay overlay[MAP_W][MAP_H])
     const bool IS_TILE_MODE = config::is_tiles_mode();
 
     //---------------- INSERT RIGIDS AND BLOOD INTO ARRAY
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             //Reset render data at this position
             render_array[x][y] = Cell_render_data();
@@ -1392,9 +1392,9 @@ void draw_map(Cell_overlay overlay[MAP_W][MAP_H])
         }
     }
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             render_data = &render_array[x][y];
 
@@ -1505,9 +1505,9 @@ void draw_map(Cell_overlay overlay[MAP_W][MAP_H])
     }
 
     //---------------- DRAW THE GRID
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             Cell_render_data render_data_cpy = render_array[x][y];
 
@@ -1584,7 +1584,7 @@ void draw_map(Cell_overlay overlay[MAP_W][MAP_H])
                         }
 
                         if (
-                            y < MAP_H - 1 &&
+                            y < map_h - 1 &&
                             (feature_id == Feature_id::wall || is_hidden_door))
                         {
                             if (map::cells[x][y + 1].is_explored)

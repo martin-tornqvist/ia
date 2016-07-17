@@ -4,7 +4,7 @@
 #include <math.h>
 
 #include "actor.hpp"
-#include "cmn.hpp"
+#include "global.hpp"
 #include "insanity.hpp"
 
 enum class Phobia
@@ -56,7 +56,7 @@ public:
 
     void act() override;
 
-    void move(Dir dir);
+    void move(Dir dir) override;
 
     void mk_start_items() override;
 
@@ -100,9 +100,9 @@ public:
     void kick_mon(Actor& defender);
     void hand_att(Actor& defender);
 
-    void update_clr();
+    void update_clr() override;
 
-    void add_light_hook(bool light_map[MAP_W][MAP_H]) const;
+    void add_light_hook(bool light_map[map_w][map_h]) const override;
 
     void on_log_msg_printed();  //Aborts e.g. searching and quick move
     void interrupt_actions();   //Aborts e.g. healing

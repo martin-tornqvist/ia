@@ -147,14 +147,14 @@ std::string Rod::name_inf() const
 
 void Rod_purge_invis::activate_impl()
 {
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
 
     map_parse::run(cell_check::Blocks_los(),
                    blocked,
                    Map_parse_mode::overwrite,
                    fov::get_fov_rect(map::player->pos));
 
-    Los_result fov[MAP_W][MAP_H];
+    Los_result fov[map_w][map_h];
 
     fov::run(map::player->pos, blocked, fov);
 
@@ -248,9 +248,9 @@ void Rod_opening::activate_impl()
 {
     bool is_any_opened = false;
 
-    for (int y = 1; y < MAP_H - 1; ++y)
+    for (int y = 1; y < map_h - 1; ++y)
     {
-        for (int x = 1; x < MAP_W - 1; ++x)
+        for (int x = 1; x < map_w - 1; ++x)
         {
             const auto& cell = map::cells[x][y];
 

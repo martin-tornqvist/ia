@@ -7,7 +7,7 @@
 #endif
 
 #include "rl_utils.hpp"
-#include "cmn.hpp"
+#include "global.hpp"
 
 //---------------------------------------------------------------------------------------
 // Room theming occurs both before and after rooms are connected (pre/post-connect).
@@ -72,8 +72,8 @@ public:
 
     virtual ~Room() {}
 
-    virtual void on_pre_connect(bool door_proposals[MAP_W][MAP_H]) = 0;
-    virtual void on_post_connect(bool door_proposals[MAP_W][MAP_H]) = 0;
+    virtual void on_pre_connect(bool door_proposals[map_w][map_h]) = 0;
+    virtual void on_post_connect(bool door_proposals[map_w][map_h]) = 0;
 
     R                   r_;
     const Room_type     type_;
@@ -92,8 +92,8 @@ public:
 
     virtual ~Std_room() {}
 
-    void on_pre_connect(bool door_proposals[MAP_W][MAP_H]) override final;
-    void on_post_connect(bool door_proposals[MAP_W][MAP_H]) override final;
+    void on_pre_connect(bool door_proposals[map_w][map_h]) override final;
+    void on_post_connect(bool door_proposals[map_w][map_h]) override final;
 
     virtual bool is_allowed() const
     {
@@ -113,8 +113,8 @@ protected:
 
     int place_auto_features();
 
-    virtual void on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H]) = 0;
-    virtual void on_post_connect_hook(bool door_proposals[MAP_W][MAP_H]) = 0;
+    virtual void on_pre_connect_hook(bool door_proposals[map_w][map_h]) = 0;
+    virtual void on_post_connect_hook(bool door_proposals[map_w][map_h]) = 0;
 };
 
 class Plain_room: public Std_room
@@ -127,8 +127,8 @@ public:
 protected:
     Range nr_auto_features_allowed() const override;
     int base_pct_chance_drk() const override;
-    void on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
-    void on_post_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
+    void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+    void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
 class Human_room: public Std_room
@@ -144,8 +144,8 @@ public:
 protected:
     Range nr_auto_features_allowed() const override;
     int base_pct_chance_drk() const override;
-    void on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
-    void on_post_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
+    void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+    void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
 class Ritual_room: public Std_room
@@ -161,8 +161,8 @@ public:
 protected:
     Range nr_auto_features_allowed() const override;
     int base_pct_chance_drk() const override;
-    void on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
-    void on_post_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
+    void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+    void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
 class Spider_room: public Std_room
@@ -178,8 +178,8 @@ public:
 protected:
     Range nr_auto_features_allowed() const override;
     int base_pct_chance_drk() const override;
-    void on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
-    void on_post_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
+    void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+    void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
 class Snake_pit_room: public Std_room
@@ -199,8 +199,8 @@ protected:
     }
 
     int base_pct_chance_drk() const override;
-    void on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
-    void on_post_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
+    void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+    void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
 class Crypt_room: public Std_room
@@ -216,8 +216,8 @@ public:
 protected:
     Range nr_auto_features_allowed() const override;
     int base_pct_chance_drk() const override;
-    void on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
-    void on_post_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
+    void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+    void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
 class Monster_room: public Std_room
@@ -233,8 +233,8 @@ public:
 protected:
     Range nr_auto_features_allowed() const override;
     int base_pct_chance_drk() const override;
-    void on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
-    void on_post_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
+    void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+    void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
 class Flooded_room: public Std_room
@@ -250,8 +250,8 @@ public:
 protected:
     Range nr_auto_features_allowed() const override;
     int base_pct_chance_drk() const override;
-    void on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
-    void on_post_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
+    void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+    void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
 class Muddy_room: public Std_room
@@ -267,8 +267,8 @@ public:
 protected:
     Range nr_auto_features_allowed() const override;
     int base_pct_chance_drk() const override;
-    void on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
-    void on_post_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
+    void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+    void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
 class Cave_room: public Std_room
@@ -284,8 +284,8 @@ public:
 protected:
     Range nr_auto_features_allowed() const override;
     int base_pct_chance_drk() const override;
-    void on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
-    void on_post_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
+    void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+    void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
 class Chasm_room: public Std_room
@@ -301,8 +301,8 @@ public:
 protected:
     Range nr_auto_features_allowed() const override;
     int base_pct_chance_drk() const override;
-    void on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
-    void on_post_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
+    void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+    void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
 class Forest_room: public Std_room
@@ -318,8 +318,8 @@ public:
 protected:
     Range nr_auto_features_allowed() const override;
     int base_pct_chance_drk() const override;
-    void on_pre_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
-    void on_post_connect_hook(bool door_proposals[MAP_W][MAP_H]) override;
+    void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+    void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
 class Corr_link_room: public Room
@@ -330,12 +330,12 @@ public:
 
     ~Corr_link_room() {}
 
-    void on_pre_connect(bool door_proposals[MAP_W][MAP_H]) override
+    void on_pre_connect(bool door_proposals[map_w][map_h]) override
     {
         (void)door_proposals;
     }
 
-    void on_post_connect(bool door_proposals[MAP_W][MAP_H]) override
+    void on_post_connect(bool door_proposals[map_w][map_h]) override
     {
         (void)door_proposals;
     }
@@ -349,12 +349,12 @@ public:
 
     ~Crumble_room() {}
 
-    void on_pre_connect(bool door_proposals[MAP_W][MAP_H]) override
+    void on_pre_connect(bool door_proposals[map_w][map_h]) override
     {
         (void)door_proposals;
     }
 
-    void on_post_connect(bool door_proposals[MAP_W][MAP_H]) override
+    void on_post_connect(bool door_proposals[map_w][map_h]) override
     {
         (void)door_proposals;
     }
@@ -369,9 +369,9 @@ public:
 
     ~River_room() {}
 
-    void on_pre_connect(bool door_proposals[MAP_W][MAP_H]) override;
+    void on_pre_connect(bool door_proposals[map_w][map_h]) override;
 
-    void on_post_connect(bool door_proposals[MAP_W][MAP_H]) override
+    void on_post_connect(bool door_proposals[map_w][map_h]) override
     {
         (void)door_proposals;
     }

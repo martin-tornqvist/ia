@@ -1,7 +1,7 @@
 #ifndef MON_HPP
 #define MON_HPP
 
-#include "cmn.hpp"
+#include "global.hpp"
 #include "actor.hpp"
 #include "sound.hpp"
 #include "spells.hpp"
@@ -48,11 +48,11 @@ public:
     virtual ~Mon();
 
     bool can_see_actor(const Actor& other,
-                       const bool hard_blocked_los[MAP_W][MAP_H]) const;
+                       const bool hard_blocked_los[map_w][map_h]) const;
 
     void act() override;
 
-    void move(Dir dir);
+    void move(Dir dir) override;
 
     void avail_attacks(Actor& defender, Ai_avail_attacks_data& dst);
 
@@ -368,11 +368,11 @@ public:
 
     static std::string cultist_phrase();
 
-    std::string aggro_phrase_mon_seen() const
+    std::string aggro_phrase_mon_seen() const override
     {
         return name_the() + ": " + cultist_phrase();
     }
-    std::string aggro_phrase_mon_hidden() const
+    std::string aggro_phrase_mon_hidden() const override
     {
         return "Voice: " + cultist_phrase();
     }
@@ -775,7 +775,7 @@ public:
 
     virtual ~Vortex() {}
 
-    virtual void mk_start_items() = 0;
+    virtual void mk_start_items() override = 0;
 
 private:
     Did_action on_act() override;
@@ -804,7 +804,7 @@ class Ooze: public Mon
 public:
     Ooze() : Mon() {}
     ~Ooze() {}
-    virtual void mk_start_items() = 0;
+    virtual void mk_start_items() override = 0;
 
     std::string death_msg() const override
     {
@@ -856,7 +856,7 @@ public:
 
     void mk_start_items() override;
 
-    Clr clr();
+    Clr clr() override;
 
     std::string death_msg() const override
     {
@@ -893,7 +893,7 @@ public:
     Gas_spore() : Mon() {}
     ~Gas_spore() {}
 
-    void on_death();
+    void on_death() override;
 
     void mk_start_items() override {}
 };

@@ -50,7 +50,7 @@ void read_file()
 
             if (should_format_line)
             {
-                text_format::split(cur_line, MAP_W, formatted);
+                text_format::split(cur_line, map_w, formatted);
 
                 for (const auto& line : formatted)
                 {
@@ -78,7 +78,7 @@ void run()
 {
     const int LINE_JUMP           = 3;
     const int NR_LINES_TOT        = lines_.size();
-    const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
+    const int MAX_NR_LINES_ON_SCR = screen_h - 2;
 
     int top_nr = 0;
     int btm_nr = std::min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);

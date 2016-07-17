@@ -49,13 +49,13 @@ std::vector<std::string> font_image_names;
 
 void set_cell_px_dim_dependent_variables()
 {
-    map_px_h_                   = cell_px_h_ * MAP_H;
-    map_px_offset_h_            = cell_px_h_ * MAP_OFFSET_H;
-    log_px_h_                   = cell_px_h_ * LOG_H;
-    char_lines_px_h_            = cell_px_h_ * CHAR_LINES_H;
-    char_lines_px_offset_h_     = cell_px_h_ * CHAR_LINES_OFFSET_H;
-    scr_px_w_                   = cell_px_w_ * SCREEN_W;
-    scr_px_h_                   = cell_px_h_ * SCREEN_H;
+    map_px_h_                   = cell_px_h_ * map_h;
+    map_px_offset_h_            = cell_px_h_ * map_offset_h;
+    log_px_h_                   = cell_px_h_ * log_h;
+    char_lines_px_h_            = cell_px_h_ * char_lines_h;
+    char_lines_px_offset_h_     = cell_px_h_ * char_lines_offset_h;
+    scr_px_w_                   = cell_px_w_ * screen_w;
+    scr_px_h_                   = cell_px_h_ * screen_h;
 }
 
 void set_cell_px_dims_from_font_name()
@@ -496,9 +496,9 @@ void draw(const Menu_browser* const browser, const int OPTION_VALUES_X_POS)
 
     std::vector<std::string> lines;
 
-    text_format::split(str, SCREEN_W, lines);
+    text_format::split(str, screen_w, lines);
 
-    int y = SCREEN_H - lines.size();
+    int y = screen_h - lines.size();
 
     for (const std::string& line : lines)
     {

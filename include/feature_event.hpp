@@ -75,11 +75,11 @@ private:
 
     bool is_ok_feature_at(const P& p) const;
 
-    void blocked_cells(const R& r, bool out[MAP_W][MAP_H]) const;
+    void blocked_cells(const R& r, bool out[map_w][map_h]) const;
 
-    void emerge_p_bucket(const P& p, bool blocked[MAP_W][MAP_H], std::vector<P>& out) const;
+    void emerge_p_bucket(const P& p, bool blocked[map_w][map_h], std::vector<P>& out) const;
 
-    const Range allowed_emerge_dist_range = Range(2, FOV_STD_RADI_INT - 1);
+    const Range allowed_emerge_dist_range = Range(2, fov_std_radi_int - 1);
 
     const size_t MIN_NR_SNAKES_ = 3;
 };

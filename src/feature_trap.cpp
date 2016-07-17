@@ -416,7 +416,7 @@ void Trap::disarm()
     {
         msg_log::add(trap_impl_->disarm_msg());
 
-        dungeon_master::incr_player_xp(XP_FOR_DISRM_TRAP);
+        dungeon_master::incr_player_xp(xp_for_disarm_trap);
     }
     else //Not disarmed
     {
@@ -598,7 +598,7 @@ Matl Trap::matl() const
 //------------------------------------------------------------- TRAP IMPLEMENTATIONS
 Trap_dart::Trap_dart(P pos, Trap* const base_trap) :
     Mech_trap_impl              (pos, Trap_id::dart, base_trap),
-    is_poisoned_                (map::dlvl >= MIN_DLVL_HARDER_TRAPS && rnd::one_in(3)),
+    is_poisoned_                (map::dlvl >= min_dlvl_harder_traps && rnd::one_in(3)),
     dart_origin_                (),
     is_dart_origin_destroyed_   (false) {}
 
@@ -609,7 +609,7 @@ Trap_placement_valid Trap_dart::on_place()
     random_shuffle(begin(offsets), end(offsets));
 
     const int NR_STEPS_MIN = 2;
-    const int NR_STEPS_MAX = FOV_STD_RADI_INT;
+    const int NR_STEPS_MAX = fov_std_radi_int;
 
     auto trap_plament_valid = Trap_placement_valid::no;
 
@@ -682,11 +682,11 @@ void Trap_dart::trigger()
 
     if (dart_origin_.x == pos_.x)
     {
-        aim_pos.y = dart_origin_.y > pos_.y ? 0 : (MAP_H - 1);
+        aim_pos.y = dart_origin_.y > pos_.y ? 0 : (map_h - 1);
     }
     else //Dart origin is on same vertial line as the trap
     {
-        aim_pos.x = dart_origin_.x > pos_.x ? 0 : (MAP_W - 1);
+        aim_pos.x = dart_origin_.x > pos_.x ? 0 : (map_w - 1);
     }
 
     if (origin_cell.is_seen_by_player)
@@ -718,7 +718,7 @@ void Trap_dart::trigger()
 
 Trap_spear::Trap_spear(P pos, Trap* const base_trap) :
     Mech_trap_impl              (pos, Trap_id::spear, base_trap),
-    is_poisoned_                (map::dlvl >= MIN_DLVL_HARDER_TRAPS && rnd::one_in(4)),
+    is_poisoned_                (map::dlvl >= min_dlvl_harder_traps && rnd::one_in(4)),
     spear_origin_               (),
     is_spear_origin_destroyed_  (false) {}
 
@@ -1166,9 +1166,9 @@ void Trap_spi_drain::trigger()
     TRACE << "Draining player spirit" << std::endl;
 
     //Allow draining more than starting spirit if this is DLVL depth after harder traps
-    const bool ALLOW_OVER_START_SPI = map::dlvl >= MIN_DLVL_HARDER_TRAPS;
-    const int D                     = SPI_PER_LVL * 2;
-    const int MAX                   = PLAYER_START_SPI + (ALLOW_OVER_START_SPI ? D : -D);
+    const bool ALLOW_OVER_START_SPI = map::dlvl >= min_dlvl_harder_traps;
+    const int D                     = spi_per_lvl * 2;
+    const int MAX                   = player_start_spi + (ALLOW_OVER_START_SPI ? D : -D);
     const int SPI_DRAINED           = rnd::range(1, MAX);
 
     map::player->hit_spi(SPI_DRAINED);

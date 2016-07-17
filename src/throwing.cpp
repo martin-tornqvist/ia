@@ -33,7 +33,7 @@ void player_throw_lit_explosive(const P& aim_cell)
     line_calc::calc_new_line(map::player->pos,
                              aim_cell,
                              true,
-                             THROW_RANGE_LMT,
+                             throw_range_lmt,
                              false,
                              path);
 
@@ -101,7 +101,7 @@ void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
 
     std::vector<P> path;
 
-    line_calc::calc_new_line(actor_throwing.pos, tgt_cell, false, THROW_RANGE_LMT, false, path);
+    line_calc::calc_new_line(actor_throwing.pos, tgt_cell, false, throw_range_lmt, false, path);
 
     const Item_data_t& item_thrown_data = item_thrown.data();
 

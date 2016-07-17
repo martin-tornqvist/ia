@@ -39,7 +39,7 @@ int nr_snd_msg_printed_cur_turn_;
 
 bool is_snd_heard_at_range(const int RANGE, const Snd& snd)
 {
-    return RANGE <= (snd.is_loud() ? SND_DIST_LOUD : SND_DIST_NORMAL);
+    return RANGE <= (snd.is_loud() ? snd_dist_loud : snd_dist_normal);
 }
 
 } //namespace
@@ -51,28 +51,28 @@ void reset_nr_snd_msg_printed_cur_turn()
 
 void run(Snd snd)
 {
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             const auto f  = map::cells[x][y].rigid;
             blocked[x][y] = !f->is_sound_passable();
         }
     }
 
-    int flood_fill[MAP_W][MAP_H];
+    int floodfill[map_w][map_h];
 
     const P& origin = snd.origin();
 
-    flood_fill::run(origin, blocked, flood_fill, 999, P(-1, -1), true);
+    floodfill::run(origin, blocked, floodfill, 999, P(-1, -1), true);
 
-    flood_fill[origin.x][origin.y] = 0;
+    floodfill[origin.x][origin.y] = 0;
 
     for (Actor* actor : game_time::actors)
     {
-        const int FLOOD_VAL_AT_ACTOR = flood_fill[actor->pos.x][actor->pos.y];
+        const int FLOOD_VAL_AT_ACTOR = floodfill[actor->pos.x][actor->pos.y];
 
         const bool IS_ORIGIN_SEEN_BY_PLAYER =
             map::cells[origin.x][origin.y].is_seen_by_player;
@@ -99,7 +99,7 @@ void run(Snd snd)
                     }
                 }
 
-                const int SND_MAX_DIST  = snd.is_loud() ? SND_DIST_LOUD : SND_DIST_NORMAL;
+                const int SND_MAX_DIST  = snd.is_loud() ? snd_dist_loud : snd_dist_normal;
 
                 const int PCT_DIST      = (FLOOD_VAL_AT_ACTOR * 100) / SND_MAX_DIST;
 

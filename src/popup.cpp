@@ -15,16 +15,16 @@ namespace
 {
 
 const int TEXT_W_STD    = 39;
-const int TEXT_X0_STD   = MAP_W_HALF - ((TEXT_W_STD) / 2);
+const int TEXT_X0_STD   = map_w_half - ((TEXT_W_STD) / 2);
 
 int print_box_and_get_title_y_pos(const int TEXT_H_TOT, const int TEXT_W)
 {
     const int BOX_W       = TEXT_W + 2;
     const int BOX_H       = TEXT_H_TOT + 2;
 
-    const int X0          = MAP_W_HALF - ((TEXT_W) / 2) - 1;
+    const int X0          = map_w_half - ((TEXT_W) / 2) - 1;
 
-    const int Y0          = MAP_H_HALF - (BOX_H / 2) - 1;
+    const int Y0          = map_h_half - (BOX_H / 2) - 1;
     const int X1          = X0 + BOX_W - 1;
     const int Y1          = Y0 + BOX_H - 1;
 
@@ -68,7 +68,7 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
     {
         render::draw_text_center(title,
                                    Panel::map,
-                                   P(MAP_W_HALF, y),
+                                   P(map_w_half, y),
                                    clr_title,
                                    clr_black,
                                    true);
@@ -84,7 +84,7 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
         {
             render::draw_text_center(line,
                                        Panel::map,
-                                       P(MAP_W_HALF, y),
+                                       P(map_w_half, y),
                                        clr_white,
                                        clr_black,
                                        true);
@@ -111,7 +111,7 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
 
         render::draw_text_center(choices[i],
                                    Panel::map,
-                                   P(MAP_W_HALF, y),
+                                   P(map_w_half, y),
                                    clr,
                                    clr_black,
                                    true);
@@ -151,7 +151,7 @@ void show_msg(const std::string& msg,
     if (!title.empty())
     {
         render::draw_text_center(title, Panel::map,
-                                   P(MAP_W_HALF, y),
+                                   P(map_w_half, y),
                                    clr_title,
                                    clr_black,
                                    true);
@@ -167,7 +167,7 @@ void show_msg(const std::string& msg,
         {
             render::draw_text_center(line,
                                        Panel::map,
-                                       P(MAP_W_HALF, y),
+                                       P(map_w_half, y),
                                        clr_white,
                                        clr_black,
                                        true);
@@ -189,7 +189,7 @@ void show_msg(const std::string& msg,
 
     render::draw_text_center("[space/esc/enter] to continue",
                                Panel::map,
-                               P(MAP_W_HALF, y),
+                               P(map_w_half, y),
                                clr_popup_label);
 
     render::update_screen();

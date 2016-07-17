@@ -92,7 +92,7 @@ void draw()
 
     str = to_str(dungeon_master::clvl());
 
-    if (dungeon_master::clvl() < PLAYER_MAX_CLVL)
+    if (dungeon_master::clvl() < player_max_clvl)
     {
         //Not at maximum character level
         str += "(" + to_str(dungeon_master::xp_to_next_lvl()) + ")";
@@ -169,7 +169,7 @@ void draw()
     str = to_str(ENC) + "%";
 
     const Clr enc_clr = ENC < 100 ? clr_white :
-                        ENC < ENC_IMMOBILE_LVL ? clr_yellow : clr_red_lgt;
+                        ENC < enc_immobile_lvl ? clr_yellow : clr_red_lgt;
 
     render::draw_text(str, panel, p, enc_clr);
 
@@ -336,7 +336,7 @@ void draw()
     const int           TURN        = game_time::turn();
     const std::string   turn_str    = to_str(TURN);
 
-    p.x = SCREEN_W - turn_str.size() - 2; //"T" + ":"
+    p.x = screen_w - turn_str.size() - 2; //"T" + ":"
 
     const bool IS_FREE_STEP_TURN = player.is_free_step_turn();
 

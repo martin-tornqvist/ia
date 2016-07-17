@@ -34,9 +34,9 @@ std::vector<P> path_;
 
 void show_map_and_freeze(const std::string& msg)
 {
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             Cell& cell = map::cells[x][y];
 
@@ -76,14 +76,14 @@ void find_stair_path()
 {
     path_.clear();
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
     map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
     P stair_p(-1, -1);
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             const auto id = map::cells[x][y].rigid->id();
 
@@ -111,7 +111,7 @@ void find_stair_path()
         show_map_and_freeze("Player on blocked position");
     }
 
-    path_find::run(player_p,
+    pathfind::run(player_p,
                    stair_p,
                    blocked,
                    path_);
@@ -194,7 +194,7 @@ void act()
 //    }
 
     //Check if we are finished with the current run, if so, go back to DLVL 1
-    if (map::dlvl >= DLVL_LAST)
+    if (map::dlvl >= dlvl_last)
     {
         TRACE << "Starting new run on first dungeon level" << std::endl;
         map_travel::init();

@@ -2,7 +2,7 @@
 #define DROP_HPP
 
 #include "rl_utils.hpp"
-#include "cmn.hpp"
+#include "global.hpp"
 
 class Item;
 class Actor;

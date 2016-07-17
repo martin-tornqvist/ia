@@ -98,7 +98,7 @@
 		<Unit filename="../include/character_descr.hpp" />
 		<Unit filename="../include/character_lines.hpp" />
 		<Unit filename="../include/close.hpp" />
-		<Unit filename="../include/cmn.hpp" />
+		<Unit filename="../include/global.hpp" />
 		<Unit filename="../include/colors.hpp" />
 		<Unit filename="../include/config.hpp" />
 		<Unit filename="../include/create_character.hpp" />

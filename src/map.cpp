@@ -72,9 +72,9 @@ namespace map
 
 Player*             player  = nullptr;
 int                 dlvl    = 0;
-Cell                cells[MAP_W][MAP_H];
+Cell                cells[map_w][map_h];
 std::vector<Room*>  room_list;
-Room*               room_map[MAP_W][MAP_H];
+Room*               room_map[map_w][map_h];
 Clr                 wall_clr;
 
 namespace
@@ -82,9 +82,9 @@ namespace
 
 void reset_cells(const bool MAKE_STONE_WALLS)
 {
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             cells[x][y].reset();
             cells[x][y].pos = P(x, y);
@@ -112,7 +112,7 @@ void init()
 
     reset_cells(false);
 
-    const P player_pos(PLAYER_START_X, PLAYER_START_Y);
+    const P player_pos(player_start_x, player_start_y);
 
     player = static_cast<Player*>(actor_factory::mk(Actor_id::player, player_pos));
 }
@@ -121,9 +121,9 @@ void cleanup()
 {
     reset_map();
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             delete cells[x][y].rigid;
             cells[x][y].rigid = nullptr;
@@ -202,9 +202,9 @@ Rigid* put(Rigid* const f)
 
     if (f->id() == Feature_id::floor)
     {
-        for (int x = 0; x < MAP_W; ++x)
+        for (int x = 0; x < map_w; ++x)
         {
-            for (int y = 0; y < MAP_H; ++y)
+            for (int y = 0; y < map_h; ++y)
             {
                 map::cells[x][y].is_seen_by_player = map::cells[x][y].is_explored = true;
             }
@@ -223,9 +223,9 @@ Rigid* put(Rigid* const f)
 
 void cpy_render_array_to_visual_memory()
 {
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             const Cell_render_data render_data = render::render_array_no_actors[x][y];
 
@@ -331,9 +331,9 @@ void actor_cells(const std::vector<Actor*>& actors, std::vector<P>& out)
     }
 }
 
-void mk_actor_array(Actor* a[MAP_W][MAP_H])
+void mk_actor_array(Actor* a[map_w][map_h])
 {
-    std::fill_n(*a, NR_MAP_CELLS, nullptr);
+    std::fill_n(*a, nr_map_cells, nullptr);
 
     for (Actor* actor : game_time::actors)
     {
@@ -393,15 +393,15 @@ bool is_pos_inside_map(const P& pos, const bool COUNT_EDGE_AS_INSIDE)
     {
         return pos.x >= 0 &&
                pos.y >= 0 &&
-               pos.x < MAP_W &&
-               pos.y < MAP_H;
+               pos.x < map_w &&
+               pos.y < map_h;
     }
     else //Edge counts as outside the map
     {
         return pos.x > 0 &&
                pos.y > 0 &&
-               pos.x < MAP_W - 1 &&
-               pos.y < MAP_H - 1;
+               pos.x < map_w - 1 &&
+               pos.y < map_h - 1;
     }
 }
 

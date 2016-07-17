@@ -19,7 +19,7 @@ namespace
 {
 
 const int TOP_MORE_Y    = 0;
-const int BTM_MORE_Y    = SCREEN_H - 1;
+const int BTM_MORE_Y    = screen_h - 1;
 const int INV_Y0        = TOP_MORE_Y + 1;
 const int INV_Y1        = BTM_MORE_Y - 1;
 
@@ -53,7 +53,7 @@ void draw_weight_pct_and_dots(const P item_pos,
     }
 
     std::string weight_str  = to_str(item_weight_pct) + "%";
-    int         weight_x    = DESCR_X0 - 1 - weight_str.size();
+    int         weight_x    = descr_x0 - 1 - weight_str.size();
 
     ASSERT(item_weight_pct >= 0 && item_weight_pct <= 100);
 
@@ -71,7 +71,7 @@ void draw_weight_pct_and_dots(const P item_pos,
     else //"Zero" weight, or 100% of weight - no weight percent should be displayed
     {
         weight_str  = "";
-        weight_x    = DESCR_X0 - 1;
+        weight_x    = descr_x0 - 1;
     }
 
     int dots_x = item_pos.x + ITEM_NAME_LEN;
@@ -151,7 +151,7 @@ void draw_detailed_item_descr(const Item* const item)
 
         if (!disturb_str.empty())
         {
-            disturb_str += " (+" + to_str(INS_FROM_DISTURBING_ITEMS) + "% insanity)";
+            disturb_str += " (+" + to_str(ins_from_disturbing_items) + "% insanity)";
 
             lines.push_back({disturb_str, clr_magenta});
         }
@@ -206,7 +206,7 @@ void draw_inv(const Menu_browser& browser)
 
     render::draw_text_center("Browsing inventory" + drop_info_str,
                              panel,
-                             P(SCREEN_W / 2, 0),
+                             P(screen_w / 2, 0),
                              clr_brown_gray);
 
     const Range idx_range_shown = browser.range_shown();
@@ -377,7 +377,7 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
 
     render::draw_text_center("Apply which item?" + drop_info_str,
                              panel,
-                             P(SCREEN_W / 2, 0),
+                             P(screen_w / 2, 0),
                              clr_brown_gray);
 
     const Range idx_range_shown = browser.range_shown();
@@ -512,7 +512,7 @@ void draw_equip(const Menu_browser& browser,
 
         render::draw_text_center(heading + drop_info_str,
                                  panel,
-                                 P(SCREEN_W / 2, 0),
+                                 P(screen_w / 2, 0),
                                  clr_brown_gray);
     }
     else

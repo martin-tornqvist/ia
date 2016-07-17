@@ -12,7 +12,7 @@ namespace create_character
 {
 
 const int TOP_MORE_Y    = 1;
-const int BTM_MORE_Y    = SCREEN_H - 1;
+const int BTM_MORE_Y    = screen_h - 1;
 const int OPT_X0        = 0;
 const int OPT_Y0        = TOP_MORE_Y + 1;
 const int OPT_X1        = 22;
@@ -22,9 +22,9 @@ const int OPT_H         = OPT_Y1 - OPT_Y0 + 1;
 namespace
 {
 
-const int DESCR_X0  = OPT_X1 + 2;
+const int descr_x0  = OPT_X1 + 2;
 const int DESCR_Y0  = OPT_Y0;
-const int DESCR_X1  = SCREEN_W - 1;
+const int DESCR_X1  = screen_w - 1;
 const int DESCR_Y1  = OPT_Y1;
 
 const int DESCR_W   = DESCR_X1 - DESCR_Y1 + 1;
@@ -38,15 +38,15 @@ void draw(const std::string& cur_string)
 
     render::draw_text_center("What is your name?",
                              Panel::screen,
-                             P(MAP_W_HALF, 0),
+                             P(map_w_half, 0),
                              clr_title);
     const int Y_NAME = 3;
 
-    const std::string name_str = cur_string.size() < PLAYER_NAME_MAX_LEN ?
+    const std::string name_str = cur_string.size() < player_name_max_len ?
                                  cur_string + "_" : cur_string;
 
-    const size_t NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LEN / 2);
-    const size_t NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LEN - 1;
+    const size_t NAME_X0 = map_w_half - (player_name_max_len / 2);
+    const size_t NAME_X1 = NAME_X0 + player_name_max_len - 1;
 
     render::draw_text(name_str,
                       Panel::screen,
@@ -72,7 +72,7 @@ void read_keys(std::string& cur_string, bool& done)
         return;
     }
 
-    if (cur_string.size() < PLAYER_NAME_MAX_LEN)
+    if (cur_string.size() < player_name_max_len)
     {
         if (
             d.sdl_key == SDLK_SPACE ||
@@ -137,7 +137,7 @@ void draw_pick_bg(const std::vector<Bg>& bgs, const Menu_browser& browser)
 
     render::draw_text_center("What is your background?",
                              Panel::screen,
-                             P(MAP_W_HALF, 0),
+                             P(map_w_half, 0),
                              clr_title,
                              clr_black,
                              true);
@@ -190,7 +190,7 @@ void draw_pick_bg(const std::vector<Bg>& bgs, const Menu_browser& browser)
         {
             render::draw_text(line,
                               Panel::screen,
-                              P(DESCR_X0, y),
+                              P(descr_x0, y),
                               clr_text);
             ++y;
         }
@@ -252,7 +252,7 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
 
     render::draw_text_center(title,
                              Panel::screen,
-                             P(MAP_W_HALF, 0),
+                             P(map_w_half, 0),
                              clr_title,
                              clr_black,
                              true);
@@ -356,7 +356,7 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
     {
         render::draw_text(str,
                           Panel::screen,
-                          P(DESCR_X0, y),
+                          P(descr_x0, y),
                           clr_white);
         ++y;
     }
@@ -381,7 +381,7 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
 
         render::draw_text(label,
                           Panel::screen,
-                          P(DESCR_X0, y),
+                          P(descr_x0, y),
                           clr_white);
 
         std::vector<Str_and_clr> prereq_titles;
@@ -417,7 +417,7 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
             prereq_titles.push_back(Str_and_clr(trait_title, clr));
         }
 
-        const int PREREQ_LIST_X = DESCR_X0 + label.size() + 1;
+        const int PREREQ_LIST_X = descr_x0 + label.size() + 1;
 
         for (const Str_and_clr& title : prereq_titles)
         {

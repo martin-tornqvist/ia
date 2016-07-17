@@ -45,9 +45,9 @@ namespace map
 
 extern Player*              player;
 extern int                  dlvl;
-extern Cell                 cells[MAP_W][MAP_H];
+extern Cell                 cells[map_w][map_h];
 extern std::vector<Room*>   room_list;              //Owns the rooms
-extern Room*                room_map[MAP_W][MAP_H]; //Helper array
+extern Room*                room_map[map_w][map_h]; //Helper array
 
 extern Clr                  wall_clr;
 
@@ -79,7 +79,7 @@ Mob* first_mob_at_pos(const P& pos);
 
 void actor_cells(const std::vector<Actor*>& actors, std::vector<P>& out);
 
-void mk_actor_array(Actor* a[MAP_W][MAP_H]);
+void mk_actor_array(Actor* a[map_w][map_h]);
 
 Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors);
 

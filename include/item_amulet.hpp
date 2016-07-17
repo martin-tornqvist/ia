@@ -565,7 +565,7 @@ public:
 
     void on_actor_turn_in_inv(const Inv_type inv_type) override final;
 
-    int hp_regen_change(const Inv_type inv_type) const;
+    int hp_regen_change(const Inv_type inv_type) const override;
 
     Clr interface_clr() const override
     {
@@ -580,7 +580,7 @@ public:
     void effect_noticed(const Amulet_effect_id effect_id);
 
 private:
-    virtual std::string name_inf() const;
+    virtual std::string name_inf() const override;
 
     std::vector<Amulet_effect*> effects_;
 };

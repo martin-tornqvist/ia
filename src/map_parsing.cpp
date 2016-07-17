@@ -131,7 +131,7 @@ bool All_adj_is_any_of_features::check(const Cell& c) const
     const int X = c.pos.x;
     const int Y = c.pos.y;
 
-    if (X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1)
+    if (X <= 0 || X >= map_w - 1 || Y <= 0 || Y >= map_h - 1)
     {
         return false;
     }
@@ -168,7 +168,7 @@ bool All_adj_is_not_feature::check(const Cell& c) const
     const int X = c.pos.x;
     const int Y = c.pos.y;
 
-    if (X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1)
+    if (X <= 0 || X >= map_w - 1 || Y <= 0 || Y >= map_h - 1)
     {
         return false;
     }
@@ -192,7 +192,7 @@ bool All_adj_is_none_of_features::check(const Cell& c) const
     const int X = c.pos.x;
     const int Y = c.pos.y;
 
-    if (X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1)
+    if (X <= 0 || X >= map_w - 1 || Y <= 0 || Y >= map_h - 1)
     {
         return false;
     }
@@ -223,7 +223,7 @@ namespace map_parse
 {
 
 void run(const  cell_check::Check& method,
-         bool   out[MAP_W][MAP_H],
+         bool   out[map_w][map_h],
          const  Map_parse_mode write_rule,
          const  R& area_to_check_cells)
 {
@@ -357,29 +357,29 @@ bool cell(const cell_check::Check& method, const P& p)
     return r;
 }
 
-void cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
+void cells_within_dist_of_others(const bool in[map_w][map_h], bool out[map_w][map_h],
                                  const Range& dist_interval)
 {
     ASSERT(in != out);
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             out[x][y] = false;
         }
     }
 
-    for (int y_outer = 0; y_outer < MAP_H; y_outer++)
+    for (int y_outer = 0; y_outer < map_h; y_outer++)
     {
-        for (int x_outer = 0; x_outer < MAP_W; x_outer++)
+        for (int x_outer = 0; x_outer < map_w; x_outer++)
         {
             if (!out[x_outer][y_outer])
             {
                 for (int d = dist_interval.min; d <= dist_interval.max; d++)
                 {
                     P p0(std::max(0,         x_outer - d), std::max(0,         y_outer - d));
-                    P p1(std::min(MAP_W - 1, x_outer + d), std::min(MAP_H - 1, y_outer + d));
+                    P p1(std::min(map_w - 1, x_outer + d), std::min(map_h - 1, y_outer + d));
 
                     for (int x = p0.x; x <= p1.x; ++x)
                     {
@@ -404,25 +404,25 @@ void cells_within_dist_of_others(const bool in[MAP_W][MAP_H], bool out[MAP_W][MA
     }
 }
 
-void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H])
+void append(bool base[map_w][map_h], const bool append[map_w][map_h])
 {
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             if (append[x][y]) {base[x][y] = true;}
         }
     }
 }
 
-void expand(const bool in[MAP_W][MAP_H],
-            bool out[MAP_W][MAP_H],
+void expand(const bool in[map_w][map_h],
+            bool out[map_w][map_h],
             const R& area_allowed_to_modify)
 {
     const int X0 = std::max(0,          area_allowed_to_modify.p0.x);
     const int Y0 = std::max(0,          area_allowed_to_modify.p0.y);
-    const int X1 = std::min(MAP_W - 1,  area_allowed_to_modify.p1.x);
-    const int Y1 = std::min(MAP_H - 1,  area_allowed_to_modify.p1.y);
+    const int X1 = std::min(map_w - 1,  area_allowed_to_modify.p1.x);
+    const int Y1 = std::min(map_h - 1,  area_allowed_to_modify.p1.y);
 
     for (int x = X0; x <= X1; ++x)
     {
@@ -434,8 +434,8 @@ void expand(const bool in[MAP_W][MAP_H],
             //which is "true" in the input arry.
             const int CMP_X0 = std::max(x - 1, 0);
             const int CMP_Y0 = std::max(y - 1, 0);
-            const int CMP_X1 = std::min(x + 1, MAP_W - 1);
-            const int CMP_Y1 = std::min(y + 1, MAP_H - 1);
+            const int CMP_X1 = std::min(x + 1, map_w - 1);
+            const int CMP_Y1 = std::min(y + 1, map_h - 1);
 
             for (int cmp_x = CMP_X0; cmp_x <= CMP_X1; ++cmp_x)
             {
@@ -459,13 +459,13 @@ void expand(const bool in[MAP_W][MAP_H],
     }
 }
 
-void expand(const bool in[MAP_W][MAP_H],
-            bool out[MAP_W][MAP_H],
+void expand(const bool in[map_w][map_h],
+            bool out[map_w][map_h],
             const int DIST)
 {
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             out[x][y] = false;
 
@@ -476,8 +476,8 @@ void expand(const bool in[MAP_W][MAP_H],
 
             const int CMP_X0 = X0 < 0 ? 0 : X0;
             const int CMP_Y0 = Y0 < 0 ? 0 : Y0;
-            const int CMP_X1 = X1 > MAP_W - 1 ? MAP_W - 1 : X1;
-            const int CMP_Y1 = Y1 > MAP_H - 1 ? MAP_H - 1 : Y1;
+            const int CMP_X1 = X1 > map_w - 1 ? map_w - 1 : X1;
+            const int CMP_Y1 = Y1 > map_h - 1 ? map_h - 1 : Y1;
 
             for (int cmp_y = CMP_Y0; cmp_y <= CMP_Y1; ++cmp_y)
             {
@@ -501,13 +501,13 @@ void expand(const bool in[MAP_W][MAP_H],
     }
 }
 
-bool is_map_connected(const bool blocked[MAP_W][MAP_H])
+bool is_map_connected(const bool blocked[map_w][map_h])
 {
     P origin(-1, -1);
 
-    for (int x = 1; x < MAP_W - 1; ++x)
+    for (int x = 1; x < map_w - 1; ++x)
     {
-        for (int y = 1; y < MAP_H - 1; ++y)
+        for (int y = 1; y < map_h - 1; ++y)
         {
             if (!blocked[x][y])
             {
@@ -524,23 +524,23 @@ bool is_map_connected(const bool blocked[MAP_W][MAP_H])
 
     ASSERT(map::is_pos_inside_map(origin, false));
 
-    int flood_fill[MAP_W][MAP_H];
+    int floodfill[map_w][map_h];
 
-    flood_fill::run(origin,
+    floodfill::run(origin,
                     blocked,
-                    flood_fill,
+                    floodfill,
                     INT_MAX,
                     P(-1, -1),
                     true);
 
     //NOTE: We can skip to origin.x immediately, since this is guaranteed to be
     //the leftmost non-blocked cell.
-    for (int x = origin.x; x < MAP_W - 1; ++x)
+    for (int x = origin.x; x < map_w - 1; ++x)
     {
-        for (int y = 1; y < MAP_H - 1; ++y)
+        for (int y = 1; y < map_h - 1; ++y)
         {
             if (
-                flood_fill[x][y] == 0   &&
+                floodfill[x][y] == 0   &&
                 !blocked[x][y]          &&
                 P(x, y) != origin)
             {
@@ -561,230 +561,3 @@ bool Is_closer_to_pos::operator()(const P& p1, const P& p2)
     const int king_dist2 = king_dist(p_.x, p_.y, p2.x, p2.y);
     return king_dist1 < king_dist2;
 }
-
-//------------------------------------------------------------ FLOOD FILL
-namespace flood_fill
-{
-
-void run(const P& p0,
-         const bool blocked[MAP_W][MAP_H],
-         int out[MAP_W][MAP_H],
-         int travel_lmt,
-         const P& p1,
-         const bool ALLOW_DIAGONAL)
-{
-    std::fill_n(*out, NR_MAP_CELLS, 0);
-
-    std::vector<P> positions;
-
-    unsigned int    nr_elements_to_skip = 0;
-    int             cur_val             = 0;
-    bool            path_exists         = true;
-    bool            is_at_tgt           = false;
-    bool            is_stopping_at_p1   = p1.x != -1;
-
-    const R bounds(P(1, 1), P(MAP_W - 2, MAP_H - 2));
-
-    P cur_pos(p0);
-
-    std::vector<P> dirs
-    {
-        P( 0, -1),
-        P(-1,  0),
-        P( 0,  1),
-        P( 1,  0)
-    };
-
-    if (ALLOW_DIAGONAL)
-    {
-        dirs.push_back(P(-1, -1));
-        dirs.push_back(P(-1, 1));
-        dirs.push_back(P(1, -1));
-        dirs.push_back(P(1, 1));
-    }
-
-    bool done = false;
-
-    while (!done)
-    {
-
-        for (const P& d : dirs)
-        {
-            if ((d != 0))
-            {
-                const P new_pos(cur_pos + d);
-
-                if (
-                    !blocked[new_pos.x][new_pos.y]  &&
-                    is_pos_inside(new_pos, bounds)  &&
-                    out[new_pos.x][new_pos.y] == 0  &&
-                    new_pos != p0)
-                {
-                    cur_val = out[cur_pos.x][cur_pos.y];
-
-                    if (cur_val < travel_lmt)
-                    {
-                        out[new_pos.x][new_pos.y] = cur_val + 1;
-                    }
-
-                    if (is_stopping_at_p1 && cur_pos == p1 - d)
-                    {
-                        is_at_tgt = true;
-                        break;
-                    }
-
-                    if (!is_stopping_at_p1 || !is_at_tgt)
-                    {
-                        positions.push_back(new_pos);
-                    }
-                }
-            }
-        }
-
-        if (is_stopping_at_p1)
-        {
-            if (positions.size() == nr_elements_to_skip)
-            {
-                path_exists = false;
-            }
-
-            if (is_at_tgt || !path_exists)
-            {
-                done = true;
-            }
-        }
-        else if (positions.size() == nr_elements_to_skip)
-        {
-            done = true;
-        }
-
-        if (cur_val == travel_lmt)
-        {
-            done = true;
-        }
-
-        if (!is_stopping_at_p1 || !is_at_tgt)
-        {
-            if (positions.size() == nr_elements_to_skip)
-            {
-                path_exists = false;
-            }
-            else
-            {
-                cur_pos = positions[nr_elements_to_skip];
-                nr_elements_to_skip++;
-            }
-        }
-    }
-}
-
-} //flood_fill
-
-//------------------------------------------------------------ PATHFINDER
-namespace path_find
-{
-
-void run(const P& p0,
-         const P& p1,
-         const bool blocked[MAP_W][MAP_H],
-         std::vector<P>& out,
-         const bool ALLOW_DIAGONAL,
-         const bool RANDOMIZE_STEP_CHOICES)
-{
-    out.clear();
-
-    if (p0 == p1)
-    {
-        //Origin and target is same cell
-        return;
-    }
-
-    int flood[MAP_W][MAP_H];
-    flood_fill::run(p0, blocked, flood, 10000, p1, ALLOW_DIAGONAL);
-
-    if (flood[p1.x][p1.y] == 0)
-    {
-        //No path exists
-        return;
-    }
-
-    const std::vector<P>& dirs =  ALLOW_DIAGONAL ?
-                                  dir_utils::dir_list :
-                                  dir_utils::cardinal_list;
-
-    const size_t NR_DIRS = dirs.size();
-
-    std::vector<bool> valid_offsets(NR_DIRS, false); //Corresponds to the elements in "dirs"
-
-    //The path length will be equal to the flood value at the target cell, so we can
-    //reserve that many elements.
-    out.reserve(flood[p1.x][p1.y]);
-
-    P cur_pos(p1);
-    out.push_back(cur_pos);
-
-    while (true)
-    {
-        P adj_pos;
-
-        //Find valid offsets, and check if origin is reached
-        for (size_t i = 0; i < NR_DIRS; ++i)
-        {
-            const P& d(dirs[i]);
-
-            adj_pos = cur_pos + d;
-
-            if (adj_pos == p0)
-            {
-                //Origin reached
-                return;
-            }
-
-            const bool IS_INSIDE_MAP = map::is_pos_inside_map(adj_pos);
-
-            const int VAL_AT_ADJ = IS_INSIDE_MAP ? flood[adj_pos.x][adj_pos.y] : 0;
-
-            const int VAL_AT_CUR = flood[cur_pos.x][cur_pos.y];
-
-            valid_offsets[i] = VAL_AT_ADJ < VAL_AT_CUR && VAL_AT_ADJ != 0;
-        }
-
-        //Set the adjacent position to one of the valid offset
-        //Either pick one of the valid offsets at random, or iterate over an offset list
-        if (RANDOMIZE_STEP_CHOICES)
-        {
-            std::vector<P> adj_pos_bucket;
-
-            for (size_t i = 0; i < NR_DIRS; ++i)
-            {
-                if (valid_offsets[i])
-                {
-                    adj_pos_bucket.push_back(cur_pos + dirs[i]);
-                }
-            }
-
-            ASSERT(!adj_pos_bucket.empty());
-
-            adj_pos = adj_pos_bucket[rnd::range(0, adj_pos_bucket.size() - 1)];
-        }
-        else //Do not randomize step choices - iterate over offset list
-        {
-            for (size_t i = 0; i < NR_DIRS; ++i)
-            {
-                if (valid_offsets[i])
-                {
-                    adj_pos = {cur_pos + dirs[i]};
-                    break;
-                }
-            }
-        }
-
-        out.push_back(adj_pos);
-
-        cur_pos = adj_pos;
-
-    } //while
-}
-
-} //path_find
-

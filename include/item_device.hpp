@@ -59,7 +59,7 @@ public:
     ~Device_blaster() override {}
 
 private:
-    std::string descr_identified() const
+    std::string descr_identified() const override
     {
         return "When activated, this device blasts all visible enemies with infernal power.";
     }
@@ -76,7 +76,7 @@ public:
     ~Device_shockwave() override {}
 
 private:
-    std::string descr_identified() const
+    std::string descr_identified() const override
     {
         return "When activated, this device generates a shock wave which violently "
                "pushes away any adjacent creatures and destroys structures.";
@@ -94,7 +94,7 @@ public:
     ~Device_rejuvenator() override {}
 
 private:
-    std::string descr_identified() const
+    std::string descr_identified() const override
     {
         return "When activated, this device heals all wounds and physical maladies.";
     }
@@ -111,7 +111,7 @@ public:
     ~Device_translocator() override {}
 
 private:
-    std::string descr_identified() const
+    std::string descr_identified() const override
     {
         return "When activated, this device teleports all visible enemies to "
                "different locations.";
@@ -129,7 +129,7 @@ public:
     ~Device_sentry_drone() override {}
 
 private:
-    std::string descr_identified() const
+    std::string descr_identified() const override
     {
         return "When activated, this device will \"come alive\" and guard the user.";
     }

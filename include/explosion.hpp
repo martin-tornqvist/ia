@@ -5,7 +5,7 @@
 
 #include "colors.hpp"
 #include "audio.hpp"
-#include "cmn.hpp"
+#include "global.hpp"
 
 class Prop;
 

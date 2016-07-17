@@ -43,7 +43,7 @@ void Actor_data_t::reset()
 
     nr_turns_aware = 0;
     spawn_min_dlvl = 999;
-    spawn_max_dlvl = DLVL_LAST - 2;
+    spawn_max_dlvl = dlvl_last - 2;
     actor_size = Actor_size::humanoid;
     is_humanoid = false;
     is_infra_visible = true;
@@ -93,8 +93,8 @@ void init_data_list()
     d.name_a = "Player";
     d.name_the = "Player";
     d.id = Actor_id::player;
-    d.hp = PLAYER_START_HP;
-    d.spi = PLAYER_START_SPI;
+    d.hp = player_start_hp;
+    d.spi = player_start_spi;
     d.speed = Actor_speed::normal;
     d.glyph = '@';
     d.color = clr_white_high;
@@ -122,10 +122,10 @@ void init_data_list()
     d.color = clr_brown;
     d.tile = Tile_id::zombie_unarmed;
     d.hp = 11;
-    d.dmg_melee = MIN_DMG_TO_WOUND - 1;
+    d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(Ability_id::melee, 25);
     d.spawn_min_dlvl = 1;
-    d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_size = Mon_group_size::pack;
     d.actor_size = Actor_size::humanoid;
     d.natural_props[size_t(Prop_id::infravis)] = true;
@@ -166,11 +166,11 @@ void init_data_list()
     d.color = clr_gray;
     d.tile = Tile_id::zombie_armed;
     d.hp = 11;
-    d.dmg_melee = MIN_DMG_TO_WOUND + 3;
+    d.dmg_melee = min_dmg_to_wound + 3;
     d.ability_vals.set_val(Ability_id::melee, 35);
     d.ability_vals.set_val(Ability_id::ranged, 0);
     d.spawn_min_dlvl = 2;
-    d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_size = Mon_group_size::pack;
     d.actor_size = Actor_size::humanoid;
     d.natural_props[size_t(Prop_id::infravis)] = true;
@@ -211,12 +211,12 @@ void init_data_list()
     d.color = clr_white_high;
     d.tile = Tile_id::zombie_bloated;
     d.hp = 18;
-    d.dmg_melee = MIN_DMG_TO_WOUND + 2;
+    d.dmg_melee = min_dmg_to_wound + 2;
     d.dmg_ranged = 3;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::ranged, 50);
     d.spawn_min_dlvl = 3;
-    d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_size = Mon_group_size::few;
     d.actor_size = Actor_size::humanoid;
     d.natural_props[size_t(Prop_id::infravis)] = true;
@@ -254,7 +254,7 @@ void init_data_list()
     d.color = clr_cyan_lgt;
     d.tile = Tile_id::zombie_unarmed;
     d.hp = 26;
-    d.dmg_melee = MIN_DMG_TO_WOUND;
+    d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::ranged, 40);
     d.spawn_min_dlvl = 4;
@@ -297,7 +297,7 @@ void init_data_list()
     d.color = clr_cyan;
     d.tile = Tile_id::zombie_unarmed;
     d.hp = 26;
-    d.dmg_melee = MIN_DMG_TO_WOUND;
+    d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::ranged, 40);
     d.is_auto_spawn_allowed = false;
@@ -341,7 +341,7 @@ void init_data_list()
     d.tile = Tile_id::crawling_intestines;
     d.hp = 4;
     d.spi = 8;
-    d.dmg_melee = MIN_DMG_TO_WOUND - 1;
+    d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(Ability_id::melee, 45);
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 3;
@@ -418,14 +418,14 @@ void init_data_list()
     d.tile = Tile_id::crawling_hand;
     d.hp = 25;
     d.spi = 25;
-    d.dmg_melee = MIN_DMG_TO_WOUND - 1;
+    d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(Ability_id::melee, 80);
     d.ability_vals.set_val(Ability_id::stealth, 90);
     d.nr_left_allowed_to_spawn = 1;
     d.is_unique = true;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 5;
-    d.spawn_max_dlvl = DLVL_LAST;
+    d.spawn_max_dlvl = dlvl_last;
     d.group_size = Mon_group_size::alone;
     d.actor_size = Actor_size::floor;
     d.nr_turns_aware = 999;
@@ -460,13 +460,13 @@ void init_data_list()
     d.tile = Tile_id::floating_skull;
     d.hp = 6;
     d.spi = 16;
-    d.dmg_melee = MIN_DMG_TO_WOUND - 2;
+    d.dmg_melee = min_dmg_to_wound - 2;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::dodge_att, 60);
     d.natural_props[size_t(Prop_id::flying)] = true;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 3;
-    d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_size = Mon_group_size::alone;
     d.actor_size = Actor_size::floor;
     d.nr_turns_aware = 10;
@@ -510,7 +510,7 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::melee, 35);
     d.ability_vals.set_val(Ability_id::ranged, 50);
     d.spawn_min_dlvl = 1;
-    d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_size = Mon_group_size::few;
     d.actor_size = Actor_size::humanoid;
     d.is_humanoid = true;
@@ -548,8 +548,8 @@ void init_data_list()
     d.spi = 12;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::ranged, 55);
-    d.spawn_min_dlvl = DLVL_FIRST_LATE_GAME;
-    d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
+    d.spawn_min_dlvl = dlvl_first_late_game;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_size = Mon_group_size::alone;
     d.actor_size = Actor_size::humanoid;
     d.is_humanoid = true;
@@ -673,7 +673,7 @@ void init_data_list()
     d.tile = Tile_id::rat_thing;
     d.hp = 10;
     d.spi = 25;
-    d.dmg_melee = MIN_DMG_TO_WOUND;
+    d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(Ability_id::melee, 50);
     d.ability_vals.set_val(Ability_id::stealth, 90);
     d.is_auto_spawn_allowed = false;
@@ -762,7 +762,7 @@ void init_data_list()
     d.spi = 30;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.spawn_min_dlvl = 5;
-    d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_size = Mon_group_size::alone;
     d.actor_size = Actor_size::humanoid;
     d.is_humanoid = true;
@@ -900,12 +900,12 @@ void init_data_list()
     d.color = clr_gray;
     d.tile = Tile_id::giant_spider;
     d.hp = 8;
-    d.dmg_melee = MIN_DMG_TO_WOUND - 1;
+    d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::stealth, 90);
     d.natural_props[size_t(Prop_id::lgtSens)] = true;
     d.spawn_min_dlvl = 4;
-    d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.group_size = Mon_group_size::pack;
     d.nr_turns_aware = 5;
@@ -982,7 +982,7 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::dodge_att, 12);
     d.spawn_min_dlvl = 2;
-    d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.group_size = Mon_group_size::alone;
     d.actor_size = Actor_size::floor;
@@ -1028,7 +1028,7 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::ranged, 85);
     d.ability_vals.set_val(Ability_id::dodge_att, 12);
     d.spawn_min_dlvl = 2;
-    d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.group_size = Mon_group_size::alone;
     d.actor_size = Actor_size::floor;
@@ -1071,7 +1071,7 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::dodge_att, 12);
     d.spawn_min_dlvl = 2;
-    d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.group_size = Mon_group_size::alone;
     d.actor_size = Actor_size::floor;
@@ -1111,8 +1111,8 @@ void init_data_list()
     d.color = clr_red;
     d.tile = Tile_id::hound;
     d.hp = 22;
-    d.dmg_melee = MIN_DMG_TO_WOUND - 1;
-    d.dmg_ranged = MIN_DMG_TO_WOUND - 1;
+    d.dmg_melee = min_dmg_to_wound - 1;
+    d.dmg_ranged = min_dmg_to_wound - 1;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.ability_vals.set_val(Ability_id::ranged, 65);
     d.ability_vals.set_val(Ability_id::dodge_att, 35);
@@ -1254,7 +1254,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::rConf)] = true;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.natural_props[size_t(Prop_id::invis)] = true;
-    d.spawn_min_dlvl = DLVL_FIRST_MID_GAME;
+    d.spawn_min_dlvl = dlvl_first_mid_game;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.group_size = Mon_group_size::few;
     d.actor_size = Actor_size::humanoid;
@@ -1299,7 +1299,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::rConf)] = true;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.natural_props[size_t(Prop_id::invis)] = true;
-    d.spawn_min_dlvl = DLVL_FIRST_LATE_GAME;
+    d.spawn_min_dlvl = dlvl_first_late_game;
     d.group_size = Mon_group_size::alone;
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.actor_size = Actor_size::humanoid;
@@ -1538,7 +1538,7 @@ void init_data_list()
     d.tile = Tile_id::byakhee;
     d.hp = 14;
     d.spi = 20;
-    d.dmg_melee = MIN_DMG_TO_WOUND;
+    d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(Ability_id::melee, 45);
     d.ability_vals.set_val(Ability_id::dodge_att, 40);
     d.natural_props[size_t(Prop_id::flying)] = true;
@@ -1586,7 +1586,7 @@ void init_data_list()
     d.tile = Tile_id::mantis;
     d.hp = 25;
     d.spi = 20;
-    d.dmg_melee = MIN_DMG_TO_WOUND;
+    d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(Ability_id::melee, 50);
     d.ability_vals.set_val(Ability_id::dodge_att, 40);
     d.ability_vals.set_val(Ability_id::stealth, 20);
@@ -1629,7 +1629,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::flying)] = true;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 7;
-    d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_size = Mon_group_size::swarm;
     d.actor_size = Actor_size::floor;
     d.can_bash_doors = false;
@@ -1724,7 +1724,7 @@ void init_data_list()
     d.tile = Tile_id::mi_go;
     d.hp = 24;
     d.spi = 20;
-    d.dmg_melee = MIN_DMG_TO_WOUND + 1;
+    d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(Ability_id::melee, 55);
     d.ability_vals.set_val(Ability_id::ranged, 55);
     d.natural_props[size_t(Prop_id::flying)] = true;
@@ -1769,7 +1769,7 @@ void init_data_list()
     d.tile = Tile_id::polyp;
     d.hp = 12;
     d.spi = 20;
-    d.dmg_melee = MIN_DMG_TO_WOUND - 1;
+    d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(Ability_id::melee, 60);
     //NOTE: Polyps should be resistant against all damage types except electricity
     d.natural_props[size_t(Prop_id::rPhys)] = true;
@@ -1841,7 +1841,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::invis)] = true;
     d.natural_props[size_t(Prop_id::see_invis)] = true;
     d.prevent_knockback = true;
-    d.spawn_min_dlvl = DLVL_LAST - 4;
+    d.spawn_min_dlvl = dlvl_last - 4;
     d.group_size = Mon_group_size::alone;
     d.actor_size = Actor_size::giant;
     d.can_bash_doors = false;
@@ -1877,7 +1877,7 @@ void init_data_list()
     d.tile = Tile_id::ghoul;
     d.hp = 21;
     d.spi = 20;
-    d.dmg_melee = MIN_DMG_TO_WOUND - 1;
+    d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(Ability_id::melee, 55);
     d.natural_props[size_t(Prop_id::rDisease)] = true;
     d.natural_props[size_t(Prop_id::infravis)] = true;
@@ -1968,7 +1968,7 @@ void init_data_list()
     d.tile = Tile_id::shadow;
     d.hp = 15;
     d.spi = 12;
-    d.dmg_melee = MIN_DMG_TO_WOUND - 1;
+    d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(Ability_id::melee, 60);
     d.natural_props[size_t(Prop_id::invis)] = true;
     d.natural_props[size_t(Prop_id::rFear)] = true;
@@ -1976,7 +1976,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 4;
-    d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_size = Mon_group_size::alone;
     d.actor_size = Actor_size::humanoid;
     d.can_bash_doors = true;
@@ -2015,9 +2015,9 @@ void init_data_list()
     d.tile = Tile_id::mummy;
     d.hp = 25;
     d.spi = 30;
-    d.dmg_melee = MIN_DMG_TO_WOUND;
+    d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(Ability_id::melee, 40);
-    d.spawn_min_dlvl = DLVL_FIRST_LATE_GAME - 3;
+    d.spawn_min_dlvl = dlvl_first_late_game - 3;
     d.group_size = Mon_group_size::alone;
     d.actor_size = Actor_size::humanoid;
     d.can_bash_doors = true;
@@ -2055,7 +2055,7 @@ void init_data_list()
     d.spi = 30;
     d.dmg_melee = 8;
     d.ability_vals.set_val(Ability_id::melee, 50);
-    d.spawn_min_dlvl = DLVL_FIRST_LATE_GAME - 3;
+    d.spawn_min_dlvl = dlvl_first_late_game - 3;
     d.group_size = Mon_group_size::swarm;
     d.actor_size = Actor_size::humanoid;
     d.can_bash_doors = true;
@@ -2096,7 +2096,7 @@ void init_data_list()
     d.tile = Tile_id::mummy;
     d.hp = 70;
     d.spi = 60;
-    d.dmg_melee = MIN_DMG_TO_WOUND + 2;
+    d.dmg_melee = min_dmg_to_wound + 2;
     d.ability_vals.set_val(Ability_id::melee, 60);
     d.is_auto_spawn_allowed = false;
     d.group_size = Mon_group_size::alone;
@@ -2137,7 +2137,7 @@ void init_data_list()
     d.tile = Tile_id::mummy;
     d.hp = 70;
     d.spi = 60;
-    d.dmg_melee = MIN_DMG_TO_WOUND + 2;
+    d.dmg_melee = min_dmg_to_wound + 2;
     d.ability_vals.set_val(Ability_id::melee, 60);
     d.spawn_min_dlvl = 11;
     d.group_size = Mon_group_size::alone;
@@ -2181,8 +2181,8 @@ void init_data_list()
     d.tile = Tile_id::deep_one;
     d.hp = 15;
     d.spi = 12;
-    d.dmg_melee = MIN_DMG_TO_WOUND;
-    d.dmg_ranged = MIN_DMG_TO_WOUND - 1;
+    d.dmg_melee = min_dmg_to_wound;
+    d.dmg_ranged = min_dmg_to_wound - 1;
     d.ability_vals.set_val(Ability_id::melee, 55);
     d.ability_vals.set_val(Ability_id::ranged, 50);
     d.spawn_min_dlvl = 6;
@@ -2226,11 +2226,11 @@ void init_data_list()
     d.tile = Tile_id::ape;
     d.hp = 18;
     d.spi = 6;
-    d.dmg_melee = MIN_DMG_TO_WOUND;
+    d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(Ability_id::melee, 50);
     d.ability_vals.set_val(Ability_id::dodge_att, 35);
     d.natural_props[size_t(Prop_id::infravis)] = true;
-    d.spawn_min_dlvl = DLVL_FIRST_LATE_GAME;
+    d.spawn_min_dlvl = dlvl_first_late_game;
     d.group_size = Mon_group_size::pack;
     d.actor_size = Actor_size::humanoid;
     d.is_humanoid = true;
@@ -2272,7 +2272,7 @@ void init_data_list()
     d.ability_vals.set_val(Ability_id::melee, 35);
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.spawn_min_dlvl = 2;
-    d.spawn_max_dlvl = DLVL_LAST_MID_GAME;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_size = Mon_group_size::swarm;
     d.actor_size = Actor_size::floor;
     d.prevent_knockback = true;
@@ -2344,7 +2344,7 @@ void init_data_list()
     d.tile = Tile_id::vortex;
     d.hp = 10;
     d.spi = 12;
-    d.dmg_melee = MIN_DMG_TO_WOUND - 1;
+    d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.natural_props[size_t(Prop_id::flying)] = true;
     d.natural_props[size_t(Prop_id::rFear)] = true;
@@ -2387,7 +2387,7 @@ void init_data_list()
     d.tile = Tile_id::vortex;
     d.hp = 16;
     d.spi = 12;
-    d.dmg_melee = MIN_DMG_TO_WOUND;
+    d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(Ability_id::melee, 40);
     d.natural_props[size_t(Prop_id::flying)] = true;
     d.natural_props[size_t(Prop_id::rFear)] = true;
@@ -2429,7 +2429,7 @@ void init_data_list()
     d.tile = Tile_id::ooze;
     d.hp = 20;
     d.spi = 12;
-    d.dmg_melee = MIN_DMG_TO_WOUND - 1;
+    d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(Ability_id::melee, 50);
     d.natural_props[size_t(Prop_id::ooze)] = true;
     d.natural_props[size_t(Prop_id::rFear)] = true;
@@ -2479,7 +2479,7 @@ void init_data_list()
     d.tile = Tile_id::ooze;
     d.hp = 12;
     d.spi = 12;
-    d.dmg_melee = MIN_DMG_TO_WOUND - 2;
+    d.dmg_melee = min_dmg_to_wound - 2;
     d.ability_vals.set_val(Ability_id::melee, 50);
     d.ability_vals.set_val(Ability_id::stealth, 90);
     d.natural_props[size_t(Prop_id::ooze)] = true;
@@ -2530,7 +2530,7 @@ void init_data_list()
     d.tile = Tile_id::ooze;
     d.hp = 20;
     d.spi = 12;
-    d.dmg_melee = MIN_DMG_TO_WOUND;
+    d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(Ability_id::melee, 50);
     d.natural_props[size_t(Prop_id::ooze)] = true;
     d.natural_props[size_t(Prop_id::rFear)] = true;
@@ -2581,7 +2581,7 @@ void init_data_list()
     d.tile = Tile_id::ooze;
     d.hp = 20;
     d.spi = 12;
-    d.dmg_melee = MIN_DMG_TO_WOUND;
+    d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(Ability_id::melee, 50);
     d.natural_props[size_t(Prop_id::ooze)] = true;
     d.natural_props[size_t(Prop_id::rFear)] = true;
@@ -2910,7 +2910,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::rFear)] = true;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.prevent_knockback = true;
-    d.spawn_min_dlvl = DLVL_LAST - 6;
+    d.spawn_min_dlvl = dlvl_last - 6;
     d.spawn_max_dlvl = 999;
     d.group_size = Mon_group_size::alone;
     d.actor_size = Actor_size::giant;
@@ -2963,7 +2963,7 @@ void init_data_list()
     d.natural_props[size_t(Prop_id::rFear)] = true;
     d.natural_props[size_t(Prop_id::infravis)] = true;
     d.prevent_knockback = true;
-    d.spawn_min_dlvl = DLVL_LAST - 6;
+    d.spawn_min_dlvl = dlvl_last - 6;
     d.spawn_max_dlvl = 999;
     d.group_size = Mon_group_size::alone;
     d.actor_size = Actor_size::humanoid;

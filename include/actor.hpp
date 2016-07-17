@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "cmn.hpp"
+#include "global.hpp"
 
 #include "actor_data.hpp"
 #include "sound.hpp"
@@ -186,9 +186,9 @@ public:
         return tile_;
     }
 
-    void add_light(bool light_map[MAP_W][MAP_H]) const;
+    void add_light(bool light_map[map_w][map_h]) const;
 
-    virtual void add_light_hook(bool light[MAP_W][MAP_H]) const
+    virtual void add_light_hook(bool light[map_w][map_h]) const
     {
         (void)light;
     }

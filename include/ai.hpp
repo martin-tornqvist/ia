@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "cmn.hpp"
+#include "global.hpp"
 
 class Mon;
 
@@ -42,7 +42,7 @@ void try_set_path_to_leader(Mon& mon, std::vector<P>& path);
 
 void try_set_path_to_player(Mon& mon, std::vector<P>& path);
 
-void set_special_blocked_cells(Mon& mon, bool a[MAP_W][MAP_H]);
+void set_special_blocked_cells(Mon& mon, bool a[map_w][map_h]);
 
 } //info
 

@@ -54,7 +54,7 @@ std::string mon_dwell_lvl_str(const Actor_data_t& def)
 {
     const int MIN_DLVL = def.spawn_min_dlvl;
 
-    if (MIN_DLVL <= 1 || MIN_DLVL >= DLVL_LAST)
+    if (MIN_DLVL <= 1 || MIN_DLVL >= dlvl_last)
     {
         return "";
     }
@@ -290,13 +290,13 @@ void print_detailed_actor_descr(const Actor& actor)
     }
 
     std::vector<std::string> lines;
-    text_format::split(descr, MAP_W - 1, lines);
+    text_format::split(descr, map_w - 1, lines);
 
     const size_t NR_LINES = lines.size();
 
     P p(0, 1);
 
-    render::cover_area(Panel::screen, p, P(MAP_W, NR_LINES));
+    render::cover_area(Panel::screen, p, P(map_w, NR_LINES));
 
     //Draw the description
     for (std::string& s : lines)

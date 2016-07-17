@@ -202,7 +202,7 @@ public:
 protected:
     int armor_points() const;
 
-    virtual Unequip_allowed on_unequip_hook()
+    virtual Unequip_allowed on_unequip_hook() override
     {
         return Unequip_allowed::yes;
     }
@@ -427,7 +427,7 @@ public:
 
     void save() override;
 
-    void load();
+    void load() override;
 
 protected:
     std::string name_inf() const override

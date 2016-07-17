@@ -48,7 +48,7 @@ public:
 
     int shock_when_adj() const;
 
-    virtual void add_light(bool light[MAP_W][MAP_H]) const;
+    virtual void add_light(bool light[map_w][map_h]) const;
 
     P pos() const
     {

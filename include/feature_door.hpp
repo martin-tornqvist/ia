@@ -74,7 +74,7 @@ public:
         return is_handled_externally_;
     }
 
-    Matl matl() const;
+    Matl matl() const override;
 
     void reveal(const bool ALLOW_MESSAGE);
 

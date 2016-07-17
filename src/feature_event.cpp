@@ -60,7 +60,7 @@ void Event_wall_crumble::on_new_turn()
             {
                 for (const P& p : wall_cells_)
                 {
-                    if (is_pos_inside(p, R(P(1, 1), P(MAP_W - 2, MAP_H - 2))))
+                    if (is_pos_inside(p, R(P(1, 1), P(map_w - 2, map_h - 2))))
                     {
                         auto* const f = map::cells[p.x][p.y].rigid;
                         f->hit(Dmg_type::physical, Dmg_method::forced, nullptr);
@@ -162,13 +162,13 @@ Event_snake_emerge::Event_snake_emerge() :
 
 bool Event_snake_emerge::try_find_p()
 {
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
 
-    blocked_cells(R(0, 0, MAP_W - 1, MAP_H - 1), blocked);
+    blocked_cells(R(0, 0, map_w - 1, map_h - 1), blocked);
 
     std::vector<P> p_bucket;
 
-    to_vec((bool*)blocked, false, MAP_W, MAP_H, p_bucket);
+    to_vec((bool*)blocked, false, map_w, map_h, p_bucket);
 
     random_shuffle(begin(p_bucket), end(p_bucket));
 
@@ -194,8 +194,8 @@ R Event_snake_emerge::allowed_emerge_rect(const P& p) const
 
     const int X0 = std::max(1,          p.x - MAX_D);
     const int Y0 = std::max(1,          p.y - MAX_D);
-    const int X1 = std::min(MAP_W - 2,  p.x + MAX_D);
-    const int Y1 = std::min(MAP_H - 2,  p.y + MAX_D);
+    const int X1 = std::min(map_w - 2,  p.x + MAX_D);
+    const int Y1 = std::min(map_h - 2,  p.y + MAX_D);
 
     return R(X0, Y0, X1, Y1);
 }
@@ -212,10 +212,10 @@ bool Event_snake_emerge::is_ok_feature_at(const P& p) const
 
 void Event_snake_emerge::emerge_p_bucket(
     const P& p,
-    bool blocked[MAP_W][MAP_H],
+    bool blocked[map_w][map_h],
     std::vector<P>& out) const
 {
-    Los_result fov[MAP_W][MAP_H];
+    Los_result fov[map_w][map_h];
 
     fov::run(p, blocked, fov);
 
@@ -240,7 +240,7 @@ void Event_snake_emerge::emerge_p_bucket(
     }
 }
 
-void Event_snake_emerge::blocked_cells(const R& r, bool out[MAP_W][MAP_H]) const
+void Event_snake_emerge::blocked_cells(const R& r, bool out[map_w][map_h]) const
 {
     for (int x = r.p0.x; x <= r.p1.x; ++x)
     {
@@ -269,7 +269,7 @@ void Event_snake_emerge::on_new_turn()
 
     const R r = allowed_emerge_rect(pos_);
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
 
     blocked_cells(r, blocked);
 

@@ -259,7 +259,7 @@ void init_data_list()
     d.can_have_rigid = false;
     d.can_have_item = false;
     d.matl_type = Matl::metal;
-    d.room_spawn_rules.set(3, {0, DLVL_LAST_MID_GAME}, Placement_rule::either,
+    d.room_spawn_rules.set(3, {0, dlvl_last_mid_game}, Placement_rule::either,
     {
         Room_type::ritual, Room_type::plain,
     });
@@ -395,7 +395,7 @@ void init_data_list()
     d.tile = Tile_id::rubble_low;
     d.move_rules.set_can_move_cmn();
     d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(4, {0, DLVL_LAST}, Placement_rule::either,
+    d.room_spawn_rules.set(4, {0, dlvl_last}, Placement_rule::either,
     {
         Room_type::plain, Room_type::crypt, Room_type::monster, Room_type::cave
     });
@@ -410,7 +410,7 @@ void init_data_list()
     d.tile = Tile_id::corpse2;
     d.move_rules.set_can_move_cmn();
     d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(3, {0, DLVL_LAST}, Placement_rule::either,
+    d.room_spawn_rules.set(3, {0, dlvl_last}, Placement_rule::either,
     {
         Room_type::monster, Room_type::cave
     });
@@ -431,7 +431,7 @@ void init_data_list()
     d.can_have_rigid = false;
     d.can_have_item = false;
     d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(6, {0, DLVL_LAST_MID_GAME}, Placement_rule::either,
+    d.room_spawn_rules.set(6, {0, dlvl_last_mid_game}, Placement_rule::either,
     {
         Room_type::plain, Room_type::human, Room_type::forest
     });
@@ -453,7 +453,7 @@ void init_data_list()
     d.can_have_item = false;
     d.shock_when_adjacent = 3;
     d.matl_type = Matl::cloth;
-    d.room_spawn_rules.set(3, {0, DLVL_LAST}, Placement_rule::either, {Room_type::spider});
+    d.room_spawn_rules.set(3, {0, dlvl_last}, Placement_rule::either, {Room_type::spider});
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = Feature_id::chest;
@@ -468,7 +468,7 @@ void init_data_list()
     d.can_have_corpse = false;
     d.can_have_rigid = false;
     d.can_have_item = false;
-    d.room_spawn_rules.set(2, {0, DLVL_LAST_MID_GAME}, Placement_rule::adj_to_walls,
+    d.room_spawn_rules.set(2, {0, dlvl_last_mid_game}, Placement_rule::adj_to_walls,
     {
         Room_type::human
     });
@@ -489,7 +489,7 @@ void init_data_list()
     d.can_have_rigid = false;
     d.can_have_item = false;
     d.matl_type = Matl::wood;
-    d.room_spawn_rules.set(1, {0, DLVL_LAST_MID_GAME}, Placement_rule::adj_to_walls,
+    d.room_spawn_rules.set(1, {0, dlvl_last_mid_game}, Placement_rule::adj_to_walls,
     {
         Room_type::human
     });
@@ -510,7 +510,7 @@ void init_data_list()
     d.can_have_rigid = false;
     d.can_have_item = false;
     d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(1, {0, DLVL_LAST_MID_GAME}, Placement_rule::away_from_walls,
+    d.room_spawn_rules.set(1, {0, dlvl_last_mid_game}, Placement_rule::away_from_walls,
     {
         Room_type::plain, Room_type::forest
     });
@@ -531,7 +531,7 @@ void init_data_list()
     d.can_have_rigid = false;
     d.can_have_item = false;
     d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(3, {0, DLVL_LAST}, Placement_rule::away_from_walls,
+    d.room_spawn_rules.set(3, {0, dlvl_last}, Placement_rule::away_from_walls,
     {
         Room_type::plain, Room_type::crypt, Room_type::ritual, Room_type::monster
     });
@@ -552,7 +552,7 @@ void init_data_list()
     d.can_have_rigid = false;
     d.can_have_item = false;
     d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(1, {0, DLVL_LAST}, Placement_rule::away_from_walls,
+    d.room_spawn_rules.set(1, {0, dlvl_last}, Placement_rule::away_from_walls,
     {
         Room_type::cave, Room_type::forest
     });
@@ -573,7 +573,7 @@ void init_data_list()
     d.can_have_rigid = false;
     d.can_have_item = false;
     d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(10, {0, DLVL_LAST}, Placement_rule::either,
+    d.room_spawn_rules.set(10, {0, dlvl_last}, Placement_rule::either,
     {
         Room_type::cave
     });
@@ -593,7 +593,7 @@ void init_data_list()
     d.can_have_item = false;
     d.shock_when_adjacent = 10;
     d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(1, {0, DLVL_LAST_MID_GAME}, Placement_rule::either,
+    d.room_spawn_rules.set(1, {0, dlvl_last_mid_game}, Placement_rule::either,
     {
         Room_type::ritual, Room_type::forest
     });
@@ -615,7 +615,7 @@ void init_data_list()
     d.can_have_item = false;
     d.shock_when_adjacent = 10;
     d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(2, {0, DLVL_LAST_MID_GAME}, Placement_rule::either,
+    d.room_spawn_rules.set(2, {0, dlvl_last_mid_game}, Placement_rule::either,
     {
         Room_type::crypt, Room_type::forest
     });

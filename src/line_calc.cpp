@@ -3,7 +3,7 @@
 #include <math.h>
 #include <vector>
 
-#include "cmn.hpp"
+#include "global.hpp"
 #include "map.hpp"
 
 namespace line_calc
@@ -12,17 +12,17 @@ namespace line_calc
 namespace
 {
 
-double          fov_abs_distances_[FOV_MAX_W_INT][FOV_MAX_W_INT];
-std::vector<P>  fov_delta_lines_[FOV_MAX_W_INT][FOV_MAX_W_INT];
+double          fov_abs_distances_[fov_max_w_int][fov_max_w_int];
+std::vector<P>  fov_delta_lines_[fov_max_w_int][fov_max_w_int];
 
 } //namespace
 
 void init()
 {
     //Calculate FOV absolute distances
-    for (int y = 0; y < FOV_MAX_W_INT; ++y)
+    for (int y = 0; y < fov_max_w_int; ++y)
     {
-        for (int x = 0; x < FOV_MAX_W_INT; ++x)
+        for (int x = 0; x < fov_max_w_int; ++x)
         {
             fov_abs_distances_[x][y] = 0;
         }
@@ -30,21 +30,21 @@ void init()
 
     double delta_x, delta_y, hypot;
 
-    //delta_x corresponds to i - FOV_MAX_W_INT, and vice versa for delta_y and j.
+    //delta_x corresponds to i - fov_max_w_int, and vice versa for delta_y and j.
     //So:
-    //i = 0                 => delta_x = -FOV_MAX_W_INT
-    //i = FOV_MAX_W_INT * 2 => delta_x =  FOV_MAX_W_INT
+    //i = 0                 => delta_x = -fov_max_w_int
+    //i = fov_max_w_int * 2 => delta_x =  fov_max_w_int
 
-    const int R_INT = FOV_MAX_RADI_INT;
+    const int R_INT = fov_max_radi_int;
 
     for (int x = 0; x <= R_INT * 2; ++x)
     {
         for (int y = 0; y <= R_INT * 2; ++y)
         {
             delta_x = double(x);
-            delta_x -= FOV_MAX_RADI_DB;
+            delta_x -= fov_max_radi_db;
             delta_y = double(y);
-            delta_y -= FOV_MAX_RADI_DB;
+            delta_y -= fov_max_radi_db;
             hypot = sqrt((delta_x * delta_x) + (delta_y * delta_y));
             fov_abs_distances_[x][y] = floor(hypot);
         }
@@ -67,10 +67,10 @@ void init()
 const std::vector<P>* fov_delta_line(const P& delta,
                                      const double& MAX_DIST_ABS)
 {
-    const int X = delta.x + FOV_MAX_RADI_INT;
-    const int Y = delta.y + FOV_MAX_RADI_INT;
+    const int X = delta.x + fov_max_radi_int;
+    const int Y = delta.y + fov_max_radi_int;
 
-    if (X >= 0 && Y >= 0 && X < FOV_MAX_W_INT && Y < FOV_MAX_W_INT)
+    if (X >= 0 && Y >= 0 && X < fov_max_w_int && Y < fov_max_w_int)
     {
         if (fov_abs_distances_[X][Y] <= MAX_DIST_ABS)
         {

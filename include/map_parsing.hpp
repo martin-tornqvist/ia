@@ -185,10 +185,10 @@ enum class Map_parse_mode {overwrite, append};
 namespace map_parse
 {
 
-const R map_rect(0, 0, MAP_W - 1, MAP_H - 1);
+const R map_rect(0, 0, map_w - 1, map_h - 1);
 
 void run(const cell_check::Check& method,
-         bool out[MAP_W][MAP_H],
+         bool out[map_w][map_h],
          const Map_parse_mode write_rule = Map_parse_mode::overwrite,
          const R& area_to_check_cells = map_rect);
 
@@ -198,23 +198,23 @@ bool cell(const cell_check::Check& method, const P& p);
 //where the cells are set to true if they are within the specified distance
 //interval of the first array.
 //This can be used for example to find all cells up to 3 steps from a wall.
-void cells_within_dist_of_others(const bool in[MAP_W][MAP_H],
-                                 bool out[MAP_W][MAP_H],
+void cells_within_dist_of_others(const bool in[map_w][map_h],
+                                 bool out[map_w][map_h],
                                  const Range& dist_interval);
 
-void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]);
+void append(bool base[map_w][map_h], const bool append[map_w][map_h]);
 
 //Optimized for expanding with a distance of one
-void expand(const bool in[MAP_W][MAP_H],
-            bool out[MAP_W][MAP_H],
-            const R& area_allowed_to_modify = R(0, 0, MAP_W, MAP_H));
+void expand(const bool in[map_w][map_h],
+            bool out[map_w][map_h],
+            const R& area_allowed_to_modify = R(0, 0, map_w, map_h));
 
 //Slower version that can expand any distance
-void expand(const bool in[MAP_W][MAP_H],
-            bool out[MAP_W][MAP_H],
+void expand(const bool in[map_w][map_h],
+            bool out[map_w][map_h],
             const int DIST);
 
-bool is_map_connected(const bool blocked[MAP_W][MAP_H]);
+bool is_map_connected(const bool blocked[map_w][map_h]);
 
 } //map_parse
 
@@ -229,37 +229,5 @@ public:
 
     P p_;
 };
-
-namespace flood_fill
-{
-
-void run(const P& p0,
-         const bool blocked[MAP_W][MAP_H],
-         int out[MAP_W][MAP_H],
-         int travel_lmt,
-         const P& p1,
-         const bool ALLOW_DIAGONAL);
-
-} //flood_fill
-
-namespace path_find
-{
-
-//NOTE: The path goes from target to origin, not including the origin.
-//---------------------------------------------------------------------------------------
-//RANDOMIZE_STEP_CHOICES: When true, for each step if there are multiple valid (nearer)
-//                        choices, pick one at random. Otherwise iterate over a predefined
-//                        list of offsets until a valid step is found. The second way is
-//                        more optimized and is the default behavior (best for e.g. AI),
-//                        while the randomized method can produces nicer results in some
-//                        cases (e.g. corridors).
-void run(const P& p0,
-         const P& p1,
-         const bool blocked[MAP_W][MAP_H],
-         std::vector<P>& out,
-         const bool ALLOW_DIAGONAL = true,
-         const bool RANDOMIZE_STEP_CHOICES = false);
-
-} //path_find
 
 #endif

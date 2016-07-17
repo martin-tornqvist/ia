@@ -21,7 +21,7 @@ namespace dungeon_master
 namespace
 {
 
-int         xp_for_lvl_[PLAYER_MAX_CLVL + 1];
+int         xp_for_lvl_[player_max_clvl + 1];
 int         clvl_  = 0;
 int         xp_    = 0;
 Time_data   time_started_;
@@ -43,10 +43,10 @@ void player_gain_lvl()
 
         render::draw_map_state();
 
-        map::player->change_max_hp(HP_PER_LVL);
+        map::player->change_max_hp(hp_per_lvl);
         map::player->restore_hp(999, false, Verbosity::silent);
 
-        map::player->change_max_spi(SPI_PER_LVL);
+        map::player->change_max_spi(spi_per_lvl);
         map::player->restore_spi(999, false, Verbosity::silent);
 
         map::player->restore_shock(999, false);
@@ -58,7 +58,7 @@ void init_xp_array()
     xp_for_lvl_[0] = 0;
     xp_for_lvl_[1] = 0;
 
-    for (int lvl = 2; lvl <= PLAYER_MAX_CLVL; lvl++)
+    for (int lvl = 2; lvl <= player_max_clvl; lvl++)
     {
         xp_for_lvl_[lvl] = xp_for_lvl_[lvl - 1] + (100 * lvl);
     }
@@ -158,7 +158,7 @@ void incr_player_xp(const int XP_GAINED)
         {
             ++xp_;
 
-            if (clvl_ < PLAYER_MAX_CLVL && xp_ >= xp_for_lvl_[clvl_ + 1])
+            if (clvl_ < player_max_clvl && xp_ >= xp_for_lvl_[clvl_ + 1])
             {
                 player_gain_lvl();
             }
@@ -168,7 +168,7 @@ void incr_player_xp(const int XP_GAINED)
 
 int xp_to_next_lvl()
 {
-    if (clvl_ == PLAYER_MAX_CLVL)
+    if (clvl_ == player_max_clvl)
     {
         return -1;
     }
@@ -211,7 +211,7 @@ void win_game()
     const int PADDING       = 9;
 
     const int X0            = PADDING;
-    const int MAX_W         = MAP_W - (PADDING * 2);
+    const int MAX_W         = map_w - (PADDING * 2);
 
     const int LINE_DELAY    = 50;
 
@@ -246,7 +246,7 @@ void win_game()
         "[space/esc/enter] to record high score and return to main menu";
 
     render::draw_text(CMD_LABEL, Panel::screen,
-                      P(X0, SCREEN_H - 2),
+                      P(X0, screen_h - 2),
                       clr_popup_label);
 
     render::update_screen();
@@ -300,7 +300,7 @@ void on_mon_seen(Actor& actor)
 
 void set_time_started_to_now()
 {
-    time_started_ = cur_time();
+    time_started_ = current_time();
 }
 
 void add_history_event(const std::string msg)

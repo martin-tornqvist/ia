@@ -391,7 +391,7 @@ void Rigid::clear_gore()
     is_bloody_   = false;
 }
 
-void Rigid::add_light(bool light[MAP_W][MAP_H]) const
+void Rigid::add_light(bool light[map_w][map_h]) const
 {
     if (burn_state_ == Burn_state::burning)
     {
@@ -1748,7 +1748,7 @@ void Brazier::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor
     }
 }
 
-void Brazier::add_light_hook(bool light[MAP_W][MAP_H]) const
+void Brazier::add_light_hook(bool light[map_w][map_h]) const
 {
     for (const P& d : dir_utils::dir_list_w_center)
     {
@@ -2321,7 +2321,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
             Clr         fume_clr    = clr_magenta;
             const int   RND         = rnd::percent();
 
-            if (map::dlvl >= MIN_DLVL_HARDER_TRAPS && RND < 20)
+            if (map::dlvl >= min_dlvl_harder_traps && RND < 20)
             {
                 prop        = new Prop_poisoned(Prop_turns::std);
                 fume_clr    = clr_green_lgt;
@@ -2397,7 +2397,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
         //First, try to spawn monster in an adjacent cell
         P spawn_pos(-1, -1);
 
-        bool blocked[MAP_W][MAP_H];
+        bool blocked[map_w][map_h];
 
         map_parse::run(cell_check::Blocks_move_cmn(true),
                        blocked,
@@ -2798,7 +2798,7 @@ void Chest::disarm()
                 render::draw_map_state();
                 is_trapped_ = false;
 
-                dungeon_master::incr_player_xp(XP_FOR_DISRM_TRAP);
+                dungeon_master::incr_player_xp(xp_for_disarm_trap);
             }
             else //Failed to disarm
             {
@@ -2877,7 +2877,7 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
     //Fire explosion?
     const int FIRE_EXPLOSION_ONE_IN_N = 5;
 
-    if (map::dlvl >= MIN_DLVL_HARDER_TRAPS && rnd::one_in(FIRE_EXPLOSION_ONE_IN_N))
+    if (map::dlvl >= min_dlvl_harder_traps && rnd::one_in(FIRE_EXPLOSION_ONE_IN_N))
     {
         if (IS_SEEN)
         {
@@ -2908,11 +2908,11 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
 
         actor->hit(rnd::range(1, 3), Dmg_type::physical);
 
-        if (map::dlvl < MIN_DLVL_HARDER_TRAPS)
+        if (map::dlvl < min_dlvl_harder_traps)
         {
             //Weak poison
             actor->prop_handler().try_add(
-                new Prop_poisoned(Prop_turns::specific, POISON_DMG_N_TURN * 3));
+                new Prop_poisoned(Prop_turns::specific, poison_dmg_n_turn * 3));
         }
         else //We're at the deep end of the pool now, apply strong poison
         {
@@ -2945,7 +2945,7 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
         Clr         fume_clr    = clr_magenta;
         const int   RND         = rnd::percent();
 
-        if (map::dlvl >= MIN_DLVL_HARDER_TRAPS && RND < 20)
+        if (map::dlvl >= min_dlvl_harder_traps && RND < 20)
         {
             prop        = new Prop_poisoned(Prop_turns::std);
             fume_clr    = clr_green_lgt;

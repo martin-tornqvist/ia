@@ -167,7 +167,7 @@ void move_bucket(Mon& mon, std::vector<P>& dirs_to_mk)
     const P& mon_p      = mon.pos;
     const P& player_p   = map::player->pos;
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
 
     const R area_to_check_blocked(mon_p - P(1, 1), mon_p + P(1, 1));
 
@@ -201,7 +201,7 @@ bool make_room_for_friend(Mon& mon)
         return false;
     }
 
-    bool blocked_los[MAP_W][MAP_H];
+    bool blocked_los[map_w][map_h];
 
     map_parse::run(cell_check::Blocks_los(), blocked_los);
 
@@ -329,7 +329,7 @@ bool move_to_random_adj_cell(Mon& mon)
         return false;
     }
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
 
     cell_check::Blocks_actor cellcheck(mon, true);
 
@@ -359,7 +359,7 @@ bool move_to_random_adj_cell(Mon& mon)
         }
     }
 
-    const R area_allowed(P(1, 1), P(MAP_W - 2, MAP_H - 2));
+    const R area_allowed(P(1, 1), P(map_w - 2, map_h - 2));
 
     //First, try the same direction as last travelled
     Dir dir = Dir::END;
@@ -457,7 +457,7 @@ bool step_to_lair_if_los(Mon& mon, const P& lair_p)
 {
     if (mon.is_alive())
     {
-        bool blocked[MAP_W][MAP_H];
+        bool blocked[map_w][map_h];
 
         const R area_check_blocked = fov::get_fov_rect(mon.pos);
 
@@ -558,7 +558,7 @@ void try_set_path_to_lair_if_no_los(Mon& mon, std::vector<P>& path, const P& lai
 {
     if (mon.is_alive())
     {
-        bool blocked[MAP_W][MAP_H];
+        bool blocked[map_w][map_h];
 
         const R fov_lmt = fov::get_fov_rect(mon.pos);
 
@@ -582,11 +582,11 @@ void try_set_path_to_lair_if_no_los(Mon& mon, std::vector<P>& path, const P& lai
                        blocked,
                        Map_parse_mode::append);
 
-        path_find::run(mon.pos,
-                       lair_p,
-                       blocked,
-                       path);
-
+        pathfind::run(mon.pos,
+                      lair_p,
+                      blocked,
+                      path);
+        
         return;
     }
 
@@ -601,7 +601,7 @@ void try_set_path_to_leader(Mon& mon, std::vector<P>& path)
 
         if (leader && leader->is_alive())
         {
-            bool blocked[MAP_W][MAP_H];
+            bool blocked[map_w][map_h];
 
             const R fov_lmt = fov::get_fov_rect(mon.pos);
 
@@ -624,7 +624,10 @@ void try_set_path_to_leader(Mon& mon, std::vector<P>& path)
                            blocked,
                            Map_parse_mode::append);
 
-            path_find::run(mon.pos, leader->pos, blocked, path);
+            pathfind::run(mon.pos,
+                          leader->pos,
+                          blocked,
+                          path);
             return;
         }
     }
@@ -640,12 +643,12 @@ void try_set_path_to_player(Mon& mon, std::vector<P>& path)
         return;
     }
 
-    bool blocked[MAP_W][MAP_H] = {};
+    bool blocked[map_w][map_h] = {};
 
     const int X0 = 1;
     const int Y0 = 1;
-    const int X1 = MAP_W - 1;
-    const int Y1 = MAP_H - 1;
+    const int X1 = map_w - 1;
+    const int Y1 = map_h - 1;
 
     //Mark blocking features in the blocking array
     for (int x = X0; x < X1; ++x)
@@ -697,11 +700,14 @@ void try_set_path_to_player(Mon& mon, std::vector<P>& path)
                        Map_parse_mode::append);
 
         //Find a path
-        path_find::run(mon.pos, player_pos, blocked, path);
+        pathfind::run(mon.pos,
+                      player_pos,
+                      blocked,
+                      path);
     }
 }
 
-void set_special_blocked_cells(Mon& mon, bool a[MAP_W][MAP_H])
+void set_special_blocked_cells(Mon& mon, bool a[map_w][map_h])
 {
     (void)mon;
     (void)a;

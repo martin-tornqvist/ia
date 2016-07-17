@@ -13,25 +13,25 @@ namespace fov
 
 R get_fov_rect(const P& p)
 {
-    const int RADI = FOV_STD_RADI_INT;
+    const int RADI = fov_std_radi_int;
 
     const P p0(std::max(0, p.x - RADI),
                std::max(0, p.y - RADI));
 
-    const P p1(std::min(MAP_W - 1, p.x + RADI),
-               std::min(MAP_H - 1, p.y + RADI));
+    const P p1(std::min(map_w - 1, p.x + RADI),
+               std::min(map_h - 1, p.y + RADI));
 
     return R(p0, p1);
 }
 
 bool is_in_fov_range(const P& p0, const P& p1)
 {
-    return king_dist(p0, p1) <= FOV_STD_RADI_INT;
+    return king_dist(p0, p1) <= fov_std_radi_int;
 }
 
 Los_result check_cell(const P& p0,
                       const P& p1,
-                      const bool hard_blocked[MAP_W][MAP_H])
+                      const bool hard_blocked[map_w][map_h])
 {
     Los_result los_result;
 
@@ -47,7 +47,7 @@ Los_result check_cell(const P& p0,
     const P delta(p1 - p0);
 
     const std::vector<P>* path_deltas_ptr =
-        line_calc::fov_delta_line(delta, FOV_STD_RADI_DB);
+        line_calc::fov_delta_line(delta, fov_std_radi_db);
 
     if (!path_deltas_ptr)
     {
@@ -102,12 +102,12 @@ Los_result check_cell(const P& p0,
 }
 
 void run(const P& p0,
-         const bool hard_blocked[MAP_W][MAP_H],
-         Los_result out[MAP_W][MAP_H])
+         const bool hard_blocked[map_w][map_h],
+         Los_result out[map_w][map_h])
 {
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             Los_result& los = out[x][y];
 

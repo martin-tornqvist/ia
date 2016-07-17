@@ -175,7 +175,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(1) - (SPI_PER_LVL * 3);
+        return player_bon::spi_occultist_can_cast_at_lvl(1) - (spi_per_lvl * 3);
     }
 };
 
@@ -422,7 +422,7 @@ public:
         };
     }
 
-    virtual Intr_spell_shock shock_type_intr_cast() const
+    virtual Intr_spell_shock shock_type_intr_cast() const override
     {
         return Intr_spell_shock::disturbing;
     }
@@ -697,7 +697,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(1) - (SPI_PER_LVL * 3);
+        return player_bon::spi_occultist_can_cast_at_lvl(1) - (spi_per_lvl * 3);
     }
 };
 
@@ -917,7 +917,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return PLAYER_START_SPI + 2;
+        return player_start_spi + 2;
     }
 };
 

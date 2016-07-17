@@ -2,7 +2,7 @@
 #define MENU_INPUT_HPP
 
 #include "rl_utils.hpp"
-#include "cmn.hpp"
+#include "global.hpp"
 
 class Menu_browser
 {

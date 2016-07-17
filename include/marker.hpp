@@ -5,7 +5,7 @@
 #include <climits>
 
 #include "rl_utils.hpp"
-#include "cmn.hpp"
+#include "global.hpp"
 
 struct Key_data;
 struct Cell_overlay;
@@ -22,7 +22,7 @@ namespace marker
 
 P run(const Marker_use_player_tgt use_tgt,
       std::function<void(const P&,
-                         Cell_overlay overlay[MAP_W][MAP_H])> on_marker_at_pos,
+                         Cell_overlay overlay[map_w][map_h])> on_marker_at_pos,
       std::function<Marker_done(const P&,
                                 const Key_data&)> on_key_press,
       Marker_show_blocked show_blocked,

@@ -94,11 +94,11 @@ void load_audio_file(const Sfx_id sfx, const std::string& filename)
 
 int next_channel(const int FROM)
 {
-    ASSERT(FROM >= 0 && FROM < AUDIO_ALLOCATED_CHANNELS);
+    ASSERT(FROM >= 0 && FROM < audio_allocated_channels);
 
     int ret = FROM + 1;
 
-    if (ret == AUDIO_ALLOCATED_CHANNELS)
+    if (ret == audio_allocated_channels)
     {
         ret = 0;
     }
@@ -108,11 +108,11 @@ int next_channel(const int FROM)
 
 int free_channel(const int FROM)
 {
-    ASSERT(FROM >= 0 && FROM < AUDIO_ALLOCATED_CHANNELS);
+    ASSERT(FROM >= 0 && FROM < audio_allocated_channels);
 
     int ret = FROM;
 
-    for (int i = 0; i < AUDIO_ALLOCATED_CHANNELS; ++i)
+    for (int i = 0; i < audio_allocated_channels; ++i)
     {
         ret = next_channel(ret);
 
@@ -260,7 +260,7 @@ int play(const Sfx_id sfx, const int VOL_PCT_TOT, const int VOL_PCT_L)
         size_t&         ms_last         = ms_at_sfx_played_[size_t(sfx)];
         const size_t    MS_DIFF         = MS_NOW - ms_last;
 
-        if (FREE_CHANNEL >= 0 && MS_DIFF >= MIN_MS_BETWEEN_SAME_SFX)
+        if (FREE_CHANNEL >= 0 && MS_DIFF >= min_ms_between_same_sfx)
         {
             cur_channel_ = FREE_CHANNEL;
 

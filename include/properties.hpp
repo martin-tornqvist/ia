@@ -6,7 +6,7 @@
 
 #include "ability_values.hpp"
 #include "rl_utils.hpp"
-#include "cmn.hpp"
+#include "global.hpp"
 
 enum class Prop_id
 {
@@ -844,9 +844,9 @@ public:
         Prop        (Prop_id::wound, turns_init, nr_turns),
         nr_wounds_  (1) {}
 
-    void save() const;
+    void save() const override;
 
-    void load();
+    void load() override;
 
     void msg(const Prop_msg msg_type, std::string& msg_ref) const override;
 

@@ -88,7 +88,7 @@ void draw(const Update_screen update)
     {
         render::cover_area(Panel::log,
                            P(0, 0),
-                           P(MAP_W, NR_LINES_WITH_CONTENT));
+                           P(map_w, NR_LINES_WITH_CONTENT));
 
         for (int i = 0; i < NR_LINES_WITH_CONTENT; ++i)
         {
@@ -150,7 +150,7 @@ void add(const std::string& str,
 
         int x_pos = x_after_msg(prev_msg);
 
-        const bool IS_MSG_FIT = x_pos + (int)str.size() + PADDING_LEN - 1 < MAP_W;
+        const bool IS_MSG_FIT = x_pos + (int)str.size() + PADDING_LEN - 1 < map_w;
 
         if (!IS_MSG_FIT)
         {
@@ -208,7 +208,7 @@ void more_prompt()
 
         if (line_nr == 0)
         {
-            if (x_pos + int(more_str.size()) - 1 >= MAP_W)
+            if (x_pos + int(more_str.size()) - 1 >= map_w)
             {
                 x_pos    = 0;
                 line_nr  = 1;
@@ -233,7 +233,7 @@ void display_history()
 
     const int LINE_JUMP           = 3;
     const int NR_LINES_TOT        = history_.size();
-    const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
+    const int MAX_NR_LINES_ON_SCR = screen_h - 2;
 
     int top_nr = std::max(0, NR_LINES_TOT - MAX_NR_LINES_ON_SCR);
     int btm_nr = std::min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);

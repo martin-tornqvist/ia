@@ -37,7 +37,7 @@ void Feature::bump(Actor& actor_bumping)
     }
 }
 
-void Feature::add_light(bool light[MAP_W][MAP_H]) const
+void Feature::add_light(bool light[map_w][map_h]) const
 {
     (void)light;
 }

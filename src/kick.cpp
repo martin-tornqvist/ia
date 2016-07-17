@@ -49,7 +49,7 @@ void player_kick()
                 if (map::player->prop_handler().allow_attack_melee(Verbosity::verbose))
                 {
                     TRACE << "Player is allowed to do melee attack" << std::endl;
-                    bool blocked[MAP_W][MAP_H];
+                    bool blocked[map_w][map_h];
                     map_parse::run(cell_check::Blocks_los(), blocked);
 
                     TRACE << "Player can see actor" << std::endl;

@@ -46,7 +46,7 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
 
     render::draw_text_center("Invoke which power?",
                              Panel::screen,
-                             P(SCREEN_W / 2, 0),
+                             P(screen_w / 2, 0),
                              clr_title);
 
     P p(0, 1);

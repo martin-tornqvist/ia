@@ -273,9 +273,9 @@ bool mk_egypt_lvl()
         }
     }
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             Rigid* const f = map::cells[x][y].rigid;
 
@@ -457,17 +457,17 @@ bool mk_rats_in_the_walls_lvl()
         }
     }
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
     map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
     //Spawn extra rats in the rightmost part of the map
     const Fraction fraction_spawned(2, 3);
 
-    const int X0 = (MAP_W * 7) / 8;
+    const int X0 = (map_w * 7) / 8;
 
-    for (int x = X0; x < MAP_W; ++x)
+    for (int x = X0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             if (!blocked[x][y] && fraction_spawned.roll())
             {
@@ -534,9 +534,9 @@ bool mk_boss_lvl()
         }
     }
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             Rigid* const f = map::cells[x][y].rigid;
 
@@ -588,9 +588,9 @@ bool mk_trapez_lvl()
         }
     }
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             Rigid* const f = map::cells[x][y].rigid;
 

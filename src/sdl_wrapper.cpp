@@ -48,7 +48,7 @@ void init()
         ASSERT(false);
     }
 
-    Mix_AllocateChannels(AUDIO_ALLOCATED_CHANNELS);
+    Mix_AllocateChannels(audio_allocated_channels);
 
     TRACE_FUNC_END;
 }

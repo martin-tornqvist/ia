@@ -44,7 +44,7 @@ void mk_list_of_mon_can_auto_spawn(const int NR_LVLS_OUT_OF_DEPTH,
     list_ref.clear();
 
     const int EFFECTIVE_DLVL =
-        constr_in_range(1, map::dlvl + NR_LVLS_OUT_OF_DEPTH, DLVL_LAST);
+        constr_in_range(1, map::dlvl + NR_LVLS_OUT_OF_DEPTH, dlvl_last);
 
     //Get list of actors currently on the level (to help avoid spawning multiple uniques,
     //note that this could otherwise happen for example with Zuul - he is allowed to
@@ -75,7 +75,7 @@ void mk_list_of_mon_can_auto_spawn(const int NR_LVLS_OUT_OF_DEPTH,
 
 void mk_group_at(const Actor_id id,
                  const std::vector<P>& sorted_free_cells,
-                 bool blocked_out[MAP_W][MAP_H],
+                 bool blocked_out[map_w][map_h],
                  const bool IS_ROAMING_ALLOWED)
 {
     const Actor_data_t& d = actor_data::data[int(id)];
@@ -136,7 +136,7 @@ void mk_group_at(const Actor_id id,
 
 bool mk_random_group_for_room(const Room_type room_type,
                               const std::vector<P>& sorted_free_cells,
-                              bool blocked_out[MAP_W][MAP_H],
+                              bool blocked_out[map_w][map_h],
                               const bool IS_ROAMING_ALLOWED)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
@@ -189,7 +189,7 @@ bool mk_random_group_for_room(const Room_type room_type,
 }
 
 void mk_group_of_random_at(const std::vector<P>& sorted_free_cells,
-                           bool blocked_out[MAP_W][MAP_H],
+                           bool blocked_out[map_w][map_h],
                            const int NR_LVLS_OUT_OF_DEPTH_ALLOWED,
                            const bool IS_ROAMING_ALLOWED)
 {
@@ -205,16 +205,16 @@ void mk_group_of_random_at(const std::vector<P>& sorted_free_cells,
 }
 
 void mk_sorted_free_cells(const P& origin,
-                          const bool blocked[MAP_W][MAP_H],
+                          const bool blocked[map_w][map_h],
                           std::vector<P>& vector_ref)
 {
     vector_ref.clear();
 
     const int RADI = 10;
-    const int X0 = constr_in_range(1, origin.x - RADI, MAP_W - 2);
-    const int Y0 = constr_in_range(1, origin.y - RADI, MAP_H - 2);
-    const int X1 = constr_in_range(1, origin.x + RADI, MAP_W - 2);
-    const int Y1 = constr_in_range(1, origin.y + RADI, MAP_H - 2);
+    const int X0 = constr_in_range(1, origin.x - RADI, map_w - 2);
+    const int Y0 = constr_in_range(1, origin.y - RADI, map_h - 2);
+    const int X1 = constr_in_range(1, origin.x + RADI, map_w - 2);
+    const int Y1 = constr_in_range(1, origin.y + RADI, map_h - 2);
 
     for (int x = X0; x <= X1; ++x)
     {
@@ -237,22 +237,22 @@ void try_spawn_due_to_time_passed()
 {
     TRACE_FUNC_BEGIN;
 
-    if (game_time::actors.size() >= MAX_NR_ACTORS_ON_MAP)
+    if (game_time::actors.size() >= max_nr_actors_on_map)
     {
         return;
     }
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
     map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
-    const int MIN_DIST_TO_PLAYER = FOV_STD_RADI_INT + 3;
+    const int MIN_DIST_TO_PLAYER = fov_std_radi_int + 3;
 
     const P& player_pos = map::player->pos;
 
     const int X0 = std::max(0,           player_pos.x - MIN_DIST_TO_PLAYER);
     const int Y0 = std::max(0,           player_pos.y - MIN_DIST_TO_PLAYER);
-    const int X1 = std::min(MAP_W - 1,   player_pos.x + MIN_DIST_TO_PLAYER);
-    const int Y1 = std::min(MAP_H - 1,   player_pos.y + MIN_DIST_TO_PLAYER);
+    const int X1 = std::min(map_w - 1,   player_pos.x + MIN_DIST_TO_PLAYER);
+    const int Y1 = std::min(map_h - 1,   player_pos.y + MIN_DIST_TO_PLAYER);
 
     for (int x = X0; x <= X1; ++x)
     {
@@ -264,9 +264,9 @@ void try_spawn_due_to_time_passed()
 
     std::vector<P> free_cells_vector;
 
-    for (int x = 1; x < MAP_W - 2; ++x)
+    for (int x = 1; x < map_w - 2; ++x)
     {
-        for (int y = 1; y < MAP_H - 2; ++y)
+        for (int y = 1; y < map_h - 2; ++y)
         {
             if (!blocked[x][y])
             {
@@ -303,17 +303,17 @@ void populate_intro_lvl()
 {
     const int NR_GROUPS_ALLOWED = rnd::range(1, 3);
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
 
-    const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT + 3;
+    const int MIN_DIST_FROM_PLAYER = fov_std_radi_int + 3;
     map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
     const P& player_pos = map::player->pos;
 
     const int X0 = std::max(0, player_pos.x - MIN_DIST_FROM_PLAYER);
     const int Y0 = std::max(0, player_pos.y - MIN_DIST_FROM_PLAYER);
-    const int X1 = std::min(MAP_W - 1, player_pos.x + MIN_DIST_FROM_PLAYER) - 1;
-    const int Y1 = std::min(MAP_H - 1, player_pos.y + MIN_DIST_FROM_PLAYER) - 1;
+    const int X1 = std::min(map_w - 1, player_pos.x + MIN_DIST_FROM_PLAYER) - 1;
+    const int Y1 = std::min(map_h - 1, player_pos.y + MIN_DIST_FROM_PLAYER) - 1;
 
     for (int y = Y0; y <= Y1; ++y)
     {
@@ -340,9 +340,9 @@ void populate_intro_lvl()
     {
         std::vector<P> origin_bucket;
 
-        for (int y = 1; y < MAP_H - 1; ++y)
+        for (int y = 1; y < map_h - 1; ++y)
         {
-            for (int x = 1; x < MAP_W - 1; ++x)
+            for (int x = 1; x < map_w - 1; ++x)
             {
                 if (!blocked[x][y])
                 {
@@ -379,9 +379,9 @@ void populate_std_lvl()
 
     int nr_groups_spawned = 0;
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
 
-    const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT - 1;
+    const int MIN_DIST_FROM_PLAYER = fov_std_radi_int - 1;
 
     map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
@@ -389,8 +389,8 @@ void populate_std_lvl()
 
     const int X0 = std::max(0, player_pos.x - MIN_DIST_FROM_PLAYER);
     const int Y0 = std::max(0, player_pos.y - MIN_DIST_FROM_PLAYER);
-    const int X1 = std::min(MAP_W - 1, player_pos.x + MIN_DIST_FROM_PLAYER);
-    const int Y1 = std::min(MAP_H - 1, player_pos.y + MIN_DIST_FROM_PLAYER);
+    const int X1 = std::min(map_w - 1, player_pos.x + MIN_DIST_FROM_PLAYER);
+    const int Y1 = std::min(map_h - 1, player_pos.y + MIN_DIST_FROM_PLAYER);
 
     for (int x = X0; x <= X1; ++x)
     {
@@ -483,9 +483,9 @@ void populate_std_lvl()
     //Second, place groups randomly in plain-themed areas until no more groups to place
     std::vector<P> origin_bucket;
 
-    for (int y = 1; y < MAP_H - 1; ++y)
+    for (int y = 1; y < map_h - 1; ++y)
     {
-        for (int x = 1; x < MAP_W - 1; ++x)
+        for (int x = 1; x < map_w - 1; ++x)
         {
             if (map::room_map[x][y])
             {

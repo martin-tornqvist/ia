@@ -70,7 +70,7 @@ void try_knock_back(Actor& defender,
 
     const P new_pos = defender.pos + d;
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
     map_parse::run(cell_check::Blocks_actor(defender, true), blocked);
 
     const bool IS_CELL_BOTTOMLESS =

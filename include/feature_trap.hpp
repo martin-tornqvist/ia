@@ -101,7 +101,7 @@ public:
         return is_hidden_;
     }
 
-    Matl matl() const;
+    Matl matl() const override;
 
     Dir actor_try_leave(Actor& actor, const Dir dir);
 
@@ -294,7 +294,7 @@ private:
 
     Trap_dart(P pos, Trap* const base_trap);
 
-    void trigger();
+    void trigger() override;
 
     Trap_placement_valid on_place() override;
 
@@ -317,7 +317,7 @@ private:
 
     Trap_spear(P pos, Trap* const base_trap);
 
-    void trigger();
+    void trigger() override;
 
     Trap_placement_valid on_place() override;
 
@@ -341,7 +341,7 @@ private:
     Trap_gas_confusion(P pos, Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::gas_confusion, base_trap) {}
 
-    void trigger();
+    void trigger() override;
 
     Range nr_turns_range_to_trigger() const override
     {
@@ -357,7 +357,7 @@ private:
     Trap_gas_paralyzation(P pos, Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::gas_paralyze, base_trap) {}
 
-    void trigger();
+    void trigger() override;
 
     Range nr_turns_range_to_trigger() const override
     {
@@ -373,7 +373,7 @@ private:
     Trap_gas_fear(P pos, Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::gas_fear, base_trap) {}
 
-    void trigger();
+    void trigger() override;
 
     Range nr_turns_range_to_trigger() const override
     {
@@ -389,7 +389,7 @@ private:
     Trap_blinding_flash(P pos, Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::blinding, base_trap) {}
 
-    void trigger();
+    void trigger() override;
 
     Range nr_turns_range_to_trigger() const override
     {
@@ -405,7 +405,7 @@ private:
     Trap_smoke(P pos, Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::smoke, base_trap) {}
 
-    void trigger();
+    void trigger() override;
 
     Range nr_turns_range_to_trigger() const override
     {
@@ -421,7 +421,7 @@ private:
     Trap_fire(P pos, Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::smoke, base_trap) {}
 
-    void trigger();
+    void trigger() override;
 
     Range nr_turns_range_to_trigger() const override
     {
@@ -437,7 +437,7 @@ private:
     Trap_alarm(P pos, Trap* const base_trap) :
         Mech_trap_impl(pos, Trap_id::alarm, base_trap) {}
 
-    void trigger();
+    void trigger() override;
 
     Range nr_turns_range_to_trigger() const override
     {
@@ -453,7 +453,7 @@ private:
     Trap_teleport(P pos, Trap* const base_trap) :
         Magic_trap_impl(pos, Trap_id::teleport, base_trap) {}
 
-    void trigger();
+    void trigger() override;
 
     Range nr_turns_range_to_trigger() const override
     {
@@ -469,7 +469,7 @@ private:
     Trap_summon_mon(P pos, Trap* const base_trap) :
         Magic_trap_impl(pos, Trap_id::summon, base_trap) {}
 
-    void trigger();
+    void trigger() override;
 
     Range nr_turns_range_to_trigger() const override
     {
@@ -485,7 +485,7 @@ private:
     Trap_spi_drain(P pos, Trap* const base_trap) :
         Magic_trap_impl(pos, Trap_id::summon, base_trap) {}
 
-    void trigger();
+    void trigger() override;
 
     Range nr_turns_range_to_trigger() const override
     {
@@ -496,7 +496,7 @@ private:
 class Trap_web: public Mech_trap_impl
 {
 public:
-    Dir actor_try_leave(Actor& actor, const Dir dir);
+    Dir actor_try_leave(Actor& actor, const Dir dir) override;
 
     bool is_holding_actor() const override
     {
@@ -510,7 +510,7 @@ private:
         Mech_trap_impl      (pos, Trap_id::web, base_trap),
         is_holding_actor_   (false) {}
 
-    void trigger();
+    void trigger() override;
 
     Clr clr() const override
     {

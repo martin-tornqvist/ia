@@ -210,14 +210,14 @@ void draw(const Menu_browser& browser)
 {
     TRACE_FUNC_BEGIN;
 
-    P pos(MAP_W_HALF, 3);
+    P pos(map_w_half, 3);
 
     TRACE << "Calling clear_window()" << std::endl;
     render::clear_screen();
 
     if (config::is_tiles_mode())
     {
-        render::draw_box(R(P(0, 0), P(SCREEN_W - 1, SCREEN_H - 1)));
+        render::draw_box(R(P(0, 0), P(screen_w - 1, screen_h - 1)));
     }
 
     if (config::is_tiles_mode())
@@ -239,7 +239,7 @@ void draw(const Menu_browser& browser)
             logo.push_back("               \\                 \\                      ");
         }
 
-        const int LOGO_X_POS_LEFT = (MAP_W - logo[0].size()) / 2;
+        const int LOGO_X_POS_LEFT = (map_w - logo[0].size()) / 2;
 
         for (const std::string& row : logo)
         {
@@ -350,7 +350,7 @@ void draw(const Menu_browser& browser)
 
     render::draw_text_center(version_str + " - " + __DATE__ + " (c) 2011-2016 Martin Tornqvist",
                              Panel::screen,
-                             P(MAP_W_HALF, SCREEN_H - 1),
+                             P(map_w_half, screen_h - 1),
                              clr_gray_drk);
 
     render::update_screen();

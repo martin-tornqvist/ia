@@ -521,12 +521,12 @@ void Potion_clairv::quaff_impl(Actor& actor)
         std::vector<P> anim_cells;
         anim_cells.clear();
 
-        bool blocked[MAP_W][MAP_H];
+        bool blocked[map_w][map_h];
         map_parse::run(cell_check::Blocks_los(), blocked);
 
-        for (int x = 0; x < MAP_W; ++x)
+        for (int x = 0; x < map_w; ++x)
         {
-            for (int y = 0; y < MAP_H; ++y)
+            for (int y = 0; y < map_h; ++y)
             {
                 Cell& cell = map::cells[x][y];
 
@@ -555,7 +555,7 @@ void Potion_descent::quaff_impl(Actor& actor)
 {
     (void)actor;
 
-    if (map::dlvl < DLVL_LAST - 1)
+    if (map::dlvl < dlvl_last - 1)
     {
         map::player->prop_handler().try_add(new Prop_descend(Prop_turns::std));
     }

@@ -34,7 +34,7 @@ Highscore_entry::Highscore_entry(std::string entry_date_and_time,
 int Highscore_entry::score() const
 {
     const double DLVL_DB      = double(dlvl_);
-    const double DLVL_LAST_DB = double(DLVL_LAST);
+    const double DLVL_LAST_DB = double(dlvl_last);
     const double XP_DB        = double(xp_);
 
     const double XP_FACTOR    = 1.0 + XP_DB + (is_win_ ? (XP_DB / 5.0) : 0.0);
@@ -54,7 +54,7 @@ Highscore_entry* final_score_ = nullptr;
 
 const int X_POS_DATE    = 0;
 const int X_POS_NAME    = X_POS_DATE  + 19;
-const int X_POS_LVL     = X_POS_NAME  + PLAYER_NAME_MAX_LEN + 2;
+const int X_POS_LVL     = X_POS_NAME  + player_name_max_len + 2;
 const int X_POS_DLVL    = X_POS_LVL   + 7;
 const int X_POS_INS     = X_POS_DLVL  + 7;
 const int X_POS_WIN     = X_POS_INS   + 10;
@@ -149,7 +149,7 @@ void draw(const std::vector<Highscore_entry>& entries, const int TOP_ELEMENT)
 
     y_pos++;
 
-    const int MAX_NR_LINES_ON_SCR = SCREEN_H - 3;
+    const int MAX_NR_LINES_ON_SCR = screen_h - 3;
 
     for (
         int i = TOP_ELEMENT;
@@ -215,7 +215,7 @@ void run_highscore_screen()
 
     const int LINE_JUMP           = 3;
     const int NR_LINES_TOT        = entries.size();
-    const int MAX_NR_LINES_ON_SCR = SCREEN_H - 3;
+    const int MAX_NR_LINES_ON_SCR = screen_h - 3;
 
     //Read keys
     while (true)
@@ -259,7 +259,7 @@ void on_game_over(const bool IS_WIN)
 {
     std::vector<Highscore_entry> entries = entries_sorted();
 
-    final_score_ = new Highscore_entry(cur_time().time_str(Time_type::minute, true),
+    final_score_ = new Highscore_entry(current_time().time_str(Time_type::minute, true),
                                        map::player->name_a(),
                                        dungeon_master::xp(),
                                        dungeon_master::clvl(),

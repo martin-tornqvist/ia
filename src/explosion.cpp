@@ -18,7 +18,7 @@ namespace
 
 void cells_reached(const R& area,
                    const P& origin,
-                   bool blocked[MAP_W][MAP_H],
+                   bool blocked[map_w][map_h],
                    std::vector< std::vector<P> >& out)
 {
     std::vector<P> line;
@@ -59,7 +59,7 @@ void cells_reached(const R& area,
 }
 
 void draw(const std::vector< std::vector<P> >& pos_lists,
-          bool blocked[MAP_W][MAP_H],
+          bool blocked[map_w][map_h],
           const Clr* const clr_override)
 {
     render::draw_map_state();
@@ -125,11 +125,11 @@ void run(const P& origin,
          Prop* const prop,
          const Clr* const clr_override)
 {
-    const int RADI = EXPLOSION_STD_RADI + RADI_CHANGE;
+    const int RADI = expl_std_radi + RADI_CHANGE;
 
     const R area = explosion_area(origin, RADI);
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
 
     map_parse::run(cell_check::Blocks_projectiles(),
                    blocked,
@@ -157,12 +157,12 @@ void run(const P& origin,
     //----------------------------------------------------------
     //Do damage, apply effect
 
-    Actor* living_actors[MAP_W][MAP_H];
-    std::vector<Actor*> corpses[MAP_W][MAP_H];
+    Actor* living_actors[map_w][map_h];
+    std::vector<Actor*> corpses[map_w][map_h];
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             living_actors[x][y] = nullptr;
             corpses[x][y].clear();
@@ -202,8 +202,8 @@ void run(const P& origin,
                 Cell& cell = map::cells[pos.x][pos.y];
                 cell.rigid->hit(Dmg_type::physical, Dmg_method::explosion, nullptr);
 
-                const int ROLLS = EXPL_DMG_ROLLS - radi;
-                const int DMG   = rnd::dice(ROLLS, EXPL_DMG_SIDES) + EXPL_DMG_PLUS;
+                const int ROLLS = expl_dmg_rolls - radi;
+                const int DMG   = rnd::dice(ROLLS, expl_dmg_sides) + expl_dmg_plus;
 
                 //Damage living actor
                 if (living_actor)
@@ -293,11 +293,11 @@ void run(const P& origin,
 
 void run_smoke_explosion_at(const P& origin, const int RADI_CHANGE)
 {
-    const int RADI = EXPLOSION_STD_RADI + RADI_CHANGE;
+    const int RADI = expl_std_radi + RADI_CHANGE;
 
     const R area = explosion_area(origin, RADI);
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
     map_parse::run(cell_check::Blocks_projectiles(), blocked);
 
     std::vector< std::vector<P> > pos_lists;
@@ -333,7 +333,7 @@ void run_smoke_explosion_at(const P& origin, const int RADI_CHANGE)
 R explosion_area(const P& c, const int RADI)
 {
     return R(P(std::max(c.x - RADI, 1),         std::max(c.y - RADI, 1)),
-             P(std::min(c.x + RADI, MAP_W - 2), std::min(c.y + RADI, MAP_H - 2)));
+             P(std::min(c.x + RADI, map_w - 2), std::min(c.y + RADI, map_h - 2)));
 }
 
 } //explosion

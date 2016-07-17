@@ -9,7 +9,7 @@
 //-----------------------------------------------------------------------------
 // Data
 //-----------------------------------------------------------------------------
-const size_t PLAYER_NAME_MAX_LEN            = 14;
+const size_t player_name_max_len            = 14;
 
 const std::string version_str               = "v18.2";
 
@@ -17,93 +17,97 @@ const std::string tiles_img_name            = "images/gfx_16x24.png";
 const std::string logo_img_name             = "images/main_menu_logo.png";
 const std::string skull_img_name            = "images/skull.png";
 
-const int SCREEN_BPP                        = 32;
+const int screen_bpp                        = 32;
 
-const int MAP_W                             = 80;
-const int MAP_H                             = 22;
-const int MAP_W_HALF                        = MAP_W / 2;
-const int MAP_H_HALF                        = MAP_H / 2;
-const int NR_MAP_CELLS                      = MAP_W * MAP_H;
+const int map_w                             = 80;
+const int map_h                             = 22;
+const int map_w_half                        = map_w / 2;
+const int map_h_half                        = map_h / 2;
+const int nr_map_cells                      = map_w * map_h;
 
-const int LOG_H                             = 2;
-const int MAP_OFFSET_H                      = LOG_H;
-const int CHAR_LINES_OFFSET_H               = MAP_OFFSET_H + MAP_H;
-const int CHAR_LINES_H                      = 3;
-const int SCREEN_W                          = MAP_W;
-const int SCREEN_H                          = CHAR_LINES_OFFSET_H + CHAR_LINES_H;
+const int log_h                             = 2;
+const int map_offset_h                      = log_h;
+const int char_lines_offset_h               = map_offset_h + map_h;
+const int char_lines_h                      = 3;
+const int screen_w                          = map_w;
+const int screen_h                          = char_lines_offset_h + char_lines_h;
 
-const int DESCR_X0                          = MAP_W - 31;
+const int descr_x0                          = map_w - 31;
 
-const int PLAYER_START_X                    = 10;
-const int PLAYER_START_Y                    = MAP_H_HALF;
+const int player_start_x                    = 10;
+const int player_start_y                    = map_h_half;
 
-const int PLAYER_MAX_CLVL                   = 12;
+const int player_max_clvl                   = 12;
 
-const int DLVL_LAST_EARLY_GAME              = 9;                        //Early     = DLVL 1  - 9
-const int DLVL_FIRST_MID_GAME               = DLVL_LAST_EARLY_GAME + 1; //
-const int DLVL_LAST_MID_GAME                = 19;                       //Mid       = DLVL 10 - 19
-const int DLVL_FIRST_LATE_GAME              = DLVL_LAST_MID_GAME + 1;   //
-const int DLVL_LAST                         = 30;                       //Late      = DLVL 20 - 30
+//NOTE:
+//Early : dlvl 1  - 9
+//Mid   : dlvl 10 - 19
+//Late  : dlvl 20 - 30
+const int dlvl_last_early_game              = 9;
+const int dlvl_first_mid_game               = dlvl_last_early_game + 1;
+const int dlvl_last_mid_game                = 19;
+const int dlvl_first_late_game              = dlvl_last_mid_game + 1;
+const int dlvl_last                         = 30;
 
-const int MIN_DLVL_HARDER_TRAPS             = 6;
+const int min_dlvl_harder_traps             = 6;
 
-const int AUDIO_ALLOCATED_CHANNELS          = 16;
+const int audio_allocated_channels          = 16;
 
-const size_t MS_DELAY_PLAYER_UNABLE_ACT     = 7;
-const size_t MIN_MS_BETWEEN_SAME_SFX        = 60;
+const size_t ms_delay_player_unable_act     = 7;
+const size_t min_ms_between_same_sfx        = 60;
 
-const int PLAYER_START_HP                   = 16;
-const int PLAYER_START_SPI                  = 6;
-const int HP_PER_LVL                        = 2;
-const int SPI_PER_LVL                       = 1;
+const int player_start_hp                   = 16;
+const int player_start_spi                  = 6;
+const int hp_per_lvl                        = 2;
+const int spi_per_lvl                       = 1;
 
-const int MIN_DMG_TO_WOUND                  = 5;
+const int min_dmg_to_wound                  = 5;
 
-const int XP_FOR_DISRM_TRAP                 = 1;
+const int xp_for_disarm_trap                 = 1;
 
-const int     FOV_STD_RADI_INT              = 8;
-const int     FOV_STD_W_INT                 = (FOV_STD_RADI_INT * 2) + 1;
-const double  FOV_STD_RADI_DB               = double(FOV_STD_RADI_INT);
-const double  FOV_STD_W_DB                  = double(FOV_STD_W_INT);
-const int     FOV_MAX_RADI_INT              = FOV_STD_RADI_INT * 2;
-const int     FOV_MAX_W_INT                 = (FOV_MAX_RADI_INT * 2) + 1;
-const double  FOV_MAX_RADI_DB               = double(FOV_MAX_RADI_INT);
-const double  FOV_MAX_W_DB                  = double(FOV_MAX_W_INT);
+const int     fov_std_radi_int              = 8;
+const int     fov_std_w_int                 = (fov_std_radi_int * 2) + 1;
+const double  fov_std_radi_db               = double(fov_std_radi_int);
+const double  fov_std_w_db                  = double(fov_std_w_int);
+const int     fov_max_radi_int              = fov_std_radi_int * 2;
+const int     fov_max_w_int                 = (fov_max_radi_int * 2) + 1;
+const double  fov_max_radi_db               = double(fov_max_radi_int);
+const double  fov_max_w_db                  = double(fov_max_w_int);
 
-const int SND_DIST_NORMAL                   = FOV_STD_RADI_INT;
-const int SND_DIST_LOUD                     = SND_DIST_NORMAL * 2;
+const int snd_dist_normal                   = fov_std_radi_int;
+const int snd_dist_loud                     = snd_dist_normal * 2;
 
-const int THROW_RANGE_LMT                   = FOV_STD_RADI_INT + 3;
+const int throw_range_lmt                   = fov_std_radi_int + 3;
 
-const int DYNAMITE_FUSE_TURNS               = 5;
-const int EXPLOSION_STD_RADI                = 2;
+const int dynamite_fuse_turns               = 5;
+const int expl_std_radi                = 2;
 
-const int ENC_IMMOBILE_LVL                  = 125;
+const int enc_immobile_lvl                  = 125;
 
-const int NR_MG_PROJECTILES                 = 5;
-const int NR_CELL_JUMPS_MG_PROJECTILES      = 2;
+const int nr_mg_projectiles                 = 5;
+const int nr_cell_jumps_mg_projectiles      = 2;
 
 //NOTE: Number of rolls is reduced by one for each step away from the explosion center
-const int EXPL_DMG_ROLLS                    = 5;
-const int EXPL_DMG_SIDES                    = 6;
-const int EXPL_DMG_PLUS                     = 10;
-const int EXPL_MAX_DMG                      = (EXPL_DMG_ROLLS* EXPL_DMG_SIDES) + EXPL_DMG_PLUS;
+const int expl_dmg_rolls                    = 5;
+const int expl_dmg_sides                    = 6;
+const int expl_dmg_plus                     = 10;
+const int expl_max_dmg                      = (expl_dmg_rolls* expl_dmg_sides) + expl_dmg_plus;
 
-const int POISON_DMG_N_TURN                 = 3;
+const int poison_dmg_n_turn                 = 3;
 
-const int SHOCK_FROM_OBSESSION              = 30;
+const int shock_from_obsession              = 30;
 
-const int INS_FROM_DISTURBING_ITEMS         = 5;
+const int ins_from_disturbing_items         = 5;
 
 //How many "units" of weight the player can carry, without trait modifiers etc
-const int PLAYER_CARRY_WEIGHT_BASE          = 500;
+const int player_carry_weight_base          = 500;
 
 //Value used for limiting spawning over time and "breeder" monsters. The actual number of actors
 //may sometimes go a bit above this number, e.g. due to a group of monsters spawning when the
 //number of actors is near the limit. Summoning spells does not check this number at all (because
 //their effects should not be arbitrarily limited by this) - so that may also push the number of
 //actors above the limit. This number is treated as a soft limit.
-const size_t MAX_NR_ACTORS_ON_MAP           = 125;
+const size_t max_nr_actors_on_map           = 125;
 
 const std::string info_scr_tip              = "[space/esc] to exit";
 const std::string info_scr_tip_scrollable   = "[2/8, down/up, j/k] " + info_scr_tip;
@@ -401,4 +405,4 @@ struct Item_att_msgs
     std::string player, other;
 };
 
-#endif //CMN_HPP
+#endif //GLOBAL_HPP

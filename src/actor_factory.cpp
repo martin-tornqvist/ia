@@ -292,11 +292,11 @@ void summon(const P& origin,
         monsters_ret->clear();
     }
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
     map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
     std::vector<P> free_cells;
-    to_vec((bool*)blocked, false, MAP_W, MAP_H, free_cells);
+    to_vec((bool*)blocked, false, map_w, map_h, free_cells);
 
     std::sort(begin(free_cells), end(free_cells), Is_closer_to_pos(origin));
 

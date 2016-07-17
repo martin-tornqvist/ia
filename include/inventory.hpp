@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-#include "cmn.hpp"
+#include "global.hpp"
 
 class Item;
 class Actor;

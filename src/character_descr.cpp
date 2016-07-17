@@ -161,7 +161,7 @@ void mk_lines()
 
     lines_.push_back({"Traits gained", clr_heading});
 
-    const int MAX_W_DESCR = (MAP_W * 2) / 3;
+    const int MAX_W_DESCR = (map_w * 2) / 3;
 
     for (int i = 0; i < int(Trait::END); ++i)
     {
@@ -196,7 +196,7 @@ void run()
 
     const int LINE_JUMP           = 3;
     const int NR_LINES_TOT        = lines_.size();
-    const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
+    const int MAX_NR_LINES_ON_SCR = screen_h - 2;
 
     int top_nr = 0;
     int btm_nr = std::min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);

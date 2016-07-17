@@ -1113,8 +1113,8 @@ int spi_occultist_can_cast_at_lvl(const int LVL)
 {
     ASSERT(LVL > 0);
     const int SPI_FROM_START_TRAIT  = 2;
-    const int SPI_FROM_LVLS         = (LVL - 1) * SPI_PER_LVL;
-    return PLAYER_START_SPI + SPI_FROM_LVLS + SPI_FROM_START_TRAIT - 1;
+    const int SPI_FROM_LVLS         = (LVL - 1) * spi_per_lvl;
+    return player_start_spi + SPI_FROM_LVLS + SPI_FROM_START_TRAIT - 1;
 }
 
 bool gets_undead_bane_bon(const Actor_data_t& actor_data)

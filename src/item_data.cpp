@@ -22,7 +22,7 @@ Item_data_t::Item_data_t() :
     value                               (Item_value::normal),
     weight                              (Item_weight::none),
     allow_spawn                         (true),
-    spawn_std_range                     (Range(1, DLVL_LAST)),
+    spawn_std_range                     (Range(1, dlvl_last)),
     max_stack_at_spawn                  (1),
     chance_to_incl_in_floor_spawn_list  (100),
     is_stackable                        (true),
@@ -194,7 +194,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.ranged.is_ranged_wpn = true;
         d.ranged.projectile_glyph = '/';
         d.ranged.projectile_clr = clr_white;
-        d.spawn_std_range.max = DLVL_LAST_MID_GAME;
+        d.spawn_std_range.max = dlvl_last_mid_game;
         d.melee.hit_small_sfx = Sfx_id::hit_small;
         d.melee.hit_medium_sfx = Sfx_id::hit_medium;
         d.melee.hit_hard_sfx = Sfx_id::hit_hard;
@@ -219,7 +219,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.type = Item_type::throwing_wpn;
         d.weight = Item_weight::extra_light;
         d.is_stackable = true;
-        d.spawn_std_range.max = DLVL_LAST_MID_GAME;
+        d.spawn_std_range.max = dlvl_last_mid_game;
         d.ranged.snd_vol = Snd_vol::low;
         d.ranged.is_throwable_wpn = true;
         break;
@@ -231,7 +231,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.glyph = '{';
         d.clr = clr_white;
         d.tile = Tile_id::ammo;
-        d.spawn_std_range.max = DLVL_LAST_MID_GAME;
+        d.spawn_std_range.max = dlvl_last_mid_game;
         break;
 
     case Item_type::ammo_mag:
@@ -239,7 +239,7 @@ void reset_data(Item_data_t& d, Item_type const item_type)
         d.type = Item_type::ammo_mag;
         d.weight = Item_weight::light;
         d.is_stackable = false;
-        d.spawn_std_range.max = DLVL_LAST_MID_GAME;
+        d.spawn_std_range.max = dlvl_last_mid_game;
         break;
 
     case Item_type::scroll:
@@ -509,7 +509,7 @@ void init_data_list()
     d.ranged.projectile_glyph = '*';
     d.ranged.projectile_clr = clr_red_lgt;
     d.ranged.reload_sfx = Sfx_id::machine_gun_reload;
-    d.spawn_std_range.min = DLVL_FIRST_MID_GAME;
+    d.spawn_std_range.min = dlvl_first_mid_game;
     add_feature_found_in(d, Feature_id::chest);
     add_feature_found_in(d, Feature_id::cabinet);
     add_feature_found_in(d, Feature_id::cocoon);
@@ -924,7 +924,7 @@ void init_data_list()
 
         "Melee attacks with clubs are noisy."
     };
-    d.spawn_std_range = Range(DLVL_FIRST_LATE_GAME, INT_MAX);
+    d.spawn_std_range = Range(dlvl_first_late_game, INT_MAX);
     d.weight = Item_weight::medium;
     d.tile = Tile_id::club;
     d.clr = clr_brown;
@@ -1279,14 +1279,14 @@ void init_data_list()
     d.id = Item_id::pit_viper_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::pit_viper);
-    d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, POISON_DMG_N_TURN * 4);
+    d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, poison_dmg_n_turn * 4);
     data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::spitting_cobra_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::spitting_cobra);
-    d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, POISON_DMG_N_TURN * 4);
+    d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, poison_dmg_n_turn * 4);
     data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ranged_wpn_intr);
@@ -1303,7 +1303,7 @@ void init_data_list()
     d.id = Item_id::black_mamba_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, Actor_id::black_mamba);
-    d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, POISON_DMG_N_TURN * 4);
+    d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, poison_dmg_n_turn * 4);
     data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::ranged_wpn_intr);
@@ -1527,21 +1527,21 @@ void init_data_list()
     d.id = Item_id::mold_spores;
     d.melee.att_msgs = {"", "releases spores at me"};
     set_dmg_from_mon_id(d, Actor_id::mold);
-    d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, POISON_DMG_N_TURN * 2);
+    d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, poison_dmg_n_turn * 2);
     data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::mi_go_sting;
     d.melee.att_msgs = {"", "stings me"};
     set_dmg_from_mon_id(d, Actor_id::mi_go);
-    d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, POISON_DMG_N_TURN * 2);
+    d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, poison_dmg_n_turn * 2);
     data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
     d.id = Item_id::mi_go_commander_sting;
     d.melee.att_msgs = {"", "stings me"};
     set_dmg_from_mon_id(d, Actor_id::mi_go_commander);
-    d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, POISON_DMG_N_TURN * 2);
+    d.melee.prop_applied = new Prop_poisoned(Prop_turns::specific, poison_dmg_n_turn * 2);
     data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::melee_wpn_intr);
@@ -1676,7 +1676,7 @@ void init_data_list()
     d.clr = clr_brown;
     d.tile = Tile_id::gas_mask;
     d.glyph = '[';
-    d.spawn_std_range = Range(1, DLVL_LAST_EARLY_GAME);
+    d.spawn_std_range = Range(1, dlvl_last_early_game);
     d.chance_to_incl_in_floor_spawn_list = 50;
     d.weight = Item_weight::light;
     d.land_on_hard_snd_msg = "";
@@ -1761,7 +1761,7 @@ void init_data_list()
 
     reset_data(d, Item_type::scroll);
     d.id = Item_id::scroll_opening;
-    d.spawn_std_range.max = DLVL_FIRST_MID_GAME;
+    d.spawn_std_range.max = dlvl_first_mid_game;
     d.spell_cast_from_scroll = Spell_id::opening;
     data[(size_t)d.id] = d;
 
@@ -1932,7 +1932,7 @@ void init_data_list()
     {
         "A portable light source. It is somewhat unreliable, as it tends to malfunction a lot."
     };
-    d.spawn_std_range = Range(1, DLVL_LAST_MID_GAME);
+    d.spawn_std_range = Range(1, dlvl_last_mid_game);
     d.spawn_std_range = Range(1, 10);
     d.chance_to_incl_in_floor_spawn_list = 50;
     d.is_identified = true;
@@ -1955,7 +1955,7 @@ void init_data_list()
 
     reset_data(d, Item_type::rod);
     d.id = Item_id::rod_opening;
-    d.spawn_std_range.max = DLVL_FIRST_MID_GAME;
+    d.spawn_std_range.max = dlvl_first_mid_game;
     data[(size_t)d.id] = d;
 
     reset_data(d, Item_type::rod);
@@ -1972,7 +1972,7 @@ void init_data_list()
         "A portable bag of medical supplies. Can be used to treat Wounds or Infections."
     };
     d.weight = Item_weight::medium;
-    d.spawn_std_range = Range(1, DLVL_LAST_MID_GAME);
+    d.spawn_std_range = Range(1, dlvl_last_mid_game);
     d.is_stackable = false;
     d.glyph = '%';
     d.clr = clr_brown_drk;

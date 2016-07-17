@@ -105,7 +105,7 @@ void Mon::act()
         //Monster is conflicted (e.g. by player ring/amulet)
         tgt_bucket = game_time::actors;
 
-        bool hard_blocked_los[MAP_W][MAP_H];
+        bool hard_blocked_los[map_w][map_h];
 
         const R fov_rect = fov::get_fov_rect(pos);
 
@@ -180,7 +180,7 @@ void Mon::act()
     //or prevent certain monsters from walking on a certain type of cells, etc.
     //This is checked in all AI movement functions. Cells set to true are
     //totally forbidden for the monster to move into.
-    bool ai_special_blockers[MAP_W][MAP_H];
+    bool ai_special_blockers[map_w][map_h];
     ai::info::set_special_blocked_cells(*this, ai_special_blockers);
 
     //------------------------------ SPECIAL MONSTER ACTIONS
@@ -353,7 +353,7 @@ void Mon::act()
     game_time::tick();
 }
 
-bool Mon::can_see_actor(const Actor& other, const bool hard_blocked_los[MAP_W][MAP_H]) const
+bool Mon::can_see_actor(const Actor& other, const bool hard_blocked_los[map_w][map_h]) const
 {
     if (this == &other || !other.is_alive())
     {
@@ -888,9 +888,9 @@ void Cultist::mk_start_items()
         //projectiles fired in each burst
         Item*       item        = item_factory::mk(Item_id::machine_gun);
         Wpn* const  wpn         = static_cast<Wpn*>(item);
-        const int   CAP_SCALED  = wpn->data().ranged.max_ammo / NR_MG_PROJECTILES;
+        const int   CAP_SCALED  = wpn->data().ranged.max_ammo / nr_mg_projectiles;
         const int   MIN_SCALED  = CAP_SCALED / 4;
-        wpn->nr_ammo_loaded_    = rnd::range(MIN_SCALED, CAP_SCALED) * NR_MG_PROJECTILES;
+        wpn->nr_ammo_loaded_    = rnd::range(MIN_SCALED, CAP_SCALED) * nr_mg_projectiles;
         inv_->put_in_slot(Slot_id::wpn, item);
     }
 
@@ -1049,7 +1049,7 @@ Did_action Vortex::on_act()
             TRACE << "Player pos: "
                   << player_pos.x << ", " << player_pos.y << std::endl;
 
-            bool blocked_los[MAP_W][MAP_H];
+            bool blocked_los[map_w][map_h];
 
             const R fov_rect = fov::get_fov_rect(pos);
 
@@ -1323,7 +1323,7 @@ Did_action Mummy::on_act()
 //
 //    if (player_wpn && player_wpn->id() == Item_id::pharaoh_staff)
 //    {
-//        bool blocked_los[MAP_W][MAP_H];
+//        bool blocked_los[map_w][map_h];
 //        map_parse::run(cell_check::Blocks_los(), blocked_los);
 //
 //        if (can_see_actor(*map::player, blocked_los))
@@ -1365,7 +1365,7 @@ Did_action Khephren::on_act()
 {
     if (is_alive() && aware_counter_ > 0 && !has_summoned_locusts)
     {
-        bool blocked[MAP_W][MAP_H];
+        bool blocked[map_w][map_h];
 
         const R fov_rect = fov::get_fov_rect(pos);
 
@@ -1378,9 +1378,9 @@ Did_action Khephren::on_act()
         {
             map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
-            const int SPAWN_AFTER_X = MAP_W / 2;
+            const int SPAWN_AFTER_X = map_w / 2;
 
-            for (int y = 0; y  < MAP_H; ++y)
+            for (int y = 0; y  < map_h; ++y)
             {
                 for (int x = 0; x <= SPAWN_AFTER_X; ++x)
                 {
@@ -1390,7 +1390,7 @@ Did_action Khephren::on_act()
 
             std::vector<P> free_cells;
 
-            to_vec((bool*)blocked, false, MAP_W, MAP_H, free_cells);
+            to_vec((bool*)blocked, false, map_w, map_h, free_cells);
 
             sort(begin(free_cells), end(free_cells), Is_closer_to_pos(pos));
 
@@ -1502,7 +1502,7 @@ Did_action Keziah_mason::on_act()
 {
     if (is_alive() && aware_counter_ > 0 && !has_summoned_jenkin)
     {
-        bool blocked_los[MAP_W][MAP_H];
+        bool blocked_los[map_w][map_h];
 
         const R fov_rect = fov::get_fov_rect(pos);
 
@@ -1573,7 +1573,7 @@ void Leng_elder::on_std_turn_hook()
 
         if (has_given_item_to_player_)
         {
-            bool blocked_los[MAP_W][MAP_H];
+            bool blocked_los[map_w][map_h];
 
             const R fov_rect = fov::get_fov_rect(pos);
 
@@ -1763,7 +1763,7 @@ void Worm_mass::on_death()
         allow_split_                                &&
         hp_ > -10                                   &&
         !prop_handler_->has_prop(Prop_id::burning)  &&
-        game_time::actors.size() < MAX_NR_ACTORS_ON_MAP)
+        game_time::actors.size() < max_nr_actors_on_map)
     {
         std::vector<Actor_id> worm_ids(2, id());
 
@@ -1807,10 +1807,10 @@ Did_action Giant_locust::on_act()
         is_alive()                                      &&
         aware_counter_ > 0                              &&
         !prop_handler_->has_prop(Prop_id::burning)      &&
-        game_time::actors.size() < MAX_NR_ACTORS_ON_MAP &&
+        game_time::actors.size() < max_nr_actors_on_map &&
         rnd::one_in(spawn_new_one_in_n))
     {
-        bool blocked[MAP_W][MAP_H];
+        bool blocked[map_w][map_h];
 
         map_parse::run(cell_check::Blocks_actor(*this, true),
                        blocked,
@@ -2080,7 +2080,7 @@ Did_action Major_clapham_lee::on_act()
 
     if (is_alive() && aware_counter_ > 0 && !has_summoned_tomb_legions)
     {
-        bool blocked_los[MAP_W][MAP_H];
+        bool blocked_los[map_w][map_h];
 
         const R fov_rect = fov::get_fov_rect(pos);
 
@@ -2167,7 +2167,7 @@ Did_action Floating_skull::on_act()
 {
     if (is_alive() && rnd::one_in(8))
     {
-        bool blocked_los[MAP_W][MAP_H];
+        bool blocked_los[map_w][map_h];
 
         const R fov_rect = fov::get_fov_rect(pos);
 
@@ -2211,10 +2211,10 @@ Did_action Mold::on_act()
 {
     if (
         is_alive()                                      &&
-        game_time::actors.size() < MAX_NR_ACTORS_ON_MAP &&
+        game_time::actors.size() < max_nr_actors_on_map &&
         rnd::one_in(spawn_new_one_in_n))
     {
-        bool blocked[MAP_W][MAP_H];
+        bool blocked[map_w][map_h];
 
         map_parse::run(cell_check::Blocks_actor(*this, true),
                        blocked,
@@ -2278,7 +2278,7 @@ void The_high_priest::on_death()
                  false,
                  More_prompt_on_msg::yes);
 
-    const P stair_pos(MAP_W - 2, 11);
+    const P stair_pos(map_w - 2, 11);
 
     map::put(new Stairs(stair_pos));
     map::put(new Rubble_low(stair_pos - P(1, 0)));

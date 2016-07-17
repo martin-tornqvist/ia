@@ -353,7 +353,7 @@ void handle_map_mode_key_press(const Key_data& d)
                     if (wpn->nr_ammo_loaded_ >= 1 || item_data.ranged.has_infinite_ammo)
                     {
                         auto on_marker_at_pos =
-                            [&](const P & p, Cell_overlay overlay[MAP_W][MAP_H])
+                            [&](const P & p, Cell_overlay overlay[map_w][map_h])
                         {
                             (void)overlay;
 
@@ -685,7 +685,7 @@ void handle_map_mode_key_press(const Key_data& d)
             if (explosive)
             {
                 auto on_marker_at_pos =
-                    [&](const P & p, Cell_overlay overlay[MAP_W][MAP_H])
+                    [&](const P & p, Cell_overlay overlay[map_w][map_h])
                 {
                     const Item_id id = explosive->id();
 
@@ -694,10 +694,10 @@ void handle_map_mode_key_press(const Key_data& d)
                         id == Item_id::molotov  ||
                         id == Item_id::smoke_grenade)
                     {
-                        std::fill_n(*overlay, NR_MAP_CELLS, Cell_overlay());
+                        std::fill_n(*overlay, nr_map_cells, Cell_overlay());
 
                         const int D     = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
-                        const int RADI  = EXPLOSION_STD_RADI + D;
+                        const int RADI  = expl_std_radi + D;
 
                         const R expl_area = explosion::explosion_area(p, RADI);
 
@@ -768,7 +768,7 @@ void handle_map_mode_key_press(const Key_data& d)
                         item_to_throw->clear_actor_carrying();
 
                         auto on_marker_at_pos =
-                            [&](const P & p, Cell_overlay overlay[MAP_W][MAP_H])
+                            [&](const P & p, Cell_overlay overlay[map_w][map_h])
                         {
                             (void)overlay;
 
@@ -866,7 +866,7 @@ void handle_map_mode_key_press(const Key_data& d)
             if (map::player->prop_handler().allow_see())
             {
                 auto on_marker_at_pos =
-                    [&](const P & p, Cell_overlay overlay[MAP_W][MAP_H])
+                    [&](const P & p, Cell_overlay overlay[map_w][map_h])
                 {
                     (void)overlay;
 
@@ -1093,9 +1093,9 @@ void handle_map_mode_key_press(const Key_data& d)
     {
         if (init::is_cheat_vision_enabled)
         {
-            for (int x = 0; x < MAP_W; ++x)
+            for (int x = 0; x < map_w; ++x)
             {
-                for (int y = 0; y < MAP_H; ++y)
+                for (int y = 0; y < map_h; ++y)
                 {
                     map::cells[x][y].is_seen_by_player  = false;
                     map::cells[x][y].is_explored        = false;

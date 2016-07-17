@@ -396,7 +396,7 @@ void Player::on_hit(int& dmg,
         incr_shock(1, Shock_src::misc);
     }
 
-    const bool IS_ENOUGH_DMG_FOR_WOUND  = dmg >= MIN_DMG_TO_WOUND;
+    const bool IS_ENOUGH_DMG_FOR_WOUND  = dmg >= min_dmg_to_wound;
     const bool IS_PHYSICAL              = dmg_type == Dmg_type::physical;
 
     //Ghoul trait Indomitable Fury makes player immune to Wounds while Frenzied
@@ -477,7 +477,7 @@ int Player::carry_weight_lmt() const
                                  (IS_STRONG_BACKED * 30) -
                                  (IS_WEAKENED      * 15);
 
-    return (PLAYER_CARRY_WEIGHT_BASE * (CARRY_WEIGHT_MOD + 100)) / 100;
+    return (player_carry_weight_base * (CARRY_WEIGHT_MOD + 100)) / 100;
 }
 
 int Player::shock_resistance(const Shock_src shock_src) const
@@ -598,7 +598,7 @@ bool Player::is_standing_in_open_place() const
 {
     const R r(pos - 1, pos + 1);
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
 
     //NOTE: Checking if adjacent cells blocks projectiles is probably the best
     //way to determine if this is an open place. If we check for things that
@@ -626,7 +626,7 @@ bool Player::is_standing_in_cramped_place() const
 {
     const R r(pos - 1, pos + 1);
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
 
     //NOTE: Checking if adjacent cells blocks projectiles is probably the best
     //way to determine if this is an open place. If we check for things that
@@ -872,7 +872,7 @@ void Player::update_tmp_shock()
         insanity::has_sympt(Ins_sympt_id::sadism) ||
         insanity::has_sympt(Ins_sympt_id::masoch))
     {
-        shock_tmp_ += double(SHOCK_FROM_OBSESSION);
+        shock_tmp_ += double(shock_from_obsession);
     }
 
     if (prop_handler_->allow_see())
@@ -917,7 +917,7 @@ int Player::ins() const
             //NOTE: Having an item equiped also counts as carrying it
             if (d.is_ins_raied_while_carried || d.is_ins_raied_while_equiped)
             {
-                out += INS_FROM_DISTURBING_ITEMS;
+                out += ins_from_disturbing_items;
             }
         }
     }
@@ -926,7 +926,7 @@ int Player::ins() const
     {
         if (item->data().is_ins_raied_while_carried)
         {
-            out += INS_FROM_DISTURBING_ITEMS;
+            out += ins_from_disturbing_items;
         }
     }
 
@@ -1240,8 +1240,8 @@ void Player::on_std_turn()
 
         int x0 = std::max(0, pos.x - R);
         int y0 = std::max(0, pos.y - R);
-        int x1 = std::min(MAP_W - 1, pos.x + R);
-        int y1 = std::min(MAP_H - 1, pos.y + R);
+        int x1 = std::min(map_w - 1, pos.x + R);
+        int y1 = std::min(map_h - 1, pos.y + R);
 
         for (int y = y0; y <= y1; ++y)
         {
@@ -1485,7 +1485,7 @@ void Player::move(Dir dir)
 
             const int MIN_NR_WOUNDS_FOR_STAGGER = 3;
 
-            if (ENC >= ENC_IMMOBILE_LVL)
+            if (ENC >= enc_immobile_lvl)
             {
                 msg_log::add("I am too encumbered to move!");
                 render::draw_map_state();
@@ -1682,7 +1682,7 @@ void Player::hand_att(Actor& defender)
     attack::melee(this, pos, defender, wpn);
 }
 
-void Player::add_light_hook(bool light_map[MAP_W][MAP_H]) const
+void Player::add_light_hook(bool light_map[map_w][map_h]) const
 {
     Lgt_size lgt_size = Lgt_size::none;
 
@@ -1711,7 +1711,7 @@ void Player::add_light_hook(bool light_map[MAP_W][MAP_H]) const
     {
     case Lgt_size::fov:
     {
-        bool hard_blocked[MAP_W][MAP_H];
+        bool hard_blocked[map_w][map_h];
 
         const R fov_lmt = fov::get_fov_rect(pos);
 
@@ -1720,7 +1720,7 @@ void Player::add_light_hook(bool light_map[MAP_W][MAP_H]) const
                        Map_parse_mode::overwrite,
                        fov_lmt);
 
-        Los_result fov[MAP_W][MAP_H];
+        Los_result fov[map_w][map_h];
 
         fov::run(pos, hard_blocked, fov);
 
@@ -1754,9 +1754,9 @@ void Player::add_light_hook(bool light_map[MAP_W][MAP_H]) const
 
 void Player::update_fov()
 {
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             Cell& cell = map::cells[x][y];
 
@@ -1768,7 +1768,7 @@ void Player::update_fov()
 
     if (prop_handler_->allow_see())
     {
-        bool hard_blocked[MAP_W][MAP_H];
+        bool hard_blocked[map_w][map_h];
 
         const R fov_lmt = fov::get_fov_rect(pos);
 
@@ -1777,7 +1777,7 @@ void Player::update_fov()
                        Map_parse_mode::overwrite,
                        fov_lmt);
 
-        Los_result fov[MAP_W][MAP_H];
+        Los_result fov[map_w][map_h];
 
         fov::run(pos, hard_blocked, fov);
 
@@ -1800,9 +1800,9 @@ void Player::update_fov()
 
     if (init::is_cheat_vision_enabled)
     {
-        for (int x = 0; x < MAP_W; ++x)
+        for (int x = 0; x < map_w; ++x)
         {
-            for (int y = 0; y < MAP_H; ++y)
+            for (int y = 0; y < map_h; ++y)
             {
                 map::cells[x][y].is_seen_by_player = true;
             }
@@ -1810,9 +1810,9 @@ void Player::update_fov()
     }
 
     //Explore
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             Cell& cell = map::cells[x][y];
             const bool IS_BLOCKING = cell_check::Blocks_move_cmn(false).check(cell);
@@ -1828,15 +1828,15 @@ void Player::update_fov()
 
 void Player::fov_hack()
 {
-    bool blocked_los[MAP_W][MAP_H];
+    bool blocked_los[map_w][map_h];
     map_parse::run(cell_check::Blocks_los(), blocked_los);
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
     map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             if (blocked_los[x][y] && blocked[x][y])
             {

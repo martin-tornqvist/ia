@@ -170,24 +170,24 @@ void Lit_flare::on_new_turn()
     }
 }
 
-void Lit_flare::add_light(bool light[MAP_W][MAP_H]) const
+void Lit_flare::add_light(bool light[map_w][map_h]) const
 {
-    const int RADI = FOV_STD_RADI_INT; //light_radius();
+    const int RADI = fov_std_radi_int; //light_radius();
 
     P p0(std::max(0, pos_.x - RADI),
          std::max(0, pos_.y - RADI));
 
-    P p1(std::min(MAP_W - 1, pos_.x + RADI),
-         std::min(MAP_H - 1, pos_.y + RADI));
+    P p1(std::min(map_w - 1, pos_.x + RADI),
+         std::min(map_h - 1, pos_.y + RADI));
 
-    bool hard_blocked[MAP_W][MAP_H];
+    bool hard_blocked[map_w][map_h];
 
     map_parse::run(cell_check::Blocks_los(),
                    hard_blocked,
                    Map_parse_mode::overwrite,
                    R(p0, p1));
 
-    Los_result fov[MAP_W][MAP_H];
+    Los_result fov[map_w][map_h];
 
     fov::run(pos_, hard_blocked, fov);
 

@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "ability_values.hpp"
-#include "cmn.hpp"
+#include "global.hpp"
 #include "properties.hpp"
 #include "audio.hpp"
 #include "room.hpp"

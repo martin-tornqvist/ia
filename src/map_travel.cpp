@@ -96,7 +96,7 @@ void mk_lvl(const Map_type& map_type)
 void init()
 {
     //Forest + dungeon + boss + trapezohedron
-    const size_t NR_LVL_TOT = DLVL_LAST + 3;
+    const size_t NR_LVL_TOT = dlvl_last + 3;
 
     map_list =
         std::vector<Map_data>(NR_LVL_TOT, {Map_type::std, Is_main_dungeon::yes});
@@ -107,7 +107,7 @@ void init()
     //Occasionally set rats-in-the-walls level as intro to first late game level
     if (rnd::one_in(3))
     {
-        map_list[DLVL_FIRST_LATE_GAME - 1] =
+        map_list[dlvl_first_late_game - 1] =
         {
             Map_type::rats_in_the_walls,
             Is_main_dungeon::yes
@@ -115,10 +115,10 @@ void init()
     }
 
     //"Pharaoh chamber" is the first late game level
-    map_list[DLVL_FIRST_LATE_GAME] = {Map_type::egypt,  Is_main_dungeon::yes};
+    map_list[dlvl_first_late_game] = {Map_type::egypt,  Is_main_dungeon::yes};
 
-    map_list[DLVL_LAST + 1] = {Map_type::boss,          Is_main_dungeon::yes};
-    map_list[DLVL_LAST + 2] = {Map_type::trapez,        Is_main_dungeon::yes};
+    map_list[dlvl_last + 1] = {Map_type::boss,          Is_main_dungeon::yes};
+    map_list[dlvl_last + 2] = {Map_type::trapez,        Is_main_dungeon::yes};
 }
 
 void save()
@@ -172,7 +172,7 @@ void go_to_nxt()
     map::player->update_clr();
     render::draw_map_state();
 
-    if (map_data.is_main_dungeon == Is_main_dungeon::yes && map::dlvl == DLVL_LAST - 1)
+    if (map_data.is_main_dungeon == Is_main_dungeon::yes && map::dlvl == dlvl_last - 1)
     {
         msg_log::add("An ominous voice thunders in my ears.",
                      clr_white,

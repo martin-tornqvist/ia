@@ -73,7 +73,7 @@ public:
     Clr clr() const override;
 
     //TODO: Lit dynamite should add light on their own cell (just one cell)
-    //void add_light(bool light[MAP_W][MAP_H]) const;
+    //void add_light(bool light[map_w][map_h]) const;
 
     void on_new_turn() override;
 
@@ -105,7 +105,7 @@ public:
 
     void on_new_turn() override;
 
-    void add_light(bool light[MAP_W][MAP_H]) const;
+    void add_light(bool light[map_w][map_h]) const override;
 
 private:
     int nr_turns_left_;

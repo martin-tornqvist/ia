@@ -50,11 +50,11 @@ namespace
 {
 
 //All cells marked as true in this array will be considered for door placement
-bool door_proposals[MAP_W][MAP_H];
+bool door_proposals[map_w][map_h];
 
 bool is_all_rooms_connected()
 {
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
     map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
     return map_parse::is_map_connected(blocked);
@@ -207,7 +207,7 @@ void connect_rooms()
         }
 
         //Alright, let's try to connect these rooms
-        mapgen_utils::mk_path_find_cor(*room0,
+        mapgen_utils::mk_pathfind_cor(*room0,
                                        *room1,
                                        door_proposals);
 
@@ -259,7 +259,7 @@ void mk_crumble_room(const R& room_area_incl_walls, const P& event_pos)
 //This function just returns false in that case.
 bool try_mk_aux_room(const P& p,
                      const P& d,
-                     bool blocked[MAP_W][MAP_H],
+                     bool blocked[map_w][map_h],
                      const P& door_p)
 {
     const R aux_rect(p, p + d - 1);
@@ -322,7 +322,7 @@ void mk_aux_rooms(Region regions[3][3])
         return P(rnd::range(3, 7), rnd::range(3, 7));
     };
 
-    bool floor_cells[MAP_W][MAP_H];
+    bool floor_cells[map_w][map_h];
 
     //TODO: It would be better with a parse predicate that checks for free cells immediately
 
@@ -330,9 +330,9 @@ void mk_aux_rooms(Region regions[3][3])
     map_parse::run(cell_check::Blocks_move_cmn(false), floor_cells);
 
     //Flip the values so that we get free cells
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             bool& v = floor_cells[x][y];
 
@@ -995,18 +995,18 @@ void mk_sub_rooms()
 void fill_dead_ends()
 {
     //Find an origin with no adjacent walls, to ensure not starting in a dead end
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
     map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
-    bool expanded_blockers[MAP_W][MAP_H];
+    bool expanded_blockers[map_w][map_h];
     map_parse::expand(blocked, expanded_blockers);
 
     P origin;
     bool is_done = false;
 
-    for (int x = 2; x < MAP_W - 2; ++x)
+    for (int x = 2; x < map_w - 2; ++x)
     {
-        for (int y = 2; y < MAP_H - 2; ++y)
+        for (int y = 2; y < map_h - 2; ++y)
         {
             if (!expanded_blockers[x][y])
             {
@@ -1023,38 +1023,38 @@ void fill_dead_ends()
     }
 
     //Floodfill from origin, then sort the positions for flood value
-    int flood_fill[MAP_W][MAP_H];
+    int floodfill[map_w][map_h];
 
-    flood_fill::run(origin,
+    floodfill::run(origin,
                     blocked,
-                    flood_fill,
+                    floodfill,
                     INT_MAX,
                     P(-1, -1),
                     true);
 
-    std::vector<Pos_val> flood_fill_vector;
+    std::vector<Pos_val> floodfill_vector;
 
-    for (int x = 1; x < MAP_W - 1; ++x)
+    for (int x = 1; x < map_w - 1; ++x)
     {
-        for (int y = 1; y < MAP_H - 1; ++y)
+        for (int y = 1; y < map_h - 1; ++y)
         {
             if (!blocked[x][y])
             {
-                flood_fill_vector.push_back(Pos_val(P(x, y), flood_fill[x][y]));
+                floodfill_vector.push_back(Pos_val(P(x, y), floodfill[x][y]));
             }
         }
     }
 
-    std::sort(flood_fill_vector.begin(), flood_fill_vector.end(),
+    std::sort(floodfill_vector.begin(), floodfill_vector.end(),
               [](const Pos_val & a, const Pos_val & b)
     {
         return a.val < b.val;
     });
 
     //Fill all positions with only one cardinal floor neighbour
-    for (int i = (int)flood_fill_vector.size() - 1; i >= 0; --i)
+    for (int i = (int)floodfill_vector.size() - 1; i >= 0; --i)
     {
-        const P& pos = flood_fill_vector[i].pos;
+        const P& pos = floodfill_vector[i].pos;
         const int x = pos.x;
         const int y = pos.y;
         const int NR_ADJ_CARDINAL_WALLS = blocked[x + 1][y] + blocked[x - 1][y] +
@@ -1072,9 +1072,9 @@ void fill_dead_ends()
 #ifdef DECORATE
 void decorate()
 {
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             Cell& cell = map::cells[x][y];
 
@@ -1094,7 +1094,7 @@ void decorate()
                 //Convert some walls to cave
                 bool should_convert_to_cave_wall = false;
 
-                if (map::dlvl >= DLVL_FIRST_LATE_GAME)
+                if (map::dlvl >= dlvl_first_late_game)
                 {
                     //If this is late game - convert all walls to cave
                     should_convert_to_cave_wall = true;
@@ -1154,9 +1154,9 @@ void decorate()
         }
     }
 
-    for (int x = 1; x < MAP_W - 1; ++x)
+    for (int x = 1; x < map_w - 1; ++x)
     {
-        for (int y = 1; y < MAP_H - 1; ++y)
+        for (int y = 1; y < map_h - 1; ++y)
         {
             if (map::cells[x][y].rigid->id() == Feature_id::floor)
             {
@@ -1172,7 +1172,7 @@ void decorate()
 }
 #endif //DECORATE
 
-void allowed_stair_cells(bool out[MAP_W][MAP_H])
+void allowed_stair_cells(bool out[map_w][map_h])
 {
     TRACE_FUNC_BEGIN;
 
@@ -1187,9 +1187,9 @@ void allowed_stair_cells(bool out[MAP_W][MAP_H])
     map_parse::run(cell_check::All_adj_is_any_of_features(feat_ids_ok), out);
 
     //Block cells with item
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             if (map::cells[x][y].item)
             {
@@ -1212,11 +1212,11 @@ P place_stairs()
 {
     TRACE_FUNC_BEGIN;
 
-    bool allowed_cells[MAP_W][MAP_H];
+    bool allowed_cells[map_w][map_h];
     allowed_stair_cells(allowed_cells);
 
     std::vector<P> allowed_cells_list;
-    to_vec((bool*)allowed_cells, true, MAP_W, MAP_H, allowed_cells_list);
+    to_vec((bool*)allowed_cells, true, map_w, map_h, allowed_cells_list);
 
     const int NR_OK_CELLS = allowed_cells_list.size();
 
@@ -1259,11 +1259,11 @@ void move_player_to_nearest_allowed_pos()
 {
     TRACE_FUNC_BEGIN;
 
-    bool allowed_cells[MAP_W][MAP_H];
+    bool allowed_cells[map_w][map_h];
     allowed_stair_cells(allowed_cells);
 
     std::vector<P> allowed_cells_list;
-    to_vec((bool*)allowed_cells, true, MAP_W, MAP_H, allowed_cells_list);
+    to_vec((bool*)allowed_cells, true, map_w, map_h, allowed_cells_list);
 
     if (allowed_cells_list.empty())
     {
@@ -1290,8 +1290,8 @@ void move_player_to_nearest_allowed_pos()
 //
 //  TRACE << "Picking a random door" << std:: endl;
 //  vector<Door*> door_bucket;
-//  for(int y = 1; y < MAP_H - 1; ++y) {
-//    for(int x = 1; x < MAP_W - 1; ++x) {
+//  for(int y = 1; y < map_h - 1; ++y) {
+//    for(int x = 1; x < map_w - 1; ++x) {
 //      Feature* const feature = map::features_static[x][y];
 //      if(feature->id() == Feature_id::door) {
 //        Door* const door = static_cast<Door*>(feature);
@@ -1302,23 +1302,23 @@ void move_player_to_nearest_allowed_pos()
 //  Door* const door_to_link = door_bucket[rnd::range(0, door_bucket.size() - 1)];
 //
 //  TRACE << "Making floodfill and keeping only positions with lower value than the door" << std:: endl;
-//  bool blocked[MAP_W][MAP_H];
+//  bool blocked[map_w][map_h];
 //  eng.map_tests->mk_move_blocker_array_for_body_type_features_only(body_type_normal, blocked);
-//  for(int y = 1; y < MAP_H - 1; ++y) {
-//    for(int x = 1; x < MAP_W - 1; ++x) {
+//  for(int y = 1; y < map_h - 1; ++y) {
+//    for(int x = 1; x < map_w - 1; ++x) {
 //      Feature* const feature = map::features_static[x][y];
 //      if(feature->id() == Feature_id::door) {
 //        blocked[x][y] = false;
 //      }
 //    }
 //  }
-//  int flood_fill[MAP_W][MAP_H];
-//  flood_fill::run(map::player->pos, blocked, flood_fill, INT_MAX, P(-1, -1));
-//  const int FLOOD_VALUE_AT_DOOR = flood_fill[door_to_link->pos_.x][door_to_link->pos_.y];
+//  int floodfill[map_w][map_h];
+//  floodfill::run(map::player->pos, blocked, floodfill, INT_MAX, P(-1, -1));
+//  const int FLOOD_VALUE_AT_DOOR = floodfill[door_to_link->pos_.x][door_to_link->pos_.y];
 //  vector<P> lever_pos_bucket;
-//  for(int y = 1; y < MAP_H - 1; ++y) {
-//    for(int x = 1; x < MAP_W - 1; ++x) {
-//      if(flood_fill[x][y] < FLOOD_VALUE_AT_DOOR) {
+//  for(int y = 1; y < map_h - 1; ++y) {
+//    for(int x = 1; x < map_w - 1; ++x) {
+//      if(floodfill[x][y] < FLOOD_VALUE_AT_DOOR) {
 //        if(map::features_static[x][y]->can_have_rigid()) {
 //          lever_pos_bucket.push_back(P(x, y));
 //        }
@@ -1351,14 +1351,14 @@ void reveal_doors_on_path_to_stairs(const P& stairs_pos)
 {
     TRACE_FUNC_BEGIN;
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
     map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
     blocked[stairs_pos.x][stairs_pos.y] = false;
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             if (map::cells[x][y].rigid->id() == Feature_id::door)
             {
@@ -1368,7 +1368,7 @@ void reveal_doors_on_path_to_stairs(const P& stairs_pos)
     }
 
     std::vector<P> path;
-    path_find::run(map::player->pos, stairs_pos, blocked, path);
+    pathfind::run(map::player->pos, stairs_pos, blocked, path);
 
     ASSERT(!path.empty());
 
@@ -1402,9 +1402,9 @@ bool mk_std_lvl()
 
     TRACE << "Resetting helper arrays" << std:: endl;
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             door_proposals[x][y] = false;
         }
@@ -1414,12 +1414,12 @@ bool mk_std_lvl()
     room_factory::init_room_bucket();
 
     TRACE << "Init regions" << std:: endl;
-    const int MAP_W_THIRD = MAP_W / 3;
-    const int MAP_H_THIRD = MAP_H / 3;
-    const int SPL_X0      = MAP_W_THIRD;
-    const int SPL_X1      = (MAP_W_THIRD * 2) + 1;
-    const int SPL_Y0      = MAP_H_THIRD;
-    const int SPL_Y1      = MAP_H_THIRD * 2;
+    const int map_w_third = map_w / 3;
+    const int map_h_third = map_h / 3;
+    const int SPL_X0      = map_w_third;
+    const int SPL_X1      = (map_w_third * 2) + 1;
+    const int SPL_Y0      = map_h_third;
+    const int SPL_Y1      = map_h_third * 2;
 
     Region regions[3][3];
 
@@ -1429,8 +1429,8 @@ bool mk_std_lvl()
         {
             const R r(x == 0 ? 1 : x == 1 ? SPL_X0 + 1 : SPL_X1 + 1,
                       y == 0 ? 1 : y == 1 ? SPL_Y0 + 1 : SPL_Y1 + 1,
-                      x == 0 ? SPL_X0 - 1 : x == 1 ? SPL_X1 - 1 : MAP_W - 2,
-                      y == 0 ? SPL_Y0 - 1 : y == 1 ? SPL_Y1 - 1 : MAP_H - 2);
+                      x == 0 ? SPL_X0 - 1 : x == 1 ? SPL_X1 - 1 : map_w - 2,
+                      y == 0 ? SPL_Y0 - 1 : y == 1 ? SPL_Y1 - 1 : map_h - 2);
 
             regions[x][y] = Region(r);
         }
@@ -1441,7 +1441,7 @@ bool mk_std_lvl()
 
     if (
         is_map_valid                        &&
-        map::dlvl >= DLVL_FIRST_MID_GAME    &&
+        map::dlvl >= dlvl_first_mid_game    &&
         rnd::one_in(RIVER_ONE_IN_N))
     {
         reserve_river(regions);
@@ -1503,7 +1503,7 @@ bool mk_std_lvl()
 #endif //MK_AUX_ROOMS
 
 #ifdef MK_SUB_ROOMS
-    if (is_map_valid && map::dlvl <= DLVL_LAST_MID_GAME)
+    if (is_map_valid && map::dlvl <= dlvl_last_mid_game)
     {
 #ifdef DEMO_MODE
         render::cover_panel(Panel::log);
@@ -1608,13 +1608,13 @@ bool mk_std_lvl()
     }
 #endif //FILL_DEAD_ENDS
 
-    if (is_map_valid && map::dlvl <= DLVL_LAST_MID_GAME)
+    if (is_map_valid && map::dlvl <= dlvl_last_mid_game)
     {
         TRACE << "Placing doors" << std:: endl;
 
-        for (int x = 0; x < MAP_W; ++x)
+        for (int x = 0; x < map_w; ++x)
         {
-            for (int y = 0; y < MAP_H; ++y)
+            for (int y = 0; y < map_h; ++y)
             {
                 if (door_proposals[x][y] && rnd::fraction(7, 10))
                 {
@@ -1697,7 +1697,7 @@ bool mk_std_lvl()
 
     map::room_list.clear();
 
-    std::fill_n(*map::room_map, NR_MAP_CELLS, nullptr);
+    std::fill_n(*map::room_map, nr_map_cells, nullptr);
 
     TRACE_FUNC_END;
     return is_map_valid;

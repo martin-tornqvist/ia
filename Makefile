@@ -59,6 +59,7 @@ CXXFLAGS = \
   -Wno-unused-value \
   -fno-rtti \
   -fno-exceptions \
+  -Wno-deprecated-register \
   #
 
 # Linker flags

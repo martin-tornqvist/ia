@@ -2,7 +2,7 @@
 #define FOV_HPP
 
 #include "rl_utils.hpp"
-#include "cmn.hpp"
+#include "global.hpp"
 
 struct Los_result
 {
@@ -23,11 +23,11 @@ bool is_in_fov_range(const P& p0, const P& p1);
 
 Los_result check_cell(const P& p0,
                       const P& p1,
-                      const bool hard_blocked[MAP_W][MAP_H]);
+                      const bool hard_blocked[map_w][map_h]);
 
 void run(const P& p0,
-         const bool hard_blocked[MAP_W][MAP_H],
-         Los_result out[MAP_W][MAP_H]);
+         const bool hard_blocked[map_w][map_h],
+         Los_result out[map_w][map_h]);
 
 } //fov
 

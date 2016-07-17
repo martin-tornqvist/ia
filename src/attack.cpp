@@ -905,7 +905,7 @@ void projectile_fire(Actor* const attacker,
 
     const bool IS_MACHINE_GUN = wpn.data().ranged.is_machine_gun;
 
-    const int NR_PROJECTILES = IS_MACHINE_GUN ? NR_MG_PROJECTILES : 1;
+    const int NR_PROJECTILES = IS_MACHINE_GUN ? nr_mg_projectiles : 1;
 
     for (int i = 0; i < NR_PROJECTILES; ++i)
     {
@@ -989,7 +989,7 @@ void projectile_fire(Actor* const attacker,
     const bool LEAVE_TRAIL = wpn.data().ranged.projectile_leaves_trail;
 
     const int SIZE_OF_PATH_PLUS_ONE =
-        path.size() + (NR_PROJECTILES - 1) * NR_CELL_JUMPS_MG_PROJECTILES;
+        path.size() + (NR_PROJECTILES - 1) * nr_cell_jumps_mg_projectiles;
 
     for (int i = 1; i < SIZE_OF_PATH_PLUS_ONE; ++i)
     {
@@ -997,7 +997,7 @@ void projectile_fire(Actor* const attacker,
         {
             //Current projectile's place in the path is the current global place (i)
             //minus a certain number of elements
-            int path_element = i - (p_cnt * NR_CELL_JUMPS_MG_PROJECTILES);
+            int path_element = i - (p_cnt * nr_cell_jumps_mg_projectiles);
 
             //Emit sound
             if (path_element == 1)
@@ -1315,10 +1315,10 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
 
     const Actor_size intended_aim_lvl = data.intended_aim_lvl;
 
-    bool feature_blockers[MAP_W][MAP_H];
+    bool feature_blockers[map_w][map_h];
     map_parse::run(cell_check::Blocks_projectiles(), feature_blockers);
 
-    Actor* actor_array[MAP_W][MAP_H];
+    Actor* actor_array[map_w][map_h];
     map::mk_actor_array(actor_array);
 
     const P origin = attacker.pos;
@@ -1718,7 +1718,7 @@ bool ranged(Actor* const attacker,
 
         if (wpn.data().ranged.is_machine_gun)
         {
-            nr_of_projectiles = NR_MG_PROJECTILES;
+            nr_of_projectiles = nr_mg_projectiles;
         }
 
         if (wpn.nr_ammo_loaded_ >= nr_of_projectiles || HAS_INF_AMMO)

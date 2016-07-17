@@ -57,15 +57,15 @@ struct Cell_overlay
 namespace render
 {
 
-extern Cell_render_data render_array[MAP_W][MAP_H];
-extern Cell_render_data render_array_no_actors[MAP_W][MAP_H];
+extern Cell_render_data render_array[map_w][map_h];
+extern Cell_render_data render_array_no_actors[map_w][map_h];
 
 void init();
 void cleanup();
 
 //Draws the whole "map state" including character lines, log, etc
 void draw_map_state(const Update_screen update = Update_screen::yes,
-                    Cell_overlay overlay[MAP_W][MAP_H] = nullptr);
+                    Cell_overlay overlay[map_w][map_h] = nullptr);
 
 void update_screen();
 
@@ -117,11 +117,11 @@ void draw_marker(const P& p,
                  const std::vector<P>& trail,
                  const int EFFECTIVE_RANGE = -1,
                  const int BLOCKED_FROM_IDX = -1,
-                 Cell_overlay overlay[MAP_W][MAP_H] = nullptr);
+                 Cell_overlay overlay[map_w][map_h] = nullptr);
 
 void draw_blast_at_field(const P& center_pos,
                          const int RADIUS,
-                         bool forbidden_cells[MAP_W][MAP_H],
+                         bool forbidden_cells[map_w][map_h],
                          const Clr& clr_inner,
                          const Clr& clr_outer);
 
@@ -153,7 +153,7 @@ void draw_descr_box(const std::vector<Str_and_clr>& lines);
 void draw_info_scr_interface(const std::string& title,
                              const Inf_screen_type screen_type);
 
-void draw_map(Cell_overlay overlay[MAP_W][MAP_H] = nullptr);
+void draw_map(Cell_overlay overlay[map_w][map_h] = nullptr);
 
 void on_toggle_fullscreen();
 

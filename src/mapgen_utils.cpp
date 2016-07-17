@@ -232,11 +232,11 @@ void mk_pillars_in_room(const Room& room)
 
 void cavify_room(Room& room)
 {
-    bool is_other_room[MAP_W][MAP_H];
+    bool is_other_room[map_w][map_h];
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             const auto* const room_here = map::room_map[x][y];
 
@@ -244,7 +244,7 @@ void cavify_room(Room& room)
         }
     }
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
 
     map_parse::expand(is_other_room, blocked);
 
@@ -280,18 +280,18 @@ void cavify_room(Room& room)
             continue;
         }
 
-        int flood[MAP_W][MAP_H];
+        int flood[map_w][map_h];
 
-        flood_fill::run(origin,
+        floodfill::run(origin,
                         blocked,
                         flood,
                         rnd::range(1, 4),
                         P( -1, -1),
                         false);
 
-        for (int x = 0; x < MAP_W; ++x)
+        for (int x = 0; x < map_w; ++x)
         {
-            for (int y = 0; y < MAP_H; ++y)
+            for (int y = 0; y < map_h; ++y)
             {
                 if (flood[x][y] > 0)
                 {
@@ -323,9 +323,9 @@ void cavify_room(Room& room)
         }
     }
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             if (map::room_map[x][y] == &room)
             {
@@ -352,12 +352,12 @@ void valid_room_corr_entries(const Room& room, std::vector<P>& out)
 
     out.clear();
 
-    bool room_cells[MAP_W][MAP_H];
-    bool room_floor_cells[MAP_W][MAP_H];
+    bool room_cells[map_w][map_h];
+    bool room_floor_cells[map_w][map_h];
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             const bool IS_ROOM_CELL = map::room_map[x][y] == &room;
             room_cells[x][y]        = IS_ROOM_CELL;
@@ -366,7 +366,7 @@ void valid_room_corr_entries(const Room& room, std::vector<P>& out)
         }
     }
 
-    bool room_cells_expanded[MAP_W][MAP_H];
+    bool room_cells_expanded[map_w][map_h];
 
     map_parse::expand(room_cells,
                       room_cells_expanded,
@@ -387,7 +387,7 @@ void valid_room_corr_entries(const Room& room, std::vector<P>& out)
             if (map::room_map[x][y]) {continue;}
 
             //Condition (3)
-            if (x <= 1 || y <= 1 || x >= MAP_W - 2 || y >= MAP_H - 2)
+            if (x <= 1 || y <= 1 || x >= map_w - 2 || y >= map_h - 2)
             {
                 continue;
             }
@@ -429,9 +429,9 @@ void valid_room_corr_entries(const Room& room, std::vector<P>& out)
     TRACE_FUNC_END_VERBOSE;
 }
 
-void mk_path_find_cor(Room& room_0,
+void mk_pathfind_cor(Room& room_0,
                       Room& room_1,
-                      bool door_proposals[MAP_W][MAP_H])
+                      bool door_proposals[map_w][map_h])
 {
     TRACE_FUNC_BEGIN_VERBOSE << "Making corridor between rooms "
                              << &room_0 << " and " << &room_1 << std::endl;
@@ -501,7 +501,7 @@ void mk_path_find_cor(Room& room_0,
     const P& p1 = entries.second;
 
     std::vector<P> path;
-    bool blocked_expanded[MAP_W][MAP_H];
+    bool blocked_expanded[map_w][map_h];
 
     //Entry points are the same cell (rooms are adjacent)? Then simply use that
     if (p0 == p1)
@@ -512,12 +512,12 @@ void mk_path_find_cor(Room& room_0,
     {
         //Try to find a path to the other entry point
 
-        bool blocked[MAP_W][MAP_H] = {};
+        bool blocked[map_w][map_h] = {};
 
         //Mark all cells as blocked, which is not a wall, or is a room
-        for (int x = 0; x < MAP_W; ++x)
+        for (int x = 0; x < map_w; ++x)
         {
-            for (int y = 0; y < MAP_H; ++y)
+            for (int y = 0; y < map_h; ++y)
             {
                 const bool IS_WALL =
                     map::cells[x][y].rigid->id() == Feature_id::wall;
@@ -561,13 +561,13 @@ void mk_path_find_cor(Room& room_0,
         blocked_expanded[p0.x][p0.y] = blocked_expanded[p1.x][p1.y] = false;
 
         //Allowing diagonal steps creates a more "cave like" path
-        const bool ALLOW_DIAGONAL = map::dlvl >= DLVL_FIRST_LATE_GAME;
+        const bool ALLOW_DIAGONAL = map::dlvl >= dlvl_first_late_game;
 
         //Randomizing steps create more "snaky" paths
-        const bool RANDOMIZE_STEP_CHOICES = map::dlvl >= DLVL_FIRST_LATE_GAME ? true :
+        const bool RANDOMIZE_STEP_CHOICES = map::dlvl >= dlvl_first_late_game ? true :
                                             rnd::one_in(5);
 
-        path_find::run(p0,
+        pathfind::run(p0,
                        p1,
                        blocked_expanded,
                        path,
@@ -631,7 +631,7 @@ void mk_path_find_cor(Room& room_0,
 
             //If this is a late level, occasionally put floor in 3x3 cells
             //around each path point (wide corridors for more "open" level).
-            if (map::dlvl >= DLVL_FIRST_LATE_GAME && rnd::fraction(2, 5))
+            if (map::dlvl >= dlvl_first_late_game && rnd::fraction(2, 5))
             {
                 for (int dx = -1; dx <= 1; ++dx)
                 {
@@ -700,10 +700,10 @@ void pathfinder_walk(const P& p0,
 {
     pos_list_ref.clear();
 
-    bool blocked[MAP_W][MAP_H] = {};
+    bool blocked[map_w][map_h] = {};
 
     std::vector<P> path;
-    path_find::run(p0, p1, blocked, path);
+    pathfind::run(p0, p1, blocked, path);
 
     std::vector<P> rnd_walk_buffer;
 

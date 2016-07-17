@@ -35,6 +35,6 @@ void first_to_lower(std::string& str);
 void first_to_upper(std::string& str);
 void all_to_upper(std::string& str);
 
-} //Text_format
+} //text_format
 
 #endif

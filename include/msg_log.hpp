@@ -6,7 +6,7 @@
 
 #include "colors.hpp"
 #include "rl_utils.hpp"
-#include "cmn.hpp"
+#include "global.hpp"
 
 class Msg
 {

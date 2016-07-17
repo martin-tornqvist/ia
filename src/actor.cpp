@@ -142,14 +142,14 @@ void Actor::seen_actors(std::vector<Actor*>& out)
 {
     out.clear();
 
-    bool blocked_los[MAP_W][MAP_H];
+    bool blocked_los[map_w][map_h];
 
     if (!is_player())
     {
-        R los_rect(std::max(0,         pos.x - FOV_STD_RADI_INT),
-                   std::max(0,         pos.y - FOV_STD_RADI_INT),
-                   std::min(MAP_W - 1, pos.x + FOV_STD_RADI_INT),
-                   std::min(MAP_H - 1, pos.y + FOV_STD_RADI_INT));
+        R los_rect(std::max(0,         pos.x - fov_std_radi_int),
+                   std::max(0,         pos.y - fov_std_radi_int),
+                   std::min(map_w - 1, pos.x + fov_std_radi_int),
+                   std::min(map_h - 1, pos.y + fov_std_radi_int));
 
         map_parse::run(cell_check::Blocks_los(),
                        blocked_los,
@@ -185,14 +185,14 @@ void Actor::seen_foes(std::vector<Actor*>& out)
 {
     out.clear();
 
-    bool blocked_los[MAP_W][MAP_H];
+    bool blocked_los[map_w][map_h];
 
     if (!is_player())
     {
-        R los_rect(std::max(0,         pos.x - FOV_STD_RADI_INT),
-                   std::max(0,         pos.y - FOV_STD_RADI_INT),
-                   std::min(MAP_W - 1, pos.x + FOV_STD_RADI_INT),
-                   std::min(MAP_H - 1, pos.y + FOV_STD_RADI_INT));
+        R los_rect(std::max(0,         pos.x - fov_std_radi_int),
+                   std::max(0,         pos.y - fov_std_radi_int),
+                   std::min(map_w - 1, pos.x + fov_std_radi_int),
+                   std::min(map_h - 1, pos.y + fov_std_radi_int));
 
         map_parse::run(cell_check::Blocks_los(),
                        blocked_los,
@@ -323,11 +323,11 @@ void Actor::on_std_turn_common()
 
 void Actor::teleport()
 {
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
     map_parse::run(cell_check::Blocks_actor(*this, true), blocked);
 
     std::vector<P> pos_bucket;
-    to_vec((bool*)blocked, false, MAP_W, MAP_H, pos_bucket);
+    to_vec((bool*)blocked, false, map_w, map_h, pos_bucket);
 
     if (pos_bucket.empty())
     {
@@ -362,7 +362,7 @@ void Actor::teleport()
             };
 
             auto on_marker_at_pos =
-                [chance_of_tele_success](const P & p, Cell_overlay overlay[MAP_W][MAP_H])
+                [chance_of_tele_success](const P & p, Cell_overlay overlay[map_w][map_h])
             {
                 (void)overlay;
 
@@ -1124,14 +1124,14 @@ void Actor::on_feed()
     }
 }
 
-void Actor::add_light(bool light_map[MAP_W][MAP_H]) const
+void Actor::add_light(bool light_map[map_w][map_h]) const
 {
     if (state_ == Actor_state::alive && prop_handler_->has_prop(Prop_id::radiant))
     {
         //TODO: Much of the code below is duplicated from Actor_player::add_light_hook(), some
         //refactoring is needed.
 
-        bool hard_blocked[MAP_W][MAP_H];
+        bool hard_blocked[map_w][map_h];
 
         const R fov_lmt = fov::get_fov_rect(pos);
 
@@ -1140,7 +1140,7 @@ void Actor::add_light(bool light_map[MAP_W][MAP_H]) const
                        Map_parse_mode::overwrite,
                        fov_lmt);
 
-        Los_result fov[MAP_W][MAP_H];
+        Los_result fov[map_w][map_h];
 
         fov::run(pos, hard_blocked, fov);
 

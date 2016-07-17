@@ -399,10 +399,10 @@ void set_item_randomized_properties(Item* item)
                 //Number of machine gun bullets loaded needs to be a multiple of the
                 //number of projectiles fired in each burst
 
-                const int CAP_SCALED    = AMMO_CAP / NR_MG_PROJECTILES;
+                const int CAP_SCALED    = AMMO_CAP / nr_mg_projectiles;
                 const int MIN_SCALED    = CAP_SCALED / 4;
                 wpn->nr_ammo_loaded_    = rnd::range(MIN_SCALED, CAP_SCALED) *
-                                          NR_MG_PROJECTILES;
+                                          nr_mg_projectiles;
             }
             else //Not machinegun
             {

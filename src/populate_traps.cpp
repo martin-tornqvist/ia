@@ -41,7 +41,7 @@ void populate_std_lvl()
 {
     TRACE_FUNC_BEGIN;
 
-    bool blocked[MAP_W][MAP_H];
+    bool blocked[map_w][map_h];
     map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
 
     //Put traps in non-plain rooms
@@ -194,9 +194,9 @@ void populate_std_lvl()
 
         std::vector<P> trap_pos_bucket;
 
-        for (int x = 1; x < MAP_W - 1; ++x)
+        for (int x = 1; x < map_w - 1; ++x)
         {
-            for (int y = 1; y < MAP_H - 1; ++y)
+            for (int y = 1; y < map_h - 1; ++y)
             {
                 if (map::room_map[x][y])
                 {

@@ -303,7 +303,7 @@ std::string Item::name(const Item_ref_type ref_type,
         {
             const Dice_param dmg_dice = dmg(Att_mode::ranged, map::player);
 
-            const int MULTIPL = data_->ranged.is_machine_gun ? NR_MG_PROJECTILES : 1;
+            const int MULTIPL = data_->ranged.is_machine_gun ? nr_mg_projectiles : 1;
 
             const std::string   rolls_str   = to_str(dmg_dice.rolls * MULTIPL);
             const std::string   sides_str   = to_str(dmg_dice.sides);
@@ -1143,7 +1143,7 @@ int Medical_bag::tot_turns_for_action(const Med_bag_action action) const
 //        }
 //        if (!adj_actors.empty())
 //        {
-//            bool blocked_los[MAP_W][MAP_H];
+//            bool blocked_los[map_w][map_h];
 //            map_parse::run(cell_check::Blocks_los(), blocked_los);
 //            for (auto* const actor : adj_actors)
 //            {
