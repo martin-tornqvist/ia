@@ -1486,9 +1486,9 @@ void River_room::on_pre_connect(bool door_proposals[map_w][map_h])
 
 #endif // DEMO_MODE
 
-    std::vector<int> coordinates(IS_HOR ? MAP_W : MAP_H);
-    std::iota(begin(coordinates), end(coordinates), 0);
-    random_shuffle(coordinates.begin(), coordinates.end());
+    std::vector<int> positions(is_hor ? map_w : map_h);
+    std::iota(begin(positions), end(positions), 0);
+    random_shuffle(positions.begin(), positions.end());
 
     std::vector<int> c_built;
 
