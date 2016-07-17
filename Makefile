@@ -2,8 +2,8 @@
 # Targets available:
 # - release (just running "make" will also build this)
 # - debug
-# - windows-release (cross compilation using mingw)
-# - osx
+# - windows-cross-compile-release (cross compilation using mingw)
+# - osx-release
 # - osx-debug
 # - clean
 #
@@ -104,23 +104,23 @@ LINUX_EXE = ia
 # Windows cross compilation specific
 ###############################################################################
 # Cross compiler to build Windows releases on Linux
-windows-release: CXX = i686-w64-mingw32-g++-win32
+windows-cross-compile-release: CXX = i686-w64-mingw32-g++-win32
 
 # Windows specific includes
-windows-release: INCLUDES += \
+windows-cross-compile-release: INCLUDES += \
   -I $(SDL_INC_DIR) \
   -I $(SDL_IMAGE_INC_DIR) \
   -I $(SDL_MIXER_INC_DIR) \
   #
 
 # Windows specific compiler flags
-windows-release: CXXFLAGS += \
+windows-cross-compile-release: CXXFLAGS += \
   -O2 \
   -DNDEBUG \
   #
 
 # Windows specific linker flags
-windows-release: LD_FLAGS += \
+windows-cross-compile-release: LD_FLAGS += \
   -L $(SDL_LIB_DIR) \
   -L $(SDL_IMAGE_LIB_DIR) \
   -L $(SDL_MIXER_LIB_DIR) \
@@ -134,22 +134,41 @@ windows-release: LD_FLAGS += \
 
 WINDOWS_EXE = ia.exe
 
+
 ###############################################################################
 # Mac OS X
 ###############################################################################
-osx osx-debug: CXX ?= c++
-osx osx-debug: CXXFLAGS = -std=c++11
-osx osx-debug: INCLUDES = -I$(INC_DIR) -I$(RL_UTILS_INC_DIR) \
-    -F/Library/Frameworks \
-    -I/Library/Frameworks/SDL2.framework/Headers \
-    -I/Library/Frameworks/SDL2_image.framework/Headers \
-    -I/Library/Frameworks/SDL2_mixer.framework/Headers
-osx osx-debug: LD_FLAGS = -F/Library/Frameworks \
-    -framework Cocoa \
-    -framework SDL2 -framework SDL2_image -framework SDL2_mixer
-osx osx-debug: CXXFLAGS += -DMACOSX
-osx: CXXFLAGS += -Os -DNDEBUG
-osx-debug: CXXFLAGS += -O0 -g
+osx-release osx-debug: CXX ?= c++
+
+osx-release osx-debug: INCLUDES += \
+  -F/Library/Frameworks \
+  -I/Library/Frameworks/SDL2.framework/Headers \
+  -I/Library/Frameworks/SDL2_image.framework/Headers \
+  -I/Library/Frameworks/SDL2_mixer.framework/Headers \
+  #
+
+osx-release osx-debug: LD_FLAGS = \
+  -F/Library/Frameworks \
+  -framework Cocoa \
+  -framework SDL2 \
+  -framework SDL2_image \
+  -framework SDL2_mixer \
+  #
+
+osx-release osx-debug: CXXFLAGS += \
+  -DMACOSX \
+  #
+
+osx-release: CXXFLAGS += \
+  -O2 \
+  -DNDEBUG \
+  #
+
+osx-debug: CXXFLAGS += \
+  -O0 \
+  -g \
+  #
+
 
 ###############################################################################
 # Common output and sources
@@ -169,7 +188,7 @@ all: release
 release debug: $(LINUX_EXE)
 
 # The Windows version needs to copy some DLLs and licenses
-windows-release: $(WINDOWS_EXE)
+windows-cross-compile-release: $(WINDOWS_EXE)
 	cp \
 	  $(SDL_BIN_DIR)/SDL2.dll \
 	  $(SDL_IMAGE_BIN_DIR)/SDL2_image.dll \
@@ -184,7 +203,7 @@ windows-release: $(WINDOWS_EXE)
 	  $(SDL_MIXER_BIN_DIR)/LICENSE.ogg-vorbis.txt \
 	  $(TARGET_DIR)
 
-osx osx-debug: $(LINUX_EXE)
+osx-release osx-debug: $(LINUX_EXE)
 
 $(LINUX_EXE) $(WINDOWS_EXE): $(RL_UTILS_OBJECTS) $(OBJECTS)
 	$(CXX) $^ -o $@ $(LD_FLAGS)
@@ -232,5 +251,5 @@ check-rl-utils :
 clean:
 	rm -rf $(TARGET_DIR) $(OBJECTS) $(RL_UTILS_OBJECTS)
 
-.PHONY: all depends clean clean-depends check-rl-utils \
-    release debug windows-release windows-debug osx osx-debug
+# Phony targets
+.PHONY: all clean check-rl-utils

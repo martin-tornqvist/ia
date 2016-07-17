@@ -96,7 +96,7 @@ Copy [SDL2.framework](http://www.libsdl.org/download-2.0.php), [SDL2\_image.fram
 
 Release build:
 
-    $ make osx
+    $ make osx-release
 
 Debug build:
 
