@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <climits>
+#include <numeric>
 
 #include "init.hpp"
 #include "map.hpp"
@@ -1486,7 +1487,7 @@ void River_room::on_pre_connect(bool door_proposals[MAP_W][MAP_H])
 #endif // DEMO_MODE
 
     std::vector<int> coordinates(IS_HOR ? MAP_W : MAP_H);
-    iota(begin(coordinates), end(coordinates), 0);
+    std::iota(begin(coordinates), end(coordinates), 0);
     random_shuffle(coordinates.begin(), coordinates.end());
 
     std::vector<int> c_built;
