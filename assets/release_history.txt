@@ -1,4 +1,11 @@
 --------------------------------------------------------------
+v19.0 (***WORK IN PROGRESS***)
+--------------------------------------------------------------
+Gameplay
+* Spiders now spawn alone instead of in packs, and are much stronger ("Huge Spider"), normal Rats no longer spawn during map generation on normal maps - the purpose of these changes is to reduce "trash mob" combat.
+
+
+--------------------------------------------------------------
 v18.2 (July 2, 2016)
 --------------------------------------------------------------
 Gameplay

@@ -1350,10 +1350,6 @@ void init_data_list()
     d.descr = "An large aggressive rodent.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.is_rat = true;
-    // d.native_rooms.push_back(RoomType::plain);
-    // d.native_rooms.push_back(RoomType::monster);
-    // d.native_rooms.push_back(RoomType::human);
-    // d.native_rooms.push_back(RoomType::crypt);
     data[size_t(d.id)] = d;
     d.reset();
 
