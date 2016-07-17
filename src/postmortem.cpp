@@ -25,7 +25,7 @@ namespace postmortem
 namespace
 {
 
-void mk_info_lines(std::vector<Str_and_clr>& out)
+void mk_info_lines(std::vector<StrAndClr>& out)
 {
     TRACE_FUNC_BEGIN;
 
@@ -41,7 +41,7 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
 
     for (const auto& d : actor_data::data)
     {
-        if (d.id != Actor_id::player && d.nr_kills > 0)
+        if (d.id != ActorId::player && d.nr_kills > 0)
         {
             nr_kills_tot_all_mon += d.nr_kills;
 
@@ -52,7 +52,7 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
         }
     }
 
-    const Highscore_entry* const score = highscore::final_score();
+    const HighscoreEntry* const score = highscore::final_score();
 
     ASSERT(score);
 
@@ -102,11 +102,11 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
         clr_info
     });
 
-    const std::vector<const Ins_sympt*> sympts = insanity::active_sympts();
+    const std::vector<const InsSympt*> sympts = insanity::active_sympts();
 
     if (!sympts.empty())
     {
-        for (const Ins_sympt* const sympt : sympts)
+        for (const InsSympt* const sympt : sympts)
         {
             const std::string sympt_descr = sympt->char_descr_msg();
 
@@ -154,7 +154,7 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
     out.push_back({"", clr_info});
     out.push_back({"History of " + map::player->name_the(), clr_heading});
 
-    const std::vector<History_event>& events = dungeon_master::history();
+    const std::vector<HistoryEvent>& events = dungeon_master::history();
 
     for (const auto& event : events)
     {
@@ -230,9 +230,9 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
             }
             else //Not player pos
             {
-                const auto& wall_d          = feature_data::data(Feature_id::wall);
-                const auto& rubble_high_d   = feature_data::data(Feature_id::rubble_high);
-                const auto& statue_d        = feature_data::data(Feature_id::statue);
+                const auto& wall_d          = feature_data::data(FeatureId::wall);
+                const auto& rubble_high_d   = feature_data::data(FeatureId::rubble_high);
+                const auto& statue_d        = feature_data::data(FeatureId::statue);
 
                 auto& cur_render_data = render::render_array[x][y];
 
@@ -261,12 +261,12 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
     TRACE_FUNC_END;
 }
 
-void render(const std::vector<Str_and_clr>& lines, const int top_element)
+void render(const std::vector<StrAndClr>& lines, const int top_element)
 {
     render::clear_screen();
 
     render::draw_info_scr_interface("Game summary",
-                                    Inf_screen_type::scrolling);
+                                    InfScreenType::scrolling);
 
     const int nr_lines_tot = int(lines.size());
 
@@ -288,7 +288,7 @@ void render(const std::vector<Str_and_clr>& lines, const int top_element)
     render::update_screen();
 }
 
-void run_info(const std::vector<Str_and_clr>& lines)
+void run_info(const std::vector<StrAndClr>& lines)
 {
     const int line_jump           = 3;
     const int max_nr_lines_on_scr = screen_h - 2;
@@ -300,7 +300,7 @@ void run_info(const std::vector<Str_and_clr>& lines)
     {
         render(lines, top_nr);
 
-        const Key_data& d = input::input();
+        const KeyData& d = input::input();
 
         if (d.sdl_key == SDLK_DOWN || d.key == '2' || d.key == 'j')
         {
@@ -326,10 +326,10 @@ void run_info(const std::vector<Str_and_clr>& lines)
     }
 }
 
-void mk_memorial_file(const std::vector<Str_and_clr>& lines)
+void mk_memorial_file(const std::vector<StrAndClr>& lines)
 {
     const std::string time_stamp =
-        dungeon_master::start_time().time_str(Time_type::second, false);
+        dungeon_master::start_time().time_str(TimeType::second, false);
 
     const std::string file_name = map::player->name_a() + "_" + time_stamp + ".txt";
 
@@ -339,7 +339,7 @@ void mk_memorial_file(const std::vector<Str_and_clr>& lines)
     std::ofstream file;
     file.open(file_path.data(), std::ios::trunc);
 
-    for (const Str_and_clr& line : lines)
+    for (const StrAndClr& line : lines)
     {
         file << line.str << std::endl;
     }
@@ -350,7 +350,7 @@ void mk_memorial_file(const std::vector<Str_and_clr>& lines)
     render::update_screen();
 }
 
-void render_menu(const Menu_browser& browser)
+void render_menu(const MenuBrowser& browser)
 {
     render::cover_panel(Panel::screen);
 
@@ -407,30 +407,30 @@ void render_menu(const Menu_browser& browser)
 
 void run(bool* const quit_game)
 {
-    std::vector<Str_and_clr> lines;
+    std::vector<StrAndClr> lines;
 
     mk_info_lines(lines);
 
-    Menu_browser browser(6);
+    MenuBrowser browser(6);
 
     render_menu(browser);
 
     while (true)
     {
-        const Menu_action action = menu_input::action(browser);
+        const MenuAction action = menu_input::action(browser);
 
         switch (action)
         {
-        case Menu_action::esc:
-        case Menu_action::space:
+        case MenuAction::esc:
+        case MenuAction::space:
             break;
 
-        case Menu_action::moved:
+        case MenuAction::moved:
             render_menu(browser);
             break;
 
-        case Menu_action::selected:
-        case Menu_action::selected_shift:
+        case MenuAction::selected:
+        case MenuAction::selected_shift:
             if (browser.is_at_idx(0))
             {
                 run_info(lines);

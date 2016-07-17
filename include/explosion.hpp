@@ -9,19 +9,19 @@
 
 class Prop;
 
-enum class Expl_type
+enum class ExplType
 {
     expl,
     apply_prop
 };
 
-enum class Expl_src
+enum class ExplSrc
 {
     misc,
     player_use_moltv_intended
 };
 
-enum class Emit_expl_snd
+enum class EmitExplSnd
 {
     no,
     yes
@@ -34,9 +34,9 @@ namespace explosion
 //      emit a custom sound before running the explosion (e.g. molotov explosion sound).
 void run(
     const P& origin,
-    const Expl_type expl_type,
-    const Expl_src expl_src = Expl_src::misc,
-    const Emit_expl_snd emit_expl_snd = Emit_expl_snd::yes,
+    const ExplType expl_type,
+    const ExplSrc expl_src = ExplSrc::misc,
+    const EmitExplSnd emit_expl_snd = EmitExplSnd::yes,
     const int radi_change = 0,
     Prop* const prop = nullptr,
     const Clr* const clr_override = nullptr);

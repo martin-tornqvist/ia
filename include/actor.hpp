@@ -11,10 +11,10 @@
 #include "config.hpp"
 #include "art.hpp"
 
-class Prop_handler;
+class PropHandler;
 class Inventory;
 
-enum class Actor_died
+enum class ActorDied
 {
     no,
     yes
@@ -26,25 +26,25 @@ public:
     Actor();
     virtual ~Actor();
 
-    Prop_handler& prop_handler()
+    PropHandler& prop_handler()
     {
         return *prop_handler_;
     }
 
-    const Prop_handler& prop_handler() const
+    const PropHandler& prop_handler() const
     {
         return *prop_handler_;
     }
 
     //This is just a shortcut to the same function in the property handler
-    bool has_prop(const Prop_id id) const;
+    bool has_prop(const PropId id) const;
 
-    Actor_data_t& data()
+    ActorDataT& data()
     {
         return *data_;
     }
 
-    const Actor_data_t& data() const
+    const ActorDataT& data() const
     {
         return *data_;
     }
@@ -59,7 +59,7 @@ public:
         return *inv_;
     }
 
-    int ability(const Ability_id id, const bool is_affected_by_props) const;
+    int ability(const AbilityId id, const bool is_affected_by_props) const;
 
     //NOTE: This function is not concerned with whether the parameter actor is
     //within FOV, or if the actor is actually hidden or not. It merely tests the
@@ -67,16 +67,16 @@ public:
     //has no side effects - it merely does a randomized check.
     bool is_spotting_sneaking_actor(Actor& actor);
 
-    void place(const P& pos_, Actor_data_t& data);
+    void place(const P& pos_, ActorDataT& data);
 
     virtual void place_hook() {}
 
-    Actor_died hit(int dmg,
-                   const Dmg_type dmg_type,
-                   const Dmg_method method = Dmg_method::END,
-                   const Allow_wound allow_wound = Allow_wound::yes);
+    ActorDied hit(int dmg,
+                   const DmgType dmg_type,
+                   const DmgMethod method = DmgMethod::END,
+                   const AllowWound allow_wound = AllowWound::yes);
 
-    Actor_died hit_spi(const int dmg, const Verbosity verbosity = Verbosity::verbose);
+    ActorDied hit_spi(const int dmg, const Verbosity verbosity = Verbosity::verbose);
 
     bool restore_hp(const int hp_restored,
                     const bool is_allowed_above_max = false,
@@ -99,7 +99,7 @@ public:
              const bool allow_drop_items);
 
     //Used by Ghoul class and Ghoul monsters
-    Did_action try_eat_corpse();
+    DidAction try_eat_corpse();
     void on_feed();
 
     void on_std_turn_common();
@@ -117,7 +117,7 @@ public:
 
     void seen_foes(std::vector<Actor*>& out);
 
-    Actor_id id() const
+    ActorId id() const
     {
         return data_->id;
     }
@@ -139,7 +139,7 @@ public:
         return spi_max_;
     }
 
-    Actor_speed speed() const;
+    ActorSpeed speed() const;
 
     virtual std::string name_the() const
     {
@@ -181,7 +181,7 @@ public:
         return clr_;
     }
 
-    virtual Tile_id tile() const
+    virtual TileId tile() const
     {
         return tile_;
     }
@@ -197,15 +197,15 @@ public:
 
     bool is_alive() const
     {
-        return state_ == Actor_state::alive;
+        return state_ == ActorState::alive;
     }
 
     bool is_corpse() const
     {
-        return state_ == Actor_state::corpse;
+        return state_ == ActorState::corpse;
     }
 
-    Actor_state state() const
+    ActorState state() const
     {
         return state_;
     }
@@ -219,9 +219,9 @@ public:
 
 protected:
     //TODO: Try to get rid of these friend declarations
-    friend class Ability_vals;
-    friend class Prop_diseased;
-    friend class Prop_poss_by_zuul;
+    friend class AbilityVals;
+    friend class PropDiseased;
+    friend class PropPossByZuul;
     friend class Trap;
 
     virtual void on_death() {}
@@ -229,9 +229,9 @@ protected:
     virtual std::string death_msg() const;
 
     virtual void on_hit(int& dmg,
-                        const Dmg_type dmg_type,
-                        const Dmg_method method,
-                        const Allow_wound allow_wound)
+                        const DmgType dmg_type,
+                        const DmgMethod method,
+                        const AllowWound allow_wound)
     {
         (void)dmg;
         (void)dmg_type;
@@ -241,17 +241,17 @@ protected:
 
     virtual void mk_start_items() {}
 
-    Actor_state  state_;
+    ActorState  state_;
     Clr clr_;
     char glyph_;
-    Tile_id tile_;
+    TileId tile_;
 
     int hp_, hp_max_, spi_, spi_max_;
 
     P lair_pos_;
 
-    Prop_handler* prop_handler_;
-    Actor_data_t* data_;
+    PropHandler* prop_handler_;
+    ActorDataT* data_;
     Inventory* inv_;
 };
 

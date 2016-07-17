@@ -31,9 +31,9 @@ void try_knock_back(Actor& defender,
 
     if (
         defender_data.prevent_knockback                 ||
-        defender_data.actor_size >= Actor_size::giant   ||
-        defender.has_prop(Prop_id::ethereal)            ||
-        defender.has_prop(Prop_id::ooze)                ||
+        defender_data.actor_size >= ActorSize::giant   ||
+        defender.has_prop(PropId::ethereal)            ||
+        defender.has_prop(PropId::ooze)                ||
         //Do not knock back player if bot is playing
         (is_defender_player && config::is_bot_playing()))
     {
@@ -46,13 +46,13 @@ void try_knock_back(Actor& defender,
     //Check if actor is held by a trap
     Rigid* const rigid = map::cells[defender.pos.x][defender.pos.y].rigid;
 
-    if (rigid->id() == Feature_id::trap)
+    if (rigid->id() == FeatureId::trap)
     {
         Trap* const trap = static_cast<Trap*>(rigid);
 
         if (trap->is_holding_actor())
         {
-            if (trap->type() == Trap_id::web)
+            if (trap->type() == TrapId::web)
             {
                 //Held by a web, just destroy the web
                 trap->destroy();
@@ -71,7 +71,7 @@ void try_knock_back(Actor& defender,
     const P new_pos = defender.pos + d;
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::Blocks_actor(defender, true), blocked);
+    map_parse::run(cell_check::BlocksActor(defender, true), blocked);
 
     const bool is_cell_bottomless =
         map::cells[new_pos.x][new_pos.y].rigid->is_bottomless();
@@ -89,7 +89,7 @@ void try_knock_back(Actor& defender,
             if (!f->is_los_passable())
             {
                 defender.prop_handler().try_add(
-                    new Prop_nailed(Prop_turns::indefinite));
+                    new PropNailed(PropTurns::indefinite));
             }
         }
 
@@ -115,7 +115,7 @@ void try_knock_back(Actor& defender,
         }
 
         defender.prop_handler().try_add(
-            new Prop_paralyzed(Prop_turns::specific, 1));
+            new PropParalyzed(PropTurns::specific, 1));
 
         defender.pos = new_pos;
 
@@ -124,7 +124,7 @@ void try_knock_back(Actor& defender,
 
         if (
             is_cell_bottomless                  &&
-            !defender.has_prop(Prop_id::flying) &&
+            !defender.has_prop(PropId::flying) &&
             player_see_defender)
         {
             if (is_defender_player)
@@ -173,4 +173,4 @@ void try_knock_back(Actor& defender,
     TRACE_FUNC_END;
 }
 
-} //Knock_back
+} //KnockBack

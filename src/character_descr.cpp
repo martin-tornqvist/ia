@@ -20,7 +20,7 @@ namespace character_descr
 namespace
 {
 
-std::vector<Str_and_clr> lines_;
+std::vector<StrAndClr> lines_;
 
 void mk_lines()
 {
@@ -33,7 +33,7 @@ void mk_lines()
 
     lines_.push_back({"History of " + map::player->name_the(), clr_heading});
 
-    const std::vector<History_event>& events = dungeon_master::history();
+    const std::vector<HistoryEvent>& events = dungeon_master::history();
 
     for (const auto& event : events)
     {
@@ -50,18 +50,18 @@ void mk_lines()
 
     lines_.push_back({"", clr_text});
 
-    const Ability_vals& abilities = map::player->data().ability_vals;
+    const AbilityVals& abilities = map::player->data().ability_vals;
 
     lines_.push_back({"Combat skills", clr_heading});
 
     const int base_melee =
-        std::min(100, abilities.val(Ability_id::melee, true, *(map::player)));
+        std::min(100, abilities.val(AbilityId::melee, true, *(map::player)));
 
     const int base_ranged =
-        std::min(100, abilities.val(Ability_id::ranged, true, *(map::player)));
+        std::min(100, abilities.val(AbilityId::ranged, true, *(map::player)));
 
     const int base_dodge_attacks =
-        std::min(100, abilities.val(Ability_id::dodge_att, true, *(map::player)));
+        std::min(100, abilities.val(AbilityId::dodge_att, true, *(map::player)));
 
     lines_.push_back({offset + "Melee    " + to_str(base_melee)         + "%", clr_text});
     lines_.push_back({offset + "Ranged   " + to_str(base_ranged)        + "%", clr_text});
@@ -71,7 +71,7 @@ void mk_lines()
 
     lines_.push_back({"Mental disorders", clr_heading});
 
-    const std::vector<const Ins_sympt*> sympts = insanity::active_sympts();
+    const std::vector<const InsSympt*> sympts = insanity::active_sympts();
 
     if (sympts.empty())
     {
@@ -79,7 +79,7 @@ void mk_lines()
     }
     else // Has insanity symptoms
     {
-        for (const Ins_sympt* const sympt : sympts)
+        for (const InsSympt* const sympt : sympts)
         {
             const std::string sympt_descr = sympt->char_descr_msg();
 
@@ -93,39 +93,39 @@ void mk_lines()
     lines_.push_back({"", clr_text});
 
     lines_.push_back({"Potion knowledge", clr_heading});
-    std::vector<Str_and_clr> potion_list;
-    std::vector<Str_and_clr> manuscript_list;
+    std::vector<StrAndClr> potion_list;
+    std::vector<StrAndClr> manuscript_list;
 
-    for (int i = 0; i < int(Item_id::END); ++i)
+    for (int i = 0; i < int(ItemId::END); ++i)
     {
-        const Item_data_t& d = item_data::data[i];
+        const ItemDataT& d = item_data::data[i];
 
         if (d.is_tried || d.is_identified)
         {
-            if (d.type == Item_type::potion)
+            if (d.type == ItemType::potion)
             {
                 Item* item = item_factory::mk(d.id);
 
-                const std::string name = item->name(Item_ref_type::plain);
+                const std::string name = item->name(ItemRefType::plain);
 
                 potion_list.push_back({offset + name, d.clr});
 
                 delete item;
             }
-            else if (d.type == Item_type::scroll)
+            else if (d.type == ItemType::scroll)
             {
                 Item* item = item_factory::mk(d.id);
 
-                const std::string name = item->name(Item_ref_type::plain);
+                const std::string name = item->name(ItemRefType::plain);
 
-                manuscript_list.push_back(Str_and_clr(offset + name, item->interface_clr()));
+                manuscript_list.push_back(StrAndClr(offset + name, item->interface_clr()));
 
                 delete item;
             }
         }
     }
 
-    auto str_and_clr_sort = [](const Str_and_clr & e1, const Str_and_clr & e2)
+    auto str_and_clr_sort = [](const StrAndClr & e1, const StrAndClr & e2)
     {
         return e1.str < e2.str;
     };
@@ -138,7 +138,7 @@ void mk_lines()
     {
         sort(potion_list.begin(), potion_list.end(), str_and_clr_sort);
 
-        for (Str_and_clr& e : potion_list) {lines_.push_back(e);}
+        for (StrAndClr& e : potion_list) {lines_.push_back(e);}
     }
 
     lines_.push_back({"", clr_text});
@@ -154,7 +154,7 @@ void mk_lines()
     {
         sort(manuscript_list.begin(), manuscript_list.end(), str_and_clr_sort);
 
-        for (Str_and_clr& e : manuscript_list) {lines_.push_back(e);}
+        for (StrAndClr& e : manuscript_list) {lines_.push_back(e);}
     }
 
     lines_.push_back({"", clr_text});
@@ -206,13 +206,13 @@ void run()
         render::clear_screen();
 
         render::draw_info_scr_interface("Character description",
-                                        Inf_screen_type::scrolling);
+                                        InfScreenType::scrolling);
 
         int y_pos = 1;
 
         for (int i = top_nr; i <= btm_nr; ++i)
         {
-            const Str_and_clr& line = lines_[i];
+            const StrAndClr& line = lines_[i];
 
             render::draw_text(line.str,
                               Panel::screen,
@@ -222,7 +222,7 @@ void run()
 
         render::update_screen();
 
-        const Key_data& d = input::input();
+        const KeyData& d = input::input();
 
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {

@@ -40,7 +40,7 @@ std::vector<std::string> Scroll::descr() const
     }
 }
 
-Consume_item Scroll::activate(Actor* const actor)
+ConsumeItem Scroll::activate(Actor* const actor)
 {
     auto& prop_handler = actor->prop_handler();
 
@@ -54,7 +54,7 @@ Consume_item Scroll::activate(Actor* const actor)
         if (!map::player->prop_handler().allow_see())
         {
             msg_log::add("I cannot read while blind.");
-            return Consume_item::no;
+            return ConsumeItem::no;
         }
 
         const P& player_pos(map::player->pos);
@@ -64,7 +64,7 @@ Consume_item Scroll::activate(Actor* const actor)
         if (cell.is_dark && !cell.is_lit)
         {
             msg_log::add("It's too dark to read here.");
-            return Consume_item::no;
+            return ConsumeItem::no;
         }
 
         auto* const spell = mk_spell();
@@ -73,7 +73,7 @@ Consume_item Scroll::activate(Actor* const actor)
 
         if (data_->is_identified)
         {
-            const std::string scroll_name = name(Item_ref_type::a, Item_ref_inf::none);
+            const std::string scroll_name = name(ItemRefType::a, ItemRefInf::none);
 
             msg_log::add("I read " + scroll_name + "...");
 
@@ -93,7 +93,7 @@ Consume_item Scroll::activate(Actor* const actor)
 
             msg_log::add(crumble_str);
 
-            if (is_noticed == Spell_effect_noticed::yes)
+            if (is_noticed == SpellEffectNoticed::yes)
             {
                 identify(Verbosity::verbose);
             }
@@ -101,10 +101,10 @@ Consume_item Scroll::activate(Actor* const actor)
 
         delete spell;
 
-        return Consume_item::yes;
+        return ConsumeItem::yes;
     }
 
-    return Consume_item::no;
+    return ConsumeItem::no;
 }
 
 Spell* Scroll::mk_spell() const
@@ -120,7 +120,7 @@ void Scroll::identify(const Verbosity verbosity)
 
         if (verbosity == Verbosity::verbose)
         {
-            const std::string name_after = name(Item_ref_type::a, Item_ref_inf::none);
+            const std::string name_after = name(ItemRefType::a, ItemRefInf::none);
 
             msg_log::add("I have identified " + name_after + ".");
 
@@ -238,20 +238,20 @@ void init()
 
     for (auto& d : item_data::data)
     {
-        if (d.type == Item_type::scroll)
+        if (d.type == ItemType::scroll)
         {
             //False name
             const size_t idx = rnd::range(0, false_names_.size() - 1);
 
             const std::string& TITLE = false_names_[idx];
 
-            d.base_name_un_id.names[int(Item_ref_type::plain)] =
+            d.base_name_un_id.names[int(ItemRefType::plain)] =
                 "Manuscript titled "    + TITLE;
 
-            d.base_name_un_id.names[int(Item_ref_type::plural)] =
+            d.base_name_un_id.names[int(ItemRefType::plural)] =
                 "Manuscripts titled "   + TITLE;
 
-            d.base_name_un_id.names[int(Item_ref_type::a)] =
+            d.base_name_un_id.names[int(ItemRefType::a)] =
                 "a Manuscript titled "  + TITLE;
 
             false_names_.erase(false_names_.begin() + idx);
@@ -267,9 +267,9 @@ void init()
             const std::string real_name_plural = "Manuscripts of "   + real_type_name;
             const std::string real_name_a      = "a Manuscript of "  + real_type_name;
 
-            d.base_name.names[int(Item_ref_type::plain)]  = real_name;
-            d.base_name.names[int(Item_ref_type::plural)] = real_name_plural;
-            d.base_name.names[int(Item_ref_type::a)]      = real_name_a;
+            d.base_name.names[int(ItemRefType::plain)]  = real_name;
+            d.base_name.names[int(ItemRefType::plural)] = real_name_plural;
+            d.base_name.names[int(ItemRefType::a)]      = real_name_a;
         }
     }
 
@@ -278,32 +278,32 @@ void init()
 
 void save()
 {
-    for (int i = 0; i < int(Item_id::END); ++i)
+    for (int i = 0; i < int(ItemId::END); ++i)
     {
-        if (item_data::data[i].type == Item_type::scroll)
+        if (item_data::data[i].type == ItemType::scroll)
         {
             auto& base_name_un_id = item_data::data[i].base_name_un_id;
 
-            save_handling::put_str(base_name_un_id.names[int(Item_ref_type::plain)]);
-            save_handling::put_str(base_name_un_id.names[int(Item_ref_type::plural)]);
-            save_handling::put_str(base_name_un_id.names[int(Item_ref_type::a)]);
+            save_handling::put_str(base_name_un_id.names[int(ItemRefType::plain)]);
+            save_handling::put_str(base_name_un_id.names[int(ItemRefType::plural)]);
+            save_handling::put_str(base_name_un_id.names[int(ItemRefType::a)]);
         }
     }
 }
 
 void load()
 {
-    for (int i = 0; i < int(Item_id::END); ++i)
+    for (int i = 0; i < int(ItemId::END); ++i)
     {
-        if (item_data::data[i].type == Item_type::scroll)
+        if (item_data::data[i].type == ItemType::scroll)
         {
             auto& base_name_un_id = item_data::data[i].base_name_un_id;
 
-            base_name_un_id.names[int(Item_ref_type::plain)]  = save_handling::get_str();
-            base_name_un_id.names[int(Item_ref_type::plural)] = save_handling::get_str();
-            base_name_un_id.names[int(Item_ref_type::a)]      = save_handling::get_str();
+            base_name_un_id.names[int(ItemRefType::plain)]  = save_handling::get_str();
+            base_name_un_id.names[int(ItemRefType::plural)] = save_handling::get_str();
+            base_name_un_id.names[int(ItemRefType::a)]      = save_handling::get_str();
         }
     }
 }
 
-} //Scroll_handling
+} //ScrollHandling

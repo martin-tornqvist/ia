@@ -6,6 +6,6 @@ namespace populate_items
 
 void mk_items_on_floor();
 
-} //Populate_items
+} //PopulateItems
 
 #endif

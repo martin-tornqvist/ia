@@ -29,14 +29,14 @@ void wait_for_key_press()
     }
 }
 
-Yes_no_answer yes_or_no(char key_for_special_event)
+YesNoAnswer yes_or_no(char key_for_special_event)
 {
     if (!is_inited_ || config::is_bot_playing())
     {
-        return Yes_no_answer::yes;
+        return YesNoAnswer::yes;
     }
 
-    Key_data d = input::input();
+    KeyData d = input::input();
 
     while (
         d.key    != 'y'             &&
@@ -50,18 +50,18 @@ Yes_no_answer yes_or_no(char key_for_special_event)
 
     if (d.key == key_for_special_event && key_for_special_event != -1)
     {
-        return Yes_no_answer::special;
+        return YesNoAnswer::special;
     }
 
     if (d.key == 'y')
     {
-        return Yes_no_answer::yes;
+        return YesNoAnswer::yes;
     }
 
-    return Yes_no_answer::no;
+    return YesNoAnswer::no;
 }
 
-Key_data letter(const bool accept_enter)
+KeyData letter(const bool accept_enter)
 {
     if (!is_inited_ || config::is_bot_playing())
     {
@@ -70,7 +70,7 @@ Key_data letter(const bool accept_enter)
 
     while (true)
     {
-        Key_data d = input::input();
+        KeyData d = input::input();
 
         if (
             (accept_enter && d.sdl_key == SDLK_RETURN) ||
@@ -83,7 +83,7 @@ Key_data letter(const bool accept_enter)
         }
     }
 
-    return Key_data();
+    return KeyData();
 }
 
 int number(const P& pos,
@@ -112,7 +112,7 @@ int number(const P& pos,
 
     while (true)
     {
-        Key_data d;
+        KeyData d;
 
         while (
             (d.key < '0' || d.key > '9')    &&
@@ -193,7 +193,7 @@ void wait_for_msg_more()
     {
         while (true)
         {
-            const Key_data d = input::input();
+            const KeyData d = input::input();
 
             if (
                 d.sdl_key == SDLK_SPACE     ||
@@ -216,7 +216,7 @@ void wait_for_confirm()
 
     while (true)
     {
-        const Key_data d = input::input();
+        const KeyData d = input::input();
 
         if (
             d.sdl_key == SDLK_SPACE     ||
@@ -228,7 +228,7 @@ void wait_for_confirm()
     }
 }
 
-Dir dir(const Allow_center allow_center)
+Dir dir(const AllowCenter allow_center)
 {
     if (!is_inited_ || config::is_bot_playing())
     {
@@ -237,7 +237,7 @@ Dir dir(const Allow_center allow_center)
 
     while (true)
     {
-        const Key_data d = input::input();
+        const KeyData d = input::input();
 
         if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)
         {
@@ -306,7 +306,7 @@ Dir dir(const Allow_center allow_center)
             return Dir::down_right;
         }
 
-        if (allow_center == Allow_center::yes && (d.key == '5' || d.key == '.'))
+        if (allow_center == AllowCenter::yes && (d.key == '5' || d.key == '.'))
         {
             return Dir::center;
         }

@@ -21,12 +21,12 @@
 namespace map_travel
 {
 
-std::vector<Map_data> map_list;
+std::vector<MapData> map_list;
 
 namespace
 {
 
-void mk_lvl(const Map_type& map_type)
+void mk_lvl(const MapType& map_type)
 {
     TRACE_FUNC_BEGIN;
 
@@ -50,31 +50,31 @@ void mk_lvl(const Map_type& map_type)
 
         switch (map_type)
         {
-        case Map_type::intro:
+        case MapType::intro:
             map_ok = mapgen::mk_intro_lvl();
             break;
 
-        case Map_type::std:
+        case MapType::std:
             map_ok = mapgen::mk_std_lvl();
             break;
 
-        case Map_type::egypt:
+        case MapType::egypt:
             map_ok = mapgen::mk_egypt_lvl();
             break;
 
-        case Map_type::leng:
+        case MapType::leng:
             map_ok = mapgen::mk_leng_lvl();
             break;
 
-        case Map_type::rats_in_the_walls:
+        case MapType::rats_in_the_walls:
             map_ok = mapgen::mk_rats_in_the_walls_lvl();
             break;
 
-        case Map_type::trapez:
+        case MapType::trapez:
             map_ok = mapgen::mk_trapez_lvl();
             break;
 
-        case Map_type::boss:
+        case MapType::boss:
             map_ok = mapgen::mk_boss_lvl();
             break;
         }
@@ -99,26 +99,26 @@ void init()
     const size_t nr_lvl_tot = dlvl_last + 3;
 
     map_list =
-        std::vector<Map_data>(nr_lvl_tot, {Map_type::std, Is_main_dungeon::yes});
+        std::vector<MapData>(nr_lvl_tot, {MapType::std, IsMainDungeon::yes});
 
     //Forest intro level
-    map_list[0] = {Map_type::intro, Is_main_dungeon::yes};
+    map_list[0] = {MapType::intro, IsMainDungeon::yes};
 
     //Occasionally set rats-in-the-walls level as intro to first late game level
     if (rnd::one_in(3))
     {
         map_list[dlvl_first_late_game - 1] =
         {
-            Map_type::rats_in_the_walls,
-            Is_main_dungeon::yes
+            MapType::rats_in_the_walls,
+            IsMainDungeon::yes
         };
     }
 
     //"Pharaoh chamber" is the first late game level
-    map_list[dlvl_first_late_game] = {Map_type::egypt,  Is_main_dungeon::yes};
+    map_list[dlvl_first_late_game] = {MapType::egypt,  IsMainDungeon::yes};
 
-    map_list[dlvl_last + 1] = {Map_type::boss,          Is_main_dungeon::yes};
-    map_list[dlvl_last + 2] = {Map_type::trapez,        Is_main_dungeon::yes};
+    map_list[dlvl_last + 1] = {MapType::boss,          IsMainDungeon::yes};
+    map_list[dlvl_last + 2] = {MapType::trapez,        IsMainDungeon::yes};
 }
 
 void save()
@@ -140,8 +140,8 @@ void load()
 
     for (auto& map_data : map_list)
     {
-        map_data.type               = Map_type(save_handling::get_int());
-        map_data.is_main_dungeon    = Is_main_dungeon(save_handling::get_int());
+        map_data.type               = MapType(save_handling::get_int());
+        map_data.is_main_dungeon    = IsMainDungeon(save_handling::get_int());
     }
 }
 
@@ -153,14 +153,14 @@ void go_to_nxt()
 
     const auto& map_data = map_list.front();
 
-    if (map_data.is_main_dungeon == Is_main_dungeon::yes)
+    if (map_data.is_main_dungeon == IsMainDungeon::yes)
     {
         ++map::dlvl;
     }
 
     mk_lvl(map_data.type);
 
-    map::player->prop_handler().end_prop(Prop_id::descend, false);
+    map::player->prop_handler().end_prop(PropId::descend, false);
 
     game_time::is_magic_descend_nxt_std_turn = false;
 
@@ -172,30 +172,30 @@ void go_to_nxt()
     map::player->update_clr();
     render::draw_map_state();
 
-    if (map_data.is_main_dungeon == Is_main_dungeon::yes && map::dlvl == dlvl_last - 1)
+    if (map_data.is_main_dungeon == IsMainDungeon::yes && map::dlvl == dlvl_last - 1)
     {
         msg_log::add("An ominous voice thunders in my ears.",
                      clr_white,
                      false,
-                     More_prompt_on_msg::yes);
+                     MorePromptOnMsg::yes);
 
-        audio::play(Sfx_id::boss_voice2);
+        audio::play(SfxId::boss_voice2);
     }
 
     audio::try_play_amb(1);
 
-    if (insanity::has_sympt(Ins_sympt_id::phobia_deep))
+    if (insanity::has_sympt(InsSymptId::phobia_deep))
     {
         msg_log::add("I am plagued by my phobia of deep places!");
 
-        map::player->prop_handler().try_add(new Prop_terrified(Prop_turns::std));
+        map::player->prop_handler().try_add(new PropTerrified(PropTurns::std));
         return;
     }
 
     TRACE_FUNC_END;
 }
 
-Map_type map_type()
+MapType map_type()
 {
     return map_list.front().type;
 }

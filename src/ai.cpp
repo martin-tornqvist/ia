@@ -81,7 +81,7 @@ bool handle_closed_blocking_door(Mon& mon, std::vector<P> path)
     const P& p = path.back();
     Feature* const f = map::cells[p.x][p.y].rigid;
 
-    if (f->id() == Feature_id::door)
+    if (f->id() == FeatureId::door)
     {
         Door* const door = static_cast<Door*>(f);
 
@@ -96,13 +96,13 @@ bool handle_closed_blocking_door(Mon& mon, std::vector<P> path)
                 }
                 else if (mon.data().can_bash_doors)
                 {
-                    door->hit(Dmg_type::physical, Dmg_method::kick, &mon);
+                    door->hit(DmgType::physical, DmgMethod::kick, &mon);
                     return true;
                 }
             }
             else if (mon.data().can_bash_doors)
             {
-                door->hit(Dmg_type::physical, Dmg_method::kick, &mon);
+                door->hit(DmgType::physical, DmgMethod::kick, &mon);
                 return true;
             }
         }
@@ -171,9 +171,9 @@ void move_bucket(Mon& mon, std::vector<P>& dirs_to_mk)
 
      const R area_to_check_blocked(mon_p - P(1, 1), mon_p + P(1, 1));
 
-    map_parse::run(cell_check::Blocks_actor(mon, true),
+    map_parse::run(cell_check::BlocksActor(mon, true),
                    blocked,
-                   Map_parse_mode::overwrite,
+                   MapParseMode::overwrite,
                    area_to_check_blocked);
 
     for (const P& d : dir_utils::dir_list)
@@ -203,7 +203,7 @@ bool make_room_for_friend(Mon& mon)
 
     bool blocked_los[map_w][map_h];
 
-    map_parse::run(cell_check::Blocks_los(), blocked_los);
+    map_parse::run(cell_check::BlocksLos(), blocked_los);
 
     if (!mon.can_see_actor(*map::player, blocked_los))
     {
@@ -264,7 +264,7 @@ bool make_room_for_friend(Mon& mon)
                 move_bucket(mon, pos_bucket);
 
                 //Sort the list by distance to player
-                Is_closer_to_pos cmp(player_p);
+                IsCloserToPos cmp(player_p);
                 sort(pos_bucket.begin(), pos_bucket.end(), cmp);
 
                 //Try to find a position not blocking a third allied monster
@@ -331,7 +331,7 @@ bool move_to_random_adj_cell(Mon& mon)
 
     bool blocked[map_w][map_h];
 
-    cell_check::Blocks_actor cellcheck(mon, true);
+    cell_check::BlocksActor cellcheck(mon, true);
 
     for (const P& d : dir_utils::dir_list)
     {
@@ -426,7 +426,7 @@ bool move_to_tgt_simple(Mon& mon)
 
         const P new_pos(mon.pos + signs);
 
-        const bool is_blocked = map_parse::cell(cell_check::Blocks_actor(mon, true),
+        const bool is_blocked = map_parse::cell(cell_check::BlocksActor(mon, true),
                                                 new_pos);
 
         if (!is_blocked)
@@ -461,12 +461,12 @@ bool step_to_lair_if_los(Mon& mon, const P& lair_p)
 
          const R area_check_blocked = fov::get_fov_rect(mon.pos);
 
-        map_parse::run(cell_check::Blocks_los(),
+        map_parse::run(cell_check::BlocksLos(),
                        blocked,
-                       Map_parse_mode::overwrite,
+                       MapParseMode::overwrite,
                        area_check_blocked);
 
-        const Los_result los = fov::check_cell(mon.pos,
+        const LosResult los = fov::check_cell(mon.pos,
                                                lair_p,
                                                blocked);
 
@@ -475,7 +475,7 @@ bool step_to_lair_if_los(Mon& mon, const P& lair_p)
             const P d       = (lair_p - mon.pos).signs();
             const P tgt_p   = mon.pos + d;
 
-            const bool is_blocked = map_parse::cell(cell_check::Blocks_actor(mon, true), tgt_p);
+            const bool is_blocked = map_parse::cell(cell_check::BlocksActor(mon, true), tgt_p);
 
             if (is_blocked)
             {
@@ -562,12 +562,12 @@ void try_set_path_to_lair_if_no_los(Mon& mon, std::vector<P>& path, const P& lai
 
          const R fov_lmt = fov::get_fov_rect(mon.pos);
 
-        map_parse::run(cell_check::Blocks_los(),
+        map_parse::run(cell_check::BlocksLos(),
                        blocked,
-                       Map_parse_mode::overwrite,
+                       MapParseMode::overwrite,
                        fov_lmt);
 
-        const Los_result los = fov::check_cell(mon.pos, lair_p, blocked);
+        const LosResult los = fov::check_cell(mon.pos, lair_p, blocked);
 
         if (!los.is_blocked_hard)
         {
@@ -575,12 +575,12 @@ void try_set_path_to_lair_if_no_los(Mon& mon, std::vector<P>& path, const P& lai
             return;
         }
 
-        map_parse::run(cell_check::Blocks_actor(mon, false),
+        map_parse::run(cell_check::BlocksActor(mon, false),
                        blocked);
 
-        map_parse::run(cell_check::Living_actors_adj_to_pos(mon.pos),
+        map_parse::run(cell_check::LivingActorsAdjToPos(mon.pos),
                        blocked,
-                       Map_parse_mode::append);
+                       MapParseMode::append);
 
         pathfind::run(mon.pos,
                       lair_p,
@@ -605,12 +605,12 @@ void try_set_path_to_leader(Mon& mon, std::vector<P>& path)
 
              const R fov_lmt = fov::get_fov_rect(mon.pos);
 
-            map_parse::run(cell_check::Blocks_los(),
+            map_parse::run(cell_check::BlocksLos(),
                            blocked,
-                           Map_parse_mode::overwrite,
+                           MapParseMode::overwrite,
                            fov_lmt);
 
-            const Los_result los = fov::check_cell(mon.pos, leader->pos, blocked);
+            const LosResult los = fov::check_cell(mon.pos, leader->pos, blocked);
 
             if (!los.is_blocked_hard)
             {
@@ -618,11 +618,11 @@ void try_set_path_to_leader(Mon& mon, std::vector<P>& path)
                 return;
             }
 
-            map_parse::run(cell_check::Blocks_actor(mon, false), blocked);
+            map_parse::run(cell_check::BlocksActor(mon, false), blocked);
 
-            map_parse::run(cell_check::Living_actors_adj_to_pos(mon.pos),
+            map_parse::run(cell_check::LivingActorsAdjToPos(mon.pos),
                            blocked,
-                           Map_parse_mode::append);
+                           MapParseMode::append);
 
             pathfind::run(mon.pos,
                           leader->pos,
@@ -659,11 +659,11 @@ void try_set_path_to_player(Mon& mon, std::vector<P>& path)
 
             if (!f->can_move(mon))
             {
-                if (f->id() == Feature_id::door)
+                if (f->id() == FeatureId::door)
                 {
                     //Mark doors as blocked depending on if the monster can bash or open doors,
 
-                    const Actor_data_t& d = mon.data();
+                    const ActorDataT& d = mon.data();
 
                     //TODO: What if there is a monster that can open doors but not bash them,
                     //and the door is stuck?
@@ -690,14 +690,14 @@ void try_set_path_to_player(Mon& mon, std::vector<P>& path)
     //anyone when they should have come into sight.
     const P& player_pos = map::player->pos;
 
-    Los_result los_result = fov::check_cell(mon.pos, player_pos, blocked);
+    LosResult los_result = fov::check_cell(mon.pos, player_pos, blocked);
 
     if (los_result.is_blocked_hard || los_result.is_blocked_by_drk)
     {
         //Append living adjacent actors to the blocking array
-        map_parse::run(cell_check::Living_actors_adj_to_pos(mon.pos),
+        map_parse::run(cell_check::LivingActorsAdjToPos(mon.pos),
                        blocked,
-                       Map_parse_mode::append);
+                       MapParseMode::append);
 
         //Find a path
         pathfind::run(mon.pos,

@@ -7,7 +7,7 @@
 #include "properties.hpp"
 #include "map.hpp"
 
-int Ability_vals::val(const Ability_id id,
+int AbilityVals::val(const AbilityId id,
                       const bool is_affected_by_props,
                       const Actor& actor) const
 {
@@ -20,7 +20,7 @@ int Ability_vals::val(const Ability_id id,
 
     if (actor.is_player())
     {
-        for (const Inv_slot& slot : actor.inv().slots_)
+        for (const InvSlot& slot : actor.inv().slots_)
         {
             if (slot.item)
             {
@@ -34,7 +34,7 @@ int Ability_vals::val(const Ability_id id,
 
         switch (id)
         {
-        case Ability_id::searching:
+        case AbilityId::searching:
             ret += 8;
 
             if (player_bon::traits[size_t(Trait::observant)])
@@ -48,7 +48,7 @@ int Ability_vals::val(const Ability_id id,
             }
             break;
 
-        case Ability_id::melee:
+        case AbilityId::melee:
             ret += 60;
 
             if (player_bon::traits[size_t(Trait::adept_melee_fighter)])
@@ -74,7 +74,7 @@ int Ability_vals::val(const Ability_id id,
             }
             break;
 
-        case Ability_id::ranged:
+        case AbilityId::ranged:
             ret += 50;
 
             if (player_bon::traits[size_t(Trait::adept_marksman)])
@@ -105,7 +105,7 @@ int Ability_vals::val(const Ability_id id,
             }
             break;
 
-        case Ability_id::dodge_trap:
+        case AbilityId::dodge_trap:
             ret += 5;
 
             if (player_bon::traits[size_t(Trait::dexterous)])
@@ -119,7 +119,7 @@ int Ability_vals::val(const Ability_id id,
             }
             break;
 
-        case Ability_id::dodge_att:
+        case AbilityId::dodge_att:
             ret += 10;
 
             if (player_bon::traits[size_t(Trait::dexterous)])
@@ -140,7 +140,7 @@ int Ability_vals::val(const Ability_id id,
             }
             break;
 
-        case Ability_id::stealth:
+        case AbilityId::stealth:
             ret += 20;
 
             if (player_bon::traits[size_t(Trait::stealthy)])
@@ -154,17 +154,17 @@ int Ability_vals::val(const Ability_id id,
             }
             break;
 
-        case Ability_id::empty:
-        case Ability_id::END:
+        case AbilityId::empty:
+        case AbilityId::END:
             break;
         }
 
-        if (id == Ability_id::searching)
+        if (id == AbilityId::searching)
         {
             //Searching must always be at least 1 to avoid trapping the player
             ret = std::max(ret, 1);
         }
-        else if (id == Ability_id::dodge_att)
+        else if (id == AbilityId::dodge_att)
         {
             //It should not be possible to dodge every attack
             ret = std::min(ret, 95);
@@ -176,20 +176,20 @@ int Ability_vals::val(const Ability_id id,
     return ret;
 }
 
-void Ability_vals::reset()
+void AbilityVals::reset()
 {
-    for (int i = 0; i < int(Ability_id::END); ++i)
+    for (int i = 0; i < int(AbilityId::END); ++i)
     {
         ability_list[i] = 0;
     }
 }
 
-void Ability_vals::set_val(const Ability_id ability, const int val)
+void AbilityVals::set_val(const AbilityId ability, const int val)
 {
     ability_list[int(ability)] = val;
 }
 
-void Ability_vals::change_val(const Ability_id ability, const int change)
+void AbilityVals::change_val(const AbilityId ability, const int change)
 {
     ability_list[int(ability)] += change;
 }
@@ -197,12 +197,12 @@ void Ability_vals::change_val(const Ability_id ability, const int change)
 namespace ability_roll
 {
 
-Ability_roll_result roll(const int tot_skill_value, const Actor* const actor_rolling)
+AbilityRollResult roll(const int tot_skill_value, const Actor* const actor_rolling)
 {
     const int roll = rnd::percent();
 
-    const bool is_cursed    = actor_rolling && actor_rolling->has_prop(Prop_id::cursed);
-    const bool is_blessed   = actor_rolling && actor_rolling->has_prop(Prop_id::blessed);
+    const bool is_cursed    = actor_rolling && actor_rolling->has_prop(PropId::cursed);
+    const bool is_blessed   = actor_rolling && actor_rolling->has_prop(PropId::blessed);
 
     //Critical success?
     Range crit_success_range(1, 1);
@@ -220,7 +220,7 @@ Ability_roll_result roll(const int tot_skill_value, const Actor* const actor_rol
 
     if (is_val_in_range(roll, crit_success_range))
     {
-        return Ability_roll_result::success_critical;
+        return AbilityRollResult::success_critical;
     }
 
     //Critical fail?
@@ -239,11 +239,11 @@ Ability_roll_result roll(const int tot_skill_value, const Actor* const actor_rol
 
     if (is_val_in_range(roll, crit_fail_range))
     {
-        return Ability_roll_result::fail_critical;
+        return AbilityRollResult::fail_critical;
     }
 
     return roll <= tot_skill_value ?
-           Ability_roll_result::success : Ability_roll_result::fail;
+           AbilityRollResult::success : AbilityRollResult::fail;
 }
 
 } //ability_roll

@@ -44,7 +44,7 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
 {
     if (draw_map_state)
     {
-        render::draw_map_state(Update_screen::no);
+        render::draw_map_state(UpdateScreen::no);
     }
 
     int text_width = text_w_std;
@@ -126,12 +126,12 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
 void show_msg(const std::string& msg,
               const bool draw_map_state,
               const std::string& title,
-              const Sfx_id sfx,
+              const SfxId sfx,
               const int w_change)
 {
     if (draw_map_state)
     {
-        render::draw_map_state(Update_screen::no);
+        render::draw_map_state(UpdateScreen::no);
     }
 
     const int text_w = text_w_std + w_change;
@@ -143,7 +143,7 @@ void show_msg(const std::string& msg,
 
     int y = print_box_and_get_title_y_pos(text_h_tot, text_w);
 
-    if (sfx != Sfx_id::END)
+    if (sfx != SfxId::END)
     {
         audio::play(sfx);
     }
@@ -206,7 +206,7 @@ int show_menu_msg(const std::string& msg,
                   const bool draw_map_state,
                   const std::vector<std::string>& choices,
                   const std::string& title,
-                  const Sfx_id sfx)
+                  const SfxId sfx)
 {
     if (config::is_bot_playing())
     {
@@ -223,9 +223,9 @@ int show_menu_msg(const std::string& msg,
 
     const int text_h_tot = title_h + nr_msg_lines + nr_blank_lines + nr_choices;
 
-    Menu_browser browser(nr_choices);
+    MenuBrowser browser(nr_choices);
 
-    if (sfx != Sfx_id::END) {audio::play(sfx);}
+    if (sfx != SfxId::END) {audio::play(sfx);}
 
     menu_msg_drawing_helper(lines,
                             choices,
@@ -237,11 +237,11 @@ int show_menu_msg(const std::string& msg,
 
     while (true)
     {
-        const Menu_action action = menu_input::action(browser, Menu_input_mode::scroll);
+        const MenuAction action = menu_input::action(browser, MenuInputMode::scroll);
 
         switch (action)
         {
-        case Menu_action::moved:
+        case MenuAction::moved:
             menu_msg_drawing_helper(lines,
                                     choices,
                                     draw_map_state,
@@ -251,8 +251,8 @@ int show_menu_msg(const std::string& msg,
                                     title);
             break;
 
-        case Menu_action::esc:
-        case Menu_action::space:
+        case MenuAction::esc:
+        case MenuAction::space:
             if (draw_map_state)
             {
                 render::draw_map_state();
@@ -260,8 +260,8 @@ int show_menu_msg(const std::string& msg,
 
             return nr_choices - 1;
 
-        case Menu_action::selected:
-        case Menu_action::selected_shift:
+        case MenuAction::selected:
+        case MenuAction::selected_shift:
             if (draw_map_state)
             {
                 render::draw_map_state();

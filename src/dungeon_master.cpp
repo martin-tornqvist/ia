@@ -24,9 +24,9 @@ namespace
 int         xp_for_lvl_[player_max_clvl + 1];
 int         clvl_  = 0;
 int         xp_    = 0;
-Time_data   time_started_;
+TimeData   time_started_;
 
-std::vector<History_event> history_events_;
+std::vector<HistoryEvent> history_events_;
 
 void player_gain_lvl()
 {
@@ -37,7 +37,7 @@ void player_gain_lvl()
         msg_log::add("Welcome to level " + to_str(clvl_) + "!",
                      clr_green,
                      false,
-                     More_prompt_on_msg::yes);
+                     MorePromptOnMsg::yes);
 
         create_character::pick_new_trait();
 
@@ -88,7 +88,7 @@ void save()
 
     save_handling::put_int(history_events_.size());
 
-    for (const History_event& event : history_events_)
+    for (const HistoryEvent& event : history_events_)
     {
         save_handling::put_str(event.msg);
         save_handling::put_int(event.turn);
@@ -125,12 +125,12 @@ int xp()
 {
     return xp_;
 }
-Time_data    start_time()
+TimeData    start_time()
 {
     return time_started_;
 }
 
-int mon_tot_xp_worth(const Actor_data_t& d)
+int mon_tot_xp_worth(const ActorDataT& d)
 {
     //K regulates player xp rate, higher -> more xp per monster
     const double k              = 0.45;
@@ -138,11 +138,11 @@ int mon_tot_xp_worth(const Actor_data_t& d)
     const double hp             = d.hp;
 
     const double speed          = double(d.speed);
-    const double speed_max      = double(Actor_speed::END);
+    const double speed_max      = double(ActorSpeed::END);
     const double speed_factor   = 1.0 + ((speed / speed_max) * 0.50);
 
     const double shock          = double(d.mon_shock_lvl);
-    const double shock_max      = double(Mon_shock_lvl::END);
+    const double shock_max      = double(MonShockLvl::END);
     const double shock_factor   = 1.0 + ((shock / shock_max) * 0.75);
 
     const double unique_factor  = d.is_unique ? 2.0 : 1.0;
@@ -256,7 +256,7 @@ void win_game()
 
 void on_mon_killed(Actor& actor)
 {
-    Actor_data_t& d = actor.data();
+    ActorDataT& d = actor.data();
 
     d.nr_kills += 1;
 
@@ -264,7 +264,7 @@ void on_mon_killed(Actor& actor)
 
     if (
         d.hp >= min_hp_for_sadism_bon &&
-        insanity::has_sympt(Ins_sympt_id::sadism))
+        insanity::has_sympt(InsSymptId::sadism))
     {
         map::player->shock_ = std::max(0.0, map::player->shock_ - 3.0);
     }
@@ -310,9 +310,9 @@ void add_history_event(const std::string msg)
     history_events_.push_back({msg, turn_nr});
 }
 
-const std::vector<History_event>& history()
+const std::vector<HistoryEvent>& history()
 {
     return history_events_;
 }
 
-} //Dungeon_master
+} //DungeonMaster

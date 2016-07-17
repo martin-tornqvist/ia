@@ -4,7 +4,7 @@
 #include "config.hpp"
 
 //---------------------------------------------------------- MENU BROWSER
-Menu_browser::Menu_browser(const int nr_items, const int list_h) :
+MenuBrowser::MenuBrowser(const int nr_items, const int list_h) :
     nr_items_       (nr_items),
     y_              (0),
     list_h_         (list_h),
@@ -15,11 +15,11 @@ Menu_browser::Menu_browser(const int nr_items, const int list_h) :
     update_range_shown();
 }
 
-void Menu_browser::move(const Ver_dir dir)
+void MenuBrowser::move(const VerDir dir)
 {
     const int last_idx = nr_items_ - 1;
 
-    if (dir == Ver_dir::up)
+    if (dir == VerDir::up)
     {
         y_ = y_ == 0 ? last_idx : (y_ - 1);
     }
@@ -31,9 +31,9 @@ void Menu_browser::move(const Ver_dir dir)
     update_range_shown();
 }
 
-void Menu_browser::move_page(const Ver_dir dir)
+void MenuBrowser::move_page(const VerDir dir)
 {
-    if (dir == Ver_dir::up)
+    if (dir == VerDir::up)
     {
         if (list_h_ >= 0)
         {
@@ -61,7 +61,7 @@ void Menu_browser::move_page(const Ver_dir dir)
     update_range_shown();
 }
 
-void Menu_browser::set_y(const int y)
+void MenuBrowser::set_y(const int y)
 {
     y_ = y;
 
@@ -70,7 +70,7 @@ void Menu_browser::set_y(const int y)
     update_range_shown();
 }
 
-Range Menu_browser::range_shown() const
+Range MenuBrowser::range_shown() const
 {
     //Shown ranged defined?
     if (list_h_ >= 0)
@@ -84,7 +84,7 @@ Range Menu_browser::range_shown() const
     }
 }
 
-void Menu_browser::update_range_shown()
+void MenuBrowser::update_range_shown()
 {
     //Shown ranged defined?
     if (list_h_ >= 0)
@@ -96,12 +96,12 @@ void Menu_browser::update_range_shown()
     }
 }
 
-void Menu_browser::set_y_nearest_valid()
+void MenuBrowser::set_y_nearest_valid()
 {
     set_constr_in_range(0, y_, nr_items_ - 1);
 }
 
-int Menu_browser::nr_items_shown() const
+int MenuBrowser::nr_items_shown() const
 {
     //Shown ranged defined?
     if (list_h_ >= 0)
@@ -115,7 +115,7 @@ int Menu_browser::nr_items_shown() const
     }
 }
 
-int Menu_browser::top_idx_shown() const
+int MenuBrowser::top_idx_shown() const
 {
     //Shown ranged defined?
     if (list_h_ >= 0)
@@ -128,7 +128,7 @@ int Menu_browser::top_idx_shown() const
     }
 }
 
-int Menu_browser::btm_idx_shown() const
+int MenuBrowser::btm_idx_shown() const
 {
     //Shown ranged defined?
     if (list_h_ >= 0)
@@ -141,7 +141,7 @@ int Menu_browser::btm_idx_shown() const
     }
 }
 
-bool Menu_browser::is_on_top_page() const
+bool MenuBrowser::is_on_top_page() const
 {
     //Shown ranged defined?
     if (list_h_ >= 0)
@@ -154,7 +154,7 @@ bool Menu_browser::is_on_top_page() const
     }
 }
 
-bool Menu_browser::is_on_btm_page() const
+bool MenuBrowser::is_on_btm_page() const
 {
     //Shown ranged defined?
     if (list_h_ >= 0)
@@ -171,43 +171,43 @@ bool Menu_browser::is_on_btm_page() const
 namespace menu_input
 {
 
-Menu_action action(Menu_browser& browser, Menu_input_mode mode)
+MenuAction action(MenuBrowser& browser, MenuInputMode mode)
 {
     while (true)
     {
-        Key_data d = input::input();
+        KeyData d = input::input();
 
         if (
             d.sdl_key == SDLK_UP    ||
             d.key == '8'            ||
-            (mode == Menu_input_mode::scroll && d.key == 'k'))
+            (mode == MenuInputMode::scroll && d.key == 'k'))
         {
-            browser.move(Ver_dir::up);
-            return Menu_action::moved;
+            browser.move(VerDir::up);
+            return MenuAction::moved;
         }
 
         if (
             d.sdl_key == SDLK_DOWN  ||
             d.key == '2'            ||
-            (mode == Menu_input_mode::scroll && d.key == 'j'))
+            (mode == MenuInputMode::scroll && d.key == 'j'))
         {
-            browser.move(Ver_dir::down);
-            return Menu_action::moved;
+            browser.move(VerDir::down);
+            return MenuAction::moved;
         }
 
         if (d.sdl_key == SDLK_PAGEUP)
         {
-            browser.move_page(Ver_dir::up);
-            return Menu_action::moved;
+            browser.move_page(VerDir::up);
+            return MenuAction::moved;
         }
 
         if (d.sdl_key == SDLK_PAGEDOWN)
         {
-            browser.move_page(Ver_dir::down);
-            return Menu_action::moved;
+            browser.move_page(VerDir::down);
+            return MenuAction::moved;
         }
 
-        if (mode == Menu_input_mode::scroll_and_letters)
+        if (mode == MenuInputMode::scroll_and_letters)
         {
             bool is_shift_held  = false;
             char c              = d.key;
@@ -233,7 +233,7 @@ Menu_action action(Menu_browser& browser, Menu_input_mode mode)
                 browser.set_y(idx);
 
                 return is_shift_held ?
-                       Menu_action::selected_shift : Menu_action::selected;
+                       MenuAction::selected_shift : MenuAction::selected;
             }
 
             //If this is a letter (lower or upper case), we don't want to handle input in any
@@ -248,21 +248,21 @@ Menu_action action(Menu_browser& browser, Menu_input_mode mode)
         if (d.sdl_key == SDLK_RETURN)
         {
             return d.is_shift_held ?
-                   Menu_action::selected_shift : Menu_action::selected;
+                   MenuAction::selected_shift : MenuAction::selected;
         }
 
         if (d.sdl_key == SDLK_SPACE)
         {
-            return Menu_action::space;
+            return MenuAction::space;
         }
 
         if (d.sdl_key == SDLK_ESCAPE)
         {
-            return Menu_action::esc;
+            return MenuAction::esc;
         }
     }
 
-    return Menu_action::esc;
+    return MenuAction::esc;
 }
 
 } //menu_input

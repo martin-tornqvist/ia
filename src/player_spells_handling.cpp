@@ -22,13 +22,13 @@ namespace player_spells_handling
 namespace
 {
 
-struct Spell_opt
+struct SpellOpt
 {
-    Spell_opt() :
+    SpellOpt() :
         spell       (nullptr),
         src_item    (nullptr) {}
 
-    Spell_opt(Spell* spell_, Item* src_item_) :
+    SpellOpt(Spell* spell_, Item* src_item_) :
         spell       (spell_),
         src_item    (src_item_) {}
 
@@ -38,7 +38,7 @@ struct Spell_opt
 
 std::vector<Spell*> known_spells_;
 
-void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
+void draw(MenuBrowser& browser, const std::vector<SpellOpt>& spell_opts)
 {
     const int nr_spells = spell_opts.size();
 
@@ -57,7 +57,7 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
     {
         const int       cur_idx         = i;
         const bool      is_idx_marked   = browser.is_at_idx(cur_idx);
-        Spell_opt       spell_opt       = spell_opts[i];
+        SpellOpt       spell_opt       = spell_opts[i];
         Spell* const    spell           = spell_opt.spell;
         std::string     name            = spell->name();
         const int       spi_x           = 25;
@@ -109,19 +109,19 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
 
         p.x = shock_x;
 
-        const Intr_spell_shock shock_type = spell->shock_type_intr_cast();
+        const IntrSpellShock shock_type = spell->shock_type_intr_cast();
 
         switch (shock_type)
         {
-        case Intr_spell_shock::mild:
+        case IntrSpellShock::mild:
             info_str = "Mild";
             break;
 
-        case Intr_spell_shock::disturbing:
+        case IntrSpellShock::disturbing:
             info_str = "Disturbing";
             break;
 
-        case Intr_spell_shock::severe:
+        case IntrSpellShock::severe:
             info_str = "Severe";
             break;
         }
@@ -131,7 +131,7 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
         if (is_idx_marked)
         {
             const auto descr = spell->descr();
-            std::vector<Str_and_clr> lines;
+            std::vector<StrAndClr> lines;
 
             if (!descr.empty())
             {
@@ -145,7 +145,7 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
             if (spell_opt.src_item)
             {
                 const std::string item_name =
-                    spell_opt.src_item->name(Item_ref_type::plain, Item_ref_inf::none);
+                    spell_opt.src_item->name(ItemRefType::plain, ItemRefInf::none);
 
                 lines.push_back({"Spell granted by " + item_name + ".", clr_green});
             }
@@ -162,13 +162,13 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
     render::update_screen();
 }
 
-void spells_avail(std::vector<Spell_opt>& out)
+void spells_avail(std::vector<SpellOpt>& out)
 {
     out.clear();
 
     for (Spell* const spell : known_spells_)
     {
-        out.push_back(Spell_opt(spell, nullptr));
+        out.push_back(SpellOpt(spell, nullptr));
     }
 
     Inventory& inv = map::player->inv();
@@ -183,7 +183,7 @@ void spells_avail(std::vector<Spell_opt>& out)
 
             for (Spell* spell : carrier_spells)
             {
-                out.push_back(Spell_opt(spell, item));
+                out.push_back(SpellOpt(spell, item));
             }
         }
     }
@@ -194,12 +194,12 @@ void spells_avail(std::vector<Spell_opt>& out)
 
         for (Spell* spell : carrier_spells)
         {
-            out.push_back(Spell_opt(spell, item));
+            out.push_back(SpellOpt(spell, item));
         }
     }
 }
 
-void try_cast(const Spell_opt& spell_opt)
+void try_cast(const SpellOpt& spell_opt)
 {
     ASSERT(spell_opt.spell);
 
@@ -221,7 +221,7 @@ void try_cast(const Spell_opt& spell_opt)
 
             render::draw_map_state();
 
-            if (query::yes_or_no() == Yes_no_answer::no)
+            if (query::yes_or_no() == YesNoAnswer::no)
             {
                 msg_log::clear();
                 render::draw_map_state();
@@ -250,7 +250,7 @@ void try_cast(const Spell_opt& spell_opt)
 
         if (is_blood_sorc)
         {
-            map::player->hit(blood_sorc_hp_drained, Dmg_type::pure);
+            map::player->hit(blood_sorc_hp_drained, DmgType::pure);
         }
 
         if (map::player->is_alive())
@@ -259,7 +259,7 @@ void try_cast(const Spell_opt& spell_opt)
 
             if (is_warlock && rnd::one_in(2))
             {
-                auto* const prop = new Prop_warlock_charged(Prop_turns::std);
+                auto* const prop = new PropWarlockCharged(PropTurns::std);
 
                 map::player->prop_handler().try_add(prop);
             }
@@ -267,7 +267,7 @@ void try_cast(const Spell_opt& spell_opt)
     }
 }
 
-} //Player_spells_handling
+} //PlayerSpellsHandling
 
 void init()
 {
@@ -297,7 +297,7 @@ void load()
 
     for (int i = 0; i < nr_spells; ++i)
     {
-        const Spell_id id = Spell_id(save_handling::get_int());
+        const SpellId id = SpellId(save_handling::get_int());
 
         known_spells_.push_back(spell_handling::mk_spell_from_id(id));
     }
@@ -305,7 +305,7 @@ void load()
 
 void player_select_spell_to_cast()
 {
-    std::vector<Spell_opt> spell_opts;
+    std::vector<SpellOpt> spell_opts;
     spells_avail(spell_opts);
 
     if (spell_opts.empty())
@@ -314,7 +314,7 @@ void player_select_spell_to_cast()
     }
     else //Has spells
     {
-        Menu_browser browser(spell_opts.size());
+        MenuBrowser browser(spell_opts.size());
 
         render::draw_map_state();
 
@@ -322,21 +322,21 @@ void player_select_spell_to_cast()
 
         while (true)
         {
-            const Menu_action action = menu_input::action(browser);
+            const MenuAction action = menu_input::action(browser);
 
             switch (action)
             {
-            case Menu_action::moved:
+            case MenuAction::moved:
                 draw(browser, spell_opts);
                 break;
 
-            case Menu_action::esc:
-            case Menu_action::space:
+            case MenuAction::esc:
+            case MenuAction::space:
                 msg_log::clear();
                 render::draw_map_state();
                 return;
 
-            case Menu_action::selected:
+            case MenuAction::selected:
                 try_cast(spell_opts[browser.y()]);
                 return;
 
@@ -347,7 +347,7 @@ void player_select_spell_to_cast()
     }
 }
 
-bool is_spell_learned(const Spell_id id)
+bool is_spell_learned(const SpellId id)
 {
     for (auto* s : known_spells_)
     {
@@ -360,7 +360,7 @@ bool is_spell_learned(const Spell_id id)
     return false;
 }
 
-void learn_spell_if_not_known(const Spell_id id)
+void learn_spell_if_not_known(const SpellId id)
 {
     learn_spell_if_not_known(spell_handling::mk_spell_from_id(id));
 }

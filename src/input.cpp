@@ -72,7 +72,7 @@ void cleanup()
     is_inited_ = false;
 }
 
-void handle_map_mode_key_press(const Key_data& d)
+void handle_map_mode_key_press(const KeyData& d)
 {
     //----------------------------------- MOVEMENT
     if (d.sdl_key == SDLK_RIGHT || d.key == '6' || d.key == 'l')
@@ -195,22 +195,22 @@ void handle_map_mode_key_press(const Key_data& d)
 
             if (player_bon::traits[size_t(Trait::steady_aimer)])
             {
-                Prop_handler& prop_hlr = map::player->prop_handler();
+                PropHandler& prop_hlr = map::player->prop_handler();
 
                 int nr_turns_aiming_old = 0;
 
                 if (player_bon::traits[size_t(Trait::sharpshooter)])
                 {
-                    Prop* const prop_aiming_old = prop_hlr.prop(Prop_id::aiming);
+                    Prop* const prop_aiming_old = prop_hlr.prop(PropId::aiming);
 
                     if (prop_aiming_old)
                     {
                         nr_turns_aiming_old =
-                            static_cast<Prop_aiming*>(prop_aiming_old)->nr_turns_aiming;
+                            static_cast<PropAiming*>(prop_aiming_old)->nr_turns_aiming;
                     }
                 }
 
-                Prop_aiming* const aiming = new Prop_aiming(Prop_turns::specific, 1);
+                PropAiming* const aiming = new PropAiming(PropTurns::specific, 1);
                 aiming->nr_turns_aiming += nr_turns_aiming_old;
                 prop_hlr.try_add(aiming);
             }
@@ -247,7 +247,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
         if (map::player->is_alive())
         {
-            Item* const wpn = map::player->inv().item_in_slot(Slot_id::wpn);
+            Item* const wpn = map::player->inv().item_in_slot(SlotId::wpn);
 
             reload::try_reload(*map::player, wpn);
         }
@@ -322,11 +322,11 @@ void handle_map_mode_key_press(const Key_data& d)
             map::player->is_alive() &&
             map::player->prop_handler().allow_attack_ranged(Verbosity::verbose))
         {
-            auto* const item = map::player->inv().item_in_slot(Slot_id::wpn);
+            auto* const item = map::player->inv().item_in_slot(SlotId::wpn);
 
             if (item)
             {
-                const Item_data_t& item_data = item->data();
+                const ItemDataT& item_data = item->data();
 
                 if (item_data.ranged.is_ranged_wpn)
                 {
@@ -334,26 +334,26 @@ void handle_map_mode_key_press(const Key_data& d)
 
                     //TODO: Quick hack for the Mi-go gun, shouldn't be here - refactor
                     if (
-                        wpn->data().id == Item_id::mi_go_gun    &&
+                        wpn->data().id == ItemId::mi_go_gun    &&
                         wpn->nr_ammo_loaded_ == 0               &&
                         map::player->hp() > 1)
                     {
-                        const std::string wpn_name = wpn->name(Item_ref_type::plain,
-                                                               Item_ref_inf::none);
+                        const std::string wpn_name = wpn->name(ItemRefType::plain,
+                                                               ItemRefInf::none);
 
                         msg_log::add("The " + wpn_name + " draws power from my essence!",
                                      clr_msg_bad);
 
                         render::draw_map_state();
                         ++wpn->nr_ammo_loaded_;
-                        map::player->hit(1, Dmg_type::pure);
+                        map::player->hit(1, DmgType::pure);
                         return;
                     }
 
                     if (wpn->nr_ammo_loaded_ >= 1 || item_data.ranged.has_infinite_ammo)
                     {
                         auto on_marker_at_pos =
-                            [&](const P & p, Cell_overlay overlay[map_w][map_h])
+                            [&](const P & p, CellOverlay overlay[map_w][map_h])
                         {
                             (void)overlay;
 
@@ -370,9 +370,9 @@ void handle_map_mode_key_press(const Key_data& d)
                                 const bool gets_undead_bane_bon =
                                     player_bon::gets_undead_bane_bon(actor->data());
 
-                                if (!actor->has_prop(Prop_id::ethereal) || gets_undead_bane_bon)
+                                if (!actor->has_prop(PropId::ethereal) || gets_undead_bane_bon)
                                 {
-                                    Ranged_att_data data(map::player,
+                                    RangedAttData data(map::player,
                                                          map::player->pos,  //Origin
                                                          actor->pos,        //Aim pos
                                                          actor->pos,        //Cur pos
@@ -384,7 +384,7 @@ void handle_map_mode_key_press(const Key_data& d)
                             msg_log::add("[f] to fire" + cancel_info_str);
                         };
 
-                        auto on_key_press = [&](const P & p, const Key_data & d_)
+                        auto on_key_press = [&](const P & p, const KeyData & d_)
                         {
                             if (d_.key == 'f')
                             {
@@ -404,22 +404,22 @@ void handle_map_mode_key_press(const Key_data& d)
 
                                     attack::ranged(map::player, map::player->pos, p, *wpn);
 
-                                    return Marker_done::yes;
+                                    return MarkerDone::yes;
                                 }
                             }
                             else if (d_.sdl_key == SDLK_SPACE || d_.sdl_key == SDLK_ESCAPE)
                             {
                                 msg_log::clear();
-                                return Marker_done::yes;
+                                return MarkerDone::yes;
                             }
 
-                            return Marker_done::no;
+                            return MarkerDone::no;
                         };
 
-                        marker::run(Marker_use_player_tgt::yes,
+                        marker::run(MarkerUsePlayerTgt::yes,
                                     on_marker_at_pos,
                                     on_key_press,
-                                    Marker_show_blocked::yes,
+                                    MarkerShowBlocked::yes,
                                     wpn->data().ranged.effective_range);
                     }
                     else /* Not enough ammo loaded */ if (config::is_ranged_wpn_auto_reload())
@@ -458,7 +458,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
             if (item_at_player)
             {
-                if (item_at_player->data().id == Item_id::trapez)
+                if (item_at_player->data().id == ItemId::trapez)
                 {
                     dungeon_master::win_game();
                     init::quit_to_main_menu = true;
@@ -511,16 +511,16 @@ void handle_map_mode_key_press(const Key_data& d)
         if (map::player->is_alive())
         {
 
-            const Pass_time pass_time = (player_bon::bg() == Bg::war_vet) ?
-                                        Pass_time::no : Pass_time::yes;
+            const PassTime pass_time = (player_bon::bg() == Bg::war_vet) ?
+                                        PassTime::no : PassTime::yes;
 
-            const std::string swift_str = (pass_time == Pass_time::no) ? " swiftly" : "";
+            const std::string swift_str = (pass_time == PassTime::no) ? " swiftly" : "";
 
             Inventory& inv = map::player->inv();
 
-            Item* const wielded   = inv.item_in_slot(Slot_id::wpn);
-            Item* const alt       = inv.item_in_slot(Slot_id::wpn_alt);
-            const std::string alt_name = alt ? alt->name(Item_ref_type::a) : "";
+            Item* const wielded   = inv.item_in_slot(SlotId::wpn);
+            Item* const alt       = inv.item_in_slot(SlotId::wpn_alt);
+            const std::string alt_name = alt ? alt->name(ItemRefType::a) : "";
 
             if (wielded || alt)
             {
@@ -533,7 +533,7 @@ void handle_map_mode_key_press(const Key_data& d)
                     }
                     else //No current alt weapon
                     {
-                        const std::string name = wielded->name(Item_ref_type::a);
+                        const std::string name = wielded->name(ItemRefType::a);
 
                         msg_log::add(
                             "I" + swift_str + " put away my weapon (" + name + ").");
@@ -617,13 +617,13 @@ void handle_map_mode_key_press(const Key_data& d)
             }
             else //Can see
             {
-                if (map::player->has_prop(Prop_id::poisoned))
+                if (map::player->has_prop(PropId::poisoned))
                 {
                     //Player is poisoned
                     msg_log::add("Not while poisoned.");
                     render::draw_map_state();
                 }
-                else if (map::player->has_prop(Prop_id::confused))
+                else if (map::player->has_prop(PropId::confused))
                 {
                     //Player is confused
                     msg_log::add("Not while confused.");
@@ -634,7 +634,7 @@ void handle_map_mode_key_press(const Key_data& d)
                     msg_log::add("Which direction?" + cancel_info_str, clr_white_high);
                     render::draw_map_state();
 
-                    const Dir input_dir = query::dir(Allow_center::no);
+                    const Dir input_dir = query::dir(AllowCenter::no);
 
                     msg_log::clear();
 
@@ -663,7 +663,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
         if (map::player->is_alive())
         {
-            if (map::player->try_eat_corpse() == Did_action::yes)
+            if (map::player->try_eat_corpse() == DidAction::yes)
             {
                 game_time::tick();
             }
@@ -685,16 +685,16 @@ void handle_map_mode_key_press(const Key_data& d)
             if (explosive)
             {
                 auto on_marker_at_pos =
-                    [&](const P & p, Cell_overlay overlay[map_w][map_h])
+                    [&](const P & p, CellOverlay overlay[map_w][map_h])
                 {
-                    const Item_id id = explosive->id();
+                    const ItemId id = explosive->id();
 
                     if (
-                        id == Item_id::dynamite ||
-                        id == Item_id::molotov  ||
-                        id == Item_id::smoke_grenade)
+                        id == ItemId::dynamite ||
+                        id == ItemId::molotov  ||
+                        id == ItemId::smoke_grenade)
                     {
-                        std::fill_n(*overlay, nr_map_cells, Cell_overlay());
+                        std::fill_n(*overlay, nr_map_cells, CellOverlay());
 
                         const int d     = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
                         const int radi  = expl_std_radi + d;
@@ -730,35 +730,35 @@ void handle_map_mode_key_press(const Key_data& d)
                     msg_log::add("[t] to throw." + cancel_info_str);
                 };
 
-                auto on_key_press = [](const P & p, const Key_data & d_)
+                auto on_key_press = [](const P & p, const KeyData & d_)
                 {
                     if (d_.sdl_key == SDLK_RETURN || d_.key == 't')
                     {
                         msg_log::clear();
                         render::draw_map_state();
                         throwing::player_throw_lit_explosive(p);
-                        return Marker_done::yes;
+                        return MarkerDone::yes;
                     }
                     else if (d_.sdl_key == SDLK_SPACE || d_.sdl_key == SDLK_ESCAPE)
                     {
                         msg_log::clear();
-                        return Marker_done::yes;
+                        return MarkerDone::yes;
                     }
 
-                    return Marker_done::no;
+                    return MarkerDone::no;
                 };
 
-                marker::run(Marker_use_player_tgt::no,
+                marker::run(MarkerUsePlayerTgt::no,
                             on_marker_at_pos,
                             on_key_press,
-                            Marker_show_blocked::yes);
+                            MarkerShowBlocked::yes);
             }
             else //Not holding explosive
             {
                 if (map::player->prop_handler().allow_attack_ranged(Verbosity::verbose))
                 {
                     Inventory& player_inv  = map::player->inv();
-                    Item* item_stack       = player_inv.item_in_slot(Slot_id::thrown);
+                    Item* item_stack       = player_inv.item_in_slot(SlotId::thrown);
 
                     if (item_stack)
                     {
@@ -768,7 +768,7 @@ void handle_map_mode_key_press(const Key_data& d)
                         item_to_throw->clear_actor_carrying();
 
                         auto on_marker_at_pos =
-                            [&](const P & p, Cell_overlay overlay[map_w][map_h])
+                            [&](const P & p, CellOverlay overlay[map_w][map_h])
                         {
                             (void)overlay;
 
@@ -786,9 +786,9 @@ void handle_map_mode_key_press(const Key_data& d)
                                 const bool gets_undead_bane_bon =
                                     player_bon::gets_undead_bane_bon(actor->data());
 
-                                if (!actor->has_prop(Prop_id::ethereal) || gets_undead_bane_bon)
+                                if (!actor->has_prop(PropId::ethereal) || gets_undead_bane_bon)
                                 {
-                                    Throw_att_data data(map::player,
+                                    ThrowAttData data(map::player,
                                                         actor->pos,     //Aim pos
                                                         actor->pos,     //Current pos
                                                         *item_to_throw);
@@ -800,7 +800,7 @@ void handle_map_mode_key_press(const Key_data& d)
                             msg_log::add("[t] to throw");
                         };
 
-                        auto on_key_press = [&](const P & p, const Key_data & d_)
+                        auto on_key_press = [&](const P & p, const KeyData & d_)
                         {
                             if (d_.sdl_key == SDLK_RETURN || d_.key == 't')
                             {
@@ -822,26 +822,26 @@ void handle_map_mode_key_press(const Key_data& d)
 
                                     throwing::throw_item(*map::player, p, *item_to_throw);
 
-                                    player_inv.decr_item_in_slot(Slot_id::thrown);
+                                    player_inv.decr_item_in_slot(SlotId::thrown);
                                 }
 
-                                return Marker_done::yes;
+                                return MarkerDone::yes;
                             }
                             else if (d_.sdl_key == SDLK_SPACE || d_.sdl_key == SDLK_ESCAPE)
                             {
                                 delete item_to_throw;
                                 item_to_throw = nullptr;
                                 msg_log::clear();
-                                return Marker_done::yes;
+                                return MarkerDone::yes;
                             }
 
-                            return Marker_done::no;
+                            return MarkerDone::no;
                         };
 
-                        marker::run(Marker_use_player_tgt::yes,
+                        marker::run(MarkerUsePlayerTgt::yes,
                                     on_marker_at_pos,
                                     on_key_press,
-                                    Marker_show_blocked::yes,
+                                    MarkerShowBlocked::yes,
                                     item_to_throw->data().ranged.effective_range);
                     }
                     else //No item equipped
@@ -866,7 +866,7 @@ void handle_map_mode_key_press(const Key_data& d)
             if (map::player->prop_handler().allow_see())
             {
                 auto on_marker_at_pos =
-                    [&](const P & p, Cell_overlay overlay[map_w][map_h])
+                    [&](const P & p, CellOverlay overlay[map_w][map_h])
                 {
                     (void)overlay;
 
@@ -886,7 +886,7 @@ void handle_map_mode_key_press(const Key_data& d)
                     msg_log::add(cancel_info_str_no_space);
                 };
 
-                auto on_key_press = [&](const P & p, const Key_data & d_)
+                auto on_key_press = [&](const P & p, const KeyData & d_)
                 {
                     if (d_.key == 'v')
                     {
@@ -905,16 +905,16 @@ void handle_map_mode_key_press(const Key_data& d)
                     else if (d_.sdl_key == SDLK_SPACE || d_.sdl_key == SDLK_ESCAPE)
                     {
                         msg_log::clear();
-                        return Marker_done::yes;
+                        return MarkerDone::yes;
                     }
 
-                    return Marker_done::no;
+                    return MarkerDone::no;
                 };
 
-                marker::run(Marker_use_player_tgt::yes,
+                marker::run(MarkerUsePlayerTgt::yes,
                             on_marker_at_pos,
                             on_key_press,
-                            Marker_show_blocked::no);
+                            MarkerShowBlocked::no);
             }
             else //Cannot see
             {
@@ -985,12 +985,12 @@ void handle_map_mode_key_press(const Key_data& d)
 
 
         Snd snd("",
-                Sfx_id::END,
-                Ignore_msg_if_origin_seen::yes,
+                SfxId::END,
+                IgnoreMsgIfOriginSeen::yes,
                 map::player->pos,
                 map::player,
-                Snd_vol::low,
-                Alerts_mon::yes);
+                SndVol::low,
+                AlertsMon::yes);
 
         snd_emit::run(snd);
 
@@ -1057,13 +1057,13 @@ void handle_map_mode_key_press(const Key_data& d)
         const int idx = query::number(P(query_str.size(), 0),
                                       clr_white_high,
                                       0,
-                                      int(Actor_id::END),
+                                      int(ActorId::END),
                                       0,
                                       false);
 
-        const Actor_id mon_id = Actor_id(idx);
+        const ActorId mon_id = ActorId(idx);
 
-        actor_factory::summon(map::player->pos, {mon_id}, Make_mon_aware::no);
+        actor_factory::summon(map::player->pos, {mon_id}, MakeMonAware::no);
 
         clear_events();
 
@@ -1118,7 +1118,7 @@ void handle_map_mode_key_press(const Key_data& d)
     //----------------------------------- INSANITY CHEAT
     else if (d.sdl_key == SDLK_F5)
     {
-        map::player->incr_shock(50, Shock_src::misc);
+        map::player->incr_shock(50, ShockSrc::misc);
         clear_events();
 
         return;
@@ -1127,15 +1127,15 @@ void handle_map_mode_key_press(const Key_data& d)
     //----------------------------------- DROP ITEMS AROUND PLAYER
     else if (d.sdl_key == SDLK_F6)
     {
-        item_factory::mk_item_on_floor(Item_id::gas_mask, map::player->pos);
+        item_factory::mk_item_on_floor(ItemId::gas_mask, map::player->pos);
 
-        for (size_t i = 0; i < size_t(Item_id::END); ++i)
+        for (size_t i = 0; i < size_t(ItemId::END); ++i)
         {
             const auto& item_data = item_data::data[i];
 
-            if (item_data.value != Item_value::normal && item_data.allow_spawn)
+            if (item_data.value != ItemValue::normal && item_data.allow_spawn)
             {
-                item_factory::mk_item_on_floor(Item_id(i), map::player->pos);
+                item_factory::mk_item_on_floor(ItemId(i), map::player->pos);
             }
         }
 
@@ -1157,7 +1157,7 @@ void handle_map_mode_key_press(const Key_data& d)
     //----------------------------------- PROPERTY
     else if (d.sdl_key == SDLK_F8)
     {
-        map::player->prop_handler().try_add(new Prop_frenzied(Prop_turns::std));
+        map::player->prop_handler().try_add(new PropFrenzied(PropTurns::std));
         clear_events();
 
         return;
@@ -1180,7 +1180,7 @@ void map_mode_input()
 {
     if (is_inited_)
     {
-        const Key_data& d = input();
+        const KeyData& d = input();
 
         if (!init::quit_to_main_menu)
         {
@@ -1197,9 +1197,9 @@ void clear_events()
     }
 }
 
-Key_data input(const bool is_o_return)
+KeyData input(const bool is_o_return)
 {
-    Key_data ret = Key_data();
+    KeyData ret = KeyData();
 
     if (!is_inited_)
     {
@@ -1242,7 +1242,7 @@ Key_data input(const bool is_o_return)
         break;
 
         case SDL_QUIT:
-            ret = Key_data(SDLK_ESCAPE);
+            ret = KeyData(SDLK_ESCAPE);
             is_done = true;
             break;
 
@@ -1268,7 +1268,7 @@ Key_data input(const bool is_o_return)
             const bool  is_ctrl_held  = mod & KMOD_CTRL;
             const bool  is_alt_held   = mod & KMOD_ALT;
 
-            ret = Key_data(-1, sdl_key, is_shift_held, is_ctrl_held);
+            ret = KeyData(-1, sdl_key, is_shift_held, is_ctrl_held);
 
             if (sdl_key >= SDLK_F1 && sdl_key <= SDLK_F9)
             {
@@ -1328,7 +1328,7 @@ Key_data input(const bool is_o_return)
             if ((c == 'o' || c == 'O') && is_o_return)
             {
                 const bool is_shift_held = c == 'O';
-                ret = Key_data(c, SDLK_RETURN, is_shift_held, false);
+                ret = KeyData(c, SDLK_RETURN, is_shift_held, false);
                 is_done = true;
             }
             else if (c >= 33 && c < 126)
@@ -1337,7 +1337,7 @@ Key_data input(const bool is_o_return)
                 //(Decimal unicode '!' = 33, '~' = 126)
 
                 clear_events();
-                ret = Key_data(c);
+                ret = KeyData(c);
                 is_done = true;
             }
             else

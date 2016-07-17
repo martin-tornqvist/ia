@@ -22,10 +22,10 @@
 
 Actor::Actor() :
     pos             (),
-    state_          (Actor_state::alive),
+    state_          (ActorState::alive),
     clr_            (clr_black),
     glyph_          (' '),
-    tile_           (Tile_id::empty),
+    tile_           (TileId::empty),
     hp_             (-1),
     hp_max_         (-1),
     spi_            (-1),
@@ -55,12 +55,12 @@ Actor::~Actor()
     delete prop_handler_;
 }
 
-bool Actor::has_prop(const Prop_id id) const
+bool Actor::has_prop(const PropId id) const
 {
     return prop_handler_->has_prop(id);
 }
 
-int Actor::ability(const Ability_id id, const bool is_affected_by_props) const
+int Actor::ability(const AbilityId id, const bool is_affected_by_props) const
 {
     return data_->ability_vals.val(id, is_affected_by_props, *this);
 }
@@ -70,11 +70,11 @@ bool Actor::is_spotting_sneaking_actor(Actor& other)
     const P& other_pos = other.pos;
 
     const int   player_search_mod   = is_player() ?
-                                      (ability(Ability_id::searching, true) / 3) : 0;
+                                      (ability(AbilityId::searching, true) / 3) : 0;
 
     const auto& abilities_other     = other.data().ability_vals;
 
-    const int   sneak_skill         = abilities_other.val(Ability_id::stealth, true, other);
+    const int   sneak_skill         = abilities_other.val(AbilityId::stealth, true, other);
 
     const int   dist                = king_dist(pos, other_pos);
 
@@ -110,7 +110,7 @@ int Actor::hp_max(const bool with_modifiers) const
     return result;
 }
 
-Actor_speed Actor::speed() const
+ActorSpeed Actor::speed() const
 {
     const auto base_speed = data_->speed;
 
@@ -118,7 +118,7 @@ Actor_speed Actor::speed() const
 
     //"Slowed" gives speed penalty
     if (
-        prop_handler_->has_prop(Prop_id::slowed) &&
+        prop_handler_->has_prop(PropId::slowed) &&
         speed_int > 0)
     {
         --speed_int;
@@ -126,16 +126,16 @@ Actor_speed Actor::speed() const
 
     //"Hasted" or "frenzied" gives speed bonus.
     if (
-        (prop_handler_->has_prop(Prop_id::hasted) ||
-         prop_handler_->has_prop(Prop_id::frenzied)) &&
-        speed_int < int(Actor_speed::END) - 1)
+        (prop_handler_->has_prop(PropId::hasted) ||
+         prop_handler_->has_prop(PropId::frenzied)) &&
+        speed_int < int(ActorSpeed::END) - 1)
     {
         ++speed_int;
     }
 
-    ASSERT(speed_int >= 0 && speed_int < int(Actor_speed::END));
+    ASSERT(speed_int >= 0 && speed_int < int(ActorSpeed::END));
 
-    return Actor_speed(speed_int);
+    return ActorSpeed(speed_int);
 }
 
 void Actor::seen_actors(std::vector<Actor*>& out)
@@ -151,9 +151,9 @@ void Actor::seen_actors(std::vector<Actor*>& out)
                    std::min(map_w - 1, pos.x + fov_std_radi_int),
                    std::min(map_h - 1, pos.y + fov_std_radi_int));
 
-        map_parse::run(cell_check::Blocks_los(),
+        map_parse::run(cell_check::BlocksLos(),
                        blocked_los,
-                       Map_parse_mode::overwrite,
+                       MapParseMode::overwrite,
                        los_rect);
     }
 
@@ -194,9 +194,9 @@ void Actor::seen_foes(std::vector<Actor*>& out)
                    std::min(map_w - 1, pos.x + fov_std_radi_int),
                    std::min(map_h - 1, pos.y + fov_std_radi_int));
 
-        map_parse::run(cell_check::Blocks_los(),
+        map_parse::run(cell_check::BlocksLos(),
                        blocked_los,
-                       Map_parse_mode::overwrite,
+                       MapParseMode::overwrite,
                        los_rect);
     }
 
@@ -231,11 +231,11 @@ void Actor::seen_foes(std::vector<Actor*>& out)
     }
 }
 
-void Actor::place(const P& pos_, Actor_data_t& actor_data)
+void Actor::place(const P& pos_, ActorDataT& actor_data)
 {
     pos         = pos_;
     data_       = &actor_data;
-    state_      = Actor_state::alive;
+    state_      = ActorState::alive;
     clr_        = data_->color;
     glyph_      = data_->glyph;
     tile_       = data_->tile;
@@ -245,10 +245,10 @@ void Actor::place(const P& pos_, Actor_data_t& actor_data)
 
     inv_ = new Inventory(this);
 
-    prop_handler_ = new Prop_handler(this);
+    prop_handler_ = new PropHandler(this);
     prop_handler_->init_natural_props();
 
-    if (data_->id != Actor_id::player)
+    if (data_->id != ActorId::player)
     {
         mk_start_items();
     }
@@ -263,7 +263,7 @@ void Actor::on_std_turn_common()
     //Do light damage if in lit cell
     if (map::cells[pos.x][pos.y].is_lit)
     {
-        hit(1, Dmg_type::light);
+        hit(1, DmgType::light);
     }
 
     if (is_alive())
@@ -324,7 +324,7 @@ void Actor::on_std_turn_common()
 void Actor::teleport()
 {
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::Blocks_actor(*this, true), blocked);
+    map_parse::run(cell_check::BlocksActor(*this, true), blocked);
 
     std::vector<P> pos_bucket;
     to_vec((bool*)blocked, false, map_w, map_h, pos_bucket);
@@ -350,8 +350,8 @@ void Actor::teleport()
 
         //Teleport control?
         if (
-            prop_handler_->has_prop(Prop_id::tele_ctrl) &&
-            !prop_handler_->has_prop(Prop_id::confused))
+            prop_handler_->has_prop(PropId::tele_ctrl) &&
+            !prop_handler_->has_prop(PropId::confused))
         {
             player_has_tele_control = true;
 
@@ -362,7 +362,7 @@ void Actor::teleport()
             };
 
             auto on_marker_at_pos =
-                [chance_of_tele_success](const P & p, Cell_overlay overlay[map_w][map_h])
+                [chance_of_tele_success](const P & p, CellOverlay overlay[map_w][map_h])
             {
                 (void)overlay;
 
@@ -377,28 +377,28 @@ void Actor::teleport()
                 msg_log::add(cancel_info_str_no_space);
             };
 
-            auto on_key_press = [](const P & p, const Key_data & key_data)
+            auto on_key_press = [](const P & p, const KeyData & key_data)
             {
                 (void)p;
 
                 if (key_data.sdl_key == SDLK_RETURN)
                 {
                     msg_log::clear();
-                    return Marker_done::yes;
+                    return MarkerDone::yes;
                 }
 
-                return Marker_done::no;
+                return MarkerDone::no;
             };
 
             msg_log::add("I have the power to control teleportation.",
                          clr_white,
                          false,
-                         More_prompt_on_msg::yes);
+                         MorePromptOnMsg::yes);
 
-            const P marker_tgt_pos = marker::run(Marker_use_player_tgt::no,
+            const P marker_tgt_pos = marker::run(MarkerUsePlayerTgt::no,
                                                  on_marker_at_pos,
                                                  on_key_press,
-                                                 Marker_show_blocked::no);
+                                                 MarkerShowBlocked::no);
 
             if (blocked[marker_tgt_pos.x][marker_tgt_pos.y])
             {
@@ -406,7 +406,7 @@ void Actor::teleport()
                 msg_log::add("Something is blocking me...",
                              clr_white,
                              false,
-                             More_prompt_on_msg::yes);
+                             MorePromptOnMsg::yes);
             }
             else if (rnd::percent(chance_of_tele_success(marker_tgt_pos)))
             {
@@ -418,7 +418,7 @@ void Actor::teleport()
                 msg_log::add("I failed to go there...",
                              clr_white,
                              false,
-                             More_prompt_on_msg::yes);
+                             MorePromptOnMsg::yes);
             }
         }
     }
@@ -432,12 +432,12 @@ void Actor::teleport()
     //needs to be adapted to consider other "hold" type traps
     Rigid* const rigid = map::cells[pos.x][pos.y].rigid;
 
-    if (rigid->id() == Feature_id::trap)
+    if (rigid->id() == FeatureId::trap)
     {
         Trap* const trap = static_cast<Trap*>(rigid);
 
         if (
-            trap->type() == Trap_id::web &&
+            trap->type() == TrapId::web &&
             trap->is_holding_actor())
         {
             trap->destroy();
@@ -465,14 +465,14 @@ void Actor::teleport()
         if (!player_has_tele_control)
         {
             msg_log::add("I suddenly find myself in a different location!");
-            prop_handler_->try_add(new Prop_confused(Prop_turns::specific, 8));
+            prop_handler_->try_add(new PropConfused(PropTurns::specific, 8));
         }
     }
 }
 
 void Actor::update_clr()
 {
-    if (state_ != Actor_state::alive)
+    if (state_ != ActorState::alive)
     {
         clr_ = data_->color;
         return;
@@ -489,7 +489,7 @@ void Actor::update_clr()
         return;
     }
 
-    if (is_player() && has_prop(Prop_id::invis))
+    if (is_player() && has_prop(PropId::invis))
     {
         clr_ = clr_gray;
         return;
@@ -662,23 +662,23 @@ void Actor::change_max_spi(const int change, const Verbosity verbosity)
     }
 }
 
-Actor_died Actor::hit(int dmg,
-                      const Dmg_type dmg_type,
-                      const Dmg_method method,
-                      const Allow_wound allow_wound)
+ActorDied Actor::hit(int dmg,
+                      const DmgType dmg_type,
+                      const DmgMethod method,
+                      const AllowWound allow_wound)
 {
-    if (state_ == Actor_state::destroyed)
+    if (state_ == ActorState::destroyed)
     {
         TRACE_FUNC_END_VERBOSE;
-        return Actor_died::no;
+        return ActorDied::no;
     }
 
     //Damage type is "light", and actor is not light sensitive?
     if (
-        dmg_type == Dmg_type::light &&
-        !prop_handler_->has_prop(Prop_id::lgtSens))
+        dmg_type == DmgType::light &&
+        !prop_handler_->has_prop(PropId::lgtSens))
     {
-        return Actor_died::no;
+        return ActorDied::no;
     }
 
     if (is_player())
@@ -695,20 +695,20 @@ Actor_died Actor::hit(int dmg,
 
         if (rnd::fraction(3, 4) || dmg >= ((hp_max(true) * 2) / 3))
         {
-            if (method == Dmg_method::kick)
+            if (method == DmgMethod::kick)
             {
                 Snd snd("*Crack!*",
-                        Sfx_id::hit_corpse_break,
-                        Ignore_msg_if_origin_seen::yes,
+                        SfxId::hit_corpse_break,
+                        IgnoreMsgIfOriginSeen::yes,
                         pos,
                         nullptr,
-                        Snd_vol::low,
-                        Alerts_mon::yes);
+                        SndVol::low,
+                        AlertsMon::yes);
 
                 snd_emit::run(snd);
             }
 
-            state_ = Actor_state::destroyed;
+            state_ = ActorState::destroyed;
 
             if (is_humanoid())
             {
@@ -726,24 +726,24 @@ Actor_died Actor::hit(int dmg,
         }
         else //Not destroyed
         {
-            if (method == Dmg_method::kick)
+            if (method == DmgMethod::kick)
             {
                 Snd snd("*Thud*",
-                        Sfx_id::hit_medium,
-                        Ignore_msg_if_origin_seen::yes,
+                        SfxId::hit_medium,
+                        IgnoreMsgIfOriginSeen::yes,
                         pos,
                         nullptr,
-                        Snd_vol::low,
-                        Alerts_mon::yes);
+                        SndVol::low,
+                        AlertsMon::yes);
 
                 snd_emit::run(snd);
             }
         }
 
-        return Actor_died::no;
+        return ActorDied::no;
     }
 
-    if (dmg_type == Dmg_type::spirit)
+    if (dmg_type == DmgType::spirit)
     {
         return hit_spi(dmg);
     }
@@ -753,15 +753,15 @@ Actor_died Actor::hit(int dmg,
 
     if (prop_handler_->try_resist_dmg(dmg_type, verbosity))
     {
-        return Actor_died::no;
+        return ActorDied::no;
     }
 
     //Filter damage through worn armor
     dmg = std::max(1, dmg);
 
-    if (dmg_type == Dmg_type::physical && is_humanoid())
+    if (dmg_type == DmgType::physical && is_humanoid())
     {
-        Armor* armor = static_cast<Armor*>(inv_->item_in_slot(Slot_id::body));
+        Armor* armor = static_cast<Armor*>(inv_->item_in_slot(SlotId::body));
 
         if (armor)
         {
@@ -776,14 +776,14 @@ Actor_died Actor::hit(int dmg,
                 if (is_player())
                 {
                     const std::string armor_name =
-                        armor->name(Item_ref_type::plain, Item_ref_inf::none);
+                        armor->name(ItemRefType::plain, ItemRefInf::none);
 
                     msg_log::add("My " + armor_name + " is torn apart!", clr_msg_note);
                 }
 
                 delete armor;
                 armor = nullptr;
-                inv_->slots_[(size_t)Slot_id::body].item = nullptr;
+                inv_->slots_[(size_t)SlotId::body].item = nullptr;
             }
         }
     }
@@ -815,14 +815,14 @@ Actor_died Actor::hit(int dmg,
 
         die(is_destroyed, !is_on_bottomless, !is_on_bottomless);
 
-        return Actor_died::yes;
+        return ActorDied::yes;
     }
 
     //HP is greater than 0
-    return Actor_died::no;
+    return ActorDied::no;
 }
 
-Actor_died Actor::hit_spi(const int dmg, const Verbosity verbosity)
+ActorDied Actor::hit_spi(const int dmg, const Verbosity verbosity)
 {
     if (verbosity == Verbosity::verbose)
     {
@@ -857,10 +857,10 @@ Actor_died Actor::hit_spi(const int dmg, const Verbosity verbosity)
         const bool is_destroyed     = !data_->can_leave_corpse || is_on_bottomless;
 
         die(is_destroyed, false, true);
-        return Actor_died::yes;
+        return ActorDied::yes;
     }
 
-    return Actor_died::no;
+    return ActorDied::no;
 }
 
 void Actor::die(const bool is_destroyed,
@@ -910,11 +910,11 @@ void Actor::die(const bool is_destroyed,
 
     if (is_destroyed)
     {
-        state_ = Actor_state::destroyed;
+        state_ = ActorState::destroyed;
     }
     else //Not destroyed
     {
-        state_ = Actor_state::corpse;
+        state_ = ActorState::corpse;
     }
 
     if (!is_player())
@@ -926,12 +926,12 @@ void Actor::die(const bool is_destroyed,
             TRACE_VERBOSE << "Emitting death sound" << std::endl;
 
             Snd snd("I hear agonized screaming.",
-                    Sfx_id::END,
-                    Ignore_msg_if_origin_seen::yes,
+                    SfxId::END,
+                    IgnoreMsgIfOriginSeen::yes,
                     pos,
                     this,
-                    Snd_vol::high,
-                    Alerts_mon::no);
+                    SndVol::high,
+                    AlertsMon::no);
 
             snd_emit::run(snd);
         }
@@ -979,7 +979,7 @@ void Actor::die(const bool is_destroyed,
         }
 
         glyph_ = '&';
-        tile_ = Tile_id::corpse2;
+        tile_ = TileId::corpse2;
     }
 
     clr_ = clr_red_lgt;
@@ -1004,19 +1004,19 @@ std::string Actor::death_msg() const
     return name_the() + " dies.";
 }
 
-Did_action Actor::try_eat_corpse()
+DidAction Actor::try_eat_corpse()
 {
     const bool actor_is_player = is_player();
 
-    Prop_wound* wound = nullptr;
+    PropWound* wound = nullptr;
 
     if (actor_is_player)
     {
-        Prop* prop = prop_handler_->prop(Prop_id::wound);
+        Prop* prop = prop_handler_->prop(PropId::wound);
 
         if (prop)
         {
-            wound = static_cast<Prop_wound*>(prop);
+            wound = static_cast<PropWound*>(prop);
         }
     }
 
@@ -1028,7 +1028,7 @@ Did_action Actor::try_eat_corpse()
             msg_log::add("I am satiated.");
         }
 
-        return Did_action::no;
+        return DidAction::no;
     }
 
     Actor* corpse = nullptr;
@@ -1037,7 +1037,7 @@ Did_action Actor::try_eat_corpse()
     //prioritized for bashing (Zombies)
     for (Actor* const actor : game_time::actors)
     {
-        if (actor->pos == pos && actor->state() == Actor_state::corpse)
+        if (actor->pos == pos && actor->state() == ActorState::corpse)
         {
             corpse = actor;
 
@@ -1056,13 +1056,13 @@ Did_action Actor::try_eat_corpse()
         const std::string   corpse_name     = corpse->corpse_name_the();
 
         Snd snd("I hear ripping and chewing.",
-                Sfx_id::bite,
-                Ignore_msg_if_origin_seen::yes,
+                SfxId::bite,
+                IgnoreMsgIfOriginSeen::yes,
                 pos,
                 this,
-                Snd_vol::low,
-                Alerts_mon::no,
-                More_prompt_on_msg::no);
+                SndVol::low,
+                AlertsMon::no,
+                MorePromptOnMsg::no);
 
         snd_emit::run(snd);
 
@@ -1087,7 +1087,7 @@ Did_action Actor::try_eat_corpse()
 
         if (is_destroyed)
         {
-            corpse->state_ = Actor_state::destroyed;
+            corpse->state_ = ActorState::destroyed;
             map::mk_gore(pos);
             map::mk_blood(pos);
         }
@@ -1095,14 +1095,14 @@ Did_action Actor::try_eat_corpse()
         //Heal
         on_feed();
 
-        return Did_action::yes;
+        return DidAction::yes;
     }
     else if (actor_is_player)
     {
         msg_log::add("I find nothing here to feed on.");
     }
 
-    return Did_action::no;
+    return DidAction::no;
 }
 
 void Actor::on_feed()
@@ -1113,11 +1113,11 @@ void Actor::on_feed()
 
     if (is_player())
     {
-        Prop* const prop = prop_handler_->prop(Prop_id::wound);
+        Prop* const prop = prop_handler_->prop(PropId::wound);
 
         if (prop && rnd::one_in(6))
         {
-            Prop_wound* const wound = static_cast<Prop_wound*>(prop);
+            PropWound* const wound = static_cast<PropWound*>(prop);
 
             wound->heal_one_wound();
         }
@@ -1126,21 +1126,21 @@ void Actor::on_feed()
 
 void Actor::add_light(bool light_map[map_w][map_h]) const
 {
-    if (state_ == Actor_state::alive && prop_handler_->has_prop(Prop_id::radiant))
+    if (state_ == ActorState::alive && prop_handler_->has_prop(PropId::radiant))
     {
-        //TODO: Much of the code below is duplicated from Actor_player::add_light_hook(), some
+        //TODO: Much of the code below is duplicated from ActorPlayer::add_light_hook(), some
         //refactoring is needed.
 
         bool hard_blocked[map_w][map_h];
 
          const R fov_lmt = fov::get_fov_rect(pos);
 
-        map_parse::run(cell_check::Blocks_los(),
+        map_parse::run(cell_check::BlocksLos(),
                        hard_blocked,
-                       Map_parse_mode::overwrite,
+                       MapParseMode::overwrite,
                        fov_lmt);
 
-        Los_result fov[map_w][map_h];
+        LosResult fov[map_w][map_h];
 
         fov::run(pos, hard_blocked, fov);
 
@@ -1155,7 +1155,7 @@ void Actor::add_light(bool light_map[map_w][map_h]) const
             }
         }
     }
-    else if (prop_handler_->has_prop(Prop_id::burning))
+    else if (prop_handler_->has_prop(PropId::burning))
     {
         for (int dx = -1; dx <= 1; ++dx)
         {

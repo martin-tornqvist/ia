@@ -9,12 +9,12 @@
 class Potion: public Item
 {
 public:
-    Potion(Item_data_t* const item_data) :
+    Potion(ItemDataT* const item_data) :
         Item(item_data) {}
 
     virtual ~Potion() {}
 
-    Consume_item activate(Actor* const actor) override final;
+    ConsumeItem activate(Actor* const actor) override final;
 
     Clr interface_clr() const override final
     {
@@ -41,12 +41,12 @@ protected:
     std::string name_inf() const override final;
 };
 
-class Potion_vitality: public Potion
+class PotionVitality: public Potion
 {
 public:
-    Potion_vitality(Item_data_t* const item_data) :
+    PotionVitality(ItemDataT* const item_data) :
         Potion(item_data) {}
-    ~Potion_vitality() {}
+    ~PotionVitality() {}
 
     void quaff_impl(Actor& actor) override;
 
@@ -66,12 +66,12 @@ private:
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
-class Potion_spirit: public Potion
+class PotionSpirit: public Potion
 {
 public:
-    Potion_spirit(Item_data_t* const item_data) :
+    PotionSpirit(ItemDataT* const item_data) :
         Potion(item_data) {}
-    ~Potion_spirit() {}
+    ~PotionSpirit() {}
 
     void quaff_impl(Actor& actor) override;
 
@@ -89,12 +89,12 @@ private:
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
-class Potion_blindness: public Potion
+class PotionBlindness: public Potion
 {
 public:
-    Potion_blindness(Item_data_t* const item_data) :
+    PotionBlindness(ItemDataT* const item_data) :
         Potion(item_data) {}
-    ~Potion_blindness() {}
+    ~PotionBlindness() {}
 
     void quaff_impl(Actor& actor) override;
 
@@ -112,12 +112,12 @@ private:
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
-class Potion_paral: public Potion
+class PotionParal: public Potion
 {
 public:
-    Potion_paral(Item_data_t* const item_data) :
+    PotionParal(ItemDataT* const item_data) :
         Potion(item_data) {}
-    ~Potion_paral() {}
+    ~PotionParal() {}
 
     void quaff_impl(Actor& actor) override;
 
@@ -135,12 +135,12 @@ private:
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
-class Potion_disease: public Potion
+class PotionDisease: public Potion
 {
 public:
-    Potion_disease(Item_data_t* const item_data) :
+    PotionDisease(ItemDataT* const item_data) :
         Potion(item_data) {}
-    ~Potion_disease() {}
+    ~PotionDisease() {}
 
     void quaff_impl(Actor& actor) override;
 
@@ -162,12 +162,12 @@ private:
     }
 };
 
-class Potion_conf: public Potion
+class PotionConf: public Potion
 {
 public:
-    Potion_conf(Item_data_t* const item_data) :
+    PotionConf(ItemDataT* const item_data) :
         Potion(item_data) {}
-    ~Potion_conf() {}
+    ~PotionConf() {}
     void quaff_impl(Actor& actor) override;
 
     const std::string real_name() const override
@@ -184,13 +184,13 @@ private:
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
-class Potion_fortitude: public Potion
+class PotionFortitude: public Potion
 {
 public:
-    Potion_fortitude(Item_data_t* const item_data) :
+    PotionFortitude(ItemDataT* const item_data) :
         Potion(item_data) {}
 
-    ~Potion_fortitude() {}
+    ~PotionFortitude() {}
 
     void quaff_impl(Actor& actor) override;
 
@@ -208,12 +208,12 @@ private:
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
-class Potion_poison: public Potion
+class PotionPoison: public Potion
 {
 public:
-    Potion_poison(Item_data_t* const item_data) :
+    PotionPoison(ItemDataT* const item_data) :
         Potion(item_data) {}
-    ~Potion_poison() {}
+    ~PotionPoison() {}
 
     void quaff_impl(Actor& actor) override;
 
@@ -231,12 +231,12 @@ private:
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
-class Potion_insight: public Potion
+class PotionInsight: public Potion
 {
 public:
-    Potion_insight(Item_data_t* const item_data) :
+    PotionInsight(ItemDataT* const item_data) :
         Potion(item_data) {}
-    ~Potion_insight() {}
+    ~PotionInsight() {}
 
     void quaff_impl(Actor& actor) override;
 
@@ -258,12 +258,12 @@ private:
     }
 };
 
-class Potion_clairv: public Potion
+class PotionClairv: public Potion
 {
 public:
-    Potion_clairv(Item_data_t* const item_data) :
+    PotionClairv(ItemDataT* const item_data) :
         Potion(item_data) {}
-    ~Potion_clairv() {}
+    ~PotionClairv() {}
 
     void quaff_impl(Actor& actor) override;
 
@@ -285,12 +285,12 @@ private:
     }
 };
 
-class Potion_rFire: public Potion
+class PotionRFire: public Potion
 {
 public:
-    Potion_rFire(Item_data_t* const item_data) :
+    PotionRFire(ItemDataT* const item_data) :
         Potion(item_data) {}
-    ~Potion_rFire() {}
+    ~PotionRFire() {}
 
     void quaff_impl(Actor& actor) override;
 
@@ -308,12 +308,12 @@ private:
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
-class Potion_curing: public Potion
+class PotionCuring: public Potion
 {
 public:
-    Potion_curing(Item_data_t* const item_data) :
+    PotionCuring(ItemDataT* const item_data) :
         Potion(item_data) {}
-    ~Potion_curing() {}
+    ~PotionCuring() {}
 
     void quaff_impl(Actor& actor) override;
 
@@ -332,12 +332,12 @@ private:
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
-class Potion_rElec: public Potion
+class PotionRElec: public Potion
 {
 public:
-    Potion_rElec(Item_data_t* const item_data) :
+    PotionRElec(ItemDataT* const item_data) :
         Potion(item_data) {}
-    ~Potion_rElec() {}
+    ~PotionRElec() {}
 
     void quaff_impl(Actor& actor) override;
 
@@ -355,12 +355,12 @@ private:
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
-class Potion_rAcid: public Potion
+class PotionRAcid: public Potion
 {
 public:
-    Potion_rAcid(Item_data_t* const item_data) :
+    PotionRAcid(ItemDataT* const item_data) :
         Potion(item_data) {}
-    ~Potion_rAcid() {}
+    ~PotionRAcid() {}
 
     void quaff_impl(Actor& actor) override;
 
@@ -378,12 +378,12 @@ private:
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
-class Potion_descent: public Potion
+class PotionDescent: public Potion
 {
 public:
-    Potion_descent(Item_data_t* const item_data) :
+    PotionDescent(ItemDataT* const item_data) :
         Potion(item_data) {}
-    ~Potion_descent() {}
+    ~PotionDescent() {}
 
     void quaff_impl(Actor& actor) override;
 
@@ -406,12 +406,12 @@ private:
     }
 };
 
-class Potion_invis: public Potion
+class PotionInvis: public Potion
 {
 public:
-    Potion_invis(Item_data_t* const item_data) :
+    PotionInvis(ItemDataT* const item_data) :
         Potion(item_data) {}
-    ~Potion_invis() {}
+    ~PotionInvis() {}
 
     void quaff_impl(Actor& actor) override;
 
@@ -429,12 +429,12 @@ private:
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
-class Potion_see_invis: public Potion
+class PotionSeeInvis: public Potion
 {
 public:
-    Potion_see_invis(Item_data_t* const item_data) :
+    PotionSeeInvis(ItemDataT* const item_data) :
         Potion(item_data) {}
-    ~Potion_see_invis() {}
+    ~PotionSeeInvis() {}
 
     void quaff_impl(Actor& actor) override;
 
@@ -456,7 +456,7 @@ private:
 namespace potion_handling
 {
 
-struct Potion_look
+struct PotionLook
 {
     std::string name_plain;
     std::string name_a;
@@ -468,6 +468,6 @@ void init();
 void save();
 void load();
 
-} //Potion_handling
+} //PotionHandling
 
 #endif

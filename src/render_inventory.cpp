@@ -109,7 +109,7 @@ void draw_weight_pct_and_dots(const P item_pos,
 
 void draw_detailed_item_descr(const Item* const item)
 {
-    std::vector<Str_and_clr> lines;
+    std::vector<StrAndClr> lines;
 
     if (item)
     {
@@ -127,7 +127,7 @@ void draw_detailed_item_descr(const Item* const item)
 
         const std::string ref_str = is_plural ? "They are " : "It is ";
 
-        const Item_data_t& d = item->data();
+        const ItemDataT& d = item->data();
 
         std::string disturb_str = "";
 
@@ -139,7 +139,7 @@ void draw_detailed_item_descr(const Item* const item)
         }
         else if (d.is_ins_raied_while_equiped)
         {
-            if (d.type == Item_type::melee_wpn || d.type == Item_type::ranged_wpn)
+            if (d.type == ItemType::melee_wpn || d.type == ItemType::ranged_wpn)
             {
                 disturb_str = disturb_base_str + "wield.";
             }
@@ -188,7 +188,7 @@ void draw_detailed_item_descr(const Item* const item)
 
 const int inv_h = INV_Y1 - INV_Y0 + 1;
 
-void draw_inv(const Menu_browser& browser)
+void draw_inv(const MenuBrowser& browser)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
@@ -196,7 +196,7 @@ void draw_inv(const Menu_browser& browser)
 
     const int           browser_y           = browser.y();
     const auto&         inv                 = map::player->inv();
-    const size_t        nr_slots            = size_t(Slot_id::END);
+    const size_t        nr_slots            = size_t(SlotId::END);
     const bool          is_any_slot_marked  = browser_y < int(nr_slots);
     const Panel         panel               = Panel::screen;
 
@@ -235,7 +235,7 @@ void draw_inv(const Menu_browser& browser)
         if (i < int(nr_slots))
         {
             //This index is a slot
-            const Inv_slot&     slot        = inv.slots_[i];
+            const InvSlot&     slot        = inv.slots_[i];
             const std::string   slot_name   = slot.name;
 
             render::draw_text(slot_name, panel, p, clr);
@@ -250,29 +250,29 @@ void draw_inv(const Menu_browser& browser)
                 draw_item_symbol(*item, p);
                 p.x += 2;
 
-                const Item_data_t&  d       = item->data();
-                Item_ref_att_inf    att_inf = Item_ref_att_inf::none;
+                const ItemDataT&  d       = item->data();
+                ItemRefAttInf    att_inf = ItemRefAttInf::none;
 
-                if (slot.id == Slot_id::wpn || slot.id == Slot_id::wpn_alt)
+                if (slot.id == SlotId::wpn || slot.id == SlotId::wpn_alt)
                 {
                     //Thrown weapons are forced to show melee info instead
-                    att_inf = d.main_att_mode == Att_mode::thrown ?
-                              Item_ref_att_inf::melee : Item_ref_att_inf::wpn_context;
+                    att_inf = d.main_att_mode == AttMode::thrown ?
+                              ItemRefAttInf::melee : ItemRefAttInf::wpn_context;
                 }
-                else if (slot.id == Slot_id::thrown)
+                else if (slot.id == SlotId::thrown)
                 {
-                    att_inf = Item_ref_att_inf::thrown;
+                    att_inf = ItemRefAttInf::thrown;
                 }
 
-                Item_ref_type ref_type = Item_ref_type::plain;
+                ItemRefType ref_type = ItemRefType::plain;
 
-                if (slot.id == Slot_id::thrown)
+                if (slot.id == SlotId::thrown)
                 {
-                    ref_type = Item_ref_type::plural;
+                    ref_type = ItemRefType::plural;
                 }
 
                 std::string item_name = item->name(ref_type,
-                                                   Item_ref_inf::yes,
+                                                   ItemRefInf::yes,
                                                    att_inf);
 
                 ASSERT(!item_name.empty());
@@ -305,9 +305,9 @@ void draw_inv(const Menu_browser& browser)
             draw_item_symbol(*item, p);
             p.x += 2;
 
-            std::string item_name = item->name(Item_ref_type::plural,
-                                               Item_ref_inf::yes,
-                                               Item_ref_att_inf::wpn_context);
+            std::string item_name = item->name(ItemRefType::plural,
+                                               ItemRefInf::yes,
+                                               ItemRefAttInf::wpn_context);
 
             text_format::first_to_upper(item_name);
 
@@ -350,7 +350,7 @@ void draw_inv(const Menu_browser& browser)
     TRACE_FUNC_END_VERBOSE;
 }
 
-void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_indexes)
+void draw_apply(const MenuBrowser& browser, const std::vector<size_t>& gen_inv_indexes)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
@@ -407,9 +407,9 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
         draw_item_symbol(*item, p);
         p.x += 2;
 
-        std::string item_name = item->name(Item_ref_type::plural,
-                                           Item_ref_inf::yes,
-                                           Item_ref_att_inf::wpn_context);
+        std::string item_name = item->name(ItemRefType::plural,
+                                           ItemRefInf::yes,
+                                           ItemRefAttInf::wpn_context);
 
         ASSERT(!item_name.empty());
 
@@ -450,13 +450,13 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
     TRACE_FUNC_END_VERBOSE;
 }
 
-void draw_equip(const Menu_browser& browser,
-                const Slot_id slot_id_to_equip,
+void draw_equip(const MenuBrowser& browser,
+                const SlotId slot_id_to_equip,
                 const std::vector<size_t>& gen_inv_indexes)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    ASSERT(slot_id_to_equip != Slot_id::END);
+    ASSERT(slot_id_to_equip != SlotId::END);
 
     const bool has_item = !gen_inv_indexes.empty();
 
@@ -466,43 +466,43 @@ void draw_equip(const Menu_browser& browser,
 
     switch (slot_id_to_equip)
     {
-    case Slot_id::wpn:
+    case SlotId::wpn:
         heading = has_item ?
                   "Wield which item?" :
                   "I carry no weapon to wield.";
         break;
 
-    case Slot_id::wpn_alt:
+    case SlotId::wpn_alt:
         heading = has_item ?
                   "Prepare which weapon?" :
                   "I carry no weapon to wield.";
         break;
 
-    case Slot_id::thrown:
+    case SlotId::thrown:
         heading = has_item ?
                   "Use which item as thrown weapon?" :
                   "I carry no weapon to throw.";
         break;
 
-    case Slot_id::body:
+    case SlotId::body:
         heading = has_item ?
                   "Wear which armor?" :
                   "I carry no armor.";
         break;
 
-    case Slot_id::head:
+    case SlotId::head:
         heading = has_item ?
                   "Wear what on head?" :
                   "I carry no headwear.";
         break;
 
-    case Slot_id::neck:
+    case SlotId::neck:
         heading = has_item ?
                   "Wear what around the neck?" :
                   "I carry nothing to wear around the neck.";
         break;
 
-    case Slot_id::END:
+    case SlotId::END:
         break;
     }
 
@@ -557,22 +557,22 @@ void draw_equip(const Menu_browser& browser,
             draw_item_symbol(*item, p);
             p.x += 2;
 
-            const Item_data_t&  d       = item->data();
-            Item_ref_att_inf    att_inf = Item_ref_att_inf::none;
+            const ItemDataT&  d       = item->data();
+            ItemRefAttInf    att_inf = ItemRefAttInf::none;
 
-            if (slot_id_to_equip == Slot_id::wpn || slot_id_to_equip == Slot_id::wpn_alt)
+            if (slot_id_to_equip == SlotId::wpn || slot_id_to_equip == SlotId::wpn_alt)
             {
                 //Thrown weapons are forced to show melee info instead
-                att_inf = d.main_att_mode == Att_mode::thrown ?
-                          Item_ref_att_inf::melee : Item_ref_att_inf::wpn_context;
+                att_inf = d.main_att_mode == AttMode::thrown ?
+                          ItemRefAttInf::melee : ItemRefAttInf::wpn_context;
             }
-            else if (slot_id_to_equip == Slot_id::thrown)
+            else if (slot_id_to_equip == SlotId::thrown)
             {
-                att_inf = Item_ref_att_inf::thrown;
+                att_inf = ItemRefAttInf::thrown;
             }
 
-            std::string item_name = item->name(Item_ref_type::plural,
-                                               Item_ref_inf::yes,
+            std::string item_name = item->name(ItemRefType::plural,
+                                               ItemRefInf::yes,
                                                att_inf);
 
             ASSERT(!item_name.empty());

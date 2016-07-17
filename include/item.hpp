@@ -5,12 +5,12 @@
 #include "inventory_handling.hpp"
 #include "rl_utils.hpp"
 
-class Item_data_t;
+class ItemDataT;
 class Prop;
 class Actor;
 class Spell;
 
-enum class Item_activate_ret_type
+enum class ItemActivateRetType
 {
     keep,
     destroyed
@@ -19,7 +19,7 @@ enum class Item_activate_ret_type
 class Item
 {
 public:
-    Item(Item_data_t* item_data);
+    Item(ItemDataT* item_data);
 
     Item(Item& other) = delete;
 
@@ -27,24 +27,24 @@ public:
 
     virtual ~Item();
 
-    Item_id id() const;
+    ItemId id() const;
 
-    const Item_data_t& data() const;
+    const ItemDataT& data() const;
 
     virtual Clr clr() const;
 
     char glyph() const;
 
-    Tile_id tile() const;
+    TileId tile() const;
 
-    virtual Lgt_size lgt_size() const
+    virtual LgtSize lgt_size() const
     {
-        return Lgt_size::none;
+        return LgtSize::none;
     }
 
-    std::string name(const Item_ref_type ref_type,
-                     const Item_ref_inf inf = Item_ref_inf::yes,
-                     const Item_ref_att_inf att_inf = Item_ref_att_inf::none) const;
+    std::string name(const ItemRefType ref_type,
+                     const ItemRefInf inf = ItemRefInf::yes,
+                     const ItemRefAttInf att_inf = ItemRefAttInf::none) const;
 
     virtual std::vector<std::string> descr() const;
 
@@ -57,25 +57,25 @@ public:
 
     virtual void load() {}
 
-    Dice_param dmg(const Att_mode att_mode, const Actor* const actor) const;
+    DiceParam dmg(const AttMode att_mode, const Actor* const actor) const;
 
     virtual int weight() const;
 
     std::string weight_str() const;
 
-    virtual Consume_item activate(Actor* const actor);
+    virtual ConsumeItem activate(Actor* const actor);
 
     virtual Clr interface_clr() const
     {
         return clr_brown;
     }
 
-    virtual void on_std_turn_in_inv(const Inv_type inv_type)
+    virtual void on_std_turn_in_inv(const InvType inv_type)
     {
         (void)inv_type;
     }
 
-    virtual void on_actor_turn_in_inv(const Inv_type inv_type)
+    virtual void on_actor_turn_in_inv(const InvType inv_type)
     {
         (void)inv_type;
     }
@@ -85,7 +85,7 @@ public:
     //"on_pickup()" should be called before this
     void on_equip(const Verbosity verbosity);
 
-    Unequip_allowed on_unequip();
+    UnequipAllowed on_unequip();
 
     //This is the opposite of "on_pickup()". If this is a wielded item, "on_unequip()" should be
     //called first.
@@ -95,7 +95,7 @@ public:
 
     void clear_carrier_props();
 
-    virtual int hp_regen_change(const Inv_type inv_type) const
+    virtual int hp_regen_change(const InvType inv_type) const
     {
         (void)inv_type;
         return 0;
@@ -146,14 +146,14 @@ protected:
         (void)verbosity;
     }
 
-    virtual Unequip_allowed on_unequip_hook()
+    virtual UnequipAllowed on_unequip_hook()
     {
-        return Unequip_allowed::yes;
+        return UnequipAllowed::yes;
     }
 
     virtual void on_removed_from_inv_hook() {}
 
-    Item_data_t* data_;
+    ItemDataT* data_;
 
     Actor* actor_carrying_;
 
@@ -168,7 +168,7 @@ private:
 class Armor: public Item
 {
 public:
-    Armor(Item_data_t* const item_data);
+    Armor(ItemDataT* const item_data);
 
     ~Armor() {}
 
@@ -202,9 +202,9 @@ public:
 protected:
     int armor_points() const;
 
-    virtual Unequip_allowed on_unequip_hook() override
+    virtual UnequipAllowed on_unequip_hook() override
     {
-        return Unequip_allowed::yes;
+        return UnequipAllowed::yes;
     }
 
     std::string name_inf() const override
@@ -215,39 +215,39 @@ protected:
     int dur_;
 };
 
-class Armor_asb_suit: public Armor
+class ArmorAsbSuit: public Armor
 {
 public:
-    Armor_asb_suit(Item_data_t* const item_data) :
+    ArmorAsbSuit(ItemDataT* const item_data) :
         Armor(item_data) {}
 
-    ~Armor_asb_suit() {}
+    ~ArmorAsbSuit() {}
 
     void on_equip_hook(const Verbosity verbosity) override;
 
 private:
-    Unequip_allowed on_unequip_hook() override;
+    UnequipAllowed on_unequip_hook() override;
 };
 
-class Armor_mi_go: public Armor
+class ArmorMiGo: public Armor
 {
 public:
-    Armor_mi_go(Item_data_t* const item_data) :
+    ArmorMiGo(ItemDataT* const item_data) :
         Armor(item_data) {}
 
-    ~Armor_mi_go() {}
+    ~ArmorMiGo() {}
 
     void on_equip_hook(const Verbosity verbosity) override;
 
 private:
 
-    Unequip_allowed on_unequip_hook() override;
+    UnequipAllowed on_unequip_hook() override;
 };
 
 class Wpn: public Item
 {
 public:
-    Wpn(Item_data_t* const item_data);
+    Wpn(ItemDataT* const item_data);
 
     virtual ~Wpn() {}
 
@@ -265,7 +265,7 @@ public:
 
     void set_random_melee_plus();
 
-    const Item_data_t& ammo_data()
+    const ItemDataT& ammo_data()
     {
         return *ammo_data_;
     }
@@ -296,13 +296,13 @@ public:
 protected:
     std::string name_inf() const override;
 
-    Item_data_t* ammo_data_;
+    ItemDataT* ammo_data_;
 };
 
-class Player_ghoul_claw : public Wpn
+class PlayerGhoulClaw : public Wpn
 {
 public:
-    Player_ghoul_claw(Item_data_t* const item_data) :
+    PlayerGhoulClaw(ItemDataT* const item_data) :
         Wpn(item_data) {}
 
 private:
@@ -311,92 +311,92 @@ private:
     void on_melee_kill(Actor& actor_killed) override;
 };
 
-class Pharaoh_staff: public Wpn
+class PharaohStaff: public Wpn
 {
 public:
-    Pharaoh_staff(Item_data_t* const item_data);
+    PharaohStaff(ItemDataT* const item_data);
 };
 
-class Sawed_off: public Wpn
+class SawedOff: public Wpn
 {
 public:
-    Sawed_off(Item_data_t* const item_data);
+    SawedOff(ItemDataT* const item_data);
 
-    ~Sawed_off() {}
+    ~SawedOff() {}
 };
 
-class Pump_shotgun: public Wpn
+class PumpShotgun: public Wpn
 {
 public:
-    Pump_shotgun(Item_data_t* const item_data);
-    ~Pump_shotgun() {}
+    PumpShotgun(ItemDataT* const item_data);
+    ~PumpShotgun() {}
 };
 
 class Pistol: public Wpn
 {
 public:
-    Pistol(Item_data_t* const item_data);
+    Pistol(ItemDataT* const item_data);
     ~Pistol() {}
 };
 
-class Flare_gun: public Wpn
+class FlareGun: public Wpn
 {
 public:
-    Flare_gun(Item_data_t* const item_data);
-    ~Flare_gun() {}
+    FlareGun(ItemDataT* const item_data);
+    ~FlareGun() {}
 };
 
-class Machine_gun: public Wpn
+class MachineGun: public Wpn
 {
 public:
-    Machine_gun(Item_data_t* const item_data);
-    ~Machine_gun() {}
+    MachineGun(ItemDataT* const item_data);
+    ~MachineGun() {}
 };
 
 class Incinerator: public Wpn
 {
 public:
-    Incinerator(Item_data_t* const item_data);
+    Incinerator(ItemDataT* const item_data);
     void on_projectile_blocked(const P& pos, Actor* actor_hit);
     ~Incinerator() {}
 };
 
-class Mi_go_gun: public Wpn
+class MiGoGun: public Wpn
 {
 public:
-    Mi_go_gun(Item_data_t* const item_data);
-    ~Mi_go_gun() {}
+    MiGoGun(ItemDataT* const item_data);
+    ~MiGoGun() {}
 };
 
-class Spike_gun: public Wpn
+class SpikeGun: public Wpn
 {
 public:
-    Spike_gun(Item_data_t* const item_data);
-    ~Spike_gun() {}
+    SpikeGun(ItemDataT* const item_data);
+    ~SpikeGun() {}
 };
 
-class Raven_peck : public Wpn
+class RavenPeck : public Wpn
 {
 public:
-    Raven_peck(Item_data_t* const item_data) :
+    RavenPeck(ItemDataT* const item_data) :
         Wpn(item_data) {}
 
     void on_melee_hit(Actor& actor_hit) override;
 };
 
-class Dust_vortex_engulf : public Wpn
+class DustVortexEngulf : public Wpn
 {
 public:
-    Dust_vortex_engulf(Item_data_t* const item_data) :
+    DustVortexEngulf(ItemDataT* const item_data) :
         Wpn(item_data) {}
 
     void on_melee_hit(Actor& actor_hit) override;
 };
 
-class Spitting_cobra_spit : public Wpn
+class SpittingCobraSpit : public Wpn
 {
 public:
-    Spitting_cobra_spit(Item_data_t* const item_data) :
+    SpittingCobraSpit(ItemDataT* const item_data) :
         Wpn(item_data) {}
 
     void on_ranged_hit(Actor& actor_hit) override;
@@ -405,7 +405,7 @@ public:
 class Ammo: public Item
 {
 public:
-    Ammo(Item_data_t* const item_data) : Item(item_data) {}
+    Ammo(ItemDataT* const item_data) : Item(item_data) {}
     virtual ~Ammo() {}
 
     Clr interface_clr() const override
@@ -414,12 +414,12 @@ public:
     }
 };
 
-class Ammo_mag: public Ammo
+class AmmoMag: public Ammo
 {
 public:
-    Ammo_mag(Item_data_t* const item_data);
+    AmmoMag(ItemDataT* const item_data);
 
-    ~Ammo_mag() {}
+    ~AmmoMag() {}
 
     int ammo_;
 
@@ -436,19 +436,19 @@ protected:
     }
 };
 
-enum class Med_bag_action
+enum class MedBagAction
 {
     treat_wound,
     sanitize_infection,
     END
 };
 
-class Medical_bag: public Item
+class MedicalBag: public Item
 {
 public:
-    Medical_bag(Item_data_t* const item_data);
+    MedicalBag(ItemDataT* const item_data);
 
-    ~Medical_bag() {}
+    ~MedicalBag() {}
 
     void save() override;
 
@@ -456,7 +456,7 @@ public:
 
     void on_pickup_hook() override;
 
-    Consume_item activate(Actor* const actor) override;
+    ConsumeItem activate(Actor* const actor) override;
 
     void continue_action();
 
@@ -472,11 +472,11 @@ public:
     int nr_supplies_;
 
 protected:
-    Med_bag_action choose_action() const;
+    MedBagAction choose_action() const;
 
-    int tot_suppl_for_action(const Med_bag_action action) const;
+    int tot_suppl_for_action(const MedBagAction action) const;
 
-    int tot_turns_for_action(const Med_bag_action action) const;
+    int tot_turns_for_action(const MedBagAction action) const;
 
     std::string name_inf() const override
     {
@@ -485,13 +485,13 @@ protected:
 
     int nr_turns_left_action_;
 
-    Med_bag_action cur_action_;
+    MedBagAction cur_action_;
 };
 
 class Headwear: public Item
 {
 public:
-    Headwear(Item_data_t* item_data) :
+    Headwear(ItemDataT* item_data) :
         Item(item_data) {}
 
     Clr interface_clr() const override
@@ -500,24 +500,24 @@ public:
     }
 };
 
-//class Hideous_mask: public Headwear
+//class HideousMask: public Headwear
 //{
 //public:
-// Hideous_mask(Item_data_t* item_data);
+// HideousMask(ItemDataT* item_data);
 //
-// void on_std_turn_in_inv(const Inv_type inv_type) override;
+// void on_std_turn_in_inv(const InvType inv_type) override;
 //};
 
-class Gas_mask: public Headwear
+class GasMask: public Headwear
 {
 public:
-    Gas_mask(Item_data_t* item_data) :
+    GasMask(ItemDataT* item_data) :
         Headwear        (item_data),
         nr_turns_left_  (60) {}
 
     void on_equip_hook(const Verbosity verbosity) override;
 
-    Unequip_allowed on_unequip_hook() override;
+    UnequipAllowed on_unequip_hook() override;
 
     void decr_turns_left(Inventory& carrier_inv);
 
@@ -537,7 +537,7 @@ public:
 
     Explosive() = delete;
 
-    Consume_item activate(Actor* const actor) override final;
+    ConsumeItem activate(Actor* const actor) override final;
     Clr interface_clr() const override final
     {
         return clr_red_lgt;
@@ -550,7 +550,7 @@ public:
     virtual std::string str_on_player_throw() const = 0;
 
 protected:
-    Explosive(Item_data_t* const item_data) :
+    Explosive(ItemDataT* const item_data) :
         Item(item_data),
         fuse_turns_(-1) {}
 
@@ -563,7 +563,7 @@ protected:
 class Dynamite: public Explosive
 {
 public:
-    Dynamite(Item_data_t* const item_data) :
+    Dynamite(ItemDataT* const item_data) :
         Explosive(item_data) {}
 
     void on_thrown_ignited_landing(const P& p) override;
@@ -592,7 +592,7 @@ protected:
 class Molotov: public Explosive
 {
 public:
-    Molotov(Item_data_t* const item_data) : Explosive(item_data) {}
+    Molotov(ItemDataT* const item_data) : Explosive(item_data) {}
 
     void on_thrown_ignited_landing(const P& p) override;
     void on_std_turn_player_hold_ignited() override;
@@ -619,7 +619,7 @@ protected:
 class Flare: public Explosive
 {
 public:
-    Flare(Item_data_t* const item_data) : Explosive(item_data) {}
+    Flare(ItemDataT* const item_data) : Explosive(item_data) {}
 
     void on_thrown_ignited_landing(const P& p) override;
     void on_std_turn_player_hold_ignited() override;
@@ -643,10 +643,10 @@ protected:
     void on_player_ignite() const override;
 };
 
-class Smoke_grenade: public Explosive
+class SmokeGrenade: public Explosive
 {
 public:
-    Smoke_grenade(Item_data_t* const item_data) : Explosive(item_data) {}
+    SmokeGrenade(ItemDataT* const item_data) : Explosive(item_data) {}
 
     void on_thrown_ignited_landing(const P& p) override;
     void on_std_turn_player_hold_ignited() override;

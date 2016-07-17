@@ -8,7 +8,7 @@
 
 class Mob;
 
-enum class Turn_type
+enum class TurnType
 {
     fast,
     normal1,
@@ -34,7 +34,7 @@ void load();
 
 void add_actor(Actor* actor);
 
-void tick(const Pass_time pass_time = Pass_time::yes);
+void tick(const PassTime pass_time = PassTime::yes);
 
 int turn();
 

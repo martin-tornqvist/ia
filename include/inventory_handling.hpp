@@ -3,7 +3,7 @@
 
 #include "inventory.hpp"
 
-enum class Inv_scr
+enum class InvScr
 {
     inv,
     equip,
@@ -14,8 +14,8 @@ enum class Inv_scr
 namespace inv_handling
 {
 
-extern Inv_scr      scr_to_open_on_new_turn;
-extern Inv_slot*    equip_slot_to_open_on_new_turn;
+extern InvScr      scr_to_open_on_new_turn;
+extern InvSlot*    equip_slot_to_open_on_new_turn;
 extern int          browser_idx_to_set_on_new_turn;
 
 void init();
@@ -24,7 +24,7 @@ void run_inv_screen();
 
 void run_apply_screen();
 
-bool run_equip_screen(Inv_slot& slot_to_equip);
+bool run_equip_screen(InvSlot& slot_to_equip);
 
 void activate(const size_t GENERAL_ITEMS_element);
 

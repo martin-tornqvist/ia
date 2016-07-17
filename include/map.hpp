@@ -22,14 +22,14 @@ struct Cell
     void reset();
 
     bool                is_explored, is_seen_by_player, is_lit, is_dark;
-    Los_result          player_los; //Updated when player updates FOV
+    LosResult          player_los; //Updated when player updates FOV
     Item*               item;
     Rigid*              rigid;
-    Cell_render_data    player_visual_memory;
+    CellRenderData    player_visual_memory;
     P                   pos;
 };
 
-enum class Map_type
+enum class MapType
 {
     intro,
     std,
@@ -73,7 +73,7 @@ void delete_and_remove_room_from_list(Room* const room);
 
 bool is_pos_seen_by_player(const P& p);
 
-Actor* actor_at_pos(const P& pos, Actor_state state = Actor_state::alive);
+Actor* actor_at_pos(const P& pos, ActorState state = ActorState::alive);
 
 Mob* first_mob_at_pos(const P& pos);
 

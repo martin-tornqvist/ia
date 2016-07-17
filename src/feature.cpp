@@ -14,7 +14,7 @@
 #include "map.hpp"
 #include "feature_data.hpp"
 
-const Feature_data_t& Feature::data() const
+const FeatureDataT& Feature::data() const
 {
     return feature_data::data(id());
 }
@@ -52,7 +52,7 @@ bool Feature::can_move(Actor& actor) const
     return data().move_rules.can_move(actor);
 }
 
-void Feature::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
+void Feature::hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
 {
     (void)dmg_type; (void)dmg_method; (void)actor;
 }
@@ -87,7 +87,7 @@ char Feature::glyph() const
     return data().glyph;
 }
 
-Tile_id Feature::tile() const
+TileId Feature::tile() const
 {
     return data().tile;
 }
@@ -117,7 +117,7 @@ bool Feature::can_have_item() const
     return data().can_have_item;
 }
 
-Feature_id Feature::id() const
+FeatureId Feature::id() const
 {
     return data().id;
 }

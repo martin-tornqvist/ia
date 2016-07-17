@@ -22,6 +22,6 @@ std::string get_str();
 int         get_int();
 bool        get_bool();
 
-} //Save_handling
+} //SaveHandling
 
 #endif

@@ -13,7 +13,7 @@
 
 //---------------------------------------------------INHERITED FUNCTIONS
 Door::Door(const P& feature_pos, const Rigid* const mimic_feature,
-           Door_spawn_state spawn_state) :
+           DoorSpawnState spawn_state) :
     Rigid                   (feature_pos),
     mimic_feature_          (mimic_feature),
     nr_spikes_              (0),
@@ -23,73 +23,73 @@ Door::Door(const P& feature_pos, const Rigid* const mimic_feature,
     is_handled_externally_  (false),
     matl_                   (Matl::wood)
 {
-    if (spawn_state == Door_spawn_state::any)
+    if (spawn_state == DoorSpawnState::any)
     {
         //Chance of secret door increases with DLVL
         if (rnd::percent(10 + ((map::dlvl - 1) * 5)))
         {
             if (rnd::one_in(7))
             {
-                spawn_state = Door_spawn_state::secret_and_stuck;
+                spawn_state = DoorSpawnState::secret_and_stuck;
             }
             else //Not stuck
             {
-                spawn_state = Door_spawn_state::secret;
+                spawn_state = DoorSpawnState::secret;
             }
         }
         else //Not secret
         {
             if (rnd::one_in(4))
             {
-                spawn_state = Door_spawn_state::open;
+                spawn_state = DoorSpawnState::open;
             }
             else //Closed
             {
                 if (rnd::one_in(5))
                 {
-                    spawn_state = Door_spawn_state::stuck;
+                    spawn_state = DoorSpawnState::stuck;
                 }
                 else //Not stuck
                 {
-                    spawn_state = Door_spawn_state::closed;
+                    spawn_state = DoorSpawnState::closed;
                 }
             }
         }
     }
 
-    switch (Door_spawn_state(spawn_state))
+    switch (DoorSpawnState(spawn_state))
     {
-    case Door_spawn_state::open:
+    case DoorSpawnState::open:
         is_open_   = true;
         is_stuck_  = false;
         is_secret_ = false;
         break;
 
-    case Door_spawn_state::closed:
+    case DoorSpawnState::closed:
         is_open_   = false;
         is_stuck_  = false;
         is_secret_ = false;
         break;
 
-    case Door_spawn_state::stuck:
+    case DoorSpawnState::stuck:
         is_open_   = false;
         is_stuck_  = true;
         is_secret_ = false;
         break;
 
-    case Door_spawn_state::secret:
+    case DoorSpawnState::secret:
         is_open_   = false;
         is_stuck_  = false;
         is_secret_ = true;
         break;
 
-    case Door_spawn_state::secret_and_stuck:
+    case DoorSpawnState::secret_and_stuck:
         is_open_   = false;
         is_stuck_  = true;
         is_secret_ = true;
         break;
 
-    case Door_spawn_state::any:
+    case DoorSpawnState::any:
         ASSERT(false && "Should not happen");
         is_open_   = false;
         is_stuck_  = false;
@@ -105,19 +105,19 @@ Door::~Door()
     }
 }
 
-void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* const actor)
+void Door::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
 {
-    if (dmg_type == Dmg_type::physical)
+    if (dmg_type == DmgType::physical)
     {
-        if (dmg_method == Dmg_method::forced)
+        if (dmg_method == DmgMethod::forced)
         {
             //---------------------------------------------------------------------- FORCED
             (void)actor;
-            map::put(new Rubble_low(pos_));
+            map::put(new RubbleLow(pos_));
         }
 
         //---------------------------------------------------------------------- SHOTGUN
-        if (dmg_method == Dmg_method::shotgun)
+        if (dmg_method == DmgMethod::shotgun)
         {
             (void)actor;
 
@@ -134,7 +134,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                             msg_log::add(a + " door is blown to splinters!");
                         }
 
-                        map::put(new Rubble_low(pos_));
+                        map::put(new RubbleLow(pos_));
                     }
                     break;
 
@@ -150,14 +150,14 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
         }
 
         //---------------------------------------------------------------------- EXPLOSION
-        if (dmg_method == Dmg_method::explosion)
+        if (dmg_method == DmgMethod::explosion)
         {
             (void)actor;
             //TODO
         }
 
         //---------------------------------------------------------------------- HEAVY BLUNT
-        if (dmg_method == Dmg_method::blunt_heavy)
+        if (dmg_method == DmgMethod::blunt_heavy)
         {
             ASSERT(actor);
 
@@ -209,13 +209,13 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
         }
 
         //---------------------------------------------------------------------- KICK
-        if (dmg_method == Dmg_method::kick)
+        if (dmg_method == DmgMethod::kick)
         {
             ASSERT(actor);
 
             const bool is_player    = actor == map::player;
             const bool is_cell_seen = map::is_pos_seen_by_player(pos_);
-            const bool is_weak      = actor->has_prop(Prop_id::weakened);
+            const bool is_weak      = actor->has_prop(PropId::weakened);
 
             switch (matl_)
             {
@@ -242,7 +242,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                         destr_chance.num += 2;
                     }
 
-                    if (actor->has_prop(Prop_id::frenzied))
+                    if (actor->has_prop(PropId::frenzied))
                     {
                         destr_chance.num += 4;
                     }
@@ -260,12 +260,12 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                         if (destr_chance.roll())
                         {
                             Snd snd("",
-                                    Sfx_id::door_break,
-                                    Ignore_msg_if_origin_seen::yes,
+                                    SfxId::door_break,
+                                    IgnoreMsgIfOriginSeen::yes,
                                     pos_,
                                     actor,
-                                    Snd_vol::low,
-                                    Alerts_mon::yes);
+                                    SndVol::low,
+                                    AlertsMon::yes);
 
                             snd_emit::run(snd);
 
@@ -285,19 +285,19 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                                 msg_log::add("I feel a door crashing open!");
                             }
 
-                            map::put(new Rubble_low(pos_));
+                            map::put(new RubbleLow(pos_));
                         }
                         else //Not broken
                         {
-                            const Sfx_id sfx = is_secret_ ? Sfx_id::END : Sfx_id::door_bang;
+                            const SfxId sfx = is_secret_ ? SfxId::END : SfxId::door_bang;
 
                             Snd snd("",
                                     sfx,
-                                    Ignore_msg_if_origin_seen::no,
+                                    IgnoreMsgIfOriginSeen::no,
                                     pos_,
                                     actor,
-                                    Snd_vol::low,
-                                    Alerts_mon::yes);
+                                    SndVol::low,
+                                    AlertsMon::yes);
 
                             snd_emit::run(snd);
                         }
@@ -307,19 +307,19 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                         if (is_cell_seen && !is_secret_)
                         {
                             Snd snd("",
-                                    Sfx_id::door_bang,
-                                    Ignore_msg_if_origin_seen::no,
+                                    SfxId::door_bang,
+                                    IgnoreMsgIfOriginSeen::no,
                                     pos_,
                                     actor,
-                                    Snd_vol::low,
-                                    Alerts_mon::yes);
+                                    SndVol::low,
+                                    AlertsMon::yes);
 
                             snd_emit::run(snd);
 
                             msg_log::add("It seems futile.",
                                          clr_msg_note,
                                          false,
-                                         More_prompt_on_msg::yes);
+                                         MorePromptOnMsg::yes);
                         }
                     }
                 }
@@ -337,12 +337,12 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                     if (destr_chance.roll())
                     {
                         Snd snd("I hear a door crashing open!",
-                                Sfx_id::door_break,
-                                Ignore_msg_if_origin_seen::yes,
+                                SfxId::door_break,
+                                IgnoreMsgIfOriginSeen::yes,
                                 pos_,
                                 actor,
-                                Snd_vol::high,
-                                Alerts_mon::no);
+                                SndVol::high,
+                                AlertsMon::no);
 
                         snd_emit::run(snd);
 
@@ -355,17 +355,17 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                             msg_log::add("A door crashes open!");
                         }
 
-                        map::put(new Rubble_low(pos_));
+                        map::put(new RubbleLow(pos_));
                     }
                     else //Not broken
                     {
                         Snd snd("I hear a loud banging on a door.",
-                                Sfx_id::door_bang,
-                                Ignore_msg_if_origin_seen::no,
+                                SfxId::door_bang,
+                                IgnoreMsgIfOriginSeen::no,
                                 pos_,
                                 actor,
-                                Snd_vol::low,
-                                Alerts_mon::no);
+                                SndVol::low,
+                                AlertsMon::no);
 
                         snd_emit::run(snd);
                     }
@@ -380,7 +380,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                     msg_log::add("It seems futile.",
                                  clr_msg_note,
                                  false,
-                                 More_prompt_on_msg::yes);
+                                 MorePromptOnMsg::yes);
                 }
                 break;
 
@@ -395,9 +395,9 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
     }
 
     //---------------------------------------------------------------------- FIRE
-    if (dmg_method == Dmg_method::elemental)
+    if (dmg_method == DmgMethod::elemental)
     {
-        if (dmg_type == Dmg_type::fire)
+        if (dmg_type == DmgType::fire)
         {
             (void)actor;
 
@@ -410,7 +410,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 
     //-------------------------------------- OLD
 
-//    if(method == Dmg_method::kick) {
+//    if(method == DmgMethod::kick) {
 //      int skill_value_bash = 0;
 //
 //      if(!is_basher_weak) {
@@ -422,10 +422,10 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 //        }
 //      }
 //      const bool is_door_smashed =
-//        (type_ == Door_type::metal || is_basher_weak) ? false :
+//        (type_ == DoorType::metal || is_basher_weak) ? false :
 //        rnd::percent() < skill_value_bash;
 //
-//      if(is_player && !is_secret_ && (type_ == Door_type::metal || is_basher_weak)) {
+//      if(is_player && !is_secret_ && (type_ == DoorType::metal || is_basher_weak)) {
 //        msg_log::add("It seems futile.");
 //      }
 //    }
@@ -437,8 +437,8 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 //      is_secret_ = false;
 //      is_open_   = true;
 //      if(is_player) {
-//        Snd snd("", Sfx_id::door_break, Ignore_msg_if_origin_seen::yes, pos_,
-//                &actor, Snd_vol::low, Alerts_mon::yes);
+//        Snd snd("", SfxId::door_break, IgnoreMsgIfOriginSeen::yes, pos_,
+//                &actor, SndVol::low, AlertsMon::yes);
 //        snd_emit::run(snd);
 //        if(!actor.prop_handler().allow_see()) {
 //          msg_log::add("I feel a door crashing open!");
@@ -451,8 +451,8 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 //        }
 //      } else {
 //        Snd snd("I hear a door crashing open!",
-//                Sfx_id::door_break, Ignore_msg_if_origin_seen::yes, pos_, &actor,
-//                Snd_vol::high, Alerts_mon::no);
+//                SfxId::door_break, IgnoreMsgIfOriginSeen::yes, pos_, &actor,
+//                SndVol::high, AlertsMon::no);
 //        snd_emit::run(snd);
 //        if(map::player->can_see_actor(actor)) {
 //          msg_log::add("The door crashes open!");
@@ -462,16 +462,16 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 //      }
 //    } else {
 //      if(is_player) {
-//        const Sfx_id sfx = is_secret_ ? Sfx_id::END : Sfx_id::door_bang;
-//        Snd snd("", sfx, Ignore_msg_if_origin_seen::yes, actor.pos,
-//                &actor, Snd_vol::low, Alerts_mon::yes);
+//        const SfxId sfx = is_secret_ ? SfxId::END : SfxId::door_bang;
+//        Snd snd("", sfx, IgnoreMsgIfOriginSeen::yes, actor.pos,
+//                &actor, SndVol::low, AlertsMon::yes);
 //        snd_emit::run(snd);
 //      } else {
 //        //Emitting the sound from the actor instead of the door, because the
 //        //sound message should be received even if the door is seen
 //        Snd snd("I hear a loud banging on a door.",
-//                Sfx_id::door_bang, Ignore_msg_if_origin_seen::yes, actor.pos,
-//                &actor, Snd_vol::low, Alerts_mon::no);
+//                SfxId::door_bang, IgnoreMsgIfOriginSeen::yes, actor.pos,
+//                &actor, SndVol::low, AlertsMon::no);
 //        snd_emit::run(snd);
 //        if(map::player->can_see_actor(actor)) {
 //          msg_log::add(actor.name_the() + " bashes at a door!");
@@ -481,17 +481,17 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 //  }
 }
 
-Was_destroyed Door::on_finished_burning()
+WasDestroyed Door::on_finished_burning()
 {
     if (map::is_pos_seen_by_player(pos_))
     {
         msg_log::add("The door burns down.");
     }
 
-    Rubble_low* const rubble = new Rubble_low(pos_);
+    RubbleLow* const rubble = new RubbleLow(pos_);
     rubble->set_has_burned();
     map::put(rubble);
-    return Was_destroyed::yes;
+    return WasDestroyed::yes;
 }
 
 bool Door::can_move_cmn() const
@@ -506,7 +506,7 @@ bool Door::can_move(Actor& actor) const
         return true;
     }
 
-    if (actor.has_prop(Prop_id::ethereal) || actor.has_prop(Prop_id::ooze))
+    if (actor.has_prop(PropId::ethereal) || actor.has_prop(PropId::ooze))
     {
         return true;
     }
@@ -539,7 +539,7 @@ std::string Door::name(const Article article) const
 
     std::string ret = "";
 
-    if (burn_state() == Burn_state::burning)
+    if (burn_state() == BurnState::burning)
     {
         ret = article == Article::a ? "a " : "the ";
         ret += "burning ";
@@ -592,10 +592,10 @@ char Door::glyph() const
     return is_secret_ ? mimic_feature_->glyph() : (is_open_ ? 39 : '+');
 }
 
-Tile_id Door::tile() const
+TileId Door::tile() const
 {
     return is_secret_ ? mimic_feature_->tile() :
-           (is_open_ ? Tile_id::door_open : Tile_id::door_closed);
+           (is_open_ ? TileId::door_open : TileId::door_closed);
 }
 
 Matl Door::matl() const
@@ -614,12 +614,12 @@ void Door::bump(Actor& actor_bumping)
             if (map::cells[pos_.x][pos_.y].is_seen_by_player)
             {
                 TRACE << "Player bumped into secret door, with vision in cell" << std::endl;
-                msg_log::add(feature_data::data(Feature_id::wall).msg_on_player_blocked);
+                msg_log::add(feature_data::data(FeatureId::wall).msg_on_player_blocked);
             }
             else //Not seen by player
             {
                 TRACE << "Player bumped into secret door, without vision in cell" << std::endl;
-                msg_log::add(feature_data::data(Feature_id::wall).msg_on_player_blocked_blind);
+                msg_log::add(feature_data::data(FeatureId::wall).msg_on_player_blocked_blind);
             }
 
             return;
@@ -655,7 +655,7 @@ void Door::player_try_spot_hidden()
 {
     if (is_secret_)
     {
-        const int player_skill = map::player->ability(Ability_id::searching, true);
+        const int player_skill = map::player->ability(AbilityId::searching, true);
 
         if (ability_roll::roll(player_skill, map::player) >= success)
         {
@@ -776,16 +776,16 @@ void Door::try_close(Actor* actor_trying)
 
             if (is_player)
             {
-                Snd snd("", Sfx_id::door_close, Ignore_msg_if_origin_seen::yes, pos_,
-                        actor_trying, Snd_vol::low, Alerts_mon::yes);
+                Snd snd("", SfxId::door_close, IgnoreMsgIfOriginSeen::yes, pos_,
+                        actor_trying, SndVol::low, AlertsMon::yes);
                 snd_emit::run(snd);
                 msg_log::add("I close the door.");
             }
             else //Is a monster closing
             {
                 Snd snd("I hear a door closing.",
-                        Sfx_id::door_close, Ignore_msg_if_origin_seen::yes, pos_, actor_trying,
-                        Snd_vol::low, Alerts_mon::no);
+                        SfxId::door_close, IgnoreMsgIfOriginSeen::yes, pos_, actor_trying,
+                        SndVol::low, AlertsMon::no);
                 snd_emit::run(snd);
 
                 if (player_see_tryer)
@@ -802,16 +802,16 @@ void Door::try_close(Actor* actor_trying)
 
                 if (is_player)
                 {
-                    Snd snd("", Sfx_id::door_close, Ignore_msg_if_origin_seen::yes, pos_,
-                            actor_trying, Snd_vol::low, Alerts_mon::yes);
+                    Snd snd("", SfxId::door_close, IgnoreMsgIfOriginSeen::yes, pos_,
+                            actor_trying, SndVol::low, AlertsMon::yes);
                     snd_emit::run(snd);
                     msg_log::add("I fumble with a door and succeed to close it.");
                 }
                 else //Monster closing
                 {
                     Snd snd("I hear a door closing.",
-                            Sfx_id::door_close, Ignore_msg_if_origin_seen::yes, pos_, actor_trying,
-                            Snd_vol::low, Alerts_mon::no);
+                            SfxId::door_close, IgnoreMsgIfOriginSeen::yes, pos_, actor_trying,
+                            SndVol::low, AlertsMon::no);
                     snd_emit::run(snd);
 
                     if (player_see_tryer)
@@ -890,12 +890,12 @@ void Door::try_open(Actor* actor_trying)
             if (is_player)
             {
                 Snd snd("",
-                        Sfx_id::door_open,
-                        Ignore_msg_if_origin_seen::yes,
+                        SfxId::door_open,
+                        IgnoreMsgIfOriginSeen::yes,
                         pos_,
                         actor_trying,
-                        Snd_vol::low,
-                        Alerts_mon::yes);
+                        SndVol::low,
+                        AlertsMon::yes);
 
                 snd_emit::run(snd);
                 msg_log::add("I open the door.");
@@ -903,12 +903,12 @@ void Door::try_open(Actor* actor_trying)
             else //Is monster
             {
                 Snd snd("I hear a door open.",
-                        Sfx_id::door_open,
-                        Ignore_msg_if_origin_seen::yes,
+                        SfxId::door_open,
+                        IgnoreMsgIfOriginSeen::yes,
                         pos_,
                         actor_trying,
-                        Snd_vol::low,
-                        Alerts_mon::no);
+                        SndVol::low,
+                        AlertsMon::no);
 
                 snd_emit::run(snd);
 
@@ -932,12 +932,12 @@ void Door::try_open(Actor* actor_trying)
                 if (is_player)
                 {
                     Snd snd("",
-                            Sfx_id::door_open,
-                            Ignore_msg_if_origin_seen::yes,
+                            SfxId::door_open,
+                            IgnoreMsgIfOriginSeen::yes,
                             pos_,
                             actor_trying,
-                            Snd_vol::low,
-                            Alerts_mon::yes);
+                            SndVol::low,
+                            AlertsMon::yes);
 
                     snd_emit::run(snd);
 
@@ -946,12 +946,12 @@ void Door::try_open(Actor* actor_trying)
                 else //Is monster
                 {
                     Snd snd("I hear something open a door clumsily.",
-                            Sfx_id::door_open,
-                            Ignore_msg_if_origin_seen::yes,
+                            SfxId::door_open,
+                            IgnoreMsgIfOriginSeen::yes,
                             pos_,
                             actor_trying,
-                            Snd_vol::low,
-                            Alerts_mon::no);
+                            SndVol::low,
+                            AlertsMon::no);
 
                     snd_emit::run(snd);
 
@@ -973,12 +973,12 @@ void Door::try_open(Actor* actor_trying)
                 if (is_player)
                 {
                     Snd snd("",
-                            Sfx_id::END,
-                            Ignore_msg_if_origin_seen::yes,
+                            SfxId::END,
+                            IgnoreMsgIfOriginSeen::yes,
                             pos_,
                             actor_trying,
-                            Snd_vol::low,
-                            Alerts_mon::yes);
+                            SndVol::low,
+                            AlertsMon::yes);
 
                     snd_emit::run(snd);
 
@@ -989,12 +989,12 @@ void Door::try_open(Actor* actor_trying)
                     //Emitting the sound from the actor instead of the door, because the
                     //sound message should be received even if the door is seen
                     Snd snd("I hear something attempting to open a door.",
-                            Sfx_id::END,
-                            Ignore_msg_if_origin_seen::yes,
+                            SfxId::END,
+                            IgnoreMsgIfOriginSeen::yes,
                             actor_trying->pos,
                             actor_trying,
-                            Snd_vol::low,
-                            Alerts_mon::no);
+                            SndVol::low,
+                            AlertsMon::no);
 
                     snd_emit::run(snd);
 
@@ -1025,12 +1025,12 @@ void Door::try_open(Actor* actor_trying)
     }
 }
 
-Did_open Door::open(Actor* const actor_opening)
+DidOpen Door::open(Actor* const actor_opening)
 {
     (void)actor_opening;
 
     is_open_   = true;
     is_secret_ = false;
     is_stuck_  = false;
-    return Did_open::yes;
+    return DidOpen::yes;
 }

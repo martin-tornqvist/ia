@@ -3,7 +3,7 @@
 
 #include "feature_rigid.hpp"
 
-enum class Door_spawn_state
+enum class DoorSpawnState
 {
     open,
     closed,
@@ -17,7 +17,7 @@ class Door: public Rigid
 {
 public:
     Door(const P& feature_pos, const Rigid* const mimic_feature,
-         Door_spawn_state spawn_state = Door_spawn_state::any);
+         DoorSpawnState spawn_state = DoorSpawnState::any);
 
 //Spawn-by-id compliant ctor (do not use for normal cases):
     Door(const P& feature_pos) :
@@ -34,15 +34,15 @@ public:
 
     ~Door() override;
 
-    Feature_id id() const override
+    FeatureId id() const override
     {
-        return Feature_id::door;
+        return FeatureId::door;
     }
 
     std::string name(const Article article) const override;
-    Was_destroyed on_finished_burning() override;
+    WasDestroyed on_finished_burning() override;
     char glyph() const override;
-    Tile_id tile() const override;
+    TileId tile() const override;
     void bump(Actor& actor_bumping) override;
     bool can_move_cmn() const override;
     bool can_move(Actor& actor) const override;
@@ -83,11 +83,11 @@ public:
         is_open_ = is_secret_ = false;
     }
 
-    virtual Did_open open(Actor* const actor_opening) override;
+    virtual DidOpen open(Actor* const actor_opening) override;
 
-    static bool is_tile_any_door(const Tile_id tile)
+    static bool is_tile_any_door(const TileId tile)
     {
-        return tile == Tile_id::door_closed || tile == Tile_id::door_open;
+        return tile == TileId::door_closed || tile == TileId::door_open;
     }
 
     void player_try_spot_hidden();
@@ -100,7 +100,7 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
+    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
                 Actor* const actor) override;
 
     const Rigid* const mimic_feature_;

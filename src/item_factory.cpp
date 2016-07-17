@@ -13,335 +13,335 @@
 namespace item_factory
 {
 
-Item* mk(const Item_id item_id, const int nr_items)
+Item* mk(const ItemId item_id, const int nr_items)
 {
     Item*           r = nullptr;
-    Item_data_t*    d = &item_data::data[size_t(item_id)];
+    ItemDataT*    d = &item_data::data[size_t(item_id)];
 
     switch (item_id)
     {
-    case Item_id::trapez:
+    case ItemId::trapez:
         r = new Item(d);
         break;
 
-    case Item_id::rock:
-    case Item_id::thr_knife:
-    case Item_id::iron_spike:
-    case Item_id::dagger:
-    case Item_id::hatchet:
-    case Item_id::club:
-    case Item_id::hammer:
-    case Item_id::machete:
-    case Item_id::axe:
-    case Item_id::pitch_fork:
-    case Item_id::sledge_hammer:
-    case Item_id::trap_dart:
-    case Item_id::trap_dart_poison:
-    case Item_id::trap_spear:
-    case Item_id::trap_spear_poison:
-    case Item_id::player_kick:
-    case Item_id::player_stomp:
-    case Item_id::player_punch:
-    case Item_id::zombie_axe:
-    case Item_id::zombie_claw:
-    case Item_id::zombie_claw_diseased:
-    case Item_id::bloated_zombie_punch:
-    case Item_id::bloated_zombie_spit:
-    case Item_id::crawling_intestines_strangle:
-    case Item_id::crawling_hand_strangle:
-    case Item_id::thing_strangle:
-    case Item_id::floating_skull_bite:
-    case Item_id::rat_bite:
-    case Item_id::rat_bite_diseased:
-    case Item_id::rat_thing_bite:
-    case Item_id::brown_jenkin_bite:
-    case Item_id::worm_mass_bite:
-    case Item_id::mind_worms_bite:
-    case Item_id::green_spider_bite:
-    case Item_id::white_spider_bite:
-    case Item_id::red_spider_bite:
-    case Item_id::shadow_spider_bite:
-    case Item_id::leng_spider_bite:
-    case Item_id::pit_viper_bite:
-    case Item_id::spitting_cobra_bite:
-    case Item_id::black_mamba_bite:
-    case Item_id::fire_hound_breath:
-    case Item_id::fire_hound_bite:
-    case Item_id::zuul_bite:
-    case Item_id::giant_bat_bite:
-    case Item_id::wolf_bite:
-    case Item_id::ghost_claw:
-    case Item_id::phantasm_sickle:
-    case Item_id::wraith_claw:
-    case Item_id::polyp_tentacle:
-    case Item_id::greater_polyp_tentacle:
-    case Item_id::ghoul_claw:
-    case Item_id::shadow_claw:
-    case Item_id::invis_stalker_claw:
-    case Item_id::byakhee_claw:
-    case Item_id::giant_mantis_claw:
-    case Item_id::giant_locust_bite:
-    case Item_id::mummy_maul:
-    case Item_id::croc_head_mummy_spear:
-    case Item_id::deep_one_javelin_att:
-    case Item_id::deep_one_spear_att:
-    case Item_id::ape_maul:
-    case Item_id::ooze_black_spew_pus:
-    case Item_id::ooze_clear_spew_pus:
-    case Item_id::ooze_putrid_spew_pus:
-    case Item_id::ooze_poison_spew_pus:
-    case Item_id::color_oo_space_touch:
-    case Item_id::chthonian_bite:
-    case Item_id::death_fiend_claw:
-    case Item_id::hunting_horror_bite:
-    case Item_id::fire_vortex_engulf:
-    case Item_id::mold_spores:
-    case Item_id::mi_go_sting:
-    case Item_id::mi_go_commander_sting:
-    case Item_id::the_high_priest_claw:
+    case ItemId::rock:
+    case ItemId::thr_knife:
+    case ItemId::iron_spike:
+    case ItemId::dagger:
+    case ItemId::hatchet:
+    case ItemId::club:
+    case ItemId::hammer:
+    case ItemId::machete:
+    case ItemId::axe:
+    case ItemId::pitch_fork:
+    case ItemId::sledge_hammer:
+    case ItemId::trap_dart:
+    case ItemId::trap_dart_poison:
+    case ItemId::trap_spear:
+    case ItemId::trap_spear_poison:
+    case ItemId::player_kick:
+    case ItemId::player_stomp:
+    case ItemId::player_punch:
+    case ItemId::zombie_axe:
+    case ItemId::zombie_claw:
+    case ItemId::zombie_claw_diseased:
+    case ItemId::bloated_zombie_punch:
+    case ItemId::bloated_zombie_spit:
+    case ItemId::crawling_intestines_strangle:
+    case ItemId::crawling_hand_strangle:
+    case ItemId::thing_strangle:
+    case ItemId::floating_skull_bite:
+    case ItemId::rat_bite:
+    case ItemId::rat_bite_diseased:
+    case ItemId::rat_thing_bite:
+    case ItemId::brown_jenkin_bite:
+    case ItemId::worm_mass_bite:
+    case ItemId::mind_worms_bite:
+    case ItemId::green_spider_bite:
+    case ItemId::white_spider_bite:
+    case ItemId::red_spider_bite:
+    case ItemId::shadow_spider_bite:
+    case ItemId::leng_spider_bite:
+    case ItemId::pit_viper_bite:
+    case ItemId::spitting_cobra_bite:
+    case ItemId::black_mamba_bite:
+    case ItemId::fire_hound_breath:
+    case ItemId::fire_hound_bite:
+    case ItemId::zuul_bite:
+    case ItemId::giant_bat_bite:
+    case ItemId::wolf_bite:
+    case ItemId::ghost_claw:
+    case ItemId::phantasm_sickle:
+    case ItemId::wraith_claw:
+    case ItemId::polyp_tentacle:
+    case ItemId::greater_polyp_tentacle:
+    case ItemId::ghoul_claw:
+    case ItemId::shadow_claw:
+    case ItemId::invis_stalker_claw:
+    case ItemId::byakhee_claw:
+    case ItemId::giant_mantis_claw:
+    case ItemId::giant_locust_bite:
+    case ItemId::mummy_maul:
+    case ItemId::croc_head_mummy_spear:
+    case ItemId::deep_one_javelin_att:
+    case ItemId::deep_one_spear_att:
+    case ItemId::ape_maul:
+    case ItemId::ooze_black_spew_pus:
+    case ItemId::ooze_clear_spew_pus:
+    case ItemId::ooze_putrid_spew_pus:
+    case ItemId::ooze_poison_spew_pus:
+    case ItemId::color_oo_space_touch:
+    case ItemId::chthonian_bite:
+    case ItemId::death_fiend_claw:
+    case ItemId::hunting_horror_bite:
+    case ItemId::fire_vortex_engulf:
+    case ItemId::mold_spores:
+    case ItemId::mi_go_sting:
+    case ItemId::mi_go_commander_sting:
+    case ItemId::the_high_priest_claw:
         r = new Wpn(d);
         break;
 
-    case Item_id::pharaoh_staff:
-        r = new Pharaoh_staff(d);
+    case ItemId::pharaoh_staff:
+        r = new PharaohStaff(d);
         break;
 
-    case Item_id::player_ghoul_claw:
-        r = new Player_ghoul_claw(d);
+    case ItemId::player_ghoul_claw:
+        r = new PlayerGhoulClaw(d);
         break;
 
-    case Item_id::dynamite:
+    case ItemId::dynamite:
         r = new Dynamite(d);
         break;
 
-    case Item_id::flare:
+    case ItemId::flare:
         r = new Flare(d);
         break;
 
-    case Item_id::molotov:
+    case ItemId::molotov:
         r = new Molotov(d);
         break;
 
-    case Item_id::smoke_grenade:
-        r = new Smoke_grenade(d);
+    case ItemId::smoke_grenade:
+        r = new SmokeGrenade(d);
         break;
 
-    case Item_id::sawed_off:
-        r = new Sawed_off(d);
+    case ItemId::sawed_off:
+        r = new SawedOff(d);
         break;
 
-    case Item_id::pump_shotgun:
-        r = new Pump_shotgun(d);
+    case ItemId::pump_shotgun:
+        r = new PumpShotgun(d);
         break;
 
-    case Item_id::shotgun_shell:
+    case ItemId::shotgun_shell:
         r = new Ammo(d);
         break;
 
-    case Item_id::machine_gun:
-        r = new Machine_gun(d);
+    case ItemId::machine_gun:
+        r = new MachineGun(d);
         break;
 
-    case Item_id::drum_of_bullets:
-    case Item_id::pistol_mag:
-    case Item_id::incinerator_ammo:
-    case Item_id::mi_go_gun_ammo:
-        r = new Ammo_mag(d);
+    case ItemId::drum_of_bullets:
+    case ItemId::pistol_mag:
+    case ItemId::incinerator_ammo:
+    case ItemId::mi_go_gun_ammo:
+        r = new AmmoMag(d);
         break;
 
-    case Item_id::pistol:
+    case ItemId::pistol:
         r = new Pistol(d);
         break;
 
-    case Item_id::flare_gun:
-        r = new Flare_gun(d);
+    case ItemId::flare_gun:
+        r = new FlareGun(d);
         break;
 
-    case Item_id::incinerator:
+    case ItemId::incinerator:
         r = new Incinerator(d);
         break;
 
-    case Item_id::spike_gun:
-        r = new Spike_gun(d);
+    case ItemId::spike_gun:
+        r = new SpikeGun(d);
         break;
 
-    case Item_id::raven_peck:
-        r = new Raven_peck(d);
+    case ItemId::raven_peck:
+        r = new RavenPeck(d);
         break;
 
-    case Item_id::dust_vortex_engulf:
-        r = new Dust_vortex_engulf(d);
+    case ItemId::dust_vortex_engulf:
+        r = new DustVortexEngulf(d);
         break;
 
-    case Item_id::spitting_cobra_spit:
-        r = new Spitting_cobra_spit(d);
+    case ItemId::spitting_cobra_spit:
+        r = new SpittingCobraSpit(d);
         break;
 
-    case Item_id::mi_go_gun:
-        r = new Mi_go_gun(d);
+    case ItemId::mi_go_gun:
+        r = new MiGoGun(d);
         break;
 
-    case Item_id::armor_flack_jacket:
-    case Item_id::armor_leather_jacket:
-    case Item_id::armor_iron_suit:
+    case ItemId::armor_flack_jacket:
+    case ItemId::armor_leather_jacket:
+    case ItemId::armor_iron_suit:
         r = new Armor(d);
         break;
 
-    case Item_id::armor_asb_suit:
-        r = new Armor_asb_suit(d);
+    case ItemId::armor_asb_suit:
+        r = new ArmorAsbSuit(d);
         break;
 
-    case Item_id::armor_mi_go:
-        r = new Armor_mi_go(d);
+    case ItemId::armor_mi_go:
+        r = new ArmorMiGo(d);
         break;
 
-    case Item_id::gas_mask:
-        r = new Gas_mask(d);
+    case ItemId::gas_mask:
+        r = new GasMask(d);
         break;
 
-    case Item_id::scroll_mayhem:
-    case Item_id::scroll_telep:
-    case Item_id::scroll_pest:
-    case Item_id::scroll_slow_mon:
-    case Item_id::scroll_terrify_mon:
-    case Item_id::scroll_paral_mon:
-    case Item_id::scroll_det_items:
-    case Item_id::scroll_det_traps:
-    case Item_id::scroll_det_mon:
-    case Item_id::scroll_bless:
-    case Item_id::scroll_darkbolt:
-    case Item_id::scroll_aza_wrath:
-    case Item_id::scroll_opening:
-    case Item_id::scroll_sacr_life:
-    case Item_id::scroll_sacr_spi:
-    case Item_id::scroll_res:
-    case Item_id::scroll_summon_mon:
-    case Item_id::scroll_light:
-    case Item_id::scroll_anim_wpns:
+    case ItemId::scroll_mayhem:
+    case ItemId::scroll_telep:
+    case ItemId::scroll_pest:
+    case ItemId::scroll_slow_mon:
+    case ItemId::scroll_terrify_mon:
+    case ItemId::scroll_paral_mon:
+    case ItemId::scroll_det_items:
+    case ItemId::scroll_det_traps:
+    case ItemId::scroll_det_mon:
+    case ItemId::scroll_bless:
+    case ItemId::scroll_darkbolt:
+    case ItemId::scroll_aza_wrath:
+    case ItemId::scroll_opening:
+    case ItemId::scroll_sacr_life:
+    case ItemId::scroll_sacr_spi:
+    case ItemId::scroll_res:
+    case ItemId::scroll_summon_mon:
+    case ItemId::scroll_light:
+    case ItemId::scroll_anim_wpns:
         r = new Scroll(d);
         break;
 
-    case Item_id::potion_vitality:
-        r = new Potion_vitality(d);
+    case ItemId::potion_vitality:
+        r = new PotionVitality(d);
         break;
 
-    case Item_id::potion_spirit:
-        r = new Potion_spirit(d);
+    case ItemId::potion_spirit:
+        r = new PotionSpirit(d);
         break;
 
-    case Item_id::potion_blindness:
-        r = new Potion_blindness(d);
+    case ItemId::potion_blindness:
+        r = new PotionBlindness(d);
         break;
 
-    case Item_id::potion_fortitude:
-        r = new Potion_fortitude(d);
+    case ItemId::potion_fortitude:
+        r = new PotionFortitude(d);
         break;
 
-    case Item_id::potion_paralyze:
-        r = new Potion_paral(d);
+    case ItemId::potion_paralyze:
+        r = new PotionParal(d);
         break;
 
-    case Item_id::potion_rElec:
-        r = new Potion_rElec(d);
+    case ItemId::potion_rElec:
+        r = new PotionRElec(d);
         break;
 
-    case Item_id::potion_conf:
-        r = new Potion_conf(d);
+    case ItemId::potion_conf:
+        r = new PotionConf(d);
         break;
 
-    case Item_id::potion_poison:
-        r = new Potion_poison(d);
+    case ItemId::potion_poison:
+        r = new PotionPoison(d);
         break;
 
-    case Item_id::potion_insight:
-        r = new Potion_insight(d);
+    case ItemId::potion_insight:
+        r = new PotionInsight(d);
         break;
 
-    case Item_id::potion_clairv:
-        r = new Potion_clairv(d);
+    case ItemId::potion_clairv:
+        r = new PotionClairv(d);
         break;
 
-    case Item_id::potion_rFire:
-        r = new Potion_rFire(d);
+    case ItemId::potion_rFire:
+        r = new PotionRFire(d);
         break;
 
-    case Item_id::potion_curing:
-        r = new Potion_curing(d);
+    case ItemId::potion_curing:
+        r = new PotionCuring(d);
         break;
 
-    case Item_id::potion_descent:
-        r = new Potion_descent(d);
+    case ItemId::potion_descent:
+        r = new PotionDescent(d);
         break;
 
-    case Item_id::potion_invis:
-        r = new Potion_invis(d);
+    case ItemId::potion_invis:
+        r = new PotionInvis(d);
         break;
 
-    case Item_id::potion_see_invis:
-        r = new Potion_see_invis(d);
+    case ItemId::potion_see_invis:
+        r = new PotionSeeInvis(d);
         break;
 
-    case Item_id::device_blaster:
-        r = new Device_blaster(d);
+    case ItemId::device_blaster:
+        r = new DeviceBlaster(d);
         break;
 
-    case Item_id::device_shockwave:
-        r = new Device_shockwave(d);
+    case ItemId::device_shockwave:
+        r = new DeviceShockwave(d);
         break;
 
-    case Item_id::device_rejuvenator:
-        r = new Device_rejuvenator(d);
+    case ItemId::device_rejuvenator:
+        r = new DeviceRejuvenator(d);
         break;
 
-    case Item_id::device_translocator:
-        r = new Device_translocator(d);
+    case ItemId::device_translocator:
+        r = new DeviceTranslocator(d);
         break;
 
-    case Item_id::device_sentry_drone:
-        r = new Device_sentry_drone(d);
+    case ItemId::device_sentry_drone:
+        r = new DeviceSentryDrone(d);
         break;
 
-    case Item_id::lantern:
-        r = new Device_lantern(d);
+    case ItemId::lantern:
+        r = new DeviceLantern(d);
         break;
 
-    case Item_id::rod_purge_invis:
-        r = new Rod_purge_invis(d);
+    case ItemId::rod_purge_invis:
+        r = new RodPurgeInvis(d);
         break;
 
-    case Item_id::rod_curing:
-        r = new Rod_curing(d);
+    case ItemId::rod_curing:
+        r = new RodCuring(d);
         break;
 
-    case Item_id::rod_opening:
-        r = new Rod_opening(d);
+    case ItemId::rod_opening:
+        r = new RodOpening(d);
         break;
 
-    case Item_id::rod_bless:
-        r = new Rod_bless(d);
+    case ItemId::rod_bless:
+        r = new RodBless(d);
         break;
 
-    case Item_id::medical_bag:
-        r = new Medical_bag(d);
+    case ItemId::medical_bag:
+        r = new MedicalBag(d);
         break;
 
-    case Item_id::star_amulet:
-    case Item_id::skull_amulet:
-    case Item_id::spider_amulet:
-    case Item_id::eye_amulet:
-    case Item_id::moon_amulet:
-    case Item_id::scarab_amulet:
-    case Item_id::dagger_amulet:
-    case Item_id::bat_winged_amulet:
-    case Item_id::golden_amulet:
-    case Item_id::silver_amulet:
-    case Item_id::obsidian_amulet:
-    case Item_id::jade_amulet:
-    case Item_id::rune_amulet:
+    case ItemId::star_amulet:
+    case ItemId::skull_amulet:
+    case ItemId::spider_amulet:
+    case ItemId::eye_amulet:
+    case ItemId::moon_amulet:
+    case ItemId::scarab_amulet:
+    case ItemId::dagger_amulet:
+    case ItemId::bat_winged_amulet:
+    case ItemId::golden_amulet:
+    case ItemId::silver_amulet:
+    case ItemId::obsidian_amulet:
+    case ItemId::jade_amulet:
+    case ItemId::rune_amulet:
         r = new Amulet(d);
         break;
 
-    case Item_id::END:
+    case ItemId::END:
         return nullptr;
     }
 
@@ -351,7 +351,7 @@ Item* mk(const Item_id item_id, const int nr_items)
     {
         TRACE << "Specified number of items (" + to_str(nr_items) + ") != 1 for "
               << "non-stackable item: "
-              << int(d->id) << ", " << r->name(Item_ref_type::plain) << std::endl;
+              << int(d->id) << ", " << r->name(ItemRefType::plain) << std::endl;
         ASSERT(false);
     }
 
@@ -362,12 +362,12 @@ Item* mk(const Item_id item_id, const int nr_items)
 
 void set_item_randomized_properties(Item* item)
 {
-    const Item_data_t& d = item->data();
+    const ItemDataT& d = item->data();
 
-    ASSERT(d.type != Item_type::melee_wpn_intr &&
-           d.type != Item_type::ranged_wpn_intr);
+    ASSERT(d.type != ItemType::melee_wpn_intr &&
+           d.type != ItemType::ranged_wpn_intr);
 
-    if (d.id == Item_id::pharaoh_staff)
+    if (d.id == ItemId::pharaoh_staff)
     {
         //TODO: This is a really hacky fix that shouldn't be here - refactor.
         item->melee_dmg_plus_ = 4;
@@ -417,9 +417,9 @@ void set_item_randomized_properties(Item* item)
     }
 
     //Vary number of Medical supplies (mostly just for aesthetic reasons)
-    if (d.id == Item_id::medical_bag)
+    if (d.id == ItemId::medical_bag)
     {
-        Medical_bag* const medbag = static_cast<Medical_bag*>(item);
+        MedicalBag* const medbag = static_cast<MedicalBag*>(item);
 
         const int nr_supplies_max = medbag->nr_supplies_;
 
@@ -429,7 +429,7 @@ void set_item_randomized_properties(Item* item)
     }
 }
 
-Item* mk_item_on_floor(const Item_id item_id, const P& pos)
+Item* mk_item_on_floor(const ItemId item_id, const P& pos)
 {
     Item* item = mk(item_id);
     set_item_randomized_properties(item);
@@ -447,17 +447,17 @@ Item* copy_item(const Item& item_to_copy)
 
 Item* mk_random_scroll_or_potion(const bool allow_scrolls, const bool allow_potions)
 {
-    std::vector<Item_id> item_bucket;
+    std::vector<ItemId> item_bucket;
 
-    for (int i = 0; i < int(Item_id::END); ++i)
+    for (int i = 0; i < int(ItemId::END); ++i)
     {
-        const Item_data_t& d = item_data::data[i];
+        const ItemDataT& d = item_data::data[i];
 
         if (
-            (d.type == Item_type::scroll && allow_scrolls) ||
-            (d.type == Item_type::potion && allow_potions))
+            (d.type == ItemType::scroll && allow_scrolls) ||
+            (d.type == ItemType::potion && allow_potions))
         {
-            item_bucket.push_back(static_cast<Item_id>(i));
+            item_bucket.push_back(static_cast<ItemId>(i));
         }
     }
 

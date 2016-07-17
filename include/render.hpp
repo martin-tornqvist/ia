@@ -20,12 +20,12 @@ enum class Panel
     log
 };
 
-struct Cell_render_data
+struct CellRenderData
 {
-    Cell_render_data() :
+    CellRenderData() :
         clr                             (clr_black),
         clr_bg                          (clr_black),
-        tile                            (Tile_id::empty),
+        tile                            (TileId::empty),
         glyph                           (' '),
         lifebar_length                  (-1),
         is_light_fade_allowed           (true),
@@ -36,7 +36,7 @@ struct Cell_render_data
 
     Clr     clr;
     Clr     clr_bg;
-    Tile_id tile;
+    TileId tile;
     char    glyph;
     int     lifebar_length;
     bool    is_light_fade_allowed;
@@ -46,9 +46,9 @@ struct Cell_render_data
     bool    is_aware_of_allied_mon_here;
 };
 
-struct Cell_overlay
+struct CellOverlay
 {
-    Cell_overlay() :
+    CellOverlay() :
         clr_bg(clr_black) {}
 
     Clr clr_bg;
@@ -57,21 +57,21 @@ struct Cell_overlay
 namespace render
 {
 
-extern Cell_render_data render_array[map_w][map_h];
-extern Cell_render_data render_array_no_actors[map_w][map_h];
+extern CellRenderData render_array[map_w][map_h];
+extern CellRenderData render_array_no_actors[map_w][map_h];
 
 void init();
 void cleanup();
 
 //Draws the whole "map state" including character lines, log, etc
-void draw_map_state(const Update_screen update = Update_screen::yes,
-                    Cell_overlay overlay[map_w][map_h] = nullptr);
+void draw_map_state(const UpdateScreen update = UpdateScreen::yes,
+                    CellOverlay overlay[map_w][map_h] = nullptr);
 
 void update_screen();
 
 void clear_screen();
 
-void draw_tile(const Tile_id tile,
+void draw_tile(const TileId tile,
                const Panel panel,
                const P& pos,
                const Clr& clr,
@@ -117,7 +117,7 @@ void draw_marker(const P& p,
                  const std::vector<P>& trail,
                  const int effective_range = -1,
                  const int blocked_from_idx = -1,
-                 Cell_overlay overlay[map_w][map_h] = nullptr);
+                 CellOverlay overlay[map_w][map_h] = nullptr);
 
 void draw_blast_at_field(const P& center_pos,
                          const int radius,
@@ -148,12 +148,12 @@ void draw_box(const R& area,
 
 //Draws a description "box" for items, spells, etc. The parameter lines may be empty,
 //in which case an empty area is drawn.
-void draw_descr_box(const std::vector<Str_and_clr>& lines);
+void draw_descr_box(const std::vector<StrAndClr>& lines);
 
 void draw_info_scr_interface(const std::string& title,
-                             const Inf_screen_type screen_type);
+                             const InfScreenType screen_type);
 
-void draw_map(Cell_overlay overlay[map_w][map_h] = nullptr);
+void draw_map(CellOverlay overlay[map_w][map_h] = nullptr);
 
 void on_toggle_fullscreen();
 

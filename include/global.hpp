@@ -133,43 +133,43 @@ enum class Verbosity
     verbose,
 };
 
-enum class Update_screen
+enum class UpdateScreen
 {
     no,
     yes
 };
 
-enum class Inv_type
+enum class InvType
 {
     slots,
     backpack
 };
 
-enum class Did_action
+enum class DidAction
 {
     yes,
     no
 };
 
-enum class Pass_time
+enum class PassTime
 {
     yes,
     no
 };
 
-enum class Consume_item
+enum class ConsumeItem
 {
     yes,
     no
 };
 
-enum class Unequip_allowed
+enum class UnequipAllowed
 {
     yes,
     no
 };
 
-enum class Item_ref_type
+enum class ItemRefType
 {
     plain,
     a,
@@ -177,13 +177,13 @@ enum class Item_ref_type
     END
 };
 
-enum class Item_ref_inf
+enum class ItemRefInf
 {
     none,
     yes
 };
 
-enum class Item_ref_att_inf
+enum class ItemRefAttInf
 {
     none,
     wpn_context,
@@ -209,7 +209,7 @@ enum class Matl
     fluid
 };
 
-enum class Liquid_type
+enum class LiquidType
 {
     water,
     mud,
@@ -225,7 +225,7 @@ enum class Condition
     fine
 };
 
-enum class Dmg_type
+enum class DmgType
 {
     physical,
     fire,
@@ -237,7 +237,7 @@ enum class Dmg_type
     END
 };
 
-enum class Dmg_method
+enum class DmgMethod
 {
     piercing,
     slashing,
@@ -251,7 +251,7 @@ enum class Dmg_method
     END
 };
 
-enum class Att_mode
+enum class AttMode
 {
     none,
     melee,
@@ -259,13 +259,13 @@ enum class Att_mode
     ranged
 };
 
-enum class Allow_wound
+enum class AllowWound
 {
     no,
     yes
 };
 
-enum class Shock_lvl
+enum class ShockLvl
 {
     none   = 0,
     mild   = 2,
@@ -273,13 +273,13 @@ enum class Shock_lvl
     heavy  = 12
 };
 
-enum class Game_entry_mode
+enum class GameEntryMode
 {
     new_game,
     load_game
 };
 
-enum class Spawn_rate
+enum class SpawnRate
 {
     never,
     extremely_rare,
@@ -289,13 +289,13 @@ enum class Spawn_rate
     very_common
 };
 
-enum class Ver_dir
+enum class VerDir
 {
     up,
     down
 };
 
-enum class Actor_state
+enum class ActorState
 {
     alive,
     corpse,
@@ -308,36 +308,36 @@ enum class Axis
     ver
 };
 
-enum class Lgt_size
+enum class LgtSize
 {
     none,
     small, //3x3
     fov
 };
 
-enum class More_prompt_on_msg
+enum class MorePromptOnMsg
 {
     no,
     yes
 };
 
-enum class Inf_screen_type
+enum class InfScreenType
 {
     scrolling,
     single_screen
 };
 
-struct Str_and_clr
+struct StrAndClr
 {
-    Str_and_clr() :
+    StrAndClr() :
         str(""),
         clr(clr_black) {}
 
-    Str_and_clr(const std::string& text, const Clr& color) :
+    StrAndClr(const std::string& text, const Clr& color) :
         str(text),
         clr(color) {}
 
-    Str_and_clr& operator=(const Str_and_clr& other)
+    StrAndClr& operator=(const StrAndClr& other)
     {
         str = other.str;
         clr = other.clr;
@@ -348,7 +348,7 @@ struct Str_and_clr
     Clr clr;
 };
 
-enum class Item_type
+enum class ItemType
 {
     general,
     melee_wpn,
@@ -370,35 +370,35 @@ enum class Item_type
     ranged_wpn_intr
 };
 
-struct Item_name
+struct ItemName
 {
-    Item_name(const std::string& name,
+    ItemName(const std::string& name,
               const std::string& name_pl,
               const std::string& name_a)
     {
-        names[size_t(Item_ref_type::plain)]   = name;
-        names[size_t(Item_ref_type::plural)]  = name_pl;
-        names[size_t(Item_ref_type::a)]       = name_a;
+        names[size_t(ItemRefType::plain)]   = name;
+        names[size_t(ItemRefType::plural)]  = name_pl;
+        names[size_t(ItemRefType::a)]       = name_a;
     }
 
-    Item_name()
+    ItemName()
     {
-        for (size_t i = 0; i < size_t(Item_ref_type::END); i++)
+        for (size_t i = 0; i < size_t(ItemRefType::END); i++)
         {
             names[i] = "";
         }
     }
 
-    std::string names[size_t(Item_ref_type::END)];
+    std::string names[size_t(ItemRefType::END)];
 };
 
-struct Item_att_msgs
+struct ItemAttMsgs
 {
-    Item_att_msgs() :
+    ItemAttMsgs() :
         player  (""),
         other   ("") {}
 
-    Item_att_msgs(const std::string& player_, const std::string& other_) :
+    ItemAttMsgs(const std::string& player_, const std::string& other_) :
         player  (player_),
         other   (other_) {}
 

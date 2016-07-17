@@ -27,7 +27,7 @@ enum class Obsession
     END
 };
 
-enum class Shock_src
+enum class ShockSrc
 {
     see_mon,
     use_strange_item,
@@ -37,7 +37,7 @@ enum class Shock_src
     END
 };
 
-class Medical_bag;
+class MedicalBag;
 class Explosive;
 class Wpn;
 
@@ -67,8 +67,8 @@ public:
                     const Dir dir_to_origin,
                     const int percent_audible_distance);
 
-    void incr_shock(const Shock_lvl shock_value, Shock_src shock_src);
-    void incr_shock(const int shock, Shock_src shock_src);
+    void incr_shock(const ShockLvl shock_value, ShockSrc shock_src);
+    void incr_shock(const int shock, ShockSrc shock_src);
     void restore_shock(const int amount_restored, const bool is_temp_shock_restored);
     void update_tmp_shock();
 
@@ -90,8 +90,8 @@ public:
         perm_shock_taken_cur_turn_ = 0.0;
     }
 
-    int shock_resistance(const Shock_src shock_src) const;
-    double shock_taken_after_mods(const int base_shock, const Shock_src shock_src) const;
+    int shock_resistance(const ShockSrc shock_src) const;
+    double shock_taken_after_mods(const int base_shock, const ShockSrc shock_src) const;
 
     void auto_melee();
 
@@ -122,7 +122,7 @@ public:
 
     bool is_free_step_turn() const;
 
-    Medical_bag* active_medical_bag;
+    MedicalBag* active_medical_bag;
     Explosive* active_explosive;
     Actor* tgt_;
     int wait_turns_left;
@@ -133,9 +133,9 @@ private:
     void incr_insanity();
 
     void on_hit(int& dmg,
-                const Dmg_type dmg_type,
-                const Dmg_method method,
-                const Allow_wound allow_wound) override;
+                const DmgType dmg_type,
+                const DmgMethod method,
+                const AllowWound allow_wound) override;
 
     void fov_hack();
 

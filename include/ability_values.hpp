@@ -3,7 +3,7 @@
 
 class Actor;
 
-enum class Ability_id
+enum class AbilityId
 {
     empty,
     searching,
@@ -16,14 +16,14 @@ enum class Ability_id
 };
 
 //Each actor has an instance of this class
-class Ability_vals
+class AbilityVals
 {
 public:
-    Ability_vals() {reset();}
+    AbilityVals() {reset();}
 
-    Ability_vals& operator=(const Ability_vals& other)
+    AbilityVals& operator=(const AbilityVals& other)
     {
-        for (int i = 0; i < int(Ability_id::END); ++i)
+        for (int i = 0; i < int(AbilityId::END); ++i)
         {
             ability_list[i] = other.ability_list[i];
         }
@@ -33,22 +33,22 @@ public:
 
     void reset();
 
-    int val(const Ability_id id, const bool is_affected_by_props, const Actor& actor) const;
+    int val(const AbilityId id, const bool is_affected_by_props, const Actor& actor) const;
 
-    int raw_val(const Ability_id id)
+    int raw_val(const AbilityId id)
     {
         return ability_list[int(id)];
     }
 
-    void set_val(const Ability_id id, const int val);
+    void set_val(const AbilityId id, const int val);
 
-    void change_val(const Ability_id id, const int change);
+    void change_val(const AbilityId id, const int change);
 
 private:
-    int ability_list[int(Ability_id::END)];
+    int ability_list[int(AbilityId::END)];
 };
 
-enum Ability_roll_result
+enum AbilityRollResult
 {
     fail_critical,
     fail,
@@ -59,7 +59,7 @@ enum Ability_roll_result
 namespace ability_roll
 {
 
-Ability_roll_result roll(const int tot_skill_value, const Actor* const actor_rolling);
+AbilityRollResult roll(const int tot_skill_value, const Actor* const actor_rolling);
 
 } //ability_roll
 

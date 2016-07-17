@@ -977,17 +977,17 @@ void pick_bg(const Bg bg)
     switch (bg_)
     {
     case Bg::ghoul:
-        map::player->prop_handler().try_add(new Prop_rDisease(Prop_turns::indefinite),
-                                            Prop_src::intr,
+        map::player->prop_handler().try_add(new PropRDisease(PropTurns::indefinite),
+                                            PropSrc::intr,
                                             true,
                                             Verbosity::silent);
 
-        map::player->prop_handler().try_add(new Prop_infravis(Prop_turns::indefinite),
-                                            Prop_src::intr,
+        map::player->prop_handler().try_add(new PropInfravis(PropTurns::indefinite),
+                                            PropSrc::intr,
                                             true,
                                             Verbosity::silent);
 
-        player_spells_handling::learn_spell_if_not_known(Spell_id::frenzy);
+        player_spells_handling::learn_spell_if_not_known(SpellId::frenzy);
 
         map::player->change_max_hp(10, Verbosity::silent);
         break;
@@ -998,7 +998,7 @@ void pick_bg(const Bg bg)
         break;
 
     case Bg::rogue:
-        player_spells_handling::learn_spell_if_not_known(Spell_id::cloud_minds);
+        player_spells_handling::learn_spell_if_not_known(SpellId::cloud_minds);
         pick_trait(Trait::observant);
         pick_trait(Trait::stealthy);
         break;
@@ -1046,8 +1046,8 @@ void pick_trait(const Trait id)
     case Trait::stout_spirit:
         map::player->change_max_spi(2, Verbosity::silent);
 
-        map::player->prop_handler().try_add(new Prop_rSpell(Prop_turns::indefinite),
-                                            Prop_src::intr,
+        map::player->prop_handler().try_add(new PropRSpell(PropTurns::indefinite),
+                                            PropSrc::intr,
                                             true,
                                             Verbosity::silent);
         break;
@@ -1061,29 +1061,29 @@ void pick_trait(const Trait id)
         break;
 
     case Trait::self_aware:
-        map::player->prop_handler().try_add(new Prop_rConf(Prop_turns::indefinite),
-                                            Prop_src::intr,
+        map::player->prop_handler().try_add(new PropRConf(PropTurns::indefinite),
+                                            PropSrc::intr,
                                             true,
                                             Verbosity::silent);
         break;
 
     case Trait::survivalist:
-        map::player->prop_handler().try_add(new Prop_rDisease(Prop_turns::indefinite),
-                                            Prop_src::intr,
+        map::player->prop_handler().try_add(new PropRDisease(PropTurns::indefinite),
+                                            PropSrc::intr,
                                             true,
                                             Verbosity::silent);
         break;
 
     case Trait::fearless:
-        map::player->prop_handler().try_add(new Prop_rFear(Prop_turns::indefinite),
-                                            Prop_src::intr,
+        map::player->prop_handler().try_add(new PropRFear(PropTurns::indefinite),
+                                            PropSrc::intr,
                                             true,
                                             Verbosity::silent);
         break;
 
     case Trait::toxic:
-        map::player->prop_handler().try_add(new Prop_rPoison(Prop_turns::indefinite),
-                                            Prop_src::intr,
+        map::player->prop_handler().try_add(new PropRPoison(PropTurns::indefinite),
+                                            PropSrc::intr,
                                             true,
                                             Verbosity::silent);
 
@@ -1117,7 +1117,7 @@ int spi_occultist_can_cast_at_lvl(const int lvl)
     return player_start_spi + spi_from_lvls + spi_from_start_trait - 1;
 }
 
-bool gets_undead_bane_bon(const Actor_data_t& actor_data)
+bool gets_undead_bane_bon(const ActorDataT& actor_data)
 {
     return player_bon::traits[(size_t)Trait::undead_bane] && actor_data.is_undead;
 }

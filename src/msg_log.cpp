@@ -79,7 +79,7 @@ void clear()
     }
 }
 
-void draw(const Update_screen update)
+void draw(const UpdateScreen update)
 {
     const int nr_lines_with_content = lines_[0].empty() ? 0 :
                                       lines_[1].empty() ? 1 : 2;
@@ -96,7 +96,7 @@ void draw(const Update_screen update)
         }
     }
 
-    if (update == Update_screen::yes)
+    if (update == UpdateScreen::yes)
     {
         render::update_screen();
     }
@@ -105,7 +105,7 @@ void draw(const Update_screen update)
 void add(const std::string& str,
          const Clr& clr,
          const bool interrupt_all_player_actions,
-         const More_prompt_on_msg add_more_prompt_on_msg)
+         const MorePromptOnMsg add_more_prompt_on_msg)
 {
     ASSERT(!str.empty());
 
@@ -129,7 +129,7 @@ void add(const std::string& str,
     bool is_repeated = false;
 
     //Check if message is identical to previous
-    if (add_more_prompt_on_msg == More_prompt_on_msg::no && prev_msg)
+    if (add_more_prompt_on_msg == MorePromptOnMsg::no && prev_msg)
     {
         std::string prev_str = "";
         prev_msg->str_raw(prev_str);
@@ -170,7 +170,7 @@ void add(const std::string& str,
         lines_[cur_line_nr].push_back(Msg(str, clr, x_pos));
     }
 
-    if (add_more_prompt_on_msg == More_prompt_on_msg::yes)
+    if (add_more_prompt_on_msg == MorePromptOnMsg::yes)
     {
         more_prompt();
     }
@@ -194,9 +194,9 @@ void more_prompt()
         return;
     }
 
-    render::draw_map_state(Update_screen::no);
+    render::draw_map_state(UpdateScreen::no);
 
-    draw(Update_screen::no);
+    draw(UpdateScreen::no);
 
     int x_pos    = 0;
     int line_nr = lines_[1].empty() ? 0 : 1;
@@ -258,7 +258,7 @@ void display_history()
                     " of " + to_str(history_.size());
         }
 
-        render::draw_info_scr_interface(title, Inf_screen_type::scrolling);
+        render::draw_info_scr_interface(title, InfScreenType::scrolling);
 
         int y_pos = 1;
 
@@ -269,7 +269,7 @@ void display_history()
 
         render::update_screen();
 
-        const Key_data& d = input::input();
+        const KeyData& d = input::input();
 
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {

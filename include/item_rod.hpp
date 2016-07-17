@@ -7,7 +7,7 @@
 class Rod: public Item
 {
 public:
-    Rod(Item_data_t* const item_data) :
+    Rod(ItemDataT* const item_data) :
         Item                    (item_data),
         nr_charge_turns_left_   (0) {}
 
@@ -17,14 +17,14 @@ public:
 
     void load() override final;
 
-    Consume_item activate(Actor* const actor) override final;
+    ConsumeItem activate(Actor* const actor) override final;
 
     Clr interface_clr() const override final
     {
         return clr_violet;
     }
 
-    void on_std_turn_in_inv(const Inv_type inv_type) override final;
+    void on_std_turn_in_inv(const InvType inv_type) override final;
 
     std::vector<std::string> descr() const override final;
 
@@ -43,13 +43,13 @@ private:
     int nr_charge_turns_left_;
 };
 
-class Rod_purge_invis : public Rod
+class RodPurgeInvis : public Rod
 {
 public:
-    Rod_purge_invis(Item_data_t* const item_data) :
+    RodPurgeInvis(ItemDataT* const item_data) :
         Rod(item_data) {}
 
-    ~Rod_purge_invis() {}
+    ~RodPurgeInvis() {}
 
     const std::string real_name() const override
     {
@@ -66,13 +66,13 @@ protected:
     void activate_impl() override;
 };
 
-class Rod_curing : public Rod
+class RodCuring : public Rod
 {
 public:
-    Rod_curing(Item_data_t* const item_data) :
+    RodCuring(ItemDataT* const item_data) :
         Rod(item_data) {}
 
-    ~Rod_curing() {}
+    ~RodCuring() {}
 
     const std::string real_name() const override
     {
@@ -89,13 +89,13 @@ protected:
     void activate_impl() override;
 };
 
-class Rod_opening : public Rod
+class RodOpening : public Rod
 {
 public:
-    Rod_opening(Item_data_t* const item_data) :
+    RodOpening(ItemDataT* const item_data) :
         Rod(item_data) {}
 
-    ~Rod_opening() {}
+    ~RodOpening() {}
 
     const std::string real_name() const override
     {
@@ -112,13 +112,13 @@ protected:
     void activate_impl() override;
 };
 
-class Rod_bless : public Rod
+class RodBless : public Rod
 {
 public:
-    Rod_bless(Item_data_t* const item_data) :
+    RodBless(ItemDataT* const item_data) :
         Rod(item_data) {}
 
-    ~Rod_bless() {}
+    ~RodBless() {}
 
     const std::string real_name() const override
     {
@@ -137,7 +137,7 @@ protected:
 namespace rod_handling
 {
 
-struct Rod_look
+struct RodLook
 {
     std::string name_plain;
     std::string name_a;

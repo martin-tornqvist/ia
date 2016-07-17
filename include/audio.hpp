@@ -3,7 +3,7 @@
 
 #include "rl_utils.hpp"
 
-enum class Sfx_id
+enum class SfxId
 {
     //Monster sounds
     dog_snarl,
@@ -73,11 +73,11 @@ void init();
 void cleanup();
 
 //Returns channel playing on
-int play(const Sfx_id sfx,
+int play(const SfxId sfx,
          const int vol_percent_tot = 100,
          const int vol_percent_l = 50);
 
-void play(const Sfx_id sfx,
+void play(const SfxId sfx,
           const Dir dir,
           const int distance_percent);
 

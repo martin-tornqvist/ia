@@ -9,7 +9,7 @@
 class Prop;
 class Amulet;
 
-enum class Amulet_effect_id
+enum class AmuletEffectId
 {
     //Primary effects (i.e. one of these must be on the amulet)
     rFire,
@@ -39,24 +39,24 @@ enum class Amulet_effect_id
     END
 };
 
-class Amulet_effect
+class AmuletEffect
 {
 public:
-    Amulet_effect(Amulet* const amulet) :
+    AmuletEffect(Amulet* const amulet) :
         amulet_(amulet) {}
 
-    virtual ~Amulet_effect() {}
+    virtual ~AmuletEffect() {}
 
-    virtual Amulet_effect_id id() const = 0;
+    virtual AmuletEffectId id() const = 0;
 
     virtual void on_equip(const Verbosity verbosity)
     {
         (void)verbosity;
     }
 
-    virtual Unequip_allowed on_unequip()
+    virtual UnequipAllowed on_unequip()
     {
-        return Unequip_allowed::yes;
+        return UnequipAllowed::yes;
     }
 
     virtual void on_std_turn_equipped() {}
@@ -82,34 +82,34 @@ protected:
 };
 
 //Base class for effects which just apply a property
-class Amulet_property_effect : public Amulet_effect
+class AmuletPropertyEffect : public AmuletEffect
 {
 public:
-    Amulet_property_effect(Amulet* const amulet) :
-        Amulet_effect(amulet) {}
+    AmuletPropertyEffect(Amulet* const amulet) :
+        AmuletEffect(amulet) {}
 
-    virtual ~Amulet_property_effect() {}
+    virtual ~AmuletPropertyEffect() {}
 
     void on_equip(const Verbosity verbosity) override;
 
-    Unequip_allowed on_unequip() override final;
+    UnequipAllowed on_unequip() override final;
 
 protected:
     virtual Prop* mk_prop() const = 0;
 };
 
 //--------------------------------------------------------- EFFECTS
-class Amulet_effect_rFire : public Amulet_property_effect
+class AmuletEffectRFire : public AmuletPropertyEffect
 {
 public:
-    Amulet_effect_rFire(Amulet* const amulet) :
-        Amulet_property_effect(amulet) {}
+    AmuletEffectRFire(Amulet* const amulet) :
+        AmuletPropertyEffect(amulet) {}
 
-    ~Amulet_effect_rFire() {}
+    ~AmuletEffectRFire() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::rFire;
+        return AmuletEffectId::rFire;
     }
 
     std::string descr() const override
@@ -121,17 +121,17 @@ protected:
     Prop* mk_prop() const override;
 };
 
-class Amulet_effect_rElec : public Amulet_property_effect
+class AmuletEffectRElec : public AmuletPropertyEffect
 {
 public:
-    Amulet_effect_rElec(Amulet* const amulet) :
-        Amulet_property_effect(amulet) {}
+    AmuletEffectRElec(Amulet* const amulet) :
+        AmuletPropertyEffect(amulet) {}
 
-    ~Amulet_effect_rElec() {}
+    ~AmuletEffectRElec() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::rElec;
+        return AmuletEffectId::rElec;
     }
 
     std::string descr() const override
@@ -143,17 +143,17 @@ protected:
     Prop* mk_prop() const override;
 };
 
-class Amulet_effect_rPoison : public Amulet_property_effect
+class AmuletEffectRPoison : public AmuletPropertyEffect
 {
 public:
-    Amulet_effect_rPoison(Amulet* const amulet) :
-        Amulet_property_effect(amulet) {}
+    AmuletEffectRPoison(Amulet* const amulet) :
+        AmuletPropertyEffect(amulet) {}
 
-    ~Amulet_effect_rPoison() {}
+    ~AmuletEffectRPoison() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::rPoison;
+        return AmuletEffectId::rPoison;
     }
 
     std::string descr() const override
@@ -165,17 +165,17 @@ protected:
     Prop* mk_prop() const override;
 };
 
-class Amulet_effect_rDisease : public Amulet_property_effect
+class AmuletEffectRDisease : public AmuletPropertyEffect
 {
 public:
-    Amulet_effect_rDisease(Amulet* const amulet) :
-        Amulet_property_effect(amulet) {}
+    AmuletEffectRDisease(Amulet* const amulet) :
+        AmuletPropertyEffect(amulet) {}
 
-    ~Amulet_effect_rDisease() {}
+    ~AmuletEffectRDisease() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::rDisease;
+        return AmuletEffectId::rDisease;
     }
 
     std::string descr() const override
@@ -187,17 +187,17 @@ protected:
     Prop* mk_prop() const override;
 };
 
-class Amulet_effect_tele_control : public Amulet_property_effect
+class AmuletEffectTeleControl : public AmuletPropertyEffect
 {
 public:
-    Amulet_effect_tele_control(Amulet* const amulet) :
-        Amulet_property_effect(amulet) {}
+    AmuletEffectTeleControl(Amulet* const amulet) :
+        AmuletPropertyEffect(amulet) {}
 
-    ~Amulet_effect_tele_control() {}
+    ~AmuletEffectTeleControl() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::tele_ctrl;
+        return AmuletEffectId::tele_ctrl;
     }
 
     std::string descr() const override
@@ -209,17 +209,17 @@ protected:
     Prop* mk_prop() const override;
 };
 
-class Amulet_effect_light : public Amulet_property_effect
+class AmuletEffectLight : public AmuletPropertyEffect
 {
 public:
-    Amulet_effect_light(Amulet* const amulet) :
-        Amulet_property_effect(amulet) {}
+    AmuletEffectLight(Amulet* const amulet) :
+        AmuletPropertyEffect(amulet) {}
 
-    ~Amulet_effect_light() {}
+    ~AmuletEffectLight() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::light;
+        return AmuletEffectId::light;
     }
 
     std::string descr() const override
@@ -231,17 +231,17 @@ protected:
     Prop* mk_prop() const override;
 };
 
-class Amulet_effect_spell_reflect : public Amulet_property_effect
+class AmuletEffectSpellReflect : public AmuletPropertyEffect
 {
 public:
-    Amulet_effect_spell_reflect(Amulet* const amulet) :
-        Amulet_property_effect(amulet) {}
+    AmuletEffectSpellReflect(Amulet* const amulet) :
+        AmuletPropertyEffect(amulet) {}
 
-    ~Amulet_effect_spell_reflect() {}
+    ~AmuletEffectSpellReflect() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::spell_reflect;
+        return AmuletEffectId::spell_reflect;
     }
 
     std::string descr() const override
@@ -253,17 +253,17 @@ protected:
     Prop* mk_prop() const override;
 };
 
-class Amulet_effect_haste : public Amulet_property_effect
+class AmuletEffectHaste : public AmuletPropertyEffect
 {
 public:
-    Amulet_effect_haste(Amulet* const amulet) :
-        Amulet_property_effect(amulet) {}
+    AmuletEffectHaste(Amulet* const amulet) :
+        AmuletPropertyEffect(amulet) {}
 
-    ~Amulet_effect_haste() {}
+    ~AmuletEffectHaste() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::haste;
+        return AmuletEffectId::haste;
     }
 
     std::string descr() const override
@@ -275,17 +275,17 @@ protected:
     Prop* mk_prop() const override;
 };
 
-class Amulet_effect_hp_bon : public Amulet_effect
+class AmuletEffectHpBon : public AmuletEffect
 {
 public:
-    Amulet_effect_hp_bon(Amulet* const amulet) :
-        Amulet_effect(amulet) {}
+    AmuletEffectHpBon(Amulet* const amulet) :
+        AmuletEffect(amulet) {}
 
-    ~Amulet_effect_hp_bon() {}
+    ~AmuletEffectHpBon() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::hp_bon;
+        return AmuletEffectId::hp_bon;
     }
 
     std::string descr() const override
@@ -294,20 +294,20 @@ public:
     }
 
     void on_equip(const Verbosity verbosity) override;
-    Unequip_allowed on_unequip() override;
+    UnequipAllowed on_unequip() override;
 };
 
-class Amulet_effect_hp_pen : public Amulet_effect
+class AmuletEffectHpPen : public AmuletEffect
 {
 public:
-    Amulet_effect_hp_pen(Amulet* const amulet) :
-        Amulet_effect(amulet) {}
+    AmuletEffectHpPen(Amulet* const amulet) :
+        AmuletEffect(amulet) {}
 
-    ~Amulet_effect_hp_pen() {}
+    ~AmuletEffectHpPen() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::hp_pen;
+        return AmuletEffectId::hp_pen;
     }
 
     std::string descr() const override
@@ -317,20 +317,20 @@ public:
 
     void on_equip(const Verbosity verbosity) override;
 
-    Unequip_allowed on_unequip() override;
+    UnequipAllowed on_unequip() override;
 };
 
-class Amulet_effect_spi_bon : public Amulet_effect
+class AmuletEffectSpiBon : public AmuletEffect
 {
 public:
-    Amulet_effect_spi_bon(Amulet* const amulet) :
-        Amulet_effect(amulet) {}
+    AmuletEffectSpiBon(Amulet* const amulet) :
+        AmuletEffect(amulet) {}
 
-    ~Amulet_effect_spi_bon() {}
+    ~AmuletEffectSpiBon() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::spi_bon;
+        return AmuletEffectId::spi_bon;
     }
 
     std::string descr() const override
@@ -339,20 +339,20 @@ public:
     }
 
     void on_equip(const Verbosity verbosity) override;
-    Unequip_allowed on_unequip() override;
+    UnequipAllowed on_unequip() override;
 };
 
-class Amulet_effect_spi_pen : public Amulet_effect
+class AmuletEffectSpiPen : public AmuletEffect
 {
 public:
-    Amulet_effect_spi_pen(Amulet* const amulet) :
-        Amulet_effect(amulet) {}
+    AmuletEffectSpiPen(Amulet* const amulet) :
+        AmuletEffect(amulet) {}
 
-    ~Amulet_effect_spi_pen() {}
+    ~AmuletEffectSpiPen() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::spi_pen;
+        return AmuletEffectId::spi_pen;
     }
 
     std::string descr() const override
@@ -361,20 +361,20 @@ public:
     }
 
     void on_equip(const Verbosity verbosity) override;
-    Unequip_allowed on_unequip() override;
+    UnequipAllowed on_unequip() override;
 };
 
-class Amulet_effect_random_tele : public Amulet_effect
+class AmuletEffectRandomTele : public AmuletEffect
 {
 public:
-    Amulet_effect_random_tele(Amulet* const amulet) :
-        Amulet_effect(amulet) {}
+    AmuletEffectRandomTele(Amulet* const amulet) :
+        AmuletEffect(amulet) {}
 
-    ~Amulet_effect_random_tele() {}
+    ~AmuletEffectRandomTele() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::random_tele;
+        return AmuletEffectId::random_tele;
     }
 
     std::string descr() const override
@@ -385,17 +385,17 @@ public:
     void on_std_turn_equipped() override;
 };
 
-class Amulet_effect_summon_mon : public Amulet_effect
+class AmuletEffectSummonMon : public AmuletEffect
 {
 public:
-    Amulet_effect_summon_mon(Amulet* const amulet) :
-        Amulet_effect(amulet) {}
+    AmuletEffectSummonMon(Amulet* const amulet) :
+        AmuletEffect(amulet) {}
 
-    ~Amulet_effect_summon_mon() {}
+    ~AmuletEffectSummonMon() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::summon;
+        return AmuletEffectId::summon;
     }
 
     std::string descr() const override
@@ -407,17 +407,17 @@ public:
     void on_std_turn_equipped() override;
 };
 
-class Amulet_effect_fire : public Amulet_effect
+class AmuletEffectFire : public AmuletEffect
 {
 public:
-    Amulet_effect_fire(Amulet* const amulet) :
-        Amulet_effect(amulet) {}
+    AmuletEffectFire(Amulet* const amulet) :
+        AmuletEffect(amulet) {}
 
-    ~Amulet_effect_fire() {}
+    ~AmuletEffectFire() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::fire;
+        return AmuletEffectId::fire;
     }
 
     std::string descr() const override
@@ -428,16 +428,16 @@ public:
     void on_std_turn_equipped() override;
 };
 
-class Amulet_effect_shriek : public Amulet_effect
+class AmuletEffectShriek : public AmuletEffect
 {
 public:
-    Amulet_effect_shriek(Amulet* const amulet);
+    AmuletEffectShriek(Amulet* const amulet);
 
-    ~Amulet_effect_shriek() {}
+    ~AmuletEffectShriek() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::shriek;
+        return AmuletEffectId::shriek;
     }
 
     std::string descr() const override
@@ -451,17 +451,17 @@ private:
     std::vector<std::string> words_;
 };
 
-class Amulet_effect_conflict : public Amulet_effect
+class AmuletEffectConflict : public AmuletEffect
 {
 public:
-    Amulet_effect_conflict(Amulet* const amulet) :
-        Amulet_effect(amulet) {}
+    AmuletEffectConflict(Amulet* const amulet) :
+        AmuletEffect(amulet) {}
 
-    ~Amulet_effect_conflict() {}
+    ~AmuletEffectConflict() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::conflict;
+        return AmuletEffectId::conflict;
     }
 
     std::string descr() const override
@@ -473,16 +473,16 @@ public:
     void on_std_turn_equipped() override;
 };
 
-class Amulet_effect_burden : public Amulet_effect
+class AmuletEffectBurden : public AmuletEffect
 {
 public:
-    Amulet_effect_burden(Amulet* const amulet);
+    AmuletEffectBurden(Amulet* const amulet);
 
-    ~Amulet_effect_burden() {}
+    ~AmuletEffectBurden() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::burden;
+        return AmuletEffectId::burden;
     }
 
     std::string descr() const override
@@ -494,17 +494,17 @@ public:
     void change_item_weight(int& weight_ref) override;
 };
 
-class Amulet_effect_hp_regen_bon : public Amulet_effect
+class AmuletEffectHpRegenBon : public AmuletEffect
 {
 public:
-    Amulet_effect_hp_regen_bon(Amulet* const amulet) :
-        Amulet_effect(amulet) {}
+    AmuletEffectHpRegenBon(Amulet* const amulet) :
+        AmuletEffect(amulet) {}
 
-    ~Amulet_effect_hp_regen_bon() {}
+    ~AmuletEffectHpRegenBon() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::hp_regen_bon;
+        return AmuletEffectId::hp_regen_bon;
     }
 
     int hp_regen_change() const override
@@ -518,20 +518,20 @@ public:
     }
 
     void on_equip(const Verbosity verbosity) override;
-    Unequip_allowed on_unequip() override;
+    UnequipAllowed on_unequip() override;
 };
 
-class Amulet_effect_hp_regen_pen : public Amulet_effect
+class AmuletEffectHpRegenPen : public AmuletEffect
 {
 public:
-    Amulet_effect_hp_regen_pen(Amulet* const amulet) :
-        Amulet_effect(amulet) {}
+    AmuletEffectHpRegenPen(Amulet* const amulet) :
+        AmuletEffect(amulet) {}
 
-    ~Amulet_effect_hp_regen_pen() {}
+    ~AmuletEffectHpRegenPen() {}
 
-    Amulet_effect_id id() const override
+    AmuletEffectId id() const override
     {
-        return Amulet_effect_id::hp_regen_pen;
+        return AmuletEffectId::hp_regen_pen;
     }
 
     int hp_regen_change() const override
@@ -545,13 +545,13 @@ public:
     }
 
     void on_equip(const Verbosity verbosity) override;
-    Unequip_allowed on_unequip() override;
+    UnequipAllowed on_unequip() override;
 };
 
 class Amulet : public Item
 {
 public:
-    Amulet(Item_data_t* const item_data);
+    Amulet(ItemDataT* const item_data);
 
     ~Amulet();
 
@@ -559,13 +559,13 @@ public:
 
     void on_equip_hook(const Verbosity verbosity) override final;
 
-    Unequip_allowed on_unequip_hook() override final;
+    UnequipAllowed on_unequip_hook() override final;
 
-    void on_std_turn_in_inv(const Inv_type inv_type) override final;
+    void on_std_turn_in_inv(const InvType inv_type) override final;
 
-    void on_actor_turn_in_inv(const Inv_type inv_type) override final;
+    void on_actor_turn_in_inv(const InvType inv_type) override final;
 
-    int hp_regen_change(const Inv_type inv_type) const override;
+    int hp_regen_change(const InvType inv_type) const override;
 
     Clr interface_clr() const override
     {
@@ -577,12 +577,12 @@ public:
     int weight() const override;
 
     //Called from the effects
-    void effect_noticed(const Amulet_effect_id effect_id);
+    void effect_noticed(const AmuletEffectId effect_id);
 
 private:
     virtual std::string name_inf() const override;
 
-    std::vector<Amulet_effect*> effects_;
+    std::vector<AmuletEffect*> effects_;
 };
 
 namespace amulet_handling

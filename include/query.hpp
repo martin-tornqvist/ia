@@ -4,16 +4,16 @@
 #include "rl_utils.hpp"
 #include "colors.hpp"
 
-struct Key_data;
+struct KeyData;
 
-enum class Yes_no_answer
+enum class YesNoAnswer
 {
     no,
     yes,
     special
 };
 
-enum class Allow_center
+enum class AllowCenter
 {
     no,
     yes
@@ -26,15 +26,15 @@ void init();
 
 void wait_for_key_press();
 
-Yes_no_answer yes_or_no(char key_for_special_event = -1);
+YesNoAnswer yes_or_no(char key_for_special_event = -1);
 
-Dir dir(const Allow_center allow_center);
+Dir dir(const AllowCenter allow_center);
 
 void wait_for_msg_more();
 
 void wait_for_confirm();
 
-Key_data letter(const bool accept_enter);
+KeyData letter(const bool accept_enter);
 
 int number(const P& pos,
            const Clr clr,

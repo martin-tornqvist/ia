@@ -35,18 +35,18 @@ void Smoke::on_new_turn()
         if (is_player)
         {
             auto&       inv                 = map::player->inv();
-            auto* const player_head_item    = inv.slots_[int(Slot_id::head)].item;
-            auto* const player_body_item    = inv.slots_[int(Slot_id::body)].item;
+            auto* const player_head_item    = inv.slots_[int(SlotId::head)].item;
+            auto* const player_body_item    = inv.slots_[int(SlotId::body)].item;
 
-            if (player_head_item && player_head_item->data().id == Item_id::gas_mask)
+            if (player_head_item && player_head_item->data().id == ItemId::gas_mask)
             {
                 is_blind_prot = true;
 
                 //This may destroy the gasmask
-                static_cast<Gas_mask*>(player_head_item)->decr_turns_left(inv);
+                static_cast<GasMask*>(player_head_item)->decr_turns_left(inv);
             }
 
-            if (player_body_item && player_body_item->data().id == Item_id::armor_asb_suit)
+            if (player_body_item && player_body_item->data().id == ItemId::armor_asb_suit)
             {
                 is_blind_prot = true;
             }
@@ -61,11 +61,11 @@ void Smoke::on_new_turn()
             }
 
             actor->prop_handler().try_add(
-                new Prop_blind(Prop_turns::specific, rnd::range(1, 3)));
+                new PropBlind(PropTurns::specific, rnd::range(1, 3)));
         }
 
         //Coughing?
-        if (rnd::one_in(4) && !actor->has_prop(Prop_id::rBreath))
+        if (rnd::one_in(4) && !actor->has_prop(PropId::rBreath))
         {
             std::string snd_msg = "";
 
@@ -81,14 +81,14 @@ void Smoke::on_new_turn()
                 }
             }
 
-            const auto alerts = is_player ? Alerts_mon::yes : Alerts_mon::no;
+            const auto alerts = is_player ? AlertsMon::yes : AlertsMon::no;
 
             snd_emit::run(Snd(snd_msg,
-                              Sfx_id::END,
-                              Ignore_msg_if_origin_seen::yes,
+                              SfxId::END,
+                              IgnoreMsgIfOriginSeen::yes,
                               actor->pos,
                               actor,
-                              Snd_vol::low,
+                              SndVol::low,
                               alerts));
         }
     }
@@ -123,7 +123,7 @@ Clr Smoke::clr() const
 }
 
 //------------------------------------------------------------------- DYNAMITE
-void Lit_dynamite::on_new_turn()
+void LitDynamite::on_new_turn()
 {
     nr_turns_left_--;
 
@@ -140,27 +140,27 @@ void Lit_dynamite::on_new_turn()
         //NOTE: This object is now deleted! Do not use member variables!
 
         explosion::run(p,
-                       Expl_type::expl,
-                       Expl_src::misc,
-                       Emit_expl_snd::yes,
+                       ExplType::expl,
+                       ExplSrc::misc,
+                       EmitExplSnd::yes,
                        d);
     }
 }
 
-std::string Lit_dynamite::name(const Article article)  const
+std::string LitDynamite::name(const Article article)  const
 {
     std::string ret = article == Article::a ? "a " : "the ";
 
     return ret + "lit stick of dynamite";
 }
 
-Clr Lit_dynamite::clr() const
+Clr LitDynamite::clr() const
 {
     return clr_red_lgt;
 }
 
 //------------------------------------------------------------------- FLARE
-void Lit_flare::on_new_turn()
+void LitFlare::on_new_turn()
 {
     --nr_turns_left_;
 
@@ -170,7 +170,7 @@ void Lit_flare::on_new_turn()
     }
 }
 
-void Lit_flare::add_light(bool light[map_w][map_h]) const
+void LitFlare::add_light(bool light[map_w][map_h]) const
 {
     const int radi = fov_std_radi_int; //light_radius();
 
@@ -182,12 +182,12 @@ void Lit_flare::add_light(bool light[map_w][map_h]) const
 
     bool hard_blocked[map_w][map_h];
 
-    map_parse::run(cell_check::Blocks_los(),
+    map_parse::run(cell_check::BlocksLos(),
                    hard_blocked,
-                   Map_parse_mode::overwrite,
+                   MapParseMode::overwrite,
                    R(p0, p1));
 
-    Los_result fov[map_w][map_h];
+    LosResult fov[map_w][map_h];
 
     fov::run(pos_, hard_blocked, fov);
 
@@ -203,14 +203,14 @@ void Lit_flare::add_light(bool light[map_w][map_h]) const
     }
 }
 
-std::string Lit_flare::name(const Article article)  const
+std::string LitFlare::name(const Article article)  const
 {
     std::string ret = article == Article::a ? "a " : "the ";
 
     return ret + "lit flare";
 }
 
-Clr Lit_flare::clr() const
+Clr LitFlare::clr() const
 {
     return clr_yellow;
 }

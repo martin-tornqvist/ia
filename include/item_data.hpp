@@ -9,9 +9,9 @@
 #include "feature_data.hpp"
 #include "audio.hpp"
 
-enum class Snd_vol;
+enum class SndVol;
 
-enum Item_weight
+enum ItemWeight
 {
     none        = 0,
     extra_light = 1,    //E.g. ammo
@@ -20,14 +20,14 @@ enum Item_weight
     heavy       = 100,  //E.g. heavy armor, heavy weapons
 };
 
-enum class Item_value
+enum class ItemValue
 {
     normal,
     minor_treasure,
     major_treasure
 };
 
-enum class Item_id
+enum class ItemId
 {
     trapez,
 
@@ -195,33 +195,33 @@ enum class Item_id
     END
 };
 
-struct Item_container_spawn_rule
+struct ItemContainerSpawnRule
 {
-    Item_container_spawn_rule() :
-        feature_id          (Feature_id::END),
+    ItemContainerSpawnRule() :
+        feature_id          (FeatureId::END),
         pct_chance_to_incl  (0) {}
 
-    Item_container_spawn_rule(Feature_id feature_id_, int pct_chance_to_incl_) :
+    ItemContainerSpawnRule(FeatureId feature_id_, int pct_chance_to_incl_) :
         feature_id          (feature_id_),
         pct_chance_to_incl  (pct_chance_to_incl_) {}
 
-    Feature_id feature_id;
+    FeatureId feature_id;
     int pct_chance_to_incl;
 };
 
-class Item_data_t
+class ItemDataT
 {
 public:
-    Item_data_t();
+    ItemDataT();
 
-    ~Item_data_t() {}
+    ~ItemDataT() {}
 
-    Item_id                     id;
-    Item_type                   type;
+    ItemId                     id;
+    ItemType                   type;
     bool                        has_std_activate; //E.g. potions and scrolls
     bool                        is_prio_in_backpack_list; //E.g. Medical Bag
-    Item_value                  value;
-    Item_weight                 weight;
+    ItemValue                  value;
+    ItemWeight                 weight;
     bool                        allow_spawn;
     Range                       spawn_std_range;
     int                         max_stack_at_spawn;
@@ -229,81 +229,81 @@ public:
     bool                        is_stackable;
     bool                        is_identified;
     bool                        is_tried;
-    Item_name                   base_name;
-    Item_name                   base_name_un_id;
+    ItemName                   base_name;
+    ItemName                   base_name_un_id;
     std::vector<std::string>    base_descr;
     char                        glyph;
     Clr                         clr;
-    Tile_id                     tile;
-    Att_mode                    main_att_mode;
-    Spell_id                    spell_cast_from_scroll;
+    TileId                     tile;
+    AttMode                    main_att_mode;
+    SpellId                    spell_cast_from_scroll;
     std::string                 land_on_hard_snd_msg;
-    Sfx_id                      land_on_hard_sfx;
+    SfxId                      land_on_hard_sfx;
     bool                        is_ins_raied_while_carried;
     bool                        is_ins_raied_while_equiped;
 
-    std::vector<Room_type>                  native_rooms;
-    std::vector<Item_container_spawn_rule>  container_spawn_rules;
+    std::vector<RoomType>                  native_rooms;
+    std::vector<ItemContainerSpawnRule>  container_spawn_rules;
 
-    int ability_mods_while_equipped[size_t(Ability_id::END)];
+    int ability_mods_while_equipped[size_t(AbilityId::END)];
 
-    struct Item_melee_data
+    struct ItemMeleeData
     {
-        Item_melee_data();
-        ~Item_melee_data();
+        ItemMeleeData();
+        ~ItemMeleeData();
 
         bool                    is_melee_wpn;
         //NOTE: The "plus" field is ignored in the melee damage data, since melee weapons have
         //individual plus damages stored in the weapon objects.
-        Dice_param              dmg;
+        DiceParam              dmg;
         int                     hit_chance_mod;
-        Item_att_msgs           att_msgs;
+        ItemAttMsgs           att_msgs;
         Prop*                   prop_applied;
-        Dmg_type                dmg_type;
+        DmgType                dmg_type;
         bool                    knocks_back;
-        Sfx_id                  hit_small_sfx;
-        Sfx_id                  hit_medium_sfx;
-        Sfx_id                  hit_hard_sfx;
-        Sfx_id                  miss_sfx;
+        SfxId                  hit_small_sfx;
+        SfxId                  hit_medium_sfx;
+        SfxId                  hit_hard_sfx;
+        SfxId                  miss_sfx;
     } melee;
 
-    struct Item_ranged_data
+    struct ItemRangedData
     {
-        Item_ranged_data();
-        ~Item_ranged_data();
+        ItemRangedData();
+        ~ItemRangedData();
 
         bool                    is_ranged_wpn, is_throwable_wpn, is_machine_gun, is_shotgun;
         //NOTE: This property should be set on ranged weapons (using ammo) AND mags:
         int                     max_ammo;
-        Dice_param              dmg;
+        DiceParam              dmg;
         //NOTE: "Pure" melee weapons do not have to (should not) set this value - they do throw
         //damage based on their melee damage instead.
-        Dice_param              throw_dmg;
+        DiceParam              throw_dmg;
         int                     hit_chance_mod;
         int                     throw_hit_chance_mod;
         int                     effective_range;
         bool                    knocks_back;
         std::string             dmg_info_override;
-        Item_id                 ammo_item_id;
-        Dmg_type                dmg_type;
+        ItemId                 ammo_item_id;
+        DmgType                dmg_type;
         bool                    has_infinite_ammo;
         char                    projectile_glyph;
-        Tile_id                 projectile_tile;
+        TileId                 projectile_tile;
         Clr                     projectile_clr;
         bool                    projectile_leaves_trail;
         bool                    projectile_leaves_smoke;
-        Item_att_msgs           att_msgs;
+        ItemAttMsgs           att_msgs;
         std::string             snd_msg;
-        Snd_vol                 snd_vol;
+        SndVol                 snd_vol;
         bool                    makes_ricochet_snd;
-        Sfx_id                  att_sfx;
-        Sfx_id                  reload_sfx;
+        SfxId                  att_sfx;
+        SfxId                  reload_sfx;
         Prop*                   prop_applied;
     } ranged;
 
-    struct Item_armor_data
+    struct ItemArmorData
     {
-        Item_armor_data();
+        ItemArmorData();
 
         int                     armor_points;
         double                  dmg_to_durability_factor;
@@ -315,7 +315,7 @@ class Item;
 namespace item_data
 {
 
-extern Item_data_t data[size_t(Item_id::END)];
+extern ItemDataT data[size_t(ItemId::END)];
 
 void init();
 void cleanup();
@@ -323,6 +323,6 @@ void cleanup();
 void save();
 void load();
 
-} //Item_data
+} //ItemData
 
 #endif

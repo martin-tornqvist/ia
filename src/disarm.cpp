@@ -29,7 +29,7 @@ void player_disarm()
     const auto* const feature_at_player =
         map::cells[player_pos.x][player_pos.y].rigid;
 
-    if (feature_at_player->id() == Feature_id::trap)
+    if (feature_at_player->id() == FeatureId::trap)
     {
         const Trap* const trap = static_cast<const Trap*>(feature_at_player);
 
@@ -52,7 +52,7 @@ void player_disarm()
     msg_log::add("Which direction?" + cancel_info_str, clr_white_high);
     render::draw_map_state();
 
-    const Dir input_dir = query::dir(Allow_center::no);
+    const Dir input_dir = query::dir(AllowCenter::no);
 
     if (input_dir == Dir::END || input_dir == Dir::center)
     {

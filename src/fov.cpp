@@ -29,11 +29,11 @@ bool is_in_fov_range(const P& p0, const P& p1)
     return king_dist(p0, p1) <= fov_std_radi_int;
 }
 
-Los_result check_cell(const P& p0,
+LosResult check_cell(const P& p0,
                       const P& p1,
                       const bool hard_blocked[map_w][map_h])
 {
-    Los_result los_result;
+    LosResult los_result;
 
     los_result.is_blocked_hard      = true; //Assume we are blocked initially
     los_result.is_blocked_by_drk    = false;
@@ -103,13 +103,13 @@ Los_result check_cell(const P& p0,
 
 void run(const P& p0,
          const bool hard_blocked[map_w][map_h],
-         Los_result out[map_w][map_h])
+         LosResult out[map_w][map_h])
 {
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)
         {
-            Los_result& los = out[x][y];
+            LosResult& los = out[x][y];
 
             los.is_blocked_hard     = true;
             los.is_blocked_by_drk   = false;

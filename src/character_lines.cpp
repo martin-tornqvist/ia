@@ -105,7 +105,7 @@ void draw()
 
     int x_wielded = p.x;
 
-    const Item* wpn = player.inv().item_in_slot(Slot_id::wpn);
+    const Item* wpn = player.inv().item_in_slot(SlotId::wpn);
 
     if (!wpn)
     {
@@ -128,12 +128,12 @@ void draw()
     const auto& data = wpn->data();
 
     //If mainly a thrown weapon, force melee info - otherwise use weapon context.
-    const Item_ref_att_inf att_inf = data.main_att_mode == Att_mode::thrown ?
-                                     Item_ref_att_inf::melee :
-                                     Item_ref_att_inf::wpn_context;
+    const ItemRefAttInf att_inf = data.main_att_mode == AttMode::thrown ?
+                                     ItemRefAttInf::melee :
+                                     ItemRefAttInf::wpn_context;
 
-    str = wpn->name(Item_ref_type::plain,
-                    Item_ref_inf::yes,
+    str = wpn->name(ItemRefType::plain,
+                    ItemRefInf::yes,
                     att_inf);
 
     text_format::first_to_upper(str);
@@ -174,7 +174,7 @@ void draw()
     render::draw_text(str, panel, p, enc_clr);
 
     //Armor
-    const Item* const body_item = player.inv().item_in_slot(Slot_id::body);
+    const Item* const body_item = player.inv().item_in_slot(SlotId::body);
 
     if (body_item)
     {
@@ -184,7 +184,7 @@ void draw()
 
         if (config::is_tiles_mode())
         {
-            const Tile_id tile = body_item->tile();
+            const TileId tile = body_item->tile();
 
             render::draw_tile(tile, panel, p, clr);
         }
@@ -211,17 +211,17 @@ void draw()
     }
 
     //Lantern
-    const Item* const lantern_item = player.inv().item_in_backpack(Item_id::lantern);
+    const Item* const lantern_item = player.inv().item_in_backpack(ItemId::lantern);
 
     if (lantern_item)
     {
         p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
-        const Device_lantern* const lantern = static_cast<const Device_lantern*>(lantern_item);
+        const DeviceLantern* const lantern = static_cast<const DeviceLantern*>(lantern_item);
 
         if (config::is_tiles_mode())
         {
-            const Tile_id tile = lantern_item->tile();
+            const TileId tile = lantern_item->tile();
 
             render::draw_tile(tile, panel, p, clr_yellow);
         }
@@ -250,7 +250,7 @@ void draw()
     }
 
     //Medical bag
-    const Item* const medical_item = player.inv().item_in_backpack(Item_id::medical_bag);
+    const Item* const medical_item = player.inv().item_in_backpack(ItemId::medical_bag);
 
     if (medical_item)
     {
@@ -260,7 +260,7 @@ void draw()
 
         if (config::is_tiles_mode())
         {
-            const Tile_id tile = medical_item->tile();
+            const TileId tile = medical_item->tile();
 
             render::draw_tile(tile, panel, p, clr);
         }
@@ -279,7 +279,7 @@ void draw()
 
         p.x += str.size();
 
-        const Medical_bag* const medical_bag = static_cast<const Medical_bag*>(medical_item);
+        const MedicalBag* const medical_bag = static_cast<const MedicalBag*>(medical_item);
 
         const int nr_suppl = medical_bag->nr_supplies_;
 
@@ -291,7 +291,7 @@ void draw()
     //Thrown item
     p.x = x_wielded;
 
-    auto* const thr_item = player.inv().item_in_slot(Slot_id::thrown);
+    auto* const thr_item = player.inv().item_in_slot(SlotId::thrown);
 
     if (thr_item)
     {
@@ -308,9 +308,9 @@ void draw()
 
         p.x += 2;
 
-        str = thr_item->name(Item_ref_type::plural,
-                             Item_ref_inf::yes,
-                             Item_ref_att_inf::thrown);
+        str = thr_item->name(ItemRefType::plural,
+                             ItemRefInf::yes,
+                             ItemRefAttInf::thrown);
 
         text_format::first_to_upper(str);
 
@@ -321,11 +321,11 @@ void draw()
     ++p.y;
     p.x = 0;
 
-    std::vector<Str_and_clr> props_line;
+    std::vector<StrAndClr> props_line;
 
     player.prop_handler().props_interface_line(props_line);
 
-    for (const Str_and_clr& cur_prop_label : props_line)
+    for (const StrAndClr& cur_prop_label : props_line)
     {
         render::draw_text(cur_prop_label.str, panel, p, cur_prop_label.clr);
 
@@ -354,4 +354,4 @@ void draw()
     render::draw_text(turn_str, panel, p, clr_white);
 }
 
-} //Character_lines
+} //CharacterLines

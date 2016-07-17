@@ -16,7 +16,7 @@ namespace auto_descr_actor
 
 void add_auto_description_lines(const Actor& actor, std::string& line);
 
-} //Auto_descr_actor
+} //AutoDescrActor
 
 namespace look
 {

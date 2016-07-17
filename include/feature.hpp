@@ -16,15 +16,15 @@ public:
 
     virtual ~Feature() {}
 
-    virtual Feature_id id() const = 0;
+    virtual FeatureId id() const = 0;
     virtual std::string name(const Article article) const = 0;
     virtual Clr clr() const = 0;
     virtual Clr clr_bg() const = 0;
 
-    const Feature_data_t& data() const;
+    const FeatureDataT& data() const;
 
-    virtual void hit(const Dmg_type dmg_type,
-                     const Dmg_method dmg_method,
+    virtual void hit(const DmgType dmg_type,
+                     const DmgMethod dmg_method,
                      Actor* const actor);
 
     virtual void bump(Actor& actor_bumping);
@@ -37,7 +37,7 @@ public:
     virtual bool is_smoke_passable() const;
     virtual bool is_bottomless() const;
     virtual char glyph() const;
-    virtual Tile_id tile() const;
+    virtual TileId tile() const;
     virtual bool can_have_corpse() const;
     virtual bool can_have_rigid() const;
     virtual bool can_have_blood() const;

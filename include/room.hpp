@@ -25,10 +25,10 @@
 // features in the post-connect step.
 //---------------------------------------------------------------------------------------
 
-struct  Feature_data_t;
+struct  FeatureDataT;
 class   Room;
 
-enum class Room_type
+enum class RoomType
 {
     //Standard rooms (standardized feature spawning and reshaping)
     plain, //NOTE: "plain" must be the first type
@@ -57,16 +57,16 @@ namespace room_factory
 void init_room_bucket();
 
 //NOTE: These functions do not make rooms on the map, they merely create Room objects.
-Room* mk(const Room_type type, const R& r);
+Room* mk(const RoomType type, const R& r);
 
 Room* mk_random_allowed_std_room(const R& r, const bool is_subroom);
 
-} //Room_factory
+} //RoomFactory
 
 class Room
 {
 public:
-    Room(R r, Room_type type);
+    Room(R r, RoomType type);
 
     Room() = delete;
 
@@ -76,7 +76,7 @@ public:
     virtual void on_post_connect(bool door_proposals[map_w][map_h]) = 0;
 
     R                   r_;
-    const Room_type     type_;
+    const RoomType     type_;
     bool                is_sub_room_;
     std::vector<Room*>  rooms_con_to_;
     std::vector<Room*>  sub_rooms_;
@@ -85,12 +85,12 @@ protected:
     void mk_drk() const;
 };
 
-class Std_room : public Room
+class StdRoom : public Room
 {
 public:
-    Std_room(R r, Room_type type) : Room(r, type) {}
+    StdRoom(R r, RoomType type) : Room(r, type) {}
 
-    virtual ~Std_room() {}
+    virtual ~StdRoom() {}
 
     void on_pre_connect(bool door_proposals[map_w][map_h]) override final;
     void on_post_connect(bool door_proposals[map_w][map_h]) override final;
@@ -108,7 +108,7 @@ protected:
     size_t try_auto_feature_placement(
         const std::vector<P>& adj_to_walls,
         const std::vector<P>& away_from_walls,
-        const std::vector<const Feature_data_t*>& feature_data_bucket,
+        const std::vector<const FeatureDataT*>& feature_data_bucket,
         P& pos_ref) const;
 
     int place_auto_features();
@@ -117,12 +117,12 @@ protected:
     virtual void on_post_connect_hook(bool door_proposals[map_w][map_h]) = 0;
 };
 
-class Plain_room: public Std_room
+class PlainRoom: public StdRoom
 {
 public:
-    Plain_room(R r) : Std_room(r, Room_type::plain) {}
+    PlainRoom(R r) : StdRoom(r, RoomType::plain) {}
 
-    ~Plain_room() {}
+    ~PlainRoom() {}
 
 protected:
     Range nr_auto_features_allowed() const override;
@@ -131,13 +131,13 @@ protected:
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
-class Human_room: public Std_room
+class HumanRoom: public StdRoom
 {
 public:
-    Human_room(R r) :
-        Std_room(r, Room_type::human) {}
+    HumanRoom(R r) :
+        StdRoom(r, RoomType::human) {}
 
-    ~Human_room() {}
+    ~HumanRoom() {}
 
     bool is_allowed() const override;
 
@@ -148,13 +148,13 @@ protected:
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
-class Ritual_room: public Std_room
+class RitualRoom: public StdRoom
 {
 public:
-    Ritual_room(R r) :
-        Std_room(r, Room_type::ritual) {}
+    RitualRoom(R r) :
+        StdRoom(r, RoomType::ritual) {}
 
-    ~Ritual_room() {}
+    ~RitualRoom() {}
 
     bool is_allowed() const override;
 
@@ -165,13 +165,13 @@ protected:
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
-class Spider_room: public Std_room
+class SpiderRoom: public StdRoom
 {
 public:
-    Spider_room(R r) :
-        Std_room(r, Room_type::spider) {}
+    SpiderRoom(R r) :
+        StdRoom(r, RoomType::spider) {}
 
-    ~Spider_room() {}
+    ~SpiderRoom() {}
 
     bool is_allowed() const override;
 
@@ -182,13 +182,13 @@ protected:
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
-class Snake_pit_room: public Std_room
+class SnakePitRoom: public StdRoom
 {
 public:
-    Snake_pit_room(R r) :
-        Std_room(r, Room_type::monster) {}
+    SnakePitRoom(R r) :
+        StdRoom(r, RoomType::monster) {}
 
-    ~Snake_pit_room() {}
+    ~SnakePitRoom() {}
 
     bool is_allowed() const override;
 
@@ -203,13 +203,13 @@ protected:
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
-class Crypt_room: public Std_room
+class CryptRoom: public StdRoom
 {
 public:
-    Crypt_room(R r) :
-        Std_room(r, Room_type::crypt) {}
+    CryptRoom(R r) :
+        StdRoom(r, RoomType::crypt) {}
 
-    ~Crypt_room() {}
+    ~CryptRoom() {}
 
     bool is_allowed() const override;
 
@@ -220,13 +220,13 @@ protected:
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
-class Monster_room: public Std_room
+class MonsterRoom: public StdRoom
 {
 public:
-    Monster_room(R r) :
-        Std_room(r, Room_type::monster) {}
+    MonsterRoom(R r) :
+        StdRoom(r, RoomType::monster) {}
 
-    ~Monster_room() {}
+    ~MonsterRoom() {}
 
     bool is_allowed() const override;
 
@@ -237,13 +237,13 @@ protected:
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
-class Flooded_room: public Std_room
+class FloodedRoom: public StdRoom
 {
 public:
-    Flooded_room(R r) :
-        Std_room(r, Room_type::flooded) {}
+    FloodedRoom(R r) :
+        StdRoom(r, RoomType::flooded) {}
 
-    ~Flooded_room() {}
+    ~FloodedRoom() {}
 
     bool is_allowed() const override;
 
@@ -254,13 +254,13 @@ protected:
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
-class Muddy_room: public Std_room
+class MuddyRoom: public StdRoom
 {
 public:
-    Muddy_room(R r) :
-        Std_room(r, Room_type::muddy) {}
+    MuddyRoom(R r) :
+        StdRoom(r, RoomType::muddy) {}
 
-    ~Muddy_room() {}
+    ~MuddyRoom() {}
 
     bool is_allowed() const override;
 
@@ -271,13 +271,13 @@ protected:
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
-class Cave_room: public Std_room
+class CaveRoom: public StdRoom
 {
 public:
-    Cave_room(R r) :
-        Std_room(r, Room_type::cave) {}
+    CaveRoom(R r) :
+        StdRoom(r, RoomType::cave) {}
 
-    ~Cave_room() {}
+    ~CaveRoom() {}
 
     bool is_allowed() const override;
 
@@ -288,13 +288,13 @@ protected:
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
-class Chasm_room: public Std_room
+class ChasmRoom: public StdRoom
 {
 public:
-    Chasm_room(R r) :
-        Std_room(r, Room_type::chasm) {}
+    ChasmRoom(R r) :
+        StdRoom(r, RoomType::chasm) {}
 
-    ~Chasm_room() {}
+    ~ChasmRoom() {}
 
     bool is_allowed() const override;
 
@@ -305,13 +305,13 @@ protected:
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
-class Forest_room: public Std_room
+class ForestRoom: public StdRoom
 {
 public:
-    Forest_room(R r) :
-        Std_room(r, Room_type::forest) {}
+    ForestRoom(R r) :
+        StdRoom(r, RoomType::forest) {}
 
-    ~Forest_room() {}
+    ~ForestRoom() {}
 
     bool is_allowed() const override;
 
@@ -322,13 +322,13 @@ protected:
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
-class Corr_link_room: public Room
+class CorrLinkRoom: public Room
 {
 public:
-    Corr_link_room(const R& r) :
-        Room(r, Room_type::corr_link) {}
+    CorrLinkRoom(const R& r) :
+        Room(r, RoomType::corr_link) {}
 
-    ~Corr_link_room() {}
+    ~CorrLinkRoom() {}
 
     void on_pre_connect(bool door_proposals[map_w][map_h]) override
     {
@@ -341,13 +341,13 @@ public:
     }
 };
 
-class Crumble_room: public Room
+class CrumbleRoom: public Room
 {
 public:
-    Crumble_room(const R& r) :
-        Room(r, Room_type::crumble_room) {}
+    CrumbleRoom(const R& r) :
+        Room(r, RoomType::crumble_room) {}
 
-    ~Crumble_room() {}
+    ~CrumbleRoom() {}
 
     void on_pre_connect(bool door_proposals[map_w][map_h]) override
     {
@@ -360,14 +360,14 @@ public:
     }
 };
 
-class River_room: public Room
+class RiverRoom: public Room
 {
 public:
-    River_room(const R& r) :
-        Room    (r, Room_type::river),
+    RiverRoom(const R& r) :
+        Room    (r, RoomType::river),
         axis_   (Axis::hor) {}
 
-    ~River_room() {}
+    ~RiverRoom() {}
 
     void on_pre_connect(bool door_proposals[map_w][map_h]) override;
 

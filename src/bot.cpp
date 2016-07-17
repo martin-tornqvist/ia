@@ -57,7 +57,7 @@ void show_map_and_freeze(const std::string& msg)
 
     while (true)
     {
-        render::draw_map_state(Update_screen::no);
+        render::draw_map_state(UpdateScreen::no);
 
         render::draw_text("[" + msg + "]",
                           Panel::screen,
@@ -77,7 +77,7 @@ void find_stair_path()
     path_.clear();
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
+    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
 
     P stair_p(-1, -1);
 
@@ -87,12 +87,12 @@ void find_stair_path()
         {
             const auto id = map::cells[x][y].rigid->id();
 
-            if (id == Feature_id::stairs)
+            if (id == FeatureId::stairs)
             {
                 blocked[x][y] = false;
                 stair_p.set(x, y);
             }
-            else if (id == Feature_id::door)
+            else if (id == FeatureId::door)
             {
                 blocked[x][y] = false;
             }
@@ -136,7 +136,7 @@ bool walk_to_adj_cell(const P& p)
         key = '0' + rnd::range(1, 9);
     }
 
-    input::handle_map_mode_key_press(Key_data(key));
+    input::handle_map_mode_key_press(KeyData(key));
 
     return map::player->pos == p;
 }
@@ -202,7 +202,7 @@ void act()
         return;
     }
 
-    Prop_handler& prop_handler = map::player->prop_handler();
+    PropHandler& prop_handler = map::player->prop_handler();
 
     //Keep an allied Mi-go around to help getting out of sticky situations
     bool has_allied_mon = false;
@@ -219,15 +219,15 @@ void act()
     if (!has_allied_mon)
     {
         actor_factory::summon(map::player->pos,
-                              std::vector<Actor_id>(1, Actor_id::mi_go),
-                              Make_mon_aware::yes,
+                              std::vector<ActorId>(1, ActorId::mi_go),
+                              MakeMonAware::yes,
                               map::player);
     }
 
     //Occasionally apply rFear (to avoid getting stuck on fear-causing monsters)
     if (rnd::one_in(7))
     {
-        prop_handler.try_add(new Prop_rFear(Prop_turns::specific, 4));
+        prop_handler.try_add(new PropRFear(PropTurns::specific, 4));
     }
 
     //Occasionally apply Burning to a random actor (helps to avoid getting stuck)
@@ -238,7 +238,7 @@ void act()
 
         if (actor != map::player)
         {
-            actor->prop_handler().try_add(new Prop_burning(Prop_turns::std));
+            actor->prop_handler().try_add(new PropBurning(PropTurns::std));
         }
     }
 
@@ -251,32 +251,32 @@ void act()
     //Occasionally send a TAB command to attack nearby monsters
     if (rnd::coin_toss())
     {
-        input::handle_map_mode_key_press(Key_data(SDLK_TAB));
+        input::handle_map_mode_key_press(KeyData(SDLK_TAB));
         return;
     }
 
     //Occasionally send a 'wait 5 turns' command (just code exercise)
     if (rnd::one_in(50))
     {
-        input::handle_map_mode_key_press(Key_data('s'));
+        input::handle_map_mode_key_press(KeyData('s'));
         return;
     }
 
     //Occasionally apply a random property to exercise the prop code
     if (rnd::one_in(20))
     {
-        std::vector<Prop_id> prop_bucket;
+        std::vector<PropId> prop_bucket;
 
-        for (size_t i = 0; i < (size_t)Prop_id::END; ++i)
+        for (size_t i = 0; i < (size_t)PropId::END; ++i)
         {
             if (prop_data::data[i].allow_test_on_bot)
             {
-                prop_bucket.push_back(Prop_id(i));
+                prop_bucket.push_back(PropId(i));
             }
         }
 
-        Prop_id     prop_id = prop_bucket[rnd::range(0, prop_bucket.size() - 1)];
-        Prop* const prop    = prop_handler.mk_prop(prop_id, Prop_turns::specific, 5);
+        PropId     prop_id = prop_bucket[rnd::range(0, prop_bucket.size() - 1)];
+        Prop* const prop    = prop_handler.mk_prop(prop_id, PropTurns::specific, 5);
 
         prop_handler.try_add(prop);
     }
@@ -284,21 +284,21 @@ void act()
     //Occasionally swap weapon (just some code exercise)
     if (rnd::one_in(50))
     {
-        input::handle_map_mode_key_press(Key_data('z'));
+        input::handle_map_mode_key_press(KeyData('z'));
         return;
     }
 
     //Occasionally cause shock spikes
     if (rnd::one_in(100))
     {
-        map::player->incr_shock(200, Shock_src::misc);
+        map::player->incr_shock(200, ShockSrc::misc);
         return;
     }
 
     //Occasionally run an explosion around the player
     if (rnd::one_in(50))
     {
-        explosion::run(map::player->pos, Expl_type::expl);
+        explosion::run(map::player->pos, ExplType::expl);
 
         return;
     }
@@ -310,21 +310,21 @@ void act()
 
         auto* const f = map::cells[p.x][p.y].rigid;
 
-        if (f->id() == Feature_id::door)
+        if (f->id() == FeatureId::door)
         {
             Door* const door = static_cast<Door*>(f);
             door->reveal(false);
 
             if (door->is_stuck())
             {
-                f->hit(Dmg_type::physical, Dmg_method::kick, map::player);
+                f->hit(DmgType::physical, DmgMethod::kick, map::player);
                 return;
             }
         }
     }
 
     //If we are terrified, wait in place
-    if (map::player->has_prop(Prop_id::terrified))
+    if (map::player->has_prop(PropId::terrified))
     {
         if (walk_to_adj_cell(map::player->pos))
         {

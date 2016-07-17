@@ -40,13 +40,13 @@ int main(int argc, char* argv[])
         init::init_session();
 
         int intro_mus_chan = -1;
-        const Game_entry_mode game_entry_type = main_menu::run(quit_game, intro_mus_chan);
+        const GameEntryMode game_entry_type = main_menu::run(quit_game, intro_mus_chan);
 
         if (!quit_game)
         {
             init::quit_to_main_menu = false;
 
-            if (game_entry_type == Game_entry_mode::new_game)
+            if (game_entry_type == GameEntryMode::new_game)
             {
                 if (config::is_bot_playing())
                 {
@@ -70,14 +70,14 @@ int main(int argc, char* argv[])
                 }
 
                 dungeon_master::set_time_started_to_now();
-                const Time_data& t = dungeon_master::start_time();
-                TRACE << "Game started on: " << t.time_str(Time_type::minute, true)
+                const TimeData& t = dungeon_master::start_time();
+                TRACE << "Game started on: " << t.time_str(TimeType::minute, true)
                       << std::endl;
             }
 
             audio::fade_out_channel(intro_mus_chan);
 
-            if (game_entry_type == Game_entry_mode::new_game)
+            if (game_entry_type == GameEntryMode::new_game)
             {
                 if (!config::is_intro_lvl_skipped())
                 {
@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
                         "of non-human origin called \"The shining Trapezohedron\" - a window to "
                         "all the secrets of the universe.";
 
-                    popup::show_msg(msg, false, "The story so far...", Sfx_id::END, 1);
+                    popup::show_msg(msg, false, "The story so far...", SfxId::END, 1);
                 }
 
                 dungeon_master::add_history_event("Started journey.");
@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
                     actor->update_clr();
 
                     const bool allow_act  = actor->prop_handler().allow_act();
-                    const bool is_gibbed  = actor->state() == Actor_state::destroyed;
+                    const bool is_gibbed  = actor->state() == ActorState::destroyed;
 
                     if (allow_act && !is_gibbed)
                     {
@@ -143,12 +143,12 @@ int main(int argc, char* argv[])
                     //Run postmortem, then return to main menu
                     static_cast<Player*>(map::player)->wait_turns_left = -1;
 
-                    audio::play(Sfx_id::death);
+                    audio::play(SfxId::death);
 
                     msg_log::add("I am dead!",
                                  clr_msg_bad,
                                  false,
-                                 More_prompt_on_msg::yes);
+                                 MorePromptOnMsg::yes);
 
                     msg_log::clear();
 

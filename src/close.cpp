@@ -18,7 +18,7 @@ namespace
 
 void player_try_close_or_jam_feature(Feature* const feature)
 {
-    if (feature->id() != Feature_id::door)
+    if (feature->id() != FeatureId::door)
     {
         const bool player_can_see = map::player->prop_handler().allow_see();
 
@@ -45,7 +45,7 @@ void player_try_close_or_jam_feature(Feature* const feature)
     }
     else //Door is closed - try to jam it
     {
-        const bool has_spike = map::player->inv().has_item_in_backpack(Item_id::iron_spike);
+        const bool has_spike = map::player->inv().has_item_in_backpack(ItemId::iron_spike);
 
         if (has_spike)
         {
@@ -53,10 +53,10 @@ void player_try_close_or_jam_feature(Feature* const feature)
 
             if (did_spike_door)
             {
-                map::player->inv().decr_item_type_in_backpack(Item_id::iron_spike);
+                map::player->inv().decr_item_type_in_backpack(ItemId::iron_spike);
 
                 const int spikes_left_after =
-                    map::player->inv().item_stack_size_in_backpack(Item_id::iron_spike);
+                    map::player->inv().item_stack_size_in_backpack(ItemId::iron_spike);
 
                 if (spikes_left_after == 0)
                 {
@@ -85,7 +85,7 @@ void player_try_close_or_jam()
 
     render::draw_map_state();
 
-    const Dir input_dir = query::dir(Allow_center::no);
+    const Dir input_dir = query::dir(AllowCenter::no);
 
     msg_log::clear();
 

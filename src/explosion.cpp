@@ -74,7 +74,7 @@ void draw(const std::vector< std::vector<P> >& pos_lists,
 
     for (int i_anim = 0; i_anim < nr_anim_steps; i_anim++)
     {
-        const Tile_id tile = i_anim == 0 ? Tile_id::blast1 : Tile_id::blast2;
+        const TileId tile = i_anim == 0 ? TileId::blast1 : TileId::blast2;
 
         const int nr_outer = pos_lists.size();
 
@@ -118,9 +118,9 @@ namespace explosion
 {
 
 void run(const P& origin,
-         const Expl_type expl_type,
-         const Expl_src expl_src,
-         const Emit_expl_snd emit_expl_snd,
+         const ExplType expl_type,
+         const ExplSrc expl_src,
+         const EmitExplSnd emit_expl_snd,
          const int radi_change,
          Prop* const prop,
          const Clr* const clr_override)
@@ -131,23 +131,23 @@ void run(const P& origin,
 
     bool blocked[map_w][map_h];
 
-    map_parse::run(cell_check::Blocks_projectiles(),
+    map_parse::run(cell_check::BlocksProjectiles(),
                    blocked,
-                   Map_parse_mode::overwrite,
+                   MapParseMode::overwrite,
                    area);
 
     std::vector< std::vector<P> > pos_lists;
     cells_reached(area, origin, blocked, pos_lists);
 
-    if (emit_expl_snd == Emit_expl_snd::yes)
+    if (emit_expl_snd == EmitExplSnd::yes)
     {
         Snd snd("I hear an explosion!",
-                Sfx_id::explosion,
-                Ignore_msg_if_origin_seen::yes,
+                SfxId::explosion,
+                IgnoreMsgIfOriginSeen::yes,
                 origin,
                 nullptr,
-                Snd_vol::high,
-                Alerts_mon::yes);
+                SndVol::high,
+                AlertsMon::yes);
 
         snd_emit::run(snd);
     }
@@ -196,11 +196,11 @@ void run(const P& origin,
             Actor* living_actor                 = living_actors[pos.x][pos.y];
             std::vector<Actor*> corpses_here    = corpses[pos.x][pos.y];
 
-            if (expl_type == Expl_type::expl)
+            if (expl_type == ExplType::expl)
             {
                 //Damage environment
                 Cell& cell = map::cells[pos.x][pos.y];
-                cell.rigid->hit(Dmg_type::physical, Dmg_method::explosion, nullptr);
+                cell.rigid->hit(DmgType::physical, DmgMethod::explosion, nullptr);
 
                 const int rolls = expl_dmg_rolls - radi;
                 const int dmg   = rnd::dice(rolls, expl_dmg_sides) + expl_dmg_plus;
@@ -213,7 +213,7 @@ void run(const P& origin,
                         msg_log::add("I am hit by an explosion!", clr_msg_bad);
                     }
 
-                    living_actor->hit(dmg, Dmg_type::physical);
+                    living_actor->hit(dmg, DmgType::physical);
 
                     if (living_actor->is_alive() && living_actor->is_player())
                     {
@@ -225,7 +225,7 @@ void run(const P& origin,
                 //Damage dead actors
                 for (Actor* corpse : corpses_here)
                 {
-                    corpse->hit(dmg, Dmg_type::physical);
+                    corpse->hit(dmg, DmgType::physical);
                 }
 
                 //Add smoke
@@ -244,33 +244,33 @@ void run(const P& origin,
                 //intentionally throwing a Molotov
                 if (
                     living_actor == map::player     &&
-                    prop->id() == Prop_id::burning  &&
+                    prop->id() == PropId::burning  &&
                     is_dem_exp                      &&
-                    expl_src == Expl_src::player_use_moltv_intended)
+                    expl_src == ExplSrc::player_use_moltv_intended)
                 {
                     should_apply_on_living_actor = false;
                 }
 
                 if (should_apply_on_living_actor)
                 {
-                    Prop_handler& prop_hlr = living_actor->prop_handler();
-                    Prop* prop_cpy = prop_hlr.mk_prop(prop->id(), Prop_turns::specific,
+                    PropHandler& prop_hlr = living_actor->prop_handler();
+                    Prop* prop_cpy = prop_hlr.mk_prop(prop->id(), PropTurns::specific,
                                                       prop->nr_turns_left());
                     prop_hlr.try_add(prop_cpy);
                 }
 
                 //If property is burning, also apply it to corpses and environment
-                if (prop->id() == Prop_id::burning)
+                if (prop->id() == PropId::burning)
                 {
                     Cell& cell = map::cells[pos.x][pos.y];
-                    cell.rigid->hit(Dmg_type::fire, Dmg_method::elemental, nullptr);
+                    cell.rigid->hit(DmgType::fire, DmgMethod::elemental, nullptr);
 
                     for (Actor* corpse : corpses_here)
                     {
-                        Prop_handler& prop_hlr = corpse->prop_handler();
+                        PropHandler& prop_hlr = corpse->prop_handler();
 
                         Prop* prop_cpy = prop_hlr.mk_prop(prop->id(),
-                                                          Prop_turns::specific,
+                                                          PropTurns::specific,
                                                           prop->nr_turns_left());
                         prop_hlr.try_add(prop_cpy);
                     }
@@ -298,19 +298,19 @@ void run_smoke_explosion_at(const P& origin, const int radi_change)
      const R area = explosion_area(origin, radi);
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::Blocks_projectiles(), blocked);
+    map_parse::run(cell_check::BlocksProjectiles(), blocked);
 
     std::vector< std::vector<P> > pos_lists;
     cells_reached(area, origin, blocked, pos_lists);
 
     //TODO: Sound message?
     Snd snd("",
-            Sfx_id::END,
-            Ignore_msg_if_origin_seen::yes,
+            SfxId::END,
+            IgnoreMsgIfOriginSeen::yes,
             origin,
             nullptr,
-            Snd_vol::low,
-            Alerts_mon::yes);
+            SndVol::low,
+            AlertsMon::yes);
 
     snd_emit::run(snd);
 

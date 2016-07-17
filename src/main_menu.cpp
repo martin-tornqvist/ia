@@ -206,7 +206,7 @@ std::string hpl_quote()
     return quotes[rnd::range(0, quotes.size() - 1)];
 }
 
-void draw(const Menu_browser& browser)
+void draw(const MenuBrowser& browser)
 {
     TRACE_FUNC_BEGIN;
 
@@ -360,46 +360,46 @@ void draw(const Menu_browser& browser)
 
 } //namespace
 
-Game_entry_mode run(bool& quit, int& intro_mus_channel)
+GameEntryMode run(bool& quit, int& intro_mus_channel)
 {
     TRACE_FUNC_BEGIN;
 
     quote = hpl_quote();
 
 #ifdef NDEBUG
-    Menu_browser browser(6);
+    MenuBrowser browser(6);
 #else //Debug mode
-    Menu_browser browser(7);
+    MenuBrowser browser(7);
 #endif // NDEBUG
 
-    intro_mus_channel = audio::play(Sfx_id::mus_cthulhiana_Madness);
+    intro_mus_channel = audio::play(SfxId::mus_cthulhiana_Madness);
 
     draw(browser);
 
     while (true)
     {
-        const Menu_action action = menu_input:: action(browser, Menu_input_mode::scroll);
+        const MenuAction action = menu_input:: action(browser, MenuInputMode::scroll);
 
         switch (action)
         {
-        case Menu_action::moved:
+        case MenuAction::moved:
             draw(browser);
             break;
 
-        case Menu_action::esc:
+        case MenuAction::esc:
             quit = true;
             TRACE_FUNC_END;
-            return Game_entry_mode::new_game;
+            return GameEntryMode::new_game;
 
-        case Menu_action::space:
+        case MenuAction::space:
             break;
 
-        case Menu_action::selected:
-        case Menu_action::selected_shift:
+        case MenuAction::selected:
+        case MenuAction::selected_shift:
             if (browser.is_at_idx(0))
             {
                 TRACE_FUNC_END;
-                return Game_entry_mode::new_game;
+                return GameEntryMode::new_game;
             }
 
             if (browser.is_at_idx(1))
@@ -409,7 +409,7 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
                     save_handling::load_game();
                     map_travel::go_to_nxt();
                     TRACE_FUNC_END;
-                    return Game_entry_mode::load_game;
+                    return GameEntryMode::load_game;
                 }
                 else //No save available
                 {
@@ -440,7 +440,7 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
             {
                 quit    = true;
                 TRACE_FUNC_END;
-                return Game_entry_mode::new_game;
+                return GameEntryMode::new_game;
             }
 
 #ifndef NDEBUG
@@ -448,7 +448,7 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
             {
                 config::toggle_bot_playing();
                 TRACE_FUNC_END;
-                return Game_entry_mode::new_game;
+                return GameEntryMode::new_game;
             }
 #endif // NDEBUG
 
@@ -457,7 +457,7 @@ Game_entry_mode run(bool& quit, int& intro_mus_channel)
     } //while(true)
 
     TRACE_FUNC_END;
-    return Game_entry_mode::new_game;
+    return GameEntryMode::new_game;
 }
 
-} //Main_menu
+} //MainMenu

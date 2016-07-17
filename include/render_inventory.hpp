@@ -5,19 +5,19 @@
 
 #include "item_data.hpp"
 
-class Menu_browser;
+class MenuBrowser;
 
 namespace render_inv
 {
 
 extern const int inv_h;
 
-void draw_inv(const Menu_browser& browser);
+void draw_inv(const MenuBrowser& browser);
 
-void draw_apply(const Menu_browser& browser,
+void draw_apply(const MenuBrowser& browser,
                 const std::vector<size_t>& gen_inv_indexes);
 
-void draw_equip(const Menu_browser& browser, const Slot_id slot_id_to_equip,
+void draw_equip(const MenuBrowser& browser, const SlotId slot_id_to_equip,
                 const std::vector<size_t>& gen_inv_indexes);
 
 } //render_inv

@@ -131,11 +131,11 @@ void cut_room_corners(const Room& room)
 
                     const Room* const room_here = map::room_map[check_p.x][check_p.y];
 
-                    const Feature_id id = map::cells[check_p.x][check_p.y].rigid->id();
+                    const FeatureId id = map::cells[check_p.x][check_p.y].rigid->id();
 
                     if (
-                        (room_here == &room && id != Feature_id::floor) ||
-                        (room_here != &room && id != Feature_id::wall)
+                        (room_here == &room && id != FeatureId::floor) ||
+                        (room_here != &room && id != FeatureId::wall)
                     )
                     {
                         allow_cut = false;
@@ -176,9 +176,9 @@ void mk_pillars_in_room(const Room& room)
         {
             const P check_p(p + d);
 
-            const Feature_id id = map::cells[check_p.x][check_p.y].rigid->id();
+            const FeatureId id = map::cells[check_p.x][check_p.y].rigid->id();
 
-            if (id == Feature_id::wall)
+            if (id == FeatureId::wall)
             {
                 return false;
             }
@@ -331,9 +331,9 @@ void cavify_room(Room& room)
             {
                 Rigid* const rigid = map::cells[x][y].rigid;
 
-                if (rigid->id() == Feature_id::floor)
+                if (rigid->id() == FeatureId::floor)
                 {
-                    static_cast<Floor*>(rigid)->type_ = Floor_type::cave;
+                    static_cast<Floor*>(rigid)->type_ = FloorType::cave;
                 }
             }
         }
@@ -362,7 +362,7 @@ void valid_room_corr_entries(const Room& room, std::vector<P>& out)
             const bool is_room_cell = map::room_map[x][y] == &room;
             room_cells[x][y]        = is_room_cell;
             const auto* const f     = map::cells[x][y].rigid;
-            room_floor_cells[x][y]  = is_room_cell && f->id() == Feature_id::floor;
+            room_floor_cells[x][y]  = is_room_cell && f->id() == FeatureId::floor;
         }
     }
 
@@ -378,7 +378,7 @@ void valid_room_corr_entries(const Room& room, std::vector<P>& out)
         for (int x = room.r_.p0.x - 1; x <= room.r_.p1.x + 1; ++x)
         {
             //Condition (1)
-            if (map::cells[x][y].rigid->id() != Feature_id::wall)
+            if (map::cells[x][y].rigid->id() != FeatureId::wall)
             {
                 continue;
             }
@@ -520,7 +520,7 @@ void mk_pathfind_cor(Room& room_0,
             for (int y = 0; y < map_h; ++y)
             {
                 const bool is_wall =
-                    map::cells[x][y].rigid->id() == Feature_id::wall;
+                    map::cells[x][y].rigid->id() == FeatureId::wall;
 
                 const auto* const room_ptr = map::room_map[x][y];
 
@@ -657,7 +657,7 @@ void mk_pathfind_cor(Room& room_0,
                 ((int)i < (int)path.size() - 3) &&
                 (i % 6 == 0))
             {
-                Room* link = room_factory::mk(Room_type::corr_link, R(p, p));
+                Room* link = room_factory::mk(RoomType::corr_link, R(p, p));
 
                 map::room_list.push_back(link);
 

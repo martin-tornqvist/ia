@@ -6,8 +6,8 @@
 namespace main_menu
 {
 
-Game_entry_mode run(bool& quit, int& intro_mus_channel);
+GameEntryMode run(bool& quit, int& intro_mus_channel);
 
-} //Main_menu
+} //MainMenu
 
 #endif

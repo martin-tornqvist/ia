@@ -64,7 +64,7 @@ void cells_in_room(const Room& room,
             {
                 const auto* const f = map::cells[pos.x + dx][pos.y + dy].rigid;
 
-                if (f->id() == Feature_id::door) {is_door_adjacent = true;}
+                if (f->id() == FeatureId::door) {is_door_adjacent = true;}
             }
         }
 

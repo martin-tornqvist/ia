@@ -9,18 +9,18 @@
 class Device: public Item
 {
 public:
-    Device(Item_data_t* const item_data);
+    Device(ItemDataT* const item_data);
 
     virtual ~Device() {}
 
-    virtual Consume_item activate(Actor* const actor) override = 0;
+    virtual ConsumeItem activate(Actor* const actor) override = 0;
 
     Clr interface_clr() const override final
     {
         return clr_cyan;
     }
 
-    virtual void on_std_turn_in_inv(const Inv_type inv_type) override
+    virtual void on_std_turn_in_inv(const InvType inv_type) override
     {
         (void)inv_type;
     }
@@ -28,14 +28,14 @@ public:
     void identify(const Verbosity verbosity) override;
 };
 
-class Strange_device : public Device
+class StrangeDevice : public Device
 {
 public:
-    Strange_device(Item_data_t* const item_data);
+    StrangeDevice(ItemDataT* const item_data);
 
     virtual std::vector<std::string> descr() const override final;
 
-    Consume_item activate(Actor* const actor) override;
+    ConsumeItem activate(Actor* const actor) override;
 
     virtual std::string name_inf() const override;
 
@@ -47,16 +47,16 @@ public:
 private:
     virtual std::string descr_identified() const = 0;
 
-    virtual Consume_item trigger_effect() = 0;
+    virtual ConsumeItem trigger_effect() = 0;
 };
 
-class Device_blaster : public Strange_device
+class DeviceBlaster : public StrangeDevice
 {
 public:
-    Device_blaster(Item_data_t* const item_data) :
-        Strange_device(item_data) {}
+    DeviceBlaster(ItemDataT* const item_data) :
+        StrangeDevice(item_data) {}
 
-    ~Device_blaster() override {}
+    ~DeviceBlaster() override {}
 
 private:
     std::string descr_identified() const override
@@ -64,16 +64,16 @@ private:
         return "When activated, this device blasts all visible enemies with infernal power.";
     }
 
-    Consume_item trigger_effect() override;
+    ConsumeItem trigger_effect() override;
 };
 
-class Device_shockwave : public Strange_device
+class DeviceShockwave : public StrangeDevice
 {
 public:
-    Device_shockwave(Item_data_t* const item_data) :
-        Strange_device(item_data) {}
+    DeviceShockwave(ItemDataT* const item_data) :
+        StrangeDevice(item_data) {}
 
-    ~Device_shockwave() override {}
+    ~DeviceShockwave() override {}
 
 private:
     std::string descr_identified() const override
@@ -82,16 +82,16 @@ private:
                "pushes away any adjacent creatures and destroys structures.";
     }
 
-    Consume_item trigger_effect() override;
+    ConsumeItem trigger_effect() override;
 };
 
-class Device_rejuvenator : public Strange_device
+class DeviceRejuvenator : public StrangeDevice
 {
 public:
-    Device_rejuvenator(Item_data_t* const item_data) :
-        Strange_device(item_data) {}
+    DeviceRejuvenator(ItemDataT* const item_data) :
+        StrangeDevice(item_data) {}
 
-    ~Device_rejuvenator() override {}
+    ~DeviceRejuvenator() override {}
 
 private:
     std::string descr_identified() const override
@@ -99,16 +99,16 @@ private:
         return "When activated, this device heals all wounds and physical maladies.";
     }
 
-    Consume_item trigger_effect() override;
+    ConsumeItem trigger_effect() override;
 };
 
-class Device_translocator : public Strange_device
+class DeviceTranslocator : public StrangeDevice
 {
 public:
-    Device_translocator(Item_data_t* const item_data) :
-        Strange_device(item_data) {}
+    DeviceTranslocator(ItemDataT* const item_data) :
+        StrangeDevice(item_data) {}
 
-    ~Device_translocator() override {}
+    ~DeviceTranslocator() override {}
 
 private:
     std::string descr_identified() const override
@@ -117,16 +117,16 @@ private:
                "different locations.";
     }
 
-    Consume_item trigger_effect() override;
+    ConsumeItem trigger_effect() override;
 };
 
-class Device_sentry_drone : public Strange_device
+class DeviceSentryDrone : public StrangeDevice
 {
 public:
-    Device_sentry_drone(Item_data_t* const item_data) :
-        Strange_device(item_data) {}
+    DeviceSentryDrone(ItemDataT* const item_data) :
+        StrangeDevice(item_data) {}
 
-    ~Device_sentry_drone() override {}
+    ~DeviceSentryDrone() override {}
 
 private:
     std::string descr_identified() const override
@@ -134,34 +134,34 @@ private:
         return "When activated, this device will \"come alive\" and guard the user.";
     }
 
-    Consume_item trigger_effect() override;
+    ConsumeItem trigger_effect() override;
 };
 
-enum class Lantern_working_state
+enum class LanternWorkingState
 {
     working,
     flicker
 };
 
-class Device_lantern : public Device
+class DeviceLantern : public Device
 {
 public:
-    Device_lantern(Item_data_t* const item_data);
+    DeviceLantern(ItemDataT* const item_data);
 
-    ~Device_lantern() override {}
+    ~DeviceLantern() override {}
 
-    Consume_item activate(Actor* const actor) override;
-    void on_std_turn_in_inv(const Inv_type inv_type) override;
+    ConsumeItem activate(Actor* const actor) override;
+    void on_std_turn_in_inv(const InvType inv_type) override;
     void on_pickup_hook() override;
 
-    Lgt_size lgt_size() const override;
+    LgtSize lgt_size() const override;
 
     void save() override;
     void load() override;
 
     int nr_turns_left_;
     int nr_flicker_turns_left_;
-    Lantern_working_state working_state_;
+    LanternWorkingState working_state_;
     bool is_activated_;
 
 private:

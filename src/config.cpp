@@ -120,7 +120,7 @@ void set_default_variables()
     TRACE_FUNC_END;
 }
 
-void player_sets_option(const Menu_browser* const browser, const int option_values_x_pos)
+void player_sets_option(const MenuBrowser* const browser, const int option_values_x_pos)
 {
     switch (browser->y())
     {
@@ -277,7 +277,7 @@ void player_sets_option(const Menu_browser* const browser, const int option_valu
     }
 }
 
-void draw(const Menu_browser* const browser, const int option_values_x_pos)
+void draw(const MenuBrowser* const browser, const int option_values_x_pos)
 {
     render::clear_screen();
 
@@ -798,7 +798,7 @@ int delay_explosion()
 
 void run_options_menu()
 {
-    Menu_browser browser(nr_options);
+    MenuBrowser browser(nr_options);
     std::vector<std::string> lines;
 
     const int option_values_x_pos = 40;
@@ -807,22 +807,22 @@ void run_options_menu()
 
     while (true)
     {
-        const Menu_action action = menu_input::action(browser);
+        const MenuAction action = menu_input::action(browser);
 
         switch (action)
         {
-        case Menu_action::moved:
+        case MenuAction::moved:
             draw(&browser, option_values_x_pos);
             break;
 
-        case Menu_action::esc:
-        case Menu_action::space:
+        case MenuAction::esc:
+        case MenuAction::space:
             //Since Text mode wall symbol may have changed, we need to
             //redefine the feature data list
             feature_data::init();
             return;
 
-        case Menu_action::selected:
+        case MenuAction::selected:
             draw(&browser, option_values_x_pos);
             player_sets_option(&browser, option_values_x_pos);
             set_lines_from_variables(lines);

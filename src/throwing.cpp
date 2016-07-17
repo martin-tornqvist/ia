@@ -63,7 +63,7 @@ void player_throw_lit_explosive(const P& aim_cell)
 
         for (const P& p : path)
         {
-            render::draw_map_state(Update_screen::no);
+            render::draw_map_state(UpdateScreen::no);
 
             if (map::cells[p.x][p.y].is_seen_by_player)
             {
@@ -95,17 +95,17 @@ void player_throw_lit_explosive(const P& aim_cell)
 
 void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
 {
-    Throw_att_data att_data(&actor_throwing, tgt_cell, actor_throwing.pos, item_thrown);
+    ThrowAttData att_data(&actor_throwing, tgt_cell, actor_throwing.pos, item_thrown);
 
-    const Actor_size aim_lvl = att_data.intended_aim_lvl;
+    const ActorSize aim_lvl = att_data.intended_aim_lvl;
 
     std::vector<P> path;
 
     line_calc::calc_new_line(actor_throwing.pos, tgt_cell, false, throw_range_lmt, false, path);
 
-    const Item_data_t& item_thrown_data = item_thrown.data();
+    const ItemDataT& item_thrown_data = item_thrown.data();
 
-    const std::string item_name_a = item_thrown.name(Item_ref_type::a);
+    const std::string item_name_a = item_thrown.name(ItemRefType::a);
 
     if (&actor_throwing == map::player)
     {
@@ -122,7 +122,7 @@ void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
         }
     }
 
-    render::draw_map_state(Update_screen::yes);
+    render::draw_map_state(UpdateScreen::yes);
 
     int         blocked_idx             = -1;
     bool        is_actor_hit            = false;
@@ -133,7 +133,7 @@ void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
 
     for (size_t i = 1; i < path.size(); ++i)
     {
-        render::draw_map_state(Update_screen::no);
+        render::draw_map_state(UpdateScreen::no);
 
         pos.set(path[i]);
 
@@ -141,13 +141,13 @@ void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
 
         if (
             actor_here &&
-            (pos == tgt_cell || (actor_here->data().actor_size >= Actor_size::humanoid)))
+            (pos == tgt_cell || (actor_here->data().actor_size >= ActorSize::humanoid)))
         {
-            att_data = Throw_att_data(&actor_throwing, tgt_cell, pos, item_thrown, aim_lvl);
+            att_data = ThrowAttData(&actor_throwing, tgt_cell, pos, item_thrown, aim_lvl);
 
             if (att_data.att_result >= success && !att_data.is_ethereal_defender_missed)
             {
-                const bool is_pot = item_thrown_data.type == Item_type::potion;
+                const bool is_pot = item_thrown_data.type == ItemType::potion;
 
                 if (map::player->can_see_actor(*actor_here))
                 {
@@ -164,7 +164,7 @@ void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
 
                 msg_log::add(defender_name + " is hit.", hit_message_clr);
 
-                actor_here->hit(att_data.dmg, Dmg_type::physical);
+                actor_here->hit(att_data.dmg, DmgType::physical);
                 is_actor_hit = true;
 
                 //If throwing a potion on an actor, let it make stuff happen
@@ -184,7 +184,7 @@ void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
                 blocked_idx = i;
 
 
-                if (item_thrown_data.type == Item_type::throwing_wpn)
+                if (item_thrown_data.type == ItemType::throwing_wpn)
                 {
                     break_item_one_in_n = 4;
                 }
@@ -213,11 +213,11 @@ void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
 
         if (!feature_here->is_projectile_passable())
         {
-            blocked_idx = (item_thrown_data.type == Item_type::potion) ? i : (i - 1);
+            blocked_idx = (item_thrown_data.type == ItemType::potion) ? i : (i - 1);
             break;
         }
 
-        if (pos == tgt_cell && att_data.intended_aim_lvl == Actor_size::floor)
+        if (pos == tgt_cell && att_data.intended_aim_lvl == ActorSize::floor)
         {
             blocked_idx = i;
             break;
@@ -225,7 +225,7 @@ void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
     }
 
     //If potion, collide it on the landscape
-    if (item_thrown_data.type == Item_type::potion)
+    if (item_thrown_data.type == ItemType::potion)
     {
         if (blocked_idx >= 0)
         {
@@ -292,18 +292,18 @@ void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
 
         if (is_noisy)
         {
-            const Alerts_mon alerts = &actor_throwing == map::player ?
-                                      Alerts_mon::yes :
-                                      Alerts_mon::no;
+            const AlertsMon alerts = &actor_throwing == map::player ?
+                                      AlertsMon::yes :
+                                      AlertsMon::no;
 
             if (!is_actor_hit)
             {
                 Snd snd(item_thrown_data.land_on_hard_snd_msg,
                         item_thrown_data.land_on_hard_sfx,
-                        Ignore_msg_if_origin_seen::yes,
+                        IgnoreMsgIfOriginSeen::yes,
                         final_pos,
                         nullptr,
-                        Snd_vol::low,
+                        SndVol::low,
                         alerts);
 
                 snd_emit::run(snd);

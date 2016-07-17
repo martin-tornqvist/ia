@@ -22,8 +22,8 @@
 namespace render
 {
 
-Cell_render_data render_array[map_w][map_h];
-Cell_render_data render_array_no_actors[map_w][map_h];
+CellRenderData render_array[map_w][map_h];
+CellRenderData render_array_no_actors[map_w][map_h];
 
 namespace
 {
@@ -295,7 +295,7 @@ void put_pixels_on_scr(const bool px_data[pixel_data_w][pixel_data_h],
     }
 }
 
-void put_pixels_on_scr_for_tile(const Tile_id tile,
+void put_pixels_on_scr_for_tile(const TileId tile,
                                 const P& scr_px_pos,
                                 const Clr& clr)
 {
@@ -620,7 +620,7 @@ void draw_marker(const P& p,
                  const std::vector<P>& trail,
                  const int effective_range,
                  const int blocked_from_idx,
-                 Cell_overlay overlay[map_w][map_h])
+                 CellOverlay overlay[map_w][map_h])
 {
     Clr clr = clr_green_lgt;
 
@@ -662,7 +662,7 @@ void draw_marker(const P& p,
             //If blocked, always draw a character (more distinct)
             if (config::is_tiles_mode() && !is_blocked)
             {
-                draw_tile(Tile_id::aim_marker_trail,
+                draw_tile(TileId::aim_marker_trail,
                           Panel::map,
                           pos,
                           clr,
@@ -690,7 +690,7 @@ void draw_marker(const P& p,
     //Head
     if (config::is_tiles_mode())
     {
-        draw_tile(Tile_id::aim_marker_head,
+        draw_tile(TileId::aim_marker_head,
                   Panel::map,
                   p,
                   clr,
@@ -743,7 +743,7 @@ void draw_blast_at_field(const P& center_pos,
 
                     if (config::is_tiles_mode())
                     {
-                        draw_tile(Tile_id::blast1, Panel::map, pos, clr, clr_black);
+                        draw_tile(TileId::blast1, Panel::map, pos, clr, clr_black);
                     }
                     else
                     {
@@ -782,7 +782,7 @@ void draw_blast_at_field(const P& center_pos,
 
                     if (config::is_tiles_mode())
                     {
-                        draw_tile(Tile_id::blast2, Panel::map, pos, clr, clr_black);
+                        draw_tile(TileId::blast2, Panel::map, pos, clr, clr_black);
                     }
                     else
                     {
@@ -817,7 +817,7 @@ void draw_blast_at_cells(const std::vector<P>& positions, const Clr& clr)
         {
             if (config::is_tiles_mode())
             {
-                draw_tile(Tile_id::blast1, Panel::map, pos, clr, clr_black);
+                draw_tile(TileId::blast1, Panel::map, pos, clr, clr_black);
             }
             else
             {
@@ -832,7 +832,7 @@ void draw_blast_at_cells(const std::vector<P>& positions, const Clr& clr)
         {
             if (config::is_tiles_mode())
             {
-                draw_tile(Tile_id::blast2, Panel::map, pos, clr, clr_black);
+                draw_tile(TileId::blast2, Panel::map, pos, clr, clr_black);
             }
             else
             {
@@ -884,7 +884,7 @@ void draw_blast_at_seen_actors(const std::vector<Actor*>& actors, const Clr& clr
     }
 }
 
-void draw_tile(const Tile_id tile,
+void draw_tile(const TileId tile,
                const Panel panel,
                const P& pos,
                const Clr& clr,
@@ -1116,7 +1116,7 @@ void draw_projectiles(std::vector<Projectile*>& projectiles,
 
     if (draw_map_before)
     {
-        draw_map_state(Update_screen::no);
+        draw_map_state(UpdateScreen::no);
     }
 
     for (Projectile* p : projectiles)
@@ -1127,7 +1127,7 @@ void draw_projectiles(std::vector<Projectile*>& projectiles,
 
             if (config::is_tiles_mode())
             {
-                if (p->tile != Tile_id::empty)
+                if (p->tile != TileId::empty)
                 {
                     draw_tile(p->tile, Panel::map, p->pos, p->clr);
                 }
@@ -1162,8 +1162,8 @@ void draw_box(const R& border, const Panel panel, const Clr& clr, const bool do_
     {
         if (is_tile_mode)
         {
-            draw_tile(Tile_id::popup_ver, panel, P(border.p0.x, y), clr, clr_black);
-            draw_tile(Tile_id::popup_ver, panel, P(border.p1.x, y), clr, clr_black);
+            draw_tile(TileId::popup_ver, panel, P(border.p0.x, y), clr, clr_black);
+            draw_tile(TileId::popup_ver, panel, P(border.p1.x, y), clr, clr_black);
         }
         else
         {
@@ -1180,8 +1180,8 @@ void draw_box(const R& border, const Panel panel, const Clr& clr, const bool do_
     {
         if (is_tile_mode)
         {
-            draw_tile(Tile_id::popup_hor, panel, P(x, border.p0.y), clr, clr_black);
-            draw_tile(Tile_id::popup_hor, panel, P(x, border.p1.y), clr, clr_black);
+            draw_tile(TileId::popup_hor, panel, P(x, border.p0.y), clr, clr_black);
+            draw_tile(TileId::popup_hor, panel, P(x, border.p1.y), clr, clr_black);
         }
         else
         {
@@ -1201,10 +1201,10 @@ void draw_box(const R& border, const Panel panel, const Clr& clr, const bool do_
     //Corners
     if (is_tile_mode)
     {
-        draw_tile(Tile_id::popup_top_l, panel, corners[0], clr, clr_black);
-        draw_tile(Tile_id::popup_top_r, panel, corners[1], clr, clr_black);
-        draw_tile(Tile_id::popup_btm_l, panel, corners[2], clr, clr_black);
-        draw_tile(Tile_id::popup_btm_r, panel, corners[3], clr, clr_black);
+        draw_tile(TileId::popup_top_l, panel, corners[0], clr, clr_black);
+        draw_tile(TileId::popup_top_r, panel, corners[1], clr, clr_black);
+        draw_tile(TileId::popup_btm_l, panel, corners[2], clr, clr_black);
+        draw_tile(TileId::popup_btm_r, panel, corners[3], clr, clr_black);
     }
     else
     {
@@ -1215,7 +1215,7 @@ void draw_box(const R& border, const Panel panel, const Clr& clr, const bool do_
     }
 }
 
-void draw_descr_box(const std::vector<Str_and_clr>& lines)
+void draw_descr_box(const std::vector<StrAndClr>& lines)
 {
     const int DESCR_Y0  = 1;
     const int DESCR_X1  = map_w - 1;
@@ -1243,18 +1243,18 @@ void draw_descr_box(const std::vector<Str_and_clr>& lines)
 }
 
 void draw_info_scr_interface(const std::string& title,
-                             const Inf_screen_type screen_type)
+                             const InfScreenType screen_type)
 {
     if (config::is_tiles_mode())
     {
         for (int x = 0; x < screen_w; ++x)
         {
-            render::draw_tile(Tile_id::popup_hor,
+            render::draw_tile(TileId::popup_hor,
                               Panel::screen,
                               P(x, 0),
                               clr_title);
 
-            render::draw_tile(Tile_id::popup_hor,
+            render::draw_tile(TileId::popup_hor,
                               Panel::screen,
                               P(x, screen_h - 1),
                               clr_title);
@@ -1282,7 +1282,7 @@ void draw_info_scr_interface(const std::string& title,
                       P(x_label, 0),
                       clr_title);
 
-    const std::string cmd_info = screen_type == Inf_screen_type::scrolling ?
+    const std::string cmd_info = screen_type == InfScreenType::scrolling ?
                                  info_scr_tip_scrollable :
                                  info_scr_tip;
 
@@ -1292,8 +1292,8 @@ void draw_info_scr_interface(const std::string& title,
                       clr_title);
 }
 
-void draw_map_state(const Update_screen update,
-                    Cell_overlay overlay[map_w][map_h])
+void draw_map_state(const UpdateScreen update,
+                    CellOverlay overlay[map_w][map_h])
 {
     if (!is_inited())
     {
@@ -1306,22 +1306,22 @@ void draw_map_state(const Update_screen update,
 
     character_lines::draw();
 
-    msg_log::draw(Update_screen::no);
+    msg_log::draw(UpdateScreen::no);
 
-    if (update == Update_screen::yes)
+    if (update == UpdateScreen::yes)
     {
         update_screen();
     }
 }
 
-void draw_map(Cell_overlay overlay[map_w][map_h])
+void draw_map(CellOverlay overlay[map_w][map_h])
 {
     if (!is_inited())
     {
         return;
     }
 
-    Cell_render_data* render_data = nullptr;
+    CellRenderData* render_data = nullptr;
 
     const bool is_tile_mode = config::is_tiles_mode();
 
@@ -1331,13 +1331,13 @@ void draw_map(Cell_overlay overlay[map_w][map_h])
         for (int y = 0; y < map_h; ++y)
         {
             //Reset render data at this position
-            render_array[x][y] = Cell_render_data();
+            render_array[x][y] = CellRenderData();
 
             if (map::cells[x][y].is_seen_by_player)
             {
                 render_data                     = &render_array[x][y];
                 const auto* const   f           = map::cells[x][y].rigid;
-                Tile_id             gore_tile   = Tile_id::empty;
+                TileId             gore_tile   = TileId::empty;
                 char                gore_glyph  = 0;
 
                 if (f->can_have_gore())
@@ -1346,7 +1346,7 @@ void draw_map(Cell_overlay overlay[map_w][map_h])
                     gore_glyph = f->gore_glyph();
                 }
 
-                if (gore_tile == Tile_id::empty)
+                if (gore_tile == TileId::empty)
                 {
                     render_data->tile   = f->tile();
                     render_data->glyph  = f->glyph();
@@ -1382,7 +1382,7 @@ void draw_map(Cell_overlay overlay[map_w][map_h])
         if (
             actor->is_corpse()                      &&
             actor->data().glyph != ' '              &&
-            actor->data().tile != Tile_id::empty    &&
+            actor->data().tile != TileId::empty    &&
             map::cells[p.x][p.y].is_seen_by_player)
         {
             render_data        = &render_array[p.x][p.y];
@@ -1429,11 +1429,11 @@ void draw_map(Cell_overlay overlay[map_w][map_h])
     for (auto* mob : game_time::mobs)
     {
         const P& p                  = mob->pos();
-        const Tile_id   mob_tile    = mob->tile();
+        const TileId   mob_tile    = mob->tile();
         const char      mob_glyph   = mob->glyph();
 
         if (
-            mob_tile != Tile_id::empty && mob_glyph != ' ' &&
+            mob_tile != TileId::empty && mob_glyph != ' ' &&
             map::cells[p.x][p.y].is_seen_by_player)
         {
             render_data = &render_array[p.x][p.y];
@@ -1464,7 +1464,7 @@ void draw_map(Cell_overlay overlay[map_w][map_h])
 
             if (map::player->can_see_actor(*actor))
             {
-                if (actor->tile() != Tile_id::empty && actor->glyph() != ' ')
+                if (actor->tile() != TileId::empty && actor->glyph() != ' ')
                 {
                     render_data->clr   = actor->clr();
                     render_data->tile  = actor->tile();
@@ -1509,7 +1509,7 @@ void draw_map(Cell_overlay overlay[map_w][map_h])
     {
         for (int y = 0; y < map_h; ++y)
         {
-            Cell_render_data render_data_cpy = render_array[x][y];
+            CellRenderData render_data_cpy = render_array[x][y];
 
             const Cell& cell = map::cells[x][y];
 
@@ -1578,14 +1578,14 @@ void draw_map(Cell_overlay overlay[map_w][map_h])
                         const auto          feature_id      = f->id();
                         bool                is_hidden_door  = false;
 
-                        if (feature_id == Feature_id::door)
+                        if (feature_id == FeatureId::door)
                         {
                             is_hidden_door = static_cast<const Door*>(f)->is_secret();
                         }
 
                         if (
                             y < map_h - 1 &&
-                            (feature_id == Feature_id::wall || is_hidden_door))
+                            (feature_id == FeatureId::wall || is_hidden_door))
                         {
                             if (map::cells[x][y + 1].is_explored)
                             {
@@ -1618,14 +1618,14 @@ void draw_map(Cell_overlay overlay[map_w][map_h])
                                     tile_below_is_wall_top    ||
                                     tile_below_is_revealed_door)
                                 {
-                                    if (feature_id == Feature_id::wall)
+                                    if (feature_id == FeatureId::wall)
                                     {
                                         const auto* const wall = static_cast<const Wall*>(f);
 
                                         render_data_cpy.tile = wall->top_wall_tile();
                                     }
                                 }
-                                else if (feature_id == Feature_id::wall)
+                                else if (feature_id == FeatureId::wall)
                                 {
                                     const auto* const wall  = static_cast<const Wall*>(f);
                                     render_data_cpy.tile    = wall->front_wall_tile();
@@ -1633,8 +1633,8 @@ void draw_map(Cell_overlay overlay[map_w][map_h])
                                 else if (is_hidden_door)
                                 {
                                     render_data_cpy.tile = config::is_tiles_wall_full_square() ?
-                                                           Tile_id::wall_top :
-                                                           Tile_id::wall_front;
+                                                           TileId::wall_top :
+                                                           TileId::wall_front;
                                 }
                             }
                             else //Cell below is not explored
@@ -1674,7 +1674,7 @@ void draw_map(Cell_overlay overlay[map_w][map_h])
                                    clr_nosf_teal_drk :
                                    clr_allied_mon;
 
-                render_data_cpy.tile    = Tile_id::empty;
+                render_data_cpy.tile    = TileId::empty;
                 render_data_cpy.glyph   = '!';
                 render_data_cpy.clr     = clr_black;
                 render_data_cpy.clr_bg  = clr_bg;
@@ -1683,7 +1683,7 @@ void draw_map(Cell_overlay overlay[map_w][map_h])
             //Overlay?
             if (overlay)
             {
-                const Cell_overlay& overlay_here = overlay[pos.x][pos.y];
+                const CellOverlay& overlay_here = overlay[pos.x][pos.y];
 
                 if (!is_clr_equal(overlay_here.clr_bg, clr_black))
                 {
@@ -1694,7 +1694,7 @@ void draw_map(Cell_overlay overlay[map_w][map_h])
             bool did_draw = false;
 
             //Draw tile here if tile mode, and a tile has been set
-            if (is_tile_mode && render_data_cpy.tile != Tile_id::empty)
+            if (is_tile_mode && render_data_cpy.tile != TileId::empty)
             {
                 draw_tile(render_data_cpy.tile,
                           Panel::map,
@@ -1724,14 +1724,14 @@ void draw_map(Cell_overlay overlay[map_w][map_h])
 
             if (!cell.is_explored)
             {
-                render_array[x][y] = Cell_render_data();
+                render_array[x][y] = CellRenderData();
             }
         }
     }
 
     //---------------- DRAW PLAYER CHARACTER
     const P&    pos         = map::player->pos;
-    Item*       item        = map::player->inv().item_in_slot(Slot_id::wpn);
+    Item*       item        = map::player->inv().item_in_slot(SlotId::wpn);
     const bool  is_ghoul    = player_bon::bg() == Bg::ghoul;
 
     Clr clr_bg = clr_black;
@@ -1739,7 +1739,7 @@ void draw_map(Cell_overlay overlay[map_w][map_h])
     //Overlay?
     if (overlay)
     {
-        const Cell_overlay& overlay_here = overlay[pos.x][pos.y];
+        const CellOverlay& overlay_here = overlay[pos.x][pos.y];
 
         if (!is_clr_equal(overlay_here.clr_bg, clr_black))
         {
@@ -1756,9 +1756,9 @@ void draw_map(Cell_overlay overlay[map_w][map_h])
             uses_ranged_wpn = item->data().ranged.is_ranged_wpn;
         }
 
-        const Tile_id tile = is_ghoul           ? Tile_id::ghoul :
-                             uses_ranged_wpn    ? Tile_id::player_firearm :
-                             Tile_id::player_melee;
+        const TileId tile = is_ghoul           ? TileId::ghoul :
+                             uses_ranged_wpn    ? TileId::player_firearm :
+                             TileId::player_melee;
 
         draw_tile(tile,
                   Panel::map,

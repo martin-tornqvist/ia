@@ -63,7 +63,7 @@ void draw(const std::string& cur_string)
 
 void read_keys(std::string& cur_string, bool& done)
 {
-    const Key_data& d = input::input(false);
+    const KeyData& d = input::input(false);
 
     if (d.sdl_key == SDLK_RETURN)
     {
@@ -125,13 +125,13 @@ void run()
         }
     }
 
-    Actor_data_t& def = map::player->data();
+    ActorDataT& def = map::player->data();
     def.name_a = def.name_the = name;
 }
 
 } //enter_name
 
-void draw_pick_bg(const std::vector<Bg>& bgs, const Menu_browser& browser)
+void draw_pick_bg(const std::vector<Bg>& bgs, const MenuBrowser& browser)
 {
     render::clear_screen();
 
@@ -210,7 +210,7 @@ void pick_bg()
         std::vector<Bg> bgs;
         player_bon::pickable_bgs(bgs);
 
-        Menu_browser browser(bgs.size());
+        MenuBrowser browser(bgs.size());
 
         //Let the browser start at Rogue, to recommend it as the default choice
         browser.set_y((int)Bg::rogue);
@@ -219,28 +219,28 @@ void pick_bg()
 
         while (true)
         {
-            const Menu_action action = menu_input::action(browser);
+            const MenuAction action = menu_input::action(browser);
 
             switch (action)
             {
-            case Menu_action::moved:
+            case MenuAction::moved:
                 draw_pick_bg(bgs, browser);
                 break;
 
-            case Menu_action::selected:
-            case Menu_action::selected_shift:
+            case MenuAction::selected:
+            case MenuAction::selected_shift:
                 player_bon::pick_bg(bgs[browser.y()]);
                 return;
 
-            case Menu_action::esc:
-            case Menu_action::space:
+            case MenuAction::esc:
+            case MenuAction::space:
                 break;
             }
         }
     }
 }
 
-void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& browser)
+void draw_pick_trait(const std::vector<Trait>& traits, const MenuBrowser& browser)
 {
     render::clear_screen();
 
@@ -384,7 +384,7 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
                           P(descr_x0, y),
                           clr_white);
 
-        std::vector<Str_and_clr> prereq_titles;
+        std::vector<StrAndClr> prereq_titles;
 
         std::string prereq_str = "";
 
@@ -400,7 +400,7 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
 
             const std::string bg_title = player_bon::bg_title(trait_marked_bg_prereq);
 
-            prereq_titles.push_back(Str_and_clr(bg_title, clr));
+            prereq_titles.push_back(StrAndClr(bg_title, clr));
         }
 
         for (Trait prereq_trait : trait_marked_prereqs)
@@ -414,12 +414,12 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
 
             const std::string trait_title = player_bon::trait_title(prereq_trait);
 
-            prereq_titles.push_back(Str_and_clr(trait_title, clr));
+            prereq_titles.push_back(StrAndClr(trait_title, clr));
         }
 
         const int prereq_list_x = descr_x0 + label.size() + 1;
 
-        for (const Str_and_clr& title : prereq_titles)
+        for (const StrAndClr& title : prereq_titles)
         {
             render::draw_text(title.str,
                               Panel::screen,
@@ -463,18 +463,18 @@ void pick_new_trait()
 
     const int list_h = OPT_Y1 - OPT_Y0 + 1;
 
-    Menu_browser browser(traits.size(), list_h);
+    MenuBrowser browser(traits.size(), list_h);
 
     while (true)
     {
         draw_pick_trait(traits, browser);
 
-        const Menu_action action = menu_input::action(browser);
+        const MenuAction action = menu_input::action(browser);
 
         switch (action)
         {
-        case Menu_action::selected:
-        case Menu_action::selected_shift:
+        case MenuAction::selected:
+        case MenuAction::selected_shift:
         {
             const Trait     trait       = traits[browser.y()];
             const bool      is_selected = player_bon::traits[(size_t)trait];
@@ -493,9 +493,9 @@ void pick_new_trait()
         }
         break;
 
-        case Menu_action::moved:
-        case Menu_action::esc:
-        case Menu_action::space:
+        case MenuAction::moved:
+        case MenuAction::esc:
+        case MenuAction::space:
             break;
         }
     }

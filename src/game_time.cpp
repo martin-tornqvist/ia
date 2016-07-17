@@ -32,7 +32,7 @@ bool is_magic_descend_nxt_std_turn;
 namespace
 {
 
-std::vector<Actor_speed> turn_type_vector_;
+std::vector<ActorSpeed> turn_type_vector_;
 
 int     cur_turn_type_pos_  = 0;
 size_t  cur_actor_idx_      = 0;
@@ -47,7 +47,7 @@ void run_std_turn_events()
         msg_log::add("I sink downwards!",
                      clr_white,
                      false,
-                     More_prompt_on_msg::yes);
+                     MorePromptOnMsg::yes);
 
         map_travel::go_to_nxt();
         return;
@@ -60,7 +60,7 @@ void run_std_turn_events()
         Actor* const actor = *it;
 
         //Delete destroyed actors
-        if (actor->state() == Actor_state::destroyed)
+        if (actor->state() == ActorState::destroyed)
         {
             //Do not delete player if player died, just return
             if (actor == map::player)
@@ -84,7 +84,7 @@ void run_std_turn_events()
         }
         else  //Actor is alive or a corpse
         {
-            actor->prop_handler().tick(Prop_turn_mode::std);
+            actor->prop_handler().tick(PropTurnMode::std);
 
             if (!actor->is_player())
             {
@@ -137,14 +137,14 @@ void run_std_turn_events()
 
     for (Item* const item : player_inv.backpack_)
     {
-        item->on_std_turn_in_inv(Inv_type::backpack);
+        item->on_std_turn_in_inv(InvType::backpack);
     }
 
-    for (Inv_slot& slot : player_inv.slots_)
+    for (InvSlot& slot : player_inv.slots_)
     {
         if (slot.item)
         {
-            slot.item->on_std_turn_in_inv(Inv_type::slots);
+            slot.item->on_std_turn_in_inv(InvType::slots);
         }
     }
 
@@ -167,7 +167,7 @@ void run_atomic_turn_events()
 
         if (rigid->data().matl_type == Matl::fluid)
         {
-            actor->prop_handler().end_prop(Prop_id::burning);
+            actor->prop_handler().end_prop(PropId::burning);
         }
     }
 
@@ -303,7 +303,7 @@ void reset_turn_type_and_actor_counters()
 //type of turn act. When all actors who can act on this phase have acted, and if this is
 //a normal speed phase - consider it a standard turn (update properties, update features,
 //spawn more monsters etc.)
-void tick(const Pass_time pass_time)
+void tick(const PassTime pass_time)
 {
     run_atomic_turn_events();
 
@@ -312,16 +312,16 @@ void tick(const Pass_time pass_time)
     actor->on_actor_turn();
 
     //Tick properties running on actor turns
-    actor->prop_handler().tick(Prop_turn_mode::actor);
+    actor->prop_handler().tick(PropTurnMode::actor);
 
     //Should time move forward?
-    if (pass_time == Pass_time::yes)
+    if (pass_time == PassTime::yes)
     {
         bool can_act = false;
 
         while (!can_act)
         {
-            auto cur_turn_type = Turn_type(cur_turn_type_pos_);
+            auto cur_turn_type = TurnType(cur_turn_type_pos_);
 
             ++cur_actor_idx_;
 
@@ -331,14 +331,14 @@ void tick(const Pass_time pass_time)
 
                 ++cur_turn_type_pos_;
 
-                if (cur_turn_type_pos_ == int(Turn_type::END))
+                if (cur_turn_type_pos_ == int(TurnType::END))
                 {
                     cur_turn_type_pos_ = 0;
                 }
 
                 //Every turn type except "fast" and "fastest" are standard turns
                 //(i.e. we increment the turn counter, and run standard turn events)
-                if (cur_turn_type != Turn_type::fast && cur_turn_type != Turn_type::fastest)
+                if (cur_turn_type != TurnType::fast && cur_turn_type != TurnType::fastest)
                 {
                     run_std_turn_events();
                 }
@@ -348,31 +348,31 @@ void tick(const Pass_time pass_time)
 
             switch (speed)
             {
-            case Actor_speed::sluggish:
-                can_act = (cur_turn_type == Turn_type::slow ||
-                           cur_turn_type == Turn_type::normal2)
+            case ActorSpeed::sluggish:
+                can_act = (cur_turn_type == TurnType::slow ||
+                           cur_turn_type == TurnType::normal2)
                           && rnd::fraction(2, 3);
                 break;
 
-            case Actor_speed::slow:
-                can_act = cur_turn_type == Turn_type::slow ||
-                          cur_turn_type == Turn_type::normal2;
+            case ActorSpeed::slow:
+                can_act = cur_turn_type == TurnType::slow ||
+                          cur_turn_type == TurnType::normal2;
                 break;
 
-            case Actor_speed::normal:
-                can_act = cur_turn_type != Turn_type::fast &&
-                          cur_turn_type != Turn_type::fastest;
+            case ActorSpeed::normal:
+                can_act = cur_turn_type != TurnType::fast &&
+                          cur_turn_type != TurnType::fastest;
                 break;
 
-            case Actor_speed::fast:
-                can_act = cur_turn_type != Turn_type::fastest;
+            case ActorSpeed::fast:
+                can_act = cur_turn_type != TurnType::fastest;
                 break;
 
-            case Actor_speed::fastest:
+            case ActorSpeed::fastest:
                 can_act = true;
                 break;
 
-            case Actor_speed::END:
+            case ActorSpeed::END:
                 ASSERT(false);
                 break;
             }
@@ -393,7 +393,7 @@ void update_light_map()
     }
 
     //Do not add light on Leng
-    if (map_travel::map_type() == Map_type::leng)
+    if (map_travel::map_type() == MapType::leng)
     {
         return;
     }

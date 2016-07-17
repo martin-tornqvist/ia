@@ -18,7 +18,7 @@
 #include "save_handling.hpp"
 #include "dungeon_master.hpp"
 
-Consume_item Potion::activate(Actor* const actor)
+ConsumeItem Potion::activate(Actor* const actor)
 {
     ASSERT(actor);
 
@@ -28,20 +28,20 @@ Consume_item Potion::activate(Actor* const actor)
         {
             data_->is_tried = true;
 
-            audio::play(Sfx_id::potion_quaff);
+            audio::play(SfxId::potion_quaff);
 
             if (data_->is_identified)
             {
-                const std::string potion_name = name(Item_ref_type::a, Item_ref_inf::none);
+                const std::string potion_name = name(ItemRefType::a, ItemRefInf::none);
                 msg_log::add("I drink " + potion_name + "...");
             }
             else //Not identified
             {
-                const std::string potion_name = name(Item_ref_type::plain, Item_ref_inf::none);
+                const std::string potion_name = name(ItemRefType::plain, ItemRefInf::none);
                 msg_log::add("I drink an unknown " + potion_name + "...");
             }
 
-            map::player->incr_shock(Shock_lvl::heavy, Shock_src::use_strange_item);
+            map::player->incr_shock(ShockLvl::heavy, ShockSrc::use_strange_item);
         }
 
         quaff_impl(*actor);
@@ -51,10 +51,10 @@ Consume_item Potion::activate(Actor* const actor)
             game_time::tick();
         }
 
-        return Consume_item::yes;
+        return ConsumeItem::yes;
     }
 
-    return Consume_item::no;
+    return ConsumeItem::no;
 }
 
 void Potion::identify(const Verbosity verbosity)
@@ -65,7 +65,7 @@ void Potion::identify(const Verbosity verbosity)
 
         if (verbosity == Verbosity::verbose)
         {
-            const std::string name_after = name(Item_ref_type::a, Item_ref_inf::none);
+            const std::string name_after = name(ItemRefType::a, ItemRefInf::none);
 
             msg_log::add("I have identified " + name_after + ".");
 
@@ -137,19 +137,19 @@ std::string Potion::name_inf() const
     return (data_->is_tried && !data_->is_identified) ? "{Tried}" : "";
 }
 
-void Potion_vitality::quaff_impl(Actor& actor)
+void PotionVitality::quaff_impl(Actor& actor)
 {
-    std::vector<Prop_id> props_can_heal =
+    std::vector<PropId> props_can_heal =
     {
-        Prop_id::blind,
-        Prop_id::poisoned,
-        Prop_id::infected,
-        Prop_id::diseased,
-        Prop_id::weakened,
-        Prop_id::wound
+        PropId::blind,
+        PropId::poisoned,
+        PropId::infected,
+        PropId::diseased,
+        PropId::weakened,
+        PropId::wound
     };
 
-    for (Prop_id prop_id : props_can_heal)
+    for (PropId prop_id : props_can_heal)
     {
         actor.prop_handler().end_prop(prop_id);
     }
@@ -167,7 +167,7 @@ void Potion_vitality::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_vitality::collide_hook(const P& pos, Actor* const actor)
+void PotionVitality::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -177,7 +177,7 @@ void Potion_vitality::collide_hook(const P& pos, Actor* const actor)
     }
 }
 
-void Potion_spirit::quaff_impl(Actor& actor)
+void PotionSpirit::quaff_impl(Actor& actor)
 {
     //SPI is always restored at least up to maximum spi, but can go beyond
     const int spi           = actor.spi();
@@ -192,7 +192,7 @@ void Potion_spirit::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_spirit::collide_hook(const P& pos, Actor* const actor)
+void PotionSpirit::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -202,9 +202,9 @@ void Potion_spirit::collide_hook(const P& pos, Actor* const actor)
     }
 }
 
-void Potion_blindness::quaff_impl(Actor& actor)
+void PotionBlindness::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().try_add(new Prop_blind(Prop_turns::std));
+    actor.prop_handler().try_add(new PropBlind(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {
@@ -212,7 +212,7 @@ void Potion_blindness::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_blindness::collide_hook(const P& pos, Actor* const actor)
+void PotionBlindness::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -222,9 +222,9 @@ void Potion_blindness::collide_hook(const P& pos, Actor* const actor)
     }
 }
 
-void Potion_paral::quaff_impl(Actor& actor)
+void PotionParal::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().try_add(new Prop_paralyzed(Prop_turns::std));
+    actor.prop_handler().try_add(new PropParalyzed(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {
@@ -232,7 +232,7 @@ void Potion_paral::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_paral::collide_hook(const P& pos, Actor* const actor)
+void PotionParal::collide_hook(const P& pos, Actor* const actor)
 {
 
     (void)pos;
@@ -243,9 +243,9 @@ void Potion_paral::collide_hook(const P& pos, Actor* const actor)
     }
 }
 
-void Potion_disease::quaff_impl(Actor& actor)
+void PotionDisease::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().try_add(new Prop_diseased(Prop_turns::std));
+    actor.prop_handler().try_add(new PropDiseased(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {
@@ -253,9 +253,9 @@ void Potion_disease::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_conf::quaff_impl(Actor& actor)
+void PotionConf::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().try_add(new Prop_confused(Prop_turns::std));
+    actor.prop_handler().try_add(new PropConfused(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {
@@ -263,7 +263,7 @@ void Potion_conf::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_conf::collide_hook(const P& pos, Actor* const actor)
+void PotionConf::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -273,32 +273,32 @@ void Potion_conf::collide_hook(const P& pos, Actor* const actor)
     }
 }
 
-void Potion_fortitude::quaff_impl(Actor& actor)
+void PotionFortitude::quaff_impl(Actor& actor)
 {
-    Prop_handler& prop_handler = actor.prop_handler();
+    PropHandler& prop_handler = actor.prop_handler();
 
-    Prop_rFear* const rFear = new Prop_rFear(Prop_turns::std);
+    PropRFear* const rFear = new PropRFear(PropTurns::std);
 
     const int nr_turns_left = rFear->nr_turns_left();
 
-    Prop_rConf* const   rConf   = new Prop_rConf(Prop_turns::specific,  nr_turns_left);
-    Prop_rSleep* const  rSleep  = new Prop_rSleep(Prop_turns::specific, nr_turns_left);
+    PropRConf* const   rConf   = new PropRConf(PropTurns::specific,  nr_turns_left);
+    PropRSleep* const  rSleep  = new PropRSleep(PropTurns::specific, nr_turns_left);
 
     prop_handler.try_add(rFear);
     prop_handler.try_add(rConf);
     prop_handler.try_add(rSleep);
 
-    prop_handler.end_prop(Prop_id::frenzied);
+    prop_handler.end_prop(PropId::frenzied);
 
     //Remove a random insanity symptom if this is the player
     if (actor.is_player())
     {
-        const std::vector<const Ins_sympt*> sympts = insanity::active_sympts();
+        const std::vector<const InsSympt*> sympts = insanity::active_sympts();
 
         if (!sympts.empty())
         {
             const size_t        idx = rnd::range(0, sympts.size() - 1);
-            const Ins_sympt_id  id  = sympts[idx]->id();
+            const InsSymptId  id  = sympts[idx]->id();
 
             insanity::end_sympt(id);
         }
@@ -314,7 +314,7 @@ void Potion_fortitude::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_fortitude::collide_hook(const P& pos, Actor* const actor)
+void PotionFortitude::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -324,9 +324,9 @@ void Potion_fortitude::collide_hook(const P& pos, Actor* const actor)
     }
 }
 
-void Potion_poison::quaff_impl(Actor& actor)
+void PotionPoison::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().try_add(new Prop_poisoned(Prop_turns::std));
+    actor.prop_handler().try_add(new PropPoisoned(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {
@@ -334,7 +334,7 @@ void Potion_poison::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_poison::collide_hook(const P& pos, Actor* const actor)
+void PotionPoison::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -344,9 +344,9 @@ void Potion_poison::collide_hook(const P& pos, Actor* const actor)
     }
 }
 
-void Potion_rFire::quaff_impl(Actor& actor)
+void PotionRFire::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().try_add(new Prop_rFire(Prop_turns::std));
+    actor.prop_handler().try_add(new PropRFire(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {
@@ -354,7 +354,7 @@ void Potion_rFire::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_rFire::collide_hook(const P& pos, Actor* const actor)
+void PotionRFire::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -364,20 +364,20 @@ void Potion_rFire::collide_hook(const P& pos, Actor* const actor)
     }
 }
 
-void Potion_curing::quaff_impl(Actor& actor)
+void PotionCuring::quaff_impl(Actor& actor)
 {
-    std::vector<Prop_id> props_can_heal =
+    std::vector<PropId> props_can_heal =
     {
-        Prop_id::blind,
-        Prop_id::poisoned,
-        Prop_id::infected,
-        Prop_id::diseased,
-        Prop_id::weakened,
+        PropId::blind,
+        PropId::poisoned,
+        PropId::infected,
+        PropId::diseased,
+        PropId::weakened,
     };
 
     bool is_noticable = false;
 
-    for (Prop_id prop_id : props_can_heal)
+    for (PropId prop_id : props_can_heal)
     {
         if (actor.prop_handler().end_prop(prop_id))
         {
@@ -403,7 +403,7 @@ void Potion_curing::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_curing::collide_hook(const P& pos, Actor* const actor)
+void PotionCuring::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -413,9 +413,9 @@ void Potion_curing::collide_hook(const P& pos, Actor* const actor)
     }
 }
 
-void Potion_rElec::quaff_impl(Actor& actor)
+void PotionRElec::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().try_add(new Prop_rElec(Prop_turns::std));
+    actor.prop_handler().try_add(new PropRElec(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {
@@ -423,7 +423,7 @@ void Potion_rElec::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_rElec::collide_hook(const P& pos, Actor* const actor)
+void PotionRElec::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -433,9 +433,9 @@ void Potion_rElec::collide_hook(const P& pos, Actor* const actor)
     }
 }
 
-void Potion_rAcid::quaff_impl(Actor& actor)
+void PotionRAcid::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().try_add(new Prop_rAcid(Prop_turns::std));
+    actor.prop_handler().try_add(new PropRAcid(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {
@@ -443,7 +443,7 @@ void Potion_rAcid::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_rAcid::collide_hook(const P& pos, Actor* const actor)
+void PotionRAcid::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -453,7 +453,7 @@ void Potion_rAcid::collide_hook(const P& pos, Actor* const actor)
     }
 }
 
-void Potion_insight::quaff_impl(Actor& actor)
+void PotionInsight::quaff_impl(Actor& actor)
 {
     (void)actor;
 
@@ -463,13 +463,13 @@ void Potion_insight::quaff_impl(Actor& actor)
 
     auto& slots = inv.slots_;
 
-    for (Inv_slot& slot : slots)
+    for (InvSlot& slot : slots)
     {
         Item* const item = slot.item;
 
         if (item)
         {
-            const Item_data_t& d = item->data();
+            const ItemDataT& d = item->data();
 
             if (!d.is_identified)
             {
@@ -482,9 +482,9 @@ void Potion_insight::quaff_impl(Actor& actor)
 
     for (Item* item : general)
     {
-        if (item->id() != Item_id::potion_insight)
+        if (item->id() != ItemId::potion_insight)
         {
-            const Item_data_t& d = item->data();
+            const ItemDataT& d = item->data();
 
             if (!d.is_identified)
             {
@@ -499,20 +499,20 @@ void Potion_insight::quaff_impl(Actor& actor)
     {
         const int     idx                   = rnd::range(0, NR_elementS - 1);
         Item* const   item                  = identify_bucket[idx];
-        const std::string  item_name_before = item->name(Item_ref_type::a, Item_ref_inf::none);
+        const std::string  item_name_before = item->name(ItemRefType::a, ItemRefInf::none);
 
         msg_log::add("I gain intuitions about " + item_name_before + "...",
-                     clr_white, false, More_prompt_on_msg::yes);
+                     clr_white, false, MorePromptOnMsg::yes);
 
         item->identify(Verbosity::verbose);
 
-        const std::string item_name_after = item->name(Item_ref_type::a, Item_ref_inf::none);
+        const std::string item_name_after = item->name(ItemRefType::a, ItemRefInf::none);
     }
 
     identify(Verbosity::verbose);
 }
 
-void Potion_clairv::quaff_impl(Actor& actor)
+void PotionClairv::quaff_impl(Actor& actor)
 {
     if (actor.is_player())
     {
@@ -522,7 +522,7 @@ void Potion_clairv::quaff_impl(Actor& actor)
         anim_cells.clear();
 
         bool blocked[map_w][map_h];
-        map_parse::run(cell_check::Blocks_los(), blocked);
+        map_parse::run(cell_check::BlocksLos(), blocked);
 
         for (int x = 0; x < map_w; ++x)
         {
@@ -539,25 +539,25 @@ void Potion_clairv::quaff_impl(Actor& actor)
             }
         }
 
-        render::draw_map_state(Update_screen::no);
+        render::draw_map_state(UpdateScreen::no);
 
         map::player->update_fov();
 
         render::draw_blast_at_cells(anim_cells, clr_white);
 
-        render::draw_map_state(Update_screen::yes);
+        render::draw_map_state(UpdateScreen::yes);
     }
 
     identify(Verbosity::verbose);
 }
 
-void Potion_descent::quaff_impl(Actor& actor)
+void PotionDescent::quaff_impl(Actor& actor)
 {
     (void)actor;
 
     if (map::dlvl < dlvl_last - 1)
     {
-        map::player->prop_handler().try_add(new Prop_descend(Prop_turns::std));
+        map::player->prop_handler().try_add(new PropDescend(PropTurns::std));
     }
     else
     {
@@ -567,9 +567,9 @@ void Potion_descent::quaff_impl(Actor& actor)
     identify(Verbosity::verbose);
 }
 
-void Potion_invis::quaff_impl(Actor& actor)
+void PotionInvis::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().try_add(new Prop_invisible(Prop_turns::std));
+    actor.prop_handler().try_add(new PropInvisible(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {
@@ -577,7 +577,7 @@ void Potion_invis::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_invis::collide_hook(const P& pos, Actor* const actor)
+void PotionInvis::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -587,9 +587,9 @@ void Potion_invis::collide_hook(const P& pos, Actor* const actor)
     }
 }
 
-void Potion_see_invis::quaff_impl(Actor& actor)
+void PotionSeeInvis::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().try_add(new Prop_see_invis(Prop_turns::std));
+    actor.prop_handler().try_add(new PropSeeInvis(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {
@@ -597,7 +597,7 @@ void Potion_see_invis::quaff_impl(Actor& actor)
     }
 }
 
-void Potion_see_invis::collide_hook(const P& pos, Actor* const actor)
+void PotionSeeInvis::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 
@@ -613,7 +613,7 @@ namespace potion_handling
 namespace
 {
 
-std::vector<Potion_look> potion_looks_;
+std::vector<PotionLook> potion_looks_;
 
 } //namespace
 
@@ -623,41 +623,41 @@ void init()
 
     //Init possible potion colors and fake names
     potion_looks_.clear();
-    potion_looks_.push_back(Potion_look {"Golden",   "a Golden",   clr_yellow});
-    potion_looks_.push_back(Potion_look {"Yellow",   "a Yellow",   clr_yellow});
-    potion_looks_.push_back(Potion_look {"Dark",     "a Dark",     clr_gray});
-    potion_looks_.push_back(Potion_look {"Black",    "a Black",    clr_gray});
-    potion_looks_.push_back(Potion_look {"Oily",     "an Oily",    clr_gray});
-    potion_looks_.push_back(Potion_look {"Smoky",    "a Smoky",    clr_white});
-    potion_looks_.push_back(Potion_look {"Slimy",    "a Slimy",    clr_green});
-    potion_looks_.push_back(Potion_look {"Green",    "a Green",    clr_green_lgt});
-    potion_looks_.push_back(Potion_look {"Fiery",    "a Fiery",    clr_red_lgt});
-    potion_looks_.push_back(Potion_look {"Murky",    "a Murky",    clr_brown_drk});
-    potion_looks_.push_back(Potion_look {"Muddy",    "a Muddy",    clr_brown});
-    potion_looks_.push_back(Potion_look {"Violet",   "a Violet",   clr_violet});
-    potion_looks_.push_back(Potion_look {"Orange",   "an Orange",  clr_orange});
-    potion_looks_.push_back(Potion_look {"Watery",   "a Watery",   clr_blue_lgt});
-    potion_looks_.push_back(Potion_look {"Metallic", "a Metallic", clr_gray});
-    potion_looks_.push_back(Potion_look {"Clear",    "a Clear",    clr_white_high});
-    potion_looks_.push_back(Potion_look {"Misty",    "a Misty",    clr_white_high});
-    potion_looks_.push_back(Potion_look {"Bloody",   "a Bloody",   clr_red});
-    potion_looks_.push_back(Potion_look {"Magenta",  "a Magenta",  clr_magenta});
-    potion_looks_.push_back(Potion_look {"Clotted",  "a Clotted",  clr_green});
-    potion_looks_.push_back(Potion_look {"Moldy",    "a Moldy",    clr_brown});
-    potion_looks_.push_back(Potion_look {"Frothy",   "a Frothy",   clr_white});
+    potion_looks_.push_back(PotionLook {"Golden",   "a Golden",   clr_yellow});
+    potion_looks_.push_back(PotionLook {"Yellow",   "a Yellow",   clr_yellow});
+    potion_looks_.push_back(PotionLook {"Dark",     "a Dark",     clr_gray});
+    potion_looks_.push_back(PotionLook {"Black",    "a Black",    clr_gray});
+    potion_looks_.push_back(PotionLook {"Oily",     "an Oily",    clr_gray});
+    potion_looks_.push_back(PotionLook {"Smoky",    "a Smoky",    clr_white});
+    potion_looks_.push_back(PotionLook {"Slimy",    "a Slimy",    clr_green});
+    potion_looks_.push_back(PotionLook {"Green",    "a Green",    clr_green_lgt});
+    potion_looks_.push_back(PotionLook {"Fiery",    "a Fiery",    clr_red_lgt});
+    potion_looks_.push_back(PotionLook {"Murky",    "a Murky",    clr_brown_drk});
+    potion_looks_.push_back(PotionLook {"Muddy",    "a Muddy",    clr_brown});
+    potion_looks_.push_back(PotionLook {"Violet",   "a Violet",   clr_violet});
+    potion_looks_.push_back(PotionLook {"Orange",   "an Orange",  clr_orange});
+    potion_looks_.push_back(PotionLook {"Watery",   "a Watery",   clr_blue_lgt});
+    potion_looks_.push_back(PotionLook {"Metallic", "a Metallic", clr_gray});
+    potion_looks_.push_back(PotionLook {"Clear",    "a Clear",    clr_white_high});
+    potion_looks_.push_back(PotionLook {"Misty",    "a Misty",    clr_white_high});
+    potion_looks_.push_back(PotionLook {"Bloody",   "a Bloody",   clr_red});
+    potion_looks_.push_back(PotionLook {"Magenta",  "a Magenta",  clr_magenta});
+    potion_looks_.push_back(PotionLook {"Clotted",  "a Clotted",  clr_green});
+    potion_looks_.push_back(PotionLook {"Moldy",    "a Moldy",    clr_brown});
+    potion_looks_.push_back(PotionLook {"Frothy",   "a Frothy",   clr_white});
 
     for (auto& d : item_data::data)
     {
-        if (d.type == Item_type::potion)
+        if (d.type == ItemType::potion)
         {
             //Color and false name
             const size_t idx = rnd::range(0, potion_looks_.size() - 1);
 
-            Potion_look& look = potion_looks_[idx];
+            PotionLook& look = potion_looks_[idx];
 
-            d.base_name_un_id.names[int(Item_ref_type::plain)]   = look.name_plain + " Potion";
-            d.base_name_un_id.names[int(Item_ref_type::plural)]  = look.name_plain + " Potions";
-            d.base_name_un_id.names[int(Item_ref_type::a)]       = look.name_a     + " Potion";
+            d.base_name_un_id.names[int(ItemRefType::plain)]   = look.name_plain + " Potion";
+            d.base_name_un_id.names[int(ItemRefType::plural)]  = look.name_plain + " Potions";
+            d.base_name_un_id.names[int(ItemRefType::a)]       = look.name_a     + " Potion";
             d.clr = look.clr;
 
             potion_looks_.erase(potion_looks_.begin() + idx);
@@ -674,9 +674,9 @@ void init()
             const std::string real_name_plural = "Potions of "   + real_type_name;
             const std::string real_name_a      = "a Potion of "  + real_type_name;
 
-            d.base_name.names[int(Item_ref_type::plain)]  = real_name;
-            d.base_name.names[int(Item_ref_type::plural)] = real_name_plural;
-            d.base_name.names[int(Item_ref_type::a)]      = real_name_a;
+            d.base_name.names[int(ItemRefType::plain)]  = real_name;
+            d.base_name.names[int(ItemRefType::plural)] = real_name_plural;
+            d.base_name.names[int(ItemRefType::a)]      = real_name_a;
         }
     }
 
@@ -685,15 +685,15 @@ void init()
 
 void save()
 {
-    for (int i = 0; i < int(Item_id::END); ++i)
+    for (int i = 0; i < int(ItemId::END); ++i)
     {
-        Item_data_t& d = item_data::data[i];
+        ItemDataT& d = item_data::data[i];
 
-        if (d.type == Item_type::potion)
+        if (d.type == ItemType::potion)
         {
-            save_handling::put_str(d.base_name_un_id.names[int(Item_ref_type::plain)]);
-            save_handling::put_str(d.base_name_un_id.names[int(Item_ref_type::plural)]);
-            save_handling::put_str(d.base_name_un_id.names[int(Item_ref_type::a)]);
+            save_handling::put_str(d.base_name_un_id.names[int(ItemRefType::plain)]);
+            save_handling::put_str(d.base_name_un_id.names[int(ItemRefType::plural)]);
+            save_handling::put_str(d.base_name_un_id.names[int(ItemRefType::a)]);
 
             save_handling::put_int(d.clr.r);
             save_handling::put_int(d.clr.g);
@@ -704,15 +704,15 @@ void save()
 
 void load()
 {
-    for (int i = 0; i < int(Item_id::END); ++i)
+    for (int i = 0; i < int(ItemId::END); ++i)
     {
-        Item_data_t& d = item_data::data[i];
+        ItemDataT& d = item_data::data[i];
 
-        if (d.type == Item_type::potion)
+        if (d.type == ItemType::potion)
         {
-            d.base_name_un_id.names[int(Item_ref_type::plain)]  = save_handling::get_str();
-            d.base_name_un_id.names[int(Item_ref_type::plural)] = save_handling::get_str();
-            d.base_name_un_id.names[int(Item_ref_type::a)]      = save_handling::get_str();
+            d.base_name_un_id.names[int(ItemRefType::plain)]  = save_handling::get_str();
+            d.base_name_un_id.names[int(ItemRefType::plural)] = save_handling::get_str();
+            d.base_name_un_id.names[int(ItemRefType::a)]      = save_handling::get_str();
 
             d.clr.r = save_handling::get_int();
             d.clr.g = save_handling::get_int();

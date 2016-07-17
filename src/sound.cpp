@@ -12,13 +12,13 @@
 
 Snd::Snd(
     const std::string&              msg,
-    const Sfx_id                    sfx,
-    const Ignore_msg_if_origin_seen ignore_msg_if_origin_seen,
+    const SfxId                    sfx,
+    const IgnoreMsgIfOriginSeen ignore_msg_if_origin_seen,
     const P&                      origin,
     Actor* const                    actor_who_made_sound,
-    const Snd_vol                   vol,
-    const Alerts_mon                alerting_mon,
-    const More_prompt_on_msg        add_more_prompt_on_msg) :
+    const SndVol                   vol,
+    const AlertsMon                alerting_mon,
+    const MorePromptOnMsg        add_more_prompt_on_msg) :
 
     msg_                            (msg),
     sfx_                            (sfx),

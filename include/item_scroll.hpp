@@ -9,7 +9,7 @@ class Spell;
 class Scroll: public Item
 {
 public:
-    Scroll(Item_data_t* const item_data) :
+    Scroll(ItemDataT* const item_data) :
         Item(item_data) {}
 
     ~Scroll() {}
@@ -19,7 +19,7 @@ public:
         return clr_magenta;
     }
 
-    Consume_item activate(Actor* const actor) override;
+    ConsumeItem activate(Actor* const actor) override;
 
     const std::string real_name() const;
 
@@ -43,6 +43,6 @@ void init();
 void save();
 void load();
 
-} //Scroll_handling
+} //ScrollHandling
 
 #endif

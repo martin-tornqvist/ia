@@ -17,10 +17,10 @@ void drop_all_characters_items(Actor& actor);
 Item* drop_item_on_map(const P& intended_pos, Item& item);
 
 void try_drop_item_from_inv(Actor& actor,
-                            const Inv_type inv_type,
+                            const InvType inv_type,
                             const size_t idx,
                             const int nr_items_to_drop = -1);
 
-} //Item_drop
+} //ItemDrop
 
 #endif

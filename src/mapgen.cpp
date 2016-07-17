@@ -55,7 +55,7 @@ bool door_proposals[map_w][map_h];
 bool is_all_rooms_connected()
 {
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
+    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
 
     return map_parse::is_map_connected(blocked);
 }
@@ -126,7 +126,7 @@ void connect_rooms()
 
         auto is_std_room = [](const Room & r)
         {
-            return (int)r.type_ < (int)Room_type::END_OF_STD_ROOMS;
+            return (int)r.type_ < (int)RoomType::END_OF_STD_ROOMS;
         };
 
         Room* room0 = rnd_room();
@@ -134,7 +134,7 @@ void connect_rooms()
         //Room 0 must be a standard room or corridor link
         if (
             !is_std_room(*room0) &&
-            room0->type_ != Room_type::corr_link)
+            room0->type_ != RoomType::corr_link)
         {
             continue;
         }
@@ -250,7 +250,7 @@ void mk_crumble_room(const R& room_area_incl_walls, const P& event_pos)
     }
 
     game_time::add_mob(
-        new Event_wall_crumble(event_pos, wall_cells, inner_cells));
+        new EventWallCrumble(event_pos, wall_cells, inner_cells));
 }
 #endif //MK_CRUMBLE_ROOMS
 
@@ -294,7 +294,7 @@ bool try_mk_aux_room(const P& p,
 #ifdef MK_CRUMBLE_ROOMS
         if (rnd::one_in(10))
         {
-            Room* const room = room_factory::mk(Room_type::crumble_room, aux_rect);
+            Room* const room = room_factory::mk(RoomType::crumble_room, aux_rect);
             register_room(*room);
             mk_crumble_room(aux_rect_with_border, door_p);
         }
@@ -327,7 +327,7 @@ void mk_aux_rooms(Region regions[3][3])
     //TODO: It would be better with a parse predicate that checks for free cells immediately
 
     //Get blocked cells
-    map_parse::run(cell_check::Blocks_move_cmn(false), floor_cells);
+    map_parse::run(cell_check::BlocksMoveCmn(false), floor_cells);
 
     //Flip the values so that we get free cells
     for (int x = 0; x < map_w; ++x)
@@ -647,8 +647,8 @@ void reserve_river(Region regions[3][3])
                        P(1, 2));
     }
 
-    Room* const         room        = room_factory::mk(Room_type::river, room_rect);
-    River_room* const   river_room  = static_cast<River_room*>(room);
+    Room* const         room        = room_factory::mk(RoomType::river, room_rect);
+    RiverRoom* const   river_room  = static_cast<RiverRoom*>(room);
     river_room->axis_               = axis;
     river_region->main_room_        = room;
     river_region->is_free_          = false;
@@ -715,7 +715,7 @@ void place_door_at_pos_if_allowed(const P& p)
             {
                 const Cell& cell = map::cells[check_pos.x][check_pos.y];
 
-                if (cell.rigid->id() == Feature_id::door)
+                if (cell.rigid->id() == FeatureId::door)
                 {
                     return;
                 }
@@ -728,24 +728,24 @@ void place_door_at_pos_if_allowed(const P& p)
 
     for (int d = -1; d <= 1; d++)
     {
-        if (map::cells[p.x + d][p.y].rigid->id() == Feature_id::wall)
+        if (map::cells[p.x + d][p.y].rigid->id() == FeatureId::wall)
         {
             is_good_hor = false;
         }
 
-        if (map::cells[p.x][p.y + d].rigid->id() == Feature_id::wall)
+        if (map::cells[p.x][p.y + d].rigid->id() == FeatureId::wall)
         {
             is_good_ver = false;
         }
 
         if (d != 0)
         {
-            if (map::cells[p.x][p.y + d].rigid->id() != Feature_id::wall)
+            if (map::cells[p.x][p.y + d].rigid->id() != FeatureId::wall)
             {
                 is_good_hor = false;
             }
 
-            if (map::cells[p.x + d][p.y].rigid->id() != Feature_id::wall)
+            if (map::cells[p.x + d][p.y].rigid->id() != FeatureId::wall)
             {
                 is_good_ver = false;
             }
@@ -754,7 +754,7 @@ void place_door_at_pos_if_allowed(const P& p)
 
     if (is_good_hor || is_good_ver)
     {
-        const auto& d = feature_data::data(Feature_id::wall);
+        const auto& d = feature_data::data(FeatureId::wall);
         const auto* const mimic = static_cast<const Rigid*>(d.mk_obj(p));
         map::put(new Door(p, mimic));
     }
@@ -795,7 +795,7 @@ void mk_sub_rooms()
             (outer_room_d.x > 16) || (outer_room_d.y > 8);
 
         const bool is_outer_std_room =
-            (int)outer_room->type_ < (int)Room_type::END_OF_STD_ROOMS;
+            (int)outer_room->type_ < (int)RoomType::END_OF_STD_ROOMS;
 
         //To build a room inside a room, the outer room shall:
         // * Be a standard room, and
@@ -862,8 +862,8 @@ void mk_sub_rooms()
                         //* Cells belonging to the outer room must be floor
                         //* Cells not belonging to the outer room must be walls
                         if (
-                            (room == outer_room && f_id != Feature_id::floor) ||
-                            (room != outer_room && f_id != Feature_id::wall)
+                            (room == outer_room && f_id != FeatureId::floor) ||
+                            (room != outer_room && f_id != FeatureId::wall)
                         )
                         {
                             is_area_free = false;
@@ -996,7 +996,7 @@ void fill_dead_ends()
 {
     //Find an origin with no adjacent walls, to ensure not starting in a dead end
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
+    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
 
     bool expanded_blockers[map_w][map_h];
     map_parse::expand(blocked, expanded_blockers);
@@ -1032,7 +1032,7 @@ void fill_dead_ends()
                     P(-1, -1),
                     true);
 
-    std::vector<Pos_val> floodfill_vector;
+    std::vector<PosVal> floodfill_vector;
 
     for (int x = 1; x < map_w - 1; ++x)
     {
@@ -1040,13 +1040,13 @@ void fill_dead_ends()
         {
             if (!blocked[x][y])
             {
-                floodfill_vector.push_back(Pos_val(P(x, y), floodfill[x][y]));
+                floodfill_vector.push_back(PosVal(P(x, y), floodfill[x][y]));
             }
         }
     }
 
     std::sort(floodfill_vector.begin(), floodfill_vector.end(),
-              [](const Pos_val & a, const Pos_val & b)
+              [](const PosVal & a, const PosVal & b)
     {
         return a.val < b.val;
     });
@@ -1078,12 +1078,12 @@ void decorate()
         {
             Cell& cell = map::cells[x][y];
 
-            if (cell.rigid->id() == Feature_id::wall)
+            if (cell.rigid->id() == FeatureId::wall)
             {
                 //Randomly convert walls to rubble
                 if (rnd::one_in(10))
                 {
-                    map::put(new Rubble_high(P(x, y)));
+                    map::put(new RubbleHigh(P(x, y)));
                     continue;
                 }
 
@@ -1124,13 +1124,13 @@ void decorate()
                             //that can "mimic" floor, but if some other feature like that
                             //is added, it could be a problem.
 
-                            if (adj_id == Feature_id::floor || adj_id == Feature_id::trap)
+                            if (adj_id == FeatureId::floor || adj_id == FeatureId::trap)
                             {
                                 has_adj_floor = true;
 
                                 auto* adj_rigid = static_cast<Floor*>(adj_cell.rigid);
 
-                                if (adj_rigid->type_ == Floor_type::cave)
+                                if (adj_rigid->type_ == FloorType::cave)
                                 {
                                     has_adj_cave_floor = true;
                                     break;
@@ -1144,7 +1144,7 @@ void decorate()
 
                 if (should_convert_to_cave_wall)
                 {
-                    wall->type_ = Wall_type::cave;
+                    wall->type_ = WallType::cave;
                 }
                 else //Should not convert to cave wall
                 {
@@ -1158,12 +1158,12 @@ void decorate()
     {
         for (int y = 1; y < map_h - 1; ++y)
         {
-            if (map::cells[x][y].rigid->id() == Feature_id::floor)
+            if (map::cells[x][y].rigid->id() == FeatureId::floor)
             {
                 //Randomly convert stone floor to low rubble
                 if (rnd::one_in(100))
                 {
-                    map::put(new Rubble_low(P(x, y)));
+                    map::put(new RubbleLow(P(x, y)));
                     continue;
                 }
             }
@@ -1177,14 +1177,14 @@ void allowed_stair_cells(bool out[map_w][map_h])
     TRACE_FUNC_BEGIN;
 
     //Mark cells as free if all adjacent feature types are allowed
-    std::vector<Feature_id> feat_ids_ok
+    std::vector<FeatureId> feat_ids_ok
     {
-        Feature_id::floor,
-        Feature_id::carpet,
-        Feature_id::grass
+        FeatureId::floor,
+        FeatureId::carpet,
+        FeatureId::grass
     };
 
-    map_parse::run(cell_check::All_adj_is_any_of_features(feat_ids_ok), out);
+    map_parse::run(cell_check::AllAdjIsAnyOfFeatures(feat_ids_ok), out);
 
     //Block cells with item
     for (int x = 0; x < map_w; ++x)
@@ -1242,7 +1242,7 @@ P place_stairs()
 
     TRACE << "Sorting the allowed cells vector "
           << "(" << allowed_cells_list.size() << " cells)" << std:: endl;
-    Is_closer_to_pos is_closer_to_origin(map::player->pos);
+    IsCloserToPos is_closer_to_origin(map::player->pos);
     sort(allowed_cells_list.begin(), allowed_cells_list.end(), is_closer_to_origin);
 
     TRACE << "Picking furthest cell" << std:: endl;
@@ -1274,7 +1274,7 @@ void move_player_to_nearest_allowed_pos()
         TRACE << "Sorting the allowed cells vector "
               << "(" << allowed_cells_list.size() << " cells)" << std:: endl;
 
-        Is_closer_to_pos is_closer_to_origin(map::player->pos);
+        IsCloserToPos is_closer_to_origin(map::player->pos);
 
         sort(allowed_cells_list.begin(), allowed_cells_list.end(), is_closer_to_origin);
 
@@ -1293,7 +1293,7 @@ void move_player_to_nearest_allowed_pos()
 //  for(int y = 1; y < map_h - 1; ++y) {
 //    for(int x = 1; x < map_w - 1; ++x) {
 //      Feature* const feature = map::features_static[x][y];
-//      if(feature->id() == Feature_id::door) {
+//      if(feature->id() == FeatureId::door) {
 //        Door* const door = static_cast<Door*>(feature);
 //        door_bucket.push_back(door);
 //      }
@@ -1307,7 +1307,7 @@ void move_player_to_nearest_allowed_pos()
 //  for(int y = 1; y < map_h - 1; ++y) {
 //    for(int x = 1; x < map_w - 1; ++x) {
 //      Feature* const feature = map::features_static[x][y];
-//      if(feature->id() == Feature_id::door) {
+//      if(feature->id() == FeatureId::door) {
 //        blocked[x][y] = false;
 //      }
 //    }
@@ -1338,10 +1338,10 @@ void move_player_to_nearest_allowed_pos()
 
 //void spawn_lever_adapt_and_link_door(const P& lever_pos, Door& door) {
 //  TRACE << "Spawning lever and linking it to the door" << std:: endl;
-//  Feature_factory::mk(Feature_id::lever, lever_pos, new Lever_spawn_data(&door));
+//  FeatureFactory::mk(FeatureId::lever, lever_pos, new LeverSpawnData(&door));
 //
 //  TRACE << "Changing door properties" << std:: endl;
-//  door.matl_ = Door_type::metal;
+//  door.matl_ = DoorType::metal;
 //  door.is_open_ = false;
 //  door.is_stuck_ = false;
 //  door.is_handled_externally_ = true;
@@ -1352,7 +1352,7 @@ void reveal_doors_on_path_to_stairs(const P& stairs_pos)
     TRACE_FUNC_BEGIN;
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
+    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
 
     blocked[stairs_pos.x][stairs_pos.y] = false;
 
@@ -1360,7 +1360,7 @@ void reveal_doors_on_path_to_stairs(const P& stairs_pos)
     {
         for (int y = 0; y < map_h; ++y)
         {
-            if (map::cells[x][y].rigid->id() == Feature_id::door)
+            if (map::cells[x][y].rigid->id() == FeatureId::door)
             {
                 blocked[x][y] = false;
             }
@@ -1378,7 +1378,7 @@ void reveal_doors_on_path_to_stairs(const P& stairs_pos)
     {
         auto* const feature = map::cells[pos.x][pos.y].rigid;
 
-        if (feature->id() == Feature_id::door)
+        if (feature->id() == FeatureId::door)
         {
             static_cast<Door*>(feature)->reveal(false);
         }
@@ -1667,7 +1667,7 @@ bool mk_std_lvl()
 
         for (int i = 0; i < nr_snake_emerge_events_to_try; ++i)
         {
-            Event_snake_emerge* const event = new Event_snake_emerge();
+            EventSnakeEmerge* const event = new EventSnakeEmerge();
 
             if (event->try_find_p())
             {

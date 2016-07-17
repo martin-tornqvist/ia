@@ -12,7 +12,7 @@ public:
 
     virtual ~Mob() {}
 
-    virtual Feature_id id() const override = 0;
+    virtual FeatureId id() const override = 0;
 
     virtual std::string name(const Article article) const override = 0;
 
@@ -36,9 +36,9 @@ public:
     Smoke() = delete;
     ~Smoke() {}
 
-    Feature_id id() const override
+    FeatureId id() const override
     {
-        return Feature_id::smoke;
+        return FeatureId::smoke;
     }
 
     std::string name(const Article article)  const override;
@@ -50,22 +50,22 @@ protected:
     int nr_turns_left_;
 };
 
-class Lit_dynamite: public Mob
+class LitDynamite: public Mob
 {
 public:
-    Lit_dynamite(const P& feature_pos, const int nr_turns) :
+    LitDynamite(const P& feature_pos, const int nr_turns) :
         Mob(feature_pos), nr_turns_left_(nr_turns) {}
 
     //Spawn-by-id compliant ctor (do not use for normal cases):
-    Lit_dynamite(const P& feature_pos) : Mob(feature_pos), nr_turns_left_(-1) {}
+    LitDynamite(const P& feature_pos) : Mob(feature_pos), nr_turns_left_(-1) {}
 
-    Lit_dynamite() = delete;
+    LitDynamite() = delete;
 
-    ~Lit_dynamite() {}
+    ~LitDynamite() {}
 
-    Feature_id id() const override
+    FeatureId id() const override
     {
-        return Feature_id::lit_dynamite;
+        return FeatureId::lit_dynamite;
     }
 
     std::string name(const Article article) const override;
@@ -81,22 +81,22 @@ private:
     int nr_turns_left_;
 };
 
-class Lit_flare: public Mob
+class LitFlare: public Mob
 {
 public:
-    Lit_flare(const P& feature_pos, const int nr_turns) :
+    LitFlare(const P& feature_pos, const int nr_turns) :
         Mob(feature_pos), nr_turns_left_(nr_turns) {}
 
     //Spawn-by-id compliant ctor (do not use for normal cases):
-    Lit_flare(const P& feature_pos) : Mob(feature_pos), nr_turns_left_(-1) {}
+    LitFlare(const P& feature_pos) : Mob(feature_pos), nr_turns_left_(-1) {}
 
-    Lit_flare() = delete;
+    LitFlare() = delete;
 
-    ~Lit_flare() {}
+    ~LitFlare() {}
 
-    Feature_id id() const override
+    FeatureId id() const override
     {
-        return Feature_id::lit_flare;
+        return FeatureId::lit_flare;
     }
 
     std::string name(const Article article) const override;

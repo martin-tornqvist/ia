@@ -88,7 +88,7 @@ void run()
         render::clear_screen();
 
         render::draw_info_scr_interface("Browsing manual",
-                                        Inf_screen_type::scrolling);
+                                        InfScreenType::scrolling);
 
         int y_pos = 1;
 
@@ -102,7 +102,7 @@ void run()
 
         render::update_screen();
 
-        const Key_data& d = input::input();
+        const KeyData& d = input::input();
 
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {

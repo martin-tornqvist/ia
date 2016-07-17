@@ -9,9 +9,9 @@
 class Item;
 class Actor;
 
-enum class Item_id;
+enum class ItemId;
 
-enum class Slot_id
+enum class SlotId
 {
     wpn,
     wpn_alt,
@@ -22,19 +22,19 @@ enum class Slot_id
     END
 };
 
-struct Inv_slot
+struct InvSlot
 {
-    Inv_slot(Slot_id id_, std::string name_) :
+    InvSlot(SlotId id_, std::string name_) :
         id      (id_),
         name    (name_),
         item    (nullptr) {}
 
-    Inv_slot() :
-        id      (Slot_id::wpn),
+    InvSlot() :
+        id      (SlotId::wpn),
         name    (""),
         item    (nullptr) {}
 
-    Slot_id id;
+    SlotId id;
     std::string name;
     Item* item;
 };
@@ -50,17 +50,17 @@ public:
     void load();
 
     //Equip item from backpack
-    void equip_backpack_item(const size_t backpack_idx, const Slot_id slot_id);
+    void equip_backpack_item(const size_t backpack_idx, const SlotId slot_id);
 
     //Attempt to unequip item from slot
-    Unequip_allowed try_unequip_slot(const Slot_id id);
+    UnequipAllowed try_unequip_slot(const SlotId id);
 
     //NOTE: All "put_in_*" functions should NEVER be called on items already in the inventory.
 
     //NOTE: Item will be put in backpack if the slot is occupied.
-    void put_in_slot(const Slot_id id, Item* item);
+    void put_in_slot(const SlotId id, Item* item);
 
-    Item* remove_from_slot(const Slot_id id);
+    Item* remove_from_slot(const SlotId id);
 
     void put_in_backpack(Item* item);
 
@@ -68,27 +68,27 @@ public:
 
     void drop_all_non_intrinsic(const P& pos);
 
-    void swap_wielded_and_prepared(const Pass_time pass_time);
+    void swap_wielded_and_prepared(const PassTime pass_time);
 
-    bool has_item_in_slot(Slot_id id) const;
+    bool has_item_in_slot(SlotId id) const;
 
     bool has_ammo_for_firearm_in_inventory();
 
-    Item* item_in_backpack(const Item_id id);
+    Item* item_in_backpack(const ItemId id);
 
-    int backpack_idx(const Item_id item_id) const;
+    int backpack_idx(const ItemId item_id) const;
 
-    Item* item_in_slot(const Slot_id id) const;
+    Item* item_in_slot(const SlotId id) const;
 
-    void remove_without_destroying(const Inv_type inv_type, const size_t idx);
+    void remove_without_destroying(const InvType inv_type, const size_t idx);
 
-    void decr_item_in_slot(Slot_id slot_id);
+    void decr_item_in_slot(SlotId slot_id);
 
     void decr_item_in_backpack(const size_t idx);
 
     void decr_item(Item* const item);
 
-    void decr_item_type_in_backpack(const Item_id item_id);
+    void decr_item_type_in_backpack(const ItemId item_id);
 
     Item* remove_item_in_backpack_with_idx(const size_t idx, const bool delete_item);
     Item* remove_item_in_backpack_with_ptr(Item* const item, const bool delete_item);
@@ -102,22 +102,22 @@ public:
 
     Item* last_item_in_backpack();
 
-    bool has_item_in_backpack(const Item_id id) const;
+    bool has_item_in_backpack(const ItemId id) const;
 
-    int item_stack_size_in_backpack(const Item_id id) const;
+    int item_stack_size_in_backpack(const ItemId id) const;
 
     void sort_backpack();
 
     int total_item_weight() const;
 
-    Inv_slot slots_[int(Slot_id::END)];
+    InvSlot slots_[int(SlotId::END)];
     std::vector<Item*> backpack_;
     std::vector<Item*> intrinsics_;
 
 private:
-    void move_from_backpack_to_slot(const Slot_id id, const size_t backpack_idx);
+    void move_from_backpack_to_slot(const SlotId id, const size_t backpack_idx);
 
-    Unequip_allowed try_move_from_slot_to_backpack(const Slot_id id);
+    UnequipAllowed try_move_from_slot_to_backpack(const SlotId id);
 
     //This checks if the item is stackable, and if so attempts to stack it with another item
     //of the same type in the backpack. The item pointer is still valid if a stack occurs

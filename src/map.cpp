@@ -27,7 +27,7 @@ Cell::Cell() :
     player_los          (),
     item                (nullptr),
     rigid               (nullptr),
-    player_visual_memory(Cell_render_data()),
+    player_visual_memory(CellRenderData()),
     pos(P(-1, -1)) {}
 
 Cell::~Cell()
@@ -50,7 +50,7 @@ void Cell::reset()
     player_los.is_blocked_hard      = true;
     player_los.is_blocked_by_drk    = false;
 
-    player_visual_memory = Cell_render_data();
+    player_visual_memory = CellRenderData();
 
     pos.set(-1, -1);
 
@@ -91,8 +91,8 @@ void reset_cells(const bool make_stone_walls)
 
             room_map[x][y] = nullptr;
 
-            render::render_array[x][y]              = Cell_render_data();
-            render::render_array_no_actors[x][y]    = Cell_render_data();
+            render::render_array[x][y]              = CellRenderData();
+            render::render_array_no_actors[x][y]    = CellRenderData();
 
             if (make_stone_walls)
             {
@@ -114,7 +114,7 @@ void init()
 
     const P player_pos(player_start_x, player_start_y);
 
-    player = static_cast<Player*>(actor_factory::mk(Actor_id::player, player_pos));
+    player = static_cast<Player*>(actor_factory::mk(ActorId::player, player_pos));
 }
 
 void cleanup()
@@ -200,7 +200,7 @@ Rigid* put(Rigid* const f)
 
 #ifdef DEMO_MODE
 
-    if (f->id() == Feature_id::floor)
+    if (f->id() == FeatureId::floor)
     {
         for (int x = 0; x < map_w; ++x)
         {
@@ -227,7 +227,7 @@ void cpy_render_array_to_visual_memory()
     {
         for (int y = 0; y < map_h; ++y)
         {
-            const Cell_render_data render_data = render::render_array_no_actors[x][y];
+            const CellRenderData render_data = render::render_array_no_actors[x][y];
 
             ASSERT(!render_data.is_aware_of_hostile_mon_here);
             ASSERT(!render_data.is_aware_of_allied_mon_here);
@@ -295,7 +295,7 @@ bool is_pos_seen_by_player(const P& p)
     return cells[p.x][p.y].is_seen_by_player;
 }
 
-Actor* actor_at_pos(const P& pos, Actor_state state)
+Actor* actor_at_pos(const P& pos, ActorState state)
 {
     for (auto* const actor : game_time::actors)
     {

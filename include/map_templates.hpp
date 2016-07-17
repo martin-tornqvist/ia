@@ -8,7 +8,7 @@
 #include "item_data.hpp"
 #include "actor_data.hpp"
 
-enum class Map_templ_id
+enum class MapTemplId
 {
     intro_forest,
     egypt,
@@ -19,37 +19,37 @@ enum class Map_templ_id
     END
 };
 
-struct Map_templ_cell
+struct MapTemplCell
 {
-    Map_templ_cell(char ch,
-                   Feature_id feature_id = Feature_id::END,
-                   Actor_id actor_id = Actor_id::END,
-                   Item_id item_id = Item_id::END) :
+    MapTemplCell(char ch,
+                   FeatureId feature_id = FeatureId::END,
+                   ActorId actor_id = ActorId::END,
+                   ItemId item_id = ItemId::END) :
         ch          (ch),
         feature_id  (feature_id),
         actor_id    (actor_id),
         item_id     (item_id) {}
 
     char ch;
-    Feature_id feature_id;
-    Actor_id actor_id;
-    Item_id item_id;
+    FeatureId feature_id;
+    ActorId actor_id;
+    ItemId item_id;
 };
 
-struct Map_templ
+struct MapTempl
 {
 public:
-    Map_templ()
+    MapTempl()
     {
         cells_.clear();
     }
 
-    const Map_templ_cell& cell(const P& p) const
+    const MapTemplCell& cell(const P& p) const
     {
         return cells_[p.y][p.x];
     }
 
-    void add_row(std::vector<Map_templ_cell>& row)
+    void add_row(std::vector<MapTemplCell>& row)
     {
         cells_.push_back(row);
     }
@@ -62,7 +62,7 @@ public:
 private:
     //NOTE: The cells are stored as a "list of rows" - i.e. the inner vector represents the x range,
     //and the outer vector represents the y range.
-    std::vector< std::vector<Map_templ_cell> > cells_;
+    std::vector< std::vector<MapTemplCell> > cells_;
 };
 
 namespace map_templ_handling
@@ -70,7 +70,7 @@ namespace map_templ_handling
 
 void init();
 
-const Map_templ& templ(const Map_templ_id id);
+const MapTempl& templ(const MapTemplId id);
 
 } //map_templ_handling
 

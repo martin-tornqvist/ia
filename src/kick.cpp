@@ -24,7 +24,7 @@ void player_kick()
 
     render::draw_map_state();
 
-    const Dir input_dir = query::dir(Allow_center::yes);
+    const Dir input_dir = query::dir(AllowCenter::yes);
 
     msg_log::clear();
 
@@ -40,7 +40,7 @@ void player_kick()
         TRACE << "Checking if player is kicking a living actor" << std::endl;
         if (input_dir != Dir::center)
         {
-            Actor* living_actor = map::actor_at_pos(kick_pos, Actor_state::alive);
+            Actor* living_actor = map::actor_at_pos(kick_pos, ActorState::alive);
 
             if (living_actor)
             {
@@ -50,7 +50,7 @@ void player_kick()
                 {
                     TRACE << "Player is allowed to do melee attack" << std::endl;
                     bool blocked[map_w][map_h];
-                    map_parse::run(cell_check::Blocks_los(), blocked);
+                    map_parse::run(cell_check::BlocksLos(), blocked);
 
                     TRACE << "Player can see actor" << std::endl;
                     map::player->kick_mon(*living_actor);
@@ -67,7 +67,7 @@ void player_kick()
         //Check all corpses here, stop at any corpse which is prioritized for bashing (Zombies)
         for (Actor* const actor : game_time::actors)
         {
-            if (actor->pos == kick_pos && actor->state() == Actor_state::corpse)
+            if (actor->pos == kick_pos && actor->state() == ActorState::corpse)
             {
                 corpse = actor;
 
@@ -89,15 +89,15 @@ void player_kick()
 
             msg_log::add("I bash " + corpse_name + ".");
 
-            Item* kick_item = item_factory::mk(Item_id::player_kick);
+            Item* kick_item = item_factory::mk(ItemId::player_kick);
 
-            const Dice_param kick_dmg_dice = kick_item->dmg(Att_mode::melee, map::player);
+            const DiceParam kick_dmg_dice = kick_item->dmg(AttMode::melee, map::player);
 
             delete kick_item;
 
             const int kick_dmg = kick_dmg_dice.roll();
 
-            corpse->hit(kick_dmg, Dmg_type::physical, Dmg_method::kick);
+            corpse->hit(kick_dmg, DmgType::physical, DmgMethod::kick);
 
             game_time::tick();
             TRACE_FUNC_END;
@@ -110,7 +110,7 @@ void player_kick()
         if (input_dir != Dir::center)
         {
             auto* const f = map::cells[kick_pos.x][kick_pos.y].rigid;
-            f->hit(Dmg_type::physical, Dmg_method::kick, map::player);
+            f->hit(DmgType::physical, DmgMethod::kick, map::player);
         }
     }
 

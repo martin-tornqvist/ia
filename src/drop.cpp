@@ -24,16 +24,16 @@ void drop_all_characters_items(Actor& actor)
 }
 
 void try_drop_item_from_inv(Actor& actor,
-                            const Inv_type inv_type,
+                            const InvType inv_type,
                             const size_t idx,
                             const int nr_items_to_drop)
 {
     Inventory&  inv             = actor.inv();
     Item*       item_to_drop    = nullptr;
 
-    if (inv_type == Inv_type::slots)
+    if (inv_type == InvType::slots)
     {
-        ASSERT(idx != size_t(Slot_id::END));
+        ASSERT(idx != size_t(SlotId::END));
         item_to_drop = inv.slots_[idx].item;
     }
     else //Backpack item
@@ -44,7 +44,7 @@ void try_drop_item_from_inv(Actor& actor,
 
     if (item_to_drop)
     {
-        const Item_data_t&  data = item_to_drop->data();
+        const ItemDataT&  data = item_to_drop->data();
 
         const bool  is_stackable            = data.is_stackable;
         const int   nr_items_before_drop    = item_to_drop->nr_items_;
@@ -55,9 +55,9 @@ void try_drop_item_from_inv(Actor& actor,
 
         std::string item_ref = "";
 
-        if (inv_type == Inv_type::slots && is_whole_stack_dropped)
+        if (inv_type == InvType::slots && is_whole_stack_dropped)
         {
-            if (item_to_drop->on_unequip() == Unequip_allowed::no)
+            if (item_to_drop->on_unequip() == UnequipAllowed::no)
             {
                 return;
             }
@@ -65,7 +65,7 @@ void try_drop_item_from_inv(Actor& actor,
 
         if (is_whole_stack_dropped)
         {
-            item_ref = item_to_drop->name(Item_ref_type::plural);
+            item_ref = item_to_drop->name(ItemRefType::plural);
             inv.remove_without_destroying(inv_type, idx);
 
             drop_item_on_map(actor.pos, *item_to_drop);
@@ -77,7 +77,7 @@ void try_drop_item_from_inv(Actor& actor,
             Item* item_to_keep      = item_to_drop;
             item_to_drop            = item_factory::copy_item(*item_to_keep);
             item_to_drop->nr_items_ = nr_items_to_drop;
-            item_ref                = item_to_drop->name(Item_ref_type::plural);
+            item_ref                = item_to_drop->name(ItemRefType::plural);
             item_to_keep->nr_items_ = nr_items_before_drop - nr_items_to_drop;
 
             drop_item_on_map(actor.pos, *item_to_drop);
@@ -93,7 +93,7 @@ void try_drop_item_from_inv(Actor& actor,
             msg_log::add("I drop " + item_ref + ".",
                          clr_text,
                          false,
-                         More_prompt_on_msg::yes);
+                         MorePromptOnMsg::yes);
         }
         else //Monster is dropping item
         {
@@ -152,7 +152,7 @@ Item* drop_item_on_map(const P& intended_pos, Item& item)
     }
 
     //Sort the vector according to distance to origin
-    Is_closer_to_pos is_closer_to_origin(intended_pos);
+    IsCloserToPos is_closer_to_origin(intended_pos);
 
     sort(begin(free_cells), end(free_cells), is_closer_to_origin);
 

@@ -11,12 +11,12 @@ namespace map_templ_handling
 namespace
 {
 
-Map_templ templates_[size_t(Map_templ_id::END)];
+MapTempl templates_[size_t(MapTemplId::END)];
 
-Map_templ_cell ch_to_cell(const char ch,
-                          const std::vector<Map_templ_cell>& prototypes)
+MapTemplCell ch_to_cell(const char ch,
+                          const std::vector<MapTemplCell>& prototypes)
 {
-    for (const Map_templ_cell& proto : prototypes)
+    for (const MapTemplCell& proto : prototypes)
     {
         if (proto.ch == ch)
         {
@@ -26,16 +26,16 @@ Map_templ_cell ch_to_cell(const char ch,
 
     TRACE << "Failed to make map template cell from char: " <<  ch << std::endl;
     ASSERT(false);
-    return Map_templ_cell(0);
+    return MapTemplCell(0);
 }
 
 void mk_templ(const std::string& str,
-              const Map_templ_id id,
-              const std::vector<Map_templ_cell>& prototypes)
+              const MapTemplId id,
+              const std::vector<MapTemplCell>& prototypes)
 {
-    Map_templ& templ = templates_[size_t(id)];
+    MapTempl& templ = templates_[size_t(id)];
 
-    std::vector<Map_templ_cell> inner;
+    std::vector<MapTemplCell> inner;
 
     for (const auto ch : str)
     {
@@ -51,13 +51,13 @@ void mk_templ(const std::string& str,
 
         case ' ':
         {
-            inner.push_back(Map_templ_cell(0));
+            inner.push_back(MapTemplCell(0));
         }
         break;
 
         default:
         {
-            Map_templ_cell templ_cell = ch_to_cell(ch, prototypes);
+            MapTemplCell templ_cell = ch_to_cell(ch, prototypes);
 
             inner.push_back(templ_cell);
         }
@@ -141,23 +141,23 @@ void init_templs()
         "ttttttttttttttttt,,,t,,,ttttttttt,,,,,,,,,ttttt,,,,ttt,,t,,,,,,,,,,,,,,,tttttttt;"
         "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt;";
 
-    mk_templ(str, Map_templ_id::intro_forest, std::vector<Map_templ_cell>
+    mk_templ(str, MapTemplId::intro_forest, std::vector<MapTemplCell>
     {
-        {'@', Feature_id::floor},           //Start pos + stone path
-        {'.', Feature_id::floor},           //Stone floor with some grass/shrubs
-        {'#', Feature_id::wall},            //Stone wall with some low/high rubble
-        {',', Feature_id::grass},           //Random grass and bushes
-        {'&', Feature_id::grass},           //Graves, or random grass and bushes
-        {'_', Feature_id::grass},           //Withered grass
-        {'=', Feature_id::floor},           //Stone path
-        {'~', Feature_id::liquid_shallow},  //Shallow water
-        {'t', Feature_id::tree},
-        {'v', Feature_id::brazier},
-        {'[', Feature_id::church_bench},
-        {'-', Feature_id::altar},
-        {'*', Feature_id::carpet},
-        {'>', Feature_id::stairs},
-        {'+', Feature_id::floor}            //Doors
+        {'@', FeatureId::floor},           //Start pos + stone path
+        {'.', FeatureId::floor},           //Stone floor with some grass/shrubs
+        {'#', FeatureId::wall},            //Stone wall with some low/high rubble
+        {',', FeatureId::grass},           //Random grass and bushes
+        {'&', FeatureId::grass},           //Graves, or random grass and bushes
+        {'_', FeatureId::grass},           //Withered grass
+        {'=', FeatureId::floor},           //Stone path
+        {'~', FeatureId::liquid_shallow},  //Shallow water
+        {'t', FeatureId::tree},
+        {'v', FeatureId::brazier},
+        {'[', FeatureId::church_bench},
+        {'-', FeatureId::altar},
+        {'*', FeatureId::carpet},
+        {'>', FeatureId::stairs},
+        {'+', FeatureId::floor}            //Doors
     });
 
     //----------------------------------------------------------------- EGYPT
@@ -185,19 +185,19 @@ void init_templs()
         "###...############################v....................##############|...|######;"
         "################################################################################;";
 
-    mk_templ(str, Map_templ_id::egypt, std::vector<Map_templ_cell>
+    mk_templ(str, MapTemplId::egypt, std::vector<MapTemplCell>
     {
-        {'@', Feature_id::floor},
-        {'.', Feature_id::floor},
-        {'#', Feature_id::wall},
-        {'v', Feature_id::brazier},
-        {'|', Feature_id::pillar},
-        {'S', Feature_id::statue},
-        {'P', Feature_id::floor, Actor_id::khephren},
-        {'M', Feature_id::floor, Actor_id::mummy},
-        {'C', Feature_id::floor, Actor_id::croc_head_mummy},
-        {'1', Feature_id::floor},   //Stair candidate #1
-        {'2', Feature_id::floor}    //Stair candidate #2
+        {'@', FeatureId::floor},
+        {'.', FeatureId::floor},
+        {'#', FeatureId::wall},
+        {'v', FeatureId::brazier},
+        {'|', FeatureId::pillar},
+        {'S', FeatureId::statue},
+        {'P', FeatureId::floor, ActorId::khephren},
+        {'M', FeatureId::floor, ActorId::mummy},
+        {'C', FeatureId::floor, ActorId::croc_head_mummy},
+        {'1', FeatureId::floor},   //Stair candidate #1
+        {'2', FeatureId::floor}    //Stair candidate #2
     });
 
     //----------------------------------------------------------------- LENG
@@ -225,19 +225,19 @@ void init_templs()
         "%%%%%%--%---%--%%%-%--%%%%%%%-%-%%%--%%--%-%%%#...............#...##########...#;"
         "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%##################################;";
 
-    mk_templ(str, Map_templ_id::leng, std::vector<Map_templ_cell>
+    mk_templ(str, MapTemplId::leng, std::vector<MapTemplCell>
     {
-        {'@', Feature_id::floor},
-        {'%', Feature_id::wall},
-        {'.', Feature_id::floor},
-        {'#', Feature_id::wall},
-        {'E', Feature_id::floor, Actor_id::leng_elder},
-        {'1', Feature_id::floor},
-        {'2', Feature_id::wall},
-        {'$', Feature_id::altar},
-        {'-', Feature_id::grass},
-        {'+', Feature_id::floor}, //Door
-        {'S', Feature_id::grass, Actor_id::leng_spider}
+        {'@', FeatureId::floor},
+        {'%', FeatureId::wall},
+        {'.', FeatureId::floor},
+        {'#', FeatureId::wall},
+        {'E', FeatureId::floor, ActorId::leng_elder},
+        {'1', FeatureId::floor},
+        {'2', FeatureId::wall},
+        {'$', FeatureId::altar},
+        {'-', FeatureId::grass},
+        {'+', FeatureId::floor}, //Door
+        {'S', FeatureId::grass, ActorId::leng_spider}
     });
 
     //----------------------------------------------------------------- RATS IN THE WALLS
@@ -265,19 +265,19 @@ void init_templs()
         "###################:,,####xxxxxxxxxxxxx##r#####rr###r###r#rrr###################;"
         "################################################################################;";
 
-    mk_templ(str, Map_templ_id::rats_in_the_walls, std::vector<Map_templ_cell>
+    mk_templ(str, MapTemplId::rats_in_the_walls, std::vector<MapTemplCell>
     {
-        {'@', Feature_id::floor},
-        {'.', Feature_id::floor},
-        {'#', Feature_id::wall},
-        {'x', Feature_id::wall},                    //Constructed walls
-        {'&', Feature_id::bones},
-        {'1', Feature_id::floor},                   //Discovery event
-        {',', Feature_id::floor},                   //Random bones
-        {'r', Feature_id::floor, Actor_id::rat},    //Random bones + rat
-        {'>', Feature_id::stairs},
-        {'|', Feature_id::monolith},
-        {':', Feature_id::stalagmite}
+        {'@', FeatureId::floor},
+        {'.', FeatureId::floor},
+        {'#', FeatureId::wall},
+        {'x', FeatureId::wall},                    //Constructed walls
+        {'&', FeatureId::bones},
+        {'1', FeatureId::floor},                   //Discovery event
+        {',', FeatureId::floor},                   //Random bones
+        {'r', FeatureId::floor, ActorId::rat},    //Random bones + rat
+        {'>', FeatureId::stairs},
+        {'|', FeatureId::monolith},
+        {':', FeatureId::stalagmite}
     });
 
     //----------------------------------------------------------------- BOSS LEVEL
@@ -305,15 +305,15 @@ void init_templs()
         "############################...................................................#;"
         "################################################################################;";
 
-    mk_templ(str, Map_templ_id::boss_level, std::vector<Map_templ_cell>
+    mk_templ(str, MapTemplId::boss_level, std::vector<MapTemplCell>
     {
-        {'@', Feature_id::floor},
-        {'.', Feature_id::floor},
-        {'#', Feature_id::wall},
-        {'M', Feature_id::floor, Actor_id::the_high_priest},
-        {'|', Feature_id::pillar},
-        {'v', Feature_id::brazier},
-        {'>', Feature_id::stairs}
+        {'@', FeatureId::floor},
+        {'.', FeatureId::floor},
+        {'#', FeatureId::wall},
+        {'M', FeatureId::floor, ActorId::the_high_priest},
+        {'|', FeatureId::pillar},
+        {'v', FeatureId::brazier},
+        {'>', FeatureId::stairs}
     });
 
     //----------------------------------------------------------------- BOSS LEVEL
@@ -341,14 +341,14 @@ void init_templs()
         "################################################################################;"
         "################################################################################;";
 
-    mk_templ(str, Map_templ_id::trapez_level, std::vector<Map_templ_cell>
+    mk_templ(str, MapTemplId::trapez_level, std::vector<MapTemplCell>
     {
-        {'@', Feature_id::floor},
-        {'.', Feature_id::floor},
-        {'#', Feature_id::wall},
-        {'|', Feature_id::pillar},
-        {'v', Feature_id::brazier},
-        {'o', Feature_id::floor, Actor_id::END, Item_id::trapez}
+        {'@', FeatureId::floor},
+        {'.', FeatureId::floor},
+        {'#', FeatureId::wall},
+        {'|', FeatureId::pillar},
+        {'v', FeatureId::brazier},
+        {'o', FeatureId::floor, ActorId::END, ItemId::trapez}
     });
 }
 
@@ -359,9 +359,9 @@ void init()
     init_templs();
 }
 
-const Map_templ& templ(const Map_templ_id id)
+const MapTempl& templ(const MapTemplId id)
 {
-    ASSERT(id != Map_templ_id::END);
+    ASSERT(id != MapTemplId::END);
     return templates_[int(id)];
 }
 

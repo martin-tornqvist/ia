@@ -16,7 +16,7 @@ namespace populate_traps
 namespace
 {
 
-Trap* mk_trap(const Trap_id id, const P& pos)
+Trap* mk_trap(const TrapId id, const P& pos)
 {
     const auto* const   f       = map::cells[pos.x][pos.y].rigid;
     const auto&         d       = feature_data::data(f->id());
@@ -42,53 +42,53 @@ void populate_std_lvl()
     TRACE_FUNC_BEGIN;
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::Blocks_move_cmn(false), blocked);
+    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
 
     //Put traps in non-plain rooms
     for (Room* const room : map::room_list)
     {
-        const Room_type type = room->type_;
+        const RoomType type = room->type_;
 
-        if (type != Room_type::plain)
+        if (type != RoomType::plain)
         {
             Fraction chance_for_trapped_room(-1, -1);
 
             switch (type)
             {
-            case Room_type::human:
+            case RoomType::human:
                 chance_for_trapped_room.set(1, 3);
                 break;
 
-            case Room_type::ritual:
+            case RoomType::ritual:
                 chance_for_trapped_room.set(1, 4);
                 break;
 
-            case Room_type::spider:
+            case RoomType::spider:
                 chance_for_trapped_room.set(2, 3);
                 break;
 
-            case Room_type::crypt:
+            case RoomType::crypt:
                 chance_for_trapped_room.set(3, 4);
                 break;
 
-            case Room_type::monster:
+            case RoomType::monster:
                 chance_for_trapped_room.set(1, 4);
                 break;
 
-            case Room_type::chasm:
+            case RoomType::chasm:
                 chance_for_trapped_room.set(1, 4);
                 break;
 
-            case Room_type::snake_pit:
-            case Room_type::forest:
-            case Room_type::plain:
-            case Room_type::flooded:
-            case Room_type::muddy:
-            case Room_type::cave:
-            case Room_type::END_OF_STD_ROOMS:
-            case Room_type::river:
-            case Room_type::corr_link:
-            case Room_type::crumble_room:
+            case RoomType::snake_pit:
+            case RoomType::forest:
+            case RoomType::plain:
+            case RoomType::flooded:
+            case RoomType::muddy:
+            case RoomType::cave:
+            case RoomType::END_OF_STD_ROOMS:
+            case RoomType::river:
+            case RoomType::corr_link:
+            case RoomType::crumble_room:
                 break;
             }
 
@@ -112,7 +112,7 @@ void populate_std_lvl()
                     }
                 }
 
-                const bool  is_spider_room  = type == Room_type::spider;
+                const bool  is_spider_room  = type == RoomType::spider;
 
                 const int   nr_origin_traps   = std::min(int(trap_pos_bucket.size()) / 2,
                                                 (is_spider_room ? 3 : 1));
@@ -124,9 +124,9 @@ void populate_std_lvl()
                         break;
                     }
 
-                    const Trap_id trap_type = is_spider_room ?
-                                              Trap_id::web :
-                                              Trap_id::any;
+                    const TrapId trap_type = is_spider_room ?
+                                              TrapId::web :
+                                              TrapId::any;
 
                     const int idx   = rnd::range(0, trap_pos_bucket.size() - 1);
                     const P pos     = trap_pos_bucket[idx];
@@ -143,15 +143,15 @@ void populate_std_lvl()
                         map::put(origin_trap);
 
                         //Spawn up to n traps in nearest cells (not necessarily adjacent)
-                        Is_closer_to_pos sorter(pos);
+                        IsCloserToPos sorter(pos);
 
                         std::sort(trap_pos_bucket.begin(), trap_pos_bucket.end(), sorter);
 
                         //NOTE: Trap type may have been randomized by the trap.
                         //We retrieve the actual trap resulting id here:
-                        const Trap_id origin_trap_type = origin_trap->type();
+                        const TrapId origin_trap_type = origin_trap->type();
 
-                        const int nr_adj = origin_trap_type == Trap_id::web ? 0 :
+                        const int nr_adj = origin_trap_type == TrapId::web ? 0 :
                                            std::min(rnd::range(0, 2), (int)trap_pos_bucket.size());
 
                         TRACE_VERBOSE << "Placing adjacent traps" << std::endl;
@@ -202,7 +202,7 @@ void populate_std_lvl()
                 {
                     if (
                         !blocked[x][y]                                  &&
-                        map::room_map[x][y]->type_ == Room_type::plain  &&
+                        map::room_map[x][y]->type_ == RoomType::plain  &&
                         map::cells[x][y].rigid->can_have_rigid())
                     {
                         trap_pos_bucket.push_back(P(x, y));
@@ -230,22 +230,22 @@ void populate_std_lvl()
 
             blocked[pos.x][pos.y] = true;
 
-            Trap* const origin_trap = mk_trap(Trap_id::any, pos);
+            Trap* const origin_trap = mk_trap(TrapId::any, pos);
 
             if (origin_trap->valid())
             {
                 map::put(origin_trap);
 
                 //Spawn up to n traps in nearest cells (not necessarily adjacent)
-                Is_closer_to_pos sorter(pos);
+                IsCloserToPos sorter(pos);
 
                 std::sort(trap_pos_bucket.begin(), trap_pos_bucket.end(), sorter);
 
                 //NOTE: Trap type may have been randomized by the trap.
                 //We retrieve the actual trap resulting id here:
-                const Trap_id origin_trap_type = origin_trap->type();
+                const TrapId origin_trap_type = origin_trap->type();
 
-                const int nr_adj = origin_trap_type == Trap_id::web ? 0 :
+                const int nr_adj = origin_trap_type == TrapId::web ? 0 :
                                    std::min(rnd::range(0, 2), (int)trap_pos_bucket.size());
 
                 TRACE_VERBOSE << "Placing adjacent traps" << std::endl;

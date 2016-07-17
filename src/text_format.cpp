@@ -170,5 +170,5 @@ void all_to_upper(std::string& str)
     transform(begin(str), end(str), begin(str), ::toupper);
 }
 
-} //Text_format
+} //TextFormat
 

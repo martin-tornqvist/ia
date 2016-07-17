@@ -25,24 +25,24 @@ void Rod::load()
     nr_charge_turns_left_ = save_handling::get_int();
 }
 
-Consume_item Rod::activate(Actor* const actor)
+ConsumeItem Rod::activate(Actor* const actor)
 {
     (void)actor;
 
     if (nr_charge_turns_left_ > 0)
     {
-        const std::string rod_name = name(Item_ref_type::plain, Item_ref_inf::none);
+        const std::string rod_name = name(ItemRefType::plain, ItemRefInf::none);
 
         msg_log::add("The " + rod_name + " is still charging.");
 
-        return Consume_item::no;
+        return ConsumeItem::no;
     }
 
     data_->is_tried = true;
 
     //TODO: Sfx
 
-    const std::string rod_name_a = name(Item_ref_type::a, Item_ref_inf::none);
+    const std::string rod_name_a = name(ItemRefType::a, ItemRefInf::none);
 
     msg_log::add("I activate " + rod_name_a + "...");
 
@@ -50,7 +50,7 @@ Consume_item Rod::activate(Actor* const actor)
 
     if (data_->is_identified)
     {
-        map::player->incr_shock(Shock_lvl::heavy, Shock_src::use_strange_item);
+        map::player->incr_shock(ShockLvl::heavy, ShockSrc::use_strange_item);
     }
     else //Not identified
     {
@@ -69,10 +69,10 @@ Consume_item Rod::activate(Actor* const actor)
         game_time::tick();
     }
 
-    return Consume_item::no;
+    return ConsumeItem::no;
 }
 
-void Rod::on_std_turn_in_inv(const Inv_type inv_type)
+void Rod::on_std_turn_in_inv(const InvType inv_type)
 {
     (void)inv_type;
 
@@ -82,12 +82,12 @@ void Rod::on_std_turn_in_inv(const Inv_type inv_type)
 
         if (nr_charge_turns_left_ == 0)
         {
-            const std::string rod_name = name(Item_ref_type::plain, Item_ref_inf::none);
+            const std::string rod_name = name(ItemRefType::plain, ItemRefInf::none);
 
             msg_log::add("The " + rod_name + " has finished charging.",
                          clr_msg_note,
                          false,
-                         More_prompt_on_msg::yes);
+                         MorePromptOnMsg::yes);
         }
     }
 }
@@ -115,7 +115,7 @@ void Rod::identify(const Verbosity verbosity)
 
         if (verbosity == Verbosity::verbose)
         {
-            const std::string name_after = name(Item_ref_type::a, Item_ref_inf::none);
+            const std::string name_after = name(ItemRefType::a, ItemRefInf::none);
 
             msg_log::add("I have identified " + name_after + ".");
 
@@ -145,16 +145,16 @@ std::string Rod::name_inf() const
     }
 }
 
-void Rod_purge_invis::activate_impl()
+void RodPurgeInvis::activate_impl()
 {
     bool blocked[map_w][map_h];
 
-    map_parse::run(cell_check::Blocks_los(),
+    map_parse::run(cell_check::BlocksLos(),
                    blocked,
-                   Map_parse_mode::overwrite,
+                   MapParseMode::overwrite,
                    fov::get_fov_rect(map::player->pos));
 
-    Los_result fov[map_w][map_h];
+    LosResult fov[map_w][map_h];
 
     fov::run(map::player->pos, blocked, fov);
 
@@ -167,11 +167,11 @@ void Rod_purge_invis::activate_impl()
             //Reveal invisible monsters
             const P& p(actor->pos);
 
-            const Los_result& los = fov[p.x][p.y];
+            const LosResult& los = fov[p.x][p.y];
 
-            if (!los.is_blocked_hard && !los.is_blocked_by_drk && actor->has_prop(Prop_id::invis))
+            if (!los.is_blocked_hard && !los.is_blocked_by_drk && actor->has_prop(PropId::invis))
             {
-                actor->prop_handler().end_prop(Prop_id::invis);
+                actor->prop_handler().end_prop(PropId::invis);
 
                 if (map::player->can_see_actor(*actor))
                 {
@@ -208,22 +208,22 @@ void Rod_purge_invis::activate_impl()
     }
 }
 
-void Rod_curing::activate_impl()
+void RodCuring::activate_impl()
 {
     Player& player = *map::player;
 
-    std::vector<Prop_id> props_can_heal =
+    std::vector<PropId> props_can_heal =
     {
-        Prop_id::blind,
-        Prop_id::poisoned,
-        Prop_id::infected,
-        Prop_id::diseased,
-        Prop_id::weakened,
+        PropId::blind,
+        PropId::poisoned,
+        PropId::infected,
+        PropId::diseased,
+        PropId::weakened,
     };
 
     bool is_something_healed = false;
 
-    for (Prop_id prop_id : props_can_heal)
+    for (PropId prop_id : props_can_heal)
     {
         if (player.prop_handler().end_prop(prop_id))
         {
@@ -244,7 +244,7 @@ void Rod_curing::activate_impl()
     identify(Verbosity::verbose);
 }
 
-void Rod_opening::activate_impl()
+void RodOpening::activate_impl()
 {
     bool is_any_opened = false;
 
@@ -256,9 +256,9 @@ void Rod_opening::activate_impl()
 
             if (cell.is_seen_by_player)
             {
-                Did_open did_open = cell.rigid->open(nullptr);
+                DidOpen did_open = cell.rigid->open(nullptr);
 
-                if (did_open == Did_open::yes)
+                if (did_open == DidOpen::yes)
                 {
                     is_any_opened = true;
                 }
@@ -275,11 +275,11 @@ void Rod_opening::activate_impl()
     }
 }
 
-void Rod_bless::activate_impl()
+void RodBless::activate_impl()
 {
     const int nr_turns = rnd::range(8, 12);
 
-    Prop* const prop = new Prop_blessed(Prop_turns::specific, nr_turns);
+    Prop* const prop = new PropBlessed(PropTurns::specific, nr_turns);
 
     map::player->prop_handler().try_add(prop);
 
@@ -292,7 +292,7 @@ namespace rod_handling
 namespace
 {
 
-std::vector<Rod_look> rod_looks_;
+std::vector<RodLook> rod_looks_;
 
 } //namespace
 
@@ -322,16 +322,16 @@ void init()
 
     for (auto& d : item_data::data)
     {
-        if (d.type == Item_type::rod)
+        if (d.type == ItemType::rod)
         {
             //Color and false name
             const size_t idx = rnd::range(0, rod_looks_.size() - 1);
 
-            Rod_look& look = rod_looks_[idx];
+            RodLook& look = rod_looks_[idx];
 
-            d.base_name_un_id.names[int(Item_ref_type::plain)]   = look.name_plain + " Rod";
-            d.base_name_un_id.names[int(Item_ref_type::plural)]  = look.name_plain + " Rods";
-            d.base_name_un_id.names[int(Item_ref_type::a)]       = look.name_a     + " Rod";
+            d.base_name_un_id.names[int(ItemRefType::plain)]   = look.name_plain + " Rod";
+            d.base_name_un_id.names[int(ItemRefType::plural)]  = look.name_plain + " Rods";
+            d.base_name_un_id.names[int(ItemRefType::a)]       = look.name_a     + " Rod";
             d.clr = look.clr;
 
             rod_looks_.erase(rod_looks_.begin() + idx);
@@ -347,9 +347,9 @@ void init()
             const std::string real_name_plural = "Rods of "   + real_type_name;
             const std::string real_name_a      = "a Rod of "  + real_type_name;
 
-            d.base_name.names[int(Item_ref_type::plain)]  = real_name;
-            d.base_name.names[int(Item_ref_type::plural)] = real_name_plural;
-            d.base_name.names[int(Item_ref_type::a)]      = real_name_a;
+            d.base_name.names[int(ItemRefType::plain)]  = real_name;
+            d.base_name.names[int(ItemRefType::plural)] = real_name_plural;
+            d.base_name.names[int(ItemRefType::a)]      = real_name_a;
         }
     }
 
@@ -358,15 +358,15 @@ void init()
 
 void save()
 {
-    for (int i = 0; i < int(Item_id::END); ++i)
+    for (int i = 0; i < int(ItemId::END); ++i)
     {
-        Item_data_t& d = item_data::data[i];
+        ItemDataT& d = item_data::data[i];
 
-        if (d.type == Item_type::rod)
+        if (d.type == ItemType::rod)
         {
-            save_handling::put_str(d.base_name_un_id.names[size_t(Item_ref_type::plain)]);
-            save_handling::put_str(d.base_name_un_id.names[size_t(Item_ref_type::plural)]);
-            save_handling::put_str(d.base_name_un_id.names[size_t(Item_ref_type::a)]);
+            save_handling::put_str(d.base_name_un_id.names[size_t(ItemRefType::plain)]);
+            save_handling::put_str(d.base_name_un_id.names[size_t(ItemRefType::plural)]);
+            save_handling::put_str(d.base_name_un_id.names[size_t(ItemRefType::a)]);
 
             save_handling::put_int(d.clr.r);
             save_handling::put_int(d.clr.g);
@@ -377,15 +377,15 @@ void save()
 
 void load()
 {
-    for (int i = 0; i < int(Item_id::END); ++i)
+    for (int i = 0; i < int(ItemId::END); ++i)
     {
-        Item_data_t& d = item_data::data[i];
+        ItemDataT& d = item_data::data[i];
 
-        if (d.type == Item_type::rod)
+        if (d.type == ItemType::rod)
         {
-            d.base_name_un_id.names[size_t(Item_ref_type::plain)]  = save_handling::get_str();
-            d.base_name_un_id.names[size_t(Item_ref_type::plural)] = save_handling::get_str();
-            d.base_name_un_id.names[size_t(Item_ref_type::a)]      = save_handling::get_str();
+            d.base_name_un_id.names[size_t(ItemRefType::plain)]  = save_handling::get_str();
+            d.base_name_un_id.names[size_t(ItemRefType::plural)] = save_handling::get_str();
+            d.base_name_un_id.names[size_t(ItemRefType::a)]      = save_handling::get_str();
 
             d.clr.r = save_handling::get_int();
             d.clr.g = save_handling::get_int();

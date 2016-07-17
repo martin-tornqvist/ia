@@ -16,14 +16,14 @@ Event::Event(const P& feature_pos) :
     Mob(feature_pos) {}
 
 //------------------------------------------------------------------- WALL CRUMBLE
-Event_wall_crumble::Event_wall_crumble(const P& p,
+EventWallCrumble::EventWallCrumble(const P& p,
                                        std::vector<P>& walls,
                                        std::vector<P>& inner) :
     Event           (p),
     wall_cells_     (walls),
     inner_cells_    (inner) {}
 
-void Event_wall_crumble::on_new_turn()
+void EventWallCrumble::on_new_turn()
 {
     if (is_pos_adj(map::player->pos, pos_, true))
     {
@@ -34,7 +34,7 @@ void Event_wall_crumble::on_new_turn()
             {
                 const auto f_id = map::cells[p.x][p.y].rigid->id();
 
-                if (f_id != Feature_id::wall && f_id != Feature_id::rubble_high)
+                if (f_id != FeatureId::wall && f_id != FeatureId::rubble_high)
                 {
                     return false;
                 }
@@ -50,7 +50,7 @@ void Event_wall_crumble::on_new_turn()
                 msg_log::add("Suddenly, the walls collapse!",
                              clr_msg_note,
                              false,
-                             More_prompt_on_msg::yes);
+                             MorePromptOnMsg::yes);
             }
 
             //Crumble
@@ -63,7 +63,7 @@ void Event_wall_crumble::on_new_turn()
                     if (is_pos_inside(p, R(P(1, 1), P(map_w - 2, map_h - 2))))
                     {
                         auto* const f = map::cells[p.x][p.y].rigid;
-                        f->hit(Dmg_type::physical, Dmg_method::forced, nullptr);
+                        f->hit(DmgType::physical, DmgMethod::forced, nullptr);
                     }
                 }
 
@@ -87,33 +87,33 @@ void Event_wall_crumble::on_new_turn()
 
             //Spawn things
             int         nr_mon_limit_except_adj_to_entry    = 9999;
-            Actor_id    mon_type                            = Actor_id::zombie;
+            ActorId    mon_type                            = ActorId::zombie;
             const int   rnd                                 = rnd::range(1, 5);
 
             switch (rnd)
             {
             case 1:
-                mon_type = Actor_id::zombie;
+                mon_type = ActorId::zombie;
                 nr_mon_limit_except_adj_to_entry = 4;
                 break;
 
             case 2:
-                mon_type = Actor_id::zombie_axe;
+                mon_type = ActorId::zombie_axe;
                 nr_mon_limit_except_adj_to_entry = 3;
                 break;
 
             case 3:
-                mon_type = Actor_id::bloated_zombie;
+                mon_type = ActorId::bloated_zombie;
                 nr_mon_limit_except_adj_to_entry = 2;
                 break;
 
             case 4:
-                mon_type = Actor_id::rat;
+                mon_type = ActorId::rat;
                 nr_mon_limit_except_adj_to_entry = 30;
                 break;
 
             case 5:
-                mon_type = Actor_id::rat_thing;
+                mon_type = ActorId::rat_thing;
                 nr_mon_limit_except_adj_to_entry = 20;
                 break;
 
@@ -149,7 +149,7 @@ void Event_wall_crumble::on_new_turn()
             map::player->update_fov();
             render::draw_map_state();
 
-            map::player->incr_shock(Shock_lvl::heavy, Shock_src::see_mon);
+            map::player->incr_shock(ShockLvl::heavy, ShockSrc::see_mon);
         }
 
         game_time::erase_mob(this, true);
@@ -157,10 +157,10 @@ void Event_wall_crumble::on_new_turn()
 }
 
 //------------------------------------------------------------------- SNAKE EMERGE
-Event_snake_emerge::Event_snake_emerge() :
+EventSnakeEmerge::EventSnakeEmerge() :
     Event (P(-1, -1)) {}
 
-bool Event_snake_emerge::try_find_p()
+bool EventSnakeEmerge::try_find_p()
 {
     bool blocked[map_w][map_h];
 
@@ -188,7 +188,7 @@ bool Event_snake_emerge::try_find_p()
     return false;
 }
 
-R Event_snake_emerge::allowed_emerge_rect(const P& p) const
+R EventSnakeEmerge::allowed_emerge_rect(const P& p) const
 {
     const int max_d = allowed_emerge_dist_range.max;
 
@@ -200,22 +200,22 @@ R Event_snake_emerge::allowed_emerge_rect(const P& p) const
     return R(X0, Y0, X1, Y1);
 }
 
-bool Event_snake_emerge::is_ok_feature_at(const P& p) const
+bool EventSnakeEmerge::is_ok_feature_at(const P& p) const
 {
     ASSERT(map::is_pos_inside_map(p, true));
 
-    const Feature_id id = map::cells[p.x][p.y].rigid->id();
+    const FeatureId id = map::cells[p.x][p.y].rigid->id();
 
-    return id == Feature_id::floor ||
-           id == Feature_id::rubble_low;
+    return id == FeatureId::floor ||
+           id == FeatureId::rubble_low;
 }
 
-void Event_snake_emerge::emerge_p_bucket(
+void EventSnakeEmerge::emerge_p_bucket(
     const P& p,
     bool blocked[map_w][map_h],
     std::vector<P>& out) const
 {
-    Los_result fov[map_w][map_h];
+    LosResult fov[map_w][map_h];
 
     fov::run(p, blocked, fov);
 
@@ -240,7 +240,7 @@ void Event_snake_emerge::emerge_p_bucket(
     }
 }
 
-void Event_snake_emerge::blocked_cells(const R& r, bool out[map_w][map_h]) const
+void EventSnakeEmerge::blocked_cells(const R& r, bool out[map_w][map_h]) const
 {
     for (int x = r.p0.x; x <= r.p1.x; ++x)
     {
@@ -260,7 +260,7 @@ void Event_snake_emerge::blocked_cells(const R& r, bool out[map_w][map_h]) const
     }
 }
 
-void Event_snake_emerge::on_new_turn()
+void EventSnakeEmerge::on_new_turn()
 {
     if (map::player->pos != pos_)
     {
@@ -291,9 +291,9 @@ void Event_snake_emerge::on_new_turn()
 
     random_shuffle(begin(tgt_bucket), end(tgt_bucket));
 
-    std::vector<Actor_id> id_bucket;
+    std::vector<ActorId> id_bucket;
 
-    for (Actor_data_t d : actor_data::data)
+    for (ActorDataT d : actor_data::data)
     {
         if (d.is_snake)
         {
@@ -302,7 +302,7 @@ void Event_snake_emerge::on_new_turn()
     }
 
     const size_t    idx = rnd::range(0, id_bucket.size() - 1);
-    const Actor_id  id  = id_bucket[idx];
+    const ActorId  id  = id_bucket[idx];
 
     const size_t nr_summoned = rnd::range(min_nr_snakes_, max_nr_snakes);
 
@@ -325,11 +325,11 @@ void Event_snake_emerge::on_new_turn()
         msg_log::add("Suddenly, vicious snakes slither up from cracks in the floor!",
                      clr_msg_note,
                      true,
-                     More_prompt_on_msg::yes);
+                     MorePromptOnMsg::yes);
 
         render::draw_blast_at_cells(seen_tgt_positions, clr_magenta);
 
-        map::player->incr_shock(Shock_lvl::some, Shock_src::see_mon);
+        map::player->incr_shock(ShockLvl::some, ShockSrc::see_mon);
     }
 
     for (size_t i = 0; i < nr_summoned; ++i)
@@ -341,16 +341,16 @@ void Event_snake_emerge::on_new_turn()
         static_cast<Mon*>(actor)->become_aware_player(false);
     }
 
-    render::draw_map_state(Update_screen::yes);
+    render::draw_map_state(UpdateScreen::yes);
 
     game_time::erase_mob(this, true);
 }
 
 //------------------------------------------------------------------- RITW DISCOVERY
-Event_rats_in_the_walls_discovery::Event_rats_in_the_walls_discovery(const P& feature_pos) :
+EventRatsInTheWallsDiscovery::EventRatsInTheWallsDiscovery(const P& feature_pos) :
     Event(feature_pos) {}
 
-void Event_rats_in_the_walls_discovery::on_new_turn()
+void EventRatsInTheWallsDiscovery::on_new_turn()
 {
     //Run the event if player is at the event position or to the right of it. If it's the
     //latter case, it means the player somehow bypassed it (e.g. teleport or dynamite),
@@ -368,7 +368,7 @@ void Event_rats_in_the_walls_discovery::on_new_turn()
 
         popup::show_msg(str, false, "A gruesome discovery...");
 
-        map::player->incr_shock(100, Shock_src::misc);
+        map::player->incr_shock(100, ShockSrc::misc);
 
         for (Actor* const actor : game_time::actors)
         {

@@ -24,33 +24,33 @@ namespace auto_descr_actor
 namespace
 {
 
-std::string mon_speed_str(const Actor_data_t& def)
+std::string mon_speed_str(const ActorDataT& def)
 {
     switch (def.speed)
     {
-    case Actor_speed::sluggish:
+    case ActorSpeed::sluggish:
         return "sluggishly";
 
-    case Actor_speed::slow:
+    case ActorSpeed::slow:
         return "slowly";
 
-    case Actor_speed::normal:
+    case ActorSpeed::normal:
         return "";
 
-    case Actor_speed::fast:
+    case ActorSpeed::fast:
         return "swiftly";
 
-    case Actor_speed::fastest:
+    case ActorSpeed::fastest:
         return "very swiftly";
 
-    case Actor_speed::END:
+    case ActorSpeed::END:
         break;
     }
 
     return "";
 }
 
-std::string mon_dwell_lvl_str(const Actor_data_t& def)
+std::string mon_dwell_lvl_str(const ActorDataT& def)
 {
     const int min_dlvl = def.spawn_min_dlvl;
 
@@ -62,7 +62,7 @@ std::string mon_dwell_lvl_str(const Actor_data_t& def)
     return to_str(min_dlvl);
 }
 
-void mon_shock_str(const Actor_data_t& def,
+void mon_shock_str(const ActorDataT& def,
                    std::string& shock_str_out,
                    std::string& punct_str_out)
 {
@@ -71,28 +71,28 @@ void mon_shock_str(const Actor_data_t& def,
 
     switch (def.mon_shock_lvl)
     {
-    case Mon_shock_lvl::unsettling:
+    case MonShockLvl::unsettling:
         shock_str_out = "unsettling";
         punct_str_out = ".";
         break;
 
-    case Mon_shock_lvl::frightening:
+    case MonShockLvl::frightening:
         shock_str_out = "frightening";
         punct_str_out = ".";
         break;
 
-    case Mon_shock_lvl::terrifying:
+    case MonShockLvl::terrifying:
         shock_str_out = "terrifying";
         punct_str_out = "!";
         break;
 
-    case Mon_shock_lvl::mind_shattering:
+    case MonShockLvl::mind_shattering:
         shock_str_out = "mind shattering";
         punct_str_out = "!";
         break;
 
-    case Mon_shock_lvl::none:
-    case Mon_shock_lvl::END:
+    case MonShockLvl::none:
+    case MonShockLvl::END:
         break;
     }
 }
@@ -101,7 +101,7 @@ void mon_shock_str(const Actor_data_t& def,
 
 void add_auto_description_lines(const Actor& actor, std::string& line)
 {
-    const Actor_data_t& def = actor.data();
+    const ActorDataT& def = actor.data();
 
     if (def.is_unique)
     {
@@ -223,8 +223,8 @@ void print_location_info_msgs(const P& pos)
 
         if (item)
         {
-            str = item->name(Item_ref_type::plural, Item_ref_inf::yes,
-                             Item_ref_att_inf::wpn_context);
+            str = item->name(ItemRefType::plural, ItemRefInf::yes,
+                             ItemRefAttInf::wpn_context);
 
             text_format::first_to_upper(str);
 
@@ -278,7 +278,7 @@ void print_detailed_actor_descr(const Actor& actor)
     render::clear_screen();
 
     render::draw_info_scr_interface("Monster info",
-                                    Inf_screen_type::single_screen);
+                                    InfScreenType::single_screen);
 
     //Add written description.
     std::string descr = actor.descr();
@@ -306,7 +306,7 @@ void print_detailed_actor_descr(const Actor& actor)
     }
 
     //Draw properties line
-    std::vector<Str_and_clr> props_line;
+    std::vector<StrAndClr> props_line;
     actor.prop_handler().props_interface_line(props_line);
 
     ++p.y;
@@ -321,7 +321,7 @@ void print_detailed_actor_descr(const Actor& actor)
     }
     else //Has properties
     {
-        for (const Str_and_clr& cur_prop_label : props_line)
+        for (const StrAndClr& cur_prop_label : props_line)
         {
             render::draw_text(cur_prop_label.str, Panel::screen, p, cur_prop_label.clr);
 

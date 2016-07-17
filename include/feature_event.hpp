@@ -27,20 +27,20 @@ protected:
     Event(const P&);
 };
 
-class Event_wall_crumble: public Event
+class EventWallCrumble: public Event
 {
 public:
-    Event_wall_crumble(const P& p, std::vector<P>& walls, std::vector<P>& inner);
+    EventWallCrumble(const P& p, std::vector<P>& walls, std::vector<P>& inner);
 
     //Spawn-by-id compliant ctor (do not use for normal cases):
-    Event_wall_crumble(const P& p) :
+    EventWallCrumble(const P& p) :
         Event(p) {}
 
-    ~Event_wall_crumble() {}
+    ~EventWallCrumble() {}
 
-    Feature_id id() const override
+    FeatureId id() const override
     {
-        return Feature_id::event_wall_crumble;
+        return FeatureId::event_wall_crumble;
     }
 
     void on_new_turn() override;
@@ -50,20 +50,20 @@ private:
     std::vector<P> inner_cells_;
 };
 
-class Event_snake_emerge: public Event
+class EventSnakeEmerge: public Event
 {
 public:
-    Event_snake_emerge();
+    EventSnakeEmerge();
 
     //Spawn-by-id compliant ctor (do not use for normal cases):
-    Event_snake_emerge(const P& p) :
+    EventSnakeEmerge(const P& p) :
         Event(p) {}
 
-    ~Event_snake_emerge() {}
+    ~EventSnakeEmerge() {}
 
-    Feature_id id() const override
+    FeatureId id() const override
     {
-        return Feature_id::event_snake_emerge;
+        return FeatureId::event_snake_emerge;
     }
 
     bool try_find_p();
@@ -84,14 +84,14 @@ private:
     const size_t min_nr_snakes_ = 3;
 };
 
-class Event_rats_in_the_walls_discovery: public Event
+class EventRatsInTheWallsDiscovery: public Event
 {
 public:
-    Event_rats_in_the_walls_discovery(const P& feature_pos);
+    EventRatsInTheWallsDiscovery(const P& feature_pos);
 
-    Feature_id id() const override
+    FeatureId id() const override
     {
-        return Feature_id::event_rats_in_the_walls_discovery;
+        return FeatureId::event_rats_in_the_walls_discovery;
     }
 
     void on_new_turn() override;

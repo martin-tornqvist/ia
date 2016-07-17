@@ -79,17 +79,17 @@ bool set_pos_to_tgt_if_visible()
 
 } //namespace
 
-P run(const Marker_use_player_tgt use_tgt,
+P run(const MarkerUsePlayerTgt use_tgt,
       std::function<void(const P&,
-                         Cell_overlay overlay[map_w][map_h])> on_marker_at_pos,
-      std::function<Marker_done(const P&,
-                                const Key_data&)> on_key_press,
-      Marker_show_blocked show_blocked,
+                         CellOverlay overlay[map_w][map_h])> on_marker_at_pos,
+      std::function<MarkerDone(const P&,
+                                const KeyData&)> on_key_press,
+      MarkerShowBlocked show_blocked,
       const int effective_range_lmt)
 {
     pos_ = map::player->pos;
 
-    if (use_tgt == Marker_use_player_tgt::yes)
+    if (use_tgt == MarkerUsePlayerTgt::yes)
     {
         //First, attempt to place marker at player target.
         if (!set_pos_to_tgt_if_visible())
@@ -101,16 +101,16 @@ P run(const Marker_use_player_tgt use_tgt,
         }
     }
 
-    Marker_done is_done = Marker_done::no;
+    MarkerDone is_done = MarkerDone::no;
 
-    Cell_overlay overlay[map_w][map_h];
+    CellOverlay overlay[map_w][map_h];
 
-    while (is_done == Marker_done::no)
+    while (is_done == MarkerDone::no)
     {
         //Print info such as name of actor at current position, etc.
         on_marker_at_pos(pos_, overlay);
 
-        render::draw_map_state(Update_screen::no, overlay);
+        render::draw_map_state(UpdateScreen::no, overlay);
 
         std::vector<P> trail;
 
@@ -125,7 +125,7 @@ P run(const Marker_use_player_tgt use_tgt,
 
         int blocked_from_idx = -1;
 
-        if (show_blocked == Marker_show_blocked::yes)
+        if (show_blocked == MarkerShowBlocked::yes)
         {
             for (size_t i = 0; i < trail.size(); ++i)
             {
@@ -149,7 +149,7 @@ P run(const Marker_use_player_tgt use_tgt,
 
         render::update_screen();
 
-        const Key_data& d = input::input();
+        const KeyData& d = input::input();
 
         if (d.sdl_key == SDLK_RIGHT || d.key == '6' || d.key == 'l')
         {
@@ -226,7 +226,7 @@ P run(const Marker_use_player_tgt use_tgt,
         //Run custom keypress events (firing ranged weapon, casting spell, etc)
         is_done = on_key_press(pos_, d);
 
-        if (is_done == Marker_done::yes)
+        if (is_done == MarkerDone::yes)
         {
             render::draw_map_state();
         }

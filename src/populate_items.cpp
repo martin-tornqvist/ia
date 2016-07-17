@@ -20,12 +20,12 @@ void mk_items_on_floor()
         nr_spawns += 2;
     }
 
-    std::vector<Item_id> item_bucket;
+    std::vector<ItemId> item_bucket;
     item_bucket.clear();
 
-    for (int i = 0; i < int(Item_id::END); ++i)
+    for (int i = 0; i < int(ItemId::END); ++i)
     {
-        const Item_data_t& data = item_data::data[i];
+        const ItemDataT& data = item_data::data[i];
 
         //The following items are NOT allowed to spawn on the floor:
         // * Intrinsic items
@@ -33,17 +33,17 @@ void mk_items_on_floor()
         // * Items forbidden to spawn (e.g. unique items already spawned)
 
         if (
-            int(data.type) < int(Item_type::END_OF_EXTR_ITEMS)      &&
+            int(data.type) < int(ItemType::END_OF_EXTR_ITEMS)      &&
             data.spawn_std_range.is_in_range(map::dlvl)             &&
             data.allow_spawn                                        &&
             rnd::percent(data.chance_to_incl_in_floor_spawn_list))
         {
-            item_bucket.push_back(Item_id(i));
+            item_bucket.push_back(ItemId(i));
         }
     }
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::Blocks_items(), blocked);
+    map_parse::run(cell_check::BlocksItems(), blocked);
 
     std::vector<P> free_cells;
     to_vec((bool*)blocked, false, map_w, map_h, free_cells);
@@ -58,7 +58,7 @@ void mk_items_on_floor()
         const size_t    cell_idx    = rnd::range(0, free_cells.size() - 1);
         const P&        pos         = free_cells[cell_idx];
         const size_t    item_idx    = rnd::range(0, item_bucket.size() - 1);
-        const Item_id   id          = item_bucket[item_idx];
+        const ItemId   id          = item_bucket[item_idx];
 
         if (item_data::data[size_t(id)].allow_spawn)
         {

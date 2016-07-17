@@ -6,10 +6,10 @@
 
 #include "player_bon.hpp"
 
-class Highscore_entry
+class HighscoreEntry
 {
 public:
-    Highscore_entry(std::string entry_date_and_time,
+    HighscoreEntry(std::string entry_date_and_time,
                     std::string player_name,
                     int player_xp,
                     int player_lvl,
@@ -18,7 +18,7 @@ public:
                     bool is_win_game,
                     Bg player_bg);
 
-    ~Highscore_entry() {}
+    ~HighscoreEntry() {}
 
     int score() const;
 
@@ -79,9 +79,9 @@ void run_highscore_screen();
 
 void on_game_over(const bool is_win);
 
-std::vector<Highscore_entry> entries_sorted();
+std::vector<HighscoreEntry> entries_sorted();
 
-const Highscore_entry* final_score();
+const HighscoreEntry* final_score();
 
 } //highscore
 

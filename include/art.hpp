@@ -6,7 +6,7 @@ const int font_sheet_y_cells = 7;
 const int tile_sheet_x_cells = 21;
 const int tile_sheet_y_cells = 13;
 
-enum class Tile_id
+enum class TileId
 {
     empty,
     player_firearm,
@@ -182,7 +182,7 @@ namespace art
 {
 
 P glyph_pos(const char glyph);
-P tile_pos(const Tile_id tile);
+P tile_pos(const TileId tile);
 
 } //Art
 

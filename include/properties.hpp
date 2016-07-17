@@ -8,7 +8,7 @@
 #include "rl_utils.hpp"
 #include "global.hpp"
 
-enum class Prop_id
+enum class PropId
 {
     rPhys,
     rFire,
@@ -75,20 +75,20 @@ enum class Prop_id
     END
 };
 
-enum class Prop_turn_mode
+enum class PropTurnMode
 {
     std,
     actor
 };
 
-enum class Prop_turns
+enum class PropTurns
 {
     std,
     specific,
     indefinite
 };
 
-enum class Prop_msg
+enum class PropMsg
 {
     start_player,
     start_mon,
@@ -99,14 +99,14 @@ enum class Prop_msg
     END
 };
 
-enum class Prop_alignment
+enum class PropAlignment
 {
     good,
     bad,
     neutral
 };
 
-enum class Prop_src
+enum class PropSrc
 {
     //Properties applied by potions, spells, etc, "natural" properties that monsters can
     //start with (e.g. flying), or player properties gained by traits
@@ -118,10 +118,10 @@ enum class Prop_src
     END
 };
 
-struct Prop_data_t
+struct PropDataT
 {
-    Prop_data_t() :
-        id                              (Prop_id::END),
+    PropDataT() :
+        id                              (PropId::END),
         std_rnd_turns                   (Range(10, 10)),
         name                            (""),
         name_short                      (""),
@@ -130,35 +130,35 @@ struct Prop_data_t
         allow_apply_more_while_active   (true),
         update_vision_when_start_or_end (false),
         allow_test_on_bot               (false),
-        alignment                       (Prop_alignment::bad)
+        alignment                       (PropAlignment::bad)
     {
-        for (int i = 0; i < int(Prop_msg::END); ++i)
+        for (int i = 0; i < int(PropMsg::END); ++i)
         {
             msg[i] = "";
         }
     }
 
-    Prop_id         id;
+    PropId         id;
     Range           std_rnd_turns;
     std::string     name;
     std::string     name_short;
-    std::string     msg[size_t(Prop_msg::END)];
+    std::string     msg[size_t(PropMsg::END)];
     bool            is_making_mon_aware;
     bool            allow_display_turns;
     bool            allow_apply_more_while_active;
     bool            update_vision_when_start_or_end;
     bool            allow_test_on_bot;
-    Prop_alignment  alignment;
+    PropAlignment  alignment;
 };
 
 namespace prop_data
 {
 
-extern Prop_data_t data[size_t(Prop_id::END)];
+extern PropDataT data[size_t(PropId::END)];
 
 void init();
 
-} //Prop_data
+} //PropData
 
 class Actor;
 class Wpn;
@@ -166,12 +166,12 @@ class Prop;
 class Item;
 
 //Each actor has an instance of this
-class Prop_handler
+class PropHandler
 {
 public:
-    Prop_handler(Actor* owning_actor);
+    PropHandler(Actor* owning_actor);
 
-    ~Prop_handler();
+    ~PropHandler();
 
     //Adds all natural properties set in the actor data
     void init_natural_props();
@@ -183,7 +183,7 @@ public:
     //All properties must be added through this function (can also be done via the other "add"
     //methods, which will then call "try_add()")
     void try_add(Prop* const prop,
-                      Prop_src src = Prop_src::intr,
+                      PropSrc src = PropSrc::intr,
                       const bool force_effect = false,
                       const Verbosity verbosity = Verbosity::verbose);
 
@@ -197,20 +197,20 @@ public:
     void remove_props_for_item(const Item* const item);
 
     //Fast method for checking if a certain property id is applied
-    bool has_prop(const Prop_id id) const
+    bool has_prop(const PropId id) const
     {
         return active_props_info_[size_t(id)] > 0;
     }
 
-    Prop* prop(const Prop_id id) const;
+    Prop* prop(const PropId id) const;
 
-    bool end_prop(const Prop_id id, const bool run_prop_end_effects = true);
+    bool end_prop(const PropId id, const bool run_prop_end_effects = true);
 
-    void props_interface_line(std::vector<Str_and_clr>& line) const;
+    void props_interface_line(std::vector<StrAndClr>& line) const;
 
     void apply_actor_turn_prop_buffer();
 
-    Prop* mk_prop(const Prop_id id, Prop_turns turns_init, const int nr_turns = -1) const;
+    Prop* mk_prop(const PropId id, PropTurns turns_init, const int nr_turns = -1) const;
 
     //-----------------------------------------------------------------------------
     // Hooks called from various places
@@ -233,24 +233,24 @@ public:
     void on_hit();
     void on_death(const bool is_player_see_owning_actor);
 
-    int ability_mod(const Ability_id ability) const;
+    int ability_mod(const AbilityId ability) const;
 
     bool affect_actor_clr(Clr& clr) const;
 
-    void tick(const Prop_turn_mode turn_mode);
+    void tick(const PropTurnMode turn_mode);
 
-    bool try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const;
+    bool try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity) const;
 
 private:
-    bool try_resist_prop(const Prop_id id) const;
+    bool try_resist_prop(const PropId id) const;
 
     //This prints messages, updates FOV, etc, and also calls the on_end() property hook. It does
     //NOT remove the property from the vector or decrement the active property info. The caller is
     //responsible for this.
     void on_prop_end(Prop* const prop);
 
-    void incr_active_props_info(const Prop_id id);
-    void decr_active_props_info(const Prop_id id);
+    void incr_active_props_info(const PropId id);
+    void decr_active_props_info(const PropId id);
 
     std::vector<Prop*> props_;
     std::vector<Prop*> actor_turn_prop_buffer_;
@@ -258,7 +258,7 @@ private:
     //This array is only used for optimization and convenience of asking the property handler which
     //properties are currently active (see the "has_prop()" method above). It is used as a cache,
     //so that we need to search through the vector as little as possible.
-    int active_props_info_[size_t(Prop_id::END)];
+    int active_props_info_[size_t(PropId::END)];
 
     Actor* owning_actor_;
 };
@@ -266,7 +266,7 @@ private:
 class Prop
 {
 public:
-    Prop(Prop_id id, Prop_turns turns_init, int nr_turns = -1);
+    Prop(PropId id, PropTurns turns_init, int nr_turns = -1);
 
     virtual ~Prop() {}
 
@@ -274,7 +274,7 @@ public:
 
     virtual void load() {}
 
-    Prop_id id() const
+    PropId id() const
     {
         return id_;
     }
@@ -294,7 +294,7 @@ public:
         return nr_turns_left_ == 0;
     }
 
-    virtual Prop_alignment alignment() const
+    virtual PropAlignment alignment() const
     {
         return data_.alignment;
     }
@@ -319,7 +319,7 @@ public:
         return data_.name_short;
     }
 
-    virtual void msg(const Prop_msg msg_type, std::string& msg_ref) const
+    virtual void msg(const PropMsg msg_type, std::string& msg_ref) const
     {
         msg_ref = data_.msg[size_t(msg_type)];
     }
@@ -415,7 +415,7 @@ public:
         return true;
     }
 
-    virtual int ability_mod(const Ability_id ability) const
+    virtual int ability_mod(const AbilityId ability) const
     {
         (void)ability;
         return 0;
@@ -427,65 +427,65 @@ public:
         (void)dir;
     }
 
-    virtual bool is_resisting_other_prop(const Prop_id prop_id) const
+    virtual bool is_resisting_other_prop(const PropId prop_id) const
     {
         (void)prop_id;
         return false;
     }
 
-    virtual bool try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const
+    virtual bool try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity) const
     {
         (void)dmg_type;
         (void)verbosity;
         return false;
     }
 
-    virtual Prop_turn_mode turn_mode() const
+    virtual PropTurnMode turn_mode() const
     {
-        return Prop_turn_mode::std;
+        return PropTurnMode::std;
     }
 
-    Prop_turns turns_init_type() const
+    PropTurns turns_init_type() const
     {
         return turns_init_type_;
     }
 
-    Prop_src src() const
+    PropSrc src() const
     {
         return src_;
     }
 
 protected:
-    friend class Prop_handler;
+    friend class PropHandler;
 
-    const Prop_id id_;
-    const Prop_data_t& data_;
+    const PropId id_;
+    const PropDataT& data_;
 
     int nr_turns_left_;
 
     //How the prop turns was inited (std, specific, indefinite). This is used for example to make
     //copies of a property to apply on melee attacks.
-    Prop_turns turns_init_type_;
+    PropTurns turns_init_type_;
 
     Actor* owning_actor_;
-    Prop_src src_;
+    PropSrc src_;
     const Item* item_applying_;
 };
 
-class Prop_terrified: public Prop
+class PropTerrified: public Prop
 {
 public:
-    Prop_terrified(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::terrified, turns_init, nr_turns) {}
+    PropTerrified(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::terrified, turns_init, nr_turns) {}
 
-    int ability_mod(const Ability_id ability) const override
+    int ability_mod(const AbilityId ability) const override
     {
         switch (ability)
         {
-        case Ability_id::dodge_att:
+        case AbilityId::dodge_att:
             return 20;
 
-        case Ability_id::ranged:
+        case AbilityId::ranged:
             return -20;
 
         default:
@@ -502,80 +502,80 @@ public:
     void on_start() override;
 };
 
-class Prop_weakened: public Prop
+class PropWeakened: public Prop
 {
 public:
-    Prop_weakened(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::weakened, turns_init, nr_turns) {}
+    PropWeakened(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::weakened, turns_init, nr_turns) {}
 };
 
-class Prop_infected: public Prop
+class PropInfected: public Prop
 {
 public:
-    Prop_infected(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::infected, turns_init, nr_turns) {}
+    PropInfected(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::infected, turns_init, nr_turns) {}
 
     Prop* on_new_turn() override;
 };
 
-class Prop_diseased: public Prop
+class PropDiseased: public Prop
 {
 public:
-    Prop_diseased(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::diseased, turns_init, nr_turns) {}
+    PropDiseased(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::diseased, turns_init, nr_turns) {}
 
     int affect_max_hp(const int hp_max) const override;
 
-    bool is_resisting_other_prop(const Prop_id prop_id) const override;
+    bool is_resisting_other_prop(const PropId prop_id) const override;
 
     void on_start() override;
     void on_end() override;
 };
 
-class Prop_descend: public Prop
+class PropDescend: public Prop
 {
 public:
-    Prop_descend(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::descend, turns_init, nr_turns) {}
+    PropDescend(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::descend, turns_init, nr_turns) {}
 
     Prop* on_new_turn() override;
 };
 
-class Prop_flying: public Prop
+class PropFlying: public Prop
 {
 public:
-    Prop_flying(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::flying, turns_init, nr_turns) {}
+    PropFlying(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::flying, turns_init, nr_turns) {}
 };
 
-class Prop_ethereal: public Prop
+class PropEthereal: public Prop
 {
 public:
-    Prop_ethereal(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::ethereal, turns_init, nr_turns) {}
+    PropEthereal(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::ethereal, turns_init, nr_turns) {}
 };
 
-class Prop_ooze: public Prop
+class PropOoze: public Prop
 {
 public:
-    Prop_ooze(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::ooze, turns_init, nr_turns) {}
+    PropOoze(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::ooze, turns_init, nr_turns) {}
 };
 
-class Prop_burrowing: public Prop
+class PropBurrowing: public Prop
 {
 public:
-    Prop_burrowing(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::burrowing, turns_init, nr_turns) {}
+    PropBurrowing(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::burrowing, turns_init, nr_turns) {}
 
     Prop* on_new_turn() override;
 };
 
-class Prop_poss_by_zuul: public Prop
+class PropPossByZuul: public Prop
 {
 public:
-    Prop_poss_by_zuul(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::poss_by_zuul, turns_init, nr_turns) {}
+    PropPossByZuul(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::poss_by_zuul, turns_init, nr_turns) {}
 
     void on_death(const bool is_player_see_owning_actor) override;
 
@@ -585,25 +585,25 @@ public:
     }
 };
 
-class Prop_poisoned: public Prop
+class PropPoisoned: public Prop
 {
 public:
-    Prop_poisoned(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::poisoned, turns_init, nr_turns) {}
+    PropPoisoned(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::poisoned, turns_init, nr_turns) {}
 
     Prop* on_new_turn() override;
 };
 
-class Prop_aiming: public Prop
+class PropAiming: public Prop
 {
 public:
-    Prop_aiming(Prop_turns turns_init, int nr_turns = -1) :
-        Prop            (Prop_id::aiming, turns_init, nr_turns),
+    PropAiming(PropTurns turns_init, int nr_turns = -1) :
+        Prop            (PropId::aiming, turns_init, nr_turns),
         nr_turns_aiming (1) {}
 
-    Prop_turn_mode turn_mode() const override
+    PropTurnMode turn_mode() const override
     {
-        return Prop_turn_mode::actor;
+        return PropTurnMode::actor;
     }
 
     std::string name_short() const override
@@ -611,9 +611,9 @@ public:
         return data_.name_short + (nr_turns_aiming >= 3 ? "(3)" : "");
     }
 
-    int ability_mod(const Ability_id ability) const override
+    int ability_mod(const AbilityId ability) const override
     {
-        if (ability == Ability_id::ranged)
+        if (ability == AbilityId::ranged)
         {
             return nr_turns_aiming >= 3 ? 999 : 20;
         }
@@ -629,23 +629,23 @@ public:
     int nr_turns_aiming;
 };
 
-class Prop_fast_shooting: public Prop
+class PropFastShooting: public Prop
 {
 public:
-    Prop_fast_shooting(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::fast_shooting, turns_init, nr_turns) {}
+    PropFastShooting(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::fast_shooting, turns_init, nr_turns) {}
 
-    Prop_turn_mode turn_mode() const override
+    PropTurnMode turn_mode() const override
     {
-        return Prop_turn_mode::actor;
+        return PropTurnMode::actor;
     }
 };
 
-class Prop_blind: public Prop
+class PropBlind: public Prop
 {
 public:
-    Prop_blind(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::blind, turns_init, nr_turns) {}
+    PropBlind(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::blind, turns_init, nr_turns) {}
 
     bool need_update_vision_when_start_or_end() const override;
 
@@ -654,21 +654,21 @@ public:
         return false;
     }
 
-    int ability_mod(const Ability_id ability) const override
+    int ability_mod(const AbilityId ability) const override
     {
         switch (ability)
         {
-        case Ability_id::searching:
+        case AbilityId::searching:
             return -9999;
 
-        case Ability_id::ranged:
+        case AbilityId::ranged:
             return -50;
 
-        case Ability_id::melee:
+        case AbilityId::melee:
             return -25;
 
-        case Ability_id::dodge_trap:
-        case Ability_id::dodge_att:
+        case AbilityId::dodge_trap:
+        case AbilityId::dodge_att:
             return -50;
 
         default:
@@ -679,49 +679,49 @@ public:
     }
 };
 
-class Prop_radiant: public Prop
+class PropRadiant: public Prop
 {
 public:
-    Prop_radiant(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::radiant, turns_init, nr_turns) {}
+    PropRadiant(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::radiant, turns_init, nr_turns) {}
 };
 
-class Prop_invisible: public Prop
+class PropInvisible: public Prop
 {
 public:
-    Prop_invisible(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::invis, turns_init, nr_turns) {}
+    PropInvisible(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::invis, turns_init, nr_turns) {}
 };
 
-class Prop_see_invis: public Prop
+class PropSeeInvis: public Prop
 {
 public:
-    Prop_see_invis(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::see_invis, turns_init, nr_turns) {}
+    PropSeeInvis(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::see_invis, turns_init, nr_turns) {}
 
     void on_start() override;
 
-    bool is_resisting_other_prop(const Prop_id prop_id) const override;
+    bool is_resisting_other_prop(const PropId prop_id) const override;
 };
 
-class Prop_infravis: public Prop
+class PropInfravis: public Prop
 {
 public:
-    Prop_infravis(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::infravis, turns_init, nr_turns) {}
+    PropInfravis(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::infravis, turns_init, nr_turns) {}
 };
 
-class Prop_blessed: public Prop
+class PropBlessed: public Prop
 {
 public:
-    Prop_blessed(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::blessed, turns_init, nr_turns) {}
+    PropBlessed(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::blessed, turns_init, nr_turns) {}
 
     void on_start() override;
 
-    int ability_mod(const Ability_id ability) const override
+    int ability_mod(const AbilityId ability) const override
     {
-        if (ability == Ability_id::searching)
+        if (ability == AbilityId::searching)
         {
             return 0;
         }
@@ -730,13 +730,13 @@ public:
     }
 };
 
-class Prop_cursed: public Prop
+class PropCursed: public Prop
 {
 public:
-    Prop_cursed(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::cursed, turns_init, nr_turns) {}
+    PropCursed(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::cursed, turns_init, nr_turns) {}
 
-    int ability_mod(const Ability_id ability) const override
+    int ability_mod(const AbilityId ability) const override
     {
         (void)ability;
         return -10;
@@ -747,11 +747,11 @@ public:
     void on_end() override;
 };
 
-class Prop_burning: public Prop
+class PropBurning: public Prop
 {
 public:
-    Prop_burning(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::burning, turns_init, nr_turns) {}
+    PropBurning(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::burning, turns_init, nr_turns) {}
 
     bool allow_read(const Verbosity verbosity) const override;
     bool allow_cast_spell(const Verbosity verbosity) const override;
@@ -767,32 +767,32 @@ public:
     Prop* on_new_turn() override;
 };
 
-class Prop_flared: public Prop
+class PropFlared: public Prop
 {
 public:
-    Prop_flared(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::flared, turns_init, nr_turns) {}
+    PropFlared(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::flared, turns_init, nr_turns) {}
 
     Prop* on_new_turn() override;
 };
 
-class Prop_warlock_charged: public Prop
+class PropWarlockCharged: public Prop
 {
 public:
-    Prop_warlock_charged(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::warlock_charged, turns_init, nr_turns) {}
+    PropWarlockCharged(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::warlock_charged, turns_init, nr_turns) {}
 
-    Prop_turn_mode turn_mode() const override
+    PropTurnMode turn_mode() const override
     {
-        return Prop_turn_mode::actor;
+        return PropTurnMode::actor;
     }
 };
 
-class Prop_confused: public Prop
+class PropConfused: public Prop
 {
 public:
-    Prop_confused(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::confused, turns_init, nr_turns) {}
+    PropConfused(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::confused, turns_init, nr_turns) {}
 
     void affect_move_dir(const P& actor_pos, Dir& dir) override;
 
@@ -802,18 +802,18 @@ public:
     bool allow_attack_ranged(const Verbosity verbosity) const override;
 };
 
-class Prop_stunned: public Prop
+class PropStunned: public Prop
 {
 public:
-    Prop_stunned(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::stunned, turns_init, nr_turns) {}
+    PropStunned(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::stunned, turns_init, nr_turns) {}
 };
 
-class Prop_nailed: public Prop
+class PropNailed: public Prop
 {
 public:
-    Prop_nailed(Prop_turns turns_init, int nr_turns = -1) :
-        Prop        (Prop_id::nailed, turns_init, nr_turns),
+    PropNailed(PropTurns turns_init, int nr_turns = -1) :
+        Prop        (PropId::nailed, turns_init, nr_turns),
         nr_spikes_  (1) {}
 
     std::string name_short() const override
@@ -837,25 +837,25 @@ private:
     int nr_spikes_;
 };
 
-class Prop_wound: public Prop
+class PropWound: public Prop
 {
 public:
-    Prop_wound(Prop_turns turns_init, int nr_turns = -1) :
-        Prop        (Prop_id::wound, turns_init, nr_turns),
+    PropWound(PropTurns turns_init, int nr_turns = -1) :
+        Prop        (PropId::wound, turns_init, nr_turns),
         nr_wounds_  (1) {}
 
     void save() const override;
 
     void load() override;
 
-    void msg(const Prop_msg msg_type, std::string& msg_ref) const override;
+    void msg(const PropMsg msg_type, std::string& msg_ref) const override;
 
     std::string name_short() const override
     {
         return "Wound(" + to_str(nr_wounds_) + ")";
     }
 
-    int ability_mod(const Ability_id ability) const override;
+    int ability_mod(const AbilityId ability) const override;
 
     void on_more() override;
 
@@ -877,15 +877,15 @@ private:
     int nr_wounds_;
 };
 
-class Prop_waiting: public Prop
+class PropWaiting: public Prop
 {
 public:
-    Prop_waiting(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::waiting, turns_init, nr_turns) {}
+    PropWaiting(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::waiting, turns_init, nr_turns) {}
 
-    Prop_turn_mode turn_mode() const override
+    PropTurnMode turn_mode() const override
     {
-        return Prop_turn_mode::actor;
+        return PropTurnMode::actor;
     }
 
     bool allow_move() const override
@@ -911,15 +911,15 @@ public:
     }
 };
 
-class Prop_disabled_attack: public Prop
+class PropDisabledAttack: public Prop
 {
 public:
-    Prop_disabled_attack(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::disabled_attack, turns_init, nr_turns) {}
+    PropDisabledAttack(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::disabled_attack, turns_init, nr_turns) {}
 
-    Prop_turn_mode turn_mode() const override
+    PropTurnMode turn_mode() const override
     {
-        return Prop_turn_mode::actor;
+        return PropTurnMode::actor;
     }
 
     bool allow_attack_ranged(const Verbosity verbosity) const override
@@ -935,15 +935,15 @@ public:
     }
 };
 
-class Prop_disabled_melee: public Prop
+class PropDisabledMelee: public Prop
 {
 public:
-    Prop_disabled_melee(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::disabled_melee, turns_init, nr_turns) {}
+    PropDisabledMelee(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::disabled_melee, turns_init, nr_turns) {}
 
-    Prop_turn_mode turn_mode() const override
+    PropTurnMode turn_mode() const override
     {
-        return Prop_turn_mode::actor;
+        return PropTurnMode::actor;
     }
 
     bool allow_attack_melee(const Verbosity verbosity) const override
@@ -953,15 +953,15 @@ public:
     }
 };
 
-class Prop_disabled_ranged: public Prop
+class PropDisabledRanged: public Prop
 {
 public:
-    Prop_disabled_ranged(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::disabled_ranged, turns_init, nr_turns) {}
+    PropDisabledRanged(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::disabled_ranged, turns_init, nr_turns) {}
 
-    Prop_turn_mode turn_mode() const override
+    PropTurnMode turn_mode() const override
     {
-        return Prop_turn_mode::actor;
+        return PropTurnMode::actor;
     }
 
     bool allow_attack_ranged(const Verbosity verbosity) const override
@@ -971,15 +971,15 @@ public:
     }
 };
 
-class Prop_paralyzed: public Prop
+class PropParalyzed: public Prop
 {
 public:
-    Prop_paralyzed(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::paralyzed, turns_init, nr_turns) {}
+    PropParalyzed(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::paralyzed, turns_init, nr_turns) {}
 
-    Prop_turn_mode turn_mode() const override
+    PropTurnMode turn_mode() const override
     {
-        return Prop_turn_mode::actor;
+        return PropTurnMode::actor;
     }
 
     void on_start() override;
@@ -989,9 +989,9 @@ public:
         return false;
     }
 
-    int ability_mod(const Ability_id ability) const override
+    int ability_mod(const AbilityId ability) const override
     {
-        if (ability == Ability_id::dodge_trap || ability == Ability_id::dodge_att)
+        if (ability == AbilityId::dodge_trap || ability == AbilityId::dodge_att)
         {
             return -999;
         }
@@ -1012,11 +1012,11 @@ public:
     }
 };
 
-class Prop_fainted: public Prop
+class PropFainted: public Prop
 {
 public:
-    Prop_fainted(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::fainted, turns_init, nr_turns) {}
+    PropFainted(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::fainted, turns_init, nr_turns) {}
 
     bool need_update_vision_when_start_or_end() const override;
 
@@ -1030,9 +1030,9 @@ public:
         return false;
     }
 
-    int ability_mod(const Ability_id ability) const override
+    int ability_mod(const AbilityId ability) const override
     {
-        if (ability == Ability_id::dodge_trap || ability == Ability_id::dodge_att)
+        if (ability == AbilityId::dodge_trap || ability == AbilityId::dodge_att)
         {
             return -999;
         }
@@ -1058,25 +1058,25 @@ public:
     }
 };
 
-class Prop_slowed: public Prop
+class PropSlowed: public Prop
 {
 public:
-    Prop_slowed(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::slowed, turns_init, nr_turns) {}
+    PropSlowed(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::slowed, turns_init, nr_turns) {}
 
     void on_start() override;
 
-    int ability_mod(const Ability_id ability) const override
+    int ability_mod(const AbilityId ability) const override
     {
         switch (ability)
         {
-        case Ability_id::dodge_att:
+        case AbilityId::dodge_att:
             return -30;
 
-        case Ability_id::ranged:
+        case AbilityId::ranged:
             return -10;
 
-        case Ability_id::melee:
+        case AbilityId::melee:
             return -10;
 
         default:
@@ -1087,25 +1087,25 @@ public:
     }
 };
 
-class Prop_hasted: public Prop
+class PropHasted: public Prop
 {
 public:
-    Prop_hasted(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::hasted, turns_init, nr_turns) {}
+    PropHasted(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::hasted, turns_init, nr_turns) {}
 
     void on_start() override;
 
-    int ability_mod(const Ability_id ability) const override
+    int ability_mod(const AbilityId ability) const override
     {
         switch (ability)
         {
-        case Ability_id::dodge_att:
+        case AbilityId::dodge_att:
             return 10;
 
-        case Ability_id::ranged:
+        case AbilityId::ranged:
             return 5;
 
-        case Ability_id::melee:
+        case AbilityId::melee:
             return 5;
 
         default:
@@ -1116,11 +1116,11 @@ public:
     }
 };
 
-class Prop_frenzied: public Prop
+class PropFrenzied: public Prop
 {
 public:
-    Prop_frenzied(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::frenzied, turns_init, nr_turns) {}
+    PropFrenzied(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::frenzied, turns_init, nr_turns) {}
 
     void on_start() override;
     void on_end() override;
@@ -1130,11 +1130,11 @@ public:
     bool allow_read(const Verbosity verbosity) const override;
     bool allow_cast_spell(const Verbosity verbosity) const override;
 
-    bool is_resisting_other_prop(const Prop_id prop_id) const override;
+    bool is_resisting_other_prop(const PropId prop_id) const override;
 
-    int ability_mod(const Ability_id ability) const override
+    int ability_mod(const AbilityId ability) const override
     {
-        if (ability == Ability_id::melee)
+        if (ability == AbilityId::melee)
         {
             return 10;
         }
@@ -1143,172 +1143,172 @@ public:
     }
 };
 
-class Prop_rAcid: public Prop
+class PropRAcid: public Prop
 {
 public:
-    Prop_rAcid(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::rAcid, turns_init, nr_turns) {}
+    PropRAcid(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::rAcid, turns_init, nr_turns) {}
 
-    bool try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const override;
+    bool try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity) const override;
 };
 
-class Prop_rConf: public Prop
+class PropRConf: public Prop
 {
 public:
-    Prop_rConf(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::rConf, turns_init, nr_turns) {}
+    PropRConf(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::rConf, turns_init, nr_turns) {}
 
     void on_start() override;
 
-    bool is_resisting_other_prop(const Prop_id prop_id) const override;
+    bool is_resisting_other_prop(const PropId prop_id) const override;
 };
 
-class Prop_rElec: public Prop
+class PropRElec: public Prop
 {
 public:
-    Prop_rElec(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::rElec, turns_init, nr_turns) {}
+    PropRElec(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::rElec, turns_init, nr_turns) {}
 
-    bool try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const override;
+    bool try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity) const override;
 };
 
-class Prop_rFear: public Prop
+class PropRFear: public Prop
 {
 public:
-    Prop_rFear(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::rFear, turns_init, nr_turns) {}
+    PropRFear(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::rFear, turns_init, nr_turns) {}
 
     void on_start() override;
 
-    bool is_resisting_other_prop(const Prop_id prop_id) const override;
+    bool is_resisting_other_prop(const PropId prop_id) const override;
 };
 
-class Prop_rPhys: public Prop
+class PropRPhys: public Prop
 {
 public:
-    Prop_rPhys(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::rPhys, turns_init, nr_turns) {}
+    PropRPhys(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::rPhys, turns_init, nr_turns) {}
 
     void on_start() override;
 
-    bool is_resisting_other_prop(const Prop_id prop_id) const override;
+    bool is_resisting_other_prop(const PropId prop_id) const override;
 
-    bool try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const override;
+    bool try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity) const override;
 };
 
-class Prop_rFire: public Prop
+class PropRFire: public Prop
 {
 public:
-    Prop_rFire(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::rFire, turns_init, nr_turns) {}
+    PropRFire(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::rFire, turns_init, nr_turns) {}
 
     void on_start() override;
 
-    bool is_resisting_other_prop(const Prop_id prop_id) const override;
+    bool is_resisting_other_prop(const PropId prop_id) const override;
 
-    bool try_resist_dmg(const Dmg_type dmg_type, const Verbosity verbosity) const override;
+    bool try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity) const override;
 };
 
-class Prop_rPoison: public Prop
+class PropRPoison: public Prop
 {
 public:
-    Prop_rPoison(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::rPoison, turns_init, nr_turns) {}
+    PropRPoison(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::rPoison, turns_init, nr_turns) {}
 
     void on_start() override;
 
-    bool is_resisting_other_prop(const Prop_id prop_id) const override;
+    bool is_resisting_other_prop(const PropId prop_id) const override;
 };
 
-class Prop_rSleep: public Prop
+class PropRSleep: public Prop
 {
 public:
-    Prop_rSleep(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::rSleep, turns_init, nr_turns) {}
+    PropRSleep(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::rSleep, turns_init, nr_turns) {}
 
     void on_start() override;
 
-    bool is_resisting_other_prop(const Prop_id prop_id) const override;
+    bool is_resisting_other_prop(const PropId prop_id) const override;
 };
 
-class Prop_rDisease: public Prop
+class PropRDisease: public Prop
 {
 public:
-    Prop_rDisease(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::rDisease, turns_init, nr_turns) {}
+    PropRDisease(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::rDisease, turns_init, nr_turns) {}
 
     void on_start() override;
 
-    bool is_resisting_other_prop(const Prop_id prop_id) const override;
+    bool is_resisting_other_prop(const PropId prop_id) const override;
 };
 
-class Prop_rBlind: public Prop
+class PropRBlind: public Prop
 {
 public:
-    Prop_rBlind(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::rBlind, turns_init, nr_turns) {}
+    PropRBlind(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::rBlind, turns_init, nr_turns) {}
 
     void on_start() override;
 
-    bool is_resisting_other_prop(const Prop_id prop_id) const override;
+    bool is_resisting_other_prop(const PropId prop_id) const override;
 };
 
-class Prop_rBreath: public Prop
+class PropRBreath: public Prop
 {
 public:
-    Prop_rBreath(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::rBreath, turns_init, nr_turns) {}
+    PropRBreath(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::rBreath, turns_init, nr_turns) {}
 };
 
-class Prop_lgtSens: public Prop
+class PropLgtSens: public Prop
 {
 public:
-    Prop_lgtSens(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::lgtSens, turns_init, nr_turns) {}
-    ~Prop_lgtSens() override {}
+    PropLgtSens(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::lgtSens, turns_init, nr_turns) {}
+    ~PropLgtSens() override {}
 };
 
-class Prop_tele_control: public Prop
+class PropTeleControl: public Prop
 {
 public:
-    Prop_tele_control(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::tele_ctrl, turns_init, nr_turns) {}
-    ~Prop_tele_control() override {}
+    PropTeleControl(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::tele_ctrl, turns_init, nr_turns) {}
+    ~PropTeleControl() override {}
 };
 
-class Prop_rSpell: public Prop
+class PropRSpell: public Prop
 {
 public:
-    Prop_rSpell(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::rSpell, turns_init, nr_turns) {}
+    PropRSpell(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::rSpell, turns_init, nr_turns) {}
 };
 
-class Prop_spell_reflect: public Prop
+class PropSpellReflect: public Prop
 {
 public:
-    Prop_spell_reflect(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::spell_reflect, turns_init, nr_turns) {}
+    PropSpellReflect(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::spell_reflect, turns_init, nr_turns) {}
 
-    ~Prop_spell_reflect() override {}
+    ~PropSpellReflect() override {}
 };
 
-class Prop_conflict: public Prop
+class PropConflict: public Prop
 {
 public:
-    Prop_conflict(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::conflict, turns_init, nr_turns) {}
-    ~Prop_conflict() override {}
+    PropConflict(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::conflict, turns_init, nr_turns) {}
+    ~PropConflict() override {}
 };
 
-class Prop_strangled: public Prop
+class PropStrangled: public Prop
 {
 public:
-    Prop_strangled(Prop_turns turns_init, int nr_turns = -1) :
-        Prop(Prop_id::strangled, turns_init, nr_turns) {}
+    PropStrangled(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::strangled, turns_init, nr_turns) {}
 
-    Prop_turn_mode turn_mode() const override
+    PropTurnMode turn_mode() const override
     {
-        return Prop_turn_mode::actor;
+        return PropTurnMode::actor;
     }
 
     Prop* on_new_turn() override;

@@ -14,57 +14,57 @@
 namespace cell_check
 {
 
-bool Blocks_los::check(const Cell& c)  const
+bool BlocksLos::check(const Cell& c)  const
 {
     return !map::is_pos_inside_map(c.pos, false) || !c.rigid->is_los_passable();
 }
 
-bool Blocks_los::check(const Mob& f) const
+bool BlocksLos::check(const Mob& f) const
 {
     return !f.is_los_passable();
 }
 
-bool Blocks_move_cmn::check(const Cell& c) const
+bool BlocksMoveCmn::check(const Cell& c) const
 {
     return !map::is_pos_inside_map(c.pos, false) || !c.rigid->can_move_cmn();
 }
 
-bool Blocks_move_cmn::check(const Mob& f) const
+bool BlocksMoveCmn::check(const Mob& f) const
 {
     return !f.can_move_cmn();
 }
 
-bool Blocks_move_cmn::check(const Actor& a) const
+bool BlocksMoveCmn::check(const Actor& a) const
 {
     return a.is_alive();
 }
 
-bool Blocks_actor::check(const Cell& c) const
+bool BlocksActor::check(const Cell& c) const
 {
     return !map::is_pos_inside_map(c.pos, false) || !c.rigid->can_move(actor_);
 }
 
-bool Blocks_actor::check(const Mob& f) const
+bool BlocksActor::check(const Mob& f) const
 {
     return !f.can_move(actor_);
 }
 
-bool Blocks_actor::check(const Actor& a) const
+bool BlocksActor::check(const Actor& a) const
 {
     return a.is_alive();
 }
 
-bool Blocks_projectiles::check(const Cell& c)  const
+bool BlocksProjectiles::check(const Cell& c)  const
 {
     return !map::is_pos_inside_map(c.pos, false) || !c.rigid->is_projectile_passable();
 }
 
-bool Blocks_projectiles::check(const Mob& f)  const
+bool BlocksProjectiles::check(const Mob& f)  const
 {
     return !f.is_projectile_passable();
 }
 
-bool Living_actors_adj_to_pos::check(const Actor& a) const
+bool LivingActorsAdjToPos::check(const Actor& a) const
 {
     if (!a.is_alive())
     {
@@ -74,22 +74,22 @@ bool Living_actors_adj_to_pos::check(const Actor& a) const
     return is_pos_adj(pos_, a.pos, true);
 }
 
-bool Blocks_items::check(const Cell& c)  const
+bool BlocksItems::check(const Cell& c)  const
 {
     return !map::is_pos_inside_map(c.pos, false) || !c.rigid->can_have_item();
 }
 
-bool Blocks_items::check(const Mob& f) const
+bool BlocksItems::check(const Mob& f) const
 {
     return !f.can_have_item();
 }
 
-bool Is_feature::check(const Cell& c) const
+bool IsFeature::check(const Cell& c) const
 {
     return c.rigid->id() == feature_;
 }
 
-bool Is_any_of_features::check(const Cell& c) const
+bool IsAnyOfFeatures::check(const Cell& c) const
 {
     for (auto f : features_)
     {
@@ -102,7 +102,7 @@ bool Is_any_of_features::check(const Cell& c) const
     return false;
 }
 
-bool All_adj_is_feature::check(const Cell& c) const
+bool AllAdjIsFeature::check(const Cell& c) const
 {
     const int x = c.pos.x;
     const int y = c.pos.y;
@@ -126,7 +126,7 @@ bool All_adj_is_feature::check(const Cell& c) const
     return true;
 }
 
-bool All_adj_is_any_of_features::check(const Cell& c) const
+bool AllAdjIsAnyOfFeatures::check(const Cell& c) const
 {
     const int x = c.pos.x;
     const int y = c.pos.y;
@@ -163,7 +163,7 @@ bool All_adj_is_any_of_features::check(const Cell& c) const
     return true;
 }
 
-bool All_adj_is_not_feature::check(const Cell& c) const
+bool AllAdjIsNotFeature::check(const Cell& c) const
 {
     const int x = c.pos.x;
     const int y = c.pos.y;
@@ -187,7 +187,7 @@ bool All_adj_is_not_feature::check(const Cell& c) const
     return true;
 }
 
-bool All_adj_is_none_of_features::check(const Cell& c) const
+bool AllAdjIsNoneOfFeatures::check(const Cell& c) const
 {
     const int x = c.pos.x;
     const int y = c.pos.y;
@@ -224,14 +224,14 @@ namespace map_parse
 
 void run(const  cell_check::Check& method,
          bool   out[map_w][map_h],
-         const  Map_parse_mode write_rule,
+         const  MapParseMode write_rule,
          const  R& area_to_check_cells)
 {
     ASSERT(method.is_checking_cells()    ||
            method.is_checking_mobs()        ||
            method.is_checking_actors());
 
-    const bool allow_write_false = write_rule == Map_parse_mode::overwrite;
+    const bool allow_write_false = write_rule == MapParseMode::overwrite;
 
     if (method.is_checking_cells())
     {
@@ -555,7 +555,7 @@ bool is_map_connected(const bool blocked[map_w][map_h])
 } //map_parse
 
 //------------------------------------------------------------ IS CLOSER TO POS
-bool Is_closer_to_pos::operator()(const P& p1, const P& p2)
+bool IsCloserToPos::operator()(const P& p1, const P& p2)
 {
     const int king_dist1 = king_dist(p_.x, p_.y, p1.x, p1.y);
     const int king_dist2 = king_dist(p_.x, p_.y, p2.x, p2.y);

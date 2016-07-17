@@ -24,7 +24,7 @@ namespace
 
 void msg_reload_fumble(const Actor& actor, const Item& ammo)
 {
-    const std::string ammo_name = ammo.name(Item_ref_type::a);
+    const std::string ammo_name = ammo.name(ItemRefType::a);
 
     if (actor.is_player())
     {
@@ -42,17 +42,17 @@ void msg_reload_fumble(const Actor& actor, const Item& ammo)
 void msg_reloaded(const Actor& actor,
                   const Wpn& wpn,
                   const Item& ammo,
-                  const Pass_time pass_time)
+                  const PassTime pass_time)
 {
-    const std::string swift_str = pass_time == Pass_time::no ? " swiftly" : "";
+    const std::string swift_str = pass_time == PassTime::no ? " swiftly" : "";
 
     if (actor.is_player())
     {
         audio::play(wpn.data().ranged.reload_sfx);
 
-        if (ammo.data().type == Item_type::ammo_mag)
+        if (ammo.data().type == ItemType::ammo_mag)
         {
-            const std::string wpn_name = wpn.name(Item_ref_type::plain, Item_ref_inf::none);
+            const std::string wpn_name = wpn.name(ItemRefType::plain, ItemRefInf::none);
 
             msg_log::add("I" + swift_str + " reload my " + wpn_name +
                          " (" + to_str(wpn.nr_ammo_loaded_) + "/" +
@@ -60,7 +60,7 @@ void msg_reloaded(const Actor& actor,
         }
         else //Not a mag
         {
-            const std::string ammo_name = ammo.name(Item_ref_type::a);
+            const std::string ammo_name = ammo.name(ItemRefType::a);
 
             msg_log::add("I" + swift_str + " load " + ammo_name +
                          " (" + to_str(wpn.nr_ammo_loaded_) + "/" +
@@ -89,8 +89,8 @@ void try_reload(Actor& actor, Item* const item_to_reload)
         return;
     }
 
-    ASSERT(item_to_reload->data().type == Item_type::melee_wpn ||
-           item_to_reload->data().type == Item_type::ranged_wpn);
+    ASSERT(item_to_reload->data().type == ItemType::melee_wpn ||
+           item_to_reload->data().type == ItemType::ranged_wpn);
 
     Wpn* const wpn = static_cast<Wpn*>(item_to_reload);
 
@@ -106,15 +106,15 @@ void try_reload(Actor& actor, Item* const item_to_reload)
 
     if (ammo_loaded_before >= wpn_max_ammo)
     {
-        const std::string item_name = wpn->name(Item_ref_type::plain, Item_ref_inf::none);
+        const std::string item_name = wpn->name(ItemRefType::plain, ItemRefInf::none);
 
         msg_log::add("My " + item_name + " is already loaded.");
         return;
     }
 
-    const Item_id       ammo_item_id    = wpn->data().ranged.ammo_item_id;
-    const Item_data_t&  ammo_data       = item_data::data[(size_t)ammo_item_id];
-    const bool          is_using_mag    = ammo_data.type == Item_type::ammo_mag;
+    const ItemId       ammo_item_id    = wpn->data().ranged.ammo_item_id;
+    const ItemDataT&  ammo_data       = item_data::data[(size_t)ammo_item_id];
+    const bool          is_using_mag    = ammo_data.type == ItemType::ammo_mag;
 
     Item*   ammo_item           = nullptr;
     size_t  ammo_backpack_idx   = 0;
@@ -133,7 +133,7 @@ void try_reload(Actor& actor, Item* const item_to_reload)
             {
                 //Find mag with most ammo in it
 
-                const Ammo_mag* const mag = static_cast<const Ammo_mag*>(item);
+                const AmmoMag* const mag = static_cast<const AmmoMag*>(item);
 
                 const int nr_ammo = mag->ammo_;
 
@@ -168,7 +168,7 @@ void try_reload(Actor& actor, Item* const item_to_reload)
             max_mag_ammo > 0    &&
             max_mag_ammo <= ammo_loaded_before)
         {
-            const std::string mag_name = ammo_data.base_name.names[(size_t)Item_ref_type::plain];
+            const std::string mag_name = ammo_data.base_name.names[(size_t)ItemRefType::plain];
 
             msg_log::add("I carry no " + mag_name + " with more ammo than already loaded.");
         }
@@ -182,12 +182,12 @@ void try_reload(Actor& actor, Item* const item_to_reload)
 
     //Being blinded or terrified makes it harder to reload
     const bool  is_blind        = !actor.prop_handler().allow_see();
-    const bool  is_terrified    = actor.has_prop(Prop_id::terrified);
+    const bool  is_terrified    = actor.has_prop(PropId::terrified);
     const int   k               = 48;
 
     const int fumble_pct = (k * is_blind) + (k * is_terrified);
 
-    Pass_time pass_time = Pass_time::yes;
+    PassTime pass_time = PassTime::yes;
 
     if (rnd::percent(fumble_pct))
     {
@@ -203,14 +203,14 @@ void try_reload(Actor& actor, Item* const item_to_reload)
                 player_bon::traits[size_t(Trait::adept_marksman)]   ? 3 : 0;
 
             pass_time = rnd::fraction(SWIFT_RELOAD_N_IN_10, 10) ?
-                        Pass_time::no : Pass_time::yes;
+                        PassTime::no : PassTime::yes;
         }
 
-        bool is_mag = ammo_item->data().type == Item_type::ammo_mag;
+        bool is_mag = ammo_item->data().type == ItemType::ammo_mag;
 
         if (is_mag)
         {
-            Ammo_mag* mag_item = static_cast<Ammo_mag*>(ammo_item);
+            AmmoMag* mag_item = static_cast<AmmoMag*>(ammo_item);
 
             wpn->nr_ammo_loaded_ = mag_item->ammo_;
 
@@ -223,7 +223,7 @@ void try_reload(Actor& actor, Item* const item_to_reload)
             if (ammo_loaded_before > 0)
             {
                 ammo_item       = item_factory::mk(ammo_item_id);
-                mag_item        = static_cast<Ammo_mag*>(ammo_item);
+                mag_item        = static_cast<AmmoMag*>(ammo_item);
                 mag_item->ammo_ = ammo_loaded_before;
 
                 inv.put_in_backpack(mag_item);
@@ -249,9 +249,9 @@ void player_arrange_pistol_mags()
 
     Wpn* wielded_pistol = nullptr;
 
-    Item* const wielded_item = inv.item_in_slot(Slot_id::wpn);
+    Item* const wielded_item = inv.item_in_slot(SlotId::wpn);
 
-    if (wielded_item && wielded_item->id() == Item_id::pistol)
+    if (wielded_item && wielded_item->id() == ItemId::pistol)
     {
         wielded_pistol = static_cast<Wpn*>(wielded_item);
     }
@@ -260,23 +260,23 @@ void player_arrange_pistol_mags()
     //NOTE: The min and max magazines may be the same item.
     int         min_mag_ammo            = INT_MAX;
     int         max_mag_ammo            = 0;
-    Ammo_mag*   min_mag                 = nullptr;  //Most empty magazine
-    Ammo_mag*   max_mag                 = nullptr;  //Most full magazine
+    AmmoMag*   min_mag                 = nullptr;  //Most empty magazine
+    AmmoMag*   max_mag                 = nullptr;  //Most full magazine
     size_t      min_mag_backpack_idx    = 0;
 
     const int pistol_max_ammo =
-        item_data::data[(size_t)Item_id::pistol].ranged.max_ammo;
+        item_data::data[(size_t)ItemId::pistol].ranged.max_ammo;
 
     for (size_t i = 0; i < inv.backpack_.size(); ++i)
     {
         Item* const item = inv.backpack_[i];
 
-        if (item->id() != Item_id::pistol_mag)
+        if (item->id() != ItemId::pistol_mag)
         {
             continue;
         }
 
-        Ammo_mag* const mag = static_cast<Ammo_mag*>(item);
+        AmmoMag* const mag = static_cast<AmmoMag*>(item);
 
         if (mag->ammo_ == pistol_max_ammo)
         {
@@ -318,8 +318,8 @@ void player_arrange_pistol_mags()
         ++wielded_pistol->nr_ammo_loaded_;
 
         const std::string name =
-            wielded_pistol->name(Item_ref_type::plain,
-                                 Item_ref_inf::yes);
+            wielded_pistol->name(ItemRefType::plain,
+                                 ItemRefInf::yes);
 
         msg_log::add("I move a round from a magazine to my " + name + ".");
     }

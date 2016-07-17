@@ -28,7 +28,7 @@ bool mk_intro_lvl()
 {
     map::reset_map();
 
-    const Map_templ&    templ       = map_templ_handling::templ(Map_templ_id::intro_forest);
+    const MapTempl&    templ       = map_templ_handling::templ(MapTemplId::intro_forest);
     const P             templ_dims  = templ.dims();
 
     for (int x = 0; x < templ_dims.x; ++x)
@@ -37,8 +37,8 @@ bool mk_intro_lvl()
         {
             const P p(x, y);
 
-            const Map_templ_cell&   templ_cell  = templ.cell(p);
-            const Feature_id        f_id        = templ_cell.feature_id;
+            const MapTemplCell&   templ_cell  = templ.cell(p);
+            const FeatureId        f_id        = templ_cell.feature_id;
 
             switch (templ_cell.ch)
             {
@@ -47,7 +47,7 @@ bool mk_intro_lvl()
             {
                 Floor* const floor = new Floor(p);
 
-                floor->type_ = Floor_type::stone_path;
+                floor->type_ = FloorType::stone_path;
 
                 map::put(floor);
 
@@ -61,7 +61,7 @@ bool mk_intro_lvl()
             case '_':
             {
                 Grass* const grass = new Grass(p);
-                grass->type_ = Grass_type::withered;
+                grass->type_ = GrassType::withered;
                 map::put(grass);
             }
             break;
@@ -82,7 +82,7 @@ bool mk_intro_lvl()
 
             case '+':
             {
-                Door* const door = new Door(p, new Wall(p), Door_spawn_state::closed);
+                Door* const door = new Door(p, new Wall(p), DoorSpawnState::closed);
                 map::put(door);
             }
             break;
@@ -113,7 +113,7 @@ bool mk_intro_lvl()
 
                 for (const P& d : dir_utils::dir_list)
                 {
-                    const Map_templ_cell& adj_cell = templ.cell(p + d);
+                    const MapTemplCell& adj_cell = templ.cell(p + d);
 
                     if (adj_cell.ch == '+')
                     {
@@ -128,11 +128,11 @@ bool mk_intro_lvl()
                 {
                     if (rnd::one_in(16))
                     {
-                        rigid = map::put(new Rubble_low(p));
+                        rigid = map::put(new RubbleLow(p));
                     }
                     else if (rnd::one_in(4))
                     {
-                        rigid = map::put(new Rubble_high(p));
+                        rigid = map::put(new RubbleHigh(p));
                     }
                 }
 
@@ -156,9 +156,9 @@ bool mk_intro_lvl()
     }
 
     //Place graves
-    std::vector<Highscore_entry> entries = highscore::entries_sorted();
+    std::vector<HighscoreEntry> entries = highscore::entries_sorted();
 
-    const int nr_non_win = count_if(begin(entries), end(entries), [](const Highscore_entry & e)
+    const int nr_non_win = count_if(begin(entries), end(entries), [](const HighscoreEntry & e)
     {
         return !e.is_win();
     });
@@ -175,13 +175,13 @@ bool mk_intro_lvl()
             {
                 const P p(x, y);
 
-                const Map_templ_cell& templ_cell = templ.cell(p);
+                const MapTemplCell& templ_cell = templ.cell(p);
 
                 if (templ_cell.ch == '&')
                 {
-                    Grave_stone* grave = new Grave_stone(p);
+                    GraveStone* grave = new GraveStone(p);
 
-                    Highscore_entry entry = entries[entry_idx];
+                    HighscoreEntry entry = entries[entry_idx];
 
                     //Skip winning entries
                     while (entry.is_win())
@@ -235,7 +235,7 @@ bool mk_egypt_lvl()
 {
     map::reset_map();
 
-    const Map_templ&    templ       = map_templ_handling::templ(Map_templ_id::egypt);
+    const MapTempl&    templ       = map_templ_handling::templ(MapTemplId::egypt);
     const P             templ_dims  = templ.dims();
     const char          stair_ch    = '1' + rnd::range(0, 1);
 
@@ -245,9 +245,9 @@ bool mk_egypt_lvl()
         {
             const P p(x, y);
 
-            const Map_templ_cell& templ_cell = templ.cell(p);
+            const MapTemplCell& templ_cell = templ.cell(p);
 
-            if (templ_cell.feature_id != Feature_id::END)
+            if (templ_cell.feature_id != FeatureId::END)
             {
                 if (templ_cell.ch == stair_ch)
                 {
@@ -260,7 +260,7 @@ bool mk_egypt_lvl()
                 }
             }
 
-            if (templ_cell.actor_id != Actor_id::END)
+            if (templ_cell.actor_id != ActorId::END)
             {
                 Actor* const actor = actor_factory::mk(templ_cell.actor_id, p);
                 static_cast<Mon*>(actor)->is_roaming_allowed_ = false;
@@ -279,9 +279,9 @@ bool mk_egypt_lvl()
         {
             Rigid* const f = map::cells[x][y].rigid;
 
-            if (f->id() == Feature_id::wall)
+            if (f->id() == FeatureId::wall)
             {
-                static_cast<Wall*>(f)->type_ = Wall_type::egypt;
+                static_cast<Wall*>(f)->type_ = WallType::egypt;
             }
         }
     }
@@ -296,7 +296,7 @@ bool mk_leng_lvl()
 {
     map::reset_map();
 
-    const Map_templ&    templ       = map_templ_handling::templ(Map_templ_id::leng);
+    const MapTempl&    templ       = map_templ_handling::templ(MapTemplId::leng);
     const P             templ_dims  = templ.dims();
 
     for (int x = 0; x < templ_dims.x; ++x)
@@ -305,37 +305,37 @@ bool mk_leng_lvl()
         {
             const P p(x, y);
 
-            const Map_templ_cell&   templ_cell  = templ.cell(p);
-            const Feature_id        f_id        = templ_cell.feature_id;
+            const MapTemplCell&   templ_cell  = templ.cell(p);
+            const FeatureId        f_id        = templ_cell.feature_id;
 
-            if (f_id != Feature_id::END)
+            if (f_id != FeatureId::END)
             {
                 const auto& d = feature_data::data(f_id);
                 auto* const f = map::put(static_cast<Rigid*>(d.mk_obj(p)));
 
-                if (f_id == Feature_id::grass)
+                if (f_id == FeatureId::grass)
                 {
                     if (rnd::one_in(50))
                     {
                         map::put(new Bush(p));
                     }
                 }
-                else if (f_id == Feature_id::wall)
+                else if (f_id == FeatureId::wall)
                 {
                     auto* const wall = static_cast<Wall*>(f);
 
                     if (templ_cell.ch == '%')
                     {
-                        wall->type_ = Wall_type::cliff;
+                        wall->type_ = WallType::cliff;
                     }
                     else if (templ_cell.ch == '#' || templ_cell.ch == '2')
                     {
-                        wall->type_ = Wall_type::leng_monestary;
+                        wall->type_ = WallType::leng_monestary;
                     }
                 }
             }
 
-            if (templ_cell.actor_id != Actor_id::END)
+            if (templ_cell.actor_id != ActorId::END)
             {
                 actor_factory::mk(templ_cell.actor_id, p);
             }
@@ -353,8 +353,8 @@ bool mk_leng_lvl()
             case '+':
             {
                 Wall* mimic   = new Wall(p);
-                mimic->type_  = Wall_type::leng_monestary;
-                map::put(new Door(p, mimic, Door_spawn_state::closed));
+                mimic->type_  = WallType::leng_monestary;
+                map::put(new Door(p, mimic, DoorSpawnState::closed));
             }
             break;
 
@@ -372,7 +372,7 @@ bool mk_rats_in_the_walls_lvl()
 {
     map::reset_map();
 
-    const Map_templ&    templ       = map_templ_handling::templ(Map_templ_id::rats_in_the_walls);
+    const MapTempl&    templ       = map_templ_handling::templ(MapTemplId::rats_in_the_walls);
     const P             templ_dims  = templ.dims();
 
     const int       rat_thing_one_in_n_rat = 6;
@@ -384,37 +384,37 @@ bool mk_rats_in_the_walls_lvl()
         {
             const P p(x, y);
 
-            const Map_templ_cell&   templ_cell  = templ.cell(p);
-            const Feature_id        f_id        = templ_cell.feature_id;
+            const MapTemplCell&   templ_cell  = templ.cell(p);
+            const FeatureId        f_id        = templ_cell.feature_id;
 
-            if (f_id != Feature_id::END)
+            if (f_id != FeatureId::END)
             {
                 const auto& d = feature_data::data(f_id);
                 auto* const f = map::put(static_cast<Rigid*>(d.mk_obj(p)));
 
-                if (f->id() == Feature_id::wall)
+                if (f->id() == FeatureId::wall)
                 {
                     if (templ_cell.ch == 'x') //Constructed walls
                     {
                         if (rnd::one_in(2))
                         {
-                            map::put(new Rubble_low(p));
+                            map::put(new RubbleLow(p));
                         }
                         else if (rnd::one_in(5))
                         {
-                            map::put(new Rubble_high(p));
+                            map::put(new RubbleHigh(p));
                         }
                         else
                         {
-                            static_cast<Wall*>(f)->type_ = Wall_type::cmn;
+                            static_cast<Wall*>(f)->type_ = WallType::cmn;
                         }
                     }
                     else //Cave walls
                     {
-                        static_cast<Wall*>(f)->type_ = Wall_type::cave;
+                        static_cast<Wall*>(f)->type_ = WallType::cave;
                     }
                 }
-                else if (f->id() == Feature_id::floor)
+                else if (f->id() == FeatureId::floor)
                 {
                     if (
                         (templ_cell.ch == ',' || templ_cell.ch == 'r') &&
@@ -424,19 +424,19 @@ bool mk_rats_in_the_walls_lvl()
                     }
                     else //Not bones
                     {
-                        static_cast<Floor*>(f)->type_ = Floor_type::cave;
+                        static_cast<Floor*>(f)->type_ = FloorType::cave;
                     }
                 }
 
-                if (templ_cell.actor_id == Actor_id::rat)
+                if (templ_cell.actor_id == ActorId::rat)
                 {
                     if (rnd::one_in(rat_thing_one_in_n_rat))
                     {
-                        actor_factory::mk(Actor_id::rat_thing, p);
+                        actor_factory::mk(ActorId::rat_thing, p);
                     }
                     else
                     {
-                        actor_factory::mk(Actor_id::rat, p);
+                        actor_factory::mk(ActorId::rat, p);
                     }
                 }
             }
@@ -448,7 +448,7 @@ bool mk_rats_in_the_walls_lvl()
                 break;
 
             case '1':
-                game_time::add_mob(new Event_rats_in_the_walls_discovery(p));
+                game_time::add_mob(new EventRatsInTheWallsDiscovery(p));
                 break;
 
             default:
@@ -458,7 +458,7 @@ bool mk_rats_in_the_walls_lvl()
     }
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
+    map_parse::run(cell_check::BlocksMoveCmn(true), blocked);
 
     //Spawn extra rats in the rightmost part of the map
     const Fraction fraction_spawned(2, 3);
@@ -475,11 +475,11 @@ bool mk_rats_in_the_walls_lvl()
 
                 if (rnd::one_in(rat_thing_one_in_n_rat))
                 {
-                    actor_factory::mk(Actor_id::rat_thing, p);
+                    actor_factory::mk(ActorId::rat_thing, p);
                 }
                 else
                 {
-                    actor_factory::mk(Actor_id::rat, p);
+                    actor_factory::mk(ActorId::rat, p);
                 }
             }
         }
@@ -504,7 +504,7 @@ bool mk_boss_lvl()
 {
     map::reset_map();
 
-    const Map_templ&    templ       = map_templ_handling::templ(Map_templ_id::boss_level);
+    const MapTempl&    templ       = map_templ_handling::templ(MapTemplId::boss_level);
     const P             templ_dims  = templ.dims();
 
     for (int x = 0; x < templ_dims.x; ++x)
@@ -513,16 +513,16 @@ bool mk_boss_lvl()
         {
             const P p(x, y);
 
-            const Map_templ_cell&   templ_cell  = templ.cell(p);
-            const Feature_id        f_id        = templ_cell.feature_id;
+            const MapTemplCell&   templ_cell  = templ.cell(p);
+            const FeatureId        f_id        = templ_cell.feature_id;
 
-            if (f_id != Feature_id::END)
+            if (f_id != FeatureId::END)
             {
                 const auto& d = feature_data::data(f_id);
                 map::put(static_cast<Rigid*>(d.mk_obj(p)));
             }
 
-            if (templ_cell.actor_id != Actor_id::END)
+            if (templ_cell.actor_id != ActorId::END)
             {
                 actor_factory::mk(templ_cell.actor_id, P(x, y));
             }
@@ -540,9 +540,9 @@ bool mk_boss_lvl()
         {
             Rigid* const f = map::cells[x][y].rigid;
 
-            if (f->id() == Feature_id::wall)
+            if (f->id() == FeatureId::wall)
             {
-                static_cast<Wall*>(f)->type_ = Wall_type::egypt;
+                static_cast<Wall*>(f)->type_ = WallType::egypt;
             }
         }
     }
@@ -555,7 +555,7 @@ bool mk_trapez_lvl()
 {
     map::reset_map();
 
-    const Map_templ&    templ       = map_templ_handling::templ(Map_templ_id::trapez_level);
+    const MapTempl&    templ       = map_templ_handling::templ(MapTemplId::trapez_level);
     const P             templ_dims  = templ.dims();
 
     for (int x = 0; x < templ_dims.x; ++x)
@@ -566,17 +566,17 @@ bool mk_trapez_lvl()
 
             const P p(x, y);
 
-            const Map_templ_cell&   templ_cell  = templ.cell(p);
-            const Feature_id        f_id        = templ_cell.feature_id;
-            const Item_id           item_id     = templ_cell.item_id;
+            const MapTemplCell&   templ_cell  = templ.cell(p);
+            const FeatureId        f_id        = templ_cell.feature_id;
+            const ItemId           item_id     = templ_cell.item_id;
 
-            if (f_id != Feature_id::END)
+            if (f_id != FeatureId::END)
             {
                 const auto& d = feature_data::data(f_id);
                 map::put(static_cast<Rigid*>(d.mk_obj(p)));
             }
 
-            if (item_id != Item_id::END)
+            if (item_id != ItemId::END)
             {
                 item_factory::mk_item_on_floor(item_id, p);
             }
@@ -594,9 +594,9 @@ bool mk_trapez_lvl()
         {
             Rigid* const f = map::cells[x][y].rigid;
 
-            if (f->id() == Feature_id::wall)
+            if (f->id() == FeatureId::wall)
             {
-                static_cast<Wall*>(f)->type_ = Wall_type::egypt;
+                static_cast<Wall*>(f)->type_ = WallType::egypt;
             }
         }
     }

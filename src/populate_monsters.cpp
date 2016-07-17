@@ -39,7 +39,7 @@ int random_out_of_depth()
 }
 
 void mk_list_of_mon_can_auto_spawn(const int nr_lvls_out_of_depth,
-                                   std::vector<Actor_id>& list_ref)
+                                   std::vector<ActorId>& list_ref)
 {
     list_ref.clear();
 
@@ -49,7 +49,7 @@ void mk_list_of_mon_can_auto_spawn(const int nr_lvls_out_of_depth,
     //Get list of actors currently on the level (to help avoid spawning multiple uniques,
     //note that this could otherwise happen for example with Zuul - he is allowed to
     //spawn freely after he appears from a possessed Cultist priest)
-    bool spawned_ids[size_t(Actor_id::END)];
+    bool spawned_ids[size_t(ActorId::END)];
 
     for (bool& v : spawned_ids) {v = false;}
 
@@ -61,7 +61,7 @@ void mk_list_of_mon_can_auto_spawn(const int nr_lvls_out_of_depth,
     for (const auto& d : actor_data::data)
     {
         if (
-            d.id != Actor_id::player            &&
+            d.id != ActorId::player            &&
             d.is_auto_spawn_allowed             &&
             d.nr_left_allowed_to_spawn != 0     &&
             effective_dlvl >= d.spawn_min_dlvl  &&
@@ -73,26 +73,26 @@ void mk_list_of_mon_can_auto_spawn(const int nr_lvls_out_of_depth,
     }
 }
 
-void mk_group_at(const Actor_id id,
+void mk_group_at(const ActorId id,
                  const std::vector<P>& sorted_free_cells,
                  bool blocked_out[map_w][map_h],
                  const bool is_roaming_allowed)
 {
-    const Actor_data_t& d = actor_data::data[int(id)];
+    const ActorDataT& d = actor_data::data[int(id)];
 
     int max_nr_in_group = 1;
 
     switch (d.group_size)
     {
-    case Mon_group_size::few:
+    case MonGroupSize::few:
         max_nr_in_group = rnd::range(1, 2);
         break;
 
-    case Mon_group_size::pack:
+    case MonGroupSize::pack:
         max_nr_in_group = rnd::range(3, 5);
         break;
 
-    case Mon_group_size::swarm:
+    case MonGroupSize::swarm:
         max_nr_in_group = rnd::range(7, 9);
         break;
 
@@ -134,7 +134,7 @@ void mk_group_at(const Actor_id id,
     }
 }
 
-bool mk_random_group_for_room(const Room_type room_type,
+bool mk_random_group_for_room(const RoomType room_type,
                               const std::vector<P>& sorted_free_cells,
                               bool blocked_out[map_w][map_h],
                               const bool is_roaming_allowed)
@@ -142,12 +142,12 @@ bool mk_random_group_for_room(const Room_type room_type,
     TRACE_FUNC_BEGIN_VERBOSE;
 
     const int nr_lvls_out_of_depth_allowed = random_out_of_depth();
-    std::vector<Actor_id> id_bucket;
+    std::vector<ActorId> id_bucket;
     mk_list_of_mon_can_auto_spawn(nr_lvls_out_of_depth_allowed, id_bucket);
 
     for (size_t i = 0; i < id_bucket.size(); ++i)
     {
-        const Actor_data_t& d = actor_data::data[size_t(id_bucket[i])];
+        const ActorDataT& d = actor_data::data[size_t(id_bucket[i])];
 
         bool is_mon_native_to_room = false;
 
@@ -176,7 +176,7 @@ bool mk_random_group_for_room(const Room_type room_type,
     }
     else //Found valid monster IDs
     {
-        const Actor_id id = id_bucket[rnd::range(0, id_bucket.size() - 1)];
+        const ActorId id = id_bucket[rnd::range(0, id_bucket.size() - 1)];
 
         mk_group_at(id,
                     sorted_free_cells,
@@ -193,12 +193,12 @@ void mk_group_of_random_at(const std::vector<P>& sorted_free_cells,
                            const int nr_lvls_out_of_depth_allowed,
                            const bool is_roaming_allowed)
 {
-    std::vector<Actor_id> id_bucket;
+    std::vector<ActorId> id_bucket;
     mk_list_of_mon_can_auto_spawn(nr_lvls_out_of_depth_allowed, id_bucket);
 
     if (!id_bucket.empty())
     {
-        const Actor_id id = id_bucket[rnd::range(0, id_bucket.size() - 1)];
+        const ActorId id = id_bucket[rnd::range(0, id_bucket.size() - 1)];
 
         mk_group_at(id, sorted_free_cells, blocked_out, is_roaming_allowed);
     }
@@ -227,7 +227,7 @@ void mk_sorted_free_cells(const P& origin,
         }
     }
 
-    Is_closer_to_pos sorter(origin);
+    IsCloserToPos sorter(origin);
     std::sort(vector_ref.begin(), vector_ref.end(), sorter);
 }
 
@@ -243,7 +243,7 @@ void try_spawn_due_to_time_passed()
     }
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
+    map_parse::run(cell_check::BlocksMoveCmn(true), blocked);
 
     const int min_dist_to_player = fov_std_radi_int + 3;
 
@@ -306,7 +306,7 @@ void populate_intro_lvl()
     bool blocked[map_w][map_h];
 
     const int min_dist_from_player = fov_std_radi_int + 3;
-    map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
+    map_parse::run(cell_check::BlocksMoveCmn(true), blocked);
 
     const P& player_pos = map::player->pos;
 
@@ -324,13 +324,13 @@ void populate_intro_lvl()
     }
 
     //Find possible monsters that can spawn on intro level (dlvl 0)
-    std::vector<Actor_id> ids_can_spawn_intro_lvl;
+    std::vector<ActorId> ids_can_spawn_intro_lvl;
 
-    for (size_t i = 0; i < size_t(Actor_id::END); ++i)
+    for (size_t i = 0; i < size_t(ActorId::END); ++i)
     {
         if (actor_data::data[i].spawn_min_dlvl == 0)
         {
-            ids_can_spawn_intro_lvl.push_back(Actor_id(i));
+            ids_can_spawn_intro_lvl.push_back(ActorId(i));
         }
     }
 
@@ -361,7 +361,7 @@ void populate_intro_lvl()
         {
             const int id_element = rnd::range(0, ids_can_spawn_intro_lvl.size() - 1);
 
-            const Actor_id id = ids_can_spawn_intro_lvl[id_element];
+            const ActorId id = ids_can_spawn_intro_lvl[id_element];
 
             mk_group_at(id,
                         sorted_free_cells,
@@ -383,7 +383,7 @@ void populate_std_lvl()
 
     const int min_dist_from_player = fov_std_radi_int - 1;
 
-    map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
+    map_parse::run(cell_check::BlocksMoveCmn(true), blocked);
 
     const P& player_pos = map::player->pos;
 
@@ -404,8 +404,8 @@ void populate_std_lvl()
     for (Room* const room : map::room_list)
     {
         if (
-            room->type_ != Room_type::plain &&
-            int(room->type_) < int(Room_type::END_OF_STD_ROOMS))
+            room->type_ != RoomType::plain &&
+            int(room->type_) < int(RoomType::END_OF_STD_ROOMS))
         {
             //TODO: This is not a good method to calculate the number of room cells
             //(the room may be irregularly shaped), parse the room map instead
@@ -491,7 +491,7 @@ void populate_std_lvl()
             {
                 if (
                     !blocked[x][y] &&
-                    map::room_map[x][y]->type_ == Room_type::plain)
+                    map::room_map[x][y]->type_ == RoomType::plain)
                 {
                     origin_bucket.push_back(P(x, y));
                 }
@@ -513,7 +513,7 @@ void populate_std_lvl()
                                  sorted_free_cells);
 
             const bool did_make_group =
-                mk_random_group_for_room(Room_type::plain,
+                mk_random_group_for_room(RoomType::plain,
                                          sorted_free_cells,
                                          blocked,
                                          true);

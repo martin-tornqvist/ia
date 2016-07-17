@@ -27,20 +27,20 @@ protected:
     Check() {}
 };
 
-class Blocks_los : public Check
+class BlocksLos : public Check
 {
 public:
-    Blocks_los() : Check() {}
+    BlocksLos() : Check() {}
     bool is_checking_cells()        const override {return true;}
     bool is_checking_mobs()         const override {return true;}
     bool check(const Cell& c)       const override;
     bool check(const Mob& f)        const override;
 };
 
-class Blocks_move_cmn : public Check
+class BlocksMoveCmn : public Check
 {
 public:
-    Blocks_move_cmn(bool is_actors_blocking) :
+    BlocksMoveCmn(bool is_actors_blocking) :
         Check(),
         is_actors_blocking_(is_actors_blocking) {}
     bool is_checking_cells()        const override {return true;}
@@ -53,10 +53,10 @@ private:
     const bool is_actors_blocking_;
 };
 
-class Blocks_actor : public Check
+class BlocksActor : public Check
 {
 public:
-    Blocks_actor(Actor& actor, bool is_actors_blocking) :
+    BlocksActor(Actor& actor, bool is_actors_blocking) :
         Check(),
         is_actors_blocking_ (is_actors_blocking),
         actor_              (actor) {}
@@ -71,116 +71,116 @@ private:
     Actor& actor_;
 };
 
-class Blocks_projectiles : public Check
+class BlocksProjectiles : public Check
 {
 public:
-    Blocks_projectiles() : Check() {}
+    BlocksProjectiles() : Check() {}
     bool is_checking_cells()        const override {return true;}
     bool is_checking_mobs()         const override {return true;}
     bool check(const Cell& c)       const override;
     bool check(const Mob& f)        const override;
 };
 
-class Living_actors_adj_to_pos : public Check
+class LivingActorsAdjToPos : public Check
 {
 public:
-    Living_actors_adj_to_pos(const P& pos) :
+    LivingActorsAdjToPos(const P& pos) :
         Check(), pos_(pos) {}
     bool is_checking_actors()       const override {return true;}
     bool check(const Actor& a)      const override;
     const P& pos_;
 };
 
-class Blocks_items : public Check
+class BlocksItems : public Check
 {
 public:
-    Blocks_items() : Check() {}
+    BlocksItems() : Check() {}
     bool is_checking_cells()        const override {return true;}
     bool is_checking_mobs()         const override {return true;}
     bool check(const Cell& c)       const override;
     bool check(const Mob& f)        const override;
 };
 
-class Is_feature : public Check
+class IsFeature : public Check
 {
 public:
-    Is_feature(const Feature_id id) : Check(), feature_(id) {}
+    IsFeature(const FeatureId id) : Check(), feature_(id) {}
     bool is_checking_cells()        const override {return true;}
     bool check(const Cell& c)       const override;
 private:
-    const Feature_id feature_;
+    const FeatureId feature_;
 };
 
-class Is_any_of_features : public Check
+class IsAnyOfFeatures : public Check
 {
 public:
-    Is_any_of_features(const std::vector<Feature_id>& features) :
+    IsAnyOfFeatures(const std::vector<FeatureId>& features) :
         Check(), features_(features) {}
 
-    Is_any_of_features(const Feature_id id) :
-        Check(), features_(std::vector<Feature_id> {id}) {}
+    IsAnyOfFeatures(const FeatureId id) :
+        Check(), features_(std::vector<FeatureId> {id}) {}
 
     bool is_checking_cells()        const override {return true;}
     bool check(const Cell& c)       const override;
 private:
-    std::vector<Feature_id> features_;
+    std::vector<FeatureId> features_;
 };
 
-class All_adj_is_feature : public Check
+class AllAdjIsFeature : public Check
 {
 public:
-    All_adj_is_feature(const Feature_id id) : Check(), feature_(id) {}
+    AllAdjIsFeature(const FeatureId id) : Check(), feature_(id) {}
     bool is_checking_cells()        const override {return true;}
     bool check(const Cell& c)       const override;
 private:
-    const Feature_id feature_;
+    const FeatureId feature_;
 };
 
-class All_adj_is_any_of_features : public Check
+class AllAdjIsAnyOfFeatures : public Check
 {
 public:
-    All_adj_is_any_of_features(const std::vector<Feature_id>& features) :
+    AllAdjIsAnyOfFeatures(const std::vector<FeatureId>& features) :
         Check(), features_(features) {}
 
-    All_adj_is_any_of_features(const Feature_id id) :
-        Check(), features_(std::vector<Feature_id> {id}) {}
+    AllAdjIsAnyOfFeatures(const FeatureId id) :
+        Check(), features_(std::vector<FeatureId> {id}) {}
 
     bool is_checking_cells()        const override {return true;}
     bool check(const Cell& c)       const override;
 private:
-    std::vector<Feature_id> features_;
+    std::vector<FeatureId> features_;
 };
 
-class All_adj_is_not_feature : public Check
+class AllAdjIsNotFeature : public Check
 {
 public:
-    All_adj_is_not_feature(const Feature_id id) : Check(), feature_(id) {}
+    AllAdjIsNotFeature(const FeatureId id) : Check(), feature_(id) {}
     bool is_checking_cells()        const override {return true;}
     bool check(const Cell& c)       const override;
 private:
-    const Feature_id feature_;
+    const FeatureId feature_;
 };
 
-class All_adj_is_none_of_features : public Check
+class AllAdjIsNoneOfFeatures : public Check
 {
 public:
-    All_adj_is_none_of_features(const std::vector<Feature_id>& features) :
+    AllAdjIsNoneOfFeatures(const std::vector<FeatureId>& features) :
         Check(), features_(features) {}
 
-    All_adj_is_none_of_features(const Feature_id id) :
-        Check(), features_(std::vector<Feature_id> {id}) {}
+    AllAdjIsNoneOfFeatures(const FeatureId id) :
+        Check(), features_(std::vector<FeatureId> {id}) {}
 
     bool is_checking_cells()        const override {return true;}
     bool check(const Cell& c)       const override;
 private:
-    std::vector<Feature_id> features_;
+    std::vector<FeatureId> features_;
 };
 
 } //cell_check
 
 //NOTE: If append mode is used, the caller is responsible for initializing the array
 //(typically with a previous parse call, with write rule set to "overwrite")
-enum class Map_parse_mode {overwrite, append};
+enum class MapParseMode {overwrite, append};
 
 namespace map_parse
 {
@@ -189,7 +189,7 @@ const R map_rect(0, 0, map_w - 1, map_h - 1);
 
 void run(const cell_check::Check& method,
          bool out[map_w][map_h],
-         const Map_parse_mode write_rule = Map_parse_mode::overwrite,
+         const MapParseMode write_rule = MapParseMode::overwrite,
          const R& area_to_check_cells = map_rect);
 
 bool cell(const cell_check::Check& method, const P& p);
@@ -219,10 +219,10 @@ bool is_map_connected(const bool blocked[map_w][map_h]);
 } //map_parse
 
 //Function object for sorting STL containers by distance to a position
-struct Is_closer_to_pos
+struct IsCloserToPos
 {
 public:
-    Is_closer_to_pos(const P& p) :
+    IsCloserToPos(const P& p) :
         p_(p) {}
 
     bool operator()(const P& p1, const P& p2);

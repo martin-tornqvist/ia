@@ -3,27 +3,27 @@
 
 #include <SDL.h>
 
-struct Key_data
+struct KeyData
 {
-    Key_data() :
+    KeyData() :
         key(-1),
         sdl_key(SDLK_UNKNOWN),
         is_shift_held(false),
         is_ctrl_held(false) {}
 
-    Key_data(char key_, SDL_Keycode sdl_key_, bool is_shift_held_, bool is_ctrl_held_) :
+    KeyData(char key_, SDL_Keycode sdl_key_, bool is_shift_held_, bool is_ctrl_held_) :
         key(key_),
         sdl_key(sdl_key_),
         is_shift_held(is_shift_held_),
         is_ctrl_held(is_ctrl_held_) {}
 
-    Key_data(char key_) :
+    KeyData(char key_) :
         key(key_),
         sdl_key(SDLK_UNKNOWN),
         is_shift_held(false),
         is_ctrl_held(false) {}
 
-    Key_data(SDL_Keycode sdl_key_) :
+    KeyData(SDL_Keycode sdl_key_) :
         key(-1),
         sdl_key(sdl_key_),
         is_shift_held(false),
@@ -43,11 +43,11 @@ void cleanup();
 //Reads input until a valid map mode command is executed
 void map_mode_input();
 
-Key_data input(const bool is_o_return = true);
+KeyData input(const bool is_o_return = true);
 
 void clear_events();
 
-void handle_map_mode_key_press(const Key_data& d);
+void handle_map_mode_key_press(const KeyData& d);
 
 } //Input
 

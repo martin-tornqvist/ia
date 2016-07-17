@@ -10,7 +10,7 @@
 
 class Room;
 
-enum class Placement_rule
+enum class PlacementRule
 {
     adj_to_walls,
     away_from_walls,

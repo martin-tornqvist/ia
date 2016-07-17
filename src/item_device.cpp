@@ -18,7 +18,7 @@
 #include "dungeon_master.hpp"
 
 //---------------------------------------------------- DEVICE
-Device::Device(Item_data_t* const item_data) :
+Device::Device(ItemDataT* const item_data) :
     Item(item_data) {}
 
 void Device::identify(const Verbosity verbosity)
@@ -29,7 +29,7 @@ void Device::identify(const Verbosity verbosity)
 
         if (verbosity == Verbosity::verbose)
         {
-            const std::string name_after = name(Item_ref_type::a, Item_ref_inf::none);
+            const std::string name_after = name(ItemRefType::a, ItemRefInf::none);
 
             msg_log::add("I have identified " + name_after + ".");
 
@@ -41,21 +41,21 @@ void Device::identify(const Verbosity verbosity)
 }
 
 //---------------------------------------------------- STRANGE DEVICE
-Strange_device::Strange_device(Item_data_t* const item_data) :
+StrangeDevice::StrangeDevice(ItemDataT* const item_data) :
     Device(item_data),
     condition_(rnd::coin_toss() ? Condition::fine : Condition::shoddy) {}
 
-void Strange_device::save()
+void StrangeDevice::save()
 {
     save_handling::put_int(int(condition_));
 }
 
-void Strange_device::load()
+void StrangeDevice::load()
 {
     condition_ = Condition(save_handling::get_int());
 }
 
-std::vector<std::string> Strange_device::descr() const
+std::vector<std::string> StrangeDevice::descr() const
 {
     if (data_->is_identified)
     {
@@ -90,14 +90,14 @@ std::vector<std::string> Strange_device::descr() const
     }
 }
 
-Consume_item Strange_device::activate(Actor* const actor)
+ConsumeItem StrangeDevice::activate(Actor* const actor)
 {
     ASSERT(actor);
 
     if (data_->is_identified)
     {
-        const std::string item_name     = name(Item_ref_type::plain, Item_ref_inf::none);
-        const std::string item_name_a   = name(Item_ref_type::a, Item_ref_inf::none);
+        const std::string item_name     = name(ItemRefType::plain, ItemRefInf::none);
+        const std::string item_name_a   = name(ItemRefType::a, ItemRefInf::none);
 
         msg_log::add("I activate " + item_name_a + "...");
 
@@ -110,12 +110,12 @@ Consume_item Strange_device::activate(Actor* const actor)
 
         int bon = 0;
 
-        if (actor->has_prop(Prop_id::blessed))
+        if (actor->has_prop(PropId::blessed))
         {
             bon += 2;
         }
 
-        if (actor->has_prop(Prop_id::cursed))
+        if (actor->has_prop(PropId::cursed))
         {
             bon -= 2;
         }
@@ -129,7 +129,7 @@ Consume_item Strange_device::activate(Actor* const actor)
             if (rnd == 5 || rnd == 6)
             {
                 msg_log::add(hurt_msg, clr_msg_bad);
-                actor->hit(rnd::dice(2, 4), Dmg_type::electric);
+                actor->hit(rnd::dice(2, 4), DmgType::electric);
             }
 
             is_effect_failed    = rnd == 3 || rnd == 4;
@@ -142,7 +142,7 @@ Consume_item Strange_device::activate(Actor* const actor)
             if (rnd == 4)
             {
                 msg_log::add(hurt_msg, clr_msg_bad);
-                actor->hit(rnd::dice(1, 4), Dmg_type::electric);
+                actor->hit(rnd::dice(1, 4), DmgType::electric);
             }
 
             is_effect_failed    = rnd == 3;
@@ -159,10 +159,10 @@ Consume_item Strange_device::activate(Actor* const actor)
 
         if (!map::player->is_alive())
         {
-            return Consume_item::no;
+            return ConsumeItem::no;
         }
 
-        Consume_item consumed_state = Consume_item::no;
+        ConsumeItem consumed_state = ConsumeItem::no;
 
         if (is_effect_failed)
         {
@@ -173,14 +173,14 @@ Consume_item Strange_device::activate(Actor* const actor)
             consumed_state = trigger_effect();
         }
 
-        if (consumed_state == Consume_item::no)
+        if (consumed_state == ConsumeItem::no)
         {
             if (is_cond_degrade)
             {
                 if (condition_ == Condition::breaking)
                 {
                     msg_log::add("The " + item_name + " breaks!");
-                    consumed_state = Consume_item::yes;
+                    consumed_state = ConsumeItem::yes;
                 }
                 else
                 {
@@ -203,11 +203,11 @@ Consume_item Strange_device::activate(Actor* const actor)
     {
         msg_log::add("This device is completely alien to me, ");
         msg_log::add("I could never understand it through normal means.");
-        return Consume_item::no;
+        return ConsumeItem::no;
     }
 }
 
-std::string Strange_device::name_inf() const
+std::string StrangeDevice::name_inf() const
 {
     if (data_->is_identified)
     {
@@ -228,7 +228,7 @@ std::string Strange_device::name_inf() const
 }
 
 //---------------------------------------------------- BLASTER
-Consume_item Device_blaster::trigger_effect()
+ConsumeItem DeviceBlaster::trigger_effect()
 {
     std::vector<Actor*> tgt_bucket;
     map::player->seen_foes(tgt_bucket);
@@ -239,16 +239,16 @@ Consume_item Device_blaster::trigger_effect()
     }
     else //Targets are available
     {
-        Spell* const spell = spell_handling::mk_spell_from_id(Spell_id::aza_wrath);
+        Spell* const spell = spell_handling::mk_spell_from_id(SpellId::aza_wrath);
         spell->cast(map::player, false);
         delete spell;
     }
 
-    return Consume_item::no;
+    return ConsumeItem::no;
 }
 
 //---------------------------------------------------- shock WAVE
-Consume_item Device_shockwave::trigger_effect()
+ConsumeItem DeviceShockwave::trigger_effect()
 {
     msg_log::add("It triggers a shock wave around me.");
 
@@ -260,7 +260,7 @@ Consume_item Device_shockwave::trigger_effect()
         {
             const P p(player_pos + P(dx, dy));
             Rigid* const rigid = map::cells[p.x][p.y].rigid;
-            rigid->hit(Dmg_type::physical, Dmg_method::explosion);
+            rigid->hit(DmgType::physical, DmgMethod::explosion);
 
             //game_time::update_light_map();
             map::player->update_fov();
@@ -276,7 +276,7 @@ Consume_item Device_shockwave::trigger_effect()
 
             if (is_pos_adj(player_pos, other_pos, false))
             {
-                actor->hit(rnd::dice(1, 8), Dmg_type::physical);
+                actor->hit(rnd::dice(1, 8), DmgType::physical);
 
                 if (actor->is_alive())
                 {
@@ -286,36 +286,36 @@ Consume_item Device_shockwave::trigger_effect()
         }
     }
 
-    return Consume_item::no;
+    return ConsumeItem::no;
 }
 
 //---------------------------------------------------- REJUVENATOR
-Consume_item Device_rejuvenator::trigger_effect()
+ConsumeItem DeviceRejuvenator::trigger_effect()
 {
     msg_log::add("It repairs my body.");
 
-    std::vector<Prop_id> props_can_heal =
+    std::vector<PropId> props_can_heal =
     {
-        Prop_id::blind,
-        Prop_id::poisoned,
-        Prop_id::infected,
-        Prop_id::diseased,
-        Prop_id::weakened,
-        Prop_id::wound
+        PropId::blind,
+        PropId::poisoned,
+        PropId::infected,
+        PropId::diseased,
+        PropId::weakened,
+        PropId::wound
     };
 
-    for (Prop_id prop_id : props_can_heal)
+    for (PropId prop_id : props_can_heal)
     {
         map::player->prop_handler().end_prop(prop_id);
     }
 
     map::player->restore_hp(999);
 
-    return Consume_item::no;
+    return ConsumeItem::no;
 }
 
 //---------------------------------------------------- TRANSLOCATOR
-Consume_item Device_translocator::trigger_effect()
+ConsumeItem DeviceTranslocator::trigger_effect()
 {
     Player* const player = map::player;
     std::vector<Actor*> seen_foes;
@@ -335,29 +335,29 @@ Consume_item Device_translocator::trigger_effect()
         }
     }
 
-    return Consume_item::no;
+    return ConsumeItem::no;
 }
 
 //---------------------------------------------------- SENTRY DRONE
-Consume_item Device_sentry_drone::trigger_effect()
+ConsumeItem DeviceSentryDrone::trigger_effect()
 {
     msg_log::add("The Sentry Drone awakens!");
     actor_factory::summon(map::player->pos,
-                          {Actor_id::sentry_drone},
-                          Make_mon_aware::yes,
+                          {ActorId::sentry_drone},
+                          MakeMonAware::yes,
                           map::player);
-    return Consume_item::yes;
+    return ConsumeItem::yes;
 }
 
 //---------------------------------------------------- ELECTRIC LANTERN
-Device_lantern::Device_lantern(Item_data_t* const item_data) :
+DeviceLantern::DeviceLantern(ItemDataT* const item_data) :
     Device                  (item_data),
     nr_turns_left_          (500),
     nr_flicker_turns_left_  (-1),
-    working_state_          (Lantern_working_state::working),
+    working_state_          (LanternWorkingState::working),
     is_activated_           (false) {}
 
-std::string Device_lantern::name_inf() const
+std::string DeviceLantern::name_inf() const
 {
     std::string inf = "{" + to_str(nr_turns_left_);
 
@@ -369,15 +369,15 @@ std::string Device_lantern::name_inf() const
     return inf + "}";
 }
 
-Consume_item Device_lantern::activate(Actor* const actor)
+ConsumeItem DeviceLantern::activate(Actor* const actor)
 {
     (void)actor;
     toggle();
     game_time::tick();
-    return Consume_item::no;
+    return ConsumeItem::no;
 }
 
-void Device_lantern::save()
+void DeviceLantern::save()
 {
     save_handling::put_int(nr_turns_left_);
     save_handling::put_int(nr_flicker_turns_left_);
@@ -385,15 +385,15 @@ void Device_lantern::save()
     save_handling::put_bool(is_activated_);
 }
 
-void Device_lantern::load()
+void DeviceLantern::load()
 {
     nr_turns_left_          = save_handling::get_int();
     nr_flicker_turns_left_  = save_handling::get_int();
-    working_state_          = Lantern_working_state(save_handling::get_int());
+    working_state_          = LanternWorkingState(save_handling::get_int());
     is_activated_           = save_handling::get_bool();
 }
 
-void Device_lantern::on_pickup_hook()
+void DeviceLantern::on_pickup_hook()
 {
     ASSERT(actor_carrying_);
 
@@ -406,14 +406,14 @@ void Device_lantern::on_pickup_hook()
         {
             //Add my turns left to the other lantern, then destroy self (it's better to keep
             //the existing lantern, to that lit state etc is preserved)
-            static_cast<Device_lantern*>(other)->nr_turns_left_ += nr_turns_left_;
+            static_cast<DeviceLantern*>(other)->nr_turns_left_ += nr_turns_left_;
             inv.remove_item_in_backpack_with_ptr(this, true);
             return;
         }
     }
 }
 
-void Device_lantern::toggle()
+void DeviceLantern::toggle()
 {
     const std::string toggle_str = is_activated_ ? "I turn off" : "I turn on";
 
@@ -421,7 +421,7 @@ void Device_lantern::toggle()
 
     is_activated_ = !is_activated_;
 
-    audio::play(Sfx_id::lantern);
+    audio::play(SfxId::lantern);
 
     game_time::update_light_map();
 
@@ -430,13 +430,13 @@ void Device_lantern::toggle()
     render::draw_map_state();
 }
 
-void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
+void DeviceLantern::on_std_turn_in_inv(const InvType inv_type)
 {
     (void)inv_type;
 
     if (is_activated_)
     {
-        if (working_state_ == Lantern_working_state::working)
+        if (working_state_ == LanternWorkingState::working)
         {
             --nr_turns_left_;
         }
@@ -446,7 +446,7 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
             msg_log::add("My Electric Lantern has run out.",
                          clr_msg_note,
                          true,
-                         More_prompt_on_msg::yes);
+                         MorePromptOnMsg::yes);
 
             dungeon_master::add_history_event("My Electric Lantern ran out.");
 
@@ -469,7 +469,7 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
 
             if (nr_flicker_turns_left_ <= 0)
             {
-                working_state_ = Lantern_working_state::working;
+                working_state_ = LanternWorkingState::working;
 
                 game_time::update_light_map();
                 map::player->update_fov();
@@ -481,7 +481,7 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
             if (rnd::one_in(40))
             {
                 msg_log::add("My Electric Lantern flickers...");
-                working_state_          = Lantern_working_state::flicker;
+                working_state_          = LanternWorkingState::flicker;
                 nr_flicker_turns_left_  = rnd::range(4, 8);
 
                 game_time::update_light_map();
@@ -490,25 +490,25 @@ void Device_lantern::on_std_turn_in_inv(const Inv_type inv_type)
             }
             else //Not flickering
             {
-                working_state_ = Lantern_working_state::working;
+                working_state_ = LanternWorkingState::working;
             }
         }
     }
 }
 
-Lgt_size Device_lantern::lgt_size() const
+LgtSize DeviceLantern::lgt_size() const
 {
     if (is_activated_)
     {
         switch (working_state_)
         {
-        case Lantern_working_state::working:
-            return Lgt_size::fov;
+        case LanternWorkingState::working:
+            return LgtSize::fov;
 
-        case Lantern_working_state::flicker:
-            return Lgt_size::small;
+        case LanternWorkingState::flicker:
+            return LgtSize::small;
         }
     }
 
-    return Lgt_size::none;
+    return LgtSize::none;
 }

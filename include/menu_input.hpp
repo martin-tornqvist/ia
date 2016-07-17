@@ -4,18 +4,18 @@
 #include "rl_utils.hpp"
 #include "global.hpp"
 
-class Menu_browser
+class MenuBrowser
 {
 public:
-    Menu_browser(const int nr_items, const int list_h = - 1);
+    MenuBrowser(const int nr_items, const int list_h = - 1);
 
-    Menu_browser() = delete;
+    MenuBrowser() = delete;
 
-    Menu_browser& operator=(const Menu_browser&) = default;
+    MenuBrowser& operator=(const MenuBrowser&) = default;
 
-    void move(const Ver_dir dir);
+    void move(const VerDir dir);
 
-    void move_page(const Ver_dir dir);
+    void move_page(const VerDir dir);
 
     int y() const
     {
@@ -57,7 +57,7 @@ private:
     Range range_shown_;
 };
 
-enum class Menu_action
+enum class MenuAction
 {
     moved,
     selected,
@@ -66,7 +66,7 @@ enum class Menu_action
     esc
 };
 
-enum class Menu_input_mode
+enum class MenuInputMode
 {
     scroll_and_letters,
     scroll
@@ -75,8 +75,8 @@ enum class Menu_input_mode
 namespace menu_input
 {
 
-Menu_action action(Menu_browser& browser,
-                   Menu_input_mode mode = Menu_input_mode::scroll_and_letters);
+MenuAction action(MenuBrowser& browser,
+                   MenuInputMode mode = MenuInputMode::scroll_and_letters);
 
 } //menu_input
 
