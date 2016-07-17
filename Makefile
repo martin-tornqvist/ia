@@ -1,13 +1,16 @@
 ###############################################################################
 # Targets available:
-# - release (just running "make" will also build this)
-# - debug
-# - windows-cross-compile-release (cross compilation using mingw)
-# - osx-release
-# - osx-debug
-# - clean
+# - make release (or just run "make")
+# - make debug
+# - make windows-cross-compile-release (Windows cross compilation using mingw)
+# - make osx-release
+# - make osx-debug
+# - make clean
 #
-
+# NOTE: Building on Windows via a Makefile is currently NOT supported (although
+#       perhaps it will be in the future), use the Code::Blocks project for this
+#       (see README.md for instructions).
+#
 
 ###############################################################################
 # Directories
