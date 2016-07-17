@@ -182,8 +182,8 @@ Room* mk_random_allowed_std_room(const R& r, const bool is_subroom)
         else //There are still room types in the bucket
         {
             const RoomType     room_type   = *room_bucket_it;
-            room                            = mk(room_type, r);
-            room->is_sub_room_              = is_subroom;
+            room                           = mk(room_type, r);
+            room->is_sub_room_             = is_subroom;
             StdRoom* const     std_room    = static_cast<StdRoom*>(room);
 
             if (std_room->is_allowed())

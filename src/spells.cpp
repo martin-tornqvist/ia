@@ -717,12 +717,6 @@ bool SpellMayhem::allow_mon_cast_now(Mon& mon) const
 //------------------------------------------------------------ PESTILENCE
 SpellEffectNoticed SpellPest::cast_impl(Actor* const caster) const
 {
-    const int rnd = rnd::range(1, 3);
-
-    const ActorId monster_id = rnd == 1 ? ActorId::green_spider :
-                                rnd == 2 ? ActorId::red_spider   :
-                                ActorId::rat;
-
     const size_t nr_mon = rnd::range(7, 10);
 
     Actor* leader = nullptr;
@@ -732,7 +726,8 @@ SpellEffectNoticed SpellPest::cast_impl(Actor* const caster) const
     if (caster->is_player())
     {
         const int n = summon_hostile_one_in_n *
-                      (player_bon::traits[size_t(Trait::summoner)] ? 2 : 1);
+                      (player_bon::traits[(size_t)Trait::summoner] ? 2 : 1);
+
         did_player_summon_hostile = rnd::one_in(n);
 
         leader = did_player_summon_hostile ? nullptr : caster;
@@ -746,7 +741,7 @@ SpellEffectNoticed SpellPest::cast_impl(Actor* const caster) const
 
     std::vector<Mon*> mon_summoned;
 
-    actor_factory::summon(caster->pos, {nr_mon, monster_id},
+    actor_factory::summon(caster->pos, {nr_mon, ActorId::rat},
                           MakeMonAware::yes,
                           leader,
                           &mon_summoned);
@@ -777,7 +772,7 @@ SpellEffectNoticed SpellPest::cast_impl(Actor* const caster) const
             }
         }
 
-        msg_log::add("Disgusting critters appear around " + caster_str + "!");
+        msg_log::add("Rats appear around " + caster_str + "!");
 
         if (did_player_summon_hostile)
         {

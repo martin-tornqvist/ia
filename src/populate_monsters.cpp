@@ -405,7 +405,7 @@ void populate_std_lvl()
     {
         if (
             room->type_ != RoomType::plain &&
-            int(room->type_) < int(RoomType::END_OF_STD_ROOMS))
+            (int)room->type_ < (int)RoomType::END_OF_STD_ROOMS)
         {
             //TODO: This is not a good method to calculate the number of room cells
             //(the room may be irregularly shaped), parse the room map instead
@@ -413,7 +413,7 @@ void populate_std_lvl()
             const int room_h = room->r_.p1.y - room->r_.p0.y + 1;
             const int nr_cells_in_room = room_w * room_h;
 
-            const int max_nr_groups_in_room = 2;
+            const int max_nr_groups_in_room = room->max_nr_mon_groups_spawned();
 
             for (int i = 0; i < max_nr_groups_in_room; ++i)
             {

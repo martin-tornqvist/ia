@@ -1,2 +1,3 @@
 cd target
 ./ia
+cd -

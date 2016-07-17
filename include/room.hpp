@@ -9,7 +9,7 @@
 #include "rl_utils.hpp"
 #include "global.hpp"
 
-//---------------------------------------------------------------------------------------
+//
 // Room theming occurs both before and after rooms are connected (pre/post-connect).
 //   > In pre-connect reshaping is done. The reshaping is called from mapgen_utils
 //     (e.g. plus-shape, cavern-shape, pillars, etc)
@@ -23,7 +23,7 @@
 //
 // As a rule of thumb, place walkable features in the pre-connect step, and blocking
 // features in the post-connect step.
-//---------------------------------------------------------------------------------------
+//
 
 struct  FeatureDataT;
 class   Room;
@@ -56,12 +56,12 @@ namespace room_factory
 
 void init_room_bucket();
 
-//NOTE: These functions do not make rooms on the map, they merely create Room objects.
+//NOTE: These functions do not make rooms on the map, just create Room objects.
 Room* mk(const RoomType type, const R& r);
 
 Room* mk_random_allowed_std_room(const R& r, const bool is_subroom);
 
-} //RoomFactory
+} //room_factory
 
 class Room
 {
@@ -75,8 +75,13 @@ public:
     virtual void on_pre_connect(bool door_proposals[map_w][map_h]) = 0;
     virtual void on_post_connect(bool door_proposals[map_w][map_h]) = 0;
 
+    virtual int max_nr_mon_groups_spawned() const
+    {
+        return 2;
+    }
+
     R                   r_;
-    const RoomType     type_;
+    const RoomType      type_;
     bool                is_sub_room_;
     std::vector<Room*>  rooms_con_to_;
     std::vector<Room*>  sub_rooms_;
@@ -174,6 +179,11 @@ public:
     ~SpiderRoom() {}
 
     bool is_allowed() const override;
+
+    int max_nr_mon_groups_spawned() const override
+    {
+        return 1;
+    }
 
 protected:
     Range nr_auto_features_allowed() const override;
