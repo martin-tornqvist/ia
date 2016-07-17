@@ -94,17 +94,17 @@ void try_reload(Actor& actor, Item* const item_to_reload)
 
     Wpn* const wpn = static_cast<Wpn*>(item_to_reload);
 
-    const int WPN_MAX_AMMO = wpn->data().ranged.max_ammo;
+    const int wpn_max_ammo = wpn->data().ranged.max_ammo;
 
-    if (WPN_MAX_AMMO == 0)
+    if (wpn_max_ammo == 0)
     {
         msg_log::add("This weapon does not use ammo.");
         return;
     }
 
-    const int AMMO_LOADED_BEFORE = wpn->nr_ammo_loaded_;
+    const int ammo_loaded_before = wpn->nr_ammo_loaded_;
 
-    if (AMMO_LOADED_BEFORE >= WPN_MAX_AMMO)
+    if (ammo_loaded_before >= wpn_max_ammo)
     {
         const std::string item_name = wpn->name(Item_ref_type::plain, Item_ref_inf::none);
 
@@ -114,7 +114,7 @@ void try_reload(Actor& actor, Item* const item_to_reload)
 
     const Item_id       ammo_item_id    = wpn->data().ranged.ammo_item_id;
     const Item_data_t&  ammo_data       = item_data::data[(size_t)ammo_item_id];
-    const bool          IS_USING_MAG    = ammo_data.type == Item_type::ammo_mag;
+    const bool          is_using_mag    = ammo_data.type == Item_type::ammo_mag;
 
     Item*   ammo_item           = nullptr;
     size_t  ammo_backpack_idx   = 0;
@@ -129,7 +129,7 @@ void try_reload(Actor& actor, Item* const item_to_reload)
 
         if (item->id() == ammo_item_id)
         {
-            if (IS_USING_MAG)
+            if (is_using_mag)
             {
                 //Find mag with most ammo in it
 
@@ -141,7 +141,7 @@ void try_reload(Actor& actor, Item* const item_to_reload)
                 {
                     max_mag_ammo = nr_ammo;
 
-                    if (nr_ammo > AMMO_LOADED_BEFORE)
+                    if (nr_ammo > ammo_loaded_before)
                     {
                         //Magazine is a candidate for reloading
                         ammo_item           = item;
@@ -164,9 +164,9 @@ void try_reload(Actor& actor, Item* const item_to_reload)
     {
         //Loaded mag has more ammo than any mag in backpack
         if (
-            IS_USING_MAG        &&
+            is_using_mag        &&
             max_mag_ammo > 0    &&
-            max_mag_ammo <= AMMO_LOADED_BEFORE)
+            max_mag_ammo <= ammo_loaded_before)
         {
             const std::string mag_name = ammo_data.base_name.names[(size_t)Item_ref_type::plain];
 
@@ -181,15 +181,15 @@ void try_reload(Actor& actor, Item* const item_to_reload)
     }
 
     //Being blinded or terrified makes it harder to reload
-    const bool  IS_BLIND        = !actor.prop_handler().allow_see();
-    const bool  IS_TERRIFIED    = actor.has_prop(Prop_id::terrified);
-    const int   K               = 48;
+    const bool  is_blind        = !actor.prop_handler().allow_see();
+    const bool  is_terrified    = actor.has_prop(Prop_id::terrified);
+    const int   k               = 48;
 
-    const int FUMBLE_PCT = (K * IS_BLIND) + (K * IS_TERRIFIED);
+    const int fumble_pct = (k * is_blind) + (k * is_terrified);
 
     Pass_time pass_time = Pass_time::yes;
 
-    if (rnd::percent(FUMBLE_PCT))
+    if (rnd::percent(fumble_pct))
     {
         msg_reload_fumble(actor, *ammo_item);
     }
@@ -220,11 +220,11 @@ void try_reload(Actor& actor, Item* const item_to_reload)
             inv.remove_item_in_backpack_with_idx(ammo_backpack_idx, true);
 
             //If weapon previously contained ammo, create a new mag item
-            if (AMMO_LOADED_BEFORE > 0)
+            if (ammo_loaded_before > 0)
             {
                 ammo_item       = item_factory::mk(ammo_item_id);
                 mag_item        = static_cast<Ammo_mag*>(ammo_item);
-                mag_item->ammo_ = AMMO_LOADED_BEFORE;
+                mag_item->ammo_ = ammo_loaded_before;
 
                 inv.put_in_backpack(mag_item);
             }
@@ -264,7 +264,7 @@ void player_arrange_pistol_mags()
     Ammo_mag*   max_mag                 = nullptr;  //Most full magazine
     size_t      min_mag_backpack_idx    = 0;
 
-    const int PISTOL_MAX_AMMO =
+    const int pistol_max_ammo =
         item_data::data[(size_t)Item_id::pistol].ranged.max_ammo;
 
     for (size_t i = 0; i < inv.backpack_.size(); ++i)
@@ -278,13 +278,13 @@ void player_arrange_pistol_mags()
 
         Ammo_mag* const mag = static_cast<Ammo_mag*>(item);
 
-        if (mag->ammo_ == PISTOL_MAX_AMMO)
+        if (mag->ammo_ == pistol_max_ammo)
         {
             continue;
         }
 
         //NOTE: For min mag, we check for lesser OR EQUAL rounds loaded - this
-        //way, when several "least full mags" are found, the LAST one will be
+        //way, when several "least full mags" are found, the last one will be
         //picked as THE max mag to use. The purpose of this is that we should
         //try avoid picking the same mag as min and max (e.g. if we have two
         //mags with 6 bullets each, then we want to move a bullet).
@@ -312,7 +312,7 @@ void player_arrange_pistol_mags()
     //If wielded pistol is not fully loaded, move round from least full mag
     if (
         wielded_pistol &&
-        wielded_pistol->nr_ammo_loaded_ < PISTOL_MAX_AMMO)
+        wielded_pistol->nr_ammo_loaded_ < pistol_max_ammo)
     {
         --min_mag->ammo_;
         ++wielded_pistol->nr_ammo_loaded_;

@@ -10,7 +10,7 @@ void init();
 
 void cleanup();
 
-void sleep(const Uint32 DURATION);
+void sleep(const Uint32 duration);
 
 //Useful to call when e.g. loading lots of resources or performing lots of
 //heavy calculations, so that the game doesn't appear totally busy, and the

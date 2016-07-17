@@ -14,21 +14,21 @@ namespace popup
 namespace
 {
 
-const int TEXT_W_STD    = 39;
-const int TEXT_X0_STD   = map_w_half - ((TEXT_W_STD) / 2);
+const int text_w_std    = 39;
+const int TEXT_X0_STD   = map_w_half - ((text_w_std) / 2);
 
-int print_box_and_get_title_y_pos(const int TEXT_H_TOT, const int TEXT_W)
+int print_box_and_get_title_y_pos(const int text_h_tot, const int text_w)
 {
-    const int BOX_W       = TEXT_W + 2;
-    const int BOX_H       = TEXT_H_TOT + 2;
+    const int box_w       = text_w + 2;
+    const int box_h       = text_h_tot + 2;
 
-    const int X0          = map_w_half - ((TEXT_W) / 2) - 1;
+    const int X0          = map_w_half - ((text_w) / 2) - 1;
 
-    const int Y0          = map_h_half - (BOX_H / 2) - 1;
-    const int X1          = X0 + BOX_W - 1;
-    const int Y1          = Y0 + BOX_H - 1;
+    const int Y0          = map_h_half - (box_h / 2) - 1;
+    const int X1          = X0 + box_w - 1;
+    const int Y1          = Y0 + box_h - 1;
 
-    render::cover_area(Panel::map, P(X0, Y0), P(BOX_W, BOX_H));
+    render::cover_area(Panel::map, P(X0, Y0), P(box_w, box_h));
     render::draw_box(R(X0, Y0, X1, Y1), Panel::map);
 
     return Y0 + 1;
@@ -39,7 +39,7 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
                              const bool draw_map_state,
                              const size_t cur_choice,
                              const int TEXT_X0,
-                             const int TEXT_H_TOT,
+                             const int text_h_tot,
                              const std::string& title)
 {
     if (draw_map_state)
@@ -47,7 +47,7 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
         render::draw_map_state(Update_screen::no);
     }
 
-    int text_width = TEXT_W_STD;
+    int text_width = text_w_std;
 
     //If no message lines, set width to widest menu option or title with
     if (lines.empty())
@@ -62,7 +62,7 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
         text_width += 2;
     }
 
-    int y = print_box_and_get_title_y_pos(TEXT_H_TOT, text_width);
+    int y = print_box_and_get_title_y_pos(text_h_tot, text_width);
 
     if (!title.empty())
     {
@@ -74,13 +74,13 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
                                    true);
     }
 
-    const bool SHOW_MSG_CENTERED = lines.size() == 1;
+    const bool show_msg_centered = lines.size() == 1;
 
     for (const std::string& line : lines)
     {
         y++;
 
-        if (SHOW_MSG_CENTERED)
+        if (show_msg_centered)
         {
             render::draw_text_center(line,
                                        Panel::map,
@@ -127,21 +127,21 @@ void show_msg(const std::string& msg,
               const bool draw_map_state,
               const std::string& title,
               const Sfx_id sfx,
-              const int W_CHANGE)
+              const int w_change)
 {
     if (draw_map_state)
     {
         render::draw_map_state(Update_screen::no);
     }
 
-    const int TEXT_W = TEXT_W_STD + W_CHANGE;
+    const int text_w = text_w_std + w_change;
 
     std::vector<std::string> lines;
-    text_format::split(msg, TEXT_W, lines);
+    text_format::split(msg, text_w, lines);
 
-    const int TEXT_H_TOT =  int(lines.size()) + 3;
+    const int text_h_tot =  int(lines.size()) + 3;
 
-    int y = print_box_and_get_title_y_pos(TEXT_H_TOT, TEXT_W);
+    int y = print_box_and_get_title_y_pos(text_h_tot, text_w);
 
     if (sfx != Sfx_id::END)
     {
@@ -157,13 +157,13 @@ void show_msg(const std::string& msg,
                                    true);
     }
 
-    const bool SHOW_MSG_CENTERED = lines.size() == 1;
+    const bool show_msg_centered = lines.size() == 1;
 
     for (std::string& line : lines)
     {
         y++;
 
-        if (SHOW_MSG_CENTERED)
+        if (show_msg_centered)
         {
             render::draw_text_center(line,
                                        Panel::map,
@@ -174,7 +174,7 @@ void show_msg(const std::string& msg,
         }
         else
         {
-            const int TEXT_X0 = TEXT_X0_STD - ((W_CHANGE + 1) / 2);
+            const int TEXT_X0 = TEXT_X0_STD - ((w_change + 1) / 2);
 
             render::draw_text(line,
                               Panel::map,
@@ -214,16 +214,16 @@ int show_menu_msg(const std::string& msg,
     }
 
     std::vector<std::string> lines;
-    text_format::split(msg, TEXT_W_STD, lines);
+    text_format::split(msg, text_w_std, lines);
 
-    const int TITLE_H         = title.empty() ? 0 : 1;
-    const int NR_MSG_LINES    = int(lines.size());
-    const int NR_BLANK_LINES  = (NR_MSG_LINES == 0 && TITLE_H == 0) ? 0 : 1;
-    const int NR_CHOICES      = int(choices.size());
+    const int title_h         = title.empty() ? 0 : 1;
+    const int nr_msg_lines    = int(lines.size());
+    const int nr_blank_lines  = (nr_msg_lines == 0 && title_h == 0) ? 0 : 1;
+    const int nr_choices      = int(choices.size());
 
-    const int TEXT_H_TOT = TITLE_H + NR_MSG_LINES + NR_BLANK_LINES + NR_CHOICES;
+    const int text_h_tot = title_h + nr_msg_lines + nr_blank_lines + nr_choices;
 
-    Menu_browser browser(NR_CHOICES);
+    Menu_browser browser(nr_choices);
 
     if (sfx != Sfx_id::END) {audio::play(sfx);}
 
@@ -232,7 +232,7 @@ int show_menu_msg(const std::string& msg,
                             draw_map_state,
                             browser.y(),
                             TEXT_X0_STD,
-                            TEXT_H_TOT,
+                            text_h_tot,
                             title);
 
     while (true)
@@ -247,7 +247,7 @@ int show_menu_msg(const std::string& msg,
                                     draw_map_state,
                                     browser.y(),
                                     TEXT_X0_STD,
-                                    TEXT_H_TOT,
+                                    text_h_tot,
                                     title);
             break;
 
@@ -258,7 +258,7 @@ int show_menu_msg(const std::string& msg,
                 render::draw_map_state();
             }
 
-            return NR_CHOICES - 1;
+            return nr_choices - 1;
 
         case Menu_action::selected:
         case Menu_action::selected_shift:

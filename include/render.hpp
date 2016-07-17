@@ -77,11 +77,11 @@ void draw_tile(const Tile_id tile,
                const Clr& clr,
                const Clr& bg_clr = clr_black);
 
-void draw_glyph(const char GLYPH,
+void draw_glyph(const char glyph,
                 const Panel panel,
                 const P& pos,
                 const Clr& clr,
-                const bool DRAW_BG_CLR = true,
+                const bool draw_bg_clr = true,
                 const Clr& bg_clr = clr_black);
 
 void draw_text(const std::string& str,
@@ -95,7 +95,7 @@ int draw_text_center(const std::string& str,
                      const P& pos,
                      const Clr& clr,
                      const Clr& bg_clr = clr_black,
-                     const bool IS_PIXEL_POS_ADJ_ALLOWED = true);
+                     const bool is_pixel_pos_adj_allowed = true);
 
 void cover_cell_in_map(const P& pos);
 
@@ -109,18 +109,18 @@ void cover_area_px(const P& px_pos, const P& px_dims);
 void draw_rectangle_solid(const P& px_pos, const P& px_dims,
                           const Clr& clr);
 
-void draw_line_hor(const P& px_pos, const int W, const Clr& clr);
+void draw_line_hor(const P& px_pos, const int w, const Clr& clr);
 
-void draw_line_ver(const P& px_pos, const int H, const Clr& clr);
+void draw_line_ver(const P& px_pos, const int h, const Clr& clr);
 
 void draw_marker(const P& p,
                  const std::vector<P>& trail,
-                 const int EFFECTIVE_RANGE = -1,
-                 const int BLOCKED_FROM_IDX = -1,
+                 const int effective_range = -1,
+                 const int blocked_from_idx = -1,
                  Cell_overlay overlay[map_w][map_h] = nullptr);
 
 void draw_blast_at_field(const P& center_pos,
-                         const int RADIUS,
+                         const int radius,
                          bool forbidden_cells[map_w][map_h],
                          const Clr& clr_inner,
                          const Clr& clr_outer);
@@ -134,17 +134,17 @@ void draw_blast_at_seen_cells(const std::vector<P>& positions,
 void draw_blast_at_seen_actors(const std::vector<Actor*>& actors,
                                const Clr& clr);
 
-void draw_main_menu_logo(const int Y_POS);
+void draw_main_menu_logo(const int y_pos);
 
 void draw_skull(const P& p);
 
 void draw_projectiles(std::vector<Projectile*>& projectiles,
-                      const bool DRAW_MAP_BEFORE);
+                      const bool draw_map_before);
 
 void draw_box(const R& area,
               const Panel panel = Panel::screen,
               const Clr& clr = clr_gray_drk,
-              const bool COVER_AREA = false);
+              const bool do_cover_area = false);
 
 //Draws a description "box" for items, spells, etc. The parameter lines may be empty,
 //in which case an empty area is drawn.

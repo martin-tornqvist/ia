@@ -85,7 +85,7 @@ P run(const Marker_use_player_tgt use_tgt,
       std::function<Marker_done(const P&,
                                 const Key_data&)> on_key_press,
       Marker_show_blocked show_blocked,
-      const int EFFECTIVE_RANGE_LMT)
+      const int effective_range_lmt)
 {
     pos_ = map::player->pos;
 
@@ -143,7 +143,7 @@ P run(const Marker_use_player_tgt use_tgt,
 
         render::draw_marker(pos_,
                             trail,
-                            EFFECTIVE_RANGE_LMT,
+                            effective_range_lmt,
                             blocked_from_idx,
                             overlay);
 

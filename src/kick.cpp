@@ -80,9 +80,9 @@ void player_kick()
 
         if (corpse)
         {
-            const bool IS_SEEING_CELL = map::cells[kick_pos.x][kick_pos.y].is_seen_by_player;
+            const bool is_seeing_cell = map::cells[kick_pos.x][kick_pos.y].is_seen_by_player;
 
-            std::string corpse_name = IS_SEEING_CELL ?
+            std::string corpse_name = is_seeing_cell ?
                                       corpse->corpse_name_a() : "a corpse";
 
             text_format::first_to_upper(corpse_name);
@@ -95,9 +95,9 @@ void player_kick()
 
             delete kick_item;
 
-            const int KICK_DMG = kick_dmg_dice.roll();
+            const int kick_dmg = kick_dmg_dice.roll();
 
-            corpse->hit(KICK_DMG, Dmg_type::physical, Dmg_method::kick);
+            corpse->hit(kick_dmg, Dmg_type::physical, Dmg_method::kick);
 
             game_time::tick();
             TRACE_FUNC_END;

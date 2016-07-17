@@ -137,8 +137,8 @@ const God* cur_god()
 
 void set_random_god()
 {
-    const int NR_GODS   = int(god_list_.size());
-    cur_god_elem_       = rnd::range(0, NR_GODS - 1);
+    const int nr_gods   = int(god_list_.size());
+    cur_god_elem_       = rnd::range(0, nr_gods - 1);
 }
 
 void set_no_god()

@@ -90,7 +90,7 @@ protected:
         return clr_black;
     }
 
-    void try_start_burning(const bool IS_MSG_ALLOWED);
+    void try_start_burning(const bool is_msg_allowed);
 
     virtual Was_destroyed on_finished_burning();
 
@@ -717,7 +717,7 @@ public:
 
     ~Item_container();
 
-    void init(const Feature_id feature_id, const int NR_ITEMS_TO_ATTEMPT);
+    void init(const Feature_id feature_id, const int nr_items_to_attempt);
 
     void open(const P& feature_pos, Actor* const actor_opening);
 
@@ -836,7 +836,7 @@ private:
 // 0: Requires nothing
 // 1: Requires "Observant"
 // 2: Requires "Perceptive"
-    const int TRAP_DET_LVL;
+    const int trap_det_lvl;
 };
 
 class Cabinet: public Rigid

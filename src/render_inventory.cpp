@@ -18,10 +18,10 @@ namespace render_inv
 namespace
 {
 
-const int TOP_MORE_Y    = 0;
-const int BTM_MORE_Y    = screen_h - 1;
-const int INV_Y0        = TOP_MORE_Y + 1;
-const int INV_Y1        = BTM_MORE_Y - 1;
+const int top_more_y    = 0;
+const int btm_more_y    = screen_h - 1;
+const int INV_Y0        = top_more_y + 1;
+const int INV_Y1        = btm_more_y - 1;
 
 void draw_item_symbol(const Item& item, const P& p)
 {
@@ -38,18 +38,18 @@ void draw_item_symbol(const Item& item, const P& p)
 }
 
 void draw_weight_pct_and_dots(const P item_pos,
-                              const size_t ITEM_NAME_LEN,
+                              const size_t item_name_len,
                               const Item& item,
                               const Clr& item_name_clr,
-                              const bool IS_MARKED)
+                              const bool is_marked)
 {
-    const int WEIGHT_CARRIED_TOT = map::player->inv().total_item_weight();
+    const int weight_carried_tot = map::player->inv().total_item_weight();
 
     int item_weight_pct = 0;
 
-    if (WEIGHT_CARRIED_TOT > 0)
+    if (weight_carried_tot > 0)
     {
-        item_weight_pct = (item.weight() * 100) / WEIGHT_CARRIED_TOT;
+        item_weight_pct = (item.weight() * 100) / weight_carried_tot;
     }
 
     std::string weight_str  = to_str(item_weight_pct) + "%";
@@ -61,7 +61,7 @@ void draw_weight_pct_and_dots(const P item_pos,
     {
         const P weight_pos(weight_x, item_pos.y);
 
-        const Clr weight_clr = IS_MARKED ? clr_white : clr_gray_drk;
+        const Clr weight_clr = is_marked ? clr_white : clr_gray_drk;
 
         render::draw_text(weight_str,
                           Panel::screen,
@@ -74,7 +74,7 @@ void draw_weight_pct_and_dots(const P item_pos,
         weight_x    = descr_x0 - 1;
     }
 
-    int dots_x = item_pos.x + ITEM_NAME_LEN;
+    int dots_x = item_pos.x + item_name_len;
     int dots_w = weight_x - dots_x;
 
     if (dots_w == 0)
@@ -92,9 +92,9 @@ void draw_weight_pct_and_dots(const P item_pos,
     }
 
     const std::string   dots_str(dots_w, '.');
-    Clr                 dots_clr = IS_MARKED ? clr_white : item_name_clr;
+    Clr                 dots_clr = is_marked ? clr_white : item_name_clr;
 
-    if (!IS_MARKED)
+    if (!is_marked)
     {
         dots_clr.r /= 2;
         dots_clr.g /= 2;
@@ -123,9 +123,9 @@ void draw_detailed_item_descr(const Item* const item)
             }
         }
 
-        const bool IS_PLURAL = item->nr_items_ > 1 && item->data().is_stackable;
+        const bool is_plural = item->nr_items_ > 1 && item->data().is_stackable;
 
-        const std::string ref_str = IS_PLURAL ? "They are " : "It is ";
+        const std::string ref_str = is_plural ? "They are " : "It is ";
 
         const Item_data_t& d = item->data();
 
@@ -160,13 +160,13 @@ void draw_detailed_item_descr(const Item* const item)
 
         lines.push_back({weight_str, clr_green});
 
-        const int WEIGHT_CARRIED_TOT = map::player->inv().total_item_weight();
+        const int weight_carried_tot = map::player->inv().total_item_weight();
 
         int weight_pct = 0;
 
-        if (WEIGHT_CARRIED_TOT > 0)
+        if (weight_carried_tot > 0)
         {
-            weight_pct = (item->weight() * 100) / WEIGHT_CARRIED_TOT;
+            weight_pct = (item->weight() * 100) / weight_carried_tot;
         }
 
         ASSERT(weight_pct >= 0 && weight_pct <= 100);
@@ -186,7 +186,7 @@ void draw_detailed_item_descr(const Item* const item)
 
 } //namespace
 
-const int INV_H = INV_Y1 - INV_Y0 + 1;
+const int inv_h = INV_Y1 - INV_Y0 + 1;
 
 void draw_inv(const Menu_browser& browser)
 {
@@ -194,15 +194,15 @@ void draw_inv(const Menu_browser& browser)
 
     render::clear_screen();
 
-    const int           BROWSER_Y           = browser.y();
+    const int           browser_y           = browser.y();
     const auto&         inv                 = map::player->inv();
-    const size_t        NR_SLOTS            = size_t(Slot_id::END);
-    const bool          IS_ANY_SLOT_MARKED  = BROWSER_Y < int(NR_SLOTS);
+    const size_t        nr_slots            = size_t(Slot_id::END);
+    const bool          is_any_slot_marked  = browser_y < int(nr_slots);
     const Panel         panel               = Panel::screen;
 
-    const auto* const item_marked = IS_ANY_SLOT_MARKED ?
-                                    inv.slots_[BROWSER_Y].item :
-                                    inv.backpack_[size_t(BROWSER_Y) - NR_SLOTS];
+    const auto* const item_marked = is_any_slot_marked ?
+                                    inv.slots_[browser_y].item :
+                                    inv.backpack_[(size_t)browser_y - nr_slots];
 
     render::draw_text_center("Browsing inventory" + drop_info_str,
                              panel,
@@ -219,9 +219,9 @@ void draw_inv(const Menu_browser& browser)
     {
         p.x = 0;
 
-        const bool IS_IDX_MARKED = BROWSER_Y == i;
+        const bool is_idx_marked = browser_y == i;
 
-        Clr clr = IS_IDX_MARKED ? clr_white_high : clr_menu_drk;
+        Clr clr = is_idx_marked ? clr_white_high : clr_menu_drk;
 
         render::draw_text(key_str,
                           panel,
@@ -232,7 +232,7 @@ void draw_inv(const Menu_browser& browser)
 
         p.x += 3;
 
-        if (i < int(NR_SLOTS))
+        if (i < int(nr_slots))
         {
             //This index is a slot
             const Inv_slot&     slot        = inv.slots_[i];
@@ -279,7 +279,7 @@ void draw_inv(const Menu_browser& browser)
 
                 text_format::first_to_upper(item_name);
 
-                Clr clr = IS_IDX_MARKED ?
+                Clr clr = is_idx_marked ?
                           clr_white_high : item->interface_clr();
 
                 render::draw_text(item_name, panel, p, clr);
@@ -288,7 +288,7 @@ void draw_inv(const Menu_browser& browser)
                                          item_name.size(),
                                          *item,
                                          clr,
-                                         IS_IDX_MARKED);
+                                         is_idx_marked);
             }
             else //No item in this slot
             {
@@ -298,9 +298,9 @@ void draw_inv(const Menu_browser& browser)
         }
         else //This index is in backpack
         {
-            const size_t BACKPACK_IDX = i - NR_SLOTS;
+            const size_t backpack_idx = i - nr_slots;
 
-            const Item* const item = inv.backpack_[BACKPACK_IDX];
+            const Item* const item = inv.backpack_[backpack_idx];
 
             draw_item_symbol(*item, p);
             p.x += 2;
@@ -311,7 +311,7 @@ void draw_inv(const Menu_browser& browser)
 
             text_format::first_to_upper(item_name);
 
-            clr = IS_IDX_MARKED ?
+            clr = is_idx_marked ?
                   clr_white_high : item->interface_clr();
 
             render::draw_text(item_name, panel, p, clr);
@@ -320,7 +320,7 @@ void draw_inv(const Menu_browser& browser)
                                      item_name.size(),
                                      *item,
                                      clr,
-                                     IS_IDX_MARKED);
+                                     is_idx_marked);
         }
 
         ++p.y;
@@ -331,7 +331,7 @@ void draw_inv(const Menu_browser& browser)
     {
         render::draw_text("(More - Page Up)",
                           panel,
-                          P(0, TOP_MORE_Y),
+                          P(0, top_more_y),
                           clr_white_high);
     }
 
@@ -339,7 +339,7 @@ void draw_inv(const Menu_browser& browser)
     {
         render::draw_text("(More - Page Down)",
                           panel,
-                          P(0, BTM_MORE_Y),
+                          P(0, btm_more_y),
                           clr_white_high);
     }
 
@@ -370,10 +370,10 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
 
     render::clear_screen();
 
-    const int           BROWSER_Y           = browser.y();
+    const int           browser_y           = browser.y();
     const auto&         inv                 = map::player->inv();
-    const size_t        BACKPACK_IDX_MARKED = gen_inv_indexes[size_t(BROWSER_Y)];
-    const auto* const   item_marked         = inv.backpack_[BACKPACK_IDX_MARKED];
+    const size_t        backpack_idx_marked = gen_inv_indexes[size_t(browser_y)];
+    const auto* const   item_marked         = inv.backpack_[backpack_idx_marked];
 
     render::draw_text_center("Apply which item?" + drop_info_str,
                              panel,
@@ -390,9 +390,9 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
     {
         p.x = 0;
 
-        const bool IS_IDX_MARKED = BROWSER_Y == i;
+        const bool is_idx_marked = browser_y == i;
 
-        Clr clr = IS_IDX_MARKED ? clr_white_high : clr_menu_drk;
+        Clr clr = is_idx_marked ? clr_white_high : clr_menu_drk;
 
         render::draw_text(key_str, panel, p, clr);
 
@@ -400,9 +400,9 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
 
         p.x += 3;
 
-        const size_t BACKPACK_IDX = gen_inv_indexes[i];
+        const size_t backpack_idx = gen_inv_indexes[i];
 
-        const Item* const item = inv.backpack_[BACKPACK_IDX];
+        const Item* const item = inv.backpack_[backpack_idx];
 
         draw_item_symbol(*item, p);
         p.x += 2;
@@ -415,13 +415,13 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
 
         text_format::first_to_upper(item_name);
 
-        clr = IS_IDX_MARKED ? clr_white_high : item->interface_clr();
+        clr = is_idx_marked ? clr_white_high : item->interface_clr();
 
         render::draw_text(item_name, panel, p, clr);
 
-        const size_t ITEM_NAME_LEN = item_name.size();
+        const size_t item_name_len = item_name.size();
 
-        draw_weight_pct_and_dots(p, ITEM_NAME_LEN, *item, clr, IS_IDX_MARKED);
+        draw_weight_pct_and_dots(p, item_name_len, *item, clr, is_idx_marked);
 
         ++p.y;
     }
@@ -431,7 +431,7 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
     {
         render::draw_text("(More - Page Up)",
                           panel,
-                          P(0, TOP_MORE_Y),
+                          P(0, top_more_y),
                           clr_white_high);
     }
 
@@ -439,7 +439,7 @@ void draw_apply(const Menu_browser& browser, const std::vector<size_t>& gen_inv_
     {
         render::draw_text("(More - Page Down)",
                           panel,
-                          P(0, BTM_MORE_Y),
+                          P(0, btm_more_y),
                           clr_white_high);
     }
 
@@ -458,7 +458,7 @@ void draw_equip(const Menu_browser& browser,
 
     ASSERT(slot_id_to_equip != Slot_id::END);
 
-    const bool HAS_ITEM = !gen_inv_indexes.empty();
+    const bool has_item = !gen_inv_indexes.empty();
 
     const Panel panel = Panel::screen;
 
@@ -467,37 +467,37 @@ void draw_equip(const Menu_browser& browser,
     switch (slot_id_to_equip)
     {
     case Slot_id::wpn:
-        heading = HAS_ITEM ?
+        heading = has_item ?
                   "Wield which item?" :
                   "I carry no weapon to wield.";
         break;
 
     case Slot_id::wpn_alt:
-        heading = HAS_ITEM ?
+        heading = has_item ?
                   "Prepare which weapon?" :
                   "I carry no weapon to wield.";
         break;
 
     case Slot_id::thrown:
-        heading = HAS_ITEM ?
+        heading = has_item ?
                   "Use which item as thrown weapon?" :
                   "I carry no weapon to throw.";
         break;
 
     case Slot_id::body:
-        heading = HAS_ITEM ?
+        heading = has_item ?
                   "Wear which armor?" :
                   "I carry no armor.";
         break;
 
     case Slot_id::head:
-        heading = HAS_ITEM ?
+        heading = has_item ?
                   "Wear what on head?" :
                   "I carry no headwear.";
         break;
 
     case Slot_id::neck:
-        heading = HAS_ITEM ?
+        heading = has_item ?
                   "Wear what around the neck?" :
                   "I carry nothing to wear around the neck.";
         break;
@@ -506,7 +506,7 @@ void draw_equip(const Menu_browser& browser,
         break;
     }
 
-    if (HAS_ITEM)
+    if (has_item)
     {
         render::clear_screen();
 
@@ -523,12 +523,12 @@ void draw_equip(const Menu_browser& browser,
                           clr_white_high);
     }
 
-    if (HAS_ITEM)
+    if (has_item)
     {
-        const int           BROWSER_Y           = browser.y();
+        const int           browser_y           = browser.y();
         const auto&         inv                 = map::player->inv();
-        const size_t        BACKPACK_IDX_MARKED = gen_inv_indexes[size_t(BROWSER_Y)];
-        const auto* const   item_marked         = inv.backpack_[BACKPACK_IDX_MARKED];
+        const size_t        backpack_idx_marked = gen_inv_indexes[size_t(browser_y)];
+        const auto* const   item_marked         = inv.backpack_[backpack_idx_marked];
 
         const Range idx_range_shown = browser.range_shown();
 
@@ -540,9 +540,9 @@ void draw_equip(const Menu_browser& browser,
         {
             p.x = 0;
 
-            const bool IS_IDX_MARKED = BROWSER_Y == i;
+            const bool is_idx_marked = browser_y == i;
 
-            Clr clr = IS_IDX_MARKED ? clr_white_high : clr_menu_drk;
+            Clr clr = is_idx_marked ? clr_white_high : clr_menu_drk;
 
             render::draw_text(key_str, panel, p, clr);
 
@@ -550,9 +550,9 @@ void draw_equip(const Menu_browser& browser,
 
             p.x += 3;
 
-            const size_t BACKPACK_IDX = gen_inv_indexes[i];
+            const size_t backpack_idx = gen_inv_indexes[i];
 
-            Item* const item = inv.backpack_[BACKPACK_IDX];
+            Item* const item = inv.backpack_[backpack_idx];
 
             draw_item_symbol(*item, p);
             p.x += 2;
@@ -579,17 +579,17 @@ void draw_equip(const Menu_browser& browser,
 
             text_format::first_to_upper(item_name);
 
-            clr = IS_IDX_MARKED ? clr_white_high : item->interface_clr();
+            clr = is_idx_marked ? clr_white_high : item->interface_clr();
 
             render::draw_text(item_name, panel, p, clr);
 
-            const size_t ITEM_NAME_LEN = item_name.size();
+            const size_t item_name_len = item_name.size();
 
             draw_weight_pct_and_dots(p,
-                                     ITEM_NAME_LEN,
+                                     item_name_len,
                                      *item,
                                      clr,
-                                     IS_IDX_MARKED);
+                                     is_idx_marked);
 
             ++p.y;
         }
@@ -602,7 +602,7 @@ void draw_equip(const Menu_browser& browser,
     {
         render::draw_text("(More - Page Up)",
                           panel,
-                          P(0, TOP_MORE_Y),
+                          P(0, top_more_y),
                           clr_white_high);
     }
 
@@ -610,7 +610,7 @@ void draw_equip(const Menu_browser& browser,
     {
         render::draw_text("(More - Page Down)",
                           panel,
-                          P(0, BTM_MORE_Y),
+                          P(0, btm_more_y),
                           clr_white_high);
     }
 

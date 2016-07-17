@@ -63,13 +63,13 @@ public:
     void on_actor_turn() override;
     void on_std_turn() override;
 
-    void hear_sound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
+    void hear_sound(const Snd& snd, const bool is_origin_seen_by_player,
                     const Dir dir_to_origin,
-                    const int PERCENT_AUDIBLE_DISTANCE);
+                    const int percent_audible_distance);
 
     void incr_shock(const Shock_lvl shock_value, Shock_src shock_src);
-    void incr_shock(const int SHOCK, Shock_src shock_src);
-    void restore_shock(const int amount_restored, const bool IS_TEMP_SHOCK_RESTORED);
+    void incr_shock(const int shock, Shock_src shock_src);
+    void restore_shock(const int amount_restored, const bool is_temp_shock_restored);
     void update_tmp_shock();
 
     int shock_tot() const
@@ -91,7 +91,7 @@ public:
     }
 
     int shock_resistance(const Shock_src shock_src) const;
-    double shock_taken_after_mods(const int BASE_SHOCK, const Shock_src shock_src) const;
+    double shock_taken_after_mods(const int base_shock, const Shock_src shock_src) const;
 
     void auto_melee();
 

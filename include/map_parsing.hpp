@@ -42,15 +42,15 @@ class Blocks_move_cmn : public Check
 public:
     Blocks_move_cmn(bool is_actors_blocking) :
         Check(),
-        IS_ACTORS_BLOCKING_(is_actors_blocking) {}
+        is_actors_blocking_(is_actors_blocking) {}
     bool is_checking_cells()        const override {return true;}
     bool is_checking_mobs()         const override {return true;}
-    bool is_checking_actors()       const override {return IS_ACTORS_BLOCKING_;}
+    bool is_checking_actors()       const override {return is_actors_blocking_;}
     bool check(const Cell& c)       const override;
     bool check(const Mob& f)        const override;
     bool check(const Actor& a)      const override;
 private:
-    const bool IS_ACTORS_BLOCKING_;
+    const bool is_actors_blocking_;
 };
 
 class Blocks_actor : public Check
@@ -58,16 +58,16 @@ class Blocks_actor : public Check
 public:
     Blocks_actor(Actor& actor, bool is_actors_blocking) :
         Check(),
-        IS_ACTORS_BLOCKING_ (is_actors_blocking),
+        is_actors_blocking_ (is_actors_blocking),
         actor_              (actor) {}
     bool is_checking_cells()        const override {return true;}
     bool is_checking_mobs()         const override {return true;}
-    bool is_checking_actors()       const override {return IS_ACTORS_BLOCKING_;}
+    bool is_checking_actors()       const override {return is_actors_blocking_;}
     bool check(const Cell& c)       const override;
     bool check(const Mob& f)        const override;
     bool check(const Actor& a)      const override;
 private:
-    const bool IS_ACTORS_BLOCKING_;
+    const bool is_actors_blocking_;
     Actor& actor_;
 };
 
@@ -212,7 +212,7 @@ void expand(const bool in[map_w][map_h],
 //Slower version that can expand any distance
 void expand(const bool in[map_w][map_h],
             bool out[map_w][map_h],
-            const int DIST);
+            const int dist);
 
 bool is_map_connected(const bool blocked[map_w][map_h]);
 

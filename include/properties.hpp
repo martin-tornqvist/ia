@@ -184,10 +184,10 @@ public:
     //methods, which will then call "try_add()")
     void try_add(Prop* const prop,
                       Prop_src src = Prop_src::intr,
-                      const bool FORCE_EFFECT = false,
+                      const bool force_effect = false,
                       const Verbosity verbosity = Verbosity::verbose);
 
-    void try_add_from_att(const Wpn& wpn, const bool IS_MELEE);
+    void try_add_from_att(const Wpn& wpn, const bool is_melee);
 
     //The following two methods are supposed to be called by items
     void add_prop_from_equipped_item(const Item* const item,
@@ -204,20 +204,20 @@ public:
 
     Prop* prop(const Prop_id id) const;
 
-    bool end_prop(const Prop_id id, const bool RUN_PROP_END_EFFECTS = true);
+    bool end_prop(const Prop_id id, const bool run_prop_end_effects = true);
 
     void props_interface_line(std::vector<Str_and_clr>& line) const;
 
     void apply_actor_turn_prop_buffer();
 
-    Prop* mk_prop(const Prop_id id, Prop_turns turns_init, const int NR_TURNS = -1) const;
+    Prop* mk_prop(const Prop_id id, Prop_turns turns_init, const int nr_turns = -1) const;
 
     //-----------------------------------------------------------------------------
     // Hooks called from various places
     //-----------------------------------------------------------------------------
     void affect_move_dir(const P& actor_pos, Dir& dir) const;
 
-    int affect_max_hp(const int HP_MAX) const;
+    int affect_max_hp(const int hp_max) const;
 
     bool allow_attack(const Verbosity verbosity) const;
     bool allow_attack_melee(const Verbosity verbosity) const;
@@ -231,7 +231,7 @@ public:
     bool allow_eat(const Verbosity verbosity) const; //Also used for drinking
 
     void on_hit();
-    void on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR);
+    void on_death(const bool is_player_see_owning_actor);
 
     int ability_mod(const Ability_id ability) const;
 
@@ -284,9 +284,9 @@ public:
         return nr_turns_left_;
     }
 
-    void set_nr_turns_left(const int NR_TURNS)
+    void set_nr_turns_left(const int nr_turns)
     {
-        nr_turns_left_ = NR_TURNS;
+        nr_turns_left_ = nr_turns;
     }
 
     virtual bool is_finished() const
@@ -363,14 +363,14 @@ public:
     virtual void on_end() {}
     virtual void on_more() {}
 
-    virtual void on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
+    virtual void on_death(const bool is_player_see_owning_actor)
     {
-        (void)IS_PLAYER_SEE_OWNING_ACTOR;
+        (void)is_player_see_owning_actor;
     }
 
-    virtual int affect_max_hp(const int HP_MAX) const
+    virtual int affect_max_hp(const int hp_max) const
     {
-        return HP_MAX;
+        return hp_max;
     }
 
     virtual bool affect_actor_clr(Clr& clr) const
@@ -524,7 +524,7 @@ public:
     Prop_diseased(Prop_turns turns_init, int nr_turns = -1) :
         Prop(Prop_id::diseased, turns_init, nr_turns) {}
 
-    int affect_max_hp(const int HP_MAX) const override;
+    int affect_max_hp(const int hp_max) const override;
 
     bool is_resisting_other_prop(const Prop_id prop_id) const override;
 
@@ -577,11 +577,11 @@ public:
     Prop_poss_by_zuul(Prop_turns turns_init, int nr_turns = -1) :
         Prop(Prop_id::poss_by_zuul, turns_init, nr_turns) {}
 
-    void on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR) override;
+    void on_death(const bool is_player_see_owning_actor) override;
 
-    int affect_max_hp(const int HP_MAX) const override
+    int affect_max_hp(const int hp_max) const override
     {
-        return HP_MAX * 2;
+        return hp_max * 2;
     }
 };
 
@@ -864,7 +864,7 @@ public:
         return nr_wounds_ <= 0;
     }
 
-    int affect_max_hp(const int HP_MAX) const override;
+    int affect_max_hp(const int hp_max) const override;
 
     int nr_wounds() const
     {

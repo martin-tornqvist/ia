@@ -58,9 +58,9 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
 
     out.push_back({map::player->name_a(), clr_heading});
 
-    const int DLVL = score->dlvl();
+    const int dlvl = score->dlvl();
 
-    if (DLVL == 0)
+    if (dlvl == 0)
     {
         out.push_back(
         {
@@ -72,7 +72,7 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
     {
         out.push_back(
         {
-            bullet_point_str + "Explored to the depth of dungeon level " + to_str(DLVL),
+            bullet_point_str + "Explored to the depth of dungeon level " + to_str(dlvl),
             clr_info
         });
 
@@ -158,11 +158,11 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
 
     for (const auto& event : events)
     {
-        std::string ev_str = to_str(event.TURN);
+        std::string ev_str = to_str(event.turn);
 
-        const int TURN_STR_MAX_W = 10;
+        const int turn_str_max_w = 10;
 
-        text_format::pad_before_to(ev_str, TURN_STR_MAX_W);
+        text_format::pad_before_to(ev_str, turn_str_max_w);
 
         ev_str += ": " + event.msg;
 
@@ -261,22 +261,22 @@ void mk_info_lines(std::vector<Str_and_clr>& out)
     TRACE_FUNC_END;
 }
 
-void render(const std::vector<Str_and_clr>& lines, const int TOP_ELEMENT)
+void render(const std::vector<Str_and_clr>& lines, const int top_element)
 {
     render::clear_screen();
 
     render::draw_info_scr_interface("Game summary",
                                     Inf_screen_type::scrolling);
 
-    const int NR_LINES_TOT = int(lines.size());
+    const int nr_lines_tot = int(lines.size());
 
-    const int MAX_NR_LINES_ON_SCR = screen_h - 2;
+    const int max_nr_lines_on_scr = screen_h - 2;
 
     int y_pos = 1;
 
     for (
-        int i = TOP_ELEMENT;
-        i < NR_LINES_TOT && ((i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR);
+        int i = top_element;
+        i < nr_lines_tot && ((i - top_element) < max_nr_lines_on_scr);
         ++i)
     {
         render::draw_text(lines[i].str,
@@ -290,9 +290,9 @@ void render(const std::vector<Str_and_clr>& lines, const int TOP_ELEMENT)
 
 void run_info(const std::vector<Str_and_clr>& lines)
 {
-    const int LINE_JUMP           = 3;
-    const int MAX_NR_LINES_ON_SCR = screen_h - 2;
-    const int NR_LINES_TOT        = lines.size();
+    const int line_jump           = 3;
+    const int max_nr_lines_on_scr = screen_h - 2;
+    const int nr_lines_tot        = lines.size();
 
     int top_nr = 0;
 
@@ -304,20 +304,20 @@ void run_info(const std::vector<Str_and_clr>& lines)
 
         if (d.sdl_key == SDLK_DOWN || d.key == '2' || d.key == 'j')
         {
-            top_nr += LINE_JUMP;
+            top_nr += line_jump;
 
-            if (NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
+            if (nr_lines_tot <= max_nr_lines_on_scr)
             {
                 top_nr = 0;
             }
             else
             {
-                top_nr = std::min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, top_nr);
+                top_nr = std::min(nr_lines_tot - max_nr_lines_on_scr, top_nr);
             }
         }
         else if (d.sdl_key == SDLK_UP || d.key == '8' || d.key == 'k')
         {
-            top_nr = std::max(0, top_nr - LINE_JUMP);
+            top_nr = std::max(0, top_nr - line_jump);
         }
         else if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)
         {

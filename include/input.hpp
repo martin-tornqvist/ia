@@ -43,7 +43,7 @@ void cleanup();
 //Reads input until a valid map mode command is executed
 void map_mode_input();
 
-Key_data input(const bool IS_O_RETURN = true);
+Key_data input(const bool is_o_return = true);
 
 void clear_events();
 

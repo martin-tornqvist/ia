@@ -29,8 +29,8 @@ namespace
 
 std::vector<size_t> backpack_indexes_to_show_;
 
-//IDX can mean Slot index or Backpack Index (both start from zero)
-bool run_drop_query(const Inv_type inv_type, const size_t IDX)
+//Index can mean Slot index or Backpack Index (both start from zero)
+bool run_drop_query(const Inv_type inv_type, const size_t idx)
 {
     TRACE_FUNC_BEGIN;
 
@@ -39,13 +39,13 @@ bool run_drop_query(const Inv_type inv_type, const size_t IDX)
 
     if (inv_type == Inv_type::slots)
     {
-        ASSERT(IDX < int(Slot_id::END));
-        item = inv.slots_[IDX].item;
+        ASSERT(idx < int(Slot_id::END));
+        item = inv.slots_[idx].item;
     }
     else //Backpack
     {
-        ASSERT(IDX < inv.backpack_.size());
-        item = inv.backpack_[IDX];
+        ASSERT(idx < inv.backpack_.size());
+        item = inv.backpack_[idx];
     }
 
     if (!item)
@@ -76,21 +76,21 @@ bool run_drop_query(const Inv_type inv_type, const size_t IDX)
 
         const P   nr_query_pos(drop_str.size() + 1, 0);
 
-        const int   MAX_DIGITS      = 3;
-        const P   done_inf_pos    = nr_query_pos + P(MAX_DIGITS + 2, 0);
+        const int   max_digits      = 3;
+        const P   done_inf_pos    = nr_query_pos + P(max_digits + 2, 0);
 
         render::draw_text("[enter] to drop" + cancel_info_str,
                           Panel::screen,
                           done_inf_pos,
                           clr_white_high);
 
-        const int NR_TO_DROP = query::number(nr_query_pos,
+        const int nr_to_drop = query::number(nr_query_pos,
                                              clr_white_high,
                                              0, 3,
                                              item->nr_items_,
                                              false);
 
-        if (NR_TO_DROP <= 0)
+        if (nr_to_drop <= 0)
         {
             TRACE << "Nr to drop <= 0, nothing to be done" << std::endl;
             TRACE_FUNC_END;
@@ -98,7 +98,7 @@ bool run_drop_query(const Inv_type inv_type, const size_t IDX)
         }
         else //Number to drop is at least one
         {
-            item_drop::try_drop_item_from_inv(*map::player, inv_type, IDX, NR_TO_DROP);
+            item_drop::try_drop_item_from_inv(*map::player, inv_type, idx, nr_to_drop);
             TRACE_FUNC_END;
             return true;
         }
@@ -106,7 +106,7 @@ bool run_drop_query(const Inv_type inv_type, const size_t IDX)
     else //Not a stack
     {
         TRACE << "Item not stackable, or only one item" << std::endl;
-        item_drop::try_drop_item_from_inv(*map::player, inv_type, IDX);
+        item_drop::try_drop_item_from_inv(*map::player, inv_type, idx);
         TRACE_FUNC_END;
         return true;
     }
@@ -185,9 +185,9 @@ void filter_player_backpack_apply()
 
     backpack_indexes_to_show_.clear();
 
-    const size_t NR_GEN = backpack.size();
+    const size_t nr_gen = backpack.size();
 
-    for (size_t i = 0; i < NR_GEN; ++i)
+    for (size_t i = 0; i < nr_gen; ++i)
     {
         const Item* const   item    = backpack[i];
         const Item_data_t&  d       = item->data();
@@ -208,14 +208,14 @@ void init()
     browser_idx_to_set_on_new_turn  = 0;
 }
 
-void activate(const size_t GENERAL_ITEMS_ELEMENT)
+void activate(const size_t GENERAL_ITEMS_element)
 {
     Inventory&  player_inv  = map::player->inv();
-    Item*       item        = player_inv.backpack_[GENERAL_ITEMS_ELEMENT];
+    Item*       item        = player_inv.backpack_[GENERAL_ITEMS_element];
 
     if (item->activate(map::player) == Consume_item::yes)
     {
-        player_inv.decr_item_in_backpack(GENERAL_ITEMS_ELEMENT);
+        player_inv.decr_item_in_backpack(GENERAL_ITEMS_element);
     }
 }
 
@@ -230,10 +230,10 @@ void run_inv_screen()
 
     inv.sort_backpack();
 
-    const int GEN_SIZE = (int)inv.backpack_.size();
+    const int gen_size = (int)inv.backpack_.size();
 
-    Menu_browser browser((int)Slot_id::END + GEN_SIZE,
-                         render_inv::INV_H);
+    Menu_browser browser((int)Slot_id::END + gen_size,
+                         render_inv::inv_h);
 
     browser.set_y(browser_idx_to_set_on_new_turn);
 
@@ -265,8 +265,8 @@ void run_inv_screen()
 
             if (cur_inv_type == Inv_type::slots)
             {
-                const size_t    BROWSER_Y   = browser.y();
-                Inv_slot&       slot        = inv.slots_[BROWSER_Y];
+                const size_t    browser_y   = browser.y();
+                Inv_slot&       slot        = inv.slots_[browser_y];
 
                 if (slot.item)
                 {
@@ -302,9 +302,9 @@ void run_inv_screen()
                         continue;
                     }
 
-                    const bool DID_EQUIP_ITEM = run_equip_screen(slot);
+                    const bool did_equip_item = run_equip_screen(slot);
 
-                    if (DID_EQUIP_ITEM)
+                    if (did_equip_item)
                     {
                         scr_to_open_on_new_turn         = Inv_scr::inv;
                         browser_idx_to_set_on_new_turn  = browser.y();
@@ -322,9 +322,9 @@ void run_inv_screen()
             }
             else //In backpack inventory
             {
-                const size_t BROWSER_Y = browser.y() - int(Slot_id::END);
+                const size_t browser_y = browser.y() - int(Slot_id::END);
 
-                activate(BROWSER_Y);
+                activate(browser_y);
 
                 render::draw_map_state();
 
@@ -337,14 +337,14 @@ void run_inv_screen()
         {
             Inv_type cur_inv_type = inv_type();
 
-            const int BROWSER_Y = browser.y();
+            const int browser_y = browser.y();
 
-            const size_t IDX = cur_inv_type == Inv_type::slots ?
-                               BROWSER_Y : (BROWSER_Y - int(Slot_id::END));
+            const size_t idx = cur_inv_type == Inv_type::slots ?
+                               browser_y : (browser_y - int(Slot_id::END));
 
-            if (run_drop_query(cur_inv_type, IDX))
+            if (run_drop_query(cur_inv_type, idx))
             {
-                browser_idx_to_set_on_new_turn  = BROWSER_Y;
+                browser_idx_to_set_on_new_turn  = browser_y;
                 scr_to_open_on_new_turn         = Inv_scr::inv;
 
                 TRACE_FUNC_END_VERBOSE;
@@ -379,7 +379,7 @@ void run_apply_screen()
 
     filter_player_backpack_apply();
 
-    Menu_browser browser(backpack_indexes_to_show_.size(), render_inv::INV_H);
+    Menu_browser browser(backpack_indexes_to_show_.size(), render_inv::inv_h);
 
     browser.set_y(browser_idx_to_set_on_new_turn);
 
@@ -403,9 +403,9 @@ void run_apply_screen()
         {
             if (!backpack_indexes_to_show_.empty())
             {
-                const size_t IDX = backpack_indexes_to_show_[browser.y()];
+                const size_t idx = backpack_indexes_to_show_[browser.y()];
 
-                activate(IDX);
+                activate(idx);
 
                 render::draw_map_state();
 
@@ -419,9 +419,9 @@ void run_apply_screen()
             if (!backpack_indexes_to_show_.empty())
             {
                 const Inv_type  inv_type    = Inv_type::backpack;
-                const size_t    IDX         = backpack_indexes_to_show_[browser.y()];
+                const size_t    idx         = backpack_indexes_to_show_[browser.y()];
 
-                if (run_drop_query(inv_type, IDX))
+                if (run_drop_query(inv_type, idx))
                 {
                     browser_idx_to_set_on_new_turn   = browser.y();
                     scr_to_open_on_new_turn          = Inv_scr::apply;
@@ -460,7 +460,7 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
 
     filter_player_backpack_equip(slot_to_equip.id);
 
-    Menu_browser browser(backpack_indexes_to_show_.size(), render_inv::INV_H);
+    Menu_browser browser(backpack_indexes_to_show_.size(), render_inv::inv_h);
 
     browser.set_y(0);
 
@@ -482,12 +482,12 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
         {
             if (!backpack_indexes_to_show_.empty())
             {
-                const int       BROWSER_Y = browser.y();
-                const size_t    IDX       = backpack_indexes_to_show_[BROWSER_Y];
+                const int       browser_y = browser.y();
+                const size_t    idx       = backpack_indexes_to_show_[browser_y];
 
                 render::draw_map_state();
 
-                inv.equip_backpack_item(IDX, slot_to_equip.id); //Calls the items equip hook
+                inv.equip_backpack_item(idx, slot_to_equip.id); //Calls the items equip hook
 
                 game_time::tick();
 
@@ -502,9 +502,9 @@ bool run_equip_screen(Inv_slot& slot_to_equip)
             if (!backpack_indexes_to_show_.empty())
             {
                 const Inv_type  inv_type    = Inv_type::backpack;
-                const size_t    IDX         = backpack_indexes_to_show_[browser.y()];
+                const size_t    idx         = backpack_indexes_to_show_[browser.y()];
 
-                if (run_drop_query(inv_type, IDX))
+                if (run_drop_query(inv_type, idx))
                 {
                     TRACE_FUNC_END_VERBOSE;
                     return true;

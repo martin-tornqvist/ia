@@ -212,9 +212,9 @@ bool is_save_available()
 
     if (file.good())
     {
-        const bool IS_EMPTY = file.peek() == std::ifstream::traits_type::eof();
+        const bool is_empty = file.peek() == std::ifstream::traits_type::eof();
         file.close();
-        return !IS_EMPTY;
+        return !is_empty;
     }
     else //Failed to open file
     {
@@ -232,14 +232,14 @@ void put_str(const std::string str)
     lines_.push_back(str);
 }
 
-void put_int(const int V)
+void put_int(const int v)
 {
-    put_str(to_str(V));
+    put_str(to_str(v));
 }
 
-void put_bool(const bool V)
+void put_bool(const bool v)
 {
-    const std::string str = V ? "T" : "F";
+    const std::string str = v ? "T" : "F";
 
     put_str(str);
 }

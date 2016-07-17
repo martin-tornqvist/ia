@@ -25,7 +25,7 @@
 namespace
 {
 
-const int SUMMON_HOSTILE_ONE_IN_N = 7;
+const int summon_hostile_one_in_n = 7;
 
 } //namespace
 
@@ -50,9 +50,9 @@ Spell* random_spell_for_mon()
 
     ASSERT(!bucket.empty());
 
-    const int ELEMENT = rnd::range(0, bucket.size() - 1);
+    const int element = rnd::range(0, bucket.size() - 1);
 
-    return mk_spell_from_id(bucket[ELEMENT]);
+    return mk_spell_from_id(bucket[element]);
 }
 
 Spell* mk_spell_from_id(const Spell_id spell_id)
@@ -150,11 +150,11 @@ Spell* mk_spell_from_id(const Spell_id spell_id)
 
 } //Spell_handling
 
-Range Spell::spi_cost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
+Range Spell::spi_cost(const bool is_base_cost_only, Actor* const caster) const
 {
     int cost_max = max_spi_cost();
 
-    if (caster == map::player && !IS_BASE_COST_ONLY)
+    if (caster == map::player && !is_base_cost_only)
     {
         const int X0 = std::max(0, caster->pos.x - 1);
         const int Y0 = std::max(0, caster->pos.y - 1);
@@ -172,12 +172,12 @@ Range Spell::spi_cost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
             }
         }
 
-        bool IS_WARLOCK     = player_bon::traits[size_t(Trait::warlock)];
-        bool IS_BLOOD_SORC  = player_bon::traits[size_t(Trait::blood_sorcerer)];
+        bool is_warlock     = player_bon::traits[size_t(Trait::warlock)];
+        bool is_blood_sorc  = player_bon::traits[size_t(Trait::blood_sorcerer)];
         bool IS_SEER        = player_bon::traits[size_t(Trait::seer)];
         bool IS_SUMMONER    = player_bon::traits[size_t(Trait::summoner)];
 
-        if (IS_BLOOD_SORC)
+        if (is_blood_sorc)
         {
             --cost_max;
         }
@@ -185,21 +185,21 @@ Range Spell::spi_cost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
         switch (id())
         {
         case Spell_id::darkbolt:
-            if (IS_WARLOCK)
+            if (is_warlock)
             {
                 --cost_max;
             }
             break;
 
         case Spell_id::aza_wrath:
-            if (IS_WARLOCK)
+            if (is_warlock)
             {
                 --cost_max;
             }
             break;
 
         case Spell_id::mayhem:
-            if (IS_WARLOCK)
+            if (is_warlock)
             {
                 --cost_max;
             }
@@ -270,12 +270,12 @@ Range Spell::spi_cost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
     }
 
     cost_max            = std::max(1, cost_max);
-    const int COST_MIN  = std::max(1, (cost_max + 1) / 2);
+    const int cost_min  = std::max(1, (cost_max + 1) / 2);
 
-    return Range(COST_MIN, cost_max);
+    return Range(cost_min, cost_max);
 }
 
-Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) const
+Spell_effect_noticed Spell::cast(Actor* const caster, const bool is_intrinsic) const
 {
     TRACE_FUNC_BEGIN;
 
@@ -287,13 +287,13 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
         {
             TRACE << "Player casting spell" << std::endl;
 
-            const Shock_src shock_src = IS_INTRINSIC ?
+            const Shock_src shock_src = is_intrinsic ?
                                         Shock_src::cast_intr_spell :
                                         Shock_src::use_strange_item;
 
-            const int SHOCK_VALUE = IS_INTRINSIC ? shock_lvl_intr_cast() : 10;
+            const int shock_value = is_intrinsic ? shock_lvl_intr_cast() : 10;
 
-            map::player->incr_shock(SHOCK_VALUE, shock_src);
+            map::player->incr_shock(shock_value, shock_src);
 
             Snd snd("",
                     Sfx_id::spell_generic,
@@ -310,7 +310,7 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
             TRACE << "Monster casting spell" << std::endl;
             Mon* const mon = static_cast<Mon*>(caster);
 
-            const bool IS_MON_SEEN = map::player->can_see_actor(*mon);
+            const bool is_mon_seen = map::player->can_see_actor(*mon);
 
             std::string spell_str = mon->data().spell_cast_msg;
 
@@ -318,7 +318,7 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
             {
                 std::string mon_name = "";
 
-                if (IS_MON_SEEN)
+                if (is_mon_seen)
                 {
                     mon_name = mon->name_the();
                 }
@@ -343,7 +343,7 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
             mon->spell_cool_down_cur_ = mon->data().spell_cooldown_turns;
         }
 
-        if (IS_INTRINSIC)
+        if (is_intrinsic)
         {
             const Range cost = spi_cost(false, caster);
 
@@ -368,14 +368,14 @@ Spell_effect_noticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) c
 
 void Spell::on_resist(Actor& target) const
 {
-    const bool IS_PLAYER        = target.is_player();
-    const bool PLAYER_SEE_TGT   = map::player->can_see_actor(target);
+    const bool is_player        = target.is_player();
+    const bool player_see_tgt   = map::player->can_see_actor(target);
 
-    if (PLAYER_SEE_TGT)
+    if (player_see_tgt)
     {
         msg_log::add(spell_resist_msg);
 
-        if (IS_PLAYER)
+        if (is_player)
         {
             audio::play(Sfx_id::spell_shield_break);
         }
@@ -383,7 +383,7 @@ void Spell::on_resist(Actor& target) const
         render::draw_blast_at_cells({target.pos}, clr_white);
     }
 
-    if (IS_PLAYER)
+    if (is_player)
     {
         target.prop_handler().end_prop(Prop_id::rSpell);
     }
@@ -433,9 +433,9 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
 
     render::draw_map_state();
 
-    const size_t LINE_SIZE = line.size();
+    const size_t line_size = line.size();
 
-    for (size_t i = 1; i < LINE_SIZE; ++i)
+    for (size_t i = 1; i < line_size; ++i)
     {
         const P& p = line[i];
 
@@ -485,9 +485,9 @@ Spell_effect_noticed Spell_darkbolt::cast_impl(Actor* const caster) const
     tgt->prop_handler().try_add(new Prop_paralyzed(Prop_turns::specific, 2));
 
     Range dmg_range(4, 10);
-    const int DMG = is_warlock_charged ? dmg_range.max : dmg_range.roll();
+    const int dmg = is_warlock_charged ? dmg_range.max : dmg_range.roll();
 
-    tgt->hit(DMG, Dmg_type::physical, Dmg_method::END, Allow_wound::no);
+    tgt->hit(dmg, Dmg_type::physical, Dmg_method::END, Allow_wound::no);
 
     Snd snd("",
             Sfx_id::END,
@@ -578,9 +578,9 @@ Spell_effect_noticed Spell_aza_wrath::cast_impl(Actor* const caster) const
 
         tgt->prop_handler().try_add(new Prop_paralyzed(Prop_turns::specific, 2));
 
-        const int DMG = is_warlock_charged ? dmg_range.max : dmg_range.roll();
+        const int dmg = is_warlock_charged ? dmg_range.max : dmg_range.roll();
 
-        tgt->hit(DMG, Dmg_type::physical, Dmg_method::END, Allow_wound::no);
+        tgt->hit(dmg, Dmg_type::physical, Dmg_method::END, Allow_wound::no);
 
         Snd snd("",
                 Sfx_id::END,
@@ -603,25 +603,25 @@ bool Spell_aza_wrath::allow_mon_cast_now(Mon& mon) const
 //------------------------------------------------------------ MAYHEM
 Spell_effect_noticed Spell_mayhem::cast_impl(Actor* const caster) const
 {
-    const bool IS_PLAYER = caster->is_player();
+    const bool is_player = caster->is_player();
 
     if (map::player->can_see_actor(*caster))
     {
-        std::string caster_name = IS_PLAYER ? "me" : caster->name_the();
+        std::string caster_name = is_player ? "me" : caster->name_the();
         msg_log::add("Destruction rages around " + caster_name + "!");
     }
 
     const P& caster_pos = caster->pos;
 
-    const int NR_SWEEPS = 5;
-    const int RADI      = fov_std_radi_int;
+    const int nr_sweeps = 5;
+    const int radi      = fov_std_radi_int;
 
-    const int X0 = std::max(1, caster_pos.x - RADI);
-    const int Y0 = std::max(1, caster_pos.y - RADI);
-    const int X1 = std::min(map_w - 1, caster_pos.x + RADI) - 1;
-    const int Y1 = std::min(map_h - 1, caster_pos.y + RADI) - 1;
+    const int X0 = std::max(1, caster_pos.x - radi);
+    const int Y0 = std::max(1, caster_pos.y - radi);
+    const int X1 = std::min(map_w - 1, caster_pos.x + radi) - 1;
+    const int Y1 = std::min(map_h - 1, caster_pos.y + radi) - 1;
 
-    for (int i = 0; i < NR_SWEEPS; ++i)
+    for (int i = 0; i < nr_sweeps; ++i)
     {
         for (int y = Y0; y <= Y1; ++y)
         {
@@ -717,13 +717,13 @@ bool Spell_mayhem::allow_mon_cast_now(Mon& mon) const
 //------------------------------------------------------------ PESTILENCE
 Spell_effect_noticed Spell_pest::cast_impl(Actor* const caster) const
 {
-    const int RND = rnd::range(1, 3);
+    const int rnd = rnd::range(1, 3);
 
-    const Actor_id monster_id = RND == 1 ? Actor_id::green_spider :
-                                RND == 2 ? Actor_id::red_spider   :
+    const Actor_id monster_id = rnd == 1 ? Actor_id::green_spider :
+                                rnd == 2 ? Actor_id::red_spider   :
                                 Actor_id::rat;
 
-    const size_t NR_MON = rnd::range(7, 10);
+    const size_t nr_mon = rnd::range(7, 10);
 
     Actor* leader = nullptr;
 
@@ -731,9 +731,9 @@ Spell_effect_noticed Spell_pest::cast_impl(Actor* const caster) const
 
     if (caster->is_player())
     {
-        const int N = SUMMON_HOSTILE_ONE_IN_N *
+        const int n = summon_hostile_one_in_n *
                       (player_bon::traits[size_t(Trait::summoner)] ? 2 : 1);
-        did_player_summon_hostile = rnd::one_in(N);
+        did_player_summon_hostile = rnd::one_in(n);
 
         leader = did_player_summon_hostile ? nullptr : caster;
     }
@@ -746,7 +746,7 @@ Spell_effect_noticed Spell_pest::cast_impl(Actor* const caster) const
 
     std::vector<Mon*> mon_summoned;
 
-    actor_factory::summon(caster->pos, {NR_MON, monster_id},
+    actor_factory::summon(caster->pos, {nr_mon, monster_id},
                           Make_mon_aware::yes,
                           leader,
                           &mon_summoned);
@@ -864,10 +864,10 @@ Spell_effect_noticed Spell_pharaoh_staff::cast_impl(Actor* const caster) const
     {
         const auto actor_id = actor->data().id;
 
-        const bool IS_ACTOR_ID_OK = actor_id == Actor_id::mummy ||
+        const bool is_actor_id_ok = actor_id == Actor_id::mummy ||
                                     actor_id == Actor_id::croc_head_mummy;
 
-        if (IS_ACTOR_ID_OK && caster->is_leader_of(actor))
+        if (is_actor_id_ok && caster->is_leader_of(actor))
         {
             actor->restore_hp(999);
             return Spell_effect_noticed::yes;
@@ -881,10 +881,10 @@ Spell_effect_noticed Spell_pharaoh_staff::cast_impl(Actor* const caster) const
 
     if (caster->is_player())
     {
-        const int N = SUMMON_HOSTILE_ONE_IN_N *
+        const int n = summon_hostile_one_in_n *
                       (player_bon::traits[size_t(Trait::summoner)] ? 2 : 1);
 
-        did_player_summon_hostile = rnd::one_in(N);
+        did_player_summon_hostile = rnd::one_in(n);
         leader = did_player_summon_hostile ? nullptr : caster;
     }
     else //Caster is monster
@@ -932,13 +932,13 @@ Spell_effect_noticed Spell_det_items::cast_impl(Actor* const caster) const
 {
     (void)caster;
 
-    const int RADI    = fov_std_radi_int + 3;
-    const int ORIG_X  = map::player->pos.x;
-    const int ORIG_Y  = map::player->pos.y;
-    const int X0      = std::max(0, ORIG_X - RADI);
-    const int Y0      = std::max(0, ORIG_Y - RADI);
-    const int X1      = std::min(map_w - 1, ORIG_X + RADI);
-    const int Y1      = std::min(map_h - 1, ORIG_Y + RADI);
+    const int radi    = fov_std_radi_int + 3;
+    const int orig_x  = map::player->pos.x;
+    const int orig_y  = map::player->pos.y;
+    const int X0      = std::max(0, orig_x - radi);
+    const int Y0      = std::max(0, orig_y - radi);
+    const int X1      = std::min(map_w - 1, orig_x + radi);
+    const int Y1      = std::min(map_h - 1, orig_y + radi);
 
     std::vector<P> items_revealed_cells;
 
@@ -1035,7 +1035,7 @@ Spell_effect_noticed Spell_det_mon::cast_impl(Actor* const caster) const
 
     bool is_seer = player_bon::traits[size_t(Trait::seer)];
 
-    const int MULTIPLIER  = 6 * (is_seer ? 3 : 1);
+    const int multiplier  = 6 * (is_seer ? 3 : 1);
 
     Spell_effect_noticed is_noticed = Spell_effect_noticed::no;
 
@@ -1043,7 +1043,7 @@ Spell_effect_noticed Spell_det_mon::cast_impl(Actor* const caster) const
     {
         if (!actor->is_player())
         {
-            static_cast<Mon*>(actor)->set_player_aware_of_me(MULTIPLIER);
+            static_cast<Mon*>(actor)->set_player_aware_of_me(multiplier);
             is_noticed = Spell_effect_noticed::yes;
         }
     }
@@ -1096,17 +1096,17 @@ Spell_effect_noticed Spell_sacr_life::cast_impl(Actor* const caster) const
 {
     (void)caster;
 
-    //Convert every 2 HP to 1 SPI
+    //Convert every 2 hp to 1 SPI
 
-    const int PLAYER_HP_CUR = map::player->hp();
+    const int player_hp_cur = map::player->hp();
 
-    if (PLAYER_HP_CUR > 2)
+    if (player_hp_cur > 2)
     {
-        const int HP_DRAINED = ((PLAYER_HP_CUR - 1) / 2) * 2;
+        const int hp_drained = ((player_hp_cur - 1) / 2) * 2;
 
-        map::player->hit(HP_DRAINED, Dmg_type::pure);
+        map::player->hit(hp_drained, Dmg_type::pure);
 
-        map::player->restore_spi(HP_DRAINED, true);
+        map::player->restore_spi(hp_drained, true);
 
         return Spell_effect_noticed::yes;
     }
@@ -1119,17 +1119,17 @@ Spell_effect_noticed Spell_sacr_spi::cast_impl(Actor* const caster) const
 {
     (void)caster;
 
-    //Convert all SPI to HP
+    //Convert all spi to HP
 
-    const int PLAYER_SPI_CUR = map::player->spi();
+    const int player_spi_cur = map::player->spi();
 
-    if (PLAYER_SPI_CUR > 0)
+    if (player_spi_cur > 0)
     {
-        const int HP_DRAINED = PLAYER_SPI_CUR - 1;
+        const int hp_drained = player_spi_cur - 1;
 
-        map::player->hit_spi(HP_DRAINED);
+        map::player->hit_spi(hp_drained);
 
-        map::player->restore_hp(HP_DRAINED);
+        map::player->restore_hp(hp_drained);
 
         return Spell_effect_noticed::yes;
     }
@@ -1159,9 +1159,9 @@ Spell_effect_noticed Spell_cloud_minds::cast_impl(Actor* const caster) const
 //------------------------------------------------------------ GHOUL FRENZY
 Spell_effect_noticed Spell_frenzy::cast_impl(Actor* const caster) const
 {
-    const int NR_TURNS = rnd::range(12, 18);
+    const int nr_turns = rnd::range(12, 18);
 
-    Prop_frenzied* frenzy = new Prop_frenzied(Prop_turns::specific, NR_TURNS);
+    Prop_frenzied* frenzy = new Prop_frenzied(Prop_turns::specific, nr_turns);
 
     caster->prop_handler().try_add(frenzy);
 
@@ -1193,30 +1193,30 @@ Spell_effect_noticed Spell_teleport::cast_impl(Actor* const caster) const
 
 bool Spell_teleport::allow_mon_cast_now(Mon& mon) const
 {
-    const bool IS_LOW_HP = mon.hp() <= (mon.hp_max(true) / 2);
+    const bool is_low_hp = mon.hp() <= (mon.hp_max(true) / 2);
 
-    return (mon.aware_counter_ > 0) && IS_LOW_HP && rnd::fraction(3, 4);
+    return (mon.aware_counter_ > 0) && is_low_hp && rnd::fraction(3, 4);
 }
 
 //------------------------------------------------------------ RESISTANCE
 Spell_effect_noticed Spell_res::cast_impl(Actor* const caster) const
 {
-    const int DURATION = 20;
+    const int duration = 20;
 
     Prop_handler& prop_hlr = caster->prop_handler();
 
-    prop_hlr.try_add(new Prop_rFire(Prop_turns::specific, DURATION));
-    prop_hlr.try_add(new Prop_rElec(Prop_turns::specific, DURATION));
+    prop_hlr.try_add(new Prop_rFire(Prop_turns::specific, duration));
+    prop_hlr.try_add(new Prop_rElec(Prop_turns::specific, duration));
 
     return Spell_effect_noticed::yes;
 }
 
 bool Spell_res::allow_mon_cast_now(Mon& mon) const
 {
-    const bool HAS_RFIRE = mon.prop_handler().has_prop(Prop_id::rFire);
-    const bool HAS_RELEC = mon.prop_handler().has_prop(Prop_id::rElec);
+    const bool has_rfire = mon.prop_handler().has_prop(Prop_id::rFire);
+    const bool has_relec = mon.prop_handler().has_prop(Prop_id::rElec);
 
-    return (!HAS_RFIRE || !HAS_RELEC) && mon.tgt_ && rnd::coin_toss();
+    return (!has_rfire || !has_relec) && mon.tgt_ && rnd::coin_toss();
 }
 
 //------------------------------------------------------------ KNOCKBACK
@@ -1398,12 +1398,12 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
     map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
     std::vector<P> free_cells_seen_by_player;
-    const int RADI = fov_std_radi_int;
+    const int radi = fov_std_radi_int;
     const P player_pos(map::player->pos);
-    const int X0 = std::max(0, player_pos.x - RADI);
-    const int Y0 = std::max(0, player_pos.y - RADI);
-    const int X1 = std::min(map_w, player_pos.x + RADI) - 1;
-    const int Y1 = std::min(map_h, player_pos.y + RADI) - 1;
+    const int X0 = std::max(0, player_pos.x - radi);
+    const int Y0 = std::max(0, player_pos.y - radi);
+    const int X1 = std::min(map_w, player_pos.x + radi) - 1;
+    const int Y1 = std::min(map_h, player_pos.y + radi) - 1;
 
     for (int x = X0; x <= X1; ++x)
     {
@@ -1433,8 +1433,8 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
     }
     else //There are free cells seen by the player available
     {
-        const size_t IDX    = rnd::range(0, free_cells_seen_by_player.size() - 1);
-        summon_pos          = free_cells_seen_by_player[IDX];
+        const size_t idx    = rnd::range(0, free_cells_seen_by_player.size() - 1);
+        summon_pos          = free_cells_seen_by_player[idx];
     }
 
     std::vector<Actor_id> summon_bucket;
@@ -1451,10 +1451,10 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
             if (caster->is_player())
             {
                 //Compare player CVL with monster's allowed spawning DLVL.
-                const int PLAYER_CLVL     = dungeon_master::clvl();
-                const int PLAYER_CLVL_PCT = (PLAYER_CLVL * 100) / player_max_clvl;
+                const int player_clvl     = dungeon_master::clvl();
+                const int player_clvl_pct = (player_clvl * 100) / player_max_clvl;
 
-                dlvl_max                   = (PLAYER_CLVL_PCT * dlvl_last) / 100;
+                dlvl_max                   = (player_clvl_pct * dlvl_last) / 100;
             }
             else //Caster is monster
             {
@@ -1476,16 +1476,16 @@ Spell_effect_noticed Spell_summon_mon::cast_impl(Actor* const caster) const
         return Spell_effect_noticed::no;
     }
 
-    const int       IDX                         = rnd::range(0, summon_bucket.size() - 1);
-    const Actor_id  mon_id                      = summon_bucket[IDX];
+    const int       idx                         = rnd::range(0, summon_bucket.size() - 1);
+    const Actor_id  mon_id                      = summon_bucket[idx];
     Actor*          leader                      = nullptr;
     bool            did_player_summon_hostile   = false;
 
     if (caster->is_player())
     {
-        const int N                 = SUMMON_HOSTILE_ONE_IN_N *
+        const int n                 = summon_hostile_one_in_n *
                                       (player_bon::traits[size_t(Trait::summoner)] ? 2 : 1);
-        did_player_summon_hostile   = rnd::one_in(N);
+        did_player_summon_hostile   = rnd::one_in(n);
         leader                      = did_player_summon_hostile ? nullptr : caster;
     }
     else //Caster is monster
@@ -1533,9 +1533,9 @@ bool Spell_summon_mon::allow_mon_cast_now(Mon& mon) const
 Spell_effect_noticed Spell_heal_self::cast_impl(Actor* const caster) const
 {
     //The spell effect is noticed if any hit points were restored
-    const bool IS_ANY_HP_HEALED = caster->restore_hp(999);
+    const bool is_any_hp_healed = caster->restore_hp(999);
 
-    return IS_ANY_HP_HEALED ? Spell_effect_noticed::yes : Spell_effect_noticed::no;
+    return is_any_hp_healed ? Spell_effect_noticed::yes : Spell_effect_noticed::no;
 }
 
 bool Spell_heal_self::allow_mon_cast_now(Mon& mon) const

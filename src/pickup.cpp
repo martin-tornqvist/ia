@@ -25,7 +25,7 @@ void try_pick()
     {
         Inventory& player_inv = map::player->inv();
 
-        const std::string ITEM_NAME = item->name(Item_ref_type::plural);
+        const std::string item_name = item->name(Item_ref_type::plural);
 
         //First try to add it to carried item stack in thrown slot.
         Item* const carried_missile = player_inv.item_in_slot(Slot_id::thrown);
@@ -37,7 +37,7 @@ void try_pick()
         {
             audio::play(Sfx_id::pickup);
 
-            msg_log::add("I add " + ITEM_NAME + " to my missile stack.");
+            msg_log::add("I add " + item_name + " to my missile stack.");
             carried_missile->nr_items_ += item->nr_items_;
             delete item;
             map::cells[pos.x][pos.y].item = nullptr;
@@ -48,7 +48,7 @@ void try_pick()
         audio::play(Sfx_id::pickup);
 
         msg_log::clear();
-        msg_log::add("I pick up " + ITEM_NAME + ".");
+        msg_log::add("I pick up " + item_name + ".");
 
         //Calls the itemps ickup hook
         //NOTE: This may destroy the item (e.g. combine with others)
@@ -69,9 +69,9 @@ Ammo* unload_ranged_wpn(Wpn& wpn)
 {
     ASSERT(!wpn.data().ranged.has_infinite_ammo);
 
-    const int NR_AMMO_LOADED = wpn.nr_ammo_loaded_;
+    const int nr_ammo_loaded = wpn.nr_ammo_loaded_;
 
-    if (NR_AMMO_LOADED == 0)
+    if (nr_ammo_loaded == 0)
     {
         return nullptr;
     }
@@ -83,12 +83,12 @@ Ammo* unload_ranged_wpn(Wpn& wpn)
     if (ammo_data.type == Item_type::ammo_mag)
     {
         //Unload a mag
-        static_cast<Ammo_mag*>(spawned_ammo)->ammo_ = NR_AMMO_LOADED;
+        static_cast<Ammo_mag*>(spawned_ammo)->ammo_ = nr_ammo_loaded;
     }
     else
     {
         //Unload loose ammo
-        spawned_ammo->nr_items_ = NR_AMMO_LOADED;
+        spawned_ammo->nr_items_ = nr_ammo_loaded;
     }
 
     wpn.nr_ammo_loaded_ = 0;

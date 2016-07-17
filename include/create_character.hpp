@@ -4,7 +4,7 @@
 namespace create_character
 {
 
-extern const int OPT_H;
+extern const int opt_h;
 
 void create_character();
 

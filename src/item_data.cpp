@@ -124,20 +124,20 @@ namespace
 
 void add_feature_found_in(Item_data_t& data,
                           const Feature_id feature_id,
-                          const int CHANCE_TO_INCL = 100)
+                          const int chance_to_incl = 100)
 {
-    data.container_spawn_rules.push_back({feature_id, CHANCE_TO_INCL});
+    data.container_spawn_rules.push_back({feature_id, chance_to_incl});
 }
 
-void mod_spawn_chances(Item_data_t& data, const double FACTOR)
+void mod_spawn_chances(Item_data_t& data, const double factor)
 {
     data.chance_to_incl_in_floor_spawn_list =
-        int(double(data.chance_to_incl_in_floor_spawn_list) * FACTOR);
+        int(double(data.chance_to_incl_in_floor_spawn_list) * factor);
 
     for (Item_container_spawn_rule& container_rule : data.container_spawn_rules)
     {
         container_rule.pct_chance_to_incl =
-            int(double(container_rule.pct_chance_to_incl) * FACTOR);
+            int(double(container_rule.pct_chance_to_incl) * factor);
     }
 }
 

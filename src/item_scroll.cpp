@@ -223,11 +223,11 @@ void init()
     cmb.push_back("Barada");
     cmb.push_back("Nikto");
 
-    const size_t NR_CMB_PARTS = cmb.size();
+    const size_t nr_cmb_parts = cmb.size();
 
-    for (size_t i = 0; i < NR_CMB_PARTS; ++i)
+    for (size_t i = 0; i < nr_cmb_parts; ++i)
     {
-        for (size_t ii = 0; ii < NR_CMB_PARTS; ii++)
+        for (size_t ii = 0; ii < nr_cmb_parts; ii++)
         {
             if (i != ii)
             {
@@ -241,9 +241,9 @@ void init()
         if (d.type == Item_type::scroll)
         {
             //False name
-            const size_t IDX = rnd::range(0, false_names_.size() - 1);
+            const size_t idx = rnd::range(0, false_names_.size() - 1);
 
-            const std::string& TITLE = false_names_[IDX];
+            const std::string& TITLE = false_names_[idx];
 
             d.base_name_un_id.names[int(Item_ref_type::plain)] =
                 "Manuscript titled "    + TITLE;
@@ -254,22 +254,22 @@ void init()
             d.base_name_un_id.names[int(Item_ref_type::a)] =
                 "a Manuscript titled "  + TITLE;
 
-            false_names_.erase(false_names_.begin() + IDX);
+            false_names_.erase(false_names_.begin() + idx);
 
             //True name
             const Scroll* const scroll = static_cast<const Scroll*>(item_factory::mk(d.id, 1));
 
-            const std::string REAL_TYPE_NAME = scroll->real_name();
+            const std::string real_type_name = scroll->real_name();
 
             delete scroll;
 
-            const std::string REAL_NAME        = "Manuscript of "    + REAL_TYPE_NAME;
-            const std::string REAL_NAME_PLURAL = "Manuscripts of "   + REAL_TYPE_NAME;
-            const std::string REAL_NAME_A      = "a Manuscript of "  + REAL_TYPE_NAME;
+            const std::string real_name        = "Manuscript of "    + real_type_name;
+            const std::string real_name_plural = "Manuscripts of "   + real_type_name;
+            const std::string real_name_a      = "a Manuscript of "  + real_type_name;
 
-            d.base_name.names[int(Item_ref_type::plain)]  = REAL_NAME;
-            d.base_name.names[int(Item_ref_type::plural)] = REAL_NAME_PLURAL;
-            d.base_name.names[int(Item_ref_type::a)]      = REAL_NAME_A;
+            d.base_name.names[int(Item_ref_type::plain)]  = real_name;
+            d.base_name.names[int(Item_ref_type::plural)] = real_name_plural;
+            d.base_name.names[int(Item_ref_type::a)]      = real_name_a;
         }
     }
 

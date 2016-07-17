@@ -20,8 +20,8 @@ namespace character_lines
 
 void draw()
 {
-    const int       X_WIELDED_DEFAULT           = 43;
-    const size_t    MIN_NR_STEPS_TO_NXT_LABEL   = 3;
+    const int       x_wielded_default           = 43;
+    const size_t    min_nr_steps_to_nxt_label   = 3;
 
     const Panel panel = Panel::char_lines;
 
@@ -42,7 +42,7 @@ void draw()
     render::draw_text(str, panel, p, clr_red_lgt);
 
     //Spirit
-    p.x += std::max(str.size() + 1, MIN_NR_STEPS_TO_NXT_LABEL);
+    p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
     str = "SP:";
 
@@ -55,7 +55,7 @@ void draw()
     render::draw_text(str, panel, p, clr_magenta);
 
     //Insanity
-    p.x += std::max(str.size() + 1, MIN_NR_STEPS_TO_NXT_LABEL);
+    p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
     str = "Ins:";
 
@@ -63,26 +63,26 @@ void draw()
 
     p.x += str.size();
 
-    const int SHOCK = player.shock_tot();
-    const int INS   = player.ins();
+    const int shock = player.shock_tot();
+    const int ins   = player.ins();
 
     const Clr short_san_clr =
-        SHOCK < 50  ? clr_green     :
-        SHOCK < 75  ? clr_yellow    :
-        SHOCK < 100 ? clr_magenta   : clr_red_lgt;
+        shock < 50  ? clr_green     :
+        shock < 75  ? clr_yellow    :
+        shock < 100 ? clr_magenta   : clr_red_lgt;
 
-    str = to_str(SHOCK) + "%/";
+    str = to_str(shock) + "%/";
 
     render::draw_text(str, panel, p, short_san_clr);
 
     p.x += str.size();
 
-    str = to_str(INS) + "%";
+    str = to_str(ins) + "%";
 
     render::draw_text(str, panel, p, clr_magenta);
 
     // Experience
-    p.x += std::max(str.size() + 1, MIN_NR_STEPS_TO_NXT_LABEL);
+    p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
     str = "Exp:";
 
@@ -101,7 +101,7 @@ void draw()
     render::draw_text(str, panel, p, clr_white);
 
     //Wielded weapon
-    p.x = std::max(X_WIELDED_DEFAULT, int(p.x + str.size() + 1));
+    p.x = std::max(x_wielded_default, int(p.x + str.size() + 1));
 
     int x_wielded = p.x;
 
@@ -156,7 +156,7 @@ void draw()
     render::draw_text(str, panel, p, clr_white);
 
     //Encumbrance
-    p.x += std::max(str.size() + 1, MIN_NR_STEPS_TO_NXT_LABEL);
+    p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
     str = "W:";
 
@@ -164,12 +164,12 @@ void draw()
 
     p.x += str.size();
 
-    const int ENC = player.enc_percent();
+    const int enc = player.enc_percent();
 
-    str = to_str(ENC) + "%";
+    str = to_str(enc) + "%";
 
-    const Clr enc_clr = ENC < 100 ? clr_white :
-                        ENC < enc_immobile_lvl ? clr_yellow : clr_red_lgt;
+    const Clr enc_clr = enc < 100 ? clr_white :
+                        enc < enc_immobile_lvl ? clr_yellow : clr_red_lgt;
 
     render::draw_text(str, panel, p, enc_clr);
 
@@ -178,7 +178,7 @@ void draw()
 
     if (body_item)
     {
-        p.x += std::max(str.size() + 1, MIN_NR_STEPS_TO_NXT_LABEL);
+        p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
         const Clr clr = body_item->clr();
 
@@ -215,7 +215,7 @@ void draw()
 
     if (lantern_item)
     {
-        p.x += std::max(str.size() + 1, MIN_NR_STEPS_TO_NXT_LABEL);
+        p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
         const Device_lantern* const lantern = static_cast<const Device_lantern*>(lantern_item);
 
@@ -254,7 +254,7 @@ void draw()
 
     if (medical_item)
     {
-        p.x += std::max(str.size() + 1, MIN_NR_STEPS_TO_NXT_LABEL);
+        p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
         const Clr clr = medical_item->clr();
 
@@ -281,9 +281,9 @@ void draw()
 
         const Medical_bag* const medical_bag = static_cast<const Medical_bag*>(medical_item);
 
-        const int NR_SUPPL = medical_bag->nr_supplies_;
+        const int nr_suppl = medical_bag->nr_supplies_;
 
-        str = to_str(NR_SUPPL);
+        str = to_str(nr_suppl);
 
         render::draw_text(str, panel, p, clr_white);
     }
@@ -333,15 +333,15 @@ void draw()
     }
 
     //Turn number
-    const int           TURN        = game_time::turn();
-    const std::string   turn_str    = to_str(TURN);
+    const int           turn        = game_time::turn();
+    const std::string   turn_str    = to_str(turn);
 
     p.x = screen_w - turn_str.size() - 2; //"T" + ":"
 
-    const bool IS_FREE_STEP_TURN = player.is_free_step_turn();
+    const bool is_free_step_turn = player.is_free_step_turn();
 
-    const Clr turn_label_clr    = IS_FREE_STEP_TURN ? clr_black : clr_gray_drk;
-    const Clr turn_label_bg_clr = IS_FREE_STEP_TURN ? clr_green : clr_black;
+    const Clr turn_label_clr    = is_free_step_turn ? clr_black : clr_gray_drk;
+    const Clr turn_label_bg_clr = is_free_step_turn ? clr_green : clr_black;
 
     render::draw_text("T", panel, p, turn_label_clr, turn_label_bg_clr);
 

@@ -121,9 +121,9 @@ void Inventory::load()
         remove_item_in_backpack_with_idx(0, true);
     }
 
-    const int BACKPACK_SIZE = save_handling::get_int();
+    const int backpack_size = save_handling::get_int();
 
-    for (int i = 0; i < BACKPACK_SIZE; ++i)
+    for (int i = 0; i < backpack_size; ++i)
     {
         const Item_id id = Item_id(save_handling::get_int());
 
@@ -298,17 +298,17 @@ void Inventory::decr_item_in_slot(Slot_id slot_id)
     }
 }
 
-Item* Inventory::remove_item_in_backpack_with_idx(const size_t IDX, const bool DELETE_ITEM)
+Item* Inventory::remove_item_in_backpack_with_idx(const size_t idx, const bool delete_item)
 {
-    ASSERT(IDX < backpack_.size());
+    ASSERT(idx < backpack_.size());
 
-    Item* item = backpack_[IDX];
+    Item* item = backpack_[idx];
 
-    backpack_.erase(begin(backpack_) + IDX);
+    backpack_.erase(begin(backpack_) + idx);
 
     item->on_removed_from_inv();
 
-    if (DELETE_ITEM)
+    if (delete_item)
     {
         delete item;
         item = nullptr;
@@ -317,7 +317,7 @@ Item* Inventory::remove_item_in_backpack_with_idx(const size_t IDX, const bool D
     return item;
 }
 
-Item* Inventory::remove_item_in_backpack_with_ptr(Item* const item, const bool DELETE_ITEM)
+Item* Inventory::remove_item_in_backpack_with_ptr(Item* const item, const bool delete_item)
 {
     for (size_t i = 0; i < backpack_.size(); ++i)
     {
@@ -325,7 +325,7 @@ Item* Inventory::remove_item_in_backpack_with_ptr(Item* const item, const bool D
 
         if (cur_item == item)
         {
-            return remove_item_in_backpack_with_idx(i, DELETE_ITEM);
+            return remove_item_in_backpack_with_idx(i, delete_item);
         }
     }
 
@@ -335,9 +335,9 @@ Item* Inventory::remove_item_in_backpack_with_ptr(Item* const item, const bool D
     return nullptr;
 }
 
-void Inventory::decr_item_in_backpack(const size_t IDX)
+void Inventory::decr_item_in_backpack(const size_t idx)
 {
-    Item* item              = backpack_[IDX];
+    Item* item              = backpack_[idx];
     bool  is_stackable       = item->data().is_stackable;
     bool  should_delete_item  = true;
 
@@ -349,7 +349,7 @@ void Inventory::decr_item_in_backpack(const size_t IDX)
 
     if (should_delete_item)
     {
-        backpack_.erase(begin(backpack_) + IDX);
+        backpack_.erase(begin(backpack_) + idx);
         delete item;
     }
 }
@@ -387,22 +387,22 @@ void Inventory::decr_item(Item* const item)
     }
 }
 
-void Inventory::move_from_backpack_to_slot(const Slot_id id, const size_t BACKPACK_IDX)
+void Inventory::move_from_backpack_to_slot(const Slot_id id, const size_t backpack_idx)
 {
     ASSERT(id != Slot_id::END);
 
     auto& slot = slots_[size_t(id)];
 
-    const bool BACKPACK_SLOT_EXISTS = BACKPACK_IDX < backpack_.size();
+    const bool backpack_slot_exists = backpack_idx < backpack_.size();
 
-    ASSERT(BACKPACK_SLOT_EXISTS);
+    ASSERT(backpack_slot_exists);
 
-    if (BACKPACK_SLOT_EXISTS)
+    if (backpack_slot_exists)
     {
-        Item* item              = backpack_[BACKPACK_IDX];
+        Item* item              = backpack_[backpack_idx];
         Item* slot_item_before  = slot.item;
 
-        backpack_.erase(begin(backpack_) + BACKPACK_IDX);
+        backpack_.erase(begin(backpack_) + backpack_idx);
 
         //If there is an item in this slot already, move it to backpack
         auto unequip_allowed_result = Unequip_allowed::yes;
@@ -454,14 +454,14 @@ Unequip_allowed Inventory::try_move_from_slot_to_backpack(const Slot_id id)
     return unequip_allowed_result;
 }
 
-void Inventory::equip_backpack_item(const size_t BACKPACK_IDX, const Slot_id slot_id)
+void Inventory::equip_backpack_item(const size_t backpack_idx, const Slot_id slot_id)
 {
     ASSERT(slot_id != Slot_id::END);
     ASSERT(owning_actor_);
 
     render::draw_map_state();
 
-    move_from_backpack_to_slot(slot_id, BACKPACK_IDX);
+    move_from_backpack_to_slot(slot_id, backpack_idx);
 
     if (owning_actor_->is_player())
     {
@@ -589,17 +589,17 @@ bool Inventory::has_item_in_slot(Slot_id id) const
     return slots_[int(id)].item;
 }
 
-void Inventory::remove_without_destroying(const Inv_type inv_type, const size_t IDX)
+void Inventory::remove_without_destroying(const Inv_type inv_type, const size_t idx)
 {
     if (inv_type == Inv_type::slots)
     {
-        ASSERT(IDX != int(Slot_id::END));
-        slots_[IDX].item = nullptr;
+        ASSERT(idx != int(Slot_id::END));
+        slots_[idx].item = nullptr;
     }
     else //Backpack
     {
-        ASSERT(IDX < backpack_.size());
-        backpack_.erase(begin(backpack_) + IDX);
+        ASSERT(idx < backpack_.size());
+        backpack_.erase(begin(backpack_) + idx);
     }
 }
 

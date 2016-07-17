@@ -99,12 +99,12 @@ void Player::mk_start_items()
 
             Spell_id        spell_id    = scroll->data().spell_cast_from_scroll;
             Spell* const    spell       = spell_handling::mk_spell_from_id(spell_id);
-            const bool      IS_AVAIL    = spell->is_avail_for_player();
-            const bool      SPI_COST_OK = spell->spi_cost(true).max <=
+            const bool      is_avail    = spell->is_avail_for_player();
+            const bool      spi_cost_ok = spell->spi_cost(true).max <=
                                           player_bon::spi_occultist_can_cast_at_lvl(4);
             delete spell;
 
-            if (IS_AVAIL && SPI_COST_OK && spell_id != Spell_id::darkbolt)
+            if (is_avail && spi_cost_ok && spell_id != Spell_id::darkbolt)
             {
                 static_cast<Scroll*>(scroll)->identify(Verbosity::silent);
                 inv_->put_in_backpack(scroll);
@@ -113,9 +113,9 @@ void Player::mk_start_items()
         }
 
         //Occultist starts with a few potions (identified).
-        const int NR_POTIONS = 2;
+        const int nr_potions = 2;
 
-        for (int i = 0; i < NR_POTIONS; ++i)
+        for (int i = 0; i < nr_potions; ++i)
         {
             Item* const potion = item_factory::mk_random_scroll_or_potion(false, true);
             static_cast<Potion*>(potion)->identify(Verbosity::silent);
@@ -172,10 +172,10 @@ void Player::mk_start_items()
     //Randomize a melee weapon if Occultist or War Veteran
     if (bg == Bg::occultist || bg == Bg::war_vet)
     {
-        const int WEAPON_CHOICE = rnd::range(1, 5);
+        const int weapon_choice = rnd::range(1, 5);
         auto      weapon_id     = Item_id::dagger;
 
-        switch (WEAPON_CHOICE)
+        switch (weapon_choice)
         {
         case 1:
             weapon_id = Item_id::dagger;
@@ -273,9 +273,9 @@ void Player::save() const
 
     for (int i = 0; i < (int)Ability_id::END; ++i)
     {
-        const int V = data_->ability_vals.raw_val(Ability_id(i));
+        const int v = data_->ability_vals.raw_val(Ability_id(i));
 
-        save_handling::put_int(V);
+        save_handling::put_int(v);
     }
 }
 
@@ -309,9 +309,9 @@ void Player::load()
 
     for (int i = 0; i < (int)Ability_id::END; ++i)
     {
-        const int V = save_handling::get_int();
+        const int v = save_handling::get_int();
 
-        data_->ability_vals.set_val(Ability_id(i), V);
+        data_->ability_vals.set_val(Ability_id(i), v);
     }
 }
 
@@ -349,23 +349,23 @@ bool Player::can_see_actor(const Actor& other) const
         return false;
     }
 
-    const bool CAN_SEE_INVIS = has_prop(Prop_id::see_invis);
+    const bool can_see_invis = has_prop(Prop_id::see_invis);
 
     //Monster is invisible, and player cannot see invisible?
-    if (other.has_prop(Prop_id::invis) && !CAN_SEE_INVIS)
+    if (other.has_prop(Prop_id::invis) && !can_see_invis)
     {
         return false;
     }
 
     //Blocked by darkness, and not seeing monster with infravision?
     bool        HAS_INFRAVIS                = prop_handler_->has_prop(Prop_id::infravis);
-    const bool  IS_OTHER_INFRA_VISIBLE      = other.data().is_infra_visible;
+    const bool  is_other_infra_visible      = other.data().is_infra_visible;
 
-    const bool  CAN_SEE_OTHER_WITH_INFRAVIS = HAS_INFRAVIS && IS_OTHER_INFRA_VISIBLE;
+    const bool  can_see_other_with_infravis = HAS_INFRAVIS && is_other_infra_visible;
 
-    const bool  CAN_SEE_OTHER_IN_DRK        = CAN_SEE_INVIS || CAN_SEE_OTHER_WITH_INFRAVIS;
+    const bool  can_see_other_in_drk        = can_see_invis || can_see_other_with_infravis;
 
-    if (cell.player_los.is_blocked_by_drk && !CAN_SEE_OTHER_IN_DRK)
+    if (cell.player_los.is_blocked_by_drk && !can_see_other_in_drk)
     {
         return false;
     }
@@ -374,8 +374,8 @@ bool Player::can_see_actor(const Actor& other) const
     if (
         mon->player_aware_of_me_counter_ <= 0   &&
         mon->is_sneaking_                       &&
-        !CAN_SEE_OTHER_WITH_INFRAVIS            &&
-        !CAN_SEE_INVIS)
+        !can_see_other_with_infravis            &&
+        !can_see_invis)
     {
         return false;
     }
@@ -396,18 +396,18 @@ void Player::on_hit(int& dmg,
         incr_shock(1, Shock_src::misc);
     }
 
-    const bool IS_ENOUGH_DMG_FOR_WOUND  = dmg >= min_dmg_to_wound;
-    const bool IS_PHYSICAL              = dmg_type == Dmg_type::physical;
+    const bool is_enough_dmg_for_wound  = dmg >= min_dmg_to_wound;
+    const bool is_physical              = dmg_type == Dmg_type::physical;
 
     //Ghoul trait Indomitable Fury makes player immune to Wounds while Frenzied
-    const bool IS_GHOUL_RESIST_WOUND = player_bon::traits[(size_t)Trait::indomitable_fury] &&
+    const bool is_ghoul_resist_wound = player_bon::traits[(size_t)Trait::indomitable_fury] &&
                                        prop_handler_->has_prop(Prop_id::frenzied);
 
     if (
         allow_wound == Allow_wound::yes &&
-        IS_ENOUGH_DMG_FOR_WOUND         &&
-        IS_PHYSICAL                     &&
-        !IS_GHOUL_RESIST_WOUND          &&
+        is_enough_dmg_for_wound         &&
+        is_physical                     &&
+        !is_ghoul_resist_wound          &&
         !config::is_bot_playing())
     {
         Prop* const prop = new Prop_wound(Prop_turns::indefinite);
@@ -426,13 +426,13 @@ void Player::on_hit(int& dmg,
             return 0;
         };
 
-        const int NR_WOUNDS_BEFORE = nr_wounds();
+        const int nr_wounds_before = nr_wounds();
 
         prop_handler_->try_add(prop);
 
-        const int NR_WOUNDS_AFTER = nr_wounds();
+        const int nr_wounds_after = nr_wounds();
 
-        if (NR_WOUNDS_AFTER > NR_WOUNDS_BEFORE)
+        if (nr_wounds_after > nr_wounds_before)
         {
             if (insanity::has_sympt(Ins_sympt_id::masoch))
             {
@@ -440,9 +440,9 @@ void Player::on_hit(int& dmg,
 
                 msg_log::add("Hehehe...");
 
-                const double SHOCK_RESTORED = 10.0;
+                const double shock_restored = 10.0;
 
-                shock_ = std::max(0.0, shock_ - SHOCK_RESTORED);
+                shock_ = std::max(0.0, shock_ - shock_restored);
             }
             else //Not masochistic
             {
@@ -456,28 +456,28 @@ void Player::on_hit(int& dmg,
 
 int Player::enc_percent() const
 {
-    const int TOTAL_W = inv_->total_item_weight();
-    const int MAX_W   = carry_weight_lmt();
+    const int total_w = inv_->total_item_weight();
+    const int max_w   = carry_weight_lmt();
 
-    return (int)(((double)TOTAL_W / (double)MAX_W) * 100.0);
+    return (int)(((double)total_w / (double)max_w) * 100.0);
 }
 
 int Player::carry_weight_lmt() const
 {
-    const bool IS_TOUGH         = player_bon::traits[(size_t)Trait::tough];
-    const bool IS_RUGGED        = player_bon::traits[(size_t)Trait::rugged];
-    const bool IS_UNBREAKABLE   = player_bon::traits[(size_t)Trait::unbreakable];
-    const bool IS_STRONG_BACKED = player_bon::traits[(size_t)Trait::strong_backed];
+    const bool is_tough         = player_bon::traits[(size_t)Trait::tough];
+    const bool is_rugged        = player_bon::traits[(size_t)Trait::rugged];
+    const bool is_unbreakable   = player_bon::traits[(size_t)Trait::unbreakable];
+    const bool is_strong_backed = player_bon::traits[(size_t)Trait::strong_backed];
 
-    const bool IS_WEAKENED      = has_prop(Prop_id::weakened);
+    const bool is_weakened      = has_prop(Prop_id::weakened);
 
-    const int CARRY_WEIGHT_MOD = (IS_TOUGH         * 10) +
-                                 (IS_RUGGED        * 10) +
-                                 (IS_UNBREAKABLE   * 10) +
-                                 (IS_STRONG_BACKED * 30) -
-                                 (IS_WEAKENED      * 15);
+    const int carry_weight_mod = (is_tough         * 10) +
+                                 (is_rugged        * 10) +
+                                 (is_unbreakable   * 10) +
+                                 (is_strong_backed * 30) -
+                                 (is_weakened      * 15);
 
-    return (player_carry_weight_base * (CARRY_WEIGHT_MOD + 100)) / 100;
+    return (player_carry_weight_base * (carry_weight_mod + 100)) / 100;
 }
 
 int Player::shock_resistance(const Shock_src shock_src) const
@@ -525,25 +525,25 @@ int Player::shock_resistance(const Shock_src shock_src) const
     return constr_in_range(0, res, 100);
 }
 
-double Player::shock_taken_after_mods(const int BASE_SHOCK,
+double Player::shock_taken_after_mods(const int base_shock,
                                       const Shock_src shock_src) const
 {
-    if (BASE_SHOCK == 0)
+    if (base_shock == 0)
     {
         return 0.0;
     }
 
-    const double SHOCK_RES_DB   = double(shock_resistance(shock_src));
-    const double BASE_SHOCK_DB  = double(BASE_SHOCK);
-    return (BASE_SHOCK_DB * (100.0 - SHOCK_RES_DB)) / 100.0;
+    const double shock_res_db   = double(shock_resistance(shock_src));
+    const double base_shock_db  = double(base_shock);
+    return (base_shock_db * (100.0 - shock_res_db)) / 100.0;
 }
 
-void Player::incr_shock(const int SHOCK, Shock_src shock_src)
+void Player::incr_shock(const int shock, Shock_src shock_src)
 {
-    const double SHOCK_AFTER_MODS = shock_taken_after_mods(SHOCK, shock_src);
+    const double shock_after_mods = shock_taken_after_mods(shock, shock_src);
 
-    shock_                      += SHOCK_AFTER_MODS;
-    perm_shock_taken_cur_turn_  += SHOCK_AFTER_MODS;
+    shock_                      += shock_after_mods;
+    perm_shock_taken_cur_turn_  += shock_after_mods;
 
     set_constr_in_range(0.0, shock_, 100.0);
 }
@@ -553,11 +553,11 @@ void Player::incr_shock(const Shock_lvl shock_value, Shock_src shock_src)
     incr_shock((int)shock_value, shock_src);
 }
 
-void Player::restore_shock(const int amount_restored, const bool IS_TEMP_SHOCK_RESTORED)
+void Player::restore_shock(const int amount_restored, const bool is_temp_shock_restored)
 {
     shock_ = std::max(0.0, shock_ - amount_restored);
 
-    if (IS_TEMP_SHOCK_RESTORED)
+    if (is_temp_shock_restored)
     {
         shock_tmp_ = 0.0;
     }
@@ -571,9 +571,9 @@ void Player::incr_insanity()
 
     if (!config::is_bot_playing())
     {
-        const int INS_INCR = 5;
+        const int ins_incr = 5;
 
-        ins_ += INS_INCR;
+        ins_ += ins_incr;
     }
 
     if (ins() >= 100)
@@ -596,7 +596,7 @@ void Player::incr_insanity()
 
 bool Player::is_standing_in_open_place() const
 {
-    const R r(pos - 1, pos + 1);
+     const R r(pos - 1, pos + 1);
 
     bool blocked[map_w][map_h];
 
@@ -624,7 +624,7 @@ bool Player::is_standing_in_open_place() const
 
 bool Player::is_standing_in_cramped_place() const
 {
-    const R r(pos - 1, pos + 1);
+     const R r(pos - 1, pos + 1);
 
     bool blocked[map_w][map_h];
 
@@ -638,7 +638,7 @@ bool Player::is_standing_in_cramped_place() const
 
     int block_count = 0;
 
-    const int MIN_NR_BLOCKED_FOR_CRAMPED = 6;
+    const int min_nr_blocked_for_cramped = 6;
 
     for (int x = r.p0.x; x <= r.p1.x; ++x)
     {
@@ -648,7 +648,7 @@ bool Player::is_standing_in_cramped_place() const
             {
                 ++block_count;
 
-                if (block_count >= MIN_NR_BLOCKED_FOR_CRAMPED)
+                if (block_count >= min_nr_blocked_for_cramped)
                 {
                     return true;
                 }
@@ -678,9 +678,9 @@ void Player::update_clr()
         return;
     }
 
-    const int CUR_SHOCK = shock_ + shock_tmp_;
+    const int cur_shock = shock_ + shock_tmp_;
 
-    if (CUR_SHOCK >= 75)
+    if (cur_shock >= 75)
     {
         clr_ = clr_magenta;
         return;
@@ -802,15 +802,15 @@ void Player::act()
         const Cell&         tgt_cell   = map::cells[tgt.x][tgt.y];
         const Rigid* const  tgt_rigid  = tgt_cell.rigid;
 
-        const bool IS_TGT_KNOWN_TRAP  = tgt_rigid->id() == Feature_id::trap &&
+        const bool is_tgt_known_trap  = tgt_rigid->id() == Feature_id::trap &&
                                         !static_cast<const Trap*>(tgt_rigid)->is_hidden();
 
-        const bool SHOULD_ABORT = !tgt_rigid->can_move_cmn()                        ||
-                                  IS_TGT_KNOWN_TRAP                                 ||
+        const bool should_abort = !tgt_rigid->can_move_cmn()                        ||
+                                  is_tgt_known_trap                                 ||
                                   tgt_rigid->burn_state() == Burn_state::burning    ||
                                   (tgt_cell.is_dark && !tgt_cell.is_lit);
 
-        if (SHOULD_ABORT)
+        if (should_abort)
         {
             nr_quick_move_steps_left_   = -1;
             quick_move_dir_             = Dir::END;
@@ -890,9 +890,9 @@ void Player::update_tmp_shock()
         {
             const P p(pos + d);
 
-            const int BASE_SHOCK = map::cells[p.x][p.y].rigid->shock_when_adj();
+            const int base_shock = map::cells[p.x][p.y].rigid->shock_when_adj();
 
-            shock_tmp_ += shock_taken_after_mods(BASE_SHOCK, Shock_src::misc);
+            shock_tmp_ += shock_taken_after_mods(base_shock, Shock_src::misc);
         }
     }
     else //Is blind
@@ -949,11 +949,11 @@ void Player::on_std_turn()
     update_tmp_shock();
 
     //Spell resistance
-    const int SPI_TRAIT_LVL = player_bon::traits[(size_t)Trait::mighty_spirit] ? 3 :
+    const int spi_trait_lvl = player_bon::traits[(size_t)Trait::mighty_spirit] ? 3 :
                               player_bon::traits[(size_t)Trait::strong_spirit] ? 2 :
                               player_bon::traits[(size_t)Trait::stout_spirit]  ? 1 : 0;
 
-    if (SPI_TRAIT_LVL > 0 && !prop_handler_->has_prop(Prop_id::rSpell))
+    if (spi_trait_lvl > 0 && !prop_handler_->has_prop(Prop_id::rSpell))
     {
         if (nr_turns_until_rspell_ <= 0)
         {
@@ -967,11 +967,11 @@ void Player::on_std_turn()
                 msg_log::more_prompt();
             }
 
-            const int NR_TURNS_BASE = 125 + rnd::range(0, 25);
+            const int nr_turns_base = 125 + rnd::range(0, 25);
 
-            const int NR_TURNS_BON  = (SPI_TRAIT_LVL - 1) * 50;
+            const int nr_turns_bon  = (spi_trait_lvl - 1) * 50;
 
-            nr_turns_until_rspell_  = std::max(10, NR_TURNS_BASE - NR_TURNS_BON);
+            nr_turns_until_rspell_  = std::max(10, nr_turns_base - nr_turns_bon);
         }
 
         if (!prop_handler_->has_prop(Prop_id::rSpell) && nr_turns_until_rspell_ > 0)
@@ -1045,9 +1045,9 @@ void Player::on_std_turn()
             incr_shock_every_n_turns *= 2;
         }
 
-        const int TURN = game_time::turn();
+        const int turn = game_time::turn();
 
-        if ((TURN % incr_shock_every_n_turns == 0) && TURN > 1)
+        if ((turn % incr_shock_every_n_turns == 0) && turn > 1)
         {
             //Occasionally cause a sudden shock spike, to make it less predictable
             if (rnd::one_in(850))
@@ -1120,9 +1120,9 @@ void Player::on_std_turn()
             actor->is_alive())
         {
             Mon& mon                = *static_cast<Mon*>(actor);
-            const bool IS_MON_SEEN  = can_see_actor(*actor);
+            const bool is_mon_seen  = can_see_actor(*actor);
 
-            if (IS_MON_SEEN)
+            if (is_mon_seen)
             {
                 mon.is_sneaking_ = false;
 
@@ -1152,9 +1152,9 @@ void Player::on_std_turn()
                     map::cells[mon.pos.x][mon.pos.y].is_seen_by_player &&
                     mon.is_sneaking_)
                 {
-                    const bool DID_SPOT_SNEAKING = is_spotting_sneaking_actor(mon);
+                    const bool did_spot_sneaking = is_spotting_sneaking_actor(mon);
 
-                    if (DID_SPOT_SNEAKING)
+                    if (did_spot_sneaking)
                     {
                         mon.is_sneaking_ = false;
 
@@ -1179,7 +1179,7 @@ void Player::on_std_turn()
     {
         int nr_turns_per_hp = 12;
 
-        //Wounds affect HP regen?
+        //Wounds affect hp regen?
         int nr_wounds = 0;
 
         if (prop_handler_->has_prop(Prop_id::wound))
@@ -1189,13 +1189,13 @@ void Player::on_std_turn()
             nr_wounds = static_cast<Prop_wound*>(prop)->nr_wounds();
         }
 
-        const bool IS_SURVIVALIST = player_bon::traits[(size_t)Trait::survivalist];
+        const bool is_survivalist = player_bon::traits[(size_t)Trait::survivalist];
 
-        const int WOUND_EFFECT_DIV = IS_SURVIVALIST ? 2 : 1;
+        const int wound_effect_div = is_survivalist ? 2 : 1;
 
-        nr_turns_per_hp += ((nr_wounds * 4) / WOUND_EFFECT_DIV);
+        nr_turns_per_hp += ((nr_wounds * 4) / wound_effect_div);
 
-        //Items affect HP regen?
+        //Items affect hp regen?
         for (const auto& slot : inv_->slots_)
         {
             if (slot.item)
@@ -1209,24 +1209,24 @@ void Player::on_std_turn()
             nr_turns_per_hp += item->hp_regen_change(Inv_type::backpack);
         }
 
-        //Rapid Recoverer trait affects HP regen?
-        const bool IS_RAPID_RECOVER = player_bon::traits[(size_t)Trait::rapid_recoverer];
+        //Rapid Recoverer trait affects hp regen?
+        const bool is_rapid_recover = player_bon::traits[(size_t)Trait::rapid_recoverer];
 
-        if (IS_RAPID_RECOVER)
+        if (is_rapid_recover)
         {
             nr_turns_per_hp /= 2;
         }
 
         nr_turns_per_hp = std::max(2, nr_turns_per_hp);
 
-        const int TURN      = game_time::turn();
-        const int HP        = hp();
-        const int HP_MAX    = hp_max(true);
+        const int turn       = game_time::turn();
+        const int current_hp = hp();
+        const int max_hp     = hp_max(true);
 
         if (
-            (HP < HP_MAX)                   &&
-            ((TURN % nr_turns_per_hp) == 0) &&
-            TURN > 1)
+            (current_hp < max_hp)           &&
+            ((turn % nr_turns_per_hp) == 0) &&
+            turn > 1)
         {
             ++hp_;
         }
@@ -1235,13 +1235,13 @@ void Player::on_std_turn()
     //Try to spot hidden traps and doors
     if (!has_prop(Prop_id::confused) && prop_handler_->allow_see())
     {
-        const int R = player_bon::traits[(size_t)Trait::perceptive] ? 3 :
+        const int r = player_bon::traits[(size_t)Trait::perceptive] ? 3 :
                       player_bon::traits[(size_t)Trait::observant]  ? 2 : 1;
 
-        int x0 = std::max(0, pos.x - R);
-        int y0 = std::max(0, pos.y - R);
-        int x1 = std::min(map_w - 1, pos.x + R);
-        int y1 = std::min(map_h - 1, pos.y + R);
+        int x0 = std::max(0, pos.x - r);
+        int y0 = std::max(0, pos.y - r);
+        int x1 = std::min(map_w - 1, pos.x + r);
+        int y1 = std::min(map_h - 1, pos.y + r);
 
         for (int y = y0; y <= y1; ++y)
         {
@@ -1301,17 +1301,17 @@ void Player::interrupt_actions()
 }
 
 void Player::hear_sound(const Snd& snd,
-                        const bool IS_ORIGIN_SEEN_BY_PLAYER,
+                        const bool is_origin_seen_by_player,
                         const Dir dir_to_origin,
-                        const int PERCENT_AUDIBLE_DISTANCE)
+                        const int percent_audible_distance)
 {
-    (void)IS_ORIGIN_SEEN_BY_PLAYER;
+    (void)is_origin_seen_by_player;
 
     const Sfx_id        sfx         = snd.sfx();
     const std::string&  msg         = snd.msg();
-    const bool          HAS_SND_MSG = !msg.empty() && msg != " ";
+    const bool          has_snd_msg = !msg.empty() && msg != " ";
 
-    if (HAS_SND_MSG)
+    if (has_snd_msg)
     {
         msg_log::add(msg,
                      clr_text,
@@ -1320,9 +1320,9 @@ void Player::hear_sound(const Snd& snd,
     }
 
     //Play audio after message to ensure sync between audio and animation.
-    audio::play(sfx, dir_to_origin, PERCENT_AUDIBLE_DISTANCE);
+    audio::play(sfx, dir_to_origin, percent_audible_distance);
 
-    if (HAS_SND_MSG)
+    if (has_snd_msg)
     {
         Actor* const actor_who_made_snd = snd.actor_who_made_sound();
 
@@ -1388,10 +1388,10 @@ void Player::move(Dir dir)
         //Hostile monster here?
         if (mon && !is_leader_of(mon))
         {
-            const bool CAN_SEE_MON      = map::player->can_see_actor(*mon);
-            const bool IS_AWARE_OF_MON  = mon->player_aware_of_me_counter_ > 0;
+            const bool can_see_mon      = map::player->can_see_actor(*mon);
+            const bool is_aware_of_mon  = mon->player_aware_of_me_counter_ > 0;
 
-            if (IS_AWARE_OF_MON)
+            if (is_aware_of_mon)
             {
                 if (prop_handler_->allow_attack_melee(Verbosity::verbose))
                 {
@@ -1409,7 +1409,7 @@ void Player::move(Dir dir)
                         {
                             const std::string wpn_name = wpn->name(Item_ref_type::a);
 
-                            const std::string mon_name = CAN_SEE_MON ? mon->name_the() : "it";
+                            const std::string mon_name = can_see_mon ? mon->name_the() : "it";
 
                             msg_log::add("Attack " + mon_name + " with " + wpn_name + "? [y/n]",
                                          clr_white_high);
@@ -1441,7 +1441,7 @@ void Player::move(Dir dir)
             else //There is a monster here that player is unaware of
             {
                 //If player is unaware of the monster, it should never be seen
-                ASSERT(!CAN_SEE_MON);
+                ASSERT(!can_see_mon);
 
                 if (is_features_allow_move)
                 {
@@ -1472,7 +1472,7 @@ void Player::move(Dir dir)
         if (is_features_allow_move)
         {
             //Encumbrance
-            const int ENC = enc_percent();
+            const int enc = enc_percent();
 
             Prop* const wound_prop = prop_handler_->prop(Prop_id::wound);
 
@@ -1483,15 +1483,15 @@ void Player::move(Dir dir)
                 nr_wounds = static_cast<Prop_wound*>(wound_prop)->nr_wounds();
             }
 
-            const int MIN_NR_WOUNDS_FOR_STAGGER = 3;
+            const int min_nr_wounds_for_stagger = 3;
 
-            if (ENC >= enc_immobile_lvl)
+            if (enc >= enc_immobile_lvl)
             {
                 msg_log::add("I am too encumbered to move!");
                 render::draw_map_state();
                 return;
             }
-            else if (ENC >= 100 || nr_wounds >= MIN_NR_WOUNDS_FOR_STAGGER)
+            else if (enc >= 100 || nr_wounds >= min_nr_wounds_for_stagger)
             {
                 msg_log::add("I stagger.", clr_msg_note);
                 prop_handler_->try_add(new Prop_waiting(Prop_turns::std));
@@ -1512,23 +1512,23 @@ void Player::move(Dir dir)
 
             pos = tgt;
 
-            const int FREE_STEP_EVERY_N_TURN =
+            const int free_step_every_n_turn =
                 player_bon::traits[(size_t)Trait::mobile]       ? 3 :
                 player_bon::traits[(size_t)Trait::lithe]        ? 4 :
                 player_bon::traits[(size_t)Trait::dexterous]    ? 5 : 0;
 
-            if (FREE_STEP_EVERY_N_TURN > 0)
+            if (free_step_every_n_turn > 0)
             {
                 if (nr_steps_until_free_action_ == -1)
                 {
                     //Steps until free action has not been initialized before
                     //(e.g. player recently picked dexterous)
-                    nr_steps_until_free_action_ = FREE_STEP_EVERY_N_TURN - 2;
+                    nr_steps_until_free_action_ = free_step_every_n_turn - 2;
                 }
                 else if (nr_steps_until_free_action_ == 0)
                 {
                     //Time for a free move!
-                    nr_steps_until_free_action_ = FREE_STEP_EVERY_N_TURN - 1;
+                    nr_steps_until_free_action_ = free_step_every_n_turn - 1;
 
                     pass_time = Pass_time::no;
                 }
@@ -1544,9 +1544,9 @@ void Player::move(Dir dir)
 
             if (item)
             {
-                const bool CAN_SEE = prop_handler_->allow_see();
+                const bool can_see = prop_handler_->allow_see();
 
-                msg_log::add(CAN_SEE ?
+                msg_log::add(can_see ?
                              "I see here:" :
                              "I try to feel what is lying here...",
                              clr_white,
@@ -1713,7 +1713,7 @@ void Player::add_light_hook(bool light_map[map_w][map_h]) const
     {
         bool hard_blocked[map_w][map_h];
 
-        const R fov_lmt = fov::get_fov_rect(pos);
+         const R fov_lmt = fov::get_fov_rect(pos);
 
         map_parse::run(cell_check::Blocks_los(),
                        hard_blocked,
@@ -1770,7 +1770,7 @@ void Player::update_fov()
     {
         bool hard_blocked[map_w][map_h];
 
-        const R fov_lmt = fov::get_fov_rect(pos);
+         const R fov_lmt = fov::get_fov_rect(pos);
 
         map_parse::run(cell_check::Blocks_los(),
                        hard_blocked,
@@ -1815,10 +1815,10 @@ void Player::update_fov()
         for (int y = 0; y < map_h; ++y)
         {
             Cell& cell = map::cells[x][y];
-            const bool IS_BLOCKING = cell_check::Blocks_move_cmn(false).check(cell);
+            const bool is_blocking = cell_check::Blocks_move_cmn(false).check(cell);
 
             //Do not explore dark floor cells
-            if (cell.is_seen_by_player && (!cell.is_dark || IS_BLOCKING))
+            if (cell.is_seen_by_player && (!cell.is_dark || is_blocking))
             {
                 cell.is_explored = true;
             }

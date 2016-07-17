@@ -26,7 +26,7 @@ P run(const Marker_use_player_tgt use_tgt,
       std::function<Marker_done(const P&,
                                 const Key_data&)> on_key_press,
       Marker_show_blocked show_blocked,
-      const int EFFECTIVE_RANGE_LMT = INT_MAX);
+      const int effective_range_lmt = INT_MAX);
 
 } //marker
 

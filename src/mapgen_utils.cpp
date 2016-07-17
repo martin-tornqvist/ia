@@ -194,12 +194,12 @@ void mk_pillars_in_room(const Room& room)
             return rnd::range(1, 2);
         };
 
-        const int DX = step_size();
-        const int DY = step_size();
+        const int dx = step_size();
+        const int dy = step_size();
 
-        for (int y = room_p0.y + 1; y <= room_p1.y - 1; y += DY)
+        for (int y = room_p0.y + 1; y <= room_p1.y - 1; y += dy)
         {
-            for (int x = room_p0.x + 1; x <= room_p1.x - 1; x += DX)
+            for (int x = room_p0.x + 1; x <= room_p1.x - 1; x += dx)
             {
                 const P p(x, y);
 
@@ -359,10 +359,10 @@ void valid_room_corr_entries(const Room& room, std::vector<P>& out)
     {
         for (int y = 0; y < map_h; ++y)
         {
-            const bool IS_ROOM_CELL = map::room_map[x][y] == &room;
-            room_cells[x][y]        = IS_ROOM_CELL;
+            const bool is_room_cell = map::room_map[x][y] == &room;
+            room_cells[x][y]        = is_room_cell;
             const auto* const f     = map::cells[x][y].rigid;
-            room_floor_cells[x][y]  = IS_ROOM_CELL && f->id() == Feature_id::floor;
+            room_floor_cells[x][y]  = is_room_cell && f->id() == Feature_id::floor;
         }
     }
 
@@ -465,11 +465,11 @@ void mk_pathfind_cor(Room& room_0,
     {
         for (const P& p1 : p1_bucket)
         {
-            const int DIST = king_dist(p0, p1);
+            const int dist = king_dist(p0, p1);
 
-            if (DIST < shortest_dist)
+            if (dist < shortest_dist)
             {
-                shortest_dist = DIST;
+                shortest_dist = dist;
             }
         }
     }
@@ -483,9 +483,9 @@ void mk_pathfind_cor(Room& room_0,
     {
         for (const P& p1 : p1_bucket)
         {
-            const int DIST = king_dist(p0, p1);
+            const int dist = king_dist(p0, p1);
 
-            if (DIST == shortest_dist)
+            if (dist == shortest_dist)
             {
                 entries_bucket.push_back(std::pair<P, P>(p0, p1));
             }
@@ -493,9 +493,9 @@ void mk_pathfind_cor(Room& room_0,
     }
 
     TRACE_VERBOSE << "Picking a random stored entry pair" << std::endl;
-    const size_t IDX = rnd::range(0, entries_bucket.size() - 1);
+    const size_t idx = rnd::range(0, entries_bucket.size() - 1);
 
-    const auto& entries = entries_bucket[IDX];
+    const auto& entries = entries_bucket[idx];
 
     const P& p0 = entries.first;
     const P& p1 = entries.second;
@@ -519,12 +519,12 @@ void mk_pathfind_cor(Room& room_0,
         {
             for (int y = 0; y < map_h; ++y)
             {
-                const bool IS_WALL =
+                const bool is_wall =
                     map::cells[x][y].rigid->id() == Feature_id::wall;
 
                 const auto* const room_ptr = map::room_map[x][y];
 
-                blocked[x][y] = !IS_WALL || room_ptr;
+                blocked[x][y] = !is_wall || room_ptr;
             }
         }
 
@@ -561,18 +561,18 @@ void mk_pathfind_cor(Room& room_0,
         blocked_expanded[p0.x][p0.y] = blocked_expanded[p1.x][p1.y] = false;
 
         //Allowing diagonal steps creates a more "cave like" path
-        const bool ALLOW_DIAGONAL = map::dlvl >= dlvl_first_late_game;
+        const bool allow_diagonal = map::dlvl >= dlvl_first_late_game;
 
         //Randomizing steps create more "snaky" paths
-        const bool RANDOMIZE_STEP_CHOICES = map::dlvl >= dlvl_first_late_game ? true :
+        const bool randomize_step_choices = map::dlvl >= dlvl_first_late_game ? true :
                                             rnd::one_in(5);
 
         pathfind::run(p0,
                        p1,
                        blocked_expanded,
                        path,
-                       ALLOW_DIAGONAL,
-                       RANDOMIZE_STEP_CHOICES);
+                       allow_diagonal,
+                       randomize_step_choices);
     }
 
     if (!path.empty())
@@ -696,7 +696,7 @@ void mk_pathfind_cor(Room& room_0,
 void pathfinder_walk(const P& p0,
                      const P& p1,
                      std::vector<P>& pos_list_ref,
-                     const bool IS_SMOOTH)
+                     const bool is_smooth)
 {
     pos_list_ref.clear();
 
@@ -711,7 +711,7 @@ void pathfinder_walk(const P& p0,
     {
         pos_list_ref.push_back(p);
 
-        if (!IS_SMOOTH && rnd::one_in(3))
+        if (!is_smooth && rnd::one_in(3))
         {
             rnd_walk(p, rnd::range(1, 6), rnd_walk_buffer, true);
 
@@ -727,16 +727,16 @@ void pathfinder_walk(const P& p0,
 void rnd_walk(const P& p0,
               int len,
               std::vector<P>& pos_list_ref,
-              const bool ALLOW_DIAGONAL,
+              const bool allow_diagonal,
               R area)
 {
     pos_list_ref.clear();
 
-    const std::vector<P>& d_list = ALLOW_DIAGONAL ?
+    const std::vector<P>& d_list = allow_diagonal ?
                                    dir_utils::dir_list :
                                    dir_utils::cardinal_list;
 
-    const int D_LIST_SIZE = d_list.size();
+    const int d_list_size = d_list.size();
 
     P p(p0);
 
@@ -747,7 +747,7 @@ void rnd_walk(const P& p0,
 
         while (true)
         {
-            const P nxt_pos = p + d_list[rnd::range(0, D_LIST_SIZE - 1)];
+            const P nxt_pos = p + d_list[rnd::range(0, d_list_size - 1)];
 
             if (is_pos_inside(nxt_pos, area))
             {

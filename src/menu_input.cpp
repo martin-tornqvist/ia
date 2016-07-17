@@ -4,10 +4,10 @@
 #include "config.hpp"
 
 //---------------------------------------------------------- MENU BROWSER
-Menu_browser::Menu_browser(const int NR_ITEMS, const int LIST_H) :
-    nr_items_       (NR_ITEMS),
+Menu_browser::Menu_browser(const int nr_items, const int list_h) :
+    nr_items_       (nr_items),
     y_              (0),
-    list_h_         (LIST_H),
+    list_h_         (list_h),
     range_shown_    (Range(-1, -1))
 {
     set_y_nearest_valid();
@@ -17,15 +17,15 @@ Menu_browser::Menu_browser(const int NR_ITEMS, const int LIST_H) :
 
 void Menu_browser::move(const Ver_dir dir)
 {
-    const int LAST_IDX = nr_items_ - 1;
+    const int last_idx = nr_items_ - 1;
 
     if (dir == Ver_dir::up)
     {
-        y_ = y_ == 0 ? LAST_IDX : (y_ - 1);
+        y_ = y_ == 0 ? last_idx : (y_ - 1);
     }
     else //Down
     {
-        y_ = y_ == LAST_IDX ? 0 : (y_ + 1);
+        y_ = y_ == last_idx ? 0 : (y_ + 1);
     }
 
     update_range_shown();
@@ -61,9 +61,9 @@ void Menu_browser::move_page(const Ver_dir dir)
     update_range_shown();
 }
 
-void Menu_browser::set_y(const int Y)
+void Menu_browser::set_y(const int y)
 {
-    y_ = Y;
+    y_ = y;
 
     set_y_nearest_valid();
 
@@ -89,10 +89,10 @@ void Menu_browser::update_range_shown()
     //Shown ranged defined?
     if (list_h_ >= 0)
     {
-        const int TOP_IDX_SHOWN = (y_ / list_h_) * list_h_;
-        const int BTM_IDX_SHOWN = std::min(TOP_IDX_SHOWN + list_h_, nr_items_) - 1;
+        const int top_idx_shown = (y_ / list_h_) * list_h_;
+        const int btm_idx_shown = std::min(top_idx_shown + list_h_, nr_items_) - 1;
 
-        range_shown_.set(TOP_IDX_SHOWN, BTM_IDX_SHOWN);
+        range_shown_.set(top_idx_shown, btm_idx_shown);
     }
 }
 
@@ -212,25 +212,25 @@ Menu_action action(Menu_browser& browser, Menu_input_mode mode)
             bool is_shift_held  = false;
             char c              = d.key;
 
-            const bool IS_LOWER_CASE_LETTER = c >= 'a' && c <= 'z';
-            const bool IS_UPPER_CASE_LETTER = c >= 'A' && c <= 'Z';
+            const bool is_lower_case_letter = c >= 'a' && c <= 'z';
+            const bool is_upper_case_letter = c >= 'A' && c <= 'Z';
 
             //First, if this is an upper case letter, convert to lower case
-            if (IS_UPPER_CASE_LETTER)
+            if (is_upper_case_letter)
             {
                 is_shift_held   = true;
                 c               = c - 'A' + 'a';
             }
 
             //Is a letter between a and z pressed?
-            const char LAST_LETTER = 'a' + browser.nr_items_shown() - 1;
+            const char last_letter = 'a' + browser.nr_items_shown() - 1;
 
-            if (c >= 'a' && c <= LAST_LETTER)
+            if (c >= 'a' && c <= last_letter)
             {
-                const int TOP_IDX_SHOWN = browser.top_idx_shown();
-                const int IDX           = TOP_IDX_SHOWN + c - 'a';
+                const int top_idx_shown = browser.top_idx_shown();
+                const int idx           = top_idx_shown + c - 'a';
 
-                browser.set_y(IDX);
+                browser.set_y(idx);
 
                 return is_shift_held ?
                        Menu_action::selected_shift : Menu_action::selected;
@@ -239,7 +239,7 @@ Menu_action action(Menu_browser& browser, Menu_input_mode mode)
             //If this is a letter (lower or upper case), we don't want to handle input in any
             //other way for this keypress (if it was outside the range of indexes, then nothing
             //should happen)
-            if (IS_LOWER_CASE_LETTER || IS_UPPER_CASE_LETTER)
+            if (is_lower_case_letter || is_upper_case_letter)
             {
                 continue;
             }

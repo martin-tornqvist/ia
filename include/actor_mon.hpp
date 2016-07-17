@@ -62,9 +62,9 @@ public:
 
     void hear_sound(const Snd& snd);
 
-    void become_aware_player(const bool IS_FROM_SEEING);
+    void become_aware_player(const bool is_from_seeing);
 
-    void set_player_aware_of_me(const int DURATION_FACTOR = 1);
+    void set_player_aware_of_me(const int duration_factor = 1);
 
     void on_actor_turn() override;
 

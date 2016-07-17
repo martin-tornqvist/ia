@@ -10,7 +10,7 @@ class Menu_browser;
 namespace render_inv
 {
 
-extern const int INV_H;
+extern const int inv_h;
 
 void draw_inv(const Menu_browser& browser);
 

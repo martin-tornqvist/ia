@@ -13,18 +13,18 @@ namespace
 
 Map_templ templates_[size_t(Map_templ_id::END)];
 
-Map_templ_cell ch_to_cell(const char CH,
+Map_templ_cell ch_to_cell(const char ch,
                           const std::vector<Map_templ_cell>& prototypes)
 {
     for (const Map_templ_cell& proto : prototypes)
     {
-        if (proto.ch == CH)
+        if (proto.ch == ch)
         {
             return proto;
         }
     }
 
-    TRACE << "Failed to make map template cell from char: " <<  CH << std::endl;
+    TRACE << "Failed to make map template cell from char: " <<  ch << std::endl;
     ASSERT(false);
     return Map_templ_cell(0);
 }

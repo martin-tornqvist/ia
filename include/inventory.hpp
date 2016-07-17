@@ -50,7 +50,7 @@ public:
     void load();
 
     //Equip item from backpack
-    void equip_backpack_item(const size_t BACKPACK_IDX, const Slot_id slot_id);
+    void equip_backpack_item(const size_t backpack_idx, const Slot_id slot_id);
 
     //Attempt to unequip item from slot
     Unequip_allowed try_unequip_slot(const Slot_id id);
@@ -80,25 +80,25 @@ public:
 
     Item* item_in_slot(const Slot_id id) const;
 
-    void remove_without_destroying(const Inv_type inv_type, const size_t IDX);
+    void remove_without_destroying(const Inv_type inv_type, const size_t idx);
 
     void decr_item_in_slot(Slot_id slot_id);
 
-    void decr_item_in_backpack(const size_t IDX);
+    void decr_item_in_backpack(const size_t idx);
 
     void decr_item(Item* const item);
 
     void decr_item_type_in_backpack(const Item_id item_id);
 
-    Item* remove_item_in_backpack_with_idx(const size_t IDX, const bool DELETE_ITEM);
-    Item* remove_item_in_backpack_with_ptr(Item* const item, const bool DELETE_ITEM);
+    Item* remove_item_in_backpack_with_idx(const size_t idx, const bool delete_item);
+    Item* remove_item_in_backpack_with_ptr(Item* const item, const bool delete_item);
 
     int intrinsics_size() const
     {
         return intrinsics_.size();
     }
 
-    Item* intrinsic_in_element(const int IDX) const;
+    Item* intrinsic_in_element(const int idx) const;
 
     Item* last_item_in_backpack();
 
@@ -115,7 +115,7 @@ public:
     std::vector<Item*> intrinsics_;
 
 private:
-    void move_from_backpack_to_slot(const Slot_id id, const size_t BACKPACK_IDX);
+    void move_from_backpack_to_slot(const Slot_id id, const size_t backpack_idx);
 
     Unequip_allowed try_move_from_slot_to_backpack(const Slot_id id);
 

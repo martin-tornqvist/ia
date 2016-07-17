@@ -239,11 +239,11 @@ void draw(const Menu_browser& browser)
             logo.push_back("               \\                 \\                      ");
         }
 
-        const int LOGO_X_POS_LEFT = (map_w - logo[0].size()) / 2;
+        const int logo_x_pos_left = (map_w - logo[0].size()) / 2;
 
         for (const std::string& row : logo)
         {
-            pos.x = LOGO_X_POS_LEFT;
+            pos.x = logo_x_pos_left;
 
             for (const char& glyph : row)
             {
@@ -324,12 +324,12 @@ void draw(const Menu_browser& browser)
     {
         text_format::split(quote, quote_w, quote_lines);
 
-        const size_t MIN_STR_W_LAST_LINE = 20;
+        const size_t min_str_w_last_line = 20;
 
         const std::string& last_line = quote_lines.back();
 
         //Is the length of the current last line at least as long as the minimum required?
-        if (last_line.length() >= MIN_STR_W_LAST_LINE)
+        if (last_line.length() >= min_str_w_last_line)
         {
             break;
         }

@@ -185,7 +185,7 @@ Prop* Amulet_effect_haste::mk_prop() const
     return new Prop_hasted(Prop_turns::indefinite);
 }
 
-//--------------------------------------------------------- HP BONUS
+//--------------------------------------------------------- hp BONUS
 void Amulet_effect_hp_bon::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
@@ -201,7 +201,7 @@ Unequip_allowed Amulet_effect_hp_bon::on_unequip()
     return Unequip_allowed::yes;
 }
 
-//--------------------------------------------------------- HP PENALTY
+//--------------------------------------------------------- hp PENALTY
 void Amulet_effect_hp_pen::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
@@ -217,7 +217,7 @@ Unequip_allowed Amulet_effect_hp_pen::on_unequip()
     return Unequip_allowed::yes;
 }
 
-//--------------------------------------------------------- SPI BONUS
+//--------------------------------------------------------- spi BONUS
 void Amulet_effect_spi_bon::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
@@ -233,7 +233,7 @@ Unequip_allowed Amulet_effect_spi_bon::on_unequip()
     return Unequip_allowed::yes;
 }
 
-//--------------------------------------------------------- SPI PENALTY
+//--------------------------------------------------------- spi PENALTY
 void Amulet_effect_spi_pen::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
@@ -254,9 +254,9 @@ void Amulet_effect_random_tele::on_std_turn_equipped()
 {
     auto& prop_handler = map::player->prop_handler();
 
-    const int TELE_ON_IN_N = 200;
+    const int tele_on_in_n = 200;
 
-    if (rnd::one_in(TELE_ON_IN_N) && prop_handler.allow_act())
+    if (rnd::one_in(tele_on_in_n) && prop_handler.allow_act())
     {
         msg_log::add("I am being teleported...",
                      clr_white,
@@ -272,9 +272,9 @@ void Amulet_effect_random_tele::on_std_turn_equipped()
 //--------------------------------------------------------- SUMMON MON
 void Amulet_effect_summon_mon::on_std_turn_equipped()
 {
-    const int SOUND_ONE_IN_N  = 250;
+    const int sound_one_in_n  = 250;
 
-    if (effects_known_[size_t(id())] && rnd::one_in(SOUND_ONE_IN_N))
+    if (effects_known_[size_t(id())] && rnd::one_in(sound_one_in_n))
     {
         msg_log::add("I hear a faint whistling sound coming nearer...",
                      clr_white,
@@ -284,9 +284,9 @@ void Amulet_effect_summon_mon::on_std_turn_equipped()
         map::player->incr_shock(Shock_lvl::mild, Shock_src::misc);
     }
 
-    const int SUMMON_ONE_IN_N = 1200;
+    const int summon_one_in_n = 1200;
 
-    if (rnd::one_in(SUMMON_ONE_IN_N))
+    if (rnd::one_in(summon_one_in_n))
     {
         msg_log::add("There is a loud whistling sound.",
                      clr_white,
@@ -320,18 +320,18 @@ void Amulet_effect_summon_mon::on_std_turn_equipped()
 //--------------------------------------------------------- FIRE
 void Amulet_effect_fire::on_std_turn_equipped()
 {
-    const int FIRE_ONE_IN_N = 300;
+    const int fire_one_in_n = 300;
 
-    if (rnd::one_in(FIRE_ONE_IN_N))
+    if (rnd::one_in(fire_one_in_n))
     {
         const P& origin   = map::player->pos;
-        const int D         = fov_std_radi_int - 2;
-        const int X0        = std::max(1,            origin.x - D);
-        const int Y0        = std::max(1,            origin.y - D);
-        const int X1        = std::min(map_w - 2,    origin.x + D);
-        const int Y1        = std::min(map_h - 2,    origin.y + D);
+        const int d         = fov_std_radi_int - 2;
+        const int X0        = std::max(1,            origin.x - d);
+        const int Y0        = std::max(1,            origin.y - d);
+        const int X1        = std::min(map_w - 2,    origin.x + d);
+        const int Y1        = std::min(map_h - 2,    origin.y + d);
 
-        const int FIRE_CELL_ONE_IN_N = 4;
+        const int fire_cell_one_in_n = 4;
 
         msg_log::add("The surrounding area suddenly burst into flames!", clr_white,
                      false, More_prompt_on_msg::yes);
@@ -340,7 +340,7 @@ void Amulet_effect_fire::on_std_turn_equipped()
         {
             for (int y = Y0; y <= Y1; ++y)
             {
-                if (rnd::one_in(FIRE_CELL_ONE_IN_N) && P(x, y) != origin)
+                if (rnd::one_in(fire_cell_one_in_n) && P(x, y) != origin)
                 {
                     map::cells[x][y].rigid->hit(Dmg_type::fire, Dmg_method::elemental);
                 }
@@ -354,9 +354,9 @@ void Amulet_effect_fire::on_std_turn_equipped()
 //--------------------------------------------------------- CONFLICT
 void Amulet_effect_conflict::on_std_turn_equipped()
 {
-    const int CONFLICT_ONE_IN_N = 50;
+    const int conflict_one_in_n = 50;
 
-    if (rnd::one_in(CONFLICT_ONE_IN_N))
+    if (rnd::one_in(conflict_one_in_n))
     {
         std::vector<Actor*> seen_foes;
         map::player->seen_foes(seen_foes);
@@ -462,9 +462,9 @@ Amulet_effect_shriek::Amulet_effect_shriek(Amulet* const amulet) :
 
 void Amulet_effect_shriek::on_std_turn_equipped()
 {
-    const int NOISE_ONE_IN_N = 300;
+    const int noise_one_in_n = 300;
 
-    if (rnd::one_in(NOISE_ONE_IN_N))
+    if (rnd::one_in(noise_one_in_n))
     {
         const std::string name = amulet_->name(Item_ref_type::plain, Item_ref_inf::none);
 
@@ -473,18 +473,18 @@ void Amulet_effect_shriek::on_std_turn_equipped()
                      false,
                      More_prompt_on_msg::yes);
 
-        const int NR_WORDS = 3;
+        const int nr_words = 3;
 
         std::string phrase = "";
 
-        for (int i = 0; i < NR_WORDS; ++i)
+        for (int i = 0; i < nr_words; ++i)
         {
-            const int   IDX     = rnd::range(0, words_.size() - 1);
-            const auto& word    = words_[size_t(IDX)];
+            const int   idx     = rnd::range(0, words_.size() - 1);
+            const auto& word    = words_[size_t(idx)];
 
             phrase += word;
 
-            if (i < NR_WORDS - 1)
+            if (i < nr_words - 1)
             {
                 phrase += " ... ";
             }
@@ -527,7 +527,7 @@ void Amulet_effect_burden::change_item_weight(int& weight_ref)
     weight_ref = int(Item_weight::medium);
 }
 
-//--------------------------------------------------------- HP REGEN BONUS
+//--------------------------------------------------------- hp REGEN BONUS
 void Amulet_effect_hp_regen_bon::on_equip(const Verbosity verbosity)
 {
     if (verbosity == Verbosity::verbose)
@@ -544,7 +544,7 @@ Unequip_allowed Amulet_effect_hp_regen_bon::on_unequip()
     return Unequip_allowed::yes;
 }
 
-//--------------------------------------------------------- HP REGEN PENALTY
+//--------------------------------------------------------- hp REGEN PENALTY
 void Amulet_effect_hp_regen_pen::on_equip(const Verbosity verbosity)
 {
     if (verbosity == Verbosity::verbose)
@@ -592,9 +592,9 @@ std::vector<std::string> Amulet::descr() const
 
     for (auto* effect : effects_)
     {
-        const size_t EFFECT_IDX = size_t(effect->id());
+        const size_t effect_idx = size_t(effect->id());
 
-        if (effects_known_[EFFECT_IDX])
+        if (effects_known_[effect_idx])
         {
             ret.push_back(effect->descr());
         }
@@ -676,9 +676,9 @@ void Amulet::identify(const Verbosity verbosity)
 
         for (auto* effect : effects_)
         {
-            const size_t EFFECT_IDX = size_t(effect->id());
+            const size_t effect_idx = size_t(effect->id());
 
-            effects_known_[EFFECT_IDX] = true;
+            effects_known_[effect_idx] = true;
         }
 
         if (verbosity == Verbosity::verbose)
@@ -729,26 +729,26 @@ int Amulet::hp_regen_change(const Inv_type inv_type) const
 
 void Amulet::effect_noticed(const Amulet_effect_id effect_id)
 {
-    const size_t EFFECT_IDX = size_t(effect_id);
+    const size_t effect_idx = size_t(effect_id);
 
-    if (!effects_known_[EFFECT_IDX])
+    if (!effects_known_[effect_idx])
     {
-        effects_known_[EFFECT_IDX] = true;
+        effects_known_[effect_idx] = true;
 
-        const int   MAX_NR_EFFECTS_ON_ITEM      = 2;
+        const int   max_nr_effects_on_item      = 2;
         int         nr_effects_known_this_item  = 0;
 
         for (auto* effect : effects_)
         {
-            const size_t CHECK_EFFECT_IDX = size_t(effect->id());
+            const size_t check_effect_idx = size_t(effect->id());
 
-            if (effects_known_[CHECK_EFFECT_IDX])
+            if (effects_known_[check_effect_idx])
             {
                 ++nr_effects_known_this_item;
             }
         }
 
-        ASSERT(nr_effects_known_this_item <= MAX_NR_EFFECTS_ON_ITEM);
+        ASSERT(nr_effects_known_this_item <= max_nr_effects_on_item);
 
         const std::string name_plain = name(Item_ref_type::plain, Item_ref_inf::none);
 
@@ -757,7 +757,7 @@ void Amulet::effect_noticed(const Amulet_effect_id effect_id)
                      false,
                      More_prompt_on_msg::yes);
 
-        if (nr_effects_known_this_item == MAX_NR_EFFECTS_ON_ITEM)
+        if (nr_effects_known_this_item == max_nr_effects_on_item)
         {
             //Amulet is completely identified - print id message and set id status in item data
             identify(Verbosity::verbose);
@@ -862,9 +862,9 @@ int rnd_item_bucket_idx_for_effect(const Amulet_effect_id effect_to_assign,
 
             if (effect_list_[i] == item_bucket[item_bucket_idx])
             {
-                const bool ALLOW_COMBINE = allow_combine_effects(effect_to_assign, cur_effect);
+                const bool allow_combine = allow_combine_effects(effect_to_assign, cur_effect);
 
-                if (!ALLOW_COMBINE)
+                if (!allow_combine)
                 {
                     //Combination with effect already assigned on item not allowed
                     can_be_placed_on_item = false;
@@ -884,8 +884,8 @@ int rnd_item_bucket_idx_for_effect(const Amulet_effect_id effect_to_assign,
         return -1;
     }
 
-    const int IDX_BUCKET_IDX = rnd::range(0, item_idx_bucket.size() - 1);
-    return item_idx_bucket[IDX_BUCKET_IDX];
+    const int idx_bucket_idx = rnd::range(0, item_idx_bucket.size() - 1);
+    return item_idx_bucket[idx_bucket_idx];
 }
 
 } //namespace
@@ -967,16 +967,16 @@ void init()
         ASSERT(secondary_effect_id != Amulet_effect_id::START_OF_SECONDARY_EFFECTS);
         ASSERT(secondary_effect_id != Amulet_effect_id::END);
 
-        const int ITEM_IDX = rnd_item_bucket_idx_for_effect(secondary_effect_id, item_bucket);
+        const int item_idx = rnd_item_bucket_idx_for_effect(secondary_effect_id, item_bucket);
 
-        if (ITEM_IDX >= 0)
+        if (item_idx >= 0)
         {
-            const Item_id id = item_bucket[size_t(ITEM_IDX)];
+            const Item_id id = item_bucket[size_t(item_idx)];
 
             ASSERT(item_data::data[size_t(id)].type == Item_type::amulet);
 
             effect_list_[size_t(secondary_effect_id)] = id;
-            item_bucket.erase(begin(item_bucket) + size_t(ITEM_IDX));
+            item_bucket.erase(begin(item_bucket) + size_t(item_idx));
         }
     }
 }

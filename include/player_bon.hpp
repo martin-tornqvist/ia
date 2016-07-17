@@ -123,7 +123,7 @@ void pick_bg(const Bg bg);
 
 void set_all_traits_to_picked();
 
-int spi_occultist_can_cast_at_lvl(const int LVL);
+int spi_occultist_can_cast_at_lvl(const int lvl);
 
 bool gets_undead_bane_bon(const Actor_data_t& actor_data);
 

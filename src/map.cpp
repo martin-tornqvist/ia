@@ -80,7 +80,7 @@ Clr                 wall_clr;
 namespace
 {
 
-void reset_cells(const bool MAKE_STONE_WALLS)
+void reset_cells(const bool make_stone_walls)
 {
     for (int x = 0; x < map_w; ++x)
     {
@@ -94,7 +94,7 @@ void reset_cells(const bool MAKE_STONE_WALLS)
             render::render_array[x][y]              = Cell_render_data();
             render::render_array_no_actors[x][y]    = Cell_render_data();
 
-            if (MAKE_STONE_WALLS)
+            if (make_stone_walls)
             {
                 put(new Wall(P(x, y)));
             }
@@ -172,9 +172,9 @@ void reset_map()
             clr_brown_gray,
         };
 
-        const size_t IDX = rnd::range(0, wall_clr_bucket.size() - 1);
+        const size_t idx = rnd::range(0, wall_clr_bucket.size() - 1);
 
-        wall_clr = wall_clr_bucket[IDX];
+        wall_clr = wall_clr_bucket[idx];
     }
     else //Standard wall color
     {
@@ -359,11 +359,11 @@ Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors)
 
     for (Actor* actor : actors)
     {
-        const int CUR_DIST = king_dist(c, actor->pos);
+        const int cur_dist = king_dist(c, actor->pos);
 
-        if (CUR_DIST < dist_to_nearest)
+        if (cur_dist < dist_to_nearest)
         {
-            dist_to_nearest = CUR_DIST;
+            dist_to_nearest = cur_dist;
         }
     }
 
@@ -382,14 +382,14 @@ Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors)
 
     ASSERT(!closest_actors.empty());
 
-    const int ELEMENT = rnd::range(0, closest_actors.size() - 1);
+    const int element = rnd::range(0, closest_actors.size() - 1);
 
-    return closest_actors[ELEMENT];
+    return closest_actors[element];
 }
 
-bool is_pos_inside_map(const P& pos, const bool COUNT_EDGE_AS_INSIDE)
+bool is_pos_inside_map(const P& pos, const bool count_edge_as_inside)
 {
-    if (COUNT_EDGE_AS_INSIDE)
+    if (count_edge_as_inside)
     {
         return pos.x >= 0 &&
                pos.y >= 0 &&

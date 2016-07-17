@@ -120,40 +120,40 @@ Consume_item Strange_device::activate(Actor* const actor)
             bon -= 2;
         }
 
-        const int RND = rnd::range(1, 8 + bon);
+        const int rnd = rnd::range(1, 8 + bon);
 
         switch (condition_)
         {
         case Condition::breaking:
         {
-            if (RND == 5 || RND == 6)
+            if (rnd == 5 || rnd == 6)
             {
                 msg_log::add(hurt_msg, clr_msg_bad);
                 actor->hit(rnd::dice(2, 4), Dmg_type::electric);
             }
 
-            is_effect_failed    = RND == 3 || RND == 4;
-            is_cond_degrade     = RND <= 2;
-            is_warning          = RND == 7 || RND == 8;
+            is_effect_failed    = rnd == 3 || rnd == 4;
+            is_cond_degrade     = rnd <= 2;
+            is_warning          = rnd == 7 || rnd == 8;
         } break;
 
         case Condition::shoddy:
         {
-            if (RND == 4)
+            if (rnd == 4)
             {
                 msg_log::add(hurt_msg, clr_msg_bad);
                 actor->hit(rnd::dice(1, 4), Dmg_type::electric);
             }
 
-            is_effect_failed    = RND == 3;
-            is_cond_degrade     = RND <= 2;
-            is_warning          = RND == 5 || RND == 6;
+            is_effect_failed    = rnd == 3;
+            is_cond_degrade     = rnd <= 2;
+            is_warning          = rnd == 5 || rnd == 6;
         } break;
 
         case Condition::fine:
         {
-            is_cond_degrade     = RND <= 2;
-            is_warning          = RND == 3 || RND == 4;
+            is_cond_degrade     = rnd <= 2;
+            is_warning          = rnd == 3 || rnd == 4;
         } break;
         }
 
@@ -247,7 +247,7 @@ Consume_item Device_blaster::trigger_effect()
     return Consume_item::no;
 }
 
-//---------------------------------------------------- SHOCK WAVE
+//---------------------------------------------------- shock WAVE
 Consume_item Device_shockwave::trigger_effect()
 {
     msg_log::add("It triggers a shock wave around me.");

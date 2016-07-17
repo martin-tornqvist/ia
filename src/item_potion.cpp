@@ -94,9 +94,9 @@ void Potion::on_collide(const P& pos, Actor* const actor)
     if (!map::cells[pos.x][pos.y].rigid->is_bottomless() || actor)
     {
         //Render and print message
-        const bool PLAYER_SEE_CELL = map::cells[pos.x][pos.y].is_seen_by_player;
+        const bool player_see_cell = map::cells[pos.x][pos.y].is_seen_by_player;
 
-        if (PLAYER_SEE_CELL)
+        if (player_see_cell)
         {
             //TODO: Use standard animation
             render::draw_glyph('*', Panel::map, pos, data_->clr);
@@ -122,7 +122,7 @@ void Potion::on_collide(const P& pos, Actor* const actor)
             {
                 collide_hook(pos, actor);
 
-                if (actor->is_alive() && !data_->is_identified && PLAYER_SEE_CELL)
+                if (actor->is_alive() && !data_->is_identified && player_see_cell)
                 {
                     //This did not identify the potion
                     msg_log::add("It had no apparent effect...");
@@ -154,12 +154,12 @@ void Potion_vitality::quaff_impl(Actor& actor)
         actor.prop_handler().end_prop(prop_id);
     }
 
-    //HP is always restored at least up to maximum HP, but can go beyond
-    const int HP          = actor.hp();
-    const int HP_MAX      = actor.hp_max(true);
-    const int HP_RESTORED = std::max(20, HP_MAX - HP);
+    //HP is always restored at least up to maximum hp, but can go beyond
+    const int hp          = actor.hp();
+    const int hp_max      = actor.hp_max(true);
+    const int hp_restored = std::max(20, hp_max - hp);
 
-    actor.restore_hp(HP_RESTORED, true);
+    actor.restore_hp(hp_restored, true);
 
     if (map::player->can_see_actor(actor))
     {
@@ -179,12 +179,12 @@ void Potion_vitality::collide_hook(const P& pos, Actor* const actor)
 
 void Potion_spirit::quaff_impl(Actor& actor)
 {
-    //SPI is always restored at least up to maximum SPI, but can go beyond
-    const int SPI           = actor.spi();
-    const int SPI_MAX       = actor.spi_max();
-    const int SPI_RESTORED  = std::max(10, SPI_MAX - SPI);
+    //SPI is always restored at least up to maximum spi, but can go beyond
+    const int spi           = actor.spi();
+    const int spi_max       = actor.spi_max();
+    const int spi_restored  = std::max(10, spi_max - spi);
 
-    actor.restore_spi(SPI_RESTORED, true);
+    actor.restore_spi(spi_restored, true);
 
     if (map::player->can_see_actor(actor))
     {
@@ -279,10 +279,10 @@ void Potion_fortitude::quaff_impl(Actor& actor)
 
     Prop_rFear* const rFear = new Prop_rFear(Prop_turns::std);
 
-    const int NR_TURNS_LEFT = rFear->nr_turns_left();
+    const int nr_turns_left = rFear->nr_turns_left();
 
-    Prop_rConf* const   rConf   = new Prop_rConf(Prop_turns::specific,  NR_TURNS_LEFT);
-    Prop_rSleep* const  rSleep  = new Prop_rSleep(Prop_turns::specific, NR_TURNS_LEFT);
+    Prop_rConf* const   rConf   = new Prop_rConf(Prop_turns::specific,  nr_turns_left);
+    Prop_rSleep* const  rSleep  = new Prop_rSleep(Prop_turns::specific, nr_turns_left);
 
     prop_handler.try_add(rFear);
     prop_handler.try_add(rConf);
@@ -297,8 +297,8 @@ void Potion_fortitude::quaff_impl(Actor& actor)
 
         if (!sympts.empty())
         {
-            const size_t        IDX = rnd::range(0, sympts.size() - 1);
-            const Ins_sympt_id  id  = sympts[IDX]->id();
+            const size_t        idx = rnd::range(0, sympts.size() - 1);
+            const Ins_sympt_id  id  = sympts[idx]->id();
 
             insanity::end_sympt(id);
         }
@@ -493,12 +493,12 @@ void Potion_insight::quaff_impl(Actor& actor)
         }
     }
 
-    const size_t NR_ELEMENTS = identify_bucket.size();
+    const size_t NR_elementS = identify_bucket.size();
 
-    if (NR_ELEMENTS > 0)
+    if (NR_elementS > 0)
     {
-        const int     IDX                   = rnd::range(0, NR_ELEMENTS - 1);
-        Item* const   item                  = identify_bucket[IDX];
+        const int     idx                   = rnd::range(0, NR_elementS - 1);
+        Item* const   item                  = identify_bucket[idx];
         const std::string  item_name_before = item->name(Item_ref_type::a, Item_ref_inf::none);
 
         msg_log::add("I gain intuitions about " + item_name_before + "...",
@@ -651,32 +651,32 @@ void init()
         if (d.type == Item_type::potion)
         {
             //Color and false name
-            const size_t IDX = rnd::range(0, potion_looks_.size() - 1);
+            const size_t idx = rnd::range(0, potion_looks_.size() - 1);
 
-            Potion_look& look = potion_looks_[IDX];
+            Potion_look& look = potion_looks_[idx];
 
             d.base_name_un_id.names[int(Item_ref_type::plain)]   = look.name_plain + " Potion";
             d.base_name_un_id.names[int(Item_ref_type::plural)]  = look.name_plain + " Potions";
             d.base_name_un_id.names[int(Item_ref_type::a)]       = look.name_a     + " Potion";
             d.clr = look.clr;
 
-            potion_looks_.erase(potion_looks_.begin() + IDX);
+            potion_looks_.erase(potion_looks_.begin() + idx);
 
             //True name
             const Potion* const potion =
                 static_cast<const Potion*>(item_factory::mk(d.id, 1));
 
-            const std::string REAL_TYPE_NAME = potion->real_name();
+            const std::string real_type_name = potion->real_name();
 
             delete potion;
 
-            const std::string REAL_NAME        = "Potion of "    + REAL_TYPE_NAME;
-            const std::string REAL_NAME_PLURAL = "Potions of "   + REAL_TYPE_NAME;
-            const std::string REAL_NAME_A      = "a Potion of "  + REAL_TYPE_NAME;
+            const std::string real_name        = "Potion of "    + real_type_name;
+            const std::string real_name_plural = "Potions of "   + real_type_name;
+            const std::string real_name_a      = "a Potion of "  + real_type_name;
 
-            d.base_name.names[int(Item_ref_type::plain)]  = REAL_NAME;
-            d.base_name.names[int(Item_ref_type::plural)] = REAL_NAME_PLURAL;
-            d.base_name.names[int(Item_ref_type::a)]      = REAL_NAME_A;
+            d.base_name.names[int(Item_ref_type::plain)]  = real_name;
+            d.base_name.names[int(Item_ref_type::plural)] = real_name_plural;
+            d.base_name.names[int(Item_ref_type::a)]      = real_name_a;
         }
     }
 

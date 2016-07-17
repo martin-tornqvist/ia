@@ -213,15 +213,15 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
         {
             ASSERT(actor);
 
-            const bool IS_PLAYER    = actor == map::player;
-            const bool IS_CELL_SEEN = map::is_pos_seen_by_player(pos_);
-            const bool IS_WEAK      = actor->has_prop(Prop_id::weakened);
+            const bool is_player    = actor == map::player;
+            const bool is_cell_seen = map::is_pos_seen_by_player(pos_);
+            const bool is_weak      = actor->has_prop(Prop_id::weakened);
 
             switch (matl_)
             {
             case Matl::wood:
             {
-                if (IS_PLAYER)
+                if (is_player)
                 {
                     Fraction destr_chance(4 - nr_spikes_, 10);
 
@@ -247,7 +247,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                         destr_chance.num += 4;
                     }
 
-                    if (IS_WEAK)
+                    if (is_weak)
                     {
                         destr_chance.num = 0;
                     }
@@ -269,7 +269,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 
                             snd_emit::run(snd);
 
-                            if (IS_CELL_SEEN)
+                            if (is_cell_seen)
                             {
                                 if (is_secret_)
                                 {
@@ -304,7 +304,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                     }
                     else //No chance of success
                     {
-                        if (IS_CELL_SEEN && !is_secret_)
+                        if (is_cell_seen && !is_secret_)
                         {
                             Snd snd("",
                                     Sfx_id::door_bang,
@@ -329,7 +329,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 
                     destr_chance.num = std::max(1, destr_chance.num);
 
-                    if (IS_WEAK)
+                    if (is_weak)
                     {
                         destr_chance.num = 0;
                     }
@@ -350,7 +350,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
                         {
                             msg_log::add("The door crashes open!");
                         }
-                        else if (IS_CELL_SEEN)
+                        else if (is_cell_seen)
                         {
                             msg_log::add("A door crashes open!");
                         }
@@ -375,7 +375,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
             break;
 
             case Matl::metal:
-                if (IS_PLAYER && IS_CELL_SEEN && !is_secret_)
+                if (is_player && is_cell_seen && !is_secret_)
                 {
                     msg_log::add("It seems futile.",
                                  clr_msg_note,
@@ -413,37 +413,37 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 //    if(method == Dmg_method::kick) {
 //      int skill_value_bash = 0;
 //
-//      if(!IS_BASHER_WEAK) {
-//        if(IS_PLAYER) {
-//          const int BON   = player_bon::traits[size_t(Trait::tough)] ? 20 : 0;
-//          skill_value_bash  = 40 + BON - min(58, nr_spikes_ * 20);
+//      if(!is_basher_weak) {
+//        if(is_player) {
+//          const int bon   = player_bon::traits[size_t(Trait::tough)] ? 20 : 0;
+//          skill_value_bash  = 40 + bon - min(58, nr_spikes_ * 20);
 //        } else {
 //          skill_value_bash  = 10 - min(9, nr_spikes_ * 3);
 //        }
 //      }
-//      const bool IS_DOOR_SMASHED =
-//        (type_ == Door_type::metal || IS_BASHER_WEAK) ? false :
+//      const bool is_door_smashed =
+//        (type_ == Door_type::metal || is_basher_weak) ? false :
 //        rnd::percent() < skill_value_bash;
 //
-//      if(IS_PLAYER && !is_secret_ && (type_ == Door_type::metal || IS_BASHER_WEAK)) {
+//      if(is_player && !is_secret_ && (type_ == Door_type::metal || is_basher_weak)) {
 //        msg_log::add("It seems futile.");
 //      }
 //    }
 //
-//    if(IS_DOOR_SMASHED) {
+//    if(is_door_smashed) {
 //      TRACE << "Bash successful" << std::endl;
-//      const bool IS_SECRET_BEFORE = is_secret_;
+//      const bool is_secret_before = is_secret_;
 //      is_stuck_  = false;
 //      is_secret_ = false;
 //      is_open_   = true;
-//      if(IS_PLAYER) {
+//      if(is_player) {
 //        Snd snd("", Sfx_id::door_break, Ignore_msg_if_origin_seen::yes, pos_,
 //                &actor, Snd_vol::low, Alerts_mon::yes);
 //        snd_emit::run(snd);
 //        if(!actor.prop_handler().allow_see()) {
 //          msg_log::add("I feel a door crashing open!");
 //        } else {
-//          if(IS_SECRET_BEFORE) {
+//          if(is_secret_before) {
 //            msg_log::add("A door crashes open!");
 //          } else {
 //            msg_log::add("The door crashes open!");
@@ -461,7 +461,7 @@ void Door::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 //        }
 //      }
 //    } else {
-//      if(IS_PLAYER) {
+//      if(is_player) {
 //        const Sfx_id sfx = is_secret_ ? Sfx_id::END : Sfx_id::door_bang;
 //        Snd snd("", sfx, Ignore_msg_if_origin_seen::yes, actor.pos,
 //                &actor, Snd_vol::low, Alerts_mon::yes);
@@ -632,7 +632,7 @@ void Door::bump(Actor& actor_bumping)
     }
 }
 
-void Door::reveal(const bool ALLOW_MESSAGE)
+void Door::reveal(const bool allow_message)
 {
     if (is_secret_)
     {
@@ -642,7 +642,7 @@ void Door::reveal(const bool ALLOW_MESSAGE)
         {
             render::draw_map_state();
 
-            if (ALLOW_MESSAGE)
+            if (allow_message)
             {
                 msg_log::add("A secret is revealed.");
                 render::draw_map_state();
@@ -655,9 +655,9 @@ void Door::player_try_spot_hidden()
 {
     if (is_secret_)
     {
-        const int PLAYER_SKILL = map::player->ability(Ability_id::searching, true);
+        const int player_skill = map::player->ability(Ability_id::searching, true);
 
-        if (ability_roll::roll(PLAYER_SKILL, map::player) >= success)
+        if (ability_roll::roll(player_skill, map::player) >= success)
         {
             reveal(true);
         }
@@ -666,8 +666,8 @@ void Door::player_try_spot_hidden()
 
 bool Door::try_jam(Actor* actor_trying)
 {
-    const bool IS_PLAYER = actor_trying == map::player;
-    const bool TRYER_IS_BLIND = !actor_trying->prop_handler().allow_see();
+    const bool is_player = actor_trying == map::player;
+    const bool tryer_is_blind = !actor_trying->prop_handler().allow_see();
 
     if (is_secret_ || is_open_)
     {
@@ -678,9 +678,9 @@ bool Door::try_jam(Actor* actor_trying)
     ++nr_spikes_;
     is_stuck_ = true;
 
-    if (IS_PLAYER)
+    if (is_player)
     {
-        if (!TRYER_IS_BLIND)
+        if (!tryer_is_blind)
         {
             msg_log::add("I jam the door with a spike.");
         }
@@ -696,17 +696,17 @@ bool Door::try_jam(Actor* actor_trying)
 
 void Door::try_close(Actor* actor_trying)
 {
-    const bool IS_PLAYER        = actor_trying == map::player;
-    const bool TRYER_IS_BLIND   = !actor_trying->prop_handler().allow_see();
+    const bool is_player        = actor_trying == map::player;
+    const bool tryer_is_blind   = !actor_trying->prop_handler().allow_see();
 
-    const bool PLAYER_SEE_TRYER = IS_PLAYER ? true :
+    const bool player_see_tryer = is_player ? true :
                                   map::player->can_see_actor(*actor_trying);
 
     bool is_closable = true;
 
     if (is_handled_externally_)
     {
-        if (IS_PLAYER)
+        if (is_player)
         {
             msg_log::add(
                 "This door refuses to be closed, perhaps it is handled elsewhere?");
@@ -721,9 +721,9 @@ void Door::try_close(Actor* actor_trying)
     {
         is_closable = false;
 
-        if (IS_PLAYER)
+        if (is_player)
         {
-            if (TRYER_IS_BLIND)
+            if (tryer_is_blind)
             {
                 msg_log::add("I find nothing there to close.");
             }
@@ -752,9 +752,9 @@ void Door::try_close(Actor* actor_trying)
         {
             is_closable = false;
 
-            if (IS_PLAYER)
+            if (is_player)
             {
-                if (TRYER_IS_BLIND)
+                if (tryer_is_blind)
                 {
                     msg_log::add("Something is blocking the door.");
                 }
@@ -770,11 +770,11 @@ void Door::try_close(Actor* actor_trying)
     {
         //Door is in correct state for closing (open, working, not blocked)
 
-        if (!TRYER_IS_BLIND)
+        if (!tryer_is_blind)
         {
             is_open_ = false;
 
-            if (IS_PLAYER)
+            if (is_player)
             {
                 Snd snd("", Sfx_id::door_close, Ignore_msg_if_origin_seen::yes, pos_,
                         actor_trying, Snd_vol::low, Alerts_mon::yes);
@@ -788,7 +788,7 @@ void Door::try_close(Actor* actor_trying)
                         Snd_vol::low, Alerts_mon::no);
                 snd_emit::run(snd);
 
-                if (PLAYER_SEE_TRYER)
+                if (player_see_tryer)
                 {
                     msg_log::add(actor_trying->name_the() + " closes a door.");
                 }
@@ -800,7 +800,7 @@ void Door::try_close(Actor* actor_trying)
             {
                 is_open_ = false;
 
-                if (IS_PLAYER)
+                if (is_player)
                 {
                     Snd snd("", Sfx_id::door_close, Ignore_msg_if_origin_seen::yes, pos_,
                             actor_trying, Snd_vol::low, Alerts_mon::yes);
@@ -814,7 +814,7 @@ void Door::try_close(Actor* actor_trying)
                             Snd_vol::low, Alerts_mon::no);
                     snd_emit::run(snd);
 
-                    if (PLAYER_SEE_TRYER)
+                    if (player_see_tryer)
                     {
                         msg_log::add(actor_trying->name_the() +
                                      "fumbles about and succeeds to close a door.");
@@ -823,13 +823,13 @@ void Door::try_close(Actor* actor_trying)
             }
             else //Fail to close
             {
-                if (IS_PLAYER)
+                if (is_player)
                 {
                     msg_log::add("I fumble blindly with a door and fail to close it.");
                 }
                 else //Monster failing to close
                 {
-                    if (PLAYER_SEE_TRYER)
+                    if (player_see_tryer)
                     {
                         msg_log::add(actor_trying->name_the() +
                                      " fumbles blindly and fails to close a door.");
@@ -849,15 +849,15 @@ void Door::try_close(Actor* actor_trying)
 void Door::try_open(Actor* actor_trying)
 {
     TRACE_FUNC_BEGIN;
-    const bool IS_PLAYER        = actor_trying == map::player;
-    const bool PLAYER_SEE_DOOR  = map::cells[pos_.x][pos_.y].is_seen_by_player;
+    const bool is_player        = actor_trying == map::player;
+    const bool player_see_door  = map::cells[pos_.x][pos_.y].is_seen_by_player;
 
-    const bool PLAYER_SEE_TRYER = IS_PLAYER ? true :
+    const bool player_see_tryer = is_player ? true :
                                   map::player->can_see_actor(*actor_trying);
 
     if (is_handled_externally_)
     {
-        if (IS_PLAYER)
+        if (is_player)
         {
             msg_log::add("I see no way to open this door, perhaps it is opened elsewhere.");
             render::draw_map_state();
@@ -870,7 +870,7 @@ void Door::try_open(Actor* actor_trying)
     {
         TRACE << "Is stuck" << std::endl;
 
-        if (IS_PLAYER)
+        if (is_player)
         {
             msg_log::add("The door seems to be stuck.");
         }
@@ -880,14 +880,14 @@ void Door::try_open(Actor* actor_trying)
     {
         TRACE << "Is not stuck" << std::endl;
 
-        const bool TRYER_CAN_SEE = actor_trying->prop_handler().allow_see();
+        const bool tryer_can_see = actor_trying->prop_handler().allow_see();
 
-        if (TRYER_CAN_SEE)
+        if (tryer_can_see)
         {
             TRACE << "Tryer can see, opening" << std::endl;
             is_open_ = true;
 
-            if (IS_PLAYER)
+            if (is_player)
             {
                 Snd snd("",
                         Sfx_id::door_open,
@@ -912,11 +912,11 @@ void Door::try_open(Actor* actor_trying)
 
                 snd_emit::run(snd);
 
-                if (PLAYER_SEE_TRYER)
+                if (player_see_tryer)
                 {
                     msg_log::add(actor_trying->name_the() + " opens a door.");
                 }
-                else if (PLAYER_SEE_DOOR)
+                else if (player_see_door)
                 {
                     msg_log::add("I see a door opening.");
                 }
@@ -929,7 +929,7 @@ void Door::try_open(Actor* actor_trying)
                 TRACE << "Tryer is blind, but open succeeded anyway" << std::endl;
                 is_open_ = true;
 
-                if (IS_PLAYER)
+                if (is_player)
                 {
                     Snd snd("",
                             Sfx_id::door_open,
@@ -955,12 +955,12 @@ void Door::try_open(Actor* actor_trying)
 
                     snd_emit::run(snd);
 
-                    if (PLAYER_SEE_TRYER)
+                    if (player_see_tryer)
                     {
                         msg_log::add(actor_trying->name_the() +
                                      "fumbles about and succeeds to open a door.");
                     }
-                    else if (PLAYER_SEE_DOOR)
+                    else if (player_see_door)
                     {
                         msg_log::add("I see a door open clumsily.");
                     }
@@ -970,7 +970,7 @@ void Door::try_open(Actor* actor_trying)
             {
                 TRACE << "Tryer is blind, and open failed" << std::endl;
 
-                if (IS_PLAYER)
+                if (is_player)
                 {
                     Snd snd("",
                             Sfx_id::END,
@@ -998,7 +998,7 @@ void Door::try_open(Actor* actor_trying)
 
                     snd_emit::run(snd);
 
-                    if (PLAYER_SEE_TRYER)
+                    if (player_see_tryer)
                     {
                         msg_log::add(actor_trying->name_the() +
                                      " fumbles blindly and fails to open a door.");

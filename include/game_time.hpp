@@ -44,7 +44,7 @@ void mobs_at_pos(const P& pos, std::vector<Mob*>& vector_ref);
 
 void add_mob(Mob* const f);
 
-void erase_mob(Mob* const f, const bool DESTROY_OBJECT);
+void erase_mob(Mob* const f, const bool destroy_object);
 
 void erase_all_mobs();
 

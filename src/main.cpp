@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
             map::player->update_fov();
             render::draw_map_state();
 
-            //========== M A I N   L O O P ==========
+            //========== M A I n   L O O P ==========
             while (!init::quit_to_main_menu)
             {
                 if (map::player->is_alive())
@@ -119,10 +119,10 @@ int main(int argc, char* argv[])
 
                     actor->update_clr();
 
-                    const bool ALLOW_ACT  = actor->prop_handler().allow_act();
-                    const bool IS_GIBBED  = actor->state() == Actor_state::destroyed;
+                    const bool allow_act  = actor->prop_handler().allow_act();
+                    const bool is_gibbed  = actor->state() == Actor_state::destroyed;
 
-                    if (ALLOW_ACT && !IS_GIBBED)
+                    if (allow_act && !is_gibbed)
                     {
                         //Tell actor to "do something". If this is the player, input is read from
                         //either the human player or the bot. If it's a monster, the AI handles it.

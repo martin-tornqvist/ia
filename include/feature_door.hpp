@@ -76,7 +76,7 @@ public:
 
     Matl matl() const override;
 
-    void reveal(const bool ALLOW_MESSAGE);
+    void reveal(const bool allow_message);
 
     void set_to_secret()
     {

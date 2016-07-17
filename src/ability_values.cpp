@@ -8,12 +8,12 @@
 #include "map.hpp"
 
 int Ability_vals::val(const Ability_id id,
-                      const bool IS_AFFECTED_BY_PROPS,
+                      const bool is_affected_by_props,
                       const Actor& actor) const
 {
     int ret = ability_list[size_t(id)];
 
-    if (IS_AFFECTED_BY_PROPS)
+    if (is_affected_by_props)
     {
         ret += actor.prop_handler().ability_mod(id);
     }
@@ -28,9 +28,9 @@ int Ability_vals::val(const Ability_id id,
             }
         }
 
-        const int HP_PCT  = (actor.hp() * 100) / actor.hp_max(true);
+        const int hp_pct  = (actor.hp() * 100) / actor.hp_max(true);
 
-        const int PERSEVERANT_BON_HP_PCT = 30;
+        const int perseverant_bon_hp_pct = 30;
 
         switch (id)
         {
@@ -68,7 +68,7 @@ int Ability_vals::val(const Ability_id id,
 
             if (
                 player_bon::traits[size_t(Trait::perseverant)] &&
-                HP_PCT <= PERSEVERANT_BON_HP_PCT)
+                hp_pct <= perseverant_bon_hp_pct)
             {
                 ret += 30;
             }
@@ -94,7 +94,7 @@ int Ability_vals::val(const Ability_id id,
 
             if (
                 player_bon::traits[size_t(Trait::perseverant)] &&
-                HP_PCT <= PERSEVERANT_BON_HP_PCT)
+                hp_pct <= perseverant_bon_hp_pct)
             {
                 ret += 30;
             }
@@ -134,7 +134,7 @@ int Ability_vals::val(const Ability_id id,
 
             if (
                 player_bon::traits[size_t(Trait::perseverant)] &&
-                HP_PCT <= PERSEVERANT_BON_HP_PCT)
+                hp_pct <= perseverant_bon_hp_pct)
             {
                 ret += 50;
             }
@@ -184,41 +184,41 @@ void Ability_vals::reset()
     }
 }
 
-void Ability_vals::set_val(const Ability_id ability, const int VAL)
+void Ability_vals::set_val(const Ability_id ability, const int val)
 {
-    ability_list[int(ability)] = VAL;
+    ability_list[int(ability)] = val;
 }
 
-void Ability_vals::change_val(const Ability_id ability, const int CHANGE)
+void Ability_vals::change_val(const Ability_id ability, const int change)
 {
-    ability_list[int(ability)] += CHANGE;
+    ability_list[int(ability)] += change;
 }
 
 namespace ability_roll
 {
 
-Ability_roll_result roll(const int TOT_SKILL_VALUE, const Actor* const actor_rolling)
+Ability_roll_result roll(const int tot_skill_value, const Actor* const actor_rolling)
 {
-    const int ROLL = rnd::percent();
+    const int roll = rnd::percent();
 
-    const bool IS_CURSED    = actor_rolling && actor_rolling->has_prop(Prop_id::cursed);
-    const bool IS_BLESSED   = actor_rolling && actor_rolling->has_prop(Prop_id::blessed);
+    const bool is_cursed    = actor_rolling && actor_rolling->has_prop(Prop_id::cursed);
+    const bool is_blessed   = actor_rolling && actor_rolling->has_prop(Prop_id::blessed);
 
     //Critical success?
     Range crit_success_range(1, 1);
 
-    if (IS_BLESSED)
+    if (is_blessed)
     {
         //Increase critical success range while blessed
         crit_success_range.max = 5;
     }
-    else if (IS_CURSED)
+    else if (is_cursed)
     {
         //Never critically succeed while cursed
         crit_success_range.set(-1, -1);
     }
 
-    if (is_val_in_range(ROLL, crit_success_range))
+    if (is_val_in_range(roll, crit_success_range))
     {
         return Ability_roll_result::success_critical;
     }
@@ -226,23 +226,23 @@ Ability_roll_result roll(const int TOT_SKILL_VALUE, const Actor* const actor_rol
     //Critical fail?
     Range crit_fail_range(100, 100);
 
-    if (IS_BLESSED)
+    if (is_blessed)
     {
         //Never critically fail while blessed
         crit_fail_range.set(-1, -1);
     }
-    else if (IS_CURSED)
+    else if (is_cursed)
     {
         //Increase critical fail range while cursed
         crit_fail_range.min = 95;
     }
 
-    if (is_val_in_range(ROLL, crit_fail_range))
+    if (is_val_in_range(roll, crit_fail_range))
     {
         return Ability_roll_result::fail_critical;
     }
 
-    return ROLL <= TOT_SKILL_VALUE ?
+    return roll <= tot_skill_value ?
            Ability_roll_result::success : Ability_roll_result::fail;
 }
 

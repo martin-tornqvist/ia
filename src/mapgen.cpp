@@ -262,8 +262,8 @@ bool try_mk_aux_room(const P& p,
                      bool blocked[map_w][map_h],
                      const P& door_p)
 {
-    const R aux_rect(p, p + d - 1);
-    const R aux_rect_with_border(aux_rect.p0 - 1, aux_rect.p1 + 1);
+     const R aux_rect(p, p + d - 1);
+     const R aux_rect_with_border(aux_rect.p0 - 1, aux_rect.p1 + 1);
 
     ASSERT(is_pos_inside(door_p, aux_rect_with_border));
 
@@ -315,7 +315,7 @@ bool try_mk_aux_room(const P& p,
 void mk_aux_rooms(Region regions[3][3])
 {
     TRACE_FUNC_BEGIN;
-    const int NR_TRIES_PER_SIDE = 10;
+    const int nr_tries_per_side = 10;
 
     auto rnd_aux_room_dim = []()
     {
@@ -353,7 +353,7 @@ void mk_aux_rooms(Region regions[3][3])
                 //Right
                 if (rnd::one_in(4))
                 {
-                    for (int i = 0; i < NR_TRIES_PER_SIDE; ++i)
+                    for (int i = 0; i < nr_tries_per_side; ++i)
                     {
                         const P con_p(main_r.r_.p1.x + 1,
                                       rnd::range(main_r.r_.p0.y + 1,
@@ -379,7 +379,7 @@ void mk_aux_rooms(Region regions[3][3])
                 //Up
                 if (rnd::one_in(4))
                 {
-                    for (int i = 0; i < NR_TRIES_PER_SIDE; ++i)
+                    for (int i = 0; i < nr_tries_per_side; ++i)
                     {
                         const P con_p(rnd::range(main_r.r_.p0.x + 1,
                                                  main_r.r_.p1.x - 1),
@@ -405,7 +405,7 @@ void mk_aux_rooms(Region regions[3][3])
                 //Left
                 if (rnd::one_in(4))
                 {
-                    for (int i = 0; i < NR_TRIES_PER_SIDE; ++i)
+                    for (int i = 0; i < nr_tries_per_side; ++i)
                     {
                         const P con_p(main_r.r_.p0.x - 1,
                                       rnd::range(main_r.r_.p0.y + 1,
@@ -431,7 +431,7 @@ void mk_aux_rooms(Region regions[3][3])
                 //Down
                 if (rnd::one_in(4))
                 {
-                    for (int i = 0; i < NR_TRIES_PER_SIDE; ++i)
+                    for (int i = 0; i < nr_tries_per_side; ++i)
                     {
                         const P con_p(rnd::range(main_r.r_.p0.x + 1,
                                                  main_r.r_.p1.x - 1),
@@ -466,9 +466,9 @@ void mk_merged_regions_and_rooms(Region regions[3][3])
 {
     TRACE_FUNC_BEGIN;
 
-    const int NR_ATTEMPTS = rnd::range(0, 2);
+    const int nr_attempts = rnd::range(0, 2);
 
-    for (int attempt_cnt = 0; attempt_cnt < NR_ATTEMPTS; ++attempt_cnt)
+    for (int attempt_cnt = 0; attempt_cnt < nr_attempts; ++attempt_cnt)
     {
         P reg_idx_1, reg_idx_2;
 
@@ -508,12 +508,12 @@ void mk_merged_regions_and_rooms(Region regions[3][3])
             return rnd::range(0, 4);
         };
 
-        const R padding(rnd_padding(),
-                        rnd_padding(),
-                        rnd_padding(),
-                        rnd_padding());
+         const R padding(rnd_padding(),
+                         rnd_padding(),
+                         rnd_padding(),
+                         rnd_padding());
 
-        const R room_rect(reg1.r_.p0 + padding.p0,
+         const R room_rect(reg1.r_.p0 + padding.p0,
                           reg1.r_.p1 - padding.p1);
 
         Room* const room =
@@ -539,13 +539,13 @@ void randomly_block_regions(Region regions[3][3])
     //no cardinally adjacent region is already blocked). However, this will push
     //the number of attempts towards the upper limit, and increase the chance
     //of a higher number of attempts.
-    const int MAX_NR_TO_TRY_BLOCK = std::max(1, map::dlvl / 3);
-    const int NR_TO_TRY_BLOCK     = std::min(rnd::range(0, MAX_NR_TO_TRY_BLOCK), 5);
+    const int max_nr_to_try_block = std::max(1, map::dlvl / 3);
+    const int nr_to_try_block     = std::min(rnd::range(0, max_nr_to_try_block), 5);
 
-    for (int i = 0; i < NR_TO_TRY_BLOCK; ++i)
+    for (int i = 0; i < nr_to_try_block; ++i)
     {
         TRACE_VERBOSE << "Attempting to block region " << i + 1 << "/"
-                      << NR_TO_TRY_BLOCK << std:: endl;
+                      << nr_to_try_block << std:: endl;
 
         std::vector<P> block_bucket;
 
@@ -604,21 +604,21 @@ void reserve_river(Region regions[3][3])
 {
     TRACE_FUNC_BEGIN;
 
-    R      room_rect;
-    Region*   river_region       = nullptr;
-    const int RESERVED_PADDING  = 2;
+    R         room_rect;
+    Region*   river_region      = nullptr;
+    const int reserved_padding  = 2;
 
     auto init_room_rect = [&](int& len0, int& len1, int& breadth0, int& breadth1,
                               const P & reg0, const P & reg2)
     {
-        const R regions_tot_rect(regions[reg0.x][reg0.y].r_.p0,
+         const R regions_tot_rect(regions[reg0.x][reg0.y].r_.p0,
                                  regions[reg2.x][reg2.y].r_.p1);
 
         room_rect       = regions_tot_rect;
         river_region    = &regions[reg0.x][reg0.y];
-        const int C     = (breadth1 + breadth0) / 2;
-        breadth0        = C - RESERVED_PADDING;
-        breadth1        = C + RESERVED_PADDING;
+        const int c     = (breadth1 + breadth0) / 2;
+        breadth0        = c - reserved_padding;
+        breadth1        = c + reserved_padding;
 
         ASSERT(is_area_inside(room_rect, regions_tot_rect, true));
 
@@ -703,11 +703,11 @@ void reserve_river(Region regions[3][3])
 void place_door_at_pos_if_allowed(const P& p)
 {
     //Check that no other doors are within a certain distance
-    const int R = 2;
+    const int r = 2;
 
-    for (int dx = -R; dx <= R; ++dx)
+    for (int dx = -r; dx <= r; ++dx)
     {
-        for (int dy = -R; dy <= R; ++dy)
+        for (int dy = -r; dy <= r; ++dy)
         {
             const P check_pos = p + P(dx, dy);
 
@@ -766,8 +766,8 @@ void mk_sub_rooms()
 {
     TRACE_FUNC_BEGIN;
 
-    const int NR_TRIES_TO_MK_ROOM   = 40;
-    const int MAX_NR_SUB_ROOMS      = rnd::one_in(3) ? 1 : 7;
+    const int nr_tries_to_mk_room   = 40;
+    const int max_nr_sub_rooms      = rnd::one_in(3) ? 1 : 7;
 
     //Minimum allowed size of the sub room, including the walls
     const P walls_min_d(4, 4);
@@ -791,24 +791,24 @@ void mk_sub_rooms()
             continue;
         }
 
-        const bool IS_OUTER_BIG =
+        const bool is_outer_big =
             (outer_room_d.x > 16) || (outer_room_d.y > 8);
 
-        const bool IS_OUTER_STD_ROOM =
+        const bool is_outer_std_room =
             (int)outer_room->type_ < (int)Room_type::END_OF_STD_ROOMS;
 
         //To build a room inside a room, the outer room shall:
         // * Be a standard room, and
         // * Be a "big room" - but we occasionally allow "small rooms"
-        if (!IS_OUTER_STD_ROOM || (!IS_OUTER_BIG && !rnd::one_in(4)))
+        if (!is_outer_std_room || (!is_outer_big && !rnd::one_in(4)))
         {
             //Outer room does not meet dimensions criteria, continue to next room
             continue;
         }
 
-        for (int nr_inner = 0; nr_inner < MAX_NR_SUB_ROOMS; ++nr_inner)
+        for (int nr_inner = 0; nr_inner < max_nr_sub_rooms; ++nr_inner)
         {
-            for (int try_count = 0; try_count < NR_TRIES_TO_MK_ROOM; ++try_count)
+            for (int try_count = 0; try_count < nr_tries_to_mk_room; ++try_count)
             {
                 //Determine the rectangle (p0, p1) of the inner room's walls
 
@@ -890,7 +890,7 @@ void mk_sub_rooms()
                 //Room area of the inner room.
                 //p0 and p1 represents the inner room's walls, so the actual
                 //room area lies inside these points
-                const R sub_room_rect(p0 + 1, p1 - 1);
+                 const R sub_room_rect(p0 + 1, p1 - 1);
 
                 Room* const sub_room =
                     room_factory::mk_random_allowed_std_room(sub_room_rect, true);
@@ -942,9 +942,9 @@ void mk_sub_rooms()
                 //(always do this if there are very few possible entries)
                 if (rnd::coin_toss() || entrance_bucket.size() <= 4)
                 {
-                    const size_t DOOR_POS_IDX = rnd::range(0, entrance_bucket.size() - 1);
+                    const size_t door_pos_idx = rnd::range(0, entrance_bucket.size() - 1);
 
-                    const P& door_pos = entrance_bucket[DOOR_POS_IDX];
+                    const P& door_pos = entrance_bucket[door_pos_idx];
 
                     map::put(new Floor(door_pos));
                     door_proposals[door_pos.x][door_pos.y] = true;
@@ -952,13 +952,13 @@ void mk_sub_rooms()
                 else //Place multiple "doorless" entrances
                 {
                     std::vector<P> positions_placed;
-                    const int NR_TRIES = rnd::range(1, 10);
+                    const int nr_tries = rnd::range(1, 10);
 
-                    for (int j = 0; j < NR_TRIES; ++j)
+                    for (int j = 0; j < nr_tries; ++j)
                     {
-                        const size_t DOOR_POS_IDX = rnd::range(0, entrance_bucket.size() - 1);
+                        const size_t door_pos_idx = rnd::range(0, entrance_bucket.size() - 1);
 
-                        const P& try_p = entrance_bucket[DOOR_POS_IDX];
+                        const P& try_p = entrance_bucket[door_pos_idx];
 
                         bool is_pos_ok = true;
 
@@ -1057,10 +1057,10 @@ void fill_dead_ends()
         const P& pos = floodfill_vector[i].pos;
         const int x = pos.x;
         const int y = pos.y;
-        const int NR_ADJ_CARDINAL_WALLS = blocked[x + 1][y] + blocked[x - 1][y] +
+        const int nr_adj_cardinal_walls = blocked[x + 1][y] + blocked[x - 1][y] +
                                           blocked[x][y + 1] + blocked[x][y - 1];
 
-        if (NR_ADJ_CARDINAL_WALLS == 3)
+        if (nr_adj_cardinal_walls == 3)
         {
             map::put(new Wall(pos));
             blocked[x][y] = true;
@@ -1218,14 +1218,14 @@ P place_stairs()
     std::vector<P> allowed_cells_list;
     to_vec((bool*)allowed_cells, true, map_w, map_h, allowed_cells_list);
 
-    const int NR_OK_CELLS = allowed_cells_list.size();
+    const int nr_ok_cells = allowed_cells_list.size();
 
-    const int MIN_NR_OK_CELLS_REQ = 3;
+    const int min_nr_ok_cells_req = 3;
 
-    if (NR_OK_CELLS < MIN_NR_OK_CELLS_REQ)
+    if (nr_ok_cells < min_nr_ok_cells_req)
     {
         TRACE << "Nr available cells to place stairs too low "
-              << "(" << NR_OK_CELLS << "), discarding map" << std:: endl;
+              << "(" << nr_ok_cells << "), discarding map" << std:: endl;
         is_map_valid = false;
 #ifdef DEMO_MODE
         render::cover_panel(Panel::log);
@@ -1246,7 +1246,7 @@ P place_stairs()
     sort(allowed_cells_list.begin(), allowed_cells_list.end(), is_closer_to_origin);
 
     TRACE << "Picking furthest cell" << std:: endl;
-    const P stairs_pos(allowed_cells_list[NR_OK_CELLS - 1]);
+    const P stairs_pos(allowed_cells_list[nr_ok_cells - 1]);
 
     TRACE << "Spawning stairs at chosen cell" << std:: endl;
     map::put(new Stairs(stairs_pos));
@@ -1314,11 +1314,11 @@ void move_player_to_nearest_allowed_pos()
 //  }
 //  int floodfill[map_w][map_h];
 //  floodfill::run(map::player->pos, blocked, floodfill, INT_MAX, P(-1, -1));
-//  const int FLOOD_VALUE_AT_DOOR = floodfill[door_to_link->pos_.x][door_to_link->pos_.y];
+//  const int flood_value_at_door = floodfill[door_to_link->pos_.x][door_to_link->pos_.y];
 //  vector<P> lever_pos_bucket;
 //  for(int y = 1; y < map_h - 1; ++y) {
 //    for(int x = 1; x < map_w - 1; ++x) {
-//      if(floodfill[x][y] < FLOOD_VALUE_AT_DOOR) {
+//      if(floodfill[x][y] < flood_value_at_door) {
 //        if(map::features_static[x][y]->can_have_rigid()) {
 //          lever_pos_bucket.push_back(P(x, y));
 //        }
@@ -1327,8 +1327,8 @@ void move_player_to_nearest_allowed_pos()
 //  }
 //
 //  if(lever_pos_bucket.size() > 0) {
-//    const int IDX = rnd::range(0, lever_pos_bucket.size() - 1);
-//    const P lever_pos(lever_pos_bucket[IDX]);
+//    const int idx = rnd::range(0, lever_pos_bucket.size() - 1);
+//    const P lever_pos(lever_pos_bucket[idx]);
 //    spawn_lever_adapt_and_link_door(lever_pos, *door_to_link);
 //  } else {
 //    TRACE << "Failed to find position to place lever" << std:: endl;
@@ -1427,7 +1427,7 @@ bool mk_std_lvl()
     {
         for (int y = 0; y < 3; ++y)
         {
-            const R r(x == 0 ? 1 : x == 1 ? SPL_X0 + 1 : SPL_X1 + 1,
+             const R r(x == 0 ? 1 : x == 1 ? SPL_X0 + 1 : SPL_X1 + 1,
                       y == 0 ? 1 : y == 1 ? SPL_Y0 + 1 : SPL_Y1 + 1,
                       x == 0 ? SPL_X0 - 1 : x == 1 ? SPL_X1 - 1 : map_w - 2,
                       y == 0 ? SPL_Y0 - 1 : y == 1 ? SPL_Y1 - 1 : map_h - 2);
@@ -1437,12 +1437,12 @@ bool mk_std_lvl()
     }
 
 #ifdef MK_RIVER
-    const int RIVER_ONE_IN_N = 8;
+    const int river_one_in_n = 8;
 
     if (
         is_map_valid                        &&
         map::dlvl >= dlvl_first_mid_game    &&
-        rnd::one_in(RIVER_ONE_IN_N))
+        rnd::one_in(river_one_in_n))
     {
         reserve_river(regions);
     }
@@ -1474,7 +1474,7 @@ bool mk_std_lvl()
 
                 if (!region.main_room_ && region.is_free_)
                 {
-                    const R room_rect = region.rnd_room_rect();
+                     const R room_rect = region.rnd_room_rect();
                     auto* room = room_factory::mk_random_allowed_std_room(room_rect, false);
                     register_room(*room);
                     mk_floor_in_room(*room);
@@ -1661,11 +1661,11 @@ bool mk_std_lvl()
     if (is_map_valid)
     {
         //Occasionally place some snake emerge events
-        const int NR_SNAKE_EMERGE_EVENTS_TO_TRY =
+        const int nr_snake_emerge_events_to_try =
             rnd::one_in(20) ? 2 :
             rnd::one_in(4)  ? 1 : 0;
 
-        for (int i = 0; i < NR_SNAKE_EMERGE_EVENTS_TO_TRY; ++i)
+        for (int i = 0; i < nr_snake_emerge_events_to_try; ++i)
         {
             Event_snake_emerge* const event = new Event_snake_emerge();
 
@@ -1682,9 +1682,9 @@ bool mk_std_lvl()
 
     if (is_map_valid)
     {
-        const int LAST_LVL_TO_REVEAL_STAIRS_PATH = 9;
+        const int last_lvl_to_reveal_stairs_path = 9;
 
-        if (map::dlvl <= LAST_LVL_TO_REVEAL_STAIRS_PATH)
+        if (map::dlvl <= last_lvl_to_reveal_stairs_path)
         {
             reveal_doors_on_path_to_stairs(stairs_pos);
         }
@@ -1708,22 +1708,22 @@ bool mk_std_lvl()
 //=============================================================== REGION
 R Region::rnd_room_rect() const
 {
-    const bool ALLOW_TINY_W = rnd::coin_toss();
+    const bool allow_tiny_w = rnd::coin_toss();
 
-    const P min_size_lmt(ALLOW_TINY_W ? 2 : 4, ALLOW_TINY_W ? 4 : 2);
+    const P min_size_lmt(allow_tiny_w ? 2 : 4, allow_tiny_w ? 4 : 2);
     const P max_size_lmt(r_.p1 - r_.p0 + 1);
 
-    const int   H           = rnd::range(min_size_lmt.y, max_size_lmt.y);
-    const int   W_MAX_SMALL = min_size_lmt.x + ((max_size_lmt.x - min_size_lmt.x) / 5);
-    const int   W_MAX_BIG   = max_size_lmt.x;
-    const bool  ALLOW_BIG_W = H > (max_size_lmt.y * 5) / 6;
-    const int   W_MAX       = ALLOW_BIG_W ? W_MAX_BIG : W_MAX_SMALL;
-    const int   W           = rnd::range(min_size_lmt.x, W_MAX);
+    const int   h           = rnd::range(min_size_lmt.y, max_size_lmt.y);
+    const int   w_max_small = min_size_lmt.x + ((max_size_lmt.x - min_size_lmt.x) / 5);
+    const int   w_max_big   = max_size_lmt.x;
+    const bool  allow_big_w = h > (max_size_lmt.y * 5) / 6;
+    const int   w_max       = allow_big_w ? w_max_big : w_max_small;
+    const int   w           = rnd::range(min_size_lmt.x, w_max);
 
-    const P p0(r_.p0.x + rnd::range(0, max_size_lmt.x - W),
-               r_.p0.y + rnd::range(0, max_size_lmt.y - H));
+    const P p0(r_.p0.x + rnd::range(0, max_size_lmt.x - w),
+               r_.p0.y + rnd::range(0, max_size_lmt.y - h));
 
-    const P p1(p0.x + W - 1, p0.y + H - 1);
+    const P p1(p0.x + w - 1, p0.y + h - 1);
 
     return R(p0, p1);
 }

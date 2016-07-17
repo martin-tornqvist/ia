@@ -42,15 +42,15 @@ void cells_in_room(const Room& room,
 
     for (P& pos : pos_bucket)
     {
-        const int NR_BLK_R = walk_blockers_in_dir(Dir::right, pos);
-        const int NR_BLK_D = walk_blockers_in_dir(Dir::down, pos);
-        const int NR_BLK_L = walk_blockers_in_dir(Dir::left, pos);
-        const int NR_BLK_U = walk_blockers_in_dir(Dir::up, pos);
+        const int nr_blk_r = walk_blockers_in_dir(Dir::right, pos);
+        const int nr_blk_d = walk_blockers_in_dir(Dir::down, pos);
+        const int nr_blk_l = walk_blockers_in_dir(Dir::left, pos);
+        const int nr_blk_u = walk_blockers_in_dir(Dir::up, pos);
 
-        const bool IS_ZERO_BLK_ALL_DIR =
-            NR_BLK_R == 0 && NR_BLK_D == 0 && NR_BLK_L == 0 && NR_BLK_U == 0;
+        const bool is_zero_blk_all_dir =
+            nr_blk_r == 0 && nr_blk_d == 0 && nr_blk_l == 0 && nr_blk_u == 0;
 
-        if (IS_ZERO_BLK_ALL_DIR)
+        if (is_zero_blk_all_dir)
         {
             away_from_walls.push_back(pos);
             continue;
@@ -71,10 +71,10 @@ void cells_in_room(const Room& room,
         if (is_door_adjacent) {continue;}
 
         if (
-            (NR_BLK_R == 3 && NR_BLK_U == 1 && NR_BLK_D == 1 && NR_BLK_L == 0) ||
-            (NR_BLK_R == 1 && NR_BLK_U == 3 && NR_BLK_D == 0 && NR_BLK_L == 1) ||
-            (NR_BLK_R == 1 && NR_BLK_U == 0 && NR_BLK_D == 3 && NR_BLK_L == 1) ||
-            (NR_BLK_R == 0 && NR_BLK_U == 1 && NR_BLK_D == 1 && NR_BLK_L == 3))
+            (nr_blk_r == 3 && nr_blk_u == 1 && nr_blk_d == 1 && nr_blk_l == 0) ||
+            (nr_blk_r == 1 && nr_blk_u == 3 && nr_blk_d == 0 && nr_blk_l == 1) ||
+            (nr_blk_r == 1 && nr_blk_u == 0 && nr_blk_d == 3 && nr_blk_l == 1) ||
+            (nr_blk_r == 0 && nr_blk_u == 1 && nr_blk_d == 1 && nr_blk_l == 3))
         {
             adj_to_walls.push_back(pos);
             continue;

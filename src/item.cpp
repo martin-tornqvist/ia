@@ -128,10 +128,10 @@ Dice_param Item::dmg(const Att_mode att_mode, const Actor* const actor) const
 
     case Att_mode::thrown:
     {
-        const bool IS_MELEE_WPN = data_->type == Item_type::melee_wpn;
+        const bool is_melee_wpn = data_->type == Item_type::melee_wpn;
 
         //Melee weapons do throw damage based on their melee damage
-        if (IS_MELEE_WPN)
+        if (is_melee_wpn)
         {
             out         = data_->melee.dmg;
             out.plus    = melee_dmg_plus_;
@@ -165,19 +165,19 @@ int Item::weight() const
 
 std::string Item::weight_str() const
 {
-    const int WEIGHT = weight();
+    const int wgt = weight();
 
-    if (WEIGHT <= (int(Item_weight::extra_light) + int(Item_weight::light)) / 2)
+    if (wgt <= (int(Item_weight::extra_light) + int(Item_weight::light)) / 2)
     {
         return "very light";
     }
 
-    if (WEIGHT <= (int(Item_weight::light) + int(Item_weight::medium)) / 2)
+    if (wgt <= (int(Item_weight::light) + int(Item_weight::medium)) / 2)
     {
         return "light";
     }
 
-    if (WEIGHT <= (int(Item_weight::medium) + int(Item_weight::heavy)) / 2)
+    if (wgt <= (int(Item_weight::medium) + int(Item_weight::heavy)) / 2)
     {
         return "a bit heavy";
     }
@@ -278,22 +278,22 @@ std::string Item::name(const Item_ref_type ref_type,
         const std::string   rolls_str       = to_str(dmg_dice.rolls);
         const std::string   sides_str       = to_str(dmg_dice.sides);
 
-        const int           PLUS            = dmg_dice.plus;
+        const int           plus            = dmg_dice.plus;
 
-        const std::string   plus_str        = PLUS == 0 ? "" :
-                                              PLUS  > 0 ?
-                                              ("+" + to_str(PLUS)) :
-                                              ("-" + to_str(PLUS));
+        const std::string   plus_str        = plus == 0 ? "" :
+                                              plus  > 0 ?
+                                              ("+" + to_str(plus)) :
+                                              ("-" + to_str(plus));
 
-        const int           ITEM_SKILL      = data_->melee.hit_chance_mod;
-        const int           MELEE_SKILL     = map::player->ability(Ability_id::melee, true);
-        const int           SKILL_TOT       = std::max(0, std::min(100, ITEM_SKILL + MELEE_SKILL));
-        const std::string   skill_str       = to_str(SKILL_TOT) + "%";
+        const int           item_skill      = data_->melee.hit_chance_mod;
+        const int           melee_skill     = map::player->ability(Ability_id::melee, true);
+        const int           skill_tot       = std::max(0, std::min(100, item_skill + melee_skill));
+        const std::string   skill_str       = to_str(skill_tot) + "%";
 
         att_str = " " + rolls_str + "d" + sides_str + plus_str + " " + skill_str;
     }
 
-    const int RANGED_SKILL = map::player->ability(Ability_id::ranged, true);
+    const int ranged_skill = map::player->ability(Ability_id::ranged, true);
 
     if (att_inf_used == Item_ref_att_inf::ranged)
     {
@@ -303,23 +303,23 @@ std::string Item::name(const Item_ref_type ref_type,
         {
             const Dice_param dmg_dice = dmg(Att_mode::ranged, map::player);
 
-            const int MULTIPL = data_->ranged.is_machine_gun ? nr_mg_projectiles : 1;
+            const int multipl = data_->ranged.is_machine_gun ? nr_mg_projectiles : 1;
 
-            const std::string   rolls_str   = to_str(dmg_dice.rolls * MULTIPL);
+            const std::string   rolls_str   = to_str(dmg_dice.rolls * multipl);
             const std::string   sides_str   = to_str(dmg_dice.sides);
-            const int           PLUS        = dmg_dice.plus * MULTIPL;
+            const int           plus        = dmg_dice.plus * multipl;
 
-            const std::string   plus_str    = PLUS == 0 ? "" :
-                                              PLUS  > 0 ?
-                                              ("+" + to_str(PLUS)) :
-                                              ("-" + to_str(PLUS));
+            const std::string   plus_str    = plus == 0 ? "" :
+                                              plus  > 0 ?
+                                              ("+" + to_str(plus)) :
+                                              ("-" + to_str(plus));
 
             dmg_str = rolls_str + "d" + sides_str + plus_str;
         }
 
-        const int           ITEM_SKILL      = data_->ranged.hit_chance_mod;
-        const int           SKILL_TOT       = std::max(0, std::min(100, ITEM_SKILL + RANGED_SKILL));
-        const std::string   skill_str       = to_str(SKILL_TOT) + "%";
+        const int           item_skill      = data_->ranged.hit_chance_mod;
+        const int           skill_tot       = std::max(0, std::min(100, item_skill + ranged_skill));
+        const std::string   skill_str       = to_str(skill_tot) + "%";
 
         att_str = " " + dmg_str + " " + skill_str;
     }
@@ -330,16 +330,16 @@ std::string Item::name(const Item_ref_type ref_type,
 
         const std::string   rolls_str       = to_str(dmg_dice.rolls);
         const std::string   sides_str       = to_str(dmg_dice.sides);
-        const int           PLUS            = dmg_dice.plus;
+        const int           plus            = dmg_dice.plus;
 
-        const std::string   plus_str        = PLUS == 0 ? "" :
-                                              PLUS  > 0 ?
-                                              ("+" + to_str(PLUS)) :
-                                              ("-" + to_str(PLUS));
+        const std::string   plus_str        = plus == 0 ? "" :
+                                              plus  > 0 ?
+                                              ("+" + to_str(plus)) :
+                                              ("-" + to_str(plus));
 
-        const int           ITEM_SKILL      = data_->ranged.throw_hit_chance_mod;
-        const int           SKILL_TOT       = std::max(0, std::min(100, ITEM_SKILL + RANGED_SKILL));
-        const std::string   skill_str       = to_str(SKILL_TOT) + "%";
+        const int           item_skill      = data_->ranged.throw_hit_chance_mod;
+        const int           skill_tot       = std::max(0, std::min(100, item_skill + ranged_skill));
+        const std::string   skill_str       = to_str(skill_tot) + "%";
 
         att_str = " " + rolls_str + "d" + sides_str + plus_str + " " + skill_str;
     }
@@ -420,15 +420,15 @@ void Armor::load()
     dur_ = save_handling::get_int();
 }
 
-std::string Armor::armor_points_str(const bool WITH_BRACKETS) const
+std::string Armor::armor_points_str(const bool with_brackets) const
 {
-    const int           AP      = armor_points();
-    const std::string   ap_str  = to_str(std::max(1, AP));
+    const int           ap      = armor_points();
+    const std::string   ap_str  = to_str(std::max(1, ap));
 
-    return WITH_BRACKETS ? ("[" + ap_str + "]") : ap_str;
+    return with_brackets ? ("[" + ap_str + "]") : ap_str;
 }
 
-int Armor::take_dur_hit_and_get_reduced_dmg(const int DMG_BEFORE)
+int Armor::take_dur_hit_and_get_reduced_dmg(const int dmg_before)
 {
     TRACE_FUNC_BEGIN;
 
@@ -437,68 +437,68 @@ int Armor::take_dur_hit_and_get_reduced_dmg(const int DMG_BEFORE)
     //DFF: Damage (to) Durability Factor
     //     A factor of how much damage the armor durability takes per attack damage point
 
-    const int AP_BEFORE = armor_points();
+    const int ap_before = armor_points();
 
     //TODO: Add check for if wearer is player!
 
     //Damage factor
-    const double DMG_BEFORE_DB = double(DMG_BEFORE);
+    const double dmg_before_db = double(dmg_before);
 
     //Adjustment factor
-    const double K = 2.0;
+    const double k = 2.0;
 
     //Armor durability factor
-    const double ARMOR_DDF = data_->armor.dmg_to_durability_factor;
+    const double armor_ddf = data_->armor.dmg_to_durability_factor;
 
     //Armor lasts twice as long for War Vets
-    const double WAR_VET_DDF = (player_bon::bg() == Bg::war_vet) ? 0.5 : 1.0;
+    const double war_vet_ddf = (player_bon::bg() == Bg::war_vet) ? 0.5 : 1.0;
 
-    dur_ -= int(DMG_BEFORE_DB * K * ARMOR_DDF * WAR_VET_DDF);
+    dur_ -= int(dmg_before_db * k * armor_ddf * war_vet_ddf);
 
     dur_ = std::max(0, dur_);
 
-    const int AP_AFTER = armor_points();
+    const int ap_after = armor_points();
 
-    if (AP_AFTER < AP_BEFORE && AP_AFTER != 0)
+    if (ap_after < ap_before && ap_after != 0)
     {
         const std::string armor_name = name(Item_ref_type::plain);
         msg_log::add("My " + armor_name + " is damaged!", clr_msg_note);
     }
 
-    TRACE << "Damage before: " + to_str(DMG_BEFORE) << std::endl;
+    TRACE << "Damage before: " + to_str(dmg_before) << std::endl;
 
-    const int DMG_AFTER = std::max(1, DMG_BEFORE - AP_BEFORE);
+    const int dmg_after = std::max(1, dmg_before - ap_before);
 
-    TRACE << "Damage after: " + to_str(DMG_AFTER) << std::endl;
+    TRACE << "Damage after: " + to_str(dmg_after) << std::endl;
 
     TRACE_FUNC_END;
-    return DMG_AFTER;
+    return dmg_after;
 }
 
 int Armor::armor_points() const
 {
-    //NOTE: AP must be able to reach zero, otherwise the armor will never count as destroyed.
+    //NOTE: ap must be able to reach zero, otherwise the armor will never count as destroyed.
 
-    const int AP_MAX = data_->armor.armor_points;
+    const int ap_max = data_->armor.armor_points;
 
     if (dur_ > 60)
     {
-        return AP_MAX;
+        return ap_max;
     }
 
     if (dur_ > 40)
     {
-        return std::max(0, AP_MAX - 1);
+        return std::max(0, ap_max - 1);
     }
 
     if (dur_ > 25)
     {
-        return std::max(0, AP_MAX - 2);
+        return std::max(0, ap_max - 2);
     }
 
     if (dur_ > 15)
     {
-        return std::max(0, AP_MAX - 3);
+        return std::max(0, ap_max - 3);
     }
 
     return 0;
@@ -610,7 +610,7 @@ Clr Wpn::clr() const
 
 void Wpn::set_random_melee_plus()
 {
-    const bool IS_LOW_DLVL = map::dlvl < 6;
+    const bool is_low_dlvl = map::dlvl < 6;
 
     //Element corresponds to plus damage value (+0, +1, +2, etc)
     const std::vector<int> weights =
@@ -619,9 +619,9 @@ void Wpn::set_random_melee_plus()
         220,                    //          320
         120,                    //          450
         70,                     //          520
-        IS_LOW_DLVL ? 20 : 40,  //          540 or 560
-        IS_LOW_DLVL ? 2  : 20,  //          542 or 580
-        IS_LOW_DLVL ? 1  : 10   //Total:    543 or 590
+        is_low_dlvl ? 20 : 40,  //          540 or 560
+        is_low_dlvl ? 2  : 20,  //          542 or 580
+        is_low_dlvl ? 1  : 10   //Total:    543 or 590
     };
 
     melee_dmg_plus_ = rnd::weighted_choice(weights);
@@ -653,17 +653,17 @@ void Player_ghoul_claw::on_melee_hit(Actor& actor_hit)
     //as Worms don't leave a corpse, and you should be able to feed on those.
     const Actor_data_t& d = actor_hit.data();
 
-    const bool IS_ETHEREAL = actor_hit.has_prop(Prop_id::ethereal);
+    const bool is_ethereal = actor_hit.has_prop(Prop_id::ethereal);
 
-    const bool IS_HP_MISSING    = map::player->hp() < map::player->hp_max(true);
-    const bool IS_WOUNDED       = map::player->prop_handler().prop(Prop_id::wound);
-    const bool IS_FEED_NEEDED   = IS_HP_MISSING || IS_WOUNDED;
+    const bool is_hp_missing    = map::player->hp() < map::player->hp_max(true);
+    const bool is_wounded       = map::player->prop_handler().prop(Prop_id::wound);
+    const bool is_feed_needed   = is_hp_missing || is_wounded;
 
     if (
-        !IS_ETHEREAL                                &&
+        !is_ethereal                                &&
         d.can_bleed                                 &&
         player_bon::traits[size_t(Trait::ravenous)] &&
-        IS_FEED_NEEDED                              &&
+        is_feed_needed                              &&
         rnd::one_in(4))
     {
         Snd snd("",
@@ -710,17 +710,17 @@ void Player_ghoul_claw::on_melee_kill(Actor& actor_killed)
 
     const Actor_data_t& d = actor_killed.data();
 
-    const bool IS_ETHEREAL = actor_killed.has_prop(Prop_id::ethereal);
+    const bool is_ethereal = actor_killed.has_prop(Prop_id::ethereal);
 
     if (
         player_bon::traits[size_t(Trait::foul)] &&
-        !IS_ETHEREAL                            &&
+        !is_ethereal                            &&
         d.can_leave_corpse                      &&
         rnd::one_in(3))
     {
-        const int NR_WORMS = rnd::range(1, 2);
+        const int nr_worms = rnd::range(1, 2);
 
-        std::vector<Actor_id> ids(NR_WORMS, Actor_id::worm_mass);
+        std::vector<Actor_id> ids(nr_worms, Actor_id::worm_mass);
 
         actor_factory::summon(actor_killed.pos,
                               ids,
@@ -950,10 +950,10 @@ Consume_item Medical_bag::activate(Actor* const actor)
         return Consume_item::no;
     }
 
-    const int   NR_SUPPLIES_NEEDED  = tot_suppl_for_action(cur_action_);
-    const bool  IS_ENOUGH_SUPPLIES  = nr_supplies_ >= NR_SUPPLIES_NEEDED;
+    const int   nr_supplies_needed  = tot_suppl_for_action(cur_action_);
+    const bool  is_enough_supplies  = nr_supplies_ >= nr_supplies_needed;
 
-    if (!IS_ENOUGH_SUPPLIES)
+    if (!is_enough_supplies)
     {
         msg_log::add("I do not have enough medical supplies.");
         cur_action_ = Med_bag_action::END;
@@ -1080,16 +1080,16 @@ void Medical_bag::interrupted()
 
 int Medical_bag::tot_suppl_for_action(const Med_bag_action action) const
 {
-    const bool  IS_HEALER   = player_bon::traits[size_t(Trait::healer)];
-    const int   DIV         = IS_HEALER ? 2 : 1;
+    const bool  is_healer   = player_bon::traits[size_t(Trait::healer)];
+    const int   div         = is_healer ? 2 : 1;
 
     switch (action)
     {
     case Med_bag_action::treat_wound:
-        return 8 / DIV;
+        return 8 / div;
 
     case Med_bag_action::sanitize_infection:
-        return 2 / DIV;
+        return 2 / div;
 
     case Med_bag_action::END:
         break;
@@ -1102,16 +1102,16 @@ int Medical_bag::tot_suppl_for_action(const Med_bag_action action) const
 
 int Medical_bag::tot_turns_for_action(const Med_bag_action action) const
 {
-    const bool  IS_HEALER   = player_bon::traits[size_t(Trait::healer)];
-    const int   DIV         = IS_HEALER ? 2 : 1;
+    const bool  is_healer   = player_bon::traits[size_t(Trait::healer)];
+    const int   div         = is_healer ? 2 : 1;
 
     switch (action)
     {
     case Med_bag_action::treat_wound:
-        return 80 / DIV;
+        return 80 / div;
 
     case Med_bag_action::sanitize_infection:
-        return 20 / DIV;
+        return 20 / div;
 
     case Med_bag_action::END:
         break;
@@ -1223,9 +1223,9 @@ Consume_item Explosive::activate(Actor* const actor)
 //---------------------------------------------------------- DYNAMITE
 void Dynamite::on_player_ignite() const
 {
-    const bool IS_DEM_EXP = player_bon::traits[(size_t)Trait::dem_expert];
+    const bool is_dem_exp = player_bon::traits[(size_t)Trait::dem_expert];
 
-    const Pass_time pass_time = (IS_DEM_EXP && rnd::coin_toss()) ?
+    const Pass_time pass_time = (is_dem_exp && rnd::coin_toss()) ?
                                 Pass_time::no :
                                 Pass_time::yes;
 
@@ -1299,9 +1299,9 @@ void Dynamite::on_player_paralyzed()
 //---------------------------------------------------------- MOLOTOV
 void Molotov::on_player_ignite() const
 {
-    const bool IS_DEM_EXP = player_bon::traits[(size_t)Trait::dem_expert];
+    const bool is_dem_exp = player_bon::traits[(size_t)Trait::dem_expert];
 
-    const Pass_time pass_time = (IS_DEM_EXP && rnd::coin_toss()) ?
+    const Pass_time pass_time = (is_dem_exp && rnd::coin_toss()) ?
                                 Pass_time::no :
                                 Pass_time::yes;
 
@@ -1351,7 +1351,7 @@ void Molotov::on_std_turn_player_hold_ignited()
 
 void Molotov::on_thrown_ignited_landing(const P& p)
 {
-    const int D = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
+    const int d = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
 
     Snd snd("I hear an explosion!",
             Sfx_id::explosion_molotov,
@@ -1367,7 +1367,7 @@ void Molotov::on_thrown_ignited_landing(const P& p)
                    Expl_type::apply_prop,
                    Expl_src::player_use_moltv_intended,
                    Emit_expl_snd::no,
-                   D,
+                   d,
                    new Prop_burning(Prop_turns::std));
 }
 
@@ -1403,9 +1403,9 @@ void Molotov::on_player_paralyzed()
 //---------------------------------------------------------- FLARE
 void Flare::on_player_ignite() const
 {
-    const bool IS_DEM_EXP = player_bon::traits[(size_t)Trait::dem_expert];
+    const bool is_dem_exp = player_bon::traits[(size_t)Trait::dem_expert];
 
-    const Pass_time pass_time = (IS_DEM_EXP && rnd::coin_toss()) ?
+    const Pass_time pass_time = (is_dem_exp && rnd::coin_toss()) ?
                                 Pass_time::no :
                                 Pass_time::yes;
 
@@ -1471,9 +1471,9 @@ void Flare::on_player_paralyzed()
 //---------------------------------------------------------- SMOKE GRENADE
 void Smoke_grenade::on_player_ignite() const
 {
-    const bool IS_DEM_EXP = player_bon::traits[(size_t)Trait::dem_expert];
+    const bool is_dem_exp = player_bon::traits[(size_t)Trait::dem_expert];
 
-    const Pass_time pass_time = (IS_DEM_EXP && rnd::coin_toss()) ?
+    const Pass_time pass_time = (is_dem_exp && rnd::coin_toss()) ?
                                 Pass_time::no :
                                 Pass_time::yes;
 
@@ -1490,9 +1490,9 @@ void Smoke_grenade::on_std_turn_player_hold_ignited()
 {
     if (fuse_turns_ < std_fuse_turns() && rnd::coin_toss())
     {
-        const int D = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
+        const int d = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
 
-        explosion::run_smoke_explosion_at(map::player->pos, D);
+        explosion::run_smoke_explosion_at(map::player->pos, d);
     }
 
     --fuse_turns_;
@@ -1511,9 +1511,9 @@ void Smoke_grenade::on_std_turn_player_hold_ignited()
 
 void Smoke_grenade::on_thrown_ignited_landing(const P& p)
 {
-    const int D = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
+    const int d = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
 
-    explosion::run_smoke_explosion_at(p, D);
+    explosion::run_smoke_explosion_at(p, d);
 
     map::player->update_fov();
 

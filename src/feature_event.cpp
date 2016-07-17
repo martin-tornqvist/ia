@@ -88,9 +88,9 @@ void Event_wall_crumble::on_new_turn()
             //Spawn things
             int         nr_mon_limit_except_adj_to_entry    = 9999;
             Actor_id    mon_type                            = Actor_id::zombie;
-            const int   RND                                 = rnd::range(1, 5);
+            const int   rnd                                 = rnd::range(1, 5);
 
-            switch (RND)
+            switch (rnd)
             {
             case 1:
                 mon_type = Actor_id::zombie;
@@ -178,7 +178,7 @@ bool Event_snake_emerge::try_find_p()
     {
         emerge_p_bucket(p, blocked, emerge_bucket);
 
-        if (emerge_bucket.size() >= MIN_NR_SNAKES_)
+        if (emerge_bucket.size() >= min_nr_snakes_)
         {
             pos_ = p;
             return true;
@@ -190,12 +190,12 @@ bool Event_snake_emerge::try_find_p()
 
 R Event_snake_emerge::allowed_emerge_rect(const P& p) const
 {
-    const int MAX_D = allowed_emerge_dist_range.max;
+    const int max_d = allowed_emerge_dist_range.max;
 
-    const int X0 = std::max(1,          p.x - MAX_D);
-    const int Y0 = std::max(1,          p.y - MAX_D);
-    const int X1 = std::min(map_w - 2,  p.x + MAX_D);
-    const int Y1 = std::min(map_h - 2,  p.y + MAX_D);
+    const int X0 = std::max(1,          p.x - max_d);
+    const int Y0 = std::max(1,          p.y - max_d);
+    const int X1 = std::min(map_w - 2,  p.x + max_d);
+    const int Y1 = std::min(map_h - 2,  p.y + max_d);
 
     return R(X0, Y0, X1, Y1);
 }
@@ -219,7 +219,7 @@ void Event_snake_emerge::emerge_p_bucket(
 
     fov::run(p, blocked, fov);
 
-    const R r = allowed_emerge_rect(p);
+     const R r = allowed_emerge_rect(p);
 
     for (int x = r.p0.x; x <= r.p1.x; ++x)
     {
@@ -227,12 +227,12 @@ void Event_snake_emerge::emerge_p_bucket(
         {
             const P tgt_p(x, y);
 
-            const int MIN_D = allowed_emerge_dist_range.min;
+            const int min_d = allowed_emerge_dist_range.min;
 
             if (
                 !blocked[x][y]              &&
                 !fov[x][y].is_blocked_hard  &&
-                king_dist(p, tgt_p) >= MIN_D)
+                king_dist(p, tgt_p) >= min_d)
             {
                 out.push_back(tgt_p);
             }
@@ -267,7 +267,7 @@ void Event_snake_emerge::on_new_turn()
         return;
     }
 
-    const R r = allowed_emerge_rect(pos_);
+     const R r = allowed_emerge_rect(pos_);
 
     bool blocked[map_w][map_h];
 
@@ -277,13 +277,13 @@ void Event_snake_emerge::on_new_turn()
 
     emerge_p_bucket(pos_, blocked, tgt_bucket);
 
-    if (tgt_bucket.size() < MIN_NR_SNAKES_)
+    if (tgt_bucket.size() < min_nr_snakes_)
     {
         //Not possible to spawn at least minimum required number of snakes
         return;
     }
 
-    int max_nr_snakes = MIN_NR_SNAKES_ + (map::dlvl / 4);
+    int max_nr_snakes = min_nr_snakes_ + (map::dlvl / 4);
 
     //Cap max number of snakes to the size of the target bucket
     //NOTE: The target bucket is at least as big as the minimum required number of snakes
@@ -301,14 +301,14 @@ void Event_snake_emerge::on_new_turn()
         }
     }
 
-    const size_t    IDX = rnd::range(0, id_bucket.size() - 1);
-    const Actor_id  id  = id_bucket[IDX];
+    const size_t    idx = rnd::range(0, id_bucket.size() - 1);
+    const Actor_id  id  = id_bucket[idx];
 
-    const size_t NR_SUMMONED = rnd::range(MIN_NR_SNAKES_, max_nr_snakes);
+    const size_t nr_summoned = rnd::range(min_nr_snakes_, max_nr_snakes);
 
     std::vector<P> seen_tgt_positions;
 
-    for (size_t i = 0; i < NR_SUMMONED; ++i)
+    for (size_t i = 0; i < nr_summoned; ++i)
     {
         ASSERT(i < tgt_bucket.size());
 
@@ -332,7 +332,7 @@ void Event_snake_emerge::on_new_turn()
         map::player->incr_shock(Shock_lvl::some, Shock_src::see_mon);
     }
 
-    for (size_t i = 0; i < NR_SUMMONED; ++i)
+    for (size_t i = 0; i < nr_summoned; ++i)
     {
         const P& p(tgt_bucket[i]);
 

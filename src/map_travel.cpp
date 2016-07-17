@@ -96,10 +96,10 @@ void mk_lvl(const Map_type& map_type)
 void init()
 {
     //Forest + dungeon + boss + trapezohedron
-    const size_t NR_LVL_TOT = dlvl_last + 3;
+    const size_t nr_lvl_tot = dlvl_last + 3;
 
     map_list =
-        std::vector<Map_data>(NR_LVL_TOT, {Map_type::std, Is_main_dungeon::yes});
+        std::vector<Map_data>(nr_lvl_tot, {Map_type::std, Is_main_dungeon::yes});
 
     //Forest intro level
     map_list[0] = {Map_type::intro, Is_main_dungeon::yes};
@@ -134,9 +134,9 @@ void save()
 
 void load()
 {
-    const int NR_MAPS = save_handling::get_int();
+    const int nr_maps = save_handling::get_int();
 
-    map_list.resize(size_t(NR_MAPS));
+    map_list.resize(size_t(nr_maps));
 
     for (auto& map_data : map_list)
     {

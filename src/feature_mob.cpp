@@ -22,7 +22,7 @@ void Smoke::on_new_turn()
 
     if (actor)
     {
-        const bool IS_PLAYER = actor == map::player;
+        const bool is_player = actor == map::player;
 
         //TODO: There needs to be some criteria here, so that e.g. a statue-monster or a
         //very alien monster can't get blinded by smoke (but do not use is_humanoid - rats,
@@ -32,7 +32,7 @@ void Smoke::on_new_turn()
 
         bool is_blind_prot = false;
 
-        if (IS_PLAYER)
+        if (is_player)
         {
             auto&       inv                 = map::player->inv();
             auto* const player_head_item    = inv.slots_[int(Slot_id::head)].item;
@@ -55,7 +55,7 @@ void Smoke::on_new_turn()
         //Blinded?
         if (!is_blind_prot && rnd::one_in(4))
         {
-            if (IS_PLAYER)
+            if (is_player)
             {
                 msg_log::add("I am getting smoke in my eyes.");
             }
@@ -69,7 +69,7 @@ void Smoke::on_new_turn()
         {
             std::string snd_msg = "";
 
-            if (IS_PLAYER)
+            if (is_player)
             {
                 msg_log::add("I cough.", clr_msg_bad);
             }
@@ -81,7 +81,7 @@ void Smoke::on_new_turn()
                 }
             }
 
-            const auto alerts = IS_PLAYER ? Alerts_mon::yes : Alerts_mon::no;
+            const auto alerts = is_player ? Alerts_mon::yes : Alerts_mon::no;
 
             snd_emit::run(Snd(snd_msg,
                               Sfx_id::END,
@@ -129,7 +129,7 @@ void Lit_dynamite::on_new_turn()
 
     if (nr_turns_left_ <= 0)
     {
-        const int D = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
+        const int d = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
 
         const P p(pos_);
 
@@ -143,7 +143,7 @@ void Lit_dynamite::on_new_turn()
                        Expl_type::expl,
                        Expl_src::misc,
                        Emit_expl_snd::yes,
-                       D);
+                       d);
     }
 }
 
@@ -172,13 +172,13 @@ void Lit_flare::on_new_turn()
 
 void Lit_flare::add_light(bool light[map_w][map_h]) const
 {
-    const int RADI = fov_std_radi_int; //light_radius();
+    const int radi = fov_std_radi_int; //light_radius();
 
-    P p0(std::max(0, pos_.x - RADI),
-         std::max(0, pos_.y - RADI));
+    P p0(std::max(0, pos_.x - radi),
+         std::max(0, pos_.y - radi));
 
-    P p1(std::min(map_w - 1, pos_.x + RADI),
-         std::min(map_h - 1, pos_.y + RADI));
+    P p1(std::min(map_w - 1, pos_.x + radi),
+         std::min(map_h - 1, pos_.y + radi));
 
     bool hard_blocked[map_w][map_h];
 

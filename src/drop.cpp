@@ -25,37 +25,37 @@ void drop_all_characters_items(Actor& actor)
 
 void try_drop_item_from_inv(Actor& actor,
                             const Inv_type inv_type,
-                            const size_t IDX,
-                            const int NR_ITEMS_TO_DROP)
+                            const size_t idx,
+                            const int nr_items_to_drop)
 {
     Inventory&  inv             = actor.inv();
     Item*       item_to_drop    = nullptr;
 
     if (inv_type == Inv_type::slots)
     {
-        ASSERT(IDX != size_t(Slot_id::END));
-        item_to_drop = inv.slots_[IDX].item;
+        ASSERT(idx != size_t(Slot_id::END));
+        item_to_drop = inv.slots_[idx].item;
     }
     else //Backpack item
     {
-        ASSERT(IDX < inv.backpack_.size());
-        item_to_drop = inv.backpack_[IDX];
+        ASSERT(idx < inv.backpack_.size());
+        item_to_drop = inv.backpack_[idx];
     }
 
     if (item_to_drop)
     {
         const Item_data_t&  data = item_to_drop->data();
 
-        const bool  IS_STACKABLE            = data.is_stackable;
-        const int   NR_ITEMS_BEFORE_DROP    = item_to_drop->nr_items_;
+        const bool  is_stackable            = data.is_stackable;
+        const int   nr_items_before_drop    = item_to_drop->nr_items_;
 
-        const bool  IS_WHOLE_STACK_DROPPED  = !IS_STACKABLE             ||
-                                              NR_ITEMS_TO_DROP == -1    ||
-                                              (NR_ITEMS_TO_DROP >= NR_ITEMS_BEFORE_DROP);
+        const bool  is_whole_stack_dropped  = !is_stackable             ||
+                                              nr_items_to_drop == -1    ||
+                                              (nr_items_to_drop >= nr_items_before_drop);
 
         std::string item_ref = "";
 
-        if (inv_type == Inv_type::slots && IS_WHOLE_STACK_DROPPED)
+        if (inv_type == Inv_type::slots && is_whole_stack_dropped)
         {
             if (item_to_drop->on_unequip() == Unequip_allowed::no)
             {
@@ -63,10 +63,10 @@ void try_drop_item_from_inv(Actor& actor,
             }
         }
 
-        if (IS_WHOLE_STACK_DROPPED)
+        if (is_whole_stack_dropped)
         {
             item_ref = item_to_drop->name(Item_ref_type::plural);
-            inv.remove_without_destroying(inv_type, IDX);
+            inv.remove_without_destroying(inv_type, idx);
 
             drop_item_on_map(actor.pos, *item_to_drop);
 
@@ -76,9 +76,9 @@ void try_drop_item_from_inv(Actor& actor,
         {
             Item* item_to_keep      = item_to_drop;
             item_to_drop            = item_factory::copy_item(*item_to_keep);
-            item_to_drop->nr_items_ = NR_ITEMS_TO_DROP;
+            item_to_drop->nr_items_ = nr_items_to_drop;
             item_ref                = item_to_drop->name(Item_ref_type::plural);
-            item_to_keep->nr_items_ = NR_ITEMS_BEFORE_DROP - NR_ITEMS_TO_DROP;
+            item_to_keep->nr_items_ = nr_items_before_drop - nr_items_to_drop;
 
             drop_item_on_map(actor.pos, *item_to_drop);
 
@@ -156,7 +156,7 @@ Item* drop_item_on_map(const P& intended_pos, Item& item)
 
     sort(begin(free_cells), end(free_cells), is_closer_to_origin);
 
-    const bool IS_STACKABLE_TYPE = item.data().is_stackable;
+    const bool is_stackable_type = item.data().is_stackable;
 
     int dist_searched_stackable = -1;
 
@@ -168,25 +168,25 @@ Item* drop_item_on_map(const P& intended_pos, Item& item)
     {
         const P& p = *outer_it;
 
-        if (IS_STACKABLE_TYPE)
+        if (is_stackable_type)
         {
-            const int DIST = king_dist(intended_pos, p);
+            const int dist = king_dist(intended_pos, p);
 
-            ASSERT(DIST >= dist_searched_stackable);
+            ASSERT(dist >= dist_searched_stackable);
 
             //Have we searched at this distance before?
-            if (DIST > dist_searched_stackable)
+            if (dist > dist_searched_stackable)
             {
                 //Search each cell which have equal distance to the current distance
                 for (auto stack_it = outer_it; stack_it != end(free_cells); ++stack_it)
                 {
                     const P& stack_p = *stack_it;
 
-                    const int STACK_DIST = king_dist(intended_pos, stack_p);
+                    const int stack_dist = king_dist(intended_pos, stack_p);
 
-                    ASSERT(STACK_DIST >= DIST);
+                    ASSERT(stack_dist >= dist);
 
-                    if (STACK_DIST > DIST)
+                    if (stack_dist > dist)
                     {
                         break;
                     }
@@ -210,7 +210,7 @@ Item* drop_item_on_map(const P& intended_pos, Item& item)
                     }
                 } //Stack position loop
 
-                dist_searched_stackable = DIST;
+                dist_searched_stackable = dist;
             }
         }
 

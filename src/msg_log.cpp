@@ -34,7 +34,7 @@ int x_after_msg(const Msg* const msg)
 }
 
 //Used by normal log and history viewer
-void draw_line(const std::vector<Msg>& line_to_draw, const int Y_POS)
+void draw_line(const std::vector<Msg>& line_to_draw, const int y_pos)
 {
     for (const Msg& msg : line_to_draw)
     {
@@ -44,7 +44,7 @@ void draw_line(const std::vector<Msg>& line_to_draw, const int Y_POS)
 
         render::draw_text(str,
                           Panel::log,
-                          P(msg.x_pos_, Y_POS),
+                          P(msg.x_pos_, y_pos),
                           msg.clr_);
     }
 }
@@ -81,16 +81,16 @@ void clear()
 
 void draw(const Update_screen update)
 {
-    const int NR_LINES_WITH_CONTENT = lines_[0].empty() ? 0 :
+    const int nr_lines_with_content = lines_[0].empty() ? 0 :
                                       lines_[1].empty() ? 1 : 2;
 
-    if (NR_LINES_WITH_CONTENT > 0)
+    if (nr_lines_with_content > 0)
     {
         render::cover_area(Panel::log,
                            P(0, 0),
-                           P(map_w, NR_LINES_WITH_CONTENT));
+                           P(map_w, nr_lines_with_content));
 
-        for (int i = 0; i < NR_LINES_WITH_CONTENT; ++i)
+        for (int i = 0; i < nr_lines_with_content; ++i)
         {
             draw_line(lines_[i], i);
         }
@@ -104,7 +104,7 @@ void draw(const Update_screen update)
 
 void add(const std::string& str,
          const Clr& clr,
-         const bool INTERRUPT_ALL_PLAYER_ACTIONS,
+         const bool interrupt_all_player_actions,
          const More_prompt_on_msg add_more_prompt_on_msg)
 {
     ASSERT(!str.empty());
@@ -143,16 +143,16 @@ void add(const std::string& str,
 
     if (!is_repeated)
     {
-        const int REPEAT_STR_LEN = 4;
+        const int repeat_str_len = 4;
 
-        const int PADDING_LEN = REPEAT_STR_LEN +
+        const int padding_len = repeat_str_len +
                                 (cur_line_nr == 0 ? 0 : (more_str.size() + 1));
 
         int x_pos = x_after_msg(prev_msg);
 
-        const bool IS_MSG_FIT = x_pos + (int)str.size() + PADDING_LEN - 1 < map_w;
+        const bool is_msg_fit = x_pos + (int)str.size() + padding_len - 1 < map_w;
 
-        if (!IS_MSG_FIT)
+        if (!is_msg_fit)
         {
             if (cur_line_nr == 0)
             {
@@ -176,7 +176,7 @@ void add(const std::string& str,
     }
 
     //Messages may stop long actions like first aid and quick walk
-    if (INTERRUPT_ALL_PLAYER_ACTIONS)
+    if (interrupt_all_player_actions)
     {
         map::player->interrupt_actions();
     }
@@ -231,12 +231,12 @@ void display_history()
 {
     clear();
 
-    const int LINE_JUMP           = 3;
-    const int NR_LINES_TOT        = history_.size();
-    const int MAX_NR_LINES_ON_SCR = screen_h - 2;
+    const int line_jump           = 3;
+    const int nr_lines_tot        = history_.size();
+    const int max_nr_lines_on_scr = screen_h - 2;
 
-    int top_nr = std::max(0, NR_LINES_TOT - MAX_NR_LINES_ON_SCR);
-    int btm_nr = std::min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
+    int top_nr = std::max(0, nr_lines_tot - max_nr_lines_on_scr);
+    int btm_nr = std::min(top_nr + max_nr_lines_on_scr - 1, nr_lines_tot - 1);
 
     while (true)
     {
@@ -273,27 +273,27 @@ void display_history()
 
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {
-            top_nr += LINE_JUMP;
+            top_nr += line_jump;
 
-            if (NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
+            if (nr_lines_tot <= max_nr_lines_on_scr)
             {
                 top_nr = 0;
             }
             else
             {
-                top_nr = std::min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, top_nr);
+                top_nr = std::min(nr_lines_tot - max_nr_lines_on_scr, top_nr);
             }
         }
         else if (d.key == '8' || d.sdl_key == SDLK_UP || d.key == 'k')
         {
-            top_nr = std::max(0, top_nr - LINE_JUMP);
+            top_nr = std::max(0, top_nr - line_jump);
         }
         else if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)
         {
             break;
         }
 
-        btm_nr = std::min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
+        btm_nr = std::min(top_nr + max_nr_lines_on_scr - 1, nr_lines_tot - 1);
     }
 
     render::draw_map_state();

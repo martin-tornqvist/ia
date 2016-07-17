@@ -193,7 +193,7 @@ void act()
 //        config::toggle_bot_playing();
 //    }
 
-    //Check if we are finished with the current run, if so, go back to DLVL 1
+    //Check if we are finished with the current run, if so, go back to dlvl 1
     if (map::dlvl >= dlvl_last)
     {
         TRACE << "Starting new run on first dungeon level" << std::endl;
@@ -233,8 +233,8 @@ void act()
     //Occasionally apply Burning to a random actor (helps to avoid getting stuck)
     if (rnd::one_in(10))
     {
-        const int ELEMENT = rnd::range(0, game_time::actors.size() - 1);
-        Actor* const actor = game_time::actors[ELEMENT];
+        const int element = rnd::range(0, game_time::actors.size() - 1);
+        Actor* const actor = game_time::actors[element];
 
         if (actor != map::player)
         {

@@ -37,13 +37,13 @@ void run(
     const Expl_type expl_type,
     const Expl_src expl_src = Expl_src::misc,
     const Emit_expl_snd emit_expl_snd = Emit_expl_snd::yes,
-    const int RADI_CHANGE = 0,
+    const int radi_change = 0,
     Prop* const prop = nullptr,
     const Clr* const clr_override = nullptr);
 
-void run_smoke_explosion_at(const P& origin, const int RADI_CHANGE = 0);
+void run_smoke_explosion_at(const P& origin, const int radi_change = 0);
 
-R explosion_area(const P& c, const int RADI);
+R explosion_area(const P& c, const int radi);
 
 } //explosion
 

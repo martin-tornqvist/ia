@@ -21,12 +21,12 @@ namespace knock_back
 
 void try_knock_back(Actor& defender,
                     const P& attacked_from_pos,
-                    const bool IS_SPIKE_GUN,
-                    const bool IS_MSG_ALLOWED)
+                    const bool is_spike_gun,
+                    const bool is_msg_allowed)
 {
     TRACE_FUNC_BEGIN;
 
-    const bool  IS_DEFENDER_PLAYER  = defender.is_player();
+    const bool  is_defender_player  = defender.is_player();
     const auto& defender_data       = defender.data();
 
     if (
@@ -35,7 +35,7 @@ void try_knock_back(Actor& defender,
         defender.has_prop(Prop_id::ethereal)            ||
         defender.has_prop(Prop_id::ooze)                ||
         //Do not knock back player if bot is playing
-        (IS_DEFENDER_PLAYER && config::is_bot_playing()))
+        (is_defender_player && config::is_bot_playing()))
     {
         //Defender is not knockable
 
@@ -73,16 +73,16 @@ void try_knock_back(Actor& defender,
     bool blocked[map_w][map_h];
     map_parse::run(cell_check::Blocks_actor(defender, true), blocked);
 
-    const bool IS_CELL_BOTTOMLESS =
+    const bool is_cell_bottomless =
         map::cells[new_pos.x][new_pos.y].rigid->is_bottomless();
 
-    const bool IS_CELL_BLOCKED =
-        blocked[new_pos.x][new_pos.y] && !IS_CELL_BOTTOMLESS;
+    const bool is_cell_blocked =
+        blocked[new_pos.x][new_pos.y] && !is_cell_bottomless;
 
-    if (IS_CELL_BLOCKED)
+    if (is_cell_blocked)
     {
         //Defender nailed to a wall from a spike gun?
-        if (IS_SPIKE_GUN)
+        if (is_spike_gun)
         {
             Rigid* const f = map::cells[new_pos.x][new_pos.y].rigid;
 
@@ -98,13 +98,13 @@ void try_knock_back(Actor& defender,
     }
     else //Target cell is free
     {
-        const bool PLAYER_SEE_DEFENDER = IS_DEFENDER_PLAYER ?
+        const bool player_see_defender = is_defender_player ?
                                          true :
                                          map::player->can_see_actor(defender);
 
-        if (IS_MSG_ALLOWED && PLAYER_SEE_DEFENDER)
+        if (is_msg_allowed && player_see_defender)
         {
-            if (IS_DEFENDER_PLAYER)
+            if (is_defender_player)
             {
                 msg_log::add("I am knocked back!");
             }
@@ -123,11 +123,11 @@ void try_knock_back(Actor& defender,
         sdl_wrapper::sleep(config::delay_projectile_draw());
 
         if (
-            IS_CELL_BOTTOMLESS                  &&
+            is_cell_bottomless                  &&
             !defender.has_prop(Prop_id::flying) &&
-            PLAYER_SEE_DEFENDER)
+            player_see_defender)
         {
-            if (IS_DEFENDER_PLAYER)
+            if (is_defender_player)
             {
                 msg_log::add("I plummet down the depths!", clr_msg_bad);
             }

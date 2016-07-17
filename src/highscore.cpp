@@ -33,14 +33,14 @@ Highscore_entry::Highscore_entry(std::string entry_date_and_time,
 
 int Highscore_entry::score() const
 {
-    const double DLVL_DB      = double(dlvl_);
-    const double DLVL_LAST_DB = double(dlvl_last);
-    const double XP_DB        = double(xp_);
+    const double dlvl_db      = double(dlvl_);
+    const double dlvl_last_db = double(dlvl_last);
+    const double xp_db        = double(xp_);
 
-    const double XP_FACTOR    = 1.0 + XP_DB + (is_win_ ? (XP_DB / 5.0) : 0.0);
-    const double DLVL_FACTOR  = 1.0 + (DLVL_DB / DLVL_LAST_DB);
+    const double xp_factor    = 1.0 + xp_db + (is_win_ ? (xp_db / 5.0) : 0.0);
+    const double dlvl_factor  = 1.0 + (dlvl_db / dlvl_last_db);
 
-    return int(XP_FACTOR * DLVL_FACTOR);
+    return int(xp_factor * dlvl_factor);
 }
 
 namespace highscore
@@ -52,13 +52,13 @@ namespace
 //Set at game over
 Highscore_entry* final_score_ = nullptr;
 
-const int X_POS_DATE    = 0;
-const int X_POS_NAME    = X_POS_DATE  + 19;
-const int X_POS_LVL     = X_POS_NAME  + player_name_max_len + 2;
-const int X_POS_DLVL    = X_POS_LVL   + 7;
-const int X_POS_INS     = X_POS_DLVL  + 7;
-const int X_POS_WIN     = X_POS_INS   + 10;
-const int X_POS_SCORE   = X_POS_WIN   + 5;
+const int x_pos_date    = 0;
+const int x_pos_name    = x_pos_date  + 19;
+const int x_pos_lvl     = x_pos_name  + player_name_max_len + 2;
+const int x_pos_dlvl    = x_pos_lvl   + 7;
+const int x_pos_ins     = x_pos_dlvl  + 7;
+const int x_pos_win     = x_pos_ins   + 10;
+const int x_pos_score   = x_pos_win   + 5;
 
 void sort_entries(std::vector<Highscore_entry>& entries)
 {
@@ -77,9 +77,9 @@ void write_file(std::vector<Highscore_entry>& entries)
 
     for (const auto entry : entries)
     {
-        const std::string WIN_STR = entry.is_win() ? "W" : "0";
+        const std::string win_str = entry.is_win() ? "W" : "0";
 
-        file << WIN_STR                 << std::endl;
+        file << win_str                 << std::endl;
         file << entry.date_and_time()   << std::endl;
         file << entry.name()            << std::endl;
         file << entry.xp()              << std::endl;
@@ -107,24 +107,24 @@ void read_file(std::vector<Highscore_entry>& entries)
             getline(file, line);
             const std::string name          = line;
             getline(file, line);
-            const int XP                    = to_int(line);
+            const int xp                    = to_int(line);
             getline(file, line);
-            const int LVL                   = to_int(line);
+            const int lvl                   = to_int(line);
             getline(file, line);
-            const int DLVL                  = to_int(line);
+            const int dlvl                  = to_int(line);
             getline(file, line);
-            const int INS                   = to_int(line);
+            const int ins                   = to_int(line);
             getline(file, line);
             Bg bg                           = Bg(to_int(line));
 
-            entries.push_back({date_and_time, name, XP, LVL, DLVL, INS, is_win, bg});
+            entries.push_back({date_and_time, name, xp, lvl, dlvl, ins, is_win, bg});
         }
 
         file.close();
     }
 }
 
-void draw(const std::vector<Highscore_entry>& entries, const int TOP_ELEMENT)
+void draw(const std::vector<Highscore_entry>& entries, const int top_element)
 {
     TRACE_FUNC_BEGIN;
 
@@ -139,21 +139,21 @@ void draw(const std::vector<Highscore_entry>& entries, const int TOP_ELEMENT)
 
     const Panel panel = Panel::screen;
 
-    render::draw_text("Ended",       panel, P(X_POS_DATE,    y_pos), label_clr);
-    render::draw_text("Name",        panel, P(X_POS_NAME,    y_pos), label_clr);
-    render::draw_text("Level",       panel, P(X_POS_LVL,     y_pos), label_clr);
-    render::draw_text("Depth",       panel, P(X_POS_DLVL,    y_pos), label_clr);
-    render::draw_text("Insanity",    panel, P(X_POS_INS,     y_pos), label_clr);
-    render::draw_text("Win",         panel, P(X_POS_WIN,     y_pos), label_clr);
-    render::draw_text("Score",       panel, P(X_POS_SCORE,   y_pos), label_clr);
+    render::draw_text("Ended",       panel, P(x_pos_date,    y_pos), label_clr);
+    render::draw_text("Name",        panel, P(x_pos_name,    y_pos), label_clr);
+    render::draw_text("Level",       panel, P(x_pos_lvl,     y_pos), label_clr);
+    render::draw_text("Depth",       panel, P(x_pos_dlvl,    y_pos), label_clr);
+    render::draw_text("Insanity",    panel, P(x_pos_ins,     y_pos), label_clr);
+    render::draw_text("Win",         panel, P(x_pos_win,     y_pos), label_clr);
+    render::draw_text("Score",       panel, P(x_pos_score,   y_pos), label_clr);
 
     y_pos++;
 
-    const int MAX_NR_LINES_ON_SCR = screen_h - 3;
+    const int max_nr_lines_on_scr = screen_h - 3;
 
     for (
-        int i = TOP_ELEMENT;
-        i < int(entries.size()) && (i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR;
+        int i = top_element;
+        i < int(entries.size()) && (i - top_element) < max_nr_lines_on_scr;
         i++)
     {
         const auto entry = entries[i];
@@ -168,13 +168,13 @@ void draw(const std::vector<Highscore_entry>& entries, const int TOP_ELEMENT)
 
         const Clr& clr = clr_white;
 
-        render::draw_text(date_and_time,    panel, P(X_POS_DATE,    y_pos), clr);
-        render::draw_text(name,             panel, P(X_POS_NAME,    y_pos), clr);
-        render::draw_text(lvl,              panel, P(X_POS_LVL,     y_pos), clr);
-        render::draw_text(dlvl,             panel, P(X_POS_DLVL,    y_pos), clr);
-        render::draw_text(ins + "%",        panel, P(X_POS_INS,     y_pos), clr);
-        render::draw_text(win,              panel, P(X_POS_WIN,     y_pos), clr);
-        render::draw_text(score,            panel, P(X_POS_SCORE,   y_pos), clr);
+        render::draw_text(date_and_time,    panel, P(x_pos_date,    y_pos), clr);
+        render::draw_text(name,             panel, P(x_pos_name,    y_pos), clr);
+        render::draw_text(lvl,              panel, P(x_pos_lvl,     y_pos), clr);
+        render::draw_text(dlvl,             panel, P(x_pos_dlvl,    y_pos), clr);
+        render::draw_text(ins + "%",        panel, P(x_pos_ins,     y_pos), clr);
+        render::draw_text(win,              panel, P(x_pos_win,     y_pos), clr);
+        render::draw_text(score,            panel, P(x_pos_score,   y_pos), clr);
         y_pos++;
     }
 
@@ -213,9 +213,9 @@ void run_highscore_screen()
     int top_nr = 0;
     draw(entries, top_nr);
 
-    const int LINE_JUMP           = 3;
-    const int NR_LINES_TOT        = entries.size();
-    const int MAX_NR_LINES_ON_SCR = screen_h - 3;
+    const int line_jump           = 3;
+    const int nr_lines_tot        = entries.size();
+    const int max_nr_lines_on_scr = screen_h - 3;
 
     //Read keys
     while (true)
@@ -226,21 +226,21 @@ void run_highscore_screen()
 
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {
-            top_nr += LINE_JUMP;
+            top_nr += line_jump;
 
-            if (NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
+            if (nr_lines_tot <= max_nr_lines_on_scr)
             {
                 top_nr = 0;
             }
             else
             {
-                top_nr = std::min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, top_nr);
+                top_nr = std::min(nr_lines_tot - max_nr_lines_on_scr, top_nr);
             }
         }
 
         if (d.key == '8' || d.sdl_key == SDLK_UP || d.key == 'k')
         {
-            top_nr = std::max(0, top_nr - LINE_JUMP);
+            top_nr = std::max(0, top_nr - line_jump);
         }
 
         if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)
@@ -255,7 +255,7 @@ const Highscore_entry* final_score()
     return final_score_;
 }
 
-void on_game_over(const bool IS_WIN)
+void on_game_over(const bool is_win)
 {
     std::vector<Highscore_entry> entries = entries_sorted();
 
@@ -265,7 +265,7 @@ void on_game_over(const bool IS_WIN)
                                        dungeon_master::clvl(),
                                        map::dlvl,
                                        map::player->ins(),
-                                       IS_WIN,
+                                       is_win,
                                        player_bon::bg());
 
     entries.push_back(*final_score_);

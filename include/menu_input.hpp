@@ -7,7 +7,7 @@
 class Menu_browser
 {
 public:
-    Menu_browser(const int NR_ITEMS, const int LIST_H = - 1);
+    Menu_browser(const int nr_items, const int list_h = - 1);
 
     Menu_browser() = delete;
 
@@ -22,7 +22,7 @@ public:
         return y_;
     }
 
-    void set_y(const int Y);
+    void set_y(const int y);
 
     Range range_shown() const;
 
@@ -41,9 +41,9 @@ public:
         return nr_items_;
     }
 
-    bool is_at_idx(const int IDX) const
+    bool is_at_idx(const int idx) const
     {
-        return y_ == IDX;
+        return y_ == idx;
     }
 
 private:

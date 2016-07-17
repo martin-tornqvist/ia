@@ -60,47 +60,47 @@ bool Actor::has_prop(const Prop_id id) const
     return prop_handler_->has_prop(id);
 }
 
-int Actor::ability(const Ability_id id, const bool IS_AFFECTED_BY_PROPS) const
+int Actor::ability(const Ability_id id, const bool is_affected_by_props) const
 {
-    return data_->ability_vals.val(id, IS_AFFECTED_BY_PROPS, *this);
+    return data_->ability_vals.val(id, is_affected_by_props, *this);
 }
 
 bool Actor::is_spotting_sneaking_actor(Actor& other)
 {
     const P& other_pos = other.pos;
 
-    const int   PLAYER_SEARCH_MOD   = is_player() ?
+    const int   player_search_mod   = is_player() ?
                                       (ability(Ability_id::searching, true) / 3) : 0;
 
     const auto& abilities_other     = other.data().ability_vals;
 
-    const int   SNEAK_SKILL         = abilities_other.val(Ability_id::stealth, true, other);
+    const int   sneak_skill         = abilities_other.val(Ability_id::stealth, true, other);
 
-    const int   DIST                = king_dist(pos, other_pos);
+    const int   dist                = king_dist(pos, other_pos);
 
-    const int   SNEAK_DIST_MOD      = constr_in_range(0, (DIST - 1) * 10, 60);
+    const int   sneak_dist_mod      = constr_in_range(0, (dist - 1) * 10, 60);
 
     const Cell& cell                = map::cells[other_pos.x][other_pos.y];
 
-    const int   SNEAK_LGT_MOD       = cell.is_lit                     ? -40 : 0;
-    const int   SNEAK_DRK_MOD       = (cell.is_dark && ! cell.is_lit) ?  40 : 0;
+    const int   sneak_lgt_mod       = cell.is_lit                     ? -40 : 0;
+    const int   sneak_drk_mod       = (cell.is_dark && ! cell.is_lit) ?  40 : 0;
 
-    const int   SNEAK_TOT           = constr_in_range(0,
-                                                      SNEAK_SKILL     +
-                                                      SNEAK_DIST_MOD  +
-                                                      SNEAK_LGT_MOD   +
-                                                      SNEAK_DRK_MOD   -
-                                                      PLAYER_SEARCH_MOD,
+    const int   sneak_tot           = constr_in_range(0,
+                                                      sneak_skill     +
+                                                      sneak_dist_mod  +
+                                                      sneak_lgt_mod   +
+                                                      sneak_drk_mod   -
+                                                      player_search_mod,
                                                       99);
 
-    return ability_roll::roll(SNEAK_TOT, &other) <= fail;
+    return ability_roll::roll(sneak_tot, &other) <= fail;
 }
 
-int Actor::hp_max(const bool WITH_MODIFIERS) const
+int Actor::hp_max(const bool with_modifiers) const
 {
     int result = hp_max_;
 
-    if (WITH_MODIFIERS)
+    if (with_modifiers)
     {
         result = prop_handler_->affect_max_hp(result);
 
@@ -213,16 +213,16 @@ void Actor::seen_foes(std::vector<Actor*>& out)
             }
             else //Not player
             {
-                const bool IS_HOSTILE_TO_PLAYER = !is_actor_my_leader(map::player);
+                const bool is_hostile_to_player = !is_actor_my_leader(map::player);
 
-                const bool IS_OTHER_HOSTILE_TO_PLAYER = actor->is_player() ? false :
+                const bool is_other_hostile_to_player = actor->is_player() ? false :
                                                         !actor->is_actor_my_leader(map::player);
 
-                const bool IS_ENEMY = IS_HOSTILE_TO_PLAYER != IS_OTHER_HOSTILE_TO_PLAYER;
+                const bool is_enemy = is_hostile_to_player != is_other_hostile_to_player;
 
                 const Mon* const mon = static_cast<const Mon*>(this);
 
-                if (IS_ENEMY && mon->can_see_actor(*actor, blocked_los))
+                if (is_enemy && mon->can_see_actor(*actor, blocked_los))
                 {
                     out.push_back(actor);
                 }
@@ -269,18 +269,18 @@ void Actor::on_std_turn_common()
     if (is_alive())
     {
         //Slowly decrease current HP/spirit if above max
-        const int DECR_ABOVE_MAX_N_TURNS = 7;
+        const int decr_above_max_n_turns = 7;
 
         if (
             hp() > hp_max(true) &&
-            game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
+            game_time::turn() % decr_above_max_n_turns == 0)
         {
             --hp_;
         }
 
         if (
             spi() > spi_max() &&
-            game_time::turn() % DECR_ABOVE_MAX_N_TURNS == 0)
+            game_time::turn() % decr_above_max_n_turns == 0)
         {
             --spi_;
         }
@@ -357,8 +357,8 @@ void Actor::teleport()
 
             auto chance_of_tele_success = [](const P & tgt)
             {
-                const int DIST = king_dist(map::player->pos, tgt);
-                return constr_in_range(25, 100 - DIST, 95);
+                const int dist = king_dist(map::player->pos, tgt);
+                return constr_in_range(25, 100 - dist, 95);
             };
 
             auto on_marker_at_pos =
@@ -369,9 +369,9 @@ void Actor::teleport()
                 msg_log::clear();
                 look::print_location_info_msgs(p);
 
-                const int CHANCE_PCT = chance_of_tele_success(p);
+                const int chance_pct = chance_of_tele_success(p);
 
-                msg_log::add(to_str(CHANCE_PCT) + "% chance of success.");
+                msg_log::add(to_str(chance_pct) + "% chance of success.");
 
                 msg_log::add("[enter] to teleport here");
                 msg_log::add(cancel_info_str_no_space);
@@ -498,28 +498,28 @@ void Actor::update_clr()
     clr_ = data_->color;
 }
 
-bool Actor::restore_hp(const int HP_RESTORED,
-                       const bool IS_ALLOWED_ABOVE_MAX,
+bool Actor::restore_hp(const int hp_restored,
+                       const bool is_allowed_above_max,
                        const Verbosity verbosity)
 {
-    bool        is_hp_gained    = IS_ALLOWED_ABOVE_MAX;
-    const int   DIF_FROM_MAX    = hp_max(true) - HP_RESTORED;
+    bool        is_hp_gained    = is_allowed_above_max;
+    const int   dif_from_max    = hp_max(true) - hp_restored;
 
-    //If hp is below limit, but restored hp will push it over the limit, HP is set to max.
+    //If hp is below limit, but restored hp will push it over the limit, hp is set to max.
     if (
-        !IS_ALLOWED_ABOVE_MAX &&
-        hp() > DIF_FROM_MAX   &&
+        !is_allowed_above_max &&
+        hp() > dif_from_max   &&
         hp() < hp_max(true))
     {
         hp_             = hp_max(true);
         is_hp_gained    = true;
     }
 
-    //If HP is below limit, and restored hp will NOT push it over the limit -
+    //If hp is below limit, and restored hp will NOT push it over the limit -
     //restored hp is added to current.
-    if (IS_ALLOWED_ABOVE_MAX || hp() <= DIF_FROM_MAX)
+    if (is_allowed_above_max || hp() <= dif_from_max)
     {
-        hp_ += HP_RESTORED;
+        hp_ += hp_restored;
         is_hp_gained = true;
     }
 
@@ -545,16 +545,16 @@ bool Actor::restore_hp(const int HP_RESTORED,
     return is_hp_gained;
 }
 
-bool Actor::restore_spi(const int SPI_RESTORED,
-                        const bool IS_ALLOWED_ABOVE_MAX,
+bool Actor::restore_spi(const int spi_restored,
+                        const bool is_allowed_above_max,
                         const Verbosity verbosity)
 {
-    bool is_spi_gained = IS_ALLOWED_ABOVE_MAX;
+    bool is_spi_gained = is_allowed_above_max;
 
-    const int DIF_FROM_MAX = spi_max() - SPI_RESTORED;
+    const int dif_from_max = spi_max() - spi_restored;
 
     //If spi is below limit, but will be pushed over the limit, spi is set to max.
-    if (!IS_ALLOWED_ABOVE_MAX && spi() > DIF_FROM_MAX && spi() < spi_max())
+    if (!is_allowed_above_max && spi() > dif_from_max && spi() < spi_max())
     {
         spi_        = spi_max();
         is_spi_gained = true;
@@ -562,9 +562,9 @@ bool Actor::restore_spi(const int SPI_RESTORED,
 
     //If spi is below limit, and will not NOT be pushed over the limit - restored spi is
     //added to current.
-    if (IS_ALLOWED_ABOVE_MAX || spi() <= DIF_FROM_MAX)
+    if (is_allowed_above_max || spi() <= dif_from_max)
     {
-        spi_ += SPI_RESTORED;
+        spi_ += spi_restored;
         is_spi_gained = true;
     }
 
@@ -594,19 +594,19 @@ void Actor::set_hp_and_spi_to_max()
     spi_    = spi_max();
 }
 
-void Actor::change_max_hp(const int CHANGE, const Verbosity verbosity)
+void Actor::change_max_hp(const int change, const Verbosity verbosity)
 {
-    hp_max_ = std::max(1, hp_max_ + CHANGE);
+    hp_max_ = std::max(1, hp_max_ + change);
 
     if (verbosity == Verbosity::verbose)
     {
         if (is_player())
         {
-            if (CHANGE > 0)
+            if (change > 0)
             {
                 msg_log::add("I feel more vigorous!", clr_msg_good);
             }
-            else if (CHANGE < 0)
+            else if (change < 0)
             {
                 msg_log::add("I feel frailer!", clr_msg_bad);
             }
@@ -615,11 +615,11 @@ void Actor::change_max_hp(const int CHANGE, const Verbosity verbosity)
         {
             if (map::player->can_see_actor(*this))
             {
-                if (CHANGE > 0)
+                if (change > 0)
                 {
                     msg_log::add(name_the() + " looks more vigorous.");
                 }
-                else if (CHANGE < 0)
+                else if (change < 0)
                 {
                     msg_log::add(name_the() + " looks frailer.");
                 }
@@ -628,19 +628,19 @@ void Actor::change_max_hp(const int CHANGE, const Verbosity verbosity)
     }
 }
 
-void Actor::change_max_spi(const int CHANGE, const Verbosity verbosity)
+void Actor::change_max_spi(const int change, const Verbosity verbosity)
 {
-    spi_max_ = std::max(1, spi_max_ + CHANGE);
+    spi_max_ = std::max(1, spi_max_ + change);
 
     if (verbosity == Verbosity::verbose)
     {
         if (is_player())
         {
-            if (CHANGE > 0)
+            if (change > 0)
             {
                 msg_log::add("My spirit is stronger!", clr_msg_good);
             }
-            else if (CHANGE < 0)
+            else if (change < 0)
             {
                 msg_log::add("My spirit is weaker!", clr_msg_bad);
             }
@@ -649,11 +649,11 @@ void Actor::change_max_spi(const int CHANGE, const Verbosity verbosity)
         {
             if (map::player->can_see_actor(*this))
             {
-                if (CHANGE > 0)
+                if (change > 0)
                 {
                     msg_log::add(name_the() + " appears to grow in spirit.");
                 }
-                else if (CHANGE < 0)
+                else if (change < 0)
                 {
                     msg_log::add(name_the() + " appears to shrink in spirit.");
                 }
@@ -804,16 +804,16 @@ Actor_died Actor::hit(int dmg,
 
     if (hp() <= 0)
     {
-        const bool IS_ON_BOTTOMLESS =
+        const bool is_on_bottomless =
             map::cells[pos.x][pos.y].rigid->is_bottomless();
 
-        const bool IS_DMG_ENOUGH_TO_DESTROY = dmg > ((hp_max(true) * 3) / 2);
+        const bool is_dmg_enough_to_destroy = dmg > ((hp_max(true) * 3) / 2);
 
-        const bool IS_DESTROYED = !data_->can_leave_corpse  ||
-                                  IS_ON_BOTTOMLESS          ||
-                                  IS_DMG_ENOUGH_TO_DESTROY;
+        const bool is_destroyed = !data_->can_leave_corpse  ||
+                                  is_on_bottomless          ||
+                                  is_dmg_enough_to_destroy;
 
-        die(IS_DESTROYED, !IS_ON_BOTTOMLESS, !IS_ON_BOTTOMLESS);
+        die(is_destroyed, !is_on_bottomless, !is_on_bottomless);
 
         return Actor_died::yes;
     }
@@ -822,7 +822,7 @@ Actor_died Actor::hit(int dmg,
     return Actor_died::no;
 }
 
-Actor_died Actor::hit_spi(const int DMG, const Verbosity verbosity)
+Actor_died Actor::hit_spi(const int dmg, const Verbosity verbosity)
 {
     if (verbosity == Verbosity::verbose)
     {
@@ -836,7 +836,7 @@ Actor_died Actor::hit_spi(const int DMG, const Verbosity verbosity)
 
     if (!is_player() || !config::is_bot_playing())
     {
-        spi_ = std::max(0, spi_ - DMG);
+        spi_ = std::max(0, spi_ - dmg);
     }
 
     if (spi() <= 0)
@@ -853,23 +853,23 @@ Actor_died Actor::hit_spi(const int DMG, const Verbosity verbosity)
             }
         }
 
-        const bool IS_ON_BOTTOMLESS = map::cells[pos.x][pos.y].rigid->is_bottomless();
-        const bool IS_DESTROYED     = !data_->can_leave_corpse || IS_ON_BOTTOMLESS;
+        const bool is_on_bottomless = map::cells[pos.x][pos.y].rigid->is_bottomless();
+        const bool is_destroyed     = !data_->can_leave_corpse || is_on_bottomless;
 
-        die(IS_DESTROYED, false, true);
+        die(is_destroyed, false, true);
         return Actor_died::yes;
     }
 
     return Actor_died::no;
 }
 
-void Actor::die(const bool IS_DESTROYED,
-                const bool ALLOW_GORE,
-                const bool ALLOW_DROP_ITEMS)
+void Actor::die(const bool is_destroyed,
+                const bool allow_gore,
+                const bool allow_drop_items)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    ASSERT(data_->can_leave_corpse || IS_DESTROYED);
+    ASSERT(data_->can_leave_corpse || is_destroyed);
 
     //Check all monsters and unset this actor as leader
     for (Actor* other : game_time::actors)
@@ -908,7 +908,7 @@ void Actor::die(const bool IS_DESTROYED,
         }
     }
 
-    if (IS_DESTROYED)
+    if (is_destroyed)
     {
         state_ = Actor_state::destroyed;
     }
@@ -936,15 +936,15 @@ void Actor::die(const bool IS_DESTROYED,
             snd_emit::run(snd);
         }
 
-        if (ALLOW_DROP_ITEMS)
+        if (allow_drop_items)
         {
             item_drop::drop_all_characters_items(*this);
         }
     }
 
-    if (IS_DESTROYED)
+    if (is_destroyed)
     {
-        if (data_->can_bleed && ALLOW_GORE)
+        if (data_->can_bleed && allow_gore)
         {
             map::mk_gore(pos);
             map::mk_blood(pos);
@@ -1006,11 +1006,11 @@ std::string Actor::death_msg() const
 
 Did_action Actor::try_eat_corpse()
 {
-    const bool IS_PLAYER = is_player();
+    const bool actor_is_player = is_player();
 
     Prop_wound* wound = nullptr;
 
-    if (IS_PLAYER)
+    if (actor_is_player)
     {
         Prop* prop = prop_handler_->prop(Prop_id::wound);
 
@@ -1023,7 +1023,7 @@ Did_action Actor::try_eat_corpse()
     if (hp() >= hp_max(true) && !wound)
     {
         //Not "hungry"
-        if (IS_PLAYER)
+        if (actor_is_player)
         {
             msg_log::add("I am satiated.");
         }
@@ -1041,7 +1041,7 @@ Did_action Actor::try_eat_corpse()
         {
             corpse = actor;
 
-            if (IS_PLAYER && actor->data().prio_corpse_bash)
+            if (actor_is_player && actor->data().prio_corpse_bash)
             {
                 break;
             }
@@ -1050,9 +1050,9 @@ Did_action Actor::try_eat_corpse()
 
     if (corpse)
     {
-        const int           CORPSE_MAX_HP   = corpse->hp_max(false);
-        const int           DESTR_ONE_IN_N  = constr_in_range(1, CORPSE_MAX_HP / 4, 8);
-        const bool          IS_DESTROYED    = rnd::one_in(DESTR_ONE_IN_N);
+        const int           corpse_max_hp   = corpse->hp_max(false);
+        const int           destr_one_in_n  = constr_in_range(1, corpse_max_hp / 4, 8);
+        const bool          is_destroyed    = rnd::one_in(destr_one_in_n);
         const std::string   corpse_name     = corpse->corpse_name_the();
 
         Snd snd("I hear ripping and chewing.",
@@ -1066,11 +1066,11 @@ Did_action Actor::try_eat_corpse()
 
         snd_emit::run(snd);
 
-        if (IS_PLAYER)
+        if (actor_is_player)
         {
             msg_log::add("I feed on " + corpse_name + ".");
 
-            if (IS_DESTROYED)
+            if (is_destroyed)
             {
                 msg_log::add("There is nothing left to eat.");
             }
@@ -1085,7 +1085,7 @@ Did_action Actor::try_eat_corpse()
             }
         }
 
-        if (IS_DESTROYED)
+        if (is_destroyed)
         {
             corpse->state_ = Actor_state::destroyed;
             map::mk_gore(pos);
@@ -1097,7 +1097,7 @@ Did_action Actor::try_eat_corpse()
 
         return Did_action::yes;
     }
-    else if (IS_PLAYER)
+    else if (actor_is_player)
     {
         msg_log::add("I find nothing here to feed on.");
     }
@@ -1107,9 +1107,9 @@ Did_action Actor::try_eat_corpse()
 
 void Actor::on_feed()
 {
-    const int HP_RESTORED = rnd::range(3, 5);
+    const int hp_restored = rnd::range(3, 5);
 
-    restore_hp(HP_RESTORED, false, Verbosity::silent);
+    restore_hp(hp_restored, false, Verbosity::silent);
 
     if (is_player())
     {
@@ -1133,7 +1133,7 @@ void Actor::add_light(bool light_map[map_w][map_h]) const
 
         bool hard_blocked[map_w][map_h];
 
-        const R fov_lmt = fov::get_fov_rect(pos);
+         const R fov_lmt = fov::get_fov_rect(pos);
 
         map_parse::run(cell_check::Blocks_los(),
                        hard_blocked,

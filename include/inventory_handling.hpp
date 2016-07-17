@@ -26,7 +26,7 @@ void run_apply_screen();
 
 bool run_equip_screen(Inv_slot& slot_to_equip);
 
-void activate(const size_t GENERAL_ITEMS_ELEMENT);
+void activate(const size_t GENERAL_ITEMS_element);
 
 } //inv_handling
 

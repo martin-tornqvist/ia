@@ -104,8 +104,8 @@ bool Is_any_of_features::check(const Cell& c) const
 
 bool All_adj_is_feature::check(const Cell& c) const
 {
-    const int X = c.pos.x;
-    const int Y = c.pos.y;
+    const int x = c.pos.x;
+    const int y = c.pos.y;
 
     if (!map::is_pos_inside_map(c.pos, false))
     {
@@ -116,7 +116,7 @@ bool All_adj_is_feature::check(const Cell& c) const
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            if (map::cells[X + dx][Y + dy].rigid->id() != feature_)
+            if (map::cells[x + dx][y + dy].rigid->id() != feature_)
             {
                 return false;
             }
@@ -128,10 +128,10 @@ bool All_adj_is_feature::check(const Cell& c) const
 
 bool All_adj_is_any_of_features::check(const Cell& c) const
 {
-    const int X = c.pos.x;
-    const int Y = c.pos.y;
+    const int x = c.pos.x;
+    const int y = c.pos.y;
 
-    if (X <= 0 || X >= map_w - 1 || Y <= 0 || Y >= map_h - 1)
+    if (x <= 0 || x >= map_w - 1 || y <= 0 || y >= map_h - 1)
     {
         return false;
     }
@@ -140,7 +140,7 @@ bool All_adj_is_any_of_features::check(const Cell& c) const
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const auto cur_id = map::cells[X + dx][Y + dy].rigid->id();
+            const auto cur_id = map::cells[x + dx][y + dy].rigid->id();
 
             bool is_match = false;
 
@@ -165,10 +165,10 @@ bool All_adj_is_any_of_features::check(const Cell& c) const
 
 bool All_adj_is_not_feature::check(const Cell& c) const
 {
-    const int X = c.pos.x;
-    const int Y = c.pos.y;
+    const int x = c.pos.x;
+    const int y = c.pos.y;
 
-    if (X <= 0 || X >= map_w - 1 || Y <= 0 || Y >= map_h - 1)
+    if (x <= 0 || x >= map_w - 1 || y <= 0 || y >= map_h - 1)
     {
         return false;
     }
@@ -177,7 +177,7 @@ bool All_adj_is_not_feature::check(const Cell& c) const
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            if (map::cells[X + dx][Y + dy].rigid->id() == feature_)
+            if (map::cells[x + dx][y + dy].rigid->id() == feature_)
             {
                 return false;
             }
@@ -189,10 +189,10 @@ bool All_adj_is_not_feature::check(const Cell& c) const
 
 bool All_adj_is_none_of_features::check(const Cell& c) const
 {
-    const int X = c.pos.x;
-    const int Y = c.pos.y;
+    const int x = c.pos.x;
+    const int y = c.pos.y;
 
-    if (X <= 0 || X >= map_w - 1 || Y <= 0 || Y >= map_h - 1)
+    if (x <= 0 || x >= map_w - 1 || y <= 0 || y >= map_h - 1)
     {
         return false;
     }
@@ -201,7 +201,7 @@ bool All_adj_is_none_of_features::check(const Cell& c) const
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const auto cur_id = map::cells[X + dx][Y + dy].rigid->id();
+            const auto cur_id = map::cells[x + dx][y + dy].rigid->id();
 
             for (auto f : features_)
             {
@@ -231,7 +231,7 @@ void run(const  cell_check::Check& method,
            method.is_checking_mobs()        ||
            method.is_checking_actors());
 
-    const bool ALLOW_WRITE_FALSE = write_rule == Map_parse_mode::overwrite;
+    const bool allow_write_false = write_rule == Map_parse_mode::overwrite;
 
     if (method.is_checking_cells())
     {
@@ -240,11 +240,11 @@ void run(const  cell_check::Check& method,
             for (int y = area_to_check_cells.p0.y; y <= area_to_check_cells.p1.y; ++y)
             {
                 const auto& c         = map::cells[x][y];
-                const bool  IS_MATCH  = method.check(c);
+                const bool  is_match  = method.check(c);
 
-                if (IS_MATCH || ALLOW_WRITE_FALSE)
+                if (is_match || allow_write_false)
                 {
-                    out[x][y] = IS_MATCH;
+                    out[x][y] = is_match;
                 }
             }
         }
@@ -258,15 +258,15 @@ void run(const  cell_check::Check& method,
 
             if (is_pos_inside(p, area_to_check_cells))
             {
-                const bool IS_MATCH = method.check(*mob);
+                const bool is_match = method.check(*mob);
 
-                if (IS_MATCH || ALLOW_WRITE_FALSE)
+                if (is_match || allow_write_false)
                 {
                     bool& v = out[p.x][p.y];
 
                     if (!v)
                     {
-                        v = IS_MATCH;
+                        v = is_match;
                     }
                 }
             }
@@ -281,15 +281,15 @@ void run(const  cell_check::Check& method,
 
             if (is_pos_inside(p, area_to_check_cells))
             {
-                const bool IS_MATCH = method.check(*actor);
+                const bool is_match = method.check(*actor);
 
-                if (IS_MATCH || ALLOW_WRITE_FALSE)
+                if (is_match || allow_write_false)
                 {
                     bool& v = out[p.x][p.y];
 
                     if (!v)
                     {
-                        v = IS_MATCH;
+                        v = is_match;
                     }
                 }
             }
@@ -308,9 +308,9 @@ bool cell(const cell_check::Check& method, const P& p)
     if (method.is_checking_cells())
     {
         const auto& c         = map::cells[p.x][p.y];
-        const bool  IS_MATCH  = method.check(c);
+        const bool  is_match  = method.check(c);
 
-        if (IS_MATCH)
+        if (is_match)
         {
             r = true;
         }
@@ -324,9 +324,9 @@ bool cell(const cell_check::Check& method, const P& p)
 
             if (mob_p == p)
             {
-                const bool IS_MATCH = method.check(*mob);
+                const bool is_match = method.check(*mob);
 
-                if (IS_MATCH)
+                if (is_match)
                 {
                     r = true;
                     break;
@@ -343,9 +343,9 @@ bool cell(const cell_check::Check& method, const P& p)
 
             if (actor_p == p)
             {
-                const bool IS_MATCH = method.check(*actor);
+                const bool is_match = method.check(*actor);
 
-                if (IS_MATCH)
+                if (is_match)
                 {
                     r = true;
                     break;
@@ -461,7 +461,7 @@ void expand(const bool in[map_w][map_h],
 
 void expand(const bool in[map_w][map_h],
             bool out[map_w][map_h],
-            const int DIST)
+            const int dist)
 {
     for (int x = 0; x < map_w; ++x)
     {
@@ -469,10 +469,10 @@ void expand(const bool in[map_w][map_h],
         {
             out[x][y] = false;
 
-            const int X0 = x - DIST;
-            const int Y0 = y - DIST;
-            const int X1 = x + DIST;
-            const int Y1 = y + DIST;
+            const int X0 = x - dist;
+            const int Y0 = y - dist;
+            const int X1 = x + dist;
+            const int Y1 = y + dist;
 
             const int CMP_X0 = X0 < 0 ? 0 : X0;
             const int CMP_Y0 = Y0 < 0 ? 0 : Y0;

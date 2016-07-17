@@ -61,7 +61,7 @@ Yes_no_answer yes_or_no(char key_for_special_event)
     return Yes_no_answer::no;
 }
 
-Key_data letter(const bool ACCEPT_ENTER)
+Key_data letter(const bool accept_enter)
 {
     if (!is_inited_ || config::is_bot_playing())
     {
@@ -73,7 +73,7 @@ Key_data letter(const bool ACCEPT_ENTER)
         Key_data d = input::input();
 
         if (
-            (ACCEPT_ENTER && d.sdl_key == SDLK_RETURN) ||
+            (accept_enter && d.sdl_key == SDLK_RETURN) ||
             d.sdl_key == SDLK_ESCAPE ||
             d.sdl_key == SDLK_SPACE  ||
             (d.key >= 'a' && d.key <= 'z') ||
@@ -88,21 +88,21 @@ Key_data letter(const bool ACCEPT_ENTER)
 
 int number(const P& pos,
            const Clr clr,
-           const int MIN,
-           const int MAX_NR_DIGITS,
-           const int DEFAULT,
-           const bool CANCEL_RETURNS_DEFAULT)
+           const int min,
+           const int max_nr_digits,
+           const int default_value,
+           const bool cancel_returns_default)
 {
     if (!is_inited_ || config::is_bot_playing())
     {
         return 0;
     }
 
-    int ret_num = std::max(MIN, DEFAULT);
+    int ret_num = std::max(min, default_value);
 
     render::cover_area(Panel::screen,
                        pos,
-                       P(MAX_NR_DIGITS + 1, 1));
+                       P(max_nr_digits + 1, 1));
 
     const std::string str = (ret_num == 0 ? "" : to_str(ret_num)) + "_";
 
@@ -126,17 +126,17 @@ int number(const P& pos,
 
         if (d.sdl_key == SDLK_RETURN)
         {
-            return std::max(MIN, ret_num);
+            return std::max(min, ret_num);
         }
 
         if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)
         {
-            return CANCEL_RETURNS_DEFAULT ? DEFAULT : -1;
+            return cancel_returns_default ? default_value : -1;
         }
 
         const std::string ret_num_str = to_str(ret_num);
 
-        const int CUR_NUM_DIGITS = ret_num_str.size();
+        const int cur_num_digits = ret_num_str.size();
 
         if (d.sdl_key == SDLK_BACKSPACE)
         {
@@ -144,7 +144,7 @@ int number(const P& pos,
 
             render::cover_area(Panel::screen,
                                pos,
-                               P(MAX_NR_DIGITS + 1, 1));
+                               P(max_nr_digits + 1, 1));
 
             render::draw_text((ret_num == 0 ? "" : to_str(ret_num)) + "_",
                               Panel::screen,
@@ -155,15 +155,15 @@ int number(const P& pos,
             continue;
         }
 
-        if (CUR_NUM_DIGITS < MAX_NR_DIGITS)
+        if (cur_num_digits < max_nr_digits)
         {
             int cur_digit = d.key - '0';
 
-            ret_num = std::max(MIN, ret_num * 10 + cur_digit);
+            ret_num = std::max(min, ret_num * 10 + cur_digit);
 
             render::cover_area(Panel::screen,
                                pos,
-                               P(MAX_NR_DIGITS + 1, 1));
+                               P(max_nr_digits + 1, 1));
 
             render::draw_text((ret_num == 0 ? "" : to_str(ret_num)) + "_",
                               Panel::screen,

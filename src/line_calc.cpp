@@ -35,11 +35,11 @@ void init()
     //i = 0                 => delta_x = -fov_max_w_int
     //i = fov_max_w_int * 2 => delta_x =  fov_max_w_int
 
-    const int R_INT = fov_max_radi_int;
+    const int r_int = fov_max_radi_int;
 
-    for (int x = 0; x <= R_INT * 2; ++x)
+    for (int x = 0; x <= r_int * 2; ++x)
     {
-        for (int y = 0; y <= R_INT * 2; ++y)
+        for (int y = 0; y <= r_int * 2; ++y)
         {
             delta_x = double(x);
             delta_x -= fov_max_radi_db;
@@ -51,30 +51,30 @@ void init()
     }
 
     //Calculate FOV delta lines
-    for (int delta_x = -R_INT; delta_x <= R_INT; delta_x++)
+    for (int delta_x = -r_int; delta_x <= r_int; delta_x++)
     {
-        for (int delta_y = -R_INT; delta_y <= R_INT; delta_y++)
+        for (int delta_y = -r_int; delta_y <= r_int; delta_y++)
         {
             const P origin(0, 0);
             const P tgt(P(delta_x, delta_y));
             std::vector<P> cur_line;
             calc_new_line(origin, tgt, true, 999, true, cur_line);
-            fov_delta_lines_[delta_x + R_INT][delta_y + R_INT] = cur_line;
+            fov_delta_lines_[delta_x + r_int][delta_y + r_int] = cur_line;
         }
     }
 }
 
 const std::vector<P>* fov_delta_line(const P& delta,
-                                     const double& MAX_DIST_ABS)
+                                     const double& max_dist_abs)
 {
-    const int X = delta.x + fov_max_radi_int;
-    const int Y = delta.y + fov_max_radi_int;
+    const int x = delta.x + fov_max_radi_int;
+    const int y = delta.y + fov_max_radi_int;
 
-    if (X >= 0 && Y >= 0 && X < fov_max_w_int && Y < fov_max_w_int)
+    if (x >= 0 && y >= 0 && x < fov_max_w_int && y < fov_max_w_int)
     {
-        if (fov_abs_distances_[X][Y] <= MAX_DIST_ABS)
+        if (fov_abs_distances_[x][y] <= max_dist_abs)
         {
-            return &(fov_delta_lines_[X][Y]);
+            return &(fov_delta_lines_[x][y]);
         }
     }
 
@@ -83,9 +83,9 @@ const std::vector<P>* fov_delta_line(const P& delta,
 
 void calc_new_line(const P& origin,
                    const P& tgt,
-                   const bool SHOULD_STOP_AT_TARGET,
-                   const int CHEB_TRAVEL_LIMIT,
-                   const bool ALLOW_OUTSIDE_MAP,
+                   const bool should_stop_at_target,
+                   const int cheb_travel_limit,
+                   const bool allow_outside_map,
                    std::vector<P>& line_ref)
 {
     line_ref.clear();
@@ -96,29 +96,29 @@ void calc_new_line(const P& origin,
         return;
     }
 
-    const double DELTA_X_DB = double(tgt.x - origin.x);
-    const double DELTA_Y_DB = double(tgt.y - origin.y);
+    const double delta_x_db = double(tgt.x - origin.x);
+    const double delta_y_db = double(tgt.y - origin.y);
 
-    const double HYPOT_DB   = sqrt((DELTA_X_DB * DELTA_X_DB) + (DELTA_Y_DB * DELTA_Y_DB));
+    const double hypot_db   = sqrt((delta_x_db * delta_x_db) + (delta_y_db * delta_y_db));
 
-    const double X_INCR_DB  = (DELTA_X_DB / HYPOT_DB);
-    const double Y_INCR_DB  = (DELTA_Y_DB / HYPOT_DB);
+    const double x_incr_db  = (delta_x_db / hypot_db);
+    const double y_incr_db  = (delta_y_db / hypot_db);
 
     double cur_x_db = double(origin.x) + 0.5;
     double cur_y_db = double(origin.y) + 0.5;
 
     P cur_pos = P(int(cur_x_db), int(cur_y_db));
 
-    const double STEP_SIZE_DB = 0.04;
+    const double step_size_db = 0.04;
 
-    for (double i = 0.0; i <= 9999.0; i += STEP_SIZE_DB)
+    for (double i = 0.0; i <= 9999.0; i += step_size_db)
     {
-        cur_x_db += X_INCR_DB * STEP_SIZE_DB;
-        cur_y_db += Y_INCR_DB * STEP_SIZE_DB;
+        cur_x_db += x_incr_db * step_size_db;
+        cur_y_db += y_incr_db * step_size_db;
 
         cur_pos.set(floor(cur_x_db), floor(cur_y_db));
 
-        if (!ALLOW_OUTSIDE_MAP && !map::is_pos_inside_map(cur_pos))
+        if (!allow_outside_map && !map::is_pos_inside_map(cur_pos))
         {
             return;
         }
@@ -140,14 +140,14 @@ void calc_new_line(const P& origin,
         }
 
         //Check distance limits
-        if (SHOULD_STOP_AT_TARGET && (cur_pos == tgt))
+        if (should_stop_at_target && (cur_pos == tgt))
         {
             return;
         }
 
-        const int DISTANCE_TRAVELED = king_dist(origin.x, origin.y, cur_pos.x, cur_pos.y);
+        const int distance_traveled = king_dist(origin.x, origin.y, cur_pos.x, cur_pos.y);
 
-        if (DISTANCE_TRAVELED >= CHEB_TRAVEL_LIMIT)
+        if (distance_traveled >= cheb_travel_limit)
         {
             return;
         }

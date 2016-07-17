@@ -34,14 +34,14 @@ void wait_for_msg_more();
 
 void wait_for_confirm();
 
-Key_data letter(const bool ACCEPT_ENTER);
+Key_data letter(const bool accept_enter);
 
 int number(const P& pos,
            const Clr clr,
-           const int MIN,
-           const int MAX_NR_DIGITS,
-           const int DEFAULT,
-           const bool CANCEL_RETURNS_DEFAULT);
+           const int min,
+           const int max_nr_digits,
+           const int default_value,
+           const bool cancel_returns_default);
 
 } //query
 

@@ -59,7 +59,7 @@ public:
         return *inv_;
     }
 
-    int ability(const Ability_id id, const bool IS_AFFECTED_BY_PROPS) const;
+    int ability(const Ability_id id, const bool is_affected_by_props) const;
 
     //NOTE: This function is not concerned with whether the parameter actor is
     //within FOV, or if the actor is actually hidden or not. It merely tests the
@@ -76,27 +76,27 @@ public:
                    const Dmg_method method = Dmg_method::END,
                    const Allow_wound allow_wound = Allow_wound::yes);
 
-    Actor_died hit_spi(const int DMG, const Verbosity verbosity = Verbosity::verbose);
+    Actor_died hit_spi(const int dmg, const Verbosity verbosity = Verbosity::verbose);
 
-    bool restore_hp(const int HP_RESTORED,
-                    const bool IS_ALLOWED_ABOVE_MAX = false,
+    bool restore_hp(const int hp_restored,
+                    const bool is_allowed_above_max = false,
                     const Verbosity verbosity = Verbosity::verbose);
 
-    bool restore_spi(const int SPI_RESTORED,
-                     const bool IS_ALLOWED_ABOVE_MAX = false,
+    bool restore_spi(const int spi_restored,
+                     const bool is_allowed_above_max = false,
                      const Verbosity verbosity = Verbosity::verbose);
 
     void set_hp_and_spi_to_max();
 
-    void change_max_hp(const int CHANGE,
+    void change_max_hp(const int change,
                        const Verbosity verbosity = Verbosity::verbose);
 
-    void change_max_spi(const int CHANGE,
+    void change_max_spi(const int change,
                         const Verbosity verbosity = Verbosity::verbose);
 
-    void die(const bool IS_DESTROYED,
-             const bool ALLOW_GORE,
-             const bool ALLOW_DROP_ITEMS);
+    void die(const bool is_destroyed,
+             const bool allow_gore,
+             const bool allow_drop_items);
 
     //Used by Ghoul class and Ghoul monsters
     Did_action try_eat_corpse();
@@ -132,7 +132,7 @@ public:
         return spi_;
     }
 
-    int hp_max(const bool WITH_MODIFIERS) const;
+    int hp_max(const bool with_modifiers) const;
 
     int spi_max() const
     {

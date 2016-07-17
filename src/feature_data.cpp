@@ -25,12 +25,12 @@ void Feature_room_spawn_rules::reset()
     *this = Feature_room_spawn_rules();
 }
 
-void Feature_room_spawn_rules::set(const int MAX_NR_IN_ROOM,
+void Feature_room_spawn_rules::set(const int max_nr_in_room,
                                    const Range& dlvls_allowed,
                                    const Placement_rule placement_rule,
                                    std::initializer_list<Room_type> room_types)
 {
-    max_nr_in_room_     = MAX_NR_IN_ROOM;
+    max_nr_in_room_     = max_nr_in_room;
     dlvls_allowed_      = dlvls_allowed;
     placement_rule_     = placement_rule;
 

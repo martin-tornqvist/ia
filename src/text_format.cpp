@@ -14,24 +14,24 @@ void read_and_remove_word(std::string& line, std::string& word_ref)
 
     for (auto it = begin(line); it != end(line); /* No increment */)
     {
-        const char CUR_CHAR = *it;
+        const char cur_char = *it;
 
         line.erase(it);
 
-        if (CUR_CHAR == ' ')
+        if (cur_char == ' ')
         {
             break;
         }
 
-        word_ref += CUR_CHAR;
+        word_ref += cur_char;
     }
 }
 
 bool is_word_fit(const std::string& cur_string,
                  const std::string& word_to_fit,
-                 const size_t MAX_W)
+                 const size_t max_w)
 {
-    return (cur_string.size() + word_to_fit.size() + 1) <= MAX_W;
+    return (cur_string.size() + word_to_fit.size() + 1) <= max_w;
 }
 
 } //namespace
@@ -41,7 +41,7 @@ namespace text_format
 {
 
 void split(std::string line,
-           const int MAX_W,
+           const int max_w,
            std::vector<std::string>& out)
 {
     out.clear();
@@ -68,7 +68,7 @@ void split(std::string line,
 
     while (!cur_word.empty())
     {
-        if (!is_word_fit(out[cur_row_idx], cur_word, MAX_W))
+        if (!is_word_fit(out[cur_row_idx], cur_word, max_w))
         {
             //Current word did not fit on current line, make a new line
             ++cur_row_idx;
@@ -130,22 +130,22 @@ void replace_all(const std::string& line,
 }
 
 void pad_before_to(std::string& str,
-                   const size_t TOT_W,
+                   const size_t tot_w,
                    const char c)
 {
-    if (TOT_W > str.size())
+    if (tot_w > str.size())
     {
-        str.insert(0, TOT_W - str.size(), c);
+        str.insert(0, tot_w - str.size(), c);
     }
 }
 
 void pad_after_to(std::string& str,
-                  const size_t TOT_W,
+                  const size_t tot_w,
                   const char c)
 {
-    if (TOT_W > str.size())
+    if (tot_w > str.size())
     {
-        str.insert(str.size(), TOT_W, c);
+        str.insert(str.size(), tot_w, c);
     }
 }
 

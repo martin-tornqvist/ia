@@ -159,13 +159,13 @@ void Rigid::on_new_turn()
     on_new_turn_hook();
 }
 
-void Rigid::try_start_burning(const bool IS_MSG_ALLOWED)
+void Rigid::try_start_burning(const bool is_msg_allowed)
 {
     clear_gore();
 
     if (burn_state_ == Burn_state::not_burned)
     {
-        if (map::is_pos_seen_by_player(pos_) && IS_MSG_ALLOWED)
+        if (map::is_pos_seen_by_player(pos_) && is_msg_allowed)
         {
             std::string str = name(Article::the) + " catches fire.";
             str[0] = toupper(str[0]);
@@ -205,12 +205,12 @@ void Rigid::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* act
 
     if (actor == map::player && dmg_method == Dmg_method::kick)
     {
-        const bool CAN_SEE_FEATURE  = !map::cells[pos_.x][pos_.y].is_seen_by_player;
-        const bool IS_BLOCKING      = !can_move_cmn() && id() != Feature_id::stairs;
+        const bool can_see_feature  = !map::cells[pos_.x][pos_.y].is_seen_by_player;
+        const bool is_blocking      = !can_move_cmn() && id() != Feature_id::stairs;
 
-        if (IS_BLOCKING)
+        if (is_blocking)
         {
-            const std::string rigid_name = CAN_SEE_FEATURE ? "something" : name(Article::a);
+            const std::string rigid_name = can_see_feature ? "something" : name(Article::a);
 
             msg_log::add("I kick " + rigid_name + "!");
 
@@ -271,9 +271,9 @@ void Rigid::try_put_gore()
 {
     if (data().can_have_gore)
     {
-        const int ROLL_GLYPH = rnd::dice(1, 4);
+        const int roll_glyph = rnd::dice(1, 4);
 
-        switch (ROLL_GLYPH)
+        switch (roll_glyph)
         {
         case 1:
             gore_glyph_ = ',';
@@ -293,9 +293,9 @@ void Rigid::try_put_gore()
         }
     }
 
-    const int ROLL_TILE = rnd::dice(1, 8);
+    const int roll_tile = rnd::dice(1, 8);
 
-    switch (ROLL_TILE)
+    switch (roll_tile)
     {
     case 1:
         gore_tile_ = Tile_id::gore1;
@@ -703,9 +703,9 @@ Tile_id Wall::top_wall_tile() const
 
 void Wall::set_rnd_cmn_wall()
 {
-    const int RND = rnd::range(1, 6);
+    const int rnd = rnd::range(1, 6);
 
-    switch (RND)
+    switch (rnd)
     {
     case 1:   type_ = Wall_type::cmn_alt; break;
 
@@ -1099,9 +1099,9 @@ void Stairs::bump(Actor& actor_bumping)
         };
 
         const std::string   title   = "A staircase leading downwards";
-        const int           CHOICE  =  popup::show_menu_msg("", true, choices, title);
+        const int           choice  =  popup::show_menu_msg("", true, choices, title);
 
-        switch (CHOICE)
+        switch (choice)
         {
         case 0:
             map::player->pos = pos_;
@@ -1782,7 +1782,7 @@ Item_container::~Item_container()
     }
 }
 
-void Item_container::init(const Feature_id feature_id, const int NR_ITEMS_TO_ATTEMPT)
+void Item_container::init(const Feature_id feature_id, const int nr_items_to_attempt)
 {
     for (auto* item : items_)
     {
@@ -1791,7 +1791,7 @@ void Item_container::init(const Feature_id feature_id, const int NR_ITEMS_TO_ATT
 
     items_.clear();
 
-    if (NR_ITEMS_TO_ATTEMPT > 0)
+    if (nr_items_to_attempt > 0)
     {
         while (items_.empty())
         {
@@ -1814,25 +1814,25 @@ void Item_container::init(const Feature_id feature_id, const int NR_ITEMS_TO_ATT
                 }
             }
 
-            for (int i = 0; i < NR_ITEMS_TO_ATTEMPT; ++i)
+            for (int i = 0; i < nr_items_to_attempt; ++i)
             {
                 if (item_bucket.empty())
                 {
                     break;
                 }
 
-                const int     IDX = rnd::range(0, item_bucket.size() - 1);
-                const Item_id id  = item_bucket[IDX];
+                const int     idx = rnd::range(0, item_bucket.size() - 1);
+                const Item_id id  = item_bucket[idx];
 
                 if (item_data::data[size_t(id)].allow_spawn)
                 {
-                    Item* item = item_factory::mk(item_bucket[IDX]);
+                    Item* item = item_factory::mk(item_bucket[idx]);
                     item_factory::set_item_randomized_properties(item);
                     items_.push_back(item);
                 }
                 else //Not allowed to spawn
                 {
-                    item_bucket.erase(begin(item_bucket) + IDX);
+                    item_bucket.erase(begin(item_bucket) + idx);
                 }
             }
         }
@@ -1856,18 +1856,18 @@ void Item_container::open(const P& feature_pos, Actor* const actor_opening)
 
             Wpn* wpn = data.ranged.is_ranged_wpn ? static_cast<Wpn*>(item) : nullptr;
 
-            const bool IS_UNLOADABLE_WPN = wpn                      &&
+            const bool is_unloadable_wpn = wpn                      &&
                                            wpn->nr_ammo_loaded_ > 0 &&
                                            !data.ranged.has_infinite_ammo;
 
-            if (IS_UNLOADABLE_WPN)
+            if (is_unloadable_wpn)
             {
                 msg_log::add("Unload? [G]");
             }
 
             render::draw_map_state();
 
-            const Yes_no_answer answer = query::yes_or_no(IS_UNLOADABLE_WPN ? 'G' : -1);
+            const Yes_no_answer answer = query::yes_or_no(is_unloadable_wpn ? 'G' : -1);
 
             if (answer == Yes_no_answer::yes)
             {
@@ -1893,7 +1893,7 @@ void Item_container::open(const P& feature_pos, Actor* const actor_opening)
             }
             else //Special key (unload in this case)
             {
-                ASSERT(IS_UNLOADABLE_WPN);
+                ASSERT(is_unloadable_wpn);
                 ASSERT(wpn);
                 ASSERT(wpn->nr_ammo_loaded_ > 0);
                 ASSERT(!data.ranged.has_infinite_ammo);
@@ -1953,17 +1953,17 @@ Tomb::Tomb(const P& feature_pos) :
     trait_                  (Tomb_trait::END)
 {
     //Contained items
-    const int NR_ITEMS_MIN  = 0;
-    const int NR_ITEMS_MAX  = player_bon::traits[size_t(Trait::treasure_hunter)] ? 2 : 1;
+    const int nr_items_min  = 0;
+    const int nr_items_max  = player_bon::traits[size_t(Trait::treasure_hunter)] ? 2 : 1;
 
-    item_container_.init(Feature_id::tomb, rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
+    item_container_.init(Feature_id::tomb, rnd::range(nr_items_min, nr_items_max));
 
     //Appearance
     if (rnd::one_in(12))
     {
         //Do not base appearance on items (random appearance)
-        const int NR_APP    = int(Tomb_appearance::END);
-        appearance_         = Tomb_appearance(rnd::range(0, NR_APP - 1));
+        const int nr_app    = int(Tomb_appearance::END);
+        appearance_         = Tomb_appearance(rnd::range(0, nr_app - 1));
 
         is_random_appearance_ = true;
     }
@@ -2013,9 +2013,9 @@ void Tomb::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* c
 
 std::string Tomb::name(const Article article) const
 {
-    const bool          IS_EMPTY    = is_open_ && item_container_.items_.empty();
-    const std::string   empty_str   = IS_EMPTY                 ? "empty " : "";
-    const std::string   open_str    = (is_open_ && !IS_EMPTY)  ? "open "  : "";
+    const bool          is_empty    = is_open_ && item_container_.items_.empty();
+    const std::string   empty_str   = is_empty                 ? "empty " : "";
+    const std::string   open_str    = (is_open_ && !is_empty)  ? "open "  : "";
 
     std::string a = "";
 
@@ -2030,7 +2030,7 @@ std::string Tomb::name(const Article article) const
 
     std::string appear_str = "";
 
-    if (!IS_EMPTY)
+    if (!is_empty)
     {
         switch (appearance_)
         {
@@ -2108,7 +2108,7 @@ void Tomb::bump(Actor& actor_bumping)
                 }
                 else //Not weakened
                 {
-                    const int BON =
+                    const int bon =
                         player_bon::traits[size_t(Trait::unbreakable)]  ? 12  :
                         player_bon::traits[size_t(Trait::rugged)]       ? 8   :
                         player_bon::traits[size_t(Trait::tough)]        ? 4   : 0;
@@ -2117,23 +2117,23 @@ void Tomb::bump(Actor& actor_bumping)
                           << push_lid_one_in_n_ << std::endl;
 
                     TRACE << "Bonus to roll: "
-                          << BON << std::endl;
+                          << bon << std::endl;
 
-                    const int ROLL_TOT = rnd::range(1, push_lid_one_in_n_) + BON;
+                    const int roll_tot = rnd::range(1, push_lid_one_in_n_) + bon;
 
-                    TRACE << "Roll + bonus = " << ROLL_TOT << std::endl;
+                    TRACE << "Roll + bonus = " << roll_tot << std::endl;
 
                     bool is_success = false;
 
-                    if (ROLL_TOT < push_lid_one_in_n_ - 9)
+                    if (roll_tot < push_lid_one_in_n_ - 9)
                     {
                         msg_log::add("It does not yield at all.");
                     }
-                    else if (ROLL_TOT < push_lid_one_in_n_ - 1)
+                    else if (roll_tot < push_lid_one_in_n_ - 1)
                     {
                         msg_log::add("It resists.");
                     }
-                    else if (ROLL_TOT == push_lid_one_in_n_ - 1)
+                    else if (roll_tot == push_lid_one_in_n_ - 1)
                     {
                         msg_log::add("It moves a little!");
                         push_lid_one_in_n_--;
@@ -2161,12 +2161,12 @@ void Tomb::bump(Actor& actor_bumping)
 
 void Tomb::try_sprain_player()
 {
-    const int SPRAIN_ONE_IN_N =
+    const int sprain_one_in_n =
         player_bon::traits[size_t(Trait::unbreakable)]  ? 10 :
         player_bon::traits[size_t(Trait::rugged)]       ? 8  :
         player_bon::traits[size_t(Trait::tough)]        ? 6  : 4;
 
-    if (rnd::one_in(SPRAIN_ONE_IN_N))
+    if (rnd::one_in(sprain_one_in_n))
     {
         msg_log::add("I sprain myself.", clr_msg_bad);
         map::player->hit(rnd::range(1, 3), Dmg_type::pure);
@@ -2234,7 +2234,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
 
     Actor_id id_to_spawn = Actor_id::END;
 
-    const bool IS_SEEN = map::cells[pos_.x][pos_.y].is_seen_by_player;
+    const bool is_seen = map::cells[pos_.x][pos_.y].is_seen_by_player;
 
     switch (trait_)
     {
@@ -2253,9 +2253,9 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
                 Actor_id::phantasm,
             };
 
-            const size_t IDX = rnd::range(0, mon_bucket.size() - 1);
+            const size_t idx = rnd::range(0, mon_bucket.size() - 1);
 
-            id_to_spawn = mon_bucket[IDX];
+            id_to_spawn = mon_bucket[idx];
         }
 
         const std::string msg = "The air suddenly feels colder.";
@@ -2280,9 +2280,9 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
             Actor_id::floating_skull
         };
 
-        const size_t IDX = rnd::range(0, mon_bucket.size() - 1);
+        const size_t idx = rnd::range(0, mon_bucket.size() - 1);
 
-        id_to_spawn = mon_bucket[IDX];
+        id_to_spawn = mon_bucket[idx];
 
         const std::string msg = "Something rises from the tomb!";
 
@@ -2299,7 +2299,7 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
     {
         if (rnd::coin_toss())
         {
-            if (IS_SEEN)
+            if (is_seen)
             {
                 msg_log::add("Fumes burst out from the tomb!",
                              clr_white,
@@ -2319,14 +2319,14 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
 
             Prop*       prop        = nullptr;
             Clr         fume_clr    = clr_magenta;
-            const int   RND         = rnd::percent();
+            const int   rnd         = rnd::percent();
 
-            if (map::dlvl >= min_dlvl_harder_traps && RND < 20)
+            if (map::dlvl >= min_dlvl_harder_traps && rnd < 20)
             {
                 prop        = new Prop_poisoned(Prop_turns::std);
                 fume_clr    = clr_green_lgt;
             }
-            else if (RND < 40)
+            else if (rnd < 40)
             {
                 prop        = new Prop_diseased(Prop_turns::std);
                 fume_clr    = clr_green;
@@ -2362,11 +2362,11 @@ Did_trigger_trap Tomb::trigger_trap(Actor* const actor)
                 }
             }
 
-            const size_t IDX = rnd::range(0, mon_bucket.size() - 1);
+            const size_t idx = rnd::range(0, mon_bucket.size() - 1);
 
-            id_to_spawn = mon_bucket[IDX];
+            id_to_spawn = mon_bucket[idx];
 
-            if (IS_SEEN)
+            if (is_seen)
             {
                 msg_log::add("Something repulsive creeps up from the tomb!",
                              clr_white,
@@ -2478,18 +2478,18 @@ Chest::Chest(const P& feature_pos) :
     is_trapped_             (false),
     is_trap_status_known_   (false),
     matl_                   (Chest_matl::wood),
-    TRAP_DET_LVL            (rnd::range(0, 2))
+    trap_det_lvl            (rnd::range(0, 2))
 {
     if (map::dlvl >= 3 && rnd::coin_toss())
     {
         matl_ = Chest_matl::iron;
     }
 
-    const bool  IS_TREASURE_HUNTER  = player_bon::traits[(size_t)Trait::treasure_hunter];
-    const int   NR_ITEMS_MIN        = 0;
-    const int   NR_ITEMS_MAX        = IS_TREASURE_HUNTER ? 3 : 2;
+    const bool  is_treasure_hunter  = player_bon::traits[(size_t)Trait::treasure_hunter];
+    const int   nr_items_min        = 0;
+    const int   nr_items_max        = is_treasure_hunter ? 3 : 2;
 
-    item_container_.init(Feature_id::chest, rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
+    item_container_.init(Feature_id::chest, rnd::range(nr_items_min, nr_items_max));
 
     if (!item_container_.items_.empty())
     {
@@ -2541,12 +2541,12 @@ void Chest::try_find_trap()
     ASSERT(is_trapped_);
     ASSERT(!is_open_);
 
-    const bool CAN_DET_TRAP =
-        TRAP_DET_LVL == 0                           ||
+    const bool can_det_trap =
+        trap_det_lvl == 0                           ||
         player_bon::traits[size_t(Trait::perceptive)]  ||
-        (TRAP_DET_LVL == 1 && player_bon::traits[size_t(Trait::observant)]);
+        (trap_det_lvl == 1 && player_bon::traits[size_t(Trait::observant)]);
 
-    if (CAN_DET_TRAP)
+    if (can_det_trap)
     {
         is_trap_status_known_ = true;
         msg_log::add("There appears to be a hidden trap.");
@@ -2556,12 +2556,12 @@ void Chest::try_find_trap()
 
 void Chest::try_sprain_player()
 {
-    const int SPRAIN_ONE_IN_N =
+    const int sprain_one_in_n =
         player_bon::traits[size_t(Trait::unbreakable)]  ? 10 :
         player_bon::traits[size_t(Trait::rugged)]       ? 8  :
         player_bon::traits[size_t(Trait::tough)]        ? 6  : 4;
 
-    if (rnd::one_in(SPRAIN_ONE_IN_N))
+    if (rnd::one_in(sprain_one_in_n))
     {
         msg_log::add("I sprain myself.", clr_msg_bad);
         map::player->hit(rnd::range(1, 3), Dmg_type::pure);
@@ -2659,12 +2659,12 @@ void Chest::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* con
                         item_container_.destroy_single_fragile();
                     }
 
-                    const int OPEN_ONE_IN_N =
+                    const int open_one_in_n =
                         player_bon::traits[size_t(Trait::unbreakable)]  ? 1 :
                         player_bon::traits[size_t(Trait::rugged)]       ? 2 :
                         player_bon::traits[size_t(Trait::tough)]        ? 3 : 4;
 
-                    if (rnd::one_in(OPEN_ONE_IN_N))
+                    if (rnd::one_in(open_one_in_n))
                     {
                         msg_log::add("The lock breaks!",
                                      clr_text,
@@ -2707,9 +2707,9 @@ void Chest::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* con
 //          clr_msg_bad);
 //        map::player->hit(1, Dmg_type::pure, false);
 //      } else {
-//        const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
+//        const int chance_to_dmg_wpn = is_blessed ? 1 : (is_cursed ? 80 : 15);
 //
-//        if(rnd::percent() < CHANCE_TO_DMG_WPN) {
+//        if(rnd::percent() < chance_to_dmg_wpn) {
 //          const std::string wpn_name = item_data::item_ref(
 //                                   *item, Item_ref_type::plain, true);
 //
@@ -2726,11 +2726,11 @@ void Chest::hit(const Dmg_type dmg_type, const Dmg_method dmg_method, Actor* con
 //          return;
 //        }
 //
-//        if(IS_WEAK) {
+//        if(is_weak) {
 //          msg_log::add("It seems futile.");
 //        } else {
-//          const int CHANCE_TO_OPEN = 40;
-//          if(rnd::percent() < CHANCE_TO_OPEN) {
+//          const int chance_to_open = 40;
+//          if(rnd::percent() < chance_to_open) {
 //            msg_log::add("I force the lock open!");
 //            open();
 //          } else {
@@ -2838,9 +2838,9 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
 
     is_trapped_ = false;
 
-    const bool IS_SEEN = map::cells[pos_.x][pos_.y].is_seen_by_player;
+    const bool is_seen = map::cells[pos_.x][pos_.y].is_seen_by_player;
 
-    if (actor && IS_SEEN)
+    if (actor && is_seen)
     {
         msg_log::add("A hidden trap on the chest triggers...",
                      clr_white,
@@ -2865,7 +2865,7 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
 
     if (rnd::one_in(trap_no_action_one_in_n))
     {
-        if (actor && IS_SEEN)
+        if (actor && is_seen)
         {
             msg_log::clear();
             msg_log::add("...but nothing happens.");
@@ -2875,11 +2875,11 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
     }
 
     //Fire explosion?
-    const int FIRE_EXPLOSION_ONE_IN_N = 5;
+    const int fire_explosion_one_in_n = 5;
 
-    if (map::dlvl >= min_dlvl_harder_traps && rnd::one_in(FIRE_EXPLOSION_ONE_IN_N))
+    if (map::dlvl >= min_dlvl_harder_traps && rnd::one_in(fire_explosion_one_in_n))
     {
-        if (IS_SEEN)
+        if (is_seen)
         {
             msg_log::clear();
             msg_log::add("Flames burst out from the chest!",
@@ -2922,7 +2922,7 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
     else //Not needle trap
     {
         //Fumes
-        if (IS_SEEN)
+        if (is_seen)
         {
             msg_log::clear();
             msg_log::add("Fumes burst out from the chest!",
@@ -2943,14 +2943,14 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
 
         Prop*       prop        = nullptr;
         Clr         fume_clr    = clr_magenta;
-        const int   RND         = rnd::percent();
+        const int   rnd         = rnd::percent();
 
-        if (map::dlvl >= min_dlvl_harder_traps && RND < 20)
+        if (map::dlvl >= min_dlvl_harder_traps && rnd < 20)
         {
             prop        = new Prop_poisoned(Prop_turns::std);
             fume_clr    = clr_green_lgt;
         }
-        else if (RND < 40)
+        else if (rnd < 40)
         {
             prop        = new Prop_diseased(Prop_turns::std);
             fume_clr    = clr_green;
@@ -2975,12 +2975,12 @@ Did_trigger_trap Chest::trigger_trap(Actor* const actor)
 
 std::string Chest::name(const Article article) const
 {
-    const bool          IS_EMPTY        = item_container_.items_.empty() && is_open_;
-    const bool          IS_KNOWN_TRAP   = is_trapped_ && is_trap_status_known_;
+    const bool          is_empty        = item_container_.items_.empty() && is_open_;
+    const bool          is_known_trap   = is_trapped_ && is_trap_status_known_;
     const std::string   locked_str      = is_locked_                ? "locked "   : "";
-    const std::string   empty_str       = IS_EMPTY                  ? "empty "    : "";
-    const std::string   trap_str        = IS_KNOWN_TRAP             ? "trapped "  : "";
-    const std::string   open_str        = (is_open_ && !IS_EMPTY)   ? "open "     : "";
+    const std::string   empty_str       = is_empty                  ? "empty "    : "";
+    const std::string   trap_str        = is_known_trap             ? "trapped "  : "";
+    const std::string   open_str        = (is_open_ && !is_empty)   ? "open "     : "";
 
     std::string a = "";
 
@@ -2988,7 +2988,7 @@ std::string Chest::name(const Article article) const
     {
         a = (
                 is_locked_ ||
-                (!is_open_ && (matl_ == Chest_matl::wood || IS_KNOWN_TRAP))
+                (!is_open_ && (matl_ == Chest_matl::wood || is_known_trap))
             ) ?
             "a " : "an ";
     }
@@ -3033,8 +3033,8 @@ Fountain::Fountain(const P& feature_pos) :
         }
         else
         {
-            const int   NR_TYPES  = int(Fountain_effect::END);
-            const auto  effect    = Fountain_effect(rnd::range(0, NR_TYPES - 1));
+            const int   nr_types  = int(Fountain_effect::END);
+            const auto  effect    = Fountain_effect(rnd::range(0, nr_types - 1));
             fountain_effects_.push_back(effect);
         }
         break;
@@ -3053,9 +3053,9 @@ Fountain::Fountain(const P& feature_pos) :
 
         std::random_shuffle(begin(effect_bucket), end(effect_bucket));
 
-        const int NR_EFFECTS = 3;
+        const int nr_effects = 3;
 
-        for (int i = 0; i < NR_EFFECTS; ++i)
+        for (int i = 0; i < nr_effects; ++i)
         {
             fountain_effects_.push_back(effect_bucket[i]);
         }
@@ -3246,11 +3246,11 @@ Cabinet::Cabinet(const P& feature_pos) :
     Rigid       (feature_pos),
     is_open_    (false)
 {
-    const int IS_EMPTY_N_IN_10  = 5;
-    const int NR_ITEMS_MIN      = rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
-    const int NR_ITEMS_MAX      = player_bon::traits[size_t(Trait::treasure_hunter)] ? 2 : 1;
+    const int is_empty_N_IN_10  = 5;
+    const int nr_items_min      = rnd::fraction(is_empty_N_IN_10, 10) ? 0 : 1;
+    const int nr_items_max      = player_bon::traits[size_t(Trait::treasure_hunter)] ? 2 : 1;
 
-    item_container_.init(Feature_id::cabinet, rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
+    item_container_.init(Feature_id::cabinet, rnd::range(nr_items_min, nr_items_max));
 }
 
 void Cabinet::on_hit(const Dmg_type dmg_type, const Dmg_method dmg_method,
@@ -3363,15 +3363,15 @@ Cocoon::Cocoon(const P& feature_pos) :
     }
     else
     {
-        const bool IS_TREASURE_HUNTER = player_bon::traits[size_t(Trait::treasure_hunter)];
+        const bool is_treasure_hunter = player_bon::traits[size_t(Trait::treasure_hunter)];
 
         const Fraction fraction_empty(6, 10);
 
-        const int NR_ITEMS_MIN = fraction_empty.roll() ? 0 : 1;
+        const int nr_items_min = fraction_empty.roll() ? 0 : 1;
 
-        const int NR_ITEMS_MAX = NR_ITEMS_MIN + (IS_TREASURE_HUNTER ? 1 : 0);
+        const int nr_items_max = nr_items_min + (is_treasure_hunter ? 1 : 0);
 
-        item_container_.init(Feature_id::cocoon, rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
+        item_container_.init(Feature_id::cocoon, rnd::range(nr_items_min, nr_items_max));
     }
 }
 
@@ -3418,9 +3418,9 @@ Did_trigger_trap Cocoon::trigger_trap(Actor* const actor)
 
     if (is_trapped_)
     {
-        const int RND = rnd::percent();
+        const int rnd = rnd::percent();
 
-        if (RND < 15)
+        if (rnd < 15)
         {
             //A dead body
             msg_log::add("There is a half-dissolved human body inside!");
@@ -3428,7 +3428,7 @@ Did_trigger_trap Cocoon::trigger_trap(Actor* const actor)
             is_trapped_ = false;
             return Did_trigger_trap::yes;
         }
-        else if (RND < 50)
+        else if (rnd < 50)
         {
             //Spiders
             TRACE << "Attempting to spawn spiders" << std::endl;
@@ -3448,17 +3448,17 @@ Did_trigger_trap Cocoon::trigger_trap(Actor* const actor)
                 }
             }
 
-            const int NR_CANDIDATES = spawn_bucket.size();
+            const int nr_candidates = spawn_bucket.size();
 
-            if (NR_CANDIDATES > 0)
+            if (nr_candidates > 0)
             {
                 TRACE << "Spawn candidates found, attempting to place" << std::endl;
                 msg_log::add("There are spiders inside!");
-                const int NR_SPIDERS          = rnd::range(2, 5);
-                const int IDX                 = rnd::range(0, NR_CANDIDATES - 1);
-                const Actor_id actor_id_to_summon = spawn_bucket[IDX];
+                const int nr_spiders          = rnd::range(2, 5);
+                const int idx                 = rnd::range(0, nr_candidates - 1);
+                const Actor_id actor_id_to_summon = spawn_bucket[idx];
 
-                const std::vector<Actor_id> ids_to_summon(NR_SPIDERS, actor_id_to_summon);
+                const std::vector<Actor_id> ids_to_summon(nr_spiders, actor_id_to_summon);
 
                 actor_factory::summon(pos_, ids_to_summon, Make_mon_aware::yes);
 

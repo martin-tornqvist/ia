@@ -27,8 +27,8 @@ public:
 class Smoke: public Mob
 {
 public:
-    Smoke(const P& feature_pos, const int NR_TURNS) :
-        Mob(feature_pos), nr_turns_left_(NR_TURNS) {}
+    Smoke(const P& feature_pos, const int nr_turns) :
+        Mob(feature_pos), nr_turns_left_(nr_turns) {}
 
     //Spawn-by-id compliant ctor (do not use for normal cases):
     Smoke(const P& feature_pos) : Mob(feature_pos), nr_turns_left_(-1) {}
@@ -53,8 +53,8 @@ protected:
 class Lit_dynamite: public Mob
 {
 public:
-    Lit_dynamite(const P& feature_pos, const int NR_TURNS) :
-        Mob(feature_pos), nr_turns_left_(NR_TURNS) {}
+    Lit_dynamite(const P& feature_pos, const int nr_turns) :
+        Mob(feature_pos), nr_turns_left_(nr_turns) {}
 
     //Spawn-by-id compliant ctor (do not use for normal cases):
     Lit_dynamite(const P& feature_pos) : Mob(feature_pos), nr_turns_left_(-1) {}
@@ -84,8 +84,8 @@ private:
 class Lit_flare: public Mob
 {
 public:
-    Lit_flare(const P& feature_pos, const int NR_TURNS) :
-        Mob(feature_pos), nr_turns_left_(NR_TURNS) {}
+    Lit_flare(const P& feature_pos, const int nr_turns) :
+        Mob(feature_pos), nr_turns_left_(nr_turns) {}
 
     //Spawn-by-id compliant ctor (do not use for normal cases):
     Lit_flare(const P& feature_pos) : Mob(feature_pos), nr_turns_left_(-1) {}

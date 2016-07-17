@@ -195,9 +195,9 @@ public:
         return armor_points() <= 0;
     }
 
-    std::string armor_points_str(const bool WITH_BRACKETS) const;
+    std::string armor_points_str(const bool with_brackets) const;
 
-    int take_dur_hit_and_get_reduced_dmg(const int DMG_BEFORE);
+    int take_dur_hit_and_get_reduced_dmg(const int dmg_before);
 
 protected:
     int armor_points() const;

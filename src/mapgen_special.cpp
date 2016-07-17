@@ -158,12 +158,12 @@ bool mk_intro_lvl()
     //Place graves
     std::vector<Highscore_entry> entries = highscore::entries_sorted();
 
-    const int NR_NON_WIN = count_if(begin(entries), end(entries), [](const Highscore_entry & e)
+    const int nr_non_win = count_if(begin(entries), end(entries), [](const Highscore_entry & e)
     {
         return !e.is_win();
     });
 
-    if (NR_NON_WIN > 0)
+    if (nr_non_win > 0)
     {
         size_t  entry_idx   = 0;
         int     nr_placed   = 0;
@@ -210,7 +210,7 @@ bool mk_intro_lvl()
                     ++nr_placed;
                     ++entry_idx;
 
-                    if (nr_placed == NR_NON_WIN)
+                    if (nr_placed == nr_non_win)
                     {
                         is_done = true;
                         break;
@@ -237,7 +237,7 @@ bool mk_egypt_lvl()
 
     const Map_templ&    templ       = map_templ_handling::templ(Map_templ_id::egypt);
     const P             templ_dims  = templ.dims();
-    const char          STAIR_CH    = '1' + rnd::range(0, 1);
+    const char          stair_ch    = '1' + rnd::range(0, 1);
 
     for (int x = 0; x < templ_dims.x; ++x)
     {
@@ -249,7 +249,7 @@ bool mk_egypt_lvl()
 
             if (templ_cell.feature_id != Feature_id::END)
             {
-                if (templ_cell.ch == STAIR_CH)
+                if (templ_cell.ch == stair_ch)
                 {
                     map::put(new Stairs(p));
                 }
@@ -375,7 +375,7 @@ bool mk_rats_in_the_walls_lvl()
     const Map_templ&    templ       = map_templ_handling::templ(Map_templ_id::rats_in_the_walls);
     const P             templ_dims  = templ.dims();
 
-    const int       RAT_THING_ONE_IN_N_RAT = 6;
+    const int       rat_thing_one_in_n_rat = 6;
     const Fraction  bones_one_in_n(1, 2);
 
     for (int x = 0; x < templ_dims.x; ++x)
@@ -430,7 +430,7 @@ bool mk_rats_in_the_walls_lvl()
 
                 if (templ_cell.actor_id == Actor_id::rat)
                 {
-                    if (rnd::one_in(RAT_THING_ONE_IN_N_RAT))
+                    if (rnd::one_in(rat_thing_one_in_n_rat))
                     {
                         actor_factory::mk(Actor_id::rat_thing, p);
                     }
@@ -473,7 +473,7 @@ bool mk_rats_in_the_walls_lvl()
             {
                 const P p(x, y);
 
-                if (rnd::one_in(RAT_THING_ONE_IN_N_RAT))
+                if (rnd::one_in(rat_thing_one_in_n_rat))
                 {
                     actor_factory::mk(Actor_id::rat_thing, p);
                 }

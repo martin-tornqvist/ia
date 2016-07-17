@@ -22,7 +22,7 @@ int         cur_channel_            = 0;
 int         seconds_at_amb_played_  = -1;
 
 int         nr_files_loaded_        = 0;
-const int   NR_FILES_TOT            = int(Sfx_id::END) - 2; //Subtracting AMB_START and AMB_END
+const int   nr_files_tot            = int(Sfx_id::END) - 2; //Subtracting AMB_START and AMB_END
 
 void load_audio_file(const Sfx_id sfx, const std::string& filename)
 {
@@ -33,7 +33,7 @@ void load_audio_file(const Sfx_id sfx, const std::string& filename)
 
     const std::string file_rel_path  = "audio/" + filename;
 
-    const std::string nr_loaded_str = to_str(nr_files_loaded_) + "/" + to_str(NR_FILES_TOT) ;
+    const std::string nr_loaded_str = to_str(nr_files_loaded_) + "/" + to_str(nr_files_tot) ;
 
     render::draw_text("Loading audio file " + nr_loaded_str + " (" + file_rel_path + ")...",
                       Panel::screen,
@@ -50,16 +50,16 @@ void load_audio_file(const Sfx_id sfx, const std::string& filename)
     }
 
     //Draw a loading bar
-    const int PCT_LOADED    = (nr_files_loaded_ * 100) / NR_FILES_TOT;
-    const int BAR_W_TOT     = 32;
-    const int BAR_W_L       = (BAR_W_TOT * PCT_LOADED) / 100;
-    const int BAR_W_R       = BAR_W_TOT - BAR_W_L;
+    const int pct_loaded    = (nr_files_loaded_ * 100) / nr_files_tot;
+    const int bar_w_tot     = 32;
+    const int bar_w_l       = (bar_w_tot * pct_loaded) / 100;
+    const int bar_w_r       = bar_w_tot - bar_w_l;
 
     const P bar_p(1, 2);
 
-    if (BAR_W_L > 0)
+    if (bar_w_l > 0)
     {
-        const std::string bar_l_str(BAR_W_L, '#');
+        const std::string bar_l_str(bar_w_l, '#');
 
         render::draw_text(bar_l_str,
                           Panel::screen,
@@ -67,13 +67,13 @@ void load_audio_file(const Sfx_id sfx, const std::string& filename)
                           clr_green);
     }
 
-    if (BAR_W_R > 0)
+    if (bar_w_r > 0)
     {
-        const std::string bar_r_str(BAR_W_R, '-');
+        const std::string bar_r_str(bar_w_r, '-');
 
         render::draw_text(bar_r_str,
                           Panel::screen,
-                          P(bar_p.x + BAR_W_L, bar_p.y),
+                          P(bar_p.x + bar_w_l, bar_p.y),
                           clr_gray_drk);
     }
 
@@ -84,7 +84,7 @@ void load_audio_file(const Sfx_id sfx, const std::string& filename)
 
     render::draw_text("]",
                       Panel::screen,
-                      P(bar_p.x + BAR_W_TOT, bar_p.y),
+                      P(bar_p.x + bar_w_tot, bar_p.y),
                       clr_white);
 
     render::update_screen();
@@ -92,11 +92,11 @@ void load_audio_file(const Sfx_id sfx, const std::string& filename)
     ++nr_files_loaded_;
 }
 
-int next_channel(const int FROM)
+int next_channel(const int from)
 {
-    ASSERT(FROM >= 0 && FROM < audio_allocated_channels);
+    ASSERT(from >= 0 && from < audio_allocated_channels);
 
-    int ret = FROM + 1;
+    int ret = from + 1;
 
     if (ret == audio_allocated_channels)
     {
@@ -106,11 +106,11 @@ int next_channel(const int FROM)
     return ret;
 }
 
-int free_channel(const int FROM)
+int find_free_channel(const int from)
 {
-    ASSERT(FROM >= 0 && FROM < audio_allocated_channels);
+    ASSERT(from >= 0 && from < audio_allocated_channels);
 
-    int ret = FROM;
+    int ret = from;
 
     for (int i = 0; i < audio_allocated_channels; ++i)
     {
@@ -126,7 +126,7 @@ int free_channel(const int FROM)
     return -1;
 }
 
-} //Namespace
+} //namespace
 
 void init()
 {
@@ -196,10 +196,10 @@ void init()
 
         int a = 1;
 
-        const int FIRST = int(Sfx_id::AMB_START) + 1;
-        const int LAST  = int(Sfx_id::AMB_END)   - 1;
+        const int first = int(Sfx_id::AMB_START) + 1;
+        const int last  = int(Sfx_id::AMB_END)   - 1;
 
-        for (int i = FIRST; i <= LAST; ++i)
+        for (int i = first; i <= last; ++i)
         {
             const std::string padding_str   = (a < 10)    ? "00"  :
                                               (a < 100)   ? "0"   : "";
@@ -216,7 +216,7 @@ void init()
         load_audio_file(Sfx_id::mus_cthulhiana_Madness,
                         "musica_cthulhiana-fragment-madness.ogg");
 
-        ASSERT(nr_files_loaded_ == NR_FILES_TOT);
+        ASSERT(nr_files_loaded_ == nr_files_tot);
     }
 
     TRACE_FUNC_END;
@@ -246,7 +246,7 @@ void cleanup()
     TRACE_FUNC_END;
 }
 
-int play(const Sfx_id sfx, const int VOL_PCT_TOT, const int VOL_PCT_L)
+int play(const Sfx_id sfx, const int vol_pct_tot, const int vol_pct_l)
 {
     if (
         !audio_chunks_.empty()      &&
@@ -255,20 +255,20 @@ int play(const Sfx_id sfx, const int VOL_PCT_TOT, const int VOL_PCT_L)
         sfx != Sfx_id::END          &&
         !config::is_bot_playing())
     {
-        const int       FREE_CHANNEL    = free_channel(cur_channel_);
-        const size_t    MS_NOW          = SDL_GetTicks();
+        const int       free_channel    = find_free_channel(cur_channel_);
+        const size_t    ms_now          = SDL_GetTicks();
         size_t&         ms_last         = ms_at_sfx_played_[size_t(sfx)];
-        const size_t    MS_DIFF         = MS_NOW - ms_last;
+        const size_t    ms_diff         = ms_now - ms_last;
 
-        if (FREE_CHANNEL >= 0 && MS_DIFF >= min_ms_between_same_sfx)
+        if (free_channel >= 0 && ms_diff >= min_ms_between_same_sfx)
         {
-            cur_channel_ = FREE_CHANNEL;
+            cur_channel_ = free_channel;
 
-            const int VOL_TOT   = (255 * VOL_PCT_TOT)   / 100;
-            const int VOL_L     = (VOL_PCT_L * VOL_TOT) / 100;
-            const int VOL_R     = VOL_TOT - VOL_L;
+            const int vol_tot   = (255 * vol_pct_tot)   / 100;
+            const int vol_l     = (vol_pct_l * vol_tot) / 100;
+            const int vol_r     = vol_tot - vol_l;
 
-            Mix_SetPanning(cur_channel_, VOL_L, VOL_R);
+            Mix_SetPanning(cur_channel_, vol_l, vol_r);
 
             Mix_PlayChannel(cur_channel_, audio_chunks_[size_t(sfx)], 0);
 
@@ -281,12 +281,12 @@ int play(const Sfx_id sfx, const int VOL_PCT_TOT, const int VOL_PCT_L)
     return -1;
 }
 
-void play(const Sfx_id sfx, const Dir dir, const int DISTANCE_PCT)
+void play(const Sfx_id sfx, const Dir dir, const int distance_pct)
 {
     if (!audio_chunks_.empty() && dir != Dir::END)
     {
         //The distance value is scaled down to avoid too much volume degradation
-        const int VOL_PCT_TOT = 100 - ((DISTANCE_PCT * 2) / 3);
+        const int vol_pct_tot = 100 - ((distance_pct * 2) / 3);
 
         int vol_pct_l = 0;
 
@@ -333,36 +333,36 @@ void play(const Sfx_id sfx, const Dir dir, const int DISTANCE_PCT)
             break;
         }
 
-        play(sfx, VOL_PCT_TOT, vol_pct_l);
+        play(sfx, vol_pct_tot, vol_pct_l);
     }
 }
 
-void try_play_amb(const int ONE_IN_N_CHANCE_TO_PLAY)
+void try_play_amb(const int one_in_n_chance_to_play)
 {
-    if (!audio_chunks_.empty() && rnd::one_in(ONE_IN_N_CHANCE_TO_PLAY))
+    if (!audio_chunks_.empty() && rnd::one_in(one_in_n_chance_to_play))
     {
-        const int SECONDS_NOW               = time(nullptr);
-        const int TIME_REQ_BETWEEN_AMB_SFX  = 20;
+        const int seconds_now               = time(nullptr);
+        const int time_req_between_amb_sfx  = 20;
 
-        if ((SECONDS_NOW - TIME_REQ_BETWEEN_AMB_SFX) > seconds_at_amb_played_)
+        if ((seconds_now - time_req_between_amb_sfx) > seconds_at_amb_played_)
         {
-            seconds_at_amb_played_ = SECONDS_NOW;
+            seconds_at_amb_played_ = seconds_now;
 
-            const int       VOL_PCT     = rnd::one_in(5) ? rnd::range(50,  99) : 100;
-            const int       FIRST_INT   = int(Sfx_id::AMB_START) + 1;
-            const int       LAST_INT    = int(Sfx_id::AMB_END)   - 1;
-            const Sfx_id    sfx         = Sfx_id(rnd::range(FIRST_INT, LAST_INT));
+            const int       vol_pct     = rnd::one_in(5) ? rnd::range(50,  99) : 100;
+            const int       first_int   = int(Sfx_id::AMB_START) + 1;
+            const int       last_int    = int(Sfx_id::AMB_END)   - 1;
+            const Sfx_id    sfx         = Sfx_id(rnd::range(first_int, last_int));
 
-            play(sfx , VOL_PCT);
+            play(sfx , vol_pct);
         }
     }
 }
 
-void fade_out_channel(const int CHANNEL_NR)
+void fade_out_channel(const int channel_nr)
 {
     if (!audio_chunks_.empty())
     {
-        Mix_FadeOutChannel(CHANNEL_NR, 5000);
+        Mix_FadeOutChannel(channel_nr, 5000);
     }
 }
 

@@ -124,9 +124,9 @@ void run_std_turn_events()
     //(If an unexplored cell is selected, the spawn is canceled)
     if (map::dlvl >= 1 && map::dlvl <= dlvl_last)
     {
-        const int SPAWN_N_TURNS = 130;
+        const int spawn_n_turns = 130;
 
-        if (turn_nr_ % SPAWN_N_TURNS == 0)
+        if (turn_nr_ % spawn_n_turns == 0)
         {
             populate_mon::try_spawn_due_to_time_passed();
         }
@@ -240,13 +240,13 @@ void add_mob(Mob* const f)
     mobs.push_back(f);
 }
 
-void erase_mob(Mob* const f, const bool DESTROY_OBJECT)
+void erase_mob(Mob* const f, const bool destroy_object)
 {
     for (auto it = mobs.begin(); it != mobs.end(); ++it)
     {
         if (*it == f)
         {
-            if (DESTROY_OBJECT)
+            if (destroy_object)
             {
                 delete f;
             }

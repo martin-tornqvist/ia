@@ -104,9 +104,9 @@ struct Projectile
         clr   = clr_to_render;
     }
 
-    void set_glyph(const char GLYPH_TO_RENDER, const Clr& clr_to_render)
+    void set_glyph(const char glyph_to_render, const Clr& clr_to_render)
     {
-        glyph = GLYPH_TO_RENDER;
+        glyph = glyph_to_render;
         clr   = clr_to_render;
     }
 

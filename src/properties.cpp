@@ -911,18 +911,18 @@ void Prop_handler::load()
 
     ASSERT(owning_actor_);
 
-    const int NR_PROPS = save_handling::get_int();
+    const int nr_props = save_handling::get_int();
 
-    for (int i = 0; i < NR_PROPS; ++i)
+    for (int i = 0; i < nr_props; ++i)
     {
         const auto prop_id = Prop_id(save_handling::get_int());
 
-        const int NR_TURNS = save_handling::get_int();
+        const int nr_turns = save_handling::get_int();
 
-        const auto turns_init = NR_TURNS == -1 ?
+        const auto turns_init = nr_turns == -1 ?
                                 Prop_turns::indefinite : Prop_turns::specific;
 
-        Prop* const prop = mk_prop(prop_id, turns_init, NR_TURNS);
+        Prop* const prop = mk_prop(prop_id, turns_init, nr_turns);
 
         prop->owning_actor_ = owning_actor_;
 
@@ -936,176 +936,176 @@ void Prop_handler::load()
     }
 }
 
-Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init, const int NR_TURNS) const
+Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init, const int nr_turns) const
 {
     ASSERT(id != Prop_id::END);
 
     //Prop turns init type should either be:
     // * "specific", and number of turns specified (> 0), OR
     // * NOT "specific" (i.e. "indefinite" or "std"), and number of turns NOT specified (-1)
-    ASSERT((turns_init == Prop_turns::specific && NR_TURNS > 0) ||
-           (turns_init != Prop_turns::specific && NR_TURNS == -1));
+    ASSERT((turns_init == Prop_turns::specific && nr_turns > 0) ||
+           (turns_init != Prop_turns::specific && nr_turns == -1));
 
     switch (id)
     {
     case Prop_id::nailed:
-        return new Prop_nailed(turns_init, NR_TURNS);
+        return new Prop_nailed(turns_init, nr_turns);
 
     case Prop_id::wound:
-        return new Prop_wound(turns_init, NR_TURNS);
+        return new Prop_wound(turns_init, nr_turns);
 
     case Prop_id::warlock_charged:
-        return new Prop_warlock_charged(turns_init, NR_TURNS);
+        return new Prop_warlock_charged(turns_init, nr_turns);
 
     case Prop_id::blind:
-        return new Prop_blind(turns_init, NR_TURNS);
+        return new Prop_blind(turns_init, nr_turns);
 
     case Prop_id::burning:
-        return new Prop_burning(turns_init, NR_TURNS);
+        return new Prop_burning(turns_init, nr_turns);
 
     case Prop_id::flared:
-        return new Prop_flared(turns_init, NR_TURNS);
+        return new Prop_flared(turns_init, nr_turns);
 
     case Prop_id::paralyzed:
-        return new Prop_paralyzed(turns_init, NR_TURNS);
+        return new Prop_paralyzed(turns_init, nr_turns);
 
     case Prop_id::terrified:
-        return new Prop_terrified(turns_init, NR_TURNS);
+        return new Prop_terrified(turns_init, nr_turns);
 
     case Prop_id::weakened:
-        return new Prop_weakened(turns_init, NR_TURNS);
+        return new Prop_weakened(turns_init, nr_turns);
 
     case Prop_id::confused:
-        return new Prop_confused(turns_init, NR_TURNS);
+        return new Prop_confused(turns_init, nr_turns);
 
     case Prop_id::stunned:
-        return new Prop_stunned(turns_init, NR_TURNS);
+        return new Prop_stunned(turns_init, nr_turns);
 
     case Prop_id::waiting:
-        return new Prop_waiting(turns_init, NR_TURNS);
+        return new Prop_waiting(turns_init, nr_turns);
 
     case Prop_id::slowed:
-        return new Prop_slowed(turns_init, NR_TURNS);
+        return new Prop_slowed(turns_init, nr_turns);
 
     case Prop_id::hasted:
-        return new Prop_hasted(turns_init, NR_TURNS);
+        return new Prop_hasted(turns_init, nr_turns);
 
     case Prop_id::infected:
-        return new Prop_infected(turns_init, NR_TURNS);
+        return new Prop_infected(turns_init, nr_turns);
 
     case Prop_id::diseased:
-        return new Prop_diseased(turns_init, NR_TURNS);
+        return new Prop_diseased(turns_init, nr_turns);
 
     case Prop_id::descend:
-        return new Prop_descend(turns_init, NR_TURNS);
+        return new Prop_descend(turns_init, nr_turns);
 
     case Prop_id::poisoned:
-        return new Prop_poisoned(turns_init, NR_TURNS);
+        return new Prop_poisoned(turns_init, nr_turns);
 
     case Prop_id::fainted:
-        return new Prop_fainted(turns_init, NR_TURNS);
+        return new Prop_fainted(turns_init, nr_turns);
 
     case Prop_id::frenzied:
-        return new Prop_frenzied(turns_init, NR_TURNS);
+        return new Prop_frenzied(turns_init, nr_turns);
 
     case Prop_id::aiming:
-        return new Prop_aiming(turns_init, NR_TURNS);
+        return new Prop_aiming(turns_init, nr_turns);
 
     case Prop_id::fast_shooting:
-        return new Prop_fast_shooting(turns_init, NR_TURNS);
+        return new Prop_fast_shooting(turns_init, nr_turns);
 
     case Prop_id::disabled_attack:
-        return new Prop_disabled_attack(turns_init, NR_TURNS);
+        return new Prop_disabled_attack(turns_init, nr_turns);
 
     case Prop_id::disabled_melee:
-        return new Prop_disabled_melee(turns_init, NR_TURNS);
+        return new Prop_disabled_melee(turns_init, nr_turns);
 
     case Prop_id::disabled_ranged:
-        return new Prop_disabled_ranged(turns_init, NR_TURNS);
+        return new Prop_disabled_ranged(turns_init, nr_turns);
 
     case Prop_id::blessed:
-        return new Prop_blessed(turns_init, NR_TURNS);
+        return new Prop_blessed(turns_init, nr_turns);
 
     case Prop_id::cursed:
-        return new Prop_cursed(turns_init, NR_TURNS);
+        return new Prop_cursed(turns_init, nr_turns);
 
     case Prop_id::rAcid:
-        return new Prop_rAcid(turns_init, NR_TURNS);
+        return new Prop_rAcid(turns_init, nr_turns);
 
     case Prop_id::rConf:
-        return new Prop_rConf(turns_init, NR_TURNS);
+        return new Prop_rConf(turns_init, nr_turns);
 
     case Prop_id::rBreath:
-        return new Prop_rBreath(turns_init, NR_TURNS);
+        return new Prop_rBreath(turns_init, nr_turns);
 
     case Prop_id::rElec:
-        return new Prop_rElec(turns_init, NR_TURNS);
+        return new Prop_rElec(turns_init, nr_turns);
 
     case Prop_id::rFear:
-        return new Prop_rFear(turns_init, NR_TURNS);
+        return new Prop_rFear(turns_init, nr_turns);
 
     case Prop_id::rPhys:
-        return new Prop_rPhys(turns_init, NR_TURNS);
+        return new Prop_rPhys(turns_init, nr_turns);
 
     case Prop_id::rFire:
-        return new Prop_rFire(turns_init, NR_TURNS);
+        return new Prop_rFire(turns_init, nr_turns);
 
     case Prop_id::rSpell:
-        return new Prop_rSpell(turns_init, NR_TURNS);
+        return new Prop_rSpell(turns_init, nr_turns);
 
     case Prop_id::rPoison:
-        return new Prop_rPoison(turns_init, NR_TURNS);
+        return new Prop_rPoison(turns_init, nr_turns);
 
     case Prop_id::rSleep:
-        return new Prop_rSleep(turns_init, NR_TURNS);
+        return new Prop_rSleep(turns_init, nr_turns);
 
     case Prop_id::lgtSens:
-        return new Prop_lgtSens(turns_init, NR_TURNS);
+        return new Prop_lgtSens(turns_init, nr_turns);
 
     case Prop_id::poss_by_zuul:
-        return new Prop_poss_by_zuul(turns_init, NR_TURNS);
+        return new Prop_poss_by_zuul(turns_init, nr_turns);
 
     case Prop_id::flying:
-        return new Prop_flying(turns_init, NR_TURNS);
+        return new Prop_flying(turns_init, nr_turns);
 
     case Prop_id::ethereal:
-        return new Prop_ethereal(turns_init, NR_TURNS);
+        return new Prop_ethereal(turns_init, nr_turns);
 
     case Prop_id::ooze:
-        return new Prop_ooze(turns_init, NR_TURNS);
+        return new Prop_ooze(turns_init, nr_turns);
 
     case Prop_id::burrowing:
-        return new Prop_burrowing(turns_init, NR_TURNS);
+        return new Prop_burrowing(turns_init, nr_turns);
 
     case Prop_id::radiant:
-        return new Prop_radiant(turns_init, NR_TURNS);
+        return new Prop_radiant(turns_init, nr_turns);
 
     case Prop_id::infravis:
-        return new Prop_infravis(turns_init, NR_TURNS);
+        return new Prop_infravis(turns_init, nr_turns);
 
     case Prop_id::rDisease:
-        return new Prop_rDisease(turns_init, NR_TURNS);
+        return new Prop_rDisease(turns_init, nr_turns);
 
     case Prop_id::rBlind:
-        return new Prop_rBlind(turns_init, NR_TURNS);
+        return new Prop_rBlind(turns_init, nr_turns);
 
     case Prop_id::tele_ctrl:
-        return new Prop_tele_control(turns_init, NR_TURNS);
+        return new Prop_tele_control(turns_init, nr_turns);
 
     case Prop_id::spell_reflect:
-        return new Prop_spell_reflect(turns_init, NR_TURNS);
+        return new Prop_spell_reflect(turns_init, nr_turns);
 
     case Prop_id::strangled:
-        return new Prop_strangled(turns_init, NR_TURNS);
+        return new Prop_strangled(turns_init, nr_turns);
 
     case Prop_id::conflict:
-        return new Prop_conflict(turns_init, NR_TURNS);
+        return new Prop_conflict(turns_init, nr_turns);
 
     case Prop_id::invis:
-        return new Prop_invisible(turns_init, NR_TURNS);
+        return new Prop_invisible(turns_init, nr_turns);
 
     case Prop_id::see_invis:
-        return new Prop_see_invis(turns_init, NR_TURNS);
+        return new Prop_see_invis(turns_init, nr_turns);
 
     case Prop_id::END:
         break;
@@ -1116,7 +1116,7 @@ Prop* Prop_handler::mk_prop(const Prop_id id, Prop_turns turns_init, const int N
 
 void Prop_handler::try_add(Prop* const prop,
                            Prop_src src,
-                           const bool FORCE_EFFECT,
+                           const bool force_effect,
                            const Verbosity verbosity)
 {
     ASSERT(prop);
@@ -1142,18 +1142,18 @@ void Prop_handler::try_add(Prop* const prop,
     prop->owning_actor_ = owning_actor_;
     prop->src_          = src;
 
-    const bool IS_PLAYER        = owning_actor_->is_player();
-    const bool PLAYER_SEE_OWNER = map::player->can_see_actor(*owning_actor_);
+    const bool is_player        = owning_actor_->is_player();
+    const bool player_see_owner = map::player->can_see_actor(*owning_actor_);
 
     //Check if property is resisted
-    if (!FORCE_EFFECT)
+    if (!force_effect)
     {
         if (try_resist_prop(prop->id()))
         {
             //Resist message
             if (verbosity == Verbosity::verbose && owning_actor_->is_alive())
             {
-                if (IS_PLAYER)
+                if (is_player)
                 {
                     std::string msg = "";
                     prop->msg(Prop_msg::res_player, msg);
@@ -1165,7 +1165,7 @@ void Prop_handler::try_add(Prop* const prop,
                 }
                 else //Is a monster
                 {
-                    if (PLAYER_SEE_OWNER)
+                    if (player_see_owner)
                     {
                         std::string msg = "";
                         prop->msg(Prop_msg::res_mon, msg);
@@ -1200,13 +1200,13 @@ void Prop_handler::try_add(Prop* const prop,
                     return;
                 }
 
-                const int TURNS_LEFT_OLD = old_prop->nr_turns_left_;
-                const int TURNS_LEFT_NEW = prop->nr_turns_left_;
+                const int turns_left_old = old_prop->nr_turns_left_;
+                const int turns_left_new = prop->nr_turns_left_;
 
                 //Start message
                 if (verbosity == Verbosity::verbose && owning_actor_->is_alive())
                 {
-                    if (IS_PLAYER)
+                    if (is_player)
                     {
                         std::string msg = "";
                         prop->msg(Prop_msg::start_player, msg);
@@ -1218,7 +1218,7 @@ void Prop_handler::try_add(Prop* const prop,
                     }
                     else //Not player
                     {
-                        if (PLAYER_SEE_OWNER)
+                        if (player_see_owner)
                         {
                             std::string msg = "";
                             prop->msg(Prop_msg::start_mon, msg);
@@ -1233,8 +1233,8 @@ void Prop_handler::try_add(Prop* const prop,
 
                 old_prop->on_more();
 
-                old_prop->nr_turns_left_ = (TURNS_LEFT_OLD < 0 || TURNS_LEFT_NEW < 0) ? -1 :
-                                           std::max(TURNS_LEFT_OLD, TURNS_LEFT_NEW);
+                old_prop->nr_turns_left_ = (turns_left_old < 0 || turns_left_new < 0) ? -1 :
+                                           std::max(turns_left_old, turns_left_new);
                 delete prop;
                 return;
             }
@@ -1258,7 +1258,7 @@ void Prop_handler::try_add(Prop* const prop,
         }
 
         //Start message
-        if (IS_PLAYER)
+        if (is_player)
         {
             std::string msg = "";
             prop->msg(Prop_msg::start_player, msg);
@@ -1270,7 +1270,7 @@ void Prop_handler::try_add(Prop* const prop,
         }
         else //Is monster
         {
-            if (PLAYER_SEE_OWNER)
+            if (player_see_owner)
             {
                 std::string msg = "";
                 prop->msg(Prop_msg::start_mon, msg);
@@ -1336,29 +1336,29 @@ void Prop_handler::remove_props_for_item(const Item* const item)
     }
 }
 
-void Prop_handler::try_add_from_att(const Wpn& wpn, const bool IS_MELEE)
+void Prop_handler::try_add_from_att(const Wpn& wpn, const bool is_melee)
 {
     const auto&         d           = wpn.data();
-    const auto* const   origin_prop = IS_MELEE ?
+    const auto* const   origin_prop = is_melee ?
                                       d.melee.prop_applied : d.ranged.prop_applied;
 
     if (origin_prop)
     {
         //If weapon damage is resisted by the defender, the property is automatically resisted
-        const Dmg_type dmg_type = IS_MELEE ?
+        const Dmg_type dmg_type = is_melee ?
                                   d.melee.dmg_type : d.ranged.dmg_type;
 
         if (!try_resist_dmg(dmg_type, Verbosity::silent))
         {
             const auto turns_init_type = origin_prop->turns_init_type();
 
-            const int NR_TURNS = turns_init_type == Prop_turns::specific ?
+            const int nr_turns = turns_init_type == Prop_turns::specific ?
                                  origin_prop->nr_turns_left_ : -1;
 
             //Make a copy of the weapon effect
             auto* const prop_cpy = mk_prop(origin_prop->id(),
                                            origin_prop->turns_init_type_,
-                                           NR_TURNS);
+                                           nr_turns);
 
             try_add(prop_cpy);
         }
@@ -1440,7 +1440,7 @@ void Prop_handler::on_prop_end(Prop* const prop)
     prop->on_end();
 }
 
-bool Prop_handler::end_prop(const Prop_id id, const bool RUN_PROP_END_EFFECTS)
+bool Prop_handler::end_prop(const Prop_id id, const bool run_prop_end_effects)
 {
     for (auto it = begin(props_); it != end(props_); ++it)
     {
@@ -1452,7 +1452,7 @@ bool Prop_handler::end_prop(const Prop_id id, const bool RUN_PROP_END_EFFECTS)
 
             decr_active_props_info(prop->id_);
 
-            if (RUN_PROP_END_EFFECTS)
+            if (run_prop_end_effects)
             {
                 on_prop_end(prop);
             }
@@ -1536,9 +1536,9 @@ void Prop_handler::props_interface_line(std::vector<Str_and_clr>& line) const
 
         if (!str.empty())
         {
-            const int TURNS_LEFT  = prop->nr_turns_left_;
+            const int turns_left  = prop->nr_turns_left_;
 
-            if (TURNS_LEFT > 0)
+            if (turns_left > 0)
             {
                 //Player can see number of turns left on own properties with Self-aware?
                 if (
@@ -1546,7 +1546,7 @@ void Prop_handler::props_interface_line(std::vector<Str_and_clr>& line) const
                     player_bon::traits[size_t(Trait::self_aware)] &&
                     prop->allow_display_turns())
                 {
-                    str += ":" + to_str(TURNS_LEFT);
+                    str += ":" + to_str(turns_left);
                 }
             }
             else //Property is indefinite
@@ -1608,9 +1608,9 @@ bool Prop_handler::allow_see() const
     return true;
 }
 
-int Prop_handler::affect_max_hp(const int HP_MAX) const
+int Prop_handler::affect_max_hp(const int hp_max) const
 {
-    int new_hp_max = HP_MAX;
+    int new_hp_max = hp_max;
 
     for (Prop* prop : props_)
     {
@@ -1755,13 +1755,13 @@ void Prop_handler::on_hit()
     }
 }
 
-void Prop_handler::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
+void Prop_handler::on_death(const bool is_player_see_owning_actor)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
     for (Prop* prop : props_)
     {
-        prop->on_death(IS_PLAYER_SEE_OWNING_ACTOR);
+        prop->on_death(is_player_see_owning_actor);
     }
 
     TRACE_FUNC_END_VERBOSE;
@@ -1890,12 +1890,12 @@ Prop* Prop_infected::on_new_turn()
     ASSERT(!owning_actor_->prop_handler().has_prop(Prop_id::diseased));
 #endif // NDEBUG
 
-    const int MAX_TURNS_LEFT_ALLOW_DISEASE  = 50;
-    const int APPLY_DISEASE_ONE_IN          = nr_turns_left_ - 1;
+    const int max_turns_left_allow_disease  = 50;
+    const int apply_disease_one_in          = nr_turns_left_ - 1;
 
     if (
-        nr_turns_left_ <= MAX_TURNS_LEFT_ALLOW_DISEASE &&
-        rnd::one_in(APPLY_DISEASE_ONE_IN))
+        nr_turns_left_ <= max_turns_left_allow_disease &&
+        rnd::one_in(apply_disease_one_in))
     {
         Prop_handler& prop_hlr = owning_actor_->prop_handler();
 
@@ -1911,13 +1911,13 @@ Prop* Prop_infected::on_new_turn()
     return this;
 }
 
-int Prop_diseased::affect_max_hp(const int HP_MAX) const
+int Prop_diseased::affect_max_hp(const int hp_max) const
 {
 #ifndef NDEBUG
     ASSERT(!owning_actor_->prop_handler().has_prop(Prop_id::infected));
 #endif // NDEBUG
 
-    return HP_MAX / 2;
+    return hp_max / 2;
 }
 
 void Prop_diseased::on_start()
@@ -1967,9 +1967,9 @@ Prop* Prop_descend::on_new_turn()
     return this;
 }
 
-void Prop_poss_by_zuul::on_death(const bool IS_PLAYER_SEE_OWNING_ACTOR)
+void Prop_poss_by_zuul::on_death(const bool is_player_see_owning_actor)
 {
-    if (IS_PLAYER_SEE_OWNING_ACTOR)
+    if (is_player_see_owning_actor)
     {
         const std::string& name1 = owning_actor_->name_the();
         const std::string& name2 = actor_data::data[int(Actor_id::zuul)].name_the;
@@ -2129,43 +2129,43 @@ void Prop_wound::msg(const Prop_msg msg_type, std::string& msg_ref) const
 
 int Prop_wound::ability_mod(const Ability_id ability) const
 {
-    const bool IS_SURVIVALIST = owning_actor_->is_player() &&
+    const bool is_survivalist = owning_actor_->is_player() &&
                                 player_bon::traits[size_t(Trait::survivalist)];
 
-    const int DIV = IS_SURVIVALIST ? 2 : 1;
+    const int div = is_survivalist ? 2 : 1;
 
-    const int K = std::min(4, nr_wounds_);
+    const int k = std::min(4, nr_wounds_);
 
     if (ability == Ability_id::melee)
     {
-        return (K * -10) / DIV;
+        return (k * -10) / div;
     }
     else if (ability == Ability_id::ranged)
     {
-        return (K *  -5) / DIV;
+        return (k *  -5) / div;
     }
     else if (ability == Ability_id::dodge_att)
     {
-        return (K * -10) / DIV;
+        return (k * -10) / div;
     }
     else if (ability == Ability_id::dodge_trap)
     {
-        return (K * -10) / DIV;
+        return (k * -10) / div;
     }
 
     return 0;
 }
 
-int Prop_wound::affect_max_hp(const int HP_MAX) const
+int Prop_wound::affect_max_hp(const int hp_max) const
 {
-    const int PEN_PCT_PER_WOUND = 10;
+    const int pen_pct_per_wound = 10;
 
-    int hp_pen_pct = nr_wounds_ * PEN_PCT_PER_WOUND;
+    int hp_pen_pct = nr_wounds_ * pen_pct_per_wound;
 
-    const bool IS_SURVIVALIST = owning_actor_->is_player() &&
+    const bool is_survivalist = owning_actor_->is_player() &&
                                 player_bon::traits[size_t(Trait::survivalist)];
 
-    if (IS_SURVIVALIST)
+    if (is_survivalist)
     {
         hp_pen_pct /= 2;
     }
@@ -2173,7 +2173,7 @@ int Prop_wound::affect_max_hp(const int HP_MAX) const
     //Cap the penalty percentage
     hp_pen_pct = std::min(70, hp_pen_pct);
 
-    return (HP_MAX * (100 - hp_pen_pct)) / 100;
+    return (hp_max * (100 - hp_pen_pct)) / 100;
 }
 
 void Prop_wound::heal_one_wound()
@@ -2195,9 +2195,9 @@ void Prop_wound::heal_one_wound()
 
 void Prop_wound::on_more()
 {
-    const int MAX_NR_WOUNDS = 5;
+    const int max_nr_wounds = 5;
 
-    nr_wounds_ = std::min(MAX_NR_WOUNDS, nr_wounds_ + 1);
+    nr_wounds_ = std::min(max_nr_wounds, nr_wounds_ + 1);
 }
 
 bool Prop_confused::allow_read(const Verbosity verbosity) const
@@ -2250,7 +2250,7 @@ void Prop_confused::affect_move_dir(const P& actor_pos, Dir& dir)
     {
         bool blocked[map_w][map_h];
 
-        const R area_check_blocked(actor_pos - P(1, 1), actor_pos + P(1, 1));
+         const R area_check_blocked(actor_pos - P(1, 1), actor_pos + P(1, 1));
 
         map_parse::run(cell_check::Blocks_actor(*owning_actor_, true),
                        blocked,
@@ -2273,8 +2273,8 @@ void Prop_confused::affect_move_dir(const P& actor_pos, Dir& dir)
 
             if (!d_bucket.empty())
             {
-                const size_t    IDX = rnd::range(0, d_bucket.size() - 1);
-                const P&        d   = d_bucket[IDX];
+                const size_t    idx = rnd::range(0, d_bucket.size() - 1);
+                const P&        d   = d_bucket[idx];
 
                 dir = dir_utils::dir(d);
             }
@@ -2284,9 +2284,9 @@ void Prop_confused::affect_move_dir(const P& actor_pos, Dir& dir)
 
 Prop* Prop_strangled::on_new_turn()
 {
-    const int DMG = rnd::range(3, 4);
+    const int dmg = rnd::range(3, 4);
 
-    owning_actor_->hit(DMG, Dmg_type::pure, Dmg_method::forced);
+    owning_actor_->hit(dmg, Dmg_type::pure, Dmg_method::forced);
 
     return this;
 }

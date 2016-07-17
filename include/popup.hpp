@@ -13,7 +13,7 @@ void show_msg(const std::string& msg,
               const bool draw_map_state,
               const std::string& title = "",
               const Sfx_id sfx = Sfx_id::END,
-              const int W_CHANGE = 0);
+              const int w_change = 0);
 
 int show_menu_msg(
     const std::string& msg, const bool draw_map_state,

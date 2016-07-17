@@ -77,7 +77,7 @@ void cleanup();
 
 void run_highscore_screen();
 
-void on_game_over(const bool IS_WIN);
+void on_game_over(const bool is_win);
 
 std::vector<Highscore_entry> entries_sorted();
 

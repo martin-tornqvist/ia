@@ -13,7 +13,7 @@
 namespace item_factory
 {
 
-Item* mk(const Item_id item_id, const int NR_ITEMS)
+Item* mk(const Item_id item_id, const int nr_items)
 {
     Item*           r = nullptr;
     Item_data_t*    d = &item_data::data[size_t(item_id)];
@@ -347,15 +347,15 @@ Item* mk(const Item_id item_id, const int NR_ITEMS)
 
     // Sanity check number of items (non-stackable items should never be set to
     // anything other than one item)
-    if (!r->data().is_stackable && NR_ITEMS != 1)
+    if (!r->data().is_stackable && nr_items != 1)
     {
-        TRACE << "Specified number of items (" + to_str(NR_ITEMS) + ") != 1 for "
+        TRACE << "Specified number of items (" + to_str(nr_items) + ") != 1 for "
               << "non-stackable item: "
               << int(d->id) << ", " << r->name(Item_ref_type::plain) << std::endl;
         ASSERT(false);
     }
 
-    r->nr_items_ = NR_ITEMS;
+    r->nr_items_ = nr_items;
 
     return r;
 }
@@ -392,21 +392,21 @@ void set_item_randomized_properties(Item* item)
         }
         else //Weapon ammo capacity > 1
         {
-            const int AMMO_CAP = wpn->data().ranged.max_ammo;
+            const int ammo_cap = wpn->data().ranged.max_ammo;
 
             if (d.ranged.is_machine_gun)
             {
                 //Number of machine gun bullets loaded needs to be a multiple of the
                 //number of projectiles fired in each burst
 
-                const int CAP_SCALED    = AMMO_CAP / nr_mg_projectiles;
-                const int MIN_SCALED    = CAP_SCALED / 4;
-                wpn->nr_ammo_loaded_    = rnd::range(MIN_SCALED, CAP_SCALED) *
+                const int cap_scaled    = ammo_cap / nr_mg_projectiles;
+                const int min_scaled    = cap_scaled / 4;
+                wpn->nr_ammo_loaded_    = rnd::range(min_scaled, cap_scaled) *
                                           nr_mg_projectiles;
             }
             else //Not machinegun
             {
-                wpn->nr_ammo_loaded_ = rnd::range(AMMO_CAP / 4, AMMO_CAP);
+                wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
             }
         }
     }
@@ -421,11 +421,11 @@ void set_item_randomized_properties(Item* item)
     {
         Medical_bag* const medbag = static_cast<Medical_bag*>(item);
 
-        const int NR_SUPPLIES_MAX = medbag->nr_supplies_;
+        const int nr_supplies_max = medbag->nr_supplies_;
 
-        const int NR_SUPPLIES_MIN = NR_SUPPLIES_MAX - (NR_SUPPLIES_MAX / 3);
+        const int nr_supplies_min = nr_supplies_max - (nr_supplies_max / 3);
 
-        medbag->nr_supplies_ = rnd::range(NR_SUPPLIES_MIN, NR_SUPPLIES_MAX);
+        medbag->nr_supplies_ = rnd::range(nr_supplies_min, nr_supplies_max);
     }
 }
 
@@ -445,7 +445,7 @@ Item* copy_item(const Item& item_to_copy)
     return new_item;
 }
 
-Item* mk_random_scroll_or_potion(const bool ALLOW_SCROLLS, const bool ALLOW_POTIONS)
+Item* mk_random_scroll_or_potion(const bool allow_scrolls, const bool allow_potions)
 {
     std::vector<Item_id> item_bucket;
 
@@ -454,8 +454,8 @@ Item* mk_random_scroll_or_potion(const bool ALLOW_SCROLLS, const bool ALLOW_POTI
         const Item_data_t& d = item_data::data[i];
 
         if (
-            (d.type == Item_type::scroll && ALLOW_SCROLLS) ||
-            (d.type == Item_type::potion && ALLOW_POTIONS))
+            (d.type == Item_type::scroll && allow_scrolls) ||
+            (d.type == Item_type::potion && allow_potions))
         {
             item_bucket.push_back(static_cast<Item_id>(i));
         }
@@ -463,8 +463,8 @@ Item* mk_random_scroll_or_potion(const bool ALLOW_SCROLLS, const bool ALLOW_POTI
 
     if (!item_bucket.empty())
     {
-        const int ELEMENT = rnd::range(0, item_bucket.size() - 1);
-        return mk(item_bucket[ELEMENT]);
+        const int element = rnd::range(0, item_bucket.size() - 1);
+        return mk(item_bucket[element]);
     }
 
     return nullptr;

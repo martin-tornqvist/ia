@@ -113,7 +113,7 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         break;
 
     case Trait::rapid_recoverer:
-        //Cannot regen HP passively
+        //Cannot regen hp passively
         return bg == Bg::ghoul;
 
     case Trait::survivalist:
@@ -937,9 +937,9 @@ void trait_list_for_bg(const Bg bg, std::vector<Trait>& traits_out)
     {
         const Trait trait = Trait(i);
 
-        const bool IS_BLOCKED_FOR_BG = is_trait_blocked_for_bg(trait, bg);
+        const bool is_blocked_for_bg = is_trait_blocked_for_bg(trait, bg);
 
-        if (!IS_BLOCKED_FOR_BG)
+        if (!is_blocked_for_bg)
         {
             //Check trait prerequisites (traits and background)
             //NOTE: Traits blocked for the current background are not
@@ -1109,12 +1109,12 @@ std::string all_picked_traits_titles_line()
     return out;
 }
 
-int spi_occultist_can_cast_at_lvl(const int LVL)
+int spi_occultist_can_cast_at_lvl(const int lvl)
 {
-    ASSERT(LVL > 0);
-    const int SPI_FROM_START_TRAIT  = 2;
-    const int SPI_FROM_LVLS         = (LVL - 1) * spi_per_lvl;
-    return player_start_spi + SPI_FROM_LVLS + SPI_FROM_START_TRAIT - 1;
+    ASSERT(lvl > 0);
+    const int spi_from_start_trait  = 2;
+    const int spi_from_lvls         = (lvl - 1) * spi_per_lvl;
+    return player_start_spi + spi_from_lvls + spi_from_start_trait - 1;
 }
 
 bool gets_undead_bane_bon(const Actor_data_t& actor_data)

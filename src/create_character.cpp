@@ -11,13 +11,13 @@
 namespace create_character
 {
 
-const int TOP_MORE_Y    = 1;
-const int BTM_MORE_Y    = screen_h - 1;
+const int top_more_y    = 1;
+const int btm_more_y    = screen_h - 1;
 const int OPT_X0        = 0;
-const int OPT_Y0        = TOP_MORE_Y + 1;
+const int OPT_Y0        = top_more_y + 1;
 const int OPT_X1        = 22;
-const int OPT_Y1        = BTM_MORE_Y - 1;
-const int OPT_H         = OPT_Y1 - OPT_Y0 + 1;
+const int OPT_Y1        = btm_more_y - 1;
+const int opt_h         = OPT_Y1 - OPT_Y0 + 1;
 
 namespace
 {
@@ -27,7 +27,7 @@ const int DESCR_Y0  = OPT_Y0;
 const int DESCR_X1  = screen_w - 1;
 const int DESCR_Y1  = OPT_Y1;
 
-const int DESCR_W   = DESCR_X1 - DESCR_Y1 + 1;
+const int descr_w   = DESCR_X1 - DESCR_Y1 + 1;
 
 namespace enter_name
 {
@@ -40,7 +40,7 @@ void draw(const std::string& cur_string)
                              Panel::screen,
                              P(map_w_half, 0),
                              clr_title);
-    const int Y_NAME = 3;
+    const int y_name = 3;
 
     const std::string name_str = cur_string.size() < player_name_max_len ?
                                  cur_string + "_" : cur_string;
@@ -50,11 +50,11 @@ void draw(const std::string& cur_string)
 
     render::draw_text(name_str,
                       Panel::screen,
-                      P(NAME_X0, Y_NAME),
+                      P(NAME_X0, y_name),
                       clr_brown_gray);
 
-    R box_rect(P(NAME_X0 - 1, Y_NAME - 1),
-               P(NAME_X1 + 1, Y_NAME + 1));
+    R box_rect(P(NAME_X0 - 1, y_name - 1),
+               P(NAME_X1 + 1, y_name + 1));
 
     render::draw_box(box_rect);
 
@@ -152,8 +152,8 @@ void draw_pick_bg(const std::vector<Bg>& bgs, const Menu_browser& browser)
     for (const Bg bg : bgs)
     {
         const std::string   bg_name     = player_bon::bg_title(bg);
-        const bool          IS_MARKED   = bg == bg_marked;
-        const Clr&          drw_clr     = IS_MARKED ? clr_menu_highlight : clr_menu_drk;
+        const bool          is_marked   = bg == bg_marked;
+        const Clr&          drw_clr     = is_marked ? clr_menu_highlight : clr_menu_drk;
 
         render::draw_text(key_str + bg_name,
                           Panel::screen,
@@ -183,7 +183,7 @@ void draw_pick_bg(const std::vector<Bg>& bgs, const Menu_browser& browser)
         std::vector<std::string> formatted_lines;
 
         text_format::split(descr_entry,
-                           DESCR_W,
+                           descr_w,
                            formatted_lines);
 
         for (const std::string& line : formatted_lines)
@@ -244,9 +244,9 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
 {
     render::clear_screen();
 
-    const int CLVL = dungeon_master::clvl();
+    const int clvl = dungeon_master::clvl();
 
-    std::string title = CLVL == 1 ?
+    std::string title = clvl == 1 ?
                         "Which additional trait do you start with?" :
                         "You have reached a new level! Which trait do you gain?";
 
@@ -257,8 +257,8 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
                              clr_black,
                              true);
 
-    const int   BROWSER_Y       = browser.y();
-    const Trait trait_marked    = traits[BROWSER_Y];
+    const int   browser_y       = browser.y();
+    const Trait trait_marked    = traits[browser_y];
     const Bg    player_bg       = player_bon::bg();
 
     //------------------------------------------------------------- TRAITS
@@ -272,17 +272,17 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
     {
         const Trait trait           = traits[i];
         std::string trait_name      = player_bon::trait_title(trait);
-        const bool  IS_IDX_MARKED   = BROWSER_Y == i;
-        const bool  IS_PICKED       = player_bon::traits[(size_t)trait];
-        const bool  IS_PREREQS_OK   = player_bon::is_prereqs_ok(trait);
+        const bool  is_idx_marked   = browser_y == i;
+        const bool  is_picked       = player_bon::traits[(size_t)trait];
+        const bool  is_prereqs_ok   = player_bon::is_prereqs_ok(trait);
 
         Clr clr = clr_magenta_lgt;
 
-        if (IS_PREREQS_OK)
+        if (is_prereqs_ok)
         {
-            if (IS_PICKED)
+            if (is_picked)
             {
-                if (IS_IDX_MARKED)
+                if (is_idx_marked)
                 {
                     clr = clr_green_lgt;
                 }
@@ -293,7 +293,7 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
             }
             else //Not picked
             {
-                if (IS_IDX_MARKED)
+                if (is_idx_marked)
                 {
                     clr = clr_menu_highlight;
                 }
@@ -305,7 +305,7 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
         }
         else //Prerequisites not met
         {
-            if (IS_IDX_MARKED)
+            if (is_idx_marked)
             {
                 clr = clr_red_lgt;
             }
@@ -329,7 +329,7 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
     {
         render::draw_text("(More - Page Up)",
                           Panel::screen,
-                          P(OPT_X0, TOP_MORE_Y),
+                          P(OPT_X0, top_more_y),
                           clr_white_high);
     }
 
@@ -337,7 +337,7 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
     {
         render::draw_text("(More - Page Down)",
                           Panel::screen,
-                          P(OPT_X0, BTM_MORE_Y),
+                          P(OPT_X0, btm_more_y),
                           clr_white_high);
     }
 
@@ -349,7 +349,7 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
     std::vector<std::string> formatted_descr;
 
     text_format::split(descr,
-                       DESCR_W,
+                       descr_w,
                        formatted_descr);
 
     for (const std::string& str : formatted_descr)
@@ -405,10 +405,10 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
 
         for (Trait prereq_trait : trait_marked_prereqs)
         {
-            const bool IS_PICKED = player_bon::traits[(size_t)prereq_trait];
+            const bool is_picked = player_bon::traits[(size_t)prereq_trait];
 
             const Clr& clr =
-                IS_PICKED ?
+                is_picked ?
                 clr_prereq_ok :
                 clr_prereq_not_ok;
 
@@ -417,13 +417,13 @@ void draw_pick_trait(const std::vector<Trait>& traits, const Menu_browser& brows
             prereq_titles.push_back(Str_and_clr(trait_title, clr));
         }
 
-        const int PREREQ_LIST_X = descr_x0 + label.size() + 1;
+        const int prereq_list_x = descr_x0 + label.size() + 1;
 
         for (const Str_and_clr& title : prereq_titles)
         {
             render::draw_text(title.str,
                               Panel::screen,
-                              P(PREREQ_LIST_X, y),
+                              P(prereq_list_x, y),
                               title.clr);
 
             ++y;
@@ -440,8 +440,8 @@ void create_character()
     pick_bg();
     pick_new_trait();
 
-    //Some backgrounds and traits may have affected maximum HP and SPI (either
-    //positively or negatively), so here we need to set the current HP and SPI
+    //Some backgrounds and traits may have affected maximum hp and spi (either
+    //positively or negatively), so here we need to set the current hp and SPI
     //equal to the maximum values.
     map::player->set_hp_and_spi_to_max();
 
@@ -461,9 +461,9 @@ void pick_new_trait()
 
     player_bon::trait_list_for_bg(player_bg, traits);
 
-    const int LIST_H = OPT_Y1 - OPT_Y0 + 1;
+    const int list_h = OPT_Y1 - OPT_Y0 + 1;
 
-    Menu_browser browser(traits.size(), LIST_H);
+    Menu_browser browser(traits.size(), list_h);
 
     while (true)
     {
@@ -477,13 +477,13 @@ void pick_new_trait()
         case Menu_action::selected_shift:
         {
             const Trait     trait       = traits[browser.y()];
-            const bool      IS_SELECTED = player_bon::traits[(size_t)trait];
+            const bool      is_selected = player_bon::traits[(size_t)trait];
 
-            if (!IS_SELECTED)
+            if (!is_selected)
             {
-                const bool IS_PREREQS_OK = player_bon::is_prereqs_ok(trait);
+                const bool is_prereqs_ok = player_bon::is_prereqs_ok(trait);
 
-                if (IS_PREREQS_OK)
+                if (is_prereqs_ok)
                 {
                     player_bon::pick_trait(traits[browser.y()]);
 

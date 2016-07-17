@@ -55,20 +55,20 @@ void mk_items_on_floor()
             break;
         }
 
-        const size_t    CELL_IDX    = rnd::range(0, free_cells.size() - 1);
-        const P&        pos         = free_cells[CELL_IDX];
-        const size_t    ITEM_IDX    = rnd::range(0, item_bucket.size() - 1);
-        const Item_id   id          = item_bucket[ITEM_IDX];
+        const size_t    cell_idx    = rnd::range(0, free_cells.size() - 1);
+        const P&        pos         = free_cells[cell_idx];
+        const size_t    item_idx    = rnd::range(0, item_bucket.size() - 1);
+        const Item_id   id          = item_bucket[item_idx];
 
         if (item_data::data[size_t(id)].allow_spawn)
         {
             item_factory::mk_item_on_floor(id, pos);
 
-            free_cells.erase(begin(free_cells) + CELL_IDX);
+            free_cells.erase(begin(free_cells) + cell_idx);
         }
         else
         {
-            item_bucket.erase(begin(item_bucket) + ITEM_IDX);
+            item_bucket.erase(begin(item_bucket) + item_idx);
         }
     }
 }

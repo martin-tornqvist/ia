@@ -15,8 +15,8 @@ bool is_save_available();
 
 //Functions called by modules when saving and loading. The get functions will erase the value.
 void put_str(const std::string str);
-void put_int(const int V);
-void put_bool(const bool V);
+void put_int(const int v);
+void put_bool(const bool v);
 
 std::string get_str();
 int         get_int();

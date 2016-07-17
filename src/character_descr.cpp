@@ -37,11 +37,11 @@ void mk_lines()
 
     for (const auto& event : events)
     {
-        std::string ev_str = to_str(event.TURN);
+        std::string ev_str = to_str(event.turn);
 
-        const int TURN_STR_MAX_W = 10;
+        const int turn_str_max_w = 10;
 
-        text_format::pad_before_to(ev_str, TURN_STR_MAX_W);
+        text_format::pad_before_to(ev_str, turn_str_max_w);
 
         ev_str += ": " + event.msg;
 
@@ -54,18 +54,18 @@ void mk_lines()
 
     lines_.push_back({"Combat skills", clr_heading});
 
-    const int BASE_MELEE =
+    const int base_melee =
         std::min(100, abilities.val(Ability_id::melee, true, *(map::player)));
 
-    const int BASE_RANGED =
+    const int base_ranged =
         std::min(100, abilities.val(Ability_id::ranged, true, *(map::player)));
 
-    const int BASE_DODGE_ATTACKS =
+    const int base_dodge_attacks =
         std::min(100, abilities.val(Ability_id::dodge_att, true, *(map::player)));
 
-    lines_.push_back({offset + "Melee    " + to_str(BASE_MELEE)         + "%", clr_text});
-    lines_.push_back({offset + "Ranged   " + to_str(BASE_RANGED)        + "%", clr_text});
-    lines_.push_back({offset + "Dodging  " + to_str(BASE_DODGE_ATTACKS) + "%", clr_text});
+    lines_.push_back({offset + "Melee    " + to_str(base_melee)         + "%", clr_text});
+    lines_.push_back({offset + "Ranged   " + to_str(base_ranged)        + "%", clr_text});
+    lines_.push_back({offset + "Dodging  " + to_str(base_dodge_attacks) + "%", clr_text});
 
     lines_.push_back({"", clr_text});
 
@@ -161,7 +161,7 @@ void mk_lines()
 
     lines_.push_back({"Traits gained", clr_heading});
 
-    const int MAX_W_DESCR = (map_w * 2) / 3;
+    const int max_w_descr = (map_w * 2) / 3;
 
     for (int i = 0; i < int(Trait::END); ++i)
     {
@@ -176,7 +176,7 @@ void mk_lines()
 
             std::vector<std::string> descr_lines;
 
-            text_format::split(descr, MAX_W_DESCR, descr_lines);
+            text_format::split(descr, max_w_descr, descr_lines);
 
             for (std::string& descr_line : descr_lines)
             {
@@ -194,12 +194,12 @@ void run()
 {
     mk_lines();
 
-    const int LINE_JUMP           = 3;
-    const int NR_LINES_TOT        = lines_.size();
-    const int MAX_NR_LINES_ON_SCR = screen_h - 2;
+    const int line_jump           = 3;
+    const int nr_lines_tot        = lines_.size();
+    const int max_nr_lines_on_scr = screen_h - 2;
 
     int top_nr = 0;
-    int btm_nr = std::min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
+    int btm_nr = std::min(top_nr + max_nr_lines_on_scr - 1, nr_lines_tot - 1);
 
     while (true)
     {
@@ -226,27 +226,27 @@ void run()
 
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {
-            top_nr += LINE_JUMP;
+            top_nr += line_jump;
 
-            if (NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
+            if (nr_lines_tot <= max_nr_lines_on_scr)
             {
                 top_nr = 0;
             }
             else
             {
-                top_nr = std::min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, top_nr);
+                top_nr = std::min(nr_lines_tot - max_nr_lines_on_scr, top_nr);
             }
         }
         else if (d.key == '8' || d.sdl_key == SDLK_UP || d.key == 'k')
         {
-            top_nr = std::max(0, top_nr - LINE_JUMP);
+            top_nr = std::max(0, top_nr - line_jump);
         }
         else if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)
         {
             break;
         }
 
-        btm_nr = std::min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
+        btm_nr = std::min(top_nr + max_nr_lines_on_scr - 1, nr_lines_tot - 1);
     }
 
     render::draw_map_state();

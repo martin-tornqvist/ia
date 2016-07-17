@@ -52,14 +52,14 @@ std::string mon_speed_str(const Actor_data_t& def)
 
 std::string mon_dwell_lvl_str(const Actor_data_t& def)
 {
-    const int MIN_DLVL = def.spawn_min_dlvl;
+    const int min_dlvl = def.spawn_min_dlvl;
 
-    if (MIN_DLVL <= 1 || MIN_DLVL >= dlvl_last)
+    if (min_dlvl <= 1 || min_dlvl >= dlvl_last)
     {
         return "";
     }
 
-    return to_str(MIN_DLVL);
+    return to_str(min_dlvl);
 }
 
 void mon_shock_str(const Actor_data_t& def,
@@ -136,15 +136,15 @@ void add_auto_description_lines(const Actor& actor, std::string& line)
         }
     }
 
-    const int NR_TURNS_AWARE = def.nr_turns_aware;
+    const int nr_turns_aware = def.nr_turns_aware;
 
     const std::string name_a = actor.name_a();
 
-    if (NR_TURNS_AWARE > 0)
+    if (nr_turns_aware > 0)
     {
-        if (NR_TURNS_AWARE < 50)
+        if (nr_turns_aware < 50)
         {
-            const std::string nr_turns_aware_str = to_str(NR_TURNS_AWARE);
+            const std::string nr_turns_aware_str = to_str(nr_turns_aware);
 
             line += " " + name_a + " will remember hostile creatures for at least " +
                     nr_turns_aware_str + " turns.";
@@ -292,11 +292,11 @@ void print_detailed_actor_descr(const Actor& actor)
     std::vector<std::string> lines;
     text_format::split(descr, map_w - 1, lines);
 
-    const size_t NR_LINES = lines.size();
+    const size_t nr_lines = lines.size();
 
     P p(0, 1);
 
-    render::cover_area(Panel::screen, p, P(map_w, NR_LINES));
+    render::cover_area(Panel::screen, p, P(map_w, nr_lines));
 
     //Draw the description
     for (std::string& s : lines)

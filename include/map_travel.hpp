@@ -7,7 +7,7 @@
 #include "map.hpp"
 
 //This includes forest intro level, rats in the walls level, etc (every level
-//that increments the DLVL number).
+//that increments the dlvl number).
 enum Is_main_dungeon
 {
     no,

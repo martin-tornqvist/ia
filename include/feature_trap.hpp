@@ -94,7 +94,7 @@ public:
 
     bool is_magical() const;
 
-    void reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES);
+    void reveal(const bool print_messsage_when_player_sees);
 
     bool is_hidden() const
     {

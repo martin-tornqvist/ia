@@ -277,9 +277,9 @@ void Rod_opening::activate_impl()
 
 void Rod_bless::activate_impl()
 {
-    const int NR_TURNS = rnd::range(8, 12);
+    const int nr_turns = rnd::range(8, 12);
 
-    Prop* const prop = new Prop_blessed(Prop_turns::specific, NR_TURNS);
+    Prop* const prop = new Prop_blessed(Prop_turns::specific, nr_turns);
 
     map::player->prop_handler().try_add(prop);
 
@@ -325,31 +325,31 @@ void init()
         if (d.type == Item_type::rod)
         {
             //Color and false name
-            const size_t IDX = rnd::range(0, rod_looks_.size() - 1);
+            const size_t idx = rnd::range(0, rod_looks_.size() - 1);
 
-            Rod_look& look = rod_looks_[IDX];
+            Rod_look& look = rod_looks_[idx];
 
             d.base_name_un_id.names[int(Item_ref_type::plain)]   = look.name_plain + " Rod";
             d.base_name_un_id.names[int(Item_ref_type::plural)]  = look.name_plain + " Rods";
             d.base_name_un_id.names[int(Item_ref_type::a)]       = look.name_a     + " Rod";
             d.clr = look.clr;
 
-            rod_looks_.erase(rod_looks_.begin() + IDX);
+            rod_looks_.erase(rod_looks_.begin() + idx);
 
             //True name
             const Rod* const rod = static_cast<const Rod*>(item_factory::mk(d.id, 1));
 
-            const std::string REAL_TYPE_NAME = rod->real_name();
+            const std::string real_type_name = rod->real_name();
 
             delete rod;
 
-            const std::string REAL_NAME        = "Rod of "    + REAL_TYPE_NAME;
-            const std::string REAL_NAME_PLURAL = "Rods of "   + REAL_TYPE_NAME;
-            const std::string REAL_NAME_A      = "a Rod of "  + REAL_TYPE_NAME;
+            const std::string real_name        = "Rod of "    + real_type_name;
+            const std::string real_name_plural = "Rods of "   + real_type_name;
+            const std::string real_name_a      = "a Rod of "  + real_type_name;
 
-            d.base_name.names[int(Item_ref_type::plain)]  = REAL_NAME;
-            d.base_name.names[int(Item_ref_type::plural)] = REAL_NAME_PLURAL;
-            d.base_name.names[int(Item_ref_type::a)]      = REAL_NAME_A;
+            d.base_name.names[int(Item_ref_type::plain)]  = real_name;
+            d.base_name.names[int(Item_ref_type::plural)] = real_name_plural;
+            d.base_name.names[int(Item_ref_type::a)]      = real_name_a;
         }
     }
 

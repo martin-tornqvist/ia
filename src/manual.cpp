@@ -76,12 +76,12 @@ void init()
 
 void run()
 {
-    const int LINE_JUMP           = 3;
-    const int NR_LINES_TOT        = lines_.size();
-    const int MAX_NR_LINES_ON_SCR = screen_h - 2;
+    const int line_jump           = 3;
+    const int nr_lines_tot        = lines_.size();
+    const int max_nr_lines_on_scr = screen_h - 2;
 
     int top_nr = 0;
-    int btm_nr = std::min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
+    int btm_nr = std::min(top_nr + max_nr_lines_on_scr - 1, nr_lines_tot - 1);
 
     while (true)
     {
@@ -106,27 +106,27 @@ void run()
 
         if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
         {
-            top_nr += LINE_JUMP;
+            top_nr += line_jump;
 
-            if (NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
+            if (nr_lines_tot <= max_nr_lines_on_scr)
             {
                 top_nr = 0;
             }
             else
             {
-                top_nr = std::min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, top_nr);
+                top_nr = std::min(nr_lines_tot - max_nr_lines_on_scr, top_nr);
             }
         }
         else if (d.key == '8' || d.sdl_key == SDLK_UP || d.key == 'k')
         {
-            top_nr = std::max(0, top_nr - LINE_JUMP);
+            top_nr = std::max(0, top_nr - line_jump);
         }
         else if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)
         {
             break;
         }
 
-        btm_nr = std::min(top_nr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
+        btm_nr = std::min(top_nr + max_nr_lines_on_scr - 1, nr_lines_tot - 1);
     }
 }
 

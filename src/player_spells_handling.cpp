@@ -40,7 +40,7 @@ std::vector<Spell*> known_spells_;
 
 void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
 {
-    const int NR_SPELLS = spell_opts.size();
+    const int nr_spells = spell_opts.size();
 
     render::clear_screen();
 
@@ -53,19 +53,19 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
 
     std::string key_str = "a) ";
 
-    for (int i = 0; i < NR_SPELLS; ++i)
+    for (int i = 0; i < nr_spells; ++i)
     {
-        const int       CUR_IDX         = i;
-        const bool      IS_IDX_MARKED   = browser.is_at_idx(CUR_IDX);
+        const int       cur_idx         = i;
+        const bool      is_idx_marked   = browser.is_at_idx(cur_idx);
         Spell_opt       spell_opt       = spell_opts[i];
         Spell* const    spell           = spell_opt.spell;
         std::string     name            = spell->name();
-        const int       SPI_X           = 25;
-        const int       SHOCK_X         = SPI_X + 10;
+        const int       spi_x           = 25;
+        const int       shock_x         = spi_x + 10;
 
         p.x = 0;
 
-        const Clr clr = IS_IDX_MARKED ? clr_menu_highlight : clr_menu_drk;
+        const Clr clr = is_idx_marked ? clr_menu_highlight : clr_menu_drk;
 
         render::draw_text(key_str, Panel::screen, p, clr);
 
@@ -77,9 +77,9 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
 
         std::string fill_str = "";
 
-        const size_t FILL_SIZE = SPI_X - p.x - name.size();
+        const size_t fill_size = spi_x - p.x - name.size();
 
-        for (size_t ii = 0; ii < FILL_SIZE; ii++)
+        for (size_t ii = 0; ii < fill_size; ii++)
         {
             fill_str.push_back('.');
         }
@@ -95,7 +95,7 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
                           P(p.x + name.size(), p.y),
                           fill_clr);
 
-        p.x = SPI_X;
+        p.x = spi_x;
 
         std::string  info_str = "SPI: ";
 
@@ -107,7 +107,7 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
 
         render::draw_text(info_str, Panel::screen, p, clr_white);
 
-        p.x = SHOCK_X;
+        p.x = shock_x;
 
         const Intr_spell_shock shock_type = spell->shock_type_intr_cast();
 
@@ -128,7 +128,7 @@ void draw(Menu_browser& browser, const std::vector<Spell_opt>& spell_opts)
 
         render::draw_text(info_str, Panel::screen, p, clr_white);
 
-        if (IS_IDX_MARKED)
+        if (is_idx_marked)
         {
             const auto descr = spell->descr();
             std::vector<Str_and_clr> lines;
@@ -231,14 +231,14 @@ void try_cast(const Spell_opt& spell_opt)
             msg_log::clear();
         }
 
-        const bool IS_BLOOD_SORC = player_bon::traits[size_t(Trait::blood_sorcerer)];
-        const bool IS_WARLOCK    = player_bon::traits[size_t(Trait::warlock)];
+        const bool is_blood_sorc = player_bon::traits[size_t(Trait::blood_sorcerer)];
+        const bool is_warlock    = player_bon::traits[size_t(Trait::warlock)];
 
-        const int BLOOD_SORC_HP_DRAINED = 2;
+        const int blood_sorc_hp_drained = 2;
 
-        if (IS_BLOOD_SORC)
+        if (is_blood_sorc)
         {
-            if (map::player->hp() <= BLOOD_SORC_HP_DRAINED)
+            if (map::player->hp() <= blood_sorc_hp_drained)
             {
                 msg_log::add("I do not have enough life force to cast this spell.");
                 render::draw_map_state();
@@ -248,16 +248,16 @@ void try_cast(const Spell_opt& spell_opt)
 
         msg_log::add("I cast " + spell->name() + "!");
 
-        if (IS_BLOOD_SORC)
+        if (is_blood_sorc)
         {
-            map::player->hit(BLOOD_SORC_HP_DRAINED, Dmg_type::pure);
+            map::player->hit(blood_sorc_hp_drained, Dmg_type::pure);
         }
 
         if (map::player->is_alive())
         {
             spell->cast(map::player, true);
 
-            if (IS_WARLOCK && rnd::one_in(2))
+            if (is_warlock && rnd::one_in(2))
             {
                 auto* const prop = new Prop_warlock_charged(Prop_turns::std);
 
@@ -293,9 +293,9 @@ void save()
 
 void load()
 {
-    const int NR_SPELLS = save_handling::get_int();
+    const int nr_spells = save_handling::get_int();
 
-    for (int i = 0; i < NR_SPELLS; ++i)
+    for (int i = 0; i < nr_spells; ++i)
     {
         const Spell_id id = Spell_id(save_handling::get_int());
 

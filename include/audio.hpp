@@ -74,16 +74,16 @@ void cleanup();
 
 //Returns channel playing on
 int play(const Sfx_id sfx,
-         const int VOL_PERCENT_TOT = 100,
-         const int VOL_PERCENT_L = 50);
+         const int vol_percent_tot = 100,
+         const int vol_percent_l = 50);
 
 void play(const Sfx_id sfx,
           const Dir dir,
-          const int DISTANCE_PERCENT);
+          const int distance_percent);
 
-void try_play_amb(const int ONE_IN_N_CHANCE_TO_PLAY);
+void try_play_amb(const int one_in_n_chance_to_play);
 
-void fade_out_channel(const int CHANNEL_NR);
+void fade_out_channel(const int channel_nr);
 
 }
 

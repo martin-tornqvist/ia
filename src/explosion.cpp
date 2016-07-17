@@ -28,10 +28,10 @@ void cells_reached(const R& area,
         for (int x = area.p0.x; x <= area.p1.x; ++x)
         {
             const P pos(x, y);
-            const int DIST = king_dist(pos, origin);
+            const int dist = king_dist(pos, origin);
             bool is_reached = true;
 
-            if (DIST > 1)
+            if (dist > 1)
             {
                 line_calc::calc_new_line(origin, pos, true, 999, false, line);
 
@@ -47,12 +47,12 @@ void cells_reached(const R& area,
 
             if (is_reached)
             {
-                if ((int)out.size() <= DIST)
+                if ((int)out.size() <= dist)
                 {
-                    out.resize(DIST + 1);
+                    out.resize(dist + 1);
                 }
 
-                out[DIST].push_back(pos);
+                out[dist].push_back(pos);
             }
         }
     }
@@ -67,20 +67,20 @@ void draw(const std::vector< std::vector<P> >& pos_lists,
     const Clr& clr_inner = clr_override ? *clr_override : clr_yellow;
     const Clr& clr_outer = clr_override ? *clr_override : clr_red_lgt;
 
-    const bool IS_TILES     = config::is_tiles_mode();
-    const int NR_ANIM_STEPS = IS_TILES ? 2 : 1;
+    const bool is_tiles     = config::is_tiles_mode();
+    const int nr_anim_steps = is_tiles ? 2 : 1;
 
     bool is_any_cell_seen_by_player = false;
 
-    for (int i_anim = 0; i_anim < NR_ANIM_STEPS; i_anim++)
+    for (int i_anim = 0; i_anim < nr_anim_steps; i_anim++)
     {
         const Tile_id tile = i_anim == 0 ? Tile_id::blast1 : Tile_id::blast2;
 
-        const int NR_OUTER = pos_lists.size();
+        const int nr_outer = pos_lists.size();
 
-        for (int i_outer = 0; i_outer < NR_OUTER; i_outer++)
+        for (int i_outer = 0; i_outer < nr_outer; i_outer++)
         {
-            const Clr& clr = i_outer == NR_OUTER - 1 ? clr_outer : clr_inner;
+            const Clr& clr = i_outer == nr_outer - 1 ? clr_outer : clr_inner;
             const std::vector<P>& inner = pos_lists[i_outer];
 
             for (const P& pos : inner)
@@ -91,7 +91,7 @@ void draw(const std::vector< std::vector<P> >& pos_lists,
                 {
                     is_any_cell_seen_by_player = true;
 
-                    if (IS_TILES)
+                    if (is_tiles)
                     {
                         render::draw_tile(tile, Panel::map, pos, clr, clr_black);
                     }
@@ -106,7 +106,7 @@ void draw(const std::vector< std::vector<P> >& pos_lists,
         if (is_any_cell_seen_by_player)
         {
             render::update_screen();
-            sdl_wrapper::sleep(config::delay_explosion() / NR_ANIM_STEPS);
+            sdl_wrapper::sleep(config::delay_explosion() / nr_anim_steps);
         }
     }
 }
@@ -121,13 +121,13 @@ void run(const P& origin,
          const Expl_type expl_type,
          const Expl_src expl_src,
          const Emit_expl_snd emit_expl_snd,
-         const int RADI_CHANGE,
+         const int radi_change,
          Prop* const prop,
          const Clr* const clr_override)
 {
-    const int RADI = expl_std_radi + RADI_CHANGE;
+    const int radi = expl_std_radi + radi_change;
 
-    const R area = explosion_area(origin, RADI);
+     const R area = explosion_area(origin, radi);
 
     bool blocked[map_w][map_h];
 
@@ -183,11 +183,11 @@ void run(const P& origin,
         }
     }
 
-    const bool IS_DEM_EXP = player_bon::traits[(size_t)Trait::dem_expert];
+    const bool is_dem_exp = player_bon::traits[(size_t)Trait::dem_expert];
 
-    const int NR_OUTER = pos_lists.size();
+    const int nr_outer = pos_lists.size();
 
-    for (int radi = 0; radi < NR_OUTER; ++radi)
+    for (int radi = 0; radi < nr_outer; ++radi)
     {
         const std::vector<P>& positions_at_radi = pos_lists[radi];
 
@@ -202,8 +202,8 @@ void run(const P& origin,
                 Cell& cell = map::cells[pos.x][pos.y];
                 cell.rigid->hit(Dmg_type::physical, Dmg_method::explosion, nullptr);
 
-                const int ROLLS = expl_dmg_rolls - radi;
-                const int DMG   = rnd::dice(ROLLS, expl_dmg_sides) + expl_dmg_plus;
+                const int rolls = expl_dmg_rolls - radi;
+                const int dmg   = rnd::dice(rolls, expl_dmg_sides) + expl_dmg_plus;
 
                 //Damage living actor
                 if (living_actor)
@@ -213,7 +213,7 @@ void run(const P& origin,
                         msg_log::add("I am hit by an explosion!", clr_msg_bad);
                     }
 
-                    living_actor->hit(DMG, Dmg_type::physical);
+                    living_actor->hit(dmg, Dmg_type::physical);
 
                     if (living_actor->is_alive() && living_actor->is_player())
                     {
@@ -225,7 +225,7 @@ void run(const P& origin,
                 //Damage dead actors
                 for (Actor* corpse : corpses_here)
                 {
-                    corpse->hit(DMG, Dmg_type::physical);
+                    corpse->hit(dmg, Dmg_type::physical);
                 }
 
                 //Add smoke
@@ -245,7 +245,7 @@ void run(const P& origin,
                 if (
                     living_actor == map::player     &&
                     prop->id() == Prop_id::burning  &&
-                    IS_DEM_EXP                      &&
+                    is_dem_exp                      &&
                     expl_src == Expl_src::player_use_moltv_intended)
                 {
                     should_apply_on_living_actor = false;
@@ -291,11 +291,11 @@ void run(const P& origin,
     }
 }
 
-void run_smoke_explosion_at(const P& origin, const int RADI_CHANGE)
+void run_smoke_explosion_at(const P& origin, const int radi_change)
 {
-    const int RADI = expl_std_radi + RADI_CHANGE;
+    const int radi = expl_std_radi + radi_change;
 
-    const R area = explosion_area(origin, RADI);
+     const R area = explosion_area(origin, radi);
 
     bool blocked[map_w][map_h];
     map_parse::run(cell_check::Blocks_projectiles(), blocked);
@@ -330,10 +330,10 @@ void run_smoke_explosion_at(const P& origin, const int RADI_CHANGE)
     render::draw_map_state();
 }
 
-R explosion_area(const P& c, const int RADI)
+R explosion_area(const P& c, const int radi)
 {
-    return R(P(std::max(c.x - RADI, 1),         std::max(c.y - RADI, 1)),
-             P(std::min(c.x + RADI, map_w - 2), std::min(c.y + RADI, map_h - 2)));
+    return R(P(std::max(c.x - radi, 1),         std::max(c.y - radi, 1)),
+             P(std::min(c.x + radi, map_w - 2), std::min(c.y + radi, map_h - 2)));
 }
 
 } //explosion

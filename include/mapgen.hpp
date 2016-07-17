@@ -47,13 +47,13 @@ void mk_pathfind_cor(Room& r0, Room& r1,
 void rnd_walk(const P& p0,
               int len,
               std::vector<P>& pos_list_ref,
-              const bool ALLOW_DIAGONAL = true,
+              const bool allow_diagonal = true,
               R area = R(1, 1, map_w - 2, map_h - 2));
 
 void pathfinder_walk(const P& p0,
                      const P& p1,
                      std::vector<P>& pos_list_ref,
-                     const bool IS_SMOOTH);
+                     const bool is_smooth);
 
 } //mapgen_utils
 

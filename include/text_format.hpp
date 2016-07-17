@@ -12,7 +12,7 @@ namespace text_format
 //maximum width, we do not bother to split that word (the entire word is simply added
 //to the output vector, breaking the maximum width).
 void split(std::string line,
-           const int MAX_W,
+           const int max_w,
            std::vector<std::string>& out);
 
 void space_separated_list(const std::string& line,
@@ -24,11 +24,11 @@ void replace_all(const std::string& line,
                  std::string& out);
 
 void pad_before_to(std::string& str,
-                   const size_t TOT_W,
+                   const size_t tot_w,
                    const char c = ' ');
 
 void pad_after_to(std::string& str,
-                  const size_t TOT_W,
+                  const size_t tot_w,
                   const char c = ' ');
 
 void first_to_lower(std::string& str);

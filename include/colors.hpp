@@ -80,6 +80,6 @@ const Clr clr_allied_mon        = clr_green;
 //-----------------------------------------------------------------------------
 bool is_clr_equal(const Clr& clr1, const Clr& clr2);
 
-void div_clr(Clr& clr, const double DIV);
+void div_clr(Clr& clr, const double div);
 
 #endif

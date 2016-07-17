@@ -10,12 +10,12 @@ class Actor;
 
 struct History_event
 {
-    History_event(const std::string msg, const int TURN) :
+    History_event(const std::string msg, const int turn) :
         msg     (msg),
-        TURN    (TURN) {}
+        turn    (turn) {}
 
     const std::string msg;
-    const int TURN;
+    const int turn;
 };
 
 namespace dungeon_master
@@ -37,13 +37,13 @@ void win_game();
 
 void set_time_started_to_now();
 
-void player_lose_xp_percent(const int PERCENT);
+void player_lose_xp_percent(const int percent);
 
 int mon_tot_xp_worth(const Actor_data_t& d);
 
 int xp_to_next_lvl();
 
-void incr_player_xp(const int XP_GAINED);
+void incr_player_xp(const int xp_gained);
 
 void add_history_event(const std::string msg);
 

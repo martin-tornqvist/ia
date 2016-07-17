@@ -46,13 +46,13 @@ void query_quit()
 {
     const auto quit_choices = std::vector<std::string> {"yes", "no"};
 
-    const int QUIT_CHOICE = popup::show_menu_msg(
+    const int quit_choice = popup::show_menu_msg(
                                 "Save and highscore are not kept.",
                                 false,
                                 quit_choices,
                                 "Quit the current game?");
 
-    if (QUIT_CHOICE == 0)
+    if (quit_choice == 0)
     {
         init::quit_to_main_menu = true;
         render::clear_screen();
@@ -299,7 +299,7 @@ void handle_map_mode_key_press(const Key_data& d)
         return;
     }
 
-    //----------------------------------- UNLOAD AMMO FROM GROUND
+    //----------------------------------- UNLOAD AMMO from GROUND
     else if (d.key == 'G')
     {
         msg_log::clear();
@@ -367,10 +367,10 @@ void handle_map_mode_key_press(const Key_data& d)
                                 !actor->is_player() &&
                                 map::player->can_see_actor(*actor))
                             {
-                                const bool GETS_UNDEAD_BANE_BON =
+                                const bool gets_undead_bane_bon =
                                     player_bon::gets_undead_bane_bon(actor->data());
 
-                                if (!actor->has_prop(Prop_id::ethereal) || GETS_UNDEAD_BANE_BON)
+                                if (!actor->has_prop(Prop_id::ethereal) || gets_undead_bane_bon)
                                 {
                                     Ranged_att_data data(map::player,
                                                          map::player->pos,  //Origin
@@ -520,7 +520,7 @@ void handle_map_mode_key_press(const Key_data& d)
 
             Item* const wielded   = inv.item_in_slot(Slot_id::wpn);
             Item* const alt       = inv.item_in_slot(Slot_id::wpn_alt);
-            const std::string ALT_NAME = alt ? alt->name(Item_ref_type::a) : "";
+            const std::string alt_name = alt ? alt->name(Item_ref_type::a) : "";
 
             if (wielded || alt)
             {
@@ -529,20 +529,20 @@ void handle_map_mode_key_press(const Key_data& d)
                     if (alt)
                     {
                         msg_log::add(
-                            "I" + swift_str + " swap to my prepared weapon (" + ALT_NAME + ").");
+                            "I" + swift_str + " swap to my prepared weapon (" + alt_name + ").");
                     }
                     else //No current alt weapon
                     {
-                        const std::string NAME = wielded->name(Item_ref_type::a);
+                        const std::string name = wielded->name(Item_ref_type::a);
 
                         msg_log::add(
-                            "I" + swift_str + " put away my weapon (" + NAME + ").");
+                            "I" + swift_str + " put away my weapon (" + name + ").");
                     }
                 }
                 else //No current wielded item
                 {
                     msg_log::add(
-                        "I" + swift_str + " wield my prepared weapon (" + ALT_NAME + ").");
+                        "I" + swift_str + " wield my prepared weapon (" + alt_name + ").");
                 }
 
                 inv.swap_wielded_and_prepared(pass_time);
@@ -576,9 +576,9 @@ void handle_map_mode_key_press(const Key_data& d)
 
                 //NOTE: Waiting with 's' just performs "move" into the center
                 //position a number of turns (i.e. the same as pressing '5')
-                const int TURNS_TO_APPLY = 5;
+                const int turns_to_apply = 5;
 
-                map::player->wait_turns_left = TURNS_TO_APPLY - 1;
+                map::player->wait_turns_left = turns_to_apply - 1;
 
                 game_time::tick();
             }
@@ -696,10 +696,10 @@ void handle_map_mode_key_press(const Key_data& d)
                     {
                         std::fill_n(*overlay, nr_map_cells, Cell_overlay());
 
-                        const int D     = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
-                        const int RADI  = expl_std_radi + D;
+                        const int d     = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
+                        const int radi  = expl_std_radi + d;
 
-                        const R expl_area = explosion::explosion_area(p, RADI);
+                         const R expl_area = explosion::explosion_area(p, radi);
 
                         Clr clr_bg = clr_red;
 
@@ -783,10 +783,10 @@ void handle_map_mode_key_press(const Key_data& d)
                                 !actor->is_player() &&
                                 map::player->can_see_actor(*actor))
                             {
-                                const bool GETS_UNDEAD_BANE_BON =
+                                const bool gets_undead_bane_bon =
                                     player_bon::gets_undead_bane_bon(actor->data());
 
-                                if (!actor->has_prop(Prop_id::ethereal) || GETS_UNDEAD_BANE_BON)
+                                if (!actor->has_prop(Prop_id::ethereal) || gets_undead_bane_bon)
                                 {
                                     Throw_att_data data(map::player,
                                                         actor->pos,     //Aim pos
@@ -1009,21 +1009,21 @@ void handle_map_mode_key_press(const Key_data& d)
 
             const std::vector<std::string> choices {"Options", "Tome of Wisdom", "Quit", "Cancel"};
 
-            const int CHOICE = popup::show_menu_msg("", true, choices);
+            const int choice = popup::show_menu_msg("", true, choices);
 
-            if (CHOICE == 0)
+            if (choice == 0)
             {
                 //---------------------------- Options
                 config::run_options_menu();
                 render::draw_map_state();
             }
-            else if (CHOICE == 1)
+            else if (choice == 1)
             {
                 //---------------------------- Manual
                 manual::run();
                 render::draw_map_state();
             }
-            else if (CHOICE == 2)
+            else if (choice == 2)
             {
                 //---------------------------- Quit
                 query_quit();
@@ -1054,14 +1054,14 @@ void handle_map_mode_key_press(const Key_data& d)
 
         render::draw_text(query_str, Panel::screen, P(0, 0), clr_yellow);
 
-        const int IDX = query::number(P(query_str.size(), 0),
+        const int idx = query::number(P(query_str.size(), 0),
                                       clr_white_high,
                                       0,
                                       int(Actor_id::END),
                                       0,
                                       false);
 
-        const Actor_id mon_id = Actor_id(IDX);
+        const Actor_id mon_id = Actor_id(idx);
 
         actor_factory::summon(map::player->pos, {mon_id}, Make_mon_aware::no);
 
@@ -1079,7 +1079,7 @@ void handle_map_mode_key_press(const Key_data& d)
         return;
     }
 
-    //----------------------------------- XP CHEAT
+    //----------------------------------- xp CHEAT
     else if (d.sdl_key == SDLK_F3)
     {
         dungeon_master::incr_player_xp(100);
@@ -1197,7 +1197,7 @@ void clear_events()
     }
 }
 
-Key_data input(const bool IS_O_RETURN)
+Key_data input(const bool is_o_return)
 {
     Key_data ret = Key_data();
 
@@ -1214,9 +1214,9 @@ Key_data input(const bool IS_O_RETURN)
     {
         sdl_wrapper::sleep(1);
 
-        const bool DID_POLL_EVENT = SDL_PollEvent(&sdl_event_);
+        const bool did_poll_event = SDL_PollEvent(&sdl_event_);
 
-        if (!DID_POLL_EVENT)
+        if (!did_poll_event)
         {
             continue;
         }
@@ -1264,11 +1264,11 @@ Key_data input(const bool IS_O_RETURN)
 
             Uint16 mod = SDL_GetModState();
 
-            const bool  IS_SHIFT_HELD = mod & KMOD_SHIFT;
-            const bool  IS_CTRL_HELD  = mod & KMOD_CTRL;
-            const bool  IS_ALT_HELD   = mod & KMOD_ALT;
+            const bool  is_shift_held = mod & KMOD_SHIFT;
+            const bool  is_ctrl_held  = mod & KMOD_CTRL;
+            const bool  is_alt_held   = mod & KMOD_ALT;
 
-            ret = Key_data(-1, sdl_key, IS_SHIFT_HELD, IS_CTRL_HELD);
+            ret = Key_data(-1, sdl_key, is_shift_held, is_ctrl_held);
 
             if (sdl_key >= SDLK_F1 && sdl_key <= SDLK_F9)
             {
@@ -1282,7 +1282,7 @@ Key_data input(const bool IS_O_RETURN)
                 case SDLK_RETURN:
                 case SDLK_RETURN2:
                 case SDLK_KP_ENTER:
-                    if (IS_ALT_HELD)
+                    if (is_alt_held)
                     {
                         config::toggle_fullscreen();
                         clear_events();
@@ -1325,10 +1325,10 @@ Key_data input(const bool IS_O_RETURN)
         {
             const char c = sdl_event_.text.text[0];
 
-            if ((c == 'o' || c == 'O') && IS_O_RETURN)
+            if ((c == 'o' || c == 'O') && is_o_return)
             {
-                const bool IS_SHIFT_HELD = c == 'O';
-                ret = Key_data(c, SDLK_RETURN, IS_SHIFT_HELD, false);
+                const bool is_shift_held = c == 'O';
+                ret = Key_data(c, SDLK_RETURN, is_shift_held, false);
                 is_done = true;
             }
             else if (c >= 33 && c < 126)

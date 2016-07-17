@@ -18,7 +18,7 @@ namespace config
 namespace
 {
 
-const int NR_OPTIONS  = 14;
+const int nr_options  = 14;
 const int OPT_Y0      = 1;
 
 std::string  font_name_                 = "";
@@ -120,7 +120,7 @@ void set_default_variables()
     TRACE_FUNC_END;
 }
 
-void player_sets_option(const Menu_browser* const browser, const int OPTION_VALUES_X_POS)
+void player_sets_option(const Menu_browser* const browser, const int option_values_x_pos)
 {
     switch (browser->y())
     {
@@ -210,54 +210,54 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
 
     case 10:
     {
-        const P p(OPTION_VALUES_X_POS, OPT_Y0 + browser->y());
+        const P p(option_values_x_pos, OPT_Y0 + browser->y());
 
-        const int NR = query::number(p,
+        const int nr = query::number(p,
                                      clr_menu_highlight,
                                      1,
                                      3,
                                      delay_projectile_draw_,
                                      true);
 
-        if (NR != -1)
+        if (nr != -1)
         {
-            delay_projectile_draw_ = NR;
+            delay_projectile_draw_ = nr;
         }
     }
     break;
 
     case 11:
     {
-        const P p(OPTION_VALUES_X_POS, OPT_Y0 + browser->y());
+        const P p(option_values_x_pos, OPT_Y0 + browser->y());
 
-        const int NR = query::number(p,
+        const int nr = query::number(p,
                                      clr_menu_highlight,
                                      1,
                                      3,
                                      delay_shotgun_,
                                      true);
 
-        if (NR != -1)
+        if (nr != -1)
         {
-            delay_shotgun_ = NR;
+            delay_shotgun_ = nr;
         }
     }
     break;
 
     case 12:
     {
-        const P p(OPTION_VALUES_X_POS, OPT_Y0 + browser->y());
+        const P p(option_values_x_pos, OPT_Y0 + browser->y());
 
-        const int NR = query::number(p,
+        const int nr = query::number(p,
                                      clr_menu_highlight,
                                      1,
                                      3,
                                      delay_explosion_,
                                      true);
 
-        if (NR != -1)
+        if (nr != -1)
         {
-            delay_explosion_ = NR;
+            delay_explosion_ = nr;
         }
     }
     break;
@@ -277,13 +277,13 @@ void player_sets_option(const Menu_browser* const browser, const int OPTION_VALU
     }
 }
 
-void draw(const Menu_browser* const browser, const int OPTION_VALUES_X_POS)
+void draw(const Menu_browser* const browser, const int option_values_x_pos)
 {
     render::clear_screen();
 
     int opt_nr = 0;
 
-    const int X1 = OPTION_VALUES_X_POS;
+    const int X1 = option_values_x_pos;
 
     std::string str = "";
 
@@ -798,12 +798,12 @@ int delay_explosion()
 
 void run_options_menu()
 {
-    Menu_browser browser(NR_OPTIONS);
+    Menu_browser browser(nr_options);
     std::vector<std::string> lines;
 
-    const int OPTION_VALUES_X_POS = 40;
+    const int option_values_x_pos = 40;
 
-    draw(&browser, OPTION_VALUES_X_POS);
+    draw(&browser, option_values_x_pos);
 
     while (true)
     {
@@ -812,7 +812,7 @@ void run_options_menu()
         switch (action)
         {
         case Menu_action::moved:
-            draw(&browser, OPTION_VALUES_X_POS);
+            draw(&browser, option_values_x_pos);
             break;
 
         case Menu_action::esc:
@@ -823,11 +823,11 @@ void run_options_menu()
             return;
 
         case Menu_action::selected:
-            draw(&browser, OPTION_VALUES_X_POS);
-            player_sets_option(&browser, OPTION_VALUES_X_POS);
+            draw(&browser, option_values_x_pos);
+            player_sets_option(&browser, option_values_x_pos);
             set_lines_from_variables(lines);
             write_lines_to_file(lines);
-            draw(&browser, OPTION_VALUES_X_POS);
+            draw(&browser, option_values_x_pos);
             break;
 
         default:

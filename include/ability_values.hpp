@@ -33,16 +33,16 @@ public:
 
     void reset();
 
-    int val(const Ability_id id, const bool IS_AFFECTED_BY_PROPS, const Actor& actor) const;
+    int val(const Ability_id id, const bool is_affected_by_props, const Actor& actor) const;
 
     int raw_val(const Ability_id id)
     {
         return ability_list[int(id)];
     }
 
-    void set_val(const Ability_id id, const int VAL);
+    void set_val(const Ability_id id, const int val);
 
-    void change_val(const Ability_id id, const int CHANGE);
+    void change_val(const Ability_id id, const int change);
 
 private:
     int ability_list[int(Ability_id::END)];
@@ -59,7 +59,7 @@ enum Ability_roll_result
 namespace ability_roll
 {
 
-Ability_roll_result roll(const int TOT_SKILL_VALUE, const Actor* const actor_rolling);
+Ability_roll_result roll(const int tot_skill_value, const Actor* const actor_rolling);
 
 } //ability_roll
 

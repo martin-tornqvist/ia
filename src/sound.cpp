@@ -37,9 +37,9 @@ namespace
 
 int nr_snd_msg_printed_cur_turn_;
 
-bool is_snd_heard_at_range(const int RANGE, const Snd& snd)
+bool is_snd_heard_at_range(const int range, const Snd& snd)
 {
-    return RANGE <= (snd.is_loud() ? snd_dist_loud : snd_dist_normal);
+    return range <= (snd.is_loud() ? snd_dist_loud : snd_dist_normal);
 }
 
 } //namespace
@@ -72,16 +72,16 @@ void run(Snd snd)
 
     for (Actor* actor : game_time::actors)
     {
-        const int FLOOD_VAL_AT_ACTOR = floodfill[actor->pos.x][actor->pos.y];
+        const int flood_val_at_actor = floodfill[actor->pos.x][actor->pos.y];
 
-        const bool IS_ORIGIN_SEEN_BY_PLAYER =
+        const bool is_origin_seen_by_player =
             map::cells[origin.x][origin.y].is_seen_by_player;
 
-        if (is_snd_heard_at_range(FLOOD_VAL_AT_ACTOR, snd))
+        if (is_snd_heard_at_range(flood_val_at_actor, snd))
         {
             if (actor->is_player())
             {
-                if ((IS_ORIGIN_SEEN_BY_PLAYER && snd.is_msg_ignored_if_origin_seen()))
+                if ((is_origin_seen_by_player && snd.is_msg_ignored_if_origin_seen()))
                 {
                     snd.clear_msg();
                 }
@@ -99,15 +99,15 @@ void run(Snd snd)
                     }
                 }
 
-                const int SND_MAX_DIST  = snd.is_loud() ? snd_dist_loud : snd_dist_normal;
+                const int snd_max_dist  = snd.is_loud() ? snd_dist_loud : snd_dist_normal;
 
-                const int PCT_DIST      = (FLOOD_VAL_AT_ACTOR * 100) / SND_MAX_DIST;
+                const int pct_dist      = (flood_val_at_actor * 100) / snd_max_dist;
 
                 const P offset = (origin - player_pos).signs();
 
                 const Dir dir_to_origin = dir_utils::dir(offset);
 
-                map::player->hear_sound(snd, IS_ORIGIN_SEEN_BY_PLAYER, dir_to_origin, PCT_DIST);
+                map::player->hear_sound(snd, is_origin_seen_by_player, dir_to_origin, pct_dist);
             }
             else //Not player
             {

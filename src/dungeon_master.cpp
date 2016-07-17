@@ -91,7 +91,7 @@ void save()
     for (const History_event& event : history_events_)
     {
         save_handling::put_str(event.msg);
-        save_handling::put_int(event.TURN);
+        save_handling::put_int(event.turn);
     }
 }
 
@@ -106,14 +106,14 @@ void load()
     time_started_.minute_   = save_handling::get_int();
     time_started_.second_   = save_handling::get_int();
 
-    const int NR_EVENTS = save_handling::get_int();
+    const int nr_events = save_handling::get_int();
 
-    for (int i = 0; i < NR_EVENTS; ++i)
+    for (int i = 0; i < nr_events; ++i)
     {
         const std::string   msg     = save_handling::get_str();
-        const int           TURN    = save_handling::get_int();
+        const int           turn    = save_handling::get_int();
 
-        history_events_.push_back({msg, TURN});
+        history_events_.push_back({msg, turn});
     }
 }
 
@@ -132,29 +132,29 @@ Time_data    start_time()
 
 int mon_tot_xp_worth(const Actor_data_t& d)
 {
-    //K regulates player XP rate, higher -> more XP per monster
-    const double K              = 0.45;
+    //K regulates player xp rate, higher -> more xp per monster
+    const double k              = 0.45;
 
-    const double HP             = d.hp;
+    const double hp             = d.hp;
 
-    const double SPEED          = double(d.speed);
-    const double SPEED_MAX      = double(Actor_speed::END);
-    const double SPEED_FACTOR   = 1.0 + ((SPEED / SPEED_MAX) * 0.50);
+    const double speed          = double(d.speed);
+    const double speed_max      = double(Actor_speed::END);
+    const double speed_factor   = 1.0 + ((speed / speed_max) * 0.50);
 
-    const double SHOCK          = double(d.mon_shock_lvl);
-    const double SHOCK_MAX      = double(Mon_shock_lvl::END);
-    const double SHOCK_FACTOR   = 1.0 + ((SHOCK / SHOCK_MAX) * 0.75);
+    const double shock          = double(d.mon_shock_lvl);
+    const double shock_max      = double(Mon_shock_lvl::END);
+    const double shock_factor   = 1.0 + ((shock / shock_max) * 0.75);
 
-    const double UNIQUE_FACTOR  = d.is_unique ? 2.0 : 1.0;
+    const double unique_factor  = d.is_unique ? 2.0 : 1.0;
 
-    return ceil(K * HP * SPEED_FACTOR * SHOCK_FACTOR * UNIQUE_FACTOR);
+    return ceil(k * hp * speed_factor * shock_factor * unique_factor);
 }
 
-void incr_player_xp(const int XP_GAINED)
+void incr_player_xp(const int xp_gained)
 {
     if (map::player->is_alive())
     {
-        for (int i = 0; i < XP_GAINED; ++i)
+        for (int i = 0; i < xp_gained; ++i)
         {
             ++xp_;
 
@@ -176,9 +176,9 @@ int xp_to_next_lvl()
     return xp_for_lvl_[clvl_ + 1] - xp_;
 }
 
-void player_lose_xp_percent(const int PERCENT)
+void player_lose_xp_percent(const int percent)
 {
-    xp_ = (xp_ * (100 - PERCENT)) / 100;
+    xp_ = (xp_ * (100 - percent)) / 100;
 }
 
 void win_game()
@@ -208,12 +208,12 @@ void win_game()
         "The destinies of all things on earth, living and dead, are mine."
     };
 
-    const int PADDING       = 9;
+    const int padding       = 9;
 
-    const int X0            = PADDING;
-    const int MAX_W         = map_w - (PADDING * 2);
+    const int X0            = padding;
+    const int max_w         = map_w - (padding * 2);
 
-    const int LINE_DELAY    = 50;
+    const int line_delay    = 50;
 
     int y = 2;
 
@@ -221,7 +221,7 @@ void win_game()
     {
         std::vector<std::string> section_lines;
 
-        text_format::split(section_msg, MAX_W, section_lines);
+        text_format::split(section_msg, max_w, section_lines);
 
         for (const std::string& line : section_lines)
         {
@@ -233,7 +233,7 @@ void win_game()
 
             render::update_screen();
 
-            sdl_wrapper::sleep(LINE_DELAY);
+            sdl_wrapper::sleep(line_delay);
 
             ++y;
         }
@@ -242,10 +242,10 @@ void win_game()
 
     ++y;
 
-    const std::string CMD_LABEL =
+    const std::string cmd_label =
         "[space/esc/enter] to record high score and return to main menu";
 
-    render::draw_text(CMD_LABEL, Panel::screen,
+    render::draw_text(cmd_label, Panel::screen,
                       P(X0, screen_h - 2),
                       clr_popup_label);
 
@@ -260,10 +260,10 @@ void on_mon_killed(Actor& actor)
 
     d.nr_kills += 1;
 
-    const int MIN_HP_FOR_SADISM_BON = 4;
+    const int min_hp_for_sadism_bon = 4;
 
     if (
-        d.hp >= MIN_HP_FOR_SADISM_BON &&
+        d.hp >= min_hp_for_sadism_bon &&
         insanity::has_sympt(Ins_sympt_id::sadism))
     {
         map::player->shock_ = std::max(0.0, map::player->shock_ - 3.0);
@@ -273,10 +273,10 @@ void on_mon_killed(Actor& actor)
 
     if (!map::player->is_leader_of(mon))
     {
-        const int MON_XP_TOT    = mon_tot_xp_worth(d);
-        const int XP_GAINED     = mon->has_given_xp_for_spotting_ ?
-                                  std::max(1, MON_XP_TOT / 2) : MON_XP_TOT;
-        incr_player_xp(XP_GAINED);
+        const int mon_xp_tot    = mon_tot_xp_worth(d);
+        const int xp_gained     = mon->has_given_xp_for_spotting_ ?
+                                  std::max(1, mon_xp_tot / 2) : mon_xp_tot;
+        incr_player_xp(xp_gained);
     }
 
     if (d.is_unique)
@@ -305,9 +305,9 @@ void set_time_started_to_now()
 
 void add_history_event(const std::string msg)
 {
-    const int TURN_NR = game_time::turn();
+    const int turn_nr = game_time::turn();
 
-    history_events_.push_back({msg, TURN_NR});
+    history_events_.push_back({msg, turn_nr});
 }
 
 const std::vector<History_event>& history()

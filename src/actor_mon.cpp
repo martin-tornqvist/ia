@@ -276,9 +276,9 @@ void Mon::act()
         }
     }
 
-    const bool IS_TERRIFIED = prop_handler_->has_prop(Prop_id::terrified);
+    const bool is_terrified = prop_handler_->has_prop(Prop_id::terrified);
 
-    if (data_->ai[size_t(Ai_id::moves_to_tgt_when_los)] && !IS_TERRIFIED)
+    if (data_->ai[size_t(Ai_id::moves_to_tgt_when_los)] && !is_terrified)
     {
         if (ai::action::move_to_tgt_simple(*this))
         {
@@ -291,7 +291,7 @@ void Mon::act()
     if (
         data_->ai[size_t(Ai_id::paths_to_tgt_when_aware)]   &&
         leader_ != map::player                              &&
-        !IS_TERRIFIED)
+        !is_terrified)
     {
         ai::info::try_set_path_to_player(*this, path);
     }
@@ -309,7 +309,7 @@ void Mon::act()
         return;
     }
 
-    if (data_->ai[size_t(Ai_id::moves_to_leader)] && !IS_TERRIFIED)
+    if (data_->ai[size_t(Ai_id::moves_to_leader)] && !is_terrified)
     {
         ai::info::try_set_path_to_leader(*this, path);
 
@@ -390,23 +390,23 @@ bool Mon::can_see_actor(const Actor& other, const bool hard_blocked_los[map_w][m
         return false;
     }
 
-    const bool CAN_SEE_INVIS = has_prop(Prop_id::see_invis);
+    const bool can_see_invis = has_prop(Prop_id::see_invis);
 
     //Actor is invisible, and monster cannot see invisible?
-    if (other.has_prop(Prop_id::invis) && !CAN_SEE_INVIS)
+    if (other.has_prop(Prop_id::invis) && !can_see_invis)
     {
         return false;
     }
 
     bool        HAS_INFRAVIS                = has_prop(Prop_id::infravis);
-    const bool  IS_OTHER_INFRA_VISIBLE      = other.data().is_infra_visible;
+    const bool  is_other_infra_visible      = other.data().is_infra_visible;
 
-    const bool  CAN_SEE_ACTOR_WITH_INFRAVIS = HAS_INFRAVIS && IS_OTHER_INFRA_VISIBLE;
+    const bool  can_see_actor_with_infravis = HAS_INFRAVIS && is_other_infra_visible;
 
-    const bool  CAN_SEE_OTHER_IN_DRK        = CAN_SEE_INVIS || CAN_SEE_ACTOR_WITH_INFRAVIS;
+    const bool  can_see_other_in_drk        = can_see_invis || can_see_actor_with_infravis;
 
     //Blocked by darkness, and not seeing actor with infravision?
-    if (los.is_blocked_by_drk && !CAN_SEE_OTHER_IN_DRK)
+    if (los.is_blocked_by_drk && !can_see_other_in_drk)
     {
         return false;
     }
@@ -503,13 +503,13 @@ void Mon::hear_sound(const Snd& snd)
 
 void Mon::speak_phrase(const Alerts_mon alerts_others)
 {
-    const bool IS_SEEN_BY_PLAYER = map::player->can_see_actor(*this);
+    const bool is_seen_by_player = map::player->can_see_actor(*this);
 
-    const std::string msg = IS_SEEN_BY_PLAYER ?
+    const std::string msg = is_seen_by_player ?
                             aggro_phrase_mon_seen() :
                             aggro_phrase_mon_hidden();
 
-    const Sfx_id sfx = IS_SEEN_BY_PLAYER ?
+    const Sfx_id sfx = is_seen_by_player ?
                        aggro_sfx_mon_seen() :
                        aggro_sfx_mon_hidden();
 
@@ -524,19 +524,19 @@ void Mon::speak_phrase(const Alerts_mon alerts_others)
     snd_emit::run(snd);
 }
 
-void Mon::become_aware_player(const bool IS_FROM_SEEING)
+void Mon::become_aware_player(const bool is_from_seeing)
 {
     if (!is_alive() || is_actor_my_leader(map::player))
     {
         return;
     }
 
-    const int AWARENESS_CNT_BEFORE  = aware_counter_;
+    const int awareness_cnt_before  = aware_counter_;
     aware_counter_                  = data_->nr_turns_aware;
 
-    if (AWARENESS_CNT_BEFORE <= 0)
+    if (awareness_cnt_before <= 0)
     {
-        if (IS_FROM_SEEING && map::player->can_see_actor(*this))
+        if (is_from_seeing && map::player->can_see_actor(*this))
         {
             map::player->update_fov();
             render::draw_map_state(Update_screen::yes);
@@ -550,14 +550,14 @@ void Mon::become_aware_player(const bool IS_FROM_SEEING)
     }
 }
 
-void Mon::set_player_aware_of_me(const int DURATION_FACTOR)
+void Mon::set_player_aware_of_me(const int duration_factor)
 {
     is_sneaking_ = false;
 
-    const int LOWER             = 4 * DURATION_FACTOR;
-    const int UPPER             = 6 * DURATION_FACTOR;
-    const int ROLL              = rnd::range(LOWER, UPPER);
-    player_aware_of_me_counter_ = std::max(player_aware_of_me_counter_, ROLL);
+    const int lower             = 4 * duration_factor;
+    const int upper             = 6 * duration_factor;
+    const int roll              = rnd::range(lower, upper);
+    player_aware_of_me_counter_ = std::max(player_aware_of_me_counter_, roll);
 }
 
 bool Mon::try_attack(Actor& defender)
@@ -633,10 +633,10 @@ bool Mon::try_attack(Actor& defender)
             return false;
         }
 
-        const int NR_TURNS_NO_RANGED = data_->ranged_cooldown_turns;
+        const int nr_turns_no_ranged = data_->ranged_cooldown_turns;
 
         Prop_disabled_ranged* ranged_cooldown_prop =
-            new Prop_disabled_ranged(Prop_turns::specific, NR_TURNS_NO_RANGED);
+            new Prop_disabled_ranged(Prop_turns::specific, nr_turns_no_ranged);
 
         prop_handler_->try_add(ranged_cooldown_prop);
 
@@ -734,9 +734,9 @@ Ai_att_data Mon::choose_att(const Ai_avail_attacks_data& mon_avail_attacks)
         return att;
     }
 
-    const size_t IDX = rnd::range(0, mon_avail_attacks.weapons.size() - 1);
+    const size_t idx = rnd::range(0, mon_avail_attacks.weapons.size() - 1);
 
-    att.wpn = mon_avail_attacks.weapons[IDX];
+    att.wpn = mon_avail_attacks.weapons[idx];
 
     return att;
 }
@@ -831,22 +831,22 @@ std::string Cultist::cultist_phrase()
 void Cultist::mk_start_items()
 {
     //If we are on a low-ish dlvl, let the vast majority of cultists carry pistols
-    const bool  IS_LOW_DLVL   = map::dlvl < 4;
+    const bool  is_low_dlvl   = map::dlvl < 4;
 
-    const int   PISTOL        = IS_LOW_DLVL   ? 20 : 6;
-    const int   PUMP_SHOTGUN  = PISTOL        + 3;
-    const int   SAWN_SHOTGUN  = PUMP_SHOTGUN  + 3;
-    const int   MG            = SAWN_SHOTGUN  + 1;
+    const int   pistol        = is_low_dlvl   ? 20 : 6;
+    const int   pump_shotgun  = pistol        + 3;
+    const int   sawn_shotgun  = pump_shotgun  + 3;
+    const int   mg            = sawn_shotgun  + 1;
 
-    const int   TOT           = MG;
-    const int   RND           = map::dlvl == 0 ? PISTOL : rnd::range(1, TOT);
+    const int   tot           = mg;
+    const int   rnd           = map::dlvl == 0 ? pistol : rnd::range(1, tot);
 
-    if (RND <= PISTOL)
+    if (rnd <= pistol)
     {
         Item*   item            = item_factory::mk(Item_id::pistol);
         Wpn*    wpn             = static_cast<Wpn*>(item);
-        const int AMMO_CAP      = wpn->data().ranged.max_ammo;
-        wpn->nr_ammo_loaded_    = rnd::range(AMMO_CAP / 4, AMMO_CAP);
+        const int ammo_cap      = wpn->data().ranged.max_ammo;
+        wpn->nr_ammo_loaded_    = rnd::range(ammo_cap / 4, ammo_cap);
 
         inv_->put_in_slot(Slot_id::wpn, item);
 
@@ -855,12 +855,12 @@ void Cultist::mk_start_items()
             inv_->put_in_backpack(item_factory::mk(Item_id::pistol_mag));
         }
     }
-    else if (RND <= PUMP_SHOTGUN)
+    else if (rnd <= pump_shotgun)
     {
         Item*   item            = item_factory::mk(Item_id::pump_shotgun);
         Wpn*    wpn             = static_cast<Wpn*>(item);
-        const int AMMO_CAP      = wpn->data().ranged.max_ammo;
-        wpn->nr_ammo_loaded_    = rnd::range(AMMO_CAP / 4, AMMO_CAP);
+        const int ammo_cap      = wpn->data().ranged.max_ammo;
+        wpn->nr_ammo_loaded_    = rnd::range(ammo_cap / 4, ammo_cap);
 
         inv_->put_in_slot(Slot_id::wpn, item);
 
@@ -871,7 +871,7 @@ void Cultist::mk_start_items()
             inv_->put_in_backpack(item);
         }
     }
-    else if (RND <= SAWN_SHOTGUN)
+    else if (rnd <= sawn_shotgun)
     {
         inv_->put_in_slot(Slot_id::wpn, item_factory::mk(Item_id::sawed_off));
 
@@ -888,9 +888,9 @@ void Cultist::mk_start_items()
         //projectiles fired in each burst
         Item*       item        = item_factory::mk(Item_id::machine_gun);
         Wpn* const  wpn         = static_cast<Wpn*>(item);
-        const int   CAP_SCALED  = wpn->data().ranged.max_ammo / nr_mg_projectiles;
-        const int   MIN_SCALED  = CAP_SCALED / 4;
-        wpn->nr_ammo_loaded_    = rnd::range(MIN_SCALED, CAP_SCALED) * nr_mg_projectiles;
+        const int   cap_scaled  = wpn->data().ranged.max_ammo / nr_mg_projectiles;
+        const int   min_scaled  = cap_scaled / 4;
+        wpn->nr_ammo_loaded_    = rnd::range(min_scaled, cap_scaled) * nr_mg_projectiles;
         inv_->put_in_slot(Slot_id::wpn, item);
     }
 
@@ -909,9 +909,9 @@ void Cultist_electric::mk_start_items()
 {
     Item*       item        = item_factory::mk(Item_id::mi_go_gun);
     Wpn*        wpn         = static_cast<Wpn*>(item);
-    const int   AMMO_CAP    = wpn->data().ranged.max_ammo;
+    const int   ammo_cap    = wpn->data().ranged.max_ammo;
 
-    wpn->nr_ammo_loaded_     = rnd::range(AMMO_CAP / 4, AMMO_CAP);
+    wpn->nr_ammo_loaded_     = rnd::range(ammo_cap / 4, ammo_cap);
 
     inv_->put_in_slot(Slot_id::wpn, item);
 
@@ -930,8 +930,8 @@ void Cultist_spike_gun::mk_start_items()
 {
     Item*       item        = item_factory::mk(Item_id::spike_gun);
     Wpn*        wpn         = static_cast<Wpn*>(item);
-    const int   AMMO_CAP    = wpn->data().ranged.max_ammo;
-    wpn->nr_ammo_loaded_    = rnd::range(AMMO_CAP / 4, AMMO_CAP);
+    const int   ammo_cap    = wpn->data().ranged.max_ammo;
+    wpn->nr_ammo_loaded_    = rnd::range(ammo_cap / 4, ammo_cap);
 
     inv_->put_in_slot(Slot_id::wpn, item);
 
@@ -952,9 +952,9 @@ void Cultist_priest::mk_start_items()
     inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
     inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
 
-    const int NR_SPELLS = 3;
+    const int nr_spells = 3;
 
-    for (int i = 0; i < NR_SPELLS; ++i)
+    for (int i = 0; i < nr_spells; ++i)
     {
         spells_known_.push_back(spell_handling::random_spell_for_mon());
     }
@@ -1051,7 +1051,7 @@ Did_action Vortex::on_act()
 
             bool blocked_los[map_w][map_h];
 
-            const R fov_rect = fov::get_fov_rect(pos);
+             const R fov_rect = fov::get_fov_rect(pos);
 
             map_parse::run(cell_check::Blocks_los(),
                            blocked_los,
@@ -1114,18 +1114,18 @@ Did_action Ghost::on_act()
     {
         set_player_aware_of_me();
 
-        const bool          PLAYER_SEES_ME  = map::player->can_see_actor(*this);
-        const std::string   name            = PLAYER_SEES_ME ? name_the() : "It";
+        const bool          player_sees_me  = map::player->can_see_actor(*this);
+        const std::string   name            = player_sees_me ? name_the() : "It";
 
         msg_log::add(name + " reaches for me...");
 
-        const int DODGE_SKILL = map::player->ability(Ability_id::dodge_att, true);
+        const int dodge_skill = map::player->ability(Ability_id::dodge_att, true);
 
-        const Ability_roll_result roll_result = ability_roll::roll(DODGE_SKILL, map::player);
+        const Ability_roll_result roll_result = ability_roll::roll(dodge_skill, map::player);
 
-        const bool PLAYER_DODGES = roll_result >= success;
+        const bool player_dodges = roll_result >= success;
 
-        if (PLAYER_DODGES)
+        if (player_dodges)
         {
             msg_log::add("I dodge!", clr_msg_good);
         }
@@ -1163,9 +1163,9 @@ void Mi_go::mk_start_items()
 {
     Item*       item        = item_factory::mk(Item_id::mi_go_gun);
     Wpn*        wpn         = static_cast<Wpn*>(item);
-    const int   AMMO_CAP    = wpn->data().ranged.max_ammo;
+    const int   ammo_cap    = wpn->data().ranged.max_ammo;
 
-    wpn->nr_ammo_loaded_ = rnd::range(AMMO_CAP / 4, AMMO_CAP);
+    wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
 
     inv_->put_in_slot(Slot_id::wpn, item);
 
@@ -1295,9 +1295,9 @@ void Mummy::mk_start_items()
 
     spells_known_.push_back(spell_handling::mk_spell_from_id(Spell_id::disease));
 
-    const int NR_SPELLS = 3;
+    const int nr_spells = 3;
 
-    for (int i = 0; i < NR_SPELLS; ++i)
+    for (int i = 0; i < nr_spells; ++i)
     {
         spells_known_.push_back(spell_handling::random_spell_for_mon());
     }
@@ -1367,7 +1367,7 @@ Did_action Khephren::on_act()
     {
         bool blocked[map_w][map_h];
 
-        const R fov_rect = fov::get_fov_rect(pos);
+         const R fov_rect = fov::get_fov_rect(pos);
 
         map_parse::run(cell_check::Blocks_los(),
                        blocked,
@@ -1378,11 +1378,11 @@ Did_action Khephren::on_act()
         {
             map_parse::run(cell_check::Blocks_move_cmn(true), blocked);
 
-            const int SPAWN_AFTER_X = map_w / 2;
+            const int spawn_after_x = map_w / 2;
 
             for (int y = 0; y  < map_h; ++y)
             {
-                for (int x = 0; x <= SPAWN_AFTER_X; ++x)
+                for (int x = 0; x <= spawn_after_x; ++x)
                 {
                     blocked[x][y] = true;
                 }
@@ -1394,15 +1394,15 @@ Did_action Khephren::on_act()
 
             sort(begin(free_cells), end(free_cells), Is_closer_to_pos(pos));
 
-            const size_t NR_OF_SPAWNS = 15;
+            const size_t nr_of_spawns = 15;
 
-            if (free_cells.size() >= NR_OF_SPAWNS + 1)
+            if (free_cells.size() >= nr_of_spawns + 1)
             {
                 msg_log::add("Khephren calls a plague of Locusts!");
 
                 map::player->incr_shock(Shock_lvl::heavy, Shock_src::misc);
 
-                for (size_t i = 0; i < NR_OF_SPAWNS; ++i)
+                for (size_t i = 0; i < nr_of_spawns; ++i)
                 {
                     Actor* const actor  = actor_factory::mk(Actor_id::locust, free_cells[0]);
                     Mon* const mon      = static_cast<Mon*>(actor);
@@ -1451,9 +1451,9 @@ Did_action Ape::on_act()
     {
         frenzy_cool_down_ = 30;
 
-        const int NR_FRENZY_TURNS = rnd::range(4, 6);
+        const int nr_frenzy_turns = rnd::range(4, 6);
 
-        prop_handler_->try_add(new Prop_frenzied(Prop_turns::specific, NR_FRENZY_TURNS));
+        prop_handler_->try_add(new Prop_frenzied(Prop_turns::specific, nr_frenzy_turns));
     }
 
     return Did_action::no;
@@ -1504,7 +1504,7 @@ Did_action Keziah_mason::on_act()
     {
         bool blocked_los[map_w][map_h];
 
-        const R fov_rect = fov::get_fov_rect(pos);
+         const R fov_rect = fov::get_fov_rect(pos);
 
         map_parse::run(cell_check::Blocks_los(),
                        blocked_los,
@@ -1518,9 +1518,9 @@ Did_action Keziah_mason::on_act()
             std::vector<P> line;
             line_calc::calc_new_line(pos, map::player->pos, true, 9999, false, line);
 
-            const int LINE_SIZE = line.size();
+            const int line_size = line.size();
 
-            for (int i = 0; i < LINE_SIZE; ++i)
+            for (int i = 0; i < line_size; ++i)
             {
                 const P c = line[i];
 
@@ -1575,7 +1575,7 @@ void Leng_elder::on_std_turn_hook()
         {
             bool blocked_los[map_w][map_h];
 
-            const R fov_rect = fov::get_fov_rect(pos);
+             const R fov_rect = fov::get_fov_rect(pos);
 
             map_parse::run(cell_check::Blocks_los(),
                            blocked_los,
@@ -1597,10 +1597,10 @@ void Leng_elder::on_std_turn_hook()
         }
         else //Has not given item to player
         {
-            const bool IS_PLAYER_SEE_ME = map::player->can_see_actor(*this);
-            const bool IS_PLAYER_ADJ    = is_pos_adj(pos, map::player->pos, false);
+            const bool is_player_see_me = map::player->can_see_actor(*this);
+            const bool is_player_adj    = is_pos_adj(pos, map::player->pos, false);
 
-            if (IS_PLAYER_SEE_ME && IS_PLAYER_ADJ)
+            if (is_player_see_me && is_player_adj)
             {
                 msg_log::add("I perceive a cloaked figure standing before me...",
                              clr_white, false, More_prompt_on_msg::yes);
@@ -1689,10 +1689,10 @@ void Color_oo_space::on_std_turn_hook()
 
         if (map::player->can_see_actor(*this))
         {
-            const int NR_TURNS_CONFUSED = rnd::range(8, 12);
+            const int nr_turns_confused = rnd::range(8, 12);
 
             map::player->prop_handler().try_add(
-                new Prop_confused(Prop_turns::specific, NR_TURNS_CONFUSED));
+                new Prop_confused(Prop_turns::specific, nr_turns_confused));
         }
     }
 }
@@ -1936,14 +1936,14 @@ Did_action Zombie::try_resurrect()
         return Did_action::no;
     }
 
-    const int MIN_NR_TURNS_UNTIL_RISE   = 3;
-    const int RISE_ONE_IN_N_TURNS       = 8;
+    const int min_nr_turns_until_rise   = 3;
+    const int rise_one_in_n_turns       = 8;
 
-    if (dead_turn_counter < MIN_NR_TURNS_UNTIL_RISE)
+    if (dead_turn_counter < min_nr_turns_until_rise)
     {
         ++dead_turn_counter;
     }
-    else if (rnd::one_in(RISE_ONE_IN_N_TURNS))
+    else if (rnd::one_in(rise_one_in_n_turns))
     {
         Actor* actor = map::actor_at_pos(pos);
 
@@ -1991,26 +1991,26 @@ void Zombie::on_death()
     //corpse is not destroyed "too hard" (e.g. by a near explosion or a sledge hammer). This also
     //serves to reward heavy weapons, since they will more often prevent spawning nasty stuff.
 
-    const int SUMMON_ONE_IN_N = 7;
+    const int summon_one_in_n = 7;
 
-    if (state_ == Actor_state::destroyed && hp_ > -10 && rnd::one_in(SUMMON_ONE_IN_N))
+    if (state_ == Actor_state::destroyed && hp_ > -10 && rnd::one_in(summon_one_in_n))
     {
         Actor_id id_to_spawn = Actor_id::END;
 
         //With a small chance, spawn a Floating Skull, otherwise spawn Hands or Intestines
-        const int ROLL = rnd::one_in(50) ? 3 : rnd::range(1, 2);
+        const int roll = rnd::one_in(50) ? 3 : rnd::range(1, 2);
 
         const std::string my_name = name_the();
 
         std::string spawn_msg = "";
 
-        if (ROLL == 1)
+        if (roll == 1)
         {
             id_to_spawn = Actor_id::crawling_hand;
 
             spawn_msg = "The hand of " + my_name + " comes off and starts crawling around!";
         }
-        else if (ROLL == 2)
+        else if (roll == 2)
         {
             id_to_spawn = Actor_id::crawling_intestines;
 
@@ -2082,7 +2082,7 @@ Did_action Major_clapham_lee::on_act()
     {
         bool blocked_los[map_w][map_h];
 
-        const R fov_rect = fov::get_fov_rect(pos);
+         const R fov_rect = fov::get_fov_rect(pos);
 
         map_parse::run(cell_check::Blocks_los(),
                        blocked_los,
@@ -2097,15 +2097,15 @@ Did_action Major_clapham_lee::on_act()
 
             std::vector<Actor_id> mon_ids = {Actor_id::dean_halsey};
 
-            const int NR_OF_EXTRA_SPAWNS = 4;
+            const int nr_of_extra_spawns = 4;
 
-            for (int i = 0; i < NR_OF_EXTRA_SPAWNS; ++i)
+            for (int i = 0; i < nr_of_extra_spawns; ++i)
             {
-                const int ZOMBIE_TYPE = rnd::range(1, 3);
+                const int zombie_type = rnd::range(1, 3);
 
                 Actor_id mon_id = Actor_id::zombie;
 
-                switch (ZOMBIE_TYPE)
+                switch (zombie_type)
                 {
                 case 1:
                     mon_id = Actor_id::zombie;
@@ -2169,7 +2169,7 @@ Did_action Floating_skull::on_act()
     {
         bool blocked_los[map_w][map_h];
 
-        const R fov_rect = fov::get_fov_rect(pos);
+         const R fov_rect = fov::get_fov_rect(pos);
 
         map_parse::run(cell_check::Blocks_los(),
                        blocked_los,
@@ -2180,9 +2180,9 @@ Did_action Floating_skull::on_act()
         {
             const std::string name = name_the();
 
-            const bool PLAYER_SEE_ME = map::player->can_see_actor(*this);
+            const bool player_see_me = map::player->can_see_actor(*this);
 
-            std::string snd_msg = PLAYER_SEE_ME ? name : "Someone";
+            std::string snd_msg = player_see_me ? name : "Someone";
 
             snd_msg += " spews forth a litany of curses.";
 
@@ -2286,18 +2286,18 @@ void The_high_priest::on_death()
     map::player->update_fov();
     render::draw_map_state();
 
-    const int NR_SNAKES = rnd::range(4, 5);
+    const int nr_snakes = rnd::range(4, 5);
 
-    std::vector<Actor_id> snake_ids(NR_SNAKES, Actor_id::pit_viper);
+    std::vector<Actor_id> snake_ids(nr_snakes, Actor_id::pit_viper);
 
     actor_factory::summon(pos, snake_ids);
 }
 
 void The_high_priest::on_std_turn_hook()
 {
-    const int REGEN_EVERY_N_TURN = 3;
+    const int regen_every_n_turn = 3;
 
-    if (is_alive() && (game_time::turn() % REGEN_EVERY_N_TURN == 0))
+    if (is_alive() && (game_time::turn() % regen_every_n_turn == 0))
     {
         restore_hp(1, false, Verbosity::silent);
     }

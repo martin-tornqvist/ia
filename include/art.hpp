@@ -1,10 +1,10 @@
 #ifndef ART_HPP
 #define ART_HPP
 
-const int FONT_SHEET_X_CELLS = 16;
-const int FONT_SHEET_Y_CELLS = 7;
-const int TILE_SHEET_X_CELLS = 21;
-const int TILE_SHEET_Y_CELLS = 13;
+const int font_sheet_x_cells = 16;
+const int font_sheet_y_cells = 7;
+const int tile_sheet_x_cells = 21;
+const int tile_sheet_y_cells = 13;
 
 enum class Tile_id
 {

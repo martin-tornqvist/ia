@@ -300,13 +300,13 @@ void summon(const P& origin,
 
     std::sort(begin(free_cells), end(free_cells), Is_closer_to_pos(origin));
 
-    const size_t    NR_FREE_CELLS   = free_cells.size();
-    const size_t    NR_MONSTER_IDS  = monster_ids.size();
-    const int       NR_TO_SPAWN     = std::min(NR_FREE_CELLS, NR_MONSTER_IDS);
+    const size_t    nr_free_cells   = free_cells.size();
+    const size_t    nr_monster_ids  = monster_ids.size();
+    const int       nr_to_spawn     = std::min(nr_free_cells, nr_monster_ids);
 
     std::vector<P> positions_to_animate;
 
-    for (int i = 0; i < NR_TO_SPAWN; ++i)
+    for (int i = 0; i < nr_to_spawn; ++i)
     {
         const P&        pos     = free_cells[i];
         const Actor_id  id      = monster_ids[i];

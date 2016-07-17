@@ -11,9 +11,9 @@
 class Msg
 {
 public:
-    Msg(const std::string& text, const Clr& clr, const int X_POS) :
+    Msg(const std::string& text, const Clr& clr, const int x_pos) :
         clr_            (clr),
-        x_pos_          (X_POS),
+        x_pos_          (x_pos),
         str_            (text),
         repeats_str_    (""),
         nr_             (1) {}
@@ -54,7 +54,7 @@ void init();
 
 void add(const std::string& str,
          const Clr& clr = clr_text,
-         const bool INTERRUPT_ALL_PLAYER_ACTIONS = false,
+         const bool interrupt_all_player_actions = false,
          const More_prompt_on_msg add_more_prompt_on_msg = More_prompt_on_msg::no);
 
 //NOTE: This function can safely be called at any time. If there is content in

@@ -147,20 +147,20 @@ void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
 
             if (att_data.att_result >= success && !att_data.is_ethereal_defender_missed)
             {
-                const bool IS_POT = item_thrown_data.type == Item_type::potion;
+                const bool is_pot = item_thrown_data.type == Item_type::potion;
 
                 if (map::player->can_see_actor(*actor_here))
                 {
-                    const Clr hit_clr = IS_POT ? item_clr : clr_red_lgt;
+                    const Clr hit_clr = is_pot ? item_clr : clr_red_lgt;
 
                     render::draw_blast_at_cells({pos}, hit_clr);
                 }
 
                 const Clr hit_message_clr = actor_here == map::player ? clr_msg_bad : clr_msg_good;
 
-                const bool CAN_SEE_ACTOR = map::player->can_see_actor(*actor_here);
+                const bool can_see_actor = map::player->can_see_actor(*actor_here);
 
-                const std::string defender_name = CAN_SEE_ACTOR ? actor_here->name_the() : "It";
+                const std::string defender_name = can_see_actor ? actor_here->name_the() : "It";
 
                 msg_log::add(defender_name + " is hit.", hit_message_clr);
 
@@ -168,7 +168,7 @@ void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
                 is_actor_hit = true;
 
                 //If throwing a potion on an actor, let it make stuff happen
-                if (IS_POT)
+                if (is_pot)
                 {
                     Potion* const potion = static_cast<Potion*>(&item_thrown);
 
@@ -245,10 +245,10 @@ void throw_item(Actor& actor_throwing, const P& tgt_cell, Item& item_thrown)
         }
     }
 
-    const int   FINAL_IDX   = blocked_idx == -1 ?
+    const int   final_idx   = blocked_idx == -1 ?
                               (path.size() - 1) : blocked_idx;
 
-    const P   final_pos   = path[FINAL_IDX];
+    const P   final_pos   = path[final_idx];
 
     if (break_item_one_in_n != -1 && rnd::one_in(break_item_one_in_n))
     {

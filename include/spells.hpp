@@ -84,7 +84,7 @@ public:
 
     virtual ~Spell() {}
 
-    Spell_effect_noticed cast(Actor* const caster, const bool IS_INTRINSIC) const;
+    Spell_effect_noticed cast(Actor* const caster, const bool is_intrinsic) const;
 
     virtual bool allow_mon_cast_now(Mon& mon) const
     {
@@ -98,7 +98,7 @@ public:
 
     virtual std::vector<std::string> descr() const = 0;
 
-    Range spi_cost(const bool IS_BASE_COST_ONLY, Actor* const caster = nullptr) const;
+    Range spi_cost(const bool is_base_cost_only, Actor* const caster = nullptr) const;
 
     int shock_lvl_intr_cast() const
     {
