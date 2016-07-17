@@ -3,12 +3,14 @@
 # - release (just running "make" will also build this)
 # - debug
 # - windows-release (cross compilation using mingw)
+# - osx
+# - osx-debug
 # - clean
 #
 
 
 ###############################################################################
-# Directiories
+# Directories
 ###############################################################################
 SRC_DIR            = src
 INC_DIR            = include
@@ -132,6 +134,22 @@ windows-release: LD_FLAGS += \
 
 WINDOWS_EXE = ia.exe
 
+###############################################################################
+# Mac OS X
+###############################################################################
+osx osx-debug: CXX ?= c++
+osx osx-debug: CXXFLAGS = -std=c++11
+osx osx-debug: INCLUDES = -I$(INC_DIR) -I$(RL_UTILS_INC_DIR) \
+    -F/Library/Frameworks \
+    -I/Library/Frameworks/SDL2.framework/Headers \
+    -I/Library/Frameworks/SDL2_image.framework/Headers \
+    -I/Library/Frameworks/SDL2_mixer.framework/Headers
+osx osx-debug: LD_FLAGS = -F/Library/Frameworks \
+    -framework Cocoa \
+    -framework SDL2 -framework SDL2_image -framework SDL2_mixer
+osx osx-debug: CXXFLAGS += -DMACOSX
+osx: CXXFLAGS += -Os -DNDEBUG
+osx-debug: CXXFLAGS += -O0 -g
 
 ###############################################################################
 # Common output and sources
@@ -165,6 +183,8 @@ windows-release: $(WINDOWS_EXE)
 	  $(SDL_MIXER_BIN_DIR)/libvorbisfile-3.dll \
 	  $(SDL_MIXER_BIN_DIR)/LICENSE.ogg-vorbis.txt \
 	  $(TARGET_DIR)
+
+osx osx-debug: $(LINUX_EXE)
 
 $(LINUX_EXE) $(WINDOWS_EXE): $(RL_UTILS_OBJECTS) $(OBJECTS)
 	$(CXX) $^ -o $@ $(LD_FLAGS)
@@ -212,4 +232,5 @@ check-rl-utils :
 clean:
 	rm -rf $(TARGET_DIR) $(OBJECTS) $(RL_UTILS_OBJECTS)
 
-.PHONY: all depends clean clean-depends check-rl-utils
+.PHONY: all depends clean clean-depends check-rl-utils \
+    release debug windows-release windows-debug osx osx-debug
