@@ -56,7 +56,8 @@ public:
 
     void reset();
 
-    void set(const int max_nr_in_room, const Range& dlvls_allowed,
+    void set(const int max_nr_in_room,
+             const Range& dlvls_allowed,
              const PlacementRule placement_rule,
              std::initializer_list<RoomType> room_types);
 

@@ -56,7 +56,7 @@ const int audio_allocated_channels          = 16;
 const size_t ms_delay_player_unable_act     = 7;
 const size_t min_ms_between_same_sfx        = 60;
 
-const int player_start_hp                   = 16;
+const int player_start_hp                   = 14;
 const int player_start_spi                  = 6;
 const int hp_per_lvl                        = 2;
 const int spi_per_lvl                       = 1;
@@ -80,7 +80,7 @@ const int snd_dist_loud                     = snd_dist_normal * 2;
 const int throw_range_lmt                   = fov_std_radi_int + 3;
 
 const int dynamite_fuse_turns               = 5;
-const int expl_std_radi                = 2;
+const int expl_std_radi                     = 2;
 
 const int enc_immobile_lvl                  = 125;
 

@@ -81,13 +81,14 @@ void Player::mk_start_items()
     {
     case Bg::occultist:
     {
-        //Occultist starts with zero explosives and throwing knives.
-        //(They are not so thematically fitting for this background.)
+        //Occultist starts with one less cartridge, and no explosives or
+        //throwing knives.
+        --nr_cartridges;
         nr_dynamite     = 0;
         nr_molotov      = 0;
         nr_thr_knives   = 0;
 
-        //Occultist starts with a scroll of Darkbolt, and one other random scroll.
+        //Occultist starts with a Darkbolt scroll, and one other random scroll.
         //(Both are identified.)
         Item* scroll = item_factory::mk(ItemId::scroll_darkbolt);
         static_cast<Scroll*>(scroll)->identify(Verbosity::silent);
@@ -97,7 +98,7 @@ void Player::mk_start_items()
         {
             scroll = item_factory::mk_random_scroll_or_potion(true, false);
 
-            SpellId        spell_id    = scroll->data().spell_cast_from_scroll;
+            SpellId        spell_id     = scroll->data().spell_cast_from_scroll;
             Spell* const    spell       = spell_handling::mk_spell_from_id(spell_id);
             const bool      is_avail    = spell->is_avail_for_player();
             const bool      spi_cost_ok = spell->spi_cost(true).max <=
@@ -143,7 +144,9 @@ void Player::mk_start_items()
 
     case Bg::war_vet:
     {
-        //War Veteran starts with some smoke grenades and a gas mask
+        //War Veteran starts with an extra cartridge, some smoke grenades and a
+        //gas mask
+        ++nr_cartridges;
         inv_->put_in_backpack(item_factory::mk(ItemId::smoke_grenade, 4));
         inv_->put_in_backpack(item_factory::mk(ItemId::gas_mask));
     }
@@ -1175,9 +1178,11 @@ void Player::on_std_turn()
     }
 
     //Regenerate Hit Points
-    if (!has_prop(PropId::poisoned) && player_bon::bg() != Bg::ghoul)
+    if (
+        !has_prop(PropId::poisoned) &&
+        player_bon::bg() != Bg::ghoul)
     {
-        int nr_turns_per_hp = 12;
+        int nr_turns_per_hp = 20;
 
         //Wounds affect hp regen?
         int nr_wounds = 0;

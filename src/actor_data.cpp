@@ -20,12 +20,18 @@ void ActorDataT::reset()
     tile = TileId::empty;
     glyph = 'X';
     color = clr_yellow;
-    group_size = MonGroupSize::alone;
+
+    //Default spawn group size is "alone"
+    group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::alone,  1),
+    });
+
     hp = dmg_melee = dmg_ranged = 1;
     spi = 12;
     speed = ActorSpeed::normal;
 
-    for (int i = 0; i < int(PropId::END); ++i)
+    for (int i = 0; i < (int)PropId::END; ++i)
     {
         natural_props[i] = false;
     }
@@ -34,7 +40,7 @@ void ActorDataT::reset()
 
     ability_vals.reset();
 
-    for (int i = 0; i < int(AiId::END); ++i)
+    for (int i = 0; i < (int)AiId::END; ++i)
     {
         ai[i] = false;
     }
@@ -121,16 +127,20 @@ void init_data_list()
     d.glyph = 'Z';
     d.color = clr_brown;
     d.tile = TileId::zombie_unarmed;
-    d.hp = 11;
-    d.dmg_melee = min_dmg_to_wound - 1;
-    d.ability_vals.set_val(AbilityId::melee, 25);
+    d.hp = 14;
+    d.dmg_melee = min_dmg_to_wound;
+    d.ability_vals.set_val(AbilityId::melee, 40);
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_mid_game;
-    d.group_size = MonGroupSize::pack;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,  3),
+        MonGroupSpawnRule(MonGroupSize::pack, 1)
+    });
     d.actor_size = ActorSize::humanoid;
     d.natural_props[size_t(PropId::infravis)] = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 20;
+    d.nr_turns_aware = 5;
     d.descr = "This rotting thing appears to have been brought back to life "
               "through some abominable process. It has grown sharp claws to "
               "attack with.";
@@ -138,7 +148,7 @@ void init_data_list()
     d.aggro_text_mon_hidden = "I hear a growling voice.";
     d.aggro_sfx_mon_seen = SfxId::zombie_growl;
     d.aggro_sfx_mon_hidden = SfxId::zombie_growl;
-    d.erratic_move_pct = ActorErraticFreq::somewhat;
+    d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = MonShockLvl::frightening;
     d.is_undead = true;
     d.is_humanoid = true;
@@ -165,24 +175,27 @@ void init_data_list()
     d.glyph = 'Z';
     d.color = clr_gray;
     d.tile = TileId::zombie_armed;
-    d.hp = 11;
-    d.dmg_melee = min_dmg_to_wound + 3;
-    d.ability_vals.set_val(AbilityId::melee, 35);
-    d.ability_vals.set_val(AbilityId::ranged, 0);
+    d.hp = 14;
+    d.dmg_melee = min_dmg_to_wound + 4;
+    d.ability_vals.set_val(AbilityId::melee, 40);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
-    d.group_size = MonGroupSize::pack;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,  3),
+        MonGroupSpawnRule(MonGroupSize::pack, 1)
+    });
     d.actor_size = ActorSize::humanoid;
     d.natural_props[size_t(PropId::infravis)] = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 20;
+    d.nr_turns_aware = 5;
     d.descr = "This rotting thing appears to have been brought back to life "
               "through some abominable process. It is wielding a rusty axe.";
     d.aggro_text_mon_seen = d.name_the + " growls at me.";
     d.aggro_text_mon_hidden = "I hear a growling voice.";
     d.aggro_sfx_mon_seen = SfxId::zombie_growl;
     d.aggro_sfx_mon_hidden = SfxId::zombie_growl;
-    d.erratic_move_pct = ActorErraticFreq::somewhat;
+    d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = MonShockLvl::frightening;
     d.is_undead = true;
     d.is_humanoid = true;
@@ -210,18 +223,21 @@ void init_data_list()
     d.glyph = 'Z';
     d.color = clr_white_high;
     d.tile = TileId::zombie_bloated;
-    d.hp = 18;
+    d.hp = 24;
     d.dmg_melee = min_dmg_to_wound + 2;
     d.dmg_ranged = 3;
     d.ability_vals.set_val(AbilityId::melee, 40);
     d.ability_vals.set_val(AbilityId::ranged, 50);
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = dlvl_last_mid_game;
-    d.group_size = MonGroupSize::few;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,  1)
+    });
     d.actor_size = ActorSize::humanoid;
     d.natural_props[size_t(PropId::infravis)] = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 50;
+    d.nr_turns_aware = 16;
     d.descr = "This lumbering giant corpse seems to be artificially bloated "
               "somehow. It is constantly oozing putrid liquid that it can spit "
               "to attack with.";
@@ -258,11 +274,10 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 40);
     d.ability_vals.set_val(AbilityId::ranged, 40);
     d.spawn_min_dlvl = 4;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.natural_props[size_t(PropId::infravis)] = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 999;
+    d.nr_turns_aware = 20;
     d.descr = "Major Sir Eric Moreland Clapham-Lee was once a commanding officer "
               "during the Great War. Shortly after his plane was shot down, his "
               "body was stolen. Now he roams these halls as a resurrected "
@@ -302,11 +317,10 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::ranged, 40);
     d.is_auto_spawn_allowed = false;
     d.spawn_min_dlvl = 4;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.natural_props[size_t(PropId::infravis)] = true;
-    d.nr_turns_aware = 999;
+    d.nr_turns_aware = 20;
     d.descr = "Alan Halsey was the dean of the Miskatonic University in New "
               "England. He must have gotten into the hands of the Cult, who "
               "turned him into the hellish zombie warrior I now see before me.";
@@ -346,7 +360,11 @@ void init_data_list()
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 15;
-    d.group_size = MonGroupSize::few;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::alone, 2),
+        MonGroupSpawnRule(MonGroupSize::few,   1)
+    });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
     d.descr = "A writhing mass of crawling intestines.";
@@ -383,7 +401,11 @@ void init_data_list()
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 15;
-    d.group_size = MonGroupSize::few;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::alone, 2),
+        MonGroupSpawnRule(MonGroupSize::few,   1)
+    });
     d.actor_size = ActorSize::floor;
     d.prevent_knockback = true;
     d.nr_turns_aware = 5;
@@ -426,7 +448,6 @@ void init_data_list()
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 5;
     d.spawn_max_dlvl = dlvl_last;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 999;
     d.descr = "A particularly nasty disembodied hand, crawling around frantically on its "
@@ -467,7 +488,6 @@ void init_data_list()
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = dlvl_last_mid_game;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 10;
     d.descr = "A severed head floating through the air.";
@@ -511,12 +531,11 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::ranged, 50);
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_mid_game;
-    d.group_size = MonGroupSize::few;
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
     d.can_open_doors = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 25;
+    d.nr_turns_aware = 16;
     d.descr = "A fanatic cultist, madly gibbering in some half-lost language.";
     d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = ActorErraticFreq::rare;
@@ -550,12 +569,11 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::ranged, 55);
     d.spawn_min_dlvl = dlvl_first_late_game;
     d.spawn_max_dlvl = dlvl_last_mid_game;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
     d.can_open_doors = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 25;
+    d.nr_turns_aware = 16;
     d.descr = "A fanatic cultist, madly gibbering in some half-lost language. It is "
               "wielding an Electric Gun, presumably a gift from the Mi-go.";
     d.spell_cast_msg = "mutters incantations.";
@@ -590,12 +608,11 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::ranged, 40);
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 3;
-    d.group_size = MonGroupSize::few;
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
     d.can_open_doors = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 25;
+    d.nr_turns_aware = 16;
     d.descr = "A fanatic cultist, madly gibbering in some half-lost language. It is "
               "wielding a Spike gun.";
     d.spell_cast_msg = "mutters incantations.";
@@ -629,7 +646,6 @@ void init_data_list()
     d.nr_left_allowed_to_spawn = 1;
     d.is_unique = true;
     d.spawn_min_dlvl = 3;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
     d.descr = "During the Salem witch trials of 1692 an old woman by the name of "
@@ -681,7 +697,6 @@ void init_data_list()
     d.is_unique = true;
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = data[size_t(ActorId::keziah_mason)].spawn_min_dlvl;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::floor;
     d.descr = "\"That object - no larger than a good sized rat and quaintly "
               "called by the townspeople, \"Brown Jenkin\" - seemed to have been "
@@ -728,7 +743,6 @@ void init_data_list()
     d.is_auto_spawn_allowed = false;
     d.is_unique = true;
     d.natural_props[size_t(PropId::infravis)] = true;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
     d.descr = "[DESCRIPTION MISSING]";
@@ -763,12 +777,11 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 40);
     d.spawn_min_dlvl = 5;
     d.spawn_max_dlvl = dlvl_last_mid_game;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
     d.can_open_doors = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 25;
+    d.nr_turns_aware = 16;
     d.descr = "A fanatic cultist of the priest rank, madly gibbering in some "
               "half-lost language.";
     d.spell_cast_msg = "mutters incantations.";
@@ -797,13 +810,12 @@ void init_data_list()
     d.color = clr_green_lgt;
     d.tile = TileId::giant_spider;
     d.hp = 16;
-    d.dmg_melee = min_dmg_to_wound - 1;
+    d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 25);
     d.ability_vals.set_val(AbilityId::dodge_att, 40);
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.natural_props[size_t(PropId::infravis)] = true;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
     d.descr = "An enormous green spider.";
@@ -833,13 +845,12 @@ void init_data_list()
     d.color = clr_white_high;
     d.tile = TileId::giant_spider;
     d.hp = 16;
-    d.dmg_melee = min_dmg_to_wound - 1;
+    d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 25);
     d.ability_vals.set_val(AbilityId::dodge_att, 40);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.natural_props[size_t(PropId::infravis)] = true;
-    d.group_size = MonGroupSize::alone;
     d.nr_turns_aware = 5;
     d.actor_size = ActorSize::humanoid;
     d.descr = "An enormous white spider.";
@@ -869,13 +880,12 @@ void init_data_list()
     d.color = clr_red_lgt;
     d.tile = TileId::giant_spider;
     d.hp = 16;
-    d.dmg_melee = min_dmg_to_wound - 1;
+    d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 25);
     d.ability_vals.set_val(AbilityId::dodge_att, 40);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.natural_props[size_t(PropId::infravis)] = true;
-    d.group_size = MonGroupSize::alone;
     d.nr_turns_aware = 5;
     d.actor_size = ActorSize::humanoid;
     d.descr = "An enormous red spider.";
@@ -903,14 +913,18 @@ void init_data_list()
     d.color = clr_gray;
     d.tile = TileId::giant_spider;
     d.hp = 8;
-    d.dmg_melee = min_dmg_to_wound - 1;
+    d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 40);
     d.ability_vals.set_val(AbilityId::stealth, 90);
     d.natural_props[size_t(PropId::lgtSens)] = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[size_t(PropId::infravis)] = true;
-    d.group_size = MonGroupSize::pack;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,   1),
+        MonGroupSpawnRule(MonGroupSize::pack,  2)
+    });
     d.nr_turns_aware = 5;
     d.actor_size = ActorSize::humanoid;
     d.is_spider = true;
@@ -948,8 +962,12 @@ void init_data_list()
 //  d.ability_vals.set_val(AbilityId::ranged, 40);
     d.spawn_min_dlvl = 10;
     d.natural_props[size_t(PropId::infravis)] = true;
-    d.group_size = MonGroupSize::few;
-    d.nr_turns_aware = 20;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,   4),
+        MonGroupSpawnRule(MonGroupSize::pack,  1)
+    });
+    d.nr_turns_aware = 16;
     d.actor_size = ActorSize::humanoid;
     d.descr = "Leng spiders are huge, purplish arachnids, with pustulent bloated "
               "bodies and long, bristly legs. Native to the Dreamlands, the "
@@ -987,7 +1005,6 @@ void init_data_list()
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[size_t(PropId::infravis)] = true;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
     d.descr = "A fierce predator. It hisses menacingly, and venom drips from its fangs.";
@@ -1033,7 +1050,6 @@ void init_data_list()
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[size_t(PropId::infravis)] = true;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
     d.descr = "A fierce predator. It hisses menacingly, and venom drips from its fangs.";
@@ -1076,7 +1092,6 @@ void init_data_list()
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[size_t(PropId::infravis)] = true;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
     d.descr = "A fierce predator. It hisses menacingly, and venom drips from its fangs.";
@@ -1122,10 +1137,15 @@ void init_data_list()
     d.natural_props[size_t(PropId::rFire)] = true;
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 9;
-    d.group_size = MonGroupSize::few;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::alone, 4),
+        MonGroupSpawnRule(MonGroupSize::few,   10),
+        MonGroupSpawnRule(MonGroupSize::pack,  1)
+    });
     d.actor_size = ActorSize::floor;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 25;
+    d.nr_turns_aware = 16;
     d.descr = "This extremely aggressive canine seems to be part corporeal and "
               "part fire. It breathes searing flames.";
     d.aggro_text_mon_seen = d.name_the + " snarls at me.";
@@ -1168,7 +1188,6 @@ void init_data_list()
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 13;
     d.spawn_max_dlvl = 999;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.nr_turns_aware = 50;
@@ -1217,7 +1236,6 @@ void init_data_list()
     d.natural_props[size_t(PropId::invis)] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
     d.descr = "A restless spirit.";
@@ -1259,9 +1277,13 @@ void init_data_list()
     d.natural_props[size_t(PropId::invis)] = true;
     d.spawn_min_dlvl = dlvl_first_mid_game;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
-    d.group_size = MonGroupSize::few;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::alone, 5),
+        MonGroupSpawnRule(MonGroupSize::few,   1)
+    });
     d.actor_size = ActorSize::humanoid;
-    d.nr_turns_aware = 7;
+    d.nr_turns_aware = 5;
     d.descr = "It exists between the land of the dead and the living. It "
               "resembles a grim reaper, including the cloak, scythe, and "
               "skeletal appearance.";
@@ -1303,7 +1325,6 @@ void init_data_list()
     d.natural_props[size_t(PropId::infravis)] = true;
     d.natural_props[size_t(PropId::invis)] = true;
     d.spawn_min_dlvl = dlvl_first_late_game;
-    d.group_size = MonGroupSize::alone;
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
@@ -1344,12 +1365,18 @@ void init_data_list()
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
-    d.group_size = MonGroupSize::pack;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,   5),
+        MonGroupSpawnRule(MonGroupSize::pack,  10),
+        MonGroupSpawnRule(MonGroupSize::swarm, 1)
+    });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
     d.descr = "An large aggressive rodent.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.is_rat = true;
+    d.is_auto_spawn_allowed = false;
     data[size_t(d.id)] = d;
     d.reset();
 
@@ -1377,7 +1404,12 @@ void init_data_list()
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 15;
-    d.group_size = MonGroupSize::pack;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,   20),
+        MonGroupSpawnRule(MonGroupSize::pack,  5),
+        MonGroupSpawnRule(MonGroupSize::swarm, 1)
+    });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
     d.descr = "At first sight, a Rat-thing can easily be mistaken for a large, "
@@ -1421,7 +1453,11 @@ void init_data_list()
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 0;
     d.spawn_max_dlvl = 10;
-    d.group_size = MonGroupSize::pack;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,   1),
+        MonGroupSpawnRule(MonGroupSize::pack,  4)
+    });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
     d.descr = "A large wolf with eyes full of cunning.";
@@ -1461,7 +1497,11 @@ void init_data_list()
     d.natural_props[size_t(PropId::flying)] = true;
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = 10;
-    d.group_size = MonGroupSize::few;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::alone,  1),
+        MonGroupSpawnRule(MonGroupSize::few,    1)
+    });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 3;
     d.descr = "A vicious black bird.";
@@ -1501,7 +1541,12 @@ void init_data_list()
     d.natural_props[size_t(PropId::flying)] = true;
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 4;
-    d.group_size = MonGroupSize::pack;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,    10),
+        MonGroupSpawnRule(MonGroupSize::pack,   20),
+        MonGroupSpawnRule(MonGroupSize::swarm,  1)
+    });
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.nr_turns_aware = 5;
@@ -1543,7 +1588,12 @@ void init_data_list()
     d.natural_props[size_t(PropId::flying)] = true;
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 6;
-    d.group_size = MonGroupSize::few;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,    40),
+        MonGroupSpawnRule(MonGroupSize::pack,   5),
+        MonGroupSpawnRule(MonGroupSize::swarm,  1)
+    });
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.nr_turns_aware = 5;
@@ -1591,7 +1641,6 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::stealth, 20);
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 8;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.nr_turns_aware = 5;
@@ -1629,7 +1678,11 @@ void init_data_list()
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 7;
     d.spawn_max_dlvl = dlvl_last_mid_game;
-    d.group_size = MonGroupSize::swarm;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::pack,   1),
+        MonGroupSpawnRule(MonGroupSize::swarm,  4)
+    });
     d.actor_size = ActorSize::floor;
     d.can_bash_doors = false;
     d.nr_turns_aware = 12;
@@ -1667,11 +1720,15 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::ranged, 55);
     d.natural_props[size_t(PropId::flying)] = true;
     d.spawn_min_dlvl = 6;
-    d.group_size = MonGroupSize::few;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::alone,  5),
+        MonGroupSpawnRule(MonGroupSize::few,    10)
+    });
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.can_open_doors = true;
-    d.nr_turns_aware = 12;
+    d.nr_turns_aware = 16;
     d.descr =
         "Fungi are more closely related to animals than plants, so it's no "
         "wonder that on some worlds, fungal life evolved to dominate "
@@ -1728,11 +1785,10 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::ranged, 55);
     d.natural_props[size_t(PropId::flying)] = true;
     d.spawn_min_dlvl = 12;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.can_open_doors = true;
-    d.nr_turns_aware = 12;
+    d.nr_turns_aware = 16;
     d.descr = data[size_t(ActorId::mi_go)].descr;
     d.spell_cast_msg = "speaks incantations in a droning voice.";
     d.aggro_text_mon_seen = d.name_the + " speaks at me in a droning voice.";
@@ -1782,11 +1838,10 @@ void init_data_list()
     d.natural_props[size_t(PropId::invis)] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 6;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;
     d.can_open_doors = false;
-    d.nr_turns_aware = 6;
+    d.nr_turns_aware = 5;
     d.descr =
         "Flying polyps are a horrible elder race of half polypous, utterly alien "
         "entities. They are only partly material and have the power of aerial "
@@ -1841,11 +1896,10 @@ void init_data_list()
     d.natural_props[size_t(PropId::see_invis)] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = dlvl_last - 4;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::giant;
     d.can_bash_doors = false;
     d.can_open_doors = false;
-    d.nr_turns_aware = 6;
+    d.nr_turns_aware = 5;
     d.descr = data[size_t(ActorId::flying_polyp)].descr;
     d.aggro_text_mon_seen = d.name_the + " makes shrill whistling sounds.";
     d.aggro_text_mon_hidden = "I hear a shrill whistling.";
@@ -1874,18 +1928,23 @@ void init_data_list()
     d.glyph = 'M';
     d.color = clr_green;
     d.tile = TileId::ghoul;
-    d.hp = 21;
+    d.hp = 28;
     d.spi = 20;
-    d.dmg_melee = min_dmg_to_wound - 1;
+    d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 55);
     d.natural_props[size_t(PropId::rDisease)] = true;
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 5;
-    d.group_size = MonGroupSize::pack;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,   10),
+        MonGroupSpawnRule(MonGroupSize::pack,  20),
+        MonGroupSpawnRule(MonGroupSize::swarm, 1)
+    });
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.can_open_doors = true;
-    d.nr_turns_aware = 25;
+    d.nr_turns_aware = 7;
     d.descr = "\"These figures were seldom completely human, but often approached humanity in "
               "varying degrees. Most of the bodies, while roughly bipedal, had a forward "
               "slumping, and a vaguely canine cast. The texture of the majority was a kind of "
@@ -1896,7 +1955,7 @@ void init_data_list()
     d.aggro_text_mon_hidden = "I hear a chilling howl.";
     d.aggro_sfx_mon_seen = SfxId::ghoul_growl;
     d.aggro_sfx_mon_hidden = SfxId::wolf_howl;
-    d.erratic_move_pct = ActorErraticFreq::somewhat;
+    d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = MonShockLvl::frightening;
     d.is_infra_visible = false;
     d.is_humanoid = true;
@@ -1933,14 +1992,18 @@ void init_data_list()
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
-    d.group_size = MonGroupSize::pack;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,   1),
+        MonGroupSpawnRule(MonGroupSize::pack,  2)
+    });
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;
     d.can_open_doors = false;
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
-    d.nr_turns_aware = 25;
+    d.nr_turns_aware = 7;
     d.descr = "A living shadow.";
     d.is_auto_descr_allowed = false;
     d.is_infra_visible = false;
@@ -1976,14 +2039,13 @@ void init_data_list()
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = dlvl_last_mid_game;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.can_open_doors = true;
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
-    d.nr_turns_aware = 30;
+    d.nr_turns_aware = 32;
     d.descr = "A mysterious humanoid figure stalking for prey. It is invisible to normal eyes.";
     d.is_auto_descr_allowed = true;
     d.is_infra_visible = false;
@@ -2017,11 +2079,10 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 40);
     d.spawn_min_dlvl = dlvl_first_late_game - 3;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.can_open_doors = true;
-    d.nr_turns_aware = 9999;
+    d.nr_turns_aware = 7;
     d.descr = "A mummified human being, possibly dating back millennia.";
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = ActorErraticFreq::rare;
@@ -2052,14 +2113,18 @@ void init_data_list()
     d.tile = TileId::croc_head_mummy;
     d.hp = 25;
     d.spi = 30;
-    d.dmg_melee = 8;
+    d.dmg_melee = min_dmg_to_wound + 4;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.spawn_min_dlvl = dlvl_first_late_game - 3;
-    d.group_size = MonGroupSize::swarm;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::pack,   1),
+        MonGroupSpawnRule(MonGroupSize::swarm,  2)
+    });
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.can_open_doors = true;
-    d.nr_turns_aware = 9999;
+    d.nr_turns_aware = 7;
     d.descr =
         "A grotesque mummified hybrid creature, with the body of a human and the head "
         "of a crocodile. It is wielding a spear.";
@@ -2098,7 +2163,6 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound + 2;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.is_auto_spawn_allowed = false;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.can_open_doors = true;
@@ -2139,7 +2203,6 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound + 2;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.spawn_min_dlvl = 11;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.can_open_doors = true;
@@ -2178,20 +2241,24 @@ void init_data_list()
     d.glyph = 'F';
     d.color = clr_white;
     d.tile = TileId::deep_one;
-    d.hp = 15;
+    d.hp = 18;
     d.spi = 12;
-    d.dmg_melee = min_dmg_to_wound;
-    d.dmg_ranged = min_dmg_to_wound - 1;
+    d.dmg_melee = min_dmg_to_wound + 4;
+    d.dmg_ranged = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 55);
     d.ability_vals.set_val(AbilityId::ranged, 50);
     d.spawn_min_dlvl = 6;
-    d.group_size = MonGroupSize::swarm;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::pack,   6),
+        MonGroupSpawnRule(MonGroupSize::swarm,  1)
+    });
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
     d.is_amphibian = true;
     d.can_bash_doors = true;
     d.can_open_doors = true;
-    d.nr_turns_aware = 20;
+    d.nr_turns_aware = 7;
     d.descr = "Deep ones are misbegotten creatures of the deep. A deep one "
               "appears as an abominable crossbreed of a human and amphibian. Its "
               "fins are merged with twisted arms and legs; its bent back is "
@@ -2230,12 +2297,16 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodge_att, 35);
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = dlvl_first_late_game;
-    d.group_size = MonGroupSize::pack;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,   1),
+        MonGroupSpawnRule(MonGroupSize::pack,  4)
+    });
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
     d.can_bash_doors = true;
     d.can_open_doors = false;
-    d.nr_turns_aware = 6;
+    d.nr_turns_aware = 7;
     d.descr =
         "An extremely aggressive species of great ape. Their pale skin and excellent night vision "
         "indicates that they adapted to subterranean life a very long time ago.";
@@ -2272,10 +2343,15 @@ void init_data_list()
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
-    d.group_size = MonGroupSize::swarm;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,   2),
+        MonGroupSpawnRule(MonGroupSize::pack,  8),
+        MonGroupSpawnRule(MonGroupSize::swarm, 1)
+    });
     d.actor_size = ActorSize::floor;
     d.prevent_knockback = true;
-    d.nr_turns_aware = 10;
+    d.nr_turns_aware = 5;
     d.descr = "A slithering conglomeration of carnivorous worms.";
     d.can_be_summoned = true;
     d.is_auto_descr_allowed = true;
@@ -2309,10 +2385,15 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 40);
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 6;
-    d.group_size = MonGroupSize::swarm;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,   2),
+        MonGroupSpawnRule(MonGroupSize::pack,  8),
+        MonGroupSpawnRule(MonGroupSize::swarm, 1)
+    });
     d.actor_size = ActorSize::floor;
     d.prevent_knockback = true;
-    d.nr_turns_aware = 20;
+    d.nr_turns_aware = 5;
     d.descr = "A slithering conglomeration of carnivorous worms. Their bite causes "
               "heavy disorientation.";
     d.can_be_summoned = true;
@@ -2352,7 +2433,10 @@ void init_data_list()
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
-    d.group_size = MonGroupSize::few;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,   1)
+    });
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
     d.is_auto_descr_allowed = true;
@@ -2395,7 +2479,10 @@ void init_data_list()
     d.natural_props[size_t(PropId::rPoison)] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 8;
-    d.group_size = MonGroupSize::few;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few, 2)
+    });
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
     d.is_auto_descr_allowed = true;
@@ -2438,9 +2525,14 @@ void init_data_list()
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
-    d.group_size = MonGroupSize::swarm;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,   1),
+        MonGroupSpawnRule(MonGroupSize::pack,  4),
+        MonGroupSpawnRule(MonGroupSize::swarm, 1)
+    });
     d.actor_size = ActorSize::floor;
-    d.nr_turns_aware = 250;
+    d.nr_turns_aware = 32;
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = false;
@@ -2489,9 +2581,13 @@ void init_data_list()
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
-    d.group_size = MonGroupSize::pack;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,   1),
+        MonGroupSpawnRule(MonGroupSize::pack,  4)
+    });
     d.actor_size = ActorSize::floor;
-    d.nr_turns_aware = 250;
+    d.nr_turns_aware = 32;
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = false;
@@ -2539,9 +2635,14 @@ void init_data_list()
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 5;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
-    d.group_size = MonGroupSize::swarm;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,   1),
+        MonGroupSpawnRule(MonGroupSize::pack,  4),
+        MonGroupSpawnRule(MonGroupSize::swarm, 1)
+    });
     d.actor_size = ActorSize::floor;
-    d.nr_turns_aware = 250;
+    d.nr_turns_aware = 32;
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = false;
@@ -2590,9 +2691,14 @@ void init_data_list()
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 9;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
-    d.group_size = MonGroupSize::swarm;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,   1),
+        MonGroupSpawnRule(MonGroupSize::pack,  4),
+        MonGroupSpawnRule(MonGroupSize::swarm, 1)
+    });
     d.actor_size = ActorSize::floor;
-    d.nr_turns_aware = 250;
+    d.nr_turns_aware = 32;
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = false;
@@ -2642,9 +2748,8 @@ void init_data_list()
     d.natural_props[size_t(PropId::rDisease)] = true;
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 14;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
-    d.nr_turns_aware = 250;
+    d.nr_turns_aware = 16;
     d.can_open_doors = false;
     d.can_bash_doors = false;
     d.descr = "A peculiar floating speck of strange shifting colors. It is very confusing to "
@@ -2690,7 +2795,6 @@ void init_data_list()
     d.natural_props[size_t(PropId::infravis)] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 12;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::giant;
     d.nr_turns_aware = 5;
     d.is_auto_descr_allowed = true;
@@ -2743,11 +2847,10 @@ void init_data_list()
     d.natural_props[size_t(PropId::rSleep)] = true;
     d.natural_props[size_t(PropId::rDisease)] = true;
     d.spawn_min_dlvl = 14;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;
     d.can_open_doors = false;
-    d.nr_turns_aware = 25;
+    d.nr_turns_aware = 16;
     d.descr =
         "An infernal piece of technology, seemingly designed to serve as a sort of "
         "guard. It hovers around, constantly searching the area with beaming "
@@ -2790,7 +2893,7 @@ void init_data_list()
     d.can_leave_corpse = false;
     d.can_bash_doors = true;
     d.can_open_doors = false;
-    d.nr_turns_aware = 25;
+    d.nr_turns_aware = 16;
     d.aggro_text_mon_seen = "";
     d.aggro_text_mon_hidden = "";
     d.is_infra_visible = false;
@@ -2807,17 +2910,20 @@ void init_data_list()
     d.tile = TileId::fungi;
     d.glyph = 'e';
     d.color = clr_green_lgt;
-    d.group_size = MonGroupSize::few;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few, 1)
+    });
     d.hp = 1;
     d.spi = 1;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(AbilityId::melee, 7);
+    d.ability_vals.set_val(AbilityId::melee, 6);
     d.speed = ActorSpeed::slow;
     d.ai[size_t(AiId::looks)] = false;
     d.ai[size_t(AiId::attacks)] = true;
     d.ai[size_t(AiId::moves_to_random_when_unaware)] = false;
     d.prevent_knockback = true;
-    d.nr_turns_aware = 25;
+    d.nr_turns_aware = 5;
     d.spawn_min_dlvl = 3;
     d.actor_size = ActorSize::floor;
     d.is_auto_descr_allowed = false;
@@ -2861,7 +2967,11 @@ void init_data_list()
     d.natural_props[size_t(PropId::rConf)] = true;
     d.natural_props[size_t(PropId::infravis)] = true;
     d.spawn_min_dlvl = 3;
-    d.group_size = MonGroupSize::pack;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::few,   1),
+        MonGroupSpawnRule(MonGroupSize::pack,  4)
+    });
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
     d.is_auto_descr_allowed = true;
@@ -2911,9 +3021,8 @@ void init_data_list()
     d.prevent_knockback = true;
     d.spawn_min_dlvl = dlvl_last - 6;
     d.spawn_max_dlvl = 999;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::giant;
-    d.nr_turns_aware = 4;
+    d.nr_turns_aware = 5;
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = true;
@@ -2964,9 +3073,8 @@ void init_data_list()
     d.prevent_knockback = true;
     d.spawn_min_dlvl = dlvl_last - 6;
     d.spawn_max_dlvl = 999;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
-    d.nr_turns_aware = 6;
+    d.nr_turns_aware = 5;
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = true;
@@ -3013,7 +3121,6 @@ void init_data_list()
     d.dmg_melee = 10;
     d.ability_vals.set_val(AbilityId::melee, 70);
     d.is_auto_spawn_allowed = false;
-    d.group_size = MonGroupSize::alone;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.can_open_doors = true;

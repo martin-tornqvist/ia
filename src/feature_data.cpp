@@ -259,7 +259,7 @@ void init_data_list()
     d.can_have_rigid = false;
     d.can_have_item = false;
     d.matl_type = Matl::metal;
-    d.room_spawn_rules.set(3, {0, dlvl_last_mid_game}, PlacementRule::either,
+    d.room_spawn_rules.set(3, {0, dlvl_last_mid_game}, PlacementRule::away_from_walls,
     {
         RoomType::ritual, RoomType::plain,
     });

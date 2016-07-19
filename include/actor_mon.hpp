@@ -121,7 +121,7 @@ protected:
 
     virtual void on_std_turn_hook() {}
 
-    int group_size();
+    int nr_mon_in_group();
 };
 
 class Rat: public Mon

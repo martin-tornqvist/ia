@@ -722,8 +722,8 @@ void run_sympt()
         delete sympt;
     }
 
-    //If the symptom is permanent (i.e. not just a one-shot thing like screaming), set it as active
-    //in the symptoms list
+    //If the symptom is permanent (i.e. not a one-shot thing like screaming),
+    //set it as active in the symptoms list
     if (sympt->is_permanent())
     {
         const size_t sympt_idx = size_t(sympt->id());

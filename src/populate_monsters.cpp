@@ -82,14 +82,27 @@ void mk_group_at(const ActorId id,
 
     int max_nr_in_group = 1;
 
-    switch (d.group_size)
+    //First, determine the type of group by a weighted choice
+    std::vector<int> weights;
+
+    for (const auto& rule : d.group_sizes)
+    {
+        weights.push_back(rule.weight);
+    }
+
+    const int rnd_choice = rnd::weighted_choice(weights);
+
+    const MonGroupSize group_size = d.group_sizes[rnd_choice].group_size;
+
+    //Determine the actual amount of monsters to spawn based on the group type
+    switch (group_size)
     {
     case MonGroupSize::few:
-        max_nr_in_group = rnd::range(1, 2);
+        max_nr_in_group = rnd::range(2, 3);
         break;
 
     case MonGroupSize::pack:
-        max_nr_in_group = rnd::range(3, 5);
+        max_nr_in_group = rnd::range(4, 5);
         break;
 
     case MonGroupSize::swarm:
@@ -121,9 +134,9 @@ void mk_group_at(const ActorId id,
         }
         else //Not origin actor
         {
-            //The monster may have been assigned a leader when placed (e.g. Ghouls being allied
-            //to player Ghoul, or other special case hooks). If not, we assign the origin monster
-            //as leader of this group.
+            //The monster may have been assigned a leader when placed
+            //(e.g. Ghouls allied to a player Ghoul, or other special cases).
+            //If not, we assign the origin monster as leader of this group.
             if (!mon->leader_)
             {
                 mon->leader_ = origin_actor;

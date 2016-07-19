@@ -473,24 +473,22 @@ void AmuletEffectShriek::on_std_turn_equipped()
                      false,
                      MorePromptOnMsg::yes);
 
-        const int nr_words = 3;
+        const int nr_words = rnd::range(2, 4);
 
         std::string phrase = "";
 
         for (int i = 0; i < nr_words; ++i)
         {
             const int   idx     = rnd::range(0, words_.size() - 1);
-            const auto& word    = words_[size_t(idx)];
+            const auto& word    = words_[(size_t)idx];
 
-            phrase += word;
+            phrase += word + "...";
 
-            if (i < nr_words - 1)
+            if (i < (nr_words - 1))
             {
-                phrase += " ... ";
+                phrase += " ";
             }
         }
-
-        phrase += "!!!";
 
         Snd snd(phrase,
                 SfxId::END,

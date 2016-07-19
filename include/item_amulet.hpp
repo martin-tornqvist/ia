@@ -514,7 +514,7 @@ public:
 
     std::string descr() const override
     {
-        return "The wounds of the wearer heal faster.";
+        return "The wearer recovers faster.";
     }
 
     void on_equip(const Verbosity verbosity) override;
@@ -541,7 +541,7 @@ public:
 
     std::string descr() const override
     {
-        return "The wounds of the wearer heal slower.";
+        return "The wearer recovers slower.";
     }
 
     void on_equip(const Verbosity verbosity) override;

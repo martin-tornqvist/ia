@@ -92,6 +92,24 @@ enum class MonGroupSize
     swarm
 };
 
+// Each actor data entry has a list of this struct, this is used for choosing
+// group sizes when spawning monsters. The size of the group spawned is
+// determined by a weighted random choice (so that a certain monster could for
+// example usually spawn alone, but on some rare occasions spawn in big groups).
+struct MonGroupSpawnRule
+{
+    MonGroupSpawnRule() :
+        group_size  (MonGroupSize::alone),
+        weight      (1) {}
+
+    MonGroupSpawnRule(MonGroupSize group_size, int weight) :
+        group_size  (group_size),
+        weight      (weight) {}
+    
+    MonGroupSize group_size;
+    int weight;
+};
+
 enum class ActorSpeed
 {
     sluggish,
@@ -158,7 +176,7 @@ struct ActorDataT
     TileId tile;
     char glyph;
     Clr color;
-    MonGroupSize group_size;
+    std::vector<MonGroupSpawnRule> group_sizes;
     int hp, spi, dmg_melee, dmg_ranged;
     ActorSpeed speed;
     AbilityVals ability_vals;

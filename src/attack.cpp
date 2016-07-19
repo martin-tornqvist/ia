@@ -302,14 +302,14 @@ RangedAttData::RangedAttData(Actor* const attacker,
 
         const ActorSpeed def_speed = defender_data.speed;
 
-        const int speed_mod = def_speed == ActorSpeed::sluggish ?  20 :
+        const int speed_mod = def_speed == ActorSpeed::sluggish ?  25 :
                               def_speed == ActorSpeed::slow     ?  10 :
                               def_speed == ActorSpeed::normal   ?   0 :
                               def_speed == ActorSpeed::fast     ? -10 : -30;
 
         defender_size       = defender_data.actor_size;
 
-        const int size_mod  = defender_size == ActorSize::floor ? -10 : 0;
+        const int size_mod  = defender_size == ActorSize::floor ? -15 : 0;
 
         int unaware_def_mod = 0;
 
@@ -424,10 +424,10 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
 
         const int dist_to_tgt = king_dist(att_pos.x, att_pos.y, def_pos.x, def_pos.y);
 
-        const int           dist_mod        = 15 - (dist_to_tgt * 5);
+        const int           dist_mod       = 15 - (dist_to_tgt * 5);
         const ActorSpeed   def_speed       = defender_data.speed;
 
-        const int speed_mod = def_speed == ActorSpeed::sluggish ?  20 :
+        const int speed_mod = def_speed == ActorSpeed::sluggish ?  25 :
                               def_speed == ActorSpeed::slow     ?  10 :
                               def_speed == ActorSpeed::normal   ?   0 :
                               def_speed == ActorSpeed::fast     ? -15 : -35;

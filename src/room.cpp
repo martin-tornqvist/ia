@@ -52,14 +52,13 @@ void init_room_bucket()
 
     if (dlvl <= dlvl_last_early_game)
     {
-        add_to_room_bucket(RoomType::human,        3);
+        add_to_room_bucket(RoomType::human,        rnd::range(2, 3));
         add_to_room_bucket(RoomType::ritual,       1);
-        add_to_room_bucket(RoomType::spider,       2);
-        add_to_room_bucket(RoomType::snake_pit,    1);
-        add_to_room_bucket(RoomType::crypt,        3);
+        add_to_room_bucket(RoomType::spider,       rnd::range(1, 3));
+        add_to_room_bucket(RoomType::crypt,        rnd::range(2, 3));
         add_to_room_bucket(RoomType::monster,      1);
-        add_to_room_bucket(RoomType::flooded,      1);
-        add_to_room_bucket(RoomType::muddy,        1);
+        add_to_room_bucket(RoomType::flooded,      rnd::range(1, 2));
+        add_to_room_bucket(RoomType::muddy,        rnd::range(1, 2));
 
         const size_t nr_plain_rooms = room_bucket_.size() * 3;
 
@@ -67,14 +66,14 @@ void init_room_bucket()
     }
     else if (dlvl <= dlvl_last_mid_game)
     {
-        add_to_room_bucket(RoomType::human,        2);
+        add_to_room_bucket(RoomType::human,        rnd::range(1, 2));
         add_to_room_bucket(RoomType::ritual,       1);
-        add_to_room_bucket(RoomType::spider,       2);
+        add_to_room_bucket(RoomType::spider,       rnd::range(1, 3));
         add_to_room_bucket(RoomType::snake_pit,    1);
         add_to_room_bucket(RoomType::crypt,        4);
         add_to_room_bucket(RoomType::monster,      2);
-        add_to_room_bucket(RoomType::flooded,      2);
-        add_to_room_bucket(RoomType::muddy,        2);
+        add_to_room_bucket(RoomType::flooded,      rnd::range(1, 3));
+        add_to_room_bucket(RoomType::muddy,        rnd::range(1, 3));
         add_to_room_bucket(RoomType::cave,         2);
         add_to_room_bucket(RoomType::chasm,        1);
         add_to_room_bucket(RoomType::forest,       2);
@@ -83,7 +82,7 @@ void init_room_bucket()
 
         add_to_room_bucket(RoomType::plain, nr_plain_rooms);
     }
-    else
+    else //Late game
     {
         add_to_room_bucket(RoomType::monster,      1);
         add_to_room_bucket(RoomType::spider,       1);
@@ -608,7 +607,7 @@ Range SpiderRoom::nr_auto_features_allowed() const
 
 int SpiderRoom::base_pct_chance_drk() const
 {
-    return 30;
+    return 80;
 }
 
 bool SpiderRoom::is_allowed() const
