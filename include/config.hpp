@@ -34,6 +34,7 @@ bool            is_any_key_confirm_more();
 int             delay_projectile_draw();
 int             delay_shotgun();
 int             delay_explosion();
+bool            is_light_explosive_prompt();
 
 } //config
 

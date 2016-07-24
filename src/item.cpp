@@ -1207,6 +1207,25 @@ ConsumeItem Explosive::activate(Actor* const actor)
         return ConsumeItem::no;
     }
 
+    if (config::is_light_explosive_prompt())
+    {
+        const std::string name = this->name(ItemRefType::a);
+
+        render::draw_map_state();
+
+        msg_log::add("Light " + name + "? [y/n]");
+        msg_log::draw(UpdateScreen::yes);
+
+        if (query::yes_or_no() == YesNoAnswer::no)
+        {
+            msg_log::clear();
+
+            return ConsumeItem::no;
+        }
+
+        msg_log::clear();
+    }
+
     //Make a copy to use as the held ignited explosive.
     auto* cpy = static_cast<Explosive*>(item_factory::mk(data().id, 1));
 
