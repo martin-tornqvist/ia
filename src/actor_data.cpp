@@ -24,7 +24,7 @@ void ActorDataT::reset()
     //Default spawn group size is "alone"
     group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::alone,  1),
+        MonGroupSpawnRule(MonGroupSize::alone, 1),
     });
 
     hp = dmg_melee = dmg_ranged = 1;
@@ -45,7 +45,7 @@ void ActorDataT::reset()
         ai[i] = false;
     }
 
-    ai[size_t(AiId::moves_to_random_when_unaware)] = true;
+    ai[(size_t)AiId::moves_to_random_when_unaware] = true;
 
     nr_turns_aware = 0;
     spawn_min_dlvl = 999;
@@ -86,7 +86,7 @@ void ActorDataT::reset()
 namespace actor_data
 {
 
-ActorDataT data[size_t(ActorId::END)];
+ActorDataT data[(size_t)ActorId::END];
 
 namespace
 {
@@ -108,7 +108,7 @@ void init_data_list()
     d.is_auto_spawn_allowed = false;
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Reanimated Corpse";
@@ -116,13 +116,13 @@ void init_data_list()
     d.corpse_name_a = "A lifeless gruesome corpse";
     d.corpse_name_the = "The lifeless gruesome corpse";
     d.id = ActorId::zombie;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::normal;
     d.glyph = 'Z';
     d.color = clr_brown;
@@ -134,11 +134,11 @@ void init_data_list()
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,  3),
-        MonGroupSpawnRule(MonGroupSize::pack, 1)
+        MonGroupSpawnRule(MonGroupSize::few,    3),
+        MonGroupSpawnRule(MonGroupSize::pack,   1)
     });
     d.actor_size = ActorSize::humanoid;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 5;
     d.descr = "This rotting thing appears to have been brought back to life "
@@ -156,7 +156,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::crypt);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Reanimated Corpse";
@@ -164,13 +164,13 @@ void init_data_list()
     d.corpse_name_a = "A lifeless gruesome corpse";
     d.corpse_name_the = "The lifeless gruesome corpse";
     d.id = ActorId::zombie_axe;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::normal;
     d.glyph = 'Z';
     d.color = clr_gray;
@@ -182,11 +182,11 @@ void init_data_list()
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,  3),
-        MonGroupSpawnRule(MonGroupSize::pack, 1)
+        MonGroupSpawnRule(MonGroupSize::few,    3),
+        MonGroupSpawnRule(MonGroupSize::pack,   1)
     });
     d.actor_size = ActorSize::humanoid;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 5;
     d.descr = "This rotting thing appears to have been brought back to life "
@@ -203,7 +203,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::crypt);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Bloated Corpse";
@@ -211,13 +211,13 @@ void init_data_list()
     d.corpse_name_a = "A huge gruesome corpse";
     d.corpse_name_the = "The huge gruesome corpse";
     d.id = ActorId::bloated_zombie;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::slow;
     d.ranged_cooldown_turns = 20;
     d.glyph = 'Z';
@@ -232,10 +232,10 @@ void init_data_list()
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,  1)
+        MonGroupSpawnRule(MonGroupSize::few, 1)
     });
     d.actor_size = ActorSize::humanoid;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 16;
     d.descr = "This lumbering giant corpse seems to be artificially bloated "
@@ -250,7 +250,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::crypt);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "Major Clapham-Lee";
@@ -258,13 +258,13 @@ void init_data_list()
     d.corpse_name_a = "The corpse of Major Clapham-Lee";
     d.corpse_name_the = d.corpse_name_a;
     d.id = ActorId::major_clapham_lee;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = false;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::normal;
     d.glyph = 'Z';
     d.color = clr_cyan_lgt;
@@ -275,7 +275,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::ranged, 40);
     d.spawn_min_dlvl = 4;
     d.actor_size = ActorSize::humanoid;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 20;
     d.descr = "Major Sir Eric Moreland Clapham-Lee was once a commanding officer "
@@ -292,7 +292,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::crypt);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "Dean Halsey";
@@ -300,13 +300,13 @@ void init_data_list()
     d.corpse_name_a = "The corpse of Dean Halsey";
     d.corpse_name_the = d.corpse_name_a;
     d.id = ActorId::dean_halsey;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = false;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::normal;
     d.glyph = 'Z';
     d.color = clr_cyan;
@@ -319,7 +319,7 @@ void init_data_list()
     d.spawn_min_dlvl = 4;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.nr_turns_aware = 20;
     d.descr = "Alan Halsey was the dean of the Miskatonic University in New "
               "England. He must have gotten into the hands of the Cult, who "
@@ -334,7 +334,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::crypt);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "Crawling Intestines";
@@ -342,13 +342,13 @@ void init_data_list()
     d.corpse_name_a = "";
     d.corpse_name_the = "";
     d.id = ActorId::crawling_intestines;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = false;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed = ActorSpeed::slow;
     d.glyph = 'z';
     d.color = clr_red_lgt;
@@ -357,13 +357,13 @@ void init_data_list()
     d.spi = 8;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 45);
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 15;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::alone, 2),
-        MonGroupSpawnRule(MonGroupSize::few,   1)
+        MonGroupSpawnRule(MonGroupSize::alone,  2),
+        MonGroupSpawnRule(MonGroupSize::few,    1)
     });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
@@ -375,7 +375,7 @@ void init_data_list()
     d.can_leave_corpse = false;
     d.is_undead = true;
     d.native_rooms.push_back(RoomType::monster);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Crawling Hand";
@@ -383,13 +383,13 @@ void init_data_list()
     d.corpse_name_a = "";
     d.corpse_name_the = "";
     d.id = ActorId::crawling_hand;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = false;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed = ActorSpeed::fast;
     d.glyph = 'z';
     d.color = clr_brown;
@@ -398,13 +398,13 @@ void init_data_list()
     d.spi = 8;
     d.dmg_melee = 3;
     d.ability_vals.set_val(AbilityId::melee, 40);
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 15;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::alone, 2),
-        MonGroupSpawnRule(MonGroupSize::few,   1)
+        MonGroupSpawnRule(MonGroupSize::alone,  2),
+        MonGroupSpawnRule(MonGroupSize::few,    1)
     });
     d.actor_size = ActorSize::floor;
     d.prevent_knockback = true;
@@ -418,7 +418,7 @@ void init_data_list()
     d.is_undead = true;
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::plain);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "Thing";
@@ -426,13 +426,13 @@ void init_data_list()
     d.corpse_name_a = "";
     d.corpse_name_the = "";
     d.id = ActorId::thing;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = false;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed = ActorSpeed::fastest;
     d.spell_cooldown_turns = 2;
     d.glyph = 'z';
@@ -445,7 +445,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::stealth, 90);
     d.nr_left_allowed_to_spawn = 1;
     d.is_unique = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 5;
     d.spawn_max_dlvl = dlvl_last;
     d.actor_size = ActorSize::floor;
@@ -460,7 +460,7 @@ void init_data_list()
     d.is_undead = true;
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::plain);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Floating Skull";
@@ -468,13 +468,13 @@ void init_data_list()
     d.corpse_name_a = "A Skull";
     d.corpse_name_the = "The Skull";
     d.id = ActorId::floating_skull;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.glyph = 'z';
     d.color = clr_white_high;
@@ -484,8 +484,8 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound - 2;
     d.ability_vals.set_val(AbilityId::melee, 40);
     d.ability_vals.set_val(AbilityId::dodge_att, 60);
-    d.natural_props[size_t(PropId::flying)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.actor_size = ActorSize::floor;
@@ -504,7 +504,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::ritual);
     d.native_rooms.push_back(RoomType::chasm);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Cultist";
@@ -512,13 +512,13 @@ void init_data_list()
     d.corpse_name_a = "A Cultist corpse";
     d.corpse_name_the = "The Cultist corpse";
     d.id = ActorId::cultist;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::slow;
     d.ranged_cooldown_turns = 2;
     d.spell_cooldown_turns = 2;
@@ -542,7 +542,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::human);
     d.native_rooms.push_back(RoomType::ritual);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Cultist";
@@ -550,13 +550,13 @@ void init_data_list()
     d.corpse_name_a = "A Cultist corpse";
     d.corpse_name_the = "The Cultist corpse";
     d.id = ActorId::cultist_electric;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::normal;
     d.ranged_cooldown_turns = 2;
     d.spell_cooldown_turns = 2;
@@ -581,7 +581,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::human);
     d.native_rooms.push_back(RoomType::ritual);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Cultist";
@@ -589,13 +589,13 @@ void init_data_list()
     d.corpse_name_a = "A Cultist corpse";
     d.corpse_name_the = "The Cultist corpse";
     d.id = ActorId::cultist_spike_gun;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::normal;
     d.ranged_cooldown_turns = 2;
     d.spell_cooldown_turns = 2;
@@ -620,7 +620,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::human);
     d.native_rooms.push_back(RoomType::ritual);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "Keziah Mason";
@@ -628,12 +628,12 @@ void init_data_list()
     d.corpse_name_a = "The corpse of Keziah Mason";
     d.corpse_name_the = d.corpse_name_a;
     d.id = ActorId::keziah_mason;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = false;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::normal;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
@@ -667,7 +667,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::ritual);
     d.native_rooms.push_back(RoomType::forest);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "Brown Jenkin";
@@ -675,13 +675,13 @@ void init_data_list()
     d.corpse_name_a = "The corpse of Brown Jenkin";
     d.corpse_name_the = d.corpse_name_a;
     d.id = ActorId::brown_jenkin;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = false;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::normal;
     d.spell_cooldown_turns = 3;
     d.glyph = 'r';
@@ -695,8 +695,8 @@ void init_data_list()
     d.is_auto_spawn_allowed = false;
     d.nr_left_allowed_to_spawn = 0;
     d.is_unique = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
-    d.spawn_min_dlvl = data[size_t(ActorId::keziah_mason)].spawn_min_dlvl;
+    d.natural_props[(size_t)PropId::infravis] = true;
+    d.spawn_min_dlvl = data[(size_t)ActorId::keziah_mason].spawn_min_dlvl;
     d.actor_size = ActorSize::floor;
     d.descr = "\"That object - no larger than a good sized rat and quaintly "
               "called by the townspeople, \"Brown Jenkin\" - seemed to have been "
@@ -717,7 +717,7 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = MonShockLvl::frightening;
     d.is_rat = true;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "Elder Hierophant";
@@ -725,12 +725,12 @@ void init_data_list()
     d.corpse_name_a = "The corpse of The Elder Hierophant";
     d.corpse_name_the = d.corpse_name_a;
     d.id = ActorId::leng_elder;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = false;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = false;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = false;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = false;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed = ActorSpeed::slow;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
@@ -742,7 +742,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::ranged, 40);
     d.is_auto_spawn_allowed = false;
     d.is_unique = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
     d.descr = "[DESCRIPTION MISSING]";
@@ -752,7 +752,7 @@ void init_data_list()
     d.nr_turns_aware = 999;
     d.erratic_move_pct = ActorErraticFreq::never;
     d.mon_shock_lvl = MonShockLvl::mind_shattering;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Cultist Priest";
@@ -760,13 +760,13 @@ void init_data_list()
     d.corpse_name_a = "A Cultist Priest corpse";
     d.corpse_name_the = "The Cultist Priest corpse";
     d.id = ActorId::cultist_priest;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::slow;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
@@ -790,7 +790,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::human);
     d.native_rooms.push_back(RoomType::ritual);
     d.native_rooms.push_back(RoomType::forest);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Huge Green Spider";
@@ -798,13 +798,13 @@ void init_data_list()
     d.corpse_name_a = "A Green Spider corpse";
     d.corpse_name_the = "The Green Spider corpse";
     d.id = ActorId::green_spider;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.glyph = 'A';
     d.color = clr_green_lgt;
@@ -815,7 +815,12 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodge_att, 40);
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::alone,  4),
+        MonGroupSpawnRule(MonGroupSize::few,    1),
+    });
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
     d.descr = "An enormous green spider.";
@@ -825,7 +830,7 @@ void init_data_list()
     d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::spider);
     d.native_rooms.push_back(RoomType::forest);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Huge White Spider";
@@ -833,13 +838,13 @@ void init_data_list()
     d.corpse_name_a = "A White Spider corpse";
     d.corpse_name_the = "The White Spider corpse";
     d.id = ActorId::white_spider;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.glyph = 'A';
     d.color = clr_white_high;
@@ -850,7 +855,12 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodge_att, 40);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::alone,  4),
+        MonGroupSpawnRule(MonGroupSize::few,    1),
+    });
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.nr_turns_aware = 5;
     d.actor_size = ActorSize::humanoid;
     d.descr = "An enormous white spider.";
@@ -860,7 +870,7 @@ void init_data_list()
     d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::spider);
     d.native_rooms.push_back(RoomType::forest);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Huge Red Spider";
@@ -868,13 +878,13 @@ void init_data_list()
     d.corpse_name_a = "A Red Spider corpse";
     d.corpse_name_the = "The Red Spider corpse";
     d.id = ActorId::red_spider;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.glyph = 'A';
     d.color = clr_red_lgt;
@@ -885,7 +895,12 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodge_att, 40);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::alone,  4),
+        MonGroupSpawnRule(MonGroupSize::few,    1),
+    });
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.nr_turns_aware = 5;
     d.actor_size = ActorSize::humanoid;
     d.descr = "An enormous red spider.";
@@ -895,19 +910,19 @@ void init_data_list()
     d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::spider);
     d.native_rooms.push_back(RoomType::forest);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Shadow Spider";
     d.name_the = "The Shadow Spider";
     d.id = ActorId::shadow_spider;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::normal;
     d.glyph = 'a';
     d.color = clr_gray;
@@ -916,14 +931,14 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 40);
     d.ability_vals.set_val(AbilityId::stealth, 90);
-    d.natural_props[size_t(PropId::lgtSens)] = true;
+    d.natural_props[(size_t)PropId::lgtSens] = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = dlvl_last_mid_game;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,   1),
-        MonGroupSpawnRule(MonGroupSize::pack,  2)
+        MonGroupSpawnRule(MonGroupSize::few,    1),
+        MonGroupSpawnRule(MonGroupSize::pack,   2)
     });
     d.nr_turns_aware = 5;
     d.actor_size = ActorSize::humanoid;
@@ -936,7 +951,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::spider);
     d.native_rooms.push_back(RoomType::forest);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Leng Spider";
@@ -944,13 +959,13 @@ void init_data_list()
     d.corpse_name_a = "A Leng Spider corpse";
     d.corpse_name_the = "The Leng Spider corpse";
     d.id = ActorId::leng_spider;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.glyph = 'A';
     d.color = clr_magenta;
@@ -961,11 +976,11 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 40);
 //  d.ability_vals.set_val(AbilityId::ranged, 40);
     d.spawn_min_dlvl = 10;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,   4),
-        MonGroupSpawnRule(MonGroupSize::pack,  1)
+        MonGroupSpawnRule(MonGroupSize::few,    4),
+        MonGroupSpawnRule(MonGroupSize::pack,   1)
     });
     d.nr_turns_aware = 16;
     d.actor_size = ActorSize::humanoid;
@@ -979,7 +994,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::spider);
     d.native_rooms.push_back(RoomType::forest);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Pit Viper";
@@ -987,13 +1002,13 @@ void init_data_list()
     d.corpse_name_a = "A Pit Viper corpse";
     d.corpse_name_the = "The Pit Viper corpse";
     d.id = ActorId::pit_viper;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.glyph = 'S';
     d.color = clr_green_lgt;
@@ -1004,7 +1019,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodge_att, 12);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
     d.descr = "A fierce predator. It hisses menacingly, and venom drips from its fangs.";
@@ -1021,7 +1036,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::chasm);
     d.native_rooms.push_back(RoomType::ritual);
     d.can_be_summoned = true;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Spitting Cobra";
@@ -1029,13 +1044,13 @@ void init_data_list()
     d.corpse_name_a = "A Spitting Cobra corpse";
     d.corpse_name_the = "The Spitting Cobra corpse";
     d.id = ActorId::spitting_cobra;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.glyph = 'S';
     d.color = clr_red;
@@ -1049,7 +1064,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodge_att, 12);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
     d.descr = "A fierce predator. It hisses menacingly, and venom drips from its fangs.";
@@ -1066,7 +1081,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::chasm);
     d.native_rooms.push_back(RoomType::ritual);
     d.can_be_summoned = true;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Black Mamba";
@@ -1074,13 +1089,13 @@ void init_data_list()
     d.corpse_name_a = "A Black Mamba corpse";
     d.corpse_name_the = "The Black Mamba corpse";
     d.id = ActorId::black_mamba;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fastest;
     d.glyph = 'S';
     d.color = clr_gray;
@@ -1091,7 +1106,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodge_att, 12);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
     d.descr = "A fierce predator. It hisses menacingly, and venom drips from its fangs.";
@@ -1108,7 +1123,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::chasm);
     d.native_rooms.push_back(RoomType::ritual);
     d.can_be_summoned = true;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Fire Hound";
@@ -1116,13 +1131,13 @@ void init_data_list()
     d.corpse_name_a = "A Fire Hound corpse";
     d.corpse_name_the = "The Fire Hound corpse";
     d.id = ActorId::fire_hound;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.ranged_cooldown_turns = 6;
     d.glyph = 'd';
@@ -1134,14 +1149,14 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 40);
     d.ability_vals.set_val(AbilityId::ranged, 65);
     d.ability_vals.set_val(AbilityId::dodge_att, 35);
-    d.natural_props[size_t(PropId::rFire)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::rFire] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 9;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::alone, 4),
-        MonGroupSpawnRule(MonGroupSize::few,   10),
-        MonGroupSpawnRule(MonGroupSize::pack,  1)
+        MonGroupSpawnRule(MonGroupSize::alone,  4),
+        MonGroupSpawnRule(MonGroupSize::few,    10),
+        MonGroupSpawnRule(MonGroupSize::pack,   1)
     });
     d.actor_size = ActorSize::floor;
     d.can_bash_doors = true;
@@ -1158,7 +1173,7 @@ void init_data_list()
     d.can_be_summoned = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::monster);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "Zuul the Gatekeeper";
@@ -1166,13 +1181,13 @@ void init_data_list()
     d.corpse_name_a = "The corpse of Zuul the Gatekeeper";
     d.corpse_name_the = d.corpse_name_a;
     d.id = ActorId::zuul;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = false;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.glyph = 'D';
     d.color = clr_magenta;
@@ -1184,8 +1199,8 @@ void init_data_list()
     d.dmg_melee = 8;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::dodge_att, 25);
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 13;
     d.spawn_max_dlvl = 999;
     d.actor_size = ActorSize::humanoid;
@@ -1208,19 +1223,19 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::human);
     d.native_rooms.push_back(RoomType::ritual);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Ghost";
     d.name_the = "The Ghost";
     d.id = ActorId::ghost;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::slow;
     d.glyph = 'G';
     d.color = clr_white_high;
@@ -1229,11 +1244,11 @@ void init_data_list()
     d.spi = 12;
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 40);
-    d.natural_props[size_t(PropId::ethereal)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
-    d.natural_props[size_t(PropId::invis)] = true;
+    d.natural_props[(size_t)PropId::ethereal] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::invis] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.actor_size = ActorSize::humanoid;
@@ -1249,19 +1264,19 @@ void init_data_list()
     d.can_leave_corpse = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::crypt);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Phantasm";
     d.name_the = "The Phantasm";
     d.id = ActorId::phantasm;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.glyph = 'G';
     d.color = clr_gray;
@@ -1270,17 +1285,17 @@ void init_data_list()
     d.spi = 12;
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 45);
-    d.natural_props[size_t(PropId::ethereal)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
-    d.natural_props[size_t(PropId::invis)] = true;
+    d.natural_props[(size_t)PropId::ethereal] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::invis] = true;
     d.spawn_min_dlvl = dlvl_first_mid_game;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::alone, 5),
-        MonGroupSpawnRule(MonGroupSize::few,   1)
+        MonGroupSpawnRule(MonGroupSize::alone,  5),
+        MonGroupSpawnRule(MonGroupSize::few,    1)
     });
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
@@ -1297,19 +1312,19 @@ void init_data_list()
     d.can_leave_corpse = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::crypt);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Wraith";
     d.name_the = "The Wraith";
     d.id = ActorId::wraith;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.spell_cooldown_turns = 4;
     d.glyph = 'G';
@@ -1319,11 +1334,11 @@ void init_data_list()
     d.spi = 30;
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.natural_props[size_t(PropId::ethereal)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
-    d.natural_props[size_t(PropId::invis)] = true;
+    d.natural_props[(size_t)PropId::ethereal] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::invis] = true;
     d.spawn_min_dlvl = dlvl_first_late_game;
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.actor_size = ActorSize::humanoid;
@@ -1339,7 +1354,7 @@ void init_data_list()
     d.can_leave_corpse = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::crypt);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Rat";
@@ -1347,13 +1362,13 @@ void init_data_list()
     d.corpse_name_a = "A Rat corpse";
     d.corpse_name_the = "The Rat corpse";
     d.id = ActorId::rat;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = false;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = false;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed = ActorSpeed::slow;
     d.glyph = 'r';
     d.color = clr_gray;
@@ -1362,14 +1377,14 @@ void init_data_list()
     d.spi = 1;
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 15);
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,   5),
-        MonGroupSpawnRule(MonGroupSize::pack,  10),
-        MonGroupSpawnRule(MonGroupSize::swarm, 1)
+        MonGroupSpawnRule(MonGroupSize::few,    5),
+        MonGroupSpawnRule(MonGroupSize::pack,   10),
+        MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
@@ -1377,7 +1392,7 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.is_rat = true;
     d.is_auto_spawn_allowed = false;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Rat-thing";
@@ -1385,13 +1400,13 @@ void init_data_list()
     d.corpse_name_a = "A Rat-thing corpse";
     d.corpse_name_the = "The Rat-thing corpse";
     d.id = ActorId::rat_thing;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = false;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed = ActorSpeed::normal;
     d.glyph = 'r';
     d.color = clr_brown_drk;
@@ -1401,14 +1416,14 @@ void init_data_list()
     d.dmg_melee = 3;
     d.ability_vals.set_val(AbilityId::melee, 25);
     d.ability_vals.set_val(AbilityId::dodge_att, 15);
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 15;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,   20),
-        MonGroupSpawnRule(MonGroupSize::pack,  5),
-        MonGroupSpawnRule(MonGroupSize::swarm, 1)
+        MonGroupSpawnRule(MonGroupSize::few,    20),
+        MonGroupSpawnRule(MonGroupSize::pack,   5),
+        MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
@@ -1426,7 +1441,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::human);
     d.native_rooms.push_back(RoomType::crypt);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Wolf";
@@ -1434,13 +1449,13 @@ void init_data_list()
     d.corpse_name_a = "A Wolf carcass";
     d.corpse_name_the = "The Wolf carcass";
     d.id = ActorId::wolf;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.glyph = 'd';
     d.color = clr_gray;
@@ -1450,13 +1465,13 @@ void init_data_list()
     d.dmg_melee = 3;
     d.ability_vals.set_val(AbilityId::melee, 35);
     d.ability_vals.set_val(AbilityId::dodge_att, 20);
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 0;
     d.spawn_max_dlvl = 10;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,   1),
-        MonGroupSpawnRule(MonGroupSize::pack,  4)
+        MonGroupSpawnRule(MonGroupSize::few,    1),
+        MonGroupSpawnRule(MonGroupSize::pack,   4)
     });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
@@ -1470,7 +1485,7 @@ void init_data_list()
     d.can_be_summoned = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Raven";
@@ -1478,13 +1493,13 @@ void init_data_list()
     d.corpse_name_a = "A Raven carcass";
     d.corpse_name_the = "The Raven carcass";
     d.id = ActorId::raven;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fastest;
     d.glyph = 'b';
     d.color = clr_gray_drk;
@@ -1494,7 +1509,7 @@ void init_data_list()
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 20);
     d.ability_vals.set_val(AbilityId::dodge_att, 40);
-    d.natural_props[size_t(PropId::flying)] = true;
+    d.natural_props[(size_t)PropId::flying] = true;
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = 10;
     d.group_sizes.assign(
@@ -1514,7 +1529,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::chasm);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Giant Bat";
@@ -1522,13 +1537,13 @@ void init_data_list()
     d.corpse_name_a = "A Giant Bat corpse";
     d.corpse_name_the = "The Giant Bat corpse";
     d.id = ActorId::giant_bat;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fastest;
     d.glyph = 'B';
     d.color = clr_gray;
@@ -1538,8 +1553,8 @@ void init_data_list()
     d.dmg_melee = 2;
     d.ability_vals.set_val(AbilityId::melee, 40);
     d.ability_vals.set_val(AbilityId::dodge_att, 70);
-    d.natural_props[size_t(PropId::flying)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 4;
     d.group_sizes.assign(
     {
@@ -1561,7 +1576,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::chasm);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Byakhee";
@@ -1569,13 +1584,13 @@ void init_data_list()
     d.corpse_name_a = "A Byakhee corpse";
     d.corpse_name_the = "The Byakhee corpse";
     d.id = ActorId::byakhee;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fastest;
     d.glyph = 'B';
     d.color = clr_brown_drk;
@@ -1585,8 +1600,8 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 45);
     d.ability_vals.set_val(AbilityId::dodge_att, 40);
-    d.natural_props[size_t(PropId::flying)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 6;
     d.group_sizes.assign(
     {
@@ -1614,7 +1629,7 @@ void init_data_list()
     d.can_be_summoned = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::chasm);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Giant Mantis";
@@ -1622,13 +1637,13 @@ void init_data_list()
     d.corpse_name_a = "A Giant Mantis corpse";
     d.corpse_name_the = "The Giant Mantis corpse";
     d.id = ActorId::giant_mantis;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fastest;
     d.glyph = 'I';
     d.color = clr_green_lgt;
@@ -1639,7 +1654,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodge_att, 40);
     d.ability_vals.set_val(AbilityId::stealth, 20);
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 8;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
@@ -1651,7 +1666,7 @@ void init_data_list()
     d.can_be_summoned = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Giant Locust";
@@ -1659,13 +1674,13 @@ void init_data_list()
     d.corpse_name_a = "A Giant Locust corpse";
     d.corpse_name_the = "The Giant Locust corpse";
     d.id = ActorId::locust;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = false;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.glyph = 'i';
     d.color = clr_brown;
@@ -1674,8 +1689,8 @@ void init_data_list()
     d.spi = 2;
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 25);
-    d.natural_props[size_t(PropId::flying)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 7;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
@@ -1692,7 +1707,7 @@ void init_data_list()
     d.is_infra_visible = false;
     d.can_be_summoned = false;
     d.native_rooms.push_back(RoomType::plain);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Fungus from Yuggoth";
@@ -1700,13 +1715,13 @@ void init_data_list()
     d.corpse_name_a = "A dead Fungus from Yuggoth";
     d.corpse_name_the = "The dead Fungus from Yuggoth";
     d.id = ActorId::mi_go;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = false;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = false;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.ranged_cooldown_turns = 4;
     d.spell_cooldown_turns = 3;
@@ -1718,7 +1733,7 @@ void init_data_list()
     d.dmg_melee = 3;
     d.ability_vals.set_val(AbilityId::melee, 40);
     d.ability_vals.set_val(AbilityId::ranged, 55);
-    d.natural_props[size_t(PropId::flying)] = true;
+    d.natural_props[(size_t)PropId::flying] = true;
     d.spawn_min_dlvl = 6;
     d.group_sizes.assign(
     {
@@ -1757,7 +1772,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::chasm);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Mi-go Commander";
@@ -1765,13 +1780,13 @@ void init_data_list()
     d.corpse_name_a = "A dead Fungus from Yuggoth";
     d.corpse_name_the = "The dead Fungus from Yuggoth";
     d.id = ActorId::mi_go_commander;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = false;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = false;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.ranged_cooldown_turns = 4;
     d.spell_cooldown_turns = 3;
@@ -1783,13 +1798,13 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 55);
     d.ability_vals.set_val(AbilityId::ranged, 55);
-    d.natural_props[size_t(PropId::flying)] = true;
+    d.natural_props[(size_t)PropId::flying] = true;
     d.spawn_min_dlvl = 12;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.can_open_doors = true;
     d.nr_turns_aware = 16;
-    d.descr = data[size_t(ActorId::mi_go)].descr;
+    d.descr = data[(size_t)ActorId::mi_go].descr;
     d.spell_cast_msg = "speaks incantations in a droning voice.";
     d.aggro_text_mon_seen = d.name_the + " speaks at me in a droning voice.";
     d.aggro_text_mon_hidden = "I hear a droning voice.";
@@ -1800,7 +1815,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::chasm);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Flying Polyp";
@@ -1810,13 +1825,13 @@ void init_data_list()
     d.id = ActorId::flying_polyp;
     d.can_be_summoned = true;
     d.can_bleed = false;
-    d.ai[size_t(AiId::looks)] = false;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = false;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::slow;
     d.spell_cooldown_turns = 3;
     d.glyph = 'E';
@@ -1827,15 +1842,15 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
     //NOTE: Polyps should be resistant against all damage types except electricity
-    d.natural_props[size_t(PropId::rPhys)] = true;
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rAcid)] = true;
-    d.natural_props[size_t(PropId::rFire)] = true;
-    d.natural_props[size_t(PropId::rPoison)] = true;
-    d.natural_props[size_t(PropId::rSleep)] = true;
-    d.natural_props[size_t(PropId::flying)] = true;
-    d.natural_props[size_t(PropId::invis)] = true;
+    d.natural_props[(size_t)PropId::rPhys] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rAcid] = true;
+    d.natural_props[(size_t)PropId::rFire] = true;
+    d.natural_props[(size_t)PropId::rPoison] = true;
+    d.natural_props[(size_t)PropId::rSleep] = true;
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::invis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 6;
     d.actor_size = ActorSize::humanoid;
@@ -1857,7 +1872,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::chasm);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Greater Polyp";
@@ -1867,13 +1882,13 @@ void init_data_list()
     d.id = ActorId::greater_polyp;
     d.can_be_summoned = false;
     d.can_bleed = false;
-    d.ai[size_t(AiId::looks)] = false;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = false;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::normal;
     d.spell_cooldown_turns = 3;
     d.glyph = 'E';
@@ -1884,23 +1899,23 @@ void init_data_list()
     d.dmg_melee = 12;
     d.ability_vals.set_val(AbilityId::melee, 70);
     //NOTE: Polyps should be resistant against all damage types except electricity
-    d.natural_props[size_t(PropId::rPhys)] = true;
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rAcid)] = true;
-    d.natural_props[size_t(PropId::rFire)] = true;
-    d.natural_props[size_t(PropId::rPoison)] = true;
-    d.natural_props[size_t(PropId::rSleep)] = true;
-    d.natural_props[size_t(PropId::flying)] = true;
-    d.natural_props[size_t(PropId::invis)] = true;
-    d.natural_props[size_t(PropId::see_invis)] = true;
+    d.natural_props[(size_t)PropId::rPhys] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rAcid] = true;
+    d.natural_props[(size_t)PropId::rFire] = true;
+    d.natural_props[(size_t)PropId::rPoison] = true;
+    d.natural_props[(size_t)PropId::rSleep] = true;
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::invis] = true;
+    d.natural_props[(size_t)PropId::see_invis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = dlvl_last - 4;
     d.actor_size = ActorSize::giant;
     d.can_bash_doors = false;
     d.can_open_doors = false;
     d.nr_turns_aware = 5;
-    d.descr = data[size_t(ActorId::flying_polyp)].descr;
+    d.descr = data[(size_t)ActorId::flying_polyp].descr;
     d.aggro_text_mon_seen = d.name_the + " makes shrill whistling sounds.";
     d.aggro_text_mon_hidden = "I hear a shrill whistling.";
     d.erratic_move_pct = ActorErraticFreq::very;
@@ -1909,7 +1924,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::chasm);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Ghoul";
@@ -1917,13 +1932,13 @@ void init_data_list()
     d.corpse_name_a = "A Ghoul corpse";
     d.corpse_name_the = "The Ghoul corpse";
     d.id = ActorId::ghoul;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::normal;
     d.glyph = 'M';
     d.color = clr_green;
@@ -1932,14 +1947,14 @@ void init_data_list()
     d.spi = 20;
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 55);
-    d.natural_props[size_t(PropId::rDisease)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::rDisease] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 5;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,   10),
-        MonGroupSpawnRule(MonGroupSize::pack,  20),
-        MonGroupSpawnRule(MonGroupSize::swarm, 1)
+        MonGroupSpawnRule(MonGroupSize::few,    10),
+        MonGroupSpawnRule(MonGroupSize::pack,   20),
+        MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
@@ -1963,19 +1978,19 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::crypt);
     d.native_rooms.push_back(RoomType::cave);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Shadow";
     d.name_the = "The Shadow";
     d.id = ActorId::shadow;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::slow;
     d.glyph = 'M';
     d.color = clr_gray;
@@ -1985,17 +2000,17 @@ void init_data_list()
     d.dmg_melee = 3;
     d.ability_vals.set_val(AbilityId::melee, 35);
     d.ability_vals.set_val(AbilityId::stealth, 90);
-    d.natural_props[size_t(PropId::lgtSens)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::lgtSens] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,   1),
-        MonGroupSpawnRule(MonGroupSize::pack,  2)
+        MonGroupSpawnRule(MonGroupSize::few,    1),
+        MonGroupSpawnRule(MonGroupSize::pack,   2)
     });
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;
@@ -2011,19 +2026,19 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = MonShockLvl::frightening;
     d.native_rooms.push_back(RoomType::plain);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "An Invisible Stalker";
     d.name_the = "The Invisible Stalker";
     d.id = ActorId::invis_stalker;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::normal;
     d.glyph = 'M';
     d.color = clr_yellow;
@@ -2032,10 +2047,10 @@ void init_data_list()
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
-    d.natural_props[size_t(PropId::invis)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::invis] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = dlvl_last_mid_game;
@@ -2054,7 +2069,7 @@ void init_data_list()
     d.mon_shock_lvl = MonShockLvl::frightening;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Mummy";
@@ -2062,13 +2077,13 @@ void init_data_list()
     d.corpse_name_a = "A lifeless Mummy";
     d.corpse_name_the = "The lifeless Mummy";
     d.id = ActorId::mummy;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::slow;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
@@ -2092,7 +2107,7 @@ void init_data_list()
     d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Crocodile Head Mummy";
@@ -2100,13 +2115,13 @@ void init_data_list()
     d.corpse_name_a = "A lifeless Mummy";
     d.corpse_name_the = "The lifeless Mummy";
     d.id = ActorId::croc_head_mummy;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::slow;
     d.glyph = 'P';
     d.color = clr_gray;
@@ -2136,7 +2151,7 @@ void init_data_list()
     d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "Khephren";
@@ -2144,13 +2159,13 @@ void init_data_list()
     d.corpse_name_a = "The lifeless Mummy of Khephren";
     d.corpse_name_the = d.corpse_name_a;
     d.id = ActorId::khephren;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::slow;
     d.spell_cooldown_turns = 2;
     d.is_unique = true;
@@ -2176,7 +2191,7 @@ void init_data_list()
     d.is_humanoid = true;
     d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::plain);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "Nitokris";
@@ -2184,13 +2199,13 @@ void init_data_list()
     d.corpse_name_a = "The lifeless Mummy of Nitokris";
     d.corpse_name_the = d.corpse_name_a;
     d.id = ActorId::nitokris;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::slow;
     d.spell_cooldown_turns = 2;
     d.is_unique = true;
@@ -2221,7 +2236,7 @@ void init_data_list()
     d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Deep One";
@@ -2229,13 +2244,13 @@ void init_data_list()
     d.corpse_name_a = "A corpse of a Deep One";
     d.corpse_name_the = "The corpse of a Deep One";
     d.id = ActorId::deep_one;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::normal;
     d.ranged_cooldown_turns = 15;
     d.glyph = 'F';
@@ -2271,7 +2286,7 @@ void init_data_list()
     d.mon_shock_lvl = MonShockLvl::frightening;
     d.native_rooms.push_back(RoomType::flooded);
     d.native_rooms.push_back(RoomType::muddy);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Carnivorous Ape";
@@ -2279,13 +2294,13 @@ void init_data_list()
     d.corpse_name_a = "An Ape corpse";
     d.corpse_name_the = "The Ape corpse";
     d.id = ActorId::ape;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.glyph = 'M';
     d.color = clr_white;
@@ -2295,12 +2310,12 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodge_att, 35);
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = dlvl_first_late_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,   1),
-        MonGroupSpawnRule(MonGroupSize::pack,  4)
+        MonGroupSpawnRule(MonGroupSize::few,    1),
+        MonGroupSpawnRule(MonGroupSize::pack,   4)
     });
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
@@ -2319,19 +2334,19 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::monster);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Worm Mass";
     d.name_the = "The Worm Mass";
     d.id = ActorId::worm_mass;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = false;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = false;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed = ActorSpeed::normal;
     d.glyph = 'w';
     d.color = clr_white;
@@ -2340,14 +2355,14 @@ void init_data_list()
     d.spi = 1;
     d.dmg_melee = 2;
     d.ability_vals.set_val(AbilityId::melee, 35);
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,   2),
-        MonGroupSpawnRule(MonGroupSize::pack,  8),
-        MonGroupSpawnRule(MonGroupSize::swarm, 1)
+        MonGroupSpawnRule(MonGroupSize::few,    2),
+        MonGroupSpawnRule(MonGroupSize::pack,   8),
+        MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::floor;
     d.prevent_knockback = true;
@@ -2362,19 +2377,19 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::forest);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "Mind Worms";
     d.name_the = "The Mind Worms";
     d.id = ActorId::mind_worms;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = false;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = false;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed = ActorSpeed::normal;
     d.glyph = 'w';
     d.color = clr_violet;
@@ -2383,13 +2398,13 @@ void init_data_list()
     d.spi = 2;
     d.dmg_melee = 3;
     d.ability_vals.set_val(AbilityId::melee, 40);
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 6;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,   2),
-        MonGroupSpawnRule(MonGroupSize::pack,  8),
-        MonGroupSpawnRule(MonGroupSize::swarm, 1)
+        MonGroupSpawnRule(MonGroupSize::few,    2),
+        MonGroupSpawnRule(MonGroupSize::pack,   8),
+        MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::floor;
     d.prevent_knockback = true;
@@ -2405,19 +2420,19 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::forest);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Dust Vortex";
     d.name_the = "The Dust Vortex";
     d.id = ActorId::dust_vortex;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = false;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = false;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = false;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed = ActorSpeed::fast;
     d.glyph = 'V';
     d.color = clr_gray;
@@ -2426,16 +2441,16 @@ void init_data_list()
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 40);
-    d.natural_props[size_t(PropId::flying)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::rPoison)] = true;
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::rPoison] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,   1)
+        MonGroupSpawnRule(MonGroupSize::few, 1)
     });
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
@@ -2451,19 +2466,19 @@ void init_data_list()
     d.mon_shock_lvl = MonShockLvl::unsettling;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Fire Vortex";
     d.name_the = "The Fire Vortex";
     d.id = ActorId::fire_vortex;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = false;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = false;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = false;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed = ActorSpeed::fast;
     d.glyph = 'V';
     d.color = clr_red;
@@ -2472,11 +2487,11 @@ void init_data_list()
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 40);
-    d.natural_props[size_t(PropId::flying)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::rFire)] = true;
-    d.natural_props[size_t(PropId::rPoison)] = true;
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::rFire] = true;
+    d.natural_props[(size_t)PropId::rPoison] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 8;
     d.group_sizes.assign(
@@ -2496,19 +2511,19 @@ void init_data_list()
     d.mon_shock_lvl = MonShockLvl::unsettling;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Black Ooze";
     d.name_the = "The Black Ooze";
     d.id = ActorId::ooze_black;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::sluggish;
     d.glyph = 'o';
     d.color = clr_gray_drk;
@@ -2517,19 +2532,19 @@ void init_data_list()
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.natural_props[size_t(PropId::ooze)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::rPoison)] = true;
-    d.natural_props[size_t(PropId::rDisease)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::ooze] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::rPoison] = true;
+    d.natural_props[(size_t)PropId::rDisease] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,   1),
-        MonGroupSpawnRule(MonGroupSize::pack,  4),
-        MonGroupSpawnRule(MonGroupSize::swarm, 1)
+        MonGroupSpawnRule(MonGroupSize::few,    1),
+        MonGroupSpawnRule(MonGroupSize::pack,   4),
+        MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 32;
@@ -2551,19 +2566,19 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::flooded);
     d.native_rooms.push_back(RoomType::muddy);
     d.native_rooms.push_back(RoomType::chasm);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Clear Ooze";
     d.name_the = "The Clear Ooze";
     d.id = ActorId::ooze_clear;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::sluggish;
     d.glyph = 'o';
     d.color = clr_white_high;
@@ -2573,18 +2588,18 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound - 2;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::stealth, 90);
-    d.natural_props[size_t(PropId::ooze)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::rPoison)] = true;
-    d.natural_props[size_t(PropId::rDisease)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::ooze] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::rPoison] = true;
+    d.natural_props[(size_t)PropId::rDisease] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,   1),
-        MonGroupSpawnRule(MonGroupSize::pack,  4)
+        MonGroupSpawnRule(MonGroupSize::few,    1),
+        MonGroupSpawnRule(MonGroupSize::pack,   4)
     });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 32;
@@ -2606,19 +2621,19 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::flooded);
     d.native_rooms.push_back(RoomType::muddy);
     d.native_rooms.push_back(RoomType::chasm);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Putrid Ooze";
     d.name_the = "The Putrid Ooze";
     d.id = ActorId::ooze_putrid;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::sluggish;
     d.glyph = 'o';
     d.color = clr_green;
@@ -2627,19 +2642,19 @@ void init_data_list()
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.natural_props[size_t(PropId::ooze)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::rPoison)] = true;
-    d.natural_props[size_t(PropId::rDisease)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::ooze] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::rPoison] = true;
+    d.natural_props[(size_t)PropId::rDisease] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 5;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,   1),
-        MonGroupSpawnRule(MonGroupSize::pack,  4),
-        MonGroupSpawnRule(MonGroupSize::swarm, 1)
+        MonGroupSpawnRule(MonGroupSize::few,    1),
+        MonGroupSpawnRule(MonGroupSize::pack,   4),
+        MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 32;
@@ -2662,19 +2677,19 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::flooded);
     d.native_rooms.push_back(RoomType::muddy);
     d.native_rooms.push_back(RoomType::chasm);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Poison Ooze";
     d.name_the = "The Poison Ooze";
     d.id = ActorId::ooze_poison;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::sluggish;
     d.glyph = 'o';
     d.color = clr_green_lgt;
@@ -2683,19 +2698,19 @@ void init_data_list()
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.natural_props[size_t(PropId::ooze)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::rPoison)] = true;
-    d.natural_props[size_t(PropId::rDisease)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::ooze] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::rPoison] = true;
+    d.natural_props[(size_t)PropId::rDisease] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 9;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,   1),
-        MonGroupSpawnRule(MonGroupSize::pack,  4),
-        MonGroupSpawnRule(MonGroupSize::swarm, 1)
+        MonGroupSpawnRule(MonGroupSize::few,    1),
+        MonGroupSpawnRule(MonGroupSize::pack,   4),
+        MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 32;
@@ -2718,19 +2733,19 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::flooded);
     d.native_rooms.push_back(RoomType::muddy);
     d.native_rooms.push_back(RoomType::chasm);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Color out of space";
     d.name_the = "The Color out of space";
     d.id = ActorId::color_oo_space;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::slow;
     d.glyph = 'O';
     d.color = clr_green_lgt;
@@ -2739,14 +2754,14 @@ void init_data_list()
     d.spi = 40;
     d.dmg_melee = 10;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.natural_props[size_t(PropId::ooze)] = true;
-    d.natural_props[size_t(PropId::ethereal)] = true;
-    d.natural_props[size_t(PropId::rPhys)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::rPoison)] = true;
-    d.natural_props[size_t(PropId::rDisease)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::ooze] = true;
+    d.natural_props[(size_t)PropId::ethereal] = true;
+    d.natural_props[(size_t)PropId::rPhys] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::rPoison] = true;
+    d.natural_props[(size_t)PropId::rDisease] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 14;
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 16;
@@ -2767,7 +2782,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::flooded);
     d.native_rooms.push_back(RoomType::muddy);
     d.native_rooms.push_back(RoomType::chasm);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Chthonian";
@@ -2775,13 +2790,13 @@ void init_data_list()
     d.corpse_name_a = "A Chthonian corpse";
     d.corpse_name_the = "The Chthonian corpse";
     d.id = ActorId::chthonian;
-    d.ai[size_t(AiId::looks)] = false;
-    d.ai[size_t(AiId::makes_room_for_friend)] = false;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = false;
+    d.ai[(size_t)AiId::looks] = false;
+    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed = ActorSpeed::sluggish;
     d.glyph = 'W';
     d.color = clr_brown_drk;
@@ -2790,9 +2805,9 @@ void init_data_list()
     d.spi = 40;
     d.dmg_melee = 10;
     d.ability_vals.set_val(AbilityId::melee, 45);
-    d.natural_props[size_t(PropId::burrowing)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::burrowing] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 12;
     d.actor_size = ActorSize::giant;
@@ -2813,7 +2828,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::chasm);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Sentry Drone";
@@ -2821,13 +2836,13 @@ void init_data_list()
     d.corpse_name_a = "A destroyed Sentry Drone";
     d.corpse_name_the = "The destroyed Sentry Drone";
     d.id = ActorId::sentry_drone;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = false;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = false;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = false;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.ranged_cooldown_turns = 3;
     d.spell_cooldown_turns  = 3;
@@ -2839,13 +2854,13 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::ranged, 65);
     d.ability_vals.set_val(AbilityId::dodge_att, 35);
-    d.natural_props[size_t(PropId::flying)] = true;
-    d.natural_props[size_t(PropId::radiant)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rBreath)] = true;
-    d.natural_props[size_t(PropId::rPoison)] = true;
-    d.natural_props[size_t(PropId::rSleep)] = true;
-    d.natural_props[size_t(PropId::rDisease)] = true;
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::radiant] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rBreath] = true;
+    d.natural_props[(size_t)PropId::rPoison] = true;
+    d.natural_props[(size_t)PropId::rSleep] = true;
+    d.natural_props[(size_t)PropId::rDisease] = true;
     d.spawn_min_dlvl = 14;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;
@@ -2863,31 +2878,31 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = MonShockLvl::unsettling;
     d.native_rooms.push_back(RoomType::plain);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.id = ActorId::animated_wpn;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::normal;
     d.hp = 18;
     d.spi = 40;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.natural_props[size_t(PropId::flying)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rBreath)] = true;
-    d.natural_props[size_t(PropId::rPoison)] = true;
-    d.natural_props[size_t(PropId::rSleep)] = true;
-    d.natural_props[size_t(PropId::rDisease)] = true;
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::rFire)] = true;
-    d.natural_props[size_t(PropId::rElec)] = true;
-    d.natural_props[size_t(PropId::rBlind)] = true;
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rBreath] = true;
+    d.natural_props[(size_t)PropId::rPoison] = true;
+    d.natural_props[(size_t)PropId::rSleep] = true;
+    d.natural_props[(size_t)PropId::rDisease] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::rFire] = true;
+    d.natural_props[(size_t)PropId::rElec] = true;
+    d.natural_props[(size_t)PropId::rBlind] = true;
     d.actor_size = ActorSize::humanoid;
     d.is_auto_descr_allowed = false;
     d.can_leave_corpse = false;
@@ -2899,7 +2914,7 @@ void init_data_list()
     d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = MonShockLvl::unsettling;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.id = ActorId::mold;
@@ -2919,9 +2934,9 @@ void init_data_list()
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 6);
     d.speed = ActorSpeed::slow;
-    d.ai[size_t(AiId::looks)] = false;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::moves_to_random_when_unaware)] = false;
+    d.ai[(size_t)AiId::looks] = false;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::moves_to_random_when_unaware] = false;
     d.prevent_knockback = true;
     d.nr_turns_aware = 5;
     d.spawn_min_dlvl = 3;
@@ -2943,34 +2958,34 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::muddy);
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::chasm);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "Gas Spore";
     d.name_the = "The Gas Spore";
     d.id = ActorId::gas_spore;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = false;
-    d.ai[size_t(AiId::attacks)] = false;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = false;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::attacks] = false;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed = ActorSpeed::slow;
     d.glyph = 'E';
     d.color = clr_red;
     d.tile = TileId::gas_spore;
     d.hp = 1;
     d.spi = 1;
-    d.natural_props[size_t(PropId::flying)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 3;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,   1),
-        MonGroupSpawnRule(MonGroupSize::pack,  4)
+        MonGroupSpawnRule(MonGroupSize::few,    1),
+        MonGroupSpawnRule(MonGroupSize::pack,   4)
     });
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
@@ -2992,7 +3007,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::muddy);
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::chasm);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Hunting Horror";
@@ -3000,13 +3015,13 @@ void init_data_list()
     d.corpse_name_a = "A Hunting Horror corpse";
     d.corpse_name_the = "The Hunting Horror corpse";
     d.id = ActorId::hunting_horror;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = false;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = false;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed = ActorSpeed::fastest;
     d.glyph = 'W';
     d.color = clr_gray_drk;
@@ -3015,9 +3030,9 @@ void init_data_list()
     d.spi = 40;
     d.dmg_melee = 12;
     d.ability_vals.set_val(AbilityId::melee, 75);
-    d.natural_props[size_t(PropId::flying)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = dlvl_last - 6;
     d.spawn_max_dlvl = 999;
@@ -3042,7 +3057,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::chasm);
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "A Death Fiend";
@@ -3050,13 +3065,13 @@ void init_data_list()
     d.corpse_name_a = "";
     d.corpse_name_the = "";
     d.id = ActorId::death_fiend;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = true;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = true;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = false;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::slow;
     d.spell_cooldown_turns = 3;
     d.glyph = 'Y';
@@ -3066,10 +3081,10 @@ void init_data_list()
     d.spi = 40;
     d.dmg_melee = 200;
     d.ability_vals.set_val(AbilityId::melee, 75);
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::rSleep)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::infravis)] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::rSleep] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = dlvl_last - 6;
     d.spawn_max_dlvl = 999;
@@ -3092,19 +3107,19 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::never;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 
     d.name_a = "The High Priest";
     d.name_the = d.name_a;
     d.id = ActorId::the_high_priest;
-    d.ai[size_t(AiId::looks)] = true;
-    d.ai[size_t(AiId::makes_room_for_friend)] = false;
-    d.ai[size_t(AiId::attacks)] = true;
-    d.ai[size_t(AiId::paths_to_tgt_when_aware)] = false;
-    d.ai[size_t(AiId::moves_to_tgt_when_los)] = true;
-    d.ai[size_t(AiId::moves_to_lair)] = true;
-    d.ai[size_t(AiId::moves_to_leader)] = true;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed = ActorSpeed::fast;
     d.spell_cooldown_turns = 2;
     d.is_unique = true;
@@ -3114,10 +3129,10 @@ void init_data_list()
     d.tile = TileId::the_high_priest;
     d.hp = 160;
     d.spi = 99999;
-    d.natural_props[size_t(PropId::rConf)] = true;
-    d.natural_props[size_t(PropId::rFear)] = true;
-    d.natural_props[size_t(PropId::rFire)] = true;
-    d.natural_props[size_t(PropId::rBreath)] = true;
+    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::rFire] = true;
+    d.natural_props[(size_t)PropId::rBreath] = true;
     d.dmg_melee = 10;
     d.ability_vals.set_val(AbilityId::melee, 70);
     d.is_auto_spawn_allowed = false;
@@ -3138,7 +3153,7 @@ void init_data_list()
     d.is_humanoid = true;
     d.can_leave_corpse = false;
     d.can_bleed = true;
-    data[size_t(d.id)] = d;
+    data[(size_t)d.id] = d;
     d.reset();
 }
 

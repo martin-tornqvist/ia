@@ -1213,7 +1213,7 @@ ConsumeItem Explosive::activate(Actor* const actor)
 
         render::draw_map_state();
 
-        msg_log::add("Light " + name + "? [y/n]");
+        msg_log::add("Light " + name + " [y/n]?");
         msg_log::draw(UpdateScreen::yes);
 
         if (query::yes_or_no() == YesNoAnswer::no)

@@ -27,6 +27,7 @@ bool            is_tiles_wall_full_square();
 bool            is_audio_enabled();
 bool            is_bot_playing();
 void            toggle_bot_playing();
+bool            is_light_explosive_prompt();
 bool            is_ranged_wpn_meleee_prompt();
 bool            is_ranged_wpn_auto_reload();
 bool            is_intro_lvl_skipped();
@@ -34,7 +35,6 @@ bool            is_any_key_confirm_more();
 int             delay_projectile_draw();
 int             delay_shotgun();
 int             delay_explosion();
-bool            is_light_explosive_prompt();
 
 } //config
 
