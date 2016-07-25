@@ -18,7 +18,7 @@ namespace config
 namespace
 {
 
-const int nr_options  = 14;
+const int nr_options  = 15;
 const int OPT_Y0      = 1;
 
 std::string  font_name_                 = "";
@@ -39,6 +39,7 @@ int     scr_px_h_                       = -1;
 int     delay_projectile_draw_          = -1;
 int     delay_shotgun_                  = -1;
 int     delay_explosion_                = -1;
+bool    is_light_explosive_prompt_      = false;
 bool    is_bot_playing_                 = false;
 bool    is_audio_enabled_               = false;
 bool    is_tiles_mode_                  = false;
@@ -113,6 +114,7 @@ void set_default_variables()
     is_intro_lvl_skipped_           = false;
     is_any_key_confirm_more_        = false;
     is_ranged_wpn_meleee_prompt_    = true;
+    is_light_explosive_prompt_      = false;
     is_ranged_wpn_auto_reload_      = false;
     delay_projectile_draw_          = 25;
     delay_shotgun_                  = 75;
@@ -263,6 +265,10 @@ void player_sets_option(const MenuBrowser* const browser, const int option_value
     break;
 
     case 13:
+        is_light_explosive_prompt_ = !is_light_explosive_prompt_;
+        break;
+
+    case 14:
         set_default_variables();
         set_cell_px_dims_from_font_name();
         set_cell_px_dim_dependent_variables();
@@ -481,6 +487,21 @@ void draw(const MenuBrowser* const browser, const int option_values_x_pos)
                       browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
     opt_nr++;
 
+    render::draw_text("Warning when lighting explosive",
+                      Panel::screen,
+                      P(0, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    render::draw_text(":",
+                      Panel::screen,
+                      P(X1 - 2, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    str = is_light_explosive_prompt_ ? "Yes" : "No";
+    render::draw_text(str,
+                      Panel::screen,
+                      P(X1, OPT_Y0 + opt_nr),
+                      browser->y() == opt_nr ? clr_menu_highlight : clr_menu_drk);
+    opt_nr++;
+
     render::draw_text("Reset to defaults",
                       Panel::screen,
                       P(0, OPT_Y0 + opt_nr + 1),
@@ -599,6 +620,10 @@ void set_variables_from_lines(std::vector<std::string>& lines)
     delay_explosion_ = to_int(cur_line);
     lines.erase(begin(lines));
 
+    cur_line = lines.front();
+    is_light_explosive_prompt_ = cur_line == "1";
+    lines.erase(begin(lines));
+
     TRACE_FUNC_END;
 }
 
@@ -637,6 +662,7 @@ void set_lines_from_variables(std::vector<std::string>& lines)
     lines.push_back(to_str(delay_projectile_draw_));
     lines.push_back(to_str(delay_shotgun_));
     lines.push_back(to_str(delay_explosion_));
+    lines.push_back(is_light_explosive_prompt_    ? "1" : "0");
     TRACE_FUNC_END;
 }
 
@@ -794,6 +820,11 @@ int delay_shotgun()
 int delay_explosion()
 {
     return delay_explosion_;
+}
+
+bool is_light_explosive_prompt()
+{
+    return is_light_explosive_prompt_;
 }
 
 void run_options_menu()
