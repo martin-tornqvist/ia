@@ -18,10 +18,45 @@ namespace mapgen
 
 bool is_map_valid = true;
 
-} //mapgen
-
-namespace mapgen_utils
+bool is_all_rooms_connected()
 {
+    bool blocked[map_w][map_h];
+    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+
+    return map_parse::is_map_connected(blocked);
+}
+
+//Adds the room to the room list and the room map
+void register_room(Room& room)
+{
+#ifndef NDEBUG
+    for (Room* const room_in_list : map::room_list)
+    {
+        ASSERT(room_in_list != &room); //Check that the room is not already added
+    }
+#endif //NDEBUG
+
+    map::room_list.push_back(&room);
+
+    for (int x = room.r_.p0.x; x <= room.r_.p1.x; ++x)
+    {
+        for (int y = room.r_.p0.y; y <= room.r_.p1.y; ++y)
+        {
+            map::room_map[x][y] = &room;
+        }
+    }
+}
+
+void mk_floor_in_room(const Room& room)
+{
+    for (int x = room.r_.p0.x; x <= room.r_.p1.x; ++x)
+    {
+        for (int y = room.r_.p0.y; y <= room.r_.p1.y; ++y)
+        {
+            map::put(new Floor(P(x, y)));
+        }
+    }
+}
 
 void cut_room_corners(const Room& room)
 {
@@ -758,4 +793,4 @@ void rnd_walk(const P& p0,
     }
 }
 
-} //mapgen_utils
+} //mapgen

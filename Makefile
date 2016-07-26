@@ -2,6 +2,7 @@
 # Targets available:
 # - make release (or just run "make")
 # - make debug
+# - make test
 # - make windows-cross-compile-release (Windows cross compilation using mingw)
 # - make osx-release
 # - make osx-debug
@@ -18,10 +19,13 @@
 SRC_DIR            = src
 INC_DIR            = include
 TARGET_DIR         = target
+OBJ_DIR            = obj
 ASSETS_DIR         = assets
 RL_UTILS_DIR       = rl_utils
 RL_UTILS_SRC_DIR   = $(RL_UTILS_DIR)/src
 RL_UTILS_INC_DIR   = $(RL_UTILS_DIR)/include
+TEST_DIR           = test
+TEST_SRC_DIR       = $(TEST_DIR)/src
 
 # Only used for Windows cross compilation on Linux
 SDL_BASE_DIR       = SDL
@@ -54,9 +58,14 @@ INCLUDES = \
   #
 
 # Compiler flags
-# The debug trace system generates warnings for trace levels higher than the
-# compiled level, so sadly Wunused-value cannot be used
-CXXFLAGS = \
+# NOTE:
+# - The debug trace system generates warnings for trace levels higher than the
+#   compiled level, so sadly Wunused-value cannot be used as it is.
+# - The Mersenne Twister implementation in mersenne_twister.hpp gives warnings
+#   about deprecated register functionality, so this warning needs to be
+#   suppressed as long as that implementation is used (should use the now
+#   standard C++ implementation instead though).
+CXXFLAGS += \
   -std=c++11 \
   -Wall \
   -Wextra \
@@ -74,11 +83,11 @@ LD_FLAGS =
 ###############################################################################
 # Linux specific
 ###############################################################################
-# Compiler for linux versions
-release debug: CXX ?= g++
+# Compiler for linux builds
+release debug test: CXX ?= g++
 
 # Linux specific compiler flags
-release debug: CXXFLAGS += $(shell sdl2-config --cflags)
+release debug test: CXXFLAGS += $(shell sdl2-config --cflags)
 
 # Linux release specific compiler flags
 release: CXXFLAGS += \
@@ -86,21 +95,24 @@ release: CXXFLAGS += \
   -DNDEBUG \
   #
 
-# Linux debug specific compiler flags
-debug: CXXFLAGS += \
+# Linux debug and test specific compiler flags
+debug test: CXXFLAGS += \
   -O0 \
   -g \
   #
 
 # Linux specific linker flags
-release debug: LD_FLAGS = \
+release debug test: LD_FLAGS = \
   $(shell sdl2-config --libs) \
   -lSDL2_image \
   -lSDL2_mixer \
   #
 
 # Executable
-LINUX_EXE = ia
+LINUX_EXE = $(TARGET_DIR)/ia
+
+# Test executable
+LINUX_TEST_EXE = $(TARGET_DIR)/test
 
 
 ###############################################################################
@@ -135,7 +147,7 @@ windows-cross-compile-release: LD_FLAGS += \
   -static-libstdc++ \
   #
 
-WINDOWS_EXE = ia.exe
+WINDOWS_EXE = $(TARGET_DIR)/ia.exe
 
 
 ###############################################################################
@@ -174,13 +186,24 @@ osx-debug: CXXFLAGS += \
 
 
 ###############################################################################
-# Common output and sources
+# Common sources files
 ###############################################################################
-SRC               = $(wildcard $(SRC_DIR)/*.cpp)
-RL_UTILS_SRC      = $(wildcard $(RL_UTILS_SRC_DIR)/*.cpp)
-OBJECTS           = $(SRC:.cpp=.o)
-RL_UTILS_OBJECTS  = $(RL_UTILS_SRC:.cpp=.o)
-# DEPENDS          = $(SRC:.cpp=.d)
+SRC              = $(wildcard $(SRC_DIR)/*.cpp)
+RL_UTILS_SRC     = $(wildcard $(RL_UTILS_SRC_DIR)/*.cpp)
+
+
+###############################################################################
+# Test source files
+###############################################################################
+TEST_SRC         = $(wildcard $(TEST_SRC_DIR)/*.cpp)
+
+
+###############################################################################
+# Object files
+###############################################################################
+OBJECTS          = $(SRC:$(SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
+RL_UTILS_OBJECTS = $(RL_UTILS_SRC:$(RL_UTILS_SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
+TEST_OBJECTS     = $(TEST_SRC:$(TEST_SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
 
 
 ###############################################################################
@@ -189,6 +212,8 @@ RL_UTILS_OBJECTS  = $(RL_UTILS_SRC:.cpp=.o)
 all: release
 
 release debug: $(LINUX_EXE)
+
+test : $(LINUX_TEST_EXE)
 
 # The Windows version needs to copy some DLLs and licenses
 windows-cross-compile-release: $(WINDOWS_EXE)
@@ -208,18 +233,30 @@ windows-cross-compile-release: $(WINDOWS_EXE)
 
 osx-release osx-debug: $(LINUX_EXE)
 
-$(LINUX_EXE) $(WINDOWS_EXE): $(RL_UTILS_OBJECTS) $(OBJECTS)
-	$(CXX) $^ -o $@ $(LD_FLAGS)
+$(LINUX_EXE) $(WINDOWS_EXE): $(OBJECTS) $(RL_UTILS_OBJECTS)
 	mkdir -p $(TARGET_DIR)
-	mv -f $@ $(TARGET_DIR)
+	$(CXX) $^ -o $@ $(LD_FLAGS)
 	cp -r $(ASSETS_DIR)/* $(TARGET_DIR)
 
-%.o: %.cpp | check-rl-utils
-	$(CXX) -c $(CXXFLAGS) $(INCLUDES) $< -o $@
+define compile-object
+mkdir -p $(OBJ_DIR)
+$(CXX) -c $(CXXFLAGS) $(INCLUDES) $< -o $@
+endef
+
+# Compiling common objects
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(compile-object)
+
+# Compiling rl utils objects
+$(OBJ_DIR)/%.o: $(RL_UTILS_SRC_DIR)/%.cpp | check-rl-utils
+	$(compile-object)
+
+# Compiling test objects
+$(OBJ_DIR)/%.o: $(TEST_SRC_DIR)/%.cpp
+	$(compile-object)
 
 # Make sure the RL Utils submodule exists
 check-rl-utils :
-	@echo "Checking..."
 	@if [ -z "$(RL_UTILS_SRC)" ]; then \
 	  echo ""; \
 	  echo "***********************************************************"; \
@@ -250,9 +287,8 @@ check-rl-utils :
 # clean-depends:
 # 	rm -rf depends.mk
 
-# Remove object files
 clean:
-	rm -rf $(TARGET_DIR) $(OBJECTS) $(RL_UTILS_OBJECTS)
+	rm -rf $(OBJ_DIR) $(TARGET_DIR)
 
 # Phony targets
 .PHONY: all clean check-rl-utils

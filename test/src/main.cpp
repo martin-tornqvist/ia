@@ -1286,7 +1286,7 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     }
 
     std::vector<P> entry_list;
-    mapgen_utils::valid_room_corr_entries(*room, entry_list);
+    valid_room_corr_entries(*room, entry_list);
 
     bool entry_map[map_w][map_h];
     bool_map(entry_list, entry_map);
@@ -1305,7 +1305,7 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     //Check that a cell in the middle of the room is not an entry, even if it's not
     //belonging to the room
     map::room_map[25][7] = nullptr;
-    mapgen_utils::valid_room_corr_entries(*room, entry_list);
+    valid_room_corr_entries(*room, entry_list);
     bool_map(entry_list, entry_map);
 
     CHECK(!entry_map[25][7]);
@@ -1313,14 +1313,14 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     //The cell should also not be an entry if it's a wall and belonging to the room
     map::room_map[25][7] = room;
     map::put(new Wall(P(25, 7)));
-    mapgen_utils::valid_room_corr_entries(*room, entry_list);
+    valid_room_corr_entries(*room, entry_list);
     bool_map(entry_list, entry_map);
 
     CHECK(!entry_map[25][7]);
 
     //The cell should also not be an entry if it's a wall and not belonging to the room
     map::room_map[25][7] = nullptr;
-    mapgen_utils::valid_room_corr_entries(*room, entry_list);
+    valid_room_corr_entries(*room, entry_list);
     bool_map(entry_list, entry_map);
 
     CHECK(!entry_map[25][7]);
@@ -1339,11 +1339,11 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
         }
     }
 
-    mapgen_utils::valid_room_corr_entries(*room, entry_list);
+    valid_room_corr_entries(*room, entry_list);
     bool_map(entry_list, entry_map);
 
     std::vector<P> entry_list_nearby_room;
-    mapgen_utils::valid_room_corr_entries(*nearby_room, entry_list_nearby_room);
+    valid_room_corr_entries(*nearby_room, entry_list_nearby_room);
     bool entry_map_near_room[map_w][map_h];
     bool_map(entry_list_nearby_room, entry_map_near_room);
 
@@ -1360,7 +1360,7 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     room = room_factory::mk(Room_type::plain, {60, 10, 60, 10});
     map::put(new Floor(P(60, 10)));
     map::room_map[60][10] = room;
-    mapgen_utils::valid_room_corr_entries(*room, entry_list);
+    valid_room_corr_entries(*room, entry_list);
     bool_map(entry_list, entry_map);
 
     // 59 60 61
@@ -1383,7 +1383,7 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     // #  .  # 10
     // #  #  # 11
     map::put(new Floor(P(60, 9)));
-    mapgen_utils::valid_room_corr_entries(*room, entry_list);
+    valid_room_corr_entries(*room, entry_list);
     bool_map(entry_list, entry_map);
 
     CHECK(!entry_map[59][9]);
@@ -1399,7 +1399,7 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     //Mark the adjacent floor as a room and check again
     Room* adj_room = room_factory::mk(Room_type::plain, {60, 9, 60, 9});
     map::room_map[60][9] = adj_room;
-    mapgen_utils::valid_room_corr_entries(*room, entry_list);
+    valid_room_corr_entries(*room, entry_list);
     bool_map(entry_list, entry_map);
 
     delete adj_room;
@@ -1422,7 +1422,7 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     room->r_.p0.x = 59;
     map::put(new Floor(P(59, 10)));
     map::room_map[59][10] = room;
-    mapgen_utils::valid_room_corr_entries(*room, entry_list);
+    valid_room_corr_entries(*room, entry_list);
     bool_map(entry_list, entry_map);
 
     CHECK(!entry_map[58][9]);
@@ -1470,7 +1470,7 @@ TEST_FIXTURE(Basic_fixture, connect_rooms_with_corridor)
         }
     }
 
-    mapgen_utils::mk_pathfind_cor(*room0, *room1);
+    mk_pathfind_cor(*room0, *room1);
 
     int flood[map_w][map_h];
 
