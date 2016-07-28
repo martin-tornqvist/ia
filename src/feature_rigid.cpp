@@ -1622,7 +1622,7 @@ void Tree::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* con
     {
         (void)actor;
 
-        if (rnd::one_in(3))
+        if (rnd::fraction(2, 3))
         {
             try_start_burning(false);
         }

@@ -1685,7 +1685,10 @@ void ColorOoSpace::on_std_turn_hook()
 {
     if (is_alive())
     {
-        restore_hp(1, false, Verbosity::silent);
+        if (!prop_handler_->has_prop(PropId::burning))
+        {
+            restore_hp(1, false, Verbosity::silent);
+        }
 
         if (map::player->can_see_actor(*this))
         {

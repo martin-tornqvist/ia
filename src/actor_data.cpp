@@ -1292,11 +1292,6 @@ void init_data_list()
     d.natural_props[(size_t)PropId::invis] = true;
     d.spawn_min_dlvl = dlvl_first_mid_game;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
-    d.group_sizes.assign(
-    {
-        MonGroupSpawnRule(MonGroupSize::alone,  5),
-        MonGroupSpawnRule(MonGroupSize::few,    1)
-    });
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
     d.descr = "It exists between the land of the dead and the living. It "
