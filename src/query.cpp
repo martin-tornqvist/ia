@@ -136,7 +136,7 @@ int number(const P& pos,
 
         const std::string ret_num_str = to_str(ret_num);
 
-        const int cur_num_digits = ret_num_str.size();
+        const int current_num_digits = ret_num_str.size();
 
         if (d.sdl_key == SDLK_BACKSPACE)
         {
@@ -155,11 +155,11 @@ int number(const P& pos,
             continue;
         }
 
-        if (cur_num_digits < max_nr_digits)
+        if (current_num_digits < max_nr_digits)
         {
-            int cur_digit = d.key - '0';
+            int current_digit = d.key - '0';
 
-            ret_num = std::max(min, ret_num * 10 + cur_digit);
+            ret_num = std::max(min, ret_num * 10 + current_digit);
 
             render::cover_area(Panel::screen,
                                pos,

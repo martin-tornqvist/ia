@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
             {
                 if (map::player->is_alive())
                 {
-                    Actor* const actor = game_time::cur_actor();
+                    Actor* const actor = game_time::current_actor();
 
                     //Properties running on the actor's turn are not immediately applied
                     //on the actor, but instead placed in a buffer. This is to ensure

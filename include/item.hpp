@@ -462,7 +462,7 @@ public:
 
     void interrupted();
 
-    void finish_cur_action();
+    void finish_current_action();
 
     Clr interface_clr() const override
     {
@@ -485,7 +485,7 @@ protected:
 
     int nr_turns_left_action_;
 
-    MedBagAction cur_action_;
+    MedBagAction current_action_;
 };
 
 class Headwear: public Item

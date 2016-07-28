@@ -340,7 +340,7 @@ SpellEffectNoticed Spell::cast(Actor* const caster, const bool is_intrinsic) con
 
             snd_emit::run(snd);
 
-            mon->spell_cool_down_cur_ = mon->data().spell_cooldown_turns;
+            mon->spell_cooldown_current_ = mon->data().spell_cooldown_turns;
         }
 
         if (is_intrinsic)

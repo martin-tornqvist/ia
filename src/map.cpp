@@ -359,11 +359,11 @@ Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors)
 
     for (Actor* actor : actors)
     {
-        const int cur_dist = king_dist(c, actor->pos);
+        const int current_dist = king_dist(c, actor->pos);
 
-        if (cur_dist < dist_to_nearest)
+        if (current_dist < dist_to_nearest)
         {
-            dist_to_nearest = cur_dist;
+            dist_to_nearest = current_dist;
         }
     }
 

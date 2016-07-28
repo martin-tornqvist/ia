@@ -35,7 +35,7 @@ namespace snd_emit
 namespace
 {
 
-int nr_snd_msg_printed_cur_turn_;
+int nr_snd_msg_printed_current_turn_;
 
 bool is_snd_heard_at_range(const int range, const Snd& snd)
 {
@@ -44,9 +44,9 @@ bool is_snd_heard_at_range(const int range, const Snd& snd)
 
 } //namespace
 
-void reset_nr_snd_msg_printed_cur_turn()
+void reset_nr_snd_msg_printed_current_turn()
 {
-    nr_snd_msg_printed_cur_turn_ = 0;
+    nr_snd_msg_printed_current_turn_ = 0;
 }
 
 void run(Snd snd)

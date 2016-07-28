@@ -248,7 +248,7 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
 RangedAttData::RangedAttData(Actor* const attacker,
                                  const P& attacker_orign,
                                  const P& aim_pos,
-                                 const P& cur_pos,
+                                 const P& current_pos,
                                  const Wpn& wpn,
                                  ActorSize aim_lvl) :
     AttData            (attacker, nullptr, wpn),
@@ -271,7 +271,7 @@ RangedAttData::RangedAttData(Actor* const attacker,
         else //No actor aimed at
         {
             const bool is_cell_blocked =
-                map_parse::cell(cell_check::BlocksProjectiles(), cur_pos);
+                map_parse::cell(cell_check::BlocksProjectiles(), current_pos);
 
             intended_aim_lvl = is_cell_blocked ?
                                ActorSize::humanoid : ActorSize::floor;
@@ -282,7 +282,7 @@ RangedAttData::RangedAttData(Actor* const attacker,
         intended_aim_lvl = aim_lvl;
     }
 
-    defender = map::actor_at_pos(cur_pos);
+    defender = map::actor_at_pos(current_pos);
 
     if (defender && defender != attacker)
     {
@@ -376,7 +376,7 @@ RangedAttData::RangedAttData(Actor* const attacker,
 
 ThrowAttData::ThrowAttData(Actor* const attacker,
                                const P& aim_pos,
-                               const P& cur_pos,
+                               const P& current_pos,
                                const Item& item,
                                ActorSize aim_lvl) :
     AttData            (attacker, nullptr, item),
@@ -396,7 +396,7 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
         else //Not aiming at actor
         {
             const bool is_cell_blocked =
-                map_parse::cell(cell_check::BlocksProjectiles(), cur_pos);
+                map_parse::cell(cell_check::BlocksProjectiles(), current_pos);
 
             intended_aim_lvl = is_cell_blocked ?
                                ActorSize::humanoid : ActorSize::floor;
@@ -407,7 +407,7 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
         intended_aim_lvl = aim_lvl;
     }
 
-    defender = map::actor_at_pos(cur_pos);
+    defender = map::actor_at_pos(current_pos);
 
     if (defender && defender != attacker)
     {
@@ -1121,14 +1121,14 @@ void projectile_fire(Actor* const attacker,
                         //Knock-back?
                         if (wpn.data().ranged.knocks_back)
                         {
-                            const AttData* const cur_data = proj->att_data;
+                            const AttData* const current_data = proj->att_data;
 
-                            if (cur_data->att_result >= success)
+                            if (current_data->att_result >= success)
                             {
                                 const bool is_spike_gun = wpn.data().id == ItemId::spike_gun;
 
-                                knock_back::try_knock_back(*(cur_data->defender),
-                                                           cur_data->attacker->pos,
+                                knock_back::try_knock_back(*(current_data->defender),
+                                                           current_data->attacker->pos,
                                                            is_spike_gun);
                             }
                         }
@@ -1361,43 +1361,43 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
             break;
         }
 
-        const P cur_pos(path[i]);
+        const P current_pos(path[i]);
 
-        if (actor_array[cur_pos.x][cur_pos.y])
+        if (actor_array[current_pos.x][current_pos.y])
         {
             //Only attempt hit if aiming at a level that would hit the actor
             const ActorSize size_of_actor =
-                actor_array[cur_pos.x][cur_pos.y]->data().actor_size;
+                actor_array[current_pos.x][current_pos.y]->data().actor_size;
 
-            if (size_of_actor >= ActorSize::humanoid || cur_pos == aim_pos)
+            if (size_of_actor >= ActorSize::humanoid || current_pos == aim_pos)
             {
                 //Actor hit?
                 data = RangedAttData(&attacker,
                                        attacker.pos,
                                        aim_pos,
-                                       cur_pos,
+                                       current_pos,
                                        wpn,
                                        intended_aim_lvl);
 
                 if (data.att_result >= success && !data.is_ethereal_defender_missed)
                 {
-                    if (map::cells[cur_pos.x][cur_pos.y].is_seen_by_player)
+                    if (map::cells[current_pos.x][current_pos.y].is_seen_by_player)
                     {
                         render::draw_map_state(UpdateScreen::no);
-                        render::cover_cell_in_map(cur_pos);
+                        render::cover_cell_in_map(current_pos);
 
                         if (config::is_tiles_mode())
                         {
                             render::draw_tile(TileId::blast2,
                                               Panel::map,
-                                              cur_pos,
+                                              current_pos,
                                               clr_red_lgt);
                         }
                         else //Text mode
                         {
                             render::draw_glyph('*',
                                                Panel::map,
-                                               cur_pos,
+                                               current_pos,
                                                clr_red_lgt);
                         }
 
@@ -1430,7 +1430,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
                         !is_tgt_killed      ||
                         nr_actors_hit >= 2  ||
                         (intended_aim_lvl == ActorSize::floor &&
-                         cur_pos == aim_pos))
+                         current_pos == aim_pos))
                     {
                         break;
                     }
@@ -1439,37 +1439,37 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
         }
 
         //Wall hit?
-        if (feature_blockers[cur_pos.x][cur_pos.y])
+        if (feature_blockers[current_pos.x][current_pos.y])
         {
             //TODO: Check hit material, soft and wood should not cause ricochet
 
             Snd snd("I hear a ricochet.",
                     SfxId::ricochet,
                     IgnoreMsgIfOriginSeen::yes,
-                    cur_pos,
+                    current_pos,
                     nullptr,
                     SndVol::low,
                     AlertsMon::yes);
 
             snd_emit::run(snd);
 
-            Cell& cell = map::cells[cur_pos.x][cur_pos.y];
+            Cell& cell = map::cells[current_pos.x][current_pos.y];
 
             if (cell.is_seen_by_player)
             {
                 render::draw_map_state(UpdateScreen::no);
-                render::cover_cell_in_map(cur_pos);
+                render::cover_cell_in_map(current_pos);
 
                 if (config::is_tiles_mode())
                 {
                     render::draw_tile(TileId::blast2,
                                       Panel::map,
-                                      cur_pos,
+                                      current_pos,
                                       clr_yellow);
                 }
                 else //Text mode
                 {
-                    render::draw_glyph('*', Panel::map, cur_pos, clr_yellow);
+                    render::draw_glyph('*', Panel::map, current_pos, clr_yellow);
                 }
 
                 render::update_screen();
@@ -1483,35 +1483,35 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
         }
 
         //Floor hit?
-        if (intended_aim_lvl == ActorSize::floor && cur_pos == aim_pos)
+        if (intended_aim_lvl == ActorSize::floor && current_pos == aim_pos)
         {
             Snd snd("I hear a ricochet.",
                     SfxId::ricochet,
                     IgnoreMsgIfOriginSeen::yes,
-                    cur_pos,
+                    current_pos,
                     nullptr,
                     SndVol::low,
                     AlertsMon::yes);
 
             snd_emit::run(snd);
 
-            if (map::cells[cur_pos.x][cur_pos.y].is_seen_by_player)
+            if (map::cells[current_pos.x][current_pos.y].is_seen_by_player)
             {
                 render::draw_map_state(UpdateScreen::no);
-                render::cover_cell_in_map(cur_pos);
+                render::cover_cell_in_map(current_pos);
 
                 if (config::is_tiles_mode())
                 {
                     render::draw_tile(TileId::blast2,
                                       Panel::map,
-                                      cur_pos,
+                                      current_pos,
                                       clr_yellow);
                 }
                 else
                 {
                     render::draw_glyph('*',
                                        Panel::map,
-                                       cur_pos,
+                                       current_pos,
                                        clr_yellow);
                 }
 

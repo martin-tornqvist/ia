@@ -32,7 +32,7 @@ const int descr_w   = DESCR_X1 - DESCR_Y1 + 1;
 namespace enter_name
 {
 
-void draw(const std::string& cur_string)
+void draw(const std::string& current_string)
 {
     render::clear_screen();
 
@@ -42,8 +42,8 @@ void draw(const std::string& cur_string)
                              clr_title);
     const int y_name = 3;
 
-    const std::string name_str = cur_string.size() < player_name_max_len ?
-                                 cur_string + "_" : cur_string;
+    const std::string name_str = current_string.size() < player_name_max_len ?
+                                 current_string + "_" : current_string;
 
     const size_t NAME_X0 = map_w_half - (player_name_max_len / 2);
     const size_t NAME_X1 = NAME_X0 + player_name_max_len - 1;
@@ -61,18 +61,18 @@ void draw(const std::string& cur_string)
     render::update_screen();
 }
 
-void read_keys(std::string& cur_string, bool& done)
+void read_keys(std::string& current_string, bool& done)
 {
     const KeyData& d = input::input(false);
 
     if (d.sdl_key == SDLK_RETURN)
     {
         done = true;
-        cur_string = cur_string.empty() ? "Player" : cur_string;
+        current_string = current_string.empty() ? "Player" : current_string;
         return;
     }
 
-    if (cur_string.size() < player_name_max_len)
+    if (current_string.size() < player_name_max_len)
     {
         if (
             d.sdl_key == SDLK_SPACE ||
@@ -82,24 +82,24 @@ void read_keys(std::string& cur_string, bool& done)
         {
             if (d.sdl_key == SDLK_SPACE)
             {
-                cur_string.push_back(' ');
+                current_string.push_back(' ');
             }
             else
             {
-                cur_string.push_back(char(d.key));
+                current_string.push_back(char(d.key));
             }
 
-            draw(cur_string);
+            draw(current_string);
             return;
         }
     }
 
-    if (cur_string.size() > 0)
+    if (current_string.size() > 0)
     {
         if (d.sdl_key == SDLK_BACKSPACE)
         {
-            cur_string.erase(cur_string.end() - 1);
-            draw(cur_string);
+            current_string.erase(current_string.end() - 1);
+            draw(current_string);
         }
     }
 }

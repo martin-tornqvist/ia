@@ -55,8 +55,8 @@ void draw(MenuBrowser& browser, const std::vector<SpellOpt>& spell_opts)
 
     for (int i = 0; i < nr_spells; ++i)
     {
-        const int       cur_idx         = i;
-        const bool      is_idx_marked   = browser.is_at_idx(cur_idx);
+        const int       current_idx         = i;
+        const bool      is_idx_marked   = browser.is_at_idx(current_idx);
         SpellOpt       spell_opt       = spell_opts[i];
         Spell* const    spell           = spell_opt.spell;
         std::string     name            = spell->name();

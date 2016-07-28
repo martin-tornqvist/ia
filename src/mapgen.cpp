@@ -152,9 +152,9 @@ void connect_rooms()
         }
 
         //Alright, let's try to connect these rooms
-        mk_pathfind_cor(*room0,
-                        *room1,
-                        door_proposals);
+        mk_pathfind_corridor(*room0,
+                             *room1,
+                             door_proposals);
 
         if (
             (nr_tries_left <= 2 || rnd::one_in(4)) &&
@@ -271,7 +271,12 @@ P place_stairs()
     allowed_stair_cells(allowed_cells);
 
     std::vector<P> allowed_cells_list;
-    to_vec((bool*)allowed_cells, true, map_w, map_h, allowed_cells_list);
+
+    to_vec((bool*)allowed_cells,
+           true,
+           map_w,
+           map_h,
+           allowed_cells_list);
 
     const int nr_ok_cells = allowed_cells_list.size();
 
@@ -297,8 +302,12 @@ P place_stairs()
 
     TRACE << "Sorting the allowed cells vector "
           << "(" << allowed_cells_list.size() << " cells)" << std:: endl;
+
     IsCloserToPos is_closer_to_origin(map::player->pos);
-    sort(allowed_cells_list.begin(), allowed_cells_list.end(), is_closer_to_origin);
+
+    sort(allowed_cells_list.begin(),
+         allowed_cells_list.end(),
+         is_closer_to_origin);
 
     TRACE << "Picking furthest cell" << std:: endl;
     const P stairs_pos(allowed_cells_list[nr_ok_cells - 1]);
@@ -331,7 +340,9 @@ void move_player_to_nearest_allowed_pos()
 
         IsCloserToPos is_closer_to_origin(map::player->pos);
 
-        sort(allowed_cells_list.begin(), allowed_cells_list.end(), is_closer_to_origin);
+        sort(allowed_cells_list.begin(),
+             allowed_cells_list.end(),
+             is_closer_to_origin);
 
         map::player->pos = allowed_cells_list.front();
 

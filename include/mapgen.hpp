@@ -82,16 +82,18 @@ void cavify_room(Room& room);
 //------------------------------------------------------------------------------
 //Misc utils
 //------------------------------------------------------------------------------
-bool is_all_rooms_connected();
-
 void register_room(Room& room);
 
 void mk_floor_in_room(const Room& room);
 
-void valid_room_corr_entries(const Room& room, std::vector<P>& out);
+bool is_all_rooms_connected();
 
-void mk_pathfind_cor(Room& r0, Room& r1,
-                      bool door_proposals[map_w][map_h] = nullptr);
+void valid_corridor_entries(const Room& room,
+                            std::vector<P>& out);
+
+void mk_pathfind_corridor(Room& r0,
+                          Room& r1,
+                          bool door_proposals[map_w][map_h] = nullptr);
 
 void rnd_walk(const P& p0,
               int len,

@@ -140,13 +140,13 @@ bool AllAdjIsAnyOfFeatures::check(const Cell& c) const
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const auto cur_id = map::cells[x + dx][y + dy].rigid->id();
+            const auto current_id = map::cells[x + dx][y + dy].rigid->id();
 
             bool is_match = false;
 
             for (auto f : features_)
             {
-                if (f == cur_id)
+                if (f == current_id)
                 {
                     is_match = true;
                     break;
@@ -201,11 +201,11 @@ bool AllAdjIsNoneOfFeatures::check(const Cell& c) const
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const auto cur_id = map::cells[x + dx][y + dy].rigid->id();
+            const auto current_id = map::cells[x + dx][y + dy].rigid->id();
 
             for (auto f : features_)
             {
-                if (f == cur_id)
+                if (f == current_id)
                 {
                     return false;
                 }

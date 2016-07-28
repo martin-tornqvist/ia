@@ -14,24 +14,24 @@ void read_and_remove_word(std::string& line, std::string& word_ref)
 
     for (auto it = begin(line); it != end(line); /* No increment */)
     {
-        const char cur_char = *it;
+        const char current_char = *it;
 
         line.erase(it);
 
-        if (cur_char == ' ')
+        if (current_char == ' ')
         {
             break;
         }
 
-        word_ref += cur_char;
+        word_ref += current_char;
     }
 }
 
-bool is_word_fit(const std::string& cur_string,
+bool is_word_fit(const std::string& current_string,
                  const std::string& word_to_fit,
                  const size_t max_w)
 {
-    return (cur_string.size() + word_to_fit.size() + 1) <= max_w;
+    return (current_string.size() + word_to_fit.size() + 1) <= max_w;
 }
 
 } //namespace
@@ -51,58 +51,58 @@ void split(std::string line,
         return;
     }
 
-    std::string cur_word = "";
+    std::string current_word = "";
 
-    read_and_remove_word(line, cur_word);
+    read_and_remove_word(line, current_word);
 
     if (line.empty())
     {
-        out = {cur_word};
+        out = {current_word};
         return;
     }
 
     out.resize(1);
     out[0] = "";
 
-    size_t cur_row_idx = 0;
+    size_t current_row_idx = 0;
 
-    while (!cur_word.empty())
+    while (!current_word.empty())
     {
-        if (!is_word_fit(out[cur_row_idx], cur_word, max_w))
+        if (!is_word_fit(out[current_row_idx], current_word, max_w))
         {
             //Current word did not fit on current line, make a new line
-            ++cur_row_idx;
-            out.resize(cur_row_idx + 1);
-            out[cur_row_idx] = "";
+            ++current_row_idx;
+            out.resize(current_row_idx + 1);
+            out[current_row_idx] = "";
         }
 
         //If this is not the first word on the current line, add a space before the word
-        if (!out[cur_row_idx].empty())
+        if (!out[current_row_idx].empty())
         {
-            out[cur_row_idx] += " ";
+            out[current_row_idx] += " ";
         }
 
-        out[cur_row_idx] += cur_word;
+        out[current_row_idx] += current_word;
 
-        read_and_remove_word(line, cur_word);
+        read_and_remove_word(line, current_word);
     }
 }
 
 void space_separated_list(const std::string& line,
                           std::vector<std::string>& out)
 {
-    std::string cur_line = "";
+    std::string current_line = "";
 
     for (char c : line)
     {
         if (c == ' ')
         {
-            out.push_back(cur_line);
-            cur_line = "";
+            out.push_back(current_line);
+            current_line = "";
         }
         else
         {
-            cur_line += c;
+            current_line += c;
         }
     }
 }

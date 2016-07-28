@@ -57,9 +57,9 @@ void init()
         {
             const P origin(0, 0);
             const P tgt(P(delta_x, delta_y));
-            std::vector<P> cur_line;
-            calc_new_line(origin, tgt, true, 999, true, cur_line);
-            fov_delta_lines_[delta_x + r_int][delta_y + r_int] = cur_line;
+            std::vector<P> current_line;
+            calc_new_line(origin, tgt, true, 999, true, current_line);
+            fov_delta_lines_[delta_x + r_int][delta_y + r_int] = current_line;
         }
     }
 }
@@ -104,21 +104,21 @@ void calc_new_line(const P& origin,
     const double x_incr_db  = (delta_x_db / hypot_db);
     const double y_incr_db  = (delta_y_db / hypot_db);
 
-    double cur_x_db = double(origin.x) + 0.5;
-    double cur_y_db = double(origin.y) + 0.5;
+    double current_x_db = double(origin.x) + 0.5;
+    double current_y_db = double(origin.y) + 0.5;
 
-    P cur_pos = P(int(cur_x_db), int(cur_y_db));
+    P current_pos = P(int(current_x_db), int(current_y_db));
 
     const double step_size_db = 0.04;
 
     for (double i = 0.0; i <= 9999.0; i += step_size_db)
     {
-        cur_x_db += x_incr_db * step_size_db;
-        cur_y_db += y_incr_db * step_size_db;
+        current_x_db += x_incr_db * step_size_db;
+        current_y_db += y_incr_db * step_size_db;
 
-        cur_pos.set(floor(cur_x_db), floor(cur_y_db));
+        current_pos.set(floor(current_x_db), floor(current_y_db));
 
-        if (!allow_outside_map && !map::is_pos_inside_map(cur_pos))
+        if (!allow_outside_map && !map::is_pos_inside_map(current_pos))
         {
             return;
         }
@@ -131,21 +131,21 @@ void calc_new_line(const P& origin,
         }
         else
         {
-            is_pos_ok_to_add = line_ref.back() != cur_pos;
+            is_pos_ok_to_add = line_ref.back() != current_pos;
         }
 
         if (is_pos_ok_to_add)
         {
-            line_ref.push_back(cur_pos);
+            line_ref.push_back(current_pos);
         }
 
         //Check distance limits
-        if (should_stop_at_target && (cur_pos == tgt))
+        if (should_stop_at_target && (current_pos == tgt))
         {
             return;
         }
 
-        const int distance_traveled = king_dist(origin.x, origin.y, cur_pos.x, cur_pos.y);
+        const int distance_traveled = king_dist(origin.x, origin.y, current_pos.x, current_pos.y);
 
         if (distance_traveled >= cheb_travel_limit)
         {

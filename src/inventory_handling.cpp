@@ -261,9 +261,9 @@ void run_inv_screen()
 
         case MenuAction::selected:
         {
-            InvType cur_inv_type = inv_type();
+            InvType current_inv_type = inv_type();
 
-            if (cur_inv_type == InvType::slots)
+            if (current_inv_type == InvType::slots)
             {
                 const size_t    browser_y   = browser.y();
                 InvSlot&       slot        = inv.slots_[browser_y];
@@ -335,14 +335,14 @@ void run_inv_screen()
 
         case MenuAction::selected_shift:
         {
-            InvType cur_inv_type = inv_type();
+            InvType current_inv_type = inv_type();
 
             const int browser_y = browser.y();
 
-            const size_t idx = cur_inv_type == InvType::slots ?
+            const size_t idx = current_inv_type == InvType::slots ?
                                browser_y : (browser_y - int(SlotId::END));
 
-            if (run_drop_query(cur_inv_type, idx))
+            if (run_drop_query(current_inv_type, idx))
             {
                 browser_idx_to_set_on_new_turn  = browser_y;
                 scr_to_open_on_new_turn         = InvScr::inv;

@@ -117,13 +117,13 @@ void add(const std::string& str,
     }
 #endif
 
-    int cur_line_nr = lines_[1].empty() ? 0 : 1;
+    int current_line_nr = lines_[1].empty() ? 0 : 1;
 
     Msg* prev_msg = nullptr;
 
-    if (!lines_[cur_line_nr].empty())
+    if (!lines_[current_line_nr].empty())
     {
-        prev_msg = &lines_[cur_line_nr].back();
+        prev_msg = &lines_[current_line_nr].back();
     }
 
     bool is_repeated = false;
@@ -146,7 +146,7 @@ void add(const std::string& str,
         const int repeat_str_len = 4;
 
         const int padding_len = repeat_str_len +
-                                (cur_line_nr == 0 ? 0 : (more_str.size() + 1));
+                                (current_line_nr == 0 ? 0 : (more_str.size() + 1));
 
         int x_pos = x_after_msg(prev_msg);
 
@@ -154,20 +154,20 @@ void add(const std::string& str,
 
         if (!is_msg_fit)
         {
-            if (cur_line_nr == 0)
+            if (current_line_nr == 0)
             {
-                cur_line_nr = 1;
+                current_line_nr = 1;
             }
             else //Current line number is not zero
             {
                 more_prompt();
-                cur_line_nr = 0;
+                current_line_nr = 0;
             }
 
             x_pos = 0;
         }
 
-        lines_[cur_line_nr].push_back(Msg(str, clr, x_pos));
+        lines_[current_line_nr].push_back(Msg(str, clr, x_pos));
     }
 
     if (add_more_prompt_on_msg == MorePromptOnMsg::yes)

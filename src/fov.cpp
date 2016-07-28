@@ -62,14 +62,14 @@ LosResult check_cell(const P& p0,
     //Ok, target is in range and we have a line - let's go
     los_result.is_blocked_hard = false;
 
-    P cur_p;
+    P current_p;
     P pre_p;
 
     const size_t path_size = path_deltas.size();
 
     for (size_t i = 0; i < path_size; ++i)
     {
-        cur_p.set(p0 + path_deltas[i]);
+        current_p.set(p0 + path_deltas[i]);
 
         if (i > 1)
         {
@@ -78,20 +78,20 @@ LosResult check_cell(const P& p0,
             pre_p.set(p0 + path_deltas[i - 1]);
 
             const auto& pre_cell = map::cells[pre_p.x][pre_p.y];
-            const auto& cur_cell = map::cells[cur_p.x][cur_p.y];
+            const auto& current_cell = map::cells[current_p.x][current_p.y];
 
-            if (!tgt_is_lgt && !cur_cell.is_lit && (cur_cell.is_dark || pre_cell.is_dark))
+            if (!tgt_is_lgt && !current_cell.is_lit && (current_cell.is_dark || pre_cell.is_dark))
             {
                 los_result.is_blocked_by_drk = true;
             }
         }
 
-        if (cur_p == p1)
+        if (current_p == p1)
         {
             break;
         }
 
-        if (i > 0 && hard_blocked[cur_p.x][cur_p.y])
+        if (i > 0 && hard_blocked[current_p.x][current_p.y])
         {
             los_result.is_blocked_hard = true;
             break;

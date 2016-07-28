@@ -325,11 +325,11 @@ void draw()
 
     player.prop_handler().props_interface_line(props_line);
 
-    for (const StrAndClr& cur_prop_label : props_line)
+    for (const StrAndClr& current_prop_label : props_line)
     {
-        render::draw_text(cur_prop_label.str, panel, p, cur_prop_label.clr);
+        render::draw_text(current_prop_label.str, panel, p, current_prop_label.clr);
 
-        p.x += cur_prop_label.str.size() + 1;
+        p.x += current_prop_label.str.size() + 1;
     }
 
     //Turn number

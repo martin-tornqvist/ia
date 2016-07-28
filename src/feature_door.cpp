@@ -1020,7 +1020,7 @@ void Door::try_open(Actor* actor_trying)
             reveal(true);
         }
 
-        TRACE << "Calling game_time::end_turn_of_cur_actor()" << std::endl;
+        TRACE << "Calling game_time::end_turn_of_current_actor()" << std::endl;
         game_time::tick();
     }
 }

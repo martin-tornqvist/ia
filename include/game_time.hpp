@@ -38,7 +38,7 @@ void tick(const PassTime pass_time = PassTime::yes);
 
 int turn();
 
-Actor* cur_actor();
+Actor* current_actor();
 
 void mobs_at_pos(const P& pos, std::vector<Mob*>& vector_ref);
 

@@ -37,7 +37,7 @@ int print_box_and_get_title_y_pos(const int text_h_tot, const int text_w)
 void menu_msg_drawing_helper(const std::vector<std::string>& lines,
                              const std::vector<std::string>& choices,
                              const bool draw_map_state,
-                             const size_t cur_choice,
+                             const size_t current_choice,
                              const int TEXT_X0,
                              const int text_h_tot,
                              const std::string& title)
@@ -107,7 +107,7 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
 
     for (size_t i = 0; i < choices.size(); ++i)
     {
-        Clr clr = i == cur_choice ? clr_menu_highlight : clr_menu_drk;
+        Clr clr = i == current_choice ? clr_menu_highlight : clr_menu_drk;
 
         render::draw_text_center(choices[i],
                                    Panel::map,

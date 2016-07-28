@@ -34,8 +34,8 @@ namespace
 
 std::vector<ActorSpeed> turn_type_vector_;
 
-int     cur_turn_type_pos_  = 0;
-size_t  cur_actor_idx_      = 0;
+int     current_turn_type_pos_  = 0;
+size_t  current_actor_idx_      = 0;
 int     turn_nr_            = 0;
 
 void run_std_turn_events()
@@ -77,9 +77,9 @@ void run_std_turn_events()
 
             it = actors.erase(it);
 
-            if (cur_actor_idx_ >= actors.size())
+            if (current_actor_idx_ >= actors.size())
             {
-                cur_actor_idx_ = 0;
+                current_actor_idx_ = 0;
             }
         }
         else  //Actor is alive or a corpse
@@ -148,7 +148,7 @@ void run_std_turn_events()
         }
     }
 
-    snd_emit::reset_nr_snd_msg_printed_cur_turn();
+    snd_emit::reset_nr_snd_msg_printed_current_turn();
 
     if (map::dlvl > 0)
     {
@@ -180,7 +180,7 @@ void run_atomic_turn_events()
 
 void init()
 {
-    cur_turn_type_pos_ = cur_actor_idx_ = turn_nr_ = 0;
+    current_turn_type_pos_ = current_actor_idx_ = turn_nr_ = 0;
 
     actors.clear();
     mobs  .clear();
@@ -296,7 +296,7 @@ void add_actor(Actor* actor)
 
 void reset_turn_type_and_actor_counters()
 {
-    cur_turn_type_pos_ = cur_actor_idx_ = 0;
+    current_turn_type_pos_ = current_actor_idx_ = 0;
 }
 
 //For every turn type step, run through all actors and let those who can act during this
@@ -307,7 +307,7 @@ void tick(const PassTime pass_time)
 {
     run_atomic_turn_events();
 
-    auto* actor = cur_actor();
+    auto* actor = current_actor();
 
     actor->on_actor_turn();
 
@@ -321,51 +321,51 @@ void tick(const PassTime pass_time)
 
         while (!can_act)
         {
-            auto cur_turn_type = TurnType(cur_turn_type_pos_);
+            auto current_turn_type = TurnType(current_turn_type_pos_);
 
-            ++cur_actor_idx_;
+            ++current_actor_idx_;
 
-            if (cur_actor_idx_ >= actors.size())
+            if (current_actor_idx_ >= actors.size())
             {
-                cur_actor_idx_ = 0;
+                current_actor_idx_ = 0;
 
-                ++cur_turn_type_pos_;
+                ++current_turn_type_pos_;
 
-                if (cur_turn_type_pos_ == int(TurnType::END))
+                if (current_turn_type_pos_ == int(TurnType::END))
                 {
-                    cur_turn_type_pos_ = 0;
+                    current_turn_type_pos_ = 0;
                 }
 
                 //Every turn type except "fast" and "fastest" are standard turns
                 //(i.e. we increment the turn counter, and run standard turn events)
-                if (cur_turn_type != TurnType::fast && cur_turn_type != TurnType::fastest)
+                if (current_turn_type != TurnType::fast && current_turn_type != TurnType::fastest)
                 {
                     run_std_turn_events();
                 }
             }
 
-            const auto speed = cur_actor()->speed();
+            const auto speed = current_actor()->speed();
 
             switch (speed)
             {
             case ActorSpeed::sluggish:
-                can_act = (cur_turn_type == TurnType::slow ||
-                           cur_turn_type == TurnType::normal2)
+                can_act = (current_turn_type == TurnType::slow ||
+                           current_turn_type == TurnType::normal2)
                           && rnd::fraction(2, 3);
                 break;
 
             case ActorSpeed::slow:
-                can_act = cur_turn_type == TurnType::slow ||
-                          cur_turn_type == TurnType::normal2;
+                can_act = current_turn_type == TurnType::slow ||
+                          current_turn_type == TurnType::normal2;
                 break;
 
             case ActorSpeed::normal:
-                can_act = cur_turn_type != TurnType::fast &&
-                          cur_turn_type != TurnType::fastest;
+                can_act = current_turn_type != TurnType::fast &&
+                          current_turn_type != TurnType::fastest;
                 break;
 
             case ActorSpeed::fast:
-                can_act = cur_turn_type != TurnType::fastest;
+                can_act = current_turn_type != TurnType::fastest;
                 break;
 
             case ActorSpeed::fastest:
@@ -427,9 +427,9 @@ void update_light_map()
     }
 }
 
-Actor* cur_actor()
+Actor* current_actor()
 {
-    Actor* const actor = actors[cur_actor_idx_];
+    Actor* const actor = actors[current_actor_idx_];
 
     //Sanity check actor retrieved
     ASSERT(map::is_pos_inside_map(actor->pos));

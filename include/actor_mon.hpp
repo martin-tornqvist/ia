@@ -99,13 +99,13 @@ public:
     bool                is_msg_mon_in_view_printed_;
     Dir                 last_dir_moved_;
     std::vector<Spell*> spells_known_;
-    int                 spell_cool_down_cur_;
+    int                 spell_cooldown_current_;
     bool                is_roaming_allowed_;
     bool                is_sneaking_;
     Actor*              leader_;
     Actor*              tgt_;
     bool                waiting_;
-    double              shock_caused_cur_;
+    double              shock_caused_current_;
     bool                has_given_xp_for_spotting_;
 
 protected:
@@ -648,14 +648,14 @@ public:
 class Ape: public Mon
 {
 public:
-    Ape() : Mon(), frenzy_cool_down_(0) {}
+    Ape() : Mon(), frenzy_cooldown_(0) {}
     ~Ape() {}
     void mk_start_items() override;
 
 private:
     DidAction on_act() override;
 
-    int frenzy_cool_down_;
+    int frenzy_cooldown_;
 };
 
 class Mummy: public Mon

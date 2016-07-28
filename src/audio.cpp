@@ -18,7 +18,7 @@ std::vector<Mix_Chunk*> audio_chunks_;
 
 size_t ms_at_sfx_played_[size_t(SfxId::END)];
 
-int         cur_channel_            = 0;
+int         current_channel_            = 0;
 int         seconds_at_amb_played_  = -1;
 
 int         nr_files_loaded_        = 0;
@@ -238,7 +238,7 @@ void cleanup()
 
     audio_chunks_.clear();
 
-    cur_channel_            =  0;
+    current_channel_            =  0;
     seconds_at_amb_played_  = -1;
 
     nr_files_loaded_ = 0;
@@ -255,26 +255,26 @@ int play(const SfxId sfx, const int vol_pct_tot, const int vol_pct_l)
         sfx != SfxId::END          &&
         !config::is_bot_playing())
     {
-        const int       free_channel    = find_free_channel(cur_channel_);
+        const int       free_channel    = find_free_channel(current_channel_);
         const size_t    ms_now          = SDL_GetTicks();
         size_t&         ms_last         = ms_at_sfx_played_[size_t(sfx)];
         const size_t    ms_diff         = ms_now - ms_last;
 
         if (free_channel >= 0 && ms_diff >= min_ms_between_same_sfx)
         {
-            cur_channel_ = free_channel;
+            current_channel_ = free_channel;
 
             const int vol_tot   = (255 * vol_pct_tot)   / 100;
             const int vol_l     = (vol_pct_l * vol_tot) / 100;
             const int vol_r     = vol_tot - vol_l;
 
-            Mix_SetPanning(cur_channel_, vol_l, vol_r);
+            Mix_SetPanning(current_channel_, vol_l, vol_r);
 
-            Mix_PlayChannel(cur_channel_, audio_chunks_[size_t(sfx)], 0);
+            Mix_PlayChannel(current_channel_, audio_chunks_[size_t(sfx)], 0);
 
             ms_last = SDL_GetTicks();
 
-            return cur_channel_;
+            return current_channel_;
         }
     }
 

@@ -34,13 +34,13 @@ Mon::Mon() :
     player_aware_of_me_counter_ (0),
     is_msg_mon_in_view_printed_ (false),
     last_dir_moved_             (Dir::center),
-    spell_cool_down_cur_        (0),
+    spell_cooldown_current_        (0),
     is_roaming_allowed_         (true),
     is_sneaking_                (false),
     leader_                     (nullptr),
     tgt_                        (nullptr),
     waiting_                    (false),
-    shock_caused_cur_           (0.0),
+    shock_caused_current_           (0.0),
     has_given_xp_for_spotting_  (false) {}
 
 Mon::~Mon()
@@ -147,9 +147,9 @@ void Mon::act()
 
     tgt_ = map::random_closest_actor(pos, tgt_bucket);
 
-    if (spell_cool_down_cur_ != 0)
+    if (spell_cooldown_current_ != 0)
     {
-        --spell_cool_down_cur_;
+        --spell_cooldown_current_;
     }
 
     if (aware_counter_ > 0)
@@ -777,7 +777,7 @@ std::string Cultist::cultist_phrase()
 {
     std::vector<std::string> phrase_bucket;
 
-    const God* const god = gods::cur_god();
+    const God* const god = gods::current_god();
 
     if (god && rnd::coin_toss())
     {
@@ -1439,17 +1439,17 @@ void Ape::mk_start_items()
 
 DidAction Ape::on_act()
 {
-    if (frenzy_cool_down_ > 0)
+    if (frenzy_cooldown_ > 0)
     {
-        --frenzy_cool_down_;
+        --frenzy_cooldown_;
     }
 
     if (
-        frenzy_cool_down_ <= 0      &&
+        frenzy_cooldown_ <= 0      &&
         tgt_                        &&
         (hp() <= hp_max(true) / 2))
     {
-        frenzy_cool_down_ = 30;
+        frenzy_cooldown_ = 30;
 
         const int nr_frenzy_turns = rnd::range(4, 6);
 

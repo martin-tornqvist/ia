@@ -46,7 +46,7 @@ Player::Player() :
     ins_                        (0),
     shock_                      (0.0),
     shock_tmp_                  (0.0),
-    perm_shock_taken_cur_turn_  (0.0),
+    perm_shock_taken_current_turn_  (0.0),
     nr_steps_until_free_action_ (-1),
     nr_turns_until_ins_         (-1),
     nr_quick_move_steps_left_   (-1),
@@ -546,7 +546,7 @@ void Player::incr_shock(const int shock, ShockSrc shock_src)
     const double shock_after_mods = shock_taken_after_mods(shock, shock_src);
 
     shock_                      += shock_after_mods;
-    perm_shock_taken_cur_turn_  += shock_after_mods;
+    perm_shock_taken_current_turn_  += shock_after_mods;
 
     set_constr_in_range(0.0, shock_, 100.0);
 }
@@ -681,9 +681,9 @@ void Player::update_clr()
         return;
     }
 
-    const int cur_shock = shock_ + shock_tmp_;
+    const int current_shock = shock_ + shock_tmp_;
 
-    if (cur_shock >= 75)
+    if (current_shock >= 75)
     {
         clr_ = clr_magenta;
         return;
@@ -840,7 +840,7 @@ void Player::act()
 
 void Player::on_actor_turn()
 {
-    reset_perm_shock_taken_cur_turn();
+    reset_perm_shock_taken_current_turn();
 
     map::player->update_fov();
 
@@ -993,7 +993,7 @@ void Player::on_std_turn()
     std::vector<Actor*> my_seen_foes;
     seen_foes(my_seen_foes);
 
-    double shock_from_mon_cur_player_turn = 0.0;
+    double shock_from_mon_current_player_turn = 0.0;
 
     for (Actor* actor : my_seen_foes)
     {
@@ -1010,30 +1010,30 @@ void Player::on_std_turn()
             switch (mon_data.mon_shock_lvl)
             {
             case MonShockLvl::unsettling:
-                mon->shock_caused_cur_ = std::min(mon->shock_caused_cur_ + 0.05,  1.0);
+                mon->shock_caused_current_ = std::min(mon->shock_caused_current_ + 0.05,  1.0);
                 break;
 
             case MonShockLvl::frightening:
-                mon->shock_caused_cur_ = std::min(mon->shock_caused_cur_ + 0.1,   1.0);
+                mon->shock_caused_current_ = std::min(mon->shock_caused_current_ + 0.1,   1.0);
                 break;
 
             case MonShockLvl::terrifying:
-                mon->shock_caused_cur_ = std::min(mon->shock_caused_cur_ + 0.5,   2.0);
+                mon->shock_caused_current_ = std::min(mon->shock_caused_current_ + 0.5,   2.0);
                 break;
 
             case MonShockLvl::mind_shattering:
-                mon->shock_caused_cur_ = std::min(mon->shock_caused_cur_ + 0.75,  3.0);
+                mon->shock_caused_current_ = std::min(mon->shock_caused_current_ + 0.75,  3.0);
                 break;
 
             default:
                 break;
             }
 
-            if (shock_from_mon_cur_player_turn < 2.5)
+            if (shock_from_mon_current_player_turn < 2.5)
             {
-                incr_shock((int)floor(mon->shock_caused_cur_), ShockSrc::see_mon);
+                incr_shock((int)floor(mon->shock_caused_current_), ShockSrc::see_mon);
 
-                shock_from_mon_cur_player_turn += mon->shock_caused_cur_;
+                shock_from_mon_current_player_turn += mon->shock_caused_current_;
             }
         }
     }

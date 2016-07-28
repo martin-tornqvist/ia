@@ -19,7 +19,7 @@ std::vector<std::string> lines_;
 
 void read_file()
 {
-    std::string cur_line;
+    std::string current_line;
     std::ifstream file("manual.txt");
 
     if (!file.is_open())
@@ -29,20 +29,20 @@ void read_file()
 
     std::vector<std::string> formatted;
 
-    while (getline(file, cur_line))
+    while (getline(file, current_line))
     {
-        if (cur_line.empty())
+        if (current_line.empty())
         {
-            lines_.push_back(cur_line);
+            lines_.push_back(current_line);
         }
         else //Current line not empty
         {
             //Do not format lines that start with two spaces
             bool should_format_line = true;
 
-            if (cur_line.size() >= 2)
+            if (current_line.size() >= 2)
             {
-                if (cur_line[0] == ' ' && cur_line[1] == ' ')
+                if (current_line[0] == ' ' && current_line[1] == ' ')
                 {
                     should_format_line = false;
                 }
@@ -50,7 +50,7 @@ void read_file()
 
             if (should_format_line)
             {
-                text_format::split(cur_line, map_w, formatted);
+                text_format::split(current_line, map_w, formatted);
 
                 for (const auto& line : formatted)
                 {
@@ -59,7 +59,7 @@ void read_file()
             }
             else //Do not format line
             {
-                lines_.push_back(cur_line);
+                lines_.push_back(current_line);
             }
         }
     }

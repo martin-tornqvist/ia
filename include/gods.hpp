@@ -34,7 +34,7 @@ void init();
 
 bool is_god_lvl();
 
-const God* cur_god();
+const God* current_god();
 
 void set_random_god();
 

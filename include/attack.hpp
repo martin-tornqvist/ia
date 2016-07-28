@@ -48,7 +48,7 @@ public:
     RangedAttData(Actor* const attacker,
                     const P& attacker_orign,
                     const P& aim_pos,
-                    const P& cur_pos,
+                    const P& current_pos,
                     const Wpn& wpn,
                     ActorSize aim_lvl = ActorSize::none);
 
@@ -65,7 +65,7 @@ class ThrowAttData: public AttData
 public:
     ThrowAttData(Actor* const attacker,
                    const P& aim_pos,
-                   const P& cur_pos,
+                   const P& current_pos,
                    const Item& item,
                    ActorSize aim_lvl = ActorSize::none);
     int         hit_chance_tot;

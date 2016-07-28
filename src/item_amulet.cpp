@@ -856,11 +856,11 @@ int rnd_item_bucket_idx_for_effect(const AmuletEffectId effect_to_assign,
         //be combined with every effect currently assigned to this item.
         for (size_t i = 0; i < size_t(AmuletEffectId::END); ++i)
         {
-            const AmuletEffectId cur_effect = AmuletEffectId(i);
+            const AmuletEffectId current_effect = AmuletEffectId(i);
 
             if (effect_list_[i] == item_bucket[item_bucket_idx])
             {
-                const bool allow_combine = allow_combine_effects(effect_to_assign, cur_effect);
+                const bool allow_combine = allow_combine_effects(effect_to_assign, current_effect);
 
                 if (!allow_combine)
                 {

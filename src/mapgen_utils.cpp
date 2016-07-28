@@ -375,7 +375,7 @@ void cavify_room(Room& room)
     }
 }
 
-void valid_room_corr_entries(const Room& room, std::vector<P>& out)
+void valid_corridor_entries(const Room& room, std::vector<P>& out)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     //Find all cells that meets all of the following criteria:
@@ -464,7 +464,7 @@ void valid_room_corr_entries(const Room& room, std::vector<P>& out)
     TRACE_FUNC_END_VERBOSE;
 }
 
-void mk_pathfind_cor(Room& room_0,
+void mk_pathfind_corridor(Room& room_0,
                       Room& room_1,
                       bool door_proposals[map_w][map_h])
 {
@@ -477,8 +477,8 @@ void mk_pathfind_cor(Room& room_0,
     std::vector<P> p0_bucket;
     std::vector<P> p1_bucket;
 
-    valid_room_corr_entries(room_0, p0_bucket);
-    valid_room_corr_entries(room_1, p1_bucket);
+    valid_corridor_entries(room_0, p0_bucket);
+    valid_corridor_entries(room_1, p1_bucket);
 
     if (p0_bucket.empty())
     {

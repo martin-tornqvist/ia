@@ -220,13 +220,13 @@ void mk_info_lines(std::vector<StrAndClr>& out)
 
     for (int y = 0; y < map_h; ++y)
     {
-        std::string cur_row = "";
+        std::string current_row = "";
 
         for (int x = 0; x < map_w; ++x)
         {
             if (P(x, y) == map::player->pos)
             {
-                cur_row.push_back('@');
+                current_row.push_back('@');
             }
             else //Not player pos
             {
@@ -234,27 +234,27 @@ void mk_info_lines(std::vector<StrAndClr>& out)
                 const auto& rubble_high_d   = feature_data::data(FeatureId::rubble_high);
                 const auto& statue_d        = feature_data::data(FeatureId::statue);
 
-                auto& cur_render_data = render::render_array[x][y];
+                auto& current_render_data = render::render_array[x][y];
 
                 if (
-                    cur_render_data.glyph == wall_d.glyph ||
-                    cur_render_data.glyph == rubble_high_d.glyph)
+                    current_render_data.glyph == wall_d.glyph ||
+                    current_render_data.glyph == rubble_high_d.glyph)
                 {
-                    cur_row.push_back('#');
+                    current_row.push_back('#');
                 }
-                else if (cur_render_data.glyph == statue_d.glyph)
+                else if (current_render_data.glyph == statue_d.glyph)
                 {
-                    cur_row.push_back('M');
+                    current_row.push_back('M');
                 }
                 else //Not wall, rubble or statue
                 {
-                    cur_row.push_back(cur_render_data.glyph);
+                    current_row.push_back(current_render_data.glyph);
                 }
             }
         }
 
-        out.push_back({cur_row, clr_info});
-        cur_row.clear();
+        out.push_back({current_row, clr_info});
+        current_row.clear();
     }
 
     TRACE_FUNC_END;

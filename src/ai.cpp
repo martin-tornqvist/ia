@@ -21,7 +21,7 @@ bool try_cast_random_spell(Mon& mon)
 {
     if (
         !mon.is_alive()                 ||
-        mon.spell_cool_down_cur_ > 0    ||
+        mon.spell_cooldown_current_ > 0    ||
         mon.spells_known_.empty()       ||
         !mon.prop_handler().allow_cast_spell(Verbosity::silent))
     {
@@ -34,25 +34,25 @@ bool try_cast_random_spell(Mon& mon)
     {
         if (spell->allow_mon_cast_now(mon))
         {
-            const int cur_spi = mon.spi();
+            const int current_spi = mon.spi();
             const int spell_max_spi = spell->spi_cost(false, &mon).max;
 
             //Cast spell if max spirit cost is lower than current spirit,
-            if (spell_max_spi < cur_spi)
+            if (spell_max_spi < current_spi)
             {
                 spell->cast(&mon, true);
                 return true;
             }
 
             //This point reached means spi was lower than the spells potential cost
-            const int cur_hp  = mon.hp();
+            const int current_hp  = mon.hp();
             const int max_hp  = mon.hp_max(true);
 
             //If monster is not allied to player, with a small chance, cast the spell
             //anyway if hp is low.
             if (
                 !map::player->is_leader_of(&mon)    &&
-                cur_hp < (max_hp / 3)               &&
+                current_hp < (max_hp / 3)               &&
                 rnd::one_in(20))
             {
                 if (map::player->can_see_actor(mon))
@@ -180,11 +180,11 @@ void move_bucket(Mon& mon, std::vector<P>& dirs_to_mk)
     {
         const P tgt_p = mon_p + d;
 
-        const int cur_to_player_dist = king_dist(mon_p, player_p);
+        const int current_to_player_dist = king_dist(mon_p, player_p);
         const int tgt_to_player_dist = king_dist(tgt_p, player_p);
 
         if (
-            tgt_to_player_dist <= cur_to_player_dist &&
+            tgt_to_player_dist <= current_to_player_dist &&
             !blocked[tgt_p.x][tgt_p.y])
         {
             dirs_to_mk.push_back(tgt_p);

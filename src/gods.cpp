@@ -10,7 +10,7 @@ namespace
 {
 
 std::vector<God>    god_list_;
-int                 cur_god_elem_;
+int                 current_god_elem_;
 
 void init_god_list()
 {
@@ -122,14 +122,14 @@ void init()
 
 bool is_god_lvl()
 {
-    return cur_god_elem_ >= 0;
+    return current_god_elem_ >= 0;
 }
 
-const God* cur_god()
+const God* current_god()
 {
-    if (cur_god_elem_ >= 0)
+    if (current_god_elem_ >= 0)
     {
-        return &(god_list_[cur_god_elem_]);
+        return &(god_list_[current_god_elem_]);
     }
 
     return nullptr;
@@ -138,12 +138,12 @@ const God* cur_god()
 void set_random_god()
 {
     const int nr_gods   = int(god_list_.size());
-    cur_god_elem_       = rnd::range(0, nr_gods - 1);
+    current_god_elem_       = rnd::range(0, nr_gods - 1);
 }
 
 void set_no_god()
 {
-    cur_god_elem_ = -1;
+    current_god_elem_ = -1;
 }
 
 } //gods

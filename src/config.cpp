@@ -552,13 +552,13 @@ void set_variables_from_lines(std::vector<std::string>& lines)
 {
     TRACE_FUNC_BEGIN;
 
-    std::string cur_line = lines.front();
-    is_audio_enabled_ = cur_line == "1";
+    std::string current_line = lines.front();
+    is_audio_enabled_ = current_line == "1";
     lines.erase(begin(lines));
 
-    cur_line = lines.front();
+    current_line = lines.front();
 
-    if (cur_line == "0")
+    if (current_line == "0")
     {
         is_tiles_mode_ = false;
     }
@@ -575,53 +575,53 @@ void set_variables_from_lines(std::vector<std::string>& lines)
 
     lines.erase(begin(lines));
 
-    cur_line = lines.front();
-    font_name_ = cur_line;
+    current_line = lines.front();
+    font_name_ = current_line;
     set_cell_px_dims_from_font_name();
     lines.erase(begin(lines));
 
-    cur_line = lines.front();
-    is_fullscr_ = cur_line == "1";
+    current_line = lines.front();
+    is_fullscr_ = current_line == "1";
     lines.erase(begin(lines));
 
-    cur_line = lines.front();
-    is_tiles_wall_full_square_ = cur_line == "1";
+    current_line = lines.front();
+    is_tiles_wall_full_square_ = current_line == "1";
     lines.erase(begin(lines));
 
-    cur_line = lines.front();
-    is_text_mode_wall_full_square_ = cur_line == "1";
+    current_line = lines.front();
+    is_text_mode_wall_full_square_ = current_line == "1";
     lines.erase(begin(lines));
 
-    cur_line = lines.front();
-    is_intro_lvl_skipped_ = cur_line == "1";
+    current_line = lines.front();
+    is_intro_lvl_skipped_ = current_line == "1";
     lines.erase(begin(lines));
 
-    cur_line = lines.front();
-    is_any_key_confirm_more_ = cur_line == "1";
+    current_line = lines.front();
+    is_any_key_confirm_more_ = current_line == "1";
     lines.erase(begin(lines));
 
-    cur_line = lines.front();
-    is_light_explosive_prompt_ = cur_line == "1";
+    current_line = lines.front();
+    is_light_explosive_prompt_ = current_line == "1";
     lines.erase(begin(lines));
 
-    cur_line = lines.front();
-    is_ranged_wpn_meleee_prompt_ = cur_line == "1";
+    current_line = lines.front();
+    is_ranged_wpn_meleee_prompt_ = current_line == "1";
     lines.erase(begin(lines));
 
-    cur_line = lines.front();
-    is_ranged_wpn_auto_reload_ = cur_line == "1";
+    current_line = lines.front();
+    is_ranged_wpn_auto_reload_ = current_line == "1";
     lines.erase(begin(lines));
 
-    cur_line = lines.front();
-    delay_projectile_draw_ = to_int(cur_line);
+    current_line = lines.front();
+    delay_projectile_draw_ = to_int(current_line);
     lines.erase(begin(lines));
 
-    cur_line = lines.front();
-    delay_shotgun_ = to_int(cur_line);
+    current_line = lines.front();
+    delay_shotgun_ = to_int(current_line);
     lines.erase(begin(lines));
 
-    cur_line = lines.front();
-    delay_explosion_ = to_int(cur_line);
+    current_line = lines.front();
+    delay_explosion_ = to_int(current_line);
     lines.erase(begin(lines));
 
     TRACE_FUNC_END;

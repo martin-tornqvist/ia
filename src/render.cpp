@@ -228,14 +228,14 @@ void load_contour(const bool base[pixel_data_w][pixel_data_h],
             if (!base[px_x][px_y])
             {
                 //Position interval to check for this pixel is constrained within current image
-                const P cur_img_px_p0((P(px_x, px_y) / cell_dims) * cell_dims);
-                const P cur_img_px_p1(cur_img_px_p0 + cell_dims - 1);
+                const P current_img_px_p0((P(px_x, px_y) / cell_dims) * cell_dims);
+                const P current_img_px_p1(current_img_px_p0 + cell_dims - 1);
 
-                const P px_p0(std::max(cur_img_px_p0.x, (int)(px_x - 1)),
-                              std::max(cur_img_px_p0.y, (int)(px_y - 1)));
+                const P px_p0(std::max(current_img_px_p0.x, (int)(px_x - 1)),
+                              std::max(current_img_px_p0.y, (int)(px_y - 1)));
 
-                const P px_p1(std::min(cur_img_px_p1.x, (int)(px_x + 1)),
-                              std::min(cur_img_px_p1.y, (int)(px_y + 1)));
+                const P px_p1(std::min(current_img_px_p1.x, (int)(px_x + 1)),
+                              std::min(current_img_px_p1.y, (int)(px_y + 1)));
 
                 for (int px_check_x = px_p0.x; px_check_x <= px_p1.x; ++px_check_x)
                 {
@@ -378,7 +378,7 @@ void draw_excl_mark_at(const P& px_pos)
 
 void draw_player_shock_excl_marks()
 {
-    const double shock  = map::player->perm_shock_taken_cur_turn();
+    const double shock  = map::player->perm_shock_taken_current_turn();
     const int nr_excl   = shock > 8 ? 3 : shock > 3 ? 2 : shock > 1 ? 1 : 0;
 
     if (nr_excl > 0)

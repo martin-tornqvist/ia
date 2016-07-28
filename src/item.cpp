@@ -877,7 +877,7 @@ MedicalBag::MedicalBag(ItemDataT* const item_data) :
     Item                    (item_data),
     nr_supplies_            (50),
     nr_turns_left_action_   (-1),
-    cur_action_             (MedBagAction::END) {}
+    current_action_             (MedBagAction::END) {}
 
 void MedicalBag::save()
 {
@@ -917,14 +917,14 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
     if (player_bon::bg() == Bg::ghoul)
     {
         msg_log::add("It is of no use to me.");
-        cur_action_ = MedBagAction::END;
+        current_action_ = MedBagAction::END;
         return ConsumeItem::no;
     }
 
     if (map::player->has_prop(PropId::poisoned))
     {
         msg_log::add("Not while poisoned.");
-        cur_action_ = MedBagAction::END;
+        current_action_ = MedBagAction::END;
         return ConsumeItem::no;
     }
 
@@ -935,13 +935,13 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
     if (!seen_foes.empty())
     {
         msg_log::add("Not while an enemy is near.");
-        cur_action_ = MedBagAction::END;
+        current_action_ = MedBagAction::END;
         return ConsumeItem::no;
     }
 
-    cur_action_ = choose_action();
+    current_action_ = choose_action();
 
-    if (cur_action_ == MedBagAction::END)
+    if (current_action_ == MedBagAction::END)
     {
         msg_log::clear();
 
@@ -950,24 +950,24 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
         return ConsumeItem::no;
     }
 
-    const int   nr_supplies_needed  = tot_suppl_for_action(cur_action_);
+    const int   nr_supplies_needed  = tot_suppl_for_action(current_action_);
     const bool  is_enough_supplies  = nr_supplies_ >= nr_supplies_needed;
 
     if (!is_enough_supplies)
     {
         msg_log::add("I do not have enough medical supplies.");
-        cur_action_ = MedBagAction::END;
+        current_action_ = MedBagAction::END;
         return ConsumeItem::no;
     }
 
     //Action can be done
     map::player->active_medical_bag = this;
 
-    nr_turns_left_action_ = tot_turns_for_action(cur_action_);
+    nr_turns_left_action_ = tot_turns_for_action(current_action_);
 
     std::string start_msg = "";
 
-    switch (cur_action_)
+    switch (current_action_)
     {
     case MedBagAction::treat_wound:
         start_msg = "I start treating a wound";
@@ -1010,13 +1010,13 @@ MedBagAction MedicalBag::choose_action() const
 
 void MedicalBag::continue_action()
 {
-    ASSERT(cur_action_ != MedBagAction::END);
+    ASSERT(current_action_ != MedBagAction::END);
 
     --nr_turns_left_action_;
 
     if (nr_turns_left_action_ <= 0)
     {
-        finish_cur_action();
+        finish_current_action();
     }
     else //Time still remaining on the current action
     {
@@ -1024,11 +1024,11 @@ void MedicalBag::continue_action()
     }
 }
 
-void MedicalBag::finish_cur_action()
+void MedicalBag::finish_current_action()
 {
     map::player->active_medical_bag = nullptr;
 
-    switch (cur_action_)
+    switch (current_action_)
     {
     case MedBagAction::treat_wound:
     {
@@ -1053,9 +1053,9 @@ void MedicalBag::finish_cur_action()
         break;
     }
 
-    nr_supplies_ -= tot_suppl_for_action(cur_action_);
+    nr_supplies_ -= tot_suppl_for_action(current_action_);
 
-    cur_action_ = MedBagAction::END;
+    current_action_ = MedBagAction::END;
 
     if (nr_supplies_ <= 0)
     {
@@ -1069,7 +1069,7 @@ void MedicalBag::interrupted()
 {
     msg_log::add("My healing is disrupted.");
 
-    cur_action_ = MedBagAction::END;
+    current_action_ = MedBagAction::END;
 
     nr_turns_left_action_ = -1;
 

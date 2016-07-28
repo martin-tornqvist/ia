@@ -321,9 +321,9 @@ Item* Inventory::remove_item_in_backpack_with_ptr(Item* const item, const bool d
 {
     for (size_t i = 0; i < backpack_.size(); ++i)
     {
-        const Item* const cur_item = backpack_[i];
+        const Item* const current_item = backpack_[i];
 
-        if (cur_item == item)
+        if (current_item == item)
         {
             return remove_item_in_backpack_with_idx(i, delete_item);
         }
@@ -797,9 +797,9 @@ void Inventory::sort_backpack()
         //Check if item should be added to any existing color group
         for (auto& group : sort_buffer)
         {
-            const Clr clr_cur_group = group[0]->interface_clr();
+            const Clr clr_current_group = group[0]->interface_clr();
 
-            if (is_clr_equal(item->interface_clr(), clr_cur_group))
+            if (is_clr_equal(item->interface_clr(), clr_current_group))
             {
                 group.push_back(item);
                 is_added_to_buffer = true;

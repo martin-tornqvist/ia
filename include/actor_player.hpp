@@ -80,14 +80,14 @@ public:
     int ins() const;
 
     //Used for determining if '!'-marks should be drawn on the player map symbol
-    double perm_shock_taken_cur_turn() const
+    double perm_shock_taken_current_turn() const
     {
-        return perm_shock_taken_cur_turn_;
+        return perm_shock_taken_current_turn_;
     }
 
-    void reset_perm_shock_taken_cur_turn()
+    void reset_perm_shock_taken_current_turn()
     {
-        perm_shock_taken_cur_turn_ = 0.0;
+        perm_shock_taken_current_turn_ = 0.0;
     }
 
     int shock_resistance(const ShockSrc shock_src) const;
@@ -127,7 +127,7 @@ public:
     Actor* tgt_;
     int wait_turns_left;
     int ins_;
-    double shock_, shock_tmp_, perm_shock_taken_cur_turn_;
+    double shock_, shock_tmp_, perm_shock_taken_current_turn_;
 
 private:
     void incr_insanity();

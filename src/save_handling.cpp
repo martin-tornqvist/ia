@@ -129,11 +129,11 @@ void read_file()
 
     if (file.is_open())
     {
-        std::string cur_line = "";
+        std::string current_line = "";
 
-        while (getline(file, cur_line))
+        while (getline(file, current_line))
         {
-            lines_.push_back(cur_line);
+            lines_.push_back(current_line);
         }
 
         file.close();
