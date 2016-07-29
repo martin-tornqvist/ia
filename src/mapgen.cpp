@@ -538,14 +538,14 @@ bool mk_std_lvl()
             {
                 auto& region = regions[x][y];
 
-                if (!region.main_room_ && region.is_free_)
+                if (!region.main_room && region.is_free)
                 {
                     const R room_rect = region.rnd_room_rect();
                     auto* room = room_factory::mk_random_allowed_std_room(room_rect, false);
                     register_room(*room);
                     mk_floor_in_room(*room);
-                    region.main_room_   = room;
-                    region.is_free_     = false;
+                    region.main_room    = room;
+                    region.is_free      = false;
                 }
             }
         }

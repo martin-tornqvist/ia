@@ -31,9 +31,9 @@
 #include "drop.hpp"
 #include "map_travel.hpp"
 
-struct Basic_fixture
+struct BasicFixture
 {
-    Basic_fixture()
+    BasicFixture()
     {
         init::init_game();
         init::init_session();
@@ -42,7 +42,7 @@ struct Basic_fixture
         map::reset_map(); //Because map generation is not run
     }
 
-    ~Basic_fixture()
+    ~BasicFixture()
     {
         init::cleanup_session();
         init::cleanup_game();
@@ -233,7 +233,7 @@ TEST(format_text)
     CHECK(formatted_lines.empty());
 }
 
-TEST_FIXTURE(Basic_fixture, line_calculation)
+TEST_FIXTURE(BasicFixture, line_calculation)
 {
     P origin(0, 0);
     std::vector<P> line;
@@ -352,7 +352,7 @@ TEST_FIXTURE(Basic_fixture, line_calculation)
     CHECK(!delta_line);
 }
 
-TEST_FIXTURE(Basic_fixture, fov)
+TEST_FIXTURE(BasicFixture, fov)
 {
     bool blocked[map_w][map_h] = {};
 
@@ -400,7 +400,7 @@ TEST_FIXTURE(Basic_fixture, fov)
     CHECK(fov[x - r + 1][y + r - 1].is_blocked_hard);
 }
 
-TEST_FIXTURE(Basic_fixture, light_map)
+TEST_FIXTURE(BasicFixture, light_map)
 {
     //Put walls on the edge of the map, and floor in all other cells, and make all cells dark
     for (int x = 0; x < map_w; ++x)
@@ -463,7 +463,7 @@ TEST_FIXTURE(Basic_fixture, light_map)
     CHECK(map::cells[burn_pos.x + 1][burn_pos.y - 1].is_dark);
 }
 
-TEST_FIXTURE(Basic_fixture, throw_items)
+TEST_FIXTURE(BasicFixture, throw_items)
 {
     //-----------------------------------------------------------------
     // Throwing a throwing knife at a wall should make it land
@@ -486,7 +486,7 @@ TEST_FIXTURE(Basic_fixture, throw_items)
     CHECK(map::cells[5][9].item);
 }
 
-TEST_FIXTURE(Basic_fixture, explosions)
+TEST_FIXTURE(BasicFixture, explosions)
 {
     const int x0 = 5;
     const int y0 = 7;
@@ -601,7 +601,7 @@ TEST_FIXTURE(Basic_fixture, explosions)
     CHECK(map::cells[x    ][y + 1].rigid->id() == FeatureId::wall);
 }
 
-TEST_FIXTURE(Basic_fixture, monster_stuck_in_spider_web)
+TEST_FIXTURE(BasicFixture, monster_stuck_in_spider_web)
 {
     //-----------------------------------------------------------------
     // Test that-
@@ -683,7 +683,7 @@ TEST_FIXTURE(Basic_fixture, monster_stuck_in_spider_web)
     CHECK(tested_loose_web_destroyed);
 }
 
-TEST_FIXTURE(Basic_fixture, inventory_handling)
+TEST_FIXTURE(BasicFixture, inventory_handling)
 {
     const P p(10, 10);
     map::put(new Floor(p));
@@ -846,7 +846,7 @@ TEST_FIXTURE(Basic_fixture, inventory_handling)
     }
 }
 
-TEST_FIXTURE(Basic_fixture, saving_game)
+TEST_FIXTURE(BasicFixture, saving_game)
 {
     //Item data
     item_data::data[(size_t)ItemId::scroll_telep].is_tried = true;
@@ -961,7 +961,7 @@ TEST_FIXTURE(Basic_fixture, saving_game)
     CHECK(save_handling::is_save_available());
 }
 
-TEST_FIXTURE(Basic_fixture, loading_game)
+TEST_FIXTURE(BasicFixture, loading_game)
 {
     CHECK(save_handling::is_save_available());
 
@@ -1108,22 +1108,29 @@ TEST_FIXTURE(Basic_fixture, loading_game)
     CHECK_EQUAL(0, game_time::turn());
 }
 
-TEST_FIXTURE(Basic_fixture, floodfilling)
+TEST_FIXTURE(BasicFixture, floodfilling)
 {
-    bool b[map_w][map_h] = {};
+    bool blocked[map_w][map_h] = {};
 
+    //Set the edge of the map as blocking
     for (int y = 0; y < map_h; ++y)
     {
-        b[0][y] = b[map_w - 1][y] = false;
+        blocked[0][y] = blocked[map_w - 1][y] = true;
     }
 
     for (int x = 0; x < map_w; ++x)
     {
-        b[x][0] = b[x][map_h - 1] = false;
+        blocked[x][0] = blocked[x][map_h - 1] = true;
     }
 
     int flood[map_w][map_h];
-    floodfill::run(P(20, 10), b, flood, 999, P(-1, -1), true);
+
+    floodfill::run(P(20, 10),
+                   blocked,
+                   flood,
+                   INT_MAX,
+                   P(-1, -1),
+                   true);
 
     CHECK_EQUAL(0, flood[20][10]);
     CHECK_EQUAL(1, flood[19][10]);
@@ -1137,22 +1144,25 @@ TEST_FIXTURE(Basic_fixture, floodfilling)
     CHECK_EQUAL(0, flood[map_w - 1][map_h - 1]);
 }
 
-TEST_FIXTURE(Basic_fixture, pathfinding)
+TEST_FIXTURE(BasicFixture, pathfinding)
 {
     std::vector<P> path;
-    bool b[map_w][map_h] = {};
+    bool blocked[map_w][map_h] = {};
 
     for (int y = 0; y < map_h; ++y)
     {
-        b[0][y] = b[map_w - 1][y] = false;
+        blocked[0][y] = blocked[map_w - 1][y] = false;
     }
 
     for (int x = 0; x < map_w; ++x)
     {
-        b[x][0] = b[x][map_h - 1] = false;
+        blocked[x][0] = blocked[x][map_h - 1] = false;
     }
 
-    pathfind::run(P(20, 10), P(25, 10), b, path);
+    pathfind::run(P(20, 10),
+                  P(25, 10),
+                  blocked,
+                  path);
 
     CHECK(!path.empty());
     CHECK(path.back() != P(20, 10));
@@ -1160,7 +1170,10 @@ TEST_FIXTURE(Basic_fixture, pathfinding)
     CHECK_EQUAL(10, path.front().y);
     CHECK_EQUAL(5, int(path.size()));
 
-    pathfind::run(P(20, 10), P(5, 3), b, path);
+    pathfind::run(P(20, 10),
+                  P(5, 3),
+                  blocked,
+                  path);
 
     CHECK(!path.empty());
     CHECK(path.back() != P(20, 10));
@@ -1168,9 +1181,12 @@ TEST_FIXTURE(Basic_fixture, pathfinding)
     CHECK_EQUAL(3, path.front().y);
     CHECK_EQUAL(15, int(path.size()));
 
-    b[10][5] = true;
+    blocked[10][5] = true;
 
-    pathfind::run(P(7, 5), P(20, 5), b, path);
+    pathfind::run(P(7, 5),
+                  P(20, 5),
+                  blocked,
+                  path);
 
     CHECK(!path.empty());
     CHECK(path.back() != P(7, 5));
@@ -1179,9 +1195,12 @@ TEST_FIXTURE(Basic_fixture, pathfinding)
     CHECK_EQUAL(13, int(path.size()));
     CHECK(find(begin(path), end(path), P(10, 5)) == end(path));
 
-    b[19][4] = b[19][5] =  b[19][6] = true;
+    blocked[19][4] = blocked[19][5] =  blocked[19][6] = true;
 
-    pathfind::run(P(7, 5), P(20, 5), b, path);
+    pathfind::run(P(7, 5),
+                  P(20, 5),
+                  blocked,
+                  path);
 
     CHECK(!path.empty());
     CHECK(path.back() != P(7, 5));
@@ -1192,7 +1211,11 @@ TEST_FIXTURE(Basic_fixture, pathfinding)
     CHECK(find(begin(path), end(path), P(19, 5)) == end(path));
     CHECK(find(begin(path), end(path), P(19, 6)) == end(path));
 
-    pathfind::run(P(40, 10), P(43, 15), b, path, false);
+    pathfind::run(P(40, 10),
+                  P(43, 15),
+                  blocked,
+                  path,
+                  false);
 
     CHECK(!path.empty());
     CHECK(path.back() != P(40, 10));
@@ -1200,9 +1223,13 @@ TEST_FIXTURE(Basic_fixture, pathfinding)
     CHECK_EQUAL(15, path.front().y);
     CHECK_EQUAL(8, int(path.size()));
 
-    b[41][10] = b[40][11]  = true;
+    blocked[41][10] = blocked[40][11]  = true;
 
-    pathfind::run(P(40, 10), P(43, 15), b, path, false);
+    pathfind::run(P(40, 10),
+                  P(43, 15),
+                  blocked,
+                  path,
+                  false);
 
     CHECK(!path.empty());
     CHECK(path.back() != P(40, 10));
@@ -1211,7 +1238,7 @@ TEST_FIXTURE(Basic_fixture, pathfinding)
     CHECK_EQUAL(10, int(path.size()));
 }
 
-TEST_FIXTURE(Basic_fixture, map_parse_expand_one)
+TEST_FIXTURE(BasicFixture, map_parse_expand_one)
 {
     bool in[map_w][map_h] = {};
 
@@ -1259,7 +1286,7 @@ TEST_FIXTURE(Basic_fixture, map_parse_expand_one)
     CHECK(!out[14][5]);
 }
 
-TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
+TEST_FIXTURE(BasicFixture, find_corridor_entries)
 {
     auto bool_map = [](const std::vector<P>& vec, bool out[map_w][map_h])
     {
@@ -1292,14 +1319,14 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     bool_map(entry_list, entry_map);
 
     CHECK(!entry_map[19][4]);
-    CHECK(entry_map[19][5]);
-    CHECK(entry_map[20][4]);
+    CHECK (entry_map[19][5]);
+    CHECK (entry_map[20][4]);
     CHECK(!entry_map[20][5]);
-    CHECK(entry_map[21][4]);
-    CHECK(entry_map[25][4]);
+    CHECK( entry_map[21][4]);
+    CHECK( entry_map[25][4]);
     CHECK(!entry_map[25][8]);
-    CHECK(entry_map[29][4]);
-    CHECK(entry_map[30][4]);
+    CHECK( entry_map[29][4]);
+    CHECK( entry_map[30][4]);
     CHECK(!entry_map[31][4]);
 
     //Check that a cell in the middle of the room is not an entry, even if it's not
@@ -1368,13 +1395,13 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     // #  .  # 10
     // #  #  # 11
     CHECK(!entry_map[59][9]);
-    CHECK(entry_map[60][9]);
+    CHECK( entry_map[60][9]);
     CHECK(!entry_map[61][9]);
-    CHECK(entry_map[59][10]);
+    CHECK( entry_map[59][10]);
     CHECK(!entry_map[60][10]);
-    CHECK(entry_map[61][10]);
+    CHECK( entry_map[61][10]);
     CHECK(!entry_map[59][11]);
-    CHECK(entry_map[60][11]);
+    CHECK( entry_map[60][11]);
     CHECK(!entry_map[61][11]);
 
     //Add an adjacent floor above the room
@@ -1389,11 +1416,11 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     CHECK(!entry_map[59][9]);
     CHECK(!entry_map[60][9]);
     CHECK(!entry_map[61][9]);
-    CHECK(entry_map[59][10]);
+    CHECK( entry_map[59][10]);
     CHECK(!entry_map[60][10]);
-    CHECK(entry_map[61][10]);
+    CHECK( entry_map[61][10]);
     CHECK(!entry_map[59][11]);
-    CHECK(entry_map[60][11]);
+    CHECK( entry_map[60][11]);
     CHECK(!entry_map[61][11]);
 
     //Mark the adjacent floor as a room and check again
@@ -1426,16 +1453,16 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     bool_map(entry_list, entry_map);
 
     CHECK(!entry_map[58][9]);
-    CHECK(entry_map[59][9]);
+    CHECK( entry_map[59][9]);
     CHECK(!entry_map[60][9]);
     CHECK(!entry_map[61][9]);
-    CHECK(entry_map[58][10]);
+    CHECK( entry_map[58][10]);
     CHECK(!entry_map[59][10]);
     CHECK(!entry_map[60][10]);
-    CHECK(entry_map[61][10]);
+    CHECK( entry_map[61][10]);
     CHECK(!entry_map[58][11]);
-    CHECK(entry_map[59][11]);
-    CHECK(entry_map[60][11]);
+    CHECK( entry_map[59][11]);
+    CHECK( entry_map[60][11]);
     CHECK(!entry_map[61][11]);
 
     //Remove the adjacent room, and check that the blocked entries are now placed
@@ -1444,7 +1471,59 @@ TEST_FIXTURE(Basic_fixture, find_room_corr_entries)
     delete room;
 }
 
-TEST_FIXTURE(Basic_fixture, connect_rooms_with_corridor)
+TEST(find_choke_points)
+{
+    bool blocked[map_w][map_h];
+
+    //--------------------------------------------------------------------------
+    //Very simple test with three adjacent free positions. Verify that the
+    //center position is a choke point.
+    //--------------------------------------------------------------------------
+    std::fill_n(*blocked, nr_map_cells, true);
+
+    blocked[20][10] = false;
+    blocked[21][10] = false;
+    blocked[22][10] = false;
+
+    ChokePointData d;
+
+    bool is_choke_point = mapgen::is_choke_point(P(21, 10),
+                                                 blocked,
+                                                 d);
+
+    CHECK(is_choke_point);
+
+    CHECK(d.p == P(21, 10));
+
+    CHECK(d.sides[0].size() == 1);
+    CHECK(d.sides[1].size() == 1);
+
+    CHECK(d.sides[0][0] == P(20, 10));
+    CHECK(d.sides[1][0] == P(22, 10));
+
+    //--------------------------------------------------------------------------
+    //The left position should NOT be a choke point
+    //--------------------------------------------------------------------------
+    is_choke_point = mapgen::is_choke_point(P(20, 10),
+                                            blocked,
+                                            d);
+
+    CHECK(!is_choke_point);
+
+    //--------------------------------------------------------------------------
+    //Set the position above the center position to free, and verify that the
+    //center position is no longer a choke point
+    //--------------------------------------------------------------------------
+    blocked[21][9] = false;
+
+    is_choke_point = mapgen::is_choke_point(P(21, 10),
+                                            blocked,
+                                            d);
+
+    CHECK(!is_choke_point);
+}
+
+TEST_FIXTURE(BasicFixture, connect_rooms_with_corridor)
 {
     R room_area_1(P(1, 1), P(10, 10));
     R room_area_2(P(15, 4), P(23, 14));
@@ -1490,7 +1569,7 @@ TEST_FIXTURE(Basic_fixture, connect_rooms_with_corridor)
     delete room1;
 }
 
-TEST_FIXTURE(Basic_fixture, map_parse_cells_within_dist_of_others)
+TEST_FIXTURE(BasicFixture, map_parse_cells_within_dist_of_others)
 {
     bool in[map_w][map_h]   = {};
     bool out[map_w][map_h]  = {};
@@ -1623,26 +1702,26 @@ void check_wall_placement(const P& origin)
     //Check that walls are not placed like this:
     // .#
     // #.
-    bool bad_walls_found = f[0][0] && w[1][0] &&
-                           w[0][1] && f[1][1];
+    bool bad_walls_found =
+        f[0][0] && w[1][0] &&
+        w[0][1] && f[1][1];
 
     //Check that walls are not placed like this:
     // #.
     // .#
-    bad_walls_found = bad_walls_found ||
-                      (
-                          w[0][0] && f[1][0] &&
-                          f[0][1] && w[1][1]
-                      );
-
+    bad_walls_found =
+        bad_walls_found ||
+        (w[0][0] && f[1][0] &&
+         f[0][1] && w[1][1]);
+    
     CHECK(!bad_walls_found);
 }
 
 } //namespace
 
-TEST_FIXTURE(Basic_fixture, mapgen_std)
+TEST_FIXTURE(BasicFixture, mapgen_std)
 {
-    for (int i = 0; i < 200; ++i)
+    for (int i = 0; i < 30; ++i)
     {
         bool map_ok = false;
 

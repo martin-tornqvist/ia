@@ -28,7 +28,7 @@ void randomly_block_regions(Region regions[3][3])
         {
             for (int y = 0; y < 3; ++y)
             {
-                if (regions[x][y].is_free_)
+                if (regions[x][y].is_free)
                 {
                     bool is_all_adj_free = true;
                     const P p(x, y);
@@ -39,7 +39,7 @@ void randomly_block_regions(Region regions[3][3])
 
                         if (p_adj >= 0 && p_adj <= 2 && p_adj != p)
                         {
-                            if (!regions[p_adj.x][p_adj.y].is_free_)
+                            if (!regions[p_adj.x][p_adj.y].is_free)
                             {
                                 is_all_adj_free = false;
                                 break;
@@ -66,7 +66,7 @@ void randomly_block_regions(Region regions[3][3])
             const P& p(block_bucket[rnd::range(0, block_bucket.size() - 1)]);
 
             TRACE_VERBOSE << "Blocking region at " << p.x << "," << p.y << std:: endl;
-            regions[p.x][p.y].is_free_ = false;
+            regions[p.x][p.y].is_free = false;
         }
     }
 

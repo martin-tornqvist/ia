@@ -11,20 +11,41 @@ struct Region
 {
 public:
     Region(const R& r) :
-        main_room_  (nullptr),
-        r_          (r),
-        is_free_    (true) {}
+        main_room   (nullptr),
+        r           (r),
+        is_free     (true) {}
 
     Region() :
-        main_room_  (nullptr),
-        r_          (),
-        is_free_    (true) {}
+        main_room   (nullptr),
+        r           (),
+        is_free     (true) {}
 
     R rnd_room_rect() const;
 
-    Room* main_room_;
-    R r_;
-    bool is_free_;
+    Room* main_room;
+    R r;
+    bool is_free;
+};
+
+struct ChokePointData
+{
+    ChokePointData() :
+        p()
+    {
+        sides[0].resize(0);
+        sides[1].resize(0);
+    }
+
+    ChokePointData& operator=(const ChokePointData& other)
+    {
+        p           = other.p;
+        sides[0]    = other.sides[0];
+        sides[1]    = other.sides[1];
+        return *this;
+    }
+
+    P p;
+    std::vector<P> sides[2];
 };
 
 namespace mapgen
@@ -90,6 +111,10 @@ bool is_all_rooms_connected();
 
 void valid_corridor_entries(const Room& room,
                             std::vector<P>& out);
+
+bool is_choke_point(const P& p,
+                    const bool blocked[map_w][map_h],
+                    ChokePointData& out);
 
 void mk_pathfind_corridor(Room& r0,
                           Room& r1,

@@ -134,9 +134,9 @@ void mk_aux_rooms(Region regions[3][3])
         {
             const Region& region = regions[region_x][region_y];
 
-            if (region.main_room_)
+            if (region.main_room)
             {
-                Room& main_r = *region.main_room_;
+                Room& main_r = *region.main_room;
 
                 //Right
                 if (rnd::one_in(4))

@@ -16,8 +16,8 @@ void reserve_river(Region regions[3][3])
     auto init_room_rect = [&](int& len0, int& len1, int& breadth0, int& breadth1,
                               const P & reg0, const P & reg2)
     {
-         const R regions_tot_rect(regions[reg0.x][reg0.y].r_.p0,
-                                 regions[reg2.x][reg2.y].r_.p1);
+         const R regions_tot_rect(regions[reg0.x][reg0.y].r.p0,
+                                  regions[reg2.x][reg2.y].r.p1);
 
         room_rect       = regions_tot_rect;
         river_region    = &regions[reg0.x][reg0.y];
@@ -52,11 +52,12 @@ void reserve_river(Region regions[3][3])
                        P(1, 2));
     }
 
-    Room* const         room        = room_factory::mk(RoomType::river, room_rect);
-    RiverRoom* const   river_room  = static_cast<RiverRoom*>(room);
-    river_room->axis_               = axis;
-    river_region->main_room_        = room;
-    river_region->is_free_          = false;
+    Room* const room            = room_factory::mk(RoomType::river, room_rect);
+    RiverRoom* const river_room = static_cast<RiverRoom*>(room);
+
+    river_room->axis_       = axis;
+    river_region->main_room = room;
+    river_region->is_free   = false;
 
     if (axis == Axis::hor)
     {

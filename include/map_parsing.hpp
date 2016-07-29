@@ -41,8 +41,8 @@ class BlocksMoveCmn : public Check
 {
 public:
     BlocksMoveCmn(bool is_actors_blocking) :
-        Check(),
-        is_actors_blocking_(is_actors_blocking) {}
+        Check               (),
+        is_actors_blocking_ (is_actors_blocking) {}
     bool is_checking_cells()        const override {return true;}
     bool is_checking_mobs()         const override {return true;}
     bool is_checking_actors()       const override {return is_actors_blocking_;}

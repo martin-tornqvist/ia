@@ -30,9 +30,10 @@ bool is_all_rooms_connected()
 void register_room(Room& room)
 {
 #ifndef NDEBUG
+    //Check that the room has not already been added
     for (Room* const room_in_list : map::room_list)
     {
-        ASSERT(room_in_list != &room); //Check that the room is not already added
+        ASSERT(room_in_list != &room);
     }
 #endif //NDEBUG
 
@@ -462,6 +463,115 @@ void valid_corridor_entries(const Room& room, std::vector<P>& out)
     }
 
     TRACE_FUNC_END_VERBOSE;
+}
+
+bool is_choke_point(const P& p,
+                    const bool blocked[map_w][map_h],
+                    ChokePointData& out)
+{
+    //Assuming that the tested position is free
+    ASSERT(!blocked[p.x][p.y]);
+
+    //There must be exactly two free cells cardinally adjacent to the tested pos
+    P p_side1;
+    P p_side2;
+
+    for (const P& d : dir_utils::cardinal_list)
+    {
+        const P adj_p(p + d);
+
+        if (!blocked[adj_p.x][adj_p.y])
+        {
+            if (p_side1.x == 0)
+            {
+                p_side1 = adj_p;
+            }
+            else if (p_side2.x == 0)
+            {
+                p_side2 = adj_p;
+            }
+            else //Both p0 and p1 has already been set
+            {
+                //This is not a choke point, bye!
+                return false;
+            }
+        }
+    }
+
+    //OK, the position has exactly two free cardinally adjacent cells
+
+    //Check that the two sides can reach each other
+    int flood_side1[map_w][map_h];
+
+    floodfill::run(p_side1,
+                   blocked,
+                   flood_side1);
+    //INT_MAX,
+    //p_side2); //Stop if side 2 is reached
+
+    if (flood_side1[p_side2.x][p_side2.y] == 0)
+    {
+        //The two sides was already separated from each other, nevermind
+        return false;
+    }
+
+    //Check if this position can completely separate the two sides
+    bool blocked_cpy[map_w][map_h];
+
+    std::copy_n(*blocked, nr_map_cells, *blocked_cpy);
+
+    blocked_cpy[p.x][p.y] = true;
+
+    //Do another floodfill from side 1
+    floodfill::run(p_side1,
+                   blocked_cpy,
+                   flood_side1);
+    //INT_MAX);
+    //p_side2); //Stop if side 2 is reached
+
+    if (flood_side1[p_side2.x][p_side2.y] > 0)
+    {
+        //The two sides can still reach each other - not a choke point
+        return false;
+    }
+
+    //OK, this is a "true" choke point, time to gather more information!
+
+    out.p = p;
+
+    int flood_side2[map_w][map_h];
+
+    //Do a floodfill from side 2
+    floodfill::run(p_side2,
+                   blocked_cpy,
+                   flood_side2);
+
+    //Prepare for at lease the worst case of push-backs
+    out.sides[0].reserve(nr_map_cells);
+    out.sides[1].reserve(nr_map_cells);
+
+    //Add the origin positions for both sides (they have flood value 0)
+    out.sides[0].push_back(p_side1);
+    out.sides[1].push_back(p_side2);
+
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
+        {
+            if (flood_side1[x][y] > 0)
+            {
+                ASSERT(flood_side2[x][y] == 0);
+
+                out.sides[0].push_back(P(x, y));
+            }
+            else if (flood_side2[x][y] > 0)
+            {
+                out.sides[1].push_back(P(x, y));
+            }
+        }
+    }
+
+    return true;
 }
 
 void mk_pathfind_corridor(Room& room_0,
