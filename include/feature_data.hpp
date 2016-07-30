@@ -89,7 +89,7 @@ public:
     {
         can_move_cmn_ = false;
 
-        for (int i = 0; i < int(PropId::END); ++i)
+        for (int i = 0; i < (int)PropId::END; ++i)
         {
             can_move_if_have_prop_[i] = false;
         }
@@ -114,7 +114,7 @@ public:
 
 private:
     bool can_move_cmn_;
-    bool can_move_if_have_prop_[size_t(PropId::END)];
+    bool can_move_if_have_prop_[(size_t)PropId::END];
 };
 
 class Feature;

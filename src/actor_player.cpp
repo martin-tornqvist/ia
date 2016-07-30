@@ -1624,9 +1624,9 @@ bool Player::is_free_step_turn() const
 void Player::auto_melee()
 {
     if (
-        tgt_                                        &&
-        tgt_->state() == ActorState::alive         &&
-        is_pos_adj(pos, tgt_->pos, false)    &&
+        tgt_                                &&
+        tgt_->state() == ActorState::alive  &&
+        is_pos_adj(pos, tgt_->pos, false)   &&
         can_see_actor(*tgt_))
     {
         move(dir_utils::dir(tgt_->pos - pos));

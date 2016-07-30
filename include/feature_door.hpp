@@ -80,14 +80,23 @@ public:
 
     void set_to_secret()
     {
-        is_open_ = is_secret_ = false;
+        is_open_    = false;
+        is_secret_  = true;
+    }
+
+    void set_to_stuck()
+    {
+        is_open_    = false;
+        is_stuck_   = true;
     }
 
     virtual DidOpen open(Actor* const actor_opening) override;
 
     static bool is_tile_any_door(const TileId tile)
     {
-        return tile == TileId::door_closed || tile == TileId::door_open;
+        return
+            tile == TileId::door_closed ||
+            tile == TileId::door_open;
     }
 
     void player_try_spot_hidden();

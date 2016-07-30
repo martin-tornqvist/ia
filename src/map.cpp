@@ -70,12 +70,13 @@ void Cell::reset()
 namespace map
 {
 
-Player*             player  = nullptr;
-int                 dlvl    = 0;
-Cell                cells[map_w][map_h];
-std::vector<Room*>  room_list;
-Room*               room_map[map_w][map_h];
-Clr                 wall_clr;
+Player*                     player  = nullptr;
+int                         dlvl    = 0;
+Cell                        cells[map_w][map_h];
+Clr                         wall_clr;
+std::vector<Room*>          room_list;
+Room*                       room_map[map_w][map_h];
+std::vector<ChokePointData> choke_point_data;
 
 namespace
 {
@@ -154,6 +155,8 @@ void reset_map()
     }
 
     room_list.clear();
+
+    choke_point_data.clear();
 
     reset_cells(true);
     game_time::erase_all_mobs();

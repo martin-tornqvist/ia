@@ -21,12 +21,12 @@ struct Cell
 
     void reset();
 
-    bool                is_explored, is_seen_by_player, is_lit, is_dark;
-    LosResult          player_los; //Updated when player updates FOV
-    Item*               item;
-    Rigid*              rigid;
-    CellRenderData    player_visual_memory;
-    P                   pos;
+    bool is_explored, is_seen_by_player, is_lit, is_dark;
+    LosResult player_los; //Updated when player updates FOV
+    Item* item;
+    Rigid* rigid;
+    CellRenderData player_visual_memory;
+    P pos;
 };
 
 enum class MapType
@@ -40,16 +40,52 @@ enum class MapType
     trapez
 };
 
+struct ChokePointData
+{
+    ChokePointData() :
+        p           (),
+        player_side (-1),
+        stairs_side (-1)
+    {
+        sides[0].resize(0);
+        sides[1].resize(0);
+    }
+
+    ChokePointData& operator=(const ChokePointData& other)
+    {
+        p           = other.p;
+        sides[0]    = other.sides[0];
+        sides[1]    = other.sides[1];
+        return *this;
+    }
+
+    P p;
+
+    //These shall have value 0 or 1
+    int player_side;
+    int stairs_side;
+
+    std::vector<P> sides[2];
+};
+
 namespace map
 {
 
-extern Player*              player;
-extern int                  dlvl;
-extern Cell                 cells[map_w][map_h];
-extern std::vector<Room*>   room_list;              //Owns the rooms
-extern Room*                room_map[map_w][map_h]; //Helper array
+extern Player*                      player;
+extern int                          dlvl;
+extern Cell                         cells[map_w][map_h];
 
-extern Clr                  wall_clr;
+extern Clr                          wall_clr;
+
+//This vector is the room owner
+extern std::vector<Room*>           room_list;
+
+//Helper array, for convenience and optimization
+extern Room*                        room_map[map_w][map_h];
+
+//NOTE: This data is only intended to be used for the purpose of map generation
+//      (and placing items etc), it is NOT updated while playing the map.
+extern std::vector<ChokePointData>  choke_point_data;
 
 void init();
 void cleanup();

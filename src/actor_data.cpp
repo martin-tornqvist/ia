@@ -134,7 +134,7 @@ void init_data_list()
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    3),
+        MonGroupSpawnRule(MonGroupSize::few,    4),
         MonGroupSpawnRule(MonGroupSize::pack,   1)
     });
     d.actor_size = ActorSize::humanoid;
@@ -182,7 +182,7 @@ void init_data_list()
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    3),
+        MonGroupSpawnRule(MonGroupSize::few,    4),
         MonGroupSpawnRule(MonGroupSize::pack,   1)
     });
     d.actor_size = ActorSize::humanoid;
@@ -232,7 +232,8 @@ void init_data_list()
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few, 1)
+        MonGroupSpawnRule(MonGroupSize::alone,  2),
+        MonGroupSpawnRule(MonGroupSize::few,    1)
     });
     d.actor_size = ActorSize::humanoid;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -817,7 +818,7 @@ void init_data_list()
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::alone,  4),
+        MonGroupSpawnRule(MonGroupSize::alone,  3),
         MonGroupSpawnRule(MonGroupSize::few,    1),
     });
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -857,7 +858,7 @@ void init_data_list()
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::alone,  4),
+        MonGroupSpawnRule(MonGroupSize::alone,  3),
         MonGroupSpawnRule(MonGroupSize::few,    1),
     });
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -897,7 +898,7 @@ void init_data_list()
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::alone,  4),
+        MonGroupSpawnRule(MonGroupSize::alone,  3),
         MonGroupSpawnRule(MonGroupSize::few,    1),
     });
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -2928,7 +2929,7 @@ void init_data_list()
     d.spi = 1;
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 6);
-    d.speed = ActorSpeed::slow;
+    d.speed = ActorSpeed::sluggish;
     d.ai[(size_t)AiId::looks] = false;
     d.ai[(size_t)AiId::attacks] = true;
     d.ai[(size_t)AiId::moves_to_random_when_unaware] = false;

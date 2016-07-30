@@ -167,7 +167,7 @@ void connect_rooms()
     TRACE_FUNC_END;
 }
 
-void place_door_at_pos_if_allowed(const P& p)
+void try_place_door(const P& p)
 {
     //Check that no other doors are within a certain distance
     const int r = 2;
@@ -468,13 +468,7 @@ bool mk_std_lvl()
 
     TRACE << "Resetting helper arrays" << std:: endl;
 
-    for (int x = 0; x < map_w; ++x)
-    {
-        for (int y = 0; y < map_h; ++y)
-        {
-            door_proposals[x][y] = false;
-        }
-    }
+    std::fill_n(*door_proposals, nr_map_cells, false);
 
     //NOTE: This must be called before any rooms are created
     room_factory::init_room_bucket();
@@ -665,9 +659,11 @@ bool mk_std_lvl()
         {
             for (int y = 0; y < map_h; ++y)
             {
-                if (door_proposals[x][y] && rnd::fraction(7, 10))
+                if (
+                    door_proposals[x][y] &&
+                    rnd::fraction(4, 5))
                 {
-                    place_door_at_pos_if_allowed(P(x, y));
+                    try_place_door(P(x, y));
                 }
             }
         }
@@ -685,6 +681,122 @@ bool mk_std_lvl()
     }
 #endif //DISABLE_DECORATE
 
+    //NOTE: The choke point data below depends on the stairs being placed, so
+    //      we need to do this first.
+    P stairs_pos;
+
+    if (is_map_valid)
+    {
+        stairs_pos = place_stairs();
+    }
+
+    //Gather data on choke points in the map (check every position where a door
+    //has previously been "proposed")
+    if (is_map_valid)
+    {
+        bool blocked[map_w][map_h];
+    
+        map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+
+        //Consider stairs and doors as non-blocking
+        for (int x = 0; x < map_w; ++x)
+        {
+            for (int y = 0; y < map_h; ++y)
+            {
+                const FeatureId id = map::cells[x][y].rigid->id();
+                
+                if (id == FeatureId::stairs ||
+                    id == FeatureId::door)
+                {
+                    blocked[x][y] = false;
+                }
+            }
+        }
+
+        for (int x = 0; x < map_w; ++x)
+        {
+            for (int y = 0; y < map_h; ++y)
+            {
+                if (door_proposals[x][y])
+                {
+                    ChokePointData d;
+
+                    const bool is_choke = is_choke_point(P(x, y),
+                                                         blocked,
+                                                         d);
+
+                    if (is_choke)
+                    {
+                        //Find player and stair side
+                        for (size_t side_idx = 0; side_idx < 2; ++side_idx)
+                        {
+                            for (const P& p : d.sides[side_idx])
+                            {
+                                if (p == map::player->pos)
+                                {
+                                    ASSERT(d.player_side == -1);
+
+                                    d.player_side = side_idx;
+                                }
+
+                                if (p == stairs_pos)
+                                {
+                                    ASSERT(d.stairs_side == -1);
+
+                                    d.stairs_side = side_idx;
+                                }
+                            }
+                        }
+
+                        ASSERT(d.player_side == 0 || d.player_side == 1);
+                        ASSERT(d.stairs_side == 0 || d.stairs_side == 1);
+
+                        //Robustness for release mode
+                        if (
+                            (d.player_side != 0 && d.player_side != 1) ||
+                            (d.player_side != 0 && d.player_side != 1))
+                        {
+                            //Go to next map position
+                            continue;
+                        }
+
+                        map::choke_point_data.emplace_back(d);
+                    }
+                }
+            } //y loop
+        } //x loop
+
+        TRACE << "Found " << map::choke_point_data.size()
+              << " choke points" << std::endl;
+    }
+
+    //Explicitly make some doors leading to "optional" areas secret and/or stuck
+    if (is_map_valid)
+    {
+        for (const auto& choke_point : map::choke_point_data)
+        {
+            if (choke_point.player_side == choke_point.stairs_side)
+            {
+                Rigid* const rigid = map::cells[choke_point.p.x][choke_point.p.y].rigid;
+
+                if (rigid->id() == FeatureId::door)
+                {
+                    Door* const door = static_cast<Door*>(rigid);
+
+                    if (rnd::coin_toss())
+                    {
+                        door->set_to_secret();
+                    }
+
+                    if (rnd::coin_toss())
+                    {
+                        door->set_to_stuck();
+                    }
+                }
+            }
+        }
+    }
+
     if (is_map_valid)
     {
         populate_mon::populate_std_lvl();
@@ -698,13 +810,6 @@ bool mk_std_lvl()
     if (is_map_valid)
     {
         populate_items::mk_items_on_floor();
-    }
-
-    P stairs_pos;
-
-    if (is_map_valid)
-    {
-        stairs_pos = place_stairs();
     }
 
     if (is_map_valid)
@@ -731,7 +836,7 @@ bool mk_std_lvl()
 
     if (is_map_valid)
     {
-        const int last_lvl_to_reveal_stairs_path = 9;
+        const int last_lvl_to_reveal_stairs_path = 6;
 
         if (map::dlvl <= last_lvl_to_reveal_stairs_path)
         {

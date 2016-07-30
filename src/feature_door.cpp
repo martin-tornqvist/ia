@@ -12,7 +12,8 @@
 #include "map_parsing.hpp"
 
 //---------------------------------------------------INHERITED FUNCTIONS
-Door::Door(const P& feature_pos, const Rigid* const mimic_feature,
+Door::Door(const P& feature_pos,
+           const Rigid* const mimic_feature,
            DoorSpawnState spawn_state) :
     Rigid                   (feature_pos),
     mimic_feature_          (mimic_feature),
@@ -25,10 +26,17 @@ Door::Door(const P& feature_pos, const Rigid* const mimic_feature,
 {
     if (spawn_state == DoorSpawnState::any)
     {
-        //Chance of secret door increases with DLVL
-        if (rnd::percent(10 + ((map::dlvl - 1) * 5)))
+        //NOTE: The chances below are just generic "default" behavior for random
+        //      doors placed wherever. Doors may be explicitly set to other
+        //      states elsewhere during map generation (e.g. set to secret to
+        //      hide an optional branch of the map).
+        
+        const int pct_secret        = std::min(50, 10 + ((map::dlvl - 1) * 5));
+        const int stuck_one_in_n    = 20;
+
+        if (rnd::percent(pct_secret))
         {
-            if (rnd::one_in(7))
+            if (rnd::one_in(stuck_one_in_n))
             {
                 spawn_state = DoorSpawnState::secret_and_stuck;
             }
@@ -39,13 +47,15 @@ Door::Door(const P& feature_pos, const Rigid* const mimic_feature,
         }
         else //Not secret
         {
-            if (rnd::one_in(4))
+            const int open_one_in_n = 4;
+
+            if (rnd::one_in(open_one_in_n))
             {
                 spawn_state = DoorSpawnState::open;
             }
             else //Closed
             {
-                if (rnd::one_in(5))
+                if (rnd::one_in(stuck_one_in_n))
                 {
                     spawn_state = DoorSpawnState::stuck;
                 }
@@ -223,21 +233,21 @@ void Door::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* con
             {
                 if (is_player)
                 {
-                    Fraction destr_chance(4 - nr_spikes_, 10);
+                    Fraction destr_chance(4 - nr_spikes_, 18);
 
                     destr_chance.num = std::max(1, destr_chance.num);
 
-                    if (player_bon::traits[size_t(Trait::tough)])
+                    if (player_bon::traits[(size_t)Trait::tough])
                     {
                         destr_chance.num += 2;
                     }
 
-                    if (player_bon::traits[size_t(Trait::rugged)])
+                    if (player_bon::traits[(size_t)Trait::rugged])
                     {
                         destr_chance.num += 2;
                     }
 
-                    if (player_bon::traits[size_t(Trait::unbreakable)])
+                    if (player_bon::traits[(size_t)Trait::unbreakable])
                     {
                         destr_chance.num += 2;
                     }

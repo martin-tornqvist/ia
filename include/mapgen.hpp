@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "map.hpp"
 #include "map_templates.hpp"
 
 class Room;
@@ -25,27 +26,6 @@ public:
     Room* main_room;
     R r;
     bool is_free;
-};
-
-struct ChokePointData
-{
-    ChokePointData() :
-        p()
-    {
-        sides[0].resize(0);
-        sides[1].resize(0);
-    }
-
-    ChokePointData& operator=(const ChokePointData& other)
-    {
-        p           = other.p;
-        sides[0]    = other.sides[0];
-        sides[1]    = other.sides[1];
-        return *this;
-    }
-
-    P p;
-    std::vector<P> sides[2];
 };
 
 namespace mapgen

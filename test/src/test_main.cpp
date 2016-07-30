@@ -1730,6 +1730,8 @@ TEST_FIXTURE(BasicFixture, mapgen_std)
             map_ok = mapgen::mk_std_lvl();
         }
 
+        check_connected();
+
         map::player->teleport();
 
         check_connected();

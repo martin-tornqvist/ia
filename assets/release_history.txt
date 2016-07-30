@@ -2,7 +2,8 @@
 v19.0 (***WORK IN PROGRESS***)
 --------------------------------------------------------------
 Gameplay
-* Spiders now spawn alone instead of in packs, and are much stronger ("Huge Spider"), normal Rats no longer spawn during map generation on normal maps - the purpose of these changes is to reduce "trash mob" combat.
+* Items are now more likely to spawn behind hidden or stuck doors, in areas away from the path to the stairs (to reward exploration more)
+* Some monsters now tend to spawn in smaller numbers instead of always in big packs, but are instead individually stronger (especially Spiders) - the purpose of this is to reduce "trash mob" combat and make each encounter more significant
 
 Interface
 * Added an option to ask for confirmation before lighting explosives (default is off)
