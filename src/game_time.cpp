@@ -124,7 +124,7 @@ void run_std_turn_events()
     //(If an unexplored cell is selected, the spawn is canceled)
     if (map::dlvl >= 1 && map::dlvl <= dlvl_last)
     {
-        const int spawn_n_turns = 200;
+        const int spawn_n_turns = 300;
 
         if (turn_nr_ % spawn_n_turns == 0)
         {
@@ -281,8 +281,9 @@ void add_actor(Actor* actor)
         ASSERT(actor != old_actor);
 
         //Never insert an actor on the same position as an existing living actor
-        //NOTE: Actors could be placed dead, e.g. Zuul can do this (immediately spawns a priest),
-        //so we check if BOTH actors are alive first before we panic.
+        //NOTE: Actors could be placed dead, e.g. Zuul can do this (immediately
+        //      spawns a priest) so we check if BOTH actors are alive first before
+        //      we panic.
         if (actor->is_alive() && old_actor->is_alive())
         {
             const P& new_actor_p = actor->pos;
