@@ -44,6 +44,8 @@ void Monolith::bump(Actor& actor_bumping)
         else //Not yet activated
         {
             activate();
+
+            map::player->incr_shock(ShockLvl::some, ShockSrc::misc);
         }
 
         render::draw_map_state();

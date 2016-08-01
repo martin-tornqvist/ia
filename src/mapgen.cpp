@@ -380,6 +380,11 @@ void place_monoliths()
 
     map_parse::expand(blocked, blocked_expanded);
 
+    for (Actor* const actor : game_time::actors)
+    {
+        blocked_expanded[actor->pos.x][actor->pos.y] = true;
+    }
+
     std::vector<P> p_bucket;
 
     for (int i = 0; i < nr_monoliths; ++i)

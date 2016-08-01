@@ -7,21 +7,35 @@
 
 class Actor;
 
-enum class SndVol                      {low, high};
-enum class AlertsMon                   {no, yes};
-enum class IgnoreMsgIfOriginSeen    {no, yes};
+enum class SndVol
+{
+    low,
+    high
+};
+
+enum class AlertsMon
+{
+    no,
+    yes
+};
+
+enum class IgnoreMsgIfOriginSeen
+{
+    no,
+    yes
+};
 
 class Snd
 {
 public:
     Snd(const std::string&              msg,
-        const SfxId                    sfx,
-        const IgnoreMsgIfOriginSeen ignore_msg_if_origin_seen,
+        const SfxId                     sfx,
+        const IgnoreMsgIfOriginSeen     ignore_msg_if_origin_seen,
         const P&                        origin,
         Actor* const                    actor_who_made_sound,
-        const SndVol                   vol,
-        const AlertsMon                alerting_mon,
-        const MorePromptOnMsg        add_more_prompt_on_msg = MorePromptOnMsg::no);
+        const SndVol                    vol,
+        const AlertsMon                 alerting_mon,
+        const MorePromptOnMsg           add_more_prompt_on_msg = MorePromptOnMsg::no);
 
     Snd() {}
     ~Snd() {}

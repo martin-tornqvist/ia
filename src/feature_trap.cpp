@@ -204,6 +204,9 @@ void Trap::trigger_start(const Actor* actor)
 
     if (actor == map::player)
     {
+        //Reveal trap if triggered by player stepping on it
+        reveal(false);
+
         map::player->update_fov();
         render::draw_map_state();
     }
@@ -214,11 +217,11 @@ void Trap::trigger_start(const Actor* actor)
     }
     else //Not magical
     {
-        MorePromptOnMsg more_prompt_on_msg = MorePromptOnMsg::no;
-
         if (type() != TrapId::web)
         {
             std::string msg = "I hear a click.";
+
+            auto more_prompt_on_msg = MorePromptOnMsg::no;
 
             if (actor == map::player)
             {
@@ -312,10 +315,7 @@ void Trap::bump(Actor& actor_bumping)
 
                 render::draw_map_state();
 
-                msg_log::add("I avoid a " + trap_name + ".",
-                             clr_msg_good,
-                             false,
-                             MorePromptOnMsg::yes);
+                msg_log::add("I avoid a " + trap_name + ".", clr_msg_good);
             }
         }
         else //Failed to avoid
@@ -526,10 +526,7 @@ void Trap::reveal(const bool print_messsage_when_player_sees)
                 msg = "I spot a " + trap_name + ".";
             }
 
-            msg_log::add(msg,
-                         clr_msg_note,
-                         false,
-                         MorePromptOnMsg::yes);
+            msg_log::add(msg);
         }
     }
 
@@ -822,12 +819,7 @@ void TrapGasConfusion::trigger()
 
     if (map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
-        msg_log::add("A burst of gas is released from a vent in the floor!",
-                     clr_white,
-                     false,
-                     MorePromptOnMsg::yes);
-
-        msg_log::more_prompt();
+        msg_log::add("A burst of gas is released from a vent in the floor!");
     }
 
     Snd snd("I hear a burst of gas.",
@@ -857,12 +849,7 @@ void TrapGasParalyzation::trigger()
 
     if (map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
-        msg_log::add("A burst of gas is released from a vent in the floor!",
-                     clr_white,
-                     false,
-                     MorePromptOnMsg::yes);
-
-        msg_log::more_prompt();
+        msg_log::add("A burst of gas is released from a vent in the floor!");
     }
 
     Snd snd("I hear a burst of gas.",
@@ -891,12 +878,7 @@ void TrapGasFear::trigger()
 
     if (map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
-        msg_log::add("A burst of gas is released from a vent in the floor!",
-                     clr_white,
-                     false,
-                     MorePromptOnMsg::yes);
-
-        msg_log::more_prompt();
+        msg_log::add("A burst of gas is released from a vent in the floor!");
     }
 
     Snd snd("I hear a burst of gas.",
@@ -926,12 +908,7 @@ void TrapBlindingFlash::trigger()
 
     if (map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
-        msg_log::add("There is an intense flash of light!",
-                     clr_white,
-                     false,
-                     MorePromptOnMsg::yes);
-
-        msg_log::more_prompt();
+        msg_log::add("There is an intense flash of light!");
     }
 
     explosion::run(pos_,
@@ -979,16 +956,11 @@ void TrapTeleport::trigger()
 
             msg += " the floor!";
 
-            msg_log::add(msg, clr_text,
-                         false,
-                         MorePromptOnMsg::yes);
+            msg_log::add(msg);
         }
         else //Cannot see
         {
-            msg_log::add("I feel a peculiar energy around me!",
-                         clr_text,
-                         false,
-                         MorePromptOnMsg::yes);
+            msg_log::add("I feel a peculiar energy around me!");
         }
     }
     else //Is a monster
@@ -1049,17 +1021,11 @@ void TrapSummonMon::trigger()
 
         msg += " the floor!";
 
-        msg_log::add(msg,
-                     clr_white,
-                     false,
-                     MorePromptOnMsg::yes);
+        msg_log::add(msg);
     }
     else //Cannot see
     {
-        msg_log::add("I feel a peculiar energy around me!",
-                     clr_white,
-                     false,
-                     MorePromptOnMsg::yes);
+        msg_log::add("I feel a peculiar energy around me!");
     }
 
     TRACE << "Finding summon candidates" << std::endl;
@@ -1157,17 +1123,11 @@ void TrapSpiDrain::trigger()
 
         msg += " the floor!";
 
-        msg_log::add(msg,
-                     clr_white,
-                     false,
-                     MorePromptOnMsg::yes);
+        msg_log::add(msg);
     }
     else //Cannot see
     {
-        msg_log::add("I feel a peculiar energy around me!",
-                     clr_white,
-                     false,
-                     MorePromptOnMsg::yes);
+        msg_log::add("I feel a peculiar energy around me!");
     }
 
     TRACE << "Draining player spirit" << std::endl;
@@ -1189,12 +1149,7 @@ void TrapSmoke::trigger()
 
     if (map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
-        msg_log::add("A burst of smoke is released from a vent in the floor!",
-                     clr_white,
-                     false,
-                     MorePromptOnMsg::yes);
-
-        msg_log::more_prompt();
+        msg_log::add("A burst of smoke is released from a vent in the floor!");
     }
 
     Snd snd("I hear a burst of gas.",
@@ -1218,12 +1173,7 @@ void TrapFire::trigger()
 
     if (map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
-        msg_log::add("Flames burst out from a vent in the floor!",
-                     clr_white,
-                     false,
-                     MorePromptOnMsg::yes);
-
-        msg_log::more_prompt();
+        msg_log::add("Flames burst out from a vent in the floor!");
     }
 
     Snd snd("I hear a burst of flames.",
@@ -1252,10 +1202,7 @@ void TrapAlarm::trigger()
 
     if (map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
-        msg_log::add("An alarm sounds!",
-                     clr_white,
-                     false,
-                     MorePromptOnMsg::yes);
+        msg_log::add("An alarm sounds!");
     }
 
     Snd snd("I hear an alarm sounding!",
@@ -1317,17 +1264,11 @@ void TrapWeb::trigger()
         {
             if (can_see)
             {
-                msg_log::add("I am entangled in a spider web!",
-                             clr_text,
-                             false,
-                             MorePromptOnMsg::yes);
+                msg_log::add("I am entangled in a spider web!");
             }
             else //Cannot see
             {
-                msg_log::add("I am entangled in a sticky mass of threads!",
-                             clr_text,
-                             false,
-                             MorePromptOnMsg::yes);
+                msg_log::add("I am entangled in a sticky mass of threads!");
             }
         }
     }

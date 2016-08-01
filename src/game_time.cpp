@@ -152,7 +152,7 @@ void run_std_turn_events()
 
     if (map::dlvl > 0)
     {
-        const int play_one_in_n = 200;
+        const int play_one_in_n = 250;
 
         audio::try_play_amb(play_one_in_n);
     }
