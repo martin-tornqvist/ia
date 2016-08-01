@@ -694,6 +694,8 @@ void Amulet::identify(const Verbosity verbosity)
             const std::string name_a = name(ItemRefType::a, ItemRefInf::none);
 
             dungeon_master::add_history_event("Learned all the properties of " + name_a + ".");
+
+            give_xp_for_identify();
         }
     }
 }

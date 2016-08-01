@@ -140,7 +140,7 @@ Item* drop_item_on_map(const P& intended_pos, Item& item)
     }
 
     std::vector<P> free_cells;
-    to_vec((bool*)free_cell_array, true, map_w, map_h, free_cells);
+    to_vec(free_cell_array, true, free_cells);
 
     if (free_cells.empty())
     {

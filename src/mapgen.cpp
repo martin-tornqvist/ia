@@ -10,6 +10,7 @@
 #include "feature_event.hpp"
 #include "actor_player.hpp"
 #include "feature_door.hpp"
+#include "feature_monolith.hpp"
 #include "actor_factory.hpp"
 #include "actor_mon.hpp"
 #include "drop.hpp"
@@ -272,10 +273,8 @@ P place_stairs()
 
     std::vector<P> allowed_cells_list;
 
-    to_vec((bool*)allowed_cells,
+    to_vec(allowed_cells,
            true,
-           map_w,
-           map_h,
            allowed_cells_list);
 
     const int nr_ok_cells = allowed_cells_list.size();
@@ -327,7 +326,10 @@ void move_player_to_nearest_allowed_pos()
     allowed_stair_cells(allowed_cells);
 
     std::vector<P> allowed_cells_list;
-    to_vec((bool*)allowed_cells, true, map_w, map_h, allowed_cells_list);
+
+    to_vec(allowed_cells,
+           true,
+           allowed_cells_list);
 
     if (allowed_cells_list.empty())
     {
@@ -349,6 +351,62 @@ void move_player_to_nearest_allowed_pos()
     }
 
     TRACE_FUNC_END;
+}
+
+void place_monoliths()
+{
+    int nr_monoliths = 1;
+
+    //Guarantee exactly one monolith on level 1
+    if (map::dlvl > 1)
+    {
+        //Determine number of Monoliths to place, by a weighted choice
+        std::vector<int> nr_weights =
+        {
+            10, //0 monolith(s)
+            50, //1 -
+            10, //2 -
+            1   //3 -
+        };
+
+        nr_monoliths = rnd::weighted_choice(nr_weights);
+    }
+
+    bool blocked[map_w][map_h] = {};
+
+    map_parse::run(cell_check::BlocksRigid(), blocked);
+
+    bool blocked_expanded[map_w][map_h];
+
+    map_parse::expand(blocked, blocked_expanded);
+
+    std::vector<P> p_bucket;
+
+    for (int i = 0; i < nr_monoliths; ++i)
+    {
+        to_vec(blocked_expanded,
+               false,
+               p_bucket);
+
+        ASSERT(!p_bucket.empty());
+
+        //Robustness for release mode
+        if (p_bucket.empty())
+        {
+            return;
+        }
+
+        const P& p = rnd::element(p_bucket);
+
+        map::cells[p.x][p.y].rigid = new Monolith(p);
+
+        for (const P& d : dir_utils::dir_list_w_center)
+        {
+            const P adj_p(p + d);
+
+            blocked_expanded[adj_p.x][adj_p.y] = true;
+        }
+    }
 }
 
 //void mk_levers() {
@@ -795,6 +853,13 @@ bool mk_std_lvl()
                 }
             }
         }
+    }
+
+    //NOTE: This depends on choke point data having been gathered (including
+    //      player side and stairs side)
+    if (is_map_valid)
+    {
+        place_monoliths();
     }
 
     if (is_map_valid)

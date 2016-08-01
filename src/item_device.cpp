@@ -36,6 +36,8 @@ void Device::identify(const Verbosity verbosity)
             msg_log::add("All its properties are now known to me.");
 
             dungeon_master::add_history_event("Comprehended " + name_after + ".");
+
+            give_xp_for_identify();
         }
     }
 }
@@ -247,7 +249,7 @@ ConsumeItem DeviceBlaster::trigger_effect()
     return ConsumeItem::no;
 }
 
-//---------------------------------------------------- shock WAVE
+//---------------------------------------------------- SHOCK WAVE
 ConsumeItem DeviceShockwave::trigger_effect()
 {
     msg_log::add("It triggers a shock wave around me.");

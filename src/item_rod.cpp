@@ -57,11 +57,13 @@ ConsumeItem Rod::activate(Actor* const actor)
         msg_log::add("Nothing happens.");
     }
 
-    //NOTE: Various rods cannot have different recharge time, since the player could trivially
-    //"metagame identify" rods based on the this value when they aren't identified in-game. So here
-    //we set a fixed value, same for all rods.
+    //NOTE: Various rods cannot have different recharge time, since the player
+    //      could trivially "metagame identify" rods based on the this value
+    //      when they aren't identified in-game. So here we set a fixed value,
+    //      same for all rods.
 
-    //TODO: This number could be a good candidate for a trait or background to provide a bonus for.
+    //TODO: This number could be a good candidate for a trait or background to
+    //      provide a bonus for!
     nr_charge_turns_left_ = 250;
 
     if (map::player->is_alive())
@@ -120,6 +122,8 @@ void Rod::identify(const Verbosity verbosity)
             msg_log::add("I have identified " + name_after + ".");
 
             dungeon_master::add_history_event("Identified " + name_after + ".");
+
+            give_xp_for_identify();
         }
     }
 }

@@ -23,7 +23,9 @@
 #include "dungeon_master.hpp"
 
 //------------------------------------------------------------- TRAP
-Trap::Trap(const P& feature_pos, Rigid* const mimic_feature, TrapId id) :
+Trap::Trap(const P& feature_pos,
+           Rigid* const mimic_feature,
+           TrapId id) :
     Rigid                   (feature_pos),
     mimic_feature_          (mimic_feature),
     is_hidden_              (true),
@@ -310,7 +312,9 @@ void Trap::bump(Actor& actor_bumping)
 
                 render::draw_map_state();
 
-                msg_log::add("I avoid a " + trap_name + ".", clr_msg_good, false,
+                msg_log::add("I avoid a " + trap_name + ".",
+                             clr_msg_good,
+                             false,
                              MorePromptOnMsg::yes);
             }
         }
@@ -416,7 +420,10 @@ void Trap::disarm()
     {
         msg_log::add(trap_impl_->disarm_msg());
 
-        dungeon_master::incr_player_xp(xp_for_disarm_trap);
+        if (type() != TrapId::web)
+        {
+            dungeon_master::incr_player_xp(xp_for_disarm_trap);
+        }
     }
     else //Not disarmed
     {

@@ -10,14 +10,28 @@ enum class BurnState
     has_burned
 };
 
-enum class WasDestroyed    {no, yes};
-enum class DidTriggerTrap {no, yes};
-enum class DidOpen         {no, yes};
+enum class WasDestroyed
+{
+    no,
+    yes
+};
+
+enum class DidTriggerTrap
+{
+    no,
+    yes
+};
+
+enum class DidOpen
+{
+    no,
+    yes
+};
 
 class Rigid: public Feature
 {
 public:
-    Rigid(const P& feature_pos);
+    Rigid(const P& p);
 
     Rigid() = delete;
 
@@ -119,7 +133,7 @@ enum class FloorType {cmn, cave, stone_path};
 class Floor: public Rigid
 {
 public:
-    Floor(const P& feature_pos);
+    Floor(const P& p);
 
     Floor() = delete;
 
@@ -138,14 +152,15 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
 class Carpet: public Rigid
 {
 public:
-    Carpet(const P& feature_pos);
+    Carpet(const P& p);
 
     Carpet() = delete;
 
@@ -162,7 +177,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
@@ -171,7 +187,7 @@ enum class GrassType {cmn, withered};
 class Grass: public Rigid
 {
 public:
-    Grass(const P& feature_pos);
+    Grass(const P& p);
 
     Grass() = delete;
 
@@ -190,14 +206,15 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
 class Bush: public Rigid
 {
 public:
-    Bush(const P& feature_pos);
+    Bush(const P& p);
 
     Bush() = delete;
 
@@ -216,14 +233,15 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
 class Brazier: public Rigid
 {
 public:
-    Brazier(const P& feature_pos) : Rigid(feature_pos) {}
+    Brazier(const P& p) : Rigid(p) {}
 
     Brazier() = delete;
 
@@ -239,18 +257,27 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 
     void add_light_hook(bool light[map_w][map_h]) const override;
 };
 
-enum class WallType {cmn, cmn_alt, cave, egypt, cliff, leng_monestary};
+enum class WallType
+{
+    cmn,
+    cmn_alt,
+    cave,
+    egypt,
+    cliff,
+    leng_monestary
+};
 
 class Wall: public Rigid
 {
 public:
-    Wall(const P& feature_pos);
+    Wall(const P& p);
 
     Wall() = delete;
 
@@ -278,14 +305,15 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
 class RubbleLow: public Rigid
 {
 public:
-    RubbleLow(const P& feature_pos);
+    RubbleLow(const P& p);
 
     RubbleLow() = delete;
 
@@ -301,14 +329,15 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
 class Bones: public Rigid
 {
 public:
-    Bones(const P& feature_pos);
+    Bones(const P& p);
 
     Bones() = delete;
 
@@ -324,14 +353,15 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
 class RubbleHigh: public Rigid
 {
 public:
-    RubbleHigh(const P& feature_pos);
+    RubbleHigh(const P& p);
 
     RubbleHigh() = delete;
 
@@ -347,14 +377,15 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
 class GraveStone: public Rigid
 {
 public:
-    GraveStone(const P& feature_pos);
+    GraveStone(const P& p);
 
     GraveStone() = delete;
 
@@ -377,7 +408,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 
     std::string inscr_;
@@ -386,7 +418,7 @@ private:
 class ChurchBench: public Rigid
 {
 public:
-    ChurchBench(const P& feature_pos);
+    ChurchBench(const P& p);
 
     ChurchBench() = delete;
 
@@ -402,7 +434,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
@@ -415,7 +448,7 @@ enum class StatueType
 class Statue: public Rigid
 {
 public:
-    Statue(const P& feature_pos);
+    Statue(const P& p);
     Statue() = delete;
     ~Statue() {}
 
@@ -443,7 +476,7 @@ private:
 class Pillar: public Rigid
 {
 public:
-    Pillar(const P& feature_pos);
+    Pillar(const P& p);
     Pillar() = delete;
     ~Pillar() {}
 
@@ -457,35 +490,15 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
-                Actor* const actor) override;
-};
-
-class Monolith: public Rigid
-{
-public:
-    Monolith(const P& feature_pos);
-    Monolith() = delete;
-    ~Monolith() {}
-
-    FeatureId id() const override
-    {
-        return FeatureId::monolith;
-    }
-
-    std::string name(const Article article) const override;
-
-private:
-    Clr clr_default() const override;
-
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
 class Stalagmite: public Rigid
 {
 public:
-    Stalagmite(const P& feature_pos);
+    Stalagmite(const P& p);
     Stalagmite() = delete;
     ~Stalagmite() {}
 
@@ -499,14 +512,15 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
 class Stairs: public Rigid
 {
 public:
-    Stairs(const P& feature_pos);
+    Stairs(const P& p);
     Stairs() = delete;
     ~Stairs() {}
 
@@ -524,15 +538,16 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
 class Bridge : public Rigid
 {
 public:
-    Bridge(const P& feature_pos) :
-        Rigid(feature_pos),
+    Bridge(const P& p) :
+        Rigid(p),
         axis_(Axis::hor) {}
     Bridge() = delete;
     ~Bridge() {}
@@ -554,7 +569,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 
     Axis axis_;
@@ -563,7 +579,7 @@ private:
 class LiquidShallow: public Rigid
 {
 public:
-    LiquidShallow(const P& feature_pos);
+    LiquidShallow(const P& p);
     LiquidShallow() = delete;
     ~LiquidShallow() {}
 
@@ -581,14 +597,15 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
 class LiquidDeep: public Rigid
 {
 public:
-    LiquidDeep(const P& feature_pos);
+    LiquidDeep(const P& p);
     LiquidDeep() = delete;
     ~LiquidDeep() {}
 
@@ -606,14 +623,15 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
 class Chasm: public Rigid
 {
 public:
-    Chasm(const P& feature_pos);
+    Chasm(const P& p);
     Chasm() = delete;
     ~Chasm() {}
 
@@ -627,7 +645,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
@@ -636,7 +655,7 @@ class Door;
 class Lever: public Rigid
 {
 public:
-    Lever(const P& feature_pos);
+    Lever(const P& p);
 
     Lever() = delete;
 
@@ -655,7 +674,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 
     void pull();
@@ -667,7 +687,7 @@ private:
 class Altar: public Rigid
 {
 public:
-    Altar(const P& feature_pos);
+    Altar(const P& p);
     Altar() = delete;
     ~Altar() {}
 
@@ -681,14 +701,15 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
 class Tree: public Rigid
 {
 public:
-    Tree(const P& feature_pos);
+    Tree(const P& p);
     Tree() = delete;
     ~Tree() {}
 
@@ -704,7 +725,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
@@ -769,7 +791,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 
     DidTriggerTrap trigger_trap(Actor* const actor) override;
@@ -815,7 +838,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 
     void try_find_trap();
@@ -859,7 +883,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 
     void player_loot();
@@ -913,7 +938,9 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor) override;
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
+                Actor* const actor) override;
 
     std::vector<FountainEffect> fountain_effects_;
     FountainMatl fountain_matl_;
@@ -945,7 +972,9 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor) override;
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
+                Actor* const actor) override;
 
     void player_loot();
 

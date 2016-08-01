@@ -28,6 +28,7 @@ ItemDataT::ItemDataT() :
     is_stackable                        (true),
     is_identified                       (true),
     is_tried                            (false),
+    xp_on_identify                      (0),
     base_name                           (),
     glyph                               ('X'),
     clr                                 (clr_white),
@@ -256,6 +257,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.chance_to_incl_in_floor_spawn_list = 40;
         d.weight = ItemWeight::none;
         d.is_identified = false;
+        d.xp_on_identify = 10;
         d.glyph = '?';
         d.clr = clr_white;
         d.tile = TileId::scroll;
@@ -279,6 +281,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.chance_to_incl_in_floor_spawn_list = 55;
         d.weight = ItemWeight::light;
         d.is_identified = false;
+        d.xp_on_identify = 10;
         d.glyph = '!';
         d.tile = TileId::potion;
         d.ranged.throw_hit_chance_mod = 15;
@@ -307,6 +310,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         };
         d.weight = ItemWeight::light;
         d.is_identified = false;
+        d.xp_on_identify = 20;
         d.glyph = '%';
         d.tile = TileId::device1;
         d.is_stackable = false;
@@ -331,6 +335,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.chance_to_incl_in_floor_spawn_list = 9;
         d.weight = ItemWeight::light;
         d.is_identified = false;
+        d.xp_on_identify = 20;
         d.glyph = '%';
         d.tile = TileId::rod;
         d.is_stackable = false;
@@ -366,6 +371,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.glyph = '\"';
         d.weight = ItemWeight::light;
         d.is_identified = false;
+        d.xp_on_identify = 20;
         d.is_stackable = false;
         d.chance_to_incl_in_floor_spawn_list = 1;
         add_feature_found_in(d, FeatureId::tomb, 5);
@@ -2103,25 +2109,25 @@ void cleanup()
 
 void save()
 {
-    for (size_t i = 0; i < size_t(ItemId::END); ++i)
+    for (size_t i = 0; i < (size_t)ItemId::END; ++i)
     {
         const ItemDataT& d = data[i];
 
         save_handling::put_bool(d.is_identified);
-        save_handling::put_bool(d.allow_spawn);
         save_handling::put_bool(d.is_tried);
+        save_handling::put_bool(d.allow_spawn);
     }
 }
 
 void load()
 {
-    for (size_t i = 0; i < size_t(ItemId::END); ++i)
+    for (size_t i = 0; i < (size_t)ItemId::END; ++i)
     {
         ItemDataT& d = data[i];
 
         d.is_identified   = save_handling::get_bool();
-        d.allow_spawn     = save_handling::get_bool();
         d.is_tried        = save_handling::get_bool();
+        d.allow_spawn     = save_handling::get_bool();
     }
 }
 

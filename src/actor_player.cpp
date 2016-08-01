@@ -90,15 +90,21 @@ void Player::mk_start_items()
 
         //Occultist starts with a Darkbolt scroll, and one other random scroll.
         //(Both are identified.)
-        Item* scroll = item_factory::mk(ItemId::scroll_darkbolt);
-        static_cast<Scroll*>(scroll)->identify(Verbosity::silent);
+        Item* item = item_factory::mk(ItemId::scroll_darkbolt);
+
+        Scroll* scroll = static_cast<Scroll*>(item);
+
+        scroll->identify(Verbosity::silent);
+
+        scroll->give_xp_for_identify(Verbosity::silent);
+
         inv_->put_in_backpack(scroll);
 
         while (true)
         {
-            scroll = item_factory::mk_random_scroll_or_potion(true, false);
+            item = item_factory::mk_random_scroll_or_potion(true, false);
 
-            SpellId        spell_id     = scroll->data().spell_cast_from_scroll;
+            SpellId         spell_id    = item->data().spell_cast_from_scroll;
             Spell* const    spell       = spell_handling::mk_spell_from_id(spell_id);
             const bool      is_avail    = spell->is_avail_for_player();
             const bool      spi_cost_ok = spell->spi_cost(true).max <=
@@ -107,7 +113,12 @@ void Player::mk_start_items()
 
             if (is_avail && spi_cost_ok && spell_id != SpellId::darkbolt)
             {
-                static_cast<Scroll*>(scroll)->identify(Verbosity::silent);
+                scroll = static_cast<Scroll*>(item);
+
+                scroll->identify(Verbosity::silent);
+
+                scroll->give_xp_for_identify(Verbosity::silent);
+
                 inv_->put_in_backpack(scroll);
                 break;
             }
@@ -118,8 +129,14 @@ void Player::mk_start_items()
 
         for (int i = 0; i < nr_potions; ++i)
         {
-            Item* const potion = item_factory::mk_random_scroll_or_potion(false, true);
-            static_cast<Potion*>(potion)->identify(Verbosity::silent);
+            item = item_factory::mk_random_scroll_or_potion(false, true);
+
+            Potion* const potion = static_cast<Potion*>(item);
+
+            potion->identify(Verbosity::silent);
+
+            potion->give_xp_for_identify(Verbosity::silent);
+
             inv_->put_in_backpack(potion);
         }
     }
@@ -997,8 +1014,6 @@ void Player::on_std_turn()
 
     for (Actor* actor : my_seen_foes)
     {
-        dungeon_master::on_mon_seen(*actor);
-
         Mon* mon = static_cast<Mon*>(actor);
 
         mon->set_player_aware_of_me();
@@ -1659,7 +1674,7 @@ void Player::kick_mon(Actor& defender)
         (d.is_spider                    ||
          d.is_rat                       ||
          d.is_snake                     ||
-         d.id == ActorId::worm_mass    ||
+         d.id == ActorId::worm_mass     ||
          d.id == ActorId::mind_worms))
     {
         kick_wpn = static_cast<Wpn*>(item_factory::mk(ItemId::player_stomp));

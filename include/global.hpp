@@ -87,7 +87,7 @@ const int enc_immobile_lvl                  = 125;
 const int nr_mg_projectiles                 = 5;
 const int nr_cell_jumps_mg_projectiles      = 2;
 
-//NOTE: Number of rolls is reduced by one for each step away from the explosion center
+//NOTE: Number of rolls is reduced by one for each step away from the center
 const int expl_dmg_rolls                    = 5;
 const int expl_dmg_sides                    = 6;
 const int expl_dmg_plus                     = 10;

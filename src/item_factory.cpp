@@ -15,8 +15,8 @@ namespace item_factory
 
 Item* mk(const ItemId item_id, const int nr_items)
 {
-    Item*           r = nullptr;
-    ItemDataT*    d = &item_data::data[size_t(item_id)];
+    Item*       r = nullptr;
+    ItemDataT*  d = &item_data::data[size_t(item_id)];
 
     switch (item_id)
     {
@@ -445,7 +445,8 @@ Item* copy_item(const Item& item_to_copy)
     return new_item;
 }
 
-Item* mk_random_scroll_or_potion(const bool allow_scrolls, const bool allow_potions)
+Item* mk_random_scroll_or_potion(const bool allow_scrolls,
+                                 const bool allow_potions)
 {
     std::vector<ItemId> item_bucket;
 

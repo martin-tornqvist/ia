@@ -95,7 +95,7 @@ void draw()
     if (dungeon_master::clvl() < player_max_clvl)
     {
         //Not at maximum character level
-        str += "(" + to_str(dungeon_master::xp_to_next_lvl()) + ")";
+        str += "(" + to_str(dungeon_master::xp()) + "%)";
     }
 
     render::draw_text(str, panel, p, clr_white);

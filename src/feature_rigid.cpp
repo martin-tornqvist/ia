@@ -22,8 +22,8 @@
 #include "sound.hpp"
 
 //--------------------------------------------------------------------- RIGID
-Rigid::Rigid(const P& feature_pos) :
-    Feature                     (feature_pos),
+Rigid::Rigid(const P& p) :
+    Feature                     (p),
     gore_tile_                  (TileId::empty),
     gore_glyph_                 (0),
     is_bloody_                  (false),
@@ -42,21 +42,21 @@ void Rigid::on_new_turn()
         clear_gore();
 
         auto scorch_actor = [](Actor & actor)
-        {
-            if (&actor == map::player)
             {
-                msg_log::add("I am scorched by flames.", clr_msg_bad);
-            }
-            else
-            {
-                if (map::player->can_see_actor(actor))
+                if (&actor == map::player)
                 {
-                    msg_log::add(actor.name_the() + " is scorched by flames.", clr_msg_good);
+                    msg_log::add("I am scorched by flames.", clr_msg_bad);
                 }
-            }
+                else
+                {
+                    if (map::player->can_see_actor(actor))
+                    {
+                        msg_log::add(actor.name_the() + " is scorched by flames.", clr_msg_good);
+                    }
+                }
 
-            actor.hit(1, DmgType::fire);
-        };
+                actor.hit(1, DmgType::fire);
+            };
 
         //TODO: Hit dead actors
 
@@ -361,7 +361,7 @@ Clr Rigid::clr() const
         else
         {
             return burn_state_ == BurnState::not_burned ?
-                   clr_default() : clr_gray_drk;
+                clr_default() : clr_gray_drk;
         }
     }
 }
@@ -410,11 +410,13 @@ void Rigid::add_light(bool light[map_w][map_h]) const
 }
 
 //--------------------------------------------------------------------- FLOOR
-Floor::Floor(const P& feature_pos) :
-    Rigid   (feature_pos),
+Floor::Floor(const P& p) :
+    Rigid   (p),
     type_   (FloorType::cmn) {}
 
-void Floor::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Floor::on_hit(const DmgType dmg_type,
+                   const DmgMethod dmg_method,
+                   Actor* const actor)
 {
     if (dmg_type == DmgType::fire && dmg_method == DmgMethod::elemental)
     {
@@ -430,8 +432,8 @@ void Floor::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* co
 TileId Floor::tile() const
 {
     return burn_state() == BurnState::has_burned ?
-           TileId::scorched_ground :
-           data().tile;
+        TileId::scorched_ground :
+        data().tile;
 }
 
 std::string Floor::name(const Article article) const
@@ -479,43 +481,45 @@ Clr Floor::clr_default() const
 }
 
 //--------------------------------------------------------------------- WALL
-Wall::Wall(const P& feature_pos) :
-    Rigid(feature_pos),
+Wall::Wall(const P& p) :
+    Rigid(p),
     type_(WallType::cmn),
     is_mossy_(false) {}
 
-void Wall::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Wall::on_hit(const DmgType dmg_type,
+                  const DmgMethod dmg_method,
+                  Actor* const actor)
 {
     (void)actor;
 
     auto destr_adj_doors = [&]()
-    {
-        for (const P& d : dir_utils::cardinal_list)
         {
-            const P p(pos_ + d);
-
-            if (map::is_pos_inside_map(p))
+            for (const P& d : dir_utils::cardinal_list)
             {
-                if (map::cells[p.x][p.y].rigid->id() == FeatureId::door)
+                const P p(pos_ + d);
+
+                if (map::is_pos_inside_map(p))
                 {
-                    map::put(new RubbleLow(p));
+                    if (map::cells[p.x][p.y].rigid->id() == FeatureId::door)
+                    {
+                        map::put(new RubbleLow(p));
+                    }
                 }
             }
-        }
-    };
+        };
 
     auto mk_low_rubble_and_rocks = [&]()
-    {
-        const P p(pos_);
-        map::put(new RubbleLow(p));
-
-        //NOTE: object is now deleted!
-
-        if (rnd::coin_toss())
         {
-            item_factory::mk_item_on_floor(ItemId::rock, p);
-        }
-    };
+            const P p(pos_);
+            map::put(new RubbleLow(p));
+
+            //NOTE: object is now deleted!
+
+            if (rnd::coin_toss())
+            {
+                item_factory::mk_item_on_floor(ItemId::rock, p);
+            }
+        };
 
     if (dmg_type == DmgType::physical)
     {
@@ -719,21 +723,22 @@ void Wall::set_random_is_moss_grown()
 }
 
 //--------------------------------------------------------------------- HIGH RUBBLE
-RubbleHigh::RubbleHigh(const P& feature_pos) :
-    Rigid(feature_pos) {}
+RubbleHigh::RubbleHigh(const P& p) :
+    Rigid(p) {}
 
-void RubbleHigh::on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
-                         Actor* const actor)
+void RubbleHigh::on_hit(const DmgType dmg_type,
+                        const DmgMethod dmg_method,
+                        Actor* const actor)
 {
     (void)actor;
 
     auto mk_low_rubble_and_rocks = [&]()
-    {
-        const P p(pos_);
-        map::put(new RubbleLow(p)); //NOTE: "this" is now deleted!
+        {
+            const P p(pos_);
+            map::put(new RubbleLow(p)); //NOTE: "this" is now deleted!
 
-        if (rnd::coin_toss()) {item_factory::mk_item_on_floor(ItemId::rock, p);}
-    };
+            if (rnd::coin_toss()) {item_factory::mk_item_on_floor(ItemId::rock, p);}
+        };
 
     if (dmg_type == DmgType::physical)
     {
@@ -767,11 +772,12 @@ Clr RubbleHigh::clr_default() const
 }
 
 //--------------------------------------------------------------------- LOW RUBBLE
-RubbleLow::RubbleLow(const P& feature_pos) :
-    Rigid(feature_pos) {}
+RubbleLow::RubbleLow(const P& p) :
+    Rigid(p) {}
 
-void RubbleLow::on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
-                        Actor* const actor)
+void RubbleLow::on_hit(const DmgType dmg_type,
+                       const DmgMethod dmg_method,
+                       Actor* const actor)
 {
     (void)actor;
 
@@ -804,8 +810,8 @@ Clr RubbleLow::clr_default() const
 }
 
 //--------------------------------------------------------------------- BONES
-Bones::Bones(const P& feature_pos) :
-    Rigid(feature_pos) {}
+Bones::Bones(const P& p) :
+    Rigid(p) {}
 
 void Bones::on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
                    Actor* const actor)
@@ -833,12 +839,12 @@ Clr Bones::clr_default() const
 }
 
 //--------------------------------------------------------------------- GRAVE
-GraveStone::GraveStone(const P& feature_pos) :
-    Rigid(feature_pos) {}
+GraveStone::GraveStone(const P& p) :
+    Rigid(p) {}
 
 void GraveStone::on_hit(const DmgType dmg_type,
-                         const DmgMethod dmg_method,
-                         Actor* const actor)
+                        const DmgMethod dmg_method,
+                        Actor* const actor)
 {
     (void)dmg_type; (void)dmg_method; (void)actor;
 }
@@ -854,7 +860,7 @@ void GraveStone::bump(Actor& actor_bumping)
 std::string GraveStone::name(const Article article) const
 {
     const std::string ret = article == Article::a ?
-                            "a " : "the ";
+        "a " : "the ";
 
     return ret + "gravestone; " + inscr_;
 }
@@ -865,10 +871,10 @@ Clr GraveStone::clr_default() const
 }
 
 //--------------------------------------------------------------------- CHURCH BENCH
-ChurchBench::ChurchBench(const P& feature_pos) : Rigid(feature_pos) {}
+ChurchBench::ChurchBench(const P& p) : Rigid(p) {}
 
 void ChurchBench::on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
-                          Actor* const actor)
+                         Actor* const actor)
 {
     (void)dmg_type;
     (void)dmg_method;
@@ -878,7 +884,7 @@ void ChurchBench::on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
 std::string ChurchBench::name(const Article article) const
 {
     const std::string ret = article == Article::a ?
-                            "a " : "the ";
+        "a " : "the ";
 
     return ret + "church bench";
 }
@@ -889,8 +895,8 @@ Clr ChurchBench::clr_default() const
 }
 
 //--------------------------------------------------------------------- STATUE
-Statue::Statue(const P& feature_pos) :
-    Rigid   (feature_pos),
+Statue::Statue(const P& p) :
+    Rigid   (p),
     type_   (rnd::one_in(8) ? StatueType::ghoul : StatueType::cmn) {}
 
 int Statue::base_shock_when_adj() const
@@ -904,7 +910,9 @@ int Statue::base_shock_when_adj() const
     return 0;
 }
 
-void Statue::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Statue::on_hit(const DmgType dmg_type,
+                    const DmgMethod dmg_method,
+                    Actor* const actor)
 {
     if (dmg_type == DmgType::physical && dmg_method == DmgMethod::kick)
     {
@@ -917,8 +925,8 @@ void Statue::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* c
         }
 
         const AlertsMon alerts_mon = actor == map::player ?
-                                      AlertsMon::yes :
-                                      AlertsMon::no;
+            AlertsMon::yes :
+            AlertsMon::no;
 
         if (map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
@@ -997,7 +1005,7 @@ std::string Statue::name(const Article article) const
 TileId Statue::tile() const
 {
     return type_ == StatueType::cmn ?
-           TileId::witch_or_warlock : TileId::ghoul;
+        TileId::witch_or_warlock : TileId::ghoul;
 }
 
 Clr Statue::clr_default() const
@@ -1006,10 +1014,12 @@ Clr Statue::clr_default() const
 }
 
 //--------------------------------------------------------------------- PILLAR
-Pillar::Pillar(const P& feature_pos) :
-    Rigid(feature_pos) {}
+Pillar::Pillar(const P& p) :
+    Rigid(p) {}
 
-void Pillar::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Pillar::on_hit(const DmgType dmg_type,
+                    const DmgMethod dmg_method,
+                    Actor* const actor)
 {
     (void)dmg_type;
     (void)dmg_method;
@@ -1027,33 +1037,13 @@ Clr Pillar::clr_default() const
     return clr_white;
 }
 
-//--------------------------------------------------------------------- MONOLITH
-Monolith::Monolith(const P& feature_pos) :
-    Rigid(feature_pos) {}
-
-void Monolith::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
-{
-    (void)dmg_type;
-    (void)dmg_method;
-    (void)actor;
-}
-
-std::string Monolith::name(const Article article) const
-{
-    std::string ret = article == Article::a ? "a " : "the ";
-    return ret + "monolith";
-}
-
-Clr Monolith::clr_default() const
-{
-    return clr_white;
-}
-
 //--------------------------------------------------------------------- STALAGMITE
-Stalagmite::Stalagmite(const P& feature_pos) :
-    Rigid(feature_pos) {}
+Stalagmite::Stalagmite(const P& p) :
+    Rigid(p) {}
 
-void Stalagmite::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Stalagmite::on_hit(const DmgType dmg_type,
+                        const DmgMethod dmg_method,
+                        Actor* const actor)
 {
     (void)dmg_type;
     (void)dmg_method;
@@ -1072,10 +1062,12 @@ Clr Stalagmite::clr_default() const
 }
 
 //--------------------------------------------------------------------- STAIRS
-Stairs::Stairs(const P& feature_pos) :
-    Rigid(feature_pos) {}
+Stairs::Stairs(const P& p) :
+    Rigid(p) {}
 
-void Stairs::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Stairs::on_hit(const DmgType dmg_type,
+                    const DmgMethod dmg_method,
+                    Actor* const actor)
 {
     (void)dmg_type;
     (void)dmg_method;
@@ -1094,9 +1086,9 @@ void Stairs::bump(Actor& actor_bumping)
         const std::vector<std::string> choices
         {
             "Descend",
-            "Save and quit",
-            "Cancel"
-        };
+                "Save and quit",
+                "Cancel"
+                };
 
         const std::string   title   = "A staircase leading downwards";
         const int           choice  =  popup::show_menu_msg("", true, choices, title);
@@ -1142,7 +1134,9 @@ TileId Bridge::tile() const
     return axis_ == Axis::hor ? TileId::hangbridge_hor : TileId::hangbridge_ver;
 }
 
-void Bridge::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Bridge::on_hit(const DmgType dmg_type,
+                    const DmgMethod dmg_method,
+                    Actor* const actor)
 {
     (void)dmg_type;
     (void)dmg_method;
@@ -1166,13 +1160,13 @@ Clr Bridge::clr_default() const
 }
 
 //--------------------------------------------------------------------- SHALLOW LIQUID
-LiquidShallow::LiquidShallow(const P& feature_pos) :
-    Rigid   (feature_pos),
+LiquidShallow::LiquidShallow(const P& p) :
+    Rigid   (p),
     type_   (LiquidType::water) {}
 
 void LiquidShallow::on_hit(const DmgType dmg_type,
-                            const DmgMethod dmg_method,
-                            Actor* const actor)
+                           const DmgMethod dmg_method,
+                           Actor* const actor)
 {
     (void)dmg_type;
     (void)dmg_method;
@@ -1269,12 +1263,12 @@ Clr LiquidShallow::clr_default() const
 }
 
 //--------------------------------------------------------------------- DEEP LIQUID
-LiquidDeep::LiquidDeep(const P& feature_pos) :
-    Rigid(feature_pos),
+LiquidDeep::LiquidDeep(const P& p) :
+    Rigid(p),
     type_(LiquidType::water) {}
 
 void LiquidDeep::on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
-                         Actor* const actor)
+                        Actor* const actor)
 {
     (void)dmg_type;
     (void)dmg_method;
@@ -1350,10 +1344,12 @@ Clr LiquidDeep::clr_default() const
 }
 
 //--------------------------------------------------------------------- CHASM
-Chasm::Chasm(const P& feature_pos) :
-    Rigid(feature_pos) {}
+Chasm::Chasm(const P& p) :
+    Rigid(p) {}
 
-void Chasm::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Chasm::on_hit(const DmgType dmg_type,
+                   const DmgMethod dmg_method,
+                   Actor* const actor)
 {
     (void)dmg_type;
     (void)dmg_method;
@@ -1373,12 +1369,14 @@ Clr Chasm::clr_default() const
 }
 
 //--------------------------------------------------------------------- LEVER
-Lever::Lever(const P& feature_pos) :
-    Rigid(feature_pos),
+Lever::Lever(const P& p) :
+    Rigid(p),
     is_position_left_(true),
     door_linked_to_(nullptr)  {}
 
-void Lever::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Lever::on_hit(const DmgType dmg_type,
+                   const DmgMethod dmg_method,
+                   Actor* const actor)
 {
     (void)dmg_type; (void)dmg_method; (void)actor;
 }
@@ -1419,10 +1417,12 @@ void Lever::pull()
 }
 
 //--------------------------------------------------------------------- ALTAR
-Altar::Altar(const P& feature_pos) :
-    Rigid(feature_pos) {}
+Altar::Altar(const P& p) :
+    Rigid(p) {}
 
-void Altar::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Altar::on_hit(const DmgType dmg_type,
+                   const DmgMethod dmg_method,
+                   Actor* const actor)
 {
     (void)dmg_type; (void)dmg_method; (void)actor;
 }
@@ -1439,10 +1439,12 @@ Clr Altar::clr_default() const
 }
 
 //--------------------------------------------------------------------- CARPET
-Carpet::Carpet(const P& feature_pos) :
-    Rigid(feature_pos) {}
+Carpet::Carpet(const P& p) :
+    Rigid(p) {}
 
-void Carpet::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Carpet::on_hit(const DmgType dmg_type,
+                    const DmgMethod dmg_method,
+                    Actor* const actor)
 {
     if (dmg_type == DmgType::fire && dmg_method == DmgMethod::elemental)
     {
@@ -1471,14 +1473,16 @@ Clr Carpet::clr_default() const
 }
 
 //--------------------------------------------------------------------- GRASS
-Grass::Grass(const P& feature_pos) :
-    Rigid(feature_pos),
+Grass::Grass(const P& p) :
+    Rigid(p),
     type_(GrassType::cmn)
 {
     if (rnd::one_in(5)) {type_ = GrassType::withered;}
 }
 
-void Grass::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Grass::on_hit(const DmgType dmg_type,
+                   const DmgMethod dmg_method,
+                   Actor* const actor)
 {
     if (dmg_type == DmgType::fire && dmg_method == DmgMethod::elemental)
     {
@@ -1491,8 +1495,8 @@ void Grass::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* co
 TileId Grass::tile() const
 {
     return burn_state() == BurnState::has_burned ?
-           TileId::scorched_ground :
-           data().tile;
+        TileId::scorched_ground :
+        data().tile;
 }
 
 std::string Grass::name(const Article article) const
@@ -1543,14 +1547,16 @@ Clr Grass::clr_default() const
 }
 
 //--------------------------------------------------------------------- BUSH
-Bush::Bush(const P& feature_pos) :
-    Rigid(feature_pos),
+Bush::Bush(const P& p) :
+    Rigid(p),
     type_(GrassType::cmn)
 {
     if (rnd::one_in(5)) {type_ = GrassType::withered;}
 }
 
-void Bush::on_hit(const DmgType dmg_type, const DmgMethod dmg_method,  Actor* const actor)
+void Bush::on_hit(const DmgType dmg_type,
+                  const DmgMethod dmg_method,
+                  Actor* const actor)
 {
     if (dmg_type == DmgType::fire && dmg_method == DmgMethod::elemental)
     {
@@ -1613,10 +1619,12 @@ Clr Bush::clr_default() const
 }
 
 //--------------------------------------------------------------------- TREE
-Tree::Tree(const P& feature_pos) :
-    Rigid(feature_pos) {}
+Tree::Tree(const P& p) :
+    Rigid(p) {}
 
-void Tree::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Tree::on_hit(const DmgType dmg_type,
+                  const DmgMethod dmg_method,
+                  Actor* const actor)
 {
     if (dmg_type == DmgType::fire && dmg_method == DmgMethod::elemental)
     {
@@ -1675,7 +1683,9 @@ std::string Brazier::name(const Article article) const
     return ret + "brazier";
 }
 
-void Brazier::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Brazier::on_hit(const DmgType dmg_type,
+                     const DmgMethod dmg_method,
+                     Actor* const actor)
 {
     if (dmg_type == DmgType::physical && dmg_method == DmgMethod::kick)
     {
@@ -1688,8 +1698,8 @@ void Brazier::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* 
         }
 
         const AlertsMon alerts_mon = actor == map::player ?
-                                      AlertsMon::yes :
-                                      AlertsMon::no;
+            AlertsMon::yes :
+            AlertsMon::no;
 
         if (map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
@@ -1856,9 +1866,9 @@ void ItemContainer::open(const P& feature_pos, Actor* const actor_opening)
 
             Wpn* wpn = data.ranged.is_ranged_wpn ? static_cast<Wpn*>(item) : nullptr;
 
-            const bool is_unloadable_wpn = wpn                      &&
-                                           wpn->nr_ammo_loaded_ > 0 &&
-                                           !data.ranged.has_infinite_ammo;
+            const bool is_unloadable_wpn = wpn  &&
+                wpn->nr_ammo_loaded_ > 0        &&
+                !data.ranged.has_infinite_ammo;
 
             if (is_unloadable_wpn)
             {
@@ -1925,7 +1935,7 @@ void ItemContainer::open(const P& feature_pos, Actor* const actor_opening)
 
 void ItemContainer::destroy_single_fragile()
 {
-    //TODO: Generalize this function (perhaps something like "is_fragile" item data value)
+    //TODO: Generalize this (perhaps something like "is_fragile" item data value)
 
     for (size_t i = 0; i < items_.size(); ++i)
     {
@@ -1943,8 +1953,8 @@ void ItemContainer::destroy_single_fragile()
 }
 
 //--------------------------------------------------------------------- TOMB
-Tomb::Tomb(const P& feature_pos) :
-    Rigid                   (feature_pos),
+Tomb::Tomb(const P& p) :
+    Rigid                   (p),
     is_open_                (false),
     is_trait_known_         (false),
     push_lid_one_in_n_      (rnd::range(6, 14)),
@@ -2004,7 +2014,9 @@ Tomb::Tomb(const P& feature_pos) :
     }
 }
 
-void Tomb::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Tomb::on_hit(const DmgType dmg_type,
+                  const DmgMethod dmg_method,
+                  Actor* const actor)
 {
     (void)dmg_type;
     (void)dmg_method;
@@ -2209,7 +2221,7 @@ DidOpen Tomb::open(Actor* const actor_opening)
                           nullptr,
                           SndVol::high,
                           AlertsMon::yes
-                         ));
+                          ));
 
         if (map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
@@ -2248,10 +2260,10 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
         else //Not containing major treasure
         {
             std::vector<ActorId> mon_bucket =
-            {
-                ActorId::ghost,
-                ActorId::phantasm,
-            };
+                {
+                    ActorId::ghost,
+                    ActorId::phantasm,
+                };
 
             const size_t idx = rnd::range(0, mon_bucket.size() - 1);
 
@@ -2272,13 +2284,13 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
     case TombTrait::other_undead:
     {
         std::vector<ActorId> mon_bucket =
-        {
-            ActorId::mummy,
-            ActorId::croc_head_mummy,
-            ActorId::zombie,
-            ActorId::zombie_axe,
-            ActorId::floating_skull
-        };
+            {
+                ActorId::mummy,
+                ActorId::croc_head_mummy,
+                ActorId::zombie,
+                ActorId::zombie_axe,
+                ActorId::floating_skull
+            };
 
         const size_t idx = rnd::range(0, mon_bucket.size() - 1);
 
@@ -2471,8 +2483,8 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
 }
 
 //--------------------------------------------------------------------- CHEST
-Chest::Chest(const P& feature_pos) :
-    Rigid                   (feature_pos),
+Chest::Chest(const P& p) :
+    Rigid                   (p),
     is_open_                (false),
     is_locked_              (false),
     is_trapped_             (false),
@@ -2615,7 +2627,9 @@ DidOpen Chest::open(Actor* const actor_opening)
     }
 }
 
-void Chest::hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Chest::hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
+                Actor* const actor)
 {
     switch (dmg_type)
     {
@@ -2740,7 +2754,9 @@ void Chest::hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const
 //      }
 }
 
-void Chest::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Chest::on_hit(const DmgType dmg_type,
+                   const DmgMethod dmg_method,
+                   Actor* const actor)
 {
     (void)dmg_type; (void)dmg_method; (void)actor;
 }
@@ -2987,8 +3003,8 @@ std::string Chest::name(const Article article) const
     if (article == Article::a)
     {
         a = (
-                is_locked_ ||
-                (!is_open_ && (matl_ == ChestMatl::wood || is_known_trap))
+            is_locked_ ||
+            (!is_open_ && (matl_ == ChestMatl::wood || is_known_trap))
             ) ?
             "a " : "an ";
     }
@@ -3013,8 +3029,8 @@ Clr Chest::clr_default() const
 }
 
 //--------------------------------------------------------------------- FOUNTAIN
-Fountain::Fountain(const P& feature_pos) :
-    Rigid               (feature_pos),
+Fountain::Fountain(const P& p) :
+    Rigid               (p),
     fountain_effects_   (std::vector<FountainEffect>()),
     fountain_matl_      (FountainMatl::stone),
     nr_drinks_left_     (rnd::range(3, 4))
@@ -3043,13 +3059,13 @@ Fountain::Fountain(const P& feature_pos) :
         std::vector<FountainEffect> effect_bucket
         {
             FountainEffect::refreshing,
-            FountainEffect::spirit,
-            FountainEffect::vitality,
-            FountainEffect::rFire,
-            FountainEffect::rElec,
-            FountainEffect::rFear,
-            FountainEffect::rConf
-        };
+                FountainEffect::spirit,
+                FountainEffect::vitality,
+                FountainEffect::rFire,
+                FountainEffect::rElec,
+                FountainEffect::rFear,
+                FountainEffect::rConf
+                };
 
         std::random_shuffle(begin(effect_bucket), end(effect_bucket));
 
@@ -3242,15 +3258,16 @@ void Fountain::bump(Actor& actor_bumping)
 }
 
 //--------------------------------------------------------------------- CABINET
-Cabinet::Cabinet(const P& feature_pos) :
-    Rigid       (feature_pos),
+Cabinet::Cabinet(const P& p) :
+    Rigid       (p),
     is_open_    (false)
 {
     const int is_empty_N_IN_10  = 5;
     const int nr_items_min      = rnd::fraction(is_empty_N_IN_10, 10) ? 0 : 1;
     const int nr_items_max      = player_bon::traits[size_t(Trait::treasure_hunter)] ? 2 : 1;
 
-    item_container_.init(FeatureId::cabinet, rnd::range(nr_items_min, nr_items_max));
+    item_container_.init(FeatureId::cabinet,
+                         rnd::range(nr_items_min, nr_items_max));
 }
 
 void Cabinet::on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
@@ -3352,8 +3369,8 @@ Clr Cabinet::clr_default() const
 }
 
 //--------------------------------------------------------------------- COCOON
-Cocoon::Cocoon(const P& feature_pos) :
-    Rigid(feature_pos),
+Cocoon::Cocoon(const P& p) :
+    Rigid(p),
     is_trapped_(rnd::fraction(6, 10)),
     is_open_(false)
 {
@@ -3375,7 +3392,9 @@ Cocoon::Cocoon(const P& feature_pos) :
     }
 }
 
-void Cocoon::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Cocoon::on_hit(const DmgType dmg_type,
+                    const DmgMethod dmg_method,
+                    Actor* const actor)
 {
     (void)dmg_type; (void)dmg_method; (void)actor;
 }
@@ -3440,7 +3459,7 @@ DidTriggerTrap Cocoon::trigger_trap(Actor* const actor)
 
                 if (
                     d.is_spider                         &&
-                    d.actor_size == ActorSize::floor   &&
+                    d.actor_size == ActorSize::floor    &&
                     d.is_auto_spawn_allowed             &&
                     !d.is_unique)
                 {

@@ -348,10 +348,10 @@ void try_play_amb(const int one_in_n_chance_to_play)
         {
             seconds_at_amb_played_ = seconds_now;
 
-            const int       vol_pct     = rnd::one_in(5) ? rnd::range(50,  99) : 100;
-            const int       first_int   = int(SfxId::AMB_START) + 1;
-            const int       last_int    = int(SfxId::AMB_END)   - 1;
-            const SfxId    sfx         = SfxId(rnd::range(first_int, last_int));
+            const int       vol_pct     = rnd::coin_toss() ? rnd::range(25,  99) : 100;
+            const int       first_int   = (int)SfxId::AMB_START + 1;
+            const int       last_int    = (int)SfxId::AMB_END   - 1;
+            const SfxId     sfx         = (SfxId)rnd::range(first_int, last_int);
 
             play(sfx , vol_pct);
         }

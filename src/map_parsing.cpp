@@ -16,7 +16,9 @@ namespace cell_check
 
 bool BlocksLos::check(const Cell& c)  const
 {
-    return !map::is_pos_inside_map(c.pos, false) || !c.rigid->is_los_passable();
+    return
+        !map::is_pos_inside_map(c.pos, false) ||
+        !c.rigid->is_los_passable();
 }
 
 bool BlocksLos::check(const Mob& f) const
@@ -26,7 +28,9 @@ bool BlocksLos::check(const Mob& f) const
 
 bool BlocksMoveCmn::check(const Cell& c) const
 {
-    return !map::is_pos_inside_map(c.pos, false) || !c.rigid->can_move_cmn();
+    return
+        !map::is_pos_inside_map(c.pos, false) ||
+        !c.rigid->can_move_cmn();
 }
 
 bool BlocksMoveCmn::check(const Mob& f) const
@@ -41,7 +45,9 @@ bool BlocksMoveCmn::check(const Actor& a) const
 
 bool BlocksActor::check(const Cell& c) const
 {
-    return !map::is_pos_inside_map(c.pos, false) || !c.rigid->can_move(actor_);
+    return
+        !map::is_pos_inside_map(c.pos, false) ||
+        !c.rigid->can_move(actor_);
 }
 
 bool BlocksActor::check(const Mob& f) const
@@ -56,7 +62,9 @@ bool BlocksActor::check(const Actor& a) const
 
 bool BlocksProjectiles::check(const Cell& c)  const
 {
-    return !map::is_pos_inside_map(c.pos, false) || !c.rigid->is_projectile_passable();
+    return
+        !map::is_pos_inside_map(c.pos, false) ||
+        !c.rigid->is_projectile_passable();
 }
 
 bool BlocksProjectiles::check(const Mob& f)  const
@@ -76,12 +84,21 @@ bool LivingActorsAdjToPos::check(const Actor& a) const
 
 bool BlocksItems::check(const Cell& c)  const
 {
-    return !map::is_pos_inside_map(c.pos, false) || !c.rigid->can_have_item();
+    return
+        !map::is_pos_inside_map(c.pos, false) ||
+        !c.rigid->can_have_item();
 }
 
 bool BlocksItems::check(const Mob& f) const
 {
     return !f.can_have_item();
+}
+
+bool BlocksRigid::check(const Cell& c)  const
+{
+    return
+        !map::is_pos_inside_map(c.pos, false) ||
+        !c.rigid->can_have_rigid();
 }
 
 bool IsFeature::check(const Cell& c) const

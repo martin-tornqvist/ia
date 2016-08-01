@@ -9,6 +9,7 @@
 #include "feature_trap.hpp"
 #include "feature_event.hpp"
 #include "feature_door.hpp"
+#include "feature_monolith.hpp"
 #include "game_time.hpp"
 
 //--------------------------------------------------------- FEATURE ROOM SPAWN RULES
@@ -228,6 +229,24 @@ void init_data_list()
     d.can_have_corpse = false;
     d.can_have_rigid = false;
     d.can_have_item = false;
+    d.matl_type = Matl::stone;
+    add_to_list_and_reset(d);
+    //---------------------------------------------------------------------------
+    d.id = FeatureId::monolith;
+    d.mk_obj = [](const P & p)
+    {
+        return new Monolith(p);
+    };
+    d.glyph = '|';
+    d.tile = TileId::monolith;
+    d.is_projectile_passable = false;
+    d.is_los_passable = false;
+    d.can_have_blood = false; //We don't want to mess with the color
+    d.can_have_gore = false;
+    d.can_have_corpse = false;
+    d.can_have_rigid = false;
+    d.can_have_item = false;
+    d.shock_when_adjacent = 10;
     d.matl_type = Matl::stone;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
@@ -534,27 +553,6 @@ void init_data_list()
     d.room_spawn_rules.set(3, {0, dlvl_last}, PlacementRule::away_from_walls,
     {
         RoomType::plain, RoomType::crypt, RoomType::ritual, RoomType::monster
-    });
-    add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
-    d.id = FeatureId::monolith;
-    d.mk_obj = [](const P & p)
-    {
-        return new Monolith(p);
-    };
-    d.glyph = '|';
-    d.tile = TileId::monolith;
-    d.is_projectile_passable = false;
-    d.is_los_passable = false;
-    d.can_have_blood = true;
-    d.can_have_gore = false;
-    d.can_have_corpse = false;
-    d.can_have_rigid = false;
-    d.can_have_item = false;
-    d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(1, {0, dlvl_last}, PlacementRule::away_from_walls,
-    {
-        RoomType::cave, RoomType::forest
     });
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------

@@ -21,10 +21,9 @@ namespace dungeon_master
 namespace
 {
 
-int         xp_for_lvl_[player_max_clvl + 1];
-int         clvl_  = 0;
-int         xp_    = 0;
-TimeData   time_started_;
+int         clvl_   = 0;
+int         xp_pct_ = 0;
+TimeData    start_time_;
 
 std::vector<HistoryEvent> history_events_;
 
@@ -41,26 +40,11 @@ void player_gain_lvl()
 
         create_character::pick_new_trait();
 
-        render::draw_map_state();
-
         map::player->change_max_hp(hp_per_lvl);
-        map::player->restore_hp(999, false, Verbosity::silent);
 
         map::player->change_max_spi(spi_per_lvl);
-        map::player->restore_spi(999, false, Verbosity::silent);
 
-        map::player->restore_shock(999, false);
-    }
-}
-
-void init_xp_array()
-{
-    xp_for_lvl_[0] = 0;
-    xp_for_lvl_[1] = 0;
-
-    for (int lvl = 2; lvl <= player_max_clvl; lvl++)
-    {
-        xp_for_lvl_[lvl] = xp_for_lvl_[lvl - 1] + (100 * lvl);
+        render::draw_map_state();
     }
 }
 
@@ -68,9 +52,8 @@ void init_xp_array()
 
 void init()
 {
-    clvl_ = 1;
-    xp_   = 0;
-    init_xp_array();
+    clvl_   = 1;
+    xp_pct_ = 0;
 
     history_events_.clear();
 }
@@ -78,13 +61,13 @@ void init()
 void save()
 {
     save_handling::put_int(clvl_);
-    save_handling::put_int(xp_);
-    save_handling::put_int(time_started_.year_);
-    save_handling::put_int(time_started_.month_);
-    save_handling::put_int(time_started_.day_);
-    save_handling::put_int(time_started_.hour_);
-    save_handling::put_int(time_started_.minute_);
-    save_handling::put_int(time_started_.second_);
+    save_handling::put_int(xp_pct_);
+    save_handling::put_int(start_time_.year_);
+    save_handling::put_int(start_time_.month_);
+    save_handling::put_int(start_time_.day_);
+    save_handling::put_int(start_time_.hour_);
+    save_handling::put_int(start_time_.minute_);
+    save_handling::put_int(start_time_.second_);
 
     save_handling::put_int(history_events_.size());
 
@@ -97,14 +80,14 @@ void save()
 
 void load()
 {
-    clvl_                   = save_handling::get_int();
-    xp_                     = save_handling::get_int();
-    time_started_.year_     = save_handling::get_int();
-    time_started_.month_    = save_handling::get_int();
-    time_started_.day_      = save_handling::get_int();
-    time_started_.hour_     = save_handling::get_int();
-    time_started_.minute_   = save_handling::get_int();
-    time_started_.second_   = save_handling::get_int();
+    clvl_               = save_handling::get_int();
+    xp_pct_             = save_handling::get_int();
+    start_time_.year_   = save_handling::get_int();
+    start_time_.month_  = save_handling::get_int();
+    start_time_.day_    = save_handling::get_int();
+    start_time_.hour_   = save_handling::get_int();
+    start_time_.minute_ = save_handling::get_int();
+    start_time_.second_ = save_handling::get_int();
 
     const int nr_events = save_handling::get_int();
 
@@ -121,64 +104,41 @@ int clvl()
 {
     return clvl_;
 }
+
 int xp()
 {
-    return xp_;
-}
-TimeData    start_time()
-{
-    return time_started_;
+    return xp_pct_;
 }
 
-int mon_tot_xp_worth(const ActorDataT& d)
+TimeData start_time()
 {
-    //K regulates player xp rate, higher -> more xp per monster
-    const double k              = 0.45;
-
-    const double hp             = d.hp;
-
-    const double speed          = double(d.speed);
-    const double speed_max      = double(ActorSpeed::END);
-    const double speed_factor   = 1.0 + ((speed / speed_max) * 0.50);
-
-    const double shock          = double(d.mon_shock_lvl);
-    const double shock_max      = double(MonShockLvl::END);
-    const double shock_factor   = 1.0 + ((shock / shock_max) * 0.75);
-
-    const double unique_factor  = d.is_unique ? 2.0 : 1.0;
-
-    return ceil(k * hp * speed_factor * shock_factor * unique_factor);
+    return start_time_;
 }
 
-void incr_player_xp(const int xp_gained)
+void incr_player_xp(const int xp_gained,
+                    const Verbosity verbosity)
 {
-    if (map::player->is_alive())
+    if (!map::player->is_alive())
     {
-        for (int i = 0; i < xp_gained; ++i)
+        return;
+    }
+
+    if (verbosity == Verbosity::verbose)
+    {
+        msg_log::add("(+" + to_str(xp_gained) + "% XP).");
+    }
+
+    xp_pct_ += xp_gained;
+
+    while (xp_pct_ >= 100)
+    {
+        if (clvl_ < player_max_clvl)
         {
-            ++xp_;
-
-            if (clvl_ < player_max_clvl && xp_ >= xp_for_lvl_[clvl_ + 1])
-            {
-                player_gain_lvl();
-            }
+            player_gain_lvl();
         }
+
+        xp_pct_ -= 100;
     }
-}
-
-int xp_to_next_lvl()
-{
-    if (clvl_ == player_max_clvl)
-    {
-        return -1;
-    }
-
-    return xp_for_lvl_[clvl_ + 1] - xp_;
-}
-
-void player_lose_xp_percent(const int percent)
-{
-    xp_ = (xp_ * (100 - percent)) / 100;
 }
 
 void win_game()
@@ -245,7 +205,8 @@ void win_game()
     const std::string cmd_label =
         "[space/esc/enter] to record high score and return to main menu";
 
-    render::draw_text(cmd_label, Panel::screen,
+    render::draw_text(cmd_label,
+                      Panel::screen,
                       P(X0, screen_h - 2),
                       clr_popup_label);
 
@@ -269,16 +230,6 @@ void on_mon_killed(Actor& actor)
         map::player->shock_ = std::max(0.0, map::player->shock_ - 3.0);
     }
 
-    Mon* const  mon = static_cast<Mon*>(&actor);
-
-    if (!map::player->is_leader_of(mon))
-    {
-        const int mon_xp_tot    = mon_tot_xp_worth(d);
-        const int xp_gained     = mon->has_given_xp_for_spotting_ ?
-                                  std::max(1, mon_xp_tot / 2) : mon_xp_tot;
-        incr_player_xp(xp_gained);
-    }
-
     if (d.is_unique)
     {
         const std::string name = actor.name_the();
@@ -287,20 +238,9 @@ void on_mon_killed(Actor& actor)
     }
 }
 
-void on_mon_seen(Actor& actor)
+void set_start_time_to_now()
 {
-    Mon* const mon = static_cast<Mon*>(&actor);
-
-    if (!map::player->is_leader_of(mon) && !mon->has_given_xp_for_spotting_)
-    {
-        mon->has_given_xp_for_spotting_ = true;
-        incr_player_xp(mon_tot_xp_worth(mon->data()) / 2);
-    }
-}
-
-void set_time_started_to_now()
-{
-    time_started_ = current_time();
+    start_time_ = current_time();
 }
 
 void add_history_event(const std::string msg)

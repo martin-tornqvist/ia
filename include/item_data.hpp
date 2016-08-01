@@ -216,12 +216,12 @@ public:
 
     ~ItemDataT() {}
 
-    ItemId                     id;
-    ItemType                   type;
+    ItemId                      id;
+    ItemType                    type;
     bool                        has_std_activate; //E.g. potions and scrolls
     bool                        is_prio_in_backpack_list; //E.g. Medical Bag
-    ItemValue                  value;
-    ItemWeight                 weight;
+    ItemValue                   value;
+    ItemWeight                  weight;
     bool                        allow_spawn;
     Range                       spawn_std_range;
     int                         max_stack_at_spawn;
@@ -229,23 +229,24 @@ public:
     bool                        is_stackable;
     bool                        is_identified;
     bool                        is_tried;
-    ItemName                   base_name;
-    ItemName                   base_name_un_id;
+    int                         xp_on_identify;
+    ItemName                    base_name;
+    ItemName                    base_name_un_id;
     std::vector<std::string>    base_descr;
     char                        glyph;
     Clr                         clr;
-    TileId                     tile;
-    AttMode                    main_att_mode;
-    SpellId                    spell_cast_from_scroll;
+    TileId                      tile;
+    AttMode                     main_att_mode;
+    SpellId                     spell_cast_from_scroll;
     std::string                 land_on_hard_snd_msg;
-    SfxId                      land_on_hard_sfx;
+    SfxId                       land_on_hard_sfx;
     bool                        is_ins_raied_while_carried;
     bool                        is_ins_raied_while_equiped;
 
-    std::vector<RoomType>                  native_rooms;
-    std::vector<ItemContainerSpawnRule>  container_spawn_rules;
+    std::vector<RoomType>               native_rooms;
+    std::vector<ItemContainerSpawnRule> container_spawn_rules;
 
-    int ability_mods_while_equipped[size_t(AbilityId::END)];
+    int ability_mods_while_equipped[(size_t)AbilityId::END];
 
     struct ItemMeleeData
     {
@@ -255,16 +256,16 @@ public:
         bool                    is_melee_wpn;
         //NOTE: The "plus" field is ignored in the melee damage data, since melee weapons have
         //individual plus damages stored in the weapon objects.
-        DiceParam              dmg;
+        DiceParam               dmg;
         int                     hit_chance_mod;
-        ItemAttMsgs           att_msgs;
+        ItemAttMsgs             att_msgs;
         Prop*                   prop_applied;
-        DmgType                dmg_type;
+        DmgType                 dmg_type;
         bool                    knocks_back;
-        SfxId                  hit_small_sfx;
-        SfxId                  hit_medium_sfx;
-        SfxId                  hit_hard_sfx;
-        SfxId                  miss_sfx;
+        SfxId                   hit_small_sfx;
+        SfxId                   hit_medium_sfx;
+        SfxId                   hit_hard_sfx;
+        SfxId                   miss_sfx;
     } melee;
 
     struct ItemRangedData
@@ -275,29 +276,29 @@ public:
         bool                    is_ranged_wpn, is_throwable_wpn, is_machine_gun, is_shotgun;
         //NOTE: This property should be set on ranged weapons (using ammo) AND mags:
         int                     max_ammo;
-        DiceParam              dmg;
+        DiceParam               dmg;
         //NOTE: "Pure" melee weapons do not have to (should not) set this value - they do throw
         //damage based on their melee damage instead.
-        DiceParam              throw_dmg;
+        DiceParam               throw_dmg;
         int                     hit_chance_mod;
         int                     throw_hit_chance_mod;
         int                     effective_range;
         bool                    knocks_back;
         std::string             dmg_info_override;
-        ItemId                 ammo_item_id;
-        DmgType                dmg_type;
+        ItemId                  ammo_item_id;
+        DmgType                 dmg_type;
         bool                    has_infinite_ammo;
         char                    projectile_glyph;
-        TileId                 projectile_tile;
+        TileId                  projectile_tile;
         Clr                     projectile_clr;
         bool                    projectile_leaves_trail;
         bool                    projectile_leaves_smoke;
-        ItemAttMsgs           att_msgs;
+        ItemAttMsgs             att_msgs;
         std::string             snd_msg;
-        SndVol                 snd_vol;
+        SndVol                  snd_vol;
         bool                    makes_ricochet_snd;
-        SfxId                  att_sfx;
-        SfxId                  reload_sfx;
+        SfxId                   att_sfx;
+        SfxId                   reload_sfx;
         Prop*                   prop_applied;
     } ranged;
 

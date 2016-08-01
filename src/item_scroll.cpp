@@ -127,6 +127,8 @@ void Scroll::identify(const Verbosity verbosity)
             render::draw_map_state();
 
             dungeon_master::add_history_event("Identified " + name_after + ".");
+
+            give_xp_for_identify();
         }
     }
 }

@@ -61,7 +61,7 @@ void mk_list_of_mon_can_auto_spawn(const int nr_lvls_out_of_depth,
     for (const auto& d : actor_data::data)
     {
         if (
-            d.id != ActorId::player            &&
+            d.id != ActorId::player             &&
             d.is_auto_spawn_allowed             &&
             d.nr_left_allowed_to_spawn != 0     &&
             effective_dlvl >= d.spawn_min_dlvl  &&
@@ -314,7 +314,7 @@ void try_spawn_due_to_time_passed()
 
 void populate_intro_lvl()
 {
-    const int nr_groups_allowed = rnd::range(1, 3);
+    const int nr_groups_to_spawn = rnd::range(1, 3);
 
     bool blocked[map_w][map_h];
 
@@ -349,7 +349,7 @@ void populate_intro_lvl()
 
     ASSERT(!ids_can_spawn_intro_lvl.empty());
 
-    for (int i = 0; i < nr_groups_allowed; ++i)
+    for (int i = 0; i < nr_groups_to_spawn; ++i)
     {
         std::vector<P> origin_bucket;
 
@@ -369,7 +369,6 @@ void populate_intro_lvl()
         std::vector<P> sorted_free_cells;
         mk_sorted_free_cells(origin, blocked, sorted_free_cells);
 
-
         if (!sorted_free_cells.empty())
         {
             const int id_element = rnd::range(0, ids_can_spawn_intro_lvl.size() - 1);
@@ -388,7 +387,7 @@ void populate_std_lvl()
 {
     TRACE_FUNC_BEGIN;
 
-    const int nr_groups_allowed_on_map = rnd::range(5, 9);
+    const int nr_groups_to_spawn = rnd::range(3, 5);
 
     int nr_groups_spawned = 0;
 
@@ -472,7 +471,7 @@ void populate_std_lvl()
                     {
                         ++nr_groups_spawned;
 
-                        if (nr_groups_spawned >= nr_groups_allowed_on_map)
+                        if (nr_groups_spawned >= nr_groups_to_spawn)
                         {
                             TRACE_FUNC_END;
                             return;
@@ -514,7 +513,7 @@ void populate_std_lvl()
 
     if (!origin_bucket.empty())
     {
-        while (nr_groups_spawned < nr_groups_allowed_on_map)
+        while (nr_groups_spawned < nr_groups_to_spawn)
         {
             const int   element = rnd::range(0, origin_bucket.size() - 1);
             const P     origin  = origin_bucket[element];

@@ -21,7 +21,7 @@ bool try_cast_random_spell(Mon& mon)
 {
     if (
         !mon.is_alive()                 ||
-        mon.spell_cooldown_current_ > 0    ||
+        mon.spell_cooldown_current_ > 0 ||
         mon.spells_known_.empty()       ||
         !mon.prop_handler().allow_cast_spell(Verbosity::silent))
     {
@@ -52,7 +52,7 @@ bool try_cast_random_spell(Mon& mon)
             //anyway if hp is low.
             if (
                 !map::player->is_leader_of(&mon)    &&
-                current_hp < (max_hp / 3)               &&
+                current_hp < (max_hp / 3)           &&
                 rnd::one_in(20))
             {
                 if (map::player->can_see_actor(mon))

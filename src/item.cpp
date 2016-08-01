@@ -160,24 +160,24 @@ DiceParam Item::dmg(const AttMode att_mode, const Actor* const actor) const
 
 int Item::weight() const
 {
-    return int(data_->weight) * nr_items_;
+    return (int)data_->weight * nr_items_;
 }
 
 std::string Item::weight_str() const
 {
     const int wgt = weight();
 
-    if (wgt <= (int(ItemWeight::extra_light) + int(ItemWeight::light)) / 2)
+    if (wgt <= ((int)ItemWeight::extra_light + (int)ItemWeight::light) / 2)
     {
         return "very light";
     }
 
-    if (wgt <= (int(ItemWeight::light) + int(ItemWeight::medium)) / 2)
+    if (wgt <= ((int)ItemWeight::light + (int)ItemWeight::medium) / 2)
     {
         return "light";
     }
 
-    if (wgt <= (int(ItemWeight::medium) + int(ItemWeight::heavy)) / 2)
+    if (wgt <= ((int)ItemWeight::medium + (int)ItemWeight::heavy) / 2)
     {
         return "a bit heavy";
     }
@@ -403,6 +403,12 @@ void Item::clear_carrier_spells()
     }
 
     carrier_spells_.clear();
+}
+
+void Item::give_xp_for_identify(const Verbosity verbosity)
+{
+    dungeon_master::incr_player_xp(data_->xp_on_identify,
+                                   verbosity);
 }
 
 //---------------------------------------------------------- ARMOR

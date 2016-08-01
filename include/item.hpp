@@ -128,6 +128,8 @@ public:
         return carrier_spells_;
     }
 
+    void give_xp_for_identify(const Verbosity verbosity = Verbosity::verbose);
+
     int nr_items_;
 
     int melee_dmg_plus_;

@@ -296,7 +296,7 @@ void summon(const P& origin,
     map_parse::run(cell_check::BlocksMoveCmn(true), blocked);
 
     std::vector<P> free_cells;
-    to_vec((bool*)blocked, false, map_w, map_h, free_cells);
+    to_vec(blocked, false, free_cells);
 
     std::sort(begin(free_cells), end(free_cells), IsCloserToPos(origin));
 

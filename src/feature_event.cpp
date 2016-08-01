@@ -168,7 +168,7 @@ bool EventSnakeEmerge::try_find_p()
 
     std::vector<P> p_bucket;
 
-    to_vec((bool*)blocked, false, map_w, map_h, p_bucket);
+    to_vec(blocked, false, p_bucket);
 
     random_shuffle(begin(p_bucket), end(p_bucket));
 

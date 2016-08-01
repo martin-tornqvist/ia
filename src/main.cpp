@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
                     mapgen::mk_intro_lvl();
                 }
 
-                dungeon_master::set_time_started_to_now();
+                dungeon_master::set_start_time_to_now();
                 const TimeData& t = dungeon_master::start_time();
                 TRACE << "Game started on: " << t.time_str(TimeType::minute, true)
                       << std::endl;

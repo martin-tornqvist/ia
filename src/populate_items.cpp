@@ -19,7 +19,7 @@ namespace
 
 int nr_items()
 {
-    int nr = rnd::range(7, 9);
+    int nr = rnd::range(4, 6);
 
     if (player_bon::traits[(size_t)Trait::treasure_hunter])
     {
@@ -166,15 +166,6 @@ void mk_position_weights(std::vector<P>& positions_out,
             }
         }
     }
-
-    // std::vector<P> free_cells;
-
-    // to_vec((bool*)blocked,
-    //        false,
-    //        map_w,
-    //        map_h,
-    //        free_cells);
-    
 }
 
 }

@@ -36,7 +36,7 @@ Spell* random_spell_for_mon()
 {
     std::vector<SpellId> bucket;
 
-    for (int i = 0; i < int(SpellId::END); ++i)
+    for (int i = 0; i < (int)SpellId::END; ++i)
     {
         Spell* const spell = mk_spell_from_id(SpellId(i));
 
@@ -172,10 +172,10 @@ Range Spell::spi_cost(const bool is_base_cost_only, Actor* const caster) const
             }
         }
 
-        bool is_warlock     = player_bon::traits[size_t(Trait::warlock)];
-        bool is_blood_sorc  = player_bon::traits[size_t(Trait::blood_sorcerer)];
-        bool IS_SEER        = player_bon::traits[size_t(Trait::seer)];
-        bool IS_SUMMONER    = player_bon::traits[size_t(Trait::summoner)];
+        bool is_warlock     = player_bon::traits[(size_t)Trait::warlock];
+        bool is_blood_sorc  = player_bon::traits[(size_t)Trait::blood_sorcerer];
+        bool IS_SEER        = player_bon::traits[(size_t)Trait::seer];
+        bool IS_SUMMONER    = player_bon::traits[(size_t)Trait::summoner];
 
         if (is_blood_sorc)
         {
@@ -877,7 +877,7 @@ SpellEffectNoticed SpellPharaohStaff::cast_impl(Actor* const caster) const
     if (caster->is_player())
     {
         const int n = summon_hostile_one_in_n *
-                      (player_bon::traits[size_t(Trait::summoner)] ? 2 : 1);
+                      (player_bon::traits[(size_t)Trait::summoner] ? 2 : 1);
 
         did_player_summon_hostile = rnd::one_in(n);
         leader = did_player_summon_hostile ? nullptr : caster;
@@ -1028,7 +1028,7 @@ SpellEffectNoticed SpellDetMon::cast_impl(Actor* const caster) const
 {
     (void)caster;
 
-    bool is_seer = player_bon::traits[size_t(Trait::seer)];
+    bool is_seer = player_bon::traits[(size_t)Trait::seer];
 
     const int multiplier  = 6 * (is_seer ? 3 : 1);
 
@@ -1417,7 +1417,7 @@ SpellEffectNoticed SpellSummonMon::cast_impl(Actor* const caster) const
     {
         //No free cells seen by player, instead summon near the caster.
         std::vector<P> free_cells_vector;
-        to_vec((bool*)blocked, false, map_w, map_h, free_cells_vector);
+        to_vec(blocked, false, free_cells_vector);
 
         if (!free_cells_vector.empty())
         {
@@ -1434,7 +1434,7 @@ SpellEffectNoticed SpellSummonMon::cast_impl(Actor* const caster) const
 
     std::vector<ActorId> summon_bucket;
 
-    for (int i = 0; i < int(ActorId::END); ++i)
+    for (int i = 0; i < (int)ActorId::END; ++i)
     {
         const ActorDataT& data = actor_data::data[i];
 
@@ -1449,7 +1449,7 @@ SpellEffectNoticed SpellSummonMon::cast_impl(Actor* const caster) const
                 const int player_clvl     = dungeon_master::clvl();
                 const int player_clvl_pct = (player_clvl * 100) / player_max_clvl;
 
-                dlvl_max                   = (player_clvl_pct * dlvl_last) / 100;
+                dlvl_max = (player_clvl_pct * dlvl_last) / 100;
             }
             else //Caster is monster
             {
@@ -1472,14 +1472,14 @@ SpellEffectNoticed SpellSummonMon::cast_impl(Actor* const caster) const
     }
 
     const int       idx                         = rnd::range(0, summon_bucket.size() - 1);
-    const ActorId  mon_id                      = summon_bucket[idx];
+    const ActorId   mon_id                      = summon_bucket[idx];
     Actor*          leader                      = nullptr;
     bool            did_player_summon_hostile   = false;
 
     if (caster->is_player())
     {
         const int n                 = summon_hostile_one_in_n *
-                                      (player_bon::traits[size_t(Trait::summoner)] ? 2 : 1);
+                                      (player_bon::traits[(size_t)Trait::summoner] ? 2 : 1);
         did_player_summon_hostile   = rnd::one_in(n);
         leader                      = did_player_summon_hostile ? nullptr : caster;
     }

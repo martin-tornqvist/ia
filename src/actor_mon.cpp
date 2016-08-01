@@ -34,14 +34,13 @@ Mon::Mon() :
     player_aware_of_me_counter_ (0),
     is_msg_mon_in_view_printed_ (false),
     last_dir_moved_             (Dir::center),
-    spell_cooldown_current_        (0),
+    spell_cooldown_current_     (0),
     is_roaming_allowed_         (true),
     is_sneaking_                (false),
     leader_                     (nullptr),
     tgt_                        (nullptr),
     waiting_                    (false),
-    shock_caused_current_           (0.0),
-    has_given_xp_for_spotting_  (false) {}
+    shock_caused_current_       (0.0) {}
 
 Mon::~Mon()
 {
@@ -201,7 +200,7 @@ void Mon::act()
     //Looking is as an action if monster was not aware before, and became aware from looking.
     //(This is to give the monsters some reaction time, and not instantly attack)
     if (
-        data_->ai[size_t(AiId::looks)] &&
+        data_->ai[(size_t)AiId::looks]  &&
         leader_ != map::player          &&
         (tgt_ == nullptr || tgt_ == map::player))
     {
@@ -212,7 +211,7 @@ void Mon::act()
     }
 
     if (
-        data_->ai[size_t(AiId::makes_room_for_friend)] &&
+        data_->ai[(size_t)AiId::makes_room_for_friend]  &&
         leader_ != map::player                          &&
         tgt_ == map::player)
     {
@@ -222,6 +221,7 @@ void Mon::act()
         }
     }
 
+    //Cast instead of attacking?
     if (rnd::one_in(5))
     {
         if (ai::action::try_cast_random_spell(*this))
@@ -230,7 +230,7 @@ void Mon::act()
         }
     }
 
-    if (data_->ai[size_t(AiId::attacks)] && tgt_)
+    if (data_->ai[(size_t)AiId::attacks] && tgt_)
     {
         if (try_attack(*tgt_))
         {
@@ -243,7 +243,7 @@ void Mon::act()
         return;
     }
 
-    int erratic_move_pct = int(data_->erratic_move_pct);
+    int erratic_move_pct = (int)data_->erratic_move_pct;
 
     //Never move erratically if frenzied
     if (prop_handler_->has_prop(PropId::frenzied))
@@ -267,7 +267,7 @@ void Mon::act()
 
     //Occasionally move erratically
     if (
-        data_->ai[size_t(AiId::moves_to_random_when_unaware)] &&
+        data_->ai[(size_t)AiId::moves_to_random_when_unaware] &&
         rnd::percent(erratic_move_pct))
     {
         if (ai::action::move_to_random_adj_cell(*this))
@@ -278,7 +278,7 @@ void Mon::act()
 
     const bool is_terrified = prop_handler_->has_prop(PropId::terrified);
 
-    if (data_->ai[size_t(AiId::moves_to_tgt_when_los)] && !is_terrified)
+    if (data_->ai[(size_t)AiId::moves_to_tgt_when_los] && !is_terrified)
     {
         if (ai::action::move_to_tgt_simple(*this))
         {
@@ -289,7 +289,7 @@ void Mon::act()
     std::vector<P> path;
 
     if (
-        data_->ai[size_t(AiId::paths_to_tgt_when_aware)]   &&
+        data_->ai[(size_t)AiId::paths_to_tgt_when_aware]    &&
         leader_ != map::player                              &&
         !is_terrified)
     {
@@ -309,7 +309,7 @@ void Mon::act()
         return;
     }
 
-    if (data_->ai[size_t(AiId::moves_to_leader)] && !is_terrified)
+    if (data_->ai[(size_t)AiId::moves_to_leader] && !is_terrified)
     {
         ai::info::try_set_path_to_leader(*this, path);
 
@@ -320,7 +320,7 @@ void Mon::act()
     }
 
     if (
-        data_->ai[size_t(AiId::moves_to_lair)] &&
+        data_->ai[(size_t)AiId::moves_to_lair]  &&
         leader_ != map::player                  &&
         (tgt_ == nullptr || tgt_ == map::player))
     {
@@ -341,7 +341,7 @@ void Mon::act()
     }
 
     //When unaware, move randomly
-    if (data_->ai[size_t(AiId::moves_to_random_when_unaware)])
+    if (data_->ai[(size_t)AiId::moves_to_random_when_unaware])
     {
         if (ai::action::move_to_random_adj_cell(*this))
         {
@@ -353,7 +353,8 @@ void Mon::act()
     game_time::tick();
 }
 
-bool Mon::can_see_actor(const Actor& other, const bool hard_blocked_los[map_w][map_h]) const
+bool Mon::can_see_actor(const Actor& other,
+                        const bool hard_blocked_los[map_w][map_h]) const
 {
     if (this == &other || !other.is_alive())
     {
@@ -970,8 +971,8 @@ void Zuul::place_hook()
 {
     if (actor_data::data[(size_t)ActorId::zuul].nr_left_allowed_to_spawn > 0)
     {
-        //NOTE: Do not call die() here - that would have side effects such as
-        //player getting XP. Instead, simply set the dead state to destroyed.
+        //NOTE: Do not call die() here - that would have side effects. Instead,
+        //      simply set the dead state to destroyed.
         state_                      = ActorState::destroyed;
 
         Actor* actor                = actor_factory::mk(ActorId::cultist_priest, pos);
@@ -1390,7 +1391,7 @@ DidAction Khephren::on_act()
 
             std::vector<P> free_cells;
 
-            to_vec((bool*)blocked, false, map_w, map_h, free_cells);
+            to_vec(blocked, false, free_cells);
 
             sort(begin(free_cells), end(free_cells), IsCloserToPos(pos));
 
@@ -1758,14 +1759,15 @@ void WormMass::mk_start_items()
 
 void WormMass::on_death()
 {
-    //Split into other worms on death. Splitting is only allowed if this is an "original" worm,
-    //i.e. not split from another, and if the worm is not destroyed "too hard" (e.g. by a near
-    //explosion or a sledge hammer), and if the worm is not burning.
+    //Split into other worms on death. Splitting is only allowed if this is an
+    //"original" worm, i.e. not split from another, and if the worm is not
+    //destroyed "too hard" (e.g. by a near explosion or a sledge hammer), and if
+    //the worm is not burning.
 
     if (
         allow_split_                                &&
         hp_ > -10                                   &&
-        !prop_handler_->has_prop(PropId::burning)  &&
+        !prop_handler_->has_prop(PropId::burning)   &&
         game_time::actors.size() < max_nr_actors_on_map)
     {
         std::vector<ActorId> worm_ids(2, id());
@@ -1990,9 +1992,10 @@ void Zombie::on_death()
         map::mk_gore(pos);
     }
 
-    //If corpse is destroyed, occasionally spawn Zombie parts. Spawning is only allowed if the
-    //corpse is not destroyed "too hard" (e.g. by a near explosion or a sledge hammer). This also
-    //serves to reward heavy weapons, since they will more often prevent spawning nasty stuff.
+    //If corpse is destroyed, occasionally spawn Zombie parts. Spawning is
+    //only allowed if the corpse is not destroyed "too hard" (e.g. by a near
+    //explosion or a sledge hammer). This also serves to reward heavy weapons,
+    //since they will more often prevent spawning nasty stuff.
 
     const int summon_one_in_n = 7;
 

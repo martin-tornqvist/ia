@@ -106,7 +106,6 @@ public:
     Actor*              tgt_;
     bool                waiting_;
     double              shock_caused_current_;
-    bool                has_given_xp_for_spotting_;
 
 protected:
     virtual void on_hit(int& dmg,
@@ -871,7 +870,7 @@ private:
 class Mold: public Mon
 {
 public:
-    Mold() : Mon(), spawn_new_one_in_n(30) {}
+    Mold() : Mon(), spawn_new_one_in_n(40) {}
     ~Mold() {}
 
     void mk_start_items() override;

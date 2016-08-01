@@ -11,7 +11,7 @@ int AbilityVals::val(const AbilityId id,
                       const bool is_affected_by_props,
                       const Actor& actor) const
 {
-    int ret = ability_list[size_t(id)];
+    int ret = ability_list[(size_t)id];
 
     if (is_affected_by_props)
     {
@@ -37,12 +37,12 @@ int AbilityVals::val(const AbilityId id,
         case AbilityId::searching:
             ret += 8;
 
-            if (player_bon::traits[size_t(Trait::observant)])
+            if (player_bon::traits[(size_t)Trait::observant])
             {
                 ret += 4;
             }
 
-            if (player_bon::traits[size_t(Trait::perceptive)])
+            if (player_bon::traits[(size_t)Trait::perceptive])
             {
                 ret += 4;
             }
@@ -51,23 +51,23 @@ int AbilityVals::val(const AbilityId id,
         case AbilityId::melee:
             ret += 60;
 
-            if (player_bon::traits[size_t(Trait::adept_melee_fighter)])
+            if (player_bon::traits[(size_t)Trait::adept_melee_fighter])
             {
                 ret += 10;
             }
 
-            if (player_bon::traits[size_t(Trait::expert_melee_fighter)])
+            if (player_bon::traits[(size_t)Trait::expert_melee_fighter])
             {
                 ret += 10;
             }
 
-            if (player_bon::traits[size_t(Trait::master_melee_fighter)])
+            if (player_bon::traits[(size_t)Trait::master_melee_fighter])
             {
                 ret += 10;
             }
 
             if (
-                player_bon::traits[size_t(Trait::perseverant)] &&
+                player_bon::traits[(size_t)Trait::perseverant] &&
                 hp_pct <= perseverant_bon_hp_pct)
             {
                 ret += 30;
@@ -77,23 +77,23 @@ int AbilityVals::val(const AbilityId id,
         case AbilityId::ranged:
             ret += 70;
 
-            if (player_bon::traits[size_t(Trait::adept_marksman)])
+            if (player_bon::traits[(size_t)Trait::adept_marksman])
             {
                 ret += 10;
             }
 
-            if (player_bon::traits[size_t(Trait::expert_marksman)])
+            if (player_bon::traits[(size_t)Trait::expert_marksman])
             {
                 ret += 10;
             }
 
-            if (player_bon::traits[size_t(Trait::master_marksman)])
+            if (player_bon::traits[(size_t)Trait::master_marksman])
             {
                 ret += 10;
             }
 
             if (
-                player_bon::traits[size_t(Trait::perseverant)] &&
+                player_bon::traits[(size_t)Trait::perseverant] &&
                 hp_pct <= perseverant_bon_hp_pct)
             {
                 ret += 30;
@@ -108,12 +108,12 @@ int AbilityVals::val(const AbilityId id,
         case AbilityId::dodge_trap:
             ret += 5;
 
-            if (player_bon::traits[size_t(Trait::dexterous)])
+            if (player_bon::traits[(size_t)Trait::dexterous])
             {
                 ret += 25;
             }
 
-            if (player_bon::traits[size_t(Trait::lithe)])
+            if (player_bon::traits[(size_t)Trait::lithe])
             {
                 ret += 25;
             }
@@ -122,18 +122,18 @@ int AbilityVals::val(const AbilityId id,
         case AbilityId::dodge_att:
             ret += 10;
 
-            if (player_bon::traits[size_t(Trait::dexterous)])
+            if (player_bon::traits[(size_t)Trait::dexterous])
             {
                 ret += 25;
             }
 
-            if (player_bon::traits[size_t(Trait::lithe)])
+            if (player_bon::traits[(size_t)Trait::lithe])
             {
                 ret += 25;
             }
 
             if (
-                player_bon::traits[size_t(Trait::perseverant)] &&
+                player_bon::traits[(size_t)Trait::perseverant] &&
                 hp_pct <= perseverant_bon_hp_pct)
             {
                 ret += 50;
@@ -141,16 +141,16 @@ int AbilityVals::val(const AbilityId id,
             break;
 
         case AbilityId::stealth:
-            ret += 20;
+            ret += 30;
 
-            if (player_bon::traits[size_t(Trait::stealthy)])
+            if (player_bon::traits[(size_t)Trait::stealthy])
             {
-                ret += 30;
+                ret += 25;
             }
 
-            if (player_bon::traits[size_t(Trait::imperceptible)])
+            if (player_bon::traits[(size_t)Trait::imperceptible])
             {
-                ret += 30;
+                ret += 25;
             }
             break;
 

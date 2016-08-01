@@ -113,13 +113,16 @@ void draw_detailed_item_descr(const Item* const item)
 
     if (item)
     {
+        //----------------------------------------------------------------------
+        //Base description
+        //----------------------------------------------------------------------
         const auto base_descr = item->descr();
 
         if (!base_descr.empty())
         {
             for (const std::string& paragraph : base_descr)
             {
-                lines.push_back({paragraph, clr_white_high});
+                lines.push_back(StrAndClr(paragraph, clr_white_high));
             }
         }
 
@@ -129,6 +132,9 @@ void draw_detailed_item_descr(const Item* const item)
 
         const ItemDataT& d = item->data();
 
+        //----------------------------------------------------------------------
+        //Disturbing to carry?
+        //----------------------------------------------------------------------
         std::string disturb_str = "";
 
         const std::string disturb_base_str = ref_str + "a burden on my mind to ";
@@ -153,12 +159,16 @@ void draw_detailed_item_descr(const Item* const item)
         {
             disturb_str += " (+" + to_str(ins_from_disturbing_items) + "% insanity)";
 
-            lines.push_back({disturb_str, clr_magenta});
+            lines.push_back(StrAndClr(disturb_str, clr_magenta));
         }
+
+        //----------------------------------------------------------------------
+        //Weight
+        //----------------------------------------------------------------------
 
         const std::string weight_str = ref_str + item->weight_str() + " to carry.";
 
-        lines.push_back({weight_str, clr_green});
+        lines.push_back(StrAndClr(weight_str, clr_green));
 
         const int weight_carried_tot = map::player->inv().total_item_weight();
 
@@ -175,12 +185,23 @@ void draw_detailed_item_descr(const Item* const item)
         {
             const std::string pct_str = "(" + to_str(weight_pct) + "% of total carried weight)";
 
-            lines.push_back({pct_str, clr_green});
+            lines.push_back(StrAndClr(pct_str, clr_green));
+        }
+
+        //----------------------------------------------------------------------
+        //XP for identifying
+        //----------------------------------------------------------------------
+        if (!d.is_identified && (d.xp_on_identify > 0))
+        {
+            const std::string xp_id_str =
+                "Identifying grants " + to_str(d.xp_on_identify) + " XP.";
+
+            lines.push_back(StrAndClr(xp_id_str, clr_msg_good));
         }
     }
 
-    //We draw the description box regardless of whether the lines are empty or not,
-    //just to clear this area on the screen.
+    //We draw the description box regardless of whether the lines are empty or
+    //not, just to clear this area on the screen.
     render::draw_descr_box(lines);
 }
 

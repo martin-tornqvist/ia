@@ -101,6 +101,14 @@ public:
     bool check(const Mob& f)        const override;
 };
 
+class BlocksRigid : public Check
+{
+public:
+    BlocksRigid() : Check() {}
+    bool is_checking_cells()        const override {return true;}
+    bool check(const Cell& c)       const override;
+};
+
 class IsFeature : public Check
 {
 public:

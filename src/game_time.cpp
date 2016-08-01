@@ -36,7 +36,7 @@ std::vector<ActorSpeed> turn_type_vector_;
 
 int     current_turn_type_pos_  = 0;
 size_t  current_actor_idx_      = 0;
-int     turn_nr_            = 0;
+int     turn_nr_                = 0;
 
 void run_std_turn_events()
 {
@@ -124,7 +124,7 @@ void run_std_turn_events()
     //(If an unexplored cell is selected, the spawn is canceled)
     if (map::dlvl >= 1 && map::dlvl <= dlvl_last)
     {
-        const int spawn_n_turns = 130;
+        const int spawn_n_turns = 200;
 
         if (turn_nr_ % spawn_n_turns == 0)
         {
@@ -152,7 +152,9 @@ void run_std_turn_events()
 
     if (map::dlvl > 0)
     {
-        audio::try_play_amb(100);
+        const int play_one_in_n = 200;
+
+        audio::try_play_amb(play_one_in_n);
     }
 }
 

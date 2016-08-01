@@ -77,8 +77,7 @@ bool Actor::is_spotting_sneaking_actor(Actor& other)
     const int   sneak_skill         = abilities_other.val(AbilityId::stealth, true, other);
 
     const int   dist                = king_dist(pos, other_pos);
-
-    const int   sneak_dist_mod      = constr_in_range(0, (dist - 1) * 10, 60);
+    const int   sneak_dist_mod      = constr_in_range(0, (dist - 1) * 15, 80);
 
     const Cell& cell                = map::cells[other_pos.x][other_pos.y];
 
@@ -327,7 +326,7 @@ void Actor::teleport()
     map_parse::run(cell_check::BlocksActor(*this, true), blocked);
 
     std::vector<P> pos_bucket;
-    to_vec((bool*)blocked, false, map_w, map_h, pos_bucket);
+    to_vec(blocked, false, pos_bucket);
 
     if (pos_bucket.empty())
     {
@@ -813,7 +812,9 @@ ActorDied Actor::hit(int dmg,
                                   is_on_bottomless          ||
                                   is_dmg_enough_to_destroy;
 
-        die(is_destroyed, !is_on_bottomless, !is_on_bottomless);
+        die(is_destroyed,
+            !is_on_bottomless,
+            !is_on_bottomless);
 
         return ActorDied::yes;
     }
