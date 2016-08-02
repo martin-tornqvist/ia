@@ -394,9 +394,6 @@ std::vector<std::string> bg_descr(const Bg id)
     case Bg::rogue:
         return
         {
-            "Has an arcane ability to cloud the minds of enemies, causing them to "
-            "forget their pursuit",
-            "",
             "The rate of shock received passively over time is reduced by half",
             "",
             "Starts with the following trait(s):",
@@ -415,8 +412,6 @@ std::vector<std::string> bg_descr(const Bg id)
             "Can switch to prepared weapon instantly",
             "",
             "Maintains armor twice as long before it breaks",
-            "",
-            "Starts with 10% insanity",
             "",
             "Starts with the following trait(s):",
             "",
@@ -927,7 +922,6 @@ void pick_bg(const Bg bg)
         break;
 
     case Bg::rogue:
-        player_spells_handling::learn_spell_if_not_known(SpellId::cloud_minds);
         pick_trait(Trait::observant);
         pick_trait(Trait::stealthy);
         break;
@@ -936,7 +930,6 @@ void pick_bg(const Bg bg)
         pick_trait(Trait::adept_melee_fighter);
         pick_trait(Trait::adept_marksman);
         pick_trait(Trait::tough);
-        map::player->ins_ += 10;
         break;
 
     case Bg::END:

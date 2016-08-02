@@ -88,57 +88,25 @@ void Player::mk_start_items()
         nr_molotov      = 0;
         nr_thr_knives   = 0;
 
-        //Occultist starts with a Darkbolt scroll, and one other random scroll.
-        //(Both are identified.)
+        //Occultist starts with Darkbolt, Detect Monsters and a Potion of Spirit
+
+        //Darkbolt
         Item* item = item_factory::mk(ItemId::scroll_darkbolt);
+        static_cast<Scroll*>(item)->identify(Verbosity::silent);
+        item->give_xp_for_identify(Verbosity::silent);
+        inv_->put_in_backpack(item);
 
-        Scroll* scroll = static_cast<Scroll*>(item);
+        //Detect Monsters
+        item = item_factory::mk(ItemId::scroll_det_mon);
+        static_cast<Scroll*>(item)->identify(Verbosity::silent);
+        item->give_xp_for_identify(Verbosity::silent);
+        inv_->put_in_backpack(item);
 
-        scroll->identify(Verbosity::silent);
-
-        scroll->give_xp_for_identify(Verbosity::silent);
-
-        inv_->put_in_backpack(scroll);
-
-        while (true)
-        {
-            item = item_factory::mk_random_scroll_or_potion(true, false);
-
-            SpellId         spell_id    = item->data().spell_cast_from_scroll;
-            Spell* const    spell       = spell_handling::mk_spell_from_id(spell_id);
-            const bool      is_avail    = spell->is_avail_for_player();
-            const bool      spi_cost_ok = spell->spi_cost(true).max <=
-                                          player_bon::spi_occultist_can_cast_at_lvl(4);
-            delete spell;
-
-            if (is_avail && spi_cost_ok && spell_id != SpellId::darkbolt)
-            {
-                scroll = static_cast<Scroll*>(item);
-
-                scroll->identify(Verbosity::silent);
-
-                scroll->give_xp_for_identify(Verbosity::silent);
-
-                inv_->put_in_backpack(scroll);
-                break;
-            }
-        }
-
-        //Occultist starts with a few potions (identified).
-        const int nr_potions = 2;
-
-        for (int i = 0; i < nr_potions; ++i)
-        {
-            item = item_factory::mk_random_scroll_or_potion(false, true);
-
-            Potion* const potion = static_cast<Potion*>(item);
-
-            potion->identify(Verbosity::silent);
-
-            potion->give_xp_for_identify(Verbosity::silent);
-
-            inv_->put_in_backpack(potion);
-        }
+        //Spirit
+        item = item_factory::mk(ItemId::potion_spirit);
+        static_cast<Potion*>(item)->identify(Verbosity::silent);
+        item->give_xp_for_identify(Verbosity::silent);
+        inv_->put_in_backpack(item);
     }
     break;
 
@@ -155,7 +123,7 @@ void Player::mk_start_items()
         inv_->put_in_slot(SlotId::wpn, dagger);
 
         //Rogue starts with some iron spikes (useful tool)
-        inv_->put_in_backpack(item_factory::mk(ItemId::iron_spike, 8));
+        inv_->put_in_backpack(item_factory::mk(ItemId::iron_spike, 12));
     }
     break;
 

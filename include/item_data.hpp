@@ -144,6 +144,7 @@ enum class ItemId
     scroll_summon_mon,
     scroll_light,
     scroll_anim_wpns,
+    scroll_cloud_minds,
 
     potion_vitality,
     potion_spirit,

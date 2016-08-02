@@ -808,7 +808,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 25);
     d.ability_vals.set_val(AbilityId::dodge_att, 40);
-    d.spawn_min_dlvl = 1;
+    d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
     {

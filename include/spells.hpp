@@ -37,8 +37,6 @@ enum class SpellId
     light,
     bless,
     anim_wpns,
-
-    //Rogue background
     cloud_minds,
 
     //Ghoul background
@@ -546,7 +544,7 @@ public:
 
     IntrSpellShock shock_type_intr_cast() const override
     {
-        return IntrSpellShock::disturbing;
+        return IntrSpellShock::mild;
     }
 
     std::vector<std::string> descr() const override
@@ -558,7 +556,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(6);
+        return player_bon::spi_occultist_can_cast_at_lvl(1);
     }
 };
 

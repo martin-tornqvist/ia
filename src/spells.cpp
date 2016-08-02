@@ -1120,7 +1120,7 @@ SpellEffectNoticed SpellSacrSpi::cast_impl(Actor* const caster) const
     return SpellEffectNoticed::no;
 }
 
-//------------------------------------------------------------ ROGUE CLOUD MINDS
+//------------------------------------------------------------ CLOUD MINDS
 SpellEffectNoticed SpellCloudMinds::cast_impl(Actor* const caster) const
 {
     (void)caster;

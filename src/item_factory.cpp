@@ -216,6 +216,7 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::scroll_summon_mon:
     case ItemId::scroll_light:
     case ItemId::scroll_anim_wpns:
+    case ItemId::scroll_cloud_minds:
         r = new Scroll(d);
         break;
 
