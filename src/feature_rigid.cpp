@@ -42,21 +42,21 @@ void Rigid::on_new_turn()
         clear_gore();
 
         auto scorch_actor = [](Actor & actor)
+        {
+            if (&actor == map::player)
             {
-                if (&actor == map::player)
+                msg_log::add("I am scorched by flames.", clr_msg_bad);
+            }
+            else
+            {
+                if (map::player->can_see_actor(actor))
                 {
-                    msg_log::add("I am scorched by flames.", clr_msg_bad);
+                    msg_log::add(actor.name_the() + " is scorched by flames.", clr_msg_good);
                 }
-                else
-                {
-                    if (map::player->can_see_actor(actor))
-                    {
-                        msg_log::add(actor.name_the() + " is scorched by flames.", clr_msg_good);
-                    }
-                }
+            }
 
-                actor.hit(1, DmgType::fire);
-            };
+            actor.hit(1, DmgType::fire);
+        };
 
         //TODO: Hit dead actors
 
@@ -125,18 +125,21 @@ void Rigid::on_new_turn()
             }
         }
 
-        //Hit adjacent features and actors?
+        //Hit actors and adjacent features?
         if (rnd::one_in(hit_adjacent_one_in_n))
         {
+            actor = map::actor_at_pos(pos_);
+
+            if (actor)
+            {
+                scorch_actor(*actor);
+            }
+
             const P p(dir_utils::rnd_adj_pos(pos_, false));
 
             if (map::is_pos_inside_map(p))
             {
                 map::cells[p.x][p.y].rigid->hit(DmgType::fire, DmgMethod::elemental);
-
-                actor = map::actor_at_pos(p);
-
-                if (actor) {scorch_actor(*actor);}
             }
         }
 
