@@ -26,14 +26,14 @@
 namespace prop_data
 {
 
-PropDataT data[size_t(PropId::END)];
+PropDataT data[(size_t)PropId::END];
 
 namespace
 {
 
 void add_prop_data(PropDataT& d)
 {
-    data[int(d.id)] = d;
+    data[(int)d.id] = d;
     PropDataT blank;
     d = blank;
 }
@@ -46,10 +46,10 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Physical Resistance";
     d.name_short = "rPhys";
-    d.msg[size_t(PropMsg::start_player)] = "I feel resistant to physical harm.";
-    d.msg[size_t(PropMsg::start_mon)] = "is resistant to physical harm.";
-    d.msg[size_t(PropMsg::end_player)] = "I feel vulnerable to physical harm.";
-    d.msg[size_t(PropMsg::end_mon)] = "is vulnerable to physical harm.";
+    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to physical harm.";
+    d.msg[(size_t)PropMsg::start_mon] = "is resistant to physical harm.";
+    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to physical harm.";
+    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to physical harm.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -62,10 +62,10 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Fire resistance";
     d.name_short = "rFire";
-    d.msg[size_t(PropMsg::start_player)] = "I feel resistant to fire.";
-    d.msg[size_t(PropMsg::start_mon)] = "is resistant to fire.";
-    d.msg[size_t(PropMsg::end_player)] = "I feel vulnerable to fire.";
-    d.msg[size_t(PropMsg::end_mon)] = "is vulnerable to fire.";
+    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to fire.";
+    d.msg[(size_t)PropMsg::start_mon] = "is resistant to fire.";
+    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to fire.";
+    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to fire.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -78,10 +78,10 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Poison resistance";
     d.name_short = "rPoison";
-    d.msg[size_t(PropMsg::start_player)] = "I feel resistant to poison.";
-    d.msg[size_t(PropMsg::start_mon)] = "is resistant to poison.";
-    d.msg[size_t(PropMsg::end_player)] = "I feel vulnerable to poison.";
-    d.msg[size_t(PropMsg::end_mon)] = "is vulnerable to poison.";
+    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to poison.";
+    d.msg[(size_t)PropMsg::start_mon] = "is resistant to poison.";
+    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to poison.";
+    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to poison.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -94,10 +94,10 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Electric resistance";
     d.name_short = "rElec";
-    d.msg[size_t(PropMsg::start_player)] = "I feel resistant to electricity.";
-    d.msg[size_t(PropMsg::start_mon)] = "is resistant to electricity.";
-    d.msg[size_t(PropMsg::end_player)] = "I feel vulnerable to electricity.";
-    d.msg[size_t(PropMsg::end_mon)] = "is vulnerable to electricity.";
+    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to electricity.";
+    d.msg[(size_t)PropMsg::start_mon] = "is resistant to electricity.";
+    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to electricity.";
+    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to electricity.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -110,10 +110,10 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Acid resistance";
     d.name_short = "rAcid";
-    d.msg[size_t(PropMsg::start_player)] = "I feel resistant to acid.";
-    d.msg[size_t(PropMsg::start_mon)] = "is resistant to acid.";
-    d.msg[size_t(PropMsg::end_player)] = "I feel vulnerable to acid.";
-    d.msg[size_t(PropMsg::end_mon)] = "is vulnerable to acid.";
+    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to acid.";
+    d.msg[(size_t)PropMsg::start_mon] = "is resistant to acid.";
+    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to acid.";
+    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to acid.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -126,10 +126,10 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Sleep resistance";
     d.name_short = "rSleep";
-    d.msg[size_t(PropMsg::start_player)] = "I feel resistant to sleep.";
-    d.msg[size_t(PropMsg::start_mon)] = "is resistant to sleep.";
-    d.msg[size_t(PropMsg::end_player)] = "I feel vulnerable to sleep.";
-    d.msg[size_t(PropMsg::end_mon)] = "is vulnerable to sleep.";
+    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to sleep.";
+    d.msg[(size_t)PropMsg::start_mon] = "is resistant to sleep.";
+    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to sleep.";
+    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to sleep.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -142,10 +142,10 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Fear resistance";
     d.name_short = "rFear";
-    d.msg[size_t(PropMsg::start_player)] = "I feel resistant to fear.";
-    d.msg[size_t(PropMsg::start_mon)] = "is resistant to fear.";
-    d.msg[size_t(PropMsg::end_player)] = "I feel vulnerable to fear.";
-    d.msg[size_t(PropMsg::end_mon)] = "is vulnerable to fear.";
+    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to fear.";
+    d.msg[(size_t)PropMsg::start_mon] = "is resistant to fear.";
+    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to fear.";
+    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to fear.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -158,10 +158,10 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Confusion resistance";
     d.name_short = "rConf";
-    d.msg[size_t(PropMsg::start_player)] = "I feel resistant to confusion.";
-    d.msg[size_t(PropMsg::start_mon)] = "is resistant to confusion.";
-    d.msg[size_t(PropMsg::end_player)] = "I feel vulnerable to confusion.";
-    d.msg[size_t(PropMsg::end_mon)] = "is vulnerable to confusion.";
+    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to confusion.";
+    d.msg[(size_t)PropMsg::start_mon] = "is resistant to confusion.";
+    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to confusion.";
+    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to confusion.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -174,10 +174,10 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Disease resistance";
     d.name_short = "rDisease";
-    d.msg[size_t(PropMsg::start_player)] = "I feel resistant to disease.";
-    d.msg[size_t(PropMsg::start_mon)] = "is resistant to disease.";
-    d.msg[size_t(PropMsg::end_player)] = "I feel vulnerable to disease.";
-    d.msg[size_t(PropMsg::end_mon)] = "is vulnerable to disease.";
+    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to disease.";
+    d.msg[(size_t)PropMsg::start_mon] = "is resistant to disease.";
+    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to disease.";
+    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to disease.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -189,10 +189,10 @@ void init_data_list()
     d.id = PropId::rBlind;
     d.name = "";
     d.name_short = "rBlind";
-    d.msg[size_t(PropMsg::start_player)] = "";
-    d.msg[size_t(PropMsg::start_mon)] = "";
-    d.msg[size_t(PropMsg::end_player)] = "";
-    d.msg[size_t(PropMsg::end_mon)] = "";
+    d.msg[(size_t)PropMsg::start_player] = "";
+    d.msg[(size_t)PropMsg::start_mon] = "";
+    d.msg[(size_t)PropMsg::end_player] = "";
+    d.msg[(size_t)PropMsg::end_mon] = "";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
@@ -205,8 +205,8 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Breath resistance";
     d.name_short = "rBreath";
-    d.msg[size_t(PropMsg::start_player)] = "I can breath without harm.";
-    d.msg[size_t(PropMsg::start_mon)] = "can breath without harm.";
+    d.msg[(size_t)PropMsg::start_player] = "I can breath without harm.";
+    d.msg[(size_t)PropMsg::start_mon] = "can breath without harm.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -218,10 +218,10 @@ void init_data_list()
     d.id = PropId::rSpell;
     d.name = "Spell Resistance";
     d.name_short = "rSpell";
-    d.msg[size_t(PropMsg::start_player)] = "I defy harmful spells!";
-    d.msg[size_t(PropMsg::start_mon)] = "is defying harmful magic spells.";
-    d.msg[size_t(PropMsg::end_player)] = "I feel vulnerable to magic spells.";
-    d.msg[size_t(PropMsg::end_mon)] = "is vulnerable to magic spells.";
+    d.msg[(size_t)PropMsg::start_player] = "I defy harmful spells!";
+    d.msg[(size_t)PropMsg::start_mon] = "is defying harmful magic spells.";
+    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to magic spells.";
+    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to magic spells.";
     d.is_making_mon_aware = false;
     d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
@@ -233,12 +233,12 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Light sensitive";
     d.name_short = "lgtSensitive";
-    d.msg[size_t(PropMsg::start_player)] = "I feel vulnerable to light!";
-    d.msg[size_t(PropMsg::start_mon)] = "is vulnerable to light.";
-    d.msg[size_t(PropMsg::end_player)] = "I no longer feel vulnerable to light.";
-    d.msg[size_t(PropMsg::end_mon)] = "no longer is vulnerable to light.";
-    d.msg[size_t(PropMsg::res_player)] = "";
-    d.msg[size_t(PropMsg::res_mon)] = "";
+    d.msg[(size_t)PropMsg::start_player] = "I feel vulnerable to light!";
+    d.msg[(size_t)PropMsg::start_mon] = "is vulnerable to light.";
+    d.msg[(size_t)PropMsg::end_player] = "I no longer feel vulnerable to light.";
+    d.msg[(size_t)PropMsg::end_mon] = "no longer is vulnerable to light.";
+    d.msg[(size_t)PropMsg::res_player] = "";
+    d.msg[(size_t)PropMsg::res_mon] = "";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -250,12 +250,12 @@ void init_data_list()
     d.std_rnd_turns = Range(20, 30);
     d.name = "Blind";
     d.name_short = "Blind";
-    d.msg[size_t(PropMsg::start_player)] = "I am blinded!";
-    d.msg[size_t(PropMsg::start_mon)] = "is blinded.";
-    d.msg[size_t(PropMsg::end_player)] = "I can see again!";
-    d.msg[size_t(PropMsg::end_mon)] = "can see again.";
-    d.msg[size_t(PropMsg::res_player)] = "";
-    d.msg[size_t(PropMsg::res_mon)] = "";
+    d.msg[(size_t)PropMsg::start_player] = "I am blinded!";
+    d.msg[(size_t)PropMsg::start_mon] = "is blinded.";
+    d.msg[(size_t)PropMsg::end_player] = "I can see again!";
+    d.msg[(size_t)PropMsg::end_mon] = "can see again.";
+    d.msg[(size_t)PropMsg::res_player] = "";
+    d.msg[(size_t)PropMsg::res_mon] = "";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -267,12 +267,12 @@ void init_data_list()
     d.std_rnd_turns = Range(100, 200);
     d.name = "Fainted";
     d.name_short = "Fainted";
-    d.msg[size_t(PropMsg::start_player)] = "I faint!";
-    d.msg[size_t(PropMsg::start_mon)] = "faints.";
-    d.msg[size_t(PropMsg::end_player)] = "I am awake.";
-    d.msg[size_t(PropMsg::end_mon)] = "wakes up.";
-    d.msg[size_t(PropMsg::res_player)] = "I resist fainting.";
-    d.msg[size_t(PropMsg::res_mon)] = "resists fainting.";
+    d.msg[(size_t)PropMsg::start_player] = "I faint!";
+    d.msg[(size_t)PropMsg::start_mon] = "faints.";
+    d.msg[(size_t)PropMsg::end_player] = "I am awake.";
+    d.msg[(size_t)PropMsg::end_mon] = "wakes up.";
+    d.msg[(size_t)PropMsg::res_player] = "I resist fainting.";
+    d.msg[(size_t)PropMsg::res_mon] = "resists fainting.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -284,12 +284,12 @@ void init_data_list()
     d.std_rnd_turns = Range(7, 11);
     d.name = "Burning";
     d.name_short = "Burning";
-    d.msg[size_t(PropMsg::start_player)] = "I am Burning!";
-    d.msg[size_t(PropMsg::start_mon)] = "is burning.";
-    d.msg[size_t(PropMsg::end_player)] = "The flames are put out.";
-    d.msg[size_t(PropMsg::end_mon)] = "is no longer burning.";
-    d.msg[size_t(PropMsg::res_player)] = "I resist burning.";
-    d.msg[size_t(PropMsg::res_mon)] = "resists burning.";
+    d.msg[(size_t)PropMsg::start_player] = "I am Burning!";
+    d.msg[(size_t)PropMsg::start_mon] = "is burning.";
+    d.msg[(size_t)PropMsg::end_player] = "The flames are put out.";
+    d.msg[(size_t)PropMsg::end_mon] = "is no longer burning.";
+    d.msg[(size_t)PropMsg::res_player] = "I resist burning.";
+    d.msg[(size_t)PropMsg::res_mon] = "resists burning.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -302,12 +302,12 @@ void init_data_list()
     d.std_rnd_turns = Range(30, 60);
     d.name = "Poisoned";
     d.name_short = "Poisoned";
-    d.msg[size_t(PropMsg::start_player)] = "I am poisoned!";
-    d.msg[size_t(PropMsg::start_mon)] = "is poisoned.";
-    d.msg[size_t(PropMsg::end_player)] = "My body is cleansed from poisoning!";
-    d.msg[size_t(PropMsg::end_mon)] = "is cleansed from poisoning.";
-    d.msg[size_t(PropMsg::res_player)] = "I resist poisoning.";
-    d.msg[size_t(PropMsg::res_mon)] = "resists poisoning.";
+    d.msg[(size_t)PropMsg::start_player] = "I am poisoned!";
+    d.msg[(size_t)PropMsg::start_mon] = "is poisoned.";
+    d.msg[(size_t)PropMsg::end_player] = "My body is cleansed from poisoning!";
+    d.msg[(size_t)PropMsg::end_mon] = "is cleansed from poisoning.";
+    d.msg[(size_t)PropMsg::res_player] = "I resist poisoning.";
+    d.msg[(size_t)PropMsg::res_mon] = "resists poisoning.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -320,12 +320,12 @@ void init_data_list()
     d.std_rnd_turns = Range(7, 9);
     d.name = "Paralyzed";
     d.name_short = "Paralyzed";
-    d.msg[size_t(PropMsg::start_player)] = "I am paralyzed!";
-    d.msg[size_t(PropMsg::start_mon)] = "is paralyzed.";
-    d.msg[size_t(PropMsg::end_player)] = "I can move again!";
-    d.msg[size_t(PropMsg::end_mon)] = "can move again.";
-    d.msg[size_t(PropMsg::res_player)] = "I resist paralyzation.";
-    d.msg[size_t(PropMsg::res_mon)] = "resists paralyzation.";
+    d.msg[(size_t)PropMsg::start_player] = "I am paralyzed!";
+    d.msg[(size_t)PropMsg::start_mon] = "is paralyzed.";
+    d.msg[(size_t)PropMsg::end_player] = "I can move again!";
+    d.msg[(size_t)PropMsg::end_mon] = "can move again.";
+    d.msg[(size_t)PropMsg::res_player] = "I resist paralyzation.";
+    d.msg[(size_t)PropMsg::res_mon] = "resists paralyzation.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = false;
@@ -338,12 +338,12 @@ void init_data_list()
     d.std_rnd_turns = Range(12, 16);
     d.name = "Terrified";
     d.name_short = "Terrified";
-    d.msg[size_t(PropMsg::start_player)] = "I am terrified!";
-    d.msg[size_t(PropMsg::start_mon)] = "looks terrified.";
-    d.msg[size_t(PropMsg::end_player)] = "I am no longer terrified!";
-    d.msg[size_t(PropMsg::end_mon)] = "is no longer terrified.";
-    d.msg[size_t(PropMsg::res_player)] = "I resist fear.";
-    d.msg[size_t(PropMsg::res_mon)] = "resists fear.";
+    d.msg[(size_t)PropMsg::start_player] = "I am terrified!";
+    d.msg[(size_t)PropMsg::start_mon] = "looks terrified.";
+    d.msg[(size_t)PropMsg::end_player] = "I am no longer terrified!";
+    d.msg[(size_t)PropMsg::end_mon] = "is no longer terrified.";
+    d.msg[(size_t)PropMsg::res_player] = "I resist fear.";
+    d.msg[(size_t)PropMsg::res_mon] = "resists fear.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -356,12 +356,12 @@ void init_data_list()
     d.std_rnd_turns = Range(80, 120);
     d.name = "Confused";
     d.name_short = "Confused";
-    d.msg[size_t(PropMsg::start_player)] = "I am confused!";
-    d.msg[size_t(PropMsg::start_mon)] = "looks confused.";
-    d.msg[size_t(PropMsg::end_player)] = "I come to my senses.";
-    d.msg[size_t(PropMsg::end_mon)] = "is no longer confused.";
-    d.msg[size_t(PropMsg::res_player)] = "I manage to keep my head together.";
-    d.msg[size_t(PropMsg::res_mon)] = "resists confusion.";
+    d.msg[(size_t)PropMsg::start_player] = "I am confused!";
+    d.msg[(size_t)PropMsg::start_mon] = "looks confused.";
+    d.msg[(size_t)PropMsg::end_player] = "I come to my senses.";
+    d.msg[(size_t)PropMsg::end_mon] = "is no longer confused.";
+    d.msg[(size_t)PropMsg::res_player] = "I manage to keep my head together.";
+    d.msg[(size_t)PropMsg::res_mon] = "resists confusion.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -374,12 +374,12 @@ void init_data_list()
     d.std_rnd_turns = Range(5, 9);
     d.name = "Stunned";
     d.name_short = "Stunned";
-    d.msg[size_t(PropMsg::start_player)] = "I am stunned!";
-    d.msg[size_t(PropMsg::start_mon)] = "is stunned.";
-    d.msg[size_t(PropMsg::end_player)] = "I am no longer stunned.";
-    d.msg[size_t(PropMsg::end_mon)] = "is no longer stunned.";
-    d.msg[size_t(PropMsg::res_player)] = "I resist stunning.";
-    d.msg[size_t(PropMsg::res_mon)] = "resists stunning.";
+    d.msg[(size_t)PropMsg::start_player] = "I am stunned!";
+    d.msg[(size_t)PropMsg::start_mon] = "is stunned.";
+    d.msg[(size_t)PropMsg::end_player] = "I am no longer stunned.";
+    d.msg[(size_t)PropMsg::end_mon] = "is no longer stunned.";
+    d.msg[(size_t)PropMsg::res_player] = "I resist stunning.";
+    d.msg[(size_t)PropMsg::res_mon] = "resists stunning.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -392,12 +392,12 @@ void init_data_list()
     d.std_rnd_turns = Range(16, 24);
     d.name = "Slowed";
     d.name_short = "Slowed";
-    d.msg[size_t(PropMsg::start_player)] = "Everything around me seems to speed up.";
-    d.msg[size_t(PropMsg::start_mon)] = "slows down.";
-    d.msg[size_t(PropMsg::end_player)] = "Everything around me seems to slow down.";
-    d.msg[size_t(PropMsg::end_mon)] = "speeds up.";
-    d.msg[size_t(PropMsg::res_player)] = "I resist slowness.";
-    d.msg[size_t(PropMsg::res_mon)] = "resists slowness.";
+    d.msg[(size_t)PropMsg::start_player] = "Everything around me seems to speed up.";
+    d.msg[(size_t)PropMsg::start_mon] = "slows down.";
+    d.msg[(size_t)PropMsg::end_player] = "Everything around me seems to slow down.";
+    d.msg[(size_t)PropMsg::end_mon] = "speeds up.";
+    d.msg[(size_t)PropMsg::res_player] = "I resist slowness.";
+    d.msg[(size_t)PropMsg::res_mon] = "resists slowness.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -410,10 +410,10 @@ void init_data_list()
     d.std_rnd_turns = Range(12, 16);
     d.name = "Hasted";
     d.name_short = "Hasted";
-    d.msg[size_t(PropMsg::start_player)] = "Everything around me seems to slow down.";
-    d.msg[size_t(PropMsg::start_mon)] = "speeds up.";
-    d.msg[size_t(PropMsg::end_player)] = "Everything around me seems to speed up.";
-    d.msg[size_t(PropMsg::end_mon)] = "slows down.";
+    d.msg[(size_t)PropMsg::start_player] = "Everything around me seems to slow down.";
+    d.msg[(size_t)PropMsg::start_mon] = "speeds up.";
+    d.msg[(size_t)PropMsg::end_player] = "Everything around me seems to speed up.";
+    d.msg[(size_t)PropMsg::end_mon] = "slows down.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -424,7 +424,7 @@ void init_data_list()
 
     d.id = PropId::flared;
     d.std_rnd_turns = Range(3, 4);
-    d.msg[size_t(PropMsg::start_mon)] = "is perforated by a flare!";
+    d.msg[(size_t)PropMsg::start_mon] = "is perforated by a flare!";
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
@@ -434,10 +434,10 @@ void init_data_list()
 
     d.id = PropId::nailed;
     d.name = "Nailed";
-    d.msg[size_t(PropMsg::start_player)] = "I am fastened by a spike!";
-    d.msg[size_t(PropMsg::start_mon)] = "is fastened by a spike.";
-    d.msg[size_t(PropMsg::end_player)] = "I tear free!";
-    d.msg[size_t(PropMsg::end_mon)] = "tears free!";
+    d.msg[(size_t)PropMsg::start_player] = "I am fastened by a spike!";
+    d.msg[(size_t)PropMsg::start_mon] = "is fastened by a spike.";
+    d.msg[(size_t)PropMsg::end_player] = "I tear free!";
+    d.msg[(size_t)PropMsg::end_mon] = "tears free!";
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
@@ -448,8 +448,8 @@ void init_data_list()
     d.id = PropId::wound;
     d.name = "Wound";
     d.name_short = "Wound";
-    d.msg[size_t(PropMsg::start_player)] = "I am wounded!";
-    d.msg[size_t(PropMsg::res_player)] = "I resist wounding!";
+    d.msg[(size_t)PropMsg::start_player] = "I am wounded!";
+    d.msg[(size_t)PropMsg::res_player] = "I resist wounding!";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
@@ -462,7 +462,7 @@ void init_data_list()
     d.std_rnd_turns = Range(1, 1);
     d.name = "Charged";
     d.name_short = "Charged";
-    d.msg[size_t(PropMsg::start_player)] = "I am burning with power!";
+    d.msg[(size_t)PropMsg::start_player] = "I am burning with power!";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
@@ -474,12 +474,12 @@ void init_data_list()
     d.std_rnd_turns = Range(100, 200);
     d.name = "Infected";
     d.name_short = "Infected";
-    d.msg[size_t(PropMsg::start_player)] = "I am infected!";
-    d.msg[size_t(PropMsg::start_mon)] = "is infected.";
-    d.msg[size_t(PropMsg::end_player)] = "My infection is cured!";
-    d.msg[size_t(PropMsg::end_mon)] = "is no longer infected.";
-    d.msg[size_t(PropMsg::res_player)] = "";
-    d.msg[size_t(PropMsg::res_mon)] = "";
+    d.msg[(size_t)PropMsg::start_player] = "I am infected!";
+    d.msg[(size_t)PropMsg::start_mon] = "is infected.";
+    d.msg[(size_t)PropMsg::end_player] = "My infection is cured!";
+    d.msg[(size_t)PropMsg::end_mon] = "is no longer infected.";
+    d.msg[(size_t)PropMsg::res_player] = "";
+    d.msg[(size_t)PropMsg::res_mon] = "";
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
@@ -492,12 +492,12 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Diseased";
     d.name_short = "Diseased";
-    d.msg[size_t(PropMsg::start_player)] = "I am diseased!";
-    d.msg[size_t(PropMsg::start_mon)] = "is diseased.";
-    d.msg[size_t(PropMsg::end_player)] = "My disease is cured!";
-    d.msg[size_t(PropMsg::end_mon)] = "is no longer diseased.";
-    d.msg[size_t(PropMsg::res_player)] = "I resist disease.";
-    d.msg[size_t(PropMsg::res_mon)] = "resists disease.";
+    d.msg[(size_t)PropMsg::start_player] = "I am diseased!";
+    d.msg[(size_t)PropMsg::start_mon] = "is diseased.";
+    d.msg[(size_t)PropMsg::end_player] = "My disease is cured!";
+    d.msg[(size_t)PropMsg::end_mon] = "is no longer diseased.";
+    d.msg[(size_t)PropMsg::res_player] = "I resist disease.";
+    d.msg[(size_t)PropMsg::res_mon] = "resists disease.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -510,9 +510,9 @@ void init_data_list()
     d.std_rnd_turns = Range(20, 30);
     d.name = "Descending";
     d.name_short = "Descend";
-    d.msg[size_t(PropMsg::start_player)] = "I feel a sinking sensation.";
-    d.msg[size_t(PropMsg::end_player)] = "";
-    d.msg[size_t(PropMsg::res_player)] = "";
+    d.msg[(size_t)PropMsg::start_player] = "I feel a sinking sensation.";
+    d.msg[(size_t)PropMsg::end_player] = "";
+    d.msg[(size_t)PropMsg::res_player] = "";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = false;
@@ -525,12 +525,12 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Weakened";
     d.name_short = "Weakened";
-    d.msg[size_t(PropMsg::start_player)] = "I feel weaker.";
-    d.msg[size_t(PropMsg::start_mon)] = "looks weaker.";
-    d.msg[size_t(PropMsg::end_player)] = "I feel stronger!";
-    d.msg[size_t(PropMsg::end_mon)] = "looks stronger!";
-    d.msg[size_t(PropMsg::res_player)] = "I resist weakness.";
-    d.msg[size_t(PropMsg::res_mon)] = "resists weakness.";
+    d.msg[(size_t)PropMsg::start_player] = "I feel weaker.";
+    d.msg[(size_t)PropMsg::start_mon] = "looks weaker.";
+    d.msg[(size_t)PropMsg::end_player] = "I feel stronger!";
+    d.msg[(size_t)PropMsg::end_mon] = "looks stronger!";
+    d.msg[(size_t)PropMsg::res_player] = "I resist weakness.";
+    d.msg[(size_t)PropMsg::res_mon] = "resists weakness.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -543,12 +543,12 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Frenzied";
     d.name_short = "Frenzied";
-    d.msg[size_t(PropMsg::start_player)] = "I feel ferocious!!!";
-    d.msg[size_t(PropMsg::start_mon)] = "Looks ferocious!";
-    d.msg[size_t(PropMsg::end_player)] = "I calm down.";
-    d.msg[size_t(PropMsg::end_mon)] = "Calms down a little.";
-    d.msg[size_t(PropMsg::res_player)] = "";
-    d.msg[size_t(PropMsg::res_mon)] = "";
+    d.msg[(size_t)PropMsg::start_player] = "I feel ferocious!!!";
+    d.msg[(size_t)PropMsg::start_mon] = "Looks ferocious!";
+    d.msg[(size_t)PropMsg::end_player] = "I calm down.";
+    d.msg[(size_t)PropMsg::end_mon] = "Calms down a little.";
+    d.msg[(size_t)PropMsg::res_player] = "";
+    d.msg[(size_t)PropMsg::res_mon] = "";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -561,8 +561,8 @@ void init_data_list()
     d.std_rnd_turns = Range(400, 600);
     d.name = "Blessed";
     d.name_short = "Blessed";
-    d.msg[size_t(PropMsg::start_player)] = "I feel luckier.";
-    d.msg[size_t(PropMsg::end_player)] = "I have normal luck.";
+    d.msg[(size_t)PropMsg::start_player] = "I feel luckier.";
+    d.msg[(size_t)PropMsg::end_player] = "I have normal luck.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -575,9 +575,9 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Cursed";
     d.name_short = "Cursed";
-    d.msg[size_t(PropMsg::start_player)] = "I feel misfortunate.";
-    d.msg[size_t(PropMsg::end_player)] = "I feel more fortunate.";
-    d.msg[size_t(PropMsg::res_player)] = "I resist misfortune.";
+    d.msg[(size_t)PropMsg::start_player] = "I feel misfortunate.";
+    d.msg[(size_t)PropMsg::end_player] = "I feel more fortunate.";
+    d.msg[(size_t)PropMsg::res_player] = "I resist misfortune.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -590,8 +590,8 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Radiant";
     d.name_short = "Radiant";
-    d.msg[size_t(PropMsg::start_player)] = "A bright light shines around me.";
-    d.msg[size_t(PropMsg::end_player)] = "It suddenly gets darker.";
+    d.msg[(size_t)PropMsg::start_player] = "A bright light shines around me.";
+    d.msg[(size_t)PropMsg::end_player] = "It suddenly gets darker.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -604,10 +604,10 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Invisible";
     d.name_short = "Invis";
-    d.msg[size_t(PropMsg::start_player)] = "I am out of sight for normal eyes!";
-    d.msg[size_t(PropMsg::start_mon)] = "is out of sight for normal eyes!";
-    d.msg[size_t(PropMsg::end_player)] = "I am visible to normal eyes.";
-    d.msg[size_t(PropMsg::end_mon)] = "is visible to normal eyes.";
+    d.msg[(size_t)PropMsg::start_player] = "I am out of sight!";
+    d.msg[(size_t)PropMsg::start_mon] = "is out of sight!";
+    d.msg[(size_t)PropMsg::end_player] = "I am visible.";
+    d.msg[(size_t)PropMsg::end_mon] = "is visible.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -620,10 +620,10 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "See Invisible";
     d.name_short = "SeeInvis";
-    d.msg[size_t(PropMsg::start_player)] = "My eyes perceive the invisible.";
-    d.msg[size_t(PropMsg::start_mon)] = "seems to see very clearly.";
-    d.msg[size_t(PropMsg::end_player)] = "My eyes can no longer perceive the invisible.";
-    d.msg[size_t(PropMsg::end_mon)] = "seems to see less clearly.";
+    d.msg[(size_t)PropMsg::start_player] = "My eyes perceive the invisible.";
+    d.msg[(size_t)PropMsg::start_mon] = "seems to see very clearly.";
+    d.msg[(size_t)PropMsg::end_player] = "My eyes can no longer perceive the invisible.";
+    d.msg[(size_t)PropMsg::end_mon] = "seems to see less clearly.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -636,10 +636,10 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Infravision";
     d.name_short = "Infravision";
-    d.msg[size_t(PropMsg::start_player)] = "I have infravision.";
-    d.msg[size_t(PropMsg::end_player)] = "I no longer have infravision.";
-    d.msg[size_t(PropMsg::res_player)] = "";
-    d.msg[size_t(PropMsg::res_mon)] = "";
+    d.msg[(size_t)PropMsg::start_player] = "I have infravision.";
+    d.msg[(size_t)PropMsg::end_player] = "I no longer have infravision.";
+    d.msg[(size_t)PropMsg::res_player] = "";
+    d.msg[(size_t)PropMsg::res_mon] = "";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -652,8 +652,8 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Teleport Control";
     d.name_short = "TeleCtrl";
-    d.msg[size_t(PropMsg::start_player)] = "I feel in control.";
-    d.msg[size_t(PropMsg::end_player)] = "I feel less in control.";
+    d.msg[(size_t)PropMsg::start_player] = "I feel in control.";
+    d.msg[(size_t)PropMsg::end_player] = "I feel less in control.";
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
@@ -665,8 +665,8 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Spell Reflection";
     d.name_short = "SpellRefl";
-    d.msg[size_t(PropMsg::start_player)] = "Spells reflect off me!";
-    d.msg[size_t(PropMsg::end_player)] = "I am vulnerable to spells.";
+    d.msg[(size_t)PropMsg::start_player] = "Spells reflect off me!";
+    d.msg[(size_t)PropMsg::end_player] = "I am vulnerable to spells.";
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
@@ -708,8 +708,8 @@ void init_data_list()
     d.id = PropId::conflict;
     d.name_short = "Conflict";
     d.std_rnd_turns = Range(10, 20);
-    d.msg[size_t(PropMsg::start_mon)] = "Looks conflicted.";
-    d.msg[size_t(PropMsg::end_mon)] = "Looks more determined.";
+    d.msg[(size_t)PropMsg::start_mon] = "Looks conflicted.";
+    d.msg[(size_t)PropMsg::end_mon] = "Looks more determined.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
@@ -1367,7 +1367,7 @@ void PropHandler::try_add_from_att(const Wpn& wpn, const bool is_melee)
 
 void PropHandler::incr_active_props_info(const PropId id)
 {
-    int& v = active_props_info_[size_t(id)];
+    int& v = active_props_info_[(size_t)id];
 
 #ifndef NDEBUG
     if (v < 0)
@@ -1382,7 +1382,7 @@ void PropHandler::incr_active_props_info(const PropId id)
 
 void PropHandler::decr_active_props_info(const PropId id)
 {
-    int& v = active_props_info_[size_t(id)];
+    int& v = active_props_info_[(size_t)id];
 
 #ifndef NDEBUG
     if (v <= 0)
@@ -1543,7 +1543,7 @@ void PropHandler::props_interface_line(std::vector<StrAndClr>& line) const
                 //Player can see number of turns left on own properties with Self-aware?
                 if (
                     owning_actor_->is_player() &&
-                    player_bon::traits[size_t(Trait::self_aware)] &&
+                    player_bon::traits[(size_t)Trait::self_aware] &&
                     prop->allow_display_turns())
                 {
                     str += ":" + to_str(turns_left);
@@ -1807,7 +1807,7 @@ bool PropHandler::affect_actor_clr(Clr& clr) const
 //-----------------------------------------------------------------------------
 Prop::Prop(PropId id, PropTurns turns_init, int nr_turns) :
     id_                 (id),
-    data_               (prop_data::data[size_t(id)]),
+    data_               (prop_data::data[(size_t)id]),
     nr_turns_left_      (nr_turns),
     turns_init_type_    (turns_init),
     owning_actor_       (nullptr),
@@ -1985,7 +1985,7 @@ void PropPossByZuul::on_death(const bool is_player_see_owning_actor)
                           MakeMonAware::yes);
 
     //Zuul is now free, allow him to spawn.
-    actor_data::data[size_t(ActorId::zuul)].nr_left_allowed_to_spawn = -1;
+    actor_data::data[(size_t)ActorId::zuul].nr_left_allowed_to_spawn = -1;
 }
 
 Prop* PropPoisoned::on_new_turn()
@@ -2109,7 +2109,7 @@ void PropWound::msg(const PropMsg msg_type, std::string& msg_ref) const
     {
     case PropMsg::start_player:
     case PropMsg::res_player:
-        msg_ref = data_.msg[size_t(msg_type)];
+        msg_ref = data_.msg[(size_t)msg_type];
         break;
 
     case PropMsg::end_player:
@@ -2130,7 +2130,7 @@ void PropWound::msg(const PropMsg msg_type, std::string& msg_ref) const
 int PropWound::ability_mod(const AbilityId ability) const
 {
     const bool is_survivalist = owning_actor_->is_player() &&
-                                player_bon::traits[size_t(Trait::survivalist)];
+                                player_bon::traits[(size_t)Trait::survivalist];
 
     const int div = is_survivalist ? 2 : 1;
 
@@ -2163,7 +2163,7 @@ int PropWound::affect_max_hp(const int hp_max) const
     int hp_pen_pct = nr_wounds_ * pen_pct_per_wound;
 
     const bool is_survivalist = owning_actor_->is_player() &&
-                                player_bon::traits[size_t(Trait::survivalist)];
+                                player_bon::traits[(size_t)Trait::survivalist];
 
     if (is_survivalist)
     {

@@ -316,7 +316,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.is_stackable = false;
         d.land_on_hard_snd_msg = "I hear a clanking sound.";
         d.land_on_hard_sfx = SfxId::metal_clank;
-        d.chance_to_incl_in_floor_spawn_list = 4;
+        d.chance_to_incl_in_floor_spawn_list = 20;
         add_feature_found_in(d, FeatureId::chest, 8);
         add_feature_found_in(d, FeatureId::cocoon, 8);
         break;

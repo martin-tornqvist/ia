@@ -86,10 +86,7 @@ void Rod::on_std_turn_in_inv(const InvType inv_type)
         {
             const std::string rod_name = name(ItemRefType::plain, ItemRefInf::none);
 
-            msg_log::add("The " + rod_name + " has finished charging.",
-                         clr_msg_note,
-                         false,
-                         MorePromptOnMsg::yes);
+            msg_log::add("The " + rod_name + " has finished charging.");
         }
     }
 }

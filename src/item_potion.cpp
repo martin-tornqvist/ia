@@ -495,20 +495,30 @@ void PotionInsight::quaff_impl(Actor& actor)
         }
     }
 
-    const size_t NR_elementS = identify_bucket.size();
-
-    if (NR_elementS > 0)
+    if (identify_bucket.empty())
     {
-        const int     idx                   = rnd::range(0, NR_elementS - 1);
-        Item* const   item                  = identify_bucket[idx];
-        const std::string  item_name_before = item->name(ItemRefType::a, ItemRefInf::none);
+        //No items to identify, give XP if Insight potion is identified
+        if (data_->is_identified)
+        {
+            give_xp_for_identify(Verbosity::verbose);
+        }
+    }
+    else //There are items to identify
+    {
+        Item* const item = rnd::element(identify_bucket);
+
+        const std::string item_name_before =
+            item->name(ItemRefType::a, ItemRefInf::none);
 
         msg_log::add("I gain intuitions about " + item_name_before + "...",
-                     clr_white, false, MorePromptOnMsg::yes);
+                     clr_white,
+                     false,
+                     MorePromptOnMsg::yes);
 
         item->identify(Verbosity::verbose);
 
-        const std::string item_name_after = item->name(ItemRefType::a, ItemRefInf::none);
+        const std::string item_name_after =
+            item->name(ItemRefType::a, ItemRefInf::none);
     }
 
     identify(Verbosity::verbose);
