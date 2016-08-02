@@ -16,7 +16,6 @@ enum class Trait
     //Common (except some traits can be blocked for certain backgrounds)
     adept_melee_fighter,
     expert_melee_fighter,
-    master_melee_fighter,
     adept_marksman,
     expert_marksman,
     cool_headed,
@@ -24,7 +23,6 @@ enum class Trait
     dexterous,
     fearless,
     imperceptible,
-    vicious,
     stealthy,
     mobile,
     lithe,
@@ -37,12 +35,10 @@ enum class Trait
     rapid_recoverer,
     survivalist,
     perseverant,
-    stout_spirit,
     strong_spirit,
     mighty_spirit,
     tough,
     rugged,
-    unbreakable,
     strong_backed,
     undead_bane,
 
@@ -55,13 +51,12 @@ enum class Trait
     //Unique for Occultist
     warlock,
     summoner,
-    blood_sorcerer,
     seer,
 
     //Unique for Rogue
+    vicious,
 
     //Unique for War veteran
-    master_marksman,
     fast_shooter,
     courageous,
     steady_aimer,

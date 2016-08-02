@@ -231,27 +231,9 @@ void try_cast(const SpellOpt& spell_opt)
             msg_log::clear();
         }
 
-        const bool is_blood_sorc = player_bon::traits[size_t(Trait::blood_sorcerer)];
-        const bool is_warlock    = player_bon::traits[size_t(Trait::warlock)];
-
-        const int blood_sorc_hp_drained = 2;
-
-        if (is_blood_sorc)
-        {
-            if (map::player->hp() <= blood_sorc_hp_drained)
-            {
-                msg_log::add("I do not have enough life force to cast this spell.");
-                render::draw_map_state();
-                return;
-            }
-        }
-
         msg_log::add("I cast " + spell->name() + "!");
 
-        if (is_blood_sorc)
-        {
-            map::player->hit(blood_sorc_hp_drained, DmgType::pure);
-        }
+        const bool is_warlock = player_bon::traits[size_t(Trait::warlock)];
 
         if (map::player->is_alive())
         {

@@ -189,11 +189,6 @@ void Door::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* con
                         destr_chance.num += 2;
                     }
 
-                    if (player_bon::traits[size_t(Trait::unbreakable)])
-                    {
-                        destr_chance.num += 2;
-                    }
-
                     if (destr_chance.roll())
                     {
 
@@ -243,11 +238,6 @@ void Door::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* con
                     }
 
                     if (player_bon::traits[(size_t)Trait::rugged])
-                    {
-                        destr_chance.num += 2;
-                    }
-
-                    if (player_bon::traits[(size_t)Trait::unbreakable])
                     {
                         destr_chance.num += 2;
                     }

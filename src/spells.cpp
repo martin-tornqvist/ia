@@ -173,14 +173,8 @@ Range Spell::spi_cost(const bool is_base_cost_only, Actor* const caster) const
         }
 
         bool is_warlock     = player_bon::traits[(size_t)Trait::warlock];
-        bool is_blood_sorc  = player_bon::traits[(size_t)Trait::blood_sorcerer];
-        bool IS_SEER        = player_bon::traits[(size_t)Trait::seer];
-        bool IS_SUMMONER    = player_bon::traits[(size_t)Trait::summoner];
-
-        if (is_blood_sorc)
-        {
-            --cost_max;
-        }
+        bool is_seer        = player_bon::traits[(size_t)Trait::seer];
+        bool is_summoner    = player_bon::traits[(size_t)Trait::summoner];
 
         switch (id())
         {
@@ -206,42 +200,42 @@ Range Spell::spi_cost(const bool is_base_cost_only, Actor* const caster) const
             break;
 
         case SpellId::det_mon:
-            if (IS_SEER)
+            if (is_seer)
             {
                 --cost_max;
             }
             break;
 
         case SpellId::det_items:
-            if (IS_SEER)
+            if (is_seer)
             {
                 cost_max -= 3;
             }
             break;
 
         case SpellId::det_traps:
-            if (IS_SEER)
+            if (is_seer)
             {
                 cost_max -= 3;
             }
             break;
 
         case SpellId::summon:
-            if (IS_SUMMONER)
+            if (is_summoner)
             {
                 --cost_max;
             }
             break;
 
         case SpellId::pest:
-            if (IS_SUMMONER)
+            if (is_summoner)
             {
                 --cost_max;
             }
             break;
 
         case SpellId::pharaoh_staff:
-            if (IS_SUMMONER)
+            if (is_summoner)
             {
                 --cost_max;
             }

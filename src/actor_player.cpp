@@ -420,11 +420,12 @@ void Player::on_hit(int& dmg,
     const bool is_physical              = dmg_type == DmgType::physical;
 
     //Ghoul trait Indomitable Fury makes player immune to Wounds while Frenzied
-    const bool is_ghoul_resist_wound = player_bon::traits[(size_t)Trait::indomitable_fury] &&
-                                       prop_handler_->has_prop(PropId::frenzied);
+    const bool is_ghoul_resist_wound =
+        player_bon::traits[(size_t)Trait::indomitable_fury] &&
+        prop_handler_->has_prop(PropId::frenzied);
 
     if (
-        allow_wound == AllowWound::yes &&
+        allow_wound == AllowWound::yes  &&
         is_enough_dmg_for_wound         &&
         is_physical                     &&
         !is_ghoul_resist_wound          &&
@@ -486,14 +487,12 @@ int Player::carry_weight_lmt() const
 {
     const bool is_tough         = player_bon::traits[(size_t)Trait::tough];
     const bool is_rugged        = player_bon::traits[(size_t)Trait::rugged];
-    const bool is_unbreakable   = player_bon::traits[(size_t)Trait::unbreakable];
     const bool is_strong_backed = player_bon::traits[(size_t)Trait::strong_backed];
 
     const bool is_weakened      = has_prop(PropId::weakened);
 
     const int carry_weight_mod = (is_tough         * 10) +
                                  (is_rugged        * 10) +
-                                 (is_unbreakable   * 10) +
                                  (is_strong_backed * 30) -
                                  (is_weakened      * 15);
 
@@ -969,9 +968,8 @@ void Player::on_std_turn()
     update_tmp_shock();
 
     //Spell resistance
-    const int spi_trait_lvl = player_bon::traits[(size_t)Trait::mighty_spirit] ? 3 :
-                              player_bon::traits[(size_t)Trait::strong_spirit] ? 2 :
-                              player_bon::traits[(size_t)Trait::stout_spirit]  ? 1 : 0;
+    const int spi_trait_lvl = player_bon::traits[(size_t)Trait::mighty_spirit]  ? 2 :
+                              player_bon::traits[(size_t)Trait::strong_spirit]  ? 1 : 0;
 
     if (spi_trait_lvl > 0 && !prop_handler_->has_prop(PropId::rSpell))
     {
@@ -1255,8 +1253,7 @@ void Player::on_std_turn()
     //Try to spot hidden traps and doors
     if (!has_prop(PropId::confused) && prop_handler_->allow_see())
     {
-        const int r = player_bon::traits[(size_t)Trait::perceptive] ? 3 :
-                      player_bon::traits[(size_t)Trait::observant]  ? 2 : 1;
+        const int r = player_bon::traits[(size_t)Trait::perceptive] ? 2 : 1;
 
         int x0 = std::max(0, pos.x - r);
         int y0 = std::max(0, pos.y - r);

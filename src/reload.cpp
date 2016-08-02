@@ -197,12 +197,11 @@ void try_reload(Actor& actor, Item* const item_to_reload)
     {
         if (actor.is_player())
         {
-            const int SWIFT_RELOAD_N_IN_10 =
-                player_bon::traits[size_t(Trait::master_marksman)]  ? 7 :
-                player_bon::traits[size_t(Trait::expert_marksman)]  ? 5 :
-                player_bon::traits[size_t(Trait::adept_marksman)]   ? 3 : 0;
+            const int swift_reload_n_in_10 =
+                player_bon::traits[size_t(Trait::expert_marksman)]  ? 9 :
+                player_bon::traits[size_t(Trait::adept_marksman)]   ? 4 : 0;
 
-            pass_time = rnd::fraction(SWIFT_RELOAD_N_IN_10, 10) ?
+            pass_time = rnd::fraction(swift_reload_n_in_10, 10) ?
                         PassTime::no : PassTime::yes;
         }
 

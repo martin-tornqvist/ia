@@ -35,7 +35,7 @@ void Monolith::bump(Actor& actor_bumping)
 {
     if (actor_bumping.is_player())
     {
-        msg_log::add("I recite the inscriptions carved on the Monolith!");
+        msg_log::add("I recite the inscriptions on the Monolith...");
 
         if (is_activated_)
         {
@@ -54,6 +54,8 @@ void Monolith::bump(Actor& actor_bumping)
 
 void Monolith::activate()
 {
+    msg_log::add("I feel powerful!");
+
     dungeon_master::incr_player_xp(25);
 
     is_activated_ = true;
@@ -71,7 +73,7 @@ void Monolith::activate()
     }
 
     //Spawn monsters?
-    if (rnd::coin_toss())
+    if (rnd::one_in(3))
     {
         spawn_monsters();
     }
@@ -105,7 +107,7 @@ void Monolith::spawn_monsters()
 
     std::vector<Mon*> mon_summoned;
 
-    const size_t nr_mon = rnd::range(2, 3);
+    const size_t nr_mon = rnd::range(3, 4);
 
     actor_factory::summon(pos_,
                           {nr_mon, mon_id},

@@ -100,11 +100,6 @@ DiceParam Item::dmg(const AttMode att_mode, const Actor* const actor) const
             {
                 ++out.plus;
             }
-
-            if (player_bon::traits[size_t(Trait::master_melee_fighter)])
-            {
-                ++out.plus;
-            }
         }
 
         //Bonus damage from being frenzied?
@@ -119,7 +114,7 @@ DiceParam Item::dmg(const AttMode att_mode, const Actor* const actor) const
     {
         out = data_->ranged.dmg;
 
-        if (actor == map::player && player_bon::traits[size_t(Trait::master_marksman)])
+        if (actor == map::player && player_bon::traits[size_t(Trait::expert_marksman)])
         {
             ++out.plus;
         }
@@ -141,7 +136,7 @@ DiceParam Item::dmg(const AttMode att_mode, const Actor* const actor) const
             out = data_->ranged.throw_dmg;
         }
 
-        if (actor == map::player && player_bon::traits[size_t(Trait::master_marksman)])
+        if (actor == map::player && player_bon::traits[size_t(Trait::expert_marksman)])
         {
             ++out.plus;
         }

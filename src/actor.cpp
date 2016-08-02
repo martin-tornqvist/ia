@@ -289,11 +289,6 @@ void Actor::on_std_turn_common()
 
         if (is_player())
         {
-            if (player_bon::traits[size_t(Trait::stout_spirit)])
-            {
-                regen_spi_n_turns -= 3;
-            }
-
             if (player_bon::traits[size_t(Trait::strong_spirit)])
             {
                 regen_spi_n_turns -= 3;

@@ -1834,7 +1834,7 @@ void ItemContainer::init(const FeatureId feature_id, const int nr_items_to_attem
                 const int     idx = rnd::range(0, item_bucket.size() - 1);
                 const ItemId id  = item_bucket[idx];
 
-                if (item_data::data[size_t(id)].allow_spawn)
+                if (item_data::data[(size_t)id].allow_spawn)
                 {
                     Item* item = item_factory::mk(item_bucket[idx]);
                     item_factory::set_item_randomized_properties(item);
@@ -1885,7 +1885,7 @@ void ItemContainer::open(const P& feature_pos, Actor* const actor_opening)
 
                 Inventory& inv = map::player->inv();
 
-                Item* const thrown_item = inv.slots_[size_t(SlotId::thrown)].item;
+                Item* const thrown_item = inv.slots_[(size_t)SlotId::thrown].item;
 
                 if (thrown_item && thrown_item->id() == item->id())
                 {
@@ -1964,7 +1964,7 @@ Tomb::Tomb(const P& p) :
 {
     //Contained items
     const int nr_items_min  = 0;
-    const int nr_items_max  = player_bon::traits[size_t(Trait::treasure_hunter)] ? 2 : 1;
+    const int nr_items_max  = player_bon::traits[(size_t)Trait::treasure_hunter] ? 2 : 1;
 
     item_container_.init(FeatureId::tomb, rnd::range(nr_items_min, nr_items_max));
 
@@ -2004,11 +2004,11 @@ Tomb::Tomb(const P& p) :
     {
         std::vector<int> weights(size_t(TombTrait::END) + 1, 0);
 
-        weights[size_t(TombTrait::ghost)]          = 5;
-        weights[size_t(TombTrait::other_undead)]   = 3;
-        weights[size_t(TombTrait::stench)]         = 2;
-        weights[size_t(TombTrait::cursed)]         = 1;
-        weights[size_t(TombTrait::END)]            = 2;
+        weights[(size_t)TombTrait::ghost]          = 5;
+        weights[(size_t)TombTrait::other_undead]   = 3;
+        weights[(size_t)TombTrait::stench]         = 2;
+        weights[(size_t)TombTrait::cursed]         = 1;
+        weights[(size_t)TombTrait::END]            = 2;
 
         trait_ = TombTrait(rnd::weighted_choice(weights));
     }
@@ -2121,9 +2121,8 @@ void Tomb::bump(Actor& actor_bumping)
                 else //Not weakened
                 {
                     const int bon =
-                        player_bon::traits[size_t(Trait::unbreakable)]  ? 12  :
-                        player_bon::traits[size_t(Trait::rugged)]       ? 8   :
-                        player_bon::traits[size_t(Trait::tough)]        ? 4   : 0;
+                        player_bon::traits[(size_t)Trait::rugged]   ? 8   :
+                        player_bon::traits[(size_t)Trait::tough]    ? 4   : 0;
 
                     TRACE << "Base chance to push lid is: 1 in "
                           << push_lid_one_in_n_ << std::endl;
@@ -2174,9 +2173,8 @@ void Tomb::bump(Actor& actor_bumping)
 void Tomb::try_sprain_player()
 {
     const int sprain_one_in_n =
-        player_bon::traits[size_t(Trait::unbreakable)]  ? 10 :
-        player_bon::traits[size_t(Trait::rugged)]       ? 8  :
-        player_bon::traits[size_t(Trait::tough)]        ? 6  : 4;
+        player_bon::traits[(size_t)Trait::rugged]   ? 8  :
+        player_bon::traits[(size_t)Trait::tough]    ? 6  : 4;
 
     if (rnd::one_in(sprain_one_in_n))
     {
@@ -2366,7 +2364,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
                 const ActorDataT& d = actor_data::data[i];
 
                 if (
-                    d.natural_props[size_t(PropId::ooze)]  &&
+                    d.natural_props[(size_t)PropId::ooze]   &&
                     d.is_auto_spawn_allowed                 &&
                     !d.is_unique)
                 {
@@ -2467,10 +2465,8 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
 
         if (mon_spawned)
         {
-            TRACE << "Setting disabled attack property on summoned monster" << std::endl;
-
             mon_spawned->prop_handler().try_add(
-                new PropDisabledAttack(PropTurns::specific, 1));
+                new PropWaiting(PropTurns::specific, 1));
         }
     }
 
@@ -2554,9 +2550,9 @@ void Chest::try_find_trap()
     ASSERT(!is_open_);
 
     const bool can_det_trap =
-        trap_det_lvl == 0                           ||
-        player_bon::traits[size_t(Trait::perceptive)]  ||
-        (trap_det_lvl == 1 && player_bon::traits[size_t(Trait::observant)]);
+        trap_det_lvl == 0                               ||
+        player_bon::traits[(size_t)Trait::perceptive]   ||
+        (trap_det_lvl == 1 && player_bon::traits[(size_t)Trait::observant]);
 
     if (can_det_trap)
     {
@@ -2569,9 +2565,8 @@ void Chest::try_find_trap()
 void Chest::try_sprain_player()
 {
     const int sprain_one_in_n =
-        player_bon::traits[size_t(Trait::unbreakable)]  ? 10 :
-        player_bon::traits[size_t(Trait::rugged)]       ? 8  :
-        player_bon::traits[size_t(Trait::tough)]        ? 6  : 4;
+        player_bon::traits[(size_t)Trait::rugged]   ? 8  :
+        player_bon::traits[(size_t)Trait::tough]    ? 6  : 4;
 
     if (rnd::one_in(sprain_one_in_n))
     {
@@ -2674,9 +2669,8 @@ void Chest::hit(const DmgType dmg_type,
                     }
 
                     const int open_one_in_n =
-                        player_bon::traits[size_t(Trait::unbreakable)]  ? 1 :
-                        player_bon::traits[size_t(Trait::rugged)]       ? 2 :
-                        player_bon::traits[size_t(Trait::tough)]        ? 3 : 4;
+                        player_bon::traits[(size_t)Trait::rugged]   ? 2 :
+                        player_bon::traits[(size_t)Trait::tough]    ? 3 : 4;
 
                     if (rnd::one_in(open_one_in_n))
                     {
@@ -2818,7 +2812,8 @@ void Chest::disarm()
             }
             else //Failed to disarm
             {
-                trigger_trap(map::player); //NOTE: This will disable the trap
+                //NOTE: This will disable the trap
+                trigger_trap(map::player);
             }
 
             game_time::tick();
@@ -3264,7 +3259,7 @@ Cabinet::Cabinet(const P& p) :
 {
     const int is_empty_N_IN_10  = 5;
     const int nr_items_min      = rnd::fraction(is_empty_N_IN_10, 10) ? 0 : 1;
-    const int nr_items_max      = player_bon::traits[size_t(Trait::treasure_hunter)] ? 2 : 1;
+    const int nr_items_max      = player_bon::traits[(size_t)Trait::treasure_hunter] ? 2 : 1;
 
     item_container_.init(FeatureId::cabinet,
                          rnd::range(nr_items_min, nr_items_max));
@@ -3380,7 +3375,7 @@ Cocoon::Cocoon(const P& p) :
     }
     else
     {
-        const bool is_treasure_hunter = player_bon::traits[size_t(Trait::treasure_hunter)];
+        const bool is_treasure_hunter = player_bon::traits[(size_t)Trait::treasure_hunter];
 
         const Fraction fraction_empty(6, 10);
 

@@ -366,4 +366,4 @@ void fade_out_channel(const int channel_nr)
     }
 }
 
-} //Audio
+} //audio
