@@ -16,9 +16,9 @@ namespace
 
 std::vector<Mix_Chunk*> audio_chunks_;
 
-size_t ms_at_sfx_played_[size_t(SfxId::END)];
+size_t ms_at_sfx_played_[(size_t)SfxId::END];
 
-int         current_channel_            = 0;
+int         current_channel_        = 0;
 int         seconds_at_amb_played_  = -1;
 
 int         nr_files_loaded_        = 0;
@@ -40,9 +40,9 @@ void load_audio_file(const SfxId sfx, const std::string& filename)
                       P(0, 0),
                       clr_white);
 
-    audio_chunks_[size_t(sfx)] = Mix_LoadWAV(file_rel_path.c_str());
+    audio_chunks_[(size_t)sfx] = Mix_LoadWAV(file_rel_path.c_str());
 
-    if (!audio_chunks_[size_t(sfx)])
+    if (!audio_chunks_[(size_t)sfx])
     {
         TRACE << "Problem loading audio file with name: "   << filename         << std::endl
               << "Mix_GetError(): "                         << Mix_GetError()   << std::endl;
@@ -250,14 +250,14 @@ int play(const SfxId sfx, const int vol_pct_tot, const int vol_pct_l)
 {
     if (
         !audio_chunks_.empty()      &&
-        sfx != SfxId::AMB_START    &&
-        sfx != SfxId::AMB_END      &&
-        sfx != SfxId::END          &&
+        sfx != SfxId::AMB_START     &&
+        sfx != SfxId::AMB_END       &&
+        sfx != SfxId::END           &&
         !config::is_bot_playing())
     {
         const int       free_channel    = find_free_channel(current_channel_);
         const size_t    ms_now          = SDL_GetTicks();
-        size_t&         ms_last         = ms_at_sfx_played_[size_t(sfx)];
+        size_t&         ms_last         = ms_at_sfx_played_[(size_t)sfx];
         const size_t    ms_diff         = ms_now - ms_last;
 
         if (free_channel >= 0 && ms_diff >= min_ms_between_same_sfx)
@@ -270,7 +270,7 @@ int play(const SfxId sfx, const int vol_pct_tot, const int vol_pct_l)
 
             Mix_SetPanning(current_channel_, vol_l, vol_r);
 
-            Mix_PlayChannel(current_channel_, audio_chunks_[size_t(sfx)], 0);
+            Mix_PlayChannel(current_channel_, audio_chunks_[(size_t)sfx], 0);
 
             ms_last = SDL_GetTicks();
 
@@ -342,13 +342,13 @@ void try_play_amb(const int one_in_n_chance_to_play)
     if (!audio_chunks_.empty() && rnd::one_in(one_in_n_chance_to_play))
     {
         const int seconds_now               = time(nullptr);
-        const int time_req_between_amb_sfx  = 20;
+        const int time_req_between_amb_sfx  = 25;
 
         if ((seconds_now - time_req_between_amb_sfx) > seconds_at_amb_played_)
         {
             seconds_at_amb_played_ = seconds_now;
 
-            const int       vol_pct     = rnd::range(25, 100);
+            const int       vol_pct     = rnd::range(15, 100);
             const int       first_int   = (int)SfxId::AMB_START + 1;
             const int       last_int    = (int)SfxId::AMB_END   - 1;
             const SfxId     sfx         = (SfxId)rnd::range(first_int, last_int);
