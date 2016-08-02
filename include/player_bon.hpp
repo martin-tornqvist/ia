@@ -19,6 +19,7 @@ enum class Trait
     adept_marksman,
     expert_marksman,
     cool_headed,
+    courageous,
     dem_expert,
     dexterous,
     fearless,
@@ -58,7 +59,6 @@ enum class Trait
 
     //Unique for War veteran
     fast_shooter,
-    courageous,
     steady_aimer,
     sharpshooter,
 

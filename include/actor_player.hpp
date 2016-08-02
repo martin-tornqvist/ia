@@ -68,16 +68,10 @@ public:
                     const int percent_audible_distance);
 
     void incr_shock(const ShockLvl shock_value, ShockSrc shock_src);
+
     void incr_shock(const int shock, ShockSrc shock_src);
+
     void restore_shock(const int amount_restored, const bool is_temp_shock_restored);
-    void update_tmp_shock();
-
-    int shock_tot() const
-    {
-        return int(floor(shock_ + shock_tmp_));
-    }
-
-    int ins() const;
 
     //Used for determining if '!'-marks should be drawn on the player map symbol
     double perm_shock_taken_current_turn() const
@@ -85,13 +79,12 @@ public:
         return perm_shock_taken_current_turn_;
     }
 
-    void reset_perm_shock_taken_current_turn()
+    int shock_tot() const
     {
-        perm_shock_taken_current_turn_ = 0.0;
+        return (int)floor(shock_ + shock_tmp_);
     }
 
-    int shock_resistance(const ShockSrc shock_src) const;
-    double shock_taken_after_mods(const int base_shock, const ShockSrc shock_src) const;
+    int ins() const;
 
     void auto_melee();
 
@@ -132,6 +125,18 @@ public:
 private:
     void incr_insanity();
 
+    void reset_perm_shock_taken_current_turn()
+    {
+        perm_shock_taken_current_turn_ = 0.0;
+    }
+
+    int shock_resistance(const ShockSrc shock_src) const;
+
+    double shock_taken_after_mods(const double base_shock,
+                                  const ShockSrc shock_src) const;
+
+    void tick_tmp_shock();
+
     void on_hit(int& dmg,
                 const DmgType dmg_type,
                 const DmgMethod method,
@@ -149,6 +154,5 @@ private:
 
     Wpn* unarmed_wpn_;
 };
-
 
 #endif

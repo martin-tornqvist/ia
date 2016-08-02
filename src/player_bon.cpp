@@ -635,7 +635,6 @@ void trait_prereqs(const Trait trait,
 
     case Trait::courageous:
         traits_out.push_back(Trait::cool_headed);
-        bg_out = Bg::war_vet;
         break;
 
     case Trait::warlock:

@@ -77,7 +77,7 @@ bool Actor::is_spotting_sneaking_actor(Actor& other)
     const int   sneak_skill         = abilities_other.val(AbilityId::stealth, true, other);
 
     const int   dist                = king_dist(pos, other_pos);
-    const int   sneak_dist_mod      = constr_in_range(0, (dist - 1) * 15, 80);
+    const int   sneak_dist_mod      = constr_in_range(0, (dist - 1) * 20, 80);
 
     const Cell& cell                = map::cells[other_pos.x][other_pos.y];
 

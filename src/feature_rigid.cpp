@@ -259,7 +259,7 @@ int Rigid::shock_when_adj() const
 
     if (nr_turns_color_corrupted_ > 0)
     {
-        shock += 5;
+        shock += 1;
     }
 
     return shock;
@@ -907,7 +907,7 @@ int Statue::base_shock_when_adj() const
     //Non-ghoul players are scared of Ghoul statues
     if (type_ == StatueType::ghoul && player_bon::bg() != Bg::ghoul)
     {
-        return 15;
+        return 3;
     }
 
     return 0;
@@ -3168,7 +3168,7 @@ void Fountain::bump(Actor& actor_bumping)
                 msg_log::add("It's very refreshing.");
                 map::player->restore_hp(1, false, Verbosity::silent);
                 map::player->restore_spi(1, false, Verbosity::silent);
-                map::player->restore_shock(5, false);
+                map::player->restore_shock(5, true);
                 break;
 
             case FountainEffect::curse:

@@ -39,20 +39,20 @@
 
 Player::Player() :
     Actor(),
-    active_medical_bag          (nullptr),
-    active_explosive            (nullptr),
-    tgt_                        (nullptr),
-    wait_turns_left             (-1),
-    ins_                        (0),
-    shock_                      (0.0),
-    shock_tmp_                  (0.0),
+    active_medical_bag              (nullptr),
+    active_explosive                (nullptr),
+    tgt_                            (nullptr),
+    wait_turns_left                 (-1),
+    ins_                            (0),
+    shock_                          (0.0),
+    shock_tmp_                      (0.0),
     perm_shock_taken_current_turn_  (0.0),
-    nr_steps_until_free_action_ (-1),
-    nr_turns_until_ins_         (-1),
-    nr_quick_move_steps_left_   (-1),
-    quick_move_dir_             (Dir::END),
-    nr_turns_until_rspell_      (-1),
-    unarmed_wpn_                (nullptr) {}
+    nr_steps_until_free_action_     (-1),
+    nr_turns_until_ins_             (-1),
+    nr_quick_move_steps_left_       (-1),
+    quick_move_dir_                 (Dir::END),
+    nr_turns_until_rspell_          (-1),
+    unarmed_wpn_                    (nullptr) {}
 
 Player::~Player()
 {
@@ -88,16 +88,16 @@ void Player::mk_start_items()
         nr_molotov      = 0;
         nr_thr_knives   = 0;
 
-        //Occultist starts with Darkbolt, Detect Monsters and a Potion of Spirit
+        //Occultist starts with some spells and a potion
 
-        //Darkbolt
-        Item* item = item_factory::mk(ItemId::scroll_darkbolt);
+        //Detect Monsters
+        Item* item = item_factory::mk(ItemId::scroll_det_mon);
         static_cast<Scroll*>(item)->identify(Verbosity::silent);
         item->give_xp_for_identify(Verbosity::silent);
         inv_->put_in_backpack(item);
 
-        //Detect Monsters
-        item = item_factory::mk(ItemId::scroll_det_mon);
+        //Darkbolt
+        item = item_factory::mk(ItemId::scroll_darkbolt);
         static_cast<Scroll*>(item)->identify(Verbosity::silent);
         item->give_xp_for_identify(Verbosity::silent);
         inv_->put_in_backpack(item);
@@ -245,7 +245,7 @@ void Player::save() const
     prop_handler_->save();
 
     save_handling::put_int(ins_);
-    save_handling::put_int(int(shock_));
+    save_handling::put_int((int)shock_);
     save_handling::put_int(hp_);
     save_handling::put_int(hp_max_);
     save_handling::put_int(spi_);
@@ -512,24 +512,21 @@ int Player::shock_resistance(const ShockSrc shock_src) const
     return constr_in_range(0, res, 100);
 }
 
-double Player::shock_taken_after_mods(const int base_shock,
+double Player::shock_taken_after_mods(const double base_shock,
                                       const ShockSrc shock_src) const
 {
-    if (base_shock == 0)
-    {
-        return 0.0;
-    }
+    const double shock_res = double(shock_resistance(shock_src));
 
-    const double shock_res_db   = double(shock_resistance(shock_src));
-    const double base_shock_db  = double(base_shock);
-    return (base_shock_db * (100.0 - shock_res_db)) / 100.0;
+    return (base_shock * (100.0 - shock_res)) / 100.0;
 }
 
 void Player::incr_shock(const int shock, ShockSrc shock_src)
 {
-    const double shock_after_mods = shock_taken_after_mods(shock, shock_src);
+    const double shock_db = shock;
 
-    shock_                      += shock_after_mods;
+    const double shock_after_mods = shock_taken_after_mods(shock_db, shock_src);
+
+    shock_                          += shock_after_mods;
     perm_shock_taken_current_turn_  += shock_after_mods;
 
     set_constr_in_range(0.0, shock_, 100.0);
@@ -540,7 +537,8 @@ void Player::incr_shock(const ShockLvl shock_value, ShockSrc shock_src)
     incr_shock((int)shock_value, shock_src);
 }
 
-void Player::restore_shock(const int amount_restored, const bool is_temp_shock_restored)
+void Player::restore_shock(const int amount_restored,
+                           const bool is_temp_shock_restored)
 {
     shock_ = std::max(0.0, shock_ - amount_restored);
 
@@ -548,8 +546,6 @@ void Player::restore_shock(const int amount_restored, const bool is_temp_shock_r
     {
         shock_tmp_ = 0.0;
     }
-
-    update_tmp_shock();
 }
 
 void Player::incr_insanity()
@@ -567,7 +563,12 @@ void Player::incr_insanity()
     {
         const std::string msg = "My mind can no longer withstand what it has grasped. "
                                 "I am hopelessly lost.";
-        popup::show_msg(msg, true, "Insane!", SfxId::insanity_rise);
+
+        popup::show_msg(msg,
+                        true,
+                        "Insane!",
+                        SfxId::insanity_rise);
+
         die(true, false, false);
         return;
     }
@@ -575,7 +576,7 @@ void Player::incr_insanity()
     //This point reached means sanity is below 100%
     insanity::run_sympt();
 
-    restore_shock(70, false);
+    restore_shock(70, true);
 
     update_clr();
     render::draw_map_state();
@@ -792,9 +793,9 @@ void Player::act()
         const bool is_tgt_known_trap  = tgt_rigid->id() == FeatureId::trap &&
                                         !static_cast<const Trap*>(tgt_rigid)->is_hidden();
 
-        const bool should_abort = !tgt_rigid->can_move_cmn()                        ||
-                                  is_tgt_known_trap                                 ||
-                                  tgt_rigid->burn_state() == BurnState::burning    ||
+        const bool should_abort = !tgt_rigid->can_move_cmn()                    ||
+                                  is_tgt_known_trap                             ||
+                                  tgt_rigid->burn_state() == BurnState::burning ||
                                   (tgt_cell.is_dark && !tgt_cell.is_lit);
 
         if (should_abort)
@@ -831,195 +832,16 @@ void Player::on_actor_turn()
     std::vector<Actor*> my_seen_foes;
     seen_foes(my_seen_foes);
 
-    insanity::on_new_player_turn(my_seen_foes);
-
-    //Run new turn events on all items
-    auto& inv = map::player->inv();
-
-    for (Item* const item : inv.backpack_)
-    {
-        item->on_actor_turn_in_inv(InvType::backpack);
-    }
-
-    for (InvSlot& slot : inv.slots_)
-    {
-        if (slot.item)
-        {
-            slot.item->on_actor_turn_in_inv(InvType::slots);
-        }
-    }
-}
-
-void Player::update_tmp_shock()
-{
-    shock_tmp_ = 0.0;
-
-    //Shock from obsession?
-    if (
-        insanity::has_sympt(InsSymptId::sadism) ||
-        insanity::has_sympt(InsSymptId::masoch))
-    {
-        shock_tmp_ += double(shock_from_obsession);
-    }
-
-    if (prop_handler_->allow_see())
-    {
-        //Temporary shock from darkness
-        Cell& cell = map::cells[pos.x][pos.y];
-
-        if (cell.is_dark && !cell.is_lit)
-        {
-            shock_tmp_ += shock_taken_after_mods(20, ShockSrc::misc);
-        }
-
-        //Temporary shock from seen features
-        for (const P& d : dir_utils::dir_list_w_center)
-        {
-            const P p(pos + d);
-
-            const int base_shock = map::cells[p.x][p.y].rigid->shock_when_adj();
-
-            shock_tmp_ += shock_taken_after_mods(base_shock, ShockSrc::misc);
-        }
-    }
-    else //Is blind
-    {
-        shock_tmp_ += shock_taken_after_mods(30, ShockSrc::misc);
-    }
-
-    shock_tmp_ = std::min(99.0, shock_tmp_);
-}
-
-int Player::ins() const
-{
-    int out = ins_;
-
-    //INS from items
-    for (auto& slot : inv_->slots_)
-    {
-        if (slot.item)
-        {
-            const ItemDataT& d = slot.item->data();
-
-            //NOTE: Having an item equiped also counts as carrying it
-            if (d.is_ins_raied_while_carried || d.is_ins_raied_while_equiped)
-            {
-                out += ins_from_disturbing_items;
-            }
-        }
-    }
-
-    for (const Item* const item : inv_->backpack_)
-    {
-        if (item->data().is_ins_raied_while_carried)
-        {
-            out += ins_from_disturbing_items;
-        }
-    }
-
-    return std::min(100, out);
-}
-
-void Player::on_std_turn()
-{
-#ifndef NDEBUG
-    //Sanity check: Disease and infection should not be active at the same time
-    ASSERT(!prop_handler_->has_prop(PropId::diseased) ||
-           !prop_handler_->has_prop(PropId::infected));
-#endif // NDEBUG
-
-    if (!is_alive())
-    {
-        return;
-    }
-
-    update_tmp_shock();
-
-    //Spell resistance
-    const int spi_trait_lvl = player_bon::traits[(size_t)Trait::mighty_spirit]  ? 2 :
-                              player_bon::traits[(size_t)Trait::strong_spirit]  ? 1 : 0;
-
-    if (spi_trait_lvl > 0 && !prop_handler_->has_prop(PropId::rSpell))
-    {
-        if (nr_turns_until_rspell_ <= 0)
-        {
-            //Cooldown has finished, OR countdown has not yet been initialized
-
-            if (nr_turns_until_rspell_ == 0)
-            {
-                //Cooldown has finished
-                prop_handler_->try_add(new PropRSpell(PropTurns::indefinite));
-
-                msg_log::more_prompt();
-            }
-
-            const int nr_turns_base = 125 + rnd::range(0, 25);
-
-            const int nr_turns_bon  = (spi_trait_lvl - 1) * 50;
-
-            nr_turns_until_rspell_  = std::max(10, nr_turns_base - nr_turns_bon);
-        }
-
-        if (!prop_handler_->has_prop(PropId::rSpell) && nr_turns_until_rspell_ > 0)
-        {
-            //Spell resistance is in cooldown state, decrement number of
-            //remaining turns
-            --nr_turns_until_rspell_;
-        }
-    }
-
-    if (active_explosive)
-    {
-        active_explosive->on_std_turn_player_hold_ignited();
-    }
-
-    std::vector<Actor*> my_seen_foes;
-    seen_foes(my_seen_foes);
-
-    double shock_from_mon_current_player_turn = 0.0;
-
     for (Actor* actor : my_seen_foes)
     {
-        Mon* mon = static_cast<Mon*>(actor);
-
-        mon->set_player_aware_of_me();
-
-        const ActorDataT& mon_data = mon->data();
-
-        if (mon_data.mon_shock_lvl != MonShockLvl::none)
-        {
-            switch (mon_data.mon_shock_lvl)
-            {
-            case MonShockLvl::unsettling:
-                mon->shock_caused_current_ = std::min(mon->shock_caused_current_ + 0.05,  1.0);
-                break;
-
-            case MonShockLvl::frightening:
-                mon->shock_caused_current_ = std::min(mon->shock_caused_current_ + 0.1,   1.0);
-                break;
-
-            case MonShockLvl::terrifying:
-                mon->shock_caused_current_ = std::min(mon->shock_caused_current_ + 0.5,   2.0);
-                break;
-
-            case MonShockLvl::mind_shattering:
-                mon->shock_caused_current_ = std::min(mon->shock_caused_current_ + 0.75,  3.0);
-                break;
-
-            default:
-                break;
-            }
-
-            if (shock_from_mon_current_player_turn < 2.5)
-            {
-                incr_shock((int)floor(mon->shock_caused_current_), ShockSrc::see_mon);
-
-                shock_from_mon_current_player_turn += mon->shock_caused_current_;
-            }
-        }
+        static_cast<Mon*>(actor)->set_player_aware_of_me();
     }
 
-    //Some shock is taken every Nth turn
+    //Decrement the current temp shock value, and add temporary shock from seen
+    //monsters, darkness, etc
+    tick_tmp_shock();
+
+    //Some "permanent shock" is taken every Nth turn
     if (prop_handler_->allow_act())
     {
         int incr_shock_every_n_turns = 12;
@@ -1072,10 +894,7 @@ void Player::on_std_turn()
         {
             render::draw_map_state(UpdateScreen::yes);
 
-            msg_log::add("I feel my sanity slipping...",
-                         clr_msg_note,
-                         true,
-                         MorePromptOnMsg::yes);
+            msg_log::add("I feel my sanity slipping...");
         }
         else //Time to go crazy!
         {
@@ -1093,6 +912,201 @@ void Player::on_std_turn()
     else //Total shock is less than 100%
     {
         nr_turns_until_ins_ = -1;
+    }
+
+    insanity::on_new_player_turn(my_seen_foes);
+
+    //Run new turn events on all items
+    auto& inv = map::player->inv();
+
+    for (Item* const item : inv.backpack_)
+    {
+        item->on_actor_turn_in_inv(InvType::backpack);
+    }
+
+    for (InvSlot& slot : inv.slots_)
+    {
+        if (slot.item)
+        {
+            slot.item->on_actor_turn_in_inv(InvType::slots);
+        }
+    }
+}
+
+void Player::tick_tmp_shock()
+{
+    //Minimum temporary shock raised due to obsession?
+    double min_tmp_shock = 0.0;
+
+    if (
+        insanity::has_sympt(InsSymptId::sadism) ||
+        insanity::has_sympt(InsSymptId::masoch))
+    {
+        shock_tmp_ = std::max(shock_tmp_, (double)shock_from_obsession);
+
+        //Do not decrement shock below this value
+        min_tmp_shock = shock_tmp_;
+    }
+
+    //NOTE: We only decrement temporary shock if it is NOT raised - so we store
+    //      the initial (possibly bumped) value here to compare against below
+    const double shock_tmp_initial = shock_tmp_;
+
+    if (prop_handler_->allow_see())
+    {
+        std::vector<Actor*> my_seen_foes;
+        seen_foes(my_seen_foes);
+
+        //Temporary shock from monsters
+        for (Actor* actor : my_seen_foes)
+        {
+            Mon* mon = static_cast<Mon*>(actor);
+
+            const ActorDataT& mon_data = mon->data();
+
+            if (mon_data.mon_shock_lvl != MonShockLvl::none)
+            {
+                double tmp_shock_from_mon = 0.0;
+
+                switch (mon_data.mon_shock_lvl)
+                {
+                case MonShockLvl::unsettling:
+                    tmp_shock_from_mon = 0.375;
+                    break;
+
+                case MonShockLvl::frightening:
+                    tmp_shock_from_mon = 0.75;
+                    break;
+
+                case MonShockLvl::terrifying:
+                    tmp_shock_from_mon = 1.5;
+                    break;
+
+                case MonShockLvl::mind_shattering:
+                    tmp_shock_from_mon = 3.0;
+                    break;
+
+                default:
+                    break;
+                }
+
+                shock_tmp_ += shock_taken_after_mods(tmp_shock_from_mon, ShockSrc::see_mon);
+            }
+        }
+
+        //Temporary shock from darkness
+        Cell& cell = map::cells[pos.x][pos.y];
+
+        if (cell.is_dark && !cell.is_lit)
+        {
+            shock_tmp_ += shock_taken_after_mods(0.5, ShockSrc::misc);
+        }
+
+        //Temporary shock from seen features
+        for (const P& d : dir_utils::dir_list_w_center)
+        {
+            const P p(pos + d);
+
+            const double feature_shock_db = (double)map::cells[p.x][p.y].rigid->shock_when_adj();
+
+            shock_tmp_ += shock_taken_after_mods(feature_shock_db, ShockSrc::misc);
+        }
+    }
+    else //Is blind
+    {
+        shock_tmp_ += shock_taken_after_mods(0.5, ShockSrc::misc);
+    }
+
+    //Decrement temporary shock, if it's near the initial value
+    const double decr_threshold_value = 0.0001;
+
+    if ((shock_tmp_ - shock_tmp_initial) <= decr_threshold_value)
+    {
+        const double shock_tmp_decr = 1.0;
+
+        shock_tmp_ = std::max(min_tmp_shock, shock_tmp_ - shock_tmp_decr);
+    }
+}
+
+int Player::ins() const
+{
+    int out = ins_;
+
+    //Insanity from items
+    for (auto& slot : inv_->slots_)
+    {
+        if (slot.item)
+        {
+            const ItemDataT& d = slot.item->data();
+
+            //NOTE: Having an item equiped also counts as carrying it
+            if (d.is_ins_raied_while_carried || d.is_ins_raied_while_equiped)
+            {
+                out += ins_from_disturbing_items;
+            }
+        }
+    }
+
+    for (const Item* const item : inv_->backpack_)
+    {
+        if (item->data().is_ins_raied_while_carried)
+        {
+            out += ins_from_disturbing_items;
+        }
+    }
+
+    return std::min(100, out);
+}
+
+void Player::on_std_turn()
+{
+#ifndef NDEBUG
+    //Sanity check: Disease and infection should not be active at the same time
+    ASSERT(!prop_handler_->has_prop(PropId::diseased) ||
+           !prop_handler_->has_prop(PropId::infected));
+#endif // NDEBUG
+
+    if (!is_alive())
+    {
+        return;
+    }
+
+    //Spell resistance
+    const int spi_trait_lvl = player_bon::traits[(size_t)Trait::mighty_spirit]  ? 2 :
+                              player_bon::traits[(size_t)Trait::strong_spirit]  ? 1 : 0;
+
+    if (spi_trait_lvl > 0 && !prop_handler_->has_prop(PropId::rSpell))
+    {
+        if (nr_turns_until_rspell_ <= 0)
+        {
+            //Cooldown has finished, OR countdown has not yet been initialized
+
+            if (nr_turns_until_rspell_ == 0)
+            {
+                //Cooldown has finished
+                prop_handler_->try_add(new PropRSpell(PropTurns::indefinite));
+
+                msg_log::more_prompt();
+            }
+
+            const int nr_turns_base = 125 + rnd::range(0, 25);
+
+            const int nr_turns_bon  = (spi_trait_lvl - 1) * 50;
+
+            nr_turns_until_rspell_  = std::max(10, nr_turns_base - nr_turns_bon);
+        }
+
+        if (!prop_handler_->has_prop(PropId::rSpell) && nr_turns_until_rspell_ > 0)
+        {
+            //Spell resistance is in cooldown state, decrement number of
+            //remaining turns
+            --nr_turns_until_rspell_;
+        }
+    }
+
+    if (active_explosive)
+    {
+        active_explosive->on_std_turn_player_hold_ignited();
     }
 
     //Check for monsters coming into view, and try to spot hidden monsters.

@@ -395,7 +395,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
 
 void set_dmg_from_mon_id(ItemDataT& item_data, const ActorId id)
 {
-    const auto& actor_data      = actor_data::data[size_t(id)];
+    const auto& actor_data      = actor_data::data[(size_t)id];
     item_data.melee.dmg         = DiceParam(1, actor_data.dmg_melee);
     item_data.ranged.dmg        = DiceParam(1, actor_data.dmg_ranged);
     item_data.ranged.throw_dmg  = DiceParam(1, actor_data.dmg_ranged);
@@ -447,6 +447,7 @@ void init_data_list()
     d.ranged.att_sfx = SfxId::shotgun_sawed_off_fire;
     d.ranged.makes_ricochet_snd = true;
     d.ranged.reload_sfx = SfxId::shotgun_reload;
+    d.spawn_std_range.min = 2;
     add_feature_found_in(d, FeatureId::chest);
     add_feature_found_in(d, FeatureId::cabinet);
     add_feature_found_in(d, FeatureId::cocoon);
@@ -476,6 +477,7 @@ void init_data_list()
     d.ranged.att_sfx = SfxId::shotgun_pump_fire ;
     d.ranged.makes_ricochet_snd = true;
     d.ranged.reload_sfx = SfxId::shotgun_reload;
+    d.spawn_std_range.min = 2;
     add_feature_found_in(d, FeatureId::chest);
     add_feature_found_in(d, FeatureId::cabinet);
     add_feature_found_in(d, FeatureId::cocoon);
@@ -534,7 +536,7 @@ void init_data_list()
     d.weight = ItemWeight::light;
     d.spawn_std_range.min = 5;
     d.max_stack_at_spawn = 1;
-    d.ranged.max_ammo = data[size_t(ItemId::incinerator)].ranged.max_ammo;
+    d.ranged.max_ammo = data[(size_t)ItemId::incinerator].ranged.max_ammo;
     d.chance_to_incl_in_floor_spawn_list = 25;
     add_feature_found_in(d, FeatureId::chest, 25);
     add_feature_found_in(d, FeatureId::cabinet, 25);
@@ -564,6 +566,7 @@ void init_data_list()
     d.ranged.att_sfx = SfxId::machine_gun_fire;
     d.ranged.makes_ricochet_snd = true;
     d.ranged.reload_sfx = SfxId::machine_gun_reload;
+    d.spawn_std_range.min = 2;
     add_feature_found_in(d, FeatureId::chest);
     add_feature_found_in(d, FeatureId::cabinet);
     add_feature_found_in(d, FeatureId::cocoon);
@@ -576,7 +579,7 @@ void init_data_list()
     {
         "Ammunition used by Tommy Guns."
     };
-    d.ranged.max_ammo = data[size_t(ItemId::machine_gun)].ranged.max_ammo;
+    d.ranged.max_ammo = data[(size_t)ItemId::machine_gun].ranged.max_ammo;
     add_feature_found_in(d, FeatureId::chest);
     add_feature_found_in(d, FeatureId::cabinet);
     add_feature_found_in(d, FeatureId::cocoon);
@@ -613,7 +616,7 @@ void init_data_list()
     {
         "Ammunition used by Colt pistols."
     };
-    d.ranged.max_ammo = data[size_t(ItemId::pistol)].ranged.max_ammo;
+    d.ranged.max_ammo = data[(size_t)ItemId::pistol].ranged.max_ammo;
     add_feature_found_in(d, FeatureId::chest);
     add_feature_found_in(d, FeatureId::cabinet);
     add_feature_found_in(d, FeatureId::cocoon);
@@ -663,7 +666,7 @@ void init_data_list()
     {
         "Ammunition for the Mi-go Electric gun."
     };
-    d.ranged.max_ammo = data[size_t(ItemId::mi_go_gun)].ranged.max_ammo;
+    d.ranged.max_ammo = data[(size_t)ItemId::mi_go_gun].ranged.max_ammo;
     d.clr = clr_yellow;
     d.spawn_std_range = Range(-1, -1);
     data[(size_t)d.id] = d;
@@ -736,7 +739,7 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::ranged_wpn);
-    d = data[size_t(ItemId::trap_dart)];
+    d = data[(size_t)ItemId::trap_dart];
     d.id = ItemId::trap_dart_poison;
     d.ranged.prop_applied = new PropPoisoned(PropTurns::std);
     data[(size_t)d.id] = d;
@@ -753,7 +756,7 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::ranged_wpn);
-    d = data[size_t(ItemId::trap_spear)];
+    d = data[(size_t)ItemId::trap_spear];
     d.id = ItemId::trap_spear_poison;
     d.ranged.prop_applied = new PropPoisoned(PropTurns::std);
     data[(size_t)d.id] = d;
@@ -1118,9 +1121,9 @@ void init_data_list()
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::player_stomp;
     d.melee.att_msgs = {"stomp", ""};
-    d.melee.hit_chance_mod = data[size_t(ItemId::player_kick)].melee.hit_chance_mod;
-    d.melee.dmg = data[size_t(ItemId::player_kick)].melee.dmg;
-    d.melee.miss_sfx = data[size_t(ItemId::player_kick)].melee.miss_sfx;
+    d.melee.hit_chance_mod = data[(size_t)ItemId::player_kick].melee.hit_chance_mod;
+    d.melee.dmg = data[(size_t)ItemId::player_kick].melee.dmg;
+    d.melee.miss_sfx = data[(size_t)ItemId::player_kick].melee.miss_sfx;
     d.melee.knocks_back = false;
     data[(size_t)d.id] = d;
 

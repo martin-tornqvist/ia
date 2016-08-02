@@ -105,7 +105,6 @@ public:
     Actor*              leader_;
     Actor*              tgt_;
     bool                waiting_;
-    double              shock_caused_current_;
 
 protected:
     virtual void on_hit(int& dmg,

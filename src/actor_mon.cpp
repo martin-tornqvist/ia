@@ -39,8 +39,7 @@ Mon::Mon() :
     is_sneaking_                (false),
     leader_                     (nullptr),
     tgt_                        (nullptr),
-    waiting_                    (false),
-    shock_caused_current_       (0.0) {}
+    waiting_                    (false) {}
 
 Mon::~Mon()
 {

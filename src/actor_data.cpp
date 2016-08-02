@@ -127,7 +127,7 @@ void init_data_list()
     d.glyph = 'Z';
     d.color = clr_brown;
     d.tile = TileId::zombie_unarmed;
-    d.hp = 14;
+    d.hp = 12;
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.spawn_min_dlvl = 1;
@@ -175,7 +175,7 @@ void init_data_list()
     d.glyph = 'Z';
     d.color = clr_gray;
     d.tile = TileId::zombie_armed;
-    d.hp = 14;
+    d.hp = 12;
     d.dmg_melee = min_dmg_to_wound + 4;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.spawn_min_dlvl = 2;
@@ -2533,8 +2533,7 @@ void init_data_list()
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::few,    1),
-        MonGroupSpawnRule(MonGroupSize::pack,   4),
-        MonGroupSpawnRule(MonGroupSize::swarm,  1)
+        MonGroupSpawnRule(MonGroupSize::pack,   1),
     });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 32;
@@ -2589,7 +2588,7 @@ void init_data_list()
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::few,    1),
-        MonGroupSpawnRule(MonGroupSize::pack,   4)
+        MonGroupSpawnRule(MonGroupSize::pack,   1)
     });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 32;
@@ -2643,8 +2642,7 @@ void init_data_list()
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::few,    1),
-        MonGroupSpawnRule(MonGroupSize::pack,   4),
-        MonGroupSpawnRule(MonGroupSize::swarm,  1)
+        MonGroupSpawnRule(MonGroupSize::pack,   1),
     });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 32;
@@ -2699,8 +2697,7 @@ void init_data_list()
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::few,    1),
-        MonGroupSpawnRule(MonGroupSize::pack,   4),
-        MonGroupSpawnRule(MonGroupSize::swarm,  1)
+        MonGroupSpawnRule(MonGroupSize::pack,   1),
     });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 32;

@@ -190,7 +190,6 @@ void init_data_list()
     d.can_have_corpse = false;
     d.can_have_rigid = false;
     d.can_have_item = false;
-    d.shock_when_adjacent = 1;
     d.msg_on_player_blocked = "There is a tree in the way.";
     d.matl_type = Matl::wood;
     add_to_list_and_reset(d);
@@ -246,7 +245,7 @@ void init_data_list()
     d.can_have_corpse = false;
     d.can_have_rigid = false;
     d.can_have_item = false;
-    d.shock_when_adjacent = 10;
+    d.shock_when_adjacent = 3;
     d.matl_type = Matl::stone;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
@@ -330,7 +329,6 @@ void init_data_list()
     d.msg_on_player_blocked = "A chasm lies in my way.";
     d.msg_on_player_blocked_blind =
         "I realize I am standing on the edge of a chasm.";
-    d.shock_when_adjacent = 3;
     d.matl_type = Matl::empty;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
@@ -470,7 +468,7 @@ void init_data_list()
     d.can_have_corpse = false;
     d.can_have_rigid = false;
     d.can_have_item = false;
-    d.shock_when_adjacent = 3;
+    d.shock_when_adjacent = 1;
     d.matl_type = Matl::cloth;
     d.room_spawn_rules.set(3, {0, dlvl_last}, PlacementRule::either, {RoomType::spider});
     add_to_list_and_reset(d);
@@ -589,7 +587,7 @@ void init_data_list()
     d.can_have_corpse = false;
     d.can_have_rigid = false;
     d.can_have_item = false;
-    d.shock_when_adjacent = 10;
+    d.shock_when_adjacent = 3;
     d.matl_type = Matl::stone;
     d.room_spawn_rules.set(1, {0, dlvl_last_mid_game}, PlacementRule::either,
     {
@@ -611,7 +609,7 @@ void init_data_list()
     d.can_have_corpse = false;
     d.can_have_rigid = false;
     d.can_have_item = false;
-    d.shock_when_adjacent = 10;
+    d.shock_when_adjacent = 3;
     d.matl_type = Matl::stone;
     d.room_spawn_rules.set(2, {0, dlvl_last_mid_game}, PlacementRule::either,
     {

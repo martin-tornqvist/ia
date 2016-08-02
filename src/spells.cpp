@@ -1018,7 +1018,7 @@ SpellEffectNoticed SpellDetMon::cast_impl(Actor* const caster) const
 
     bool is_seer = player_bon::traits[(size_t)Trait::seer];
 
-    const int multiplier  = 6 * (is_seer ? 3 : 1);
+    const int multiplier  = 20 * (is_seer ? 2 : 1);
 
     SpellEffectNoticed is_noticed = SpellEffectNoticed::no;
 
