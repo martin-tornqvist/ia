@@ -1489,9 +1489,7 @@ void DeathFiend::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::death_fiend_claw));
 
-    spells_known_.push_back(new SpellParalyzeMon);
-    spells_known_.push_back(new SpellSlowMon);
-    spells_known_.push_back(new SpellTerrifyMon);
+    spells_known_.push_back(new SpellEnfeebleMon);
 }
 
 void HuntingHorror::mk_start_items()
@@ -1558,8 +1556,10 @@ void KeziahMason::mk_start_items()
     spells_known_.push_back(new SpellSummonMon);
     spells_known_.push_back(new SpellPest);
     spells_known_.push_back(new SpellDarkbolt);
-    spells_known_.push_back(spell_handling::random_spell_for_mon());
+    spells_known_.push_back(new SpellEnfeebleMon);
 
+
+    //Make some treasures to drop
     for (int i = rnd::range(2, 3); i > 0; --i)
     {
         inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
@@ -2270,7 +2270,7 @@ void TheHighPriest::mk_start_items()
 
     spells_known_.push_back(new SpellSummonMon());
     spells_known_.push_back(new SpellBurn());
-    spells_known_.push_back(new SpellParalyzeMon());
+    spells_known_.push_back(new SpellEnfeebleMon());
     spells_known_.push_back(new SpellMiGoHypno());
     spells_known_.push_back(new SpellPest());
     spells_known_.push_back(new SpellTeleport());

@@ -1726,18 +1726,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::scroll);
-    d.id = ItemId::scroll_slow_mon;
-    d.spell_cast_from_scroll = SpellId::slow_mon;
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::scroll);
-    d.id = ItemId::scroll_terrify_mon;
-    d.spell_cast_from_scroll = SpellId::terrify_mon;
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::scroll);
-    d.id = ItemId::scroll_paral_mon;
-    d.spell_cast_from_scroll = SpellId::paralyze_mon;
+    d.id = ItemId::scroll_enfeeble_mon;
+    d.spell_cast_from_scroll = SpellId::enfeeble_mon;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::scroll);

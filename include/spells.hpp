@@ -20,9 +20,7 @@ enum class SpellId
     //Available for player and all monsters
     darkbolt,
     aza_wrath,
-    slow_mon,
-    terrify_mon,
-    paralyze_mon,
+    enfeeble_mon,
     teleport,
     summon,
     pest,
@@ -175,7 +173,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(1) - (spi_per_lvl * 3);
+        return 4;
     }
 };
 
@@ -229,7 +227,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(2);
+        return player_bon::spi_occultist_can_cast_at_lvl(3);
     }
 };
 
@@ -873,7 +871,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(1);
+        return 4;
     }
 };
 
@@ -1014,12 +1012,33 @@ private:
     }
 };
 
-class SpellPropOnMon: public Spell
+class SpellEnfeebleMon: public Spell
 {
 public:
-    SpellPropOnMon() : Spell() {}
+    SpellEnfeebleMon() : Spell() {}
 
     virtual bool allow_mon_cast_now(Mon& mon) const override;
+
+    std::string name() const override
+    {
+        return "Enfeeble Enemies";
+    }
+
+    SpellId id() const override
+    {
+        return SpellId::enfeeble_mon;
+    }
+
+    IntrSpellShock shock_type_intr_cast() const override
+    {
+        return IntrSpellShock::disturbing;
+    }
+
+    std::vector<std::string> descr() const override
+    {
+        return {"Attempts to enfeeble all visible enemies by exhausting their stamina, or by "
+                "terrorizing their minds."};
+    }
 
     bool is_avail_for_all_mon() const override
     {
@@ -1031,123 +1050,12 @@ public:
         return true;
     }
 
-    virtual std::string name() const override = 0;
-    virtual SpellId id() const override = 0;
-    virtual IntrSpellShock shock_type_intr_cast() const override = 0;
-
 protected:
     SpellEffectNoticed cast_impl(Actor* const caster) const override;
-    virtual PropId applied_prop_id() const = 0;
-    virtual int max_spi_cost() const override = 0;
-};
-
-class SpellSlowMon: public SpellPropOnMon
-{
-public:
-    SpellSlowMon() : SpellPropOnMon() {}
-
-    std::string name() const override
-    {
-        return "Slow Enemies";
-    }
-
-    SpellId id() const override
-    {
-        return SpellId::slow_mon;
-    }
-
-    IntrSpellShock shock_type_intr_cast() const override
-    {
-        return IntrSpellShock::disturbing;
-    }
-
-    std::vector<std::string> descr() const override
-    {
-        return {"Causes all visible enemies to move slower."};
-    }
-private:
-    PropId applied_prop_id() const override
-    {
-        return PropId::slowed;
-    }
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(1);
-    }
-};
-
-class SpellTerrifyMon: public SpellPropOnMon
-{
-public:
-    SpellTerrifyMon() : SpellPropOnMon() {}
-
-    std::string name() const override
-    {
-        return "Terrify Enemies";
-    }
-
-    SpellId id() const override
-    {
-        return SpellId::terrify_mon;
-    }
-
-    IntrSpellShock shock_type_intr_cast() const override
-    {
-        return IntrSpellShock::severe;
-    }
-
-    std::vector<std::string> descr() const override
-    {
-        return {"Causes terror in the minds of all visible enemies."};
-    }
-private:
-    PropId applied_prop_id() const override
-    {
-        return PropId::terrified;
-    }
-
-    int max_spi_cost() const override
-    {
-        return player_bon::spi_occultist_can_cast_at_lvl(3);
-    }
-};
-
-class SpellParalyzeMon: public SpellPropOnMon
-{
-public:
-    SpellParalyzeMon() : SpellPropOnMon() {}
-
-    std::string name() const override
-    {
-        return "Paralyze Enemies";
-    }
-
-    SpellId id() const override
-    {
-        return SpellId::paralyze_mon;
-    }
-
-    virtual bool allow_mon_cast_now(Mon& mon) const override;
-
-    IntrSpellShock shock_type_intr_cast() const override
-    {
-        return IntrSpellShock::disturbing;
-    }
-
-    std::vector<std::string> descr() const override
-    {
-        return {"All visible enemies are paralyzed for a brief moment."};
-    }
-private:
-    PropId applied_prop_id() const override
-    {
-        return PropId::paralyzed;
-    }
-
-    int max_spi_cost() const override
-    {
-        return player_bon::spi_occultist_can_cast_at_lvl(6);
+        return player_bon::spi_occultist_can_cast_at_lvl(2);
     }
 };
 

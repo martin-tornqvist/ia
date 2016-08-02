@@ -59,14 +59,8 @@ Spell* mk_spell_from_id(const SpellId spell_id)
 {
     switch (spell_id)
     {
-    case SpellId::slow_mon:
-        return new SpellSlowMon;
-
-    case SpellId::terrify_mon:
-        return new SpellTerrifyMon;
-
-    case SpellId::paralyze_mon:
-        return new SpellParalyzeMon;
+    case SpellId::enfeeble_mon:
+        return new SpellEnfeebleMon;
 
     case SpellId::disease:
         return new SpellDisease;
@@ -1267,10 +1261,31 @@ bool SpellKnockBack::allow_mon_cast_now(Mon& mon) const
     return mon.tgt_ && rnd::coin_toss();
 }
 
-//------------------------------------------------------------ PROP ON OTHERS
-SpellEffectNoticed SpellPropOnMon::cast_impl(Actor* const caster) const
+//------------------------------------------------------------ ENFEEBLE
+SpellEffectNoticed SpellEnfeebleMon::cast_impl(Actor* const caster) const
 {
-    const PropId prop_id = applied_prop_id();
+    PropId prop_id = PropId::END;
+
+    const int rnd = rnd::range(1, 4);
+
+    switch (rnd)
+    {
+    case 1: prop_id = PropId::slowed;
+        break;
+
+    case 2: prop_id = PropId::weakened;
+        break;
+
+    case 3: prop_id = PropId::paralyzed;
+        break;
+
+    case 4: prop_id = PropId::terrified;
+        break;
+
+    default:
+        ASSERT(false);
+        break;
+    }
 
     std::vector<Actor*> tgts;
     caster->seen_foes(tgts);
@@ -1316,12 +1331,7 @@ SpellEffectNoticed SpellPropOnMon::cast_impl(Actor* const caster) const
     return SpellEffectNoticed::yes;
 }
 
-bool SpellPropOnMon::allow_mon_cast_now(Mon& mon) const
-{
-    return mon.tgt_;
-}
-
-bool SpellParalyzeMon::allow_mon_cast_now(Mon& mon) const
+bool SpellEnfeebleMon::allow_mon_cast_now(Mon& mon) const
 {
     return mon.tgt_ && rnd::one_in(4);
 }

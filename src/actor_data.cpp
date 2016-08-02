@@ -242,7 +242,6 @@ void init_data_list()
     d.descr = "This lumbering giant corpse seems to be artificially bloated "
               "somehow. It is constantly oozing putrid liquid that it can spit "
               "to attack with.";
-    d.aggro_text_mon_hidden = "I hear heavy footsteps.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = MonShockLvl::frightening;
     d.is_undead = true;
@@ -492,9 +491,6 @@ void init_data_list()
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 10;
     d.descr = "A severed head floating through the air.";
-    d.aggro_text_mon_hidden = "";
-    d.aggro_sfx_mon_seen = SfxId::END;
-    d.aggro_sfx_mon_hidden = SfxId::END;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = MonShockLvl::terrifying;
     d.can_be_summoned = true;
@@ -748,8 +744,6 @@ void init_data_list()
     d.is_humanoid = true;
     d.descr = "[DESCRIPTION MISSING]";
     d.spell_cast_msg = "makes strange gestures in the air.";
-    d.aggro_text_mon_seen = "";
-    d.aggro_text_mon_hidden = "";
     d.nr_turns_aware = 999;
     d.erratic_move_pct = ActorErraticFreq::never;
     d.mon_shock_lvl = MonShockLvl::mind_shattering;
