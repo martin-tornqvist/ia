@@ -7,6 +7,7 @@
 # - make osx-release
 # - make osx-debug
 # - make clean
+# - make obj-clean
 #
 # NOTE: Building on Windows via a Makefile is currently NOT supported (although
 #       perhaps it will be in the future), use the Code::Blocks project for this
@@ -341,5 +342,8 @@ check-rl-utils:
 clean:
 	rm -rf $(OBJ_BASE_DIR) $(TARGET_BASE_DIR)
 
+obj-clean:
+	rm -rf $(OBJ_BASE_DIR)
+
 # Phony targets
-.PHONY: all test clean check-rl-utils
+.PHONY: all test clean obj-clean check-rl-utils
