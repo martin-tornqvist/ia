@@ -77,7 +77,7 @@ bool Actor::is_spotting_sneaking_actor(Actor& other)
     const int   sneak_skill         = abilities_other.val(AbilityId::stealth, true, other);
 
     const int   dist                = king_dist(pos, other_pos);
-    const int   sneak_dist_mod      = constr_in_range(0, (dist - 1) * 20, 80);
+    const int   sneak_dist_mod      = std::min((dist - 2) * 20, 80);
 
     const Cell& cell                = map::cells[other_pos.x][other_pos.y];
 
@@ -113,7 +113,7 @@ ActorSpeed Actor::speed() const
 {
     const auto base_speed = data_->speed;
 
-    int speed_int = int(base_speed);
+    int speed_int = (int)base_speed;
 
     //"Slowed" gives speed penalty
     if (
@@ -127,12 +127,12 @@ ActorSpeed Actor::speed() const
     if (
         (prop_handler_->has_prop(PropId::hasted) ||
          prop_handler_->has_prop(PropId::frenzied)) &&
-        speed_int < int(ActorSpeed::END) - 1)
+        speed_int < (int)ActorSpeed::END - 1)
     {
         ++speed_int;
     }
 
-    ASSERT(speed_int >= 0 && speed_int < int(ActorSpeed::END));
+    ASSERT(speed_int >= 0 && speed_int < (int)ActorSpeed::END);
 
     return ActorSpeed(speed_int);
 }
@@ -285,18 +285,18 @@ void Actor::on_std_turn_common()
         }
 
         //Regenerate spirit
-        int regen_spi_n_turns = 15;
+        int regen_spi_n_turns = 20;
 
         if (is_player())
         {
-            if (player_bon::traits[size_t(Trait::strong_spirit)])
+            if (player_bon::traits[(size_t)Trait::strong_spirit])
             {
-                regen_spi_n_turns -= 3;
+                regen_spi_n_turns -= 4;
             }
 
-            if (player_bon::traits[size_t(Trait::mighty_spirit)])
+            if (player_bon::traits[(size_t)Trait::mighty_spirit])
             {
-                regen_spi_n_turns -= 3;
+                regen_spi_n_turns -= 4;
             }
         }
         else //Is monster

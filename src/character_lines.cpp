@@ -71,9 +71,15 @@ void draw()
         shock < 75  ? clr_yellow    :
         shock < 100 ? clr_magenta   : clr_red_lgt;
 
-    str = to_str(shock) + "%/";
+    str = to_str(shock) + "%";
 
     render::draw_text(str, panel, p, short_san_clr);
+
+    p.x += str.size();
+
+    str = "/";
+
+    render::draw_text(str, panel, p, clr_gray_drk);
 
     p.x += str.size();
 

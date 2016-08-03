@@ -861,10 +861,10 @@ void init_data_list()
     d.tile = TileId::rock;
     d.glyph = '*';
     d.clr = clr_gray;
-    d.ranged.throw_dmg = DiceParam(1, 3);
+    d.ranged.throw_dmg = DiceParam(1, 4);
     d.ranged.throw_hit_chance_mod = 10;
     d.ranged.effective_range = 4;
-    d.max_stack_at_spawn = 6;
+    d.max_stack_at_spawn = 4;
     d.main_att_mode = AttMode::thrown;
     add_feature_found_in(d, FeatureId::cabinet);
     add_feature_found_in(d, FeatureId::cocoon);
@@ -1027,7 +1027,7 @@ void init_data_list()
     d.tile = TileId::pitchfork;
     d.melee.att_msgs = {"strike", "strikes me with a Pitchfork"};
     d.melee.dmg = DiceParam(3, 4);
-    d.melee.hit_chance_mod = -5;
+    d.melee.hit_chance_mod = -15;
     d.melee.knocks_back = true;
     d.melee.hit_small_sfx = SfxId::hit_sharp;
     d.melee.hit_medium_sfx = SfxId::hit_sharp;
@@ -1051,7 +1051,7 @@ void init_data_list()
     d.tile = TileId::sledge_hammer;
     d.melee.att_msgs = {"strike", "strikes me with a Sledgehammer"};
     d.melee.dmg = DiceParam(3, 5);
-    d.melee.hit_chance_mod = -10;
+    d.melee.hit_chance_mod = -15;
     d.melee.knocks_back = true;
     d.melee.miss_sfx = SfxId::miss_heavy;
     d.ranged.throw_hit_chance_mod = -10;
@@ -1099,7 +1099,7 @@ void init_data_list()
     d.clr = clr_gray;
     d.glyph = '/';
     d.ranged.throw_hit_chance_mod = -5;
-    d.ranged.throw_dmg = DiceParam(1, 3);
+    d.ranged.throw_dmg = DiceParam(1, 4);
     d.ranged.effective_range = 3;
     d.max_stack_at_spawn = 12;
     d.land_on_hard_snd_msg = "I hear a clanking sound.";

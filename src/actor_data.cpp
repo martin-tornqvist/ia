@@ -123,18 +123,18 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::normal;
+    d.speed = ActorSpeed::slow;
     d.glyph = 'Z';
     d.color = clr_brown;
     d.tile = TileId::zombie_unarmed;
-    d.hp = 12;
-    d.dmg_melee = min_dmg_to_wound;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.hp = 16;
+    d.dmg_melee = min_dmg_to_wound + 1;
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    4),
+        MonGroupSpawnRule(MonGroupSize::few,    1),
         MonGroupSpawnRule(MonGroupSize::pack,   1)
     });
     d.actor_size = ActorSize::humanoid;
@@ -148,7 +148,7 @@ void init_data_list()
     d.aggro_text_mon_hidden = "I hear a growling voice.";
     d.aggro_sfx_mon_seen = SfxId::zombie_growl;
     d.aggro_sfx_mon_hidden = SfxId::zombie_growl;
-    d.erratic_move_pct = ActorErraticFreq::rare;
+    d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = MonShockLvl::frightening;
     d.is_undead = true;
     d.is_humanoid = true;
@@ -171,18 +171,18 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::normal;
+    d.speed = ActorSpeed::slow;
     d.glyph = 'Z';
     d.color = clr_gray;
     d.tile = TileId::zombie_armed;
-    d.hp = 12;
-    d.dmg_melee = min_dmg_to_wound + 4;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.hp = 16;
+    d.dmg_melee = min_dmg_to_wound + 5;
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    4),
+        MonGroupSpawnRule(MonGroupSize::few,    1),
         MonGroupSpawnRule(MonGroupSize::pack,   1)
     });
     d.actor_size = ActorSize::humanoid;
@@ -195,7 +195,7 @@ void init_data_list()
     d.aggro_text_mon_hidden = "I hear a growling voice.";
     d.aggro_sfx_mon_seen = SfxId::zombie_growl;
     d.aggro_sfx_mon_hidden = SfxId::zombie_growl;
-    d.erratic_move_pct = ActorErraticFreq::rare;
+    d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = MonShockLvl::frightening;
     d.is_undead = true;
     d.is_humanoid = true;
@@ -226,7 +226,7 @@ void init_data_list()
     d.hp = 24;
     d.dmg_melee = min_dmg_to_wound + 2;
     d.dmg_ranged = 3;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::ranged, 50);
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = dlvl_last_mid_game;
@@ -270,8 +270,8 @@ void init_data_list()
     d.color = clr_cyan_lgt;
     d.tile = TileId::zombie_unarmed;
     d.hp = 26;
-    d.dmg_melee = min_dmg_to_wound;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.dmg_melee = min_dmg_to_wound + 1;
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::ranged, 40);
     d.spawn_min_dlvl = 4;
     d.actor_size = ActorSize::humanoid;
@@ -312,8 +312,8 @@ void init_data_list()
     d.color = clr_cyan;
     d.tile = TileId::zombie_unarmed;
     d.hp = 26;
-    d.dmg_melee = min_dmg_to_wound;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.dmg_melee = min_dmg_to_wound + 1;
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::ranged, 40);
     d.is_auto_spawn_allowed = false;
     d.spawn_min_dlvl = 4;
@@ -966,7 +966,7 @@ void init_data_list()
     d.color = clr_magenta;
     d.tile = TileId::giant_spider;
     d.hp = 30;
-    d.dmg_melee = 8;
+    d.dmg_melee = min_dmg_to_wound + 3;
 //  d.dmg_ranged = 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
 //  d.ability_vals.set_val(AbilityId::ranged, 40);
@@ -1139,7 +1139,7 @@ void init_data_list()
     d.color = clr_red;
     d.tile = TileId::hound;
     d.hp = 22;
-    d.dmg_melee = min_dmg_to_wound - 1;
+    d.dmg_melee = min_dmg_to_wound + 1;
     d.dmg_ranged = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::ranged, 65);
@@ -1191,7 +1191,7 @@ void init_data_list()
     d.is_auto_descr_allowed = false;
     d.hp = 65;
     d.spi = 40;
-    d.dmg_melee = 8;
+    d.dmg_melee = min_dmg_to_wound + 3;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::dodge_att, 25);
     d.natural_props[(size_t)PropId::rFear] = true;
@@ -1461,7 +1461,7 @@ void init_data_list()
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::few,    1),
-        MonGroupSpawnRule(MonGroupSize::pack,   4)
+        MonGroupSpawnRule(MonGroupSize::pack,   5)
     });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
@@ -1587,7 +1587,7 @@ void init_data_list()
     d.tile = TileId::byakhee;
     d.hp = 14;
     d.spi = 20;
-    d.dmg_melee = min_dmg_to_wound;
+    d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodge_att, 40);
     d.natural_props[(size_t)PropId::flying] = true;
@@ -1640,7 +1640,7 @@ void init_data_list()
     d.tile = TileId::mantis;
     d.hp = 25;
     d.spi = 20;
-    d.dmg_melee = min_dmg_to_wound;
+    d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodge_att, 40);
     d.ability_vals.set_val(AbilityId::stealth, 20);
@@ -1886,7 +1886,7 @@ void init_data_list()
     d.tile = TileId::polyp;
     d.hp = 70;
     d.spi = 30;
-    d.dmg_melee = 12;
+    d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 70);
     //NOTE: Polyps should be resistant against all damage types except electricity
     d.natural_props[(size_t)PropId::rPhys] = true;
@@ -1935,8 +1935,8 @@ void init_data_list()
     d.tile = TileId::ghoul;
     d.hp = 28;
     d.spi = 20;
-    d.dmg_melee = min_dmg_to_wound + 1;
-    d.ability_vals.set_val(AbilityId::melee, 55);
+    d.dmg_melee = min_dmg_to_wound + 2;
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.natural_props[(size_t)PropId::rDisease] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 5;
@@ -2081,7 +2081,7 @@ void init_data_list()
     d.tile = TileId::mummy;
     d.hp = 25;
     d.spi = 30;
-    d.dmg_melee = min_dmg_to_wound;
+    d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.spawn_min_dlvl = dlvl_first_late_game - 3;
     d.actor_size = ActorSize::humanoid;
@@ -2118,7 +2118,7 @@ void init_data_list()
     d.tile = TileId::croc_head_mummy;
     d.hp = 25;
     d.spi = 30;
-    d.dmg_melee = min_dmg_to_wound + 4;
+    d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.spawn_min_dlvl = dlvl_first_late_game - 3;
     d.group_sizes.assign(
@@ -2297,7 +2297,7 @@ void init_data_list()
     d.tile = TileId::ape;
     d.hp = 18;
     d.spi = 6;
-    d.dmg_melee = min_dmg_to_wound;
+    d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodge_att, 35);
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -2305,7 +2305,7 @@ void init_data_list()
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::few,    1),
-        MonGroupSpawnRule(MonGroupSize::pack,   4)
+        MonGroupSpawnRule(MonGroupSize::pack,   1)
     });
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
@@ -2475,7 +2475,7 @@ void init_data_list()
     d.tile = TileId::vortex;
     d.hp = 16;
     d.spi = 12;
-    d.dmg_melee = min_dmg_to_wound;
+    d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::rFear] = true;
@@ -2629,7 +2629,7 @@ void init_data_list()
     d.tile = TileId::ooze;
     d.hp = 20;
     d.spi = 12;
-    d.dmg_melee = min_dmg_to_wound;
+    d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.natural_props[(size_t)PropId::ooze] = true;
     d.natural_props[(size_t)PropId::rFear] = true;
@@ -2684,7 +2684,7 @@ void init_data_list()
     d.tile = TileId::ooze;
     d.hp = 20;
     d.spi = 12;
-    d.dmg_melee = min_dmg_to_wound;
+    d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.natural_props[(size_t)PropId::ooze] = true;
     d.natural_props[(size_t)PropId::rFear] = true;
@@ -2739,7 +2739,7 @@ void init_data_list()
     d.tile = TileId::ooze;
     d.hp = 35;
     d.spi = 40;
-    d.dmg_melee = 10;
+    d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.natural_props[(size_t)PropId::ooze] = true;
     d.natural_props[(size_t)PropId::ethereal] = true;
@@ -2790,7 +2790,7 @@ void init_data_list()
     d.tile = TileId::chthonian;
     d.hp = 200;
     d.spi = 40;
-    d.dmg_melee = 10;
+    d.dmg_melee = min_dmg_to_wound + 10;
     d.ability_vals.set_val(AbilityId::melee, 45);
     d.natural_props[(size_t)PropId::burrowing] = true;
     d.natural_props[(size_t)PropId::rFear] = true;
@@ -3015,7 +3015,7 @@ void init_data_list()
     d.tile = TileId::hunting_horror;
     d.hp = 90;
     d.spi = 40;
-    d.dmg_melee = 12;
+    d.dmg_melee = min_dmg_to_wound + 7;
     d.ability_vals.set_val(AbilityId::melee, 75);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::rFear] = true;
@@ -3120,7 +3120,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::rFear] = true;
     d.natural_props[(size_t)PropId::rFire] = true;
     d.natural_props[(size_t)PropId::rBreath] = true;
-    d.dmg_melee = 10;
+    d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 70);
     d.is_auto_spawn_allowed = false;
     d.actor_size = ActorSize::humanoid;

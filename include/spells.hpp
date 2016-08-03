@@ -171,7 +171,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return 4;
+        return 6;
     }
 };
 

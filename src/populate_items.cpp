@@ -62,13 +62,9 @@ std::vector<ItemId> mk_item_bucket()
     return item_bucket;
 }
 
-void mk_position_weights(std::vector<P>& positions_out,
-                         std::vector<int>& weights_out)
+void mk_blocked_map(bool out[map_w][map_h])
 {
-    bool blocked[map_w][map_h];
-    map_parse::run(cell_check::BlocksItems(), blocked);
-
-    int weight_map[map_w][map_h] = {};
+    map_parse::run(cell_check::BlocksItems(), out);
 
     for (int x = 0; x < map_w; ++x)
     {
@@ -79,11 +75,25 @@ void mk_position_weights(std::vector<P>& positions_out,
 
             if (id == FeatureId::liquid_shallow)
             {
-                blocked[x][y] = true;
+                out[x][y] = true;
             }
+        }
+    }
+}
 
+void mk_position_weights(const bool blocked[map_w][map_h],
+                         std::vector<P>& positions_out,
+                         std::vector<int>& weights_out)
+{
+    int weight_map[map_w][map_h] = {};
+
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
+        {
             if (!blocked[x][y])
             {
+                //This position is OK to spawn in, give it a base chance of 1
                 weight_map[x][y] = 1;
 
                 //Increase weight for dark cells
@@ -186,7 +196,13 @@ void mk_items_on_floor()
     std::vector<P>      positions;
     std::vector<int>    position_weights;
 
-    mk_position_weights(positions, position_weights);
+    bool blocked[map_w][map_h];
+
+    mk_blocked_map(blocked);
+
+    mk_position_weights(blocked,
+                        positions,
+                        position_weights);
 
     const int nr = nr_items();
 
@@ -202,7 +218,7 @@ void mk_items_on_floor()
         const size_t    item_idx    = rnd::range(0, item_bucket.size() - 1);
         const ItemId    id          = item_bucket[item_idx];
 
-        if (item_data::data[size_t(id)].allow_spawn)
+        if (item_data::data[(size_t)id].allow_spawn)
         {
             item_factory::mk_item_on_floor(id, p);
 
@@ -213,6 +229,20 @@ void mk_items_on_floor()
         {
             item_bucket.erase(begin(item_bucket) + item_idx);
         }
+    }
+
+    //Spawn some extra rocks on the map (to give player some ranged attack)
+    to_vec(blocked,
+           false,
+           positions);
+
+    const int nr_rock_spawns = rnd::range(4, 6);
+
+    for (int i = 0; i < nr_rock_spawns; ++i)
+    {
+        const P& p(rnd::element(positions));
+
+        item_factory::mk_item_on_floor(ItemId::rock, p);
     }
 }
 

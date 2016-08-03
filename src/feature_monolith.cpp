@@ -80,7 +80,7 @@ void Monolith::activate()
     }
 
     //Spawn monsters?
-    if (rnd::one_in(3))
+    if (rnd::one_in(6))
     {
         spawn_monsters();
     }
@@ -96,7 +96,7 @@ void Monolith::spawn_monsters()
 
         if (data.can_be_summoned)
         {
-            if (data.spawn_min_dlvl <= (map::dlvl + 8))
+            if (data.spawn_min_dlvl <= (map::dlvl + 4))
             {
                 summon_bucket.push_back(ActorId(i));
             }

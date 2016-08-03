@@ -30,9 +30,9 @@ Door::Door(const P& feature_pos,
         //      doors placed wherever. Doors may be explicitly set to other
         //      states elsewhere during map generation (e.g. set to secret to
         //      hide an optional branch of the map).
-        
-        const int pct_secret        = std::min(50, 10 + ((map::dlvl - 1) * 5));
-        const int stuck_one_in_n    = 20;
+
+        const int pct_secret        = std::min(50, (map::dlvl - 1) * 5);
+        const int stuck_one_in_n    = 24;
 
         if (rnd::percent(pct_secret))
         {
@@ -47,9 +47,9 @@ Door::Door(const P& feature_pos,
         }
         else //Not secret
         {
-            const int open_one_in_n = 4;
+            Fraction chance_open(3, 4);
 
-            if (rnd::one_in(open_one_in_n))
+            if (chance_open.roll())
             {
                 spawn_state = DoorSpawnState::open;
             }

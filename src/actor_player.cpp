@@ -892,8 +892,6 @@ void Player::on_actor_turn()
 
         if (nr_turns_until_ins_ > 0)
         {
-            render::draw_map_state(UpdateScreen::yes);
-
             msg_log::add("I feel my sanity slipping...");
         }
         else //Time to go crazy!
@@ -936,7 +934,7 @@ void Player::on_actor_turn()
 void Player::tick_tmp_shock()
 {
     //Minimum temporary shock raised due to obsession?
-    double min_tmp_shock = 0.0;
+    double shock_tmp_min = 0.0;
 
     if (
         insanity::has_sympt(InsSymptId::sadism) ||
@@ -945,7 +943,7 @@ void Player::tick_tmp_shock()
         shock_tmp_ = std::max(shock_tmp_, (double)shock_from_obsession);
 
         //Do not decrement shock below this value
-        min_tmp_shock = shock_tmp_;
+        shock_tmp_min = (double)shock_from_obsession;
     }
 
     //NOTE: We only decrement temporary shock if it is NOT raised - so we store
@@ -971,19 +969,19 @@ void Player::tick_tmp_shock()
                 switch (mon_data.mon_shock_lvl)
                 {
                 case MonShockLvl::unsettling:
-                    tmp_shock_from_mon = 0.375;
+                    tmp_shock_from_mon = 0.3;
                     break;
 
                 case MonShockLvl::frightening:
-                    tmp_shock_from_mon = 0.75;
+                    tmp_shock_from_mon = 0.6;
                     break;
 
                 case MonShockLvl::terrifying:
-                    tmp_shock_from_mon = 1.5;
+                    tmp_shock_from_mon = 1.2;
                     break;
 
                 case MonShockLvl::mind_shattering:
-                    tmp_shock_from_mon = 3.0;
+                    tmp_shock_from_mon = 2.4;
                     break;
 
                 default:
@@ -1022,10 +1020,19 @@ void Player::tick_tmp_shock()
 
     if ((shock_tmp_ - shock_tmp_initial) <= decr_threshold_value)
     {
-        const double shock_tmp_decr = 1.0;
+        const double shock_tmp_decr = 2.0;
 
-        shock_tmp_ = std::max(min_tmp_shock, shock_tmp_ - shock_tmp_decr);
+        shock_tmp_ = std::max(shock_tmp_min, shock_tmp_ - shock_tmp_decr);
     }
+    else //Did receive some temporary shock
+    {
+        //Interrupt actions, so shock doesn't run away while e.g. healing
+        interrupt_actions();
+    }
+
+    const double shock_tmp_max = 100.0 - shock_;
+
+    shock_tmp_ = std::min(shock_tmp_, shock_tmp_max);
 }
 
 int Player::ins() const

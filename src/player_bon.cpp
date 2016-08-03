@@ -446,7 +446,7 @@ std::string trait_descr(const Trait id)
         return "+10% hit chance and +1 damage with melee attacks";
 
     case Trait::adept_marksman:
-        return "+10% hit chance with firearms and thrown weapons, you occasionally "
+        return "+10% hit chance and +1 damage with firearms and thrown weapons, you occasionally "
                "reload instantly";
 
     case Trait::expert_marksman:

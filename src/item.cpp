@@ -91,12 +91,12 @@ DiceParam Item::dmg(const AttMode att_mode, const Actor* const actor) const
 
         if (actor == map::player)
         {
-            if (player_bon::traits[size_t(Trait::adept_melee_fighter)])
+            if (player_bon::traits[(size_t)Trait::adept_melee_fighter])
             {
                 ++out.plus;
             }
 
-            if (player_bon::traits[size_t(Trait::expert_melee_fighter)])
+            if (player_bon::traits[(size_t)Trait::expert_melee_fighter])
             {
                 ++out.plus;
             }
@@ -114,9 +114,17 @@ DiceParam Item::dmg(const AttMode att_mode, const Actor* const actor) const
     {
         out = data_->ranged.dmg;
 
-        if (actor == map::player && player_bon::traits[size_t(Trait::expert_marksman)])
+        if (actor == map::player)
         {
-            ++out.plus;
+            if ( player_bon::traits[(size_t)Trait::adept_marksman])
+            {
+                ++out.plus;
+            }
+
+            if ( player_bon::traits[(size_t)Trait::expert_marksman])
+            {
+                ++out.plus;
+            }
         }
     }
     break;
@@ -136,9 +144,17 @@ DiceParam Item::dmg(const AttMode att_mode, const Actor* const actor) const
             out = data_->ranged.throw_dmg;
         }
 
-        if (actor == map::player && player_bon::traits[size_t(Trait::expert_marksman)])
+        if (actor == map::player)
         {
-            ++out.plus;
+            if ( player_bon::traits[(size_t)Trait::adept_marksman])
+            {
+                ++out.plus;
+            }
+
+            if ( player_bon::traits[(size_t)Trait::expert_marksman])
+            {
+                ++out.plus;
+            }
         }
     }
     break;
@@ -354,7 +370,7 @@ std::string Item::name(const ItemRefType ref_type,
     const auto& names_used = data_->is_identified ?
                              data_->base_name : data_->base_name_un_id;
 
-    const std::string base_name = names_used.names[size_t(ref_type_used)];
+    const std::string base_name = names_used.names[(size_t)ref_type_used];
 
     const std::string ret = nr_str + base_name + att_str + inf_str;
 
@@ -663,7 +679,7 @@ void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit)
     if (
         !is_ethereal                                &&
         d.can_bleed                                 &&
-        player_bon::traits[size_t(Trait::ravenous)] &&
+        player_bon::traits[(size_t)Trait::ravenous] &&
         is_feed_needed                              &&
         rnd::one_in(4))
     {
@@ -685,7 +701,7 @@ void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit)
     {
         //Poison victim from Ghoul Toxic trait?
         if (
-            player_bon::traits[size_t(Trait::toxic)] &&
+            player_bon::traits[(size_t)Trait::toxic] &&
             rnd::one_in(4))
         {
             Prop* const poison = new PropPoisoned(PropTurns::std);
@@ -695,7 +711,7 @@ void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit)
 
         //Terrify victim from Ghoul Indomitable Fury trait?
         if (
-            player_bon::traits[size_t(Trait::indomitable_fury)] &&
+            player_bon::traits[(size_t)Trait::indomitable_fury] &&
             map::player->has_prop(PropId::frenzied))
         {
             Prop* const fear = new PropTerrified(PropTurns::std);
@@ -714,7 +730,7 @@ void PlayerGhoulClaw::on_melee_kill(Actor& actor_killed)
     const bool is_ethereal = actor_killed.has_prop(PropId::ethereal);
 
     if (
-        player_bon::traits[size_t(Trait::foul)] &&
+        player_bon::traits[(size_t)Trait::foul] &&
         !is_ethereal                            &&
         d.can_leave_corpse                      &&
         rnd::one_in(3))
@@ -1081,7 +1097,7 @@ void MedicalBag::interrupted()
 
 int MedicalBag::tot_suppl_for_action(const MedBagAction action) const
 {
-    const bool  is_healer   = player_bon::traits[size_t(Trait::healer)];
+    const bool  is_healer   = player_bon::traits[(size_t)Trait::healer];
     const int   div         = is_healer ? 2 : 1;
 
     switch (action)
@@ -1103,7 +1119,7 @@ int MedicalBag::tot_suppl_for_action(const MedBagAction action) const
 
 int MedicalBag::tot_turns_for_action(const MedBagAction action) const
 {
-    const bool  is_healer   = player_bon::traits[size_t(Trait::healer)];
+    const bool  is_healer   = player_bon::traits[(size_t)Trait::healer];
     const int   div         = is_healer ? 2 : 1;
 
     switch (action)

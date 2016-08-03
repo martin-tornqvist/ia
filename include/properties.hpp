@@ -756,6 +756,12 @@ public:
     bool allow_read(const Verbosity verbosity) const override;
     bool allow_cast_spell(const Verbosity verbosity) const override;
 
+    int ability_mod(const AbilityId ability) const override
+    {
+        (void)ability;
+        return -30;
+    }
+
     bool affect_actor_clr(Clr& clr) const override
     {
         clr = clr_red_lgt;

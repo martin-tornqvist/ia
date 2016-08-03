@@ -758,7 +758,7 @@ bool mk_std_lvl()
     if (is_map_valid)
     {
         bool blocked[map_w][map_h];
-    
+
         map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
 
         //Consider stairs and doors as non-blocking
@@ -767,7 +767,7 @@ bool mk_std_lvl()
             for (int y = 0; y < map_h; ++y)
             {
                 const FeatureId id = map::cells[x][y].rigid->id();
-                
+
                 if (id == FeatureId::stairs ||
                     id == FeatureId::door)
                 {
@@ -846,12 +846,12 @@ bool mk_std_lvl()
                 {
                     Door* const door = static_cast<Door*>(rigid);
 
-                    if (rnd::coin_toss())
+                    if (rnd::one_in(4))
                     {
                         door->set_to_secret();
                     }
 
-                    if (rnd::coin_toss())
+                    if (rnd::one_in(4))
                     {
                         door->set_to_stuck();
                     }
