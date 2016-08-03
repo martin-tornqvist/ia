@@ -518,8 +518,7 @@ std::string trait_descr(const Trait id)
         return "You are more likely to spot hidden monsters and objects";
 
     case Trait::perceptive:
-        return "You can spot hidden traps and doors from two cells away, and you are "
-               "more likely to spot hidden monsters and objects";
+        return "You are more likely to spot hidden monsters and objects";
 
     case Trait::vigilant:
         return "You cannot be backstabbed - monsters that you are unaware of gets no melee attack "

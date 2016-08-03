@@ -969,19 +969,19 @@ void Player::tick_tmp_shock()
                 switch (mon_data.mon_shock_lvl)
                 {
                 case MonShockLvl::unsettling:
-                    tmp_shock_from_mon = 0.3;
+                    tmp_shock_from_mon = 0.5;
                     break;
 
                 case MonShockLvl::frightening:
-                    tmp_shock_from_mon = 0.6;
+                    tmp_shock_from_mon = 1.0;
                     break;
 
                 case MonShockLvl::terrifying:
-                    tmp_shock_from_mon = 1.2;
+                    tmp_shock_from_mon = 2.0;
                     break;
 
                 case MonShockLvl::mind_shattering:
-                    tmp_shock_from_mon = 2.4;
+                    tmp_shock_from_mon = 4.0;
                     break;
 
                 default:
@@ -1242,16 +1242,9 @@ void Player::on_std_turn()
     //Try to spot hidden traps and doors
     if (!has_prop(PropId::confused) && prop_handler_->allow_see())
     {
-        const int r = player_bon::traits[(size_t)Trait::perceptive] ? 2 : 1;
-
-        int x0 = std::max(0, pos.x - r);
-        int y0 = std::max(0, pos.y - r);
-        int x1 = std::min(map_w - 1, pos.x + r);
-        int y1 = std::min(map_h - 1, pos.y + r);
-
-        for (int y = y0; y <= y1; ++y)
+        for (int x = 0; x < map_w; ++x)
         {
-            for (int x = x0; x <= x1; ++x)
+            for (int y = 0; y < map_h; ++y)
             {
                 if (map::cells[x][y].is_seen_by_player)
                 {

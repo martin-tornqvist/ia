@@ -846,7 +846,7 @@ bool mk_std_lvl()
                 {
                     Door* const door = static_cast<Door*>(rigid);
 
-                    if (rnd::one_in(4))
+                    if (rnd::one_in(3))
                     {
                         door->set_to_secret();
                     }

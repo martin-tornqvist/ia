@@ -35,16 +35,16 @@ int AbilityVals::val(const AbilityId id,
         switch (id)
         {
         case AbilityId::searching:
-            ret += 8;
+            ret += 2;
 
             if (player_bon::traits[(size_t)Trait::observant])
             {
-                ret += 4;
+                ret += 2;
             }
 
             if (player_bon::traits[(size_t)Trait::perceptive])
             {
-                ret += 4;
+                ret += 2;
             }
             break;
 
@@ -151,7 +151,7 @@ int AbilityVals::val(const AbilityId id,
 
         if (id == AbilityId::searching)
         {
-            //Searching must always be at least 1 to avoid trapping the player
+            //Searching must ALWAYS be at least 1 to avoid trapping the player
             ret = std::max(ret, 1);
         }
         else if (id == AbilityId::dodge_att)

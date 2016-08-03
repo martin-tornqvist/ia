@@ -69,8 +69,7 @@ bool Actor::is_spotting_sneaking_actor(Actor& other)
 {
     const P& other_pos = other.pos;
 
-    const int   player_search_mod   = is_player() ?
-                                      (ability(AbilityId::searching, true) / 3) : 0;
+    const int   player_search_mod   = is_player() ? ability(AbilityId::searching, true) : 0;
 
     const auto& abilities_other     = other.data().ability_vals;
 
