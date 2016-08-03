@@ -236,7 +236,7 @@ void mk_items_on_floor()
            false,
            positions);
 
-    const int nr_rock_spawns = rnd::range(4, 6);
+    const int nr_rock_spawns = rnd::range(2, 3);
 
     for (int i = 0; i < nr_rock_spawns; ++i)
     {

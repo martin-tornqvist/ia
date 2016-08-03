@@ -1554,7 +1554,10 @@ Bush::Bush(const P& p) :
     Rigid(p),
     type_(GrassType::cmn)
 {
-    if (rnd::one_in(5)) {type_ = GrassType::withered;}
+    if (rnd::one_in(5))
+    {
+        type_ = GrassType::withered;
+    }
 }
 
 void Bush::on_hit(const DmgType dmg_type,
@@ -1596,7 +1599,8 @@ std::string Bush::name(const Article article) const
     case BurnState::burning:
         return ret + "burning shrub";
 
-    case BurnState::has_burned: {/*Should not happen*/}
+    case BurnState::has_burned:
+        //Should not happen
         break;
     }
 
@@ -1619,6 +1623,55 @@ Clr Bush::clr_default() const
 
     ASSERT(false && "Failed to set color");
     return clr_yellow;
+}
+
+//--------------------------------------------------------------------- VINES
+Vines::Vines(const P& p) :
+    Rigid(p) {}
+
+void Vines::on_hit(const DmgType dmg_type,
+                  const DmgMethod dmg_method,
+                  Actor* const actor)
+{
+    if (dmg_type == DmgType::fire && dmg_method == DmgMethod::elemental)
+    {
+        (void)actor;
+        try_start_burning(false);
+    }
+}
+
+WasDestroyed Vines::on_finished_burning()
+{
+    Floor* const floor = new Floor(pos_);
+    floor->set_has_burned();
+    map::put(floor);
+    return WasDestroyed::yes;
+}
+
+std::string Vines::name(const Article article) const
+{
+    std::string ret = article == Article::a ? "" : "the ";
+
+    switch (burn_state())
+    {
+    case BurnState::not_burned:
+        return ret + "hanging vines";
+
+    case BurnState::burning:
+        return ret + "burning vines";
+
+    case BurnState::has_burned:
+        //Should not happen
+        break;
+    }
+
+    ASSERT("Failed to set name" && false);
+    return "";
+}
+
+Clr Vines::clr_default() const
+{
+    return clr_green;
 }
 
 //--------------------------------------------------------------------- TREE

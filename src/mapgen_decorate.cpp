@@ -36,7 +36,8 @@ void decorate()
                 }
                 else //Not late game
                 {
-                    //Convert walls with no adjacent floor or with adjacent cave floor to cave
+                    //Convert walls with no adjacent floor or with adjacent cave
+                    //floor to cave
                     bool has_adj_floor      = false;
                     bool has_adj_cave_floor = false;
 
@@ -44,32 +45,37 @@ void decorate()
                     {
                         const P p_adj(P(x, y) + d);
 
-                        if (map::is_pos_inside_map(p_adj))
+                        if (!map::is_pos_inside_map(p_adj))
                         {
-                            auto& adj_cell = map::cells[p_adj.x][p_adj.y];
+                            continue;
+                        }
 
-                            const auto adj_id = adj_cell.rigid->id();
+                        auto& adj_cell = map::cells[p_adj.x][p_adj.y];
 
-                            //TODO: Traps count as floor here - otherwise walls that are
-                            //only adjacent to traps (and not to any "real" floor) would
-                            //be converted to cave walls, which would spoil the presence
-                            //of the trap for the player, and just be weird in general.
-                            //This works for now, but it should probably be handled
-                            //better in the future. Currently, traps are the only rigid
-                            //that can "mimic" floor, but if some other feature like that
-                            //is added, it could be a problem.
+                        const auto adj_id = adj_cell.rigid->id();
 
-                            if (adj_id == FeatureId::floor || adj_id == FeatureId::trap)
+                        //TODO: Traps count as floor here - otherwise walls that
+                        //      are only adjacent to traps would be converted to
+                        //      cave walls, which would spoil the presence of
+                        //      the trap, and just be weird in general. This
+                        //      works for now, but it should probably be handled
+                        //      better. Currently, traps are the only rigid that
+                        //      can "mimic" floor, but if some other feature
+                        //      like that is added, it could be a problem.
+
+                        if (
+                            adj_id == FeatureId::floor  ||
+                            adj_id == FeatureId::carpet ||
+                            adj_id == FeatureId::trap)
+                        {
+                            has_adj_floor = true;
+
+                            auto* adj_rigid = static_cast<Floor*>(adj_cell.rigid);
+
+                            if (adj_rigid->type_ == FloorType::cave)
                             {
-                                has_adj_floor = true;
-
-                                auto* adj_rigid = static_cast<Floor*>(adj_cell.rigid);
-
-                                if (adj_rigid->type_ == FloorType::cave)
-                                {
-                                    has_adj_cave_floor = true;
-                                    break;
-                                }
+                                has_adj_cave_floor = true;
+                                break;
                             }
                         }
                     }
@@ -95,11 +101,28 @@ void decorate()
         {
             if (map::cells[x][y].rigid->id() == FeatureId::floor)
             {
-                //Randomly convert stone floor to low rubble
+                const P p(x, y);
+
+                //Randomly put low rubble
                 if (rnd::one_in(100))
                 {
-                    map::put(new RubbleLow(P(x, y)));
-                    continue;
+                    map::put(new RubbleLow(p));
+                }
+
+                //Randomly put vines
+                if (rnd::one_in(100))
+                {
+                    for (const P& d : dir_utils::cardinal_list_w_center)
+                    {
+                        const P adj_p(p + d);
+
+                        if (
+                            map::cells[adj_p.x][adj_p.y].rigid->id() == FeatureId::floor &&
+                            rnd::one_in(3))
+                        {
+                            map::put(new Vines(adj_p));
+                        }
+                    }
                 }
             }
         }

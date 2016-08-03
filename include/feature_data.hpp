@@ -15,6 +15,7 @@ enum class FeatureId
     tree,
     grass,
     bush,
+    vines,
     stairs,
     lever,
     brazier,

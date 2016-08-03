@@ -238,6 +238,31 @@ private:
                 Actor* const actor) override;
 };
 
+class Vines: public Rigid
+{
+public:
+    Vines(const P& p);
+
+    Vines() = delete;
+
+    ~Vines() {}
+
+    FeatureId id() const override
+    {
+        return FeatureId::vines;
+    }
+
+    std::string name(const Article article) const override;
+    WasDestroyed on_finished_burning() override;
+
+private:
+    Clr clr_default() const override;
+
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
+                Actor* const actor) override;
+};
+
 class Brazier: public Rigid
 {
 public:

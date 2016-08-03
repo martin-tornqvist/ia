@@ -228,7 +228,7 @@ void Door::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* con
             {
                 if (is_player)
                 {
-                    Fraction destr_chance(4 - nr_spikes_, 18);
+                    Fraction destr_chance(4 - nr_spikes_, 16);
 
                     destr_chance.num = std::max(1, destr_chance.num);
 

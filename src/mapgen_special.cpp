@@ -69,7 +69,7 @@ bool mk_intro_lvl()
             case '&':
             case ',':
             {
-                if (rnd::one_in(8))
+                if (rnd::one_in(12))
                 {
                     map::put(new Bush(p));
                 }
