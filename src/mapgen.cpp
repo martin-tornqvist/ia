@@ -366,7 +366,6 @@ void place_monoliths()
             5,  //0 monolith(s)
             50, //1 -
             5,  //2 -
-            1   //3 -
         };
 
         nr_monoliths = rnd::weighted_choice(nr_weights);

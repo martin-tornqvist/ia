@@ -3,7 +3,6 @@
 
 #include <functional>
 #include "art.hpp"
-#include "room.hpp"
 #include "map_patterns.hpp"
 #include "properties.hpp"
 
@@ -48,30 +47,6 @@ enum class FeatureId
     event_rats_in_the_walls_discovery,
 
     END
-};
-
-struct FeatureRoomSpawnRules
-{
-public:
-    FeatureRoomSpawnRules();
-
-    void reset();
-
-    void set(const int max_nr_in_room,
-             const Range& dlvls_allowed,
-             const PlacementRule placement_rule,
-             std::initializer_list<RoomType> room_types);
-
-    bool is_belonging_to_room_type(const RoomType type) const;
-    PlacementRule placement_rule() const;
-    int max_nr_in_room() const;
-    Range dlvls_allowed() const;
-
-private:
-    int max_nr_in_room_;
-    Range dlvls_allowed_;
-    PlacementRule placement_rule_;
-    std::vector<RoomType> room_types_native_;
 };
 
 class Actor;
@@ -142,7 +117,7 @@ struct FeatureDataT
     std::string msg_on_player_blocked_blind;
     int dodge_modifier;
     int shock_when_adjacent;
-    FeatureRoomSpawnRules room_spawn_rules;
+    FeaturePlacement auto_spawn_placement;
 };
 
 namespace feature_data

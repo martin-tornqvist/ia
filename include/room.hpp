@@ -2,28 +2,26 @@
 #define ROOM_HPP
 
 #include <vector>
-#ifdef MACOSX
-#include <numeric>
-#endif
 
 #include "rl_utils.hpp"
 #include "global.hpp"
+#include "feature_data.hpp"
 
+//------------------------------------------------------------------------------
+//Room theming occurs both pre- and post-connect.
+//  >   In pre-connect, reshaping is performed, e.g. plus-shape, cavern-shape,
+//      pillars, etc)
 //
-// Room theming occurs both before and after rooms are connected (pre/post-connect).
-//   > In pre-connect reshaping is done. The reshaping is called from mapgen_utils
-//     (e.g. plus-shape, cavern-shape, pillars, etc)
+//      When pre-connect starts, it is assumed that all (standard) rooms are
+//      rectangular with unbroken walls.
 //
-//     When pre-connect starts, it is assumed that all (standard) rooms are rectangular
-//     with unbroken walls.
+//  >   In post-connect, auto-features such as chests and altars are placed,
+//      as well as room-specific stuff like trees, altars, etc. It can then
+//      be verified for each feature that the map is still connected.
 //
-//   > In post-connect, auto-features such as chests and altars are placed (this is
-//     configured in the feature data), as well as room-specific stuff like trees, altars,
-//     etc. It can then be verified for each feature that the map is still connected.
-//
-// As a rule of thumb, place walkable features in the pre-connect step, and blocking
-// features in the post-connect step.
-//
+//As a rule of thumb, place walkable features in the pre-connect step, and
+//blocking features in the post-connect step.
+//------------------------------------------------------------------------------
 
 struct  FeatureDataT;
 class   Room;
@@ -51,12 +49,26 @@ enum class RoomType
     river
 };
 
+struct RoomAutoFeatureRule
+{
+    RoomAutoFeatureRule() :
+        feature_id  (FeatureId::END),
+        nr_allowed  (0) {}
+
+    RoomAutoFeatureRule(const FeatureId id, const int nr_allowed) :
+        feature_id  (id),
+        nr_allowed  (nr_allowed) {}
+
+    FeatureId feature_id;
+    int nr_allowed;
+};
+
 namespace room_factory
 {
 
 void init_room_bucket();
 
-//NOTE: These functions do not make rooms on the map, just create Room objects.
+//NOTE: These functions do not make rooms on the map, just Room objects
 Room* mk(const RoomType type, const R& r);
 
 Room* mk_random_allowed_std_room(const R& r, const bool is_subroom);
@@ -106,17 +118,15 @@ public:
     }
 
 protected:
-    virtual Range nr_auto_features_allowed() const = 0;
+    virtual std::vector<RoomAutoFeatureRule> auto_features_allowed() const = 0;
 
     virtual int base_pct_chance_drk() const = 0;
 
-    size_t try_auto_feature_placement(
-        const std::vector<P>& adj_to_walls,
-        const std::vector<P>& away_from_walls,
-        const std::vector<const FeatureDataT*>& feature_data_bucket,
-        P& pos_ref) const;
+    P find_auto_feature_placement(const std::vector<P>& adj_to_walls,
+                                  const std::vector<P>& away_from_walls,
+                                  const FeatureId id) const;
 
-    int place_auto_features();
+    void place_auto_features();
 
     virtual void on_pre_connect_hook(bool door_proposals[map_w][map_h]) = 0;
     virtual void on_post_connect_hook(bool door_proposals[map_w][map_h]) = 0;
@@ -130,9 +140,12 @@ public:
     ~PlainRoom() {}
 
 protected:
-    Range nr_auto_features_allowed() const override;
+    std::vector<RoomAutoFeatureRule> auto_features_allowed() const override;
+
     int base_pct_chance_drk() const override;
+
     void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
@@ -147,9 +160,12 @@ public:
     bool is_allowed() const override;
 
 protected:
-    Range nr_auto_features_allowed() const override;
+    std::vector<RoomAutoFeatureRule> auto_features_allowed() const override;
+
     int base_pct_chance_drk() const override;
+
     void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
@@ -164,9 +180,12 @@ public:
     bool is_allowed() const override;
 
 protected:
-    Range nr_auto_features_allowed() const override;
+    std::vector<RoomAutoFeatureRule> auto_features_allowed() const override;
+
     int base_pct_chance_drk() const override;
+
     void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
@@ -186,9 +205,12 @@ public:
     }
 
 protected:
-    Range nr_auto_features_allowed() const override;
+    std::vector<RoomAutoFeatureRule> auto_features_allowed() const override;
+
     int base_pct_chance_drk() const override;
+
     void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
@@ -203,13 +225,12 @@ public:
     bool is_allowed() const override;
 
 protected:
-    Range nr_auto_features_allowed() const override
-    {
-        return Range(0, 0);
-    }
+    std::vector<RoomAutoFeatureRule> auto_features_allowed() const override;
 
     int base_pct_chance_drk() const override;
+
     void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
@@ -224,9 +245,12 @@ public:
     bool is_allowed() const override;
 
 protected:
-    Range nr_auto_features_allowed() const override;
+    std::vector<RoomAutoFeatureRule> auto_features_allowed() const override;
+
     int base_pct_chance_drk() const override;
+
     void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
@@ -241,9 +265,12 @@ public:
     bool is_allowed() const override;
 
 protected:
-    Range nr_auto_features_allowed() const override;
+    std::vector<RoomAutoFeatureRule> auto_features_allowed() const override;
+
     int base_pct_chance_drk() const override;
+
     void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
@@ -258,9 +285,12 @@ public:
     bool is_allowed() const override;
 
 protected:
-    Range nr_auto_features_allowed() const override;
+    std::vector<RoomAutoFeatureRule> auto_features_allowed() const override;
+
     int base_pct_chance_drk() const override;
+
     void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
@@ -275,9 +305,12 @@ public:
     bool is_allowed() const override;
 
 protected:
-    Range nr_auto_features_allowed() const override;
+    std::vector<RoomAutoFeatureRule> auto_features_allowed() const override;
+
     int base_pct_chance_drk() const override;
+
     void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
@@ -292,9 +325,12 @@ public:
     bool is_allowed() const override;
 
 protected:
-    Range nr_auto_features_allowed() const override;
+    std::vector<RoomAutoFeatureRule> auto_features_allowed() const override;
+
     int base_pct_chance_drk() const override;
+
     void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
@@ -309,9 +345,12 @@ public:
     bool is_allowed() const override;
 
 protected:
-    Range nr_auto_features_allowed() const override;
+    std::vector<RoomAutoFeatureRule> auto_features_allowed() const override;
+
     int base_pct_chance_drk() const override;
+
     void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
@@ -326,9 +365,12 @@ public:
     bool is_allowed() const override;
 
 protected:
-    Range nr_auto_features_allowed() const override;
+    std::vector<RoomAutoFeatureRule> auto_features_allowed() const override;
+
     int base_pct_chance_drk() const override;
+
     void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 

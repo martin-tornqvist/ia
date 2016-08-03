@@ -5,12 +5,11 @@
 
 #include "rl_utils.hpp"
 
-//TODO: This should be be merged into mapgen_utils or something
-//Also, most/all things in here really needs clearer purpose/naming
+//TODO: This should be be merged into other files
 
 class Room;
 
-enum class PlacementRule
+enum class FeaturePlacement
 {
     adj_to_walls,
     away_from_walls,
@@ -20,11 +19,10 @@ enum class PlacementRule
 namespace map_patterns
 {
 
+//TODO: This should be a member function in the room class
 void cells_in_room(const Room& room,
                    std::vector<P>& adj_to_walls,
                    std::vector<P>& away_from_walls);
-
-int walk_blockers_in_dir(const Dir dir, const P& pos);
 
 } //map_patterns
 

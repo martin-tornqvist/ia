@@ -8,6 +8,7 @@
 #include "spells.hpp"
 #include "feature_data.hpp"
 #include "audio.hpp"
+#include "room.hpp"
 
 enum class SndVol;
 

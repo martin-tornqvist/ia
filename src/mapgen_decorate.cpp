@@ -15,7 +15,7 @@ void decorate()
 
             if (cell.rigid->id() == FeatureId::wall)
             {
-                //Randomly convert walls to rubble
+                //Randomly convert walls to high rubble
                 if (rnd::one_in(10))
                 {
                     map::put(new RubbleHigh(P(x, y)));
@@ -110,9 +110,9 @@ void decorate()
                 }
 
                 //Randomly put vines
-                if (rnd::one_in(100))
+                if (rnd::one_in(150))
                 {
-                    for (const P& d : dir_utils::cardinal_list_w_center)
+                    for (const P& d : dir_utils::dir_list_w_center)
                     {
                         const P adj_p(p + d);
 

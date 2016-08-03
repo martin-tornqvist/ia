@@ -12,58 +12,6 @@
 #include "feature_monolith.hpp"
 #include "game_time.hpp"
 
-//--------------------------------------------------------- FEATURE ROOM SPAWN RULES
-FeatureRoomSpawnRules::FeatureRoomSpawnRules() :
-    max_nr_in_room_(-1),
-    dlvls_allowed_(Range(-1, -1)),
-    placement_rule_(PlacementRule::adj_to_walls)
-{
-    room_types_native_.clear();
-}
-
-void FeatureRoomSpawnRules::reset()
-{
-    *this = FeatureRoomSpawnRules();
-}
-
-void FeatureRoomSpawnRules::set(const int max_nr_in_room,
-                                const Range& dlvls_allowed,
-                                const PlacementRule placement_rule,
-                                std::initializer_list<RoomType> room_types)
-{
-    max_nr_in_room_     = max_nr_in_room;
-    dlvls_allowed_      = dlvls_allowed;
-    placement_rule_     = placement_rule;
-
-    room_types_native_.clear();
-
-    for (RoomType id : room_types)
-    {
-        room_types_native_.push_back(id);
-    }
-}
-
-bool FeatureRoomSpawnRules::is_belonging_to_room_type(const RoomType type) const
-{
-    return find(begin(room_types_native_), end(room_types_native_), type) !=
-           end(room_types_native_);
-}
-
-PlacementRule FeatureRoomSpawnRules::placement_rule() const
-{
-    return placement_rule_;
-}
-
-int FeatureRoomSpawnRules::max_nr_in_room() const
-{
-    return max_nr_in_room_;
-}
-
-Range FeatureRoomSpawnRules::dlvls_allowed() const
-{
-    return dlvls_allowed_;
-}
-
 //--------------------------------------------------------- MOVE RULES
 bool MoveRules::can_move(Actor& actor) const
 {
@@ -119,7 +67,6 @@ void reset_data(FeatureDataT& d)
     d.msg_on_player_blocked_blind = "I bump into something.";
     d.dodge_modifier = 0;
     d.shock_when_adjacent = 0;
-    d.room_spawn_rules.reset();
 }
 
 void add_to_list_and_reset(FeatureDataT& d)
@@ -226,15 +173,9 @@ void init_data_list()
     d.tile = TileId::vines;
     d.move_rules.set_can_move_cmn();
     d.is_los_passable = false;
+    d.can_have_blood = false; //Looks weird
     d.matl_type = Matl::plant;
-    d.room_spawn_rules.set(3,
-                           {0, dlvl_last},
-                           PlacementRule::either,
-                           {
-                               RoomType::flooded,
-                               RoomType::muddy,
-                               RoomType::forest
-                           });
+    d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = FeatureId::stairs;
@@ -298,13 +239,7 @@ void init_data_list()
     d.can_have_rigid = false;
     d.can_have_item = false;
     d.matl_type = Matl::metal;
-    d.room_spawn_rules.set(3,
-                           {0, dlvl_last_mid_game},
-                           PlacementRule::away_from_walls,
-                           {
-                               RoomType::ritual,
-                               RoomType::plain,
-                            });
+    d.auto_spawn_placement = FeaturePlacement::away_from_walls;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = FeatureId::liquid_shallow;
@@ -436,15 +371,7 @@ void init_data_list()
     d.tile = TileId::rubble_low;
     d.move_rules.set_can_move_cmn();
     d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(4,
-                           {0, dlvl_last},
-                           PlacementRule::either,
-                           {
-                               RoomType::plain,
-                               RoomType::crypt,
-                               RoomType::monster,
-                               RoomType::cave
-                            });
+    d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = FeatureId::bones;
@@ -456,13 +383,7 @@ void init_data_list()
     d.tile = TileId::corpse2;
     d.move_rules.set_can_move_cmn();
     d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(3,
-                           {0, dlvl_last},
-                           PlacementRule::either,
-                           {
-                               RoomType::monster,
-                               RoomType::cave
-                            });
+    d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = FeatureId::statue;
@@ -480,14 +401,7 @@ void init_data_list()
     d.can_have_rigid = false;
     d.can_have_item = false;
     d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(6,
-                           {0, dlvl_last_mid_game},
-                           PlacementRule::either,
-                           {
-                               RoomType::plain,
-                               RoomType::human,
-                               RoomType::forest
-                            });
+    d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = FeatureId::cocoon;
@@ -506,12 +420,7 @@ void init_data_list()
     d.can_have_item = false;
     d.shock_when_adjacent = 1;
     d.matl_type = Matl::cloth;
-    d.room_spawn_rules.set(3,
-                           {0, dlvl_last},
-                           PlacementRule::either,
-                           {
-                               RoomType::spider
-                            });
+    d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = FeatureId::chest;
@@ -526,12 +435,7 @@ void init_data_list()
     d.can_have_corpse = false;
     d.can_have_rigid = false;
     d.can_have_item = false;
-    d.room_spawn_rules.set(2,
-                           {0, dlvl_last_mid_game},
-                           PlacementRule::adj_to_walls,
-                           {
-                               RoomType::human
-                           });
+    d.auto_spawn_placement = FeaturePlacement::adj_to_walls;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = FeatureId::cabinet;
@@ -549,12 +453,7 @@ void init_data_list()
     d.can_have_rigid = false;
     d.can_have_item = false;
     d.matl_type = Matl::wood;
-    d.room_spawn_rules.set(1,
-                           {0, dlvl_last_mid_game},
-                           PlacementRule::adj_to_walls,
-                           {
-                               RoomType::human
-                           });
+    d.auto_spawn_placement = FeaturePlacement::adj_to_walls;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = FeatureId::fountain;
@@ -572,13 +471,7 @@ void init_data_list()
     d.can_have_rigid = false;
     d.can_have_item = false;
     d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(1,
-                           {0, dlvl_last_mid_game},
-                           PlacementRule::away_from_walls,
-                           {
-                               RoomType::plain,
-                               RoomType::forest
-                           });
+    d.auto_spawn_placement = FeaturePlacement::away_from_walls;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = FeatureId::pillar;
@@ -596,15 +489,7 @@ void init_data_list()
     d.can_have_rigid = false;
     d.can_have_item = false;
     d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(3,
-                           {0, dlvl_last},
-                           PlacementRule::away_from_walls,
-                           {
-                               RoomType::plain,
-                               RoomType::crypt,
-                               RoomType::ritual,
-                               RoomType::monster
-                           });
+    d.auto_spawn_placement = FeaturePlacement::away_from_walls;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = FeatureId::stalagmite;
@@ -622,12 +507,7 @@ void init_data_list()
     d.can_have_rigid = false;
     d.can_have_item = false;
     d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(10,
-                           {0, dlvl_last},
-                           PlacementRule::either,
-                           {
-                               RoomType::cave
-                           });
+    d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = FeatureId::altar;
@@ -644,12 +524,7 @@ void init_data_list()
     d.can_have_item = false;
     d.shock_when_adjacent = 3;
     d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(1,
-                           {0, dlvl_last_mid_game},
-                           PlacementRule::either,
-                           {
-                               RoomType::ritual, RoomType::forest
-                           });
+    d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = FeatureId::tomb;
@@ -668,13 +543,7 @@ void init_data_list()
     d.can_have_item = false;
     d.shock_when_adjacent = 3;
     d.matl_type = Matl::stone;
-    d.room_spawn_rules.set(2,
-                           {0, dlvl_last_mid_game},
-                           PlacementRule::either,
-                           {
-                               RoomType::crypt,
-                               RoomType::forest
-                           });
+    d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = FeatureId::door;

@@ -28,7 +28,7 @@ std::string Monolith::name(const Article article) const
 
 Clr Monolith::clr_default() const
 {
-    return is_activated_ ? clr_red : clr_cyan_lgt;
+    return is_activated_ ? clr_gray : clr_cyan_lgt;
 }
 
 void Monolith::bump(Actor& actor_bumping)
@@ -66,18 +66,6 @@ void Monolith::activate()
     dungeon_master::incr_player_xp(25);
 
     is_activated_ = true;
-
-    for (const P& d : dir_utils::dir_list)
-    {
-        const P p(pos_ + d);
-
-        map::mk_blood(p);
-
-        if (rnd::fraction(2, 3))
-        {
-            map::mk_gore(p);
-        }
-    }
 
     //Spawn monsters?
     if (rnd::one_in(6))

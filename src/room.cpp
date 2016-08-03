@@ -189,13 +189,16 @@ Room* mk_random_allowed_std_room(const R& r, const bool is_subroom)
             {
                 room_bucket_.erase(room_bucket_it);
 
-                TRACE_FUNC_END_VERBOSE << "Made room type: " << int (room_type) << std::endl;
+                TRACE_FUNC_END_VERBOSE << "Made room type: "
+                                       << (int)room_type << std::endl;
                 break;
             }
             else //Room not allowed (e.g. wrong dimensions)
             {
                 delete room;
-                ++room_bucket_it; //Try next room type in the bucket
+
+                //Try next room type in the bucket
+                ++room_bucket_it;
             }
         }
     }
@@ -257,181 +260,149 @@ void StdRoom::on_post_connect(bool door_proposals[map_w][map_h])
     }
 }
 
-size_t StdRoom::try_auto_feature_placement(
-    const std::vector<P>& adj_to_walls, const std::vector<P>& away_from_walls,
-    const std::vector<const FeatureDataT*>& feature_data_bucket, P& pos_ref) const
+P StdRoom::find_auto_feature_placement(const std::vector<P>& adj_to_walls,
+                                       const std::vector<P>& away_from_walls,
+                                       const FeatureId id) const
 {
     TRACE_FUNC_BEGIN_VERBOSE;
-
-    if (feature_data_bucket.empty())
-    {
-        pos_ref = P(-1, -1);
-        return 0;
-    }
 
     const bool is_adj_to_walls_avail    = !adj_to_walls.empty();
     const bool is_away_from_walls_avail = !away_from_walls.empty();
 
-    if (!is_adj_to_walls_avail && !is_away_from_walls_avail)
+    if (
+        !is_adj_to_walls_avail &&
+        !is_away_from_walls_avail)
     {
         TRACE_FUNC_END_VERBOSE << "No eligible cells found" << std::endl;
-        pos_ref = P(-1, -1);
-        return 0;
+        return P(-1, -1);
     }
 
-    //TODO: Use bucket instead
+    //TODO: This method is crap, use a bucket instead!
 
     const int nr_attempts_to_find_pos = 100;
 
     for (int i = 0; i < nr_attempts_to_find_pos; ++i)
     {
-        const size_t      nr_data = feature_data_bucket.size();
-        const size_t      element = rnd::range(0, nr_data - 1);
-        const auto* const data    = feature_data_bucket[element];
+        const FeatureDataT& d = feature_data::data(id);
 
         if (
             is_adj_to_walls_avail &&
-            data->room_spawn_rules.placement_rule() == PlacementRule::adj_to_walls)
+            d.auto_spawn_placement == FeaturePlacement::adj_to_walls)
         {
-            pos_ref = adj_to_walls[rnd::range(0, adj_to_walls.size() - 1)];
             TRACE_FUNC_END_VERBOSE;
-            return element;
+            return rnd::element(adj_to_walls);
         }
 
         if (
             is_away_from_walls_avail &&
-            data->room_spawn_rules.placement_rule() == PlacementRule::away_from_walls)
+            d.auto_spawn_placement == FeaturePlacement::away_from_walls)
         {
-            pos_ref = away_from_walls[rnd::range(0, away_from_walls.size() - 1)];
             TRACE_FUNC_END_VERBOSE;
-            return element;
+            return rnd::element(away_from_walls);
         }
 
-        if (data->room_spawn_rules.placement_rule() == PlacementRule::either)
+        if (d.auto_spawn_placement == FeaturePlacement::either)
         {
             if (rnd::coin_toss())
             {
                 if (is_adj_to_walls_avail)
                 {
-                    pos_ref = adj_to_walls[rnd::range(0, adj_to_walls.size() - 1)];
                     TRACE_FUNC_END_VERBOSE;
-                    return element;
+                    return rnd::element(adj_to_walls);
 
                 }
             }
-            else
+            else //Coint toss
             {
                 if (is_away_from_walls_avail)
                 {
-                    pos_ref = away_from_walls[rnd::range(0, away_from_walls.size() - 1)];
                     TRACE_FUNC_END_VERBOSE;
-                    return element;
+                    return rnd::element(away_from_walls);
                 }
             }
         }
     }
 
     TRACE_FUNC_END_VERBOSE;
-    return 0;
+    return P(-1, -1);
 }
 
-int StdRoom::place_auto_features()
+void StdRoom::place_auto_features()
 {
     TRACE_FUNC_BEGIN;
 
-    std::vector<const FeatureDataT*> feature_bucket;
+    //Make a feature bucket
+    std::vector<FeatureId> feature_bucket;
 
-    for (int i = 0; i < int (FeatureId::END); ++i)
+    const auto rules = auto_features_allowed();
+
+    for (const auto& rule : rules)
     {
-        const auto& d           = feature_data::data((FeatureId)(i));
-        const auto& spawn_rules = d.room_spawn_rules;
-
-        if (
-            spawn_rules.is_belonging_to_room_type(type_) &&
-            spawn_rules.dlvls_allowed().is_in_range(map::dlvl))
-        {
-            feature_bucket.push_back(&d);
-        }
+        //Insert N elements of the given Feature ID
+        feature_bucket.insert(end(feature_bucket),
+                              rule.nr_allowed,
+                              rule.feature_id);
     }
 
-    std::vector<P> adj_to_walls;
-    std::vector<P> away_from_walls;
+    std::vector<P> adj_to_walls_bucket;
+    std::vector<P> away_from_walls_bucket;
 
-    map_patterns::cells_in_room(*this, adj_to_walls, away_from_walls);
+    map_patterns::cells_in_room(*this,
+                                adj_to_walls_bucket,
+                                away_from_walls_bucket);
 
-    std::vector<int> spawn_count(feature_bucket.size(), 0);
-
-    int nr_features_left_to_place   = nr_auto_features_allowed().roll();
-    int nr_features_placed          = 0;
-
-    while (true)
+    while (!feature_bucket.empty())
     {
-        if (nr_features_left_to_place == 0)
+        //TODO: Do a random shuffle of the bucket instead, and pop elements
+        const size_t    feature_idx = rnd::range(0, feature_bucket.size() - 1);
+        const FeatureId id          = feature_bucket[feature_idx];
+
+        feature_bucket.erase(begin(feature_bucket) + feature_idx);
+
+        const P p = find_auto_feature_placement(adj_to_walls_bucket,
+                                                away_from_walls_bucket,
+                                                id);
+
+        if (p.x >= 0)
         {
-            TRACE_FUNC_END << "Placed enough features" << std::endl;
-            return nr_features_placed;
-        }
+            //A good position was found
 
-        P pos(-1, -1);
-
-        const size_t feature_idx =
-            try_auto_feature_placement(adj_to_walls, away_from_walls, feature_bucket, pos);
-
-        if (pos.x >= 0)
-        {
-            ASSERT(feature_idx < feature_bucket.size());
-
-            const FeatureDataT* d = feature_bucket[feature_idx];
+            const FeatureDataT& d = feature_data::data(id);
 
             TRACE << "Placing feature" << std::endl;
-            map::put(static_cast<Rigid*>(d->mk_obj(pos)));
-            ++spawn_count[feature_idx];
 
-            nr_features_left_to_place--;
-            nr_features_placed++;
-
-            //Check if more of this feature can be spawned. If not, erase it.
-            if (spawn_count[feature_idx] >= d->room_spawn_rules.max_nr_in_room())
-            {
-                spawn_count   .erase(spawn_count   .begin() + feature_idx);
-                feature_bucket.erase(feature_bucket.begin() + feature_idx);
-
-                if (feature_bucket.empty())
-                {
-                    TRACE_FUNC_END << "No more features to place" << std::endl;
-                    return nr_features_placed;
-                }
-            }
+            map::put(static_cast<Rigid*>(d.mk_obj(p)));
 
             //Erase all adjacent positions
-            auto is_adj = [&](const P & p)
+            auto is_adj = [&](const P& other_p)
             {
-                return is_pos_adj(p, pos, true);
+                return is_pos_adj(p, other_p, true);
             };
-            adj_to_walls   .erase(remove_if(begin(adj_to_walls),    end(adj_to_walls),    is_adj),
-                                  end(adj_to_walls));
-            away_from_walls.erase(remove_if(begin(away_from_walls), end(away_from_walls), is_adj),
-                                  end(away_from_walls));
-        }
-        else //No good feature placement found
-        {
-            TRACE_FUNC_END << "No remaining positions to place feature" << std::endl;
-            return nr_features_placed;
+
+            adj_to_walls_bucket.erase(
+                remove_if(begin(adj_to_walls_bucket),
+                          end(adj_to_walls_bucket),
+                          is_adj),
+                end(adj_to_walls_bucket));
+
+            away_from_walls_bucket.erase(
+                remove_if(begin(away_from_walls_bucket),
+                          end(away_from_walls_bucket),
+                          is_adj),
+                end(away_from_walls_bucket));
         }
     }
 }
 
 //------------------------------------------------------------------- PLAIN ROOM
-Range PlainRoom::nr_auto_features_allowed() const
+std::vector<RoomAutoFeatureRule> PlainRoom::auto_features_allowed() const
 {
-    if (rnd::one_in(4))
+    return
     {
-        return {1, 2};
-    }
-    else
-    {
-        return {0, 0};
-    }
+        {FeatureId::brazier,    rnd::one_in(4) ? 1 : 0},
+        {FeatureId::statue,     rnd::one_in(7) ? rnd::range(1, 2) : 0},
+        {FeatureId::fountain,   rnd::one_in(7) ? 1 : 0}
+    };
 }
 
 int PlainRoom::base_pct_chance_drk() const
@@ -457,9 +428,15 @@ void PlainRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 }
 
 //------------------------------------------------------------------- HUMAN ROOM
-Range HumanRoom::nr_auto_features_allowed() const
+std::vector<RoomAutoFeatureRule> HumanRoom::auto_features_allowed() const
 {
-    return {2, 6};
+    return
+    {
+        {FeatureId::chest,      rnd::range(0, 2)},
+        {FeatureId::cabinet,    rnd::range(0, 2)},
+        {FeatureId::brazier,    rnd::range(0, 2)},
+        {FeatureId::statue,     rnd::range(0, 3)}
+    };
 }
 
 int HumanRoom::base_pct_chance_drk() const
@@ -469,7 +446,9 @@ int HumanRoom::base_pct_chance_drk() const
 
 bool HumanRoom::is_allowed() const
 {
-    return r_.min_dim() >= 4 && r_.max_dim() <= 8;
+    return
+        r_.min_dim() >= 4 &&
+        r_.max_dim() <= 8;
 }
 
 void HumanRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
@@ -508,9 +487,13 @@ void HumanRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 }
 
 //------------------------------------------------------------------- RITUAL ROOM
-Range RitualRoom::nr_auto_features_allowed() const
+std::vector<RoomAutoFeatureRule> RitualRoom::auto_features_allowed() const
 {
-    return {1, 5};
+    return
+    {
+        {FeatureId::altar,      1},
+        {FeatureId::brazier,    rnd::range(2, 4)}
+    };
 }
 
 int RitualRoom::base_pct_chance_drk() const
@@ -520,7 +503,9 @@ int RitualRoom::base_pct_chance_drk() const
 
 bool RitualRoom::is_allowed() const
 {
-    return r_.min_dim() >= 4 && r_.max_dim() <= 8;
+    return
+        r_.min_dim() >= 4 &&
+        r_.max_dim() <= 8;
 }
 
 void RitualRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
@@ -600,9 +585,12 @@ void RitualRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 }
 
 //------------------------------------------------------------------- SPIDER ROOM
-Range SpiderRoom::nr_auto_features_allowed() const
+std::vector<RoomAutoFeatureRule> SpiderRoom::auto_features_allowed() const
 {
-    return {0, 3};
+    return
+    {
+        {FeatureId::cocoon, rnd::range(0, 3)}
+    };
 }
 
 int SpiderRoom::base_pct_chance_drk() const
@@ -612,7 +600,9 @@ int SpiderRoom::base_pct_chance_drk() const
 
 bool SpiderRoom::is_allowed() const
 {
-    return r_.min_dim() >= 3 && r_.max_dim() <= 8;
+    return
+        r_.min_dim() >= 3 &&
+        r_.max_dim() <= 8;
 }
 
 void SpiderRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
@@ -646,6 +636,11 @@ void SpiderRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 }
 
 //------------------------------------------------------------------- SNAKE PIT ROOM
+std::vector<RoomAutoFeatureRule> SnakePitRoom::auto_features_allowed() const
+{
+    return {};
+}
+
 int SnakePitRoom::base_pct_chance_drk() const
 {
     return 75;
@@ -653,7 +648,9 @@ int SnakePitRoom::base_pct_chance_drk() const
 
 bool SnakePitRoom::is_allowed() const
 {
-    return (r_.min_dim() >= 3) && (r_.max_dim() <= 4);
+    return
+        r_.min_dim() >= 3 &&
+        r_.max_dim() <= 4;
 }
 
 void SnakePitRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
@@ -730,9 +727,13 @@ void SnakePitRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 }
 
 //------------------------------------------------------------------- CRYPT ROOM
-Range CryptRoom::nr_auto_features_allowed() const
+std::vector<RoomAutoFeatureRule> CryptRoom::auto_features_allowed() const
 {
-    return {3, 6};
+    return
+    {
+        {FeatureId::tomb,       rnd::range(1, 2)},
+        {FeatureId::rubble_low, rnd::range(1, 4)}
+    };
 }
 
 int CryptRoom::base_pct_chance_drk() const
@@ -742,7 +743,9 @@ int CryptRoom::base_pct_chance_drk() const
 
 bool CryptRoom::is_allowed() const
 {
-    return r_.min_dim() >= 3  && r_.max_dim() <= 12;
+    return
+        r_.min_dim() >= 3 &&
+        r_.max_dim() <= 12;
 }
 
 void CryptRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
@@ -763,19 +766,24 @@ void CryptRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 }
 
 //------------------------------------------------------------------- MONSTER ROOM
-Range MonsterRoom::nr_auto_features_allowed() const
+std::vector<RoomAutoFeatureRule> MonsterRoom::auto_features_allowed() const
 {
-    return {0, 6};
+    return
+    {
+        {FeatureId::rubble_low, rnd::range(3, 6)}
+    };
 }
 
 int MonsterRoom::base_pct_chance_drk() const
 {
-    return 75;
+    return 80;
 }
 
 bool MonsterRoom::is_allowed() const
 {
-    return r_.min_dim() >= 4 && r_.max_dim() <= 8;
+    return
+        r_.min_dim() >= 4 &&
+        r_.max_dim() <= 8;
 }
 
 void MonsterRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
@@ -839,9 +847,12 @@ void MonsterRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 }
 
 //------------------------------------------------------------------- FLOODED ROOM
-Range FloodedRoom::nr_auto_features_allowed() const
+std::vector<RoomAutoFeatureRule> FloodedRoom::auto_features_allowed() const
 {
-    return {0, 0};
+    return
+    {
+        {FeatureId::vines, rnd::coin_toss() ? rnd::range(4, 8) : 0}
+    };
 }
 
 int FloodedRoom::base_pct_chance_drk() const
@@ -910,7 +921,7 @@ void FloodedRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
     bool blocked[map_w][map_h];
     map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
 
-    const int liquid_one_in_n = rnd::range(2, 4);
+    const int liquid_one_in_n = rnd::range(3, 8);
 
     for (int x = r_.p0.x; x <= r_.p1.x; ++x)
     {
@@ -931,9 +942,12 @@ void FloodedRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 }
 
 //------------------------------------------------------------------- MUDDY ROOM
-Range MuddyRoom::nr_auto_features_allowed() const
+std::vector<RoomAutoFeatureRule> MuddyRoom::auto_features_allowed() const
 {
-    return {0, 0};
+    return
+    {
+        {FeatureId::vines, rnd::coin_toss() ? rnd::range(4, 8) : 0}
+    };
 }
 
 int MuddyRoom::base_pct_chance_drk() const
@@ -949,30 +963,6 @@ bool MuddyRoom::is_allowed() const
 void MuddyRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 {
     (void)door_proposals;
-
-#ifndef NDEBUG
-    //Sanity check (look for some features that should not exist in this room)
-    for (int x = r_.p0.x; x <= r_.p1.x; ++x)
-    {
-        for (int y = r_.p0.y; y <= r_.p1.y; ++y)
-        {
-            if (map::room_map[x][y] == this)
-            {
-                const auto id = map::cells[x][y].rigid->id();
-
-                if (
-                    id == FeatureId::chest    ||
-                    id == FeatureId::tomb     ||
-                    id == FeatureId::cabinet  ||
-                    id == FeatureId::fountain)
-                {
-                    TRACE << "Illegal feature found in room" << std::endl;
-                    ASSERT(false);
-                }
-            }
-        }
-    }
-#endif // NDEBUG
 
     //Early game : Always reshape by cutting corners
     //Mid    -   : "Flip a coin"
@@ -1002,7 +992,7 @@ void MuddyRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
     bool blocked[map_w][map_h];
     map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
 
-    const int liquid_one_in_n = rnd::range(2, 4);
+    const int liquid_one_in_n = rnd::range(3, 8);
 
     for (int x = r_.p0.x; x <= r_.p1.x; ++x)
     {
@@ -1021,9 +1011,13 @@ void MuddyRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 }
 
 //------------------------------------------------------------------- CAVE ROOM
-Range CaveRoom::nr_auto_features_allowed() const
+std::vector<RoomAutoFeatureRule> CaveRoom::auto_features_allowed() const
 {
-    return {2, 6};
+    return
+    {
+        {FeatureId::rubble_low, rnd::range(2, 4)},
+        {FeatureId::stalagmite, rnd::range(2, 8)}
+    };
 }
 
 int CaveRoom::base_pct_chance_drk() const
@@ -1049,16 +1043,12 @@ void CaveRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 }
 
 //------------------------------------------------------------------- FOREST ROOM
-Range ForestRoom::nr_auto_features_allowed() const
+std::vector<RoomAutoFeatureRule> ForestRoom::auto_features_allowed() const
 {
-    if (rnd::one_in(3))
+    return
     {
-        return {2, 6};
-    }
-    else
-    {
-        return {0, 1};
-    }
+        {FeatureId::brazier, rnd::range(0, 1)}
+    };
 }
 
 int ForestRoom::base_pct_chance_drk() const
@@ -1068,7 +1058,10 @@ int ForestRoom::base_pct_chance_drk() const
 
 bool ForestRoom::is_allowed() const
 {
-    return !is_sub_room_ && r_.min_dim() >= 5;
+    //TODO: Also check sub_rooms_.empty() ?
+    return
+        !is_sub_room_ &&
+        r_.min_dim() >= 5;
 }
 
 void ForestRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
@@ -1137,9 +1130,9 @@ void ForestRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 }
 
 //------------------------------------------------------------------- CHASM ROOM
-Range ChasmRoom::nr_auto_features_allowed() const
+std::vector<RoomAutoFeatureRule> ChasmRoom::auto_features_allowed() const
 {
-    return {0, 0};
+    return {};
 }
 
 int ChasmRoom::base_pct_chance_drk() const
@@ -1149,8 +1142,9 @@ int ChasmRoom::base_pct_chance_drk() const
 
 bool ChasmRoom::is_allowed() const
 {
-    return r_.min_dim() >= 5 &&
-           r_.max_dim() <= 9;
+    return
+        r_.min_dim() >= 5 &&
+        r_.max_dim() <= 9;
 }
 
 void ChasmRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])

@@ -3134,7 +3134,9 @@ void Fountain::on_hit(const DmgType dmg_type,
                       const DmgMethod dmg_method,
                       Actor* const actor)
 {
-    (void)dmg_type; (void)dmg_method; (void)actor;
+    (void)dmg_type;
+    (void)dmg_method;
+    (void)actor;
 }
 
 Clr Fountain::clr_default() const
