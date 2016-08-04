@@ -117,7 +117,10 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
     case Trait::strong_spirit:
     case Trait::mighty_spirit:
         //Have very little use for spirit, aside from Spell Resistance
-        return bg == Bg::ghoul || bg == Bg::war_vet;
+        return
+            bg == Bg::ghoul ||
+            bg == Bg::rogue ||
+            bg == Bg::war_vet;
 
     case Trait::stealthy:
         break;

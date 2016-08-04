@@ -207,7 +207,7 @@ void init_data_list()
     d.can_have_corpse = false;
     d.can_have_rigid = false;
     d.can_have_item = false;
-    d.shock_when_adjacent = 3;
+    d.shock_when_adjacent = 2;
     d.matl_type = Matl::stone;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
@@ -522,7 +522,7 @@ void init_data_list()
     d.can_have_corpse = false;
     d.can_have_rigid = false;
     d.can_have_item = false;
-    d.shock_when_adjacent = 3;
+    d.shock_when_adjacent = 2;
     d.matl_type = Matl::stone;
     d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
@@ -541,7 +541,7 @@ void init_data_list()
     d.can_have_corpse = false;
     d.can_have_rigid = false;
     d.can_have_item = false;
-    d.shock_when_adjacent = 3;
+    d.shock_when_adjacent = 2;
     d.matl_type = Matl::stone;
     d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);

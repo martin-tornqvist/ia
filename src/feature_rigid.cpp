@@ -907,7 +907,7 @@ int Statue::base_shock_when_adj() const
     //Non-ghoul players are scared of Ghoul statues
     if (type_ == StatueType::ghoul && player_bon::bg() != Bg::ghoul)
     {
-        return 3;
+        return 2;
     }
 
     return 0;
@@ -2863,8 +2863,6 @@ void Chest::disarm()
                 msg_log::add("I successfully disarm it!");
                 render::draw_map_state();
                 is_trapped_ = false;
-
-                dungeon_master::incr_player_xp(xp_for_disarm_trap);
             }
             else //Failed to disarm
             {
@@ -3064,7 +3062,9 @@ std::string Chest::name(const Article article) const
         a = "the ";
     }
 
-    const std::string matl_str = is_open_ ? "" : matl_ == ChestMatl::wood ? "wooden " : "iron ";
+    const std::string matl_str =
+        is_open_ ? "" :
+        matl_ == ChestMatl::wood ? "wooden " : "iron ";
 
     return a + locked_str + empty_str + open_str + trap_str + matl_str + "chest";
 }
@@ -3082,51 +3082,57 @@ Clr Chest::clr_default() const
 //--------------------------------------------------------------------- FOUNTAIN
 Fountain::Fountain(const P& p) :
     Rigid               (p),
-    fountain_effects_   (std::vector<FountainEffect>()),
-    fountain_matl_      (FountainMatl::stone),
-    nr_drinks_left_     (rnd::range(3, 4))
+    fountain_effect_    (FountainEffect::END),
+    fountain_type_      (FountainType::normal),
+    has_drinks_left_    (true)
 {
-    if (rnd::one_in(16))
+    std::vector<int> weights =
     {
-        fountain_matl_ = FountainMatl::gold;
+        16, //Normal
+        4,  //Blessed
+        1,  //Cursed
+    };
+
+    const int choice = rnd::weighted_choice(weights);
+
+    FountainType type = FountainType::normal;
+
+    switch (choice)
+    {
+    case 0: type = FountainType::normal;    break;
+    case 1: type = FountainType::blessed;   break;
+    case 2: type = FountainType::cursed;    break;
     }
 
-    switch (fountain_matl_)
+    set_type(type);
+}
+
+void Fountain::set_type(const FountainType type)
+{
+    fountain_type_ = type;
+
+    //Setup effect
+    switch (fountain_type_)
     {
-    case FountainMatl::stone:
-        if (rnd::fraction(5, 6))
-        {
-            fountain_effects_.push_back(FountainEffect::refreshing);
-        }
-        else
-        {
-            const int   nr_types  = int(FountainEffect::END);
-            const auto  effect    = FountainEffect(rnd::range(0, nr_types - 1));
-            fountain_effects_.push_back(effect);
-        }
-        break;
+    case FountainType::normal:
+    {
+        fountain_effect_ = FountainEffect::refreshing;
+    }
+    break;
 
-    case FountainMatl::gold:
-        std::vector<FountainEffect> effect_bucket
-        {
-            FountainEffect::refreshing,
-                FountainEffect::spirit,
-                FountainEffect::vitality,
-                FountainEffect::rFire,
-                FountainEffect::rElec,
-                FountainEffect::rFear,
-                FountainEffect::rConf
-                };
+    case FountainType::blessed:
+    {
+        fountain_effect_ = FountainEffect::xp;
+    }
+    break;
 
-        std::random_shuffle(begin(effect_bucket), end(effect_bucket));
+    case FountainType::cursed:
+    {
+        const int min = (int)FountainEffect::START_OF_BAD_EFFECTS + 1;
+        const int max = (int)FountainEffect::END - 1;
 
-        const int nr_effects = 3;
-
-        for (int i = 0; i < nr_effects; ++i)
-        {
-            fountain_effects_.push_back(effect_bucket[i]);
-        }
-        break;
+        fountain_effect_ = (FountainEffect)rnd::range(min, max);
+    }
     }
 }
 
@@ -3141,19 +3147,7 @@ void Fountain::on_hit(const DmgType dmg_type,
 
 Clr Fountain::clr_default() const
 {
-    if (nr_drinks_left_ <= 0)
-    {
-        return clr_gray;
-    }
-    else
-    {
-        switch (fountain_matl_)
-        {
-        case FountainMatl::stone: return clr_blue_lgt;
-
-        case FountainMatl::gold:  return clr_yellow;
-        }
-    }
+    return has_drinks_left_ ? clr_blue_lgt : clr_gray;
 
     ASSERT("Failed to get fountain color" && false);
     return clr_black;
@@ -3161,16 +3155,9 @@ Clr Fountain::clr_default() const
 
 std::string Fountain::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "a " : "the ";
+    std::string a = article == Article::a ? "a " : "the ";
 
-    switch (fountain_matl_)
-    {
-    case FountainMatl::stone: {}                break;
-
-    case FountainMatl::gold:  ret += "golden "; break;
-    }
-
-    return ret + "fountain";
+    return a + "fountain";
 }
 
 void Fountain::bump(Actor& actor_bumping)
@@ -3180,11 +3167,7 @@ void Fountain::bump(Actor& actor_bumping)
         return;
     }
 
-    if (nr_drinks_left_ <= 0)
-    {
-        msg_log::add("The fountain is dried out.");
-    }
-    else
+    if (has_drinks_left_)
     {
         PropHandler& prop_hlr = map::player->prop_handler();
 
@@ -3215,98 +3198,68 @@ void Fountain::bump(Actor& actor_bumping)
 
         audio::play(SfxId::fountain_drink);
 
-        for (auto effect : fountain_effects_)
+        switch (fountain_effect_)
         {
-            switch (effect)
-            {
-            case FountainEffect::refreshing:
-                msg_log::add("It's very refreshing.");
-                map::player->restore_hp(1, false, Verbosity::silent);
-                map::player->restore_spi(1, false, Verbosity::silent);
-                map::player->restore_shock(5, true);
-                break;
-
-            case FountainEffect::curse:
-                prop_hlr.try_add(new PropCursed(PropTurns::std));
-                break;
-
-            case FountainEffect::spirit:
-                map::player->restore_spi(2, true);
-                break;
-
-            case FountainEffect::vitality:
-                map::player->restore_hp(2, true);
-                break;
-
-            case FountainEffect::disease:
-                prop_hlr.try_add(new PropDiseased(PropTurns::std));
-                break;
-
-            case FountainEffect::poison:
-                prop_hlr.try_add(new PropPoisoned(PropTurns::std));
-                break;
-
-            case FountainEffect::frenzy:
-                prop_hlr.try_add(new PropFrenzied(PropTurns::std));
-                break;
-
-            case FountainEffect::paralyze:
-                prop_hlr.try_add(new PropParalyzed(PropTurns::std));
-                break;
-
-            case FountainEffect::blind:
-                prop_hlr.try_add(new PropBlind(PropTurns::std));
-                break;
-
-            case FountainEffect::faint:
-                prop_hlr.try_add(new PropFainted(PropTurns::specific, 10));
-                break;
-
-            case FountainEffect::rFire:
-            {
-                Prop* const prop = new PropRFire(PropTurns::std);
-                prop->set_nr_turns_left(prop->nr_turns_left() * 2);
-                prop_hlr.try_add(prop);
-            }
+        case FountainEffect::refreshing:
+            msg_log::add("It's very refreshing.");
+            map::player->restore_hp(1, false, Verbosity::silent);
+            map::player->restore_spi(1, false, Verbosity::silent);
+            map::player->restore_shock(5, true);
             break;
 
-            case FountainEffect::rElec:
-            {
-                Prop* const prop = new PropRElec(PropTurns::std);
-                prop->set_nr_turns_left(prop->nr_turns_left() * 2);
-                prop_hlr.try_add(prop);
-            } break;
-
-            case FountainEffect::rConf:
-            {
-                Prop* const prop = new PropRConf(PropTurns::std);
-                prop->set_nr_turns_left(prop->nr_turns_left() * 2);
-                prop_hlr.try_add(prop);
-            }
+        case FountainEffect::xp:
+            msg_log::add("I feel more powerful!");
+            dungeon_master::incr_player_xp(3);
             break;
 
-            case FountainEffect::rFear:
-            {
-                Prop* const prop = new PropRFear(PropTurns::std);
-                prop->set_nr_turns_left(prop->nr_turns_left() * 2);
-                prop_hlr.try_add(prop);
-            }
+        case FountainEffect::curse:
+            prop_hlr.try_add(new PropCursed(PropTurns::std));
             break;
 
-            case FountainEffect::END:
-                break;
-            }
+        case FountainEffect::disease:
+            prop_hlr.try_add(new PropDiseased(PropTurns::std));
+            break;
+
+        case FountainEffect::poison:
+            prop_hlr.try_add(new PropPoisoned(PropTurns::std));
+            break;
+
+        case FountainEffect::frenzy:
+            prop_hlr.try_add(new PropFrenzied(PropTurns::std));
+            break;
+
+        case FountainEffect::paralyze:
+            prop_hlr.try_add(new PropParalyzed(PropTurns::std));
+            break;
+
+        case FountainEffect::blind:
+            prop_hlr.try_add(new PropBlind(PropTurns::std));
+            break;
+
+        case FountainEffect::faint:
+            prop_hlr.try_add(new PropFainted(PropTurns::specific, 10));
+            break;
+
+        case FountainEffect::START_OF_BAD_EFFECTS:
+        case FountainEffect::END:
+            break;
         }
 
-        --nr_drinks_left_;
+        const int dry_one_in_n = 3;
 
-        if (nr_drinks_left_ <= 0)
+        if (rnd::one_in(dry_one_in_n))
         {
-            msg_log::add("The fountain dries out.");
+            has_drinks_left_ = false;
+
+            msg_log::add("The fountain dries up.");
         }
 
         render::draw_map_state();
         game_time::tick();
+    }
+    else //Dried up
+    {
+        msg_log::add("The fountain is dried-up.");
     }
 }
 

@@ -63,8 +63,6 @@ const int spi_per_lvl                       = 1;
 
 const int min_dmg_to_wound                  = 5;
 
-const int xp_for_disarm_trap                 = 1;
-
 const int     fov_std_radi_int              = 8;
 const int     fov_std_w_int                 = (fov_std_radi_int * 2) + 1;
 const double  fov_std_radi_db               = double(fov_std_radi_int);

@@ -397,11 +397,15 @@ void StdRoom::place_auto_features()
 //------------------------------------------------------------------- PLAIN ROOM
 std::vector<RoomAutoFeatureRule> PlainRoom::auto_features_allowed() const
 {
+    const int fountain_one_in_n =
+        (map::dlvl <= 4)                    ? 5  :
+        (map::dlvl <= dlvl_last_mid_game)   ? 10 : 20;
+
     return
     {
         {FeatureId::brazier,    rnd::one_in(4) ? 1 : 0},
         {FeatureId::statue,     rnd::one_in(7) ? rnd::range(1, 2) : 0},
-        {FeatureId::fountain,   rnd::one_in(7) ? 1 : 0}
+        {FeatureId::fountain,   rnd::one_in(fountain_one_in_n) ? 1 : 0}
     };
 }
 

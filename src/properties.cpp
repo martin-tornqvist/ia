@@ -1121,13 +1121,13 @@ void PropHandler::try_add(Prop* const prop,
 {
     ASSERT(prop);
 
-    //First, if this is a prop that runs on actor turns, check if the actor-turn prop buffer
-    //does not already contain the prop:
-    // - If it doesn't, then just add it to the buffer and return.
-    // - If the buffer already contains the prop, it means it was requested to be applied from the
-    //   buffer to the applied props.
-    //This way, this function can be used both for requesting to apply props, and for applying
-    //props from the buffer.
+    //First, if this is a prop that runs on actor turns, check if the actor-turn
+    //prop buffer does not already contain the prop:
+    //  -   If it doesn't, then just add it to the buffer and return.
+    //  -   If the buffer already contains the prop, it means it was requested
+    //      to be applied from the buffer to the applied props.
+    //This way, this function can be used both for requesting to apply props,
+    //and for applying props from the buffer.
     if (prop->turn_mode() == PropTurnMode::actor)
     {
         std::vector<Prop*>& buffer = actor_turn_prop_buffer_;
@@ -1151,7 +1151,9 @@ void PropHandler::try_add(Prop* const prop,
         if (try_resist_prop(prop->id()))
         {
             //Resist message
-            if (verbosity == Verbosity::verbose && owning_actor_->is_alive())
+            if (
+                verbosity == Verbosity::verbose &&
+                owning_actor_->is_alive())
             {
                 if (is_player)
                 {
@@ -1186,13 +1188,16 @@ void PropHandler::try_add(Prop* const prop,
 
     //This point reached means nothing is blocking the property.
 
-    //Is this an intrinsic property, and actor already has an intrinsic property of the same type?
-    //If so, the new property will just be "merged" into the old one ("on_more()").
+    //Is this an intrinsic property, and actor already has an intrinsic
+    //property of the same type? If so, the new property will just be "merged"
+    //into the old one ("on_more()").
     if (prop->src_ == PropSrc::intr)
     {
         for (Prop* old_prop : props_)
         {
-            if (old_prop->src_ == PropSrc::intr && prop->id() == old_prop->id())
+            if (
+                old_prop->src_ == PropSrc::intr &&
+                prop->id() == old_prop->id())
             {
                 if (!prop->allow_apply_more_while_active())
                 {
@@ -1204,7 +1209,9 @@ void PropHandler::try_add(Prop* const prop,
                 const int turns_left_new = prop->nr_turns_left_;
 
                 //Start message
-                if (verbosity == Verbosity::verbose && owning_actor_->is_alive())
+                if (
+                    verbosity == Verbosity::verbose &&
+                    owning_actor_->is_alive())
                 {
                     if (is_player)
                     {
@@ -1247,7 +1254,9 @@ void PropHandler::try_add(Prop* const prop,
 
     prop->on_start();
 
-    if (verbosity == Verbosity::verbose && owning_actor_->is_alive())
+    if (
+        verbosity == Verbosity::verbose &&
+        owning_actor_->is_alive())
     {
         if (prop->need_update_vision_when_start_or_end())
         {
@@ -1852,25 +1861,115 @@ Prop::Prop(PropId id, PropTurns turns_init, int nr_turns) :
 void PropBlessed::on_start()
 {
     owning_actor_->prop_handler().end_prop(PropId::cursed, false);
+
+    bless_adjacent();
+}
+
+void PropBlessed::on_more()
+{
+    bless_adjacent();
+}
+
+void PropBlessed::bless_adjacent() const
+{
+    //"Bless" adjacent fountains
+    const P& p = owning_actor_->pos;
+
+    for (const P& d : dir_utils::dir_list_w_center)
+    {
+        const P p_adj(p + d);
+
+        Cell& cell = map::cells[p_adj.x][p_adj.y];
+
+        Rigid* const rigid = cell.rigid;
+
+        if (rigid->id() == FeatureId::fountain)
+        {
+            Fountain* const fountain = static_cast<Fountain*>(rigid);
+
+            if (
+                fountain->type() != FountainType::blessed &&
+                fountain->has_drinks_left())
+            {
+                if (cell.is_seen_by_player)
+                {
+                    std::string name = fountain->name(Article::the);
+
+                    text_format::first_to_lower(name);
+
+                    msg_log::add("The water in " + name + " seems clearer.");
+                }
+
+                fountain->set_type(FountainType::blessed);
+            }
+        }
+    }
 }
 
 void PropCursed::on_start()
 {
     owning_actor_->prop_handler().end_prop(PropId::blessed, false);
 
-    //If this is a permanent curse that the player caught, log it as a historic event
-    if (owning_actor_->is_player() && turns_init_type_ == PropTurns::indefinite)
+    curse_adjacent();
+
+    //If this is a permanent curse, log it as a historic event
+    if (
+        owning_actor_->is_player() &&
+        turns_init_type_ == PropTurns::indefinite)
     {
         dungeon_master::add_history_event("A terrible curse was put upon me.");
     }
 }
 
+void PropCursed::on_more()
+{
+    curse_adjacent();
+}
+
 void PropCursed::on_end()
 {
-    //If this is a permanent curse that the player caught, log it as a historic event
-    if (owning_actor_->is_player() && turns_init_type_ == PropTurns::indefinite)
+    //If this was a permanent curse, log it as a historic event
+    if (
+        owning_actor_->is_player() &&
+        turns_init_type_ == PropTurns::indefinite)
     {
         dungeon_master::add_history_event("A terrible curse was lifted from me.");
+    }
+}
+
+void PropCursed::curse_adjacent() const
+{
+    //"Curse" adjacent fountains
+    const P& p = owning_actor_->pos;
+
+    for (const P& d : dir_utils::dir_list_w_center)
+    {
+        const P p_adj(p + d);
+
+        Cell& cell = map::cells[p_adj.x][p_adj.y];
+
+        Rigid* const rigid = cell.rigid;
+
+        if (rigid->id() == FeatureId::fountain)
+        {
+            Fountain* const fountain = static_cast<Fountain*>(rigid);
+
+            if (
+                fountain->type() != FountainType::cursed &&
+                fountain->has_drinks_left())
+            {
+                if (cell.is_seen_by_player)
+                {
+                    std::string name = fountain->name(Article::the);
+
+                    text_format::first_to_lower(name);
+
+                    msg_log::add("The water in " + name + " seems murkier.");
+                }
+
+                fountain->set_type(FountainType::cursed);
+            }
+        }
     }
 }
 

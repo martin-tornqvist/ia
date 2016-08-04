@@ -68,7 +68,7 @@ void Monolith::activate()
     is_activated_ = true;
 
     //Spawn monsters?
-    if (rnd::one_in(6))
+    if (rnd::one_in(5))
     {
         spawn_monsters();
     }

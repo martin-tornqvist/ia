@@ -719,6 +719,8 @@ public:
 
     void on_start() override;
 
+    void on_more() override;
+
     int ability_mod(const AbilityId ability) const override
     {
         if (ability == AbilityId::searching)
@@ -728,6 +730,9 @@ public:
 
         return 10;
     }
+
+private:
+    void bless_adjacent() const;
 };
 
 class PropCursed: public Prop
@@ -744,7 +749,12 @@ public:
 
     void on_start() override;
 
+    void on_more() override;
+
     void on_end() override;
+
+private:
+    void curse_adjacent() const;
 };
 
 class PropBurning: public Prop

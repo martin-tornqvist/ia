@@ -1363,7 +1363,10 @@ void MummyUnique::mk_start_items()
 
 DidAction Khephren::on_act()
 {
-    if (is_alive() && aware_counter_ > 0 && !has_summoned_locusts)
+    if (
+        is_alive()          &&
+        aware_counter_ > 0  &&
+        !has_summoned_locusts)
     {
         bool blocked[map_w][map_h];
 
@@ -1498,7 +1501,10 @@ void HuntingHorror::mk_start_items()
 
 DidAction KeziahMason::on_act()
 {
-    if (is_alive() && aware_counter_ > 0 && !has_summoned_jenkin)
+    if (
+        is_alive()          &&
+        aware_counter_ > 0  &&
+        !has_summoned_jenkin)
     {
         bool blocked_los[map_w][map_h];
 
@@ -1808,9 +1814,9 @@ void MindWorms::mk_start_items()
 DidAction GiantLocust::on_act()
 {
     if (
-        is_alive()                                      &&
-        aware_counter_ > 0                              &&
-        !prop_handler_->has_prop(PropId::burning)      &&
+        is_alive()                                  &&
+        aware_counter_ > 0                          &&
+        !prop_handler_->has_prop(PropId::burning)   &&
         game_time::actors.size() < max_nr_actors_on_map &&
         rnd::one_in(spawn_new_one_in_n))
     {
@@ -1864,7 +1870,10 @@ void LordOfShadows::mk_start_items()
 
 DidAction LordOfSpiders::on_act()
 {
-    if (is_alive() && aware_counter_ > 0 && rnd::coin_toss())
+    if (
+        is_alive()          &&
+        aware_counter_ > 0  &&
+        rnd::coin_toss())
     {
         const P player_pos = map::player->pos;
 
@@ -1940,14 +1949,14 @@ DidAction Zombie::try_resurrect()
         return DidAction::no;
     }
 
-    const int min_nr_turns_until_rise   = 3;
-    const int rise_one_in_n_turns       = 8;
+    const int min_nr_turns_until_rise   = 2;
+    const int rise_one_in_n             = 4;
 
     if (dead_turn_counter < min_nr_turns_until_rise)
     {
         ++dead_turn_counter;
     }
-    else if (rnd::one_in(rise_one_in_n_turns))
+    else if (rnd::one_in(rise_one_in_n))
     {
         Actor* actor = map::actor_at_pos(pos);
 
@@ -2083,7 +2092,10 @@ DidAction MajorClaphamLee::on_act()
         return DidAction::yes;
     }
 
-    if (is_alive() && aware_counter_ > 0 && !has_summoned_tomb_legions)
+    if (
+        is_alive()          &&
+        aware_counter_ > 0  &&
+        !has_summoned_tomb_legions)
     {
         bool blocked_los[map_w][map_h];
 
@@ -2170,7 +2182,10 @@ void FloatingSkull::mk_start_items()
 
 DidAction FloatingSkull::on_act()
 {
-    if (is_alive() && rnd::one_in(8))
+    if (
+        is_alive()          &&
+        aware_counter_ > 0  &&
+        rnd::one_in(8))
     {
         bool blocked_los[map_w][map_h];
 

@@ -20,7 +20,6 @@
 #include "player_bon.hpp"
 #include "item_factory.hpp"
 #include "attack.hpp"
-#include "dungeon_master.hpp"
 
 //------------------------------------------------------------- TRAP
 Trap::Trap(const P& feature_pos,
@@ -419,11 +418,6 @@ void Trap::disarm()
     if (is_disarmed)
     {
         msg_log::add(trap_impl_->disarm_msg());
-
-        if (type() != TrapId::web)
-        {
-            dungeon_master::incr_player_xp(xp_for_disarm_trap);
-        }
     }
     else //Not disarmed
     {

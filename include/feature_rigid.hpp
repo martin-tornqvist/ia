@@ -921,25 +921,24 @@ private:
 enum class FountainEffect
 {
     refreshing,
+    xp,
+
+    START_OF_BAD_EFFECTS,
     curse,
-    spirit,
-    vitality,
     disease,
     poison,
     frenzy,
     paralyze,
     blind,
     faint,
-    rFire,
-    rElec,
-    rFear,
-    rConf,
     END
 };
 
-enum class FountainMatl
+enum class FountainType
 {
-    stone, gold
+    normal,
+    blessed,
+    cursed
 };
 
 class Fountain: public Rigid
@@ -960,6 +959,18 @@ public:
 
     void bump(Actor& actor_bumping) override;
 
+    FountainType type() const
+    {
+        return fountain_type_;
+    }
+
+    bool has_drinks_left() const
+    {
+        return has_drinks_left_;
+    }
+
+    void set_type(const FountainType type);
+
 private:
     Clr clr_default() const override;
 
@@ -967,9 +978,9 @@ private:
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 
-    std::vector<FountainEffect> fountain_effects_;
-    FountainMatl fountain_matl_;
-    int nr_drinks_left_;
+    FountainEffect fountain_effect_;
+    FountainType fountain_type_;
+    bool has_drinks_left_;
 };
 
 class Cocoon: public Rigid

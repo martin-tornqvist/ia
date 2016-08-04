@@ -969,19 +969,19 @@ void Player::tick_tmp_shock()
                 switch (mon_data.mon_shock_lvl)
                 {
                 case MonShockLvl::unsettling:
-                    tmp_shock_from_mon = 0.5;
+                    tmp_shock_from_mon = 0.4;
                     break;
 
                 case MonShockLvl::frightening:
-                    tmp_shock_from_mon = 1.0;
+                    tmp_shock_from_mon = 0.8;
                     break;
 
                 case MonShockLvl::terrifying:
-                    tmp_shock_from_mon = 2.0;
+                    tmp_shock_from_mon = 1.6;
                     break;
 
                 case MonShockLvl::mind_shattering:
-                    tmp_shock_from_mon = 4.0;
+                    tmp_shock_from_mon = 3.2;
                     break;
 
                 default:
