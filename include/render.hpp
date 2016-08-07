@@ -16,7 +16,7 @@ enum class Panel
 {
     screen,
     map,
-    char_lines,
+    status_lines,
     log
 };
 

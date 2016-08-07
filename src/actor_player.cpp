@@ -8,7 +8,6 @@
 #include "feature_trap.hpp"
 #include "create_character.hpp"
 #include "msg_log.hpp"
-#include "character_lines.hpp"
 #include "popup.hpp"
 #include "dungeon_master.hpp"
 #include "map.hpp"

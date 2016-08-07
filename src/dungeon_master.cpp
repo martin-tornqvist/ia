@@ -7,7 +7,6 @@
 #include "render.hpp"
 #include "query.hpp"
 #include "actor_player.hpp"
-#include "character_lines.hpp"
 #include "msg_log.hpp"
 #include "sdl_wrapper.hpp"
 #include "map.hpp"

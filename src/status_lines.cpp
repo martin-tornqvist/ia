@@ -1,4 +1,4 @@
-#include "character_lines.hpp"
+#include "status_lines.hpp"
 
 #include "game_time.hpp"
 #include "colors.hpp"
@@ -15,7 +15,7 @@
 #include "item.hpp"
 #include "item_device.hpp"
 
-namespace character_lines
+namespace status_lines
 {
 
 void draw()
@@ -23,7 +23,7 @@ void draw()
     const int       x_wielded_default           = 43;
     const size_t    min_nr_steps_to_nxt_label   = 3;
 
-    const Panel panel = Panel::char_lines;
+    const Panel panel = Panel::status_lines;
 
     render::cover_panel(panel);
 
@@ -360,4 +360,4 @@ void draw()
     render::draw_text(turn_str, panel, p, clr_white);
 }
 
-} //CharacterLines
+} //status_lines

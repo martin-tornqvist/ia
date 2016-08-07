@@ -162,6 +162,8 @@ void reset_map()
     game_time::erase_all_mobs();
     game_time::reset_turn_type_and_actor_counters();
 
+    Clr clr_red_brighter = {160, 0, 0, 0};
+
     //Occasionally set wall color to something unusual
     if (rnd::one_in(7))
     {
@@ -169,15 +171,13 @@ void reset_map()
         {
             clr_nosf_sepia,
             clr_nosf_sepia_drk,
-            clr_red,
+            clr_red_brighter,
             clr_brown,
             clr_brown_drk,
             clr_brown_gray,
         };
 
-        const size_t idx = rnd::range(0, wall_clr_bucket.size() - 1);
-
-        wall_clr = wall_clr_bucket[idx];
+        wall_clr = rnd::element(wall_clr_bucket);
     }
     else //Standard wall color
     {

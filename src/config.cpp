@@ -33,8 +33,8 @@ bool    is_any_key_confirm_more_        = false;
 int     map_px_h_                       = -1;
 int     log_px_h_                       = -1;
 int     map_px_offset_h_                = -1;
-int     char_lines_px_h_                = -1;
-int     char_lines_px_offset_h_         = -1;
+int     stat_lines_px_h_                = -1;
+int     stat_lines_px_offset_h_         = -1;
 int     scr_px_w_                       = -1;
 int     scr_px_h_                       = -1;
 int     delay_projectile_draw_          = -1;
@@ -53,8 +53,8 @@ void set_cell_px_dim_dependent_variables()
     map_px_h_                   = cell_px_h_ * map_h;
     map_px_offset_h_            = cell_px_h_ * map_offset_h;
     log_px_h_                   = cell_px_h_ * log_h;
-    char_lines_px_h_            = cell_px_h_ * char_lines_h;
-    char_lines_px_offset_h_     = cell_px_h_ * char_lines_offset_h;
+    stat_lines_px_h_            = cell_px_h_ * stat_lines_h;
+    stat_lines_px_offset_h_     = cell_px_h_ * stat_lines_offset_h;
     scr_px_w_                   = cell_px_w_ * screen_w;
     scr_px_h_                   = cell_px_h_ * screen_h;
 }
@@ -754,13 +754,13 @@ int map_px_offset_h()
     return map_px_offset_h_;
 }
 
-int char_lines_px_offset_h()
+int stat_lines_px_offset_h()
 {
-    return char_lines_px_offset_h_;
+    return stat_lines_px_offset_h_;
 }
-int char_lines_px_h()
+int stat_lines_px_h()
 {
-    return char_lines_px_h_;
+    return stat_lines_px_h_;
 }
 
 bool is_text_mode_wall_full_square()

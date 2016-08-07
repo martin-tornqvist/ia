@@ -27,10 +27,10 @@ const int nr_map_cells                      = map_w * map_h;
 
 const int log_h                             = 2;
 const int map_offset_h                      = log_h;
-const int char_lines_offset_h               = map_offset_h + map_h;
-const int char_lines_h                      = 3;
+const int stat_lines_offset_h               = map_offset_h + map_h;
+const int stat_lines_h                      = 3;
 const int screen_w                          = map_w;
-const int screen_h                          = char_lines_offset_h + char_lines_h;
+const int screen_h                          = stat_lines_offset_h + stat_lines_h;
 
 const int descr_x0                          = map_w - 31;
 

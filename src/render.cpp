@@ -5,7 +5,7 @@
 
 #include "init.hpp"
 #include "item.hpp"
-#include "character_lines.hpp"
+#include "status_lines.hpp"
 #include "marker.hpp"
 #include "map.hpp"
 #include "actor.hpp"
@@ -324,8 +324,8 @@ P px_pos_for_cell_in_panel(const Panel panel, const P& pos)
     case Panel::log:
         return pos * cell_dims;
 
-    case Panel::char_lines:
-        return (pos * cell_dims) + P(0, config::char_lines_px_offset_h());
+    case Panel::status_lines:
+        return (pos * cell_dims) + P(0, config::stat_lines_px_offset_h());
     }
 
     return P();
@@ -994,10 +994,10 @@ void cover_panel(const Panel panel)
 
     switch (panel)
     {
-    case Panel::char_lines:
+    case Panel::status_lines:
     {
         const P px_pos = px_pos_for_cell_in_panel(panel, P(0, 0));
-        cover_area_px(px_pos, P(screen_pixel_w, config::char_lines_px_h()));
+        cover_area_px(px_pos, P(screen_pixel_w, config::stat_lines_px_h()));
     }
     break;
 
@@ -1266,7 +1266,7 @@ void draw_map_state(const UpdateScreen update,
 
     draw_map(overlay);
 
-    character_lines::draw();
+    status_lines::draw();
 
     msg_log::draw(UpdateScreen::no);
 
