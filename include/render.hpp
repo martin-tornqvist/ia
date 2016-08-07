@@ -27,7 +27,6 @@ struct CellRenderData
         clr_bg                          (clr_black),
         tile                            (TileId::empty),
         glyph                           (' '),
-        lifebar_length                  (-1),
         is_light_fade_allowed           (true),
         is_marked_lit                   (false),
         is_living_actor_seen_here       (false),
@@ -36,9 +35,8 @@ struct CellRenderData
 
     Clr     clr;
     Clr     clr_bg;
-    TileId tile;
+    TileId  tile;
     char    glyph;
-    int     lifebar_length;
     bool    is_light_fade_allowed;
     bool    is_marked_lit;
     bool    is_living_actor_seen_here;

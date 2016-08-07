@@ -790,6 +790,8 @@ ActorDied Actor::hit(int dmg,
 
     dmg = std::max(1, dmg);
 
+    const int hp_pct_before = (hp() * 100) / hp_max(true);
+
     if (!(is_player() && config::is_bot_playing()))
     {
         hp_ -= dmg;
@@ -814,6 +816,22 @@ ActorDied Actor::hit(int dmg,
     }
 
     //HP is greater than 0
+
+    const int hp_pct_after = (hp() * 100) / hp_max(true);
+
+    const int hp_warn_lvl = 25;
+
+    if (
+        is_player()                 &&
+        hp_pct_before > hp_warn_lvl &&
+        hp_pct_after <= hp_warn_lvl)
+    {
+        msg_log::add("-LOW HP WARNING!-",
+                     clr_msg_bad,
+                     true,
+                     MorePromptOnMsg::yes);
+    }
+
     return ActorDied::no;
 }
 

@@ -331,44 +331,6 @@ P px_pos_for_cell_in_panel(const Panel panel, const P& pos)
     return P();
 }
 
-int lifebar_length(const Actor& actor)
-{
-    const int actor_hp      = std::max(0, actor.hp());
-    const int actor_hp_max  = actor.hp_max(true);
-
-    if (actor_hp < actor_hp_max)
-    {
-        int HP_PERCENT = (actor_hp * 100) / actor_hp_max;
-        return ((config::cell_px_w() - 2) * HP_PERCENT) / 100;
-    }
-
-    return -1;
-}
-
-void draw_life_bar(const P& pos, const int length)
-{
-    if (length >= 0)
-    {
-        const P cell_dims(config::cell_px_w(),  config::cell_px_h());
-        const int w_green   = length;
-        const int w_bar_tot = cell_dims.x - 2;
-        const int w_red     = w_bar_tot - w_green;
-        const P px_pos    = px_pos_for_cell_in_panel(Panel::map, pos + P(0, 1)) - P(0, 2);
-        const int X0_GREEN  = px_pos.x + 1;
-        const int X0_RED    = X0_GREEN + w_green;
-
-        if (w_green > 0)
-        {
-            draw_line_hor(P(X0_GREEN, px_pos.y), w_green, clr_green_lgt);
-        }
-
-        if (w_red > 0)
-        {
-            draw_line_hor(P(X0_RED, px_pos.y), w_red, clr_red_lgt);
-        }
-    }
-}
-
 void draw_excl_mark_at(const P& px_pos)
 {
     draw_rectangle_solid(px_pos, P(3, 12), clr_black);
@@ -1325,7 +1287,9 @@ void draw_map(CellOverlay overlay[map_w][map_h])
 
     const bool is_tile_mode = config::is_tiles_mode();
 
-    //---------------- INSERT RIGIDS AND BLOOD INTO ARRAY
+    //--------------------------------------------------------------------------
+    //Insert rigids and blood
+    //--------------------------------------------------------------------------
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)
@@ -1374,15 +1338,17 @@ void draw_map(CellOverlay overlay[map_w][map_h])
         }
     }
 
-    //---------------- INSERT DEAD ACTORS INTO ARRAY
+    //--------------------------------------------------------------------------
+    //Insert dead actors
+    //--------------------------------------------------------------------------
     for (Actor* actor : game_time::actors)
     {
         const P& p(actor->pos);
 
         if (
-            actor->is_corpse()                      &&
-            actor->data().glyph != ' '              &&
-            actor->data().tile != TileId::empty    &&
+            actor->is_corpse()                  &&
+            actor->data().glyph != ' '          &&
+            actor->data().tile != TileId::empty &&
             map::cells[p.x][p.y].is_seen_by_player)
         {
             render_data        = &render_array[p.x][p.y];
@@ -1400,7 +1366,9 @@ void draw_map(CellOverlay overlay[map_w][map_h])
 
             if (map::cells[x][y].is_seen_by_player)
             {
-                //---------------- INSERT ITEMS INTO ARRAY
+                //--------------------------------------------------------------
+                //Insert items
+                //--------------------------------------------------------------
                 const Item* const item = map::cells[x][y].item;
 
                 if (item)
@@ -1425,7 +1393,9 @@ void draw_map(CellOverlay overlay[map_w][map_h])
         }
     }
 
-    //---------------- INSERT MOBILE FEATURES INTO ARRAY
+    //--------------------------------------------------------------------------
+    //Insert mobile features
+    //--------------------------------------------------------------------------
     for (auto* mob : game_time::mobs)
     {
         const P& p                  = mob->pos();
@@ -1443,10 +1413,14 @@ void draw_map(CellOverlay overlay[map_w][map_h])
         }
     }
 
-    //---------------- INSERT LIVING ACTORS INTO ARRAY
+    //--------------------------------------------------------------------------
+    //Insert living actors
+    //--------------------------------------------------------------------------
     for (auto* actor : game_time::actors)
     {
-        if (!actor->is_player() && actor->is_alive())
+        if (
+            !actor->is_player() &&
+            actor->is_alive())
         {
             //There is a living monster here
 
@@ -1454,8 +1428,8 @@ void draw_map(CellOverlay overlay[map_w][map_h])
 
             render_data = &render_array[p.x][p.y];
 
-            //There should NOT already be an actor here which is seen, or that
-            //we are aware of
+            //Sanity check: There should NOT already be an actor here which is
+            //seen, or that we are aware of
             ASSERT(!render_data->is_living_actor_seen_here);
             ASSERT(!render_data->is_aware_of_hostile_mon_here);
             ASSERT(!render_data->is_aware_of_allied_mon_here);
@@ -1464,13 +1438,33 @@ void draw_map(CellOverlay overlay[map_w][map_h])
 
             if (map::player->can_see_actor(*actor))
             {
-                if (actor->tile() != TileId::empty && actor->glyph() != ' ')
+                if (
+                    actor->tile() != TileId::empty &&
+                    actor->glyph() != ' ')
                 {
-                    render_data->clr   = actor->clr();
+                    Clr actor_clr = actor->clr();
+
+                    //If the monster is injured, draw it as a shade of red
+                    //(unless it's burning, then use the burning color)
+                    if (!actor->has_prop(PropId::burning))
+                    {
+                        const int hp        = actor->hp();
+                        const int hp_max    = actor->hp_max(true);
+
+                        if (hp < hp_max)
+                        {
+                            const int hp_pct = constr_in_range(0, (hp * 100) / hp_max, 100);
+
+                            actor_clr.r = std::max(192, (255 * hp_pct) / 100);
+                            actor_clr.g = (64 * hp_pct) / 100;
+                            actor_clr.b = (64 * hp_pct) / 100;
+                        }
+                    }
+
+                    render_data->clr   = actor_clr;
                     render_data->tile  = actor->tile();
                     render_data->glyph = actor->glyph();
 
-                    render_data->lifebar_length             = lifebar_length(*actor);
                     render_data->is_living_actor_seen_here  = true;
                     render_data->is_light_fade_allowed      = false;
 
@@ -1504,7 +1498,9 @@ void draw_map(CellOverlay overlay[map_w][map_h])
         }
     }
 
-    //---------------- DRAW THE GRID
+    //--------------------------------------------------------------------------
+    //Draw the grid
+    //--------------------------------------------------------------------------
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)
@@ -1716,12 +1712,6 @@ void draw_map(CellOverlay overlay[map_w][map_h])
                 did_draw = true;
             }
 
-            //Draw lifebar here?
-            if (did_draw && render_data_cpy.lifebar_length != -1)
-            {
-                draw_life_bar(pos, render_data_cpy.lifebar_length);
-            }
-
             if (!cell.is_explored)
             {
                 render_array[x][y] = CellRenderData();
@@ -1729,7 +1719,9 @@ void draw_map(CellOverlay overlay[map_w][map_h])
         }
     }
 
-    //---------------- DRAW PLAYER CHARACTER
+    //--------------------------------------------------------------------------
+    //Draw player character
+    //--------------------------------------------------------------------------
     const P&    pos         = map::player->pos;
     Item*       item        = map::player->inv().item_in_slot(SlotId::wpn);
     const bool  is_ghoul    = player_bon::bg() == Bg::ghoul;
@@ -1773,13 +1765,6 @@ void draw_map(CellOverlay overlay[map_w][map_h])
                    map::player->clr(),
                    true,
                    clr_bg);
-    }
-
-    const int life_bar_length = lifebar_length(*map::player);
-
-    if (life_bar_length != -1)
-    {
-        draw_life_bar(pos, life_bar_length);
     }
 
     draw_player_shock_excl_marks();

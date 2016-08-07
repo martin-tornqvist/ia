@@ -1186,7 +1186,7 @@ void LiquidShallow::bump(Actor& actor_bumping)
 
         if (actor_bumping.is_player())
         {
-            Snd snd("*glop*",
+            Snd snd("*Glop*",
                     SfxId::END,
                     IgnoreMsgIfOriginSeen::no,
                     actor_bumping.pos,
