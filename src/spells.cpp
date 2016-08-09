@@ -13,7 +13,7 @@
 #include "map.hpp"
 #include "actor_factory.hpp"
 #include "feature_trap.hpp"
-#include "player_spells_handling.hpp"
+#include "player_spells.hpp"
 #include "item_scroll.hpp"
 #include "inventory.hpp"
 #include "map_parsing.hpp"
@@ -40,7 +40,7 @@ Spell* random_spell_for_mon()
     {
         Spell* const spell = mk_spell_from_id(SpellId(i));
 
-        if (spell->is_avail_for_all_mon())
+        if (spell->mon_can_learn())
         {
             bucket.push_back(SpellId(i));
         }
@@ -142,14 +142,22 @@ Spell* mk_spell_from_id(const SpellId spell_id)
     return nullptr;
 }
 
-} //SpellHandling
+} //spell_handling
 
 Range Spell::spi_cost(const bool is_base_cost_only, Actor* const caster) const
 {
     int cost_max = max_spi_cost();
 
-    if (caster == map::player && !is_base_cost_only)
+    if (
+        caster == map::player &&
+        !is_base_cost_only)
     {
+        //The spell is more expensive the less skill the player has in it
+        const int skill_pct = player_spells::spell_skill_pct(id());
+
+        cost_max += (cost_max * (100 - skill_pct)) / 100;
+
+        //Standing next to an altar makes it cheaper
         const int X0 = std::max(0, caster->pos.x - 1);
         const int Y0 = std::max(0, caster->pos.y - 1);
         const int X1 = std::min(map_w - 1, caster->pos.x + 1);
@@ -166,6 +174,8 @@ Range Spell::spi_cost(const bool is_base_cost_only, Actor* const caster) const
             }
         }
 
+        //Traits reducing the cost of specific spells
+        //TODO: Shouldn't this be done by calling virtual functions?
         bool is_warlock     = player_bon::traits[(size_t)Trait::warlock];
         bool is_seer        = player_bon::traits[(size_t)Trait::seer];
         bool is_summoner    = player_bon::traits[(size_t)Trait::summoner];
@@ -239,13 +249,6 @@ Range Spell::spi_cost(const bool is_base_cost_only, Actor* const caster) const
             break;
         }
 
-        PropHandler& prop_hlr = caster->prop_handler();
-
-        if (!prop_hlr.allow_see())
-        {
-            --cost_max;
-        }
-
         if (caster->has_prop(PropId::blessed))
         {
             --cost_max;
@@ -255,7 +258,7 @@ Range Spell::spi_cost(const bool is_base_cost_only, Actor* const caster) const
         {
             cost_max += 3;
         }
-    }
+    } //Is player, and use modified cost
 
     cost_max            = std::max(1, cost_max);
     const int cost_min  = std::max(1, (cost_max + 1) / 2);
@@ -263,21 +266,26 @@ Range Spell::spi_cost(const bool is_base_cost_only, Actor* const caster) const
     return Range(cost_min, cost_max);
 }
 
-SpellEffectNoticed Spell::cast(Actor* const caster, const bool is_intrinsic) const
+SpellEffectNoticed Spell::cast(Actor* const caster,
+                               const bool is_intrinsic,
+                               const bool is_base_cost_only) const
 {
     TRACE_FUNC_BEGIN;
 
     ASSERT(caster);
 
-    if (caster->prop_handler().allow_cast_spell(Verbosity::verbose))
+    const bool allow_cast =
+        caster->prop_handler().allow_cast_spell(Verbosity::verbose);
+
+    if (allow_cast)
     {
         if (caster->is_player())
         {
             TRACE << "Player casting spell" << std::endl;
 
             const ShockSrc shock_src = is_intrinsic ?
-                                        ShockSrc::cast_intr_spell :
-                                        ShockSrc::use_strange_item;
+                                       ShockSrc::cast_intr_spell :
+                                       ShockSrc::use_strange_item;
 
             const int shock_value = is_intrinsic ? shock_lvl_intr_cast() : 10;
 
@@ -333,7 +341,7 @@ SpellEffectNoticed Spell::cast(Actor* const caster, const bool is_intrinsic) con
 
         if (is_intrinsic)
         {
-            const Range cost = spi_cost(false, caster);
+            const Range cost = spi_cost(is_base_cost_only, caster);
 
             caster->hit_spi(cost.roll(), Verbosity::silent);
         }

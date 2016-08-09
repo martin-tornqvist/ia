@@ -10,7 +10,7 @@
 #include "properties.hpp"
 #include "feature_rigid.hpp"
 #include "actor_factory.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 #include "init.hpp"
 #include "game_time.hpp"
 #include "render.hpp"
@@ -651,7 +651,7 @@ void save()
     {
         const InsSympt* const sympt = sympts_[i];
 
-        save_handling::put_bool(sympt);
+        saving::put_bool(sympt);
 
         if (sympt)
         {
@@ -664,7 +664,7 @@ void load()
 {
     for (size_t i = 0; i < size_t(InsSymptId::END); ++i)
     {
-        const bool has_symptom = save_handling::get_bool();
+        const bool has_symptom = saving::get_bool();
 
         if (has_symptom)
         {

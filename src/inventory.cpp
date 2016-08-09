@@ -15,7 +15,7 @@
 #include "dungeon_master.hpp"
 #include "player_bon.hpp"
 #include "map.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 
 Inventory::Inventory(Actor* const owning_actor) :
     owning_actor_(owning_actor)
@@ -64,23 +64,23 @@ void Inventory::save() const
 
         if (item)
         {
-            save_handling::put_int(int(item->id()));
-            save_handling::put_int(item->nr_items_);
+            saving::put_int(int(item->id()));
+            saving::put_int(item->nr_items_);
 
             item->save();
         }
         else //No item in this slot
         {
-            save_handling::put_int(int(ItemId::END));
+            saving::put_int(int(ItemId::END));
         }
     }
 
-    save_handling::put_int(backpack_.size());
+    saving::put_int(backpack_.size());
 
     for (Item* item : backpack_)
     {
-        save_handling::put_int(int(item->id()));
-        save_handling::put_int(item->nr_items_);
+        saving::put_int(int(item->id()));
+        saving::put_int(item->nr_items_);
 
         item->save();
     }
@@ -96,13 +96,13 @@ void Inventory::load()
         delete item;
         slot.item = nullptr;
 
-        const ItemId id = ItemId(save_handling::get_int());
+        const ItemId id = ItemId(saving::get_int());
 
         if (id != ItemId::END)
         {
             item = item_factory::mk(id);
 
-            item->nr_items_ = save_handling::get_int();
+            item->nr_items_ = saving::get_int();
 
             item->load();
 
@@ -121,15 +121,15 @@ void Inventory::load()
         remove_item_in_backpack_with_idx(0, true);
     }
 
-    const int backpack_size = save_handling::get_int();
+    const int backpack_size = saving::get_int();
 
     for (int i = 0; i < backpack_size; ++i)
     {
-        const ItemId id = ItemId(save_handling::get_int());
+        const ItemId id = ItemId(saving::get_int());
 
         Item* item = item_factory::mk(id);
 
-        item->nr_items_ = save_handling::get_int();
+        item->nr_items_ = saving::get_int();
 
         item->load();
 

@@ -6,11 +6,11 @@
 #include "dungeon_master.hpp"
 #include "item_factory.hpp"
 #include "inventory.hpp"
-#include "player_spells_handling.hpp"
+#include "player_spells.hpp"
 #include "map.hpp"
 #include "map_parsing.hpp"
 #include "create_character.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 
 namespace player_bon
 {
@@ -116,11 +116,7 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
 
     case Trait::strong_spirit:
     case Trait::mighty_spirit:
-        //Have very little use for spirit, aside from Spell Resistance
-        return
-            bg == Bg::ghoul ||
-            bg == Bg::rogue ||
-            bg == Bg::war_vet;
+        break;
 
     case Trait::stealthy:
         break;
@@ -170,21 +166,21 @@ void init()
 
 void save()
 {
-    save_handling::put_int((int)bg_);
+    saving::put_int((int)bg_);
 
     for (int i = 0; i < (int)Trait::END; ++i)
     {
-        save_handling::put_bool(traits[i]);
+        saving::put_bool(traits[i]);
     }
 }
 
 void load()
 {
-    bg_ = Bg(save_handling::get_int());
+    bg_ = Bg(saving::get_int());
 
     for (int i = 0; i < (int)Trait::END; ++i)
     {
-        traits[i] = save_handling::get_bool();
+        traits[i] = saving::get_bool();
     }
 }
 
@@ -379,11 +375,15 @@ std::vector<std::string> bg_descr(const Bg id)
     case Bg::occultist:
         return
         {
-            "Can learn spells by heart when casting from manuscripts",
+            "Gains spell proficiency at a much quicker rate",
+            "",
+            "Starts with a few known spells",
             "",
             "-50% shock taken from using and identifying strange items (e.g. potions)",
             "",
             "Can dispel magic traps",
+            "",
+            "+2 Spirit Points",
             "",
             "-2 Hit Points",
             "",
@@ -912,13 +912,14 @@ void pick_bg(const Bg bg)
                                             true,
                                             Verbosity::silent);
 
-        player_spells_handling::learn_spell_if_not_known(SpellId::frenzy);
+        player_spells::learn_spell(SpellId::frenzy, Verbosity::silent);
 
         map::player->change_max_hp(10, Verbosity::silent);
         break;
 
     case Bg::occultist:
         pick_trait(Trait::strong_spirit);
+        map::player->change_max_spi(2, Verbosity::silent);
         map::player->change_max_hp(-2, Verbosity::silent);
         break;
 
@@ -1024,17 +1025,11 @@ std::string all_picked_traits_titles_line()
     return out;
 }
 
-int spi_occultist_can_cast_at_lvl(const int lvl)
-{
-    ASSERT(lvl > 0);
-    const int spi_from_start_trait  = 2;
-    const int spi_from_lvls         = (lvl - 1) * spi_per_lvl;
-    return player_start_spi + spi_from_lvls + spi_from_start_trait - 1;
-}
-
 bool gets_undead_bane_bon(const ActorDataT& actor_data)
 {
-    return player_bon::traits[(size_t)Trait::undead_bane] && actor_data.is_undead;
+    return
+        player_bon::traits[(size_t)Trait::undead_bane] &&
+        actor_data.is_undead;
 }
 
 } //player_bon

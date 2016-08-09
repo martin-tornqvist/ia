@@ -15,7 +15,7 @@
 #include "feature_mob.hpp"
 #include "feature_rigid.hpp"
 #include "item_data.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 #include "actor_factory.hpp"
 #include "dungeon_master.hpp"
 
@@ -429,12 +429,12 @@ Armor::Armor(ItemDataT* const item_data) :
 
 void Armor::save()
 {
-    save_handling::put_int(dur_);
+    saving::put_int(dur_);
 }
 
 void Armor::load()
 {
-    dur_ = save_handling::get_int();
+    dur_ = saving::get_int();
 }
 
 std::string Armor::armor_points_str(const bool with_brackets) const
@@ -598,14 +598,14 @@ Wpn::Wpn(ItemDataT* const item_data) :
 
 void Wpn::save()
 {
-    save_handling::put_int(melee_dmg_plus_);
-    save_handling::put_int(nr_ammo_loaded_);
+    saving::put_int(melee_dmg_plus_);
+    saving::put_int(nr_ammo_loaded_);
 }
 
 void Wpn::load()
 {
-    melee_dmg_plus_ = save_handling::get_int();
-    nr_ammo_loaded_ = save_handling::get_int();
+    melee_dmg_plus_ = saving::get_int();
+    nr_ammo_loaded_ = saving::get_int();
 }
 
 Clr Wpn::clr() const
@@ -876,12 +876,12 @@ AmmoMag::AmmoMag(ItemDataT* const item_data) : Ammo(item_data)
 
 void AmmoMag::save()
 {
-    save_handling::put_int(ammo_);
+    saving::put_int(ammo_);
 }
 
 void AmmoMag::load()
 {
-    ammo_ = save_handling::get_int();
+    ammo_ = saving::get_int();
 }
 
 void AmmoMag::set_full_ammo()
@@ -898,12 +898,12 @@ MedicalBag::MedicalBag(ItemDataT* const item_data) :
 
 void MedicalBag::save()
 {
-    save_handling::put_int(nr_supplies_);
+    saving::put_int(nr_supplies_);
 }
 
 void MedicalBag::load()
 {
-    nr_supplies_ = save_handling::get_int();
+    nr_supplies_ = saving::get_int();
 }
 
 void MedicalBag::on_pickup_hook()

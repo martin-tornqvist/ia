@@ -1,7 +1,7 @@
 #include "item_rod.hpp"
 
 #include "init.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 #include "item_data.hpp"
 #include "msg_log.hpp"
 #include "map.hpp"
@@ -13,16 +13,16 @@
 #include "actor_mon.hpp"
 #include "render.hpp"
 #include "feature_rigid.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 
 void Rod::save()
 {
-    save_handling::put_int(nr_charge_turns_left_);
+    saving::put_int(nr_charge_turns_left_);
 }
 
 void Rod::load()
 {
-    nr_charge_turns_left_ = save_handling::get_int();
+    nr_charge_turns_left_ = saving::get_int();
 }
 
 ConsumeItem Rod::activate(Actor* const actor)
@@ -365,13 +365,13 @@ void save()
 
         if (d.type == ItemType::rod)
         {
-            save_handling::put_str(d.base_name_un_id.names[size_t(ItemRefType::plain)]);
-            save_handling::put_str(d.base_name_un_id.names[size_t(ItemRefType::plural)]);
-            save_handling::put_str(d.base_name_un_id.names[size_t(ItemRefType::a)]);
+            saving::put_str(d.base_name_un_id.names[size_t(ItemRefType::plain)]);
+            saving::put_str(d.base_name_un_id.names[size_t(ItemRefType::plural)]);
+            saving::put_str(d.base_name_un_id.names[size_t(ItemRefType::a)]);
 
-            save_handling::put_int(d.clr.r);
-            save_handling::put_int(d.clr.g);
-            save_handling::put_int(d.clr.b);
+            saving::put_int(d.clr.r);
+            saving::put_int(d.clr.g);
+            saving::put_int(d.clr.b);
         }
     }
 }
@@ -384,13 +384,13 @@ void load()
 
         if (d.type == ItemType::rod)
         {
-            d.base_name_un_id.names[size_t(ItemRefType::plain)]  = save_handling::get_str();
-            d.base_name_un_id.names[size_t(ItemRefType::plural)] = save_handling::get_str();
-            d.base_name_un_id.names[size_t(ItemRefType::a)]      = save_handling::get_str();
+            d.base_name_un_id.names[size_t(ItemRefType::plain)]  = saving::get_str();
+            d.base_name_un_id.names[size_t(ItemRefType::plural)] = saving::get_str();
+            d.base_name_un_id.names[size_t(ItemRefType::a)]      = saving::get_str();
 
-            d.clr.r = save_handling::get_int();
-            d.clr.g = save_handling::get_int();
-            d.clr.b = save_handling::get_int();
+            d.clr.r = saving::get_int();
+            d.clr.g = saving::get_int();
+            d.clr.b = saving::get_int();
         }
     }
 }

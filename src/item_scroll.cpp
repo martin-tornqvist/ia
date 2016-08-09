@@ -8,10 +8,10 @@
 #include "player_bon.hpp"
 #include "msg_log.hpp"
 #include "inventory.hpp"
-#include "player_spells_handling.hpp"
+#include "player_spells.hpp"
 #include "render.hpp"
 #include "item_factory.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 #include "dungeon_master.hpp"
 
 const std::string Scroll::real_name() const
@@ -71,32 +71,51 @@ ConsumeItem Scroll::activate(Actor* const actor)
 
         const std::string crumble_str = "The Manuscript crumbles to dust.";
 
-        if (data_->is_identified)
+        const bool is_identified_before = data_->is_identified;
+
+        if (is_identified_before)
         {
             const std::string scroll_name = name(ItemRefType::a, ItemRefInf::none);
 
             msg_log::add("I read " + scroll_name + "...");
-
-            spell->cast(map::player, false);
-
-            msg_log::add(crumble_str);
-
-            try_learn();
         }
         else //Not already identified
         {
             msg_log::add("I recite the forbidden incantations on the manuscript...");
 
             data_->is_tried = true;
+        }
 
-            const auto is_noticed = spell->cast(map::player, false);
+        const auto is_noticed = spell->cast(map::player, false, true);
 
-            msg_log::add(crumble_str);
+        msg_log::add(crumble_str);
 
-            if (is_noticed == SpellEffectNoticed::yes)
+        if (
+            !is_identified_before &&
+            is_noticed == SpellEffectNoticed::yes)
+        {
+            identify(Verbosity::verbose);
+        }
+
+        //Learn spell, increase skill level
+        if (
+            data_->is_identified &&
+            spell->player_can_learn())
+        {
+            const SpellId id = spell->id();
+
+            const bool is_learned_before = player_spells::is_spell_learned(id);
+
+            if (!is_learned_before)
             {
-                identify(Verbosity::verbose);
+                player_spells::learn_spell(id, Verbosity::verbose);
             }
+
+            const auto skill_incr_verbosity =
+                is_learned_before ?
+                Verbosity::verbose : Verbosity::silent;
+
+            player_spells::incr_spell_skill(id, skill_incr_verbosity);
         }
 
         delete spell;
@@ -129,26 +148,6 @@ void Scroll::identify(const Verbosity verbosity)
             dungeon_master::add_history_event("Identified " + name_after + ".");
 
             give_xp_for_identify();
-        }
-    }
-}
-
-void Scroll::try_learn()
-{
-    if (player_bon::bg() == Bg::occultist)
-    {
-        Spell* const spell = mk_spell();
-
-        if (
-            spell->is_avail_for_player() &&
-            !player_spells_handling::is_spell_learned(spell->id()))
-        {
-            msg_log::add("I learn to cast this incantation by heart!");
-            player_spells_handling::learn_spell_if_not_known(spell);
-        }
-        else
-        {
-            delete spell;
         }
     }
 }
@@ -286,9 +285,9 @@ void save()
         {
             auto& base_name_un_id = item_data::data[i].base_name_un_id;
 
-            save_handling::put_str(base_name_un_id.names[int(ItemRefType::plain)]);
-            save_handling::put_str(base_name_un_id.names[int(ItemRefType::plural)]);
-            save_handling::put_str(base_name_un_id.names[int(ItemRefType::a)]);
+            saving::put_str(base_name_un_id.names[int(ItemRefType::plain)]);
+            saving::put_str(base_name_un_id.names[int(ItemRefType::plural)]);
+            saving::put_str(base_name_un_id.names[int(ItemRefType::a)]);
         }
     }
 }
@@ -301,9 +300,9 @@ void load()
         {
             auto& base_name_un_id = item_data::data[i].base_name_un_id;
 
-            base_name_un_id.names[int(ItemRefType::plain)]  = save_handling::get_str();
-            base_name_un_id.names[int(ItemRefType::plural)] = save_handling::get_str();
-            base_name_un_id.names[int(ItemRefType::a)]      = save_handling::get_str();
+            base_name_un_id.names[int(ItemRefType::plain)]  = saving::get_str();
+            base_name_un_id.names[int(ItemRefType::plural)] = saving::get_str();
+            base_name_un_id.names[int(ItemRefType::a)]      = saving::get_str();
         }
     }
 }

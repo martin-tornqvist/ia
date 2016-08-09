@@ -11,7 +11,7 @@
 #include "sound.hpp"
 #include "item_device.hpp"
 #include "map.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 #include "game_time.hpp"
 
 ItemDataT::ItemDataT() :
@@ -2111,9 +2111,9 @@ void save()
     {
         const ItemDataT& d = data[i];
 
-        save_handling::put_bool(d.is_identified);
-        save_handling::put_bool(d.is_tried);
-        save_handling::put_bool(d.allow_spawn);
+        saving::put_bool(d.is_identified);
+        saving::put_bool(d.is_tried);
+        saving::put_bool(d.allow_spawn);
     }
 }
 
@@ -2123,9 +2123,9 @@ void load()
     {
         ItemDataT& d = data[i];
 
-        d.is_identified   = save_handling::get_bool();
-        d.is_tried        = save_handling::get_bool();
-        d.allow_spawn     = save_handling::get_bool();
+        d.is_identified   = saving::get_bool();
+        d.is_tried        = saving::get_bool();
+        d.allow_spawn     = saving::get_bool();
     }
 }
 

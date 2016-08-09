@@ -1,4 +1,4 @@
-#include "save_handling.hpp"
+#include "saving.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -16,12 +16,12 @@
 #include "map_travel.hpp"
 #include "inventory.hpp"
 #include "game_time.hpp"
-#include "player_spells_handling.hpp"
+#include "player_spells.hpp"
 #include "item_amulet.hpp"
 #include "postmortem.hpp"
 #include "insanity.hpp"
 
-namespace save_handling
+namespace saving
 {
 
 namespace
@@ -64,7 +64,7 @@ void save_modules()
     map::save();
     actor_data::save();
     game_time::save();
-    player_spells_handling::save();
+    player_spells::save();
 
     TRACE_FUNC_END;
 }
@@ -96,7 +96,7 @@ void load_modules()
     map::load();
     actor_data::load();
     game_time::load();
-    player_spells_handling::load();
+    player_spells::load();
 
     TRACE_FUNC_END;
 }
@@ -270,4 +270,4 @@ bool get_bool()
     return get_str() == "T";
 }
 
-} //save_handling
+} //save

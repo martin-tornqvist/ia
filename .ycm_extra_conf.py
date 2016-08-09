@@ -12,7 +12,7 @@ flags = [
     '-Wextra',
     '-Werror',
     '-fno-rtti',
-    'fno-exceptions',
+    '-fno-exceptions',
 ]
 
 compilation_database_folder = ''

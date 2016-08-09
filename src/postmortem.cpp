@@ -17,7 +17,7 @@
 #include "player_bon.hpp"
 #include "text_format.hpp"
 #include "feature_rigid.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 
 namespace postmortem
 {

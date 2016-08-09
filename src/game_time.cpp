@@ -18,7 +18,7 @@
 #include "render.hpp"
 #include "map_travel.hpp"
 #include "item.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 #include "msg_log.hpp"
 
 namespace game_time
@@ -211,12 +211,12 @@ void cleanup()
 
 void save()
 {
-    save_handling::put_int(turn_nr_);
+    saving::put_int(turn_nr_);
 }
 
 void load()
 {
-    turn_nr_ = save_handling::get_int();
+    turn_nr_ = saving::get_int();
 }
 
 int turn()

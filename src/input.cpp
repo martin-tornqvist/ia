@@ -15,11 +15,11 @@
 #include "marker.hpp"
 #include "map.hpp"
 #include "dungeon_master.hpp"
-#include "player_spells_handling.hpp"
+#include "player_spells.hpp"
 #include "manual.hpp"
 #include "character_descr.hpp"
 #include "query.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 #include "item_factory.hpp"
 #include "actor_factory.hpp"
 #include "actor_mon.hpp"
@@ -947,7 +947,7 @@ void handle_map_mode_key_press(const KeyData& d)
 
         if (map::player->is_alive())
         {
-            player_spells_handling::player_select_spell_to_cast();
+            player_spells::player_select_spell_to_cast();
         }
 
         clear_events();

@@ -8,7 +8,7 @@
 #include "map.hpp"
 #include "popup.hpp"
 #include "map_travel.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 #include "item_factory.hpp"
 #include "map_parsing.hpp"
 #include "feature_mob.hpp"
@@ -1108,7 +1108,7 @@ void Stairs::bump(Actor& actor_bumping)
 
         case 1:
             map::player->pos = pos_;
-            save_handling::save_game();
+            saving::save_game();
             init::quit_to_main_menu = true;
             break;
 

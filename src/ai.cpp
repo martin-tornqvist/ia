@@ -40,7 +40,7 @@ bool try_cast_random_spell(Mon& mon)
             //Cast spell if max spirit cost is lower than current spirit,
             if (spell_max_spi < current_spi)
             {
-                spell->cast(&mon, true);
+                spell->cast(&mon, true, false);
                 return true;
             }
 
@@ -60,7 +60,7 @@ bool try_cast_random_spell(Mon& mon)
                     msg_log::add(mon.name_the() + " looks desperate.");
                 }
 
-                spell->cast(&mon, true);
+                spell->cast(&mon, true, false);
                 return true;
             }
 

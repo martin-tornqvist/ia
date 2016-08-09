@@ -12,7 +12,7 @@
 #include "map.hpp"
 #include "create_character.hpp"
 #include "actor_mon.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 
 namespace dungeon_master
 {
@@ -59,41 +59,41 @@ void init()
 
 void save()
 {
-    save_handling::put_int(clvl_);
-    save_handling::put_int(xp_pct_);
-    save_handling::put_int(start_time_.year_);
-    save_handling::put_int(start_time_.month_);
-    save_handling::put_int(start_time_.day_);
-    save_handling::put_int(start_time_.hour_);
-    save_handling::put_int(start_time_.minute_);
-    save_handling::put_int(start_time_.second_);
+    saving::put_int(clvl_);
+    saving::put_int(xp_pct_);
+    saving::put_int(start_time_.year_);
+    saving::put_int(start_time_.month_);
+    saving::put_int(start_time_.day_);
+    saving::put_int(start_time_.hour_);
+    saving::put_int(start_time_.minute_);
+    saving::put_int(start_time_.second_);
 
-    save_handling::put_int(history_events_.size());
+    saving::put_int(history_events_.size());
 
     for (const HistoryEvent& event : history_events_)
     {
-        save_handling::put_str(event.msg);
-        save_handling::put_int(event.turn);
+        saving::put_str(event.msg);
+        saving::put_int(event.turn);
     }
 }
 
 void load()
 {
-    clvl_               = save_handling::get_int();
-    xp_pct_             = save_handling::get_int();
-    start_time_.year_   = save_handling::get_int();
-    start_time_.month_  = save_handling::get_int();
-    start_time_.day_    = save_handling::get_int();
-    start_time_.hour_   = save_handling::get_int();
-    start_time_.minute_ = save_handling::get_int();
-    start_time_.second_ = save_handling::get_int();
+    clvl_               = saving::get_int();
+    xp_pct_             = saving::get_int();
+    start_time_.year_   = saving::get_int();
+    start_time_.month_  = saving::get_int();
+    start_time_.day_    = saving::get_int();
+    start_time_.hour_   = saving::get_int();
+    start_time_.minute_ = saving::get_int();
+    start_time_.second_ = saving::get_int();
 
-    const int nr_events = save_handling::get_int();
+    const int nr_events = saving::get_int();
 
     for (int i = 0; i < nr_events; ++i)
     {
-        const std::string   msg     = save_handling::get_str();
-        const int           turn    = save_handling::get_int();
+        const std::string   msg     = saving::get_str();
+        const int           turn    = saving::get_int();
 
         history_events_.push_back({msg, turn});
     }

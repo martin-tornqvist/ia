@@ -660,6 +660,8 @@ ActorDied Actor::hit(int dmg,
                       const DmgMethod method,
                       const AllowWound allow_wound)
 {
+    const int hp_pct_before = (hp() * 100) / hp_max(true);
+
     if (state_ == ActorState::destroyed)
     {
         TRACE_FUNC_END_VERBOSE;
@@ -790,8 +792,6 @@ ActorDied Actor::hit(int dmg,
 
     dmg = std::max(1, dmg);
 
-    const int hp_pct_before = (hp() * 100) / hp_max(true);
-
     if (!(is_player() && config::is_bot_playing()))
     {
         hp_ -= dmg;
@@ -872,6 +872,8 @@ ActorDied Actor::hit_spi(const int dmg, const Verbosity verbosity)
         die(is_destroyed, false, true);
         return ActorDied::yes;
     }
+
+    //SP is greater than 0
 
     return ActorDied::no;
 }

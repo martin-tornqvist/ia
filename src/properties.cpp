@@ -19,7 +19,7 @@
 #include "feature_mob.hpp"
 #include "item.hpp"
 #include "text_format.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 #include "dungeon_master.hpp"
 #include "map_travel.hpp"
 
@@ -891,14 +891,14 @@ void PropHandler::save() const
         }
     }
 
-    save_handling::put_int(nr_intr_props_);
+    saving::put_int(nr_intr_props_);
 
     for (Prop* prop : props_)
     {
         if (prop->src_ == PropSrc::intr)
         {
-            save_handling::put_int(int(prop->id()));
-            save_handling::put_int(prop->nr_turns_left_);
+            saving::put_int(int(prop->id()));
+            saving::put_int(prop->nr_turns_left_);
 
             prop->save();
         }
@@ -911,13 +911,13 @@ void PropHandler::load()
 
     ASSERT(owning_actor_);
 
-    const int nr_props = save_handling::get_int();
+    const int nr_props = saving::get_int();
 
     for (int i = 0; i < nr_props; ++i)
     {
-        const auto prop_id = PropId(save_handling::get_int());
+        const auto prop_id = PropId(saving::get_int());
 
-        const int nr_turns = save_handling::get_int();
+        const int nr_turns = saving::get_int();
 
         const auto turns_init = nr_turns == -1 ?
                                 PropTurns::indefinite : PropTurns::specific;
@@ -2194,12 +2194,12 @@ void PropNailed::affect_move_dir(const P& actor_pos, Dir& dir)
 
 void PropWound::save() const
 {
-    save_handling::put_int(nr_wounds_);
+    saving::put_int(nr_wounds_);
 }
 
 void PropWound::load()
 {
-    nr_wounds_ = save_handling::get_int();
+    nr_wounds_ = saving::get_int();
 }
 
 void PropWound::msg(const PropMsg msg_type, std::string& msg_ref) const

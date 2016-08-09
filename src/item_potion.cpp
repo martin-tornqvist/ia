@@ -6,7 +6,7 @@
 #include "msg_log.hpp"
 #include "map.hpp"
 #include "actor_mon.hpp"
-#include "player_spells_handling.hpp"
+#include "player_spells.hpp"
 #include "item_scroll.hpp"
 #include "game_time.hpp"
 #include "audio.hpp"
@@ -15,7 +15,7 @@
 #include "map_parsing.hpp"
 #include "feature_rigid.hpp"
 #include "item_factory.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 #include "dungeon_master.hpp"
 
 ConsumeItem Potion::activate(Actor* const actor)
@@ -703,13 +703,13 @@ void save()
 
         if (d.type == ItemType::potion)
         {
-            save_handling::put_str(d.base_name_un_id.names[int(ItemRefType::plain)]);
-            save_handling::put_str(d.base_name_un_id.names[int(ItemRefType::plural)]);
-            save_handling::put_str(d.base_name_un_id.names[int(ItemRefType::a)]);
+            saving::put_str(d.base_name_un_id.names[int(ItemRefType::plain)]);
+            saving::put_str(d.base_name_un_id.names[int(ItemRefType::plural)]);
+            saving::put_str(d.base_name_un_id.names[int(ItemRefType::a)]);
 
-            save_handling::put_int(d.clr.r);
-            save_handling::put_int(d.clr.g);
-            save_handling::put_int(d.clr.b);
+            saving::put_int(d.clr.r);
+            saving::put_int(d.clr.g);
+            saving::put_int(d.clr.b);
         }
     }
 }
@@ -722,13 +722,13 @@ void load()
 
         if (d.type == ItemType::potion)
         {
-            d.base_name_un_id.names[int(ItemRefType::plain)]  = save_handling::get_str();
-            d.base_name_un_id.names[int(ItemRefType::plural)] = save_handling::get_str();
-            d.base_name_un_id.names[int(ItemRefType::a)]      = save_handling::get_str();
+            d.base_name_un_id.names[int(ItemRefType::plain)]  = saving::get_str();
+            d.base_name_un_id.names[int(ItemRefType::plural)] = saving::get_str();
+            d.base_name_un_id.names[int(ItemRefType::a)]      = saving::get_str();
 
-            d.clr.r = save_handling::get_int();
-            d.clr.g = save_handling::get_int();
-            d.clr.b = save_handling::get_int();
+            d.clr.r = saving::get_int();
+            d.clr.g = saving::get_int();
+            d.clr.b = saving::get_int();
         }
     }
 }

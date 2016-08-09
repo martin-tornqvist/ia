@@ -55,7 +55,12 @@ enum class SpellId
     END
 };
 
-enum class IntrSpellShock {mild, disturbing, severe};
+enum class IntrSpellShock
+{
+    mild,
+    disturbing,
+    severe
+};
 
 class Spell;
 
@@ -80,15 +85,18 @@ public:
 
     virtual ~Spell() {}
 
-    SpellEffectNoticed cast(Actor* const caster, const bool is_intrinsic) const;
+    SpellEffectNoticed cast(Actor* const caster,
+                            const bool is_intrinsic,
+                            const bool is_base_cost_only) const;
 
     virtual bool allow_mon_cast_now(Mon& mon) const
     {
         (void)mon;
         return false;
     }
-    virtual bool is_avail_for_all_mon() const = 0;
-    virtual bool is_avail_for_player() const = 0;
+
+    virtual bool mon_can_learn() const = 0;
+    virtual bool player_can_learn() const = 0;
     virtual std::string name() const = 0;
     virtual SpellId id() const = 0;
 
@@ -132,12 +140,12 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return true;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -171,7 +179,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return 6;
+        return 4;
     }
 };
 
@@ -182,12 +190,12 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return true;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -225,7 +233,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(3);
+        return 9;
     }
 };
 
@@ -236,12 +244,12 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return false;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -275,7 +283,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(11);
+        return 16;
     }
 };
 
@@ -286,12 +294,12 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return true;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -324,7 +332,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(2);
+        return 7;
     }
 };
 
@@ -333,12 +341,12 @@ class SpellAnimWpns: public Spell
 public:
     SpellAnimWpns() : Spell() {}
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return false;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -374,7 +382,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(2);
+        return 7;
     }
 };
 
@@ -386,12 +394,12 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
-    virtual bool is_avail_for_all_mon() const override
+    virtual bool mon_can_learn() const override
     {
         return false;
     }
 
-    virtual bool is_avail_for_player() const override
+    virtual bool player_can_learn() const override
     {
         return false;
     }
@@ -427,7 +435,7 @@ protected:
 
     virtual int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(2);
+        return 7;
     }
 };
 
@@ -436,12 +444,12 @@ class SpellDetItems: public Spell
 public:
     SpellDetItems() : Spell() {}
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return false;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -470,7 +478,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(6);
+        return 11;
     }
 };
 
@@ -479,12 +487,12 @@ class SpellDetTraps: public Spell
 public:
     SpellDetTraps() : Spell() {}
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return false;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -513,7 +521,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(4);
+        return 9;
     }
 };
 
@@ -522,12 +530,12 @@ class SpellDetMon: public Spell
 public:
     SpellDetMon() : Spell() {}
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return false;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -549,14 +557,17 @@ public:
 
     std::vector<std::string> descr() const override
     {
-        return {"Reveals the presence of all creatures in the surrounding area."};
+        return
+        {
+            "Reveals the presence of all creatures in the surrounding area."
+        };
     }
 private:
     SpellEffectNoticed cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(1);
+        return 4;
     }
 };
 
@@ -565,12 +576,12 @@ class SpellOpening: public Spell
 public:
     SpellOpening() : Spell() {}
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return false;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -592,14 +603,17 @@ public:
 
     std::vector<std::string> descr() const override
     {
-        return {"Opens all locks, lids and doors in the surrounding area."};
+        return
+        {
+            "Opens all locks, lids and doors in the surrounding area."
+        };
     }
 private:
     SpellEffectNoticed cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(5);
+        return 10;
     }
 };
 
@@ -608,12 +622,12 @@ class SpellSacrLife: public Spell
 public:
     SpellSacrLife() : Spell() {}
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return false;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -646,7 +660,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(2);
+        return 7;
     }
 };
 
@@ -655,12 +669,12 @@ class SpellSacrSpi: public Spell
 public:
     SpellSacrSpi() : Spell() {}
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return false;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -693,7 +707,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(1) - (spi_per_lvl * 3);
+        return 3;
     }
 };
 
@@ -702,12 +716,12 @@ class SpellCloudMinds: public Spell
 public:
     SpellCloudMinds() : Spell() {}
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return false;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -745,12 +759,12 @@ class SpellFrenzy: public Spell
 public:
     SpellFrenzy() : Spell() {}
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return false;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -793,12 +807,12 @@ class SpellBless: public Spell
 public:
     SpellBless() : Spell() {}
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return false;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -827,7 +841,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(11);
+        return 16;
     }
 };
 
@@ -836,11 +850,11 @@ class SpellLight: public Spell
 public:
     SpellLight() : Spell() {}
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return false;
     }
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -880,11 +894,11 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return true;
     }
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return false;
     }
@@ -913,7 +927,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_start_spi + 2;
+        return 8;
     }
 };
 
@@ -924,12 +938,12 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return true;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -958,7 +972,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(2);
+        return 7;
     }
 };
 
@@ -969,12 +983,12 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return true;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -1006,7 +1020,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(4);
+        return 9;
     }
 };
 
@@ -1038,12 +1052,12 @@ public:
                 "terrorizing their minds."};
     }
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return true;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -1053,7 +1067,7 @@ protected:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(2);
+        return 7;
     }
 };
 
@@ -1064,12 +1078,12 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return true;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return false;
     }
@@ -1098,7 +1112,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(2);
+        return 7;
     }
 };
 
@@ -1109,12 +1123,12 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return true;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return true;
     }
@@ -1149,7 +1163,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(2);
+        return 7;
     }
 };
 
@@ -1160,12 +1174,12 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return true;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return false;
     }
@@ -1194,7 +1208,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(2);
+        return 7;
     }
 };
 
@@ -1205,12 +1219,12 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return true;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return false;
     }
@@ -1239,7 +1253,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(2);
+        return 7;
     }
 };
 
@@ -1250,12 +1264,12 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
-    bool is_avail_for_all_mon() const override
+    bool mon_can_learn() const override
     {
         return true;
     }
 
-    bool is_avail_for_player() const override
+    bool player_can_learn() const override
     {
         return false;
     }
@@ -1284,7 +1298,7 @@ private:
 
     int max_spi_cost() const override
     {
-        return player_bon::spi_occultist_can_cast_at_lvl(2);
+        return 7;
     }
 };
 

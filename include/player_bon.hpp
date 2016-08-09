@@ -106,8 +106,8 @@ std::string trait_descr(const Trait id);
 std::string bg_title(const Bg id);
 
 //NOTE: The string vector returned is not formatted. Each line still needs to
-//be formatted by the caller. The reason for using a vector instead of a string
-//is to separate the text into paragraphs.
+//      be formatted by the caller. The reason for using a vector instead of a
+//      string is to separate the text into paragraphs.
 std::vector<std::string> bg_descr(const Bg id);
 
 std::string all_picked_traits_titles_line();
@@ -117,8 +117,6 @@ void pick_trait(const Trait id);
 void pick_bg(const Bg bg);
 
 void set_all_traits_to_picked();
-
-int spi_occultist_can_cast_at_lvl(const int lvl);
 
 bool gets_undead_bane_bon(const ActorDataT& actor_data);
 

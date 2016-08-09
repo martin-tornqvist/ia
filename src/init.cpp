@@ -18,12 +18,12 @@
 #include "dungeon_master.hpp"
 #include "bot.hpp"
 #include "manual.hpp"
-#include "player_spells_handling.hpp"
+#include "player_spells.hpp"
 #include "map_templates.hpp"
 #include "map_travel.hpp"
 #include "query.hpp"
 #include "item_amulet.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 #include "insanity.hpp"
 #include "highscore.hpp"
 
@@ -58,7 +58,7 @@ void cleanup_io()
 void init_game()
 {
     TRACE_FUNC_BEGIN;
-    save_handling::init();
+    saving::init();
     line_calc::init();
     gods::init();
     manual::init();
@@ -92,7 +92,7 @@ void init_session()
     msg_log::init();
     dungeon_master::init();
     bot::init();
-    player_spells_handling::init();
+    player_spells::init();
     amulet_handling::init();
     highscore::init();
     TRACE_FUNC_END;
@@ -102,7 +102,7 @@ void cleanup_session()
 {
     TRACE_FUNC_BEGIN;
     highscore::cleanup();
-    player_spells_handling::cleanup();
+    player_spells::cleanup();
     insanity::cleanup();
     map::cleanup();
     game_time::cleanup();

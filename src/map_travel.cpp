@@ -14,7 +14,7 @@
 #include "render.hpp"
 #include "msg_log.hpp"
 #include "feature_rigid.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 
 #include "sdl_wrapper.hpp" // *** Temporary ***
 
@@ -123,25 +123,25 @@ void init()
 
 void save()
 {
-    save_handling::put_int(map_list.size());
+    saving::put_int(map_list.size());
 
     for (const auto& map_data : map_list)
     {
-        save_handling::put_int(int(map_data.type));
-        save_handling::put_int(int(map_data.is_main_dungeon));
+        saving::put_int(int(map_data.type));
+        saving::put_int(int(map_data.is_main_dungeon));
     }
 }
 
 void load()
 {
-    const int nr_maps = save_handling::get_int();
+    const int nr_maps = saving::get_int();
 
     map_list.resize(size_t(nr_maps));
 
     for (auto& map_data : map_list)
     {
-        map_data.type               = MapType(save_handling::get_int());
-        map_data.is_main_dungeon    = IsMainDungeon(save_handling::get_int());
+        map_data.type               = MapType(saving::get_int());
+        map_data.is_main_dungeon    = IsMainDungeon(saving::get_int());
     }
 }
 

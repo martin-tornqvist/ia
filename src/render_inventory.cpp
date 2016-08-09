@@ -85,7 +85,7 @@ void draw_weight_pct_and_dots(const P item_pos,
 
     if (dots_w < 0)
     {
-        //Item name does not fit at all, draw a few dots up until the weight percentage
+        //Item name does not fit at all, draw some dots until the weight percent
         dots_w              = 3;
         const int DOTS_X1   = weight_x - 1;
         dots_x              = DOTS_X1 - dots_w + 1;

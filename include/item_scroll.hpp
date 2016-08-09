@@ -30,8 +30,6 @@ public:
     Spell* mk_spell() const;
 
 protected:
-    void try_learn();
-
     std::string name_inf() const override;
 };
 

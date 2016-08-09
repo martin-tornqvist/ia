@@ -89,7 +89,10 @@ Uint32 px(SDL_Surface& srf,
     return -1;
 }
 
-void put_px(const SDL_Surface& srf, const int pixel_x, const int pixel_y, Uint32 px)
+void put_px(const SDL_Surface& srf,
+            const int pixel_x,
+            const int pixel_y,
+            Uint32 px)
 {
     const int bpp = srf.format->BytesPerPixel;
 
@@ -940,8 +943,11 @@ void draw_text(const std::string& str,
     }
 }
 
-int draw_text_center(const std::string& str, const Panel panel, const P& pos,
-                     const Clr& clr, const Clr& bg_clr,
+int draw_text_center(const std::string& str,
+                     const Panel panel,
+                     const P& pos,
+                     const Clr& clr,
+                     const Clr& bg_clr,
                      const bool is_pixel_pos_adj_allowed)
 {
     if (!is_inited())
@@ -1107,7 +1113,10 @@ void draw_projectiles(std::vector<Projectile*>& projectiles,
     update_screen();
 }
 
-void draw_box(const R& border, const Panel panel, const Clr& clr, const bool do_cover_area)
+void draw_box(const R& border,
+              const Panel panel,
+              const Clr& clr,
+              const bool do_cover_area)
 {
     if (do_cover_area)
     {

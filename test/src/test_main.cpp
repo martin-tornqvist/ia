@@ -20,9 +20,9 @@
 #include "map_parsing.hpp"
 #include "fov.hpp"
 #include "line_calc.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 #include "inventory.hpp"
-#include "player_spells_handling.hpp"
+#include "player_spells.hpp"
 #include "player_bon.hpp"
 #include "explosion.hpp"
 #include "item_device.hpp"
@@ -933,8 +933,8 @@ TEST_FIXTURE(BasicFixture, saving_game)
     actor_data::data[size_t(ActorId::END) - 1].nr_kills = 123;
 
     //Learned spells
-    player_spells_handling::learn_spell_if_not_known(SpellId::bless);
-    player_spells_handling::learn_spell_if_not_known(SpellId::aza_wrath);
+    player_spells::learn_spell(SpellId::bless);
+    player_spells::learn_spell(SpellId::aza_wrath);
 
     //Applied properties
     PropHandler& prop_hlr = map::player->prop_handler();
@@ -957,17 +957,17 @@ TEST_FIXTURE(BasicFixture, saving_game)
     map_travel::map_list[5] = {MapType::rats_in_the_walls, IsMainDungeon::yes};
     map_travel::map_list[7] = {MapType::leng,              IsMainDungeon::no};
 
-    save_handling::save_game();
-    CHECK(save_handling::is_save_available());
+    saving::save_game();
+    CHECK(saving::is_save_available());
 }
 
 TEST_FIXTURE(BasicFixture, loading_game)
 {
-    CHECK(save_handling::is_save_available());
+    CHECK(saving::is_save_available());
 
     const int PLAYER_MAX_HP_BEFORE_LOAD = map::player->hp_max(true);
 
-    save_handling::load_game();
+    saving::load_game();
 
     //Item data
     CHECK_EQUAL(true,  item_data::data[int(ItemId::scroll_telep)].is_tried);
@@ -1059,9 +1059,9 @@ TEST_FIXTURE(BasicFixture, loading_game)
     CHECK_EQUAL(123, actor_data::data[int(ActorId::END) - 1].nr_kills);
 
     //Learned spells
-    CHECK(player_spells_handling::is_spell_learned(SpellId::bless));
-    CHECK(player_spells_handling::is_spell_learned(SpellId::aza_wrath));
-    CHECK_EQUAL(false, player_spells_handling::is_spell_learned(SpellId::mayhem));
+    CHECK(player_spells::is_spell_learned(SpellId::bless));
+    CHECK(player_spells::is_spell_learned(SpellId::aza_wrath));
+    CHECK_EQUAL(false, player_spells::is_spell_learned(SpellId::mayhem));
 
     //Properties
     PropHandler& prop_hlr = map::player->prop_handler();

@@ -6,7 +6,7 @@
 #include "colors.hpp"
 #include "render.hpp"
 #include "menu_input.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 #include "highscore.hpp"
 #include "manual.hpp"
 #include "popup.hpp"
@@ -404,9 +404,9 @@ GameEntryMode run(bool& quit, int& intro_mus_channel)
 
             if (browser.is_at_idx(1))
             {
-                if (save_handling::is_save_available())
+                if (saving::is_save_available())
                 {
-                    save_handling::load_game();
+                    saving::load_game();
                     map_travel::go_to_nxt();
                     TRACE_FUNC_END;
                     return GameEntryMode::load_game;

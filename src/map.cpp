@@ -13,7 +13,7 @@
 #include "mapgen.hpp"
 #include "item.hpp"
 #include "feature_rigid.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 
 #ifdef DEMO_MODE
 #include "sdl_wrapper.hpp"
@@ -137,12 +137,12 @@ void cleanup()
 
 void save()
 {
-    save_handling::put_int(dlvl);
+    saving::put_int(dlvl);
 }
 
 void load()
 {
-    dlvl = save_handling::get_int();
+    dlvl = saving::get_int();
 }
 
 void reset_map()

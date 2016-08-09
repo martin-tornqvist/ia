@@ -10,7 +10,7 @@
 #include "text_format.hpp"
 #include "actor_factory.hpp"
 #include "feature_rigid.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 #include "dungeon_master.hpp"
 
 namespace
@@ -985,8 +985,8 @@ void save()
 {
     for (size_t i = 0; i < size_t(AmuletEffectId::END); ++i)
     {
-        save_handling::put_int(int(effect_list_[i]));
-        save_handling::put_bool(effects_known_[i]);
+        saving::put_int(int(effect_list_[i]));
+        saving::put_bool(effects_known_[i]);
     }
 }
 
@@ -994,8 +994,8 @@ void load()
 {
     for (size_t i = 0; i < size_t(AmuletEffectId::END); ++i)
     {
-        effect_list_[i]   = ItemId(save_handling::get_int());
-        effects_known_[i] = save_handling::get_bool();
+        effect_list_[i]   = ItemId(saving::get_int());
+        effects_known_[i] = saving::get_bool();
     }
 }
 

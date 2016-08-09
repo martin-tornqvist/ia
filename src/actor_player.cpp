@@ -23,7 +23,7 @@
 #include "player_bon.hpp"
 #include "inventory.hpp"
 #include "inventory_handling.hpp"
-#include "player_spells_handling.hpp"
+#include "player_spells.hpp"
 #include "bot.hpp"
 #include "input.hpp"
 #include "map_parsing.hpp"
@@ -32,7 +32,7 @@
 #include "item_scroll.hpp"
 #include "item_potion.hpp"
 #include "text_format.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 #include "insanity.hpp"
 #include "reload.hpp"
 
@@ -89,19 +89,27 @@ void Player::mk_start_items()
 
         //Occultist starts with some spells and a potion
 
-        //Detect Monsters
-        Item* item = item_factory::mk(ItemId::scroll_det_mon);
+        //Learn the Darkbolt spell
+        player_spells::learn_spell(SpellId::darkbolt, Verbosity::silent);
+        player_spells::set_spell_skill_pct(SpellId::darkbolt, 20);
+
+        //Identify the Darkbolt scroll
+        Item* item = item_factory::mk(ItemId::scroll_darkbolt);
         static_cast<Scroll*>(item)->identify(Verbosity::silent);
         item->give_xp_for_identify(Verbosity::silent);
-        inv_->put_in_backpack(item);
+        delete item;
 
-        //Darkbolt
-        item = item_factory::mk(ItemId::scroll_darkbolt);
+        //Learn the Detect Monsters spell
+        player_spells::learn_spell(SpellId::det_mon, Verbosity::silent);
+        player_spells::set_spell_skill_pct(SpellId::det_mon, 40);
+
+        //Identify the Detect Monsters scroll
+        item = item_factory::mk(ItemId::scroll_det_mon);
         static_cast<Scroll*>(item)->identify(Verbosity::silent);
         item->give_xp_for_identify(Verbosity::silent);
-        inv_->put_in_backpack(item);
+        delete item;
 
-        //Spirit
+        //Spirit potion
         item = item_factory::mk(ItemId::potion_spirit);
         static_cast<Potion*>(item)->identify(Verbosity::silent);
         item->give_xp_for_identify(Verbosity::silent);
@@ -243,26 +251,26 @@ void Player::save() const
 {
     prop_handler_->save();
 
-    save_handling::put_int(ins_);
-    save_handling::put_int((int)shock_);
-    save_handling::put_int(hp_);
-    save_handling::put_int(hp_max_);
-    save_handling::put_int(spi_);
-    save_handling::put_int(spi_max_);
-    save_handling::put_int(pos.x);
-    save_handling::put_int(pos.y);
-    save_handling::put_int(nr_steps_until_free_action_);
-    save_handling::put_int(nr_turns_until_rspell_);
+    saving::put_int(ins_);
+    saving::put_int((int)shock_);
+    saving::put_int(hp_);
+    saving::put_int(hp_max_);
+    saving::put_int(spi_);
+    saving::put_int(spi_max_);
+    saving::put_int(pos.x);
+    saving::put_int(pos.y);
+    saving::put_int(nr_steps_until_free_action_);
+    saving::put_int(nr_turns_until_rspell_);
 
     ASSERT(unarmed_wpn_);
 
-    save_handling::put_int((int)unarmed_wpn_->id());
+    saving::put_int((int)unarmed_wpn_->id());
 
     for (int i = 0; i < (int)AbilityId::END; ++i)
     {
         const int v = data_->ability_vals.raw_val(AbilityId(i));
 
-        save_handling::put_int(v);
+        saving::put_int(v);
     }
 }
 
@@ -270,18 +278,18 @@ void Player::load()
 {
     prop_handler_->load();
 
-    ins_                        = save_handling::get_int();
-    shock_                      = double(save_handling::get_int());
-    hp_                         = save_handling::get_int();
-    hp_max_                     = save_handling::get_int();
-    spi_                        = save_handling::get_int();
-    spi_max_                    = save_handling::get_int();
-    pos.x                       = save_handling::get_int();
-    pos.y                       = save_handling::get_int();
-    nr_steps_until_free_action_ = save_handling::get_int();
-    nr_turns_until_rspell_      = save_handling::get_int();
+    ins_                        = saving::get_int();
+    shock_                      = double(saving::get_int());
+    hp_                         = saving::get_int();
+    hp_max_                     = saving::get_int();
+    spi_                        = saving::get_int();
+    spi_max_                    = saving::get_int();
+    pos.x                       = saving::get_int();
+    pos.y                       = saving::get_int();
+    nr_steps_until_free_action_ = saving::get_int();
+    nr_turns_until_rspell_      = saving::get_int();
 
-    ItemId unarmed_wpn_id = ItemId(save_handling::get_int());
+    ItemId unarmed_wpn_id = ItemId(saving::get_int());
 
     ASSERT(unarmed_wpn_id < ItemId::END);
 
@@ -296,7 +304,7 @@ void Player::load()
 
     for (int i = 0; i < (int)AbilityId::END; ++i)
     {
-        const int v = save_handling::get_int();
+        const int v = saving::get_int();
 
         data_->ability_vals.set_val(AbilityId(i), v);
     }

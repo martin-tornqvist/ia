@@ -7,7 +7,7 @@
 #include <math.h>
 
 #include "item.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 #include "game_time.hpp"
 
 void ActorDataT::reset()
@@ -3159,8 +3159,8 @@ void save()
     {
         const auto& d = data[i];
 
-        save_handling::put_int(d.nr_left_allowed_to_spawn);
-        save_handling::put_int(d.nr_kills);
+        saving::put_int(d.nr_left_allowed_to_spawn);
+        saving::put_int(d.nr_kills);
     }
 }
 
@@ -3170,8 +3170,8 @@ void load()
     {
         auto& d = data[i];
 
-        d.nr_left_allowed_to_spawn  = save_handling::get_int();
-        d.nr_kills                  = save_handling::get_int();
+        d.nr_left_allowed_to_spawn  = saving::get_int();
+        d.nr_kills                  = saving::get_int();
     }
 }
 

@@ -14,7 +14,7 @@
 #include "audio.hpp"
 #include "feature_rigid.hpp"
 #include "actor_factory.hpp"
-#include "save_handling.hpp"
+#include "saving.hpp"
 #include "dungeon_master.hpp"
 
 //---------------------------------------------------- DEVICE
@@ -49,12 +49,12 @@ StrangeDevice::StrangeDevice(ItemDataT* const item_data) :
 
 void StrangeDevice::save()
 {
-    save_handling::put_int(int(condition_));
+    saving::put_int(int(condition_));
 }
 
 void StrangeDevice::load()
 {
-    condition_ = Condition(save_handling::get_int());
+    condition_ = Condition(saving::get_int());
 }
 
 std::vector<std::string> StrangeDevice::descr() const
@@ -242,7 +242,7 @@ ConsumeItem DeviceBlaster::trigger_effect()
     else //Targets are available
     {
         Spell* const spell = spell_handling::mk_spell_from_id(SpellId::aza_wrath);
-        spell->cast(map::player, false);
+        spell->cast(map::player, false, true);
         delete spell;
     }
 
@@ -381,18 +381,18 @@ ConsumeItem DeviceLantern::activate(Actor* const actor)
 
 void DeviceLantern::save()
 {
-    save_handling::put_int(nr_turns_left_);
-    save_handling::put_int(nr_flicker_turns_left_);
-    save_handling::put_int(int(working_state_));
-    save_handling::put_bool(is_activated_);
+    saving::put_int(nr_turns_left_);
+    saving::put_int(nr_flicker_turns_left_);
+    saving::put_int(int(working_state_));
+    saving::put_bool(is_activated_);
 }
 
 void DeviceLantern::load()
 {
-    nr_turns_left_          = save_handling::get_int();
-    nr_flicker_turns_left_  = save_handling::get_int();
-    working_state_          = LanternWorkingState(save_handling::get_int());
-    is_activated_           = save_handling::get_bool();
+    nr_turns_left_          = saving::get_int();
+    nr_flicker_turns_left_  = saving::get_int();
+    working_state_          = LanternWorkingState(saving::get_int());
+    is_activated_           = saving::get_bool();
 }
 
 void DeviceLantern::on_pickup_hook()
