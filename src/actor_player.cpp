@@ -1346,7 +1346,6 @@ void Player::move(Dir dir)
         return;
     }
 
-    //Store the original intended direction, for use later in this function
     const Dir intended_dir = dir;
 
     prop_handler_->affect_move_dir(pos, dir);
@@ -1578,18 +1577,15 @@ void Player::move(Dir dir)
     }
 
     //If position is at the destination now, it means that the player either:
-    // * did an actual move to another cell, or
-    // * that player waited in the current cell on purpose, or
+    // * did an actual move to another position, or
+    // * that player waited in the current position on purpose, or
     // * that the player was stuck (e.g. in a spider web)
     //In either case, the game time is ticked here (since no melee attack or
     //other "time advancing" action has occurred)
     if (pos == tgt)
     {
-        //Here we rearrange the pistol magazines, if:
-        // * Player intended to wait in place (i.e. the parameter
-        //   direction is "center"), and,
-        // * Player is not stuck in a trap, and
-        // * No monsters are seen
+        //If the player intended to wait in the current position, perform
+        //"standing still" actions
         if (intended_dir == Dir::center)
         {
             bool is_stuck = false;
@@ -1603,12 +1599,24 @@ void Player::move(Dir dir)
 
             if (!is_stuck)
             {
-                std::vector<Actor*> my_seen_foes;
-                seen_foes(my_seen_foes);
+                auto did_action = DidAction::no;
 
-                if (my_seen_foes.empty())
+                //Ghoul feed on corpses?
+                if (player_bon::bg() == Bg::ghoul)
                 {
-                    reload::player_arrange_pistol_mags();
+                    did_action = try_eat_corpse();
+                }
+
+                if (did_action == DidAction::no)
+                {
+                    //Reorganize pistol magazines?
+                    std::vector<Actor*> my_seen_foes;
+                    seen_foes(my_seen_foes);
+
+                    if (my_seen_foes.empty())
+                    {
+                        reload::player_arrange_pistol_mags();
+                    }
                 }
             }
         }

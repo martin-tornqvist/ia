@@ -348,7 +348,7 @@ std::vector<std::string> bg_descr(const Bg id)
         return
         {
             "Does not regenerate Hit Points and cannot use medical equipment - must "
-            "instead heal by feeding on corpses (press [q])",
+            "instead heal by feeding on corpses (stand still to feed)",
             "",
             "Has an arcane ability to incite Frenzy at will (increased speed, "
             "+10% melee hit chance, +1 melee damage, must move towards enemies).",
@@ -913,6 +913,7 @@ void pick_bg(const Bg bg)
                                             Verbosity::silent);
 
         player_spells::learn_spell(SpellId::frenzy, Verbosity::silent);
+        player_spells::set_spell_skill_pct(SpellId::frenzy, 100);
 
         map::player->change_max_hp(10, Verbosity::silent);
         break;

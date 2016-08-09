@@ -1038,18 +1038,13 @@ DidAction Actor::try_eat_corpse()
     if (hp() >= hp_max(true) && !wound)
     {
         //Not "hungry"
-        if (actor_is_player)
-        {
-            msg_log::add("I am satiated.");
-        }
-
         return DidAction::no;
     }
 
     Actor* corpse = nullptr;
 
-    //Check all corpses here, if this is the player eating, stop at any corpse which is
-    //prioritized for bashing (Zombies)
+    //Check all corpses here, if this is the player eating, stop at any corpse
+    //which is prioritized for bashing (Zombies)
     for (Actor* const actor : game_time::actors)
     {
         if (actor->pos == pos && actor->state() == ActorState::corpse)
@@ -1111,10 +1106,6 @@ DidAction Actor::try_eat_corpse()
         on_feed();
 
         return DidAction::yes;
-    }
-    else if (actor_is_player)
-    {
-        msg_log::add("I find nothing here to feed on.");
     }
 
     return DidAction::no;

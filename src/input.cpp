@@ -656,23 +656,6 @@ void handle_map_mode_key_press(const KeyData& d)
         return;
     }
 
-    else if (d.key == 'q' && player_bon::bg() == Bg::ghoul)
-    {
-        //----------------------------------- EAT CORPSE (GHOUL)
-        msg_log::clear();
-
-        if (map::player->is_alive())
-        {
-            if (map::player->try_eat_corpse() == DidAction::yes)
-            {
-                game_time::tick();
-            }
-        }
-
-        clear_events();
-        return;
-    }
-
     //----------------------------------- THROW ITEM
     else if (d.key == 't')
     {
