@@ -851,14 +851,16 @@ public:
     }
 
     std::string name(const Article article) const override;
+
     TileId tile() const override;
+
     void bump(Actor& actor_bumping) override;
+
     DidOpen open(Actor* const actor_opening) override;
-    void disarm() override;
 
-    void hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void hit(const DmgType dmg_type,
+             const DmgMethod dmg_method,
              Actor* const actor) override;
-
 
 private:
     Clr clr_default() const override;
@@ -867,25 +869,15 @@ private:
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 
-    void try_find_trap();
-
-    DidTriggerTrap trigger_trap(Actor* const actor) override;
-
     void player_loot();
 
     void try_sprain_player();
 
     ItemContainer item_container_;
 
-    bool is_open_, is_locked_, is_trapped_, is_trap_status_known_;
+    bool is_open_, is_locked_;
 
     ChestMatl matl_;
-
-//How hard the trap is to detect (0 - 2)
-// 0: Requires nothing
-// 1: Requires "Observant"
-// 2: Requires "Perceptive"
-    const int trap_det_lvl;
 };
 
 class Cabinet: public Rigid

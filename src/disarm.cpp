@@ -97,5 +97,4 @@ void player_disarm()
     }
 }
 
-} //Disarm
-
+} //disarm

@@ -316,10 +316,7 @@ void Door::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* con
 
                             snd_emit::run(snd);
 
-                            msg_log::add("It seems futile.",
-                                         clr_msg_note,
-                                         false,
-                                         MorePromptOnMsg::yes);
+                            msg_log::add("It seems futile.");
                         }
                     }
                 }

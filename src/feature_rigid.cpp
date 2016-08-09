@@ -2172,7 +2172,7 @@ void Tomb::bump(Actor& actor_bumping)
                 {
                     try_sprain_player();
 
-                    msg_log::add("It seems futile.", clr_msg_note, false, MorePromptOnMsg::yes);
+                    msg_log::add("It seems futile.");
                 }
                 else //Not weakened
                 {
@@ -2539,10 +2539,7 @@ Chest::Chest(const P& p) :
     Rigid                   (p),
     is_open_                (false),
     is_locked_              (false),
-    is_trapped_             (false),
-    is_trap_status_known_   (false),
-    matl_                   (ChestMatl::wood),
-    trap_det_lvl            (rnd::range(0, 2))
+    matl_                   (ChestMatl::wood)
 {
     if (map::dlvl >= 3 && rnd::coin_toss())
     {
@@ -2553,13 +2550,15 @@ Chest::Chest(const P& p) :
     const int   nr_items_min        = 0;
     const int   nr_items_max        = is_treasure_hunter ? 3 : 2;
 
-    item_container_.init(FeatureId::chest, rnd::range(nr_items_min, nr_items_max));
+    item_container_.init(FeatureId::chest,
+                         rnd::range(nr_items_min, nr_items_max));
 
-    if (!item_container_.items_.empty())
-    {
-        is_locked_   = rnd::fraction(4, 10);
-        is_trapped_  = rnd::fraction(6, 10);
-    }
+    const int locked_numer =
+        item_container_.items_.empty() ?
+        1 :
+        std::min(8, map::dlvl);
+
+    is_locked_ = rnd::fraction(locked_numer, 10);
 }
 
 void Chest::bump(Actor& actor_bumping)
@@ -2600,24 +2599,6 @@ void Chest::bump(Actor& actor_bumping)
     }
 }
 
-void Chest::try_find_trap()
-{
-    ASSERT(is_trapped_);
-    ASSERT(!is_open_);
-
-    const bool can_det_trap =
-        trap_det_lvl == 0                               ||
-        player_bon::traits[(size_t)Trait::perceptive]   ||
-        (trap_det_lvl == 1 && player_bon::traits[(size_t)Trait::observant]);
-
-    if (can_det_trap)
-    {
-        is_trap_status_known_ = true;
-        msg_log::add("There appears to be a hidden trap.");
-        render::draw_map_state();
-    }
-}
-
 void Chest::try_sprain_player()
 {
     const int sprain_one_in_n =
@@ -2652,8 +2633,9 @@ void Chest::player_loot()
 
 DidOpen Chest::open(Actor* const actor_opening)
 {
-    is_locked_              = false;
-    is_trap_status_known_   = true;
+    (void)actor_opening;
+
+    is_locked_ = false;
 
     if (is_open_)
     {
@@ -2667,10 +2649,6 @@ DidOpen Chest::open(Actor* const actor_opening)
         {
             msg_log::add("The chest opens.");
         }
-
-        render::draw_map_state();
-
-        trigger_trap(actor_opening);
 
         render::draw_map_state();
 
@@ -2696,13 +2674,15 @@ void Chest::hit(const DmgType dmg_type,
                 //(generic kicking)
                 Rigid::hit(dmg_type, dmg_method, map::player);
             }
-            else if (!is_locked_)
-            {
-                msg_log::add("It is not locked.");
-            }
             else if (is_open_)
             {
                 msg_log::add("It is already open.");
+            }
+            else if (!is_locked_)
+            {
+                msg_log::add("The lid slams open, then falls shut.");
+
+                game_time::tick();
             }
             else
             {
@@ -2713,7 +2693,8 @@ void Chest::hit(const DmgType dmg_type,
                 if (actor->has_prop(PropId::weakened) || matl_ == ChestMatl::iron)
                 {
                     try_sprain_player();
-                    msg_log::add("It seems futile.", clr_msg_note, false, MorePromptOnMsg::yes);
+
+                    msg_log::add("It seems futile.");
                 }
                 else //Chest can be bashed open
                 {
@@ -2730,12 +2711,13 @@ void Chest::hit(const DmgType dmg_type,
 
                     if (rnd::one_in(open_one_in_n))
                     {
-                        msg_log::add("The lock breaks!",
+                        msg_log::add("The lock breaks and the lid flies open!",
                                      clr_text,
                                      false,
                                      MorePromptOnMsg::yes);
 
-                        is_locked_ = false;
+                        is_locked_  = false;
+                        is_open_    = true;
                     }
                     else
                     {
@@ -2760,313 +2742,60 @@ void Chest::hit(const DmgType dmg_type,
         break;
 
     } //dmg_type
-
-    //TODO: Force lock with weapon
-//      Inventory& inv    = map::player->inv();
-//      Item* const item  = inv.item_in_slot(SlotId::wpn);
-//
-//      if(!item) {
-//        msg_log::add(
-//          "I attempt to punch the lock open, nearly breaking my hand.",
-//          clr_msg_bad);
-//        map::player->hit(1, DmgType::pure, false);
-//      } else {
-//        const int chance_to_dmg_wpn = is_blessed ? 1 : (is_cursed ? 80 : 15);
-//
-//        if(rnd::percent() < chance_to_dmg_wpn) {
-//          const std::string wpn_name = item_data::item_ref(
-//                                   *item, ItemRefType::plain, true);
-//
-//          Wpn* const wpn = static_cast<Wpn*>(item);
-//
-//          if(wpn->melee_dmg_plus == 0) {
-//            msg_log::add("My " + wpn_name + " breaks!");
-//            delete wpn;
-//            inv.slot(SlotId::wpn)->item = nullptr;
-//          } else {
-//            msg_log::add("My " + wpn_name + " is damaged!");
-//            wpn->melee_dmg_plus--;
-//          }
-//          return;
-//        }
-//
-//        if(is_weak) {
-//          msg_log::add("It seems futile.");
-//        } else {
-//          const int chance_to_open = 40;
-//          if(rnd::percent() < chance_to_open) {
-//            msg_log::add("I force the lock open!");
-//            open();
-//          } else {
-//            msg_log::add("The lock resists.");
-//          }
-//        }
-//      }
 }
 
 void Chest::on_hit(const DmgType dmg_type,
                    const DmgMethod dmg_method,
                    Actor* const actor)
 {
-    (void)dmg_type; (void)dmg_method; (void)actor;
-}
-
-void Chest::disarm()
-{
-    //NOTE: Only an actual attempt at disarming a trap counts as a turn. Just discovering
-    //the trap does not end the turn.
-
-    if (is_locked_)
-    {
-        msg_log::add("The chest is locked.");
-        render::draw_map_state();
-        return;
-    }
-
-    if (is_trapped_)
-    {
-        //First search for a trap if not already known
-        if (!is_trap_status_known_)
-        {
-            try_find_trap();
-
-            //If trap was unknown, give the player a chance to abort
-            if (is_trap_status_known_)
-            {
-                msg_log::add("Attempt to disarm it? [y/n]");
-                render::draw_map_state();
-                const auto answer = query::yes_or_no();
-
-                if (answer == YesNoAnswer::no)
-                {
-                    msg_log::clear();
-                    msg_log::add("I leave the chest for now.");
-                    render::draw_map_state();
-                    return;
-                }
-            }
-        }
-
-        //Try disarming trap
-        if (is_trap_status_known_)
-        {
-            msg_log::add("I attempt to disarm the chest...",
-                         clr_text,
-                         false,
-                         MorePromptOnMsg::yes);
-            msg_log::clear();
-
-            const Fraction disarm_chance(4, 5);
-
-            if (disarm_chance.roll())
-            {
-                msg_log::add("I successfully disarm it!");
-                render::draw_map_state();
-                is_trapped_ = false;
-            }
-            else //Failed to disarm
-            {
-                //NOTE: This will disable the trap
-                trigger_trap(map::player);
-            }
-
-            game_time::tick();
-            return;
-        }
-    }
-
-    //This point reached means the chest is not locked, but there were no attempt at
-    //disarming a trap (either the trap is not known, or the chest is not trapped)
-    if (!is_trap_status_known_)
-    {
-        //The chest could be trapped
-        msg_log::add("The chest does not appear to be trapped.");
-    }
-    else if (!is_trapped_)
-    {
-        //Player knows for sure that the chest is *not* trapped
-        msg_log::add("The chest is not trapped.");
-    }
-
-    render::draw_map_state();
-}
-
-DidTriggerTrap Chest::trigger_trap(Actor* const actor)
-{
-    is_trap_status_known_ = true;
-
-    //Chest is not trapped?
-    if (!is_trapped_)
-    {
-        return DidTriggerTrap::no;
-    }
-
-    is_trapped_ = false;
-
-    const bool is_seen = map::cells[pos_.x][pos_.y].is_seen_by_player;
-
-    if (actor && is_seen)
-    {
-        msg_log::add("A hidden trap on the chest triggers...",
-                     clr_white,
-                     false,
-                     MorePromptOnMsg::yes);
-    }
-
-    //Nothing happens?
-    int trap_no_action_one_in_n = 4;
-
-    if (actor)
-    {
-        if (actor->has_prop(PropId::blessed))
-        {
-            trap_no_action_one_in_n = 2;
-        }
-        else if (actor->has_prop(PropId::cursed))
-        {
-            trap_no_action_one_in_n = 20;
-        }
-    }
-
-    if (rnd::one_in(trap_no_action_one_in_n))
-    {
-        if (actor && is_seen)
-        {
-            msg_log::clear();
-            msg_log::add("...but nothing happens.");
-        }
-
-        return DidTriggerTrap::no;
-    }
-
-    //Fire explosion?
-    const int fire_explosion_one_in_n = 5;
-
-    if (map::dlvl >= min_dlvl_harder_traps && rnd::one_in(fire_explosion_one_in_n))
-    {
-        if (is_seen)
-        {
-            msg_log::clear();
-            msg_log::add("Flames burst out from the chest!",
-                         clr_white,
-                         false,
-                         MorePromptOnMsg::yes);
-        }
-
-        explosion::run(pos_,
-                       ExplType::apply_prop,
-                       ExplSrc::misc,
-                       EmitExplSnd::yes,
-                       0,
-                       new PropBurning(PropTurns::std));
-
-        return DidTriggerTrap::yes;
-    }
-
-    //If player is opening, the trap can be a needle
-    if (actor == map::player && rnd::coin_toss())
-    {
-        //Needle
-        msg_log::add("A needle pierces my skin!",
-                     clr_msg_bad,
-                     true);
-
-        actor->hit(rnd::range(1, 3), DmgType::physical);
-
-        if (map::dlvl < min_dlvl_harder_traps)
-        {
-            //Weak poison
-            actor->prop_handler().try_add(
-                new PropPoisoned(PropTurns::specific, poison_dmg_n_turn * 3));
-        }
-        else //We're at the deep end of the pool now, apply strong poison
-        {
-            actor->prop_handler().try_add(new PropPoisoned(PropTurns::std));
-        }
-    }
-    else //Not needle trap
-    {
-        //Fumes
-        if (is_seen)
-        {
-            msg_log::clear();
-            msg_log::add("Fumes burst out from the chest!",
-                         clr_white,
-                         false,
-                         MorePromptOnMsg::yes);
-        }
-
-        Snd snd("I hear a burst of gas.",
-                SfxId::gas,
-                IgnoreMsgIfOriginSeen::yes,
-                pos_,
-                nullptr,
-                SndVol::low,
-                AlertsMon::yes);
-
-        snd_emit::run(snd);
-
-        Prop*       prop        = nullptr;
-        Clr         fume_clr    = clr_magenta;
-        const int   rnd         = rnd::percent();
-
-        if (map::dlvl >= min_dlvl_harder_traps && rnd < 20)
-        {
-            prop        = new PropPoisoned(PropTurns::std);
-            fume_clr    = clr_green_lgt;
-        }
-        else if (rnd < 40)
-        {
-            prop        = new PropDiseased(PropTurns::std);
-            fume_clr    = clr_green;
-        }
-        else
-        {
-            prop = new PropParalyzed(PropTurns::std);
-            prop->set_nr_turns_left(prop->nr_turns_left() * 2);
-        }
-
-        explosion::run(pos_,
-                       ExplType::apply_prop,
-                       ExplSrc::misc,
-                       EmitExplSnd::no,
-                       0,
-                       prop,
-                       &fume_clr);
-    }
-
-    return DidTriggerTrap::yes;
+    (void)dmg_type;
+    (void)dmg_method;
+    (void)actor;
 }
 
 std::string Chest::name(const Article article) const
 {
-    const bool          is_empty        = item_container_.items_.empty() && is_open_;
-    const bool          is_known_trap   = is_trapped_ && is_trap_status_known_;
-    const std::string   locked_str      = is_locked_                ? "locked "   : "";
-    const std::string   empty_str       = is_empty                  ? "empty "    : "";
-    const std::string   trap_str        = is_known_trap             ? "trapped "  : "";
-    const std::string   open_str        = (is_open_ && !is_empty)   ? "open "     : "";
+    std::string matl_str = "", locked_str = "", empty_str = "", open_str = "", a = "";
 
-    std::string a = "";
-
-    if (article == Article::a)
+    if (matl_ == ChestMatl::wood)
     {
-        a = (
-            is_locked_ ||
-            (!is_open_ && (matl_ == ChestMatl::wood || is_known_trap))
-            ) ?
-            "a " : "an ";
+        matl_str = "wooden ";
+
+        a = "a ";
     }
-    else
+    else //Iron
+    {
+        matl_str = "iron ";
+
+        a = "an ";
+    }
+
+    if (is_open_)
+    {
+        if (item_container_.items_.empty())
+        {
+            empty_str = "empty ";
+        }
+        else //Not empty
+        {
+            open_str = "open ";
+        }
+
+        a = "an ";
+    }
+    else if (is_locked_)
+    {
+        locked_str = "locked ";
+
+        a = "a ";
+    }
+
+    if (article == Article::the)
     {
         a = "the ";
     }
 
-    const std::string matl_str =
-        is_open_ ? "" :
-        matl_ == ChestMatl::wood ? "wooden " : "iron ";
-
-    return a + locked_str + empty_str + open_str + trap_str + matl_str + "chest";
+    return a + locked_str + empty_str + open_str + matl_str + "chest";
 }
 
 TileId Chest::tile() const

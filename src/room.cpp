@@ -436,7 +436,7 @@ std::vector<RoomAutoFeatureRule> HumanRoom::auto_features_allowed() const
 {
     return
     {
-        {FeatureId::chest,      rnd::range(0, 2)},
+        {FeatureId::chest,      rnd::range(1, 2)},
         {FeatureId::cabinet,    rnd::range(0, 2)},
         {FeatureId::brazier,    rnd::range(0, 2)},
         {FeatureId::statue,     rnd::range(0, 3)}
@@ -735,7 +735,7 @@ std::vector<RoomAutoFeatureRule> CryptRoom::auto_features_allowed() const
 {
     return
     {
-        {FeatureId::tomb,       rnd::range(1, 2)},
+        {FeatureId::tomb,       rnd::one_in(6) ? 2 : 1},
         {FeatureId::rubble_low, rnd::range(1, 4)}
     };
 }
