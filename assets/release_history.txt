@@ -2,12 +2,29 @@
 v19.0 (***WORK IN PROGRESS***)
 --------------------------------------------------------------
 Gameplay
+* You no longer gain XP from monsters (killing or seeing) - instead XP is raised by activities related to exploration and discovery, such as identifying items, drinking from some types of Fountains, or reading inscriptions on "Monoliths"
+* Much fewer monster are spawned on the map, and in smaller groups than before (some monsters are tougher now though), and they generally remember you for a much shorter time - making it more feasible to avoid combat
 * Items are now more likely to spawn behind hidden or stuck doors, in areas away from the path to the stairs (to reward exploration more)
 * Some monsters now tend to spawn in smaller numbers instead of always in big packs, but are instead individually stronger (especially Spiders) - the purpose of this is to reduce "trash mob" combat and make each encounter more significant
+* Reduced "more" prompt message spam from traps (less interruption)
+* Some unnecessary traits have been removed (e.g. there doesn't have to be three steps of Melee traits)
+* The spells Slow, Paralyze, and Terrify Enemies have been merged into "Enfeeble Enemies"
+* Burning features now only hurt creatures on the same cell (not adjacent to it)
+* Rogue no longer starts with "Cloud Minds" (this is now a Manuscript instead)
+* Occultist starts with fixed (non-random) items and spells
+* Potion of Insight gives XP if there is no item to identify
+* Shock from seeing monsters can now be recovered from - this means that as long as you end the encounter before taking a sanity hit, the part of your shock from seeing the monsters will drop again - so it's no longer super critical to micromanage your time spent in view of monsters (shock taken passively over time, and some other types of shock, are still strictly increasing however)
+* You always search for traps and secret doors in every seen cell (so you can stand in the middle of a room and search all walls)
+* Some "Hanging vines" are now scattered on the map, which can be walked through, but blocks line of sight
+* Spells now have "skill level" percentages, which affects the Spirit cost to cast the spell - the skill levels can be increased by casting from Manuscripts
+* All backgrounds can now learn spells, but the Occultist gains proficiency much faster, and starts with a few known spells
+* Chests can no longer be trapped (it was awkward to deal with, and it didn't really bring anything to the game) - chests are now just interacted with by bumping them (if they are not locked), kicking them, or using an Opening spell
 
 Interface
 * Added an option to ask for confirmation before lighting explosives (default is off)
-
+* Removed the life bars showing creatures health - instead health is shown by gradually coloring creatures red
+* Printing a low HP warning (with "more" prompt) when dropping to a low HP percent
+* Removed the "q" command - Ghoul characters now feed on corpses when standing still on them instead
 
 --------------------------------------------------------------
 v18.2 (July 2, 2016)
