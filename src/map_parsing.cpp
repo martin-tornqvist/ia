@@ -244,17 +244,22 @@ void run(const  cell_check::Check& method,
          const  MapParseMode write_rule,
          const  R& area_to_check_cells)
 {
-    ASSERT(method.is_checking_cells()    ||
-           method.is_checking_mobs()        ||
+    ASSERT(method.is_checking_cells()   ||
+           method.is_checking_mobs()    ||
            method.is_checking_actors());
 
-    const bool allow_write_false = write_rule == MapParseMode::overwrite;
+    const bool allow_write_false =
+        write_rule == MapParseMode::overwrite;
 
     if (method.is_checking_cells())
     {
-        for (int x = area_to_check_cells.p0.x; x <= area_to_check_cells.p1.x; ++x)
+        for (int x = area_to_check_cells.p0.x;
+             x <= area_to_check_cells.p1.x;
+             ++x)
         {
-            for (int y = area_to_check_cells.p0.y; y <= area_to_check_cells.p1.y; ++y)
+            for (int y = area_to_check_cells.p0.y;
+                 y <= area_to_check_cells.p1.y;
+                 ++y)
             {
                 const auto& c         = map::cells[x][y];
                 const bool  is_match  = method.check(c);
@@ -374,7 +379,8 @@ bool cell(const cell_check::Check& method, const P& p)
     return r;
 }
 
-void cells_within_dist_of_others(const bool in[map_w][map_h], bool out[map_w][map_h],
+void cells_within_dist_of_others(const bool in[map_w][map_h],
+                                 bool out[map_w][map_h],
                                  const Range& dist_interval)
 {
     ASSERT(in != out);
@@ -395,8 +401,11 @@ void cells_within_dist_of_others(const bool in[map_w][map_h], bool out[map_w][ma
             {
                 for (int d = dist_interval.min; d <= dist_interval.max; d++)
                 {
-                    P p0(std::max(0,         x_outer - d), std::max(0,         y_outer - d));
-                    P p1(std::min(map_w - 1, x_outer + d), std::min(map_h - 1, y_outer + d));
+                    P p0(std::max(0,            x_outer - d),
+                         std::max(0,            y_outer - d));
+
+                    P p1(std::min(map_w - 1,    x_outer + d),
+                         std::min(map_h - 1,    y_outer + d));
 
                     for (int x = p0.x; x <= p1.x; ++x)
                     {
@@ -541,14 +550,14 @@ bool is_map_connected(const bool blocked[map_w][map_h])
 
     ASSERT(map::is_pos_inside_map(origin, false));
 
-    int floodfill[map_w][map_h];
+    int flood[map_w][map_h];
 
-    floodfill::run(origin,
-                    blocked,
-                    floodfill,
-                    INT_MAX,
-                    P(-1, -1),
-                    true);
+    floodfill(origin,
+              blocked,
+              flood,
+              INT_MAX,
+              P(-1, -1),
+              true);
 
     //NOTE: We can skip to origin.x immediately, since this is guaranteed to be
     //the leftmost non-blocked cell.
@@ -557,8 +566,8 @@ bool is_map_connected(const bool blocked[map_w][map_h])
         for (int y = 1; y < map_h - 1; ++y)
         {
             if (
-                floodfill[x][y] == 0   &&
-                !blocked[x][y]          &&
+                flood[x][y] == 0    &&
+                !blocked[x][y]      &&
                 P(x, y) != origin)
             {
                 return false;
@@ -569,7 +578,7 @@ bool is_map_connected(const bool blocked[map_w][map_h])
     return true;
 }
 
-} //map_parse
+} // map_parse
 
 //------------------------------------------------------------ IS CLOSER TO POS
 bool IsCloserToPos::operator()(const P& p1, const P& p2)

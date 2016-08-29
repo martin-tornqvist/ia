@@ -11,14 +11,14 @@
 #include "map_parsing.hpp"
 
 Snd::Snd(
-    const std::string&              msg,
-    const SfxId                    sfx,
+    const std::string&          msg,
+    const SfxId                 sfx,
     const IgnoreMsgIfOriginSeen ignore_msg_if_origin_seen,
-    const P&                      origin,
-    Actor* const                    actor_who_made_sound,
-    const SndVol                   vol,
-    const AlertsMon                alerting_mon,
-    const MorePromptOnMsg        add_more_prompt_on_msg) :
+    const P&                    origin,
+    Actor* const                actor_who_made_sound,
+    const SndVol                vol,
+    const AlertsMon             alerting_mon,
+    const MorePromptOnMsg       add_more_prompt_on_msg) :
 
     msg_                            (msg),
     sfx_                            (sfx),
@@ -42,7 +42,7 @@ bool is_snd_heard_at_range(const int range, const Snd& snd)
     return range <= (snd.is_loud() ? snd_dist_loud : snd_dist_normal);
 }
 
-} //namespace
+} // namespace
 
 void reset_nr_snd_msg_printed_current_turn()
 {
@@ -62,17 +62,22 @@ void run(Snd snd)
         }
     }
 
-    int floodfill[map_w][map_h];
+    int flood[map_w][map_h];
 
     const P& origin = snd.origin();
 
-    floodfill::run(origin, blocked, floodfill, 999, P(-1, -1), true);
+    floodfill(origin,
+              blocked,
+              flood,
+              999,
+              P(-1, -1),
+              true);
 
-    floodfill[origin.x][origin.y] = 0;
+    flood[origin.x][origin.y] = 0;
 
     for (Actor* actor : game_time::actors)
     {
-        const int flood_val_at_actor = floodfill[actor->pos.x][actor->pos.y];
+        const int flood_val_at_actor = flood[actor->pos.x][actor->pos.y];
 
         const bool is_origin_seen_by_player =
             map::cells[origin.x][origin.y].is_seen_by_player;
@@ -81,7 +86,8 @@ void run(Snd snd)
         {
             if (actor->is_player())
             {
-                if ((is_origin_seen_by_player && snd.is_msg_ignored_if_origin_seen()))
+                if (is_origin_seen_by_player &&
+                    snd.is_msg_ignored_if_origin_seen())
                 {
                     snd.clear_msg();
                 }
@@ -90,7 +96,7 @@ void run(Snd snd)
 
                 if (!snd.msg().empty())
                 {
-                    //Add a direction string to the message (i.e. "(NW)", "(E)" , etc)
+                    //Add a direction to the message (i.e. "(NW)", "(E)" , etc)
                     if (player_pos != origin)
                     {
                         std::string dir_str = "";
@@ -99,15 +105,19 @@ void run(Snd snd)
                     }
                 }
 
-                const int snd_max_dist  = snd.is_loud() ? snd_dist_loud : snd_dist_normal;
+                const int snd_max_dist =
+                    snd.is_loud() ?
+                    snd_dist_loud : snd_dist_normal;
 
-                const int pct_dist      = (flood_val_at_actor * 100) / snd_max_dist;
+                const int pct_dist = (flood_val_at_actor * 100) / snd_max_dist;
 
                 const P offset = (origin - player_pos).signs();
 
                 const Dir dir_to_origin = dir_utils::dir(offset);
 
-                map::player->hear_sound(snd, is_origin_seen_by_player, dir_to_origin, pct_dist);
+                map::player->hear_sound(snd,
+                                        is_origin_seen_by_player,
+                                        dir_to_origin, pct_dist);
             }
             else //Not player
             {

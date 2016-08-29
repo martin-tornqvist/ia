@@ -91,7 +91,7 @@ INCLUDES = \
 #   suppressed as long as that implementation is used (should use the now
 #   standard C++ implementation instead though).
 CXXFLAGS += \
-  -std=c++11 \
+  -std=c++14 \
   -Wall \
   -Wextra \
   -Werror \

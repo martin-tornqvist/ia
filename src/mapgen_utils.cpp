@@ -318,7 +318,7 @@ void cavify_room(Room& room)
 
         int flood[map_w][map_h];
 
-        floodfill::run(origin,
+        floodfill(origin,
                         blocked,
                         flood,
                         rnd::range(1, 4),
@@ -503,7 +503,7 @@ bool is_choke_point(const P& p,
     //Check that the two sides can reach each other
     int flood_side1[map_w][map_h];
 
-    floodfill::run(p_side1,
+    floodfill(p_side1,
                    blocked,
                    flood_side1);
     //INT_MAX,
@@ -523,7 +523,7 @@ bool is_choke_point(const P& p,
     blocked_cpy[p.x][p.y] = true;
 
     //Do another floodfill from side 1
-    floodfill::run(p_side1,
+    floodfill(p_side1,
                    blocked_cpy,
                    flood_side1);
     //INT_MAX);
@@ -542,7 +542,7 @@ bool is_choke_point(const P& p,
     int flood_side2[map_w][map_h];
 
     //Do a floodfill from side 2
-    floodfill::run(p_side2,
+    floodfill(p_side2,
                    blocked_cpy,
                    flood_side2);
 
@@ -712,7 +712,7 @@ void mk_pathfind_corridor(Room& room_0,
         const bool randomize_step_choices = map::dlvl >= dlvl_first_late_game ? true :
                                             rnd::one_in(5);
 
-        pathfind::run(p0,
+        pathfind(p0,
                        p1,
                        blocked_expanded,
                        path,
@@ -848,7 +848,7 @@ void pathfinder_walk(const P& p0,
     bool blocked[map_w][map_h] = {};
 
     std::vector<P> path;
-    pathfind::run(p0, p1, blocked, path);
+    pathfind(p0, p1, blocked, path);
 
     std::vector<P> rnd_walk_buffer;
 

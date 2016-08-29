@@ -111,7 +111,7 @@ void find_stair_path()
         show_map_and_freeze("Player on blocked position");
     }
 
-    pathfind::run(player_p,
+    pathfind(player_p,
                    stair_p,
                    blocked,
                    path_);

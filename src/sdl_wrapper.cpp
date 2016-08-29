@@ -42,7 +42,12 @@ void init()
     const int     audio_channels  = 2;
     const int     audio_buffers   = 1024;
 
-    if (Mix_OpenAudio(audio_freq, AUDIO_FORMAT, audio_channels, audio_buffers) == -1)
+    const int result = Mix_OpenAudio(audio_freq,
+                                     AUDIO_FORMAT,
+                                     audio_channels,
+                                     audio_buffers);
+
+    if (result == -1)
     {
         TRACE << "Failed to init SDL_mixer" << std::endl;
         ASSERT(false);

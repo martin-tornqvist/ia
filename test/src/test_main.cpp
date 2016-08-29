@@ -78,9 +78,15 @@ TEST(is_val_in_range)
     CHECK(!is_val_in_range(4,   Range(5,  5)));
     CHECK(!is_val_in_range(6,   Range(5,  5)));
 
-    //NOTE: Reversed range settings (e.g. Range(7, 3)) will fail an assert on debug builds.
-    //For release builds, this will reverse the result - i.e. is_val_in_range(1, Range(7, 3))
-    //will return true.
+    // NOTE: Reversed ranges will fail an assert on debug builds., e.g.:
+    //
+    //       Range(7, 3))
+    //
+    //       For release builds, this will reverse the result - i.e.
+    //
+    //       is_val_in_range(1, Range(7, 3))
+    //
+    //       ...will return true.
 }
 
 TEST(roll_dice)
@@ -315,7 +321,9 @@ TEST_FIXTURE(BasicFixture, line_calculation)
     CHECK(line[2] == P(2, 0));
 
     //Test precalculated FOV line offsets
-    const std::vector<P>* delta_line = line_calc::fov_delta_line(P(3, 3), fov_std_radi_db);
+    const std::vector<P>* delta_line =
+        line_calc::fov_delta_line(P(3, 3), fov_std_radi_db);
+
     CHECK(delta_line->size() == 4);
     CHECK(delta_line->at(0) == P(0, 0));
     CHECK(delta_line->at(1) == P(1, 1));
@@ -402,7 +410,8 @@ TEST_FIXTURE(BasicFixture, fov)
 
 TEST_FIXTURE(BasicFixture, light_map)
 {
-    //Put walls on the edge of the map, and floor in all other cells, and make all cells dark
+    // Put walls on the edge of the map, and floor in all other cells, and make
+    // all cells dark
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)
@@ -440,7 +449,7 @@ TEST_FIXTURE(BasicFixture, light_map)
 
     map::player->update_fov();
 
-    //Check that the cells around the burning floor is lit
+    // Check that the cells around the burning floor is lit
     CHECK(map::cells[burn_pos.x    ][burn_pos.y    ].is_lit);
     CHECK(map::cells[burn_pos.x    ][burn_pos.y + 1].is_lit);
     CHECK(map::cells[burn_pos.x    ][burn_pos.y - 1].is_lit);
@@ -451,7 +460,8 @@ TEST_FIXTURE(BasicFixture, light_map)
     CHECK(map::cells[burn_pos.x + 1][burn_pos.y + 1].is_lit);
     CHECK(map::cells[burn_pos.x + 1][burn_pos.y - 1].is_lit);
 
-    //The cells around the burning floor should still be "dark" (not affected by light)
+    // The cells around the burning floor should still be "dark"
+    // (not affected by light)
     CHECK(map::cells[burn_pos.x    ][burn_pos.y    ].is_dark);
     CHECK(map::cells[burn_pos.x    ][burn_pos.y + 1].is_dark);
     CHECK(map::cells[burn_pos.x    ][burn_pos.y - 1].is_dark);
@@ -933,8 +943,8 @@ TEST_FIXTURE(BasicFixture, saving_game)
     actor_data::data[size_t(ActorId::END) - 1].nr_kills = 123;
 
     //Learned spells
-    player_spells::learn_spell(SpellId::bless);
-    player_spells::learn_spell(SpellId::aza_wrath);
+    player_spells::learn_spell(SpellId::bless, Verbosity::silent);
+    player_spells::learn_spell(SpellId::aza_wrath, Verbosity::silent);
 
     //Applied properties
     PropHandler& prop_hlr = map::player->prop_handler();
@@ -1125,7 +1135,7 @@ TEST_FIXTURE(BasicFixture, floodfilling)
 
     int flood[map_w][map_h];
 
-    floodfill::run(P(20, 10),
+    floodfill(P(20, 10),
                    blocked,
                    flood,
                    INT_MAX,
@@ -1159,7 +1169,7 @@ TEST_FIXTURE(BasicFixture, pathfinding)
         blocked[x][0] = blocked[x][map_h - 1] = false;
     }
 
-    pathfind::run(P(20, 10),
+    pathfind(P(20, 10),
                   P(25, 10),
                   blocked,
                   path);
@@ -1170,7 +1180,7 @@ TEST_FIXTURE(BasicFixture, pathfinding)
     CHECK_EQUAL(10, path.front().y);
     CHECK_EQUAL(5, int(path.size()));
 
-    pathfind::run(P(20, 10),
+    pathfind(P(20, 10),
                   P(5, 3),
                   blocked,
                   path);
@@ -1183,7 +1193,7 @@ TEST_FIXTURE(BasicFixture, pathfinding)
 
     blocked[10][5] = true;
 
-    pathfind::run(P(7, 5),
+    pathfind(P(7, 5),
                   P(20, 5),
                   blocked,
                   path);
@@ -1197,7 +1207,7 @@ TEST_FIXTURE(BasicFixture, pathfinding)
 
     blocked[19][4] = blocked[19][5] =  blocked[19][6] = true;
 
-    pathfind::run(P(7, 5),
+    pathfind(P(7, 5),
                   P(20, 5),
                   blocked,
                   path);
@@ -1211,7 +1221,7 @@ TEST_FIXTURE(BasicFixture, pathfinding)
     CHECK(find(begin(path), end(path), P(19, 5)) == end(path));
     CHECK(find(begin(path), end(path), P(19, 6)) == end(path));
 
-    pathfind::run(P(40, 10),
+    pathfind(P(40, 10),
                   P(43, 15),
                   blocked,
                   path,
@@ -1225,7 +1235,7 @@ TEST_FIXTURE(BasicFixture, pathfinding)
 
     blocked[41][10] = blocked[40][11]  = true;
 
-    pathfind::run(P(40, 10),
+    pathfind(P(40, 10),
                   P(43, 15),
                   blocked,
                   path,
@@ -1557,7 +1567,7 @@ TEST_FIXTURE(BasicFixture, connect_rooms_with_corridor)
 
     map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
 
-    floodfill::run(5,
+    floodfill(5,
                     blocked,
                     flood,
                     INT_MAX, -1,
@@ -1653,7 +1663,7 @@ void check_connected()
 
     if (stair_p.x != -1)
     {
-        pathfind::run(map::player->pos,
+        pathfind(map::player->pos,
                        stair_p,
                        blocked,
                        path);
@@ -1713,7 +1723,7 @@ void check_wall_placement(const P& origin)
         bad_walls_found ||
         (w[0][0] && f[1][0] &&
          f[0][1] && w[1][1]);
-    
+
     CHECK(!bad_walls_found);
 }
 

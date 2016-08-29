@@ -459,7 +459,7 @@ void place_monoliths()
 //    }
 //  }
 //  int floodfill[map_w][map_h];
-//  floodfill::run(map::player->pos, blocked, floodfill, INT_MAX, P(-1, -1));
+//  floodfill(map::player->pos, blocked, floodfill, INT_MAX, P(-1, -1));
 //  const int flood_value_at_door = floodfill[door_to_link->pos_.x][door_to_link->pos_.y];
 //  vector<P> lever_pos_bucket;
 //  for(int y = 1; y < map_h - 1; ++y) {
@@ -514,7 +514,7 @@ void reveal_doors_on_path_to_stairs(const P& stairs_pos)
     }
 
     std::vector<P> path;
-    pathfind::run(map::player->pos, stairs_pos, blocked, path);
+    pathfind(map::player->pos, stairs_pos, blocked, path);
 
     ASSERT(!path.empty());
 

@@ -582,7 +582,7 @@ void try_set_path_to_lair_if_no_los(Mon& mon, std::vector<P>& path, const P& lai
                        blocked,
                        MapParseMode::append);
 
-        pathfind::run(mon.pos,
+        pathfind(mon.pos,
                       lair_p,
                       blocked,
                       path);
@@ -624,7 +624,7 @@ void try_set_path_to_leader(Mon& mon, std::vector<P>& path)
                            blocked,
                            MapParseMode::append);
 
-            pathfind::run(mon.pos,
+            pathfind(mon.pos,
                           leader->pos,
                           blocked,
                           path);
@@ -700,7 +700,7 @@ void try_set_path_to_player(Mon& mon, std::vector<P>& path)
                        MapParseMode::append);
 
         //Find a path
-        pathfind::run(mon.pos,
+        pathfind(mon.pos,
                       player_pos,
                       blocked,
                       path);

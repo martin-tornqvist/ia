@@ -1194,7 +1194,7 @@ void ChasmRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 
     int flood[map_w][map_h];
 
-    floodfill::run(origin, blocked_expanded, flood, 10000, { -1,  -1}, false);
+    floodfill(origin, blocked_expanded, flood, 10000, { -1,  -1}, false);
 
     for (int x = r_.p0.x; x <= r_.p1.x; ++x)
     {
@@ -1325,7 +1325,7 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
 
     const P origin(r_.center());
 
-    floodfill::run(origin,
+    floodfill(origin,
                     blocked_expanded,
                     flood,
                     INT_MAX,
