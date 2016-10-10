@@ -26,6 +26,7 @@ Interface
 * Printing a low HP warning (with "more" prompt) when dropping to a low HP percent
 * Removed the "q" command - Ghoul characters now feed on corpses when standing still on them instead
 * The map shown on the postmortem info screen is now drawn with tiles (when tiles mode is enabled), and is drawn in color
+* Added "New journey" option to postmortem menu
 
 
 --------------------------------------------------------------
