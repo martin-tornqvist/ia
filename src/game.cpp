@@ -1546,8 +1546,6 @@ void GameState::draw_map()
                 render_data->clr_bg  = clr_bg;
             }
 
-            bool did_draw = false;
-
             // Draw tile here if tile mode, and a tile has been set
             if (is_tile_mode && render_data->tile != TileId::empty)
             {
@@ -1556,8 +1554,6 @@ void GameState::draw_map()
                               pos,
                               render_data->clr,
                               render_data->clr_bg);
-
-                did_draw = true;
             }
             // Text mode, or no tile set
             else if (render_data->glyph != ' ' &&
@@ -1569,8 +1565,6 @@ void GameState::draw_map()
                                render_data->clr,
                                true,
                                render_data->clr_bg);
-
-                did_draw = true;
             }
 
             if (!cell.is_explored)
