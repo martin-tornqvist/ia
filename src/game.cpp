@@ -1072,11 +1072,6 @@ void GameState::on_start()
     game::start_time_ = current_time();
 }
 
-void GameState::on_pushed()
-{
-    init::init_session();
-}
-
 void GameState::draw()
 {
     draw_map();

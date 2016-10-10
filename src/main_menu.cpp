@@ -18,7 +18,6 @@
 #include "map.hpp"
 #include "create_character.hpp"
 #include "game.hpp"
-#include "mapgen.hpp"
 
 namespace
 {
@@ -392,24 +391,11 @@ void MainMenuState::update()
             }
 #endif // NDEBUG
 
-            std::unique_ptr<State> game_state(new GameState);
+            init::init_session();
 
-            states::push(std::move(game_state));
+            std::unique_ptr<State> new_game_state(new NewGameState);
 
-            std::unique_ptr<State> create_char_state(new CreateCharState);
-
-            states::push(std::move(create_char_state));
-
-            if (config::is_intro_lvl_skipped())
-            {
-                // Build first dungeon level
-                map_travel::go_to_nxt();
-            }
-            else // Using intro level
-            {
-                // Build forest.
-                mapgen::mk_intro_lvl();
-            }
+            states::push(std::move(new_game_state));
         }
         break;
 
@@ -419,15 +405,13 @@ void MainMenuState::update()
             {
                 states::pop();
 
-                //
-                // NOTE: The game state must be pushed before loading the game,
-                //       since it initializes the session data.
-                //
+                init::init_session();
+
+                saving::load_game();
+
                 std::unique_ptr<State> game_state(new GameState);
 
                 states::push(std::move(game_state));
-
-                saving::load_game();
 
                 map_travel::go_to_nxt();
             }

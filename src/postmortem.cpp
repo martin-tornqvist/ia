@@ -18,7 +18,7 @@
 #include "feature_rigid.hpp"
 #include "saving.hpp"
 #include "query.hpp"
-
+#include "create_character.hpp"
 
 namespace
 {
@@ -34,7 +34,7 @@ PostmortemMenu::PostmortemMenu() :
     State       (),
     browser_    ()
 {
-    browser_.reset(6);
+    browser_.reset(7);
 }
 
 void PostmortemMenu::on_start()
@@ -278,6 +278,7 @@ void PostmortemMenu::draw()
 
     std::vector<std::string> labels =
     {
+        "New journey",
         "Show game summary",
         "Write memorial file",
         "View High Scores",
@@ -391,6 +392,23 @@ void PostmortemMenu::update()
         {
         case 0:
         {
+            //
+            // Exit screen
+            //
+            states::pop();
+
+            init::init_session();
+
+            std::unique_ptr<State> new_game_state(new NewGameState);
+
+            states::push(std::move(new_game_state));
+
+            return;
+        }
+        break;
+
+        case 1:
+        {
             std::unique_ptr<State> postmortem_info(new PostmortemInfo());
 
             states::push(std::move(postmortem_info));
@@ -400,7 +418,7 @@ void PostmortemMenu::update()
         //
         // Store memorial file
         //
-        case 1:
+        case 2:
         {
             mk_memorial_file();
         }
@@ -409,7 +427,7 @@ void PostmortemMenu::update()
         //
         // Show highscores
         //
-        case 2:
+        case 3:
         {
             std::unique_ptr<State> browse_highscore_state(new BrowseHighscore);
 
@@ -420,7 +438,7 @@ void PostmortemMenu::update()
         //
         // Display message history
         //
-        case 3:
+        case 4:
         {
             std::unique_ptr<State> msg_history_state(new MsgHistoryState);
 
@@ -431,7 +449,7 @@ void PostmortemMenu::update()
         //
         // Return to main menu
         //
-        case 4:
+        case 5:
         {
             //
             // Exit screen
@@ -445,7 +463,7 @@ void PostmortemMenu::update()
         //
         // Quit game
         //
-        case 5:
+        case 6:
         {
             //
             // Bye!

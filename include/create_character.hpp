@@ -5,12 +5,12 @@
 #include "browser.hpp"
 #include "player_bon.hpp"
 
-class CreateCharState: public State
+class NewGameState: public State
 {
 public:
-    CreateCharState() {}
+    NewGameState() {}
 
-    ~CreateCharState() {}
+    ~NewGameState() {}
 
     void on_pushed() override;
 

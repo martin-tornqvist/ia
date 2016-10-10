@@ -93,8 +93,6 @@ public:
 
     void on_start() override;
 
-    void on_pushed() override;
-
     void draw() override;
 
     void update() override;

@@ -9,6 +9,8 @@
 #include "msg_log.hpp"
 #include "init.hpp"
 #include "popup.hpp"
+#include "map_travel.hpp"
+#include "mapgen.hpp"
 
 namespace
 {
@@ -31,12 +33,10 @@ const int descr_w_      = descr_x1_ - descr_y1_ + 1;
 } // namespace
 
 // -----------------------------------------------------------------------------
-// Create character state
+// New game state
 // -----------------------------------------------------------------------------
-void CreateCharState::on_pushed()
+void NewGameState::on_pushed()
 {
-    // Push states for the character creation steps
-
     std::unique_ptr<State> name_state(  new EnterNameState);
     std::unique_ptr<State> trait_state( new PickTraitState);
     std::unique_ptr<State> bg_state(    new PickBgState);
@@ -46,23 +46,32 @@ void CreateCharState::on_pushed()
     states::push(std::move(bg_state));
 }
 
-void CreateCharState::on_resume()
+void NewGameState::on_resume()
 {
-    // TODO: This doesn't really seem like the best place to do this...
-    //       If the call below is moved elsewhere, then this state would only
-    //       have to implement "on_start" (perhaps this state shouldn't even
-    //       exist then... maybe the main menu could just as well push the
-    //       individual character creation steps).
-
     // Some backgrounds and traits may have affected maximum hp and spi (either
     // positively or negatively), so here we need to set the current hp and SPI
     // equal to the maximum values.
     map::player->set_hp_and_spi_to_max();
 
     states::pop();
+
+    std::unique_ptr<State> game_state(new GameState);
+
+    states::push(std::move(game_state));
+
+    if (config::is_intro_lvl_skipped())
+    {
+        // Build first dungeon level
+        map_travel::go_to_nxt();
+    }
+    else // Using intro level
+    {
+        // Build forest.
+        mapgen::mk_intro_lvl();
+    }
 }
 
-void CreateCharState::on_popped()
+void NewGameState::on_popped()
 {
     game::add_history_event("Started journey");
 
