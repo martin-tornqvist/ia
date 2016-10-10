@@ -1093,7 +1093,35 @@ void GameState::update()
         //
         Actor* actor = game_time::current_actor();
 
-        actor->act();
+        // Properties running on the actor's turn are not
+        // immediately applied on the actor, but instead placed in a
+        // buffer. This is to ensure that e.g. a property set to
+        // last one turn actually covers one turn (and not applied
+        // after the actor acts, and ends before the actor's next
+        // turn). The contents of the buffer are moved to the
+        // applied properties here.
+        actor->prop_handler().apply_actor_turn_prop_buffer();
+
+        const bool allow_act = actor->prop_handler().allow_act();
+
+        const bool is_gibbed = actor->state() == ActorState::destroyed;
+
+        if (allow_act && !is_gibbed)
+        {
+            // Tell actor to "do something". If this is the player,
+            // input is read from either the player or the bot. If
+            // it's a monster, the AI handles it.
+            actor->act();
+        }
+        else // Actor cannot act
+        {
+            if (actor->is_player())
+            {
+                sdl_base::sleep(ms_delay_player_unable_act);
+            }
+
+            game_time::tick();
+        }
 
         if (map::player->state() != ActorState::alive)
         {
@@ -1347,6 +1375,8 @@ void GameState::draw_map()
     //--------------------------------------------------------------------------
     // Do some "post processing", and draw the map
     //--------------------------------------------------------------------------
+    const bool use_light_fade = config::use_light_fade_effect();
+
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)
@@ -1357,7 +1387,9 @@ void GameState::draw_map()
 
             if (cell.is_seen_by_player)
             {
-                if (render_data->is_light_fade_allowed)
+                // Light fade effect
+                if (use_light_fade &&
+                    render_data->is_light_fade_allowed)
                 {
                     const int dist_from_player =
                         king_dist(map::player->pos, P(x, y));

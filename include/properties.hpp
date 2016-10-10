@@ -20,8 +20,9 @@ enum class PropId
     rConf,
     rBreath,
     rDisease,
-    //NOTE: The purpose of this is only to prevent blindness for "eyeless" monsters (e.g.
-    //constructs such as animated weapons), and is only intended as a natural property.
+    // NOTE: The purpose of this is only to prevent blindness for "eyeless"
+    //       monsters (e.g. constructs such as animated weapons), and is only
+    //       intended as a natural property.
     rBlind,
     lgtSens,
     blind,
@@ -50,19 +51,19 @@ enum class PropId
     conflict,
     descend,
 
-    //Properties describing the actors body and/or method of moving around
+    // Properties describing the actors body and/or method of moving around
     flying,
     ethereal,
     ooze,
     burrowing,
 
-    //Properties used for AI control
+    // Properties used for AI control
     waiting,
     disabled_attack,
     disabled_melee,
     disabled_ranged,
 
-    //Special (for supporting very specific game mechanics)
+    // Special (for supporting very specific game mechanics)
     poss_by_zuul,
     aiming,
     fast_shooting,

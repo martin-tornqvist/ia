@@ -863,7 +863,8 @@ PropHandler::~PropHandler()
     {
         if (active_props_info_[i] != 0)
         {
-            TRACE << "Active property info at id " << i << " not zero" << std::endl;
+            TRACE << "Active property info at id " << i
+                  << " not zero" << std::endl;
             ASSERT(false);
         }
     }
@@ -936,13 +937,16 @@ void PropHandler::load()
     }
 }
 
-Prop* PropHandler::mk_prop(const PropId id, PropTurns turns_init, const int nr_turns) const
+Prop* PropHandler::mk_prop(const PropId id,
+                           PropTurns turns_init,
+                           const int nr_turns) const
 {
     ASSERT(id != PropId::END);
 
-    //Prop turns init type should either be:
+    // Prop turns init type should either be:
     // * "specific", and number of turns specified (> 0), OR
-    // * NOT "specific" (i.e. "indefinite" or "std"), and number of turns NOT specified (-1)
+    // * NOT "specific" (i.e. "indefinite" or "std"), and number of turns NOT
+    //   specified (-1)
     ASSERT((turns_init == PropTurns::specific && nr_turns > 0) ||
            (turns_init != PropTurns::specific && nr_turns == -1));
 
@@ -1115,19 +1119,19 @@ Prop* PropHandler::mk_prop(const PropId id, PropTurns turns_init, const int nr_t
 }
 
 void PropHandler::try_add(Prop* const prop,
-                           PropSrc src,
-                           const bool force_effect,
-                           const Verbosity verbosity)
+                          PropSrc src,
+                          const bool force_effect,
+                          const Verbosity verbosity)
 {
     ASSERT(prop);
 
-    //First, if this is a prop that runs on actor turns, check if the actor-turn
-    //prop buffer does not already contain the prop:
+    // First, if this is a prop that runs on actor turns, check if the
+    // actor-turn prop buffer does not already contain the prop:
     //  -   If it doesn't, then just add it to the buffer and return.
     //  -   If the buffer already contains the prop, it means it was requested
     //      to be applied from the buffer to the applied props.
-    //This way, this function can be used both for requesting to apply props,
-    //and for applying props from the buffer.
+    // This way, this function can be used both for requesting to apply props,
+    // and for applying props from the buffer.
     if (prop->turn_mode() == PropTurnMode::actor)
     {
         std::vector<Prop*>& buffer = actor_turn_prop_buffer_;
@@ -1145,12 +1149,12 @@ void PropHandler::try_add(Prop* const prop,
     const bool is_player        = owning_actor_->is_player();
     const bool player_see_owner = map::player->can_see_actor(*owning_actor_);
 
-    //Check if property is resisted
+    // Check if property is resisted
     if (!force_effect)
     {
         if (try_resist_prop(prop->id()))
         {
-            //Resist message
+            // Resist message
             if (verbosity == Verbosity::verbose &&
                 owning_actor_->is_alive())
             {
@@ -1164,7 +1168,7 @@ void PropHandler::try_add(Prop* const prop,
                         msg_log::add(msg, clr_text, true);
                     }
                 }
-                else //Is a monster
+                else // Is a monster
                 {
                     if (player_see_owner)
                     {
@@ -1173,7 +1177,9 @@ void PropHandler::try_add(Prop* const prop,
 
                         if (!msg.empty())
                         {
-                            const std::string monster_name = owning_actor_->name_the();
+                            const std::string monster_name =
+                                owning_actor_->name_the();
+
                             msg_log::add(monster_name + " " + msg);
                         }
                     }
@@ -1185,11 +1191,11 @@ void PropHandler::try_add(Prop* const prop,
         }
     }
 
-    //This point reached means nothing is blocking the property.
+    // This point reached means nothing is blocking the property.
 
-    //Is this an intrinsic property, and actor already has an intrinsic
-    //property of the same type? If so, the new property will just be "merged"
-    //into the old one ("on_more()").
+    // Is this an intrinsic property, and actor already has an intrinsic
+    // property of the same type? If so, the new property will just be "merged"
+    // into the old one ("on_more()").
     if (prop->src_ == PropSrc::intr)
     {
         for (Prop* old_prop : props_)
@@ -1206,7 +1212,7 @@ void PropHandler::try_add(Prop* const prop,
                 const int turns_left_old = old_prop->nr_turns_left_;
                 const int turns_left_new = prop->nr_turns_left_;
 
-                //Start message
+                // Start message
                 if (verbosity == Verbosity::verbose &&
                     owning_actor_->is_alive())
                 {
@@ -1220,7 +1226,7 @@ void PropHandler::try_add(Prop* const prop,
                             msg_log::add(msg, clr_text, true);
                         }
                     }
-                    else //Not player
+                    else // Not player
                     {
                         if (player_see_owner)
                         {
@@ -1229,7 +1235,8 @@ void PropHandler::try_add(Prop* const prop,
 
                             if (!msg.empty())
                             {
-                                msg_log::add(owning_actor_->name_the() + " " + msg);
+                                msg_log::add(
+                                    owning_actor_->name_the() + " " + msg);
                             }
                         }
                     }
@@ -1248,7 +1255,7 @@ void PropHandler::try_add(Prop* const prop,
         }
     }
 
-    //This part reached means the property should be applied on its own
+    // This part reached means the property should be applied on its own
 
     props_.push_back(prop);
 
@@ -1257,19 +1264,14 @@ void PropHandler::try_add(Prop* const prop,
     if (verbosity == Verbosity::verbose &&
         owning_actor_->is_alive())
     {
-        // TODO: Check if something like this is really needed, if so -
-        //       reimplement somehow.
-        /*
         if (prop->need_update_vision_when_start_or_end())
         {
-            prop->owning_actor_->update_clr();
             game_time::update_light_map();
             map::player->update_fov();
-            io::draw_map_state();
+            states::draw();
         }
-        */
 
-        //Start message
+        // Start message
         if (is_player)
         {
             std::string msg = "";
@@ -1280,7 +1282,7 @@ void PropHandler::try_add(Prop* const prop,
                 msg_log::add(msg, clr_text, true);
             }
         }
-        else //Is monster
+        else // Is monster
         {
             if (player_see_owner)
             {
@@ -1298,10 +1300,9 @@ void PropHandler::try_add(Prop* const prop,
     incr_active_props_info(prop->id());
 }
 
-void PropHandler::add_prop_from_equipped_item(
-    const Item* const item,
-    Prop* const prop,
-    const Verbosity verbosity)
+void PropHandler::add_prop_from_equipped_item(const Item* const item,
+                                              Prop* const prop,
+                                              const Verbosity verbosity)
 {
     prop->item_applying_ = item;
 
@@ -1341,7 +1342,7 @@ void PropHandler::remove_props_for_item(const Item* const item)
 
             on_prop_end(prop);
         }
-        else //Property was not added by this item
+        else // Property was not added by this item
         {
             ++i;
         }
@@ -1420,17 +1421,12 @@ void PropHandler::decr_active_props_info(const PropId id)
 
 void PropHandler::on_prop_end(Prop* const prop)
 {
-    // TODO: Check if something like this is really needed, if so -
-    //       reimplement somehow.
-    /*
     if (prop->need_update_vision_when_start_or_end())
     {
-        prop->owning_actor_->update_clr();
         game_time::update_light_map();
         map::player->update_fov();
-        io::draw_map_state();
+        states::draw();
     }
-    */
 
     //Print end message if this is the last active property of this type
     if (owning_actor_->state() == ActorState::alive &&
@@ -2034,10 +2030,11 @@ int PropDiseased::affect_max_hp(const int hp_max) const
 
 void PropDiseased::on_start()
 {
-    //End infection
+    // End infection
     owning_actor_->prop_handler().end_prop(PropId::infected, false);
 
-    //If this is a permanent disease that the player caught, log it as a historic event
+    // If this is a permanent disease that the player caught, log it as a
+    // historic event
     if (owning_actor_->is_player() && turns_init_type_ == PropTurns::indefinite)
     {
         game::add_history_event("Caught a horrible disease.");
@@ -2597,7 +2594,8 @@ Prop* PropFlared::on_new_turn()
     return this;
 }
 
-bool PropRAcid::try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity) const
+bool PropRAcid::try_resist_dmg(const DmgType dmg_type,
+                               const Verbosity verbosity) const
 {
     if (dmg_type == DmgType::acid)
     {
@@ -2619,7 +2617,8 @@ bool PropRAcid::try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity
     return false;
 }
 
-bool PropRElec::try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity) const
+bool PropRElec::try_resist_dmg(const DmgType dmg_type,
+                               const Verbosity verbosity) const
 {
     if (dmg_type == DmgType::electric)
     {

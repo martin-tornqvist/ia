@@ -24,6 +24,7 @@ const int opt_y0_           = 1;
 const int opt_values_x_pos_ = 40;
 
 std::string  font_name_                 = "";
+bool    use_light_fade_effect_          = false;
 bool    is_fullscr_                     = false;
 bool    is_tiles_wall_full_square_      = false;
 bool    is_text_mode_wall_full_square_  = false;
@@ -112,6 +113,7 @@ void set_default_variables()
 
     set_cell_px_dims_from_font_name();
 
+    use_light_fade_effect_          = false;
     is_fullscr_                     = false;
     is_tiles_wall_full_square_      = false;
     is_text_mode_wall_full_square_  = true;
@@ -130,12 +132,15 @@ void player_sets_option(const MenuBrowser& browser)
 {
     switch (browser.y())
     {
-    case 0:
+    case 0: // Audio
+    {
         is_audio_enabled_ = !is_audio_enabled_;
         audio::init();
-        break;
+    }
+    break;
 
-    case 1:
+    case 1: // Tiles mode
+    {
         is_tiles_mode_ = !is_tiles_mode_;
 
         if (is_tiles_mode_ && (cell_px_w_ != 16 || cell_px_h_ != 24))
@@ -146,9 +151,11 @@ void player_sets_option(const MenuBrowser& browser)
         set_cell_px_dims_from_font_name();
         set_cell_px_dim_dependent_variables();
         io::init();
-        break;
+    }
+    break;
 
-    case 2:
+    case 2: // Font
+    {
         for (size_t i = 0; i < font_image_names.size(); ++i)
         {
             if (font_name_ == font_image_names[i])
@@ -183,42 +190,65 @@ void player_sets_option(const MenuBrowser& browser)
 
         set_cell_px_dim_dependent_variables();
         io::init();
-        break;
+    }
+    break;
 
-    case 3:
+    case 3: // Light fade effect
+    {
+        use_light_fade_effect_ = !use_light_fade_effect_;
+    }
+    break;
+
+    case 4: // Fullscreen
+    {
         is_fullscr_ = !is_fullscr_;
         io::init();
-        break;
+    }
+    break;
 
-    case 4:
+    case 5: // Tiles mode wall symbol
+    {
         is_tiles_wall_full_square_ = !is_tiles_wall_full_square_;
-        break;
+    }
+    break;
 
-    case 5:
+    case 6: // Text mode wall symbol
+    {
         is_text_mode_wall_full_square_ = !is_text_mode_wall_full_square_;
-        break;
+    }
+    break;
 
-    case 6:
+    case 7: // Skip intro level
+    {
         is_intro_lvl_skipped_ = !is_intro_lvl_skipped_;
-        break;
+    }
+    break;
 
-    case 7:
+    case 8: // Confirm "more" with any key
+    {
         is_any_key_confirm_more_ = !is_any_key_confirm_more_;
-        break;
+    }
+    break;
 
-    case 8:
+    case 9: // Print warning when lighting explovies
+    {
         is_light_explosive_prompt_ = !is_light_explosive_prompt_;
-        break;
+    }
+    break;
 
-    case 9:
+    case 10: // Print warning when melee attacking with ranged weapons
+    {
         is_ranged_wpn_meleee_prompt_ = !is_ranged_wpn_meleee_prompt_;
-        break;
+    }
+    break;
 
-    case 10:
+    case 11: // Ranged weapon auto reload
+    {
         is_ranged_wpn_auto_reload_ = !is_ranged_wpn_auto_reload_;
-        break;
+    }
+    break;
 
-    case 11:
+    case 12: // Projectile delay
     {
         const P p(opt_values_x_pos_, opt_y0_ + browser.y());
 
@@ -236,7 +266,7 @@ void player_sets_option(const MenuBrowser& browser)
     }
     break;
 
-    case 12:
+    case 13: // Shotgun delay
     {
         const P p(opt_values_x_pos_, opt_y0_ + browser.y());
 
@@ -254,7 +284,7 @@ void player_sets_option(const MenuBrowser& browser)
     }
     break;
 
-    case 13:
+    case 14: // Explosion delay
     {
         const P p(opt_values_x_pos_, opt_y0_ + browser.y());
 
@@ -272,13 +302,15 @@ void player_sets_option(const MenuBrowser& browser)
     }
     break;
 
-    case 14:
+    case 15: // Reset to defaults
+    {
         set_default_variables();
         set_cell_px_dims_from_font_name();
         set_cell_px_dim_dependent_variables();
         io::init();
         audio::init();
-        break;
+    }
+    break;
 
     default:
         ASSERT(false);
@@ -334,6 +366,10 @@ void set_variables_from_lines(std::vector<std::string>& lines)
     current_line = lines.front();
     font_name_ = current_line;
     set_cell_px_dims_from_font_name();
+    lines.erase(begin(lines));
+
+    current_line = lines.front();
+    use_light_fade_effect_ = current_line == "1";
     lines.erase(begin(lines));
 
     current_line = lines.front();
@@ -408,6 +444,7 @@ void set_lines_from_variables(std::vector<std::string>& lines)
     lines.push_back(is_audio_enabled_               ? "1" : "0");
     lines.push_back(is_tiles_mode_                  ? "1" : "0");
     lines.push_back(font_name_);
+    lines.push_back(use_light_fade_effect_          ? "1" : "0");
     lines.push_back(is_fullscr_                     ? "1" : "0");
     lines.push_back(is_tiles_wall_full_square_      ? "1" : "0");
     lines.push_back(is_text_mode_wall_full_square_  ? "1" : "0");
@@ -472,6 +509,11 @@ bool is_tiles_mode()
 std::string font_name()
 {
     return font_name_;
+}
+
+bool use_light_fade_effect()
+{
+    return use_light_fade_effect_;
 }
 
 bool is_fullscreen()
@@ -607,7 +649,7 @@ void toggle_fullscreen()
 // -----------------------------------------------------------------------------
 ConfigState::ConfigState() :
     State       (),
-    browser_    (15)
+    browser_    (16)
 {
 
 }
@@ -692,6 +734,11 @@ void ConfigState::draw()
 
         {
             "Font", font_disp_name
+        },
+
+        {
+            "Use light fade effect",
+            config::use_light_fade_effect_ ? "Yes" : "No"
         },
 
         {

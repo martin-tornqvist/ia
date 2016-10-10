@@ -15,6 +15,7 @@ void toggle_fullscreen();
 
 bool            is_tiles_mode();
 std::string     font_name();
+bool            use_light_fade_effect();
 bool            is_fullscreen();
 int             scr_px_w();
 int             scr_px_h();
