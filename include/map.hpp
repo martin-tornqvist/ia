@@ -9,7 +9,8 @@
 #include "config.hpp"
 #include "actor_player.hpp"
 #include "fov.hpp"
-#include "render.hpp"
+#include "io.hpp"
+#include "game.hpp"
 
 class Rigid;
 class Mob;
@@ -22,7 +23,7 @@ struct Cell
     void reset();
 
     bool is_explored, is_seen_by_player, is_lit, is_dark;
-    LosResult player_los; //Updated when player updates FOV
+    LosResult player_los; // Updated when player updates FOV
     Item* item;
     Rigid* rigid;
     CellRenderData player_visual_memory;
@@ -96,11 +97,6 @@ void load();
 void reset_map();
 
 Rigid* put(Rigid* const rigid);
-
-//Makes a copy of the renderers current array
-//TODO: This is weird, and it's unclear how it should be used. Remove?
-//Can it not be copied in the map drawing function instead?
-void cpy_render_array_to_visual_memory();
 
 void mk_blood(const P& origin);
 void mk_gore(const P& origin);

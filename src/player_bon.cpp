@@ -3,7 +3,7 @@
 #include "init.hpp"
 #include "text_format.hpp"
 #include "actor_player.hpp"
-#include "dungeon_master.hpp"
+#include "game.hpp"
 #include "item_factory.hpp"
 #include "inventory.hpp"
 #include "player_spells.hpp"
@@ -957,52 +957,99 @@ void pick_trait(const Trait id)
     switch (id)
     {
     case Trait::tough:
-        map::player->change_max_hp(2, Verbosity::silent);
-        break;
+    {
+        const int hp_incr = 2;
+
+        map::player->change_max_hp(hp_incr,
+                                   Verbosity::silent);
+
+        map::player->restore_hp(hp_incr,
+                                false, // Not allowed above max
+                                Verbosity::silent);
+    }
+    break;
 
     case Trait::rugged:
-        map::player->change_max_hp(4, Verbosity::silent);
-        break;
+    {
+        const int hp_incr = 4;
+
+        map::player->change_max_hp(hp_incr,
+                                   Verbosity::silent);
+
+        map::player->restore_hp(hp_incr,
+                                false, // Not allowed above max
+                                Verbosity::silent);
+    }
+    break;
 
     case Trait::strong_spirit:
-        map::player->change_max_spi(2, Verbosity::silent);
+    {
+        const int spi_incr = 2;
 
-        map::player->prop_handler().try_add(new PropRSpell(PropTurns::indefinite),
-                                            PropSrc::intr,
-                                            true,
-                                            Verbosity::silent);
-        break;
+        map::player->change_max_spi(spi_incr,
+                                    Verbosity::silent);
+
+        map::player->restore_spi(spi_incr,
+                                 false, // Not allowed above max
+                                 Verbosity::silent);
+
+        map::player->prop_handler().try_add(
+            new PropRSpell(PropTurns::indefinite),
+            PropSrc::intr,
+            true,
+            Verbosity::silent);
+    }
+    break;
 
     case Trait::mighty_spirit:
-        map::player->change_max_spi(2, Verbosity::silent);
-        break;
+    {
+        const int spi_incr = 2;
+
+        map::player->change_max_spi(spi_incr,
+                                    Verbosity::silent);
+
+        map::player->restore_spi(spi_incr,
+                                 false, // Not allowed above max
+                                 Verbosity::silent);
+    }
+    break;
 
     case Trait::self_aware:
-        map::player->prop_handler().try_add(new PropRConf(PropTurns::indefinite),
-                                            PropSrc::intr,
-                                            true,
-                                            Verbosity::silent);
-        break;
+    {
+        map::player->prop_handler().try_add(
+            new PropRConf(PropTurns::indefinite),
+            PropSrc::intr,
+            true,
+            Verbosity::silent);
+    }
+    break;
 
     case Trait::survivalist:
+    {
         map::player->prop_handler().try_add(new PropRDisease(PropTurns::indefinite),
                                             PropSrc::intr,
                                             true,
                                             Verbosity::silent);
-        break;
+    }
+    break;
 
     case Trait::fearless:
+    {
         map::player->prop_handler().try_add(new PropRFear(PropTurns::indefinite),
                                             PropSrc::intr,
                                             true,
                                             Verbosity::silent);
-        break;
+    }
+    break;
 
     case Trait::toxic:
+    {
         map::player->prop_handler().try_add(new PropRPoison(PropTurns::indefinite),
                                             PropSrc::intr,
                                             true,
                                             Verbosity::silent);
+    }
+    break;
 
     default:
         break;

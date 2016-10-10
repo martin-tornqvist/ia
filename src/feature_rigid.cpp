@@ -4,7 +4,7 @@
 
 #include "init.hpp"
 #include "msg_log.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "map.hpp"
 #include "popup.hpp"
 #include "map_travel.hpp"
@@ -18,7 +18,7 @@
 #include "actor_mon.hpp"
 #include "query.hpp"
 #include "pickup.hpp"
-#include "dungeon_master.hpp"
+#include "game.hpp"
 #include "sound.hpp"
 
 //--------------------------------------------------------------------- RIGID
@@ -45,13 +45,15 @@ void Rigid::on_new_turn()
         {
             if (&actor == map::player)
             {
-                msg_log::add("I am scorched by flames.", clr_msg_bad);
+                msg_log::add("I am scorched by flames.",
+                             clr_msg_bad);
             }
             else
             {
                 if (map::player->can_see_actor(actor))
                 {
-                    msg_log::add(actor.name_the() + " is scorched by flames.", clr_msg_good);
+                    msg_log::add(actor.name_the() + " is scorched by flames.",
+                                 clr_msg_good);
                 }
             }
 
@@ -65,7 +67,8 @@ void Rigid::on_new_turn()
 
         if (actor)
         {
-            //Occasionally try to set actor on fire, otherwise just do small fire damage
+            // Occasionally try to set actor on fire, otherwise just do small
+            // fire damage
             if (rnd::one_in(4))
             {
                 auto& prop_handler = actor->prop_handler();
@@ -139,7 +142,8 @@ void Rigid::on_new_turn()
 
             if (map::is_pos_inside_map(p))
             {
-                map::cells[p.x][p.y].rigid->hit(DmgType::fire, DmgMethod::elemental);
+                map::cells[p.x][p.y].rigid->hit(DmgType::fire,
+                                                DmgMethod::elemental);
             }
         }
 
@@ -150,7 +154,11 @@ void Rigid::on_new_turn()
 
             if (map::is_pos_inside_map(p))
             {
-                if (!cell_check::BlocksMoveCmn(false).check(map::cells[p.x][p.y]))
+                const bool blocks =
+                    cell_check::BlocksMoveCmn(false).
+                    check(map::cells[p.x][p.y]);
+
+                if (!blocks)
                 {
                     game_time::add_mob(new Smoke(p, 10));
                 }
@@ -187,7 +195,6 @@ WasDestroyed Rigid::on_finished_burning()
 void Rigid::disarm()
 {
     msg_log::add(msg_disarm_no_trap);
-    render::draw_map_state();
 }
 
 DidOpen Rigid::open(Actor* const actor_opening)
@@ -202,18 +209,26 @@ DidTriggerTrap Rigid::trigger_trap(Actor* const actor)
     return DidTriggerTrap::no;
 }
 
-void Rigid::hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* actor)
+void Rigid::hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
+                Actor* actor)
 {
     bool is_feature_hit = true;
 
     if (actor == map::player && dmg_method == DmgMethod::kick)
     {
-        const bool can_see_feature  = !map::cells[pos_.x][pos_.y].is_seen_by_player;
-        const bool is_blocking      = !can_move_cmn() && id() != FeatureId::stairs;
+        const bool can_see_feature =
+            !map::cells[pos_.x][pos_.y].is_seen_by_player;
+
+        const bool is_blocking =
+            !can_move_cmn() &&
+            id() != FeatureId::stairs;
 
         if (is_blocking)
         {
-            const std::string rigid_name = can_see_feature ? "something" : name(Article::a);
+            const std::string rigid_name =
+                can_see_feature ?
+                "something" : name(Article::a);
 
             msg_log::add("I kick " + rigid_name + "!");
 
@@ -485,9 +500,9 @@ Clr Floor::clr_default() const
 
 //--------------------------------------------------------------------- WALL
 Wall::Wall(const P& p) :
-    Rigid(p),
-    type_(WallType::cmn),
-    is_mossy_(false) {}
+    Rigid       (p),
+    type_       (WallType::cmn),
+    is_mossy_   (false) {}
 
 void Wall::on_hit(const DmgType dmg_type,
                   const DmgMethod dmg_method,
@@ -496,33 +511,33 @@ void Wall::on_hit(const DmgType dmg_type,
     (void)actor;
 
     auto destr_adj_doors = [&]()
+    {
+        for (const P& d : dir_utils::cardinal_list)
         {
-            for (const P& d : dir_utils::cardinal_list)
-            {
-                const P p(pos_ + d);
+            const P p(pos_ + d);
 
-                if (map::is_pos_inside_map(p))
+            if (map::is_pos_inside_map(p))
+            {
+                if (map::cells[p.x][p.y].rigid->id() == FeatureId::door)
                 {
-                    if (map::cells[p.x][p.y].rigid->id() == FeatureId::door)
-                    {
-                        map::put(new RubbleLow(p));
-                    }
+                    map::put(new RubbleLow(p));
                 }
             }
-        };
+        }
+    };
 
     auto mk_low_rubble_and_rocks = [&]()
+    {
+        const P p(pos_);
+        map::put(new RubbleLow(p));
+
+        // NOTE: object is now deleted!
+
+        if (rnd::coin_toss())
         {
-            const P p(pos_);
-            map::put(new RubbleLow(p));
-
-            //NOTE: object is now deleted!
-
-            if (rnd::coin_toss())
-            {
-                item_factory::mk_item_on_floor(ItemId::rock, p);
-            }
-        };
+            item_factory::mk_item_on_floor(ItemId::rock, p);
+        }
+    };
 
     if (dmg_type == DmgType::physical)
     {
@@ -586,9 +601,14 @@ bool Wall::is_tile_any_wall_top(const TileId tile)
 
 std::string Wall::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "a " : "the ";
+    std::string ret =
+        article == Article::a ?
+        "a " : "the ";
 
-    if (is_mossy_) {ret += "moss-grown ";}
+    if (is_mossy_)
+    {
+        ret += "moss-grown ";
+    }
 
     switch (type_)
     {
@@ -952,8 +972,6 @@ void Statue::on_hit(const DmgType dmg_type,
 
         map::player->update_fov();
 
-        render::draw_map_state();
-
         Actor* const actor_behind = map::actor_at_pos(dst_pos);
 
         if (actor_behind && actor_behind->is_alive())
@@ -975,8 +993,8 @@ void Statue::on_hit(const DmgType dmg_type,
 
         const auto rigid_id = map::cells[dst_pos.x][dst_pos.y].rigid->id();
 
-        //NOTE: This is kinda hacky, but the rubble is mostly just for decoration anyway,
-        //so it doesn't really matter.
+        // NOTE: This is kinda hacky, but the rubble is mostly just for
+        // decoration anyway, so it doesn't really matter.
         if (
             rigid_id == FeatureId::floor ||
             rigid_id == FeatureId::grass ||
@@ -1089,32 +1107,38 @@ void Stairs::bump(Actor& actor_bumping)
         const std::vector<std::string> choices
         {
             "Descend",
-                "Save and quit",
-                "Cancel"
-                };
+            "Save and quit",
+            "Cancel"
+        };
 
-        const std::string   title   = "A staircase leading downwards";
-        const int           choice  =  popup::show_menu_msg("", true, choices, title);
+        const std::string title = "A staircase leading downwards";
+
+        const int choice = popup::show_menu_msg("",
+                                                choices,
+                                                title);
 
         switch (choice)
         {
         case 0:
             map::player->pos = pos_;
+
             msg_log::clear();
+
             msg_log::add("I descend the stairs.");
-            render::draw_map_state();
+
             map_travel::go_to_nxt();
             break;
 
         case 1:
             map::player->pos = pos_;
+
             saving::save_game();
-            init::quit_to_main_menu = true;
+
+            states::pop();
             break;
 
         default:
             msg_log::clear();
-            render::draw_map_state();
             break;
         }
     }
@@ -1414,8 +1438,7 @@ void Lever::pull()
 //    door_linked_to_->is_open_  = !door_linked_to_->is_open_;
 //    door_linked_to_->is_stuck_ = false;
 //  }
-    map::player->update_fov();
-    render::draw_map_state();
+
     TRACE_FUNC_END;
 }
 
@@ -1780,9 +1803,6 @@ void Brazier::on_hit(const DmgType dmg_type,
 
         //NOTE: "this" is now deleted!
 
-        map::player->update_fov();
-        render::draw_map_state();
-
         Rigid* const dst_rigid = map::cells[dst_pos.x][dst_pos.y].rigid;
 
         if (!dst_rigid->data().is_bottomless)
@@ -1905,7 +1925,8 @@ void ItemContainer::init(const FeatureId feature_id, const int nr_items_to_attem
     }
 }
 
-void ItemContainer::open(const P& feature_pos, Actor* const actor_opening)
+void ItemContainer::open(const P& feature_pos,
+                         Actor* const actor_opening)
 {
     if (actor_opening)
     {
@@ -1913,17 +1934,22 @@ void ItemContainer::open(const P& feature_pos, Actor* const actor_opening)
         {
             msg_log::clear();
 
-            const std::string name = item->name(ItemRefType::plural, ItemRefInf::yes,
+            const std::string name = item->name(ItemRefType::plural,
+                                                ItemRefInf::yes,
                                                 ItemRefAttInf::wpn_context);
 
             msg_log::add("Pick up " + name + "? [y/n]");
 
             const ItemDataT&  data = item->data();
 
-            Wpn* wpn = data.ranged.is_ranged_wpn ? static_cast<Wpn*>(item) : nullptr;
+            Wpn* wpn =
+                data.ranged.is_ranged_wpn ?
+                static_cast<Wpn*>(item) :
+                nullptr;
 
-            const bool is_unloadable_wpn = wpn  &&
-                wpn->nr_ammo_loaded_ > 0        &&
+            const bool is_unloadable_wpn =
+                wpn                         &&
+                wpn->nr_ammo_loaded_ > 0    &&
                 !data.ranged.has_infinite_ammo;
 
             if (is_unloadable_wpn)
@@ -1931,9 +1957,8 @@ void ItemContainer::open(const P& feature_pos, Actor* const actor_opening)
                 msg_log::add("Unload? [G]");
             }
 
-            render::draw_map_state();
-
-            const YesNoAnswer answer = query::yes_or_no(is_unloadable_wpn ? 'G' : -1);
+            const YesNoAnswer answer =
+                query::yes_or_no(is_unloadable_wpn ? 'G' : -1);
 
             if (answer == YesNoAnswer::yes)
             {
@@ -1941,14 +1966,15 @@ void ItemContainer::open(const P& feature_pos, Actor* const actor_opening)
 
                 Inventory& inv = map::player->inv();
 
-                Item* const thrown_item = inv.slots_[(size_t)SlotId::thrown].item;
+                Item* const thrown_item =
+                    inv.slots_[(size_t)SlotId::thrown].item;
 
                 if (thrown_item && thrown_item->id() == item->id())
                 {
                     thrown_item->nr_items_ += item->nr_items_;
                     delete item;
                 }
-                else //Item does not stack with current thrown weapon
+                else // Item does not stack with current thrown weapon
                 {
                     inv.put_in_backpack(item);
                 }
@@ -1957,7 +1983,7 @@ void ItemContainer::open(const P& feature_pos, Actor* const actor_opening)
             {
                 item_drop::drop_item_on_map(feature_pos, *item);
             }
-            else //Special key (unload in this case)
+            else // Special key (unload in this case)
             {
                 ASSERT(is_unloadable_wpn);
                 ASSERT(wpn);
@@ -1976,9 +2002,8 @@ void ItemContainer::open(const P& feature_pos, Actor* const actor_opening)
 
         msg_log::clear();
         msg_log::add("There are no more items.");
-        render::draw_map_state();
     }
-    else //Not opened by an actor (probably opened by a spell of opening)
+    else // Not opened by an actor (probably opened by a spell of opening)
     {
         for (auto* item : items_)
         {
@@ -1996,6 +2021,7 @@ void ItemContainer::destroy_single_fragile()
     for (size_t i = 0; i < items_.size(); ++i)
     {
         Item* const item = items_[i];
+
         const ItemDataT& d = item->data();
 
         if (d.type == ItemType::potion || d.id == ItemId::molotov)
@@ -2156,7 +2182,6 @@ void Tomb::bump(Actor& actor_bumping)
         else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
             msg_log::add("There is a stone box here.");
-            render::draw_map_state();
         }
         else //Player can see
         {
@@ -2279,13 +2304,11 @@ DidOpen Tomb::open(Actor* const actor_opening)
 
         if (map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
-            render::draw_map_state();
             msg_log::add("The lid comes off.");
         }
 
         trigger_trap(actor_opening);
 
-        render::draw_map_state();
         return DidOpen::yes;
     }
 }
@@ -2568,19 +2591,16 @@ void Chest::bump(Actor& actor_bumping)
         if (item_container_.items_.empty() && is_open_)
         {
             msg_log::add("The chest is empty.");
-            render::draw_map_state();
         }
         else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
             msg_log::add("There is a chest here.");
-            render::draw_map_state();
         }
         else //Player can see
         {
             if (is_locked_)
             {
                 msg_log::add("The chest is locked.");
-                render::draw_map_state();
             }
             else //Not locked
             {
@@ -2620,7 +2640,7 @@ void Chest::player_loot()
     {
         msg_log::add("There is nothing of value inside.");
     }
-    else //Not empty
+    else // Not empty
     {
         msg_log::add("There are some items inside.",
                      clr_text,
@@ -2649,8 +2669,6 @@ DidOpen Chest::open(Actor* const actor_opening)
         {
             msg_log::add("The chest opens.");
         }
-
-        render::draw_map_state();
 
         return DidOpen::yes;
     }
@@ -2903,16 +2921,17 @@ void Fountain::bump(Actor& actor_bumping)
         if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
             msg_log::clear();
+
             msg_log::add("There is a fountain here. Drink from it? [y/n]");
-            render::draw_map_state();
 
             const auto answer = query::yes_or_no();
 
             if (answer == YesNoAnswer::no)
             {
                 msg_log::clear();
+
                 msg_log::add("I leave the fountain for now.");
-                render::draw_map_state();
+
                 return;
             }
         }
@@ -2938,7 +2957,7 @@ void Fountain::bump(Actor& actor_bumping)
 
         case FountainEffect::xp:
             msg_log::add("I feel more powerful!");
-            dungeon_master::incr_player_xp(3);
+            game::incr_player_xp(3);
             break;
 
         case FountainEffect::curse:
@@ -2983,7 +3002,6 @@ void Fountain::bump(Actor& actor_bumping)
             msg_log::add("The fountain dries up.");
         }
 
-        render::draw_map_state();
         game_time::tick();
     }
     else //Dried up
@@ -2998,8 +3016,14 @@ Cabinet::Cabinet(const P& p) :
     is_open_    (false)
 {
     const int is_empty_N_IN_10  = 5;
-    const int nr_items_min      = rnd::fraction(is_empty_N_IN_10, 10) ? 0 : 1;
-    const int nr_items_max      = player_bon::traits[(size_t)Trait::treasure_hunter] ? 2 : 1;
+
+    const int nr_items_min =
+        rnd::fraction(is_empty_N_IN_10, 10) ?
+        0 : 1;
+
+    const int nr_items_max =
+        player_bon::traits[(size_t)Trait::treasure_hunter] ?
+        2 : 1;
 
     item_container_.init(FeatureId::cabinet,
                          rnd::range(nr_items_min, nr_items_max));
@@ -3022,7 +3046,6 @@ void Cabinet::bump(Actor& actor_bumping)
         else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
             msg_log::add("There is a cabinet here.");
-            render::draw_map_state();
         }
         else //Can see
         {
@@ -3065,17 +3088,14 @@ DidOpen Cabinet::open(Actor* const actor_opening)
     {
         return DidOpen::no;
     }
-    else //Was not already open
+    else // Was not already open
     {
         is_open_ = true;
 
         if (map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
-            render::draw_map_state();
             msg_log::add("The cabinet opens.");
         }
-
-        render::draw_map_state(UpdateScreen::yes);
 
         return DidOpen::yes;
     }
@@ -3145,7 +3165,6 @@ void Cocoon::bump(Actor& actor_bumping)
         else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
             msg_log::add("There is a cocoon here.");
-            render::draw_map_state();
         }
         else //Player can see
         {
@@ -3253,8 +3272,6 @@ DidOpen Cocoon::open(Actor* const actor_opening)
     else //Was not already open
     {
         is_open_ = true;
-
-        render::draw_map_state(UpdateScreen::yes);
 
         if (map::cells[pos_.x][pos_.y].is_seen_by_player)
         {

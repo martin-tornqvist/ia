@@ -1,14 +1,45 @@
 #ifndef POSTMORTEM_HPP
 #define POSTMORTEM_HPP
 
-#include <vector>
-#include <string>
+#include "state.hpp"
+#include "browser.hpp"
+#include "global.hpp"
 
-namespace postmortem
+class PostmortemMenu: public State
 {
+public:
+    PostmortemMenu();
 
-void run(bool* const quit_game);
+    void on_start() override;
 
-} //Postmortem
+    void on_popped() override;
 
-#endif
+    void draw() override;
+
+    void update() override;
+
+private:
+    void mk_memorial_file() const;
+
+    MenuBrowser browser_;
+};
+
+class PostmortemInfo: public State
+{
+public:
+    PostmortemInfo() :
+        State                   (),
+        max_nr_lines_on_scr_    (screen_h - 2),
+        top_idx_                (0) {}
+
+    void draw() override;
+
+    void update() override;
+
+private:
+    const int max_nr_lines_on_scr_;
+
+    int top_idx_;
+};
+
+#endif // POSTMORTEM_HPP

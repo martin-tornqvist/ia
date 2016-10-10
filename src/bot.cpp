@@ -9,7 +9,6 @@
 #include "actor.hpp"
 #include "actor_mon.hpp"
 #include "feature.hpp"
-#include "input.hpp"
 #include "map.hpp"
 #include "actor_player.hpp"
 #include "actor_factory.hpp"
@@ -21,8 +20,8 @@
 #include "game_time.hpp"
 #include "map_travel.hpp"
 #include "explosion.hpp"
-#include "render.hpp"
-#include "sdl_wrapper.hpp"
+#include "io.hpp"
+#include "sdl_base.hpp"
 
 namespace bot
 {
@@ -34,6 +33,8 @@ std::vector<P> path_;
 
 void show_map_and_freeze(const std::string& msg)
 {
+    TRACE_FUNC_BEGIN;
+
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)
@@ -57,18 +58,16 @@ void show_map_and_freeze(const std::string& msg)
 
     while (true)
     {
-        render::draw_map_state(UpdateScreen::no);
-
-        render::draw_text("[" + msg + "]",
+        io::draw_text("[" + msg + "]",
                           Panel::screen,
                           P(0, 0),
                           clr_red_lgt);
 
-        render::update_screen();
+        io::update_screen();
 
-        sdl_wrapper::sleep(1);
+        sdl_base::sleep(1);
 
-        sdl_wrapper::flush_input();
+        io::flush_input();
     }
 }
 
@@ -130,13 +129,13 @@ bool walk_to_adj_cell(const P& p)
 
     char key = '0' + (int)dir_utils::dir(p - map::player->pos);
 
-    //Occasionally randomize movement
+    // Occasionally randomize movement
     if (rnd::one_in(5))
     {
         key = '0' + rnd::range(1, 9);
     }
 
-    input::handle_map_mode_key_press(KeyData(key));
+    game::handle_player_input(InputData(key));
 
     return map::player->pos == p;
 }
@@ -154,18 +153,21 @@ void act()
     // TESTS
     //=======================================================================
 #ifndef NDEBUG
-    for (size_t outer_idx = 0; outer_idx < game_time::actors.size(); ++outer_idx)
+    for (size_t outer_idx = 0;
+         outer_idx < game_time::actors.size();
+         ++outer_idx)
     {
         const Actor* const actor = game_time::actors[outer_idx];
 
         ASSERT(map::is_pos_inside_map(actor->pos));
 
-        for (size_t inner_idx = 0; inner_idx < game_time::actors.size(); ++inner_idx)
+        for (size_t inner_idx = 0;
+             inner_idx < game_time::actors.size();
+             ++inner_idx)
         {
             const Actor* const other_actor = game_time::actors[inner_idx];
 
-            if (
-                outer_idx != inner_idx  &&
+            if (outer_idx != inner_idx  &&
                 actor->is_alive()       &&
                 other_actor->is_alive())
             {
@@ -188,7 +190,7 @@ void act()
 
     //Abort?
     //TODO: Reimplement this
-//    if(input::is_key_held(SDLK_ESCAPE))
+//    if(io::is_key_held(SDLK_ESCAPE))
 //    {
 //        config::toggle_bot_playing();
 //    }
@@ -251,14 +253,14 @@ void act()
     //Occasionally send a TAB command to attack nearby monsters
     if (rnd::coin_toss())
     {
-        input::handle_map_mode_key_press(KeyData(SDLK_TAB));
+        game::handle_player_input(InputData(SDLK_TAB));
         return;
     }
 
     //Occasionally send a 'wait 5 turns' command (just code exercise)
     if (rnd::one_in(50))
     {
-        input::handle_map_mode_key_press(KeyData('s'));
+        game::handle_player_input(InputData('s'));
         return;
     }
 
@@ -284,7 +286,7 @@ void act()
     //Occasionally swap weapon (just some code exercise)
     if (rnd::one_in(50))
     {
-        input::handle_map_mode_key_press(KeyData('z'));
+        game::handle_player_input(InputData('z'));
         return;
     }
 

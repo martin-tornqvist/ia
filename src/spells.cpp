@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "init.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "actor_mon.hpp"
 #include "actor_player.hpp"
 #include "msg_log.hpp"
@@ -18,9 +18,9 @@
 #include "inventory.hpp"
 #include "map_parsing.hpp"
 #include "line_calc.hpp"
-#include "sdl_wrapper.hpp"
+#include "sdl_base.hpp"
 #include "player_bon.hpp"
-#include "dungeon_master.hpp"
+#include "game.hpp"
 
 namespace
 {
@@ -376,7 +376,7 @@ void Spell::on_resist(Actor& target) const
             audio::play(SfxId::spell_shield_break);
         }
 
-        render::draw_blast_at_cells({target.pos}, clr_white);
+        io::draw_blast_at_cells({target.pos}, clr_white);
     }
 
     if (is_player)
@@ -425,9 +425,14 @@ SpellEffectNoticed SpellDarkbolt::cast_impl(Actor* const caster) const
 
     std::vector<P> line;
 
-    line_calc::calc_new_line(caster->pos, tgt->pos, true, 999, false, line);
+    line_calc::calc_new_line(caster->pos,
+                             tgt->pos,
+                             true,
+                             999,
+                             false,
+                             line);
 
-    render::draw_map_state();
+    states::draw();
 
     const size_t line_size = line.size();
 
@@ -437,18 +442,18 @@ SpellEffectNoticed SpellDarkbolt::cast_impl(Actor* const caster) const
 
         if (config::is_tiles_mode())
         {
-            render::draw_tile(TileId::blast1, Panel::map, p, clr_magenta);
+            io::draw_tile(TileId::blast1, Panel::map, p, clr_magenta);
         }
         else
         {
-            render::draw_glyph('*', Panel::map, p, clr_magenta);
+            io::draw_glyph('*', Panel::map, p, clr_magenta);
         }
 
-        render::update_screen();
-        sdl_wrapper::sleep(config::delay_projectile_draw());
+        io::update_screen();
+        sdl_base::sleep(config::delay_projectile_draw());
     }
 
-    render::draw_blast_at_cells({tgt->pos}, clr_magenta);
+    io::draw_blast_at_cells({tgt->pos}, clr_magenta);
 
     bool        is_warlock_charged  = false;
     Clr         msg_clr             = clr_msg_good;
@@ -523,7 +528,7 @@ SpellEffectNoticed SpellAzaWrath::cast_impl(Actor* const caster) const
         is_warlock_charged = caster->has_prop(PropId::warlock_charged);
     }
 
-    render::draw_blast_at_seen_actors(tgts, clr_red_lgt);
+    io::draw_blast_at_seen_actors(tgts, clr_red_lgt);
 
     for (Actor* const tgt : tgts)
     {
@@ -950,10 +955,11 @@ SpellEffectNoticed SpellDetItems::cast_impl(Actor* const caster) const
 
     if (!items_revealed_cells.empty())
     {
-        render::draw_map_state();
         map::player->update_fov();
-        render::draw_blast_at_cells(items_revealed_cells, clr_white);
-        render::draw_map_state();
+
+        states::draw();
+
+        io::draw_blast_at_cells(items_revealed_cells, clr_white);
 
         if (items_revealed_cells.size() == 1)
         {
@@ -998,10 +1004,11 @@ SpellEffectNoticed SpellDetTraps::cast_impl(Actor* const caster) const
 
     if (!traps_revealed_cells.empty())
     {
-        render::draw_map_state();
         map::player->update_fov();
-        render::draw_blast_at_cells(traps_revealed_cells, clr_white);
-        render::draw_map_state();
+
+        states::draw();
+
+        io::draw_blast_at_cells(traps_revealed_cells, clr_white);
 
         if (traps_revealed_cells.size() == 1)
         {
@@ -1078,7 +1085,7 @@ SpellEffectNoticed SpellOpening::cast_impl(Actor* const caster) const
     }
 
     map::player->update_fov();
-    render::draw_map_state();
+
     return SpellEffectNoticed::yes;
 }
 
@@ -1303,7 +1310,7 @@ SpellEffectNoticed SpellEnfeebleMon::cast_impl(Actor* const caster) const
         return SpellEffectNoticed::no;
     }
 
-    render::draw_blast_at_seen_actors(tgts, clr_magenta);
+    io::draw_blast_at_seen_actors(tgts, clr_magenta);
 
     for (Actor* const tgt : tgts)
     {
@@ -1452,13 +1459,14 @@ SpellEffectNoticed SpellSummonMon::cast_impl(Actor* const caster) const
 
         if (data.can_be_summoned)
         {
-            //Method for finding eligible monsters depends on if player or monster is casting.
+            // Method for finding eligible monsters depends on if player or
+            // monster is casting.
             int dlvl_max = -1;
 
             if (caster->is_player())
             {
                 //Compare player CVL with monster's allowed spawning DLVL.
-                const int player_clvl     = dungeon_master::clvl();
+                const int player_clvl     = game::clvl();
                 const int player_clvl_pct = (player_clvl * 100) / player_max_clvl;
 
                 dlvl_max = (player_clvl_pct * dlvl_last) / 100;
@@ -1483,15 +1491,15 @@ SpellEffectNoticed SpellSummonMon::cast_impl(Actor* const caster) const
         return SpellEffectNoticed::no;
     }
 
-    const int       idx                         = rnd::range(0, summon_bucket.size() - 1);
-    const ActorId   mon_id                      = summon_bucket[idx];
+    const ActorId   mon_id                      = rnd::element(summon_bucket);
     Actor*          leader                      = nullptr;
     bool            did_player_summon_hostile   = false;
 
     if (caster->is_player())
     {
-        const int n                 = summon_hostile_one_in_n *
-                                      (player_bon::traits[(size_t)Trait::summoner] ? 2 : 1);
+        const int n = summon_hostile_one_in_n *
+            (player_bon::traits[(size_t)Trait::summoner] ? 2 : 1);
+
         did_player_summon_hostile   = rnd::one_in(n);
         leader                      = did_player_summon_hostile ? nullptr : caster;
     }

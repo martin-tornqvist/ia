@@ -4,8 +4,8 @@
 namespace init
 {
 
+// TODO: Weird place for this variable
 extern bool is_cheat_vision_enabled;
-extern bool quit_to_main_menu;
 
 void init_io();
 void cleanup_io();
@@ -16,6 +16,6 @@ void cleanup_game();
 void init_session();
 void cleanup_session();
 
-} //init
+} // init
 
 #endif

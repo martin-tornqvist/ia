@@ -9,13 +9,12 @@
 #include "actor_mon.hpp"
 #include "map.hpp"
 #include "populate_monsters.hpp"
-#include "input.hpp"
 #include "inventory.hpp"
 #include "inventory_handling.hpp"
 #include "player_bon.hpp"
 #include "audio.hpp"
 #include "map_parsing.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "map_travel.hpp"
 #include "item.hpp"
 #include "saving.hpp"
@@ -42,8 +41,6 @@ void run_std_turn_events()
 {
     if (is_magic_descend_nxt_std_turn)
     {
-        render::draw_map_state();
-
         msg_log::add("I sink downwards!",
                      clr_white,
                      false,
@@ -59,10 +56,10 @@ void run_std_turn_events()
     {
         Actor* const actor = *it;
 
-        //Delete destroyed actors
+        // Delete destroyed actors
         if (actor->state() == ActorState::destroyed)
         {
-            //Do not delete player if player died, just return
+            // Do not delete player if player died, just return
             if (actor == map::player)
             {
                 return;
@@ -82,13 +79,13 @@ void run_std_turn_events()
                 current_actor_idx_ = 0;
             }
         }
-        else  //Actor is alive or a corpse
+        else  // Actor is alive or a corpse
         {
             actor->prop_handler().tick(PropTurnMode::std);
 
             if (!actor->is_player())
             {
-                //Count down monster awareness
+                // Count down monster awareness
                 Mon* const mon = static_cast<Mon*>(actor);
 
                 if (mon->player_aware_of_me_counter_ > 0)
@@ -103,7 +100,7 @@ void run_std_turn_events()
         }
     }
 
-    //New turn for rigids
+    // New turn for rigids
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)
@@ -112,7 +109,7 @@ void run_std_turn_events()
         }
     }
 
-    //New turn for mobs (using a copied vector, since mobs may get destroyed)
+    // New turn for mobs (using a copied vector, since mobs may get destroyed)
     const std::vector<Mob*> mobs_cpy = mobs;
 
     for (auto* f : mobs_cpy)
@@ -120,8 +117,8 @@ void run_std_turn_events()
         f->on_new_turn();
     }
 
-    //Spawn more monsters?
-    //(If an unexplored cell is selected, the spawn is canceled)
+    // Spawn more monsters?
+    // (If an unexplored cell is selected, the spawn is canceled)
     if (map::dlvl >= 1 && map::dlvl <= dlvl_last)
     {
         const int spawn_n_turns = 300;
@@ -132,7 +129,7 @@ void run_std_turn_events()
         }
     }
 
-    //Run new turn events on all player items
+    // Run new turn events on all player items
     auto& player_inv = map::player->inv();
 
     for (Item* const item : player_inv.backpack_)
@@ -160,7 +157,7 @@ void run_std_turn_events()
 
 void run_atomic_turn_events()
 {
-    //Stop burning for any actor standing in liquid
+    // Stop burning for any actor standing in liquid
     for (auto* const actor : actors)
     {
         const P& p = actor->pos;
@@ -173,12 +170,12 @@ void run_atomic_turn_events()
         }
     }
 
-    //NOTE: We add light AFTER ending burning for actors in liquid, since those actors shouldn't
-    //add light.
+    // NOTE: We add light AFTER ending burning for actors in liquid, since those
+    //       actors shouldn't add light.
     update_light_map();
 }
 
-} //namespace
+} // namespace
 
 void init()
 {
@@ -271,19 +268,20 @@ void erase_all_mobs()
 
 void add_actor(Actor* actor)
 {
-    //Sanity checks
+    // Sanity checks
     ASSERT(map::is_pos_inside_map(actor->pos));
 
 #ifndef NDEBUG
     for (Actor* const old_actor : actors)
     {
-        //Never insert the same actor twice
+        // Never insert the same actor twice
         ASSERT(actor != old_actor);
 
-        //Never insert an actor on the same position as an existing living actor
-        //NOTE: Actors could be placed dead, e.g. Zuul can do this (immediately
-        //      spawns a priest) so we check if BOTH actors are alive first before
-        //      we panic.
+        // Never insert an actor at the same position as another living actor
+        //
+        // NOTE: Actors could be placed dead, e.g. Zuul can do this (immediately
+        //       spawns a priest) so we check if BOTH actors are alive first
+        //       before we panic.
         if (actor->is_alive() && old_actor->is_alive())
         {
             const P& new_actor_p = actor->pos;
@@ -302,24 +300,13 @@ void reset_turn_type_and_actor_counters()
     current_turn_type_pos_ = current_actor_idx_ = 0;
 }
 
-//For every turn type step, run through all actors and let those who can act during this
-//type of turn act. When all actors who can act on this phase have acted, and if this is
-//a normal speed phase - consider it a standard turn (update properties, update features,
-//spawn more monsters etc.)
 void tick(const PassTime pass_time)
 {
-    run_atomic_turn_events();
-
-    auto* actor = current_actor();
-
-    actor->on_actor_turn();
-
-    //Tick properties running on actor turns
-    actor->prop_handler().tick(PropTurnMode::actor);
-
-    //Should time move forward?
+    // Should time move forward?
     if (pass_time == PassTime::yes)
     {
+        // Find next actor
+
         bool can_act = false;
 
         while (!can_act)
@@ -334,14 +321,16 @@ void tick(const PassTime pass_time)
 
                 ++current_turn_type_pos_;
 
-                if (current_turn_type_pos_ == int(TurnType::END))
+                if (current_turn_type_pos_ == (int)TurnType::END)
                 {
                     current_turn_type_pos_ = 0;
                 }
 
-                //Every turn type except "fast" and "fastest" are standard turns
-                //(i.e. we increment the turn counter, and run standard turn events)
-                if (current_turn_type != TurnType::fast && current_turn_type != TurnType::fastest)
+                // Every turn type except "fast" and "fastest" are standard
+                // turns (i.e. we increment the turn counter, and run standard
+                // turn events)
+                if (current_turn_type != TurnType::fast &&
+                    current_turn_type != TurnType::fastest)
                 {
                     run_std_turn_events();
                 }
@@ -352,19 +341,22 @@ void tick(const PassTime pass_time)
             switch (speed)
             {
             case ActorSpeed::sluggish:
-                can_act = (current_turn_type == TurnType::slow ||
-                           current_turn_type == TurnType::normal2)
-                          && rnd::fraction(2, 3);
+                can_act =
+                    (current_turn_type == TurnType::slow ||
+                     current_turn_type == TurnType::normal2) &&
+                    rnd::fraction(2, 3);
                 break;
 
             case ActorSpeed::slow:
-                can_act = current_turn_type == TurnType::slow ||
-                          current_turn_type == TurnType::normal2;
+                can_act =
+                    current_turn_type == TurnType::slow ||
+                    current_turn_type == TurnType::normal2;
                 break;
 
             case ActorSpeed::normal:
-                can_act = current_turn_type != TurnType::fast &&
-                          current_turn_type != TurnType::fastest;
+                can_act =
+                    current_turn_type != TurnType::fast &&
+                    current_turn_type != TurnType::fastest;
                 break;
 
             case ActorSpeed::fast:
@@ -381,6 +373,13 @@ void tick(const PassTime pass_time)
             }
         }
     }
+
+    run_atomic_turn_events();
+
+    // Tick properties running on actor turns
+    current_actor()->prop_handler().tick(PropTurnMode::actor);
+
+    current_actor()->on_actor_turn();
 }
 
 void update_light_map()
@@ -395,7 +394,7 @@ void update_light_map()
         }
     }
 
-    //Do not add light on Leng
+    // Do not add light on Leng
     if (map_travel::map_type() == MapType::leng)
     {
         return;
@@ -419,8 +418,8 @@ void update_light_map()
         }
     }
 
-    //Copy the temp values to the real light map
-    //NOTE: This must be done separately - it cannot be done in the map loop above
+    // Copy the temp values to the real light map
+    // NOTE: Must be done separately - it cannot be done in the map loop above
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)
@@ -434,9 +433,9 @@ Actor* current_actor()
 {
     Actor* const actor = actors[current_actor_idx_];
 
-    //Sanity check actor retrieved
+    // Sanity check
     ASSERT(map::is_pos_inside_map(actor->pos));
     return actor;
 }
 
-} //game_time
+} // game_time

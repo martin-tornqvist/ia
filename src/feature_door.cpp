@@ -8,7 +8,6 @@
 #include "msg_log.hpp"
 #include "postmortem.hpp"
 #include "player_bon.hpp"
-#include "render.hpp"
 #include "map_parsing.hpp"
 
 //---------------------------------------------------INHERITED FUNCTIONS
@@ -610,13 +609,19 @@ void Door::bump(Actor& actor_bumping)
 
             if (map::cells[pos_.x][pos_.y].is_seen_by_player)
             {
-                TRACE << "Player bumped into secret door, with vision in cell" << std::endl;
-                msg_log::add(feature_data::data(FeatureId::wall).msg_on_player_blocked);
+                TRACE << "Player bumped into secret door, "
+                      << "with vision in cell" << std::endl;
+
+                msg_log::add(feature_data::data(FeatureId::wall).
+                             msg_on_player_blocked);
             }
             else //Not seen by player
             {
-                TRACE << "Player bumped into secret door, without vision in cell" << std::endl;
-                msg_log::add(feature_data::data(FeatureId::wall).msg_on_player_blocked_blind);
+                TRACE << "Player bumped into secret door, "
+                      << "without vision in cell" << std::endl;
+
+                msg_log::add(feature_data::data(FeatureId::wall).
+                             msg_on_player_blocked_blind);
             }
 
             return;
@@ -637,12 +642,9 @@ void Door::reveal(const bool allow_message)
 
         if (map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
-            render::draw_map_state();
-
             if (allow_message)
             {
                 msg_log::add("A secret is revealed.");
-                render::draw_map_state();
             }
         }
     }
@@ -652,7 +654,8 @@ void Door::player_try_spot_hidden()
 {
     if (is_secret_)
     {
-        const int player_skill = map::player->ability(AbilityId::searching, true);
+        const int player_skill =
+            map::player->ability(AbilityId::searching, true);
 
         if (ability_roll::roll(player_skill, map::player) >= success)
         {
@@ -705,9 +708,8 @@ void Door::try_close(Actor* actor_trying)
     {
         if (is_player)
         {
-            msg_log::add(
-                "This door refuses to be closed, perhaps it is handled elsewhere?");
-            render::draw_map_state();
+            msg_log::add("This door refuses to be closed, "
+                         "perhaps it is handled elsewhere?");
         }
 
         return;
@@ -773,16 +775,28 @@ void Door::try_close(Actor* actor_trying)
 
             if (is_player)
             {
-                Snd snd("", SfxId::door_close, IgnoreMsgIfOriginSeen::yes, pos_,
-                        actor_trying, SndVol::low, AlertsMon::yes);
+                Snd snd("",
+                        SfxId::door_close,
+                        IgnoreMsgIfOriginSeen::yes,
+                        pos_,
+                        actor_trying,
+                        SndVol::low,
+                        AlertsMon::yes);
+
                 snd_emit::run(snd);
+
                 msg_log::add("I close the door.");
             }
             else //Is a monster closing
             {
                 Snd snd("I hear a door closing.",
-                        SfxId::door_close, IgnoreMsgIfOriginSeen::yes, pos_, actor_trying,
-                        SndVol::low, AlertsMon::no);
+                        SfxId::door_close,
+                        IgnoreMsgIfOriginSeen::yes,
+                        pos_,
+                        actor_trying,
+                        SndVol::low,
+                        AlertsMon::no);
+
                 snd_emit::run(snd);
 
                 if (player_see_tryer)
@@ -799,22 +813,36 @@ void Door::try_close(Actor* actor_trying)
 
                 if (is_player)
                 {
-                    Snd snd("", SfxId::door_close, IgnoreMsgIfOriginSeen::yes, pos_,
-                            actor_trying, SndVol::low, AlertsMon::yes);
+                    Snd snd("",
+                            SfxId::door_close,
+                            IgnoreMsgIfOriginSeen::yes,
+                            pos_,
+                            actor_trying,
+                            SndVol::low,
+                            AlertsMon::yes);
+
                     snd_emit::run(snd);
-                    msg_log::add("I fumble with a door and succeed to close it.");
+
+                    msg_log::add("I fumble with a door and "
+                                 "succeed to close it.");
                 }
                 else //Monster closing
                 {
                     Snd snd("I hear a door closing.",
-                            SfxId::door_close, IgnoreMsgIfOriginSeen::yes, pos_, actor_trying,
-                            SndVol::low, AlertsMon::no);
+                            SfxId::door_close,
+                            IgnoreMsgIfOriginSeen::yes,
+                            pos_,
+                            actor_trying,
+                            SndVol::low,
+                            AlertsMon::no);
+
                     snd_emit::run(snd);
 
                     if (player_see_tryer)
                     {
                         msg_log::add(actor_trying->name_the() +
-                                     "fumbles about and succeeds to close a door.");
+                                     "fumbles about and succeeds "
+                                     "to close a door.");
                     }
                 }
             }
@@ -822,21 +850,24 @@ void Door::try_close(Actor* actor_trying)
             {
                 if (is_player)
                 {
-                    msg_log::add("I fumble blindly with a door and fail to close it.");
+                    msg_log::add("I fumble blindly with a door and "
+                                 "fail to close it.");
                 }
                 else //Monster failing to close
                 {
                     if (player_see_tryer)
                     {
                         msg_log::add(actor_trying->name_the() +
-                                     " fumbles blindly and fails to close a door.");
+                                     " fumbles blindly and fails to "
+                                     "close a door.");
                     }
                 }
             }
         }
     }
 
-    //TODO: It doesn't seem like a turn is spent if player is blind and fail to close the door?
+    // TODO: It doesn't seem like a turn is spent if player is blind and fails
+    //       to close the door?
     if (!is_open_ && is_closable)
     {
         game_time::tick();
@@ -856,8 +887,8 @@ void Door::try_open(Actor* actor_trying)
     {
         if (is_player)
         {
-            msg_log::add("I see no way to open this door, perhaps it is opened elsewhere.");
-            render::draw_map_state();
+            msg_log::add("I see no way to open this door, "
+                         "perhaps it is opened elsewhere.");
         }
 
         return;

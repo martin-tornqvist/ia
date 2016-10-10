@@ -4,13 +4,29 @@
 #include <vector>
 #include <string>
 
-namespace manual
+#include "state.hpp"
+#include "global.hpp"
+
+class BrowseManual: public State
 {
+public:
+    BrowseManual() :
+        State       (),
+        lines_      (),
+        top_idx_    (0) {}
 
-void init(); //{read_file();}
+    void on_start() override;
 
-void run();
+    void draw() override;
 
-} //Manual
+    void update() override;
 
-#endif
+private:
+    void read_file();
+
+    std::vector<std::string> lines_;
+
+    int top_idx_;
+};
+
+#endif // MANUAL_HPP

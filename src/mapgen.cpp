@@ -17,7 +17,7 @@
 #include "item_factory.hpp"
 #include "map.hpp"
 #include "map_parsing.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "populate_monsters.hpp"
 #include "populate_traps.hpp"
 #include "populate_items.hpp"
@@ -25,8 +25,8 @@
 #include "rl_utils.hpp"
 
 #ifdef DEMO_MODE
-#include "render.hpp"
-#include "sdl_wrapper.hpp"
+#include "io.hpp"
+#include "sdl_base.hpp"
 #include "query.hpp"
 #endif //DEMO_MODE
 
@@ -54,13 +54,13 @@ void connect_rooms()
         {
             mapgen::is_map_valid = false;
 #ifdef DEMO_MODE
-            render::cover_panel(Panel::log);
-            render::draw_text("Failed to connect map",
+            io::cover_panel(Panel::log);
+            io::draw_text("Failed to connect map",
                               Panel::screen,
                               P(0, 0),
                               clr_red_lgt);
-            render::update_screen();
-            sdl_wrapper::sleep(8000);
+            io::update_screen();
+            sdl_base::sleep(8000);
 #endif //DEMO_MODE
             break;
         }
@@ -287,14 +287,14 @@ P place_stairs()
               << "(" << nr_ok_cells << "), discarding map" << std:: endl;
         is_map_valid = false;
 #ifdef DEMO_MODE
-        render::cover_panel(Panel::log);
-        render::draw_map();
-        render::draw_text("To few cells to place stairs",
+        io::cover_panel(Panel::log);
+        io::draw_map();
+        io::draw_text("To few cells to place stairs",
                           Panel::screen,
                           P(0, 0),
                           clr_red_lgt);
-        render::update_screen();
-        sdl_wrapper::sleep(8000);
+        io::update_screen();
+        sdl_base::sleep(8000);
 #endif //DEMO_MODE
         return P(-1, -1);
     }
@@ -541,8 +541,8 @@ bool mk_std_lvl()
 
     is_map_valid = true;
 
-    render::clear_screen();
-    render::update_screen();
+    io::clear_screen();
+    io::update_screen();
 
     map::reset_map();
 
@@ -642,13 +642,13 @@ bool mk_std_lvl()
 
 #ifndef DISABLE_AUX_ROOMS
 #ifdef DEMO_MODE
-    render::cover_panel(Panel::log);
-    render::draw_map();
-    render::draw_text("Press any key to make aux rooms...",
+    io::cover_panel(Panel::log);
+    io::draw_map();
+    io::draw_text("Press any key to make aux rooms...",
                       Panel::screen,
                       P(0, 0),
                       clr_white);
-    render::update_screen();
+    io::update_screen();
     query::wait_for_key_press();
 #endif //DEMO_MODE
 
@@ -664,13 +664,13 @@ bool mk_std_lvl()
     if (map::dlvl <= dlvl_last_mid_game)
     {
 #ifdef DEMO_MODE
-        render::cover_panel(Panel::log);
-        render::draw_map();
-        render::draw_text("Press any key to make sub rooms...",
+        io::cover_panel(Panel::log);
+        io::draw_map();
+        io::draw_text("Press any key to make sub rooms...",
                           Panel::screen,
                           P(0, 0),
                           clr_white);
-        render::update_screen();
+        io::update_screen();
         query::wait_for_key_press();
 #endif //DEMO_MODE
 
@@ -701,13 +701,13 @@ bool mk_std_lvl()
     TRACE << "Running pre-connect functions for all rooms" << std:: endl;
 
 #ifdef DEMO_MODE
-    render::cover_panel(Panel::log);
-    render::draw_map();
-    render::draw_text("Press any key to run pre-connect functions on rooms...",
+    io::cover_panel(Panel::log);
+    io::draw_map();
+    io::draw_text("Press any key to run pre-connect functions on rooms...",
                       Panel::screen,
                       P(0, 0),
                       clr_white);
-    render::update_screen();
+    io::update_screen();
     query::wait_for_key_press();
 #endif //DEMO_MODE
 
@@ -726,13 +726,13 @@ bool mk_std_lvl()
     //Connect
 
 #ifdef DEMO_MODE
-    render::cover_panel(Panel::log);
-    render::draw_map();
-    render::draw_text("Press any key to connect rooms...",
+    io::cover_panel(Panel::log);
+    io::draw_map();
+    io::draw_text("Press any key to connect rooms...",
                       Panel::screen,
                       P(0, 0),
                       clr_white);
-    render::update_screen();
+    io::update_screen();
     query::wait_for_key_press();
 #endif //DEMO_MODE
 
@@ -745,13 +745,13 @@ bool mk_std_lvl()
 
     TRACE << "Running post-connect functions for all rooms" << std:: endl;
 #ifdef DEMO_MODE
-    render::cover_panel(Panel::log);
-    render::draw_map();
-    render::draw_text("Press any key to run post-connect functions on rooms...",
+    io::cover_panel(Panel::log);
+    io::draw_map();
+    io::draw_text("Press any key to run post-connect functions on rooms...",
                       Panel::screen,
                       P(0, 0),
                       clr_white);
-    render::update_screen();
+    io::update_screen();
     query::wait_for_key_press();
 #endif //DEMO_MODE
 

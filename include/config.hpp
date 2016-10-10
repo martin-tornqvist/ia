@@ -3,11 +3,14 @@
 
 #include <string>
 
+#include "state.hpp"
+#include "browser.hpp"
+
 namespace config
 {
 
 void init();
-void run_options_menu();
+
 void toggle_fullscreen();
 
 bool            is_tiles_mode();
@@ -36,6 +39,19 @@ int             delay_projectile_draw();
 int             delay_shotgun();
 int             delay_explosion();
 
-} //config
+} // config
+
+class ConfigState: public State
+{
+public:
+    ConfigState();
+
+    void update() override;
+
+    void draw() override;
+
+private:
+    MenuBrowser browser_;
+};
 
 #endif

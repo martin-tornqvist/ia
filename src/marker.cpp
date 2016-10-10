@@ -2,57 +2,311 @@
 
 #include <vector>
 
-#include "input.hpp"
+#include "io.hpp"
 #include "inventory_handling.hpp"
-#include "input.hpp"
 #include "actor_player.hpp"
 #include "attack.hpp"
 #include "msg_log.hpp"
 #include "look.hpp"
 #include "throwing.hpp"
-#include "render.hpp"
 #include "map.hpp"
 #include "item_factory.hpp"
 #include "line_calc.hpp"
 #include "config.hpp"
 #include "feature_rigid.hpp"
+#include "explosion.hpp"
 
-namespace marker
+// -----------------------------------------------------------------------------
+// Marker state
+// -----------------------------------------------------------------------------
+void MarkerState::on_start()
 {
+    pos_ = map::player->pos;
 
-namespace
-{
-
-P pos_;
-
-void set_pos_to_closest_enemy_if_visible()
-{
-    std::vector<Actor*> seen_foes;
-    map::player->seen_foes(seen_foes);
-    std::vector<P> seen_foes_cells;
-
-    map::actor_cells(seen_foes, seen_foes_cells);
-
-    //If player sees enemies, suggest one for targeting
-    if (!seen_foes_cells.empty())
+    if (use_player_tgt())
     {
-        pos_ = closest_pos(map::player->pos, seen_foes_cells);
+        // First, attempt to place marker at player target.
+        const bool did_go_to_tgt = try_go_to_tgt();
 
-        map::player->tgt_ = map::actor_at_pos(pos_);
+        if (!did_go_to_tgt)
+        {
+            // If no target available, attempt to place marker at closest
+            // visible monster. This sets a new player target if successful.
+            map::player->tgt_ = nullptr;
+
+            try_go_to_closest_enemy();
+        }
+    }
+
+    on_moved();
+}
+
+void MarkerState::draw()
+{
+    std::vector<P> trail;
+
+    const P origin(map::player->pos);
+
+    line_calc::calc_new_line(origin,
+                             pos_,
+                             true,      // Stop at target
+                             INT_MAX,   // Travel limit
+                             false,     // Allow outside map
+                             trail);
+
+    int blocked_from_idx = -1;
+
+    if (show_blocked())
+    {
+        for (size_t i = 0; i < trail.size(); ++i)
+        {
+            const P& p(trail[i]);
+
+            const Cell& c = map::cells[p.x][p.y];
+
+            if (c.is_seen_by_player &&
+                !c.rigid->is_projectile_passable())
+            {
+                blocked_from_idx = i;
+                break;
+            }
+        }
+    }
+
+    const int range = effective_range();
+
+    draw_marker(pos_,
+                trail,
+                range,
+                blocked_from_idx);
+
+    on_draw();
+}
+
+void MarkerState::update()
+{
+    const auto input = io::get();
+
+    msg_log::clear();
+
+    switch (input.key)
+    {
+
+    //
+    // Direction input is handle by the base class
+    //
+    case SDLK_RIGHT:
+    case '6':
+    case 'l':
+    {
+        if (input.is_shift_held)
+        {
+            move(Dir::up_right);
+        }
+        else if (input.is_ctrl_held)
+        {
+            move(Dir::down_right);
+        }
+        else
+        {
+            move(Dir::right);
+        }
+    }
+    break;
+
+    case SDLK_UP:
+    case '8':
+    case 'k':
+    {
+        move(Dir::up);
+    }
+    break;
+
+    case SDLK_LEFT:
+    case '4':
+    case 'h':
+    {
+        if (input.is_shift_held)
+        {
+            move(Dir::up_left);
+        }
+        else if (input.is_ctrl_held)
+        {
+            move(Dir::down_left);
+        }
+        else
+        {
+            move(Dir::left);
+        }
+    }
+    break;
+
+    case SDLK_DOWN:
+    case '2':
+    case 'j':
+    {
+        move(Dir::down);
+    }
+    break;
+
+    case SDLK_PAGEUP:
+    case '9':
+    case 'u':
+    {
+        move(Dir::up_right);
+    }
+    break;
+
+    case SDLK_HOME:
+    case '7':
+    case 'y':
+    {
+        move(Dir::up_left);
+    }
+    break;
+
+    case SDLK_END:
+    case '1':
+    case 'b':
+    {
+        move(Dir::down_left);
+    }
+    break;
+
+    case SDLK_PAGEDOWN:
+    case '3':
+    case 'n':
+    {
+        move(Dir::down_right);
+    }
+    break;
+
+    //
+    // Input other than direction keys is passed to the inherited marker state
+    //
+    default:
+    {
+        handle_input(input);
+    }
+    break;
     }
 }
 
-void try_move(const Dir dir)
+void MarkerState::draw_marker(const P& p,
+                              const std::vector<P>& trail,
+                              const int effective_range,
+                              const int blocked_from_idx)
+{
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
+        {
+            auto& d = marker_render_data_[x][y];
+
+            d.tile  = TileId::empty;
+            d.glyph = 0;
+        }
+    }
+
+    Clr clr = clr_green_lgt;
+
+    // Tail
+    for (size_t i = 1; i < trail.size(); ++i)
+    {
+        const P& tail_p = trail[i];
+
+        const bool is_blocked =
+            (blocked_from_idx != -1) &&
+            ((int)i >= blocked_from_idx);
+
+        // NOTE: Final color is stored for drawing the head
+        if (is_blocked)
+        {
+            clr = clr_red_lgt;
+        }
+        else if (effective_range != -1)
+        {
+            const int cheb_dist = king_dist(trail[0], tail_p);
+
+            if (cheb_dist > effective_range)
+            {
+                clr = clr_orange;
+            }
+        }
+
+        // Draw tail until (but not including) the head
+        if (i < (trail.size() - 1))
+        {
+            io::cover_cell_in_map(tail_p);
+
+            auto& d = marker_render_data_[tail_p.x][tail_p.y];
+
+            d.tile      = TileId::aim_marker_trail;
+            d.glyph     = '*';
+            d.clr       = clr;
+            d.clr_bg    = clr_black;
+
+            // If blocked, always draw a character (more distinct)
+            if (config::is_tiles_mode() && !is_blocked)
+            {
+                io::draw_tile(d.tile,
+                              Panel::map,
+                              tail_p,
+                              d.clr,
+                              d.clr_bg);
+            }
+            else // Text mode, or blocked
+            {
+                io::draw_glyph(d.glyph,
+                               Panel::map,
+                               tail_p,
+                               d.clr,
+                               true,
+                               d.clr_bg);
+            }
+        }
+    }
+
+    auto& d = marker_render_data_[p.x][p.y];
+
+    d.tile      = TileId::aim_marker_head;
+    d.glyph     = 'X';
+    d.clr       = clr;
+    d.clr_bg    = clr_black;
+
+    // Head
+    if (config::is_tiles_mode())
+    {
+        io::draw_tile(d.tile,
+                      Panel::map,
+                      p,
+                      d.clr,
+                      d.clr_bg);
+    }
+    else // Text mode
+    {
+        io::draw_glyph(d.glyph,
+                       Panel::map,
+                       p,
+                       d.clr,
+                       true,
+                       d.clr_bg);
+    }
+}
+
+void MarkerState::move(const Dir dir)
 {
     const P new_pos(pos_ + dir_utils::offset(dir));
 
     if (map::is_pos_inside_map(new_pos))
     {
         pos_ = new_pos;
+
+        on_moved();
     }
 }
 
-bool set_pos_to_tgt_if_visible()
+bool MarkerState::try_go_to_tgt()
 {
     const Actor* const tgt = map::player->tgt_;
 
@@ -77,162 +331,336 @@ bool set_pos_to_tgt_if_visible()
     return false;
 }
 
-} //namespace
-
-P run(const MarkerUsePlayerTgt use_tgt,
-      std::function<void(const P&,
-                         CellOverlay overlay[map_w][map_h])> on_marker_at_pos,
-      std::function<MarkerDone(const P&,
-                                const KeyData&)> on_key_press,
-      MarkerShowBlocked show_blocked,
-      const int effective_range_lmt)
+void MarkerState::try_go_to_closest_enemy()
 {
-    pos_ = map::player->pos;
+    std::vector<Actor*> seen_foes;
+    map::player->seen_foes(seen_foes);
 
-    if (use_tgt == MarkerUsePlayerTgt::yes)
+    std::vector<P> seen_foes_cells;
+    map::actor_cells(seen_foes, seen_foes_cells);
+
+    // If player sees enemies, suggest one for targeting
+    if (!seen_foes_cells.empty())
     {
-        //First, attempt to place marker at player target.
-        if (!set_pos_to_tgt_if_visible())
+        pos_ = closest_pos(map::player->pos, seen_foes_cells);
+
+        map::player->tgt_ = map::actor_at_pos(pos_);
+    }
+}
+
+// -----------------------------------------------------------------------------
+// View state
+// -----------------------------------------------------------------------------
+void Viewing::on_moved()
+{
+    msg_log::clear();
+    look::print_location_info_msgs(pos_);
+
+    const auto* const actor = map::actor_at_pos(pos_);
+
+    if (actor                   &&
+        actor != map::player    &&
+        map::player->can_see_actor(*actor))
+    {
+        msg_log::add("[v] for description");
+    }
+
+    msg_log::add(cancel_info_str_no_space);
+}
+
+void Viewing::handle_input(const InputData& input)
+{
+    if (input.key == 'v')
+    {
+        const auto* const actor = map::actor_at_pos(pos_);
+
+        if (actor                   &&
+            actor != map::player    &&
+            map::player->can_see_actor(*actor))
         {
-            //If no target available, attempt to place marker at closest
-            //visible monster. This sets a new player target if successful.
-            map::player->tgt_ = nullptr;
-            set_pos_to_closest_enemy_if_visible();
+            msg_log::clear();
+
+            look::print_detailed_actor_descr(*actor);
+        }
+    }
+    else if (input.key == SDLK_SPACE ||
+             input.key == SDLK_ESCAPE)
+    {
+        msg_log::clear();
+
+        states::pop();
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Aim marker state
+// -----------------------------------------------------------------------------
+void Aiming::on_moved()
+{
+    look::print_location_info_msgs(pos_);
+
+    auto* const actor = map::actor_at_pos(pos_);
+
+    if (actor               &&
+        !actor->is_player() &&
+        map::player->can_see_actor(*actor))
+    {
+        const bool gets_undead_bane_bon =
+            player_bon::gets_undead_bane_bon(actor->data());
+
+        if (!actor->has_prop(PropId::ethereal) ||
+            gets_undead_bane_bon)
+        {
+            RangedAttData data(map::player,
+                               map::player->pos,    // Origin
+                               actor->pos,          // Aim position
+                               actor->pos,          // Current position
+                               wpn_);
+
+            msg_log::add(to_str(data.hit_chance_tot) + "% hit chance.");
         }
     }
 
-    MarkerDone is_done = MarkerDone::no;
+    msg_log::add("[f] to fire" + cancel_info_str);
+}
 
-    CellOverlay overlay[map_w][map_h];
-
-    while (is_done == MarkerDone::no)
+void Aiming::handle_input(const InputData& input)
+{
+    switch (input.key)
     {
-        //Print info such as name of actor at current position, etc.
-        on_marker_at_pos(pos_, overlay);
+    case SDLK_ESCAPE:
+    case SDLK_SPACE:
+    {
+        states::pop();
+    }
+    break;
 
-        render::draw_map_state(UpdateScreen::no, overlay);
-
-        std::vector<P> trail;
-
-        const P origin(map::player->pos);
-
-        line_calc::calc_new_line(origin,
-                                 pos_,
-                                 true,
-                                 INT_MAX,
-                                 false,
-                                 trail);
-
-        int blocked_from_idx = -1;
-
-        if (show_blocked == MarkerShowBlocked::yes)
+    case 'f':
+    case SDLK_RETURN:
+    {
+        if (pos_ != map::player->pos)
         {
-            for (size_t i = 0; i < trail.size(); ++i)
+            msg_log::clear();
+
+            Actor* const actor = map::actor_at_pos(pos_);
+
+            if (actor && map::player->can_see_actor(*actor))
             {
-                const P& p(trail[i]);
+                map::player->tgt_ = actor;
+            }
 
-                const Cell& c = map::cells[p.x][p.y];
+            const P     pos = pos_;
+            Wpn* const  wpn = &wpn_;
 
-                if (c.is_seen_by_player && !c.rigid->is_projectile_passable())
+            states::pop();
+
+            // NOTE: This object is now destroyed!
+
+            attack::ranged(map::player,
+                           map::player->pos,
+                           pos,
+                           *wpn);
+        }
+    }
+    break;
+
+    default:
+        break;
+    }
+}
+
+int Aiming::effective_range() const
+{
+    return wpn_.data().ranged.effective_range;
+}
+
+// -----------------------------------------------------------------------------
+// Throw attack marker state
+// -----------------------------------------------------------------------------
+void Throwing::on_moved()
+{
+    look::print_location_info_msgs(pos_);
+
+    auto* const actor = map::actor_at_pos(pos_);
+
+    if (actor               &&
+        !actor->is_player() &&
+        map::player->can_see_actor(*actor))
+    {
+        const bool gets_undead_bane_bon =
+            player_bon::gets_undead_bane_bon(actor->data());
+
+        if (!actor->has_prop(PropId::ethereal) ||
+            gets_undead_bane_bon)
+        {
+            ThrowAttData data(map::player,
+                              actor->pos,       // Aim position
+                              actor->pos,       // Current position
+                              *item_to_throw_);
+
+            msg_log::add(to_str(data.hit_chance_tot) + "% hit chance.");
+        }
+    }
+
+    msg_log::add("[t] to throw" + cancel_info_str);
+}
+
+void Throwing::handle_input(const InputData& input)
+{
+    switch (input.key)
+    {
+    case SDLK_ESCAPE:
+    case SDLK_SPACE:
+    {
+        delete item_to_throw_;
+
+        states::pop();
+    }
+    break;
+
+    case 't':
+    case SDLK_RETURN:
+    {
+        if (pos_ != map::player->pos)
+        {
+            msg_log::clear();
+
+            Actor* const actor = map::actor_at_pos(pos_);
+
+            if (actor && map::player->can_see_actor(*actor))
+            {
+                map::player->tgt_ = actor;
+            }
+
+            const P     pos             = pos_;
+            Item* const item_to_throw   = item_to_throw_;
+
+            states::pop();
+
+            // NOTE: This object is now destroyed!
+
+            throwing::throw_item(*map::player,
+                                 pos,
+                                 *item_to_throw);
+
+            map::player->inv().decr_item_in_slot(SlotId::thrown);
+        }
+    }
+    break;
+
+    default:
+        break;
+    }
+}
+
+int Throwing::effective_range() const
+{
+    return item_to_throw_->data().ranged.effective_range;
+}
+
+// -----------------------------------------------------------------------------
+// Throw explosive marker state
+// -----------------------------------------------------------------------------
+void ThrowingExplosive::on_draw()
+{
+    const ItemId id = explosive_.id();
+
+    if (id == ItemId::dynamite ||
+        id == ItemId::molotov  ||
+        id == ItemId::smoke_grenade)
+    {
+        const int radi_d =
+            player_bon::traits[(size_t)Trait::dem_expert] ?
+            1 : 0;
+
+        const int radi = expl_std_radi + radi_d;
+
+        const R expl_area = explosion::explosion_area(pos_, radi);
+
+        Clr clr_bg = clr_red;
+
+        div_clr(clr_bg, 2.0);
+
+        // Draw explosion radius area overlay
+        for (int x = expl_area.p0.x;
+             x <= expl_area.p1.x;
+             ++x)
+        {
+            for (int y = expl_area.p0.y;
+                 y <= expl_area.p1.y;
+                 ++y)
+            {
+                const auto& render_d        = game::render_array[x][y];
+                const auto& marker_render_d = marker_render_data_[x][y];
+
+                if (render_d.glyph != 0 || marker_render_d.glyph != 0)
                 {
-                    blocked_from_idx = i;
-                    break;
+                    const bool has_marker = marker_render_d.glyph != 0;
+
+                    const auto& d =
+                        has_marker ?
+                        marker_render_d :
+                        render_d;
+
+                    const P p(x, y);
+
+                    if (config::is_tiles_mode())
+                    {
+                        io::draw_tile(d.tile,
+                                      Panel::map,
+                                      p,
+                                      d.clr,
+                                      clr_bg);
+                    }
+                    else // Text mode
+                    {
+                        io::draw_glyph(d.glyph,
+                                       Panel::map,
+                                       p,
+                                       d.clr,
+                                       true,
+                                       clr_bg);
+                    }
                 }
             }
         }
-
-        render::draw_marker(pos_,
-                            trail,
-                            effective_range_lmt,
-                            blocked_from_idx,
-                            overlay);
-
-        render::update_screen();
-
-        const KeyData& d = input::input();
-
-        if (d.sdl_key == SDLK_RIGHT || d.key == '6' || d.key == 'l')
-        {
-            if (d.is_shift_held)
-            {
-                try_move(Dir::up_right);
-            }
-            else if (d.is_ctrl_held)
-            {
-                try_move(Dir::down_right);
-            }
-            else
-            {
-                try_move(Dir::right);
-            }
-
-            continue;
-        }
-
-        if (d.sdl_key == SDLK_UP || d.key == '8' || d.key == 'k')
-        {
-            try_move(Dir::up);
-            continue;
-        }
-
-        if (d.sdl_key == SDLK_LEFT || d.key == '4' || d.key == 'h')
-        {
-            if (d.is_shift_held)
-            {
-                try_move(Dir::up_left);
-            }
-            else if (d.is_ctrl_held)
-            {
-                try_move(Dir::down_left);
-            }
-            else
-            {
-                try_move(Dir::left);
-            }
-
-            continue;
-        }
-
-        if (d.sdl_key == SDLK_DOWN || d.key == '2' || d.key == 'j')
-        {
-            try_move(Dir::down);
-            continue;
-        }
-
-        if (d.sdl_key == SDLK_PAGEUP || d.key == '9' || d.key == 'u')
-        {
-            try_move(Dir::up_right);
-            continue;
-        }
-
-        if (d.sdl_key == SDLK_HOME || d.key == '7' || d.key == 'y')
-        {
-            try_move(Dir::up_left);
-            continue;
-        }
-
-        if (d.sdl_key == SDLK_END || d.key == '1' || d.key == 'b')
-        {
-            try_move(Dir::down_left);
-            continue;
-        }
-
-        if (d.sdl_key == SDLK_PAGEDOWN || d.key == '3' || d.key == 'n')
-        {
-            try_move(Dir::down_right);
-            continue;
-        }
-
-        //Run custom keypress events (firing ranged weapon, casting spell, etc)
-        is_done = on_key_press(pos_, d);
-
-        if (is_done == MarkerDone::yes)
-        {
-            render::draw_map_state();
-        }
     }
-
-    return pos_;
 }
 
-} //marker
+void ThrowingExplosive::on_moved()
+{
+    look::print_location_info_msgs(pos_);
+
+    msg_log::add("[t] to throw" + cancel_info_str);
+}
+
+void ThrowingExplosive::handle_input(const InputData& input)
+{
+    switch (input.key)
+    {
+    case SDLK_ESCAPE:
+    case SDLK_SPACE:
+    {
+        states::pop();
+    }
+    break;
+
+    case 't':
+    case SDLK_RETURN:
+    {
+        msg_log::clear();
+
+        const P pos = pos_;
+
+        states::pop();
+
+        // NOTE: This object is now destroyed!
+
+        throwing::player_throw_lit_explosive(pos);
+    }
+    break;
+
+    default:
+        break;
+    }
+}

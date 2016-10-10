@@ -3,8 +3,7 @@
 #include <iostream>
 
 #include "config.hpp"
-#include "input.hpp"
-#include "render.hpp"
+#include "io.hpp"
 
 namespace query
 {
@@ -14,7 +13,7 @@ namespace
 
 bool is_inited_ = false;
 
-} //namespace
+} // namespace
 
 void init()
 {
@@ -25,7 +24,9 @@ void wait_for_key_press()
 {
     if (is_inited_ && !config::is_bot_playing())
     {
-        input::input();
+        io::update_screen();
+
+        io::get();
     }
 }
 
@@ -36,19 +37,21 @@ YesNoAnswer yes_or_no(char key_for_special_event)
         return YesNoAnswer::yes;
     }
 
-    KeyData d = input::input();
+    io::update_screen();
 
-    while (
-        d.key    != 'y'             &&
-        d.key    != 'n'             &&
-        d.sdl_key != SDLK_ESCAPE    &&
-        d.sdl_key != SDLK_SPACE     &&
-        (d.key != key_for_special_event || key_for_special_event == -1))
+    auto d = io::get();
+
+    while (d.key    != 'y'      &&
+           d.key    != 'n'      &&
+           d.key != SDLK_ESCAPE &&
+           d.key != SDLK_SPACE  &&
+           (d.key != key_for_special_event || key_for_special_event == -1))
     {
-        d = input::input();
+        d = io::get();
     }
 
-    if (d.key == key_for_special_event && key_for_special_event != -1)
+    if (d.key == key_for_special_event &&
+        key_for_special_event != -1)
     {
         return YesNoAnswer::special;
     }
@@ -61,21 +64,22 @@ YesNoAnswer yes_or_no(char key_for_special_event)
     return YesNoAnswer::no;
 }
 
-KeyData letter(const bool accept_enter)
+InputData letter(const bool accept_enter)
 {
     if (!is_inited_ || config::is_bot_playing())
     {
         return 'a';
     }
 
+    io::update_screen();
+
     while (true)
     {
-        KeyData d = input::input();
+        const auto d = io::get();
 
-        if (
-            (accept_enter && d.sdl_key == SDLK_RETURN) ||
-            d.sdl_key == SDLK_ESCAPE ||
-            d.sdl_key == SDLK_SPACE  ||
+        if ((accept_enter && d.key == SDLK_RETURN) ||
+            d.key == SDLK_ESCAPE ||
+            d.key == SDLK_SPACE  ||
             (d.key >= 'a' && d.key <= 'z') ||
             (d.key >= 'A' && d.key <= 'Z'))
         {
@@ -83,7 +87,7 @@ KeyData letter(const bool accept_enter)
         }
     }
 
-    return KeyData();
+    return InputData();
 }
 
 int number(const P& pos,
@@ -100,36 +104,35 @@ int number(const P& pos,
 
     int ret_num = std::max(min, default_value);
 
-    render::cover_area(Panel::screen,
+    io::cover_area(Panel::screen,
                        pos,
                        P(max_nr_digits + 1, 1));
 
     const std::string str = (ret_num == 0 ? "" : to_str(ret_num)) + "_";
 
-    render::draw_text(str, Panel::screen, pos, clr);
+    io::draw_text(str, Panel::screen, pos, clr);
 
-    render::update_screen();
+    io::update_screen();
 
     while (true)
     {
-        KeyData d;
+        InputData d;
 
-        while (
-            (d.key < '0' || d.key > '9')    &&
-            d.sdl_key != SDLK_RETURN        &&
-            d.sdl_key != SDLK_SPACE         &&
-            d.sdl_key != SDLK_ESCAPE        &&
-            d.sdl_key != SDLK_BACKSPACE)
+        while ((d.key < '0' || d.key > '9') &&
+               d.key != SDLK_RETURN         &&
+               d.key != SDLK_SPACE          &&
+               d.key != SDLK_ESCAPE         &&
+               d.key != SDLK_BACKSPACE)
         {
-            d = input::input();
+            d = io::get();
         }
 
-        if (d.sdl_key == SDLK_RETURN)
+        if (d.key == SDLK_RETURN)
         {
             return std::max(min, ret_num);
         }
 
-        if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)
+        if (d.key == SDLK_SPACE || d.key == SDLK_ESCAPE)
         {
             return cancel_returns_default ? default_value : -1;
         }
@@ -138,20 +141,20 @@ int number(const P& pos,
 
         const int current_num_digits = ret_num_str.size();
 
-        if (d.sdl_key == SDLK_BACKSPACE)
+        if (d.key == SDLK_BACKSPACE)
         {
             ret_num = ret_num / 10;
 
-            render::cover_area(Panel::screen,
+            io::cover_area(Panel::screen,
                                pos,
                                P(max_nr_digits + 1, 1));
 
-            render::draw_text((ret_num == 0 ? "" : to_str(ret_num)) + "_",
+            io::draw_text((ret_num == 0 ? "" : to_str(ret_num)) + "_",
                               Panel::screen,
                               pos,
                               clr);
 
-            render::update_screen();
+            io::update_screen();
             continue;
         }
 
@@ -161,16 +164,16 @@ int number(const P& pos,
 
             ret_num = std::max(min, ret_num * 10 + current_digit);
 
-            render::cover_area(Panel::screen,
+            io::cover_area(Panel::screen,
                                pos,
                                P(max_nr_digits + 1, 1));
 
-            render::draw_text((ret_num == 0 ? "" : to_str(ret_num)) + "_",
+            io::draw_text((ret_num == 0 ? "" : to_str(ret_num)) + "_",
                               Panel::screen,
                               pos,
                               clr);
 
-            render::update_screen();
+            io::update_screen();
         }
     }
 
@@ -184,22 +187,23 @@ void wait_for_msg_more()
         return;
     }
 
-    //Determine criteria for confirming more prompt (decided by config)
+    io::update_screen();
+
+    // Determine criteria for confirming more prompt (decided by config)
     if (config::is_any_key_confirm_more())
     {
         wait_for_key_press();
     }
-    else //Only some keys confirm more prompts
+    else // Only some keys confirm more prompts
     {
         while (true)
         {
-            const KeyData d = input::input();
+            const auto d = io::get();
 
-            if (
-                d.sdl_key == SDLK_SPACE     ||
-                d.sdl_key == SDLK_ESCAPE    ||
-                d.sdl_key == SDLK_RETURN    ||
-                d.sdl_key == SDLK_TAB)
+            if (d.key == SDLK_SPACE     ||
+                d.key == SDLK_ESCAPE    ||
+                d.key == SDLK_RETURN    ||
+                d.key == SDLK_TAB)
             {
                 break;
             }
@@ -214,14 +218,15 @@ void wait_for_confirm()
         return;
     }
 
+    io::update_screen();
+
     while (true)
     {
-        const KeyData d = input::input();
+        const auto d = io::get();
 
-        if (
-            d.sdl_key == SDLK_SPACE     ||
-            d.sdl_key == SDLK_ESCAPE    ||
-            d.sdl_key == SDLK_RETURN)
+        if (d.key == SDLK_SPACE     ||
+            d.key == SDLK_ESCAPE    ||
+            d.key == SDLK_RETURN)
         {
             break;
         }
@@ -235,16 +240,18 @@ Dir dir(const AllowCenter allow_center)
         return Dir::END;
     }
 
+    io::update_screen();
+
     while (true)
     {
-        const KeyData d = input::input();
+        const auto d = io::get();
 
-        if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)
+        if (d.key == SDLK_SPACE || d.key == SDLK_ESCAPE)
         {
             return Dir::END;
         }
 
-        if (d.sdl_key == SDLK_RIGHT || d.key == '6' || d.key == 'l')
+        if (d.key == SDLK_RIGHT || d.key == '6' || d.key == 'l')
         {
             if (d.is_shift_held)
             {
@@ -260,22 +267,22 @@ Dir dir(const AllowCenter allow_center)
             }
         }
 
-        if (d.sdl_key == SDLK_PAGEUP || d.key == '9' || d.key == 'u')
+        if (d.key == SDLK_PAGEUP || d.key == '9' || d.key == 'u')
         {
             return Dir::up_right;
         }
 
-        if (d.sdl_key == SDLK_UP || d.key == '8' || d.key == 'k')
+        if (d.key == SDLK_UP || d.key == '8' || d.key == 'k')
         {
             return Dir::up;
         }
 
-        if (d.sdl_key == SDLK_END || d.key == '7' || d.key == 'y')
+        if (d.key == SDLK_END || d.key == '7' || d.key == 'y')
         {
             return Dir::up_left;
         }
 
-        if (d.sdl_key == SDLK_LEFT || d.key == '4' || d.key == 'h')
+        if (d.key == SDLK_LEFT || d.key == '4' || d.key == 'h')
         {
             if (d.is_shift_held)
             {
@@ -291,17 +298,17 @@ Dir dir(const AllowCenter allow_center)
             }
         }
 
-        if (d.sdl_key == SDLK_END || d.key == '1' || d.key == 'b')
+        if (d.key == SDLK_END || d.key == '1' || d.key == 'b')
         {
             return Dir::down_left;
         }
 
-        if (d.sdl_key == SDLK_DOWN || d.key == '2' || d.key == 'j')
+        if (d.key == SDLK_DOWN || d.key == '2' || d.key == 'j')
         {
             return Dir::down;
         }
 
-        if (d.sdl_key == SDLK_PAGEDOWN || d.key == '3' || d.key == 'n')
+        if (d.key == SDLK_PAGEDOWN || d.key == '3' || d.key == 'n')
         {
             return Dir::down_right;
         }
@@ -312,8 +319,8 @@ Dir dir(const AllowCenter allow_center)
         }
     }
 
-    //Unreachable
+    // Unreachable
     return Dir::END;
 }
 
-} //query
+} // query

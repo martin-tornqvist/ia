@@ -8,8 +8,7 @@
 #include "properties.hpp"
 #include "msg_log.hpp"
 #include "explosion.hpp"
-#include "render.hpp"
-#include "input.hpp"
+#include "io.hpp"
 #include "query.hpp"
 #include "item_factory.hpp"
 #include "feature_mob.hpp"
@@ -17,7 +16,7 @@
 #include "item_data.hpp"
 #include "saving.hpp"
 #include "actor_factory.hpp"
-#include "dungeon_master.hpp"
+#include "game.hpp"
 
 //---------------------------------------------------------- ITEM
 Item::Item(ItemDataT* item_data) :
@@ -418,7 +417,7 @@ void Item::clear_carrier_spells()
 
 void Item::give_xp_for_identify(const Verbosity verbosity)
 {
-    dungeon_master::incr_player_xp(data_->xp_on_identify,
+    game::incr_player_xp(data_->xp_on_identify,
                                    verbosity);
 }
 
@@ -542,8 +541,6 @@ void ArmorMiGo::on_equip_hook(const Verbosity verbosity)
 {
     if (verbosity == Verbosity::verbose)
     {
-        render::draw_map_state();
-
         msg_log::add("The armor joins with my skin!",
                      clr_text,
                      false,
@@ -555,8 +552,6 @@ void ArmorMiGo::on_equip_hook(const Verbosity verbosity)
 
 UnequipAllowed ArmorMiGo::on_unequip_hook()
 {
-    render::draw_map_state();
-
     msg_log::add("I attempt to tear off the armor, it rips my skin!",
                  clr_msg_bad,
                  false,
@@ -1078,7 +1073,7 @@ void MedicalBag::finish_current_action()
     {
         map::player->inv().remove_item_in_backpack_with_ptr(this, true);
 
-        dungeon_master::add_history_event("Ran out of medical supplies.");
+        game::add_history_event("Ran out of medical supplies.");
     }
 }
 
@@ -1091,8 +1086,6 @@ void MedicalBag::interrupted()
     nr_turns_left_action_ = -1;
 
     map::player->active_medical_bag = nullptr;
-
-    render::draw_map_state();
 }
 
 int MedicalBag::tot_suppl_for_action(const MedBagAction action) const
@@ -1228,12 +1221,11 @@ ConsumeItem Explosive::activate(Actor* const actor)
     {
         const std::string name = this->name(ItemRefType::a);
 
-        render::draw_map_state();
-
         msg_log::add("Light " + name + " [y/n]?");
-        msg_log::draw(UpdateScreen::yes);
 
-        if (query::yes_or_no() == YesNoAnswer::no)
+        auto result = query::yes_or_no();
+
+        if (result == YesNoAnswer::no)
         {
             msg_log::clear();
 
@@ -1243,13 +1235,11 @@ ConsumeItem Explosive::activate(Actor* const actor)
         msg_log::clear();
     }
 
-    //Make a copy to use as the held ignited explosive.
+    // Make a copy to use as the held ignited explosive.
     auto* cpy = static_cast<Explosive*>(item_factory::mk(data().id, 1));
 
     cpy->fuse_turns_               = std_fuse_turns();
     map::player->active_explosive  = cpy;
-
-    map::player->update_clr();
 
     cpy->on_player_ignite();
 
@@ -1268,8 +1258,6 @@ void Dynamite::on_player_ignite() const
     const std::string swift_str = (pass_time == PassTime::no) ? "swiftly " : "";
 
     msg_log::add("I " + swift_str + "light a dynamite stick.");
-
-    render::draw_map_state();
 
     game_time::tick(pass_time);
 }
@@ -1299,8 +1287,6 @@ void Dynamite::on_std_turn_player_hold_ignited()
 
         explosion::run(map::player->pos, ExplType::expl);
 
-        map::player->update_clr();
-
         fuse_turns_ = -1;
 
         delete this;
@@ -1317,8 +1303,6 @@ void Dynamite::on_player_paralyzed()
     msg_log::add("The lit Dynamite stick falls from my hand!");
 
     map::player->active_explosive = nullptr;
-
-    map::player->update_clr();
 
     const P& p = map::player->pos;
 
@@ -1345,8 +1329,6 @@ void Molotov::on_player_ignite() const
 
     msg_log::add("I " + swift_str + "light a Molotov Cocktail.");
 
-    render::draw_map_state();
-
     game_time::tick(pass_time);
 }
 
@@ -1359,8 +1341,6 @@ void Molotov::on_std_turn_player_hold_ignited()
         msg_log::add("The Molotov Cocktail explodes in my hand!");
 
         map::player->active_explosive = nullptr;
-
-        map::player->update_clr();
 
         const P player_pos = map::player->pos;
 
@@ -1411,8 +1391,8 @@ void Molotov::on_thrown_ignited_landing(const P& p)
 void Molotov::on_player_paralyzed()
 {
     msg_log::add("The lit Molotov Cocktail falls from my hand!");
+
     map::player->active_explosive = nullptr;
-    map::player->update_clr();
 
     const P player_pos = map::player->pos;
 
@@ -1449,12 +1429,6 @@ void Flare::on_player_ignite() const
 
     msg_log::add("I " + swift_str + "light a Flare.");
 
-    game_time::update_light_map();
-
-    map::player->update_fov();
-
-    render::draw_map_state();
-
     game_time::tick(pass_time);
 }
 
@@ -1465,8 +1439,9 @@ void Flare::on_std_turn_player_hold_ignited()
     if (fuse_turns_ <= 0)
     {
         msg_log::add("The flare is extinguished.");
+
         map::player->active_explosive = nullptr;
-        map::player->update_clr();
+
         delete this;
     }
 }
@@ -1474,12 +1449,6 @@ void Flare::on_std_turn_player_hold_ignited()
 void Flare::on_thrown_ignited_landing(const P& p)
 {
     game_time::add_mob(new LitFlare(p, fuse_turns_));
-
-    game_time::update_light_map();
-
-    map::player->update_fov();
-
-    render::draw_map_state();
 }
 
 void Flare::on_player_paralyzed()
@@ -1487,8 +1456,6 @@ void Flare::on_player_paralyzed()
     msg_log::add("The lit Flare falls from my hand!");
 
     map::player->active_explosive = nullptr;
-
-    map::player->update_clr();
 
     const P&    p   = map::player->pos;
     auto* const f   = map::cells[p.x][p.y].rigid;
@@ -1498,9 +1465,6 @@ void Flare::on_player_paralyzed()
         game_time::add_mob(new LitFlare(p, fuse_turns_));
     }
 
-    game_time::update_light_map();
-    map::player->update_fov();
-    render::draw_map_state();
     delete this;
 }
 
@@ -1516,8 +1480,6 @@ void SmokeGrenade::on_player_ignite() const
     const std::string swift_str = (pass_time == PassTime::no) ? "swiftly " : "";
 
     msg_log::add("I " + swift_str + "ignite a smoke grenade.");
-
-    render::draw_map_state();
 
     game_time::tick(pass_time);
 }
@@ -1539,8 +1501,6 @@ void SmokeGrenade::on_std_turn_player_hold_ignited()
 
         map::player->active_explosive = nullptr;
 
-        map::player->update_clr();
-
         delete this;
     }
 }
@@ -1550,10 +1510,6 @@ void SmokeGrenade::on_thrown_ignited_landing(const P& p)
     const int d = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
 
     explosion::run_smoke_explosion_at(p, d);
-
-    map::player->update_fov();
-
-    render::draw_map_state();
 }
 
 void SmokeGrenade::on_player_paralyzed()
@@ -1562,8 +1518,6 @@ void SmokeGrenade::on_player_paralyzed()
 
     map::player->active_explosive = nullptr;
 
-    map::player->update_clr();
-
     const P&    p   = map::player->pos;
     auto* const f   = map::cells[p.x][p.y].rigid;
 
@@ -1571,10 +1525,6 @@ void SmokeGrenade::on_player_paralyzed()
     {
         explosion::run_smoke_explosion_at(map::player->pos);
     }
-
-    map::player->update_fov();
-
-    render::draw_map_state();
 
     delete this;
 }

@@ -1,4 +1,4 @@
-#include "sdl_wrapper.hpp"
+#include "sdl_base.hpp"
 
 #include <iostream>
 
@@ -9,7 +9,7 @@
 #include "config.hpp"
 #include "game_time.hpp"
 
-namespace sdl_wrapper
+namespace sdl_base
 {
 
 namespace
@@ -61,9 +61,13 @@ void init()
 void cleanup()
 {
     is_inited = false;
+
     IMG_Quit();
+
     Mix_AllocateChannels(0);
+
     Mix_CloseAudio();
+
     SDL_Quit();
 }
 
@@ -77,9 +81,9 @@ void sleep(const Uint32 duration)
         }
         else //Duration longer than 1 ms
         {
-            const Uint32 WAIT_UNTIL = SDL_GetTicks() + duration;
+            const Uint32 wait_until = SDL_GetTicks() + duration;
 
-            while (SDL_GetTicks() < WAIT_UNTIL)
+            while (SDL_GetTicks() < wait_until)
             {
                 SDL_PumpEvents();
             }
@@ -87,9 +91,4 @@ void sleep(const Uint32 duration)
     }
 }
 
-void flush_input()
-{
-    SDL_PumpEvents();
-}
-
-} //sdl_wrapper
+} // sdl_base

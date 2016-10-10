@@ -10,11 +10,11 @@
 #include "map.hpp"
 #include "inventory.hpp"
 #include "item_factory.hpp"
-#include "dungeon_master.hpp"
+#include "game.hpp"
 #include "player_bon.hpp"
 #include "game_time.hpp"
 #include "audio.hpp"
-#include "render.hpp"
+#include "io.hpp"
 
 namespace reload
 {
@@ -52,10 +52,12 @@ void msg_reloaded(const Actor& actor,
 
         if (ammo.data().type == ItemType::ammo_mag)
         {
-            const std::string wpn_name = wpn.name(ItemRefType::plain, ItemRefInf::none);
+            const std::string wpn_name =
+                wpn.name(ItemRefType::plain, ItemRefInf::none);
 
             msg_log::add("I" + swift_str + " reload my " + wpn_name +
-                         " (" + to_str(wpn.nr_ammo_loaded_) + "/" +
+                         " (" + to_str(wpn.nr_ammo_loaded_) +
+                         "/" +
                          to_str(wpn.data().ranged.max_ammo) + ").");
         }
         else //Not a mag
@@ -63,11 +65,10 @@ void msg_reloaded(const Actor& actor,
             const std::string ammo_name = ammo.name(ItemRefType::a);
 
             msg_log::add("I" + swift_str + " load " + ammo_name +
-                         " (" + to_str(wpn.nr_ammo_loaded_) + "/" +
+                         " (" + to_str(wpn.nr_ammo_loaded_) +
+                         "/" +
                          to_str(wpn.data().ranged.max_ammo) + ").");
         }
-
-        render::draw_map_state();
     }
     else //Is monster
     {

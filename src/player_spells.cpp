@@ -7,8 +7,8 @@
 #include "item_scroll.hpp"
 #include "actor_player.hpp"
 #include "msg_log.hpp"
-#include "menu_input.hpp"
-#include "render.hpp"
+#include "browser.hpp"
+#include "io.hpp"
 #include "inventory.hpp"
 #include "item_factory.hpp"
 #include "player_bon.hpp"
@@ -22,205 +22,18 @@ namespace player_spells
 namespace
 {
 
-enum class SpellSrc
-{
-    learned,
-    item
-};
-
-struct SpellOpt
-{
-    SpellOpt() :
-        spell       (nullptr),
-        src         ((SpellSrc)0),
-        src_item    (nullptr) {}
-
-    SpellOpt(Spell* spell, SpellSrc src, Item* src_item) :
-        spell       (spell),
-        src         (src),
-        src_item    (src_item) {}
-
-    Spell* spell;
-    SpellSrc src;
-    Item* src_item;
-};
-
 std::vector<Spell*> learned_spells_;
 
-//Spell skill levels
+// Spell skill levels
 int spell_skill_pct_[(size_t)SpellId::END];
 
-void draw(MenuBrowser& browser,
-          const std::vector<SpellOpt>& spell_opts)
+std::vector<SpellOpt> spells_avail()
 {
-    const int nr_spells = spell_opts.size();
-
-    render::clear_screen();
-
-    render::draw_text_center("Invoke which power?",
-                             Panel::screen,
-                             P(screen_w / 2, 0),
-                             clr_title);
-
-    P p(0, 1);
-
-    std::string key_str = "a) ";
-
-    for (int i = 0; i < nr_spells; ++i)
-    {
-        const int       current_idx     = i;
-        const bool      is_idx_marked   = browser.is_at_idx(current_idx);
-        SpellOpt        spell_opt       = spell_opts[i];
-        Spell* const    spell           = spell_opt.spell;
-        std::string     name            = spell->name();
-        const int       spi_label_x     = 26;
-        const int       skill_label_x   = spi_label_x + 11;
-
-        p.x = 0;
-
-        const Clr clr = is_idx_marked ? clr_menu_highlight : clr_menu_drk;
-
-        render::draw_text(key_str, Panel::screen, p, clr);
-
-        ++key_str[0];
-
-        p.x = key_str.size();
-
-        render::draw_text(name, Panel::screen, p, clr);
-
-        std::string fill_str = "";
-
-        const size_t fill_size = spi_label_x - p.x - name.size();
-
-        for (size_t ii = 0; ii < fill_size; ++ii)
-        {
-            fill_str.push_back('.');
-        }
-
-        Clr fill_clr = clr_gray;
-
-        fill_clr.r /= 3;
-        fill_clr.g /= 3;
-        fill_clr.b /= 3;
-
-        render::draw_text(fill_str,
-                          Panel::screen,
-                          P(p.x + name.size(), p.y),
-                          fill_clr);
-
-        p.x = spi_label_x;
-
-        std::string str = "SP: ";
-
-        render::draw_text(str,
-                          Panel::screen,
-                          p,
-                          clr_gray_drk);
-
-        p.x += str.size();
-
-        //Casting from items always casts at base cost
-        const bool is_base_cost_only = spell_opt.src == SpellSrc::item;
-
-        const Range spi_cost = spell->spi_cost(is_base_cost_only, map::player);
-
-        const std::string lower_str = to_str(spi_cost.min);
-        const std::string upper_str = to_str(spi_cost.max);
-
-        str = spi_cost.max == 1 ? "1" : (lower_str +  "-" + upper_str);
-
-        render::draw_text(str,
-                          Panel::screen,
-                          p,
-                          clr_white);
-
-        const SpellId   id          = spell->id();
-        const int       skill_pct   = spell_skill_pct_[(size_t)id];
-
-        //Draw skill level if learned
-        if (spell_opt.src == SpellSrc::learned)
-        {
-            p.x = skill_label_x;
-
-            str = "Skill: ";
-
-            render::draw_text(str,
-                              Panel::screen,
-                              p,
-                              clr_gray_drk);
-
-            str = to_str(skill_pct) + "%";
-
-            p.x = descr_x0 - 1 - str.size();
-
-            render::draw_text(str,
-                              Panel::screen,
-                              p,
-                              clr_white);
-        }
-
-        if (is_idx_marked)
-        {
-            const auto descr = spell->descr();
-            std::vector<StrAndClr> lines;
-
-            if (!descr.empty())
-            {
-                for (const auto& line : descr)
-                {
-                    lines.push_back(StrAndClr(line, clr_white_high));
-                }
-            }
-
-            switch (spell_opt.src)
-            {
-            //If spell source is "learned", add info about spell skills
-            case SpellSrc::learned:
-            {
-                lines.push_back(StrAndClr("Higher skill levels reduces the number of Spirit Points "
-                                          "required to cast the spell.",
-                                          clr_white_high));
-
-                if (skill_pct < 100)
-                {
-                    lines.push_back(StrAndClr("Skill level can be increased by casting from "
-                                              "Manuscripts.",
-                                              clr_white_high));
-                }
-            }
-            break;
-
-            //If spell source is an item, add info about this
-            case SpellSrc::item:
-            {
-                const std::string item_name =
-                    spell_opt.src_item->name(ItemRefType::plain, ItemRefInf::none);
-
-                lines.push_back(StrAndClr("Spell granted by " + item_name + ".",
-                                          clr_green));
-            }
-            break;
-            }
-
-            if (!lines.empty())
-            {
-                render::draw_descr_box(lines);
-            }
-        }
-
-        ++p.y;
-    }
-
-    render::update_screen();
-}
-
-void spells_avail(std::vector<SpellOpt>& out)
-{
-    out.clear();
+    std::vector<SpellOpt> ret;
 
     for (Spell* const spell : learned_spells_)
     {
-        out.push_back(SpellOpt(spell,
+        ret.push_back(SpellOpt(spell,
                                SpellSrc::learned,
                                nullptr));
     }
@@ -237,7 +50,7 @@ void spells_avail(std::vector<SpellOpt>& out)
 
             for (Spell* spell : carrier_spells)
             {
-                out.push_back(SpellOpt(spell,
+                ret.push_back(SpellOpt(spell,
                                        SpellSrc::item,
                                        item));
             }
@@ -250,11 +63,13 @@ void spells_avail(std::vector<SpellOpt>& out)
 
         for (Spell* spell : carrier_spells)
         {
-            out.push_back(SpellOpt(spell,
+            ret.push_back(SpellOpt(spell,
                                    SpellSrc::item,
                                    item));
         }
     }
+
+    return ret;
 }
 
 void try_cast(const SpellOpt& spell_opt)
@@ -273,26 +88,24 @@ void try_cast(const SpellOpt& spell_opt)
     if (allow_cast)
     {
         msg_log::clear();
-        render::draw_map_state();
 
         Spell* const spell = spell_opt.spell;
 
-        //Casting from items always casts at base cost
+        // Casting from items always casts at base cost
         const bool is_base_cost_only = spell_opt.src == SpellSrc::item;
 
-        const Range spi_cost_range = spell->spi_cost(is_base_cost_only, map::player);
+        const Range spi_cost_range =
+            spell->spi_cost(is_base_cost_only, map::player);
 
         if (spi_cost_range.max >= map::player->spi())
         {
             msg_log::add("Cast spell and risk depleting your spirit [y/n]?",
                          clr_white_high);
 
-            render::draw_map_state();
-
             if (query::yes_or_no() == YesNoAnswer::no)
             {
                 msg_log::clear();
-                render::draw_map_state();
+
                 return;
             }
 
@@ -317,7 +130,7 @@ void try_cast(const SpellOpt& spell_opt)
     }
 }
 
-} //namespace
+} // namespace
 
 void init()
 {
@@ -371,50 +184,6 @@ void load()
     }
 }
 
-void player_select_spell_to_cast()
-{
-    std::vector<SpellOpt> spell_opts;
-    spells_avail(spell_opts);
-
-    if (spell_opts.empty())
-    {
-        msg_log::add("I do not know any spells to invoke.");
-    }
-    else //Has spells
-    {
-        MenuBrowser browser(spell_opts.size());
-
-        render::draw_map_state();
-
-        draw(browser, spell_opts);
-
-        while (true)
-        {
-            const MenuAction action = menu_input::action(browser);
-
-            switch (action)
-            {
-            case MenuAction::moved:
-                draw(browser, spell_opts);
-                break;
-
-            case MenuAction::esc:
-            case MenuAction::space:
-                msg_log::clear();
-                render::draw_map_state();
-                return;
-
-            case MenuAction::selected:
-                try_cast(spell_opts[browser.y()]);
-                return;
-
-            default:
-                break;
-            }
-        }
-    }
-}
-
 bool is_spell_learned(const SpellId id)
 {
     for (auto* s : learned_spells_)
@@ -446,7 +215,7 @@ void learn_spell(const SpellId id, const Verbosity verbosity)
 
     ASSERT(!is_learned_before);
 
-    //Robustness for release mode
+    // Robustness for release mode
     if (is_learned_before)
     {
         delete spell;
@@ -483,11 +252,11 @@ void incr_spell_skill(const SpellId id, const Verbosity verbosity)
 
     v = std::min(100, v + incr);
 
-    if (
-        v > skill_before &&
+    if (v > skill_before &&
         verbosity == Verbosity::verbose)
     {
-        msg_log::add("I am now more proficient at casting this spell (" + to_str(v) + "%).");
+        msg_log::add("I am now more proficient at casting this spell (" +
+                     to_str(v) + "%).");
     }
 }
 
@@ -501,4 +270,242 @@ void set_spell_skill_pct(const SpellId id, const int val)
     spell_skill_pct_[(size_t)id] = val;
 }
 
-} //player_spells
+} // player_spells
+
+// -----------------------------------------------------------------------------
+// BrowseSpell
+// -----------------------------------------------------------------------------
+void BrowseSpell::on_start()
+{
+    spell_opts_ = player_spells::spells_avail();
+
+    browser_.reset(spell_opts_.size());
+}
+
+void BrowseSpell::draw()
+{
+    const int nr_spells = spell_opts_.size();
+
+    io::clear_screen();
+
+    io::draw_text_center("Invoke which power?",
+                         Panel::screen,
+                         P(screen_w / 2, 0),
+                         clr_title);
+
+    P p(0, 1);
+
+    std::string key_str = "a) ";
+
+    for (int i = 0; i < nr_spells; ++i)
+    {
+        const int       current_idx     = i;
+        const bool      is_idx_marked   = browser_.is_at_idx(current_idx);
+        SpellOpt        spell_opt       = spell_opts_[i];
+        Spell* const    spell           = spell_opt.spell;
+        std::string     name            = spell->name();
+        const int       spi_label_x     = 26;
+        const int       skill_label_x   = spi_label_x + 11;
+
+        p.x = 0;
+
+        const Clr clr =
+            is_idx_marked ?
+            clr_menu_highlight :
+            clr_menu_drk;
+
+        io::draw_text(key_str,
+                      Panel::screen,
+                      p,
+                      clr);
+
+        ++key_str[0];
+
+        p.x = key_str.size();
+
+        io::draw_text(name,
+                      Panel::screen,
+                      p,
+                      clr);
+
+        std::string fill_str = "";
+
+        const size_t fill_size = spi_label_x - p.x - name.size();
+
+        for (size_t ii = 0; ii < fill_size; ++ii)
+        {
+            fill_str.push_back('.');
+        }
+
+        Clr fill_clr = clr_gray;
+
+        fill_clr.r /= 3;
+        fill_clr.g /= 3;
+        fill_clr.b /= 3;
+
+        io::draw_text(fill_str,
+                      Panel::screen,
+                      P(p.x + name.size(), p.y),
+                      fill_clr);
+
+        p.x = spi_label_x;
+
+        std::string str = "SP: ";
+
+        io::draw_text(str,
+                          Panel::screen,
+                          p,
+                          clr_gray_drk);
+
+        p.x += str.size();
+
+        // Casting from items always casts at base cost
+        const bool is_base_cost_only = spell_opt.src == SpellSrc::item;
+
+        const Range spi_cost = spell->spi_cost(is_base_cost_only,
+                                               map::player);
+
+        const std::string lower_str = to_str(spi_cost.min);
+        const std::string upper_str = to_str(spi_cost.max);
+
+        str = spi_cost.max == 1 ? "1" : (lower_str +  "-" + upper_str);
+
+        io::draw_text(str,
+                          Panel::screen,
+                          p,
+                          clr_white);
+
+        const SpellId id = spell->id();
+
+        const int skill_pct =
+            player_spells::spell_skill_pct_[(size_t)id];
+
+        // Draw skill level if learned
+        if (spell_opt.src == SpellSrc::learned)
+        {
+            p.x = skill_label_x;
+
+            str = "Skill: ";
+
+            io::draw_text(str,
+                              Panel::screen,
+                              p,
+                              clr_gray_drk);
+
+            str = to_str(skill_pct) + "%";
+
+            p.x = descr_x0 - 1 - str.size();
+
+            io::draw_text(str,
+                              Panel::screen,
+                              p,
+                              clr_white);
+        }
+
+        if (is_idx_marked)
+        {
+            const auto descr = spell->descr();
+            std::vector<StrAndClr> lines;
+
+            if (!descr.empty())
+            {
+                for (const auto& line : descr)
+                {
+                    lines.push_back(StrAndClr(line, clr_white_high));
+                }
+            }
+
+            switch (spell_opt.src)
+            {
+            // If spell source is "learned", add info about spell skills
+            case SpellSrc::learned:
+            {
+                lines.push_back(
+                    StrAndClr("Higher skill levels reduces the number of "
+                              "Spirit Points required to cast the spell.",
+                              clr_white_high));
+
+                if (skill_pct < 100)
+                {
+                    lines.push_back(
+                        StrAndClr("Skill level can be increased by casting "
+                                  "from Manuscripts.",
+                                  clr_white_high));
+                }
+            }
+            break;
+
+            // If spell source is an item, add info about this
+            case SpellSrc::item:
+            {
+                const std::string item_name =
+                    spell_opt.src_item->name(ItemRefType::plain,
+                                             ItemRefInf::none);
+
+                lines.push_back(StrAndClr("Spell granted by " + item_name + ".",
+                                          clr_green));
+            }
+            break;
+            }
+
+            if (!lines.empty())
+            {
+                io::draw_descr_box(lines);
+            }
+        }
+
+        ++p.y;
+    }
+}
+
+void BrowseSpell::update()
+{
+    if (spell_opts_.empty())
+    {
+        msg_log::add("I do not know any spells to invoke.");
+
+        //
+        // Exit screen
+        //
+        states::pop();
+        return;
+    }
+
+    auto input = io::get();
+
+    const MenuAction action =
+        browser_.read(input,
+                      MenuInputMode::scrolling_and_letters);
+
+    switch (action)
+    {
+    case MenuAction::selected:
+    {
+        const auto spell_opt = spell_opts_[browser_.y()];
+
+        //
+        // Exit screen
+        //
+        states::pop();
+
+        player_spells::try_cast(spell_opt);
+
+        return;
+    }
+    break;
+
+    case MenuAction::esc:
+    case MenuAction::space:
+    {
+        //
+        // Exit screen
+        //
+        states::pop();
+        return;
+    }
+    break;
+
+    default:
+        break;
+    }
+}

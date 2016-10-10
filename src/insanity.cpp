@@ -1,7 +1,7 @@
 #include "insanity.hpp"
 
 #include "popup.hpp"
-#include "dungeon_master.hpp"
+#include "game.hpp"
 #include "sound.hpp"
 #include "map.hpp"
 #include "actor_player.hpp"
@@ -13,7 +13,7 @@
 #include "saving.hpp"
 #include "init.hpp"
 #include "game_time.hpp"
-#include "render.hpp"
+#include "io.hpp"
 
 //-----------------------------------------------------------------------------
 // Insanity symptoms
@@ -29,7 +29,9 @@ void InsSympt::on_start()
 
     if (!heading.empty() && !msg.empty())
     {
-        popup::show_msg(msg, true, heading, SfxId::insanity_rise);
+        popup::show_msg(msg,
+                        heading,
+                        SfxId::insanity_rise);
     }
 
     const std::string history_event_msg = history_msg();
@@ -38,7 +40,7 @@ void InsSympt::on_start()
 
     if (!history_event_msg.empty())
     {
-        dungeon_master::add_history_event(history_event_msg);
+        game::add_history_event(history_event_msg);
     }
 
     on_start_hook();
@@ -61,7 +63,7 @@ void InsSympt::on_end()
 
     if (!history_event_msg.empty())
     {
-        dungeon_master::add_history_event(history_event_msg);
+        game::add_history_event(history_event_msg);
     }
 }
 
@@ -448,7 +450,9 @@ void InsShadows::on_start_hook()
 
     const int nr_shadows_lower = 2;
 
-    const int nr_shadows_upper = constr_in_range(nr_shadows_lower, map::dlvl - 2, 8);
+    const int nr_shadows_upper = constr_in_range(nr_shadows_lower,
+                                                 map::dlvl - 2,
+                                                 8);
 
     const int nr = rnd::range(nr_shadows_lower, nr_shadows_upper);
 
@@ -470,7 +474,8 @@ void InsShadows::on_start_hook()
         mon->is_sneaking_                   = true;
         mon->player_aware_of_me_counter_    = 0;
 
-        auto* const disabled_att = new PropDisabledAttack(PropTurns::specific, 1);
+        auto* const disabled_att =
+            new PropDisabledAttack(PropTurns::specific, 1);
 
         mon->prop_handler().try_add(disabled_att);
     }
@@ -485,9 +490,6 @@ void InsShadows::on_start_hook()
         static_cast<Mon*>(actor)->set_player_aware_of_me();
     }
 
-    render::draw_map_state();
-
-    map::cpy_render_array_to_visual_memory();
 
     TRACE_FUNC_END;
 }

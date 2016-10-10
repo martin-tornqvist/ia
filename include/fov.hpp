@@ -29,6 +29,6 @@ void run(const P& p0,
          const bool hard_blocked[map_w][map_h],
          LosResult out[map_w][map_h]);
 
-} //fov
+} // fov
 
 #endif

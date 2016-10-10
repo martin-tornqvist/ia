@@ -6,7 +6,7 @@
 #include "actor_player.hpp"
 #include "msg_log.hpp"
 #include "postmortem.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "actor_mon.hpp"
 #include "inventory.hpp"
 #include "map.hpp"
@@ -20,7 +20,7 @@
 #include "item.hpp"
 #include "text_format.hpp"
 #include "saving.hpp"
-#include "dungeon_master.hpp"
+#include "game.hpp"
 #include "map_travel.hpp"
 
 namespace prop_data
@@ -1151,8 +1151,7 @@ void PropHandler::try_add(Prop* const prop,
         if (try_resist_prop(prop->id()))
         {
             //Resist message
-            if (
-                verbosity == Verbosity::verbose &&
+            if (verbosity == Verbosity::verbose &&
                 owning_actor_->is_alive())
             {
                 if (is_player)
@@ -1195,8 +1194,7 @@ void PropHandler::try_add(Prop* const prop,
     {
         for (Prop* old_prop : props_)
         {
-            if (
-                old_prop->src_ == PropSrc::intr &&
+            if (old_prop->src_ == PropSrc::intr &&
                 prop->id() == old_prop->id())
             {
                 if (!prop->allow_apply_more_while_active())
@@ -1209,8 +1207,7 @@ void PropHandler::try_add(Prop* const prop,
                 const int turns_left_new = prop->nr_turns_left_;
 
                 //Start message
-                if (
-                    verbosity == Verbosity::verbose &&
+                if (verbosity == Verbosity::verbose &&
                     owning_actor_->is_alive())
                 {
                     if (is_player)
@@ -1240,8 +1237,11 @@ void PropHandler::try_add(Prop* const prop,
 
                 old_prop->on_more();
 
-                old_prop->nr_turns_left_ = (turns_left_old < 0 || turns_left_new < 0) ? -1 :
-                                           std::max(turns_left_old, turns_left_new);
+                old_prop->nr_turns_left_ =
+                    ((turns_left_old < 0) || (turns_left_new < 0)) ?
+                    -1 :
+                    std::max(turns_left_old, turns_left_new);
+
                 delete prop;
                 return;
             }
@@ -1254,17 +1254,20 @@ void PropHandler::try_add(Prop* const prop,
 
     prop->on_start();
 
-    if (
-        verbosity == Verbosity::verbose &&
+    if (verbosity == Verbosity::verbose &&
         owning_actor_->is_alive())
     {
+        // TODO: Check if something like this is really needed, if so -
+        //       reimplement somehow.
+        /*
         if (prop->need_update_vision_when_start_or_end())
         {
             prop->owning_actor_->update_clr();
             game_time::update_light_map();
             map::player->update_fov();
-            render::draw_map_state();
+            io::draw_map_state();
         }
+        */
 
         //Start message
         if (is_player)
@@ -1347,22 +1350,29 @@ void PropHandler::remove_props_for_item(const Item* const item)
 
 void PropHandler::try_add_from_att(const Wpn& wpn, const bool is_melee)
 {
-    const auto&         d           = wpn.data();
-    const auto* const   origin_prop = is_melee ?
-                                      d.melee.prop_applied : d.ranged.prop_applied;
+    const auto& d = wpn.data();
+
+    const auto* const origin_prop
+        = is_melee ?
+        d.melee.prop_applied :
+        d.ranged.prop_applied;
 
     if (origin_prop)
     {
-        //If weapon damage is resisted by the defender, the property is automatically resisted
-        const DmgType dmg_type = is_melee ?
-                                  d.melee.dmg_type : d.ranged.dmg_type;
+        // If weapon damage is resisted by the defender, the property is
+        // automatically resisted
+        const DmgType dmg_type =
+            is_melee ?
+            d.melee.dmg_type :
+            d.ranged.dmg_type;
 
         if (!try_resist_dmg(dmg_type, Verbosity::silent))
         {
             const auto turns_init_type = origin_prop->turns_init_type();
 
-            const int nr_turns = turns_init_type == PropTurns::specific ?
-                                 origin_prop->nr_turns_left_ : -1;
+            const int nr_turns =
+                (turns_init_type == PropTurns::specific) ?
+                origin_prop->nr_turns_left_ : -1;
 
             //Make a copy of the weapon effect
             auto* const prop_cpy = mk_prop(origin_prop->id(),
@@ -1381,7 +1391,9 @@ void PropHandler::incr_active_props_info(const PropId id)
 #ifndef NDEBUG
     if (v < 0)
     {
-        TRACE << "Tried to increment property with current value " << v << std::endl;
+        TRACE << "Tried to increment property with current value "
+              << v << std::endl;
+
         ASSERT(false);
     }
 #endif // NDEBUG
@@ -1396,7 +1408,9 @@ void PropHandler::decr_active_props_info(const PropId id)
 #ifndef NDEBUG
     if (v <= 0)
     {
-        TRACE << "Tried to decrement property with current value " << v << std::endl;
+        TRACE << "Tried to decrement property with current value "
+              << v << std::endl;
+
         ASSERT(false);
     }
 #endif // NDEBUG
@@ -1406,17 +1420,20 @@ void PropHandler::decr_active_props_info(const PropId id)
 
 void PropHandler::on_prop_end(Prop* const prop)
 {
+    // TODO: Check if something like this is really needed, if so -
+    //       reimplement somehow.
+    /*
     if (prop->need_update_vision_when_start_or_end())
     {
         prop->owning_actor_->update_clr();
         game_time::update_light_map();
         map::player->update_fov();
-        render::draw_map_state();
+        io::draw_map_state();
     }
+    */
 
     //Print end message if this is the last active property of this type
-    if (
-        owning_actor_->state() == ActorState::alive &&
+    if (owning_actor_->state() == ActorState::alive &&
         active_props_info_[(size_t)prop->id_] == 0)
     {
         if (owning_actor_->is_player())
@@ -1522,7 +1539,8 @@ void PropHandler::tick(const PropTurnMode turn_mode)
             }
             else //Not finished
             {
-                //NOTE: "prop" may be set to nullptr here (if the property removed itself)
+                // NOTE: "prop" may be set to nullptr here (if the property
+                //       removed itself)
                 prop = prop->on_new_turn();
             }
         }
@@ -1549,9 +1567,9 @@ void PropHandler::props_interface_line(std::vector<StrAndClr>& line) const
 
             if (turns_left > 0)
             {
-                //Player can see number of turns left on own properties with Self-aware?
-                if (
-                    owning_actor_->is_player() &&
+                // Player can see number of turns left on own properties with
+                // Self-aware?
+                if (owning_actor_->is_player() &&
                     player_bon::traits[(size_t)Trait::self_aware] &&
                     prop->allow_display_turns())
                 {
@@ -1562,7 +1580,7 @@ void PropHandler::props_interface_line(std::vector<StrAndClr>& line) const
             {
                 if (prop->src() == PropSrc::intr)
                 {
-                    //Indefinite intrinsic properties are printed in all upper case
+                    // Indefinite intrinsic properties are printed in upper case
                     text_format::all_to_upper(str);
                 }
             }
@@ -1641,8 +1659,7 @@ bool PropHandler::allow_attack(const Verbosity verbosity) const
 {
     for (Prop* prop : props_)
     {
-        if (
-            !prop->allow_attack_melee(verbosity) &&
+        if (!prop->allow_attack_melee(verbosity) &&
             !prop->allow_attack_ranged(verbosity))
         {
             return false;
@@ -1798,9 +1815,10 @@ bool PropHandler::affect_actor_clr(Clr& clr) const
         {
             did_affect_clr = true;
 
-            //It's probably more likely that a color change due to a bad property is critical
-            //information (e.g. burning), so then we stop searching and use this color. If it's
-            //a good or neutral property that affected the color, then we keep searching.
+            // It's probably more likely that a color change due to a bad
+            // property is critical information (e.g. burning), so then we stop
+            // searching and use this color. If it's a good or neutral property
+            // that affected the color, then we keep searching.
             if (prop->alignment() == PropAlignment::bad)
             {
                 break;
@@ -1829,8 +1847,8 @@ Prop::Prop(PropId id, PropTurns turns_init, int nr_turns) :
 #ifndef NDEBUG
         if (nr_turns_left_ != -1)
         {
-            TRACE << "Prop turns is \"std\", but " << nr_turns_left_ << " turns specified"
-                  << std::endl;
+            TRACE << "Prop turns is \"std\", but " << nr_turns_left_
+                  << " turns specified" << std::endl;
             ASSERT(false);
         }
 #endif // NDEBUG
@@ -1842,8 +1860,8 @@ Prop::Prop(PropId id, PropTurns turns_init, int nr_turns) :
 #ifndef NDEBUG
         if (nr_turns_left_ != -1)
         {
-            TRACE << "Prop turns is \"indefinite\", but " << nr_turns_left_ << " turns specified"
-                  << std::endl;
+            TRACE << "Prop turns is \"indefinite\", but " << nr_turns_left_
+                  << " turns specified" << std::endl;
             ASSERT(false);
         }
 #endif // NDEBUG
@@ -1887,8 +1905,7 @@ void PropBlessed::bless_adjacent() const
         {
             Fountain* const fountain = static_cast<Fountain*>(rigid);
 
-            if (
-                fountain->type() != FountainType::blessed &&
+            if (fountain->type() != FountainType::blessed &&
                 fountain->has_drinks_left())
             {
                 if (cell.is_seen_by_player)
@@ -1913,11 +1930,10 @@ void PropCursed::on_start()
     curse_adjacent();
 
     //If this is a permanent curse, log it as a historic event
-    if (
-        owning_actor_->is_player() &&
+    if (owning_actor_->is_player() &&
         turns_init_type_ == PropTurns::indefinite)
     {
-        dungeon_master::add_history_event("A terrible curse was put upon me.");
+        game::add_history_event("A terrible curse was put upon me.");
     }
 }
 
@@ -1929,11 +1945,10 @@ void PropCursed::on_more()
 void PropCursed::on_end()
 {
     //If this was a permanent curse, log it as a historic event
-    if (
-        owning_actor_->is_player() &&
+    if (owning_actor_->is_player() &&
         turns_init_type_ == PropTurns::indefinite)
     {
-        dungeon_master::add_history_event("A terrible curse was lifted from me.");
+        game::add_history_event("A terrible curse was lifted from me.");
     }
 }
 
@@ -1954,8 +1969,7 @@ void PropCursed::curse_adjacent() const
         {
             Fountain* const fountain = static_cast<Fountain*>(rigid);
 
-            if (
-                fountain->type() != FountainType::cursed &&
+            if (fountain->type() != FountainType::cursed &&
                 fountain->has_drinks_left())
             {
                 if (cell.is_seen_by_player)
@@ -1992,8 +2006,7 @@ Prop* PropInfected::on_new_turn()
     const int max_turns_left_allow_disease  = 50;
     const int apply_disease_one_in          = nr_turns_left_ - 1;
 
-    if (
-        nr_turns_left_ <= max_turns_left_allow_disease &&
+    if (nr_turns_left_ <= max_turns_left_allow_disease &&
         rnd::one_in(apply_disease_one_in))
     {
         PropHandler& prop_hlr = owning_actor_->prop_handler();
@@ -2027,7 +2040,7 @@ void PropDiseased::on_start()
     //If this is a permanent disease that the player caught, log it as a historic event
     if (owning_actor_->is_player() && turns_init_type_ == PropTurns::indefinite)
     {
-        dungeon_master::add_history_event("Caught a horrible disease.");
+        game::add_history_event("Caught a horrible disease.");
     }
 }
 
@@ -2040,7 +2053,7 @@ void PropDiseased::on_end()
     //If this is a permanent disease that the player caught, log it as a historic event
     if (owning_actor_->is_player() && turns_init_type_ == PropTurns::indefinite)
     {
-        dungeon_master::add_history_event("My body was cured from a horrible disease.");
+        game::add_history_event("My body was cured from a horrible disease.");
     }
 }
 

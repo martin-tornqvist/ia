@@ -4,25 +4,23 @@
 
 #include "player_bon.hpp"
 #include "actor_player.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "text_format.hpp"
-#include "input.hpp"
 #include "item_potion.hpp"
 #include "item_scroll.hpp"
 #include "item_factory.hpp"
 #include "item.hpp"
 #include "map.hpp"
-#include "dungeon_master.hpp"
-
-namespace character_descr
-{
+#include "game.hpp"
 
 namespace
 {
 
-std::vector<StrAndClr> lines_;
+const int max_nr_lines_on_scr = screen_h - 2;
 
-void mk_lines()
+} // namespace
+
+void CharacterDescr::on_start()
 {
     lines_.clear();
 
@@ -31,9 +29,11 @@ void mk_lines()
     const Clr&          clr_text        = clr_white;
     const Clr&          clr_text_dark   = clr_gray;
 
-    lines_.push_back({"History of " + map::player->name_the(), clr_heading});
+    lines_.push_back(
+        StrAndClr("History of " + map::player->name_the(),
+                  clr_heading));
 
-    const std::vector<HistoryEvent>& events = dungeon_master::history();
+    const std::vector<HistoryEvent>& events = game::history();
 
     for (const auto& event : events)
     {
@@ -45,37 +45,60 @@ void mk_lines()
 
         ev_str += ": " + event.msg;
 
-        lines_.push_back({offset + ev_str, clr_text});
+        lines_.push_back(
+            StrAndClr(offset + ev_str,
+                      clr_text));
     }
 
-    lines_.push_back({"", clr_text});
+    lines_.push_back(StrAndClr("", clr_text));
 
     const AbilityVals& abilities = map::player->data().ability_vals;
 
-    lines_.push_back({"Combat skills", clr_heading});
+    lines_.push_back(
+        StrAndClr("Combat skills",
+                  clr_heading));
 
     const int base_melee =
-        std::min(100, abilities.val(AbilityId::melee, true, *(map::player)));
+        std::min(100, abilities.val(AbilityId::melee,
+                                    true,
+                                    *map::player));
 
     const int base_ranged =
-        std::min(100, abilities.val(AbilityId::ranged, true, *(map::player)));
+        std::min(100, abilities.val(AbilityId::ranged,
+                                    true,
+                                    *map::player));
 
     const int base_dodge_attacks =
-        std::min(100, abilities.val(AbilityId::dodge_att, true, *(map::player)));
+        std::min(100, abilities.val(AbilityId::dodge_att,
+                                    true,
+                                    *map::player));
 
-    lines_.push_back({offset + "Melee    " + to_str(base_melee)         + "%", clr_text});
-    lines_.push_back({offset + "Ranged   " + to_str(base_ranged)        + "%", clr_text});
-    lines_.push_back({offset + "Dodging  " + to_str(base_dodge_attacks) + "%", clr_text});
+    lines_.push_back(
+        StrAndClr(offset + "Melee    " + to_str(base_melee) + "%",
+                  clr_text));
 
-    lines_.push_back({"", clr_text});
+    lines_.push_back(
+        StrAndClr(offset + "Ranged   " + to_str(base_ranged) + "%",
+                  clr_text));
 
-    lines_.push_back({"Mental disorders", clr_heading});
+    lines_.push_back(
+        StrAndClr(offset + "Dodging  " + to_str(base_dodge_attacks) + "%",
+                  clr_text));
+
+    lines_.push_back(
+        StrAndClr("", clr_text));
+
+    lines_.push_back(
+        StrAndClr("Mental disorders",
+                  clr_heading));
 
     const std::vector<const InsSympt*> sympts = insanity::active_sympts();
 
     if (sympts.empty())
     {
-        lines_.push_back({offset + "None", clr_text});
+        lines_.push_back(
+            StrAndClr(offset + "None",
+                      clr_text));
     }
     else // Has insanity symptoms
     {
@@ -85,14 +108,18 @@ void mk_lines()
 
             if (!sympt_descr.empty())
             {
-                lines_.push_back({offset + sympt_descr, clr_text});
+                lines_.push_back(
+                    StrAndClr(offset + sympt_descr, clr_text));
             }
         }
     }
 
-    lines_.push_back({"", clr_text});
+    lines_.push_back(StrAndClr("", clr_text));
 
-    lines_.push_back({"Potion knowledge", clr_heading});
+    lines_.push_back(
+        StrAndClr("Potion knowledge",
+                  clr_heading));
+
     std::vector<StrAndClr> potion_list;
     std::vector<StrAndClr> manuscript_list;
 
@@ -108,7 +135,9 @@ void mk_lines()
 
                 const std::string name = item->name(ItemRefType::plain);
 
-                potion_list.push_back({offset + name, d.clr});
+                potion_list.push_back(
+                    StrAndClr(offset + name,
+                              d.clr));
 
                 delete item;
             }
@@ -118,7 +147,8 @@ void mk_lines()
 
                 const std::string name = item->name(ItemRefType::plain);
 
-                manuscript_list.push_back(StrAndClr(offset + name, item->interface_clr()));
+                manuscript_list.push_back(
+                    StrAndClr(offset + name, item->interface_clr()));
 
                 delete item;
             }
@@ -132,38 +162,52 @@ void mk_lines()
 
     if (potion_list.empty())
     {
-        lines_.push_back({offset + "No known potions", clr_text});
+        lines_.push_back(
+            StrAndClr(offset + "No known potions",
+                      clr_text));
     }
     else
     {
         sort(potion_list.begin(), potion_list.end(), str_and_clr_sort);
 
-        for (StrAndClr& e : potion_list) {lines_.push_back(e);}
+        for (StrAndClr& e : potion_list)
+        {
+            lines_.push_back(e);
+        }
     }
 
-    lines_.push_back({"", clr_text});
+    lines_.push_back(StrAndClr("", clr_text));
 
 
-    lines_.push_back({"Manuscript knowledge", clr_heading});
+    lines_.push_back(
+        StrAndClr("Manuscript knowledge",
+                  clr_heading));
 
     if (manuscript_list.empty())
     {
-        lines_.push_back({offset + "No known manuscripts", clr_text});
+        lines_.push_back(
+            StrAndClr(offset + "No known manuscripts",
+                      clr_text));
     }
     else
     {
         sort(manuscript_list.begin(), manuscript_list.end(), str_and_clr_sort);
 
-        for (StrAndClr& e : manuscript_list) {lines_.push_back(e);}
+        for (StrAndClr& e : manuscript_list)
+        {
+            lines_.push_back(e);
+        }
     }
 
-    lines_.push_back({"", clr_text});
+    lines_.push_back(StrAndClr("", clr_text));
 
-    lines_.push_back({"Traits gained", clr_heading});
+    lines_.push_back(
+        StrAndClr("Traits gained",
+                  clr_heading));
 
     const int max_w_descr = (map_w * 2) / 3;
 
-    for (int i = 0; i < int(Trait::END); ++i)
+    for (size_t i = 0; i < (size_t)Trait::END; ++i)
     {
         if (player_bon::traits[i])
         {
@@ -172,7 +216,9 @@ void mk_lines()
             const std::string title = player_bon::trait_title(trait);
             const std::string descr = player_bon::trait_descr(trait);
 
-            lines_.push_back({offset + title, clr_text});
+            lines_.push_back(
+                StrAndClr(offset + title,
+                          clr_text));
 
             std::vector<std::string> descr_lines;
 
@@ -180,76 +226,79 @@ void mk_lines()
 
             for (std::string& descr_line : descr_lines)
             {
-                lines_.push_back({offset + descr_line, clr_text_dark});
+                lines_.push_back(
+                    StrAndClr(offset + descr_line,
+                              clr_text_dark));
             }
 
-            lines_.push_back({"", clr_text});
+            lines_.push_back(StrAndClr("", clr_text));
         }
     }
 }
 
-} //namespace
-
-void run()
+void CharacterDescr::draw()
 {
-    mk_lines();
+    io::draw_info_scr_interface("Character description",
+                                InfScreenType::scrolling);
 
-    const int line_jump           = 3;
-    const int nr_lines_tot        = lines_.size();
-    const int max_nr_lines_on_scr = screen_h - 2;
+    int y_pos = 1;
 
-    int top_nr = 0;
-    int btm_nr = std::min(top_nr + max_nr_lines_on_scr - 1, nr_lines_tot - 1);
+    const int nr_lines_tot = lines_.size();
 
-    while (true)
+    int btm_nr = std::min(top_idx_ + max_nr_lines_on_scr - 1, nr_lines_tot - 1);
+
+    for (int i = top_idx_; i <= btm_nr; ++i)
     {
-        render::clear_screen();
+        const StrAndClr& line = lines_[i];
 
-        render::draw_info_scr_interface("Character description",
-                                        InfScreenType::scrolling);
+        io::draw_text(line.str,
+                      Panel::screen,
+                      P(0, y_pos),
+                      line.clr);
 
-        int y_pos = 1;
-
-        for (int i = top_nr; i <= btm_nr; ++i)
-        {
-            const StrAndClr& line = lines_[i];
-
-            render::draw_text(line.str,
-                              Panel::screen,
-                              P(0, y_pos++),
-                              line.clr);
-        }
-
-        render::update_screen();
-
-        const KeyData& d = input::input();
-
-        if (d.key == '2' || d.sdl_key == SDLK_DOWN || d.key == 'j')
-        {
-            top_nr += line_jump;
-
-            if (nr_lines_tot <= max_nr_lines_on_scr)
-            {
-                top_nr = 0;
-            }
-            else
-            {
-                top_nr = std::min(nr_lines_tot - max_nr_lines_on_scr, top_nr);
-            }
-        }
-        else if (d.key == '8' || d.sdl_key == SDLK_UP || d.key == 'k')
-        {
-            top_nr = std::max(0, top_nr - line_jump);
-        }
-        else if (d.sdl_key == SDLK_SPACE || d.sdl_key == SDLK_ESCAPE)
-        {
-            break;
-        }
-
-        btm_nr = std::min(top_nr + max_nr_lines_on_scr - 1, nr_lines_tot - 1);
+        ++y_pos;
     }
-
-    render::draw_map_state();
 }
 
-} //character_descr
+void CharacterDescr::update()
+{
+    const int line_jump     = 3;
+    const int nr_lines_tot  = lines_.size();
+
+    const auto input = io::get();
+
+    switch (input.key)
+    {
+    case '2':
+    case SDLK_DOWN:
+    case 'j':
+        top_idx_ += line_jump;
+
+        if (nr_lines_tot <= max_nr_lines_on_scr)
+        {
+            top_idx_ = 0;
+        }
+        else
+        {
+            top_idx_ = std::min(nr_lines_tot - max_nr_lines_on_scr, top_idx_);
+        }
+        break;
+
+    case '8':
+    case SDLK_UP:
+    case 'k':
+        top_idx_ = std::max(0, top_idx_ - line_jump);
+        break;
+
+    case SDLK_SPACE:
+    case SDLK_ESCAPE:
+        //
+        // Exit screen
+        //
+        states::pop();
+        break;
+
+    default:
+        break;
+    }
+}

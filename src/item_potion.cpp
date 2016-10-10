@@ -10,13 +10,13 @@
 #include "item_scroll.hpp"
 #include "game_time.hpp"
 #include "audio.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "inventory.hpp"
 #include "map_parsing.hpp"
 #include "feature_rigid.hpp"
 #include "item_factory.hpp"
 #include "saving.hpp"
-#include "dungeon_master.hpp"
+#include "game.hpp"
 
 ConsumeItem Potion::activate(Actor* const actor)
 {
@@ -32,12 +32,16 @@ ConsumeItem Potion::activate(Actor* const actor)
 
             if (data_->is_identified)
             {
-                const std::string potion_name = name(ItemRefType::a, ItemRefInf::none);
+                const std::string potion_name =
+                    name(ItemRefType::a, ItemRefInf::none);
+
                 msg_log::add("I drink " + potion_name + "...");
             }
             else //Not identified
             {
-                const std::string potion_name = name(ItemRefType::plain, ItemRefInf::none);
+                const std::string potion_name =
+                    name(ItemRefType::plain, ItemRefInf::none);
+
                 msg_log::add("I drink an unknown " + potion_name + "...");
             }
 
@@ -69,7 +73,7 @@ void Potion::identify(const Verbosity verbosity)
 
             msg_log::add("I have identified " + name_after + ".");
 
-            dungeon_master::add_history_event("Identified " + name_after + ".");
+            game::add_history_event("Identified " + name_after + ".");
 
             give_xp_for_identify();
         }
@@ -101,19 +105,22 @@ void Potion::on_collide(const P& pos, Actor* const actor)
         if (player_see_cell)
         {
             //TODO: Use standard animation
-            render::draw_glyph('*', Panel::map, pos, data_->clr);
+            io::draw_glyph('*', Panel::map, pos, data_->clr);
 
             if (actor)
             {
                 if (actor->is_alive())
                 {
-                    msg_log::add("The potion shatters on " + actor->name_the() + ".");
+                    msg_log::add("The potion shatters on " +
+                                 actor->name_the() + ".");
                 }
             }
             else //No actor here
             {
                 Feature* const f = map::cells[pos.x][pos.y].rigid;
-                msg_log::add("The potion shatters on " + f->name(Article::the) + ".");
+
+                msg_log::add("The potion shatters on " +
+                             f->name(Article::the) + ".");
             }
         }
 
@@ -551,13 +558,11 @@ void PotionClairv::quaff_impl(Actor& actor)
             }
         }
 
-        render::draw_map_state(UpdateScreen::no);
+        states::draw();
 
         map::player->update_fov();
 
-        render::draw_blast_at_cells(anim_cells, clr_white);
-
-        render::draw_map_state(UpdateScreen::yes);
+        io::draw_blast_at_cells(anim_cells, clr_white);
     }
 
     identify(Verbosity::verbose);
@@ -573,7 +578,8 @@ void PotionDescent::quaff_impl(Actor& actor)
     }
     else
     {
-        msg_log::add("I feel a faint sinking sensation, but it quickly disappears...");
+        msg_log::add("I feel a faint sinking sensation, "
+                     "but it soon disappears...");
     }
 
     identify(Verbosity::verbose);
@@ -633,30 +639,33 @@ void init()
 {
     TRACE_FUNC_BEGIN;
 
-    //Init possible potion colors and fake names
-    potion_looks_.clear();
-    potion_looks_.push_back(PotionLook {"Golden",   "a Golden",   clr_yellow});
-    potion_looks_.push_back(PotionLook {"Yellow",   "a Yellow",   clr_yellow});
-    potion_looks_.push_back(PotionLook {"Dark",     "a Dark",     clr_gray});
-    potion_looks_.push_back(PotionLook {"Black",    "a Black",    clr_gray});
-    potion_looks_.push_back(PotionLook {"Oily",     "an Oily",    clr_gray});
-    potion_looks_.push_back(PotionLook {"Smoky",    "a Smoky",    clr_white});
-    potion_looks_.push_back(PotionLook {"Slimy",    "a Slimy",    clr_green});
-    potion_looks_.push_back(PotionLook {"Green",    "a Green",    clr_green_lgt});
-    potion_looks_.push_back(PotionLook {"Fiery",    "a Fiery",    clr_red_lgt});
-    potion_looks_.push_back(PotionLook {"Murky",    "a Murky",    clr_brown_drk});
-    potion_looks_.push_back(PotionLook {"Muddy",    "a Muddy",    clr_brown});
-    potion_looks_.push_back(PotionLook {"Violet",   "a Violet",   clr_violet});
-    potion_looks_.push_back(PotionLook {"Orange",   "an Orange",  clr_orange});
-    potion_looks_.push_back(PotionLook {"Watery",   "a Watery",   clr_blue_lgt});
-    potion_looks_.push_back(PotionLook {"Metallic", "a Metallic", clr_gray});
-    potion_looks_.push_back(PotionLook {"Clear",    "a Clear",    clr_white_high});
-    potion_looks_.push_back(PotionLook {"Misty",    "a Misty",    clr_white_high});
-    potion_looks_.push_back(PotionLook {"Bloody",   "a Bloody",   clr_red});
-    potion_looks_.push_back(PotionLook {"Magenta",  "a Magenta",  clr_magenta});
-    potion_looks_.push_back(PotionLook {"Clotted",  "a Clotted",  clr_green});
-    potion_looks_.push_back(PotionLook {"Moldy",    "a Moldy",    clr_brown});
-    potion_looks_.push_back(PotionLook {"Frothy",   "a Frothy",   clr_white});
+    // Init possible potion colors and fake names
+    potion_looks_.assign(
+    {
+        {"Golden",    "a Golden",     clr_yellow},
+        {"Golden",    "a Golden",     clr_yellow},
+        {"Yellow",    "a Yellow",     clr_yellow},
+        {"Dark",      "a Dark",       clr_gray},
+        {"Black",     "a Black",      clr_gray},
+        {"Oily",      "an Oily",      clr_gray},
+        {"Smoky",     "a Smoky",      clr_white},
+        {"Slimy",     "a Slimy",      clr_green},
+        {"Green",     "a Green",      clr_green_lgt},
+        {"Fiery",     "a Fiery",      clr_red_lgt},
+        {"Murky",     "a Murky",      clr_brown_drk},
+        {"Muddy",     "a Muddy",      clr_brown},
+        {"Violet",    "a Violet",     clr_violet},
+        {"Orange",    "an Orange",    clr_orange},
+        {"Watery",    "a Watery",     clr_blue_lgt},
+        {"Metallic",  "a Metallic",   clr_gray},
+        {"Clear",     "a Clear",      clr_white_high},
+        {"Misty",     "a Misty",      clr_white_high},
+        {"Bloody",    "a Bloody",     clr_red},
+        {"Magenta",   "a Magenta",    clr_magenta},
+        {"Clotted",   "a Clotted",    clr_green},
+        {"Moldy",     "a Moldy",      clr_brown},
+        {"Frothy",    "a Frothy",     clr_white}
+    });
 
     for (auto& d : item_data::data)
     {
@@ -667,9 +676,15 @@ void init()
 
             PotionLook& look = potion_looks_[idx];
 
-            d.base_name_un_id.names[int(ItemRefType::plain)]   = look.name_plain + " Potion";
-            d.base_name_un_id.names[int(ItemRefType::plural)]  = look.name_plain + " Potions";
-            d.base_name_un_id.names[int(ItemRefType::a)]       = look.name_a     + " Potion";
+            d.base_name_un_id.names[(size_t)ItemRefType::plain]
+                = look.name_plain + " Potion";
+
+            d.base_name_un_id.names[(size_t)ItemRefType::plural] =
+                look.name_plain + " Potions";
+
+            d.base_name_un_id.names[(size_t)ItemRefType::a] =
+                look.name_a     + " Potion";
+
             d.clr = look.clr;
 
             potion_looks_.erase(potion_looks_.begin() + idx);
@@ -686,9 +701,9 @@ void init()
             const std::string real_name_plural = "Potions of "   + real_type_name;
             const std::string real_name_a      = "a Potion of "  + real_type_name;
 
-            d.base_name.names[int(ItemRefType::plain)]  = real_name;
-            d.base_name.names[int(ItemRefType::plural)] = real_name_plural;
-            d.base_name.names[int(ItemRefType::a)]      = real_name_a;
+            d.base_name.names[(size_t)ItemRefType::plain]  = real_name;
+            d.base_name.names[(size_t)ItemRefType::plural] = real_name_plural;
+            d.base_name.names[(size_t)ItemRefType::a]      = real_name_a;
         }
     }
 
@@ -703,9 +718,9 @@ void save()
 
         if (d.type == ItemType::potion)
         {
-            saving::put_str(d.base_name_un_id.names[int(ItemRefType::plain)]);
-            saving::put_str(d.base_name_un_id.names[int(ItemRefType::plural)]);
-            saving::put_str(d.base_name_un_id.names[int(ItemRefType::a)]);
+            saving::put_str(d.base_name_un_id.names[(size_t)ItemRefType::plain]);
+            saving::put_str(d.base_name_un_id.names[(size_t)ItemRefType::plural]);
+            saving::put_str(d.base_name_un_id.names[(size_t)ItemRefType::a]);
 
             saving::put_int(d.clr.r);
             saving::put_int(d.clr.g);
@@ -722,9 +737,14 @@ void load()
 
         if (d.type == ItemType::potion)
         {
-            d.base_name_un_id.names[int(ItemRefType::plain)]  = saving::get_str();
-            d.base_name_un_id.names[int(ItemRefType::plural)] = saving::get_str();
-            d.base_name_un_id.names[int(ItemRefType::a)]      = saving::get_str();
+            d.base_name_un_id.names[(size_t)ItemRefType::plain] =
+                saving::get_str();
+
+            d.base_name_un_id.names[(size_t)ItemRefType::plural] =
+                saving::get_str();
+
+            d.base_name_un_id.names[(size_t)ItemRefType::a] =
+                saving::get_str();
 
             d.clr.r = saving::get_int();
             d.clr.g = saving::get_int();

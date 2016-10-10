@@ -1,22 +1,23 @@
-#ifndef HIGH_SCORE_HPP
-#define HIGH_SCORE_HPP
+#ifndef HIGHSCORE_HPP
+#define HIGHSCORE_HPP
 
 #include <vector>
 #include <string>
 
+#include "state.hpp"
 #include "player_bon.hpp"
 
 class HighscoreEntry
 {
 public:
     HighscoreEntry(std::string entry_date_and_time,
-                    std::string player_name,
-                    int player_xp,
-                    int player_lvl,
-                    int player_dlvl,
-                    int player_insanity,
-                    bool is_win_game,
-                    Bg player_bg);
+                   std::string player_name,
+                   int player_xp,
+                   int player_lvl,
+                   int player_dlvl,
+                   int player_insanity,
+                   bool is_win_game,
+                   Bg player_bg);
 
     ~HighscoreEntry() {}
 
@@ -75,14 +76,38 @@ namespace highscore
 void init();
 void cleanup();
 
-void run_highscore_screen();
-
 void on_game_over(const bool is_win);
 
 std::vector<HighscoreEntry> entries_sorted();
 
 const HighscoreEntry* final_score();
 
-} //highscore
+} // highscore
 
-#endif
+class BrowseHighscore: public State
+{
+public:
+    BrowseHighscore() :
+        State       (),
+        entries_    (),
+        top_idx_    (0) {}
+
+    void on_start() override;
+
+    void draw() override;
+
+    void update() override;
+
+    bool draw_overlayed() const override
+    {
+        // If there are no entries, we draw an overlayed popup
+        return entries_.empty();
+    }
+
+private:
+    std::vector<HighscoreEntry> entries_;
+
+    int top_idx_;
+};
+
+#endif // HIGHSCORE_HPP

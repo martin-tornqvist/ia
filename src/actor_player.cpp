@@ -3,13 +3,13 @@
 #include <string>
 
 #include "init.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "audio.hpp"
 #include "feature_trap.hpp"
 #include "create_character.hpp"
 #include "msg_log.hpp"
 #include "popup.hpp"
-#include "dungeon_master.hpp"
+#include "game.hpp"
 #include "map.hpp"
 #include "explosion.hpp"
 #include "actor_mon.hpp"
@@ -25,7 +25,6 @@
 #include "inventory_handling.hpp"
 #include "player_spells.hpp"
 #include "bot.hpp"
-#include "input.hpp"
 #include "map_parsing.hpp"
 #include "properties.hpp"
 #include "item_device.hpp"
@@ -199,51 +198,64 @@ void Player::mk_start_items()
     //Unarmed attack
     if (player_bon::bg() == Bg::ghoul)
     {
-        unarmed_wpn_ = static_cast<Wpn*>(item_factory::mk(ItemId::player_ghoul_claw));
+        unarmed_wpn_ = static_cast<Wpn*>(
+            item_factory::mk(ItemId::player_ghoul_claw));
     }
     else //Not ghoul
     {
-        unarmed_wpn_ = static_cast<Wpn*>(item_factory::mk(ItemId::player_punch));
+        unarmed_wpn_ = static_cast<Wpn*>(
+            item_factory::mk(ItemId::player_punch));
     }
 
     if (has_pistol)
     {
-        inv_->put_in_slot(SlotId::wpn_alt, item_factory::mk(ItemId::pistol));
+        inv_->put_in_slot(
+            SlotId::wpn_alt,
+            item_factory::mk(ItemId::pistol));
     }
 
     for (int i = 0; i < nr_cartridges; ++i)
     {
-        inv_->put_in_backpack(item_factory::mk(ItemId::pistol_mag));
+        inv_->put_in_backpack(
+            item_factory::mk(ItemId::pistol_mag));
     }
 
     if (nr_dynamite > 0)
     {
-        inv_->put_in_backpack(item_factory::mk(ItemId::dynamite,  nr_dynamite));
+        inv_->put_in_backpack(
+            item_factory::mk(ItemId::dynamite,  nr_dynamite));
     }
 
     if (nr_molotov > 0)
     {
-        inv_->put_in_backpack(item_factory::mk(ItemId::molotov,   nr_molotov));
+        inv_->put_in_backpack(
+            item_factory::mk(ItemId::molotov, nr_molotov));
     }
 
     if (nr_thr_knives > 0)
     {
-        inv_->put_in_slot(SlotId::thrown, item_factory::mk(ItemId::thr_knife, nr_thr_knives));
+        inv_->put_in_slot(
+            SlotId::thrown,
+            item_factory::mk(ItemId::thr_knife, nr_thr_knives));
     }
 
     if (has_medbag)
     {
-        inv_->put_in_backpack(item_factory::mk(ItemId::medical_bag));
+        inv_->put_in_backpack(
+            item_factory::mk(ItemId::medical_bag));
     }
 
     if (has_lantern)
     {
-        inv_->put_in_backpack(item_factory::mk(ItemId::lantern));
+        inv_->put_in_backpack(
+            item_factory::mk(ItemId::lantern));
     }
 
     if (has_leather_jacket)
     {
-        inv_->put_in_slot(SlotId::body, item_factory::mk(ItemId::armor_leather_jacket));
+        inv_->put_in_slot(
+            SlotId::body,
+            item_factory::mk(ItemId::armor_leather_jacket));
     }
 }
 
@@ -394,13 +406,13 @@ void Player::on_hit(int& dmg,
     const bool is_enough_dmg_for_wound  = dmg >= min_dmg_to_wound;
     const bool is_physical              = dmg_type == DmgType::physical;
 
-    //Ghoul trait Indomitable Fury makes player immune to Wounds while Frenzied
+    // Ghoul trait Indomitable Fury makes player immune to Wounds while Frenzied
     const bool is_ghoul_resist_wound =
         player_bon::traits[(size_t)Trait::indomitable_fury] &&
         prop_handler_->has_prop(PropId::frenzied);
 
-    if (
-        allow_wound == AllowWound::yes  &&
+    if (allow_wound == AllowWound::yes  &&
+        (hp() - dmg) > 0                &&
         is_enough_dmg_for_wound         &&
         is_physical                     &&
         !is_ghoul_resist_wound          &&
@@ -414,7 +426,8 @@ void Player::on_hit(int& dmg,
             {
                 const Prop* const prop = prop_handler_->prop(PropId::wound);
 
-                const PropWound* const wound = static_cast<const PropWound*>(prop);
+                const PropWound* const wound =
+                    static_cast<const PropWound*>(prop);
 
                 return wound->nr_wounds();
             }
@@ -432,7 +445,7 @@ void Player::on_hit(int& dmg,
         {
             if (insanity::has_sympt(InsSymptId::masoch))
             {
-                dungeon_master::add_history_event("Experienced a very pleasant wound.");
+                game::add_history_event("Experienced a very pleasant wound.");
 
                 msg_log::add("Hehehe...");
 
@@ -440,14 +453,12 @@ void Player::on_hit(int& dmg,
 
                 shock_ = std::max(0.0, shock_ - shock_restored);
             }
-            else //Not masochistic
+            else // Not masochistic
             {
-                dungeon_master::add_history_event("Sustained a severe wound.");
+                game::add_history_event("Sustained a severe wound.");
             }
         }
     }
-
-    render::draw_map_state();
 }
 
 int Player::enc_percent() const
@@ -568,11 +579,11 @@ void Player::incr_insanity()
 
     if (ins() >= 100)
     {
-        const std::string msg = "My mind can no longer withstand what it has grasped. "
-                                "I am hopelessly lost.";
+        const std::string msg =
+            "My mind can no longer withstand what it has grasped. "
+            "I am hopelessly lost.";
 
         popup::show_msg(msg,
-                        true,
                         "Insane!",
                         SfxId::insanity_rise);
 
@@ -580,13 +591,10 @@ void Player::incr_insanity()
         return;
     }
 
-    //This point reached means sanity is below 100%
+    // This point reached means sanity is below 100%
     insanity::run_sympt();
 
     restore_shock(70, true);
-
-    update_clr();
-    render::draw_map_state();
 }
 
 bool Player::is_standing_in_open_place() const
@@ -654,36 +662,6 @@ bool Player::is_standing_in_cramped_place() const
     return false;
 }
 
-void Player::update_clr()
-{
-    if (!is_alive())
-    {
-        clr_ = clr_red;
-        return;
-    }
-
-    if (prop_handler_->affect_actor_clr(clr_))
-    {
-        return;
-    }
-
-    if (active_explosive)
-    {
-        clr_ = clr_yellow;
-        return;
-    }
-
-    const int current_shock = shock_ + shock_tmp_;
-
-    if (current_shock >= 75)
-    {
-        clr_ = clr_magenta;
-        return;
-    }
-
-    clr_ = data_->color;
-}
-
 void Player::set_quick_move(const Dir dir)
 {
     nr_quick_move_steps_left_   = 10;
@@ -693,34 +671,25 @@ void Player::set_quick_move(const Dir dir)
 void Player::act()
 {
 #ifndef NDEBUG
-    //Sanity check: Disease and infection should never be active at the same time
+    // Sanity check: Disease and infection should never be active simultaneously
     ASSERT(!prop_handler_->has_prop(PropId::diseased) ||
            !prop_handler_->has_prop(PropId::infected));
 #endif // NDEBUG
-
-    render::draw_map_state();
 
     if (!is_alive())
     {
         return;
     }
 
-    render::draw_map_state();
-
-    map::cpy_render_array_to_visual_memory();
-
     if (tgt_ && tgt_->state() != ActorState::alive)
     {
         tgt_ = nullptr;
     }
 
-    //NOTE: We cannot just check for "seen_foes()" here, since the result is
-    //also used for setting player awareness below
+    // NOTE: We cannot just check for "seen_foes()" here, since the result is
+    //       also used for setting player awareness below
     std::vector<Actor*> my_seen_actors;
     seen_actors(my_seen_actors);
-
-    //Check if we should go back to inventory screen
-    const auto inv_scr_on_new_turn = inv_handling::scr_to_open_on_new_turn;
 
     bool is_seeing_foe = false;
 
@@ -730,37 +699,6 @@ void Player::act()
         {
             is_seeing_foe = true;
             break;
-        }
-    }
-
-    if (inv_scr_on_new_turn != InvScr::none)
-    {
-        if (is_seeing_foe)
-        {
-            inv_handling::scr_to_open_on_new_turn           = InvScr::none;
-            inv_handling::browser_idx_to_set_on_new_turn    = 0;
-        }
-        else //No seen enemies
-        {
-            switch (inv_scr_on_new_turn)
-            {
-            case InvScr::inv:
-                inv_handling::run_inv_screen();
-                break;
-
-            case InvScr::apply:
-                inv_handling::run_apply_screen();
-                break;
-
-            case InvScr::equip:
-                inv_handling::run_equip_screen(*inv_handling::equip_slot_to_open_on_new_turn);
-                break;
-
-            case InvScr::none:
-                break;
-            }
-
-            return;
         }
     }
 
@@ -779,38 +717,38 @@ void Player::act()
     {
         --wait_turns_left;
 
-        //game_time::tick();
-
         move(Dir::center);
 
         return;
     }
 
-    //Quick move
+    // Quick move
     if (nr_quick_move_steps_left_ > 0)
     {
-        //NOTE: There is no need to check for items here, since the message
-        //from stepping on an item will interrupt player actions.
+        // NOTE: There is no need to check for items here, since the message
+        //       from stepping on an item will interrupt player actions.
 
         const P tgt(pos + dir_utils::offset(quick_move_dir_));
 
         const Cell&         tgt_cell   = map::cells[tgt.x][tgt.y];
         const Rigid* const  tgt_rigid  = tgt_cell.rigid;
 
-        const bool is_tgt_known_trap  = tgt_rigid->id() == FeatureId::trap &&
-                                        !static_cast<const Trap*>(tgt_rigid)->is_hidden();
+        const bool is_tgt_known_trap =
+            tgt_rigid->id() == FeatureId::trap &&
+            !static_cast<const Trap*>(tgt_rigid)->is_hidden();
 
-        const bool should_abort = !tgt_rigid->can_move_cmn()                    ||
-                                  is_tgt_known_trap                             ||
-                                  tgt_rigid->burn_state() == BurnState::burning ||
-                                  (tgt_cell.is_dark && !tgt_cell.is_lit);
+        const bool should_abort =
+            !tgt_rigid->can_move_cmn()                      ||
+            is_tgt_known_trap                               ||
+            tgt_rigid->burn_state() == BurnState::burning   ||
+            (tgt_cell.is_dark && !tgt_cell.is_lit);
 
         if (should_abort)
         {
             nr_quick_move_steps_left_   = -1;
             quick_move_dir_             = Dir::END;
         }
-        else //Keep going!
+        else // Keep going!
         {
             --nr_quick_move_steps_left_;
             move(quick_move_dir_);
@@ -818,15 +756,16 @@ void Player::act()
         }
     }
 
-    //If this point is reached - read input from player
+    // If this point is reached - read input from player
     if (config::is_bot_playing())
     {
         bot::act();
     }
-    else //Not bot playing
+    else // Not bot playing
     {
-        input::clear_events();
-        input::map_mode_input();
+        const InputData& input = io::get();
+
+        game::handle_player_input(input);
     }
 }
 
@@ -834,7 +773,7 @@ void Player::on_actor_turn()
 {
     reset_perm_shock_taken_current_turn();
 
-    map::player->update_fov();
+    update_fov();
 
     std::vector<Actor*> my_seen_foes;
     seen_foes(my_seen_foes);
@@ -844,11 +783,11 @@ void Player::on_actor_turn()
         static_cast<Mon*>(actor)->set_player_aware_of_me();
     }
 
-    //Decrement the current temp shock value, and add temporary shock from seen
-    //monsters, darkness, etc
+    // Decrement the current temp shock value, and add temporary shock from seen
+    // monsters, darkness, etc
     tick_tmp_shock();
 
-    //Some "permanent shock" is taken every Nth turn
+    // Some "permanent shock" is taken every Nth turn
     if (prop_handler_->allow_act())
     {
         int incr_shock_every_n_turns = 12;
@@ -862,7 +801,7 @@ void Player::on_actor_turn()
 
         if ((turn % incr_shock_every_n_turns == 0) && turn > 1)
         {
-            //Occasionally cause a sudden shock spike, to make it less predictable
+            // Occasionally cause a shock spike, to make it less predictable
             if (rnd::one_in(850))
             {
                 std::string msg = "";
@@ -879,8 +818,6 @@ void Player::on_actor_turn()
                 msg_log::add(msg, clr_msg_note, false, MorePromptOnMsg::yes);
 
                 incr_shock(ShockLvl::heavy, ShockSrc::misc);
-
-                render::draw_map_state();
             }
             else //No randomized shock spike
             {
@@ -1153,26 +1090,25 @@ void Player::on_std_turn()
                     mon.is_msg_mon_in_view_printed_ = true;
                 }
             }
-            else //Monster is not seen
+            else // Monster is not seen
             {
                 mon.is_msg_mon_in_view_printed_ = false;
 
-                //Is the monster sneaking? Try to spot it
-                //NOTE: Infravision is irrelevant here, since the monster would
-                //have been completely seen already.
+                // Is the monster sneaking? Try to spot it
+                // NOTE: Infravision is irrelevant here, since the monster would
+                //       have been completely seen already.
                 if (
                     map::cells[mon.pos.x][mon.pos.y].is_seen_by_player &&
                     mon.is_sneaking_)
                 {
-                    const bool did_spot_sneaking = is_spotting_sneaking_actor(mon);
+                    const bool did_spot_sneaking =
+                        is_spotting_sneaking_actor(mon);
 
                     if (did_spot_sneaking)
                     {
                         mon.is_sneaking_ = false;
 
                         mon.set_player_aware_of_me();
-
-                        render::draw_map_state();
 
                         const std::string mon_name = mon.name_a();
 
@@ -1203,7 +1139,8 @@ void Player::on_std_turn()
             nr_wounds = static_cast<PropWound*>(prop)->nr_wounds();
         }
 
-        const bool is_survivalist = player_bon::traits[(size_t)Trait::survivalist];
+        const bool is_survivalist =
+            player_bon::traits[(size_t)Trait::survivalist];
 
         const int wound_effect_div = is_survivalist ? 2 : 1;
 
@@ -1287,21 +1224,17 @@ void Player::on_log_msg_printed()
 
 void Player::interrupt_actions()
 {
-    //Abort browsing inventory
-    inv_handling::scr_to_open_on_new_turn           = InvScr::none;
-    inv_handling::browser_idx_to_set_on_new_turn    = 0;
-
-    //Abort healing
+    // Abort healing
     if (active_medical_bag)
     {
         active_medical_bag->interrupted();
         active_medical_bag = nullptr;
     }
 
-    //Abort waiting
+    // Abort waiting
     wait_turns_left = -1;
 
-    //Abort quick move
+    // Abort quick move
     nr_quick_move_steps_left_   = -1;
     quick_move_dir_             = Dir::END;
 }
@@ -1313,7 +1246,7 @@ void Player::hear_sound(const Snd& snd,
 {
     (void)is_origin_seen_by_player;
 
-    const SfxId        sfx         = snd.sfx();
+    const SfxId         sfx         = snd.sfx();
     const std::string&  msg         = snd.msg();
     const bool          has_snd_msg = !msg.empty() && msg != " ";
 
@@ -1412,25 +1345,31 @@ void Player::move(Dir dir)
                             wpn->data().ranged.is_ranged_wpn &&
                             config::is_ranged_wpn_meleee_prompt())
                         {
-                            const std::string wpn_name = wpn->name(ItemRefType::a);
+                            const std::string wpn_name =
+                                wpn->name(ItemRefType::a);
 
-                            const std::string mon_name = can_see_mon ? mon->name_the() : "it";
+                            const std::string mon_name =
+                                can_see_mon ?
+                                mon->name_the() : "it";
 
-                            msg_log::add("Attack " + mon_name + " with " + wpn_name + "? [y/n]",
+                            msg_log::add("Attack " + mon_name +
+                                         " with " + wpn_name +
+                                         "? [y/n]",
                                          clr_white_high);
-
-                            render::draw_map_state();
 
                             if (query::yes_or_no() == YesNoAnswer::no)
                             {
                                 msg_log::clear();
-                                render::draw_map_state();
 
                                 return;
                             }
                         }
 
-                        attack::melee(this, pos, *mon, *wpn);
+                        attack::melee(this,
+                                      pos,
+                                      *mon,
+                                      *wpn);
+
                         tgt_ = mon;
 
                         return;
@@ -1453,12 +1392,12 @@ void Player::move(Dir dir)
                     //Cell is not blocked, reveal monster here and return
                     mon->set_player_aware_of_me();
 
-                    render::draw_map_state();
-
                     const ActorDataT& d = mon->data();
 
-                    const std::string mon_ref = d.is_ghost      ? "some foul entity" :
-                                                (d.is_humanoid  ? "someone" : "a creature");
+                    const std::string mon_ref =
+                        d.is_ghost      ? "some foul entity" :
+                        d.is_humanoid   ? "someone" :
+                        "a creature";
 
                     msg_log::add("There is " + mon_ref + " here!",
                                  clr_msg_note,
@@ -1493,7 +1432,7 @@ void Player::move(Dir dir)
             if (enc >= enc_immobile_lvl)
             {
                 msg_log::add("I am too encumbered to move!");
-                render::draw_map_state();
+
                 return;
             }
             else if (enc >= 100 || nr_wounds >= min_nr_wounds_for_stagger)
@@ -1623,6 +1562,58 @@ void Player::move(Dir dir)
 
         game_time::tick(pass_time);
     }
+}
+
+Clr Player::clr() const
+{
+    if (!is_alive())
+    {
+        return clr_red;
+    }
+
+    if (active_explosive)
+    {
+        return clr_yellow;
+    }
+
+    Clr tmp_clr;
+
+    if (prop_handler_->affect_actor_clr(tmp_clr))
+    {
+        return tmp_clr;
+    }
+
+    // If injured, draw as a shade of red
+    const int current_hp        = hp();
+    const int current_hp_max    = hp_max(true);
+
+    if (current_hp < current_hp_max)
+    {
+        const int hp_pct =
+            constr_in_range(0,
+                            (current_hp * 100) / current_hp_max,
+                            100);
+
+        tmp_clr.r = std::max(192, (255 * hp_pct) / 100);
+        tmp_clr.g = (64 * hp_pct) / 100;
+        tmp_clr.b = (64 * hp_pct) / 100;
+
+        return tmp_clr;
+    }
+
+    const int current_shock = shock_ + shock_tmp_;
+
+    if (current_shock >= 75)
+    {
+        return clr_magenta;
+    }
+
+    if (has_prop(PropId::invis))
+    {
+        return clr_gray;
+    }
+
+    return data_->color;
 }
 
 bool Player::is_free_step_turn() const

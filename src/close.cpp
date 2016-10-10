@@ -8,7 +8,7 @@
 #include "map.hpp"
 #include "msg_log.hpp"
 #include "query.hpp"
-#include "render.hpp"
+#include "io.hpp"
 
 namespace close_door
 {
@@ -45,18 +45,22 @@ void player_try_close_or_jam_feature(Feature* const feature)
     }
     else //Door is closed - try to jam it
     {
-        const bool has_spike = map::player->inv().has_item_in_backpack(ItemId::iron_spike);
+        const bool has_spike =
+            map::player->inv().has_item_in_backpack(ItemId::iron_spike);
 
         if (has_spike)
         {
-            const bool did_spike_door = door->try_jam(map::player);
+            const bool did_spike_door =
+                door->try_jam(map::player);
 
             if (did_spike_door)
             {
-                map::player->inv().decr_item_type_in_backpack(ItemId::iron_spike);
+                map::player->inv().decr_item_type_in_backpack(
+                    ItemId::iron_spike);
 
                 const int spikes_left_after =
-                    map::player->inv().item_stack_size_in_backpack(ItemId::iron_spike);
+                    map::player->inv().item_stack_size_in_backpack(
+                        ItemId::iron_spike);
 
                 if (spikes_left_after == 0)
                 {
@@ -64,7 +68,8 @@ void player_try_close_or_jam_feature(Feature* const feature)
                 }
                 else //Has spikes left
                 {
-                    msg_log::add("I have " + to_str(spikes_left_after) + " iron spikes left.");
+                    msg_log::add("I have " + to_str(spikes_left_after) +
+                                 " iron spikes left.");
                 }
             }
         }
@@ -81,9 +86,8 @@ void player_try_close_or_jam()
 {
     msg_log::clear();
 
-    msg_log::add("Which direction?" + cancel_info_str, clr_white_high);
-
-    render::draw_map_state();
+    msg_log::add("Which direction?" + cancel_info_str,
+                 clr_white_high);
 
     const Dir input_dir = query::dir(AllowCenter::no);
 
@@ -96,8 +100,6 @@ void player_try_close_or_jam()
 
         player_try_close_or_jam_feature(map::cells[p.x][p.y].rigid);
     }
-
-    render::draw_map_state();
 }
 
 } //close

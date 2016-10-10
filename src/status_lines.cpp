@@ -2,10 +2,10 @@
 
 #include "game_time.hpp"
 #include "colors.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "actor_player.hpp"
 #include "map.hpp"
-#include "dungeon_master.hpp"
+#include "game.hpp"
 #include "mapgen.hpp"
 #include "player_bon.hpp"
 #include "inventory.hpp"
@@ -25,7 +25,7 @@ void draw()
 
     const Panel panel = Panel::status_lines;
 
-    render::cover_panel(panel);
+    io::cover_panel(panel);
 
     Player& player = *map::player;
 
@@ -33,33 +33,33 @@ void draw()
     P p(0, 0);
 
     std::string str = "HP:";
-    render::draw_text(str, panel, p, clr_gray_drk);
+    io::draw_text(str, panel, p, clr_gray_drk);
 
     p.x += str.size();
 
     str = to_str(player.hp()) + "/" + to_str(player.hp_max(true));
 
-    render::draw_text(str, panel, p, clr_red_lgt);
+    io::draw_text(str, panel, p, clr_red_lgt);
 
     //Spirit
     p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
     str = "SP:";
 
-    render::draw_text(str, panel, p, clr_gray_drk);
+    io::draw_text(str, panel, p, clr_gray_drk);
 
     p.x += str.size();
 
     str = to_str(player.spi()) + "/" + to_str(player.spi_max());
 
-    render::draw_text(str, panel, p, clr_magenta);
+    io::draw_text(str, panel, p, clr_magenta);
 
     //Insanity
     p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
     str = "Ins:";
 
-    render::draw_text(str, panel, p, clr_gray_drk);
+    io::draw_text(str, panel, p, clr_gray_drk);
 
     p.x += str.size();
 
@@ -73,38 +73,38 @@ void draw()
 
     str = to_str(shock) + "%";
 
-    render::draw_text(str, panel, p, short_san_clr);
+    io::draw_text(str, panel, p, short_san_clr);
 
     p.x += str.size();
 
     str = "/";
 
-    render::draw_text(str, panel, p, clr_gray_drk);
+    io::draw_text(str, panel, p, clr_gray_drk);
 
     p.x += str.size();
 
     str = to_str(ins) + "%";
 
-    render::draw_text(str, panel, p, clr_magenta);
+    io::draw_text(str, panel, p, clr_magenta);
 
     // Experience
     p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
     str = "Exp:";
 
-    render::draw_text(str, panel, p, clr_gray_drk);
+    io::draw_text(str, panel, p, clr_gray_drk);
 
     p.x += str.size();
 
-    str = to_str(dungeon_master::clvl());
+    str = to_str(game::clvl());
 
-    if (dungeon_master::clvl() < player_max_clvl)
+    if (game::clvl() < player_max_clvl)
     {
         //Not at maximum character level
-        str += "(" + to_str(dungeon_master::xp()) + "%)";
+        str += "(" + to_str(game::xp()) + "%)";
     }
 
-    render::draw_text(str, panel, p, clr_white);
+    io::draw_text(str, panel, p, clr_white);
 
     //Wielded weapon
     p.x = std::max(x_wielded_default, int(p.x + str.size() + 1));
@@ -122,11 +122,11 @@ void draw()
 
     if (config::is_tiles_mode())
     {
-        render::draw_tile(wpn->tile(), panel, p, item_clr);
+        io::draw_tile(wpn->tile(), panel, p, item_clr);
     }
     else //Text mode
     {
-        render::draw_glyph(wpn->glyph(), panel, p, item_clr);
+        io::draw_glyph(wpn->glyph(), panel, p, item_clr);
     }
 
     p.x += 2;
@@ -144,29 +144,31 @@ void draw()
 
     text_format::first_to_upper(str);
 
-    render::draw_text(str, panel, p, clr_white);
+    io::draw_text(str, panel, p, clr_white);
 
-    //----------------------------------------------------------------------------- SECOND ROW
+    // -------------------------------------------------------------------------
+    // Second row
+    // -------------------------------------------------------------------------
     ++p.y;
     p.x = 0;
 
     //Dungeon level
     str = "Dlvl:";
 
-    render::draw_text(str, panel, p, clr_gray_drk);
+    io::draw_text(str, panel, p, clr_gray_drk);
 
     p.x += str.size();
 
     str = map::dlvl > 0 ? to_str(map::dlvl) : "-";
 
-    render::draw_text(str, panel, p, clr_white);
+    io::draw_text(str, panel, p, clr_white);
 
     //Encumbrance
     p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
     str = "W:";
 
-    render::draw_text(str, panel, p, clr_gray_drk);
+    io::draw_text(str, panel, p, clr_gray_drk);
 
     p.x += str.size();
 
@@ -177,7 +179,7 @@ void draw()
     const Clr enc_clr = enc < 100 ? clr_white :
                         enc < enc_immobile_lvl ? clr_yellow : clr_red_lgt;
 
-    render::draw_text(str, panel, p, enc_clr);
+    io::draw_text(str, panel, p, enc_clr);
 
     //Armor
     const Item* const body_item = player.inv().item_in_slot(SlotId::body);
@@ -192,20 +194,20 @@ void draw()
         {
             const TileId tile = body_item->tile();
 
-            render::draw_tile(tile, panel, p, clr);
+            io::draw_tile(tile, panel, p, clr);
         }
         else //Text mode
         {
             str = body_item->glyph();
 
-            render::draw_text(str, panel, p, clr);
+            io::draw_text(str, panel, p, clr);
         }
 
         ++p.x;
 
         str = ":";
 
-        render::draw_text(str, panel, p, clr_gray_drk);
+        io::draw_text(str, panel, p, clr_gray_drk);
 
         p.x += str.size();
 
@@ -213,7 +215,7 @@ void draw()
 
         str = armor->armor_points_str(false /* Do not include brackets */);
 
-        render::draw_text(str, panel, p, clr_white);
+        io::draw_text(str, panel, p, clr_white);
     }
 
     //Lantern
@@ -229,20 +231,20 @@ void draw()
         {
             const TileId tile = lantern_item->tile();
 
-            render::draw_tile(tile, panel, p, clr_yellow);
+            io::draw_tile(tile, panel, p, clr_yellow);
         }
         else //Text mode
         {
             str = lantern_item->glyph();
 
-            render::draw_text(str, panel, p, clr_yellow);
+            io::draw_text(str, panel, p, clr_yellow);
         }
 
         ++p.x;
 
         str = ":";
 
-        render::draw_text(str, panel, p, clr_gray_drk);
+        io::draw_text(str, panel, p, clr_gray_drk);
 
         p.x += str.size();
 
@@ -252,7 +254,7 @@ void draw()
 
         str += "(" + to_str(lantern->nr_turns_left_) + ")";
 
-        render::draw_text(str, panel, p, clr);
+        io::draw_text(str, panel, p, clr);
     }
 
     //Medical bag
@@ -268,20 +270,20 @@ void draw()
         {
             const TileId tile = medical_item->tile();
 
-            render::draw_tile(tile, panel, p, clr);
+            io::draw_tile(tile, panel, p, clr);
         }
         else //Text mode
         {
             str = medical_item->glyph();
 
-            render::draw_text(str, panel, p, clr);
+            io::draw_text(str, panel, p, clr);
         }
 
         ++p.x;
 
         str = ":";
 
-        render::draw_text(str, panel, p, clr_gray_drk);
+        io::draw_text(str, panel, p, clr_gray_drk);
 
         p.x += str.size();
 
@@ -291,7 +293,7 @@ void draw()
 
         str = to_str(nr_suppl);
 
-        render::draw_text(str, panel, p, clr_white);
+        io::draw_text(str, panel, p, clr_white);
     }
 
     //Thrown item
@@ -305,11 +307,11 @@ void draw()
 
         if (config::is_tiles_mode())
         {
-            render::draw_tile(thr_item->tile(), panel, p, item_clr);
+            io::draw_tile(thr_item->tile(), panel, p, item_clr);
         }
         else //Text mode
         {
-            render::draw_glyph(thr_item->glyph(), panel, p, item_clr);
+            io::draw_glyph(thr_item->glyph(), panel, p, item_clr);
         }
 
         p.x += 2;
@@ -320,10 +322,12 @@ void draw()
 
         text_format::first_to_upper(str);
 
-        render::draw_text(str, panel, p, clr_white);
+        io::draw_text(str, panel, p, clr_white);
     }
 
-    //----------------------------------------------------------------------------- THIRD ROW
+    // -------------------------------------------------------------------------
+    // Third row
+    // -------------------------------------------------------------------------
     ++p.y;
     p.x = 0;
 
@@ -333,7 +337,7 @@ void draw()
 
     for (const StrAndClr& current_prop_label : props_line)
     {
-        render::draw_text(current_prop_label.str, panel, p, current_prop_label.clr);
+        io::draw_text(current_prop_label.str, panel, p, current_prop_label.clr);
 
         p.x += current_prop_label.str.size() + 1;
     }
@@ -349,15 +353,15 @@ void draw()
     const Clr turn_label_clr    = is_free_step_turn ? clr_black : clr_gray_drk;
     const Clr turn_label_bg_clr = is_free_step_turn ? clr_green : clr_black;
 
-    render::draw_text("T", panel, p, turn_label_clr, turn_label_bg_clr);
+    io::draw_text("T", panel, p, turn_label_clr, turn_label_bg_clr);
 
     ++p.x;
 
-    render::draw_text(":", panel, p, clr_gray_drk);
+    io::draw_text(":", panel, p, clr_gray_drk);
 
     ++p.x;
 
-    render::draw_text(turn_str, panel, p, clr_white);
+    io::draw_text(turn_str, panel, p, clr_white);
 }
 
 } //status_lines

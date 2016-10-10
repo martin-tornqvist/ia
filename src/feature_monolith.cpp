@@ -1,7 +1,7 @@
 #include "feature_monolith.hpp"
 
 #include "msg_log.hpp"
-#include "dungeon_master.hpp"
+#include "game.hpp"
 #include "map.hpp"
 #include "actor.hpp"
 #include "actor_mon.hpp"
@@ -54,8 +54,6 @@ void Monolith::bump(Actor& actor_bumping)
 
             map::player->incr_shock(ShockLvl::some, ShockSrc::misc);
         }
-
-        render::draw_map_state();
     }
 }
 
@@ -63,7 +61,7 @@ void Monolith::activate()
 {
     msg_log::add("I feel powerful!");
 
-    dungeon_master::incr_player_xp(25);
+    game::incr_player_xp(25);
 
     is_activated_ = true;
 

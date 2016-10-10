@@ -5,9 +5,9 @@
 
 #include "init.hpp"
 #include "msg_log.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "actor_player.hpp"
-#include "dungeon_master.hpp"
+#include "game.hpp"
 #include "item_scroll.hpp"
 #include "item_potion.hpp"
 #include "item_rod.hpp"
@@ -28,7 +28,8 @@ namespace
 {
 
 #ifndef NDEBUG
-//This is only used to verify that the put/get methods are not called at the wrong time
+
+// Only used to verify that the put/get methods are not called at the wrong time
 enum class State
 {
     saving,
@@ -50,7 +51,7 @@ void save_modules()
 
     put_str(map::player->name_a());
 
-    dungeon_master::save();
+    game::save();
     scroll_handling::save();
     potion_handling::save();
     rod_handling::save();
@@ -82,7 +83,7 @@ void load_modules()
     map::player->data().name_a      = player_name;
     map::player->data().name_the    = player_name;
 
-    dungeon_master::load();
+    game::load();
     scroll_handling::load();
     potion_handling::load();
     rod_handling::load();

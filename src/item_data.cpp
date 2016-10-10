@@ -410,7 +410,8 @@ void init_data_list()
     d.id = ItemId::trapez;;
     d.base_name =
     {
-        "Shining Trapezohedron", "Shining Trapezohedrons", "The Shining Trapezohedron"
+        "Shining Trapezohedron", "Shining Trapezohedrons",
+        "The Shining Trapezohedron"
     };
     d.spawn_std_range = Range(-1, -1);
     d.chance_to_incl_in_floor_spawn_list = 0;
@@ -429,9 +430,10 @@ void init_data_list()
     };
     d.base_descr =
     {
-        "Compared to a standard shotgun, the sawed - off has a shorter effective range. "
-        "At close range it is more devastating however. It holds two barrels, and needs "
-        "to be reloaded after both are discharged"
+        "Compared to a standard shotgun, the sawed - off has a shorter "
+        "effective range. At close range it is more devastating however. "
+        "It holds two barrels, and needs to be reloaded after both are "
+        "discharged"
     };
     d.weight = ItemWeight::medium;
     d.tile = TileId::shotgun;
@@ -458,10 +460,10 @@ void init_data_list()
     d.base_name = {"Pump Shotgun", "Pump shotguns", "a Pump Shotgun"};
     d.base_descr =
     {
-        "A pump - action shotgun has a handgrip that can be pumped back and forth in "
-        "order to eject a spent round of ammunition and to chamber a fresh one. It has "
-        "a single barrel above a tube magazine into which shells are inserted. The "
-        "magazine has a capacity of 8 shells."
+        "A pump - action shotgun has a handgrip that can be pumped back and "
+        "forth in order to eject a spent round of ammunition and to chamber a "
+        "fresh one. It has a single barrel above a tube magazine into which "
+        "shells are inserted. The magazine has a capacity of 8 shells."
     };
     d.weight = ItemWeight::medium;
     d.tile = TileId::shotgun;
@@ -501,8 +503,8 @@ void init_data_list()
     d.base_name = {"Incinerator", "Incinerators", "an Incinerator"};
     d.base_descr =
     {
-        "This hellish, experimental weapon launches an explosive fireball. Best used "
-        "with extreme caution."
+        "This hellish, experimental weapon launches an explosive fireball. "
+        "Best used with extreme caution."
     };
     d.weight = ItemWeight((ItemWeight::medium + ItemWeight::heavy) / 2);
     d.tile = TileId::incinerator;
@@ -527,7 +529,8 @@ void init_data_list()
     d.id = ItemId::incinerator_ammo;
     d.base_name =
     {
-        "Incinerator Cartridge", "Incinerator Cartridges", "an Incinerator Cartridge"
+        "Incinerator Cartridge", "Incinerator Cartridges",
+        "an Incinerator Cartridge"
     };
     d.base_descr =
     {
@@ -548,9 +551,9 @@ void init_data_list()
     d.base_name = {"Tommy Gun", "Tommy Guns", "a Tommy Gun"};
     d.base_descr =
     {
-        "\"Tommy Gun\" is a nickname for the Thompson submachine gun-an automatic "
-        "firearm with a drum magazine and verical foregrip. It fires .45 ACP "
-        "ammunition. The drum magazine has a capacity of 50 rounds."
+        "\"Tommy Gun\" is a nickname for the Thompson submachine gun-an "
+        "automatic firearm with a drum magazine and verical foregrip. It fires "
+        ".45 ACP ammunition. The drum magazine has a capacity of 50 rounds."
     };
     d.weight = ItemWeight::medium;
     d.tile = TileId::tommy_gun;
@@ -590,7 +593,8 @@ void init_data_list()
     d.base_name = {"M1911 Colt", "M1911 Colt", "an M1911 Colt"};
     d.base_descr =
     {
-        "A semi-automatic, magazine-fed pistol chambered for the .45 ACP cartridge."
+        "A semi-automatic, magazine-fed pistol chambered for the .45 ACP "
+        "cartridge."
     };
     d.weight = ItemWeight((ItemWeight::light + ItemWeight::medium) / 2);
     d.tile = TileId::pistol;
@@ -611,7 +615,11 @@ void init_data_list()
 
     reset_data(d, ItemType::ammo_mag);
     d.id = ItemId::pistol_mag;
-    d.base_name = {".45ACP Colt cartridge", ".45ACP Colt cartridges", "a .45ACP Colt cartridge"};
+    d.base_name =
+    {
+        ".45ACP Colt cartridge", ".45ACP Colt cartridges",
+        "a .45ACP Colt cartridge"
+    };
     d.base_descr =
     {
         "Ammunition used by Colt pistols."
@@ -630,9 +638,11 @@ void init_data_list()
     };
     d.base_descr =
     {
-        "A weapon created by the Mi-go. It fires devastating bolts of electricity.",
-        "If there is no ammunition to fuel the weapon, it can draw power from the "
-        "essence of the wielder (press [f] while no ammo loaded)."
+        "A weapon created by the Mi-go. It fires devastating bolts of "
+        "electricity.",
+
+        "If there is no ammunition to fuel the weapon, it can draw power from "
+        "the essence of the wielder (press [f] while no ammo loaded)."
     };
     d.spawn_std_range = Range(-1, -1);
     d.weight = ItemWeight::medium;
@@ -699,9 +709,9 @@ void init_data_list()
     d.base_name = {"Spike Gun", "Spike Guns", "a Spike Gun"};
     d.base_descr =
     {
-        "A very strange and crude weapon capable of launching iron spikes with enough "
-        "force to pierce flesh (or even rock). It seems almost to be deliberately "
-        "designed for cruelty, rather than pure stopping power."
+        "A very strange and crude weapon capable of launching iron spikes "
+        "with enough force to pierce flesh (or even rock). It seems almost to "
+        "be deliberately designed for cruelty, rather than pure stopping power."
     };
     d.weight = ItemWeight::medium;
     d.tile = TileId::tommy_gun;
@@ -766,8 +776,8 @@ void init_data_list()
     d.base_name = {"Dynamite", "Sticks of Dynamite", "a Stick of Dynamite"};
     d.base_descr =
     {
-        "An explosive material based on nitroglycerin. The name comes from the ancient "
-        "Greek word for \"power\"."
+        "An explosive material based on nitroglycerin. The name comes from the "
+        "ancient Greek word for \"power\"."
     };
     d.weight = ItemWeight::light;
     d.tile = TileId::dynamite;
@@ -782,8 +792,8 @@ void init_data_list()
     d.base_name = {"Flare", "Flares", "a Flare"};
     d.base_descr =
     {
-        "A type of pyrotechnic that produces a brilliant light or intense heat without "
-        "an explosion."
+        "A type of pyrotechnic that produces a brilliant light or intense heat "
+        "without an explosion."
     };
     d.weight = ItemWeight::light;
     d.tile = TileId::flare;
@@ -795,12 +805,16 @@ void init_data_list()
 
     reset_data(d, ItemType::explosive);
     d.id = ItemId::molotov;
-    d.base_name = {"Molotov Cocktail", "Molotov Cocktails", "a Molotov Cocktail"};
+    d.base_name =
+    {
+        "Molotov Cocktail", "Molotov Cocktails", "a Molotov Cocktail"
+    };
     d.base_descr =
     {
-        "An improvised incendiary weapon made of a glass bottle containing flammable "
-        "liquid and some cloth for ignition. In action, the cloth is lit and the bottle "
-        "hurled at a target, causing an immediate fireball followed by a raging fire."
+        "An improvised incendiary weapon made of a glass bottle containing "
+        "flammable liquid and some cloth for ignition. In action, the cloth "
+        "is lit and the bottle hurled at a target, causing an immediate "
+        "fireball followed by a raging fire."
     };
     d.weight = ItemWeight::light;
     d.tile = TileId::molotov;
@@ -815,10 +829,10 @@ void init_data_list()
     d.base_name = {"Smoke Grenade", "Smoke Grenades", "a Smoke Grenade"};
     d.base_descr =
     {
-        "A sheet steel cylinder with emission holes releasing smoke when the grenade is "
-        "ignited. Their primary use is to create smoke screens for concealment. "
-        "The fumes produced can harm the eyes, throat and lungs - so it is "
-        "recommended to wear a protective mask."
+        "A sheet steel cylinder with emission holes releasing smoke when the "
+        "grenade is ignited. Their primary use is to create smoke screens for "
+        "concealment. The fumes produced can harm the eyes, throat and lungs - "
+        "so it is recommended to wear a protective mask."
     };
     d.weight = ItemWeight::light;
     d.tile = TileId::flare;
@@ -832,7 +846,8 @@ void init_data_list()
     d.base_name = {"Throwing Knife", "Throwing Knives", "a Throwing Knife"};
     d.base_descr =
     {
-        "A knife specially designed and weighted so that it can be thrown effectively."
+        "A knife specially designed and weighted so that it can be thrown "
+        "effectively."
     };
     d.weight = ItemWeight::extra_light;
     d.tile = TileId::dagger;
@@ -855,7 +870,8 @@ void init_data_list()
     d.base_name = {"Rock", "Rocks", "a Rock"};
     d.base_descr =
     {
-        "Although not a very impressive weapon, with skill they can be used with some result."
+        "Although not a very impressive weapon, with skill they can be used "
+        "with some result."
     };
     d.weight = ItemWeight::extra_light;
     d.tile = TileId::rock;
@@ -878,8 +894,8 @@ void init_data_list()
         "Commonly associated with deception, stealth, and treachery. Many "
         "assassinations have been carried out with the use of a dagger.",
 
-        "Attacking an unaware opponent with a dagger does 300% damage (instead of the "
-        "normal 150% damage from stealth attacks).",
+        "Attacking an unaware opponent with a dagger does 300% damage "
+        "(instead of the normal 150% damage from stealth attacks).",
 
         "Melee attacks with daggers are silent."
     };
@@ -904,8 +920,8 @@ void init_data_list()
     d.base_name = {"Hatchet", "Hatchets", "a Hatchet"};
     d.base_descr =
     {
-        "A small axe with a short handle. Hatchets are reliable weapons - they are easy to use, "
-        "and cause decent damage for their low weight.",
+        "A small axe with a short handle. Hatchets are reliable weapons - "
+        "they are easy to use, and cause decent damage for their low weight.",
 
         "Melee attacks with hatchets are silent."
     };
@@ -952,7 +968,8 @@ void init_data_list()
     d.base_name = {"Hammer", "Hammers", "a Hammer"};
     d.base_descr =
     {
-        "Typically used for construction, but can be quite devastating when wielded as a weapon.",
+        "Typically used for construction, but can be quite devastating when "
+        "wielded as a weapon.",
 
         "Melee attacks with hammers are noisy."
     };
@@ -973,7 +990,8 @@ void init_data_list()
     d.base_name = {"Machete", "Machetes", "a Machete"};
     d.base_descr =
     {
-        "A large cleaver-like knife. It serves well both as a cutting tool and weapon.",
+        "A large cleaver-like knife. It serves well both as a cutting tool "
+        "and weapon.",
 
         "Melee attacks with machetes are noisy."
     };
@@ -996,8 +1014,9 @@ void init_data_list()
     d.base_name = {"Axe", "Axes", "an Axe"};
     d.base_descr =
     {
-        "A tool intended for felling trees, splitting timber, etc. Used as a weapon it "
-        "can deliver devastating blows, although it requires some skill to use effectively."
+        "A tool intended for felling trees, splitting timber, etc. Used as a "
+        "weapon it can deliver devastating blows, although it requires some "
+        "skill to use effectively."
         /*TODO: "Also effective for breaching wooden doors."*/,
 
         "Melee attacks with axes are noisy."
@@ -1020,8 +1039,8 @@ void init_data_list()
     d.base_name = {"Pitchfork", "Pitchforks", "a Pitchfork"};
     d.base_descr =
     {
-        "A long staff with a forked, four-pronged end. Victims can be pushed away when "
-        "stabbed, to keep them at bay."
+        "A long staff with a forked, four-pronged end. Victims can be pushed "
+        "away when stabbed, to keep them at bay."
     };
     d.weight = ItemWeight::heavy;
     d.tile = TileId::pitchfork;
@@ -1043,9 +1062,9 @@ void init_data_list()
     d.base_name = {"Sledgehammer", "Sledgehammers", "a Sledgehammer"};
     d.base_descr =
     {
-        "Often used in destruction work for breaking through walls. It can deal a great "
-        "amount of damage, although it is cumbersome to carry, and it requires some "
-        "skill to use effectively."
+        "Often used in destruction work for breaking through walls. It can "
+        "deal a great amount of damage, although it is cumbersome to carry, "
+        "and it requires some skill to use effectively."
     };
     d.weight = ItemWeight::heavy;
     d.tile = TileId::sledge_hammer;
@@ -1063,12 +1082,13 @@ void init_data_list()
     d.id = ItemId::pharaoh_staff;
     d.base_name =
     {
-        "Staff of the Pharaohs", "Staff of the Pharaohs", "the Staff of the Pharaohs"
+        "Staff of the Pharaohs", "Staff of the Pharaohs",
+        "the Staff of the Pharaohs"
     };
     d.base_descr =
     {
-        "Once wielded by long-forgotten kings in ancient times, this powerful artifact "
-        "grants the power to call up a loyal servant from the dead."
+        "Once wielded by long-forgotten kings in ancient times, this powerful "
+        "artifact grants the power to call up a loyal servant from the dead."
     };
     d.clr = clr_magenta;
     d.weight = ItemWeight::medium;
@@ -1121,7 +1141,8 @@ void init_data_list()
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::player_stomp;
     d.melee.att_msgs = {"stomp", ""};
-    d.melee.hit_chance_mod = data[(size_t)ItemId::player_kick].melee.hit_chance_mod;
+    d.melee.hit_chance_mod =
+        data[(size_t)ItemId::player_kick].melee.hit_chance_mod;
     d.melee.dmg = data[(size_t)ItemId::player_kick].melee.dmg;
     d.melee.miss_sfx = data[(size_t)ItemId::player_kick].melee.miss_sfx;
     d.melee.knocks_back = false;
@@ -1288,14 +1309,16 @@ void init_data_list()
     d.id = ItemId::pit_viper_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, ActorId::pit_viper);
-    d.melee.prop_applied = new PropPoisoned(PropTurns::specific, poison_dmg_n_turn * 4);
+    d.melee.prop_applied = new PropPoisoned(PropTurns::specific,
+                                            poison_dmg_n_turn * 4);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::spitting_cobra_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, ActorId::spitting_cobra);
-    d.melee.prop_applied = new PropPoisoned(PropTurns::specific, poison_dmg_n_turn * 4);
+    d.melee.prop_applied = new PropPoisoned(PropTurns::specific,
+                                            poison_dmg_n_turn * 4);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::ranged_wpn_intr);
@@ -1312,7 +1335,8 @@ void init_data_list()
     d.id = ItemId::black_mamba_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, ActorId::black_mamba);
-    d.melee.prop_applied = new PropPoisoned(PropTurns::specific, poison_dmg_n_turn * 4);
+    d.melee.prop_applied = new PropPoisoned(PropTurns::specific,
+                                            poison_dmg_n_turn * 4);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::ranged_wpn_intr);
@@ -1536,21 +1560,24 @@ void init_data_list()
     d.id = ItemId::mold_spores;
     d.melee.att_msgs = {"", "releases spores at me"};
     set_dmg_from_mon_id(d, ActorId::mold);
-    d.melee.prop_applied = new PropPoisoned(PropTurns::specific, poison_dmg_n_turn * 2);
+    d.melee.prop_applied = new PropPoisoned(PropTurns::specific,
+                                            poison_dmg_n_turn * 2);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::mi_go_sting;
     d.melee.att_msgs = {"", "stings me"};
     set_dmg_from_mon_id(d, ActorId::mi_go);
-    d.melee.prop_applied = new PropPoisoned(PropTurns::specific, poison_dmg_n_turn * 2);
+    d.melee.prop_applied = new PropPoisoned(PropTurns::specific,
+                                            poison_dmg_n_turn * 2);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::mi_go_commander_sting;
     d.melee.att_msgs = {"", "stings me"};
     set_dmg_from_mon_id(d, ActorId::mi_go_commander);
-    d.melee.prop_applied = new PropPoisoned(PropTurns::specific, poison_dmg_n_turn * 2);
+    d.melee.prop_applied = new PropPoisoned(PropTurns::specific,
+                                            poison_dmg_n_turn * 2);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1580,11 +1607,13 @@ void init_data_list()
     d.base_name = {"Iron Suit", "", "an Iron Suit"};
     d.base_descr =
     {
-        "A crude armour constructed from metal plates, bolts, and leather straps.",
+        "A crude armour constructed from metal plates, bolts, and leather "
+        "straps.",
 
-        "It can absorb a high amount of damage, but it makes sneaking and dodging very "
-        "difficult. Also, due to the narrow slit of the helmet, aiming is slightly "
-        "more difficult, and it is harder to detect sneaking enemies and hidden objects."
+        "It can absorb a high amount of damage, but it makes sneaking and "
+        "dodging very difficult. Also, due to the narrow slit of the helmet, "
+        "aiming is slightly more difficult, and it is harder to detect "
+        "sneaking enemies and hidden objects."
     };
     d.ability_mods_while_equipped[int(AbilityId::stealth)]     = -50;
     d.ability_mods_while_equipped[int(AbilityId::dodge_att)]   = -50;
@@ -1606,8 +1635,9 @@ void init_data_list()
     d.base_name = {"Flak Jacket", "", "a Flak Jacket"};
     d.base_descr =
     {
-        "An armour consisting of steel plates sewn into a waistcoat. It offers very good "
-        "protection for its weight. Sneaking and dodging is slightly more difficult."
+        "An armour consisting of steel plates sewn into a waistcoat. It "
+        "offers very good protection for its weight. Sneaking and dodging is "
+        "slightly more difficult."
     };
     d.ability_mods_while_equipped[int(AbilityId::stealth)]     = -20;
     d.ability_mods_while_equipped[int(AbilityId::dodge_att)]   = -20;
@@ -1626,13 +1656,13 @@ void init_data_list()
     d.base_name = {"Asbestos Suit", "", "an Asbestos Suit"};
     d.base_descr =
     {
-        "A one piece overall of asbestos fabric, including a hood, furnace mask, gloves "
-        "and shoes. It protects the wearer against fire, acid and electricity, and also "
-        "against smoke, fumes and gas.",
+        "A one piece overall of asbestos fabric, including a hood, furnace "
+        "mask, gloves and shoes. It protects the wearer against fire, acid "
+        "and electricity, and also against smoke, fumes and gas.",
 
-        "It is a bit bulky, so sneaking and dodging is slightly more difficult. Also, "
-        "because of the hood and mask, aiming and detecting hidden enemies and objects "
-        "is somewhat harder."
+        "It is a bit bulky, so sneaking and dodging is slightly more difficult."
+        "Also, because of the hood and mask, aiming and detecting hidden "
+        "enemies and objects is somewhat harder."
     };
     d.ability_mods_while_equipped[int(AbilityId::stealth)]     = -20;
     d.ability_mods_while_equipped[int(AbilityId::dodge_att)]   = -20;
@@ -1672,11 +1702,12 @@ void init_data_list()
     d.base_name = {"Gas Mask", "", "a Gas Mask"};
     d.base_descr =
     {
-        "Protects the eyes, throat and lungs from smoke and fumes. It has a limited "
-        "useful lifespan that is related to the absorbent capacity of the filter.",
+        "Protects the eyes, throat and lungs from smoke and fumes. It has a "
+        "limited useful lifespan that is related to the absorbent capacity of "
+        "the filter.",
 
-        "Due to the small eye windows, aiming is slightly more difficult, and it is "
-        "harder to detect sneaking enemies and hidden objects."
+        "Due to the small eye windows, aiming is slightly more difficult, and "
+        "it is harder to detect sneaking enemies and hidden objects."
     };
     d.ability_mods_while_equipped[int(AbilityId::melee)]      = -10;
     d.ability_mods_while_equipped[int(AbilityId::ranged)]     = -10;
@@ -1931,10 +1962,14 @@ void init_data_list()
     reset_data(d, ItemType::device);
     d.id = ItemId::lantern;
     d.is_prio_in_backpack_list = true;
-    d.base_name = {"Electric Lantern", "Electric Lanterns", "an Electric Lantern"};
+    d.base_name =
+    {
+        "Electric Lantern", "Electric Lanterns", "an Electric Lantern"
+    };
     d.base_descr =
     {
-        "A portable light source. It is somewhat unreliable, as it tends to malfunction a lot."
+        "A portable light source. It is somewhat unreliable, as it tends to "
+        "malfunction."
     };
     d.spawn_std_range = Range(1, dlvl_last_mid_game);
     d.spawn_std_range = Range(1, 10);
@@ -1973,7 +2008,8 @@ void init_data_list()
     d.base_name = {"Medical Bag", "Medical Bags", "a Medical Bag"};
     d.base_descr =
     {
-        "A portable bag of medical supplies. Can be used to treat Wounds or Infections."
+        "A portable bag of medical supplies. Can be used to treat Wounds or "
+        "Infections."
     };
     d.weight = ItemWeight::medium;
     d.spawn_std_range = Range(1, dlvl_last_mid_game);
@@ -2090,7 +2126,7 @@ void cleanup()
 {
     TRACE_FUNC_BEGIN;
 
-    for (size_t i = 0; i < size_t(ItemId::END); ++i)
+    for (size_t i = 0; i < (size_t)ItemId::END; ++i)
     {
         ItemDataT& d = data[i];
 
@@ -2129,4 +2165,4 @@ void load()
     }
 }
 
-} //item_data
+} // item_data

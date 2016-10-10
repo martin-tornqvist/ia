@@ -5,7 +5,7 @@
 
 #include "init.hpp"
 #include "actor_player.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "game_time.hpp"
 #include "msg_log.hpp"
 #include "knockback.hpp"
@@ -15,7 +15,7 @@
 #include "feature_rigid.hpp"
 #include "actor_factory.hpp"
 #include "saving.hpp"
-#include "dungeon_master.hpp"
+#include "game.hpp"
 
 //---------------------------------------------------- DEVICE
 Device::Device(ItemDataT* const item_data) :
@@ -35,7 +35,7 @@ void Device::identify(const Verbosity verbosity)
 
             msg_log::add("All its properties are now known to me.");
 
-            dungeon_master::add_history_event("Comprehended " + name_after + ".");
+            game::add_history_event("Comprehended " + name_after + ".");
 
             give_xp_for_identify();
         }
@@ -256,18 +256,13 @@ ConsumeItem DeviceShockwave::trigger_effect()
 
     const P& player_pos = map::player->pos;
 
-    for (int dx = -1; dx <= 1; ++dx)
+    for (const P& d : dir_utils::dir_list)
     {
-        for (int dy = -1; dy <= 1; ++dy)
-        {
-            const P p(player_pos + P(dx, dy));
-            Rigid* const rigid = map::cells[p.x][p.y].rigid;
-            rigid->hit(DmgType::physical, DmgMethod::explosion);
+        const P p(player_pos + d);
 
-            //game_time::update_light_map();
-            map::player->update_fov();
-            render::draw_map_state();
-        }
+        Rigid* const rigid = map::cells[p.x][p.y].rigid;
+
+        rigid->hit(DmgType::physical, DmgMethod::explosion);
     }
 
     for (Actor* actor : game_time::actors)
@@ -282,7 +277,10 @@ ConsumeItem DeviceShockwave::trigger_effect()
 
                 if (actor->is_alive())
                 {
-                    knock_back::try_knock_back(*actor, player_pos, false, true);
+                    knock_back::try_knock_back(*actor,
+                                               player_pos,
+                                               false,
+                                               true);
                 }
             }
         }
@@ -332,7 +330,7 @@ ConsumeItem DeviceTranslocator::trigger_effect()
         for (Actor* actor : seen_foes)
         {
             msg_log::add(actor->name_the() + " is teleported.");
-            render::draw_blast_at_cells(std::vector<P> {actor->pos}, clr_yellow);
+            io::draw_blast_at_cells(std::vector<P> {actor->pos}, clr_yellow);
             actor->teleport();
         }
     }
@@ -406,10 +404,12 @@ void DeviceLantern::on_pickup_hook()
     {
         if (other != this && other->id() == id())
         {
-            //Add my turns left to the other lantern, then destroy self (it's better to keep
-            //the existing lantern, to that lit state etc is preserved)
-            static_cast<DeviceLantern*>(other)->nr_turns_left_ += nr_turns_left_;
+            auto* other_lantern = static_cast<DeviceLantern*>(other);
+
+            other_lantern->nr_turns_left_ += nr_turns_left_;
+
             inv.remove_item_in_backpack_with_ptr(this, true);
+
             return;
         }
     }
@@ -417,19 +417,15 @@ void DeviceLantern::on_pickup_hook()
 
 void DeviceLantern::toggle()
 {
-    const std::string toggle_str = is_activated_ ? "I turn off" : "I turn on";
+    const std::string toggle_str =
+        is_activated_ ?
+        "I turn off" : "I turn on";
 
     msg_log::add(toggle_str + " an Electric Lantern.");
 
     is_activated_ = !is_activated_;
 
     audio::play(SfxId::lantern);
-
-    game_time::update_light_map();
-
-    map::player->update_fov();
-
-    render::draw_map_state();
 }
 
 void DeviceLantern::on_std_turn_in_inv(const InvType inv_type)
@@ -450,14 +446,10 @@ void DeviceLantern::on_std_turn_in_inv(const InvType inv_type)
                          true,
                          MorePromptOnMsg::yes);
 
-            dungeon_master::add_history_event("My Electric Lantern ran out.");
+            game::add_history_event("My Electric Lantern ran out.");
 
-            //NOTE: The this deletes the object
+            // NOTE: The this deletes the object
             map::player->inv().remove_item_in_backpack_with_ptr(this, true);
-
-            game_time::update_light_map();
-            map::player->update_fov();
-            render::draw_map_state();
 
             return;
         }
@@ -472,10 +464,6 @@ void DeviceLantern::on_std_turn_in_inv(const InvType inv_type)
             if (nr_flicker_turns_left_ <= 0)
             {
                 working_state_ = LanternWorkingState::working;
-
-                game_time::update_light_map();
-                map::player->update_fov();
-                render::draw_map_state();
             }
         }
         else //Not flickering
@@ -485,10 +473,6 @@ void DeviceLantern::on_std_turn_in_inv(const InvType inv_type)
                 msg_log::add("My Electric Lantern flickers...");
                 working_state_          = LanternWorkingState::flicker;
                 nr_flicker_turns_left_  = rnd::range(4, 8);
-
-                game_time::update_light_map();
-                map::player->update_fov();
-                render::draw_map_state();
             }
             else //Not flickering
             {

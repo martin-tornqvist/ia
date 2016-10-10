@@ -9,10 +9,10 @@
 #include "actor_player.hpp"
 #include "msg_log.hpp"
 #include "game_time.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "item_factory.hpp"
 #include "create_character.hpp"
-#include "dungeon_master.hpp"
+#include "game.hpp"
 #include "player_bon.hpp"
 #include "map.hpp"
 #include "saving.hpp"
@@ -454,12 +454,11 @@ UnequipAllowed Inventory::try_move_from_slot_to_backpack(const SlotId id)
     return unequip_allowed_result;
 }
 
-void Inventory::equip_backpack_item(const size_t backpack_idx, const SlotId slot_id)
+void Inventory::equip_backpack_item(const size_t backpack_idx,
+                                    const SlotId slot_id)
 {
     ASSERT(slot_id != SlotId::END);
     ASSERT(owning_actor_);
-
-    render::draw_map_state();
 
     move_from_backpack_to_slot(slot_id, backpack_idx);
 
@@ -508,20 +507,21 @@ void Inventory::equip_backpack_item(const size_t backpack_idx, const SlotId slot
 
 UnequipAllowed Inventory::try_unequip_slot(const SlotId id)
 {
-    auto& slot = slots_[size_t(id)];
+    auto& slot = slots_[(size_t)id];
 
     Item* item = slot.item;
 
     ASSERT(item);
 
-    render::draw_map_state();
+    auto unequip_allowed_result =
+        try_move_from_slot_to_backpack(slot.id);
 
-    auto unequip_allowed_result = try_move_from_slot_to_backpack(slot.id);
-
-    if (owning_actor_->is_player() && unequip_allowed_result == UnequipAllowed::yes)
+    if (owning_actor_->is_player() &&
+        unequip_allowed_result == UnequipAllowed::yes)
     {
-        //The message should be of the form "... my [item]", so we never want the item name to be
-        //"A [item]". Then we use plural form for stacks of items, and plain form for single items.
+        // The message should be of the form "... my [item]" - we never want the
+        // name to be "A [item]". Therefore we use plural form for stacks, and
+        // plain form for single items.
         const auto item_ref_type = item->nr_items_ > 1 ?
                                    ItemRefType::plural :
                                    ItemRefType::plain;
@@ -578,8 +578,6 @@ void Inventory::swap_wielded_and_prepared(const PassTime pass_time)
     slot1.item  = item2;
     slot2.item  = item1;
 
-    render::draw_map_state();
-
     game_time::tick(pass_time);
 }
 
@@ -589,7 +587,8 @@ bool Inventory::has_item_in_slot(SlotId id) const
     return slots_[int(id)].item;
 }
 
-void Inventory::remove_without_destroying(const InvType inv_type, const size_t idx)
+void Inventory::remove_without_destroying(const InvType inv_type,
+                                          const size_t idx)
 {
     if (inv_type == InvType::slots)
     {

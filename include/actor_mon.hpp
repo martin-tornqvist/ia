@@ -54,6 +54,8 @@ public:
 
     void move(Dir dir) override;
 
+    virtual Clr clr() const override;
+
     void avail_attacks(Actor& defender, AiAvailAttacksData& dst);
 
     AiAttData choose_att(const AiAvailAttacksData& mon_avail_attacks);
@@ -854,7 +856,7 @@ public:
 
     void mk_start_items() override;
 
-    Clr clr() override;
+    Clr clr() const override;
 
     std::string death_msg() const override
     {
@@ -927,7 +929,7 @@ public:
 
     char glyph() const override;
 
-    Clr clr() override;
+    Clr clr() const override;
 
     TileId tile() const override;
 

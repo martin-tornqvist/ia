@@ -15,10 +15,10 @@ enum class SndVol;
 enum ItemWeight
 {
     none        = 0,
-    extra_light = 1,    //E.g. ammo
-    light       = 10,   //E.g. dynamite, daggers
-    medium      = 50,   //E.g. most firearms
-    heavy       = 100,  //E.g. heavy armor, heavy weapons
+    extra_light = 1,    // E.g. ammo
+    light       = 10,   // E.g. dynamite, daggers
+    medium      = 50,   // E.g. most firearms
+    heavy       = 100,  // E.g. heavy armor, heavy weapons
 };
 
 enum class ItemValue
@@ -77,9 +77,17 @@ enum class ItemId
     rat_bite_diseased,
     rat_thing_bite,
     brown_jenkin_bite,
-    worm_mass_bite, mind_worms_bite,
-    green_spider_bite, white_spider_bite, red_spider_bite, shadow_spider_bite, leng_spider_bite,
-    pit_viper_bite, spitting_cobra_bite, spitting_cobra_spit, black_mamba_bite,
+    worm_mass_bite,
+    mind_worms_bite,
+    green_spider_bite,
+    white_spider_bite,
+    red_spider_bite,
+    shadow_spider_bite,
+    leng_spider_bite,
+    pit_viper_bite,
+    spitting_cobra_bite,
+    spitting_cobra_spit,
+    black_mamba_bite,
     ghoul_claw,
     shadow_claw,
     invis_stalker_claw,

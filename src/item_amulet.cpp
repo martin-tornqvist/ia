@@ -5,19 +5,19 @@
 #include "map.hpp"
 #include "msg_log.hpp"
 #include "game_time.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "actor_mon.hpp"
 #include "text_format.hpp"
 #include "actor_factory.hpp"
 #include "feature_rigid.hpp"
 #include "saving.hpp"
-#include "dungeon_master.hpp"
+#include "game.hpp"
 
 namespace
 {
 
-ItemId     effect_list_    [size_t(AmuletEffectId::END)];
-bool        effects_known_  [size_t(AmuletEffectId::END)];
+ItemId  effect_list_    [(size_t)AmuletEffectId::END];
+bool    effects_known_  [(size_t)AmuletEffectId::END];
 
 AmuletEffect* mk_effect(const AmuletEffectId id, Amulet* const amulet)
 {
@@ -274,7 +274,7 @@ void AmuletEffectSummonMon::on_std_turn_equipped()
 {
     const int sound_one_in_n  = 250;
 
-    if (effects_known_[size_t(id())] && rnd::one_in(sound_one_in_n))
+    if (effects_known_[(size_t)id()] && rnd::one_in(sound_one_in_n))
     {
         msg_log::add("I hear a faint whistling sound coming nearer...",
                      clr_white,
@@ -512,7 +512,7 @@ void AmuletEffectShriek::on_std_turn_equipped()
 AmuletEffectBurden::AmuletEffectBurden(Amulet* const amulet) :
     AmuletEffect(amulet)
 {
-    effects_known_[size_t(id())] = true;
+    effects_known_[(size_t)id()] = true;
 }
 
 void AmuletEffectBurden::on_equip(const Verbosity verbosity)
@@ -563,7 +563,7 @@ UnequipAllowed AmuletEffectHpRegenPen::on_unequip()
 Amulet::Amulet(ItemDataT* const item_data) :
     Item(item_data)
 {
-    for (size_t i = 0; i < size_t(AmuletEffectId::END); ++i)
+    for (size_t i = 0; i < (size_t)AmuletEffectId::END; ++i)
     {
         if (effect_list_[i] == item_data->id)
         {
@@ -590,7 +590,7 @@ std::vector<std::string> Amulet::descr() const
 
     for (auto* effect : effects_)
     {
-        const size_t effect_idx = size_t(effect->id());
+        const size_t effect_idx = (size_t)effect->id();
 
         if (effects_known_[effect_idx])
         {
@@ -674,7 +674,7 @@ void Amulet::identify(const Verbosity verbosity)
 
         for (auto* effect : effects_)
         {
-            const size_t effect_idx = size_t(effect->id());
+            const size_t effect_idx = (size_t)effect->id();
 
             effects_known_[effect_idx] = true;
         }
@@ -693,7 +693,7 @@ void Amulet::identify(const Verbosity verbosity)
 
             const std::string name_a = name(ItemRefType::a, ItemRefInf::none);
 
-            dungeon_master::add_history_event("Learned all the properties of " + name_a + ".");
+            game::add_history_event("Learned all the properties of " + name_a + ".");
 
             give_xp_for_identify();
         }
@@ -729,7 +729,7 @@ int Amulet::hp_regen_change(const InvType inv_type) const
 
 void Amulet::effect_noticed(const AmuletEffectId effect_id)
 {
-    const size_t effect_idx = size_t(effect_id);
+    const size_t effect_idx = (size_t)effect_id;
 
     if (!effects_known_[effect_idx])
     {
@@ -740,7 +740,7 @@ void Amulet::effect_noticed(const AmuletEffectId effect_id)
 
         for (auto* effect : effects_)
         {
-            const size_t check_effect_idx = size_t(effect->id());
+            const size_t check_effect_idx = (size_t)effect->id();
 
             if (effects_known_[check_effect_idx])
             {
@@ -771,7 +771,7 @@ void Amulet::effect_noticed(const AmuletEffectId effect_id)
             //which would be redundant.
             const std::string name_a = name(ItemRefType::a, ItemRefInf::none);
 
-            dungeon_master::add_history_event("Learned a new property of " + name_a + ".");
+            game::add_history_event("Learned a new property of " + name_a + ".");
         }
     }
 }
@@ -856,7 +856,7 @@ int rnd_item_bucket_idx_for_effect(const AmuletEffectId effect_to_assign,
 
         //Verify that the effect can be placed on this item by checking if it can
         //be combined with every effect currently assigned to this item.
-        for (size_t i = 0; i < size_t(AmuletEffectId::END); ++i)
+        for (size_t i = 0; i < (size_t)AmuletEffectId::END; ++i)
         {
             const AmuletEffectId current_effect = AmuletEffectId(i);
 
@@ -896,7 +896,7 @@ namespace amulet_handling
 void init()
 {
     //Reset the effect list and knowledge status list
-    for (size_t i = 0; i < size_t(AmuletEffectId::END); ++i)
+    for (size_t i = 0; i < (size_t)AmuletEffectId::END; ++i)
     {
         effect_list_   [i] = ItemId::END;
         effects_known_ [i] = false;
@@ -948,12 +948,12 @@ void init()
         {
             const auto effect_id = primary_effect_bucket[i];
 
-            effect_list_[size_t(effect_id)] = item_id;
+            effect_list_[(size_t)effect_id] = item_id;
         }
         else //All primary effects have been assigned
         {
             //Prevent the remaining amulet data entries from spawning
-            item_data::data[size_t(item_id)].allow_spawn = false;
+            item_data::data[(size_t)item_id].allow_spawn = false;
         }
     }
 
@@ -971,19 +971,19 @@ void init()
 
         if (item_idx >= 0)
         {
-            const ItemId id = item_bucket[size_t(item_idx)];
+            const ItemId id = item_bucket[(size_t)item_idx];
 
-            ASSERT(item_data::data[size_t(id)].type == ItemType::amulet);
+            ASSERT(item_data::data[(size_t)id].type == ItemType::amulet);
 
-            effect_list_[size_t(secondary_effect_id)] = id;
-            item_bucket.erase(begin(item_bucket) + size_t(item_idx));
+            effect_list_[(size_t)secondary_effect_id] = id;
+            item_bucket.erase(begin(item_bucket) + (size_t)item_idx);
         }
     }
 }
 
 void save()
 {
-    for (size_t i = 0; i < size_t(AmuletEffectId::END); ++i)
+    for (size_t i = 0; i < (size_t)AmuletEffectId::END; ++i)
     {
         saving::put_int(int(effect_list_[i]));
         saving::put_bool(effects_known_[i]);
@@ -992,7 +992,7 @@ void save()
 
 void load()
 {
-    for (size_t i = 0; i < size_t(AmuletEffectId::END); ++i)
+    for (size_t i = 0; i < (size_t)AmuletEffectId::END; ++i)
     {
         effect_list_[i]   = ItemId(saving::get_int());
         effects_known_[i] = saving::get_bool();

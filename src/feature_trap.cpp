@@ -16,7 +16,7 @@
 #include "inventory.hpp"
 #include "sound.hpp"
 #include "actor_factory.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "player_bon.hpp"
 #include "item_factory.hpp"
 #include "attack.hpp"
@@ -37,8 +37,11 @@ Trap::Trap(const P& feature_pos,
 
     if (!rigid_here->can_have_rigid())
     {
-        TRACE << "Cannot place trap on feature id: " << int(rigid_here->id()) << std::endl
-              << "Trap id: " << (int)id << std::endl;
+        TRACE << "Cannot place trap on feature id: " << (int)rigid_here->id()
+              << std::endl
+              << "Trap id: " << (int)id
+              << std::endl;
+
         ASSERT(false);
         return;
     }
@@ -53,7 +56,7 @@ Trap::Trap(const P& feature_pos,
         {
             trap_impl_ = impl;
         }
-        else //Placement not valid
+        else // Placement not valid
         {
             delete impl;
         }
@@ -61,7 +64,7 @@ Trap::Trap(const P& feature_pos,
 
     if (id == TrapId::any)
     {
-        //Attempt to set a trap implementation until a valid one is picked
+        // Attempt to set a trap implementation until a valid one is picked
         while (true)
         {
             const auto random_id = TrapId(rnd::range(0, (int)TrapId::END - 1));
@@ -75,10 +78,10 @@ Trap::Trap(const P& feature_pos,
             }
         }
     }
-    else //Make a specific trap type
+    else // Make a specific trap type
     {
-        //NOTE: This may fail, in which case we have no trap implementation.
-        //The trap creator is responsible for handling this situation.
+        // NOTE: This may fail, in which case we have no trap implementation.
+        // The trap creator is responsible for handling this situation.
         try_place_trap_or_discard(id);
     }
 }
@@ -189,7 +192,7 @@ void Trap::on_new_turn_hook()
 
         if (nr_turns_until_trigger_ == 0)
         {
-            //NOTE: This will reset number of turns  until triggered
+            // NOTE: This will reset number of turns  until triggered
             trigger_trap(nullptr);
         }
     }
@@ -203,18 +206,19 @@ void Trap::trigger_start(const Actor* actor)
 
     if (actor == map::player)
     {
-        //Reveal trap if triggered by player stepping on it
+        // Reveal trap if triggered by player stepping on it
         reveal(false);
 
         map::player->update_fov();
-        render::draw_map_state();
+
+        states::draw();
     }
 
     if (is_magical())
     {
-        //TODO: Play sfx for magic traps (if player)
+        // TODO: Play sfx for magic traps (if player)
     }
-    else //Not magical
+    else // Not magical
     {
         if (type() != TrapId::web)
         {
@@ -224,7 +228,7 @@ void Trap::trigger_start(const Actor* actor)
 
             if (actor == map::player)
             {
-                //If player is triggering, make the message a bit more "foreboding"
+                // If player is triggering, make the message a bit more "foreboding"
                 msg += "..";
 
                 more_prompt_on_msg = MorePromptOnMsg::yes;
@@ -312,7 +316,7 @@ void Trap::bump(Actor& actor_bumping)
             {
                 map::player->update_fov();
 
-                render::draw_map_state();
+                states::draw();
 
                 msg_log::add("I avoid a " + trap_name + ".", clr_msg_good);
             }
@@ -369,11 +373,13 @@ void Trap::disarm()
     if (is_hidden())
     {
         msg_log::add(msg_disarm_no_trap);
-        render::draw_map_state();
+
+        states::draw();
+
         return;
     }
 
-    //Spider webs are automatically destroyed if wielding machete
+    // Spider webs are automatically destroyed if wielding machete
     bool is_auto_succeed = false;
 
     if (type() == TrapId::web)
@@ -423,7 +429,7 @@ void Trap::disarm()
     {
         msg_log::add(trap_impl_->disarm_fail_msg());
 
-        render::draw_map_state();
+        states::draw();
 
         const int trigger_one_in_n = is_blessed ? 9 : is_cursed ? 2 : 6;
 
@@ -503,7 +509,7 @@ void Trap::reveal(const bool print_messsage_when_player_sees)
 
     if (map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
-        render::draw_map_state();
+        states::draw();
 
         if (print_messsage_when_player_sees)
         {
@@ -1063,7 +1069,7 @@ void TrapSummonMon::trigger()
         {
             mon->set_player_aware_of_me();
 
-            render::draw_map_state();
+            states::draw();
 
             msg_log::add(mon->name_a() + " appears!");
         }

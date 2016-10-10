@@ -3,10 +3,9 @@
 #include <cassert>
 
 #include "player_bon.hpp"
-#include "sdl_wrapper.hpp"
+#include "sdl_base.hpp"
 #include "config.hpp"
-#include "input.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "audio.hpp"
 #include "line_calc.hpp"
 #include "gods.hpp"
@@ -15,7 +14,7 @@
 #include "item_rod.hpp"
 #include "map.hpp"
 #include "msg_log.hpp"
-#include "dungeon_master.hpp"
+#include "game.hpp"
 #include "bot.hpp"
 #include "manual.hpp"
 #include "player_spells.hpp"
@@ -30,17 +29,16 @@
 namespace init
 {
 
-bool is_cheat_vision_enabled    = false;
-bool quit_to_main_menu          = false;
+bool is_cheat_vision_enabled = false;
 
 void init_io()
 {
     TRACE_FUNC_BEGIN;
-    sdl_wrapper::init();
+    sdl_base::init();
     config::init();
-    input::init();
+    io::init();
     query::init();
-    render::init();
+    io::init();
     audio::init();
     TRACE_FUNC_END;
 }
@@ -49,9 +47,9 @@ void cleanup_io()
 {
     TRACE_FUNC_BEGIN;
     audio::cleanup();
-    render::cleanup();
-    input::cleanup();
-    sdl_wrapper::cleanup();
+    io::cleanup();
+    io::cleanup();
+    sdl_base::cleanup();
     TRACE_FUNC_END;
 }
 
@@ -61,7 +59,6 @@ void init_game()
     saving::init();
     line_calc::init();
     gods::init();
-    manual::init();
     map_templ_handling::init();
     TRACE_FUNC_END;
 }
@@ -83,14 +80,13 @@ void init_session()
     scroll_handling::init();
     potion_handling::init();
     rod_handling::init();
-    inv_handling::init();
     game_time::init();
     map_travel::init();
     map::init();
     player_bon::init();
     insanity::init();
     msg_log::init();
-    dungeon_master::init();
+    game::init();
     bot::init();
     player_spells::init();
     amulet_handling::init();
@@ -110,4 +106,4 @@ void cleanup_session()
     TRACE_FUNC_END;
 }
 
-} //init
+} // init

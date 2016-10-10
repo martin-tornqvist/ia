@@ -58,6 +58,8 @@ public:
 
     void move(Dir dir) override;
 
+    Clr clr() const override;
+
     void mk_start_items() override;
 
     void on_actor_turn() override;
@@ -67,13 +69,16 @@ public:
                     const Dir dir_to_origin,
                     const int percent_audible_distance);
 
-    void incr_shock(const ShockLvl shock_value, ShockSrc shock_src);
+    void incr_shock(const ShockLvl shock_value,
+                    ShockSrc shock_src);
 
-    void incr_shock(const int shock, ShockSrc shock_src);
+    void incr_shock(const int shock,
+                    ShockSrc shock_src);
 
-    void restore_shock(const int amount_restored, const bool is_temp_shock_restored);
+    void restore_shock(const int amount_restored,
+                       const bool is_temp_shock_restored);
 
-    //Used for determining if '!'-marks should be drawn on the player map symbol
+    // Used for determining if '!'-marks should be drawn over the player
     double perm_shock_taken_current_turn() const
     {
         return perm_shock_taken_current_turn_;
@@ -93,12 +98,10 @@ public:
     void kick_mon(Actor& defender);
     void hand_att(Actor& defender);
 
-    void update_clr() override;
-
     void add_light_hook(bool light_map[map_w][map_h]) const override;
 
-    void on_log_msg_printed();  //Aborts e.g. searching and quick move
-    void interrupt_actions();   //Aborts e.g. healing
+    void on_log_msg_printed();  // Aborts e.g. searching and quick move
+    void interrupt_actions();   // Aborts e.g. healing
 
     int enc_percent() const;
 

@@ -11,12 +11,10 @@
 #include "map.hpp"
 #include "mapgen.hpp"
 #include "populate_items.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "msg_log.hpp"
 #include "feature_rigid.hpp"
 #include "saving.hpp"
-
-#include "sdl_wrapper.hpp" // *** Temporary ***
 
 namespace map_travel
 {
@@ -37,10 +35,10 @@ void mk_lvl(const MapType& map_type)
     auto  start_time   = std::chrono::steady_clock::now();
 #endif
 
-    //TODO: When the map is invalid, any unique items spawned are lost forever.
-    //Currently, the only effect of this should be that slightly fewever unique items
-    //are found by the player.
-    //It is bad design and should be fixed (but "good enough" for v17.0).
+    // TODO: When the map is invalid, any unique items spawned are lost forever.
+    //       Currently, the only effect of this should be that slightly fewever
+    //       unique items are found by the player. It is bad design however, and
+    //       should be fixed.
 
     while (!map_ok)
     {
@@ -83,9 +81,11 @@ void mk_lvl(const MapType& map_type)
 #ifndef NDEBUG
     auto diff_time = std::chrono::steady_clock::now() - start_time;
 
+    const double duration =
+        std::chrono::duration<double, std::milli>(diff_time).count();
+
     TRACE << "map built after   " << nr_attempts << " attempt(s). " << std::endl
-          << "Total time taken: "
-          << std::chrono::duration<double, std::milli>(diff_time).count() << " ms" << std::endl;
+          << "Total time taken: " <<  duration << " ms" << std::endl;
 #endif
 
     TRACE_FUNC_END;
@@ -167,12 +167,11 @@ void go_to_nxt()
     map::player->restore_shock(999, true);
 
     map::player->tgt_ = nullptr;
-    game_time::update_light_map();
-    map::player->update_fov();
-    map::player->update_clr();
-    render::draw_map_state();
 
-    if (map_data.is_main_dungeon == IsMainDungeon::yes && map::dlvl == dlvl_last - 1)
+    map::player->update_fov();
+
+    if (map_data.is_main_dungeon == IsMainDungeon::yes &&
+        map::dlvl == (dlvl_last - 1))
     {
         msg_log::add("An ominous voice thunders in my ears.",
                      clr_white,
@@ -188,7 +187,9 @@ void go_to_nxt()
     {
         msg_log::add("I am plagued by my phobia of deep places!");
 
-        map::player->prop_handler().try_add(new PropTerrified(PropTurns::std));
+        map::player->prop_handler().try_add(
+            new PropTerrified(PropTurns::std));
+
         return;
     }
 
@@ -200,4 +201,4 @@ MapType map_type()
     return map_list.front().type;
 }
 
-} //map_travel
+} // map_travel

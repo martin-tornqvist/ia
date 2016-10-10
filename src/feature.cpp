@@ -4,7 +4,7 @@
 #include "actor.hpp"
 #include "actor_player.hpp"
 #include "msg_log.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "map_parsing.hpp"
 #include "game_time.hpp"
 #include "map_travel.hpp"

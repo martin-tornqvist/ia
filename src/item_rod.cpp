@@ -6,12 +6,12 @@
 #include "msg_log.hpp"
 #include "map.hpp"
 #include "game_time.hpp"
-#include "dungeon_master.hpp"
+#include "game.hpp"
 #include "item_factory.hpp"
 #include "fov.hpp"
 #include "map_parsing.hpp"
 #include "actor_mon.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "feature_rigid.hpp"
 #include "saving.hpp"
 
@@ -118,7 +118,7 @@ void Rod::identify(const Verbosity verbosity)
 
             msg_log::add("I have identified " + name_after + ".");
 
-            dungeon_master::add_history_event("Identified " + name_after + ".");
+            game::add_history_event("Identified " + name_after + ".");
 
             give_xp_for_identify();
         }
@@ -190,8 +190,6 @@ void RodPurgeInvis::activate_impl()
                 if (map::player->can_see_actor(*actor))
                 {
                     mon->is_sneaking_ = false;
-
-                    render::draw_map_state();
 
                     const std::string mon_name = mon->name_a();
 
@@ -269,9 +267,6 @@ void RodOpening::activate_impl()
 
     if (is_any_opened)
     {
-        map::player->update_fov();
-        render::draw_map_state();
-
         identify(Verbosity::verbose);
     }
 }

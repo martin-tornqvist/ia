@@ -8,7 +8,7 @@
 #include <SDL.h>
 
 #include "config.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "map.hpp"
 #include "actor_player.hpp"
 #include "throwing.hpp"
@@ -37,9 +37,12 @@ struct BasicFixture
     {
         init::init_game();
         init::init_session();
+
         map::player->mk_start_items();
         map::player->pos = P(1, 1);
-        map::reset_map(); //Because map generation is not run
+
+        // Because map generation is not run
+        map::reset_map();
     }
 
     ~BasicFixture()
@@ -196,43 +199,43 @@ TEST(format_text)
     int lines_max_w = 100;
     text_format::split(str, lines_max_w, formatted_lines);
     CHECK_EQUAL(str, formatted_lines[0]);
-    CHECK_EQUAL(1, int(formatted_lines.size()));
+    CHECK_EQUAL(1, (int)formatted_lines.size());
 
     lines_max_w = 18;
     text_format::split(str, lines_max_w, formatted_lines);
     CHECK_EQUAL("one two three four", formatted_lines[0]);
-    CHECK_EQUAL(1, int(formatted_lines.size()));
+    CHECK_EQUAL(1, (int)formatted_lines.size());
 
     lines_max_w = 17;
     text_format::split(str, lines_max_w, formatted_lines);
     CHECK_EQUAL("one two three",    formatted_lines[0]);
     CHECK_EQUAL("four",             formatted_lines[1]);
-    CHECK_EQUAL(2, int(formatted_lines.size()));
+    CHECK_EQUAL(2, (int)formatted_lines.size());
 
     lines_max_w = 15;
     text_format::split(str, lines_max_w, formatted_lines);
     CHECK_EQUAL("one two three",    formatted_lines[0]);
     CHECK_EQUAL("four",             formatted_lines[1]);
-    CHECK_EQUAL(2, int(formatted_lines.size()));
+    CHECK_EQUAL(2, (int)formatted_lines.size());
 
     lines_max_w = 11;
     text_format::split(str, lines_max_w, formatted_lines);
     CHECK_EQUAL("one two",          formatted_lines[0]);
     CHECK_EQUAL("three four",       formatted_lines[1]);
-    CHECK_EQUAL(2, int(formatted_lines.size()));
+    CHECK_EQUAL(2, (int)formatted_lines.size());
 
     lines_max_w    = 4;
     str         = "123456";
     text_format::split(str, lines_max_w, formatted_lines);
     CHECK_EQUAL("123456",           formatted_lines[0]);
-    CHECK_EQUAL(1, int(formatted_lines.size()));
+    CHECK_EQUAL(1, (int)formatted_lines.size());
 
     lines_max_w    = 4;
     str         = "12 345678";
     text_format::split(str, lines_max_w, formatted_lines);
     CHECK_EQUAL("12",               formatted_lines[0]);
     CHECK_EQUAL("345678",           formatted_lines[1]);
-    CHECK_EQUAL(2, int(formatted_lines.size()));
+    CHECK_EQUAL(2, (int)formatted_lines.size());
 
     str = "";
     text_format::split(str, lines_max_w, formatted_lines);
@@ -534,13 +537,13 @@ TEST_FIXTURE(BasicFixture, explosions)
     //Check damage to actors
     Actor* a1 = actor_factory::mk(ActorId::rat, P(x0 + 1, y0));
     explosion::run(P(x0, y0), ExplType::expl);
-    CHECK_EQUAL(int(ActorState::destroyed), int(a1->state()));
+    CHECK_EQUAL((int)ActorState::destroyed, int(a1->state()));
 
     //Check that corpses can be destroyed, and do not block living actors
-    const int NR_CORPSES = 3;
-    Actor* corpses[NR_CORPSES];
+    const int nr_corpses = 3;
+    Actor* corpses[nr_corpses];
 
-    for (int i = 0; i < NR_CORPSES; ++i)
+    for (int i = 0; i < nr_corpses; ++i)
     {
         corpses[i] = actor_factory::mk(ActorId::rat, P(x0 + 1, y0));
         corpses[i]->die(false, false, false);
@@ -549,15 +552,15 @@ TEST_FIXTURE(BasicFixture, explosions)
     a1 = actor_factory::mk(ActorId::rat, P(x0 + 1, y0));
     explosion::run(P(x0, y0), ExplType::expl);
 
-    for (int i = 0; i < NR_CORPSES; ++i)
+    for (int i = 0; i < nr_corpses; ++i)
     {
-        CHECK_EQUAL(int(ActorState::destroyed), int(corpses[i]->state()));
+        CHECK_EQUAL((int)ActorState::destroyed, int(corpses[i]->state()));
     }
 
-    CHECK_EQUAL(int(ActorState::destroyed), int(a1->state()));
+    CHECK_EQUAL((int)ActorState::destroyed, int(a1->state()));
 
     //Check explosion applying Burning to living and dead actors
-    for (int i = 0; i < NR_CORPSES; ++i)
+    for (int i = 0; i < nr_corpses; ++i)
     {
         corpses[i] = actor_factory::mk(ActorId::rat, P(x0 + 1, y0));
         corpses[i]->die(false, false, false);
@@ -579,7 +582,7 @@ TEST_FIXTURE(BasicFixture, explosions)
     CHECK(a1->has_prop(PropId::burning));
     CHECK(a2->has_prop(PropId::burning));
 
-    for (int i = 0; i < NR_CORPSES; ++i)
+    for (int i = 0; i < nr_corpses; ++i)
     {
         PropHandler& prop_hlr = corpses[i]->prop_handler();
 
@@ -700,7 +703,7 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
     map::player->pos = p;
 
     Inventory&  inv         = map::player->inv();
-    InvSlot&   body_slot   = inv.slots_[size_t(SlotId::body)];
+    InvSlot&   body_slot   = inv.slots_[(size_t)SlotId::body];
 
     delete body_slot.item;
     body_slot.item = nullptr;
@@ -708,7 +711,7 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
     PropHandler& prop_hlr = map::player->prop_handler();
 
     //Check that no props are enabled
-    for (size_t i = 0; i < size_t(PropId::END); ++i)
+    for (size_t i = 0; i < (size_t)PropId::END; ++i)
     {
         CHECK(!prop_hlr.has_prop(PropId(i)));
         CHECK(!prop_hlr.prop(PropId(i)));
@@ -722,7 +725,7 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
     //Check that the props are applied
     size_t nr_props = 0;
 
-    for (size_t i = 0; i < size_t(PropId::END); ++i)
+    for (size_t i = 0; i < (size_t)PropId::END; ++i)
     {
         if (prop_hlr.has_prop(PropId(i)))
         {
@@ -749,7 +752,7 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
     CHECK(inv.backpack_idx(ItemId::armor_asb_suit) != -1);
 
     //Check that the properties are cleared
-    for (int i = 0; i < int(PropId::END); ++i)
+    for (int i = 0; i < (int)PropId::END; ++i)
     {
         CHECK(!prop_hlr.has_prop(PropId(i)));
         CHECK(!prop_hlr.prop(PropId(i)));
@@ -764,7 +767,7 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
     //Check that the props are applied
     nr_props = 0;
 
-    for (int i = 0; i < int(PropId::END); ++i)
+    for (int i = 0; i < (int)PropId::END; ++i)
     {
         if (prop_hlr.has_prop(PropId(i)))
         {
@@ -788,7 +791,7 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
     //Drop the asbeshos suit on the ground
     item_drop::try_drop_item_from_inv(*map::player,
                                       InvType::slots,
-                                      int(SlotId::body),
+                                      (int)SlotId::body,
                                       1);
 
     //Check that no item exists in body slot
@@ -799,7 +802,7 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
     CHECK(cell.item);
 
     //Check that the properties are cleared
-    for (int i = 0; i < int(PropId::END); ++i)
+    for (int i = 0; i < (int)PropId::END; ++i)
     {
         CHECK(!prop_hlr.has_prop(PropId(i)));
         CHECK(!prop_hlr.prop(PropId(i)));
@@ -813,7 +816,7 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
     //Check that the props are applied
     nr_props = 0;
 
-    for (int i = 0; i < int(PropId::END); ++i)
+    for (int i = 0; i < (int)PropId::END; ++i)
     {
         if (prop_hlr.has_prop(PropId(i)))
         {
@@ -940,7 +943,7 @@ TEST_FIXTURE(BasicFixture, saving_game)
     map::dlvl = 7;
 
     //Actor data
-    actor_data::data[size_t(ActorId::END) - 1].nr_kills = 123;
+    actor_data::data[(size_t)ActorId::END - 1].nr_kills = 123;
 
     //Learned spells
     player_spells::learn_spell(SpellId::bless, Verbosity::silent);
@@ -975,7 +978,7 @@ TEST_FIXTURE(BasicFixture, loading_game)
 {
     CHECK(saving::is_save_available());
 
-    const int PLAYER_MAX_HP_BEFORE_LOAD = map::player->hp_max(true);
+    const int player_max_hp_before_load = map::player->hp_max(true);
 
     saving::load_game();
 
@@ -988,8 +991,8 @@ TEST_FIXTURE(BasicFixture, loading_game)
     CHECK_EQUAL(false, item_data::data[int(ItemId::scroll_det_mon)].is_identified);
 
     //Bonus
-    CHECK_EQUAL(int(Bg::rogue), int(player_bon::bg()));
-    CHECK(player_bon::traits[size_t(Trait::healer)]);
+    CHECK_EQUAL((int)Bg::rogue, int(player_bon::bg()));
+    CHECK(player_bon::traits[(size_t)Trait::healer]);
     CHECK(!player_bon::traits[size_t(Trait::fast_shooter)]);
 
     //Player inventory
@@ -1033,7 +1036,7 @@ TEST_FIXTURE(BasicFixture, loading_game)
         else if (id == ItemId::device_blaster)
         {
             is_sentry_device_found = true;
-            CHECK_EQUAL(int(Condition::shoddy),
+            CHECK_EQUAL((int)Condition::shoddy,
                         int(static_cast<StrangeDevice*>(item)->condition_));
         }
         else if (id == ItemId::lantern)
@@ -1042,7 +1045,7 @@ TEST_FIXTURE(BasicFixture, loading_game)
             DeviceLantern* lantern = static_cast<DeviceLantern*>(item);
             CHECK_EQUAL(789, lantern->nr_turns_left_);
             CHECK_EQUAL(456, lantern->nr_flicker_turns_left_);
-            CHECK_EQUAL(int(LanternWorkingState::flicker), int(lantern->working_state_));
+            CHECK_EQUAL((int)LanternWorkingState::flicker, int(lantern->working_state_));
             CHECK(lantern->is_activated_);
         }
     }
@@ -1060,13 +1063,13 @@ TEST_FIXTURE(BasicFixture, loading_game)
     CHECK_EQUAL("TEST PLAYER", def.name_the);
 
     //Check max HP (affected by disease)
-    CHECK_EQUAL((PLAYER_MAX_HP_BEFORE_LOAD + 5) / 2, map::player->hp_max(true));
+    CHECK_EQUAL((player_max_hp_before_load + 5) / 2, map::player->hp_max(true));
 
     //map
     CHECK_EQUAL(7, map::dlvl);
 
     //Actor data
-    CHECK_EQUAL(123, actor_data::data[int(ActorId::END) - 1].nr_kills);
+    CHECK_EQUAL(123, actor_data::data[(int)ActorId::END - 1].nr_kills);
 
     //Learned spells
     CHECK(player_spells::is_spell_learned(SpellId::bless));
@@ -1136,11 +1139,11 @@ TEST_FIXTURE(BasicFixture, floodfilling)
     int flood[map_w][map_h];
 
     floodfill(P(20, 10),
-                   blocked,
-                   flood,
-                   INT_MAX,
-                   P(-1, -1),
-                   true);
+              blocked,
+              flood,
+              INT_MAX,
+              P(-1, -1),
+              true);
 
     CHECK_EQUAL(0, flood[20][10]);
     CHECK_EQUAL(1, flood[19][10]);

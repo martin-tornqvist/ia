@@ -6,6 +6,12 @@
 #include "feature.hpp"
 #include "actor_data.hpp"
 
+
+//
+// TODO: Use the time system from "sci-fi RL" instead. The current time system
+//       in IA is extremely weird!
+//
+
 class Mob;
 
 enum class TurnType

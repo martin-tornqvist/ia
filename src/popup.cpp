@@ -1,11 +1,11 @@
 #include "popup.hpp"
 
 #include "config.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "text_format.hpp"
 #include "msg_log.hpp"
 #include "query.hpp"
-#include "menu_input.hpp"
+#include "browser.hpp"
 #include "audio.hpp"
 
 namespace popup
@@ -15,38 +15,37 @@ namespace
 {
 
 const int text_w_std    = 39;
-const int TEXT_X0_STD   = map_w_half - ((text_w_std) / 2);
+const int text_x0_std   = map_w_half - ((text_w_std) / 2);
 
-int print_box_and_get_title_y_pos(const int text_h_tot, const int text_w)
+int print_box_and_get_title_y_pos(const int text_h_tot,
+                                  const int text_w)
 {
     const int box_w       = text_w + 2;
     const int box_h       = text_h_tot + 2;
 
-    const int X0          = map_w_half - ((text_w) / 2) - 1;
+    const int x0          = map_w_half - ((text_w) / 2) - 1;
 
-    const int Y0          = map_h_half - (box_h / 2) - 1;
-    const int X1          = X0 + box_w - 1;
-    const int Y1          = Y0 + box_h - 1;
+    const int y0          = map_h_half - (box_h / 2) - 1;
+    const int x1          = x0 + box_w - 1;
+    const int y1          = y0 + box_h - 1;
 
-    render::cover_area(Panel::map, P(X0, Y0), P(box_w, box_h));
-    render::draw_box(R(X0, Y0, X1, Y1), Panel::map);
+    io::cover_area(Panel::map,
+                       P(x0, y0),
+                       P(box_w, box_h));
 
-    return Y0 + 1;
+    io::draw_box(R(x0, y0, x1, y1),
+                     Panel::map);
+
+    return y0 + 1;
 }
 
 void menu_msg_drawing_helper(const std::vector<std::string>& lines,
                              const std::vector<std::string>& choices,
-                             const bool draw_map_state,
                              const size_t current_choice,
-                             const int TEXT_X0,
+                             const int text_x0,
                              const int text_h_tot,
                              const std::string& title)
 {
-    if (draw_map_state)
-    {
-        render::draw_map_state(UpdateScreen::no);
-    }
-
     int text_width = text_w_std;
 
     //If no message lines, set width to widest menu option or title with
@@ -66,7 +65,7 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
 
     if (!title.empty())
     {
-        render::draw_text_center(title,
+        io::draw_text_center(title,
                                    Panel::map,
                                    P(map_w_half, y),
                                    clr_title,
@@ -82,18 +81,18 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
 
         if (show_msg_centered)
         {
-            render::draw_text_center(line,
-                                       Panel::map,
-                                       P(map_w_half, y),
-                                       clr_white,
-                                       clr_black,
-                                       true);
+            io::draw_text_center(line,
+                                     Panel::map,
+                                     P(map_w_half, y),
+                                     clr_white,
+                                     clr_black,
+                                     true);
         }
         else //Draw the message with left alignment
         {
-            render::draw_text(line,
+            io::draw_text(line,
                               Panel::map,
-                              P(TEXT_X0, y),
+                              P(text_x0, y),
                               clr_white);
         }
 
@@ -109,7 +108,7 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
     {
         Clr clr = i == current_choice ? clr_menu_highlight : clr_menu_drk;
 
-        render::draw_text_center(choices[i],
+        io::draw_text_center(choices[i],
                                    Panel::map,
                                    P(map_w_half, y),
                                    clr,
@@ -118,21 +117,17 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
         ++y;
     }
 
-    render::update_screen();
+    io::update_screen();
 }
 
-} //namespace
+} // namespace
 
 void show_msg(const std::string& msg,
-              const bool draw_map_state,
               const std::string& title,
               const SfxId sfx,
               const int w_change)
 {
-    if (draw_map_state)
-    {
-        render::draw_map_state(UpdateScreen::no);
-    }
+    states::draw();
 
     const int text_w = text_w_std + w_change;
 
@@ -150,7 +145,7 @@ void show_msg(const std::string& msg,
 
     if (!title.empty())
     {
-        render::draw_text_center(title, Panel::map,
+        io::draw_text_center(title, Panel::map,
                                    P(map_w_half, y),
                                    clr_title,
                                    clr_black,
@@ -165,7 +160,7 @@ void show_msg(const std::string& msg,
 
         if (show_msg_centered)
         {
-            render::draw_text_center(line,
+            io::draw_text_center(line,
                                        Panel::map,
                                        P(map_w_half, y),
                                        clr_white,
@@ -174,11 +169,11 @@ void show_msg(const std::string& msg,
         }
         else
         {
-            const int TEXT_X0 = TEXT_X0_STD - ((w_change + 1) / 2);
+            const int text_x0 = text_x0_std - ((w_change + 1) / 2);
 
-            render::draw_text(line,
+            io::draw_text(line,
                               Panel::map,
-                              P(TEXT_X0, y),
+                              P(text_x0, y),
                               clr_white);
         }
 
@@ -187,23 +182,17 @@ void show_msg(const std::string& msg,
 
     y += 2;
 
-    render::draw_text_center("[space/esc/enter] to continue",
-                               Panel::map,
-                               P(map_w_half, y),
-                               clr_popup_label);
+    io::draw_text_center(confirm_info_str_no_space,
+                         Panel::map,
+                         P(map_w_half, y),
+                         clr_popup_label);
 
-    render::update_screen();
+    io::update_screen();
 
     query::wait_for_confirm();
-
-    if (draw_map_state)
-    {
-        render::draw_map_state();
-    }
 }
 
 int show_menu_msg(const std::string& msg,
-                  const bool draw_map_state,
                   const std::vector<std::string>& choices,
                   const std::string& title,
                   const SfxId sfx)
@@ -213,7 +202,10 @@ int show_menu_msg(const std::string& msg,
         return 0;
     }
 
+    states::draw();
+
     std::vector<std::string> lines;
+
     text_format::split(msg, text_w_std, lines);
 
     const int title_h         = title.empty() ? 0 : 1;
@@ -221,55 +213,56 @@ int show_menu_msg(const std::string& msg,
     const int nr_blank_lines  = (nr_msg_lines == 0 && title_h == 0) ? 0 : 1;
     const int nr_choices      = int(choices.size());
 
-    const int text_h_tot = title_h + nr_msg_lines + nr_blank_lines + nr_choices;
+    const int text_h_tot =
+        title_h +
+        nr_msg_lines +
+        nr_blank_lines +
+        nr_choices;
 
     MenuBrowser browser(nr_choices);
 
-    if (sfx != SfxId::END) {audio::play(sfx);}
+    if (sfx != SfxId::END)
+    {
+        audio::play(sfx);
+    }
 
     menu_msg_drawing_helper(lines,
                             choices,
-                            draw_map_state,
                             browser.y(),
-                            TEXT_X0_STD,
+                            text_x0_std,
                             text_h_tot,
                             title);
 
     while (true)
     {
-        const MenuAction action = menu_input::action(browser, MenuInputMode::scroll);
+        const auto input = io::get();
+
+        const MenuAction action = browser.read(input,
+                                               MenuInputMode::scrolling);
 
         switch (action)
         {
         case MenuAction::moved:
             menu_msg_drawing_helper(lines,
                                     choices,
-                                    draw_map_state,
                                     browser.y(),
-                                    TEXT_X0_STD,
+                                    text_x0_std,
                                     text_h_tot,
                                     title);
             break;
 
         case MenuAction::esc:
         case MenuAction::space:
-            if (draw_map_state)
-            {
-                render::draw_map_state();
-            }
-
             return nr_choices - 1;
 
         case MenuAction::selected:
         case MenuAction::selected_shift:
-            if (draw_map_state)
-            {
-                render::draw_map_state();
-            }
-
             return browser.y();
+
+        case MenuAction::none:
+            break;
         }
     }
 }
 
-} //Popup
+} // popup

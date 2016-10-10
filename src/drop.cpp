@@ -12,7 +12,7 @@
 #include "item_factory.hpp"
 #include "map_parsing.hpp"
 #include "feature_rigid.hpp"
-#include "render.hpp"
+#include "io.hpp"
 
 
 namespace item_drop
@@ -49,9 +49,10 @@ void try_drop_item_from_inv(Actor& actor,
         const bool  is_stackable            = data.is_stackable;
         const int   nr_items_before_drop    = item_to_drop->nr_items_;
 
-        const bool  is_whole_stack_dropped  = !is_stackable             ||
-                                              nr_items_to_drop == -1    ||
-                                              (nr_items_to_drop >= nr_items_before_drop);
+        const bool  is_whole_stack_dropped =
+            !is_stackable             ||
+            nr_items_to_drop == -1    ||
+            (nr_items_to_drop >= nr_items_before_drop);
 
         std::string item_ref = "";
 
@@ -89,7 +90,7 @@ void try_drop_item_from_inv(Actor& actor,
         if (&actor == map::player)
         {
             msg_log::clear();
-            render::draw_map_state();
+
             msg_log::add("I drop " + item_ref + ".",
                          clr_text,
                          false,

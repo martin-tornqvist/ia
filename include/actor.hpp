@@ -98,7 +98,7 @@ public:
              const bool allow_gore,
              const bool allow_drop_items);
 
-    //Used by Ghoul class and Ghoul monsters
+    // Used by Ghoul class and Ghoul monsters
     DidAction try_eat_corpse();
     void on_feed();
 
@@ -111,7 +111,11 @@ public:
     virtual void on_actor_turn() {}
     virtual void on_std_turn() {}
 
-    virtual void update_clr();
+    virtual TileId tile() const;
+
+    virtual char glyph() const;
+
+    virtual Clr clr() const = 0;
 
     void seen_actors(std::vector<Actor*>& out);
 
@@ -171,21 +175,6 @@ public:
         return data_->is_humanoid;
     }
 
-    virtual char glyph() const
-    {
-        return glyph_;
-    }
-
-    virtual Clr clr()
-    {
-        return clr_;
-    }
-
-    virtual TileId tile() const
-    {
-        return tile_;
-    }
-
     void add_light(bool light_map[map_w][map_h]) const;
 
     virtual void add_light_hook(bool light[map_w][map_h]) const
@@ -242,11 +231,11 @@ protected:
     virtual void mk_start_items() {}
 
     ActorState  state_;
-    Clr clr_;
-    char glyph_;
-    TileId tile_;
 
-    int hp_, hp_max_, spi_, spi_max_;
+    int hp_;
+    int hp_max_;
+    int spi_;
+    int spi_max_;
 
     P lair_pos_;
 

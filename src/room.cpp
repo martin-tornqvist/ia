@@ -14,8 +14,8 @@
 #include "game_time.hpp"
 
 #ifdef DEMO_MODE
-#include "render.hpp"
-#include "sdl_wrapper.hpp"
+#include "io.hpp"
+#include "sdl_base.hpp"
 #endif // DEMO_MODE
 
 namespace
@@ -1455,7 +1455,7 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
     }
 
 #ifdef DEMO_MODE
-    render::draw_map();
+    io::draw_map();
 
     for (int y = 1; y < map_h - 1; ++y)
     {
@@ -1465,18 +1465,18 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
 
             if (valid_room_entries0[x][y])
             {
-                render::draw_glyph('0', Panel::map, p, clr_red_lgt);
+                io::draw_glyph('0', Panel::map, p, clr_red_lgt);
             }
 
             if (valid_room_entries1[x][y])
             {
-                render::draw_glyph('1', Panel::map, p, clr_red_lgt);
+                io::draw_glyph('1', Panel::map, p, clr_red_lgt);
             }
 
             if (valid_room_entries0[x][y] || valid_room_entries1[x][y])
             {
-                render::update_screen();
-                sdl_wrapper::sleep(100);
+                io::update_screen();
+                sdl_base::sleep(100);
             }
         }
     }
@@ -1566,11 +1566,11 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
         if (room_con0.x != -1 && room_con1.x != -1)
         {
 #ifdef DEMO_MODE
-            render::draw_map();
-            render::draw_glyph('0', Panel::map, room_con0, clr_green_lgt);
-            render::draw_glyph('1', Panel::map, room_con1, clr_yellow);
-            render::update_screen();
-            sdl_wrapper::sleep(2000);
+            io::draw_map();
+            io::draw_glyph('0', Panel::map, room_con0, clr_green_lgt);
+            io::draw_glyph('1', Panel::map, room_con1, clr_yellow);
+            io::update_screen();
+            sdl_base::sleep(2000);
 #endif // DEMO_MODE
 
             TRACE << "Found valid connection pair at: "

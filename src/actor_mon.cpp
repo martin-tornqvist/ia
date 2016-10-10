@@ -12,7 +12,7 @@
 #include "feature_trap.hpp"
 #include "feature_mob.hpp"
 #include "properties.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "sound.hpp"
 #include "map.hpp"
 #include "msg_log.hpp"
@@ -57,9 +57,9 @@ void Mon::on_actor_turn()
     }
 }
 
-//TODO: Some of the things done in this function should probably be moved to
-//"on_actor_turn()" instead. The purpose of this function ("act()") is only to
-//tell the actor to "do something".
+// TODO: Some of the things done in this function should probably be moved to
+//       "on_actor_turn()" instead. The purpose of this function ("act()") is
+//       only to tell the actor to "do something".
 void Mon::act()
 {
 #ifndef NDEBUG
@@ -70,17 +70,19 @@ void Mon::act()
         ASSERT(false);
     }
 
-    //Sanity check - verify that monster's leader does not have a leader (never allowed)
-    if (
-        leader_ && !is_actor_my_leader(map::player) &&  //Has a leader which is a monster?
-        static_cast<Mon*>(leader_)->leader_)            //Leader has a leader?
+    // Sanity check - verify that monster's leader does not have a leader
+    // (never allowed)
+    if (leader_                             &&  // Has leader?
+        !is_actor_my_leader(map::player)    &&  // Leader is monster?
+        static_cast<Mon*>(leader_)->leader_)    // Leader has a leader?
     {
         TRACE << "Two (or more) steps of leader is never allowed" << std::endl;
         ASSERT(false);
     }
 #endif // NDEBUG
 
-    if (aware_counter_ <= 0 && !is_actor_my_leader(map::player))
+    if (aware_counter_ <= 0 &&
+        !is_actor_my_leader(map::player))
     {
         waiting_ = !waiting_;
 
@@ -95,12 +97,12 @@ void Mon::act()
         waiting_ = false;
     }
 
-    //Pick a target
+    // Pick a target
     std::vector<Actor*> tgt_bucket;
 
     if (prop_handler_->has_prop(PropId::conflict))
     {
-        //Monster is conflicted (e.g. by player ring/amulet)
+        // Monster is conflicted (e.g. by player ring/amulet)
         tgt_bucket = game_time::actors;
 
         bool hard_blocked_los[map_w][map_h];
@@ -112,7 +114,7 @@ void Mon::act()
                        MapParseMode::overwrite,
                        fov_rect);
 
-        //Remove self and all unseen actors from vector
+        // Remove self and all unseen actors from vector
         for (auto it = begin(tgt_bucket); it != end(tgt_bucket);)
         {
             if (*it == this || !can_see_actor(**it, hard_blocked_los))
@@ -125,11 +127,11 @@ void Mon::act()
             }
         }
     }
-    else //Not conflicted
+    else // Not conflicted
     {
         seen_foes(tgt_bucket);
 
-        //If not aware, remove player from target bucket
+        // If not aware, remove player from target bucket
         if (aware_counter_ <= 0)
         {
             for (auto it = begin(tgt_bucket); it != end(tgt_bucket); ++it)
@@ -158,7 +160,8 @@ void Mon::act()
         {
             if (leader_->is_alive() && !is_actor_my_leader(map::player))
             {
-                static_cast<Mon*>(leader_)->aware_counter_ = leader_->data().nr_turns_aware;
+                static_cast<Mon*>(leader_)->aware_counter_ =
+                    leader_->data().nr_turns_aware;
             }
         }
         else //Monster does not have a leader
@@ -170,21 +173,22 @@ void Mon::act()
         }
     }
 
-    is_sneaking_ = !is_actor_my_leader(map::player)         &&
-                   ability(AbilityId::stealth, true) > 0   &&
-                   !map::player->can_see_actor(*this);
+    is_sneaking_ =
+        !is_actor_my_leader(map::player)        &&
+        (ability(AbilityId::stealth, true) > 0) &&
+        !map::player->can_see_actor(*this);
 
-    //Array used for AI purposes, e.g. to prevent tactically bad positions,
-    //or prevent certain monsters from walking on a certain type of cells, etc.
-    //This is checked in all AI movement functions. Cells set to true are
-    //totally forbidden for the monster to move into.
+    // Array used for AI purposes, e.g. to prevent tactically bad positions, or
+    // prevent certain monsters from walking on a certain type of cells, etc.
+    // This is checked in all AI movement functions. Cells set to true are
+    // totally forbidden for the monster to move into.
     bool ai_special_blockers[map_w][map_h];
+
     ai::info::set_special_blocked_cells(*this, ai_special_blockers);
 
     //------------------------------ SPECIAL MONSTER ACTIONS
     //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
-    if (
-        leader_ != map::player &&
+    if (leader_ != map::player &&
         (tgt_ == nullptr || tgt_ == map::player))
     {
         if (on_act() == DidAction::yes)
@@ -196,10 +200,10 @@ void Mon::act()
     //------------------------------ COMMON ACTIONS
     //                               (MOVING, ATTACKING, CASTING SPELLS...)
 
-    //Looking is as an action if monster was not aware before, and became aware from looking.
-    //(This is to give the monsters some reaction time, and not instantly attack)
-    if (
-        data_->ai[(size_t)AiId::looks]  &&
+    // Looking is as an action if monster was not aware before, and became aware
+    // from looking. (This is to give the monsters some reaction time, and not
+    // instantly attack)
+    if (data_->ai[(size_t)AiId::looks]  &&
         leader_ != map::player          &&
         (tgt_ == nullptr || tgt_ == map::player))
     {
@@ -244,19 +248,19 @@ void Mon::act()
 
     int erratic_move_pct = (int)data_->erratic_move_pct;
 
-    //Never move erratically if frenzied
+    // Never move erratically if frenzied
     if (prop_handler_->has_prop(PropId::frenzied))
     {
         erratic_move_pct = 0;
     }
 
-    //Move less erratically if allied to player
+    // Move less erratically if allied to player
     if (is_actor_my_leader(map::player))
     {
         erratic_move_pct /= 2;
     }
 
-    //Move more erratically if confused
+    // Move more erratically if confused
     if (prop_handler_->has_prop(PropId::confused))
     {
         erratic_move_pct *= 2;
@@ -264,9 +268,8 @@ void Mon::act()
 
     set_constr_in_range(0, erratic_move_pct, 95);
 
-    //Occasionally move erratically
-    if (
-        data_->ai[(size_t)AiId::moves_to_random_when_unaware] &&
+    // Occasionally move erratically
+    if (data_->ai[(size_t)AiId::moves_to_random_when_unaware] &&
         rnd::percent(erratic_move_pct))
     {
         if (ai::action::move_to_random_adj_cell(*this))
@@ -287,8 +290,7 @@ void Mon::act()
 
     std::vector<P> path;
 
-    if (
-        data_->ai[(size_t)AiId::paths_to_tgt_when_aware]    &&
+    if (data_->ai[(size_t)AiId::paths_to_tgt_when_aware]    &&
         leader_ != map::player                              &&
         !is_terrified)
     {
@@ -327,9 +329,9 @@ void Mon::act()
         {
             return;
         }
-        else //No LOS to lair
+        else // No LOS to lair
         {
-            //Try to use pathfinder to travel to lair
+            // Try to use pathfinder to travel to lair
             ai::info::try_set_path_to_lair_if_no_los(*this, path, lair_pos_);
 
             if (ai::action::step_path(*this, path))
@@ -339,7 +341,7 @@ void Mon::act()
         }
     }
 
-    //When unaware, move randomly
+    // When unaware, move randomly
     if (data_->ai[(size_t)AiId::moves_to_random_when_unaware])
     {
         if (ai::action::move_to_random_adj_cell(*this))
@@ -348,7 +350,7 @@ void Mon::act()
         }
     }
 
-    //No action could be performed, just let someone else act
+    // No action could be performed, just let someone else act
     game_time::tick();
 }
 
@@ -360,14 +362,14 @@ bool Mon::can_see_actor(const Actor& other,
         return true;
     }
 
-    //Outside FOV range?
+    // Outside FOV range?
     if (!fov::is_in_fov_range(pos, other.pos))
     {
         //Other actor is outside FOV range
         return false;
     }
 
-    //Monster allied to player looking at other monster which is hidden?
+    // Monster allied to player looking at other monster which is hidden?
     if (
         is_actor_my_leader(map::player) &&
         !other.is_player()              &&
@@ -376,7 +378,7 @@ bool Mon::can_see_actor(const Actor& other,
         return false;
     }
 
-    //Monster is blind?
+    // Monster is blind?
     if (!prop_handler_->allow_see())
     {
         return false;
@@ -384,7 +386,7 @@ bool Mon::can_see_actor(const Actor& other,
 
     const LosResult los = fov::check_cell(pos, other.pos, hard_blocked_los);
 
-    //LOS blocked hard (e.g. a wall)?
+    // LOS blocked hard (e.g. a wall)?
     if (los.is_blocked_hard)
     {
         return false;
@@ -392,7 +394,7 @@ bool Mon::can_see_actor(const Actor& other,
 
     const bool can_see_invis = has_prop(PropId::see_invis);
 
-    //Actor is invisible, and monster cannot see invisible?
+    // Actor is invisible, and monster cannot see invisible?
     if (other.has_prop(PropId::invis) && !can_see_invis)
     {
         return false;
@@ -405,13 +407,13 @@ bool Mon::can_see_actor(const Actor& other,
 
     const bool  can_see_other_in_drk        = can_see_invis || can_see_actor_with_infravis;
 
-    //Blocked by darkness, and not seeing actor with infravision?
+    // Blocked by darkness, and not seeing actor with infravision?
     if (los.is_blocked_by_drk && !can_see_other_in_drk)
     {
         return false;
     }
 
-    //OK, all checks passed, actor can bee seen!
+    // OK, all checks passed, actor can bee seen!
     return true;
 }
 
@@ -451,7 +453,7 @@ void Mon::move(Dir dir)
 
     prop_handler().affect_move_dir(pos, dir);
 
-    //Trap affects leaving?
+    // Trap affects leaving?
     if (dir != Dir::center)
     {
         auto* f = map::cells[pos.x][pos.y].rigid;
@@ -469,7 +471,7 @@ void Mon::move(Dir dir)
         }
     }
 
-    //Movement direction is stored for AI purposes
+    // Movement direction is stored for AI purposes
     last_dir_moved_ = dir;
 
     const P tgt_p(pos + dir_utils::offset(dir));
@@ -478,7 +480,7 @@ void Mon::move(Dir dir)
     {
         pos = tgt_p;
 
-        //Bump features in target cell (i.e. to trigger traps)
+        // Bump features in target cell (i.e. to trigger traps)
         std::vector<Mob*> mobs;
         game_time::mobs_at_pos(pos, mobs);
 
@@ -493,9 +495,45 @@ void Mon::move(Dir dir)
     game_time::tick();
 }
 
+Clr Mon::clr() const
+{
+    if (state_ != ActorState::alive)
+    {
+        return data_->color;
+    }
+
+    Clr tmp_clr;
+
+    if (prop_handler_->affect_actor_clr(tmp_clr))
+    {
+        return tmp_clr;
+    }
+
+    // If injured, draw as a shade of red
+    const int current_hp        = hp();
+    const int current_hp_max    = hp_max(true);
+
+    if (current_hp < current_hp_max)
+    {
+        const int hp_pct =
+            constr_in_range(0,
+                            (current_hp * 100) / current_hp_max,
+                            100);
+
+        tmp_clr.r = std::max(192, (255 * hp_pct) / 100);
+        tmp_clr.g = (64 * hp_pct) / 100;
+        tmp_clr.b = (64 * hp_pct) / 100;
+
+        return tmp_clr;
+    }
+
+    return data_->color;
+}
+
 void Mon::hear_sound(const Snd& snd)
 {
-    if (is_alive() && snd.is_alerting_mon())
+    if (is_alive() &&
+        snd.is_alerting_mon())
     {
         become_aware_player(false);
     }
@@ -536,10 +574,9 @@ void Mon::become_aware_player(const bool is_from_seeing)
 
     if (awareness_cnt_before <= 0)
     {
-        if (is_from_seeing && map::player->can_see_actor(*this))
+        if (is_from_seeing &&
+            map::player->can_see_actor(*this))
         {
-            map::player->update_fov();
-            render::draw_map_state(UpdateScreen::yes);
             msg_log::add(name_the() + " sees me!");
         }
 
@@ -562,15 +599,16 @@ void Mon::set_player_aware_of_me(const int duration_factor)
 
 bool Mon::try_attack(Actor& defender)
 {
-    if (
-        state_ != ActorState::alive ||
+    if (state_ != ActorState::alive ||
         (aware_counter_ <= 0 && leader_ != map::player))
     {
         return false;
     }
 
     AiAvailAttacksData my_avail_attacks;
-    avail_attacks(defender, my_avail_attacks);
+
+    avail_attacks(defender,
+                  my_avail_attacks);
 
     const AiAttData att = choose_att(my_avail_attacks);
 
@@ -599,7 +637,7 @@ bool Mon::try_attack(Actor& defender)
             return true;
         }
 
-        //Check if friend is in the way (with a small chance to ignore this)
+        // Check if friend is in the way (with a small chance to ignore this)
         bool is_blocked_by_friend = false;
 
         if (rnd::fraction(4, 5))
@@ -640,9 +678,12 @@ bool Mon::try_attack(Actor& defender)
 
         prop_handler_->try_add(ranged_cooldown_prop);
 
-        attack::ranged(this, pos, defender.pos, *att.wpn);
+        const bool did_attack = attack::ranged(this,
+                                               pos,
+                                               defender.pos,
+                                               *att.wpn);
 
-        return true;
+        return did_attack;
     }
 
     return false;
@@ -1407,15 +1448,15 @@ DidAction Khephren::on_act()
 
                 for (size_t i = 0; i < nr_of_spawns; ++i)
                 {
-                    Actor* const actor  = actor_factory::mk(ActorId::locust, free_cells[0]);
+                    Actor* const actor =
+                        actor_factory::mk(ActorId::locust, free_cells[0]);
+
                     Mon* const mon      = static_cast<Mon*>(actor);
                     mon->aware_counter_ = 999;
                     mon->leader_        = leader_ ? leader_ : this;
 
                     free_cells.erase(begin(free_cells));
                 }
-
-                render::draw_map_state();
 
                 has_summoned_locusts = true;
 
@@ -1535,15 +1576,18 @@ DidAction KeziahMason::on_act()
 
                     msg_log::add("Keziah summons Brown Jenkin!");
 
-                    Actor* const actor      = actor_factory::mk(ActorId::brown_jenkin, c);
+                    Actor* const actor =
+                        actor_factory::mk(ActorId::brown_jenkin, c);
 
-                    Mon* jenkin             = static_cast<Mon*>(actor);
-
-                    render::draw_map_state();
+                    Mon* mon = static_cast<Mon*>(actor);
 
                     has_summoned_jenkin     = true;
-                    jenkin->aware_counter_  = 999;
-                    jenkin->leader_         = leader_ ? leader_ : this;
+                    mon->aware_counter_     = 999;
+
+                    mon->leader_ =
+                        leader_ ?
+                        leader_ : this;
+
                     game_time::tick();
                     return DidAction::yes;
                 }
@@ -1564,10 +1608,11 @@ void KeziahMason::mk_start_items()
     spells_known_.push_back(new SpellEnfeebleMon);
 
 
-    //Make some treasures to drop
+    // Make some treasures to drop
     for (int i = rnd::range(2, 3); i > 0; --i)
     {
-        inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
+        inv_->put_in_backpack(
+            item_factory::mk_random_scroll_or_potion(true, true));
     }
 }
 
@@ -1609,14 +1654,17 @@ void LengElder::on_std_turn_hook()
             if (is_player_see_me && is_player_adj)
             {
                 msg_log::add("I perceive a cloaked figure standing before me...",
-                             clr_white, false, MorePromptOnMsg::yes);
+                             clr_white,
+                             false,
+                             MorePromptOnMsg::yes);
 
                 msg_log::add("It is the Elder Hierophant of the Leng monastery, ");
 
                 msg_log::add("the High Priest Not to Be Described.",
-                             clr_white, false, MorePromptOnMsg::yes);
+                             clr_white,
+                             false,
+                             MorePromptOnMsg::yes);
 
-                popup::show_msg("", true, "");
 
                 //auto& inv = map::player->inv();
                 //TODO: Which item to give?
@@ -1676,7 +1724,7 @@ DidAction ColorOoSpace::on_act()
     return DidAction::no;
 }
 
-Clr ColorOoSpace::clr()
+Clr ColorOoSpace::clr() const
 {
     Clr clr = clr_magenta_lgt;
 
@@ -1964,9 +2012,6 @@ DidAction Zombie::try_resurrect()
         {
             state_  = ActorState::alive;
             hp_     = (hp_max(true) * 3) / 4;
-            glyph_  = data_->glyph;
-            tile_   = data_->tile;
-            clr_    = data_->color;
 
             has_resurrected = true;
 
@@ -1974,9 +2019,12 @@ DidAction Zombie::try_resurrect()
 
             if (map::cells[pos.x][pos.y].is_seen_by_player)
             {
-                msg_log::add(corpse_name_the() + " rises again!!", clr_text, true);
+                msg_log::add(corpse_name_the() + " rises again!!",
+                             clr_text,
+                             true);
 
-                map::player->incr_shock(ShockLvl::some, ShockSrc::see_mon);
+                map::player->incr_shock(ShockLvl::some,
+                                        ShockSrc::see_mon);
             }
 
             aware_counter_ = data_->nr_turns_aware * 2;
@@ -2053,8 +2101,6 @@ void Zombie::on_death()
                               nullptr,
                               nullptr,
                               Verbosity::silent);
-
-        render::draw_map_state();
     }
 }
 
@@ -2143,8 +2189,6 @@ DidAction MajorClaphamLee::on_act()
             actor_factory::summon(pos, mon_ids,
                                   MakeMonAware::yes,
                                   this);
-
-            render::draw_map_state();
 
             has_summoned_tomb_legions = true;
 
@@ -2303,9 +2347,6 @@ void TheHighPriest::on_death()
     map::put(new Stairs(stair_pos));
     map::put(new RubbleLow(stair_pos - P(1, 0)));
 
-    map::player->update_fov();
-    render::draw_map_state();
-
     const int nr_snakes = rnd::range(4, 5);
 
     std::vector<ActorId> snake_ids(nr_snakes, ActorId::pit_viper);
@@ -2332,9 +2373,6 @@ DidAction TheHighPriest::on_act()
 
     if (!has_greeted_player_)
     {
-        map::player->update_fov();
-        render::draw_map_state();
-
         msg_log::add("A booming voice echoes through the halls.",
                      clr_white,
                      false,
@@ -2394,7 +2432,7 @@ char AnimatedWpn::glyph() const
     return item->glyph();
 }
 
-Clr AnimatedWpn::clr()
+Clr AnimatedWpn::clr() const
 {
     Item* item = inv_->item_in_slot(SlotId::wpn);
 
@@ -2418,13 +2456,15 @@ std::string AnimatedWpn::descr() const
 
     ASSERT(item);
 
-    std::string name = item->name(ItemRefType::a,
+    std::string str = item->name(ItemRefType::a,
                                   ItemRefInf::yes,
                                   ItemRefAttInf::none);
 
-    text_format::first_to_upper(name);
+    text_format::first_to_upper(str);
 
-    return name + ", floating through the air as if wielded by some invisible hand.";
+    str += ", floating through the air as if wielded by some invisible hand.";
+
+    return str;
 }
 
 std::string AnimatedWpn::death_msg() const

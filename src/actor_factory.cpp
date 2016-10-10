@@ -5,12 +5,12 @@
 #include "actor_mon.hpp"
 #include "actor_player.hpp"
 #include "map.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "map_parsing.hpp"
 #include "actor.hpp"
 #include "feature_rigid.hpp"
 #include "init.hpp"
-#include "render.hpp"
+#include "io.hpp"
 
 namespace actor_factory
 {
@@ -338,7 +338,7 @@ void summon(const P& origin,
 
     if (verbosity == Verbosity::verbose)
     {
-        render::draw_blast_at_seen_cells(positions_to_animate, clr_magenta);
+        io::draw_blast_at_seen_cells(positions_to_animate, clr_magenta);
     }
 
     TRACE_FUNC_END;

@@ -1,13 +1,26 @@
 #ifndef MAIN_MENU_HPP
 #define MAIN_MENU_HPP
 
-#include "global.hpp"
+#include "state.hpp"
+#include "browser.hpp"
 
-namespace main_menu
+class MainMenuState: public State
 {
+public:
+    MainMenuState();
 
-GameEntryMode run(bool& quit, int& intro_mus_channel);
+    ~MainMenuState();
 
-} //MainMenu
+    void draw() override;
 
-#endif
+    void update() override;
+
+    void on_start() override;
+
+    void on_pause() override;
+
+private:
+    MenuBrowser browser_;
+};
+
+#endif // MAIN_MENU_HPP

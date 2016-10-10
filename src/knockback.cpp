@@ -9,9 +9,9 @@
 #include "msg_log.hpp"
 #include "config.hpp"
 #include "game_time.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "map_parsing.hpp"
-#include "sdl_wrapper.hpp"
+#include "sdl_base.hpp"
 #include "feature_rigid.hpp"
 #include "feature_trap.hpp"
 #include "feature_mob.hpp"
@@ -29,15 +29,14 @@ void try_knock_back(Actor& defender,
     const bool  is_defender_player  = defender.is_player();
     const auto& defender_data       = defender.data();
 
-    if (
-        defender_data.prevent_knockback                 ||
-        defender_data.actor_size >= ActorSize::giant   ||
-        defender.has_prop(PropId::ethereal)            ||
-        defender.has_prop(PropId::ooze)                ||
-        //Do not knock back player if bot is playing
+    if (defender_data.prevent_knockback                 ||
+        defender_data.actor_size >= ActorSize::giant    ||
+        defender.has_prop(PropId::ethereal)             ||
+        defender.has_prop(PropId::ooze)                 ||
+        // Do not knock back player if bot is playing
         (is_defender_player && config::is_bot_playing()))
     {
-        //Defender is not knockable
+        // Defender is not knockable
 
         TRACE_FUNC_END;
         return;
@@ -119,12 +118,8 @@ void try_knock_back(Actor& defender,
 
         defender.pos = new_pos;
 
-        render::draw_map_state();
-        sdl_wrapper::sleep(config::delay_projectile_draw());
-
-        if (
-            is_cell_bottomless                  &&
-            !defender.has_prop(PropId::flying) &&
+        if (is_cell_bottomless                  &&
+            !defender.has_prop(PropId::flying)  &&
             player_see_defender)
         {
             if (is_defender_player)
@@ -173,4 +168,4 @@ void try_knock_back(Actor& defender,
     TRACE_FUNC_END;
 }
 
-} //KnockBack
+} // knockBack

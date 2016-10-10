@@ -4,7 +4,7 @@
 #include "rl_utils.hpp"
 #include "colors.hpp"
 
-struct KeyData;
+struct InputData;
 
 enum class YesNoAnswer
 {
@@ -34,7 +34,7 @@ void wait_for_msg_more();
 
 void wait_for_confirm();
 
-KeyData letter(const bool accept_enter);
+InputData letter(const bool accept_enter);
 
 int number(const P& pos,
            const Clr clr,

@@ -4,14 +4,36 @@
 #include "rl_utils.hpp"
 #include "global.hpp"
 
+struct InputData;
+
+enum class MenuAction
+{
+    none,
+    moved,
+    selected,
+    selected_shift,
+    space,
+    esc
+};
+
+enum class MenuInputMode
+{
+    scrolling_and_letters,
+    scrolling
+};
+
+// TODO: There's probably some public methods here that could be private
+
 class MenuBrowser
 {
 public:
     MenuBrowser(const int nr_items, const int list_h = - 1);
 
-    MenuBrowser() = delete;
+    MenuBrowser();
 
     MenuBrowser& operator=(const MenuBrowser&) = default;
+
+    MenuAction read(const InputData& input, MenuInputMode mode);
 
     void move(const VerDir dir);
 
@@ -46,6 +68,8 @@ public:
         return y_ == idx;
     }
 
+    void reset(const int nr_items, const int list_h = -1);
+
 private:
     void set_y_nearest_valid();
 
@@ -56,28 +80,5 @@ private:
     int  list_h_;
     Range range_shown_;
 };
-
-enum class MenuAction
-{
-    moved,
-    selected,
-    selected_shift,
-    space,
-    esc
-};
-
-enum class MenuInputMode
-{
-    scroll_and_letters,
-    scroll
-};
-
-namespace menu_input
-{
-
-MenuAction action(MenuBrowser& browser,
-                   MenuInputMode mode = MenuInputMode::scroll_and_letters);
-
-} //menu_input
 
 #endif

@@ -15,14 +15,14 @@
 #include "actor_player.hpp"
 #include "msg_log.hpp"
 #include "line_calc.hpp"
-#include "render.hpp"
-#include "sdl_wrapper.hpp"
+#include "io.hpp"
+#include "sdl_base.hpp"
 #include "knockback.hpp"
 #include "drop.hpp"
 
 AttData::AttData(Actor* const attacker,
-                   Actor* const defender,
-                   const Item& att_item) :
+                 Actor* const defender,
+                 const Item& att_item) :
     attacker        (attacker),
     defender        (defender),
     att_result      (fail),
@@ -41,36 +41,41 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
 {
     const P&            def_pos             = defender.pos;
     bool                is_defender_aware   = true;
-    const ActorDataT& defender_data       = defender.data();
+    const ActorDataT&   defender_data       = defender.data();
 
     if (defender.is_player())
     {
         if (attacker)
         {
-            is_defender_aware = static_cast<Mon*>(attacker)->player_aware_of_me_counter_ > 0 ||
-                                player_bon::traits[(size_t)Trait::vigilant];
+            is_defender_aware =
+                static_cast<Mon*>(attacker)->player_aware_of_me_counter_ > 0 ||
+                player_bon::traits[(size_t)Trait::vigilant];
         }
-        else //No attacker actor (e.g. a trap)
+        else // No attacker actor (e.g. a trap)
         {
             is_defender_aware = true;
         }
     }
-    else //Defender is monster
+    else // Defender is monster
     {
         is_defender_aware = static_cast<Mon*>(&defender)->aware_counter_ > 0;
     }
 
     if (is_defender_aware)
     {
-        const int defender_dodge_skill = defender.ability(AbilityId::dodge_att, true);
+        const int defender_dodge_skill =
+            defender.ability(AbilityId::dodge_att, true);
 
-        const int dodge_mod_at_feature = map::cells[def_pos.x][def_pos.y].rigid->dodge_modifier();
+        const int dodge_mod_at_feature =
+            map::cells[def_pos.x][def_pos.y].rigid->dodge_modifier();
 
-        const int dodge_chance_tot = defender_dodge_skill + dodge_mod_at_feature;
+        const int dodge_chance_tot =
+            defender_dodge_skill + dodge_mod_at_feature;
 
         if (dodge_chance_tot > 0)
         {
-            is_defender_dodging = ability_roll::roll(dodge_chance_tot, &defender) >= success;
+            is_defender_dodging =
+                ability_roll::roll(dodge_chance_tot, &defender) >= success;
         }
     }
 
@@ -1073,29 +1078,29 @@ void projectile_fire(Actor* const attacker,
                         {
                             proj->set_tile(TileId::blast1, clr_red_lgt);
 
-                            render::draw_projectiles(projectiles, !leave_trail);
+                            io::draw_projectiles(projectiles, !leave_trail);
 
-                            sdl_wrapper::sleep(delay / 2);
+                            sdl_base::sleep(delay / 2);
 
                             proj->set_tile(TileId::blast2, clr_red_lgt);
 
-                            render::draw_projectiles(projectiles, !leave_trail);
+                            io::draw_projectiles(projectiles, !leave_trail);
 
-                            sdl_wrapper::sleep(delay / 2);
+                            sdl_base::sleep(delay / 2);
                         }
                         else //Text mode
                         {
                             proj->set_glyph('*', clr_red_lgt);
 
-                            render::draw_projectiles(projectiles, !leave_trail);
+                            io::draw_projectiles(projectiles, !leave_trail);
 
-                            sdl_wrapper::sleep(delay);
+                            sdl_base::sleep(delay);
                         }
 
                         //MESSAGES FOR ACTOR HIT
                         print_proj_at_actor_msgs(att_data, true, wpn);
                         //Need to draw again here to show log message
-                        render::draw_projectiles(projectiles, !leave_trail);
+                        io::draw_projectiles(projectiles, !leave_trail);
                     }
 
                     proj->is_done_rendering     = true;
@@ -1176,17 +1181,17 @@ void projectile_fire(Actor* const attacker,
                         if (config::is_tiles_mode())
                         {
                             proj->set_tile(TileId::blast1, clr_yellow);
-                            render::draw_projectiles(projectiles, !leave_trail);
-                            sdl_wrapper::sleep(delay / 2);
+                            io::draw_projectiles(projectiles, !leave_trail);
+                            sdl_base::sleep(delay / 2);
                             proj->set_tile(TileId::blast2, clr_yellow);
-                            render::draw_projectiles(projectiles, !leave_trail);
-                            sdl_wrapper::sleep(delay / 2);
+                            io::draw_projectiles(projectiles, !leave_trail);
+                            sdl_base::sleep(delay / 2);
                         }
                         else //Text mode
                         {
                             proj->set_glyph('*', clr_yellow);
-                            render::draw_projectiles(projectiles, !leave_trail);
-                            sdl_wrapper::sleep(delay);
+                            io::draw_projectiles(projectiles, !leave_trail);
+                            sdl_base::sleep(delay);
                         }
                     }
                 }
@@ -1218,17 +1223,17 @@ void projectile_fire(Actor* const attacker,
                         if (config::is_tiles_mode())
                         {
                             proj->set_tile(TileId::blast1, clr_yellow);
-                            render::draw_projectiles(projectiles, !leave_trail);
-                            sdl_wrapper::sleep(delay / 2);
+                            io::draw_projectiles(projectiles, !leave_trail);
+                            sdl_base::sleep(delay / 2);
                             proj->set_tile(TileId::blast2, clr_yellow);
-                            render::draw_projectiles(projectiles, !leave_trail);
-                            sdl_wrapper::sleep(delay / 2);
+                            io::draw_projectiles(projectiles, !leave_trail);
+                            sdl_base::sleep(delay / 2);
                         }
                         else //Text mode
                         {
                             proj->set_glyph('*', clr_yellow);
-                            render::draw_projectiles(projectiles, !leave_trail);
-                            sdl_wrapper::sleep(delay);
+                            io::draw_projectiles(projectiles, !leave_trail);
+                            sdl_base::sleep(delay);
                         }
                     }
                 }
@@ -1239,12 +1244,12 @@ void projectile_fire(Actor* const attacker,
                     if (config::is_tiles_mode())
                     {
                         proj->set_tile(projectile_tile, projectile_clr);
-                        render::draw_projectiles(projectiles, !leave_trail);
+                        io::draw_projectiles(projectiles, !leave_trail);
                     }
                     else //Text mode
                     {
                         proj->set_glyph(projectile_glyph, projectile_clr);
-                        render::draw_projectiles(projectiles, !leave_trail);
+                        io::draw_projectiles(projectiles, !leave_trail);
                     }
                 }
             }
@@ -1259,7 +1264,7 @@ void projectile_fire(Actor* const attacker,
                 map::cells[pos.x][pos.y].is_seen_by_player &&
                 !projectile->is_obstructed)
             {
-                sdl_wrapper::sleep(delay);
+                sdl_base::sleep(delay);
                 break;
             }
         }
@@ -1277,10 +1282,10 @@ void projectile_fire(Actor* const attacker,
 
         if (is_all_obstructed) {break;}
 
-    } //End path-loop
+    } // End path-loop
 
-    //So far, only projectile 0 can have special obstruction events
-    //Must be changed if something like an assault-incinerator is added
+    // So far, only projectile 0 can have special obstruction events
+    // Must be changed if something like an assault-incinerator is added
     const Projectile* const first_projectile = projectiles[0];
 
     if (first_projectile->is_obstructed)
@@ -1294,13 +1299,11 @@ void projectile_fire(Actor* const attacker,
         wpn.on_projectile_blocked(aim_pos, first_projectile->actor_hit);
     }
 
-    //Cleanup
+    // Cleanup
     for (Projectile* projectile : projectiles)
     {
         delete projectile;
     }
-
-    render::draw_map_state();
 }
 
 void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
@@ -1383,26 +1386,27 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
                 {
                     if (map::cells[current_pos.x][current_pos.y].is_seen_by_player)
                     {
-                        render::draw_map_state(UpdateScreen::no);
-                        render::cover_cell_in_map(current_pos);
+                        states::draw();
+
+                        io::cover_cell_in_map(current_pos);
 
                         if (config::is_tiles_mode())
                         {
-                            render::draw_tile(TileId::blast2,
+                            io::draw_tile(TileId::blast2,
                                               Panel::map,
                                               current_pos,
                                               clr_red_lgt);
                         }
                         else //Text mode
                         {
-                            render::draw_glyph('*',
+                            io::draw_glyph('*',
                                                Panel::map,
                                                current_pos,
                                                clr_red_lgt);
                         }
 
-                        render::update_screen();
-                        sdl_wrapper::sleep(config::delay_shotgun());
+                        io::update_screen();
+                        sdl_base::sleep(config::delay_shotgun());
                     }
 
                     //Messages
@@ -1413,7 +1417,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
 
                     ++nr_actors_hit;
 
-                    render::draw_map_state();
+                    states::draw();
 
                     //Special shotgun behavior:
                     //If current defender was killed, and player aimed at
@@ -1457,24 +1461,27 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
 
             if (cell.is_seen_by_player)
             {
-                render::draw_map_state(UpdateScreen::no);
-                render::cover_cell_in_map(current_pos);
+                states::draw();
+
+                io::cover_cell_in_map(current_pos);
 
                 if (config::is_tiles_mode())
                 {
-                    render::draw_tile(TileId::blast2,
+                    io::draw_tile(TileId::blast2,
                                       Panel::map,
                                       current_pos,
                                       clr_yellow);
                 }
                 else //Text mode
                 {
-                    render::draw_glyph('*', Panel::map, current_pos, clr_yellow);
+                    io::draw_glyph('*', Panel::map, current_pos, clr_yellow);
                 }
 
-                render::update_screen();
-                sdl_wrapper::sleep(config::delay_shotgun());
-                render::draw_map_state();
+                io::update_screen();
+
+                sdl_base::sleep(config::delay_shotgun());
+
+                states::draw();
             }
 
             cell.rigid->hit(DmgType::physical, DmgMethod::shotgun, nullptr);
@@ -1497,27 +1504,30 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
 
             if (map::cells[current_pos.x][current_pos.y].is_seen_by_player)
             {
-                render::draw_map_state(UpdateScreen::no);
-                render::cover_cell_in_map(current_pos);
+                states::draw();
+
+                io::cover_cell_in_map(current_pos);
 
                 if (config::is_tiles_mode())
                 {
-                    render::draw_tile(TileId::blast2,
+                    io::draw_tile(TileId::blast2,
                                       Panel::map,
                                       current_pos,
                                       clr_yellow);
                 }
                 else
                 {
-                    render::draw_glyph('*',
+                    io::draw_glyph('*',
                                        Panel::map,
                                        current_pos,
                                        clr_yellow);
                 }
 
-                render::update_screen();
-                sdl_wrapper::sleep(config::delay_shotgun());
-                render::draw_map_state();
+                io::update_screen();
+
+                sdl_base::sleep(config::delay_shotgun());
+
+                states::draw();
             }
 
             break;
@@ -1712,7 +1722,7 @@ bool ranged(Actor* const attacker,
             }
         }
     }
-    else //Not a shotgun
+    else // Not a shotgun
     {
         int nr_of_projectiles = 1;
 
@@ -1734,14 +1744,14 @@ bool ranged(Actor* const attacker,
                     wpn.nr_ammo_loaded_ -= nr_of_projectiles;
                 }
             }
-            else //Player is dead
+            else // Player is dead
             {
                 return true;
             }
         }
     }
 
-    render::draw_map_state();
+    states::draw();
 
     if (did_attack)
     {
@@ -1755,7 +1765,8 @@ bool ranged(Actor* const attacker,
                 wpn.data().type == ItemType::ranged_wpn &&
                 player_bon::traits[(size_t)Trait::fast_shooter])
             {
-                const bool is_fast_shooting = props.has_prop(PropId::fast_shooting);
+                const bool is_fast_shooting =
+                    props.has_prop(PropId::fast_shooting);
 
                 if (is_fast_shooting)
                 {
@@ -1768,7 +1779,7 @@ bool ranged(Actor* const attacker,
             }
         }
 
-        //Only pass time if an actor is attacking (not if it's a trap or something)
+        // Only pass time if an actor is attacking (not if it's e.g. a trap)
         if (attacker)
         {
             game_time::tick(pass_time);
@@ -1780,4 +1791,4 @@ bool ranged(Actor* const attacker,
     return false;
 }
 
-} //attack
+} // attack

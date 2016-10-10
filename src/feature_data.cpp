@@ -40,7 +40,7 @@ bool MoveRules::can_move(Actor& actor) const
 namespace feature_data
 {
 
-FeatureDataT data_list[int(FeatureId::END)];
+FeatureDataT data_list[(size_t)FeatureId::END];
 
 namespace
 {

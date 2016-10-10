@@ -6,7 +6,7 @@
 
 #include "init.hpp"
 #include "map.hpp"
-#include "render.hpp"
+#include "io.hpp"
 
 namespace audio
 {
@@ -29,13 +29,13 @@ void load_audio_file(const SfxId sfx, const std::string& filename)
     //Read events, so that we don't freeze the game while we loading sounds
     SDL_PumpEvents();
 
-    render::clear_screen();
+    io::clear_screen();
 
     const std::string file_rel_path  = "audio/" + filename;
 
     const std::string nr_loaded_str = to_str(nr_files_loaded_) + "/" + to_str(nr_files_tot) ;
 
-    render::draw_text("Loading audio file " + nr_loaded_str + " (" + file_rel_path + ")...",
+    io::draw_text("Loading audio file " + nr_loaded_str + " (" + file_rel_path + ")...",
                       Panel::screen,
                       P(0, 0),
                       clr_white);
@@ -61,7 +61,7 @@ void load_audio_file(const SfxId sfx, const std::string& filename)
     {
         const std::string bar_l_str(bar_w_l, '#');
 
-        render::draw_text(bar_l_str,
+        io::draw_text(bar_l_str,
                           Panel::screen,
                           bar_p,
                           clr_green);
@@ -71,23 +71,23 @@ void load_audio_file(const SfxId sfx, const std::string& filename)
     {
         const std::string bar_r_str(bar_w_r, '-');
 
-        render::draw_text(bar_r_str,
+        io::draw_text(bar_r_str,
                           Panel::screen,
                           P(bar_p.x + bar_w_l, bar_p.y),
                           clr_gray_drk);
     }
 
-    render::draw_text("[",
+    io::draw_text("[",
                       Panel::screen,
                       P(bar_p.x - 1, bar_p.y),
                       clr_white);
 
-    render::draw_text("]",
+    io::draw_text("]",
                       Panel::screen,
                       P(bar_p.x + bar_w_tot, bar_p.y),
                       clr_white);
 
-    render::update_screen();
+    io::update_screen();
 
     ++nr_files_loaded_;
 }

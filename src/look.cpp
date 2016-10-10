@@ -14,7 +14,7 @@
 #include "inventory.hpp"
 #include "attack.hpp"
 #include "game_time.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "feature_mob.hpp"
 #include "feature_rigid.hpp"
 
@@ -275,9 +275,9 @@ void print_location_info_msgs(const P& pos)
 
 void print_detailed_actor_descr(const Actor& actor)
 {
-    render::clear_screen();
+    io::clear_screen();
 
-    render::draw_info_scr_interface("Monster info",
+    io::draw_info_scr_interface("Monster info",
                                     InfScreenType::single_screen);
 
     //Add written description.
@@ -296,12 +296,12 @@ void print_detailed_actor_descr(const Actor& actor)
 
     P p(0, 1);
 
-    render::cover_area(Panel::screen, p, P(map_w, nr_lines));
+    io::cover_area(Panel::screen, p, P(map_w, nr_lines));
 
     //Draw the description
     for (std::string& s : lines)
     {
-        render::draw_text(s, Panel::screen, p, clr_white_high);
+        io::draw_text(s, Panel::screen, p, clr_white_high);
         ++p.y;
     }
 
@@ -311,25 +311,25 @@ void print_detailed_actor_descr(const Actor& actor)
 
     ++p.y;
 
-    render::draw_text("Properties:", Panel::screen, p, clr_white_high);
+    io::draw_text("Properties:", Panel::screen, p, clr_white_high);
 
     ++p.y;
 
     if (props_line.empty())
     {
-        render::draw_text("None", Panel::screen, p, clr_white);
+        io::draw_text("None", Panel::screen, p, clr_white);
     }
     else //Has properties
     {
         for (const StrAndClr& current_prop_label : props_line)
         {
-            render::draw_text(current_prop_label.str, Panel::screen, p, current_prop_label.clr);
+            io::draw_text(current_prop_label.str, Panel::screen, p, current_prop_label.clr);
 
             p.x += current_prop_label.str.size() + 1;
         }
     }
 
-    render::update_screen();
+    io::update_screen();
 
     query::wait_for_key_press();
 }

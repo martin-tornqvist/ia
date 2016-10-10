@@ -9,14 +9,14 @@
 #include "actor_factory.hpp"
 #include "item_factory.hpp"
 #include "game_time.hpp"
-#include "render.hpp"
+#include "io.hpp"
 #include "mapgen.hpp"
 #include "item.hpp"
 #include "feature_rigid.hpp"
 #include "saving.hpp"
 
 #ifdef DEMO_MODE
-#include "sdl_wrapper.hpp"
+#include "sdl_base.hpp"
 #endif // DEMO_MODE
 
 Cell::Cell() :
@@ -92,9 +92,6 @@ void reset_cells(const bool make_stone_walls)
 
             room_map[x][y] = nullptr;
 
-            render::render_array[x][y]              = CellRenderData();
-            render::render_array_no_actors[x][y]    = CellRenderData();
-
             if (make_stone_walls)
             {
                 put(new Wall(P(x, y)));
@@ -115,7 +112,9 @@ void init()
 
     const P player_pos(player_start_x, player_start_y);
 
-    player = static_cast<Player*>(actor_factory::mk(ActorId::player, player_pos));
+    Actor* actor = actor_factory::mk(ActorId::player, player_pos);
+
+    player = static_cast<Player*>(actor);
 }
 
 void cleanup()
@@ -131,7 +130,8 @@ void cleanup()
         }
     }
 
-    //NOTE: game_time deletes the player object (the actor list is the owner of this memory)
+    // NOTE: game_time deletes the player object (the actor list is the owner of
+    //       this memory)
     player = nullptr;
 }
 
@@ -164,7 +164,7 @@ void reset_map()
 
     Clr clr_red_brighter = {160, 0, 0, 0};
 
-    //Occasionally set wall color to something unusual
+    // Occasionally set wall color to something unusual
     if (rnd::one_in(7))
     {
         std::vector<Clr> wall_clr_bucket =
@@ -179,11 +179,11 @@ void reset_map()
 
         wall_clr = rnd::element(wall_clr_bucket);
     }
-    else //Standard wall color
+    else // Standard wall color
     {
         wall_clr = clr_gray;
 
-        //Randomize the color slightly (subtle effect)
+        // Randomize the color slightly (subtle effect)
         wall_clr.r += rnd::range(-6, 6);
         wall_clr.g += rnd::range(-6, 6);
         wall_clr.b += rnd::range(-6, 6);
@@ -209,36 +209,20 @@ Rigid* put(Rigid* const f)
         {
             for (int y = 0; y < map_h; ++y)
             {
-                map::cells[x][y].is_seen_by_player = map::cells[x][y].is_explored = true;
+                map::cells[x][y].is_seen_by_player =
+                    map::cells[x][y].is_explored = true;
             }
         }
 
-        render::draw_map();
-        render::draw_glyph('X', Panel::map, p, clr_yellow);
-        render::update_screen();
-        sdl_wrapper::sleep(10); //NOTE: Delay must be > 1 for user input to be read
+        io::draw_map();
+        io::draw_glyph('X', Panel::map, p, clr_yellow);
+        io::update_screen();
+        sdl_base::sleep(10); //NOTE: Delay must be > 1 for user input to be read
     }
 
 #endif // DEMO_MODE
 
     return f;
-}
-
-void cpy_render_array_to_visual_memory()
-{
-    for (int x = 0; x < map_w; ++x)
-    {
-        for (int y = 0; y < map_h; ++y)
-        {
-            const CellRenderData render_data = render::render_array_no_actors[x][y];
-
-            ASSERT(!render_data.is_aware_of_hostile_mon_here);
-            ASSERT(!render_data.is_aware_of_allied_mon_here);
-            ASSERT(!render_data.is_living_actor_seen_here);
-
-            cells[x][y].player_visual_memory = render_data;
-        }
-    }
 }
 
 void mk_blood(const P& origin)
