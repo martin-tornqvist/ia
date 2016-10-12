@@ -76,12 +76,6 @@ enum class PropId
     END
 };
 
-enum class PropTurnMode
-{
-    std,
-    actor
-};
-
 enum class PropTurns
 {
     std,
@@ -109,8 +103,8 @@ enum class PropAlignment
 
 enum class PropSrc
 {
-    //Properties applied by potions, spells, etc, "natural" properties that monsters can
-    //start with (e.g. flying), or player properties gained by traits
+    // Properties applied by potions, spells, etc, or "natural" properties for
+    // monsters (e.g. flying), or player properties gained by traits
     intr,
 
     //Properties applied by items carried in inventory
@@ -133,40 +127,40 @@ struct PropDataT
         allow_test_on_bot               (false),
         alignment                       (PropAlignment::bad)
     {
-        for (int i = 0; i < int(PropMsg::END); ++i)
+        for (int i = 0; i < (int)PropMsg::END; ++i)
         {
             msg[i] = "";
         }
     }
 
-    PropId         id;
+    PropId          id;
     Range           std_rnd_turns;
     std::string     name;
     std::string     name_short;
-    std::string     msg[size_t(PropMsg::END)];
+    std::string     msg[(size_t)PropMsg::END];
     bool            is_making_mon_aware;
     bool            allow_display_turns;
     bool            allow_apply_more_while_active;
     bool            update_vision_when_start_or_end;
     bool            allow_test_on_bot;
-    PropAlignment  alignment;
+    PropAlignment   alignment;
 };
 
 namespace prop_data
 {
 
-extern PropDataT data[size_t(PropId::END)];
+extern PropDataT data[(size_t)PropId::END];
 
 void init();
 
-} //PropData
+} // prop_data
 
 class Actor;
 class Wpn;
 class Prop;
 class Item;
 
-//Each actor has an instance of this
+// Each actor has an instance of this
 class PropHandler
 {
 public:
@@ -174,33 +168,33 @@ public:
 
     ~PropHandler();
 
-    //Adds all natural properties set in the actor data
+    // Adds all natural properties set in the actor data
     void init_natural_props();
 
     void save() const;
 
     void load();
 
-    //All properties must be added through this function (can also be done via the other "add"
-    //methods, which will then call "try_add()")
+    // All properties must be added through this function (can also be done via
+    // the other "add" methods, which will then call "try_add()")
     void try_add(Prop* const prop,
-                      PropSrc src = PropSrc::intr,
-                      const bool force_effect = false,
-                      const Verbosity verbosity = Verbosity::verbose);
+                 PropSrc src = PropSrc::intr,
+                 const bool force_effect = false,
+                 const Verbosity verbosity = Verbosity::verbose);
 
     void try_add_from_att(const Wpn& wpn, const bool is_melee);
 
-    //The following two methods are supposed to be called by items
+    // The following two methods are supposed to be called by items
     void add_prop_from_equipped_item(const Item* const item,
                                      Prop* const prop,
                                      const Verbosity verbosity);
 
     void remove_props_for_item(const Item* const item);
 
-    //Fast method for checking if a certain property id is applied
+    // Fast method for checking if a certain property id is applied
     bool has_prop(const PropId id) const
     {
-        return active_props_info_[size_t(id)] > 0;
+        return active_props_info_[(size_t)id] > 0;
     }
 
     Prop* prop(const PropId id) const;
@@ -209,13 +203,13 @@ public:
 
     void props_interface_line(std::vector<StrAndClr>& line) const;
 
-    void apply_actor_turn_prop_buffer();
+    Prop* mk_prop(const PropId id,
+                  PropTurns turns_init,
+                  const int nr_turns = -1) const;
 
-    Prop* mk_prop(const PropId id, PropTurns turns_init, const int nr_turns = -1) const;
-
-    //-----------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Hooks called from various places
-    //-----------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     void affect_move_dir(const P& actor_pos, Dir& dir) const;
 
     int affect_max_hp(const int hp_max) const;
@@ -229,7 +223,7 @@ public:
     bool allow_read(const Verbosity verbosity) const;
     bool allow_cast_spell(const Verbosity verbosity) const;
     bool allow_speak(const Verbosity verbosity) const;
-    bool allow_eat(const Verbosity verbosity) const; //Also used for drinking
+    bool allow_eat(const Verbosity verbosity) const; // Also used for drinking
 
     void on_hit();
     void on_death(const bool is_player_see_owning_actor);
@@ -238,28 +232,33 @@ public:
 
     bool affect_actor_clr(Clr& clr) const;
 
-    void tick(const PropTurnMode turn_mode);
+    // Called when the actors turn begins
+    void on_turn_begin();
 
-    bool try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity) const;
+    // Called when the actors turn ends
+    void on_turn_end();
+
+    bool try_resist_dmg(const DmgType dmg_type,
+                        const Verbosity verbosity) const;
 
 private:
     bool try_resist_prop(const PropId id) const;
 
-    //This prints messages, updates FOV, etc, and also calls the on_end() property hook. It does
-    //NOT remove the property from the vector or decrement the active property info. The caller is
-    //responsible for this.
+    // This prints messages, updates FOV, etc, and also calls the on_end()
+    // property hook. It does NOT remove the property from the vector or
+    // decrement the active property info. The caller is responsible for this.
     void on_prop_end(Prop* const prop);
 
     void incr_active_props_info(const PropId id);
     void decr_active_props_info(const PropId id);
 
     std::vector<Prop*> props_;
-    std::vector<Prop*> actor_turn_prop_buffer_;
 
-    //This array is only used for optimization and convenience of asking the property handler which
-    //properties are currently active (see the "has_prop()" method above). It is used as a cache,
-    //so that we need to search through the vector as little as possible.
-    int active_props_info_[size_t(PropId::END)];
+    // This array is only used for optimization and convenience of asking the
+    // property handler which properties are currently active (see the
+    // "has_prop()" method above). It is used as a cache, so that we need to
+    // search through the vector as little as possible.
+    int active_props_info_[(size_t)PropId::END];
 
     Actor* owning_actor_;
 };
@@ -330,8 +329,8 @@ public:
         return data_.allow_apply_more_while_active;
     }
 
-    //TODO: This is ridiculous, can't the properties just call rendering,
-    //actor color update etc themselves (whatever is needed per case)?
+    // TODO: This is ridiculous! Can't the properties just call vision updating
+    //       themselves (whatever is needed per case)???
     virtual bool need_update_vision_when_start_or_end() const
     {
         return data_.update_vision_when_start_or_end;
@@ -354,8 +353,9 @@ public:
 
     virtual void on_hit() {}
 
-    //Returns a pointer to the property if it's still active, otherwise nullptr is returned
-    virtual Prop* on_new_turn()
+    // Returns a pointer to the property if it's still active, otherwise
+    // nullptr is returned
+    virtual Prop* on_tick()
     {
         return this;
     }
@@ -434,16 +434,12 @@ public:
         return false;
     }
 
-    virtual bool try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity) const
+    virtual bool try_resist_dmg(const DmgType dmg_type,
+                                const Verbosity verbosity) const
     {
         (void)dmg_type;
         (void)verbosity;
         return false;
-    }
-
-    virtual PropTurnMode turn_mode() const
-    {
-        return PropTurnMode::std;
     }
 
     PropTurns turns_init_type() const
@@ -464,8 +460,8 @@ protected:
 
     int nr_turns_left_;
 
-    //How the prop turns was inited (std, specific, indefinite). This is used for example to make
-    //copies of a property to apply on melee attacks.
+    // How the prop turns was inited (std, specific, indefinite). This is used
+    // for example to make copies of a property to apply on melee attacks.
     PropTurns turns_init_type_;
 
     Actor* owning_actor_;
@@ -516,7 +512,7 @@ public:
     PropInfected(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::infected, turns_init, nr_turns) {}
 
-    Prop* on_new_turn() override;
+    Prop* on_tick() override;
 };
 
 class PropDiseased: public Prop
@@ -539,7 +535,7 @@ public:
     PropDescend(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::descend, turns_init, nr_turns) {}
 
-    Prop* on_new_turn() override;
+    Prop* on_tick() override;
 };
 
 class PropFlying: public Prop
@@ -569,7 +565,7 @@ public:
     PropBurrowing(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::burrowing, turns_init, nr_turns) {}
 
-    Prop* on_new_turn() override;
+    Prop* on_tick() override;
 };
 
 class PropPossByZuul: public Prop
@@ -592,31 +588,26 @@ public:
     PropPoisoned(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::poisoned, turns_init, nr_turns) {}
 
-    Prop* on_new_turn() override;
+    Prop* on_tick() override;
 };
 
 class PropAiming: public Prop
 {
 public:
     PropAiming(PropTurns turns_init, int nr_turns = -1) :
-        Prop            (PropId::aiming, turns_init, nr_turns),
-        nr_turns_aiming (1) {}
-
-    PropTurnMode turn_mode() const override
-    {
-        return PropTurnMode::actor;
-    }
+        Prop                (PropId::aiming, turns_init, nr_turns),
+        nr_turns_aiming_    (1) {}
 
     std::string name_short() const override
     {
-        return data_.name_short + (nr_turns_aiming >= 3 ? "(3)" : "");
+        return data_.name_short + ((nr_turns_aiming_ >= 3) ? "(3)" : "");
     }
 
     int ability_mod(const AbilityId ability) const override
     {
         if (ability == AbilityId::ranged)
         {
-            return nr_turns_aiming >= 3 ? 999 : 20;
+            return nr_turns_aiming_ >= 3 ? 999 : 20;
         }
 
         return 0;
@@ -624,10 +615,10 @@ public:
 
     bool is_max_ranged_dmg() const
     {
-        return nr_turns_aiming >= 3;
+        return nr_turns_aiming_ >= 3;
     }
 
-    int nr_turns_aiming;
+    int nr_turns_aiming_;
 };
 
 class PropFastShooting: public Prop
@@ -636,10 +627,6 @@ public:
     PropFastShooting(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::fast_shooting, turns_init, nr_turns) {}
 
-    PropTurnMode turn_mode() const override
-    {
-        return PropTurnMode::actor;
-    }
 };
 
 class PropBlind: public Prop
@@ -781,7 +768,7 @@ public:
 
     bool allow_attack_ranged(const Verbosity verbosity) const override;
 
-    Prop* on_new_turn() override;
+    Prop* on_tick() override;
 };
 
 class PropFlared: public Prop
@@ -790,7 +777,7 @@ public:
     PropFlared(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::flared, turns_init, nr_turns) {}
 
-    Prop* on_new_turn() override;
+    Prop* on_tick() override;
 };
 
 class PropWarlockCharged: public Prop
@@ -799,10 +786,6 @@ public:
     PropWarlockCharged(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::warlock_charged, turns_init, nr_turns) {}
 
-    PropTurnMode turn_mode() const override
-    {
-        return PropTurnMode::actor;
-    }
 };
 
 class PropConfused: public Prop
@@ -900,11 +883,6 @@ public:
     PropWaiting(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::waiting, turns_init, nr_turns) {}
 
-    PropTurnMode turn_mode() const override
-    {
-        return PropTurnMode::actor;
-    }
-
     bool allow_move() const override
     {
         return false;
@@ -934,11 +912,6 @@ public:
     PropDisabledAttack(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::disabled_attack, turns_init, nr_turns) {}
 
-    PropTurnMode turn_mode() const override
-    {
-        return PropTurnMode::actor;
-    }
-
     bool allow_attack_ranged(const Verbosity verbosity) const override
     {
         (void)verbosity;
@@ -958,11 +931,6 @@ public:
     PropDisabledMelee(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::disabled_melee, turns_init, nr_turns) {}
 
-    PropTurnMode turn_mode() const override
-    {
-        return PropTurnMode::actor;
-    }
-
     bool allow_attack_melee(const Verbosity verbosity) const override
     {
         (void)verbosity;
@@ -976,11 +944,6 @@ public:
     PropDisabledRanged(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::disabled_ranged, turns_init, nr_turns) {}
 
-    PropTurnMode turn_mode() const override
-    {
-        return PropTurnMode::actor;
-    }
-
     bool allow_attack_ranged(const Verbosity verbosity) const override
     {
         (void)verbosity;
@@ -993,11 +956,6 @@ class PropParalyzed: public Prop
 public:
     PropParalyzed(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::paralyzed, turns_init, nr_turns) {}
-
-    PropTurnMode turn_mode() const override
-    {
-        return PropTurnMode::actor;
-    }
 
     void on_start() override;
 
@@ -1323,15 +1281,10 @@ public:
     PropStrangled(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::strangled, turns_init, nr_turns) {}
 
-    PropTurnMode turn_mode() const override
-    {
-        return PropTurnMode::actor;
-    }
-
-    Prop* on_new_turn() override;
+    Prop* on_tick() override;
 
     bool allow_speak(const Verbosity verbosity) const override;
     bool allow_eat(const Verbosity verbosity) const override;
 };
 
-#endif
+#endif // PROPERTIES_HPP

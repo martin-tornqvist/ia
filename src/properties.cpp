@@ -858,8 +858,8 @@ PropHandler::~PropHandler()
     }
 
 #ifndef NDEBUG
-    //Sanity check: all active props info should be exactly zero now
-    for (size_t i = 0; i < size_t(PropId::END); ++i)
+    // Sanity check: all active props info should be exactly zero now
+    for (size_t i = 0; i < (size_t)PropId::END; ++i)
     {
         if (active_props_info_[i] != 0)
         {
@@ -869,11 +869,6 @@ PropHandler::~PropHandler()
         }
     }
 #endif // NDEBUG
-
-    for (Prop* prop : actor_turn_prop_buffer_)
-    {
-        delete prop;
-    }
 }
 
 void PropHandler::save() const
@@ -1124,24 +1119,6 @@ void PropHandler::try_add(Prop* const prop,
                           const Verbosity verbosity)
 {
     ASSERT(prop);
-
-    // First, if this is a prop that runs on actor turns, check if the
-    // actor-turn prop buffer does not already contain the prop:
-    //  -   If it doesn't, then just add it to the buffer and return.
-    //  -   If the buffer already contains the prop, it means it was requested
-    //      to be applied from the buffer to the applied props.
-    // This way, this function can be used both for requesting to apply props,
-    // and for applying props from the buffer.
-    if (prop->turn_mode() == PropTurnMode::actor)
-    {
-        std::vector<Prop*>& buffer = actor_turn_prop_buffer_;
-
-        if (find(begin(buffer), end(buffer), prop) == end(buffer))
-        {
-            buffer.push_back(prop);
-            return;
-        }
-    }
 
     prop->owning_actor_ = owning_actor_;
     prop->src_          = src;
@@ -1488,62 +1465,58 @@ bool PropHandler::end_prop(const PropId id, const bool run_prop_end_effects)
     return false;
 }
 
-void PropHandler::apply_actor_turn_prop_buffer()
-{
-    for (Prop* prop : actor_turn_prop_buffer_)
-    {
-        try_add(prop);
-    }
-
-    actor_turn_prop_buffer_.clear();
-}
-
-void PropHandler::tick(const PropTurnMode turn_mode)
+void PropHandler::on_turn_begin()
 {
     for (size_t i = 0; i < props_.size(); /* No increment */)
     {
         Prop* prop = props_[i];
 
-        if (prop->turn_mode() == turn_mode)
+        // Count down number of turns
+        if (prop->nr_turns_left_ > 0)
         {
-            //Aggravates monster?
-            if (!owning_actor_->is_player() && prop->is_making_mon_aware())
-            {
-                auto* mon = static_cast<Mon*>(owning_actor_);
+            ASSERT(prop->src_ == PropSrc::intr);
 
-                mon->become_aware_player(false);
-            }
-
-            //Count down number of turns
-            if (prop->nr_turns_left_ > 0)
-            {
-                ASSERT(prop->src_ == PropSrc::intr);
-
-                --prop->nr_turns_left_;
-            }
-
-            if (prop->is_finished())
-            {
-                props_.erase(begin(props_) + i);
-
-                decr_active_props_info(prop->id());
-
-                on_prop_end(prop);
-
-                delete prop;
-                prop = nullptr;
-            }
-            else //Not finished
-            {
-                // NOTE: "prop" may be set to nullptr here (if the property
-                //       removed itself)
-                prop = prop->on_new_turn();
-            }
+            --prop->nr_turns_left_;
         }
+
+        // Aggravates monster?
+        if (!owning_actor_->is_player() &&
+            prop->is_making_mon_aware())
+        {
+            auto* mon = static_cast<Mon*>(owning_actor_);
+
+            mon->become_aware_player(false);
+        }
+
+        // NOTE: The property may return a nullptr here, if it removed itself
+        prop = prop->on_tick();
 
         if (prop)
         {
-            //Property has not been removed
+            // Property has not been removed
+            ++i;
+        }
+    }
+}
+
+void PropHandler::on_turn_end()
+{
+    for (size_t i = 0; i < props_.size(); /* No increment */)
+    {
+        Prop* prop = props_[i];
+
+        if (prop->is_finished())
+        {
+            props_.erase(begin(props_) + i);
+
+            decr_active_props_info(prop->id());
+
+            on_prop_end(prop);
+
+            delete prop;
+        }
+        else  // Property has not been removed
+        {
             ++i;
         }
     }
@@ -1561,18 +1534,7 @@ void PropHandler::props_interface_line(std::vector<StrAndClr>& line) const
         {
             const int turns_left  = prop->nr_turns_left_;
 
-            if (turns_left > 0)
-            {
-                // Player can see number of turns left on own properties with
-                // Self-aware?
-                if (owning_actor_->is_player() &&
-                    player_bon::traits[(size_t)Trait::self_aware] &&
-                    prop->allow_display_turns())
-                {
-                    str += ":" + to_str(turns_left);
-                }
-            }
-            else //Property is indefinite
+            if (prop->turns_init_type() == PropTurns::indefinite)
             {
                 if (prop->src() == PropSrc::intr)
                 {
@@ -1580,12 +1542,43 @@ void PropHandler::props_interface_line(std::vector<StrAndClr>& line) const
                     text_format::all_to_upper(str);
                 }
             }
+            else // Not indefinite
+            {
+                // Player can see number of turns left on own properties with
+                // Self-aware?
+                if (owning_actor_->is_player()                      &&
+                    player_bon::traits[(size_t)Trait::self_aware]   &&
+                    prop->allow_display_turns())
+                {
+                    // NOTE: Since turns left are decremented before the actors
+                    //       turn, and checked after the turn - "turns_left"
+                    //       practically represents how many more times the
+                    //       actor will act with the property enabled, EXCLUDING
+                    //       the current (ongoing) turn.
+                    //
+                    //       I.e. one "turns_left" means that the property will
+                    //       be enabled the whole next turn, while Zero
+                    //       "turns_left", means that it will only be active the
+                    //       current turn. However, from a players perspective,
+                    //       this is unintuitive; "one turn left" means the
+                    //       current turn, plus the next - but is likely
+                    //       interpreted as just the current turn. Therefore we
+                    //       add +1 to the displayed value, so that a displayed
+                    //       value of one means that the property will end after
+                    //       performing the next action.
+                    //
+                    const int turns_left_displayed = turns_left + 1;
+
+                    str += ":" + to_str(turns_left_displayed);
+                }
+            }
 
             const PropAlignment alignment = prop->alignment();
 
-            const Clr clr = alignment == PropAlignment::good ? clr_msg_good :
-                            alignment == PropAlignment::bad  ? clr_msg_bad :
-                            clr_white;
+            const Clr clr =
+                (alignment == PropAlignment::good) ? clr_msg_good :
+                (alignment == PropAlignment::bad)  ? clr_msg_bad :
+                clr_white;
 
             line.push_back(StrAndClr(str, clr));
         }
@@ -1605,7 +1598,8 @@ bool PropHandler::try_resist_prop(const PropId id) const
     return false;
 }
 
-bool PropHandler::try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity) const
+bool PropHandler::try_resist_dmg(const DmgType dmg_type,
+                                 const Verbosity verbosity) const
 {
     for (Prop* p : props_)
     {
@@ -1993,7 +1987,7 @@ void PropHasted::on_start()
     owning_actor_->prop_handler().end_prop(PropId::slowed, false);
 }
 
-Prop* PropInfected::on_new_turn()
+Prop* PropInfected::on_tick()
 {
 #ifndef NDEBUG
     ASSERT(!owning_actor_->prop_handler().has_prop(PropId::diseased));
@@ -2009,7 +2003,7 @@ Prop* PropInfected::on_new_turn()
 
         prop_hlr.try_add(new PropDiseased(PropTurns::indefinite));
 
-        //NOTE: Disease ends infection, this property object is now deleted!
+        // NOTE: Disease ends infection, this property object is now deleted!
 
         msg_log::more_prompt();
 
@@ -2064,7 +2058,7 @@ bool PropDiseased::is_resisting_other_prop(const PropId prop_id) const
     return prop_id == PropId::infected;
 }
 
-Prop* PropDescend::on_new_turn()
+Prop* PropDescend::on_tick()
 {
     ASSERT(owning_actor_->is_player());
 
@@ -2097,7 +2091,7 @@ void PropPossByZuul::on_death(const bool is_player_see_owning_actor)
     actor_data::data[(size_t)ActorId::zuul].nr_left_allowed_to_spawn = -1;
 }
 
-Prop* PropPoisoned::on_new_turn()
+Prop* PropPoisoned::on_tick()
 {
     if (owning_actor_->is_alive())
     {
@@ -2105,13 +2099,16 @@ Prop* PropPoisoned::on_new_turn()
         {
             if (owning_actor_->is_player())
             {
-                msg_log::add("I am suffering from the poison!", clr_msg_bad, true);
+                msg_log::add("I am suffering from the poison!",
+                             clr_msg_bad,
+                             true);
             }
             else //Is monster
             {
                 if (map::player->can_see_actor(*owning_actor_))
                 {
-                    msg_log::add(owning_actor_->name_the() + " suffers from poisoning!");
+                    msg_log::add(owning_actor_->name_the() +
+                                 " suffers from poisoning!");
                 }
             }
 
@@ -2391,7 +2388,7 @@ void PropConfused::affect_move_dir(const P& actor_pos, Dir& dir)
     }
 }
 
-Prop* PropStrangled::on_new_turn()
+Prop* PropStrangled::on_tick()
 {
     const int dmg = rnd::range(3, 4);
 
@@ -2512,7 +2509,7 @@ bool PropFrenzied::allow_cast_spell(const Verbosity verbosity) const
     return false;
 }
 
-Prop* PropBurning::on_new_turn()
+Prop* PropBurning::on_tick()
 {
     if (owning_actor_->is_player())
     {
@@ -2579,7 +2576,7 @@ bool PropFainted::need_update_vision_when_start_or_end() const
     return owning_actor_->is_player();
 }
 
-Prop* PropFlared::on_new_turn()
+Prop* PropFlared::on_tick()
 {
     owning_actor_->hit(1, DmgType::fire);
 
@@ -2781,7 +2778,7 @@ void PropSeeInvis::on_start()
     owning_actor_->prop_handler().end_prop(PropId::blind);
 }
 
-Prop* PropBurrowing::on_new_turn()
+Prop* PropBurrowing::on_tick()
 {
     const P& p = owning_actor_->pos;
     map::cells[p.x][p.y].rigid->hit(DmgType::physical, DmgMethod::forced);

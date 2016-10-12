@@ -236,25 +236,27 @@ void handle_player_input(const InputData& input)
         {
             PropHandler& prop_hlr = map::player->prop_handler();
 
-            int nr_turns_aiming_old = 0;
+            PropAiming* aiming = nullptr;
 
             if (player_bon::traits[(size_t)Trait::sharpshooter])
             {
-                Prop* const prop_aiming_old = prop_hlr.prop(PropId::aiming);
+                aiming = static_cast<PropAiming*>(
+                    prop_hlr.prop(PropId::aiming));
 
-                if (prop_aiming_old)
+                if (aiming)
                 {
-                    nr_turns_aiming_old =
-                        static_cast<PropAiming*>(prop_aiming_old)->
-                        nr_turns_aiming;
+                    ++aiming->nr_turns_aiming_;
+
+                    aiming->set_nr_turns_left(aiming->nr_turns_left() + 1);
                 }
             }
 
-            PropAiming* const aiming =
-                new PropAiming(PropTurns::specific, 1);
+            if (!aiming)
+            {
+                aiming = new PropAiming(PropTurns::specific, 1);
 
-            aiming->nr_turns_aiming += nr_turns_aiming_old;
-            prop_hlr.try_add(aiming);
+                prop_hlr.try_add(aiming);
+            }
         }
 
         map::player->move(Dir::center);
@@ -1092,15 +1094,6 @@ void GameState::update()
         // Let the current actor act
         //
         Actor* actor = game_time::current_actor();
-
-        // Properties running on the actor's turn are not
-        // immediately applied on the actor, but instead placed in a
-        // buffer. This is to ensure that e.g. a property set to
-        // last one turn actually covers one turn (and not applied
-        // after the actor acts, and ends before the actor's next
-        // turn). The contents of the buffer are moved to the
-        // applied properties here.
-        actor->prop_handler().apply_actor_turn_prop_buffer();
 
         const bool allow_act = actor->prop_handler().allow_act();
 

@@ -81,8 +81,6 @@ void run_std_turn_events()
         }
         else  // Actor is alive or a corpse
         {
-            actor->prop_handler().tick(PropTurnMode::std);
-
             if (!actor->is_player())
             {
                 // Count down monster awareness
@@ -302,6 +300,8 @@ void reset_turn_type_and_actor_counters()
 
 void tick(const PassTime pass_time)
 {
+    current_actor()->prop_handler().on_turn_end();
+
     // Should time move forward?
     if (pass_time == PassTime::yes)
     {
@@ -376,8 +376,7 @@ void tick(const PassTime pass_time)
 
     run_atomic_turn_events();
 
-    // Tick properties running on actor turns
-    current_actor()->prop_handler().tick(PropTurnMode::actor);
+    current_actor()->prop_handler().on_turn_begin();
 
     current_actor()->on_actor_turn();
 }
