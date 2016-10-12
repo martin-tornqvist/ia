@@ -935,6 +935,10 @@ void incr_player_xp(const int xp_gained,
     {
         if (clvl_ < player_max_clvl)
         {
+            ++clvl_;
+
+            msg_log::more_prompt();
+
             std::unique_ptr<State> trait_state(new PickTraitState);
 
             states::push(std::move(trait_state));
@@ -1101,9 +1105,9 @@ void GameState::update()
 
         if (allow_act && !is_gibbed)
         {
-            // Tell actor to "do something". If this is the player,
-            // input is read from either the player or the bot. If
-            // it's a monster, the AI handles it.
+            // Tell actor to "do something". If this is the player, input is
+            // read from either the player or the bot. If it's a monster, the
+            // AI handles it.
             actor->act();
         }
         else // Actor cannot act

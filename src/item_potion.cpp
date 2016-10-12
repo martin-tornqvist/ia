@@ -37,7 +37,7 @@ ConsumeItem Potion::activate(Actor* const actor)
 
                 msg_log::add("I drink " + potion_name + "...");
             }
-            else //Not identified
+            else // Not identified
             {
                 const std::string potion_name =
                     name(ItemRefType::plain, ItemRefInf::none);
@@ -69,7 +69,8 @@ void Potion::identify(const Verbosity verbosity)
 
         if (verbosity == Verbosity::verbose)
         {
-            const std::string name_after = name(ItemRefType::a, ItemRefInf::none);
+            const std::string name_after =
+                name(ItemRefType::a, ItemRefInf::none);
 
             msg_log::add("I have identified " + name_after + ".");
 
