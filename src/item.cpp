@@ -418,7 +418,7 @@ void Item::clear_carrier_spells()
 void Item::give_xp_for_identify(const Verbosity verbosity)
 {
     game::incr_player_xp(data_->xp_on_identify,
-                                   verbosity);
+                         verbosity);
 }
 
 //---------------------------------------------------------- ARMOR

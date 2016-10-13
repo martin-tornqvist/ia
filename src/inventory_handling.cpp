@@ -383,9 +383,8 @@ void BrowseInv::on_resume()
 
 void BrowseInv::draw()
 {
-    // Only draw this state if it's the current state, and no  no "exit"
-    // command was received from another state (so that e.g. equip or drop
-    // messages can be drawn over the map)
+    // Only draw this state if it's the current state, and no "exit" command
+    // received from another state - so that messages can be drawn over the map
     if (!states::is_current_state(*this) ||
         received_exit_cmd_)
     {
@@ -721,14 +720,26 @@ void Apply::on_start()
         }
     }
 
+    if (filtered_backpack_indexes_.empty())
+    {
+        //
+        // Exit screen
+        //
+        states::pop();
+
+        msg_log::add("I carry nothing to apply.");
+
+        return;
+    }
+
     browser_.reset(filtered_backpack_indexes_.size(),
                    inv_h_);
 }
 
 void Apply::draw()
 {
-    // Only draw this state if it's the current state (so that e.g. equip or
-    // drop messages can be drawn over the map)
+    // Only draw this state if it's the current state - so that messages can be
+    // drawn over the map
     if (!states::is_current_state(*this))
     {
         return;
@@ -737,16 +748,6 @@ void Apply::draw()
     io::clear_screen();
 
     const Panel panel = Panel::screen;
-
-    if (filtered_backpack_indexes_.empty())
-    {
-        io::draw_text("I carry nothing to apply." + cancel_info_str,
-                      panel,
-                      P(0, 0),
-                      clr_white_high);
-
-        return;
-    }
 
     const int   browser_y   = browser_.y();
     const auto& inv         = map::player->inv();
@@ -849,23 +850,6 @@ void Apply::update()
 {
     auto input = io::get();
 
-    if (input.key == SDLK_SPACE ||
-        input.key == SDLK_ESCAPE)
-    {
-        //
-        // Exit screen
-        //
-        states::pop();
-
-        return;
-    }
-
-    // If no item is available, do nothing except check for cancelling
-    if (filtered_backpack_indexes_.empty())
-    {
-        return;
-    }
-
     const MenuAction action =
         browser_.read(input,
                       MenuInputMode::scrolling_and_letters);
@@ -911,8 +895,14 @@ void Apply::update()
 
     case MenuAction::esc:
     case MenuAction::space:
-        TRACE_FUNC_END_VERBOSE;
+    {
+        //
+        // Exit screen
+        //
+        states::pop();
         return;
+    }
+    break;
 
     default:
         break;
@@ -1050,7 +1040,7 @@ void Equip::draw()
 
     if (!has_item)
     {
-        io::draw_text(heading + cancel_info_str,
+        io::draw_text(heading + any_key_info_str,
                       panel,
                       P(0, 0),
                       clr_white_high);
@@ -1180,7 +1170,8 @@ void Equip::update()
 {
     const auto input = io::get();
 
-    if (input.key == SDLK_SPACE ||
+    if (filtered_backpack_indexes_.empty()  ||
+        input.key == SDLK_SPACE             ||
         input.key == SDLK_ESCAPE)
     {
         //
@@ -1188,12 +1179,6 @@ void Equip::update()
         //
         states::pop();
 
-        return;
-    }
-
-    // If no item is available, do nothing except check for cancelling
-    if (filtered_backpack_indexes_.empty())
-    {
         return;
     }
 

@@ -49,15 +49,16 @@ public:
     void save() const;
     void load();
 
-    //Equip item from backpack
+    // Equip item from backpack
     void equip_backpack_item(const size_t backpack_idx, const SlotId slot_id);
 
-    //Attempt to unequip item from slot
+    // Attempt to unequip item from slot
     UnequipAllowed try_unequip_slot(const SlotId id);
 
-    //NOTE: All "put_in_*" functions should NEVER be called on items already in the inventory.
+    // NOTE: The "put_in_*" functions should NEVER be called on items already in
+    //       the inventory.
 
-    //NOTE: Item will be put in backpack if the slot is occupied.
+    // NOTE: Item will be put in backpack if the slot is occupied.
     void put_in_slot(const SlotId id, Item* item);
 
     Item* remove_from_slot(const SlotId id);
@@ -90,8 +91,11 @@ public:
 
     void decr_item_type_in_backpack(const ItemId item_id);
 
-    Item* remove_item_in_backpack_with_idx(const size_t idx, const bool delete_item);
-    Item* remove_item_in_backpack_with_ptr(Item* const item, const bool delete_item);
+    Item* remove_item_in_backpack_with_idx(const size_t idx,
+                                           const bool delete_item);
+
+    Item* remove_item_in_backpack_with_ptr(Item* const item,
+                                           const bool delete_item);
 
     int intrinsics_size() const
     {
@@ -119,9 +123,9 @@ private:
 
     UnequipAllowed try_move_from_slot_to_backpack(const SlotId id);
 
-    //This checks if the item is stackable, and if so attempts to stack it with another item
-    //of the same type in the backpack. The item pointer is still valid if a stack occurs
-    //(it is the other item that gets destroyed)
+    // Checks if the item is stackable, and if so attempts to stack it with
+    // another item of the same type in the backpack. The item pointer is still
+    // valid if a stack occurs (it is the other item that gets destroyed)
     bool try_stack_in_backpack(Item* item);
 
     Actor* const owning_actor_;

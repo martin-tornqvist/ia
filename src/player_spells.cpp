@@ -279,14 +279,23 @@ void BrowseSpell::on_start()
 {
     spell_opts_ = player_spells::spells_avail();
 
+    if (spell_opts_.empty())
+    {
+        //
+        // Exit screen
+        //
+        states::pop();
+
+        msg_log::add("I do not know any spells.");
+        return;
+    }
+
     browser_.reset(spell_opts_.size());
 }
 
 void BrowseSpell::draw()
 {
     const int nr_spells = spell_opts_.size();
-
-    io::clear_screen();
 
     io::draw_text_center("Invoke which power?",
                          Panel::screen,
@@ -460,17 +469,6 @@ void BrowseSpell::draw()
 
 void BrowseSpell::update()
 {
-    if (spell_opts_.empty())
-    {
-        msg_log::add("I do not know any spells to invoke.");
-
-        //
-        // Exit screen
-        //
-        states::pop();
-        return;
-    }
-
     auto input = io::get();
 
     const MenuAction action =

@@ -64,6 +64,7 @@ public:
 
     bool draw_overlayed() const override
     {
+        // To draw messages over the map
         return true;
     }
 
@@ -86,6 +87,7 @@ public:
 
     bool draw_overlayed() const override
     {
+        // To draw messages over the map
         return true;
     }
 
@@ -107,11 +109,6 @@ public:
     void draw() override;
 
     void update() override;
-
-    bool draw_overlayed() const override
-    {
-        return false;
-    }
 
 private:
     std::vector<size_t> filtered_backpack_indexes_;
