@@ -65,53 +65,13 @@ void Monolith::activate()
 
     is_activated_ = true;
 
-    //Spawn monsters?
-    if (rnd::one_in(5))
+    for (Actor* const actor : game_time::actors)
     {
-        spawn_monsters();
-    }
-}
-
-void Monolith::spawn_monsters()
-{
-    std::vector<ActorId> summon_bucket;
-
-    for (int i = 0; i < (int)ActorId::END; ++i)
-    {
-        const ActorDataT& data = actor_data::data[i];
-
-        if (data.can_be_summoned)
+        if (!actor->is_player())
         {
-            if (data.spawn_min_dlvl <= (map::dlvl + 3))
-            {
-                summon_bucket.push_back(ActorId(i));
-            }
+            Mon* const mon = static_cast<Mon*>(actor);
+
+            mon->become_aware_player(false, 5);
         }
-    }
-
-    if (summon_bucket.empty())
-    {
-        TRACE << "No elligible monsters found for spawning" << std::endl;
-        ASSERT(false);
-        return;
-    }
-
-    const ActorId mon_id = rnd::element(summon_bucket);
-
-    std::vector<Mon*> mon_summoned;
-
-    const size_t nr_mon = rnd::range(3, 4);
-
-    actor_factory::summon(pos_,
-                          {nr_mon, mon_id},
-                          MakeMonAware::yes,
-                          nullptr,
-                          &mon_summoned);
-
-    for (Mon* mon : mon_summoned)
-    {
-        mon->become_aware_player(false);
-
-        mon->prop_handler().try_add(new PropWaiting(PropTurns::specific, 1));
     }
 }

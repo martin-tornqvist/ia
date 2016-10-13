@@ -156,15 +156,21 @@ void Mon::act()
     {
         is_roaming_allowed_ = true;
 
-        if (leader_)
+        if (leader_ && leader_->is_alive())
         {
-            if (leader_->is_alive() && !is_actor_my_leader(map::player))
+            // Monster has a living leader
+
+            if (!is_actor_my_leader(map::player))
             {
-                static_cast<Mon*>(leader_)->aware_counter_ =
-                    leader_->data().nr_turns_aware;
+                // Make leader aware
+                Mon* const leader_mon = static_cast<Mon*>(leader_);
+
+                leader_mon->aware_counter_ =
+                    std::max(leader_mon->data().nr_turns_aware,
+                             leader_mon->aware_counter_);
             }
         }
-        else //Monster does not have a leader
+        else // Monster does not have a living leader
         {
             if (is_alive() && rnd::one_in(12))
             {
@@ -400,12 +406,17 @@ bool Mon::can_see_actor(const Actor& other,
         return false;
     }
 
-    bool        HAS_INFRAVIS                = has_prop(PropId::infravis);
-    const bool  is_other_infra_visible      = other.data().is_infra_visible;
+    bool has_infravis =
+        has_prop(PropId::infravis);
 
-    const bool  can_see_actor_with_infravis = HAS_INFRAVIS && is_other_infra_visible;
+    const bool is_other_infra_visible =
+        other.data().is_infra_visible;
 
-    const bool  can_see_other_in_drk        = can_see_invis || can_see_actor_with_infravis;
+    const bool can_see_actor_with_infravis =
+        has_infravis && is_other_infra_visible;
+
+    const bool can_see_other_in_drk =
+        can_see_invis || can_see_actor_with_infravis;
 
     // Blocked by darkness, and not seeing actor with infravision?
     if (los.is_blocked_by_drk && !can_see_other_in_drk)
@@ -432,7 +443,8 @@ void Mon::on_hit(int& dmg,
     (void)method;
     (void)allow_wound;
 
-    aware_counter_ = data_->nr_turns_aware;
+    aware_counter_ = std::max(data_->nr_turns_aware,
+                              aware_counter_);
 }
 
 void Mon::move(Dir dir)
@@ -562,17 +574,22 @@ void Mon::speak_phrase(const AlertsMon alerts_others)
     snd_emit::run(snd);
 }
 
-void Mon::become_aware_player(const bool is_from_seeing)
+void Mon::become_aware_player(const bool is_from_seeing,
+                              const int factor)
 {
     if (!is_alive() || is_actor_my_leader(map::player))
     {
         return;
     }
 
-    const int awareness_cnt_before  = aware_counter_;
-    aware_counter_                  = data_->nr_turns_aware;
+    const int nr_turns_aware = data_->nr_turns_aware * factor;
 
-    if (awareness_cnt_before <= 0)
+    const int awareness_count_before = aware_counter_;
+
+    aware_counter_= std::max(nr_turns_aware,
+                             awareness_count_before);
+
+    if (awareness_count_before <= 0)
     {
         if (is_from_seeing &&
             map::player->can_see_actor(*this))
@@ -600,7 +617,7 @@ void Mon::set_player_aware_of_me(const int duration_factor)
 bool Mon::try_attack(Actor& defender)
 {
     if (state_ != ActorState::alive ||
-        (aware_counter_ <= 0 && leader_ != map::player))
+        ((aware_counter_ <= 0) && (leader_ != map::player)))
     {
         return false;
     }
@@ -1147,8 +1164,7 @@ void FireVortex::mk_start_items()
 
 DidAction Ghost::on_act()
 {
-    if (
-        is_alive()                                  &&
+    if (is_alive()                                  &&
         aware_counter_ > 0                          &&
         is_pos_adj(pos, map::player->pos, false)    &&
         rnd::one_in(4))
@@ -1351,8 +1367,7 @@ DidAction Mummy::on_act()
     //It is probably too powerful and unbalanced. Perhaps add this power as a separate
     //spell to the Staff (something like "Pharohs Command")?
 
-//    if (
-//        !is_alive()          ||
+//    if (!is_alive()          ||
 //        data_->is_unique     ||
 //        aware_counter_ <= 0  ||
 //        is_actor_my_leader(map::player))
@@ -1404,8 +1419,7 @@ void MummyUnique::mk_start_items()
 
 DidAction Khephren::on_act()
 {
-    if (
-        is_alive()          &&
+    if (is_alive()          &&
         aware_counter_ > 0  &&
         !has_summoned_locusts)
     {
@@ -1542,8 +1556,7 @@ void HuntingHorror::mk_start_items()
 
 DidAction KeziahMason::on_act()
 {
-    if (
-        is_alive()          &&
+    if (is_alive()          &&
         aware_counter_ > 0  &&
         !has_summoned_jenkin)
     {
@@ -1620,7 +1633,7 @@ void LengElder::on_std_turn_hook()
 {
     if (is_alive())
     {
-        aware_counter_ = 100;
+        aware_counter_ += 100;
 
         if (has_given_item_to_player_)
         {
@@ -1861,8 +1874,7 @@ void MindWorms::mk_start_items()
 
 DidAction GiantLocust::on_act()
 {
-    if (
-        is_alive()                                  &&
+    if (is_alive()                                  &&
         aware_counter_ > 0                          &&
         !prop_handler_->has_prop(PropId::burning)   &&
         game_time::actors.size() < max_nr_actors_on_map &&
@@ -1918,8 +1930,7 @@ void LordOfShadows::mk_start_items()
 
 DidAction LordOfSpiders::on_act()
 {
-    if (
-        is_alive()          &&
+    if (is_alive()          &&
         aware_counter_ > 0  &&
         rnd::coin_toss())
     {
@@ -2027,7 +2038,7 @@ DidAction Zombie::try_resurrect()
                                         ShockSrc::see_mon);
             }
 
-            aware_counter_ = data_->nr_turns_aware * 2;
+            aware_counter_ += data_->nr_turns_aware * 2;
 
             game_time::tick();
 
@@ -2138,8 +2149,7 @@ DidAction MajorClaphamLee::on_act()
         return DidAction::yes;
     }
 
-    if (
-        is_alive()          &&
+    if (is_alive()          &&
         aware_counter_ > 0  &&
         !has_summoned_tomb_legions)
     {
@@ -2226,8 +2236,7 @@ void FloatingSkull::mk_start_items()
 
 DidAction FloatingSkull::on_act()
 {
-    if (
-        is_alive()          &&
+    if (is_alive()          &&
         aware_counter_ > 0  &&
         rnd::one_in(8))
     {
@@ -2381,7 +2390,7 @@ DidAction TheHighPriest::on_act()
         audio::play(SfxId::boss_voice1);
 
         has_greeted_player_ = true;
-        aware_counter_      = data_->nr_turns_aware;
+        aware_counter_      += data_->nr_turns_aware;
     }
 
     if (rnd::coin_toss())

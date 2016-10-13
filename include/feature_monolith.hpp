@@ -28,8 +28,6 @@ private:
 
     void activate();
 
-    void spawn_monsters();
-
     bool is_activated_;
 };
 
