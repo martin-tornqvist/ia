@@ -12,7 +12,7 @@ Contents:
 1. Command list
 --------------------------------------------------------------------------------
    Esc    Menu
-   ?      This manual
+   ?, F1  This manual
    =      Options
    Q      Quit
    Space  Cancel, proceed

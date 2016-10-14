@@ -297,6 +297,7 @@ void handle_player_input(const InputData& input)
     // Manual
     //
     case '?':
+    case SDLK_F1:
     {
         std::unique_ptr<State> browse_manual_state(new BrowseManual);
 
@@ -788,25 +789,6 @@ void handle_player_input(const InputData& input)
     // Some cheat commands enabled in debug builds
     //
 #ifndef NDEBUG
-    case SDLK_F1:
-    {
-        const std::string query_str = "Summon monster id:";
-
-        io::draw_text(query_str, Panel::screen, P(0, 0), clr_yellow);
-
-        const int idx = query::number(P(query_str.size(), 0),
-                                      clr_white_high,
-                                      0,
-                                      int(ActorId::END),
-                                      0,
-                                      false);
-
-        const ActorId mon_id = ActorId(idx);
-
-        actor_factory::summon(map::player->pos, {mon_id}, MakeMonAware::no);
-    }
-    break;
-
     case SDLK_F2:
     {
         map_travel::go_to_nxt();
@@ -878,6 +860,24 @@ void handle_player_input(const InputData& input)
     }
     break;
 
+    case SDLK_F9:
+    {
+        const std::string query_str = "Summon monster id:";
+
+        io::draw_text(query_str, Panel::screen, P(0, 0), clr_yellow);
+
+        const int idx = query::number(P(query_str.size(), 0),
+                                      clr_white_high,
+                                      0,
+                                      int(ActorId::END),
+                                      0,
+                                      false);
+
+        const ActorId mon_id = ActorId(idx);
+
+        actor_factory::summon(map::player->pos, {mon_id}, MakeMonAware::no);
+    }
+    break;
 #endif // NDEBUG
 
     //
