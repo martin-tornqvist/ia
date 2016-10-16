@@ -13,7 +13,6 @@ Gameplay
 * Rogue no longer starts with "Cloud Minds" (this is now a Manuscript instead)
 * Occultist starts with fixed (non-random) items and spells
 * Potion of Insight gives XP if there is no item to identify
-* Shock from seeing monsters can now be recovered from - this means that as long as you end the encounter before taking a sanity hit, the part of your shock from seeing the monsters will drop again - so it's no longer super critical to micromanage your time spent in view of monsters (shock taken passively over time, and some other types of shock, are still strictly increasing however)
 * You always search for traps and secret doors in every seen cell (so you can stand in the middle of a room and search all walls)
 * Some "Hanging vines" are now scattered on the map, which can be walked through, but blocks line of sight
 * Spells now have "skill level" percentages, which affects the Spirit cost to cast the spell - the skill levels can be increased by casting from Manuscripts

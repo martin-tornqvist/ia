@@ -72,7 +72,7 @@ public:
     void incr_shock(const ShockLvl shock_value,
                     ShockSrc shock_src);
 
-    void incr_shock(const int shock,
+    void incr_shock(const double shock,
                     ShockSrc shock_src);
 
     void restore_shock(const int amount_restored,
@@ -138,7 +138,10 @@ private:
     double shock_taken_after_mods(const double base_shock,
                                   const ShockSrc shock_src) const;
 
-    void tick_tmp_shock();
+
+    void add_shock_from_seen_monsters();
+
+    void set_tmp_shock();
 
     void on_hit(int& dmg,
                 const DmgType dmg_type,

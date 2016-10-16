@@ -139,6 +139,7 @@ void init_data_list()
     d.can_have_item = false;
     d.msg_on_player_blocked = "There is a tree in the way.";
     d.matl_type = Matl::wood;
+    d.shock_when_adjacent = 1;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = FeatureId::grass;
@@ -207,7 +208,7 @@ void init_data_list()
     d.can_have_corpse = false;
     d.can_have_rigid = false;
     d.can_have_item = false;
-    d.shock_when_adjacent = 2;
+    d.shock_when_adjacent = 10;
     d.matl_type = Matl::stone;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
@@ -289,6 +290,7 @@ void init_data_list()
     d.msg_on_player_blocked_blind =
         "I realize I am standing on the edge of a chasm.";
     d.matl_type = Matl::empty;
+    d.shock_when_adjacent = 3;
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
     d.id = FeatureId::gravestone;
@@ -418,7 +420,7 @@ void init_data_list()
     d.can_have_corpse = false;
     d.can_have_rigid = false;
     d.can_have_item = false;
-    d.shock_when_adjacent = 1;
+    d.shock_when_adjacent = 3;
     d.matl_type = Matl::cloth;
     d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
@@ -522,7 +524,7 @@ void init_data_list()
     d.can_have_corpse = false;
     d.can_have_rigid = false;
     d.can_have_item = false;
-    d.shock_when_adjacent = 2;
+    d.shock_when_adjacent = 10;
     d.matl_type = Matl::stone;
     d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
@@ -541,7 +543,7 @@ void init_data_list()
     d.can_have_corpse = false;
     d.can_have_rigid = false;
     d.can_have_item = false;
-    d.shock_when_adjacent = 2;
+    d.shock_when_adjacent = 10;
     d.matl_type = Matl::stone;
     d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);

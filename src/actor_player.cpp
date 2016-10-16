@@ -533,19 +533,17 @@ int Player::shock_resistance(const ShockSrc shock_src) const
 double Player::shock_taken_after_mods(const double base_shock,
                                       const ShockSrc shock_src) const
 {
-    const double shock_res = double(shock_resistance(shock_src));
+    const double shock_res_db = double(shock_resistance(shock_src));
 
-    return (base_shock * (100.0 - shock_res)) / 100.0;
+    return (base_shock * (100.0 - shock_res_db)) / 100.0;
 }
 
-void Player::incr_shock(const int shock, ShockSrc shock_src)
+void Player::incr_shock(double shock, ShockSrc shock_src)
 {
-    const double shock_db = shock;
+    shock = shock_taken_after_mods(shock, shock_src);
 
-    const double shock_after_mods = shock_taken_after_mods(shock_db, shock_src);
-
-    shock_                          += shock_after_mods;
-    perm_shock_taken_current_turn_  += shock_after_mods;
+    shock_                          += shock;
+    perm_shock_taken_current_turn_  += shock;
 
     set_constr_in_range(0.0, shock_, 100.0);
 }
@@ -783,9 +781,10 @@ void Player::on_actor_turn()
         static_cast<Mon*>(actor)->set_player_aware_of_me();
     }
 
-    // Decrement the current temp shock value, and add temporary shock from seen
-    // monsters, darkness, etc
-    tick_tmp_shock();
+    add_shock_from_seen_monsters();
+
+    // Set current temporary shock from darkness etc
+    set_tmp_shock();
 
     // Some "permanent shock" is taken every Nth turn
     if (prop_handler_->allow_act())
@@ -819,7 +818,7 @@ void Player::on_actor_turn()
 
                 incr_shock(ShockLvl::heavy, ShockSrc::misc);
             }
-            else //No randomized shock spike
+            else // No randomized shock spike
             {
                 if (map::dlvl != 0)
                 {
@@ -829,16 +828,19 @@ void Player::on_actor_turn()
         }
     }
 
-    //Take sanity hit from high shock?
+    // Take sanity hit from high shock?
     if (shock_tot() >= 100)
     {
-        nr_turns_until_ins_ = nr_turns_until_ins_ < 0 ? 3 : nr_turns_until_ins_ - 1;
+        nr_turns_until_ins_ =
+            (nr_turns_until_ins_ < 0) ?
+            3 :
+            (nr_turns_until_ins_ - 1);
 
         if (nr_turns_until_ins_ > 0)
         {
             msg_log::add("I feel my sanity slipping...");
         }
-        else //Time to go crazy!
+        else // Time to go crazy!
         {
             nr_turns_until_ins_ = -1;
             incr_insanity();
@@ -851,14 +853,14 @@ void Player::on_actor_turn()
             return;
         }
     }
-    else //Total shock is less than 100%
+    else // Total shock is less than 100%
     {
         nr_turns_until_ins_ = -1;
     }
 
     insanity::on_new_player_turn(my_seen_foes);
 
-    //Run new turn events on all items
+    // Run new turn events on all items
     auto& inv = map::player->inv();
 
     for (Item* const item : inv.backpack_)
@@ -875,122 +877,122 @@ void Player::on_actor_turn()
     }
 }
 
-void Player::tick_tmp_shock()
+void Player::add_shock_from_seen_monsters()
 {
-    //Minimum temporary shock raised due to obsession?
+    if (!prop_handler_->allow_see())
+    {
+        return;
+    }
+
+    std::vector<Actor*> my_seen_foes;
+    seen_foes(my_seen_foes);
+
+    double val = 0.0;
+
+    for (Actor* actor : my_seen_foes)
+    {
+        Mon* mon = static_cast<Mon*>(actor);
+
+        const ActorDataT& mon_data = mon->data();
+
+        switch (mon_data.mon_shock_lvl)
+        {
+        case MonShockLvl::unsettling:
+            val += 0.05;
+            break;
+
+        case MonShockLvl::frightening:
+            val += 0.375;
+            break;
+
+        case MonShockLvl::terrifying:
+            val += 0.75;
+            break;
+
+        case MonShockLvl::mind_shattering:
+            val += 1.75;
+            break;
+
+        case MonShockLvl::none:
+        case MonShockLvl::END:
+            break;
+        }
+    }
+
+    // Dampen the progression (it doesn't seem right that e.g. 8 monsters are
+    // twice as scary as 4 monsters).
+    val = std::sqrt(val);
+
+    // Cap the value
+    const double cap = 5.0;
+
+    val = std::min(cap, val);
+
+    incr_shock(val, ShockSrc::see_mon);
+}
+
+void Player::set_tmp_shock()
+{
+    shock_tmp_ = 0.0;
+
+    // Minimum temporary shock raised due to obsession?
     double shock_tmp_min = 0.0;
 
-    if (
-        insanity::has_sympt(InsSymptId::sadism) ||
+    if (insanity::has_sympt(InsSymptId::sadism) ||
         insanity::has_sympt(InsSymptId::masoch))
     {
-        shock_tmp_ = std::max(shock_tmp_, (double)shock_from_obsession);
+        shock_tmp_ = std::max(shock_tmp_,
+                              (double)shock_from_obsession);
 
-        //Do not decrement shock below this value
         shock_tmp_min = (double)shock_from_obsession;
     }
 
-    //NOTE: We only decrement temporary shock if it is NOT raised - so we store
-    //      the initial (possibly bumped) value here to compare against below
-    const double shock_tmp_initial = shock_tmp_;
-
     if (prop_handler_->allow_see())
     {
-        std::vector<Actor*> my_seen_foes;
-        seen_foes(my_seen_foes);
-
-        //Temporary shock from monsters
-        for (Actor* actor : my_seen_foes)
-        {
-            Mon* mon = static_cast<Mon*>(actor);
-
-            const ActorDataT& mon_data = mon->data();
-
-            if (mon_data.mon_shock_lvl != MonShockLvl::none)
-            {
-                double tmp_shock_from_mon = 0.0;
-
-                switch (mon_data.mon_shock_lvl)
-                {
-                case MonShockLvl::unsettling:
-                    tmp_shock_from_mon = 0.4;
-                    break;
-
-                case MonShockLvl::frightening:
-                    tmp_shock_from_mon = 0.8;
-                    break;
-
-                case MonShockLvl::terrifying:
-                    tmp_shock_from_mon = 1.6;
-                    break;
-
-                case MonShockLvl::mind_shattering:
-                    tmp_shock_from_mon = 3.2;
-                    break;
-
-                default:
-                    break;
-                }
-
-                shock_tmp_ += shock_taken_after_mods(tmp_shock_from_mon, ShockSrc::see_mon);
-            }
-        }
-
-        //Temporary shock from darkness
+        // Temporary shock from darkness
         Cell& cell = map::cells[pos.x][pos.y];
 
         if (cell.is_dark && !cell.is_lit)
         {
-            shock_tmp_ += shock_taken_after_mods(0.5, ShockSrc::misc);
+            shock_tmp_ += shock_taken_after_mods(20.0, ShockSrc::misc);
         }
 
-        //Temporary shock from seen features
+        // Temporary shock from seen features
         for (const P& d : dir_utils::dir_list_w_center)
         {
             const P p(pos + d);
 
-            const double feature_shock_db = (double)map::cells[p.x][p.y].rigid->shock_when_adj();
+            const double feature_shock_db =
+                (double)map::cells[p.x][p.y].rigid->shock_when_adj();
 
-            shock_tmp_ += shock_taken_after_mods(feature_shock_db, ShockSrc::misc);
+            shock_tmp_ += shock_taken_after_mods(feature_shock_db,
+                                                 ShockSrc::misc);
         }
     }
-    else //Is blind
+    else // Is blind
     {
-        shock_tmp_ += shock_taken_after_mods(0.5, ShockSrc::misc);
-    }
-
-    //Decrement temporary shock, if it's near the initial value
-    const double decr_threshold_value = 0.0001;
-
-    if ((shock_tmp_ - shock_tmp_initial) <= decr_threshold_value)
-    {
-        const double shock_tmp_decr = 2.0;
-
-        shock_tmp_ = std::max(shock_tmp_min, shock_tmp_ - shock_tmp_decr);
-    }
-    else //Did receive some temporary shock
-    {
-        //Interrupt actions, so shock doesn't run away while e.g. healing
-        interrupt_actions();
+        shock_tmp_ += shock_taken_after_mods(30.0, ShockSrc::misc);
     }
 
     const double shock_tmp_max = 100.0 - shock_;
 
-    shock_tmp_ = std::min(shock_tmp_, shock_tmp_max);
+    constr_in_range(shock_tmp_min,
+                    shock_tmp_,
+                    shock_tmp_max);
 }
 
 int Player::ins() const
 {
     int out = ins_;
 
-    //Insanity from items
+    // Insanity from items
     for (auto& slot : inv_->slots_)
     {
         if (slot.item)
         {
             const ItemDataT& d = slot.item->data();
 
-            //NOTE: Having an item equiped also counts as carrying it
+            // NOTE: Having an item equiped also counts as carrying it
             if (d.is_ins_raied_while_carried || d.is_ins_raied_while_equiped)
             {
                 out += ins_from_disturbing_items;
@@ -1012,7 +1014,7 @@ int Player::ins() const
 void Player::on_std_turn()
 {
 #ifndef NDEBUG
-    //Sanity check: Disease and infection should not be active at the same time
+    // Sanity check: Disease and infection should not be active at the same time
     ASSERT(!prop_handler_->has_prop(PropId::diseased) ||
            !prop_handler_->has_prop(PropId::infected));
 #endif // NDEBUG
@@ -1022,19 +1024,20 @@ void Player::on_std_turn()
         return;
     }
 
-    //Spell resistance
-    const int spi_trait_lvl = player_bon::traits[(size_t)Trait::mighty_spirit]  ? 2 :
-                              player_bon::traits[(size_t)Trait::strong_spirit]  ? 1 : 0;
+    // Spell resistance
+    const int spi_trait_lvl =
+        player_bon::traits[(size_t)Trait::mighty_spirit]  ? 2 :
+        player_bon::traits[(size_t)Trait::strong_spirit]  ? 1 : 0;
 
     if (spi_trait_lvl > 0 && !prop_handler_->has_prop(PropId::rSpell))
     {
         if (nr_turns_until_rspell_ <= 0)
         {
-            //Cooldown has finished, OR countdown has not yet been initialized
+            // Cooldown has finished, OR countdown has not yet been initialized
 
             if (nr_turns_until_rspell_ == 0)
             {
-                //Cooldown has finished
+                // Cooldown has finished
                 prop_handler_->try_add(new PropRSpell(PropTurns::indefinite));
 
                 msg_log::more_prompt();
@@ -1047,10 +1050,11 @@ void Player::on_std_turn()
             nr_turns_until_rspell_  = std::max(10, nr_turns_base - nr_turns_bon);
         }
 
-        if (!prop_handler_->has_prop(PropId::rSpell) && nr_turns_until_rspell_ > 0)
+        if (!prop_handler_->has_prop(PropId::rSpell) &&
+            nr_turns_until_rspell_ > 0)
         {
-            //Spell resistance is in cooldown state, decrement number of
-            //remaining turns
+            // Spell resistance is in cooldown state, decrement number of
+            // remaining turns
             --nr_turns_until_rspell_;
         }
     }
@@ -1060,11 +1064,10 @@ void Player::on_std_turn()
         active_explosive->on_std_turn_player_hold_ignited();
     }
 
-    //Check for monsters coming into view, and try to spot hidden monsters.
+    // Check for monsters coming into view, and try to spot hidden monsters.
     for (Actor* actor : game_time::actors)
     {
-        if (
-            !actor->is_player()                 &&
+        if (!actor->is_player()                 &&
             !map::player->is_leader_of(actor)   &&
             actor->is_alive())
         {
@@ -1122,7 +1125,7 @@ void Player::on_std_turn()
         }
     }
 
-    //Regenerate Hit Points
+    // Regenerate Hit Points
     if (
         !has_prop(PropId::poisoned) &&
         player_bon::bg() != Bg::ghoul)
@@ -1144,9 +1147,10 @@ void Player::on_std_turn()
 
         const int wound_effect_div = is_survivalist ? 2 : 1;
 
-        nr_turns_per_hp += ((nr_wounds * 4) / wound_effect_div);
+        nr_turns_per_hp +=
+            ((nr_wounds * 4) / wound_effect_div);
 
-        //Items affect hp regen?
+        // Items affect hp regen?
         for (const auto& slot : inv_->slots_)
         {
             if (slot.item)
@@ -1160,8 +1164,9 @@ void Player::on_std_turn()
             nr_turns_per_hp += item->hp_regen_change(InvType::backpack);
         }
 
-        //Rapid Recoverer trait affects hp regen?
-        const bool is_rapid_recover = player_bon::traits[(size_t)Trait::rapid_recoverer];
+        // Rapid Recoverer trait affects hp regen?
+        const bool is_rapid_recover =
+            player_bon::traits[(size_t)Trait::rapid_recoverer];
 
         if (is_rapid_recover)
         {
@@ -1601,9 +1606,7 @@ Clr Player::clr() const
         return tmp_clr;
     }
 
-    const int current_shock = shock_ + shock_tmp_;
-
-    if (current_shock >= 75)
+    if (shock_tot() >= 75)
     {
         return clr_magenta;
     }

@@ -71,7 +71,7 @@ void Monolith::activate()
         {
             Mon* const mon = static_cast<Mon*>(actor);
 
-            mon->become_aware_player(false, 5);
+            mon->become_aware_player(false, 2);
         }
     }
 }

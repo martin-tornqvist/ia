@@ -242,13 +242,18 @@ void Rigid::hit(const DmgType dmg_type,
             {
                 msg_log::add("I am off-balance.");
 
-                Prop* prop = new PropParalyzed(PropTurns::specific, rnd::range(1, 3));
+                Prop* prop =
+                    new PropParalyzed(PropTurns::specific,
+                                      rnd::range(1, 3));
 
-                actor->prop_handler().try_add(prop, PropSrc::intr, false, Verbosity::silent);
+                actor->prop_handler().try_add(prop,
+                                              PropSrc::intr,
+                                              false,
+                                              Verbosity::silent);
             }
 
         }
-        else //Not blocking
+        else // Not blocking
         {
             is_feature_hit = false;
             msg_log::add("I kick the air!");
@@ -263,7 +268,7 @@ void Rigid::hit(const DmgType dmg_type,
 
     if (actor)
     {
-        //TODO: This should probably be done elsewhere.
+        // TODO: This should probably be done elsewhere.
         game_time::tick();
     }
 }
@@ -274,7 +279,7 @@ int Rigid::shock_when_adj() const
 
     if (nr_turns_color_corrupted_ > 0)
     {
-        shock += 1;
+        shock += 5;
     }
 
     return shock;
@@ -924,10 +929,10 @@ Statue::Statue(const P& p) :
 
 int Statue::base_shock_when_adj() const
 {
-    //Non-ghoul players are scared of Ghoul statues
+    // Non-ghoul players are scared of Ghoul statues
     if (type_ == StatueType::ghoul && player_bon::bg() != Bg::ghoul)
     {
-        return 2;
+        return 10;
     }
 
     return 0;

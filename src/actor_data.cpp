@@ -140,10 +140,11 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 7;
-    d.descr = "This rotting thing appears to have been brought back to life "
-              "through some abominable process. It has grown sharp claws to "
-              "attack with.";
+    d.nr_turns_aware = 8;
+    d.descr =
+        "This rotting thing appears to have been brought back to life "
+        "through some abominable process. It has grown sharp claws to "
+        "attack with.";
     d.aggro_text_mon_seen = d.name_the + " growls at me.";
     d.aggro_text_mon_hidden = "I hear a growling voice.";
     d.aggro_sfx_mon_seen = SfxId::zombie_growl;
@@ -188,9 +189,10 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 7;
-    d.descr = "This rotting thing appears to have been brought back to life "
-              "through some abominable process. It is wielding a rusty axe.";
+    d.nr_turns_aware = 8;
+    d.descr =
+        "This rotting thing appears to have been brought back to life "
+        "through some abominable process. It is wielding a rusty axe.";
     d.aggro_text_mon_seen = d.name_the + " growls at me.";
     d.aggro_text_mon_hidden = "I hear a growling voice.";
     d.aggro_sfx_mon_seen = SfxId::zombie_growl;
@@ -239,9 +241,10 @@ void init_data_list()
     d.natural_props[(size_t)PropId::infravis] = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 16;
-    d.descr = "This lumbering giant corpse seems to be artificially bloated "
-              "somehow. It is constantly oozing putrid liquid that it can spit "
-              "to attack with.";
+    d.descr =
+        "This lumbering giant corpse seems to be artificially bloated "
+        "somehow. It is constantly oozing putrid liquid that it can spit "
+        "to attack with.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = MonShockLvl::frightening;
     d.is_undead = true;
@@ -278,10 +281,11 @@ void init_data_list()
     d.natural_props[(size_t)PropId::infravis] = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 20;
-    d.descr = "Major Sir Eric Moreland Clapham-Lee was once a commanding officer "
-              "during the Great War. Shortly after his plane was shot down, his "
-              "body was stolen. Now he roams these halls as a resurrected "
-              "warrior in service of the cult, commanding a squad of undead.";
+    d.descr =
+        "Major Sir Eric Moreland Clapham-Lee was once a commanding officer "
+        "during the Great War. Shortly after his plane was shot down, his "
+        "body was stolen. Now he roams these halls as a resurrected "
+        "warrior in service of the cult, commanding a squad of undead.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = MonShockLvl::terrifying;
     d.is_undead = true;
@@ -321,9 +325,10 @@ void init_data_list()
     d.can_bash_doors = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.nr_turns_aware = 20;
-    d.descr = "Alan Halsey was the dean of the Miskatonic University in New "
-              "England. He must have gotten into the hands of the Cult, who "
-              "turned him into the hellish zombie warrior I now see before me.";
+    d.descr =
+        "Alan Halsey was the dean of the Miskatonic University in New "
+        "England. He must have gotten into the hands of the Cult, who "
+        "turned him into the hellish zombie warrior I now see before me.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = MonShockLvl::terrifying;
     d.is_undead = true;
@@ -409,7 +414,9 @@ void init_data_list()
     d.actor_size = ActorSize::floor;
     d.prevent_knockback = true;
     d.nr_turns_aware = 5;
-    d.descr = "A disembodied hand, crawling around frantically on its fingertips like a spider.";
+    d.descr =
+        "A disembodied hand, crawling around frantically on its fingertips "
+        "like a spider.";
     d.erratic_move_pct = ActorErraticFreq::very;
     d.mon_shock_lvl = MonShockLvl::frightening;
     d.can_be_summoned = false;
@@ -450,8 +457,9 @@ void init_data_list()
     d.spawn_max_dlvl = dlvl_last;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 999;
-    d.descr = "A particularly nasty disembodied hand, crawling around frantically on its "
-              "fingertips like a spider. Beware of the Thing.";
+    d.descr =
+        "A particularly nasty disembodied hand, crawling around frantically on "
+        "its fingertips like a spider. Beware of the Thing.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = MonShockLvl::terrifying;
     d.can_be_summoned = false;
@@ -571,8 +579,9 @@ void init_data_list()
     d.can_open_doors = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 16;
-    d.descr = "A fanatic cultist, madly gibbering in some half-lost language. It is "
-              "wielding an Electric Gun, presumably a gift from the Mi-go.";
+    d.descr =
+        "A fanatic cultist, madly gibbering in some half-lost language. It is "
+        "wielding an Electric Gun, presumably a gift from the Mi-go.";
     d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.native_rooms.push_back(RoomType::plain);
@@ -610,8 +619,9 @@ void init_data_list()
     d.can_open_doors = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 16;
-    d.descr = "A fanatic cultist, madly gibbering in some half-lost language. It is "
-              "wielding a Spike gun.";
+    d.descr =
+        "A fanatic cultist, madly gibbering in some half-lost language. It is "
+        "wielding a Spike gun.";
     d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.native_rooms.push_back(RoomType::plain);
@@ -645,16 +655,17 @@ void init_data_list()
     d.spawn_min_dlvl = 3;
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
-    d.descr = "During the Salem witch trials of 1692 an old woman by the name of "
-              "Keziah Mason was arrested for her suspicious behavior and seeming "
-              "insight into other worlds. In her testimony to the judge, she "
-              "confessed to having signed her name in the Black Book of "
-              "Azathoth, and of her secret name of Nahab. She later disappeared "
-              "mysteriously from Salem. She is described as having a \"bent "
-              "back, long nose, and shrivelled chin\" and has a \"croaking "
-              "voice\". She has an animal familiar; the rat Brown Jenkin, which "
-              "she trusts to carry messages between her and the devil. She feeds "
-              "this creature on her blood.";
+    d.descr =
+        "During the Salem witch trials of 1692 an old woman by the name of "
+        "Keziah Mason was arrested for her suspicious behavior and seeming "
+        "insight into other worlds. In her testimony to the judge, she "
+        "confessed to having signed her name in the Black Book of "
+        "Azathoth, and of her secret name of Nahab. She later disappeared "
+        "mysteriously from Salem. She is described as having a \"bent "
+        "back, long nose, and shrivelled chin\" and has a \"croaking "
+        "voice\". She has an animal familiar; the rat Brown Jenkin, which "
+        "she trusts to carry messages between her and the devil. She feeds "
+        "this creature on her blood.";
     d.spell_cast_msg = "croaks incantations.";
     d.aggro_text_mon_seen = d.name_the + " chortles at me in a croaking voice.";
     d.aggro_text_mon_hidden = "I hear a repulsive croaking voice.";
@@ -695,18 +706,19 @@ void init_data_list()
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = data[(size_t)ActorId::keziah_mason].spawn_min_dlvl;
     d.actor_size = ActorSize::floor;
-    d.descr = "\"That object - no larger than a good sized rat and quaintly "
-              "called by the townspeople, \"Brown Jenkin\" - seemed to have been "
-              "the fruit of a remarkable case of sympathetic herd-delusion, for "
-              "in 1692, no less than eleven persons had persons had testified to "
-              "glimpsing it. There were recent rumors, too, with a baffling and "
-              "disconcerting amount of agreement. Witnesses said it had long "
-              "hair and the shape of a rat, but that its sharp-toothed, bearded "
-              "face was evilly human while its paws were like tiny human hands. "
-              "It took messages betwixt old Keziah and the devil, and was nursed "
-              "on the witch's blood, which it sucked like a vampire. Its voice "
-              "was a kind of loathsome titter, and could speak all languages.\" "
-              "H.P.Lovecraft -\"Dreams in the witch house\".";
+    d.descr =
+        "\"That object - no larger than a good sized rat and quaintly "
+        "called by the townspeople, \"Brown Jenkin\" - seemed to have been "
+        "the fruit of a remarkable case of sympathetic herd-delusion, for "
+        "in 1692, no less than eleven persons had persons had testified to "
+        "glimpsing it. There were recent rumors, too, with a baffling and "
+        "disconcerting amount of agreement. Witnesses said it had long "
+        "hair and the shape of a rat, but that its sharp-toothed, bearded "
+        "face was evilly human while its paws were like tiny human hands. "
+        "It took messages betwixt old Keziah and the devil, and was nursed "
+        "on the witch's blood, which it sucked like a vampire. Its voice "
+        "was a kind of loathsome titter, and could speak all languages.\" "
+        "H.P.Lovecraft -\"Dreams in the witch house\".";
     d.spell_cast_msg = "";
     d.aggro_text_mon_seen = d.name_the + " titters at me in a loathsome voice.";
     d.aggro_text_mon_hidden = "I hear a loathsome titter.";
@@ -777,8 +789,9 @@ void init_data_list()
     d.can_open_doors = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 16;
-    d.descr = "A fanatic cultist of the priest rank, madly gibbering in some "
-              "half-lost language.";
+    d.descr =
+        "A fanatic cultist of the priest rank, madly gibbering in some "
+        "half-lost language.";
     d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.native_rooms.push_back(RoomType::plain);
@@ -979,9 +992,10 @@ void init_data_list()
     });
     d.nr_turns_aware = 16;
     d.actor_size = ActorSize::humanoid;
-    d.descr = "Leng spiders are huge, purplish arachnids, with pustulent bloated "
-              "bodies and long, bristly legs. Native to the Dreamlands, the "
-              "spiders of Leng are intelligent, dangerous, and gigantic.";
+    d.descr =
+        "Leng spiders are huge, purplish arachnids, with pustulent bloated "
+        "bodies and long, bristly legs. Native to the Dreamlands, the "
+        "spiders of Leng are intelligent, dangerous, and gigantic.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.is_spider = true;
     d.is_infra_visible = false;
@@ -1017,7 +1031,9 @@ void init_data_list()
     d.natural_props[(size_t)PropId::infravis] = true;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
-    d.descr = "A fierce predator. It hisses menacingly, and venom drips from its fangs.";
+    d.descr =
+        "A fierce predator. It hisses menacingly, and venom drips from its "
+        "fangs.";
     d.aggro_text_mon_seen = d.name_the + " hisses at me.";
     d.aggro_text_mon_hidden = "I hear hissing.";
     d.aggro_sfx_mon_seen = SfxId::hiss;
@@ -1062,7 +1078,9 @@ void init_data_list()
     d.natural_props[(size_t)PropId::infravis] = true;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
-    d.descr = "A fierce predator. It hisses menacingly, and venom drips from its fangs.";
+    d.descr =
+        "A fierce predator. It hisses menacingly, and venom drips from its "
+        "fangs.";
     d.aggro_text_mon_seen = d.name_the + " hisses at me.";
     d.aggro_text_mon_hidden = "I hear hissing.";
     d.aggro_sfx_mon_seen = SfxId::hiss;
@@ -1104,7 +1122,9 @@ void init_data_list()
     d.natural_props[(size_t)PropId::infravis] = true;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
-    d.descr = "A fierce predator. It hisses menacingly, and venom drips from its fangs.";
+    d.descr =
+        "A fierce predator. It hisses menacingly, and venom drips from its "
+        "fangs.";
     d.aggro_text_mon_seen = d.name_the + " hisses at me.";
     d.aggro_text_mon_hidden = "I hear hissing.";
     d.aggro_sfx_mon_seen = SfxId::hiss;
@@ -1156,8 +1176,9 @@ void init_data_list()
     d.actor_size = ActorSize::floor;
     d.can_bash_doors = true;
     d.nr_turns_aware = 16;
-    d.descr = "This extremely aggressive canine seems to be part corporeal and "
-              "part fire. It breathes searing flames.";
+    d.descr =
+        "This extremely aggressive canine seems to be part corporeal and "
+        "part fire. It breathes searing flames.";
     d.aggro_text_mon_seen = d.name_the + " snarls at me.";
     d.aggro_text_mon_hidden = "I hear a snarl.";
     d.aggro_sfx_mon_seen = SfxId::dog_snarl;
@@ -1201,9 +1222,10 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.nr_turns_aware = 50;
-    d.descr = "Zuul the Gatekeeper of Gozer is a demigod and minion of Gozer. It "
-              "was worshiped by the Sumerians and Hittites in 6000 BC, along "
-              "with Gozer.";
+    d.descr =
+        "Zuul the Gatekeeper of Gozer is a demigod and minion of Gozer. It "
+        "was worshiped by the Sumerians and Hittites in 6000 BC, along "
+        "with Gozer.";
     d.aggro_text_mon_seen = d.name_the + " snarls at me.";
     d.aggro_text_mon_hidden = "I hear a snarl.";
     d.aggro_sfx_mon_seen = SfxId::dog_snarl;
@@ -1289,9 +1311,10 @@ void init_data_list()
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
-    d.descr = "It exists between the land of the dead and the living. It "
-              "resembles a grim reaper, including the cloak, scythe, and "
-              "skeletal appearance.";
+    d.descr =
+        "It exists between the land of the dead and the living. It "
+        "resembles a grim reaper, including the cloak, scythe, and "
+        "skeletal appearance.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = MonShockLvl::terrifying;
     d.is_undead = true;
@@ -1417,12 +1440,13 @@ void init_data_list()
     });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
-    d.descr = "At first sight, a Rat-thing can easily be mistaken for a large, "
-              "dark rat. On closer examination, however, their human hands and "
-              "evil caricatures of human heads reveal their unnatural nature. "
-              "Rat-things are said to be created from dead cultists by foul "
-              "witchcraft. Thus, they are found where the witch who created them "
-              "had her lair.";
+    d.descr =
+        "At first sight, a Rat-thing can easily be mistaken for a large, "
+        "dark rat. On closer examination, however, their human hands and "
+        "evil caricatures of human heads reveal their unnatural nature. "
+        "Rat-things are said to be created from dead cultists by foul "
+        "witchcraft. Thus, they are found where the witch who created them "
+        "had her lair.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = MonShockLvl::unsettling;
     d.is_rat = true;
@@ -1555,8 +1579,9 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.nr_turns_aware = 5;
-    d.descr = "An unknown species, perhaps stemming from some hidden bowels of "
-              "the earth. It is about as tall as a full-grown human.";
+    d.descr =
+        "An unknown species, perhaps stemming from some hidden bowels of "
+        "the earth. It is about as tall as a full-grown human.";
     d.aggro_text_mon_hidden = "I hear the flapping of great wings.";
     d.aggro_sfx_mon_seen = SfxId::flapping_wings;
     d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
@@ -1602,15 +1627,16 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.nr_turns_aware = 5;
-    d.descr = "\"There flapped rhythmically a horde of tame, trained, hybrid "
-              "winged things ... not altogether crows, nor moles, nor buzzards, "
-              "nor ants, nor decomposed human beings, but something I cannot and "
-              "must not recall.\"-H.P. Lovecraft, \"The Festival\". A Byakhee "
-              "appears as a disturbing mixture of creatures composing a humanoid "
-              "form. Insect traits vie with predatory birds, digging mammals, "
-              "and possibly the necrotic flesh of human victims. At home in "
-              "lonely voids of interstellar space, Byakhee are a created race, "
-              "though their origin is buried in the distant past.";
+    d.descr =
+        "\"There flapped rhythmically a horde of tame, trained, hybrid "
+        "winged things ... not altogether crows, nor moles, nor buzzards, "
+        "nor ants, nor decomposed human beings, but something I cannot and "
+        "must not recall.\"-H.P. Lovecraft, \"The Festival\". A Byakhee "
+        "appears as a disturbing mixture of creatures composing a humanoid "
+        "form. Insect traits vie with predatory birds, digging mammals, "
+        "and possibly the necrotic flesh of human victims. At home in "
+        "lonely voids of interstellar space, Byakhee are a created race, "
+        "though their origin is buried in the distant past.";
     d.aggro_text_mon_hidden = "I hear the flapping of great wings.";
     d.aggro_sfx_mon_seen = SfxId::flapping_wings;
     d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
@@ -1848,12 +1874,12 @@ void init_data_list()
     d.can_open_doors = false;
     d.nr_turns_aware = 5;
     d.descr =
-        "Flying polyps are a horrible elder race of half polypous, utterly alien "
-        "entities. They are only partly material and have the power of aerial "
-        "motion, despite the absence of wings. Their senses does not include sight, "
-        "but what senses they have can penetrate all material obstructions. They "
-        "are invulnerable to normal means of damage, though they can be destroyed "
-        "by certain forms of electrical energy.";
+        "Flying polyps are a horrible elder race of half polypous, utterly "
+        "alien entities. They are only partly material and have the power of "
+        "aerial motion, despite the absence of wings. Their senses does not "
+        "include sight, but what senses they have can penetrate all material "
+        "obstructions. They are invulnerable to normal means of damage, "
+        "though they can be destroyed by certain forms of electrical energy.";
     d.aggro_text_mon_seen = d.name_the + " makes shrill whistling sounds.";
     d.aggro_text_mon_hidden = "I hear a shrill whistling.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
@@ -1888,7 +1914,7 @@ void init_data_list()
     d.spi = 30;
     d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 70);
-    //NOTE: Polyps should be resistant against all damage types except electricity
+    // NOTE: Polyps should be resistant against all damage except electricity
     d.natural_props[(size_t)PropId::rPhys] = true;
     d.natural_props[(size_t)PropId::rConf] = true;
     d.natural_props[(size_t)PropId::rFear] = true;
@@ -1950,12 +1976,14 @@ void init_data_list()
     d.can_bash_doors = true;
     d.can_open_doors = true;
     d.nr_turns_aware = 7;
-    d.descr = "\"These figures were seldom completely human, but often approached humanity in "
-              "varying degrees. Most of the bodies, while roughly bipedal, had a forward "
-              "slumping, and a vaguely canine cast. The texture of the majority was a kind of "
-              "unpleasant rubberiness\" -H.P.Lovecraft \"Pickman's Model\". Ghouls are rubbery, "
-              "loathsome humanoids with hooflike feet, canine features, and claws. They are often "
-              "encrusted with grave mold collected as they feed.";
+    d.descr =
+        "\"These figures were seldom completely human, but often approached "
+        "humanity in varying degrees. Most of the bodies, while roughly "
+        "bipedal, had a forward slumping, and a vaguely canine cast. The "
+        "texture of the majority was a kind of unpleasant rubberiness\" "
+        "-H.P.Lovecraft \"Pickman's Model\". Ghouls are rubbery, loathsome "
+        "humanoids with hooflike feet, canine features, and claws. They are "
+        "often encrusted with grave mold collected as they feed.";
     d.aggro_text_mon_seen = d.name_the + " growls at me.";
     d.aggro_text_mon_hidden = "I hear a chilling howl.";
     d.aggro_sfx_mon_seen = SfxId::ghoul_growl;
@@ -2051,7 +2079,9 @@ void init_data_list()
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.nr_turns_aware = 32;
-    d.descr = "A mysterious humanoid figure stalking for prey. It is invisible to normal eyes.";
+    d.descr =
+        "A mysterious humanoid figure stalking for prey. It is invisible to "
+        "normal eyes.";
     d.is_auto_descr_allowed = true;
     d.is_infra_visible = false;
     d.is_humanoid = true;
@@ -2131,8 +2161,8 @@ void init_data_list()
     d.can_open_doors = true;
     d.nr_turns_aware = 7;
     d.descr =
-        "A grotesque mummified hybrid creature, with the body of a human and the head "
-        "of a crocodile. It is wielding a spear.";
+        "A grotesque mummified hybrid creature, with the body of a human and "
+        "the head of a crocodile. It is wielding a spear.";
     d.spell_cast_msg = "casts a spell.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = MonShockLvl::frightening;
@@ -2172,8 +2202,9 @@ void init_data_list()
     d.can_bash_doors = true;
     d.can_open_doors = true;
     d.nr_turns_aware = 9999;
-    d.descr = "The mummified fourth dynasty Egyptian pharaoh Khephren. How he came to dwell here "
-              "is beyond anyones guess.";
+    d.descr =
+        "The mummified fourth dynasty Egyptian pharaoh Khephren. How he came "
+        "to dwell here is beyond anyones guess.";
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = MonShockLvl::terrifying;
@@ -2212,12 +2243,13 @@ void init_data_list()
     d.can_bash_doors = true;
     d.can_open_doors = true;
     d.nr_turns_aware = 9999;
-    d.descr = "The mummified sixth dynasty Egyptian pharaoh Nitokris. How she "
-              "came to dwell here is beyond anyones guess. Her name is found in the "
-              "histories of Herodotus and writings of Manetho. According to the "
-              "writings of the former, she took the throne by inviting her "
-              "brothers murderers to a banquet. Then killed them by flooding the "
-              "sealed room with the Nile.";
+    d.descr =
+        "The mummified sixth dynasty Egyptian pharaoh Nitokris. How she "
+        "came to dwell here is beyond anyones guess. Her name is found in the "
+        "histories of Herodotus and writings of Manetho. According to the "
+        "writings of the former, she took the throne by inviting her "
+        "brothers murderers to a banquet. Then killed them by flooding the "
+        "sealed room with the Nile.";
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = MonShockLvl::terrifying;
@@ -2264,14 +2296,15 @@ void init_data_list()
     d.can_bash_doors = true;
     d.can_open_doors = true;
     d.nr_turns_aware = 7;
-    d.descr = "Deep ones are misbegotten creatures of the deep. A deep one "
-              "appears as an abominable crossbreed of a human and amphibian. Its "
-              "fins are merged with twisted arms and legs; its bent back is "
-              "crowned with a long, spiny frill. They can breathe both air and "
-              "water. In the timeless depths of the sea, the deep one's alien, "
-              "arrogant lives are coldly beautiful, unbelievably cruel, and "
-              "effectively immortal. Deep ones may be worshipped by humans with "
-              "whom they regularly interbreed.";
+    d.descr =
+        "Deep ones are misbegotten creatures of the deep. A deep one "
+        "appears as an abominable crossbreed of a human and amphibian. Its "
+        "fins are merged with twisted arms and legs; its bent back is "
+        "crowned with a long, spiny frill. They can breathe both air and "
+        "water. In the timeless depths of the sea, the deep one's alien, "
+        "arrogant lives are coldly beautiful, unbelievably cruel, and "
+        "effectively immortal. Deep ones may be worshipped by humans with "
+        "whom they regularly interbreed.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = MonShockLvl::frightening;
     d.native_rooms.push_back(RoomType::flooded);
@@ -2313,8 +2346,9 @@ void init_data_list()
     d.can_open_doors = false;
     d.nr_turns_aware = 7;
     d.descr =
-        "An extremely aggressive species of great ape. Their pale skin and excellent night vision "
-        "indicates that they adapted to subterranean life a very long time ago.";
+        "An extremely aggressive species of great ape. Their pale skin and "
+        "excellent night vision indicates that they adapted to subterranean "
+        "life a very long time ago.";
     d.aggro_text_mon_hidden = "I hear a beast howling.";
     d.aggro_text_mon_seen = d.name_the + " howls at me.";
     d.aggro_sfx_mon_seen = SfxId::ape;
@@ -2399,8 +2433,9 @@ void init_data_list()
     d.actor_size = ActorSize::floor;
     d.prevent_knockback = true;
     d.nr_turns_aware = 5;
-    d.descr = "A slithering conglomeration of carnivorous worms. Their bite causes "
-              "heavy disorientation.";
+    d.descr =
+        "A slithering conglomeration of carnivorous worms. Their bite causes "
+        "heavy disorientation.";
     d.can_be_summoned = true;
     d.is_auto_descr_allowed = true;
     d.erratic_move_pct = ActorErraticFreq::very;
@@ -2445,8 +2480,9 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
     d.is_auto_descr_allowed = true;
-    d.descr = "A spinning force of destruction. It seems to move with some "
-              "manner of purpose.";
+    d.descr =
+        "A spinning force of destruction. It seems to move with some "
+        "manner of purpose.";
     d.aggro_text_mon_hidden = "I hear a howling wind.";
     d.can_be_summoned = true;
     d.can_bleed = false;
@@ -2491,8 +2527,9 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
     d.is_auto_descr_allowed = true;
-    d.descr = "A spinning force of fire and destruction. It seems to move with "
-              "some manner of purpose.";
+    d.descr =
+        "A spinning force of fire and destruction. It seems to move with "
+        "some manner of purpose.";
     d.aggro_text_mon_hidden = "I hear a howling wind.";
     d.can_be_summoned = true;
     d.can_bleed = false;
@@ -2649,8 +2686,9 @@ void init_data_list()
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = false;
-    d.descr = "It's just a mass of gunk, but it seems sentient. It stinks like "
-              "rotting cadavers.";
+    d.descr =
+        "It's just a mass of gunk, but it seems sentient. It stinks like "
+        "rotting cadavers.";
     d.aggro_text_mon_seen = d.name_the + " makes a gurgling noise.";
     d.aggro_text_mon_hidden = "I hear a gurgling noise.";
     d.aggro_sfx_mon_seen = SfxId::ooze_gurgle;
@@ -2704,8 +2742,9 @@ void init_data_list()
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = false;
-    d.descr = "It's just a mass of gunk, but it seems sentient. It drips and "
-              "sizzles with poison.";
+    d.descr =
+        "It's just a mass of gunk, but it seems sentient. It drips and "
+        "sizzles with poison.";
     d.aggro_text_mon_seen = d.name_the + " makes a gurgling noise.";
     d.aggro_text_mon_hidden = "I hear a gurgling noise.";
     d.aggro_sfx_mon_seen = SfxId::ooze_gurgle;
@@ -2754,10 +2793,12 @@ void init_data_list()
     d.nr_turns_aware = 16;
     d.can_open_doors = false;
     d.can_bash_doors = false;
-    d.descr = "A peculiar floating speck of strange shifting colors. It is very confusing to "
-              "look at. Wherever they pass, they corrupt the environment around them. They are "
-              "invulnerable to attacks from common materials like iron or steel, but can be "
-              "destroyed by other forms of damage, such as fire or electricity.";
+    d.descr =
+        "A peculiar floating speck of strange shifting colors. It is very "
+        "confusing to look at. Wherever they pass, they corrupt the "
+        "environment around them. They are invulnerable to attacks from "
+        "common materials like iron or steel, but can be destroyed by other "
+        "forms of damage, such as fire or electricity.";
     d.is_auto_descr_allowed = true;
     d.can_be_summoned = true;
     d.can_bleed = false;
@@ -2802,9 +2843,10 @@ void init_data_list()
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = false;
-    d.descr = "It resembles an immense squid, with reaching, groping tentacles, "
-              "and a pulpy, elongated sack of a body. Chthonians are powerful "
-              "burrowers, and live for more than a thousand years.";
+    d.descr =
+        "It resembles an immense squid, with reaching, groping tentacles, "
+        "and a pulpy, elongated sack of a body. Chthonians are powerful "
+        "burrowers, and live for more than a thousand years.";
     d.aggro_text_mon_seen = "";
     d.aggro_text_mon_hidden = "";
     d.aggro_sfx_mon_seen = SfxId::END;
@@ -2854,10 +2896,11 @@ void init_data_list()
     d.can_open_doors = false;
     d.nr_turns_aware = 16;
     d.descr =
-        "An infernal piece of technology, seemingly designed to serve as a sort of "
-        "guard. It hovers around, constantly searching the area with beaming "
-        "spotlights, ready to blast any interloper on sight. It appears to have "
-        "some organic parts, and may even be a conscious living being.";
+        "An infernal piece of technology, seemingly designed to serve as a "
+        "sort of guard. It hovers around, constantly searching the area with "
+        "beaming spotlights, ready to blast any interloper on sight. It "
+        "appears to have some organic parts, and may even be a conscious "
+        "living being.";
     d.spell_cast_msg = "makes buzzing sounds in peculiar frequencies.";
     d.aggro_text_mon_seen = d.name_the + " makes a deep buzzing sound.";
     d.aggro_text_mon_hidden = "I hear a deep buzzing sound.";
@@ -2933,8 +2976,8 @@ void init_data_list()
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.descr =
-        "A sickly growth thriving in damp areas. It produces toxic spores which it "
-        "stores in its slimy heads.";
+        "A sickly growth thriving in damp areas. It produces toxic spores "
+        "which it stores in its slimy heads.";
     d.aggro_text_mon_seen = "";
     d.aggro_text_mon_hidden = "";
     d.aggro_sfx_mon_seen = SfxId::END;
@@ -2980,8 +3023,9 @@ void init_data_list()
     d.can_open_doors = false;
     d.can_bash_doors = false;
     d.descr =
-        "A vaguely intelligent floating fungus-based organism. It contains a highly "
-        "explosive gas and will detonate very easily, which it seems to desire.";
+        "A vaguely intelligent floating fungus-based organism. It contains a "
+        "highly explosive gas and will detonate very easily, which it seems to "
+        "desire.";
     d.aggro_text_mon_hidden = "";
     d.can_be_summoned = false;
     d.can_bleed = false;
@@ -3028,11 +3072,12 @@ void init_data_list()
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = true;
-    d.descr = "It resembles an enormous black ropy worm, like a legless dragon "
-              "seen in a nightmare. A great gaping maw filled with jagged, "
-              "irregular teeth gapes open hungrily as it flies in search of "
-              "prey. Hunting horrors haunt the dark places of the universe, from "
-              "which they are called up at the whim of their lord Nyarlathotep.";
+    d.descr =
+        "It resembles an enormous black ropy worm, like a legless dragon "
+        "seen in a nightmare. A great gaping maw filled with jagged, "
+        "irregular teeth gapes open hungrily as it flies in search of "
+        "prey. Hunting horrors haunt the dark places of the universe, from "
+        "which they are called up at the whim of their lord Nyarlathotep.";
     d.aggro_text_mon_hidden = "I hear the flapping of great wings.";
     d.aggro_sfx_mon_seen = SfxId::flapping_wings;
     d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
@@ -3080,9 +3125,11 @@ void init_data_list()
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = true;
-    d.descr = "A living incarnation of death. With its goat-like features, it is eerily similar "
-              "to the imagery of Devils and Demons seen in medieval woodcuts. The attack of this "
-              "entity can bypass any armor, and means almost certain death!";
+    d.descr =
+        "A living incarnation of death. With its goat-like features, it is "
+        "eerily similar to the imagery of Devils and Demons seen in medieval "
+        "woodcuts. The attack of this entity can bypass any armor, and means "
+        "almost certain death!";
     d.aggro_sfx_mon_seen = SfxId::END;
     d.aggro_sfx_mon_hidden = SfxId::END;
     d.can_be_summoned = false;
@@ -3129,10 +3176,11 @@ void init_data_list()
     d.prevent_knockback = true;
     d.nr_turns_aware = 9999;
     d.descr =
-        "The Grand Wizard of the Cult of Starry Wisdom. He appears incredibly old, "
-        "like a hideous ancient vampire or a grim reaper. Tattered crimson robes flow "
-        "from his skeletal frame, his bony fingers extends into razor sharp claws, and "
-        "he has a grim expression on his face.";
+        "The Grand Wizard of the Cult of Starry Wisdom. He appears "
+        "incredibly old, like a hideous ancient vampire or a grim reaper. "
+        "Tattered crimson robes flow from his skeletal frame, his bony "
+        "fingers extends into razor sharp claws, and he has a grim expression "
+        "on his face.";
     d.is_auto_descr_allowed = false;
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = ActorErraticFreq::never;
