@@ -64,8 +64,8 @@ void mk_lvl(const MapType& map_type)
             map_ok = mapgen::mk_leng_lvl();
             break;
 
-        case MapType::rats_in_the_walls:
-            map_ok = mapgen::mk_rats_in_the_walls_lvl();
+        case MapType::rat_cave:
+            map_ok = mapgen::mk_rat_cave_level();
             break;
 
         case MapType::trapez:
@@ -109,7 +109,7 @@ void init()
     {
         map_list[dlvl_first_late_game - 1] =
         {
-            MapType::rats_in_the_walls,
+            MapType::rat_cave,
             IsMainDungeon::yes
         };
     }

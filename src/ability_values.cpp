@@ -135,12 +135,12 @@ int AbilityVals::val(const AbilityId id,
 
             if (player_bon::traits[(size_t)Trait::stealthy])
             {
-                ret += 30;
+                ret += 40;
             }
 
             if (player_bon::traits[(size_t)Trait::imperceptible])
             {
-                ret += 30;
+                ret += 40;
             }
             break;
 
@@ -187,24 +187,30 @@ void AbilityVals::change_val(const AbilityId ability, const int change)
 namespace ability_roll
 {
 
-AbilityRollResult roll(const int tot_skill_value, const Actor* const actor_rolling)
+AbilityRollResult roll(const int tot_skill_value,
+                       const Actor* const actor_rolling)
 {
     const int roll = rnd::percent();
 
-    const bool is_cursed    = actor_rolling && actor_rolling->has_prop(PropId::cursed);
-    const bool is_blessed   = actor_rolling && actor_rolling->has_prop(PropId::blessed);
+    const bool is_cursed =
+        actor_rolling &&
+        actor_rolling->has_prop(PropId::cursed);
 
-    //Critical success?
+    const bool is_blessed =
+        actor_rolling &&
+        actor_rolling->has_prop(PropId::blessed);
+
+    // Critical success?
     Range crit_success_range(1, 1);
 
     if (is_blessed)
     {
-        //Increase critical success range while blessed
+        // Increase critical success range while blessed
         crit_success_range.max = 5;
     }
     else if (is_cursed)
     {
-        //Never critically succeed while cursed
+        // Never critically succeed while cursed
         crit_success_range.set(-1, -1);
     }
 
@@ -213,17 +219,17 @@ AbilityRollResult roll(const int tot_skill_value, const Actor* const actor_rolli
         return AbilityRollResult::success_critical;
     }
 
-    //Critical fail?
+    // Critical fail?
     Range crit_fail_range(100, 100);
 
     if (is_blessed)
     {
-        //Never critically fail while blessed
+        // Never critically fail while blessed
         crit_fail_range.set(-1, -1);
     }
     else if (is_cursed)
     {
-        //Increase critical fail range while cursed
+        // Increase critical fail range while cursed
         crit_fail_range.min = 95;
     }
 
@@ -232,8 +238,10 @@ AbilityRollResult roll(const int tot_skill_value, const Actor* const actor_rolli
         return AbilityRollResult::fail_critical;
     }
 
-    return roll <= tot_skill_value ?
-           AbilityRollResult::success : AbilityRollResult::fail;
+    return
+        (roll <= tot_skill_value) ?
+        AbilityRollResult::success :
+        AbilityRollResult::fail;
 }
 
-} //ability_roll
+} // ability_roll

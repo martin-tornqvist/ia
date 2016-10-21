@@ -36,7 +36,7 @@ enum class MapType
     std,
     egypt,
     leng,
-    rats_in_the_walls,
+    rat_cave,
     boss,
     trapez
 };

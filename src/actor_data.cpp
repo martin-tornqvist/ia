@@ -149,7 +149,7 @@ void init_data_list()
     d.aggro_text_mon_hidden = "I hear a growling voice.";
     d.aggro_sfx_mon_seen = SfxId::zombie_growl;
     d.aggro_sfx_mon_hidden = SfxId::zombie_growl;
-    d.erratic_move_pct = ActorErraticFreq::somewhat;
+    d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = MonShockLvl::frightening;
     d.is_undead = true;
     d.is_humanoid = true;
@@ -197,7 +197,7 @@ void init_data_list()
     d.aggro_text_mon_hidden = "I hear a growling voice.";
     d.aggro_sfx_mon_seen = SfxId::zombie_growl;
     d.aggro_sfx_mon_hidden = SfxId::zombie_growl;
-    d.erratic_move_pct = ActorErraticFreq::somewhat;
+    d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = MonShockLvl::frightening;
     d.is_undead = true;
     d.is_humanoid = true;
@@ -286,7 +286,7 @@ void init_data_list()
         "during the Great War. Shortly after his plane was shot down, his "
         "body was stolen. Now he roams these halls as a resurrected "
         "warrior in service of the cult, commanding a squad of undead.";
-    d.erratic_move_pct = ActorErraticFreq::somewhat;
+    d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = MonShockLvl::terrifying;
     d.is_undead = true;
     d.is_humanoid = true;

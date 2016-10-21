@@ -65,27 +65,48 @@ bool Actor::is_spotting_sneaking_actor(Actor& other)
 {
     const P& other_pos = other.pos;
 
-    const int   player_search_mod   = is_player() ? ability(AbilityId::searching, true) : 0;
+    const int player_search_mod =
+        is_player() ?
+        ability(AbilityId::searching, true) :
+        0;
 
-    const auto& abilities_other     = other.data().ability_vals;
+    const auto& abilities_other = other.data().ability_vals;
 
-    const int   sneak_skill         = abilities_other.val(AbilityId::stealth, true, other);
+    const int sneak_skill =
+        abilities_other.val(AbilityId::stealth,
+                            true,
+                            other);
 
-    const int   dist                = king_dist(pos, other_pos);
-    const int   sneak_dist_mod      = std::min((dist - 2) * 20, 80);
+    const int dist = king_dist(pos, other_pos);
 
-    const Cell& cell                = map::cells[other_pos.x][other_pos.y];
+    // Distance  Sneak bonus
+    // ----------------------
+    // 1         -20
+    // 2           0
+    // 3          20
+    // 4          40
+    // 5          60
+    // 6          80
+    const int sneak_dist_mod = std::min((dist - 2) * 20, 80);
 
-    const int   sneak_lgt_mod       = cell.is_lit                     ? -40 : 0;
-    const int   sneak_drk_mod       = (cell.is_dark && ! cell.is_lit) ?  40 : 0;
+    const Cell& cell = map::cells[other_pos.x][other_pos.y];
 
-    const int   sneak_tot           = constr_in_range(0,
-                                                      sneak_skill     +
-                                                      sneak_dist_mod  +
-                                                      sneak_lgt_mod   +
-                                                      sneak_drk_mod   -
-                                                      player_search_mod,
-                                                      99);
+    const int sneak_lgt_mod =
+        cell.is_lit ?
+        -40 : 0;
+
+    const int sneak_drk_mod =
+        (cell.is_dark && ! cell.is_lit) ?
+        40 : 0;
+
+    // NOTE: There is no need to cap the sneak skill value here, since there's
+    //       always the chance of critically failing.
+    const int sneak_tot =
+        sneak_skill     +
+        sneak_dist_mod  +
+        sneak_lgt_mod   +
+        sneak_drk_mod   -
+        player_search_mod;
 
     return ability_roll::roll(sneak_tot, &other) <= fail;
 }

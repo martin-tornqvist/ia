@@ -19,8 +19,7 @@ namespace action
 
 bool try_cast_random_spell(Mon& mon)
 {
-    if (
-        !mon.is_alive()                 ||
+    if (!mon.is_alive()                 ||
         mon.spell_cooldown_current_ > 0 ||
         mon.spells_known_.empty()       ||
         !mon.prop_handler().allow_cast_spell(Verbosity::silent))
@@ -37,19 +36,22 @@ bool try_cast_random_spell(Mon& mon)
             const int current_spi = mon.spi();
             const int spell_max_spi = spell->spi_cost(false, &mon).max;
 
-            //Cast spell if max spirit cost is lower than current spirit,
+            // Cast spell if max spirit cost is lower than current spirit,
             if (spell_max_spi < current_spi)
             {
                 spell->cast(&mon, true, false);
                 return true;
             }
 
-            //This point reached means spi was lower than the spells potential cost
+            //
+            // Spi was lower than the spells potential cost
+            //
+
             const int current_hp  = mon.hp();
             const int max_hp  = mon.hp_max(true);
 
-            //If monster is not allied to player, with a small chance, cast the spell
-            //anyway if hp is low.
+            // If monster is not allied to player, with a small chance, cast
+            // the spell anyway if hp is low.
             if (
                 !map::player->is_leader_of(&mon)    &&
                 current_hp < (max_hp / 3)           &&
@@ -87,22 +89,34 @@ bool handle_closed_blocking_door(Mon& mon, std::vector<P> path)
 
         if (!door->can_move(mon))
         {
-            if (!door->is_stuck())
+            const bool is_stuck     = door->is_stuck();
+            const bool mon_can_bash = mon.data().can_bash_doors;
+            const bool mon_can_open = mon.data().can_open_doors;
+
+            // Open the door?
+            if (mon_can_open && !is_stuck)
             {
-                if (mon.data().can_open_doors)
-                {
-                    door->try_open(&mon);
-                    return true;
-                }
-                else if (mon.data().can_bash_doors)
-                {
-                    door->hit(DmgType::physical, DmgMethod::kick, &mon);
-                    return true;
-                }
+                door->try_open(&mon);
+                return true;
             }
-            else if (mon.data().can_bash_doors)
+
+            // Bash the door?
+            if (mon_can_bash &&
+                (is_stuck || !mon_can_open))
             {
-                door->hit(DmgType::physical, DmgMethod::kick, &mon);
+                // HACK: When bashing doors, give the bashing monster some bonus
+                //       awareness time (because monsters trying to bash down
+                //       doors is a pretty central part of the game, and they
+                //       should not give up so easily).
+                if (rnd::fraction(2, 3))
+                {
+                    mon.aware_counter_++;
+                }
+
+                door->hit(DmgType::physical,
+                          DmgMethod::kick,
+                          &mon);
+
                 return true;
             }
         }
@@ -117,15 +131,18 @@ bool handle_inventory(Mon& mon)
     return false;
 }
 
-//Helper function(s) for make_room_for_friend()
+// Helper function(s) for make_room_for_friend()
 namespace
 {
 
-//Check if position is on a line between two points
-bool is_pos_on_line(const P& p, const P& line_p0, const P& line_p1)
+// Check if position is on a line between two points
+bool is_pos_on_line(const P& p,
+                    const P& line_p0,
+                    const P& line_p1)
 {
-    //First, do a cheaper check and just see if we are outside a rectangle defined by the two
-    //points. If we are outside this area, we can't possibly be on a line between the points.
+    // First, do a cheaper check and just see if we are outside a rectangle
+    // defined by the two points. If we are outside this area, we can't
+    // possibly be on a line between the points.
      const R r(std::min(line_p0.x, line_p1.x),
               std::min(line_p0.y, line_p1.y),
               std::max(line_p0.x, line_p1.x),
@@ -136,7 +153,7 @@ bool is_pos_on_line(const P& p, const P& line_p0, const P& line_p1)
         return false;
     }
 
-    //OK, we could be on the line!
+    // OK, we could be on the line!
 
     std::vector<P> line;
 
@@ -158,8 +175,8 @@ bool is_pos_on_line(const P& p, const P& line_p0, const P& line_p1)
     return false;
 }
 
-//Returns all free positions around the acting monster that is further from the player than the
-//monster's current position
+// Returns all free positions around the acting monster that is further from the
+// player than the monster's current position
 void move_bucket(Mon& mon, std::vector<P>& dirs_to_mk)
 {
     dirs_to_mk.clear();
@@ -169,7 +186,7 @@ void move_bucket(Mon& mon, std::vector<P>& dirs_to_mk)
 
     bool blocked[map_w][map_h];
 
-     const R area_to_check_blocked(mon_p - P(1, 1), mon_p + P(1, 1));
+    const R area_to_check_blocked(mon_p - P(1, 1), mon_p + P(1, 1));
 
     map_parse::run(cell_check::BlocksActor(mon, true),
                    blocked,
@@ -180,11 +197,10 @@ void move_bucket(Mon& mon, std::vector<P>& dirs_to_mk)
     {
         const P tgt_p = mon_p + d;
 
-        const int current_to_player_dist = king_dist(mon_p, player_p);
-        const int tgt_to_player_dist = king_dist(tgt_p, player_p);
+        const int current_dist_to_player    = king_dist(mon_p, player_p);
+        const int tgt_dist_to_player        = king_dist(tgt_p, player_p);
 
-        if (
-            tgt_to_player_dist <= current_to_player_dist &&
+        if (tgt_dist_to_player <= current_dist_to_player &&
             !blocked[tgt_p.x][tgt_p.y])
         {
             dirs_to_mk.push_back(tgt_p);
@@ -192,7 +208,7 @@ void move_bucket(Mon& mon, std::vector<P>& dirs_to_mk)
     }
 }
 
-} //namespace
+} // namespace
 
 bool make_room_for_friend(Mon& mon)
 {
@@ -212,23 +228,21 @@ bool make_room_for_friend(Mon& mon)
 
     const P& player_p = map::player->pos;
 
-    //Check if there is an allied monster that we should move away for
+    // Check if there is an allied monster that we should move away for
     for (Actor* other_actor : game_time::actors)
     {
-        if (
-            other_actor != &mon         &&
+        if (other_actor != &mon         &&
             other_actor->is_alive()     &&
             !other_actor->is_player()   &&
-            !map::player->is_leader_of(other_actor)
-        )
+            !map::player->is_leader_of(other_actor))
         {
             Mon* const other_mon = static_cast<Mon*>(other_actor);
 
             const bool is_other_adj =
                 is_pos_adj(mon.pos, other_mon->pos, false);
 
-            //TODO: It's probably better to check LOS than vision here?
-            //We don't want to move out of the way for a blind monster.
+            // TODO: It's probably better to check LOS than vision here? We
+            //       don't want to move out of the way for a blind monster.
             const bool is_other_seeing_player =
                 other_mon->can_see_actor(*map::player, blocked_los);
 
@@ -242,43 +256,47 @@ bool make_room_for_friend(Mon& mon)
             const bool is_other_adj_with_no_player_los =
                 is_other_adj && !is_other_seeing_player;
 
-            //We consider moving out of the way if the other monster EITHER:
-            // * Is seeing the player and we are blocking it, or
-            // * Is adjacent to us, and is not seeing the player.
-            if (
-                (is_other_seeing_player && is_pos_on_line(mon.pos, other_mon->pos, player_p)) ||
+            // We consider moving out of the way if the other monster EITHER:
+            //  * Is seeing the player and we are blocking it, OR
+            //  * Is adjacent to us, and is not seeing the player.
+            const bool is_between =
+                is_pos_on_line(mon.pos, other_mon->pos, player_p);
+
+            if ((is_other_seeing_player && is_between) ||
                 is_other_adj_with_no_player_los)
             {
-                //We are blocking a friend! Try to find an adjacent free cell, which:
-                // * Is NOT further away from the player than our current position, and
+                // We are blocking a friend! Try to find an adjacent free cell,
+                // which:
+                // * Is NOT further away from the player than our current
+                //   position, and
                 // * Is not also blocking another monster
 
-                //NOTE: We do not care whether the target cell has LOS to the
-                //player or not. If we move into a cell without LOS, it will
-                //appear as if we are dodging in and out of cover. It lets us
-                //move towards the player with less time in the player's LOS,
-                //and allows blocked ranged monsters to shoot at the player.
+                // NOTE: We do not care whether the target cell has LOS to the
+                //       player or not. If we move into a cell without LOS, it
+                //       will appear as if we are dodging in and out of cover.
+                //       It lets us move towards the player with less time in
+                //       the player's LOS, and allows blocked ranged monsters to
+                //       shoot at the player.
 
-                //Get a list of neighbouring free cells
+                // Get a list of neighbouring free cells
                 std::vector<P> pos_bucket;
                 move_bucket(mon, pos_bucket);
 
-                //Sort the list by distance to player
+                // Sort the list by distance to player
                 IsCloserToPos cmp(player_p);
                 sort(pos_bucket.begin(), pos_bucket.end(), cmp);
 
-                //Try to find a position not blocking a third allied monster
+                // Try to find a position not blocking a third allied monster
                 for (const auto& tgt_p : pos_bucket)
                 {
                     bool is_p_ok = true;
 
                     for (Actor* actor3 : game_time::actors)
                     {
-                        //NOTE: The third actor here can include the original
-                        //blocked "other" actor, since we must also check if we
-                        //block that actor from the target position.
-                        if (
-                            actor3 != &mon          &&
+                        // NOTE: The third actor here can include the original
+                        //       blocked "other" actor, since we must also check
+                        //       if we block that actor from the target position
+                        if (actor3 != &mon          &&
                             actor3->is_alive()      &&
                             !actor3->is_player()    &&
                             !map::player->is_leader_of(actor3))
@@ -288,14 +306,14 @@ bool make_room_for_friend(Mon& mon)
                             const bool other_is_seeing_player =
                                 mon3->can_see_actor(*map::player, blocked_los);
 
-                            //TODO: We also need to check that we don't move
-                            //into a cell which is adjacent to a third monster,
-                            //who does not have LOS to player! As it is now,
-                            //we may move out of the way for one such monster,
-                            //only to block another in the same way!
+                            // TODO: We also need to check that we don't move
+                            //       into a cell which is adjacent to a third
+                            //       monster, who does not have LOS to player!
+                            //       As it is now, we may move out of the way
+                            //       for one such monster, only to block
+                            //       another in the same way!
 
-                            if (
-                                other_is_seeing_player &&
+                            if (other_is_seeing_player &&
                                 is_pos_on_line(tgt_p, mon3->pos, player_p))
                             {
                                 is_p_ok = false;
@@ -426,8 +444,9 @@ bool move_to_tgt_simple(Mon& mon)
 
         const P new_pos(mon.pos + signs);
 
-        const bool is_blocked = map_parse::cell(cell_check::BlocksActor(mon, true),
-                                                new_pos);
+        const bool is_blocked =
+            map_parse::cell(cell_check::BlocksActor(mon, true),
+                            new_pos);
 
         if (!is_blocked)
         {
@@ -475,7 +494,9 @@ bool step_to_lair_if_los(Mon& mon, const P& lair_p)
             const P d       = (lair_p - mon.pos).signs();
             const P tgt_p   = mon.pos + d;
 
-            const bool is_blocked = map_parse::cell(cell_check::BlocksActor(mon, true), tgt_p);
+            const bool is_blocked =
+                map_parse::cell(cell_check::BlocksActor(mon, true),
+                                tgt_p);
 
             if (is_blocked)
             {
@@ -554,7 +575,9 @@ bool look_become_player_aware(Mon& mon)
     return false;
 }
 
-void try_set_path_to_lair_if_no_los(Mon& mon, std::vector<P>& path, const P& lair_p)
+void try_set_path_to_lair_if_no_los(Mon& mon,
+                                    std::vector<P>& path,
+                                    const P& lair_p)
 {
     if (mon.is_alive())
     {
@@ -586,7 +609,7 @@ void try_set_path_to_lair_if_no_los(Mon& mon, std::vector<P>& path, const P& lai
                       lair_p,
                       blocked,
                       path);
-        
+
         return;
     }
 
@@ -595,42 +618,50 @@ void try_set_path_to_lair_if_no_los(Mon& mon, std::vector<P>& path, const P& lai
 
 void try_set_path_to_leader(Mon& mon, std::vector<P>& path)
 {
-    if (mon.is_alive())
+    if (!mon.is_alive())
     {
-        Actor* leader = mon.leader_;
-
-        if (leader && leader->is_alive())
-        {
-            bool blocked[map_w][map_h];
-
-             const R fov_lmt = fov::get_fov_rect(mon.pos);
-
-            map_parse::run(cell_check::BlocksLos(),
-                           blocked,
-                           MapParseMode::overwrite,
-                           fov_lmt);
-
-            const LosResult los = fov::check_cell(mon.pos, leader->pos, blocked);
-
-            if (!los.is_blocked_hard)
-            {
-                path.clear();
-                return;
-            }
-
-            map_parse::run(cell_check::BlocksActor(mon, false), blocked);
-
-            map_parse::run(cell_check::LivingActorsAdjToPos(mon.pos),
-                           blocked,
-                           MapParseMode::append);
-
-            pathfind(mon.pos,
-                          leader->pos,
-                          blocked,
-                          path);
-            return;
-        }
+        return;
     }
+
+    Actor* leader = mon.leader_;
+
+    if (!leader || !leader->is_alive())
+    {
+        return;
+    }
+
+    bool blocked[map_w][map_h];
+
+    const R fov_lmt = fov::get_fov_rect(mon.pos);
+
+    map_parse::run(cell_check::BlocksLos(),
+                   blocked,
+                   MapParseMode::overwrite,
+                   fov_lmt);
+
+    const LosResult los =
+        fov::check_cell(mon.pos,
+                        leader->pos,
+                        blocked);
+
+    if (!los.is_blocked_hard)
+    {
+        path.clear();
+        return;
+    }
+
+    map_parse::run(cell_check::BlocksActor(mon, false),
+                   blocked);
+
+    map_parse::run(cell_check::LivingActorsAdjToPos(mon.pos),
+                   blocked,
+                   MapParseMode::append);
+
+    pathfind(mon.pos,
+             leader->pos,
+             blocked,
+             path);
+    return;
 
     path.clear();
 }
@@ -643,37 +674,65 @@ void try_set_path_to_player(Mon& mon, std::vector<P>& path)
         return;
     }
 
-    bool blocked[map_w][map_h] = {};
+    bool blocked[map_w][map_h];
 
-    const int X0 = 1;
-    const int Y0 = 1;
-    const int X1 = map_w - 1;
-    const int Y1 = map_h - 1;
+    map_parse::run(cell_check::BlocksLos(),
+                   blocked);
 
-    //Mark blocking features in the blocking array
-    for (int x = X0; x < X1; ++x)
+    // If there is an unblocked LOS between the monster and the player we skip
+    // the pathfinding. The monster should not use the pathfinder to move
+    // towards the player in this case.
+    // If the player is invisible for example, we *do* want pathfinding as long
+    // as the monster is aware, and is around corner (they are guided by sound
+    // or something else) - but when they come into LOS of an invisible player,
+    // they should not approach further.
+    // This creates a pretty cool effect, where monsters appear a bit confused
+    // that they cannot see anyone when they should have come into sight.
+    const P& player_pos = map::player->pos;
+
+    LosResult los_result =
+        fov::check_cell(mon.pos,
+                        player_pos,
+                        blocked);
+
+    if (!los_result.is_blocked_hard &&
+        !los_result.is_blocked_by_drk)
     {
-        for (int y = Y0; y < Y1; ++y)
+        return;
+    }
+
+    // Monster does not have LOS to player - alright, let's go!
+
+    const int x0 = 1;
+    const int y0 = 1;
+    const int x1 = map_w - 1;
+    const int y1 = map_h - 1;
+
+    for (int x = x0; x < x1; ++x)
+    {
+        for (int y = y0; y < y1; ++y)
         {
+            blocked[x][y] = false;
+
             const auto* const f = map::cells[x][y].rigid;
 
             if (!f->can_move(mon))
             {
+                // Doors are only blocked if the monster cannot open or bash
                 if (f->id() == FeatureId::door)
                 {
-                    //Mark doors as blocked depending on if the monster can bash or open doors,
+                    // TODO: What if there is a monster that can open
+                    //       doors but not bash, and the door is stuck?
 
                     const ActorDataT& d = mon.data();
 
-                    //TODO: What if there is a monster that can open doors but not bash them,
-                    //and the door is stuck?
-
-                    if (!d.can_open_doors && !d.can_bash_doors)
+                    if (!d.can_open_doors &&
+                        !d.can_bash_doors)
                     {
                         blocked[x][y] = true;
                     }
                 }
-                else //Not a door (e.g. a wall)
+                else // Not a door (e.g. a wall)
                 {
                     blocked[x][y] = true;
                 }
@@ -681,30 +740,16 @@ void try_set_path_to_player(Mon& mon, std::vector<P>& path)
         }
     }
 
-    //If there is an unblocked LOS between the monster and the player we cancel the pathfinding.
-    //The monster should not use the pathfinder to move towards the player in this case. If the
-    //player is invisible for example, we *do* want pathfinding as long as the monster is aware,
-    //and is around corner (they are guided by sound or something else) - but when they come into
-    //LOS of an invisible player, they should not approach further.
-    //This creates a pretty cool effect, where monsters appear a bit confused that they cannot see
-    //anyone when they should have come into sight.
-    const P& player_pos = map::player->pos;
+    // Append living adjacent actors to the blocking array
+    map_parse::run(cell_check::LivingActorsAdjToPos(mon.pos),
+                   blocked,
+                   MapParseMode::append);
 
-    LosResult los_result = fov::check_cell(mon.pos, player_pos, blocked);
-
-    if (los_result.is_blocked_hard || los_result.is_blocked_by_drk)
-    {
-        //Append living adjacent actors to the blocking array
-        map_parse::run(cell_check::LivingActorsAdjToPos(mon.pos),
-                       blocked,
-                       MapParseMode::append);
-
-        //Find a path
-        pathfind(mon.pos,
-                      player_pos,
-                      blocked,
-                      path);
-    }
+    // Find a path
+    pathfind(mon.pos,
+             player_pos,
+             blocked,
+             path);
 }
 
 void set_special_blocked_cells(Mon& mon, bool a[map_w][map_h])
@@ -713,7 +758,6 @@ void set_special_blocked_cells(Mon& mon, bool a[map_w][map_h])
     (void)a;
 }
 
-} //info
+} // info
 
-} //ai
-
+} // ai

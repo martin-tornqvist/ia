@@ -31,30 +31,30 @@ public:
 namespace mapgen
 {
 
-//This variable is checked at certain points to see if the current map
-//has been flagged as "failed". Setting is_map_valid to false will generally
-//stop map generation, discard the map, and trigger generation of a new map.
+// This variable is checked at certain points to see if the current map
+// has been flagged as "failed". Setting is_map_valid to false will generally
+// stop map generation, discard the map, and trigger generation of a new map.
 extern bool is_map_valid;
 
-//All cells marked as true in this array will be considered for door placement
+// All cells marked as true in this array will be considered for door placement
 extern bool door_proposals[map_w][map_h];
 
 //------------------------------------------------------------------------------
-//Generate maps
+// Generate maps
 //------------------------------------------------------------------------------
-//Standard dungeon level
+// Standard dungeon level
 bool mk_std_lvl();
 
-//"Special" levels
+// "Special" levels
 bool mk_intro_lvl();
 bool mk_egypt_lvl();
 bool mk_leng_lvl();
-bool mk_rats_in_the_walls_lvl();
+bool mk_rat_cave_level();
 bool mk_trapez_lvl();
 bool mk_boss_lvl();
 
 //------------------------------------------------------------------------------
-//Map generation steps (in no particular order)
+// Map generation steps (in no particular order)
 //------------------------------------------------------------------------------
 void mk_merged_regions_and_rooms(Region regions[3][3]);
 
@@ -69,19 +69,20 @@ void mk_sub_rooms();
 void decorate();
 
 //------------------------------------------------------------------------------
-//Room reshaping utils (called by the room objects)
+// Room reshaping utils (called by the room objects)
 //------------------------------------------------------------------------------
-//NOTE: Some reshape functions below will not change the boundaries of the room,
-//but may affect which cells belong to the room. This only affects the room map
-//(in the "map" namespace), so the room parameter should be a const reference.
-//For other reshape functions, the room may expand beyond its initial rectangle,
-//so in those cases the functions need to modify the data of the room object.
+// NOTE: Some reshape functions below will not change the boundaries of the
+//       room, but may affect which cells belong to the room. This only affects
+//       the room map (in the "map" namespace), so the room parameter should be
+//       a const reference. For other reshape functions, the room may expand
+//       beyond its initial rectangle, so in those cases the functions need to
+//       modify the data of the room object.
 void cut_room_corners(const Room& room);
 void mk_pillars_in_room(const Room& room);
 void cavify_room(Room& room);
 
 //------------------------------------------------------------------------------
-//Misc utils
+// Misc utils
 //------------------------------------------------------------------------------
 void register_room(Room& room);
 
@@ -111,6 +112,6 @@ void pathfinder_walk(const P& p0,
                      std::vector<P>& pos_list_ref,
                      const bool is_smooth);
 
-} //mapgen
+} // mapgen
 
 #endif

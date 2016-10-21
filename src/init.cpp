@@ -59,7 +59,7 @@ void init_game()
     saving::init();
     line_calc::init();
     gods::init();
-    map_templ_handling::init();
+    map_templates::init();
     TRACE_FUNC_END;
 }
 

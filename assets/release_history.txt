@@ -18,6 +18,7 @@ Gameplay
 * Spells now have "skill level" percentages, which affects the Spirit cost to cast the spell - the skill levels can be increased by casting from Manuscripts
 * All backgrounds can now learn spells, but the Occultist gains proficiency much faster, and starts with a few known spells
 * Chests can no longer be trapped (it was awkward to deal with, and it didn't really bring anything to the game) - chests are now just interacted with by bumping them (if they are not locked), kicking them, or using an Opening spell
+* Rogues remain aware of monsters much longer than the other Backgrounds, and the other Backgrounds remain aware for a shorter duration than before
 
 Interface
 * Added an option to ask for confirmation before lighting explosives (default is off)

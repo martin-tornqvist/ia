@@ -379,7 +379,8 @@ std::vector<std::string> bg_descr(const Bg id)
             "",
             "Starts with a few known spells",
             "",
-            "-50% shock taken from using and identifying strange items (e.g. potions)",
+            "-50% shock taken from using and identifying strange items "
+            "(e.g. potions)",
             "",
             "Can dispel magic traps",
             "",
@@ -398,6 +399,8 @@ std::vector<std::string> bg_descr(const Bg id)
         return
         {
             "The rate of shock received passively over time is reduced by half",
+            "",
+            "Remains aware of the presence of other creatures longer",
             "",
             "Starts with the following trait(s):",
             "",

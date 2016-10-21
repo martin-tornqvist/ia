@@ -219,8 +219,7 @@ void Mon::act()
         }
     }
 
-    if (
-        data_->ai[(size_t)AiId::makes_room_for_friend]  &&
+    if (data_->ai[(size_t)AiId::makes_room_for_friend]  &&
         leader_ != map::player                          &&
         tgt_ == map::player)
     {
@@ -230,7 +229,7 @@ void Mon::act()
         }
     }
 
-    //Cast instead of attacking?
+    // Cast instead of attacking?
     if (rnd::one_in(5))
     {
         if (ai::action::try_cast_random_spell(*this))
@@ -326,8 +325,7 @@ void Mon::act()
         }
     }
 
-    if (
-        data_->ai[(size_t)AiId::moves_to_lair]  &&
+    if (data_->ai[(size_t)AiId::moves_to_lair]  &&
         leader_ != map::player                  &&
         (tgt_ == nullptr || tgt_ == map::player))
     {
@@ -604,12 +602,17 @@ void Mon::become_aware_player(const bool is_from_seeing,
     }
 }
 
-void Mon::set_player_aware_of_me(const int duration_factor)
+void Mon::set_player_aware_of_me(int duration_factor)
 {
     is_sneaking_ = false;
 
-    const int lower             = 4 * duration_factor;
-    const int upper             = 6 * duration_factor;
+    if (player_bon::bg() == Bg::rogue)
+    {
+        duration_factor *= 4;
+    }
+
+    const int lower             = 2 * duration_factor;
+    const int upper             = 3 * duration_factor;
     const int roll              = rnd::range(lower, upper);
     player_aware_of_me_counter_ = std::max(player_aware_of_me_counter_, roll);
 }
@@ -1102,7 +1105,8 @@ DidAction Vortex::on_act()
         if (knock_back_from_pos != player_pos)
         {
             TRACE << "Pos found to knockback player from: "
-                  << knock_back_from_pos.x << ", " << knock_back_from_pos.y << std::endl;
+                  << knock_back_from_pos.x << ", "
+                  << knock_back_from_pos.y << std::endl;
 
             TRACE << "Player pos: "
                   << player_pos.x << ", " << player_pos.y << std::endl;
@@ -1171,14 +1175,20 @@ DidAction Ghost::on_act()
     {
         set_player_aware_of_me();
 
-        const bool          player_sees_me  = map::player->can_see_actor(*this);
-        const std::string   name            = player_sees_me ? name_the() : "It";
+        const bool player_sees_me =
+            map::player->can_see_actor(*this);
+
+        const std::string name =
+            player_sees_me ?
+            name_the() : "It";
 
         msg_log::add(name + " reaches for me...");
 
-        const int dodge_skill = map::player->ability(AbilityId::dodge_att, true);
+        const int dodge_skill =
+            map::player->ability(AbilityId::dodge_att, true);
 
-        const AbilityRollResult roll_result = ability_roll::roll(dodge_skill, map::player);
+        const AbilityRollResult roll_result =
+            ability_roll::roll(dodge_skill, map::player);
 
         const bool player_dodges = roll_result >= success;
 
@@ -1188,7 +1198,8 @@ DidAction Ghost::on_act()
         }
         else
         {
-            map::player->prop_handler().try_add(new PropSlowed(PropTurns::std));
+            map::player->prop_handler().try_add(
+                new PropSlowed(PropTurns::std));
         }
 
         game_time::tick();
@@ -1574,7 +1585,12 @@ DidAction KeziahMason::on_act()
             map_parse::run(cell_check::BlocksMoveCmn(true), blocked_los);
 
             std::vector<P> line;
-            line_calc::calc_new_line(pos, map::player->pos, true, 9999, false, line);
+            line_calc::calc_new_line(pos,
+                                     map::player->pos,
+                                     true,
+                                     9999,
+                                     false,
+                                     line);
 
             const int line_size = line.size();
 
@@ -1584,7 +1600,7 @@ DidAction KeziahMason::on_act()
 
                 if (!blocked_los[c.x][c.y])
                 {
-                    //TODO: Use the generalized summoning functionality
+                    // TODO: Use the generalized summoning functionality
                     set_player_aware_of_me();
 
                     msg_log::add("Keziah summons Brown Jenkin!");

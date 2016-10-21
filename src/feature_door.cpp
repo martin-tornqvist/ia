@@ -319,7 +319,7 @@ void Door::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* con
                         }
                     }
                 }
-                else //Not player
+                else // Not player
                 {
                     Fraction destr_chance(10 - (nr_spikes_ * 3), 100);
 
@@ -353,7 +353,7 @@ void Door::on_hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* con
 
                         map::put(new RubbleLow(pos_));
                     }
-                    else //Not broken
+                    else // Not broken
                     {
                         Snd snd("I hear a loud banging on a door.",
                                 SfxId::door_bang,

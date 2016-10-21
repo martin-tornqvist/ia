@@ -336,13 +336,13 @@ bool Player::can_see_actor(const Actor& other) const
 
     const Cell& cell = map::cells[other.pos.x][other.pos.y];
 
-    //Dead actors are seen if the cell is seen
+    // Dead actors are seen if the cell is seen
     if (!other.is_alive() && cell.is_seen_by_player)
     {
         return true;
     }
 
-    //Player is blind?
+    // Player is blind?
     if (!prop_handler_->allow_see())
     {
         return false;
@@ -350,7 +350,7 @@ bool Player::can_see_actor(const Actor& other) const
 
     const Mon* const mon = static_cast<const Mon*>(&other);
 
-    //LOS blocked hard (e.g. a wall)?
+    // LOS blocked hard (e.g. a wall)?
     if (cell.player_los.is_blocked_hard)
     {
         return false;
@@ -358,28 +358,34 @@ bool Player::can_see_actor(const Actor& other) const
 
     const bool can_see_invis = has_prop(PropId::see_invis);
 
-    //Monster is invisible, and player cannot see invisible?
+    // Monster is invisible, and player cannot see invisible?
     if (other.has_prop(PropId::invis) && !can_see_invis)
     {
         return false;
     }
 
-    //Blocked by darkness, and not seeing monster with infravision?
-    bool        HAS_INFRAVIS                = prop_handler_->has_prop(PropId::infravis);
-    const bool  is_other_infra_visible      = other.data().is_infra_visible;
+    // Blocked by darkness, and not seeing monster with infravision?
+    const bool has_infravis =
+        prop_handler_->has_prop(PropId::infravis);
 
-    const bool  can_see_other_with_infravis = HAS_INFRAVIS && is_other_infra_visible;
+    const bool is_other_infra_visible =
+        other.data().is_infra_visible;
 
-    const bool  can_see_other_in_drk        = can_see_invis || can_see_other_with_infravis;
+    const bool can_see_other_with_infravis =
+        has_infravis &&
+        is_other_infra_visible;
+
+    const bool can_see_other_in_drk =
+        can_see_invis ||
+        can_see_other_with_infravis;
 
     if (cell.player_los.is_blocked_by_drk && !can_see_other_in_drk)
     {
         return false;
     }
 
-    //Monster is sneaking, and we cannot see it with infravision or magic seeing?
-    if (
-        mon->player_aware_of_me_counter_ <= 0   &&
+    // Monster is sneaking, and cannot be seen with infravision or magic seeing?
+    if (mon->player_aware_of_me_counter_ <= 0   &&
         mon->is_sneaking_                       &&
         !can_see_other_with_infravis            &&
         !can_see_invis)
@@ -387,7 +393,7 @@ bool Player::can_see_actor(const Actor& other) const
         return false;
     }
 
-    //OK, all checks passed, actor can bee seen!
+    // OK, all checks passed, actor can bee seen!
     return true;
 }
 
@@ -1387,9 +1393,9 @@ void Player::move(Dir dir)
 
                 return;
             }
-            else //There is a monster here that player is unaware of
+            else // There is a monster here that player is unaware of
             {
-                //If player is unaware of the monster, it should never be seen
+                // If player is unaware of the monster, it should never be seen
                 ASSERT(!can_see_mon);
 
                 if (is_features_allow_move)
@@ -1412,15 +1418,15 @@ void Player::move(Dir dir)
                     return;
                 }
 
-                //NOTE: The target is blocked by map features. Do NOT reveal
-                //the monster - just act like the monster isn't there, and
-                //let the code below handle the situation.
+                // NOTE: The target is blocked by map features. Do NOT reveal
+                // the monster - just act like the monster isn't there, and
+                // let the code below handle the situation.
             }
         }
 
         if (is_features_allow_move)
         {
-            //Encumbrance
+            // Encumbrance
             const int enc = enc_percent();
 
             Prop* const wound_prop = prop_handler_->prop(PropId::wound);
@@ -1446,12 +1452,14 @@ void Player::move(Dir dir)
                 prop_handler_->try_add(new PropWaiting(PropTurns::std));
             }
 
-            //Displace allied monster
+            // Displace allied monster
             if (mon && is_leader_of(mon))
             {
                 if (mon->player_aware_of_me_counter_ > 0)
                 {
-                    std::string mon_name = can_see_actor(*mon) ? mon->name_a() : "it";
+                    std::string mon_name =
+                        can_see_actor(*mon) ?
+                        mon->name_a() : "it";
 
                     msg_log::add("I displace " + mon_name + ".");
                 }
@@ -1470,13 +1478,13 @@ void Player::move(Dir dir)
             {
                 if (nr_steps_until_free_action_ == -1)
                 {
-                    //Steps until free action has not been initialized before
-                    //(e.g. player recently picked dexterous)
+                    // Steps until free action has not been initialized before
+                    // (e.g. player recently picked dexterous)
                     nr_steps_until_free_action_ = free_step_every_n_turn - 2;
                 }
                 else if (nr_steps_until_free_action_ == 0)
                 {
-                    //Time for a free move!
+                    // Time for a free move!
                     nr_steps_until_free_action_ = free_step_every_n_turn - 1;
 
                     pass_time = PassTime::no;
@@ -1488,7 +1496,7 @@ void Player::move(Dir dir)
                 }
             }
 
-            //Print message if walking on item
+            // Print message if walking on item
             Item* const item = map::cells[pos.x][pos.y].item;
 
             if (item)
@@ -1511,7 +1519,7 @@ void Player::move(Dir dir)
             }
         }
 
-        //NOTE: bump() prints block messages.
+        // NOTE: bump() prints block messages.
         for (auto* mob : mobs)
         {
             mob->bump(*this);
@@ -1520,12 +1528,12 @@ void Player::move(Dir dir)
         map::cells[tgt.x][tgt.y].rigid->bump(*this);
     }
 
-    //If position is at the destination now, it means that the player either:
+    // If position is at the destination now, it means that the player either:
     // * did an actual move to another position, or
     // * that player waited in the current position on purpose, or
     // * that the player was stuck (e.g. in a spider web)
-    //In either case, the game time is ticked here (since no melee attack or
-    //other "time advancing" action has occurred)
+    // In either case, the game time is ticked here (since no melee attack or
+    // other "time advancing" action has occurred)
     if (pos == tgt)
     {
         //If the player intended to wait in the current position, perform
