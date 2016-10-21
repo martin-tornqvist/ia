@@ -695,17 +695,6 @@ void Player::act()
     std::vector<Actor*> my_seen_actors;
     seen_actors(my_seen_actors);
 
-    bool is_seeing_foe = false;
-
-    for (Actor* seen_actor : my_seen_actors)
-    {
-        if (!is_leader_of(seen_actor))
-        {
-            is_seeing_foe = true;
-            break;
-        }
-    }
-
     for (Actor* const actor : my_seen_actors)
     {
         static_cast<Mon*>(actor)->set_player_aware_of_me();
