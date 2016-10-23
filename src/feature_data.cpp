@@ -620,7 +620,7 @@ void init_data_list()
     d.move_rules.set_can_move_cmn();
     add_to_list_and_reset(d);
     //---------------------------------------------------------------------------
-    d.id = FeatureId::event_rats_in_the_walls_discovery;
+    d.id = FeatureId::event_rat_cave_discovery;
     d.mk_obj = [](const P & p)
     {
         return new EventRatsInTheWallsDiscovery(p);

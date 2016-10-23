@@ -8,7 +8,7 @@
 #include "feature_data.hpp"
 
 //------------------------------------------------------------------------------
-//Room theming occurs both pre- and post-connect.
+// Room theming occurs both pre- and post-connect.
 //  >   In pre-connect, reshaping is performed, e.g. plus-shape, cavern-shape,
 //      pillars, etc)
 //
@@ -19,8 +19,8 @@
 //      as well as room-specific stuff like trees, altars, etc. It can then
 //      be verified for each feature that the map is still connected.
 //
-//As a rule of thumb, place walkable features in the pre-connect step, and
-//blocking features in the post-connect step.
+// As a rule of thumb, place walkable features in the pre-connect step, and
+// blocking features in the post-connect step.
 //------------------------------------------------------------------------------
 
 struct  FeatureDataT;
@@ -28,8 +28,8 @@ class   Room;
 
 enum class RoomType
 {
-    //Standard rooms (standardized feature spawning and reshaping)
-    plain, //NOTE: "plain" must be the first type
+    // Standard rooms (standardized feature spawning and reshaping)
+    plain, // NOTE: "plain" must be the first type
     human,
     ritual,
     spider,
@@ -43,7 +43,7 @@ enum class RoomType
     forest,
     END_OF_STD_ROOMS,
 
-    //Exceptional room types
+    // Exceptional room types
     corr_link,
     crumble_room,
     river
@@ -68,12 +68,14 @@ namespace room_factory
 
 void init_room_bucket();
 
-//NOTE: These functions do not make rooms on the map, just Room objects
+// NOTE: These functions do not make rooms on the map, just create Room objects.
+//       Use the "mk_room..." functions in the map generator for a convenient
+//       way to generate rooms on the map.
 Room* mk(const RoomType type, const R& r);
 
-Room* mk_random_allowed_std_room(const R& r, const bool is_subroom);
+Room* mk_random_room(const R& r, const IsSubRoom is_subroom);
 
-} //room_factory
+} // room_factory
 
 class Room
 {
@@ -92,11 +94,11 @@ public:
         return 2;
     }
 
-    R                   r_;
-    const RoomType      type_;
-    bool                is_sub_room_;
-    std::vector<Room*>  rooms_con_to_;
-    std::vector<Room*>  sub_rooms_;
+    R r_;
+    const RoomType type_;
+    bool is_sub_room_;
+    std::vector<Room*> rooms_con_to_;
+    std::vector<Room*> sub_rooms_;
 
 protected:
     void mk_drk() const;
@@ -431,4 +433,4 @@ public:
     Axis axis_;
 };
 
-#endif
+#endif // ROOM_HPP

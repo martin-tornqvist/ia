@@ -967,7 +967,7 @@ TEST_FIXTURE(BasicFixture, saving_game)
     CHECK(!prop);
 
     //map sequence
-    map_travel::map_list[5] = {MapType::rats_in_the_walls, IsMainDungeon::yes};
+    map_travel::map_list[5] = {MapType::rat_cave, IsMainDungeon::yes};
     map_travel::map_list[7] = {MapType::leng,              IsMainDungeon::no};
 
     saving::save_game();
@@ -1110,7 +1110,7 @@ TEST_FIXTURE(BasicFixture, loading_game)
     CHECK(mapData.is_main_dungeon   == IsMainDungeon::yes);
 
     mapData = map_travel::map_list[5];
-    CHECK(mapData.type              == MapType::rats_in_the_walls);
+    CHECK(mapData.type              == MapType::rat_cave);
     CHECK(mapData.is_main_dungeon   == IsMainDungeon::yes);
 
     mapData = map_travel::map_list[7];

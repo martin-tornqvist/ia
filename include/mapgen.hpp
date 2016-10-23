@@ -45,7 +45,7 @@ extern bool door_proposals[map_w][map_h];
 // Standard dungeon level
 bool mk_std_lvl();
 
-// "Special" levels
+// Hand crafted levels
 bool mk_intro_lvl();
 bool mk_egypt_lvl();
 bool mk_leng_lvl();
@@ -56,9 +56,7 @@ bool mk_boss_lvl();
 //------------------------------------------------------------------------------
 // Map generation steps (in no particular order)
 //------------------------------------------------------------------------------
-void mk_merged_regions_and_rooms(Region regions[3][3]);
-
-void randomly_block_regions(Region regions[3][3]);
+void merge_regions(Region regions[3][3]);
 
 void mk_aux_rooms(Region regions[3][3]);
 
@@ -82,12 +80,25 @@ void mk_pillars_in_room(const Room& room);
 void cavify_room(Room& room);
 
 //------------------------------------------------------------------------------
-// Misc utils
+// Room creation
 //------------------------------------------------------------------------------
+// NOTE: All "mk_room..." functions are "complete", i.e. they handle all the
+//       necessary steps such as creating floor on the map, creating room
+//       objects and registering them, et c. No such actions are needed by the
+//       clients.
+Room* mk_room(Region& region);
+
+Room* mk_room(const R& r, const IsSubRoom is_sub_room);
+
+// Low level functions related to room creation - these are only necessary when
+// creating rooms by other methods than the "mk_room" functions above.
 void register_room(Room& room);
 
-void mk_floor_in_room(const Room& room);
+void mk_floor(const Room& room);
 
+//------------------------------------------------------------------------------
+// Misc utils
+//------------------------------------------------------------------------------
 bool is_all_rooms_connected();
 
 void valid_corridor_entries(const Room& room,
@@ -114,4 +125,4 @@ void pathfinder_walk(const P& p0,
 
 } // mapgen
 
-#endif
+#endif // MAPBUILD_HPP

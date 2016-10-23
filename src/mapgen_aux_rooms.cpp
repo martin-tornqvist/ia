@@ -10,12 +10,13 @@ namespace mapgen
 namespace
 {
 
-void mk_crumble_room(const R& room_area_incl_walls, const P& event_pos)
+void mk_crumble_room(const R& room_area_incl_walls,
+                     const P& event_pos)
 {
     std::vector<P> wall_cells;
     std::vector<P> inner_cells;
 
-    const R& a = room_area_incl_walls; //abbreviation
+    const R& a = room_area_incl_walls; // Abbreviation
 
     for (int x = a.p0.x; x <= a.p1.x; ++x)
     {
@@ -23,26 +24,32 @@ void mk_crumble_room(const R& room_area_incl_walls, const P& event_pos)
         {
             const P p(x, y);
 
-            if (x == a.p0.x || x == a.p1.x || y == a.p0.y || y == a.p1.y)
+            if (x == a.p0.x ||
+                x == a.p1.x ||
+                y == a.p0.y ||
+                y == a.p1.y)
             {
                 wall_cells.push_back(p);
             }
-            else
+            else // Is inner cell
             {
                 inner_cells.push_back(p);
             }
 
+            // Fill the room with walls (so we don't have an inaccessible
+            // empty room)
             map::put(new Wall(p));
         }
     }
 
-    game_time::add_mob( new EventWallCrumble(event_pos,
-                                             wall_cells,
-                                             inner_cells));
-}
+    game_time::add_mob(new EventWallCrumble(event_pos,
+                                            wall_cells,
+                                            inner_cells));
 
-//NOTE: The positions and size can be outside map (e.g. negative positions).
-//This function just returns false in that case.
+} // mk_crumble_room
+
+// NOTE: The positions and size can be outside map (e.g. negative positions).
+//       This function just returns false in that case.
 bool try_mk_aux_room(const P& p,
                      const P& d,
                      bool blocked[map_w][map_h],
@@ -55,14 +62,18 @@ bool try_mk_aux_room(const P& p,
 
     if (map::is_area_inside_map(aux_rect_with_border))
     {
-        //Check if area is blocked
-        for (int x = aux_rect_with_border.p0.x; x <= aux_rect_with_border.p1.x; ++x)
+        // Check if area is blocked
+        for (int x = aux_rect_with_border.p0.x;
+             x <= aux_rect_with_border.p1.x;
+             ++x)
         {
-            for (int y = aux_rect_with_border.p0.y; y <= aux_rect_with_border.p1.y; ++y)
+            for (int y = aux_rect_with_border.p0.y;
+                 y <= aux_rect_with_border.p1.y;
+                 ++y)
             {
                 if (blocked[x][y])
                 {
-                    //Can't build here, bye...
+                    // Can't build here, bye...
                     return false;
                 }
             }
@@ -78,27 +89,31 @@ bool try_mk_aux_room(const P& p,
         }
 
 #ifndef DISABLE_CRUMBLE_ROOMS
+        // Make a "crumble room"?
         if (rnd::one_in(10))
         {
-            Room* const room = room_factory::mk(RoomType::crumble_room, aux_rect);
+            Room* const room =
+                room_factory::mk(RoomType::crumble_room, aux_rect);
+
             register_room(*room);
-            mk_crumble_room(aux_rect_with_border, door_p);
+
+            mk_crumble_room(aux_rect_with_border,
+                            door_p);
         }
-        else
-#endif //DISABLE_CRUMBLE_ROOMS
+        else // Not "crumble room"
+#endif // DISABLE_CRUMBLE_ROOMS
         {
-            Room* const room = room_factory::mk_random_allowed_std_room(aux_rect, false);
-            register_room(*room);
-            mk_floor_in_room(*room);
+            mk_room(aux_rect, IsSubRoom::no);
         }
 
         return true;
     }
 
     return false;
-}
 
-} //namespace
+} // try_mk_aux_room
+
+} // namespace
 
 void mk_aux_rooms(Region regions[3][3])
 {
@@ -112,12 +127,13 @@ void mk_aux_rooms(Region regions[3][3])
 
     bool floor_cells[map_w][map_h];
 
-    //TODO: It would be better with a parse predicate that checks for free cells immediately
+    // TODO: It would be better with a parse predicate that checks for free
+    //       cells immediately
 
-    //Get blocked cells
+    // Get blocked cells
     map_parse::run(cell_check::BlocksMoveCmn(false), floor_cells);
 
-    //Flip the values so that we get free cells
+    // Flip the values so that we get free cells
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)
@@ -138,7 +154,7 @@ void mk_aux_rooms(Region regions[3][3])
             {
                 Room& main_r = *region.main_room;
 
-                //Right
+                // Right
                 if (rnd::one_in(4))
                 {
                     for (int i = 0; i < nr_tries_per_side; ++i)
@@ -155,16 +171,23 @@ void mk_aux_rooms(Region regions[3][3])
 
                         if (floor_cells[con_p.x - 1][con_p.y])
                         {
-                            if (try_mk_aux_room(aux_p, aux_d, floor_cells, con_p))
+                            const bool did_place_room =
+                                try_mk_aux_room(aux_p,
+                                                aux_d,
+                                                floor_cells,
+                                                con_p);
+
+                            if (did_place_room)
                             {
-                                TRACE_VERBOSE << "Aux room placed right" << std:: endl;
+                                TRACE_VERBOSE << "Aux room placed right"
+                                              << std:: endl;
                                 break;
                             }
                         }
                     }
                 }
 
-                //Up
+                // Up
                 if (rnd::one_in(4))
                 {
                     for (int i = 0; i < nr_tries_per_side; ++i)
@@ -181,16 +204,23 @@ void mk_aux_rooms(Region regions[3][3])
 
                         if (floor_cells[con_p.x][con_p.y + 1])
                         {
-                            if (try_mk_aux_room(aux_p, aux_d, floor_cells, con_p))
+                            const bool did_place_room =
+                                try_mk_aux_room(aux_p,
+                                                aux_d,
+                                                floor_cells,
+                                                con_p);
+
+                            if (did_place_room)
                             {
-                                TRACE_VERBOSE << "Aux room placed up" << std:: endl;
+                                TRACE_VERBOSE << "Aux room placed up"
+                                              << std:: endl;
                                 break;
                             }
                         }
                     }
                 }
 
-                //Left
+                // Left
                 if (rnd::one_in(4))
                 {
                     for (int i = 0; i < nr_tries_per_side; ++i)
@@ -207,16 +237,23 @@ void mk_aux_rooms(Region regions[3][3])
 
                         if (floor_cells[con_p.x + 1][con_p.y])
                         {
-                            if (try_mk_aux_room(aux_p, aux_d, floor_cells, con_p))
+                            const bool did_place_room =
+                                try_mk_aux_room(aux_p,
+                                                aux_d,
+                                                floor_cells,
+                                                con_p);
+
+                            if (did_place_room)
                             {
-                                TRACE_VERBOSE << "Aux room placed left" << std:: endl;
+                                TRACE_VERBOSE << "Aux room placed left"
+                                              << std:: endl;
                                 break;
                             }
                         }
                     }
                 }
 
-                //Down
+                // Down
                 if (rnd::one_in(4))
                 {
                     for (int i = 0; i < nr_tries_per_side; ++i)
@@ -233,19 +270,27 @@ void mk_aux_rooms(Region regions[3][3])
 
                         if (floor_cells[con_p.x][con_p.y - 1])
                         {
-                            if (try_mk_aux_room(aux_p, aux_d, floor_cells, con_p))
+                            const bool did_place_room =
+                                try_mk_aux_room(aux_p,
+                                                aux_d,
+                                                floor_cells,
+                                                con_p);
+
+                            if (did_place_room)
                             {
-                                TRACE_VERBOSE << "Aux room placed down" << std:: endl;
+                                TRACE_VERBOSE << "Aux room placed down"
+                                              << std:: endl;
                                 break;
                             }
                         }
                     }
                 }
             }
-        } //Region y loop
-    } //Region x loop
+        } // Region y loop
+    } // Region x loop
 
     TRACE_FUNC_END;
-}
 
-} //mapgen
+} // mk_aux_rooms
+
+} // mapgen

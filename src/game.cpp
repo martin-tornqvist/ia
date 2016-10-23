@@ -420,7 +420,7 @@ void handle_player_input(const InputData& input)
                     }
                     else // Not enough ammo loaded, and auto reloading disabled
                     {
-                        msg_log::add("There is no ammo loadeinput.");
+                        msg_log::add("There is no ammo loaded.");
                     }
                 }
                 else // Wielded item is not a ranged weapon

@@ -28,7 +28,7 @@
 #include "io.hpp"
 #include "sdl_base.hpp"
 #include "query.hpp"
-#endif //DEMO_MODE
+#endif // DEMO_MODE
 
 namespace mapgen
 {
@@ -46,8 +46,8 @@ void connect_rooms()
 
     while (true)
     {
-        //NOTE: Keep this counter at the top of the loop, since otherwise a "continue"
-        //statement could bypass it so we get stuck in the loop.
+        // NOTE: Keep this counter at the top of the loop, since otherwise a
+        //       continue statement could bypass it so we get stuck in the loop.
         --nr_tries_left;
 
         if (nr_tries_left == 0)
@@ -61,7 +61,7 @@ void connect_rooms()
                               clr_red_lgt);
             io::update_screen();
             sdl_base::sleep(8000);
-#endif //DEMO_MODE
+#endif // DEMO_MODE
             break;
         }
 
@@ -77,7 +77,7 @@ void connect_rooms()
 
         Room* room0 = rnd_room();
 
-        //Room 0 must be a standard room or corridor link
+        // Room 0 must be a standard room or corridor link
         if (
             !is_std_room(*room0) &&
             room0->type_ != RoomType::corr_link)
@@ -85,12 +85,12 @@ void connect_rooms()
             continue;
         }
 
-        //Finding second room to connect to
+        // Finding second room to connect to
         Room* room1 = rnd_room();
 
-        //Room 1 must not be the same as room 0, and it must be a standard room
+        // Room 1 must not be the same as room 0, and it must be a standard room
         //(connections are only allowed between two standard rooms, or from a
-        //corridor link to a standard room - never between two corridor links)
+        // corridor link to a standard room - never between two corridor links)
         while (
             room1 == room0 ||
             !is_std_room(*room1))
@@ -98,7 +98,7 @@ void connect_rooms()
             room1 = rnd_room();
         }
 
-        //Do not allow two rooms to be connected twice
+        // Do not allow two rooms to be connected twice
         const auto& room0_connections = room0->rooms_con_to_;
 
         if (
@@ -106,13 +106,13 @@ void connect_rooms()
                  room0_connections.end(),
                  room1) != room0_connections.end())
         {
-            //Rooms are already connected, trying other combination
+            // Rooms are already connected, trying other combination
             continue;
         }
 
-        //Do not connect room 0 and 1 if another room (except for sub rooms)
-        //lies anywhere in a rectangle defined by the two center points of
-        //those rooms.
+        // Do not connect room 0 and 1 if another room (except for sub rooms)
+        // lies anywhere in a rectangle defined by the two center points of
+        // those rooms.
         bool is_other_room_in_way = false;
 
         const P c0(room0->r_.center());
@@ -148,11 +148,11 @@ void connect_rooms()
 
         if (is_other_room_in_way)
         {
-            //Blocked by room between, trying other combination
+            // Blocked by room between, trying other combination
             continue;
         }
 
-        //Alright, let's try to connect these rooms
+        // Alright, let's try to connect these rooms
         mk_pathfind_corridor(*room0,
                              *room1,
                              door_proposals);
@@ -170,7 +170,7 @@ void connect_rooms()
 
 void try_place_door(const P& p)
 {
-    //Check that no other doors are within a certain distance
+    // Check that no other doors are within a certain distance
     const int r = 2;
 
     for (int dx = -r; dx <= r; ++dx)
@@ -232,7 +232,7 @@ void allowed_stair_cells(bool out[map_w][map_h])
 {
     TRACE_FUNC_BEGIN;
 
-    //Mark cells as free if all adjacent feature types are allowed
+    // Mark cells as free if all adjacent feature types are allowed
     std::vector<FeatureId> feat_ids_ok
     {
         FeatureId::floor,
@@ -242,7 +242,7 @@ void allowed_stair_cells(bool out[map_w][map_h])
 
     map_parse::run(cell_check::AllAdjIsAnyOfFeatures(feat_ids_ok), out);
 
-    //Block cells with item
+    // Block cells with item
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)
@@ -254,7 +254,7 @@ void allowed_stair_cells(bool out[map_w][map_h])
         }
     }
 
-    //Block cells with actors
+    // Block cells with actors
     for (const auto* const actor : game_time::actors)
     {
         const P& p(actor->pos);
@@ -295,7 +295,7 @@ P place_stairs()
                           clr_red_lgt);
         io::update_screen();
         sdl_base::sleep(8000);
-#endif //DEMO_MODE
+#endif // DEMO_MODE
         return P(-1, -1);
     }
 
@@ -335,7 +335,7 @@ void move_player_to_nearest_allowed_pos()
     {
         is_map_valid = false;
     }
-    else //Valid cells exists
+    else // Valid cells exists
     {
         TRACE << "Sorting the allowed cells vector "
               << "(" << allowed_cells_list.size() << " cells)" << std:: endl;
@@ -357,15 +357,15 @@ void place_monoliths()
 {
     int nr_monoliths = 1;
 
-    //Guarantee exactly one monolith on level 1
+    // Guarantee exactly one monolith on level 1
     if (map::dlvl > 1)
     {
-        //Determine number of Monoliths to place, by a weighted choice
+        // Determine number of Monoliths to place, by a weighted choice
         std::vector<int> nr_weights =
         {
-            5,  //0 monolith(s)
-            50, //1 -
-            5,  //2 -
+            5,  // 0 monolith(s)
+            50, // 1 -
+            5,  // 2 -
         };
 
         nr_monoliths = rnd::weighted_choice(nr_weights);
@@ -386,7 +386,7 @@ void place_monoliths()
         }
     }
 
-    //Block the area around the player
+    // Block the area around the player
     const P&    player_p    = map::player->pos;
     const int   r           = fov_std_radi_int;
 
@@ -413,7 +413,7 @@ void place_monoliths()
 
         if (p_bucket.empty())
         {
-            //Unable to place Monolith (too small map?), invalidate the map!
+            // Unable to place Monolith (too small map?), invalidate the map!
             is_map_valid = false;
             return;
         }
@@ -431,7 +431,7 @@ void place_monoliths()
     }
 }
 
-//void mk_levers() {
+// void mk_levers() {
 //  TRACE_FUNC_BEGIN;
 //
 //  TRACE << "Picking a random door" << std:: endl;
@@ -482,7 +482,7 @@ void place_monoliths()
 //  TRACE_FUNC_END;
 //}
 
-//void spawn_lever_adapt_and_link_door(const P& lever_pos, Door& door) {
+// void spawn_lever_adapt_and_link_door(const P& lever_pos, Door& door) {
 //  TRACE << "Spawning lever and linking it to the door" << std:: endl;
 //  FeatureFactory::mk(FeatureId::lever, lever_pos, new LeverSpawnData(&door));
 //
@@ -533,7 +533,7 @@ void reveal_doors_on_path_to_stairs(const P& stairs_pos)
     TRACE_FUNC_END;
 }
 
-} //namespace
+} // namespace
 
 bool mk_std_lvl()
 {
@@ -550,7 +550,7 @@ bool mk_std_lvl()
 
     std::fill_n(*door_proposals, nr_map_cells, false);
 
-    //NOTE: This must be called before any rooms are created
+    // NOTE: This must be called before any rooms are created
     room_factory::init_room_bucket();
 
     TRACE << "Init regions" << std:: endl;
@@ -567,7 +567,7 @@ bool mk_std_lvl()
     {
         for (int y = 0; y < 3; ++y)
         {
-             const R r(x == 0 ? 1 : x == 1 ? SPL_X0 + 1 : SPL_X1 + 1,
+            const R r(x == 0 ? 1 : x == 1 ? SPL_X0 + 1 : SPL_X1 + 1,
                       y == 0 ? 1 : y == 1 ? SPL_Y0 + 1 : SPL_Y1 + 1,
                       x == 0 ? SPL_X0 - 1 : x == 1 ? SPL_X1 - 1 : map_w - 2,
                       y == 0 ? SPL_Y0 - 1 : y == 1 ? SPL_Y1 - 1 : map_h - 2);
@@ -595,25 +595,16 @@ bool mk_std_lvl()
     {
         return false;
     }
-#endif //MK_RIVER
+#endif // MK_RIVER
 
 #ifndef DISABLE_MERGED_REGIONS
-    mk_merged_regions_and_rooms(regions);
+    merge_regions(regions);
 
     if (!is_map_valid)
     {
         return false;
     }
-#endif //MK_MERGED_REGIONS
-
-#ifndef DISABLE_RANDOMLY_BLOCK_REGIONS
-    randomly_block_regions(regions);
-
-    if (!is_map_valid)
-    {
-        return false;
-    }
-#endif //RANDOMLY_BLOCK_REGIONS
+#endif // MK_MERGED_REGIONS
 
     TRACE << "Making main rooms" << std:: endl;
 
@@ -625,12 +616,7 @@ bool mk_std_lvl()
 
             if (!region.main_room && region.is_free)
             {
-                const R room_rect = region.rnd_room_rect();
-                auto* room = room_factory::mk_random_allowed_std_room(room_rect, false);
-                register_room(*room);
-                mk_floor_in_room(*room);
-                region.main_room    = room;
-                region.is_free      = false;
+                mk_room(region);
             }
         }
     }
@@ -650,7 +636,7 @@ bool mk_std_lvl()
                       clr_white);
     io::update_screen();
     query::wait_for_key_press();
-#endif //DEMO_MODE
+#endif // DEMO_MODE
 
     mk_aux_rooms(regions);
 
@@ -658,7 +644,7 @@ bool mk_std_lvl()
     {
         return false;
     }
-#endif //DISABLE_AUX_ROOMS
+#endif // DISABLE_AUX_ROOMS
 
 #ifndef DISABLE_MK_SUB_ROOMS
     if (map::dlvl <= dlvl_last_mid_game)
@@ -672,7 +658,7 @@ bool mk_std_lvl()
                           clr_white);
         io::update_screen();
         query::wait_for_key_press();
-#endif //DEMO_MODE
+#endif // DEMO_MODE
 
         mk_sub_rooms();
     }
@@ -681,11 +667,11 @@ bool mk_std_lvl()
     {
         return false;
     }
-#endif //DISABLE_MK_SUB_ROOMS
+#endif // DISABLE_MK_SUB_ROOMS
 
     TRACE << "Sorting the room list according to room type" << std:: endl;
-    //NOTE: This allows common rooms to assume that they are rectangular and
-    //have their walls untouched when their reshaping functions run.
+    // NOTE: This allows common rooms to assume that they are rectangular and
+    //       have their walls untouched when their reshaping functions run.
     auto cmp = [](const Room * r0, const Room * r1)
     {
         return (int)r0->type_ < (int)r1->type_;
@@ -709,7 +695,7 @@ bool mk_std_lvl()
                       clr_white);
     io::update_screen();
     query::wait_for_key_press();
-#endif //DEMO_MODE
+#endif // DEMO_MODE
 
     gods::set_no_god();
 
@@ -723,7 +709,7 @@ bool mk_std_lvl()
         return false;
     }
 
-    //Connect
+    // Connect
 
 #ifdef DEMO_MODE
     io::cover_panel(Panel::log);
@@ -734,7 +720,7 @@ bool mk_std_lvl()
                       clr_white);
     io::update_screen();
     query::wait_for_key_press();
-#endif //DEMO_MODE
+#endif // DEMO_MODE
 
     connect_rooms();
 
@@ -753,7 +739,7 @@ bool mk_std_lvl()
                       clr_white);
     io::update_screen();
     query::wait_for_key_press();
-#endif //DEMO_MODE
+#endif // DEMO_MODE
 
     for (Room* room : map::room_list)
     {
@@ -802,10 +788,10 @@ bool mk_std_lvl()
     {
         return false;
     }
-#endif //DISABLE_DECORATE
+#endif // DISABLE_DECORATE
 
-    //NOTE: The choke point data below depends on the stairs being placed, so
-    //      we need to do this first.
+    // NOTE: The choke point data below depends on the stairs being placed, so
+    //       we need to do this first.
     P stairs_pos;
 
     stairs_pos = place_stairs();
@@ -815,13 +801,13 @@ bool mk_std_lvl()
         return false;
     }
 
-    //Gather data on choke points in the map (check every position where a door
-    //has previously been "proposed")
+    // Gather data on choke points in the map (check every position where a door
+    // has previously been "proposed")
     bool blocked[map_w][map_h];
 
     map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
 
-    //Consider stairs and doors as non-blocking
+    // Consider stairs and doors as non-blocking
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)
@@ -850,7 +836,7 @@ bool mk_std_lvl()
 
                 if (is_choke)
                 {
-                    //Find player and stair side
+                    // Find player and stair side
                     for (size_t side_idx = 0; side_idx < 2; ++side_idx)
                     {
                         for (const P& p : d.sides[side_idx])
@@ -874,20 +860,20 @@ bool mk_std_lvl()
                     ASSERT(d.player_side == 0 || d.player_side == 1);
                     ASSERT(d.stairs_side == 0 || d.stairs_side == 1);
 
-                    //Robustness for release mode
+                    // Robustness for release mode
                     if (
                         (d.player_side != 0 && d.player_side != 1) ||
                         (d.player_side != 0 && d.player_side != 1))
                     {
-                        //Go to next map position
+                        // Go to next map position
                         continue;
                     }
 
                     map::choke_point_data.emplace_back(d);
                 }
             }
-        } //y loop
-    } //x loop
+        } // y loop
+    } // x loop
 
     TRACE << "Found " << map::choke_point_data.size()
           << " choke points" << std::endl;
@@ -897,12 +883,13 @@ bool mk_std_lvl()
         return false;
     }
 
-    //Explicitly make some doors leading to "optional" areas secret and/or stuck
+    // Explicitly make some doors leading to "optional" areas secret and/or stuck
     for (const auto& choke_point : map::choke_point_data)
     {
         if (choke_point.player_side == choke_point.stairs_side)
         {
-            Rigid* const rigid = map::cells[choke_point.p.x][choke_point.p.y].rigid;
+            Rigid* const rigid =
+                map::cells[choke_point.p.x][choke_point.p.y].rigid;
 
             if (rigid->id() == FeatureId::door)
             {
@@ -926,8 +913,8 @@ bool mk_std_lvl()
         return false;
     }
 
-    //NOTE: This depends on choke point data having been gathered (including
-    //      player side and stairs side)
+    // NOTE: This depends on choke point data having been gathered (including
+    //       player side and stairs side)
     place_monoliths();
 
     if (!is_map_valid)
@@ -956,7 +943,7 @@ bool mk_std_lvl()
         return false;
     }
 
-    //Occasionally place some snake emerge events
+    // Occasionally place some snake emerge events
     const int nr_snake_emerge_events_to_try =
         rnd::one_in(30) ? 2 :
         rnd::one_in(8)  ? 1 : 0;
@@ -1005,4 +992,4 @@ bool mk_std_lvl()
     return is_map_valid;
 }
 
-} //mapgen
+} // mapgen

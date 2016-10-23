@@ -210,9 +210,9 @@ enum class Matl
     empty,
     stone,
     metal,
-    plant,  //Grass, bushes, reeds, vines, fungi...
-    wood,   //Trees, doors, benches...
-    cloth,  //Carpet, silk (cocoons)...
+    plant,  // Grass, bushes, reeds, vines, fungi...
+    wood,   // Trees, doors, benches...
+    cloth,  // Carpet, silk (cocoons)...
     fluid
 };
 
@@ -254,7 +254,7 @@ enum class DmgMethod
     explosion,
     shotgun,
     elemental,
-    forced, //Guaranteed to detroy the feature (silently - no messages)
+    forced, // Guaranteed to detroy the feature (silently - no messages)
     END
 };
 
@@ -315,10 +315,16 @@ enum class Axis
     ver
 };
 
+enum class IsSubRoom
+{
+    no,
+    yes
+};
+
 enum class LgtSize
 {
     none,
-    small, //3x3
+    small, // 3x3
     fov
 };
 
@@ -412,4 +418,4 @@ struct ItemAttMsgs
     std::string player, other;
 };
 
-#endif //GLOBAL_HPP
+#endif // GLOBAL_HPP

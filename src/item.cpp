@@ -561,8 +561,8 @@ UnequipAllowed ArmorMiGo::on_unequip_hook()
 
     if (rnd::coin_toss())
     {
-        //NOTE: There is no need to print a message here, a message is always printed when
-        //taking off armor.
+        //NOTE: There is no need to print a message here, a message is always
+        //      printed when taking off armor.
         return UnequipAllowed::yes;
     }
     else //Armor is stuck
@@ -586,7 +586,7 @@ Wpn::Wpn(ItemDataT* const item_data) :
 
     if (ammo_item_id != ItemId::END)
     {
-        ammo_data_      = &item_data::data[int(ammo_item_id)];
+        ammo_data_      = &item_data::data[(size_t)ammo_item_id];
         nr_ammo_loaded_ = data_->ranged.max_ammo;
     }
 }
@@ -624,7 +624,7 @@ void Wpn::set_random_melee_plus()
 {
     const bool is_low_dlvl = map::dlvl < 6;
 
-    //Element corresponds to plus damage value (+0, +1, +2, etc)
+    // Element corresponds to plus damage value (+0, +1, +2, etc)
     const std::vector<int> weights =
     {
         100,                    //          100

@@ -91,7 +91,7 @@ public:
 
     FeatureId id() const override
     {
-        return FeatureId::event_rats_in_the_walls_discovery;
+        return FeatureId::event_rat_cave_discovery;
     }
 
     void on_new_turn() override;

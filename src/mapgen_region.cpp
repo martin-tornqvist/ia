@@ -2,22 +2,38 @@
 
 R Region::rnd_room_rect() const
 {
-    const bool allow_tiny_w = rnd::coin_toss();
+    //
+    // Set random size
+    //
 
-    const P min_size_lmt(allow_tiny_w ? 2 : 4, allow_tiny_w ? 4 : 2);
-    const P max_size_lmt(r.p1 - r.p0 + 1);
+    // Minimum possible size
+    const P min_size(3, 3);
 
-    const int   h           = rnd::range(min_size_lmt.y, max_size_lmt.y);
-    const int   w_max_small = min_size_lmt.x + ((max_size_lmt.x - min_size_lmt.x) / 5);
-    const int   w_max_big   = max_size_lmt.x;
-    const bool  allow_big_w = h > (max_size_lmt.y * 5) / 6;
-    const int   w_max       = allow_big_w ? w_max_big : w_max_small;
-    const int   w           = rnd::range(min_size_lmt.x, w_max);
+    // Maximum possible size (cover the whole region)
+    const P max_size(r.p1 - r.p0 + 1);
 
-    const P p0(r.p0.x + rnd::range(0, max_size_lmt.x - w),
-               r.p0.y + rnd::range(0, max_size_lmt.y - h));
+    // Set random width and height using binomial distribution
+    const double w_p = 0.40;
+    const double h_p = 0.80;
 
-    const P p1(p0.x + w - 1, p0.y + h - 1);
+    const int w = rnd::range_binom(min_size.x,
+                                   max_size.x,
+                                   w_p);
+
+    const int h = rnd::range_binom(min_size.y,
+                                   max_size.y,
+                                   h_p);
+
+    //
+    // Set random position
+    //
+
+    const P p0(r.p0.x + rnd::range(0, max_size.x - w),
+               r.p0.y + rnd::range(0, max_size.y - h));
+
+    const P p1(p0.x + w - 1,
+               p0.y + h - 1);
 
     return R(p0, p1);
-}
+
+} // rnd_room_rect
