@@ -7,6 +7,7 @@
 
 #include <SDL.h>
 
+#include "rl_utils.hpp"
 #include "config.hpp"
 #include "io.hpp"
 #include "map.hpp"
@@ -52,9 +53,58 @@ struct BasicFixture
     }
 };
 
+TEST(2d_array)
+{
+    Array2<char> a(3, 5);
+
+    CHECK(a.dims() == P(3, 5));
+
+    a(0, 0) = 'x';
+
+    CHECK(a(0, 0) == 'x');
+
+    //
+    // Rotate clock wise
+    //
+    a.rotate_cw();
+
+    CHECK(a.dims() == P(5, 3));
+
+    CHECK(a(0, 0) == 0);
+
+    CHECK(a(4, 0) == 'x');
+
+    //
+    // Flip vertically
+    //
+    a.flip_ver();
+
+    CHECK(a(4, 0) == 0);
+
+    CHECK(a(4, 2) == 'x');
+
+    //
+    // Rotate counter clock wise
+    //
+    a.rotate_ccw();
+
+    CHECK(a.dims() == P(3, 5));
+
+    CHECK(a(2, 0) == 'x');
+
+    //
+    // Flip horizontally
+    //
+    a.flip_hor();
+
+    CHECK(a(2, 0) == 0);
+
+    CHECK(a(0, 0) == 'x');
+}
+
 TEST(is_val_in_range)
 {
-    //Check in range
+    // Check in range
     CHECK(is_val_in_range(5,    Range(3,  7)));
     CHECK(is_val_in_range(3,    Range(3,  7)));
     CHECK(is_val_in_range(7,    Range(3,  7)));
@@ -68,7 +118,7 @@ TEST(is_val_in_range)
 
     CHECK(is_val_in_range(5,    Range(5,  5)));
 
-    //Check NOT in range
+    // Check NOT in range
     CHECK(!is_val_in_range(2,   Range(3,  7)));
     CHECK(!is_val_in_range(8,   Range(3,  7)));
     CHECK(!is_val_in_range(-1,  Range(3,  7)));
@@ -95,32 +145,49 @@ TEST(is_val_in_range)
 TEST(roll_dice)
 {
     int val = rnd::range(100, 200);
+
     CHECK(val >= 100 && val <= 200);
+
     val = rnd::range(-1, 1);
+
     CHECK(val >= -1 && val <= 1);
 }
 
 TEST(constrain_val_in_range)
 {
     int val = constr_in_range(5, 9, 10);
+
     CHECK_EQUAL(val, 9);
+
     val = constr_in_range(5, 11, 10);
+
     CHECK_EQUAL(val, 10);
+
     val = constr_in_range(5, 4, 10);
+
     CHECK_EQUAL(val, 5);
 
     set_constr_in_range(2, val, 8);
+
     CHECK_EQUAL(val, 5);
+
     set_constr_in_range(2, val, 4);
+
     CHECK_EQUAL(val, 4);
+
     set_constr_in_range(18, val, 22);
+
     CHECK_EQUAL(val, 18);
 
-    //Test faulty paramters
-    val = constr_in_range(9, 4, 2);   //Min > Max -> return -1
+    // Test faulty paramters
+    val = constr_in_range(9, 4, 2);   // Min > Max -> return -1
+
     CHECK_EQUAL(val, -1);
+
     val = 10;
-    set_constr_in_range(20, val, 3);   //Min > Max -> do nothing
+
+    set_constr_in_range(20, val, 3);   // Min > Max -> do nothing
+
     CHECK_EQUAL(val, 10);
 }
 
@@ -136,57 +203,105 @@ TEST(directions)
 {
     const int x0 = 20;
     const int y0 = 20;
+
     const P from_pos(x0, y0);
+
     std::string str = "";
+
     dir_utils::compass_dir_name(from_pos, P(x0 + 1, y0), str);
+
     CHECK_EQUAL("E", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0 + 1, y0 + 1), str);
+
     CHECK_EQUAL("SE", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0, y0 + 1), str);
+
     CHECK_EQUAL("S", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0 - 1, y0 + 1), str);
+
     CHECK_EQUAL("SW", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0 - 1, y0), str);
+
     CHECK_EQUAL("W", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0 - 1, y0 - 1), str);
+
     CHECK_EQUAL("NW", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0, y0 - 1), str);
+
     CHECK_EQUAL("N", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0 + 1, y0 - 1), str);
+
     CHECK_EQUAL("NE", str);
 
     dir_utils::compass_dir_name(from_pos, P(x0 + 3, y0 + 1), str);
+
     CHECK_EQUAL("E", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0 + 2, y0 + 3), str);
+
     CHECK_EQUAL("SE", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0 + 1, y0 + 3), str);
+
     CHECK_EQUAL("S", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0 - 3, y0 + 2), str);
+
     CHECK_EQUAL("SW", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0 - 3, y0 + 1), str);
+
     CHECK_EQUAL("W", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0 - 3, y0 - 2), str);
+
     CHECK_EQUAL("NW", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0 + 1, y0 - 3), str);
+
     CHECK_EQUAL("N", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0 + 3, y0 - 2), str);
+
     CHECK_EQUAL("NE", str);
 
     dir_utils::compass_dir_name(from_pos, P(x0 + 10000, y0), str);
+
     CHECK_EQUAL("E", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0 + 10000, y0 + 10000), str);
+
     CHECK_EQUAL("SE", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0, y0 + 10000), str);
+
     CHECK_EQUAL("S", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0 - 10000, y0 + 10000), str);
+
     CHECK_EQUAL("SW", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0 - 10000, y0), str);
+
     CHECK_EQUAL("W", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0 - 10000, y0 - 10000), str);
+
     CHECK_EQUAL("NW", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0, y0 - 10000), str);
+
     CHECK_EQUAL("N", str);
+
     dir_utils::compass_dir_name(from_pos, P(x0 + 10000, y0 - 10000), str);
+
     CHECK_EQUAL("NE", str);
 }
 
@@ -310,20 +425,20 @@ TEST_FIXTURE(BasicFixture, line_calculation)
     CHECK(line[2] == P(-2, -2));
     CHECK(line[3] == P(-3, -3));
 
-    //Test disallowing outside map
+    // Test disallowing outside map
     line_calc::calc_new_line(P(1, 0), P(-9, 0), true, 999, false, line);
     CHECK(line.size() == 2);
     CHECK(line[0] == P(1, 0));
     CHECK(line[1] == P(0, 0));
 
-    //Test travel limit parameter
+    // Test travel limit parameter
     line_calc::calc_new_line(origin, P(20, 0), true, 2, true, line);
     CHECK(line.size() == 3);
     CHECK(line[0] == origin);
     CHECK(line[1] == P(1, 0));
     CHECK(line[2] == P(2, 0));
 
-    //Test precalculated FOV line offsets
+    // Test precalculated FOV line offsets
     const std::vector<P>* delta_line =
         line_calc::fov_delta_line(P(3, 3), fov_std_radi_db);
 
@@ -354,11 +469,11 @@ TEST_FIXTURE(BasicFixture, line_calculation)
     CHECK(delta_line->at(2) == P(-2, -2));
     CHECK(delta_line->at(3) == P(-3, -3));
 
-    //Check constraints for retrieving FOV offset lines
-    //Delta > parameter max distance
+    // Check constraints for retrieving FOV offset lines
+    // Delta > parameter max distance
     delta_line = line_calc::fov_delta_line(P(3, 0), 2);
     CHECK(!delta_line);
-    //Delta > limit of precalculated
+    // Delta > limit of precalculated
     delta_line = line_calc::fov_delta_line(P(50, 0), 999);
     CHECK(!delta_line);
 }
@@ -378,7 +493,7 @@ TEST_FIXTURE(BasicFixture, fov)
 
     const int r = fov_std_radi_int;
 
-    //Not blocked
+    // Not blocked
     CHECK(!fov[x    ][y    ].is_blocked_hard);
     CHECK(!fov[x + 1][y    ].is_blocked_hard);
     CHECK(!fov[x - 1][y    ].is_blocked_hard);
@@ -393,13 +508,13 @@ TEST_FIXTURE(BasicFixture, fov)
     CHECK(!fov[x    ][y + r].is_blocked_hard);
     CHECK(!fov[x    ][y - r].is_blocked_hard);
 
-    //Blocked (not within FOV range)
+    // Blocked (not within FOV range)
     CHECK(fov[x + r + 1][y        ].is_blocked_hard);
     CHECK(fov[x - r - 1][y        ].is_blocked_hard);
     CHECK(fov[x        ][y + r + 1].is_blocked_hard);
     CHECK(fov[x        ][y - r - 1].is_blocked_hard);
 
-    //Corners
+    // Corners
     CHECK(fov[x + r][y - r].is_blocked_hard);
     CHECK(fov[x - r][y - r].is_blocked_hard);
     CHECK(fov[x + r][y + r].is_blocked_hard);
@@ -430,7 +545,7 @@ TEST_FIXTURE(BasicFixture, light_map)
             {
                 map::put(new Floor(p));
             }
-            else //Is on edge of map
+            else // Is on edge of map
             {
                 map::put(new Wall(p));
             }
@@ -478,7 +593,7 @@ TEST_FIXTURE(BasicFixture, light_map)
 
 TEST_FIXTURE(BasicFixture, throw_items)
 {
-    //-----------------------------------------------------------------
+    // -----------------------------------------------------------------
     // Throwing a throwing knife at a wall should make it land
     // in front of the wall - i.e. the cell it travelled through
     // before encountering the wall.
@@ -487,7 +602,7 @@ TEST_FIXTURE(BasicFixture, throw_items)
     // # <- If aiming at wall here... (5, 8)
     // . <- ...throwing knife should finally land here (5, 9)
     // @ <- Player position (5, 10).
-    //-----------------------------------------------------------------
+    // -----------------------------------------------------------------
 
     map::put(new Floor(P(5, 7)));
     map::put(new Floor(P(5, 9)));
@@ -506,12 +621,12 @@ TEST_FIXTURE(BasicFixture, explosions)
 
     map::put(new Floor(P(x0, y0)));
 
-    //Check wall destruction
+    // Check wall destruction
     for (int i = 0; i < 2; ++i)
     {
         explosion::run(P(x0, y0), ExplType::expl);
 
-        //Cells around the center, at a distance of 1, should be destroyed
+        // Cells around the center, at a distance of 1, should be destroyed
         int r = 1;
         CHECK(map::cells[x0 + r][y0    ].rigid->id() != FeatureId::wall);
         CHECK(map::cells[x0 - r][y0    ].rigid->id() != FeatureId::wall);
@@ -522,7 +637,7 @@ TEST_FIXTURE(BasicFixture, explosions)
         CHECK(map::cells[x0 - r][y0 + r].rigid->id() != FeatureId::wall);
         CHECK(map::cells[x0 - r][y0 - r].rigid->id() != FeatureId::wall);
 
-        //Cells around the center, at a distance of 2, should NOT be destroyed
+        // Cells around the center, at a distance of 2, should NOT be destroyed
         r = 2;
         CHECK(map::cells[x0 + r][y0    ].rigid->id() == FeatureId::wall);
         CHECK(map::cells[x0 - r][y0    ].rigid->id() == FeatureId::wall);
@@ -534,12 +649,12 @@ TEST_FIXTURE(BasicFixture, explosions)
         CHECK(map::cells[x0 - r][y0 - r].rigid->id() == FeatureId::wall);
     }
 
-    //Check damage to actors
+    // Check damage to actors
     Actor* a1 = actor_factory::mk(ActorId::rat, P(x0 + 1, y0));
     explosion::run(P(x0, y0), ExplType::expl);
     CHECK_EQUAL((int)ActorState::destroyed, int(a1->state()));
 
-    //Check that corpses can be destroyed, and do not block living actors
+    // Check that corpses can be destroyed, and do not block living actors
     const int nr_corpses = 3;
     Actor* corpses[nr_corpses];
 
@@ -559,7 +674,7 @@ TEST_FIXTURE(BasicFixture, explosions)
 
     CHECK_EQUAL((int)ActorState::destroyed, int(a1->state()));
 
-    //Check explosion applying Burning to living and dead actors
+    // Check explosion applying Burning to living and dead actors
     for (int i = 0; i < nr_corpses; ++i)
     {
         corpses[i] = actor_factory::mk(ActorId::rat, P(x0 + 1, y0));
@@ -590,10 +705,10 @@ TEST_FIXTURE(BasicFixture, explosions)
         CHECK(prop_hlr.has_prop(PropId::burning));
     }
 
-    //Check that the explosion can handle the map edge (e.g. that it does not
-    //destroy the edge wall, or go outside the map - possibly causing a crash)
+    // Check that the explosion can handle the map edge (e.g. that it does not
+    // destroy the edge wall, or go outside the map - possibly causing a crash)
 
-    //North-west edge
+    // North-west edge
     int x = 1;
     int y = 1;
     map::put(new Floor(P(x, y)));
@@ -603,7 +718,7 @@ TEST_FIXTURE(BasicFixture, explosions)
     CHECK(map::cells[x - 1][y    ].rigid->id() == FeatureId::wall);
     CHECK(map::cells[x    ][y - 1].rigid->id() == FeatureId::wall);
 
-    //South-east edge
+    // South-east edge
     x = map_w - 2;
     y = map_h - 2;
     map::put(new Floor(P(x, y)));
@@ -616,44 +731,43 @@ TEST_FIXTURE(BasicFixture, explosions)
 
 TEST_FIXTURE(BasicFixture, monster_stuck_in_spider_web)
 {
-    //-----------------------------------------------------------------
+    // -----------------------------------------------------------------
     // Test that-
     // * a monster can get stuck in a spider web,
     // * the monster can get loose, and
     // * the web can get destroyed
-    //-----------------------------------------------------------------
+    // -----------------------------------------------------------------
 
     const P pos_l(1, 4);
     const P pos_r(2, 4);
 
-    //Spawn left floor cell
+    // Spawn left floor cell
     map::put(new Floor(pos_l));
 
-    //Conditions for finished test
+    // Conditions for finished test
     bool tested_stuck               = false;
     bool tested_loose_web_interact  = false;
     bool tested_loose_web_destroyed = false;
 
-    while (
-           !tested_stuck              ||
+    while (!tested_stuck ||
            !tested_loose_web_interact ||
            !tested_loose_web_destroyed)
     {
-        //Spawn right floor cell
+        // Spawn right floor cell
         map::put(new Floor(pos_r));
 
-        //Spawn a monster that can get stuck in the web
+        // Spawn a monster that can get stuck in the web
         Actor* const  actor = actor_factory::mk(ActorId::zombie, pos_l);
         Mon* const    mon   = static_cast<Mon*>(actor);
 
-        //Create a spider web in the right cell
+        // Create a spider web in the right cell
         const auto    mimic_id    = map::cells[pos_r.x][pos_r.y].rigid->id();
         const auto&   mimic_data  = feature_data::data(mimic_id);
         auto* const   mimic       = static_cast<Rigid*>(mimic_data.mk_obj(pos_r));
 
         map::put(new Trap(pos_r, mimic, TrapId::web));
 
-        //Move the monster into the trap, and back again
+        // Move the monster into the trap, and back again
         mon->aware_counter_ = 20000; // > 0 req. for triggering trap
         mon->pos = pos_l;
         mon->move(Dir::right);
@@ -663,15 +777,15 @@ TEST_FIXTURE(BasicFixture, monster_stuck_in_spider_web)
         mon->move(Dir::left);
         mon->move(Dir::left);
 
-        //Check conditions
+        // Check conditions
         if (mon->pos == pos_r)
         {
-            //Monster is stuck
+            // Monster is stuck
             tested_stuck = true;
         }
         else if (mon->pos == pos_l)
         {
-            //Monster managed to break free
+            // Monster managed to break free
 
             const auto feature_id = map::cells[pos_r.x][pos_r.y].rigid->id();
 
@@ -679,18 +793,18 @@ TEST_FIXTURE(BasicFixture, monster_stuck_in_spider_web)
             {
                 tested_loose_web_destroyed = true;
             }
-            else //Not floor
+            else // Not floor
             {
                 tested_loose_web_interact = true;
             }
         }
 
-        //Remove the monster
+        // Remove the monster
         actor_factory::delete_all_mon();
     }
 
-    //Check that all cases have been triggered (not really necessary, it just
-    //verifies that the loop above is correctly written).
+    // Check that all cases have been triggered (not really necessary, it just
+    // verifies that the loop above is correctly written).
     CHECK(tested_stuck);
     CHECK(tested_loose_web_interact);
     CHECK(tested_loose_web_destroyed);
@@ -710,19 +824,19 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
 
     PropHandler& prop_hlr = map::player->prop_handler();
 
-    //Check that no props are enabled
+    // Check that no props are enabled
     for (size_t i = 0; i < (size_t)PropId::END; ++i)
     {
         CHECK(!prop_hlr.has_prop(PropId(i)));
         CHECK(!prop_hlr.prop(PropId(i)));
     }
 
-    //Wear asbesthos suit
+    // Wear asbesthos suit
     Item* item = item_factory::mk(ItemId::armor_asb_suit);
 
     inv.put_in_slot(SlotId::body, item);
 
-    //Check that the props are applied
+    // Check that the props are applied
     size_t nr_props = 0;
 
     for (size_t i = 0; i < (size_t)PropId::END; ++i)
@@ -746,25 +860,25 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
     CHECK(prop_hlr.has_prop(PropId::rAcid));
     CHECK(prop_hlr.has_prop(PropId::rBreath));
 
-    //Take off asbeshos suit
+    // Take off asbeshos suit
     inv.try_unequip_slot(SlotId::body);
 
     CHECK(inv.backpack_idx(ItemId::armor_asb_suit) != -1);
 
-    //Check that the properties are cleared
+    // Check that the properties are cleared
     for (int i = 0; i < (int)PropId::END; ++i)
     {
         CHECK(!prop_hlr.has_prop(PropId(i)));
         CHECK(!prop_hlr.prop(PropId(i)));
     }
 
-    //Wear the asbeshos suit again
+    // Wear the asbeshos suit again
     inv.equip_backpack_item(inv.backpack_idx(ItemId::armor_asb_suit),
                             SlotId::body);
 
     game_time::tick();
 
-    //Check that the props are applied
+    // Check that the props are applied
     nr_props = 0;
 
     for (int i = 0; i < (int)PropId::END; ++i)
@@ -788,32 +902,32 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
     CHECK(prop_hlr.has_prop(PropId::rAcid));
     CHECK(prop_hlr.has_prop(PropId::rBreath));
 
-    //Drop the asbeshos suit on the ground
+    // Drop the asbeshos suit on the ground
     item_drop::try_drop_item_from_inv(*map::player,
                                       InvType::slots,
                                       (int)SlotId::body,
                                       1);
 
-    //Check that no item exists in body slot
+    // Check that no item exists in body slot
     CHECK(!body_slot.item);
 
-    //Check that the item is on the ground
+    // Check that the item is on the ground
     Cell& cell = map::cells[p.x][p.y];
     CHECK(cell.item);
 
-    //Check that the properties are cleared
+    // Check that the properties are cleared
     for (int i = 0; i < (int)PropId::END; ++i)
     {
         CHECK(!prop_hlr.has_prop(PropId(i)));
         CHECK(!prop_hlr.prop(PropId(i)));
     }
 
-    //Wear the same dropped asbesthos suit again
+    // Wear the same dropped asbesthos suit again
     inv.put_in_slot(SlotId::body, cell.item);
 
     cell.item = nullptr;
 
-    //Check that the props are applied
+    // Check that the props are applied
     nr_props = 0;
 
     for (int i = 0; i < (int)PropId::END; ++i)
@@ -837,21 +951,21 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
     CHECK(prop_hlr.has_prop(PropId::rAcid));
     CHECK(prop_hlr.has_prop(PropId::rBreath));
 
-    //Destroy the asbesthos suit
+    // Destroy the asbesthos suit
     for (int i = 0; i < 10; ++i)
     {
         map::player->restore_hp(99999, true /* Restoring above max */);
 
         explosion::run(map::player->pos, ExplType::expl);
 
-        //Clear wound property
+        // Clear wound property
         prop_hlr.end_prop(PropId::wound);
     }
 
-    //Check that the asbesthos suit is destroyed
+    // Check that the asbesthos suit is destroyed
     CHECK(!body_slot.item);
 
-    //Check that all properties from asbesthos suit are cleared
+    // Check that all properties from asbesthos suit are cleared
     for (int i = 0; i < (int)PropId::END; ++i)
     {
         CHECK(!prop_hlr.has_prop(PropId(i)));
@@ -861,18 +975,18 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
 
 TEST_FIXTURE(BasicFixture, saving_game)
 {
-    //Item data
+    // Item data
     item_data::data[(size_t)ItemId::scroll_telep].is_tried = true;
     item_data::data[(size_t)ItemId::scroll_opening].is_identified = true;
 
-    //Bonus
+    // Bonus
     player_bon::pick_bg(Bg::rogue);
     player_bon::traits[(size_t)Trait::healer] = true;
 
-    //Player inventory
+    // Player inventory
     Inventory& inv = map::player->inv();
 
-    //First, remove all present items to get a clean state
+    // First, remove all present items to get a clean state
     std::vector<Item*>& gen = inv.backpack_;
 
     for (Item* item : gen)
@@ -893,11 +1007,11 @@ TEST_FIXTURE(BasicFixture, saving_game)
         }
     }
 
-    //Put new items
+    // Put new items
     Item* item = item_factory::mk(ItemId::mi_go_gun);
     inv.put_in_slot(SlotId::wpn, item);
 
-    //Wear asbestos suit to test properties from wearing items
+    // Wear asbestos suit to test properties from wearing items
     item = item_factory::mk(ItemId::armor_asb_suit);
     inv.put_in_slot(SlotId::body, item);
 
@@ -932,41 +1046,41 @@ TEST_FIXTURE(BasicFixture, saving_game)
 
     inv.put_in_backpack(item);
 
-    //Player
+    // Player
     ActorDataT& def = map::player->data();
 
     def.name_a = def.name_the = "TEST PLAYER";
 
     map::player->change_max_hp(5, Verbosity::silent);
 
-    //map
+    // map
     map::dlvl = 7;
 
-    //Actor data
+    // Actor data
     actor_data::data[(size_t)ActorId::END - 1].nr_kills = 123;
 
-    //Learned spells
+    // Learned spells
     player_spells::learn_spell(SpellId::bless, Verbosity::silent);
     player_spells::learn_spell(SpellId::aza_wrath, Verbosity::silent);
 
-    //Applied properties
+    // Applied properties
     PropHandler& prop_hlr = map::player->prop_handler();
     prop_hlr.try_add(new PropRSleep(PropTurns::specific, 3));
     prop_hlr.try_add(new PropDiseased(PropTurns::indefinite));
     prop_hlr.try_add(new PropBlessed(PropTurns::std));
 
-    //Check a a few of the props applied
+    // Check a a few of the props applied
     Prop* prop = prop_hlr.prop(PropId::diseased);
     CHECK(prop);
 
     prop = prop_hlr.prop(PropId::blessed);
     CHECK(prop);
 
-    //Check a prop that was NOT applied
+    // Check a prop that was NOT applied
     prop = prop_hlr.prop(PropId::confused);
     CHECK(!prop);
 
-    //map sequence
+    // map sequence
     map_travel::map_list[5] = {MapType::rat_cave, IsMainDungeon::yes};
     map_travel::map_list[7] = {MapType::leng,              IsMainDungeon::no};
 
@@ -982,7 +1096,7 @@ TEST_FIXTURE(BasicFixture, loading_game)
 
     saving::load_game();
 
-    //Item data
+    // Item data
     CHECK_EQUAL(true,  item_data::data[int(ItemId::scroll_telep)].is_tried);
     CHECK_EQUAL(false, item_data::data[int(ItemId::scroll_telep)].is_identified);
     CHECK_EQUAL(true,  item_data::data[int(ItemId::scroll_opening)].is_identified);
@@ -990,12 +1104,12 @@ TEST_FIXTURE(BasicFixture, loading_game)
     CHECK_EQUAL(false, item_data::data[int(ItemId::scroll_det_mon)].is_tried);
     CHECK_EQUAL(false, item_data::data[int(ItemId::scroll_det_mon)].is_identified);
 
-    //Bonus
+    // Bonus
     CHECK_EQUAL((int)Bg::rogue, int(player_bon::bg()));
     CHECK(player_bon::traits[(size_t)Trait::healer]);
     CHECK(!player_bon::traits[size_t(Trait::fast_shooter)]);
 
-    //Player inventory
+    // Player inventory
     Inventory& inv  = map::player->inv();
     auto& genInv    = inv.backpack_;
 
@@ -1056,34 +1170,34 @@ TEST_FIXTURE(BasicFixture, loading_game)
     CHECK(is_sentry_device_found);
     CHECK(is_lantern_found);
 
-    //Player
+    // Player
     ActorDataT& def = map::player->data();
 
     CHECK_EQUAL("TEST PLAYER", def.name_a);
     CHECK_EQUAL("TEST PLAYER", def.name_the);
 
-    //Check max HP (affected by disease)
+    // Check max HP (affected by disease)
     CHECK_EQUAL((player_max_hp_before_load + 5) / 2, map::player->hp_max(true));
 
-    //map
+    // map
     CHECK_EQUAL(7, map::dlvl);
 
-    //Actor data
+    // Actor data
     CHECK_EQUAL(123, actor_data::data[(int)ActorId::END - 1].nr_kills);
 
-    //Learned spells
+    // Learned spells
     CHECK(player_spells::is_spell_learned(SpellId::bless));
     CHECK(player_spells::is_spell_learned(SpellId::aza_wrath));
     CHECK_EQUAL(false, player_spells::is_spell_learned(SpellId::mayhem));
 
-    //Properties
+    // Properties
     PropHandler& prop_hlr = map::player->prop_handler();
     Prop* prop = prop_hlr.prop(PropId::diseased);
     CHECK(prop);
     CHECK(prop_hlr.has_prop(PropId::diseased));
     CHECK_EQUAL(-1, prop->nr_turns_left());
 
-    //Check currrent HP (should not be affected)
+    // Check currrent HP (should not be affected)
     CHECK_EQUAL(map::player->data().hp, map::player->hp());
 
     prop = prop_hlr.prop(PropId::rSleep);
@@ -1096,7 +1210,7 @@ TEST_FIXTURE(BasicFixture, loading_game)
     CHECK(prop_hlr.has_prop(PropId::blessed));
     CHECK(prop->nr_turns_left() > 0);
 
-    //Properties from worn item
+    // Properties from worn item
     prop = prop_hlr.prop(PropId::rAcid);
     CHECK(prop);
     CHECK(prop->nr_turns_left() == -1);
@@ -1104,7 +1218,7 @@ TEST_FIXTURE(BasicFixture, loading_game)
     CHECK(prop);
     CHECK(prop->nr_turns_left() == -1);
 
-    //map sequence
+    // map sequence
     auto mapData = map_travel::map_list[3];
     CHECK(mapData.type              == MapType::std);
     CHECK(mapData.is_main_dungeon   == IsMainDungeon::yes);
@@ -1117,7 +1231,7 @@ TEST_FIXTURE(BasicFixture, loading_game)
     CHECK(mapData.type              == MapType::leng);
     CHECK(mapData.is_main_dungeon   == IsMainDungeon::no);
 
-    //Game time
+    // Game time
     CHECK_EQUAL(0, game_time::turn());
 }
 
@@ -1125,7 +1239,7 @@ TEST_FIXTURE(BasicFixture, floodfilling)
 {
     bool blocked[map_w][map_h] = {};
 
-    //Set the edge of the map as blocking
+    // Set the edge of the map as blocking
     for (int y = 0; y < map_h; ++y)
     {
         blocked[0][y] = blocked[map_w - 1][y] = true;
@@ -1287,7 +1401,7 @@ TEST_FIXTURE(BasicFixture, map_parse_expand_one)
     CHECK(out[12][5]);
     CHECK(out[12][6]);
 
-    //Check that old values are cleared
+    // Check that old values are cleared
     std::fill_n(*in, nr_map_cells, 0);
     in[40][10] = true;
     map_parse::expand(in, out);
@@ -1311,7 +1425,7 @@ TEST_FIXTURE(BasicFixture, find_corridor_entries)
         }
     };
 
-    //------------------------------------------------ Square, normal sized room
+    // ------------------------------------------------ Square, normal sized room
     R room_rect(20, 5, 30, 10);
 
     Room* room = room_factory::mk(RoomType::plain, room_rect);
@@ -1342,15 +1456,15 @@ TEST_FIXTURE(BasicFixture, find_corridor_entries)
     CHECK( entry_map[30][4]);
     CHECK(!entry_map[31][4]);
 
-    //Check that a cell in the middle of the room is not an entry, even if it's not
-    //belonging to the room
+    // Check that a cell in the middle of the room is not an entry, even if it's not
+    // belonging to the room
     map::room_map[25][7] = nullptr;
     mapgen::valid_corridor_entries(*room, entry_list);
     bool_map(entry_list, entry_map);
 
     CHECK(!entry_map[25][7]);
 
-    //The cell should also not be an entry if it's a wall and belonging to the room
+    // The cell should also not be an entry if it's a wall and belonging to the room
     map::room_map[25][7] = room;
     map::put(new Wall(P(25, 7)));
     mapgen::valid_corridor_entries(*room, entry_list);
@@ -1358,14 +1472,14 @@ TEST_FIXTURE(BasicFixture, find_corridor_entries)
 
     CHECK(!entry_map[25][7]);
 
-    //The cell should also not be an entry if it's a wall and not belonging to the room
+    // The cell should also not be an entry if it's a wall and not belonging to the room
     map::room_map[25][7] = nullptr;
     mapgen::valid_corridor_entries(*room, entry_list);
     bool_map(entry_list, entry_map);
 
     CHECK(!entry_map[25][7]);
 
-    //Check that the room can share an antry point with a nearby room
+    // Check that the room can share an antry point with a nearby room
     room_rect = R(10, 5, 18, 10);
 
     Room* nearby_room = room_factory::mk(RoomType::plain, room_rect);
@@ -1395,7 +1509,7 @@ TEST_FIXTURE(BasicFixture, find_corridor_entries)
 
     delete nearby_room;
 
-    //------------------------------------------------ Room with only one cell
+    // ------------------------------------------------ Room with only one cell
     delete room;
     room = room_factory::mk(RoomType::plain, {60, 10, 60, 10});
     map::put(new Floor(P(60, 10)));
@@ -1417,7 +1531,7 @@ TEST_FIXTURE(BasicFixture, find_corridor_entries)
     CHECK( entry_map[60][11]);
     CHECK(!entry_map[61][11]);
 
-    //Add an adjacent floor above the room
+    // Add an adjacent floor above the room
     // 59 60 61
     // #  .  # 9
     // #  .  # 10
@@ -1436,7 +1550,7 @@ TEST_FIXTURE(BasicFixture, find_corridor_entries)
     CHECK( entry_map[60][11]);
     CHECK(!entry_map[61][11]);
 
-    //Mark the adjacent floor as a room and check again
+    // Mark the adjacent floor as a room and check again
     Room* adj_room = room_factory::mk(RoomType::plain, {60, 9, 60, 9});
     map::room_map[60][9] = adj_room;
     mapgen::valid_corridor_entries(*room, entry_list);
@@ -1454,7 +1568,7 @@ TEST_FIXTURE(BasicFixture, find_corridor_entries)
     CHECK(entry_map[60][11]);
     CHECK(!entry_map[61][11]);
 
-    //Make the room wider, entries should not be placed next to adjacent floor
+    // Make the room wider, entries should not be placed next to adjacent floor
     // 58 59 60 61
     // #  #  .  # 9
     // #  .  .  # 10
@@ -1478,8 +1592,8 @@ TEST_FIXTURE(BasicFixture, find_corridor_entries)
     CHECK( entry_map[60][11]);
     CHECK(!entry_map[61][11]);
 
-    //Remove the adjacent room, and check that the blocked entries are now placed
-    //TODO
+    // Remove the adjacent room, and check that the blocked entries are now placed
+    // TODO
 
     delete room;
 }
@@ -1488,10 +1602,10 @@ TEST(find_choke_points)
 {
     bool blocked[map_w][map_h];
 
-    //--------------------------------------------------------------------------
-    //Very simple test with three adjacent free positions. Verify that the
-    //center position is a choke point.
-    //--------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // Very simple test with three adjacent free positions. Verify that the
+    // center position is a choke point.
+    // --------------------------------------------------------------------------
     std::fill_n(*blocked, nr_map_cells, true);
 
     blocked[20][10] = false;
@@ -1514,19 +1628,19 @@ TEST(find_choke_points)
     CHECK(d.sides[0][0] == P(20, 10));
     CHECK(d.sides[1][0] == P(22, 10));
 
-    //--------------------------------------------------------------------------
-    //The left position should NOT be a choke point
-    //--------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // The left position should NOT be a choke point
+    // --------------------------------------------------------------------------
     is_choke_point = mapgen::is_choke_point(P(20, 10),
                                             blocked,
                                             d);
 
     CHECK(!is_choke_point);
 
-    //--------------------------------------------------------------------------
-    //Set the position above the center position to free, and verify that the
-    //center position is no longer a choke point
-    //--------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // Set the position above the center position to free, and verify that the
+    // center position is no longer a choke point
+    // --------------------------------------------------------------------------
     blocked[21][9] = false;
 
     is_choke_point = mapgen::is_choke_point(P(21, 10),
@@ -1629,9 +1743,9 @@ TEST_FIXTURE(BasicFixture, map_parse_cells_within_dist_of_others)
     CHECK_EQUAL(false, out[25][10]);
 }
 
-//-----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 // Some code exercise
-//-----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 namespace
 {
 
@@ -1661,7 +1775,7 @@ void check_connected()
         }
     }
 
-    //Check path from player to stairs
+    // Check path from player to stairs
     std::vector<P> path;
 
     if (stair_p.x != -1)
@@ -1679,16 +1793,16 @@ void check_connected()
         path_front = path.front();
     }
 
-    //Stairs found?
+    // Stairs found?
     CHECK(stair_p.x != -1);
 
-    //Path to stairs found?
+    // Path to stairs found?
     CHECK(!path.empty());
 
-    //The end of the path should be the stairs position
+    // The end of the path should be the stairs position
     CHECK(path_front == stair_p);
 
-    //Check that all of the map is connected
+    // Check that all of the map is connected
     const bool IS_CONNECTED = map_parse::is_map_connected(blocked);
 
     CHECK(IS_CONNECTED);
@@ -1696,8 +1810,8 @@ void check_connected()
 
 void check_wall_placement(const P& origin)
 {
-    bool w[2][2]; //Wall
-    bool f[2][2]; //Floor
+    bool w[2][2]; // Wall
+    bool f[2][2]; // Floor
 
     for (int x = 0; x < 2; ++x)
     {
@@ -1712,14 +1826,14 @@ void check_wall_placement(const P& origin)
         }
     }
 
-    //Check that walls are not placed like this:
+    // Check that walls are not placed like this:
     // .#
     // #.
     bool bad_walls_found =
         f[0][0] && w[1][0] &&
         w[0][1] && f[1][1];
 
-    //Check that walls are not placed like this:
+    // Check that walls are not placed like this:
     // #.
     // .#
     bad_walls_found =
@@ -1730,11 +1844,11 @@ void check_wall_placement(const P& origin)
     CHECK(!bad_walls_found);
 }
 
-} //namespace
+} // namespace
 
 TEST_FIXTURE(BasicFixture, mapgen_std)
 {
-    for (int i = 0; i < 30; ++i)
+    for (int i = 0; i < 100; ++i)
     {
         bool map_ok = false;
 

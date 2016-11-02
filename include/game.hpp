@@ -88,8 +88,9 @@ const std::vector<HistoryEvent>& history();
 class GameState: public State
 {
 public:
-    GameState() :
-        State() {}
+    GameState(GameEntryMode entry_mode) :
+        State       (),
+        entry_mode_ (entry_mode) {}
 
     void on_start() override;
 
@@ -101,6 +102,8 @@ private:
     void query_quit();
 
     void draw_map();
+
+    const GameEntryMode entry_mode_;
 };
 
 #endif // GAME_HPP

@@ -39,9 +39,15 @@ void register_room(Room& room)
 
     map::room_list.push_back(&room);
 
-    for (int x = room.r_.p0.x; x <= room.r_.p1.x; ++x)
+    const P room_p0(room.r_.p0);
+    const P room_p1(room.r_.p1);
+
+    ASSERT(map::is_pos_inside_map(room_p0, false));
+    ASSERT(map::is_pos_inside_map(room_p1, false));
+
+    for (int x = room_p0.x; x <= room_p1.x; ++x)
     {
-        for (int y = room.r_.p0.y; y <= room.r_.p1.y; ++y)
+        for (int y = room_p0.y; y <= room_p1.y; ++y)
         {
             map::room_map[x][y] = &room;
         }

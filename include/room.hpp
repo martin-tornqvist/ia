@@ -43,7 +43,8 @@ enum class RoomType
     forest,
     END_OF_STD_ROOMS,
 
-    // Exceptional room types
+    // Special room types
+    template_room,
     corr_link,
     crumble_room,
     river
@@ -374,6 +375,25 @@ protected:
     void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
 
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
+};
+
+class TemplateRoom: public Room
+{
+public:
+    TemplateRoom(const R& r) :
+        Room(r, RoomType::template_room) {}
+
+    ~TemplateRoom() {}
+
+    void on_pre_connect(bool door_proposals[map_w][map_h]) override
+    {
+        (void)door_proposals;
+    }
+
+    void on_post_connect(bool door_proposals[map_w][map_h]) override
+    {
+        (void)door_proposals;
+    }
 };
 
 class CorrLinkRoom: public Room

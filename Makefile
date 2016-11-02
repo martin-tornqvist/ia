@@ -232,7 +232,7 @@ RL_UTILS_SRC            = $(wildcard $(RL_UTILS_SRC_DIR)/*.cpp)
 ###############################################################################
 TEST_SRC                = $(wildcard $(TEST_SRC_DIR)/*.cpp)
 
-# Source file list without the normal main file
+# Source file list without the standard main file
 COMMON_SRC_NO_MAIN      = $(filter-out $(COMMON_SRC_DIR)/main.cpp,$(COMMON_SRC))
 
 
@@ -243,23 +243,45 @@ COMMON_OBJECTS          = $(COMMON_SRC:$(COMMON_SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
 RL_UTILS_OBJECTS        = $(RL_UTILS_SRC:$(RL_UTILS_SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
 TEST_OBJECTS            = $(TEST_SRC:$(TEST_SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
 
-# Object file list without the normal main object
+# Object file list without the standard main object
 COMMON_OBJECTS_NO_MAIN  = $(COMMON_SRC_NO_MAIN:$(COMMON_SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
+
+
+###############################################################################
+# Assets
+###############################################################################
+ASSETS			= $(shell find $(ASSETS_DIR) -type f)
+
+TARGET_ASSETS		= $(ASSETS:$(ASSETS_DIR)/%=$(TARGET_DIR)/%)
 
 
 ###############################################################################
 # Targets and recipes
 ###############################################################################
+# Phony targets
+.PHONY: \
+  all \
+  release \
+  debug \
+  test \
+  windows-cross-compile-release \
+  osx-release \
+  osx-debug \
+  clean \
+  obj-clean \
+  check-rl-utils \
+  #
+
 all: release
 
-release debug: $(LINUX_EXE)
+release debug: $(LINUX_EXE) $(TARGET_ASSETS)
 
-test: $(LINUX_TEST_EXE)
+test: $(LINUX_TEST_EXE) $(TARGET_ASSETS)
 	@echo "Running tests..."; \
 	cd $(TARGET_DIR) && ./$(LINUX_TEST_EXE_NAME)
 
-# The Windows version needs to copy some DLLs and licenses
-windows-cross-compile-release: $(WINDOWS_EXE)
+# The Windows version also needs to copy some DLLs and licenses
+windows-cross-compile-release: $(WINDOWS_EXE) $(TARGET_ASSETS)
 	cp \
 	  $(SDL_BIN_DIR)/SDL2.dll \
 	  $(SDL_IMAGE_BIN_DIR)/SDL2_image.dll \
@@ -274,13 +296,12 @@ windows-cross-compile-release: $(WINDOWS_EXE)
 	  $(SDL_MIXER_BIN_DIR)/LICENSE.ogg-vorbis.txt \
 	  $(TARGET_DIR)
 
-osx-release osx-debug: $(LINUX_EXE)
+osx-release osx-debug: $(LINUX_EXE) $(TARGET_ASSETS)
 
-# Generic recipe for linking an executable and copying assets directory
-define link-exe-and-copy-assets
+# Generic recipe for linking an executable
+define link-executable
   mkdir -p $(TARGET_DIR)
   $(CXX) $^ -o $@ $(LD_FLAGS)
-  cp -r $(ASSETS_DIR)/* $(TARGET_DIR)
 endef
 
 # Generic recipe for compiling an object file
@@ -289,11 +310,15 @@ define compile-object
   $(CXX) -c $(CXXFLAGS) $(INCLUDES) $< -o $@
 endef
 
+$(TARGET_DIR)/% : $(ASSETS_DIR)/%
+	@mkdir -p $(dir $(subst $(ASSETS_DIR), $(TARGET_DIR), $<))
+	cp $< $(subst $(ASSETS_DIR), $(TARGET_DIR), $<)
+
 $(LINUX_EXE) $(WINDOWS_EXE): $(COMMON_OBJECTS) $(RL_UTILS_OBJECTS)
-	$(link-exe-and-copy-assets)
+	$(link-executable)
 
 $(LINUX_TEST_EXE): $(COMMON_OBJECTS_NO_MAIN) $(RL_UTILS_OBJECTS) $(TEST_OBJECTS)
-	$(link-exe-and-copy-assets)
+	$(link-executable)
 
 # Compiling common objects
 $(OBJ_DIR)/%.o: $(COMMON_SRC_DIR)/%.cpp
@@ -344,6 +369,3 @@ clean:
 
 obj-clean:
 	rm -rf $(OBJ_BASE_DIR)
-
-# Phony targets
-.PHONY: all test clean obj-clean check-rl-utils

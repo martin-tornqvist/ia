@@ -145,9 +145,12 @@ Room* mk(const RoomType type, const R& r)
         return new ForestRoom(r);
 
     case RoomType::END_OF_STD_ROOMS:
-        TRACE << "Illegal room type id: " << int (type) << std::endl;
+        TRACE << "Illegal room type id: " << (int)type << std::endl;
         ASSERT(false);
         return nullptr;
+
+    case RoomType::template_room:
+        return new TemplateRoom(r);
 
     case RoomType::corr_link:
         return new CorrLinkRoom(r);
@@ -159,7 +162,7 @@ Room* mk(const RoomType type, const R& r)
         return new RiverRoom(r);
     }
 
-    TRACE << "Unhandled room type id: " << int (type) << std::endl;
+    TRACE << "Unhandled room type id: " << (int)type << std::endl;
     ASSERT(false);
     return nullptr;
 }
@@ -413,8 +416,8 @@ void StdRoom::place_auto_features()
 std::vector<RoomAutoFeatureRule> PlainRoom::auto_features_allowed() const
 {
     const int fountain_one_in_n =
-        (map::dlvl <= 4)                    ? 5  :
-        (map::dlvl <= dlvl_last_mid_game)   ? 10 : 20;
+        (map::dlvl <= 4) ? 5  :
+        (map::dlvl <= dlvl_last_mid_game) ? 10 : 20;
 
     return
     {
@@ -1551,7 +1554,7 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
     }
 
 #ifdef DEMO_MODE
-    io::draw_map();
+    states::draw();
 
     for (int y = 1; y < map_h - 1; ++y)
     {
@@ -1679,7 +1682,7 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
         if (room_con0.x != -1 && room_con1.x != -1)
         {
 #ifdef DEMO_MODE
-            io::draw_map();
+            states::draw();
             io::draw_glyph('0', Panel::map, room_con0, clr_green_lgt);
             io::draw_glyph('1', Panel::map, room_con1, clr_yellow);
             io::update_screen();

@@ -36,6 +36,7 @@
 #include "manual.hpp"
 #include "postmortem.hpp"
 #include "character_descr.hpp"
+#include "mapgen.hpp"
 
 namespace game
 {
@@ -1072,6 +1073,18 @@ const std::vector<HistoryEvent>& history()
 void GameState::on_start()
 {
     map::player->mk_start_items();
+
+    if (config::is_intro_lvl_skipped() ||
+        entry_mode_ == GameEntryMode::load_game)
+    {
+        // Build first/next dungeon level
+        map_travel::go_to_nxt();
+    }
+    else
+    {
+        // Build forest.
+        mapgen::mk_intro_lvl();
+    }
 
     map::player->update_fov();
 

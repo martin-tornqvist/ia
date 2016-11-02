@@ -263,6 +263,30 @@ private:
                 Actor* const actor) override;
 };
 
+class Grating: public Rigid
+{
+public:
+    Grating(const P& p);
+
+    Grating() = delete;
+
+    ~Grating() {}
+
+    FeatureId id() const override
+    {
+        return FeatureId::grating;
+    }
+
+    std::string name(const Article article) const override;
+
+private:
+    Clr clr_default() const override;
+
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
+                Actor* const actor) override;
+};
+
 class Brazier: public Rigid
 {
 public:

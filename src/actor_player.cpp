@@ -1653,13 +1653,12 @@ void Player::kick_mon(Actor& defender)
 
     const ActorDataT& d = defender.data();
 
-    //TODO: This is REALLY hacky, it should be done another way.
-    if (
-        d.actor_size == ActorSize::floor &&
-        (d.is_spider                    ||
-         d.is_rat                       ||
-         d.is_snake                     ||
-         d.id == ActorId::worm_mass     ||
+    // TODO: This is REALLY hacky, it should be done another way.
+    if (d.actor_size == ActorSize::floor &&
+        (d.is_spider ||
+         d.is_rat ||
+         d.is_snake ||
+         d.id == ActorId::worm_mass ||
          d.id == ActorId::mind_worms))
     {
         kick_wpn = static_cast<Wpn*>(item_factory::mk(ItemId::player_stomp));
@@ -1669,7 +1668,11 @@ void Player::kick_mon(Actor& defender)
         kick_wpn = static_cast<Wpn*>(item_factory::mk(ItemId::player_kick));
     }
 
-    attack::melee(this, pos, defender, *kick_wpn);
+    attack::melee(this,
+                  pos,
+                  defender,
+                  *kick_wpn);
+
     delete kick_wpn;
 }
 

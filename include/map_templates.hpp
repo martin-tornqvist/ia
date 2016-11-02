@@ -24,6 +24,8 @@ void init();
 
 const Array2<char>& level_templ(LevelTemplId id);
 
+const Array2<char>* random_room_templ(const P& max_dim);
+
 } // map_templates
 
 #endif // MAP_TEMPLATES_HPP

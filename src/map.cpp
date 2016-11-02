@@ -214,10 +214,12 @@ Rigid* put(Rigid* const f)
             }
         }
 
-        io::draw_map();
+        states::draw();
         io::draw_glyph('X', Panel::map, p, clr_yellow);
         io::update_screen();
-        sdl_base::sleep(10); //NOTE: Delay must be > 1 for user input to be read
+
+        // NOTE: Delay must be > 1 for user input to be read
+        sdl_base::sleep(10);
     }
 
 #endif // DEMO_MODE

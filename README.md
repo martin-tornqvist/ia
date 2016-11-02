@@ -12,13 +12,13 @@
     $ git submodule init
     $ git submodule update
 
-## Fetching source
+## Fetching the source code
 
-If you aren't familiar with using Git, you can download whole source code directly [as compressed archive](https://github.com/InfraArcana/ia/archive/master.zip).
+If you aren't familiar with Git, you can download the whole project directly [as a compressed archive](https://github.com/InfraArcana/ia/archive/master.zip).
 
 ## Linux
 
-The instructions below are written and tested for Ubuntu 12.10
+The instructions below are written and tested for Linux Mint 18
 
 ### Building Infra Arcana
 
@@ -34,7 +34,7 @@ Or if you want to do a debug build:
 
     $ make debug
 
-Go to the "target" folder
+Go to the "target" directory
 
 Start IA by typing
 
@@ -42,7 +42,7 @@ Start IA by typing
 
 (dot slash ia)
 
-If you want, you can copy the "target" folder somewhere and rename it
+If you want, you can copy the "target" directory somewhere and rename it
 
 ## OS X
 
@@ -67,7 +67,7 @@ Run:
     $ cd ./target
     $ ./ia
 
-If you want, you can copy the "target" folder somewhere and rename it.
+If you want, you can copy the "target" directory somewhere and rename it.
 
 ## Windows
 

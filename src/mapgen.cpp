@@ -55,10 +55,11 @@ void connect_rooms()
             mapgen::is_map_valid = false;
 #ifdef DEMO_MODE
             io::cover_panel(Panel::log);
+            states::draw();
             io::draw_text("Failed to connect map",
-                              Panel::screen,
-                              P(0, 0),
-                              clr_red_lgt);
+                          Panel::screen,
+                          P(0, 0),
+                          clr_red_lgt);
             io::update_screen();
             sdl_base::sleep(8000);
 #endif // DEMO_MODE
@@ -70,16 +71,18 @@ void connect_rooms()
             return map::room_list[rnd::range(0, map::room_list.size() - 1)];
         };
 
-        auto is_std_room = [](const Room & r)
+        // Standard rooms and template rooms are connectable rooms
+        auto is_connectable_room = [](const Room & r)
         {
-            return (int)r.type_ < (int)RoomType::END_OF_STD_ROOMS;
+            return
+            ((int)r.type_ < (int)RoomType::END_OF_STD_ROOMS) ||
+            (r.type_ == RoomType::template_room);
         };
 
         Room* room0 = rnd_room();
 
-        // Room 0 must be a standard room or corridor link
-        if (
-            !is_std_room(*room0) &&
+        // Room 0 must be a connectable room, or a corridor link
+        if (!is_connectable_room(*room0) &&
             room0->type_ != RoomType::corr_link)
         {
             continue;
@@ -88,12 +91,12 @@ void connect_rooms()
         // Finding second room to connect to
         Room* room1 = rnd_room();
 
-        // Room 1 must not be the same as room 0, and it must be a standard room
-        //(connections are only allowed between two standard rooms, or from a
-        // corridor link to a standard room - never between two corridor links)
-        while (
-            room1 == room0 ||
-            !is_std_room(*room1))
+        // Room 1 must not be the same as room 0, and it must be a connectable
+        // room (connections are only allowed between two standard rooms, or
+        // from a corridor link to a standard room - never between two corridor
+        // links)
+        while (room1 == room0 ||
+               !is_connectable_room(*room1))
         {
             room1 = rnd_room();
         }
@@ -101,8 +104,7 @@ void connect_rooms()
         // Do not allow two rooms to be connected twice
         const auto& room0_connections = room0->rooms_con_to_;
 
-        if (
-            find(room0_connections.begin(),
+        if (find(room0_connections.begin(),
                  room0_connections.end(),
                  room1) != room0_connections.end())
         {
@@ -288,7 +290,7 @@ P place_stairs()
         is_map_valid = false;
 #ifdef DEMO_MODE
         io::cover_panel(Panel::log);
-        io::draw_map();
+        states::draw();
         io::draw_text("To few cells to place stairs",
                           Panel::screen,
                           P(0, 0),
@@ -629,7 +631,7 @@ bool mk_std_lvl()
 #ifndef DISABLE_AUX_ROOMS
 #ifdef DEMO_MODE
     io::cover_panel(Panel::log);
-    io::draw_map();
+    states::draw();
     io::draw_text("Press any key to make aux rooms...",
                       Panel::screen,
                       P(0, 0),
@@ -651,7 +653,7 @@ bool mk_std_lvl()
     {
 #ifdef DEMO_MODE
         io::cover_panel(Panel::log);
-        io::draw_map();
+        states::draw();
         io::draw_text("Press any key to make sub rooms...",
                           Panel::screen,
                           P(0, 0),
@@ -688,7 +690,7 @@ bool mk_std_lvl()
 
 #ifdef DEMO_MODE
     io::cover_panel(Panel::log);
-    io::draw_map();
+    states::draw();
     io::draw_text("Press any key to run pre-connect functions on rooms...",
                       Panel::screen,
                       P(0, 0),
@@ -713,7 +715,7 @@ bool mk_std_lvl()
 
 #ifdef DEMO_MODE
     io::cover_panel(Panel::log);
-    io::draw_map();
+    states::draw();
     io::draw_text("Press any key to connect rooms...",
                       Panel::screen,
                       P(0, 0),
@@ -732,7 +734,7 @@ bool mk_std_lvl()
     TRACE << "Running post-connect functions for all rooms" << std:: endl;
 #ifdef DEMO_MODE
     io::cover_panel(Panel::log);
-    io::draw_map();
+    states::draw();
     io::draw_text("Press any key to run post-connect functions on rooms...",
                       Panel::screen,
                       P(0, 0),
@@ -883,7 +885,7 @@ bool mk_std_lvl()
         return false;
     }
 
-    // Explicitly make some doors leading to "optional" areas secret and/or stuck
+    // Explicitly make some doors leading to "optional" areas secret or stuck
     for (const auto& choke_point : map::choke_point_data)
     {
         if (choke_point.player_side == choke_point.stairs_side)

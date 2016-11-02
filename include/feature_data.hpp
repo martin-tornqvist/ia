@@ -15,6 +15,7 @@ enum class FeatureId
     grass,
     bush,
     vines,
+    grating,
     stairs,
     lever,
     brazier,
@@ -127,6 +128,6 @@ void init();
 
 const FeatureDataT& data(const FeatureId id);
 
-} //FeatureData
+} // feature_data
 
 #endif

@@ -2,7 +2,6 @@
 
 #include "init.hpp"
 
-#include "colors.hpp"
 #include "actor.hpp"
 #include "feature_rigid.hpp"
 #include "feature_mob.hpp"
@@ -12,7 +11,9 @@
 #include "feature_monolith.hpp"
 #include "game_time.hpp"
 
-//--------------------------------------------------------- MOVE RULES
+// -----------------------------------------------------------------------------
+// Move rules
+// -----------------------------------------------------------------------------
 bool MoveRules::can_move(Actor& actor) const
 {
     if (can_move_cmn_)
@@ -22,7 +23,7 @@ bool MoveRules::can_move(Actor& actor) const
 
     auto& prop_handler = actor.prop_handler();
 
-    //If not allowing normal move, check if any property overrides this
+    // If not allowing normal move, check if any property overrides this
     for (size_t i = 0; i < size_t(PropId::END); ++i)
     {
         const PropId id = PropId(i);
@@ -36,7 +37,9 @@ bool MoveRules::can_move(Actor& actor) const
     return false;
 }
 
-//--------------------------------------------------------- FEATURE DATA
+// -----------------------------------------------------------------------------
+// Feature data
+// -----------------------------------------------------------------------------
 namespace feature_data
 {
 
@@ -80,7 +83,7 @@ void init_data_list()
     FeatureDataT d;
     reset_data(d);
 
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::floor;
     d.mk_obj = [](const P & p)
     {
@@ -91,7 +94,7 @@ void init_data_list()
     d.move_rules.set_can_move_cmn();
     d.matl_type = Matl::stone;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::bridge;
     d.mk_obj = [](const P & p)
     {
@@ -100,7 +103,7 @@ void init_data_list()
     d.move_rules.set_can_move_cmn();
     d.matl_type = Matl::wood;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::wall;
     d.mk_obj = [](const P & p)
     {
@@ -120,7 +123,7 @@ void init_data_list()
     d.can_have_item = false;
     d.matl_type = Matl::stone;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::tree;
     d.mk_obj = [](const P & p)
     {
@@ -141,7 +144,7 @@ void init_data_list()
     d.matl_type = Matl::wood;
     d.shock_when_adjacent = 1;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::grass;
     d.mk_obj = [](const P & p)
     {
@@ -152,7 +155,7 @@ void init_data_list()
     d.move_rules.set_can_move_cmn();
     d.matl_type = Matl::plant;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::bush;
     d.mk_obj = [](const P & p)
     {
@@ -164,7 +167,7 @@ void init_data_list()
     d.is_los_passable = false;
     d.matl_type = Matl::plant;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::vines;
     d.mk_obj = [](const P & p)
     {
@@ -174,11 +177,30 @@ void init_data_list()
     d.tile = TileId::vines;
     d.move_rules.set_can_move_cmn();
     d.is_los_passable = false;
-    d.can_have_blood = false; //Looks weird
+    d.can_have_blood = false; // Looks weird
     d.matl_type = Matl::plant;
     d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    d.id = FeatureId::grating;
+    d.mk_obj = [](const P & p)
+    {
+        return new Grating(p);
+    };
+    d.glyph = '#';
+    d.tile = TileId::grating;
+    d.move_rules.set_prop_can_move(PropId::ethereal);
+    d.move_rules.set_prop_can_move(PropId::burrowing);
+    d.move_rules.set_prop_can_move(PropId::ooze);
+    d.is_los_passable = true;
+    d.can_have_blood = false; // Looks weird
+    d.can_have_gore = false;
+    d.can_have_corpse = false;
+    d.can_have_rigid = false;
+    d.can_have_item = false;
+    d.matl_type = Matl::metal;
+    add_to_list_and_reset(d);
+    // -------------------------------------------------------------------------
     d.id = FeatureId::stairs;
     d.mk_obj = [](const P & p)
     {
@@ -193,7 +215,7 @@ void init_data_list()
     d.can_have_item = false;
     d.matl_type = Matl::stone;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::monolith;
     d.mk_obj = [](const P & p)
     {
@@ -211,7 +233,7 @@ void init_data_list()
     d.shock_when_adjacent = 10;
     d.matl_type = Matl::stone;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::lever;
     d.mk_obj = [](const P & p)
     {
@@ -226,7 +248,7 @@ void init_data_list()
     d.can_have_item = false;
     d.matl_type = Matl::metal;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::brazier;
     d.mk_obj = [](const P & p)
     {
@@ -242,7 +264,7 @@ void init_data_list()
     d.matl_type = Matl::metal;
     d.auto_spawn_placement = FeaturePlacement::away_from_walls;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::liquid_shallow;
     d.mk_obj = [](const P & p)
     {
@@ -257,7 +279,7 @@ void init_data_list()
     d.dodge_modifier = -10;
     d.matl_type = Matl::fluid;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::liquid_deep;
     d.mk_obj = [](const P & p)
     {
@@ -272,7 +294,7 @@ void init_data_list()
     d.can_have_rigid = false;
     d.matl_type = Matl::fluid;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::chasm;
     d.mk_obj = [](const P & p)
     {
@@ -292,7 +314,7 @@ void init_data_list()
     d.matl_type = Matl::empty;
     d.shock_when_adjacent = 3;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::gravestone;
     d.mk_obj = [](const P & p)
     {
@@ -310,7 +332,7 @@ void init_data_list()
     d.shock_when_adjacent = 2;
     d.matl_type = Matl::stone;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::church_bench;
     d.mk_obj = [](const P & p)
     {
@@ -330,7 +352,7 @@ void init_data_list()
     d.can_have_item = false;
     d.matl_type = Matl::wood;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::carpet;
     d.mk_obj = [](const P & p)
     {
@@ -342,7 +364,7 @@ void init_data_list()
     d.move_rules.set_can_move_cmn();
     d.matl_type = Matl::cloth;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::rubble_high;
     d.mk_obj = [](const P & p)
     {
@@ -363,7 +385,7 @@ void init_data_list()
     d.can_have_item = false;
     d.matl_type = Matl::stone;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::rubble_low;
     d.mk_obj = [](const P & p)
     {
@@ -375,7 +397,7 @@ void init_data_list()
     d.matl_type = Matl::stone;
     d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::bones;
     d.mk_obj = [](const P & p)
     {
@@ -387,7 +409,7 @@ void init_data_list()
     d.matl_type = Matl::stone;
     d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::statue;
     d.mk_obj = [](const P & p)
     {
@@ -405,7 +427,7 @@ void init_data_list()
     d.matl_type = Matl::stone;
     d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::cocoon;
     d.mk_obj = [](const P & p)
     {
@@ -424,7 +446,7 @@ void init_data_list()
     d.matl_type = Matl::cloth;
     d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::chest;
     d.mk_obj = [](const P & p)
     {
@@ -439,7 +461,7 @@ void init_data_list()
     d.can_have_item = false;
     d.auto_spawn_placement = FeaturePlacement::adj_to_walls;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::cabinet;
     d.mk_obj = [](const P & p)
     {
@@ -457,7 +479,7 @@ void init_data_list()
     d.matl_type = Matl::wood;
     d.auto_spawn_placement = FeaturePlacement::adj_to_walls;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::fountain;
     d.mk_obj = [](const P & p)
     {
@@ -475,7 +497,7 @@ void init_data_list()
     d.matl_type = Matl::stone;
     d.auto_spawn_placement = FeaturePlacement::away_from_walls;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::pillar;
     d.mk_obj = [](const P & p)
     {
@@ -493,7 +515,7 @@ void init_data_list()
     d.matl_type = Matl::stone;
     d.auto_spawn_placement = FeaturePlacement::away_from_walls;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::stalagmite;
     d.mk_obj = [](const P & p)
     {
@@ -511,7 +533,7 @@ void init_data_list()
     d.matl_type = Matl::stone;
     d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::altar;
     d.mk_obj = [](const P & p)
     {
@@ -528,7 +550,7 @@ void init_data_list()
     d.matl_type = Matl::stone;
     d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::tomb;
     d.mk_obj = [](const P & p)
     {
@@ -547,7 +569,7 @@ void init_data_list()
     d.matl_type = Matl::stone;
     d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::door;
     d.mk_obj = [](const P & p)
     {
@@ -559,7 +581,7 @@ void init_data_list()
     d.can_have_rigid = false;
     d.can_have_item = false;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::trap;
     d.mk_obj = [](const P & p)
     {
@@ -568,7 +590,7 @@ void init_data_list()
     d.move_rules.set_can_move_cmn();
     d.can_have_rigid = false;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::lit_dynamite;
     d.mk_obj = [](const P & p)
     {
@@ -582,7 +604,7 @@ void init_data_list()
     d.can_have_corpse = false;
     d.can_have_item = false;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::lit_flare;
     d.mk_obj = [](const P & p)
     {
@@ -592,7 +614,7 @@ void init_data_list()
     d.tile = TileId::flare_lit;
     d.move_rules.set_can_move_cmn();
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::smoke;
     d.mk_obj = [](const P & p)
     {
@@ -603,7 +625,7 @@ void init_data_list()
     d.move_rules.set_can_move_cmn();
     d.is_los_passable = false;
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::event_wall_crumble;
     d.mk_obj = [](const P & p)
     {
@@ -611,7 +633,7 @@ void init_data_list()
     };
     d.move_rules.set_can_move_cmn();
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::event_snake_emerge;
     d.mk_obj = [](const P & p)
     {
@@ -619,7 +641,7 @@ void init_data_list()
     };
     d.move_rules.set_can_move_cmn();
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     d.id = FeatureId::event_rat_cave_discovery;
     d.mk_obj = [](const P & p)
     {
@@ -627,10 +649,10 @@ void init_data_list()
     };
     d.move_rules.set_can_move_cmn();
     add_to_list_and_reset(d);
-    //---------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 }
 
-} //namespace
+} // namespace
 
 void init()
 {
@@ -646,4 +668,4 @@ const FeatureDataT& data(const FeatureId id)
     return data_list[int(id)];
 }
 
-} //FeatureData
+} // feature_data

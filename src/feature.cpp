@@ -29,7 +29,7 @@ void Feature::bump(Actor& actor_bumping)
             {
                 msg_log::add(data().msg_on_player_blocked);
             }
-            else //Actor cannot see
+            else // Actor cannot see
             {
                 msg_log::add(data().msg_on_player_blocked_blind);
             }
@@ -52,7 +52,9 @@ bool Feature::can_move(Actor& actor) const
     return data().move_rules.can_move(actor);
 }
 
-void Feature::hit(const DmgType dmg_type, const DmgMethod dmg_method, Actor* const actor)
+void Feature::hit(const DmgType dmg_type,
+                  const DmgMethod dmg_method,
+                  Actor* const actor)
 {
     (void)dmg_type; (void)dmg_method; (void)actor;
 }

@@ -21,7 +21,9 @@
 #include "game.hpp"
 #include "sound.hpp"
 
-//--------------------------------------------------------------------- RIGID
+// -----------------------------------------------------------------------------
+// Rigid
+// -----------------------------------------------------------------------------
 Rigid::Rigid(const P& p) :
     Feature                     (p),
     gore_tile_                  (TileId::empty),
@@ -432,7 +434,9 @@ void Rigid::add_light(bool light[map_w][map_h]) const
     add_light_hook(light);
 }
 
-//--------------------------------------------------------------------- FLOOR
+// -----------------------------------------------------------------------------
+// Floor
+// -----------------------------------------------------------------------------
 Floor::Floor(const P& p) :
     Rigid   (p),
     type_   (FloorType::cmn) {}
@@ -503,7 +507,9 @@ Clr Floor::clr_default() const
     return clr_gray;
 }
 
-//--------------------------------------------------------------------- WALL
+// -----------------------------------------------------------------------------
+// Wall
+// -----------------------------------------------------------------------------
 Wall::Wall(const P& p) :
     Rigid       (p),
     type_       (WallType::cmn),
@@ -514,6 +520,10 @@ void Wall::on_hit(const DmgType dmg_type,
                   Actor* const actor)
 {
     (void)actor;
+
+    //
+    // TODO: This is copy pasted - it should be handled better!
+    //
 
     auto destr_adj_doors = [&]()
     {
@@ -750,7 +760,9 @@ void Wall::set_random_is_moss_grown()
     is_mossy_ = rnd::one_in(40);
 }
 
-//--------------------------------------------------------------------- HIGH RUBBLE
+// -----------------------------------------------------------------------------
+// High rubble
+// -----------------------------------------------------------------------------
 RubbleHigh::RubbleHigh(const P& p) :
     Rigid(p) {}
 
@@ -790,7 +802,10 @@ void RubbleHigh::on_hit(const DmgType dmg_type,
 
 std::string RubbleHigh::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "a " : "the ";
+    std::string ret =
+        article == Article::a ?
+        "a " : "the ";
+
     return ret + "big pile of debris";
 }
 
@@ -799,7 +814,9 @@ Clr RubbleHigh::clr_default() const
     return map::wall_clr;
 }
 
-//--------------------------------------------------------------------- LOW RUBBLE
+// -----------------------------------------------------------------------------
+// Low rubble
+// -----------------------------------------------------------------------------
 RubbleLow::RubbleLow(const P& p) :
     Rigid(p) {}
 
@@ -837,7 +854,9 @@ Clr RubbleLow::clr_default() const
     return map::wall_clr;
 }
 
-//--------------------------------------------------------------------- BONES
+// -----------------------------------------------------------------------------
+// Bones
+// -----------------------------------------------------------------------------
 Bones::Bones(const P& p) :
     Rigid(p) {}
 
@@ -866,7 +885,9 @@ Clr Bones::clr_default() const
     return clr_gray_drk;
 }
 
-//--------------------------------------------------------------------- GRAVE
+// -----------------------------------------------------------------------------
+// Grave
+// -----------------------------------------------------------------------------
 GraveStone::GraveStone(const P& p) :
     Rigid(p) {}
 
@@ -898,7 +919,9 @@ Clr GraveStone::clr_default() const
     return clr_white;
 }
 
-//--------------------------------------------------------------------- CHURCH BENCH
+// -----------------------------------------------------------------------------
+// Church bench
+// -----------------------------------------------------------------------------
 ChurchBench::ChurchBench(const P& p) : Rigid(p) {}
 
 void ChurchBench::on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
@@ -922,7 +945,9 @@ Clr ChurchBench::clr_default() const
     return clr_brown;
 }
 
-//--------------------------------------------------------------------- STATUE
+// -----------------------------------------------------------------------------
+// Statue
+// -----------------------------------------------------------------------------
 Statue::Statue(const P& p) :
     Rigid   (p),
     type_   (rnd::one_in(8) ? StatueType::ghoul : StatueType::cmn) {}
@@ -1039,7 +1064,9 @@ Clr Statue::clr_default() const
     return clr_white;
 }
 
-//--------------------------------------------------------------------- PILLAR
+// -----------------------------------------------------------------------------
+// Pillar
+// -----------------------------------------------------------------------------
 Pillar::Pillar(const P& p) :
     Rigid(p) {}
 
@@ -1063,7 +1090,9 @@ Clr Pillar::clr_default() const
     return clr_white;
 }
 
-//--------------------------------------------------------------------- STALAGMITE
+// -----------------------------------------------------------------------------
+// Stalagmite
+// -----------------------------------------------------------------------------
 Stalagmite::Stalagmite(const P& p) :
     Rigid(p) {}
 
@@ -1087,7 +1116,9 @@ Clr Stalagmite::clr_default() const
     return clr_brown_gray;
 }
 
-//--------------------------------------------------------------------- STAIRS
+// -----------------------------------------------------------------------------
+// Stairs
+// -----------------------------------------------------------------------------
 Stairs::Stairs(const P& p) :
     Rigid(p) {}
 
@@ -1160,7 +1191,9 @@ Clr Stairs::clr_default() const
     return clr_yellow;
 }
 
-//--------------------------------------------------------------------- BRIDGE
+// -----------------------------------------------------------------------------
+// Bridge
+// -----------------------------------------------------------------------------
 TileId Bridge::tile() const
 {
     return axis_ == Axis::hor ? TileId::hangbridge_hor : TileId::hangbridge_ver;
@@ -1191,7 +1224,9 @@ Clr Bridge::clr_default() const
     return clr_brown_drk;
 }
 
-//--------------------------------------------------------------------- SHALLOW LIQUID
+// -----------------------------------------------------------------------------
+// Shallow liquid
+// -----------------------------------------------------------------------------
 LiquidShallow::LiquidShallow(const P& p) :
     Rigid   (p),
     type_   (LiquidType::water) {}
@@ -1294,7 +1329,9 @@ Clr LiquidShallow::clr_default() const
     return clr_yellow;
 }
 
-//--------------------------------------------------------------------- DEEP LIQUID
+// -----------------------------------------------------------------------------
+// Deep liquid
+// -----------------------------------------------------------------------------
 LiquidDeep::LiquidDeep(const P& p) :
     Rigid(p),
     type_(LiquidType::water) {}
@@ -1375,7 +1412,9 @@ Clr LiquidDeep::clr_default() const
     return clr_yellow;
 }
 
-//--------------------------------------------------------------------- CHASM
+// -----------------------------------------------------------------------------
+// Chasm
+// -----------------------------------------------------------------------------
 Chasm::Chasm(const P& p) :
     Rigid(p) {}
 
@@ -1400,7 +1439,9 @@ Clr Chasm::clr_default() const
     return clr_black;
 }
 
-//--------------------------------------------------------------------- LEVER
+// -----------------------------------------------------------------------------
+// Lever
+// -----------------------------------------------------------------------------
 Lever::Lever(const P& p) :
     Rigid(p),
     is_position_left_(true),
@@ -1447,7 +1488,9 @@ void Lever::pull()
     TRACE_FUNC_END;
 }
 
-//--------------------------------------------------------------------- ALTAR
+// -----------------------------------------------------------------------------
+// Altar
+// -----------------------------------------------------------------------------
 Altar::Altar(const P& p) :
     Rigid(p) {}
 
@@ -1469,7 +1512,9 @@ Clr Altar::clr_default() const
     return clr_white;
 }
 
-//--------------------------------------------------------------------- CARPET
+// -----------------------------------------------------------------------------
+// Carpet
+// -----------------------------------------------------------------------------
 Carpet::Carpet(const P& p) :
     Rigid(p) {}
 
@@ -1503,7 +1548,9 @@ Clr Carpet::clr_default() const
     return clr_red;
 }
 
-//--------------------------------------------------------------------- GRASS
+// -----------------------------------------------------------------------------
+// Grass
+// -----------------------------------------------------------------------------
 Grass::Grass(const P& p) :
     Rigid(p),
     type_(GrassType::cmn)
@@ -1577,7 +1624,9 @@ Clr Grass::clr_default() const
     return clr_yellow;
 }
 
-//--------------------------------------------------------------------- BUSH
+// -----------------------------------------------------------------------------
+// Bush
+// -----------------------------------------------------------------------------
 Bush::Bush(const P& p) :
     Rigid(p),
     type_(GrassType::cmn)
@@ -1653,7 +1702,9 @@ Clr Bush::clr_default() const
     return clr_yellow;
 }
 
-//--------------------------------------------------------------------- VINES
+// -----------------------------------------------------------------------------
+// Vines
+// -----------------------------------------------------------------------------
 Vines::Vines(const P& p) :
     Rigid(p) {}
 
@@ -1702,7 +1753,68 @@ Clr Vines::clr_default() const
     return clr_green;
 }
 
-//--------------------------------------------------------------------- TREE
+// -----------------------------------------------------------------------------
+// Grating
+// -----------------------------------------------------------------------------
+Grating::Grating(const P& p) :
+    Rigid(p) {}
+
+void Grating::on_hit(const DmgType dmg_type,
+                  const DmgMethod dmg_method,
+                  Actor* const actor)
+{
+    (void)actor;
+
+    //
+    // TODO: This is copy pasted - it should be handled better!
+    //
+
+    auto destr_adj_doors = [&]()
+    {
+        for (const P& d : dir_utils::cardinal_list)
+        {
+            const P p(pos_ + d);
+
+            if (map::is_pos_inside_map(p))
+            {
+                if (map::cells[p.x][p.y].rigid->id() == FeatureId::door)
+                {
+                    map::put(new RubbleLow(p));
+                }
+            }
+        }
+    };
+
+    if (dmg_type == DmgType::physical)
+    {
+        if ((dmg_method == DmgMethod::forced) ||
+            (dmg_method == DmgMethod::explosion) ||
+            ((dmg_method == DmgMethod::blunt_heavy) && rnd::one_in(4)))
+        {
+            destr_adj_doors();
+
+            map::put(new RubbleLow(pos_));
+        }
+    }
+}
+
+std::string Grating::name(const Article article) const
+{
+    std::string ret =
+        article == Article::a ?
+        "a " : "the ";
+
+    return ret + "grating";
+}
+
+Clr Grating::clr_default() const
+{
+    return clr_brown_drk;
+}
+
+// -----------------------------------------------------------------------------
+// Tree
+// -----------------------------------------------------------------------------
 Tree::Tree(const P& p) :
     Rigid(p) {}
 
@@ -1760,7 +1872,9 @@ Clr Tree::clr_default() const
     return clr_brown_drk;
 }
 
-//--------------------------------------------------------------------- BRAZIER
+// -----------------------------------------------------------------------------
+// Brazier
+// -----------------------------------------------------------------------------
 std::string Brazier::name(const Article article) const
 {
     std::string ret = article == Article::a ? "a " : "the ";
@@ -1854,7 +1968,9 @@ Clr Brazier::clr_default() const
     return clr_yellow;
 }
 
-//--------------------------------------------------------------------- ITEM CONTAINER
+// -----------------------------------------------------------------------------
+// Item container
+// -----------------------------------------------------------------------------
 ItemContainer::ItemContainer()
 {
     for (auto* item : items_)
@@ -2039,7 +2155,9 @@ void ItemContainer::destroy_single_fragile()
     }
 }
 
-//--------------------------------------------------------------------- TOMB
+// -----------------------------------------------------------------------------
+// Tomb
+// -----------------------------------------------------------------------------
 Tomb::Tomb(const P& p) :
     Rigid                   (p),
     is_open_                (false),
@@ -2562,7 +2680,9 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
     return did_trigger_trap;
 }
 
-//--------------------------------------------------------------------- CHEST
+// -----------------------------------------------------------------------------
+// Chest
+// -----------------------------------------------------------------------------
 Chest::Chest(const P& p) :
     Rigid                   (p),
     is_open_                (false),
@@ -2831,7 +2951,9 @@ Clr Chest::clr_default() const
     return matl_ == ChestMatl::wood ? clr_brown_drk : clr_gray;
 }
 
-//--------------------------------------------------------------------- FOUNTAIN
+// -----------------------------------------------------------------------------
+// Fountain
+// -----------------------------------------------------------------------------
 Fountain::Fountain(const P& p) :
     Rigid               (p),
     fountain_effect_    (FountainEffect::END),
@@ -3015,7 +3137,9 @@ void Fountain::bump(Actor& actor_bumping)
     }
 }
 
-//--------------------------------------------------------------------- CABINET
+// -----------------------------------------------------------------------------
+// Cabinet
+// -----------------------------------------------------------------------------
 Cabinet::Cabinet(const P& p) :
     Rigid       (p),
     is_open_    (false)
@@ -3128,7 +3252,9 @@ Clr Cabinet::clr_default() const
     return clr_brown_drk;
 }
 
-//--------------------------------------------------------------------- COCOON
+// -----------------------------------------------------------------------------
+// Cocoon
+// -----------------------------------------------------------------------------
 Cocoon::Cocoon(const P& p) :
     Rigid(p),
     is_trapped_(rnd::fraction(6, 10)),
@@ -3140,7 +3266,8 @@ Cocoon::Cocoon(const P& p) :
     }
     else
     {
-        const bool is_treasure_hunter = player_bon::traits[(size_t)Trait::treasure_hunter];
+        const bool is_treasure_hunter =
+            player_bon::traits[(size_t)Trait::treasure_hunter];
 
         const Fraction fraction_empty(6, 10);
 
@@ -3148,7 +3275,8 @@ Cocoon::Cocoon(const P& p) :
 
         const int nr_items_max = nr_items_min + (is_treasure_hunter ? 1 : 0);
 
-        item_container_.init(FeatureId::cocoon, rnd::range(nr_items_min, nr_items_max));
+        item_container_.init(FeatureId::cocoon,
+                             rnd::range(nr_items_min, nr_items_max));
     }
 }
 
@@ -3230,17 +3358,26 @@ DidTriggerTrap Cocoon::trigger_trap(Actor* const actor)
 
             if (nr_candidates > 0)
             {
-                TRACE << "Spawn candidates found, attempting to place" << std::endl;
+                TRACE << "Spawn candidates found, attempting to place"
+                      << std::endl;
+
                 msg_log::add("There are spiders inside!");
-                const int nr_spiders          = rnd::range(2, 5);
-                const int idx                 = rnd::range(0, nr_candidates - 1);
+
+                const int nr_spiders = rnd::range(2, 5);
+
+                const int idx = rnd::range(0, nr_candidates - 1);
+
                 const ActorId actor_id_to_summon = spawn_bucket[idx];
 
-                const std::vector<ActorId> ids_to_summon(nr_spiders, actor_id_to_summon);
+                const std::vector<ActorId>
+                    ids_to_summon(nr_spiders, actor_id_to_summon);
 
-                actor_factory::summon(pos_, ids_to_summon, MakeMonAware::yes);
+                actor_factory::summon(pos_,
+                                      ids_to_summon,
+                                      MakeMonAware::yes);
 
                 is_trapped_ = false;
+
                 return DidTriggerTrap::yes;
             }
         }

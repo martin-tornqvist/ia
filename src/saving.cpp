@@ -20,6 +20,7 @@
 #include "item_amulet.hpp"
 #include "postmortem.hpp"
 #include "insanity.hpp"
+#include "map_templates.hpp"
 
 namespace saving
 {

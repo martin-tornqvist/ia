@@ -113,7 +113,7 @@ void set_default_variables()
 
     set_cell_px_dims_from_font_name();
 
-    use_light_fade_effect_          = false;
+    use_light_fade_effect_          = true;
     is_fullscr_                     = false;
     is_tiles_wall_full_square_      = false;
     is_text_mode_wall_full_square_  = true;

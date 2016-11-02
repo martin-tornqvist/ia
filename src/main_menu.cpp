@@ -409,11 +409,10 @@ void MainMenuState::update()
 
                 saving::load_game();
 
-                std::unique_ptr<State> game_state(new GameState);
+                std::unique_ptr<State> game_state(
+                    new GameState(GameEntryMode::load_game));
 
                 states::push(std::move(game_state));
-
-                map_travel::go_to_nxt();
             }
             else // No save available
             {

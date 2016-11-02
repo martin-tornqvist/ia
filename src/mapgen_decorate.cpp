@@ -63,14 +63,14 @@ void decorate()
                         //      can "mimic" floor, but if some other feature
                         //      like that is added, it could be a problem.
 
-                        if (
-                            adj_id == FeatureId::floor  ||
+                        if (adj_id == FeatureId::floor  ||
                             adj_id == FeatureId::carpet ||
                             adj_id == FeatureId::trap)
                         {
                             has_adj_floor = true;
 
-                            auto* adj_rigid = static_cast<Floor*>(adj_cell.rigid);
+                            auto* adj_rigid =
+                                static_cast<Floor*>(adj_cell.rigid);
 
                             if (adj_rigid->type_ == FloorType::cave)
                             {
@@ -80,7 +80,9 @@ void decorate()
                         }
                     }
 
-                    should_convert_to_cave_wall = !has_adj_floor || has_adj_cave_floor;
+                    should_convert_to_cave_wall =
+                        !has_adj_floor ||
+                        has_adj_cave_floor;
                 }
 
                 if (should_convert_to_cave_wall)
@@ -116,8 +118,11 @@ void decorate()
                     {
                         const P adj_p(p + d);
 
-                        if (
-                            map::cells[adj_p.x][adj_p.y].rigid->id() == FeatureId::floor &&
+                        const bool is_floor =
+                            map::cells[adj_p.x][adj_p.y].rigid->id() ==
+                            FeatureId::floor;
+
+                        if (is_floor &&
                             rnd::one_in(3))
                         {
                             map::put(new Vines(adj_p));
@@ -129,4 +134,4 @@ void decorate()
     }
 }
 
-} //mapgen
+} // mapgen

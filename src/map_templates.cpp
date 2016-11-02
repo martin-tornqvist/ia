@@ -1,5 +1,8 @@
 #include "map_templates.hpp"
 
+#include "rl_utils.hpp"
+#include "saving.hpp"
+
 #include <fstream>
 #include <map>
 
@@ -11,21 +14,80 @@ namespace
 
 Array2<char> level_templates_[(size_t)LevelTemplId::END];
 
-std::map<std::string, LevelTemplId> name_2_level_id_;
+std::vector< Array2<char> > room_templates_;
 
+// Space and tab
+const std::string whitespace_chars = " \t";
+
+const char comment_symbol = '\'';
+
+
+// Checks if this line has non-whitespace characters, and is not commented out
+bool line_has_content(const std::string& line)
+{
+    const size_t first_non_space =
+        line.find_first_not_of(whitespace_chars);
+
+    return
+        (first_non_space != std::string::npos) &&
+        (line[first_non_space] != comment_symbol);
+}
+
+void trim_trailing_whitespace(std::string& line)
+{
+    const size_t end_pos =
+        line.find_last_not_of(whitespace_chars);
+
+    line = line.substr(0, end_pos + 1);
+}
+
+size_t max_length(const std::vector<std::string>& lines)
+{
+    size_t max_len = 0;
+
+    std::for_each(begin(lines),
+                  end(lines),
+                  [&max_len](const std::string& buffer_line)
+    {
+        if (buffer_line.size() > max_len)
+        {
+            max_len = buffer_line.size();
+        }
+    });
+
+    return max_len;
+}
 
 void load_level_templates()
 {
-    std::ifstream levels_ifs("data/map/levels.txt");
+    TRACE_FUNC_BEGIN;
 
-    ASSERT(!levels_ifs.fail());
-    ASSERT(levels_ifs.is_open());
+    std::ifstream ifs("data/map/levels.txt");
 
-    const char comment_symbol   = '\'';
-    const char name_symbol      = '$';
+    ASSERT(!ifs.fail());
+    ASSERT(ifs.is_open());
 
-    // Space and tab
-    const std::string whitespace_chars = " \t";
+    std::map<std::string, LevelTemplId> name_2_level_id_;
+
+    name_2_level_id_["Intro forest"] =
+        LevelTemplId::intro_forest;
+
+    name_2_level_id_["Egypt"] =
+        LevelTemplId::egypt;
+
+    name_2_level_id_["Leng"] =
+        LevelTemplId::leng;
+
+    name_2_level_id_["Rat cave"] =
+        LevelTemplId::rat_cave;
+
+    name_2_level_id_["Boss level"] =
+        LevelTemplId::boss_level;
+
+    name_2_level_id_["Trapezohedron level"] =
+        LevelTemplId::trapez_level;
+
+    const char name_symbol = '$';
 
     LevelTemplId current_id = LevelTemplId::END;
 
@@ -33,7 +95,7 @@ void load_level_templates()
 
     std::vector<std::string> lines_read;
 
-    for (std::string line; std::getline(levels_ifs, line); )
+    for (std::string line; std::getline(ifs, line); /* No increment */)
     {
         lines_read.push_back(line);
     }
@@ -51,12 +113,7 @@ void load_level_templates()
 
         if (!try_finalize)
         {
-            // Check if this is a whitespace-only line or a comment line
-            const size_t first_non_space =
-                line.find_first_not_of(whitespace_chars);
-
-            if (first_non_space == std::string::npos ||
-                line[first_non_space] == comment_symbol)
+            if (!line_has_content(line))
             {
                 try_finalize = true;
             }
@@ -64,15 +121,8 @@ void load_level_templates()
 
         if (!try_finalize)
         {
-            // Trim trailing whitespace
-            const size_t end_pos =
-                line.find_last_not_of(whitespace_chars);
+            trim_trailing_whitespace(line);
 
-            line = line.substr(0, end_pos + 1);
-        }
-
-        if (!try_finalize)
-        {
             // Is this line a template name?
             if (line[0] == name_symbol)
             {
@@ -107,7 +157,7 @@ void load_level_templates()
         }
 
         // Is the current template done?
-        if (try_finalize                    &&
+        if (try_finalize &&
             current_id != LevelTemplId::END &&
             !template_buffer.empty())
         {
@@ -115,17 +165,7 @@ void load_level_templates()
 
             // Not all lines in a template needs to be the same length, so we
             // to find the length of the longest line
-            size_t max_len = 0;
-
-            std::for_each(begin(template_buffer),
-                          end(template_buffer),
-                          [&max_len](std::string& buffer_line)
-            {
-                if (buffer_line.size() > max_len)
-                {
-                    max_len = buffer_line.size();
-                }
-            });
+            const size_t max_len = max_length(template_buffer);
 
             ASSERT(max_len == map_w);
 
@@ -158,33 +198,165 @@ void load_level_templates()
 
     } // for
 
+    TRACE_FUNC_END;
+
 } // load_level_templates
+
+
+//
+// Add all combinations of rotating and flipping the template
+//
+void mk_room_templ_variants(Array2<char>& templ)
+{
+    //
+    // "Up"
+    //
+    room_templates_.push_back(templ);
+
+    templ.flip_hor();
+
+    room_templates_.push_back(templ);
+
+    //
+    // "Right"
+    //
+    templ.rotate_cw();
+
+    room_templates_.push_back(templ);
+
+    templ.flip_ver();
+
+    room_templates_.push_back(templ);
+
+    //
+    // "Down"
+    //
+    templ.rotate_cw();
+
+    room_templates_.push_back(templ);
+
+    templ.flip_hor();
+
+    room_templates_.push_back(templ);
+
+    //
+    // "Left"
+    //
+    templ.rotate_cw();
+
+    room_templates_.push_back(templ);
+
+    templ.flip_ver();
+
+    room_templates_.push_back(templ);
+
+} // add_room_templ_variants
+
+
+void load_room_templates()
+{
+    TRACE_FUNC_BEGIN;
+
+    room_templates_.clear();
+
+    std::ifstream ifs("data/map/rooms.txt");
+
+    ASSERT(!ifs.fail());
+    ASSERT(ifs.is_open());
+
+    std::vector<std::string> template_buffer;
+
+    std::vector<std::string> lines_read;
+
+    for (std::string line; std::getline(ifs, line); /* No increment */)
+    {
+        lines_read.push_back(line);
+    }
+
+    for (size_t line_idx = 0; line_idx < lines_read.size(); ++line_idx)
+    {
+        std::string& line = lines_read[line_idx];
+
+        bool try_finalize = false;
+
+        if (line.empty())
+        {
+            try_finalize = true;
+        }
+
+        if (!try_finalize)
+        {
+            if (!line_has_content(line))
+            {
+                try_finalize = true;
+            }
+        }
+
+        if (!try_finalize)
+        {
+            trim_trailing_whitespace(line);
+
+            // TODO: Handle meta information, only store as template line if
+            //       part of the actual template
+
+            template_buffer.push_back(line);
+        }
+
+        // Is this the last line? Then we should try finalizing the template
+        if (line_idx == (lines_read.size() - 1))
+        {
+            try_finalize = true;
+        }
+
+        // Is the current template done?
+        if (try_finalize &&
+            !template_buffer.empty())
+        {
+            // Not all lines in a template needs to be the same length, so we
+            // have to find the length of the longest line
+            const size_t max_len = max_length(template_buffer);
+
+            Array2<char> templ(max_len, template_buffer.size());
+
+            for (size_t buffer_idx = 0;
+                 buffer_idx < template_buffer.size();
+                 ++buffer_idx)
+            {
+                std::string& buffer_line = template_buffer[buffer_idx];
+
+                // Pad the buffer line with space characters
+                buffer_line.append(max_len - buffer_line.size(), ' ');
+
+                // Fill the template araray with the buffer characters
+                for (size_t line_idx = 0;
+                     line_idx < max_len;
+                     ++line_idx)
+                {
+                    templ(line_idx, buffer_idx) = buffer_line[line_idx];
+                }
+            }
+
+            mk_room_templ_variants(templ);
+
+            template_buffer.clear();
+        }
+
+    } // for
+
+    TRACE_FUNC_END;
+}
 
 } // namespace
 
 void init()
 {
-    name_2_level_id_.clear();
-
-    name_2_level_id_["Intro forest"] =
-        LevelTemplId::intro_forest;
-
-    name_2_level_id_["Egypt"] =
-        LevelTemplId::egypt;
-
-    name_2_level_id_["Leng"] =
-        LevelTemplId::leng;
-
-    name_2_level_id_["Rat cave"] =
-        LevelTemplId::rat_cave;
-
-    name_2_level_id_["Boss level"] =
-        LevelTemplId::boss_level;
-
-    name_2_level_id_["Trapezohedron level"] =
-        LevelTemplId::trapez_level;
+    TRACE_FUNC_BEGIN;
 
     load_level_templates();
+
+    load_room_templates();
+
+    TRACE_FUNC_END;
 }
 
 const Array2<char>& level_templ(LevelTemplId id)
@@ -192,6 +364,33 @@ const Array2<char>& level_templ(LevelTemplId id)
     ASSERT(id != LevelTemplId::END);
 
     return level_templates_[(size_t)id];
+}
+
+const Array2<char>* random_room_templ(const P& max_dims)
+{
+    ASSERT(!room_templates_.empty());
+
+    std::vector< const Array2<char>* > bucket;
+
+    for (auto& templ : room_templates_)
+    {
+        const P templ_dims(templ.dims());
+
+        if (templ_dims.x <= max_dims.x &&
+            templ_dims.y <= max_dims.y)
+        {
+            bucket.push_back(&templ);
+        }
+    }
+
+    if (bucket.empty())
+    {
+        return nullptr;
+    }
+
+    const size_t idx = rnd::range(0, bucket.size() - 1);
+
+    return bucket[idx];
 }
 
 } // map_templates

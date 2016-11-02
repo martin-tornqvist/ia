@@ -10,7 +10,6 @@
 #include "init.hpp"
 #include "popup.hpp"
 #include "map_travel.hpp"
-#include "mapgen.hpp"
 
 namespace
 {
@@ -55,20 +54,10 @@ void NewGameState::on_resume()
 
     states::pop();
 
-    std::unique_ptr<State> game_state(new GameState);
+    std::unique_ptr<State> game_state(
+        new GameState(GameEntryMode::new_game));
 
     states::push(std::move(game_state));
-
-    if (config::is_intro_lvl_skipped())
-    {
-        // Build first dungeon level
-        map_travel::go_to_nxt();
-    }
-    else // Using intro level
-    {
-        // Build forest.
-        mapgen::mk_intro_lvl();
-    }
 }
 
 void NewGameState::on_popped()
