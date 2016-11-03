@@ -54,6 +54,11 @@ public:
         has_started_ = true;
     }
 
+    bool has_started()
+    {
+        return has_started_;
+    }
+
 private:
     bool has_started_;
 };

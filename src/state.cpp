@@ -62,7 +62,10 @@ void draw()
 
             const auto& state_ptr = *draw_from;
 
-            if (!state_ptr->draw_overlayed())
+            // If not drawn overlayed, draw from this state as bottom layer
+            // (but only if the state has been started, see note below)
+            if (!state_ptr->draw_overlayed() &&
+                state_ptr->has_started())
             {
                 break;
             }
@@ -73,7 +76,14 @@ void draw()
         {
             const auto& state_ptr = *draw_from;
 
-            state_ptr->draw();
+            // Do NOT draw states which are not yet started (they may need to
+            // set up menus etc in their start function, and expect the chance
+            // to do so before drawing is called)
+
+            if (state_ptr->has_started())
+            {
+                state_ptr->draw();
+            }
         }
     }
 }

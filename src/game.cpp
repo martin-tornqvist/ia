@@ -798,7 +798,7 @@ void handle_player_input(const InputData& input)
 
     case SDLK_F3:
     {
-        game::incr_player_xp(100);
+        game::incr_player_xp(33);
     }
     break;
 

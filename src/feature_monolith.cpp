@@ -22,13 +22,18 @@ void Monolith::on_hit(const DmgType dmg_type,
 
 std::string Monolith::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "a " : "the ";
+    std::string ret =
+        article == Article::a ?
+        "a " : "the ";
+
     return ret + "carved monolith";
 }
 
 Clr Monolith::clr_default() const
 {
-    return is_activated_ ? clr_gray : clr_cyan_lgt;
+    return
+        is_activated_ ?
+        clr_gray : clr_cyan_lgt;
 }
 
 void Monolith::bump(Actor& actor_bumping)
@@ -48,7 +53,7 @@ void Monolith::bump(Actor& actor_bumping)
         {
             msg_log::add("Nothing happens.");
         }
-        else //Not yet activated
+        else // Not yet activated
         {
             activate();
 
