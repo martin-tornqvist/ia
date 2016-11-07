@@ -176,9 +176,9 @@ Range Spell::spi_cost(const bool is_base_cost_only, Actor* const caster) const
 
         // Traits reducing the cost of specific spells
         // TODO: Shouldn't this be done by calling virtual functions?
-        bool is_warlock     = player_bon::traits[(size_t)Trait::warlock];
-        bool is_seer        = player_bon::traits[(size_t)Trait::seer];
-        bool is_summoner    = player_bon::traits[(size_t)Trait::summoner];
+        bool is_warlock = player_bon::traits[(size_t)Trait::warlock];
+        bool is_seer = player_bon::traits[(size_t)Trait::seer];
+        bool is_summoner = player_bon::traits[(size_t)Trait::summoner];
 
         switch (id())
         {
@@ -260,8 +260,8 @@ Range Spell::spi_cost(const bool is_base_cost_only, Actor* const caster) const
         }
     } // Is player, and use modified cost
 
-    cost_max            = std::max(1, cost_max);
-    const int cost_min  = std::max(1, (cost_max + 1) / 2);
+    cost_max = std::max(1, cost_max);
+    const int cost_min = std::max(1, (cost_max + 1) / 2);
 
     return Range(cost_min, cost_max);
 }
@@ -364,8 +364,8 @@ SpellEffectNoticed Spell::cast(Actor* const caster,
 
 void Spell::on_resist(Actor& target) const
 {
-    const bool is_player        = target.is_player();
-    const bool player_see_tgt   = map::player->can_see_actor(target);
+    const bool is_player = target.is_player();
+    const bool player_see_tgt = map::player->can_see_actor(target);
 
     if (player_see_tgt)
     {
@@ -457,9 +457,9 @@ SpellEffectNoticed SpellDarkbolt::cast_impl(Actor* const caster) const
 
     io::draw_blast_at_cells({tgt->pos}, clr_magenta);
 
-    bool        is_warlock_charged  = false;
-    Clr         msg_clr             = clr_msg_good;
-    std::string str_begin           = "I am";
+    bool is_warlock_charged = false;
+    Clr msg_clr = clr_msg_good;
+    std::string str_begin = "I am";
 
     if (tgt->is_player())
     {
@@ -516,7 +516,7 @@ bool SpellDarkbolt::allow_mon_cast_now(Mon& mon) const
 SpellEffectNoticed SpellAzaWrath::cast_impl(Actor* const caster) const
 {
     Range dmg_range(4, 8);
-    bool  is_warlock_charged = false;
+    bool is_warlock_charged = false;
 
     std::vector<Actor*> tgts;
     caster->seen_foes(tgts);
@@ -559,8 +559,8 @@ SpellEffectNoticed SpellAzaWrath::cast_impl(Actor* const caster) const
             continue;
         }
 
-        std::string     str_begin   = "I am";
-        Clr             msg_clr     = clr_msg_good;
+        std::string str_begin = "I am";
+        Clr msg_clr = clr_msg_good;
 
         if (tgt->is_player())
         {
@@ -621,7 +621,7 @@ SpellEffectNoticed SpellMayhem::cast_impl(Actor* const caster) const
     const P& caster_pos = caster->pos;
 
     const int nr_sweeps = 5;
-    const int radi      = fov_std_radi_int;
+    const int radi = fov_std_radi_int;
 
     const int x0 = std::max(1, caster_pos.x - radi);
     const int y0 = std::max(1, caster_pos.y - radi);
@@ -799,8 +799,8 @@ SpellEffectNoticed SpellPest::cast_impl(Actor* const caster) const
 
 bool SpellPest::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_         &&
-           rnd::one_in(3)   &&
+    return mon.tgt_ &&
+           rnd::one_in(3) &&
            (mon.tgt_ || rnd::one_in(30));
 }
 
@@ -822,8 +822,8 @@ SpellEffectNoticed SpellAnimWpns::cast_impl(Actor* const caster) const
                 Item* const item = cell.item;
 
                 if (
-                    cell.is_seen_by_player  &&
-                    item                    &&
+                    cell.is_seen_by_player &&
+                    item &&
                     item->data().type == ItemType::melee_wpn)
                 {
                     cell.item = nullptr;
@@ -1058,7 +1058,7 @@ SpellEffectNoticed SpellDetMon::cast_impl(Actor* const caster) const
 
     bool is_seer = player_bon::traits[(size_t)Trait::seer];
 
-    const int multiplier  = 20 * (is_seer ? 2 : 1);
+    const int multiplier = 20 * (is_seer ? 2 : 1);
 
     SpellEffectNoticed is_noticed = SpellEffectNoticed::no;
 
@@ -1267,10 +1267,10 @@ SpellEffectNoticed SpellKnockBack::cast_impl(Actor* const caster) const
 {
     ASSERT(!caster->is_player());
 
-    Clr             msg_clr     = clr_msg_good;
-    std::string     tgt_str     = "me";
-    Actor*          caster_used = caster;
-    Actor*          tgt         = static_cast<Mon*>(caster_used)->tgt_;
+    Clr msg_clr = clr_msg_good;
+    std::string tgt_str = "me";
+    Actor* caster_used = caster;
+    Actor* tgt = static_cast<Mon*>(caster_used)->tgt_;
     ASSERT(tgt);
 
     // Spell reflection?
@@ -1406,7 +1406,7 @@ SpellEffectNoticed SpellDisease::cast_impl(Actor* const caster) const
     ASSERT(!caster->is_player());
 
     Actor* caster_used = caster;
-    Actor* tgt        = static_cast<Mon*>(caster_used)->tgt_;
+    Actor* tgt = static_cast<Mon*>(caster_used)->tgt_;
 
     // Spell reflection?
     if (tgt->has_prop(PropId::spell_reflect))
@@ -1546,22 +1546,22 @@ SpellEffectNoticed SpellSummonMon::cast_impl(Actor* const caster) const
         return SpellEffectNoticed::no;
     }
 
-    const ActorId   mon_id                      = rnd::element(summon_bucket);
-    Actor*          leader                      = nullptr;
-    bool            did_player_summon_hostile   = false;
+    const ActorId mon_id = rnd::element(summon_bucket);
+    Actor* leader = nullptr;
+    bool did_player_summon_hostile = false;
 
     if (caster->is_player())
     {
         const int n = summon_hostile_one_in_n *
             (player_bon::traits[(size_t)Trait::summoner] ? 2 : 1);
 
-        did_player_summon_hostile   = rnd::one_in(n);
-        leader                      = did_player_summon_hostile ? nullptr : caster;
+        did_player_summon_hostile = rnd::one_in(n);
+        leader = did_player_summon_hostile ? nullptr : caster;
     }
     else // Caster is monster
     {
-        Actor* const caster_leader  = static_cast<Mon*>(caster)->leader_;
-        leader                      = caster_leader ? caster_leader : caster;
+        Actor* const caster_leader = static_cast<Mon*>(caster)->leader_;
+        leader = caster_leader ? caster_leader : caster;
     }
 
     std::vector<Mon*> mon_summoned;
@@ -1595,7 +1595,7 @@ bool SpellSummonMon::allow_mon_cast_now(Mon& mon) const
 {
     // NOTE: Checking awareness instead of target, to allow summoning even with broken LOS
     return (mon.aware_counter_ > 0) &&
-           rnd::coin_toss()         &&
+           rnd::coin_toss() &&
            (mon.tgt_ || rnd::one_in(23));
 }
 
@@ -1622,8 +1622,8 @@ SpellEffectNoticed SpellMiGoHypno::cast_impl(Actor* const caster) const
 {
     ASSERT(!caster->is_player());
 
-    Actor* caster_used  = caster;
-    Actor* tgt          = static_cast<Mon*>(caster_used)->tgt_;
+    Actor* caster_used = caster;
+    Actor* tgt = static_cast<Mon*>(caster_used)->tgt_;
 
     ASSERT(tgt);
 
@@ -1669,8 +1669,8 @@ SpellEffectNoticed SpellMiGoHypno::cast_impl(Actor* const caster) const
 
 bool SpellMiGoHypno::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_                 &&
-           mon.tgt_->is_player()    &&
+    return mon.tgt_ &&
+           mon.tgt_->is_player() &&
            rnd::one_in(3);
 }
 
@@ -1682,7 +1682,7 @@ SpellEffectNoticed SpellBurn::cast_impl(Actor* const caster) const
     ASSERT(!caster->is_player());
 
     Actor* caster_used = caster;
-    Actor* tgt        = static_cast<Mon*>(caster_used)->tgt_;
+    Actor* tgt = static_cast<Mon*>(caster_used)->tgt_;
 
     ASSERT(tgt);
 

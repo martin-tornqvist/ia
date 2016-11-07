@@ -47,9 +47,9 @@ CellRenderData render_array_no_actors[map_w][map_h];
 namespace
 {
 
-int         clvl_       = 0;
-int         xp_pct_     = 0;
-TimeData    start_time_;
+int clvl_ = 0;
+int xp_pct_ = 0;
+TimeData start_time_;
 
 std::vector<HistoryEvent> history_events_;
 
@@ -76,7 +76,7 @@ void query_quit()
 
 void init()
 {
-    clvl_   = 1;
+    clvl_ = 1;
     xp_pct_ = 0;
 
     history_events_.clear();
@@ -113,12 +113,12 @@ void save()
 
 void load()
 {
-    clvl_               = saving::get_int();
-    xp_pct_             = saving::get_int();
-    start_time_.year_   = saving::get_int();
-    start_time_.month_  = saving::get_int();
-    start_time_.day_    = saving::get_int();
-    start_time_.hour_   = saving::get_int();
+    clvl_ = saving::get_int();
+    xp_pct_ = saving::get_int();
+    start_time_.year_ = saving::get_int();
+    start_time_.month_ = saving::get_int();
+    start_time_.day_ = saving::get_int();
+    start_time_.hour_ = saving::get_int();
     start_time_.minute_ = saving::get_int();
     start_time_.second_ = saving::get_int();
 
@@ -126,8 +126,8 @@ void load()
 
     for (int i = 0; i < nr_events; ++i)
     {
-        const std::string   msg     = saving::get_str();
-        const int           turn    = saving::get_int();
+        const std::string msg = saving::get_str();
+        const int turn = saving::get_int();
 
         history_events_.push_back({msg, turn});
     }
@@ -389,7 +389,7 @@ void handle_player_input(const InputData& input)
                     // TODO: A hack for the Mi-go gun - refactor
                     //
                     if (wpn->data().id == ItemId::mi_go_gun &&
-                        wpn->nr_ammo_loaded_ == 0           &&
+                        wpn->nr_ammo_loaded_ == 0 &&
                         map::player->hp() > 1)
                     {
                         const std::string wpn_name =
@@ -501,9 +501,9 @@ void handle_player_input(const InputData& input)
 
         Inventory& inv = map::player->inv();
 
-        Item* const wielded         = inv.item_in_slot(SlotId::wpn);
-        Item* const alt             = inv.item_in_slot(SlotId::wpn_alt);
-        const std::string alt_name  = alt ? alt->name(ItemRefType::a) : "";
+        Item* const wielded = inv.item_in_slot(SlotId::wpn);
+        Item* const alt = inv.item_in_slot(SlotId::wpn_alt);
+        const std::string alt_name = alt ? alt->name(ItemRefType::a) : "";
 
         if (wielded || alt)
         {
@@ -810,8 +810,8 @@ void handle_player_input(const InputData& input)
             {
                 for (int y = 0; y < map_h; ++y)
                 {
-                    map::cells[x][y].is_seen_by_player  = false;
-                    map::cells[x][y].is_explored        = false;
+                    map::cells[x][y].is_seen_by_player = false;
+                    map::cells[x][y].is_explored = false;
                 }
             }
 
@@ -984,12 +984,12 @@ void win_game()
         "The destinies of all things on earth, living and dead, are mine."
     };
 
-    const int padding       = 9;
+    const int padding = 9;
 
-    const int X0            = padding;
-    const int max_w         = map_w - (padding * 2);
+    const int X0 = padding;
+    const int max_w = map_w - (padding * 2);
 
-    const int line_delay    = 50;
+    const int line_delay = 50;
 
     int y = 2;
 
@@ -1201,19 +1201,19 @@ void GameState::draw_map()
 
                 TileId gore_tile = TileId::empty;
 
-                char gore_glyph  = 0;
+                char gore_glyph = 0;
 
                 if (f->can_have_gore())
                 {
-                    gore_tile  = f->gore_tile();
+                    gore_tile = f->gore_tile();
                     gore_glyph = f->gore_glyph();
                 }
 
                 if (gore_tile == TileId::empty)
                 {
-                    render_data->tile   = f->tile();
-                    render_data->glyph  = f->glyph();
-                    render_data->clr    = f->clr();
+                    render_data->tile = f->tile();
+                    render_data->glyph = f->glyph();
+                    render_data->clr = f->clr();
 
                     const Clr& feature_clr_bg = f->clr_bg();
 
@@ -1224,9 +1224,9 @@ void GameState::draw_map()
                 }
                 else // Has gore
                 {
-                    render_data->tile  = gore_tile;
+                    render_data->tile = gore_tile;
                     render_data->glyph = gore_glyph;
-                    render_data->clr   = clr_red;
+                    render_data->clr = clr_red;
                 }
 
                 if (map::cells[x][y].is_lit && f->is_los_passable())
@@ -1250,10 +1250,10 @@ void GameState::draw_map()
             actor->data().tile != TileId::empty &&
             map::cells[p.x][p.y].is_seen_by_player)
         {
-            render_data         = &game::render_array[p.x][p.y];
-            render_data->clr    = actor->clr();
-            render_data->tile   = actor->tile();
-            render_data->glyph  = actor->glyph();
+            render_data = &game::render_array[p.x][p.y];
+            render_data->clr = actor->clr();
+            render_data->tile = actor->tile();
+            render_data->glyph = actor->glyph();
         }
     }
 
@@ -1272,8 +1272,8 @@ void GameState::draw_map()
 
                 if (item)
                 {
-                    render_data->clr   = item->clr();
-                    render_data->tile  = item->tile();
+                    render_data->clr = item->clr();
+                    render_data->tile = item->tile();
                     render_data->glyph = item->glyph();
                 }
 
@@ -1315,10 +1315,10 @@ void GameState::draw_map()
             mob_glyph != ' ' &&
             map::cells[p.x][p.y].is_seen_by_player)
         {
-            render_data         = &game::render_array[p.x][p.y];
-            render_data->clr    = mob->clr();
-            render_data->tile   = mob_tile;
-            render_data->glyph  = mob_glyph;
+            render_data = &game::render_array[p.x][p.y];
+            render_data->clr = mob->clr();
+            render_data->tile = mob_tile;
+            render_data->glyph = mob_glyph;
         }
     }
 
@@ -1350,12 +1350,12 @@ void GameState::draw_map()
                     actor->glyph() != 0 &&
                     actor->glyph() != ' ')
                 {
-                    render_data->clr    = actor->clr();
-                    render_data->tile   = actor->tile();
-                    render_data->glyph  = actor->glyph();
+                    render_data->clr = actor->clr();
+                    render_data->tile = actor->tile();
+                    render_data->glyph = actor->glyph();
 
-                    render_data->is_living_actor_seen_here  = true;
-                    render_data->is_light_fade_allowed      = false;
+                    render_data->is_living_actor_seen_here = true;
+                    render_data->is_light_fade_allowed = false;
 
                     if (map::player->is_leader_of(mon))
                     {
@@ -1417,14 +1417,14 @@ void GameState::draw_map()
 
                         div = std::min(2.0, div);
 
-                        div_clr(render_data->clr,    div);
+                        div_clr(render_data->clr, div);
                         div_clr(render_data->clr_bg, div);
                     }
 
                     if (cell.is_dark && !cell.is_lit)
                     {
                         const double drk_div = 1.75;
-                        div_clr(render_data->clr,    drk_div);
+                        div_clr(render_data->clr, drk_div);
                         div_clr(render_data->clr_bg, drk_div);
                     }
                 }
@@ -1452,7 +1452,7 @@ void GameState::draw_map()
 
                 const double div = 5.0;
 
-                div_clr(render_data->clr,    div);
+                div_clr(render_data->clr, div);
                 div_clr(render_data->clr_bg, div);
             }
 
@@ -1485,7 +1485,7 @@ void GameState::draw_map()
 
                         const auto feature_id = f->id();
 
-                        bool is_hidden_door  = false;
+                        bool is_hidden_door = false;
 
                         if (feature_id == FeatureId::door)
                         {
@@ -1498,13 +1498,13 @@ void GameState::draw_map()
                         {
                             if (map::cells[x][y + 1].is_explored)
                             {
-                                const bool is_seen_below  =
+                                const bool is_seen_below =
                                     map::cells[x][y + 1].is_seen_by_player;
 
-                                const auto tile_below_seen  =
+                                const auto tile_below_seen =
                                     game::render_array_no_actors[x][y + 1].tile;
 
-                                const auto tile_below_mem   =
+                                const auto tile_below_mem =
                                     map::cells[x][y + 1].
                                     player_visual_memory.tile;
 
@@ -1523,8 +1523,8 @@ void GameState::draw_map()
                                     Door::is_tile_any_door(tile_below_seen) :
                                     Door::is_tile_any_door(tile_below_mem);
 
-                                if (tile_below_is_wall_front  ||
-                                    tile_below_is_wall_top    ||
+                                if (tile_below_is_wall_front ||
+                                    tile_below_is_wall_top ||
                                     tile_below_is_revealed_door)
                                 {
                                     if (feature_id == FeatureId::wall)
@@ -1589,10 +1589,10 @@ void GameState::draw_map()
                     clr_nosf_teal_drk :
                     clr_allied_mon;
 
-                render_data->tile    = TileId::empty;
-                render_data->glyph   = '!';
-                render_data->clr     = clr_black;
-                render_data->clr_bg  = clr_bg;
+                render_data->tile = TileId::empty;
+                render_data->glyph = '!';
+                render_data->clr = clr_black;
+                render_data->clr_bg = clr_bg;
             }
 
             // Draw tile here if tile mode, and a tile has been set
@@ -1626,12 +1626,12 @@ void GameState::draw_map()
     //--------------------------------------------------------------------------
     // Draw player character
     //--------------------------------------------------------------------------
-    const P&    pos             = map::player->pos;
-    Item*       item            = map::player->inv().item_in_slot(SlotId::wpn);
-    const bool  is_ghoul        = player_bon::bg() == Bg::ghoul;
-    const Clr   clr             = map::player->clr();
-    Clr         clr_bg          = clr_black;
-    bool        uses_ranged_wpn = false;
+    const P& pos = map::player->pos;
+    Item* item = map::player->inv().item_in_slot(SlotId::wpn);
+    const bool is_ghoul = player_bon::bg() == Bg::ghoul;
+    const Clr clr = map::player->clr();
+    Clr clr_bg = clr_black;
+    bool uses_ranged_wpn = false;
 
     if (item)
     {
@@ -1640,7 +1640,7 @@ void GameState::draw_map()
     }
 
     const TileId tile =
-        is_ghoul        ? TileId::ghoul :
+        is_ghoul ? TileId::ghoul :
         uses_ranged_wpn ? TileId::player_firearm :
         TileId::player_melee;
 
@@ -1648,10 +1648,10 @@ void GameState::draw_map()
 
     auto& player_render_data = game::render_array[pos.x][pos.y];
 
-    player_render_data.tile     = tile;
-    player_render_data.glyph    = glyph;
-    player_render_data.clr      = clr;
-    player_render_data.clr_bg   = clr_bg;
+    player_render_data.tile = tile;
+    player_render_data.glyph = glyph;
+    player_render_data.clr = clr;
+    player_render_data.clr_bg = clr_bg;
 
     if (is_tile_mode)
     {

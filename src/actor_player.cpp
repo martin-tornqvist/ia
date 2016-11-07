@@ -62,53 +62,55 @@ void Player::mk_start_items()
 {
     data_->ability_vals.reset();
 
-    bool has_pistol         = true;
-    bool has_medbag         = true;
-    bool has_lantern        = true;
+    bool has_pistol = true;
+    bool has_medbag = true;
+    bool has_lantern = true;
     bool has_leather_jacket = true;
 
-    int nr_cartridges   = 2;
-    int nr_dynamite     = 2;
-    int nr_molotov      = 2;
-    int nr_thr_knives   = 6;
+    int nr_cartridges = 2;
+    int nr_dynamite = 2;
+    int nr_molotov = 2;
+    int nr_thr_knives = 6;
 
-    //------------------------------------------------------- BACKGROUND SPECIFIC SETUP
+    // -------------------------------------------------------------------------
+    // Background specific setup
+    // -------------------------------------------------------------------------
     const Bg bg = player_bon::bg();
 
     switch (bg)
     {
     case Bg::occultist:
     {
-        //Occultist starts with one less cartridge, and no explosives or
-        //throwing knives.
+        // Occultist starts with one less cartridge, and no explosives or
+        // throwing knives.
         --nr_cartridges;
-        nr_dynamite     = 0;
-        nr_molotov      = 0;
-        nr_thr_knives   = 0;
+        nr_dynamite = 0;
+        nr_molotov = 0;
+        nr_thr_knives = 0;
 
-        //Occultist starts with some spells and a potion
+        // Occultist starts with some spells and a potion
 
-        //Learn the Darkbolt spell
+        // Learn the Darkbolt spell
         player_spells::learn_spell(SpellId::darkbolt, Verbosity::silent);
         player_spells::set_spell_skill_pct(SpellId::darkbolt, 20);
 
-        //Identify the Darkbolt scroll
+        // Identify the Darkbolt scroll
         Item* item = item_factory::mk(ItemId::scroll_darkbolt);
         static_cast<Scroll*>(item)->identify(Verbosity::silent);
         item->give_xp_for_identify(Verbosity::silent);
         delete item;
 
-        //Learn the Detect Monsters spell
+        // Learn the Detect Monsters spell
         player_spells::learn_spell(SpellId::det_mon, Verbosity::silent);
         player_spells::set_spell_skill_pct(SpellId::det_mon, 40);
 
-        //Identify the Detect Monsters scroll
+        // Identify the Detect Monsters scroll
         item = item_factory::mk(ItemId::scroll_det_mon);
         static_cast<Scroll*>(item)->identify(Verbosity::silent);
         item->give_xp_for_identify(Verbosity::silent);
         delete item;
 
-        //Spirit potion
+        // Spirit potion
         item = item_factory::mk(ItemId::potion_spirit);
         static_cast<Potion*>(item)->identify(Verbosity::silent);
         item->give_xp_for_identify(Verbosity::silent);
@@ -118,25 +120,25 @@ void Player::mk_start_items()
 
     case Bg::rogue:
     {
-        //Rogue starts with extra throwing knives
+        // Rogue starts with extra throwing knives
         nr_thr_knives += 6;
 
-        //Rogue starts with a +1 dagger
+        // Rogue starts with a +1 dagger
         auto* const dagger = item_factory::mk(ItemId::dagger);
 
         static_cast<Wpn*>(dagger)->melee_dmg_plus_ = 1;
 
         inv_->put_in_slot(SlotId::wpn, dagger);
 
-        //Rogue starts with some iron spikes (useful tool)
+        // Rogue starts with some iron spikes (useful tool)
         inv_->put_in_backpack(item_factory::mk(ItemId::iron_spike, 12));
     }
     break;
 
     case Bg::war_vet:
     {
-        //War Veteran starts with an extra cartridge, some smoke grenades and a
-        //gas mask
+        // War Veteran starts with an extra cartridge, some smoke grenades and a
+        // gas mask
         ++nr_cartridges;
         inv_->put_in_backpack(item_factory::mk(ItemId::smoke_grenade, 4));
         inv_->put_in_backpack(item_factory::mk(ItemId::gas_mask));
@@ -145,16 +147,16 @@ void Player::mk_start_items()
 
     case Bg::ghoul:
     {
-        //Ghoul starts with no items
-        has_pistol          = false;
-        has_medbag          = false;
-        has_lantern         = false;
-        has_leather_jacket  = false;
+        // Ghoul starts with no items
+        has_pistol = false;
+        has_medbag = false;
+        has_lantern = false;
+        has_leather_jacket = false;
 
-        nr_cartridges   = 0;
-        nr_dynamite     = 0;
-        nr_molotov      = 0;
-        nr_thr_knives   = 0;
+        nr_cartridges = 0;
+        nr_dynamite = 0;
+        nr_molotov = 0;
+        nr_thr_knives = 0;
     }
     break;
 
@@ -162,12 +164,14 @@ void Player::mk_start_items()
         break;
     }
 
-    //------------------------------------------------------- GENERAL SETUP
-    //Randomize a melee weapon if Occultist or War Veteran
+    // -------------------------------------------------------------------------
+    // General setup
+    // -------------------------------------------------------------------------
+    // Randomize a melee weapon if Occultist or War Veteran
     if (bg == Bg::occultist || bg == Bg::war_vet)
     {
         const int weapon_choice = rnd::range(1, 5);
-        auto      weapon_id     = ItemId::dagger;
+        auto weapon_id = ItemId::dagger;
 
         switch (weapon_choice)
         {
@@ -195,13 +199,13 @@ void Player::mk_start_items()
         inv_->put_in_slot(SlotId::wpn, item_factory::mk(weapon_id));
     }
 
-    //Unarmed attack
+    // Unarmed attack
     if (player_bon::bg() == Bg::ghoul)
     {
         unarmed_wpn_ = static_cast<Wpn*>(
             item_factory::mk(ItemId::player_ghoul_claw));
     }
-    else //Not ghoul
+    else // Not ghoul
     {
         unarmed_wpn_ = static_cast<Wpn*>(
             item_factory::mk(ItemId::player_punch));
@@ -223,7 +227,7 @@ void Player::mk_start_items()
     if (nr_dynamite > 0)
     {
         inv_->put_in_backpack(
-            item_factory::mk(ItemId::dynamite,  nr_dynamite));
+            item_factory::mk(ItemId::dynamite, nr_dynamite));
     }
 
     if (nr_molotov > 0)
@@ -290,16 +294,16 @@ void Player::load()
 {
     prop_handler_->load();
 
-    ins_                        = saving::get_int();
-    shock_                      = double(saving::get_int());
-    hp_                         = saving::get_int();
-    hp_max_                     = saving::get_int();
-    spi_                        = saving::get_int();
-    spi_max_                    = saving::get_int();
-    pos.x                       = saving::get_int();
-    pos.y                       = saving::get_int();
+    ins_ = saving::get_int();
+    shock_ = double(saving::get_int());
+    hp_ = saving::get_int();
+    hp_max_ = saving::get_int();
+    spi_ = saving::get_int();
+    spi_max_ = saving::get_int();
+    pos.x = saving::get_int();
+    pos.y = saving::get_int();
     nr_steps_until_free_action_ = saving::get_int();
-    nr_turns_until_rspell_      = saving::get_int();
+    nr_turns_until_rspell_ = saving::get_int();
 
     ItemId unarmed_wpn_id = ItemId(saving::get_int());
 
@@ -385,9 +389,9 @@ bool Player::can_see_actor(const Actor& other) const
     }
 
     // Monster is sneaking, and cannot be seen with infravision or magic seeing?
-    if (mon->player_aware_of_me_counter_ <= 0   &&
-        mon->is_sneaking_                       &&
-        !can_see_other_with_infravis            &&
+    if (mon->player_aware_of_me_counter_ <= 0 &&
+        mon->is_sneaking_ &&
+        !can_see_other_with_infravis &&
         !can_see_invis)
     {
         return false;
@@ -409,19 +413,19 @@ void Player::on_hit(int& dmg,
         incr_shock(1, ShockSrc::misc);
     }
 
-    const bool is_enough_dmg_for_wound  = dmg >= min_dmg_to_wound;
-    const bool is_physical              = dmg_type == DmgType::physical;
+    const bool is_enough_dmg_for_wound = dmg >= min_dmg_to_wound;
+    const bool is_physical = dmg_type == DmgType::physical;
 
     // Ghoul trait Indomitable Fury makes player immune to Wounds while Frenzied
     const bool is_ghoul_resist_wound =
         player_bon::traits[(size_t)Trait::indomitable_fury] &&
         prop_handler_->has_prop(PropId::frenzied);
 
-    if (allow_wound == AllowWound::yes  &&
-        (hp() - dmg) > 0                &&
-        is_enough_dmg_for_wound         &&
-        is_physical                     &&
-        !is_ghoul_resist_wound          &&
+    if (allow_wound == AllowWound::yes &&
+        (hp() - dmg) > 0 &&
+        is_enough_dmg_for_wound &&
+        is_physical &&
+        !is_ghoul_resist_wound &&
         !config::is_bot_playing())
     {
         Prop* const prop = new PropWound(PropTurns::indefinite);
@@ -470,23 +474,23 @@ void Player::on_hit(int& dmg,
 int Player::enc_percent() const
 {
     const int total_w = inv_->total_item_weight();
-    const int max_w   = carry_weight_lmt();
+    const int max_w = carry_weight_lmt();
 
     return (int)(((double)total_w / (double)max_w) * 100.0);
 }
 
 int Player::carry_weight_lmt() const
 {
-    const bool is_tough         = player_bon::traits[(size_t)Trait::tough];
-    const bool is_rugged        = player_bon::traits[(size_t)Trait::rugged];
+    const bool is_tough = player_bon::traits[(size_t)Trait::tough];
+    const bool is_rugged = player_bon::traits[(size_t)Trait::rugged];
     const bool is_strong_backed = player_bon::traits[(size_t)Trait::strong_backed];
 
-    const bool is_weakened      = has_prop(PropId::weakened);
+    const bool is_weakened = has_prop(PropId::weakened);
 
-    const int carry_weight_mod = (is_tough         * 10) +
-                                 (is_rugged        * 10) +
+    const int carry_weight_mod = (is_tough * 10) +
+                                 (is_rugged * 10) +
                                  (is_strong_backed * 30) -
-                                 (is_weakened      * 15);
+                                 (is_weakened * 15);
 
     return (player_carry_weight_base * (carry_weight_mod + 100)) / 100;
 }
@@ -548,8 +552,8 @@ void Player::incr_shock(double shock, ShockSrc shock_src)
 {
     shock = shock_taken_after_mods(shock, shock_src);
 
-    shock_                          += shock;
-    perm_shock_taken_current_turn_  += shock;
+    shock_ += shock;
+    perm_shock_taken_current_turn_ += shock;
 
     set_constr_in_range(0.0, shock_, 100.0);
 }
@@ -607,9 +611,9 @@ bool Player::is_standing_in_open_place() const
 
     bool blocked[map_w][map_h];
 
-    //NOTE: Checking if adjacent cells blocks projectiles is probably the best
-    //way to determine if this is an open place. If we check for things that
-    //block common movement, stuff like chasms would count as blocking.
+    // NOTE: Checking if adjacent cells blocks projectiles is probably the best
+    // way to determine if this is an open place. If we check for things that
+    // block common movement, stuff like chasms would count as blocking.
     map_parse::run(cell_check::BlocksProjectiles(),
                    blocked,
                    MapParseMode::overwrite,
@@ -635,9 +639,9 @@ bool Player::is_standing_in_cramped_place() const
 
     bool blocked[map_w][map_h];
 
-    //NOTE: Checking if adjacent cells blocks projectiles is probably the best
-    //way to determine if this is an open place. If we check for things that
-    //block common movement, stuff like chasms would count as blocking.
+    // NOTE: Checking if adjacent cells blocks projectiles is probably the best
+    // way to determine if this is an open place. If we check for things that
+    // block common movement, stuff like chasms would count as blocking.
     map_parse::run(cell_check::BlocksProjectiles(),
                    blocked,
                    MapParseMode::overwrite,
@@ -668,8 +672,8 @@ bool Player::is_standing_in_cramped_place() const
 
 void Player::set_quick_move(const Dir dir)
 {
-    nr_quick_move_steps_left_   = 10;
-    quick_move_dir_             = dir;
+    nr_quick_move_steps_left_ = 10;
+    quick_move_dir_ = dir;
 }
 
 void Player::act()
@@ -723,8 +727,8 @@ void Player::act()
 
         const P tgt(pos + dir_utils::offset(quick_move_dir_));
 
-        const Cell&         tgt_cell   = map::cells[tgt.x][tgt.y];
-        const Rigid* const  tgt_rigid  = tgt_cell.rigid;
+        const Cell& tgt_cell = map::cells[tgt.x][tgt.y];
+        const Rigid* const tgt_rigid = tgt_cell.rigid;
 
         const bool is_tgt_known_trap =
             tgt_rigid->id() == FeatureId::trap &&
@@ -738,8 +742,8 @@ void Player::act()
 
         if (should_abort)
         {
-            nr_quick_move_steps_left_   = -1;
-            quick_move_dir_             = Dir::END;
+            nr_quick_move_steps_left_ = -1;
+            quick_move_dir_ = Dir::END;
         }
         else // Keep going!
         {
@@ -1040,9 +1044,9 @@ void Player::on_std_turn()
 
             const int nr_turns_base = 125 + rnd::range(0, 25);
 
-            const int nr_turns_bon  = (spi_trait_lvl - 1) * 50;
+            const int nr_turns_bon = (spi_trait_lvl - 1) * 50;
 
-            nr_turns_until_rspell_  = std::max(10, nr_turns_base - nr_turns_bon);
+            nr_turns_until_rspell_ = std::max(10, nr_turns_base - nr_turns_bon);
         }
 
         if (!prop_handler_->has_prop(PropId::rSpell) &&
@@ -1062,12 +1066,12 @@ void Player::on_std_turn()
     // Check for monsters coming into view, and try to spot hidden monsters.
     for (Actor* actor : game_time::actors)
     {
-        if (!actor->is_player()                 &&
-            !map::player->is_leader_of(actor)   &&
+        if (!actor->is_player() &&
+            !map::player->is_leader_of(actor) &&
             actor->is_alive())
         {
-            Mon& mon                = *static_cast<Mon*>(actor);
-            const bool is_mon_seen  = can_see_actor(*actor);
+            Mon& mon = *static_cast<Mon*>(actor);
+            const bool is_mon_seen = can_see_actor(*actor);
 
             if (is_mon_seen)
             {
@@ -1075,9 +1079,8 @@ void Player::on_std_turn()
 
                 if (!mon.is_msg_mon_in_view_printed_)
                 {
-                    if (
-                        active_medical_bag    ||
-                        wait_turns_left > 0   ||
+                    if (active_medical_bag ||
+                        wait_turns_left > 0 ||
                         nr_quick_move_steps_left_ > 0)
                     {
                         msg_log::add(actor->name_a() + " comes into my view.",
@@ -1095,8 +1098,7 @@ void Player::on_std_turn()
                 // Is the monster sneaking? Try to spot it
                 // NOTE: Infravision is irrelevant here, since the monster would
                 //       have been completely seen already.
-                if (
-                    map::cells[mon.pos.x][mon.pos.y].is_seen_by_player &&
+                if (map::cells[mon.pos.x][mon.pos.y].is_seen_by_player &&
                     mon.is_sneaking_)
                 {
                     const bool did_spot_sneaking =
@@ -1121,13 +1123,12 @@ void Player::on_std_turn()
     }
 
     // Regenerate Hit Points
-    if (
-        !has_prop(PropId::poisoned) &&
+    if (!has_prop(PropId::poisoned) &&
         player_bon::bg() != Bg::ghoul)
     {
         int nr_turns_per_hp = 20;
 
-        //Wounds affect hp regen?
+        // Wounds affect hp regen?
         int nr_wounds = 0;
 
         if (prop_handler_->has_prop(PropId::wound))
@@ -1170,12 +1171,11 @@ void Player::on_std_turn()
 
         nr_turns_per_hp = std::max(2, nr_turns_per_hp);
 
-        const int turn       = game_time::turn();
+        const int turn = game_time::turn();
         const int current_hp = hp();
-        const int max_hp     = hp_max(true);
+        const int max_hp = hp_max(true);
 
-        if (
-            (current_hp < max_hp)           &&
+        if ((current_hp < max_hp) &&
             ((turn % nr_turns_per_hp) == 0) &&
             turn > 1)
         {
@@ -1183,7 +1183,7 @@ void Player::on_std_turn()
         }
     }
 
-    //Try to spot hidden traps and doors
+    // Try to spot hidden traps and doors
     if (!has_prop(PropId::confused) && prop_handler_->allow_see())
     {
         for (int x = 0; x < map_w; ++x)
@@ -1211,15 +1211,15 @@ void Player::on_std_turn()
 
 void Player::on_log_msg_printed()
 {
-    //NOTE: There cannot be any calls to msg_log::add() in this function, as
-    //that would cause infinite recursion!
+    // NOTE: There cannot be any calls to msg_log::add() in this function, as
+    // that would cause infinite recursion!
 
-    //All messages abort waiting
+    // All messages abort waiting
     wait_turns_left = -1;
 
-    //All messages abort quick move
-    nr_quick_move_steps_left_   = -1;
-    quick_move_dir_             = Dir::END;
+    // All messages abort quick move
+    nr_quick_move_steps_left_ = -1;
+    quick_move_dir_ = Dir::END;
 }
 
 void Player::interrupt_actions()
@@ -1235,8 +1235,8 @@ void Player::interrupt_actions()
     wait_turns_left = -1;
 
     // Abort quick move
-    nr_quick_move_steps_left_   = -1;
-    quick_move_dir_             = Dir::END;
+    nr_quick_move_steps_left_ = -1;
+    quick_move_dir_ = Dir::END;
 }
 
 void Player::hear_sound(const Snd& snd,
@@ -1246,9 +1246,9 @@ void Player::hear_sound(const Snd& snd,
 {
     (void)is_origin_seen_by_player;
 
-    const SfxId         sfx         = snd.sfx();
-    const std::string&  msg         = snd.msg();
-    const bool          has_snd_msg = !msg.empty() && msg != " ";
+    const SfxId sfx = snd.sfx();
+    const std::string& msg = snd.msg();
+    const bool has_snd_msg = !msg.empty() && msg != " ";
 
     if (has_snd_msg)
     {
@@ -1258,7 +1258,7 @@ void Player::hear_sound(const Snd& snd,
                      snd.should_add_more_prompt_on_msg());
     }
 
-    //Play audio after message to ensure sync between audio and animation.
+    // Play audio after message to ensure sync between audio and animation.
     audio::play(sfx, dir_to_origin, percent_audible_distance);
 
     if (has_snd_msg)
@@ -1283,7 +1283,7 @@ void Player::move(Dir dir)
 
     prop_handler_->affect_move_dir(pos, dir);
 
-    //Trap affects leaving?
+    // Trap affects leaving?
     if (dir != Dir::center)
     {
         Feature* f = map::cells[pos.x][pos.y].rigid;
@@ -1299,10 +1299,10 @@ void Player::move(Dir dir)
 
     const P tgt(pos + dir_utils::offset(dir));
 
-    //Attacking, bumping stuff, staggering from encumbrance, etc?
+    // Attacking, bumping stuff, staggering from encumbrance, etc?
     if (dir != Dir::center)
     {
-        //Check if map features are blocking (used later)
+        // Check if map features are blocking (used later)
         Cell& cell = map::cells[tgt.x][tgt.y];
         bool is_features_allow_move = cell.rigid->can_move(*this);
 
@@ -1323,11 +1323,11 @@ void Player::move(Dir dir)
 
         Mon* const mon = static_cast<Mon*>(map::actor_at_pos(tgt));
 
-        //Hostile monster here?
+        // Hostile monster here?
         if (mon && !is_leader_of(mon))
         {
-            const bool can_see_mon      = map::player->can_see_actor(*mon);
-            const bool is_aware_of_mon  = mon->player_aware_of_me_counter_ > 0;
+            const bool can_see_mon = map::player->can_see_actor(*mon);
+            const bool is_aware_of_mon = mon->player_aware_of_me_counter_ > 0;
 
             if (is_aware_of_mon)
             {
@@ -1339,10 +1339,9 @@ void Player::move(Dir dir)
                     {
                         Wpn* const wpn = static_cast<Wpn*>(wpn_item);
 
-                        //If this is also a ranged weapon, ask if player really
-                        //intended to use it as melee weapon
-                        if (
-                            wpn->data().ranged.is_ranged_wpn &&
+                        // If this is also a ranged weapon, ask if player really
+                        // intended to use it as melee weapon
+                        if (wpn->data().ranged.is_ranged_wpn &&
                             config::is_ranged_wpn_meleee_prompt())
                         {
                             const std::string wpn_name =
@@ -1374,7 +1373,7 @@ void Player::move(Dir dir)
 
                         return;
                     }
-                    else //No melee weapon wielded
+                    else // No melee weapon wielded
                     {
                         hand_att(*mon);
                     }
@@ -1389,14 +1388,14 @@ void Player::move(Dir dir)
 
                 if (is_features_allow_move)
                 {
-                    //Cell is not blocked, reveal monster here and return
+                    // Cell is not blocked, reveal monster here and return
                     mon->set_player_aware_of_me();
 
                     const ActorDataT& d = mon->data();
 
                     const std::string mon_ref =
-                        d.is_ghost      ? "some foul entity" :
-                        d.is_humanoid   ? "someone" :
+                        d.is_ghost ? "some foul entity" :
+                        d.is_humanoid ? "someone" :
                         "a creature";
 
                     msg_log::add("There is " + mon_ref + " here!",
@@ -1480,7 +1479,7 @@ void Player::move(Dir dir)
                 }
                 else
                 {
-                    //Not yet free move
+                    // Not yet free move
                     --nr_steps_until_free_action_;
                 }
             }
@@ -1525,8 +1524,8 @@ void Player::move(Dir dir)
     // other "time advancing" action has occurred)
     if (pos == tgt)
     {
-        //If the player intended to wait in the current position, perform
-        //"standing still" actions
+        // If the player intended to wait in the current position, perform
+        // "standing still" actions
         if (intended_dir == Dir::center)
         {
             bool is_stuck = false;
@@ -1542,7 +1541,7 @@ void Player::move(Dir dir)
             {
                 auto did_action = DidAction::no;
 
-                //Ghoul feed on corpses?
+                // Ghoul feed on corpses?
                 if (player_bon::bg() == Bg::ghoul)
                 {
                     did_action = try_eat_corpse();
@@ -1550,7 +1549,7 @@ void Player::move(Dir dir)
 
                 if (did_action == DidAction::no)
                 {
-                    //Reorganize pistol magazines?
+                    // Reorganize pistol magazines?
                     std::vector<Actor*> my_seen_foes;
                     seen_foes(my_seen_foes);
 
@@ -1586,8 +1585,8 @@ Clr Player::clr() const
     }
 
     // If injured, draw as a shade of red
-    const int current_hp        = hp();
-    const int current_hp_max    = hp_max(true);
+    const int current_hp = hp();
+    const int current_hp_max = hp_max(true);
 
     if (current_hp < current_hp_max)
     {
@@ -1623,17 +1622,16 @@ bool Player::is_free_step_turn() const
 
 void Player::auto_melee()
 {
-    if (
-        tgt_                                &&
-        tgt_->state() == ActorState::alive  &&
-        is_pos_adj(pos, tgt_->pos, false)   &&
+    if (tgt_ &&
+        tgt_->state() == ActorState::alive &&
+        is_pos_adj(pos, tgt_->pos, false) &&
         can_see_actor(*tgt_))
     {
         move(dir_utils::dir(tgt_->pos - pos));
         return;
     }
 
-    //If this line reached, there is no adjacent cur target.
+    // If this line reached, there is no adjacent cur target.
     for (const P& d : dir_utils::dir_list)
     {
         Actor* const actor = map::actor_at_pos(pos + d);
@@ -1768,9 +1766,9 @@ void Player::update_fov()
         {
             Cell& cell = map::cells[x][y];
 
-            cell.is_seen_by_player              = false;
-            cell.player_los.is_blocked_hard     = true;
-            cell.player_los.is_blocked_by_drk   = false;
+            cell.is_seen_by_player = false;
+            cell.player_los.is_blocked_hard = true;
+            cell.player_los.is_blocked_by_drk = false;
         }
     }
 
@@ -1793,11 +1791,14 @@ void Player::update_fov()
         {
             for (int y = fov_lmt.p0.y; y <= fov_lmt.p1.y; ++y)
             {
-                const LosResult&   los     = fov[x][y];
-                Cell&               cell    = map::cells[x][y];
+                const LosResult& los = fov[x][y];
+                Cell& cell = map::cells[x][y];
 
-                cell.is_seen_by_player      = !los.is_blocked_hard && !los.is_blocked_by_drk;
-                cell.player_los             = los;
+                cell.is_seen_by_player =
+                    !los.is_blocked_hard &&
+                    !los.is_blocked_by_drk;
+
+                cell.player_los = los;
             }
         }
 
@@ -1817,16 +1818,19 @@ void Player::update_fov()
         }
     }
 
-    //Explore
+    // Explore
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)
         {
             Cell& cell = map::cells[x][y];
-            const bool is_blocking = cell_check::BlocksMoveCmn(false).check(cell);
 
-            //Do not explore dark floor cells
-            if (cell.is_seen_by_player && (!cell.is_dark || is_blocking))
+            const bool is_blocking =
+                cell_check::BlocksMoveCmn(false).check(cell);
+
+            // Do not explore dark floor cells
+            if (cell.is_seen_by_player &&
+                (!cell.is_dark || is_blocking))
             {
                 cell.is_explored = true;
             }
@@ -1858,13 +1862,12 @@ void Player::fov_hack()
                     {
                         const Cell& adj_cell = map::cells[p_adj.x][p_adj.y];
 
-                        if (
-                            adj_cell.is_seen_by_player              &&
-                            (!adj_cell.is_dark || adj_cell.is_lit)  &&
+                        if (adj_cell.is_seen_by_player &&
+                            (!adj_cell.is_dark || adj_cell.is_lit) &&
                             !blocked[p_adj.x][p_adj.y])
                         {
-                            Cell& cell                      = map::cells[x][y];
-                            cell.is_seen_by_player          = true;
+                            Cell& cell = map::cells[x][y];
+                            cell.is_seen_by_player = true;
                             cell.player_los.is_blocked_hard = false;
 
                             break;
@@ -1883,13 +1886,13 @@ bool Player::is_leader_of(const Actor* const actor) const
         return false;
     }
 
-    //Actor is monster
+    // Actor is monster
     return static_cast<const Mon*>(actor)->leader_ == this;
 }
 
 bool Player::is_actor_my_leader(const Actor* const actor) const
 {
-    //Should never happen
+    // Should never happen
     (void)actor;
     return false;
 }

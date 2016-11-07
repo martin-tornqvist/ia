@@ -23,23 +23,23 @@ namespace io
 namespace
 {
 
-SDL_Window*     sdl_window_         = nullptr;
-SDL_Renderer*   sdl_renderer_       = nullptr;
+SDL_Window* sdl_window_ = nullptr;
+SDL_Renderer* sdl_renderer_ = nullptr;
 
 // Bytes per pixel
-int             bpp_                = -1;
+int bpp_ = -1;
 
-SDL_Surface*    scr_srf_            = nullptr;
-SDL_Texture*    scr_texture_        = nullptr;
+SDL_Surface* scr_srf_ = nullptr;
+SDL_Texture* scr_texture_ = nullptr;
 
-SDL_Surface*    main_menu_logo_srf_ = nullptr;
-SDL_Surface*    skull_srf_          = nullptr;
+SDL_Surface* main_menu_logo_srf_ = nullptr;
+SDL_Surface* skull_srf_ = nullptr;
 
-const size_t tiles_nr_x_    = 21;
-const size_t tiles_nr_y_    = 12;
+const size_t tiles_nr_x_ = 21;
+const size_t tiles_nr_y_ = 12;
 
-const size_t font_nr_x_   = 16;
-const size_t font_nr_y_   = 7;
+const size_t font_nr_x_ = 16;
+const size_t font_nr_y_ = 7;
 
 std::vector<P> tile_px_data_[tiles_nr_x_][tiles_nr_y_];
 std::vector<P> font_px_data_[font_nr_x_][font_nr_y_];
@@ -142,13 +142,13 @@ void put_px24(const SDL_Surface& srf,
     if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
     {
         p[0] = (px >> 16) & 0xff;
-        p[1] = (px >> 8)  & 0xff;
+        p[1] = (px >> 8) & 0xff;
         p[2] = px & 0xff;
     }
     else // Little endian
     {
         p[0] = px & 0xff;
-        p[1] = (px >> 8)  & 0xff;
+        p[1] = (px >> 8) & 0xff;
         p[2] = (px >> 16) & 0xff;
     }
 }
@@ -319,7 +319,7 @@ void load_contours(const std::vector<P>* base,
             const int offset = (x * nr_y) + y;
 
             const auto& base_px_data = *(base + offset);
-            auto&       dest_px_data = *(out + offset);
+            auto& dest_px_data = *(out + offset);
 
             for (const P& base_px_pos : base_px_data)
             {
@@ -435,16 +435,16 @@ P px_pos_for_cell_in_panel(const Panel panel, const P& pos)
 void draw_excl_mark_at(const P& px_pos)
 {
     draw_rectangle_solid(px_pos, P(3, 12), clr_black);
-    draw_line_ver(px_pos + P(1,  1), 6, clr_magenta_lgt);
-    draw_line_ver(px_pos + P(1,  9), 2, clr_magenta_lgt);
+    draw_line_ver(px_pos + P(1, 1), 6, clr_magenta_lgt);
+    draw_line_ver(px_pos + P(1, 9), 2, clr_magenta_lgt);
 }
 */
 
 /*
 void draw_player_shock_excl_marks()
 {
-    const double shock  = map::player->perm_shock_taken_current_turn();
-    const int nr_excl   = shock > 8 ? 3 : shock > 3 ? 2 : shock > 1 ? 1 : 0;
+    const double shock = map::player->perm_shock_taken_current_turn();
+    const int nr_excl = shock > 8 ? 3 : shock > 3 ? 2 : shock > 1 ? 1 : 0;
 
     if (nr_excl > 0)
     {
@@ -472,8 +472,8 @@ void draw_glyph_at_px(const char glyph,
         draw_rectangle_solid(px_pos, cell_dims, bg_clr);
 
         // Draw contour if neither the foreground nor background is black
-        if (!is_clr_equal(clr,      clr_black) &&
-            !is_clr_equal(bg_clr,   clr_black))
+        if (!is_clr_equal(clr, clr_black) &&
+            !is_clr_equal(bg_clr, clr_black))
         {
             const P glyph_pos(art::glyph_pos(glyph));
 
@@ -709,7 +709,7 @@ void draw_main_menu_logo(const int y_pos)
 {
     if (is_inited())
     {
-        const int scr_px_w  = config::scr_px_w();
+        const int scr_px_w = config::scr_px_w();
         const int logo_px_h = main_menu_logo_srf_->w;
         const int cell_px_h = config::cell_px_h();
 
@@ -966,8 +966,8 @@ void draw_tile(const TileId tile,
     draw_rectangle_solid(px_pos, cell_dims, bg_clr);
 
     // Draw contour if neither the foreground nor background is black
-    if (!is_clr_equal(clr,      clr_black) &&
-        !is_clr_equal(bg_clr,   clr_black))
+    if (!is_clr_equal(clr, clr_black) &&
+        !is_clr_equal(bg_clr, clr_black))
     {
         const P tile_pos(art::tile_pos(tile));
 
@@ -1019,16 +1019,16 @@ void draw_text(const std::string& str,
         return;
     }
 
-    const int       cell_px_w   = config::cell_px_w();
-    const int       cell_px_h   = config::cell_px_h();
-    const size_t    msg_w       = str.size();
-    const int       msg_px_w    = msg_w * cell_px_w;
+    const int cell_px_w = config::cell_px_w();
+    const int cell_px_h = config::cell_px_h();
+    const size_t msg_w = str.size();
+    const int msg_px_w = msg_w * cell_px_w;
 
     draw_rectangle_solid(px_pos, {msg_px_w, cell_px_h}, bg_clr);
 
-    const int   scr_px_w            = config::scr_px_w();
-    const int   msg_px_x1           = px_pos.x + msg_px_w - 1;
-    const bool  is_msg_w_fit_on_scr = msg_px_x1 < scr_px_w;
+    const int scr_px_w = config::scr_px_w();
+    const int msg_px_x1 = px_pos.x + msg_px_w - 1;
+    const bool is_msg_w_fit_on_scr = msg_px_x1 < scr_px_w;
 
     // X position to start drawing dots instead when the message does not
     // fit on the screen horizontally.
@@ -1070,9 +1070,9 @@ int draw_text_center(const std::string& str,
         return 0;
     }
 
-    const int len         = str.size();
-    const int len_half    = len / 2;
-    const int x_pos_left  = pos.x - len_half;
+    const int len = str.size();
+    const int len_half = len / 2;
+    const int x_pos_left = pos.x - len_half;
 
     const P cell_dims(config::cell_px_w(), config::cell_px_h());
 
@@ -1352,8 +1352,8 @@ void draw_box(const R& border,
 
 void draw_descr_box(const std::vector<StrAndClr>& lines)
 {
-    const int descr_y0  = 1;
-    const int descr_x1  = map_w - 1;
+    const int descr_y0 = 1;
+    const int descr_x1 = map_w - 1;
 
     cover_area(Panel::screen,
                R(descr_x0 - 1, descr_y0, descr_x1, screen_h - 1));
@@ -1486,7 +1486,7 @@ InputData get(const bool is_o_return)
         break;
 
         case SDL_QUIT:
-            ret     = InputData(SDLK_ESCAPE);
+            ret = InputData(SDLK_ESCAPE);
             is_done = true;
             break;
 
@@ -1496,11 +1496,11 @@ InputData get(const bool is_o_return)
 
             // Do not return shift, control or alt as separate key events
             if (
-                key == SDLK_LSHIFT  ||
-                key == SDLK_RSHIFT  ||
-                key == SDLK_LCTRL   ||
-                key == SDLK_RCTRL   ||
-                key == SDLK_LALT    ||
+                key == SDLK_LSHIFT ||
+                key == SDLK_RSHIFT ||
+                key == SDLK_LCTRL ||
+                key == SDLK_RCTRL ||
+                key == SDLK_LALT ||
                 key == SDLK_RALT)
             {
                 continue;
@@ -1509,8 +1509,8 @@ InputData get(const bool is_o_return)
             Uint16 mod = SDL_GetModState();
 
             const bool is_shift_held = mod & KMOD_SHIFT;
-            const bool is_ctrl_held  = mod & KMOD_CTRL;
-            const bool is_alt_held   = mod & KMOD_ALT;
+            const bool is_ctrl_held = mod & KMOD_CTRL;
+            const bool is_alt_held = mod & KMOD_ALT;
 
             ret = InputData(key,
                             is_shift_held,
