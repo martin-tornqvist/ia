@@ -503,15 +503,7 @@ void PotionInsight::quaff_impl(Actor& actor)
         }
     }
 
-    if (identify_bucket.empty())
-    {
-        //No items to identify, give XP if Insight potion is identified
-        if (data_->is_identified)
-        {
-            give_xp_for_identify(Verbosity::verbose);
-        }
-    }
-    else //There are items to identify
+    if (!identify_bucket.empty())
     {
         Item* const item = rnd::element(identify_bucket);
 
@@ -529,7 +521,19 @@ void PotionInsight::quaff_impl(Actor& actor)
             item->name(ItemRefType::a, ItemRefInf::none);
     }
 
+    const bool was_identified_before = data_->is_identified;
+
     identify(Verbosity::verbose);
+
+    // If potion of insight was already identified, or if we have no other
+    // potion to identify, then give extra XP (to avoid making them worthless
+    // if the player identifies all items)
+    if (was_identified_before || identify_bucket.empty())
+    {
+        msg_log::add("I feel insightful.");
+
+        give_xp_for_identify(Verbosity::verbose);
+    }
 }
 
 void PotionClairv::quaff_impl(Actor& actor)
