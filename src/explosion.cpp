@@ -267,10 +267,9 @@ void run(const P& origin,
 
                 // Do not apply burning if actor is player with the demolition
                 // expert trait, and  intentionally throwing a Molotov
-                if (
-                    living_actor == map::player     &&
-                    prop->id() == PropId::burning  &&
-                    is_dem_exp                      &&
+                if (living_actor == map::player &&
+                    prop->id() == PropId::burning &&
+                    is_dem_exp &&
                     expl_src == ExplSrc::player_use_moltv_intended)
                 {
                     should_apply_on_living_actor = false;
@@ -314,15 +313,14 @@ void run(const P& origin,
         }
     }
 
-    // game_time::update_light_map();
-
-    // map::player->update_fov();
-
     if (prop)
     {
         delete prop;
     }
-}
+
+    map::update_vision();
+
+} // run
 
 void run_smoke_explosion_at(const P& origin, const int radi_change)
 {
@@ -358,9 +356,7 @@ void run_smoke_explosion_at(const P& origin, const int radi_change)
         }
     }
 
-    game_time::update_light_map();
-
-    map::player->update_fov();
+    map::update_vision();
 }
 
 R explosion_area(const P& c, const int radi)

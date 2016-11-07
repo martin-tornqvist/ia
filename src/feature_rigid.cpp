@@ -592,6 +592,8 @@ void Wall::on_hit(const DmgType dmg_type,
                 }
             }
         }
+
+        map::update_vision();
     }
 }
 
@@ -773,12 +775,18 @@ void RubbleHigh::on_hit(const DmgType dmg_type,
     (void)actor;
 
     auto mk_low_rubble_and_rocks = [&]()
-        {
-            const P p(pos_);
-            map::put(new RubbleLow(p)); //NOTE: "this" is now deleted!
+    {
+        const P p(pos_);
 
-            if (rnd::coin_toss()) {item_factory::mk_item_on_floor(ItemId::rock, p);}
-        };
+        map::put(new RubbleLow(p)); // NOTE: "this" is now deleted!
+
+        if (rnd::coin_toss())
+        {
+            item_factory::mk_item_on_floor(ItemId::rock, p);
+        }
+
+        map::update_vision();
+    };
 
     if (dmg_type == DmgType::physical)
     {
@@ -795,7 +803,10 @@ void RubbleHigh::on_hit(const DmgType dmg_type,
 
         if (dmg_method == DmgMethod::blunt_heavy)
         {
-            if (rnd::fraction(2, 4)) {mk_low_rubble_and_rocks();}
+            if (rnd::fraction(2, 4))
+            {
+                mk_low_rubble_and_rocks();
+            }
         }
     }
 }
@@ -967,7 +978,8 @@ void Statue::on_hit(const DmgType dmg_type,
                     const DmgMethod dmg_method,
                     Actor* const actor)
 {
-    if (dmg_type == DmgType::physical && dmg_method == DmgMethod::kick)
+    if (dmg_type == DmgType::physical &&
+        dmg_method == DmgMethod::kick)
     {
         ASSERT(actor);
 
@@ -998,9 +1010,7 @@ void Statue::on_hit(const DmgType dmg_type,
 
         const P dst_pos = pos_ + (pos_ - actor->pos);
 
-        map::put(new RubbleLow(pos_)); //NOTE: "this" is now deleted!
-
-        map::player->update_fov();
+        map::put(new RubbleLow(pos_)); // NOTE: "this" is now deleted!
 
         Actor* const actor_behind = map::actor_at_pos(dst_pos);
 
@@ -1025,13 +1035,14 @@ void Statue::on_hit(const DmgType dmg_type,
 
         // NOTE: This is kinda hacky, but the rubble is mostly just for
         // decoration anyway, so it doesn't really matter.
-        if (
-            rigid_id == FeatureId::floor ||
+        if (rigid_id == FeatureId::floor ||
             rigid_id == FeatureId::grass ||
             rigid_id == FeatureId::carpet)
         {
             map::put(new RubbleLow(dst_pos));
         }
+
+        map::update_vision();
     }
 }
 
@@ -1532,8 +1543,11 @@ void Carpet::on_hit(const DmgType dmg_type,
 WasDestroyed Carpet::on_finished_burning()
 {
     Floor* const floor = new Floor(pos_);
+
     floor->set_has_burned();
+
     map::put(floor);
+
     return WasDestroyed::yes;
 }
 
@@ -1651,8 +1665,11 @@ void Bush::on_hit(const DmgType dmg_type,
 WasDestroyed Bush::on_finished_burning()
 {
     Grass* const grass = new Grass(pos_);
+
     grass->set_has_burned();
+
     map::put(grass);
+
     return WasDestroyed::yes;
 }
 
@@ -1722,8 +1739,11 @@ void Vines::on_hit(const DmgType dmg_type,
 WasDestroyed Vines::on_finished_burning()
 {
     Floor* const floor = new Floor(pos_);
+
     floor->set_has_burned();
+
     map::put(floor);
+
     return WasDestroyed::yes;
 }
 
@@ -1760,8 +1780,8 @@ Grating::Grating(const P& p) :
     Rigid(p) {}
 
 void Grating::on_hit(const DmgType dmg_type,
-                  const DmgMethod dmg_method,
-                  Actor* const actor)
+                     const DmgMethod dmg_method,
+                     Actor* const actor)
 {
     (void)actor;
 
@@ -1794,6 +1814,8 @@ void Grating::on_hit(const DmgType dmg_type,
             destr_adj_doors();
 
             map::put(new RubbleLow(pos_));
+
+            map::update_vision();
         }
     }
 }
@@ -1809,7 +1831,7 @@ std::string Grating::name(const Article article) const
 
 Clr Grating::clr_default() const
 {
-    return clr_brown_drk;
+    return clr_gray_drk;
 }
 
 // -----------------------------------------------------------------------------
@@ -1838,8 +1860,13 @@ WasDestroyed Tree::on_finished_burning()
     if (map::is_pos_inside_map(pos_, false))
     {
         Grass* const grass = new Grass(pos_);
+
         grass->set_has_burned();
+
         map::put(grass);
+
+        map::update_vision();
+
         return WasDestroyed::yes;
     }
 
@@ -1885,7 +1912,8 @@ void Brazier::on_hit(const DmgType dmg_type,
                      const DmgMethod dmg_method,
                      Actor* const actor)
 {
-    if (dmg_type == DmgType::physical && dmg_method == DmgMethod::kick)
+    if (dmg_type == DmgType::physical &&
+        dmg_method == DmgMethod::kick)
     {
         ASSERT(actor);
 
@@ -1895,7 +1923,8 @@ void Brazier::on_hit(const DmgType dmg_type,
             return;
         }
 
-        const AlertsMon alerts_mon = actor == map::player ?
+        const AlertsMon alerts_mon =
+            actor == map::player ?
             AlertsMon::yes :
             AlertsMon::no;
 
@@ -1920,9 +1949,10 @@ void Brazier::on_hit(const DmgType dmg_type,
 
         map::put(new RubbleLow(pos_));
 
-        //NOTE: "this" is now deleted!
+        // NOTE: "this" is now deleted!
 
-        Rigid* const dst_rigid = map::cells[dst_pos.x][dst_pos.y].rigid;
+        Rigid* const dst_rigid =
+            map::cells[dst_pos.x][dst_pos.y].rigid;
 
         if (!dst_rigid->data().is_bottomless)
         {
@@ -1950,6 +1980,8 @@ void Brazier::on_hit(const DmgType dmg_type,
                            expl_d,
                            new PropBurning(PropTurns::std));
         }
+
+        map::update_vision();
     }
 }
 
@@ -2533,19 +2565,23 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
             Clr         fume_clr    = clr_magenta;
             const int   rnd         = rnd::percent();
 
-            if (map::dlvl >= min_dlvl_harder_traps && rnd < 20)
+            if ((map::dlvl >= min_dlvl_harder_traps) &&
+                (rnd < 20))
             {
-                prop        = new PropPoisoned(PropTurns::std);
-                fume_clr    = clr_green_lgt;
+                prop = new PropPoisoned(PropTurns::std);
+
+                fume_clr = clr_green_lgt;
             }
             else if (rnd < 40)
             {
-                prop        = new PropDiseased(PropTurns::std);
-                fume_clr    = clr_green;
+                prop = new PropDiseased(PropTurns::std);
+
+                fume_clr = clr_green;
             }
             else
             {
                 prop = new PropParalyzed(PropTurns::std);
+
                 prop->set_nr_turns_left(prop->nr_turns_left() * 2);
             }
 
@@ -2962,9 +2998,9 @@ Fountain::Fountain(const P& p) :
 {
     std::vector<int> weights =
     {
-        16, //Normal
-        4,  //Blessed
-        1,  //Cursed
+        16, // Normal
+        4,  // Blessed
+        1,  // Cursed
     };
 
     const int choice = rnd::weighted_choice(weights);
@@ -2985,7 +3021,7 @@ void Fountain::set_type(const FountainType type)
 {
     fountain_type_ = type;
 
-    //Setup effect
+    // Setup effect
     switch (fountain_type_)
     {
     case FountainType::normal:
@@ -3021,7 +3057,9 @@ void Fountain::on_hit(const DmgType dmg_type,
 
 Clr Fountain::clr_default() const
 {
-    return has_drinks_left_ ? clr_blue_lgt : clr_gray;
+    return
+        has_drinks_left_ ?
+        clr_blue_lgt : clr_gray;
 
     ASSERT("Failed to get fountain color" && false);
     return clr_black;
@@ -3029,7 +3067,9 @@ Clr Fountain::clr_default() const
 
 std::string Fountain::name(const Article article) const
 {
-    std::string a = article == Article::a ? "a " : "the ";
+    std::string a =
+        article == Article::a ?
+        "a " : "the ";
 
     return a + "fountain";
 }

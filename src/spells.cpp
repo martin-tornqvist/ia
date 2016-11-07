@@ -386,7 +386,9 @@ void Spell::on_resist(Actor& target) const
 
 }
 
-//------------------------------------------------------------ DARKBOLT
+// -----------------------------------------------------------------------------
+// Darkbolt
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellDarkbolt::cast_impl(Actor* const caster) const
 {
     Actor* tgt = nullptr;
@@ -508,7 +510,9 @@ bool SpellDarkbolt::allow_mon_cast_now(Mon& mon) const
     return mon.tgt_ && rnd::one_in(3);
 }
 
-//------------------------------------------------------------ AZATHOTHS WRATH
+// -----------------------------------------------------------------------------
+// Azathoths wrath
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellAzaWrath::cast_impl(Actor* const caster) const
 {
     Range dmg_range(4, 8);
@@ -601,7 +605,9 @@ bool SpellAzaWrath::allow_mon_cast_now(Mon& mon) const
     return mon.tgt_ && rnd::one_in(3);
 }
 
-//------------------------------------------------------------ MAYHEM
+// -----------------------------------------------------------------------------
+// Mayhem
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellMayhem::cast_impl(Actor* const caster) const
 {
     const bool is_player = caster->is_player();
@@ -712,10 +718,15 @@ SpellEffectNoticed SpellMayhem::cast_impl(Actor* const caster) const
 
 bool SpellMayhem::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.aware_counter_ > 0 && rnd::coin_toss() && (mon.tgt_ || rnd::one_in(20));
+    return
+        mon.aware_counter_ > 0 &&
+        rnd::coin_toss() &&
+        (mon.tgt_ || rnd::one_in(20));
 }
 
-//------------------------------------------------------------ PESTILENCE
+// -----------------------------------------------------------------------------
+// Pestilence
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellPest::cast_impl(Actor* const caster) const
 {
     const size_t nr_mon = rnd::range(7, 10);
@@ -793,7 +804,9 @@ bool SpellPest::allow_mon_cast_now(Mon& mon) const
            (mon.tgt_ || rnd::one_in(30));
 }
 
-//------------------------------------------------------------ ANIMATE WEAPONS
+// -----------------------------------------------------------------------------
+// Animate weapons
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellAnimWpns::cast_impl(Actor* const caster) const
 {
     bool is_any_animated = false;
@@ -852,7 +865,9 @@ SpellEffectNoticed SpellAnimWpns::cast_impl(Actor* const caster) const
            SpellEffectNoticed::yes : SpellEffectNoticed::no;
 }
 
-//------------------------------------------------------------ PHARAOH STAFF
+// -----------------------------------------------------------------------------
+// Pharaoh staff
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellPharaohStaff::cast_impl(Actor* const caster) const
 {
     //First check for a friendly mummy and heal it (as per the spell description)
@@ -923,7 +938,9 @@ bool SpellPharaohStaff::allow_mon_cast_now(Mon& mon) const
     return mon.tgt_ && rnd::one_in(4);
 }
 
-//------------------------------------------------------------ DETECT ITEMS
+// -----------------------------------------------------------------------------
+// Detect items
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellDetItems::cast_impl(Actor* const caster) const
 {
     (void)caster;
@@ -947,7 +964,9 @@ SpellEffectNoticed SpellDetItems::cast_impl(Actor* const caster) const
             if (item)
             {
                 map::cells[x][y].is_seen_by_player = true;
-                map::cells[x][y].is_explored     = true;
+
+                map::cells[x][y].is_explored = true;
+
                 items_revealed_cells.push_back(P(x, y));
             }
         }
@@ -977,7 +996,9 @@ SpellEffectNoticed SpellDetItems::cast_impl(Actor* const caster) const
     return SpellEffectNoticed::no;
 }
 
-//------------------------------------------------------------ DETECT TRAPS
+// -----------------------------------------------------------------------------
+// Detect traps
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellDetTraps::cast_impl(Actor* const caster) const
 {
     (void)caster;
@@ -1026,7 +1047,9 @@ SpellEffectNoticed SpellDetTraps::cast_impl(Actor* const caster) const
     return SpellEffectNoticed::no;
 }
 
-//------------------------------------------------------------ DETECT MONSTERS
+// -----------------------------------------------------------------------------
+// Detect monsters
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellDetMon::cast_impl(Actor* const caster) const
 {
     (void)caster;
@@ -1054,7 +1077,9 @@ SpellEffectNoticed SpellDetMon::cast_impl(Actor* const caster) const
     return is_noticed;
 }
 
-//------------------------------------------------------------ OPENING
+// -----------------------------------------------------------------------------
+// Opening
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellOpening::cast_impl(Actor* const caster) const
 {
     (void)caster;
@@ -1084,12 +1109,14 @@ SpellEffectNoticed SpellOpening::cast_impl(Actor* const caster) const
         return SpellEffectNoticed::no;
     }
 
-    map::player->update_fov();
+    map::update_vision();
 
     return SpellEffectNoticed::yes;
 }
 
-//------------------------------------------------------------ SACRIFICE LIFE
+// -----------------------------------------------------------------------------
+// Sacrifice life
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellSacrLife::cast_impl(Actor* const caster) const
 {
     (void)caster;
@@ -1112,7 +1139,9 @@ SpellEffectNoticed SpellSacrLife::cast_impl(Actor* const caster) const
     return SpellEffectNoticed::no;
 }
 
-//------------------------------------------------------------ SACRIFICE SPIRIT
+// -----------------------------------------------------------------------------
+// Sacrifice spirit
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellSacrSpi::cast_impl(Actor* const caster) const
 {
     (void)caster;
@@ -1135,7 +1164,9 @@ SpellEffectNoticed SpellSacrSpi::cast_impl(Actor* const caster) const
     return SpellEffectNoticed::no;
 }
 
-//------------------------------------------------------------ CLOUD MINDS
+// -----------------------------------------------------------------------------
+// Cloud minds
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellCloudMinds::cast_impl(Actor* const caster) const
 {
     (void)caster;
@@ -1154,7 +1185,9 @@ SpellEffectNoticed SpellCloudMinds::cast_impl(Actor* const caster) const
     return SpellEffectNoticed::yes;
 }
 
-//------------------------------------------------------------ GHOUL FRENZY
+// -----------------------------------------------------------------------------
+// Ghoul frenzy
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellFrenzy::cast_impl(Actor* const caster) const
 {
     const int nr_turns = rnd::range(12, 18);
@@ -1166,7 +1199,9 @@ SpellEffectNoticed SpellFrenzy::cast_impl(Actor* const caster) const
     return SpellEffectNoticed::yes;
 }
 
-//------------------------------------------------------------ BLESS
+// -----------------------------------------------------------------------------
+// Bless
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellBless::cast_impl(Actor* const caster) const
 {
     caster->prop_handler().try_add(new PropBlessed(PropTurns::std));
@@ -1174,14 +1209,18 @@ SpellEffectNoticed SpellBless::cast_impl(Actor* const caster) const
     return SpellEffectNoticed::yes;
 }
 
-//------------------------------------------------------------ LIGHT
+// -----------------------------------------------------------------------------
+// Light
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellLight::cast_impl(Actor* const caster) const
 {
     caster->prop_handler().try_add(new PropRadiant(PropTurns::std));
     return SpellEffectNoticed::yes;
 }
 
-//------------------------------------------------------------ TELEPORT
+// -----------------------------------------------------------------------------
+// Teleport
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellTeleport::cast_impl(Actor* const caster) const
 {
     caster->teleport();
@@ -1196,7 +1235,9 @@ bool SpellTeleport::allow_mon_cast_now(Mon& mon) const
     return (mon.aware_counter_ > 0) && is_low_hp && rnd::fraction(3, 4);
 }
 
-//------------------------------------------------------------ RESISTANCE
+// -----------------------------------------------------------------------------
+// Resistance
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellRes::cast_impl(Actor* const caster) const
 {
     const int duration = 20;
@@ -1217,7 +1258,9 @@ bool SpellRes::allow_mon_cast_now(Mon& mon) const
     return (!has_rfire || !has_relec) && mon.tgt_ && rnd::coin_toss();
 }
 
-//------------------------------------------------------------ KNOCKBACK
+// -----------------------------------------------------------------------------
+// Knockback
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellKnockBack::cast_impl(Actor* const caster) const
 {
     ASSERT(!caster->is_player());
@@ -1276,7 +1319,9 @@ bool SpellKnockBack::allow_mon_cast_now(Mon& mon) const
     return mon.tgt_ && rnd::coin_toss();
 }
 
-//------------------------------------------------------------ ENFEEBLE
+// -----------------------------------------------------------------------------
+// Enfeeble
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellEnfeebleMon::cast_impl(Actor* const caster) const
 {
     PropId prop_id = PropId::END;
@@ -1351,7 +1396,9 @@ bool SpellEnfeebleMon::allow_mon_cast_now(Mon& mon) const
     return mon.tgt_ && rnd::one_in(4);
 }
 
-//------------------------------------------------------------ DISEASE
+// -----------------------------------------------------------------------------
+// Disease
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellDisease::cast_impl(Actor* const caster) const
 {
     ASSERT(!caster->is_player());
@@ -1402,7 +1449,9 @@ bool SpellDisease::allow_mon_cast_now(Mon& mon) const
     return mon.tgt_ && rnd::coin_toss();
 }
 
-//------------------------------------------------------------ SUMMON MONSTER
+// -----------------------------------------------------------------------------
+// Summon monster
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellSummonMon::cast_impl(Actor* const caster) const
 {
     //Try to summon a creature inside the player's FOV (inside the standard range), in a
@@ -1544,7 +1593,9 @@ bool SpellSummonMon::allow_mon_cast_now(Mon& mon) const
            (mon.tgt_ || rnd::one_in(23));
 }
 
-//------------------------------------------------------------ HEAL SELF
+// -----------------------------------------------------------------------------
+// Heal self
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellHealSelf::cast_impl(Actor* const caster) const
 {
     //The spell effect is noticed if any hit points were restored
@@ -1558,7 +1609,9 @@ bool SpellHealSelf::allow_mon_cast_now(Mon& mon) const
     return mon.hp() < mon.hp_max(true);
 }
 
-//------------------------------------------------------------ MI-GO HYPNOSIS
+// -----------------------------------------------------------------------------
+// Mi-go hypnosis
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellMiGoHypno::cast_impl(Actor* const caster) const
 {
     ASSERT(!caster->is_player());
@@ -1615,7 +1668,9 @@ bool SpellMiGoHypno::allow_mon_cast_now(Mon& mon) const
            rnd::one_in(3);
 }
 
-//------------------------------------------------------------ IMMOLATION
+// -----------------------------------------------------------------------------
+// Immolation
+// -----------------------------------------------------------------------------
 SpellEffectNoticed SpellBurn::cast_impl(Actor* const caster) const
 {
     ASSERT(!caster->is_player());

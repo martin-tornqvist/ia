@@ -221,6 +221,8 @@ P column_and_row_tile(const TileId tile)
     case TileId::door_open:                     return P(15, 6);
     case TileId::door_broken:                   return P(16, 6);
     case TileId::fountain:                      return P(18, 6);
+    case TileId::gate_open:                     return P(20, 6);
+    case TileId::gate_closed:                   return P(19, 6);
     case TileId::tree:                          return P(1, 7);
     case TileId::bush:                          return P(2, 7);
     case TileId::church_bench:                  return P(4, 7);
@@ -294,9 +296,10 @@ P column_and_row_tile(const TileId tile)
     case TileId::empty:
     default:                                    return P(18, 10);
     }
-}
 
-}
+} // column_and_row_glyph
+
+} // namespace
 
 P glyph_pos(const char glyph)
 {
@@ -308,4 +311,4 @@ P tile_pos(const TileId tile)
      return column_and_row_tile(tile);
 }
 
-} //Art
+} // art

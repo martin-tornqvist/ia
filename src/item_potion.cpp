@@ -561,7 +561,7 @@ void PotionClairv::quaff_impl(Actor& actor)
 
         states::draw();
 
-        map::player->update_fov();
+        map::update_vision();
 
         io::draw_blast_at_cells(anim_cells, clr_white);
     }

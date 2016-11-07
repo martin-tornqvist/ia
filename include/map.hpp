@@ -72,21 +72,21 @@ struct ChokePointData
 namespace map
 {
 
-extern Player*                      player;
-extern int                          dlvl;
-extern Cell                         cells[map_w][map_h];
+extern Player* player;
+extern int dlvl;
+extern Cell cells[map_w][map_h];
 
-extern Clr                          wall_clr;
+extern Clr wall_clr;
 
-//This vector is the room owner
-extern std::vector<Room*>           room_list;
+// This vector is the room owner
+extern std::vector<Room*> room_list;
 
-//Helper array, for convenience and optimization
-extern Room*                        room_map[map_w][map_h];
+// Helper array, for convenience and optimization
+extern Room* room_map[map_w][map_h];
 
-//NOTE: This data is only intended to be used for the purpose of map generation
-//      (and placing items etc), it is NOT updated while playing the map.
-extern std::vector<ChokePointData>  choke_point_data;
+// NOTE: This data is only intended to be used for the purpose of map generation
+//       (and placing items etc), it is NOT updated while playing the map.
+extern std::vector<ChokePointData> choke_point_data;
 
 void init();
 void cleanup();
@@ -97,6 +97,10 @@ void load();
 void reset_map();
 
 Rigid* put(Rigid* const rigid);
+
+// This should be called when e.g. a door closes, or a wall is destoyed -
+// updates light map, player fov (etc).
+void update_vision();
 
 void mk_blood(const P& origin);
 void mk_gore(const P& origin);
@@ -119,6 +123,6 @@ bool is_pos_inside_map(const P& pos, const bool count_edge_as_inside = true);
 
 bool is_area_inside_map(const R& area);
 
-} //map
+} // map
 
-#endif
+#endif // MAP_HPP

@@ -1243,9 +1243,7 @@ void PropHandler::try_add(Prop* const prop,
     {
         if (prop->need_update_vision_when_start_or_end())
         {
-            game_time::update_light_map();
-            map::player->update_fov();
-            states::draw();
+            map::update_vision();
         }
 
         // Start message
@@ -1400,9 +1398,7 @@ void PropHandler::on_prop_end(Prop* const prop)
 {
     if (prop->need_update_vision_when_start_or_end())
     {
-        game_time::update_light_map();
-        map::player->update_fov();
-        states::draw();
+        map::update_vision();
     }
 
     //Print end message if this is the last active property of this type

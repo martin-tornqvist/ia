@@ -180,7 +180,7 @@ void Mon::act()
     }
 
     is_sneaking_ =
-        !is_actor_my_leader(map::player)        &&
+        !is_actor_my_leader(map::player) &&
         (ability(AbilityId::stealth, true) > 0) &&
         !map::player->can_see_actor(*this);
 
@@ -192,8 +192,9 @@ void Mon::act()
 
     ai::info::set_special_blocked_cells(*this, ai_special_blockers);
 
-    //------------------------------ SPECIAL MONSTER ACTIONS
-    //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
+    // -------------------------------------------------------------------------
+    // Special monster actions (e.g. zombies rising)
+    // -------------------------------------------------------------------------
     if (leader_ != map::player &&
         (tgt_ == nullptr || tgt_ == map::player))
     {
@@ -203,14 +204,15 @@ void Mon::act()
         }
     }
 
-    //------------------------------ COMMON ACTIONS
-    //                               (MOVING, ATTACKING, CASTING SPELLS...)
+    // -------------------------------------------------------------------------
+    // Common actions (moving, attacking, casting spells, etc)
+    // -------------------------------------------------------------------------
 
-    // Looking is as an action if monster was not aware before, and became aware
-    // from looking. (This is to give the monsters some reaction time, and not
-    // instantly attack)
-    if (data_->ai[(size_t)AiId::looks]  &&
-        leader_ != map::player          &&
+    // NOTE: Looking is as an action if monster was not aware before, and became
+    //       aware from looking. (This is to give the monsters some reaction
+    //       time, and not instantly attack)
+    if (data_->ai[(size_t)AiId::looks] &&
+        leader_ != map::player &&
         (tgt_ == nullptr || tgt_ == map::player))
     {
         if (ai::info::look_become_player_aware(*this))
@@ -219,8 +221,8 @@ void Mon::act()
         }
     }
 
-    if (data_->ai[(size_t)AiId::makes_room_for_friend]  &&
-        leader_ != map::player                          &&
+    if (data_->ai[(size_t)AiId::makes_room_for_friend] &&
+        leader_ != map::player &&
         tgt_ == map::player)
     {
         if (ai::action::make_room_for_friend(*this))
@@ -266,9 +268,10 @@ void Mon::act()
     }
 
     // Move more erratically if confused
-    if (prop_handler_->has_prop(PropId::confused))
+    if (prop_handler_->has_prop(PropId::confused) &&
+        erratic_move_pct > 0)
     {
-        erratic_move_pct *= 2;
+        erratic_move_pct += 50;
     }
 
     set_constr_in_range(0, erratic_move_pct, 95);
@@ -285,7 +288,8 @@ void Mon::act()
 
     const bool is_terrified = prop_handler_->has_prop(PropId::terrified);
 
-    if (data_->ai[(size_t)AiId::moves_to_tgt_when_los] && !is_terrified)
+    if (data_->ai[(size_t)AiId::moves_to_tgt_when_los] &&
+        !is_terrified)
     {
         if (ai::action::move_to_tgt_simple(*this))
         {
@@ -295,11 +299,11 @@ void Mon::act()
 
     std::vector<P> path;
 
-    if (data_->ai[(size_t)AiId::paths_to_tgt_when_aware]    &&
-        leader_ != map::player                              &&
+    if (data_->ai[(size_t)AiId::paths_to_tgt_when_aware] &&
+        leader_ != map::player &&
         !is_terrified)
     {
-        ai::info::try_set_path_to_player(*this, path);
+        ai::info::find_path_to_player(*this, path);
     }
 
     if (leader_ != map::player)
@@ -317,7 +321,7 @@ void Mon::act()
 
     if (data_->ai[(size_t)AiId::moves_to_leader] && !is_terrified)
     {
-        ai::info::try_set_path_to_leader(*this, path);
+        ai::info::find_path_to_leader(*this, path);
 
         if (ai::action::step_path(*this, path))
         {
@@ -336,7 +340,7 @@ void Mon::act()
         else // No LOS to lair
         {
             // Try to use pathfinder to travel to lair
-            ai::info::try_set_path_to_lair_if_no_los(*this, path, lair_pos_);
+            ai::info::find_path_to_lair_if_no_los(*this, path, lair_pos_);
 
             if (ai::action::step_path(*this, path))
             {
@@ -374,9 +378,8 @@ bool Mon::can_see_actor(const Actor& other,
     }
 
     // Monster allied to player looking at other monster which is hidden?
-    if (
-        is_actor_my_leader(map::player) &&
-        !other.is_player()              &&
+    if (is_actor_my_leader(map::player) &&
+        !other.is_player() &&
         static_cast<const Mon*>(&other)->is_sneaking_)
     {
         return false;
@@ -388,9 +391,11 @@ bool Mon::can_see_actor(const Actor& other,
         return false;
     }
 
-    const LosResult los = fov::check_cell(pos, other.pos, hard_blocked_los);
+    const LosResult los = fov::check_cell(pos,
+                                          other.pos,
+                                          hard_blocked_los);
 
-    // LOS blocked hard (e.g. a wall)?
+    // LOS blocked hard (e.g. a wall or smoke)?
     if (los.is_blocked_hard)
     {
         return false;
@@ -399,7 +404,8 @@ bool Mon::can_see_actor(const Actor& other,
     const bool can_see_invis = has_prop(PropId::see_invis);
 
     // Actor is invisible, and monster cannot see invisible?
-    if (other.has_prop(PropId::invis) && !can_see_invis)
+    if (other.has_prop(PropId::invis) &&
+        !can_see_invis)
     {
         return false;
     }
@@ -417,7 +423,8 @@ bool Mon::can_see_actor(const Actor& other,
         can_see_invis || can_see_actor_with_infravis;
 
     // Blocked by darkness, and not seeing actor with infravision?
-    if (los.is_blocked_by_drk && !can_see_other_in_drk)
+    if (los.is_blocked_by_drk &&
+        !can_see_other_in_drk)
     {
         return false;
     }

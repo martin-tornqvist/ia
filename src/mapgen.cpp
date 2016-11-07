@@ -53,6 +53,7 @@ void connect_rooms()
         if (nr_tries_left == 0)
         {
             mapgen::is_map_valid = false;
+
 #ifdef DEMO_MODE
             io::cover_panel(Panel::log);
             states::draw();
@@ -131,10 +132,9 @@ void connect_rooms()
             {
                 const Room* const room_here = map::room_map[x][y];
 
-                if (
-                    room_here           &&
-                    room_here != room0  &&
-                    room_here != room1  &&
+                if (room_here &&
+                    room_here != room0 &&
+                    room_here != room1 &&
                     !room_here->is_sub_room_)
                 {
                     is_other_room_in_way = true;
@@ -159,9 +159,26 @@ void connect_rooms()
                              *room1,
                              door_proposals);
 
-        if (
-            (nr_tries_left <= 2 || rnd::one_in(4)) &&
-            is_all_rooms_connected())
+        bool blocked[map_w][map_h];
+
+        map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+
+        //
+        // Do not consider doors blocking
+        //
+        for (int x = 0; x < map_w; ++x)
+        {
+            for (int y = 0; y < map_h; ++y)
+            {
+                if (map::cells[x][y].rigid->id() == FeatureId::door)
+                {
+                    blocked[x][y] = false;
+                }
+            }
+        }
+
+        if ((nr_tries_left <= 2 || rnd::one_in(4)) &&
+            map_parse::is_map_connected(blocked))
         {
             break;
         }
@@ -224,9 +241,27 @@ void try_place_door(const P& p)
 
     if (is_good_hor || is_good_ver)
     {
-        const auto& d = feature_data::data(FeatureId::wall);
-        const auto* const mimic = static_cast<const Rigid*>(d.mk_obj(p));
-        map::put(new Door(p, mimic));
+        //
+        // Make most doors "common" wooden doors, and occasionally make gates
+        //
+        Door* door = nullptr;
+
+        if (rnd::fraction(4, 5))
+        {
+            const Wall* const mimic = new Wall(p);
+
+            door = new Door(p,
+                            mimic,
+                            DoorType::wood);
+        }
+        else // Barred gate
+        {
+            door = new Door(p,
+                            nullptr,
+                            DoorType::gate);
+        }
+
+        map::put(door);
     }
 }
 
@@ -897,14 +932,15 @@ bool mk_std_lvl()
             {
                 Door* const door = static_cast<Door*>(rigid);
 
-                if (rnd::one_in(3))
+                if ((door->type() != DoorType::gate) &&
+                    rnd::one_in(3))
                 {
-                    door->set_to_secret();
+                    door->set_secret();
                 }
 
                 if (rnd::one_in(4))
                 {
-                    door->set_to_stuck();
+                    door->set_stuck();
                 }
             }
         }

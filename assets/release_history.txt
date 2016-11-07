@@ -14,7 +14,8 @@ Gameplay
 * Occultist starts with fixed (non-random) items and spells
 * Potion of Insight gives XP if there is no item to identify
 * You always search for traps and secret doors in every seen cell (so you can stand in the middle of a room and search all walls)
-* Some "Hanging vines" are now scattered on the map, which can be walked through, but blocks line of sight
+* Added Barred gates (doors that you can see and shoot through), and Gratings (similarly, but walls)
+* Some Hanging vines are now scattered on the map, which can be walked through, but blocks line of sight
 * Spells now have "skill level" percentages, which affects the Spirit cost to cast the spell - the skill levels can be increased by casting from Manuscripts
 * All backgrounds can now learn spells, but the Occultist gains proficiency much faster, and starts with a few known spells
 * Chests can no longer be trapped (it was awkward to deal with, and it didn't really bring anything to the game) - chests are now just interacted with by bumping them (if they are not locked), kicking them, or using an Opening spell

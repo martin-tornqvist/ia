@@ -2,6 +2,7 @@
 
 #include "room.hpp"
 #include "feature_rigid.hpp"
+#include "feature_door.hpp"
 
 namespace mapgen
 {
@@ -20,7 +21,7 @@ void put_templ_features(const Array2<char>& templ,
         {
             const P templ_p(templ_x, templ_y);
 
-            const P map_p(p0 + templ_p);
+            const P p(p0 + templ_p);
 
             const char c = templ(templ_p);
 
@@ -30,33 +31,27 @@ void put_templ_features(const Array2<char>& templ,
             {
             case '.':
             {
-                map::put(new Floor(map_p));
+                map::put(new Floor(p));
             }
             break;
 
             case '#':
             {
-                map::put(new Wall(map_p));
+                map::put(new Wall(p));
 
                 is_room_cell = false;
             }
             break;
 
-            case '=':
-            {
-                map::put(new Grating(map_p));
-            }
-            break;
-
             case '-':
             {
-                map::put(new Altar(map_p));
+                map::put(new Altar(p));
             }
             break;
 
             case '~':
             {
-                auto* liquid = new LiquidShallow(map_p);
+                auto* liquid = new LiquidShallow(p);
 
                 liquid->type_ = LiquidType::water;
 
@@ -66,13 +61,33 @@ void put_templ_features(const Array2<char>& templ,
 
             case '0':
             {
-                map::put(new Brazier(map_p));
+                map::put(new Brazier(p));
             }
             break;
 
             case 'P':
             {
-                map::put(new Statue(map_p));
+                map::put(new Statue(p));
+            }
+            break;
+
+            case '+':
+            {
+                Wall* mimic = new Wall(p);
+
+                map::put(new Door(p, mimic, DoorType::wood));
+            }
+            break;
+
+            case 'x':
+            {
+                map::put(new Door(p, nullptr, DoorType::gate));
+            }
+            break;
+
+            case '=':
+            {
+                map::put(new Grating(p));
             }
             break;
 
@@ -105,7 +120,7 @@ void put_templ_features(const Array2<char>& templ,
 
             if (!is_room_cell)
             {
-                map::room_map[map_p.x][map_p.y] = nullptr;
+                map::room_map[p.x][p.y] = nullptr;
             }
         } // y loop
     } // x loop
@@ -150,7 +165,7 @@ Room* mk_room(Region& region)
     ASSERT(region.is_free);
 
     // Make a templated room?
-    if (rnd::one_in(11))
+    if (map::dlvl <= dlvl_last_mid_game && rnd::one_in(11))
     {
         const P max_dims(region.r.dims());
 

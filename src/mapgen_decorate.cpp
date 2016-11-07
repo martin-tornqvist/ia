@@ -15,29 +15,29 @@ void decorate()
 
             if (cell.rigid->id() == FeatureId::wall)
             {
-                //Randomly convert walls to high rubble
+                // Randomly convert walls to high rubble
                 if (rnd::one_in(10))
                 {
                     map::put(new RubbleHigh(P(x, y)));
                     continue;
                 }
 
-                //Moss grown walls
+                // Moss grown walls
                 Wall* const wall = static_cast<Wall*>(cell.rigid);
                 wall->set_random_is_moss_grown();
 
-                //Convert some walls to cave
+                // Convert some walls to cave
                 bool should_convert_to_cave_wall = false;
 
                 if (map::dlvl >= dlvl_first_late_game)
                 {
-                    //If this is late game - convert all walls to cave
+                    // If this is late game - convert all walls to cave
                     should_convert_to_cave_wall = true;
                 }
-                else //Not late game
+                else // Not late game
                 {
-                    //Convert walls with no adjacent floor or with adjacent cave
-                    //floor to cave
+                    // Convert walls with no adjacent floor or with adjacent
+                    // cave floor to cave
                     bool has_adj_floor      = false;
                     bool has_adj_cave_floor = false;
 
@@ -54,14 +54,15 @@ void decorate()
 
                         const auto adj_id = adj_cell.rigid->id();
 
-                        //TODO: Traps count as floor here - otherwise walls that
-                        //      are only adjacent to traps would be converted to
-                        //      cave walls, which would spoil the presence of
-                        //      the trap, and just be weird in general. This
-                        //      works for now, but it should probably be handled
-                        //      better. Currently, traps are the only rigid that
-                        //      can "mimic" floor, but if some other feature
-                        //      like that is added, it could be a problem.
+                        // TODO: Traps count as floor here - otherwise walls
+                        //       that are only adjacent to traps would be
+                        //       converted to cave walls, which would spoil the
+                        //       presence of the trap, and just be weird in
+                        //       general. This works for now, but it should
+                        //       probably be handled better. Currently, traps
+                        //       are the only rigid that can "mimic" floor, but
+                        //       if some other feature like that is added, it
+                        //       could be a problem.
 
                         if (adj_id == FeatureId::floor  ||
                             adj_id == FeatureId::carpet ||
@@ -89,7 +90,7 @@ void decorate()
                 {
                     wall->type_ = WallType::cave;
                 }
-                else //Should not convert to cave wall
+                else // Should not convert to cave wall
                 {
                     wall->set_rnd_cmn_wall();
                 }
@@ -105,13 +106,13 @@ void decorate()
             {
                 const P p(x, y);
 
-                //Randomly put low rubble
+                // Randomly put low rubble
                 if (rnd::one_in(100))
                 {
                     map::put(new RubbleLow(p));
                 }
 
-                //Randomly put vines
+                // Randomly put vines
                 if (rnd::one_in(150))
                 {
                     for (const P& d : dir_utils::dir_list_w_center)

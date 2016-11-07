@@ -480,7 +480,7 @@ void InsShadows::on_start_hook()
         mon->prop_handler().try_add(disabled_att);
     }
 
-    map::player->update_fov();
+    map::update_vision();
 
     std::vector<Actor*> player_seen_foes;
     map::player->seen_foes(player_seen_foes);

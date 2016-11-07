@@ -731,9 +731,9 @@ void Player::act()
             !static_cast<const Trap*>(tgt_rigid)->is_hidden();
 
         const bool should_abort =
-            !tgt_rigid->can_move_cmn()                      ||
-            is_tgt_known_trap                               ||
-            tgt_rigid->burn_state() == BurnState::burning   ||
+            !tgt_rigid->can_move_cmn() ||
+            is_tgt_known_trap ||
+            tgt_rigid->burn_state() == BurnState::burning ||
             (tgt_cell.is_dark && !tgt_cell.is_lit);
 
         if (should_abort)

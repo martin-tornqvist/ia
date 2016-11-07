@@ -123,6 +123,8 @@ enum class TileId
     door_closed,
     door_open,
     door_broken,
+    gate_closed,
+    gate_open,
     fountain,
     tree,
     bush,

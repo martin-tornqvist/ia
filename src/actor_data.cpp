@@ -123,19 +123,20 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed = ActorSpeed::normal;
     d.glyph = 'Z';
     d.color = clr_brown;
     d.tile = TileId::zombie_unarmed;
-    d.hp = 16;
+    d.hp = 14;
     d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    1),
-        MonGroupSpawnRule(MonGroupSize::pack,   1)
+        MonGroupSpawnRule(MonGroupSize::few,    15),
+        MonGroupSpawnRule(MonGroupSize::pack,   5),
+        MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::humanoid;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -172,19 +173,20 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed = ActorSpeed::normal;
     d.glyph = 'Z';
     d.color = clr_gray;
     d.tile = TileId::zombie_armed;
-    d.hp = 16;
+    d.hp = 14;
     d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    1),
-        MonGroupSpawnRule(MonGroupSize::pack,   1)
+        MonGroupSpawnRule(MonGroupSize::few,    15),
+        MonGroupSpawnRule(MonGroupSize::pack,   5),
+        MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::humanoid;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -234,7 +236,7 @@ void init_data_list()
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::alone,  2),
+        MonGroupSpawnRule(MonGroupSize::alone,  3),
         MonGroupSpawnRule(MonGroupSize::few,    1)
     });
     d.actor_size = ActorSize::humanoid;
@@ -268,7 +270,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::normal;
+    d.speed = ActorSpeed::fast;
     d.glyph = 'Z';
     d.color = clr_cyan_lgt;
     d.tile = TileId::zombie_unarmed;
@@ -710,14 +712,14 @@ void init_data_list()
         "\"That object - no larger than a good sized rat and quaintly "
         "called by the townspeople, \"Brown Jenkin\" - seemed to have been "
         "the fruit of a remarkable case of sympathetic herd-delusion, for "
-        "in 1692, no less than eleven persons had persons had testified to "
-        "glimpsing it. There were recent rumors, too, with a baffling and "
-        "disconcerting amount of agreement. Witnesses said it had long "
-        "hair and the shape of a rat, but that its sharp-toothed, bearded "
-        "face was evilly human while its paws were like tiny human hands. "
-        "It took messages betwixt old Keziah and the devil, and was nursed "
-        "on the witch's blood, which it sucked like a vampire. Its voice "
-        "was a kind of loathsome titter, and could speak all languages.\" "
+        "in 1692, no less than eleven persons had testified to glimpsing it. "
+        "There were recent rumors, too, with a baffling and disconcerting "
+        "amount of agreement. Witnesses said it had long hair and the shape "
+        "of a rat, but that its sharp-toothed, bearded face was evilly human "
+        "while its paws were like tiny human hands. It took messages betwixt "
+        "old Keziah and the devil, and was nursed on the witch's blood, which "
+        "it sucked like a vampire. Its voice was a kind of loathsome titter, "
+        "and could speak all languages.\" "
         "H.P.Lovecraft -\"Dreams in the witch house\".";
     d.spell_cast_msg = "";
     d.aggro_text_mon_seen = d.name_the + " titters at me in a loathsome voice.";
@@ -1968,8 +1970,8 @@ void init_data_list()
     d.spawn_min_dlvl = 5;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    10),
-        MonGroupSpawnRule(MonGroupSize::pack,   20),
+        MonGroupSpawnRule(MonGroupSize::few,    20),
+        MonGroupSpawnRule(MonGroupSize::pack,   10),
         MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::humanoid;

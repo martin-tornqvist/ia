@@ -23,6 +23,20 @@ bool is_all_rooms_connected()
     bool blocked[map_w][map_h];
     map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
 
+    //
+    // Do not consider doors blocking
+    //
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
+        {
+            if (map::cells[x][y].rigid->id() == FeatureId::door)
+            {
+                blocked[x][y] = false;
+            }
+        }
+    }
+
     return map_parse::is_map_connected(blocked);
 }
 

@@ -21,7 +21,9 @@
 #include "item_factory.hpp"
 #include "attack.hpp"
 
-//------------------------------------------------------------- TRAP
+// -----------------------------------------------------------------------------
+// Trap
+// -----------------------------------------------------------------------------
 Trap::Trap(const P& feature_pos,
            Rigid* const mimic_feature,
            TrapId id) :
@@ -228,13 +230,14 @@ void Trap::trigger_start(const Actor* actor)
 
             if (actor == map::player)
             {
-                // If player is triggering, make the message a bit more "foreboding"
+                // If player is triggering, make the message a bit more
+                // "foreboding"
                 msg += "..";
 
                 more_prompt_on_msg = MorePromptOnMsg::yes;
             }
 
-            //TODO: Make a sound effect for this
+            // TODO: Make a sound effect for this
             Snd snd(msg,
                     SfxId::END,
                     IgnoreMsgIfOriginSeen::no,
@@ -281,17 +284,18 @@ void Trap::bump(Actor& actor_bumping)
 
     const ActorDataT& d = actor_bumping.data();
 
-    if (
-        actor_bumping.has_prop(PropId::ethereal) ||
+    if (actor_bumping.has_prop(PropId::ethereal) ||
         actor_bumping.has_prop(PropId::flying))
     {
         TRACE_FUNC_END_VERBOSE;
         return;
     }
 
-    const bool          actor_can_see   = actor_bumping.prop_handler().allow_see();
-    AbilityVals&       abilities       = actor_bumping.data().ability_vals;
-    const std::string   trap_name       = trap_impl_->title();
+    const bool actor_can_see = actor_bumping.prop_handler().allow_see();
+
+    AbilityVals& abilities = actor_bumping.data().ability_vals;
+
+    const std::string trap_name = trap_impl_->title();
 
     const int dodge_skill =
         abilities.val(AbilityId::dodge_trap, true, actor_bumping);
@@ -318,7 +322,10 @@ void Trap::bump(Actor& actor_bumping)
 
                 states::draw();
 
-                msg_log::add("I avoid a " + trap_name + ".", clr_msg_good);
+                msg_log::add("I avoid a " +
+                             trap_name +
+                             ".",
+                             clr_msg_good);
             }
         }
         else //Failed to avoid
@@ -599,10 +606,13 @@ Matl Trap::matl() const
     return is_hidden_ ? mimic_feature_->matl() : data().matl_type;
 }
 
-//------------------------------------------------------------- TRAP IMPLEMENTATIONS
+// -----------------------------------------------------------------------------
+// Trap implementations
+// -----------------------------------------------------------------------------
 TrapDart::TrapDart(P pos, Trap* const base_trap) :
-    MechTrapImpl              (pos, TrapId::dart, base_trap),
-    is_poisoned_                (map::dlvl >= min_dlvl_harder_traps && rnd::one_in(3)),
+    MechTrapImpl                (pos, TrapId::dart, base_trap),
+    is_poisoned_                (map::dlvl >= min_dlvl_harder_traps &&
+                                 rnd::one_in(3)),
     dart_origin_                (),
     is_dart_origin_destroyed_   (false) {}
 
@@ -631,8 +641,8 @@ TrapPlacementValid TrapDart::on_place()
 
             if (!is_passable && (i < nr_steps_min || !is_wall))
             {
-                //We are blocked too early - OR - blocked by a rigid feature other than a wall.
-                //Give up on this direction.
+                // We are blocked too early - OR - blocked by a rigid feature
+                // other than a wall. Give up on this direction.
                 break;
             }
 
@@ -935,15 +945,19 @@ void TrapTeleport::trigger()
         return;
     }
 
-    const bool          is_player               = actor_here->is_player();
-    const bool          can_see                 = actor_here->prop_handler().allow_see();
-    const bool          can_player_see_actor    = map::player->can_see_actor(*actor_here);
-    const std::string   actor_name              = actor_here->name_the();
-    const bool          is_hidden               = base_trap_->is_hidden();
+    const bool is_player = actor_here->is_player();
+
+    const bool can_see = actor_here->prop_handler().allow_see();
+
+    const bool can_player_see_actor = map::player->can_see_actor(*actor_here);
+
+    const std::string actor_name = actor_here->name_the();
+
+    const bool is_hidden = base_trap_->is_hidden();
 
     if (is_player)
     {
-        map::player->update_fov();
+        map::update_vision();
 
         if (can_see)
         {
@@ -1045,10 +1059,12 @@ void TrapSummonMon::trigger()
     {
         TRACE_VERBOSE << "No eligible candidates found" << std::endl;
     }
-    else //Eligible monsters found
+    else // Eligible monsters found
     {
-        const size_t    idx             = rnd::range(0, summon_bucket.size() - 1);
-        const ActorId  id_to_summon    = summon_bucket[idx];
+        const size_t idx = rnd::range(0, summon_bucket.size() - 1);
+
+        const ActorId id_to_summon = summon_bucket[idx];
+
         TRACE_VERBOSE << "Actor id: " << int(id_to_summon) << std::endl;
 
         std::vector<Mon*> summoned;

@@ -71,7 +71,7 @@ void Smoke::on_new_turn()
 
             if (is_player)
             {
-                msg_log::add("I cough.", clr_msg_bad);
+                msg_log::add("I cough.");
             }
             else //Is monster
             {
@@ -81,7 +81,9 @@ void Smoke::on_new_turn()
                 }
             }
 
-            const auto alerts = is_player ? AlertsMon::yes : AlertsMon::no;
+            const auto alerts =
+                is_player ?
+                AlertsMon::yes : AlertsMon::no;
 
             snd_emit::run(Snd(snd_msg,
                               SfxId::END,

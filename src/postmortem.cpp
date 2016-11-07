@@ -281,7 +281,7 @@ void PostmortemMenu::draw()
         "New journey",
         "Show game summary",
         "Write memorial file",
-        "View High Scores",
+        "View high scores",
         "View message log",
         "Return to main menu",
         "Quit the game"

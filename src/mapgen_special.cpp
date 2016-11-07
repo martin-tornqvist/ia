@@ -195,6 +195,7 @@ bool mk_intro_lvl()
                 Door* const door =
                     new Door(p,
                              new Wall(p),
+                             DoorType::wood,
                              DoorSpawnState::closed);
 
                 map::put(door);
@@ -498,7 +499,10 @@ bool mk_leng_lvl()
 
                 mimic->type_ = WallType::leng_monestary;
 
-                map::put(new Door(p, mimic, DoorSpawnState::closed));
+                map::put(new Door(p,
+                                  mimic,
+                                  DoorType::wood,
+                                  DoorSpawnState::closed));
             }
             break;
             }

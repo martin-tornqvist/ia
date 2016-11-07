@@ -3,6 +3,10 @@
 
 #include "feature_rigid.hpp"
 
+//
+// NOTE: Gates are *never* secret
+//
+
 enum class DoorSpawnState
 {
     open,
@@ -13,13 +17,28 @@ enum class DoorSpawnState
     any
 };
 
+enum class DoorType
+{
+    wood,
+    metal,
+    gate
+};
+
 class Door: public Rigid
 {
 public:
-    Door(const P& feature_pos, const Rigid* const mimic_feature,
+    Door(const P& feature_pos,
+         //
+         // NOTE: This should be nullptr if type is "gate"
+         //
+         const Rigid* const mimic_feature,
+         DoorType type = DoorType::wood,
+         //
+         // NOTE: This should never any "secret" variant if type is "gate"
+         //
          DoorSpawnState spawn_state = DoorSpawnState::any);
 
-//Spawn-by-id compliant ctor (do not use for normal cases):
+    // Spawn-by-id compliant ctor (do not use for normal cases):
     Door(const P& feature_pos) :
         Rigid                   (feature_pos),
         mimic_feature_          (nullptr),
@@ -28,7 +47,7 @@ public:
         is_stuck_               (false),
         is_secret_              (false),
         is_handled_externally_  (false),
-        matl_(Matl::wood) {}
+        type_                   (DoorType::wood) {}
 
     Door() = delete;
 
@@ -39,19 +58,38 @@ public:
         return FeatureId::door;
     }
 
+    //
+    // Sometimes we want to refer to a door as just a "door", instead of
+    // something verbose like "the open wooden door".
+    //
+    std::string base_name() const; // E.g. "wooden door"
+
+    std::string base_name_short() const; // E.g. "door"
+
     std::string name(const Article article) const override;
+
     WasDestroyed on_finished_burning() override;
+
     char glyph() const override;
+
     TileId tile() const override;
+
     void bump(Actor& actor_bumping) override;
+
     bool can_move_cmn() const override;
+
     bool can_move(Actor& actor) const override;
+
     bool is_los_passable() const override;
+
     bool is_projectile_passable() const override;
+
     bool is_smoke_passable() const override;
 
     void try_open(Actor* actor_trying);
+
     void try_close(Actor* actor_trying);
+
     bool try_jam(Actor* actor_trying);
 
     bool is_open() const
@@ -78,13 +116,15 @@ public:
 
     void reveal(const bool allow_message);
 
-    void set_to_secret()
+    void set_secret()
     {
+        ASSERT(type_ != DoorType::gate);
+
         is_open_    = false;
         is_secret_  = true;
     }
 
-    void set_to_stuck()
+    void set_stuck()
     {
         is_open_    = false;
         is_stuck_   = true;
@@ -106,19 +146,26 @@ public:
         return mimic_feature_;
     }
 
+    DoorType type() const
+    {
+        return type_;
+    }
+
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
                 Actor* const actor) override;
 
     const Rigid* const mimic_feature_;
+
     int nr_spikes_;
 
     bool is_open_, is_stuck_, is_secret_, is_handled_externally_;
 
-    Matl matl_;
-};
+    DoorType type_;
 
-#endif
+}; // Door
 
+#endif // FEATURE_DOOR_HPP

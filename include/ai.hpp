@@ -10,6 +10,9 @@ class Mon;
 namespace ai
 {
 
+// -----------------------------------------------------------------------------
+// Things that cost turns for the monster
+// -----------------------------------------------------------------------------
 namespace action
 {
 
@@ -29,23 +32,28 @@ bool step_path(Mon& mon, std::vector<P>& path);
 
 bool step_to_lair_if_los(Mon& mon, const P& lair_p);
 
-} //action
+} // action
 
+// -----------------------------------------------------------------------------
+// Information gathering
+// -----------------------------------------------------------------------------
 namespace info
 {
 
 bool look_become_player_aware(Mon& mon);
 
-void try_set_path_to_lair_if_no_los(Mon& mon, std::vector<P>& path, const P& lair_p);
+void find_path_to_lair_if_no_los(Mon& mon,
+                                 std::vector<P>& path,
+                                 const P& lair_p);
 
-void try_set_path_to_leader(Mon& mon, std::vector<P>& path);
+void find_path_to_leader(Mon& mon, std::vector<P>& path);
 
-void try_set_path_to_player(Mon& mon, std::vector<P>& path);
+void find_path_to_player(Mon& mon, std::vector<P>& path);
 
 void set_special_blocked_cells(Mon& mon, bool a[map_w][map_h]);
 
-} //info
+} // info
 
-} //ai
+} // ai
 
 #endif

@@ -131,7 +131,7 @@ ActorSpeed Actor::speed() const
 
     int speed_int = (int)base_speed;
 
-    //"Slowed" gives speed penalty
+    // "Slowed" gives speed penalty
     if (
         prop_handler_->has_prop(PropId::slowed) &&
         speed_int > 0)
@@ -434,8 +434,9 @@ void Actor::teleport()
     }
 
     // If actor was held by a spider web, destroy it
+
     // TODO: If something like a bear trap is implemented, the code below
-    // needs to be adapted to consider other "hold" type traps
+    //       needs to be adapted to consider other "hold" type traps
     Rigid* const rigid = map::cells[pos.x][pos.y].rigid;
 
     if (rigid->id() == FeatureId::trap)
@@ -452,7 +453,7 @@ void Actor::teleport()
 
     pos = tgt_pos;
 
-    map::player->update_fov();
+    map::update_vision();
 
     std::vector<Actor*> player_seen_actors;
     map::player->seen_actors(player_seen_actors);
@@ -1132,8 +1133,8 @@ void Actor::add_light(bool light_map[map_w][map_h]) const
 {
     if (state_ == ActorState::alive && prop_handler_->has_prop(PropId::radiant))
     {
-        //TODO: Much of the code below is duplicated from ActorPlayer::add_light_hook(), some
-        //refactoring is needed.
+        // TODO: Much of the code below is duplicated from
+        // ActorPlayer::add_light_hook(), some refactoring is needed.
 
         bool hard_blocked[map_w][map_h];
 

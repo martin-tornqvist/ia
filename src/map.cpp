@@ -227,14 +227,22 @@ Rigid* put(Rigid* const f)
     return f;
 }
 
+void update_vision()
+{
+    game_time::update_light_map();
+
+    map::player->update_fov();
+}
+
 void mk_blood(const P& origin)
 {
     for (int dx = -1; dx <= 1; ++dx)
     {
         for (int dy = -1; dy <= 1; ++dy)
         {
-            const P         c   = origin + P(dx, dy);
-            Rigid* const    f   = cells[c.x][c.y].rigid;
+            const P c = origin + P(dx, dy);
+
+            Rigid* const f = cells[c.x][c.y].rigid;
 
             if (f->can_have_blood())
             {

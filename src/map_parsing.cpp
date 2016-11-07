@@ -10,7 +10,9 @@
 #include "feature_rigid.hpp"
 #include "feature_mob.hpp"
 
-//------------------------------------------------------------ CELL CHECKS
+// -----------------------------------------------------------------------------
+// Cell checks
+// -----------------------------------------------------------------------------
 namespace cell_check
 {
 
@@ -233,19 +235,21 @@ bool AllAdjIsNoneOfFeatures::check(const Cell& c) const
     return true;
 }
 
-} //cell_check
+} // cell_check
 
-//------------------------------------------------------------ MAP PARSE
+// -----------------------------------------------------------------------------
+// Map parsing
+// -----------------------------------------------------------------------------
 namespace map_parse
 {
 
-void run(const  cell_check::Check& method,
-         bool   out[map_w][map_h],
-         const  MapParseMode write_rule,
-         const  R& area_to_check_cells)
+void run(const cell_check::Check& method,
+         bool out[map_w][map_h],
+         const MapParseMode write_rule,
+         const R& area_to_check_cells)
 {
-    ASSERT(method.is_checking_cells()   ||
-           method.is_checking_mobs()    ||
+    ASSERT(method.is_checking_cells() ||
+           method.is_checking_mobs() ||
            method.is_checking_actors());
 
     const bool allow_write_false =
@@ -261,8 +265,9 @@ void run(const  cell_check::Check& method,
                  y <= area_to_check_cells.p1.y;
                  ++y)
             {
-                const auto& c         = map::cells[x][y];
-                const bool  is_match  = method.check(c);
+                const auto& c = map::cells[x][y];
+
+                const bool is_match = method.check(c);
 
                 if (is_match || allow_write_false)
                 {
@@ -329,8 +334,9 @@ bool cell(const cell_check::Check& method, const P& p)
 
     if (method.is_checking_cells())
     {
-        const auto& c         = map::cells[p.x][p.y];
-        const bool  is_match  = method.check(c);
+        const auto& c = map::cells[p.x][p.y];
+
+        const bool is_match = method.check(c);
 
         if (is_match)
         {
@@ -401,11 +407,11 @@ void cells_within_dist_of_others(const bool in[map_w][map_h],
             {
                 for (int d = dist_interval.min; d <= dist_interval.max; d++)
                 {
-                    P p0(std::max(0,            x_outer - d),
-                         std::max(0,            y_outer - d));
+                    P p0(std::max(0, x_outer - d),
+                         std::max(0, y_outer - d));
 
-                    P p1(std::min(map_w - 1,    x_outer + d),
-                         std::min(map_h - 1,    y_outer + d));
+                    P p1(std::min(map_w - 1, x_outer + d),
+                         std::min(map_h - 1, y_outer + d));
 
                     for (int x = p0.x; x <= p1.x; ++x)
                     {
@@ -559,15 +565,14 @@ bool is_map_connected(const bool blocked[map_w][map_h])
               P(-1, -1),
               true);
 
-    //NOTE: We can skip to origin.x immediately, since this is guaranteed to be
-    //the leftmost non-blocked cell.
+    // NOTE: We can skip to origin.x immediately, since this is guaranteed to be
+    // the leftmost non-blocked cell.
     for (int x = origin.x; x < map_w - 1; ++x)
     {
         for (int y = 1; y < map_h - 1; ++y)
         {
-            if (
-                flood[x][y] == 0    &&
-                !blocked[x][y]      &&
+            if (flood[x][y] == 0 &&
+                !blocked[x][y] &&
                 P(x, y) != origin)
             {
                 return false;
@@ -580,7 +585,9 @@ bool is_map_connected(const bool blocked[map_w][map_h])
 
 } // map_parse
 
-//------------------------------------------------------------ IS CLOSER TO POS
+// -----------------------------------------------------------------------------
+// Is closer to pos
+// -----------------------------------------------------------------------------
 bool IsCloserToPos::operator()(const P& p1, const P& p2)
 {
     const int king_dist1 = king_dist(p_.x, p_.y, p1.x, p1.y);

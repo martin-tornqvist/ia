@@ -168,7 +168,7 @@ void go_to_nxt()
 
     map::player->tgt_ = nullptr;
 
-    map::player->update_fov();
+    map::update_vision();
 
     if (map_data.is_main_dungeon == IsMainDungeon::yes &&
         map::dlvl == (dlvl_last - 1))

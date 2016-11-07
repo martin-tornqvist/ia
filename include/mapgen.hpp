@@ -99,8 +99,6 @@ void mk_floor(const Room& room);
 //------------------------------------------------------------------------------
 // Misc utils
 //------------------------------------------------------------------------------
-bool is_all_rooms_connected();
-
 void valid_corridor_entries(const Room& room,
                             std::vector<P>& out);
 

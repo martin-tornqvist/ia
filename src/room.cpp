@@ -1145,7 +1145,22 @@ void ForestRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
     (void)door_proposals;
 
     bool blocked[map_w][map_h];
+
     map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+
+    //
+    // Do not consider doors blocking
+    //
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
+        {
+            if (map::cells[x][y].rigid->id() == FeatureId::door)
+            {
+                blocked[x][y] = false;
+            }
+        }
+    }
 
     std::vector<P> tree_pos_bucket;
 
@@ -1153,9 +1168,11 @@ void ForestRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
     {
         for (int y = r_.p0.y; y <= r_.p1.y; ++y)
         {
-            if (!blocked[x][y] && map::room_map[x][y] == this)
+            if (!blocked[x][y] &&
+                map::room_map[x][y] == this)
             {
                 const P p(x, y);
+
                 tree_pos_bucket.push_back(p);
 
                 if (rnd::one_in(6))
@@ -1179,6 +1196,7 @@ void ForestRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
     while (!tree_pos_bucket.empty())
     {
         const P p = tree_pos_bucket.back();
+
         tree_pos_bucket.pop_back();
 
         if (rnd::one_in(tree_one_in_n))
@@ -1188,6 +1206,7 @@ void ForestRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
             if (map_parse::is_map_connected(blocked))
             {
                 map::put(new Tree(p));
+
                 ++nr_trees_placed;
             }
             else
