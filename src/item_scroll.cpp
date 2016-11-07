@@ -16,7 +16,9 @@
 
 const std::string Scroll::real_name() const
 {
-    Spell* spell = spell_handling::mk_spell_from_id(data_->spell_cast_from_scroll);
+    Spell* spell =
+        spell_handling::mk_spell_from_id(
+            data_->spell_cast_from_scroll);
 
     const std::string scroll_name = spell->name();
 
@@ -44,9 +46,8 @@ ConsumeItem Scroll::activate(Actor* const actor)
 {
     auto& prop_handler = actor->prop_handler();
 
-    if (
-        prop_handler.allow_cast_spell(Verbosity::verbose)   &&
-        prop_handler.allow_read(Verbosity::verbose)         &&
+    if (prop_handler.allow_cast_spell(Verbosity::verbose) &&
+        prop_handler.allow_read(Verbosity::verbose) &&
         prop_handler.allow_speak(Verbosity::verbose))
     {
         if (!map::player->prop_handler().allow_see())
@@ -73,13 +74,15 @@ ConsumeItem Scroll::activate(Actor* const actor)
 
         if (is_identified_before)
         {
-            const std::string scroll_name = name(ItemRefType::a, ItemRefInf::none);
+            const std::string scroll_name =
+                name(ItemRefType::a, ItemRefInf::none);
 
             msg_log::add("I read " + scroll_name + "...");
         }
         else //Not already identified
         {
-            msg_log::add("I recite the forbidden incantations on the manuscript...");
+            msg_log::add(
+                "I recite the forbidden incantations on the manuscript...");
 
             data_->is_tried = true;
         }
@@ -88,16 +91,14 @@ ConsumeItem Scroll::activate(Actor* const actor)
 
         msg_log::add(crumble_str);
 
-        if (
-            !is_identified_before &&
+        if (!is_identified_before &&
             is_noticed == SpellEffectNoticed::yes)
         {
             identify(Verbosity::verbose);
         }
 
-        //Learn spell, increase skill level
-        if (
-            data_->is_identified &&
+        // Learn spell, increase skill level
+        if (data_->is_identified &&
             spell->player_can_learn())
         {
             const SpellId id = spell->id();
@@ -126,7 +127,8 @@ ConsumeItem Scroll::activate(Actor* const actor)
 
 Spell* Scroll::mk_spell() const
 {
-    return spell_handling::mk_spell_from_id(data_->spell_cast_from_scroll);
+    return spell_handling::mk_spell_from_id(
+        data_->spell_cast_from_scroll);
 }
 
 void Scroll::identify(const Verbosity verbosity)
@@ -137,7 +139,8 @@ void Scroll::identify(const Verbosity verbosity)
 
         if (verbosity == Verbosity::verbose)
         {
-            const std::string name_after = name(ItemRefType::a, ItemRefInf::none);
+            const std::string name_after =
+                name(ItemRefType::a, ItemRefInf::none);
 
             msg_log::add("I have identified " + name_after + ".");
 
@@ -237,36 +240,44 @@ void init()
     {
         if (d.type == ItemType::scroll)
         {
-            //False name
+            // False name
             const size_t idx = rnd::range(0, false_names_.size() - 1);
 
-            const std::string& TITLE = false_names_[idx];
+            const std::string& title = false_names_[idx];
 
-            d.base_name_un_id.names[int(ItemRefType::plain)] =
-                "Manuscript titled "    + TITLE;
+            d.base_name_un_id.names[(size_t)ItemRefType::plain] =
+                "Manuscript titled " + title;
 
-            d.base_name_un_id.names[int(ItemRefType::plural)] =
-                "Manuscripts titled "   + TITLE;
+            d.base_name_un_id.names[(size_t)ItemRefType::plural] =
+                "Manuscripts titled " + title;
 
-            d.base_name_un_id.names[int(ItemRefType::a)] =
-                "a Manuscript titled "  + TITLE;
+            d.base_name_un_id.names[(size_t)ItemRefType::a] =
+                "a Manuscript titled " + title;
 
             false_names_.erase(false_names_.begin() + idx);
 
-            //True name
-            const Scroll* const scroll = static_cast<const Scroll*>(item_factory::mk(d.id, 1));
+            // True name
+            const Scroll* const scroll =
+                static_cast<const Scroll*>(item_factory::mk(d.id, 1));
 
             const std::string real_type_name = scroll->real_name();
 
             delete scroll;
 
-            const std::string real_name        = "Manuscript of "    + real_type_name;
-            const std::string real_name_plural = "Manuscripts of "   + real_type_name;
-            const std::string real_name_a      = "a Manuscript of "  + real_type_name;
+            const std::string real_name =
+                "Manuscript of " + real_type_name;
 
-            d.base_name.names[int(ItemRefType::plain)]  = real_name;
-            d.base_name.names[int(ItemRefType::plural)] = real_name_plural;
-            d.base_name.names[int(ItemRefType::a)]      = real_name_a;
+            const std::string real_name_plural =
+                "Manuscripts of " + real_type_name;
+
+            const std::string real_name_a =
+                "a Manuscript of " + real_type_name;
+
+            d.base_name.names[(size_t)ItemRefType::plain] = real_name;
+
+            d.base_name.names[(size_t)ItemRefType::plural] = real_name_plural;
+
+            d.base_name.names[(size_t)ItemRefType::a] = real_name_a;
         }
     }
 
@@ -275,32 +286,37 @@ void init()
 
 void save()
 {
-    for (int i = 0; i < int(ItemId::END); ++i)
+    for (size_t i = 0; i < (size_t)ItemId::END; ++i)
     {
         if (item_data::data[i].type == ItemType::scroll)
         {
             auto& base_name_un_id = item_data::data[i].base_name_un_id;
 
-            saving::put_str(base_name_un_id.names[int(ItemRefType::plain)]);
-            saving::put_str(base_name_un_id.names[int(ItemRefType::plural)]);
-            saving::put_str(base_name_un_id.names[int(ItemRefType::a)]);
+            saving::put_str(base_name_un_id.names[(size_t)ItemRefType::plain]);
+            saving::put_str(base_name_un_id.names[(size_t)ItemRefType::plural]);
+            saving::put_str(base_name_un_id.names[(size_t)ItemRefType::a]);
         }
     }
 }
 
 void load()
 {
-    for (int i = 0; i < int(ItemId::END); ++i)
+    for (size_t i = 0; i < (size_t)ItemId::END; ++i)
     {
         if (item_data::data[i].type == ItemType::scroll)
         {
             auto& base_name_un_id = item_data::data[i].base_name_un_id;
 
-            base_name_un_id.names[int(ItemRefType::plain)]  = saving::get_str();
-            base_name_un_id.names[int(ItemRefType::plural)] = saving::get_str();
-            base_name_un_id.names[int(ItemRefType::a)]      = saving::get_str();
+            base_name_un_id.names[(size_t)ItemRefType::plain] =
+                saving::get_str();
+
+            base_name_un_id.names[(size_t)ItemRefType::plural] =
+                saving::get_str();
+
+            base_name_un_id.names[(size_t)ItemRefType::a] =
+                saving::get_str();
         }
     }
 }
 
-} //scroll_handling
+} // scroll_handling

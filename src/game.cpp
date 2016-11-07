@@ -1195,10 +1195,13 @@ void GameState::draw_map()
 
             if (map::cells[x][y].is_seen_by_player)
             {
-                render_data                     = &game::render_array[x][y];
-                const auto* const   f           = map::cells[x][y].rigid;
-                TileId              gore_tile   = TileId::empty;
-                char                gore_glyph  = 0;
+                render_data = &game::render_array[x][y];
+
+                const auto* const f = map::cells[x][y].rigid;
+
+                TileId gore_tile = TileId::empty;
+
+                char gore_glyph  = 0;
 
                 if (f->can_have_gore())
                 {
@@ -1241,16 +1244,16 @@ void GameState::draw_map()
     {
         const P& p(actor->pos);
 
-        if (actor->is_corpse()                  &&
-            actor->data().glyph != 0            &&
-            actor->data().glyph != ' '          &&
+        if (actor->is_corpse() &&
+            actor->data().glyph != 0 &&
+            actor->data().glyph != ' ' &&
             actor->data().tile != TileId::empty &&
             map::cells[p.x][p.y].is_seen_by_player)
         {
-            render_data        = &game::render_array[p.x][p.y];
-            render_data->clr   = actor->clr();
-            render_data->tile  = actor->tile();
-            render_data->glyph = actor->glyph();
+            render_data         = &game::render_array[p.x][p.y];
+            render_data->clr    = actor->clr();
+            render_data->tile   = actor->tile();
+            render_data->glyph  = actor->glyph();
         }
     }
 
@@ -1301,13 +1304,15 @@ void GameState::draw_map()
     //--------------------------------------------------------------------------
     for (auto* mob : game_time::mobs)
     {
-        const P&        p           = mob->pos();
-        const TileId    mob_tile    = mob->tile();
-        const char      mob_glyph   = mob->glyph();
+        const P& p = mob->pos();
 
-        if (mob_tile != TileId::empty   &&
-            mob_glyph != 0              &&
-            mob_glyph != ' '            &&
+        const TileId mob_tile = mob->tile();
+
+        const char mob_glyph = mob->glyph();
+
+        if (mob_tile != TileId::empty &&
+            mob_glyph != 0 &&
+            mob_glyph != ' ' &&
             map::cells[p.x][p.y].is_seen_by_player)
         {
             render_data         = &game::render_array[p.x][p.y];
@@ -1341,8 +1346,8 @@ void GameState::draw_map()
 
             if (map::player->can_see_actor(*actor))
             {
-                if (actor->tile() != TileId::empty  &&
-                    actor->glyph() != 0             &&
+                if (actor->tile() != TileId::empty &&
+                    actor->glyph() != 0 &&
                     actor->glyph() != ' ')
                 {
                     render_data->clr    = actor->clr();
@@ -1459,8 +1464,8 @@ void GameState::draw_map()
                 // (1) Cell below is explored, and its tile is not a front or
                 //     top wall.
                 // (2) Cell below is unexplored.
-                if (!render_data->is_living_actor_seen_here      &&
-                    !render_data->is_aware_of_hostile_mon_here   &&
+                if (!render_data->is_living_actor_seen_here &&
+                    !render_data->is_aware_of_hostile_mon_here &&
                     !render_data->is_aware_of_allied_mon_here)
                 {
                     const auto tile_seen =
@@ -1476,9 +1481,11 @@ void GameState::draw_map()
 
                     if (is_tile_wall)
                     {
-                        const auto* const   f               = cell.rigid;
-                        const auto          feature_id      = f->id();
-                        bool                is_hidden_door  = false;
+                        const auto* const f = cell.rigid;
+
+                        const auto feature_id = f->id();
+
+                        bool is_hidden_door  = false;
 
                         if (feature_id == FeatureId::door)
                         {

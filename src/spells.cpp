@@ -27,7 +27,7 @@ namespace
 
 const int summon_hostile_one_in_n = 7;
 
-} //namespace
+} // namespace
 
 namespace spell_handling
 {
@@ -142,7 +142,7 @@ Spell* mk_spell_from_id(const SpellId spell_id)
     return nullptr;
 }
 
-} //spell_handling
+} // spell_handling
 
 Range Spell::spi_cost(const bool is_base_cost_only, Actor* const caster) const
 {
@@ -152,20 +152,20 @@ Range Spell::spi_cost(const bool is_base_cost_only, Actor* const caster) const
         caster == map::player &&
         !is_base_cost_only)
     {
-        //The spell is more expensive the less skill the player has in it
+        // The spell is more expensive the less skill the player has in it
         const int skill_pct = player_spells::spell_skill_pct(id());
 
         cost_max += (cost_max * (100 - skill_pct)) / 100;
 
-        //Standing next to an altar makes it cheaper
-        const int X0 = std::max(0, caster->pos.x - 1);
-        const int Y0 = std::max(0, caster->pos.y - 1);
-        const int X1 = std::min(map_w - 1, caster->pos.x + 1);
-        const int Y1 = std::min(map_h - 1, caster->pos.y + 1);
+        // Standing next to an altar makes it cheaper
+        const int x0 = std::max(0, caster->pos.x - 1);
+        const int y0 = std::max(0, caster->pos.y - 1);
+        const int x1 = std::min(map_w - 1, caster->pos.x + 1);
+        const int y1 = std::min(map_h - 1, caster->pos.y + 1);
 
-        for (int x = X0; x <= X1; ++x)
+        for (int x = x0; x <= x1; ++x)
         {
-            for (int y = Y0; y <= Y1; ++y)
+            for (int y = y0; y <= y1; ++y)
             {
                 if (map::cells[x][y].rigid->id() == FeatureId::altar)
                 {
@@ -174,8 +174,8 @@ Range Spell::spi_cost(const bool is_base_cost_only, Actor* const caster) const
             }
         }
 
-        //Traits reducing the cost of specific spells
-        //TODO: Shouldn't this be done by calling virtual functions?
+        // Traits reducing the cost of specific spells
+        // TODO: Shouldn't this be done by calling virtual functions?
         bool is_warlock     = player_bon::traits[(size_t)Trait::warlock];
         bool is_seer        = player_bon::traits[(size_t)Trait::seer];
         bool is_summoner    = player_bon::traits[(size_t)Trait::summoner];
@@ -258,7 +258,7 @@ Range Spell::spi_cost(const bool is_base_cost_only, Actor* const caster) const
         {
             cost_max += 3;
         }
-    } //Is player, and use modified cost
+    } // Is player, and use modified cost
 
     cost_max            = std::max(1, cost_max);
     const int cost_min  = std::max(1, (cost_max + 1) / 2);
@@ -301,7 +301,7 @@ SpellEffectNoticed Spell::cast(Actor* const caster,
 
             snd_emit::run(snd);
         }
-        else //Caster is monster
+        else // Caster is monster
         {
             TRACE << "Monster casting spell" << std::endl;
             Mon* const mon = static_cast<Mon*>(caster);
@@ -318,7 +318,7 @@ SpellEffectNoticed Spell::cast(Actor* const caster,
                 {
                     mon_name = mon->name_the();
                 }
-                else //Cannot see monster
+                else // Cannot see monster
                 {
                     mon_name = mon->data().is_humanoid ? "Someone" : "Something";
                 }
@@ -403,7 +403,7 @@ SpellEffectNoticed SpellDarkbolt::cast_impl(Actor* const caster) const
 
     tgt = map::random_closest_actor(caster->pos, seen_actors);
 
-    //Spell reflection?
+    // Spell reflection?
     if (tgt->has_prop(PropId::spell_reflect))
     {
         if (map::player->can_see_actor(*tgt))
@@ -417,7 +417,7 @@ SpellEffectNoticed SpellDarkbolt::cast_impl(Actor* const caster) const
         return cast_impl(tgt);
     }
 
-    //Spell resistance?
+    // Spell resistance?
     if (tgt->has_prop(PropId::rSpell))
     {
         on_resist(*tgt);
@@ -465,7 +465,7 @@ SpellEffectNoticed SpellDarkbolt::cast_impl(Actor* const caster) const
     {
         msg_clr = clr_msg_bad;
     }
-    else //Target is monster
+    else // Target is monster
     {
         str_begin = tgt->name_the() + " is";
 
@@ -526,7 +526,7 @@ SpellEffectNoticed SpellAzaWrath::cast_impl(Actor* const caster) const
         return SpellEffectNoticed::no;
     }
 
-    //This point reached means targets are available
+    // This point reached means targets are available
     if (caster->is_player())
     {
         is_warlock_charged = caster->has_prop(PropId::warlock_charged);
@@ -536,7 +536,7 @@ SpellEffectNoticed SpellAzaWrath::cast_impl(Actor* const caster) const
 
     for (Actor* const tgt : tgts)
     {
-        //Spell reflection?
+        // Spell reflection?
         if (tgt->has_prop(PropId::spell_reflect))
         {
             if (map::player->can_see_actor(*tgt))
@@ -551,7 +551,7 @@ SpellEffectNoticed SpellAzaWrath::cast_impl(Actor* const caster) const
             continue;
         }
 
-        //Spell resistance?
+        // Spell resistance?
         if (tgt->has_prop(PropId::rSpell))
         {
             on_resist(*tgt);
@@ -566,7 +566,7 @@ SpellEffectNoticed SpellAzaWrath::cast_impl(Actor* const caster) const
         {
             msg_clr = clr_msg_bad;
         }
-        else //Target is monster
+        else // Target is monster
         {
             str_begin = tgt->name_the() + " is";
 
@@ -623,16 +623,16 @@ SpellEffectNoticed SpellMayhem::cast_impl(Actor* const caster) const
     const int nr_sweeps = 5;
     const int radi      = fov_std_radi_int;
 
-    const int X0 = std::max(1, caster_pos.x - radi);
-    const int Y0 = std::max(1, caster_pos.y - radi);
-    const int X1 = std::min(map_w - 1, caster_pos.x + radi) - 1;
-    const int Y1 = std::min(map_h - 1, caster_pos.y + radi) - 1;
+    const int x0 = std::max(1, caster_pos.x - radi);
+    const int y0 = std::max(1, caster_pos.y - radi);
+    const int x1 = std::min(map_w - 1, caster_pos.x + radi) - 1;
+    const int y1 = std::min(map_h - 1, caster_pos.y + radi) - 1;
 
     for (int i = 0; i < nr_sweeps; ++i)
     {
-        for (int y = Y0; y <= Y1; ++y)
+        for (int y = y0; y <= y1; ++y)
         {
-            for (int x = X0; x <= X1; ++x)
+            for (int x = x0; x <= x1; ++x)
             {
                 bool is_adj_to_walkable_cell = false;
 
@@ -654,9 +654,9 @@ SpellEffectNoticed SpellMayhem::cast_impl(Actor* const caster) const
         }
     }
 
-    for (int y = Y0; y <= Y1; ++y)
+    for (int y = y0; y <= y1; ++y)
     {
-        for (int x = X0; x <= X1; ++x)
+        for (int x = x0; x <= x1; ++x)
         {
             auto* const f = map::cells[x][y].rigid;
 
@@ -677,7 +677,7 @@ SpellEffectNoticed SpellMayhem::cast_impl(Actor* const caster) const
 
     for (auto* tgt : seen_foes)
     {
-        //Spell reflection?
+        // Spell reflection?
         if (tgt->has_prop(PropId::spell_reflect))
         {
             if (map::player->can_see_actor(*tgt))
@@ -692,7 +692,7 @@ SpellEffectNoticed SpellMayhem::cast_impl(Actor* const caster) const
             continue;
         }
 
-        //Spell resistance?
+        // Spell resistance?
         if (tgt->has_prop(PropId::rSpell))
         {
             on_resist(*tgt);
@@ -744,7 +744,7 @@ SpellEffectNoticed SpellPest::cast_impl(Actor* const caster) const
 
         leader = did_player_summon_hostile ? nullptr : caster;
     }
-    else //Caster is monster
+    else // Caster is monster
     {
         Actor* const caster_leader = static_cast<Mon*>(caster)->leader_;
 
@@ -870,7 +870,7 @@ SpellEffectNoticed SpellAnimWpns::cast_impl(Actor* const caster) const
 // -----------------------------------------------------------------------------
 SpellEffectNoticed SpellPharaohStaff::cast_impl(Actor* const caster) const
 {
-    //First check for a friendly mummy and heal it (as per the spell description)
+    // First check for a friendly mummy and heal it (as per the spell description)
     for (Actor* const actor : game_time::actors)
     {
         const auto actor_id = actor->data().id;
@@ -885,7 +885,7 @@ SpellEffectNoticed SpellPharaohStaff::cast_impl(Actor* const caster) const
         }
     }
 
-    //This point reached means no mummy controlled, summon a new one
+    // This point reached means no mummy controlled, summon a new one
     Actor* leader = nullptr;
 
     bool did_player_summon_hostile = false;
@@ -898,7 +898,7 @@ SpellEffectNoticed SpellPharaohStaff::cast_impl(Actor* const caster) const
         did_player_summon_hostile = rnd::one_in(n);
         leader = did_player_summon_hostile ? nullptr : caster;
     }
-    else //Caster is monster
+    else // Caster is monster
     {
         Actor* const caster_leader = static_cast<Mon*>(caster)->leader_;
         leader = caster_leader ? caster_leader : caster;
@@ -945,27 +945,27 @@ SpellEffectNoticed SpellDetItems::cast_impl(Actor* const caster) const
 {
     (void)caster;
 
-    const int radi    = fov_std_radi_int + 3;
-    const int orig_x  = map::player->pos.x;
-    const int orig_y  = map::player->pos.y;
-    const int X0      = std::max(0, orig_x - radi);
-    const int Y0      = std::max(0, orig_y - radi);
-    const int X1      = std::min(map_w - 1, orig_x + radi);
-    const int Y1      = std::min(map_h - 1, orig_y + radi);
+    const int radi = fov_std_radi_int + 3;
+    const int orig_x = map::player->pos.x;
+    const int orig_y = map::player->pos.y;
+    const int x0 = std::max(0, orig_x - radi);
+    const int y0 = std::max(0, orig_y - radi);
+    const int x1 = std::min(map_w - 1, orig_x + radi);
+    const int y1 = std::min(map_h - 1, orig_y + radi);
 
     std::vector<P> items_revealed_cells;
 
-    for (int y = Y0; y < Y1; ++y)
+    for (int y = y0; y < y1; ++y)
     {
-        for (int x = X0; x <= X1; ++x)
+        for (int x = x0; x <= x1; ++x)
         {
-            Item* item = map::cells[x][y].item;
+            auto& cell = map::cells[x][y];
 
-            if (item)
+            if (cell.item)
             {
-                map::cells[x][y].is_seen_by_player = true;
+                cell.is_seen_by_player = true;
 
-                map::cells[x][y].is_explored = true;
+                cell.is_explored = true;
 
                 items_revealed_cells.push_back(P(x, y));
             }
@@ -974,6 +974,9 @@ SpellEffectNoticed SpellDetItems::cast_impl(Actor* const caster) const
 
     if (!items_revealed_cells.empty())
     {
+        // To update the render data
+        states::draw();
+
         map::player->update_fov();
 
         states::draw();
@@ -984,8 +987,7 @@ SpellEffectNoticed SpellDetItems::cast_impl(Actor* const caster) const
         {
             msg_log::add("An item is revealed to me.");
         }
-
-        if (items_revealed_cells.size() > 1)
+        else // > 1 items detected
         {
             msg_log::add("Some items are revealed to me.");
         }
@@ -1121,7 +1123,7 @@ SpellEffectNoticed SpellSacrLife::cast_impl(Actor* const caster) const
 {
     (void)caster;
 
-    //Convert every 2 hp to 1 SPI
+    // Convert every 2 hp to 1 SPI
 
     const int player_hp_cur = map::player->hp();
 
@@ -1146,7 +1148,7 @@ SpellEffectNoticed SpellSacrSpi::cast_impl(Actor* const caster) const
 {
     (void)caster;
 
-    //Convert all spi to HP
+    // Convert all spi to HP
 
     const int player_spi_cur = map::player->spi();
 
@@ -1271,7 +1273,7 @@ SpellEffectNoticed SpellKnockBack::cast_impl(Actor* const caster) const
     Actor*          tgt         = static_cast<Mon*>(caster_used)->tgt_;
     ASSERT(tgt);
 
-    //Spell reflection?
+    // Spell reflection?
     if (tgt->has_prop(PropId::spell_reflect))
     {
         if (map::player->can_see_actor(*tgt))
@@ -1285,7 +1287,7 @@ SpellEffectNoticed SpellKnockBack::cast_impl(Actor* const caster) const
         std::swap(caster_used, tgt);
     }
 
-    //Spell resistance?
+    // Spell resistance?
     if (tgt->has_prop(PropId::rSpell))
     {
         on_resist(*tgt);
@@ -1297,7 +1299,7 @@ SpellEffectNoticed SpellKnockBack::cast_impl(Actor* const caster) const
     {
         msg_clr = clr_msg_bad;
     }
-    else //Target is monster
+    else // Target is monster
     {
         tgt_str = tgt->name_the();
 
@@ -1361,7 +1363,7 @@ SpellEffectNoticed SpellEnfeebleMon::cast_impl(Actor* const caster) const
     {
         PropHandler& prop_handler = tgt->prop_handler();
 
-        //Spell reflection?
+        // Spell reflection?
         if (tgt->has_prop(PropId::spell_reflect))
         {
             if (map::player->can_see_actor(*tgt))
@@ -1376,7 +1378,7 @@ SpellEffectNoticed SpellEnfeebleMon::cast_impl(Actor* const caster) const
             continue;
         }
 
-        //Spell resistance?
+        // Spell resistance?
         if (tgt->has_prop(PropId::rSpell))
         {
             on_resist(*tgt);
@@ -1406,7 +1408,7 @@ SpellEffectNoticed SpellDisease::cast_impl(Actor* const caster) const
     Actor* caster_used = caster;
     Actor* tgt        = static_cast<Mon*>(caster_used)->tgt_;
 
-    //Spell reflection?
+    // Spell reflection?
     if (tgt->has_prop(PropId::spell_reflect))
     {
         if (map::player->can_see_actor(*tgt))
@@ -1420,7 +1422,7 @@ SpellEffectNoticed SpellDisease::cast_impl(Actor* const caster) const
         std::swap(caster_used, tgt);
     }
 
-    //Spell resistance?
+    // Spell resistance?
     if (tgt->has_prop(PropId::rSpell))
     {
         on_resist(*tgt);
@@ -1454,8 +1456,8 @@ bool SpellDisease::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 SpellEffectNoticed SpellSummonMon::cast_impl(Actor* const caster) const
 {
-    //Try to summon a creature inside the player's FOV (inside the standard range), in a
-    //free visible cell. If no such cell is available, instead summon near the caster.
+    // Try to summon a creature inside the player's FOV (inside the standard range), in a
+    // free visible cell. If no such cell is available, instead summon near the caster.
 
     bool blocked[map_w][map_h];
     map_parse::run(cell_check::BlocksMoveCmn(true), blocked);
@@ -1463,14 +1465,14 @@ SpellEffectNoticed SpellSummonMon::cast_impl(Actor* const caster) const
     std::vector<P> free_cells_seen_by_player;
     const int radi = fov_std_radi_int;
     const P player_pos(map::player->pos);
-    const int X0 = std::max(0, player_pos.x - radi);
-    const int Y0 = std::max(0, player_pos.y - radi);
-    const int X1 = std::min(map_w, player_pos.x + radi) - 1;
-    const int Y1 = std::min(map_h, player_pos.y + radi) - 1;
+    const int x0 = std::max(0, player_pos.x - radi);
+    const int y0 = std::max(0, player_pos.y - radi);
+    const int x1 = std::min(map_w, player_pos.x + radi) - 1;
+    const int y1 = std::min(map_h, player_pos.y + radi) - 1;
 
-    for (int x = X0; x <= X1; ++x)
+    for (int x = x0; x <= x1; ++x)
     {
-        for (int y = Y0; y <= Y1; ++y)
+        for (int y = y0; y <= y1; ++y)
         {
             if (!blocked[x][y] && map::cells[x][y].is_seen_by_player)
             {
@@ -1483,7 +1485,7 @@ SpellEffectNoticed SpellSummonMon::cast_impl(Actor* const caster) const
 
     if (free_cells_seen_by_player.empty())
     {
-        //No free cells seen by player, instead summon near the caster.
+        // No free cells seen by player, instead summon near the caster.
         std::vector<P> free_cells_vector;
         to_vec(blocked, false, free_cells_vector);
 
@@ -1494,10 +1496,12 @@ SpellEffectNoticed SpellSummonMon::cast_impl(Actor* const caster) const
             summon_pos = free_cells_vector[0];
         }
     }
-    else //There are free cells seen by the player available
+    else // There are free cells seen by the player available
     {
-        const size_t idx    = rnd::range(0, free_cells_seen_by_player.size() - 1);
-        summon_pos          = free_cells_seen_by_player[idx];
+        const size_t idx =
+            rnd::range(0, free_cells_seen_by_player.size() - 1);
+
+        summon_pos = free_cells_seen_by_player[idx];
     }
 
     std::vector<ActorId> summon_bucket;
@@ -1514,15 +1518,17 @@ SpellEffectNoticed SpellSummonMon::cast_impl(Actor* const caster) const
 
             if (caster->is_player())
             {
-                //Compare player CVL with monster's allowed spawning DLVL.
-                const int player_clvl     = game::clvl();
-                const int player_clvl_pct = (player_clvl * 100) / player_max_clvl;
+                // Compare player CVL with monster's allowed spawning DLVL.
+                const int player_clvl = game::clvl();
+
+                const int player_clvl_pct =
+                    (player_clvl * 100) / player_max_clvl;
 
                 dlvl_max = (player_clvl_pct * dlvl_last) / 100;
             }
-            else //Caster is monster
+            else // Caster is monster
             {
-                //Compare caster and summoned monster's allowed spawning DLVL.
+                // Compare caster and summoned monster's allowed spawning DLVL.
                 dlvl_max = caster->data().spawn_min_dlvl;
             }
 
@@ -1552,7 +1558,7 @@ SpellEffectNoticed SpellSummonMon::cast_impl(Actor* const caster) const
         did_player_summon_hostile   = rnd::one_in(n);
         leader                      = did_player_summon_hostile ? nullptr : caster;
     }
-    else //Caster is monster
+    else // Caster is monster
     {
         Actor* const caster_leader  = static_cast<Mon*>(caster)->leader_;
         leader                      = caster_leader ? caster_leader : caster;
@@ -1587,7 +1593,7 @@ SpellEffectNoticed SpellSummonMon::cast_impl(Actor* const caster) const
 
 bool SpellSummonMon::allow_mon_cast_now(Mon& mon) const
 {
-    //NOTE: Checking awareness instead of target, to allow summoning even with broken LOS
+    // NOTE: Checking awareness instead of target, to allow summoning even with broken LOS
     return (mon.aware_counter_ > 0) &&
            rnd::coin_toss()         &&
            (mon.tgt_ || rnd::one_in(23));
@@ -1598,7 +1604,7 @@ bool SpellSummonMon::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 SpellEffectNoticed SpellHealSelf::cast_impl(Actor* const caster) const
 {
-    //The spell effect is noticed if any hit points were restored
+    // The spell effect is noticed if any hit points were restored
     const bool is_any_hp_healed = caster->restore_hp(999);
 
     return is_any_hp_healed ? SpellEffectNoticed::yes : SpellEffectNoticed::no;
@@ -1621,7 +1627,7 @@ SpellEffectNoticed SpellMiGoHypno::cast_impl(Actor* const caster) const
 
     ASSERT(tgt);
 
-    //Spell reflection?
+    // Spell reflection?
     if (tgt->has_prop(PropId::spell_reflect))
     {
         if (map::player->can_see_actor(*tgt))
@@ -1635,7 +1641,7 @@ SpellEffectNoticed SpellMiGoHypno::cast_impl(Actor* const caster) const
         std::swap(caster_used, tgt);
     }
 
-    //Spell resistance?
+    // Spell resistance?
     if (tgt->has_prop(PropId::rSpell))
     {
         on_resist(*tgt);
@@ -1680,7 +1686,7 @@ SpellEffectNoticed SpellBurn::cast_impl(Actor* const caster) const
 
     ASSERT(tgt);
 
-    //Spell reflection?
+    // Spell reflection?
     if (tgt->has_prop(PropId::spell_reflect))
     {
         if (map::player->can_see_actor(*tgt))
@@ -1694,7 +1700,7 @@ SpellEffectNoticed SpellBurn::cast_impl(Actor* const caster) const
         std::swap(caster_used, tgt);
     }
 
-    //Spell resistance?
+    // Spell resistance?
     if (tgt->has_prop(PropId::rSpell))
     {
         on_resist(*tgt);
