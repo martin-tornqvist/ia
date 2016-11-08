@@ -123,11 +123,11 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::normal;
+    d.speed = ActorSpeed::slow;
     d.glyph = 'Z';
     d.color = clr_brown;
     d.tile = TileId::zombie_unarmed;
-    d.hp = 14;
+    d.hp = 16;
     d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.spawn_min_dlvl = 1;
@@ -173,11 +173,11 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::normal;
+    d.speed = ActorSpeed::slow;
     d.glyph = 'Z';
     d.color = clr_gray;
     d.tile = TileId::zombie_armed;
-    d.hp = 14;
+    d.hp = 16;
     d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.spawn_min_dlvl = 2;
@@ -270,7 +270,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed = ActorSpeed::normal;
     d.glyph = 'Z';
     d.color = clr_cyan_lgt;
     d.tile = TileId::zombie_unarmed;
@@ -313,7 +313,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::normal;
+    d.speed = ActorSpeed::slow;
     d.glyph = 'Z';
     d.color = clr_cyan;
     d.tile = TileId::zombie_unarmed;
