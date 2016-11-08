@@ -1831,7 +1831,7 @@ std::string Grating::name(const Article article) const
 
 Clr Grating::clr_default() const
 {
-    return clr_gray_drk;
+    return clr_brown;
 }
 
 // -----------------------------------------------------------------------------
