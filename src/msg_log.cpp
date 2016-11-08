@@ -341,7 +341,7 @@ void MsgHistoryState::update()
 
     const int history_size = history_.size();
 
-    const auto input = io::get();
+    const auto input = io::get(false);
 
     switch (input.key)
     {

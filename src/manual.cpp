@@ -45,10 +45,10 @@ void BrowseManual::draw()
 
 void BrowseManual::update()
 {
-    const int line_jump     = 3;
-    const int nr_lines_tot  = lines_.size();
+    const int line_jump = 3;
+    const int nr_lines_tot = lines_.size();
 
-    const auto input = io::get();
+    const auto input = io::get(false);
 
     switch (input.key)
     {

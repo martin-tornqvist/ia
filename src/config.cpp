@@ -20,46 +20,46 @@ namespace config
 namespace
 {
 
-const int opt_y0_           = 1;
+const int opt_y0_ = 1;
 const int opt_values_x_pos_ = 40;
 
-std::string  font_name_                 = "";
-bool    use_light_fade_effect_          = false;
-bool    is_fullscr_                     = false;
-bool    is_tiles_wall_full_square_      = false;
-bool    is_text_mode_wall_full_square_  = false;
-bool    is_light_explosive_prompt_      = false;
-bool    is_ranged_wpn_meleee_prompt_    = false;
-bool    is_ranged_wpn_auto_reload_      = false;
-bool    is_intro_lvl_skipped_           = false;
-bool    is_any_key_confirm_more_        = false;
-int     map_px_h_                       = -1;
-int     log_px_h_                       = -1;
-int     map_px_offset_h_                = -1;
-int     stat_lines_px_h_                = -1;
-int     stat_lines_px_offset_h_         = -1;
-int     scr_px_w_                       = -1;
-int     scr_px_h_                       = -1;
-int     delay_projectile_draw_          = -1;
-int     delay_shotgun_                  = -1;
-int     delay_explosion_                = -1;
-bool    is_bot_playing_                 = false;
-bool    is_audio_enabled_               = false;
-bool    is_tiles_mode_                  = false;
-int     cell_px_w_                      = -1;
-int     cell_px_h_                      = -1;
+std::string font_name_ = "";
+bool use_light_fade_effect_ = false;
+bool is_fullscr_ = false;
+bool is_tiles_wall_full_square_ = false;
+bool is_text_mode_wall_full_square_ = false;
+bool is_light_explosive_prompt_ = false;
+bool is_ranged_wpn_meleee_prompt_ = false;
+bool is_ranged_wpn_auto_reload_ = false;
+bool is_intro_lvl_skipped_ = false;
+bool is_any_key_confirm_more_ = false;
+int map_px_h_ = -1;
+int log_px_h_ = -1;
+int map_px_offset_h_ = -1;
+int stat_lines_px_h_ = -1;
+int stat_lines_px_offset_h_ = -1;
+int scr_px_w_ = -1;
+int scr_px_h_ = -1;
+int delay_projectile_draw_ = -1;
+int delay_shotgun_ = -1;
+int delay_explosion_ = -1;
+bool is_bot_playing_ = false;
+bool is_audio_enabled_ = false;
+bool is_tiles_mode_ = false;
+int cell_px_w_ = -1;
+int cell_px_h_ = -1;
 
 std::vector<std::string> font_image_names;
 
 void set_cell_px_dim_dependent_variables()
 {
-    map_px_h_                   = cell_px_h_ * map_h;
-    map_px_offset_h_            = cell_px_h_ * map_offset_h;
-    log_px_h_                   = cell_px_h_ * log_h;
-    stat_lines_px_h_            = cell_px_h_ * stat_lines_h;
-    stat_lines_px_offset_h_     = cell_px_h_ * stat_lines_offset_h;
-    scr_px_w_                   = cell_px_w_ * screen_w;
-    scr_px_h_                   = cell_px_h_ * screen_h;
+    map_px_h_ = cell_px_h_ * map_h;
+    map_px_offset_h_ = cell_px_h_ * map_offset_h;
+    log_px_h_ = cell_px_h_ * log_h;
+    stat_lines_px_h_ = cell_px_h_ * stat_lines_h;
+    stat_lines_px_offset_h_ = cell_px_h_ * stat_lines_offset_h;
+    scr_px_w_ = cell_px_w_ * screen_w;
+    scr_px_h_ = cell_px_h_ * screen_h;
 }
 
 void set_cell_px_dims_from_font_name()
@@ -107,24 +107,24 @@ void set_cell_px_dims_from_font_name()
 void set_default_variables()
 {
     TRACE_FUNC_BEGIN;
-    is_audio_enabled_               = true;
-    is_tiles_mode_                  = true;
-    font_name_                      = "images/16x24_v1.png";
+    is_audio_enabled_ = true;
+    is_tiles_mode_ = true;
+    font_name_ = "images/16x24_v1.png";
 
     set_cell_px_dims_from_font_name();
 
-    use_light_fade_effect_          = true;
-    is_fullscr_                     = false;
-    is_tiles_wall_full_square_      = false;
-    is_text_mode_wall_full_square_  = true;
-    is_intro_lvl_skipped_           = false;
-    is_any_key_confirm_more_        = false;
-    is_light_explosive_prompt_      = false;
-    is_ranged_wpn_meleee_prompt_    = true;
-    is_ranged_wpn_auto_reload_      = false;
-    delay_projectile_draw_          = 25;
-    delay_shotgun_                  = 75;
-    delay_explosion_                = 225;
+    use_light_fade_effect_ = true;
+    is_fullscr_ = false;
+    is_tiles_wall_full_square_ = false;
+    is_text_mode_wall_full_square_ = true;
+    is_intro_lvl_skipped_ = false;
+    is_any_key_confirm_more_ = false;
+    is_light_explosive_prompt_ = false;
+    is_ranged_wpn_meleee_prompt_ = true;
+    is_ranged_wpn_auto_reload_ = false;
+    delay_projectile_draw_ = 25;
+    delay_shotgun_ = 75;
+    delay_explosion_ = 225;
     TRACE_FUNC_END;
 }
 
@@ -441,18 +441,18 @@ void set_lines_from_variables(std::vector<std::string>& lines)
 {
     TRACE_FUNC_BEGIN;
     lines.clear();
-    lines.push_back(is_audio_enabled_               ? "1" : "0");
-    lines.push_back(is_tiles_mode_                  ? "1" : "0");
+    lines.push_back(is_audio_enabled_ ? "1" : "0");
+    lines.push_back(is_tiles_mode_ ? "1" : "0");
     lines.push_back(font_name_);
-    lines.push_back(use_light_fade_effect_          ? "1" : "0");
-    lines.push_back(is_fullscr_                     ? "1" : "0");
-    lines.push_back(is_tiles_wall_full_square_      ? "1" : "0");
-    lines.push_back(is_text_mode_wall_full_square_  ? "1" : "0");
-    lines.push_back(is_intro_lvl_skipped_           ? "1" : "0");
-    lines.push_back(is_any_key_confirm_more_        ? "1" : "0");
-    lines.push_back(is_light_explosive_prompt_      ? "1" : "0");
-    lines.push_back(is_ranged_wpn_meleee_prompt_    ? "1" : "0");
-    lines.push_back(is_ranged_wpn_auto_reload_      ? "1" : "0");
+    lines.push_back(use_light_fade_effect_ ? "1" : "0");
+    lines.push_back(is_fullscr_ ? "1" : "0");
+    lines.push_back(is_tiles_wall_full_square_ ? "1" : "0");
+    lines.push_back(is_text_mode_wall_full_square_ ? "1" : "0");
+    lines.push_back(is_intro_lvl_skipped_ ? "1" : "0");
+    lines.push_back(is_any_key_confirm_more_ ? "1" : "0");
+    lines.push_back(is_light_explosive_prompt_ ? "1" : "0");
+    lines.push_back(is_ranged_wpn_meleee_prompt_ ? "1" : "0");
+    lines.push_back(is_ranged_wpn_auto_reload_ ? "1" : "0");
     lines.push_back(to_str(delay_projectile_draw_));
     lines.push_back(to_str(delay_shotgun_));
     lines.push_back(to_str(delay_explosion_));
@@ -463,7 +463,7 @@ void set_lines_from_variables(std::vector<std::string>& lines)
 
 void init()
 {
-    font_name_      = "";
+    font_name_ = "";
     is_bot_playing_ = false;
 
     font_image_names.clear();
@@ -656,7 +656,7 @@ ConfigState::ConfigState() :
 
 void ConfigState::update()
 {
-    const auto input = io::get();
+    const auto input = io::get(true);
 
     const MenuAction action = browser_.read(input,
                                             MenuInputMode::scrolling);

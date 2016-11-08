@@ -28,12 +28,12 @@ bool run_drop_query(const InvType inv_type, const size_t idx)
 {
     TRACE_FUNC_BEGIN;
 
-    Inventory&  inv     = map::player->inv();
-    Item*       item    = nullptr;
+    Inventory& inv = map::player->inv();
+    Item* item = nullptr;
 
     if (inv_type == InvType::slots)
     {
-        ASSERT(idx < int(SlotId::END));
+        ASSERT(idx < (int)SlotId::END);
         item = inv.slots_[idx].item;
     }
     else // Backpack
@@ -60,8 +60,8 @@ bool run_drop_query(const InvType inv_type, const size_t idx)
 
         states::draw();
 
-        const std::string nr_str    = "1-" + to_str(item->nr_items_);
-        const std::string drop_str  = "Drop how many (" + nr_str + ")?:";
+        const std::string nr_str = "1-" + to_str(item->nr_items_);
+        const std::string drop_str = "Drop how many (" + nr_str + ")?:";
 
         io::draw_text(drop_str,
                       Panel::screen,
@@ -70,10 +70,10 @@ bool run_drop_query(const InvType inv_type, const size_t idx)
 
         io::update_screen();
 
-        const P     nr_query_pos(drop_str.size() + 1, 0);
+        const P nr_query_pos(drop_str.size() + 1, 0);
 
-        const int   max_digits      = 3;
-        const P     done_inf_pos    = nr_query_pos + P(max_digits + 2, 0);
+        const int max_digits = 3;
+        const P done_inf_pos = nr_query_pos + P(max_digits + 2, 0);
 
         io::draw_text("[enter] to drop" + cancel_info_str,
                       Panel::screen,
@@ -166,8 +166,8 @@ void InvState::draw_weight_pct_and_dots(const P item_pos,
         item_weight_pct = (item.weight() * 100) / weight_carried_tot;
     }
 
-    std::string weight_str  = to_str(item_weight_pct) + "%";
-    int         weight_x    = descr_x0 - 1 - weight_str.size();
+    std::string weight_str = to_str(item_weight_pct) + "%";
+    int weight_x = descr_x0 - 1 - weight_str.size();
 
     ASSERT(item_weight_pct >= 0 && item_weight_pct <= 100);
 
@@ -187,8 +187,8 @@ void InvState::draw_weight_pct_and_dots(const P item_pos,
     else // Zero weight, or 100% of weight
     {
         // No weight percent is displayed
-        weight_str  = "";
-        weight_x    = descr_x0 - 1;
+        weight_str = "";
+        weight_x = descr_x0 - 1;
     }
 
     int dots_x = item_pos.x + item_name_len;
@@ -203,9 +203,9 @@ void InvState::draw_weight_pct_and_dots(const P item_pos,
     if (dots_w < 0)
     {
         // Item name does not fit at all, draw dots until the weight percent
-        dots_w              = 3;
-        const int DOTS_X1   = weight_x - 1;
-        dots_x              = DOTS_X1 - dots_w + 1;
+        dots_w = 3;
+        const int dots_x1 = weight_x - 1;
+        dots_x = dots_x1 - dots_w + 1;
     }
 
     const std::string dots_str(dots_w, '.');
@@ -334,8 +334,8 @@ void InvState::draw_detailed_item_descr(const Item* const item) const
 
 void InvState::activate(const size_t backpack_idx)
 {
-    Inventory&  player_inv  = map::player->inv();
-    Item*       item        = player_inv.backpack_[backpack_idx];
+    Inventory& player_inv = map::player->inv();
+    Item* item = player_inv.backpack_[backpack_idx];
 
     auto result = item->activate(map::player);
 
@@ -393,10 +393,10 @@ void BrowseInv::draw()
 
     io::clear_screen();
 
-    const int       browser_y   = browser_.y();
-    const auto&     inv         = map::player->inv();
-    const size_t    nr_slots    = (size_t)SlotId::END;
-    const Panel     panel       = Panel::screen;
+    const int browser_y = browser_.y();
+    const auto& inv = map::player->inv();
+    const size_t nr_slots = (size_t)SlotId::END;
+    const Panel panel = Panel::screen;
 
     const Item* item_marked = nullptr;
 
@@ -441,8 +441,8 @@ void BrowseInv::draw()
         if (i < int(nr_slots))
         {
             // This index is a slot
-            const InvSlot&      slot        = inv.slots_[i];
-            const std::string   slot_name   = slot.name;
+            const InvSlot& slot = inv.slots_[i];
+            const std::string slot_name = slot.name;
 
             io::draw_text(slot_name, panel, p, clr);
 
@@ -456,8 +456,8 @@ void BrowseInv::draw()
                 draw_item_symbol(*item, p);
                 p.x += 2;
 
-                const ItemDataT&    d       = item->data();
-                ItemRefAttInf       att_inf = ItemRefAttInf::none;
+                const ItemDataT& d = item->data();
+                ItemRefAttInf att_inf = ItemRefAttInf::none;
 
                 if (slot.id == SlotId::wpn || slot.id == SlotId::wpn_alt)
                 {
@@ -576,7 +576,7 @@ void BrowseInv::update()
         return inv_type_marked;
     };
 
-    const auto input = io::get();
+    const auto input = io::get(false);
 
     const MenuAction action =
         browser_.read(input,
@@ -590,8 +590,8 @@ void BrowseInv::update()
 
         if (inv_type_marked == InvType::slots)
         {
-            const size_t    browser_y   = browser_.y();
-            InvSlot&        slot        = inv.slots_[browser_y];
+            const size_t browser_y = browser_.y();
+            InvSlot& slot = inv.slots_[browser_y];
 
             if (slot.item)
             {
@@ -711,8 +711,8 @@ void Apply::on_start()
 
     for (size_t i = 0; i < backpack.size(); ++i)
     {
-        const Item* const   item    = backpack[i];
-        const ItemDataT&    d       = item->data();
+        const Item* const item = backpack[i];
+        const ItemDataT& d = item->data();
 
         if (d.has_std_activate)
         {
@@ -749,8 +749,8 @@ void Apply::draw()
 
     const Panel panel = Panel::screen;
 
-    const int   browser_y   = browser_.y();
-    const auto& inv         = map::player->inv();
+    const int browser_y = browser_.y();
+    const auto& inv = map::player->inv();
 
     const size_t backpack_idx_marked =
         filtered_backpack_indexes_[(size_t)browser_y];
@@ -848,7 +848,7 @@ void Apply::draw()
 
 void Apply::update()
 {
-    auto input = io::get();
+    auto input = io::get(false);
 
     const MenuAction action =
         browser_.read(input,
@@ -927,8 +927,8 @@ void Equip::on_start()
 
     for (size_t i = 0; i < backpack.size(); ++i)
     {
-        const auto* const   item    = backpack[i];
-        const auto&         data    = item->data();
+        const auto* const item = backpack[i];
+        const auto& data = item->data();
 
         switch (slot_to_equip_.id)
         {
@@ -986,9 +986,9 @@ void Equip::on_start()
 
 void Equip::draw()
 {
-    const bool  has_item    = !filtered_backpack_indexes_.empty();
-    const Panel panel       = Panel::screen;
-    std::string heading     = "";
+    const bool has_item = !filtered_backpack_indexes_.empty();
+    const Panel panel = Panel::screen;
+    std::string heading = "";
 
     switch (slot_to_equip_.id)
     {
@@ -1057,8 +1057,8 @@ void Equip::draw()
                          P(screen_w / 2, 0),
                          clr_brown_gray);
 
-    auto&       inv         = map::player->inv();
-    const int   browser_y   = browser_.y();
+    auto& inv = map::player->inv();
+    const int browser_y = browser_.y();
 
     const size_t backpack_idx_marked =
         filtered_backpack_indexes_[(size_t)browser_y];
@@ -1100,8 +1100,8 @@ void Equip::draw()
         draw_item_symbol(*item, p);
         p.x += 2;
 
-        const ItemDataT&    d       = item->data();
-        ItemRefAttInf       att_inf = ItemRefAttInf::none;
+        const ItemDataT& d = item->data();
+        ItemRefAttInf att_inf = ItemRefAttInf::none;
 
         if (slot_to_equip_.id == SlotId::wpn ||
             slot_to_equip_.id == SlotId::wpn_alt)
@@ -1168,10 +1168,10 @@ void Equip::draw()
 
 void Equip::update()
 {
-    const auto input = io::get();
+    const auto input = io::get(false);
 
-    if (filtered_backpack_indexes_.empty()  ||
-        input.key == SDLK_SPACE             ||
+    if (filtered_backpack_indexes_.empty() ||
+        input.key == SDLK_SPACE ||
         input.key == SDLK_ESCAPE)
     {
         //

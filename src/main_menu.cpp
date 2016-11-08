@@ -273,9 +273,9 @@ void MainMenuState::draw()
 
 #ifndef NDEBUG
     io::draw_text("## DEBUG MODE ##",
-                      Panel::screen,
-                      P(1, 1),
-                      clr_yellow);
+                  Panel::screen,
+                  P(1, 1),
+                  clr_yellow);
 #endif // NDEBUG
 
     std::vector<std::string> labels =
@@ -368,7 +368,7 @@ void MainMenuState::draw()
 
 void MainMenuState::update()
 {
-    const auto input = io::get();
+    const auto input = io::get(true);
 
     const MenuAction action =
         browser_.read(input, MenuInputMode::scrolling);

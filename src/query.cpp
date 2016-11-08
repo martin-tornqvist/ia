@@ -26,7 +26,7 @@ void wait_for_key_press()
     {
         io::update_screen();
 
-        io::get();
+        io::get(true);
     }
 }
 
@@ -39,15 +39,15 @@ YesNoAnswer yes_or_no(char key_for_special_event)
 
     io::update_screen();
 
-    auto d = io::get();
+    auto d = io::get(false);
 
-    while (d.key    != 'y'      &&
-           d.key    != 'n'      &&
+    while (d.key != 'y' &&
+           d.key != 'n' &&
            d.key != SDLK_ESCAPE &&
-           d.key != SDLK_SPACE  &&
+           d.key != SDLK_SPACE &&
            (d.key != key_for_special_event || key_for_special_event == -1))
     {
-        d = io::get();
+        d = io::get(false);
     }
 
     if (d.key == key_for_special_event &&
@@ -75,11 +75,11 @@ InputData letter(const bool accept_enter)
 
     while (true)
     {
-        const auto d = io::get();
+        const auto d = io::get(false);
 
         if ((accept_enter && d.key == SDLK_RETURN) ||
             d.key == SDLK_ESCAPE ||
-            d.key == SDLK_SPACE  ||
+            d.key == SDLK_SPACE ||
             (d.key >= 'a' && d.key <= 'z') ||
             (d.key >= 'A' && d.key <= 'Z'))
         {
@@ -119,12 +119,12 @@ int number(const P& pos,
         InputData d;
 
         while ((d.key < '0' || d.key > '9') &&
-               d.key != SDLK_RETURN         &&
-               d.key != SDLK_SPACE          &&
-               d.key != SDLK_ESCAPE         &&
+               d.key != SDLK_RETURN &&
+               d.key != SDLK_SPACE &&
+               d.key != SDLK_ESCAPE &&
                d.key != SDLK_BACKSPACE)
         {
-            d = io::get();
+            d = io::get(true);
         }
 
         if (d.key == SDLK_RETURN)
@@ -198,11 +198,11 @@ void wait_for_msg_more()
     {
         while (true)
         {
-            const auto d = io::get();
+            const auto d = io::get(true);
 
-            if (d.key == SDLK_SPACE     ||
-                d.key == SDLK_ESCAPE    ||
-                d.key == SDLK_RETURN    ||
+            if (d.key == SDLK_SPACE ||
+                d.key == SDLK_ESCAPE ||
+                d.key == SDLK_RETURN ||
                 d.key == SDLK_TAB)
             {
                 break;
@@ -222,10 +222,10 @@ void wait_for_confirm()
 
     while (true)
     {
-        const auto d = io::get();
+        const auto d = io::get(true);
 
-        if (d.key == SDLK_SPACE     ||
-            d.key == SDLK_ESCAPE    ||
+        if (d.key == SDLK_SPACE ||
+            d.key == SDLK_ESCAPE ||
             d.key == SDLK_RETURN)
         {
             break;
@@ -244,7 +244,7 @@ Dir dir(const AllowCenter allow_center)
 
     while (true)
     {
-        const auto d = io::get();
+        const auto d = io::get(false);
 
         if (d.key == SDLK_SPACE || d.key == SDLK_ESCAPE)
         {

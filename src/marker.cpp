@@ -85,7 +85,7 @@ void MarkerState::draw()
 
 void MarkerState::update()
 {
-    const auto input = io::get();
+    const auto input = io::get(true);
 
     msg_log::clear();
 

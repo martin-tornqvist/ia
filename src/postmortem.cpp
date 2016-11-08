@@ -41,11 +41,11 @@ void PostmortemMenu::on_start()
 {
     info_lines_.clear();
 
-    const Clr clr_heading  = clr_white_high;
-    const Clr clr_info     = clr_white;
+    const Clr clr_heading = clr_white_high;
+    const Clr clr_info = clr_white;
 
-    const std::string offset            = "   ";
-    const std::string bullet_point_str  = offset + "* ";
+    const std::string offset = "   ";
+    const std::string bullet_point_str = offset + "* ";
 
     TRACE << "Finding number of killed monsters" << std::endl;
 
@@ -374,7 +374,7 @@ void PostmortemMenu::mk_memorial_file() const
 
 void PostmortemMenu::update()
 {
-    const auto input = io::get();
+    const auto input = io::get(true);
 
     const MenuAction action =
         browser_.read(input,
@@ -492,7 +492,7 @@ void PostmortemInfo::draw()
                                 InfScreenType::scrolling);
 
     const int nr_info_lines = (int)info_lines_.size();
-    const int nr_lines_tot  = nr_info_lines + map_h;
+    const int nr_lines_tot = nr_info_lines + map_h;
 
     int screen_y = 1;
 
@@ -555,10 +555,10 @@ void PostmortemInfo::draw()
 
 void PostmortemInfo::update()
 {
-    const int line_jump     = 3;
-    const int nr_lines_tot  = info_lines_.size() + map_h;
+    const int line_jump = 3;
+    const int nr_lines_tot = info_lines_.size() + map_h;
 
-    const auto input = io::get();
+    const auto input = io::get(false);
 
     switch (input.key)
     {

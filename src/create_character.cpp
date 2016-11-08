@@ -14,20 +14,20 @@
 namespace
 {
 
-const int top_more_y_   = 1;
-const int btm_more_y_   = screen_h - 1;
-const int opt_x0_       = 0;
-const int opt_y0_       = top_more_y_ + 1;
-const int opt_x1_       = 22;
-const int opt_y1_       = btm_more_y_ - 1;
-const int opt_h_        = opt_y1_ - opt_y0_ + 1;
+const int top_more_y_ = 1;
+const int btm_more_y_ = screen_h - 1;
+const int opt_x0_ = 0;
+const int opt_y0_ = top_more_y_ + 1;
+const int opt_x1_ = 22;
+const int opt_y1_ = btm_more_y_ - 1;
+const int opt_h_ = opt_y1_ - opt_y0_ + 1;
 
-const int descr_x0_     = opt_x1_ + 2;
-const int descr_y0_     = opt_y0_;
-const int descr_x1_     = screen_w - 1;
-const int descr_y1_     = opt_y1_;
+const int descr_x0_ = opt_x1_ + 2;
+const int descr_y0_ = opt_y0_;
+const int descr_x1_ = screen_w - 1;
+const int descr_y1_ = opt_y1_;
 
-const int descr_w_      = descr_x1_ - descr_y1_ + 1;
+const int descr_w_ = descr_x1_ - descr_y1_ + 1;
 
 } // namespace
 
@@ -36,9 +36,9 @@ const int descr_w_      = descr_x1_ - descr_y1_ + 1;
 // -----------------------------------------------------------------------------
 void NewGameState::on_pushed()
 {
-    std::unique_ptr<State> name_state(  new EnterNameState);
-    std::unique_ptr<State> trait_state( new PickTraitState);
-    std::unique_ptr<State> bg_state(    new PickBgState);
+    std::unique_ptr<State> name_state(new EnterNameState);
+    std::unique_ptr<State> trait_state(new PickTraitState);
+    std::unique_ptr<State> bg_state(new PickBgState);
 
     states::push(std::move(name_state));
     states::push(std::move(trait_state));
@@ -149,7 +149,7 @@ void PickBgState::update()
         return;
     }
 
-    const auto input = io::get();
+    const auto input = io::get(false);
 
     const MenuAction action =
         browser_.read(input,
@@ -193,8 +193,8 @@ void PickBgState::draw()
 
     for (const Bg bg : bgs_)
     {
-        const std::string   bg_name     = player_bon::bg_title(bg);
-        const bool          is_marked   = bg == bg_marked;
+        const std::string bg_name = player_bon::bg_title(bg);
+        const bool is_marked = bg == bg_marked;
 
         const Clr& drw_clr =
             is_marked ?
@@ -272,7 +272,7 @@ void PickTraitState::update()
         return;
     }
 
-    const auto input = io::get();
+    const auto input = io::get(false);
 
     const MenuAction action =
         browser_.read(input,
@@ -283,8 +283,8 @@ void PickTraitState::update()
     case MenuAction::selected:
     case MenuAction::selected_shift:
     {
-        const Trait     trait       = traits_[browser_.y()];
-        const bool      is_picked   = player_bon::traits[(size_t)trait];
+        const Trait trait = traits_[browser_.y()];
+        const bool is_picked = player_bon::traits[(size_t)trait];
 
         if (!is_picked)
         {
@@ -321,9 +321,9 @@ void PickTraitState::draw()
                          clr_black,
                          true);
 
-    const int   browser_y       = browser_.y();
-    const Trait trait_marked    = traits_[browser_y];
-    const Bg    player_bg       = player_bon::bg();
+    const int browser_y = browser_.y();
+    const Trait trait_marked = traits_[browser_y];
+    const Bg player_bg = player_bon::bg();
 
     //
     // Traits
@@ -336,11 +336,11 @@ void PickTraitState::draw()
 
     for (int i = idx_range_shown.min; i <= idx_range_shown.max; ++i)
     {
-        const Trait trait           = traits_[i];
-        std::string trait_name      = player_bon::trait_title(trait);
-        const bool  is_idx_marked   = browser_y == i;
-        const bool  is_picked       = player_bon::traits[(size_t)trait];
-        const bool  is_prereqs_ok   = player_bon::is_prereqs_ok(trait);
+        const Trait trait = traits_[i];
+        std::string trait_name = player_bon::trait_title(trait);
+        const bool is_idx_marked = browser_y == i;
+        const bool is_picked = player_bon::traits[(size_t)trait];
+        const bool is_prereqs_ok = player_bon::is_prereqs_ok(trait);
 
         Clr clr = clr_magenta_lgt;
 
@@ -459,8 +459,8 @@ void PickTraitState::draw()
 
         std::string prereq_str = "";
 
-        const Clr& clr_prereq_ok        = clr_green;
-        const Clr& clr_prereq_not_ok    = clr_red;
+        const Clr& clr_prereq_ok = clr_green;
+        const Clr& clr_prereq_not_ok = clr_red;
 
         if (trait_marked_bg_prereq != Bg::END)
         {
@@ -528,7 +528,7 @@ void EnterNameState::update()
         return;
     }
 
-    const auto input = io::get();
+    const auto input = io::get(false);
 
     if (input.key == SDLK_RETURN)
     {

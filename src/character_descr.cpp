@@ -24,10 +24,10 @@ void CharacterDescr::on_start()
 {
     lines_.clear();
 
-    const std::string   offset          = "   ";
-    const Clr&          clr_heading     = clr_white_high;
-    const Clr&          clr_text        = clr_white;
-    const Clr&          clr_text_dark   = clr_gray;
+    const std::string offset = "   ";
+    const Clr& clr_heading = clr_white_high;
+    const Clr& clr_text = clr_white;
+    const Clr& clr_text_dark = clr_gray;
 
     lines_.push_back(
         StrAndClr("History of " + map::player->name_the(),
@@ -168,7 +168,9 @@ void CharacterDescr::on_start()
     }
     else
     {
-        sort(potion_list.begin(), potion_list.end(), str_and_clr_sort);
+        sort(potion_list.begin(),
+             potion_list.end(),
+             str_and_clr_sort);
 
         for (StrAndClr& e : potion_list)
         {
@@ -191,7 +193,9 @@ void CharacterDescr::on_start()
     }
     else
     {
-        sort(manuscript_list.begin(), manuscript_list.end(), str_and_clr_sort);
+        sort(manuscript_list.begin(),
+             manuscript_list.end(),
+             str_and_clr_sort);
 
         for (StrAndClr& e : manuscript_list)
         {
@@ -245,7 +249,8 @@ void CharacterDescr::draw()
 
     const int nr_lines_tot = lines_.size();
 
-    int btm_nr = std::min(top_idx_ + max_nr_lines_on_scr - 1, nr_lines_tot - 1);
+    int btm_nr = std::min(top_idx_ + max_nr_lines_on_scr - 1,
+                          nr_lines_tot - 1);
 
     for (int i = top_idx_; i <= btm_nr; ++i)
     {
@@ -262,10 +267,10 @@ void CharacterDescr::draw()
 
 void CharacterDescr::update()
 {
-    const int line_jump     = 3;
-    const int nr_lines_tot  = lines_.size();
+    const int line_jump = 3;
+    const int nr_lines_tot = lines_.size();
 
-    const auto input = io::get();
+    const auto input = io::get(false);
 
     switch (input.key)
     {
@@ -280,7 +285,8 @@ void CharacterDescr::update()
         }
         else
         {
-            top_idx_ = std::min(nr_lines_tot - max_nr_lines_on_scr, top_idx_);
+            top_idx_ = std::min(nr_lines_tot - max_nr_lines_on_scr,
+                                top_idx_);
         }
         break;
 

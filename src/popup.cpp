@@ -235,7 +235,7 @@ int show_menu_msg(const std::string& msg,
 
     while (true)
     {
-        const auto input = io::get();
+        const auto input = io::get(true);
 
         const MenuAction action = browser.read(input,
                                                MenuInputMode::scrolling);

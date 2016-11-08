@@ -146,7 +146,7 @@ void clear_events();
 // ---
 
 // TODO: "is_o_return" is very hacky...
-InputData get(const bool is_o_return = true);
+InputData get(const bool is_o_return);
 
 } // io
 
