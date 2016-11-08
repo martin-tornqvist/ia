@@ -85,8 +85,8 @@ void init()
     {
         for (int y = 0; y < map_h; ++y)
         {
-            render_array[x][y]              = CellRenderData();
-            render_array_no_actors[x][y]    = CellRenderData();
+            render_array[x][y] = CellRenderData();
+            render_array_no_actors[x][y] = CellRenderData();
         }
     }
 }
@@ -1072,7 +1072,10 @@ const std::vector<HistoryEvent>& history()
 // -----------------------------------------------------------------------------
 void GameState::on_start()
 {
-    map::player->mk_start_items();
+    if (entry_mode_ == GameEntryMode::new_game)
+    {
+        map::player->mk_start_items();
+    }
 
     if (config::is_intro_lvl_skipped() ||
         entry_mode_ == GameEntryMode::load_game)

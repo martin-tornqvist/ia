@@ -131,4 +131,4 @@ private:
     Actor* const owning_actor_;
 };
 
-#endif
+#endif // INVENTORY_HPP

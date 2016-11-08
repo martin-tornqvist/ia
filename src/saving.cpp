@@ -146,7 +146,7 @@ void read_file()
     }
 }
 
-} //namespace
+} // namespace
 
 void init()
 {
@@ -166,14 +166,15 @@ void save_game()
     state_ = State::saving;
 #endif // NDEBUG
 
-    //Tell all modules to append to the save lines (via this modules store functions)
+    // Tell all modules to append to the save lines (via this modules store
+    // functions)
     save_modules();
 
 #ifndef NDEBUG
     state_ = State::stopped;
 #endif // NDEBUG
 
-    //Write the save lines to the save file
+    // Write the save lines to the save file
     write_file();
 
     lines_.clear();
@@ -188,23 +189,23 @@ void load_game()
     state_ = State::loading;
 #endif // NDEBUG
 
-    //Read the save file to the save lines
+    // Read the save file to the save lines
     read_file();
 
     ASSERT(!lines_.empty());
 
-    //Tell all modules to set up their state from the save lines (via the
-    //read functions of this module)
+    // Tell all modules to set up their state from the save lines (via the
+    // read functions of this module)
     load_modules();
 
 #ifndef NDEBUG
     state_ = State::stopped;
 #endif // NDEBUG
 
-    //Save file corruption check
+    // Save file corruption check
     ASSERT(lines_.empty());
 
-    //Loading is finished, write an empty save file to prevent reloading the game
+    // Loading finished, write an empty save file to prevent reloading the game
     write_file();
 }
 
@@ -218,7 +219,7 @@ bool is_save_available()
         file.close();
         return !is_empty;
     }
-    else //Failed to open file
+    else // Failed to open file
     {
         file.close();
         return false;
@@ -252,7 +253,7 @@ std::string get_str()
     ASSERT(state_ == State::loading);
 #endif // NDEBUG
 
-    //Save file corruption check
+    // Save file corruption check
     ASSERT(!lines_.empty());
 
     const std::string str = lines_.front();
@@ -272,4 +273,4 @@ bool get_bool()
     return get_str() == "T";
 }
 
-} //save
+} // save

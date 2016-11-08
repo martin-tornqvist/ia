@@ -403,8 +403,6 @@ void MainMenuState::update()
         {
             if (saving::is_save_available())
             {
-                states::pop();
-
                 init::init_session();
 
                 saving::load_game();
