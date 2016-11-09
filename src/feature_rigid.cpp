@@ -2565,10 +2565,18 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
             Clr         fume_clr    = clr_magenta;
             const int   rnd         = rnd::percent();
 
-            if ((map::dlvl >= min_dlvl_harder_traps) &&
-                (rnd < 20))
+            if (rnd < 20)
             {
-                prop = new PropPoisoned(PropTurns::std);
+                if (map::dlvl < dlvl_harder_traps)
+                {
+                    prop = new PropPoisoned(
+                        PropTurns::specific,
+                        poison_dmg_n_turn * rnd::range(6, 10));
+                }
+                else
+                {
+                    prop = new PropPoisoned(PropTurns::std);
+                }
 
                 fume_clr = clr_green_lgt;
             }
@@ -3044,7 +3052,7 @@ void Fountain::set_type(const FountainType type)
 
         fountain_effect_ = (FountainEffect)rnd::range(min, max);
     }
-    }
+    } // Fountain type switch
 }
 
 void Fountain::on_hit(const DmgType dmg_type,
@@ -3137,7 +3145,17 @@ void Fountain::bump(Actor& actor_bumping)
             break;
 
         case FountainEffect::poison:
-            prop_hlr.try_add(new PropPoisoned(PropTurns::std));
+            if (map::dlvl < dlvl_harder_traps)
+            {
+                prop_hlr.try_add(
+                    new PropPoisoned(
+                        PropTurns::specific,
+                        poison_dmg_n_turn * rnd::range(6, 10)));
+            }
+            else
+            {
+                prop_hlr.try_add(new PropPoisoned(PropTurns::std));
+            }
             break;
 
         case FountainEffect::frenzy:

@@ -49,7 +49,7 @@ const int dlvl_last_mid_game                = 19;
 const int dlvl_first_late_game              = dlvl_last_mid_game + 1;
 const int dlvl_last                         = 30;
 
-const int min_dlvl_harder_traps             = 6;
+const int dlvl_harder_traps             = 6;
 
 const int audio_allocated_channels          = 16;
 

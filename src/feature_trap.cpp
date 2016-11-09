@@ -194,7 +194,7 @@ void Trap::on_new_turn_hook()
 
         if (nr_turns_until_trigger_ == 0)
         {
-            // NOTE: This will reset number of turns  until triggered
+            // NOTE: This will reset number of turns until triggered
             trigger_trap(nullptr);
         }
     }
@@ -252,8 +252,8 @@ void Trap::trigger_start(const Actor* actor)
     }
 
     //Get a randomized value for number of remaining turns
-    const Range turns_range     = trap_impl_->nr_turns_range_to_trigger();
-    const int   rnd_nr_turns    = turns_range.roll();
+    const Range turns_range = trap_impl_->nr_turns_range_to_trigger();
+    const int rnd_nr_turns = turns_range.roll();
 
     //Set number of remaining turns to the randomized value if number of turns
     //was not already set, or if the new value will make it trigger sooner.
@@ -271,7 +271,7 @@ void Trap::trigger_start(const Actor* actor)
     //If number of remaining turns is zero, trigger immediately
     if (nr_turns_until_trigger_ == 0)
     {
-        //NOTE: This will reset number of turns  until triggered
+        //NOTE: This will reset number of turns until triggered
         trigger_trap(nullptr);
     }
 
@@ -408,10 +408,10 @@ void Trap::disarm()
     }
 
     const bool is_blessed = map::player->has_prop(PropId::blessed);
-    const bool is_cursed  = map::player->has_prop(PropId::cursed);
+    const bool is_cursed = map::player->has_prop(PropId::cursed);
 
-    int         disarm_num  = 6;
-    const int   disarm_den  = 10;
+    int disarm_num = 6;
+    const int disarm_den = 10;
 
     if (is_blessed)
     {
@@ -611,7 +611,7 @@ Matl Trap::matl() const
 // -----------------------------------------------------------------------------
 TrapDart::TrapDart(P pos, Trap* const base_trap) :
     MechTrapImpl                (pos, TrapId::dart, base_trap),
-    is_poisoned_                (map::dlvl >= min_dlvl_harder_traps &&
+    is_poisoned_                (map::dlvl >= dlvl_harder_traps &&
                                  rnd::one_in(3)),
     dart_origin_                (),
     is_dart_origin_destroyed_   (false) {}
@@ -635,9 +635,9 @@ TrapPlacementValid TrapDart::on_place()
         {
             p += d;
 
-            const Rigid* const  rigid       = map::cells[p.x][p.y].rigid;
-            const bool          is_wall     = rigid->id() == FeatureId::wall;
-            const bool          is_passable = rigid->is_projectile_passable();
+            const Rigid* const rigid = map::cells[p.x][p.y].rigid;
+            const bool is_wall = rigid->id() == FeatureId::wall;
+            const bool is_passable = rigid->is_projectile_passable();
 
             if (!is_passable && (i < nr_steps_min || !is_wall))
             {
@@ -732,7 +732,7 @@ void TrapDart::trigger()
 
 TrapSpear::TrapSpear(P pos, Trap* const base_trap) :
     MechTrapImpl              (pos, TrapId::spear, base_trap),
-    is_poisoned_                (map::dlvl >= min_dlvl_harder_traps && rnd::one_in(4)),
+    is_poisoned_                (map::dlvl >= dlvl_harder_traps && rnd::one_in(4)),
     spear_origin_               (),
     is_spear_origin_destroyed_  (false) {}
 
@@ -748,9 +748,9 @@ TrapPlacementValid TrapSpear::on_place()
     {
         const P p = pos_ + d;
 
-        const Rigid* const  rigid       = map::cells[p.x][p.y].rigid;
-        const bool          is_wall     = rigid->id() == FeatureId::wall;
-        const bool          is_passable = rigid->is_projectile_passable();
+        const Rigid* const rigid = map::cells[p.x][p.y].rigid;
+        const bool is_wall = rigid->id() == FeatureId::wall;
+        const bool is_passable = rigid->is_projectile_passable();
 
         if (is_wall && !is_passable)
         {
@@ -1106,7 +1106,7 @@ void TrapSpiDrain::trigger()
 
     if (!actor_here)
     {
-        //Should never happen
+        // Should never happen
         return;
     }
 
@@ -1123,9 +1123,11 @@ void TrapSpiDrain::trigger()
     }
 
     const bool can_see = actor_here->prop_handler().allow_see();
+
     TRACE_VERBOSE << "Actor can see: " << can_see << std::endl;
 
     const std::string actor_name = actor_here->name_the();
+
     TRACE_VERBOSE << "Actor name: " << actor_name << std::endl;
 
     if (can_see)
@@ -1141,20 +1143,26 @@ void TrapSpiDrain::trigger()
 
         msg_log::add(msg);
     }
-    else //Cannot see
+    else // Cannot see
     {
         msg_log::add("I feel a peculiar energy around me!");
     }
 
     TRACE << "Draining player spirit" << std::endl;
 
-    //Allow draining more than starting spirit if this is dlvl depth after harder traps
-    const bool allow_over_start_spi = map::dlvl >= min_dlvl_harder_traps;
-    const int d                     = spi_per_lvl * 2;
-    const int max                   = player_start_spi + (allow_over_start_spi ? d : -d);
-    const int spi_drained           = rnd::range(1, max);
+    // Never let spirit draining traps insta-kill the player
+    const int player_spi = map::player->spi();
 
-    map::player->hit_spi(spi_drained);
+    const int spi_drained = player_spi - 1;
+
+    if (spi_drained > 0)
+    {
+        map::player->hit_spi(spi_drained);
+    }
+    else
+    {
+        msg_log::add("I feel somewhat drained.");
+    }
 
     TRACE_FUNC_END_VERBOSE;
 }
@@ -1250,17 +1258,17 @@ void TrapWeb::trigger()
 
     is_holding_actor_ = true;
 
-    const bool          is_player               = actor_here->is_player();
-    const bool          can_see                 = actor_here->prop_handler().allow_see();
-    const bool          can_player_see_actor    = map::player->can_see_actor(*actor_here);
-    const std::string   actor_name              = actor_here->name_the();
+    const bool is_player = actor_here->is_player();
+    const bool can_see = actor_here->prop_handler().allow_see();
+    const bool can_player_see_actor = map::player->can_see_actor(*actor_here);
+    const std::string actor_name = actor_here->name_the();
 
     if (is_player)
     {
         TRACE << "Checking if player has machete" << std::endl;
-        const auto& player_inv      = map::player->inv();
-        Item* const item_wielded    = player_inv.item_in_slot(SlotId::wpn);
-        const bool  has_machete     = item_wielded && item_wielded->data().id == ItemId::machete;
+        const auto& player_inv = map::player->inv();
+        Item* const item_wielded = player_inv.item_in_slot(SlotId::wpn);
+        const bool has_machete = item_wielded && item_wielded->data().id == ItemId::machete;
 
         if (has_machete)
         {
@@ -1303,15 +1311,16 @@ Dir TrapWeb::actor_try_leave(Actor& actor, const Dir dir)
 {
     if (!is_holding_actor_)
     {
-        TRACE_VERBOSE << "Not holding actor, returning current direction" << std::endl;
+        TRACE_VERBOSE << "Not holding actor, returning current direction"
+                      << std::endl;
         return dir;
     }
 
     TRACE_VERBOSE << "Is holding actor" << std::endl;
 
-    const bool          player_can_see          = map::player->prop_handler().allow_see();
-    const bool          player_can_see_actor    = map::player->can_see_actor(actor);
-    const std::string   actor_name              = actor.name_the();
+    const bool player_can_see = map::player->prop_handler().allow_see();
+    const bool player_can_see_actor = map::player->can_see_actor(actor);
+    const std::string actor_name = actor.name_the();
 
     TRACE_VERBOSE << "Name of actor held: " << actor_name << std::endl;
 
