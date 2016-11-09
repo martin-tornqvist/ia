@@ -481,16 +481,22 @@ int Player::enc_percent() const
 
 int Player::carry_weight_lmt() const
 {
-    const bool is_tough = player_bon::traits[(size_t)Trait::tough];
-    const bool is_rugged = player_bon::traits[(size_t)Trait::rugged];
-    const bool is_strong_backed = player_bon::traits[(size_t)Trait::strong_backed];
+    const bool is_tough =
+        player_bon::traits[(size_t)Trait::tough];
+
+    const bool is_rugged =
+        player_bon::traits[(size_t)Trait::rugged];
+
+    const bool is_strong_backed =
+        player_bon::traits[(size_t)Trait::strong_backed];
 
     const bool is_weakened = has_prop(PropId::weakened);
 
-    const int carry_weight_mod = (is_tough * 10) +
-                                 (is_rugged * 10) +
-                                 (is_strong_backed * 30) -
-                                 (is_weakened * 15);
+    const int carry_weight_mod =
+        (is_tough * 10) +
+        (is_rugged * 10) +
+        (is_strong_backed * 30) -
+        (is_weakened * 15);
 
     return (player_carry_weight_base * (carry_weight_mod + 100)) / 100;
 }
@@ -612,12 +618,13 @@ bool Player::is_standing_in_open_place() const
     bool blocked[map_w][map_h];
 
     // NOTE: Checking if adjacent cells blocks projectiles is probably the best
-    // way to determine if this is an open place. If we check for things that
-    // block common movement, stuff like chasms would count as blocking.
-    map_parse::run(cell_check::BlocksProjectiles(),
-                   blocked,
-                   MapParseMode::overwrite,
-                   r);
+    //       way to determine if this is an open place. If we check for things
+    //       that blocks common movement, stuff like chasms would count as
+    //       blocking.
+    map_parsers::BlocksProjectiles()
+        .run(blocked,
+             MapParseMode::overwrite,
+             r);
 
     for (int x = r.p0.x; x <= r.p1.x; ++x)
     {
@@ -640,12 +647,13 @@ bool Player::is_standing_in_cramped_place() const
     bool blocked[map_w][map_h];
 
     // NOTE: Checking if adjacent cells blocks projectiles is probably the best
-    // way to determine if this is an open place. If we check for things that
-    // block common movement, stuff like chasms would count as blocking.
-    map_parse::run(cell_check::BlocksProjectiles(),
-                   blocked,
-                   MapParseMode::overwrite,
-                   r);
+    //       way to determine if this is an open place. If we check for things
+    //       that block common movement, stuff like chasms would count as
+    //       blocking.
+    map_parsers::BlocksProjectiles()
+        .run(blocked,
+             MapParseMode::overwrite,
+             r);
 
     int block_count = 0;
 
@@ -1721,10 +1729,10 @@ void Player::add_light_hook(bool light_map[map_w][map_h]) const
 
          const R fov_lmt = fov::get_fov_rect(pos);
 
-        map_parse::run(cell_check::BlocksLos(),
-                       hard_blocked,
-                       MapParseMode::overwrite,
-                       fov_lmt);
+        map_parsers::BlocksLos()
+            .run(hard_blocked,
+                 MapParseMode::overwrite,
+                 fov_lmt);
 
         LosResult fov[map_w][map_h];
 
@@ -1778,10 +1786,10 @@ void Player::update_fov()
 
          const R fov_lmt = fov::get_fov_rect(pos);
 
-        map_parse::run(cell_check::BlocksLos(),
-                       hard_blocked,
-                       MapParseMode::overwrite,
-                       fov_lmt);
+        map_parsers::BlocksLos()
+            .run(hard_blocked,
+                 MapParseMode::overwrite,
+                 fov_lmt);
 
         LosResult fov[map_w][map_h];
 
@@ -1823,10 +1831,11 @@ void Player::update_fov()
     {
         for (int y = 0; y < map_h; ++y)
         {
-            Cell& cell = map::cells[x][y];
-
             const bool is_blocking =
-                cell_check::BlocksMoveCmn(false).check(cell);
+                map_parsers::BlocksMoveCmn(ParseActors::no)
+                .cell(P(x, y));
+
+            Cell& cell = map::cells[x][y];
 
             // Do not explore dark floor cells
             if (cell.is_seen_by_player &&
@@ -1841,10 +1850,14 @@ void Player::update_fov()
 void Player::fov_hack()
 {
     bool blocked_los[map_w][map_h];
-    map_parse::run(cell_check::BlocksLos(), blocked_los);
+
+    map_parsers::BlocksLos()
+        .run(blocked_los);
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+
+    map_parsers::BlocksMoveCmn(ParseActors::no)
+        .run(blocked);
 
     for (int x = 0; x < map_w; ++x)
     {

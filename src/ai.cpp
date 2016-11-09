@@ -48,8 +48,8 @@ bool try_cast_random_spell(Mon& mon)
             // Spi was lower than the spells potential cost
             //
 
-            const int current_hp  = mon.hp();
-            const int max_hp  = mon.hp_max(true);
+            const int current_hp = mon.hp();
+            const int max_hp = mon.hp_max(true);
 
             // If monster is not allied to player, with a small chance, cast
             // the spell anyway if hp is low.
@@ -196,17 +196,17 @@ void move_bucket(Mon& mon, std::vector<P>& dirs_to_mk)
 {
     dirs_to_mk.clear();
 
-    const P& mon_p      = mon.pos;
-    const P& player_p   = map::player->pos;
+    const P& mon_p = mon.pos;
+    const P& player_p = map::player->pos;
 
     bool blocked[map_w][map_h];
 
     const R area_to_check_blocked(mon_p - P(1, 1), mon_p + P(1, 1));
 
-    map_parse::run(cell_check::BlocksActor(mon, true),
-                   blocked,
-                   MapParseMode::overwrite,
-                   area_to_check_blocked);
+    map_parsers::BlocksActor(mon, ParseActors::yes)
+        .run(blocked,
+             MapParseMode::overwrite,
+             area_to_check_blocked);
 
     for (const P& d : dir_utils::dir_list)
     {
@@ -235,7 +235,8 @@ bool make_room_for_friend(Mon& mon)
 
     bool blocked_los[map_w][map_h];
 
-    map_parse::run(cell_check::BlocksLos(), blocked_los);
+    map_parsers::BlocksLos()
+        .run(blocked_los);
 
     if (!mon.can_see_actor(*map::player, blocked_los))
     {
@@ -312,9 +313,9 @@ bool make_room_for_friend(Mon& mon)
                         // NOTE: The third actor here can include the original
                         //       blocked "other" actor, since we must also check
                         //       if we block that actor from the target position
-                        if (actor3 != &mon          &&
-                            actor3->is_alive()      &&
-                            !actor3->is_player()    &&
+                        if (actor3 != &mon &&
+                            actor3->is_alive() &&
+                            !actor3->is_player() &&
                             !map::player->is_leader_of(actor3))
                         {
                             Mon* const mon3 = static_cast<Mon*>(actor3);
@@ -364,35 +365,14 @@ bool move_to_random_adj_cell(Mon& mon)
 
     bool blocked[map_w][map_h];
 
-    cell_check::BlocksActor cellcheck(mon, true);
+    const R parse_area(mon.pos - 1, mon.pos + 1);
 
-    for (const P& d : dir_utils::dir_list)
-    {
-        const P p(mon.pos + d);
+    map_parsers::BlocksActor(mon, ParseActors::yes)
+        .run(blocked,
+             MapParseMode::overwrite,
+             parse_area);
 
-        blocked[p.x][p.y] = cellcheck.check(map::cells[p.x][p.y]);
-    }
-
-    for (Actor* actor : game_time::actors)
-    {
-        if (actor->is_alive())
-        {
-            const P& p = actor->pos;
-            blocked[p.x][p.y] = true;
-        }
-    }
-
-    for (Mob* mob : game_time::mobs)
-    {
-        const P& p = mob->pos();
-
-        if (cellcheck.check(*mob))
-        {
-            blocked[p.x][p.y] = true;
-        }
-    }
-
-     const R area_allowed(P(1, 1), P(map_w - 2, map_h - 2));
+    const R area_allowed(P(1, 1), P(map_w - 2, map_h - 2));
 
     // First, try the same direction as last travelled
     Dir dir = Dir::END;
@@ -430,7 +410,9 @@ bool move_to_random_adj_cell(Mon& mon)
 
         if (!dir_bucket.empty())
         {
-            dir = dir_bucket[rnd::range(0, dir_bucket.size() - 1)];
+            const size_t idx = rnd::range(0, dir_bucket.size() - 1);
+
+            dir = dir_bucket[idx];
         }
     }
 
@@ -454,14 +436,14 @@ bool move_to_tgt_simple(Mon& mon)
     if (mon.aware_counter_ > 0 ||
         map::player->is_leader_of(&mon))
     {
-        const P offset  = mon.tgt_->pos - mon.pos;
-        const P signs   = offset.signs();
+        const P offset = mon.tgt_->pos - mon.pos;
+        const P signs = offset.signs();
 
         const P new_pos(mon.pos + signs);
 
         const bool is_blocked =
-            map_parse::cell(cell_check::BlocksActor(mon, true),
-                            new_pos);
+            map_parsers::BlocksActor(mon, ParseActors::yes)
+            .cell(new_pos);
 
         if (!is_blocked)
         {
@@ -495,10 +477,10 @@ bool step_to_lair_if_los(Mon& mon, const P& lair_p)
 
          const R area_check_blocked = fov::get_fov_rect(mon.pos);
 
-        map_parse::run(cell_check::BlocksLos(),
-                       blocked,
-                       MapParseMode::overwrite,
-                       area_check_blocked);
+        map_parsers::BlocksLos()
+            .run(blocked,
+                 MapParseMode::overwrite,
+                 area_check_blocked);
 
         const LosResult los = fov::check_cell(mon.pos,
                                                lair_p,
@@ -511,8 +493,8 @@ bool step_to_lair_if_los(Mon& mon, const P& lair_p)
             const P tgt_p = mon.pos + d;
 
             const bool is_blocked =
-                map_parse::cell(cell_check::BlocksActor(mon, true),
-                                tgt_p);
+                map_parsers::BlocksActor(mon, ParseActors::yes)
+                .cell(tgt_p);
 
             if (is_blocked)
             {
@@ -601,10 +583,10 @@ void find_path_to_lair_if_no_los(Mon& mon,
 
          const R fov_lmt = fov::get_fov_rect(mon.pos);
 
-        map_parse::run(cell_check::BlocksLos(),
-                       blocked,
-                       MapParseMode::overwrite,
-                       fov_lmt);
+        map_parsers::BlocksLos()
+            .run(blocked,
+                 MapParseMode::overwrite,
+                 fov_lmt);
 
         const LosResult los = fov::check_cell(mon.pos,
                                               lair_p,
@@ -616,17 +598,17 @@ void find_path_to_lair_if_no_los(Mon& mon,
             return;
         }
 
-        map_parse::run(cell_check::BlocksActor(mon, false),
-                       blocked);
+        map_parsers::BlocksActor(mon, ParseActors::no)
+            .run(blocked);
 
-        map_parse::run(cell_check::LivingActorsAdjToPos(mon.pos),
-                       blocked,
-                       MapParseMode::append);
+        map_parsers::LivingActorsAdjToPos(mon.pos)
+            .run(blocked,
+                 MapParseMode::append);
 
         pathfind(mon.pos,
-                      lair_p,
-                      blocked,
-                      path);
+                 lair_p,
+                 blocked,
+                 path);
 
         return;
     }
@@ -652,10 +634,10 @@ void find_path_to_leader(Mon& mon, std::vector<P>& path)
 
     const R fov_lmt = fov::get_fov_rect(mon.pos);
 
-    map_parse::run(cell_check::BlocksLos(),
-                   blocked,
-                   MapParseMode::overwrite,
-                   fov_lmt);
+    map_parsers::BlocksLos()
+        .run(blocked,
+             MapParseMode::overwrite,
+             fov_lmt);
 
     const LosResult los =
         fov::check_cell(mon.pos,
@@ -668,12 +650,12 @@ void find_path_to_leader(Mon& mon, std::vector<P>& path)
         return;
     }
 
-    map_parse::run(cell_check::BlocksActor(mon, false),
-                   blocked);
+    map_parsers::BlocksActor(mon, ParseActors::no)
+        .run(blocked);
 
-    map_parse::run(cell_check::LivingActorsAdjToPos(mon.pos),
-                   blocked,
-                   MapParseMode::append);
+    map_parsers::LivingActorsAdjToPos(mon.pos)
+        .run(blocked,
+             MapParseMode::append);
 
     pathfind(mon.pos,
              leader->pos,
@@ -711,10 +693,10 @@ void find_path_to_player(Mon& mon, std::vector<P>& path)
     const int los_x1 = std::max(map::player->pos.x, mon.pos.x);
     const int los_y1 = std::max(map::player->pos.y, mon.pos.y);
 
-    map_parse::run(cell_check::BlocksLos(),
-                   blocked,
-                   MapParseMode::overwrite,
-                   R(los_x0, los_y0, los_x1, los_y1));
+    map_parsers::BlocksLos()
+        .run(blocked,
+             MapParseMode::overwrite,
+             R(los_x0, los_y0, los_x1, los_y1));
 
     const bool is_seeing_player =
         mon.can_see_actor(*map::player, blocked);
@@ -773,9 +755,9 @@ void find_path_to_player(Mon& mon, std::vector<P>& path)
     }
 
     // Append living adjacent actors to the blocking array
-    map_parse::run(cell_check::LivingActorsAdjToPos(mon.pos),
-                   blocked,
-                   MapParseMode::append);
+    map_parsers::LivingActorsAdjToPos(mon.pos)
+        .run(blocked,
+             MapParseMode::append);
 
     // Find a path
     pathfind(mon.pos,

@@ -31,7 +31,8 @@ ConsumeItem Rod::activate(Actor* const actor)
 
     if (nr_charge_turns_left_ > 0)
     {
-        const std::string rod_name = name(ItemRefType::plain, ItemRefInf::none);
+        const std::string rod_name =
+            name(ItemRefType::plain, ItemRefInf::none);
 
         msg_log::add("The " + rod_name + " is still charging.");
 
@@ -40,9 +41,10 @@ ConsumeItem Rod::activate(Actor* const actor)
 
     data_->is_tried = true;
 
-    //TODO: Sfx
+    // TODO: Sfx
 
-    const std::string rod_name_a = name(ItemRefType::a, ItemRefInf::none);
+    const std::string rod_name_a =
+        name(ItemRefType::a, ItemRefInf::none);
 
     msg_log::add("I activate " + rod_name_a + "...");
 
@@ -52,18 +54,18 @@ ConsumeItem Rod::activate(Actor* const actor)
     {
         map::player->incr_shock(ShockLvl::heavy, ShockSrc::use_strange_item);
     }
-    else //Not identified
+    else // Not identified
     {
         msg_log::add("Nothing happens.");
     }
 
-    //NOTE: Various rods cannot have different recharge time, since the player
-    //      could trivially "metagame identify" rods based on the this value
-    //      when they aren't identified in-game. So here we set a fixed value,
-    //      same for all rods.
+    // NOTE: Various rods cannot have different recharge time, since the player
+    //       could trivially "metagame identify" rods based on the this value
+    //       when they aren't identified in-game. So here we set a fixed value,
+    //       same for all rods.
 
-    //TODO: This number could be a good candidate for a trait or background to
-    //      provide a bonus for!
+    // TODO: This number could be a good candidate for a trait or background to
+    //       provide a bonus for!
     nr_charge_turns_left_ = 250;
 
     if (map::player->is_alive())
@@ -84,7 +86,9 @@ void Rod::on_std_turn_in_inv(const InvType inv_type)
 
         if (nr_charge_turns_left_ == 0)
         {
-            const std::string rod_name = name(ItemRefType::plain, ItemRefInf::none);
+            const std::string rod_name =
+                name(ItemRefType::plain,
+                     ItemRefInf::none);
 
             msg_log::add("The " + rod_name + " has finished charging.");
         }
@@ -100,7 +104,7 @@ std::vector<std::string> Rod::descr() const
             descr_identified()
         };
     }
-    else //Not identified
+    else // Not identified
     {
         return data_->base_descr;
     }
@@ -114,7 +118,9 @@ void Rod::identify(const Verbosity verbosity)
 
         if (verbosity == Verbosity::verbose)
         {
-            const std::string name_after = name(ItemRefType::a, ItemRefInf::none);
+            const std::string name_after =
+                name(ItemRefType::a,
+                     ItemRefInf::none);
 
             msg_log::add("I have identified " + name_after + ".");
 
@@ -127,21 +133,30 @@ void Rod::identify(const Verbosity verbosity)
 
 std::string Rod::name_inf() const
 {
-    const std::string charge_str = "Charging:" + to_str(nr_charge_turns_left_);
+    const std::string charge_str =
+        "Charging:" + to_str(nr_charge_turns_left_);
 
     if (data_->is_identified)
     {
-        return nr_charge_turns_left_ > 0 ? ("{" + charge_str + "}") : "";
+        return
+            nr_charge_turns_left_ > 0 ?
+            ("{" + charge_str + "}") : "";
     }
-    else //Not identified
+    else // Not identified
     {
         if (nr_charge_turns_left_ > 0)
         {
-            return std::string("{") + (data_->is_tried ? "Tried, " : "") + charge_str + "}";
+            return
+                std::string("{") +
+                (data_->is_tried ? "Tried, " : "") +
+                charge_str +
+                "}";
         }
         else
         {
-            return data_->is_tried ? "{Tried}" : "";
+            return
+                data_->is_tried ?
+                "{Tried}" : "";
         }
     }
 }
@@ -150,10 +165,10 @@ void RodPurgeInvis::activate_impl()
 {
     bool blocked[map_w][map_h];
 
-    map_parse::run(cell_check::BlocksLos(),
-                   blocked,
-                   MapParseMode::overwrite,
-                   fov::get_fov_rect(map::player->pos));
+    map_parsers::BlocksLos()
+        .run(blocked,
+             MapParseMode::overwrite,
+             fov::get_fov_rect(map::player->pos));
 
     LosResult fov[map_w][map_h];
 
@@ -165,12 +180,14 @@ void RodPurgeInvis::activate_impl()
     {
         if (!actor->is_player())
         {
-            //Reveal invisible monsters
+            // Reveal invisible monsters
             const P& p(actor->pos);
 
             const LosResult& los = fov[p.x][p.y];
 
-            if (!los.is_blocked_hard && !los.is_blocked_by_drk && actor->has_prop(PropId::invis))
+            if (!los.is_blocked_hard &&
+                !los.is_blocked_by_drk &&
+                actor->has_prop(PropId::invis))
             {
                 actor->prop_handler().end_prop(PropId::invis);
 
@@ -180,7 +197,7 @@ void RodPurgeInvis::activate_impl()
                 }
             }
 
-            //Reveal sneaking monsters
+            // Reveal sneaking monsters
             Mon* const mon = static_cast<Mon*>(actor);
 
             if (mon->is_sneaking_)
@@ -290,62 +307,69 @@ namespace
 
 std::vector<RodLook> rod_looks_;
 
-} //namespace
+} // namespace
 
 void init()
 {
     TRACE_FUNC_BEGIN;
 
-    //Init possible rod colors and fake names
+    // Init possible rod colors and fake names
     rod_looks_.clear();
-    rod_looks_.push_back({"Iron",       "an Iron",      clr_gray});
-    rod_looks_.push_back({"Zinc",       "a Zinc",       clr_white_high});
-    rod_looks_.push_back({"Chromium",   "a Chromium",   clr_white_high});
-    rod_looks_.push_back({"Tin",        "a Tin",        clr_white_high});
-    rod_looks_.push_back({"Silver",     "a Silver",     clr_white_high});
-    rod_looks_.push_back({"Golden",     "a Golden",     clr_yellow});
-    rod_looks_.push_back({"Nickel",     "a Nickel",     clr_white_high});
-    rod_looks_.push_back({"Copper",     "a Copper",     clr_brown});
-    rod_looks_.push_back({"Lead",       "a Lead",       clr_gray});
-    rod_looks_.push_back({"Tungsten",   "a Tungsten",   clr_white});
-    rod_looks_.push_back({"Platinum",   "a Platinum",   clr_white_high});
-    rod_looks_.push_back({"Lithium",    "a Lithium",    clr_white});
-    rod_looks_.push_back({"Zirconium",  "a Zirconium",  clr_white});
-    rod_looks_.push_back({"Gallium",    "a Gallium",    clr_white_high});
-    rod_looks_.push_back({"Cobalt",     "a Cobalt",     clr_blue_lgt});
-    rod_looks_.push_back({"Titanium",   "a Titanium",   clr_white_high});
-    rod_looks_.push_back({"Magnesium",  "a Magnesium",  clr_white});
+    rod_looks_.push_back({"Iron", "an Iron", clr_gray});
+    rod_looks_.push_back({"Zinc", "a Zinc", clr_white_high});
+    rod_looks_.push_back({"Chromium", "a Chromium", clr_white_high});
+    rod_looks_.push_back({"Tin", "a Tin", clr_white_high});
+    rod_looks_.push_back({"Silver", "a Silver", clr_white_high});
+    rod_looks_.push_back({"Golden", "a Golden", clr_yellow});
+    rod_looks_.push_back({"Nickel", "a Nickel", clr_white_high});
+    rod_looks_.push_back({"Copper", "a Copper", clr_brown});
+    rod_looks_.push_back({"Lead", "a Lead", clr_gray});
+    rod_looks_.push_back({"Tungsten", "a Tungsten", clr_white});
+    rod_looks_.push_back({"Platinum", "a Platinum", clr_white_high});
+    rod_looks_.push_back({"Lithium", "a Lithium", clr_white});
+    rod_looks_.push_back({"Zirconium", "a Zirconium", clr_white});
+    rod_looks_.push_back({"Gallium", "a Gallium", clr_white_high});
+    rod_looks_.push_back({"Cobalt", "a Cobalt", clr_blue_lgt});
+    rod_looks_.push_back({"Titanium", "a Titanium", clr_white_high});
+    rod_looks_.push_back({"Magnesium", "a Magnesium", clr_white});
 
     for (auto& d : item_data::data)
     {
         if (d.type == ItemType::rod)
         {
-            //Color and false name
+            // Color and false name
             const size_t idx = rnd::range(0, rod_looks_.size() - 1);
 
             RodLook& look = rod_looks_[idx];
 
-            d.base_name_un_id.names[int(ItemRefType::plain)]   = look.name_plain + " Rod";
-            d.base_name_un_id.names[int(ItemRefType::plural)]  = look.name_plain + " Rods";
-            d.base_name_un_id.names[int(ItemRefType::a)]       = look.name_a     + " Rod";
+            d.base_name_un_id.names[(size_t)ItemRefType::plain] =
+                look.name_plain + " Rod";
+
+            d.base_name_un_id.names[(size_t)ItemRefType::plural] =
+                look.name_plain + " Rods";
+
+            d.base_name_un_id.names[(size_t)ItemRefType::a] =
+                look.name_a + " Rod";
+
             d.clr = look.clr;
 
             rod_looks_.erase(rod_looks_.begin() + idx);
 
-            //True name
-            const Rod* const rod = static_cast<const Rod*>(item_factory::mk(d.id, 1));
+            // True name
+            const Rod* const rod =
+                static_cast<const Rod*>(item_factory::mk(d.id, 1));
 
             const std::string real_type_name = rod->real_name();
 
             delete rod;
 
-            const std::string real_name        = "Rod of "    + real_type_name;
-            const std::string real_name_plural = "Rods of "   + real_type_name;
-            const std::string real_name_a      = "a Rod of "  + real_type_name;
+            const std::string real_name = "Rod of " + real_type_name;
+            const std::string real_name_plural = "Rods of " + real_type_name;
+            const std::string real_name_a = "a Rod of " + real_type_name;
 
-            d.base_name.names[int(ItemRefType::plain)]  = real_name;
+            d.base_name.names[int(ItemRefType::plain)] = real_name;
             d.base_name.names[int(ItemRefType::plural)] = real_name_plural;
-            d.base_name.names[int(ItemRefType::a)]      = real_name_a;
+            d.base_name.names[int(ItemRefType::a)] = real_name_a;
         }
     }
 
@@ -360,9 +384,14 @@ void save()
 
         if (d.type == ItemType::rod)
         {
-            saving::put_str(d.base_name_un_id.names[size_t(ItemRefType::plain)]);
-            saving::put_str(d.base_name_un_id.names[size_t(ItemRefType::plural)]);
-            saving::put_str(d.base_name_un_id.names[size_t(ItemRefType::a)]);
+            saving::put_str(
+                d.base_name_un_id.names[size_t(ItemRefType::plain)]);
+
+            saving::put_str(
+                d.base_name_un_id.names[size_t(ItemRefType::plural)]);
+
+            saving::put_str(
+                d.base_name_un_id.names[size_t(ItemRefType::a)]);
 
             saving::put_int(d.clr.r);
             saving::put_int(d.clr.g);
@@ -379,9 +408,14 @@ void load()
 
         if (d.type == ItemType::rod)
         {
-            d.base_name_un_id.names[size_t(ItemRefType::plain)]  = saving::get_str();
-            d.base_name_un_id.names[size_t(ItemRefType::plural)] = saving::get_str();
-            d.base_name_un_id.names[size_t(ItemRefType::a)]      = saving::get_str();
+            d.base_name_un_id.names[size_t(ItemRefType::plain)] =
+                saving::get_str();
+
+            d.base_name_un_id.names[size_t(ItemRefType::plural)] =
+                saving::get_str();
+
+            d.base_name_un_id.names[size_t(ItemRefType::a)] =
+                saving::get_str();
 
             d.clr.r = saving::get_int();
             d.clr.g = saving::get_int();
@@ -390,4 +424,4 @@ void load()
     }
 }
 
-} //rod_handling
+} // rod_handling

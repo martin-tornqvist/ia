@@ -148,8 +148,7 @@ Range Spell::spi_cost(const bool is_base_cost_only, Actor* const caster) const
 {
     int cost_max = max_spi_cost();
 
-    if (
-        caster == map::player &&
+    if (caster == map::player &&
         !is_base_cost_only)
     {
         // The spell is more expensive the less skill the player has in it
@@ -821,10 +820,9 @@ SpellEffectNoticed SpellAnimWpns::cast_impl(Actor* const caster) const
 
                 Item* const item = cell.item;
 
-                if (
-                    cell.is_seen_by_player &&
+                if (cell.is_seen_by_player &&
                     item &&
-                    item->data().type == ItemType::melee_wpn)
+                    (item->data().type == ItemType::melee_wpn))
                 {
                     cell.item = nullptr;
 
@@ -832,12 +830,13 @@ SpellEffectNoticed SpellAnimWpns::cast_impl(Actor* const caster) const
 
                     std::vector<Mon*> summoned;
 
-                    actor_factory::summon(p,
-                                          std::vector<ActorId>(1, ActorId::animated_wpn),
-                                          MakeMonAware::no,
-                                          map::player,
-                                          &summoned,
-                                          Verbosity::silent);
+                    actor_factory::summon(
+                        p,
+                        std::vector<ActorId>(1, ActorId::animated_wpn),
+                        MakeMonAware::no,
+                        map::player,
+                        &summoned,
+                        Verbosity::silent);
 
                     ASSERT(summoned.size() == 1);
 
@@ -849,9 +848,10 @@ SpellEffectNoticed SpellAnimWpns::cast_impl(Actor* const caster) const
 
                     inv.put_in_slot(SlotId::wpn, item);
 
-                    const std::string item_name = item->name(ItemRefType::plain,
-                                                  ItemRefInf::yes,
-                                                  ItemRefAttInf::none);
+                    const std::string item_name =
+                        item->name(ItemRefType::plain,
+                                   ItemRefInf::yes,
+                                   ItemRefAttInf::none);
 
                     msg_log::add("The " + item_name + " rises into thin air!");
 
@@ -1439,7 +1439,9 @@ SpellEffectNoticed SpellDisease::cast_impl(Actor* const caster) const
 
     if (map::player->can_see_actor(*tgt))
     {
-        msg_log::add("A horrible disease is starting to afflict " + actor_name + "!");
+        msg_log::add("A horrible disease is starting to afflict " +
+                     actor_name +
+                     "!");
     }
 
     tgt->prop_handler().try_add(new PropDiseased(PropTurns::std));
@@ -1456,11 +1458,14 @@ bool SpellDisease::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 SpellEffectNoticed SpellSummonMon::cast_impl(Actor* const caster) const
 {
-    // Try to summon a creature inside the player's FOV (inside the standard range), in a
-    // free visible cell. If no such cell is available, instead summon near the caster.
+    // Try to summon a creature inside the player's FOV (inside the standard
+    // range), in a free visible cell. If no such cell is available, instead
+    // summon near the caster.
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::BlocksMoveCmn(true), blocked);
+
+    map_parsers::BlocksMoveCmn(ParseActors::yes)
+        .run(blocked);
 
     std::vector<P> free_cells_seen_by_player;
     const int radi = fov_std_radi_int;

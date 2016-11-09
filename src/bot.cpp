@@ -76,7 +76,9 @@ void find_stair_path()
     path_.clear();
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+
+    map_parsers::BlocksMoveCmn(ParseActors::no)
+        .run(blocked);
 
     P stair_p(-1, -1);
 

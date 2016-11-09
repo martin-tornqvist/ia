@@ -157,8 +157,8 @@ void Rigid::on_new_turn()
             if (map::is_pos_inside_map(p))
             {
                 const bool blocks =
-                    cell_check::BlocksMoveCmn(false).
-                    check(map::cells[p.x][p.y]);
+                    map_parsers::BlocksMoveCmn(ParseActors::no)
+                    .cell(p);
 
                 if (!blocks)
                 {
@@ -2647,10 +2647,10 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
 
         bool blocked[map_w][map_h];
 
-        map_parse::run(cell_check::BlocksMoveCmn(true),
-                       blocked,
-                       MapParseMode::overwrite,
-                       R(pos_ - 1, pos_ + 1));
+        map_parsers::BlocksMoveCmn(ParseActors::yes)
+            .run(blocked,
+                 MapParseMode::overwrite,
+                 R(pos_ - 1, pos_ + 1));
 
         auto positions_to_try = dir_utils::dir_list;
 
@@ -2679,7 +2679,8 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
             //All adjacent space is occupied, use the summon method as fallback
             //(Although the monster could spawn pretty far from the tomb...)
 
-            TRACE << "Could not spawn adjacent monster, using summon method instead"
+            TRACE << "Could not spawn adjacent monster, "
+                  << "using summon method instead"
                   << std::endl;
 
             std::vector<Mon*> spawned_list;

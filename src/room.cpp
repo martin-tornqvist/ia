@@ -54,13 +54,13 @@ void init_room_bucket()
 
     if (dlvl <= dlvl_last_early_game)
     {
-        add_to_room_bucket(RoomType::human,        rnd::range(2, 3));
-        add_to_room_bucket(RoomType::ritual,       1);
-        add_to_room_bucket(RoomType::spider,       rnd::range(1, 3));
-        add_to_room_bucket(RoomType::crypt,        rnd::range(2, 3));
-        add_to_room_bucket(RoomType::monster,      1);
-        add_to_room_bucket(RoomType::flooded,      rnd::range(1, 2));
-        add_to_room_bucket(RoomType::muddy,        rnd::range(1, 2));
+        add_to_room_bucket(RoomType::human, rnd::range(2, 3));
+        add_to_room_bucket(RoomType::ritual, 1);
+        add_to_room_bucket(RoomType::spider, rnd::range(1, 3));
+        add_to_room_bucket(RoomType::crypt, rnd::range(2, 3));
+        add_to_room_bucket(RoomType::monster, 1);
+        add_to_room_bucket(RoomType::flooded, rnd::range(1, 2));
+        add_to_room_bucket(RoomType::muddy, rnd::range(1, 2));
 
         const size_t nr_plain_rooms = room_bucket_.size() * 3;
 
@@ -68,17 +68,17 @@ void init_room_bucket()
     }
     else if (dlvl <= dlvl_last_mid_game)
     {
-        add_to_room_bucket(RoomType::human,         rnd::range(1, 2));
-        add_to_room_bucket(RoomType::ritual,        1);
-        add_to_room_bucket(RoomType::spider,        rnd::range(1, 3));
-        add_to_room_bucket(RoomType::snake_pit,     1);
-        add_to_room_bucket(RoomType::crypt,         4);
-        add_to_room_bucket(RoomType::monster,       2);
-        add_to_room_bucket(RoomType::flooded,       rnd::range(1, 3));
-        add_to_room_bucket(RoomType::muddy,         rnd::range(1, 3));
-        add_to_room_bucket(RoomType::cave,          2);
-        add_to_room_bucket(RoomType::chasm,         1);
-        add_to_room_bucket(RoomType::forest,        2);
+        add_to_room_bucket(RoomType::human, rnd::range(1, 2));
+        add_to_room_bucket(RoomType::ritual, 1);
+        add_to_room_bucket(RoomType::spider, rnd::range(1, 3));
+        add_to_room_bucket(RoomType::snake_pit, 1);
+        add_to_room_bucket(RoomType::crypt, 4);
+        add_to_room_bucket(RoomType::monster, 2);
+        add_to_room_bucket(RoomType::flooded, rnd::range(1, 3));
+        add_to_room_bucket(RoomType::muddy, rnd::range(1, 3));
+        add_to_room_bucket(RoomType::cave, 2);
+        add_to_room_bucket(RoomType::chasm, 1);
+        add_to_room_bucket(RoomType::forest, 2);
 
         const size_t nr_plain_rooms = room_bucket_.size() * 3;
 
@@ -86,13 +86,13 @@ void init_room_bucket()
     }
     else // Late game
     {
-        add_to_room_bucket(RoomType::monster,       1);
-        add_to_room_bucket(RoomType::spider,        1);
-        add_to_room_bucket(RoomType::snake_pit,     1);
-        add_to_room_bucket(RoomType::flooded,       1);
-        add_to_room_bucket(RoomType::muddy,         1);
-        add_to_room_bucket(RoomType::chasm,         2);
-        add_to_room_bucket(RoomType::forest,        2);
+        add_to_room_bucket(RoomType::monster, 1);
+        add_to_room_bucket(RoomType::spider, 1);
+        add_to_room_bucket(RoomType::snake_pit, 1);
+        add_to_room_bucket(RoomType::flooded, 1);
+        add_to_room_bucket(RoomType::muddy, 1);
+        add_to_room_bucket(RoomType::chasm, 2);
+        add_to_room_bucket(RoomType::forest, 2);
 
         const size_t nr_cave_rooms = room_bucket_.size() * 2;
 
@@ -282,7 +282,7 @@ P StdRoom::find_auto_feature_placement(const std::vector<P>& adj_to_walls,
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    const bool is_adj_to_walls_avail    = !adj_to_walls.empty();
+    const bool is_adj_to_walls_avail = !adj_to_walls.empty();
     const bool is_away_from_walls_avail = !away_from_walls.empty();
 
     if (!is_adj_to_walls_avail &&
@@ -416,14 +416,14 @@ void StdRoom::place_auto_features()
 std::vector<RoomAutoFeatureRule> PlainRoom::auto_features_allowed() const
 {
     const int fountain_one_in_n =
-        (map::dlvl <= 4) ? 5  :
+        (map::dlvl <= 4) ? 5 :
         (map::dlvl <= dlvl_last_mid_game) ? 10 : 20;
 
     return
     {
-        {FeatureId::brazier,    rnd::one_in(4) ? 1 : 0},
-        {FeatureId::statue,     rnd::one_in(7) ? rnd::range(1, 2) : 0},
-        {FeatureId::fountain,   rnd::one_in(fountain_one_in_n) ? 1 : 0}
+        {FeatureId::brazier, rnd::one_in(4) ? 1 : 0},
+        {FeatureId::statue, rnd::one_in(7) ? rnd::range(1, 2) : 0},
+        {FeatureId::fountain, rnd::one_in(fountain_one_in_n) ? 1 : 0}
     };
 }
 
@@ -456,10 +456,10 @@ std::vector<RoomAutoFeatureRule> HumanRoom::auto_features_allowed() const
 {
     return
     {
-        {FeatureId::chest,      rnd::range(1, 2)},
-        {FeatureId::cabinet,    rnd::range(0, 2)},
-        {FeatureId::brazier,    rnd::range(0, 2)},
-        {FeatureId::statue,     rnd::range(0, 3)}
+        {FeatureId::chest, rnd::range(1, 2)},
+        {FeatureId::cabinet, rnd::range(0, 2)},
+        {FeatureId::brazier, rnd::range(0, 2)},
+        {FeatureId::statue, rnd::range(0, 3)}
     };
 }
 
@@ -494,7 +494,9 @@ void HumanRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
     if (rnd::coin_toss())
     {
         bool blocked[map_w][map_h];
-        map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+
+        map_parsers::BlocksMoveCmn(ParseActors::no)
+            .run(blocked);
 
         for (int x = r_.p0.x + 1; x <= r_.p1.x - 1; ++x)
         {
@@ -517,8 +519,8 @@ std::vector<RoomAutoFeatureRule> RitualRoom::auto_features_allowed() const
 {
     return
     {
-        {FeatureId::altar,      1},
-        {FeatureId::brazier,    rnd::range(2, 4)}
+        {FeatureId::altar, 1},
+        {FeatureId::brazier, rnd::range(2, 4)}
     };
 }
 
@@ -553,7 +555,9 @@ void RitualRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
     gods::set_random_god();
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+
+    map_parsers::BlocksMoveCmn(ParseActors::no)
+        .run(blocked);
 
     const int bloody_chamber_pct = 60;
 
@@ -695,7 +699,7 @@ void SnakePitRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
     (void)door_proposals;
 
     const bool is_early = map::dlvl <= dlvl_last_early_game;
-    const bool is_mid   = !is_early && map::dlvl <= dlvl_last_mid_game;
+    const bool is_mid = !is_early && map::dlvl <= dlvl_last_mid_game;
 
     if (is_early || is_mid)
     {
@@ -741,10 +745,10 @@ void SnakePitRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 
     bool blocked[map_w][map_h];
 
-    map_parse::run(cell_check::BlocksMoveCmn(true),
-                   blocked,
-                   MapParseMode::overwrite,
-                   r_);
+    map_parsers::BlocksMoveCmn(ParseActors::yes)
+        .run(blocked,
+             MapParseMode::overwrite,
+             r_);
 
     // Fill the room with snakes
     for (int x = r_.p0.x; x <= r_.p1.x; ++x)
@@ -775,7 +779,7 @@ std::vector<RoomAutoFeatureRule> CryptRoom::auto_features_allowed() const
 {
     return
     {
-        {FeatureId::tomb,       rnd::one_in(6) ? 2 : 1},
+        {FeatureId::tomb, rnd::one_in(6) ? 2 : 1},
         {FeatureId::rubble_low, rnd::range(1, 4)}
     };
 }
@@ -866,7 +870,9 @@ void MonsterRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
     (void)door_proposals;
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+
+    map_parsers::BlocksMoveCmn(ParseActors::no)
+        .run(blocked);
 
     int nr_blood_put = 0;
 
@@ -975,7 +981,9 @@ void FloodedRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 #endif // NDEBUG
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+
+    map_parsers::BlocksMoveCmn(ParseActors::no)
+        .run(blocked);
 
     const int liquid_one_in_n = rnd::range(3, 8);
 
@@ -1053,7 +1061,8 @@ void MuddyRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 
     bool blocked[map_w][map_h];
 
-    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+    map_parsers::BlocksMoveCmn(ParseActors::no)
+        .run(blocked);
 
     const int liquid_one_in_n = rnd::range(3, 8);
 
@@ -1146,7 +1155,8 @@ void ForestRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 
     bool blocked[map_w][map_h];
 
-    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+    map_parsers::BlocksMoveCmn(ParseActors::no)
+        .run(blocked);
 
     //
     // Do not consider doors blocking
@@ -1203,7 +1213,7 @@ void ForestRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
         {
             blocked[p.x][p.y] = true;
 
-            if (map_parse::is_map_connected(blocked))
+            if (map_parsers::is_map_connected(blocked))
             {
                 map::put(new Tree(p));
 
@@ -1249,7 +1259,9 @@ void ChasmRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
     (void)door_proposals;
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+
+    map_parsers::BlocksMoveCmn(ParseActors::no)
+        .run(blocked);
 
     for (int x = 0; x < map_w; ++x)
     {
@@ -1263,7 +1275,8 @@ void ChasmRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
     }
 
     bool blocked_expanded[map_w][map_h];
-    map_parse::expand(blocked, blocked_expanded);
+
+    map_parsers::expand(blocked, blocked_expanded);
 
     P origin;
 
@@ -1284,7 +1297,7 @@ void ChasmRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
               blocked_expanded,
               flood,
               10000,
-              P(-1,  -1),
+              P(-1, -1),
               false);
 
     for (int x = r_.p0.x; x <= r_.p1.x; ++x)
@@ -1386,20 +1399,20 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
             const int river_y = r_.p0.y;
 
             find_closest_center0(Range(river_y - 1, 1),
-                                 Range(1, map_w - 2),  y, x);
+                                 Range(1, map_w - 2), y, x);
 
             find_closest_center1(Range(river_y + 1, map_h - 2),
-                                 Range(1, map_w - 2),  y, x);
+                                 Range(1, map_w - 2), y, x);
         }
         else // Vertical
         {
             const int river_x = r_.p0.x;
 
             find_closest_center0(Range(river_x - 1, 1),
-                                 Range(1, map_h - 2),  x, y);
+                                 Range(1, map_h - 2), x, y);
 
             find_closest_center1(Range(river_x + 1, map_w - 2),
-                                 Range(1, map_h - 2),  x, y);
+                                 Range(1, map_h - 2), x, y);
         }
     }
 
@@ -1429,7 +1442,8 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
     }
 
     bool blocked_expanded[map_w][map_h];
-    map_parse::expand(blocked, blocked_expanded);
+
+    map_parsers::expand(blocked, blocked_expanded);
 
     int flood[map_w][map_h];
 
@@ -1532,8 +1546,8 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
             if (feature_id == FeatureId::wall && !map::room_map[x][y])
             {
                 const P p(x, y);
-                int nr_cardinal_floor  = 0;
-                int nr_cardinal_river  = 0;
+                int nr_cardinal_floor = 0;
+                int nr_cardinal_river = 0;
 
                 for (const auto& d : dir_utils::cardinal_list)
                 {
@@ -1616,7 +1630,7 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
     for (const int bridge_n : positions)
     {
         if (bridge_n < min_edge_dist ||
-            (is_hor  && (bridge_n > (map_w - 1 - min_edge_dist))) ||
+            (is_hor && (bridge_n > (map_w - 1 - min_edge_dist))) ||
             (!is_hor && (bridge_n > (map_h - 1 - min_edge_dist))))
         {
             continue;
@@ -1651,12 +1665,12 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
         P room_con0(-1, -1);
         P room_con1(-1, -1);
 
-        const int C0_0 = is_hor ? r_.p1.y : r_.p1.x;
-        const int C1_0 = is_hor ? r_.p0.y : r_.p0.x;
+        const int c0_0 = is_hor ? r_.p1.y : r_.p1.x;
+        const int c1_0 = is_hor ? r_.p0.y : r_.p0.x;
 
-        for (int c = C0_0; c != C1_0; --c)
+        for (int c = c0_0; c != c1_0; --c)
         {
-            if ((is_hor  && sides[bridge_n][c] == side0) ||
+            if ((is_hor && sides[bridge_n][c] == side0) ||
                 (!is_hor && sides[c][bridge_n] == side0))
             {
                 break;
@@ -1674,12 +1688,12 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
             }
         }
 
-        const int C0_1 = is_hor ? r_.p0.y : r_.p0.x;
-        const int C1_1 = is_hor ? r_.p1.y : r_.p1.x;
+        const int c0_1 = is_hor ? r_.p0.y : r_.p0.x;
+        const int c1_1 = is_hor ? r_.p1.y : r_.p1.x;
 
-        for (int c = C0_1; c != C1_1; ++c)
+        for (int c = c0_1; c != c1_1; ++c)
         {
-            if ((is_hor  && sides[bridge_n][c] == side1) ||
+            if ((is_hor && sides[bridge_n][c] == side1) ||
                 (!is_hor && sides[c][bridge_n] == side1))
             {
                 break;
@@ -1787,9 +1801,9 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
         // Convert wall cells adjacent to river cells to river
         bool valid_room_entries_expanded[map_w][map_h];
 
-        map_parse::expand(valid_room_entries,
-                          valid_room_entries_expanded,
-                          2);
+        map_parsers::expand(valid_room_entries,
+                            valid_room_entries_expanded,
+                            2);
 
         for (int x = 2; x < map_w - 2; ++x)
         {

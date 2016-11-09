@@ -546,7 +546,9 @@ void PotionClairv::quaff_impl(Actor& actor)
         anim_cells.clear();
 
         bool blocked[map_w][map_h];
-        map_parse::run(cell_check::BlocksLos(), blocked);
+
+        map_parsers::BlocksLos()
+            .run(blocked);
 
         for (int x = 0; x < map_w; ++x)
         {

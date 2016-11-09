@@ -15,7 +15,9 @@
 #include "msg_log.hpp"
 #include "map_parsing.hpp"
 
-//------------------------------------------------------------------- SMOKE
+// -----------------------------------------------------------------------------
+// Smoke
+// -----------------------------------------------------------------------------
 void Smoke::on_new_turn()
 {
     auto* actor = map::actor_at_pos(pos_);
@@ -24,21 +26,23 @@ void Smoke::on_new_turn()
     {
         const bool is_player = actor == map::player;
 
-        //TODO: There needs to be some criteria here, so that e.g. a statue-monster or a
-        //very alien monster can't get blinded by smoke (but do not use is_humanoid - rats,
-        //wolves etc should definitely be blinded by smoke).
+        // TODO: There needs to be some criteria here, so that e.g. a
+        //       statue-monster or a very alien monster can't get blinded by
+        //       smoke (but do not use is_humanoid - rats, wolves etc should
+        //       definitely be blinded by smoke).
 
-        //Perhaps add some variable like "has_eyes"?
+        // Perhaps add some variable like "has_eyes"?
 
         bool is_blind_prot = false;
 
         if (is_player)
         {
-            auto&       inv                 = map::player->inv();
-            auto* const player_head_item    = inv.slots_[int(SlotId::head)].item;
-            auto* const player_body_item    = inv.slots_[int(SlotId::body)].item;
+            auto& inv = map::player->inv();
+            auto* const player_head_item = inv.slots_[int(SlotId::head)].item;
+            auto* const player_body_item = inv.slots_[int(SlotId::body)].item;
 
-            if (player_head_item && player_head_item->data().id == ItemId::gas_mask)
+            if (player_head_item &&
+                (player_head_item->data().id == ItemId::gas_mask))
             {
                 is_blind_prot = true;
 
@@ -46,7 +50,8 @@ void Smoke::on_new_turn()
                 static_cast<GasMask*>(player_head_item)->decr_turns_left(inv);
             }
 
-            if (player_body_item && player_body_item->data().id == ItemId::armor_asb_suit)
+            if (player_body_item &&
+                (player_body_item->data().id == ItemId::armor_asb_suit))
             {
                 is_blind_prot = true;
             }
@@ -124,7 +129,9 @@ Clr Smoke::clr() const
     return clr_gray;
 }
 
-//------------------------------------------------------------------- DYNAMITE
+// -----------------------------------------------------------------------------
+// Dynamite
+// -----------------------------------------------------------------------------
 void LitDynamite::on_new_turn()
 {
     nr_turns_left_--;
@@ -161,7 +168,9 @@ Clr LitDynamite::clr() const
     return clr_red_lgt;
 }
 
-//------------------------------------------------------------------- FLARE
+// -----------------------------------------------------------------------------
+// Flare
+// -----------------------------------------------------------------------------
 void LitFlare::on_new_turn()
 {
     --nr_turns_left_;
@@ -184,10 +193,10 @@ void LitFlare::add_light(bool light[map_w][map_h]) const
 
     bool hard_blocked[map_w][map_h];
 
-    map_parse::run(cell_check::BlocksLos(),
-                   hard_blocked,
-                   MapParseMode::overwrite,
-                   R(p0, p1));
+    map_parsers::BlocksLos()
+        .run(hard_blocked,
+             MapParseMode::overwrite,
+             R(p0, p1));
 
     LosResult fov[map_w][map_h];
 

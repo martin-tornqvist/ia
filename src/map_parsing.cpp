@@ -10,71 +10,219 @@
 #include "feature_rigid.hpp"
 #include "feature_mob.hpp"
 
-// -----------------------------------------------------------------------------
-// Cell checks
-// -----------------------------------------------------------------------------
-namespace cell_check
+namespace map_parsers
 {
 
-bool BlocksLos::check(const Cell& c)  const
+// -----------------------------------------------------------------------------
+// Base class
+// -----------------------------------------------------------------------------
+void MapParser::run(bool out[map_w][map_h],
+                    const MapParseMode write_rule,
+                    const R& area_to_parse_cells)
+{
+    ASSERT(parse_cells_ == ParseCells::yes ||
+           parse_mobs_ == ParseMobs::yes ||
+           parse_actors_ == ParseActors::yes);
+
+    const bool allow_write_false =
+        write_rule == MapParseMode::overwrite;
+
+    if (parse_cells_ == ParseCells::yes)
+    {
+        for (int x = area_to_parse_cells.p0.x;
+             x <= area_to_parse_cells.p1.x;
+             ++x)
+        {
+            for (int y = area_to_parse_cells.p0.y;
+                 y <= area_to_parse_cells.p1.y;
+                 ++y)
+            {
+                const auto& c = map::cells[x][y];
+
+                const bool is_match = parse(c);
+
+                if (is_match || allow_write_false)
+                {
+                    out[x][y] = is_match;
+                }
+            }
+        }
+    }
+
+    if (parse_mobs_ == ParseMobs::yes)
+    {
+        for (Mob* mob : game_time::mobs)
+        {
+            const P& p = mob->pos();
+
+            if (is_pos_inside(p, area_to_parse_cells))
+            {
+                const bool is_match = parse(*mob);
+
+                if (is_match || allow_write_false)
+                {
+                    bool& v = out[p.x][p.y];
+
+                    if (!v)
+                    {
+                        v = is_match;
+                    }
+                }
+            }
+        }
+    }
+
+    if (parse_actors_ == ParseActors::yes)
+    {
+        for (Actor* actor : game_time::actors)
+        {
+            const P& p = actor->pos;
+
+            if (is_pos_inside(p, area_to_parse_cells))
+            {
+                const bool is_match = parse(*actor);
+
+                if (is_match || allow_write_false)
+                {
+                    bool& v = out[p.x][p.y];
+
+                    if (!v)
+                    {
+                        v = is_match;
+                    }
+                }
+            }
+        }
+    }
+
+} // run
+
+
+bool MapParser::cell(const P& p)
+{
+    ASSERT(parse_cells_ == ParseCells::yes ||
+           parse_mobs_ == ParseMobs::yes ||
+           parse_actors_ == ParseActors::yes);
+
+    bool r = false;
+
+    if (parse_cells_ == ParseCells::yes)
+    {
+        const auto& c = map::cells[p.x][p.y];
+
+        const bool is_match = parse(c);
+
+        if (is_match)
+        {
+            r = true;
+        }
+    }
+
+    if (parse_mobs_ == ParseMobs::yes)
+    {
+        for (Mob* mob : game_time::mobs)
+        {
+            const P& mob_p = mob->pos();
+
+            if (mob_p == p)
+            {
+                const bool is_match = parse(*mob);
+
+                if (is_match)
+                {
+                    r = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (parse_actors_ == ParseActors::yes)
+    {
+        for (Actor* actor : game_time::actors)
+        {
+            const P& actor_p = actor->pos;
+
+            if (actor_p == p)
+            {
+                const bool is_match = parse(*actor);
+
+                if (is_match)
+                {
+                    r = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    return r;
+
+} // cell
+
+
+// -----------------------------------------------------------------------------
+// Map parsers
+// -----------------------------------------------------------------------------
+bool BlocksLos::parse(const Cell& c)  const
 {
     return
         !map::is_pos_inside_map(c.pos, false) ||
         !c.rigid->is_los_passable();
 }
 
-bool BlocksLos::check(const Mob& f) const
+bool BlocksLos::parse(const Mob& f) const
 {
     return !f.is_los_passable();
 }
 
-bool BlocksMoveCmn::check(const Cell& c) const
+bool BlocksMoveCmn::parse(const Cell& c) const
 {
     return
         !map::is_pos_inside_map(c.pos, false) ||
         !c.rigid->can_move_cmn();
 }
 
-bool BlocksMoveCmn::check(const Mob& f) const
+bool BlocksMoveCmn::parse(const Mob& f) const
 {
     return !f.can_move_cmn();
 }
 
-bool BlocksMoveCmn::check(const Actor& a) const
+bool BlocksMoveCmn::parse(const Actor& a) const
 {
     return a.is_alive();
 }
 
-bool BlocksActor::check(const Cell& c) const
+bool BlocksActor::parse(const Cell& c) const
 {
     return
         !map::is_pos_inside_map(c.pos, false) ||
         !c.rigid->can_move(actor_);
 }
 
-bool BlocksActor::check(const Mob& f) const
+bool BlocksActor::parse(const Mob& f) const
 {
     return !f.can_move(actor_);
 }
 
-bool BlocksActor::check(const Actor& a) const
+bool BlocksActor::parse(const Actor& a) const
 {
     return a.is_alive();
 }
 
-bool BlocksProjectiles::check(const Cell& c)  const
+bool BlocksProjectiles::parse(const Cell& c)  const
 {
     return
         !map::is_pos_inside_map(c.pos, false) ||
         !c.rigid->is_projectile_passable();
 }
 
-bool BlocksProjectiles::check(const Mob& f)  const
+bool BlocksProjectiles::parse(const Mob& f)  const
 {
     return !f.is_projectile_passable();
 }
 
-bool LivingActorsAdjToPos::check(const Actor& a) const
+bool LivingActorsAdjToPos::parse(const Actor& a) const
 {
     if (!a.is_alive())
     {
@@ -84,31 +232,31 @@ bool LivingActorsAdjToPos::check(const Actor& a) const
     return is_pos_adj(pos_, a.pos, true);
 }
 
-bool BlocksItems::check(const Cell& c)  const
+bool BlocksItems::parse(const Cell& c)  const
 {
     return
         !map::is_pos_inside_map(c.pos, false) ||
         !c.rigid->can_have_item();
 }
 
-bool BlocksItems::check(const Mob& f) const
+bool BlocksItems::parse(const Mob& f) const
 {
     return !f.can_have_item();
 }
 
-bool BlocksRigid::check(const Cell& c)  const
+bool BlocksRigid::parse(const Cell& c)  const
 {
     return
         !map::is_pos_inside_map(c.pos, false) ||
         !c.rigid->can_have_rigid();
 }
 
-bool IsFeature::check(const Cell& c) const
+bool IsFeature::parse(const Cell& c) const
 {
     return c.rigid->id() == feature_;
 }
 
-bool IsAnyOfFeatures::check(const Cell& c) const
+bool IsAnyOfFeatures::parse(const Cell& c) const
 {
     for (auto f : features_)
     {
@@ -121,7 +269,7 @@ bool IsAnyOfFeatures::check(const Cell& c) const
     return false;
 }
 
-bool AllAdjIsFeature::check(const Cell& c) const
+bool AllAdjIsFeature::parse(const Cell& c) const
 {
     const int x = c.pos.x;
     const int y = c.pos.y;
@@ -145,7 +293,7 @@ bool AllAdjIsFeature::check(const Cell& c) const
     return true;
 }
 
-bool AllAdjIsAnyOfFeatures::check(const Cell& c) const
+bool AllAdjIsAnyOfFeatures::parse(const Cell& c) const
 {
     const int x = c.pos.x;
     const int y = c.pos.y;
@@ -182,7 +330,7 @@ bool AllAdjIsAnyOfFeatures::check(const Cell& c) const
     return true;
 }
 
-bool AllAdjIsNotFeature::check(const Cell& c) const
+bool AllAdjIsNotFeature::parse(const Cell& c) const
 {
     const int x = c.pos.x;
     const int y = c.pos.y;
@@ -206,7 +354,7 @@ bool AllAdjIsNotFeature::check(const Cell& c) const
     return true;
 }
 
-bool AllAdjIsNoneOfFeatures::check(const Cell& c) const
+bool AllAdjIsNoneOfFeatures::parse(const Cell& c) const
 {
     const int x = c.pos.x;
     const int y = c.pos.y;
@@ -235,156 +383,9 @@ bool AllAdjIsNoneOfFeatures::check(const Cell& c) const
     return true;
 }
 
-} // cell_check
-
 // -----------------------------------------------------------------------------
-// Map parsing
+// Various utility algorithms
 // -----------------------------------------------------------------------------
-namespace map_parse
-{
-
-void run(const cell_check::Check& method,
-         bool out[map_w][map_h],
-         const MapParseMode write_rule,
-         const R& area_to_check_cells)
-{
-    ASSERT(method.is_checking_cells() ||
-           method.is_checking_mobs() ||
-           method.is_checking_actors());
-
-    const bool allow_write_false =
-        write_rule == MapParseMode::overwrite;
-
-    if (method.is_checking_cells())
-    {
-        for (int x = area_to_check_cells.p0.x;
-             x <= area_to_check_cells.p1.x;
-             ++x)
-        {
-            for (int y = area_to_check_cells.p0.y;
-                 y <= area_to_check_cells.p1.y;
-                 ++y)
-            {
-                const auto& c = map::cells[x][y];
-
-                const bool is_match = method.check(c);
-
-                if (is_match || allow_write_false)
-                {
-                    out[x][y] = is_match;
-                }
-            }
-        }
-    }
-
-    if (method.is_checking_mobs())
-    {
-        for (Mob* mob : game_time::mobs)
-        {
-            const P& p = mob->pos();
-
-            if (is_pos_inside(p, area_to_check_cells))
-            {
-                const bool is_match = method.check(*mob);
-
-                if (is_match || allow_write_false)
-                {
-                    bool& v = out[p.x][p.y];
-
-                    if (!v)
-                    {
-                        v = is_match;
-                    }
-                }
-            }
-        }
-    }
-
-    if (method.is_checking_actors())
-    {
-        for (Actor* actor : game_time::actors)
-        {
-            const P& p = actor->pos;
-
-            if (is_pos_inside(p, area_to_check_cells))
-            {
-                const bool is_match = method.check(*actor);
-
-                if (is_match || allow_write_false)
-                {
-                    bool& v = out[p.x][p.y];
-
-                    if (!v)
-                    {
-                        v = is_match;
-                    }
-                }
-            }
-        }
-    }
-}
-
-bool cell(const cell_check::Check& method, const P& p)
-{
-    ASSERT(method.is_checking_cells()  ||
-           method.is_checking_mobs()   ||
-           method.is_checking_actors());
-
-    bool r = false;
-
-    if (method.is_checking_cells())
-    {
-        const auto& c = map::cells[p.x][p.y];
-
-        const bool is_match = method.check(c);
-
-        if (is_match)
-        {
-            r = true;
-        }
-    }
-
-    if (method.is_checking_mobs())
-    {
-        for (Mob* mob : game_time::mobs)
-        {
-            const P& mob_p = mob->pos();
-
-            if (mob_p == p)
-            {
-                const bool is_match = method.check(*mob);
-
-                if (is_match)
-                {
-                    r = true;
-                    break;
-                }
-            }
-        }
-    }
-
-    if (method.is_checking_actors())
-    {
-        for (Actor* actor : game_time::actors)
-        {
-            const P& actor_p = actor->pos;
-
-            if (actor_p == p)
-            {
-                const bool is_match = method.check(*actor);
-
-                if (is_match)
-                {
-                    r = true;
-                    break;
-                }
-            }
-        }
-    }
-
-    return r;
-}
-
 void cells_within_dist_of_others(const bool in[map_w][map_h],
                                  bool out[map_w][map_h],
                                  const Range& dist_interval)
@@ -434,7 +435,9 @@ void cells_within_dist_of_others(const bool in[map_w][map_h],
             }
         }
     }
-}
+
+} // cells_within_dist_of_others
+
 
 void append(bool base[map_w][map_h], const bool append[map_w][map_h])
 {
@@ -489,7 +492,9 @@ void expand(const bool in[map_w][map_h],
             }
         }
     }
-}
+
+} // expand
+
 
 void expand(const bool in[map_w][map_h],
             bool out[map_w][map_h],
@@ -531,7 +536,9 @@ void expand(const bool in[map_w][map_h],
             }
         }
     }
-}
+
+} // expand
+
 
 bool is_map_connected(const bool blocked[map_w][map_h])
 {
@@ -581,9 +588,12 @@ bool is_map_connected(const bool blocked[map_w][map_h])
     }
 
     return true;
-}
 
-} // map_parse
+} // is_map_connected
+
+
+} // map_parsers
+
 
 // -----------------------------------------------------------------------------
 // Is closer to pos

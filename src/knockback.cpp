@@ -26,13 +26,13 @@ void try_knock_back(Actor& defender,
 {
     TRACE_FUNC_BEGIN;
 
-    const bool  is_defender_player  = defender.is_player();
-    const auto& defender_data       = defender.data();
+    const bool is_defender_player = defender.is_player();
+    const auto& defender_data = defender.data();
 
-    if (defender_data.prevent_knockback                 ||
-        defender_data.actor_size >= ActorSize::giant    ||
-        defender.has_prop(PropId::ethereal)             ||
-        defender.has_prop(PropId::ooze)                 ||
+    if (defender_data.prevent_knockback ||
+        defender_data.actor_size >= ActorSize::giant ||
+        defender.has_prop(PropId::ethereal) ||
+        defender.has_prop(PropId::ooze) ||
         // Do not knock back player if bot is playing
         (is_defender_player && config::is_bot_playing()))
     {
@@ -70,7 +70,9 @@ void try_knock_back(Actor& defender,
     const P new_pos = defender.pos + d;
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::BlocksActor(defender, true), blocked);
+
+    map_parsers::BlocksActor(defender, ParseActors::yes)
+        .run(blocked);
 
     const bool is_cell_bottomless =
         map::cells[new_pos.x][new_pos.y].rigid->is_bottomless();
@@ -118,7 +120,7 @@ void try_knock_back(Actor& defender,
 
         defender.pos = new_pos;
 
-        if (is_cell_bottomless                  &&
+        if (is_cell_bottomless &&
             !defender.has_prop(PropId::flying)  &&
             player_see_defender)
         {

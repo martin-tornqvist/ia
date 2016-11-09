@@ -150,12 +150,13 @@ void run(const P& origin,
 
     bool blocked[map_w][map_h];
 
-    map_parse::run(cell_check::BlocksProjectiles(),
-                   blocked,
-                   MapParseMode::overwrite,
-                   area);
+    map_parsers::BlocksProjectiles().
+        run(blocked,
+            MapParseMode::overwrite,
+            area);
 
     std::vector< std::vector<P> > pos_lists;
+
     cells_reached(area, origin, blocked, pos_lists);
 
     if (emit_expl_snd == EmitExplSnd::yes)
@@ -329,9 +330,14 @@ void run_smoke_explosion_at(const P& origin, const int radi_change)
     const R area = explosion_area(origin, radi);
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::BlocksProjectiles(), blocked);
+
+    map_parsers::BlocksProjectiles()
+        .run(blocked,
+             MapParseMode::overwrite,
+             area);
 
     std::vector< std::vector<P> > pos_lists;
+
     cells_reached(area, origin, blocked, pos_lists);
 
     // TODO: Sound message?

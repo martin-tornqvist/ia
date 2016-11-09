@@ -10,223 +10,320 @@ struct Cell;
 class Mob;
 class Actor;
 
-namespace cell_check
+// NOTE: If append mode is used, the caller is responsible for initializing the
+//       array (perhaps with a previous "overwrite" parse call)
+enum class MapParseMode
+{
+    overwrite,
+    append
+};
+
+enum class ParseCells
+{
+    no,
+    yes
+};
+
+enum class ParseMobs
+{
+    no,
+    yes
+};
+
+enum class ParseActors
+{
+    no,
+    yes
+};
+
+namespace map_parsers
 {
 
-class Check
+// -----------------------------------------------------------------------------
+// Map parsers (usage: create an object and call "run" or "cell")
+// -----------------------------------------------------------------------------
+class MapParser
 {
 public:
-    virtual ~Check() {}
-    virtual bool is_checking_cells()        const {return false;}
-    virtual bool is_checking_mobs()         const {return false;}
-    virtual bool is_checking_actors()       const {return false;}
-    virtual bool check(const Cell& c)       const {(void)c; return false;}
-    virtual bool check(const Mob& f)        const {(void)f; return false;}
-    virtual bool check(const Actor& a)      const {(void)a; return false;}
+    virtual ~MapParser() {}
+
+    void run(bool out[map_w][map_h],
+             const MapParseMode write_rule = MapParseMode::overwrite,
+             const R& area_to_parse_cells = R(0, 0, map_w - 1, map_h - 1));
+
+    bool cell(const P& p);
+
+    virtual bool parse(const Cell& c) const
+    {
+        (void)c;
+
+        return false;
+    }
+
+    virtual bool parse(const Mob& f) const
+    {
+        (void)f;
+
+        return false;
+    }
+
+    virtual bool parse(const Actor& a) const
+    {
+        (void)a;
+
+        return false;
+    }
+
 protected:
-    Check() {}
-};
+    MapParser(ParseCells parse_cells,
+              ParseMobs parse_mobs,
+              ParseActors parse_actors) :
+        parse_cells_    (parse_cells),
+        parse_mobs_     (parse_mobs),
+        parse_actors_   (parse_actors) {}
 
-class BlocksLos : public Check
-{
-public:
-    BlocksLos() : Check() {}
-    bool is_checking_cells()        const override {return true;}
-    bool is_checking_mobs()         const override {return true;}
-    bool check(const Cell& c)       const override;
-    bool check(const Mob& f)        const override;
-};
-
-class BlocksMoveCmn : public Check
-{
-public:
-    BlocksMoveCmn(bool is_actors_blocking) :
-        Check               (),
-        is_actors_blocking_ (is_actors_blocking) {}
-    bool is_checking_cells()        const override {return true;}
-    bool is_checking_mobs()         const override {return true;}
-    bool is_checking_actors()       const override {return is_actors_blocking_;}
-    bool check(const Cell& c)       const override;
-    bool check(const Mob& f)        const override;
-    bool check(const Actor& a)      const override;
 private:
-    const bool is_actors_blocking_;
+    const ParseCells parse_cells_;
+    const ParseMobs parse_mobs_;
+    const ParseActors parse_actors_;
 };
 
-class BlocksActor : public Check
+class BlocksLos : public MapParser
 {
 public:
-    BlocksActor(Actor& actor, bool is_actors_blocking) :
-        Check(),
-        is_actors_blocking_ (is_actors_blocking),
-        actor_              (actor) {}
-    bool is_checking_cells()        const override {return true;}
-    bool is_checking_mobs()         const override {return true;}
-    bool is_checking_actors()       const override {return is_actors_blocking_;}
-    bool check(const Cell& c)       const override;
-    bool check(const Mob& f)        const override;
-    bool check(const Actor& a)      const override;
+    BlocksLos() :
+        MapParser(ParseCells::yes,
+                  ParseMobs::yes,
+                  ParseActors::no) {}
+
 private:
-    const bool is_actors_blocking_;
+    bool parse(const Cell& c) const override;
+    bool parse(const Mob& f) const override;
+};
+
+class BlocksMoveCmn : public MapParser
+{
+public:
+    BlocksMoveCmn(ParseActors parse_actors) :
+        MapParser(ParseCells::yes,
+                  ParseMobs::yes,
+                  parse_actors) {}
+
+private:
+    bool parse(const Cell& c) const override;
+    bool parse(const Mob& f) const override;
+    bool parse(const Actor& a) const override;
+};
+
+class BlocksActor : public MapParser
+{
+public:
+    BlocksActor(Actor& actor, ParseActors parse_actors) :
+        MapParser   (ParseCells::yes,
+                     ParseMobs::yes,
+                     parse_actors),
+        actor_      (actor) {}
+
+private:
+    bool parse(const Cell& c) const override;
+    bool parse(const Mob& f) const override;
+    bool parse(const Actor& a) const override;
+
     Actor& actor_;
 };
 
-class BlocksProjectiles : public Check
+class BlocksProjectiles : public MapParser
 {
 public:
-    BlocksProjectiles() : Check() {}
-    bool is_checking_cells()        const override {return true;}
-    bool is_checking_mobs()         const override {return true;}
-    bool check(const Cell& c)       const override;
-    bool check(const Mob& f)        const override;
+    BlocksProjectiles() :
+        MapParser(ParseCells::yes,
+                  ParseMobs::yes,
+                  ParseActors::no) {}
+
+private:
+    bool parse(const Cell& c) const override;
+    bool parse(const Mob& f) const override;
 };
 
-class LivingActorsAdjToPos : public Check
+class LivingActorsAdjToPos : public MapParser
 {
 public:
     LivingActorsAdjToPos(const P& pos) :
-        Check(), pos_(pos) {}
-    bool is_checking_actors()       const override {return true;}
-    bool check(const Actor& a)      const override;
+        MapParser   (ParseCells::no,
+                     ParseMobs::no,
+                     ParseActors::yes),
+        pos_        (pos) {}
+
+private:
+    bool parse(const Actor& a) const override;
+
     const P& pos_;
 };
 
-class BlocksItems : public Check
+class BlocksItems : public MapParser
 {
 public:
-    BlocksItems() : Check() {}
-    bool is_checking_cells()        const override {return true;}
-    bool is_checking_mobs()         const override {return true;}
-    bool check(const Cell& c)       const override;
-    bool check(const Mob& f)        const override;
-};
+    BlocksItems() :
+        MapParser(ParseCells::yes,
+                  ParseMobs::yes,
+                  ParseActors::no) {}
 
-class BlocksRigid : public Check
-{
-public:
-    BlocksRigid() : Check() {}
-    bool is_checking_cells()        const override {return true;}
-    bool check(const Cell& c)       const override;
-};
-
-class IsFeature : public Check
-{
-public:
-    IsFeature(const FeatureId id) : Check(), feature_(id) {}
-    bool is_checking_cells()        const override {return true;}
-    bool check(const Cell& c)       const override;
 private:
+    bool parse(const Cell& c) const override;
+    bool parse(const Mob& f) const override;
+};
+
+class BlocksRigid : public MapParser
+{
+public:
+    BlocksRigid() :
+        MapParser(ParseCells::yes,
+                  ParseMobs::no,
+                  ParseActors::no) {}
+
+private:
+    bool parse(const Cell& c) const override;
+};
+
+class IsFeature : public MapParser
+{
+public:
+    IsFeature(const FeatureId id) :
+        MapParser   (ParseCells::yes,
+                     ParseMobs::no,
+                     ParseActors::no),
+        feature_    (id) {}
+
+private:
+    bool parse(const Cell& c) const override;
+
     const FeatureId feature_;
 };
 
-class IsAnyOfFeatures : public Check
+class IsAnyOfFeatures : public MapParser
 {
 public:
     IsAnyOfFeatures(const std::vector<FeatureId>& features) :
-        Check(), features_(features) {}
+        MapParser   (ParseCells::yes,
+                     ParseMobs::no,
+                     ParseActors::no),
+        features_   (features) {}
 
     IsAnyOfFeatures(const FeatureId id) :
-        Check(), features_(std::vector<FeatureId> {id}) {}
+        MapParser   (ParseCells::yes,
+                     ParseMobs::no,
+                     ParseActors::no),
+        features_   (std::vector<FeatureId> {id}) {}
 
-    bool is_checking_cells()        const override {return true;}
-    bool check(const Cell& c)       const override;
 private:
+    bool parse(const Cell& c) const override;
+
     std::vector<FeatureId> features_;
 };
 
-class AllAdjIsFeature : public Check
+class AllAdjIsFeature : public MapParser
 {
 public:
-    AllAdjIsFeature(const FeatureId id) : Check(), feature_(id) {}
-    bool is_checking_cells()        const override {return true;}
-    bool check(const Cell& c)       const override;
+    AllAdjIsFeature(const FeatureId id) :
+        MapParser   (ParseCells::yes,
+                     ParseMobs::no,
+                     ParseActors::no),
+        feature_    (id) {}
+
 private:
+    bool parse(const Cell& c) const override;
+
     const FeatureId feature_;
 };
 
-class AllAdjIsAnyOfFeatures : public Check
+class AllAdjIsAnyOfFeatures : public MapParser
 {
 public:
     AllAdjIsAnyOfFeatures(const std::vector<FeatureId>& features) :
-        Check(), features_(features) {}
+        MapParser   (ParseCells::yes,
+                     ParseMobs::no,
+                     ParseActors::no),
+        features_   (features) {}
 
     AllAdjIsAnyOfFeatures(const FeatureId id) :
-        Check(), features_(std::vector<FeatureId> {id}) {}
+        MapParser   (ParseCells::yes,
+                     ParseMobs::no,
+                     ParseActors::no),
+        features_   (std::vector<FeatureId> {id}) {}
 
-    bool is_checking_cells()        const override {return true;}
-    bool check(const Cell& c)       const override;
 private:
+    bool parse(const Cell& c) const override;
+
     std::vector<FeatureId> features_;
 };
 
-class AllAdjIsNotFeature : public Check
+class AllAdjIsNotFeature : public MapParser
 {
 public:
-    AllAdjIsNotFeature(const FeatureId id) : Check(), feature_(id) {}
-    bool is_checking_cells()        const override {return true;}
-    bool check(const Cell& c)       const override;
+    AllAdjIsNotFeature(const FeatureId id) :
+        MapParser   (ParseCells::yes,
+                     ParseMobs::no,
+                     ParseActors::no),
+        feature_    (id) {}
+
 private:
+    bool parse(const Cell& c) const override;
+
     const FeatureId feature_;
 };
 
-class AllAdjIsNoneOfFeatures : public Check
+class AllAdjIsNoneOfFeatures : public MapParser
 {
 public:
     AllAdjIsNoneOfFeatures(const std::vector<FeatureId>& features) :
-        Check(), features_(features) {}
+        MapParser   (ParseCells::yes,
+                     ParseMobs::no,
+                     ParseActors::no),
+        features_   (features) {}
 
     AllAdjIsNoneOfFeatures(const FeatureId id) :
-        Check(), features_(std::vector<FeatureId> {id}) {}
+        MapParser   (ParseCells::yes,
+                     ParseMobs::no,
+                     ParseActors::no),
+        features_   (std::vector<FeatureId> {id}) {}
 
-    bool is_checking_cells()        const override {return true;}
-    bool check(const Cell& c)       const override;
 private:
+    bool parse(const Cell& c) const override;
+
     std::vector<FeatureId> features_;
 };
 
-} //cell_check
 
-//NOTE: If append mode is used, the caller is responsible for initializing the array
-//(typically with a previous parse call, with write rule set to "overwrite")
-enum class MapParseMode {overwrite, append};
-
-namespace map_parse
-{
-
-const R map_rect(0, 0, map_w - 1, map_h - 1);
-
-void run(const cell_check::Check& method,
-         bool out[map_w][map_h],
-         const MapParseMode write_rule = MapParseMode::overwrite,
-         const R& area_to_check_cells = map_rect);
-
-bool cell(const cell_check::Check& method, const P& p);
-
-//Given a map array of booleans, this will fill a second map array of boolens
-//where the cells are set to true if they are within the specified distance
-//interval of the first array.
-//This can be used for example to find all cells up to 3 steps from a wall.
+// -----------------------------------------------------------------------------
+// Various utility algorithms
+// -----------------------------------------------------------------------------
+// Given a map array of booleans, this will fill a second map array of boolens
+// where the cells are set to true if they are within the specified distance
+// interval of the first array.
+// This can be used for example to find all cells up to N steps from a wall.
 void cells_within_dist_of_others(const bool in[map_w][map_h],
                                  bool out[map_w][map_h],
                                  const Range& dist_interval);
 
-void append(bool base[map_w][map_h], const bool append[map_w][map_h]);
+void append(bool base[map_w][map_h],
+            const bool append[map_w][map_h]);
 
-//Optimized for expanding with a distance of one
+// Optimized for expanding with a distance of one
 void expand(const bool in[map_w][map_h],
             bool out[map_w][map_h],
-            const R& area_allowed_to_modify = R(0, 0, map_w, map_h));
+            const R& area_allowed_to_modify = R(0, 0, map_w - 1, map_h - 1));
 
-//Slower version that can expand any distance
+// Slower version that can expand any distance
 void expand(const bool in[map_w][map_h],
             bool out[map_w][map_h],
             const int dist);
 
 bool is_map_connected(const bool blocked[map_w][map_h]);
 
-} //map_parse
+} // map_parsers
 
-//Function object for sorting STL containers by distance to a position
+
+// Function object for sorting STL containers by distance to a position
 struct IsCloserToPos
 {
 public:
@@ -238,4 +335,4 @@ public:
     P p_;
 };
 
-#endif
+#endif // MAP_PARSING_HPP

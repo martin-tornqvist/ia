@@ -237,9 +237,8 @@ Actor* mk_actor_from_id(const ActorId id)
 
 Actor* mk(const ActorId id, const P& pos)
 {
-    ASSERT(
-        !map::cells[pos.x][pos.y].rigid ||
-        map::cells[pos.x][pos.y].rigid->id() != FeatureId::stairs);
+    ASSERT(!map::cells[pos.x][pos.y].rigid ||
+           (map::cells[pos.x][pos.y].rigid->id() != FeatureId::stairs));
 
     Actor* const actor = mk_actor_from_id(id);
 
@@ -293,25 +292,27 @@ void summon(const P& origin,
     }
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::BlocksMoveCmn(true), blocked);
+
+    map_parsers::BlocksMoveCmn(ParseActors::yes)
+        .run(blocked);
 
     std::vector<P> free_cells;
     to_vec(blocked, false, free_cells);
 
     std::sort(begin(free_cells), end(free_cells), IsCloserToPos(origin));
 
-    const size_t    nr_free_cells   = free_cells.size();
-    const size_t    nr_monster_ids  = monster_ids.size();
-    const int       nr_to_spawn     = std::min(nr_free_cells, nr_monster_ids);
+    const size_t nr_free_cells = free_cells.size();
+    const size_t nr_monster_ids = monster_ids.size();
+    const int nr_to_spawn = std::min(nr_free_cells, nr_monster_ids);
 
     std::vector<P> positions_to_animate;
 
     for (int i = 0; i < nr_to_spawn; ++i)
     {
-        const P&        pos     = free_cells[i];
-        const ActorId  id      = monster_ids[i];
-        Actor* const    actor   = mk(id, pos);
-        Mon* const      mon     = static_cast<Mon*>(actor);
+        const P& pos = free_cells[i];
+        const ActorId id = monster_ids[i];
+        Actor* const actor = mk(id, pos);
+        Mon* const mon = static_cast<Mon*>(actor);
 
         ASSERT(map::is_pos_inside_map(pos, false));
 
@@ -330,7 +331,8 @@ void summon(const P& origin,
             mon->aware_counter_ = mon->data().nr_turns_aware;
         }
 
-        if (verbosity == Verbosity::verbose && map::player->can_see_actor(*actor))
+        if ((verbosity == Verbosity::verbose) &&
+            map::player->can_see_actor(*actor))
         {
             positions_to_animate.push_back(pos);
         }
@@ -338,7 +340,8 @@ void summon(const P& origin,
 
     if (verbosity == Verbosity::verbose)
     {
-        io::draw_blast_at_seen_cells(positions_to_animate, clr_magenta);
+        io::draw_blast_at_seen_cells(positions_to_animate,
+                                     clr_magenta);
     }
 
     TRACE_FUNC_END;

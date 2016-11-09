@@ -131,7 +131,8 @@ void mk_aux_rooms(Region regions[3][3])
     //       cells immediately
 
     // Get blocked cells
-    map_parse::run(cell_check::BlocksMoveCmn(false), floor_cells);
+    map_parsers::BlocksMoveCmn(ParseActors::no)
+        .run(floor_cells);
 
     // Flip the values so that we get free cells
     for (int x = 0; x < map_w; ++x)

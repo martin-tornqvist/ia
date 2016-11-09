@@ -21,7 +21,9 @@ bool is_map_valid = true;
 bool is_all_rooms_connected()
 {
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+
+    map_parsers::BlocksMoveCmn(ParseActors::no)
+        .run(blocked);
 
     //
     // Do not consider doors blocking
@@ -37,7 +39,7 @@ bool is_all_rooms_connected()
         }
     }
 
-    return map_parse::is_map_connected(blocked);
+    return map_parsers::is_map_connected(blocked);
 }
 
 // Adds the room to the room list and the room map
@@ -303,7 +305,7 @@ void cavify_room(Room& room)
 
     bool blocked[map_w][map_h];
 
-    map_parse::expand(is_other_room, blocked);
+    map_parsers::expand(is_other_room, blocked);
 
     R& room_rect = room.r_;
 
@@ -429,10 +431,10 @@ void valid_corridor_entries(const Room& room, std::vector<P>& out)
 
     bool room_cells_expanded[map_w][map_h];
 
-    map_parse::expand(room_cells,
-                      room_cells_expanded,
-                      R(P(room.r_.p0 - 2),
-                        P(room.r_.p1 + 2)));
+    map_parsers::expand(room_cells,
+                        room_cells_expanded,
+                        R(P(room.r_.p0 - 2),
+                          P(room.r_.p1 + 2)));
 
     for (int y = room.r_.p0.y - 1; y <= room.r_.p1.y + 1; ++y)
     {
@@ -733,7 +735,7 @@ void mk_pathfind_corridor(Room& room_0,
         }
 
         // Expand the blocked cells - we do not want to build adjacent to floor
-        map_parse::expand(blocked, blocked_expanded);
+        map_parsers::expand(blocked, blocked_expanded);
 
         // We know from above that p0 and p1 are actually OK - so mark them as
         // free in the expanded blocking array

@@ -63,7 +63,8 @@ std::vector<ItemId> mk_item_bucket()
 
 void mk_blocked_map(bool out[map_w][map_h])
 {
-    map_parse::run(cell_check::BlocksItems(), out);
+    map_parsers::BlocksItems()
+        .run(out);
 
     for (int x = 0; x < map_w; ++x)
     {

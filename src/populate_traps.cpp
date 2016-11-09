@@ -18,9 +18,9 @@ namespace
 
 Trap* mk_trap(const TrapId id, const P& pos)
 {
-    const auto* const   f       = map::cells[pos.x][pos.y].rigid;
-    const auto&         d       = feature_data::data(f->id());
-    auto* const         mimic   = static_cast<Rigid*>(d.mk_obj(pos));
+    const auto* const f = map::cells[pos.x][pos.y].rigid;
+    const auto& d = feature_data::data(f->id());
+    auto* const mimic = static_cast<Rigid*>(d.mk_obj(pos));
 
     if (!f->can_have_rigid())
     {
@@ -46,7 +46,9 @@ void populate_std_lvl()
     TRACE_FUNC_BEGIN;
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+
+    map_parsers::BlocksMoveCmn(ParseActors::no)
+        .run(blocked);
 
     //Put traps in non-plain rooms
     for (Room* const room : map::room_list)

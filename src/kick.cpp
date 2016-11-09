@@ -20,7 +20,9 @@ void player_kick()
     TRACE_FUNC_BEGIN;
 
     msg_log::clear();
-    msg_log::add("Which direction?" + cancel_info_str, clr_white_high);
+
+    msg_log::add("Which direction?" + cancel_info_str,
+                 clr_white_high);
 
     const Dir input_dir = query::dir(AllowCenter::yes);
 
@@ -38,7 +40,8 @@ void player_kick()
         TRACE << "Checking if player is kicking a living actor" << std::endl;
         if (input_dir != Dir::center)
         {
-            Actor* living_actor = map::actor_at_pos(kick_pos, ActorState::alive);
+            Actor* living_actor =
+                map::actor_at_pos(kick_pos, ActorState::alive);
 
             if (living_actor)
             {
@@ -55,7 +58,9 @@ void player_kick()
                           << std::endl;
 
                     bool blocked[map_w][map_h];
-                    map_parse::run(cell_check::BlocksLos(), blocked);
+
+                    map_parsers::BlocksLos()
+                        .run(blocked);
 
                     TRACE << "Player can see actor" << std::endl;
                     map::player->kick_mon(*living_actor);

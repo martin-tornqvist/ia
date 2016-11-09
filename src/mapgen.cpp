@@ -161,7 +161,8 @@ void connect_rooms()
 
         bool blocked[map_w][map_h];
 
-        map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+        map_parsers::BlocksMoveCmn(ParseActors::no).
+            run(blocked);
 
         //
         // Do not consider doors blocking
@@ -178,7 +179,7 @@ void connect_rooms()
         }
 
         if ((nr_tries_left <= 2 || rnd::one_in(4)) &&
-            map_parse::is_map_connected(blocked))
+            map_parsers::is_map_connected(blocked))
         {
             break;
         }
@@ -277,7 +278,8 @@ void allowed_stair_cells(bool out[map_w][map_h])
         FeatureId::grass
     };
 
-    map_parse::run(cell_check::AllAdjIsAnyOfFeatures(feat_ids_ok), out);
+    map_parsers::AllAdjIsAnyOfFeatures(feat_ids_ok)
+        .run(out);
 
     // Block cells with item
     for (int x = 0; x < map_w; ++x)
@@ -413,9 +415,10 @@ void place_monoliths()
     {
         bool blocked[map_w][map_h] = {};
 
-        map_parse::run(cell_check::BlocksRigid(), blocked);
+        map_parsers::BlocksRigid()
+            .run(blocked);
 
-        map_parse::expand(blocked, blocked_expanded);
+        map_parsers::expand(blocked, blocked_expanded);
 
         for (Actor* const actor : game_time::actors)
         {
@@ -535,7 +538,9 @@ void reveal_doors_on_path_to_stairs(const P& stairs_pos)
     TRACE_FUNC_BEGIN;
 
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+
+    map_parsers::BlocksMoveCmn(ParseActors::no)
+        .run(blocked);
 
     blocked[stairs_pos.x][stairs_pos.y] = false;
 
@@ -842,7 +847,8 @@ bool mk_std_lvl()
     // has previously been "proposed")
     bool blocked[map_w][map_h];
 
-    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+    map_parsers::BlocksMoveCmn(ParseActors::no)
+        .run(blocked);
 
     // Consider stairs and doors as non-blocking
     for (int x = 0; x < map_w; ++x)

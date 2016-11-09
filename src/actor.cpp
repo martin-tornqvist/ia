@@ -102,10 +102,10 @@ bool Actor::is_spotting_sneaking_actor(Actor& other)
     // NOTE: There is no need to cap the sneak skill value here, since there's
     //       always the chance of critically failing.
     const int sneak_tot =
-        sneak_skill     +
-        sneak_dist_mod  +
-        sneak_lgt_mod   +
-        sneak_drk_mod   -
+        sneak_skill +
+        sneak_dist_mod +
+        sneak_lgt_mod +
+        sneak_drk_mod -
         player_search_mod;
 
     return ability_roll::roll(sneak_tot, &other) <= fail;
@@ -161,15 +161,15 @@ void Actor::seen_actors(std::vector<Actor*>& out)
 
     if (!is_player())
     {
-        R los_rect(std::max(0,         pos.x - fov_std_radi_int),
-                   std::max(0,         pos.y - fov_std_radi_int),
+        R los_rect(std::max(0, pos.x - fov_std_radi_int),
+                   std::max(0, pos.y - fov_std_radi_int),
                    std::min(map_w - 1, pos.x + fov_std_radi_int),
                    std::min(map_h - 1, pos.y + fov_std_radi_int));
 
-        map_parse::run(cell_check::BlocksLos(),
-                       blocked_los,
-                       MapParseMode::overwrite,
-                       los_rect);
+        map_parsers::BlocksLos()
+            .run(blocked_los,
+                 MapParseMode::overwrite,
+                 los_rect);
     }
 
     for (Actor* actor : game_time::actors)
@@ -204,15 +204,15 @@ void Actor::seen_foes(std::vector<Actor*>& out)
 
     if (!is_player())
     {
-        R los_rect(std::max(0,         pos.x - fov_std_radi_int),
-                   std::max(0,         pos.y - fov_std_radi_int),
+        R los_rect(std::max(0, pos.x - fov_std_radi_int),
+                   std::max(0, pos.y - fov_std_radi_int),
                    std::min(map_w - 1, pos.x + fov_std_radi_int),
                    std::min(map_h - 1, pos.y + fov_std_radi_int));
 
-        map_parse::run(cell_check::BlocksLos(),
-                       blocked_los,
-                       MapParseMode::overwrite,
-                       los_rect);
+        map_parsers::BlocksLos()
+            .run(blocked_los,
+                 MapParseMode::overwrite,
+                 los_rect);
     }
 
     for (Actor* actor : game_time::actors)
@@ -228,12 +228,15 @@ void Actor::seen_foes(std::vector<Actor*>& out)
             }
             else //Not player
             {
-                const bool is_hostile_to_player = !is_actor_my_leader(map::player);
+                const bool is_hostile_to_player =
+                    !is_actor_my_leader(map::player);
 
-                const bool is_other_hostile_to_player = actor->is_player() ? false :
-                                                        !actor->is_actor_my_leader(map::player);
+                const bool is_other_hostile_to_player =
+                    actor->is_player() ? false :
+                    !actor->is_actor_my_leader(map::player);
 
-                const bool is_enemy = is_hostile_to_player != is_other_hostile_to_player;
+                const bool is_enemy =
+                    is_hostile_to_player != is_other_hostile_to_player;
 
                 const Mon* const mon = static_cast<const Mon*>(this);
 
@@ -248,12 +251,12 @@ void Actor::seen_foes(std::vector<Actor*>& out)
 
 void Actor::place(const P& pos_, ActorDataT& actor_data)
 {
-    pos         = pos_;
-    data_       = &actor_data;
-    state_      = ActorState::alive;
-    hp_         = hp_max_  = data_->hp;
-    spi_        = spi_max_ = data_->spi;
-    lair_pos_   = pos;
+    pos = pos_;
+    data_ = &actor_data;
+    state_ = ActorState::alive;
+    hp_ = hp_max_ = data_->hp;
+    spi_ = spi_max_ = data_->spi;
+    lair_pos_ = pos;
 
     inv_ = new Inventory(this);
 
@@ -312,8 +315,8 @@ void Actor::on_std_turn_common()
         }
         else //Is monster
         {
-            //Monsters regen spirit very quickly, so spell casters doesn't suddenly get
-            //completely handicapped
+            // Monsters regen spirit very quickly, so spell casters doesn't
+            // suddenly get completely handicapped
             regen_spi_n_turns = 2;
         }
 
@@ -329,7 +332,9 @@ void Actor::on_std_turn_common()
 void Actor::teleport()
 {
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::BlocksActor(*this, true), blocked);
+
+    map_parsers::BlocksActor(*this, ParseActors::yes)
+        .run(blocked);
 
     std::vector<P> pos_bucket;
     to_vec(blocked, false, pos_bucket);
@@ -497,17 +502,17 @@ bool Actor::restore_hp(const int hp_restored,
                        const bool is_allowed_above_max,
                        const Verbosity verbosity)
 {
-    bool        is_hp_gained    = is_allowed_above_max;
-    const int   dif_from_max    = hp_max(true) - hp_restored;
+    bool is_hp_gained = is_allowed_above_max;
+    const int dif_from_max = hp_max(true) - hp_restored;
 
     // If hp is below limit, but restored hp will push it over the limit, hp is
     // set to max.
     if (!is_allowed_above_max &&
-        hp() > dif_from_max   &&
+        hp() > dif_from_max &&
         hp() < hp_max(true))
     {
-        hp_             = hp_max(true);
-        is_hp_gained    = true;
+        hp_ = hp_max(true);
+        is_hp_gained = true;
     }
 
     // If hp is below limit, and restored hp will NOT push it over the limit -
@@ -575,8 +580,8 @@ bool Actor::restore_spi(const int spi_restored,
 
 void Actor::set_hp_and_spi_to_max()
 {
-    hp_     = hp_max(true);
-    spi_    = spi_max();
+    hp_ = hp_max(true);
+    spi_ = spi_max();
 }
 
 void Actor::change_max_hp(const int change, const Verbosity verbosity)
@@ -806,8 +811,8 @@ ActorDied Actor::hit(int dmg,
 
         const bool is_dmg_enough_to_destroy = dmg > ((hp_max(true) * 3) / 2);
 
-        const bool is_destroyed = !data_->can_leave_corpse  ||
-                                  is_on_bottomless          ||
+        const bool is_destroyed = !data_->can_leave_corpse ||
+                                  is_on_bottomless ||
                                   is_dmg_enough_to_destroy;
 
         die(is_destroyed,
@@ -895,8 +900,7 @@ void Actor::die(const bool is_destroyed,
     //Check all monsters and unset this actor as leader
     for (Actor* other : game_time::actors)
     {
-        if (
-            other != this       &&
+        if (other != this &&
             !other->is_player() &&
             is_leader_of(other))
         {
@@ -985,7 +989,7 @@ void Actor::die(const bool is_destroyed,
                 {
                     for (int dy = -1; dy <= 1; ++dy)
                     {
-                        new_pos      = pos + P(dx, dy);
+                        new_pos = pos + P(dx, dy);
                         feature_here = map::cells[pos.x + dx][pos.y + dy].rigid;
 
                         if (feature_here->can_have_corpse())
@@ -1059,10 +1063,10 @@ DidAction Actor::try_eat_corpse()
 
     if (corpse)
     {
-        const int           corpse_max_hp   = corpse->hp_max(false);
-        const int           destr_one_in_n  = constr_in_range(1, corpse_max_hp / 4, 8);
-        const bool          is_destroyed    = rnd::one_in(destr_one_in_n);
-        const std::string   corpse_name     = corpse->corpse_name_the();
+        const int corpse_max_hp = corpse->hp_max(false);
+        const int destr_one_in_n = constr_in_range(1, corpse_max_hp / 4, 8);
+        const bool is_destroyed = rnd::one_in(destr_one_in_n);
+        const std::string corpse_name = corpse->corpse_name_the();
 
         Snd snd("I hear ripping and chewing.",
                 SfxId::bite,
@@ -1140,10 +1144,10 @@ void Actor::add_light(bool light_map[map_w][map_h]) const
 
          const R fov_lmt = fov::get_fov_rect(pos);
 
-        map_parse::run(cell_check::BlocksLos(),
-                       hard_blocked,
-                       MapParseMode::overwrite,
-                       fov_lmt);
+        map_parsers::BlocksLos()
+            .run(hard_blocked,
+                 MapParseMode::overwrite,
+                 fov_lmt);
 
         LosResult fov[map_w][map_h];
 

@@ -2354,10 +2354,10 @@ void PropConfused::affect_move_dir(const P& actor_pos, Dir& dir)
 
          const R area_check_blocked(actor_pos - P(1, 1), actor_pos + P(1, 1));
 
-        map_parse::run(cell_check::BlocksActor(*owning_actor_, true),
-                       blocked,
-                       MapParseMode::overwrite,
-                       area_check_blocked);
+         map_parsers::BlocksActor(*owning_actor_, ParseActors::yes)
+             .run(blocked,
+                  MapParseMode::overwrite,
+                  area_check_blocked);
 
         if (rnd::one_in(8))
         {
@@ -2375,8 +2375,9 @@ void PropConfused::affect_move_dir(const P& actor_pos, Dir& dir)
 
             if (!d_bucket.empty())
             {
-                const size_t    idx = rnd::range(0, d_bucket.size() - 1);
-                const P&        d   = d_bucket[idx];
+                const size_t idx = rnd::range(0, d_bucket.size() - 1);
+
+                const P& d = d_bucket[idx];
 
                 dir = dir_utils::dir(d);
             }
@@ -2434,18 +2435,25 @@ void PropFrenzied::affect_move_dir(const P& actor_pos, Dir& dir)
             seen_foes_cells.push_back(actor->pos);
         }
 
-        sort(begin(seen_foes_cells), end(seen_foes_cells), IsCloserToPos(actor_pos));
+        sort(begin(seen_foes_cells),
+             end(seen_foes_cells),
+             IsCloserToPos(actor_pos));
 
         const P& closest_mon_pos = seen_foes_cells[0];
 
         bool blocked[map_w][map_h];
 
-        map_parse::run(cell_check::BlocksActor(*owning_actor_, false),
-                       blocked);
+        map_parsers::BlocksActor(*owning_actor_, ParseActors::no)
+            .run(blocked);
 
         std::vector<P> line;
 
-        line_calc::calc_new_line(actor_pos, closest_mon_pos, true, 999, false, line);
+        line_calc::calc_new_line(actor_pos,
+                                 closest_mon_pos,
+                                 true,
+                                 999,
+                                 false,
+                                 line);
 
         if (line.size() > 1)
         {

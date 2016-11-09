@@ -10,7 +10,8 @@ void decorate()
 {
     bool blocked[map_w][map_h];
 
-    map_parse::run(cell_check::BlocksMoveCmn(false), blocked);
+    map_parsers::BlocksMoveCmn(ParseActors::no).
+        run(blocked);
 
     for (int x = 0; x < map_w; ++x)
     {
