@@ -1196,11 +1196,13 @@ void GameState::draw_map()
             // Reset render data at this position
             game::render_array[x][y] = CellRenderData();
 
-            if (map::cells[x][y].is_seen_by_player)
-            {
-                render_data = &game::render_array[x][y];
+            render_data = &game::render_array[x][y];
 
-                const auto* const f = map::cells[x][y].rigid;
+            auto& cell = map::cells[x][y];
+
+            if (cell.is_seen_by_player)
+            {
+                const auto* const f = cell.rigid;
 
                 TileId gore_tile = TileId::empty;
 
@@ -1232,9 +1234,18 @@ void GameState::draw_map()
                     render_data->clr = clr_red;
                 }
 
-                if (map::cells[x][y].is_lit && f->is_los_passable())
+                if (cell.is_lit && f->is_los_passable())
                 {
                     render_data->is_marked_lit = true;
+                }
+
+                if (cell.is_dark && !cell.is_lit)
+                {
+                    render_data->clr.r =
+                        (Uint8)((double)(render_data->clr.r) / 1.5);
+
+                    render_data->clr.g =
+                        (Uint8)((double)(render_data->clr.g) / 1.5);
                 }
             }
         }
@@ -1423,13 +1434,6 @@ void GameState::draw_map()
                         div_clr(render_data->clr, div);
                         div_clr(render_data->clr_bg, div);
                     }
-
-                    if (cell.is_dark && !cell.is_lit)
-                    {
-                        const double drk_div = 1.75;
-                        div_clr(render_data->clr, drk_div);
-                        div_clr(render_data->clr_bg, drk_div);
-                    }
                 }
             }
             else if (cell.is_explored &&
@@ -1453,7 +1457,7 @@ void GameState::draw_map()
                 render_data->is_aware_of_allied_mon_here =
                     is_aware_of_allied_mon_here;
 
-                const double div = 5.0;
+                const double div = 3.0;
 
                 div_clr(render_data->clr, div);
                 div_clr(render_data->clr_bg, div);
@@ -1588,7 +1592,8 @@ void GameState::draw_map()
                 ASSERT(!render_data->is_aware_of_hostile_mon_here ||
                        !render_data->is_aware_of_allied_mon_here);
 
-                const Clr clr_bg = render_data->is_aware_of_hostile_mon_here ?
+                const Clr clr_bg =
+                    render_data->is_aware_of_hostile_mon_here ?
                     clr_nosf_teal_drk :
                     clr_allied_mon;
 

@@ -37,15 +37,15 @@ struct CellRenderData
 
     CellRenderData& operator=(const CellRenderData&) = default;
 
-    Clr     clr;
-    Clr     clr_bg;
-    TileId  tile;
-    char    glyph;
-    bool    is_light_fade_allowed;
-    bool    is_marked_lit;
-    bool    is_living_actor_seen_here;
-    bool    is_aware_of_hostile_mon_here;
-    bool    is_aware_of_allied_mon_here;
+    Clr clr;
+    Clr clr_bg;
+    TileId tile;
+    char glyph;
+    bool is_light_fade_allowed;
+    bool is_marked_lit;
+    bool is_living_actor_seen_here;
+    bool is_aware_of_hostile_mon_here;
+    bool is_aware_of_allied_mon_here;
 };
 
 namespace game

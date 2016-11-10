@@ -383,7 +383,8 @@ bool Player::can_see_actor(const Actor& other) const
         can_see_invis ||
         can_see_other_with_infravis;
 
-    if (cell.player_los.is_blocked_by_drk && !can_see_other_in_drk)
+    if (cell.player_los.is_blocked_by_drk &&
+        !can_see_other_in_drk)
     {
         return false;
     }
@@ -835,6 +836,27 @@ void Player::on_actor_turn()
         }
     }
 
+    // Run new turn events on all items
+    auto& inv = map::player->inv();
+
+    for (Item* const item : inv.backpack_)
+    {
+        item->on_actor_turn_in_inv(InvType::backpack);
+    }
+
+    for (InvSlot& slot : inv.slots_)
+    {
+        if (slot.item)
+        {
+            slot.item->on_actor_turn_in_inv(InvType::slots);
+        }
+    }
+
+    if (!is_alive())
+    {
+        return;
+    }
+
     // Take sanity hit from high shock?
     if (shock_tot() >= 100)
     {
@@ -850,6 +872,7 @@ void Player::on_actor_turn()
         else // Time to go crazy!
         {
             nr_turns_until_ins_ = -1;
+
             incr_insanity();
 
             if (is_alive())
@@ -866,22 +889,6 @@ void Player::on_actor_turn()
     }
 
     insanity::on_new_player_turn(my_seen_foes);
-
-    // Run new turn events on all items
-    auto& inv = map::player->inv();
-
-    for (Item* const item : inv.backpack_)
-    {
-        item->on_actor_turn_in_inv(InvType::backpack);
-    }
-
-    for (InvSlot& slot : inv.slots_)
-    {
-        if (slot.item)
-        {
-            slot.item->on_actor_turn_in_inv(InvType::slots);
-        }
-    }
 }
 
 void Player::add_shock_from_seen_monsters()
@@ -1800,6 +1807,7 @@ void Player::update_fov()
             for (int y = fov_lmt.p0.y; y <= fov_lmt.p1.y; ++y)
             {
                 const LosResult& los = fov[x][y];
+
                 Cell& cell = map::cells[x][y];
 
                 cell.is_seen_by_player =
@@ -1810,10 +1818,14 @@ void Player::update_fov()
             }
         }
 
-        map::cells[pos.x][pos.y].is_seen_by_player = true;
-
         fov_hack();
     }
+
+    //
+    // The player's current cell is always seen - mostly to update item info
+    // while blind (i.e. when you pick up an item you should see it disappear)
+    //
+    map::cells[pos.x][pos.y].is_seen_by_player = true;
 
     if (init::is_cheat_vision_enabled)
     {
@@ -1831,15 +1843,15 @@ void Player::update_fov()
     {
         for (int y = 0; y < map_h; ++y)
         {
-            const bool is_blocking =
-                map_parsers::BlocksMoveCmn(ParseActors::no)
-                .cell(P(x, y));
+            // const bool is_blocking =
+            //     map_parsers::BlocksMoveCmn(ParseActors::no)
+            //     .cell(P(x, y));
 
             Cell& cell = map::cells[x][y];
 
             // Do not explore dark floor cells
-            if (cell.is_seen_by_player &&
-                (!cell.is_dark || is_blocking))
+            if (cell.is_seen_by_player /*&&
+                                         (!cell.is_dark || is_blocking)*/)
             {
                 cell.is_explored = true;
             }
