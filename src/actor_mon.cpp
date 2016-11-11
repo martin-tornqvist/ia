@@ -1475,7 +1475,8 @@ DidAction Khephren::on_act()
             {
                 msg_log::add("Khephren calls a plague of Locusts!");
 
-                map::player->incr_shock(ShockLvl::heavy, ShockSrc::misc);
+                map::player->incr_shock(ShockLvl::terrifying,
+                                        ShockSrc::misc);
 
                 for (size_t i = 0; i < nr_of_spawns; ++i)
                 {
@@ -2060,7 +2061,7 @@ DidAction Zombie::try_resurrect()
                              clr_text,
                              true);
 
-                map::player->incr_shock(ShockLvl::some,
+                map::player->incr_shock(ShockLvl::frightening,
                                         ShockSrc::see_mon);
             }
 
@@ -2092,11 +2093,14 @@ void Zombie::on_death()
 
     const int summon_one_in_n = 7;
 
-    if (state_ == ActorState::destroyed && hp_ > -10 && rnd::one_in(summon_one_in_n))
+    if ((state_ == ActorState::destroyed) &&
+        (hp_ > -10) &&
+        rnd::one_in(summon_one_in_n))
     {
         ActorId id_to_spawn = ActorId::END;
 
-        // With a small chance, spawn a Floating Skull, otherwise spawn Hands or Intestines
+        // With a small chance, spawn a Floating Skull, otherwise spawn Hands or
+        // Intestines
         const int roll = rnd::one_in(50) ? 3 : rnd::range(1, 2);
 
         const std::string my_name = name_the();
@@ -2107,19 +2111,28 @@ void Zombie::on_death()
         {
             id_to_spawn = ActorId::crawling_hand;
 
-            spawn_msg = "The hand of " + my_name + " comes off and starts crawling around!";
+            spawn_msg =
+                "The hand of " +
+                my_name +
+                " comes off and starts crawling around!";
         }
         else if (roll == 2)
         {
             id_to_spawn = ActorId::crawling_intestines;
 
-            spawn_msg = "The intestines of " + my_name + " starts crawling around!";
+            spawn_msg =
+                "The intestines of " +
+                my_name +
+                " starts crawling around!";
         }
         else
         {
             id_to_spawn = ActorId::floating_skull;
 
-            spawn_msg = "The head of " + my_name + " starts floating around!";
+            spawn_msg =
+                "The head of " +
+                my_name +
+                " starts floating around!";
         }
 
         if (map::cells[pos.x][pos.y].is_seen_by_player)
@@ -2128,7 +2141,8 @@ void Zombie::on_death()
 
             msg_log::add(spawn_msg);
 
-            map::player->incr_shock(ShockLvl::some, ShockSrc::see_mon);
+            map::player->incr_shock(ShockLvl::frightening,
+                                    ShockSrc::see_mon);
         }
 
         ASSERT(id_to_spawn != ActorId::END);
@@ -2228,7 +2242,8 @@ DidAction MajorClaphamLee::on_act()
 
             has_summoned_tomb_legions = true;
 
-            map::player->incr_shock(ShockLvl::heavy, ShockSrc::misc);
+            map::player->incr_shock(ShockLvl::terrifying,
+                                    ShockSrc::misc);
 
             game_time::tick();
 

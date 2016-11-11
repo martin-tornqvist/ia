@@ -37,6 +37,7 @@
 #include "postmortem.hpp"
 #include "character_descr.hpp"
 #include "mapgen.hpp"
+#include "actor_data.hpp"
 
 namespace game
 {
@@ -798,7 +799,7 @@ void handle_player_input(const InputData& input)
 
     case SDLK_F3:
     {
-        game::incr_player_xp(33);
+        game::incr_player_xp(100);
     }
     break;
 
@@ -1029,6 +1030,63 @@ void win_game()
     io::update_screen();
 
     query::wait_for_confirm();
+}
+
+void on_mon_seen(Actor& actor)
+{
+    auto& d = actor.data();
+
+    if (!d.has_player_seen)
+    {
+        d.has_player_seen = true;
+
+        //
+        // Give XP based on monster shock rating
+        //
+        int xp_gained = 0;
+
+        switch (d.mon_shock_lvl)
+        {
+        case ShockLvl::unsettling:
+            xp_gained = 5;
+            break;
+
+        case ShockLvl::frightening:
+            xp_gained = 10;
+            break;
+
+        case ShockLvl::terrifying:
+            xp_gained = 15;
+            break;
+
+        case ShockLvl::mind_shattering:
+            xp_gained = 25;
+            break;
+
+        case ShockLvl::none:
+        case ShockLvl::END:
+            break;
+        }
+
+        if (xp_gained > 0)
+        {
+            const std::string name = actor.name_a();
+
+            msg_log::add("I have discovered " + name + "!");
+
+            incr_player_xp(xp_gained);
+
+            msg_log::more_prompt();
+
+            add_history_event("Discovered " + name + ".");
+
+            //
+            // We also cause some shock the first time
+            //
+            map::player->incr_shock(d.mon_shock_lvl,
+                                    ShockSrc::see_mon);
+        }
+    }
 }
 
 void on_mon_killed(Actor& actor)

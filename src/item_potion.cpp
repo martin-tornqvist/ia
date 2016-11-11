@@ -45,7 +45,8 @@ ConsumeItem Potion::activate(Actor* const actor)
                 msg_log::add("I drink an unknown " + potion_name + "...");
             }
 
-            map::player->incr_shock(ShockLvl::heavy, ShockSrc::use_strange_item);
+            map::player->incr_shock(ShockLvl::terrifying,
+                                    ShockSrc::use_strange_item);
         }
 
         quaff_impl(*actor);
@@ -538,39 +539,61 @@ void PotionInsight::quaff_impl(Actor& actor)
 
 void PotionClairv::quaff_impl(Actor& actor)
 {
-    if (actor.is_player())
+    if (!actor.is_player())
     {
-        msg_log::add("I see far and wide!");
+        return;
+    }
 
-        std::vector<P> anim_cells;
-        anim_cells.clear();
+    msg_log::add("I see far and wide!");
 
-        bool blocked[map_w][map_h];
+    std::vector<P> anim_cells;
 
-        map_parsers::BlocksLos()
-            .run(blocked);
+    anim_cells.clear();
 
-        for (int x = 0; x < map_w; ++x)
+    //
+    // All cells which do not block LOS are revealed (it just looks nice)
+    //
+    bool blocks_los[map_w][map_h];
+
+    map_parsers::BlocksLos()
+        .run(blocks_los);
+
+    //
+    // Some important map features are always revealed (keep this list up to
+    // date when game design changes and important features are added/removed!)
+    //
+    bool always_show[map_w][map_h];
+
+    map_parsers::IsAnyOfFeatures feature_parser(
+    {
+        FeatureId::stairs,
+        FeatureId::monolith,
+    });
+
+    feature_parser.run(always_show);
+
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
         {
-            for (int y = 0; y < map_h; ++y)
-            {
-                Cell& cell = map::cells[x][y];
+            Cell& cell = map::cells[x][y];
 
-                if (!blocked[x][y] && !cell.is_dark)
-                {
-                    cell.is_explored = true;
-                    cell.is_seen_by_player = true;
-                    anim_cells.push_back(P(x, y));
-                }
+            if (!blocks_los[x][y] || always_show[x][y])
+            {
+                cell.is_explored = true;
+
+                cell.is_seen_by_player = true;
+
+                anim_cells.push_back(P(x, y));
             }
         }
-
-        states::draw();
-
-        map::update_vision();
-
-        io::draw_blast_at_cells(anim_cells, clr_white);
     }
+
+    states::draw();
+
+    map::update_vision();
+
+    io::draw_blast_at_cells(anim_cells, clr_white);
 
     identify(Verbosity::verbose);
 }

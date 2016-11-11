@@ -71,28 +71,28 @@ void mon_shock_str(const ActorDataT& def,
 
     switch (def.mon_shock_lvl)
     {
-    case MonShockLvl::unsettling:
+    case ShockLvl::unsettling:
         shock_str_out = "unsettling";
         punct_str_out = ".";
         break;
 
-    case MonShockLvl::frightening:
+    case ShockLvl::frightening:
         shock_str_out = "frightening";
         punct_str_out = ".";
         break;
 
-    case MonShockLvl::terrifying:
+    case ShockLvl::terrifying:
         shock_str_out = "terrifying";
         punct_str_out = "!";
         break;
 
-    case MonShockLvl::mind_shattering:
+    case ShockLvl::mind_shattering:
         shock_str_out = "mind shattering";
         punct_str_out = "!";
         break;
 
-    case MonShockLvl::none:
-    case MonShockLvl::END:
+    case ShockLvl::none:
+    case ShockLvl::END:
         break;
     }
 }

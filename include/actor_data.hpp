@@ -105,7 +105,7 @@ struct MonGroupSpawnRule
     MonGroupSpawnRule(MonGroupSize group_size, int weight) :
         group_size  (group_size),
         weight      (weight) {}
-    
+
     MonGroupSize group_size;
     int weight;
 };
@@ -122,10 +122,10 @@ enum class ActorSpeed
 
 enum class ActorErraticFreq
 {
-    never    = 0,
-    rare     = 8,
-    somewhat = 25,
-    very     = 50
+    never       = 0,
+    rare        = 8,
+    somewhat    = 25,
+    very        = 50
 };
 
 enum class ActorSize
@@ -134,16 +134,6 @@ enum class ActorSize
     floor,
     humanoid,
     giant
-};
-
-enum class MonShockLvl
-{
-    none,
-    unsettling,
-    frightening,
-    terrifying,
-    mind_shattering,
-    END
 };
 
 enum class AiId
@@ -190,16 +180,25 @@ struct ActorDataT
     bool is_infra_visible;
     bool is_auto_descr_allowed;
     int nr_kills;
+    bool has_player_seen;
     bool can_open_doors, can_bash_doors;
-    //NOTE: Knockback may be prevented even if this is false, e.g. if monster is ethereal
+    // NOTE: Knockback may be prevented even if this is false, e.g. if monstes
+    //       is ethereal
     bool prevent_knockback;
     int nr_left_allowed_to_spawn;
     bool is_unique;
     bool is_auto_spawn_allowed;
     std::string spell_cast_msg;
     ActorErraticFreq erratic_move_pct;
-    MonShockLvl mon_shock_lvl;
-    bool is_rat, is_canine, is_spider, is_undead, is_ghost, is_snake, is_reptile, is_amphibian;
+    ShockLvl mon_shock_lvl;
+    bool is_rat;
+    bool is_canine;
+    bool is_spider;
+    bool is_undead;
+    bool is_ghost;
+    bool is_snake;
+    bool is_reptile;
+    bool is_amphibian;
     bool can_be_summoned;
     bool can_bleed;
     bool can_leave_corpse;

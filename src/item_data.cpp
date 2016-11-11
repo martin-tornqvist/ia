@@ -551,7 +551,7 @@ void init_data_list()
     d.base_name = {"Tommy Gun", "Tommy Guns", "a Tommy Gun"};
     d.base_descr =
     {
-        "\"Tommy Gun\" is a nickname for the Thompson submachine gun-an "
+        "\"Tommy Gun\" is a nickname for the Thompson submachine gun - an "
         "automatic firearm with a drum magazine and verical foregrip. It fires "
         ".45 ACP ammunition. The drum magazine has a capacity of 50 rounds."
     };

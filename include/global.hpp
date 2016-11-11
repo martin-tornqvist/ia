@@ -274,10 +274,12 @@ enum class AllowWound
 
 enum class ShockLvl
 {
-    none   = 0,
-    mild   = 2,
-    some   = 4,
-    heavy  = 12
+    none,
+    unsettling,
+    frightening,
+    terrifying,
+    mind_shattering,
+    END
 };
 
 enum class GameEntryMode

@@ -55,6 +55,7 @@ void ActorDataT::reset()
     is_infra_visible = true;
     is_auto_descr_allowed = true;
     nr_kills = 0;
+    has_player_seen = false;
     can_open_doors = can_bash_doors = false;
     prevent_knockback = false;
     nr_left_allowed_to_spawn = -1;
@@ -62,7 +63,7 @@ void ActorDataT::reset()
     is_auto_spawn_allowed = true;
     spell_cast_msg = "";
     erratic_move_pct = ActorErraticFreq::rare;
-    mon_shock_lvl = MonShockLvl::none;
+    mon_shock_lvl = ShockLvl::none;
     is_rat = false;
     is_canine = false;
     is_spider = false;
@@ -151,7 +152,7 @@ void init_data_list()
     d.aggro_sfx_mon_seen = SfxId::zombie_growl;
     d.aggro_sfx_mon_hidden = SfxId::zombie_growl;
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.is_undead = true;
     d.is_humanoid = true;
     d.prio_corpse_bash = true;
@@ -200,7 +201,7 @@ void init_data_list()
     d.aggro_sfx_mon_seen = SfxId::zombie_growl;
     d.aggro_sfx_mon_hidden = SfxId::zombie_growl;
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.is_undead = true;
     d.is_humanoid = true;
     d.prio_corpse_bash = true;
@@ -248,7 +249,7 @@ void init_data_list()
         "somehow. It is constantly oozing putrid liquid that it can spit "
         "to attack with.";
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.is_undead = true;
     d.is_humanoid = true;
     d.prio_corpse_bash = true;
@@ -289,7 +290,7 @@ void init_data_list()
         "body was stolen. Now he roams these halls as a resurrected "
         "warrior in service of the cult, commanding a squad of undead.";
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::terrifying;
+    d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_undead = true;
     d.is_humanoid = true;
     d.is_unique = true;
@@ -332,7 +333,7 @@ void init_data_list()
         "England. He must have gotten into the hands of the Cult, who "
         "turned him into the hellish zombie warrior I now see before me.";
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::terrifying;
+    d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_undead = true;
     d.is_humanoid = true;
     d.is_unique = true;
@@ -376,7 +377,7 @@ void init_data_list()
     d.nr_turns_aware = 5;
     d.descr = "A writhing mass of crawling intestines.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = MonShockLvl::terrifying;
+    d.mon_shock_lvl = ShockLvl::terrifying;
     d.can_be_summoned = false;
     d.is_auto_descr_allowed = false;
     d.can_leave_corpse = false;
@@ -420,7 +421,7 @@ void init_data_list()
         "A disembodied hand, crawling around frantically on its fingertips "
         "like a spider.";
     d.erratic_move_pct = ActorErraticFreq::very;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.can_be_summoned = false;
     d.is_auto_descr_allowed = false;
     d.can_leave_corpse = false;
@@ -463,7 +464,7 @@ void init_data_list()
         "A particularly nasty disembodied hand, crawling around frantically on "
         "its fingertips like a spider. Beware of the Thing.";
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::terrifying;
+    d.mon_shock_lvl = ShockLvl::terrifying;
     d.can_be_summoned = false;
     d.can_leave_corpse = false;
     d.is_auto_descr_allowed = false;
@@ -502,7 +503,7 @@ void init_data_list()
     d.nr_turns_aware = 10;
     d.descr = "A severed head floating through the air.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = MonShockLvl::terrifying;
+    d.mon_shock_lvl = ShockLvl::terrifying;
     d.can_be_summoned = true;
     d.is_undead = true;
     d.is_auto_descr_allowed = false;
@@ -673,7 +674,7 @@ void init_data_list()
     d.aggro_text_mon_hidden = "I hear a repulsive croaking voice.";
     d.nr_turns_aware = 999;
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::ritual);
     d.native_rooms.push_back(RoomType::forest);
@@ -726,7 +727,7 @@ void init_data_list()
     d.aggro_text_mon_hidden = "I hear a loathsome titter.";
     d.nr_turns_aware = 999;
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.is_rat = true;
     data[(size_t)d.id] = d;
     d.reset();
@@ -760,7 +761,7 @@ void init_data_list()
     d.spell_cast_msg = "makes strange gestures in the air.";
     d.nr_turns_aware = 999;
     d.erratic_move_pct = ActorErraticFreq::never;
-    d.mon_shock_lvl = MonShockLvl::mind_shattering;
+    d.mon_shock_lvl = ShockLvl::mind_shattering;
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -1001,7 +1002,7 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.is_spider = true;
     d.is_infra_visible = false;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::spider);
     d.native_rooms.push_back(RoomType::forest);
@@ -1186,7 +1187,7 @@ void init_data_list()
     d.aggro_sfx_mon_seen = SfxId::dog_snarl;
     d.aggro_sfx_mon_hidden = SfxId::dog_snarl;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.is_canine = true;
     d.can_be_summoned = true;
     d.native_rooms.push_back(RoomType::plain);
@@ -1233,7 +1234,7 @@ void init_data_list()
     d.aggro_sfx_mon_seen = SfxId::dog_snarl;
     d.aggro_sfx_mon_hidden = SfxId::dog_snarl;
     d.erratic_move_pct = ActorErraticFreq::never;
-    d.mon_shock_lvl = MonShockLvl::mind_shattering;
+    d.mon_shock_lvl = ShockLvl::mind_shattering;
     d.is_canine = true;
     d.can_be_summoned = false;
     d.is_unique = true;
@@ -1274,7 +1275,7 @@ void init_data_list()
     d.nr_turns_aware = 5;
     d.descr = "A restless spirit.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.is_undead = true;
     d.is_ghost = true;
     d.is_infra_visible = false;
@@ -1318,7 +1319,7 @@ void init_data_list()
         "resembles a grim reaper, including the cloak, scythe, and "
         "skeletal appearance.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = MonShockLvl::terrifying;
+    d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_undead = true;
     d.is_ghost = true;
     d.is_infra_visible = false;
@@ -1360,7 +1361,7 @@ void init_data_list()
     d.nr_turns_aware = 5;
     d.descr = "A powerful spirit.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = MonShockLvl::terrifying;
+    d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_undead = true;
     d.is_ghost = true;
     d.is_infra_visible = false;
@@ -1450,7 +1451,7 @@ void init_data_list()
         "witchcraft. Thus, they are found where the witch who created them "
         "had her lair.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = MonShockLvl::unsettling;
+    d.mon_shock_lvl = ShockLvl::unsettling;
     d.is_rat = true;
     d.can_be_summoned = true;
     d.native_rooms.push_back(RoomType::plain);
@@ -1540,7 +1541,7 @@ void init_data_list()
     d.aggro_sfx_mon_seen = SfxId::flapping_wings;
     d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
     d.erratic_move_pct = ActorErraticFreq::very;
-    d.mon_shock_lvl = MonShockLvl::none;
+    d.mon_shock_lvl = ShockLvl::none;
     d.can_be_summoned = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
@@ -1588,7 +1589,7 @@ void init_data_list()
     d.aggro_sfx_mon_seen = SfxId::flapping_wings;
     d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
     d.erratic_move_pct = ActorErraticFreq::very;
-    d.mon_shock_lvl = MonShockLvl::unsettling;
+    d.mon_shock_lvl = ShockLvl::unsettling;
     d.can_be_summoned = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
@@ -1614,7 +1615,7 @@ void init_data_list()
     d.tile = TileId::byakhee;
     d.hp = 14;
     d.spi = 20;
-    d.dmg_melee = min_dmg_to_wound + 1;
+    d.dmg_melee = min_dmg_to_wound + 3;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodge_att, 40);
     d.natural_props[(size_t)PropId::flying] = true;
@@ -1643,7 +1644,7 @@ void init_data_list()
     d.aggro_sfx_mon_seen = SfxId::flapping_wings;
     d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.can_be_summoned = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::chasm);
@@ -1679,7 +1680,7 @@ void init_data_list()
     d.nr_turns_aware = 5;
     d.descr = "A huge predatory insect.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = MonShockLvl::unsettling;
+    d.mon_shock_lvl = ShockLvl::unsettling;
     d.is_infra_visible = false;
     d.can_be_summoned = false;
     d.native_rooms.push_back(RoomType::plain);
@@ -1721,7 +1722,7 @@ void init_data_list()
     d.nr_turns_aware = 12;
     d.descr = "A huge swarming insect. They breed rapidly.";
     d.erratic_move_pct = ActorErraticFreq::very;
-    d.mon_shock_lvl = MonShockLvl::none;
+    d.mon_shock_lvl = ShockLvl::none;
     d.is_infra_visible = false;
     d.can_be_summoned = false;
     d.native_rooms.push_back(RoomType::plain);
@@ -1784,7 +1785,7 @@ void init_data_list()
     d.aggro_text_mon_seen = d.name_the + " speaks at me in a droning voice.";
     d.aggro_text_mon_hidden = "I hear a droning voice.";
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
@@ -1827,7 +1828,7 @@ void init_data_list()
     d.aggro_text_mon_seen = d.name_the + " speaks at me in a droning voice.";
     d.aggro_text_mon_hidden = "I hear a droning voice.";
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
@@ -1885,7 +1886,7 @@ void init_data_list()
     d.aggro_text_mon_seen = d.name_the + " makes shrill whistling sounds.";
     d.aggro_text_mon_hidden = "I hear a shrill whistling.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = MonShockLvl::terrifying;
+    d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
@@ -1937,7 +1938,7 @@ void init_data_list()
     d.aggro_text_mon_seen = d.name_the + " makes shrill whistling sounds.";
     d.aggro_text_mon_hidden = "I hear a shrill whistling.";
     d.erratic_move_pct = ActorErraticFreq::very;
-    d.mon_shock_lvl = MonShockLvl::mind_shattering;
+    d.mon_shock_lvl = ShockLvl::mind_shattering;
     d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
@@ -1991,7 +1992,7 @@ void init_data_list()
     d.aggro_sfx_mon_seen = SfxId::ghoul_growl;
     d.aggro_sfx_mon_hidden = SfxId::wolf_howl;
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.is_infra_visible = false;
     d.is_humanoid = true;
     d.native_rooms.push_back(RoomType::plain);
@@ -2044,7 +2045,7 @@ void init_data_list()
     d.is_infra_visible = false;
     d.is_humanoid = true;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.native_rooms.push_back(RoomType::plain);
     data[(size_t)d.id] = d;
     d.reset();
@@ -2088,7 +2089,7 @@ void init_data_list()
     d.is_infra_visible = false;
     d.is_humanoid = true;
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
     data[(size_t)d.id] = d;
@@ -2123,7 +2124,7 @@ void init_data_list()
     d.descr = "A mummified human being, possibly dating back millennia.";
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.is_undead = true;
     d.is_humanoid = true;
     d.is_infra_visible = false;
@@ -2167,7 +2168,7 @@ void init_data_list()
         "the head of a crocodile. It is wielding a spear.";
     d.spell_cast_msg = "casts a spell.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.is_undead = true;
     d.is_humanoid = true;
     d.is_infra_visible = false;
@@ -2209,7 +2210,7 @@ void init_data_list()
         "to dwell here is beyond anyones guess.";
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::terrifying;
+    d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_undead = true;
     d.is_humanoid = true;
     d.is_infra_visible = false;
@@ -2254,7 +2255,7 @@ void init_data_list()
         "sealed room with the Nile.";
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::terrifying;
+    d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_undead = true;
     d.is_humanoid = true;
     d.is_infra_visible = false;
@@ -2308,7 +2309,7 @@ void init_data_list()
         "effectively immortal. Deep ones may be worshipped by humans with "
         "whom they regularly interbreed.";
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.native_rooms.push_back(RoomType::flooded);
     d.native_rooms.push_back(RoomType::muddy);
     data[(size_t)d.id] = d;
@@ -2356,7 +2357,7 @@ void init_data_list()
     d.aggro_sfx_mon_seen = SfxId::ape;
     d.aggro_sfx_mon_hidden = SfxId::ape;
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::unsettling;
+    d.mon_shock_lvl = ShockLvl::unsettling;
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::monster);
@@ -2491,7 +2492,7 @@ void init_data_list()
     d.can_leave_corpse = false;
     d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::very;
-    d.mon_shock_lvl = MonShockLvl::unsettling;
+    d.mon_shock_lvl = ShockLvl::unsettling;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     data[(size_t)d.id] = d;
@@ -2537,7 +2538,7 @@ void init_data_list()
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.erratic_move_pct = ActorErraticFreq::very;
-    d.mon_shock_lvl = MonShockLvl::unsettling;
+    d.mon_shock_lvl = ShockLvl::unsettling;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     data[(size_t)d.id] = d;
@@ -2589,7 +2590,7 @@ void init_data_list()
     d.can_leave_corpse = false;
     d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = MonShockLvl::unsettling;
+    d.mon_shock_lvl = ShockLvl::unsettling;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::flooded);
     d.native_rooms.push_back(RoomType::muddy);
@@ -2643,7 +2644,7 @@ void init_data_list()
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.is_infra_visible = false;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::flooded);
@@ -2700,7 +2701,7 @@ void init_data_list()
     d.can_leave_corpse = false;
     d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::flooded);
     d.native_rooms.push_back(RoomType::muddy);
@@ -2756,7 +2757,7 @@ void init_data_list()
     d.can_leave_corpse = false;
     d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::flooded);
     d.native_rooms.push_back(RoomType::muddy);
@@ -2807,7 +2808,7 @@ void init_data_list()
     d.can_leave_corpse = false;
     d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::very;
-    d.mon_shock_lvl = MonShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::frightening;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::flooded);
     d.native_rooms.push_back(RoomType::muddy);
@@ -2854,7 +2855,7 @@ void init_data_list()
     d.aggro_sfx_mon_seen = SfxId::END;
     d.aggro_sfx_mon_hidden = SfxId::END;
     d.can_be_summoned = false;
-    d.mon_shock_lvl = MonShockLvl::terrifying;
+    d.mon_shock_lvl = ShockLvl::terrifying;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
@@ -2908,7 +2909,7 @@ void init_data_list()
     d.aggro_text_mon_hidden = "I hear a deep buzzing sound.";
     d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::unsettling;
+    d.mon_shock_lvl = ShockLvl::unsettling;
     d.native_rooms.push_back(RoomType::plain);
     data[(size_t)d.id] = d;
     d.reset();
@@ -2945,7 +2946,7 @@ void init_data_list()
     d.aggro_text_mon_hidden = "";
     d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = MonShockLvl::unsettling;
+    d.mon_shock_lvl = ShockLvl::unsettling;
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -3034,7 +3035,7 @@ void init_data_list()
     d.can_leave_corpse = false;
     d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = MonShockLvl::none;
+    d.mon_shock_lvl = ShockLvl::none;
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::flooded);
     d.native_rooms.push_back(RoomType::muddy);
@@ -3085,7 +3086,7 @@ void init_data_list()
     d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
     d.can_bleed = true;
     d.can_be_summoned = false;
-    d.mon_shock_lvl = MonShockLvl::mind_shattering;
+    d.mon_shock_lvl = ShockLvl::mind_shattering;
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
@@ -3139,7 +3140,7 @@ void init_data_list()
     d.is_humanoid = true;
     d.can_leave_corpse = false;
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
-    d.mon_shock_lvl = MonShockLvl::mind_shattering;
+    d.mon_shock_lvl = ShockLvl::mind_shattering;
     d.erratic_move_pct = ActorErraticFreq::never;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
@@ -3186,7 +3187,7 @@ void init_data_list()
     d.is_auto_descr_allowed = false;
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = ActorErraticFreq::never;
-    d.mon_shock_lvl = MonShockLvl::terrifying;
+    d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_humanoid = true;
     d.can_leave_corpse = false;
     d.can_bleed = true;
@@ -3205,24 +3206,26 @@ void init()
 
 void save()
 {
-    for (int i = 0; i < int(ActorId::END); ++i)
+    for (int i = 0; i < (int)ActorId::END; ++i)
     {
         const auto& d = data[i];
 
         saving::put_int(d.nr_left_allowed_to_spawn);
         saving::put_int(d.nr_kills);
+        saving::put_bool(d.has_player_seen);
     }
 }
 
 void load()
 {
-    for (int i = 0; i < int(ActorId::END); ++i)
+    for (int i = 0; i < (int)ActorId::END; ++i)
     {
         auto& d = data[i];
 
-        d.nr_left_allowed_to_spawn  = saving::get_int();
-        d.nr_kills                  = saving::get_int();
+        d.nr_left_allowed_to_spawn = saving::get_int();
+        d.nr_kills = saving::get_int();
+        d.has_player_seen = saving::get_bool();
     }
 }
 
-} //actor_data
+} // actor_data

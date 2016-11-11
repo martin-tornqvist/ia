@@ -1962,13 +1962,13 @@ void Brazier::on_hit(const DmgType dmg_type,
 
             if (dst_rigid->is_projectile_passable())
             {
-                expl_pos    = dst_pos;
-                expl_d      = -1;
+                expl_pos = dst_pos;
+                expl_d = -1;
             }
             else
             {
-                expl_pos    = my_pos;
-                expl_d      = -2;
+                expl_pos = my_pos;
+                expl_d = -2;
             }
 
             //TODO: Emit sound from explosion center
@@ -2021,7 +2021,8 @@ ItemContainer::~ItemContainer()
     }
 }
 
-void ItemContainer::init(const FeatureId feature_id, const int nr_items_to_attempt)
+void ItemContainer::init(const FeatureId feature_id,
+                         const int nr_items_to_attempt)
 {
     for (auto* item : items_)
     {
@@ -2609,9 +2610,8 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
             {
                 const ActorDataT& d = actor_data::data[i];
 
-                if (
-                    d.natural_props[(size_t)PropId::ooze]   &&
-                    d.is_auto_spawn_allowed                 &&
+                if (d.natural_props[(size_t)PropId::ooze] &&
+                    d.is_auto_spawn_allowed &&
                     !d.is_unique)
                 {
                     mon_bucket.push_back(ActorId(i));
@@ -3133,7 +3133,7 @@ void Fountain::bump(Actor& actor_bumping)
 
         case FountainEffect::xp:
             msg_log::add("I feel more powerful!");
-            game::incr_player_xp(3);
+            game::incr_player_xp(2);
             break;
 
         case FountainEffect::curse:
@@ -3389,7 +3389,8 @@ DidTriggerTrap Cocoon::trigger_trap(Actor* const actor)
         {
             //A dead body
             msg_log::add("There is a half-dissolved human body inside!");
-            map::player->incr_shock(ShockLvl::heavy, ShockSrc::misc);
+            map::player->incr_shock(ShockLvl::terrifying,
+                                    ShockSrc::misc);
             is_trapped_ = false;
             return DidTriggerTrap::yes;
         }
@@ -3403,10 +3404,9 @@ DidTriggerTrap Cocoon::trigger_trap(Actor* const actor)
             {
                 const ActorDataT& d = actor_data::data[i];
 
-                if (
-                    d.is_spider                         &&
-                    d.actor_size == ActorSize::floor    &&
-                    d.is_auto_spawn_allowed             &&
+                if (d.is_spider &&
+                    d.actor_size == ActorSize::floor &&
+                    d.is_auto_spawn_allowed &&
                     !d.is_unique)
                 {
                     spawn_bucket.push_back(d.id);

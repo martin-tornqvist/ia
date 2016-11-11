@@ -69,7 +69,7 @@ public:
                     const Dir dir_to_origin,
                     const int percent_audible_distance);
 
-    void incr_shock(const ShockLvl shock_value,
+    void incr_shock(const ShockLvl shock,
                     ShockSrc shock_src);
 
     void incr_shock(const double shock,
@@ -139,7 +139,7 @@ private:
                                   const ShockSrc shock_src) const;
 
 
-    void add_shock_from_seen_monsters();
+    void add_shock_from_seen_monsters(std::vector<Actor*> seen_monsters);
 
     void set_tmp_shock();
 

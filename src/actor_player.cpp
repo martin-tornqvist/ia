@@ -565,9 +565,37 @@ void Player::incr_shock(double shock, ShockSrc shock_src)
     set_constr_in_range(0.0, shock_, 100.0);
 }
 
-void Player::incr_shock(const ShockLvl shock_value, ShockSrc shock_src)
+void Player::incr_shock(const ShockLvl shock, ShockSrc shock_src)
 {
-    incr_shock((int)shock_value, shock_src);
+    double shock_value = 0.0;
+
+    switch (shock)
+    {
+    case ShockLvl::unsettling:
+        shock_value = 2.0;
+        break;
+
+    case ShockLvl::frightening:
+        shock_value = 4.0;
+        break;
+
+    case ShockLvl::terrifying:
+        shock_value = 12.0;
+        break;
+
+    case ShockLvl::mind_shattering:
+        shock_value = 50.0;
+        break;
+
+    case ShockLvl::none:
+    case ShockLvl::END:
+        break;
+    }
+
+    if (shock_value > 0.0)
+    {
+        incr_shock(shock_value, shock_src);
+    }
 }
 
 void Player::restore_shock(const int amount_restored,
@@ -781,18 +809,21 @@ void Player::on_actor_turn()
 
     update_fov();
 
+    // Set current temporary shock from darkness etc
+    set_tmp_shock();
+
     std::vector<Actor*> my_seen_foes;
+
     seen_foes(my_seen_foes);
 
     for (Actor* actor : my_seen_foes)
     {
         static_cast<Mon*>(actor)->set_player_aware_of_me();
+
+        game::on_mon_seen(*actor);
     }
 
-    add_shock_from_seen_monsters();
-
-    // Set current temporary shock from darkness etc
-    set_tmp_shock();
+    add_shock_from_seen_monsters(my_seen_foes);
 
     // Some "permanent shock" is taken every Nth turn
     if (prop_handler_->allow_act())
@@ -806,33 +837,11 @@ void Player::on_actor_turn()
 
         const int turn = game_time::turn();
 
-        if ((turn % incr_shock_every_n_turns == 0) && turn > 1)
+        if (((turn % incr_shock_every_n_turns) == 0) &&
+            (turn > 1) &&
+            (map::dlvl != 0))
         {
-            // Occasionally cause a shock spike, to make it less predictable
-            if (rnd::one_in(850))
-            {
-                std::string msg = "";
-
-                if (rnd::coin_toss())
-                {
-                    msg = "I have a bad feeling about this...";
-                }
-                else
-                {
-                    msg = "A chill runs down my spine...";
-                }
-
-                msg_log::add(msg, clr_msg_note, false, MorePromptOnMsg::yes);
-
-                incr_shock(ShockLvl::heavy, ShockSrc::misc);
-            }
-            else // No randomized shock spike
-            {
-                if (map::dlvl != 0)
-                {
-                    incr_shock(1, ShockSrc::time);
-                }
-            }
+            incr_shock(1, ShockSrc::time);
         }
     }
 
@@ -891,19 +900,16 @@ void Player::on_actor_turn()
     insanity::on_new_player_turn(my_seen_foes);
 }
 
-void Player::add_shock_from_seen_monsters()
+void Player::add_shock_from_seen_monsters(std::vector<Actor*> seen_monsters)
 {
     if (!prop_handler_->allow_see())
     {
         return;
     }
 
-    std::vector<Actor*> my_seen_foes;
-    seen_foes(my_seen_foes);
-
     double val = 0.0;
 
-    for (Actor* actor : my_seen_foes)
+    for (Actor* actor : seen_monsters)
     {
         Mon* mon = static_cast<Mon*>(actor);
 
@@ -911,24 +917,24 @@ void Player::add_shock_from_seen_monsters()
 
         switch (mon_data.mon_shock_lvl)
         {
-        case MonShockLvl::unsettling:
+        case ShockLvl::unsettling:
             val += 0.05;
             break;
 
-        case MonShockLvl::frightening:
+        case ShockLvl::frightening:
             val += 0.375;
             break;
 
-        case MonShockLvl::terrifying:
+        case ShockLvl::terrifying:
             val += 0.75;
             break;
 
-        case MonShockLvl::mind_shattering:
+        case ShockLvl::mind_shattering:
             val += 1.75;
             break;
 
-        case MonShockLvl::none:
-        case MonShockLvl::END:
+        case ShockLvl::none:
+        case ShockLvl::END:
             break;
         }
     }
@@ -968,7 +974,15 @@ void Player::set_tmp_shock()
 
         if (cell.is_dark && !cell.is_lit)
         {
-            shock_tmp_ += shock_taken_after_mods(20.0, ShockSrc::misc);
+            double shock_value = 20.0;
+
+            if (insanity::has_sympt(InsSymptId::phobia_dark))
+            {
+                shock_value = 30.0;
+            }
+
+            shock_tmp_ += shock_taken_after_mods(shock_value,
+                                                 ShockSrc::misc);
         }
 
         // Temporary shock from seen features

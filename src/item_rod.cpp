@@ -52,7 +52,8 @@ ConsumeItem Rod::activate(Actor* const actor)
 
     if (data_->is_identified)
     {
-        map::player->incr_shock(ShockLvl::heavy, ShockSrc::use_strange_item);
+        map::player->incr_shock(ShockLvl::terrifying,
+                                ShockSrc::use_strange_item);
     }
     else // Not identified
     {

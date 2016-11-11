@@ -16,8 +16,8 @@
 namespace
 {
 
-ItemId  effect_list_    [(size_t)AmuletEffectId::END];
-bool    effects_known_  [(size_t)AmuletEffectId::END];
+ItemId effect_list_ [(size_t)AmuletEffectId::END];
+bool effects_known_ [(size_t)AmuletEffectId::END];
 
 AmuletEffect* mk_effect(const AmuletEffectId id, Amulet* const amulet)
 {
@@ -116,9 +116,11 @@ AmuletEffect* mk_effect(const AmuletEffectId id, Amulet* const amulet)
     return ret;
 }
 
-} //namespace
+} // namespace
 
-//--------------------------------------------------------- AMULET PROPERTY EFFECT
+// -----------------------------------------------------------------------------
+// Amulet property effect
+// -----------------------------------------------------------------------------
 void AmuletPropertyEffect::on_equip(const Verbosity verbosity)
 {
     Prop* const prop = mk_prop();
@@ -137,55 +139,73 @@ UnequipAllowed AmuletPropertyEffect::on_unequip()
     return UnequipAllowed::yes;
 }
 
-//--------------------------------------------------------- FIRE RESISTANCE
+// -----------------------------------------------------------------------------
+// Fire resistnace
+// -----------------------------------------------------------------------------
 Prop* AmuletEffectRFire::mk_prop() const
 {
     return new PropRFire(PropTurns::indefinite);
 }
 
-//--------------------------------------------------------- ELEC RESISTANCE
+// -----------------------------------------------------------------------------
+// Electricity resistance
+// -----------------------------------------------------------------------------
 Prop* AmuletEffectRElec::mk_prop() const
 {
     return new PropRElec(PropTurns::indefinite);
 }
 
-//--------------------------------------------------------- POISON RESISTANCE
+// -----------------------------------------------------------------------------
+// Poison resistnace
+// -----------------------------------------------------------------------------
 Prop* AmuletEffectRPoison::mk_prop() const
 {
     return new PropRPoison(PropTurns::indefinite);
 }
 
-//--------------------------------------------------------- DISEASE RESISTANCE
+// -----------------------------------------------------------------------------
+// Disease resistance
+// -----------------------------------------------------------------------------
 Prop* AmuletEffectRDisease::mk_prop() const
 {
     return new PropRDisease(PropTurns::indefinite);
 }
 
-//--------------------------------------------------------- TELEPORT CONTROL
+// -----------------------------------------------------------------------------
+// Teleport control
+// -----------------------------------------------------------------------------
 Prop* AmuletEffectTeleControl::mk_prop() const
 {
     return new PropTeleControl(PropTurns::indefinite);
 }
 
-//--------------------------------------------------------- LIGHT
+// -----------------------------------------------------------------------------
+// Light
+// -----------------------------------------------------------------------------
 Prop* AmuletEffectLight::mk_prop() const
 {
     return new PropRadiant(PropTurns::indefinite);
 }
 
-//--------------------------------------------------------- SPELL REFLECTION
+// -----------------------------------------------------------------------------
+// Spell reflection
+// -----------------------------------------------------------------------------
 Prop* AmuletEffectSpellReflect::mk_prop() const
 {
     return new PropSpellReflect(PropTurns::indefinite);
 }
 
-//--------------------------------------------------------- HASTE
+// -----------------------------------------------------------------------------
+// Haste
+// -----------------------------------------------------------------------------
 Prop* AmuletEffectHaste::mk_prop() const
 {
     return new PropHasted(PropTurns::indefinite);
 }
 
-//--------------------------------------------------------- hp BONUS
+// -----------------------------------------------------------------------------
+// HP bonus
+// -----------------------------------------------------------------------------
 void AmuletEffectHpBon::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
@@ -201,7 +221,9 @@ UnequipAllowed AmuletEffectHpBon::on_unequip()
     return UnequipAllowed::yes;
 }
 
-//--------------------------------------------------------- hp PENALTY
+// -----------------------------------------------------------------------------
+// HP penalty
+// -----------------------------------------------------------------------------
 void AmuletEffectHpPen::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
@@ -217,7 +239,9 @@ UnequipAllowed AmuletEffectHpPen::on_unequip()
     return UnequipAllowed::yes;
 }
 
-//--------------------------------------------------------- spi BONUS
+// -----------------------------------------------------------------------------
+// SP bonus
+// -----------------------------------------------------------------------------
 void AmuletEffectSpiBon::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
@@ -233,7 +257,9 @@ UnequipAllowed AmuletEffectSpiBon::on_unequip()
     return UnequipAllowed::yes;
 }
 
-//--------------------------------------------------------- spi PENALTY
+// -----------------------------------------------------------------------------
+// SP penalty
+// -----------------------------------------------------------------------------
 void AmuletEffectSpiPen::on_equip(const Verbosity verbosity)
 {
     (void)verbosity;
@@ -249,7 +275,9 @@ UnequipAllowed AmuletEffectSpiPen::on_unequip()
     return UnequipAllowed::yes;
 }
 
-//--------------------------------------------------------- RANDOM TELEPORTATION
+// -----------------------------------------------------------------------------
+// Random teleportation
+// -----------------------------------------------------------------------------
 void AmuletEffectRandomTele::on_std_turn_equipped()
 {
     auto& prop_handler = map::player->prop_handler();
@@ -269,7 +297,9 @@ void AmuletEffectRandomTele::on_std_turn_equipped()
     }
 }
 
-//--------------------------------------------------------- SUMMON MON
+// -----------------------------------------------------------------------------
+// Summon monster
+// -----------------------------------------------------------------------------
 void AmuletEffectSummonMon::on_std_turn_equipped()
 {
     const int sound_one_in_n  = 250;
@@ -281,7 +311,8 @@ void AmuletEffectSummonMon::on_std_turn_equipped()
                      false,
                      MorePromptOnMsg::yes);
 
-        map::player->incr_shock(ShockLvl::mild, ShockSrc::misc);
+        map::player->incr_shock(ShockLvl::unsettling,
+                                ShockSrc::misc);
     }
 
     const int summon_one_in_n = 1200;
@@ -317,7 +348,9 @@ void AmuletEffectSummonMon::on_std_turn_equipped()
     }
 }
 
-//--------------------------------------------------------- FIRE
+// -----------------------------------------------------------------------------
+// Fire
+// -----------------------------------------------------------------------------
 void AmuletEffectFire::on_std_turn_equipped()
 {
     const int fire_one_in_n = 300;
@@ -351,7 +384,9 @@ void AmuletEffectFire::on_std_turn_equipped()
     }
 }
 
-//--------------------------------------------------------- CONFLICT
+// -----------------------------------------------------------------------------
+// Conflict
+// -----------------------------------------------------------------------------
 void AmuletEffectConflict::on_std_turn_equipped()
 {
     const int conflict_one_in_n = 50;
@@ -381,7 +416,9 @@ void AmuletEffectConflict::on_std_turn_equipped()
     }
 }
 
-//--------------------------------------------------------- SHRIEK
+// -----------------------------------------------------------------------------
+// Shriek
+// -----------------------------------------------------------------------------
 AmuletEffectShriek::AmuletEffectShriek(Amulet* const amulet) :
     AmuletEffect(amulet)
 {
@@ -414,6 +451,7 @@ AmuletEffectShriek::AmuletEffectShriek(Amulet* const amulet) :
         "FATE",
         "SUFFER",
         "BEHOLD",
+        "MANIFEST",
         "BEWARE",
         "WATCHES",
         "LIGHT",
@@ -422,27 +460,34 @@ AmuletEffectShriek::AmuletEffectShriek(Amulet* const amulet) :
         "APPEAR",
         "DECAY",
         "IMMORTAL",
+        "ALL",
         "BOUNDLESS",
         "ETERNAL",
         "ANCIENT",
         "TIME",
         "NEVER-ENDING",
+        "NEVER",
         "DIMENSIONS",
         "EYES",
         "STARS",
         "GAZE",
         "FORBIDDEN",
+        "FOLLOW",
         "DOMINIONS",
         "RULER",
         "KING",
         "UNKNOWN",
         "ABYSS",
         "BENEATH",
+        "BEYOND",
         "BELOW",
         "PASSAGE",
         "PATH",
         "GATE",
         "SERPENT",
+        "HEAR",
+        "SEE",
+        "UNSEEN",
         "NYARLATHOTEP",
         "GOL-GOROTH",
         "ABHOLOS",
@@ -466,7 +511,8 @@ void AmuletEffectShriek::on_std_turn_equipped()
 
     if (rnd::one_in(noise_one_in_n))
     {
-        const std::string name = amulet_->name(ItemRefType::plain, ItemRefInf::none);
+        const std::string name = amulet_->name(ItemRefType::plain,
+                                               ItemRefInf::none);
 
         msg_log::add("The " + name + " shrieks...",
                      clr_text,
@@ -479,8 +525,9 @@ void AmuletEffectShriek::on_std_turn_equipped()
 
         for (int i = 0; i < nr_words; ++i)
         {
-            const int   idx     = rnd::range(0, words_.size() - 1);
-            const auto& word    = words_[(size_t)idx];
+            const int idx = rnd::range(0, words_.size() - 1);
+
+            const auto& word = words_[(size_t)idx];
 
             phrase += word + "...";
 
@@ -500,7 +547,8 @@ void AmuletEffectShriek::on_std_turn_equipped()
 
         snd_emit::run(snd);
 
-        map::player->incr_shock(ShockLvl::mild, ShockSrc::misc);
+        map::player->incr_shock(ShockLvl::unsettling,
+                                ShockSrc::misc);
 
         msg_log::more_prompt();
 
@@ -508,7 +556,9 @@ void AmuletEffectShriek::on_std_turn_equipped()
     }
 }
 
-//--------------------------------------------------------- BURDEN
+// -----------------------------------------------------------------------------
+// Burden
+// -----------------------------------------------------------------------------
 AmuletEffectBurden::AmuletEffectBurden(Amulet* const amulet) :
     AmuletEffect(amulet)
 {
@@ -525,7 +575,9 @@ void AmuletEffectBurden::change_item_weight(int& weight_ref)
     weight_ref = int(ItemWeight::medium);
 }
 
-//--------------------------------------------------------- hp REGEN BONUS
+// -----------------------------------------------------------------------------
+// HP regen bonus
+// -----------------------------------------------------------------------------
 void AmuletEffectHpRegenBon::on_equip(const Verbosity verbosity)
 {
     if (verbosity == Verbosity::verbose)
@@ -542,7 +594,9 @@ UnequipAllowed AmuletEffectHpRegenBon::on_unequip()
     return UnequipAllowed::yes;
 }
 
-//--------------------------------------------------------- hp REGEN PENALTY
+// -----------------------------------------------------------------------------
+// HP regen penalty
+// -----------------------------------------------------------------------------
 void AmuletEffectHpRegenPen::on_equip(const Verbosity verbosity)
 {
     if (verbosity == Verbosity::verbose)
@@ -559,7 +613,9 @@ UnequipAllowed AmuletEffectHpRegenPen::on_unequip()
     return UnequipAllowed::yes;
 }
 
-//--------------------------------------------------------- AMULET
+// -----------------------------------------------------------------------------
+// Amulet
+// -----------------------------------------------------------------------------
 Amulet::Amulet(ItemDataT* const item_data) :
     Item(item_data)
 {
@@ -600,9 +656,12 @@ std::vector<std::string> Amulet::descr() const
 
     if (data_->is_identified)
     {
-        const std::string amulet_name = name(ItemRefType::plain, ItemRefInf::none);
+        const std::string amulet_name =
+            name(ItemRefType::plain, ItemRefInf::none);
 
-        ret.push_back("All properties of the " + amulet_name + " are known to me.");
+        ret.push_back("All properties of the " +
+                      amulet_name +
+                      " are known to me.");
     }
 
     return ret;
@@ -617,7 +676,8 @@ void Amulet::on_equip_hook(const Verbosity verbosity)
 {
     for (auto* const effect : effects_)
     {
-        //This may cause the effect to set up carrier properties (e.g. fire resistance)
+        // This may cause the effect to set up carrier properties (e.g. fire
+        // resistance)
         effect->on_equip(verbosity);
     }
 
@@ -681,19 +741,24 @@ void Amulet::identify(const Verbosity verbosity)
 
         if (verbosity == Verbosity::verbose)
         {
-            const std::string name_plain = name(ItemRefType::plain, ItemRefInf::none);
+            const std::string name_plain =
+                name(ItemRefType::plain, ItemRefInf::none);
 
-            const std::string msg = "I feel like all properties of the " + name_plain +
-                                    " are known to me.";
+            const std::string msg =
+                "I feel like all properties of the " +
+                name_plain +
+                " are known to me.";
 
             msg_log::add(msg,
                          clr_white,
                          false,
                          MorePromptOnMsg::yes);
 
-            const std::string name_a = name(ItemRefType::a, ItemRefInf::none);
+            const std::string name_a =
+                name(ItemRefType::a, ItemRefInf::none);
 
-            game::add_history_event("Learned all the properties of " + name_a + ".");
+            game::add_history_event(
+                "Learned all the properties of " + name_a + ".");
 
             give_xp_for_identify();
         }
@@ -759,24 +824,30 @@ void Amulet::effect_noticed(const AmuletEffectId effect_id)
 
         if (nr_effects_known_this_item == max_nr_effects_on_item)
         {
-            //Amulet is completely identified - print id message and set id status in item data
+            // Amulet is completely identified - print id message and set id
+            // status in item data
             identify(Verbosity::verbose);
         }
         else //Not all properties are known
         {
-            //NOTE: The identify method adds a history event about learning *all* properties,
-            //so we only add an event about learning a property if it is not yet fully identified
-            //(i.e. when we don't call the identify method) - otherwise the history would contain
-            //something like "Learned a property" immediately followed by "Learned all properties",
-            //which would be redundant.
+            // NOTE: The identify method adds a history event about learning
+            //       *all* properties, also we only add an event about
+            //       learning a property if it is not yet fully identified
+            //       (i.e. when we don't call the identify method) - otherwise
+            //       the history would contain something like "Learned a
+            //       property" immediately followed by "Learned all properties",
+            //       which would be redundant.
             const std::string name_a = name(ItemRefType::a, ItemRefInf::none);
 
-            game::add_history_event("Learned a new property of " + name_a + ".");
+            game::add_history_event(
+                "Learned a new property of " + name_a + ".");
         }
     }
 }
 
-//--------------------------------------------------------- AMULET HANDLING
+// -----------------------------------------------------------------------------
+// Amulet handling
+// -----------------------------------------------------------------------------
 namespace
 {
 
@@ -850,23 +921,27 @@ int rnd_item_bucket_idx_for_effect(const AmuletEffectId effect_to_assign,
 {
     std::vector<int> item_idx_bucket;
 
-    for (size_t item_bucket_idx = 0; item_bucket_idx < item_bucket.size(); ++item_bucket_idx)
+    for (size_t item_bucket_idx = 0;
+         item_bucket_idx < item_bucket.size();
+         ++item_bucket_idx)
     {
         bool can_be_placed_on_item = true;
 
-        //Verify that the effect can be placed on this item by checking if it can
-        //be combined with every effect currently assigned to this item.
+        // Verify that the effect can be placed on this item by checking if it
+        // can be combined with every effect currently assigned to this item.
         for (size_t i = 0; i < (size_t)AmuletEffectId::END; ++i)
         {
             const AmuletEffectId current_effect = AmuletEffectId(i);
 
             if (effect_list_[i] == item_bucket[item_bucket_idx])
             {
-                const bool allow_combine = allow_combine_effects(effect_to_assign, current_effect);
+                const bool allow_combine =
+                    allow_combine_effects(effect_to_assign,
+                                          current_effect);
 
                 if (!allow_combine)
                 {
-                    //Combination with effect already assigned on item not allowed
+                    // Combination not allowed
                     can_be_placed_on_item = false;
                     break;
                 }
@@ -931,8 +1006,8 @@ void init()
         }
     }
 
-    //Assuming there are more amulet items than primary or secondary effects (if this changes,
-    //just add more amulets to the item data)
+    // Assuming there are more amulet items than primary or secondary effects
+    // if this changes, just add more amulets to the item data)
     ASSERT(item_bucket.size() > primary_effect_bucket.size());
     ASSERT(item_bucket.size() > secondary_effect_bucket.size());
 
@@ -957,8 +1032,8 @@ void init()
         }
     }
 
-    //Remove all items without a primary effect from the item bucket (this is why we assert that
-    //there are more amulet items than primary effects above)
+    // Remove all items without a primary effect from the item bucket (this is
+    // why we assert that here are more amulet items than primary effects above)
     item_bucket.resize(primary_effect_bucket.size());
 
     //Assign secondary effects
@@ -967,7 +1042,9 @@ void init()
         ASSERT(secondary_effect_id != AmuletEffectId::START_OF_SECONDARY_EFFECTS);
         ASSERT(secondary_effect_id != AmuletEffectId::END);
 
-        const int item_idx = rnd_item_bucket_idx_for_effect(secondary_effect_id, item_bucket);
+        const int item_idx =
+            rnd_item_bucket_idx_for_effect(secondary_effect_id,
+                                           item_bucket);
 
         if (item_idx >= 0)
         {
@@ -999,4 +1076,4 @@ void load()
     }
 }
 
-} //amulet_handling
+} // amulet_handling

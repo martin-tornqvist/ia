@@ -57,7 +57,8 @@ void Monolith::bump(Actor& actor_bumping)
         {
             activate();
 
-            map::player->incr_shock(ShockLvl::some, ShockSrc::misc);
+            map::player->incr_shock(ShockLvl::terrifying,
+                                    ShockSrc::misc);
         }
     }
 }
@@ -66,7 +67,7 @@ void Monolith::activate()
 {
     msg_log::add("I feel powerful!");
 
-    game::incr_player_xp(25);
+    game::incr_player_xp(20);
 
     is_activated_ = true;
 

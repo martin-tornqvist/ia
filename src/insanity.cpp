@@ -384,7 +384,8 @@ void InsPhobiaDeep::on_new_player_turn(const std::vector<Actor*>& seen_foes)
             {
                 msg_log::add("I am plagued by my phobia of deep places!");
 
-                map::player->prop_handler().try_add(new PropTerrified(PropTurns::std));
+                map::player->prop_handler().try_add(
+                    new PropTerrified(PropTurns::std));
 
                 break;
             }
@@ -414,13 +415,13 @@ void InsPhobiaDark::on_new_player_turn(const std::vector<Actor*>& seen_foes)
         const P             p(map::player->pos);
         const PropHandler& props = map::player->prop_handler();
 
-        if (
-            (props.allow_act() && !props.allow_see()) ||
+        if ((props.allow_act() && !props.allow_see()) ||
             (map::cells[p.x][p.y].is_dark && !map::cells[p.x][p.y].is_lit))
         {
             msg_log::add("I am plagued by my phobia of the dark!");
 
-            map::player->prop_handler().try_add(new PropTerrified(PropTurns::std));
+            map::player->prop_handler().try_add(
+                new PropTerrified(PropTurns::std));
         }
     }
 }

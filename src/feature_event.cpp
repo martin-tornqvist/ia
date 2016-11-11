@@ -155,7 +155,7 @@ void EventWallCrumble::on_new_turn()
             }
         }
 
-        map::player->incr_shock(ShockLvl::heavy,
+        map::player->incr_shock(ShockLvl::terrifying,
                                 ShockSrc::see_mon);
     }
 
@@ -340,7 +340,15 @@ void EventSnakeEmerge::on_new_turn()
 
         io::draw_blast_at_cells(seen_tgt_positions, clr_magenta);
 
-        map::player->incr_shock(ShockLvl::some, ShockSrc::see_mon);
+        ShockLvl shock_lvl = ShockLvl::unsettling;
+
+        if (insanity::has_sympt(InsSymptId::phobia_reptile_and_amph))
+        {
+            shock_lvl = ShockLvl::terrifying;
+        }
+
+        map::player->incr_shock(shock_lvl,
+                                ShockSrc::see_mon);
     }
 
     for (size_t i = 0; i < nr_summoned; ++i)

@@ -584,7 +584,8 @@ void ArmorMiGo::on_equip_hook(const Verbosity verbosity)
                      false,
                      MorePromptOnMsg::yes);
 
-        map::player->incr_shock(ShockLvl::heavy, ShockSrc::use_strange_item);
+        map::player->incr_shock(ShockLvl::terrifying,
+                                ShockSrc::use_strange_item);
     }
 }
 

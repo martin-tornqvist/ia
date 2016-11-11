@@ -12,8 +12,8 @@ class Actor;
 class Mon;
 
 const std::string summon_warning_str =
-    "There is a small risk that whatever is summoned will be hostile to the caster. "
-    "Do not call up that which you cannot put down.";
+    "There is a small risk that whatever is summoned will be hostile to the "
+    "caster. Do not call up that which you cannot put down.";
 
 enum class SpellId
 {

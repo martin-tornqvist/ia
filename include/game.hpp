@@ -65,6 +65,8 @@ int clvl();
 int xp();
 TimeData start_time();
 
+void on_mon_seen(Actor& actor);
+
 void on_mon_killed(Actor& actor);
 
 void win_game();
