@@ -116,26 +116,30 @@ void mk_position_weights(const bool blocked[map_w][map_h],
                    choke_point.player_side == 1);
 
             // Robustness for release mode
-            if (
-                choke_point.player_side != 0 &&
+            if (choke_point.player_side != 0 &&
                 choke_point.player_side != 1)
             {
                 continue;
             }
 
-            const int other_side_idx = choke_point.player_side == 0 ? 1 : 0;
+            const int other_side_idx =
+                choke_point.player_side == 0 ?
+                1 : 0;
 
-            const auto& other_side_positions = choke_point.sides[other_side_idx];
+            const auto& other_side_positions =
+                choke_point.sides[other_side_idx];
 
             // NOTE: To avoid leaning heavily towards only putting items in big
             //       hidden areas (it looks more nice and "natural" with small
             //       hidden rooms filled with items), we divide the weight given
             //       per cell based on the total number of cells in the area.
 
-            const int weight_div = other_side_positions.size() / 2;
+            const int weight_div =
+                std::max(1, (int)other_side_positions.size() / 2);
 
             // Increase weight for being in an optional map branch
-            int weight_inc = std::max(1, (200 / weight_div));
+            int weight_inc =
+                std::max(1, (200 / weight_div));
 
             Rigid* const rigid =
                 map::cells[choke_point.p.x][choke_point.p.y].rigid;

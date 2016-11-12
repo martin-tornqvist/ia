@@ -833,9 +833,9 @@ ActorDied Actor::hit(int dmg,
             (dmg >= dmg_threshold_relative) ||
             (dmg >= dmg_threshold_absolute);
 
-        die(is_destroyed,
-            !is_on_bottomless,
-            !is_on_bottomless);
+        die(is_destroyed,       // Is destroyed
+            !is_on_bottomless,  // Allow gore
+            !is_on_bottomless); // Allow dropping items
 
         return ActorDied::yes;
     }
@@ -846,7 +846,7 @@ ActorDied Actor::hit(int dmg,
 
     const int hp_warn_lvl = 25;
 
-    if (is_player()                 &&
+    if (is_player() &&
         hp_pct_before > hp_warn_lvl &&
         hp_pct_after <= hp_warn_lvl)
     {
@@ -915,7 +915,7 @@ void Actor::die(const bool is_destroyed,
 
     ASSERT(data_->can_leave_corpse || is_destroyed);
 
-    //Check all monsters and unset this actor as leader
+    // Check all monsters and unset this actor as leader
     for (Actor* other : game_time::actors)
     {
         if (other != this &&
@@ -930,7 +930,7 @@ void Actor::die(const bool is_destroyed,
 
     if (!is_player())
     {
-        //If this monster is player's target, unset the target
+        // If this monster is player's target, unset the target
         if (map::player->tgt_ == this)
         {
             map::player->tgt_ = nullptr;
@@ -998,6 +998,7 @@ void Actor::die(const bool is_destroyed,
         if (!is_player())
         {
             P new_pos;
+
             auto* feature_here = map::cells[pos.x][pos.y].rigid;
 
             // TODO: this should be decided with a floodfill instead

@@ -2094,7 +2094,8 @@ void Zombie::on_death()
     const int summon_one_in_n = 7;
 
     if ((state_ == ActorState::destroyed) &&
-        (hp_ > -10) &&
+        (hp_ > -8) &&
+        !map::cells[pos.x][pos.y].rigid->is_bottomless() &&
         rnd::one_in(summon_one_in_n))
     {
         ActorId id_to_spawn = ActorId::END;
