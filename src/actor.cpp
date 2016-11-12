@@ -809,11 +809,29 @@ ActorDied Actor::hit(int dmg,
         const bool is_on_bottomless =
             map::cells[pos.x][pos.y].rigid->is_bottomless();
 
-        const bool is_dmg_enough_to_destroy = dmg > ((hp_max(true) * 3) / 2);
+        //
+        // Destroy the corpse if the damage is either:
+        //
+        // * Above a threshold relative to the actor's maximum hit points, or
+        // * Above a fixed value threshold
+        //
+        // The purpose of the first case is to make it very likely that small
+        // creatures like rats are destroyed.
+        //
+        // The purpose of the second point is that powerful attacks like
+        // explosions should always destroy the corpse, even if the creature
+        // has a very high pool of hit points.
+        //
 
-        const bool is_destroyed = !data_->can_leave_corpse ||
-                                  is_on_bottomless ||
-                                  is_dmg_enough_to_destroy;
+        const int dmg_threshold_relative = (hp_max(true) * 3) / 2;
+
+        const int dmg_threshold_absolute = 14;
+
+        const bool is_destroyed =
+            !data_->can_leave_corpse ||
+            is_on_bottomless ||
+            (dmg >= dmg_threshold_relative) ||
+            (dmg >= dmg_threshold_absolute);
 
         die(is_destroyed,
             !is_on_bottomless,

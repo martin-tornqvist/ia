@@ -135,8 +135,8 @@ void init_data_list()
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    15),
-        MonGroupSpawnRule(MonGroupSize::pack,   5),
+        MonGroupSpawnRule(MonGroupSize::few,    40),
+        MonGroupSpawnRule(MonGroupSize::pack,   10),
         MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::humanoid;
@@ -185,8 +185,8 @@ void init_data_list()
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    15),
-        MonGroupSpawnRule(MonGroupSize::pack,   5),
+        MonGroupSpawnRule(MonGroupSize::few,    40),
+        MonGroupSpawnRule(MonGroupSize::pack,   10),
         MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::humanoid;
@@ -1860,7 +1860,7 @@ void init_data_list()
     d.spi = 20;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
-    //NOTE: Polyps should be resistant against all damage types except electricity
+    // NOTE: Polyps should be resistant against all damage except electricity
     d.natural_props[(size_t)PropId::rPhys] = true;
     d.natural_props[(size_t)PropId::rConf] = true;
     d.natural_props[(size_t)PropId::rFear] = true;

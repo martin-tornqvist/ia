@@ -213,8 +213,9 @@ void run(const P& origin,
 
         for (const P& pos : positions_at_radi)
         {
-            Actor* living_actor                 = living_actors[pos.x][pos.y];
-            std::vector<Actor*> corpses_here    = corpses[pos.x][pos.y];
+            Actor* living_actor = living_actors[pos.x][pos.y];
+
+            std::vector<Actor*> corpses_here = corpses[pos.x][pos.y];
 
             if (expl_type == ExplType::expl)
             {
@@ -222,7 +223,8 @@ void run(const P& origin,
                 Cell& cell = map::cells[pos.x][pos.y];
 
                 cell.rigid->hit(DmgType::physical,
-                                DmgMethod::explosion, nullptr);
+                                DmgMethod::explosion,
+                                nullptr);
 
                 const int rolls = expl_dmg_rolls - radi;
 
