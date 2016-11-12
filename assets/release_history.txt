@@ -30,6 +30,9 @@ Interface
 * The map shown on the postmortem info screen is now drawn with tiles (when tiles mode is enabled), and is drawn in color
 * Added "New journey" option to postmortem menu
 
+Bug fixes
+* Fixed a bug where if you dropped the Staff of the Pharaohs, the spell would be permanently lost, even if you picked it up again
+
 
 --------------------------------------------------------------
 v18.2 (July 2, 2016)
