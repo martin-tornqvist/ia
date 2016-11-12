@@ -229,10 +229,6 @@ UnequipAllowed Item::on_unequip()
 
 void Item::on_removed_from_inv()
 {
-    clear_carrier_props();
-
-    clear_carrier_spells();
-
     actor_carrying_ = nullptr;
 
     on_removed_from_inv_hook();
@@ -244,8 +240,10 @@ std::string Item::name(const ItemRefType ref_type,
 {
     ItemRefType ref_type_used = ref_type;
 
-    //If requested ref type is "plural" and this is a single item, use ref type "a" instead.
-    if (ref_type == ItemRefType::plural && (!data_->is_stackable || nr_items_ == 1))
+    // If requested ref type is "plural" and this is a single item, use ref type
+    // "a" instead.
+    if (ref_type == ItemRefType::plural &&
+        (!data_->is_stackable || nr_items_ == 1))
     {
         ref_type_used = ItemRefType::a;
     }
@@ -424,7 +422,10 @@ void Item::add_carrier_prop(Prop* const prop, const Verbosity verbosity)
     ASSERT(actor_carrying_);
     ASSERT(prop);
 
-    actor_carrying_->prop_handler().add_prop_from_equipped_item(this, prop, verbosity);
+    actor_carrying_->prop_handler()
+        .add_prop_from_equipped_item(this,
+                                     prop,
+                                     verbosity);
 }
 
 void Item::clear_carrier_props()
@@ -531,7 +532,8 @@ int Armor::take_dur_hit_and_get_reduced_dmg(const int dmg_before)
 
 int Armor::armor_points() const
 {
-    //NOTE: ap must be able to reach zero, otherwise the armor will never count as destroyed.
+    // NOTE: AP must be able to reach zero, otherwise the armor will never count
+    //       as destroyed.
 
     const int ap_max = data_->armor.armor_points;
 
@@ -758,7 +760,8 @@ void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit)
 
 void PlayerGhoulClaw::on_melee_kill(Actor& actor_killed)
 {
-    //TODO: See TODO note in melee hit hook for Ghoul claw concerning "constructed monsters".
+    // TODO: See TODO note in melee hit hook for Ghoul claw concerning
+    // "constructed monsters".
 
     const ActorDataT& d = actor_killed.data();
 
@@ -1257,7 +1260,8 @@ void GasMask::decr_turns_left(Inventory& carrier_inv)
 
     if (nr_turns_left_ <= 0)
     {
-        const std::string item_name = name(ItemRefType::plain, ItemRefInf::none);
+        const std::string item_name =
+            name(ItemRefType::plain, ItemRefInf::none);
 
         msg_log::add("My " + item_name + " expires.",
                      clr_msg_note,

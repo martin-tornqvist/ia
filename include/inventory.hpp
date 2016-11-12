@@ -91,6 +91,9 @@ public:
 
     void decr_item_type_in_backpack(const ItemId item_id);
 
+    Item* remove_item_in_slot(const SlotId slot_id,
+                              const bool delete_item);
+
     Item* remove_item_in_backpack_with_idx(const size_t idx,
                                            const bool delete_item);
 

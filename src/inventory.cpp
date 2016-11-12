@@ -297,9 +297,31 @@ void Inventory::decr_item_in_slot(SlotId slot_id)
 
     if (delete_item)
     {
-        slots_[(size_t)slot_id].item = nullptr;
-        delete item;
+        remove_item_in_slot(slot_id, true);
     }
+}
+
+Item* Inventory::remove_item_in_slot(const SlotId slot_id,
+                                     const bool delete_item)
+{
+    ASSERT(slot_id != SlotId::END);
+
+    auto& slot = slots_[(size_t)slot_id];
+
+    Item* item = slot.item;
+
+    slot.item = nullptr;
+
+    item->on_unequip();
+
+    if (delete_item)
+    {
+        delete item;
+
+        item = nullptr;
+    }
+
+    return item;
 }
 
 Item* Inventory::remove_item_in_backpack_with_idx(const size_t idx,
@@ -344,7 +366,9 @@ Item* Inventory::remove_item_in_backpack_with_ptr(Item* const item,
 void Inventory::decr_item_in_backpack(const size_t idx)
 {
     Item* item = backpack_[idx];
+
     bool is_stackable = item->data().is_stackable;
+
     bool should_delete_item = true;
 
     if (is_stackable)
@@ -355,8 +379,7 @@ void Inventory::decr_item_in_backpack(const size_t idx)
 
     if (should_delete_item)
     {
-        backpack_.erase(begin(backpack_) + idx);
-        delete item;
+        remove_item_in_backpack_with_idx(idx, true);
     }
 }
 
