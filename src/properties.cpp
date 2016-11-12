@@ -2184,7 +2184,9 @@ void PropNailed::affect_move_dir(const P& actor_pos, Dir& dir)
                     {
                         if (map::player->can_see_actor(*owning_actor_))
                         {
-                            msg_log::add(owning_actor_->name_the() + " tears out a spike!");
+                            msg_log::add(
+                                owning_actor_->name_the() +
+                                " tears out a spike!");
                         }
                     }
                 }

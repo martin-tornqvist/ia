@@ -30,7 +30,8 @@ struct CellRenderData
         tile                            (TileId::empty),
         glyph                           (0),
         is_light_fade_allowed           (true),
-        is_marked_lit                   (false),
+        mark_lit                        (false),
+        remember_dark                   (false),
         is_living_actor_seen_here       (false),
         is_aware_of_hostile_mon_here    (false),
         is_aware_of_allied_mon_here     (false) {}
@@ -42,7 +43,8 @@ struct CellRenderData
     TileId tile;
     char glyph;
     bool is_light_fade_allowed;
-    bool is_marked_lit;
+    bool mark_lit;
+    bool remember_dark;
     bool is_living_actor_seen_here;
     bool is_aware_of_hostile_mon_here;
     bool is_aware_of_allied_mon_here;

@@ -6,7 +6,7 @@
 typedef SDL_Color Clr;
 
 //-----------------------------------------------------------------------------
-//Standard colors
+// Standard colors
 //-----------------------------------------------------------------------------
 const Clr clr_black             = {  0,   0,   0, 0};
 const Clr clr_gray              = {128, 128, 128, 0};
@@ -44,7 +44,7 @@ const Clr clr_violet_drk        = { 64,   0, 128, 0};
 const Clr clr_orange            = {255, 128,   0, 0};
 
 //-----------------------------------------------------------------------------
-//Colors taken from Nosferatu movie screen shots
+// Colors taken from Nosferatu movie screen shots
 //-----------------------------------------------------------------------------
 const Clr clr_nosf_sepia        = {139, 114,  57, 0};
 const Clr clr_nosf_sepia_lgt    = {225, 205, 154, 0};
@@ -55,7 +55,7 @@ const Clr clr_nosf_teal_lgt     = { 88, 226, 228, 0};
 const Clr clr_nosf_teal_drk     = { 20,  54,  51, 0};
 
 //-----------------------------------------------------------------------------
-//Standard interface colors
+// Standard interface colors
 //-----------------------------------------------------------------------------
 const Clr clr_text              = clr_white;
 
@@ -71,12 +71,12 @@ const Clr clr_msg_bad           = clr_red_lgt;
 const Clr clr_msg_note          = clr_orange;
 
 //-----------------------------------------------------------------------------
-//Misc colors
+// Misc colors
 //-----------------------------------------------------------------------------
 const Clr clr_allied_mon        = clr_green;
 
 //-----------------------------------------------------------------------------
-//Utils
+// Utils
 //-----------------------------------------------------------------------------
 bool is_clr_equal(const Clr& clr1, const Clr& clr2);
 

@@ -1292,18 +1292,17 @@ void GameState::draw_map()
                     render_data->clr = clr_red;
                 }
 
-                if (cell.is_lit && f->is_los_passable())
+                if (f->is_los_passable())
                 {
-                    render_data->is_marked_lit = true;
-                }
+                    if (cell.is_lit)
+                    {
+                        render_data->mark_lit = true;
+                    }
 
-                if (cell.is_dark && !cell.is_lit)
-                {
-                    render_data->clr.r =
-                        (Uint8)((double)(render_data->clr.r) / 1.5);
-
-                    render_data->clr.g =
-                        (Uint8)((double)(render_data->clr.g) / 1.5);
+                    if (cell.is_dark)
+                    {
+                        render_data->remember_dark = true;
+                    }
                 }
             }
         }
@@ -1323,9 +1322,12 @@ void GameState::draw_map()
             map::cells[p.x][p.y].is_seen_by_player)
         {
             render_data = &game::render_array[p.x][p.y];
+
             render_data->clr = actor->clr();
             render_data->tile = actor->tile();
             render_data->glyph = actor->glyph();
+
+            render_data->remember_dark = false;
         }
     }
 
@@ -1347,20 +1349,24 @@ void GameState::draw_map()
                     render_data->clr = item->clr();
                     render_data->tile = item->tile();
                     render_data->glyph = item->glyph();
+
+                    render_data->remember_dark = false;
                 }
 
                 // -------------------------------------------------------------
                 // Copy array to player memory (before living actors and mobile
                 // features)
                 // -------------------------------------------------------------
-                map::cells[x][y].player_visual_memory = *render_data;
+                auto& cell = map::cells[x][y];
+
+                cell.player_visual_memory = *render_data;
 
                 game::render_array_no_actors[x][y] = *render_data;
 
                 // -------------------------------------------------------------
                 // Color cells slightly yellow when marked as lit
                 // -------------------------------------------------------------
-                if (render_data->is_marked_lit)
+                if (render_data->mark_lit)
                 {
                     render_data->clr.r = std::min(255, render_data->clr.r + 40);
                     render_data->clr.g = std::min(255, render_data->clr.g + 40);
@@ -1514,6 +1520,18 @@ void GameState::draw_map()
 
                 render_data->is_aware_of_allied_mon_here =
                     is_aware_of_allied_mon_here;
+
+                if (render_data->remember_dark)
+                {
+                    render_data->clr.r =
+                        (Uint8)((double)render_data->clr.r / 2.25);
+
+                    render_data->clr.g =
+                        (Uint8)((double)render_data->clr.g / 2.25);
+
+                    render_data->clr.b =
+                        std::min(255, render_data->clr.b + 120);
+                }
 
                 const double div = 3.0;
 

@@ -9,7 +9,7 @@ bool is_clr_equal(const Clr& clr1, const Clr& clr2)
 
 void div_clr(Clr& clr, const double div)
 {
-    clr.r = double(clr.r) / div;
-    clr.g = double(clr.g) / div;
-    clr.b = double(clr.b) / div;
+    clr.r = (Uint8)((double)clr.r / div);
+    clr.g = (Uint8)((double)clr.g / div);
+    clr.b = (Uint8)((double)clr.b / div);
 }
