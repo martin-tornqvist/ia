@@ -944,6 +944,19 @@ void incr_player_xp(const int xp_gained,
             std::unique_ptr<State> trait_state(new PickTraitState);
 
             states::push(std::move(trait_state));
+
+            map::player->change_max_hp(hp_per_lvl);
+
+            map::player->restore_hp(hp_per_lvl,
+                                    false,
+                                    Verbosity::silent);
+
+            map::player->change_max_spi(spi_per_lvl);
+
+            map::player->restore_spi(spi_per_lvl,
+                                     false,
+                                     Verbosity::silent);
+
         }
 
         xp_pct_ -= 100;
