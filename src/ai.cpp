@@ -107,10 +107,10 @@ bool handle_closed_blocking_door(Mon& mon, std::vector<P> path)
             if (mon_can_bash &&
                 (is_stuck || !mon_can_open))
             {
-                // HACK: When bashing doors, give the bashing monster some bonus
-                //       awareness time (because monsters trying to bash down
-                //       doors is a pretty central part of the game, and they
-                //       should not give up so easily).
+                // When bashing doors, give the bashing monster some bonus
+                // awareness time (because monsters trying to bash down doors is
+                // a pretty central part of the game, and they should not give
+                // up so easily)
                 if (rnd::fraction(3, 4))
                 {
                     mon.aware_counter_++;

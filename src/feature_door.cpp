@@ -376,13 +376,19 @@ void Door::on_hit(const DmgType dmg_type,
 
                     if (destr_chance.roll())
                     {
+                        //
+                        // NOTE: When it's a monster bashing down the door, we
+                        //       make the sound alert other monsters - since
+                        //       causes a nicer AI behavior (everyone near the
+                        //       door understands that it's time to run inside)
+                        //
                         Snd snd("I hear a door crashing open!",
                                 SfxId::door_break,
                                 IgnoreMsgIfOriginSeen::yes,
                                 pos_,
                                 actor,
                                 SndVol::high,
-                                AlertsMon::no);
+                                AlertsMon::yes);
 
                         snd_emit::run(snd);
 
