@@ -1683,7 +1683,7 @@ void GameState::draw_map()
 
                 const Clr clr_bg =
                     render_data->is_aware_of_hostile_mon_here ?
-                    clr_nosf_teal_drk :
+                    clr_white :
                     clr_allied_mon;
 
                 render_data->tile = TileId::empty;

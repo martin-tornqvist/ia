@@ -15,7 +15,7 @@ Gameplay
 * Potion of Insight gives XP if there is no item to identify
 * You always search for traps and secret doors in every seen cell (so you can stand in the middle of a room and search all walls)
 * Added Barred gates (doors that you can see and shoot through), and Gratings (similarly, but walls)
-* Some Hanging vines are now scattered on the map, which can be walked through, but blocks line of sight
+* Added Hanging vines, which can be walked through, but blocks line of sight
 * Spells now have "skill level" percentages, which affects the Spirit cost to cast the spell - the skill levels can be increased by casting from Manuscripts
 * All backgrounds can now learn spells, but the Occultist gains proficiency much faster, and starts with a few known spells
 * Chests can no longer be trapped (it was awkward to deal with, and it didn't really bring anything to the game) - chests are now just interacted with by bumping them (if they are not locked), kicking them, or using an Opening spell
@@ -29,6 +29,8 @@ Interface
 * Removed the "q" command - Ghoul characters now feed on corpses when standing still on them instead
 * The map shown on the postmortem info screen is now drawn with tiles (when tiles mode is enabled), and is drawn in color
 * Added "New journey" option to postmortem menu
+* Dark areas can now be explored - i.e. the game draws how the player character remembered the room (with a blue color to distinguish the dark areas)
+* When [v]iewing the map, the game now also prints messages for detected unseen monsters ("There is a creature here")
 
 Bug fixes
 * Fixed a bug where if you dropped the Staff of the Pharaohs, the spell would be permanently lost, even if you picked it up again

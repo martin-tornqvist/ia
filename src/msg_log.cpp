@@ -135,7 +135,8 @@ void add(const std::string& str,
     bool is_repeated = false;
 
     // Check if message is identical to previous
-    if (add_more_prompt_on_msg == MorePromptOnMsg::no && prev_msg)
+    if (add_more_prompt_on_msg == MorePromptOnMsg::no &&
+        prev_msg)
     {
         std::string prev_str = "";
         prev_msg->str_raw(prev_str);
@@ -169,6 +170,7 @@ void add(const std::string& str,
             else // Current line number is not zero
             {
                 more_prompt();
+
                 current_line_nr = 0;
             }
 
@@ -210,19 +212,23 @@ void more_prompt()
 
     draw();
 
-    int x_pos    = 0;
-    int line_nr = lines_[1].empty() ? 0 : 1;
+    int x_pos = 0;
+
+    int line_nr =
+        lines_[1].empty() ?
+        0 : 1;
 
     if (!lines_[line_nr].empty())
     {
         Msg* const last_msg = &lines_[line_nr].back();
+
         x_pos = x_after_msg(last_msg);
 
         if (line_nr == 0)
         {
-            if (x_pos + int(more_str.size()) - 1 >= map_w)
+            if ((x_pos + (int)more_str.size() - 1) >= map_w)
             {
-                x_pos    = 0;
+                x_pos = 0;
                 line_nr  = 1;
             }
         }

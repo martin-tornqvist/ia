@@ -97,7 +97,7 @@ void mon_shock_str(const ActorDataT& def,
     }
 }
 
-} //namespace
+} // namespace
 
 void add_auto_description_lines(const Actor& actor, std::string& line)
 {
@@ -109,17 +109,23 @@ void add_auto_description_lines(const Actor& actor, std::string& line)
 
         if (!dwell_str.empty())
         {
-            line += " " + def.name_the + " usually dwells beneath level " + dwell_str + ".";
+            line +=
+                " " +
+                def.name_the +
+                " usually dwells beneath level " +
+                dwell_str +
+                ".";
         }
 
         const std::string speed_str = mon_speed_str(def);
 
         if (!speed_str.empty())
         {
-            line += " " + def.name_the + " appears to move " + speed_str + ".";
+            line +=
+                " " + def.name_the + " appears to move " + speed_str + ".";
         }
     }
-    else //Not unique
+    else // Not unique
     {
         const std::string dwell_str = mon_dwell_lvl_str(def);
 
@@ -146,13 +152,19 @@ void add_auto_description_lines(const Actor& actor, std::string& line)
         {
             const std::string nr_turns_aware_str = to_str(nr_turns_aware);
 
-            line += " " + name_a + " will remember hostile creatures for at least " +
-                    nr_turns_aware_str + " turns.";
+            line +=
+                " " +
+                name_a +
+                " will remember hostile creatures for at least " +
+                nr_turns_aware_str +
+                " turns.";
         }
-        else //Very high number of turns awareness
+        else // Very high number of turns awareness
         {
-            line += " " + name_a +
-                    " remembers hostile creatures for a very long time.";
+            line +=
+                " " +
+                name_a +
+                " remembers hostile creatures for a very long time.";
         }
     }
 
@@ -170,42 +182,50 @@ void add_auto_description_lines(const Actor& actor, std::string& line)
     {
         if (def.is_unique)
         {
-            line += " " + def.name_the + " is " + shock_str + " to behold" + shock_punct_str;
+            line +=
+                " " +
+                def.name_the +
+                " is " +
+                shock_str +
+                " to behold" +
+                shock_punct_str;
         }
-        else //Not unique
+        else // Not unique
         {
-            line += " They are " + shock_str + " to behold" + shock_punct_str;
+            line +=
+                " They are " +
+                shock_str +
+                " to behold" +
+                shock_punct_str;
         }
     }
 }
 
-} //auto_descr_actor
+} // auto_descr_actor
 
 namespace look
 {
 
 void print_location_info_msgs(const P& pos)
 {
-    bool did_see_something = false;
-
     const Cell& cell = map::cells[pos.x][pos.y];
+
+    const bool is_cell_seen = cell.is_seen_by_player;
 
     const std::string i_see_here_str = "I see here:";
 
-    if (map::cells[pos.x][pos.y].is_seen_by_player)
+    if (is_cell_seen)
     {
-        did_see_something = true;
-
         msg_log::add(i_see_here_str);
 
-        //Describe rigid.
+        // Describe rigid.
         std::string str = cell.rigid->name(Article::a);
 
         text_format::first_to_upper(str);
 
         msg_log::add(str + ".");
 
-        //Describe mobile features.
+        // Describe mobile features.
         for (auto* mob : game_time::mobs)
         {
             if (mob->pos() == pos)
@@ -218,7 +238,7 @@ void print_location_info_msgs(const P& pos)
             }
         }
 
-        //Describe item.
+        // Describe item.
         Item* item = cell.item;
 
         if (item)
@@ -231,7 +251,7 @@ void print_location_info_msgs(const P& pos)
             msg_log::add(str + ".");
         }
 
-        //Describe dead actors.
+        // Describe dead actors.
         for (Actor* actor : game_time::actors)
         {
             if (actor->is_corpse() && actor->pos == pos)
@@ -246,28 +266,35 @@ void print_location_info_msgs(const P& pos)
 
     }
 
-    //Describe living actor.
+    // Describe living actor.
     Actor* actor = map::actor_at_pos(pos);
 
-    if (actor && !actor->is_player() && actor->is_alive() && map::player->can_see_actor(*actor))
+    if (actor &&
+        !actor->is_player() &&
+        actor->is_alive())
     {
-        if (!did_see_something)
+        if (map::player->can_see_actor(*actor))
         {
-            //The player only sees the actor but not the cell (e.g. through infravision)
-            //Print the initial "I see here" message.
-            msg_log::add(i_see_here_str);
+            if (!is_cell_seen)
+            {
+                // The player only sees the actor but not the cell (e.g. through
+                // infravision) - print the initial "I see here" message
+                msg_log::add(i_see_here_str);
+            }
+
+            std::string str = actor->name_a();
+
+            text_format::first_to_upper(str);
+
+            msg_log::add(str + ".");
         }
-
-        did_see_something = true;
-
-        std::string str = actor->name_a();
-
-        text_format::first_to_upper(str);
-
-        msg_log::add(str + ".");
+        else // Cannot see actor
+        {
+            msg_log::add("There is a creature here.");
+        }
     }
 
-    if (!did_see_something)
+    if (!is_cell_seen)
     {
         msg_log::add("I have no vision here.");
     }
@@ -278,12 +305,12 @@ void print_detailed_actor_descr(const Actor& actor)
     io::clear_screen();
 
     io::draw_info_scr_interface("Monster info",
-                                    InfScreenType::single_screen);
+                                InfScreenType::single_screen);
 
-    //Add written description.
+    // Add written description.
     std::string descr = actor.descr();
 
-    //Add auto-description.
+    // Add auto-description.
     if (actor.data().is_auto_descr_allowed)
     {
         auto_descr_actor::add_auto_description_lines(actor, descr);
@@ -298,14 +325,14 @@ void print_detailed_actor_descr(const Actor& actor)
 
     io::cover_area(Panel::screen, p, P(map_w, nr_lines));
 
-    //Draw the description
+    // Draw the description
     for (std::string& s : lines)
     {
         io::draw_text(s, Panel::screen, p, clr_white_high);
         ++p.y;
     }
 
-    //Draw properties line
+    // Draw properties line
     std::vector<StrAndClr> props_line;
     actor.prop_handler().props_interface_line(props_line);
 
@@ -319,11 +346,14 @@ void print_detailed_actor_descr(const Actor& actor)
     {
         io::draw_text("None", Panel::screen, p, clr_white);
     }
-    else //Has properties
+    else // Has properties
     {
         for (const StrAndClr& current_prop_label : props_line)
         {
-            io::draw_text(current_prop_label.str, Panel::screen, p, current_prop_label.clr);
+            io::draw_text(current_prop_label.str,
+                          Panel::screen,
+                          p,
+                          current_prop_label.clr);
 
             p.x += current_prop_label.str.size() + 1;
         }
@@ -334,4 +364,4 @@ void print_detailed_actor_descr(const Actor& actor)
     query::wait_for_key_press();
 }
 
-} //look
+} // look
