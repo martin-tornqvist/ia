@@ -58,7 +58,7 @@ const size_t min_ms_between_same_sfx = 60;
 
 const int player_start_hp = 14;
 const int player_start_spi = 4;
-const int hp_per_lvl = 2;
+const int hp_per_lvl = 1;
 const int spi_per_lvl = 1;
 
 const int min_dmg_to_wound = 5;

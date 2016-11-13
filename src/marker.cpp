@@ -241,10 +241,13 @@ void MarkerState::draw_marker(const P& p,
 
             auto& d = marker_render_data_[tail_p.x][tail_p.y];
 
-            d.tile      = TileId::aim_marker_trail;
-            d.glyph     = '*';
-            d.clr       = clr;
-            d.clr_bg    = clr_black;
+            d.tile = TileId::aim_marker_trail;
+
+            d.glyph = '*';
+
+            d.clr = clr;
+
+            d.clr_bg = clr_black;
 
             // If blocked, always draw a character (more distinct)
             if (config::is_tiles_mode() && !is_blocked)
@@ -269,10 +272,13 @@ void MarkerState::draw_marker(const P& p,
 
     auto& d = marker_render_data_[p.x][p.y];
 
-    d.tile      = TileId::aim_marker_head;
-    d.glyph     = 'X';
-    d.clr       = clr;
-    d.clr_bg    = clr_black;
+    d.tile = TileId::aim_marker_head;
+
+    d.glyph = 'X';
+
+    d.clr = clr;
+
+    d.clr_bg = clr_black;
 
     // Head
     if (config::is_tiles_mode())
@@ -401,7 +407,7 @@ void Aiming::on_moved()
 
     auto* const actor = map::actor_at_pos(pos_);
 
-    if (actor               &&
+    if (actor &&
         !actor->is_player() &&
         map::player->can_see_actor(*actor))
     {

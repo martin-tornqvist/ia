@@ -17,7 +17,9 @@
 #include "saving.hpp"
 #include "game.hpp"
 
-//---------------------------------------------------- DEVICE
+// -----------------------------------------------------------------------------
+// Device
+// -----------------------------------------------------------------------------
 Device::Device(ItemDataT* const item_data) :
     Item(item_data) {}
 
@@ -29,7 +31,8 @@ void Device::identify(const Verbosity verbosity)
 
         if (verbosity == Verbosity::verbose)
         {
-            const std::string name_after = name(ItemRefType::a, ItemRefInf::none);
+            const std::string name_after =
+                name(ItemRefType::a, ItemRefInf::none);
 
             msg_log::add("I have identified " + name_after + ".");
 
@@ -42,7 +45,9 @@ void Device::identify(const Verbosity verbosity)
     }
 }
 
-//---------------------------------------------------- STRANGE DEVICE
+// -----------------------------------------------------------------------------
+// Strange device
+// -----------------------------------------------------------------------------
 StrangeDevice::StrangeDevice(ItemDataT* const item_data) :
     Device(item_data),
     condition_(rnd::coin_toss() ? Condition::fine : Condition::shoddy) {}
@@ -98,12 +103,15 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
 
     if (data_->is_identified)
     {
-        const std::string item_name     = name(ItemRefType::plain, ItemRefInf::none);
-        const std::string item_name_a   = name(ItemRefType::a, ItemRefInf::none);
+        const std::string item_name =
+            name(ItemRefType::plain, ItemRefInf::none);
+
+        const std::string item_name_a =
+            name(ItemRefType::a, ItemRefInf::none);
 
         msg_log::add("I activate " + item_name_a + "...");
 
-        //Damage user? Fail to run effect? Condition degrade? Warning?
+        // Damage user? Fail to run effect? Condition degrade? Warning?
         const std::string hurt_msg  = "It hits me with a jolt of electricity!";
 
         bool is_effect_failed   = false;
@@ -130,33 +138,47 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
         {
             if (rnd == 5 || rnd == 6)
             {
-                msg_log::add(hurt_msg, clr_msg_bad);
-                actor->hit(rnd::dice(2, 4), DmgType::electric);
+                msg_log::add(hurt_msg,
+                             clr_msg_bad);
+
+                actor->hit(rnd::dice(2, 4),
+                           DmgType::electric);
             }
 
-            is_effect_failed    = rnd == 3 || rnd == 4;
-            is_cond_degrade     = rnd <= 2;
-            is_warning          = rnd == 7 || rnd == 8;
-        } break;
+            is_effect_failed = rnd == 3 || rnd == 4;
+
+            is_cond_degrade = rnd <= 2;
+
+            is_warning = rnd == 7 || rnd == 8;
+        }
+        break;
 
         case Condition::shoddy:
         {
             if (rnd == 4)
             {
-                msg_log::add(hurt_msg, clr_msg_bad);
-                actor->hit(rnd::dice(1, 4), DmgType::electric);
+                msg_log::add(hurt_msg,
+                             clr_msg_bad);
+
+                actor->hit(rnd::dice(1, 4),
+                           DmgType::electric);
             }
 
-            is_effect_failed    = rnd == 3;
-            is_cond_degrade     = rnd <= 2;
-            is_warning          = rnd == 5 || rnd == 6;
-        } break;
+            is_effect_failed = rnd == 3;
+
+            is_cond_degrade = rnd <= 2;
+
+            is_warning = rnd == 5 || rnd == 6;
+        }
+        break;
 
         case Condition::fine:
         {
-            is_cond_degrade     = rnd <= 2;
-            is_warning          = rnd == 3 || rnd == 4;
-        } break;
+            is_cond_degrade = rnd <= 2;
+
+            is_warning = rnd == 3 || rnd == 4;
+        }
+        break;
         }
 
         if (!map::player->is_alive())
@@ -186,8 +208,12 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
                 }
                 else
                 {
-                    msg_log::add("The " + item_name + " makes a terrible grinding noise.");
+                    msg_log::add("The " +
+                                 item_name +
+                                 " makes a terrible grinding noise.");
+
                     msg_log::add("I seem to have damaged it.");
+
                     condition_ = Condition(int(condition_) - 1);
                 }
             }
@@ -204,7 +230,9 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
     else //Not identified
     {
         msg_log::add("This device is completely alien to me, ");
+
         msg_log::add("I could never understand it through normal means.");
+
         return ConsumeItem::no;
     }
 }
@@ -229,7 +257,9 @@ std::string StrangeDevice::name_inf() const
     return "";
 }
 
-//---------------------------------------------------- BLASTER
+// -----------------------------------------------------------------------------
+// Blaster
+// -----------------------------------------------------------------------------
 ConsumeItem DeviceBlaster::trigger_effect()
 {
     std::vector<Actor*> tgt_bucket;
@@ -249,7 +279,9 @@ ConsumeItem DeviceBlaster::trigger_effect()
     return ConsumeItem::no;
 }
 
-//---------------------------------------------------- SHOCK WAVE
+// -----------------------------------------------------------------------------
+// Shock wave
+// -----------------------------------------------------------------------------
 ConsumeItem DeviceShockwave::trigger_effect()
 {
     msg_log::add("It triggers a shock wave around me.");
@@ -267,13 +299,20 @@ ConsumeItem DeviceShockwave::trigger_effect()
 
     for (Actor* actor : game_time::actors)
     {
-        if (actor != map::player && actor->is_alive())
+        if (!actor->is_player() &&
+            actor->is_alive())
         {
             const P& other_pos = actor->pos;
 
-            if (is_pos_adj(player_pos, other_pos, false))
+            const bool is_adj =
+                is_pos_adj(player_pos,
+                           other_pos,
+                           false);
+
+            if (is_adj)
             {
-                actor->hit(rnd::dice(1, 8), DmgType::physical);
+                actor->hit(rnd::dice(1, 8),
+                           DmgType::physical);
 
                 if (actor->is_alive())
                 {
@@ -289,7 +328,9 @@ ConsumeItem DeviceShockwave::trigger_effect()
     return ConsumeItem::no;
 }
 
-//---------------------------------------------------- REJUVENATOR
+// -----------------------------------------------------------------------------
+// Rejuvenator
+// -----------------------------------------------------------------------------
 ConsumeItem DeviceRejuvenator::trigger_effect()
 {
     msg_log::add("It repairs my body.");
@@ -314,7 +355,9 @@ ConsumeItem DeviceRejuvenator::trigger_effect()
     return ConsumeItem::no;
 }
 
-//---------------------------------------------------- TRANSLOCATOR
+// -----------------------------------------------------------------------------
+// Translocator
+// -----------------------------------------------------------------------------
 ConsumeItem DeviceTranslocator::trigger_effect()
 {
     Player* const player = map::player;
@@ -338,7 +381,9 @@ ConsumeItem DeviceTranslocator::trigger_effect()
     return ConsumeItem::no;
 }
 
-//---------------------------------------------------- SENTRY DRONE
+// -----------------------------------------------------------------------------
+// Sentry drone
+// -----------------------------------------------------------------------------
 ConsumeItem DeviceSentryDrone::trigger_effect()
 {
     msg_log::add("The Sentry Drone awakens!");
@@ -349,7 +394,9 @@ ConsumeItem DeviceSentryDrone::trigger_effect()
     return ConsumeItem::yes;
 }
 
-//---------------------------------------------------- ELECTRIC LANTERN
+// -----------------------------------------------------------------------------
+// Electric lantern
+// -----------------------------------------------------------------------------
 DeviceLantern::DeviceLantern(ItemDataT* const item_data) :
     Device                  (item_data),
     nr_turns_left_          (500),

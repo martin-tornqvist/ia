@@ -1085,6 +1085,7 @@ DidAction Vortex::on_act()
         TRACE << "Vortex attempting to pull player" << std::endl;
 
         const P delta = player_pos - pos;
+
         P knock_back_from_pos = player_pos;
 
         if (delta.x >  1)
@@ -1852,12 +1853,13 @@ void WormMass::on_death()
 {
     // Split into other worms on death. Splitting is only allowed if this is an
     // "original" worm, i.e. not split from another, and if the worm is not
-    // destroyed "too hard" (e.g. by a near explosion or a sledge hammer), and if
-    // the worm is not burning.
+    // destroyed "too hard" (e.g. by a near explosion or a sledge hammer), and
+    // if the worm is not burning.
 
     if (allow_split_ &&
         (hp_ > -10) &&
         !prop_handler_->has_prop(PropId::burning) &&
+        !map::cells[pos.x][pos.y].rigid->is_bottomless() &&
         game_time::actors.size() < max_nr_actors_on_map)
     {
         std::vector<ActorId> worm_ids(2, id());

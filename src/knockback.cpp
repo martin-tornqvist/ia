@@ -42,7 +42,7 @@ void try_knock_back(Actor& defender,
         return;
     }
 
-    //Check if actor is held by a trap
+    // Check if actor is held by a trap
     Rigid* const rigid = map::cells[defender.pos.x][defender.pos.y].rigid;
 
     if (rigid->id() == FeatureId::trap)
@@ -53,12 +53,12 @@ void try_knock_back(Actor& defender,
         {
             if (trap->type() == TrapId::web)
             {
-                //Held by a web, just destroy the web
+                // Held by a web, just destroy the web
                 trap->destroy();
             }
-            else //Not a web
+            else // Not a web
             {
-                //Held by some other trap, prevent knockback
+                // Held by some other trap, prevent knockback
                 TRACE_FUNC_END;
                 return;
             }
@@ -82,7 +82,7 @@ void try_knock_back(Actor& defender,
 
     if (is_cell_blocked)
     {
-        //Defender nailed to a wall from a spike gun?
+        // Defender nailed to a wall from a spike gun?
         if (is_spike_gun)
         {
             Rigid* const f = map::cells[new_pos.x][new_pos.y].rigid;
@@ -97,7 +97,7 @@ void try_knock_back(Actor& defender,
         TRACE_FUNC_END;
         return;
     }
-    else //Target cell is free
+    else // Target cell is free
     {
         const bool player_see_defender = is_defender_player ?
                                          true :
@@ -140,7 +140,7 @@ void try_knock_back(Actor& defender,
             return;
         }
 
-        //Bump features (e.g. so monsters can be knocked back into traps)
+        // Bump features (e.g. so monsters can be knocked back into traps)
         std::vector<Mob*> mobs;
 
         game_time::mobs_at_pos(defender.pos, mobs);
