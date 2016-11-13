@@ -249,9 +249,11 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.has_std_activate = true;
         d.base_descr =
         {
-            "A short transcription of an eldritch incantation. There is a strange aura "
-            "about it, as if some power was imbued in the paper itself.",
-            "It should be possible to pronounce it correctly, but the purpose is unclear."
+            "A short transcription of an eldritch incantation. There is a "
+            "strange aura about it, as if some power was imbued in the paper "
+            "itself.",
+            "It should be possible to pronounce it correctly, but the purpose "
+            "is unclear."
         };
         d.value = ItemValue::minor_treasure;
         d.chance_to_incl_in_floor_spawn_list = 40;
@@ -301,16 +303,22 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.value = ItemValue::minor_treasure;
         d.is_ins_raied_while_carried = true;
         d.has_std_activate = true;
-        d.base_name_un_id = {"Strange Device", "Strange Devices", "a Strange Device"};
+        d.base_name_un_id =
+        {
+            "Strange Device",
+            "Strange Devices",
+            "a Strange Device"
+        };
         d.base_descr =
         {
-            "A small piece of machinery. It could not possibly have been designed by a "
-            "human mind. Even for its small size, it seems incredibly complex. There is "
-            "no hope of understanding the purpose or function of it through normal means."
+            "A small piece of machinery. It could not possibly have been "
+            "designed by a human mind. Even for its small size, it seems "
+            "incredibly complex. There is no hope of understanding the purpose "
+            "or function of it through normal means."
         };
         d.weight = ItemWeight::light;
         d.is_identified = false;
-        d.xp_on_identify = 20;
+        d.xp_on_identify = 15;
         d.glyph = '%';
         d.tile = TileId::device1;
         d.is_stackable = false;
@@ -329,13 +337,13 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.has_std_activate = true;
         d.base_descr =
         {
-            "A peculiar metallic device of cylindrical shape. The only detail is a single button "
-            "on the side."
+            "A peculiar metallic device of cylindrical shape. The only detail "
+            "is a single button on the side."
         };
         d.chance_to_incl_in_floor_spawn_list = 9;
         d.weight = ItemWeight::light;
         d.is_identified = false;
-        d.xp_on_identify = 20;
+        d.xp_on_identify = 15;
         d.glyph = '%';
         d.tile = TileId::rod;
         d.is_stackable = false;
@@ -371,7 +379,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.glyph = '\"';
         d.weight = ItemWeight::light;
         d.is_identified = false;
-        d.xp_on_identify = 20;
+        d.xp_on_identify = 15;
         d.is_stackable = false;
         d.chance_to_incl_in_floor_spawn_list = 1;
         add_feature_found_in(d, FeatureId::tomb, 5);
@@ -395,13 +403,18 @@ void reset_data(ItemDataT& d, ItemType const item_type)
 
 void set_dmg_from_mon_id(ItemDataT& item_data, const ActorId id)
 {
-    const auto& actor_data      = actor_data::data[(size_t)id];
-    item_data.melee.dmg         = DiceParam(1, actor_data.dmg_melee);
-    item_data.ranged.dmg        = DiceParam(1, actor_data.dmg_ranged);
-    item_data.ranged.throw_dmg  = DiceParam(1, actor_data.dmg_ranged);
+    const auto& actor_data = actor_data::data[(size_t)id];
+
+    item_data.melee.dmg = DiceParam(1, actor_data.dmg_melee);
+
+    item_data.ranged.dmg = DiceParam(1, actor_data.dmg_ranged);
+
+    item_data.ranged.throw_dmg = DiceParam(1, actor_data.dmg_ranged);
 }
 
-//------------------------------- LIST OF ITEMS
+// -----------------------------------------------------------------------------
+// Item list
+// -----------------------------------------------------------------------------
 void init_data_list()
 {
     ItemDataT d;

@@ -1062,19 +1062,19 @@ void on_mon_seen(Actor& actor)
         switch (d.mon_shock_lvl)
         {
         case ShockLvl::unsettling:
-            xp_gained = 5;
+            xp_gained = 3;
             break;
 
         case ShockLvl::frightening:
-            xp_gained = 10;
+            xp_gained = 5;
             break;
 
         case ShockLvl::terrifying:
-            xp_gained = 15;
+            xp_gained = 10;
             break;
 
         case ShockLvl::mind_shattering:
-            xp_gained = 25;
+            xp_gained = 20;
             break;
 
         case ShockLvl::none:

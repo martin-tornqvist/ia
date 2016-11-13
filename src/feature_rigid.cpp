@@ -3018,9 +3018,17 @@ Fountain::Fountain(const P& p) :
 
     switch (choice)
     {
-    case 0: type = FountainType::normal;    break;
-    case 1: type = FountainType::blessed;   break;
-    case 2: type = FountainType::cursed;    break;
+    case 0:
+        type = FountainType::normal;
+        break;
+
+    case 1:
+        type = FountainType::blessed;
+        break;
+
+    case 2:
+        type = FountainType::cursed;
+        break;
     }
 
     set_type(type);
