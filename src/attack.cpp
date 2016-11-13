@@ -1783,7 +1783,9 @@ void melee(Actor* const attacker,
                 rnd::one_in(4) &&
                 player.inv().item_in_slot(SlotId::wpn) == &wpn)
             {
-                Item* item = player.inv().remove_from_slot(SlotId::wpn);
+                // Remove item without deleting it
+                Item* item = player.inv().remove_item_in_slot(SlotId::wpn,
+                                                              false);
 
                 if (item)
                 {

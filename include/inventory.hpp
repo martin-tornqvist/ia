@@ -61,8 +61,6 @@ public:
     // NOTE: Item will be put in backpack if the slot is occupied.
     void put_in_slot(const SlotId id, Item* item);
 
-    Item* remove_from_slot(const SlotId id);
-
     void put_in_backpack(Item* item);
 
     void put_in_intrinsics(Item* item);

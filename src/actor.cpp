@@ -782,9 +782,9 @@ ActorDied Actor::hit(int dmg,
                                  clr_msg_note);
                 }
 
-                delete armor;
+                inv_->remove_item_in_slot(SlotId::body, true);
+
                 armor = nullptr;
-                inv_->slots_[(size_t)SlotId::body].item = nullptr;
             }
         }
     }

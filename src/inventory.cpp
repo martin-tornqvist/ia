@@ -310,15 +310,20 @@ Item* Inventory::remove_item_in_slot(const SlotId slot_id,
 
     Item* item = slot.item;
 
-    slot.item = nullptr;
-
-    item->on_unequip();
-
-    if (delete_item)
+    if (item)
     {
-        delete item;
+        slot.item = nullptr;
 
-        item = nullptr;
+        item->on_unequip();
+
+        item->on_removed_from_inv();
+
+        if (delete_item)
+        {
+            delete item;
+
+            item = nullptr;
+        }
     }
 
     return item;
@@ -728,33 +733,6 @@ void Inventory::put_in_slot(const SlotId id, Item* item)
 
     // Should never happen
     ASSERT(false);
-}
-
-Item* Inventory::remove_from_slot(const SlotId id)
-{
-    ASSERT(id != SlotId::END);
-
-    for (InvSlot& slot : slots_)
-    {
-        if (slot.id == id)
-        {
-            Item* item = slot.item;
-
-            if (item)
-            {
-                ASSERT(item->actor_carrying());
-
-                slot.item = nullptr;
-
-                item->on_unequip();
-                item->on_removed_from_inv();
-
-                return item;
-            }
-        }
-    }
-
-    return nullptr;
 }
 
 int Inventory::total_item_weight() const
