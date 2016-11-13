@@ -468,73 +468,27 @@ void PotionInsight::quaff_impl(Actor& actor)
 {
     (void)actor;
 
-    auto& inv = map::player->inv();
+    //
+    // Run identify selection menu
+    //
+    // NOTE: We push this state BEFORE giving any XP (directly or via
+    //       identifying stuff), because if the player gains a new level in
+    //       the process, the trait selection should occur first
+    //
+    std::unique_ptr<State> select_identify(
+        new SelectIdentify);
 
-    std::vector<Item*> identify_bucket;
+    states::push(std::move(select_identify));
 
-    auto& slots = inv.slots_;
+    // Insight gives some extra XP, to avoid making them worthless if the player
+    // identifies all items)
+    msg_log::add("I feel insightful.");
 
-    for (InvSlot& slot : slots)
-    {
-        Item* const item = slot.item;
-
-        if (item)
-        {
-            const ItemDataT& d = item->data();
-
-            if (!d.is_identified)
-            {
-                identify_bucket.push_back(item);
-            }
-        }
-    }
-
-    std::vector<Item*>& general = inv.backpack_;
-
-    for (Item* item : general)
-    {
-        if (item->id() != ItemId::potion_insight)
-        {
-            const ItemDataT& d = item->data();
-
-            if (!d.is_identified)
-            {
-                identify_bucket.push_back(item);
-            }
-        }
-    }
-
-    if (!identify_bucket.empty())
-    {
-        Item* const item = rnd::element(identify_bucket);
-
-        const std::string item_name_before =
-            item->name(ItemRefType::a, ItemRefInf::none);
-
-        msg_log::add("I gain intuitions about " + item_name_before + "...",
-                     clr_white,
-                     false,
-                     MorePromptOnMsg::yes);
-
-        item->identify(Verbosity::verbose);
-
-        const std::string item_name_after =
-            item->name(ItemRefType::a, ItemRefInf::none);
-    }
-
-    const bool was_identified_before = data_->is_identified;
+    game::incr_player_xp(5);
 
     identify(Verbosity::verbose);
 
-    // If potion of insight was already identified, or if we have no other
-    // potion to identify, then give extra XP (to avoid making them worthless
-    // if the player identifies all items)
-    if (was_identified_before || identify_bucket.empty())
-    {
-        msg_log::add("I feel insightful.");
-
-        give_xp_for_identify(Verbosity::verbose);
-    }
+    msg_log::more_prompt();
 }
 
 void PotionClairv::quaff_impl(Actor& actor)

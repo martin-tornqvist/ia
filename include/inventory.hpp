@@ -117,7 +117,7 @@ public:
 
     int total_item_weight() const;
 
-    InvSlot slots_[int(SlotId::END)];
+    InvSlot slots_[(size_t)SlotId::END];
     std::vector<Item*> backpack_;
     std::vector<Item*> intrinsics_;
 

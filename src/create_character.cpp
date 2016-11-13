@@ -550,7 +550,7 @@ void EnterNameState::update()
     {
         if (input.key == SDLK_SPACE)
         {
-            current_str_.push_back('_');
+            current_str_.push_back(' ');
 
             return;
         }

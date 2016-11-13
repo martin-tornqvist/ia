@@ -12,7 +12,8 @@ Gameplay
 * Burning features now only hurt creatures on the same cell (not adjacent to it)
 * Rogue no longer starts with "Cloud Minds" (this is now a Manuscript instead)
 * Occultist starts with fixed (non-random) items and spells
-* Potion of Insight gives XP if there is no item to identify
+* When quaffing Potion of Insight, you can now manually choose which item to identify
+* Potion of Insight always gives some XP, in addition to identifying an item (to avoid making Potions of Insight worthless if all items are identified)
 * You always search for traps and secret doors in every seen cell (so you can stand in the middle of a room and search all walls)
 * Added Barred gates (doors that you can see and shoot through), and Gratings (similarly, but walls)
 * Added Hanging vines, which can be walked through, but blocks line of sight

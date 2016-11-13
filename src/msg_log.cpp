@@ -18,9 +18,11 @@ namespace
 
 std::vector<Msg> lines_[2];
 
-const size_t    history_capacity_   = 30;
-size_t          history_size_       = 0;
-size_t          history_count_      = 0;
+const size_t history_capacity_ = 200;
+
+size_t history_size_ = 0;
+
+size_t history_count_ = 0;
 
 std::vector<Msg> history_[history_capacity_];
 
@@ -71,8 +73,9 @@ void init()
 
 void draw()
 {
-    const int nr_lines_with_content = lines_[0].empty() ? 0 :
-                                      lines_[1].empty() ? 1 : 2;
+    const int nr_lines_with_content =
+        lines_[0].empty() ? 0 :
+        lines_[1].empty() ? 1 : 2;
 
     if (nr_lines_with_content > 0)
     {

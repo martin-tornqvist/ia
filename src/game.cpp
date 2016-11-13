@@ -799,7 +799,7 @@ void handle_player_input(const InputData& input)
 
     case SDLK_F3:
     {
-        game::incr_player_xp(100);
+        game::incr_player_xp(100, Verbosity::silent);
     }
     break;
 
@@ -928,7 +928,7 @@ void incr_player_xp(const int xp_gained,
 
     if (verbosity == Verbosity::verbose)
     {
-        msg_log::add("(+" + to_str(xp_gained) + "% XP).");
+        msg_log::add("(+" + to_str(xp_gained) + "% XP)");
     }
 
     xp_pct_ += xp_gained;
@@ -940,10 +940,6 @@ void incr_player_xp(const int xp_gained,
             ++clvl_;
 
             msg_log::more_prompt();
-
-            std::unique_ptr<State> trait_state(new PickTraitState);
-
-            states::push(std::move(trait_state));
 
             map::player->change_max_hp(hp_per_lvl);
 
@@ -957,6 +953,11 @@ void incr_player_xp(const int xp_gained,
                                      false,
                                      Verbosity::silent);
 
+            msg_log::more_prompt();
+
+            std::unique_ptr<State> trait_state(new PickTraitState);
+
+            states::push(std::move(trait_state));
         }
 
         xp_pct_ -= 100;
@@ -1724,10 +1725,15 @@ void GameState::draw_map()
     // Draw player character
     //--------------------------------------------------------------------------
     const P& pos = map::player->pos;
+
     Item* item = map::player->inv().item_in_slot(SlotId::wpn);
+
     const bool is_ghoul = player_bon::bg() == Bg::ghoul;
+
     const Clr clr = map::player->clr();
+
     Clr clr_bg = clr_black;
+
     bool uses_ranged_wpn = false;
 
     if (item)

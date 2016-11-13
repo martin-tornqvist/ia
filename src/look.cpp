@@ -290,7 +290,12 @@ void print_location_info_msgs(const P& pos)
         }
         else // Cannot see actor
         {
-            msg_log::add("There is a creature here.");
+            const Mon* const mon = static_cast<Mon*>(actor);
+
+            if (mon->player_aware_of_me_counter_ > 0)
+            {
+                msg_log::add("There is a creature here.");
+            }
         }
     }
 

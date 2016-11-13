@@ -21,15 +21,16 @@ public:
     virtual ~InvState() {}
 
 protected:
-    void draw_item_symbol(const Item& item, const P& p) const;
+    void draw_slot(const SlotId id,
+                   const int y,
+                   const char key,
+                   const bool is_marked) const;
 
-    void draw_weight_pct_and_dots(const P item_pos,
-                                  const size_t item_name_len,
-                                  const Item& item,
-                                  const Clr& item_name_clr,
-                                  const bool is_marked) const;
-
-    void draw_detailed_item_descr(const Item* const item) const;
+    void draw_backpack_item(const size_t backpack_idx,
+                            const int y,
+                            const char key,
+                            const bool is_marked,
+                            const ItemRefAttInf att_info) const;
 
     void activate(const size_t backpack_idx);
 
@@ -40,6 +41,17 @@ protected:
     const int inv_y0_;
     const int inv_y1_;
     const int inv_h_;
+
+protected:
+    void draw_weight_pct_and_dots(const P item_pos,
+                                  const size_t item_name_len,
+                                  const Item& item,
+                                  const Clr& item_name_clr,
+                                  const bool is_marked) const;
+
+    void draw_item_symbol(const Item& item, const P& p) const;
+
+    void draw_detailed_item_descr(const Item* const item) const;
 };
 
 class BrowseInv: public InvState
@@ -116,6 +128,25 @@ private:
     InvSlot& slot_to_equip_;
 
     BrowseInv& browse_inv_state_;
+};
+
+class SelectIdentify: public InvState
+{
+public:
+    SelectIdentify() :
+        InvState            (),
+        slots_              (),
+        backpack_indexes_   () {}
+
+    void on_start() override;
+
+    void draw() override;
+
+    void update() override;
+
+private:
+    std::vector<SlotId> slots_;
+    std::vector<size_t> backpack_indexes_;
 };
 
 #endif // INV_HANDLING_HPP
