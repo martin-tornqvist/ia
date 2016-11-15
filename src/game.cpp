@@ -980,7 +980,7 @@ void win_game()
     {
         "As I approach the crystal, an eerie glow illuminates the area. "
         "I notice a figure observing me from the edge of the light. "
-        "There is no doubt in my mind concerning the nature of this entity; "
+        "There is no doubt concerning the nature of this entity; "
         "it is the Faceless God who dwells in the depths of the earth - "
         "Nyarlathotep!",
 
@@ -990,7 +990,7 @@ void win_game()
 
         "In the radiance I see visions beyond eternity, visions of unreal "
         "reality, visions of the brightest light of day and the darkest night "
-        "of madness. There is only onward now, I demand to attain everything!",
+        "of madness. There is only onward now, I have to see, I have to KNOW.",
 
         "So I make a pact with the Fiend.",
 
