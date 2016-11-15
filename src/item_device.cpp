@@ -399,7 +399,7 @@ ConsumeItem DeviceSentryDrone::trigger_effect()
 // -----------------------------------------------------------------------------
 DeviceLantern::DeviceLantern(ItemDataT* const item_data) :
     Device                  (item_data),
-    nr_turns_left_          (500),
+    nr_turns_left_          (100),
     nr_flicker_turns_left_  (-1),
     working_state_          (LanternWorkingState::working),
     is_activated_           (false) {}

@@ -954,9 +954,9 @@ void AmmoMag::set_full_ammo()
 // -----------------------------------------------------------------------------
 MedicalBag::MedicalBag(ItemDataT* const item_data) :
     Item                    (item_data),
-    nr_supplies_            (50),
+    nr_supplies_            (32),
     nr_turns_left_action_   (-1),
-    current_action_             (MedBagAction::END) {}
+    current_action_         (MedBagAction::END) {}
 
 void MedicalBag::save()
 {
@@ -1111,7 +1111,8 @@ void MedicalBag::finish_current_action()
     {
     case MedBagAction::treat_wound:
     {
-        Prop* const wound_prop = map::player->prop_handler().prop(PropId::wound);
+        Prop* const wound_prop =
+            map::player->prop_handler().prop(PropId::wound);
 
         ASSERT(wound_prop);
 
