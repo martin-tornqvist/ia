@@ -30,9 +30,11 @@ TEST_FRAMEWORK_INC_DIR  = $(TEST_FRAMEWORK_DIR)/include
 TEST_FRAMEWORK_LIB      = UnitTest++
 
 OBJ_BASE_DIR            = obj
+DEP_BASE_DIR            = dep
 TARGET_BASE_DIR         = target
 
 # Set target and object directories based on specified build target
+#
 # NOTE: It is especially important for the objects to be separated when building
 #       the 'debug' and 'test' targets, since the tests should be built with
 #       TRACE_LVL 0 (we don't want game message spam while running the tests).
@@ -51,6 +53,7 @@ endif
 
 TARGET_DIR              = $(TARGET_BASE_DIR)/$(TARGET_NAME)
 OBJ_DIR                 = $(OBJ_BASE_DIR)/$(TARGET_NAME)
+DEP_DIR                 = $(DEP_BASE_DIR)/$(TARGET_NAME)
 
 # The SDL variables below are only used for Windows cross compilation on Linux
 SDL_BASE_DIR            = SDL
@@ -248,11 +251,22 @@ COMMON_OBJECTS_NO_MAIN  = $(COMMON_SRC_NO_MAIN:$(COMMON_SRC_DIR)%.cpp=$(OBJ_DIR)
 
 
 ###############################################################################
+# Dependency files
+###############################################################################
+COMMON_DEPS             = $(COMMON_SRC:$(COMMON_SRC_DIR)%.cpp=$(DEP_DIR)%.d)
+RL_UTILS_DEPS           = $(RL_UTILS_SRC:$(RL_UTILS_SRC_DIR)%.cpp=$(DEP_DIR)%.d)
+TEST_DEPS               = $(TEST_SRC:$(TEST_SRC_DIR)%.cpp=$(DEP_DIR)%.d)
+
+# Object file list without the standard main object
+COMMON_DEPS_NO_MAIN     = $(COMMON_SRC_NO_MAIN:$(COMMON_SRC_DIR)%.cpp=$(DEP_DIR)%.d)
+
+
+###############################################################################
 # Assets
 ###############################################################################
-ASSETS			= $(shell find $(ASSETS_DIR) -type f)
+ASSETS                  = $(shell find $(ASSETS_DIR) -type f)
 
-TARGET_ASSETS		= $(ASSETS:$(ASSETS_DIR)/%=$(TARGET_DIR)/%)
+TARGET_ASSETS           = $(ASSETS:$(ASSETS_DIR)/%=$(TARGET_DIR)/%)
 
 
 ###############################################################################
@@ -270,6 +284,13 @@ TARGET_ASSETS		= $(ASSETS:$(ASSETS_DIR)/%=$(TARGET_DIR)/%)
   clean \
   obj-clean \
   check-rl-utils \
+  #
+
+# Do not delete intermediate files
+.SECONDARY: \
+  $(COMMON_DEPS) \
+  $(RL_UTILS_DEPS) \
+  $(TEST_DEPS) \
   #
 
 all: release
@@ -310,6 +331,12 @@ define compile-object
   $(CXX) -c $(CXXFLAGS) $(INCLUDES) $< -o $@
 endef
 
+# Generic recipe to generate dependency files
+define generate-dep
+  @mkdir -p $(DEP_DIR)
+  $(CXX) -MM $(CXXFLAGS) $(INCLUDES) $< -MF $@ -MT '$(@:$(DEP_DIR)%.d=$(OBJ_DIR)%.o)'
+endef
+
 $(TARGET_DIR)/% : $(ASSETS_DIR)/%
 	@mkdir -p $(dir $(subst $(ASSETS_DIR), $(TARGET_DIR), $<))
 	cp $< $(subst $(ASSETS_DIR), $(TARGET_DIR), $<)
@@ -321,16 +348,28 @@ $(LINUX_TEST_EXE): $(COMMON_OBJECTS_NO_MAIN) $(RL_UTILS_OBJECTS) $(TEST_OBJECTS)
 	$(link-executable)
 
 # Compiling common objects
-$(OBJ_DIR)/%.o: $(COMMON_SRC_DIR)/%.cpp
+$(OBJ_DIR)/%.o: $(COMMON_SRC_DIR)/%.cpp $(DEP_DIR)/%.d
 	$(compile-object)
+
+# Generating common dependency files
+$(DEP_DIR)/%.d : $(COMMON_SRC_DIR)/%.cpp
+	$(generate-dep)
 
 # Compiling rl utils objects
-$(OBJ_DIR)/%.o: $(RL_UTILS_SRC_DIR)/%.cpp | check-rl-utils
+$(OBJ_DIR)/%.o: $(RL_UTILS_SRC_DIR)/%.cpp $(DEP_DIR)/%.d | check-rl-utils
 	$(compile-object)
 
+# Generating rl utils dependency files
+$(DEP_DIR)/%.d : $(RL_UTILS_SRC_DIR)/%.cpp
+	$(generate-dep)
+
 # Compiling test objects
-$(OBJ_DIR)/%.o: $(TEST_SRC_DIR)/%.cpp
+$(OBJ_DIR)/%.o: $(TEST_SRC_DIR)/%.cpp $(DEP_DIR)/%.d
 	$(compile-object)
+
+# Generating test dependency files
+$(DEP_DIR)/%.d : $(TEST_SRC_DIR)/%.cpp
+	$(generate-dep)
 
 # Make sure the RL Utils submodule exists
 check-rl-utils:
@@ -351,21 +390,11 @@ check-rl-utils:
 	  exit 1; \
 	fi
 
-# Optional auto dependency tracking
-#  -include depends.mk
-
-# depends: $(DEPENDS)
-
-# %.d:
-# 	$(CXX) -MM $(CXXFLAGS) $(INCLUDES) $(@:.d=.cpp) -MF depends.tmp -MT$(@:.d=.o)
-# 	cat depends.tmp >> depends.mk
-# 	rm -rf depends.tmp
-
-# clean-depends:
-# 	rm -rf depends.mk
-
 clean:
-	rm -rf $(OBJ_BASE_DIR) $(TARGET_BASE_DIR)
+	rm -rf $(OBJ_BASE_DIR) $(TARGET_BASE_DIR) $(DEP_BASE_DIR)
 
 obj-clean:
-	rm -rf $(OBJ_BASE_DIR)
+	rm -rf $(OBJ_BASE_DIR) $(DEP_BASE_DIR)
+
+# Include dependency files, if they are generated
+-include $(wildcard $(DEP_DIR)/*.d)

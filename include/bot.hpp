@@ -10,4 +10,4 @@ void act();
 
 } //Bot
 
-#endif
+#endif // BOT_HPP

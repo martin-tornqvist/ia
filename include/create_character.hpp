@@ -2,8 +2,8 @@
 #define CREATE_CHARACTER_HPP
 
 #include "state.hpp"
-#include "browser.hpp"
 #include "player_bon.hpp"
+#include "browser.hpp"
 
 class NewGameState: public State
 {
