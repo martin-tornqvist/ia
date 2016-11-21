@@ -6,7 +6,6 @@ Gameplay
 * Much fewer monster are spawned on the map, and in smaller groups than before (some monsters are tougher now though), and they generally remember you for a much shorter time - making it more feasible to avoid combat
 * Items are now more likely to spawn behind hidden or stuck doors, in areas away from the path to the stairs (to reward exploration more)
 * Some monsters now tend to spawn in smaller numbers instead of always in big packs, but are instead individually stronger (especially Spiders) - the purpose of this is to reduce "trash mob" combat and make each encounter more significant
-* Reduced "more" prompt message spam from traps (less interruption)
 * Some unnecessary traits have been removed (e.g. there doesn't have to be three steps of Melee traits)
 * The spells Slow, Paralyze, and Terrify Enemies have been merged into "Enfeeble Enemies"
 * Burning features now only hurt creatures on the same cell (not adjacent to it)
@@ -15,6 +14,7 @@ Gameplay
 * When quaffing Potion of Insight, you can now manually choose which item to identify
 * Potion of Insight always gives some XP, in addition to identifying an item (to avoid making Potions of Insight worthless if all items are identified)
 * You always search for traps and secret doors in every seen cell (so you can stand in the middle of a room and search all walls)
+* Traps are always immediately revealed when triggered by the player
 * Added Barred gates (doors that you can see and shoot through), and Gratings (similarly, but walls)
 * Added Hanging vines, which can be walked through, but blocks line of sight
 * Spells now have "skill level" percentages, which affects the Spirit cost to cast the spell - the skill levels can be increased by casting from Manuscripts
@@ -24,6 +24,7 @@ Gameplay
 * Removed the random "I have a bad feeling about this..." events causing shock
 
 Interface
+* Reduced "more" prompt message spam from traps (less interruption)
 * Added an option to ask for confirmation before lighting explosives (default is off)
 * Removed the life bars showing creatures health - instead health is shown by gradually coloring creatures red
 * Printing a low HP warning (with "more" prompt) when dropping to a low HP percent
