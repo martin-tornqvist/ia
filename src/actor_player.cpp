@@ -1,6 +1,7 @@
 #include "actor_player.hpp"
 
 #include <string>
+#include <cmath>
 
 #include "init.hpp"
 #include "io.hpp"
