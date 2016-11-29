@@ -7,6 +7,9 @@ Gameplay
 * Items are now more likely to spawn behind hidden or stuck doors, in areas away from the path to the stairs (to reward exploration more)
 * Some monsters now tend to spawn in smaller numbers instead of always in big packs, but are instead individually stronger (especially Spiders) - the purpose of this is to reduce "trash mob" combat and make each encounter more significant
 * Some unnecessary traits have been removed (e.g. there doesn't have to be three steps of Melee traits)
+* The game now models creature speeds in a new (probably more common and intuitive) way - creature speeds are expressed as percentages, e.g. 50%, 100%, or 300%, and different actions can have different speeds
+* Many bonuses such as "you occasionally reload instantly" now instead give a speed bonus to that action - e.g. the War Veteran switches to the prepared weapon with +100% speed (so it only takes a half turn), and the Dexterous traits simply grants a general speed percent bonus instead of "every Nth step is a free action"
+* Dodging now also applies to ranged attacks
 * The spells Slow, Paralyze, and Terrify Enemies have been merged into "Enfeeble Enemies"
 * Burning features now only hurt creatures on the same cell (not adjacent to it)
 * Rogue no longer starts with "Cloud Minds" (this is now a Manuscript instead)
@@ -22,6 +25,7 @@ Gameplay
 * Chests can no longer be trapped (it was awkward to deal with, and it didn't really bring anything to the game) - chests are now just interacted with by bumping them (if they are not locked), kicking them, or using an Opening spell
 * Rogues remain aware of monsters much longer than the other Backgrounds, and the other Backgrounds remain aware for a shorter duration than before
 * Removed the random "I have a bad feeling about this..." events causing shock
+* The Iron Suit no longer gives penalties to aiming or spotting hidden monsters and objects
 
 Interface
 * Reduced "more" prompt message spam from traps (less interruption)
@@ -33,6 +37,9 @@ Interface
 * Added "New journey" option to postmortem menu
 * Dark areas can now be explored - i.e. the game draws how the player character remembered the room (with a blue color to distinguish the dark areas)
 * When [v]iewing the map, the game now also prints messages for detected unseen monsters ("There is a creature here")
+* When [v]iewing detailed monster descriptions, the game now prints hit chances for melee, ranged, and throwing attacks for the player and the monster - with all values contributing to the total hit chances shown
+* Weapons now merely display their own hit chance modifier (e.g. +5% or -10%), instead of your skill plus the weapon modifier (the old way was misleading, since more factors are involved when calculating actual hit chances during attacks)
+* Removed the "Combat skills" section of the character description page
 
 Bug fixes
 * Fixed a bug where if you dropped the Staff of the Pharaohs, the spell would be permanently lost, even if you picked it up again

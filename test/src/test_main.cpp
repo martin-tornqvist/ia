@@ -1232,7 +1232,7 @@ TEST_FIXTURE(BasicFixture, loading_game)
     CHECK(mapData.is_main_dungeon   == IsMainDungeon::no);
 
     // Game time
-    CHECK_EQUAL(0, game_time::turn());
+    CHECK_EQUAL(0, game_time::turn_nr());
 }
 
 TEST_FIXTURE(BasicFixture, floodfilling)

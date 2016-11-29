@@ -264,11 +264,11 @@ void BrowseHighscore::draw()
 
         const std::string date_and_time = entry.date_and_time();
         const std::string name = entry.name();
-        const std::string lvl = to_str(entry.lvl());
-        const std::string dlvl = to_str(entry.dlvl());
-        const std::string ins = to_str(entry.ins());
+        const std::string lvl = std::to_string(entry.lvl());
+        const std::string dlvl = std::to_string(entry.dlvl());
+        const std::string ins = std::to_string(entry.ins());
         const std::string win = entry.is_win() ? "Yes" : "No";
-        const std::string score = to_str(entry.score());
+        const std::string score = std::to_string(entry.score());
 
         const Clr& clr = clr_white;
 

@@ -33,7 +33,7 @@ void load_audio_file(const SfxId sfx, const std::string& filename)
 
     const std::string file_rel_path  = "audio/" + filename;
 
-    const std::string nr_loaded_str = to_str(nr_files_loaded_) + "/" + to_str(nr_files_tot) ;
+    const std::string nr_loaded_str = std::to_string(nr_files_loaded_) + "/" + std::to_string(nr_files_tot) ;
 
     io::draw_text("Loading audio file " + nr_loaded_str + " (" + file_rel_path + ")...",
                       Panel::screen,
@@ -204,7 +204,7 @@ void init()
             const std::string padding_str   = (a < 10)    ? "00"  :
                                               (a < 100)   ? "0"   : "";
 
-            const std::string idx_str       = to_str(a);
+            const std::string idx_str       = std::to_string(a);
 
             const std::string file_name = "amb_" + padding_str + idx_str + ".ogg";
 

@@ -116,8 +116,6 @@ public:
 
     bool is_standing_in_cramped_place() const;
 
-    bool is_free_step_turn() const;
-
     MedicalBag* active_medical_bag;
     Explosive* active_explosive;
     Actor* tgt_;
@@ -150,7 +148,6 @@ private:
 
     void fov_hack();
 
-    int nr_steps_until_free_action_;
     int nr_turns_until_ins_;
 
     int nr_quick_move_steps_left_;

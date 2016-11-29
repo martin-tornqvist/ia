@@ -60,7 +60,7 @@ bool run_drop_query(const InvType inv_type, const size_t idx)
 
         states::draw();
 
-        const std::string nr_str = "1-" + to_str(item->nr_items_);
+        const std::string nr_str = "1-" + std::to_string(item->nr_items_);
 
         const std::string drop_str = "Drop how many (" + nr_str + ")?:";
 
@@ -350,7 +350,7 @@ void InvState::draw_weight_pct_and_dots(const P item_pos,
         item_weight_pct = (item.weight() * 100) / weight_carried_tot;
     }
 
-    std::string weight_str = to_str(item_weight_pct) + "%";
+    std::string weight_str = std::to_string(item_weight_pct) + "%";
     int weight_x = descr_x0 - 1 - weight_str.size();
 
     ASSERT(item_weight_pct >= 0 && item_weight_pct <= 100);
@@ -466,7 +466,7 @@ void InvState::draw_detailed_item_descr(const Item* const item) const
         if (!disturb_str.empty())
         {
             disturb_str +=
-                " (+" + to_str(ins_from_disturbing_items) + "% insanity)";
+                " (+" + std::to_string(ins_from_disturbing_items) + "% insanity)";
 
             lines.push_back(StrAndClr(disturb_str, clr_magenta));
         }
@@ -494,7 +494,7 @@ void InvState::draw_detailed_item_descr(const Item* const item) const
         if (weight_pct > 0 && weight_pct < 100)
         {
             const std::string pct_str =
-                "(" + to_str(weight_pct) + "% of total carried weight)";
+                "(" + std::to_string(weight_pct) + "% of total carried weight)";
 
             lines.push_back(StrAndClr(pct_str, clr_green));
         }
@@ -505,7 +505,7 @@ void InvState::draw_detailed_item_descr(const Item* const item) const
         if (!d.is_identified && (d.xp_on_identify > 0))
         {
             const std::string xp_id_str =
-                "Identifying grants " + to_str(d.xp_on_identify) + " XP.";
+                "Identifying grants " + std::to_string(d.xp_on_identify) + " XP.";
 
             lines.push_back(StrAndClr(xp_id_str, clr_msg_good));
         }

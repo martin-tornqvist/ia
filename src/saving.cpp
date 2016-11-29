@@ -237,7 +237,7 @@ void put_str(const std::string str)
 
 void put_int(const int v)
 {
-    put_str(to_str(v));
+    put_str(std::to_string(v));
 }
 
 void put_bool(const bool v)

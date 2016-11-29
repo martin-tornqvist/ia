@@ -492,19 +492,16 @@ void handle_player_input(const InputData& input)
     //
     case 'z':
     {
-        const PassTime pass_time =
-            (player_bon::bg() == Bg::war_vet) ?
-            PassTime::no : PassTime::yes;
-
-        const std::string swift_str =
-            (pass_time == PassTime::no) ?
-            " swiftly" : "";
-
         Inventory& inv = map::player->inv();
 
         Item* const wielded = inv.item_in_slot(SlotId::wpn);
+
         Item* const alt = inv.item_in_slot(SlotId::wpn_alt);
-        const std::string alt_name = alt ? alt->name(ItemRefType::a) : "";
+
+        const std::string alt_name =
+            alt ?
+            alt->name(ItemRefType::a) :
+            "";
 
         if (wielded || alt)
         {
@@ -512,27 +509,31 @@ void handle_player_input(const InputData& input)
             {
                 if (alt)
                 {
-                    msg_log::add("I" + swift_str +
-                                 " swap to my prepared weapon (" +
+                    msg_log::add("I swap to my prepared weapon (" +
                                  alt_name + ").");
                 }
                 else // No current alt weapon
                 {
                     const std::string name = wielded->name(ItemRefType::a);
 
-                    msg_log::add("I" + swift_str +
-                                 " put away my weapon (" +
+                    msg_log::add("I put away my weapon (" +
                                  name + ").");
                 }
             }
             else // No current wielded item
             {
-                msg_log::add("I" + swift_str +
-                             " wield my prepared weapon ("
+                msg_log::add("I wield my prepared weapon ("
                              + alt_name + ").");
             }
 
-            inv.swap_wielded_and_prepared(pass_time);
+            inv.swap_wielded_and_prepared();
+
+            const int speed_pct_diff =
+                (player_bon::bg() == Bg::war_vet) ?
+                100 :
+                0;
+
+            game_time::tick(speed_pct_diff);
         }
         else // No wielded weapon and no alt weapon
         {
@@ -928,7 +929,7 @@ void incr_player_xp(const int xp_gained,
 
     if (verbosity == Verbosity::verbose)
     {
-        msg_log::add("(+" + to_str(xp_gained) + "% XP)");
+        msg_log::add("(+" + std::to_string(xp_gained) + "% XP)");
     }
 
     xp_pct_ += xp_gained;
@@ -1127,7 +1128,7 @@ void on_mon_killed(Actor& actor)
 
 void add_history_event(const std::string msg)
 {
-    const int turn_nr = game_time::turn();
+    const int turn_nr = game_time::turn_nr();
 
     history_events_.push_back({msg, turn_nr});
 }
@@ -1684,7 +1685,7 @@ void GameState::draw_map()
 
                 const Clr clr_bg =
                     render_data->is_aware_of_hostile_mon_here ?
-                    clr_white :
+                    clr_gray :
                     clr_allied_mon;
 
                 render_data->tile = TileId::empty;

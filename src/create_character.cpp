@@ -94,7 +94,7 @@ void GainLvlState::on_start()
 
     const int clvl = game::clvl();
 
-    msg_log::add("Welcome to level " + to_str(clvl) + "!",
+    msg_log::add("Welcome to level " + std::to_string(clvl) + "!",
                  clr_green,
                  false,
                  MorePromptOnMsg::yes);

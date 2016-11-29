@@ -75,7 +75,7 @@ Trap::Trap(const P& feature_pos,
 
             if (trap_impl_)
             {
-                //Trap placement is good!
+                // Trap placement is good!
                 break;
             }
         }
@@ -251,12 +251,12 @@ void Trap::trigger_start(const Actor* actor)
         }
     }
 
-    //Get a randomized value for number of remaining turns
+    // Get a randomized value for number of remaining turns
     const Range turns_range = trap_impl_->nr_turns_range_to_trigger();
     const int rnd_nr_turns = turns_range.roll();
 
-    //Set number of remaining turns to the randomized value if number of turns
-    //was not already set, or if the new value will make it trigger sooner.
+    // Set number of remaining turns to the randomized value if number of turns
+    // was not already set, or if the new value will make it trigger sooner.
     if (
         nr_turns_until_trigger_ == -1 ||
         rnd_nr_turns < nr_turns_until_trigger_)
@@ -264,14 +264,16 @@ void Trap::trigger_start(const Actor* actor)
         nr_turns_until_trigger_ = rnd_nr_turns;
     }
 
-    TRACE_VERBOSE << "nr_turns_until_trigger_: " << nr_turns_until_trigger_ << std::endl;
+    TRACE_VERBOSE << "nr_turns_until_trigger_: "
+                  << nr_turns_until_trigger_
+                  << std::endl;
 
     ASSERT(nr_turns_until_trigger_ > -1);
 
-    //If number of remaining turns is zero, trigger immediately
+    // If number of remaining turns is zero, trigger immediately
     if (nr_turns_until_trigger_ == 0)
     {
-        //NOTE: This will reset number of turns until triggered
+        // NOTE: This will reset number of turns until triggered
         trigger_trap(nullptr);
     }
 
@@ -293,12 +295,14 @@ void Trap::bump(Actor& actor_bumping)
 
     const bool actor_can_see = actor_bumping.prop_handler().allow_see();
 
-    AbilityVals& abilities = actor_bumping.data().ability_vals;
-
     const std::string trap_name = trap_impl_->title();
 
-    const int dodge_skill =
-        abilities.val(AbilityId::dodge_trap, true, actor_bumping);
+    //
+    // TODO: Reimplement something affecting chance of success, e.g.
+    //       dexterous traits
+    //
+
+    const int dodge_skill = 50;
 
     if (actor_bumping.is_player())
     {
@@ -328,12 +332,12 @@ void Trap::bump(Actor& actor_bumping)
                              clr_msg_good);
             }
         }
-        else //Failed to avoid
+        else // Failed to avoid
         {
             trigger_start(&actor_bumping);
         }
     }
-    else //Is a monster
+    else // Is a monster
     {
         TRACE_VERBOSE << "Monster bumping trap" << std::endl;
 
@@ -344,7 +348,8 @@ void Trap::bump(Actor& actor_bumping)
 
             if (mon->aware_counter_ > 0 && !mon->is_sneaking_)
             {
-                TRACE_VERBOSE << "Monster eligible for triggering trap" << std::endl;
+                TRACE_VERBOSE << "Monster eligible for triggering trap"
+                              << std::endl;
 
                 const bool is_actor_seen_by_player =
                     map::player->can_see_actor(actor_bumping);
@@ -360,10 +365,13 @@ void Trap::bump(Actor& actor_bumping)
                     {
                         const std::string actor_name = actor_bumping.name_the();
 
-                        msg_log::add(actor_name + " avoids a " + trap_name + ".");
+                        msg_log::add(actor_name +
+                                     " avoids a " +
+                                     trap_name +
+                                     ".");
                     }
                 }
-                else //Failed to avoid
+                else // Failed to avoid
                 {
                     trigger_start(&actor_bumping);
                 }
@@ -376,7 +384,7 @@ void Trap::bump(Actor& actor_bumping)
 
 void Trap::disarm()
 {
-    //Abort if trap is hidden
+    // Abort if trap is hidden
     if (is_hidden())
     {
         msg_log::add(msg_disarm_no_trap);
@@ -432,7 +440,7 @@ void Trap::disarm()
     {
         msg_log::add(trap_impl_->disarm_msg());
     }
-    else //Not disarmed
+    else // Not disarmed
     {
         msg_log::add(trap_impl_->disarm_fail_msg());
 
@@ -460,8 +468,8 @@ void Trap::destroy()
 {
     ASSERT(mimic_feature_);
 
-    //Magical traps and webs simply "dissapear" (place their mimic feature),
-    //and mechanical traps puts rubble.
+    // Magical traps and webs simply "dissapear" (place their mimic feature),
+    // and mechanical traps puts rubble.
 
     if (is_magical() || type() == TrapId::web)
     {
@@ -469,10 +477,10 @@ void Trap::destroy()
 
         mimic_feature_ = nullptr;
 
-        //NOTE: This call destroys the object!
+        // NOTE: This call destroys the object!
         map::put(f_tmp);
     }
-    else //"Mechanical" trap
+    else // "Mechanical" trap
     {
         map::put(new RubbleLow(pos_));
     }
@@ -484,7 +492,9 @@ DidTriggerTrap Trap::trigger_trap(Actor* const actor)
 
     (void)actor;
 
-    TRACE_VERBOSE << "Name of trap triggering: " << trap_impl_->title() << std::endl;
+    TRACE_VERBOSE << "Name of trap triggering: "
+                  << trap_impl_->title()
+                  << std::endl;
 
     nr_turns_until_trigger_ = -1;
 
@@ -492,7 +502,7 @@ DidTriggerTrap Trap::trigger_trap(Actor* const actor)
 
     trap_impl_->trigger();
 
-    //NOTE: This object may now be deleted (e.g. a web was torn down)!
+    // NOTE: This object may now be deleted (e.g. a web was torn down)!
 
     TRACE_FUNC_END_VERBOSE;
     return DidTriggerTrap::yes;
@@ -503,7 +513,7 @@ void Trap::reveal(const bool print_messsage_when_player_sees)
     TRACE_FUNC_BEGIN_VERBOSE;
     is_hidden_ = false;
 
-    //Destroy any corpse on the trap
+    // Destroy any corpse on the trap
     for (Actor* actor : game_time::actors)
     {
         if (actor->pos == pos_ && actor->is_corpse())
@@ -528,7 +538,7 @@ void Trap::reveal(const bool print_messsage_when_player_sees)
             {
                 msg += "There is a " + trap_name + " here!";
             }
-            else //Trap is not at player position
+            else // Trap is not at player position
             {
                 msg = "I spot a " + trap_name + ".";
             }
@@ -546,7 +556,9 @@ void Trap::player_try_spot_hidden()
     {
         const auto& abilities = map::player->data().ability_vals;
 
-        const int skill = abilities.val(AbilityId::searching, true, *(map::player));
+        const int skill = abilities.val(AbilityId::searching,
+                                        true,
+                                        *(map::player));
 
         if (ability_roll::roll(skill, map::player) >= success)
         {
@@ -561,7 +573,7 @@ std::string Trap::name(const Article article) const
     {
         return mimic_feature_->name(article);
     }
-    else //Not hidden
+    else // Not hidden
     {
         return (article == Article::a ? "a " : "the ") + trap_impl_->title();
     }
@@ -648,7 +660,7 @@ TrapPlacementValid TrapDart::on_place()
 
             if (i >= nr_steps_min && is_wall)
             {
-                //This is a good origin!
+                // This is a good origin!
                 dart_origin_ = p;
                 trap_plament_valid = TrapPlacementValid::yes;
                 break;
@@ -657,7 +669,7 @@ TrapPlacementValid TrapDart::on_place()
 
         if (trap_plament_valid == TrapPlacementValid::yes)
         {
-            //A valid origin has been found
+            // A valid origin has been found
 
             if (rnd::fraction(2, 3))
             {
@@ -683,7 +695,8 @@ void TrapDart::trigger()
 
     if (origin_cell.rigid->id() != FeatureId::wall)
     {
-        is_dart_origin_destroyed_ = true; //NOTE: This is permanently set from now on
+        // NOTE: This is permanently set from now on
+        is_dart_origin_destroyed_ = true;
     }
 
     if (is_dart_origin_destroyed_)
@@ -691,14 +704,14 @@ void TrapDart::trigger()
         return;
     }
 
-    //Aim target is the wall on the other side of the map
+    // Aim target is the wall on the other side of the map
     P aim_pos = dart_origin_;
 
     if (dart_origin_.x == pos_.x)
     {
         aim_pos.y = dart_origin_.y > pos_.y ? 0 : (map_h - 1);
     }
-    else //Dart origin is on same vertial line as the trap
+    else // Dart origin is on same vertial line as the trap
     {
         aim_pos.x = dart_origin_.x > pos_.x ? 0 : (map_w - 1);
     }
@@ -710,19 +723,19 @@ void TrapDart::trigger()
         msg_log::add("A dart is launched from " + name + "!");
     }
 
-    //Make a temporary dart weapon
+    // Make a temporary dart weapon
     Wpn* wpn = nullptr;
 
     if (is_poisoned_)
     {
         wpn = static_cast<Wpn*>(item_factory::mk(ItemId::trap_dart_poison));
     }
-    else //Not poisoned
+    else // Not poisoned
     {
         wpn = static_cast<Wpn*>(item_factory::mk(ItemId::trap_dart));
     }
 
-    //Fire!
+    // Fire!
     attack::ranged(nullptr, dart_origin_, aim_pos, *wpn);
 
     delete wpn;
@@ -731,8 +744,9 @@ void TrapDart::trigger()
 }
 
 TrapSpear::TrapSpear(P pos, Trap* const base_trap) :
-    MechTrapImpl              (pos, TrapId::spear, base_trap),
-    is_poisoned_                (map::dlvl >= dlvl_harder_traps && rnd::one_in(4)),
+    MechTrapImpl                (pos, TrapId::spear, base_trap),
+    is_poisoned_                ((map::dlvl >= dlvl_harder_traps) &&
+                                 rnd::one_in(4)),
     spear_origin_               (),
     is_spear_origin_destroyed_  (false) {}
 
@@ -749,12 +763,14 @@ TrapPlacementValid TrapSpear::on_place()
         const P p = pos_ + d;
 
         const Rigid* const rigid = map::cells[p.x][p.y].rigid;
+
         const bool is_wall = rigid->id() == FeatureId::wall;
+
         const bool is_passable = rigid->is_projectile_passable();
 
         if (is_wall && !is_passable)
         {
-            //This is a good origin!
+            // This is a good origin!
             spear_origin_ = p;
             trap_plament_valid = TrapPlacementValid::yes;
 
@@ -782,7 +798,8 @@ void TrapSpear::trigger()
 
     if (origin_cell.rigid->id() != FeatureId::wall)
     {
-        is_spear_origin_destroyed_ = true; //NOTE: This is permanently set from now on
+        // NOTE: This is permanently set from now on
+        is_spear_origin_destroyed_ = true;
     }
 
     if (is_spear_origin_destroyed_)
@@ -797,24 +814,30 @@ void TrapSpear::trigger()
         msg_log::add("A spear shoots out from " + name + "!");
     }
 
-    //Is anyone standing on the trap now?
+    // Is anyone standing on the trap now?
     Actor* const actor_on_trap = map::actor_at_pos(pos_);
 
     if (actor_on_trap)
     {
-        //Make a temporary spear weapon
+        // Make a temporary spear weapon
         Wpn* wpn = nullptr;
 
         if (is_poisoned_)
         {
-            wpn = static_cast<Wpn*>(item_factory::mk(ItemId::trap_spear_poison));
+            wpn =
+                static_cast<Wpn*>(
+                    item_factory::mk(
+                        ItemId::trap_spear_poison));
         }
-        else //Not poisoned
+        else // Not poisoned
         {
-            wpn = static_cast<Wpn*>(item_factory::mk(ItemId::trap_spear));
+            wpn =
+                static_cast<Wpn*>(
+                    item_factory::mk(
+                        ItemId::trap_spear));
         }
 
-        //Attack!
+        // Attack!
         attack::melee(nullptr, spear_origin_, *actor_on_trap, *wpn);
 
         delete wpn;
@@ -941,7 +964,7 @@ void TrapTeleport::trigger()
 
     if (!actor_here)
     {
-        //Should never happen
+        // Should never happen
         return;
     }
 
@@ -972,12 +995,12 @@ void TrapTeleport::trigger()
 
             msg_log::add(msg);
         }
-        else //Cannot see
+        else // Cannot see
         {
             msg_log::add("I feel a peculiar energy around me!");
         }
     }
-    else //Is a monster
+    else // Is a monster
     {
         if (can_player_see_actor)
         {
@@ -1000,7 +1023,7 @@ void TrapSummonMon::trigger()
 
     if (!actor_here)
     {
-        //Should never happen
+        // Should never happen
         return;
     }
 
@@ -1037,7 +1060,7 @@ void TrapSummonMon::trigger()
 
         msg_log::add(msg);
     }
-    else //Cannot see
+    else // Cannot see
     {
         msg_log::add("I feel a peculiar energy around me!");
     }
@@ -1252,7 +1275,7 @@ void TrapWeb::trigger()
 
     if (!actor_here)
     {
-        //Should never happen
+        // Should never happen
         return;
     }
 
@@ -1266,9 +1289,14 @@ void TrapWeb::trigger()
     if (is_player)
     {
         TRACE << "Checking if player has machete" << std::endl;
+
         const auto& player_inv = map::player->inv();
+
         Item* const item_wielded = player_inv.item_in_slot(SlotId::wpn);
-        const bool has_machete = item_wielded && item_wielded->data().id == ItemId::machete;
+
+        const bool has_machete =
+            item_wielded &&
+            (item_wielded->data().id == ItemId::machete);
 
         if (has_machete)
         {
@@ -1278,25 +1306,26 @@ void TrapWeb::trigger()
             }
             else
             {
-                msg_log::add("I cut down a sticky mass of threads with my machete.");
+                msg_log::add(
+                    "I cut down a sticky mass of threads with my machete.");
             }
 
             TRACE << "Destroyed by Machete" << std::endl;
             base_trap_->destroy();
         }
-        else //Not wielding machete
+        else // Not wielding machete
         {
             if (can_see)
             {
                 msg_log::add("I am entangled in a spider web!");
             }
-            else //Cannot see
+            else // Cannot see
             {
                 msg_log::add("I am entangled in a sticky mass of threads!");
             }
         }
     }
-    else //Is a monster
+    else // Is a monster
     {
         if (can_player_see_actor)
         {
@@ -1324,7 +1353,7 @@ Dir TrapWeb::actor_try_leave(Actor& actor, const Dir dir)
 
     TRACE_VERBOSE << "Name of actor held: " << actor_name << std::endl;
 
-    //TODO: reimplement something affecting chance of success?
+    // TODO: reimplement something affecting chance of success?
 
     if (rnd::one_in(4))
     {
@@ -1336,7 +1365,7 @@ Dir TrapWeb::actor_try_leave(Actor& actor, const Dir dir)
         {
             msg_log::add("I break free.");
         }
-        else //Is monster
+        else // Is monster
         {
             if (player_can_see_actor)
             {
@@ -1346,19 +1375,19 @@ Dir TrapWeb::actor_try_leave(Actor& actor, const Dir dir)
 
         if (rnd::one_in(2))
         {
-            if (
-                (actor.is_player()  && player_can_see) ||
+            if ((actor.is_player() && player_can_see) ||
                 (!actor.is_player() && player_can_see_actor))
             {
                 msg_log::add("The web is destroyed.");
             }
 
-            TRACE_VERBOSE << "Web destroyed, returning center direction" << std::endl;
+            TRACE_VERBOSE << "Web destroyed, returning center direction"
+                          << std::endl;
 
             base_trap_->destroy();
         }
     }
-    else //Failed to break free
+    else // Failed to break free
     {
         if (actor.is_player())
         {

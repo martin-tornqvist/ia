@@ -17,17 +17,25 @@ class AttData
 public:
     virtual ~AttData() {}
 
-    Actor*              attacker;
-    Actor*              defender;
-    AbilityRollResult   att_result;
-    int                 dmg;
-    bool                is_intrinsic_att, is_ethereal_defender_missed;
+    Actor* attacker;
+    Actor* defender;
+    int skill_mod;
+    int wpn_mod;
+    int dodging_mod;
+    int state_mod;
+    int hit_chance_tot;
+    AbilityRollResult att_result;
+    int dmg;
+    bool is_intrinsic_att;
 
 protected:
-    //Never use this class directly (only through inheritance)
+    // Never use this class directly (only through inheritance)
     AttData(Actor* const attacker,
             Actor* const defender,
             const Item& att_item);
+
+    bool is_defender_aware(const Actor* const attacker,
+                           const Actor& defender) const;
 };
 
 class MeleeAttData: public AttData
@@ -39,7 +47,8 @@ public:
 
     ~MeleeAttData() {}
 
-    bool is_defender_dodging, is_backstab, is_weak_attack;
+    bool is_backstab;
+    bool is_weak_attack;
 };
 
 class RangedAttData: public AttData
@@ -54,10 +63,12 @@ public:
 
     ~RangedAttData() {}
 
-    P           aim_pos;
-    int         hit_chance_tot;
-    ActorSize   intended_aim_lvl, defender_size;
-    std::string verb_player_attacks, verb_other_attacks;
+    P aim_pos;
+    ActorSize intended_aim_lvl;
+    ActorSize defender_size;
+    std::string verb_player_attacks;
+    std::string verb_other_attacks;
+    int dist_mod;
 };
 
 class ThrowAttData: public AttData
@@ -68,8 +79,10 @@ public:
                  const P& current_pos,
                  const Item& item,
                  ActorSize aim_lvl = ActorSize::none);
-    int hit_chance_tot;
-    ActorSize intended_aim_lvl, defender_size;
+
+    ActorSize intended_aim_lvl;
+    ActorSize defender_size;
+    int dist_mod;
 };
 
 struct Projectile

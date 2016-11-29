@@ -21,6 +21,7 @@
 
 Actor::Actor() :
     pos             (),
+    delay_          (0),
     state_          (ActorState::alive),
     hp_             (-1),
     hp_max_         (-1),
@@ -125,32 +126,37 @@ int Actor::hp_max(const bool with_modifiers) const
     return result;
 }
 
-ActorSpeed Actor::speed() const
+int Actor::speed_pct() const
 {
-    const auto base_speed = data_->speed;
-
-    int speed_int = (int)base_speed;
+    int ret = data_->speed_pct;
 
     // "Slowed" gives speed penalty
-    if (
-        prop_handler_->has_prop(PropId::slowed) &&
-        speed_int > 0)
+    if (prop_handler_->has_prop(PropId::slowed))
     {
-        --speed_int;
+        ret /= 2;
     }
 
-    //"Hasted" or "frenzied" gives speed bonus.
-    if (
-        (prop_handler_->has_prop(PropId::hasted) ||
-         prop_handler_->has_prop(PropId::frenzied)) &&
-        speed_int < (int)ActorSpeed::END - 1)
+    // "Hasted" or "frenzied" gives speed bonus.
+    if ((prop_handler_->has_prop(PropId::hasted) ||
+         prop_handler_->has_prop(PropId::frenzied)))
     {
-        ++speed_int;
+        ret *= 2;
     }
 
-    ASSERT(speed_int >= 0 && speed_int < (int)ActorSpeed::END);
+    if (is_player())
+    {
+        if (player_bon::traits[(size_t)Trait::dexterous])
+        {
+            ret += 10;
+        }
 
-    return ActorSpeed(speed_int);
+        if (player_bon::traits[(size_t)Trait::lithe])
+        {
+            ret += 10;
+        }
+    }
+
+    return ret;
 }
 
 void Actor::seen_actors(std::vector<Actor*>& out)
@@ -273,7 +279,7 @@ void Actor::place(const P& pos_, ActorDataT& actor_data)
 
 void Actor::on_std_turn_common()
 {
-    //Do light damage if in lit cell
+    // Do light damage if in lit cell
     if (map::cells[pos.x][pos.y].is_lit)
     {
         hit(1, DmgType::light);
@@ -281,24 +287,23 @@ void Actor::on_std_turn_common()
 
     if (is_alive())
     {
-        //Slowly decrease current HP/spirit if above max
+        // Slowly decrease current HP/spirit if above max
         const int decr_above_max_n_turns = 7;
 
-        if (
-            hp() > hp_max(true) &&
-            game_time::turn() % decr_above_max_n_turns == 0)
+        const bool decr_this_turn =
+            (game_time::turn_nr() % decr_above_max_n_turns) == 0;
+
+        if ((hp() > hp_max(true)) && decr_this_turn)
         {
             --hp_;
         }
 
-        if (
-            spi() > spi_max() &&
-            game_time::turn() % decr_above_max_n_turns == 0)
+        if ((spi() > spi_max()) && decr_this_turn)
         {
             --spi_;
         }
 
-        //Regenerate spirit
+        // Regenerate spirit
         int regen_spi_n_turns = 20;
 
         if (is_player())
@@ -313,14 +318,17 @@ void Actor::on_std_turn_common()
                 regen_spi_n_turns -= 4;
             }
         }
-        else //Is monster
+        else // Is monster
         {
             // Monsters regen spirit very quickly, so spell casters doesn't
             // suddenly get completely handicapped
             regen_spi_n_turns = 2;
         }
 
-        if (game_time::turn() % regen_spi_n_turns == 0)
+        const bool regen_spi_this_turn =
+            (game_time::turn_nr() % regen_spi_n_turns) == 0;
+
+        if (regen_spi_this_turn)
         {
             restore_spi(1, false, Verbosity::silent);
         }
@@ -379,7 +387,7 @@ void Actor::teleport()
 
                 const int chance_pct = chance_of_tele_success(p);
 
-                msg_log::add(to_str(chance_pct) + "% chance of success.");
+                msg_log::add(std::to_string(chance_pct) + "% chance of success.");
 
                 msg_log::add("[enter] to teleport here");
                 msg_log::add(cancel_info_str_no_space);

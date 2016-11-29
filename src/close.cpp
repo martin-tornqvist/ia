@@ -68,7 +68,7 @@ void player_try_close_or_jam_feature(Feature* const feature)
                 }
                 else //Has spikes left
                 {
-                    msg_log::add("I have " + to_str(spikes_left_after) +
+                    msg_log::add("I have " + std::to_string(spikes_left_after) +
                                  " iron spikes left.");
                 }
             }

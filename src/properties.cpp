@@ -33,7 +33,7 @@ namespace
 
 void add_prop_data(PropDataT& d)
 {
-    data[(int)d.id] = d;
+    data[(size_t)d.id] = d;
     PropDataT blank;
     d = blank;
 }
@@ -684,16 +684,6 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
-    d.id = PropId::fast_shooting;
-    d.std_rnd_turns = Range(1, 1);
-    d.name = "";
-    d.name_short = "";
-    d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
-    d.update_vision_when_start_or_end = false;
-    d.alignment = PropAlignment::good;
-    add_prop_data(d);
-
     d.id = PropId::strangled;
     d.std_rnd_turns = Range(1, 1);
     d.name = "Strangled";
@@ -1009,9 +999,6 @@ Prop* PropHandler::mk_prop(const PropId id,
 
     case PropId::aiming:
         return new PropAiming(turns_init, nr_turns);
-
-    case PropId::fast_shooting:
-        return new PropFastShooting(turns_init, nr_turns);
 
     case PropId::disabled_attack:
         return new PropDisabledAttack(turns_init, nr_turns);
@@ -1565,7 +1552,7 @@ void PropHandler::props_interface_line(std::vector<StrAndClr>& line) const
                     //
                     const int turns_left_displayed = turns_left + 1;
 
-                    str += ":" + to_str(turns_left_displayed);
+                    str += ":" + std::to_string(turns_left_displayed);
                 }
             }
 
@@ -2091,7 +2078,7 @@ Prop* PropPoisoned::on_tick()
 {
     if (owning_actor_->is_alive())
     {
-        if (game_time::turn() % poison_dmg_n_turn == 0)
+        if (game_time::turn_nr() % poison_dmg_n_turn == 0)
         {
             if (owning_actor_->is_player())
             {
@@ -2217,9 +2204,10 @@ void PropWound::msg(const PropMsg msg_type, std::string& msg_ref) const
         break;
 
     case PropMsg::end_player:
-        msg_ref = (nr_wounds_ > 1) ?
-                  "All my wounds are healed!" :
-                  "A wound is healed!";
+        msg_ref =
+            (nr_wounds_ > 1) ?
+            "All my wounds are healed!" :
+            "A wound is healed!";
         break;
 
     case PropMsg::start_mon:
@@ -2233,8 +2221,9 @@ void PropWound::msg(const PropMsg msg_type, std::string& msg_ref) const
 
 int PropWound::ability_mod(const AbilityId ability) const
 {
-    const bool is_survivalist = owning_actor_->is_player() &&
-                                player_bon::traits[(size_t)Trait::survivalist];
+    const bool is_survivalist =
+        owning_actor_->is_player() &&
+        player_bon::traits[(size_t)Trait::survivalist];
 
     const int div = is_survivalist ? 2 : 1;
 
@@ -2248,11 +2237,7 @@ int PropWound::ability_mod(const AbilityId ability) const
     {
         return (k *  -5) / div;
     }
-    else if (ability == AbilityId::dodge_att)
-    {
-        return (k * -10) / div;
-    }
-    else if (ability == AbilityId::dodge_trap)
+    else if (ability == AbilityId::dodging)
     {
         return (k * -10) / div;
     }
@@ -2266,8 +2251,9 @@ int PropWound::affect_max_hp(const int hp_max) const
 
     int hp_pen_pct = nr_wounds_ * pen_pct_per_wound;
 
-    const bool is_survivalist = owning_actor_->is_player() &&
-                                player_bon::traits[(size_t)Trait::survivalist];
+    const bool is_survivalist =
+        owning_actor_->is_player() &&
+        player_bon::traits[(size_t)Trait::survivalist];
 
     if (is_survivalist)
     {

@@ -20,8 +20,9 @@ namespace status_lines
 
 void draw()
 {
-    const int       x_wielded_default           = 43;
-    const size_t    min_nr_steps_to_nxt_label   = 3;
+    const int x_wielded_default = 43;
+
+    const size_t min_nr_steps_to_nxt_label = 3;
 
     const Panel panel = Panel::status_lines;
 
@@ -29,7 +30,7 @@ void draw()
 
     Player& player = *map::player;
 
-    //Hit points
+    // Hit points
     P p(0, 0);
 
     std::string str = "HP:";
@@ -37,11 +38,11 @@ void draw()
 
     p.x += str.size();
 
-    str = to_str(player.hp()) + "/" + to_str(player.hp_max(true));
+    str = std::to_string(player.hp()) + "/" + std::to_string(player.hp_max(true));
 
     io::draw_text(str, panel, p, clr_red_lgt);
 
-    //Spirit
+    // Spirit
     p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
     str = "SP:";
@@ -50,11 +51,11 @@ void draw()
 
     p.x += str.size();
 
-    str = to_str(player.spi()) + "/" + to_str(player.spi_max());
+    str = std::to_string(player.spi()) + "/" + std::to_string(player.spi_max());
 
     io::draw_text(str, panel, p, clr_magenta);
 
-    //Insanity
+    // Insanity
     p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
     str = "Ins:";
@@ -71,7 +72,7 @@ void draw()
         shock < 75  ? clr_yellow    :
         shock < 100 ? clr_magenta   : clr_red_lgt;
 
-    str = to_str(shock) + "%";
+    str = std::to_string(shock) + "%";
 
     io::draw_text(str, panel, p, short_san_clr);
 
@@ -83,7 +84,7 @@ void draw()
 
     p.x += str.size();
 
-    str = to_str(ins) + "%";
+    str = std::to_string(ins) + "%";
 
     io::draw_text(str, panel, p, clr_magenta);
 
@@ -96,17 +97,17 @@ void draw()
 
     p.x += str.size();
 
-    str = to_str(game::clvl());
+    str = std::to_string(game::clvl());
 
     if (game::clvl() < player_max_clvl)
     {
-        //Not at maximum character level
-        str += "(" + to_str(game::xp()) + "%)";
+        // Not at maximum character level
+        str += "(" + std::to_string(game::xp()) + "%)";
     }
 
     io::draw_text(str, panel, p, clr_white);
 
-    //Wielded weapon
+    // Wielded weapon
     p.x = std::max(x_wielded_default, int(p.x + str.size() + 1));
 
     int x_wielded = p.x;
@@ -124,7 +125,7 @@ void draw()
     {
         io::draw_tile(wpn->tile(), panel, p, item_clr);
     }
-    else //Text mode
+    else // Text mode
     {
         io::draw_glyph(wpn->glyph(), panel, p, item_clr);
     }
@@ -133,10 +134,11 @@ void draw()
 
     const auto& data = wpn->data();
 
-    //If mainly a thrown weapon, force melee info - otherwise use weapon context.
-    const ItemRefAttInf att_inf = data.main_att_mode == AttMode::thrown ?
-                                     ItemRefAttInf::melee :
-                                     ItemRefAttInf::wpn_context;
+    // If mainly a throwing weapon, use melee info - otherwise use context
+    const ItemRefAttInf att_inf =
+        data.main_att_mode == AttMode::thrown ?
+        ItemRefAttInf::melee :
+        ItemRefAttInf::wpn_context;
 
     str = wpn->name(ItemRefType::plain,
                     ItemRefInf::yes,
@@ -152,18 +154,18 @@ void draw()
     ++p.y;
     p.x = 0;
 
-    //Dungeon level
+    // Dungeon level
     str = "Dlvl:";
 
     io::draw_text(str, panel, p, clr_gray_drk);
 
     p.x += str.size();
 
-    str = map::dlvl > 0 ? to_str(map::dlvl) : "-";
+    str = map::dlvl > 0 ? std::to_string(map::dlvl) : "-";
 
     io::draw_text(str, panel, p, clr_white);
 
-    //Encumbrance
+    // Encumbrance
     p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
     str = "W:";
@@ -174,14 +176,14 @@ void draw()
 
     const int enc = player.enc_percent();
 
-    str = to_str(enc) + "%";
+    str = std::to_string(enc) + "%";
 
     const Clr enc_clr = enc < 100 ? clr_white :
                         enc < enc_immobile_lvl ? clr_yellow : clr_red_lgt;
 
     io::draw_text(str, panel, p, enc_clr);
 
-    //Armor
+    // Armor
     const Item* const body_item = player.inv().item_in_slot(SlotId::body);
 
     if (body_item)
@@ -196,7 +198,7 @@ void draw()
 
             io::draw_tile(tile, panel, p, clr);
         }
-        else //Text mode
+        else // Text mode
         {
             str = body_item->glyph();
 
@@ -218,14 +220,16 @@ void draw()
         io::draw_text(str, panel, p, clr_white);
     }
 
-    //Lantern
-    const Item* const lantern_item = player.inv().item_in_backpack(ItemId::lantern);
+    // Lantern
+    const Item* const lantern_item =
+        player.inv().item_in_backpack(ItemId::lantern);
 
     if (lantern_item)
     {
         p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
-        const DeviceLantern* const lantern = static_cast<const DeviceLantern*>(lantern_item);
+        const DeviceLantern* const lantern =
+            static_cast<const DeviceLantern*>(lantern_item);
 
         if (config::is_tiles_mode())
         {
@@ -233,7 +237,7 @@ void draw()
 
             io::draw_tile(tile, panel, p, clr_yellow);
         }
-        else //Text mode
+        else // Text mode
         {
             str = lantern_item->glyph();
 
@@ -252,13 +256,14 @@ void draw()
 
         str = lantern->is_activated_ ? "On" : "Off";
 
-        str += "(" + to_str(lantern->nr_turns_left_) + ")";
+        str += "(" + std::to_string(lantern->nr_turns_left_) + ")";
 
         io::draw_text(str, panel, p, clr);
     }
 
-    //Medical bag
-    const Item* const medical_item = player.inv().item_in_backpack(ItemId::medical_bag);
+    // Medical bag
+    const Item* const medical_item =
+        player.inv().item_in_backpack(ItemId::medical_bag);
 
     if (medical_item)
     {
@@ -272,7 +277,7 @@ void draw()
 
             io::draw_tile(tile, panel, p, clr);
         }
-        else //Text mode
+        else // Text mode
         {
             str = medical_item->glyph();
 
@@ -287,16 +292,17 @@ void draw()
 
         p.x += str.size();
 
-        const MedicalBag* const medical_bag = static_cast<const MedicalBag*>(medical_item);
+        const MedicalBag* const medical_bag =
+            static_cast<const MedicalBag*>(medical_item);
 
         const int nr_suppl = medical_bag->nr_supplies_;
 
-        str = to_str(nr_suppl);
+        str = std::to_string(nr_suppl);
 
         io::draw_text(str, panel, p, clr_white);
     }
 
-    //Thrown item
+    // Thrown item
     p.x = x_wielded;
 
     auto* const thr_item = player.inv().item_in_slot(SlotId::thrown);
@@ -309,7 +315,7 @@ void draw()
         {
             io::draw_tile(thr_item->tile(), panel, p, item_clr);
         }
-        else //Text mode
+        else // Text mode
         {
             io::draw_glyph(thr_item->glyph(), panel, p, item_clr);
         }
@@ -342,18 +348,14 @@ void draw()
         p.x += current_prop_label.str.size() + 1;
     }
 
-    //Turn number
-    const int           turn        = game_time::turn();
-    const std::string   turn_str    = to_str(turn);
+    // Turn number
+    const int turn = game_time::turn_nr();
 
-    p.x = screen_w - turn_str.size() - 2; //"T" + ":"
+    const std::string turn_str = std::to_string(turn);
 
-    const bool is_free_step_turn = player.is_free_step_turn();
+    p.x = screen_w - turn_str.size() - 2; // "T" + ":"
 
-    const Clr turn_label_clr    = is_free_step_turn ? clr_black : clr_gray_drk;
-    const Clr turn_label_bg_clr = is_free_step_turn ? clr_green : clr_black;
-
-    io::draw_text("T", panel, p, turn_label_clr, turn_label_bg_clr);
+    io::draw_text("T", panel, p, clr_gray_drk, clr_black);
 
     ++p.x;
 
@@ -364,4 +366,4 @@ void draw()
     io::draw_text(turn_str, panel, p, clr_white);
 }
 
-} //status_lines
+} // status_lines

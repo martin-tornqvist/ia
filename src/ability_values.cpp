@@ -61,8 +61,7 @@ int AbilityVals::val(const AbilityId id,
                 ret += 10;
             }
 
-            if (
-                player_bon::traits[(size_t)Trait::perseverant] &&
+            if (player_bon::traits[(size_t)Trait::perseverant] &&
                 hp_pct <= perseverant_bon_hp_pct)
             {
                 ret += 30;
@@ -70,7 +69,7 @@ int AbilityVals::val(const AbilityId id,
             break;
 
         case AbilityId::ranged:
-            ret += 70;
+            ret += 60;
 
             if (player_bon::traits[(size_t)Trait::adept_marksman])
             {
@@ -82,8 +81,7 @@ int AbilityVals::val(const AbilityId id,
                 ret += 10;
             }
 
-            if (
-                player_bon::traits[(size_t)Trait::perseverant] &&
+            if (player_bon::traits[(size_t)Trait::perseverant] &&
                 hp_pct <= perseverant_bon_hp_pct)
             {
                 ret += 30;
@@ -95,35 +93,18 @@ int AbilityVals::val(const AbilityId id,
             }
             break;
 
-        case AbilityId::dodge_trap:
-            ret += 5;
-
+        case AbilityId::dodging:
             if (player_bon::traits[(size_t)Trait::dexterous])
             {
-                ret += 25;
+                ret += 15;
             }
 
             if (player_bon::traits[(size_t)Trait::lithe])
             {
-                ret += 25;
-            }
-            break;
-
-        case AbilityId::dodge_att:
-            ret += 10;
-
-            if (player_bon::traits[(size_t)Trait::dexterous])
-            {
-                ret += 25;
+                ret += 15;
             }
 
-            if (player_bon::traits[(size_t)Trait::lithe])
-            {
-                ret += 25;
-            }
-
-            if (
-                player_bon::traits[(size_t)Trait::perseverant] &&
+            if (player_bon::traits[(size_t)Trait::perseverant] &&
                 hp_pct <= perseverant_bon_hp_pct)
             {
                 ret += 50;
@@ -153,11 +134,6 @@ int AbilityVals::val(const AbilityId id,
         {
             //Searching must ALWAYS be at least 1 to avoid trapping the player
             ret = std::max(ret, 1);
-        }
-        else if (id == AbilityId::dodge_att)
-        {
-            //It should not be possible to dodge every attack
-            ret = std::min(ret, 95);
         }
     }
 

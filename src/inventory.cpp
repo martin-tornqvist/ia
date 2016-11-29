@@ -606,16 +606,16 @@ UnequipAllowed Inventory::try_unequip_slot(const SlotId id)
     return unequip_allowed_result;
 }
 
-void Inventory::swap_wielded_and_prepared(const PassTime pass_time)
+void Inventory::swap_wielded_and_prepared()
 {
     auto& slot1 = slots_[(size_t)SlotId::wpn];
     auto& slot2 = slots_[(size_t)SlotId::wpn_alt];
+
     Item* item1 = slot1.item;
     Item* item2 = slot2.item;
+
     slot1.item = item2;
     slot2.item = item1;
-
-    game_time::tick(pass_time);
 }
 
 bool Inventory::has_item_in_slot(SlotId id) const

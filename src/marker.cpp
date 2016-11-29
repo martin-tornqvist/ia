@@ -378,15 +378,18 @@ void Viewing::handle_input(const InputData& input)
 {
     if (input.key == 'v')
     {
-        const auto* const actor = map::actor_at_pos(pos_);
+        auto* const actor = map::actor_at_pos(pos_);
 
-        if (actor                   &&
-            actor != map::player    &&
+        if (actor &&
+            actor != map::player &&
             map::player->can_see_actor(*actor))
         {
             msg_log::clear();
 
-            look::print_detailed_actor_descr(*actor);
+            std::unique_ptr<ViewActorDescr>
+                view_actor_descr(new ViewActorDescr(*actor));
+
+            states::push(std::move(view_actor_descr));
         }
     }
     else if (input.key == SDLK_SPACE ||
@@ -411,20 +414,13 @@ void Aiming::on_moved()
         !actor->is_player() &&
         map::player->can_see_actor(*actor))
     {
-        const bool gets_undead_bane_bon =
-            player_bon::gets_undead_bane_bon(actor->data());
+        RangedAttData data(map::player,
+                           map::player->pos,    // Origin
+                           actor->pos,          // Aim position
+                           actor->pos,          // Current position
+                           wpn_);
 
-        if (!actor->has_prop(PropId::ethereal) ||
-            gets_undead_bane_bon)
-        {
-            RangedAttData data(map::player,
-                               map::player->pos,    // Origin
-                               actor->pos,          // Aim position
-                               actor->pos,          // Current position
-                               wpn_);
-
-            msg_log::add(to_str(data.hit_chance_tot) + "% hit chance.");
-        }
+        msg_log::add(std::to_string(data.hit_chance_tot) + "% hit chance.");
     }
 
     msg_log::add("[f] to fire" + cancel_info_str);
@@ -504,7 +500,7 @@ void Throwing::on_moved()
                               actor->pos,       // Current position
                               *item_to_throw_);
 
-            msg_log::add(to_str(data.hit_chance_tot) + "% hit chance.");
+            msg_log::add(std::to_string(data.hit_chance_tot) + "% hit chance.");
         }
     }
 

@@ -434,7 +434,7 @@ public:
 protected:
     std::string name_inf() const override
     {
-        return "{" + to_str(ammo_) + "}";
+        return "{" + std::to_string(ammo_) + "}";
     }
 };
 
@@ -482,7 +482,7 @@ protected:
 
     std::string name_inf() const override
     {
-        return "{" + to_str(nr_supplies_) + "}";
+        return "{" + std::to_string(nr_supplies_) + "}";
     }
 
     int nr_turns_left_action_;
@@ -526,7 +526,7 @@ public:
 protected:
     std::string name_inf() const override
     {
-        return "{" + to_str(nr_turns_left_) + "}";
+        return "{" + std::to_string(nr_turns_left_) + "}";
     }
 
     int nr_turns_left_;

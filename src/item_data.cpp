@@ -118,7 +118,7 @@ ItemDataT::ItemArmorData::ItemArmorData() :
 namespace item_data
 {
 
-ItemDataT data[int(ItemId::END)];
+ItemDataT data[(size_t)ItemId::END];
 
 namespace
 {
@@ -133,7 +133,7 @@ void add_feature_found_in(ItemDataT& data,
 void mod_spawn_chances(ItemDataT& data, const double factor)
 {
     data.chance_to_incl_in_floor_spawn_list =
-        int(double(data.chance_to_incl_in_floor_spawn_list) * factor);
+        (int)((double)data.chance_to_incl_in_floor_spawn_list * factor);
 
     for (ItemContainerSpawnRule& container_rule : data.container_spawn_rules)
     {
@@ -142,7 +142,9 @@ void mod_spawn_chances(ItemDataT& data, const double factor)
     }
 }
 
-//------------------------------- ITEM ARCHETYPES (DEFAULTS)
+// -----------------------------------------------------------------------------
+// Item archetypes (defaults)
+// -----------------------------------------------------------------------------
 void reset_data(ItemDataT& d, ItemType const item_type)
 {
     switch (item_type)
@@ -1624,16 +1626,10 @@ void init_data_list()
         "straps.",
 
         "It can absorb a high amount of damage, but it makes sneaking and "
-        "dodging very difficult. Also, due to the narrow slit of the helmet, "
-        "aiming is slightly more difficult, and it is harder to detect "
-        "sneaking enemies and hidden objects."
+        "dodging very difficult."
     };
-    d.ability_mods_while_equipped[int(AbilityId::stealth)]     = -50;
-    d.ability_mods_while_equipped[int(AbilityId::dodge_att)]   = -50;
-    d.ability_mods_while_equipped[int(AbilityId::dodge_trap)]  = -50;
-    d.ability_mods_while_equipped[int(AbilityId::melee)]       = -10;
-    d.ability_mods_while_equipped[int(AbilityId::ranged)]      = -10;
-    d.ability_mods_while_equipped[int(AbilityId::searching)]   = -6;
+    d.ability_mods_while_equipped[(size_t)AbilityId::stealth]   = -50;
+    d.ability_mods_while_equipped[(size_t)AbilityId::dodging]   = -50;
     d.weight = ItemWeight::heavy;
     d.clr = clr_white;
     d.spawn_std_range.min = 2;
@@ -1652,9 +1648,8 @@ void init_data_list()
         "offers very good protection for its weight. Sneaking and dodging is "
         "slightly more difficult."
     };
-    d.ability_mods_while_equipped[int(AbilityId::stealth)]     = -20;
-    d.ability_mods_while_equipped[int(AbilityId::dodge_att)]   = -20;
-    d.ability_mods_while_equipped[int(AbilityId::dodge_trap)]  = -20;
+    d.ability_mods_while_equipped[(size_t)AbilityId::stealth]   = -20;
+    d.ability_mods_while_equipped[(size_t)AbilityId::dodging]   = -20;
     d.weight = ItemWeight::medium;
     d.clr = clr_green;
     d.spawn_std_range.min = 3;
@@ -1677,12 +1672,11 @@ void init_data_list()
         "Also, because of the hood and mask, aiming and detecting hidden "
         "enemies and objects is somewhat harder."
     };
-    d.ability_mods_while_equipped[int(AbilityId::stealth)]     = -20;
-    d.ability_mods_while_equipped[int(AbilityId::dodge_att)]   = -20;
-    d.ability_mods_while_equipped[int(AbilityId::dodge_trap)]  = -20;
-    d.ability_mods_while_equipped[int(AbilityId::melee)]       = -10;
-    d.ability_mods_while_equipped[int(AbilityId::ranged)]      = -10;
-    d.ability_mods_while_equipped[int(AbilityId::searching)]   = -6;
+    d.ability_mods_while_equipped[(size_t)AbilityId::stealth]   = -20;
+    d.ability_mods_while_equipped[(size_t)AbilityId::melee]     = -10;
+    d.ability_mods_while_equipped[(size_t)AbilityId::ranged]    = -10;
+    d.ability_mods_while_equipped[(size_t)AbilityId::dodging]   = -20;
+    d.ability_mods_while_equipped[(size_t)AbilityId::searching] = -6;
     d.weight = ItemWeight::medium;
     d.clr = clr_red_lgt;
     d.spawn_std_range.min = 3;
@@ -1722,9 +1716,9 @@ void init_data_list()
         "Due to the small eye windows, aiming is slightly more difficult, and "
         "it is harder to detect sneaking enemies and hidden objects."
     };
-    d.ability_mods_while_equipped[int(AbilityId::melee)]      = -10;
-    d.ability_mods_while_equipped[int(AbilityId::ranged)]     = -10;
-    d.ability_mods_while_equipped[int(AbilityId::searching)]  = -6;
+    d.ability_mods_while_equipped[(size_t)AbilityId::melee]     = -10;
+    d.ability_mods_while_equipped[(size_t)AbilityId::ranged]    = -10;
+    d.ability_mods_while_equipped[(size_t)AbilityId::searching] = -6;
     d.is_stackable = false;
     d.clr = clr_brown;
     d.tile = TileId::gas_mask;

@@ -6,23 +6,7 @@
 #include "feature.hpp"
 #include "actor_data.hpp"
 
-
-//
-// TODO: Use the time system from "sci-fi RL" instead. The current time system
-//       in IA is extremely weird!
-//
-
 class Mob;
-
-enum class TurnType
-{
-    fast,
-    normal1,
-    slow,
-    fastest,
-    normal2,
-    END
-};
 
 namespace game_time
 {
@@ -40,9 +24,9 @@ void load();
 
 void add_actor(Actor* actor);
 
-void tick(const PassTime pass_time = PassTime::yes);
+void tick(const int speed_pct_diff = 0);
 
-int turn();
+int turn_nr();
 
 Actor* current_actor();
 
@@ -60,4 +44,4 @@ void update_light_map();
 
 } //game_time
 
-#endif
+#endif // GAME_TIME_HPP

@@ -37,7 +37,7 @@ void CharacterDescr::on_start()
 
     for (const auto& event : events)
     {
-        std::string ev_str = to_str(event.turn);
+        std::string ev_str = std::to_string(event.turn);
 
         const int turn_str_max_w = 10;
 
@@ -51,42 +51,6 @@ void CharacterDescr::on_start()
     }
 
     lines_.push_back(StrAndClr("", clr_text));
-
-    const AbilityVals& abilities = map::player->data().ability_vals;
-
-    lines_.push_back(
-        StrAndClr("Combat skills",
-                  clr_heading));
-
-    const int base_melee =
-        std::min(100, abilities.val(AbilityId::melee,
-                                    true,
-                                    *map::player));
-
-    const int base_ranged =
-        std::min(100, abilities.val(AbilityId::ranged,
-                                    true,
-                                    *map::player));
-
-    const int base_dodge_attacks =
-        std::min(100, abilities.val(AbilityId::dodge_att,
-                                    true,
-                                    *map::player));
-
-    lines_.push_back(
-        StrAndClr(offset + "Melee    " + to_str(base_melee) + "%",
-                  clr_text));
-
-    lines_.push_back(
-        StrAndClr(offset + "Ranged   " + to_str(base_ranged) + "%",
-                  clr_text));
-
-    lines_.push_back(
-        StrAndClr(offset + "Dodging  " + to_str(base_dodge_attacks) + "%",
-                  clr_text));
-
-    lines_.push_back(
-        StrAndClr("", clr_text));
 
     lines_.push_back(
         StrAndClr("Mental disorders",

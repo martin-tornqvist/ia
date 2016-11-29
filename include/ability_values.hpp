@@ -9,8 +9,7 @@ enum class AbilityId
     searching,
     ranged,
     melee,
-    dodge_trap,
-    dodge_att,
+    dodging,
     stealth,
     END
 };
@@ -19,7 +18,10 @@ enum class AbilityId
 class AbilityVals
 {
 public:
-    AbilityVals() {reset();}
+    AbilityVals()
+    {
+        reset();
+    }
 
     AbilityVals& operator=(const AbilityVals& other)
     {
@@ -33,7 +35,9 @@ public:
 
     void reset();
 
-    int val(const AbilityId id, const bool is_affected_by_props, const Actor& actor) const;
+    int val(const AbilityId id,
+            const bool is_affected_by_props,
+            const Actor& actor) const;
 
     int raw_val(const AbilityId id)
     {
@@ -59,7 +63,8 @@ enum AbilityRollResult
 namespace ability_roll
 {
 
-AbilityRollResult roll(const int tot_skill_value, const Actor* const actor_rolling);
+AbilityRollResult roll(const int tot_skill_value,
+                       const Actor* const actor_rolling);
 
 } //ability_roll
 

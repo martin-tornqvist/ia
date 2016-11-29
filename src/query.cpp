@@ -108,7 +108,7 @@ int number(const P& pos,
                        pos,
                        P(max_nr_digits + 1, 1));
 
-    const std::string str = (ret_num == 0 ? "" : to_str(ret_num)) + "_";
+    const std::string str = (ret_num == 0 ? "" : std::to_string(ret_num)) + "_";
 
     io::draw_text(str, Panel::screen, pos, clr);
 
@@ -137,7 +137,7 @@ int number(const P& pos,
             return cancel_returns_default ? default_value : -1;
         }
 
-        const std::string ret_num_str = to_str(ret_num);
+        const std::string ret_num_str = std::to_string(ret_num);
 
         const int current_num_digits = ret_num_str.size();
 
@@ -149,7 +149,7 @@ int number(const P& pos,
                                pos,
                                P(max_nr_digits + 1, 1));
 
-            io::draw_text((ret_num == 0 ? "" : to_str(ret_num)) + "_",
+            io::draw_text((ret_num == 0 ? "" : std::to_string(ret_num)) + "_",
                               Panel::screen,
                               pos,
                               clr);
@@ -168,7 +168,7 @@ int number(const P& pos,
                                pos,
                                P(max_nr_digits + 1, 1));
 
-            io::draw_text((ret_num == 0 ? "" : to_str(ret_num)) + "_",
+            io::draw_text((ret_num == 0 ? "" : std::to_string(ret_num)) + "_",
                               Panel::screen,
                               pos,
                               clr);

@@ -112,11 +112,11 @@ struct MonGroupSpawnRule
 
 enum class ActorSpeed
 {
-    sluggish,
-    slow,
-    normal,
-    fast,
-    fastest,
+    sluggish    = 40,
+    slow        = 80,
+    normal      = 100,
+    fast        = 150,
+    fastest     = 300,
     END
 };
 
@@ -168,7 +168,7 @@ struct ActorDataT
     Clr color;
     std::vector<MonGroupSpawnRule> group_sizes;
     int hp, spi, dmg_melee, dmg_ranged;
-    ActorSpeed speed;
+    int speed_pct;
     AbilityVals ability_vals;
     bool natural_props[(size_t)PropId::END];
     int ranged_cooldown_turns, spell_cooldown_turns;

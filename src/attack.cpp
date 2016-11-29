@@ -25,239 +25,246 @@ AttData::AttData(Actor* const attacker,
                  const Item& att_item) :
     attacker        (attacker),
     defender        (defender),
+    skill_mod       (0),
+    wpn_mod         (0),
+    dodging_mod     (0),
+    state_mod       (0),
+    hit_chance_tot  (0),
     att_result      (fail),
     dmg             (0),
     is_intrinsic_att(att_item.data().type == ItemType::melee_wpn_intr ||
-                     att_item.data().type == ItemType::ranged_wpn_intr),
-    is_ethereal_defender_missed(false) {}
+                     att_item.data().type == ItemType::ranged_wpn_intr) {}
 
-MeleeAttData::MeleeAttData(Actor* const attacker,
-                           Actor& defender,
-                           const Wpn& wpn) :
-    AttData             (attacker, &defender, wpn),
-    is_defender_dodging (false),
-    is_backstab         (false),
-    is_weak_attack      (false)
+bool AttData::is_defender_aware(const Actor* const attacker,
+                                const Actor& defender) const
 {
-    const P& def_pos = defender.pos;
-    bool is_defender_aware = true;
-    const ActorDataT& defender_data = defender.data();
+    bool is_aware = false;
 
     if (defender.is_player())
     {
         if (attacker)
         {
-            auto* const mon = static_cast<Mon*>(attacker);
+            const auto* const mon = static_cast<const Mon*>(attacker);
 
-            is_defender_aware =
+            is_aware =
                 (mon->player_aware_of_me_counter_ > 0) ||
                 player_bon::traits[(size_t)Trait::vigilant];
         }
         else // No attacker actor (e.g. a trap)
         {
-            is_defender_aware = true;
+            is_aware = true;
         }
     }
     else // Defender is monster
     {
-        auto* const mon = static_cast<Mon*>(&defender);
+        auto* const mon = static_cast<const Mon*>(&defender);
 
-        is_defender_aware = mon->aware_counter_ > 0;
+        is_aware = mon->aware_counter_ > 0;
     }
 
-    if (is_defender_aware)
+    return is_aware;
+}
+
+MeleeAttData::MeleeAttData(Actor* const attacker,
+                           Actor& defender,
+                           const Wpn& wpn) :
+    AttData             (attacker, &defender, wpn),
+    is_backstab         (false),
+    is_weak_attack      (false)
+{
+    const P& def_pos = defender.pos;
+
+    const bool is_defender_aware =
+        AttData::is_defender_aware(attacker, defender);
+
+    const ActorDataT& defender_data = defender.data();
+
+    //
+    // Determine attack result
+    //
+    skill_mod =
+        attacker ?
+        attacker->ability(AbilityId::melee, true) :
+        50;
+
+    wpn_mod = wpn.data().melee.hit_chance_mod;
+
+    dodging_mod =
+        is_defender_aware ?
+        -defender.ability(AbilityId::dodging, true) :
+        0;
+
+    bool is_attacker_aware = true;
+
+    // Attacker gets a penalty against unseen targets
+    //
+    // NOTE: The AI never attacks unseen targets, so in the case of a
+    //       monster attacker, we can assume the target is seen. We only
+    //       need to check if target is seen when player is attacking.
+    bool can_attacker_see_tgt = true;
+
+    if (attacker)
     {
-        const int defender_dodge_skill =
-            defender.ability(AbilityId::dodge_att, true);
-
-        const int dodge_mod_at_feature =
-            map::cells[def_pos.x][def_pos.y].rigid->dodge_modifier();
-
-        const int dodge_chance_tot =
-            defender_dodge_skill + dodge_mod_at_feature;
-
-        if (dodge_chance_tot > 0)
+        if (attacker->is_player())
         {
-            is_defender_dodging =
-                ability_roll::roll(dodge_chance_tot, &defender) >= success;
+            Mon& mon = static_cast<Mon&>(defender);
+
+            is_attacker_aware = mon.player_aware_of_me_counter_ > 0;
+
+            can_attacker_see_tgt = map::player->can_see_actor(defender);
+        }
+        else // Attacker is monster
+        {
+            Mon* const mon = static_cast<Mon*>(attacker);
+
+            is_attacker_aware = mon->aware_counter_ > 0;
         }
     }
 
-    if (!is_defender_dodging)
+    // Check for extra attack bonuses, such as defender being immobilized.
+    bool is_big_att_bon = false;
+    bool is_small_att_bon = false;
+
+    if (!is_defender_aware)
     {
-        //
-        // Determine attack result
-        //
-        int tot_skill = 0;
+        // Give big attack bonus if defender is unaware of the attacker.
+        is_big_att_bon = true;
+    }
 
-        if (attacker)
+    if (!is_big_att_bon)
+    {
+        // Give big attack bonus if defender is stuck in trap.
+        const auto* const f = map::cells[def_pos.x][def_pos.y].rigid;
+
+        if (f->id() == FeatureId::trap)
         {
-            tot_skill = attacker->ability(AbilityId::melee, true);
-        }
+            const auto* const t = static_cast<const Trap*>(f);
 
-        tot_skill += wpn.data().melee.hit_chance_mod;
-
-        bool is_attacker_aware = true;
-
-        // Attacker gets a penalty against unseen targets
-        //
-        // NOTE: The AI never attacks unseen targets, so in the case of a
-        //       monster attacker, we can assume the target is seen. We only
-        //       need to check if target is seen when player is attacking.
-        bool can_attacker_see_tgt = true;
-
-        if (attacker)
-        {
-            if (attacker->is_player())
+            if (t->is_holding_actor())
             {
-                Mon& mon = static_cast<Mon&>(defender);
-
-                is_attacker_aware = mon.player_aware_of_me_counter_ > 0;
-
-                can_attacker_see_tgt = map::player->can_see_actor(defender);
-            }
-            else // Attacker is monster
-            {
-                Mon* const mon = static_cast<Mon*>(attacker);
-
-                is_attacker_aware = mon->aware_counter_ > 0;
-            }
-        }
-
-        // If attacker is aware of the defender, check for extra attack bonuses
-        // such as defender being immobilized or blind.
-        if (is_attacker_aware)
-        {
-            bool is_big_att_bon = false;
-            bool is_small_att_bon = false;
-
-            if (!is_defender_aware)
-            {
-                // Give big attack bonus if defender is unaware of the attacker.
                 is_big_att_bon = true;
             }
+        }
+    }
 
-            if (!is_big_att_bon)
-            {
-                // Give big attack bonus if defender is stuck in trap.
-                const auto* const f = map::cells[def_pos.x][def_pos.y].rigid;
+    if (!is_big_att_bon)
+    {
+        // Check if attacker gets a bonus due to a defender property.
 
-                if (f->id() == FeatureId::trap)
-                {
-                    const auto* const t = static_cast<const Trap*>(f);
+        if (defender.has_prop(PropId::paralyzed) ||
+            defender.has_prop(PropId::nailed) ||
+            defender.has_prop(PropId::fainted))
+        {
+            // Give big attack bonus if defender is completely unable to
+            // fight.
+            is_big_att_bon = true;
+        }
+        else if (defender.has_prop(PropId::confused) ||
+                 defender.has_prop(PropId::slowed) ||
+                 defender.has_prop(PropId::burning))
+        {
+            // Give small attack bonus if defender has problems fighting
+            is_small_att_bon = true;
+        }
+    }
 
-                    if (t->is_holding_actor())
-                    {
-                        is_big_att_bon = true;
-                    }
-                }
-            }
+    // Give small attack bonus if defender cannot see.
+    if (!is_big_att_bon && !is_small_att_bon)
+    {
+        if (!defender.prop_handler().allow_see())
+        {
+            is_small_att_bon = true;
+        }
+    }
 
-            if (!is_big_att_bon)
-            {
-                // Check if attacker gets a bonus due to a defender property.
+    state_mod =
+        is_big_att_bon      ? 50 :
+        is_small_att_bon    ? 20 : 0;
 
-                if (defender.has_prop(PropId::paralyzed) ||
-                    defender.has_prop(PropId::nailed)    ||
-                    defender.has_prop(PropId::fainted))
-                {
-                    // Give big attack bonus if defender is completely unable to
-                    // fight.
-                    is_big_att_bon = true;
-                }
-                else if (defender.has_prop(PropId::confused) ||
-                         defender.has_prop(PropId::slowed) ||
-                         defender.has_prop(PropId::burning))
-                {
-                    // Give small attack bonus if defender has problems fighting
-                    is_small_att_bon = true;
-                }
-            }
+    // Lower hit chance if attacker cannot see target (e.g. attacking
+    // invisible creature)
+    if (!can_attacker_see_tgt)
+    {
+        state_mod -= 25;
+    }
 
-            // Give small attack bonus if defender cannot see.
-            if (!is_big_att_bon && !is_small_att_bon)
-            {
-                if (!defender.prop_handler().allow_see())
-                {
-                    is_small_att_bon = true;
-                }
-            }
+    // Lower hit chance if defender is ethereal (except if Bane of the Undead
+    // bonus applies)
+    const bool apply_undead_bane_bon =
+        (attacker ==  map::player) &&
+        player_bon::gets_undead_bane_bon(defender_data);
 
-            // Apply the hit chance bonus (if any)
-            tot_skill += is_big_att_bon ? 50 : (is_small_att_bon ? 20 : 0);
+    const bool apply_ethereal_defender_pen =
+        defender.has_prop(PropId::ethereal) &&
+        !apply_undead_bane_bon;
 
-            // Lower hit chance if attacker cannot see target (e.g. attacking
-            // invisible creature)
-            if (!can_attacker_see_tgt)
-            {
-                tot_skill -= 25;
-            }
+    if (apply_ethereal_defender_pen)
+    {
+        state_mod -= 50;
+    }
+
+    hit_chance_tot =
+        skill_mod +
+        wpn_mod +
+        dodging_mod +
+        state_mod;
+
+    // NOTE: Total skill may be negative or above 100 (the attacker may still
+    //       critically hit or miss)
+    att_result = ability_roll::roll(hit_chance_tot, attacker);
+
+    //
+    // Determine damage
+    //
+    DiceParam dmg_dice = wpn.dmg(AttMode::melee, attacker);
+
+    if (apply_undead_bane_bon)
+    {
+        dmg_dice.plus += 2;
+    }
+
+    if (attacker && attacker->has_prop(PropId::weakened))
+    {
+        // Weak attack (min damage)
+        dmg = dmg_dice.min();
+        is_weak_attack = true;
+    }
+    else // Attacker not weakened, or not an actor attacking (e.g. a trap)
+    {
+        if (att_result == success_critical)
+        {
+            // Critical hit (max damage)
+            dmg = std::max(1, dmg_dice.max());
+        }
+        else // Not critical hit
+        {
+            dmg = std::max(1, dmg_dice.roll());
         }
 
-        // NOTE: Total skill may be negative (attacker may still critically hit)
-        att_result = ability_roll::roll(tot_skill, attacker);
-
-        const bool apply_undead_bane_bon =
-            (attacker == map::player) &&
-            player_bon::gets_undead_bane_bon(defender_data);
-
-        // Ethereal target missed?
-        if (defender.has_prop(PropId::ethereal) &&
-            !apply_undead_bane_bon)
+        if (attacker &&
+            is_attacker_aware &&
+            !is_defender_aware)
         {
-            is_ethereal_defender_missed = rnd::fraction(2, 3);
-        }
+            // Backstab (extra damage)
 
-        //
-        // Determine damage
-        //
-        DiceParam dmg_dice = wpn.dmg(AttMode::melee, attacker);
+            int dmg_pct = 150;
 
-        if (apply_undead_bane_bon)
-        {
-            dmg_dice.plus += 2;
-        }
-
-        if (attacker && attacker->has_prop(PropId::weakened))
-        {
-            // Weak attack (min damage)
-            dmg = dmg_dice.min();
-            is_weak_attack = true;
-        }
-        else // Attacker not weakened, or not an actor attacking (e.g. a trap)
-        {
-            if (att_result == success_critical)
+            // +50% if player and has the "Vicious" trait.
+            if ((attacker == map::player) &&
+                player_bon::traits[(size_t)Trait::vicious])
             {
-                // Critical hit (max damage)
-                dmg = std::max(1, dmg_dice.max());
-            }
-            else // Not critical hit
-            {
-                dmg = std::max(1, dmg_dice.roll());
+                dmg_pct += 50;
             }
 
-            if (attacker && is_attacker_aware && !is_defender_aware)
+            // Double damage percent if attacking with a dagger.
+            if (wpn.data().id == ItemId::dagger)
             {
-                // Backstab (extra damage)
-
-                int dmg_pct = 150;
-
-                // +50% if player and has the "Vicious" trait.
-                if ((attacker == map::player) &&
-                    player_bon::traits[(size_t)Trait::vicious])
-                {
-                    dmg_pct += 50;
-                }
-
-                // Double damage percent if attacking with a dagger.
-                if (wpn.data().id == ItemId::dagger)
-                {
-                    dmg_pct *= 2;
-                }
-
-                dmg = (dmg * dmg_pct) / 100;
-                is_backstab = true;
+                dmg_pct *= 2;
             }
+
+            dmg = (dmg * dmg_pct) / 100;
+
+            is_backstab = true;
         }
     }
 }
@@ -270,11 +277,11 @@ RangedAttData::RangedAttData(Actor* const attacker,
                              ActorSize aim_lvl) :
     AttData             (attacker, nullptr, wpn),
     aim_pos             (aim_pos),
-    hit_chance_tot      (0),
     intended_aim_lvl    (ActorSize::none),
     defender_size       (ActorSize::none),
     verb_player_attacks (wpn.data().ranged.att_msgs.player),
-    verb_other_attacks  (wpn.data().ranged.att_msgs.other)
+    verb_other_attacks  (wpn.data().ranged.att_msgs.other),
+    dist_mod            (0)
 {
     Actor* const actor_aimed_at = map::actor_at_pos(aim_pos);
 
@@ -312,45 +319,54 @@ RangedAttData::RangedAttData(Actor* const attacker,
 
         const P& def_pos(defender->pos);
 
-        const int att_skill =
+        skill_mod =
             attacker ?
             attacker->ability(AbilityId::ranged, true) :
             50;
 
-        const int wpn_mod = wpn.data().ranged.hit_chance_mod;
+        wpn_mod = wpn.data().ranged.hit_chance_mod;
+
+        const bool is_defender_aware =
+            AttData::is_defender_aware(attacker, *defender);
+
+        dodging_mod =
+            is_defender_aware ?
+            -defender->ability(AbilityId::dodging, true) :
+            0;
 
         const int dist_to_tgt = king_dist(attacker_orign, def_pos);
 
-        const int dist_mod = 15 - (dist_to_tgt * 5);
-
-        const ActorSpeed def_speed = defender_data.speed;
-
-        const int speed_mod =
-            def_speed == ActorSpeed::sluggish ?  25 :
-            def_speed == ActorSpeed::slow ?  10 :
-            def_speed == ActorSpeed::normal ?   0 :
-            def_speed == ActorSpeed::fast ? -10 : -30;
+        dist_mod = 15 - (dist_to_tgt * 5);
 
         defender_size = defender_data.actor_size;
 
-        const int size_mod =
-            defender_size == ActorSize::floor ?
-            -15 : 0;
-
-        int unaware_def_mod = 0;
+        state_mod = 0;
 
         if (attacker->is_player() &&
             static_cast<Mon*>(defender)->aware_counter_ <= 0)
         {
-            unaware_def_mod = 25;
+            state_mod = 25;
         }
 
-        hit_chance_tot = att_skill +
-                         wpn_mod +
-                         dist_mod +
-                         speed_mod +
-                         size_mod +
-                         unaware_def_mod;
+        const bool apply_undead_bane_bon =
+            (attacker == map::player) &&
+            player_bon::gets_undead_bane_bon(defender_data);
+
+        const bool apply_ethereal_defender_pen =
+            defender->has_prop(PropId::ethereal) &&
+            !apply_undead_bane_bon;
+
+        if (apply_ethereal_defender_pen)
+        {
+            state_mod -= 50;
+        }
+
+        hit_chance_tot =
+            skill_mod +
+            wpn_mod +
+            dodging_mod +
+            dist_mod +
+            state_mod;
 
         set_constr_in_range(5, hit_chance_tot, 99);
 
@@ -359,15 +375,6 @@ RangedAttData::RangedAttData(Actor* const attacker,
         if (att_result >= success)
         {
             TRACE_VERBOSE << "Attack roll succeeded" << std::endl;
-
-            const bool apply_undead_bane_bon =
-                (attacker == map::player) &&
-                player_bon::gets_undead_bane_bon(defender_data);
-
-            if (defender->has_prop(PropId::ethereal) && !apply_undead_bane_bon)
-            {
-                is_ethereal_defender_missed = rnd::fraction(2, 3);
-            }
 
             bool player_aim_x3 = false;
 
@@ -410,9 +417,9 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
                            const Item& item,
                            ActorSize aim_lvl) :
     AttData             (attacker, nullptr, item),
-    hit_chance_tot      (0),
     intended_aim_lvl    (ActorSize::none),
-    defender_size       (ActorSize::none)
+    defender_size       (ActorSize::none),
+    dist_mod            (0)
 {
     Actor* const actor_aimed_at = map::actor_at_pos(aim_pos);
 
@@ -448,9 +455,20 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
 
         const ActorDataT& defender_data = defender->data();
 
-        const int att_skill = attacker->ability(AbilityId::ranged, true);
+        skill_mod =
+            attacker ?
+            attacker->ability(AbilityId::ranged, true) :
+            50;
 
-        const int wpn_mod = item.data().ranged.throw_hit_chance_mod;
+        wpn_mod = item.data().ranged.throw_hit_chance_mod;
+
+        const bool is_defender_aware =
+            AttData::is_defender_aware(attacker, *defender);
+
+        dodging_mod =
+            is_defender_aware ?
+            -defender->ability(AbilityId::dodging, true) :
+            0;
 
         const P& att_pos(attacker->pos);
         const P& def_pos(defender->pos);
@@ -461,36 +479,37 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
                       def_pos.x,
                       def_pos.y);
 
-        const int dist_mod = 15 - (dist_to_tgt * 5);
-
-        const ActorSpeed def_speed = defender_data.speed;
-
-        const int speed_mod =
-            def_speed == ActorSpeed::sluggish ?  25 :
-            def_speed == ActorSpeed::slow ?  10 :
-            def_speed == ActorSpeed::normal ?   0 :
-            def_speed == ActorSpeed::fast ? -15 : -35;
+        dist_mod = 15 - (dist_to_tgt * 5);
 
         defender_size = defender_data.actor_size;
 
-        const int size_mod =
-            defender_size == ActorSize::floor ?
-            -15 : 0;
-
-        int unaware_def_mod = 0;
+        state_mod = 0;
 
         if (attacker->is_player() &&
             static_cast<Mon*>(defender)->aware_counter_ <= 0)
         {
-            unaware_def_mod = 25;
+            state_mod = 25;
         }
 
-        hit_chance_tot = att_skill +
-                         wpn_mod +
-                         dist_mod +
-                         speed_mod +
-                         size_mod +
-                         unaware_def_mod;
+        const bool apply_undead_bane_bon =
+            (attacker == map::player) &&
+            player_bon::gets_undead_bane_bon(defender_data);
+
+        const bool apply_ethereal_defender_pen =
+            defender->has_prop(PropId::ethereal) &&
+            !apply_undead_bane_bon;
+
+        if (apply_ethereal_defender_pen)
+        {
+            state_mod -= 50;
+        }
+
+        hit_chance_tot =
+            skill_mod +
+            wpn_mod +
+            dodging_mod +
+            dist_mod +
+            state_mod;
 
         set_constr_in_range(5, hit_chance_tot, 99);
 
@@ -499,15 +518,6 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
         if (att_result >= success)
         {
             TRACE_VERBOSE << "Attack roll succeeded" << std::endl;
-
-            const bool apply_undead_bane_bon =
-                (attacker == map::player) &&
-                player_bon::gets_undead_bane_bon(defender_data);
-
-            if (defender->has_prop(PropId::ethereal) && !apply_undead_bane_bon)
-            {
-                is_ethereal_defender_missed = rnd::fraction(2, 3);
-            }
 
             bool player_aim_x3 = false;
 
@@ -564,78 +574,14 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
     }
 
     // Only print a message if player is not involved
-    if (att_data.defender != map::player && att_data.attacker != map::player)
+    if ((att_data.defender != map::player) &&
+        (att_data.attacker != map::player))
     {
         // TODO: This message is not always appropriate (e.g. spear traps)
         snd_msg = "I hear fighting.";
     }
 
-    if (att_data.is_defender_dodging)
-    {
-        //
-        // Defender dodges
-        //
-        if (att_data.defender->is_player())
-        {
-            std::string msg = "I dodge";
-
-            if (att_data.attacker)
-            {
-                if (map::player->can_see_actor(*att_data.attacker))
-                {
-                    other_name = att_data.attacker->name_the();
-                }
-                else // Player cannot see attacker
-                {
-                    other_name = "it";
-                }
-
-                msg += " an attack from " + other_name;
-            }
-
-            msg_log::add(msg + ".", clr_msg_good);
-        }
-        else // Defender is monster
-        {
-            const bool player_see_defender =
-                map::player->can_see_actor(*att_data.defender);
-
-            if (att_data.attacker == map::player)
-            {
-                if (player_see_defender)
-                {
-                    other_name = att_data.defender->name_the();
-                }
-                else // Player cannot see defender
-                {
-                    other_name = "It";
-                }
-
-                msg_log::add(other_name + " dodges my attack.");
-            }
-            else // Attacker is not player
-            {
-                // Only print message if there is no attacker actor (no messages
-                // for monsters fighting each other)
-                if (!att_data.attacker && player_see_defender)
-                {
-                    other_name = att_data.defender->name_the();
-
-                    msg_log::add(other_name + " dodges.");
-                }
-            }
-        }
-
-        Snd snd(snd_msg, wpn.data().melee.miss_sfx,
-                IgnoreMsgIfOriginSeen::yes,
-                att_data.defender->pos,
-                att_data.attacker,
-                SndVol::low,
-                snd_alerts_mon);
-
-        snd_emit::run(snd);
-    }
-    else if (att_data.att_result <= fail)
+    if (att_data.att_result <= fail)
     {
         SfxId sfx = wpn.data().melee.miss_sfx;
 
@@ -655,7 +601,8 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
                 msg_log::add("I miss.");
             }
         }
-        else if (att_data.attacker) // Attacker is monster
+        // Attacker is monster
+        else if (att_data.attacker)
         {
             if (att_data.defender->is_player())
             {
@@ -682,235 +629,178 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
 
         snd_emit::run(snd);
     }
-    else // Aim is ok
+    else // Attack hits target
     {
-        if (att_data.is_ethereal_defender_missed)
-        {
-            //
-            // Missed ethereal target
-            //
-            if (att_data.attacker == map::player)
-            {
-                if (map::player->can_see_actor(*att_data.defender))
-                {
-                    other_name = att_data.defender->name_the();
-                }
-                else // Cannot see defender
-                {
-                    other_name = "it";
-                }
+        // Determine the relative "size" of the hit
+        const DiceParam dmg_dice =
+            wpn.dmg(AttMode::melee, att_data.attacker);
 
-                msg_log::add("My attack passes right through " +
+        const int max_dmg = dmg_dice.max();
+
+        MeleeHitSize hit_size = MeleeHitSize::small;
+
+        if (max_dmg >= 4)
+        {
+            if (att_data.dmg > (max_dmg * 5) / 6)
+            {
+                hit_size = MeleeHitSize::hard;
+            }
+            else if (att_data.dmg >  max_dmg / 2)
+            {
+                hit_size = MeleeHitSize::medium;
+            }
+        }
+
+        // Punctuation depends on attack strength
+        std::string dmg_punct = ".";
+
+        switch (hit_size)
+        {
+        case MeleeHitSize::small:
+            break;
+
+        case MeleeHitSize::medium:
+            dmg_punct = "!";
+            break;
+
+        case MeleeHitSize::hard:
+            dmg_punct = "!!!";
+            break;
+        }
+
+        if (att_data.attacker == map::player)
+        {
+            const std::string wpn_verb = wpn.data().melee.att_msgs.player;
+
+            if (map::player->can_see_actor(*att_data.defender))
+            {
+                other_name = att_data.defender->name_the();
+            }
+            else // Player cannot see defender
+            {
+                other_name = "it";
+            }
+
+            if (att_data.is_intrinsic_att)
+            {
+                const std::string att_mod_str =
+                    att_data.is_weak_attack ?
+                    " feebly" : "";
+
+                msg_log::add("I " +
+                             wpn_verb +
+                             " " +
                              other_name +
-                             "!");
+                             att_mod_str +
+                             dmg_punct,
+                             clr_msg_good);
             }
-            else if (att_data.attacker) // Attacker is monster
+            else // Not intrinsic attack
             {
-                if (att_data.defender->is_player())
-                {
-                    if (map::player->can_see_actor(*att_data.attacker))
-                    {
-                        other_name = att_data.attacker->name_the();
-                    }
-                    else // Player cannot see attacker
-                    {
-                        other_name = "it";
-                    }
+                const std::string att_mod_str =
+                    att_data.is_weak_attack ? "feebly "    :
+                    att_data.is_backstab ? "covertly "  : "";
 
-                    msg_log::add("The attack of " +
-                                 other_name +
-                                 " passes right through me!",
-                                 clr_msg_good);
-                }
+                const Clr clr =
+                    att_data.is_backstab ?
+                    clr_blue_lgt : clr_msg_good;
+
+                const std::string wpn_name_a =
+                    wpn.name(ItemRefType::a,
+                             ItemRefInf::none);
+
+                msg_log::add("I " +
+                             wpn_verb +
+                             " " +
+                             other_name +
+                             " " +
+                             att_mod_str +
+                             "with " +
+                             wpn_name_a +
+                             dmg_punct,
+                             clr);
             }
-
-            Snd snd(snd_msg,
-                    wpn.data().melee.miss_sfx,
-                    IgnoreMsgIfOriginSeen::yes,
-                    att_data.defender->pos,
-                    att_data.attacker,
-                    SndVol::low,
-                    snd_alerts_mon);
-
-            snd_emit::run(snd);
         }
-        else // Target was hit (not ethereal)
+        else if (att_data.attacker) // Attacker is monster
         {
-            //
-            // Attack hits target
-            //
-
-            // Determine the relative "size" of the hit
-            const DiceParam dmg_dice =
-                wpn.dmg(AttMode::melee, att_data.attacker);
-
-            const int max_dmg = dmg_dice.max();
-
-            MeleeHitSize hit_size = MeleeHitSize::small;
-
-            if (max_dmg >= 4)
+            if (att_data.defender->is_player())
             {
-                if (att_data.dmg > (max_dmg * 5) / 6)
+                const std::string wpn_verb =
+                    wpn.data().melee.att_msgs.other;
+
+                if (map::player->can_see_actor(*att_data.attacker))
                 {
-                    hit_size = MeleeHitSize::hard;
+                    other_name = att_data.attacker->name_the();
                 }
-                else if (att_data.dmg >  max_dmg / 2)
+                else // Player cannot see attacker
                 {
-                    hit_size = MeleeHitSize::medium;
+                    other_name = "It";
                 }
+
+                msg_log::add(other_name +
+                             " " +
+                             wpn_verb +
+                             dmg_punct,
+                             clr_msg_bad,
+                             true);
             }
-
-            // Punctuation depends on attack strength
-            std::string dmg_punct = ".";
-
-            switch (hit_size)
+        }
+        else // No attacker (e.g. trap attack)
+        {
+            if (att_data.defender == map::player)
             {
-            case MeleeHitSize::small:
-                break;
-
-            case MeleeHitSize::medium:
-                dmg_punct = "!";
-                break;
-
-            case MeleeHitSize::hard:
-                dmg_punct = "!!!";
-                break;
+                msg_log::add("I am hit" + dmg_punct,
+                             clr_msg_bad,
+                             true);
             }
-
-            if (att_data.attacker == map::player)
+            else // Defender is monster
             {
-                const std::string wpn_verb = wpn.data().melee.att_msgs.player;
-
                 if (map::player->can_see_actor(*att_data.defender))
                 {
                     other_name = att_data.defender->name_the();
-                }
-                else // Player cannot see defender
-                {
-                    other_name = "it";
-                }
 
-                if (att_data.is_intrinsic_att)
-                {
-                    const std::string att_mod_str =
-                        att_data.is_weak_attack ?
-                        " feebly" : "";
+                    Clr msg_clr = clr_msg_good;
 
-                    msg_log::add("I " +
-                                 wpn_verb +
-                                 " " +
-                                 other_name +
-                                 att_mod_str +
-                                 dmg_punct,
-                                 clr_msg_good);
-                }
-                else // Not intrinsic attack
-                {
-                    const std::string att_mod_str =
-                        att_data.is_weak_attack ? "feebly "    :
-                        att_data.is_backstab ? "covertly "  : "";
-
-                    const Clr clr =
-                        att_data.is_backstab ?
-                        clr_blue_lgt : clr_msg_good;
-
-                    const std::string wpn_name_a =
-                        wpn.name(ItemRefType::a,
-                                 ItemRefInf::none);
-
-                    msg_log::add("I " +
-                                 wpn_verb +
-                                 " " +
-                                 other_name +
-                                 " " +
-                                 att_mod_str +
-                                 "with " +
-                                 wpn_name_a +
-                                 dmg_punct,
-                                 clr);
-                }
-            }
-            else if (att_data.attacker) // Attacker is monster
-            {
-                if (att_data.defender->is_player())
-                {
-                    const std::string wpn_verb =
-                        wpn.data().melee.att_msgs.other;
-
-                    if (map::player->can_see_actor(*att_data.attacker))
+                    if (map::player->is_leader_of(att_data.defender))
                     {
-                        other_name = att_data.attacker->name_the();
-                    }
-                    else // Player cannot see attacker
-                    {
-                        other_name = "It";
+                        // Monster is allied to player, use a neutral color
+                        // instead (we do not use red color here, since that
+                        // is reserved for player taking damage).
+                        msg_clr = clr_white;
                     }
 
-                    msg_log::add(other_name +
-                                 " " +
-                                 wpn_verb +
-                                 dmg_punct,
-                                 clr_msg_bad,
+                    msg_log::add(other_name + " is hit" + dmg_punct,
+                                 msg_clr,
                                  true);
                 }
             }
-            else // No attacker (e.g. trap attack)
-            {
-                if (att_data.defender == map::player)
-                {
-                    msg_log::add("I am hit" + dmg_punct,
-                                 clr_msg_bad,
-                                 true);
-                }
-                else // Defender is monster
-                {
-                    if (map::player->can_see_actor(*att_data.defender))
-                    {
-                        other_name = att_data.defender->name_the();
-
-                        Clr msg_clr = clr_msg_good;
-
-                        if (map::player->is_leader_of(att_data.defender))
-                        {
-                            // Monster is allied to player, use a neutral color
-                            // instead (we do not use red color here, since that
-                            // is reserved for player taking damage).
-                            msg_clr = clr_white;
-                        }
-
-                        msg_log::add(other_name + " is hit" + dmg_punct,
-                                     msg_clr,
-                                     true);
-                    }
-                }
-            }
-
-            SfxId hit_sfx = SfxId::END;
-
-            switch (hit_size)
-            {
-            case MeleeHitSize::small:
-                hit_sfx = wpn.data().melee.hit_small_sfx;
-                break;
-
-            case MeleeHitSize::medium:
-                hit_sfx = wpn.data().melee.hit_medium_sfx;
-                break;
-
-            case MeleeHitSize::hard:
-                hit_sfx = wpn.data().melee.hit_hard_sfx;
-                break;
-            }
-
-            Snd snd(snd_msg, hit_sfx,
-                    IgnoreMsgIfOriginSeen::yes,
-                    att_data.defender->pos,
-                    att_data.attacker,
-                    SndVol::low,
-                    snd_alerts_mon);
-
-            snd_emit::run(snd);
         }
+
+        SfxId hit_sfx = SfxId::END;
+
+        switch (hit_size)
+        {
+        case MeleeHitSize::small:
+            hit_sfx = wpn.data().melee.hit_small_sfx;
+            break;
+
+        case MeleeHitSize::medium:
+            hit_sfx = wpn.data().melee.hit_medium_sfx;
+            break;
+
+        case MeleeHitSize::hard:
+            hit_sfx = wpn.data().melee.hit_hard_sfx;
+            break;
+        }
+
+        Snd snd(snd_msg, hit_sfx,
+                IgnoreMsgIfOriginSeen::yes,
+                att_data.defender->pos,
+                att_data.attacker,
+                SndVol::low,
+                snd_alerts_mon);
+
+        snd_emit::run(snd);
     }
 }
 
@@ -1157,19 +1047,18 @@ void projectile_fire(Actor* const attacker,
 
                 const P draw_pos(proj->pos);
 
-                // HIT ACTOR?
+                // Hit actor?
                 const bool is_actor_aimed_for = proj->pos == aim_pos;
 
                 const auto& att_data = *proj->att_data;
 
                 if (att_data.defender &&
                     !proj->is_obstructed &&
-                    !att_data.is_ethereal_defender_missed &&
                     att_data.att_result >= success &&
                     (att_data.defender_size >= ActorSize::humanoid ||
                      is_actor_aimed_for))
                 {
-                    // RENDER ACTOR HIT
+                    // Render actor hit
                     if (proj->is_seen_by_player)
                     {
                         if (config::is_tiles_mode())
@@ -1507,8 +1396,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
                                      wpn,
                                      intended_aim_lvl);
 
-                if (data.att_result >= success &&
-                    !data.is_ethereal_defender_missed)
+                if (data.att_result >= success)
                 {
                     const auto& cell = map::cells[current_pos.x][current_pos.y];
 
@@ -1675,10 +1563,7 @@ void melee(Actor* const attacker,
 
     print_melee_msg_and_mk_snd(att_data, wpn);
 
-    const bool is_hit =
-        (att_data.att_result >= success) &&
-        !att_data.is_ethereal_defender_missed &&
-        !att_data.is_defender_dodging;
+    const bool is_hit = att_data.att_result >= success;
 
     if (is_hit)
     {
@@ -1825,7 +1710,22 @@ void melee(Actor* const attacker,
         }
     }
 
-    game_time::tick();
+    int speed_pct_diff = 0;
+
+    if (attacker == map::player)
+    {
+        if (player_bon::traits[(size_t)Trait::adept_melee_fighter])
+        {
+            speed_pct_diff += 10;
+        }
+
+        if (player_bon::traits[(size_t)Trait::expert_melee_fighter])
+        {
+            speed_pct_diff += 10;
+        }
+    }
+
+    game_time::tick(speed_pct_diff);
 }
 
 bool ranged(Actor* const attacker,
@@ -1887,33 +1787,31 @@ bool ranged(Actor* const attacker,
 
     if (did_attack)
     {
-        PassTime pass_time = PassTime::yes;
-
-        if (attacker == map::player)
-        {
-            PropHandler& props = map::player->prop_handler();
-
-            if ((wpn.data().type == ItemType::ranged_wpn) &&
-                player_bon::traits[(size_t)Trait::fast_shooter])
-            {
-                const bool is_fast_shooting =
-                    props.has_prop(PropId::fast_shooting);
-
-                if (is_fast_shooting)
-                {
-                    pass_time = PassTime::no;
-                }
-                else // Not fast shooting
-                {
-                    props.try_add(new PropFastShooting(PropTurns::std));
-                }
-            }
-        }
-
         // Only pass time if an actor is attacking (not if it's e.g. a trap)
         if (attacker)
         {
-            game_time::tick(pass_time);
+            int speed_pct_diff = 0;
+
+            if (attacker == map::player &&
+                wpn.data().type == ItemType::ranged_wpn)
+            {
+                if (player_bon::traits[(size_t)Trait::adept_marksman])
+                {
+                    speed_pct_diff += 25;
+                }
+
+                if (player_bon::traits[(size_t)Trait::expert_marksman])
+                {
+                    speed_pct_diff += 25;
+                }
+
+                if (player_bon::traits[(size_t)Trait::fast_shooter])
+                {
+                    speed_pct_diff += 100;
+                }
+            }
+
+            game_time::tick(speed_pct_diff);
         }
 
         return true;

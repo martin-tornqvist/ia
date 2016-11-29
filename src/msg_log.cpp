@@ -317,14 +317,14 @@ void MsgHistoryState::draw()
     }
     else // History has content
     {
-        const std::string msg_nr_str_first  = to_str(top_line_nr_ + 1);
-        const std::string msg_nr_str_last   = to_str(btm_line_nr_ + 1);
+        const std::string msg_nr_str_first  = std::to_string(top_line_nr_ + 1);
+        const std::string msg_nr_str_last   = std::to_string(btm_line_nr_ + 1);
 
         title =
             "Messages " +
             msg_nr_str_first + "-" +
             msg_nr_str_last +
-            " of " + to_str(history_.size());
+            " of " + std::to_string(history_.size());
     }
 
     io::draw_info_scr_interface(title,

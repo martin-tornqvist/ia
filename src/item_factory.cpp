@@ -348,7 +348,7 @@ Item* mk(const ItemId item_id, const int nr_items)
     // anything other than one item)
     if (!r->data().is_stackable && nr_items != 1)
     {
-        TRACE << "Specified number of items (" + to_str(nr_items) + ") != 1 for "
+        TRACE << "Specified number of items (" + std::to_string(nr_items) + ") != 1 for "
               << "non-stackable item: "
               << int(d->id) << ", " << r->name(ItemRefType::plain) << std::endl;
         ASSERT(false);

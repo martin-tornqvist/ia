@@ -181,8 +181,8 @@ void act()
                 if (actor->pos == other_actor->pos)
                 {
                     show_map_and_freeze("Two living actors at same pos (" +
-                                        to_str(actor->pos.x) + ", " +
-                                        to_str(actor->pos.y) + ")");
+                                        std::to_string(actor->pos.x) + ", " +
+                                        std::to_string(actor->pos.y) + ")");
                 }
             }
         }

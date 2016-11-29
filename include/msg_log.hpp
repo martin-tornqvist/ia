@@ -42,7 +42,7 @@ public:
     {
         ++nr_;
 
-        repeats_str_ = "(x" + to_str(nr_) + ")";
+        repeats_str_ = "(x" + std::to_string(nr_) + ")";
     }
 
     Clr clr_;

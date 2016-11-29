@@ -29,9 +29,9 @@ void ActorDataT::reset()
 
     hp = dmg_melee = dmg_ranged = 1;
     spi = 12;
-    speed = ActorSpeed::normal;
+    speed_pct = (int)ActorSpeed::normal;
 
-    for (int i = 0; i < (int)PropId::END; ++i)
+    for (size_t i = 0; i < (size_t)PropId::END; ++i)
     {
         natural_props[i] = false;
     }
@@ -40,7 +40,7 @@ void ActorDataT::reset()
 
     ability_vals.reset();
 
-    for (int i = 0; i < (int)AiId::END; ++i)
+    for (size_t i = 0; i < (size_t)AiId::END; ++i)
     {
         ai[i] = false;
     }
@@ -102,7 +102,7 @@ void init_data_list()
     d.id = ActorId::player;
     d.hp = player_start_hp;
     d.spi = player_start_spi;
-    d.speed = ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = '@';
     d.color = clr_white_high;
     d.tile = TileId::player_firearm;
@@ -124,13 +124,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.glyph = 'Z';
     d.color = clr_brown;
     d.tile = TileId::zombie_unarmed;
     d.hp = 16;
     d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
@@ -174,13 +175,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.glyph = 'Z';
     d.color = clr_gray;
     d.tile = TileId::zombie_armed;
     d.hp = 16;
     d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
@@ -223,7 +225,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.ranged_cooldown_turns = 20;
     d.glyph = 'Z';
     d.color = clr_white_high;
@@ -271,14 +273,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = 'Z';
     d.color = clr_cyan_lgt;
     d.tile = TileId::zombie_unarmed;
     d.hp = 26;
     d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
-    d.ability_vals.set_val(AbilityId::ranged, 40);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.spawn_min_dlvl = 4;
     d.actor_size = ActorSize::humanoid;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -314,14 +316,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.glyph = 'Z';
     d.color = clr_cyan;
     d.tile = TileId::zombie_unarmed;
     d.hp = 26;
     d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
-    d.ability_vals.set_val(AbilityId::ranged, 40);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.is_auto_spawn_allowed = false;
     d.spawn_min_dlvl = 4;
     d.actor_size = ActorSize::humanoid;
@@ -357,14 +359,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = false;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.glyph = 'z';
     d.color = clr_red_lgt;
     d.tile = TileId::crawling_intestines;
     d.hp = 4;
     d.spi = 8;
     d.dmg_melee = min_dmg_to_wound - 1;
-    d.ability_vals.set_val(AbilityId::melee, 40);
+    d.ability_vals.set_val(AbilityId::melee, 50);
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 15;
@@ -398,14 +400,15 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = false;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'z';
     d.color = clr_brown;
     d.tile = TileId::crawling_hand;
     d.hp = 4;
     d.spi = 8;
     d.dmg_melee = 3;
-    d.ability_vals.set_val(AbilityId::melee, 40);
+    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::dodging, 40);
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 15;
@@ -443,7 +446,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = false;
-    d.speed = ActorSpeed::fastest;
+    d.speed_pct = (int)ActorSpeed::fastest;
     d.spell_cooldown_turns = 2;
     d.glyph = 'z';
     d.color = clr_magenta;
@@ -451,7 +454,8 @@ void init_data_list()
     d.hp = 25;
     d.spi = 25;
     d.dmg_melee = min_dmg_to_wound - 1;
-    d.ability_vals.set_val(AbilityId::melee, 80);
+    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::dodging, 60);
     d.ability_vals.set_val(AbilityId::stealth, 90);
     d.nr_left_allowed_to_spawn = 1;
     d.is_unique = true;
@@ -486,15 +490,15 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'z';
     d.color = clr_white_high;
     d.tile = TileId::floating_skull;
     d.hp = 6;
     d.spi = 16;
     d.dmg_melee = min_dmg_to_wound - 2;
-    d.ability_vals.set_val(AbilityId::melee, 40);
-    d.ability_vals.set_val(AbilityId::dodge_att, 60);
+    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::dodging, 60);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 3;
@@ -527,7 +531,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.ranged_cooldown_turns = 2;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
@@ -535,7 +539,7 @@ void init_data_list()
     d.tile = TileId::cultist_firearm;
     d.hp = 4;
     d.spi = 12;
-    d.ability_vals.set_val(AbilityId::melee, 35);
+    d.ability_vals.set_val(AbilityId::melee, 45);
     d.ability_vals.set_val(AbilityId::ranged, 50);
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_mid_game;
@@ -565,7 +569,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.ranged_cooldown_turns = 2;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
@@ -573,7 +577,7 @@ void init_data_list()
     d.tile = TileId::cultist_firearm;
     d.hp = 8;
     d.spi = 12;
-    d.ability_vals.set_val(AbilityId::melee, 35);
+    d.ability_vals.set_val(AbilityId::melee, 45);
     d.ability_vals.set_val(AbilityId::ranged, 55);
     d.spawn_min_dlvl = dlvl_first_late_game;
     d.spawn_max_dlvl = dlvl_last_mid_game;
@@ -605,7 +609,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.ranged_cooldown_turns = 2;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
@@ -613,7 +617,7 @@ void init_data_list()
     d.tile = TileId::cultist_firearm;
     d.hp = 6;
     d.spi = 12;
-    d.ability_vals.set_val(AbilityId::melee, 35);
+    d.ability_vals.set_val(AbilityId::melee, 45);
     d.ability_vals.set_val(AbilityId::ranged, 40);
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 3;
@@ -644,7 +648,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_magenta;
@@ -693,7 +697,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.spell_cooldown_turns = 3;
     d.glyph = 'r';
     d.color = clr_magenta;
@@ -701,7 +705,7 @@ void init_data_list()
     d.hp = 10;
     d.spi = 25;
     d.dmg_melee = min_dmg_to_wound;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::stealth, 90);
     d.is_auto_spawn_allowed = false;
     d.nr_left_allowed_to_spawn = 0;
@@ -743,14 +747,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = false;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = false;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_yellow;
     d.tile = TileId::leng_elder;
     d.hp = 200;
     d.spi = 200;
-    d.ability_vals.set_val(AbilityId::melee, 40);
+    d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::ranged, 40);
     d.is_auto_spawn_allowed = false;
     d.is_unique = true;
@@ -777,14 +781,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_cyan_lgt;
     d.tile = TileId::cultist_dagger;
     d.hp = 6;
     d.spi = 30;
-    d.ability_vals.set_val(AbilityId::melee, 40);
+    d.ability_vals.set_val(AbilityId::melee, 45);
     d.spawn_min_dlvl = 5;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.actor_size = ActorSize::humanoid;
@@ -816,14 +820,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'A';
     d.color = clr_green_lgt;
     d.tile = TileId::giant_spider;
     d.hp = 16;
     d.dmg_melee = min_dmg_to_wound;
-    d.ability_vals.set_val(AbilityId::melee, 25);
-    d.ability_vals.set_val(AbilityId::dodge_att, 40);
+    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::dodging, 40);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
@@ -856,14 +860,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'A';
     d.color = clr_white_high;
     d.tile = TileId::giant_spider;
     d.hp = 16;
     d.dmg_melee = min_dmg_to_wound;
-    d.ability_vals.set_val(AbilityId::melee, 25);
-    d.ability_vals.set_val(AbilityId::dodge_att, 40);
+    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::dodging, 40);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
@@ -896,14 +900,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'A';
     d.color = clr_red_lgt;
     d.tile = TileId::giant_spider;
     d.hp = 16;
     d.dmg_melee = min_dmg_to_wound;
-    d.ability_vals.set_val(AbilityId::melee, 25);
-    d.ability_vals.set_val(AbilityId::dodge_att, 40);
+    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::dodging, 40);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
@@ -934,13 +938,13 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = 'a';
     d.color = clr_gray;
     d.tile = TileId::giant_spider;
     d.hp = 8;
     d.dmg_melee = min_dmg_to_wound;
-    d.ability_vals.set_val(AbilityId::melee, 40);
+    d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::stealth, 90);
     d.natural_props[(size_t)PropId::lgtSens] = true;
     d.spawn_min_dlvl = 4;
@@ -977,14 +981,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'A';
     d.color = clr_magenta;
     d.tile = TileId::giant_spider;
     d.hp = 30;
     d.dmg_melee = min_dmg_to_wound + 3;
 //  d.dmg_ranged = 1;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 60);
 //  d.ability_vals.set_val(AbilityId::ranged, 40);
     d.spawn_min_dlvl = 10;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -1021,14 +1025,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'S';
     d.color = clr_green_lgt;
     d.tile = TileId::snake;
     d.hp = 6;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(AbilityId::melee, 40);
-    d.ability_vals.set_val(AbilityId::dodge_att, 12);
+    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::dodging, 30);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -1065,7 +1069,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'S';
     d.color = clr_red;
     d.tile = TileId::snake;
@@ -1073,9 +1077,9 @@ void init_data_list()
     d.dmg_melee = 1;
     d.dmg_ranged = 1;
     d.ranged_cooldown_turns = 150;
-    d.ability_vals.set_val(AbilityId::melee, 40);
+    d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::ranged, 85);
-    d.ability_vals.set_val(AbilityId::dodge_att, 12);
+    d.ability_vals.set_val(AbilityId::dodging, 30);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -1112,14 +1116,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fastest;
+    d.speed_pct = (int)ActorSpeed::fastest;
     d.glyph = 'S';
     d.color = clr_gray;
     d.tile = TileId::snake;
     d.hp = 6;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(AbilityId::melee, 40);
-    d.ability_vals.set_val(AbilityId::dodge_att, 12);
+    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::dodging, 30);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -1156,7 +1160,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.ranged_cooldown_turns = 6;
     d.glyph = 'd';
     d.color = clr_red;
@@ -1164,9 +1168,9 @@ void init_data_list()
     d.hp = 22;
     d.dmg_melee = min_dmg_to_wound + 1;
     d.dmg_ranged = min_dmg_to_wound - 1;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::ranged, 65);
-    d.ability_vals.set_val(AbilityId::dodge_att, 35);
+    d.ability_vals.set_val(AbilityId::dodging, 40);
     d.natural_props[(size_t)PropId::rFire] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 9;
@@ -1207,7 +1211,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'D';
     d.color = clr_magenta;
     d.tile = TileId::hound;
@@ -1216,8 +1220,8 @@ void init_data_list()
     d.hp = 65;
     d.spi = 40;
     d.dmg_melee = min_dmg_to_wound + 3;
-    d.ability_vals.set_val(AbilityId::melee, 60);
-    d.ability_vals.set_val(AbilityId::dodge_att, 25);
+    d.ability_vals.set_val(AbilityId::melee, 70);
+    d.ability_vals.set_val(AbilityId::dodging, 25);
     d.natural_props[(size_t)PropId::rFear] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 13;
@@ -1256,7 +1260,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.glyph = 'G';
     d.color = clr_white_high;
     d.tile = TileId::ghost;
@@ -1297,14 +1301,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'G';
     d.color = clr_gray;
     d.tile = TileId::phantasm;
     d.hp = 9;
     d.spi = 12;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(AbilityId::melee, 45);
+    d.ability_vals.set_val(AbilityId::melee, 50);
     d.natural_props[(size_t)PropId::ethereal] = true;
     d.natural_props[(size_t)PropId::rFear] = true;
     d.natural_props[(size_t)PropId::rConf] = true;
@@ -1341,7 +1345,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.spell_cooldown_turns = 4;
     d.glyph = 'G';
     d.color = clr_red;
@@ -1385,14 +1389,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = false;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.glyph = 'r';
     d.color = clr_gray;
     d.tile = TileId::rat;
     d.hp = 2;
     d.spi = 1;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(AbilityId::melee, 15);
+    d.ability_vals.set_val(AbilityId::melee, 30);
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
@@ -1423,15 +1427,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = false;
-    d.speed = ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = 'r';
     d.color = clr_brown_drk;
     d.tile = TileId::rat_thing;
     d.hp = 4;
     d.spi = 8;
     d.dmg_melee = 3;
-    d.ability_vals.set_val(AbilityId::melee, 25);
-    d.ability_vals.set_val(AbilityId::dodge_att, 15);
+    d.ability_vals.set_val(AbilityId::melee, 40);
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 15;
@@ -1473,15 +1476,15 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'd';
     d.color = clr_gray;
     d.tile = TileId::wolf;
     d.hp = 4;
     d.spi = 2;
     d.dmg_melee = 3;
-    d.ability_vals.set_val(AbilityId::melee, 35);
-    d.ability_vals.set_val(AbilityId::dodge_att, 20);
+    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::dodging, 30);
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 0;
     d.spawn_max_dlvl = 10;
@@ -1517,15 +1520,15 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fastest;
+    d.speed_pct = (int)ActorSpeed::fastest;
     d.glyph = 'b';
     d.color = clr_gray_drk;
     d.tile = TileId::raven;
     d.hp = 2;
     d.spi = 6;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(AbilityId::melee, 20);
-    d.ability_vals.set_val(AbilityId::dodge_att, 40);
+    d.ability_vals.set_val(AbilityId::melee, 40);
+    d.ability_vals.set_val(AbilityId::dodging, 40);
     d.natural_props[(size_t)PropId::flying] = true;
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = 10;
@@ -1561,7 +1564,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fastest;
+    d.speed_pct = (int)ActorSpeed::fastest;
     d.glyph = 'B';
     d.color = clr_gray;
     d.tile = TileId::bat;
@@ -1569,7 +1572,7 @@ void init_data_list()
     d.spi = 6;
     d.dmg_melee = 2;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::dodge_att, 70);
+    d.ability_vals.set_val(AbilityId::dodging, 70);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 4;
@@ -1609,7 +1612,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fastest;
+    d.speed_pct = (int)ActorSpeed::fastest;
     d.glyph = 'B';
     d.color = clr_brown_drk;
     d.tile = TileId::byakhee;
@@ -1617,7 +1620,7 @@ void init_data_list()
     d.spi = 20;
     d.dmg_melee = min_dmg_to_wound + 3;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::dodge_att, 40);
+    d.ability_vals.set_val(AbilityId::dodging, 40);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 6;
@@ -1663,16 +1666,16 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fastest;
+    d.speed_pct = (int)ActorSpeed::fastest;
     d.glyph = 'I';
     d.color = clr_green_lgt;
     d.tile = TileId::mantis;
     d.hp = 25;
     d.spi = 20;
     d.dmg_melee = min_dmg_to_wound + 1;
-    d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::dodge_att, 40);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::stealth, 20);
+    d.ability_vals.set_val(AbilityId::dodging, 40);
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 8;
     d.actor_size = ActorSize::humanoid;
@@ -1700,14 +1703,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'i';
     d.color = clr_brown;
     d.tile = TileId::locust;
     d.hp = 3;
     d.spi = 2;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(AbilityId::melee, 25);
+    d.ability_vals.set_val(AbilityId::melee, 30);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 7;
@@ -1741,7 +1744,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = false;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.ranged_cooldown_turns = 4;
     d.spell_cooldown_turns = 3;
     d.glyph = 'E';
@@ -1750,8 +1753,8 @@ void init_data_list()
     d.hp = 10;
     d.spi = 20;
     d.dmg_melee = 3;
-    d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::ranged, 55);
+    d.ability_vals.set_val(AbilityId::melee, 45);
+    d.ability_vals.set_val(AbilityId::ranged, 60);
     d.natural_props[(size_t)PropId::flying] = true;
     d.spawn_min_dlvl = 6;
     d.group_sizes.assign(
@@ -1806,7 +1809,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = false;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.ranged_cooldown_turns = 4;
     d.spell_cooldown_turns = 3;
     d.glyph = 'E';
@@ -1816,7 +1819,7 @@ void init_data_list()
     d.spi = 20;
     d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 55);
-    d.ability_vals.set_val(AbilityId::ranged, 55);
+    d.ability_vals.set_val(AbilityId::ranged, 60);
     d.natural_props[(size_t)PropId::flying] = true;
     d.spawn_min_dlvl = 12;
     d.actor_size = ActorSize::humanoid;
@@ -1851,7 +1854,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.spell_cooldown_turns = 3;
     d.glyph = 'E';
     d.color = clr_magenta;
@@ -1908,7 +1911,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.spell_cooldown_turns = 3;
     d.glyph = 'E';
     d.color = clr_red;
@@ -1958,7 +1961,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = 'M';
     d.color = clr_green;
     d.tile = TileId::ghoul;
@@ -2012,14 +2015,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.glyph = 'M';
     d.color = clr_gray;
     d.tile = TileId::shadow;
     d.hp = 4;
     d.spi = 12;
     d.dmg_melee = 3;
-    d.ability_vals.set_val(AbilityId::melee, 35);
+    d.ability_vals.set_val(AbilityId::melee, 45);
     d.ability_vals.set_val(AbilityId::stealth, 90);
     d.natural_props[(size_t)PropId::lgtSens] = true;
     d.natural_props[(size_t)PropId::rFear] = true;
@@ -2060,7 +2063,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = 'M';
     d.color = clr_yellow;
     d.tile = TileId::shadow;
@@ -2107,7 +2110,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.spell_cooldown_turns = 2;
     d.glyph = 'P';
     d.color = clr_magenta;
@@ -2115,7 +2118,7 @@ void init_data_list()
     d.hp = 25;
     d.spi = 30;
     d.dmg_melee = min_dmg_to_wound + 1;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.spawn_min_dlvl = dlvl_first_late_game - 3;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
@@ -2145,14 +2148,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.glyph = 'P';
     d.color = clr_gray;
     d.tile = TileId::croc_head_mummy;
     d.hp = 25;
     d.spi = 30;
     d.dmg_melee = min_dmg_to_wound + 5;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 70);
     d.spawn_min_dlvl = dlvl_first_late_game - 3;
     d.group_sizes.assign(
     {
@@ -2189,7 +2192,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.spell_cooldown_turns = 2;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
@@ -2199,7 +2202,7 @@ void init_data_list()
     d.hp = 70;
     d.spi = 60;
     d.dmg_melee = min_dmg_to_wound + 2;
-    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::melee, 70);
     d.is_auto_spawn_allowed = false;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
@@ -2230,7 +2233,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.spell_cooldown_turns = 2;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 1;
@@ -2240,7 +2243,7 @@ void init_data_list()
     d.hp = 70;
     d.spi = 60;
     d.dmg_melee = min_dmg_to_wound + 2;
-    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::melee, 70);
     d.spawn_min_dlvl = 11;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
@@ -2276,7 +2279,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.ranged_cooldown_turns = 15;
     d.glyph = 'F';
     d.color = clr_white;
@@ -2285,7 +2288,7 @@ void init_data_list()
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound + 4;
     d.dmg_ranged = min_dmg_to_wound;
-    d.ability_vals.set_val(AbilityId::melee, 55);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::ranged, 50);
     d.spawn_min_dlvl = 6;
     d.group_sizes.assign(
@@ -2327,15 +2330,15 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'M';
     d.color = clr_white;
     d.tile = TileId::ape;
     d.hp = 18;
     d.spi = 6;
     d.dmg_melee = min_dmg_to_wound + 1;
-    d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::dodge_att, 35);
+    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::dodging, 30);
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = dlvl_first_late_game;
     d.group_sizes.assign(
@@ -2374,7 +2377,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = false;
-    d.speed = ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = 'w';
     d.color = clr_white;
     d.tile = TileId::mass_of_worms;
@@ -2417,7 +2420,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = false;
-    d.speed = ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = 'w';
     d.color = clr_violet;
     d.tile = TileId::mass_of_worms;
@@ -2461,7 +2464,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = false;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = false;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'V';
     d.color = clr_gray;
     d.tile = TileId::vortex;
@@ -2508,7 +2511,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = false;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = false;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'V';
     d.color = clr_red;
     d.tile = TileId::vortex;
@@ -2554,14 +2557,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::sluggish;
+    d.speed_pct = (int)ActorSpeed::sluggish;
     d.glyph = 'o';
     d.color = clr_gray_drk;
     d.tile = TileId::ooze;
     d.hp = 20;
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.natural_props[(size_t)PropId::ooze] = true;
     d.natural_props[(size_t)PropId::rFear] = true;
     d.natural_props[(size_t)PropId::rConf] = true;
@@ -2608,14 +2611,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::sluggish;
+    d.speed_pct = (int)ActorSpeed::sluggish;
     d.glyph = 'o';
     d.color = clr_white_high;
     d.tile = TileId::ooze;
     d.hp = 12;
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 2;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::stealth, 90);
     d.natural_props[(size_t)PropId::ooze] = true;
     d.natural_props[(size_t)PropId::rFear] = true;
@@ -2663,14 +2666,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::sluggish;
+    d.speed_pct = (int)ActorSpeed::sluggish;
     d.glyph = 'o';
     d.color = clr_green;
     d.tile = TileId::ooze;
     d.hp = 20;
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.natural_props[(size_t)PropId::ooze] = true;
     d.natural_props[(size_t)PropId::rFear] = true;
     d.natural_props[(size_t)PropId::rConf] = true;
@@ -2719,14 +2722,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::sluggish;
+    d.speed_pct = (int)ActorSpeed::sluggish;
     d.glyph = 'o';
     d.color = clr_green_lgt;
     d.tile = TileId::ooze;
     d.hp = 20;
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.natural_props[(size_t)PropId::ooze] = true;
     d.natural_props[(size_t)PropId::rFear] = true;
     d.natural_props[(size_t)PropId::rConf] = true;
@@ -2775,14 +2778,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.glyph = 'O';
     d.color = clr_green_lgt;
     d.tile = TileId::ooze;
     d.hp = 35;
     d.spi = 40;
     d.dmg_melee = min_dmg_to_wound + 5;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.natural_props[(size_t)PropId::ooze] = true;
     d.natural_props[(size_t)PropId::ethereal] = true;
     d.natural_props[(size_t)PropId::rPhys] = true;
@@ -2828,14 +2831,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = false;
-    d.speed = ActorSpeed::sluggish;
+    d.speed_pct = (int)ActorSpeed::sluggish;
     d.glyph = 'W';
     d.color = clr_brown_drk;
     d.tile = TileId::chthonian;
     d.hp = 200;
     d.spi = 40;
     d.dmg_melee = min_dmg_to_wound + 10;
-    d.ability_vals.set_val(AbilityId::melee, 45);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.natural_props[(size_t)PropId::burrowing] = true;
     d.natural_props[(size_t)PropId::rFear] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -2875,7 +2878,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = false;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.ranged_cooldown_turns = 3;
     d.spell_cooldown_turns  = 3;
     d.glyph = '~';
@@ -2885,7 +2888,7 @@ void init_data_list()
     d.spi = 40;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::ranged, 65);
-    d.ability_vals.set_val(AbilityId::dodge_att, 35);
+    d.ability_vals.set_val(AbilityId::dodging, 35);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::radiant] = true;
     d.natural_props[(size_t)PropId::rFear] = true;
@@ -2922,10 +2925,10 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.hp = 18;
     d.spi = 40;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::rFear] = true;
     d.natural_props[(size_t)PropId::rBreath] = true;
@@ -2965,8 +2968,8 @@ void init_data_list()
     d.hp = 1;
     d.spi = 1;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(AbilityId::melee, 6);
-    d.speed = ActorSpeed::sluggish;
+    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.speed_pct = (int)ActorSpeed::sluggish;
     d.ai[(size_t)AiId::looks] = false;
     d.ai[(size_t)AiId::attacks] = true;
     d.ai[(size_t)AiId::moves_to_random_when_unaware] = false;
@@ -3004,7 +3007,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = false;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.glyph = 'E';
     d.color = clr_red;
     d.tile = TileId::gas_spore;
@@ -3056,14 +3059,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = false;
-    d.speed = ActorSpeed::fastest;
+    d.speed_pct = (int)ActorSpeed::fastest;
     d.glyph = 'W';
     d.color = clr_gray_drk;
     d.tile = TileId::hunting_horror;
     d.hp = 90;
     d.spi = 40;
     d.dmg_melee = min_dmg_to_wound + 7;
-    d.ability_vals.set_val(AbilityId::melee, 75);
+    d.ability_vals.set_val(AbilityId::melee, 80);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::rFear] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -3107,7 +3110,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow;
     d.spell_cooldown_turns = 3;
     d.glyph = 'Y';
     d.color = clr_red;
@@ -3115,7 +3118,7 @@ void init_data_list()
     d.hp = 90;
     d.spi = 40;
     d.dmg_melee = 200;
-    d.ability_vals.set_val(AbilityId::melee, 75);
+    d.ability_vals.set_val(AbilityId::melee, 80);
     d.natural_props[(size_t)PropId::rConf] = true;
     d.natural_props[(size_t)PropId::rSleep] = true;
     d.natural_props[(size_t)PropId::rFear] = true;
@@ -3157,7 +3160,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed = ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.spell_cooldown_turns = 2;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
@@ -3171,7 +3174,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::rFire] = true;
     d.natural_props[(size_t)PropId::rBreath] = true;
     d.dmg_melee = min_dmg_to_wound + 5;
-    d.ability_vals.set_val(AbilityId::melee, 70);
+    d.ability_vals.set_val(AbilityId::melee, 80);
     d.is_auto_spawn_allowed = false;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;

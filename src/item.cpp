@@ -252,7 +252,7 @@ std::string Item::name(const ItemRefType ref_type,
 
     if (ref_type_used == ItemRefType::plural)
     {
-        nr_str = to_str(nr_items_) + " ";
+        nr_str = std::to_string(nr_items_) + " ";
     }
 
     std::string att_str = "";
@@ -285,26 +285,22 @@ std::string Item::name(const ItemRefType ref_type,
     {
         const DiceParam dmg_dice = dmg(AttMode::melee, map::player);
 
-        const std::string rolls_str = to_str(dmg_dice.rolls);
-        const std::string sides_str = to_str(dmg_dice.sides);
+        const std::string rolls_str = std::to_string(dmg_dice.rolls);
+        const std::string sides_str = std::to_string(dmg_dice.sides);
 
         const int plus = dmg_dice.plus;
 
         const std::string plus_str =
             plus == 0 ? "" :
             plus > 0 ?
-            ("+" + to_str(plus)) :
-            ("-" + to_str(plus));
+            ("+" + std::to_string(plus)) :
+            ("-" + std::to_string(plus));
 
-        const int item_skill = data_->melee.hit_chance_mod;
+        const int item_mod = data_->melee.hit_chance_mod;
 
-        const int melee_skill =
-            map::player->ability(AbilityId::melee, true);
-
-        const int skill_tot =
-            std::max(0, std::min(100, item_skill + melee_skill));
-
-        const std::string skill_str = to_str(skill_tot) + "%";
+        const std::string skill_str =
+            (item_mod >= 0 ? "+" : "") +
+            std::to_string(item_mod) + "%";
 
         att_str =
             " " +
@@ -315,8 +311,6 @@ std::string Item::name(const ItemRefType ref_type,
             " " +
             skill_str;
     }
-
-    const int ranged_skill = map::player->ability(AbilityId::ranged, true);
 
     if (att_inf_used == ItemRefAttInf::ranged)
     {
@@ -330,24 +324,25 @@ std::string Item::name(const ItemRefType ref_type,
                 data_->ranged.is_machine_gun ?
                 nr_mg_projectiles : 1;
 
-            const std::string rolls_str = to_str(dmg_dice.rolls * mul);
-            const std::string sides_str = to_str(dmg_dice.sides);
+            const std::string rolls_str = std::to_string(dmg_dice.rolls * mul);
+
+            const std::string sides_str = std::to_string(dmg_dice.sides);
+
             const int plus = dmg_dice.plus * mul;
 
             const std::string plus_str = plus == 0 ? "" :
                 plus > 0 ?
-                ("+" + to_str(plus)) :
-                ("-" + to_str(plus));
+                ("+" + std::to_string(plus)) :
+                ("-" + std::to_string(plus));
 
             dmg_str = rolls_str + "d" + sides_str + plus_str;
         }
 
-        const int item_skill = data_->ranged.hit_chance_mod;
+        const int item_mod = data_->ranged.hit_chance_mod;
 
-        const int skill_tot =
-            std::max(0, std::min(100, item_skill + ranged_skill));
-
-        const std::string skill_str = to_str(skill_tot) + "%";
+        const std::string skill_str =
+            (item_mod >= 0 ? "+" : "") +
+            std::to_string(item_mod) + "%";
 
         att_str =
             " " +
@@ -360,22 +355,24 @@ std::string Item::name(const ItemRefType ref_type,
     {
         const DiceParam dmg_dice = dmg(AttMode::thrown, map::player);
 
-        const std::string rolls_str = to_str(dmg_dice.rolls);
-        const std::string sides_str = to_str(dmg_dice.sides);
+        const std::string rolls_str = std::to_string(dmg_dice.rolls);
+        const std::string sides_str = std::to_string(dmg_dice.sides);
         const int plus = dmg_dice.plus;
 
         const std::string plus_str =
             plus == 0 ? "" :
             plus  > 0 ?
-            ("+" + to_str(plus)) :
-            ("-" + to_str(plus));
+            ("+" + std::to_string(plus)) :
+            ("-" + std::to_string(plus));
 
-        const int item_skill = data_->ranged.throw_hit_chance_mod;
+        const int item_mod = data_->ranged.throw_hit_chance_mod;
 
-        const int skill_tot =
-            std::max(0, std::min(100, item_skill + ranged_skill));
+        // const int skill_tot =
+        //     std::max(0, std::min(100, item_skill + ranged_skill));
 
-        const std::string skill_str = to_str(skill_tot) + "%";
+        const std::string skill_str =
+            (item_mod >= 0 ? "+" : "") +
+            std::to_string(item_mod) + "%";
 
         att_str =
             " " +
@@ -478,7 +475,7 @@ void Armor::load()
 std::string Armor::armor_points_str(const bool with_brackets) const
 {
     const int ap = armor_points();
-    const std::string ap_str = to_str(std::max(1, ap));
+    const std::string ap_str = std::to_string(std::max(1, ap));
 
     return with_brackets ? ("[" + ap_str + "]") : ap_str;
 }
@@ -520,11 +517,11 @@ int Armor::take_dur_hit_and_get_reduced_dmg(const int dmg_before)
         msg_log::add("My " + armor_name + " is damaged!", clr_msg_note);
     }
 
-    TRACE << "Damage before: " + to_str(dmg_before) << std::endl;
+    TRACE << "Damage before: " + std::to_string(dmg_before) << std::endl;
 
     const int dmg_after = std::max(1, dmg_before - ap_before);
 
-    TRACE << "Damage after: " + to_str(dmg_after) << std::endl;
+    TRACE << "Damage after: " + std::to_string(dmg_after) << std::endl;
 
     TRACE_FUNC_END;
     return dmg_after;
@@ -686,7 +683,7 @@ std::string Wpn::name_inf() const
 {
     if (data_->ranged.is_ranged_wpn && !data_->ranged.has_infinite_ammo)
     {
-        return to_str(nr_ammo_loaded_) + "/" + to_str(data_->ranged.max_ammo);
+        return std::to_string(nr_ammo_loaded_) + "/" + std::to_string(data_->ranged.max_ammo);
     }
 
     return "";
@@ -697,17 +694,21 @@ std::string Wpn::name_inf() const
 // -----------------------------------------------------------------------------
 void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit)
 {
-    //TODO: If some "constructed" monster is added (something not made of flesh, e.g. a golem),
-    //then a Ghoul player would be able to feed from it, which would be a problem. In that case,
-    //there should probably be a field in the actor data called something like either
-    //"is_flesh_body", or "is_construct".
+    // TODO: If some "constructed" monster is added (something not made of
+    //       flesh, e.g. a golem), then a Ghoul player would be able to feed
+    //       from it, which would be a problem. In that case, there should
+    //       probably be a field in the actor data called something like either
+    //       "is_flesh_body", or "is_construct".
 
 
-    //Ghoul feeding from Ravenous trait?
-    //NOTE: Player should never feed on monsters such as Ghosts or Shadows. Checking that the
-    //monster is not Ethereal and that it can bleed should be a pretty good rule for this.
-    //We should NOT check if the monster can leave a corpse however, since some monsters such
-    //as Worms don't leave a corpse, and you should be able to feed on those.
+    // Ghoul feeding from Ravenous trait?
+    //
+    // NOTE: Player should never feed on monsters such as Ghosts or Shadows.
+    //       Checking that the monster is not Ethereal and that it can bleed
+    //       should be a pretty good rule for this.
+    //       We should NOT check if the monster can leave a corpse however,
+    //       since some monsters such as Worms don't leave a corpse, and you
+    //       SHOULD be able to feed on those.
     const ActorDataT& d = actor_hit.data();
 
     const bool is_ethereal = actor_hit.has_prop(PropId::ethereal);
@@ -1061,7 +1062,7 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
         break;
     }
 
-    start_msg += " (" + to_str(nr_turns_left_action_) + " turns)...";
+    start_msg += " (" + std::to_string(nr_turns_left_action_) + " turns)...";
 
     msg_log::add(start_msg);
 
@@ -1326,20 +1327,14 @@ ConsumeItem Explosive::activate(Actor* const actor)
 // -----------------------------------------------------------------------------
 void Dynamite::on_player_ignite() const
 {
-    const bool is_dem_exp = player_bon::traits[(size_t)Trait::dem_expert];
+    msg_log::add("I light a dynamite stick.");
 
-    const PassTime pass_time =
-        (is_dem_exp && rnd::coin_toss()) ?
-        PassTime::no :
-        PassTime::yes;
+    const int speed_pct_diff =
+        player_bon::traits[(size_t)Trait::dem_expert] ?
+        100 :
+        0;
 
-    const std::string swift_str =
-        (pass_time == PassTime::no) ?
-        "swiftly " : "";
-
-    msg_log::add("I " + swift_str + "light a dynamite stick.");
-
-    game_time::tick(pass_time);
+    game_time::tick(speed_pct_diff);
 }
 
 void Dynamite::on_std_turn_player_hold_ignited()
@@ -1401,17 +1396,14 @@ void Dynamite::on_player_paralyzed()
 // -----------------------------------------------------------------------------
 void Molotov::on_player_ignite() const
 {
-    const bool is_dem_exp = player_bon::traits[(size_t)Trait::dem_expert];
+    msg_log::add("I light a Molotov Cocktail.");
 
-    const PassTime pass_time = (is_dem_exp && rnd::coin_toss()) ?
-                                PassTime::no :
-                                PassTime::yes;
+    const int speed_pct_diff =
+        player_bon::traits[(size_t)Trait::dem_expert] ?
+        100 :
+        0;
 
-    const std::string swift_str = (pass_time == PassTime::no) ? "swiftly " : "";
-
-    msg_log::add("I " + swift_str + "light a Molotov Cocktail.");
-
-    game_time::tick(pass_time);
+    game_time::tick(speed_pct_diff);
 }
 
 void Molotov::on_std_turn_player_hold_ignited()
@@ -1503,17 +1495,14 @@ void Molotov::on_player_paralyzed()
 // -----------------------------------------------------------------------------
 void Flare::on_player_ignite() const
 {
-    const bool is_dem_exp = player_bon::traits[(size_t)Trait::dem_expert];
+    msg_log::add("I light a Flare.");
 
-    const PassTime pass_time = (is_dem_exp && rnd::coin_toss()) ?
-                                PassTime::no :
-                                PassTime::yes;
+    const int speed_pct_diff =
+        player_bon::traits[(size_t)Trait::dem_expert] ?
+        100 :
+        0;
 
-    const std::string swift_str = (pass_time == PassTime::no) ? "swiftly " : "";
-
-    msg_log::add("I " + swift_str + "light a Flare.");
-
-    game_time::tick(pass_time);
+    game_time::tick(speed_pct_diff);
 }
 
 void Flare::on_std_turn_player_hold_ignited()
@@ -1557,20 +1546,14 @@ void Flare::on_player_paralyzed()
 // -----------------------------------------------------------------------------
 void SmokeGrenade::on_player_ignite() const
 {
-    const bool is_dem_exp = player_bon::traits[(size_t)Trait::dem_expert];
+    msg_log::add("I ignite a smoke grenade.");
 
-    const PassTime pass_time =
-        (is_dem_exp && rnd::coin_toss()) ?
-        PassTime::no :
-        PassTime::yes;
+    const int speed_pct_diff =
+        player_bon::traits[(size_t)Trait::dem_expert] ?
+        100 :
+        0;
 
-    const std::string swift_str =
-        (pass_time == PassTime::no) ?
-        "swiftly " : "";
-
-    msg_log::add("I " + swift_str + "ignite a smoke grenade.");
-
-    game_time::tick(pass_time);
+    game_time::tick(speed_pct_diff);
 }
 
 void SmokeGrenade::on_std_turn_player_hold_ignited()

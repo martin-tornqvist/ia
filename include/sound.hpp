@@ -28,14 +28,14 @@ enum class IgnoreMsgIfOriginSeen
 class Snd
 {
 public:
-    Snd(const std::string&              msg,
-        const SfxId                     sfx,
-        const IgnoreMsgIfOriginSeen     ignore_msg_if_origin_seen,
-        const P&                        origin,
-        Actor* const                    actor_who_made_sound,
-        const SndVol                    vol,
-        const AlertsMon                 alerting_mon,
-        const MorePromptOnMsg           add_more_prompt_on_msg = MorePromptOnMsg::no);
+    Snd(const std::string& msg,
+        const SfxId sfx,
+        const IgnoreMsgIfOriginSeen ignore_msg_if_origin_seen,
+        const P& origin,
+        Actor* const actor_who_made_sound,
+        const SndVol vol,
+        const AlertsMon alerting_mon,
+        const MorePromptOnMsg add_more_prompt_on_msg = MorePromptOnMsg::no);
 
     Snd() {}
     ~Snd() {}
@@ -111,4 +111,3 @@ void reset_nr_snd_msg_printed_current_turn();
 } //snd_emit
 
 #endif
-

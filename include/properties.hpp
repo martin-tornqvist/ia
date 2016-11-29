@@ -66,7 +66,6 @@ enum class PropId
     // Special (for supporting very specific game mechanics)
     poss_by_zuul,
     aiming,
-    fast_shooting,
     nailed,
     flared,
     warlock_charged,
@@ -479,7 +478,7 @@ public:
     {
         switch (ability)
         {
-        case AbilityId::dodge_att:
+        case AbilityId::dodging:
             return 20;
 
         case AbilityId::ranged:
@@ -621,14 +620,6 @@ public:
     int nr_turns_aiming_;
 };
 
-class PropFastShooting: public Prop
-{
-public:
-    PropFastShooting(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::fast_shooting, turns_init, nr_turns) {}
-
-};
-
 class PropBlind: public Prop
 {
 public:
@@ -650,13 +641,12 @@ public:
             return -9999;
 
         case AbilityId::ranged:
-            return -50;
+            return -20;
 
         case AbilityId::melee:
-            return -25;
+            return -20;
 
-        case AbilityId::dodge_trap:
-        case AbilityId::dodge_att:
+        case AbilityId::dodging:
             return -50;
 
         default:
@@ -711,12 +701,9 @@ public:
 
     int ability_mod(const AbilityId ability) const override
     {
-        if (ability == AbilityId::searching)
-        {
-            return 0;
-        }
+        (void)ability;
 
-        return 10;
+        return 5;
     }
 
 private:
@@ -732,7 +719,8 @@ public:
     int ability_mod(const AbilityId ability) const override
     {
         (void)ability;
-        return -10;
+
+        return -5;
     }
 
     void on_start() override;
@@ -818,7 +806,7 @@ public:
 
     std::string name_short() const override
     {
-        return "Nailed(" + to_str(nr_spikes_) + ")";
+        return "Nailed(" + std::to_string(nr_spikes_) + ")";
     }
 
     void affect_move_dir(const P& actor_pos, Dir& dir) override;
@@ -852,7 +840,7 @@ public:
 
     std::string name_short() const override
     {
-        return "Wound(" + to_str(nr_wounds_) + ")";
+        return "Wound(" + std::to_string(nr_wounds_) + ")";
     }
 
     int ability_mod(const AbilityId ability) const override;
@@ -959,19 +947,19 @@ public:
 
     void on_start() override;
 
-    bool allow_act() const override
-    {
-        return false;
-    }
-
     int ability_mod(const AbilityId ability) const override
     {
-        if (ability == AbilityId::dodge_trap || ability == AbilityId::dodge_att)
+        if (ability == AbilityId::dodging)
         {
             return -999;
         }
 
         return 0;
+    }
+
+    bool allow_act() const override
+    {
+        return false;
     }
 
     bool allow_attack_ranged(const Verbosity verbosity) const override
@@ -995,6 +983,16 @@ public:
 
     bool need_update_vision_when_start_or_end() const override;
 
+    int ability_mod(const AbilityId ability) const override
+    {
+        if (ability == AbilityId::dodging)
+        {
+            return -999;
+        }
+
+        return 0;
+    }
+
     bool allow_act() const override
     {
         return false;
@@ -1003,16 +1001,6 @@ public:
     bool allow_see() const override
     {
         return false;
-    }
-
-    int ability_mod(const AbilityId ability) const override
-    {
-        if (ability == AbilityId::dodge_trap || ability == AbilityId::dodge_att)
-        {
-            return -999;
-        }
-
-        return 0;
     }
 
     bool allow_attack_ranged(const Verbosity verbosity) const override
@@ -1040,26 +1028,6 @@ public:
         Prop(PropId::slowed, turns_init, nr_turns) {}
 
     void on_start() override;
-
-    int ability_mod(const AbilityId ability) const override
-    {
-        switch (ability)
-        {
-        case AbilityId::dodge_att:
-            return -30;
-
-        case AbilityId::ranged:
-            return -10;
-
-        case AbilityId::melee:
-            return -10;
-
-        default:
-            break;
-        }
-
-        return 0;
-    }
 };
 
 class PropHasted: public Prop
@@ -1069,26 +1037,6 @@ public:
         Prop(PropId::hasted, turns_init, nr_turns) {}
 
     void on_start() override;
-
-    int ability_mod(const AbilityId ability) const override
-    {
-        switch (ability)
-        {
-        case AbilityId::dodge_att:
-            return 10;
-
-        case AbilityId::ranged:
-            return 5;
-
-        case AbilityId::melee:
-            return 5;
-
-        default:
-            break;
-        }
-
-        return 0;
-    }
 };
 
 class PropFrenzied: public Prop
@@ -1124,7 +1072,8 @@ public:
     PropRAcid(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::rAcid, turns_init, nr_turns) {}
 
-    bool try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity) const override;
+    bool try_resist_dmg(const DmgType dmg_type,
+                        const Verbosity verbosity) const override;
 };
 
 class PropRConf: public Prop
@@ -1144,7 +1093,8 @@ public:
     PropRElec(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::rElec, turns_init, nr_turns) {}
 
-    bool try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity) const override;
+    bool try_resist_dmg(const DmgType dmg_type,
+                        const Verbosity verbosity) const override;
 };
 
 class PropRFear: public Prop
@@ -1168,7 +1118,8 @@ public:
 
     bool is_resisting_other_prop(const PropId prop_id) const override;
 
-    bool try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity) const override;
+    bool try_resist_dmg(const DmgType dmg_type,
+                        const Verbosity verbosity) const override;
 };
 
 class PropRFire: public Prop
@@ -1181,7 +1132,8 @@ public:
 
     bool is_resisting_other_prop(const PropId prop_id) const override;
 
-    bool try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity) const override;
+    bool try_resist_dmg(const DmgType dmg_type,
+                        const Verbosity verbosity) const override;
 };
 
 class PropRPoison: public Prop

@@ -185,7 +185,7 @@ bool mk_random_group_for_room(const RoomType room_type,
     if (id_bucket.empty())
     {
         TRACE_VERBOSE << "Found no valid monsters to spawn at room type ("
-                      << to_str(int(room_type)) + ")" << std::endl;
+                      << std::to_string(int(room_type)) + ")" << std::endl;
         TRACE_FUNC_END_VERBOSE;
         return false;
     }

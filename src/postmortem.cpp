@@ -87,7 +87,7 @@ void PostmortemMenu::on_start()
         info_lines_.push_back(
         {
             bullet_point_str + "Explored to the depth of dungeon level " +
-                to_str(dlvl),
+                std::to_string(dlvl),
             clr_info
         });
 
@@ -96,28 +96,28 @@ void PostmortemMenu::on_start()
     info_lines_.push_back(
     {
         bullet_point_str + "Was " +
-            to_str(score->ins()) + "% insane",
+            std::to_string(score->ins()) + "% insane",
         clr_info
     });
 
     info_lines_.push_back(
     {
         bullet_point_str + "Killed " +
-            to_str(nr_kills_tot_all_mon) +" monsters",
+            std::to_string(nr_kills_tot_all_mon) +" monsters",
         clr_info
     });
 
     info_lines_.push_back(
     {
         bullet_point_str + "Gained " +
-            to_str(score->xp()) + " experience points",
+            std::to_string(score->xp()) + " experience points",
         clr_info
     });
 
     info_lines_.push_back(
     {
         bullet_point_str + "Gained a score of " +
-            to_str(score->score()),
+            std::to_string(score->score()),
         clr_info
     });
 
@@ -205,7 +205,7 @@ void PostmortemMenu::on_start()
 
     for (const auto& event : events)
     {
-        std::string ev_str = to_str(event.turn);
+        std::string ev_str = std::to_string(event.turn);
 
         const int turn_str_max_w = 10;
 

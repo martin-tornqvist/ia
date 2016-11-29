@@ -174,7 +174,7 @@ bool mk_intro_lvl()
 
             case '-':
             {
-                map::put(new ChurchBench(p));
+                map::put(new Altar(p));
             }
             break;
 
@@ -260,7 +260,7 @@ bool mk_intro_lvl()
 
                     const std::string date_str = date_str_vector[0];
 
-                    const std::string score_str = to_str(entry.score());
+                    const std::string score_str = std::to_string(entry.score());
 
                     const std::string class_str =
                         player_bon::bg_title(entry.bg());

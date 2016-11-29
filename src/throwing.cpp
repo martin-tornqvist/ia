@@ -99,6 +99,21 @@ void throw_item(Actor& actor_throwing,
                 const P& tgt_cell,
                 Item& item_thrown)
 {
+    int speed_pct_diff = 0;
+
+    if (&actor_throwing == map::player)
+    {
+        if (player_bon::traits[(size_t)Trait::adept_marksman])
+        {
+            speed_pct_diff += 25;
+        }
+
+        if (player_bon::traits[(size_t)Trait::expert_marksman])
+        {
+            speed_pct_diff += 25;
+        }
+    }
+
     ThrowAttData att_data(&actor_throwing,
                           tgt_cell,
                           actor_throwing.pos,
@@ -138,10 +153,13 @@ void throw_item(Actor& actor_throwing,
 
     states::draw();
 
-    int         blocked_idx             = -1;
-    bool        is_actor_hit            = false;
-    const Clr   item_clr                = item_thrown.clr();
-    int         break_item_one_in_n     = -1;
+    int blocked_idx = -1;
+
+    bool is_actor_hit = false;
+
+    const Clr item_clr = item_thrown.clr();
+
+    int break_item_one_in_n = -1;
 
     P pos(-1, -1);
 
@@ -163,8 +181,7 @@ void throw_item(Actor& actor_throwing,
                                     item_thrown,
                                     aim_lvl);
 
-            if (att_data.att_result >= success &&
-                !att_data.is_ethereal_defender_missed)
+            if (att_data.att_result >= success)
             {
                 const bool is_pot =
                     item_thrown_data.type == ItemType::potion;
@@ -201,13 +218,12 @@ void throw_item(Actor& actor_throwing,
 
                     delete &item_thrown;
 
-                    game_time::tick();
+                    game_time::tick(speed_pct_diff);
 
                     return;
                 }
 
                 blocked_idx = i;
-
 
                 if (item_thrown_data.type == ItemType::throwing_wpn)
                 {
@@ -247,7 +263,8 @@ void throw_item(Actor& actor_throwing,
         {
             blocked_idx =
                 (item_thrown_data.type == ItemType::potion) ?
-                i : (i - 1);
+                i :
+                (i - 1);
             break;
         }
 
@@ -274,7 +291,7 @@ void throw_item(Actor& actor_throwing,
 
             delete &item_thrown;
 
-            game_time::tick();
+            game_time::tick(speed_pct_diff);
 
             return;
         }
@@ -352,7 +369,7 @@ void throw_item(Actor& actor_throwing,
         item_drop::drop_item_on_map(final_pos, item_thrown);
     }
 
-    game_time::tick();
+    game_time::tick(speed_pct_diff);
 }
 
-} // Throwing
+} // throwing

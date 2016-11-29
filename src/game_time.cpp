@@ -33,9 +33,12 @@ namespace
 
 std::vector<ActorSpeed> turn_type_vector_;
 
-int     current_turn_type_pos_  = 0;
-size_t  current_actor_idx_      = 0;
-int     turn_nr_                = 0;
+const int ticks_per_turn_ = 20;
+
+int current_turn_type_pos_ = 0;
+size_t current_actor_idx_ = 0;
+int turn_nr_ = 0;
+int std_turn_delay_ = ticks_per_turn_;
 
 void run_std_turn_events()
 {
@@ -177,7 +180,10 @@ void run_atomic_turn_events()
 
 void init()
 {
-    current_turn_type_pos_ = current_actor_idx_ = turn_nr_ = 0;
+    current_turn_type_pos_ = 0;
+    current_actor_idx_ = 0;
+    turn_nr_ = 0;
+    std_turn_delay_ = ticks_per_turn_;
 
     actors.clear();
     mobs  .clear();
@@ -214,7 +220,7 @@ void load()
     turn_nr_ = saving::get_int();
 }
 
-int turn()
+int turn_nr()
 {
     return turn_nr_;
 }
@@ -298,80 +304,71 @@ void reset_turn_type_and_actor_counters()
     current_turn_type_pos_ = current_actor_idx_ = 0;
 }
 
-void tick(const PassTime pass_time)
+void tick(const int speed_pct_diff)
 {
-    current_actor()->prop_handler().on_turn_end();
+    auto* actor = current_actor();
 
-    // Should time move forward?
-    if (pass_time == PassTime::yes)
     {
-        // Find next actor
+        const int actor_speed_pct = actor->speed_pct();
 
-        bool can_act = false;
+        const int speed_pct = std::max(1, actor_speed_pct + speed_pct_diff);
 
-        while (!can_act)
+        int delay_to_set = (ticks_per_turn_ * 100) / speed_pct;
+
+        // Make sure the delay is at least 1, to never give an actor infinite
+        // number of actions
+        delay_to_set = std::max(1, delay_to_set);
+
+        actor->delay_ = delay_to_set;
+    }
+
+    actor->prop_handler().on_turn_end();
+
+    // Find next actor who can act
+    while (true)
+    {
+        if (actors.empty())
         {
-            auto current_turn_type = TurnType(current_turn_type_pos_);
-
-            ++current_actor_idx_;
-
-            if (current_actor_idx_ >= actors.size())
-            {
-                current_actor_idx_ = 0;
-
-                ++current_turn_type_pos_;
-
-                if (current_turn_type_pos_ == (int)TurnType::END)
-                {
-                    current_turn_type_pos_ = 0;
-                }
-
-                // Every turn type except "fast" and "fastest" are standard
-                // turns (i.e. we increment the turn counter, and run standard
-                // turn events)
-                if (current_turn_type != TurnType::fast &&
-                    current_turn_type != TurnType::fastest)
-                {
-                    run_std_turn_events();
-                }
-            }
-
-            const auto speed = current_actor()->speed();
-
-            switch (speed)
-            {
-            case ActorSpeed::sluggish:
-                can_act =
-                    (current_turn_type == TurnType::slow ||
-                     current_turn_type == TurnType::normal2) &&
-                    rnd::fraction(2, 3);
-                break;
-
-            case ActorSpeed::slow:
-                can_act =
-                    current_turn_type == TurnType::slow ||
-                    current_turn_type == TurnType::normal2;
-                break;
-
-            case ActorSpeed::normal:
-                can_act =
-                    current_turn_type != TurnType::fast &&
-                    current_turn_type != TurnType::fastest;
-                break;
-
-            case ActorSpeed::fast:
-                can_act = current_turn_type != TurnType::fastest;
-                break;
-
-            case ActorSpeed::fastest:
-                can_act = true;
-                break;
-
-            case ActorSpeed::END:
-                ASSERT(false);
-                break;
-            }
+            return;
         }
+
+        ++current_actor_idx_;
+
+        if (current_actor_idx_ == actors.size())
+        {
+            // New standard turn?
+            if (std_turn_delay_ == 0)
+            {
+                // Increment the turn counter, and run standard turn events
+                // run_std_turn_events();
+                //
+                // NOTE: This will prune destroyed actors, which will decrease
+                //       the actor vector size.
+                //
+                run_std_turn_events();
+
+                std_turn_delay_ = ticks_per_turn_;
+            }
+            else
+            {
+                --std_turn_delay_;
+            }
+
+            current_actor_idx_ = 0;
+        }
+
+        actor = current_actor();
+
+        ASSERT(actor->delay_ >= 0);
+
+        if (actor->delay_ == 0)
+        {
+            // Actor is ready to go
+            break;
+        }
+
+        // Actor is still waiting
+        --actor->delay_;
     }
 
     run_atomic_turn_events();

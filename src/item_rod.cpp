@@ -135,7 +135,7 @@ void Rod::identify(const Verbosity verbosity)
 std::string Rod::name_inf() const
 {
     const std::string charge_str =
-        "Charging:" + to_str(nr_charge_turns_left_);
+        "Charging:" + std::to_string(nr_charge_turns_left_);
 
     if (data_->is_identified)
     {

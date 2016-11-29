@@ -143,7 +143,7 @@ public:
         return spi_max_;
     }
 
-    ActorSpeed speed() const;
+    int speed_pct() const;
 
     virtual std::string name_the() const
     {
@@ -206,6 +206,8 @@ public:
 
     P pos;
 
+    int delay_;
+
 protected:
     //TODO: Try to get rid of these friend declarations
     friend class AbilityVals;
@@ -244,4 +246,4 @@ protected:
     Inventory* inv_;
 };
 
-#endif
+#endif // ACTOR_HPP

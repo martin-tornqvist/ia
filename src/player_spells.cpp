@@ -256,7 +256,7 @@ void incr_spell_skill(const SpellId id, const Verbosity verbosity)
         verbosity == Verbosity::verbose)
     {
         msg_log::add("I am now more proficient at casting this spell (" +
-                     to_str(v) + "%).");
+                     std::to_string(v) + "%).");
     }
 }
 
@@ -374,8 +374,8 @@ void BrowseSpell::draw()
         const Range spi_cost = spell->spi_cost(is_base_cost_only,
                                                map::player);
 
-        const std::string lower_str = to_str(spi_cost.min);
-        const std::string upper_str = to_str(spi_cost.max);
+        const std::string lower_str = std::to_string(spi_cost.min);
+        const std::string upper_str = std::to_string(spi_cost.max);
 
         str = spi_cost.max == 1 ? "1" : (lower_str +  "-" + upper_str);
 
@@ -401,7 +401,7 @@ void BrowseSpell::draw()
                               p,
                               clr_gray_drk);
 
-            str = to_str(skill_pct) + "%";
+            str = std::to_string(skill_pct) + "%";
 
             p.x = descr_x0 - 1 - str.size();
 

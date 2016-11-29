@@ -406,7 +406,7 @@ DeviceLantern::DeviceLantern(ItemDataT* const item_data) :
 
 std::string DeviceLantern::name_inf() const
 {
-    std::string inf = "{" + to_str(nr_turns_left_);
+    std::string inf = "{" + std::to_string(nr_turns_left_);
 
     if (is_activated_)
     {

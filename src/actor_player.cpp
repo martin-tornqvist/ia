@@ -45,7 +45,6 @@ Player::Player() :
     shock_                          (0.0),
     shock_tmp_                      (0.0),
     perm_shock_taken_current_turn_  (0.0),
-    nr_steps_until_free_action_     (-1),
     nr_turns_until_ins_             (-1),
     nr_quick_move_steps_left_       (-1),
     quick_move_dir_                 (Dir::END),
@@ -275,7 +274,6 @@ void Player::save() const
     saving::put_int(spi_max_);
     saving::put_int(pos.x);
     saving::put_int(pos.y);
-    saving::put_int(nr_steps_until_free_action_);
     saving::put_int(nr_turns_until_rspell_);
 
     ASSERT(unarmed_wpn_);
@@ -302,7 +300,6 @@ void Player::load()
     spi_max_ = saving::get_int();
     pos.x = saving::get_int();
     pos.y = saving::get_int();
-    nr_steps_until_free_action_ = saving::get_int();
     nr_turns_until_rspell_ = saving::get_int();
 
     ItemId unarmed_wpn_id = ItemId(saving::get_int());
@@ -835,7 +832,7 @@ void Player::on_actor_turn()
             incr_shock_every_n_turns *= 2;
         }
 
-        const int turn = game_time::turn();
+        const int turn = game_time::turn_nr();
 
         if (((turn % incr_shock_every_n_turns) == 0) &&
             (turn > 1) &&
@@ -1200,7 +1197,7 @@ void Player::on_std_turn()
 
         nr_turns_per_hp = std::max(2, nr_turns_per_hp);
 
-        const int turn = game_time::turn();
+        const int turn = game_time::turn_nr();
         const int current_hp = hp();
         const int max_hp = hp_max(true);
 
@@ -1294,7 +1291,8 @@ void Player::hear_sound(const Snd& snd,
     {
         Actor* const actor_who_made_snd = snd.actor_who_made_sound();
 
-        if (actor_who_made_snd && actor_who_made_snd != this)
+        if (actor_who_made_snd &&
+            (actor_who_made_snd != this))
         {
             static_cast<Mon*>(actor_who_made_snd)->set_player_aware_of_me();
         }
@@ -1323,8 +1321,6 @@ void Player::move(Dir dir)
             dir = static_cast<Trap*>(f)->actor_try_leave(*this, dir);
         }
     }
-
-    PassTime pass_time = PassTime::yes;
 
     const P tgt(pos + dir_utils::offset(dir));
 
@@ -1486,33 +1482,6 @@ void Player::move(Dir dir)
 
             pos = tgt;
 
-            const int free_step_every_n_turn =
-                player_bon::traits[(size_t)Trait::mobile]       ? 3 :
-                player_bon::traits[(size_t)Trait::lithe]        ? 4 :
-                player_bon::traits[(size_t)Trait::dexterous]    ? 5 : 0;
-
-            if (free_step_every_n_turn > 0)
-            {
-                if (nr_steps_until_free_action_ == -1)
-                {
-                    // Steps until free action has not been initialized before
-                    // (e.g. player recently picked dexterous)
-                    nr_steps_until_free_action_ = free_step_every_n_turn - 2;
-                }
-                else if (nr_steps_until_free_action_ == 0)
-                {
-                    // Time for a free move!
-                    nr_steps_until_free_action_ = free_step_every_n_turn - 1;
-
-                    pass_time = PassTime::no;
-                }
-                else
-                {
-                    // Not yet free move
-                    --nr_steps_until_free_action_;
-                }
-            }
-
             // Print message if walking on item
             Item* const item = map::cells[pos.x][pos.y].item;
 
@@ -1553,6 +1522,8 @@ void Player::move(Dir dir)
     // other "time advancing" action has occurred)
     if (pos == tgt)
     {
+        int speed_pct_diff = 0;
+
         // If the player intended to wait in the current position, perform
         // "standing still" actions
         if (intended_dir == Dir::center)
@@ -1589,8 +1560,13 @@ void Player::move(Dir dir)
                 }
             }
         }
+        // Player dids not wait in place
+        else if(player_bon::traits[(size_t)Trait::mobile])
+        {
+            speed_pct_diff = 20;
+        }
 
-        game_time::tick(pass_time);
+        game_time::tick(speed_pct_diff);
     }
 }
 
@@ -1642,11 +1618,6 @@ Clr Player::clr() const
     }
 
     return data_->color;
-}
-
-bool Player::is_free_step_turn() const
-{
-    return nr_steps_until_free_action_ == 0;
 }
 
 void Player::auto_melee()

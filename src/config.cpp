@@ -453,9 +453,9 @@ void set_lines_from_variables(std::vector<std::string>& lines)
     lines.push_back(is_light_explosive_prompt_ ? "1" : "0");
     lines.push_back(is_ranged_wpn_meleee_prompt_ ? "1" : "0");
     lines.push_back(is_ranged_wpn_auto_reload_ ? "1" : "0");
-    lines.push_back(to_str(delay_projectile_draw_));
-    lines.push_back(to_str(delay_shotgun_));
-    lines.push_back(to_str(delay_explosion_));
+    lines.push_back(std::to_string(delay_projectile_draw_));
+    lines.push_back(std::to_string(delay_shotgun_));
+    lines.push_back(std::to_string(delay_explosion_));
     TRACE_FUNC_END;
 }
 
@@ -783,17 +783,17 @@ void ConfigState::draw()
 
         {
             "Projectile delay (ms)",
-            to_str(config::delay_projectile_draw_)
+            std::to_string(config::delay_projectile_draw_)
         },
 
         {
             "Shotgun delay (ms)",
-            to_str(config::delay_shotgun_)
+            std::to_string(config::delay_shotgun_)
         },
 
         {
             "Explosion delay (ms)",
-            to_str(config::delay_explosion_)
+            std::to_string(config::delay_explosion_)
         },
 
         {

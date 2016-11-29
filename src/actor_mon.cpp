@@ -1190,23 +1190,8 @@ DidAction Ghost::on_act()
 
         msg_log::add(name + " reaches for me...");
 
-        const int dodge_skill =
-            map::player->ability(AbilityId::dodge_att, true);
-
-        const AbilityRollResult roll_result =
-            ability_roll::roll(dodge_skill, map::player);
-
-        const bool player_dodges = roll_result >= success;
-
-        if (player_dodges)
-        {
-            msg_log::add("I dodge!", clr_msg_good);
-        }
-        else
-        {
-            map::player->prop_handler().try_add(
-                new PropSlowed(PropTurns::std));
-        }
+        map::player->prop_handler().try_add(
+            new PropSlowed(PropTurns::std));
 
         game_time::tick();
 
@@ -2410,7 +2395,7 @@ void TheHighPriest::on_std_turn_hook()
 {
     const int regen_every_n_turn = 3;
 
-    if (is_alive() && (game_time::turn() % regen_every_n_turn == 0))
+    if (is_alive() && (game_time::turn_nr() % regen_every_n_turn == 0))
     {
         restore_hp(1, false, Verbosity::silent);
     }

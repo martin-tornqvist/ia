@@ -156,7 +156,7 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
 
 void init()
 {
-    for (int i = 0; i < (int)Trait::END; ++i)
+    for (size_t i = 0; i < (size_t)Trait::END; ++i)
     {
         traits[i] = false;
     }
@@ -168,7 +168,7 @@ void save()
 {
     saving::put_int((int)bg_);
 
-    for (int i = 0; i < (int)Trait::END; ++i)
+    for (size_t i = 0; i < (size_t)Trait::END; ++i)
     {
         saving::put_bool(traits[i]);
     }
@@ -178,7 +178,7 @@ void load()
 {
     bg_ = Bg(saving::get_int());
 
-    for (int i = 0; i < (int)Trait::END; ++i)
+    for (size_t i = 0; i < (size_t)Trait::END; ++i)
     {
         traits[i] = saving::get_bool();
     }
@@ -347,11 +347,12 @@ std::vector<std::string> bg_descr(const Bg id)
     {
         return
         {
-            "Does not regenerate Hit Points and cannot use medical equipment - must "
-            "instead heal by feeding on corpses (stand still to feed)",
+            "Does not regenerate Hit Points and cannot use medical equipment - "
+            "must instead heal by feeding on corpses (stand still to feed)",
             "",
             "Has an arcane ability to incite Frenzy at will (increased speed, "
-            "+10% melee hit chance, +1 melee damage, must move towards enemies).",
+            "+10% melee hit chance, +1 melee damage, must move towards "
+            "enemies).",
             "",
             "Does not become Weakened when Frenzy ends",
             "",
@@ -415,7 +416,7 @@ std::vector<std::string> bg_descr(const Bg id)
     case Bg::war_vet:
         return
         {
-            "Can switch to prepared weapon instantly",
+            "Switches to prepared weapon with +100% speed",
             "",
             "Maintains armor twice as long before it breaks",
             "",
@@ -446,142 +447,195 @@ std::string trait_descr(const Trait id)
     switch (id)
     {
     case Trait::adept_melee_fighter:
-        return "+10% hit chance and +1 damage with melee attacks";
+        return
+            "+10% hit chance, +10% attack speed, and +1 damage with melee "
+            "attacks";
 
     case Trait::expert_melee_fighter:
-        return "+10% hit chance and +1 damage with melee attacks";
+        return
+            "+10% hit chance, +10% attack speed, and +1 damage with melee "
+            "attacks";
 
     case Trait::adept_marksman:
-        return "+10% hit chance and +1 damage with firearms and thrown weapons, you occasionally "
-               "reload instantly";
+        return
+            "+10% hit chance, +25% attack speed, and +1 damage with firearms "
+            "and thrown weapons, +50% reload speed";
 
     case Trait::expert_marksman:
-        return "+10% hit chance and +1 damage with firearms and thrown weapons, you often "
-               "reload instantly";
+        return
+            "+10% hit chance, +25% attack speed, and +1 damage with firearms "
+            "and thrown weapons, +50% reload speed";
 
     case Trait::steady_aimer:
-        return "Standing still gives ranged attacks +20% hit chance on the following turn";
+        return
+            "Standing still gives ranged attacks +20% hit chance on the "
+            "following turn";
 
     case Trait::sharpshooter:
-        return "Standing still for three turns gives ranged attacks maximum hit chance "
-               "and damage on the following turn";
+        return
+            "Standing still for three turns gives ranged attacks maximum hit "
+            "chance and damage on the following turn";
 
     case Trait::fast_shooter:
-        return "Every second consecutive shot is a free action (not applicable to thrown weapons)";
+        return
+            "+100% firing speed (not applicable to thrown weapons)";
 
     case Trait::dem_expert:
-        return "+1 radius for explosives, you are not harmed by your own "
-               "Molotov Cocktails, you occasionally light explosives instantly";
+        return
+            "+1 radius for explosives, you are not harmed by your own "
+            "Molotov Cocktails, +100% speed when lighting explosives";
 
     case Trait::cool_headed:
-        return "+20% shock resistance";
+        return
+            "+20% shock resistance";
 
     case Trait::courageous:
-        return "+20% shock resistance";
+        return
+            "+20% shock resistance";
 
     case Trait::warlock:
-        return "-1 Spirit cost for damage dealing spells, casting any spell has a chance "
-               "to make you \"Charged\" for one turn, causing attack spells to do "
-               "maximum damage";
+        return
+            "-1 Spirit cost for damage dealing spells, casting any spell has a "
+            "chance to make you \"Charged\" for one turn, causing attack "
+            "spells to do maximum damage";
 
     case Trait::summoner:
-        return "-1 Spirit cost for summoning spells, halved risk that called creatures are hostile";
+        return
+            "-1 Spirit cost for summoning spells, halved risk that called "
+            "creatures are hostile";
 
     case Trait::seer:
-        return "Detection spells have decreased Spirit costs, and the spell "
-               "\"Detect Monsters\" has triple duration";
+        return
+            "Detection spells have lower Spirit costs, and the spell "
+            "\"Detect Monsters\" has triple duration";
 
     case Trait::tough:
-        return "+2 hit points, +10% carry weight limit, better results for object "
-               "interactions requiring strength (e.g. bashing doors or pushing a lid)";
+        return
+            "+2 hit points, +10% carry weight limit, better results for object "
+            "interactions requiring strength (e.g. bashing doors or pushing a "
+            "lid)";
 
     case Trait::rugged:
-        return "+4 hit points, +10% carry weight limit, better results for object "
-               "interactions requiring strength (such as bashing doors, or moving the "
-               "lid from a stone coffin)";
+        return
+            "+4 hit points, +10% carry weight limit, better results for object "
+            "interactions requiring strength (such as bashing doors, or moving "
+            "the lid from a stone coffin)";
 
     case Trait::strong_backed:
-        return "+30% carry weight limit";
+        return
+            "+30% carry weight limit";
 
     case Trait::dexterous:
-        return "+25% chance to dodge melee attacks, better chances to evade traps, "
-               "every fifth step is a free action";
+        return
+            "+10% speed for all actions, +15% chance to evade melee and "
+            "ranged attacks.";
 
     case Trait::lithe:
-        return "+25% chance to dodge melee attacks, better chances to evade traps, "
-               "every fourth step is a free action";
+        return
+            "+10% speed for all actions, +15% chance to evade melee and "
+            "ranged attacks.";
 
     case Trait::mobile:
-        return "Every third step is a free action";
+        return
+            "+20% movement speed (i.e. only when moving between different "
+            "cells on the map)";
 
     case Trait::fearless:
-        return "You cannot become terrified, +5% shock resistance";
+        return
+            "You cannot become terrified, +5% shock resistance";
 
     case Trait::healer:
-        return "Using medical equipment takes half the normal time and resources";
+        return
+            "Using medical equipment takes half the normal time and resources";
 
     case Trait::observant:
-        return "You are more likely to spot hidden monsters and objects";
+        return
+            "You are more likely to spot hidden monsters and objects";
 
     case Trait::perceptive:
-        return "You are more likely to spot hidden monsters and objects";
+        return
+            "You are more likely to spot hidden monsters and objects";
 
     case Trait::vigilant:
-        return "You cannot be backstabbed - monsters that you are unaware of gets no melee attack "
-               "bonus against you, and their attacks can be dodged";
+        return
+            "You cannot be backstabbed - monsters that you are unaware of gets "
+            "no melee attack bonus against you, and their attacks can be "
+            "dodged";
 
     case Trait::rapid_recoverer:
-        return "Double Hit Point regeneration rate";
+        return
+            "Double Hit Point regeneration rate";
 
     case Trait::survivalist:
-        return "You cannot become diseased, negative effects from wounds reduced by 50%";
+        return
+            "You cannot become diseased, negative effects from wounds reduced "
+            "by 50%";
 
     case Trait::perseverant:
-        return "When your Hit Points are reduced to 30% or less, you gain +50% chance to "
-               "dodge melee attacks, and +30% hit chance with melee and ranged attacks";
+        return
+            "When your Hit Points are reduced to 30% or less, you gain +50% "
+            "chance to dodge melee and ranged attacks, and +30% hit chance "
+            "with melee and ranged attacks";
 
     case Trait::self_aware:
-        return "You cannot become confused, the number of remaining turns for status "
-               "effects are displayed";
+        return
+            "You cannot become confused, the number of remaining turns for "
+            "status effects are displayed";
 
     case Trait::strong_spirit:
-        return "+2 Spirit Points, increased Spirit regeneration rate, you can defy harmful "
-               "spells (it takes a certain number of turns to regain spell resistance)";
+        return
+            "+2 Spirit Points, increased Spirit regeneration rate, you can "
+            "defy harmful spells (it takes a certain number of turns to regain "
+            "spell resistance)";
 
     case Trait::mighty_spirit:
-        return "+2 Spirit Points, increased Spirit regeneration rate, you can defy harmful spells "
-               "- the number of turns to regain spell resistance is reduced";
+        return
+            "+2 Spirit Points, increased Spirit regeneration rate, you can "
+            "defy harmful spells - the number of turns to regain spell "
+            "resistance is reduced";
 
     case Trait::stealthy:
-        return "You are more likely to avoid detection";
+        return
+            "You are more likely to avoid detection";
 
     case Trait::imperceptible:
-        return "You are more likely to avoid detection";
+        return
+            "You are more likely to avoid detection";
 
     case Trait::vicious:
-        return "+50% backstab damage";
+        return
+            "+50% backstab damage";
 
     case Trait::treasure_hunter:
-        return "You tend to find more items";
+        return
+            "You tend to find more items";
 
     case Trait::undead_bane:
-        return "+2 melee and ranged attack damage against undead monsters. Attacks "
-               "against ethereal undead monsters (e.g. Ghosts) never pass through them "
-               "(although you can still miss in the ordinary way)";
+        return
+            "+2 melee and ranged attack damage against undead monsters. "
+            "Attacks against ethereal undead monsters (e.g. Ghosts) never pass "
+            "through them (although you can still miss in the ordinary way)";
 
     case Trait::ravenous:
-        return "You occasionally feed on living victims when attacking with your claws.";
+        return
+            "You occasionally feed on living victims when attacking with your "
+            "claws.";
 
     case Trait::foul:
-        return "You have particularly filthy and verminous claws - vicious worms occasionally "
-               "burst out from the corpses of your victims to attack your enemies.";
+        return
+            "You have particularly filthy and verminous claws - vicious worms "
+            "occasionally burst out from the corpses of your victims to attack "
+            "your enemies.";
 
     case Trait::toxic:
-        return "Attacks with your claws occasionally poisons your victims. "
-               "You are immune to Poison.";
+        return
+            "Attacks with your claws occasionally poisons your victims. "
+            "You are immune to Poison.";
 
     case Trait::indomitable_fury:
-        return "While Frenzied, you are immune to Wounds, and your attacks causes fear.";
+        return
+            "While Frenzied, you are immune to Wounds, and your attacks causes "
+            "fear.";
 
     case Trait::END:
         break;
@@ -1083,4 +1137,4 @@ bool gets_undead_bane_bon(const ActorDataT& actor_data)
         actor_data.is_undead;
 }
 
-} //player_bon
+} // player_bon
