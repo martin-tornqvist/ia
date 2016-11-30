@@ -590,16 +590,7 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
         //
         if (att_data.attacker == map::player)
         {
-            if (att_data.att_result == fail_critical)
-            {
-                msg_log::add("I botch the attack completely!");
-
-                sfx = SfxId::END;
-            }
-            else // Not critical fail
-            {
-                msg_log::add("I miss.");
-            }
+            msg_log::add("I miss.");
         }
         // Attacker is monster
         else if (att_data.attacker)
@@ -1611,86 +1602,41 @@ void melee(Actor* const attacker,
         }
     }
 
-    // Player critically fails melee attack?
+    auto& player_inv = map::player->inv();
+
+    const bool is_crit_fail = att_data.att_result == fail_critical;
+
+    const bool player_cursed = map::player->has_prop(PropId::cursed);
+
+    const bool is_wielding_wpn = player_inv.item_in_slot(SlotId::wpn) == &wpn;
+
+    const int break_on_crit_fail_one_in_n = 32;
+
+    // If player is cursed and the attack critically fails, occasionally break
+    // the weapon.
     if ((attacker == map::player) &&
-        (att_data.att_result == fail_critical))
+        is_crit_fail &&
+        player_cursed &&
+        is_wielding_wpn &&
+        rnd::one_in(break_on_crit_fail_one_in_n))
     {
-        Player& player = *map::player;
+        // Remove item without deleting it
+        Item* const item = player_inv.remove_item_in_slot(SlotId::wpn,
+                                                          false);
 
-        const int roll = rnd::range(1, 8);
+        ASSERT(item);
 
-        switch (roll)
+        if (item)
         {
-        // Exhausted (weakened)
-        case 1:
-        {
-            Prop* prop = new PropWeakened(PropTurns::specific,
-                                           rnd::range(6, 12));
+            const std::string item_name =
+                item->name(ItemRefType::plain, ItemRefInf::none);
 
-            player.prop_handler().try_add(prop,
-                                          PropSrc::intr,
-                                          false,
-                                          Verbosity::silent);
-
-            msg_log::add("I am exhausted.",
-                         clr_msg_note,
-                         true,
-                         MorePromptOnMsg::yes);
-        }
-        break;
-
-        // Off-balance
-        case 2:
-        {
-            msg_log::add("I am off-balance.",
+            msg_log::add("My " + item_name + " breaks!",
                          clr_msg_note,
                          true,
                          MorePromptOnMsg::yes);
 
-            Prop* prop = new PropParalyzed(PropTurns::specific,
-                                            rnd::range(1, 2));
-
-            player.prop_handler().try_add(prop,
-                                          PropSrc::intr,
-                                          false,
-                                          Verbosity::silent);
-        }
-        break;
-
-        // Weapon breaks?
-        case 3:
-        {
-            // Only break weapon if:
-            // * Player is Cursed, and
-            // * Random roll (we really don't want this to happen often), and
-            // * Player is attacking with wielded weapon (and not e.g. a Kick)
-            if (player.has_prop(PropId::cursed) &&
-                rnd::one_in(4) &&
-                player.inv().item_in_slot(SlotId::wpn) == &wpn)
-            {
-                // Remove item without deleting it
-                Item* item = player.inv().remove_item_in_slot(SlotId::wpn,
-                                                              false);
-
-                if (item)
-                {
-                    std::string item_name =
-                        item->name(ItemRefType::plain, ItemRefInf::none);
-
-                    msg_log::add("My " + item_name + " breaks!",
-                                 clr_msg_note,
-                                 true,
-                                 MorePromptOnMsg::yes);
-
-                    delete item;
-                }
-            }
-        }
-        break;
-
-        // Nothing happens
-        default:
-            break;
+            delete item;
         }
     }
 

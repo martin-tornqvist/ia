@@ -26,6 +26,7 @@ Gameplay
 * Rogues remain aware of monsters much longer than the other Backgrounds, and the other Backgrounds remain aware for a shorter duration than before
 * Removed the random "I have a bad feeling about this..." events causing shock
 * The Iron Suit no longer gives penalties to aiming or spotting hidden monsters and objects
+* Removed all negative effects from critically failing melee attacks (such as "I am exhausted"), except for a small chance of the weapon breaking - which can only happen while cursed
 
 Interface
 * Reduced "more" prompt message spam from traps (less interruption)
