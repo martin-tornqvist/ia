@@ -20,28 +20,20 @@ namespace
 
 int random_out_of_depth()
 {
-    if (map::dlvl == 0)
+    int nr_levels = 0;
+
+    if (map::dlvl > 0 &&
+        rnd::one_in(6))
     {
-        return 0;
+        nr_levels = 8;
     }
 
-    if (rnd::one_in(40) && map::dlvl > 1)
-    {
-        return 5;
-    }
-
-    if (rnd::one_in(5))
-    {
-        return 2;
-    }
-
-    return 0;
+    return nr_levels;
 }
 
-void mk_list_of_mon_can_auto_spawn(const int nr_lvls_out_of_depth,
-                                   std::vector<ActorId>& list_ref)
+std::vector<ActorId> valid_auto_spawn_monsters(const int nr_lvls_out_of_depth)
 {
-    list_ref.clear();
+    std::vector<ActorId> ret;
 
     const int effective_dlvl =
         constr_in_range(1,
@@ -52,13 +44,11 @@ void mk_list_of_mon_can_auto_spawn(const int nr_lvls_out_of_depth,
     // multiple uniques, note that this could otherwise happen for example with
     // Zuul - he is allowed to spawn freely after he appears from a possessed
     // Cultist priest)
-    bool spawned_ids[size_t(ActorId::END)];
-
-    for (bool& v : spawned_ids) {v = false;}
+    bool spawned_ids[(size_t)ActorId::END] = {};
 
     for (const auto* const actor : game_time::actors)
     {
-        spawned_ids[size_t(actor->id())] = true;
+        spawned_ids[(size_t)actor->id()] = true;
     }
 
     for (const auto& d : actor_data::data)
@@ -68,11 +58,13 @@ void mk_list_of_mon_can_auto_spawn(const int nr_lvls_out_of_depth,
             d.nr_left_allowed_to_spawn != 0 &&
             effective_dlvl >= d.spawn_min_dlvl &&
             effective_dlvl <= d.spawn_max_dlvl &&
-            !(d.is_unique && spawned_ids[size_t(d.id)]))
+            !(d.is_unique && spawned_ids[(size_t)d.id]))
         {
-            list_ref.push_back(d.id);
+            ret.push_back(d.id);
         }
     }
+
+    return ret;
 }
 
 void mk_group_at(const ActorId id,
@@ -157,12 +149,15 @@ bool mk_random_group_for_room(const RoomType room_type,
     TRACE_FUNC_BEGIN_VERBOSE;
 
     const int nr_lvls_out_of_depth_allowed = random_out_of_depth();
-    std::vector<ActorId> id_bucket;
-    mk_list_of_mon_can_auto_spawn(nr_lvls_out_of_depth_allowed, id_bucket);
+
+    auto id_bucket =
+        valid_auto_spawn_monsters(nr_lvls_out_of_depth_allowed);
 
     for (size_t i = 0; i < id_bucket.size(); ++i)
     {
-        const ActorDataT& d = actor_data::data[size_t(id_bucket[i])];
+        const auto id = id_bucket[i];
+
+        const ActorDataT& d = actor_data::data[(size_t)id];
 
         bool is_mon_native_to_room = false;
 
@@ -208,8 +203,8 @@ void mk_group_of_random_at(const std::vector<P>& sorted_free_cells,
                            const int nr_lvls_out_of_depth_allowed,
                            const bool is_roaming_allowed)
 {
-    std::vector<ActorId> id_bucket;
-    mk_list_of_mon_can_auto_spawn(nr_lvls_out_of_depth_allowed, id_bucket);
+    const auto id_bucket =
+        valid_auto_spawn_monsters(nr_lvls_out_of_depth_allowed);
 
     if (!id_bucket.empty())
     {
@@ -345,7 +340,7 @@ void populate_intro_lvl()
     // Find possible monsters that can spawn on intro level (dlvl 0)
     std::vector<ActorId> ids_can_spawn_intro_lvl;
 
-    for (size_t i = 0; i < size_t(ActorId::END); ++i)
+    for (size_t i = 0; i < (size_t)ActorId::END; ++i)
     {
         if (actor_data::data[i].spawn_min_dlvl == 0)
         {

@@ -112,7 +112,7 @@ struct MonGroupSpawnRule
 
 enum class ActorSpeed
 {
-    sluggish    = 40,
+    sluggish    = 30,
     slow        = 80,
     normal      = 100,
     fast        = 150,
