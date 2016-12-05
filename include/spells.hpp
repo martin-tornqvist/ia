@@ -72,12 +72,6 @@ Spell* mk_spell_from_id(const SpellId spell_id);
 
 } //spell_handling
 
-enum class SpellEffectNoticed
-{
-    no,
-    yes
-};
-
 class Spell
 {
 public:
@@ -85,9 +79,9 @@ public:
 
     virtual ~Spell() {}
 
-    SpellEffectNoticed cast(Actor* const caster,
-                            const bool is_intrinsic,
-                            const bool is_base_cost_only) const;
+    void cast(Actor* const caster,
+              const bool is_intrinsic,
+              const bool is_base_cost_only) const;
 
     virtual bool allow_mon_cast_now(Mon& mon) const
     {
@@ -102,7 +96,8 @@ public:
 
     virtual std::vector<std::string> descr() const = 0;
 
-    Range spi_cost(const bool is_base_cost_only, Actor* const caster = nullptr) const;
+    Range spi_cost(const bool is_base_cost_only,
+                   Actor* const caster = nullptr) const;
 
     int shock_lvl_intr_cast() const
     {
@@ -126,7 +121,7 @@ public:
     virtual IntrSpellShock shock_type_intr_cast() const = 0;
 
 protected:
-    virtual SpellEffectNoticed cast_impl(Actor* const caster) const = 0;
+    virtual void cast_impl(Actor* const caster) const = 0;
 
     virtual int max_spi_cost() const = 0;
 
@@ -169,13 +164,13 @@ public:
     {
         return
         {
-            "Siphons power from some hellish mystic source, which is focused into a "
-            "bolt cast towards a target with great force."
+            "Siphons power from some hellish mystic source, which is focused "
+            "into a bolt cast towards a target with great force."
         };
     }
 
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -219,17 +214,13 @@ public:
     {
         return
         {
-            "Channels the destructive force of Azathoth unto all visible enemies."
-
-            /*
-            "This spell will generally inflict damage, but due to the chaotic nature of "
-            "its source, it can occasionally have other effects, and may affect the "
-            "caster as well [TODO]."*/
+            "Channels the destructive force of Azathoth unto all visible "
+            "enemies."
         };
     }
 
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -273,13 +264,13 @@ public:
     {
         return
         {
-            "Engulfs all visible enemies in flames, and causes terrible destruction on "
-            "the surrounding area."
+            "Engulfs all visible enemies in flames, and causes terrible "
+            "destruction on the surrounding area."
         };
     }
 
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -328,7 +319,7 @@ public:
         };
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -370,15 +361,16 @@ public:
     {
         return
         {
-            "Infuses lifeless weapons with a spirit of their own, causing them to rise up into the "
-            "air and protect their master (for a while). It is only possible to animate basic "
-            "melee weapons however - \"modern\" mechanisms such as pistols or machine guns are far "
-            "too complex."
+            "Infuses lifeless weapons with a spirit of their own, causing "
+            "them to rise up into the air and protect their master (for a "
+            "while). It is only possible to animate basic melee weapons "
+            "however - \"modern\" mechanisms such as pistols or machine guns "
+            "are far too complex."
         };
     }
 
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -420,7 +412,8 @@ public:
         {
             "Summons a loyal Mummy servant which will fight for the caster.",
 
-            "If an allied Mummy is already present, this spell will instead heal it.",
+            "If an allied Mummy is already present, this spell will instead "
+            "heal it.",
 
             summon_warning_str
         };
@@ -431,7 +424,7 @@ public:
         return IntrSpellShock::disturbing;
     }
 protected:
-    virtual SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    virtual void cast_impl(Actor* const caster) const override;
 
     virtual int max_spi_cost() const override
     {
@@ -474,7 +467,7 @@ public:
         return {"Reveals the presence of all items in the surrounding area."};
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -517,7 +510,7 @@ public:
         return {"Reveals the presence of all traps in the surrounding area."};
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -563,7 +556,7 @@ public:
         };
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -609,7 +602,7 @@ public:
         };
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -651,12 +644,13 @@ public:
     {
         return
         {
-            "Brings the caster to the brink of death in order to restore the spirit. "
-            "The amount restored is proportional to the life sacrificed."
+            "Brings the caster to the brink of death in order to restore the "
+            "spirit. The amount restored is proportional to the life "
+            "sacrificed."
         };
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -698,12 +692,13 @@ public:
     {
         return
         {
-            "Brings the caster to the brink of spiritual death in order to restore "
-            "health. The amount restored is proportional to the spirit sacrificed."
+            "Brings the caster to the brink of spiritual death in order to "
+            "restore health. The amount restored is proportional to the "
+            "spirit sacrificed."
         };
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -746,7 +741,7 @@ public:
         return {"All enemies forget your presence."};
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -788,13 +783,13 @@ public:
     {
         return
         {
-            "Incites a great rage in the caster, which will charge their enemies with a "
-            "terrible, uncontrollable fury."
+            "Incites a great rage in the caster, which will charge their "
+            "enemies with a terrible, uncontrollable fury."
         };
     }
 
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -837,7 +832,7 @@ public:
         return {"Bends the universe in favor of the caster."};
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -879,7 +874,7 @@ public:
         return {"Illuminates the area around the caster."};
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -923,7 +918,7 @@ public:
         return {""};
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -968,7 +963,7 @@ public:
         return {"Instantly moves the caster to a different position."};
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -1012,11 +1007,12 @@ public:
     {
         return
         {
-            "For a brief time, the caster is completely shielded from fire and electricity."
+            "For a brief time, the caster is completely shielded from fire "
+            "and electricity."
         };
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -1048,8 +1044,10 @@ public:
 
     std::vector<std::string> descr() const override
     {
-        return {"Attempts to enfeeble all visible enemies by exhausting their stamina, or by "
-                "terrorizing their minds."};
+        return
+        {
+            "Attempts to physically or mentally enfeeble all seen enemies."
+        };
     }
 
     bool mon_can_learn() const override
@@ -1063,7 +1061,7 @@ public:
     }
 
 protected:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -1108,7 +1106,7 @@ public:
         return {""};
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -1152,14 +1150,15 @@ public:
     {
         return
         {
-            "Summons a creature to do the caster's bidding. A more powerful sorcerer "
-            "(higher character level) can summon beings of greater might and rarity.",
+            "Summons a creature to do the caster's bidding. A more powerful "
+            "sorcerer (higher character level) can summon beings of greater "
+            "might and rarity.",
 
             summon_warning_str
         };
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -1204,7 +1203,7 @@ public:
         return {""};
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -1249,7 +1248,7 @@ public:
         return {""};
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -1294,7 +1293,7 @@ public:
         return {""};
     }
 private:
-    SpellEffectNoticed cast_impl(Actor* const caster) const override;
+    void cast_impl(Actor* const caster) const override;
 
     int max_spi_cost() const override
     {
@@ -1302,4 +1301,4 @@ private:
     }
 };
 
-#endif
+#endif // SPELLS_HPP

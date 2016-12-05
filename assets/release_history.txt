@@ -16,6 +16,7 @@ Gameplay
 * Occultist starts with fixed (non-random) items and spells
 * When quaffing Potion of Insight, you can now manually choose which item to identify
 * Potion of Insight always gives some XP, in addition to identifying an item (to avoid making Potions of Insight worthless if all items are identified)
+* All Manuscripts are now guaranteed to be identified when read
 * You always search for traps and secret doors in every seen cell (so you can stand in the middle of a room and search all walls)
 * Traps are always immediately revealed when triggered by the player
 * Added Barred gates (doors that you can see and shoot through), and Gratings (similarly, but walls)

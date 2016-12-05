@@ -87,19 +87,14 @@ ConsumeItem Scroll::activate(Actor* const actor)
             data_->is_tried = true;
         }
 
-        const auto is_noticed = spell->cast(map::player, false, true);
+        spell->cast(map::player, false, true);
 
         msg_log::add(crumble_str);
 
-        if (!is_identified_before &&
-            is_noticed == SpellEffectNoticed::yes)
-        {
-            identify(Verbosity::verbose);
-        }
+        identify(Verbosity::verbose);
 
         // Learn spell, increase skill level
-        if (data_->is_identified &&
-            spell->player_can_learn())
+        if (spell->player_can_learn())
         {
             const SpellId id = spell->id();
 
@@ -133,21 +128,23 @@ Spell* Scroll::mk_spell() const
 
 void Scroll::identify(const Verbosity verbosity)
 {
-    if (!data_->is_identified)
+    if (data_->is_identified)
     {
-        data_->is_identified = true;
+        return;
+    }
 
-        if (verbosity == Verbosity::verbose)
-        {
-            const std::string name_after =
-                name(ItemRefType::a, ItemRefInf::none);
+    data_->is_identified = true;
 
-            msg_log::add("I have identified " + name_after + ".");
+    if (verbosity == Verbosity::verbose)
+    {
+        const std::string name_after =
+            name(ItemRefType::a, ItemRefInf::none);
 
-            game::add_history_event("Identified " + name_after + ".");
+        msg_log::add("I have identified " + name_after + ".");
 
-            give_xp_for_identify();
-        }
+        game::add_history_event("Identified " + name_after + ".");
+
+        give_xp_for_identify();
     }
 }
 

@@ -239,7 +239,7 @@ void incr_spell_skill(const SpellId id, const Verbosity verbosity)
     {
         incr_dice = DiceParam(4, 6);
     }
-    else //Not Occultist
+    else // Not Occultist
     {
         incr_dice = DiceParam(1, 6);
     }
