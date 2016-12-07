@@ -1330,6 +1330,7 @@ void Player::move(Dir dir)
     {
         // Check if map features are blocking (used later)
         Cell& cell = map::cells[tgt.x][tgt.y];
+
         bool is_features_allow_move = cell.rigid->can_move(*this);
 
         std::vector<Mob*> mobs;
@@ -1353,6 +1354,7 @@ void Player::move(Dir dir)
         if (mon && !is_leader_of(mon))
         {
             const bool can_see_mon = map::player->can_see_actor(*mon);
+
             const bool is_aware_of_mon = mon->player_aware_of_me_counter_ > 0;
 
             if (is_aware_of_mon)
@@ -1488,14 +1490,6 @@ void Player::move(Dir dir)
 
             if (item)
             {
-                const bool can_see = prop_handler_->allow_see();
-
-                msg_log::add(can_see ?
-                             "I see here:" :
-                             "I try to feel what is lying here...",
-                             clr_white,
-                             true);
-
                 std::string item_name = item->name(ItemRefType::plural,
                                                    ItemRefInf::yes,
                                                    ItemRefAttInf::wpn_context);
@@ -1503,6 +1497,18 @@ void Player::move(Dir dir)
                 text_format::first_to_upper(item_name);
 
                 msg_log::add(item_name + ".");
+            }
+
+            // Print message if walking on corpses
+            for (auto* const actor : game_time::actors)
+            {
+                if (actor->pos == pos &&
+                    actor->state() == ActorState::corpse)
+                {
+                    const std::string name = actor->corpse_name_a();
+
+                    msg_log::add(name + ".");
+                }
             }
         }
 

@@ -42,6 +42,7 @@ Interface
 * When [v]iewing detailed monster descriptions, the game now prints hit chances for melee, ranged, and throwing attacks for the player and the monster - with all values contributing to the total hit chances shown
 * Weapons now merely display their own hit chance modifier (e.g. +5% or -10%), instead of your skill plus the weapon modifier (the old way was misleading, since more factors are involved when calculating actual hit chances during attacks)
 * Removed the "Combat skills" section of the character description page
+* The game now prints messages when you step on corpses
 
 Bug fixes
 * Fixed a bug where if you dropped the Staff of the Pharaohs, the spell would be permanently lost, even if you picked it up again

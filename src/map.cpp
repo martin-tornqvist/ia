@@ -296,7 +296,8 @@ Actor* actor_at_pos(const P& pos, ActorState state)
 {
     for (auto* const actor : game_time::actors)
     {
-        if (actor->pos == pos && actor->state() == state)
+        if (actor->pos == pos &&
+            actor->state() == state)
         {
             return actor;
         }
