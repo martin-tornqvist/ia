@@ -164,8 +164,11 @@ Room* mk_room(Region& region)
 
     ASSERT(region.is_free);
 
+    const int templ_room_one_in_n = 12;
+
     // Make a templated room?
-    if (map::dlvl <= dlvl_last_mid_game && rnd::one_in(11))
+    if (map::dlvl <= dlvl_last_mid_game &&
+        rnd::one_in(templ_room_one_in_n))
     {
         const P max_dims(region.r.dims());
 
@@ -194,8 +197,7 @@ Room* mk_room(Region& region)
 
     const R room_rect = region.rnd_room_rect();
 
-    auto* room = room_factory::mk_random_room(room_rect,
-                                              IsSubRoom::no);
+    auto* room = room_factory::mk_random_room(room_rect, IsSubRoom::no);
 
     register_room(*room);
 
@@ -209,8 +211,7 @@ Room* mk_room(Region& region)
 
 Room* mk_room(const R& r, const IsSubRoom is_sub_room)
 {
-    auto* room = room_factory::mk_random_room(r,
-                                              is_sub_room);
+    auto* room = room_factory::mk_random_room(r, is_sub_room);
 
     register_room(*room);
 
