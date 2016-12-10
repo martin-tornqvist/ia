@@ -203,42 +203,42 @@ void Door::on_hit(const DmgType dmg_type,
         {
             ASSERT(actor);
 
-            switch (type_)
-            {
-            case DoorType::wood:
-            case DoorType::gate:
-            {
-                Fraction destr_chance(6, 10);
+            // switch (type_)
+            // {
+            // case DoorType::wood:
+            // case DoorType::gate:
+            // {
+            //     Fraction destr_chance(6, 10);
 
-                if (actor == map::player)
-                {
-                    if (player_bon::traits[(size_t)Trait::tough])
-                    {
-                        destr_chance.num += 2;
-                    }
+            //     if (actor == map::player)
+            //     {
+            //         if (player_bon::traits[(size_t)Trait::tough])
+            //         {
+            //             destr_chance.num += 2;
+            //         }
 
-                    if (player_bon::traits[(size_t)Trait::rugged])
-                    {
-                        destr_chance.num += 2;
-                    }
+            //         if (player_bon::traits[(size_t)Trait::rugged])
+            //         {
+            //             destr_chance.num += 2;
+            //         }
 
-                    if (destr_chance.roll())
-                    {
+            //         if (destr_chance.roll())
+            //         {
 
-                    }
-                }
-                else //Is monster
-                {
-                    if (destr_chance.roll())
-                    {
+            //         }
+            //     }
+            //     else //Is monster
+            //     {
+            //         if (destr_chance.roll())
+            //         {
 
-                    }
-                }
-            } break;
+            //         }
+            //     }
+            // } break;
 
-            case DoorType::metal:
-                break;
-            }
+            // case DoorType::metal:
+            //     break;
+            // }
 
         } // blunt_heavy
 

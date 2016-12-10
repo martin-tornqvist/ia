@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "room.hpp"
 #include "rl_utils.hpp"
 #include "array2.hpp"
 
@@ -17,6 +18,17 @@ enum class LevelTemplId
     END
 };
 
+struct RoomTempl
+{
+    RoomTempl() :
+        symbols (),
+        type    ((RoomType)0) {}
+
+    Array2<char> symbols;
+
+    RoomType type;
+};
+
 namespace map_templates
 {
 
@@ -24,7 +36,7 @@ void init();
 
 const Array2<char>& level_templ(LevelTemplId id);
 
-const Array2<char>* random_room_templ(const P& max_dim);
+RoomTempl* random_room_templ(const P& max_dims);
 
 } // map_templates
 

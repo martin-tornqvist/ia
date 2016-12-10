@@ -20,6 +20,11 @@ void mk_sub_rooms()
     {
         auto* const outer_room = map::room_list[i];
 
+        if (!outer_room->allow_sub_rooms())
+        {
+            continue;
+        }
+
         const R outer_room_rect = outer_room->r_;
         const P outer_room_d(outer_room_rect.dims());
 

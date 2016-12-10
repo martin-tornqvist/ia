@@ -36,6 +36,66 @@ void add_to_room_bucket(const RoomType type, const size_t nr)
     }
 }
 
+//
+// NOTE: This cannot be a virtual class method, since a room of a certain
+//       RoomType doesn't have to be instantiated as an object of the
+//       corresponding Room child class (it could be for example a TemplateRoom
+//       object with RoomType "ritual" - in that case we still want the same
+//       chance to make it dark).
+//
+int base_pct_chance_drk(const RoomType room_type)
+{
+    switch (room_type)
+    {
+    case RoomType::plain:
+        return 5;
+
+    case RoomType::human:
+        return 10;
+
+    case RoomType::ritual:
+        return 15;
+
+    case RoomType::jail:
+        return 50;
+
+    case RoomType::spider:
+        return 15;
+
+    case RoomType::snake_pit:
+        return 75;
+
+    case RoomType::crypt:
+        return 60;
+
+    case RoomType::monster:
+        return 80;
+
+    case RoomType::flooded:
+        return 25;
+
+    case RoomType::muddy:
+        return 25;
+
+    case RoomType::cave:
+        return 30;
+
+    case RoomType::chasm:
+        return 25;
+
+    case RoomType::forest:
+        return 10;
+
+    case RoomType::END_OF_STD_ROOMS:
+    case RoomType::corr_link:
+    case RoomType::crumble_room:
+    case RoomType::river:
+        break;
+    }
+
+    return 0;
+}
+
 } // namespace
 
 // -----------------------------------------------------------------------------
@@ -144,14 +204,6 @@ Room* mk(const RoomType type, const R& r)
     case RoomType::forest:
         return new ForestRoom(r);
 
-    case RoomType::END_OF_STD_ROOMS:
-        TRACE << "Illegal room type id: " << (int)type << std::endl;
-        ASSERT(false);
-        return nullptr;
-
-    case RoomType::template_room:
-        return new TemplateRoom(r);
-
     case RoomType::corr_link:
         return new CorrLinkRoom(r);
 
@@ -160,10 +212,21 @@ Room* mk(const RoomType type, const R& r)
 
     case RoomType::river:
         return new RiverRoom(r);
+
+    //
+    // Does not have room classes
+    //
+    case RoomType::END_OF_STD_ROOMS:
+    case RoomType::jail:
+        TRACE << "Illegal room type id: " << (int)type << std::endl;
+
+        ASSERT(false);
+
+        return nullptr;
     }
 
-    TRACE << "Unhandled room type id: " << (int)type << std::endl;
     ASSERT(false);
+
     return nullptr;
 }
 
@@ -264,9 +327,10 @@ void StdRoom::on_post_connect(bool door_proposals[map_w][map_h])
     on_post_connect_hook(door_proposals);
 
     // Make dark?
-    int pct_chance_dark = base_pct_chance_drk() - 15;
+    int pct_chance_dark = base_pct_chance_drk(type_) - 15;
 
-    pct_chance_dark += map::dlvl; // Increase with higher dungeon level
+    // Increase chance with deeper dungeon levels
+    pct_chance_dark += map::dlvl;
 
     set_constr_in_range(0, pct_chance_dark, 100);
 
@@ -427,11 +491,6 @@ std::vector<RoomAutoFeatureRule> PlainRoom::auto_features_allowed() const
     };
 }
 
-int PlainRoom::base_pct_chance_drk() const
-{
-    return 5;
-}
-
 void PlainRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 {
     (void)door_proposals;
@@ -461,11 +520,6 @@ std::vector<RoomAutoFeatureRule> HumanRoom::auto_features_allowed() const
         {FeatureId::brazier, rnd::range(0, 2)},
         {FeatureId::statue, rnd::range(0, 3)}
     };
-}
-
-int HumanRoom::base_pct_chance_drk() const
-{
-    return 10;
 }
 
 bool HumanRoom::is_allowed() const
@@ -522,11 +576,6 @@ std::vector<RoomAutoFeatureRule> RitualRoom::auto_features_allowed() const
         {FeatureId::altar, 1},
         {FeatureId::brazier, rnd::range(2, 4)}
     };
-}
-
-int RitualRoom::base_pct_chance_drk() const
-{
-    return 15;
 }
 
 bool RitualRoom::is_allowed() const
@@ -628,11 +677,6 @@ std::vector<RoomAutoFeatureRule> SpiderRoom::auto_features_allowed() const
     };
 }
 
-int SpiderRoom::base_pct_chance_drk() const
-{
-    return 80;
-}
-
 bool SpiderRoom::is_allowed() const
 {
     return
@@ -680,11 +724,6 @@ void SpiderRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 std::vector<RoomAutoFeatureRule> SnakePitRoom::auto_features_allowed() const
 {
     return {};
-}
-
-int SnakePitRoom::base_pct_chance_drk() const
-{
-    return 75;
 }
 
 bool SnakePitRoom::is_allowed() const
@@ -784,11 +823,6 @@ std::vector<RoomAutoFeatureRule> CryptRoom::auto_features_allowed() const
     };
 }
 
-int CryptRoom::base_pct_chance_drk() const
-{
-    return 60;
-}
-
 bool CryptRoom::is_allowed() const
 {
     return
@@ -822,11 +856,6 @@ std::vector<RoomAutoFeatureRule> MonsterRoom::auto_features_allowed() const
     {
         {FeatureId::rubble_low, rnd::range(3, 6)}
     };
-}
-
-int MonsterRoom::base_pct_chance_drk() const
-{
-    return 80;
 }
 
 bool MonsterRoom::is_allowed() const
@@ -912,11 +941,6 @@ std::vector<RoomAutoFeatureRule> FloodedRoom::auto_features_allowed() const
     {
         {FeatureId::vines, rnd::coin_toss() ? rnd::range(4, 8) : 0}
     };
-}
-
-int FloodedRoom::base_pct_chance_drk() const
-{
-    return 25;
 }
 
 bool FloodedRoom::is_allowed() const
@@ -1016,11 +1040,6 @@ std::vector<RoomAutoFeatureRule> MuddyRoom::auto_features_allowed() const
     };
 }
 
-int MuddyRoom::base_pct_chance_drk() const
-{
-    return 25;
-}
-
 bool MuddyRoom::is_allowed() const
 {
     return true;
@@ -1096,11 +1115,6 @@ std::vector<RoomAutoFeatureRule> CaveRoom::auto_features_allowed() const
     };
 }
 
-int CaveRoom::base_pct_chance_drk() const
-{
-    return 30;
-}
-
 bool CaveRoom::is_allowed() const
 {
     return !is_sub_room_;
@@ -1127,11 +1141,6 @@ std::vector<RoomAutoFeatureRule> ForestRoom::auto_features_allowed() const
     {
         {FeatureId::brazier, rnd::range(0, 1)}
     };
-}
-
-int ForestRoom::base_pct_chance_drk() const
-{
-    return 10;
 }
 
 bool ForestRoom::is_allowed() const
@@ -1233,11 +1242,6 @@ void ForestRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 std::vector<RoomAutoFeatureRule> ChasmRoom::auto_features_allowed() const
 {
     return {};
-}
-
-int ChasmRoom::base_pct_chance_drk() const
-{
-    return 25;
 }
 
 bool ChasmRoom::is_allowed() const

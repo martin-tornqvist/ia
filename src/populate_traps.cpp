@@ -50,7 +50,7 @@ void populate_std_lvl()
     map_parsers::BlocksMoveCmn(ParseActors::no)
         .run(blocked);
 
-    //Put traps in non-plain rooms
+    // Put traps in non-plain rooms
     for (Room* const room : map::room_list)
     {
         const RoomType type = room->type_;
@@ -91,8 +91,8 @@ void populate_std_lvl()
             case RoomType::flooded:
             case RoomType::muddy:
             case RoomType::cave:
+            case RoomType::jail:
             case RoomType::END_OF_STD_ROOMS:
-            case RoomType::template_room:
             case RoomType::river:
             case RoomType::corr_link:
             case RoomType::crumble_room:

@@ -160,6 +160,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::crypt);
+    d.native_rooms.push_back(RoomType::jail);
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -210,6 +211,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::crypt);
+    d.native_rooms.push_back(RoomType::jail);
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -258,6 +260,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::crypt);
+    d.native_rooms.push_back(RoomType::jail);
     data[(size_t)d.id] = d;
     d.reset();
 

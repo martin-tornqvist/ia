@@ -126,9 +126,9 @@ void put_templ_features(const Array2<char>& templ,
     } // x loop
 }
 
-Room* mk_template_room(const Array2<char>& templ, Region& region)
+Room* mk_template_room(const RoomTempl& templ, Region& region)
 {
-    const P dims(templ.dims());
+    const P dims(templ.symbols.dims());
 
     // Random position inside the region
     const P p0(region.r.p0.x + rnd::range(0, region.r.w() - dims.x),
@@ -137,8 +137,9 @@ Room* mk_template_room(const Array2<char>& templ, Region& region)
     const P p1(p0.x + dims.x - 1,
                p0.y + dims.y - 1);
 
-    auto* room = room_factory::mk(RoomType::template_room,
-                                  R(p0, p1));
+    const R r(p0, p1);
+
+    auto* room = new TemplateRoom(r, templ.type);
 
     register_room(*room);
 
@@ -147,7 +148,7 @@ Room* mk_template_room(const Array2<char>& templ, Region& region)
     // NOTE: This must be done AFTER "register_room", since it may remove some
     //       of its cells from the global room map (e.g. untouched cells)
     //
-    put_templ_features(templ, p0);
+    put_templ_features(templ.symbols, p0);
 
     region.main_room = room;
     region.is_free = false;
@@ -164,7 +165,7 @@ Room* mk_room(Region& region)
 
     ASSERT(region.is_free);
 
-    const int templ_room_one_in_n = 12;
+    const int templ_room_one_in_n = 11;
 
     // Make a templated room?
     if (map::dlvl <= dlvl_last_mid_game &&
@@ -177,8 +178,10 @@ Room* mk_room(Region& region)
 
         if (templ)
         {
-            if ((templ->dims().x > max_dims.x) ||
-                (templ->dims().y > max_dims.y))
+            auto& symbols = templ->symbols;
+
+            if ((symbols.dims().x > max_dims.x) ||
+                (symbols.dims().y > max_dims.y))
             {
                 ASSERT(false);
             }

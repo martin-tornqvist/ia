@@ -72,12 +72,10 @@ void connect_rooms()
             return map::room_list[rnd::range(0, map::room_list.size() - 1)];
         };
 
-        // Standard rooms and template rooms are connectable rooms
+        // Standard rooms are connectable
         auto is_connectable_room = [](const Room & r)
         {
-            return
-            ((int)r.type_ < (int)RoomType::END_OF_STD_ROOMS) ||
-            (r.type_ == RoomType::template_room);
+            return (int)r.type_ < (int)RoomType::END_OF_STD_ROOMS;
         };
 
         Room* room0 = rnd_room();
