@@ -14,20 +14,20 @@ namespace popup
 namespace
 {
 
-const int text_w_std    = 39;
-const int text_x0_std   = map_w_half - ((text_w_std) / 2);
+const int text_w_std = 39;
+const int text_x0_std = map_w_half - ((text_w_std) / 2);
 
 int print_box_and_get_title_y_pos(const int text_h_tot,
                                   const int text_w)
 {
-    const int box_w       = text_w + 2;
-    const int box_h       = text_h_tot + 2;
+    const int box_w = text_w + 2;
+    const int box_h = text_h_tot + 2;
 
-    const int x0          = map_w_half - ((text_w) / 2) - 1;
+    const int x0 = map_w_half - ((text_w) / 2) - 1;
 
-    const int y0          = map_h_half - (box_h / 2) - 1;
-    const int x1          = x0 + box_w - 1;
-    const int y1          = y0 + box_h - 1;
+    const int y0 = map_h_half - (box_h / 2) - 1;
+    const int x1 = x0 + box_w - 1;
+    const int y1 = y0 + box_h - 1;
 
     io::cover_area(Panel::map,
                        P(x0, y0),
@@ -48,7 +48,7 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
 {
     int text_width = text_w_std;
 
-    //If no message lines, set width to widest menu option or title with
+    // If no message lines, set width to widest menu option or title with
     if (lines.empty())
     {
         text_width = title.size();
@@ -88,7 +88,7 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
                                      clr_black,
                                      true);
         }
-        else //Draw the message with left alignment
+        else // Draw the message with left alignment
         {
             io::draw_text(line,
                               Panel::map,
@@ -127,8 +127,6 @@ void show_msg(const std::string& msg,
               const SfxId sfx,
               const int w_change)
 {
-    states::draw();
-
     const int text_w = text_w_std + w_change;
 
     std::vector<std::string> lines;
@@ -202,16 +200,14 @@ int show_menu_msg(const std::string& msg,
         return 0;
     }
 
-    states::draw();
-
     std::vector<std::string> lines;
 
     text_format::split(msg, text_w_std, lines);
 
-    const int title_h         = title.empty() ? 0 : 1;
-    const int nr_msg_lines    = int(lines.size());
-    const int nr_blank_lines  = (nr_msg_lines == 0 && title_h == 0) ? 0 : 1;
-    const int nr_choices      = int(choices.size());
+    const int title_h = title.empty() ? 0 : 1;
+    const int nr_msg_lines = int(lines.size());
+    const int nr_blank_lines = (nr_msg_lines == 0 && title_h == 0) ? 0 : 1;
+    const int nr_choices = int(choices.size());
 
     const int text_h_tot =
         title_h +

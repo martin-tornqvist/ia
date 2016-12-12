@@ -15,8 +15,6 @@ public:
     void on_pushed() override;
 
     void on_resume() override;
-
-    void on_popped() override;
 };
 
 class GainLvlState: public State

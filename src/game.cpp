@@ -1148,6 +1148,28 @@ void GameState::on_start()
     if (entry_mode_ == GameEntryMode::new_game)
     {
         map::player->mk_start_items();
+
+        game::add_history_event("Started journey");
+
+        io::clear_screen();
+
+        const std::string msg =
+            "I stand on a cobbled forest path, ahead lies a "
+            "shunned and decrepit old church. I know of the things "
+            "that dwell below, and of the Cult of Starry Wisdom "
+            "and the monstrous sacrifices dedicated to their "
+            "rulers. But now they are weak - only deranged "
+            "fanatics grasping at false promises. I will enter "
+            "these sprawling catacombs and rob them of treasures "
+            "and knowledge! At the depths of the abyss lies my "
+            "true destiny, an artifact of non-human origin called "
+            "\"The shining Trapezohedron\" - a window to all the "
+            "secrets of the universe.";
+
+        popup::show_msg(msg,
+                        "The story so far...",
+                        SfxId::END,
+                        1);
     }
 
     if (config::is_intro_lvl_skipped() ||
