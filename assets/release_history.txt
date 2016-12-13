@@ -18,7 +18,7 @@ Gameplay
 * When quaffing Potion of Insight, you can now manually choose which item to identify
 * Potion of Insight always gives some XP, in addition to identifying an item (to avoid making Potions of Insight worthless if all items are identified)
 * All Manuscripts are now guaranteed to be identified when read
-* You always search for traps and secret doors in every seen cell (so you can stand in the middle of a room and search all walls)
+* You now search for secret doors and traps a bit further away, and your chance of finding them is affected by distance - for adjacent cells there is now a higher chance of detection than before (to avoid requiring hundreds of turns to detect an obvious hidden door)
 * Traps are always immediately revealed when triggered by the player
 * Added Barred gates (doors that you can see and shoot through), and Gratings (similarly, but walls)
 * Added Hanging vines, which can be walked through, but blocks line of sight

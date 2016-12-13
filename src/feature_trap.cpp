@@ -209,7 +209,7 @@ void Trap::trigger_start(const Actor* actor)
     if (actor == map::player)
     {
         // Reveal trap if triggered by player stepping on it
-        reveal(false);
+        reveal(Verbosity::silent);
 
         map::player->update_fov();
 
@@ -508,7 +508,7 @@ DidTriggerTrap Trap::trigger_trap(Actor* const actor)
     return DidTriggerTrap::yes;
 }
 
-void Trap::reveal(const bool print_messsage_when_player_sees)
+void Trap::reveal(const Verbosity verbosity)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     is_hidden_ = false;
@@ -528,7 +528,7 @@ void Trap::reveal(const bool print_messsage_when_player_sees)
     {
         states::draw();
 
-        if (print_messsage_when_player_sees)
+        if (verbosity == Verbosity::verbose)
         {
             std::string msg = "";
 
@@ -548,23 +548,6 @@ void Trap::reveal(const bool print_messsage_when_player_sees)
     }
 
     TRACE_FUNC_END_VERBOSE;
-}
-
-void Trap::player_try_spot_hidden()
-{
-    if (is_hidden_)
-    {
-        const auto& abilities = map::player->data().ability_vals;
-
-        const int skill = abilities.val(AbilityId::searching,
-                                        true,
-                                        *(map::player));
-
-        if (ability_roll::roll(skill, map::player) >= success)
-        {
-            reveal(true);
-        }
-    }
 }
 
 std::string Trap::name(const Article article) const

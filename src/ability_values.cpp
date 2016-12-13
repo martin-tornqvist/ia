@@ -22,33 +22,40 @@ int AbilityVals::val(const AbilityId id,
     {
         for (const InvSlot& slot : actor.inv().slots_)
         {
-            if (slot.item)
+            if (!slot.item)
             {
-                ret += slot.item->data().ability_mods_while_equipped[int(id)];
+                continue;
             }
+
+            auto& d = slot.item->data();
+
+            ret += d.ability_mods_while_equipped[(size_t)id];
         }
 
-        const int hp_pct  = (actor.hp() * 100) / actor.hp_max(true);
+        const int hp_pct = (actor.hp() * 100) / actor.hp_max(true);
 
         const int perseverant_bon_hp_pct = 30;
 
         switch (id)
         {
         case AbilityId::searching:
-            ret += 2;
+        {
+            ret += 10;
 
             if (player_bon::traits[(size_t)Trait::observant])
             {
-                ret += 2;
+                ret += 10;
             }
 
             if (player_bon::traits[(size_t)Trait::perceptive])
             {
-                ret += 2;
+                ret += 10;
             }
-            break;
+        }
+        break;
 
         case AbilityId::melee:
+        {
             ret += 60;
 
             if (player_bon::traits[(size_t)Trait::adept_melee_fighter])
@@ -66,9 +73,11 @@ int AbilityVals::val(const AbilityId id,
             {
                 ret += 30;
             }
-            break;
+        }
+        break;
 
         case AbilityId::ranged:
+        {
             ret += 70;
 
             if (player_bon::traits[(size_t)Trait::adept_marksman])
@@ -91,9 +100,11 @@ int AbilityVals::val(const AbilityId id,
             {
                 ret -= 15;
             }
-            break;
+        }
+        break;
 
         case AbilityId::dodging:
+        {
             if (player_bon::traits[(size_t)Trait::dexterous])
             {
                 ret += 15;
@@ -109,9 +120,11 @@ int AbilityVals::val(const AbilityId id,
             {
                 ret += 50;
             }
-            break;
+        }
+        break;
 
         case AbilityId::stealth:
+        {
             ret += 20;
 
             if (player_bon::traits[(size_t)Trait::stealthy])
@@ -123,7 +136,8 @@ int AbilityVals::val(const AbilityId id,
             {
                 ret += 40;
             }
-            break;
+        }
+        break;
 
         case AbilityId::empty:
         case AbilityId::END:
@@ -132,8 +146,8 @@ int AbilityVals::val(const AbilityId id,
 
         if (id == AbilityId::searching)
         {
-            //Searching must ALWAYS be at least 1 to avoid trapping the player
-            ret = std::max(ret, 1);
+            // Searching must ALWAYS be at least 1, to avoid trapping the player
+            ret = std::max(1, ret);
         }
     }
 

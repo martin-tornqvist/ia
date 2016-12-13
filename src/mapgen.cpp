@@ -566,7 +566,7 @@ void reveal_doors_on_path_to_stairs(const P& stairs_pos)
 
         if (feature->id() == FeatureId::door)
         {
-            static_cast<Door*>(feature)->reveal(false);
+            static_cast<Door*>(feature)->reveal(Verbosity::silent);
         }
     }
 

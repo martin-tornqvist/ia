@@ -42,6 +42,11 @@ void Feature::add_light(bool light[map_w][map_h]) const
     (void)light;
 }
 
+void Feature::reveal(const Verbosity verbosity)
+{
+    (void)verbosity;
+}
+
 bool Feature::can_move_cmn() const
 {
     return data().move_rules.can_move_cmn();

@@ -43,7 +43,7 @@ Door::Door(const P& feature_pos,
         const int pct_secret =
             type_ == DoorType::gate ?
             0 :
-            std::min(50, (map::dlvl - 1) * 5);
+            std::min(80, (map::dlvl - 1) * 10);
 
         const int stuck_one_in_n = 24;
 
@@ -262,37 +262,35 @@ void Door::on_hit(const DmgType dmg_type,
             {
                 if (is_player)
                 {
-                    Fraction destr_chance(4 - nr_spikes_, 16);
+                    int destr_chance_pct = 25 - (nr_spikes_ * 3);
 
-                    destr_chance.num = std::max(1, destr_chance.num);
+                    destr_chance_pct = std::max(1, destr_chance_pct);
 
                     if (player_bon::traits[(size_t)Trait::tough])
                     {
-                        destr_chance.num += 2;
+                        destr_chance_pct += 15;
                     }
 
                     if (player_bon::traits[(size_t)Trait::rugged])
                     {
-                        destr_chance.num += 2;
+                        destr_chance_pct += 15;
                     }
 
                     if (actor->has_prop(PropId::frenzied))
                     {
-                        destr_chance.num += 4;
+                        destr_chance_pct += 30;
                     }
 
                     if (is_weak)
                     {
-                        destr_chance.num = 0;
+                        destr_chance_pct = 0;
                     }
 
-                    // Cap numerator to denominator
-                    destr_chance.num = std::min(destr_chance.num,
-                                                destr_chance.den);
+                    destr_chance_pct = std::min(100, destr_chance_pct);
 
-                    if (destr_chance.num > 0)
+                    if (destr_chance_pct > 0)
                     {
-                        if (destr_chance.roll())
+                        if (rnd::percent(destr_chance_pct))
                         {
                             Snd snd("",
                                     SfxId::door_break,
@@ -328,7 +326,7 @@ void Door::on_hit(const DmgType dmg_type,
 
                             map::update_vision();
                         }
-                        else // Not broken
+                        else // Not destroyed
                         {
                             const SfxId sfx =
                                 is_secret_ ?
@@ -365,16 +363,16 @@ void Door::on_hit(const DmgType dmg_type,
                 }
                 else // Is monster
                 {
-                    Fraction destr_chance(10 - (nr_spikes_ * 3), 100);
+                    int destr_chance_pct = 8 - (nr_spikes_ * 2);
 
-                    destr_chance.num = std::max(1, destr_chance.num);
+                    destr_chance_pct = std::max(1, destr_chance_pct);
 
                     if (is_weak)
                     {
-                        destr_chance.num = 0;
+                        destr_chance_pct = 0;
                     }
 
-                    if (destr_chance.roll())
+                    if (rnd::percent(destr_chance_pct))
                     {
                         //
                         // NOTE: When it's a monster bashing down the door, we
@@ -409,7 +407,7 @@ void Door::on_hit(const DmgType dmg_type,
 
                         map::update_vision();
                     }
-                    else // Not broken
+                    else // Not destroyed
                     {
                         Snd snd("I hear a loud banging.",
                                 SfxId::door_bang,
@@ -744,33 +742,19 @@ void Door::bump(Actor& actor_bumping)
 
 } // bump
 
-void Door::reveal(const bool allow_message)
+void Door::reveal(const Verbosity verbosity)
 {
-    if (is_secret_)
+    if (!is_secret_)
     {
-        is_secret_ = false;
-
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
-        {
-            if (allow_message)
-            {
-                msg_log::add("A secret is revealed.");
-            }
-        }
+        return;
     }
-}
 
-void Door::player_try_spot_hidden()
-{
-    if (is_secret_)
+    is_secret_ = false;
+
+    if (verbosity == Verbosity::verbose &&
+        map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
-        const int player_skill =
-            map::player->ability(AbilityId::searching, true);
-
-        if (ability_roll::roll(player_skill, map::player) >= success)
-        {
-            reveal(true);
-        }
+        msg_log::add("A secret is revealed.");
     }
 }
 
@@ -1211,7 +1195,7 @@ void Door::try_open(Actor* actor_trying)
         if (is_secret_)
         {
             TRACE << "Was secret, now revealing" << std::endl;
-            reveal(true);
+            reveal(Verbosity::verbose);
         }
 
         game_time::tick();

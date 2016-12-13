@@ -27,6 +27,8 @@ public:
                      const DmgMethod dmg_method,
                      Actor* const actor);
 
+    virtual void reveal(const Verbosity verbosity);
+
     virtual void bump(Actor& actor_bumping);
     virtual void on_new_turn() {}
     virtual bool can_move_cmn() const;

@@ -797,12 +797,14 @@ public:
     std::vector<Item*> items_;
 };
 
-//NOTE: In some previous versions, it was possible to inspect the tomb and get a hint
-//about its trait ("It has an aura of unrest", "There are foreboding carved signs", etc).
-//This is currently not possible - you open the tomb and any "trap" it has will trigger.
-//Therefore the TombTrait type could be removed, and instead an effect is just randomized
-//when the tomb is opened. But it should be kept the way it is; it could be useful.
-//Maybe some sort of hint will be re-implemented (e.g. via the "Detect Traps" spell).
+// NOTE: In some previous versions, it was possible to inspect the tomb and get
+//       a hint about its trait ("It has an aura of unrest", "There are
+//       foreboding carved signs", etc). This is currently not possible - you
+//       open the tomb and any "trap" it has will trigger. Therefore the
+//       TombTrait type could be removed, and instead an effect is just
+//       randomized when the tomb is opened. But it should be kept the way it
+//       is; it could be useful. Maybe some sort of hint will be re-implemented
+//       (e.g. via the "Detect Traps" spell).
 enum class TombTrait
 {
     ghost,

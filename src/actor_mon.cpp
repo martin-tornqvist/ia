@@ -1975,7 +1975,7 @@ DidAction LordOfSpiders::on_act()
 
                         map::put(f);
 
-                        f->reveal(false);
+                        f->reveal(Verbosity::silent);
                     }
                 }
             }

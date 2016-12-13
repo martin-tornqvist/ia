@@ -1050,7 +1050,9 @@ void Player::on_std_turn()
         return;
     }
 
+    //
     // Spell resistance
+    //
     const int spi_trait_lvl =
         player_bon::traits[(size_t)Trait::mighty_spirit]  ? 2 :
         player_bon::traits[(size_t)Trait::strong_spirit]  ? 1 : 0;
@@ -1090,7 +1092,9 @@ void Player::on_std_turn()
         active_explosive->on_std_turn_player_hold_ignited();
     }
 
+    //
     // Check for monsters coming into view, and try to spot hidden monsters.
+    //
     for (Actor* actor : game_time::actors)
     {
         if (!actor->is_player() &&
@@ -1149,7 +1153,9 @@ void Player::on_std_turn()
         }
     }
 
+    //
     // Regenerate Hit Points
+    //
     if (!has_prop(PropId::poisoned) &&
         player_bon::bg() != Bg::ghoul)
     {
@@ -1210,25 +1216,52 @@ void Player::on_std_turn()
         }
     }
 
+    //
     // Try to spot hidden traps and doors
-    if (!has_prop(PropId::confused) && prop_handler_->allow_see())
+    //
+
+    //
+    // NOTE: Skill value retrieved here is always at least 1
+    //
+    const int player_search_skill =
+        map::player->ability(AbilityId::searching, true);
+
+    if (!has_prop(PropId::confused) &&
+        prop_handler_->allow_see())
     {
         for (int x = 0; x < map_w; ++x)
         {
             for (int y = 0; y < map_h; ++y)
             {
-                if (map::cells[x][y].is_seen_by_player)
+                if (!map::cells[x][y].is_seen_by_player)
                 {
-                    auto* f = map::cells[x][y].rigid;
+                    continue;
+                }
 
-                    if (f->id() == FeatureId::trap)
-                    {
-                        static_cast<Trap*>(f)->player_try_spot_hidden();
-                    }
+                auto& cell = map::cells[x][y];
 
-                    if (f->id() == FeatureId::door)
+                auto* f = cell.rigid;
+
+                const int lit_mod = cell.is_lit ? 5 : 0;
+
+                const int dist = king_dist(pos, f->pos());
+
+                const int dist_mod = -((dist - 1) * 5);
+
+                int skill_tot =
+                    player_search_skill +
+                    lit_mod +
+                    dist_mod;
+
+                if (skill_tot > 0)
+                {
+                    const bool is_spotted =
+                        ability_roll::roll(skill_tot, map::player) >=
+                        success;
+
+                    if (is_spotted)
                     {
-                        static_cast<Door*>(f)->player_try_spot_hidden();
+                        f->reveal(Verbosity::verbose);
                     }
                 }
             }

@@ -5,6 +5,7 @@
 #include "ability_values.hpp"
 #include "art.hpp"
 #include "feature_rigid.hpp"
+#include "global.hpp"
 
 class TrapImpl;
 
@@ -94,7 +95,7 @@ public:
 
     bool is_magical() const;
 
-    void reveal(const bool print_messsage_when_player_sees);
+    void reveal(const Verbosity verbosity) override;
 
     bool is_hidden() const
     {

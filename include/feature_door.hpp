@@ -114,7 +114,7 @@ public:
 
     Matl matl() const override;
 
-    void reveal(const bool allow_message);
+    void reveal(const Verbosity verbosity) override;
 
     void set_secret()
     {
@@ -138,8 +138,6 @@ public:
             tile == TileId::door_closed ||
             tile == TileId::door_open;
     }
-
-    void player_try_spot_hidden();
 
     const Rigid* mimic() const
     {

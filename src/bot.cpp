@@ -142,7 +142,7 @@ bool walk_to_adj_cell(const P& p)
     return map::player->pos == p;
 }
 
-} //namespace
+} // namespace
 
 void init()
 {
@@ -151,9 +151,9 @@ void init()
 
 void act()
 {
-    //=======================================================================
+    // =======================================================================
     // TESTS
-    //=======================================================================
+    // =======================================================================
 #ifndef NDEBUG
     for (size_t outer_idx = 0;
          outer_idx < game_time::actors.size();
@@ -188,16 +188,16 @@ void act()
         }
     }
 #endif
-    //=======================================================================
+    // =======================================================================
 
-    //Abort?
-    //TODO: Reimplement this
+    // Abort?
+    // TODO: Reimplement this
 //    if(io::is_key_held(SDLK_ESCAPE))
 //    {
 //        config::toggle_bot_playing();
 //    }
 
-    //Check if we are finished with the current run, if so, go back to dlvl 1
+    // Check if we are finished with the current run, if so, go back to dlvl 1
     if (map::dlvl >= dlvl_last)
     {
         TRACE << "Starting new run on first dungeon level" << std::endl;
@@ -208,7 +208,7 @@ void act()
 
     PropHandler& prop_handler = map::player->prop_handler();
 
-    //Keep an allied Mi-go around to help getting out of sticky situations
+    // Keep an allied Mi-go around to help getting out of sticky situations
     bool has_allied_mon = false;
 
     for (const Actor* const actor : game_time::actors)
@@ -228,13 +228,13 @@ void act()
                               map::player);
     }
 
-    //Occasionally apply rFear (to avoid getting stuck on fear-causing monsters)
+    // Occasionally apply rFear to avoid getting stuck on fear-causing monsters
     if (rnd::one_in(7))
     {
         prop_handler.try_add(new PropRFear(PropTurns::specific, 4));
     }
 
-    //Occasionally apply Burning to a random actor (helps to avoid getting stuck)
+    // Occasionally apply Burning to a random actor helps to avoid getting stuck
     if (rnd::one_in(10))
     {
         const int element = rnd::range(0, game_time::actors.size() - 1);
@@ -246,27 +246,27 @@ void act()
         }
     }
 
-    //Occasionally teleport (to avoid getting stuck)
+    // Occasionally teleport (to avoid getting stuck)
     if (rnd::one_in(200))
     {
         map::player->teleport();
     }
 
-    //Occasionally send a TAB command to attack nearby monsters
+    // Occasionally send a TAB command to attack nearby monsters
     if (rnd::coin_toss())
     {
         game::handle_player_input(InputData(SDLK_TAB));
         return;
     }
 
-    //Occasionally send a 'wait 5 turns' command (just code exercise)
+    // Occasionally send a 'wait 5 turns' command (just code exercise)
     if (rnd::one_in(50))
     {
         game::handle_player_input(InputData('s'));
         return;
     }
 
-    //Occasionally apply a random property to exercise the prop code
+    // Occasionally apply a random property to exercise the prop code
     if (rnd::one_in(20))
     {
         std::vector<PropId> prop_bucket;
@@ -279,27 +279,30 @@ void act()
             }
         }
 
-        PropId     prop_id = prop_bucket[rnd::range(0, prop_bucket.size() - 1)];
-        Prop* const prop    = prop_handler.mk_prop(prop_id, PropTurns::specific, 5);
+        PropId prop_id = prop_bucket[rnd::range(0, prop_bucket.size() - 1)];
+
+        Prop* const prop = prop_handler.mk_prop(prop_id,
+                                                PropTurns::specific,
+                                                5);
 
         prop_handler.try_add(prop);
     }
 
-    //Occasionally swap weapon (just some code exercise)
+    // Occasionally swap weapon (just some code exercise)
     if (rnd::one_in(50))
     {
         game::handle_player_input(InputData('z'));
         return;
     }
 
-    //Occasionally cause shock spikes
+    // Occasionally cause shock spikes
     if (rnd::one_in(100))
     {
         map::player->incr_shock(200, ShockSrc::misc);
         return;
     }
 
-    //Occasionally run an explosion around the player
+    // Occasionally run an explosion around the player
     if (rnd::one_in(50))
     {
         explosion::run(map::player->pos, ExplType::expl);
@@ -307,7 +310,7 @@ void act()
         return;
     }
 
-    //Handle blocking door
+    // Handle blocking door
     for (const P& d : dir_utils::dir_list)
     {
         const P p(map::player->pos + d);
@@ -317,17 +320,19 @@ void act()
         if (f->id() == FeatureId::door)
         {
             Door* const door = static_cast<Door*>(f);
-            door->reveal(false);
+
+            door->reveal(Verbosity::silent);
 
             if (door->is_stuck())
             {
                 f->hit(DmgType::physical, DmgMethod::kick, map::player);
+
                 return;
             }
         }
     }
 
-    //If we are terrified, wait in place
+    // If we are terrified, wait in place
     if (map::player->has_prop(PropId::terrified))
     {
         if (walk_to_adj_cell(map::player->pos))
@@ -341,4 +346,4 @@ void act()
     walk_to_adj_cell(path_.back());
 }
 
-} //bot
+} // bot

@@ -1042,7 +1042,9 @@ void SpellDetTraps::cast_impl(Actor* const caster) const
                 if (f->id() == FeatureId::trap)
                 {
                     auto* const trap = static_cast<Trap*>(f);
-                    trap->reveal(false);
+
+                    trap->reveal(Verbosity::silent);
+
                     traps_revealed_cells.push_back(P(x, y));
                 }
             }
