@@ -23,9 +23,9 @@ int random_out_of_depth()
     int nr_levels = 0;
 
     if (map::dlvl > 0 &&
-        rnd::one_in(6))
+        rnd::one_in(12))
     {
-        nr_levels = 8;
+        nr_levels = 5;
     }
 
     return nr_levels;
@@ -150,8 +150,7 @@ bool mk_random_group_for_room(const RoomType room_type,
 
     const int nr_lvls_out_of_depth_allowed = random_out_of_depth();
 
-    auto id_bucket =
-        valid_auto_spawn_monsters(nr_lvls_out_of_depth_allowed);
+    auto id_bucket = valid_auto_spawn_monsters(nr_lvls_out_of_depth_allowed);
 
     for (size_t i = 0; i < id_bucket.size(); ++i)
     {
