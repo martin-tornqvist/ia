@@ -337,9 +337,7 @@ void draw()
     ++p.y;
     p.x = 0;
 
-    std::vector<StrAndClr> props_line;
-
-    player.prop_handler().props_interface_line(props_line);
+    const auto props_line = player.prop_handler().props_line();
 
     for (const StrAndClr& current_prop_label : props_line)
     {

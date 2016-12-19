@@ -399,7 +399,10 @@ RangedAttData::RangedAttData(Actor* const attacker,
                 dmg_dice.plus += 2;
             }
 
-            dmg = player_aim_x3 ? dmg_dice.max() : dmg_dice.roll();
+            dmg =
+                player_aim_x3 ?
+                dmg_dice.max() :
+                dmg_dice.roll();
 
             // Outside effective range limit?
             if (!wpn.is_in_effective_range_lmt(attacker_orign, defender->pos))

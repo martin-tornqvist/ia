@@ -498,9 +498,16 @@ void SpellDarkbolt::cast_impl(Actor* const caster) const
     tgt->prop_handler().try_add(new PropParalyzed(PropTurns::specific, 2));
 
     Range dmg_range(4, 10);
-    const int dmg = is_warlock_charged ? dmg_range.max : dmg_range.roll();
 
-    tgt->hit(dmg, DmgType::physical, DmgMethod::END, AllowWound::no);
+    const int dmg =
+        is_warlock_charged ?
+        dmg_range.max :
+        dmg_range.roll();
+
+    tgt->hit(dmg,
+             DmgType::physical,
+             DmgMethod::END,
+             AllowWound::no);
 
     Snd snd("",
             SfxId::END,

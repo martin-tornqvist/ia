@@ -35,16 +35,24 @@ void Smoke::on_new_turn()
 
         bool is_blind_prot = false;
 
+        bool is_breath_prot = actor->prop_handler().has_prop(PropId::rBreath);
+
         if (is_player)
         {
             auto& inv = map::player->inv();
-            auto* const player_head_item = inv.slots_[int(SlotId::head)].item;
-            auto* const player_body_item = inv.slots_[int(SlotId::body)].item;
+
+            auto* const player_head_item =
+                inv.slots_[(size_t)SlotId::head].item;
+
+            auto* const player_body_item =
+                inv.slots_[(size_t)SlotId::body].item;
 
             if (player_head_item &&
                 (player_head_item->data().id == ItemId::gas_mask))
             {
                 is_blind_prot = true;
+
+                is_breath_prot = true;
 
                 //This may destroy the gasmask
                 static_cast<GasMask*>(player_head_item)->decr_turns_left(inv);
@@ -54,11 +62,14 @@ void Smoke::on_new_turn()
                 (player_body_item->data().id == ItemId::armor_asb_suit))
             {
                 is_blind_prot = true;
+
+                is_breath_prot = true;
             }
         }
 
-        //Blinded?
-        if (!is_blind_prot && rnd::one_in(4))
+        // Blinded?
+        if (!is_blind_prot &&
+            rnd::one_in(4))
         {
             if (is_player)
             {
@@ -69,8 +80,9 @@ void Smoke::on_new_turn()
                 new PropBlind(PropTurns::specific, rnd::range(1, 3)));
         }
 
-        //Coughing?
-        if (rnd::one_in(4) && !actor->has_prop(PropId::rBreath))
+        // Coughing?
+        if (!is_breath_prot &&
+            rnd::one_in(4))
         {
             std::string snd_msg = "";
 
@@ -100,7 +112,7 @@ void Smoke::on_new_turn()
         }
     }
 
-    //If not permanent, count down turns left and possibly erase self
+    // If not permanent, count down turns left and possibly erase self
     if (nr_turns_left_ > -1)
     {
         --nr_turns_left_;

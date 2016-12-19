@@ -31,6 +31,7 @@ Gameplay
 * Removed all negative effects from critically failing melee attacks (such as "I am exhausted"), except for a small chance of the weapon breaking - which can only happen while cursed
 
 Interface
+* All active properties are now printed with descriptions on the [@] character decsription page, and when [v]iewing monsters
 * Reduced "more" prompt message spam from traps (less interruption)
 * Added an option to ask for confirmation before lighting explosives (default is off)
 * Removed the life bars showing creatures health - instead health is shown by gradually coloring creatures red

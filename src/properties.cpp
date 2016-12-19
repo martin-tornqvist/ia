@@ -46,6 +46,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Physical Resistance";
     d.name_short = "rPhys";
+    d.descr = "Cannot be harmed by plain physical force";
     d.msg[(size_t)PropMsg::start_player] = "I feel resistant to physical harm.";
     d.msg[(size_t)PropMsg::start_mon] = "is resistant to physical harm.";
     d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to physical harm.";
@@ -62,6 +63,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Fire resistance";
     d.name_short = "rFire";
+    d.descr = "Cannot be harmed by fire";
     d.msg[(size_t)PropMsg::start_player] = "I feel resistant to fire.";
     d.msg[(size_t)PropMsg::start_mon] = "is resistant to fire.";
     d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to fire.";
@@ -78,6 +80,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Poison resistance";
     d.name_short = "rPoison";
+    d.descr = "Cannot be harmed by poison";
     d.msg[(size_t)PropMsg::start_player] = "I feel resistant to poison.";
     d.msg[(size_t)PropMsg::start_mon] = "is resistant to poison.";
     d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to poison.";
@@ -94,6 +97,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Electric resistance";
     d.name_short = "rElec";
+    d.descr = "Cannot be harmed by electricity";
     d.msg[(size_t)PropMsg::start_player] = "I feel resistant to electricity.";
     d.msg[(size_t)PropMsg::start_mon] = "is resistant to electricity.";
     d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to electricity.";
@@ -110,6 +114,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Acid resistance";
     d.name_short = "rAcid";
+    d.descr = "Cannot be harmed by acid";
     d.msg[(size_t)PropMsg::start_player] = "I feel resistant to acid.";
     d.msg[(size_t)PropMsg::start_mon] = "is resistant to acid.";
     d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to acid.";
@@ -126,6 +131,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Sleep resistance";
     d.name_short = "rSleep";
+    d.descr = "Cannot faint or become hypnotized";
     d.msg[(size_t)PropMsg::start_player] = "I feel resistant to sleep.";
     d.msg[(size_t)PropMsg::start_mon] = "is resistant to sleep.";
     d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to sleep.";
@@ -142,6 +148,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Fear resistance";
     d.name_short = "rFear";
+    d.descr = "Unaffected by fear";
     d.msg[(size_t)PropMsg::start_player] = "I feel resistant to fear.";
     d.msg[(size_t)PropMsg::start_mon] = "is resistant to fear.";
     d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to fear.";
@@ -158,6 +165,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Confusion resistance";
     d.name_short = "rConf";
+    d.descr = "Cannot become confused";
     d.msg[(size_t)PropMsg::start_player] = "I feel resistant to confusion.";
     d.msg[(size_t)PropMsg::start_mon] = "is resistant to confusion.";
     d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to confusion.";
@@ -174,6 +182,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Disease resistance";
     d.name_short = "rDisease";
+    d.descr = "Cannot become diseased";
     d.msg[(size_t)PropMsg::start_player] = "I feel resistant to disease.";
     d.msg[(size_t)PropMsg::start_mon] = "is resistant to disease.";
     d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to disease.";
@@ -187,8 +196,9 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = PropId::rBlind;
-    d.name = "";
+    d.name = "Blindness resistance";
     d.name_short = "rBlind";
+    d.descr = "Cannot be blinded";
     d.msg[(size_t)PropMsg::start_player] = "";
     d.msg[(size_t)PropMsg::start_mon] = "";
     d.msg[(size_t)PropMsg::end_player] = "";
@@ -203,8 +213,9 @@ void init_data_list()
 
     d.id = PropId::rBreath;
     d.std_rnd_turns = Range(50, 100);
-    d.name = "Breath resistance";
-    d.name_short = "rBreath";
+    d.name = "";
+    d.name_short = "";
+    d.descr = "Cannot be harmed by constricted breathing";
     d.msg[(size_t)PropMsg::start_player] = "I can breath without harm.";
     d.msg[(size_t)PropMsg::start_mon] = "can breath without harm.";
     d.is_making_mon_aware = false;
@@ -218,6 +229,7 @@ void init_data_list()
     d.id = PropId::rSpell;
     d.name = "Spell Resistance";
     d.name_short = "rSpell";
+    d.descr = "Cannot be affected by harmful spells";
     d.msg[(size_t)PropMsg::start_player] = "I defy harmful spells!";
     d.msg[(size_t)PropMsg::start_mon] = "is defying harmful magic spells.";
     d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to magic spells.";
@@ -233,6 +245,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Light sensitive";
     d.name_short = "lgtSensitive";
+    d.descr = "Is vulnerable to light";
     d.msg[(size_t)PropMsg::start_player] = "I feel vulnerable to light!";
     d.msg[(size_t)PropMsg::start_mon] = "is vulnerable to light.";
     d.msg[(size_t)PropMsg::end_player] = "I no longer feel vulnerable to light.";
@@ -250,6 +263,7 @@ void init_data_list()
     d.std_rnd_turns = Range(20, 30);
     d.name = "Blind";
     d.name_short = "Blind";
+    d.descr = "Cannot see, -20% hit chance, -50% chance to evade attacks";
     d.msg[(size_t)PropMsg::start_player] = "I am blinded!";
     d.msg[(size_t)PropMsg::start_mon] = "is blinded.";
     d.msg[(size_t)PropMsg::end_player] = "I can see again!";
@@ -267,6 +281,7 @@ void init_data_list()
     d.std_rnd_turns = Range(100, 200);
     d.name = "Fainted";
     d.name_short = "Fainted";
+    d.descr = "";
     d.msg[(size_t)PropMsg::start_player] = "I faint!";
     d.msg[(size_t)PropMsg::start_mon] = "faints.";
     d.msg[(size_t)PropMsg::end_player] = "I am awake.";
@@ -284,6 +299,7 @@ void init_data_list()
     d.std_rnd_turns = Range(7, 11);
     d.name = "Burning";
     d.name_short = "Burning";
+    d.descr = "Takes damage each turn, cannot read, cannot cast spells";
     d.msg[(size_t)PropMsg::start_player] = "I am Burning!";
     d.msg[(size_t)PropMsg::start_mon] = "is burning.";
     d.msg[(size_t)PropMsg::end_player] = "The flames are put out.";
@@ -302,6 +318,7 @@ void init_data_list()
     d.std_rnd_turns = Range(30, 60);
     d.name = "Poisoned";
     d.name_short = "Poisoned";
+    d.descr = "Takes damage each turn";
     d.msg[(size_t)PropMsg::start_player] = "I am poisoned!";
     d.msg[(size_t)PropMsg::start_mon] = "is poisoned.";
     d.msg[(size_t)PropMsg::end_player] = "My body is cleansed from poisoning!";
@@ -320,6 +337,7 @@ void init_data_list()
     d.std_rnd_turns = Range(7, 9);
     d.name = "Paralyzed";
     d.name_short = "Paralyzed";
+    d.descr = "Cannot move";
     d.msg[(size_t)PropMsg::start_player] = "I am paralyzed!";
     d.msg[(size_t)PropMsg::start_mon] = "is paralyzed.";
     d.msg[(size_t)PropMsg::end_player] = "I can move again!";
@@ -338,6 +356,9 @@ void init_data_list()
     d.std_rnd_turns = Range(12, 16);
     d.name = "Terrified";
     d.name_short = "Terrified";
+    d.descr =
+        "Cannot perform melee attacks, -20% ranged hit chance, +20% chance to "
+        "evade attacks";
     d.msg[(size_t)PropMsg::start_player] = "I am terrified!";
     d.msg[(size_t)PropMsg::start_mon] = "looks terrified.";
     d.msg[(size_t)PropMsg::end_player] = "I am no longer terrified!";
@@ -356,6 +377,9 @@ void init_data_list()
     d.std_rnd_turns = Range(80, 120);
     d.name = "Confused";
     d.name_short = "Confused";
+    d.descr =
+        "Occasionally moving in random directions, cannot read or cast spells, "
+        "cannot search for hidden doors or traps";
     d.msg[(size_t)PropMsg::start_player] = "I am confused!";
     d.msg[(size_t)PropMsg::start_mon] = "looks confused.";
     d.msg[(size_t)PropMsg::end_player] = "I come to my senses.";
@@ -374,6 +398,7 @@ void init_data_list()
     d.std_rnd_turns = Range(5, 9);
     d.name = "Stunned";
     d.name_short = "Stunned";
+    d.descr = "";
     d.msg[(size_t)PropMsg::start_player] = "I am stunned!";
     d.msg[(size_t)PropMsg::start_mon] = "is stunned.";
     d.msg[(size_t)PropMsg::end_player] = "I am no longer stunned.";
@@ -392,6 +417,7 @@ void init_data_list()
     d.std_rnd_turns = Range(16, 24);
     d.name = "Slowed";
     d.name_short = "Slowed";
+    d.descr = "-50% speed";
     d.msg[(size_t)PropMsg::start_player] = "Everything around me seems to speed up.";
     d.msg[(size_t)PropMsg::start_mon] = "slows down.";
     d.msg[(size_t)PropMsg::end_player] = "Everything around me seems to slow down.";
@@ -410,6 +436,7 @@ void init_data_list()
     d.std_rnd_turns = Range(12, 16);
     d.name = "Hasted";
     d.name_short = "Hasted";
+    d.descr = "+100% speed";
     d.msg[(size_t)PropMsg::start_player] = "Everything around me seems to slow down.";
     d.msg[(size_t)PropMsg::start_mon] = "speeds up.";
     d.msg[(size_t)PropMsg::end_player] = "Everything around me seems to speed up.";
@@ -434,6 +461,7 @@ void init_data_list()
 
     d.id = PropId::nailed;
     d.name = "Nailed";
+    d.descr = "Fastened by a spike - tearing it out will be rather painful";
     d.msg[(size_t)PropMsg::start_player] = "I am fastened by a spike!";
     d.msg[(size_t)PropMsg::start_mon] = "is fastened by a spike.";
     d.msg[(size_t)PropMsg::end_player] = "I tear free!";
@@ -446,8 +474,13 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = PropId::wound;
-    d.name = "Wound";
+    d.name = "Wounded";
     d.name_short = "Wound";
+    d.descr =
+        "For each wound: -10% melee hit chance, -5% ranged hit chance, "
+        "-10% chance to evade attacks, -10% Hit Points, and reduced Hit Point "
+        "generation rate - also, walking takes extra turns if more than two "
+        "wounds are received";
     d.msg[(size_t)PropMsg::start_player] = "I am wounded!";
     d.msg[(size_t)PropMsg::res_player] = "I resist wounding!";
     d.is_making_mon_aware = false;
@@ -462,6 +495,7 @@ void init_data_list()
     d.std_rnd_turns = Range(1, 1);
     d.name = "Charged";
     d.name_short = "Charged";
+    d.descr = "Spells deal maximum damage";
     d.msg[(size_t)PropMsg::start_player] = "I am burning with power!";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
@@ -474,6 +508,7 @@ void init_data_list()
     d.std_rnd_turns = Range(100, 200);
     d.name = "Infected";
     d.name_short = "Infected";
+    d.descr = "A nasty infection, this should be treated immediately";
     d.msg[(size_t)PropMsg::start_player] = "I am infected!";
     d.msg[(size_t)PropMsg::start_mon] = "is infected.";
     d.msg[(size_t)PropMsg::end_player] = "My infection is cured!";
@@ -492,6 +527,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Diseased";
     d.name_short = "Diseased";
+    d.descr = "Affected by a horrible disease, -50% Hit Points";
     d.msg[(size_t)PropMsg::start_player] = "I am diseased!";
     d.msg[(size_t)PropMsg::start_mon] = "is diseased.";
     d.msg[(size_t)PropMsg::end_player] = "My disease is cured!";
@@ -510,6 +546,7 @@ void init_data_list()
     d.std_rnd_turns = Range(20, 30);
     d.name = "Descending";
     d.name_short = "Descend";
+    d.descr = "Soon moved to a deeper level";
     d.msg[(size_t)PropMsg::start_player] = "I feel a sinking sensation.";
     d.msg[(size_t)PropMsg::end_player] = "";
     d.msg[(size_t)PropMsg::res_player] = "";
@@ -525,6 +562,9 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Weakened";
     d.name_short = "Weakened";
+    d.descr =
+        "Minimum melee damage, cannot bash doors or chests open, knock "
+        "heavy objects over, etc";
     d.msg[(size_t)PropMsg::start_player] = "I feel weaker.";
     d.msg[(size_t)PropMsg::start_mon] = "looks weaker.";
     d.msg[(size_t)PropMsg::end_player] = "I feel stronger!";
@@ -543,6 +583,10 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Frenzied";
     d.name_short = "Frenzied";
+    d.descr =
+        "Must move towards seen enemies, +100% speed, +10% melee hit chance, "
+        "immune to confusion, fainting, fear, and weakening, cannot read or "
+        "cast spells, becomes weakened when the frenzy ends";
     d.msg[(size_t)PropMsg::start_player] = "I feel ferocious!!!";
     d.msg[(size_t)PropMsg::start_mon] = "Looks ferocious!";
     d.msg[(size_t)PropMsg::end_player] = "I calm down.";
@@ -561,6 +605,8 @@ void init_data_list()
     d.std_rnd_turns = Range(400, 600);
     d.name = "Blessed";
     d.name_short = "Blessed";
+    d.descr =
+        "Is generally more lucky, and most actions are easier to perform";
     d.msg[(size_t)PropMsg::start_player] = "I feel luckier.";
     d.msg[(size_t)PropMsg::end_player] = "I have normal luck.";
     d.is_making_mon_aware = false;
@@ -575,6 +621,9 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Cursed";
     d.name_short = "Cursed";
+    d.descr =
+        "Is generally more unlucky, and most actions are more difficult to "
+        "perform";
     d.msg[(size_t)PropMsg::start_player] = "I feel misfortunate.";
     d.msg[(size_t)PropMsg::end_player] = "I feel more fortunate.";
     d.msg[(size_t)PropMsg::res_player] = "I resist misfortune.";
@@ -590,6 +639,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Radiant";
     d.name_short = "Radiant";
+    d.descr = "Emanating a bright light";
     d.msg[(size_t)PropMsg::start_player] = "A bright light shines around me.";
     d.msg[(size_t)PropMsg::end_player] = "It suddenly gets darker.";
     d.is_making_mon_aware = false;
@@ -604,6 +654,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Invisible";
     d.name_short = "Invis";
+    d.descr = "Cannot be detected by normal sight";
     d.msg[(size_t)PropMsg::start_player] = "I am out of sight!";
     d.msg[(size_t)PropMsg::start_mon] = "is out of sight!";
     d.msg[(size_t)PropMsg::end_player] = "I am visible.";
@@ -620,6 +671,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "See Invisible";
     d.name_short = "SeeInvis";
+    d.descr = "Can see invisible creatures, cannot be blinded";
     d.msg[(size_t)PropMsg::start_player] = "My eyes perceive the invisible.";
     d.msg[(size_t)PropMsg::start_mon] = "seems to see very clearly.";
     d.msg[(size_t)PropMsg::end_player] = "My eyes can no longer perceive the invisible.";
@@ -636,6 +688,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Infravision";
     d.name_short = "Infravision";
+    d.descr = "Can see warm blooded creatures in the dark";
     d.msg[(size_t)PropMsg::start_player] = "I have infravision.";
     d.msg[(size_t)PropMsg::end_player] = "I no longer have infravision.";
     d.msg[(size_t)PropMsg::res_player] = "";
@@ -652,6 +705,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Teleport Control";
     d.name_short = "TeleCtrl";
+    d.descr = "Can control teleport destination";
     d.msg[(size_t)PropMsg::start_player] = "I feel in control.";
     d.msg[(size_t)PropMsg::end_player] = "I feel less in control.";
     d.allow_display_turns = true;
@@ -665,6 +719,7 @@ void init_data_list()
     d.std_rnd_turns = Range(50, 100);
     d.name = "Spell Reflection";
     d.name_short = "SpellRefl";
+    d.descr = "Hostile spells are reflected against the caster";
     d.msg[(size_t)PropMsg::start_player] = "Spells reflect off me!";
     d.msg[(size_t)PropMsg::end_player] = "I am vulnerable to spells.";
     d.allow_display_turns = true;
@@ -678,6 +733,7 @@ void init_data_list()
     d.std_rnd_turns = Range(1, 1);
     d.name = "Aiming";
     d.name_short = "Aiming";
+    d.descr = "Increased range attack effectiveness";
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
@@ -688,6 +744,7 @@ void init_data_list()
     d.std_rnd_turns = Range(1, 1);
     d.name = "Strangled";
     d.name_short = "Strangled";
+    d.descr = "";
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
@@ -696,7 +753,9 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = PropId::conflict;
+    d.name = "Conflicted";
     d.name_short = "Conflict";
+    d.descr = "Considers every creature as an enemy";
     d.std_rnd_turns = Range(10, 20);
     d.msg[(size_t)PropMsg::start_mon] = "Looks conflicted.";
     d.msg[(size_t)PropMsg::end_mon] = "Looks more determined.";
@@ -718,6 +777,8 @@ void init_data_list()
 
     d.id = PropId::flying;
     d.name_short = "Flying";
+    d.name = "Flying";
+    d.descr = "Can fly over low obstacles";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
@@ -728,6 +789,9 @@ void init_data_list()
 
     d.id = PropId::ethereal;
     d.name_short = "Ethereal";
+    d.name = "Ethereal";
+    d.descr =
+        "Can pass through solid objects, and is harder to hit with all attacks";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
@@ -738,6 +802,10 @@ void init_data_list()
 
     d.id = PropId::ooze;
     d.name_short = "Ooze";
+    d.name = "Ooze";
+    d.descr =
+        "Can move through narrow cracks and crevices such as piles of rubble, "
+        "or beneath doors";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
@@ -748,6 +816,8 @@ void init_data_list()
 
     d.id = PropId::burrowing;
     d.name_short = "Burrow";
+    d.name = "Burrowing";
+    d.descr = "Can move through and destroy walls";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.allow_apply_more_while_active = true;
@@ -793,7 +863,7 @@ void init_data_list()
     add_prop_data(d);
 }
 
-} //namespace
+} // namespace
 
 void init()
 {
@@ -1208,10 +1278,18 @@ void PropHandler::try_add(Prop* const prop,
 
                 old_prop->on_more();
 
+                const bool is_turns_nr_indefinite =
+                    (turns_left_old < 0) || (turns_left_new < 0);
+
                 old_prop->nr_turns_left_ =
-                    ((turns_left_old < 0) || (turns_left_new < 0)) ?
+                    is_turns_nr_indefinite ?
                     -1 :
                     std::max(turns_left_old, turns_left_new);
+
+                if (prop->turns_init_type() == PropTurns::indefinite)
+                {
+                    old_prop->turns_init_type_ = PropTurns::indefinite;
+                }
 
                 delete prop;
                 return;
@@ -1505,32 +1583,106 @@ void PropHandler::on_turn_end()
     }
 }
 
-void PropHandler::props_interface_line(std::vector<StrAndClr>& line) const
+std::vector<StrAndClr> PropHandler::props_line() const
 {
-    line.clear();
+    std::vector<StrAndClr> line;
 
     for (Prop* prop : props_)
     {
         std::string str = prop->name_short();
 
-        if (!str.empty())
+        if (str.empty())
+        {
+            continue;
+        }
+
+        const int turns_left  = prop->nr_turns_left_;
+
+        if (prop->turns_init_type() == PropTurns::indefinite &&
+            prop->src() == PropSrc::intr)
+        {
+            // Indefinite intrinsic properties are printed in upper case
+            text_format::all_to_upper(str);
+        }
+        else // Not indefinite
+        {
+            // Player can see number of turns left on own properties with
+            // Self-aware?
+            if (owning_actor_->is_player() &&
+                player_bon::traits[(size_t)Trait::self_aware] &&
+                prop->allow_display_turns())
+            {
+                // NOTE: Since turns left are decremented before the actors
+                //       turn, and checked after the turn - "turns_left"
+                //       practically represents how many more times the
+                //       actor will act with the property enabled, EXCLUDING
+                //       the current (ongoing) turn.
+                //
+                //       I.e. one "turns_left" means that the property will
+                //       be enabled the whole next turn, while Zero
+                //       "turns_left", means that it will only be active the
+                //       current turn. However, from a players perspective,
+                //       this is unintuitive; "one turn left" means the
+                //       current turn, plus the next - but is likely
+                //       interpreted as just the current turn. Therefore we
+                //       add +1 to the displayed value, so that a displayed
+                //       value of one means that the property will end after
+                //       performing the next action.
+                //
+                const int turns_left_displayed = turns_left + 1;
+
+                str += ":" + std::to_string(turns_left_displayed);
+            }
+        }
+
+        const PropAlignment alignment = prop->alignment();
+
+        const Clr clr =
+            (alignment == PropAlignment::good) ? clr_msg_good :
+            (alignment == PropAlignment::bad)  ? clr_msg_bad :
+            clr_white;
+
+        line.push_back(StrAndClr(str, clr));
+    }
+
+    return line;
+}
+
+//
+// TODO: Lots of copy paste from the function above (props_line), some
+//       refactoring needed here
+//
+std::vector< std::pair<StrAndClr, std::string> > PropHandler::props_list() const
+{
+    std::vector< std::pair<StrAndClr, std::string> > list;
+
+    for (Prop* prop : props_)
+    {
+        const std::string name_long = prop->name();
+
+        std::string name_short = prop->name_short();
+
+        if (name_long.empty() && name_short.empty())
+        {
+            continue;
+        }
+
+        if (!name_short.empty())
         {
             const int turns_left  = prop->nr_turns_left_;
 
-            if (prop->turns_init_type() == PropTurns::indefinite)
+            if (prop->turns_init_type() == PropTurns::indefinite &&
+                prop->src() == PropSrc::intr)
             {
-                if (prop->src() == PropSrc::intr)
-                {
-                    // Indefinite intrinsic properties are printed in upper case
-                    text_format::all_to_upper(str);
-                }
+                // Indefinite intrinsic properties are printed in upper case
+                text_format::all_to_upper(name_short);
             }
             else // Not indefinite
             {
                 // Player can see number of turns left on own properties with
                 // Self-aware?
-                if (owning_actor_->is_player()                      &&
-                    player_bon::traits[(size_t)Trait::self_aware]   &&
+                if (owning_actor_->is_player() &&
+                    player_bon::traits[(size_t)Trait::self_aware] &&
                     prop->allow_display_turns())
                 {
                     // NOTE: Since turns left are decremented before the actors
@@ -1552,20 +1704,47 @@ void PropHandler::props_interface_line(std::vector<StrAndClr>& line) const
                     //
                     const int turns_left_displayed = turns_left + 1;
 
-                    str += ":" + std::to_string(turns_left_displayed);
+                    name_short += ":" + std::to_string(turns_left_displayed);
                 }
             }
-
-            const PropAlignment alignment = prop->alignment();
-
-            const Clr clr =
-                (alignment == PropAlignment::good) ? clr_msg_good :
-                (alignment == PropAlignment::bad)  ? clr_msg_bad :
-                clr_white;
-
-            line.push_back(StrAndClr(str, clr));
         }
+
+        std::string title;
+
+        if (!name_long.empty())
+        {
+            title = name_long;
+        }
+
+        if (!name_short.empty() &&
+            name_short != name_long)
+        {
+            title += " (" + name_short + ")";
+        }
+
+        const PropAlignment alignment = prop->alignment();
+
+        const Clr clr =
+            (alignment == PropAlignment::good) ? clr_msg_good :
+            (alignment == PropAlignment::bad)  ? clr_msg_bad :
+            clr_white;
+
+        const std::string descr = prop->descr();
+
+        const size_t new_size = list.size() + 1;
+
+        list.resize(new_size);
+
+        auto& entry = list[new_size - 1];
+
+        entry.first.str = title;
+
+        entry.first.clr = clr;
+
+        entry.second = descr;
     }
+
+    return list;
 }
 
 bool PropHandler::try_resist_prop(const PropId id) const
@@ -1839,11 +2018,11 @@ Prop::Prop(PropId id, PropTurns turns_init, int nr_turns) :
         }
 #endif // NDEBUG
 
-        nr_turns_left_ = -1; //Robustness for release builds
+        nr_turns_left_ = -1; // Robustness for release builds
         break;
 
     case PropTurns::specific:
-        //Use the number of turns specified in the ctor argument
+        // Use the number of turns specified in the ctor argument
         ASSERT(nr_turns_left_ > 0);
         break;
     }
@@ -1863,7 +2042,7 @@ void PropBlessed::on_more()
 
 void PropBlessed::bless_adjacent() const
 {
-    //"Bless" adjacent fountains
+    // "Bless" adjacent fountains
     const P& p = owning_actor_->pos;
 
     for (const P& d : dir_utils::dir_list_w_center)
@@ -2076,27 +2255,25 @@ void PropPossByZuul::on_death(const bool is_player_see_owning_actor)
 
 Prop* PropPoisoned::on_tick()
 {
-    if (owning_actor_->is_alive())
+    if (owning_actor_->is_alive() &&
+        (game_time::turn_nr() % poison_dmg_n_turn) == 0)
     {
-        if (game_time::turn_nr() % poison_dmg_n_turn == 0)
+        if (owning_actor_->is_player())
         {
-            if (owning_actor_->is_player())
-            {
-                msg_log::add("I am suffering from the poison!",
-                             clr_msg_bad,
-                             true);
-            }
-            else //Is monster
-            {
-                if (map::player->can_see_actor(*owning_actor_))
-                {
-                    msg_log::add(owning_actor_->name_the() +
-                                 " suffers from poisoning!");
-                }
-            }
-
-            owning_actor_->hit(1, DmgType::pure);
+            msg_log::add("I am suffering from the poison!",
+                         clr_msg_bad,
+                         true);
         }
+        else // Is monster
+        {
+            if (map::player->can_see_actor(*owning_actor_))
+            {
+                msg_log::add(owning_actor_->name_the() +
+                             " suffers from poisoning!");
+            }
+        }
+
+        owning_actor_->hit(1, DmgType::pure);
     }
 
     return this;
@@ -2120,13 +2297,15 @@ bool PropTerrified::allow_attack_ranged(const Verbosity verbosity) const
 
 void PropTerrified::on_start()
 {
-    //If this is a monster, we reset its last direction moved. Otherwise it would probably
-    //tend to move toward the player even while terrified (the AI would typically use the idle
-    //movement algorithm, which favors stepping in the same direction as the last move).
+    // If this is a monster, we reset its last direction moved. Otherwise it
+    // would probably tend to move toward the player even while terrified (the
+    // AI would typically use the idle movement algorithm, which favors stepping
+    // in the same direction as the last move).
 
     if (!owning_actor_->is_player())
     {
         Mon* const mon = static_cast<Mon*>(owning_actor_);
+
         mon->last_dir_moved_ = Dir::center;
     }
 }
@@ -2260,7 +2439,7 @@ int PropWound::affect_max_hp(const int hp_max) const
         hp_pen_pct /= 2;
     }
 
-    //Cap the penalty percentage
+    // Cap the penalty percentage
     hp_pen_pct = std::min(70, hp_pen_pct);
 
     return (hp_max * (100 - hp_pen_pct)) / 100;
@@ -2460,8 +2639,11 @@ void PropFrenzied::affect_move_dir(const P& actor_pos, Dir& dir)
 
 bool PropFrenzied::is_resisting_other_prop(const PropId prop_id) const
 {
-    return prop_id == PropId::confused || prop_id == PropId::fainted ||
-           prop_id == PropId::terrified || prop_id == PropId::weakened;
+    return
+        prop_id == PropId::confused ||
+        prop_id == PropId::fainted ||
+        prop_id == PropId::terrified ||
+        prop_id == PropId::weakened;
 }
 
 void PropFrenzied::on_start()
@@ -2475,7 +2657,8 @@ void PropFrenzied::on_end()
 {
     //Only the player (except for Ghoul background) gets tired after a frenzy
     //(it looks weird for monsters)
-    if (owning_actor_->is_player() && player_bon::bg() != Bg::ghoul)
+    if (owning_actor_->is_player() &&
+        player_bon::bg() != Bg::ghoul)
     {
         owning_actor_->prop_handler().try_add(new PropWeakened(PropTurns::std));
     }

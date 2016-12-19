@@ -437,19 +437,56 @@ void ViewActorDescr::on_start()
     p.y += 3;
 
     // Add properties
-    std::vector<StrAndClr> props_line;
+    const std::string offset = "   ";
 
-    actor_.prop_handler().props_interface_line(props_line);
+    put_text("Current properties",
+             p,
+             clr_white_high);
 
-    if (!props_line.empty())
+    const auto prop_list = actor_.prop_handler().props_list();
+
+    ++p.y;
+
+    p.x += 3;
+
+    if (prop_list.empty())
     {
-        for (const StrAndClr& current_prop_label : props_line)
-        {
-            put_text(current_prop_label.str,
-                     p,
-                     current_prop_label.clr);
+        put_text("None",
+                 p,
+                 clr_white);
 
-            p.x += current_prop_label.str.size() + 1;
+        ++p.y;
+    }
+    else // Has properties
+    {
+        const int max_w_descr = (map_w * 3) / 4;
+
+        for (const auto& e : prop_list)
+        {
+            const auto& title = e.first;
+
+            put_text(title.str,
+                     p,
+                     title.clr);
+
+            ++p.y;
+
+            std::vector<std::string> descr_formatted;
+
+            text_format::split(e.second,
+                               max_w_descr,
+                               descr_formatted);
+
+            for (const auto& descr_line : descr_formatted)
+            {
+                put_text(descr_line,
+                         p,
+                         clr_gray);
+
+                ++p.y;
+            }
+
+            ++p.y;
         }
     }
 

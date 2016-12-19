@@ -564,7 +564,6 @@ void ArmorAsbSuit::on_equip_hook(const Verbosity verbosity)
     add_carrier_prop(new PropRFire(PropTurns::indefinite), Verbosity::silent);
     add_carrier_prop(new PropRAcid(PropTurns::indefinite), Verbosity::silent);
     add_carrier_prop(new PropRElec(PropTurns::indefinite), Verbosity::silent);
-    add_carrier_prop(new PropRBreath(PropTurns::indefinite), Verbosity::silent);
 }
 
 UnequipAllowed ArmorAsbSuit::on_unequip_hook()
@@ -681,9 +680,13 @@ void Wpn::set_random_melee_plus()
 
 std::string Wpn::name_inf() const
 {
-    if (data_->ranged.is_ranged_wpn && !data_->ranged.has_infinite_ammo)
+    if (data_->ranged.is_ranged_wpn &&
+        !data_->ranged.has_infinite_ammo)
     {
-        return std::to_string(nr_ammo_loaded_) + "/" + std::to_string(data_->ranged.max_ammo);
+        return
+            std::to_string(nr_ammo_loaded_) +
+            "/" +
+            std::to_string(data_->ranged.max_ammo);
     }
 
     return "";
@@ -1244,9 +1247,6 @@ int MedicalBag::tot_turns_for_action(const MedBagAction action) const
 void GasMask::on_equip_hook(const Verbosity verbosity)
 {
     (void)verbosity;
-
-    add_carrier_prop(new PropRBreath(PropTurns::indefinite),
-                     Verbosity::silent);
 }
 
 UnequipAllowed GasMask::on_unequip_hook()

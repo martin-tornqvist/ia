@@ -119,6 +119,7 @@ struct PropDataT
         std_rnd_turns                   (Range(10, 10)),
         name                            (""),
         name_short                      (""),
+        descr                           (""),
         is_making_mon_aware             (false),
         allow_display_turns             (true),
         allow_apply_more_while_active   (true),
@@ -132,17 +133,18 @@ struct PropDataT
         }
     }
 
-    PropId          id;
-    Range           std_rnd_turns;
-    std::string     name;
-    std::string     name_short;
-    std::string     msg[(size_t)PropMsg::END];
-    bool            is_making_mon_aware;
-    bool            allow_display_turns;
-    bool            allow_apply_more_while_active;
-    bool            update_vision_when_start_or_end;
-    bool            allow_test_on_bot;
-    PropAlignment   alignment;
+    PropId id;
+    Range std_rnd_turns;
+    std::string name;
+    std::string name_short;
+    std::string descr;
+    std::string msg[(size_t)PropMsg::END];
+    bool is_making_mon_aware;
+    bool allow_display_turns;
+    bool allow_apply_more_while_active;
+    bool update_vision_when_start_or_end;
+    bool allow_test_on_bot;
+    PropAlignment alignment;
 };
 
 namespace prop_data
@@ -200,7 +202,11 @@ public:
 
     bool end_prop(const PropId id, const bool run_prop_end_effects = true);
 
-    void props_interface_line(std::vector<StrAndClr>& line) const;
+    // A line of property names of the short form
+    std::vector<StrAndClr> props_line() const;
+
+    // A list of properties names of the full form, with descriptions
+    std::vector< std::pair<StrAndClr, std::string> > props_list() const;
 
     Prop* mk_prop(const PropId id,
                   PropTurns turns_init,
@@ -316,6 +322,11 @@ public:
     virtual std::string name_short() const
     {
         return data_.name_short;
+    }
+
+    std::string descr() const
+    {
+        return data_.descr;
     }
 
     virtual void msg(const PropMsg msg_type, std::string& msg_ref) const

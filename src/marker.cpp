@@ -485,23 +485,16 @@ void Throwing::on_moved()
 
     auto* const actor = map::actor_at_pos(pos_);
 
-    if (actor               &&
+    if (actor &&
         !actor->is_player() &&
         map::player->can_see_actor(*actor))
     {
-        const bool gets_undead_bane_bon =
-            player_bon::gets_undead_bane_bon(actor->data());
+        ThrowAttData data(map::player,
+                          actor->pos,       // Aim position
+                          actor->pos,       // Current position
+                          *item_to_throw_);
 
-        if (!actor->has_prop(PropId::ethereal) ||
-            gets_undead_bane_bon)
-        {
-            ThrowAttData data(map::player,
-                              actor->pos,       // Aim position
-                              actor->pos,       // Current position
-                              *item_to_throw_);
-
-            msg_log::add(std::to_string(data.hit_chance_tot) + "% hit chance.");
-        }
+        msg_log::add(std::to_string(data.hit_chance_tot) + "% hit chance.");
     }
 
     msg_log::add("[t] to throw" + cancel_info_str);

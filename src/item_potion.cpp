@@ -288,28 +288,34 @@ void PotionFortitude::quaff_impl(Actor& actor)
 {
     PropHandler& prop_handler = actor.prop_handler();
 
-    PropRFear* const rFear = new PropRFear(PropTurns::std);
+    PropRFear* const r_fear =
+        new PropRFear(PropTurns::std);
 
-    const int nr_turns_left = rFear->nr_turns_left();
+    const int nr_turns_left =
+        r_fear->nr_turns_left();
 
-    PropRConf* const   rConf   = new PropRConf(PropTurns::specific,  nr_turns_left);
-    PropRSleep* const  rSleep  = new PropRSleep(PropTurns::specific, nr_turns_left);
+    PropRConf* const r_conf =
+        new PropRConf(PropTurns::specific,  nr_turns_left);
 
-    prop_handler.try_add(rFear);
-    prop_handler.try_add(rConf);
-    prop_handler.try_add(rSleep);
+    PropRSleep* const r_sleep =
+        new PropRSleep(PropTurns::specific, nr_turns_left);
+
+    prop_handler.try_add(r_fear);
+    prop_handler.try_add(r_conf);
+    prop_handler.try_add(r_sleep);
 
     prop_handler.end_prop(PropId::frenzied);
 
-    //Remove a random insanity symptom if this is the player
+    // Remove a random insanity symptom if this is the player
     if (actor.is_player())
     {
         const std::vector<const InsSympt*> sympts = insanity::active_sympts();
 
         if (!sympts.empty())
         {
-            const size_t        idx = rnd::range(0, sympts.size() - 1);
-            const InsSymptId  id  = sympts[idx]->id();
+            const size_t idx = rnd::range(0, sympts.size() - 1);
+
+            const InsSymptId id = sympts[idx]->id();
 
             insanity::end_sympt(id);
         }

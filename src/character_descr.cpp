@@ -25,32 +25,54 @@ void CharacterDescr::on_start()
     lines_.clear();
 
     const std::string offset = "   ";
+
+    const int max_w_descr = (map_w * 3) / 4;
+
     const Clr& clr_heading = clr_white_high;
+
     const Clr& clr_text = clr_white;
+
     const Clr& clr_text_dark = clr_gray;
 
     lines_.push_back(
-        StrAndClr("History of " + map::player->name_the(),
-                  clr_heading));
+        StrAndClr("Current properties", clr_heading));
 
-    const std::vector<HistoryEvent>& events = game::history();
+    const auto prop_list = map::player->prop_handler().props_list();
 
-    for (const auto& event : events)
+    if (prop_list.empty())
     {
-        std::string ev_str = std::to_string(event.turn);
-
-        const int turn_str_max_w = 10;
-
-        text_format::pad_before_to(ev_str, turn_str_max_w);
-
-        ev_str += ": " + event.msg;
-
         lines_.push_back(
-            StrAndClr(offset + ev_str,
+            StrAndClr(offset + "None",
                       clr_text));
-    }
 
-    lines_.push_back(StrAndClr("", clr_text));
+        lines_.push_back(StrAndClr("", clr_text));
+    }
+    else // Has properties
+    {
+        for (const auto& e : prop_list)
+        {
+            const auto& title = e.first;
+
+            lines_.push_back(
+                StrAndClr(offset + title.str,
+                          title.clr));
+
+            std::vector<std::string> descr_formatted;
+
+            text_format::split(e.second,
+                               max_w_descr,
+                               descr_formatted);
+
+            for (const auto& descr_line : descr_formatted)
+            {
+                lines_.push_back(
+                    StrAndClr(offset + descr_line,
+                              clr_text_dark));
+            }
+
+            lines_.push_back(StrAndClr("", clr_text));
+        }
+    }
 
     lines_.push_back(
         StrAndClr("Mental disorders",
@@ -87,7 +109,7 @@ void CharacterDescr::on_start()
     std::vector<StrAndClr> potion_list;
     std::vector<StrAndClr> manuscript_list;
 
-    for (int i = 0; i < int(ItemId::END); ++i)
+    for (int i = 0; i < (int)ItemId::END; ++i)
     {
         const ItemDataT& d = item_data::data[i];
 
@@ -170,10 +192,40 @@ void CharacterDescr::on_start()
     lines_.push_back(StrAndClr("", clr_text));
 
     lines_.push_back(
-        StrAndClr("Traits gained",
+        StrAndClr("History of " + map::player->name_the(),
                   clr_heading));
 
-    const int max_w_descr = (map_w * 2) / 3;
+    const std::vector<HistoryEvent>& events = game::history();
+
+    int longest_turn_w = 0;
+
+    for (const auto& event : events)
+    {
+        const int turn_w = std::to_string(event.turn).size();
+
+        longest_turn_w = std::max(turn_w, longest_turn_w);
+    }
+
+    for (const auto& event : events)
+    {
+        std::string ev_str = std::to_string(event.turn);
+
+        const int turn_w = ev_str.size();
+
+        ev_str.append(longest_turn_w - turn_w, ' ');
+
+        ev_str += " : " + event.msg;
+
+        lines_.push_back(
+            StrAndClr(offset + ev_str,
+                      clr_text));
+    }
+
+    lines_.push_back(StrAndClr("", clr_text));
+
+    lines_.push_back(
+        StrAndClr("Traits gained",
+                  clr_heading));
 
     for (size_t i = 0; i < (size_t)Trait::END; ++i)
     {

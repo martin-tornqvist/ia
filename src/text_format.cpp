@@ -7,7 +7,7 @@
 namespace
 {
 
-//Reads and removes the first word of the string.
+// Reads and removes the first word of the string.
 void read_and_remove_word(std::string& line, std::string& word_ref)
 {
     word_ref = "";
@@ -34,7 +34,7 @@ bool is_word_fit(const std::string& current_string,
     return (current_string.size() + word_to_fit.size() + 1) <= max_w;
 }
 
-} //namespace
+} // namespace
 
 
 namespace text_format
@@ -70,13 +70,14 @@ void split(std::string line,
     {
         if (!is_word_fit(out[current_row_idx], current_word, max_w))
         {
-            //Current word did not fit on current line, make a new line
+            // Current word did not fit on current line, make a new line
             ++current_row_idx;
             out.resize(current_row_idx + 1);
             out[current_row_idx] = "";
         }
 
-        //If this is not the first word on the current line, add a space before the word
+        // If this is not the first word on the current line, add a space before
+        // the word
         if (!out[current_row_idx].empty())
         {
             out[current_row_idx] += " ";
@@ -170,5 +171,4 @@ void all_to_upper(std::string& str)
     transform(begin(str), end(str), begin(str), ::toupper);
 }
 
-} //TextFormat
-
+} // text_format

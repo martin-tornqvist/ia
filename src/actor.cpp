@@ -133,14 +133,19 @@ int Actor::speed_pct() const
     // "Slowed" gives speed penalty
     if (prop_handler_->has_prop(PropId::slowed))
     {
-        ret /= 2;
+        ret -= 50;
     }
 
-    // "Hasted" or "frenzied" gives speed bonus.
-    if ((prop_handler_->has_prop(PropId::hasted) ||
-         prop_handler_->has_prop(PropId::frenzied)))
+    // "Hasted" gives speed bonus
+    if (prop_handler_->has_prop(PropId::hasted))
     {
-        ret *= 2;
+        ret += 100;
+    }
+
+    // "Frenzied" gives speed bonus
+    if (prop_handler_->has_prop(PropId::frenzied))
+    {
+        ret += 100;
     }
 
     if (is_player())
@@ -155,6 +160,10 @@ int Actor::speed_pct() const
             ret += 10;
         }
     }
+
+    const int min_speed = 20;
+
+    ret = std::max(min_speed, ret);
 
     return ret;
 }
