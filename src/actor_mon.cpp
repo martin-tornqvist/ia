@@ -613,15 +613,15 @@ void Mon::set_player_aware_of_me(int duration_factor)
 {
     is_sneaking_ = false;
 
+    int nr_turns = 2 * duration_factor;
+
     if (player_bon::bg() == Bg::rogue)
     {
-        duration_factor *= 4;
+        nr_turns *= 8;
     }
 
-    const int lower = 2 * duration_factor;
-    const int upper = 3 * duration_factor;
-    const int roll = rnd::range(lower, upper);
-    player_aware_of_me_counter_ = std::max(player_aware_of_me_counter_, roll);
+    player_aware_of_me_counter_ =
+        std::max(player_aware_of_me_counter_, nr_turns);
 }
 
 bool Mon::try_attack(Actor& defender)

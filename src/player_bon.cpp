@@ -401,7 +401,7 @@ std::vector<std::string> bg_descr(const Bg id)
         {
             "The rate of shock received passively over time is reduced by half",
             "",
-            "Remains aware of the presence of other creatures longer",
+            "Remains aware of the presence of other creatures much longer",
             "",
             "Starts with the following trait(s):",
             "",
