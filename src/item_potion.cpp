@@ -402,19 +402,21 @@ void PotionCuring::quaff_impl(Actor& actor)
         }
     }
 
-    if (actor.restore_hp(3, false /*Not allowed above max*/))
+    if (actor.restore_hp(3, false /* Not allowed above max */))
     {
         is_noticable = true;
     }
 
-    if (!is_noticable && actor.is_player())
+    if (!is_noticable &&
+        actor.is_player())
     {
         msg_log::add("I feel fine.");
 
         is_noticable = true;
     }
 
-    if (is_noticable && map::player->can_see_actor(actor))
+    if (is_noticable &&
+        map::player->can_see_actor(actor))
     {
         identify(Verbosity::verbose);
     }

@@ -859,7 +859,7 @@ void handle_player_input(const InputData& input)
     case SDLK_F8:
     {
         map::player->prop_handler().try_add(
-            new PropFrenzied(PropTurns::std));
+            new PropPoisoned(PropTurns::std));
     }
     break;
 

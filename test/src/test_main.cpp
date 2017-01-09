@@ -850,15 +850,15 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
 
     CHECK_EQUAL(4, int(nr_props));
 
-    CHECK(prop_hlr.prop(PropId::rFire));
-    CHECK(prop_hlr.prop(PropId::rElec));
-    CHECK(prop_hlr.prop(PropId::rAcid));
-    CHECK(prop_hlr.prop(PropId::rBreath));
+    CHECK(prop_hlr.prop(PropId::r_fire));
+    CHECK(prop_hlr.prop(PropId::r_elec));
+    CHECK(prop_hlr.prop(PropId::r_acid));
+    CHECK(prop_hlr.prop(PropId::r_breath));
 
-    CHECK(prop_hlr.has_prop(PropId::rFire));
-    CHECK(prop_hlr.has_prop(PropId::rElec));
-    CHECK(prop_hlr.has_prop(PropId::rAcid));
-    CHECK(prop_hlr.has_prop(PropId::rBreath));
+    CHECK(prop_hlr.has_prop(PropId::r_fire));
+    CHECK(prop_hlr.has_prop(PropId::r_elec));
+    CHECK(prop_hlr.has_prop(PropId::r_acid));
+    CHECK(prop_hlr.has_prop(PropId::r_breath));
 
     // Take off asbeshos suit
     inv.try_unequip_slot(SlotId::body);
@@ -892,15 +892,15 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
 
     CHECK_EQUAL(4, int(nr_props));
 
-    CHECK(prop_hlr.prop(PropId::rFire));
-    CHECK(prop_hlr.prop(PropId::rElec));
-    CHECK(prop_hlr.prop(PropId::rAcid));
-    CHECK(prop_hlr.prop(PropId::rBreath));
+    CHECK(prop_hlr.prop(PropId::r_fire));
+    CHECK(prop_hlr.prop(PropId::r_elec));
+    CHECK(prop_hlr.prop(PropId::r_acid));
+    CHECK(prop_hlr.prop(PropId::r_breath));
 
-    CHECK(prop_hlr.has_prop(PropId::rFire));
-    CHECK(prop_hlr.has_prop(PropId::rElec));
-    CHECK(prop_hlr.has_prop(PropId::rAcid));
-    CHECK(prop_hlr.has_prop(PropId::rBreath));
+    CHECK(prop_hlr.has_prop(PropId::r_fire));
+    CHECK(prop_hlr.has_prop(PropId::r_elec));
+    CHECK(prop_hlr.has_prop(PropId::r_acid));
+    CHECK(prop_hlr.has_prop(PropId::r_breath));
 
     // Drop the asbeshos suit on the ground
     item_drop::try_drop_item_from_inv(*map::player,
@@ -941,15 +941,15 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
 
     CHECK_EQUAL(4, int(nr_props));
 
-    CHECK(prop_hlr.prop(PropId::rFire));
-    CHECK(prop_hlr.prop(PropId::rElec));
-    CHECK(prop_hlr.prop(PropId::rAcid));
-    CHECK(prop_hlr.prop(PropId::rBreath));
+    CHECK(prop_hlr.prop(PropId::r_fire));
+    CHECK(prop_hlr.prop(PropId::r_elec));
+    CHECK(prop_hlr.prop(PropId::r_acid));
+    CHECK(prop_hlr.prop(PropId::r_breath));
 
-    CHECK(prop_hlr.has_prop(PropId::rFire));
-    CHECK(prop_hlr.has_prop(PropId::rElec));
-    CHECK(prop_hlr.has_prop(PropId::rAcid));
-    CHECK(prop_hlr.has_prop(PropId::rBreath));
+    CHECK(prop_hlr.has_prop(PropId::r_fire));
+    CHECK(prop_hlr.has_prop(PropId::r_elec));
+    CHECK(prop_hlr.has_prop(PropId::r_acid));
+    CHECK(prop_hlr.has_prop(PropId::r_breath));
 
     // Destroy the asbesthos suit
     for (int i = 0; i < 10; ++i)
@@ -1200,9 +1200,9 @@ TEST_FIXTURE(BasicFixture, loading_game)
     // Check currrent HP (should not be affected)
     CHECK_EQUAL(map::player->data().hp, map::player->hp());
 
-    prop = prop_hlr.prop(PropId::rSleep);
+    prop = prop_hlr.prop(PropId::r_sleep);
     CHECK(prop);
-    CHECK(prop_hlr.has_prop(PropId::rSleep));
+    CHECK(prop_hlr.has_prop(PropId::r_sleep));
     CHECK_EQUAL(3, prop->nr_turns_left());
 
     prop = prop_hlr.prop(PropId::blessed);
@@ -1211,10 +1211,10 @@ TEST_FIXTURE(BasicFixture, loading_game)
     CHECK(prop->nr_turns_left() > 0);
 
     // Properties from worn item
-    prop = prop_hlr.prop(PropId::rAcid);
+    prop = prop_hlr.prop(PropId::r_acid);
     CHECK(prop);
     CHECK(prop->nr_turns_left() == -1);
-    prop = prop_hlr.prop(PropId::rFire);
+    prop = prop_hlr.prop(PropId::r_fire);
     CHECK(prop);
     CHECK(prop->nr_turns_left() == -1);
 

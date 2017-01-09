@@ -145,6 +145,8 @@ public:
 
     int speed_pct() const;
 
+    virtual int spell_skill(const SpellId id) const = 0;
+
     virtual std::string name_the() const
     {
         return data_->name_the;

@@ -10,21 +10,21 @@
 
 enum class PropId
 {
-    rPhys,
-    rFire,
-    rPoison,
-    rElec,
-    rAcid,
-    rSleep,
-    rFear,
-    rConf,
-    rBreath,
-    rDisease,
+    r_phys,
+    r_fire,
+    r_poison,
+    r_elec,
+    r_acid,
+    r_sleep,
+    r_fear,
+    r_conf,
+    r_breath,
+    r_disease,
     // NOTE: The purpose of this is only to prevent blindness for "eyeless"
     //       monsters (e.g. constructs such as animated weapons), and is only
     //       intended as a natural property.
-    rBlind,
-    lgtSens,
+    r_blind,
+    lgt_sens,
     blind,
     fainted,
     burning,
@@ -70,7 +70,7 @@ enum class PropId
     flared,
     warlock_charged,
     wound,
-    rSpell,
+    r_spell,
 
     END
 };
@@ -1081,7 +1081,7 @@ class PropRAcid: public Prop
 {
 public:
     PropRAcid(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::rAcid, turns_init, nr_turns) {}
+        Prop(PropId::r_acid, turns_init, nr_turns) {}
 
     bool try_resist_dmg(const DmgType dmg_type,
                         const Verbosity verbosity) const override;
@@ -1091,7 +1091,7 @@ class PropRConf: public Prop
 {
 public:
     PropRConf(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::rConf, turns_init, nr_turns) {}
+        Prop(PropId::r_conf, turns_init, nr_turns) {}
 
     void on_start() override;
 
@@ -1102,7 +1102,7 @@ class PropRElec: public Prop
 {
 public:
     PropRElec(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::rElec, turns_init, nr_turns) {}
+        Prop(PropId::r_elec, turns_init, nr_turns) {}
 
     bool try_resist_dmg(const DmgType dmg_type,
                         const Verbosity verbosity) const override;
@@ -1112,7 +1112,7 @@ class PropRFear: public Prop
 {
 public:
     PropRFear(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::rFear, turns_init, nr_turns) {}
+        Prop(PropId::r_fear, turns_init, nr_turns) {}
 
     void on_start() override;
 
@@ -1123,7 +1123,7 @@ class PropRPhys: public Prop
 {
 public:
     PropRPhys(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::rPhys, turns_init, nr_turns) {}
+        Prop(PropId::r_phys, turns_init, nr_turns) {}
 
     void on_start() override;
 
@@ -1137,7 +1137,7 @@ class PropRFire: public Prop
 {
 public:
     PropRFire(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::rFire, turns_init, nr_turns) {}
+        Prop(PropId::r_fire, turns_init, nr_turns) {}
 
     void on_start() override;
 
@@ -1151,7 +1151,7 @@ class PropRPoison: public Prop
 {
 public:
     PropRPoison(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::rPoison, turns_init, nr_turns) {}
+        Prop(PropId::r_poison, turns_init, nr_turns) {}
 
     void on_start() override;
 
@@ -1162,7 +1162,7 @@ class PropRSleep: public Prop
 {
 public:
     PropRSleep(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::rSleep, turns_init, nr_turns) {}
+        Prop(PropId::r_sleep, turns_init, nr_turns) {}
 
     void on_start() override;
 
@@ -1173,7 +1173,7 @@ class PropRDisease: public Prop
 {
 public:
     PropRDisease(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::rDisease, turns_init, nr_turns) {}
+        Prop(PropId::r_disease, turns_init, nr_turns) {}
 
     void on_start() override;
 
@@ -1184,7 +1184,7 @@ class PropRBlind: public Prop
 {
 public:
     PropRBlind(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::rBlind, turns_init, nr_turns) {}
+        Prop(PropId::r_blind, turns_init, nr_turns) {}
 
     void on_start() override;
 
@@ -1195,14 +1195,14 @@ class PropRBreath: public Prop
 {
 public:
     PropRBreath(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::rBreath, turns_init, nr_turns) {}
+        Prop(PropId::r_breath, turns_init, nr_turns) {}
 };
 
 class PropLgtSens: public Prop
 {
 public:
     PropLgtSens(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::lgtSens, turns_init, nr_turns) {}
+        Prop(PropId::lgt_sens, turns_init, nr_turns) {}
     ~PropLgtSens() override {}
 };
 
@@ -1218,7 +1218,7 @@ class PropRSpell: public Prop
 {
 public:
     PropRSpell(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::rSpell, turns_init, nr_turns) {}
+        Prop(PropId::r_spell, turns_init, nr_turns) {}
 };
 
 class PropSpellReflect: public Prop

@@ -269,10 +269,13 @@ ConsumeItem DeviceBlaster::trigger_effect()
     {
         msg_log::add("It seems to peruse area.");
     }
-    else //Targets are available
+    else // Targets are available
     {
-        Spell* const spell = spell_handling::mk_spell_from_id(SpellId::aza_wrath);
-        spell->cast(map::player, false, true);
+        Spell* const spell =
+            spell_handling::mk_spell_from_id(SpellId::aza_wrath);
+
+        spell->cast(map::player, false);
+
         delete spell;
     }
 

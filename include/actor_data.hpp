@@ -170,6 +170,7 @@ struct ActorDataT
     int hp, spi, dmg_melee, dmg_ranged;
     int speed_pct;
     AbilityVals ability_vals;
+    int spell_skill;
     bool natural_props[(size_t)PropId::END];
     int ranged_cooldown_turns, spell_cooldown_turns;
     bool ai[(size_t)AiId::END];

@@ -69,7 +69,7 @@ void InsSympt::on_end()
 
 bool InsScream::is_allowed() const
 {
-    return !map::player->has_prop(PropId::rFear);
+    return !map::player->has_prop(PropId::r_fear);
 }
 
 void InsScream::on_start_hook()
@@ -148,7 +148,7 @@ void InsLaugh::on_start_hook()
 bool InsPhobiaRat::is_allowed() const
 {
     const bool has_phobia   = insanity::has_sympt_type(InsSymptType::phobia);
-    const bool is_rfear     = map::player->has_prop(PropId::rFear);
+    const bool is_rfear     = map::player->has_prop(PropId::r_fear);
 
     return !is_rfear && (!has_phobia || rnd::one_in(20));
 }
@@ -179,7 +179,7 @@ void InsPhobiaRat::on_permanent_rfear()
 bool InsPhobiaSpider::is_allowed() const
 {
     const bool has_phobia   = insanity::has_sympt_type(InsSymptType::phobia);
-    const bool is_rfear     = map::player->has_prop(PropId::rFear);
+    const bool is_rfear     = map::player->has_prop(PropId::r_fear);
 
     return !is_rfear && (!has_phobia || rnd::one_in(20));
 }
@@ -210,7 +210,7 @@ void InsPhobiaSpider::on_permanent_rfear()
 bool InsPhobiaReptileAndAmph::is_allowed() const
 {
     const bool has_phobia   = insanity::has_sympt_type(InsSymptType::phobia);
-    const bool is_rfear     = map::player->has_prop(PropId::rFear);
+    const bool is_rfear     = map::player->has_prop(PropId::r_fear);
 
     return !is_rfear && (!has_phobia || rnd::one_in(20));
 }
@@ -253,7 +253,7 @@ void InsPhobiaReptileAndAmph::on_permanent_rfear()
 bool InsPhobiaCanine::is_allowed() const
 {
     const bool has_phobia   = insanity::has_sympt_type(InsSymptType::phobia);
-    const bool is_rfear     = map::player->has_prop(PropId::rFear);
+    const bool is_rfear     = map::player->has_prop(PropId::r_fear);
 
     return !is_rfear && (!has_phobia || rnd::one_in(20));
 }
@@ -284,7 +284,7 @@ void InsPhobiaCanine::on_permanent_rfear()
 bool InsPhobiaDead::is_allowed() const
 {
     const bool has_phobia   = insanity::has_sympt_type(InsSymptType::phobia);
-    const bool is_rfear     = map::player->has_prop(PropId::rFear);
+    const bool is_rfear     = map::player->has_prop(PropId::r_fear);
 
     return !is_rfear && (!has_phobia || rnd::one_in(20));
 }
@@ -315,7 +315,7 @@ void InsPhobiaDead::on_permanent_rfear()
 bool InsPhobiaOpen::is_allowed() const
 {
     const bool has_phobia   = insanity::has_sympt_type(InsSymptType::phobia);
-    const bool is_rfear     = map::player->has_prop(PropId::rFear);
+    const bool is_rfear     = map::player->has_prop(PropId::r_fear);
 
     return !is_rfear && (!has_phobia || rnd::one_in(20));
 }
@@ -340,7 +340,7 @@ void InsPhobiaOpen::on_permanent_rfear()
 bool InsPhobiaConfined::is_allowed() const
 {
     const bool has_phobia   = insanity::has_sympt_type(InsSymptType::phobia);
-    const bool is_rfear     = map::player->has_prop(PropId::rFear);
+    const bool is_rfear     = map::player->has_prop(PropId::r_fear);
 
     return !is_rfear && (!has_phobia || rnd::one_in(20));
 }
@@ -365,7 +365,7 @@ void InsPhobiaConfined::on_permanent_rfear()
 bool InsPhobiaDeep::is_allowed() const
 {
     const bool has_phobia   = insanity::has_sympt_type(InsSymptType::phobia);
-    const bool is_rfear     = map::player->has_prop(PropId::rFear);
+    const bool is_rfear     = map::player->has_prop(PropId::r_fear);
 
     return !is_rfear && (!has_phobia || rnd::one_in(20));
 }
@@ -401,7 +401,7 @@ void InsPhobiaDeep::on_permanent_rfear()
 bool InsPhobiaDark::is_allowed() const
 {
     const bool has_phobia   = insanity::has_sympt_type(InsSymptType::phobia);
-    const bool is_rfear     = map::player->has_prop(PropId::rFear);
+    const bool is_rfear     = map::player->has_prop(PropId::r_fear);
 
     return !is_rfear && (!has_phobia || rnd::one_in(20));
 }
@@ -524,7 +524,7 @@ void InsParanoia::on_start_hook()
 
 bool InsConfusion::is_allowed() const
 {
-    return !map::player->has_prop(PropId::rConf);
+    return !map::player->has_prop(PropId::r_conf);
 }
 
 void InsConfusion::on_start_hook()

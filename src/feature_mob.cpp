@@ -35,7 +35,7 @@ void Smoke::on_new_turn()
 
         bool is_blind_prot = false;
 
-        bool is_breath_prot = actor->prop_handler().has_prop(PropId::rBreath);
+        bool is_breath_prot = actor->prop_handler().has_prop(PropId::r_breath);
 
         if (is_player)
         {

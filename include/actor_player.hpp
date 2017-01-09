@@ -60,6 +60,8 @@ public:
 
     Clr clr() const override;
 
+    int spell_skill(const SpellId id) const override;
+
     void mk_start_items() override;
 
     void on_actor_turn() override;

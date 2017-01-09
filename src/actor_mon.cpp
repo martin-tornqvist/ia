@@ -547,6 +547,13 @@ Clr Mon::clr() const
     return data_->color;
 }
 
+int Mon::spell_skill(const SpellId id) const
+{
+    (void)id;
+
+    return data_->spell_skill;
+}
+
 void Mon::hear_sound(const Snd& snd)
 {
     if (is_alive() &&
@@ -897,7 +904,7 @@ std::string Cultist::cultist_phrase()
 
 void Cultist::mk_start_items()
 {
-    // If we are on a low-ish dlvl, let the vast majority of cultists carry pistols
+    // If we are on a low dlvl, let the vast majority of cultists carry pistols
     const bool is_low_dlvl = map::dlvl < 4;
 
     const int pistol = is_low_dlvl ? 20 : 6;
@@ -951,19 +958,26 @@ void Cultist::mk_start_items()
     }
     else // Machine gun
     {
-        // Number of machine gun bullets loaded needs to be a multiple of the number of
-        // projectiles fired in each burst
+        // Number of machine gun bullets loaded needs to be a multiple of the
+        // number of projectiles fired in each burst
         Item* item = item_factory::mk(ItemId::machine_gun);
+
         Wpn* const wpn = static_cast<Wpn*>(item);
+
         const int cap_scaled = wpn->data().ranged.max_ammo / nr_mg_projectiles;
+
         const int min_scaled = cap_scaled / 4;
-        wpn->nr_ammo_loaded_ = rnd::range(min_scaled, cap_scaled) * nr_mg_projectiles;
+
+        wpn->nr_ammo_loaded_ =
+            rnd::range(min_scaled, cap_scaled) * nr_mg_projectiles;
+
         inv_->put_in_slot(SlotId::wpn, item);
     }
 
     if (rnd::one_in(8))
     {
-        inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
+        inv_->put_in_backpack(
+            item_factory::mk_random_scroll_or_potion(true, true));
     }
 
     if (rnd::one_in(12))
@@ -975,7 +989,9 @@ void Cultist::mk_start_items()
 void CultistElectric::mk_start_items()
 {
     Item* item = item_factory::mk(ItemId::mi_go_gun);
+
     Wpn* wpn = static_cast<Wpn*>(item);
+
     const int ammo_cap = wpn->data().ranged.max_ammo;
 
     wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
@@ -984,7 +1000,8 @@ void CultistElectric::mk_start_items()
 
     if (rnd::one_in(5))
     {
-        inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
+        inv_->put_in_backpack(
+            item_factory::mk_random_scroll_or_potion(true, true));
     }
 
     if (rnd::one_in(3))
@@ -1299,6 +1316,7 @@ void RatThing::mk_start_items()
 void BrownJenkin::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::brown_jenkin_bite));
+
     spells_known_.push_back(new SpellTeleport);
 }
 
@@ -1364,41 +1382,6 @@ void Mummy::mk_start_items()
 
 DidAction Mummy::on_act()
 {
-    // TODO: Below is an implementation for mummies turning friendly if player is wielding
-    // the Staff of the Pharoh. It is commented out at least until after v17.0 is released.
-    // It is probably too powerful and unbalanced. Perhaps add this power as a separate
-    // spell to the Staff (something like "Pharohs Command")?
-
-//    if (!is_alive()          ||
-//        data_->is_unique ||
-//        aware_counter_ <= 0 ||
-//        is_actor_my_leader(map::player))
-//    {
-//        return false;
-//    }
-//
-//    const Item* const player_wpn = map::player->inv().item_in_slot(SlotId::wpn);
-//
-//    if (player_wpn && player_wpn->id() == ItemId::pharaoh_staff)
-//    {
-//        bool blocked_los[map_w][map_h];
-//        map_parse::run(cell_check::BlocksLos(), blocked_los);
-//
-//        if (can_see_actor(*map::player, blocked_los))
-//        {
-//            if (map::player->can_see_actor(*this))
-//            {
-//                const std::string name = name_the();
-//
-//                msg_log::add(name + " bows before me.", clr_text, false, true);
-//            }
-//
-//            leader_ = map::player;
-//
-//            game_time::tick();
-//            return true;
-//        }
-//    }
 
     return DidAction::no;
 }

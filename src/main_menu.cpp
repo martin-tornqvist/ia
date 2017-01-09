@@ -357,7 +357,7 @@ void MainMenuState::draw()
     }
 
     io::draw_text_center(version_str + " - " + __DATE__ +
-                         " (c) 2011-2016 Martin Tornqvist",
+                         " (c) 2011-2017 Martin Tornqvist",
                          Panel::screen,
                          P(map_w_half, screen_h - 1),
                          clr_gray_drk);

@@ -1978,7 +1978,8 @@ void Brazier::on_hit(const DmgType dmg_type,
                            ExplSrc::misc,
                            EmitExplSnd::no,
                            expl_d,
-                           new PropBurning(PropTurns::std));
+                           ExplExclCenter::no,
+                           {new PropBurning(PropTurns::std)});
         }
 
         map::update_vision();
@@ -2599,7 +2600,8 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
                            ExplSrc::misc,
                            EmitExplSnd::no,
                            0,
-                           prop,
+                           ExplExclCenter::no,
+                           {prop},
                            &fume_clr);
         }
         else //Not fumes

@@ -191,7 +191,7 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
     // Lower hit chance if defender is ethereal (except if Bane of the Undead
     // bonus applies)
     const bool apply_undead_bane_bon =
-        (attacker ==  map::player) &&
+        (attacker == map::player) &&
         player_bon::gets_undead_bane_bon(defender_data);
 
     const bool apply_ethereal_defender_pen =

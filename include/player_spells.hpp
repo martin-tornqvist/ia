@@ -9,12 +9,6 @@
 
 class Spell;
 
-enum class SpellSrc
-{
-    learned,
-    item
-};
-
 struct SpellOpt
 {
     SpellOpt() :

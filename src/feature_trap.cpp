@@ -853,7 +853,8 @@ void TrapGasConfusion::trigger()
                    ExplSrc::misc,
                    EmitExplSnd::no,
                    -1,
-                   new PropConfused(PropTurns::std),
+                   ExplExclCenter::no,
+                   {new PropConfused(PropTurns::std)},
                    &clr_magenta);
 
     TRACE_FUNC_END_VERBOSE;
@@ -882,7 +883,8 @@ void TrapGasParalyzation::trigger()
                    ExplSrc::misc,
                    EmitExplSnd::no,
                    -1,
-                   new PropParalyzed(PropTurns::std),
+                   ExplExclCenter::no,
+                   {new PropParalyzed(PropTurns::std)},
                    &clr_magenta);
 
     TRACE_FUNC_END_VERBOSE;
@@ -912,7 +914,8 @@ void TrapGasFear::trigger()
                    ExplSrc::misc,
                    EmitExplSnd::no,
                    -1,
-                   new PropTerrified(PropTurns::std),
+                   ExplExclCenter::no,
+                   {new PropTerrified(PropTurns::std)},
                    &clr_magenta);
 
     TRACE_FUNC_END_VERBOSE;
@@ -932,7 +935,9 @@ void TrapBlindingFlash::trigger()
                    ExplSrc::misc,
                    EmitExplSnd::no,
                    -1,
-                   new PropBlind(PropTurns::std), &clr_yellow);
+                   ExplExclCenter::no,
+                   {new PropBlind(PropTurns::std)},
+                   &clr_yellow);
 
     TRACE_FUNC_END_VERBOSE;
 }
@@ -1221,7 +1226,8 @@ void TrapFire::trigger()
                    ExplSrc::misc,
                    EmitExplSnd::no,
                    -1,
-                   new PropBurning(PropTurns::std));
+                   ExplExclCenter::no,
+                   {new PropBurning(PropTurns::std)});
 
     TRACE_FUNC_END_VERBOSE;
 }

@@ -1057,7 +1057,7 @@ void Player::on_std_turn()
         player_bon::traits[(size_t)Trait::mighty_spirit]  ? 2 :
         player_bon::traits[(size_t)Trait::strong_spirit]  ? 1 : 0;
 
-    if (spi_trait_lvl > 0 && !prop_handler_->has_prop(PropId::rSpell))
+    if (spi_trait_lvl > 0 && !prop_handler_->has_prop(PropId::r_spell))
     {
         if (nr_turns_until_rspell_ <= 0)
         {
@@ -1078,7 +1078,7 @@ void Player::on_std_turn()
             nr_turns_until_rspell_ = std::max(10, nr_turns_base - nr_turns_bon);
         }
 
-        if (!prop_handler_->has_prop(PropId::rSpell) &&
+        if (!prop_handler_->has_prop(PropId::r_spell) &&
             nr_turns_until_rspell_ > 0)
         {
             // Spell resistance is in cooldown state, decrement number of
@@ -1658,6 +1658,11 @@ Clr Player::clr() const
     }
 
     return data_->color;
+}
+
+int Player::spell_skill(const SpellId id) const
+{
+    return player_spells::spell_skill_pct(id);
 }
 
 void Player::auto_melee()

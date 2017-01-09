@@ -58,9 +58,10 @@ public:
 private:
     std::string descr_identified() const override
     {
-        return "This elixir heals all wounds and cures blindness, poisoning, infections, disease, "
-               "and weakening. It can even temporarily raise the consumers condition past normal "
-               "levels.";
+        return
+            "This elixir heals all wounds and cures blindness, poisoning, "
+            "infections, disease, and weakening. It can even temporarily raise "
+            "the consumers condition past normal levels.";
     }
 
     void collide_hook(const P& pos, Actor* const actor) override;
@@ -325,8 +326,9 @@ public:
 private:
     std::string descr_identified() const override
     {
-        return "Cures blindness, poisoning, infections, disease, and weakening, and restores the "
-               "consumers health by a small amount.";
+        return
+            "Cures blindness, poisoning, infections, disease, and weakening, "
+            "and restores the consumers health by a small amount.";
     }
 
     void collide_hook(const P& pos, Actor* const actor) override;

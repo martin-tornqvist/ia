@@ -42,7 +42,7 @@ void init_data_list()
 {
     PropDataT d;
 
-    d.id = PropId::rPhys;
+    d.id = PropId::r_phys;
     d.std_rnd_turns = Range(50, 100);
     d.name = "Physical Resistance";
     d.name_short = "rPhys";
@@ -59,7 +59,7 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
-    d.id = PropId::rFire;
+    d.id = PropId::r_fire;
     d.std_rnd_turns = Range(50, 100);
     d.name = "Fire resistance";
     d.name_short = "rFire";
@@ -76,7 +76,7 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
-    d.id = PropId::rPoison;
+    d.id = PropId::r_poison;
     d.std_rnd_turns = Range(50, 100);
     d.name = "Poison resistance";
     d.name_short = "rPoison";
@@ -93,7 +93,7 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
-    d.id = PropId::rElec;
+    d.id = PropId::r_elec;
     d.std_rnd_turns = Range(50, 100);
     d.name = "Electric resistance";
     d.name_short = "rElec";
@@ -110,7 +110,7 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
-    d.id = PropId::rAcid;
+    d.id = PropId::r_acid;
     d.std_rnd_turns = Range(50, 100);
     d.name = "Acid resistance";
     d.name_short = "rAcid";
@@ -127,7 +127,7 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
-    d.id = PropId::rSleep;
+    d.id = PropId::r_sleep;
     d.std_rnd_turns = Range(50, 100);
     d.name = "Sleep resistance";
     d.name_short = "rSleep";
@@ -144,7 +144,7 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
-    d.id = PropId::rFear;
+    d.id = PropId::r_fear;
     d.std_rnd_turns = Range(50, 100);
     d.name = "Fear resistance";
     d.name_short = "rFear";
@@ -161,7 +161,7 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
-    d.id = PropId::rConf;
+    d.id = PropId::r_conf;
     d.std_rnd_turns = Range(50, 100);
     d.name = "Confusion resistance";
     d.name_short = "rConf";
@@ -178,7 +178,7 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
-    d.id = PropId::rDisease;
+    d.id = PropId::r_disease;
     d.std_rnd_turns = Range(50, 100);
     d.name = "Disease resistance";
     d.name_short = "rDisease";
@@ -195,7 +195,7 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
-    d.id = PropId::rBlind;
+    d.id = PropId::r_blind;
     d.name = "Blindness resistance";
     d.name_short = "rBlind";
     d.descr = "Cannot be blinded";
@@ -211,7 +211,7 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
-    d.id = PropId::rBreath;
+    d.id = PropId::r_breath;
     d.std_rnd_turns = Range(50, 100);
     d.name = "";
     d.name_short = "";
@@ -226,7 +226,7 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
-    d.id = PropId::rSpell;
+    d.id = PropId::r_spell;
     d.name = "Spell Resistance";
     d.name_short = "rSpell";
     d.descr = "Cannot be affected by harmful spells";
@@ -241,7 +241,7 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
-    d.id = PropId::lgtSens;
+    d.id = PropId::lgt_sens;
     d.std_rnd_turns = Range(50, 100);
     d.name = "Light sensitive";
     d.name_short = "lgtSensitive";
@@ -1085,37 +1085,37 @@ Prop* PropHandler::mk_prop(const PropId id,
     case PropId::cursed:
         return new PropCursed(turns_init, nr_turns);
 
-    case PropId::rAcid:
+    case PropId::r_acid:
         return new PropRAcid(turns_init, nr_turns);
 
-    case PropId::rConf:
+    case PropId::r_conf:
         return new PropRConf(turns_init, nr_turns);
 
-    case PropId::rBreath:
+    case PropId::r_breath:
         return new PropRBreath(turns_init, nr_turns);
 
-    case PropId::rElec:
+    case PropId::r_elec:
         return new PropRElec(turns_init, nr_turns);
 
-    case PropId::rFear:
+    case PropId::r_fear:
         return new PropRFear(turns_init, nr_turns);
 
-    case PropId::rPhys:
+    case PropId::r_phys:
         return new PropRPhys(turns_init, nr_turns);
 
-    case PropId::rFire:
+    case PropId::r_fire:
         return new PropRFire(turns_init, nr_turns);
 
-    case PropId::rSpell:
+    case PropId::r_spell:
         return new PropRSpell(turns_init, nr_turns);
 
-    case PropId::rPoison:
+    case PropId::r_poison:
         return new PropRPoison(turns_init, nr_turns);
 
-    case PropId::rSleep:
+    case PropId::r_sleep:
         return new PropRSleep(turns_init, nr_turns);
 
-    case PropId::lgtSens:
+    case PropId::lgt_sens:
         return new PropLgtSens(turns_init, nr_turns);
 
     case PropId::poss_by_zuul:
@@ -1139,10 +1139,10 @@ Prop* PropHandler::mk_prop(const PropId id,
     case PropId::infravis:
         return new PropInfravis(turns_init, nr_turns);
 
-    case PropId::rDisease:
+    case PropId::r_disease:
         return new PropRDisease(turns_init, nr_turns);
 
-    case PropId::rBlind:
+    case PropId::r_blind:
         return new PropRBlind(turns_init, nr_turns);
 
     case PropId::tele_ctrl:

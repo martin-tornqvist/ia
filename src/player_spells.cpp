@@ -91,11 +91,7 @@ void try_cast(const SpellOpt& spell_opt)
 
         Spell* const spell = spell_opt.spell;
 
-        // Casting from items always casts at base cost
-        const bool is_base_cost_only = spell_opt.src == SpellSrc::item;
-
-        const Range spi_cost_range =
-            spell->spi_cost(is_base_cost_only, map::player);
+        const Range spi_cost_range = spell->spi_cost(map::player);
 
         if (spi_cost_range.max >= map::player->spi())
         {
@@ -118,7 +114,7 @@ void try_cast(const SpellOpt& spell_opt)
 
         if (map::player->is_alive())
         {
-            spell->cast(map::player, true, is_base_cost_only);
+            spell->cast(map::player, true);
 
             if (is_warlock && rnd::one_in(2))
             {
@@ -237,11 +233,11 @@ void incr_spell_skill(const SpellId id, const Verbosity verbosity)
 
     if (player_bon::bg() == Bg::occultist)
     {
-        incr_dice = DiceParam(4, 6);
+        incr_dice = DiceParam(2, 6);
     }
     else // Not Occultist
     {
-        incr_dice = DiceParam(1, 6);
+        incr_dice = DiceParam(1, 4);
     }
 
     const int incr = incr_dice.roll();
@@ -308,13 +304,19 @@ void BrowseSpell::draw()
 
     for (int i = 0; i < nr_spells; ++i)
     {
-        const int       current_idx     = i;
-        const bool      is_idx_marked   = browser_.is_at_idx(current_idx);
-        SpellOpt        spell_opt       = spell_opts_[i];
-        Spell* const    spell           = spell_opt.spell;
-        std::string     name            = spell->name();
-        const int       spi_label_x     = 26;
-        const int       skill_label_x   = spi_label_x + 11;
+        const int current_idx = i;
+
+        const bool is_idx_marked = browser_.is_at_idx(current_idx);
+
+        SpellOpt spell_opt = spell_opts_[i];
+
+        Spell* const spell = spell_opt.spell;
+
+        std::string name = spell->name();
+
+        const int spi_label_x = 26;
+
+        const int skill_label_x = spi_label_x + 11;
 
         p.x = 0;
 
@@ -368,11 +370,7 @@ void BrowseSpell::draw()
 
         p.x += str.size();
 
-        // Casting from items always casts at base cost
-        const bool is_base_cost_only = spell_opt.src == SpellSrc::item;
-
-        const Range spi_cost = spell->spi_cost(is_base_cost_only,
-                                               map::player);
+        const Range spi_cost = spell->spi_cost(map::player);
 
         const std::string lower_str = std::to_string(spi_cost.min);
         const std::string upper_str = std::to_string(spi_cost.max);
@@ -414,6 +412,7 @@ void BrowseSpell::draw()
         if (is_idx_marked)
         {
             const auto descr = spell->descr();
+
             std::vector<StrAndClr> lines;
 
             if (!descr.empty())
@@ -426,24 +425,6 @@ void BrowseSpell::draw()
 
             switch (spell_opt.src)
             {
-            // If spell source is "learned", add info about spell skills
-            case SpellSrc::learned:
-            {
-                lines.push_back(
-                    StrAndClr("Higher skill levels reduces the number of "
-                              "Spirit Points required to cast the spell.",
-                              clr_white_high));
-
-                if (skill_pct < 100)
-                {
-                    lines.push_back(
-                        StrAndClr("Skill level can be increased by casting "
-                                  "from Manuscripts.",
-                                  clr_white_high));
-                }
-            }
-            break;
-
             // If spell source is an item, add info about this
             case SpellSrc::item:
             {
@@ -455,6 +436,10 @@ void BrowseSpell::draw()
                                           clr_green));
             }
             break;
+
+            case SpellSrc::manuscript:
+            case SpellSrc::learned:
+                break;
             }
 
             if (!lines.empty())

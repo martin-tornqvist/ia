@@ -12,10 +12,10 @@ class Amulet;
 enum class AmuletEffectId
 {
     //Primary effects (i.e. one of these must be on the amulet)
-    rFire,
-    rElec,
-    rPoison,
-    rDisease,
+    r_fire,
+    r_elec,
+    r_poison,
+    r_disease,
     tele_ctrl,
     light,
     haste,
@@ -111,7 +111,7 @@ public:
 
     AmuletEffectId id() const override
     {
-        return AmuletEffectId::rFire;
+        return AmuletEffectId::r_fire;
     }
 
     std::string descr() const override
@@ -133,7 +133,7 @@ public:
 
     AmuletEffectId id() const override
     {
-        return AmuletEffectId::rElec;
+        return AmuletEffectId::r_elec;
     }
 
     std::string descr() const override
@@ -155,7 +155,7 @@ public:
 
     AmuletEffectId id() const override
     {
-        return AmuletEffectId::rPoison;
+        return AmuletEffectId::r_poison;
     }
 
     std::string descr() const override
@@ -177,7 +177,7 @@ public:
 
     AmuletEffectId id() const override
     {
-        return AmuletEffectId::rDisease;
+        return AmuletEffectId::r_disease;
     }
 
     std::string descr() const override

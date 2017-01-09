@@ -16,11 +16,13 @@
 namespace
 {
 
-void cells_reached(const R& area,
-                   const P& origin,
-                   bool blocked[map_w][map_h],
-                   std::vector< std::vector<P> >& out)
+std::vector< std::vector<P> > cells_reached(const R& area,
+                                            const P& origin,
+                                            const ExplExclCenter exclude_center,
+                                            bool blocked[map_w][map_h])
 {
+    std::vector< std::vector<P> > out;
+
     std::vector<P> line;
 
     for (int y = area.p0.y; y <= area.p1.y; ++y)
@@ -28,7 +30,15 @@ void cells_reached(const R& area,
         for (int x = area.p0.x; x <= area.p1.x; ++x)
         {
             const P pos(x, y);
+
+            if (exclude_center == ExplExclCenter::yes &&
+                pos == origin)
+            {
+                continue;
+            }
+
             const int dist = king_dist(pos, origin);
+
             bool is_reached = true;
 
             if (dist > 1)
@@ -61,6 +71,8 @@ void cells_reached(const R& area,
             }
         }
     }
+
+    return out;
 }
 
 void draw(const std::vector< std::vector<P> >& pos_lists,
@@ -141,12 +153,13 @@ void run(const P& origin,
          const ExplSrc expl_src,
          const EmitExplSnd emit_expl_snd,
          const int radi_change,
-         Prop* const prop,
+         const ExplExclCenter exclude_center,
+         std::vector<Prop*> properties_applied,
          const Clr* const clr_override)
 {
     const int radi = expl_std_radi + radi_change;
 
-     const R area = explosion_area(origin, radi);
+    const R area = explosion_area(origin, radi);
 
     bool blocked[map_w][map_h];
 
@@ -155,9 +168,10 @@ void run(const P& origin,
             MapParseMode::overwrite,
             area);
 
-    std::vector< std::vector<P> > pos_lists;
-
-    cells_reached(area, origin, blocked, pos_lists);
+    auto pos_lists = cells_reached(area,
+                                   origin,
+                                   exclude_center,
+                                   blocked);
 
     if (emit_expl_snd == EmitExplSnd::yes)
     {
@@ -178,6 +192,7 @@ void run(const P& origin,
     // Do damage, apply effect
     //
     Actor* living_actors[map_w][map_h];
+
     std::vector<Actor*> corpses[map_w][map_h];
 
     for (int x = 0; x < map_w; ++x)
@@ -263,10 +278,10 @@ void run(const P& origin,
                 }
             }
 
-            // Apply property
-            if (prop)
+            // Apply properties
+            for (auto* prop : properties_applied)
             {
-                bool should_apply_on_living_actor = living_actor;
+                bool should_apply_on_living_actor = (living_actor != nullptr);
 
                 // Do not apply burning if actor is player with the demolition
                 // expert trait, and  intentionally throwing a Molotov
@@ -290,7 +305,7 @@ void run(const P& origin,
                     prop_hlr.try_add(prop_cpy);
                 }
 
-                // If property is burning, also apply it to corpses and
+                // If property is burning, also apply it to corpses and the
                 // environment
                 if (prop->id() == PropId::burning)
                 {
@@ -316,7 +331,7 @@ void run(const P& origin,
         }
     }
 
-    if (prop)
+    for (auto* prop : properties_applied)
     {
         delete prop;
     }
@@ -338,9 +353,10 @@ void run_smoke_explosion_at(const P& origin, const int radi_change)
              MapParseMode::overwrite,
              area);
 
-    std::vector< std::vector<P> > pos_lists;
-
-    cells_reached(area, origin, blocked, pos_lists);
+    auto pos_lists = cells_reached(area,
+                                   origin,
+                                   ExplExclCenter::no,
+                                   blocked);
 
     // TODO: Sound message?
     Snd snd("",

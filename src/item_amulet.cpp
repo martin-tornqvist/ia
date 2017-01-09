@@ -27,19 +27,19 @@ AmuletEffect* mk_effect(const AmuletEffectId id, Amulet* const amulet)
 
     switch (id)
     {
-    case AmuletEffectId::rFire:
+    case AmuletEffectId::r_fire:
         ret = new AmuletEffectRFire(amulet);
         break;
 
-    case AmuletEffectId::rElec:
+    case AmuletEffectId::r_elec:
         ret = new AmuletEffectRElec(amulet);
         break;
 
-    case AmuletEffectId::rPoison:
+    case AmuletEffectId::r_poison:
         ret = new AmuletEffectRPoison(amulet);
         break;
 
-    case AmuletEffectId::rDisease:
+    case AmuletEffectId::r_disease:
         ret = new AmuletEffectRDisease(amulet);
         break;
 
@@ -869,7 +869,9 @@ bool allow_combine_effects(const AmuletEffectId id1,
         return id2 != Id::hp_pen;
 
     case Id::hp_pen:
-        return id2 != Id::hp_bon && id2 != Id::rDisease;
+        return
+            id2 != Id::hp_bon &&
+            id2 != Id::r_disease;
 
     case Id::spi_bon:
         return id2 != Id::spi_pen;
@@ -877,11 +879,13 @@ bool allow_combine_effects(const AmuletEffectId id1,
     case Id::spi_pen:
         return id2 != Id::spi_bon;
 
-    case Id::rDisease:
+    case Id::r_disease:
         return id2 != Id::hp_pen;
 
     case Id::tele_ctrl:
-        return id2 != Id::random_tele && id2 != Id::spell_reflect;
+        return
+            id2 != Id::random_tele &&
+            id2 != Id::spell_reflect;
 
     case Id::random_tele:
         return id2 != Id::tele_ctrl;
@@ -890,17 +894,23 @@ bool allow_combine_effects(const AmuletEffectId id1,
         return id2 != Id::tele_ctrl;
 
     case Id::hp_regen_bon:
-        return id2 != Id::hp_regen_pen && id2 != Id::hp_bon && id2 != Id::hp_pen;
+        return
+            id2 != Id::hp_regen_pen &&
+            id2 != Id::hp_bon &&
+            id2 != Id::hp_pen;
 
     case Id::hp_regen_pen:
-        return id2 != Id::hp_regen_bon && id2 != Id::hp_bon && id2 != Id::hp_pen;
+        return
+            id2 != Id::hp_regen_bon &&
+            id2 != Id::hp_bon &&
+            id2 != Id::hp_pen;
 
     case Id::summon:
     case Id::light:
     case Id::conflict:
-    case Id::rFire:
-    case Id::rElec:
-    case Id::rPoison:
+    case Id::r_fire:
+    case Id::r_elec:
+    case Id::r_poison:
     case Id::burden:
     case Id::shriek:
     case Id::haste:

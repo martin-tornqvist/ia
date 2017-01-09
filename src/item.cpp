@@ -1433,7 +1433,8 @@ void Molotov::on_std_turn_player_hold_ignited()
                        ExplSrc::misc,
                        EmitExplSnd::no,
                        0,
-                       new PropBurning(PropTurns::std));
+                       ExplExclCenter::no,
+                       {new PropBurning(PropTurns::std)});
 
         delete this;
     }
@@ -1458,7 +1459,8 @@ void Molotov::on_thrown_ignited_landing(const P& p)
                    ExplSrc::player_use_moltv_intended,
                    EmitExplSnd::no,
                    d,
-                   new PropBurning(PropTurns::std));
+                   ExplExclCenter::no,
+                   {new PropBurning(PropTurns::std)});
 }
 
 
@@ -1485,7 +1487,8 @@ void Molotov::on_player_paralyzed()
                    ExplSrc::misc,
                    EmitExplSnd::no,
                    0,
-                   new PropBurning(PropTurns::std));
+                   ExplExclCenter::no,
+                   {new PropBurning(PropTurns::std)});
 
     delete this;
 }

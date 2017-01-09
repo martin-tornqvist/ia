@@ -685,7 +685,7 @@ ActorDied Actor::hit(int dmg,
 
     // Damage type is "light", and actor is not light sensitive?
     if (dmg_type == DmgType::light &&
-        !prop_handler_->has_prop(PropId::lgtSens))
+        !prop_handler_->has_prop(PropId::lgt_sens))
     {
         return ActorDied::no;
     }

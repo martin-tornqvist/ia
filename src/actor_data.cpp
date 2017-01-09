@@ -40,6 +40,8 @@ void ActorDataT::reset()
 
     ability_vals.reset();
 
+    spell_skill = 0;
+
     for (size_t i = 0; i < (size_t)AiId::END; ++i)
     {
         ai[i] = false;
@@ -451,6 +453,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed_pct = (int)ActorSpeed::fastest;
     d.spell_cooldown_turns = 2;
+    d.spell_skill = 20;
     d.glyph = 'z';
     d.color = clr_magenta;
     d.tile = TileId::crawling_hand;
@@ -537,6 +540,7 @@ void init_data_list()
     d.speed_pct = (int)ActorSpeed::slow;
     d.ranged_cooldown_turns = 2;
     d.spell_cooldown_turns = 2;
+    d.spell_skill = 10;
     d.glyph = 'P';
     d.color = clr_gray;
     d.tile = TileId::cultist_firearm;
@@ -575,6 +579,7 @@ void init_data_list()
     d.speed_pct = (int)ActorSpeed::normal;
     d.ranged_cooldown_turns = 2;
     d.spell_cooldown_turns = 2;
+    d.spell_skill = 10;
     d.glyph = 'P';
     d.color = clr_yellow;
     d.tile = TileId::cultist_firearm;
@@ -615,6 +620,7 @@ void init_data_list()
     d.speed_pct = (int)ActorSpeed::normal;
     d.ranged_cooldown_turns = 2;
     d.spell_cooldown_turns = 2;
+    d.spell_skill = 10;
     d.glyph = 'P';
     d.color = clr_brown;
     d.tile = TileId::cultist_firearm;
@@ -653,6 +659,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
     d.spell_cooldown_turns = 2;
+    d.spell_skill = 50;
     d.glyph = 'P';
     d.color = clr_magenta;
     d.tile = TileId::witch_or_warlock;
@@ -702,6 +709,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
     d.spell_cooldown_turns = 3;
+    d.spell_skill = 10;
     d.glyph = 'r';
     d.color = clr_magenta;
     d.tile = TileId::rat_thing;
@@ -752,6 +760,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed_pct = (int)ActorSpeed::slow;
     d.spell_cooldown_turns = 2;
+    d.spell_skill = 100;
     d.glyph = 'P';
     d.color = clr_yellow;
     d.tile = TileId::leng_elder;
@@ -786,6 +795,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::slow;
     d.spell_cooldown_turns = 2;
+    d.spell_skill = 30;
     d.glyph = 'P';
     d.color = clr_cyan_lgt;
     d.tile = TileId::cultist_dagger;
@@ -949,7 +959,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::stealth, 90);
-    d.natural_props[(size_t)PropId::lgtSens] = true;
+    d.natural_props[(size_t)PropId::lgt_sens] = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -1174,7 +1184,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::ranged, 65);
     d.ability_vals.set_val(AbilityId::dodging, 40);
-    d.natural_props[(size_t)PropId::rFire] = true;
+    d.natural_props[(size_t)PropId::r_fire] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 9;
     d.group_sizes.assign(
@@ -1225,7 +1235,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound + 3;
     d.ability_vals.set_val(AbilityId::melee, 70);
     d.ability_vals.set_val(AbilityId::dodging, 25);
-    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 13;
     d.spawn_max_dlvl = 999;
@@ -1272,8 +1282,8 @@ void init_data_list()
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.natural_props[(size_t)PropId::ethereal] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.natural_props[(size_t)PropId::invis] = true;
     d.spawn_min_dlvl = 3;
@@ -1313,8 +1323,8 @@ void init_data_list()
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.natural_props[(size_t)PropId::ethereal] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.natural_props[(size_t)PropId::invis] = true;
     d.spawn_min_dlvl = dlvl_first_mid_game;
@@ -1350,6 +1360,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
     d.spell_cooldown_turns = 4;
+    d.spell_skill = 50;
     d.glyph = 'G';
     d.color = clr_red;
     d.tile = TileId::wraith;
@@ -1358,8 +1369,8 @@ void init_data_list()
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.natural_props[(size_t)PropId::ethereal] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.natural_props[(size_t)PropId::invis] = true;
     d.spawn_min_dlvl = dlvl_first_late_game;
@@ -1750,6 +1761,7 @@ void init_data_list()
     d.speed_pct = (int)ActorSpeed::fast;
     d.ranged_cooldown_turns = 4;
     d.spell_cooldown_turns = 3;
+    d.spell_skill = 30;
     d.glyph = 'E';
     d.color = clr_brown_drk;
     d.tile = TileId::mi_go;
@@ -1815,6 +1827,7 @@ void init_data_list()
     d.speed_pct = (int)ActorSpeed::fast;
     d.ranged_cooldown_turns = 4;
     d.spell_cooldown_turns = 3;
+    d.spell_skill = 50;
     d.glyph = 'E';
     d.color = clr_red;
     d.tile = TileId::mi_go;
@@ -1858,7 +1871,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::slow;
-    d.spell_cooldown_turns = 3;
     d.glyph = 'E';
     d.color = clr_magenta;
     d.tile = TileId::polyp;
@@ -1867,13 +1879,13 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
     // NOTE: Polyps should be resistant against all damage except electricity
-    d.natural_props[(size_t)PropId::rPhys] = true;
-    d.natural_props[(size_t)PropId::rConf] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rAcid] = true;
-    d.natural_props[(size_t)PropId::rFire] = true;
-    d.natural_props[(size_t)PropId::rPoison] = true;
-    d.natural_props[(size_t)PropId::rSleep] = true;
+    d.natural_props[(size_t)PropId::r_phys] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_acid] = true;
+    d.natural_props[(size_t)PropId::r_fire] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
+    d.natural_props[(size_t)PropId::r_sleep] = true;
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::invis] = true;
     d.prevent_knockback = true;
@@ -1915,7 +1927,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
-    d.spell_cooldown_turns = 3;
     d.glyph = 'E';
     d.color = clr_red;
     d.tile = TileId::polyp;
@@ -1924,13 +1935,13 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 70);
     // NOTE: Polyps should be resistant against all damage except electricity
-    d.natural_props[(size_t)PropId::rPhys] = true;
-    d.natural_props[(size_t)PropId::rConf] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rAcid] = true;
-    d.natural_props[(size_t)PropId::rFire] = true;
-    d.natural_props[(size_t)PropId::rPoison] = true;
-    d.natural_props[(size_t)PropId::rSleep] = true;
+    d.natural_props[(size_t)PropId::r_phys] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_acid] = true;
+    d.natural_props[(size_t)PropId::r_fire] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
+    d.natural_props[(size_t)PropId::r_sleep] = true;
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::invis] = true;
     d.natural_props[(size_t)PropId::see_invis] = true;
@@ -1972,7 +1983,7 @@ void init_data_list()
     d.spi = 20;
     d.dmg_melee = min_dmg_to_wound + 2;
     d.ability_vals.set_val(AbilityId::melee, 60);
-    d.natural_props[(size_t)PropId::rDisease] = true;
+    d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 5;
     d.group_sizes.assign(
@@ -2027,9 +2038,9 @@ void init_data_list()
     d.dmg_melee = 3;
     d.ability_vals.set_val(AbilityId::melee, 45);
     d.ability_vals.set_val(AbilityId::stealth, 90);
-    d.natural_props[(size_t)PropId::lgtSens] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::lgt_sens] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 3;
@@ -2075,8 +2086,8 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.natural_props[(size_t)PropId::invis] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 4;
@@ -2115,6 +2126,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::slow;
     d.spell_cooldown_turns = 2;
+    d.spell_skill = 50;
     d.glyph = 'P';
     d.color = clr_magenta;
     d.tile = TileId::mummy;
@@ -2197,6 +2209,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::slow;
     d.spell_cooldown_turns = 2;
+    d.spell_skill = 70;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
     d.glyph = 'P';
@@ -2238,6 +2251,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::slow;
     d.spell_cooldown_turns = 2;
+    d.spell_skill = 70;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 1;
     d.glyph = 'P';
@@ -2476,9 +2490,9 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.natural_props[(size_t)PropId::flying] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rConf] = true;
-    d.natural_props[(size_t)PropId::rPoison] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
@@ -2523,10 +2537,10 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.natural_props[(size_t)PropId::flying] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rConf] = true;
-    d.natural_props[(size_t)PropId::rFire] = true;
-    d.natural_props[(size_t)PropId::rPoison] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
+    d.natural_props[(size_t)PropId::r_fire] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 8;
     d.group_sizes.assign(
@@ -2569,10 +2583,10 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.natural_props[(size_t)PropId::ooze] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rConf] = true;
-    d.natural_props[(size_t)PropId::rPoison] = true;
-    d.natural_props[(size_t)PropId::rDisease] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
+    d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
@@ -2624,10 +2638,10 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::stealth, 90);
     d.natural_props[(size_t)PropId::ooze] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rConf] = true;
-    d.natural_props[(size_t)PropId::rPoison] = true;
-    d.natural_props[(size_t)PropId::rDisease] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
+    d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
@@ -2678,10 +2692,10 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.natural_props[(size_t)PropId::ooze] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rConf] = true;
-    d.natural_props[(size_t)PropId::rPoison] = true;
-    d.natural_props[(size_t)PropId::rDisease] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
+    d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 5;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
@@ -2734,10 +2748,10 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.natural_props[(size_t)PropId::ooze] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rConf] = true;
-    d.natural_props[(size_t)PropId::rPoison] = true;
-    d.natural_props[(size_t)PropId::rDisease] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
+    d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 9;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
@@ -2791,11 +2805,11 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.natural_props[(size_t)PropId::ooze] = true;
     d.natural_props[(size_t)PropId::ethereal] = true;
-    d.natural_props[(size_t)PropId::rPhys] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rConf] = true;
-    d.natural_props[(size_t)PropId::rPoison] = true;
-    d.natural_props[(size_t)PropId::rDisease] = true;
+    d.natural_props[(size_t)PropId::r_phys] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
+    d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 14;
     d.actor_size = ActorSize::humanoid;
@@ -2843,7 +2857,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound + 10;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.natural_props[(size_t)PropId::burrowing] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 12;
@@ -2884,6 +2898,7 @@ void init_data_list()
     d.speed_pct = (int)ActorSpeed::fast;
     d.ranged_cooldown_turns = 3;
     d.spell_cooldown_turns  = 3;
+    d.spell_skill = 30;
     d.glyph = '~';
     d.color = clr_red;
     d.tile = TileId::device2;
@@ -2894,11 +2909,11 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodging, 35);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::radiant] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rBreath] = true;
-    d.natural_props[(size_t)PropId::rPoison] = true;
-    d.natural_props[(size_t)PropId::rSleep] = true;
-    d.natural_props[(size_t)PropId::rDisease] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_breath] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
+    d.natural_props[(size_t)PropId::r_sleep] = true;
+    d.natural_props[(size_t)PropId::r_disease] = true;
     d.spawn_min_dlvl = 14;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;
@@ -2933,15 +2948,15 @@ void init_data_list()
     d.spi = 40;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.natural_props[(size_t)PropId::flying] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rBreath] = true;
-    d.natural_props[(size_t)PropId::rPoison] = true;
-    d.natural_props[(size_t)PropId::rSleep] = true;
-    d.natural_props[(size_t)PropId::rDisease] = true;
-    d.natural_props[(size_t)PropId::rConf] = true;
-    d.natural_props[(size_t)PropId::rFire] = true;
-    d.natural_props[(size_t)PropId::rElec] = true;
-    d.natural_props[(size_t)PropId::rBlind] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_breath] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
+    d.natural_props[(size_t)PropId::r_sleep] = true;
+    d.natural_props[(size_t)PropId::r_disease] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
+    d.natural_props[(size_t)PropId::r_fire] = true;
+    d.natural_props[(size_t)PropId::r_elec] = true;
+    d.natural_props[(size_t)PropId::r_blind] = true;
     d.actor_size = ActorSize::humanoid;
     d.is_auto_descr_allowed = false;
     d.can_leave_corpse = false;
@@ -3017,8 +3032,8 @@ void init_data_list()
     d.hp = 1;
     d.spi = 1;
     d.natural_props[(size_t)PropId::flying] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rConf] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 3;
     d.group_sizes.assign(
@@ -3071,7 +3086,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound + 7;
     d.ability_vals.set_val(AbilityId::melee, 80);
     d.natural_props[(size_t)PropId::flying] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = dlvl_last - 6;
@@ -3115,6 +3130,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::slow;
     d.spell_cooldown_turns = 3;
+    d.spell_skill = 70;
     d.glyph = 'Y';
     d.color = clr_red;
     d.tile = TileId::fiend;
@@ -3122,9 +3138,9 @@ void init_data_list()
     d.spi = 40;
     d.dmg_melee = 200;
     d.ability_vals.set_val(AbilityId::melee, 80);
-    d.natural_props[(size_t)PropId::rConf] = true;
-    d.natural_props[(size_t)PropId::rSleep] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
+    d.natural_props[(size_t)PropId::r_sleep] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = dlvl_last - 6;
@@ -3165,6 +3181,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
     d.spell_cooldown_turns = 2;
+    d.spell_skill = 100;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
     d.glyph = 'P';
@@ -3172,10 +3189,10 @@ void init_data_list()
     d.tile = TileId::the_high_priest;
     d.hp = 160;
     d.spi = 99999;
-    d.natural_props[(size_t)PropId::rConf] = true;
-    d.natural_props[(size_t)PropId::rFear] = true;
-    d.natural_props[(size_t)PropId::rFire] = true;
-    d.natural_props[(size_t)PropId::rBreath] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_fire] = true;
+    d.natural_props[(size_t)PropId::r_breath] = true;
     d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 80);
     d.is_auto_spawn_allowed = false;

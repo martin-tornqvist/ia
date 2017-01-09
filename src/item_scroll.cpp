@@ -32,8 +32,11 @@ std::vector<std::string> Scroll::descr() const
     if (data_->is_identified)
     {
         const auto* const spell = mk_spell();
+
         const auto descr = spell->descr();
+
         delete spell;
+
         return descr;
     }
     else //Not identified
@@ -87,7 +90,7 @@ ConsumeItem Scroll::activate(Actor* const actor)
             data_->is_tried = true;
         }
 
-        spell->cast(map::player, false, true);
+        spell->cast(map::player, false);
 
         msg_log::add(crumble_str);
 
