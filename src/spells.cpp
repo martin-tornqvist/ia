@@ -28,6 +28,8 @@ namespace
 
 const int summon_hostile_one_in_n = 7;
 
+const int warlock_multi_cast_chance_pct = 25;
+
 } // namespace
 
 namespace spell_handling
@@ -414,6 +416,18 @@ std::vector<std::string> Spell::descr() const
 // -----------------------------------------------------------------------------
 void SpellDarkbolt::run_effect(Actor* const caster) const
 {
+    if (caster == map::player &&
+        player_bon::traits[(size_t)Trait::warlock] &&
+        rnd::percent(warlock_multi_cast_chance_pct))
+    {
+        run_effect(caster);
+
+        if (!caster->is_alive())
+        {
+            return;
+        }
+    }
+
     Actor* target = nullptr;
 
     std::vector<Actor*> seen_actors;
@@ -506,11 +520,6 @@ void SpellDarkbolt::run_effect(Actor* const caster) const
         }
     }
 
-    // if (caster->is_player())
-    // {
-    //     is_warlock_charged = caster->has_prop(PropId::warlock_charged);
-    // }
-
     if (map::player->can_see_actor(*target))
     {
         msg_log::add(str_begin + " struck by a blast!", msg_clr);
@@ -599,6 +608,18 @@ bool SpellDarkbolt::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 void SpellAzaWrath::run_effect(Actor* const caster) const
 {
+    if (caster == map::player &&
+        player_bon::traits[(size_t)Trait::warlock] &&
+        rnd::percent(warlock_multi_cast_chance_pct))
+    {
+        run_effect(caster);
+
+        if (!caster->is_alive())
+        {
+            return;
+        }
+    }
+
     std::vector<Actor*> targets;
     caster->seen_foes(targets);
 
@@ -610,12 +631,6 @@ void SpellAzaWrath::run_effect(Actor* const caster) const
                 "There is a faint rumbling sound, like distant thunder.");
         }
     }
-
-    // This point reached means targets are available
-    // if (caster->is_player())
-    // {
-    //     is_warlock_charged = caster->has_prop(PropId::warlock_charged);
-    // }
 
     io::draw_blast_at_seen_actors(targets, clr_red_lgt);
 
@@ -745,6 +760,18 @@ bool SpellAzaWrath::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 void SpellMayhem::run_effect(Actor* const caster) const
 {
+    if (caster == map::player &&
+        player_bon::traits[(size_t)Trait::warlock] &&
+        rnd::percent(warlock_multi_cast_chance_pct))
+    {
+        run_effect(caster);
+
+        if (!caster->is_alive())
+        {
+            return;
+        }
+    }
+
     const bool is_player = caster->is_player();
 
     if (map::player->can_see_actor(*caster))

@@ -491,19 +491,6 @@ void init_data_list()
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
 
-    d.id = PropId::warlock_charged;
-    d.std_rnd_turns = Range(1, 1);
-    d.name = "Charged";
-    d.name_short = "Charged";
-    d.descr = "Spells deal maximum damage";
-    d.msg[(size_t)PropMsg::start_player] = "I am burning with power!";
-    d.is_making_mon_aware = false;
-    d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
-    d.update_vision_when_start_or_end = false;
-    d.alignment = PropAlignment::good;
-    add_prop_data(d);
-
     d.id = PropId::infected;
     d.std_rnd_turns = Range(100, 200);
     d.name = "Infected";
@@ -1012,9 +999,6 @@ Prop* PropHandler::mk_prop(const PropId id,
 
     case PropId::wound:
         return new PropWound(turns_init, nr_turns);
-
-    case PropId::warlock_charged:
-        return new PropWarlockCharged(turns_init, nr_turns);
 
     case PropId::blind:
         return new PropBlind(turns_init, nr_turns);

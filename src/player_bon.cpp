@@ -495,9 +495,11 @@ std::string trait_descr(const Trait id)
 
     case Trait::warlock:
         return
-            "-1 Spirit cost for damage dealing spells, casting any spell has a "
-            "chance to make you \"Charged\" for one turn, causing attack "
-            "spells to do maximum damage";
+            "-1 Spirit cost for damage dealing spells (not counting any spells "
+            "which deals damage as a side effect of a high skill level), and "
+            "when cast, has a 25% chance of triggering the effect again "
+            "(recursively, so an infinite number of casts is theoretically "
+            "possible)";
 
     case Trait::summoner:
         return

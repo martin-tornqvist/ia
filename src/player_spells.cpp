@@ -110,18 +110,9 @@ void try_cast(const SpellOpt& spell_opt)
 
         msg_log::add("I cast " + spell->name() + "!");
 
-        const bool is_warlock = player_bon::traits[(size_t)Trait::warlock];
-
         if (map::player->is_alive())
         {
             spell->cast(map::player, true);
-
-            if (is_warlock && rnd::one_in(2))
-            {
-                auto* const prop = new PropWarlockCharged(PropTurns::std);
-
-                map::player->prop_handler().try_add(prop);
-            }
         }
     }
 }

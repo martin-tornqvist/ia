@@ -68,7 +68,6 @@ enum class PropId
     aiming,
     nailed,
     flared,
-    warlock_charged,
     wound,
     r_spell,
 
@@ -777,14 +776,6 @@ public:
         Prop(PropId::flared, turns_init, nr_turns) {}
 
     Prop* on_tick() override;
-};
-
-class PropWarlockCharged: public Prop
-{
-public:
-    PropWarlockCharged(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::warlock_charged, turns_init, nr_turns) {}
-
 };
 
 class PropConfused: public Prop
