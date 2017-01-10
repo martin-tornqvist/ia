@@ -2032,49 +2032,72 @@ void ItemContainer::init(const FeatureId feature_id,
 
     items_.clear();
 
-    if (nr_items_to_attempt > 0)
+    if (nr_items_to_attempt <= 0)
     {
-        while (items_.empty())
+        return;
+    }
+
+    // Try until actually succeeded to add at least one item
+    while (items_.empty())
+    {
+        std::vector<ItemId> item_bucket;
+
+        for (size_t i = 0; i < (size_t)ItemId::END; ++i)
         {
-            std::vector<ItemId> item_bucket;
+            ItemDataT& item_d = item_data::data[i];
 
-            for (size_t i = 0; i < size_t(ItemId::END); ++i)
+            if (!item_d.allow_spawn)
             {
-                ItemDataT& d = item_data::data[i];
-
-                for (auto container_spawn_rule : d.container_spawn_rules)
-                {
-                    if (
-                        container_spawn_rule.feature_id == feature_id &&
-                        d.allow_spawn &&
-                        rnd::percent() < container_spawn_rule.pct_chance_to_incl)
-                    {
-                        item_bucket.push_back(ItemId(i));
-                        break;
-                    }
-                }
+                //
+                // Item not allowed to spawn - next item!
+                //
+                continue;
             }
 
-            for (int i = 0; i < nr_items_to_attempt; ++i)
+            const bool can_spawn_in_container =
+                std::find(begin(item_d.native_containers),
+                          end(item_d.native_containers),
+                          feature_id) !=
+                end(item_d.native_containers);
+
+
+            if (!can_spawn_in_container)
             {
-                if (item_bucket.empty())
-                {
-                    break;
-                }
+                //
+                // Item not allowed to spawn in this feature - next item!
+                //
+                continue;
+            }
 
-                const int     idx = rnd::range(0, item_bucket.size() - 1);
-                const ItemId id  = item_bucket[idx];
+            if (rnd::percent(item_d.chance_to_incl_in_spawn_list))
+            {
+                item_bucket.push_back(ItemId(i));
+            }
+        }
 
-                if (item_data::data[(size_t)id].allow_spawn)
-                {
-                    Item* item = item_factory::mk(item_bucket[idx]);
-                    item_factory::set_item_randomized_properties(item);
-                    items_.push_back(item);
-                }
-                else //Not allowed to spawn
-                {
-                    item_bucket.erase(begin(item_bucket) + idx);
-                }
+        for (int i = 0; i < nr_items_to_attempt; ++i)
+        {
+            if (item_bucket.empty())
+            {
+                break;
+            }
+
+            const int idx = rnd::range(0, item_bucket.size() - 1);
+
+            const ItemId id = item_bucket[idx];
+
+            // Is this item still allowed to spawn (perhaps unique)?
+            if (item_data::data[(size_t)id].allow_spawn)
+            {
+                Item* item = item_factory::mk(item_bucket[idx]);
+
+                item_factory::set_item_randomized_properties(item);
+
+                items_.push_back(item);
+            }
+            else // Not allowed to spawn
+            {
+                item_bucket.erase(begin(item_bucket) + idx);
             }
         }
     }

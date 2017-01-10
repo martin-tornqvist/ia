@@ -402,7 +402,7 @@ struct ItemName
         }
     }
 
-    std::string names[size_t(ItemRefType::END)];
+    std::string names[(size_t)ItemRefType::END];
 };
 
 struct ItemAttMsgs

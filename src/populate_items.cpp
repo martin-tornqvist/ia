@@ -52,7 +52,7 @@ std::vector<ItemId> mk_item_bucket()
         if ((int)data.type < (int)ItemType::END_OF_EXTR_ITEMS &&
             data.spawn_std_range.is_in_range(map::dlvl) &&
             data.allow_spawn &&
-            rnd::percent(data.chance_to_incl_in_floor_spawn_list))
+            rnd::percent(data.chance_to_incl_in_spawn_list))
         {
             item_bucket.push_back(ItemId(i));
         }

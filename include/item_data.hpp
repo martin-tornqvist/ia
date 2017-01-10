@@ -159,12 +159,12 @@ enum class ItemId
     potion_blindness,
     potion_fortitude,
     potion_paralyze,
-    potion_rElec,
+    potion_r_elec,
     potion_conf,
     potion_poison,
     potion_insight,
     potion_clairv,
-    potion_rFire,
+    potion_r_fire,
     potion_curing,
     potion_descent,
     potion_invis,
@@ -233,7 +233,7 @@ public:
     bool                        allow_spawn;
     Range                       spawn_std_range;
     int                         max_stack_at_spawn;
-    int                         chance_to_incl_in_floor_spawn_list;
+    int                         chance_to_incl_in_spawn_list;
     bool                        is_stackable;
     bool                        is_identified;
     bool                        is_tried;
@@ -251,8 +251,8 @@ public:
     bool                        is_ins_raied_while_carried;
     bool                        is_ins_raied_while_equiped;
 
-    std::vector<RoomType>               native_rooms;
-    std::vector<ItemContainerSpawnRule> container_spawn_rules;
+    std::vector<RoomType>       native_rooms;
+    std::vector<FeatureId>      native_containers;
 
     int ability_mods_while_equipped[(size_t)AbilityId::END];
 
@@ -262,8 +262,9 @@ public:
         ~ItemMeleeData();
 
         bool                    is_melee_wpn;
-        //NOTE: The "plus" field is ignored in the melee damage data, since melee weapons have
-        //individual plus damages stored in the weapon objects.
+        // NOTE: The "plus" field is ignored in the melee damage data, since
+        //       melee weapons have individual plus damages stored in the weapon
+        //       objects.
         DiceParam               dmg;
         int                     hit_chance_mod;
         ItemAttMsgs             att_msgs;
@@ -281,12 +282,15 @@ public:
         ItemRangedData();
         ~ItemRangedData();
 
-        bool                    is_ranged_wpn, is_throwable_wpn, is_machine_gun, is_shotgun;
-        //NOTE: This property should be set on ranged weapons (using ammo) AND mags:
+        bool                    is_ranged_wpn;
+        bool                    is_throwable_wpn;
+        bool                    is_machine_gun;
+        bool                    is_shotgun;
+        // NOTE: This should be set on ranged weapons (using ammo) AND mags:
         int                     max_ammo;
         DiceParam               dmg;
-        //NOTE: "Pure" melee weapons do not have to (should not) set this value - they do throw
-        //damage based on their melee damage instead.
+        // NOTE: "Pure" melee weapons do not have to (should not) set this value
+        //       they do throw damage based on their melee damage instead.
         DiceParam               throw_dmg;
         int                     hit_chance_mod;
         int                     throw_hit_chance_mod;

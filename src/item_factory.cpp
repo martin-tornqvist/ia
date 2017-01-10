@@ -239,7 +239,7 @@ Item* mk(const ItemId item_id, const int nr_items)
         r = new PotionParal(d);
         break;
 
-    case ItemId::potion_rElec:
+    case ItemId::potion_r_elec:
         r = new PotionRElec(d);
         break;
 
@@ -259,7 +259,7 @@ Item* mk(const ItemId item_id, const int nr_items)
         r = new PotionClairv(d);
         break;
 
-    case ItemId::potion_rFire:
+    case ItemId::potion_r_fire:
         r = new PotionRFire(d);
         break;
 
