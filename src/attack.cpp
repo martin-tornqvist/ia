@@ -570,8 +570,7 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
     std::string snd_msg = "";
     auto snd_alerts_mon = AlertsMon::no;
 
-    if (((int)wpn.data().weight > (int)ItemWeight::light) &&
-        !att_data.is_intrinsic_att)
+    if (wpn.data().melee.is_noisy && !att_data.is_intrinsic_att)
     {
         snd_alerts_mon = AlertsMon::yes;
     }

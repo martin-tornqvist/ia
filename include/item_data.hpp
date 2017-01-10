@@ -267,6 +267,7 @@ public:
         //       objects.
         DiceParam               dmg;
         int                     hit_chance_mod;
+        bool                    is_noisy;
         ItemAttMsgs             att_msgs;
         Prop*                   prop_applied;
         DmgType                 dmg_type;

@@ -57,6 +57,7 @@ ItemDataT::ItemMeleeData::ItemMeleeData() :
     is_melee_wpn                        (false),
     dmg                                 (),
     hit_chance_mod                      (0),
+    is_noisy                            (true),
     att_msgs                            (ItemAttMsgs()),
     prop_applied                        (nullptr),
     dmg_type                            (DmgType::physical),
@@ -125,13 +126,8 @@ namespace
 
 void mod_spawn_chance(ItemDataT& data, const double factor)
 {
-    TRACE << "Name: " << data.base_name.names[(size_t)ItemRefType::plain] << std::endl;
-    TRACE << "Chance before: " << data.chance_to_incl_in_spawn_list << std::endl;
-
     data.chance_to_incl_in_spawn_list =
         (int)((double)data.chance_to_incl_in_spawn_list * factor);
-
-    TRACE << "Chance after: " << data.chance_to_incl_in_spawn_list << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -911,6 +907,7 @@ void init_data_list()
     d.melee.att_msgs = {"stab", "stabs me with a Dagger"};
     d.melee.dmg = DiceParam(1, 4);
     d.melee.hit_chance_mod = 20;
+    d.melee.is_noisy = false;
     d.melee.hit_medium_sfx = SfxId::hit_sharp;
     d.melee.hit_hard_sfx = SfxId::hit_sharp;
     d.melee.miss_sfx = SfxId::miss_light;
@@ -937,6 +934,7 @@ void init_data_list()
     d.melee.att_msgs = {"strike", "strikes me with a Hatchet"};
     d.melee.dmg = DiceParam(1, 5);
     d.melee.hit_chance_mod = 15;
+    d.melee.is_noisy = false;
     d.melee.hit_medium_sfx = SfxId::hit_sharp;
     d.melee.hit_hard_sfx = SfxId::hit_sharp;
     d.melee.miss_sfx = SfxId::miss_light;
@@ -954,15 +952,16 @@ void init_data_list()
     {
         "Wielded since prehistoric times.",
 
-        "Melee attacks with clubs are noisy."
+        "Melee attacks with clubs are silent."
     };
-    d.spawn_std_range = Range(dlvl_first_late_game, INT_MAX);
+    d.spawn_std_range = Range(dlvl_first_mid_game, INT_MAX);
     d.weight = ItemWeight::medium;
     d.tile = TileId::club;
     d.clr = clr_brown;
     d.melee.att_msgs = {"strike", "strikes me with a Club"};
     d.melee.dmg = DiceParam(2, 3);
     d.melee.hit_chance_mod = 10;
+    d.melee.is_noisy = false;
     d.melee.miss_sfx = SfxId::miss_medium;
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.effective_range = 4;
