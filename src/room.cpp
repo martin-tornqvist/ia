@@ -326,17 +326,46 @@ void StdRoom::on_post_connect(bool door_proposals[map_w][map_h])
 
     on_post_connect_hook(door_proposals);
 
-    // Make dark?
-    int pct_chance_dark = base_pct_chance_drk(type_) - 15;
+    //
+    // Make the room dark?
+    //
 
-    // Increase chance with deeper dungeon levels
-    pct_chance_dark += map::dlvl;
+    // Do not make the room dark if it has a light source
 
-    set_constr_in_range(0, pct_chance_dark, 100);
+    bool has_light_source = false;
 
-    if (rnd::percent() < pct_chance_dark)
+    for (int x = r_.p0.x; x <= r_.p1.x; ++x)
     {
-        mk_drk();
+        for (int y = r_.p0.y; y <= r_.p1.y; ++y)
+        {
+            //
+            // TODO: This should really be handled in a more generic way, but
+            //       currently the only map features that are light sources are
+            //       braziers - so it works for now.
+            //
+
+            const auto id = map::cells[x][y].rigid->id();
+
+            if (id == FeatureId::brazier)
+            {
+                has_light_source = true;
+            }
+        }
+    }
+
+    if (!has_light_source)
+    {
+        int pct_chance_dark = base_pct_chance_drk(type_) - 15;
+
+        // Increase chance with deeper dungeon levels
+        pct_chance_dark += map::dlvl;
+
+        set_constr_in_range(0, pct_chance_dark, 100);
+
+        if (rnd::percent() < pct_chance_dark)
+        {
+            mk_drk();
+        }
     }
 }
 

@@ -1879,15 +1879,15 @@ void Player::update_fov()
     {
         for (int y = 0; y < map_h; ++y)
         {
-            // const bool is_blocking =
-            //     map_parsers::BlocksMoveCmn(ParseActors::no)
-            //     .cell(P(x, y));
+            const bool is_blocking =
+                map_parsers::BlocksMoveCmn(ParseActors::no)
+                .cell(P(x, y));
 
             Cell& cell = map::cells[x][y];
 
             // Do not explore dark floor cells
-            if (cell.is_seen_by_player /*&&
-                                         (!cell.is_dark || is_blocking)*/)
+            if (cell.is_seen_by_player &&
+                (!cell.is_dark || is_blocking))
             {
                 cell.is_explored = true;
             }

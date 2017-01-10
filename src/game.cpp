@@ -1003,6 +1003,7 @@ void win_game()
     const int padding = 9;
 
     const int X0 = padding;
+
     const int max_w = map_w - (padding * 2);
 
     const int line_delay = 50;
@@ -1335,11 +1336,6 @@ void GameState::draw_map()
                     {
                         render_data->mark_lit = true;
                     }
-
-                    if (cell.is_dark)
-                    {
-                        render_data->remember_dark = true;
-                    }
                 }
             }
         }
@@ -1363,8 +1359,6 @@ void GameState::draw_map()
             render_data->clr = actor->clr();
             render_data->tile = actor->tile();
             render_data->glyph = actor->glyph();
-
-            render_data->remember_dark = false;
         }
     }
 
@@ -1386,8 +1380,6 @@ void GameState::draw_map()
                     render_data->clr = item->clr();
                     render_data->tile = item->tile();
                     render_data->glyph = item->glyph();
-
-                    render_data->remember_dark = false;
                 }
 
                 // -------------------------------------------------------------
@@ -1517,20 +1509,31 @@ void GameState::draw_map()
 
             if (cell.is_seen_by_player)
             {
-                // Light fade effect
-                if (use_light_fade &&
-                    render_data->is_light_fade_allowed)
+                if (render_data->is_light_fade_allowed)
                 {
-                    const int dist_from_player =
-                        king_dist(map::player->pos, P(x, y));
-
-                    if (dist_from_player > 1)
+                    // Fade light with distance?
+                    if (use_light_fade)
                     {
-                        double div =
-                            1.0 +
-                            ((double(dist_from_player - 1) * 0.33));
+                        const int dist_from_player =
+                            king_dist(map::player->pos, P(x, y));
 
-                        div = std::min(2.0, div);
+                        if (dist_from_player > 1)
+                        {
+                            double div =
+                                1.0 +
+                                ((double(dist_from_player - 1) * 0.33));
+
+                            div = std::min(2.0, div);
+
+                            div_clr(render_data->clr, div);
+                            div_clr(render_data->clr_bg, div);
+                        }
+                    }
+
+                    // Fade dark cells
+                    if (cell.is_dark && !cell.is_lit)
+                    {
+                        const double div = 1.75;
 
                         div_clr(render_data->clr, div);
                         div_clr(render_data->clr_bg, div);
@@ -1540,10 +1543,10 @@ void GameState::draw_map()
             else if (cell.is_explored &&
                      !render_data->is_living_actor_seen_here)
             {
-                bool is_aware_of_hostile_mon_here =
+                const bool is_aware_of_hostile_mon_here =
                     render_data->is_aware_of_hostile_mon_here;
 
-                bool is_aware_of_allied_mon_here =
+                const bool is_aware_of_allied_mon_here =
                     render_data->is_aware_of_allied_mon_here;
 
                 // Set render array and the temporary render data to the
@@ -1557,18 +1560,6 @@ void GameState::draw_map()
 
                 render_data->is_aware_of_allied_mon_here =
                     is_aware_of_allied_mon_here;
-
-                if (render_data->remember_dark)
-                {
-                    render_data->clr.r =
-                        (Uint8)((double)render_data->clr.r / 2.25);
-
-                    render_data->clr.g =
-                        (Uint8)((double)render_data->clr.g / 2.25);
-
-                    render_data->clr.b =
-                        std::min(255, render_data->clr.b + 120);
-                }
 
                 const double div = 3.0;
 

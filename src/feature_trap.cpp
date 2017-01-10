@@ -511,6 +511,12 @@ DidTriggerTrap Trap::trigger_trap(Actor* const actor)
 void Trap::reveal(const Verbosity verbosity)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
+
+    if (!is_hidden_)
+    {
+        return;
+    }
+
     is_hidden_ = false;
 
     // Destroy any corpse on the trap
