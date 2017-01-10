@@ -40,7 +40,6 @@ Interface
 * Removed the "q" command - Ghoul characters now feed on corpses when standing still on them instead
 * The map shown on the postmortem info screen is now drawn with tiles (when tiles mode is enabled), and is drawn in color
 * Added "New journey" option to postmortem menu
-* Dark areas can now be explored - i.e. the game draws how the player character remembered the room (with a blue color to distinguish the dark areas)
 * When [v]iewing the map, the game now also prints messages for detected unseen monsters ("There is a creature here")
 * When [v]iewing detailed monster descriptions, the game now prints hit chances for melee, ranged, and throwing attacks for the player and the monster - with all values contributing to the total hit chances shown
 * Weapons now merely display their own hit chance modifier (e.g. +5% or -10%), instead of your skill plus the weapon modifier (the old way was misleading, since more factors are involved when calculating actual hit chances during attacks)
