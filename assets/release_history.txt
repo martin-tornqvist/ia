@@ -13,8 +13,8 @@ Gameplay
 * Dodging now also applies to ranged attacks
 * The spells Slow, Paralyze, and Terrify Enemies have been merged into "Enfeeble Enemies"
 * Burning features now only hurt creatures on the same cell (not adjacent to it)
-* Rogue no longer starts with "Cloud Minds" (this is now a Manuscript instead)
-* Occultist starts with fixed (non-random) items and spells
+* "Cloud Minds" is now a Rod instead of a spell (the Rogue starts with this item, intead of the spell)
+* The Occultist starts with fixed (non-random) items and spells
 * When quaffing Potion of Insight, you can now manually choose which item to identify
 * Potion of Insight always gives some XP, in addition to identifying an item (to avoid making Potions of Insight worthless if all items are identified)
 * All Manuscripts are now guaranteed to be identified when read

@@ -153,7 +153,6 @@ enum class ItemId
     scroll_summon_mon,
     scroll_light,
     scroll_anim_wpns,
-    scroll_cloud_minds,
 
     potion_vitality,
     potion_spirit,
@@ -181,6 +180,7 @@ enum class ItemId
     rod_curing,
     rod_opening,
     rod_bless,
+    rod_cloud_minds,
 
     lantern,
 

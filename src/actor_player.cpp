@@ -28,7 +28,7 @@
 #include "bot.hpp"
 #include "map_parsing.hpp"
 #include "properties.hpp"
-#include "item_device.hpp"
+#include "item_rod.hpp"
 #include "item_scroll.hpp"
 #include "item_potion.hpp"
 #include "text_format.hpp"
@@ -132,6 +132,12 @@ void Player::mk_start_items()
 
         // Rogue starts with some iron spikes (useful tool)
         inv_->put_in_backpack(item_factory::mk(ItemId::iron_spike, 12));
+
+        // Rogue starts with a Rod of Cloud Minds
+        Item* item = item_factory::mk(ItemId::rod_cloud_minds);
+        static_cast<RodCloudMinds*>(item)->identify(Verbosity::silent);
+        item->give_xp_for_identify(Verbosity::silent);
+        inv_->put_in_backpack(item);
     }
     break;
 

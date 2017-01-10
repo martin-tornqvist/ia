@@ -399,7 +399,10 @@ std::vector<std::string> bg_descr(const Bg id)
     case Bg::rogue:
         return
         {
-            "The rate of shock received passively over time is reduced by half",
+            "The rate of shock received passively over time is halved",
+            "",
+            "Has a acquired an artifact which can cloud the minds of all "
+            "enemies, causing them to forget the presence of the user",
             "",
             "Remains aware of the presence of other creatures much longer",
             "",

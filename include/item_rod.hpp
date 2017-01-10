@@ -35,7 +35,7 @@ public:
 protected:
     virtual std::string descr_identified() const = 0;
 
-    virtual void activate_impl() = 0;
+    virtual void run_effect() = 0;
 
     std::string name_inf() const override final;
 
@@ -59,11 +59,12 @@ public:
 protected:
     std::string descr_identified() const override
     {
-        return "When activated, this device reveals any hidden or invisible creatures in the area "
-               "around the user.";
+        return
+            "When activated, this device reveals any hidden or invisible "
+            "creatures in the area around the user.";
     }
 
-    void activate_impl() override;
+    void run_effect() override;
 };
 
 class RodCuring : public Rod
@@ -82,11 +83,13 @@ public:
 protected:
     std::string descr_identified() const override
     {
-        return "When activated, this device cures blindness, poisoning, infections, disease, "
-               "and weakening, and restores the consumers health by a small amount.";
+        return
+            "When activated, this device cures blindness, poisoning, "
+            "infections, disease, and weakening, and restores the users "
+            "health by a small amount.";
     }
 
-    void activate_impl() override;
+    void run_effect() override;
 };
 
 class RodOpening : public Rod
@@ -105,11 +108,12 @@ public:
 protected:
     std::string descr_identified() const override
     {
-        return "When activated, this device opens all locks, lids and doors in the surrounding "
-               "area.";
+        return
+            "When activated, this device opens all locks, lids and doors in "
+            "the surrounding area.";
     }
 
-    void activate_impl() override;
+    void run_effect() override;
 };
 
 class RodBless : public Rod
@@ -128,10 +132,37 @@ public:
 protected:
     std::string descr_identified() const override
     {
-        return "When activated, this device bends the universe in favor of the caster for a while.";
+        return
+            "When activated, this device bends reality in favor of the "
+            "user for a while.";
     }
 
-    void activate_impl() override;
+    void run_effect() override;
+};
+
+class RodCloudMinds : public Rod
+{
+public:
+    RodCloudMinds(ItemDataT* const item_data) :
+        Rod(item_data) {}
+
+    ~RodCloudMinds() {}
+
+    const std::string real_name() const override
+    {
+        return "Cloud Minds";
+    }
+
+protected:
+    std::string descr_identified() const override
+    {
+        return
+            "When activated, this device clouds the memories of all "
+            "creatures in the area, causing them to forget the presence of "
+            "the user.";
+    }
+
+    void run_effect() override;
 };
 
 namespace rod_handling

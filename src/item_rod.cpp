@@ -48,7 +48,7 @@ ConsumeItem Rod::activate(Actor* const actor)
 
     msg_log::add("I activate " + rod_name_a + "...");
 
-    activate_impl();
+    run_effect();
 
     if (data_->is_identified)
     {
@@ -162,7 +162,7 @@ std::string Rod::name_inf() const
     }
 }
 
-void RodPurgeInvis::activate_impl()
+void RodPurgeInvis::run_effect()
 {
     bool blocked[map_w][map_h];
 
@@ -225,7 +225,7 @@ void RodPurgeInvis::activate_impl()
     }
 }
 
-void RodCuring::activate_impl()
+void RodCuring::run_effect()
 {
     Player& player = *map::player;
 
@@ -261,7 +261,7 @@ void RodCuring::activate_impl()
     identify(Verbosity::verbose);
 }
 
-void RodOpening::activate_impl()
+void RodOpening::run_effect()
 {
     bool is_any_opened = false;
 
@@ -289,7 +289,7 @@ void RodOpening::activate_impl()
     }
 }
 
-void RodBless::activate_impl()
+void RodBless::run_effect()
 {
     const int nr_turns = rnd::range(8, 12);
 
@@ -298,6 +298,20 @@ void RodBless::activate_impl()
     map::player->prop_handler().try_add(prop);
 
     identify(Verbosity::verbose);
+}
+
+void RodCloudMinds::run_effect()
+{
+    msg_log::add("I vanish from the minds of my enemies.");
+
+    for (Actor* actor : game_time::actors)
+    {
+        if (!actor->is_player())
+        {
+            Mon* const mon = static_cast<Mon*>(actor);
+            mon->aware_counter_ = 0;
+        }
+    }
 }
 
 namespace rod_handling

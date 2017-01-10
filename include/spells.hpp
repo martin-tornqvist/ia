@@ -37,7 +37,6 @@ enum class SpellId
     light,
     bless,
     anim_wpns,
-    cloud_minds,
 
     // Ghoul background
     frenzy,
@@ -648,47 +647,6 @@ private:
     int max_spi_cost() const override
     {
         return 3;
-    }
-};
-
-class SpellCloudMinds: public Spell
-{
-public:
-    SpellCloudMinds() : Spell() {}
-
-    bool mon_can_learn() const override
-    {
-        return false;
-    }
-
-    bool player_can_learn() const override
-    {
-        return true;
-    }
-
-    std::string name() const override
-    {
-        return "Cloud Minds";
-    }
-
-    SpellId id() const override
-    {
-        return SpellId::cloud_minds;
-    }
-
-    IntrSpellShock shock_type_intr_cast() const override
-    {
-        return IntrSpellShock::mild;
-    }
-
-    std::vector<std::string> descr_specific() const override;
-
-    void run_effect(Actor* const caster) const override;
-
-private:
-    int max_spi_cost() const override
-    {
-        return 5;
     }
 };
 

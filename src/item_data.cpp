@@ -1837,11 +1837,6 @@ void init_data_list()
     d.spell_cast_from_scroll = SpellId::anim_wpns;
     data[(size_t)d.id] = d;
 
-    reset_data(d, ItemType::scroll);
-    d.id = ItemId::scroll_cloud_minds;
-    d.spell_cast_from_scroll = SpellId::cloud_minds;
-    data[(size_t)d.id] = d;
-
     reset_data(d, ItemType::potion);
     d.id = ItemId::potion_vitality;
     data[(size_t)d.id] = d;
@@ -2006,6 +2001,10 @@ void init_data_list()
 
     reset_data(d, ItemType::rod);
     d.id = ItemId::rod_bless;
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::rod);
+    d.id = ItemId::rod_cloud_minds;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::general);

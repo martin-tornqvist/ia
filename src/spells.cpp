@@ -113,9 +113,6 @@ Spell* mk_spell_from_id(const SpellId spell_id)
     case SpellId::sacr_spi:
         return new SpellSacrSpi;
 
-    case SpellId::cloud_minds:
-        return new SpellCloudMinds;
-
     case SpellId::frenzy:
         return new SpellFrenzy;
 
@@ -1691,30 +1688,6 @@ std::vector<std::string> SpellSacrSpi::descr_specific() const
     }
 
     return descr;
-}
-
-// -----------------------------------------------------------------------------
-// Cloud minds
-// -----------------------------------------------------------------------------
-void SpellCloudMinds::run_effect(Actor* const caster) const
-{
-    (void)caster;
-
-    msg_log::add("I vanish from the minds of my enemies.");
-
-    for (Actor* actor : game_time::actors)
-    {
-        if (!actor->is_player())
-        {
-            Mon* const mon = static_cast<Mon*>(actor);
-            mon->aware_counter_ = 0;
-        }
-    }
-}
-
-std::vector<std::string> SpellCloudMinds::descr_specific() const
-{
-    return {"All enemies forget your presence."};
 }
 
 // -----------------------------------------------------------------------------
