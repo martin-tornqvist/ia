@@ -61,6 +61,7 @@ enum class TileId
     wraith,
     mantis,
     locust,
+    bog_tcher,
     mi_go_armor,
     pistol,
     tommy_gun,

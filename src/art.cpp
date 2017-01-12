@@ -176,6 +176,7 @@ P column_and_row_tile(const TileId tile)
     case TileId::wraith:                        return P(13, 2);
     case TileId::mantis:                        return P(14, 2);
     case TileId::locust:                        return P(15, 2);
+    case TileId::bog_tcher:                     return P(16, 2);
     case TileId::mi_go_armor:                   return P(17, 2);
     case TileId::pistol:                        return P(1, 3);
     case TileId::tommy_gun:                     return P(3, 3);

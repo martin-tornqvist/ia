@@ -986,31 +986,7 @@ void Cultist::mk_start_items()
     }
 }
 
-void CultistElectric::mk_start_items()
-{
-    Item* item = item_factory::mk(ItemId::mi_go_gun);
-
-    Wpn* wpn = static_cast<Wpn*>(item);
-
-    const int ammo_cap = wpn->data().ranged.max_ammo;
-
-    wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
-
-    inv_->put_in_slot(SlotId::wpn, item);
-
-    if (rnd::one_in(5))
-    {
-        inv_->put_in_backpack(
-            item_factory::mk_random_scroll_or_potion(true, true));
-    }
-
-    if (rnd::one_in(3))
-    {
-        spells_known_.push_back(spell_handling::random_spell_for_mon());
-    }
-}
-
-void CultistSpikeGun::mk_start_items()
+void BogTcher::mk_start_items()
 {
     Item* item = item_factory::mk(ItemId::spike_gun);
     Wpn* wpn = static_cast<Wpn*>(item);

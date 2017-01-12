@@ -109,11 +109,8 @@ Actor* mk_actor_from_id(const ActorId id)
     case ActorId::cultist:
         return new Cultist();
 
-    case ActorId::cultist_electric:
-        return new CultistElectric();
-
-    case ActorId::cultist_spike_gun:
-        return new CultistSpikeGun();
+    case ActorId::bog_tcher:
+        return new BogTcher();
 
     case ActorId::cultist_priest:
         return new CultistPriest();

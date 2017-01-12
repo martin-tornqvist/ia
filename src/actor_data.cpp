@@ -21,7 +21,7 @@ void ActorDataT::reset()
     glyph = 'X';
     color = clr_yellow;
 
-    //Default spawn group size is "alone"
+    // Default spawn group size is "alone"
     group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::alone, 1),
@@ -538,7 +538,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::slow;
-    d.ranged_cooldown_turns = 2;
+    d.ranged_cooldown_turns = 1;
     d.spell_cooldown_turns = 2;
     d.spell_skill = 10;
     d.glyph = 'P';
@@ -561,14 +561,15 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::human);
     d.native_rooms.push_back(RoomType::ritual);
+    d.native_rooms.push_back(RoomType::jail);
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Cultist";
-    d.name_the = "The Cultist";
-    d.corpse_name_a = "A Cultist corpse";
-    d.corpse_name_the = "The Cultist corpse";
-    d.id = ActorId::cultist_electric;
+    d.name_a = "A Bog Tcher";
+    d.name_the = "The Bog Tcher";
+    d.corpse_name_a = "A Bog Tcher corpse";
+    d.corpse_name_the = "The Bog Tcher corpse";
+    d.id = ActorId::bog_tcher;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
     d.ai[(size_t)AiId::attacks] = true;
@@ -577,72 +578,41 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
-    d.ranged_cooldown_turns = 2;
+    d.ranged_cooldown_turns = 1;
     d.spell_cooldown_turns = 2;
     d.spell_skill = 10;
-    d.glyph = 'P';
-    d.color = clr_yellow;
-    d.tile = TileId::cultist_firearm;
-    d.hp = 8;
-    d.spi = 12;
-    d.ability_vals.set_val(AbilityId::melee, 45);
-    d.ability_vals.set_val(AbilityId::ranged, 55);
-    d.spawn_min_dlvl = dlvl_first_late_game;
-    d.spawn_max_dlvl = dlvl_last_mid_game;
-    d.actor_size = ActorSize::humanoid;
-    d.is_humanoid = true;
-    d.can_open_doors = true;
-    d.can_bash_doors = true;
-    d.nr_turns_aware = 16;
-    d.descr =
-        "A fanatic cultist, madly gibbering in some half-lost language. It is "
-        "wielding an Electric Gun, presumably a gift from the Mi-go.";
-    d.spell_cast_msg = "mutters incantations.";
-    d.erratic_move_pct = ActorErraticFreq::rare;
-    d.native_rooms.push_back(RoomType::plain);
-    d.native_rooms.push_back(RoomType::human);
-    d.native_rooms.push_back(RoomType::ritual);
-    data[(size_t)d.id] = d;
-    d.reset();
-
-    d.name_a = "A Cultist";
-    d.name_the = "The Cultist";
-    d.corpse_name_a = "A Cultist corpse";
-    d.corpse_name_the = "The Cultist corpse";
-    d.id = ActorId::cultist_spike_gun;
-    d.ai[(size_t)AiId::looks] = true;
-    d.ai[(size_t)AiId::makes_room_for_friend] = true;
-    d.ai[(size_t)AiId::attacks] = true;
-    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
-    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
-    d.ai[(size_t)AiId::moves_to_lair] = false;
-    d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal;
-    d.ranged_cooldown_turns = 2;
-    d.spell_cooldown_turns = 2;
-    d.spell_skill = 10;
-    d.glyph = 'P';
-    d.color = clr_brown;
-    d.tile = TileId::cultist_firearm;
+    d.glyph = 'p';
+    d.color = clr_brown_drk;
+    d.tile = TileId::bog_tcher;
     d.hp = 6;
     d.spi = 12;
     d.ability_vals.set_val(AbilityId::melee, 45);
-    d.ability_vals.set_val(AbilityId::ranged, 40);
+    d.ability_vals.set_val(AbilityId::ranged, 50);
     d.spawn_min_dlvl = 4;
-    d.spawn_max_dlvl = d.spawn_min_dlvl + 3;
-    d.actor_size = ActorSize::humanoid;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 15;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::alone,  4),
+        MonGroupSpawnRule(MonGroupSize::few,    1),
+    });
+    d.actor_size = ActorSize::floor;
     d.is_humanoid = true;
     d.can_open_doors = true;
-    d.can_bash_doors = true;
+    d.can_bash_doors = false;
     d.nr_turns_aware = 16;
     d.descr =
-        "A fanatic cultist, madly gibbering in some half-lost language. It is "
-        "wielding a Spike gun.";
+        "A vile dwarfish creature, clad in coarse brown robes. It has a "
+        "cruel grin on its pale face, and its eyes are gleaming with hatred. "
+        "The Bog Tcher are mechanically inclined, which they put to use by "
+        "crafting sadistic weapons and traps. Their favored weapon is their "
+        "\"spike gun\", which can pin the target against solid objects for "
+        "prolonged suffering.";
     d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::human);
     d.native_rooms.push_back(RoomType::ritual);
+    d.native_rooms.push_back(RoomType::jail);
     data[(size_t)d.id] = d;
     d.reset();
 

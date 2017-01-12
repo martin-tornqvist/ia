@@ -383,19 +383,11 @@ public:
     virtual ~Cultist() {}
 };
 
-class CultistElectric: public Cultist
+class BogTcher: public Cultist
 {
 public:
-    CultistElectric() : Cultist() {}
-    ~CultistElectric() {}
-    void mk_start_items() override;
-};
-
-class CultistSpikeGun: public Cultist
-{
-public:
-    CultistSpikeGun() : Cultist() {}
-    ~CultistSpikeGun() {}
+    BogTcher() : Cultist() {}
+    ~BogTcher() {}
     void mk_start_items() override;
 };
 
