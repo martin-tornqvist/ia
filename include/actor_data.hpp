@@ -22,6 +22,8 @@ enum class ActorId
     floating_skull,
     cultist,
     cultist_priest,
+    cultist_wizard,
+    cultist_grand_wizard,
     bog_tcher,
     rat,
     rat_thing,

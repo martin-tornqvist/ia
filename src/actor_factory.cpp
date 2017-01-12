@@ -115,6 +115,12 @@ Actor* mk_actor_from_id(const ActorId id)
     case ActorId::cultist_priest:
         return new CultistPriest();
 
+    case ActorId::cultist_wizard:
+        return new CultistWizard();
+
+    case ActorId::cultist_grand_wizard:
+        return new CultistGrandWizard();
+
     case ActorId::keziah_mason:
         return new KeziahMason();
 

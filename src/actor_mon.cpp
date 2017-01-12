@@ -911,7 +911,6 @@ void Cultist::mk_start_items()
     const int pump_shotgun = pistol + 3;
     const int sawn_shotgun = pump_shotgun + 3;
     const int mg = sawn_shotgun + 1;
-
     const int tot = mg;
     const int rnd = map::dlvl == 0 ? pistol : rnd::range(1, tot);
 
@@ -920,6 +919,7 @@ void Cultist::mk_start_items()
         Item* item = item_factory::mk(ItemId::pistol);
         Wpn* wpn = static_cast<Wpn*>(item);
         const int ammo_cap = wpn->data().ranged.max_ammo;
+
         wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
 
         inv_->put_in_slot(SlotId::wpn, item);
@@ -934,6 +934,7 @@ void Cultist::mk_start_items()
         Item* item = item_factory::mk(ItemId::pump_shotgun);
         Wpn* wpn = static_cast<Wpn*>(item);
         const int ammo_cap = wpn->data().ranged.max_ammo;
+
         wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
 
         inv_->put_in_slot(SlotId::wpn, item);
@@ -952,7 +953,9 @@ void Cultist::mk_start_items()
         if (rnd::one_in(4))
         {
             Item* item = item_factory::mk(ItemId::shotgun_shell);
+
             item->nr_items_ = rnd::range(1, 8);
+
             inv_->put_in_backpack(item);
         }
     }
@@ -983,14 +986,22 @@ void Cultist::mk_start_items()
     if (rnd::one_in(12))
     {
         spells_known_.push_back(spell_handling::random_spell_for_mon());
+
+        if (rnd::coin_toss())
+        {
+            spells_known_.push_back(spell_handling::random_spell_for_mon());
+        }
     }
 }
 
 void BogTcher::mk_start_items()
 {
     Item* item = item_factory::mk(ItemId::spike_gun);
+
     Wpn* wpn = static_cast<Wpn*>(item);
+
     const int ammo_cap = wpn->data().ranged.max_ammo;
+
     wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
 
     inv_->put_in_slot(SlotId::wpn, item);
@@ -1005,18 +1016,99 @@ void BogTcher::mk_start_items()
 
 void CultistPriest::mk_start_items()
 {
+    spells_known_.push_back(new SpellHealSelf);
+    spells_known_.push_back(new SpellDarkbolt);
+    spells_known_.push_back(new SpellEnfeebleMon);
+    spells_known_.push_back(new SpellKnockBack);
+
+    if (rnd::coin_toss())
+    {
+        spells_known_.push_back(new SpellTeleport);
+    }
+
+    if (rnd::coin_toss())
+    {
+        spells_known_.push_back(new SpellSummonMon);
+    }
+
+    if (rnd::coin_toss())
+    {
+        spells_known_.push_back(new SpellPest);
+    }
+
     Item* item = item_factory::mk(ItemId::dagger);
+
     item->melee_dmg_plus_ = 2;
+
     inv_->put_in_slot(SlotId::wpn, item);
 
-    inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
-    inv_->put_in_backpack(item_factory::mk_random_scroll_or_potion(true, true));
-
-    const int nr_spells = 3;
-
-    for (int i = 0; i < nr_spells; ++i)
+    // Make some treasures to drop
+    for (int i = rnd::range(1, 2); i > 0; --i)
     {
-        spells_known_.push_back(spell_handling::random_spell_for_mon());
+        inv_->put_in_backpack(
+            item_factory::mk_random_scroll_or_potion(true, true));
+    }
+}
+
+void CultistWizard::mk_start_items()
+{
+    spells_known_.push_back(new SpellHealSelf);
+    spells_known_.push_back(new SpellDarkbolt);
+    spells_known_.push_back(new SpellEnfeebleMon);
+    spells_known_.push_back(new SpellKnockBack);
+
+    if (rnd::coin_toss())
+    {
+        spells_known_.push_back(new SpellTeleport);
+    }
+
+    if (rnd::coin_toss())
+    {
+        spells_known_.push_back(new SpellSummonMon);
+    }
+
+    if (rnd::coin_toss())
+    {
+        spells_known_.push_back(new SpellPest);
+    }
+
+    // Make some treasures to drop
+    for (int i = rnd::range(1, 2); i > 0; --i)
+    {
+        inv_->put_in_backpack(
+            item_factory::mk_random_scroll_or_potion(true, true));
+    }
+}
+
+void CultistGrandWizard::mk_start_items()
+{
+    spells_known_.push_back(new SpellHealSelf);
+    spells_known_.push_back(new SpellDarkbolt);
+    spells_known_.push_back(new SpellEnfeebleMon);
+    spells_known_.push_back(new SpellKnockBack);
+    spells_known_.push_back(new SpellAzaWrath);
+    spells_known_.push_back(new SpellBurn);
+
+    if (rnd::coin_toss())
+    {
+        spells_known_.push_back(new SpellTeleport);
+    }
+
+    if (rnd::coin_toss())
+    {
+        spells_known_.push_back(new SpellSummonMon);
+    }
+
+    if (rnd::coin_toss())
+    {
+        spells_known_.push_back(new SpellPest);
+    }
+
+    // Make some treasures to drop
+    for (int i = rnd::range(1, 2); i > 0; --i)
+    {
+        inv_->put_in_backpack(
+            item_factory::mk_random_scroll_or_potion(true, true));
     }
 }
 

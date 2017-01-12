@@ -481,6 +481,8 @@ void init_data_list()
     d.is_undead = true;
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::plain);
+    d.native_rooms.push_back(RoomType::cave);
+    d.native_rooms.push_back(RoomType::human);
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -522,6 +524,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::ritual);
     d.native_rooms.push_back(RoomType::chasm);
+    d.native_rooms.push_back(RoomType::cave);
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -537,8 +540,8 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::slow;
-    d.ranged_cooldown_turns = 1;
+    d.speed_pct = (int)ActorSpeed::normal;
+    d.ranged_cooldown_turns = 2;
     d.spell_cooldown_turns = 2;
     d.spell_skill = 10;
     d.glyph = 'P';
@@ -554,8 +557,12 @@ void init_data_list()
     d.is_humanoid = true;
     d.can_open_doors = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 16;
-    d.descr = "A fanatic cultist, madly gibbering in some half-lost language.";
+    d.nr_turns_aware = 12;
+    d.descr =
+        "A fanatic cultist of the lowest rank, madly gibbering in some "
+        "half-lost language. They may occasionally have learned to cast a "
+        "spell or two, although never with any great skill. "
+        "Therefore they tend to rely on mundane firearms to handle threats.";
     d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.native_rooms.push_back(RoomType::plain);
@@ -578,7 +585,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
-    d.ranged_cooldown_turns = 1;
+    d.ranged_cooldown_turns = 2;
     d.spell_cooldown_turns = 2;
     d.spell_skill = 10;
     d.glyph = 'p';
@@ -608,11 +615,12 @@ void init_data_list()
         "\"spike gun\", which can pin the target against solid objects for "
         "prolonged suffering.";
     d.spell_cast_msg = "mutters incantations.";
+    d.mon_shock_lvl = ShockLvl::unsettling;
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.native_rooms.push_back(RoomType::plain);
-    d.native_rooms.push_back(RoomType::human);
     d.native_rooms.push_back(RoomType::ritual);
     d.native_rooms.push_back(RoomType::jail);
+    d.native_rooms.push_back(RoomType::cave);
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -662,6 +670,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::ritual);
     d.native_rooms.push_back(RoomType::forest);
+    d.native_rooms.push_back(RoomType::cave);
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -763,7 +772,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.spell_cooldown_turns = 2;
     d.spell_skill = 30;
     d.glyph = 'P';
@@ -772,15 +781,15 @@ void init_data_list()
     d.hp = 6;
     d.spi = 30;
     d.ability_vals.set_val(AbilityId::melee, 45);
-    d.spawn_min_dlvl = 5;
+    d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
     d.can_open_doors = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 16;
+    d.nr_turns_aware = 12;
     d.descr =
-        "A fanatic cultist of the priest rank, madly gibbering in some "
+        "A fanatic cultist of the Priest rank, madly gibbering in some "
         "half-lost language.";
     d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = ActorErraticFreq::rare;
@@ -788,6 +797,89 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::human);
     d.native_rooms.push_back(RoomType::ritual);
     d.native_rooms.push_back(RoomType::forest);
+    d.native_rooms.push_back(RoomType::cave);
+    data[(size_t)d.id] = d;
+    d.reset();
+
+    d.name_a = "A Wizard";
+    d.name_the = "The Wizard";
+    d.corpse_name_a = "A Wizard corpse";
+    d.corpse_name_the = "The Wizard corpse";
+    d.id = ActorId::cultist_wizard;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = false;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
+    d.speed_pct = (int)ActorSpeed::normal;
+    d.spell_cooldown_turns = 2;
+    d.spell_skill = 60;
+    d.glyph = 'P';
+    d.color = clr_cyan;
+    d.tile = TileId::witch_or_warlock;
+    d.hp = 18;
+    d.spi = 40;
+    d.ability_vals.set_val(AbilityId::melee, 45);
+    d.spawn_min_dlvl = dlvl_first_mid_game;
+    d.spawn_max_dlvl = (dlvl_last_mid_game + dlvl_last) / 2;
+    d.actor_size = ActorSize::humanoid;
+    d.is_humanoid = true;
+    d.can_open_doors = true;
+    d.can_bash_doors = true;
+    d.nr_turns_aware = 12;
+    d.descr =
+        "A fanatic cultist of the Wizard rank, madly gibbering in some "
+        "half-lost language.";
+    d.spell_cast_msg = "mutters incantations.";
+    d.erratic_move_pct = ActorErraticFreq::rare;
+    d.native_rooms.push_back(RoomType::plain);
+    d.native_rooms.push_back(RoomType::human);
+    d.native_rooms.push_back(RoomType::ritual);
+    d.native_rooms.push_back(RoomType::forest);
+    d.native_rooms.push_back(RoomType::cave);
+    data[(size_t)d.id] = d;
+    d.reset();
+
+    d.name_a = "A Grand Wizard";
+    d.name_the = "The Grand Wizard";
+    d.corpse_name_a = "A Grand Wizard corpse";
+    d.corpse_name_the = "The Grand Wizard corpse";
+    d.id = ActorId::cultist_grand_wizard;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = false;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
+    d.speed_pct = (int)ActorSpeed::normal;
+    d.spell_cooldown_turns = 2;
+    d.spell_skill = 90;
+    d.glyph = 'P';
+    d.color = clr_white;
+    d.tile = TileId::witch_or_warlock;
+    d.hp = 36;
+    d.spi = 50;
+    d.ability_vals.set_val(AbilityId::melee, 45);
+    d.spawn_min_dlvl = dlvl_first_late_game;
+    d.spawn_max_dlvl = 999;
+    d.actor_size = ActorSize::humanoid;
+    d.is_humanoid = true;
+    d.can_open_doors = true;
+    d.can_bash_doors = true;
+    d.nr_turns_aware = 12;
+    d.descr =
+        "A fanatic cultist of the Grand Wizard rank, madly gibbering in some "
+        "half-lost language.";
+    d.spell_cast_msg = "mutters incantations.";
+    d.erratic_move_pct = ActorErraticFreq::rare;
+    d.native_rooms.push_back(RoomType::plain);
+    d.native_rooms.push_back(RoomType::human);
+    d.native_rooms.push_back(RoomType::ritual);
+    d.native_rooms.push_back(RoomType::forest);
+    d.native_rooms.push_back(RoomType::cave);
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -828,6 +920,7 @@ void init_data_list()
     d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::spider);
     d.native_rooms.push_back(RoomType::forest);
+    d.native_rooms.push_back(RoomType::cave);
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -868,6 +961,7 @@ void init_data_list()
     d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::spider);
     d.native_rooms.push_back(RoomType::forest);
+    d.native_rooms.push_back(RoomType::cave);
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -908,6 +1002,7 @@ void init_data_list()
     d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::spider);
     d.native_rooms.push_back(RoomType::forest);
+    d.native_rooms.push_back(RoomType::cave);
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -949,6 +1044,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::spider);
     d.native_rooms.push_back(RoomType::forest);
+    d.native_rooms.push_back(RoomType::cave);
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -993,6 +1089,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::spider);
     d.native_rooms.push_back(RoomType::forest);
+    d.native_rooms.push_back(RoomType::cave);
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -1230,6 +1327,7 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::human);
     d.native_rooms.push_back(RoomType::ritual);
+    d.native_rooms.push_back(RoomType::cave);
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -1344,6 +1442,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::infravis] = true;
     d.natural_props[(size_t)PropId::invis] = true;
     d.spawn_min_dlvl = dlvl_first_late_game;
+    d.spawn_max_dlvl = 999;
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
@@ -2179,7 +2278,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::slow;
     d.spell_cooldown_turns = 2;
-    d.spell_skill = 70;
+    d.spell_skill = 80;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
     d.glyph = 'P';
@@ -2221,7 +2320,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::slow;
     d.spell_cooldown_turns = 2;
-    d.spell_skill = 70;
+    d.spell_skill = 80;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 1;
     d.glyph = 'P';
@@ -3172,7 +3271,7 @@ void init_data_list()
     d.prevent_knockback = true;
     d.nr_turns_aware = 9999;
     d.descr =
-        "The Grand Wizard of the Cult of Starry Wisdom. He appears "
+        "The Supreme Wizard of the Cult of Starry Wisdom. He appears "
         "incredibly old, like a hideous ancient vampire or a grim reaper. "
         "Tattered crimson robes flow from his skeletal frame, his bony "
         "fingers extends into razor sharp claws, and he has a grim expression "

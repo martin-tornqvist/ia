@@ -30,6 +30,7 @@ Gameplay
 * Removed the random "I have a bad feeling about this..." events causing shock
 * The Iron Suit no longer gives penalties to aiming or spotting hidden monsters and objects
 * Removed all negative effects from critically failing melee attacks (such as "I am exhausted"), except for a small chance of the weapon breaking - which can only happen while cursed
+* Added more monsters
 
 Interface
 * All active properties are now printed with descriptions on the [@] character decsription page, and when [v]iewing monsters

@@ -399,6 +399,22 @@ public:
     void mk_start_items() override;
 };
 
+class CultistWizard: public Cultist
+{
+public:
+    CultistWizard() : Cultist() {}
+    ~CultistWizard() {}
+    void mk_start_items() override;
+};
+
+class CultistGrandWizard: public Cultist
+{
+public:
+    CultistGrandWizard() : Cultist() {}
+    ~CultistGrandWizard() {}
+    void mk_start_items() override;
+};
+
 class LordOfShadows: public Mon
 {
 public:
