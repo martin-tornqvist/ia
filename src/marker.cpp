@@ -316,20 +316,22 @@ bool MarkerState::try_go_to_tgt()
 {
     const Actor* const tgt = map::player->tgt_;
 
-    if (tgt)
+    if (!tgt)
     {
-        std::vector<Actor*> seen_foes;
-        map::player->seen_foes(seen_foes);
+        return false;
+    }
 
-        if (!seen_foes.empty())
+    const auto seen_foes = map::player->seen_foes();
+
+    if (!seen_foes.empty())
+    {
+        for (auto* const actor : seen_foes)
         {
-            for (auto* const actor : seen_foes)
+            if (tgt == actor)
             {
-                if (tgt == actor)
-                {
-                    pos_ = actor->pos;
-                    return true;
-                }
+                pos_ = actor->pos;
+
+                return true;
             }
         }
     }
@@ -339,10 +341,10 @@ bool MarkerState::try_go_to_tgt()
 
 void MarkerState::try_go_to_closest_enemy()
 {
-    std::vector<Actor*> seen_foes;
-    map::player->seen_foes(seen_foes);
+    const auto seen_foes = map::player->seen_foes();
 
     std::vector<P> seen_foes_cells;
+
     map::actor_cells(seen_foes, seen_foes_cells);
 
     // If player sees enemies, suggest one for targeting

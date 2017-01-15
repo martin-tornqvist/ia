@@ -54,6 +54,10 @@ public:
 
     bool can_see_actor(const Actor& other) const;
 
+    std::vector<Actor*> seen_actors() const override;
+
+    std::vector<Actor*> seen_foes() const override;
+
     void act() override;
 
     void move(Dir dir) override;

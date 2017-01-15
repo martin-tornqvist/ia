@@ -29,9 +29,9 @@ struct AiAvailAttacksData
 
     AiAvailAttacksData& operator=(const AiAvailAttacksData& other)
     {
-        weapons             = other.weapons;
-        is_reload_needed    = other.is_reload_needed;
-        is_melee            = other.is_melee;
+        weapons = other.weapons;
+        is_reload_needed = other.is_reload_needed;
+        is_melee = other.is_melee;
         return *this;
     }
 
@@ -49,6 +49,12 @@ public:
 
     bool can_see_actor(const Actor& other,
                        const bool hard_blocked_los[map_w][map_h]) const;
+
+    std::vector<Actor*> seen_actors() const override;
+
+    std::vector<Actor*> seen_foes() const override;
+
+    bool is_sneaking() const;
 
     void act() override;
 
@@ -100,16 +106,15 @@ public:
     bool is_leader_of(const Actor* const actor) const override;
     bool is_actor_my_leader(const Actor* const actor) const override;
 
-    int                 aware_counter_, player_aware_of_me_counter_;
-    bool                is_msg_mon_in_view_printed_;
-    Dir                 last_dir_moved_;
+    int aware_of_player_counter_, player_aware_of_me_counter_;
+    bool is_msg_mon_in_view_printed_;
+    Dir last_dir_moved_;
     std::vector<Spell*> spells_known_;
-    int                 spell_cooldown_current_;
-    bool                is_roaming_allowed_;
-    bool                is_sneaking_;
-    Actor*              leader_;
-    Actor*              tgt_;
-    bool                waiting_;
+    int spell_cooldown_current_;
+    bool is_roaming_allowed_;
+    Actor* leader_;
+    Actor* tgt_;
+    bool waiting_;
 
 protected:
     virtual void on_hit(int& dmg,

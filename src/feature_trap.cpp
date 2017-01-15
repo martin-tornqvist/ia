@@ -346,7 +346,7 @@ void Trap::bump(Actor& actor_bumping)
             TRACE_VERBOSE << "Humanoid monster bumping" << std::endl;
             Mon* const mon = static_cast<Mon*>(&actor_bumping);
 
-            if (mon->aware_counter_ > 0 && !mon->is_sneaking_)
+            if (mon->aware_of_player_counter_ > 0)
             {
                 TRACE_VERBOSE << "Monster eligible for triggering trap"
                               << std::endl;
@@ -1062,7 +1062,7 @@ void TrapSummonMon::trigger()
     TRACE << "Finding summon candidates" << std::endl;
     std::vector<ActorId> summon_bucket;
 
-    for (int i = 0; i < int(ActorId::END); ++i)
+    for (int i = 0; i < (int)ActorId::END; ++i)
     {
         const ActorDataT& data = actor_data::data[i];
 
@@ -1084,13 +1084,11 @@ void TrapSummonMon::trigger()
 
         TRACE_VERBOSE << "Actor id: " << int(id_to_summon) << std::endl;
 
-        std::vector<Mon*> summoned;
-
-        actor_factory::summon(pos_,
-                              std::vector<ActorId>(1, id_to_summon),
-                              MakeMonAware::yes,
-                              nullptr,
-                              &summoned);
+        const auto summoned =
+            actor_factory::summon(pos_,
+                                  {1, id_to_summon},
+                                  MakeMonAware::yes,
+                                  nullptr);
 
         ASSERT(summoned.size() == 1);
 

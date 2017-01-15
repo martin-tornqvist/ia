@@ -22,8 +22,9 @@ void InsSympt::on_start()
 {
     msg_log::more_prompt();
 
-    const std::string heading   = start_heading();
-    const std::string msg       = "Insanity draws nearer... " + start_msg();
+    const std::string heading = start_heading();
+
+    const std::string msg = "Insanity draws nearer... " + start_msg();
 
     ASSERT(!heading.empty() && !msg.empty());
 
@@ -459,21 +460,18 @@ void InsShadows::on_start_hook()
 
     std::vector<ActorId> shadow_ids(nr, ActorId::shadow);
 
-    std::vector<Mon*> summoned;
-
-    actor_factory::summon(map::player->pos,
-                          shadow_ids,
-                          MakeMonAware::yes,
-                          nullptr,
-                          &summoned,
-                          Verbosity::silent);
+    const auto summoned =
+        actor_factory::summon(map::player->pos,
+                              shadow_ids,
+                              MakeMonAware::yes,
+                              nullptr,
+                              Verbosity::silent);
 
     ASSERT(!summoned.empty());
 
     for (Mon* const mon : summoned)
     {
-        mon->is_sneaking_                   = true;
-        mon->player_aware_of_me_counter_    = 0;
+        mon->player_aware_of_me_counter_ = 0;
 
         auto* const disabled_att =
             new PropDisabledAttack(PropTurns::specific, 1);
@@ -483,8 +481,7 @@ void InsShadows::on_start_hook()
 
     map::update_vision();
 
-    std::vector<Actor*> player_seen_foes;
-    map::player->seen_foes(player_seen_foes);
+    const auto player_seen_foes = map::player->seen_foes();
 
     for (Actor* const actor : player_seen_foes)
     {
@@ -503,20 +500,19 @@ void InsParanoia::on_start_hook()
     {
         std::vector<ActorId> stalker_id(1, ActorId::invis_stalker);
 
-        std::vector<Mon*> summoned;
-
-        actor_factory::summon(map::player->pos,
-                              stalker_id,
-                              MakeMonAware::yes,
-                              nullptr,
-                              &summoned,
-                              Verbosity::silent);
+        const auto summoned =
+            actor_factory::summon(map::player->pos,
+                                  stalker_id,
+                                  MakeMonAware::yes,
+                                  nullptr,
+                                  Verbosity::silent);
 
         ASSERT(summoned.size() == 1);
 
         Mon* const mon = summoned[0];
 
-        auto* const disabled_att = new PropDisabledAttack(PropTurns::specific, 2);
+        auto* const disabled_att =
+            new PropDisabledAttack(PropTurns::specific, 2);
 
         mon->prop_handler().try_add(disabled_att);
     }
@@ -529,7 +525,8 @@ bool InsConfusion::is_allowed() const
 
 void InsConfusion::on_start_hook()
 {
-    map::player->prop_handler().try_add(new PropConfused(PropTurns::std));
+    map::player->prop_handler().try_add(
+        new PropConfused(PropTurns::std));
 }
 
 bool InsFrenzy::is_allowed() const

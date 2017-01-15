@@ -59,7 +59,7 @@ bool AttData::is_defender_aware(const Actor* const attacker,
     {
         auto* const mon = static_cast<const Mon*>(&defender);
 
-        is_aware = mon->aware_counter_ > 0;
+        is_aware = mon->aware_of_player_counter_ > 0;
     }
 
     return is_aware;
@@ -117,7 +117,7 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
         {
             Mon* const mon = static_cast<Mon*>(attacker);
 
-            is_attacker_aware = mon->aware_counter_ > 0;
+            is_attacker_aware = mon->aware_of_player_counter_ > 0;
         }
     }
 
@@ -343,7 +343,7 @@ RangedAttData::RangedAttData(Actor* const attacker,
         state_mod = 0;
 
         if (attacker->is_player() &&
-            static_cast<Mon*>(defender)->aware_counter_ <= 0)
+            static_cast<Mon*>(defender)->aware_of_player_counter_ <= 0)
         {
             state_mod = 25;
         }
@@ -489,7 +489,7 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
         state_mod = 0;
 
         if (attacker->is_player() &&
-            static_cast<Mon*>(defender)->aware_counter_ <= 0)
+            static_cast<Mon*>(defender)->aware_of_player_counter_ <= 0)
         {
             state_mod = 25;
         }
@@ -1649,8 +1649,6 @@ void melee(Actor* const attacker,
             Mon* const mon = static_cast<Mon*>(att_data.attacker);
 
             mon->set_player_aware_of_me();
-
-            mon->is_sneaking_ = false;
         }
         else // Defender is monster
         {

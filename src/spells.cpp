@@ -427,9 +427,7 @@ void SpellDarkbolt::run_effect(Actor* const caster) const
 
     Actor* target = nullptr;
 
-    std::vector<Actor*> seen_actors;
-
-    caster->seen_foes(seen_actors);
+    const auto seen_actors = caster->seen_foes();
 
     if (seen_actors.empty())
     {
@@ -617,8 +615,7 @@ void SpellAzaWrath::run_effect(Actor* const caster) const
         }
     }
 
-    std::vector<Actor*> targets;
-    caster->seen_foes(targets);
+    const auto targets = caster->seen_foes();
 
     if (targets.empty())
     {
@@ -891,7 +888,7 @@ std::vector<std::string> SpellMayhem::descr_specific() const
 bool SpellMayhem::allow_mon_cast_now(Mon& mon) const
 {
     return
-        mon.aware_counter_ > 0 &&
+        mon.aware_of_player_counter_ > 0 &&
         rnd::coin_toss() &&
         (mon.tgt_ || rnd::one_in(20));
 }
@@ -929,12 +926,11 @@ void SpellPest::run_effect(Actor* const caster) const
             caster;
     }
 
-    std::vector<Mon*> mon_summoned;
-
-    actor_factory::summon(caster->pos, {nr_mon, ActorId::rat},
-                          MakeMonAware::yes,
-                          leader,
-                          &mon_summoned);
+    const auto mon_summoned =
+        actor_factory::summon(caster->pos,
+                              {nr_mon, ActorId::rat},
+                              MakeMonAware::yes,
+                              leader);
 
     bool is_any_seen_by_player = false;
 
@@ -1044,15 +1040,13 @@ void SpellAnimWpns::run_effect(Actor* const caster) const
 
                 const P p(x, y);
 
-                std::vector<Mon*> summoned;
-
-                actor_factory::summon(
-                    p,
-                    std::vector<ActorId>(1, ActorId::animated_wpn),
-                    MakeMonAware::no,
-                    map::player,
-                    &summoned,
-                    Verbosity::silent);
+                const auto summoned =
+                    actor_factory::summon(
+                        p,
+                        {1, ActorId::animated_wpn},
+                        MakeMonAware::no,
+                        map::player,
+                        Verbosity::silent);
 
                 ASSERT(summoned.size() == 1);
 
@@ -1167,17 +1161,16 @@ void SpellPharaohStaff::run_effect(Actor* const caster) const
         leader = caster_leader ? caster_leader : caster;
     }
 
-    std::vector<Mon*> summoned_mon;
-
     const auto actor_id =
         rnd::coin_toss() ?
         ActorId::mummy :
         ActorId::croc_head_mummy;
 
-    actor_factory::summon(caster->pos, {actor_id},
-                          MakeMonAware::yes,
-                          leader,
-                          &summoned_mon);
+    const auto summoned_mon =
+        actor_factory::summon(caster->pos,
+                              {actor_id},
+                              MakeMonAware::yes,
+                              leader);
 
     const Mon* const mon = summoned_mon[0];
 
@@ -1823,7 +1816,7 @@ bool SpellTeleport::allow_mon_cast_now(Mon& mon) const
     const bool is_low_hp = mon.hp() <= (mon.hp_max(true) / 2);
 
     return
-        (mon.aware_counter_ > 0) &&
+        (mon.aware_of_player_counter_ > 0) &&
         is_low_hp &&
         rnd::fraction(3, 4);
 }
@@ -1993,9 +1986,7 @@ void SpellEnfeebleMon::run_effect(Actor* const caster) const
         break;
     }
 
-    std::vector<Actor*> targets;
-
-    caster->seen_foes(targets);
+    auto targets = caster->seen_foes();
 
     if (targets.empty())
     {
@@ -2270,20 +2261,21 @@ void SpellSummonMon::run_effect(Actor* const caster) const
             (player_bon::traits[(size_t)Trait::summoner] ? 2 : 1);
 
         did_player_summon_hostile = rnd::one_in(n);
+
         leader = did_player_summon_hostile ? nullptr : caster;
     }
     else // Caster is monster
     {
         Actor* const caster_leader = static_cast<Mon*>(caster)->leader_;
+
         leader = caster_leader ? caster_leader : caster;
     }
 
-    std::vector<Mon*> mon_summoned;
-
-    actor_factory::summon(summon_pos, {mon_id},
-                          MakeMonAware::yes,
-                          leader,
-                          &mon_summoned);
+    const auto mon_summoned =
+        actor_factory::summon(summon_pos,
+                              {mon_id},
+                              MakeMonAware::yes,
+                              leader);
 
     Mon* const mon = mon_summoned[0];
 
@@ -2322,7 +2314,7 @@ bool SpellSummonMon::allow_mon_cast_now(Mon& mon) const
 {
     // NOTE: Checking awareness instead of target, to allow summoning even with
     //       broken LOS
-    return (mon.aware_counter_ > 0) &&
+    return (mon.aware_of_player_counter_ > 0) &&
            rnd::coin_toss() &&
            (mon.tgt_ || rnd::one_in(23));
 }

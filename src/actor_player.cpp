@@ -395,7 +395,6 @@ bool Player::can_see_actor(const Actor& other) const
 
     // Monster is sneaking, and cannot be seen with infravision or magic seeing?
     if (mon->player_aware_of_me_counter_ <= 0 &&
-        mon->is_sneaking_ &&
         !can_see_other_with_infravis &&
         !can_see_invis)
     {
@@ -404,6 +403,42 @@ bool Player::can_see_actor(const Actor& other) const
 
     // OK, all checks passed, actor can bee seen!
     return true;
+}
+
+std::vector<Actor*> Player::seen_actors() const
+{
+    std::vector<Actor*> out;
+
+    for (Actor* actor : game_time::actors)
+    {
+        if (actor != this && actor->is_alive())
+        {
+            if (can_see_actor(*actor))
+            {
+                out.push_back(actor);
+            }
+        }
+    }
+
+    return out;
+}
+
+std::vector<Actor*> Player::seen_foes() const
+{
+    std::vector<Actor*> out;
+
+    for (Actor* actor : game_time::actors)
+    {
+        if (actor != this &&
+            actor->is_alive() &&
+            map::player->can_see_actor(*actor) &&
+            !is_leader_of(actor))
+        {
+            out.push_back(actor);
+        }
+    }
+
+    return out;
 }
 
 void Player::on_hit(int& dmg,
@@ -737,8 +772,7 @@ void Player::act()
 
     // NOTE: We cannot just check for "seen_foes()" here, since the result is
     //       also used for setting player awareness below
-    std::vector<Actor*> my_seen_actors;
-    seen_actors(my_seen_actors);
+    const auto my_seen_actors = seen_actors();
 
     for (Actor* const actor : my_seen_actors)
     {
@@ -816,9 +850,74 @@ void Player::on_actor_turn()
     // Set current temporary shock from darkness etc
     set_tmp_shock();
 
-    std::vector<Actor*> my_seen_foes;
+    //
+    // Check for monsters coming into view, and try to spot hidden monsters.
+    //
+    for (Actor* actor : game_time::actors)
+    {
+        if (actor->is_player() ||
+            map::player->is_leader_of(actor) ||
+            !actor->is_alive())
+        {
+            continue;
+        }
 
-    seen_foes(my_seen_foes);
+        Mon& mon = *static_cast<Mon*>(actor);
+
+        const bool is_mon_seen = can_see_actor(*actor);
+
+        if (is_mon_seen)
+        {
+            if (!mon.is_msg_mon_in_view_printed_)
+            {
+                if (active_medical_bag ||
+                    wait_turns_left > 0 ||
+                    nr_quick_move_steps_left_ > 0)
+                {
+                    msg_log::add(actor->name_a() + " comes into my view.",
+                                 clr_white,
+                                 true);
+                }
+
+                mon.is_msg_mon_in_view_printed_ = true;
+            }
+        }
+        else // Monster is not seen
+        {
+            mon.is_msg_mon_in_view_printed_ = false;
+
+            if (map::cells[mon.pos.x][mon.pos.y].is_seen_by_player)
+            {
+                // Monster is sneaking? Try to spot it
+                //
+                // NOTE: Infravision is irrelevant here, since the monster would
+                //       have been completely seen already.
+                //
+                if (mon.is_sneaking())
+                {
+                    const bool did_spot = roll_spot_sneaking_actor(mon);
+
+                    if (did_spot)
+                    {
+                        mon.set_player_aware_of_me();
+
+                        const std::string mon_name = mon.name_a();
+
+                        msg_log::add("I spot " + mon_name + "!",
+                                     clr_msg_note,
+                                     true,
+                                     MorePromptOnMsg::yes);
+                    }
+                }
+                else // Not sneaking, just mark that player is aware
+                {
+                    mon.set_player_aware_of_me();
+                }
+            }
+        }
+    }
+
+    const auto my_seen_foes = seen_foes();
 
     for (Actor* actor : my_seen_foes)
     {
@@ -1096,67 +1195,6 @@ void Player::on_std_turn()
     if (active_explosive)
     {
         active_explosive->on_std_turn_player_hold_ignited();
-    }
-
-    //
-    // Check for monsters coming into view, and try to spot hidden monsters.
-    //
-    for (Actor* actor : game_time::actors)
-    {
-        if (!actor->is_player() &&
-            !map::player->is_leader_of(actor) &&
-            actor->is_alive())
-        {
-            Mon& mon = *static_cast<Mon*>(actor);
-            const bool is_mon_seen = can_see_actor(*actor);
-
-            if (is_mon_seen)
-            {
-                mon.is_sneaking_ = false;
-
-                if (!mon.is_msg_mon_in_view_printed_)
-                {
-                    if (active_medical_bag ||
-                        wait_turns_left > 0 ||
-                        nr_quick_move_steps_left_ > 0)
-                    {
-                        msg_log::add(actor->name_a() + " comes into my view.",
-                                     clr_white,
-                                     true);
-                    }
-
-                    mon.is_msg_mon_in_view_printed_ = true;
-                }
-            }
-            else // Monster is not seen
-            {
-                mon.is_msg_mon_in_view_printed_ = false;
-
-                // Is the monster sneaking? Try to spot it
-                // NOTE: Infravision is irrelevant here, since the monster would
-                //       have been completely seen already.
-                if (map::cells[mon.pos.x][mon.pos.y].is_seen_by_player &&
-                    mon.is_sneaking_)
-                {
-                    const bool did_spot_sneaking =
-                        is_spotting_sneaking_actor(mon);
-
-                    if (did_spot_sneaking)
-                    {
-                        mon.is_sneaking_ = false;
-
-                        mon.set_player_aware_of_me();
-
-                        const std::string mon_name = mon.name_a();
-
-                        msg_log::add("I spot " + mon_name + "!",
-                                     clr_msg_note,
-                                     true,
-                                     MorePromptOnMsg::yes);
-                    }
-                }
-            }
-        }
     }
 
     //
@@ -1596,8 +1634,7 @@ void Player::move(Dir dir)
                 if (did_action == DidAction::no)
                 {
                     // Reorganize pistol magazines?
-                    std::vector<Actor*> my_seen_foes;
-                    seen_foes(my_seen_foes);
+                    const auto my_seen_foes = seen_foes();
 
                     if (my_seen_foes.empty())
                     {

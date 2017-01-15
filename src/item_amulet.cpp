@@ -326,15 +326,12 @@ void AmuletEffectSummonMon::on_std_turn_equipped()
 
         const P origin = map::player->pos;
 
-        std::vector<Mon*> summoned_mon;
+        const auto summoned =
+            actor_factory::summon(origin,
+                                  {1, ActorId::greater_polyp},
+                                  MakeMonAware::no);
 
-        actor_factory::summon(origin,
-                              std::vector<ActorId>(1, ActorId::greater_polyp),
-                              MakeMonAware::no,
-                              nullptr,
-                              &summoned_mon);
-
-        const Mon* const mon = summoned_mon[0];
+        const Mon* const mon = summoned[0];
 
         if (map::player->can_see_actor(*mon))
         {
@@ -366,8 +363,10 @@ void AmuletEffectFire::on_std_turn_equipped()
 
         const int fire_cell_one_in_n = 4;
 
-        msg_log::add("The surrounding area suddenly burst into flames!", clr_white,
-                     false, MorePromptOnMsg::yes);
+        msg_log::add("The surrounding area suddenly burst into flames!",
+                     clr_white,
+                     false,
+                     MorePromptOnMsg::yes);
 
         for (int x = X0; x <= X1; ++x)
         {
@@ -375,7 +374,8 @@ void AmuletEffectFire::on_std_turn_equipped()
             {
                 if (rnd::one_in(fire_cell_one_in_n) && P(x, y) != origin)
                 {
-                    map::cells[x][y].rigid->hit(DmgType::fire, DmgMethod::elemental);
+                    map::cells[x][y].rigid->hit(DmgType::fire,
+                                                DmgMethod::elemental);
                 }
             }
         }
@@ -393,8 +393,7 @@ void AmuletEffectConflict::on_std_turn_equipped()
 
     if (rnd::one_in(conflict_one_in_n))
     {
-        std::vector<Actor*> seen_foes;
-        map::player->seen_foes(seen_foes);
+        auto seen_foes = map::player->seen_foes();
 
         if (!seen_foes.empty())
         {

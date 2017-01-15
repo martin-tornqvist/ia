@@ -150,7 +150,7 @@ void EventWallCrumble::on_new_turn()
             {
                 Actor*  const actor = actor_factory::mk(mon_type, p);
                 Mon*    const mon   = static_cast<Mon*>(actor);
-                mon->aware_counter_ = mon->data().nr_turns_aware;
+                mon->aware_of_player_counter_ = mon->data().nr_turns_aware;
                 ++nr_mon_spawned;
             }
         }

@@ -262,8 +262,7 @@ std::string StrangeDevice::name_inf() const
 // -----------------------------------------------------------------------------
 ConsumeItem DeviceBlaster::trigger_effect()
 {
-    std::vector<Actor*> tgt_bucket;
-    map::player->seen_foes(tgt_bucket);
+    const auto tgt_bucket = map::player->seen_foes();
 
     if (tgt_bucket.empty())
     {
@@ -364,8 +363,8 @@ ConsumeItem DeviceRejuvenator::trigger_effect()
 ConsumeItem DeviceTranslocator::trigger_effect()
 {
     Player* const player = map::player;
-    std::vector<Actor*> seen_foes;
-    player->seen_foes(seen_foes);
+
+    const auto seen_foes = player->seen_foes();
 
     if (seen_foes.empty())
     {
@@ -390,10 +389,12 @@ ConsumeItem DeviceTranslocator::trigger_effect()
 ConsumeItem DeviceSentryDrone::trigger_effect()
 {
     msg_log::add("The Sentry Drone awakens!");
+
     actor_factory::summon(map::player->pos,
                           {ActorId::sentry_drone},
                           MakeMonAware::yes,
                           map::player);
+
     return ConsumeItem::yes;
 }
 

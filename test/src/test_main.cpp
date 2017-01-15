@@ -768,7 +768,7 @@ TEST_FIXTURE(BasicFixture, monster_stuck_in_spider_web)
         map::put(new Trap(pos_r, mimic, TrapId::web));
 
         // Move the monster into the trap, and back again
-        mon->aware_counter_ = 20000; // > 0 req. for triggering trap
+        mon->aware_of_player_counter_ = 20000; // > 0 req. for triggering trap
         mon->pos = pos_l;
         mon->move(Dir::right);
 

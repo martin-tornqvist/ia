@@ -34,7 +34,7 @@ Actor::Actor() :
 
 Actor::~Actor()
 {
-    //Free all items owning actors
+    // Free all items owning actors
     for (Item* item : inv_->backpack_)
     {
         item->clear_actor_carrying();
@@ -62,7 +62,7 @@ int Actor::ability(const AbilityId id, const bool is_affected_by_props) const
     return data_->ability_vals.val(id, is_affected_by_props, *this);
 }
 
-bool Actor::is_spotting_sneaking_actor(Actor& other)
+bool Actor::roll_spot_sneaking_actor(Actor& other)
 {
     const P& other_pos = other.pos;
 
@@ -168,114 +168,24 @@ int Actor::speed_pct() const
     return ret;
 }
 
-void Actor::seen_actors(std::vector<Actor*>& out)
-{
-    out.clear();
-
-    bool blocked_los[map_w][map_h];
-
-    if (!is_player())
-    {
-        R los_rect(std::max(0, pos.x - fov_std_radi_int),
-                   std::max(0, pos.y - fov_std_radi_int),
-                   std::min(map_w - 1, pos.x + fov_std_radi_int),
-                   std::min(map_h - 1, pos.y + fov_std_radi_int));
-
-        map_parsers::BlocksLos()
-            .run(blocked_los,
-                 MapParseMode::overwrite,
-                 los_rect);
-    }
-
-    for (Actor* actor : game_time::actors)
-    {
-        if (actor != this && actor->is_alive())
-        {
-            if (is_player())
-            {
-                if (map::player->can_see_actor(*actor))
-                {
-                    out.push_back(actor);
-                }
-            }
-            else //Not player
-            {
-                const Mon* const mon = static_cast<const Mon*>(this);
-
-                if (mon->can_see_actor(*actor, blocked_los))
-                {
-                    out.push_back(actor);
-                }
-            }
-        }
-    }
-}
-
-void Actor::seen_foes(std::vector<Actor*>& out)
-{
-    out.clear();
-
-    bool blocked_los[map_w][map_h];
-
-    if (!is_player())
-    {
-        R los_rect(std::max(0, pos.x - fov_std_radi_int),
-                   std::max(0, pos.y - fov_std_radi_int),
-                   std::min(map_w - 1, pos.x + fov_std_radi_int),
-                   std::min(map_h - 1, pos.y + fov_std_radi_int));
-
-        map_parsers::BlocksLos()
-            .run(blocked_los,
-                 MapParseMode::overwrite,
-                 los_rect);
-    }
-
-    for (Actor* actor : game_time::actors)
-    {
-        if (actor != this && actor->is_alive())
-        {
-            if (is_player())
-            {
-                if (map::player->can_see_actor(*actor) && !is_leader_of(actor))
-                {
-                    out.push_back(actor);
-                }
-            }
-            else //Not player
-            {
-                const bool is_hostile_to_player =
-                    !is_actor_my_leader(map::player);
-
-                const bool is_other_hostile_to_player =
-                    actor->is_player() ? false :
-                    !actor->is_actor_my_leader(map::player);
-
-                const bool is_enemy =
-                    is_hostile_to_player != is_other_hostile_to_player;
-
-                const Mon* const mon = static_cast<const Mon*>(this);
-
-                if (is_enemy && mon->can_see_actor(*actor, blocked_los))
-                {
-                    out.push_back(actor);
-                }
-            }
-        }
-    }
-}
-
 void Actor::place(const P& pos_, ActorDataT& actor_data)
 {
     pos = pos_;
+
     data_ = &actor_data;
+
     state_ = ActorState::alive;
+
     hp_ = hp_max_ = data_->hp;
+
     spi_ = spi_max_ = data_->spi;
+
     lair_pos_ = pos;
 
     inv_ = new Inventory(this);
 
     prop_handler_ = new PropHandler(this);
+
     prop_handler_->init_natural_props();
 
     if (data_->id != ActorId::player)
@@ -477,8 +387,8 @@ void Actor::teleport()
 
     map::update_vision();
 
-    std::vector<Actor*> player_seen_actors;
-    map::player->seen_actors(player_seen_actors);
+    const auto player_seen_actors =
+        map::player->seen_actors();
 
     for (Actor* const actor : player_seen_actors)
     {

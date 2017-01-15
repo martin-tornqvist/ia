@@ -776,15 +776,12 @@ void PlayerGhoulClaw::on_melee_kill(Actor& actor_killed)
         d.can_leave_corpse &&
         rnd::one_in(3))
     {
-        const int nr_worms = rnd::range(1, 2);
-
-        std::vector<ActorId> ids(nr_worms, ActorId::worm_mass);
+        const size_t nr_worms = rnd::range(1, 2);
 
         actor_factory::summon(actor_killed.pos,
-                              ids,
+                              {nr_worms, ActorId::worm_mass},
                               MakeMonAware::yes,
                               map::player,
-                              nullptr,
                               Verbosity::silent);
     }
 }
@@ -1011,9 +1008,7 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
         return ConsumeItem::no;
     }
 
-    std::vector<Actor*> seen_foes;
-
-    map::player->seen_foes(seen_foes);
+    const auto seen_foes = map::player->seen_foes();
 
     if (!seen_foes.empty())
     {

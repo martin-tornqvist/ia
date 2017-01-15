@@ -2517,10 +2517,10 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
         else //Not containing major treasure
         {
             std::vector<ActorId> mon_bucket =
-                {
-                    ActorId::ghost,
-                    ActorId::phantasm,
-                };
+            {
+                ActorId::ghost,
+                ActorId::phantasm,
+            };
 
             const size_t idx = rnd::range(0, mon_bucket.size() - 1);
 
@@ -2541,13 +2541,13 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
     case TombTrait::other_undead:
     {
         std::vector<ActorId> mon_bucket =
-            {
-                ActorId::mummy,
-                ActorId::croc_head_mummy,
-                ActorId::zombie,
-                ActorId::zombie_axe,
-                ActorId::floating_skull
-            };
+        {
+            ActorId::mummy,
+            ActorId::croc_head_mummy,
+            ActorId::zombie,
+            ActorId::zombie_axe,
+            ActorId::floating_skull
+        };
 
         const size_t idx = rnd::range(0, mon_bucket.size() - 1);
 
@@ -2709,27 +2709,25 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
 
         if (!mon_spawned)
         {
-            //All adjacent space is occupied, use the summon method as fallback
-            //(Although the monster could spawn pretty far from the tomb...)
+            // All adjacent space is occupied, use the summon method as fallback
+            // (Although the monster could spawn pretty far from the tomb...)
 
             TRACE << "Could not spawn adjacent monster, "
                   << "using summon method instead"
                   << std::endl;
 
-            std::vector<Mon*> spawned_list;
+            const auto summoned =
+                actor_factory::summon(pos_,
+                                      {1, id_to_spawn},
+                                      MakeMonAware::yes,
+                                      nullptr,
+                                      Verbosity::silent);
 
-            actor_factory::summon(pos_,
-                                  std::vector<ActorId>(1, id_to_spawn),
-                                  MakeMonAware::yes,
-                                  nullptr,
-                                  &spawned_list,
-                                  Verbosity::silent);
+            ASSERT(summoned.size() == 1);
 
-            ASSERT(spawned_list.size() == 1);
-
-            if (!spawned_list.empty())
+            if (!summoned.empty())
             {
-                mon_spawned = spawned_list[0];
+                mon_spawned = summoned[0];
             }
         }
 

@@ -270,8 +270,7 @@ void handle_player_input(const InputData& input)
     //
     case 's':
     {
-        std::vector<Actor*> seen_mon;
-        map::player->seen_foes(seen_mon);
+        const auto seen_mon = map::player->seen_foes();
 
         if (seen_mon.empty())
         {
@@ -547,8 +546,7 @@ void handle_player_input(const InputData& input)
     //
     case 'e':
     {
-        std::vector<Actor*> seen_mon;
-        map::player->seen_foes(seen_mon);
+        const auto seen_mon = map::player->seen_foes();
 
         if (!seen_mon.empty())
         {
@@ -1470,7 +1468,7 @@ void GameState::draw_map()
                     }
                     else // Player is not leader of monster
                     {
-                        if (mon->aware_counter_ <= 0)
+                        if (mon->aware_of_player_counter_ <= 0)
                         {
                             render_data->clr_bg = clr_blue;
                         }

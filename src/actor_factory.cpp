@@ -280,19 +280,15 @@ void delete_all_mon()
     }
 }
 
-void summon(const P& origin,
-            const std::vector<ActorId>& monster_ids,
-            const MakeMonAware make_aware,
-            Actor* const actor_to_set_as_leader,
-            std::vector<Mon*>* monsters_ret,
-            Verbosity verbosity)
+std::vector<Mon*> summon(const P& origin,
+                         const std::vector<ActorId>& monster_ids,
+                         const MakeMonAware make_aware,
+                         Actor* const actor_to_set_as_leader,
+                         Verbosity verbosity)
 {
     TRACE_FUNC_BEGIN;
 
-    if (monsters_ret)
-    {
-        monsters_ret->clear();
-    }
+    std::vector<Mon*> monsters_summoned;
 
     bool blocked[map_w][map_h];
 
@@ -300,12 +296,15 @@ void summon(const P& origin,
         .run(blocked);
 
     std::vector<P> free_cells;
+
     to_vec(blocked, false, free_cells);
 
     std::sort(begin(free_cells), end(free_cells), IsCloserToPos(origin));
 
     const size_t nr_free_cells = free_cells.size();
+
     const size_t nr_monster_ids = monster_ids.size();
+
     const int nr_to_spawn = std::min(nr_free_cells, nr_monster_ids);
 
     std::vector<P> positions_to_animate;
@@ -313,16 +312,23 @@ void summon(const P& origin,
     for (int i = 0; i < nr_to_spawn; ++i)
     {
         const P& pos = free_cells[i];
+
         const ActorId id = monster_ids[i];
+
         Actor* const actor = mk(id, pos);
+
         Mon* const mon = static_cast<Mon*>(actor);
 
         ASSERT(map::is_pos_inside_map(pos, false));
 
-        if (monsters_ret)
+        // Should the player be aware of the monster?
+        if (map::cells[mon->pos.x][mon->pos.y].is_seen_by_player &&
+            !mon->is_sneaking())
         {
-            monsters_ret->push_back(mon);
+            mon->set_player_aware_of_me();
         }
+
+        monsters_summoned.push_back(mon);
 
         if (actor_to_set_as_leader)
         {
@@ -331,9 +337,10 @@ void summon(const P& origin,
 
         if (make_aware == MakeMonAware::yes)
         {
-            mon->aware_counter_ = mon->data().nr_turns_aware;
+            mon->aware_of_player_counter_ = mon->data().nr_turns_aware;
         }
 
+        // Draw animation here if player can see the monster
         if ((verbosity == Verbosity::verbose) &&
             map::player->can_see_actor(*actor))
         {
@@ -348,6 +355,8 @@ void summon(const P& origin,
     }
 
     TRACE_FUNC_END;
+
+    return monsters_summoned;
 }
 
-} //actor_factory
+} // actor_factory

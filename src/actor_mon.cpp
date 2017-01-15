@@ -30,13 +30,12 @@
 
 Mon::Mon() :
     Actor                       (),
-    aware_counter_              (0),
+    aware_of_player_counter_    (0),
     player_aware_of_me_counter_ (0),
     is_msg_mon_in_view_printed_ (false),
     last_dir_moved_             (Dir::center),
     spell_cooldown_current_     (0),
     is_roaming_allowed_         (true),
-    is_sneaking_                (false),
     leader_                     (nullptr),
     tgt_                        (nullptr),
     waiting_                    (false) {}
@@ -51,9 +50,9 @@ Mon::~Mon()
 
 void Mon::on_actor_turn()
 {
-    if (aware_counter_ > 0)
+    if (aware_of_player_counter_ > 0)
     {
-        --aware_counter_;
+        --aware_of_player_counter_;
     }
 }
 
@@ -81,7 +80,7 @@ void Mon::act()
     }
 #endif // NDEBUG
 
-    if (aware_counter_ <= 0 &&
+    if (aware_of_player_counter_ <= 0 &&
         !is_actor_my_leader(map::player))
     {
         waiting_ = !waiting_;
@@ -129,10 +128,10 @@ void Mon::act()
     }
     else // Not conflicted
     {
-        seen_foes(tgt_bucket);
+        tgt_bucket = seen_foes();
 
         // If not aware, remove player from target bucket
-        if (aware_counter_ <= 0)
+        if (aware_of_player_counter_ <= 0)
         {
             for (auto it = begin(tgt_bucket); it != end(tgt_bucket); ++it)
             {
@@ -152,7 +151,7 @@ void Mon::act()
         --spell_cooldown_current_;
     }
 
-    if (aware_counter_ > 0)
+    if (aware_of_player_counter_ > 0)
     {
         is_roaming_allowed_ = true;
 
@@ -165,9 +164,9 @@ void Mon::act()
                 // Make leader aware
                 Mon* const leader_mon = static_cast<Mon*>(leader_);
 
-                leader_mon->aware_counter_ =
+                leader_mon->aware_of_player_counter_ =
                     std::max(leader_mon->data().nr_turns_aware,
-                             leader_mon->aware_counter_);
+                             leader_mon->aware_of_player_counter_);
             }
         }
         else // Monster does not have a living leader
@@ -178,11 +177,6 @@ void Mon::act()
             }
         }
     }
-
-    is_sneaking_ =
-        !is_actor_my_leader(map::player) &&
-        (ability(AbilityId::stealth, true) > 0) &&
-        !map::player->can_see_actor(*this);
 
     // Array used for AI purposes, e.g. to prevent tactically bad positions, or
     // prevent certain monsters from walking on a certain type of cells, etc.
@@ -380,7 +374,7 @@ bool Mon::can_see_actor(const Actor& other,
     // Monster allied to player looking at other monster which is hidden?
     if (is_actor_my_leader(map::player) &&
         !other.is_player() &&
-        static_cast<const Mon*>(&other)->is_sneaking_)
+        static_cast<const Mon*>(&other)->player_aware_of_me_counter_ <= 0)
     {
         return false;
     }
@@ -433,6 +427,88 @@ bool Mon::can_see_actor(const Actor& other,
     return true;
 }
 
+std::vector<Actor*> Mon::seen_actors() const
+{
+    std::vector<Actor*> out;
+
+    bool blocked_los[map_w][map_h];
+
+    R los_rect(std::max(0, pos.x - fov_std_radi_int),
+               std::max(0, pos.y - fov_std_radi_int),
+               std::min(map_w - 1, pos.x + fov_std_radi_int),
+               std::min(map_h - 1, pos.y + fov_std_radi_int));
+
+    map_parsers::BlocksLos()
+        .run(blocked_los,
+             MapParseMode::overwrite,
+             los_rect);
+
+    for (Actor* actor : game_time::actors)
+    {
+        if (actor != this && actor->is_alive())
+        {
+            const Mon* const mon = static_cast<const Mon*>(this);
+
+            if (mon->can_see_actor(*actor, blocked_los))
+            {
+                out.push_back(actor);
+            }
+        }
+    }
+
+    return out;
+}
+
+std::vector<Actor*> Mon::seen_foes() const
+{
+    std::vector<Actor*> out;
+
+    bool blocked_los[map_w][map_h];
+
+    R los_rect(std::max(0, pos.x - fov_std_radi_int),
+               std::max(0, pos.y - fov_std_radi_int),
+               std::min(map_w - 1, pos.x + fov_std_radi_int),
+               std::min(map_h - 1, pos.y + fov_std_radi_int));
+
+    map_parsers::BlocksLos()
+        .run(blocked_los,
+             MapParseMode::overwrite,
+             los_rect);
+
+    for (Actor* actor : game_time::actors)
+    {
+        if (actor != this && actor->is_alive())
+        {
+            const bool is_hostile_to_player =
+                !is_actor_my_leader(map::player);
+
+            const bool is_other_hostile_to_player =
+                actor->is_player() ? false :
+                !actor->is_actor_my_leader(map::player);
+
+            const bool is_enemy =
+                is_hostile_to_player != is_other_hostile_to_player;
+
+            const Mon* const mon = static_cast<const Mon*>(this);
+
+            if (is_enemy && mon->can_see_actor(*actor, blocked_los))
+            {
+                out.push_back(actor);
+            }
+        }
+    }
+
+    return out;
+}
+
+bool Mon::is_sneaking() const
+{
+    return
+        (player_aware_of_me_counter_ <= 0) &&
+        (ability(AbilityId::stealth, true) > 0) &&
+        !is_actor_my_leader(map::player);
+}
+
 void Mon::on_std_turn()
 {
     on_std_turn_hook();
@@ -448,8 +524,9 @@ void Mon::on_hit(int& dmg,
     (void)method;
     (void)allow_wound;
 
-    aware_counter_ = std::max(data_->nr_turns_aware,
-                              aware_counter_);
+    aware_of_player_counter_ =
+        std::max(data_->nr_turns_aware,
+                 aware_of_player_counter_);
 }
 
 void Mon::move(Dir dir)
@@ -567,13 +644,15 @@ void Mon::speak_phrase(const AlertsMon alerts_others)
 {
     const bool is_seen_by_player = map::player->can_see_actor(*this);
 
-    const std::string msg = is_seen_by_player ?
-                            aggro_phrase_mon_seen() :
-                            aggro_phrase_mon_hidden();
+    const std::string msg =
+        is_seen_by_player ?
+        aggro_phrase_mon_seen() :
+        aggro_phrase_mon_hidden();
 
-    const SfxId sfx = is_seen_by_player ?
-                       aggro_sfx_mon_seen() :
-                       aggro_sfx_mon_hidden();
+    const SfxId sfx =
+        is_seen_by_player ?
+        aggro_sfx_mon_seen() :
+        aggro_sfx_mon_hidden();
 
     Snd snd(msg,
             sfx,
@@ -596,10 +675,11 @@ void Mon::become_aware_player(const bool is_from_seeing,
 
     const int nr_turns_aware = data_->nr_turns_aware * factor;
 
-    const int awareness_count_before = aware_counter_;
+    const int awareness_count_before = aware_of_player_counter_;
 
-    aware_counter_= std::max(nr_turns_aware,
-                             awareness_count_before);
+    aware_of_player_counter_=
+        std::max(nr_turns_aware,
+                 awareness_count_before);
 
     if (awareness_count_before <= 0)
     {
@@ -618,8 +698,6 @@ void Mon::become_aware_player(const bool is_from_seeing,
 
 void Mon::set_player_aware_of_me(int duration_factor)
 {
-    is_sneaking_ = false;
-
     int nr_turns = 2 * duration_factor;
 
     if (player_bon::bg() == Bg::rogue)
@@ -634,7 +712,7 @@ void Mon::set_player_aware_of_me(int duration_factor)
 bool Mon::try_attack(Actor& defender)
 {
     if (state_ != ActorState::alive ||
-        ((aware_counter_ <= 0) && (leader_ != map::player)))
+        ((aware_of_player_counter_ <= 0) && (leader_ != map::player)))
     {
         return false;
     }
@@ -1123,10 +1201,11 @@ void Zuul::place_hook()
     if (actor_data::data[(size_t)ActorId::zuul].nr_left_allowed_to_spawn > 0)
     {
         // NOTE: Do not call die() here - that would have side effects. Instead,
-        //      simply set the dead state to destroyed.
+        //       simply set the dead state to destroyed.
         state_ = ActorState::destroyed;
 
         Actor* actor = actor_factory::mk(ActorId::cultist_priest, pos);
+
         auto& priest_prop_handler = actor->prop_handler();
 
         auto* poss_by_zuul_prop = new PropPossByZuul(PropTurns::indefinite);
@@ -1157,7 +1236,7 @@ DidAction Vortex::on_act()
         --pull_cooldown;
     }
 
-    if (aware_counter_ <= 0 || pull_cooldown > 0)
+    if (aware_of_player_counter_ <= 0 || pull_cooldown > 0)
     {
         return DidAction::no;
     }
@@ -1260,7 +1339,7 @@ void FireVortex::mk_start_items()
 DidAction Ghost::on_act()
 {
     if (is_alive() &&
-        (aware_counter_ > 0) &&
+        (aware_of_player_counter_ > 0) &&
         is_pos_adj(pos, map::player->pos, false) &&
         rnd::one_in(4))
     {
@@ -1472,71 +1551,47 @@ void MummyUnique::mk_start_items()
 
 DidAction Khephren::on_act()
 {
-    if (is_alive() &&
-        (aware_counter_ > 0) &&
-        !has_summoned_locusts)
+    // Summon locusts
+    if (!is_alive() ||
+        (aware_of_player_counter_ <= 0) ||
+        has_summoned_locusts)
     {
-        bool blocked[map_w][map_h];
-
-         const R fov_rect = fov::get_fov_rect(pos);
-
-         map_parsers::BlocksLos()
-             .run(blocked,
-                  MapParseMode::overwrite,
-                  fov_rect);
-
-        if (can_see_actor(*(map::player), blocked))
-        {
-            map_parsers::BlocksMoveCmn(ParseActors::yes)
-                .run(blocked);
-
-            const int spawn_after_x = map_w / 2;
-
-            for (int y = 0; y < map_h; ++y)
-            {
-                for (int x = 0; x <= spawn_after_x; ++x)
-                {
-                    blocked[x][y] = true;
-                }
-            }
-
-            std::vector<P> free_cells;
-
-            to_vec(blocked, false, free_cells);
-
-            sort(begin(free_cells), end(free_cells), IsCloserToPos(pos));
-
-            const size_t nr_of_spawns = 15;
-
-            if (free_cells.size() >= nr_of_spawns + 1)
-            {
-                msg_log::add("Khephren calls a plague of Locusts!");
-
-                map::player->incr_shock(ShockLvl::terrifying,
-                                        ShockSrc::misc);
-
-                for (size_t i = 0; i < nr_of_spawns; ++i)
-                {
-                    Actor* const actor =
-                        actor_factory::mk(ActorId::locust, free_cells[0]);
-
-                    Mon* const mon = static_cast<Mon*>(actor);
-                    mon->aware_counter_ = 999;
-                    mon->leader_ = leader_ ? leader_ : this;
-
-                    free_cells.erase(begin(free_cells));
-                }
-
-                has_summoned_locusts = true;
-
-                game_time::tick();
-
-                return DidAction::yes;
-            }
-        }
+        return DidAction::no;
     }
 
-    return DidAction::no;
+    const R fov_rect = fov::get_fov_rect(pos);
+
+    bool blocked[map_w][map_h];
+
+    map_parsers::BlocksLos()
+        .run(blocked,
+             MapParseMode::overwrite,
+             fov_rect);
+
+    if (!can_see_actor(*(map::player), blocked))
+    {
+        return DidAction::no;
+    }
+
+    msg_log::add("Khephren calls a plague of Locusts!");
+
+    map::player->incr_shock(ShockLvl::terrifying,
+                            ShockSrc::misc);
+
+    Actor* const actor_to_set_as_leader = leader_ ? leader_ : this;
+
+    const size_t nr_of_spawns = 15;
+
+    actor_factory::summon(pos,
+                          {nr_of_spawns, ActorId::locust},
+                          MakeMonAware::yes,
+                          actor_to_set_as_leader);
+
+    has_summoned_locusts = true;
+
+    game_time::tick();
+
+    return DidAction::yes;
 }
 
 void DeepOne::mk_start_items()
@@ -1611,65 +1666,40 @@ void HuntingHorror::mk_start_items()
 
 DidAction KeziahMason::on_act()
 {
-    if (is_alive() &&
-        (aware_counter_ > 0) &&
-        !has_summoned_jenkin)
+    // Summon Brown Jenkin
+    if (!is_alive() ||
+        (aware_of_player_counter_ <= 0) ||
+        has_summoned_jenkin)
     {
-        bool blocked_los[map_w][map_h];
-
-         const R fov_rect = fov::get_fov_rect(pos);
-
-         map_parsers::BlocksLos()
-             .run(blocked_los,
-                  MapParseMode::overwrite,
-                  fov_rect);
-
-        if (can_see_actor(*(map::player), blocked_los))
-        {
-            map_parsers::BlocksMoveCmn(ParseActors::yes)
-                .run(blocked_los);
-
-            std::vector<P> line;
-            line_calc::calc_new_line(pos,
-                                     map::player->pos,
-                                     true,
-                                     9999,
-                                     false,
-                                     line);
-
-            const int line_size = line.size();
-
-            for (int i = 0; i < line_size; ++i)
-            {
-                const P c = line[i];
-
-                if (!blocked_los[c.x][c.y])
-                {
-                    // TODO: Use the generalized summoning functionality
-                    set_player_aware_of_me();
-
-                    msg_log::add("Keziah summons Brown Jenkin!");
-
-                    Actor* const actor =
-                        actor_factory::mk(ActorId::brown_jenkin, c);
-
-                    Mon* mon = static_cast<Mon*>(actor);
-
-                    has_summoned_jenkin = true;
-                    mon->aware_counter_ = 999;
-
-                    mon->leader_ =
-                        leader_ ?
-                        leader_ : this;
-
-                    game_time::tick();
-                    return DidAction::yes;
-                }
-            }
-        }
+        return DidAction::no;
     }
 
-    return DidAction::no;
+    bool blocked_los[map_w][map_h];
+
+    const R fov_rect = fov::get_fov_rect(pos);
+
+    map_parsers::BlocksLos()
+        .run(blocked_los,
+             MapParseMode::overwrite,
+             fov_rect);
+
+    if (!can_see_actor(*(map::player), blocked_los))
+    {
+        return DidAction::no;
+    }
+
+    msg_log::add("Keziah summons Brown Jenkin!");
+
+    actor_factory::summon(pos,
+                          {ActorId::brown_jenkin},
+                          MakeMonAware::yes,
+                          this);
+
+    has_summoned_jenkin = true;
+
+    game_time::tick();
+
+    return DidAction::yes;
 }
 
 void KeziahMason::mk_start_items()
@@ -1694,7 +1724,7 @@ void LengElder::on_std_turn_hook()
 {
     if (is_alive())
     {
-        aware_counter_ += 100;
+        aware_of_player_counter_ += 100;
 
         if (has_given_item_to_player_)
         {
@@ -1892,43 +1922,39 @@ void WormMass::on_death()
     // destroyed "too hard" (e.g. by a near explosion or a sledge hammer), and
     // if the worm is not burning.
 
-    if (allow_split_ &&
-        (hp_ > -10) &&
-        !prop_handler_->has_prop(PropId::burning) &&
-        !map::cells[pos.x][pos.y].rigid->is_bottomless() &&
-        game_time::actors.size() < max_nr_actors_on_map)
+    if (!allow_split_ ||
+        (hp_ <= -10) ||
+        prop_handler_->has_prop(PropId::burning) ||
+        map::cells[pos.x][pos.y].rigid->is_bottomless() ||
+        game_time::actors.size() >= max_nr_actors_on_map)
     {
-        std::vector<ActorId> worm_ids(2, id());
+        return;
+    }
 
-        std::vector<Mon*> summoned;
-
-        // NOTE: If dying worm has a leader, that actor is set as leader for the
-        //       spawned worms
+    // NOTE: If dying worm has a leader, that actor is set as leader for the
+    //       spawned worms
+    const auto summoned =
         actor_factory::summon(pos,
-                              worm_ids,
+                              {2, id()},
                               MakeMonAware::yes,
                               leader_,
-                              &summoned,
                               Verbosity::silent);
 
-        ASSERT(summoned.size() == 2);
+    // If no leader has been set yet, assign the first worm as leader of the
+    // second
+    if (!leader_ && summoned.size() >= 2)
+    {
+        summoned[1]->leader_ = summoned[0];
+    }
 
-        // If no leader has been set yet, assign the first worm as leader of the
-        // second
-        if (!leader_ && summoned.size() >= 2)
-        {
-            summoned[1]->leader_ = summoned[0];
-        }
+    for (Mon* const mon : summoned)
+    {
+        // Do not allow summoned worms to split again
+        static_cast<WormMass*>(mon)->allow_split_ = false;
 
-        for (Mon* const mon : summoned)
-        {
-            // Do not allow summoned worms to split again
-            static_cast<WormMass*>(mon)->allow_split_ = false;
-
-            // Do not allow summoned worms to attack immediately
-            mon->prop_handler().try_add(
-                new PropDisabledAttack(PropTurns::specific, 1));
-        }
+        // Do not allow summoned worms to attack immediately
+        mon->prop_handler().try_add(
+            new PropDisabledAttack(PropTurns::specific, 1));
     }
 }
 
@@ -1939,43 +1965,46 @@ void MindWorms::mk_start_items()
 
 DidAction GiantLocust::on_act()
 {
-    if (is_alive() &&
-        (aware_counter_ > 0) &&
-        !prop_handler_->has_prop(PropId::burning) &&
-        (game_time::actors.size() < max_nr_actors_on_map) &&
-        rnd::one_in(spawn_new_one_in_n))
+    if (!is_alive() ||
+        (aware_of_player_counter_ <= 0) ||
+        prop_handler_->has_prop(PropId::burning) ||
+        (game_time::actors.size() >= max_nr_actors_on_map) ||
+        !rnd::one_in(spawn_new_one_in_n))
     {
-        bool blocked[map_w][map_h];
-
-        map_parsers::BlocksActor(*this, ParseActors::yes)
-            .run(blocked,
-                 MapParseMode::overwrite,
-                 R(pos - 1, pos + 1));
-
-        for (const P& d : dir_utils::dir_list)
-        {
-            const P p_adj(pos + d);
-
-            if (!blocked[p_adj.x][p_adj.y])
-            {
-                Actor* const actor = actor_factory::mk(data_->id, p_adj);
-
-                GiantLocust* const locust = static_cast<GiantLocust*>(actor);
-
-                spawn_new_one_in_n += 4;
-
-                locust->spawn_new_one_in_n = spawn_new_one_in_n;
-                locust->aware_counter_ = aware_counter_;
-                locust->leader_ = leader_ ? leader_ : this;
-
-                game_time::tick();
-
-                return DidAction::yes;
-            }
-        }
+        return DidAction::no;
     }
 
-    return DidAction::no;
+    const MakeMonAware make_aware =
+        aware_of_player_counter_ > 0 ?
+        MakeMonAware::yes :
+        MakeMonAware::no;
+
+    Actor* const actor_to_set_as_leader = leader_ ? leader_ : this;
+
+    const auto summoned =
+        actor_factory::summon(pos,
+                              {id()},
+                              make_aware,
+                              actor_to_set_as_leader,
+                              Verbosity::silent);
+
+    if (summoned.empty())
+    {
+        return DidAction::no;
+    }
+
+    spawn_new_one_in_n += 4;
+
+    for (auto* const mon : summoned)
+    {
+        auto* const locust = static_cast<GiantLocust*>(mon);
+
+        locust->spawn_new_one_in_n = spawn_new_one_in_n;
+    }
+
+    game_time::tick();
+
+    return DidAction::yes;
 }
 
 void GiantLocust::mk_start_items()
@@ -1996,7 +2025,7 @@ void LordOfShadows::mk_start_items()
 DidAction LordOfSpiders::on_act()
 {
     if (is_alive() &&
-        (aware_counter_ > 0) &&
+        (aware_of_player_counter_ > 0) &&
         rnd::coin_toss())
     {
         const P player_pos = map::player->pos;
@@ -2103,7 +2132,7 @@ DidAction Zombie::try_resurrect()
                                         ShockSrc::see_mon);
             }
 
-            aware_counter_ += data_->nr_turns_aware * 2;
+            aware_of_player_counter_ += data_->nr_turns_aware * 2;
 
             game_time::tick();
 
@@ -2189,7 +2218,6 @@ void Zombie::on_death()
         actor_factory::summon(pos, {id_to_spawn},
                               MakeMonAware::yes,
                               nullptr,
-                              nullptr,
                               Verbosity::silent);
     }
 }
@@ -2229,7 +2257,7 @@ DidAction MajorClaphamLee::on_act()
     }
 
     if (is_alive() &&
-        (aware_counter_ > 0) &&
+        (aware_of_player_counter_ > 0) &&
         !has_summoned_tomb_legions)
     {
         bool blocked_los[map_w][map_h];
@@ -2317,7 +2345,7 @@ void FloatingSkull::mk_start_items()
 DidAction FloatingSkull::on_act()
 {
     if (is_alive() &&
-        (aware_counter_ > 0) &&
+        (aware_of_player_counter_ > 0) &&
         rnd::one_in(8))
     {
         bool blocked_los[map_w][map_h];
@@ -2362,34 +2390,29 @@ DidAction FloatingSkull::on_act()
 
 DidAction Mold::on_act()
 {
-    if (is_alive() &&
-        (game_time::actors.size() < max_nr_actors_on_map) &&
-        rnd::one_in(spawn_new_one_in_n))
+    if (!is_alive() ||
+        (game_time::actors.size() >= max_nr_actors_on_map) ||
+        !rnd::one_in(spawn_new_one_in_n))
     {
-        bool blocked[map_w][map_h];
-
-        map_parsers::BlocksActor(*this, ParseActors::yes)
-            .run(blocked,
-                 MapParseMode::overwrite,
-                 R(pos - 1, pos + 1));
-
-        for (const P& d : dir_utils::dir_list)
-        {
-            const P adj_pos(pos + d);
-
-            if (!blocked[adj_pos.x][adj_pos.y])
-            {
-                Actor* const actor = actor_factory::mk(data_->id, adj_pos);
-                Mold* const mold = static_cast<Mold*>(actor);
-                mold->aware_counter_ = aware_counter_;
-                mold->leader_ = leader_ ? leader_ : this;
-                game_time::tick();
-                return DidAction::yes;
-            }
-        }
+        return DidAction::no;
     }
 
-    return DidAction::no;
+    const MakeMonAware make_aware =
+        aware_of_player_counter_ > 0 ?
+        MakeMonAware::yes :
+        MakeMonAware::no;
+
+    Actor* const actor_to_set_as_leader = leader_ ? leader_ : this;
+
+    actor_factory::summon(pos,
+                          {id()},
+                          make_aware,
+                          actor_to_set_as_leader,
+                          Verbosity::silent);
+
+    game_time::tick();
+
+    return DidAction::yes;
 }
 
 void Mold::mk_start_items()
@@ -2435,11 +2458,9 @@ void TheHighPriest::on_death()
     map::put(new Stairs(stair_pos));
     map::put(new RubbleLow(stair_pos - P(1, 0)));
 
-    const int nr_snakes = rnd::range(4, 5);
+    const size_t nr_snakes = rnd::range(4, 5);
 
-    std::vector<ActorId> snake_ids(nr_snakes, ActorId::pit_viper);
-
-    actor_factory::summon(pos, snake_ids);
+    actor_factory::summon(pos, {nr_snakes, ActorId::pit_viper});
 }
 
 void TheHighPriest::on_std_turn_hook()
@@ -2469,7 +2490,8 @@ DidAction TheHighPriest::on_act()
         audio::play(SfxId::boss_voice1);
 
         has_greeted_player_ = true;
-        aware_counter_ += data_->nr_turns_aware;
+
+        aware_of_player_counter_ += data_->nr_turns_aware;
     }
 
     if (rnd::coin_toss())

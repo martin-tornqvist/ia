@@ -817,7 +817,7 @@ void init_data_list()
     d.spell_cooldown_turns = 2;
     d.spell_skill = 60;
     d.glyph = 'P';
-    d.color = clr_cyan;
+    d.color = clr_yellow;
     d.tile = TileId::witch_or_warlock;
     d.hp = 18;
     d.spi = 40;

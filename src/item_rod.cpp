@@ -179,16 +179,19 @@ void RodPurgeInvis::run_effect()
 
     for (Actor* const actor : game_time::actors)
     {
-        if (!actor->is_player())
+        if (actor->is_player())
+        {
+            continue;
+        }
+
+        const P& p(actor->pos);
+
+        const LosResult& los = fov[p.x][p.y];
+
+        if (!los.is_blocked_hard)
         {
             // Reveal invisible monsters
-            const P& p(actor->pos);
-
-            const LosResult& los = fov[p.x][p.y];
-
-            if (!los.is_blocked_hard &&
-                !los.is_blocked_by_drk &&
-                actor->has_prop(PropId::invis))
+            if (actor->has_prop(PropId::invis))
             {
                 actor->prop_handler().end_prop(PropId::invis);
 
@@ -201,21 +204,7 @@ void RodPurgeInvis::run_effect()
             // Reveal sneaking monsters
             Mon* const mon = static_cast<Mon*>(actor);
 
-            if (mon->is_sneaking_)
-            {
-                mon->is_sneaking_ = false;
-
-                if (map::player->can_see_actor(*actor))
-                {
-                    mon->is_sneaking_ = false;
-
-                    const std::string mon_name = mon->name_a();
-
-                    msg_log::add(mon_name + " is revealed!");
-
-                    is_effect_noticed = true;
-                }
-            }
+            mon->set_player_aware_of_me();
         }
     }
 
@@ -309,7 +298,7 @@ void RodCloudMinds::run_effect()
         if (!actor->is_player())
         {
             Mon* const mon = static_cast<Mon*>(actor);
-            mon->aware_counter_ = 0;
+            mon->aware_of_player_counter_ = 0;
         }
     }
 }

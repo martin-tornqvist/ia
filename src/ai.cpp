@@ -113,7 +113,7 @@ bool handle_closed_blocking_door(Mon& mon, std::vector<P> path)
                 // up so easily)
                 if (rnd::fraction(3, 4))
                 {
-                    mon.aware_counter_++;
+                    mon.aware_of_player_counter_++;
                 }
 
                 if (map::player->can_see_actor(mon))
@@ -358,7 +358,7 @@ bool make_room_for_friend(Mon& mon)
 bool move_to_random_adj_cell(Mon& mon)
 {
     if (!mon.is_alive() ||
-        (!mon.is_roaming_allowed_ && mon.aware_counter_ <= 0))
+        (!mon.is_roaming_allowed_ && mon.aware_of_player_counter_ <= 0))
     {
         return false;
     }
@@ -433,7 +433,7 @@ bool move_to_tgt_simple(Mon& mon)
         return false;
     }
 
-    if (mon.aware_counter_ > 0 ||
+    if (mon.aware_of_player_counter_ > 0 ||
         map::player->is_leader_of(&mon))
     {
         const P offset = mon.tgt_->pos - mon.pos;
@@ -523,41 +523,35 @@ bool look_become_player_aware(Mon& mon)
         return false;
     }
 
-    const bool was_aware_before = mon.aware_counter_ > 0;
+    const bool was_aware_before = mon.aware_of_player_counter_ > 0;
 
-    std::vector<Actor*> seen_foes;
-
-    mon.seen_foes(seen_foes);
+    auto seen_foes = mon.seen_foes();
 
     if (!seen_foes.empty() && was_aware_before)
     {
         mon.become_aware_player(false);
+
         return false;
     }
 
     for (Actor* actor : seen_foes)
     {
+        bool did_become_aware = false;
+
         if (actor->is_player())
         {
-            if (mon.is_spotting_sneaking_actor(*actor))
+            if (mon.roll_spot_sneaking_actor(*actor))
             {
                 mon.become_aware_player(true);
-
-                if (was_aware_before)
-                {
-                    return false;
-                }
-                else // Was not aware before
-                {
-                    game_time::tick();
-                    return true;
-                }
             }
         }
         else // Other actor is monster
         {
             mon.become_aware_player(false);
+        }
 
+        if (did_become_aware)
+        {
             if (was_aware_before)
             {
                 return false;
@@ -565,6 +559,7 @@ bool look_become_player_aware(Mon& mon)
             else // Was not aware before
             {
                 game_time::tick();
+
                 return true;
             }
         }
@@ -668,7 +663,7 @@ void find_path_to_leader(Mon& mon, std::vector<P>& path)
 
 void find_path_to_player(Mon& mon, std::vector<P>& path)
 {
-    if (!mon.is_alive() || mon.aware_counter_ <= 0)
+    if (!mon.is_alive() || mon.aware_of_player_counter_ <= 0)
     {
         path.clear();
         return;

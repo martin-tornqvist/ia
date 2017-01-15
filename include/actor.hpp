@@ -36,7 +36,7 @@ public:
         return *prop_handler_;
     }
 
-    //This is just a shortcut to the same function in the property handler
+    // This is just a shortcut to the same function in the property handler
     bool has_prop(const PropId id) const;
 
     ActorDataT& data()
@@ -61,11 +61,11 @@ public:
 
     int ability(const AbilityId id, const bool is_affected_by_props) const;
 
-    //NOTE: This function is not concerned with whether the parameter actor is
-    //within FOV, or if the actor is actually hidden or not. It merely tests the
-    //sneak skill of the actor, and various conditions such as light/dark. It
-    //has no side effects - it merely does a randomized check.
-    bool is_spotting_sneaking_actor(Actor& actor);
+    // NOTE: This function is not concerned with whether the parameter actor is
+    //       within FOV, or if the actor is actually hidden or not. It merely
+    //       tests the sneak skill of the actor, and various conditions such as
+    //       light/dark. It has no side effects.
+    bool roll_spot_sneaking_actor(Actor& actor);
 
     void place(const P& pos_, ActorDataT& data);
 
@@ -76,7 +76,8 @@ public:
                    const DmgMethod method = DmgMethod::END,
                    const AllowWound allow_wound = AllowWound::yes);
 
-    ActorDied hit_spi(const int dmg, const Verbosity verbosity = Verbosity::verbose);
+    ActorDied hit_spi(const int dmg,
+                      const Verbosity verbosity = Verbosity::verbose);
 
     bool restore_hp(const int hp_restored,
                     const bool is_allowed_above_max = false,
@@ -117,9 +118,9 @@ public:
 
     virtual Clr clr() const = 0;
 
-    void seen_actors(std::vector<Actor*>& out);
+    virtual std::vector<Actor*> seen_actors() const = 0;
 
-    void seen_foes(std::vector<Actor*>& out);
+    virtual std::vector<Actor*> seen_foes() const = 0;
 
     ActorId id() const
     {

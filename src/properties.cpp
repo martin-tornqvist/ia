@@ -2567,57 +2567,58 @@ bool PropStrangled::allow_eat(const Verbosity verbosity) const
 
 void PropFrenzied::affect_move_dir(const P& actor_pos, Dir& dir)
 {
-    if (owning_actor_->is_player())
+    if (!owning_actor_->is_player())
     {
-        std::vector<Actor*> seen_foes;
-        owning_actor_->seen_foes(seen_foes);
+        return;
+    }
 
-        if (seen_foes.empty())
+    const auto seen_foes = owning_actor_->seen_foes();
+
+    if (seen_foes.empty())
+    {
+        return;
+    }
+
+    std::vector<P> seen_foes_cells;
+
+    seen_foes_cells.clear();
+
+    for (auto* actor : seen_foes)
+    {
+        seen_foes_cells.push_back(actor->pos);
+    }
+
+    sort(begin(seen_foes_cells),
+         end(seen_foes_cells),
+         IsCloserToPos(actor_pos));
+
+    const P& closest_mon_pos = seen_foes_cells[0];
+
+    bool blocked[map_w][map_h];
+
+    map_parsers::BlocksActor(*owning_actor_, ParseActors::no)
+        .run(blocked);
+
+    std::vector<P> line;
+
+    line_calc::calc_new_line(actor_pos,
+                             closest_mon_pos,
+                             true,
+                             999,
+                             false,
+                             line);
+
+    if (line.size() > 1)
+    {
+        for (P& pos : line)
         {
-            return;
-        }
-
-        std::vector<P> seen_foes_cells;
-
-        seen_foes_cells.clear();
-
-        for (auto* actor : seen_foes)
-        {
-            seen_foes_cells.push_back(actor->pos);
-        }
-
-        sort(begin(seen_foes_cells),
-             end(seen_foes_cells),
-             IsCloserToPos(actor_pos));
-
-        const P& closest_mon_pos = seen_foes_cells[0];
-
-        bool blocked[map_w][map_h];
-
-        map_parsers::BlocksActor(*owning_actor_, ParseActors::no)
-            .run(blocked);
-
-        std::vector<P> line;
-
-        line_calc::calc_new_line(actor_pos,
-                                 closest_mon_pos,
-                                 true,
-                                 999,
-                                 false,
-                                 line);
-
-        if (line.size() > 1)
-        {
-            for (P& pos : line)
+            if (blocked[pos.x][pos.y])
             {
-                if (blocked[pos.x][pos.y])
-                {
-                    return;
-                }
+                return;
             }
-
-            dir = dir_utils::dir(line[1] - actor_pos);
         }
+
+        dir = dir_utils::dir(line[1] - actor_pos);
     }
 }
 
