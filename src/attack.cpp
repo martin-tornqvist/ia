@@ -30,7 +30,7 @@ AttData::AttData(Actor* const attacker,
     dodging_mod     (0),
     state_mod       (0),
     hit_chance_tot  (0),
-    att_result      (fail),
+    att_result      (ActionResult::fail),
     dmg             (0),
     is_intrinsic_att(att_item.data().type == ItemType::melee_wpn_intr ||
                      att_item.data().type == ItemType::ranged_wpn_intr) {}
@@ -231,7 +231,7 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
     }
     else // Attacker not weakened, or not an actor attacking (e.g. a trap)
     {
-        if (att_result == success_critical)
+        if (att_result == ActionResult::success_critical)
         {
             // Critical hit (max damage)
             dmg = std::max(1, dmg_dice.max());
@@ -372,7 +372,7 @@ RangedAttData::RangedAttData(Actor* const attacker,
 
         att_result = ability_roll::roll(hit_chance_tot, attacker);
 
-        if (att_result >= success)
+        if (att_result >= ActionResult::success)
         {
             TRACE_VERBOSE << "Attack roll succeeded" << std::endl;
 
@@ -518,7 +518,7 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
 
         att_result = ability_roll::roll(hit_chance_tot, attacker);
 
-        if (att_result >= success)
+        if (att_result >= ActionResult::success)
         {
             TRACE_VERBOSE << "Attack roll succeeded" << std::endl;
 
@@ -583,7 +583,7 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
         snd_msg = "I hear fighting.";
     }
 
-    if (att_data.att_result <= fail)
+    if (att_data.att_result <= ActionResult::fail)
     {
         SfxId sfx = wpn.data().melee.miss_sfx;
 
@@ -1045,11 +1045,14 @@ void projectile_fire(Actor* const attacker,
 
                 const auto& att_data = *proj->att_data;
 
+                const bool can_hit_height =
+                    att_data.defender_size >= ActorSize::humanoid ||
+                    is_actor_aimed_for;
+
                 if (att_data.defender &&
                     !proj->is_obstructed &&
-                    att_data.att_result >= success &&
-                    (att_data.defender_size >= ActorSize::humanoid ||
-                     is_actor_aimed_for))
+                    att_data.att_result >= ActionResult::success &&
+                    can_hit_height)
                 {
                     // Render actor hit
                     if (proj->is_seen_by_player)
@@ -1110,7 +1113,7 @@ void projectile_fire(Actor* const attacker,
                         {
                             const AttData* const current_data = proj->att_data;
 
-                            if (current_data->att_result >= success)
+                            if (current_data->att_result >= ActionResult::success)
                             {
                                 const bool is_spike_gun =
                                     wpn.data().id == ItemId::spike_gun;
@@ -1389,7 +1392,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
                                      wpn,
                                      intended_aim_lvl);
 
-                if (data.att_result >= success)
+                if (data.att_result >= ActionResult::success)
                 {
                     const auto& cell = map::cells[current_pos.x][current_pos.y];
 
@@ -1556,7 +1559,7 @@ void melee(Actor* const attacker,
 
     print_melee_msg_and_mk_snd(att_data, wpn);
 
-    const bool is_hit = att_data.att_result >= success;
+    const bool is_hit = att_data.att_result >= ActionResult::success;
 
     if (is_hit)
     {
@@ -1606,7 +1609,8 @@ void melee(Actor* const attacker,
 
     auto& player_inv = map::player->inv();
 
-    const bool is_crit_fail = att_data.att_result == fail_critical;
+    const bool is_crit_fail =
+        att_data.att_result == ActionResult::fail_critical;
 
     const bool player_cursed = map::player->has_prop(PropId::cursed);
 

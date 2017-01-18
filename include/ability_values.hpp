@@ -1,6 +1,8 @@
 #ifndef ABILITY_VALUES_HPP
 #define ABILITY_VALUES_HPP
 
+#include <cstddef>
+
 class Actor;
 
 enum class AbilityId
@@ -14,7 +16,17 @@ enum class AbilityId
     END
 };
 
-//Each actor has an instance of this class
+enum class ActionResult
+{
+    fail_critical,
+    fail_big,
+    fail,
+    success,
+    success_big,
+    success_critical
+};
+
+// Each actor has an instance of this class
 class AbilityVals
 {
 public:
@@ -25,7 +37,7 @@ public:
 
     AbilityVals& operator=(const AbilityVals& other)
     {
-        for (int i = 0; i < int(AbilityId::END); ++i)
+        for (size_t i = 0; i < (size_t)AbilityId::END; ++i)
         {
             ability_list[i] = other.ability_list[i];
         }
@@ -41,7 +53,7 @@ public:
 
     int raw_val(const AbilityId id)
     {
-        return ability_list[int(id)];
+        return ability_list[(size_t)id];
     }
 
     void set_val(const AbilityId id, const int val);
@@ -49,23 +61,15 @@ public:
     void change_val(const AbilityId id, const int change);
 
 private:
-    int ability_list[int(AbilityId::END)];
-};
-
-enum AbilityRollResult
-{
-    fail_critical,
-    fail,
-    success,
-    success_critical
+    int ability_list[(size_t)AbilityId::END];
 };
 
 namespace ability_roll
 {
 
-AbilityRollResult roll(const int tot_skill_value,
-                       const Actor* const actor_rolling);
+ActionResult roll(const int skill_value,
+                  const Actor* const actor_rolling);
 
-} //ability_roll
+} // ability_roll
 
-#endif
+#endif // ABILITY_VALUES_HPP

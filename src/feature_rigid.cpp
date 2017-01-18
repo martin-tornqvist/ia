@@ -2586,9 +2586,11 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
 
             snd_emit::run(snd);
 
-            Prop*       prop        = nullptr;
-            Clr         fume_clr    = clr_magenta;
-            const int   rnd         = rnd::percent();
+            Prop* prop = nullptr;
+
+            Clr fume_clr = clr_magenta;
+
+            const int rnd = rnd::range(1, 100);
 
             if (rnd < 20)
             {
@@ -2740,7 +2742,8 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
         }
     }
 
-    trait_          = TombTrait::END;
+    trait_ = TombTrait::END;
+
     is_trait_known_ = true;
 
     TRACE_FUNC_END;
@@ -2762,9 +2765,12 @@ Chest::Chest(const P& p) :
         matl_ = ChestMatl::iron;
     }
 
-    const bool  is_treasure_hunter  = player_bon::traits[(size_t)Trait::treasure_hunter];
-    const int   nr_items_min        = 0;
-    const int   nr_items_max        = is_treasure_hunter ? 3 : 2;
+    const bool is_treasure_hunter =
+        player_bon::traits[(size_t)Trait::treasure_hunter];
+
+    const int nr_items_min = 0;
+
+    const int nr_items_max = is_treasure_hunter ? 3 : 2;
 
     item_container_.init(FeatureId::chest,
                          rnd::range(nr_items_min, nr_items_max));
@@ -3414,7 +3420,7 @@ DidTriggerTrap Cocoon::trigger_trap(Actor* const actor)
 
     if (is_trapped_)
     {
-        const int rnd = rnd::percent();
+        const int rnd = rnd::range(1, 100);
 
         if (rnd < 15)
         {
@@ -3431,7 +3437,7 @@ DidTriggerTrap Cocoon::trigger_trap(Actor* const actor)
             TRACE << "Attempting to spawn spiders" << std::endl;
             std::vector<ActorId> spawn_bucket;
 
-            for (int i = 0; i < int(ActorId::END); ++i)
+            for (int i = 0; i < (int)ActorId::END; ++i)
             {
                 const ActorDataT& d = actor_data::data[i];
 

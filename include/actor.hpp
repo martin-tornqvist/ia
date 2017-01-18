@@ -61,20 +61,20 @@ public:
 
     int ability(const AbilityId id, const bool is_affected_by_props) const;
 
-    // NOTE: This function is not concerned with whether the parameter actor is
-    //       within FOV, or if the actor is actually hidden or not. It merely
-    //       tests the sneak skill of the actor, and various conditions such as
-    //       light/dark. It has no side effects.
-    bool roll_spot_sneaking_actor(Actor& actor);
+    // NOTE: This function is not concerned with whether actors are within FOV,
+    //       or if they are actually hidden or not. It merely performs a skill
+    //       check, taking various conditions such as light/dark into concern.
+    //       It has no side effects.
+    ActionResult roll_sneak(const Actor& actor) const;
 
     void place(const P& pos_, ActorDataT& data);
 
     virtual void place_hook() {}
 
     ActorDied hit(int dmg,
-                   const DmgType dmg_type,
-                   const DmgMethod method = DmgMethod::END,
-                   const AllowWound allow_wound = AllowWound::yes);
+                  const DmgType dmg_type,
+                  const DmgMethod method = DmgMethod::END,
+                  const AllowWound allow_wound = AllowWound::yes);
 
     ActorDied hit_spi(const int dmg,
                       const Verbosity verbosity = Verbosity::verbose);

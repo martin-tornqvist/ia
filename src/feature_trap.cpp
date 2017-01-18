@@ -315,10 +315,9 @@ void Trap::bump(Actor& actor_bumping)
             avoid_skill = std::max(10, avoid_skill / 2);
         }
 
-        const AbilityRollResult result =
-            ability_roll::roll(avoid_skill, &actor_bumping);
+        const auto result = ability_roll::roll(avoid_skill, &actor_bumping);
 
-        if (result >= success)
+        if (result >= ActionResult::success)
         {
             if (!is_hidden_ && actor_can_see)
             {
@@ -356,10 +355,10 @@ void Trap::bump(Actor& actor_bumping)
 
                 const int avoid_skill = 60 + dodge_skill;
 
-                const AbilityRollResult result =
+                const auto result =
                     ability_roll::roll(avoid_skill, &actor_bumping);
 
-                if (result >= success)
+                if (result >= ActionResult::success)
                 {
                     if (!is_hidden_ && is_actor_seen_by_player)
                     {

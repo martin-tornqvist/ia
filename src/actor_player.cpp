@@ -895,9 +895,9 @@ void Player::on_actor_turn()
                 //
                 if (mon.is_sneaking())
                 {
-                    const bool did_spot = roll_spot_sneaking_actor(mon);
+                    const auto sneak_result = mon.roll_sneak(*this);
 
-                    if (did_spot)
+                    if (sneak_result <= ActionResult::fail)
                     {
                         mon.set_player_aware_of_me();
 
@@ -1301,7 +1301,7 @@ void Player::on_std_turn()
                 {
                     const bool is_spotted =
                         ability_roll::roll(skill_tot, map::player) >=
-                        success;
+                        ActionResult::success;
 
                     if (is_spotted)
                     {
@@ -1351,7 +1351,9 @@ void Player::hear_sound(const Snd& snd,
     (void)is_origin_seen_by_player;
 
     const SfxId sfx = snd.sfx();
+
     const std::string& msg = snd.msg();
+
     const bool has_snd_msg = !msg.empty() && msg != " ";
 
     if (has_snd_msg)

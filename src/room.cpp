@@ -362,7 +362,7 @@ void StdRoom::on_post_connect(bool door_proposals[map_w][map_h])
 
         set_constr_in_range(0, pct_chance_dark, 100);
 
-        if (rnd::percent() < pct_chance_dark)
+        if (rnd::percent(pct_chance_dark))
         {
             mk_drk();
         }
@@ -639,7 +639,7 @@ void RitualRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 
     const int bloody_chamber_pct = 60;
 
-    if (rnd::percent() < bloody_chamber_pct)
+    if (rnd::percent(bloody_chamber_pct))
     {
         P origin(-1, -1);
         std::vector<P> origin_bucket;
@@ -679,7 +679,7 @@ void RitualRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
                 for (int dy = -1; dy <= 1; ++dy)
                 {
                     if ((dx == 0 && dy == 0) ||
-                        (rnd::percent() < bloody_chamber_pct / 2))
+                        (rnd::percent(bloody_chamber_pct / 2)))
                     {
                         const P pos = origin + P(dx, dy);
 

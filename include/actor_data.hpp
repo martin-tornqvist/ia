@@ -190,6 +190,12 @@ struct ActorDataT
     int nr_left_allowed_to_spawn;
     bool is_unique;
     bool is_auto_spawn_allowed;
+    std::string descr;
+    std::string wary_msg;
+    std::string aggro_msg_mon_seen;
+    std::string aggro_msg_mon_hidden;
+    SfxId aggro_sfx_mon_seen;
+    SfxId aggro_sfx_mon_hidden;
     std::string spell_cast_msg;
     ActorErraticFreq erratic_move_pct;
     ShockLvl mon_shock_lvl;
@@ -206,11 +212,6 @@ struct ActorDataT
     bool can_leave_corpse;
     bool prio_corpse_bash;
     std::vector<RoomType> native_rooms;
-    std::string descr;
-    std::string aggro_text_mon_seen;
-    std::string aggro_text_mon_hidden;
-    SfxId aggro_sfx_mon_seen;
-    SfxId aggro_sfx_mon_hidden;
 };
 
 namespace actor_data
@@ -223,6 +224,6 @@ void init();
 void save();
 void load();
 
-} //actor_data
+} // actor_data
 
-#endif
+#endif // ACTOR_DATA_HPP

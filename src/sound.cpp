@@ -51,6 +51,8 @@ void reset_nr_snd_msg_printed_current_turn()
 
 void run(Snd snd)
 {
+    ASSERT(snd.msg() != " ");
+
     bool blocked[map_w][map_h];
 
     for (int x = 0; x < map_w; ++x)
@@ -96,11 +98,15 @@ void run(Snd snd)
 
                 if (!snd.msg().empty())
                 {
-                    //Add a direction to the message (i.e. "(NW)", "(E)" , etc)
+                    // Add a direction to the message (i.e. "(NW)", "(E)" , etc)
                     if (player_pos != origin)
                     {
                         std::string dir_str = "";
-                        dir_utils::compass_dir_name(player_pos, origin, dir_str);
+
+                        dir_utils::compass_dir_name(player_pos,
+                                                    origin,
+                                                    dir_str);
+
                         snd.add_string("(" + dir_str + ")");
                     }
                 }
@@ -119,7 +125,7 @@ void run(Snd snd)
                                         is_origin_seen_by_player,
                                         dir_to_origin, pct_dist);
             }
-            else //Not player
+            else // Not player
             {
                 Mon* const mon = static_cast<Mon*>(actor);
                 mon->hear_sound(snd);
@@ -128,4 +134,4 @@ void run(Snd snd)
     }
 }
 
-}
+} // snd_emit

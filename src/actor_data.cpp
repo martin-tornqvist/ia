@@ -63,6 +63,11 @@ void ActorDataT::reset()
     nr_left_allowed_to_spawn = -1;
     is_unique = false;
     is_auto_spawn_allowed = true;
+    wary_msg = "";
+    aggro_msg_mon_seen = "";
+    aggro_msg_mon_hidden = "";
+    aggro_sfx_mon_seen = SfxId::END;
+    aggro_sfx_mon_hidden = SfxId::END;
     spell_cast_msg = "";
     erratic_move_pct = ActorErraticFreq::rare;
     mon_shock_lvl = ShockLvl::none;
@@ -80,10 +85,6 @@ void ActorDataT::reset()
     prio_corpse_bash = false;
     native_rooms.clear();
     descr = "";
-    aggro_text_mon_seen = "";
-    aggro_text_mon_hidden = "";
-    aggro_sfx_mon_seen = SfxId::END;
-    aggro_sfx_mon_hidden = SfxId::END;
 }
 
 namespace actor_data
@@ -150,8 +151,9 @@ void init_data_list()
         "This rotting thing appears to have been brought back to life "
         "through some abominable process. It has grown sharp claws to "
         "attack with.";
-    d.aggro_text_mon_seen = d.name_the + " growls at me.";
-    d.aggro_text_mon_hidden = "I hear a growling voice.";
+    d.wary_msg = d.name_the + " looks wary.";
+    d.aggro_msg_mon_seen = d.name_the + " growls.";
+    d.aggro_msg_mon_hidden = "I hear a growling voice.";
     d.aggro_sfx_mon_seen = SfxId::zombie_growl;
     d.aggro_sfx_mon_hidden = SfxId::zombie_growl;
     d.erratic_move_pct = ActorErraticFreq::rare;
@@ -201,8 +203,9 @@ void init_data_list()
     d.descr =
         "This rotting thing appears to have been brought back to life "
         "through some abominable process. It is wielding a rusty axe.";
-    d.aggro_text_mon_seen = d.name_the + " growls at me.";
-    d.aggro_text_mon_hidden = "I hear a growling voice.";
+    d.wary_msg = d.name_the + " looks wary.";
+    d.aggro_msg_mon_seen = d.name_the + " growls.";
+    d.aggro_msg_mon_hidden = "I hear a growling voice.";
     d.aggro_sfx_mon_seen = SfxId::zombie_growl;
     d.aggro_sfx_mon_hidden = SfxId::zombie_growl;
     d.erratic_move_pct = ActorErraticFreq::rare;
@@ -254,6 +257,7 @@ void init_data_list()
         "This lumbering giant corpse seems to be artificially bloated "
         "somehow. It is constantly oozing putrid liquid that it can spit "
         "to attack with.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::frightening;
     d.is_undead = true;
@@ -296,6 +300,7 @@ void init_data_list()
         "during the Great War. Shortly after his plane was shot down, his "
         "body was stolen. Now he roams these halls as a resurrected "
         "warrior in service of the cult, commanding a squad of undead.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_undead = true;
@@ -339,6 +344,7 @@ void init_data_list()
         "Alan Halsey was the dean of the Miskatonic University in New "
         "England. He must have gotten into the hands of the Cult, who "
         "turned him into the hellish zombie warrior I now see before me.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_undead = true;
@@ -383,6 +389,7 @@ void init_data_list()
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
     d.descr = "A writhing mass of crawling intestines.";
+    d.wary_msg = d.name_the + " starts groping and feeling around.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.can_be_summoned = false;
@@ -428,6 +435,7 @@ void init_data_list()
     d.descr =
         "A disembodied hand, crawling around frantically on its fingertips "
         "like a spider.";
+    d.wary_msg = d.name_the + " seems aggravated.";
     d.erratic_move_pct = ActorErraticFreq::very;
     d.mon_shock_lvl = ShockLvl::frightening;
     d.can_be_summoned = false;
@@ -473,6 +481,7 @@ void init_data_list()
     d.descr =
         "A particularly nasty disembodied hand, crawling around frantically on "
         "its fingertips like a spider. Beware of the Thing.";
+    d.wary_msg = d.name_the + " seems aggravated.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.can_be_summoned = false;
@@ -514,6 +523,7 @@ void init_data_list()
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 10;
     d.descr = "A severed head floating through the air.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.can_be_summoned = true;
@@ -563,6 +573,7 @@ void init_data_list()
         "half-lost language. They may occasionally have learned to cast a "
         "spell or two, although never with any great skill. "
         "Therefore they tend to rely on mundane firearms to handle threats.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.native_rooms.push_back(RoomType::plain);
@@ -614,6 +625,7 @@ void init_data_list()
         "crafting sadistic weapons and traps. Their favored weapon is their "
         "\"spike gun\", which can pin the target against solid objects for "
         "prolonged suffering.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "mutters incantations.";
     d.mon_shock_lvl = ShockLvl::unsettling;
     d.erratic_move_pct = ActorErraticFreq::rare;
@@ -661,9 +673,10 @@ void init_data_list()
         "voice\". She has an animal familiar; the rat Brown Jenkin, which "
         "she trusts to carry messages between her and the devil. She feeds "
         "this creature on her blood.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "croaks incantations.";
-    d.aggro_text_mon_seen = d.name_the + " chortles at me in a croaking voice.";
-    d.aggro_text_mon_hidden = "I hear a repulsive croaking voice.";
+    d.aggro_msg_mon_seen = d.name_the + " chortles in a croaking voice.";
+    d.aggro_msg_mon_hidden = "I hear a repulsive croaking voice.";
     d.nr_turns_aware = 999;
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::frightening;
@@ -716,9 +729,10 @@ void init_data_list()
         "it sucked like a vampire. Its voice was a kind of loathsome titter, "
         "and could speak all languages.\" "
         "H.P.Lovecraft -\"Dreams in the witch house\".";
+    d.wary_msg = d.name_the + " seems aggravated.";
     d.spell_cast_msg = "";
-    d.aggro_text_mon_seen = d.name_the + " titters at me in a loathsome voice.";
-    d.aggro_text_mon_hidden = "I hear a loathsome titter.";
+    d.aggro_msg_mon_seen = d.name_the + " titters in a loathsome voice.";
+    d.aggro_msg_mon_hidden = "I hear a loathsome titter.";
     d.nr_turns_aware = 999;
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::frightening;
@@ -753,6 +767,7 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
     d.descr = "[DESCRIPTION MISSING]";
+    d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "makes strange gestures in the air.";
     d.nr_turns_aware = 999;
     d.erratic_move_pct = ActorErraticFreq::never;
@@ -791,6 +806,7 @@ void init_data_list()
     d.descr =
         "A fanatic cultist of the Priest rank, madly gibbering in some "
         "half-lost language.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.native_rooms.push_back(RoomType::plain);
@@ -832,6 +848,7 @@ void init_data_list()
     d.descr =
         "A fanatic cultist of the Wizard rank, madly gibbering in some "
         "half-lost language.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.native_rooms.push_back(RoomType::plain);
@@ -873,6 +890,7 @@ void init_data_list()
     d.descr =
         "A fanatic cultist of the Grand Wizard rank, madly gibbering in some "
         "half-lost language.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "mutters incantations.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.native_rooms.push_back(RoomType::plain);
@@ -914,6 +932,7 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
     d.descr = "An enormous green spider.";
+    d.wary_msg = d.name_the + " seems aggravated.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.can_be_summoned = true;
     d.is_spider = true;
@@ -955,6 +974,7 @@ void init_data_list()
     d.nr_turns_aware = 5;
     d.actor_size = ActorSize::humanoid;
     d.descr = "An enormous white spider.";
+    d.wary_msg = d.name_the + " seems aggravated.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.can_be_summoned = true;
     d.is_spider = true;
@@ -996,6 +1016,7 @@ void init_data_list()
     d.nr_turns_aware = 5;
     d.actor_size = ActorSize::humanoid;
     d.descr = "An enormous red spider.";
+    d.wary_msg = d.name_the + " seems aggravated.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.can_be_summoned = true;
     d.is_spider = true;
@@ -1040,6 +1061,7 @@ void init_data_list()
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.descr = "A faint shadow of a huge spider, lurking in the periphery.";
+    d.wary_msg = d.name_the + " seems aggravated.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::spider);
@@ -1082,6 +1104,7 @@ void init_data_list()
         "Leng spiders are huge, purplish arachnids, with pustulent bloated "
         "bodies and long, bristly legs. Native to the Dreamlands, the "
         "spiders of Leng are intelligent, dangerous, and gigantic.";
+    d.wary_msg = d.name_the + " seems aggravated.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.is_spider = true;
     d.is_infra_visible = false;
@@ -1121,8 +1144,9 @@ void init_data_list()
     d.descr =
         "A fierce predator. It hisses menacingly, and venom drips from its "
         "fangs.";
-    d.aggro_text_mon_seen = d.name_the + " hisses at me.";
-    d.aggro_text_mon_hidden = "I hear hissing.";
+    d.wary_msg = d.name_the + " seems aggravated.";
+    d.aggro_msg_mon_seen = d.name_the + " hisses.";
+    d.aggro_msg_mon_hidden = "I hear hissing.";
     d.aggro_sfx_mon_seen = SfxId::hiss;
     d.aggro_sfx_mon_hidden = SfxId::hiss;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
@@ -1168,8 +1192,9 @@ void init_data_list()
     d.descr =
         "A fierce predator. It hisses menacingly, and venom drips from its "
         "fangs.";
-    d.aggro_text_mon_seen = d.name_the + " hisses at me.";
-    d.aggro_text_mon_hidden = "I hear hissing.";
+    d.wary_msg = d.name_the + " seems aggravated.";
+    d.aggro_msg_mon_seen = d.name_the + " hisses.";
+    d.aggro_msg_mon_hidden = "I hear hissing.";
     d.aggro_sfx_mon_seen = SfxId::hiss;
     d.aggro_sfx_mon_hidden = SfxId::hiss;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
@@ -1212,8 +1237,9 @@ void init_data_list()
     d.descr =
         "A fierce predator. It hisses menacingly, and venom drips from its "
         "fangs.";
-    d.aggro_text_mon_seen = d.name_the + " hisses at me.";
-    d.aggro_text_mon_hidden = "I hear hissing.";
+    d.wary_msg = d.name_the + " seems aggravated.";
+    d.aggro_msg_mon_seen = d.name_the + " hisses.";
+    d.aggro_msg_mon_hidden = "I hear hissing.";
     d.aggro_sfx_mon_seen = SfxId::hiss;
     d.aggro_sfx_mon_hidden = SfxId::hiss;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
@@ -1266,8 +1292,9 @@ void init_data_list()
     d.descr =
         "This extremely aggressive canine seems to be part corporeal and "
         "part fire. It breathes searing flames.";
-    d.aggro_text_mon_seen = d.name_the + " snarls at me.";
-    d.aggro_text_mon_hidden = "I hear a snarl.";
+    d.wary_msg = d.name_the + " seems aggravated.";
+    d.aggro_msg_mon_seen = d.name_the + " snarls.";
+    d.aggro_msg_mon_hidden = "I hear a snarl.";
     d.aggro_sfx_mon_seen = SfxId::dog_snarl;
     d.aggro_sfx_mon_hidden = SfxId::dog_snarl;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
@@ -1313,8 +1340,9 @@ void init_data_list()
         "Zuul the Gatekeeper of Gozer is a demigod and minion of Gozer. It "
         "was worshiped by the Sumerians and Hittites in 6000 BC, along "
         "with Gozer.";
-    d.aggro_text_mon_seen = d.name_the + " snarls at me.";
-    d.aggro_text_mon_hidden = "I hear a snarl.";
+    d.wary_msg = d.name_the + " looks wary.";
+    d.aggro_msg_mon_seen = d.name_the + " snarls.";
+    d.aggro_msg_mon_hidden = "I hear a snarl.";
     d.aggro_sfx_mon_seen = SfxId::dog_snarl;
     d.aggro_sfx_mon_hidden = SfxId::dog_snarl;
     d.erratic_move_pct = ActorErraticFreq::never;
@@ -1359,6 +1387,7 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
     d.descr = "A restless spirit.";
+    d.wary_msg = d.name_the + " looks disturbed.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::frightening;
     d.is_undead = true;
@@ -1403,6 +1432,7 @@ void init_data_list()
         "It exists between the land of the dead and the living. It "
         "resembles a grim reaper, including the cloak, scythe, and "
         "skeletal appearance.";
+    d.wary_msg = d.name_the + " looks disturbed.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_undead = true;
@@ -1447,6 +1477,7 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
     d.descr = "A powerful spirit.";
+    d.wary_msg = d.name_the + " looks disturbed.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_undead = true;
@@ -1492,6 +1523,7 @@ void init_data_list()
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
     d.descr = "An large aggressive rodent.";
+    d.wary_msg = d.name_the + " seems disturbed.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.is_rat = true;
     d.is_auto_spawn_allowed = false;
@@ -1536,6 +1568,7 @@ void init_data_list()
         "Rat-things are said to be created from dead cultists by foul "
         "witchcraft. Thus, they are found where the witch who created them "
         "had her lair.";
+    d.wary_msg = d.name_the + " seems disturbed.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::unsettling;
     d.is_rat = true;
@@ -1579,8 +1612,9 @@ void init_data_list()
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
     d.descr = "A large wolf with eyes full of cunning.";
-    d.aggro_text_mon_seen = d.name_the + " snarls at me.";
-    d.aggro_text_mon_hidden = "I hear a chilling howl.";
+    d.wary_msg = d.name_the + " looks wary.";
+    d.aggro_msg_mon_seen = d.name_the + " snarls.";
+    d.aggro_msg_mon_hidden = "I hear a chilling howl.";
     d.aggro_sfx_mon_seen = SfxId::dog_snarl;
     d.aggro_sfx_mon_hidden = SfxId::wolf_howl;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
@@ -1623,7 +1657,8 @@ void init_data_list()
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 3;
     d.descr = "A vicious black bird.";
-    d.aggro_text_mon_hidden = "I hear the flapping of wings.";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.aggro_msg_mon_hidden = "I hear the flapping of wings.";
     d.aggro_sfx_mon_seen = SfxId::flapping_wings;
     d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
     d.erratic_move_pct = ActorErraticFreq::very;
@@ -1671,7 +1706,8 @@ void init_data_list()
     d.descr =
         "An unknown species, perhaps stemming from some hidden bowels of "
         "the earth. It is about as tall as a full-grown human.";
-    d.aggro_text_mon_hidden = "I hear the flapping of great wings.";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.aggro_msg_mon_hidden = "I hear the flapping of great wings.";
     d.aggro_sfx_mon_seen = SfxId::flapping_wings;
     d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
     d.erratic_move_pct = ActorErraticFreq::very;
@@ -1726,7 +1762,8 @@ void init_data_list()
         "and possibly the necrotic flesh of human victims. At home in "
         "lonely voids of interstellar space, Byakhee are a created race, "
         "though their origin is buried in the distant past.";
-    d.aggro_text_mon_hidden = "I hear the flapping of great wings.";
+    d.wary_msg = d.name_the + " looks wary.";
+    d.aggro_msg_mon_hidden = "I hear the flapping of great wings.";
     d.aggro_sfx_mon_seen = SfxId::flapping_wings;
     d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
@@ -1765,6 +1802,7 @@ void init_data_list()
     d.can_bash_doors = true;
     d.nr_turns_aware = 5;
     d.descr = "A huge predatory insect.";
+    d.wary_msg = d.name_the + " seems disturbed.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::unsettling;
     d.is_infra_visible = false;
@@ -1807,6 +1845,7 @@ void init_data_list()
     d.can_bash_doors = false;
     d.nr_turns_aware = 12;
     d.descr = "A huge swarming insect. They breed rapidly.";
+    d.wary_msg = d.name_the + " seems disturbed.";
     d.erratic_move_pct = ActorErraticFreq::very;
     d.mon_shock_lvl = ShockLvl::none;
     d.is_infra_visible = false;
@@ -1868,9 +1907,10 @@ void init_data_list()
         "much more robust than the average human, they rely upon their "
         "superior science to subdue any primitives who stumble upon their "
         "mines and outposts.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "speaks incantations in a droning voice.";
-    d.aggro_text_mon_seen = d.name_the + " speaks at me in a droning voice.";
-    d.aggro_text_mon_hidden = "I hear a droning voice.";
+    d.aggro_msg_mon_seen = d.name_the + " speaks in a droning voice.";
+    d.aggro_msg_mon_hidden = "I hear a droning voice.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::frightening;
     d.is_infra_visible = false;
@@ -1912,9 +1952,10 @@ void init_data_list()
     d.can_open_doors = true;
     d.nr_turns_aware = 16;
     d.descr = data[(size_t)ActorId::mi_go].descr;
+    d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "speaks incantations in a droning voice.";
-    d.aggro_text_mon_seen = d.name_the + " speaks at me in a droning voice.";
-    d.aggro_text_mon_hidden = "I hear a droning voice.";
+    d.aggro_msg_mon_seen = d.name_the + " speaks in a droning voice.";
+    d.aggro_msg_mon_hidden = "I hear a droning voice.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::frightening;
     d.is_infra_visible = false;
@@ -1970,8 +2011,9 @@ void init_data_list()
         "include sight, but what senses they have can penetrate all material "
         "obstructions. They are invulnerable to normal means of damage, "
         "though they can be destroyed by certain forms of electrical energy.";
-    d.aggro_text_mon_seen = d.name_the + " makes shrill whistling sounds.";
-    d.aggro_text_mon_hidden = "I hear a shrill whistling.";
+    d.wary_msg = d.name_the + " looks wary.";
+    d.aggro_msg_mon_seen = d.name_the + " makes shrill whistling sounds.";
+    d.aggro_msg_mon_hidden = "I hear a shrill whistling.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_infra_visible = false;
@@ -2021,8 +2063,9 @@ void init_data_list()
     d.can_open_doors = false;
     d.nr_turns_aware = 5;
     d.descr = data[(size_t)ActorId::flying_polyp].descr;
-    d.aggro_text_mon_seen = d.name_the + " makes shrill whistling sounds.";
-    d.aggro_text_mon_hidden = "I hear a shrill whistling.";
+    d.wary_msg = d.name_the + " looks wary.";
+    d.aggro_msg_mon_seen = d.name_the + " makes shrill whistling sounds.";
+    d.aggro_msg_mon_hidden = "I hear a shrill whistling.";
     d.erratic_move_pct = ActorErraticFreq::very;
     d.mon_shock_lvl = ShockLvl::mind_shattering;
     d.is_infra_visible = false;
@@ -2073,8 +2116,9 @@ void init_data_list()
         "-H.P.Lovecraft \"Pickman's Model\". Ghouls are rubbery, loathsome "
         "humanoids with hooflike feet, canine features, and claws. They are "
         "often encrusted with grave mold collected as they feed.";
-    d.aggro_text_mon_seen = d.name_the + " growls at me.";
-    d.aggro_text_mon_hidden = "I hear a chilling howl.";
+    d.wary_msg = d.name_the + " looks wary.";
+    d.aggro_msg_mon_seen = d.name_the + " growls.";
+    d.aggro_msg_mon_hidden = "I hear a chilling howl.";
     d.aggro_sfx_mon_seen = SfxId::ghoul_growl;
     d.aggro_sfx_mon_hidden = SfxId::wolf_howl;
     d.erratic_move_pct = ActorErraticFreq::rare;
@@ -2127,6 +2171,7 @@ void init_data_list()
     d.can_leave_corpse = false;
     d.nr_turns_aware = 7;
     d.descr = "A living shadow.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.is_auto_descr_allowed = false;
     d.is_infra_visible = false;
     d.is_humanoid = true;
@@ -2171,6 +2216,7 @@ void init_data_list()
     d.descr =
         "A mysterious humanoid figure stalking for prey. It is invisible to "
         "normal eyes.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.is_auto_descr_allowed = true;
     d.is_infra_visible = false;
     d.is_humanoid = true;
@@ -2209,6 +2255,7 @@ void init_data_list()
     d.can_open_doors = true;
     d.nr_turns_aware = 7;
     d.descr = "A mummified human being, possibly dating back millennia.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::frightening;
@@ -2253,6 +2300,7 @@ void init_data_list()
     d.descr =
         "A grotesque mummified hybrid creature, with the body of a human and "
         "the head of a crocodile. It is wielding a spear.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "casts a spell.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::frightening;
@@ -2296,6 +2344,7 @@ void init_data_list()
     d.descr =
         "The mummified fourth dynasty Egyptian pharaoh Khephren. How he came "
         "to dwell here is beyond anyones guess.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::terrifying;
@@ -2342,6 +2391,7 @@ void init_data_list()
         "writings of the former, she took the throne by inviting her "
         "brothers murderers to a banquet. Then killed them by flooding the "
         "sealed room with the Nile.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::terrifying;
@@ -2397,6 +2447,7 @@ void init_data_list()
         "arrogant lives are coldly beautiful, unbelievably cruel, and "
         "effectively immortal. Deep ones may be worshipped by humans with "
         "whom they regularly interbreed.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::frightening;
     d.native_rooms.push_back(RoomType::flooded);
@@ -2441,8 +2492,9 @@ void init_data_list()
         "An extremely aggressive species of great ape. Their pale skin and "
         "excellent night vision indicates that they adapted to subterranean "
         "life a very long time ago.";
-    d.aggro_text_mon_hidden = "I hear a beast howling.";
-    d.aggro_text_mon_seen = d.name_the + " howls at me.";
+    d.wary_msg = d.name_the + " looks wary.";
+    d.aggro_msg_mon_hidden = "I hear a beast howling.";
+    d.aggro_msg_mon_seen = d.name_the + " howls.";
     d.aggro_sfx_mon_seen = SfxId::ape;
     d.aggro_sfx_mon_hidden = SfxId::ape;
     d.erratic_move_pct = ActorErraticFreq::rare;
@@ -2484,6 +2536,7 @@ void init_data_list()
     d.prevent_knockback = true;
     d.nr_turns_aware = 5;
     d.descr = "A slithering conglomeration of carnivorous worms.";
+    d.wary_msg = d.name_the + " seems disturbed.";
     d.can_be_summoned = true;
     d.is_auto_descr_allowed = true;
     d.erratic_move_pct = ActorErraticFreq::very;
@@ -2528,6 +2581,7 @@ void init_data_list()
     d.descr =
         "A slithering conglomeration of carnivorous worms. Their bite causes "
         "heavy disorientation.";
+    d.wary_msg = d.name_the + " seems disturbed.";
     d.can_be_summoned = true;
     d.is_auto_descr_allowed = true;
     d.erratic_move_pct = ActorErraticFreq::very;
@@ -2575,7 +2629,8 @@ void init_data_list()
     d.descr =
         "A spinning force of destruction. It seems to move with some "
         "manner of purpose.";
-    d.aggro_text_mon_hidden = "I hear a howling wind.";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.aggro_msg_mon_hidden = "I hear a howling wind.";
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
@@ -2622,7 +2677,8 @@ void init_data_list()
     d.descr =
         "A spinning force of fire and destruction. It seems to move with "
         "some manner of purpose.";
-    d.aggro_text_mon_hidden = "I hear a howling wind.";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.aggro_msg_mon_hidden = "I hear a howling wind.";
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
@@ -2670,8 +2726,9 @@ void init_data_list()
     d.can_open_doors = false;
     d.can_bash_doors = false;
     d.descr = "It's just a mass of gunk, but it seems sentient.";
-    d.aggro_text_mon_seen = d.name_the + " makes a gurgling noise.";
-    d.aggro_text_mon_hidden = "I hear a gurgling noise.";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.aggro_msg_mon_seen = d.name_the + " makes a gurgling noise.";
+    d.aggro_msg_mon_hidden = "I hear a gurgling noise.";
     d.aggro_sfx_mon_seen = SfxId::ooze_gurgle;
     d.aggro_sfx_mon_hidden = SfxId::ooze_gurgle;
     d.can_be_summoned = true;
@@ -2725,8 +2782,9 @@ void init_data_list()
     d.can_open_doors = false;
     d.can_bash_doors = false;
     d.descr = "It's a clear mass of gunk. They can be hard to spot.";
-    d.aggro_text_mon_seen = d.name_the + " makes a gurgling noise.";
-    d.aggro_text_mon_hidden = "I hear a gurgling noise.";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.aggro_msg_mon_seen = d.name_the + " makes a gurgling noise.";
+    d.aggro_msg_mon_hidden = "I hear a gurgling noise.";
     d.aggro_sfx_mon_seen = SfxId::ooze_gurgle;
     d.aggro_sfx_mon_hidden = SfxId::ooze_gurgle;
     d.can_be_summoned = true;
@@ -2781,8 +2839,9 @@ void init_data_list()
     d.descr =
         "It's just a mass of gunk, but it seems sentient. It stinks like "
         "rotting cadavers.";
-    d.aggro_text_mon_seen = d.name_the + " makes a gurgling noise.";
-    d.aggro_text_mon_hidden = "I hear a gurgling noise.";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.aggro_msg_mon_seen = d.name_the + " makes a gurgling noise.";
+    d.aggro_msg_mon_hidden = "I hear a gurgling noise.";
     d.aggro_sfx_mon_seen = SfxId::ooze_gurgle;
     d.aggro_sfx_mon_hidden = SfxId::ooze_gurgle;
     d.can_be_summoned = true;
@@ -2837,8 +2896,9 @@ void init_data_list()
     d.descr =
         "It's just a mass of gunk, but it seems sentient. It drips and "
         "sizzles with poison.";
-    d.aggro_text_mon_seen = d.name_the + " makes a gurgling noise.";
-    d.aggro_text_mon_hidden = "I hear a gurgling noise.";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.aggro_msg_mon_seen = d.name_the + " makes a gurgling noise.";
+    d.aggro_msg_mon_hidden = "I hear a gurgling noise.";
     d.aggro_sfx_mon_seen = SfxId::ooze_gurgle;
     d.aggro_sfx_mon_hidden = SfxId::ooze_gurgle;
     d.can_be_summoned = true;
@@ -2891,6 +2951,7 @@ void init_data_list()
         "environment around them. They are invulnerable to attacks from "
         "common materials like iron or steel, but can be destroyed by other "
         "forms of damage, such as fire or electricity.";
+    d.wary_msg = d.name_the + " seems disturbed.";
     d.is_auto_descr_allowed = true;
     d.can_be_summoned = true;
     d.can_bleed = false;
@@ -2939,8 +3000,9 @@ void init_data_list()
         "It resembles an immense squid, with reaching, groping tentacles, "
         "and a pulpy, elongated sack of a body. Chthonians are powerful "
         "burrowers, and live for more than a thousand years.";
-    d.aggro_text_mon_seen = "";
-    d.aggro_text_mon_hidden = "";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.aggro_msg_mon_seen = "";
+    d.aggro_msg_mon_hidden = "";
     d.aggro_sfx_mon_seen = SfxId::END;
     d.aggro_sfx_mon_hidden = SfxId::END;
     d.can_be_summoned = false;
@@ -2994,9 +3056,10 @@ void init_data_list()
         "beaming spotlights, ready to blast any interloper on sight. It "
         "appears to have some organic parts, and may even be a conscious "
         "living being.";
+    d.wary_msg = d.name_the + " seems disturbed.";
     d.spell_cast_msg = "makes buzzing sounds in peculiar frequencies.";
-    d.aggro_text_mon_seen = d.name_the + " makes a deep buzzing sound.";
-    d.aggro_text_mon_hidden = "I hear a deep buzzing sound.";
+    d.aggro_msg_mon_seen = d.name_the + " makes a deep buzzing sound.";
+    d.aggro_msg_mon_hidden = "I hear a deep buzzing sound.";
     d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::unsettling;
@@ -3032,8 +3095,8 @@ void init_data_list()
     d.can_bash_doors = true;
     d.can_open_doors = false;
     d.nr_turns_aware = 16;
-    d.aggro_text_mon_seen = "";
-    d.aggro_text_mon_hidden = "";
+    d.aggro_msg_mon_seen = "";
+    d.aggro_msg_mon_hidden = "";
     d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::unsettling;
@@ -3071,8 +3134,9 @@ void init_data_list()
     d.descr =
         "A sickly growth thriving in damp areas. It produces toxic spores "
         "which it stores in its slimy heads.";
-    d.aggro_text_mon_seen = "";
-    d.aggro_text_mon_hidden = "";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.aggro_msg_mon_seen = "";
+    d.aggro_msg_mon_hidden = "";
     d.aggro_sfx_mon_seen = SfxId::END;
     d.aggro_sfx_mon_hidden = SfxId::END;
     d.is_infra_visible = false;
@@ -3119,7 +3183,8 @@ void init_data_list()
         "A vaguely intelligent floating fungus-based organism. It contains a "
         "highly explosive gas and will detonate very easily, which it seems to "
         "desire.";
-    d.aggro_text_mon_hidden = "";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.aggro_msg_mon_hidden = "";
     d.can_be_summoned = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
@@ -3171,7 +3236,8 @@ void init_data_list()
         "irregular teeth gapes open hungrily as it flies in search of "
         "prey. Hunting horrors haunt the dark places of the universe, from "
         "which they are called up at the whim of their lord Nyarlathotep.";
-    d.aggro_text_mon_hidden = "I hear the flapping of great wings.";
+    d.wary_msg = d.name_the + " looks wary.";
+    d.aggro_msg_mon_hidden = "I hear the flapping of great wings.";
     d.aggro_sfx_mon_seen = SfxId::flapping_wings;
     d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
     d.can_bleed = true;
@@ -3224,6 +3290,7 @@ void init_data_list()
         "eerily similar to the imagery of Devils and Demons seen in medieval "
         "woodcuts. The attack of this entity can bypass any armor, and means "
         "almost certain death!";
+    d.wary_msg = d.name_the + " looks wary.";
     d.aggro_sfx_mon_seen = SfxId::END;
     d.aggro_sfx_mon_hidden = SfxId::END;
     d.can_be_summoned = false;
@@ -3276,6 +3343,7 @@ void init_data_list()
         "Tattered crimson robes flow from his skeletal frame, his bony "
         "fingers extends into razor sharp claws, and he has a grim expression "
         "on his face.";
+    d.wary_msg = d.name_the + " looks wary.";
     d.is_auto_descr_allowed = false;
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = ActorErraticFreq::never;
@@ -3287,7 +3355,7 @@ void init_data_list()
     d.reset();
 }
 
-} //namespace
+} // namespace
 
 void init()
 {

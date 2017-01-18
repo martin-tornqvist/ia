@@ -877,7 +877,7 @@ void Door::try_close(Actor* actor_trying)
 
         if (tryer_is_blind)
         {
-            if (rnd::percent() < 50)
+            if (rnd::coin_toss())
             {
                 is_open_ = false;
 
@@ -1089,7 +1089,7 @@ void Door::try_open(Actor* actor_trying)
         }
         else // Tryer is blind
         {
-            if (rnd::percent() < 50)
+            if (rnd::coin_toss())
             {
                 TRACE << "Tryer is blind, but open succeeded anyway"
                       << std::endl;

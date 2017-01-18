@@ -142,11 +142,13 @@ void add(const std::string& str,
         prev_msg)
     {
         std::string prev_str = "";
+
         prev_msg->str_raw(prev_str);
 
         if (prev_str.compare(str) == 0)
         {
             prev_msg->incr_repeat();
+
             is_repeated = true;
         }
     }

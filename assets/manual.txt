@@ -181,14 +181,20 @@ If your Insanity reaches 100%, you are hopelessly lost, and the game is over.
 --------------------------------------------------------------------------------
 8. Sneaking and backstabbing
 --------------------------------------------------------------------------------
-Monsters unaware of your presence have a blue background in their map icon. This is their default mode. While in this state they may roam the map, but they will not actively search for you or purposefully attack you.
+Monsters unaware of your presence have a blue background on their map icon. This is their default mode. While in this state they may roam the map, but they will not actively search for you or purposefully attack you. If you attack an unaware opponent in melee, the attack gets a big bonus to damage and hit chance.
 
-For each turn you spend in a monsters visual area, there is a certain chance it will notice you (except for some monsters which lack conventional sight). Monsters also react to noise, and may disturb nearby monsters when becoming aware, alerting them to your presence.
+For each turn you spend in a monsters visual area (for monsters with sight), there is a chance that it will either completely detect you, or become "suspicious". While suspicious, the monster has an increased chance of detecting you (watch out for messages about monsters looking "wary" or "disturbed").
+
+Some monsters have the ability to sneak as well. You automatically attempt to detect them while they are in your visual area.
+
+The chances of one creature detecting another are affected by:
+   * Search skill
+   * The hidden actors sneak skill
+   * Light and darkness
+   * Distance
+
+You can improve the search and sneak skills with traits (e.g. "Observant" and "Stealthy").
 
 When you stay out of an aware monsters vision for a certain number of turns (and nothing else alerts it), it will "forget" about you. The number of turns this takes depends on the monster; A simple animal may only care for a couple of turns after it loses sight, while a human will remain aware longer.
 
-If you attack an unaware opponent in melee, the attack gets a big bonus to damage and hit chance.
-
-Medium and heavy melee weapons will make noise on attacks, so a light weapon might be more ideal for a stealthy combat approach.
-
-(end)
+Monsters also react to noise, and may disturb nearby monsters when becoming aware, alerting them to your presence. Medium and heavy melee weapons will make noise on attacks, so a light weapon might be more ideal for a stealthy combat approach. Some sounds are louder than others, for example firing a gun or kicking down a door is likely to attract some attention.

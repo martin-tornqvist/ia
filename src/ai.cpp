@@ -516,7 +516,7 @@ bool step_to_lair_if_los(Mon& mon, const P& lair_p)
 namespace info
 {
 
-bool look_become_player_aware(Mon& mon)
+bool look(Mon& mon)
 {
     if (!mon.is_alive())
     {
@@ -527,7 +527,12 @@ bool look_become_player_aware(Mon& mon)
 
     auto seen_foes = mon.seen_foes();
 
-    if (!seen_foes.empty() && was_aware_before)
+    if (seen_foes.empty())
+    {
+        return false;
+    }
+
+    if (was_aware_before)
     {
         mon.become_aware_player(false);
 
@@ -536,13 +541,25 @@ bool look_become_player_aware(Mon& mon)
 
     for (Actor* actor : seen_foes)
     {
-        bool did_become_aware = false;
-
         if (actor->is_player())
         {
-            if (mon.roll_spot_sneaking_actor(*actor))
+            const auto sneak_result = actor->roll_sneak(mon);
+
+            // Become aware if we got a "big fail" or worse, OR if we got a
+            // normal fail and we are already wary
+            const bool become_aware =
+                (sneak_result <= ActionResult::fail_big) ||
+                ((sneak_result == ActionResult::fail) &&
+                 mon.wary_of_player_counter_);
+
+            if (become_aware)
             {
                 mon.become_aware_player(true);
+            }
+            // Not aware, just become wary if normal success
+            else if (sneak_result == ActionResult::fail)
+            {
+                mon.become_wary_player();
             }
         }
         else // Other actor is monster
@@ -550,18 +567,12 @@ bool look_become_player_aware(Mon& mon)
             mon.become_aware_player(false);
         }
 
-        if (did_become_aware)
+        // Did the monster become aware?
+        if (mon.aware_of_player_counter_ > 0)
         {
-            if (was_aware_before)
-            {
-                return false;
-            }
-            else // Was not aware before
-            {
-                game_time::tick();
+            game_time::tick();
 
-                return true;
-            }
+            return true;
         }
     }
 

@@ -40,7 +40,7 @@ bool step_to_lair_if_los(Mon& mon, const P& lair_p);
 namespace info
 {
 
-bool look_become_player_aware(Mon& mon);
+bool look(Mon& mon);
 
 void find_path_to_lair_if_no_los(Mon& mon,
                                  std::vector<P>& path,
@@ -56,4 +56,4 @@ void set_special_blocked_cells(Mon& mon, bool a[map_w][map_h]);
 
 } // ai
 
-#endif
+#endif // AI_HPP

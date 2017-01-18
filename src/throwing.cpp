@@ -181,7 +181,7 @@ void throw_item(Actor& actor_throwing,
                                     item_thrown,
                                     aim_lvl);
 
-            if (att_data.att_result >= success)
+            if (att_data.att_result >= ActionResult::success)
             {
                 const bool is_pot =
                     item_thrown_data.type == ItemType::potion;

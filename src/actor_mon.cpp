@@ -30,6 +30,7 @@
 
 Mon::Mon() :
     Actor                       (),
+    wary_of_player_counter_     (0),
     aware_of_player_counter_    (0),
     player_aware_of_me_counter_ (0),
     is_msg_mon_in_view_printed_ (false),
@@ -52,6 +53,7 @@ void Mon::on_actor_turn()
 {
     if (aware_of_player_counter_ > 0)
     {
+        --wary_of_player_counter_;
         --aware_of_player_counter_;
     }
 }
@@ -80,7 +82,8 @@ void Mon::act()
     }
 #endif // NDEBUG
 
-    if (aware_of_player_counter_ <= 0 &&
+    if (wary_of_player_counter_ <= 0 &&
+        aware_of_player_counter_ <= 0 &&
         !is_actor_my_leader(map::player))
     {
         waiting_ = !waiting_;
@@ -91,7 +94,7 @@ void Mon::act()
             return;
         }
     }
-    else // Is aware, or player is leader
+    else // Is wary/aware, or player is leader
     {
         waiting_ = false;
     }
@@ -151,15 +154,16 @@ void Mon::act()
         --spell_cooldown_current_;
     }
 
-    if (aware_of_player_counter_ > 0)
+    if (wary_of_player_counter_ > 0 ||
+        aware_of_player_counter_ > 0)
     {
         is_roaming_allowed_ = true;
 
         if (leader_ && leader_->is_alive())
         {
-            // Monster has a living leader
-
-            if (!is_actor_my_leader(map::player))
+            // If monster is aware of hostile player, make leader also aware
+            if (aware_of_player_counter_ > 0 &&
+                !is_actor_my_leader(map::player))
             {
                 // Make leader aware
                 Mon* const leader_mon = static_cast<Mon*>(leader_);
@@ -171,6 +175,7 @@ void Mon::act()
         }
         else // Monster does not have a living leader
         {
+            // Monster is wary or aware, occasionally make a sound
             if (is_alive() && rnd::one_in(12))
             {
                 speak_phrase(AlertsMon::no);
@@ -209,7 +214,7 @@ void Mon::act()
         leader_ != map::player &&
         (tgt_ == nullptr || tgt_ == map::player))
     {
-        if (ai::info::look_become_player_aware(*this))
+        if (ai::info::look(*this))
         {
             return;
         }
@@ -646,8 +651,8 @@ void Mon::speak_phrase(const AlertsMon alerts_others)
 
     const std::string msg =
         is_seen_by_player ?
-        aggro_phrase_mon_seen() :
-        aggro_phrase_mon_hidden();
+        aggro_msg_mon_seen() :
+        aggro_msg_mon_hidden();
 
     const SfxId sfx =
         is_seen_by_player ?
@@ -673,25 +678,80 @@ void Mon::become_aware_player(const bool is_from_seeing,
         return;
     }
 
-    const int nr_turns_aware = data_->nr_turns_aware * factor;
+    const int nr_turns = data_->nr_turns_aware * factor;
 
-    const int awareness_count_before = aware_of_player_counter_;
+    const int aware_counter_before = aware_of_player_counter_;
 
     aware_of_player_counter_=
-        std::max(nr_turns_aware,
-                 awareness_count_before);
+        std::max(nr_turns,
+                 aware_counter_before);
 
-    if (awareness_count_before <= 0)
+    wary_of_player_counter_ = aware_of_player_counter_;
+
+    if (aware_counter_before <= 0)
     {
         if (is_from_seeing &&
             map::player->can_see_actor(*this))
         {
-            msg_log::add(name_the() + " sees me!");
+            std::string msg = name_the() + " sees me!";
+
+            std::string dir_str = "";
+
+            dir_utils::compass_dir_name(map::player->pos,
+                                        pos,
+                                        dir_str);
+
+            msg += "(" + dir_str + ")";
+
+            msg_log::add(msg);
         }
 
         if (rnd::coin_toss())
         {
             speak_phrase(AlertsMon::yes);
+        }
+    }
+}
+
+void Mon::become_wary_player()
+{
+    if (!is_alive() || is_actor_my_leader(map::player))
+    {
+        return;
+    }
+
+    // Reusing the monster data aware duration to determine number of wary turns
+    const int nr_turns = data_->nr_turns_aware;
+
+    const int wary_counter_before = wary_of_player_counter_;
+
+    wary_of_player_counter_=
+        std::max(nr_turns,
+                 wary_counter_before);
+
+    if (wary_counter_before <= 0)
+    {
+        if (map::player->can_see_actor(*this))
+        {
+            std::string msg = data_->wary_msg;
+
+            if (!msg.empty())
+            {
+                std::string dir_str = "";
+
+                dir_utils::compass_dir_name(map::player->pos,
+                                            pos,
+                                            dir_str);
+
+                msg += "(" + dir_str + ")";
+
+                msg_log::add(msg);
+            }
+        }
+
+        if (rnd::one_in(4))
+        {
+            speak_phrase(AlertsMon::no);
         }
     }
 }
@@ -1443,7 +1503,7 @@ void Rat::mk_start_items()
 {
     Item* item = nullptr;
 
-    if (rnd::percent() < 15)
+    if (rnd::percent(15))
     {
         item = item_factory::mk(ItemId::rat_bite_diseased);
     }
@@ -2226,7 +2286,7 @@ void ZombieClaw::mk_start_items()
 {
     Item* item = nullptr;
 
-    if (rnd::percent() < 20)
+    if (rnd::percent(20))
     {
         item = item_factory::mk(ItemId::zombie_claw_diseased);
     }
@@ -2323,17 +2383,21 @@ DidAction MajorClaphamLee::on_act()
 
 void CrawlingIntestines::mk_start_items()
 {
-    inv_->put_in_intrinsics(item_factory::mk(ItemId::crawling_intestines_strangle));
+    inv_->put_in_intrinsics(
+        item_factory::mk(ItemId::crawling_intestines_strangle));
 }
 
 void CrawlingHand::mk_start_items()
 {
-    inv_->put_in_intrinsics(item_factory::mk(ItemId::crawling_hand_strangle));
+    inv_->put_in_intrinsics(
+        item_factory::mk(ItemId::crawling_hand_strangle));
 }
 
 void Thing::mk_start_items()
 {
-    inv_->put_in_intrinsics(item_factory::mk(ItemId::thing_strangle));
+    inv_->put_in_intrinsics(
+        item_factory::mk(ItemId::thing_strangle));
+
     spells_known_.push_back(new SpellTeleport);
 }
 

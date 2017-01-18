@@ -62,23 +62,16 @@ int Actor::ability(const AbilityId id, const bool is_affected_by_props) const
     return data_->ability_vals.val(id, is_affected_by_props, *this);
 }
 
-bool Actor::roll_spot_sneaking_actor(Actor& other)
+ActionResult Actor::roll_sneak(const Actor& other) const
 {
-    const P& other_pos = other.pos;
+    const int sneak_skill = ability(AbilityId::stealth, true);
 
-    const int player_search_mod =
-        is_player() ?
-        ability(AbilityId::searching, true) :
+    const int search_mod =
+        other.is_player() ?
+        other.ability(AbilityId::searching, true) :
         0;
 
-    const auto& abilities_other = other.data().ability_vals;
-
-    const int sneak_skill =
-        abilities_other.val(AbilityId::stealth,
-                            true,
-                            other);
-
-    const int dist = king_dist(pos, other_pos);
+    const int dist = king_dist(pos, other.pos);
 
     // Distance  Sneak bonus
     // ----------------------
@@ -88,28 +81,28 @@ bool Actor::roll_spot_sneaking_actor(Actor& other)
     // 4          40
     // 5          60
     // 6          80
-    const int sneak_dist_mod = std::min((dist - 2) * 20, 80);
+    const int dist_mod = std::min((dist - 2) * 20, 80);
 
-    const Cell& cell = map::cells[other_pos.x][other_pos.y];
+    const Cell& cell = map::cells[pos.x][pos.y];
 
-    const int sneak_lgt_mod =
+    const int lgt_mod =
         cell.is_lit ?
         -40 : 0;
 
-    const int sneak_drk_mod =
+    const int drk_mod =
         (cell.is_dark && ! cell.is_lit) ?
         40 : 0;
 
-    // NOTE: There is no need to cap the sneak skill value here, since there's
-    //       always the chance of critically failing.
     const int sneak_tot =
-        sneak_skill +
-        sneak_dist_mod +
-        sneak_lgt_mod +
-        sneak_drk_mod -
-        player_search_mod;
+        sneak_skill
+        - search_mod
+        + dist_mod
+        + lgt_mod
+        + drk_mod;
 
-    return ability_roll::roll(sneak_tot, &other) <= fail;
+    const auto result = ability_roll::roll(sneak_tot, this);
+
+    return result;
 }
 
 int Actor::hp_max(const bool with_modifiers) const

@@ -75,20 +75,22 @@ public:
     void become_aware_player(const bool is_from_seeing,
                              const int factor = 1);
 
+    void become_wary_player();
+
     void set_player_aware_of_me(int duration_factor = 1);
 
     void on_actor_turn() override;
 
     void on_std_turn() override final;
 
-    virtual std::string aggro_phrase_mon_seen() const
+    virtual std::string aggro_msg_mon_seen() const
     {
-        return data_->aggro_text_mon_seen;
+        return data_->aggro_msg_mon_seen;
     }
 
-    virtual std::string aggro_phrase_mon_hidden() const
+    virtual std::string aggro_msg_mon_hidden() const
     {
-        return data_->aggro_text_mon_hidden;
+        return data_->aggro_msg_mon_hidden;
     }
 
     virtual SfxId aggro_sfx_mon_seen() const
@@ -106,7 +108,9 @@ public:
     bool is_leader_of(const Actor* const actor) const override;
     bool is_actor_my_leader(const Actor* const actor) const override;
 
-    int aware_of_player_counter_, player_aware_of_me_counter_;
+    int wary_of_player_counter_;
+    int aware_of_player_counter_;
+    int player_aware_of_me_counter_;
     bool is_msg_mon_in_view_printed_;
     Dir last_dir_moved_;
     std::vector<Spell*> spells_known_;
@@ -376,11 +380,11 @@ public:
 
     static std::string cultist_phrase();
 
-    std::string aggro_phrase_mon_seen() const override
+    std::string aggro_msg_mon_seen() const override
     {
         return name_the() + ": " + cultist_phrase();
     }
-    std::string aggro_phrase_mon_hidden() const override
+    std::string aggro_msg_mon_hidden() const override
     {
         return "Voice: " + cultist_phrase();
     }

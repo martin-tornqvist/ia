@@ -24,7 +24,7 @@ public:
     int dodging_mod;
     int state_mod;
     int hit_chance_tot;
-    AbilityRollResult att_result;
+    ActionResult att_result;
     int dmg;
     bool is_intrinsic_att;
 
