@@ -18,42 +18,50 @@ std::vector<Mix_Chunk*> audio_chunks_;
 
 size_t ms_at_sfx_played_[(size_t)SfxId::END];
 
-int         current_channel_        = 0;
-int         seconds_at_amb_played_  = -1;
+int current_channel_ = 0;
+int seconds_at_amb_played_ = -1;
 
-int         nr_files_loaded_        = 0;
-const int   nr_files_tot            = int(SfxId::END) - 2; //Subtracting AMB_START and AMB_END
+int nr_files_loaded_ = 0;
+
+// Subtracting AMB_START and AMB_END
+const int nr_files_tot = (int)SfxId::END - 2;
 
 void load_audio_file(const SfxId sfx, const std::string& filename)
 {
-    //Read events, so that we don't freeze the game while we loading sounds
+    // Read events, so that we don't freeze the game while we loading sounds
     SDL_PumpEvents();
 
     io::clear_screen();
 
-    const std::string file_rel_path  = "audio/" + filename;
+    const std::string file_rel_path = "audio/" + filename;
 
-    const std::string nr_loaded_str = std::to_string(nr_files_loaded_) + "/" + std::to_string(nr_files_tot) ;
+    const std::string nr_loaded_str =
+        std::to_string(nr_files_loaded_) + "/" +
+        std::to_string(nr_files_tot) ;
 
-    io::draw_text("Loading audio file " + nr_loaded_str + " (" + file_rel_path + ")...",
-                      Panel::screen,
-                      P(0, 0),
-                      clr_white);
+    io::draw_text("Loading audio file " +
+                  nr_loaded_str +
+                  " (" + file_rel_path + ")...",
+                  Panel::screen,
+                  P(0, 0),
+                  clr_white);
 
     audio_chunks_[(size_t)sfx] = Mix_LoadWAV(file_rel_path.c_str());
 
     if (!audio_chunks_[(size_t)sfx])
     {
-        TRACE << "Problem loading audio file with name: "   << filename         << std::endl
-              << "Mix_GetError(): "                         << Mix_GetError()   << std::endl;
+        TRACE << "Problem loading audio file with name: "
+              << filename << std::endl
+              << "Mix_GetError(): "
+              << Mix_GetError()   << std::endl;
         ASSERT(false);
     }
 
-    //Draw a loading bar
-    const int pct_loaded    = (nr_files_loaded_ * 100) / nr_files_tot;
-    const int bar_w_tot     = 32;
-    const int bar_w_l       = (bar_w_tot * pct_loaded) / 100;
-    const int bar_w_r       = bar_w_tot - bar_w_l;
+    // Draw a loading bar
+    const int pct_loaded = (nr_files_loaded_ * 100) / nr_files_tot;
+    const int bar_w_tot = 32;
+    const int bar_w_l = (bar_w_tot * pct_loaded) / 100;
+    const int bar_w_r = bar_w_tot - bar_w_l;
 
     const P bar_p(1, 2);
 
@@ -62,9 +70,9 @@ void load_audio_file(const SfxId sfx, const std::string& filename)
         const std::string bar_l_str(bar_w_l, '#');
 
         io::draw_text(bar_l_str,
-                          Panel::screen,
-                          bar_p,
-                          clr_green);
+                      Panel::screen,
+                      bar_p,
+                      clr_green);
     }
 
     if (bar_w_r > 0)
@@ -72,20 +80,20 @@ void load_audio_file(const SfxId sfx, const std::string& filename)
         const std::string bar_r_str(bar_w_r, '-');
 
         io::draw_text(bar_r_str,
-                          Panel::screen,
-                          P(bar_p.x + bar_w_l, bar_p.y),
-                          clr_gray_drk);
+                      Panel::screen,
+                      P(bar_p.x + bar_w_l, bar_p.y),
+                      clr_gray_drk);
     }
 
     io::draw_text("[",
-                      Panel::screen,
-                      P(bar_p.x - 1, bar_p.y),
-                      clr_white);
+                  Panel::screen,
+                  P(bar_p.x - 1, bar_p.y),
+                  clr_white);
 
     io::draw_text("]",
-                      Panel::screen,
-                      P(bar_p.x + bar_w_tot, bar_p.y),
-                      clr_white);
+                  Panel::screen,
+                  P(bar_p.x + bar_w_tot, bar_p.y),
+                  clr_white);
 
     io::update_screen();
 
@@ -126,7 +134,7 @@ int find_free_channel(const int from)
     return -1;
 }
 
-} //namespace
+} // namespace
 
 void init()
 {
@@ -138,7 +146,7 @@ void init()
     {
         audio_chunks_.resize(size_t(SfxId::END));
 
-        //Monster sounds
+        // Monster sounds
         load_audio_file(SfxId::dog_snarl,              "sfx_dog_snarl.ogg");
         load_audio_file(SfxId::wolf_howl,              "sfx_wolf_howl.ogg");
         load_audio_file(SfxId::hiss,                   "sfx_hiss.ogg");
@@ -148,7 +156,7 @@ void init()
         load_audio_file(SfxId::flapping_wings,         "sfx_flapping_wings.ogg");
         load_audio_file(SfxId::ape,                    "sfx_ape.ogg");
 
-        //Weapon and attack sounds
+        // Weapon and attack sounds
         load_audio_file(SfxId::hit_small,              "sfx_hit_small.ogg");
         load_audio_file(SfxId::hit_medium,             "sfx_hit_medium.ogg");
         load_audio_file(SfxId::hit_hard,               "sfx_hit_hard.ogg");
@@ -168,7 +176,7 @@ void init()
         load_audio_file(SfxId::spike_gun,              "sfx_spike_gun.ogg");
         load_audio_file(SfxId::bite,                   "sfx_bite.ogg");
 
-        //Environment sounds
+        // Environment sounds
         load_audio_file(SfxId::metal_clank,            "sfx_metal_clank.ogg");
         load_audio_file(SfxId::ricochet,               "sfx_ricochet.ogg");
         load_audio_file(SfxId::explosion,              "sfx_explosion.ogg");
@@ -183,7 +191,7 @@ void init()
         load_audio_file(SfxId::boss_voice1,            "sfx_boss_voice1.ogg");
         load_audio_file(SfxId::boss_voice2,            "sfx_boss_voice2.ogg");
 
-        //User interface sounds
+        // User interface sounds
         load_audio_file(SfxId::backpack,               "sfx_backpack.ogg");
         load_audio_file(SfxId::pickup,                 "sfx_pickup.ogg");
         load_audio_file(SfxId::lantern,                "sfx_electric_lantern.ogg");
@@ -192,19 +200,21 @@ void init()
         load_audio_file(SfxId::spell_shield_break,     "sfx_spell_shield_break.ogg");
         load_audio_file(SfxId::insanity_rise,          "sfx_insanity_rising.ogg");
         load_audio_file(SfxId::glop,                   "sfx_glop.ogg");
+        load_audio_file(SfxId::chains,                 "sfx_chains.ogg");
         load_audio_file(SfxId::death,                  "sfx_death.ogg");
 
         int a = 1;
 
         const int first = int(SfxId::AMB_START) + 1;
-        const int last  = int(SfxId::AMB_END)   - 1;
+        const int last = int(SfxId::AMB_END) - 1;
 
         for (int i = first; i <= last; ++i)
         {
-            const std::string padding_str   = (a < 10)    ? "00"  :
-                                              (a < 100)   ? "0"   : "";
+            const std::string padding_str =
+                (a < 10) ? "00" :
+                (a < 100) ? "0" : "";
 
-            const std::string idx_str       = std::to_string(a);
+            const std::string idx_str = std::to_string(a);
 
             const std::string file_name = "amb_" + padding_str + idx_str + ".ogg";
 
@@ -238,8 +248,8 @@ void cleanup()
 
     audio_chunks_.clear();
 
-    current_channel_            =  0;
-    seconds_at_amb_played_  = -1;
+    current_channel_ =  0;
+    seconds_at_amb_played_ = -1;
 
     nr_files_loaded_ = 0;
 
@@ -248,25 +258,24 @@ void cleanup()
 
 int play(const SfxId sfx, const int vol_pct_tot, const int vol_pct_l)
 {
-    if (
-        !audio_chunks_.empty()      &&
-        sfx != SfxId::AMB_START     &&
-        sfx != SfxId::AMB_END       &&
-        sfx != SfxId::END           &&
+    if (!audio_chunks_.empty() &&
+        sfx != SfxId::AMB_START &&
+        sfx != SfxId::AMB_END &&
+        sfx != SfxId::END &&
         !config::is_bot_playing())
     {
-        const int       free_channel    = find_free_channel(current_channel_);
-        const size_t    ms_now          = SDL_GetTicks();
-        size_t&         ms_last         = ms_at_sfx_played_[(size_t)sfx];
-        const size_t    ms_diff         = ms_now - ms_last;
+        const int free_channel = find_free_channel(current_channel_);
+        const size_t ms_now = SDL_GetTicks();
+        size_t& ms_last = ms_at_sfx_played_[(size_t)sfx];
+        const size_t ms_diff = ms_now - ms_last;
 
         if (free_channel >= 0 && ms_diff >= min_ms_between_same_sfx)
         {
             current_channel_ = free_channel;
 
-            const int vol_tot   = (255 * vol_pct_tot)   / 100;
-            const int vol_l     = (vol_pct_l * vol_tot) / 100;
-            const int vol_r     = vol_tot - vol_l;
+            const int vol_tot = (255 * vol_pct_tot) / 100;
+            const int vol_l = (vol_pct_l * vol_tot) / 100;
+            const int vol_r = vol_tot - vol_l;
 
             Mix_SetPanning(current_channel_, vol_l, vol_r);
 
@@ -285,7 +294,7 @@ void play(const SfxId sfx, const Dir dir, const int distance_pct)
 {
     if (!audio_chunks_.empty() && dir != Dir::END)
     {
-        //The distance value is scaled down to avoid too much volume degradation
+        // The distance value is scaled down to avoid too much volume reduction
         const int vol_pct_tot = 100 - ((distance_pct * 2) / 3);
 
         int vol_pct_l = 0;
@@ -341,17 +350,17 @@ void try_play_amb(const int one_in_n_chance_to_play)
 {
     if (!audio_chunks_.empty() && rnd::one_in(one_in_n_chance_to_play))
     {
-        const int seconds_now               = time(nullptr);
-        const int time_req_between_amb_sfx  = 25;
+        const int seconds_now = time(nullptr);
+        const int time_req_between_amb_sfx = 25;
 
         if ((seconds_now - time_req_between_amb_sfx) > seconds_at_amb_played_)
         {
             seconds_at_amb_played_ = seconds_now;
 
-            const int       vol_pct     = rnd::range(15, 100);
-            const int       first_int   = (int)SfxId::AMB_START + 1;
-            const int       last_int    = (int)SfxId::AMB_END   - 1;
-            const SfxId     sfx         = (SfxId)rnd::range(first_int, last_int);
+            const int vol_pct = rnd::range(15, 100);
+            const int first_int = (int)SfxId::AMB_START + 1;
+            const int last_int = (int)SfxId::AMB_END - 1;
+            const SfxId sfx = (SfxId)rnd::range(first_int, last_int);
 
             play(sfx , vol_pct);
         }
@@ -366,4 +375,4 @@ void fade_out_channel(const int channel_nr)
     }
 }
 
-} //audio
+} // audio

@@ -106,6 +106,7 @@ enum class TileId
     lever_right,
     device1,
     device2,
+    chains,
     cabinet_closed,
     cabinet_open,
     pillar_broken,

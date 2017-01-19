@@ -1774,6 +1774,69 @@ Clr Vines::clr_default() const
 }
 
 // -----------------------------------------------------------------------------
+// Chains
+// -----------------------------------------------------------------------------
+Chains::Chains(const P& p) :
+    Rigid(p) {}
+
+std::string Chains::name(const Article article) const
+{
+    std::string ret =
+        article == Article::a ?
+        "" : "the ";
+
+    return ret + "rusty chains";
+}
+
+Clr Chains::clr_default() const
+{
+    return clr_gray;
+}
+
+void Chains::bump(Actor& actor_bumping)
+{
+    if (actor_bumping.data().actor_size > ActorSize::floor &&
+        !actor_bumping.has_prop(PropId::ethereal) &&
+        !actor_bumping.has_prop(PropId::ooze))
+    {
+        std::string msg;
+
+        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        {
+            msg = "The chains rattle.";
+        }
+        else // Not seen
+        {
+            msg = "I hear chains rattling.";
+        }
+
+        const AlertsMon alerts_mon =
+            actor_bumping.is_player() ?
+            AlertsMon::yes :
+            AlertsMon::no;
+
+        Snd snd(msg,
+                SfxId::chains,
+                IgnoreMsgIfOriginSeen::no,
+                actor_bumping.pos,
+                &actor_bumping,
+                SndVol::low,
+                alerts_mon);
+
+        snd_emit::run(snd);
+    }
+}
+
+void Chains::on_hit(const DmgType dmg_type,
+                    const DmgMethod dmg_method,
+                    Actor* const actor)
+{
+    (void)dmg_type;
+    (void)dmg_method;
+    (void)actor;
+}
+
+// -----------------------------------------------------------------------------
 // Grating
 // -----------------------------------------------------------------------------
 Grating::Grating(const P& p) :
@@ -2677,7 +2740,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
     {
         TRACE << "Summoning monster" << std::endl;
 
-        //First, try to spawn monster in an adjacent cell
+        // First, try to spawn monster in an adjacent cell
         P spawn_pos(-1, -1);
 
         bool blocked[map_w][map_h];

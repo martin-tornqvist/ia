@@ -91,6 +91,18 @@ void put_templ_features(const Array2<char>& templ,
             }
             break;
 
+            case '"':
+            {
+                map::put(new Vines(p));
+            }
+            break;
+
+            case '\'':
+            {
+                map::put(new Chains(p));
+            }
+            break;
+
             // (Space)
             case ' ':
             {
@@ -193,7 +205,7 @@ Room* mk_room(Region& region)
             }
         }
 
-        // Fine, make a normal procedural room
+        // Failed to make a templated room - fine, make a normal procedural room
     }
 
     // Make a procedural room

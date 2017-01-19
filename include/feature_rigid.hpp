@@ -263,6 +263,32 @@ private:
                 Actor* const actor) override;
 };
 
+class Chains: public Rigid
+{
+public:
+    Chains(const P& p);
+
+    Chains() = delete;
+
+    ~Chains() {}
+
+    FeatureId id() const override
+    {
+        return FeatureId::chains;
+    }
+
+    std::string name(const Article article) const override;
+
+    void bump(Actor& actor_bumping) override;
+
+private:
+    Clr clr_default() const override;
+
+    void on_hit(const DmgType dmg_type,
+                const DmgMethod dmg_method,
+                Actor* const actor) override;
+};
+
 class Grating: public Rigid
 {
 public:

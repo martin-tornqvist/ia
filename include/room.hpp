@@ -190,6 +190,22 @@ protected:
     void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
 };
 
+class JailRoom: public StdRoom
+{
+public:
+    JailRoom(R r) :
+        StdRoom(r, RoomType::jail) {}
+
+    ~JailRoom() {}
+
+protected:
+    std::vector<RoomAutoFeatureRule> auto_features_allowed() const override;
+
+    void on_pre_connect_hook(bool door_proposals[map_w][map_h]) override;
+
+    void on_post_connect_hook(bool door_proposals[map_w][map_h]) override;
+};
+
 class RitualRoom: public StdRoom
 {
 public:

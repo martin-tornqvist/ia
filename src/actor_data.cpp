@@ -613,7 +613,7 @@ void init_data_list()
         MonGroupSpawnRule(MonGroupSize::alone,  4),
         MonGroupSpawnRule(MonGroupSize::few,    1),
     });
-    d.actor_size = ActorSize::floor;
+    d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
     d.can_open_doors = true;
     d.can_bash_doors = false;

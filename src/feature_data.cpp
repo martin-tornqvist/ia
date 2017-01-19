@@ -60,7 +60,7 @@ void reset_data(FeatureDataT& d)
     d.is_los_passable = true;
     d.is_smoke_passable = true;
     d.can_have_blood = true;
-    d.can_have_gore = true;
+    d.can_have_gore = false;
     d.can_have_corpse = true;
     d.can_have_rigid = true;
     d.can_have_item = true;
@@ -93,6 +93,7 @@ void init_data_list()
     d.tile = TileId::floor;
     d.move_rules.set_can_move_cmn();
     d.matl_type = Matl::stone;
+    d.can_have_gore = true;
     add_to_list_and_reset(d);
     // -------------------------------------------------------------------------
     d.id = FeatureId::bridge;
@@ -154,6 +155,7 @@ void init_data_list()
     d.tile = TileId::floor;
     d.move_rules.set_can_move_cmn();
     d.matl_type = Matl::plant;
+    d.can_have_gore = true;
     add_to_list_and_reset(d);
     // -------------------------------------------------------------------------
     d.id = FeatureId::bush;
@@ -177,8 +179,24 @@ void init_data_list()
     d.tile = TileId::vines;
     d.move_rules.set_can_move_cmn();
     d.is_los_passable = false;
-    d.can_have_blood = false; // Looks weird
+    d.can_have_blood = false;
+    d.can_have_gore = false;
     d.matl_type = Matl::plant;
+    d.auto_spawn_placement = FeaturePlacement::either;
+    add_to_list_and_reset(d);
+    // -------------------------------------------------------------------------
+    d.id = FeatureId::chains;
+    d.mk_obj = [](const P & p)
+    {
+        return new Chains(p);
+    };
+    d.glyph = '"';
+    d.tile = TileId::chains;
+    d.move_rules.set_can_move_cmn();
+    d.is_los_passable = true;
+    d.is_projectile_passable = true;
+    d.can_have_blood = true;
+    d.matl_type = Matl::metal;
     d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
     // -------------------------------------------------------------------------

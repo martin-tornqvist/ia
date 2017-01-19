@@ -23,6 +23,7 @@ Gameplay
 * Traps are always immediately revealed when triggered by the player
 * Added Barred gates (doors that you can see and shoot through), and Gratings (similarly, but walls)
 * Added Hanging vines, which can be walked through, but blocks line of sight
+* Added Rusty chains, which make a noise when someone walks through them
 * Spells now have "skill level" percentages, which determines the strength of the spell (and can add additional spell effects) - the skill levels can be increased by casting from Manuscripts - different monsters have different spell skill levels (so spells cast by more powerful monsters will typically hurt more, or last longer, etc)
 * All backgrounds can now learn spells, but the Occultist gains proficiency much faster, and starts with a few known spells
 * The Warlock trait now gives a chance to cast damage dealing spell multiple times (instead of spells having a random chance to make you \"Charged\" and deal maximum damage)

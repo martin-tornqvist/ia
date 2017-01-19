@@ -755,9 +755,9 @@ bool mk_std_lvl()
     io::cover_panel(Panel::log);
     states::draw();
     io::draw_text("Press any key to connect rooms...",
-                      Panel::screen,
-                      P(0, 0),
-                      clr_white);
+                  Panel::screen,
+                  P(0, 0),
+                  clr_white);
     io::update_screen();
     query::wait_for_key_press();
 #endif // DEMO_MODE
@@ -774,9 +774,9 @@ bool mk_std_lvl()
     io::cover_panel(Panel::log);
     states::draw();
     io::draw_text("Press any key to run post-connect functions on rooms...",
-                      Panel::screen,
-                      P(0, 0),
-                      clr_white);
+                  Panel::screen,
+                  P(0, 0),
+                  clr_white);
     io::update_screen();
     query::wait_for_key_press();
 #endif // DEMO_MODE

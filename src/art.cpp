@@ -261,6 +261,7 @@ P column_and_row_tile(const TileId tile)
     case TileId::lever_left:                    return P(14, 8);
     case TileId::device1:                       return P(15, 8);
     case TileId::device2:                       return P(16, 8);
+    case TileId::chains:                        return P(19, 8);
     case TileId::cabinet_closed:                return P(3, 9);
     case TileId::cabinet_open:                  return P(4, 9);
     case TileId::pillar_broken:                 return P(5, 9);

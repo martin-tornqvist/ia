@@ -5,7 +5,7 @@
 
 enum class SfxId
 {
-    //Monster sounds
+    // Monster sounds
     dog_snarl,
     wolf_howl,
     hiss,
@@ -15,7 +15,7 @@ enum class SfxId
     flapping_wings,
     ape,
 
-    //Weapon and attack sounds
+    // Weapon and attack sounds
     hit_small, hit_medium, hit_hard, hit_corpse_break,
     miss_light, miss_medium, miss_heavy,
     hit_sharp,
@@ -30,7 +30,7 @@ enum class SfxId
     spike_gun,
     bite,
 
-    //Environment action sounds
+    // Environment action sounds
     metal_clank,
     ricochet,
     explosion,
@@ -40,8 +40,10 @@ enum class SfxId
     tomb_open,
     fountain_drink,
     boss_voice1, boss_voice2,
+    chains,
+    glop,
 
-    //User interface sounds
+    // User interface sounds
     backpack,
     pickup,
     lantern,
@@ -49,16 +51,16 @@ enum class SfxId
     spell_generic,
     spell_shield_break,
     insanity_rise,
-    glop,
     death,
 
-    //Ambient sounds
+    // Ambient sounds
     AMB_START,
-    amb001, amb002, amb003, amb004, amb005, amb006, amb007, amb008, amb009, amb010,
-    amb011, amb012, amb013, amb014, amb015, amb016, amb017, amb018, amb019, amb020,
-    amb021, amb022, amb023, amb024, amb025, amb026, amb027, amb028, amb029, amb030,
-    amb031, amb032, amb033, amb034, amb035, amb036, amb037, amb038, amb039, amb040,
-    amb041, amb042, amb043, amb044, amb045, amb046, amb047, amb048, amb049, amb050,
+    amb001, amb002, amb003, amb004, amb005, amb006, amb007, amb008, amb009,
+    amb010, amb011, amb012, amb013, amb014, amb015, amb016, amb017, amb018,
+    amb019, amb020, amb021, amb022, amb023, amb024, amb025, amb026, amb027,
+    amb028, amb029, amb030, amb031, amb032, amb033, amb034, amb035, amb036,
+    amb037, amb038, amb039, amb040, amb041, amb042, amb043, amb044, amb045,
+    amb046, amb047, amb048, amb049, amb050,
     AMB_END,
 
     mus_cthulhiana_Madness,
@@ -72,7 +74,7 @@ namespace audio
 void init();
 void cleanup();
 
-//Returns channel playing on
+// Returns channel playing on
 int play(const SfxId sfx,
          const int vol_percent_tot = 100,
          const int vol_percent_l = 50);
@@ -87,4 +89,4 @@ void fade_out_channel(const int channel_nr);
 
 }
 
-#endif
+#endif // AUDIO_HPP

@@ -57,7 +57,7 @@ int base_pct_chance_drk(const RoomType room_type)
         return 15;
 
     case RoomType::jail:
-        return 50;
+        return 60;
 
     case RoomType::spider:
         return 15;
@@ -115,6 +115,7 @@ void init_room_bucket()
     if (dlvl <= dlvl_last_early_game)
     {
         add_to_room_bucket(RoomType::human, rnd::range(2, 3));
+        add_to_room_bucket(RoomType::jail, rnd::range(1, 2));
         add_to_room_bucket(RoomType::ritual, 1);
         add_to_room_bucket(RoomType::spider, rnd::range(1, 3));
         add_to_room_bucket(RoomType::crypt, rnd::range(2, 3));
@@ -129,6 +130,7 @@ void init_room_bucket()
     else if (dlvl <= dlvl_last_mid_game)
     {
         add_to_room_bucket(RoomType::human, rnd::range(1, 2));
+        add_to_room_bucket(RoomType::jail, rnd::range(1, 2));
         add_to_room_bucket(RoomType::ritual, 1);
         add_to_room_bucket(RoomType::spider, rnd::range(1, 3));
         add_to_room_bucket(RoomType::snake_pit, 1);
@@ -183,6 +185,9 @@ Room* mk(const RoomType type, const R& r)
     case RoomType::human:
         return new HumanRoom(r);
 
+    case RoomType::jail:
+        return new JailRoom(r);
+
     case RoomType::monster:
         return new MonsterRoom(r);
 
@@ -217,7 +222,6 @@ Room* mk(const RoomType type, const R& r)
     // Does not have room classes
     //
     case RoomType::END_OF_STD_ROOMS:
-    case RoomType::jail:
         TRACE << "Illegal room type id: " << (int)type << std::endl;
 
         ASSERT(false);
@@ -516,7 +520,8 @@ std::vector<RoomAutoFeatureRule> PlainRoom::auto_features_allowed() const
     {
         {FeatureId::brazier, rnd::one_in(4) ? 1 : 0},
         {FeatureId::statue, rnd::one_in(7) ? rnd::range(1, 2) : 0},
-        {FeatureId::fountain, rnd::one_in(fountain_one_in_n) ? 1 : 0}
+        {FeatureId::fountain, rnd::one_in(fountain_one_in_n) ? 1 : 0},
+        {FeatureId::chains, rnd::one_in(7) ? rnd::range(1, 2) : 0}
     };
 }
 
@@ -524,7 +529,10 @@ void PlainRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 {
     (void)door_proposals;
 
-    mapgen::cut_room_corners(*this);
+    if (rnd::coin_toss())
+    {
+        mapgen::cut_room_corners(*this);
+    }
 
     if (rnd::fraction(1, 4))
     {
@@ -562,7 +570,10 @@ void HumanRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 {
     (void)door_proposals;
 
-    mapgen::cut_room_corners(*this);
+    if (rnd::coin_toss())
+    {
+        mapgen::cut_room_corners(*this);
+    }
 
     if (rnd::fraction(1, 4))
     {
@@ -596,6 +607,39 @@ void HumanRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 }
 
 // -----------------------------------------------------------------------------
+// Jail room
+// -----------------------------------------------------------------------------
+std::vector<RoomAutoFeatureRule> JailRoom::auto_features_allowed() const
+{
+    return
+    {
+        {FeatureId::chains, rnd::range(2, 8)},
+        {FeatureId::brazier, rnd::one_in(4) ? 1 : 0},
+        {FeatureId::rubble_low, rnd::range(1, 4)}
+    };
+}
+
+void JailRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
+{
+    (void)door_proposals;
+
+    if (rnd::coin_toss())
+    {
+        mapgen::cut_room_corners(*this);
+    }
+
+    if (rnd::fraction(1, 4))
+    {
+        mapgen::mk_pillars_in_room(*this);
+    }
+}
+
+void JailRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
+{
+    (void)door_proposals;
+}
+
+// -----------------------------------------------------------------------------
 // Ritual room
 // -----------------------------------------------------------------------------
 std::vector<RoomAutoFeatureRule> RitualRoom::auto_features_allowed() const
@@ -603,7 +647,8 @@ std::vector<RoomAutoFeatureRule> RitualRoom::auto_features_allowed() const
     return
     {
         {FeatureId::altar, 1},
-        {FeatureId::brazier, rnd::range(2, 4)}
+        {FeatureId::brazier, rnd::range(2, 4)},
+        {FeatureId::chains, rnd::one_in(7) ? rnd::range(1, 2) : 0}
     };
 }
 
@@ -618,7 +663,10 @@ void RitualRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 {
     (void)door_proposals;
 
-    mapgen::cut_room_corners(*this);
+    if (rnd::coin_toss())
+    {
+        mapgen::cut_room_corners(*this);
+    }
 
     if (rnd::fraction(1, 4))
     {
@@ -729,7 +777,10 @@ void SpiderRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 
     if (is_early || (is_mid && rnd::coin_toss()))
     {
-        mapgen::cut_room_corners(*this);
+        if (rnd::coin_toss())
+        {
+            mapgen::cut_room_corners(*this);
+        }
     }
     else
     {
@@ -863,7 +914,10 @@ void CryptRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 {
     (void)door_proposals;
 
-    mapgen::cut_room_corners(*this);
+    if (rnd::coin_toss())
+    {
+        mapgen::cut_room_corners(*this);
+    }
 
     if (rnd::fraction(1, 3))
     {
@@ -993,7 +1047,10 @@ void FloodedRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 
     if (is_early || (is_mid && rnd::coin_toss()))
     {
-        mapgen::cut_room_corners(*this);
+        if (rnd::coin_toss())
+        {
+            mapgen::cut_room_corners(*this);
+        }
     }
     else
     {
@@ -1090,7 +1147,10 @@ void MuddyRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 
     if (is_early || (is_mid && rnd::coin_toss()))
     {
-        mapgen::cut_room_corners(*this);
+        if (rnd::coin_toss())
+        {
+            mapgen::cut_room_corners(*this);
+        }
     }
     else
     {
