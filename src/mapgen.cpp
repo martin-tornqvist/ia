@@ -400,9 +400,9 @@ void place_monoliths()
         // Determine number of Monoliths to place, by a weighted choice
         std::vector<int> nr_weights =
         {
-            5,  // 0 monolith(s)
-            50, // 1 -
-            5,  // 2 -
+            25,     // 0 monolith(s)
+            100,    // 1 -
+            1,      // 2 -
         };
 
         nr_monoliths = rnd::weighted_choice(nr_weights);
