@@ -18,7 +18,7 @@ const int top_more_y_ = 1;
 const int btm_more_y_ = screen_h - 1;
 const int opt_x0_ = 0;
 const int opt_y0_ = top_more_y_ + 1;
-const int opt_x1_ = 22;
+const int opt_x1_ = 23;
 const int opt_y1_ = btm_more_y_ - 1;
 const int opt_h_ = opt_y1_ - opt_y0_ + 1;
 

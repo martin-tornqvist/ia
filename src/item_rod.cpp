@@ -65,9 +65,12 @@ ConsumeItem Rod::activate(Actor* const actor)
     //       when they aren't identified in-game. So here we set a fixed value,
     //       same for all rods.
 
-    // TODO: This number could be a good candidate for a trait or background to
-    //       provide a bonus for!
     nr_charge_turns_left_ = 250;
+
+    if (player_bon::traits[(size_t)Trait::elec_incl])
+    {
+        nr_charge_turns_left_ /= 2;
+    }
 
     if (map::player->is_alive())
     {

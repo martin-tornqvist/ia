@@ -13,7 +13,7 @@ struct ActorDataT;
 
 enum class Trait
 {
-    //Common (except some traits can be blocked for certain backgrounds)
+    // Common (except some traits can be blocked for certain backgrounds)
     adept_melee_fighter,
     expert_melee_fighter,
     adept_marksman,
@@ -42,22 +42,24 @@ enum class Trait
     rugged,
     strong_backed,
     undead_bane,
+    elec_incl,
 
-    //Unique for Ghoul
+    // Unique for Ghoul
     ravenous,
     foul,
     toxic,
     indomitable_fury,
 
-    //Unique for Occultist
+    // Unique for Occultist
     warlock,
     summoner,
+    blood_sorc,
     seer,
 
-    //Unique for Rogue
+    // Unique for Rogue
     vicious,
 
-    //Unique for War veteran
+    // Unique for War veteran
     fast_shooter,
     steady_aimer,
     sharpshooter,
@@ -87,8 +89,8 @@ void load();
 
 void pickable_bgs(std::vector<Bg>& bgs_out);
 
-//Returns a list of all traits in the game, except traits which cannot be
-//picked by the given background
+// Returns a list of all traits in the game, except traits which cannot be
+// picked by the given background
 void trait_list_for_bg(const Bg bg, std::vector<Trait>& traits_out);
 
 void trait_prereqs(const Trait id,
@@ -105,9 +107,9 @@ std::string trait_descr(const Trait id);
 
 std::string bg_title(const Bg id);
 
-//NOTE: The string vector returned is not formatted. Each line still needs to
-//      be formatted by the caller. The reason for using a vector instead of a
-//      string is to separate the text into paragraphs.
+// NOTE: The string vector returned is not formatted. Each line still needs to
+//       be formatted by the caller. The reason for using a vector instead of a
+//       string is to separate the text into paragraphs.
 std::vector<std::string> bg_descr(const Bg id);
 
 std::string all_picked_traits_titles_line();
@@ -120,6 +122,6 @@ void set_all_traits_to_picked();
 
 bool gets_undead_bane_bon(const ActorDataT& actor_data);
 
-} //player_bon
+} // player_bon
 
-#endif
+#endif // PLAYER_BON_HPP

@@ -82,13 +82,13 @@ public:
 
     void on_pickup(Actor& actor);
 
-    //"on_pickup()" should be called before this
+    // "on_pickup()" should be called before this
     void on_equip(const Verbosity verbosity);
 
     UnequipAllowed on_unequip();
 
-    //This is the opposite of "on_pickup()". If this is a wielded item, "on_unequip()" should be
-    //called first.
+    // This is the opposite of "on_pickup()". If this is a wielded item,
+    // "on_unequip()" should be called first.
     void on_removed_from_inv();
 
     void add_carrier_prop(Prop* const prop, const Verbosity verbosity);
@@ -101,7 +101,7 @@ public:
         return 0;
     }
 
-    //Used when attempting to fire or throw an item
+    // Used when attempting to fire or throw an item
     bool is_in_effective_range_lmt(const P& p0, const P& p1) const;
 
     Actor* actor_carrying()
@@ -135,7 +135,7 @@ public:
     int melee_dmg_plus_;
 
 protected:
-    //E.g. "{Off}" for Lanterns, "{60}" for Medical Bags, or "4/7" for Pistols
+    // E.g. "{Off}" for Lanterns, "{60}" for Medical Bags, or "4/7" for Pistols
     virtual std::string name_inf() const
     {
         return "";
@@ -155,15 +155,22 @@ protected:
 
     virtual void on_removed_from_inv_hook() {}
 
+    virtual void specific_dmg_mod(DiceParam& dice,
+                                  const Actor* const actor) const
+    {
+        (void)dice;
+        (void)actor;
+    }
+
     ItemDataT* data_;
 
     Actor* actor_carrying_;
 
 private:
-    //Properties to apply when wearing something like a ring of fire resistance
+    // Properties to apply when wearing something like a ring of fire resistance
     std::vector<Prop*> carrier_props_;
 
-    //Spells granted to the carrier
+    // Spells granted to the carrier
     std::vector<Spell*> carrier_spells_;
 };
 
@@ -368,6 +375,10 @@ class MiGoGun: public Wpn
 public:
     MiGoGun(ItemDataT* const item_data);
     ~MiGoGun() {}
+
+protected:
+    void specific_dmg_mod(DiceParam& dice,
+                          const Actor* const actor) const override;
 };
 
 class SpikeGun: public Wpn
@@ -502,13 +513,13 @@ public:
     }
 };
 
-//class HideousMask: public Headwear
-//{
-//public:
+// class HideousMask: public Headwear
+// {
+// public:
 // HideousMask(ItemDataT* item_data);
 //
 // void on_std_turn_in_inv(const InvType inv_type) override;
-//};
+// };
 
 class GasMask: public Headwear
 {
@@ -669,4 +680,4 @@ protected:
     void on_player_ignite() const override;
 };
 
-#endif
+#endif // ITEM_HPP

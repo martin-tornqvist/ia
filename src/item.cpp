@@ -17,6 +17,7 @@
 #include "saving.hpp"
 #include "actor_factory.hpp"
 #include "game.hpp"
+#include "player_bon.hpp"
 
 // -----------------------------------------------------------------------------
 // Item
@@ -103,7 +104,7 @@ DiceParam Item::dmg(const AttMode att_mode, const Actor* const actor) const
             }
         }
 
-        //Bonus damage from being frenzied?
+        // Bonus damage from being frenzied?
         if (actor && actor->has_prop(PropId::frenzied))
         {
             ++out.plus;
@@ -134,13 +135,13 @@ DiceParam Item::dmg(const AttMode att_mode, const Actor* const actor) const
     {
         const bool is_melee_wpn = data_->type == ItemType::melee_wpn;
 
-        //Melee weapons do throw damage based on their melee damage
+        // Melee weapons do throw damage based on their melee damage
         if (is_melee_wpn)
         {
             out = data_->melee.dmg;
             out.plus = melee_dmg_plus_;
         }
-        else //Not a melee weapon
+        else // Not a melee weapon
         {
             out = data_->ranged.throw_dmg;
         }
@@ -165,7 +166,10 @@ DiceParam Item::dmg(const AttMode att_mode, const Actor* const actor) const
         ASSERT(false);
         break;
     }
-    }
+    } // Attack mode switch
+
+    // Apply item specific damage modifications
+    specific_dmg_mod(out, actor);
 
     return out;
 }
@@ -484,25 +488,29 @@ int Armor::take_dur_hit_and_get_reduced_dmg(const int dmg_before)
 {
     TRACE_FUNC_BEGIN;
 
-    //AP:  Armor points
+    //
+    // AP:  Armor points
     //     Damage soaked up instead of hitting the player
-    //DFF: Damage (to) Durability Factor
-    //     A factor of how much damage the armor durability takes per attack damage point
+    //
+    // DFF: Damage (to) Durability Factor
+    //     A factor of how much damage the armor durability takes per attack
+    //     damage point
+    //
 
     const int ap_before = armor_points();
 
-    //TODO: Add check for if wearer is player!
+    // TODO: Add check for if wearer is player!
 
-    //Damage factor
+    // Damage factor
     const double dmg_before_db = double(dmg_before);
 
-    //Adjustment factor
+    // Adjustment factor
     const double k = 2.0;
 
-    //Armor durability factor
+    // Armor durability factor
     const double armor_ddf = data_->armor.dmg_to_durability_factor;
 
-    //Armor lasts twice as long for War Vets
+    // Armor lasts twice as long for War Vets
     const double war_vet_ddf = (player_bon::bg() == Bg::war_vet) ? 0.5 : 1.0;
 
     dur_ -= int(dmg_before_db * k * armor_ddf * war_vet_ddf);
@@ -598,11 +606,11 @@ UnequipAllowed ArmorMiGo::on_unequip_hook()
 
     if (rnd::coin_toss())
     {
-        //NOTE: There is no need to print a message here, a message is always
-        //      printed when taking off armor.
+        // NOTE: There is no need to print a message here, a message is always
+        //       printed when taking off armor.
         return UnequipAllowed::yes;
     }
-    else //Armor is stuck
+    else // Armor is stuck
     {
         msg_log::add("I fail to tear it off.",
                      clr_white,
@@ -672,7 +680,7 @@ void Wpn::set_random_melee_plus()
         70,                     //          520
         is_low_dlvl ? 20 : 40,  //          540 or 560
         is_low_dlvl ? 2  : 20,  //          542 or 580
-        is_low_dlvl ? 1  : 10   //Total:    543 or 590
+        is_low_dlvl ? 1  : 10   // Total:   543 or 590
     };
 
     melee_dmg_plus_ = rnd::weighted_choice(weights);
@@ -742,7 +750,7 @@ void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit)
 
     if (actor_hit.state() == ActorState::alive)
     {
-        //Poison victim from Ghoul Toxic trait?
+        // Poison victim from Ghoul Toxic trait?
         if (player_bon::traits[(size_t)Trait::toxic] &&
             rnd::one_in(4))
         {
@@ -751,7 +759,7 @@ void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit)
             actor_hit.prop_handler().try_add(poison);
         }
 
-        //Terrify victim from Ghoul Indomitable Fury trait?
+        // Terrify victim from Ghoul Indomitable Fury trait?
         if (player_bon::traits[(size_t)Trait::indomitable_fury] &&
             map::player->has_prop(PropId::frenzied))
         {
@@ -833,6 +841,16 @@ MachineGun::MachineGun(ItemDataT* const item_data) :
 MiGoGun::MiGoGun(ItemDataT* const item_data) :
     Wpn(item_data) {}
 
+void MiGoGun::specific_dmg_mod(DiceParam& dice,
+                               const Actor* const actor) const
+{
+    if (actor == map::player &&
+        player_bon::traits[(size_t)Trait::elec_incl])
+    {
+        ++dice.plus;
+    }
+}
+
 // -----------------------------------------------------------------------------
 // Spike gun
 // -----------------------------------------------------------------------------
@@ -862,7 +880,7 @@ void RavenPeck::on_melee_hit(Actor& actor_hit)
         return;
     }
 
-    //Gas mask and Asbesthos suit protects against blindness
+    // Gas mask and Asbesthos suit protects against blindness
     Item* const head_item = actor_hit.inv().item_in_slot(SlotId::head);
     Item* const body_item = actor_hit.inv().item_in_slot(SlotId::body);
 
@@ -887,7 +905,7 @@ void DustVortexEngulf::on_melee_hit(Actor& actor_hit)
         return;
     }
 
-    //Gas mask and Asbesthos suit protects against blindness
+    // Gas mask and Asbesthos suit protects against blindness
     Item* const head_item = actor_hit.inv().item_in_slot(SlotId::head);
     Item* const body_item = actor_hit.inv().item_in_slot(SlotId::body);
 
@@ -912,7 +930,7 @@ void SpittingCobraSpit::on_ranged_hit(Actor& actor_hit)
         return;
     }
 
-    //Gas mask and Asbesthos suit protects against blindness
+    // Gas mask and Asbesthos suit protects against blindness
     Item* const head_item = actor_hit.inv().item_in_slot(SlotId::head);
     Item* const body_item = actor_hit.inv().item_in_slot(SlotId::body);
 
@@ -975,12 +993,12 @@ void MedicalBag::on_pickup_hook()
 
     auto& inv = actor_carrying_->inv();
 
-    //Check for existing medical bag in inventory
+    // Check for existing medical bag in inventory
     for (Item* const other : inv.backpack_)
     {
         if (other != this && other->id() == id())
         {
-            //Add my turns left to the other medical bag, then destroy self
+            // Add my turns left to the other medical bag, then destroy self
             static_cast<MedicalBag*>(other)->nr_supplies_ += nr_supplies_;
 
             inv.remove_item_in_backpack_with_ptr(this, true);
@@ -1038,7 +1056,7 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
         return ConsumeItem::no;
     }
 
-    //Action can be done
+    // Action can be done
     map::player->active_medical_bag = this;
 
     nr_turns_left_action_ = tot_turns_for_action(current_action_);
@@ -1071,13 +1089,13 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
 
 MedBagAction MedicalBag::choose_action() const
 {
-    //Infection?
+    // Infection?
     if (map::player->has_prop(PropId::infected))
     {
         return MedBagAction::sanitize_infection;
     }
 
-    //Wound?
+    // Wound?
     if (map::player->has_prop(PropId::wound))
     {
         return MedBagAction::treat_wound;
@@ -1096,7 +1114,7 @@ void MedicalBag::continue_action()
     {
         finish_current_action();
     }
-    else //Time still remaining on the current action
+    else // Time still remaining on the current action
     {
         game_time::tick();
     }
@@ -1349,7 +1367,7 @@ void Dynamite::on_std_turn_player_hold_ignited()
 
         msg_log::add(fuse_msg, clr_yellow);
     }
-    else //Fuse has run out
+    else // Fuse has run out
     {
         msg_log::add("The dynamite explodes in my hand!");
 

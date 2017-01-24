@@ -607,7 +607,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 45);
     d.ability_vals.set_val(AbilityId::ranged, 50);
     d.spawn_min_dlvl = 4;
-    d.spawn_max_dlvl = d.spawn_min_dlvl + 15;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::alone,  4),

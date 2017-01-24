@@ -91,7 +91,7 @@ std::vector<std::string> StrangeDevice::descr() const
 
         return out;
     }
-    else //Not identified
+    else // Not identified
     {
         return data_->base_descr;
     }
@@ -114,9 +114,9 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
         // Damage user? Fail to run effect? Condition degrade? Warning?
         const std::string hurt_msg  = "It hits me with a jolt of electricity!";
 
-        bool is_effect_failed   = false;
-        bool is_cond_degrade    = false;
-        bool is_warning         = false;
+        bool is_effect_failed = false;
+        bool is_cond_degrade = false;
+        bool is_warning = false;
 
         int bon = 0;
 
@@ -130,12 +130,22 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
             bon -= 2;
         }
 
+        if (actor->is_player() &&
+            player_bon::traits[(size_t)Trait::elec_incl])
+        {
+            bon += 2;
+        }
+
         const int rnd = rnd::range(1, 8 + bon);
 
         switch (condition_)
         {
         case Condition::breaking:
         {
+            is_cond_degrade = rnd <= 2;
+
+            is_effect_failed = rnd == 3 || rnd == 4;
+
             if (rnd == 5 || rnd == 6)
             {
                 msg_log::add(hurt_msg,
@@ -145,16 +155,16 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
                            DmgType::electric);
             }
 
-            is_effect_failed = rnd == 3 || rnd == 4;
-
-            is_cond_degrade = rnd <= 2;
-
             is_warning = rnd == 7 || rnd == 8;
         }
         break;
 
         case Condition::shoddy:
         {
+            is_cond_degrade = rnd <= 2;
+
+            is_effect_failed = rnd == 3;
+
             if (rnd == 4)
             {
                 msg_log::add(hurt_msg,
@@ -163,10 +173,6 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
                 actor->hit(rnd::dice(1, 4),
                            DmgType::electric);
             }
-
-            is_effect_failed = rnd == 3;
-
-            is_cond_degrade = rnd <= 2;
 
             is_warning = rnd == 5 || rnd == 6;
         }
@@ -227,7 +233,7 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
         game_time::tick();
         return consumed_state;
     }
-    else //Not identified
+    else // Not identified
     {
         msg_log::add("This device is completely alien to me, ");
 
@@ -370,7 +376,7 @@ ConsumeItem DeviceTranslocator::trigger_effect()
     {
         msg_log::add("It seems to peruse area.");
     }
-    else //Seen targets are available
+    else // Seen targets are available
     {
         for (Actor* actor : seen_foes)
         {
@@ -438,17 +444,17 @@ void DeviceLantern::save()
 
 void DeviceLantern::load()
 {
-    nr_turns_left_          = saving::get_int();
-    nr_flicker_turns_left_  = saving::get_int();
-    working_state_          = LanternWorkingState(saving::get_int());
-    is_activated_           = saving::get_bool();
+    nr_turns_left_ = saving::get_int();
+    nr_flicker_turns_left_ = saving::get_int();
+    working_state_ = LanternWorkingState(saving::get_int());
+    is_activated_ = saving::get_bool();
 }
 
 void DeviceLantern::on_pickup_hook()
 {
     ASSERT(actor_carrying_);
 
-    //Check for existing electric lantern in inventory
+    // Check for existing electric lantern in inventory
     Inventory& inv = actor_carrying_->inv();
 
     for (Item* const other : inv.backpack_)
@@ -476,6 +482,12 @@ void DeviceLantern::toggle()
 
     is_activated_ = !is_activated_;
 
+    // Discourage flipping on and off frequently
+    if (is_activated_ && nr_turns_left_ > 1)
+    {
+        --nr_turns_left_;
+    }
+
     audio::play(SfxId::lantern);
 }
 
@@ -487,17 +499,28 @@ void DeviceLantern::on_std_turn_in_inv(const InvType inv_type)
     {
         if (working_state_ == LanternWorkingState::working)
         {
-            --nr_turns_left_;
+            bool should_decr = true;
+
+            if (player_bon::traits[(size_t)Trait::elec_incl] &&
+                game_time::turn_nr() % 2 == 0)
+            {
+                should_decr = false;
+            }
+
+            if (should_decr)
+            {
+                --nr_turns_left_;
+            }
         }
 
         if (nr_turns_left_ <= 0)
         {
-            msg_log::add("My Electric Lantern has run out.",
+            msg_log::add("My Electric Lantern has expired.",
                          clr_msg_note,
                          true,
                          MorePromptOnMsg::yes);
 
-            game::add_history_event("My Electric Lantern ran out.");
+            game::add_history_event("My Electric Lantern expired.");
 
             // NOTE: The this deletes the object
             map::player->inv().remove_item_in_backpack_with_ptr(this, true);
@@ -505,11 +528,11 @@ void DeviceLantern::on_std_turn_in_inv(const InvType inv_type)
             return;
         }
 
-        //This point reached means the lantern is not destroyed
+        // This point reached means the lantern is not destroyed
 
         if (nr_flicker_turns_left_ > 0)
         {
-            //Already flickering, count down instead
+            // Already flickering, count down instead
             --nr_flicker_turns_left_;
 
             if (nr_flicker_turns_left_ <= 0)
@@ -517,15 +540,22 @@ void DeviceLantern::on_std_turn_in_inv(const InvType inv_type)
                 working_state_ = LanternWorkingState::working;
             }
         }
-        else //Not flickering
+        else // Not already flickering
         {
-            if (rnd::one_in(40))
+            int flicker_one_in_n = 40;
+
+            if (player_bon::traits[(size_t)Trait::elec_incl])
+            {
+                flicker_one_in_n *= 2;
+            }
+
+            if (rnd::one_in(flicker_one_in_n))
             {
                 msg_log::add("My Electric Lantern flickers...");
-                working_state_          = LanternWorkingState::flicker;
+                working_state_ = LanternWorkingState::flicker;
                 nr_flicker_turns_left_  = rnd::range(4, 8);
             }
-            else //Not flickering
+            else // Not starting to flicker
             {
                 working_state_ = LanternWorkingState::working;
             }

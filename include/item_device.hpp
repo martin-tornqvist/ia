@@ -61,7 +61,9 @@ public:
 private:
     std::string descr_identified() const override
     {
-        return "When activated, this device blasts all visible enemies with infernal power.";
+        return
+            "When activated, this device blasts all visible enemies with "
+            "infernal power.";
     }
 
     ConsumeItem trigger_effect() override;
@@ -78,8 +80,10 @@ public:
 private:
     std::string descr_identified() const override
     {
-        return "When activated, this device generates a shock wave which violently "
-               "pushes away any adjacent creatures and destroys structures.";
+        return
+            "When activated, this device generates a shock wave which "
+            "violently pushes away any adjacent creatures and destroys "
+            "structures.";
     }
 
     ConsumeItem trigger_effect() override;
@@ -96,7 +100,9 @@ public:
 private:
     std::string descr_identified() const override
     {
-        return "When activated, this device heals all wounds and physical maladies.";
+        return
+            "When activated, this device heals all wounds and physical "
+            "maladies.";
     }
 
     ConsumeItem trigger_effect() override;
@@ -113,8 +119,9 @@ public:
 private:
     std::string descr_identified() const override
     {
-        return "When activated, this device teleports all visible enemies to "
-               "different locations.";
+        return
+            "When activated, this device teleports all visible enemies to "
+            "different locations.";
     }
 
     ConsumeItem trigger_effect() override;
@@ -131,7 +138,9 @@ public:
 private:
     std::string descr_identified() const override
     {
-        return "When activated, this device will \"come alive\" and guard the user.";
+        return
+            "When activated, this device will \"come alive\" and guard the "
+            "user.";
     }
 
     ConsumeItem trigger_effect() override;
@@ -172,4 +181,4 @@ private:
     std::string name_inf() const override;
 };
 
-#endif
+#endif // ITEM_DEVICE_HPP

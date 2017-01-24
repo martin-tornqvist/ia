@@ -63,6 +63,9 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
     case Trait::summoner:
         break;
 
+    case Trait::blood_sorc:
+        break;
+
     case Trait::seer:
         break;
 
@@ -131,6 +134,9 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         break;
 
     case Trait::undead_bane:
+        break;
+
+    case Trait::elec_incl:
         break;
 
     case Trait::ravenous:
@@ -231,6 +237,9 @@ std::string trait_title(const Trait id)
     case Trait::summoner:
         return "Summoner";
 
+    case Trait::blood_sorc:
+        return "Blood Sorcerer";
+
     case Trait::seer:
         return "Seer";
 
@@ -317,6 +326,9 @@ std::string trait_title(const Trait id)
 
     case Trait::undead_bane:
         return "Bane of the Undead";
+
+    case Trait::elec_incl:
+        return "Electrically Inclined";
 
     case Trait::ravenous:
         return "Ravenous";
@@ -509,6 +521,11 @@ std::string trait_descr(const Trait id)
             "-1 Spirit cost for summoning spells, halved risk that called "
             "creatures are hostile";
 
+    case Trait::blood_sorc:
+        return
+            "-1 Spirit cost for all spells, casting a spell drains 2 "
+            "Hit Points";
+
     case Trait::seer:
         return
             "Detection spells have lower Spirit costs, and the spell "
@@ -621,6 +638,12 @@ std::string trait_descr(const Trait id)
             "Attacks against ethereal undead monsters (e.g. Ghosts) never pass "
             "through them (although you can still miss in the ordinary way)";
 
+    case Trait::elec_incl:
+        return
+            "Rods recharge twice as fast, Strange Devices are less likely to "
+            "malfunction or break, Electric Lanterns last twice as long, and "
+            "are less likely to flicker, +1 damage with electricity weapons.";
+
     case Trait::ravenous:
         return
             "You occasionally feed on living victims when attacking with your "
@@ -710,6 +733,11 @@ void trait_prereqs(const Trait trait,
     case Trait::summoner:
         traits_out.push_back(Trait::fearless);
         traits_out.push_back(Trait::strong_spirit);
+        bg_out = Bg::occultist;
+        break;
+
+    case Trait::blood_sorc:
+        traits_out.push_back(Trait::tough);
         bg_out = Bg::occultist;
         break;
 
@@ -806,6 +834,9 @@ void trait_prereqs(const Trait trait,
         traits_out.push_back(Trait::tough);
         traits_out.push_back(Trait::fearless);
         traits_out.push_back(Trait::strong_spirit);
+        break;
+
+    case Trait::elec_incl:
         break;
 
     case Trait::ravenous:

@@ -176,11 +176,14 @@ Range Spell::spi_cost(Actor* const caster) const
         //
         // TODO: Shouldn't this be done by calling virtual functions?
         //
-        bool is_warlock = player_bon::traits[(size_t)Trait::warlock];
+        bool is_warlock =
+            player_bon::traits[(size_t)Trait::warlock];
 
-        bool is_seer = player_bon::traits[(size_t)Trait::seer];
+        bool is_seer =
+            player_bon::traits[(size_t)Trait::seer];
 
-        bool is_summoner = player_bon::traits[(size_t)Trait::summoner];
+        bool is_summoner =
+            player_bon::traits[(size_t)Trait::summoner];
 
         switch (id())
         {
@@ -251,6 +254,14 @@ Range Spell::spi_cost(Actor* const caster) const
             break;
         }
 
+        const bool is_blood_sorc =
+            player_bon::traits[(size_t)Trait::blood_sorc];
+
+        if (is_blood_sorc)
+        {
+            --cost_max;
+        }
+
         if (caster->has_prop(PropId::blessed))
         {
             --cost_max;
@@ -263,6 +274,7 @@ Range Spell::spi_cost(Actor* const caster) const
     } // Is player, and use modified cost
 
     cost_max = std::max(1, cost_max);
+
     const int cost_min = std::max(1, (cost_max + 1) / 2);
 
     return Range(cost_min, cost_max);
