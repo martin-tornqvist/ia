@@ -97,7 +97,7 @@ void put_templ_features(const Array2<char>& templ,
             }
             break;
 
-            case '\'':
+            case '*':
             {
                 map::put(new Chains(p));
             }
