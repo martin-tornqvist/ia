@@ -87,18 +87,16 @@ void save();
 
 void load();
 
-void pickable_bgs(std::vector<Bg>& bgs_out);
+std::vector<Bg> pickable_bgs();
 
-// Returns a list of all traits in the game, except traits which cannot be
-// picked by the given background
-void trait_list_for_bg(const Bg bg, std::vector<Trait>& traits_out);
+void unpicked_traits_for_bg(const Bg bg,
+                            std::vector<Trait>& traits_can_be_picked_out,
+                            std::vector<Trait>& traits_prereqs_not_met_out);
 
 void trait_prereqs(const Trait id,
                    const Bg bg,
                    std::vector<Trait>& traits_out,
                    Bg& bg_out);
-
-bool is_prereqs_ok(const Trait id);
 
 Bg bg();
 

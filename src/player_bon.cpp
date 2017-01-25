@@ -48,7 +48,7 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         break;
 
     case Trait::dem_expert:
-        //Too much character theme mismatch
+        // Too much character theme mismatch
         return bg == Bg::occultist || bg == Bg::ghoul;
 
     case Trait::cool_headed:
@@ -91,7 +91,7 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         break;
 
     case Trait::healer:
-        //Cannot use Medial Bag
+        // Cannot use Medial Bag
         return bg == Bg::ghoul;
 
     case Trait::observant:
@@ -104,11 +104,11 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         break;
 
     case Trait::rapid_recoverer:
-        //Cannot regen hp passively
+        // Cannot regen hp passively
         return bg == Bg::ghoul;
 
     case Trait::survivalist:
-        //Has RDISEASE already + a bit of theme mismatch
+        // Has RDISEASE already + a bit of theme mismatch
         return bg == Bg::ghoul;
 
     case Trait::perseverant:
@@ -158,7 +158,7 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
     return false;
 }
 
-} //namespace
+} // namespace
 
 void init()
 {
@@ -873,7 +873,7 @@ void trait_prereqs(const Trait trait,
         {
             it = traits_out.erase(it);
         }
-        else //Not blocked
+        else // Not blocked
         {
             ++it;
         }
@@ -890,98 +890,113 @@ void trait_prereqs(const Trait trait,
     });
 }
 
-bool is_prereqs_ok(const Trait id)
-{
-    //If the trait is already picked, of course the prerequisites are OK!
-    if (traits[(size_t)id])
-    {
-        return true;
-    }
-
-    std::vector<Trait> prereq_traits;
-
-    Bg prereq_bg = Bg::END;
-
-    trait_prereqs(id,
-                  bg_,
-                  prereq_traits,
-                  prereq_bg);
-
-    //Background OK?
-    bool is_ok = bg_== prereq_bg || prereq_bg == Bg::END;
-
-    if (is_ok)
-    {
-        //Background is OK, time to check the traits
-        for (Trait prereq_trait : prereq_traits)
-        {
-            if (!traits[(size_t)prereq_trait])
-            {
-                is_ok = false;
-                break;
-            }
-        }
-    }
-
-    return is_ok;
-}
-
 Bg bg()
 {
     return bg_;
 }
 
-void pickable_bgs(std::vector<Bg>& bgs_out)
+std::vector<Bg> pickable_bgs()
 {
-    bgs_out.clear();
+    std::vector<Bg> ret;
 
     for (int i = 0; i < (int)Bg::END; ++i)
     {
-        bgs_out.push_back(Bg(i));
+        ret.push_back(Bg(i));
     }
 
-    //Sort lexicographically
-    sort(bgs_out.begin(), bgs_out.end(), [](const Bg & bg1, const Bg & bg2)
+    // Sort lexicographically
+    sort(ret.begin(), ret.end(), [](const Bg & bg1, const Bg & bg2)
     {
         const std::string str1 = bg_title(bg1);
         const std::string str2 = bg_title(bg2);
         return str1 < str2;
     });
+
+    return ret;
 }
 
-void trait_list_for_bg(const Bg bg, std::vector<Trait>& traits_out)
+void unpicked_traits_for_bg(const Bg bg,
+                            std::vector<Trait>& traits_can_be_picked_out,
+                            std::vector<Trait>& traits_prereqs_not_met_out)
 {
-    traits_out.clear();
-
     for (size_t i = 0; i < (size_t)Trait::END; ++i)
     {
-        const Trait trait = Trait(i);
+        //
+        // Already picked?
+        //
+        if (traits[i])
+        {
+            continue;
+        }
 
+        const auto trait = (Trait)i;
+
+        //
+        // Check if trait is explicitly blocked for this background
+        //
         const bool is_blocked_for_bg = is_trait_blocked_for_bg(trait, bg);
 
-        if (!is_blocked_for_bg)
+        if (is_blocked_for_bg)
         {
-            //Check trait prerequisites (traits and background)
-            //NOTE: Traits blocked for the current background are not
-            //considered prerequisites
+            continue;
+        }
 
-            std::vector<Trait> trait_prereq_list;
-            Bg bg_prereq = Bg::END;
+        //
+        // Check trait prerequisites (traits and background)
+        //
 
-            trait_prereqs(trait, bg, trait_prereq_list, bg_prereq);
+        std::vector<Trait> trait_prereq_list;
 
-            bool is_pickable = (bg_ == bg_prereq) || (bg_prereq == Bg::END);
+        Bg bg_prereq = Bg::END;
 
-            if (is_pickable)
+        //
+        // NOTE: Traits blocked for the current background are not
+        //       considered prerequisites
+        //
+        trait_prereqs(trait, bg, trait_prereq_list, bg_prereq);
+
+        bool is_bg_ok = (bg_ == bg_prereq) || (bg_prereq == Bg::END);
+
+        if (!is_bg_ok)
+        {
+            continue;
+        }
+
+        bool is_trait_prereqs_ok = true;
+
+        for (const auto& prereq : trait_prereq_list)
+        {
+            if (!traits[(size_t)prereq])
             {
-                traits_out.push_back(trait);
+                is_trait_prereqs_ok = false;
+
+                break;
             }
         }
-    }
 
-    //Sort lexicographically
-    sort(traits_out.begin(),
-         traits_out.end(),
+        if (is_trait_prereqs_ok)
+        {
+            traits_can_be_picked_out.push_back(trait);
+        }
+        else // Prerequisites not met
+        {
+            traits_prereqs_not_met_out.push_back(trait);
+        }
+
+    } // Trait loop
+
+    // Sort lexicographically
+    sort(traits_can_be_picked_out.begin(),
+         traits_can_be_picked_out.end(),
+         [](const Trait & t1, const Trait & t2)
+    {
+        const std::string str1 = trait_title(t1);
+        const std::string str2 = trait_title(t2);
+        return str1 < str2;
+    });
+
+    sort(traits_prereqs_not_met_out.begin(),
+         traits_prereqs_not_met_out.end(),
          [](const Trait & t1, const Trait & t2)
     {
         const std::string str1 = trait_title(t1);

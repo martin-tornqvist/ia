@@ -97,15 +97,15 @@ void GainLvlState::update()
 // Pick background state
 // -----------------------------------------------------------------------------
 PickBgState::PickBgState() :
-    State       (),
-    browser_    ()
+    State(),
+    browser_()
 {
 
 }
 
 void PickBgState::on_start()
 {
-    player_bon::pickable_bgs(bgs_);
+    bgs_ = player_bon::pickable_bgs();
 
     browser_.reset(bgs_.size(), opt_h_);
 
@@ -223,8 +223,12 @@ void PickBgState::draw()
 // Pick trait state
 // -----------------------------------------------------------------------------
 PickTraitState::PickTraitState() :
-    State       (),
-    browser_    ()
+    State(),
+    browser_traits_avail_(),
+    browser_traits_unavail_(),
+    traits_avail_(),
+    traits_unavail_(),
+    screen_mode_(TraitScreenMode::pick_new)
 {
 
 }
@@ -233,9 +237,13 @@ void PickTraitState::on_start()
 {
     const Bg player_bg = player_bon::bg();
 
-    player_bon::trait_list_for_bg(player_bg, traits_);
+    player_bon::unpicked_traits_for_bg(player_bg,
+                                       traits_avail_,
+                                       traits_unavail_);
 
-    browser_.reset(traits_.size(), opt_h_);
+    browser_traits_avail_.reset(traits_avail_.size(), opt_h_);
+
+    browser_traits_unavail_.reset(traits_unavail_.size(), opt_h_);
 }
 
 void PickTraitState::update()
@@ -249,28 +257,40 @@ void PickTraitState::update()
 
     const auto input = io::get(false);
 
+    //
+    // Switch trait screen mode?
+    //
+    if (input.key == SDLK_TAB)
+    {
+        screen_mode_ =
+            screen_mode_ == TraitScreenMode::pick_new ?
+            TraitScreenMode::view_unavail :
+            TraitScreenMode::pick_new;
+
+        return;
+    }
+
+    MenuBrowser& browser =
+        screen_mode_ == TraitScreenMode::pick_new ?
+        browser_traits_avail_ :
+        browser_traits_unavail_;
+
     const MenuAction action =
-        browser_.read(input,
-                      MenuInputMode::scrolling_and_letters);
+        browser.read(input,
+                     MenuInputMode::scrolling_and_letters);
 
     switch (action)
     {
     case MenuAction::selected:
     case MenuAction::selected_shift:
     {
-        const Trait trait = traits_[browser_.y()];
-        const bool is_picked = player_bon::traits[(size_t)trait];
-
-        if (!is_picked)
+        if (screen_mode_ == TraitScreenMode::pick_new)
         {
-            const bool is_prereqs_ok = player_bon::is_prereqs_ok(trait);
+            const Trait trait = traits_avail_[browser.y()];
 
-            if (is_prereqs_ok)
-            {
-                player_bon::pick_trait(trait);
+            player_bon::pick_trait(trait);
 
-                states::pop();
-            }
+            states::pop();
         }
     }
     break;
@@ -284,10 +304,23 @@ void PickTraitState::draw()
 {
     const int clvl = game::clvl();
 
-    std::string title =
-        (clvl == 1) ?
-        "Which additional trait do you start with?" :
-        "You have reached a new level! Which trait do you gain?";
+    std::string title;
+
+    if (screen_mode_ == TraitScreenMode::pick_new)
+    {
+        title =
+            (clvl == 1) ?
+            "Which extra trait do you start with?" :
+            "Which trait do you gain?";
+
+        title += " [TAB] to view unavailable traits";
+    }
+    else // Viewing unavailable traits
+    {
+        title = "Currently unavailable traits";
+
+        title += " [TAB] to view available traits";
+    }
 
     io::draw_text_center(title,
                          Panel::screen,
@@ -296,8 +329,27 @@ void PickTraitState::draw()
                          clr_black,
                          true);
 
-    const int browser_y = browser_.y();
-    const Trait trait_marked = traits_[browser_y];
+    MenuBrowser* browser;
+
+    std::vector<Trait>* traits;
+
+    if (screen_mode_ == TraitScreenMode::pick_new)
+    {
+        browser = &browser_traits_avail_;
+
+        traits = &traits_avail_;
+    }
+    else // Viewing unavailable traits
+    {
+        browser = &browser_traits_unavail_;
+
+        traits = &traits_unavail_;
+    }
+
+    const int browser_y = browser->y();
+
+    const Trait trait_marked = traits->at(browser_y);
+
     const Bg player_bg = player_bon::bg();
 
     //
@@ -305,81 +357,67 @@ void PickTraitState::draw()
     //
     int y = opt_y0_;
 
-    const Range idx_range_shown = browser_.range_shown();
+    const Range idx_range_shown = browser->range_shown();
 
     std::string key_str = "a) ";
 
     for (int i = idx_range_shown.min; i <= idx_range_shown.max; ++i)
     {
-        const Trait trait = traits_[i];
+        const Trait trait = traits->at(i);
+
         std::string trait_name = player_bon::trait_title(trait);
+
         const bool is_idx_marked = browser_y == i;
-        const bool is_picked = player_bon::traits[(size_t)trait];
-        const bool is_prereqs_ok = player_bon::is_prereqs_ok(trait);
 
         Clr clr = clr_magenta_lgt;
 
-        if (is_prereqs_ok)
+        if (screen_mode_ == TraitScreenMode::pick_new)
         {
-            if (is_picked)
+            if (is_idx_marked)
             {
-                if (is_idx_marked)
-                {
-                    clr = clr_green_lgt;
-                }
-                else //Not marked
-                {
-                    clr = clr_green;
-                }
+                clr = clr_menu_highlight;
             }
-            else //Not picked
+            else // Not marked
             {
-                if (is_idx_marked)
-                {
-                    clr = clr_menu_highlight;
-                }
-                else //Not marked
-                {
-                    clr = clr_menu_drk;
-                }
+                clr = clr_menu_drk;
             }
         }
-        else // Prerequisites not met
+        else // Viewing unavailable traits
         {
             if (is_idx_marked)
             {
                 clr = clr_red_lgt;
             }
-            else //Not marked
+            else // Not marked
             {
                 clr = clr_red;
             }
         }
 
         io::draw_text(key_str + trait_name,
-                          Panel::screen,
-                          P(opt_x0_, y),
-                          clr);
+                      Panel::screen,
+                      P(opt_x0_, y),
+                      clr);
 
         ++y;
         ++key_str[0];
     }
 
     // Draw "more" labels
-    if (!browser_.is_on_top_page())
+    if (!browser->is_on_top_page())
     {
         io::draw_text("(More - Page Up)",
-                          Panel::screen,
-                          P(opt_x0_, top_more_y_),
-                          clr_white_high);
+                      Panel::screen,
+                      P(opt_x0_, top_more_y_),
+                      clr_white_high);
     }
 
-    if (!browser_.is_on_btm_page())
+    if (!browser->is_on_btm_page())
     {
         io::draw_text("(More - Page Down)",
-                          Panel::screen,
-                          P(opt_x0_, btm_more_y_),
-                          clr_white_high);
+                      Panel::screen,
+                      P(opt_x0_, btm_more_y_),
+                      clr_white_high);
     }
 
     //
@@ -416,9 +454,9 @@ void PickTraitState::draw()
                               trait_marked_prereqs,
                               trait_marked_bg_prereq);
 
-    const int Y0_PREREQS = 10;
+    const int y0_prereqs = 10;
 
-    y = Y0_PREREQS;
+    y = y0_prereqs;
 
     if (!trait_marked_prereqs.empty() ||
         trait_marked_bg_prereq != Bg::END)
@@ -426,15 +464,16 @@ void PickTraitState::draw()
         const std::string label = "Prerequisite(s):";
 
         io::draw_text(label,
-                          Panel::screen,
-                          P(descr_x0_, y),
-                          clr_white);
+                      Panel::screen,
+                      P(descr_x0_, y),
+                      clr_white);
 
         std::vector<StrAndClr> prereq_titles;
 
         std::string prereq_str = "";
 
         const Clr& clr_prereq_ok = clr_green;
+
         const Clr& clr_prereq_not_ok = clr_red;
 
         if (trait_marked_bg_prereq != Bg::END)
@@ -484,8 +523,8 @@ void PickTraitState::draw()
 // Enter name state
 // -----------------------------------------------------------------------------
 EnterNameState::EnterNameState() :
-    State           (),
-    current_str_    ()
+    State(),
+    current_str_()
 {
 
 }

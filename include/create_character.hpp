@@ -5,6 +5,12 @@
 #include "player_bon.hpp"
 #include "browser.hpp"
 
+enum class TraitScreenMode
+{
+    pick_new,
+    view_unavail
+};
+
 class NewGameState: public State
 {
 public:
@@ -62,9 +68,13 @@ public:
     void draw() override;
 
 private:
-    MenuBrowser browser_;
+    MenuBrowser browser_traits_avail_;
+    MenuBrowser browser_traits_unavail_;
 
-    std::vector<Trait> traits_;
+    std::vector<Trait> traits_avail_;
+    std::vector<Trait> traits_unavail_;
+
+    TraitScreenMode screen_mode_;
 };
 
 class EnterNameState: public State
