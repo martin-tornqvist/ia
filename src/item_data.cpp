@@ -1661,14 +1661,9 @@ void init_data_list()
         "and electricity, and also against smoke, fumes and gas.",
 
         "It is a bit bulky, so sneaking and dodging is slightly more difficult."
-        "Also, because of the hood and mask, aiming and detecting hidden "
-        "enemies and objects is somewhat harder."
     };
     d.ability_mods_while_equipped[(size_t)AbilityId::stealth]   = -20;
-    d.ability_mods_while_equipped[(size_t)AbilityId::melee]     = -10;
-    d.ability_mods_while_equipped[(size_t)AbilityId::ranged]    = -10;
     d.ability_mods_while_equipped[(size_t)AbilityId::dodging]   = -20;
-    d.ability_mods_while_equipped[(size_t)AbilityId::searching] = -6;
     d.weight = ItemWeight::medium;
     d.clr = clr_red_lgt;
     d.spawn_std_range.min = 3;

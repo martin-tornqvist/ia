@@ -473,4 +473,4 @@ Item* mk_random_scroll_or_potion(const bool allow_scrolls,
     return nullptr;
 }
 
-} //item_factory
+} // item_factory
