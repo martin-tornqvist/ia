@@ -608,24 +608,6 @@ Clr Mon::clr() const
         return tmp_clr;
     }
 
-    // If injured, draw as a shade of red
-    const int current_hp = hp();
-    const int current_hp_max = hp_max(true);
-
-    if (current_hp < current_hp_max)
-    {
-        const int hp_pct =
-            constr_in_range(0,
-                            (current_hp * 100) / current_hp_max,
-                            100);
-
-        tmp_clr.r = std::max(192, (255 * hp_pct) / 100);
-        tmp_clr.g = (64 * hp_pct) / 100;
-        tmp_clr.b = (64 * hp_pct) / 100;
-
-        return tmp_clr;
-    }
-
     return data_->color;
 }
 

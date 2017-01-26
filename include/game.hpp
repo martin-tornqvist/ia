@@ -33,7 +33,8 @@ struct CellRenderData
         mark_lit                        (false),
         is_living_actor_seen_here       (false),
         is_aware_of_hostile_mon_here    (false),
-        is_aware_of_allied_mon_here     (false) {}
+        is_aware_of_allied_mon_here     (false),
+        lifebar_length                  (-1) {}
 
     CellRenderData& operator=(const CellRenderData&) = default;
 
@@ -46,6 +47,7 @@ struct CellRenderData
     bool is_living_actor_seen_here;
     bool is_aware_of_hostile_mon_here;
     bool is_aware_of_allied_mon_here;
+    int lifebar_length;
 };
 
 namespace game

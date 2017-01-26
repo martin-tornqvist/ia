@@ -138,6 +138,8 @@ void draw_info_scr_interface(const std::string& title,
 
 void on_toggle_fullscreen();
 
+P px_pos_for_cell_in_panel(const Panel panel, const P& pos);
+
 // ---
 // TODO: WTF is the difference between these two functions?
 void flush_input();

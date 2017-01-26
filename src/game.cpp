@@ -73,6 +73,59 @@ void query_quit()
     }
 }
 
+int lifebar_length(const Actor& actor)
+{
+    const int actor_hp = std::max(0, actor.hp());
+    const int actor_hp_max = actor.hp_max(true);
+
+    if (actor_hp < actor_hp_max)
+    {
+        int HP_PERCENT = (actor_hp * 100) / actor_hp_max;
+        return ((config::cell_px_w() - 2) * HP_PERCENT) / 100;
+    }
+
+    return -1;
+}
+
+void draw_life_bar(const P& pos, const int length)
+{
+    if (length < 0)
+    {
+        return;
+    }
+
+    const P cell_dims(config::cell_px_w(), config::cell_px_h());
+
+    const int w_green = length;
+
+    const int w_bar_tot = cell_dims.x - 2;
+
+    const int w_red = w_bar_tot - w_green;
+
+    const P px_pos =
+        io::px_pos_for_cell_in_panel(Panel::map,
+                                     pos + P(0, 1)) - P(0, 2);
+
+    const int x0_green = px_pos.x + 1;
+
+    const int x0_red = x0_green + w_green;
+
+    if (w_green > 0)
+    {
+        io::draw_line_hor(P(x0_green, px_pos.y),
+                          w_green,
+                          clr_green_lgt);
+    }
+
+    if (w_red > 0)
+    {
+        io::draw_line_hor(P(x0_red, px_pos.y),
+                          w_red,
+                          clr_red_lgt);
+    }
+}
+
+
 } // namespace
 
 void init()
@@ -1462,6 +1515,8 @@ void GameState::draw_map()
                     render_data->is_living_actor_seen_here = true;
                     render_data->is_light_fade_allowed = false;
 
+                    render_data->lifebar_length = game::lifebar_length(*actor);
+
                     if (map::player->is_leader_of(mon))
                     {
                         render_data->clr_bg = clr_allied_mon;
@@ -1705,25 +1760,42 @@ void GameState::draw_map()
                 render_data->clr_bg = clr_bg;
             }
 
-            // Draw tile here if tile mode, and a tile has been set
-            if (is_tile_mode && render_data->tile != TileId::empty)
+            bool did_draw = false;
+
+            if (is_tile_mode)
             {
-                io::draw_tile(render_data->tile,
-                              Panel::map,
-                              pos,
-                              render_data->clr,
-                              render_data->clr_bg);
+                if (render_data->tile != TileId::empty)
+                {
+                    io::draw_tile(render_data->tile,
+                                  Panel::map,
+                                  pos,
+                                  render_data->clr,
+                                  render_data->clr_bg);
+
+                    did_draw = true;
+                }
             }
-            // Text mode, or no tile set
-            else if (render_data->glyph != ' ' &&
-                     render_data->glyph != 0)
+            else // Text mode
             {
-                io::draw_glyph(render_data->glyph,
-                               Panel::map,
-                               pos,
-                               render_data->clr,
-                               true,
-                               render_data->clr_bg);
+                if (render_data->glyph != ' ' &&
+                    render_data->glyph != 0)
+                {
+                    io::draw_glyph(render_data->glyph,
+                                   Panel::map,
+                                   pos,
+                                   render_data->clr,
+                                   true,
+                                   render_data->clr_bg);
+
+                    did_draw = true;
+                }
+            }
+
+            //Draw lifebar here?
+            if (did_draw &&
+                render_data->lifebar_length != -1)
+            {
+                game::draw_life_bar(pos, render_data->lifebar_length);
             }
 
             if (!cell.is_explored)
@@ -1784,6 +1856,13 @@ void GameState::draw_map()
                        clr,
                        true,
                        clr_bg);
+    }
+
+    const int life_bar_length = game::lifebar_length(*map::player);
+
+    if (life_bar_length != -1)
+    {
+        game::draw_life_bar(pos, life_bar_length);
     }
 
     // TODO: Reimplement somehow

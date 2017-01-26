@@ -275,7 +275,7 @@ void Actor::teleport()
 
     if (is_player())
     {
-        //Teleport control?
+        // Teleport control?
         if (prop_handler_->has_prop(PropId::tele_ctrl) &&
             !prop_handler_->has_prop(PropId::confused))
         {
@@ -332,7 +332,7 @@ void Actor::teleport()
 
             if (blocked[marker_tgt_pos.x][marker_tgt_pos.y])
             {
-                //Blocked
+                // Blocked
                 msg_log::add("Something is blocking me...",
                              clr_white,
                              false,
@@ -340,10 +340,10 @@ void Actor::teleport()
             }
             else if (rnd::percent(chance_of_tele_success(marker_tgt_pos)))
             {
-                //Success
+                // Success
                 tgt_pos = marker_tgt_pos;
             }
-            else //Distance roll failed
+            else // Distance roll failed
             {
                 msg_log::add("I failed to go there...",
                              clr_white,
@@ -521,7 +521,7 @@ void Actor::change_max_hp(const int change, const Verbosity verbosity)
                 msg_log::add("I feel frailer!", clr_msg_bad);
             }
         }
-        else //Is monster
+        else // Is monster
         {
             if (map::player->can_see_actor(*this))
             {
@@ -555,7 +555,7 @@ void Actor::change_max_spi(const int change, const Verbosity verbosity)
                 msg_log::add("My spirit is weaker!", clr_msg_bad);
             }
         }
-        else //Is monster
+        else // Is monster
         {
             if (map::player->can_see_actor(*this))
             {
@@ -803,7 +803,7 @@ ActorDied Actor::hit_spi(const int dmg, const Verbosity verbosity)
             msg_log::add("All my spirit is depleted, I am devoid of life!",
                          clr_msg_bad);
         }
-        else //Is monster
+        else // Is monster
         {
             if (map::player->can_see_actor(*this))
             {
@@ -875,14 +875,14 @@ void Actor::die(const bool is_destroyed,
     {
         state_ = ActorState::destroyed;
     }
-    else //Not destroyed
+    else // Not destroyed
     {
         state_ = ActorState::corpse;
     }
 
     if (!is_player())
     {
-        //This is a monster
+        // This is a monster
 
         if (is_humanoid())
         {
@@ -913,7 +913,7 @@ void Actor::die(const bool is_destroyed,
             map::mk_blood(pos);
         }
     }
-    else //Not destroyed
+    else // Not destroyed
     {
         if (!is_player())
         {
@@ -979,14 +979,14 @@ DidAction Actor::try_eat_corpse()
 
     if (hp() >= hp_max(true) && !wound)
     {
-        //Not "hungry"
+        // Not "hungry"
         return DidAction::no;
     }
 
     Actor* corpse = nullptr;
 
-    //Check all corpses here, if this is the player eating, stop at any corpse
-    //which is prioritized for bashing (Zombies)
+    // Check all corpses here, if this is the player eating, stop at any corpse
+    // which is prioritized for bashing (Zombies)
     for (Actor* const actor : game_time::actors)
     {
         if (actor->pos == pos && actor->state() == ActorState::corpse)
@@ -1027,7 +1027,7 @@ DidAction Actor::try_eat_corpse()
                 msg_log::add("There is nothing left to eat.");
             }
         }
-        else //Is monster
+        else // Is monster
         {
             if (map::player->can_see_actor(*this))
             {
@@ -1044,7 +1044,7 @@ DidAction Actor::try_eat_corpse()
             map::mk_blood(pos);
         }
 
-        //Heal
+        // Heal
         on_feed();
 
         return DidAction::yes;

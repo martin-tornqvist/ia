@@ -407,30 +407,6 @@ void put_pixels_on_scr_for_glyph(const char glyph,
                       clr);
 }
 
-P px_pos_for_cell_in_panel(const Panel panel, const P& pos)
-{
-    const P cell_dims(config::cell_px_w(),
-                      config::cell_px_h());
-
-    switch (panel)
-    {
-    case Panel::screen:
-        return P(pos.x * cell_dims.x,
-                 pos.y * cell_dims.y);
-
-    case Panel::map:
-        return (pos * cell_dims) + P(0, config::map_px_offset_h());
-
-    case Panel::log:
-        return pos * cell_dims;
-
-    case Panel::status_lines:
-        return (pos * cell_dims) + P(0, config::stat_lines_px_offset_h());
-    }
-
-    return P();
-}
-
 /*
 void draw_excl_mark_at(const P& px_pos)
 {
@@ -1426,6 +1402,30 @@ void draw_info_scr_interface(const std::string& title,
                       Panel::screen,
                       P(x_label, screen_h - 1),
                       clr_title);
+}
+
+P px_pos_for_cell_in_panel(const Panel panel, const P& pos)
+{
+    const P cell_dims(config::cell_px_w(),
+                      config::cell_px_h());
+
+    switch (panel)
+    {
+    case Panel::screen:
+        return P(pos.x * cell_dims.x,
+                 pos.y * cell_dims.y);
+
+    case Panel::map:
+        return (pos * cell_dims) + P(0, config::map_px_offset_h());
+
+    case Panel::log:
+        return pos * cell_dims;
+
+    case Panel::status_lines:
+        return (pos * cell_dims) + P(0, config::stat_lines_px_offset_h());
+    }
+
+    return P();
 }
 
 void flush_input()
