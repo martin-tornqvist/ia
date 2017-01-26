@@ -368,8 +368,7 @@ void Actor::teleport()
     {
         Trap* const trap = static_cast<Trap*>(rigid);
 
-        if (
-            trap->type() == TrapId::web &&
+        if (trap->type() == TrapId::web &&
             trap->is_holding_actor())
         {
             trap->destroy();
@@ -388,13 +387,12 @@ void Actor::teleport()
         static_cast<Mon*>(actor)->set_player_aware_of_me();
     }
 
-    if (is_player())
+    if (is_player() &&
+        !player_has_tele_control)
     {
-        if (!player_has_tele_control)
-        {
-            msg_log::add("I suddenly find myself in a different location!");
-            prop_handler_->try_add(new PropConfused(PropTurns::specific, 8));
-        }
+        msg_log::add("I suddenly find myself in a different location!");
+
+        prop_handler_->try_add(new PropConfused(PropTurns::specific, 8));
     }
 }
 

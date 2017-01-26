@@ -1555,6 +1555,8 @@ void melee(Actor* const attacker,
            Actor& defender,
            Wpn& wpn)
 {
+    map::update_vision();
+
     const MeleeAttData att_data(attacker, defender, wpn);
 
     print_melee_msg_and_mk_snd(att_data, wpn);
@@ -1627,8 +1629,7 @@ void melee(Actor* const attacker,
         rnd::one_in(break_on_crit_fail_one_in_n))
     {
         // Remove item without deleting it
-        Item* const item = player_inv.remove_item_in_slot(SlotId::wpn,
-                                                          false);
+        Item* const item = player_inv.remove_item_in_slot(SlotId::wpn, false);
 
         ASSERT(item);
 
@@ -1683,6 +1684,8 @@ bool ranged(Actor* const attacker,
             const P& aim_pos,
             Wpn& wpn)
 {
+    map::update_vision();
+
     bool did_attack = false;
 
     const bool has_inf_ammo = wpn.data().ranged.has_infinite_ammo;
