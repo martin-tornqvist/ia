@@ -433,10 +433,10 @@ void init_data_list()
     };
     d.base_descr =
     {
-        "Compared to a standard shotgun, the sawed - off has a shorter "
-        "effective range. At close range it is more devastating however. "
+        "Compared to a standard shotgun, the sawed-off has a shorter "
+        "effective range - however, at close range it is more devastating. "
         "It holds two barrels, and needs to be reloaded after both are "
-        "discharged"
+        "discharged."
     };
     d.weight = ItemWeight::medium;
     d.tile = TileId::shotgun;
@@ -463,7 +463,7 @@ void init_data_list()
     d.base_name = {"Pump Shotgun", "Pump shotguns", "a Pump Shotgun"};
     d.base_descr =
     {
-        "A pump - action shotgun has a handgrip that can be pumped back and "
+        "A pump-action shotgun has a handgrip that can be pumped back and "
         "forth in order to eject a spent round of ammunition and to chamber a "
         "fresh one. It has a single barrel above a tube magazine into which "
         "shells are inserted. The magazine has a capacity of 8 shells."
@@ -554,9 +554,10 @@ void init_data_list()
     d.base_name = {"Tommy Gun", "Tommy Guns", "a Tommy Gun"};
     d.base_descr =
     {
-        "\"Tommy Gun\" is a nickname for the Thompson submachine gun - an "
-        "automatic firearm with a drum magazine and verical foregrip. It fires "
-        ".45 ACP ammunition. The drum magazine has a capacity of 50 rounds."
+        "\"Tommy Gun\" is a nickname for the Thompson submachine gun - "
+        "an automatic firearm with a drum magazine and vertical foregrip. "
+        "It fires .45 ACP ammunition. The drum magazine has a capacity of 50 "
+        "rounds."
     };
     d.weight = ItemWeight::medium;
     d.tile = TileId::tommy_gun;

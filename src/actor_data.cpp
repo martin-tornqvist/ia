@@ -1904,7 +1904,7 @@ void init_data_list()
         "mine certain minerals not available on their icy world, and more "
         "recently, to study its odd inhabitants. The mi-go are responsible "
         "for many \"alien abduction\" kidnappings. Physically they are not "
-        "much more robust than the average human, they rely upon their "
+        "much more robust than the average human, so they rely upon their "
         "superior science to subdue any primitives who stumble upon their "
         "mines and outposts.";
     d.wary_msg = d.name_the + " looks wary.";

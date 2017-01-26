@@ -580,7 +580,7 @@ std::string trait_descr(const Trait id)
 
     case Trait::vigilant:
         return
-            "You cannot be backstabbed - monsters that you are unaware of gets "
+            "You cannot be backstabbed - monsters that you are unaware of get "
             "no melee attack bonus against you, and their attacks can be "
             "dodged";
 
