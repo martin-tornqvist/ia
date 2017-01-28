@@ -251,12 +251,31 @@ void Actor::on_std_turn_common()
 
 void Actor::teleport()
 {
+    //
+    // Teleport control?
+    //
+    if (is_player() &&
+        prop_handler_->has_prop(PropId::tele_ctrl) &&
+        !prop_handler_->has_prop(PropId::confused))
+    {
+        auto tele_ctrl_state = std::unique_ptr<State>(new CtrlTele);
+
+        states::push(std::move(tele_ctrl_state));
+
+        return;
+    }
+
+    //
+    // Teleport randomly
+    //
+
     bool blocked[map_w][map_h];
 
     map_parsers::BlocksActor(*this, ParseActors::yes)
         .run(blocked);
 
     std::vector<P> pos_bucket;
+
     to_vec(blocked, false, pos_bucket);
 
     if (pos_bucket.empty())
@@ -264,96 +283,19 @@ void Actor::teleport()
         return;
     }
 
+    const P tgt_pos = rnd::element(pos_bucket);
+
+    teleport(tgt_pos);
+}
+
+void Actor::teleport(const P& p)
+{
     if (!is_player() && map::player->can_see_actor(*this))
     {
         msg_log::add(name_the() + " suddenly disappears!");
     }
 
-    P tgt_pos = pos_bucket[rnd::range(0, pos_bucket.size() - 1)];
-
-    bool player_has_tele_control = false;
-
-    if (is_player())
-    {
-        // Teleport control?
-        if (prop_handler_->has_prop(PropId::tele_ctrl) &&
-            !prop_handler_->has_prop(PropId::confused))
-        {
-            player_has_tele_control = true;
-
-            /*
-            auto chance_of_tele_success = [](const P & tgt)
-            {
-                const int dist = king_dist(map::player->pos, tgt);
-                return constr_in_range(25, 100 - dist, 95);
-            };
-
-            auto on_marker_at_pos =
-                [chance_of_tele_success](const P & p,
-                                         CellOverlay overlay[map_w][map_h])
-            {
-                (void)overlay;
-
-                msg_log::clear();
-                look::print_location_info_msgs(p);
-
-                const int chance_pct = chance_of_tele_success(p);
-
-                msg_log::add(std::to_string(chance_pct) + "% chance of success.");
-
-                msg_log::add("[enter] to teleport here");
-                msg_log::add(cancel_info_str_no_space);
-            };
-
-            auto on_key_press = [](const P & p, const InputData & key_data)
-            {
-                (void)p;
-
-                if (key_data.key == SDLK_RETURN)
-                {
-                    msg_log::clear();
-                    return MarkerDone::yes;
-                }
-
-                return MarkerDone::no;
-            };
-            */
-
-            msg_log::add("I have the power to control teleportation.",
-                         clr_white,
-                         false,
-                         MorePromptOnMsg::yes);
-
-            /*
-            const P marker_tgt_pos = marker::run(MarkerUsePlayerTgt::no,
-                                                 on_marker_at_pos,
-                                                 on_key_press,
-                                                 MarkerShowBlocked::no);
-
-            if (blocked[marker_tgt_pos.x][marker_tgt_pos.y])
-            {
-                // Blocked
-                msg_log::add("Something is blocking me...",
-                             clr_white,
-                             false,
-                             MorePromptOnMsg::yes);
-            }
-            else if (rnd::percent(chance_of_tele_success(marker_tgt_pos)))
-            {
-                // Success
-                tgt_pos = marker_tgt_pos;
-            }
-            else // Distance roll failed
-            {
-                msg_log::add("I failed to go there...",
-                             clr_white,
-                             false,
-                             MorePromptOnMsg::yes);
-            }
-            */
-        }
-    }
-    else // Is a monster
+    if (!is_player())
     {
         static_cast<Mon*>(this)->player_aware_of_me_counter_ = 0;
     }
@@ -375,7 +317,7 @@ void Actor::teleport()
         }
     }
 
-    pos = tgt_pos;
+    pos = p;
 
     map::update_vision();
 
@@ -388,7 +330,8 @@ void Actor::teleport()
     }
 
     if (is_player() &&
-        !player_has_tele_control)
+        (!prop_handler_->has_prop(PropId::tele_ctrl) ||
+         prop_handler_->has_prop(PropId::confused)))
     {
         msg_log::add("I suddenly find myself in a different location!");
 

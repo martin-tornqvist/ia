@@ -36,6 +36,8 @@ public:
     void update() override;
 
 protected:
+    virtual void on_start_hook() {}
+
     void draw_marker(const P& p,
                      const std::vector<P>& trail,
                      const int effective_range,
@@ -199,6 +201,30 @@ protected:
     }
 
     const Item& explosive_;
+};
+
+// -----------------------------------------------------------------------------
+// Teleport control marker state
+// -----------------------------------------------------------------------------
+class CtrlTele: public MarkerState
+{
+public:
+    CtrlTele() :
+        MarkerState () {}
+
+    ~CtrlTele() {}
+
+protected:
+    void on_start_hook() override;
+
+    void on_moved() override;
+
+    void handle_input(const InputData& input) override;
+
+private:
+    int chance_of_success_pct(const P& tgt) const;
+
+    bool blocked_[map_w][map_h];
 };
 
 #endif // MARKER_HPP

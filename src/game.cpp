@@ -910,7 +910,7 @@ void handle_player_input(const InputData& input)
     case SDLK_F8:
     {
         map::player->prop_handler().try_add(
-            new PropPoisoned(PropTurns::std));
+            new PropTeleControl(PropTurns::std));
     }
     break;
 
@@ -1762,36 +1762,38 @@ void GameState::draw_map()
 
             bool did_draw = false;
 
-            if (is_tile_mode)
+            // Draw tile here if tile mode, and a tile has been set
+            if (is_tile_mode && render_data->tile != TileId::empty)
             {
-                if (render_data->tile != TileId::empty)
-                {
-                    io::draw_tile(render_data->tile,
-                                  Panel::map,
-                                  pos,
-                                  render_data->clr,
-                                  render_data->clr_bg);
+                io::draw_tile(render_data->tile,
+                              Panel::map,
+                              pos,
+                              render_data->clr,
+                              render_data->clr_bg);
 
-                    did_draw = true;
-                }
+                did_draw = true;
             }
-            else // Text mode
+            // Text mode, or no tile set - draw glyph?
+            else if (render_data->glyph != 0 &&
+                     render_data->glyph != ' ')
             {
-                if (render_data->glyph != ' ' &&
-                    render_data->glyph != 0)
-                {
-                    io::draw_glyph(render_data->glyph,
-                                   Panel::map,
-                                   pos,
-                                   render_data->clr,
-                                   true,
-                                   render_data->clr_bg);
+                //
+                // NOTE: It can happen that text is drawn on the map even in
+                //       tiles mode - for example exclamation marks on cells
+                //       with known, unseen actors
+                //
 
-                    did_draw = true;
-                }
+                io::draw_glyph(render_data->glyph,
+                               Panel::map,
+                               pos,
+                               render_data->clr,
+                               true,
+                               render_data->clr_bg);
+
+                did_draw = true;
             }
 
-            //Draw lifebar here?
+            // Draw lifebar here?
             if (did_draw &&
                 render_data->lifebar_length != -1)
             {

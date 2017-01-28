@@ -187,6 +187,8 @@ public:
 
     void teleport();
 
+    void teleport(const P& p);
+
     bool is_alive() const
     {
         return state_ == ActorState::alive;

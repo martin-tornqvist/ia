@@ -15,6 +15,7 @@
 #include "config.hpp"
 #include "feature_rigid.hpp"
 #include "explosion.hpp"
+#include "map_parsing.hpp"
 
 // -----------------------------------------------------------------------------
 // Marker state
@@ -37,6 +38,8 @@ void MarkerState::on_start()
             try_go_to_closest_enemy();
         }
     }
+
+    on_start_hook();
 
     on_moved();
 }
@@ -366,8 +369,8 @@ void Viewing::on_moved()
 
     const auto* const actor = map::actor_at_pos(pos_);
 
-    if (actor                   &&
-        actor != map::player    &&
+    if (actor &&
+        actor != map::player &&
         map::player->can_see_actor(*actor))
     {
         msg_log::add("[v] for description");
@@ -453,8 +456,8 @@ void Aiming::handle_input(const InputData& input)
                 map::player->tgt_ = actor;
             }
 
-            const P     pos = pos_;
-            Wpn* const  wpn = &wpn_;
+            const P pos = pos_;
+            Wpn* const wpn = &wpn_;
 
             states::pop();
 
@@ -579,15 +582,11 @@ void ThrowingExplosive::on_draw()
         div_clr(clr_bg, 2.0);
 
         // Draw explosion radius area overlay
-        for (int x = expl_area.p0.x;
-             x <= expl_area.p1.x;
-             ++x)
+        for (int x = expl_area.p0.x; x <= expl_area.p1.x; ++x)
         {
-            for (int y = expl_area.p0.y;
-                 y <= expl_area.p1.y;
-                 ++y)
+            for (int y = expl_area.p0.y; y <= expl_area.p1.y; ++y)
             {
-                const auto& render_d        = game::render_array[x][y];
+                const auto& render_d = game::render_array[x][y];
                 const auto& marker_render_d = marker_render_data_[x][y];
 
                 if (render_d.glyph != 0 || marker_render_d.glyph != 0)
@@ -654,6 +653,92 @@ void ThrowingExplosive::handle_input(const InputData& input)
         // NOTE: This object is now destroyed!
 
         throwing::player_throw_lit_explosive(pos);
+    }
+    break;
+
+    default:
+        break;
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Teleport control marker state
+// -----------------------------------------------------------------------------
+void CtrlTele::on_start_hook()
+{
+    map_parsers::BlocksActor(*map::player, ParseActors::yes)
+        .run(blocked_);
+
+    msg_log::add("I have the power to control teleportation.",
+                 clr_white,
+                 false,
+                 MorePromptOnMsg::yes);
+}
+
+int CtrlTele::chance_of_success_pct(const P& tgt) const
+{
+    const int dist = king_dist(map::player->pos, tgt);
+
+    const int chance = constr_in_range(25, 100 - dist, 95);
+
+    return chance;
+}
+
+void CtrlTele::on_moved()
+{
+    look::print_location_info_msgs(pos_);
+
+    if (pos_ != map::player->pos)
+    {
+        const int chance_pct = chance_of_success_pct(pos_);
+
+        msg_log::add(std::to_string(chance_pct) + "% chance of success.");
+
+        msg_log::add("[enter] to try teleporting here");
+
+        msg_log::add(cancel_info_str_no_space);
+    }
+}
+
+void CtrlTele::handle_input(const InputData& input)
+{
+    switch (input.key)
+    {
+    case SDLK_ESCAPE:
+    case SDLK_SPACE:
+    {
+        states::pop();
+    }
+    break;
+
+    case SDLK_RETURN:
+    {
+        if (pos_ != map::player->pos)
+        {
+            const int chance = chance_of_success_pct(pos_);
+
+            const bool roll_ok = rnd::percent(chance);
+
+            const bool is_tele_success =
+                roll_ok &&
+                !blocked_[pos_.x][pos_.y];
+
+            states::pop();
+
+            // NOTE: This object is now destroyed!
+
+            if (is_tele_success)
+            {
+                map::player->teleport(pos_);
+            }
+            else // Failed to teleport (blocked or roll failed
+            {
+                msg_log::add("I failed to go there...",
+                             clr_white,
+                             false,
+                             MorePromptOnMsg::yes);
+            }
+        }
     }
     break;
 
