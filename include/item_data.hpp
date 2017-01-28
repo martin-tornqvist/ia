@@ -89,6 +89,7 @@ enum class ItemId
     spitting_cobra_spit,
     black_mamba_bite,
     ghoul_claw,
+    void_traveler_rip,
     shadow_claw,
     invis_stalker_claw,
     byakhee_claw,

@@ -42,6 +42,7 @@ enum class TileId
     lantern,
     medical_bag,
     gas_mask,
+    void_traveler,
     snake,
     rat,
     spider,

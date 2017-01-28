@@ -1445,6 +1445,12 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
+    d.id = ItemId::void_traveler_rip;
+    d.melee.att_msgs = {"", "rips me"};
+    set_dmg_from_mon_id(d, ActorId::void_traveler);
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::shadow_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, ActorId::shadow);

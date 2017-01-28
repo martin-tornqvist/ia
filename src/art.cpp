@@ -157,6 +157,7 @@ P column_and_row_tile(const TileId tile)
     case TileId::lantern:                       return P(16, 1);
     case TileId::medical_bag:                   return P(17, 1);
     case TileId::gas_mask:                      return P(18, 1);
+    case TileId::void_traveler:                 return P(19, 1);
     case TileId::snake:                         return P(20, 1);
     case TileId::rat:                           return P(1, 2);
     case TileId::spider:                        return P(2, 2);

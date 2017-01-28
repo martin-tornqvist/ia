@@ -656,6 +656,18 @@ private:
     DidAction on_act() override;
 };
 
+class VoidTraveler: public Mon
+{
+public:
+    VoidTraveler() : Mon() {}
+    ~VoidTraveler() {}
+
+    void mk_start_items() override;
+
+private:
+    DidAction on_act() override;
+};
+
 class DeepOne: public Mon
 {
 public:

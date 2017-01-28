@@ -48,6 +48,7 @@ enum class ActorId
     ghost,
     phantasm,
     wraith,
+    void_traveler,
     raven,
     giant_bat,
     byakhee,

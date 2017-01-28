@@ -1555,6 +1555,32 @@ DidAction Ghoul::on_act()
     return DidAction::no;
 }
 
+void VoidTraveler::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(ItemId::void_traveler_rip));
+}
+
+DidAction VoidTraveler::on_act()
+{
+    if (!is_alive())
+    {
+        return DidAction::no;
+    }
+
+    const int teleport_one_in_n = 6;
+
+    if (rnd::one_in(teleport_one_in_n))
+    {
+        teleport();
+
+        game_time::tick();
+
+        return DidAction::yes;
+    }
+
+    return DidAction::no;
+}
+
 void Mummy::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::mummy_maul));
