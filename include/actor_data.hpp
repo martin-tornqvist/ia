@@ -73,7 +73,7 @@ enum class ActorId
     ooze_clear,
     ooze_putrid,
     ooze_poison,
-    color_oo_space,
+    strange_color,
     chthonian,
     hunting_horror,
     sentry_drone,

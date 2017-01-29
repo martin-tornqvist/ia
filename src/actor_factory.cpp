@@ -196,8 +196,8 @@ Actor* mk_actor_from_id(const ActorId id)
     case ActorId::ooze_black:
         return new OozeBlack();
 
-    case ActorId::color_oo_space:
-        return new ColorOoSpace();
+    case ActorId::strange_color:
+        return new StrangeColor();
 
     case ActorId::ooze_clear:
         return new OozeClear();

@@ -1509,7 +1509,7 @@ void init_data_list()
     d.spi = 30;
     d.dmg_melee = min_dmg_to_wound + 4;
     d.ability_vals.set_val(AbilityId::melee, 70);
-    d.spawn_min_dlvl = dlvl_first_mid_game;
+    d.spawn_min_dlvl = (dlvl_first_mid_game + dlvl_first_late_game) / 2;
     d.spawn_max_dlvl = 999;
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 20;
@@ -1521,6 +1521,8 @@ void init_data_list()
     d.wary_msg = d.name_the + " looks wary.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::terrifying;
+    d.can_bash_doors = false;
+    d.can_open_doors = false;
     d.is_infra_visible = false;
     d.can_be_summoned = false;
     d.can_bleed = false;
@@ -2956,9 +2958,9 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Color out of space";
-    d.name_the = "The Color out of space";
-    d.id = ActorId::color_oo_space;
+    d.name_a = "A Strange Color";
+    d.name_the = "The Strange Color";
+    d.id = ActorId::strange_color;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
     d.ai[(size_t)AiId::attacks] = true;

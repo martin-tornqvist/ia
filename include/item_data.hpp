@@ -120,7 +120,7 @@ enum class ItemId
     ooze_putrid_spew_pus,
     ooze_poison_spew_pus,
     ooze_clear_spew_pus,
-    color_oo_space_touch,
+    strange_color_touch,
     chthonian_bite,
     death_fiend_claw,
     hunting_horror_bite,

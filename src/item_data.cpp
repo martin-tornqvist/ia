@@ -1543,9 +1543,9 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
-    d.id = ItemId::color_oo_space_touch;
+    d.id = ItemId::strange_color_touch;
     d.melee.att_msgs = {"", "touches me"};
-    set_dmg_from_mon_id(d, ActorId::color_oo_space);
+    set_dmg_from_mon_id(d, ActorId::strange_color);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);

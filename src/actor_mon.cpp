@@ -1826,18 +1826,20 @@ void LengElder::on_std_turn_hook()
 
             if (is_player_see_me && is_player_adj)
             {
-                msg_log::add("I perceive a cloaked figure standing before me...",
-                             clr_white,
-                             false,
-                             MorePromptOnMsg::yes);
+                msg_log::add(
+                    "I perceive a cloaked figure standing before me...",
+                    clr_white,
+                    false,
+                    MorePromptOnMsg::yes);
 
-                msg_log::add("It is the Elder Hierophant of the Leng monastery, ");
+                msg_log::add(
+                    "It is the Elder Hierophant of the Leng monastery, ");
 
-                msg_log::add("the High Priest Not to Be Described.",
-                             clr_white,
-                             false,
-                             MorePromptOnMsg::yes);
-
+                msg_log::add(
+                    "the High Priest Not to Be Described.",
+                    clr_white,
+                    false,
+                    MorePromptOnMsg::yes);
 
                 // auto& inv = map::player->inv();
                 // TODO: Which item to give?
@@ -1883,12 +1885,12 @@ void OozePoison::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(ItemId::ooze_poison_spew_pus));
 }
 
-void ColorOoSpace::mk_start_items()
+void StrangeColor::mk_start_items()
 {
-    inv_->put_in_intrinsics(item_factory::mk(ItemId::color_oo_space_touch));
+    inv_->put_in_intrinsics(item_factory::mk(ItemId::strange_color_touch));
 }
 
-DidAction ColorOoSpace::on_act()
+DidAction StrangeColor::on_act()
 {
     Rigid* r = map::cells[pos.x][pos.y].rigid;
 
@@ -1897,7 +1899,7 @@ DidAction ColorOoSpace::on_act()
     return DidAction::no;
 }
 
-Clr ColorOoSpace::clr() const
+Clr StrangeColor::clr() const
 {
     Clr clr = clr_magenta_lgt;
 
@@ -1908,22 +1910,33 @@ Clr ColorOoSpace::clr() const
     return clr;
 }
 
-void ColorOoSpace::on_std_turn_hook()
+void StrangeColor::on_std_turn_hook()
 {
-    if (is_alive())
+    if (!is_alive())
     {
-        if (!prop_handler_->has_prop(PropId::burning))
+        return;
+    }
+
+    if (!prop_handler_->has_prop(PropId::burning))
+    {
+        restore_hp(1, false, Verbosity::silent);
+    }
+
+    if (map::player->can_see_actor(*this))
+    {
+        if (!map::player->prop_handler().has_prop(PropId::confused))
         {
-            restore_hp(1, false, Verbosity::silent);
+            std::string msg = name_the() + " bewilders me.";
+
+            text_format::first_to_upper(msg);
+
+            msg_log::add(msg);
         }
 
-        if (map::player->can_see_actor(*this))
-        {
-            const int nr_turns_confused = rnd::range(8, 12);
+        const int nr_turns_confused = rnd::range(8, 12);
 
-            map::player->prop_handler().try_add(
-                new PropConfused(PropTurns::specific, nr_turns_confused));
-        }
+        map::player->prop_handler().try_add(
+            new PropConfused(PropTurns::specific, nr_turns_confused));
     }
 }
 

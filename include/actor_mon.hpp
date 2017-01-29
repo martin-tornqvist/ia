@@ -879,12 +879,12 @@ public:
     void mk_start_items() override;
 };
 
-class ColorOoSpace: public Ooze
+class StrangeColor: public Ooze
 {
 public:
-    ColorOoSpace() : Ooze() {}
+    StrangeColor() : Ooze() {}
 
-    ~ColorOoSpace() {}
+    ~StrangeColor() {}
 
     void mk_start_items() override;
 

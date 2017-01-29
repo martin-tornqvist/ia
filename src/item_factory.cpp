@@ -91,7 +91,7 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::ooze_clear_spew_pus:
     case ItemId::ooze_putrid_spew_pus:
     case ItemId::ooze_poison_spew_pus:
-    case ItemId::color_oo_space_touch:
+    case ItemId::strange_color_touch:
     case ItemId::chthonian_bite:
     case ItemId::death_fiend_claw:
     case ItemId::hunting_horror_bite:
