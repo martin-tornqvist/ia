@@ -22,11 +22,15 @@ namespace knock_back
 void try_knock_back(Actor& defender,
                     const P& attacked_from_pos,
                     const bool is_spike_gun,
-                    const bool is_msg_allowed)
+                    const Verbosity verbosity,
+                    const int paralyze_extra_turns)
 {
     TRACE_FUNC_BEGIN;
 
+    ASSERT(paralyze_extra_turns >= 0);
+
     const bool is_defender_player = defender.is_player();
+
     const auto& defender_data = defender.data();
 
     if (defender_data.prevent_knockback ||
@@ -99,11 +103,13 @@ void try_knock_back(Actor& defender,
     }
     else // Target cell is free
     {
-        const bool player_see_defender = is_defender_player ?
-                                         true :
-                                         map::player->can_see_actor(defender);
+        const bool player_see_defender =
+            is_defender_player ?
+            true :
+            map::player->can_see_actor(defender);
 
-        if (is_msg_allowed && player_see_defender)
+        if (verbosity == Verbosity::verbose &&
+            player_see_defender)
         {
             if (is_defender_player)
             {
@@ -115,8 +121,11 @@ void try_knock_back(Actor& defender,
             }
         }
 
+        const int nr_turns_paralyze = 1 + paralyze_extra_turns;
+
         defender.prop_handler().try_add(
-            new PropParalyzed(PropTurns::specific, 1));
+            new PropParalyzed(PropTurns::specific,
+                              nr_turns_paralyze));
 
         defender.pos = new_pos;
 

@@ -1354,7 +1354,7 @@ DidAction Vortex::on_act()
                 knock_back::try_knock_back(*map::player,
                                            knock_back_from_pos,
                                            false,
-                                           false);
+                                           Verbosity::silent);
 
                 pull_cooldown = 2;
 

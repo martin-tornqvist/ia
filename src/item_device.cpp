@@ -16,6 +16,7 @@
 #include "actor_factory.hpp"
 #include "saving.hpp"
 #include "game.hpp"
+#include "text_format.hpp"
 
 // -----------------------------------------------------------------------------
 // Device
@@ -307,29 +308,44 @@ ConsumeItem DeviceShockwave::trigger_effect()
 
     for (Actor* actor : game_time::actors)
     {
-        if (!actor->is_player() &&
-            actor->is_alive())
+        if (actor->is_player() ||
+            !actor->is_alive())
         {
-            const P& other_pos = actor->pos;
+            continue;
+        }
 
-            const bool is_adj =
-                is_pos_adj(player_pos,
-                           other_pos,
-                           false);
+        const P& other_pos = actor->pos;
 
-            if (is_adj)
-            {
-                actor->hit(rnd::dice(1, 8),
-                           DmgType::physical);
+        const bool is_adj =
+            is_pos_adj(player_pos,
+                       other_pos,
+                       false);
 
-                if (actor->is_alive())
-                {
-                    knock_back::try_knock_back(*actor,
-                                               player_pos,
-                                               false,
-                                               true);
-                }
-            }
+        if (!is_adj)
+        {
+            continue;
+        }
+
+        if (map::player->can_see_actor(*actor))
+        {
+            std::string msg = actor->name_the() + " is hit!";
+
+            text_format::first_to_upper(msg);
+
+            msg_log::add(msg);
+        }
+
+        actor->hit(rnd::dice(1, 8),
+                   DmgType::physical);
+
+        // Surived the damage? Knock the monster back
+        if (actor->is_alive())
+        {
+            knock_back::try_knock_back(*actor,
+                                       player_pos,
+                                       false,
+                                       Verbosity::verbose,
+                                       1); // 1 extra turn paralyzed
         }
     }
 
