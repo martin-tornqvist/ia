@@ -340,6 +340,18 @@ private:
     DidAction on_act() override;
 };
 
+class MindEater: public Mon
+{
+public:
+    MindEater() : Mon() {}
+    ~MindEater() {}
+
+    void mk_start_items() override;
+
+private:
+    DidAction on_act() override;
+};
+
 class KeziahMason: public Mon
 {
 public:

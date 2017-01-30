@@ -501,6 +501,12 @@ bool is_choke_point(const P& p,
     // Assuming that the tested position is free
     ASSERT(!blocked[p.x][p.y]);
 
+    // Robustness for release mode
+    if (blocked[p.x][p.y])
+    {
+        return false;
+    }
+
     // First, there must be exactly two free cells cardinally adjacent to the
     // tested position
     P p_side1;

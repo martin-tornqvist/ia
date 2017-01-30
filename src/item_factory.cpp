@@ -75,6 +75,7 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::wraith_claw:
     case ItemId::polyp_tentacle:
     case ItemId::greater_polyp_tentacle:
+    case ItemId::mind_eater_tentacle:
     case ItemId::ghoul_claw:
     case ItemId::void_traveler_rip:
     case ItemId::shadow_claw:

@@ -111,6 +111,7 @@ enum class ItemId
     mi_go_gun_ammo,
     polyp_tentacle,
     greater_polyp_tentacle,
+    mind_eater_tentacle,
     mummy_maul,
     croc_head_mummy_spear,
     deep_one_spear_att,

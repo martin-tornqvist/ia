@@ -177,7 +177,7 @@ Room* mk_room(Region& region)
 
     ASSERT(region.is_free);
 
-    const int templ_room_one_in_n = 10;
+    const int templ_room_one_in_n = 17;
 
     // Make a templated room?
     if (map::dlvl <= dlvl_last_mid_game &&

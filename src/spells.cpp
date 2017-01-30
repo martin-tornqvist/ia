@@ -2342,7 +2342,9 @@ void SpellHealSelf::run_effect(Actor* const caster) const
 
 bool SpellHealSelf::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.hp() < mon.hp_max(true);
+    return
+        (mon.hp() < mon.hp_max(true)) &&
+        rnd::coin_toss();
 }
 
 // -----------------------------------------------------------------------------

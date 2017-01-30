@@ -1431,6 +1431,13 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
+    d.id = ItemId::mind_eater_tentacle;
+    d.melee.att_msgs = {"", "stings me"};
+    d.melee.prop_applied = new PropParalyzed(PropTurns::specific, 2);
+    set_dmg_from_mon_id(d, ActorId::mind_eater);
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::greater_polyp_tentacle;
     d.melee.att_msgs = {"", "grips me with a tentacle"};
     d.melee.prop_applied = new PropParalyzed(PropTurns::specific, 1);

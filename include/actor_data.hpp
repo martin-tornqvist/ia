@@ -39,6 +39,7 @@ enum class ActorId
     mi_go_commander,
     flying_polyp,
     greater_polyp,
+    mind_eater,
     ghoul,
     shadow,
     invis_stalker,

@@ -91,6 +91,7 @@ enum class TileId
     hunting_horror,
     giant_spider,
     chthonian,
+    mind_eater,
     mi_go,
     floor,
     aim_marker_head,

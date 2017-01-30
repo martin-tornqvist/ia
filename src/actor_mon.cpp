@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "init.hpp"
+#include "rl_utils.hpp"
 #include "item.hpp"
 #include "actor_player.hpp"
 #include "game_time.hpp"
@@ -102,7 +103,7 @@ void Mon::act()
     // Pick a target
     std::vector<Actor*> tgt_bucket;
 
-    if (prop_handler_->has_prop(PropId::conflict))
+    if (has_prop(PropId::conflict))
     {
         // Monster is conflicted (e.g. by player ring/amulet)
         tgt_bucket = game_time::actors;
@@ -255,7 +256,7 @@ void Mon::act()
     int erratic_move_pct = (int)data_->erratic_move_pct;
 
     // Never move erratically if frenzied
-    if (prop_handler_->has_prop(PropId::frenzied))
+    if (has_prop(PropId::frenzied))
     {
         erratic_move_pct = 0;
     }
@@ -267,7 +268,7 @@ void Mon::act()
     }
 
     // Move more erratically if confused
-    if (prop_handler_->has_prop(PropId::confused) &&
+    if (has_prop(PropId::confused) &&
         erratic_move_pct > 0)
     {
         erratic_move_pct += 50;
@@ -285,7 +286,7 @@ void Mon::act()
         }
     }
 
-    const bool is_terrified = prop_handler_->has_prop(PropId::terrified);
+    const bool is_terrified = has_prop(PropId::terrified);
 
     if (data_->ai[(size_t)AiId::moves_to_tgt_when_los] &&
         !is_terrified)
@@ -1481,6 +1482,60 @@ void GreaterPolyp::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(ItemId::greater_polyp_tentacle));
 }
 
+void MindEater::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(ItemId::mind_eater_tentacle));
+}
+
+DidAction MindEater::on_act()
+{
+    if (!is_alive() ||
+        !is_pos_adj(pos, map::player->pos, false) ||
+        has_prop(PropId::burning) ||
+        has_prop(PropId::confused) ||
+        has_prop(PropId::terrified) ||
+        !map::player->has_prop(PropId::paralyzed))
+    {
+        return DidAction::no;
+    }
+
+    const bool player_see_me = map::player->can_see_actor(*this);
+
+    const std::string name =
+        player_see_me ?
+        name_the() :
+        "It";
+
+    if (map::player->has_prop(PropId::confused) ||
+        map::player->has_prop(PropId::frenzied))
+    {
+        msg_log::add(name + " attempts to probe my brain.");
+
+        if (player_see_me)
+        {
+            msg_log::add(name + " is bewildered by my state of mind.");
+        }
+
+        prop_handler_->try_add(new PropConfused(PropTurns::std));
+
+        prop_handler_->try_add(new PropTerrified(PropTurns::std));
+    }
+    else // Player is not confused
+    {
+        msg_log::add(name + " probes my brain!!!");
+
+        map::player->prop_handler().try_add(
+            new PropTerrified(PropTurns::std));
+
+        map::player->incr_shock(ShockLvl::mind_shattering,
+                                ShockSrc::misc);
+    }
+
+    game_time::tick();
+
+    return DidAction::yes;
+}
+
 void Rat::mk_start_items()
 {
     Item* item = nullptr;
@@ -1859,7 +1914,7 @@ void LengElder::mk_start_items()
 
 void Ooze::on_std_turn_hook()
 {
-    if (is_alive() && !prop_handler_->has_prop(PropId::burning))
+    if (is_alive() && !has_prop(PropId::burning))
     {
         restore_hp(1, false, Verbosity::silent);
     }
@@ -1917,7 +1972,7 @@ void StrangeColor::on_std_turn_hook()
         return;
     }
 
-    if (!prop_handler_->has_prop(PropId::burning))
+    if (!has_prop(PropId::burning))
     {
         restore_hp(1, false, Verbosity::silent);
     }
@@ -2005,7 +2060,7 @@ void WormMass::on_death()
 
     if (!allow_split_ ||
         (hp_ <= -10) ||
-        prop_handler_->has_prop(PropId::burning) ||
+        has_prop(PropId::burning) ||
         map::cells[pos.x][pos.y].rigid->is_bottomless() ||
         game_time::actors.size() >= max_nr_actors_on_map)
     {
@@ -2048,7 +2103,7 @@ DidAction GiantLocust::on_act()
 {
     if (!is_alive() ||
         (aware_of_player_counter_ <= 0) ||
-        prop_handler_->has_prop(PropId::burning) ||
+        has_prop(PropId::burning) ||
         (game_time::actors.size() >= max_nr_actors_on_map) ||
         !rnd::one_in(spawn_new_one_in_n))
     {

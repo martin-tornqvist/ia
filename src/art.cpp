@@ -206,6 +206,7 @@ P column_and_row_tile(const TileId tile)
     case TileId::hunting_horror:                return P(4, 5);
     case TileId::giant_spider:                  return P(10, 5);
     case TileId::chthonian:                     return P(0, 5);
+    case TileId::mind_eater:                    return P(3, 5);
     case TileId::mi_go:                         return P(12, 5);
     case TileId::floor:                         return P(1, 6);
     case TileId::aim_marker_head:               return P(2, 6);

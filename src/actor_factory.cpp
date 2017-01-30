@@ -136,6 +136,9 @@ Actor* mk_actor_from_id(const ActorId id)
     case ActorId::greater_polyp:
         return new GreaterPolyp();
 
+    case ActorId::mind_eater:
+        return new MindEater();
+
     case ActorId::mi_go:
         return new MiGo();
 

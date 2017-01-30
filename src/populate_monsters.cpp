@@ -23,7 +23,7 @@ int random_out_of_depth()
     int nr_levels = 0;
 
     if (map::dlvl > 0 &&
-        rnd::one_in(12))
+        rnd::one_in(9))
     {
         nr_levels = 5;
     }

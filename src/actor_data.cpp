@@ -1512,7 +1512,7 @@ void init_data_list()
     d.spawn_min_dlvl = (dlvl_first_mid_game + dlvl_first_late_game) / 2;
     d.spawn_max_dlvl = 999;
     d.actor_size = ActorSize::humanoid;
-    d.nr_turns_aware = 20;
+    d.nr_turns_aware = 12;
     d.descr =
         "A nightmarish creature of humanoid shape. It has a hideous gangly "
         "physique and sickly pale skin. Its arms are as long as its body is "
@@ -1596,7 +1596,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 40);
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 2;
-    d.spawn_max_dlvl = d.spawn_min_dlvl + 15;
+    d.spawn_max_dlvl = dlvl_last_early_game;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::few,    20),
@@ -1887,7 +1887,7 @@ void init_data_list()
     });
     d.actor_size = ActorSize::floor;
     d.can_bash_doors = false;
-    d.nr_turns_aware = 12;
+    d.nr_turns_aware = 5;
     d.descr = "A huge swarming insect. They breed rapidly.";
     d.wary_msg = d.name_the + " seems disturbed.";
     d.erratic_move_pct = ActorErraticFreq::very;
@@ -2044,7 +2044,8 @@ void init_data_list()
     d.natural_props[(size_t)PropId::invis] = true;
     d.natural_props[(size_t)PropId::see_invis] = true;
     d.prevent_knockback = true;
-    d.spawn_min_dlvl = 6;
+    d.spawn_min_dlvl = 7;
+    d.spawn_max_dlvl = 999;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;
     d.can_open_doors = false;
@@ -2102,7 +2103,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::invis] = true;
     d.natural_props[(size_t)PropId::see_invis] = true;
     d.prevent_knockback = true;
-    d.spawn_min_dlvl = dlvl_last - 8;
+    d.spawn_min_dlvl = dlvl_first_late_game;
     d.spawn_max_dlvl = 999;
     d.actor_size = ActorSize::giant;
     d.can_bash_doors = false;
@@ -2115,6 +2116,54 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::very;
     d.mon_shock_lvl = ShockLvl::mind_shattering;
     d.is_infra_visible = false;
+    d.native_rooms.push_back(RoomType::plain);
+    d.native_rooms.push_back(RoomType::cave);
+    d.native_rooms.push_back(RoomType::chasm);
+    data[(size_t)d.id] = d;
+    d.reset();
+
+    d.name_a = "A Mind Eater";
+    d.name_the = "The Mind Eater";
+    d.corpse_name_a = "A Mind Eater corpse";
+    d.corpse_name_the = "The Mind Eater corpse";
+    d.id = ActorId::mind_eater;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
+    d.speed_pct = (int)ActorSpeed::normal;
+    d.glyph = 'E';
+    d.color = clr_orange;
+    d.tile = TileId::mind_eater;
+    d.hp = 40;
+    d.spi = 40;
+    d.dmg_melee = 2;
+    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::r_breath] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
+    d.natural_props[(size_t)PropId::r_sleep] = true;
+    d.natural_props[(size_t)PropId::r_disease] = true;
+    d.spawn_min_dlvl = dlvl_first_mid_game;
+    d.spawn_max_dlvl = dlvl_last - 4;
+    d.actor_size = ActorSize::humanoid;
+    d.can_bash_doors = false;
+    d.can_open_doors = false;
+    d.nr_turns_aware = 7;
+    d.descr =
+        "A large tentacled alien creature, mysteriously floating through the "
+        "air in a ghostly manner. They somehow sustain themselves on the "
+        "brain activity of other beings. Their preferred strategy is to subdue "
+        "their victim with a paralyzing sting, and once immobilized, a second "
+        "appendage probes the brain. This will usually not kill the victim, "
+        "but the experience is horrific beyond words.";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.is_infra_visible = false;
+    d.erratic_move_pct = ActorErraticFreq::rare;
+    d.mon_shock_lvl = ShockLvl::terrifying;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::chasm);
@@ -3060,56 +3109,46 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Sentry Drone";
-    d.name_the = "The Sentry Drone";
-    d.corpse_name_a = "A destroyed Sentry Drone";
-    d.corpse_name_the = "The destroyed Sentry Drone";
-    d.id = ActorId::sentry_drone;
+    d.name_a = "A Floating Skull";
+    d.name_the = "The Floating Skull";
+    d.corpse_name_a = "A Skull";
+    d.corpse_name_the = "The Skull";
+    d.id = ActorId::floating_skull;
     d.ai[(size_t)AiId::looks] = true;
-    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
     d.ai[(size_t)AiId::attacks] = true;
-    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
-    d.ai[(size_t)AiId::moves_to_tgt_when_los] = false;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
-    d.ranged_cooldown_turns = 3;
-    d.spell_cooldown_turns  = 3;
-    d.spell_skill = 30;
-    d.glyph = '~';
-    d.color = clr_red;
-    d.tile = TileId::device2;
-    d.hp = 22;
-    d.spi = 40;
+    d.glyph = 'z';
+    d.color = clr_white_high;
+    d.tile = TileId::floating_skull;
+    d.hp = 6;
+    d.spi = 16;
+    d.dmg_melee = min_dmg_to_wound - 2;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::ranged, 65);
-    d.ability_vals.set_val(AbilityId::dodging, 35);
+    d.ability_vals.set_val(AbilityId::dodging, 60);
     d.natural_props[(size_t)PropId::flying] = true;
-    d.natural_props[(size_t)PropId::radiant] = true;
-    d.natural_props[(size_t)PropId::r_fear] = true;
-    d.natural_props[(size_t)PropId::r_breath] = true;
-    d.natural_props[(size_t)PropId::r_poison] = true;
-    d.natural_props[(size_t)PropId::r_sleep] = true;
-    d.natural_props[(size_t)PropId::r_disease] = true;
-    d.spawn_min_dlvl = 14;
-    d.actor_size = ActorSize::humanoid;
-    d.can_bash_doors = false;
-    d.can_open_doors = false;
-    d.nr_turns_aware = 16;
-    d.descr =
-        "An infernal piece of technology, seemingly designed to serve as a "
-        "sort of guard. It hovers around, constantly searching the area with "
-        "beaming spotlights, ready to blast any interloper on sight. It "
-        "appears to have some organic parts, and may even be a conscious "
-        "living being.";
-    d.wary_msg = d.name_the + " seems disturbed.";
-    d.spell_cast_msg = "makes buzzing sounds in peculiar frequencies.";
-    d.aggro_msg_mon_seen = d.name_the + " makes a deep buzzing sound.";
-    d.aggro_msg_mon_hidden = "I hear a deep buzzing sound.";
-    d.is_infra_visible = false;
-    d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = ShockLvl::unsettling;
+    d.natural_props[(size_t)PropId::infravis] = true;
+    d.spawn_min_dlvl = 3;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
+    d.actor_size = ActorSize::floor;
+    d.nr_turns_aware = 10;
+    d.descr = "A severed head floating through the air.";
+    d.wary_msg = d.name_the + " looks wary.";
+    d.erratic_move_pct = ActorErraticFreq::somewhat;
+    d.mon_shock_lvl = ShockLvl::terrifying;
+    d.can_be_summoned = true;
+    d.is_undead = true;
+    d.is_auto_descr_allowed = false;
+    d.can_bleed = false;
+    d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::plain);
+    d.native_rooms.push_back(RoomType::ritual);
+    d.native_rooms.push_back(RoomType::chasm);
+    d.native_rooms.push_back(RoomType::cave);
     data[(size_t)d.id] = d;
     d.reset();
 
