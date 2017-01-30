@@ -1509,7 +1509,7 @@ void init_data_list()
     d.spi = 30;
     d.dmg_melee = min_dmg_to_wound + 4;
     d.ability_vals.set_val(AbilityId::melee, 70);
-    d.spawn_min_dlvl = (dlvl_first_mid_game + dlvl_first_late_game) / 2;
+    d.spawn_min_dlvl = dlvl_first_mid_game + 2;
     d.spawn_max_dlvl = 999;
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 12;
@@ -2147,7 +2147,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_sleep] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
-    d.spawn_min_dlvl = dlvl_first_mid_game;
+    d.spawn_min_dlvl = 6;
     d.spawn_max_dlvl = dlvl_last - 4;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;
