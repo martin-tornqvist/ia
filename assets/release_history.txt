@@ -6,6 +6,7 @@ Gameplay
 * Much fewer monster are spawned on the map, and in smaller groups than before (some monsters are tougher now though), and they generally remember you for a much shorter time - making it more feasible to avoid combat
 * Items are now more likely to spawn behind hidden or stuck doors, in areas away from the path to the stairs (to reward exploration more)
 * Some monsters now tend to spawn in smaller numbers instead of always in big packs, but are instead individually stronger (especially Spiders) - the purpose of this is to reduce "trash mob" combat and make each encounter more significant
+* Standing in lit cells now temporarily reduces your shock (like "inverted" darkness)
 * Some rooms are now generated from hand designed templates (loaded from a text file)
 * The stealth system has been ehanced - now monsters may become "suspicious" (typically with a message about them looking "wary" or "disturbed"), which gives them an increased chance of detecting you - they may still detect you immediately, but the chance for this is slightly lower than before
 * Added trait Electrically Inclined - gives bonus to using Rods, Devices, Electric Lanterns, and electricity weapons

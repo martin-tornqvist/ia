@@ -499,9 +499,9 @@ void DeviceLantern::toggle()
     is_activated_ = !is_activated_;
 
     // Discourage flipping on and off frequently
-    if (is_activated_ && nr_turns_left_ > 1)
+    if (is_activated_ && nr_turns_left_ >= 2)
     {
-        --nr_turns_left_;
+        nr_turns_left_ -= 2;
     }
 
     audio::play(SfxId::lantern);

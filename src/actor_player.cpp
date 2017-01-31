@@ -848,7 +848,7 @@ void Player::on_actor_turn()
     update_fov();
 
     // Set current temporary shock from darkness etc
-    set_tmp_shock();
+    update_tmp_shock();
 
     //
     // Check for monsters coming into view, and try to spot hidden monsters.
@@ -1054,13 +1054,27 @@ void Player::add_shock_from_seen_monsters(std::vector<Actor*> seen_monsters)
     incr_shock(val, ShockSrc::see_mon);
 }
 
-void Player::set_tmp_shock()
+void Player::update_tmp_shock()
 {
     shock_tmp_ = 0.0;
 
-    // Minimum temporary shock raised due to obsession?
-    double shock_tmp_min = 0.0;
+    const int tot_shock_before = shock_tot();
 
+    // Minimum temporary shock
+
+    //
+    // NOTE: In case the total shock is currently at 100, we do NOT want to
+    //       allow lowering the shock e.g. by turning on the Electric Lantern,
+    //       since you could interrupt the 3 turns countdown until the insanity
+    //       event happens just ny turning the lantern on for one turn.
+    //       Therefore we only allow negative temporary shock while below 100%.
+    //
+    double shock_tmp_min =
+        (tot_shock_before < 100) ?
+        -999.0 :
+        0.0;
+
+    // "Obessions" raise the minimum temporary shock
     if (insanity::has_sympt(InsSymptId::sadism) ||
         insanity::has_sympt(InsSymptId::masoch))
     {
@@ -1072,10 +1086,15 @@ void Player::set_tmp_shock()
 
     if (prop_handler_->allow_see())
     {
-        // Temporary shock from darkness
         Cell& cell = map::cells[pos.x][pos.y];
 
-        if (cell.is_dark && !cell.is_lit)
+        // Shock reduction from light?
+        if (cell.is_lit)
+        {
+            shock_tmp_ -= 20.0;
+        }
+        // Not lit - shock from darkness?
+        else if (cell.is_dark)
         {
             double shock_value = 20.0;
 
@@ -1088,7 +1107,7 @@ void Player::set_tmp_shock()
                                                  ShockSrc::misc);
         }
 
-        // Temporary shock from seen features
+        // Temporary shock from seen features?
         for (const P& d : dir_utils::dir_list_w_center)
         {
             const P p(pos + d);
@@ -1110,6 +1129,17 @@ void Player::set_tmp_shock()
     constr_in_range(shock_tmp_min,
                     shock_tmp_,
                     shock_tmp_max);
+}
+
+int Player::shock_tot() const
+{
+    double shock_tot_db = shock_ + shock_tmp_;
+
+    shock_tot_db = std::max(0.0, shock_tot_db);
+
+    shock_tot_db = floor(shock_tot_db);
+
+    return (int)shock_tot_db;
 }
 
 int Player::ins() const

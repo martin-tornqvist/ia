@@ -162,7 +162,7 @@ There are also other ways you can lose your Spirit, for example some monsters ca
 --------------------------------------------------------------------------------
 "A few steps more, and our breaths were literally snatched from us by what we saw; so literally that Thornton, the psychic investigator, actually fainted in the arms of the dazed man who stood behind him. Norrys, his plump face utterly white and flabby, simply cried out inarticulately; whilst I think that what I did was to gasp or hiss, and cover my eyes. The man behind me - the only one of the party older than I - croaked the hackneyed "My God!" in the most cracked voice I ever heard. Of seven cultivated men, only Sir William Brinton retained his composure; a thing the more to his credit because he led the party and must have seen the sight first."-H.P. Lovecraft, "Rats in the Walls"
 
-Certain events in this game affects the sanity and composure of your character. One of the main threats to your mental health are the various horrifying creatures that inhabit the game world. When inside your view, some creatures may cause a vague unease, while others are very disturbing to behold. You also lose sanity from using occult powers, and other bizarre events. Finally, there is a slow perpetual draining of your sanity from exploring and dwelling in this ancient haunted dungeon.
+Certain events in this game affects the sanity and composure of your character. One of the main threats to your mental health are the various horrifying creatures that inhabit the game world. When inside your view, some creatures may cause a vague unease, while others are very disturbing to behold. Your mind also takes a hit when you use occult powers, carry weird artifacts, or stand in darkness, etc. Finally, there is a slow perpetual taxing of your mind from exploring and dwelling in this haunted dungeon.
 
 Your state of Insanity is shown by two percentage values like this:
    Ins:X%/Y%
@@ -174,7 +174,7 @@ When various disturbing events occur, the shock value rises. When shock hits 100
    * The shock value is restored a bit
    * Insanity rises
 
-Each time you travel to the next dungeon level, your shock is restored (you have escaped the horrors above, and is bestowed with a sense of progress).
+Each time you travel to the next dungeon level, your shock is restored (you have escaped the horrors above, and is bestowed with a sense of progress). Also, standing in a lit area reduces your shock a bit (most characters start with an Electric Lantern).
 
 If your Insanity reaches 100%, you are hopelessly lost, and the game is over.
 

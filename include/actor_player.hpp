@@ -90,10 +90,7 @@ public:
         return perm_shock_taken_current_turn_;
     }
 
-    int shock_tot() const
-    {
-        return (int)floor(shock_ + shock_tmp_);
-    }
+    int shock_tot() const;
 
     int ins() const;
 
@@ -145,7 +142,7 @@ private:
 
     void add_shock_from_seen_monsters(std::vector<Actor*> seen_monsters);
 
-    void set_tmp_shock();
+    void update_tmp_shock();
 
     void on_hit(int& dmg,
                 const DmgType dmg_type,
