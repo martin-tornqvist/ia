@@ -886,13 +886,11 @@ void Player::on_actor_turn()
         {
             mon.is_msg_mon_in_view_printed_ = false;
 
-            if (map::cells[mon.pos.x][mon.pos.y].is_seen_by_player)
+            if (map::cells[mon.pos.x][mon.pos.y].is_seen_by_player &&
+                (!mon.has_prop(PropId::invis) ||
+                 has_prop(PropId::see_invis)))
             {
                 // Monster is sneaking? Try to spot it
-                //
-                // NOTE: Infravision is irrelevant here, since the monster would
-                //       have been completely seen already.
-                //
                 if (mon.is_sneaking())
                 {
                     const auto sneak_result = mon.roll_sneak(*this);

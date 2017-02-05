@@ -356,7 +356,7 @@ void MainMenuState::draw()
         }
     }
 
-    io::draw_text_center(version_str + " - " + __DATE__ +
+    io::draw_text_center(version_str + " - " + date_str +
                          " (c) 2011-2017 Martin Tornqvist",
                          Panel::screen,
                          P(map_w_half, screen_h - 1),

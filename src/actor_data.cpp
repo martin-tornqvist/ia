@@ -1509,6 +1509,7 @@ void init_data_list()
     d.spi = 30;
     d.dmg_melee = min_dmg_to_wound + 4;
     d.ability_vals.set_val(AbilityId::melee, 70);
+    d.ability_vals.set_val(AbilityId::dodging, 30);
     d.spawn_min_dlvl = dlvl_first_mid_game + 2;
     d.spawn_max_dlvl = 999;
     d.actor_size = ActorSize::humanoid;
@@ -2141,7 +2142,8 @@ void init_data_list()
     d.hp = 40;
     d.spi = 40;
     d.dmg_melee = 2;
-    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::melee, 70);
+    d.ability_vals.set_val(AbilityId::dodging, 30);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::r_breath] = true;
     d.natural_props[(size_t)PropId::r_poison] = true;

@@ -113,12 +113,12 @@ void set_default_variables()
 
     set_cell_px_dims_from_font_name();
 
-    use_light_fade_effect_ = true;
+    use_light_fade_effect_ = false;
     is_fullscr_ = false;
     is_tiles_wall_full_square_ = false;
     is_text_mode_wall_full_square_ = true;
     is_intro_lvl_skipped_ = false;
-    is_any_key_confirm_more_ = false;
+    is_any_key_confirm_more_ = true;
     is_light_explosive_prompt_ = false;
     is_ranged_wpn_meleee_prompt_ = true;
     is_ranged_wpn_auto_reload_ = false;

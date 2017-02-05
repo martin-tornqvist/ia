@@ -304,6 +304,8 @@ void RodCloudMinds::run_effect()
             mon->aware_of_player_counter_ = 0;
         }
     }
+
+    identify(Verbosity::verbose);
 }
 
 namespace rod_handling
