@@ -40,7 +40,8 @@ Interface
 * All active properties are now printed with descriptions on the [@] character decsription page, and when [v]iewing monsters
 * When picking a trait, instead of showing all available and unavailable traits in the same list, the trait selection screen now has two modes (toggled with [TAB]) - the first mode shows available traits, and the second shows traits for which the prerequisites are not yet fulfilled
 * Reduced "more" prompt message spam from traps (less interruption)
-* Added an option to ask for confirmation before lighting explosives (default is off)
+* Addded option to enable/disable fading of rendering brightness with distance from player
+* Added an option to ask for confirmation before lighting explosives
 * Printing a low HP warning (with "more" prompt) when dropping to a low HP percent
 * Removed the "q" command - Ghoul characters now feed on corpses when standing still on them instead
 * The map shown on the postmortem info screen is now drawn with tiles (when tiles mode is enabled), and is drawn in color
