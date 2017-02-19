@@ -21,7 +21,7 @@
 #include "map_templates.hpp"
 #include "map_travel.hpp"
 #include "query.hpp"
-#include "item_amulet.hpp"
+#include "item_artifact.hpp"
 #include "saving.hpp"
 #include "insanity.hpp"
 #include "highscore.hpp"
@@ -89,7 +89,6 @@ void init_session()
     game::init();
     bot::init();
     player_spells::init();
-    amulet_handling::init();
     highscore::init();
     TRACE_FUNC_END;
 }

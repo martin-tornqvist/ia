@@ -621,6 +621,8 @@ int Mon::spell_skill(const SpellId id) const
 
 void Mon::hear_sound(const Snd& snd)
 {
+    snd.on_heard(*this);
+
     if (is_alive() &&
         snd.is_alerting_mon())
     {
@@ -1506,19 +1508,25 @@ DidAction MindEater::on_act()
         name_the() :
         "It";
 
-    if (map::player->has_prop(PropId::confused) ||
+    if (map::player->ins() >= 50 ||
+        map::player->has_prop(PropId::confused) ||
         map::player->has_prop(PropId::frenzied))
     {
         msg_log::add(name + " attempts to probe my brain.");
 
         if (player_see_me)
         {
-            msg_log::add(name + " is bewildered by my state of mind.");
+            msg_log::add(name + " looks shocked!");
         }
 
-        prop_handler_->try_add(new PropConfused(PropTurns::std));
+        hit(rnd::dice(3, 5), DmgType::pure);
 
-        prop_handler_->try_add(new PropTerrified(PropTurns::std));
+        if (is_alive())
+        {
+            prop_handler_->try_add(new PropConfused(PropTurns::std));
+
+            prop_handler_->try_add(new PropTerrified(PropTurns::std));
+        }
     }
     else // Player is not confused
     {
@@ -1705,10 +1713,10 @@ DidAction Khephren::on_act()
 
     const size_t nr_of_spawns = 15;
 
-    actor_factory::summon(pos,
-                          {nr_of_spawns, ActorId::locust},
-                          MakeMonAware::yes,
-                          actor_to_set_as_leader);
+    actor_factory::spawn(pos,
+                         {nr_of_spawns, ActorId::locust},
+                         MakeMonAware::yes,
+                         actor_to_set_as_leader);
 
     has_summoned_locusts = true;
 
@@ -1813,10 +1821,19 @@ DidAction KeziahMason::on_act()
 
     msg_log::add("Keziah summons Brown Jenkin!");
 
-    actor_factory::summon(pos,
-                          {ActorId::brown_jenkin},
-                          MakeMonAware::yes,
-                          this);
+    auto summoned =
+        actor_factory::spawn(pos,
+                             {ActorId::brown_jenkin},
+                             MakeMonAware::yes,
+                             this);
+
+    ASSERT(summoned.size() == 1);
+
+    if (!summoned.empty())
+    {
+        summoned[0]->prop_handler().try_add(
+            new PropSummoned(PropTurns::indefinite));
+    }
 
     has_summoned_jenkin = true;
 
@@ -2070,11 +2087,10 @@ void WormMass::on_death()
     // NOTE: If dying worm has a leader, that actor is set as leader for the
     //       spawned worms
     const auto summoned =
-        actor_factory::summon(pos,
-                              {2, id()},
-                              MakeMonAware::yes,
-                              leader_,
-                              Verbosity::silent);
+        actor_factory::spawn(pos,
+                             {2, id()},
+                             MakeMonAware::yes,
+                             leader_);
 
     // If no leader has been set yet, assign the first worm as leader of the
     // second
@@ -2118,11 +2134,10 @@ DidAction GiantLocust::on_act()
     Actor* const actor_to_set_as_leader = leader_ ? leader_ : this;
 
     const auto summoned =
-        actor_factory::summon(pos,
-                              {id()},
-                              make_aware,
-                              actor_to_set_as_leader,
-                              Verbosity::silent);
+        actor_factory::spawn(pos,
+                             {id()},
+                             make_aware,
+                             actor_to_set_as_leader);
 
     if (summoned.empty())
     {
@@ -2351,10 +2366,9 @@ void Zombie::on_death()
 
         ASSERT(id_to_spawn != ActorId::END);
 
-        actor_factory::summon(pos, {id_to_spawn},
-                              MakeMonAware::yes,
-                              nullptr,
-                              Verbosity::silent);
+        actor_factory::spawn(pos, {id_to_spawn},
+                             MakeMonAware::yes,
+                             nullptr);
     }
 }
 
@@ -2439,9 +2453,9 @@ DidAction MajorClaphamLee::on_act()
                 mon_ids.push_back(mon_id);
             }
 
-            actor_factory::summon(pos, mon_ids,
-                                  MakeMonAware::yes,
-                                  this);
+            actor_factory::spawn(pos, mon_ids,
+                                 MakeMonAware::yes,
+                                 this);
 
             has_summoned_tomb_legions = true;
 
@@ -2544,11 +2558,10 @@ DidAction Mold::on_act()
 
     Actor* const actor_to_set_as_leader = leader_ ? leader_ : this;
 
-    actor_factory::summon(pos,
-                          {id()},
-                          make_aware,
-                          actor_to_set_as_leader,
-                          Verbosity::silent);
+    actor_factory::spawn(pos,
+                         {id()},
+                         make_aware,
+                         actor_to_set_as_leader);
 
     game_time::tick();
 
@@ -2600,7 +2613,8 @@ void TheHighPriest::on_death()
 
     const size_t nr_snakes = rnd::range(4, 5);
 
-    actor_factory::summon(pos, {nr_snakes, ActorId::pit_viper});
+    actor_factory::spawn(pos,
+                         {nr_snakes, ActorId::pit_viper});
 }
 
 void TheHighPriest::on_std_turn_hook()

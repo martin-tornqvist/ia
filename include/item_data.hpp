@@ -44,8 +44,6 @@ enum class ItemId
     pitch_fork,
     sledge_hammer,
 
-    pharaoh_staff,
-
     sawed_off,
     pump_shotgun,
     machine_gun,
@@ -188,19 +186,15 @@ enum class ItemId
 
     medical_bag,
 
-    star_amulet,
-    skull_amulet,
-    spider_amulet,
-    eye_amulet,
-    moon_amulet,
-    scarab_amulet,
-    dagger_amulet,
-    bat_winged_amulet,
-    golden_amulet,
-    silver_amulet,
-    obsidian_amulet,
-    jade_amulet,
-    rune_amulet,
+    pharaoh_staff,
+    refl_talisman,
+    resurrect_talisman,
+    horn_of_malice,
+    horn_of_banishment,
+    clockwork,
+    spirit_dagger,
+    orb_of_sorcery,
+    orb_of_life,
 
     END
 };
@@ -228,10 +222,11 @@ public:
 
     ItemId                      id;
     ItemType                    type;
-    bool                        has_std_activate; //E.g. potions and scrolls
-    bool                        is_prio_in_backpack_list; //E.g. Medical Bag
+    bool                        has_std_activate; // E.g. potions and scrolls
+    bool                        is_prio_in_backpack_list; // E.g. Medical Bag
     ItemValue                   value;
     ItemWeight                  weight;
+    bool                        is_unique;
     bool                        allow_spawn;
     Range                       spawn_std_range;
     int                         max_stack_at_spawn;
@@ -239,6 +234,7 @@ public:
     bool                        is_stackable;
     bool                        is_identified;
     bool                        is_tried;
+    bool                        is_found; // Seen on map or in inventory
     int                         xp_on_identify;
     ItemName                    base_name;
     ItemName                    base_name_un_id;
@@ -250,8 +246,8 @@ public:
     SpellId                     spell_cast_from_scroll;
     std::string                 land_on_hard_snd_msg;
     SfxId                       land_on_hard_sfx;
-    bool                        is_ins_raied_while_carried;
-    bool                        is_ins_raied_while_equiped;
+    bool                        is_carry_shocking;
+    bool                        is_equiped_shocking;
 
     std::vector<RoomType>       native_rooms;
     std::vector<FeatureId>      native_containers;

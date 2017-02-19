@@ -2,55 +2,55 @@
 v19.0 (***WORK IN PROGRESS***)
 --------------------------------------------------------------
 Gameplay
-* You no longer gain XP from killing monsters - instead XP is raised by activities related to exploration and discovery, such as identifying items, drinking from some types of Fountains, reading inscriptions on "Monoliths", or seeing a new type of monster for the first time
-* Much fewer monster are spawned on the map, and in smaller groups than before (some monsters are tougher now though), and they generally remember you for a much shorter time - making it more feasible to avoid combat
-* Items are now more likely to spawn behind hidden or stuck doors, in areas away from the path to the stairs (to reward exploration more)
-* Some monsters now tend to spawn in smaller numbers instead of always in big packs, but are instead individually stronger (especially Spiders) - the purpose of this is to reduce "trash mob" combat and make each encounter more significant
-* Standing in lit cells now temporarily reduces your shock (like "inverted" darkness)
-* Some rooms are now generated from hand designed templates (loaded from a text file)
+* You no longer gain XP from killing monsters - instead XP is raised by activities related to exploration and discovery, such as identifying items, drinking from some types of fountains, reading inscriptions on "monoliths", or seeing a new type of monster for the first time
+* Much fewer monster are now spawned on the map overall, and many monster types now tend to spawn in smaller groups than before, but are individually stronger - they also generally remember you for a much shorter time
 * The stealth system has been ehanced - now monsters may become "suspicious" (typically with a message about them looking "wary" or "disturbed"), which gives them an increased chance of detecting you - they may still detect you immediately, but the chance for this is slightly lower than before
-* Added trait Electrically Inclined - gives bonus to using Rods, Devices, Electric Lanterns, and electricity weapons
-* Some redundant traits have been removed (e.g. a third step of Melee traits)
+* Items are now more likely to spawn behind hidden or stuck doors, in areas away from the path to the stairs
+* Added more unique and distinct "handcrafted" artifacts, and removed the (somewhat bland) randomized amulets
+* Standing in lit cells (e.g. lit by the Electric Lantern) now temporarily reduces your shock
+* Some rooms are now generated from hand designed templates (loaded from a text file)
 * The game now models creature speeds in a new (probably more common and intuitive) way - creature speeds are expressed as percentages, e.g. 50%, 100%, or 300%, and different actions can have different speeds
-* Many bonuses such as "you occasionally reload instantly" now instead give a speed bonus to that action - e.g. the War Veteran switches to the prepared weapon with +100% speed (so it only takes a half turn), and the Dexterous traits simply grants a general speed percent bonus instead of "every Nth step is a free action"
+* Many bonuses such as "you occasionally reload instantly" now instead give a speed bonus to that action - e.g. the War Veteran switches to the prepared weapon with +100% speed (i.e. it only takes half a standard turn), and the Dexterous traits simply grants a general speed percent bonus instead of "every Nth step is a free action"
 * Dodging now also applies to ranged attacks
 * The spells Slow, Paralyze, and Terrify Enemies have been merged into "Enfeeble Enemies"
 * Burning features now only hurt creatures on the same cell (not adjacent to it)
 * "Cloud Minds" is now a Rod instead of a spell (the Rogue starts with this item, intead of the spell)
+* Added trait Electrically Inclined - gives bonus to using Rods, Devices, Electric Lanterns, and electricity weapons
 * The Occultist starts with fixed (non-random) items and spells
 * When quaffing Potion of Insight, you can now manually choose which item to identify
 * Potion of Insight always gives some XP, in addition to identifying an item (to avoid making Potions of Insight worthless if all items are identified)
-* All Manuscripts are now guaranteed to be identified when read
+* All Manuscripts are now guaranteed to be identified when read (previously this only applied to potions)
 * You now search for secret doors and traps a bit further away, and your chance of finding them is affected by distance - for adjacent cells there is now a higher chance of detection than before (to avoid requiring hundreds of turns to detect an obvious hidden door)
 * Traps are always immediately revealed when triggered by the player
 * Added Barred gates (doors that you can see and shoot through), and Gratings (similarly, but walls)
 * Added Hanging vines, which can be walked through, but blocks line of sight
-* Added Rusty chains, which make a noise when someone walks through them
-* Spells now have "skill level" percentages, which determines the strength of the spell (and can add additional spell effects) - the skill levels can be increased by casting from Manuscripts - different monsters have different spell skill levels (so spells cast by more powerful monsters will typically hurt more, or last longer, etc)
-* All backgrounds can now learn spells, but the Occultist gains proficiency much faster, starts with a few known spells, and has access to unique spell casting traits
-* The Warlock trait now gives a chance to cast damage dealing spell multiple times (instead of spells having a random chance to make you "Charged" and deal maximum damage)
-* Chests can no longer be trapped (it was awkward to deal with, and it didn't really bring anything to the game) - chests are now just interacted with by bumping them (if they are not locked), kicking them, or using an Opening spell
+* Added Rusty chains, which makes a noise when someone walks through them
+* Spells now have "skill level" percentages, which determines the strength of the spell (and can also add additional spell effects) - the skill levels are primarily increased by casting from Manuscripts
+* All backgrounds can now learn spells, but the Occultist gains proficiency much faster (and as before, starts with a few spells and has access to unique spell casting traits)
+* Different monsters have different spell skill levels (so spells cast by more powerful monsters will typically hurt more, last longer, summon nastier monsters, etc)
+* The Warlock trait now gives a chance to cast damage dealing spell multiple times (instead of the old "Charged" mechanic)
+* Chests can no longer be trapped (it was awkward to deal with, and didn't really bring anything to the game) - chests are now interacted with merely by bumping them (if they are not locked), kicking them, or using an Opening spell
 * Rogues remain aware of monsters much longer than the other Backgrounds, and the other Backgrounds remain aware for a shorter duration than before
-* Removed the random "I have a bad feeling about this..." events causing shock
+* Removed the random "I have a bad feeling about this..." shock events
 * The Iron Suit and Asbestos Suit no longer gives penalties to aiming or spotting hidden monsters and objects
 * Removed all negative effects from critically failing melee attacks (such as "I am exhausted"), except for a small chance of the weapon breaking - which can only happen while cursed
 * Added more monsters
 
 Interface
 * All active properties are now printed with descriptions on the [@] character decsription page, and when [v]iewing monsters
-* When picking a trait, instead of showing all available and unavailable traits in the same list, the trait selection screen now has two modes (toggled with [TAB]) - the first mode shows available traits, and the second shows traits for which the prerequisites are not yet fulfilled
+* When picking a trait, instead of showing all available and blocked traits in the same list, the trait selection screen now has two modes (toggled with [TAB]) - the first mode shows available traits, and the second shows traits for which the prerequisites are not yet fulfilled
 * Reduced "more" prompt message spam from traps (less interruption)
-* Addded option to enable/disable fading of rendering brightness with distance from player
+* Addded option to enable/disable fading rendering brightness with distance from player
 * Added an option to ask for confirmation before lighting explosives
-* Printing a low HP warning (with "more" prompt) when dropping to a low HP percent
-* Removed the "q" command - Ghoul characters now feed on corpses when standing still on them instead
-* The map shown on the postmortem info screen is now drawn with tiles (when tiles mode is enabled), and is drawn in color
-* Added "New journey" option to postmortem menu
-* When [v]iewing the map, the game now also prints messages for detected unseen monsters ("There is a creature here")
-* When [v]iewing detailed monster descriptions, the game now prints hit chances for melee, ranged, and throwing attacks for the player and the monster - with all values contributing to the total hit chances shown
+* Added a low HP warning
+* Removed the "q" command - Ghoul characters now feed on corpses when "waiting" on them instead
+* The map shown on the postmortem info screen is now drawn with tiles (if that mode is enabled), and in color
+* Added "New journey" option to postmortem menu, to immediately start a new game
+* When [v]iewing the map, the game now also prints messages for cells with detected unseen monsters ("There is a creature here")
+* When [v]iewing detailed monster descriptions, the game now prints hit chances for melee, ranged, and throwing attacks for the player and the monster - with the calculations of the total hit chances shown
 * Weapons now merely display their own hit chance modifier (e.g. +5% or -10%), instead of your skill plus the weapon modifier (the old way was misleading, since more factors are involved when calculating actual hit chances during attacks)
 * Removed the "Combat skills" section of the character description page
-* The game now prints messages when you step on corpses
+* Messages are now printed when stepping on corpses
 
 Bug fixes
 * Fixed a bug where if you dropped the Staff of the Pharaohs, the spell would be permanently lost, even if you picked it up again

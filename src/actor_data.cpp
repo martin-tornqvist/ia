@@ -649,7 +649,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
     d.spell_cooldown_turns = 2;
-    d.spell_skill = 50;
+    d.spell_skill = 30;
     d.glyph = 'P';
     d.color = clr_magenta;
     d.tile = TileId::witch_or_warlock;
@@ -789,7 +789,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
     d.spell_cooldown_turns = 2;
-    d.spell_skill = 30;
+    d.spell_skill = 20;
     d.glyph = 'P';
     d.color = clr_cyan_lgt;
     d.tile = TileId::cultist_dagger;
@@ -2135,14 +2135,14 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'E';
     d.color = clr_orange;
     d.tile = TileId::mind_eater;
-    d.hp = 40;
+    d.hp = 30;
     d.spi = 40;
     d.dmg_melee = 2;
-    d.ability_vals.set_val(AbilityId::melee, 70);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::dodging, 30);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::r_breath] = true;
@@ -2161,7 +2161,9 @@ void init_data_list()
         "brain activity of other beings. Their preferred strategy is to subdue "
         "their victim with a paralyzing sting, and once immobilized, a second "
         "appendage probes the brain. This will usually not kill the victim, "
-        "but the experience is horrific beyond words.";
+        "but the experience is horrific beyond words. They only feed on "
+        "sound minds however - a strange or chaotic mind will cause them "
+        "great distress.";
     d.wary_msg = d.name_the + " seems disturbed.";
     d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::rare;

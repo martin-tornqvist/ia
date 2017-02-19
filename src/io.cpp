@@ -755,7 +755,7 @@ void draw_blast_at_field(const P& center_pos,
                               clr,
                               clr_black);
                 }
-                else
+                else // Text mode
                 {
                     draw_glyph('*',
                                Panel::map,
@@ -777,15 +777,13 @@ void draw_blast_at_field(const P& center_pos,
         sdl_base::sleep(config::delay_explosion() / 2);
     }
 
-    for (
-        pos.y = std::max(1, center_pos.y - radius);
-        pos.y <= std::min(map_h - 2, center_pos.y + radius);
-        pos.y++)
+    for (pos.y = std::max(1, center_pos.y - radius);
+         pos.y <= std::min(map_h - 2, center_pos.y + radius);
+         pos.y++)
     {
-        for (
-            pos.x = std::max(1, center_pos.x - radius);
-            pos.x <= std::min(map_w - 2, center_pos.x + radius);
-            pos.x++)
+        for (pos.x = std::max(1, center_pos.x - radius);
+             pos.x <= std::min(map_w - 2, center_pos.x + radius);
+             pos.x++)
         {
             if (!forbidden_cells[pos.x][pos.y])
             {
@@ -1105,6 +1103,7 @@ void cover_panel(const Panel panel)
     case Panel::status_lines:
     {
         const P px_pos = px_pos_for_cell_in_panel(panel, P(0, 0));
+
         cover_area_px(px_pos, P(screen_pixel_w, config::stat_lines_px_h()));
     }
     break;
@@ -1116,6 +1115,7 @@ void cover_panel(const Panel panel)
     case Panel::map:
     {
         const P px_pos = px_pos_for_cell_in_panel(panel, P(0, 0));
+
         cover_area_px(px_pos, P(screen_pixel_w, config::map_px_h()));
     }
     break;
@@ -1134,7 +1134,9 @@ void cover_area(const Panel panel, const R& area)
 void cover_area(const Panel panel, const P& pos, const P& dims)
 {
     const P px_pos = px_pos_for_cell_in_panel(panel, pos);
+
     const P cell_dims(config::cell_px_w(), config::cell_px_h());
+
     cover_area_px(px_pos, dims * cell_dims);
 }
 
@@ -1176,7 +1178,10 @@ void draw_rectangle_solid(const P& px_pos, const P& px_dims, const Clr& clr)
 
         SDL_FillRect(scr_srf_,
                      &sdl_rect,
-                     SDL_MapRGB(scr_srf_->format, clr.r, clr.g, clr.b));
+                     SDL_MapRGB(scr_srf_->format,
+                                clr.r,
+                                clr.g,
+                                clr.b));
     }
 }
 
@@ -1201,7 +1206,7 @@ void draw_projectiles(std::vector<Projectile*>& projectiles,
                     draw_tile(p->tile, Panel::map, p->pos, p->clr);
                 }
             }
-            else
+            else // Text mode
             {
                 if (p->glyph != -1)
                 {

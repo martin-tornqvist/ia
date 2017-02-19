@@ -21,11 +21,10 @@ void delete_all_mon();
 
 Actor* mk(const ActorId id, const P& pos);
 
-std::vector<Mon*> summon(const P& origin,
-                         const std::vector<ActorId>& monster_ids,
-                         const MakeMonAware make_aware = MakeMonAware::yes,
-                         Actor* const actor_to_set_as_leader = nullptr,
-                         Verbosity verbosity = Verbosity::verbose);
+std::vector<Mon*> spawn(const P& origin,
+                        const std::vector<ActorId>& monster_ids,
+                        const MakeMonAware make_aware = MakeMonAware::yes,
+                        Actor* const actor_to_set_as_leader = nullptr);
 
 } // actor_factory
 

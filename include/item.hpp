@@ -67,7 +67,7 @@ public:
 
     virtual Clr interface_clr() const
     {
-        return clr_brown;
+        return clr_orange;
     }
 
     virtual void on_std_turn_in_inv(const InvType inv_type)
@@ -90,6 +90,13 @@ public:
     // This is the opposite of "on_pickup()". If this is a wielded item,
     // "on_unequip()" should be called first.
     void on_removed_from_inv();
+
+    // Called when:
+    // * Player walks into the same cell as the item,
+    // * The item is dropped into the same cell as the player,
+    // * The item is picked up,
+    // * The item is found in an item container, but not picked up
+    void on_found();
 
     void add_carrier_prop(Prop* const prop, const Verbosity verbosity);
 
@@ -318,12 +325,6 @@ private:
     void on_melee_hit(Actor& actor_hit) override;
 
     void on_melee_kill(Actor& actor_killed) override;
-};
-
-class PharaohStaff: public Wpn
-{
-public:
-    PharaohStaff(ItemDataT* const item_data);
 };
 
 class SawedOff: public Wpn

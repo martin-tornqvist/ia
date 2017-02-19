@@ -22,44 +22,49 @@ ConsumeItem Potion::activate(Actor* const actor)
 {
     ASSERT(actor);
 
-    if (actor->prop_handler().allow_eat(Verbosity::verbose))
+    if (!actor->prop_handler().allow_eat(Verbosity::verbose))
     {
-        if (actor->is_player())
-        {
-            data_->is_tried = true;
-
-            audio::play(SfxId::potion_quaff);
-
-            if (data_->is_identified)
-            {
-                const std::string potion_name =
-                    name(ItemRefType::a, ItemRefInf::none);
-
-                msg_log::add("I drink " + potion_name + "...");
-            }
-            else // Not identified
-            {
-                const std::string potion_name =
-                    name(ItemRefType::plain, ItemRefInf::none);
-
-                msg_log::add("I drink an unknown " + potion_name + "...");
-            }
-
-            map::player->incr_shock(ShockLvl::terrifying,
-                                    ShockSrc::use_strange_item);
-        }
-
-        quaff_impl(*actor);
-
-        if (map::player->is_alive())
-        {
-            game_time::tick();
-        }
-
-        return ConsumeItem::yes;
+        return ConsumeItem::no;
     }
 
-    return ConsumeItem::no;
+    if (actor->is_player())
+    {
+        data_->is_tried = true;
+
+        audio::play(SfxId::potion_quaff);
+
+        if (data_->is_identified)
+        {
+            const std::string potion_name =
+                name(ItemRefType::a, ItemRefInf::none);
+
+            msg_log::add("I drink " + potion_name + "...");
+        }
+        else // Not identified
+        {
+            const std::string potion_name =
+                name(ItemRefType::plain, ItemRefInf::none);
+
+            msg_log::add("I drink an unknown " + potion_name + "...");
+        }
+
+        map::player->incr_shock(ShockLvl::terrifying,
+                                ShockSrc::use_strange_item);
+
+        if (!map::player->is_alive())
+        {
+            return ConsumeItem::yes;
+        }
+    }
+
+    quaff_impl(*actor);
+
+    if (map::player->is_alive())
+    {
+        game_time::tick();
+    }
+
+    return ConsumeItem::yes;
 }
 
 void Potion::identify(const Verbosity verbosity)
@@ -128,12 +133,13 @@ void Potion::on_collide(const P& pos, Actor* const actor)
 
         if (actor)
         {
-            //If the blow from the bottle didn't kill the actor, apply what's inside
+            // If the blow from the bottle didn't kill the actor, apply effect
             if (actor->is_alive())
             {
                 collide_hook(pos, actor);
 
-                if (actor->is_alive() && !data_->is_identified && player_see_cell)
+                if (actor->is_alive() &&
+                    !data_->is_identified && player_see_cell)
                 {
                     //This did not identify the potion
                     msg_log::add("It had no apparent effect...");
@@ -165,9 +171,9 @@ void PotionVitality::quaff_impl(Actor& actor)
         actor.prop_handler().end_prop(prop_id);
     }
 
-    //HP is always restored at least up to maximum hp, but can go beyond
-    const int hp          = actor.hp();
-    const int hp_max      = actor.hp_max(true);
+    // HP is always restored at least up to maximum hp, but can go beyond
+    const int hp = actor.hp();
+    const int hp_max = actor.hp_max(true);
     const int hp_restored = std::max(20, hp_max - hp);
 
     actor.restore_hp(hp_restored, true);
@@ -191,9 +197,9 @@ void PotionVitality::collide_hook(const P& pos, Actor* const actor)
 void PotionSpirit::quaff_impl(Actor& actor)
 {
     //SPI is always restored at least up to maximum spi, but can go beyond
-    const int spi           = actor.spi();
-    const int spi_max       = actor.spi_max();
-    const int spi_restored  = std::max(10, spi_max - spi);
+    const int spi = actor.spi();
+    const int spi_max = actor.spi_max();
+    const int spi_restored = std::max(10, spi_max - spi);
 
     actor.restore_spi(spi_restored, true);
 

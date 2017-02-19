@@ -409,12 +409,6 @@ std::vector<std::string> Spell::descr() const
     if (can_be_improved_with_skill())
     {
         ret.push_back("Skill level: " + std::to_string(skill) + "%");
-
-        if (skill < 100)
-        {
-            ret.push_back(
-                "(Skill level can be improved by casting from Manuscripts.)");
-        }
     }
 
     return ret;
@@ -454,24 +448,25 @@ void SpellDarkbolt::run_effect(Actor* const caster) const
 
     target = map::random_closest_actor(caster->pos, seen_actors);
 
-    // Spell reflection?
-    if (target->has_prop(PropId::spell_reflect))
-    {
-        if (map::player->can_see_actor(*target))
-        {
-            msg_log::add(spell_reflect_msg,
-                         clr_text,
-                         false,
-                         MorePromptOnMsg::yes);
-        }
-
-        return run_effect(target);
-    }
-
     // Spell resistance?
     if (target->has_prop(PropId::r_spell))
     {
         on_resist(*target);
+
+        // Spell reflection?
+        if (target->has_prop(PropId::spell_reflect))
+        {
+            if (map::player->can_see_actor(*target))
+            {
+                msg_log::add(spell_reflect_msg,
+                             clr_text,
+                             false,
+                             MorePromptOnMsg::yes);
+            }
+
+            // Run effect with the target as caster instead
+            run_effect(target);
+        }
 
         return;
     }
@@ -575,12 +570,12 @@ std::vector<std::string> SpellDarkbolt::descr_specific() const
     std::vector<std::string> descr;
 
     descr.push_back(
-        "Siphons power from some hellish mystic source, which is focused "
+        "Siphons power from some infernal dimension, which is then focused "
         "into a bolt hurled towards a target with great force.");
 
     descr.push_back(
-        "The conjured bolt has some sort of will on its own - the caster "
-        "cannot determine exactly which creature will be struck.");
+        "The conjured bolt has some will on its own - the caster determine "
+        "determine exactly which creature will be struck.");
 
     const int skill = map::player->spell_skill(id());
 
@@ -642,25 +637,25 @@ void SpellAzaWrath::run_effect(Actor* const caster) const
 
     for (Actor* const target : targets)
     {
-        // Spell reflection?
-        if (target->has_prop(PropId::spell_reflect))
-        {
-            if (map::player->can_see_actor(*target))
-            {
-                msg_log::add(spell_reflect_msg,
-                             clr_white,
-                             false,
-                             MorePromptOnMsg::yes);
-            }
-
-            run_effect(target);
-            continue;
-        }
-
         // Spell resistance?
         if (target->has_prop(PropId::r_spell))
         {
             on_resist(*target);
+
+            // Spell reflection?
+            if (target->has_prop(PropId::spell_reflect))
+            {
+                if (map::player->can_see_actor(*target))
+                {
+                    msg_log::add(spell_reflect_msg,
+                                 clr_white,
+                                 false,
+                                 MorePromptOnMsg::yes);
+                }
+
+                // Run effect with the target as caster
+                run_effect(target);
+            }
 
             continue;
         }
@@ -939,15 +934,18 @@ void SpellPest::run_effect(Actor* const caster) const
     }
 
     const auto mon_summoned =
-        actor_factory::summon(caster->pos,
-                              {nr_mon, ActorId::rat},
-                              MakeMonAware::yes,
-                              leader);
+        actor_factory::spawn(caster->pos,
+                             {nr_mon, ActorId::rat},
+                             MakeMonAware::yes,
+                             leader);
 
     bool is_any_seen_by_player = false;
 
     for (Mon* const mon : mon_summoned)
     {
+        mon->prop_handler().try_add(
+            new PropSummoned(PropTurns::indefinite));
+
         if (map::player->can_see_actor(*mon))
         {
             is_any_seen_by_player = true;
@@ -1053,12 +1051,11 @@ void SpellAnimWpns::run_effect(Actor* const caster) const
                 const P p(x, y);
 
                 const auto summoned =
-                    actor_factory::summon(
+                    actor_factory::spawn(
                         p,
                         {1, ActorId::animated_wpn},
                         MakeMonAware::no,
-                        map::player,
-                        Verbosity::silent);
+                        map::player);
 
                 ASSERT(summoned.size() == 1);
 
@@ -1179,7 +1176,7 @@ void SpellPharaohStaff::run_effect(Actor* const caster) const
         ActorId::croc_head_mummy;
 
     const auto summoned_mon =
-        actor_factory::summon(caster->pos,
+        actor_factory::spawn(caster->pos,
                               {actor_id},
                               MakeMonAware::yes,
                               leader);
@@ -1924,26 +1921,28 @@ void SpellKnockBack::run_effect(Actor* const caster) const
     Actor* target = static_cast<Mon*>(caster_used)->tgt_;
     ASSERT(target);
 
-    // Spell reflection?
-    if (target->has_prop(PropId::spell_reflect))
-    {
-        if (map::player->can_see_actor(*target))
-        {
-            msg_log::add(spell_reflect_msg,
-                         clr_text,
-                         false,
-                         MorePromptOnMsg::yes);
-        }
-
-        std::swap(caster_used, target);
-    }
-
     // Spell resistance?
     if (target->has_prop(PropId::r_spell))
     {
         on_resist(*target);
 
-        return;
+        // Spell reflection?
+        if (target->has_prop(PropId::spell_reflect))
+        {
+            if (map::player->can_see_actor(*target))
+            {
+                msg_log::add(spell_reflect_msg,
+                             clr_text,
+                             false,
+                             MorePromptOnMsg::yes);
+            }
+
+            std::swap(caster_used, target);
+        }
+        else // No spell reflection, just abort
+        {
+            return;
+        }
     }
 
     if (target->is_player())
@@ -2050,26 +2049,25 @@ void SpellEnfeebleMon::run_effect(Actor* const caster) const
     {
         PropHandler& prop_handler = target->prop_handler();
 
-        // Spell reflection?
-        if (target->has_prop(PropId::spell_reflect))
-        {
-            if (map::player->can_see_actor(*target))
-            {
-                msg_log::add(spell_reflect_msg,
-                             clr_text,
-                             false,
-                             MorePromptOnMsg::yes);
-            }
-
-            run_effect(target);
-
-            continue;
-        }
-
         // Spell resistance?
         if (target->has_prop(PropId::r_spell))
         {
             on_resist(*target);
+
+            // Spell reflection?
+            if (target->has_prop(PropId::spell_reflect))
+            {
+                if (map::player->can_see_actor(*target))
+                {
+                    msg_log::add(spell_reflect_msg,
+                                 clr_text,
+                                 false,
+                                 MorePromptOnMsg::yes);
+                }
+
+                // Run effect with target as caster
+                run_effect(target);
+            }
 
             continue;
         }
@@ -2123,26 +2121,28 @@ void SpellDisease::run_effect(Actor* const caster) const
     Actor* caster_used = caster;
     Actor* target = static_cast<Mon*>(caster_used)->tgt_;
 
-    // Spell reflection?
-    if (target->has_prop(PropId::spell_reflect))
-    {
-        if (map::player->can_see_actor(*target))
-        {
-            msg_log::add(spell_reflect_msg,
-                         clr_text,
-                         false,
-                         MorePromptOnMsg::yes);
-        }
-
-        std::swap(caster_used, target);
-    }
-
     // Spell resistance?
     if (target->has_prop(PropId::r_spell))
     {
         on_resist(*target);
 
-        return;
+        // Spell reflection?
+        if (target->has_prop(PropId::spell_reflect))
+        {
+            if (map::player->can_see_actor(*target))
+            {
+                msg_log::add(spell_reflect_msg,
+                             clr_text,
+                             false,
+                             MorePromptOnMsg::yes);
+            }
+
+            std::swap(caster_used, target);
+        }
+        else // No spell reflection, just abort
+        {
+            return;
+        }
     }
 
     std::string actor_name = "me";
@@ -2284,12 +2284,15 @@ void SpellSummonMon::run_effect(Actor* const caster) const
     }
 
     const auto mon_summoned =
-        actor_factory::summon(summon_pos,
+        actor_factory::spawn(summon_pos,
                               {mon_id},
                               MakeMonAware::yes,
                               leader);
 
     Mon* const mon = mon_summoned[0];
+
+    mon->prop_handler().try_add(
+        new PropSummoned(PropTurns::indefinite));
 
     if (map::player->can_see_actor(*mon))
     {
@@ -2359,26 +2362,28 @@ void SpellMiGoHypno::run_effect(Actor* const caster) const
 
     ASSERT(target);
 
-    // Spell reflection?
-    if (target->has_prop(PropId::spell_reflect))
-    {
-        if (map::player->can_see_actor(*target))
-        {
-            msg_log::add(spell_reflect_msg,
-                         clr_text,
-                         false,
-                         MorePromptOnMsg::yes);
-        }
-
-        std::swap(caster_used, target);
-    }
-
     // Spell resistance?
     if (target->has_prop(PropId::r_spell))
     {
         on_resist(*target);
 
-        return;
+        // Spell reflection?
+        if (target->has_prop(PropId::spell_reflect))
+        {
+            if (map::player->can_see_actor(*target))
+            {
+                msg_log::add(spell_reflect_msg,
+                             clr_text,
+                             false,
+                             MorePromptOnMsg::yes);
+            }
+
+            std::swap(caster_used, target);
+        }
+        else // No spell reflection, just abort
+        {
+            return;
+        }
     }
 
     if (target->is_player())
@@ -2418,26 +2423,28 @@ void SpellBurn::run_effect(Actor* const caster) const
 
     ASSERT(target);
 
-    // Spell reflection?
-    if (target->has_prop(PropId::spell_reflect))
-    {
-        if (map::player->can_see_actor(*target))
-        {
-            msg_log::add(spell_reflect_msg,
-                         clr_text,
-                         false,
-                         MorePromptOnMsg::yes);
-        }
-
-        std::swap(caster_used, target);
-    }
-
     // Spell resistance?
     if (target->has_prop(PropId::r_spell))
     {
         on_resist(*target);
 
-        return;
+        // Spell reflection?
+        if (target->has_prop(PropId::spell_reflect))
+        {
+            if (map::player->can_see_actor(*target))
+            {
+                msg_log::add(spell_reflect_msg,
+                             clr_text,
+                             false,
+                             MorePromptOnMsg::yes);
+            }
+
+            std::swap(caster_used, target);
+        }
+        else // No spell reflection, just abort
+        {
+            return;
+        }
     }
 
     std::string target_str = "me";

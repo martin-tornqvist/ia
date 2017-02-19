@@ -18,7 +18,6 @@ enum class SlotId
     thrown,
     body,
     head,
-    neck,
     END
 };
 

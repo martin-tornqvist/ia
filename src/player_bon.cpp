@@ -137,6 +137,7 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         break;
 
     case Trait::elec_incl:
+        return bg == Bg::ghoul;
         break;
 
     case Trait::ravenous:
@@ -392,8 +393,8 @@ std::vector<std::string> bg_descr(const Bg id)
             "",
             "Starts with a few known spells",
             "",
-            "-50% shock taken from using and identifying strange items "
-            "(e.g. potions)",
+            "-50% shock taken from carrying, using and identifying strange "
+            "items (e.g. drinking a potion or carrying a disturbing artifact)",
             "",
             "Can dispel magic traps",
             "",
@@ -533,13 +534,13 @@ std::string trait_descr(const Trait id)
 
     case Trait::tough:
         return
-            "+2 hit points, +10% carry weight limit, better results for object "
+            "+2 Hit Points, +10% carry weight limit, better results for object "
             "interactions requiring strength (e.g. bashing doors or pushing a "
             "lid)";
 
     case Trait::rugged:
         return
-            "+4 hit points, +10% carry weight limit, better results for object "
+            "+4 Hit Points, +10% carry weight limit, better results for object "
             "interactions requiring strength (such as bashing doors, or moving "
             "the lid from a stone coffin)";
 
@@ -586,7 +587,7 @@ std::string trait_descr(const Trait id)
 
     case Trait::rapid_recoverer:
         return
-            "Double Hit Point regeneration rate";
+            "Four times faster Hit Point regeneration base rate";
 
     case Trait::survivalist:
         return

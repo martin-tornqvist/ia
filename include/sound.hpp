@@ -25,6 +25,19 @@ enum class IgnoreMsgIfOriginSeen
     yes
 };
 
+class SndHeardEffect
+{
+public:
+    SndHeardEffect() {}
+
+    virtual ~SndHeardEffect() {}
+
+    virtual void run(Actor& actor) const = 0;
+};
+
+// -----------------------------------------------------------------------------
+// Sound
+// -----------------------------------------------------------------------------
 class Snd
 {
 public:
@@ -35,10 +48,12 @@ public:
         Actor* const actor_who_made_sound,
         const SndVol vol,
         const AlertsMon alerting_mon,
-        const MorePromptOnMsg add_more_prompt_on_msg = MorePromptOnMsg::no);
+        const MorePromptOnMsg add_more_prompt_on_msg = MorePromptOnMsg::no,
+        std::shared_ptr<SndHeardEffect> snd_heard_effect = nullptr);
 
     Snd() {}
-    ~Snd() {}
+
+    ~Snd();
 
     const std::string& msg() const
     {
@@ -90,6 +105,8 @@ public:
         msg_ += str;
     }
 
+    void on_heard(Actor& actor) const;
+
 private:
     std::string msg_;
     SfxId sfx_;
@@ -99,8 +116,12 @@ private:
     SndVol vol_;
     AlertsMon is_alerting_mon_;
     MorePromptOnMsg add_more_prompt_on_msg_;
+    std::shared_ptr<SndHeardEffect> snd_heard_effect_;
 };
 
+// -----------------------------------------------------------------------------
+// Sound emitting
+// -----------------------------------------------------------------------------
 namespace snd_emit
 {
 

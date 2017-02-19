@@ -345,7 +345,8 @@ bool Player::can_see_actor(const Actor& other) const
     const Cell& cell = map::cells[other.pos.x][other.pos.y];
 
     // Dead actors are seen if the cell is seen
-    if (!other.is_alive() && cell.is_seen_by_player)
+    if (!other.is_alive() &&
+        cell.is_seen_by_player)
     {
         return true;
     }
@@ -394,7 +395,7 @@ bool Player::can_see_actor(const Actor& other) const
     }
 
     // Monster is sneaking, and cannot be seen with infravision or magic seeing?
-    if (mon->player_aware_of_me_counter_ <= 0 &&
+    if (mon->is_sneaking() &&
         !can_see_other_with_infravis &&
         !can_see_invis)
     {
@@ -589,7 +590,7 @@ int Player::shock_resistance(const ShockSrc shock_src) const
 double Player::shock_taken_after_mods(const double base_shock,
                                       const ShockSrc shock_src) const
 {
-    const double shock_res_db = double(shock_resistance(shock_src));
+    const double shock_res_db = (double)shock_resistance(shock_src);
 
     return (base_shock * (100.0 - shock_res_db)) / 100.0;
 }
@@ -599,6 +600,7 @@ void Player::incr_shock(double shock, ShockSrc shock_src)
     shock = shock_taken_after_mods(shock, shock_src);
 
     shock_ += shock;
+
     perm_shock_taken_current_turn_ += shock;
 
     set_constr_in_range(0.0, shock_, 100.0);
@@ -749,6 +751,7 @@ bool Player::is_standing_in_cramped_place() const
 void Player::set_quick_move(const Dir dir)
 {
     nr_quick_move_steps_left_ = 10;
+
     quick_move_dir_ = dir;
 }
 
@@ -803,27 +806,31 @@ void Player::act()
         const P tgt(pos + dir_utils::offset(quick_move_dir_));
 
         const Cell& tgt_cell = map::cells[tgt.x][tgt.y];
+
         const Rigid* const tgt_rigid = tgt_cell.rigid;
 
         const bool is_tgt_known_trap =
-            tgt_rigid->id() == FeatureId::trap &&
+            (tgt_rigid->id() == FeatureId::trap) &&
             !static_cast<const Trap*>(tgt_rigid)->is_hidden();
 
         const bool should_abort =
             !tgt_rigid->can_move_cmn() ||
             is_tgt_known_trap ||
-            tgt_rigid->burn_state() == BurnState::burning ||
+            (tgt_rigid->burn_state() == BurnState::burning) ||
             (tgt_cell.is_dark && !tgt_cell.is_lit);
 
         if (should_abort)
         {
             nr_quick_move_steps_left_ = -1;
+
             quick_move_dir_ = Dir::END;
         }
         else // Keep going!
         {
             --nr_quick_move_steps_left_;
+
             move(quick_move_dir_);
+
             return;
         }
     }
@@ -926,23 +933,56 @@ void Player::on_actor_turn()
 
     add_shock_from_seen_monsters(my_seen_foes);
 
-    // Some "permanent shock" is taken every Nth turn
     if (prop_handler_->allow_act())
     {
-        int incr_shock_every_n_turns = 12;
+        //
+        // Passive shock taken over time
+        //
+        double passive_shock_taken = 0.07;
 
         if (player_bon::bg() == Bg::rogue)
         {
-            incr_shock_every_n_turns *= 2;
+            passive_shock_taken /= 2.0;
         }
 
-        const int turn = game_time::turn_nr();
+        incr_shock(passive_shock_taken, ShockSrc::time);
 
-        if (((turn % incr_shock_every_n_turns) == 0) &&
-            (turn > 1) &&
-            (map::dlvl != 0))
+        //
+        // Passive shock taken over time due to items
+        //
+        bool is_item_shock_taken = false;
+
+        double item_shock_taken = 0.0;
+
+        for (auto& slot : inv_->slots_)
         {
-            incr_shock(1, ShockSrc::time);
+            if (slot.item)
+            {
+                const ItemDataT& d = slot.item->data();
+
+                // NOTE: Having an item equiped also counts as carrying it
+                if (d.is_carry_shocking || d.is_equiped_shocking)
+                {
+                    item_shock_taken += shock_from_disturbing_items;
+
+                    is_item_shock_taken = true;
+                }
+            }
+        }
+
+        for (const Item* const item : inv_->backpack_)
+        {
+            if (item->data().is_carry_shocking)
+            {
+                item_shock_taken += shock_from_disturbing_items;
+
+                is_item_shock_taken = true;
+            }
+        }
+
+        if (is_item_shock_taken)
+        {
+            incr_shock(item_shock_taken, ShockSrc::use_strange_item);
         }
     }
 
@@ -1142,32 +1182,7 @@ int Player::shock_tot() const
 
 int Player::ins() const
 {
-    int out = ins_;
-
-    // Insanity from items
-    for (auto& slot : inv_->slots_)
-    {
-        if (slot.item)
-        {
-            const ItemDataT& d = slot.item->data();
-
-            // NOTE: Having an item equiped also counts as carrying it
-            if (d.is_ins_raied_while_carried || d.is_ins_raied_while_equiped)
-            {
-                out += ins_from_disturbing_items;
-            }
-        }
-    }
-
-    for (const Item* const item : inv_->backpack_)
-    {
-        if (item->data().is_ins_raied_while_carried)
-        {
-            out += ins_from_disturbing_items;
-        }
-    }
-
-    return std::min(100, out);
+    return std::min(100, ins_);
 }
 
 void Player::on_std_turn()
@@ -1190,7 +1205,8 @@ void Player::on_std_turn()
         player_bon::traits[(size_t)Trait::mighty_spirit]  ? 2 :
         player_bon::traits[(size_t)Trait::strong_spirit]  ? 1 : 0;
 
-    if (spi_trait_lvl > 0 && !prop_handler_->has_prop(PropId::r_spell))
+    if (spi_trait_lvl > 0 &&
+        !prop_handler_->has_prop(PropId::r_spell))
     {
         if (nr_turns_until_rspell_ <= 0)
         {
@@ -1209,6 +1225,12 @@ void Player::on_std_turn()
             const int nr_turns_bon = (spi_trait_lvl - 1) * 50;
 
             nr_turns_until_rspell_ = std::max(10, nr_turns_base - nr_turns_bon);
+
+            // Halved number of turns due to the Talisman of Reflection?
+            if (inv_->has_item_in_backpack(ItemId::refl_talisman))
+            {
+                nr_turns_until_rspell_ /= 2;
+            }
         }
 
         if (!prop_handler_->has_prop(PropId::r_spell) &&
@@ -1232,6 +1254,15 @@ void Player::on_std_turn()
         player_bon::bg() != Bg::ghoul)
     {
         int nr_turns_per_hp = 20;
+
+        // Rapid Recoverer trait affects hp regen?
+        const bool is_rapid_recover =
+            player_bon::traits[(size_t)Trait::rapid_recoverer];
+
+        if (is_rapid_recover)
+        {
+            nr_turns_per_hp /= 4;
+        }
 
         // Wounds affect hp regen?
         int nr_wounds = 0;
@@ -1265,16 +1296,7 @@ void Player::on_std_turn()
             nr_turns_per_hp += item->hp_regen_change(InvType::backpack);
         }
 
-        // Rapid Recoverer trait affects hp regen?
-        const bool is_rapid_recover =
-            player_bon::traits[(size_t)Trait::rapid_recoverer];
-
-        if (is_rapid_recover)
-        {
-            nr_turns_per_hp /= 2;
-        }
-
-        nr_turns_per_hp = std::max(2, nr_turns_per_hp);
+        nr_turns_per_hp = std::max(1, nr_turns_per_hp);
 
         const int turn = game_time::turn_nr();
         const int current_hp = hp();
@@ -1405,6 +1427,8 @@ void Player::hear_sound(const Snd& snd,
             static_cast<Mon*>(actor_who_made_snd)->set_player_aware_of_me();
         }
     }
+
+    snd.on_heard(*this);
 }
 
 void Player::move(Dir dir)
@@ -1592,7 +1616,7 @@ void Player::move(Dir dir)
 
             pos = tgt;
 
-            // Print message if walking on item
+            // Walking on item?
             Item* const item = map::cells[pos.x][pos.y].item;
 
             if (item)
@@ -1604,6 +1628,8 @@ void Player::move(Dir dir)
                 text_format::first_to_upper(item_name);
 
                 msg_log::add(item_name + ".");
+
+                item->on_found();
             }
 
             // Print message if walking on corpses
@@ -1717,7 +1743,7 @@ Clr Player::clr() const
 
 int Player::spell_skill(const SpellId id) const
 {
-    return player_spells::spell_skill_pct(id);
+    return player_spells::spell_skill_pct_tot(id);
 }
 
 void Player::auto_melee()
@@ -1736,7 +1762,9 @@ void Player::auto_melee()
     {
         Actor* const actor = map::actor_at_pos(pos + d);
 
-        if (actor && !is_leader_of(actor) && can_see_actor(*actor))
+        if (actor &&
+            !is_leader_of(actor) &&
+            can_see_actor(*actor))
         {
             tgt_ = actor;
             move(dir_utils::dir(d));

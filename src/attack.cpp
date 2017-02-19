@@ -153,7 +153,8 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
 
         if (defender.has_prop(PropId::paralyzed) ||
             defender.has_prop(PropId::nailed) ||
-            defender.has_prop(PropId::fainted))
+            defender.has_prop(PropId::fainted) ||
+            defender.has_prop(PropId::clockwork_frozen))
         {
             // Give big attack bonus if defender is completely unable to
             // fight.
@@ -1298,10 +1299,12 @@ void projectile_fire(Actor* const attacker,
     if (first_projectile->is_obstructed)
     {
         const int element = first_projectile->obstructed_in_element;
+
         const P& pos = path[element];
+
         wpn.on_projectile_blocked(pos, first_projectile->actor_hit);
     }
-    else
+    else // Not blocked
     {
         wpn.on_projectile_blocked(aim_pos, first_projectile->actor_hit);
     }

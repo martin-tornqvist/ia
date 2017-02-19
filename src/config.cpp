@@ -149,7 +149,9 @@ void player_sets_option(const MenuBrowser& browser)
         }
 
         set_cell_px_dims_from_font_name();
+
         set_cell_px_dim_dependent_variables();
+
         io::init();
     }
     break;

@@ -257,7 +257,9 @@ void incr_spell_skill(const SpellId id, const Verbosity verbosity)
 
     const int skill_before = v;
 
-    v = std::min(100, v + incr);
+    v += incr;
+
+    v = std::min(100, v);
 
     if (v > skill_before &&
         verbosity == Verbosity::verbose)
@@ -267,9 +269,19 @@ void incr_spell_skill(const SpellId id, const Verbosity verbosity)
     }
 }
 
-int spell_skill_pct(const SpellId id)
+int spell_skill_pct_tot(const SpellId id)
 {
-    return spell_skill_pct_[(size_t)id];
+    int skill_tot = spell_skill_pct_[(size_t)id];
+
+    // Bonus skill from the Sorcery Crystal?
+    if (map::player->inv().has_item_in_backpack(ItemId::orb_of_sorcery))
+    {
+        skill_tot += 10;
+    }
+
+    skill_tot = std::min(100, skill_tot);
+
+    return skill_tot;
 }
 
 void set_spell_skill_pct(const SpellId id, const int val)
@@ -396,7 +408,7 @@ void BrowseSpell::draw()
         const SpellId id = spell->id();
 
         const int skill_pct =
-            player_spells::spell_skill_pct_[(size_t)id];
+            player_spells::spell_skill_pct_tot(id);
 
         // Draw skill level if learned
         if (spell_opt.src == SpellSrc::learned)
@@ -406,18 +418,18 @@ void BrowseSpell::draw()
             str = "Skill: ";
 
             io::draw_text(str,
-                              Panel::screen,
-                              p,
-                              clr_gray_drk);
+                          Panel::screen,
+                          p,
+                          clr_gray_drk);
 
             str = std::to_string(skill_pct) + "%";
 
             p.x = descr_x0 - 1 - str.size();
 
             io::draw_text(str,
-                              Panel::screen,
-                              p,
-                              clr_white);
+                          Panel::screen,
+                          p,
+                          clr_white);
         }
 
         if (is_idx_marked)

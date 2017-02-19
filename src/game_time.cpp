@@ -36,8 +36,11 @@ std::vector<ActorSpeed> turn_type_vector_;
 const int ticks_per_turn_ = 20;
 
 int current_turn_type_pos_ = 0;
+
 size_t current_actor_idx_ = 0;
+
 int turn_nr_ = 0;
+
 int std_turn_delay_ = ticks_per_turn_;
 
 void run_std_turn_events()
@@ -255,9 +258,12 @@ void erase_mob(Mob* const f, const bool destroy_object)
             }
 
             mobs.erase(it);
+
             return;
         }
     }
+
+    ASSERT(false);
 }
 
 void erase_all_mobs()

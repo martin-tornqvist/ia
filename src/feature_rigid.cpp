@@ -62,9 +62,9 @@ void Rigid::on_new_turn()
             actor.hit(1, DmgType::fire);
         };
 
-        //TODO: Hit dead actors
+        // TODO: Hit dead actors
 
-        //Hit actor standing on feature
+        // Hit actor standing on feature
         auto* actor = map::actor_at_pos(pos_);
 
         if (actor)
@@ -82,7 +82,7 @@ void Rigid::on_new_turn()
             }
         }
 
-        //Finished burning?
+        // Finished burning?
         int finish_burning_one_in_n = 1;
         int hit_adjacent_one_in_n   = 1;
 
@@ -130,7 +130,7 @@ void Rigid::on_new_turn()
             }
         }
 
-        //Hit actors and adjacent features?
+        // Hit actors and adjacent features?
         if (rnd::one_in(hit_adjacent_one_in_n))
         {
             actor = map::actor_at_pos(pos_);
@@ -149,7 +149,7 @@ void Rigid::on_new_turn()
             }
         }
 
-        //Create smoke?
+        // Create smoke?
         if (rnd::one_in(20))
         {
             const P p(dir_utils::rnd_adj_pos(pos_, true));
@@ -168,7 +168,7 @@ void Rigid::on_new_turn()
         }
     }
 
-    //Run specialized new turn actions
+    // Run specialized new turn actions
     on_new_turn_hook();
 }
 
@@ -1486,8 +1486,8 @@ void Lever::pull()
     TRACE_FUNC_BEGIN;
     is_position_left_ = !is_position_left_;
 
-    //TODO: Implement something like open_by_lever in the Door class instead of setting
-    //"is_open_" etc directly.
+    // TODO: Implement something like open_by_lever in the Door class instead of setting
+    // "is_open_" etc directly.
 
 //  if(!door_linked_to_->is_broken_) {
 //    TRACE << "Door linked to is not broken" << std::endl;
@@ -1694,7 +1694,7 @@ std::string Bush::name(const Article article) const
         return ret + "burning shrub";
 
     case BurnState::has_burned:
-        //Should not happen
+        // Should not happen
         break;
     }
 
@@ -1760,7 +1760,7 @@ std::string Vines::name(const Article article) const
         return ret + "burning vines";
 
     case BurnState::has_burned:
-        //Should not happen
+        // Should not happen
         break;
     }
 
@@ -2034,7 +2034,7 @@ void Brazier::on_hit(const DmgType dmg_type,
                 expl_d = -2;
             }
 
-            //TODO: Emit sound from explosion center
+            // TODO: Emit sound from explosion center
 
             explosion::run(expl_pos,
                            ExplType::apply_prop,
@@ -2189,8 +2189,8 @@ void ItemContainer::open(const P& feature_pos,
                 nullptr;
 
             const bool is_unloadable_wpn =
-                wpn                         &&
-                wpn->nr_ammo_loaded_ > 0    &&
+                wpn &&
+                wpn->nr_ammo_loaded_ > 0 &&
                 !data.ranged.has_infinite_ammo;
 
             if (is_unloadable_wpn)
@@ -2223,6 +2223,8 @@ void ItemContainer::open(const P& feature_pos,
             else if (answer == YesNoAnswer::no)
             {
                 item_drop::drop_item_on_map(feature_pos, *item);
+
+                item->on_found();
             }
             else // Special key (unload in this case)
             {
@@ -2257,7 +2259,7 @@ void ItemContainer::open(const P& feature_pos,
 
 void ItemContainer::destroy_single_fragile()
 {
-    //TODO: Generalize this (perhaps something like "is_fragile" item data value)
+    // TODO: Generalize this (perhaps something like "is_fragile" item data value)
 
     for (size_t i = 0; i < items_.size(); ++i)
     {
@@ -2287,24 +2289,30 @@ Tomb::Tomb(const P& p) :
     is_random_appearance_   (false),
     trait_                  (TombTrait::END)
 {
-    //Contained items
-    const int nr_items_min  = 0;
-    const int nr_items_max  = player_bon::traits[(size_t)Trait::treasure_hunter] ? 2 : 1;
+    // Contained items
+    const int nr_items_min = 0;
 
-    item_container_.init(FeatureId::tomb, rnd::range(nr_items_min, nr_items_max));
+    const int nr_items_max =
+        player_bon::traits[(size_t)Trait::treasure_hunter] ?
+        2 : 1;
 
-    //Appearance
+    item_container_.init(FeatureId::tomb,
+                         rnd::range(nr_items_min,
+                                    nr_items_max));
+
+    // Appearance
     if (rnd::one_in(12))
     {
-        //Do not base appearance on items (random appearance)
-        const int nr_app    = int(TombAppearance::END);
-        appearance_         = TombAppearance(rnd::range(0, nr_app - 1));
+        // Do not base appearance on items (random appearance)
+        const int nr_app = (int)TombAppearance::END;
+
+        appearance_ = TombAppearance(rnd::range(0, nr_app - 1));
 
         is_random_appearance_ = true;
     }
-    else //Base appearance on value of contained items
+    else // Base appearance on value of contained items
     {
-        //Appearance is based on items inside
+        // Appearance is based on items inside
         for (Item* item : item_container_.items_)
         {
             const ItemValue item_value = item->data().value;
@@ -2312,6 +2320,7 @@ Tomb::Tomb(const P& p) :
             if (item_value == ItemValue::major_treasure)
             {
                 appearance_ = TombAppearance::marvelous;
+
                 break;
             }
             else if (item_value == ItemValue::minor_treasure)
@@ -2321,11 +2330,12 @@ Tomb::Tomb(const P& p) :
         }
     }
 
-    if (appearance_ == TombAppearance::marvelous && !is_random_appearance_)
+    if (appearance_ == TombAppearance::marvelous &&
+        !is_random_appearance_)
     {
-        trait_ = TombTrait::ghost; //NOTE: Wraith is always chosen
+        trait_ = TombTrait::ghost; // NOTE: Wraith is always chosen
     }
-    else //Randomized trait
+    else // Randomized trait
     {
         std::vector<int> weights(size_t(TombTrait::END) + 1, 0);
 
@@ -2350,15 +2360,25 @@ void Tomb::on_hit(const DmgType dmg_type,
 
 std::string Tomb::name(const Article article) const
 {
-    const bool          is_empty    = is_open_ && item_container_.items_.empty();
-    const std::string   empty_str   = is_empty                 ? "empty " : "";
-    const std::string   open_str    = (is_open_ && !is_empty)  ? "open "  : "";
+    const bool is_empty =
+        is_open_ &&
+        item_container_.items_.empty();
+
+    const std::string empty_str =
+        is_empty ?
+        "empty " : "";
+
+    const std::string open_str =
+        (is_open_ && !is_empty) ?
+        "open " : "";
 
     std::string a = "";
 
     if (article == Article::a)
     {
-        a = (is_open_ || appearance_ == TombAppearance::ornate) ?  "an " : "a ";
+        a =
+            (is_open_ || (appearance_ == TombAppearance::ornate)) ?
+            "an " : "a ";
     }
     else
     {
@@ -2426,13 +2446,13 @@ void Tomb::bump(Actor& actor_bumping)
         {
             msg_log::add("There is a stone box here.");
         }
-        else //Player can see
+        else // Player can see
         {
             if (is_open_)
             {
                 player_loot();
             }
-            else //Not open
+            else // Not open
             {
                 msg_log::add("I attempt to push the lid.");
 
@@ -2442,7 +2462,7 @@ void Tomb::bump(Actor& actor_bumping)
 
                     msg_log::add("It seems futile.");
                 }
-                else //Not weakened
+                else // Not weakened
                 {
                     const int bon =
                         player_bon::traits[(size_t)Trait::rugged]   ? 8   :
@@ -2532,7 +2552,7 @@ DidOpen Tomb::open(Actor* const actor_opening)
     {
         return DidOpen::no;
     }
-    else //Was not already open
+    else // Was not already open
     {
         is_open_ = true;
 
@@ -2572,12 +2592,13 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
     {
     case TombTrait::ghost:
     {
-        //Tomb contains major treasure?
-        if (appearance_ == TombAppearance::marvelous && !is_random_appearance_)
+        // Tomb contains major treasure?
+        if (appearance_ == TombAppearance::marvelous &&
+            !is_random_appearance_)
         {
             id_to_spawn = ActorId::wraith;
         }
-        else //Not containing major treasure
+        else // Not containing major treasure
         {
             std::vector<ActorId> mon_bucket =
             {
@@ -2692,7 +2713,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
                            {prop},
                            &fume_clr);
         }
-        else //Not fumes
+        else // Not fumes
         {
             std::vector<ActorId> mon_bucket;
 
@@ -2782,11 +2803,10 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
                   << std::endl;
 
             const auto summoned =
-                actor_factory::summon(pos_,
+                actor_factory::spawn(pos_,
                                       {1, id_to_spawn},
                                       MakeMonAware::yes,
-                                      nullptr,
-                                      Verbosity::silent);
+                                      nullptr);
 
             ASSERT(summoned.size() == 1);
 
@@ -2858,13 +2878,13 @@ void Chest::bump(Actor& actor_bumping)
         {
             msg_log::add("There is a chest here.");
         }
-        else //Player can see
+        else // Player can see
         {
             if (is_locked_)
             {
                 msg_log::add("The chest is locked.");
             }
-            else //Not locked
+            else // Not locked
             {
                 if (is_open_)
                 {
@@ -2923,7 +2943,7 @@ DidOpen Chest::open(Actor* const actor_opening)
     {
         return DidOpen::no;
     }
-    else //Chest is closed
+    else // Chest is closed
     {
         is_open_ = true;
 
@@ -2950,8 +2970,8 @@ void Chest::hit(const DmgType dmg_type,
         {
             if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
             {
-                //If player is blind, call the parent hit function instead
-                //(generic kicking)
+                // If player is blind, call the parent hit function instead
+                // (generic kicking)
                 Rigid::hit(dmg_type, dmg_method, map::player);
             }
             else if (is_open_)
@@ -2976,7 +2996,7 @@ void Chest::hit(const DmgType dmg_type,
 
                     msg_log::add("It seems futile.");
                 }
-                else //Chest can be bashed open
+                else // Chest can be bashed open
                 {
                     if (
                         !actor->has_prop(PropId::blessed) &&
@@ -3009,19 +3029,19 @@ void Chest::hit(const DmgType dmg_type,
                 game_time::tick();
             }
         }
-        break; //Kick
+        break; // Kick
 
         default:
             break;
 
-        } //dmg_method
+        } // dmg_method
 
-    } //Physical damage
+    } // Physical damage
 
     default:
         break;
 
-    } //dmg_type
+    } // dmg_type
 }
 
 void Chest::on_hit(const DmgType dmg_type,
@@ -3035,7 +3055,11 @@ void Chest::on_hit(const DmgType dmg_type,
 
 std::string Chest::name(const Article article) const
 {
-    std::string matl_str = "", locked_str = "", empty_str = "", open_str = "", a = "";
+    std::string matl_str = "";
+    std::string locked_str = "";
+    std::string empty_str = "";
+    std::string open_str = "";
+    std::string a = "";
 
     if (matl_ == ChestMatl::wood)
     {
@@ -3043,7 +3067,7 @@ std::string Chest::name(const Article article) const
 
         a = "a ";
     }
-    else //Iron
+    else // Iron
     {
         matl_str = "iron ";
 
@@ -3056,7 +3080,7 @@ std::string Chest::name(const Article article) const
         {
             empty_str = "empty ";
         }
-        else //Not empty
+        else // Not empty
         {
             open_str = "open ";
         }
@@ -3290,7 +3314,7 @@ void Fountain::bump(Actor& actor_bumping)
 
         game_time::tick();
     }
-    else //Dried up
+    else // Dried up
     {
         msg_log::add("The fountain is dried-up.");
     }
@@ -3335,7 +3359,7 @@ void Cabinet::bump(Actor& actor_bumping)
         {
             msg_log::add("There is a cabinet here.");
         }
-        else //Can see
+        else // Can see
         {
             if (is_open_)
             {
@@ -3458,11 +3482,12 @@ void Cocoon::bump(Actor& actor_bumping)
         {
             msg_log::add("There is a cocoon here.");
         }
-        else //Player can see
+        else // Player can see
         {
             if (insanity::has_sympt(InsSymptId::phobia_spider))
             {
-                map::player->prop_handler().try_add( new PropTerrified(PropTurns::std));
+                map::player->prop_handler().try_add(
+                    new PropTerrified(PropTurns::std));
             }
 
             if (is_open_)
@@ -3487,7 +3512,7 @@ DidTriggerTrap Cocoon::trigger_trap(Actor* const actor)
 
         if (rnd < 15)
         {
-            //A dead body
+            // A dead body
             msg_log::add("There is a half-dissolved human body inside!");
             map::player->incr_shock(ShockLvl::terrifying,
                                     ShockSrc::misc);
@@ -3496,7 +3521,7 @@ DidTriggerTrap Cocoon::trigger_trap(Actor* const actor)
         }
         else if (rnd < 50)
         {
-            //Spiders
+            // Spiders
             TRACE << "Attempting to spawn spiders" << std::endl;
             std::vector<ActorId> spawn_bucket;
 
@@ -3531,7 +3556,7 @@ DidTriggerTrap Cocoon::trigger_trap(Actor* const actor)
                 const std::vector<ActorId>
                     ids_to_summon(nr_spiders, actor_id_to_summon);
 
-                actor_factory::summon(pos_,
+                actor_factory::spawn(pos_,
                                       ids_to_summon,
                                       MakeMonAware::yes);
 
@@ -3570,7 +3595,7 @@ DidOpen Cocoon::open(Actor* const actor_opening)
     {
         return DidOpen::no;
     }
-    else //Was not already open
+    else // Was not already open
     {
         is_open_ = true;
 

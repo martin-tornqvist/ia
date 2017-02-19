@@ -21,6 +21,7 @@ ItemDataT::ItemDataT() :
     is_prio_in_backpack_list            (false),
     value                               (ItemValue::normal),
     weight                              (ItemWeight::none),
+    is_unique                           (false),
     allow_spawn                         (true),
     spawn_std_range                     (Range(1, dlvl_last)),
     max_stack_at_spawn                  (1),
@@ -28,6 +29,7 @@ ItemDataT::ItemDataT() :
     is_stackable                        (true),
     is_identified                       (true),
     is_tried                            (false),
+    is_found                            (false),
     xp_on_identify                      (0),
     base_name                           (),
     glyph                               ('X'),
@@ -37,8 +39,8 @@ ItemDataT::ItemDataT() :
     spell_cast_from_scroll              (SpellId::END),
     land_on_hard_snd_msg                ("I hear a thudding sound."),
     land_on_hard_sfx                    (SfxId::END),
-    is_ins_raied_while_carried          (false),
-    is_ins_raied_while_equiped          (false),
+    is_carry_shocking                   (false),
+    is_equiped_shocking                 (false),
     melee                               (ItemMeleeData()),
     ranged                              (ItemRangedData()),
     armor                               (ItemArmorData())
@@ -291,7 +293,6 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         reset_data(d, ItemType::general);
         d.type = ItemType::device;
         d.value = ItemValue::minor_treasure;
-        d.is_ins_raied_while_carried = true;
         d.has_std_activate = true;
         d.base_name_un_id =
         {
@@ -322,15 +323,13 @@ void reset_data(ItemDataT& d, ItemType const item_type)
     case ItemType::rod:
         reset_data(d, ItemType::general);
         d.type = ItemType::rod;
-        d.value = ItemValue::major_treasure;
-        d.is_ins_raied_while_carried = true;
+        d.value = ItemValue::minor_treasure;
         d.has_std_activate = true;
         d.base_descr =
         {
             "A peculiar metallic device of cylindrical shape. The only detail "
             "is a single button on the side."
         };
-        d.chance_to_incl_in_spawn_list = 9;
         d.weight = ItemWeight::light;
         d.is_identified = false;
         d.xp_on_identify = 15;
@@ -339,7 +338,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.is_stackable = false;
         d.land_on_hard_snd_msg = "I hear a clanking sound.";
         d.land_on_hard_sfx = SfxId::metal_clank;
-        d.chance_to_incl_in_spawn_list = 4;
+        d.chance_to_incl_in_spawn_list = 10;
         d.native_containers.push_back(FeatureId::chest);
         d.native_containers.push_back(FeatureId::cocoon);
         break;
@@ -358,22 +357,6 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.type = ItemType::head_wear;
         d.glyph = '[';
         d.is_stackable = false;
-        break;
-
-    case ItemType::amulet:
-        reset_data(d, ItemType::general);
-        d.type = ItemType::amulet;
-        d.value = ItemValue::major_treasure;
-        d.is_ins_raied_while_carried = true;
-        d.tile = TileId::amulet;
-        d.glyph = '\"';
-        d.weight = ItemWeight::light;
-        d.is_identified = false;
-        d.xp_on_identify = 15;
-        d.is_stackable = false;
-        d.chance_to_incl_in_spawn_list = 1;
-        d.native_containers.push_back(FeatureId::tomb);
-        d.native_containers.push_back(FeatureId::chest);
         break;
 
     case ItemType::explosive:
@@ -413,7 +396,8 @@ void init_data_list()
     d.id = ItemId::trapez;;
     d.base_name =
     {
-        "Shining Trapezohedron", "Shining Trapezohedrons",
+        "Shining Trapezohedron",
+        "Shining Trapezohedrons",
         "The Shining Trapezohedron"
     };
     d.spawn_std_range = Range(-1, -1);
@@ -532,7 +516,8 @@ void init_data_list()
     d.id = ItemId::incinerator_ammo;
     d.base_name =
     {
-        "Incinerator Cartridge", "Incinerator Cartridges",
+        "Incinerator Cartridge",
+        "Incinerator Cartridges",
         "an Incinerator Cartridge"
     };
     d.base_descr =
@@ -1083,33 +1068,6 @@ void init_data_list()
     d.ranged.throw_hit_chance_mod = -10;
     d.ranged.effective_range = 3;
     d.native_containers.push_back(FeatureId::cabinet);
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::melee_wpn);
-    d.id = ItemId::pharaoh_staff;
-    d.base_name =
-    {
-        "Staff of the Pharaohs", "Staff of the Pharaohs",
-        "the Staff of the Pharaohs"
-    };
-    d.base_descr =
-    {
-        "Once wielded by long-forgotten kings in ancient times, this powerful "
-        "artifact grants the power to call up a loyal servant from the dead."
-    };
-    d.clr = clr_magenta;
-    d.weight = ItemWeight::medium;
-    d.tile = TileId::pharaoh_staff;
-    d.melee.att_msgs = {"strike", "strikes me with the Staff of the Pharaohs"};
-    d.melee.dmg = DiceParam(2, 4);
-    d.melee.hit_chance_mod = 0;
-    d.melee.miss_sfx = SfxId::miss_medium;
-    d.ranged.throw_hit_chance_mod = -10;
-    d.ranged.effective_range = 3;
-    d.chance_to_incl_in_spawn_list = 1;
-    d.value = ItemValue::major_treasure;
-    d.is_ins_raied_while_carried = true;
-    d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::throwing_wpn);
@@ -1696,7 +1654,7 @@ void init_data_list()
     };
     d.spawn_std_range = Range(-1, -1);
     d.weight = ItemWeight::medium;
-    d.is_ins_raied_while_equiped = true;
+    d.is_equiped_shocking = true;
     d.clr = clr_magenta;
     d.tile = TileId::mi_go_armor;
     d.armor.armor_points = 3;
@@ -1987,8 +1945,6 @@ void init_data_list()
     d.is_identified = true;
     d.tile = TileId::lantern;
     d.clr = clr_yellow;
-    d.is_ins_raied_while_carried = false;
-    d.is_ins_raied_while_equiped = false;
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -2033,99 +1989,249 @@ void init_data_list()
     d.tile = TileId::medical_bag;
     data[(size_t)d.id] = d;
 
-    reset_data(d, ItemType::amulet);
-    d.id = ItemId::star_amulet;
-    d.base_name = {"Star Amulet", "", "a Star Amulet"};
-    d.base_name_un_id = d.base_name;
+    reset_data(d, ItemType::melee_wpn);
+    d.id = ItemId::pharaoh_staff;
+    d.base_name =
+    {
+        "Staff of the Pharaohs",
+        "",
+        "the Staff of the Pharaohs"
+    };
+    d.base_descr =
+    {
+        "Once wielded by long-forgotten kings in ancient times, this powerful "
+        "artifact grants the power to call up a loyal servant from the dead."
+    };
+    d.clr = clr_magenta;
+    d.weight = ItemWeight::medium;
+    d.tile = TileId::pharaoh_staff;
+    d.melee.att_msgs = {"strike", "strikes me with the Staff of the Pharaohs"};
+    d.melee.dmg = DiceParam(2, 4, 4);
+    d.melee.hit_chance_mod = 0;
+    d.melee.miss_sfx = SfxId::miss_medium;
+    d.ranged.throw_hit_chance_mod = -10;
+    d.ranged.effective_range = 3;
+    d.is_unique = true;
+    d.value = ItemValue::major_treasure;
+    d.is_carry_shocking = true;
+    d.chance_to_incl_in_spawn_list = 5;
+    d.native_containers.push_back(FeatureId::tomb);
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::general);
+    d.id = ItemId::refl_talisman;
+    d.base_name =
+    {
+        "Talisman of Reflection",
+        "",
+        "the Talisman of Reflection"
+    };
+    d.base_descr =
+    {
+        "Whenever a hostile spell is blocked due to spell resistance, it "
+        "is also reflected. The number of turns to regain spell resistance "
+        "is halved."
+    };
+    d.clr = clr_blue_lgt;
+    d.weight = ItemWeight::light;
+    d.tile = TileId::amulet;
+    d.glyph = '"';
+    d.is_unique = true;
+    d.value = ItemValue::major_treasure;
+    d.is_carry_shocking = true;
+    d.chance_to_incl_in_spawn_list = 5;
+    d.native_containers.push_back(FeatureId::tomb);
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::general);
+    d.id = ItemId::resurrect_talisman;
+    d.base_name =
+    {
+        "Talisman of Resurrection",
+        "",
+        "the Talisman of Resurrection"
+    };
+    d.base_descr =
+    {
+        "This powerful charm brings the owner back to life upon bodily death. "
+        "The talisman is destroyed in the process however, so one may only be "
+        "brought back once."
+    };
+    d.clr = clr_white_high;
+    d.weight = ItemWeight::light;
+    d.tile = TileId::amulet;
+    d.glyph = '"';
+    d.is_unique = true;
+    d.value = ItemValue::major_treasure;
+    d.is_carry_shocking = true;
+    d.chance_to_incl_in_spawn_list = 5;
+    d.native_containers.push_back(FeatureId::tomb);
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::general);
+    d.id = ItemId::clockwork;
+    d.base_name =
+    {
+        "Arcane Clockwork",
+        "",
+        "the Arcane Clockwork",
+    };
+    d.base_descr =
+    {
+        "A mainspring-powered clockwork of unreal quality and beauty. "
+        "When wound up, it grants +2000% speed for 9 turns. One must "
+        "chose their actions carefully however, as this is only borrowed time. "
+        "When the clockwork stops, one is frozen in time for 9 turns.",
+        "While carried, the owner is also protected from all sources of "
+        "magical slowing (except for the side effect of using the Clockwork)."
+    };
     d.clr = clr_white;
+    d.weight = ItemWeight::extra_light;
+    d.tile = TileId::clockwork;
+    d.glyph = '%';
+    d.is_unique = true;
+    d.value = ItemValue::major_treasure;
+    d.has_std_activate = true;
+    d.is_carry_shocking = true;
+    d.chance_to_incl_in_spawn_list = 5;
+    d.native_containers.push_back(FeatureId::chest);
     data[(size_t)d.id] = d;
 
-    reset_data(d, ItemType::amulet);
-    d.id = ItemId::skull_amulet;
-    d.base_name = {"Skull Amulet", "", "a Skull Amulet"};
-    d.base_name_un_id = d.base_name;
-    d.clr = clr_white;
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::amulet);
-    d.id = ItemId::spider_amulet;
-    d.base_name = {"Spider Amulet", "", "a Spider Amulet"};
-    d.base_name_un_id = d.base_name;
-    d.clr = clr_white;
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::amulet);
-    d.id = ItemId::eye_amulet;
-    d.base_name = {"Eye Amulet", "", "an Eye Amulet"};
-    d.base_name_un_id = d.base_name;
-    d.clr = clr_white;
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::amulet);
-    d.id = ItemId::moon_amulet;
-    d.base_name = {"Moon Amulet", "", "a Moon Amulet"};
-    d.base_name_un_id = d.base_name;
-    d.clr = clr_white;
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::amulet);
-    d.id = ItemId::scarab_amulet;
-    d.base_name = {"Scarab Amulet", "", "a Scarab Amulet"};
-    d.base_name_un_id = d.base_name;
-    d.clr = clr_white;
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::amulet);
-    d.id = ItemId::dagger_amulet;
-    d.base_name = {"Dagger Amulet", "", "a Dagger Amulet"};
-    d.base_name_un_id = d.base_name;
-    d.clr = clr_white;
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::amulet);
-    d.id = ItemId::bat_winged_amulet;
-    d.base_name = {"Bat-winged Amulet", "", "a Bat-winged Amulet"};
-    d.base_name_un_id = d.base_name;
-    d.clr = clr_white;
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::amulet);
-    d.id = ItemId::golden_amulet;
-    d.base_name = {"Golden Amulet", "", "a Golden Amulet"};
-    d.base_name_un_id = d.base_name;
-    d.clr = clr_yellow;
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::amulet);
-    d.id = ItemId::silver_amulet;
-    d.base_name = {"Silver Amulet", "", "a Silver Amulet"};
-    d.base_name_un_id = d.base_name;
-    d.clr = clr_white;
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::amulet);
-    d.id = ItemId::obsidian_amulet;
-    d.base_name = {"Obsidian Amulet", "", "an Obsidian Amulet"};
-    d.base_name_un_id = d.base_name;
+    reset_data(d, ItemType::general);
+    d.id = ItemId::horn_of_malice;
+    d.base_name =
+    {
+        "Horn of Malice",
+        "",
+        "the Horn of Malice"
+    };
+    d.base_descr =
+    {
+        "When blown, this sinister artifact emitts a weird resonance, which "
+        "corrupts the psyche of all those within hearing range (excluding the "
+        "horn blower) - causing them to consider all other creatures with "
+        "intense hatred and distrust."
+    };
     d.clr = clr_gray;
+    d.weight = ItemWeight::light;
+    d.tile = TileId::horn;
+    d.glyph = '%';
+    d.is_unique = true;
+    d.value = ItemValue::major_treasure;
+    d.has_std_activate = true;
+    d.is_carry_shocking = true;
+    d.chance_to_incl_in_spawn_list = 5;
+    d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
-    reset_data(d, ItemType::amulet);
-    d.id = ItemId::jade_amulet;
-    d.base_name = {"Jade Amulet", "", "a Jade Amulet"};
-    d.base_name_un_id = d.base_name;
-    d.clr = clr_green_lgt;
+    reset_data(d, ItemType::general);
+    d.id = ItemId::horn_of_banishment;
+    d.base_name =
+    {
+        "Horn of Banishment",
+        "",
+        "the Horn of Banishment"
+    };
+    d.base_descr =
+    {
+        "When blown, this instrument forces all magically summoned "
+        "creatures within hearing range back to their original realm."
+    };
+    d.clr = clr_magenta;
+    d.weight = ItemWeight::light;
+    d.tile = TileId::horn;
+    d.glyph = '%';
+    d.is_unique = true;
+    d.value = ItemValue::major_treasure;
+    d.has_std_activate = true;
+    d.is_carry_shocking = true;
+    d.chance_to_incl_in_spawn_list = 5;
+    d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
-    reset_data(d, ItemType::amulet);
-    d.id = ItemId::rune_amulet;
-    d.base_name = {"Rune Amulet", "", "a Rune Amulet"};
-    d.base_name_un_id = d.base_name;
-    d.clr = clr_white;
+    reset_data(d, ItemType::melee_wpn);
+    d.id = ItemId::spirit_dagger;
+    d.base_name =
+    {
+        "Spirit Dagger",
+        "",
+        "the Spirit Dagger"};
+    d.base_descr =
+    {
+        "A black dagger with elaborate ornaments. The blade appears blurry, as "
+        "if perpetually covered in a dark haze. On a succesful attack, 1 "
+        "Spirit Point is drained from the victim, in addition to the normal "
+        "physical damage."
+    };
+    d.weight = ItemWeight::light;
+    d.tile = TileId::dagger;
+    d.clr = clr_violet;
+    d.melee.att_msgs = {"stab", "stabs me with a Dagger"};
+    d.melee.dmg = DiceParam(1, 4, 3);
+    d.melee.hit_chance_mod = 20;
+    d.melee.is_noisy = false;
+    d.melee.hit_medium_sfx = SfxId::hit_sharp;
+    d.melee.hit_hard_sfx = SfxId::hit_sharp;
+    d.melee.miss_sfx = SfxId::miss_light;
+    d.ranged.throw_hit_chance_mod = -5;
+    d.ranged.effective_range = 4;
+    d.is_unique = true;
+    d.value = ItemValue::major_treasure;
+    d.is_carry_shocking = true;
+    d.chance_to_incl_in_spawn_list = 5;
+    d.native_containers.push_back(FeatureId::tomb);
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::general);
+    d.id = ItemId::orb_of_sorcery;
+    d.base_name =
+    {
+        "Orb of Sorcery",
+        "",
+        "the Orb of Sorcery"
+    };
+    d.base_descr =
+    {
+        "Enhances spell casting capabilities, +10% skill level with all spells "
+        "while carried."
+    };
+    d.clr = clr_violet;
+    d.weight = ItemWeight::light;
+    d.tile = TileId::orb;
+    d.glyph = '"';
+    d.is_unique = true;
+    d.value = ItemValue::major_treasure;
+    d.is_carry_shocking = true;
+    d.chance_to_incl_in_spawn_list = 5;
+    d.native_containers.push_back(FeatureId::tomb);
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::general);
+    d.id = ItemId::orb_of_life;
+    d.base_name =
+    {
+        "Orb of Life",
+        "",
+        "the Orb of Life"
+    };
+    d.base_descr =
+    {
+        "+4 Hit Points, heals 1 Hit Point every 4th turn, grants resistance "
+        "against poison and disease."
+    };
+    d.clr = clr_white_high;
+    d.weight = ItemWeight::light;
+    d.tile = TileId::orb;
+    d.glyph = '"';
+    d.is_unique = true;
+    d.value = ItemValue::major_treasure;
+    d.is_carry_shocking = true;
+    d.chance_to_incl_in_spawn_list = 5;
+    d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 }
 
-} //namespace
+} // namespace
 
 void init()
 {
@@ -2163,6 +2269,7 @@ void save()
 
         saving::put_bool(d.is_identified);
         saving::put_bool(d.is_tried);
+        saving::put_bool(d.is_found);
         saving::put_bool(d.allow_spawn);
     }
 }
@@ -2173,9 +2280,10 @@ void load()
     {
         ItemDataT& d = data[i];
 
-        d.is_identified   = saving::get_bool();
-        d.is_tried        = saving::get_bool();
-        d.allow_spawn     = saving::get_bool();
+        d.is_identified = saving::get_bool();
+        d.is_tried = saving::get_bool();
+        d.is_found = saving::get_bool();
+        d.allow_spawn = saving::get_bool();
     }
 }
 

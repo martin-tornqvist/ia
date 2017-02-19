@@ -124,7 +124,7 @@ private:
     bool is_bloody_;
     BurnState burn_state_;
 
-    //Corrupted by Color out of space
+    // Corrupted by Color out of space
     int nr_turns_color_corrupted_;
 };
 
@@ -834,17 +834,17 @@ public:
 enum class TombTrait
 {
     ghost,
-    other_undead,   //Zombies, Mummies, ...
-    stench,         //Fumes, Ooze-type monster
+    other_undead,   // Zombies, Mummies, ...
+    stench,         // Fumes, Ooze-type monster
     cursed,
     END
 };
 
 enum class TombAppearance
 {
-    common,     //Common items
-    ornate,     //Minor treasure
-    marvelous,  //Major treasure
+    common,     // Common items
+    ornate,     // Minor treasure
+    marvelous,  // Major treasure
     END
 };
 

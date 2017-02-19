@@ -42,6 +42,6 @@ void reset_turn_type_and_actor_counters();
 
 void update_light_map();
 
-} //game_time
+} // game_time
 
 #endif // GAME_TIME_HPP

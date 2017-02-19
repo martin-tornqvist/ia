@@ -115,19 +115,19 @@ void draw(const std::vector< std::vector<P> >& pos_lists,
                     if (is_tiles)
                     {
                         io::draw_tile(tile,
-                                          Panel::map,
-                                          pos,
-                                          clr,
-                                          clr_black);
+                                      Panel::map,
+                                      pos,
+                                      clr,
+                                      clr_black);
                     }
                     else
                     {
                         io::draw_glyph('*',
-                                           Panel::map,
-                                           pos,
-                                           clr,
-                                           true,
-                                           clr_black);
+                                       Panel::map,
+                                       pos,
+                                       clr,
+                                       true,
+                                       clr_black);
                     }
                 }
             }

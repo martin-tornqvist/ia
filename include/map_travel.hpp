@@ -6,8 +6,8 @@
 
 #include "map.hpp"
 
-//This includes forest intro level, rats in the walls level, etc (every level
-//that increments the dlvl number).
+// This includes forest intro level, rats in the walls level, etc (every level
+// that increments the dlvl number).
 enum IsMainDungeon
 {
     no,
@@ -16,7 +16,16 @@ enum IsMainDungeon
 
 struct MapData
 {
-    MapType        type;
+    MapData(MapType type, IsMainDungeon is_main_dungeon) :
+        type(type),
+        is_main_dungeon(is_main_dungeon) {}
+
+    MapData() :
+        type(MapType::std),
+        is_main_dungeon(IsMainDungeon::yes) {}
+
+    MapType type;
+
     IsMainDungeon is_main_dungeon;
 };
 
@@ -36,6 +45,6 @@ void go_to_nxt();
 
 MapType map_type();
 
-} //map_travel
+} // map_travel
 
 #endif

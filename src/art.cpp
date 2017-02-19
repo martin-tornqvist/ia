@@ -179,6 +179,9 @@ P column_and_row_tile(const TileId tile)
     case TileId::locust:                        return P(15, 2);
     case TileId::bog_tcher:                     return P(16, 2);
     case TileId::mi_go_armor:                   return P(17, 2);
+    case TileId::horn:                          return P(18, 2);
+    case TileId::clockwork:                     return P(19, 2);
+    case TileId::crystal:                       return P(20, 2);
     case TileId::pistol:                        return P(1, 3);
     case TileId::tommy_gun:                     return P(3, 3);
     case TileId::shotgun:                       return P(4, 3);
@@ -190,6 +193,7 @@ P column_and_row_tile(const TileId tile)
     case TileId::flare:                         return P(10, 3);
     case TileId::flare_gun:                     return P(11, 3);
     case TileId::flare_lit:                     return P(12, 3);
+    case TileId::orb:                           return P(13, 3);
     case TileId::dagger:                        return P(0, 4);
     case TileId::crowbar:                       return P(3, 4);
     case TileId::rod:                           return P(6, 4);

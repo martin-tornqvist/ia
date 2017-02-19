@@ -222,7 +222,7 @@ void act()
 
     if (!has_allied_mon)
     {
-        actor_factory::summon(map::player->pos,
+        actor_factory::spawn(map::player->pos,
                               std::vector<ActorId>(1, ActorId::mi_go),
                               MakeMonAware::yes,
                               map::player);

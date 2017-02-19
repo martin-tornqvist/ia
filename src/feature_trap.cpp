@@ -1084,7 +1084,7 @@ void TrapSummonMon::trigger()
         TRACE_VERBOSE << "Actor id: " << int(id_to_summon) << std::endl;
 
         const auto summoned =
-            actor_factory::summon(pos_,
+            actor_factory::spawn(pos_,
                                   {1, id_to_summon},
                                   MakeMonAware::yes,
                                   nullptr);

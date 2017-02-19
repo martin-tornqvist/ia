@@ -15,9 +15,9 @@
 #include "game_time.hpp"
 #include "io.hpp"
 
-//-----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 // Insanity symptoms
-//-----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 void InsSympt::on_start()
 {
     msg_log::more_prompt();
@@ -148,8 +148,8 @@ void InsLaugh::on_start_hook()
 
 bool InsPhobiaRat::is_allowed() const
 {
-    const bool has_phobia   = insanity::has_sympt_type(InsSymptType::phobia);
-    const bool is_rfear     = map::player->has_prop(PropId::r_fear);
+    const bool has_phobia = insanity::has_sympt_type(InsSymptType::phobia);
+    const bool is_rfear = map::player->has_prop(PropId::r_fear);
 
     return !is_rfear && (!has_phobia || rnd::one_in(20));
 }
@@ -164,7 +164,8 @@ void InsPhobiaRat::on_new_player_turn(const std::vector<Actor*>& seen_foes)
             {
                 msg_log::add("I am plagued by my phobia of rats!");
 
-                map::player->prop_handler().try_add(new PropTerrified(PropTurns::std));
+                map::player->prop_handler().try_add(
+                    new PropTerrified(PropTurns::std));
 
                 break;
             }
@@ -179,8 +180,8 @@ void InsPhobiaRat::on_permanent_rfear()
 
 bool InsPhobiaSpider::is_allowed() const
 {
-    const bool has_phobia   = insanity::has_sympt_type(InsSymptType::phobia);
-    const bool is_rfear     = map::player->has_prop(PropId::r_fear);
+    const bool has_phobia = insanity::has_sympt_type(InsSymptType::phobia);
+    const bool is_rfear = map::player->has_prop(PropId::r_fear);
 
     return !is_rfear && (!has_phobia || rnd::one_in(20));
 }
@@ -195,7 +196,8 @@ void InsPhobiaSpider::on_new_player_turn(const std::vector<Actor*>& seen_foes)
             {
                 msg_log::add("I am plagued by my phobia of spiders!");
 
-                map::player->prop_handler().try_add(new PropTerrified(PropTurns::std));
+                map::player->prop_handler().try_add(
+                    new PropTerrified(PropTurns::std));
 
                 break;
             }
@@ -210,13 +212,14 @@ void InsPhobiaSpider::on_permanent_rfear()
 
 bool InsPhobiaReptileAndAmph::is_allowed() const
 {
-    const bool has_phobia   = insanity::has_sympt_type(InsSymptType::phobia);
-    const bool is_rfear     = map::player->has_prop(PropId::r_fear);
+    const bool has_phobia = insanity::has_sympt_type(InsSymptType::phobia);
+    const bool is_rfear = map::player->has_prop(PropId::r_fear);
 
     return !is_rfear && (!has_phobia || rnd::one_in(20));
 }
 
-void InsPhobiaReptileAndAmph::on_new_player_turn(const std::vector<Actor*>& seen_foes)
+void InsPhobiaReptileAndAmph::on_new_player_turn(
+    const std::vector<Actor*>& seen_foes)
 {
     bool is_triggered = false;
 
@@ -253,8 +256,8 @@ void InsPhobiaReptileAndAmph::on_permanent_rfear()
 
 bool InsPhobiaCanine::is_allowed() const
 {
-    const bool has_phobia   = insanity::has_sympt_type(InsSymptType::phobia);
-    const bool is_rfear     = map::player->has_prop(PropId::r_fear);
+    const bool has_phobia = insanity::has_sympt_type(InsSymptType::phobia);
+    const bool is_rfear = map::player->has_prop(PropId::r_fear);
 
     return !is_rfear && (!has_phobia || rnd::one_in(20));
 }
@@ -269,7 +272,8 @@ void InsPhobiaCanine::on_new_player_turn(const std::vector<Actor*>& seen_foes)
             {
                 msg_log::add("I am plagued by my phobia of canines!");
 
-                map::player->prop_handler().try_add(new PropTerrified(PropTurns::std));
+                map::player->prop_handler().try_add(
+                    new PropTerrified(PropTurns::std));
 
                 break;
             }
@@ -284,8 +288,8 @@ void InsPhobiaCanine::on_permanent_rfear()
 
 bool InsPhobiaDead::is_allowed() const
 {
-    const bool has_phobia   = insanity::has_sympt_type(InsSymptType::phobia);
-    const bool is_rfear     = map::player->has_prop(PropId::r_fear);
+    const bool has_phobia = insanity::has_sympt_type(InsSymptType::phobia);
+    const bool is_rfear = map::player->has_prop(PropId::r_fear);
 
     return !is_rfear && (!has_phobia || rnd::one_in(20));
 }
@@ -300,7 +304,8 @@ void InsPhobiaDead::on_new_player_turn(const std::vector<Actor*>& seen_foes)
             {
                 msg_log::add("I am plagued by my phobia of the dead!");
 
-                map::player->prop_handler().try_add(new PropTerrified(PropTurns::std));
+                map::player->prop_handler().try_add(
+                    new PropTerrified(PropTurns::std));
 
                 break;
             }
@@ -315,8 +320,8 @@ void InsPhobiaDead::on_permanent_rfear()
 
 bool InsPhobiaOpen::is_allowed() const
 {
-    const bool has_phobia   = insanity::has_sympt_type(InsSymptType::phobia);
-    const bool is_rfear     = map::player->has_prop(PropId::r_fear);
+    const bool has_phobia = insanity::has_sympt_type(InsSymptType::phobia);
+    const bool is_rfear = map::player->has_prop(PropId::r_fear);
 
     return !is_rfear && (!has_phobia || rnd::one_in(20));
 }
@@ -365,8 +370,8 @@ void InsPhobiaConfined::on_permanent_rfear()
 
 bool InsPhobiaDeep::is_allowed() const
 {
-    const bool has_phobia   = insanity::has_sympt_type(InsSymptType::phobia);
-    const bool is_rfear     = map::player->has_prop(PropId::r_fear);
+    const bool has_phobia = insanity::has_sympt_type(InsSymptType::phobia);
+    const bool is_rfear = map::player->has_prop(PropId::r_fear);
 
     return !is_rfear && (!has_phobia || rnd::one_in(20));
 }
@@ -401,8 +406,8 @@ void InsPhobiaDeep::on_permanent_rfear()
 
 bool InsPhobiaDark::is_allowed() const
 {
-    const bool has_phobia   = insanity::has_sympt_type(InsSymptType::phobia);
-    const bool is_rfear     = map::player->has_prop(PropId::r_fear);
+    const bool has_phobia = insanity::has_sympt_type(InsSymptType::phobia);
+    const bool is_rfear = map::player->has_prop(PropId::r_fear);
 
     return !is_rfear && (!has_phobia || rnd::one_in(20));
 }
@@ -413,7 +418,7 @@ void InsPhobiaDark::on_new_player_turn(const std::vector<Actor*>& seen_foes)
 
     if (rnd::one_in(10))
     {
-        const P             p(map::player->pos);
+        const P p(map::player->pos);
         const PropHandler& props = map::player->prop_handler();
 
         if ((props.allow_act() && !props.allow_see()) ||
@@ -452,20 +457,20 @@ void InsShadows::on_start_hook()
 
     const int nr_shadows_lower = 2;
 
-    const int nr_shadows_upper = constr_in_range(nr_shadows_lower,
-                                                 map::dlvl - 2,
-                                                 8);
+    const int nr_shadows_upper =
+        constr_in_range(nr_shadows_lower,
+                        map::dlvl - 2,
+                        8);
 
     const int nr = rnd::range(nr_shadows_lower, nr_shadows_upper);
 
     std::vector<ActorId> shadow_ids(nr, ActorId::shadow);
 
     const auto summoned =
-        actor_factory::summon(map::player->pos,
+        actor_factory::spawn(map::player->pos,
                               shadow_ids,
                               MakeMonAware::yes,
-                              nullptr,
-                              Verbosity::silent);
+                              nullptr);
 
     ASSERT(!summoned.empty());
 
@@ -494,18 +499,17 @@ void InsShadows::on_start_hook()
 
 void InsParanoia::on_start_hook()
 {
-    //Flip a coint to decide if we should spawn a stalker or not
-    //(Maybe it's just paranoia, or maybe it's real)
+    // Flip a coint to decide if we should spawn a stalker or not
+    // (Maybe it's just paranoia, or maybe it's real)
     if (rnd::coin_toss())
     {
         std::vector<ActorId> stalker_id(1, ActorId::invis_stalker);
 
         const auto summoned =
-            actor_factory::summon(map::player->pos,
+            actor_factory::spawn(map::player->pos,
                                   stalker_id,
                                   MakeMonAware::yes,
-                                  nullptr,
-                                  Verbosity::silent);
+                                  nullptr);
 
         ASSERT(summoned.size() == 1);
 
@@ -540,16 +544,16 @@ void InsFrenzy::on_start_hook()
 }
 
 
-//-----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 // Insanity handling
-//-----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 namespace insanity
 {
 
 namespace
 {
 
-InsSympt* sympts_[size_t(InsSymptId::END)];
+InsSympt* sympts_[(size_t)InsSymptId::END];
 
 InsSympt* mk_sympt(const InsSymptId id)
 {
@@ -624,12 +628,12 @@ InsSympt* mk_sympt(const InsSymptId id)
     return nullptr;
 }
 
-} //namespace
+} // namespace
 
 
 void init()
 {
-    for (size_t i = 0; i < size_t(InsSymptId::END); ++i)
+    for (size_t i = 0; i < (size_t)InsSymptId::END; ++i)
     {
         sympts_[i] = nullptr;
     }
@@ -637,7 +641,7 @@ void init()
 
 void cleanup()
 {
-    for (size_t i = 0; i < size_t(InsSymptId::END); ++i)
+    for (size_t i = 0; i < (size_t)InsSymptId::END; ++i)
     {
         delete sympts_[i];
 
@@ -647,7 +651,7 @@ void cleanup()
 
 void save()
 {
-    for (size_t i = 0; i < size_t(InsSymptId::END); ++i)
+    for (size_t i = 0; i < (size_t)InsSymptId::END; ++i)
     {
         const InsSympt* const sympt = sympts_[i];
 
@@ -662,7 +666,7 @@ void save()
 
 void load()
 {
-    for (size_t i = 0; i < size_t(InsSymptId::END); ++i)
+    for (size_t i = 0; i < (size_t)InsSymptId::END; ++i)
     {
         const bool has_symptom = saving::get_bool();
 
@@ -681,11 +685,11 @@ void run_sympt()
 {
     std::vector<InsSympt*> sympt_bucket;
 
-    for (size_t i = 0; i < size_t(InsSymptId::END); ++i)
+    for (size_t i = 0; i < (size_t)InsSymptId::END; ++i)
     {
         const InsSympt* const active_sympt = sympts_[i];
 
-        //Symptoms are only allowed if not already active
+        // Symptoms are only allowed if not already active
         if (!active_sympt)
         {
             InsSympt* const new_sympt = mk_sympt(InsSymptId(i));
@@ -696,7 +700,7 @@ void run_sympt()
             {
                 sympt_bucket.push_back(new_sympt);
             }
-            else //Not allowed (e.g. player resistant to fear, and this is a phobia)
+            else // Not allowed (e.g. resistant to fear, and this is a phobia)
             {
                 delete new_sympt;
             }
@@ -705,8 +709,8 @@ void run_sympt()
 
     if (sympt_bucket.empty())
     {
-        //This should never be able to happen, since there are symptoms which can occur repeatedly,
-        //unconditionally - but we do a check anyway for robustness.
+        // This should never happen, since there are symptoms which can occur
+        // repeatedly unconditionally - but we do a check anyway for robustness.
         return;
     }
 
@@ -716,14 +720,14 @@ void run_sympt()
 
     sympt_bucket.erase(begin(sympt_bucket) + bucket_idx);
 
-    //Delete the remaining symptoms in the bucket
+    // Delete the remaining symptoms in the bucket
     for (auto* const sympt : sympt_bucket)
     {
         delete sympt;
     }
 
-    //If the symptom is permanent (i.e. not a one-shot thing like screaming),
-    //set it as active in the symptoms list
+    // If the symptom is permanent (i.e. not a one-shot thing like screaming),
+    // set it as active in the symptoms list
     if (sympt->is_permanent())
     {
         const size_t sympt_idx = size_t(sympt->id());
@@ -745,7 +749,7 @@ bool has_sympt(const InsSymptId id)
 
 bool has_sympt_type(const InsSymptType type)
 {
-    for (size_t i = 0; i < size_t(InsSymptId::END); ++i)
+    for (size_t i = 0; i < (size_t)InsSymptId::END; ++i)
     {
         const InsSympt* const s = sympts_[i];
 
@@ -762,7 +766,7 @@ std::vector<const InsSympt*> active_sympts()
 {
     std::vector<const InsSympt*> out;
 
-    for (size_t i = 0; i < size_t(InsSymptId::END); ++i)
+    for (size_t i = 0; i < (size_t)InsSymptId::END; ++i)
     {
         const InsSympt* const sympt = sympts_[i];
 
@@ -777,7 +781,7 @@ std::vector<const InsSympt*> active_sympts()
 
 void on_new_player_turn(const std::vector<Actor*>& seen_foes)
 {
-    for (size_t i = 0; i < size_t(InsSymptId::END); ++i)
+    for (size_t i = 0; i < (size_t)InsSymptId::END; ++i)
     {
         InsSympt* const sympt = sympts_[i];
 
@@ -790,7 +794,7 @@ void on_new_player_turn(const std::vector<Actor*>& seen_foes)
 
 void on_permanent_rfear()
 {
-    for (size_t i = 0; i < size_t(InsSymptId::END); ++i)
+    for (size_t i = 0; i < (size_t)InsSymptId::END; ++i)
     {
         InsSympt* const sympt = sympts_[i];
 
@@ -818,4 +822,4 @@ void end_sympt(const InsSymptId id)
     delete sympt;
 }
 
-} //insanity
+} // insanity

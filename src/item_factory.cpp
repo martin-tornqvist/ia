@@ -4,7 +4,7 @@
 #include "item_scroll.hpp"
 #include "item_potion.hpp"
 #include "item_rod.hpp"
-#include "item_amulet.hpp"
+#include "item_artifact.hpp"
 #include "drop.hpp"
 #include "item_device.hpp"
 #include "item_data.hpp"
@@ -15,8 +15,9 @@ namespace item_factory
 
 Item* mk(const ItemId item_id, const int nr_items)
 {
-    Item*       r = nullptr;
-    ItemDataT*  d = &item_data::data[size_t(item_id)];
+    Item* r = nullptr;
+
+    ItemDataT* d = &item_data::data[(size_t)item_id];
 
     switch (item_id)
     {
@@ -102,10 +103,6 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::mi_go_commander_sting:
     case ItemId::the_high_priest_claw:
         r = new Wpn(d);
-        break;
-
-    case ItemId::pharaoh_staff:
-        r = new PharaohStaff(d);
         break;
 
     case ItemId::player_ghoul_claw:
@@ -329,20 +326,40 @@ Item* mk(const ItemId item_id, const int nr_items)
         r = new MedicalBag(d);
         break;
 
-    case ItemId::star_amulet:
-    case ItemId::skull_amulet:
-    case ItemId::spider_amulet:
-    case ItemId::eye_amulet:
-    case ItemId::moon_amulet:
-    case ItemId::scarab_amulet:
-    case ItemId::dagger_amulet:
-    case ItemId::bat_winged_amulet:
-    case ItemId::golden_amulet:
-    case ItemId::silver_amulet:
-    case ItemId::obsidian_amulet:
-    case ItemId::jade_amulet:
-    case ItemId::rune_amulet:
-        r = new Amulet(d);
+    case ItemId::pharaoh_staff:
+        r = new PharaohStaff(d);
+        break;
+
+    case ItemId::refl_talisman:
+        r = new ReflTalisman(d);
+        break;
+
+    case ItemId::resurrect_talisman:
+        r = new ResurrectTalisman(d);
+        break;
+
+    case ItemId::horn_of_malice:
+        r = new HornOfMalice(d);
+        break;
+
+    case ItemId::horn_of_banishment:
+        r = new HornOfBanishment(d);
+        break;
+
+    case ItemId::clockwork:
+        r = new Clockwork(d);
+        break;
+
+    case ItemId::spirit_dagger:
+        r = new SpiritDagger(d);
+        break;
+
+    case ItemId::orb_of_sorcery:
+        r = new OrbOfSorcery(d);
+        break;
+
+    case ItemId::orb_of_life:
+        r = new OrbOfLife(d);
         break;
 
     case ItemId::END:
@@ -353,13 +370,23 @@ Item* mk(const ItemId item_id, const int nr_items)
     // anything other than one item)
     if (!r->data().is_stackable && nr_items != 1)
     {
-        TRACE << "Specified number of items (" + std::to_string(nr_items) + ") != 1 for "
+        TRACE << "Specified number of items ("
+              << nr_items
+              << ") != 1 for "
               << "non-stackable item: "
-              << int(d->id) << ", " << r->name(ItemRefType::plain) << std::endl;
+              << int(d->id) << ", "
+              << r->name(ItemRefType::plain)
+              << std::endl;
+
         ASSERT(false);
     }
 
     r->nr_items_ = nr_items;
+
+    if (d->is_unique)
+    {
+        d->allow_spawn = false;
+    }
 
     return r;
 }
@@ -371,21 +398,16 @@ void set_item_randomized_properties(Item* item)
     ASSERT(d.type != ItemType::melee_wpn_intr &&
            d.type != ItemType::ranged_wpn_intr);
 
-    if (d.id == ItemId::pharaoh_staff)
+    // If it is a pure melee weapon, and "plus" damage is not already specified
+    // randomize the extra damage
+    if (d.melee.is_melee_wpn &&
+        !d.ranged.is_ranged_wpn &&
+        (d.melee.dmg.plus == 0))
     {
-        //TODO: This is a really hacky fix that shouldn't be here - refactor.
-        item->melee_dmg_plus_ = 4;
-    }
-    else //Not Staff of the Pharohs
-    {
-        //If it is a pure melee weapon, it may get extra damage
-        if (d.melee.is_melee_wpn && !d.ranged.is_ranged_wpn)
-        {
-            static_cast<Wpn*>(item)->set_random_melee_plus();
-        }
+        static_cast<Wpn*>(item)->set_random_melee_plus();
     }
 
-    //If firearm, spawn with random amount of ammo
+    // If firearm, spawn with random amount of ammo
     if (d.ranged.is_ranged_wpn && !d.ranged.has_infinite_ammo)
     {
         Wpn* const wpn = static_cast<Wpn*>(item);
@@ -394,21 +416,23 @@ void set_item_randomized_properties(Item* item)
         {
             wpn->nr_ammo_loaded_ = rnd::coin_toss() ? 1 : 0;
         }
-        else //Weapon ammo capacity > 1
+        else // Weapon ammo capacity > 1
         {
             const int ammo_cap = wpn->data().ranged.max_ammo;
 
             if (d.ranged.is_machine_gun)
             {
-                //Number of machine gun bullets loaded needs to be a multiple of the
-                //number of projectiles fired in each burst
+                // Number of machine gun bullets loaded needs to be a multiple
+                // of the number of projectiles fired in each burst
 
-                const int cap_scaled    = ammo_cap / nr_mg_projectiles;
-                const int min_scaled    = cap_scaled / 4;
-                wpn->nr_ammo_loaded_    = rnd::range(min_scaled, cap_scaled) *
-                                          nr_mg_projectiles;
+                const int cap_scaled = ammo_cap / nr_mg_projectiles;
+                const int min_scaled = cap_scaled / 4;
+
+                wpn->nr_ammo_loaded_ =
+                    rnd::range(min_scaled, cap_scaled) *
+                    nr_mg_projectiles;
             }
-            else //Not machinegun
+            else // Not machinegun
             {
                 wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
             }
@@ -420,7 +444,7 @@ void set_item_randomized_properties(Item* item)
         item->nr_items_ = rnd::range(1, d.max_stack_at_spawn);
     }
 
-    //Vary number of Medical supplies (mostly just for aesthetic reasons)
+    // Vary number of Medical supplies (mostly just for aesthetic reasons)
     if (d.id == ItemId::medical_bag)
     {
         MedicalBag* const medbag = static_cast<MedicalBag*>(item);
@@ -436,15 +460,19 @@ void set_item_randomized_properties(Item* item)
 Item* mk_item_on_floor(const ItemId item_id, const P& pos)
 {
     Item* item = mk(item_id);
+
     set_item_randomized_properties(item);
+
     item_drop::drop_item_on_map(pos, *item);
+
     return item;
 }
 
 Item* copy_item(const Item& item_to_copy)
 {
-    Item* new_item  = mk(item_to_copy.id());
-    *new_item       = item_to_copy;
+    Item* new_item = mk(item_to_copy.id());
+
+    *new_item = item_to_copy;
 
     return new_item;
 }
@@ -454,12 +482,11 @@ Item* mk_random_scroll_or_potion(const bool allow_scrolls,
 {
     std::vector<ItemId> item_bucket;
 
-    for (int i = 0; i < int(ItemId::END); ++i)
+    for (int i = 0; i < (int)ItemId::END; ++i)
     {
         const ItemDataT& d = item_data::data[i];
 
-        if (
-            (d.type == ItemType::scroll && allow_scrolls) ||
+        if ((d.type == ItemType::scroll && allow_scrolls) ||
             (d.type == ItemType::potion && allow_potions))
         {
             item_bucket.push_back(static_cast<ItemId>(i));
@@ -469,6 +496,7 @@ Item* mk_random_scroll_or_potion(const bool allow_scrolls,
     if (!item_bucket.empty())
     {
         const int element = rnd::range(0, item_bucket.size() - 1);
+
         return mk(item_bucket[element]);
     }
 

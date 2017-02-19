@@ -31,8 +31,8 @@ void mk_lvl(const MapType& map_type)
     bool map_ok = false;
 
 #ifndef NDEBUG
-    int   nr_attempts  = 0;
-    auto  start_time   = std::chrono::steady_clock::now();
+    int nr_attempts = 0;
+    auto start_time = std::chrono::steady_clock::now();
 #endif
 
     // TODO: When the map is invalid, any unique items spawned are lost forever.
@@ -91,20 +91,21 @@ void mk_lvl(const MapType& map_type)
     TRACE_FUNC_END;
 }
 
-} //namespace
+} // namespace
 
 void init()
 {
-    //Forest + dungeon + boss + trapezohedron
+    // Forest + dungeon + boss + trapezohedron
     const size_t nr_lvl_tot = dlvl_last + 3;
 
-    map_list =
-        std::vector<MapData>(nr_lvl_tot, {MapType::std, IsMainDungeon::yes});
+    const MapData default_map_data = MapData(MapType::std, IsMainDungeon::yes);
 
-    //Forest intro level
-    map_list[0] = {MapType::intro, IsMainDungeon::yes};
+    map_list = std::vector<MapData>(nr_lvl_tot, default_map_data);
 
-    //Occasionally set rats-in-the-walls level as intro to first late game level
+    // Forest intro level
+    map_list[0] = MapData(MapType::intro, IsMainDungeon::yes);
+
+    // Occasionally set rats-in-the-walls level as intro to late game
     if (rnd::one_in(3))
     {
         map_list[dlvl_first_late_game - 1] =
@@ -114,11 +115,11 @@ void init()
         };
     }
 
-    //"Pharaoh chamber" is the first late game level
-    map_list[dlvl_first_late_game] = {MapType::egypt,  IsMainDungeon::yes};
+    // "Pharaoh chamber" is the first late game level
+    map_list[dlvl_first_late_game] = {MapType::egypt, IsMainDungeon::yes};
 
-    map_list[dlvl_last + 1] = {MapType::boss,          IsMainDungeon::yes};
-    map_list[dlvl_last + 2] = {MapType::trapez,        IsMainDungeon::yes};
+    map_list[dlvl_last + 1] = {MapType::boss, IsMainDungeon::yes};
+    map_list[dlvl_last + 2] = {MapType::trapez, IsMainDungeon::yes};
 }
 
 void save()

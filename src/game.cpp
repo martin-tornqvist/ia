@@ -929,7 +929,7 @@ void handle_player_input(const InputData& input)
 
         const ActorId mon_id = ActorId(idx);
 
-        actor_factory::summon(map::player->pos, {mon_id}, MakeMonAware::no);
+        actor_factory::spawn(map::player->pos, {mon_id}, MakeMonAware::no);
     }
     break;
 #endif // NDEBUG

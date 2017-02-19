@@ -232,6 +232,8 @@ void update_vision()
     game_time::update_light_map();
 
     map::player->update_fov();
+
+    states::draw();
 }
 
 void mk_blood(const P& origin)

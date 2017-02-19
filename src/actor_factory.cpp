@@ -242,7 +242,7 @@ Actor* mk_actor_from_id(const ActorId id)
     return nullptr;
 }
 
-} //namespace
+} // namespace
 
 Actor* mk(const ActorId id, const P& pos)
 {
@@ -277,7 +277,7 @@ void delete_all_mon()
         {
             ++it;
         }
-        else //Is monster
+        else // Is monster
         {
             delete actor;
 
@@ -286,11 +286,10 @@ void delete_all_mon()
     }
 }
 
-std::vector<Mon*> summon(const P& origin,
-                         const std::vector<ActorId>& monster_ids,
-                         const MakeMonAware make_aware,
-                         Actor* const actor_to_set_as_leader,
-                         Verbosity verbosity)
+std::vector<Mon*> spawn(const P& origin,
+                        const std::vector<ActorId>& monster_ids,
+                        const MakeMonAware make_aware,
+                        Actor* const actor_to_set_as_leader)
 {
     TRACE_FUNC_BEGIN;
 
@@ -312,8 +311,6 @@ std::vector<Mon*> summon(const P& origin,
     const size_t nr_monster_ids = monster_ids.size();
 
     const int nr_to_spawn = std::min(nr_free_cells, nr_monster_ids);
-
-    std::vector<P> positions_to_animate;
 
     for (int i = 0; i < nr_to_spawn; ++i)
     {
@@ -345,19 +342,6 @@ std::vector<Mon*> summon(const P& origin,
         {
             mon->aware_of_player_counter_ = mon->data().nr_turns_aware;
         }
-
-        // Draw animation here if player can see the monster
-        if ((verbosity == Verbosity::verbose) &&
-            map::player->can_see_actor(*actor))
-        {
-            positions_to_animate.push_back(pos);
-        }
-    }
-
-    if (verbosity == Verbosity::verbose)
-    {
-        io::draw_blast_at_seen_cells(positions_to_animate,
-                                     clr_magenta);
     }
 
     TRACE_FUNC_END;

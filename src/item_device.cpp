@@ -193,7 +193,7 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
             return ConsumeItem::no;
         }
 
-        ConsumeItem consumed_state = ConsumeItem::no;
+        ConsumeItem consumed = ConsumeItem::no;
 
         if (is_effect_failed)
         {
@@ -201,17 +201,17 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
         }
         else
         {
-            consumed_state = trigger_effect();
+            consumed = trigger_effect();
         }
 
-        if (consumed_state == ConsumeItem::no)
+        if (consumed == ConsumeItem::no)
         {
             if (is_cond_degrade)
             {
                 if (condition_ == Condition::breaking)
                 {
                     msg_log::add("The " + item_name + " breaks!");
-                    consumed_state = ConsumeItem::yes;
+                    consumed = ConsumeItem::yes;
                 }
                 else
                 {
@@ -231,8 +231,12 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
             }
         }
 
+        map::player->incr_shock(ShockLvl::terrifying,
+                                ShockSrc::use_strange_item);
+
         game_time::tick();
-        return consumed_state;
+
+        return consumed;
     }
     else // Not identified
     {
@@ -412,7 +416,7 @@ ConsumeItem DeviceSentryDrone::trigger_effect()
 {
     msg_log::add("The Sentry Drone awakens!");
 
-    actor_factory::summon(map::player->pos,
+    actor_factory::spawn(map::player->pos,
                           {ActorId::sentry_drone},
                           MakeMonAware::yes,
                           map::player);

@@ -204,6 +204,13 @@ public:
         return state_;
     }
 
+    // Simply mark the monster as body-destroyed, without running any "death"
+    // events (used e.g. by the Horn of Banishment)
+    void set_destroyed()
+    {
+        state_ = ActorState::destroyed;
+    }
+
     virtual bool is_leader_of(const Actor* const actor) const = 0;
     virtual bool is_actor_my_leader(const Actor* const actor) const = 0;
 
@@ -214,7 +221,7 @@ public:
     int delay_;
 
 protected:
-    //TODO: Try to get rid of these friend declarations
+    // TODO: Try to get rid of these friend declarations
     friend class AbilityVals;
     friend class PropDiseased;
     friend class PropPossByZuul;

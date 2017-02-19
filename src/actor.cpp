@@ -18,6 +18,8 @@
 #include "item.hpp"
 #include "marker.hpp"
 #include "look.hpp"
+#include "map_travel.hpp"
+#include "popup.hpp"
 
 Actor::Actor() :
     pos             (),
@@ -123,24 +125,32 @@ int Actor::speed_pct() const
 {
     int ret = data_->speed_pct;
 
-    // "Slowed" gives speed penalty
+    //
+    // Speed modifications due to properties
+    //
     if (prop_handler_->has_prop(PropId::slowed))
     {
         ret -= 50;
     }
 
-    // "Hasted" gives speed bonus
     if (prop_handler_->has_prop(PropId::hasted))
     {
         ret += 100;
     }
 
-    // "Frenzied" gives speed bonus
     if (prop_handler_->has_prop(PropId::frenzied))
     {
         ret += 100;
     }
 
+    if (prop_handler_->has_prop(PropId::clockwork_hasted))
+    {
+        ret += 2000;
+    }
+
+    //
+    // Speed bonus from traits?
+    //
     if (is_player())
     {
         if (player_bon::traits[(size_t)Trait::dexterous])
@@ -154,7 +164,7 @@ int Actor::speed_pct() const
         }
     }
 
-    const int min_speed = 20;
+    const int min_speed = 10;
 
     ret = std::max(min_speed, ret);
 
@@ -292,7 +302,7 @@ void Actor::teleport(const P& p)
 {
     if (!is_player() && map::player->can_see_actor(*this))
     {
-        msg_log::add(name_the() + " suddenly disappears!");
+        msg_log::add(name_the() + mon_disappear_msg);
     }
 
     if (!is_player())
@@ -364,6 +374,7 @@ bool Actor::restore_hp(const int hp_restored,
                        const Verbosity verbosity)
 {
     bool is_hp_gained = is_allowed_above_max;
+
     const int dif_from_max = hp_max(true) - hp_restored;
 
     // If hp is below limit, but restored hp will push it over the limit, hp is
@@ -760,6 +771,7 @@ ActorDied Actor::hit_spi(const int dmg, const Verbosity verbosity)
             is_on_bottomless;
 
         die(is_destroyed, false, true);
+
         return ActorDied::yes;
     }
 
@@ -773,6 +785,48 @@ void Actor::die(const bool is_destroyed,
                 const bool allow_drop_items)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
+
+    // Save player with Talisman of Resurrection?
+    if (is_player() &&
+        (map::player->ins() < 100) &&   // Not dead due to insanity?
+        (spi() > 0) &&                  // Not dead due to depleted spirit?
+        inv_->has_item_in_backpack(ItemId::resurrect_talisman))
+    {
+        inv_->decr_item_type_in_backpack(ItemId::resurrect_talisman);
+
+        msg_log::more_prompt();
+
+        io::clear_screen();
+
+        io::update_screen();
+
+        const std::string msg =
+            "Strange emptiness surrounds me. An eternity passes as I lay "
+            "frozen in a world of shadows. Suddenly I awake!";
+
+        popup::show_msg(msg, "Dead");
+
+        restore_hp(999,
+                   false,
+                   Verbosity::silent);
+
+        prop_handler_->end_prop(PropId::wound, false);
+
+        // If player died due to falling down a chasm, go to next level
+        if (map::cells[pos.x][pos.y].rigid->is_bottomless())
+        {
+            map_travel::go_to_nxt();
+        }
+
+        msg_log::add("I LIVE AGAIN!");
+
+        game::add_history_event("I was brought back from the dead.");
+
+        map::player->incr_shock(ShockLvl::mind_shattering,
+                                ShockSrc::misc);
+
+        return;
+    }
 
     ASSERT(data_->can_leave_corpse || is_destroyed);
 
@@ -891,6 +945,7 @@ void Actor::die(const bool is_destroyed,
     if (!is_player())
     {
         game::on_mon_killed(*this);
+
         static_cast<Mon*>(this)->leader_ = nullptr;
     }
 

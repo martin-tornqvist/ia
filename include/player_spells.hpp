@@ -39,7 +39,7 @@ void learn_spell(const SpellId id, const Verbosity verbosity);
 
 void incr_spell_skill(const SpellId id, const Verbosity verbosity);
 
-int spell_skill_pct(const SpellId id);
+int spell_skill_pct_tot(const SpellId id);
 
 void set_spell_skill_pct(const SpellId id, const int val);
 

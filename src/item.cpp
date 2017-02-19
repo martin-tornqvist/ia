@@ -28,15 +28,23 @@ Item::Item(ItemDataT* item_data) :
     data_           (item_data),
     actor_carrying_ (nullptr),
     carrier_props_  (),
-    carrier_spells_ () {}
+    carrier_spells_ ()
+{
+    melee_dmg_plus_ = data_->melee.dmg.plus;
+}
 
 Item& Item::operator=(const Item& other)
 {
     nr_items_ = other.nr_items_;
+
     melee_dmg_plus_ = other.melee_dmg_plus_;
+
     data_ = other.data_;
+
     actor_carrying_ = other.actor_carrying_;
+
     carrier_props_ = other.carrier_props_;
+
     carrier_spells_ = other.carrier_spells_;
 
     return *this;
@@ -89,6 +97,7 @@ DiceParam Item::dmg(const AttMode att_mode, const Actor* const actor) const
     case AttMode::melee:
     {
         out = data_->melee.dmg;
+
         out.plus = melee_dmg_plus_;
 
         if (actor == map::player)
@@ -204,7 +213,9 @@ std::string Item::weight_str() const
 ConsumeItem Item::activate(Actor* const actor)
 {
     (void)actor;
+
     msg_log::add("I cannot apply that.");
+
     return ConsumeItem::no;
 }
 
@@ -213,6 +224,8 @@ void Item::on_pickup(Actor& actor)
     ASSERT(!actor_carrying_);
 
     actor_carrying_ = &actor;
+
+    on_found();
 
     on_pickup_hook();
 }
@@ -233,9 +246,29 @@ UnequipAllowed Item::on_unequip()
 
 void Item::on_removed_from_inv()
 {
-    actor_carrying_ = nullptr;
-
     on_removed_from_inv_hook();
+
+    actor_carrying_ = nullptr;
+}
+
+void Item::on_found()
+{
+    if (data_->value == ItemValue::major_treasure &&
+        data_->is_unique &&
+        !data_->is_found)
+    {
+        const std::string item_name =
+            name(ItemRefType::a,
+                 ItemRefInf::none);
+
+        msg_log::more_prompt();
+
+        msg_log::add("I have found " + item_name + "!");
+
+        game::incr_player_xp(5, Verbosity::verbose);
+
+        data_->is_found = true;
+    }
 }
 
 std::string Item::name(const ItemRefType ref_type,
@@ -786,23 +819,11 @@ void PlayerGhoulClaw::on_melee_kill(Actor& actor_killed)
     {
         const size_t nr_worms = rnd::range(1, 2);
 
-        actor_factory::summon(actor_killed.pos,
+        actor_factory::spawn(actor_killed.pos,
                               {nr_worms, ActorId::worm_mass},
                               MakeMonAware::yes,
-                              map::player,
-                              Verbosity::silent);
+                              map::player);
     }
-}
-
-// -----------------------------------------------------------------------------
-// Staff of the pharaohs
-// -----------------------------------------------------------------------------
-PharaohStaff::PharaohStaff(ItemDataT* const item_data) :
-    Wpn(item_data)
-{
-    item_data->allow_spawn = false;
-
-    add_carrier_spell(new SpellPharaohStaff);
 }
 
 // -----------------------------------------------------------------------------
@@ -880,7 +901,7 @@ void RavenPeck::on_melee_hit(Actor& actor_hit)
         return;
     }
 
-    // Gas mask and Asbesthos suit protects against blindness
+    // Gas mask and Asbestos suit protects against blindness
     Item* const head_item = actor_hit.inv().item_in_slot(SlotId::head);
     Item* const body_item = actor_hit.inv().item_in_slot(SlotId::body);
 
@@ -905,7 +926,7 @@ void DustVortexEngulf::on_melee_hit(Actor& actor_hit)
         return;
     }
 
-    // Gas mask and Asbesthos suit protects against blindness
+    // Gas mask and Asbestos suit protects against blindness
     Item* const head_item = actor_hit.inv().item_in_slot(SlotId::head);
     Item* const body_item = actor_hit.inv().item_in_slot(SlotId::body);
 
@@ -930,7 +951,7 @@ void SpittingCobraSpit::on_ranged_hit(Actor& actor_hit)
         return;
     }
 
-    // Gas mask and Asbesthos suit protects against blindness
+    // Gas mask and Asbestos suit protects against blindness
     Item* const head_item = actor_hit.inv().item_in_slot(SlotId::head);
     Item* const body_item = actor_hit.inv().item_in_slot(SlotId::body);
 
@@ -1015,14 +1036,18 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
     if (player_bon::bg() == Bg::ghoul)
     {
         msg_log::add("It is of no use to me.");
+
         current_action_ = MedBagAction::END;
+
         return ConsumeItem::no;
     }
 
     if (map::player->has_prop(PropId::poisoned))
     {
         msg_log::add("Not while poisoned.");
+
         current_action_ = MedBagAction::END;
+
         return ConsumeItem::no;
     }
 
@@ -1031,7 +1056,9 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
     if (!seen_foes.empty())
     {
         msg_log::add("Not while an enemy is near.");
+
         current_action_ = MedBagAction::END;
+
         return ConsumeItem::no;
     }
 
@@ -1047,12 +1074,15 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
     }
 
     const int nr_supplies_needed = tot_suppl_for_action(current_action_);
+
     const bool is_enough_supplies = nr_supplies_ >= nr_supplies_needed;
 
     if (!is_enough_supplies)
     {
         msg_log::add("I do not have enough medical supplies.");
+
         current_action_ = MedBagAction::END;
+
         return ConsumeItem::no;
     }
 

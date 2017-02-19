@@ -3,6 +3,8 @@
 #include "init.hpp"
 
 #include <vector>
+#include <sstream>
+#include <iomanip>
 
 #include "item_scroll.hpp"
 #include "actor_player.hpp"
@@ -29,6 +31,7 @@ bool run_drop_query(const InvType inv_type, const size_t idx)
     TRACE_FUNC_BEGIN;
 
     Inventory& inv = map::player->inv();
+
     Item* item = nullptr;
 
     if (inv_type == InvType::slots)
@@ -446,11 +449,11 @@ void InvState::draw_detailed_item_descr(const Item* const item) const
         const std::string disturb_base_str =
             ref_str + "a burden on my mind to ";
 
-        if (d.is_ins_raied_while_carried)
+        if (d.is_carry_shocking)
         {
             disturb_str = disturb_base_str + "carry";
         }
-        else if (d.is_ins_raied_while_equiped)
+        else if (d.is_equiped_shocking)
         {
             if (d.type == ItemType::melee_wpn ||
                 d.type == ItemType::ranged_wpn)
@@ -465,8 +468,15 @@ void InvState::draw_detailed_item_descr(const Item* const item) const
 
         if (!disturb_str.empty())
         {
+            std::stringstream shock_value_stream;
+
+            shock_value_stream << std::setprecision(2)
+                               << shock_from_disturbing_items;
+
             disturb_str +=
-                " (+" + std::to_string(ins_from_disturbing_items) + "% insanity)";
+                " (+" +
+                shock_value_stream.str() +
+                "% shock taken per turn - before resistances are applied)";
 
             lines.push_back(StrAndClr(disturb_str, clr_magenta));
         }
@@ -1001,13 +1011,6 @@ void Equip::on_start()
             }
             break;
 
-        case SlotId::neck:
-            if (data.type == ItemType::amulet)
-            {
-                filtered_backpack_indexes_.push_back(i);
-            }
-            break;
-
         case SlotId::END:
             break;
         }
@@ -1059,13 +1062,6 @@ void Equip::draw()
             has_item ?
             "Wear what on head?" :
             "I carry no headwear.";
-        break;
-
-    case SlotId::neck:
-        heading =
-            has_item ?
-            "Wear what around the neck?" :
-            "I carry nothing to wear around the neck.";
         break;
 
     case SlotId::END:

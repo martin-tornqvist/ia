@@ -97,7 +97,7 @@ const int poison_dmg_n_turn = 3;
 
 const int shock_from_obsession = 30;
 
-const int ins_from_disturbing_items = 5;
+const double shock_from_disturbing_items = 0.05;
 
 // How many "units" of weight the player can carry, without trait modifiers etc
 const int player_carry_weight_base = 500;
@@ -114,18 +114,29 @@ const std::string info_scr_tip = "[space/esc] to exit";
 const std::string info_scr_tip_scrollable =
     "[2/8, down/up, j/k] to scroll " +
     info_scr_tip;
+
 const std::string cancel_info_str_no_space = "[space/esc] to cancel";
 const std::string cancel_info_str = " " + cancel_info_str_no_space;
+
 const std::string confirm_info_str_no_space = "[space/esc/enter] to continue";
 const std::string confirm_info_str = " " + confirm_info_str_no_space;
+
 const std::string any_key_info_str_no_space = "[Any key] to continue";
 const std::string any_key_info_str = " " + any_key_info_str_no_space;
+
 const std::string drop_info_str = " [shift+select] to drop";
+
 const std::string msg_disarm_no_trap = "I find nothing there to disarm.";
+
 const std::string msg_mon_prevent_cmd = "Not while an enemy is near.";
+
 const std::string spell_resist_msg = "The spell is resisted!";
+
 const std::string spell_reflect_msg = "The spell is reflected!";
+
 const std::string spell_reflect_self_msg = "There is a faint echo...";
+
+const std::string mon_disappear_msg = " suddenly disappears!";
 
 // -----------------------------------------------------------------------------
 // Types
@@ -377,7 +388,6 @@ enum class ItemType
     rod,
     armor,
     head_wear,
-    amulet,
     explosive,
 
     END_OF_EXTR_ITEMS,
@@ -391,14 +401,14 @@ struct ItemName
               const std::string& name_pl,
               const std::string& name_a)
     {
-        names[size_t(ItemRefType::plain)]   = name;
-        names[size_t(ItemRefType::plural)]  = name_pl;
-        names[size_t(ItemRefType::a)]       = name_a;
+        names[(size_t)ItemRefType::plain] = name;
+        names[(size_t)ItemRefType::plural] = name_pl;
+        names[(size_t)ItemRefType::a] = name_a;
     }
 
     ItemName()
     {
-        for (size_t i = 0; i < size_t(ItemRefType::END); i++)
+        for (size_t i = 0; i < (size_t)ItemRefType::END; ++i)
         {
             names[i] = "";
         }

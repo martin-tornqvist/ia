@@ -17,6 +17,7 @@ enum class PropId
     r_acid,
     r_sleep,
     r_fear,
+    r_slow,
     r_conf,
     r_breath,
     r_disease,
@@ -57,7 +58,7 @@ enum class PropId
     ooze,
     burrowing,
 
-    // Properties used for AI control
+    // Properties mostly used for AI control
     waiting,
     disabled_attack,
     disabled_melee,
@@ -70,6 +71,9 @@ enum class PropId
     flared,
     wound,
     r_spell,
+    clockwork_frozen, // For the Arcane Clockwork artifact
+    clockwork_hasted, // -
+    summoned, // Will be unsommed by Horn of Banishment
 
     END
 };
@@ -199,7 +203,8 @@ public:
 
     Prop* prop(const PropId id) const;
 
-    bool end_prop(const PropId id, const bool run_prop_end_effects = true);
+    bool end_prop(const PropId id,
+                  const bool run_prop_end_effects = true);
 
     // A line of property names of the short form
     std::vector<StrAndClr> props_line() const;
@@ -1041,6 +1046,54 @@ public:
     void on_start() override;
 };
 
+class PropClockworkFrozen: public Prop
+{
+public:
+    PropClockworkFrozen(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::clockwork_frozen, turns_init, nr_turns) {}
+
+    bool allow_act() const override
+    {
+        return false;
+    }
+};
+
+class PropClockworkHasted: public Prop
+{
+public:
+    PropClockworkHasted(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::clockwork_hasted, turns_init, nr_turns) {}
+
+    void on_end() override;
+
+    int ability_mod(const AbilityId ability) const override
+    {
+        if (ability == AbilityId::dodging)
+        {
+            return 20;
+        }
+
+        if (ability == AbilityId::melee)
+        {
+            return 20;
+        }
+
+        if (ability == AbilityId::ranged)
+        {
+            return 10;
+        }
+
+        return 0;
+    }
+};
+
+class PropSummoned: public Prop
+{
+public:
+    PropSummoned(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::summoned, turns_init, nr_turns) {}
+};
+
 class PropFrenzied: public Prop
 {
 public:
@@ -1104,6 +1157,17 @@ class PropRFear: public Prop
 public:
     PropRFear(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::r_fear, turns_init, nr_turns) {}
+
+    void on_start() override;
+
+    bool is_resisting_other_prop(const PropId prop_id) const override;
+};
+
+class PropRSlow: public Prop
+{
+public:
+    PropRSlow(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::r_slow, turns_init, nr_turns) {}
 
     void on_start() override;
 

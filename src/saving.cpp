@@ -17,7 +17,6 @@
 #include "inventory.hpp"
 #include "game_time.hpp"
 #include "player_spells.hpp"
-#include "item_amulet.hpp"
 #include "postmortem.hpp"
 #include "insanity.hpp"
 #include "map_templates.hpp"
@@ -57,7 +56,6 @@ void save_modules()
     potion_handling::save();
     rod_handling::save();
     item_data::save();
-    amulet_handling::save();
     map::player->inv().save();
     map::player->save();
     insanity::save();
@@ -89,7 +87,6 @@ void load_modules()
     potion_handling::load();
     rod_handling::load();
     item_data::load();
-    amulet_handling::load();
     map::player->inv().load();
     map::player->load();
     insanity::load();
