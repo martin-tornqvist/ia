@@ -268,6 +268,8 @@ void Item::on_found()
         game::incr_player_xp(5, Verbosity::verbose);
 
         data_->is_found = true;
+
+        game::add_history_event("Found " + item_name + ".");
     }
 }
 
@@ -1324,6 +1326,13 @@ ConsumeItem Explosive::activate(Actor* const actor)
 {
     (void)actor;
 
+    if (map::player->has_prop(PropId::burning))
+    {
+        msg_log::add("Not while burning.");
+
+        return ConsumeItem::no;
+    }
+
     const Explosive* const held_explosive = map::player->active_explosive;
 
     if (held_explosive)
@@ -1358,6 +1367,7 @@ ConsumeItem Explosive::activate(Actor* const actor)
     auto* cpy = static_cast<Explosive*>(item_factory::mk(data().id, 1));
 
     cpy->fuse_turns_ = std_fuse_turns();
+
     map::player->active_explosive = cpy;
 
     cpy->on_player_ignite();

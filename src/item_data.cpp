@@ -2014,7 +2014,7 @@ void init_data_list()
     d.is_unique = true;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 4;
+    d.chance_to_incl_in_spawn_list = 3;
     d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
@@ -2039,7 +2039,7 @@ void init_data_list()
     d.is_unique = true;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 4;
+    d.chance_to_incl_in_spawn_list = 3;
     d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
@@ -2064,7 +2064,7 @@ void init_data_list()
     d.is_unique = true;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 4;
+    d.chance_to_incl_in_spawn_list = 3;
     d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
@@ -2093,7 +2093,7 @@ void init_data_list()
     d.value = ItemValue::major_treasure;
     d.has_std_activate = true;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 4;
+    d.chance_to_incl_in_spawn_list = 3;
     d.native_containers.push_back(FeatureId::chest);
     data[(size_t)d.id] = d;
 
@@ -2120,7 +2120,7 @@ void init_data_list()
     d.value = ItemValue::major_treasure;
     d.has_std_activate = true;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 4;
+    d.chance_to_incl_in_spawn_list = 3;
     d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
@@ -2145,7 +2145,7 @@ void init_data_list()
     d.value = ItemValue::major_treasure;
     d.has_std_activate = true;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 4;
+    d.chance_to_incl_in_spawn_list = 3;
     d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
@@ -2178,7 +2178,7 @@ void init_data_list()
     d.is_unique = true;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 4;
+    d.chance_to_incl_in_spawn_list = 3;
     d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
@@ -2202,7 +2202,7 @@ void init_data_list()
     d.is_unique = true;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 4;
+    d.chance_to_incl_in_spawn_list = 3;
     d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
@@ -2226,7 +2226,7 @@ void init_data_list()
     d.is_unique = true;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 4;
+    d.chance_to_incl_in_spawn_list = 3;
     d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 }

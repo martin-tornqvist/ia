@@ -139,7 +139,7 @@ void throw_item(Actor& actor_throwing,
         msg_log::clear();
         msg_log::add("I throw " + item_name_a + ".");
     }
-    else //Monster throwing
+    else // Monster throwing
     {
         const P& p = path.front();
 
@@ -243,7 +243,7 @@ void throw_item(Actor& actor_throwing,
                                   pos,
                                   item_clr);
             }
-            else //Text mode
+            else // Text mode
             {
                 io::draw_glyph(item_thrown.glyph(),
                                    Panel::map,
@@ -276,7 +276,7 @@ void throw_item(Actor& actor_throwing,
         }
     }
 
-    //If potion, collide it on the landscape
+    // If potion, collide it on the landscape
     if (item_thrown_data.type == ItemType::potion)
     {
         if (blocked_idx >= 0)
@@ -308,7 +308,7 @@ void throw_item(Actor& actor_throwing,
     {
         delete &item_thrown;
     }
-    else //Thrown item not destroyed
+    else // Thrown item not destroyed
     {
         const Matl matl_at_drop_pos =
             map::cells[final_pos.x][final_pos.y].rigid->matl();
