@@ -639,20 +639,6 @@ void cleanup()
     TRACE_FUNC_END;
 }
 
-void on_toggle_fullscreen()
-{
-    if (config::is_fullscreen())
-    {
-        SDL_SetWindowFullscreen(sdl_window_, SDL_WINDOW_FULLSCREEN_DESKTOP);
-    }
-    else
-    {
-        SDL_SetWindowFullscreen(sdl_window_, SDL_WINDOW_SHOWN);
-    }
-
-    update_screen();
-}
-
 void update_screen()
 {
     if (is_inited())
@@ -1500,8 +1486,7 @@ InputData get(const bool is_o_return)
             const int key = sdl_event_.key.keysym.sym;
 
             // Do not return shift, control or alt as separate key events
-            if (
-                key == SDLK_LSHIFT ||
+            if (key == SDLK_LSHIFT ||
                 key == SDLK_RSHIFT ||
                 key == SDLK_LCTRL ||
                 key == SDLK_RCTRL ||
@@ -1536,7 +1521,9 @@ InputData get(const bool is_o_return)
                     if (is_alt_held)
                     {
                         config::toggle_fullscreen();
+
                         clear_events();
+
                         continue;
                     }
                     else // Alt is not held

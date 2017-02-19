@@ -203,8 +203,7 @@ void player_sets_option(const MenuBrowser& browser)
 
     case 4: // Fullscreen
     {
-        is_fullscr_ = !is_fullscr_;
-        io::init();
+        toggle_fullscreen();
     }
     break;
 
@@ -634,13 +633,26 @@ int delay_explosion()
 void toggle_fullscreen()
 {
     is_fullscr_ = !is_fullscr_;
+
     set_cell_px_dims_from_font_name();
+
     set_cell_px_dim_dependent_variables();
 
-    io::on_toggle_fullscreen();
+    io::clear_screen();
+
+    io::update_screen();
+
+    // Reinitialize io in fullscreen mode
+    io::init();
+
+    states::draw();
+
+    io::update_screen();
 
     std::vector<std::string> lines;
+
     set_lines_from_variables(lines);
+
     write_lines_to_file(lines);
 }
 
@@ -660,8 +672,8 @@ void ConfigState::update()
 {
     const auto input = io::get(true);
 
-    const MenuAction action = browser_.read(input,
-                                            MenuInputMode::scrolling);
+    const MenuAction action =
+        browser_.read(input, MenuInputMode::scrolling);
 
     switch (action)
     {

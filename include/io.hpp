@@ -136,8 +136,6 @@ void draw_descr_box(const std::vector<StrAndClr>& lines);
 void draw_info_scr_interface(const std::string& title,
                              const InfScreenType screen_type);
 
-void on_toggle_fullscreen();
-
 P px_pos_for_cell_in_panel(const Panel panel, const P& pos);
 
 // ---
