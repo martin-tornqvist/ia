@@ -23,9 +23,9 @@ int random_out_of_depth()
     int nr_levels = 0;
 
     if (map::dlvl > 0 &&
-        rnd::one_in(9))
+        rnd::one_in(7))
     {
-        nr_levels = 5;
+        nr_levels = 3;
     }
 
     return nr_levels;
@@ -152,27 +152,35 @@ bool mk_random_group_for_room(const RoomType room_type,
 
     auto id_bucket = valid_auto_spawn_monsters(nr_lvls_out_of_depth_allowed);
 
+    // Remove monsters which do not belong in this room
     for (size_t i = 0; i < id_bucket.size(); ++i)
     {
-        const auto id = id_bucket[i];
+        // Ocassionally allow any monster type, to mix things up a bit
+        const int allow_any_one_in_n = 11;
 
-        const ActorDataT& d = actor_data::data[(size_t)id];
-
-        bool is_mon_native_to_room = false;
-
-        for (const auto native_room_type : d.native_rooms)
+        if (!rnd::one_in(allow_any_one_in_n))
         {
-            if (native_room_type == room_type)
+            bool is_native = false;
+
+            const auto id = id_bucket[i];
+
+            const ActorDataT& d = actor_data::data[(size_t)id];
+
+            for (const auto native_room_type : d.native_rooms)
             {
-                is_mon_native_to_room = true;
-                break;
-            }
-        }
+                if (native_room_type == room_type)
+                {
+                    is_native = true;
 
-        if (!is_mon_native_to_room)
-        {
-            id_bucket.erase(id_bucket.begin() + i);
-            --i;
+                    break;
+                }
+            }
+
+            if (!is_native)
+            {
+                id_bucket.erase(id_bucket.begin() + i);
+                --i;
+            }
         }
     }
 

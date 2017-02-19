@@ -134,12 +134,13 @@ void init_data_list()
     d.hp = 16;
     d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
-    d.ability_vals.set_val(AbilityId::dodging, 20);
+    d.ability_vals.set_val(AbilityId::dodging, 10);
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    40),
+        MonGroupSpawnRule(MonGroupSize::alone,  20),
+        MonGroupSpawnRule(MonGroupSize::few,    60),
         MonGroupSpawnRule(MonGroupSize::pack,   10),
         MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
@@ -187,12 +188,13 @@ void init_data_list()
     d.hp = 16;
     d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 60);
-    d.ability_vals.set_val(AbilityId::dodging, 20);
+    d.ability_vals.set_val(AbilityId::dodging, 10);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    40),
+        MonGroupSpawnRule(MonGroupSize::alone,  20),
+        MonGroupSpawnRule(MonGroupSize::few,    60),
         MonGroupSpawnRule(MonGroupSize::pack,   10),
         MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
@@ -289,7 +291,7 @@ void init_data_list()
     d.hp = 26;
     d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
-    d.ability_vals.set_val(AbilityId::dodging, 20);
+    d.ability_vals.set_val(AbilityId::dodging, 10);
     d.spawn_min_dlvl = 4;
     d.actor_size = ActorSize::humanoid;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -333,7 +335,7 @@ void init_data_list()
     d.hp = 26;
     d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
-    d.ability_vals.set_val(AbilityId::dodging, 20);
+    d.ability_vals.set_val(AbilityId::dodging, 10);
     d.is_auto_spawn_allowed = false;
     d.spawn_min_dlvl = 4;
     d.actor_size = ActorSize::humanoid;
@@ -420,7 +422,7 @@ void init_data_list()
     d.spi = 8;
     d.dmg_melee = 3;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::dodging, 40);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 15;
@@ -469,7 +471,7 @@ void init_data_list()
     d.spi = 25;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
-    d.ability_vals.set_val(AbilityId::dodging, 60);
+    d.ability_vals.set_val(AbilityId::dodging, 40);
     d.ability_vals.set_val(AbilityId::stealth, 90);
     d.nr_left_allowed_to_spawn = 1;
     d.is_unique = true;
@@ -515,7 +517,7 @@ void init_data_list()
     d.spi = 16;
     d.dmg_melee = min_dmg_to_wound - 2;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::dodging, 60);
+    d.ability_vals.set_val(AbilityId::dodging, 30);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 3;
@@ -920,7 +922,7 @@ void init_data_list()
     d.hp = 16;
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::dodging, 40);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
@@ -962,7 +964,7 @@ void init_data_list()
     d.hp = 16;
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::dodging, 40);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
@@ -1004,7 +1006,7 @@ void init_data_list()
     d.hp = 16;
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::dodging, 40);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
@@ -1135,7 +1137,7 @@ void init_data_list()
     d.hp = 6;
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::dodging, 30);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -1183,7 +1185,7 @@ void init_data_list()
     d.ranged_cooldown_turns = 150;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::ranged, 85);
-    d.ability_vals.set_val(AbilityId::dodging, 30);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -1228,7 +1230,7 @@ void init_data_list()
     d.hp = 6;
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::dodging, 30);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -1276,7 +1278,7 @@ void init_data_list()
     d.dmg_ranged = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::ranged, 65);
-    d.ability_vals.set_val(AbilityId::dodging, 40);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::r_fire] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 9;
@@ -1328,7 +1330,7 @@ void init_data_list()
     d.spi = 40;
     d.dmg_melee = min_dmg_to_wound + 3;
     d.ability_vals.set_val(AbilityId::melee, 70);
-    d.ability_vals.set_val(AbilityId::dodging, 25);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 13;
@@ -1509,7 +1511,7 @@ void init_data_list()
     d.spi = 30;
     d.dmg_melee = min_dmg_to_wound + 4;
     d.ability_vals.set_val(AbilityId::melee, 70);
-    d.ability_vals.set_val(AbilityId::dodging, 30);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.spawn_min_dlvl = dlvl_first_mid_game + 2;
     d.spawn_max_dlvl = 999;
     d.actor_size = ActorSize::humanoid;
@@ -1645,7 +1647,7 @@ void init_data_list()
     d.spi = 2;
     d.dmg_melee = 3;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::dodging, 30);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 0;
     d.spawn_max_dlvl = 10;
@@ -1689,8 +1691,8 @@ void init_data_list()
     d.hp = 2;
     d.spi = 6;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(AbilityId::melee, 40);
-    d.ability_vals.set_val(AbilityId::dodging, 40);
+    d.ability_vals.set_val(AbilityId::melee, 30);
+    d.ability_vals.set_val(AbilityId::dodging, 30);
     d.natural_props[(size_t)PropId::flying] = true;
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = 10;
@@ -1735,7 +1737,7 @@ void init_data_list()
     d.spi = 6;
     d.dmg_melee = 2;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::dodging, 70);
+    d.ability_vals.set_val(AbilityId::dodging, 40);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 4;
@@ -1784,7 +1786,7 @@ void init_data_list()
     d.spi = 20;
     d.dmg_melee = min_dmg_to_wound + 3;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::dodging, 40);
+    d.ability_vals.set_val(AbilityId::dodging, 30);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 6;
@@ -2143,7 +2145,7 @@ void init_data_list()
     d.spi = 40;
     d.dmg_melee = 2;
     d.ability_vals.set_val(AbilityId::melee, 60);
-    d.ability_vals.set_val(AbilityId::dodging, 30);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::r_breath] = true;
     d.natural_props[(size_t)PropId::r_poison] = true;
@@ -2574,7 +2576,7 @@ void init_data_list()
     d.spi = 6;
     d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
-    d.ability_vals.set_val(AbilityId::dodging, 30);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = dlvl_first_late_game;
     d.group_sizes.assign(
@@ -3110,49 +3112,6 @@ void init_data_list()
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::chasm);
-    data[(size_t)d.id] = d;
-    d.reset();
-
-    d.name_a = "A Floating Skull";
-    d.name_the = "The Floating Skull";
-    d.corpse_name_a = "A Skull";
-    d.corpse_name_the = "The Skull";
-    d.id = ActorId::floating_skull;
-    d.ai[(size_t)AiId::looks] = true;
-    d.ai[(size_t)AiId::makes_room_for_friend] = true;
-    d.ai[(size_t)AiId::attacks] = true;
-    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
-    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
-    d.ai[(size_t)AiId::moves_to_lair] = false;
-    d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::fast;
-    d.glyph = 'z';
-    d.color = clr_white_high;
-    d.tile = TileId::floating_skull;
-    d.hp = 6;
-    d.spi = 16;
-    d.dmg_melee = min_dmg_to_wound - 2;
-    d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::dodging, 60);
-    d.natural_props[(size_t)PropId::flying] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
-    d.spawn_min_dlvl = 3;
-    d.spawn_max_dlvl = dlvl_last_mid_game;
-    d.actor_size = ActorSize::floor;
-    d.nr_turns_aware = 10;
-    d.descr = "A severed head floating through the air.";
-    d.wary_msg = d.name_the + " looks wary.";
-    d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = ShockLvl::terrifying;
-    d.can_be_summoned = true;
-    d.is_undead = true;
-    d.is_auto_descr_allowed = false;
-    d.can_bleed = false;
-    d.native_rooms.push_back(RoomType::monster);
-    d.native_rooms.push_back(RoomType::plain);
-    d.native_rooms.push_back(RoomType::ritual);
-    d.native_rooms.push_back(RoomType::chasm);
-    d.native_rooms.push_back(RoomType::cave);
     data[(size_t)d.id] = d;
     d.reset();
 

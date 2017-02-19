@@ -207,7 +207,12 @@ void RodPurgeInvis::run_effect()
             // Reveal sneaking monsters
             Mon* const mon = static_cast<Mon*>(actor);
 
-            mon->set_player_aware_of_me();
+            if (mon->is_sneaking())
+            {
+                mon->set_player_aware_of_me();
+
+                is_effect_noticed = true;
+            }
         }
     }
 

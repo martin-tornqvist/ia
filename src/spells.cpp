@@ -2230,6 +2230,24 @@ void SpellSummonMon::run_effect(Actor* const caster) const
 
     const int skill = caster->spell_skill(id());
 
+    //
+    // NOTE: There are summonable monsters spawning from dlvl 0 (wolves), so
+    //       it's not a problem if the dlvl limit is 0
+    //
+
+    int max_dlvl_spawned = (skill * dlvl_last) / 100;
+
+    // If it's a monster doing the summoning, also don't allow a too far
+    // out of depth monsters to be spawned
+    if (!caster->is_player())
+    {
+        const int nr_dlvls_ood_allowed = 3;
+
+        max_dlvl_spawned =
+            std::min(max_dlvl_spawned,
+                     map::dlvl + nr_dlvls_ood_allowed);
+    }
+
     for (int i = 0; i < (int)ActorId::END; ++i)
     {
         const ActorDataT& data = actor_data::data[i];
@@ -2239,14 +2257,7 @@ void SpellSummonMon::run_effect(Actor* const caster) const
             continue;
         }
 
-        //
-        // NOTE: There are summonable monsters spawning from dlvl 0 (wolves), so
-        //       it's not a problem if the dlvl limit is 0
-        //
-
-        const int dlvl_max = (skill * dlvl_last) / 100;
-
-        if (data.spawn_min_dlvl <= dlvl_max)
+        if (data.spawn_min_dlvl <= max_dlvl_spawned)
         {
             summon_bucket.push_back(ActorId(i));
         }
