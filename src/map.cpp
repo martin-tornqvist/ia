@@ -70,12 +70,16 @@ void Cell::reset()
 namespace map
 {
 
-Player*                     player  = nullptr;
-int                         dlvl    = 0;
-Cell                        cells[map_w][map_h];
-Clr                         wall_clr;
-std::vector<Room*>          room_list;
-Room*                       room_map[map_w][map_h];
+Player* player = nullptr;
+
+int dlvl = 0;
+
+Cell cells[map_w][map_h];
+
+std::vector<Room*> room_list;
+
+Room* room_map[map_w][map_h];
+
 std::vector<ChokePointData> choke_point_data;
 
 namespace
@@ -159,43 +163,18 @@ void reset_map()
     choke_point_data.clear();
 
     reset_cells(true);
+
     game_time::erase_all_mobs();
     game_time::reset_turn_type_and_actor_counters();
-
-    Clr clr_red_brighter = {160, 0, 0, 0};
-
-    // Occasionally set wall color to something unusual
-    if (rnd::one_in(7))
-    {
-        std::vector<Clr> wall_clr_bucket =
-        {
-            clr_nosf_sepia,
-            clr_nosf_sepia_drk,
-            clr_red_brighter,
-            clr_brown,
-            clr_brown_drk,
-            clr_brown_gray,
-        };
-
-        wall_clr = rnd::element(wall_clr_bucket);
-    }
-    else // Standard wall color
-    {
-        wall_clr = clr_gray;
-
-        // Randomize the color slightly (subtle effect)
-        wall_clr.r += rnd::range(-6, 6);
-        wall_clr.g += rnd::range(-6, 6);
-        wall_clr.b += rnd::range(-6, 6);
-    }
 }
 
 Rigid* put(Rigid* const f)
 {
     ASSERT(f);
 
-    const P p     = f->pos();
-    Cell&     cell  = cells[p.x][p.y];
+    const P p = f->pos();
+
+    Cell& cell = cells[p.x][p.y];
 
     delete cell.rigid;
 

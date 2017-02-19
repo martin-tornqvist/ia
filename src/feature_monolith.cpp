@@ -33,7 +33,8 @@ Clr Monolith::clr_default() const
 {
     return
         is_activated_ ?
-        clr_gray : clr_cyan_lgt;
+        clr_gray :
+        clr_cyan_lgt;
 }
 
 void Monolith::bump(Actor& actor_bumping)

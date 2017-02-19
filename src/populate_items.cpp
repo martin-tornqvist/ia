@@ -24,7 +24,7 @@ int nr_items()
     // Spawn extra items on the earliest levels, to kickstart the player
     if (map::dlvl <= 3)
     {
-        nr += 4;
+        nr += 2;
     }
 
     if (player_bon::traits[(size_t)Trait::treasure_hunter])

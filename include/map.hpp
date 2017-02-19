@@ -76,8 +76,6 @@ extern Player* player;
 extern int dlvl;
 extern Cell cells[map_w][map_h];
 
-extern Clr wall_clr;
-
 // This vector is the room owner
 extern std::vector<Room*> room_list;
 

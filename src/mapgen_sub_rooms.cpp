@@ -11,13 +11,21 @@ void mk_sub_rooms()
     TRACE_FUNC_BEGIN;
 
     const int nr_tries_to_mk_room = 40;
+
     const int max_nr_sub_rooms = rnd::one_in(3) ? 1 : 7;
 
     // Minimum allowed size of the sub room, including the walls
     const P walls_min_d(4, 4);
 
+    const Fraction chance_try_make_subroom(3, 4);
+
     for (size_t i = 0; i < map::room_list.size(); ++i)
     {
+        if (!chance_try_make_subroom.roll())
+        {
+            continue;
+        }
+
         auto* const outer_room = map::room_list[i];
 
         if (!outer_room->allow_sub_rooms())
@@ -26,6 +34,7 @@ void mk_sub_rooms()
         }
 
         const R outer_room_rect = outer_room->r_;
+
         const P outer_room_d(outer_room_rect.dims());
 
         // Maximum sub room size, including the walls, in this outer room
@@ -48,7 +57,8 @@ void mk_sub_rooms()
         // To build a room inside a room, the outer room shall:
         // * Be a standard room, and
         // * Be a "big room" - but we occasionally allow "small rooms"
-        if (!is_outer_std_room || (!is_outer_big && !rnd::one_in(4)))
+        if (!is_outer_std_room ||
+            (!is_outer_big && !rnd::one_in(4)))
         {
             // Outer room does not meet dimensions criteria - next room
             continue;
@@ -188,7 +198,7 @@ void mk_sub_rooms()
                 }
 
                 // Sometimes place one entrance, which may have a door
-                //(always do this if there are very few possible entries)
+                // (always do this if there are very few possible entries)
                 if (rnd::coin_toss() || entrance_bucket.size() <= 4)
                 {
                     const size_t door_pos_idx =

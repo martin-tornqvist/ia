@@ -21,6 +21,15 @@
 #include "game.hpp"
 #include "sound.hpp"
 
+
+namespace
+{
+
+const Clr std_wall_clr = clr_gray;
+
+} // namespace
+
+
 // -----------------------------------------------------------------------------
 // Rigid
 // -----------------------------------------------------------------------------
@@ -666,7 +675,7 @@ Clr Wall::clr_default() const
 
     case WallType::cmn:
     case WallType::cmn_alt:
-        return map::wall_clr;
+        return std_wall_clr;
 
     case WallType::leng_monestary:
         return clr_red;
@@ -822,7 +831,7 @@ std::string RubbleHigh::name(const Article article) const
 
 Clr RubbleHigh::clr_default() const
 {
-    return map::wall_clr;
+    return std_wall_clr;
 }
 
 // -----------------------------------------------------------------------------
@@ -862,7 +871,7 @@ std::string RubbleLow::name(const Article article) const
 
 Clr RubbleLow::clr_default() const
 {
-    return map::wall_clr;
+    return std_wall_clr;
 }
 
 // -----------------------------------------------------------------------------
@@ -871,7 +880,8 @@ Clr RubbleLow::clr_default() const
 Bones::Bones(const P& p) :
     Rigid(p) {}
 
-void Bones::on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+void Bones::on_hit(const DmgType dmg_type,
+                   const DmgMethod dmg_method,
                    Actor* const actor)
 {
     (void)dmg_type;

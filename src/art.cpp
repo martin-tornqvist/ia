@@ -215,9 +215,8 @@ P column_and_row_tile(const TileId tile)
     case TileId::floor:                         return P(1, 6);
     case TileId::aim_marker_head:               return P(2, 6);
     case TileId::aim_marker_trail:              return P(3, 6);
-    case TileId::wall_top:                      return P(5, 6);
     case TileId::wall_front:                    return P(3, 7);
-    case TileId::square_checkered:              return P(5, 6);
+    case TileId::square_checkered_sparse:       return P(5, 6);
     case TileId::rubble_high:                   return P(7, 6);
     case TileId::rubble_low:                    return P(8, 6);
     case TileId::stairs_down:                   return P(9, 6);
@@ -277,6 +276,8 @@ P column_and_row_tile(const TileId tile)
     case TileId::sarcophagus:                   return P(9, 9);
     case TileId::cave_wall_front:               return P(10, 9);
     case TileId::cave_wall_top:                 return P(11, 9);
+    case TileId::wall_top:                      return P(15, 9);
+    case TileId::square_checkered:              return P(15, 9);
     case TileId::egypt_wall_front:              return P(16, 9);
     case TileId::egypt_wall_top:                return P(17, 9);
     case TileId::monolith:                      return P(18, 9);
