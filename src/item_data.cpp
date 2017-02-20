@@ -1382,6 +1382,18 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
+    d.id = ItemId::vampire_bat_bite;
+    d.melee.att_msgs = {"", "bites me"};
+    set_dmg_from_mon_id(d, ActorId::vampire_bat);
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::melee_wpn_intr);
+    d.id = ItemId::baeleroch_bite;
+    d.melee.att_msgs = {"", "bites me"};
+    set_dmg_from_mon_id(d, ActorId::baeleroch);
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::polyp_tentacle;
     d.melee.att_msgs = {"", "grips me with a tentacle"};
     d.melee.prop_applied = new PropParalyzed(PropTurns::specific, 1);

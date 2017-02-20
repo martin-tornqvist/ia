@@ -565,6 +565,22 @@ public:
     void mk_start_items() override;
 };
 
+class VampireBat: public Mon
+{
+public:
+    VampireBat() : Mon() {}
+    ~VampireBat() {}
+    void mk_start_items() override;
+};
+
+class Baeleroch: public Mon
+{
+public:
+    Baeleroch() : Mon() {}
+    ~Baeleroch() {}
+    void mk_start_items() override;
+};
+
 class Byakhee: public GiantBat
 {
 public:

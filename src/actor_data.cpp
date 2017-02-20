@@ -1138,7 +1138,7 @@ void init_data_list()
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodging, 20);
-    d.spawn_min_dlvl = 2;
+    d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.actor_size = ActorSize::floor;
@@ -1186,7 +1186,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::ranged, 85);
     d.ability_vals.set_val(AbilityId::dodging, 20);
-    d.spawn_min_dlvl = 2;
+    d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.actor_size = ActorSize::floor;
@@ -1231,7 +1231,7 @@ void init_data_list()
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodging, 20);
-    d.spawn_min_dlvl = 2;
+    d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.actor_size = ActorSize::floor;
@@ -1736,15 +1736,16 @@ void init_data_list()
     d.hp = 8;
     d.spi = 6;
     d.dmg_melee = 2;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 40);
     d.ability_vals.set_val(AbilityId::dodging, 40);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 4;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    10),
-        MonGroupSpawnRule(MonGroupSize::pack,   20),
+        MonGroupSpawnRule(MonGroupSize::alone,  10),
+        MonGroupSpawnRule(MonGroupSize::few,    20),
+        MonGroupSpawnRule(MonGroupSize::pack,   10),
         MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::humanoid;
@@ -1760,6 +1761,107 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::very;
     d.mon_shock_lvl = ShockLvl::unsettling;
     d.can_be_summoned = true;
+    d.native_rooms.push_back(RoomType::plain);
+    d.native_rooms.push_back(RoomType::forest);
+    d.native_rooms.push_back(RoomType::chasm);
+    data[(size_t)d.id] = d;
+    d.reset();
+
+    d.name_a = "A Vampire Bat";
+    d.name_the = "The Vampire Bat";
+    d.corpse_name_a = "A Vampire Bat corpse";
+    d.corpse_name_the = "The Vampire Bat corpse";
+    d.id = ActorId::vampire_bat;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
+    d.speed_pct = (int)ActorSpeed::fastest;
+    d.glyph = 'B';
+    d.color = clr_red_lgt;
+    d.tile = TileId::bat;
+    d.hp = 10;
+    d.spi = 8;
+    d.dmg_melee = 3;
+    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::dodging, 40);
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
+    d.spawn_min_dlvl = 6;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::alone,  10),
+        MonGroupSpawnRule(MonGroupSize::few,    20),
+        MonGroupSpawnRule(MonGroupSize::pack,   20),
+        MonGroupSpawnRule(MonGroupSize::swarm,  1)
+    });
+    d.actor_size = ActorSize::humanoid;
+    d.can_bash_doors = true;
+    d.nr_turns_aware = 5;
+    d.descr =
+        "An unknown species, perhaps stemming from some hidden bowels of "
+        "the earth. It is about as tall as a full-grown human. Its attack "
+        "drains health from the victim.";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.aggro_msg_mon_hidden = "I hear the flapping of great wings.";
+    d.aggro_sfx_mon_seen = SfxId::flapping_wings;
+    d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
+    d.erratic_move_pct = ActorErraticFreq::very;
+    d.mon_shock_lvl = ShockLvl::unsettling;
+    d.can_be_summoned = true;
+    d.native_rooms.push_back(RoomType::plain);
+    d.native_rooms.push_back(RoomType::forest);
+    d.native_rooms.push_back(RoomType::chasm);
+    data[(size_t)d.id] = d;
+    d.reset();
+
+    d.name_a = "Baeleroch the Destroyer";
+    d.name_the = "Baeleroch the Destroyer";
+    d.corpse_name_a = "The corpse of Baeleroch";
+    d.corpse_name_the = "The corpse of Baeleroch";
+    d.id = ActorId::baeleroch;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
+    d.speed_pct = (int)ActorSpeed::fast;
+    d.glyph = 'B';
+    d.color = clr_white_high;
+    d.tile = TileId::bat;
+    d.hp = 120;
+    d.spi = 36;
+    d.dmg_melee = min_dmg_to_wound + 4;
+    d.ability_vals.set_val(AbilityId::melee, 80);
+    d.ability_vals.set_val(AbilityId::dodging, 40);
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_disease] = true;
+    d.spawn_min_dlvl = dlvl_first_late_game;
+    d.spawn_max_dlvl = 999;
+    d.actor_size = ActorSize::giant;
+    d.can_bash_doors = true;
+    d.nr_turns_aware = 24;
+    d.descr =
+        "A colossal white bat, told of in ancient traditions as \"Baeleroch "
+        "the Destroyer\" (or a variation thereof). It has eternal life, which "
+        "it sustains by feeding on other creatures - allegedly including "
+        "human sacrifice. This has surely given rise to certain vampire myths "
+        "over the years.";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.aggro_msg_mon_hidden = "I hear the flapping of great wings.";
+    d.aggro_sfx_mon_seen = SfxId::flapping_wings;
+    d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
+    d.erratic_move_pct = ActorErraticFreq::somewhat;
+    d.mon_shock_lvl = ShockLvl::mind_shattering;
+    d.is_unique = true;
+    d.nr_left_allowed_to_spawn = 1;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::chasm);
@@ -1782,7 +1884,7 @@ void init_data_list()
     d.glyph = 'B';
     d.color = clr_brown_drk;
     d.tile = TileId::byakhee;
-    d.hp = 14;
+    d.hp = 16;
     d.spi = 20;
     d.dmg_melee = min_dmg_to_wound + 3;
     d.ability_vals.set_val(AbilityId::melee, 50);
@@ -1814,7 +1916,7 @@ void init_data_list()
     d.aggro_sfx_mon_seen = SfxId::flapping_wings;
     d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = ShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::terrifying;
     d.can_be_summoned = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::chasm);
@@ -1842,7 +1944,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::stealth, 20);
-    d.ability_vals.set_val(AbilityId::dodging, 40);
+    d.ability_vals.set_val(AbilityId::dodging, 30);
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 8;
     d.actor_size = ActorSize::humanoid;
@@ -2576,7 +2678,7 @@ void init_data_list()
     d.spi = 6;
     d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
-    d.ability_vals.set_val(AbilityId::dodging, 20);
+    d.ability_vals.set_val(AbilityId::dodging, 10);
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = dlvl_first_late_game;
     d.group_sizes.assign(
@@ -2625,7 +2727,7 @@ void init_data_list()
     d.dmg_melee = 2;
     d.ability_vals.set_val(AbilityId::melee, 35);
     d.natural_props[(size_t)PropId::infravis] = true;
-    d.spawn_min_dlvl = 2;
+    d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {

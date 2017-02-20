@@ -1592,7 +1592,7 @@ void melee(Actor* const attacker,
 
         // NOTE: This is run regardless of if defender died or not, it is the
         // hook implementors responsibility to check this if it matters.
-        wpn.on_melee_hit(defender);
+        wpn.on_melee_hit(defender, att_data.dmg);
 
         if (defender.is_alive())
         {

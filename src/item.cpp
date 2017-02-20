@@ -738,8 +738,10 @@ std::string Wpn::name_inf() const
 // -----------------------------------------------------------------------------
 // Player ghoul claw
 // -----------------------------------------------------------------------------
-void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit)
+void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit, const int dmg)
 {
+    (void)dmg;
+
     // TODO: If some "constructed" monster is added (something not made of
     //       flesh, e.g. a golem), then a Ghoul player would be able to feed
     //       from it, which would be a problem. In that case, there should
@@ -896,8 +898,10 @@ void Incinerator::on_projectile_blocked(
 // -----------------------------------------------------------------------------
 // Raven peck
 // -----------------------------------------------------------------------------
-void RavenPeck::on_melee_hit(Actor& actor_hit)
+void RavenPeck::on_melee_hit(Actor& actor_hit, const int dmg)
 {
+    (void)dmg;
+
     if (!actor_hit.is_alive())
     {
         return;
@@ -919,10 +923,27 @@ void RavenPeck::on_melee_hit(Actor& actor_hit)
 }
 
 // -----------------------------------------------------------------------------
+// Raven peck
+// -----------------------------------------------------------------------------
+void VampireBatBite::on_melee_hit(Actor& actor_hit, const int dmg)
+{
+    if (!actor_hit.is_alive())
+    {
+        return;
+    }
+
+    actor_carrying_->restore_hp(dmg,
+                                false,
+                                Verbosity::verbose);
+}
+
+// -----------------------------------------------------------------------------
 // Dust vortex enguld
 // -----------------------------------------------------------------------------
-void DustVortexEngulf::on_melee_hit(Actor& actor_hit)
+void DustVortexEngulf::on_melee_hit(Actor& actor_hit, const int dmg)
 {
+    (void)dmg;
+
     if (!actor_hit.is_alive())
     {
         return;

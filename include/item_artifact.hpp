@@ -131,7 +131,7 @@ class SpiritDagger: public Wpn
 public:
     SpiritDagger(ItemDataT* const item_data);
 
-    void on_melee_hit(Actor& actor_hit) override;
+    void on_melee_hit(Actor& actor_hit, const int dmg) override;
 };
 
 // -----------------------------------------------------------------------------

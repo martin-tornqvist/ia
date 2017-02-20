@@ -168,6 +168,11 @@ Item* mk(const ItemId item_id, const int nr_items)
         r = new RavenPeck(d);
         break;
 
+    case ItemId::vampire_bat_bite:
+    case ItemId::baeleroch_bite:
+        r = new VampireBatBite(d);
+        break;
+
     case ItemId::dust_vortex_engulf:
         r = new DustVortexEngulf(d);
         break;

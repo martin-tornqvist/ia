@@ -1768,6 +1768,16 @@ void GiantBat::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(ItemId::giant_bat_bite));
 }
 
+void VampireBat::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(ItemId::vampire_bat_bite));
+}
+
+void Baeleroch::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(ItemId::baeleroch_bite));
+}
+
 void Byakhee::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::byakhee_claw));

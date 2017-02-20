@@ -277,8 +277,10 @@ SpiritDagger::SpiritDagger(ItemDataT* const item_data) :
 
 }
 
-void SpiritDagger::on_melee_hit(Actor& actor_hit)
+void SpiritDagger::on_melee_hit(Actor& actor_hit, const int dmg)
 {
+    (void)dmg;
+
     // Only drain spirit if the victim did not die from the normal attack,
     // otherwise the actor might be killed twice
     if (actor_hit.is_alive())

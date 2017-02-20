@@ -529,7 +529,7 @@ void SpellDarkbolt::run_effect(Actor* const caster) const
 
     int skill = caster->spell_skill(id());
 
-    const int dmg = (skill / 7) + 1;
+    const int dmg = (skill / 10) + 1;
 
     target->hit(dmg,
              DmgType::physical,
@@ -579,7 +579,7 @@ std::vector<std::string> SpellDarkbolt::descr_specific() const
 
     const int skill = map::player->spell_skill(id());
 
-    const int dmg = (skill / 7) + 1;
+    const int dmg = (skill / 10) + 1;
 
     descr.push_back(
         "The impact does " +
@@ -685,7 +685,7 @@ void SpellAzaWrath::run_effect(Actor* const caster) const
 
         int skill = caster->spell_skill(id());
 
-        int dmg = (skill / 11) + 1;
+        int dmg = (skill / 12) + 1;
 
         target->hit(dmg,
                     DmgType::physical,
@@ -730,7 +730,7 @@ std::vector<std::string> SpellAzaWrath::descr_specific() const
 
     const int skill = map::player->spell_skill(id());
 
-    int dmg = (skill / 11) + 1;
+    int dmg = (skill / 12) + 1;
 
     descr.push_back(
         "The spell does " +

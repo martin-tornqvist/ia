@@ -97,7 +97,7 @@ const int poison_dmg_n_turn = 3;
 
 const int shock_from_obsession = 30;
 
-const double shock_from_disturbing_items = 0.05;
+const double shock_from_disturbing_items = 0.1;
 
 // How many "units" of weight the player can carry, without trait modifiers etc
 const int player_carry_weight_base = 500;

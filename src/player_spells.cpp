@@ -244,7 +244,7 @@ void incr_spell_skill(const SpellId id, const Verbosity verbosity)
 
     if (player_bon::bg() == Bg::occultist)
     {
-        incr_dice = DiceParam(2, 6);
+        incr_dice = DiceParam(4, 4);
     }
     else // Not Occultist
     {

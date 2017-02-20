@@ -292,9 +292,10 @@ public:
         (void)actor;
     }
 
-    virtual void on_melee_hit(Actor& actor_hit)
+    virtual void on_melee_hit(Actor& actor_hit, const int dmg)
     {
         (void)actor_hit;
+        (void)dmg;
     }
 
     virtual void on_melee_kill(Actor& actor_killed)
@@ -322,7 +323,7 @@ public:
         Wpn(item_data) {}
 
 private:
-    void on_melee_hit(Actor& actor_hit) override;
+    void on_melee_hit(Actor& actor_hit, const int dmg) override;
 
     void on_melee_kill(Actor& actor_killed) override;
 };
@@ -395,7 +396,16 @@ public:
     RavenPeck(ItemDataT* const item_data) :
         Wpn(item_data) {}
 
-    void on_melee_hit(Actor& actor_hit) override;
+    void on_melee_hit(Actor& actor_hit, const int dmg) override;
+};
+
+class VampireBatBite : public Wpn
+{
+public:
+    VampireBatBite(ItemDataT* const item_data) :
+        Wpn(item_data) {}
+
+    void on_melee_hit(Actor& actor_hit, const int dmg) override;
 };
 
 class DustVortexEngulf : public Wpn
@@ -404,7 +414,7 @@ public:
     DustVortexEngulf(ItemDataT* const item_data) :
         Wpn(item_data) {}
 
-    void on_melee_hit(Actor& actor_hit) override;
+    void on_melee_hit(Actor& actor_hit, const int dmg) override;
 };
 
 class SpittingCobraSpit : public Wpn
