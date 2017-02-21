@@ -800,8 +800,10 @@ void Player::act()
     // Quick move
     if (nr_quick_move_steps_left_ > 0)
     {
+        //
         // NOTE: There is no need to check for items here, since the message
         //       from stepping on an item will interrupt player actions.
+        //
 
         const P tgt(pos + dir_utils::offset(quick_move_dir_));
 
@@ -816,8 +818,7 @@ void Player::act()
         const bool should_abort =
             !tgt_rigid->can_move_cmn() ||
             is_tgt_known_trap ||
-            (tgt_rigid->burn_state() == BurnState::burning) ||
-            (tgt_cell.is_dark && !tgt_cell.is_lit);
+            (tgt_rigid->burn_state() == BurnState::burning);
 
         if (should_abort)
         {

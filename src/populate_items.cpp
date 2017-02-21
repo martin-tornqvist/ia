@@ -129,10 +129,12 @@ void mk_position_weights(const bool blocked[map_w][map_h],
             const auto& other_side_positions =
                 choke_point.sides[other_side_idx];
 
+            //
             // NOTE: To avoid leaning heavily towards only putting items in big
             //       hidden areas (it looks more nice and "natural" with small
             //       hidden rooms filled with items), we divide the weight given
             //       per cell based on the total number of cells in the area.
+            //
 
             const int weight_div =
                 std::max(1, (int)other_side_positions.size() / 2);
@@ -196,8 +198,11 @@ void mk_items_on_floor()
     auto item_bucket = mk_item_bucket();
 
     // Spawn items with a weighted random choice
+
+    //
     // NOTE: Each index in the position vector corresponds to the same index in
     //       the weights vector.
+    //
     std::vector<P>      positions;
     std::vector<int>    position_weights;
 

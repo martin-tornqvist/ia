@@ -590,7 +590,9 @@ bool mk_std_lvl()
 
     std::fill_n(*door_proposals, nr_map_cells, false);
 
+    //
     // NOTE: This must be called before any rooms are created
+    //
     room_factory::init_room_bucket();
 
     TRACE << "Init regions" << std:: endl;
@@ -830,8 +832,10 @@ bool mk_std_lvl()
     }
 #endif // DISABLE_DECORATE
 
+    //
     // NOTE: The choke point data below depends on the stairs being placed, so
     //       we need to do this first.
+    //
     P stairs_pos;
 
     stairs_pos = place_stairs();
@@ -841,8 +845,10 @@ bool mk_std_lvl()
         return false;
     }
 
+    //
     // Gather data on choke points in the map (check every position where a door
     // has previously been "proposed")
+    //
     bool blocked[map_w][map_h];
 
     map_parsers::BlocksMoveCmn(ParseActors::no)
@@ -902,8 +908,7 @@ bool mk_std_lvl()
                     ASSERT(d.stairs_side == 0 || d.stairs_side == 1);
 
                     // Robustness for release mode
-                    if (
-                        (d.player_side != 0 && d.player_side != 1) ||
+                    if ((d.player_side != 0 && d.player_side != 1) ||
                         (d.player_side != 0 && d.player_side != 1))
                     {
                         // Go to next map position
@@ -924,7 +929,9 @@ bool mk_std_lvl()
         return false;
     }
 
+    //
     // Explicitly make some doors leading to "optional" areas secret or stuck
+    //
     for (const auto& choke_point : map::choke_point_data)
     {
         if (choke_point.player_side == choke_point.stairs_side)
@@ -955,8 +962,10 @@ bool mk_std_lvl()
         return false;
     }
 
+    //
     // NOTE: This depends on choke point data having been gathered (including
     //       player side and stairs side)
+    //
     place_monoliths();
 
     if (!is_map_valid)
@@ -985,7 +994,9 @@ bool mk_std_lvl()
         return false;
     }
 
+    //
     // Occasionally place some snake emerge events
+    //
     const int nr_snake_emerge_events_to_try =
         rnd::one_in(30) ? 2 :
         rnd::one_in(8)  ? 1 : 0;
@@ -1014,6 +1025,25 @@ bool mk_std_lvl()
     if (map::dlvl <= last_lvl_to_reveal_stairs_path)
     {
         reveal_doors_on_path_to_stairs(stairs_pos);
+    }
+
+    //
+    // Occasionally make the whole level dark
+    //
+    if (map::dlvl > 1)
+    {
+        const int make_drk_pct = 5 + (map::dlvl / 4);
+
+        if (rnd::percent(make_drk_pct))
+        {
+            for (int x = 0; x < map_w; ++x)
+            {
+                for (int y = 0; y < map_h; ++y)
+                {
+                    map::cells[x][y].is_dark = true;
+                }
+            }
+        }
     }
 
     if (!is_map_valid)
