@@ -2091,13 +2091,11 @@ void init_data_list()
     d.base_descr =
     {
         "A mainspring-powered clockwork of unreal quality and beauty. "
-        "When wound up, it grants +2000% speed for 9 turns. One must "
-        "chose their actions carefully however, as this is only borrowed time. "
-        "When the clockwork stops, one is frozen in time for 9 turns.",
+        "When wound up, it grants +300% speed for a brief time.",
         "While carried, the owner is also protected from all sources of "
-        "magical slowing (except for the side effect of using the Clockwork)."
+        "magical slowing."
     };
-    d.clr = clr_white;
+    d.clr = clr_yellow;
     d.weight = ItemWeight::extra_light;
     d.tile = TileId::clockwork;
     d.glyph = '%';

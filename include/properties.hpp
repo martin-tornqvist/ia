@@ -71,8 +71,7 @@ enum class PropId
     flared,
     wound,
     r_spell,
-    clockwork_frozen, // For the Arcane Clockwork artifact
-    clockwork_hasted, // -
+    clockwork_hasted, // For the Arcane Clockwork artifact
     summoned, // Will be unsommed by Horn of Banishment
 
     END
@@ -1046,45 +1045,11 @@ public:
     void on_start() override;
 };
 
-class PropClockworkFrozen: public Prop
-{
-public:
-    PropClockworkFrozen(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::clockwork_frozen, turns_init, nr_turns) {}
-
-    bool allow_act() const override
-    {
-        return false;
-    }
-};
-
 class PropClockworkHasted: public Prop
 {
 public:
     PropClockworkHasted(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::clockwork_hasted, turns_init, nr_turns) {}
-
-    void on_end() override;
-
-    int ability_mod(const AbilityId ability) const override
-    {
-        if (ability == AbilityId::dodging)
-        {
-            return 20;
-        }
-
-        if (ability == AbilityId::melee)
-        {
-            return 20;
-        }
-
-        if (ability == AbilityId::ranged)
-        {
-            return 10;
-        }
-
-        return 0;
-    }
 };
 
 class PropSummoned: public Prop

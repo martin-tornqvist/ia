@@ -153,8 +153,7 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
 
         if (defender.has_prop(PropId::paralyzed) ||
             defender.has_prop(PropId::nailed) ||
-            defender.has_prop(PropId::fainted) ||
-            defender.has_prop(PropId::clockwork_frozen))
+            defender.has_prop(PropId::fainted))
         {
             // Give big attack bonus if defender is completely unable to
             // fight.

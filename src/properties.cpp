@@ -471,29 +471,11 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
-    d.id = PropId::clockwork_frozen;
-    d.std_rnd_turns = Range(9, 9);
-    d.name = "Time Frozen";
-    d.name_short = "Frozen";
-    d.descr = "Moves infinitely slow";
-    d.msg[(size_t)PropMsg::start_player] =
-        "Everything around me suddenly moves infinitely fast!";
-    d.msg[(size_t)PropMsg::end_player] =
-        "Everything around me seems to slow down.";
-    d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
-    d.update_vision_when_start_or_end = false;
-    d.allow_test_on_bot = true;
-    d.alignment = PropAlignment::bad;
-    add_prop_data(d);
-
     d.id = PropId::clockwork_hasted;
-    d.std_rnd_turns = Range(9, 9);
+    d.std_rnd_turns = Range(7, 11);
     d.name = "Extra hasted";
     d.name_short = "Hasted+";
-    d.descr =
-        "+2000% speed, +20% dodging, +20% melee hit chance, "
-        "+10% ranged hit chance";
+    d.descr = "+300% speed";
     d.msg[(size_t)PropMsg::start_player] =
         "Everything around me suddenly seems very still.";
     d.allow_display_turns = true;
@@ -1093,9 +1075,6 @@ Prop* PropHandler::mk_prop(const PropId id,
 
     case PropId::hasted:
         return new PropHasted(turns_init, nr_turns);
-
-    case PropId::clockwork_frozen:
-        return new PropClockworkFrozen(turns_init, nr_turns);
 
     case PropId::clockwork_hasted:
         return new PropClockworkHasted(turns_init, nr_turns);
@@ -2205,12 +2184,6 @@ void PropSlowed::on_start()
 void PropHasted::on_start()
 {
     owning_actor_->prop_handler().end_prop(PropId::slowed, false);
-}
-
-void PropClockworkHasted::on_end()
-{
-    owning_actor_->prop_handler().try_add(
-        new PropClockworkFrozen(PropTurns::std));
 }
 
 Prop* PropInfected::on_tick()
