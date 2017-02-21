@@ -169,7 +169,7 @@ Item* mk(const ItemId item_id, const int nr_items)
         break;
 
     case ItemId::vampire_bat_bite:
-    case ItemId::baeleroch_bite:
+    case ItemId::abaxu_bite:
         r = new VampireBatBite(d);
         break;
 

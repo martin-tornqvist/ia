@@ -53,7 +53,7 @@ enum class ActorId
     raven,
     giant_bat,
     vampire_bat,
-    baeleroch, // Unique bat
+    abaxu, // Unique bat
     byakhee,
     giant_mantis,
     locust,

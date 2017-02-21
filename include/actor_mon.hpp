@@ -573,11 +573,11 @@ public:
     void mk_start_items() override;
 };
 
-class Baeleroch: public Mon
+class Abaxu: public Mon
 {
 public:
-    Baeleroch() : Mon() {}
-    ~Baeleroch() {}
+    Abaxu() : Mon() {}
+    ~Abaxu() {}
     void mk_start_items() override;
 };
 

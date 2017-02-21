@@ -95,7 +95,7 @@ enum class ItemId
     giant_locust_bite,
     fire_hound_breath, fire_hound_bite, zuul_bite,
     raven_peck,
-    giant_bat_bite, vampire_bat_bite, baeleroch_bite,
+    giant_bat_bite, vampire_bat_bite, abaxu_bite,
     zombie_axe, zombie_claw, zombie_claw_diseased,
     bloated_zombie_punch, bloated_zombie_spit,
     crawling_intestines_strangle,

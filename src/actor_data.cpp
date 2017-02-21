@@ -1818,11 +1818,11 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "Baeleroch the Destroyer";
-    d.name_the = "Baeleroch the Destroyer";
-    d.corpse_name_a = "The corpse of Baeleroch";
-    d.corpse_name_the = "The corpse of Baeleroch";
-    d.id = ActorId::baeleroch;
+    d.name_a = "Abaxu the Destroyer";
+    d.name_the = "Abaxu the Destroyer";
+    d.corpse_name_a = "The corpse of Abaxu";
+    d.corpse_name_the = "The corpse of Abaxu";
+    d.id = ActorId::abaxu;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
     d.ai[(size_t)AiId::attacks] = true;
@@ -1830,7 +1830,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::fastest;
     d.glyph = 'B';
     d.color = clr_white_high;
     d.tile = TileId::bat;
@@ -1849,7 +1849,7 @@ void init_data_list()
     d.can_bash_doors = true;
     d.nr_turns_aware = 24;
     d.descr =
-        "A colossal white bat, told of in ancient traditions as \"Baeleroch "
+        "A colossal white bat, spoken of in ancient traditions as \"Abaxu "
         "the Destroyer\" (or a variation thereof). It has eternal life, which "
         "it sustains by feeding on other creatures - allegedly including "
         "human sacrifice. This has surely given rise to certain vampire myths "

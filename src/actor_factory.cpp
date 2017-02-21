@@ -109,8 +109,8 @@ Actor* mk_actor_from_id(const ActorId id)
     case ActorId::vampire_bat:
         return new VampireBat();
 
-    case ActorId::baeleroch:
-        return new Baeleroch();
+    case ActorId::abaxu:
+        return new Abaxu();
 
     case ActorId::cultist:
         return new Cultist();

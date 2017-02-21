@@ -1388,9 +1388,9 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
-    d.id = ItemId::baeleroch_bite;
+    d.id = ItemId::abaxu_bite;
     d.melee.att_msgs = {"", "bites me"};
-    set_dmg_from_mon_id(d, ActorId::baeleroch);
+    set_dmg_from_mon_id(d, ActorId::abaxu);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
