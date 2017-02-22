@@ -509,9 +509,16 @@ std::vector<Actor*> Mon::seen_foes() const
 
 bool Mon::is_sneaking() const
 {
+    //
+    // NOTE: We require that the stealth ability is greater than zero, BOTH when
+    //       including property effects, and when NOT including them - otherwise
+    //       a non-sneaky monster will suddenly be able to sneak while blessed,
+    //       for example
+    //
     return
         (player_aware_of_me_counter_ <= 0) &&
-        (ability(AbilityId::stealth, true) > 0) &&
+        (ability(AbilityId::stealth, false) > 0) && // Without properties
+        (ability(AbilityId::stealth, true) > 0) &&  // With    -
         !is_actor_my_leader(map::player);
 }
 
