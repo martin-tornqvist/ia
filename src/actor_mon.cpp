@@ -1047,12 +1047,16 @@ void Cultist::mk_start_items()
     if (rnd <= pistol)
     {
         Item* item = item_factory::mk(ItemId::pistol);
+
         Wpn* wpn = static_cast<Wpn*>(item);
+
         const int ammo_cap = wpn->data().ranged.max_ammo;
 
         wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
 
-        inv_->put_in_slot(SlotId::wpn, item);
+        inv_->put_in_slot(SlotId::wpn,
+                          item,
+                          Verbosity::silent);
 
         if (rnd::one_in(6))
         {
@@ -1062,23 +1066,31 @@ void Cultist::mk_start_items()
     else if (rnd <= pump_shotgun)
     {
         Item* item = item_factory::mk(ItemId::pump_shotgun);
+
         Wpn* wpn = static_cast<Wpn*>(item);
+
         const int ammo_cap = wpn->data().ranged.max_ammo;
 
         wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
 
-        inv_->put_in_slot(SlotId::wpn, item);
+        inv_->put_in_slot(SlotId::wpn,
+                          item,
+                          Verbosity::silent);
 
         if (rnd::one_in(4))
         {
             item = item_factory::mk(ItemId::shotgun_shell);
+
             item->nr_items_ = rnd::range(1, 8);
+
             inv_->put_in_backpack(item);
         }
     }
     else if (rnd <= sawn_shotgun)
     {
-        inv_->put_in_slot(SlotId::wpn, item_factory::mk(ItemId::sawed_off));
+        inv_->put_in_slot(SlotId::wpn,
+                          item_factory::mk(ItemId::sawed_off),
+                          Verbosity::silent);
 
         if (rnd::one_in(4))
         {
@@ -1104,7 +1116,9 @@ void Cultist::mk_start_items()
         wpn->nr_ammo_loaded_ =
             rnd::range(min_scaled, cap_scaled) * nr_mg_projectiles;
 
-        inv_->put_in_slot(SlotId::wpn, item);
+        inv_->put_in_slot(SlotId::wpn,
+                          item,
+                          Verbosity::silent);
     }
 
     if (rnd::one_in(8))
@@ -1134,7 +1148,9 @@ void BogTcher::mk_start_items()
 
     wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
 
-    inv_->put_in_slot(SlotId::wpn, item);
+    inv_->put_in_slot(SlotId::wpn,
+                      item,
+                      Verbosity::silent);
 
     if (rnd::one_in(4))
     {
@@ -1170,7 +1186,9 @@ void CultistPriest::mk_start_items()
 
     item->melee_dmg_plus_ = 2;
 
-    inv_->put_in_slot(SlotId::wpn, item);
+    inv_->put_in_slot(SlotId::wpn,
+                      item,
+                      Verbosity::silent);
 
     // Make some treasures to drop
     for (int i = rnd::range(1, 2); i > 0; --i)
@@ -1442,7 +1460,9 @@ void MiGo::mk_start_items()
 
     wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
 
-    inv_->put_in_slot(SlotId::wpn, item);
+    inv_->put_in_slot(SlotId::wpn,
+                      item,
+                      Verbosity::silent);
 
     if (id() == ActorId::mi_go)
     {
@@ -1450,11 +1470,14 @@ void MiGo::mk_start_items()
     }
     else if (id() == ActorId::mi_go_commander)
     {
-        inv_->put_in_intrinsics(item_factory::mk(ItemId::mi_go_commander_sting));
+        inv_->put_in_intrinsics(
+            item_factory::mk(ItemId::mi_go_commander_sting));
 
         if (rnd::one_in(3))
         {
-            inv_->put_in_slot(SlotId::body, item_factory::mk(ItemId::armor_mi_go));
+            inv_->put_in_slot(SlotId::body,
+                              item_factory::mk(ItemId::armor_mi_go),
+                              Verbosity::silent);
         }
     }
 

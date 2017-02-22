@@ -18,28 +18,36 @@ namespace item_pickup
 
 void try_pick()
 {
+    msg_log::clear();
+
     const P& pos = map::player->pos;
 
     Item* const item = map::cells[pos.x][pos.y].item;
 
-    if (item)
+    if (!item)
     {
-        Inventory& player_inv = map::player->inv();
+        msg_log::add("I see nothing to pick up here.");
 
-        const std::string item_name = item->name(ItemRefType::plural);
+        return;
+    }
 
-        // First try to add it to carried item stack in thrown slot.
-        Item* const carried_missile = player_inv.item_in_slot(SlotId::thrown);
+    Inventory& inv = map::player->inv();
 
+    const std::string item_name = item->name(ItemRefType::plural);
+
+    // First try to add it to carried item stack in thrown slot.
+    Item* const equiped_throwing = inv.item_in_slot(SlotId::thrown);
+
+    if (equiped_throwing)
+    {
         if (item->data().is_stackable &&
-            carried_missile &&
-            item->id() == carried_missile->data().id)
+            item->id() == equiped_throwing->data().id)
         {
             audio::play(SfxId::pickup);
 
             msg_log::add("I add " + item_name + " to my missile stack.");
 
-            carried_missile->nr_items_ += item->nr_items_;
+            equiped_throwing->nr_items_ += item->nr_items_;
 
             delete item;
 
@@ -49,26 +57,40 @@ void try_pick()
 
             return;
         }
-
-        audio::play(SfxId::pickup);
-
-        msg_log::clear();
-
-        msg_log::add("I pick up " + item_name + ".");
-
-        // Calls the itemps ickup hook
-        // NOTE: This may destroy the item (e.g. combine with others)
-        player_inv.put_in_backpack(item);
-
-        map::cells[pos.x][pos.y].item = nullptr;
-
-        game_time::tick();
     }
-    else // No item in this cell
+    else // Nothing equiped in the throwing slot
     {
-        msg_log::clear();
-        msg_log::add("I see nothing to pick up here.");
+        // If this is a throwing weapon (i.e. not just a throwABLE weapon)
+        // equip this item
+        if (item->data().type == ItemType::throwing_wpn)
+        {
+            audio::play(SfxId::pickup);
+
+            inv.put_in_slot(SlotId::thrown,
+                            item,
+                            Verbosity::verbose);
+
+            map::cells[pos.x][pos.y].item = nullptr;
+
+            game_time::tick();
+
+            return;
+        }
     }
+
+    audio::play(SfxId::pickup);
+
+    msg_log::add("I pick up " + item_name + ".");
+
+    //
+    // NOTE: This calls the items pickup hook, which may destroy the item
+    //       (e.g. combine with others)
+    //
+    inv.put_in_backpack(item);
+
+    map::cells[pos.x][pos.y].item = nullptr;
+
+    game_time::tick();
 }
 
 Ammo* unload_ranged_wpn(Wpn& wpn)

@@ -1065,7 +1065,9 @@ void SpellAnimWpns::run_effect(Actor* const caster) const
 
                 ASSERT(!inv.item_in_slot(SlotId::wpn));
 
-                inv.put_in_slot(SlotId::wpn, item);
+                inv.put_in_slot(SlotId::wpn,
+                                item,
+                                Verbosity::silent);
 
                 const std::string item_name =
                     item->name(ItemRefType::plain,

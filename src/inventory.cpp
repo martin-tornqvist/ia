@@ -8,7 +8,6 @@
 #include "drop.hpp"
 #include "actor_player.hpp"
 #include "msg_log.hpp"
-#include "game_time.hpp"
 #include "io.hpp"
 #include "item_factory.hpp"
 #include "create_character.hpp"
@@ -420,43 +419,6 @@ void Inventory::decr_item(Item* const item)
     }
 }
 
-void Inventory::move_from_backpack_to_slot(const SlotId id,
-                                           const size_t backpack_idx)
-{
-    ASSERT(id != SlotId::END);
-
-    auto& slot = slots_[(size_t)id];
-
-    const bool backpack_slot_exists = backpack_idx < backpack_.size();
-
-    ASSERT(backpack_slot_exists);
-
-    if (backpack_slot_exists)
-    {
-        Item* item = backpack_[backpack_idx];
-        Item* slot_item_before = slot.item;
-
-        backpack_.erase(begin(backpack_) + backpack_idx);
-
-        // If there is an item in this slot already, move it to backpack
-        auto unequip_allowed_result = UnequipAllowed::yes;
-
-        if (slot_item_before)
-        {
-            unequip_allowed_result = try_move_from_slot_to_backpack(id);
-        }
-
-        if (unequip_allowed_result == UnequipAllowed::yes)
-        {
-            slot.item = item;
-
-            item->on_equip(Verbosity::verbose);
-        }
-    }
-
-    sort_backpack();
-}
-
 UnequipAllowed Inventory::try_move_from_slot_to_backpack(const SlotId id)
 {
     ASSERT(id != SlotId::END);
@@ -492,48 +454,28 @@ void Inventory::equip_backpack_item(const size_t backpack_idx,
                                     const SlotId slot_id)
 {
     ASSERT(slot_id != SlotId::END);
+
     ASSERT(owning_actor_);
 
-    move_from_backpack_to_slot(slot_id, backpack_idx);
+    const bool backpack_slot_exists = backpack_idx < backpack_.size();
 
-    if (owning_actor_->is_player())
+    ASSERT(backpack_slot_exists);
+
+    // Robustness for release mode
+    if (!backpack_slot_exists)
     {
-        Item* const item_after = item_in_slot(slot_id);
-        const std::string name = item_after->name(ItemRefType::plural);
-
-        std::string msg = "";
-
-        switch (slot_id)
-        {
-        case SlotId::wpn:
-            msg = "I am now wielding " + name + ".";
-            break;
-
-        case SlotId::wpn_alt:
-            msg = "I am now using " + name + " as a prepared weapon.";
-            break;
-
-        case SlotId::thrown:
-            msg = "I now have " + name + " at hand for throwing.";
-            break;
-
-        case SlotId::body:
-            msg = "I am now wearing " + name + ".";
-            break;
-
-        case SlotId::head:
-            msg = "I am now wearing " + name + ".";
-            break;
-
-        case SlotId::END: {}
-            break;
-        }
-
-        msg_log::add(msg,
-                     clr_text,
-                     false,
-                     MorePromptOnMsg::yes);
+        return;
     }
+
+    Item* item = backpack_[backpack_idx];
+
+    backpack_.erase(begin(backpack_) + backpack_idx);
+
+    equip(slot_id,
+          item,
+          Verbosity::verbose);
+
+    sort_backpack();
 }
 
 UnequipAllowed Inventory::try_unequip_slot(const SlotId id)
@@ -697,33 +639,94 @@ Item* Inventory::last_item_in_backpack()
     return nullptr;
 }
 
-void Inventory::put_in_slot(const SlotId id, Item* item)
+void Inventory::equip(const SlotId id,
+                      Item* const item,
+                      Verbosity verbosity)
 {
-    ASSERT(!item->actor_carrying());
-
     ASSERT(id != SlotId::END);
 
-    for (InvSlot& slot : slots_)
-    {
-        if (slot.id == id)
-        {
-            if (slot.item)
-            {
-                put_in_backpack(item);
-            }
-            else // Slot not occupied
-            {
-                slot.item = item;
+    InvSlot* slot = nullptr;
 
-                item->on_pickup(*owning_actor_);
-                item->on_equip(Verbosity::silent);
-            }
-            return;
+    for (InvSlot& current_slot : slots_)
+    {
+        if (current_slot.id == id)
+        {
+            slot = &current_slot;
         }
     }
 
-    // Should never happen
-    ASSERT(false);
+    ASSERT(slot);
+
+    // Robustness for release mode
+    if (!slot)
+    {
+        return;
+    }
+
+    // The slot should not already be occupied
+    ASSERT(!slot->item);
+
+    // Robustness for release mode
+    if (slot->item)
+    {
+        return;
+    }
+
+    slot->item = item;
+
+    if (owning_actor_->is_player() &&
+        verbosity == Verbosity::verbose)
+    {
+        Item* const item_after = item_in_slot(slot->id);
+
+        const std::string name = item_after->name(ItemRefType::plural);
+
+        std::string msg = "";
+
+        switch (slot->id)
+        {
+        case SlotId::wpn:
+            msg = "I am now wielding " + name + ".";
+            break;
+
+        case SlotId::wpn_alt:
+            msg = "I am now using " + name + " as a prepared weapon.";
+            break;
+
+        case SlotId::thrown:
+            msg = "I now have " + name + " at hand for throwing.";
+            break;
+
+        case SlotId::body:
+            msg = "I am now wearing " + name + ".";
+            break;
+
+        case SlotId::head:
+            msg = "I am now wearing " + name + ".";
+            break;
+
+        case SlotId::END: {}
+            break;
+        }
+
+        msg_log::add(msg,
+                     clr_text,
+                     false,
+                     MorePromptOnMsg::yes);
+    }
+
+    item->on_equip(verbosity);
+}
+
+void Inventory::put_in_slot(const SlotId id,
+                            Item* item,
+                            Verbosity verbosity)
+{
+    item->on_pickup(*owning_actor_);
+
+    equip(id,
+          item,
+          verbosity);
 }
 
 int Inventory::total_item_weight() const

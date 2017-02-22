@@ -1061,13 +1061,14 @@ void TrapSummonMon::trigger()
     TRACE << "Finding summon candidates" << std::endl;
     std::vector<ActorId> summon_bucket;
 
-    for (int i = 0; i < (int)ActorId::END; ++i)
+    for (size_t i = 0; i < (size_t)ActorId::END; ++i)
     {
         const ActorDataT& data = actor_data::data[i];
 
-        if (data.can_be_summoned && data.spawn_min_dlvl <= map::dlvl + 3)
+        if (data.can_be_summoned &&
+            data.spawn_min_dlvl <= map::dlvl + 3)
         {
-            summon_bucket.push_back(ActorId(i));
+            summon_bucket.push_back((ActorId)i);
         }
     }
 
@@ -1103,8 +1104,6 @@ void TrapSummonMon::trigger()
 
             msg_log::add(mon->name_a() + " appears!");
         }
-
-        map::player->incr_shock(5, ShockSrc::misc);
     }
 
     TRACE_FUNC_END;

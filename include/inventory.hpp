@@ -49,16 +49,18 @@ public:
     void load();
 
     // Equip item from backpack
-    void equip_backpack_item(const size_t backpack_idx, const SlotId slot_id);
+    void equip_backpack_item(const size_t backpack_idx,
+                             const SlotId slot_id);
 
     // Attempt to unequip item from slot
     UnequipAllowed try_unequip_slot(const SlotId id);
 
+    //
     // NOTE: The "put_in_*" functions should NEVER be called on items already in
     //       the inventory.
-
-    // NOTE: Item will be put in backpack if the slot is occupied.
-    void put_in_slot(const SlotId id, Item* item);
+    void put_in_slot(const SlotId id,
+                     Item* item,
+                     Verbosity verbosity);
 
     void put_in_backpack(Item* item);
 
@@ -78,7 +80,8 @@ public:
 
     Item* item_in_slot(const SlotId id) const;
 
-    void remove_without_destroying(const InvType inv_type, const size_t idx);
+    void remove_without_destroying(const InvType inv_type,
+                                   const size_t idx);
 
     void decr_item_in_slot(SlotId slot_id);
 
@@ -119,7 +122,13 @@ public:
     std::vector<Item*> intrinsics_;
 
 private:
-    void move_from_backpack_to_slot(const SlotId id, const size_t backpack_idx);
+    // Puts the item in the slot, and prints messages
+    void equip(const SlotId id,
+               Item* const item,
+               Verbosity verbosity);
+
+    void equip_from_backpack(const SlotId id,
+                             const size_t backpack_idx);
 
     UnequipAllowed try_move_from_slot_to_backpack(const SlotId id);
 

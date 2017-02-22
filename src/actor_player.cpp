@@ -128,7 +128,9 @@ void Player::mk_start_items()
 
         static_cast<Wpn*>(dagger)->melee_dmg_plus_ = 1;
 
-        inv_->put_in_slot(SlotId::wpn, dagger);
+        inv_->put_in_slot(SlotId::wpn,
+                          dagger,
+                          Verbosity::silent);
 
         // Rogue starts with some iron spikes (useful tool)
         inv_->put_in_backpack(item_factory::mk(ItemId::iron_spike, 12));
@@ -202,7 +204,9 @@ void Player::mk_start_items()
             break;
         }
 
-        inv_->put_in_slot(SlotId::wpn, item_factory::mk(weapon_id));
+        inv_->put_in_slot(SlotId::wpn,
+                          item_factory::mk(weapon_id),
+                          Verbosity::silent);
     }
 
     // Unarmed attack
@@ -219,9 +223,9 @@ void Player::mk_start_items()
 
     if (has_pistol)
     {
-        inv_->put_in_slot(
-            SlotId::wpn_alt,
-            item_factory::mk(ItemId::pistol));
+        inv_->put_in_slot(SlotId::wpn_alt,
+                          item_factory::mk(ItemId::pistol),
+                          Verbosity::silent);
     }
 
     for (int i = 0; i < nr_cartridges; ++i)
@@ -244,9 +248,9 @@ void Player::mk_start_items()
 
     if (nr_thr_knives > 0)
     {
-        inv_->put_in_slot(
-            SlotId::thrown,
-            item_factory::mk(ItemId::thr_knife, nr_thr_knives));
+        inv_->put_in_slot(SlotId::thrown,
+                          item_factory::mk(ItemId::thr_knife, nr_thr_knives),
+                          Verbosity::silent);
     }
 
     if (has_medbag)
@@ -263,9 +267,9 @@ void Player::mk_start_items()
 
     if (has_leather_jacket)
     {
-        inv_->put_in_slot(
-            SlotId::body,
-            item_factory::mk(ItemId::armor_leather_jacket));
+        inv_->put_in_slot(SlotId::body,
+                          item_factory::mk(ItemId::armor_leather_jacket),
+                          Verbosity::silent);
     }
 }
 
