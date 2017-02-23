@@ -165,7 +165,16 @@ void go_to_nxt()
 
     game_time::is_magic_descend_nxt_std_turn = false;
 
+    msg_log::add("I have discovered a new area.");
+
     map::player->restore_shock(999, true);
+
+    //
+    // NOTE: When the "intro level" is skipped, "go_to_nxt" is called when the
+    //       game starts - so no XP is missed in that case (same thing when
+    //       loading the game)
+    //
+    game::incr_player_xp(5, Verbosity::verbose);
 
     map::player->tgt_ = nullptr;
 

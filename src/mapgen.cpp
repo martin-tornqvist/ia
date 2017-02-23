@@ -392,21 +392,15 @@ void move_player_to_nearest_allowed_pos()
 
 void place_monoliths()
 {
-    int nr_monoliths = 1;
-
-    // Guarantee exactly one monolith on level 1
-    if (map::dlvl > 1)
+    // Determine number of Monoliths to place, by a weighted choice
+    std::vector<int> nr_weights =
     {
-        // Determine number of Monoliths to place, by a weighted choice
-        std::vector<int> nr_weights =
-        {
-            25,     // 0 monolith(s)
-            100,    // 1 -
-            1,      // 2 -
-        };
+        50, // 0 monolith(s)
+        50, // 1 -
+        1,  // 2 -
+    };
 
-        nr_monoliths = rnd::weighted_choice(nr_weights);
-    }
+    const int nr_monoliths = rnd::weighted_choice(nr_weights);
 
     bool blocked_expanded[map_w][map_h];
 

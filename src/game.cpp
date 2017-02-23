@@ -1203,7 +1203,7 @@ void GameState::on_start()
 
         game::add_history_event("Started journey");
 
-        if (!config::is_intro_lvl_skipped())
+        if (config::is_intro_lvl_skipped())
         {
             io::clear_screen();
 

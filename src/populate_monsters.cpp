@@ -426,7 +426,7 @@ void populate_std_lvl()
     for (Room* const room : map::room_list)
     {
         if (room->type_ != RoomType::plain &&
-            (int)room->type_ < (int)RoomType::END_OF_STD_ROOMS)
+            ((int)room->type_ < (int)RoomType::END_OF_STD_ROOMS))
         {
             // TODO: This is not a good method to calculate the number of room
             //       cells (the room may be irregularly shaped), parse the room
@@ -437,7 +437,9 @@ void populate_std_lvl()
 
             const int max_nr_groups_in_room = room->max_nr_mon_groups_spawned();
 
-            for (int i = 0; i < max_nr_groups_in_room; ++i)
+            const int nr_groups_to_try = rnd::range(1, max_nr_groups_in_room);
+
+            for (int i = 0; i < nr_groups_to_try; ++i)
             {
                 // Randomly pick a free position inside the room
                 std::vector<P> origin_bucket;

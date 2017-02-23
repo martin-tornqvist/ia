@@ -1046,7 +1046,7 @@ void init_data_list()
     d.hp = 8;
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::stealth, 90);
+    d.ability_vals.set_val(AbilityId::stealth, 95);
     d.natural_props[(size_t)PropId::lgt_sens] = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = dlvl_last_mid_game;
@@ -2353,7 +2353,7 @@ void init_data_list()
     d.spi = 12;
     d.dmg_melee = 3;
     d.ability_vals.set_val(AbilityId::melee, 45);
-    d.ability_vals.set_val(AbilityId::stealth, 90);
+    d.ability_vals.set_val(AbilityId::stealth, 95);
     d.natural_props[(size_t)PropId::lgt_sens] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
@@ -2965,7 +2965,7 @@ void init_data_list()
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 2;
     d.ability_vals.set_val(AbilityId::melee, 60);
-    d.ability_vals.set_val(AbilityId::stealth, 90);
+    d.ability_vals.set_val(AbilityId::stealth, 95);
     d.natural_props[(size_t)PropId::ooze] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;

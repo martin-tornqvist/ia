@@ -484,6 +484,8 @@ void StdRoom::place_auto_features()
 
             TRACE << "Placing feature" << std::endl;
 
+            ASSERT(map::is_pos_inside_map(p, false));
+
             map::put(static_cast<Rigid*>(d.mk_obj(p)));
 
             // Erase all adjacent positions
