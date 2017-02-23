@@ -130,6 +130,7 @@ void cleanup()
         for (int y = 0; y < map_h; ++y)
         {
             delete cells[x][y].rigid;
+
             cells[x][y].rigid = nullptr;
         }
     }

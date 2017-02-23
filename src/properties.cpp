@@ -909,10 +909,9 @@ PropHandler::PropHandler(Actor* owning_actor) :
     owning_actor_(owning_actor)
 {
     // Reset the active props info
-    for (size_t i = 0; i < size_t(PropId::END); ++i)
-    {
-        active_props_info_[i] = 0;
-    }
+    std::fill(std::begin(active_props_info_),
+              std::end(active_props_info_),
+              0);
 }
 
 void PropHandler::init_natural_props()

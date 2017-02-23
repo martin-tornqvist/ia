@@ -57,6 +57,11 @@ TEST(2d_array)
 {
     Array2<char> a(3, 5);
 
+    a.for_each([](char& v)
+    {
+        v = 0;
+    });
+
     CHECK(a.dims() == P(3, 5));
 
     a(0, 0) = 'x';
@@ -689,7 +694,8 @@ TEST_FIXTURE(BasicFixture, explosions)
                    ExplSrc::misc,
                    EmitExplSnd::no,
                    0,
-                   new PropBurning(PropTurns::std));
+                   ExplExclCenter::no,
+                   {new PropBurning(PropTurns::std)});
 
     CHECK(a1->prop_handler().prop(PropId::burning));
     CHECK(a2->prop_handler().prop(PropId::burning));
@@ -699,10 +705,10 @@ TEST_FIXTURE(BasicFixture, explosions)
 
     for (int i = 0; i < nr_corpses; ++i)
     {
-        PropHandler& prop_hlr = corpses[i]->prop_handler();
+        PropHandler& props = corpses[i]->prop_handler();
 
-        CHECK(prop_hlr.prop(PropId::burning));
-        CHECK(prop_hlr.has_prop(PropId::burning));
+        CHECK(props.prop(PropId::burning));
+        CHECK(props.has_prop(PropId::burning));
     }
 
     // Check that the explosion can handle the map edge (e.g. that it does not
@@ -810,55 +816,56 @@ TEST_FIXTURE(BasicFixture, monster_stuck_in_spider_web)
     CHECK(tested_loose_web_destroyed);
 }
 
-TEST_FIXTURE(BasicFixture, inventory_handling)
+TEST_FIXTURE(BasicFixture, using_inventory)
 {
     const P p(10, 10);
     map::put(new Floor(p));
     map::player->pos = p;
 
-    Inventory&  inv         = map::player->inv();
-    InvSlot&   body_slot   = inv.slots_[(size_t)SlotId::body];
+    Inventory& inv = map::player->inv();
+
+    InvSlot& body_slot = inv.slots_[(size_t)SlotId::body];
 
     delete body_slot.item;
+
     body_slot.item = nullptr;
 
-    PropHandler& prop_hlr = map::player->prop_handler();
+    PropHandler& props = map::player->prop_handler();
 
     // Check that no props are enabled
     for (size_t i = 0; i < (size_t)PropId::END; ++i)
     {
-        CHECK(!prop_hlr.has_prop(PropId(i)));
-        CHECK(!prop_hlr.prop(PropId(i)));
+        CHECK(!props.has_prop((PropId)i));
+        CHECK(!props.prop((PropId)i));
     }
 
     // Wear asbesthos suit
     Item* item = item_factory::mk(ItemId::armor_asb_suit);
 
-    inv.put_in_slot(SlotId::body, item);
+    inv.put_in_slot(SlotId::body,
+                    item,
+                    Verbosity::verbose);
 
     // Check that the props are applied
-    size_t nr_props = 0;
+    int nr_props = 0;
 
-    for (size_t i = 0; i < (size_t)PropId::END; ++i)
+    for (size_t i = 0u; i < (size_t)PropId::END; ++i)
     {
-        if (prop_hlr.has_prop(PropId(i)))
+        if (props.has_prop((PropId)i))
         {
-            CHECK(prop_hlr.prop(PropId(i)));
             ++nr_props;
         }
     }
 
-    CHECK_EQUAL(4, int(nr_props));
+    CHECK_EQUAL(3, nr_props);
 
-    CHECK(prop_hlr.prop(PropId::r_fire));
-    CHECK(prop_hlr.prop(PropId::r_elec));
-    CHECK(prop_hlr.prop(PropId::r_acid));
-    CHECK(prop_hlr.prop(PropId::r_breath));
+    CHECK(props.prop(PropId::r_fire));
+    CHECK(props.prop(PropId::r_elec));
+    CHECK(props.prop(PropId::r_acid));
 
-    CHECK(prop_hlr.has_prop(PropId::r_fire));
-    CHECK(prop_hlr.has_prop(PropId::r_elec));
-    CHECK(prop_hlr.has_prop(PropId::r_acid));
-    CHECK(prop_hlr.has_prop(PropId::r_breath));
+    CHECK(props.has_prop(PropId::r_fire));
+    CHECK(props.has_prop(PropId::r_elec));
+    CHECK(props.has_prop(PropId::r_acid));
 
     // Take off asbeshos suit
     inv.try_unequip_slot(SlotId::body);
@@ -868,8 +875,8 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
     // Check that the properties are cleared
     for (int i = 0; i < (int)PropId::END; ++i)
     {
-        CHECK(!prop_hlr.has_prop(PropId(i)));
-        CHECK(!prop_hlr.prop(PropId(i)));
+        CHECK(!props.has_prop((PropId)i));
+        CHECK(!props.prop((PropId)i));
     }
 
     // Wear the asbeshos suit again
@@ -883,24 +890,21 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
 
     for (int i = 0; i < (int)PropId::END; ++i)
     {
-        if (prop_hlr.has_prop(PropId(i)))
+        if (props.has_prop((PropId)i))
         {
-            CHECK(prop_hlr.prop(PropId(i)));
             ++nr_props;
         }
     }
 
-    CHECK_EQUAL(4, int(nr_props));
+    CHECK_EQUAL(3, nr_props);
 
-    CHECK(prop_hlr.prop(PropId::r_fire));
-    CHECK(prop_hlr.prop(PropId::r_elec));
-    CHECK(prop_hlr.prop(PropId::r_acid));
-    CHECK(prop_hlr.prop(PropId::r_breath));
+    CHECK(props.prop(PropId::r_fire));
+    CHECK(props.prop(PropId::r_elec));
+    CHECK(props.prop(PropId::r_acid));
 
-    CHECK(prop_hlr.has_prop(PropId::r_fire));
-    CHECK(prop_hlr.has_prop(PropId::r_elec));
-    CHECK(prop_hlr.has_prop(PropId::r_acid));
-    CHECK(prop_hlr.has_prop(PropId::r_breath));
+    CHECK(props.has_prop(PropId::r_fire));
+    CHECK(props.has_prop(PropId::r_elec));
+    CHECK(props.has_prop(PropId::r_acid));
 
     // Drop the asbeshos suit on the ground
     item_drop::try_drop_item_from_inv(*map::player,
@@ -918,12 +922,14 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
     // Check that the properties are cleared
     for (int i = 0; i < (int)PropId::END; ++i)
     {
-        CHECK(!prop_hlr.has_prop(PropId(i)));
-        CHECK(!prop_hlr.prop(PropId(i)));
+        CHECK(!props.has_prop((PropId)i));
+        CHECK(!props.prop((PropId)i));
     }
 
     // Wear the same dropped asbesthos suit again
-    inv.put_in_slot(SlotId::body, cell.item);
+    inv.put_in_slot(SlotId::body,
+                    cell.item,
+                    Verbosity::verbose);
 
     cell.item = nullptr;
 
@@ -932,24 +938,21 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
 
     for (int i = 0; i < (int)PropId::END; ++i)
     {
-        if (prop_hlr.has_prop(PropId(i)))
+        if (props.has_prop((PropId)i))
         {
-            CHECK(prop_hlr.prop(PropId(i)));
             ++nr_props;
         }
     }
 
-    CHECK_EQUAL(4, int(nr_props));
+    CHECK_EQUAL(3, nr_props);
 
-    CHECK(prop_hlr.prop(PropId::r_fire));
-    CHECK(prop_hlr.prop(PropId::r_elec));
-    CHECK(prop_hlr.prop(PropId::r_acid));
-    CHECK(prop_hlr.prop(PropId::r_breath));
+    CHECK(props.prop(PropId::r_fire));
+    CHECK(props.prop(PropId::r_elec));
+    CHECK(props.prop(PropId::r_acid));
 
-    CHECK(prop_hlr.has_prop(PropId::r_fire));
-    CHECK(prop_hlr.has_prop(PropId::r_elec));
-    CHECK(prop_hlr.has_prop(PropId::r_acid));
-    CHECK(prop_hlr.has_prop(PropId::r_breath));
+    CHECK(props.has_prop(PropId::r_fire));
+    CHECK(props.has_prop(PropId::r_elec));
+    CHECK(props.has_prop(PropId::r_acid));
 
     // Destroy the asbesthos suit
     for (int i = 0; i < 10; ++i)
@@ -959,7 +962,7 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
         explosion::run(map::player->pos, ExplType::expl);
 
         // Clear wound property
-        prop_hlr.end_prop(PropId::wound);
+        props.end_prop(PropId::wound);
     }
 
     // Check that the asbesthos suit is destroyed
@@ -968,8 +971,8 @@ TEST_FIXTURE(BasicFixture, inventory_handling)
     // Check that all properties from asbesthos suit are cleared
     for (int i = 0; i < (int)PropId::END; ++i)
     {
-        CHECK(!prop_hlr.has_prop(PropId(i)));
-        CHECK(!prop_hlr.prop(PropId(i)));
+        CHECK(!props.has_prop((PropId)i));
+        CHECK(!props.prop((PropId)i));
     }
 }
 
@@ -1009,11 +1012,16 @@ TEST_FIXTURE(BasicFixture, saving_game)
 
     // Put new items
     Item* item = item_factory::mk(ItemId::mi_go_gun);
-    inv.put_in_slot(SlotId::wpn, item);
+
+    inv.put_in_slot(SlotId::wpn,
+                    item,
+                    Verbosity::verbose);
 
     // Wear asbestos suit to test properties from wearing items
     item = item_factory::mk(ItemId::armor_asb_suit);
-    inv.put_in_slot(SlotId::body, item);
+    inv.put_in_slot(SlotId::body,
+                    item,
+                    Verbosity::verbose);
 
     item = item_factory::mk(ItemId::pistol_mag);
     static_cast<AmmoMag*>(item)->ammo_ = 1;
@@ -1064,20 +1072,20 @@ TEST_FIXTURE(BasicFixture, saving_game)
     player_spells::learn_spell(SpellId::aza_wrath, Verbosity::silent);
 
     // Applied properties
-    PropHandler& prop_hlr = map::player->prop_handler();
-    prop_hlr.try_add(new PropRSleep(PropTurns::specific, 3));
-    prop_hlr.try_add(new PropDiseased(PropTurns::indefinite));
-    prop_hlr.try_add(new PropBlessed(PropTurns::std));
+    PropHandler& props = map::player->prop_handler();
+    props.try_add(new PropRSleep(PropTurns::specific, 3));
+    props.try_add(new PropDiseased(PropTurns::indefinite));
+    props.try_add(new PropBlessed(PropTurns::std));
 
     // Check a a few of the props applied
-    Prop* prop = prop_hlr.prop(PropId::diseased);
+    Prop* prop = props.prop(PropId::diseased);
     CHECK(prop);
 
-    prop = prop_hlr.prop(PropId::blessed);
+    prop = props.prop(PropId::blessed);
     CHECK(prop);
 
     // Check a prop that was NOT applied
-    prop = prop_hlr.prop(PropId::confused);
+    prop = props.prop(PropId::confused);
     CHECK(!prop);
 
     // map sequence
@@ -1191,30 +1199,30 @@ TEST_FIXTURE(BasicFixture, loading_game)
     CHECK_EQUAL(false, player_spells::is_spell_learned(SpellId::mayhem));
 
     // Properties
-    PropHandler& prop_hlr = map::player->prop_handler();
-    Prop* prop = prop_hlr.prop(PropId::diseased);
+    PropHandler& props = map::player->prop_handler();
+    Prop* prop = props.prop(PropId::diseased);
     CHECK(prop);
-    CHECK(prop_hlr.has_prop(PropId::diseased));
+    CHECK(props.has_prop(PropId::diseased));
     CHECK_EQUAL(-1, prop->nr_turns_left());
 
     // Check currrent HP (should not be affected)
     CHECK_EQUAL(map::player->data().hp, map::player->hp());
 
-    prop = prop_hlr.prop(PropId::r_sleep);
+    prop = props.prop(PropId::r_sleep);
     CHECK(prop);
-    CHECK(prop_hlr.has_prop(PropId::r_sleep));
+    CHECK(props.has_prop(PropId::r_sleep));
     CHECK_EQUAL(3, prop->nr_turns_left());
 
-    prop = prop_hlr.prop(PropId::blessed);
+    prop = props.prop(PropId::blessed);
     CHECK(prop);
-    CHECK(prop_hlr.has_prop(PropId::blessed));
+    CHECK(props.has_prop(PropId::blessed));
     CHECK(prop->nr_turns_left() > 0);
 
     // Properties from worn item
-    prop = prop_hlr.prop(PropId::r_acid);
+    prop = props.prop(PropId::r_acid);
     CHECK(prop);
     CHECK(prop->nr_turns_left() == -1);
-    prop = prop_hlr.prop(PropId::r_fire);
+    prop = props.prop(PropId::r_fire);
     CHECK(prop);
     CHECK(prop->nr_turns_left() == -1);
 
@@ -1372,7 +1380,7 @@ TEST_FIXTURE(BasicFixture, map_parse_expand_one)
     in[10][5] = true;
 
     bool out[map_w][map_h];
-    map_parse::expand(in, out);
+    map_parsers::expand(in, out);
 
     CHECK(!out[8][5]);
     CHECK(out[9][5]);
@@ -1387,7 +1395,7 @@ TEST_FIXTURE(BasicFixture, map_parse_expand_one)
     CHECK(!out[12][4]);
 
     in[14][5] = true;
-    map_parse::expand(in, out);
+    map_parsers::expand(in, out);
 
     CHECK(out[10][5]);
     CHECK(out[11][5]);
@@ -1396,7 +1404,7 @@ TEST_FIXTURE(BasicFixture, map_parse_expand_one)
     CHECK(out[14][5]);
 
     in[12][5] = true;
-    map_parse::expand(in, out);
+    map_parsers::expand(in, out);
     CHECK(out[12][4]);
     CHECK(out[12][5]);
     CHECK(out[12][6]);
@@ -1404,7 +1412,7 @@ TEST_FIXTURE(BasicFixture, map_parse_expand_one)
     // Check that old values are cleared
     std::fill_n(*in, nr_map_cells, 0);
     in[40][10] = true;
-    map_parse::expand(in, out);
+    map_parsers::expand(in, out);
     CHECK(out[39][10]);
     CHECK(out[40][10]);
     CHECK(out[41][10]);
@@ -1682,7 +1690,8 @@ TEST_FIXTURE(BasicFixture, connect_rooms_with_corridor)
 
     bool blocked[map_w][map_h];
 
-    map_parse::run(cell_check::BlocksMoveCmn(ParseActors::no), blocked);
+    map_parsers::BlocksMoveCmn(ParseActors::no)
+        .run(blocked);
 
     floodfill(5,
                     blocked,
@@ -1703,7 +1712,7 @@ TEST_FIXTURE(BasicFixture, map_parse_cells_within_dist_of_others)
 
     in[20][10] = true;
 
-    map_parse::cells_within_dist_of_others(in, out, Range(0, 1));
+    map_parsers::cells_within_dist_of_others(in, out, Range(0, 1));
     CHECK_EQUAL(false, out[18][10]);
     CHECK_EQUAL(true,  out[19][10]);
     CHECK_EQUAL(false, out[20][ 8]);
@@ -1712,12 +1721,12 @@ TEST_FIXTURE(BasicFixture, map_parse_cells_within_dist_of_others)
     CHECK_EQUAL(true,  out[20][11]);
     CHECK_EQUAL(true,  out[21][11]);
 
-    map_parse::cells_within_dist_of_others(in, out, Range(1, 1));
+    map_parsers::cells_within_dist_of_others(in, out, Range(1, 1));
     CHECK_EQUAL(true,  out[19][10]);
     CHECK_EQUAL(false, out[20][10]);
     CHECK_EQUAL(true,  out[21][11]);
 
-    map_parse::cells_within_dist_of_others(in, out, Range(1, 5));
+    map_parsers::cells_within_dist_of_others(in, out, Range(1, 5));
     CHECK_EQUAL(true,  out[23][10]);
     CHECK_EQUAL(true,  out[24][10]);
     CHECK_EQUAL(true,  out[25][10]);
@@ -1732,7 +1741,7 @@ TEST_FIXTURE(BasicFixture, map_parse_cells_within_dist_of_others)
 
     in[23][10] = true;
 
-    map_parse::cells_within_dist_of_others(in, out, Range(1, 1));
+    map_parsers::cells_within_dist_of_others(in, out, Range(1, 1));
     CHECK_EQUAL(false, out[18][10]);
     CHECK_EQUAL(true,  out[19][10]);
     CHECK_EQUAL(false, out[20][10]);
@@ -1752,7 +1761,9 @@ namespace
 void check_connected()
 {
     bool blocked[map_w][map_h];
-    map_parse::run(cell_check::BlocksMoveCmn(ParseActors::no), blocked);
+
+    map_parsers::BlocksMoveCmn(ParseActors::no)
+        .run(blocked);
 
     P stair_p(-1, -1);
 
@@ -1803,7 +1814,7 @@ void check_connected()
     CHECK(path_front == stair_p);
 
     // Check that all of the map is connected
-    const bool IS_CONNECTED = map_parse::is_map_connected(blocked);
+    const bool IS_CONNECTED = map_parsers::is_map_connected(blocked);
 
     CHECK(IS_CONNECTED);
 }

@@ -50,7 +50,7 @@ void decorate()
                 {
                     // Convert walls with no adjacent floor or with adjacent
                     // cave floor to cave
-                    bool has_adj_floor      = false;
+                    bool has_adj_floor = false;
                     bool has_adj_cave_floor = false;
 
                     for (const P& d : dir_utils::dir_list)
@@ -76,19 +76,29 @@ void decorate()
                         //       if some other feature like that is added, it
                         //       could be a problem.
 
-                        if (adj_id == FeatureId::floor  ||
+                        if (adj_id == FeatureId::floor ||
                             adj_id == FeatureId::carpet ||
                             adj_id == FeatureId::trap)
                         {
                             has_adj_floor = true;
 
-                            auto* adj_rigid =
-                                static_cast<Floor*>(adj_cell.rigid);
+                            //
+                            // TODO: Currently, traps always prevents converting
+                            //       adjacent walls to cave wall - even if the
+                            //       trap mimics cave floor
+                            //
 
-                            if (adj_rigid->type_ == FloorType::cave)
+                            // Cave floor?
+                            if (adj_id == FeatureId::floor)
                             {
-                                has_adj_cave_floor = true;
-                                break;
+                                auto* adj_floor =
+                                    static_cast<Floor*>(adj_cell.rigid);
+
+                                if (adj_floor->type_ == FloorType::cave)
+                                {
+                                    has_adj_cave_floor = true;
+                                    break;
+                                }
                             }
                         }
                     }

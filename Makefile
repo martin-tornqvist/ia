@@ -25,7 +25,7 @@ RL_UTILS_SRC_DIR        = $(RL_UTILS_DIR)/src
 RL_UTILS_INC_DIR        = $(RL_UTILS_DIR)/include
 TEST_DIR                = test
 TEST_SRC_DIR            = $(TEST_DIR)/src
-TEST_FRAMEWORK_DIR      = $(TEST_DIR)/unittest++-1.6.1-x86_64
+TEST_FRAMEWORK_DIR      = $(TEST_DIR)/unittest++-2.0.0-x86_64
 TEST_FRAMEWORK_INC_DIR  = $(TEST_FRAMEWORK_DIR)/include
 TEST_FRAMEWORK_LIB      = UnitTest++
 
@@ -86,13 +86,8 @@ INCLUDES = \
   #
 
 # Compiler flags
-# NOTE:
-# - The debug trace system generates warnings for trace levels higher than the
-#   compiled level, so sadly Wunused-value cannot be used as it is.
-# - The Mersenne Twister implementation in mersenne_twister.hpp gives warnings
-#   about deprecated register functionality, so this warning needs to be
-#   suppressed as long as that implementation is used (should use the now
-#   standard C++ implementation instead though).
+# NOTE: The debug trace system generates warnings for trace levels higher than
+#       the compiled level, so sadly Wunused-value cannot be used as it is.
 CXXFLAGS += \
   -std=c++14 \
   -Wall \
@@ -100,7 +95,6 @@ CXXFLAGS += \
   -Werror \
   -Wno-unused-value \
   -fno-rtti \
-  -Wno-deprecated-register \
   #
 
 # Linker flags

@@ -52,9 +52,14 @@ Item& Item::operator=(const Item& other)
 
 Item::~Item()
 {
-    if (actor_carrying_)
+    for (auto* prop : carrier_props_)
     {
-        on_removed_from_inv();
+        delete prop;
+    }
+
+    for (auto* spell : carrier_spells_)
+    {
+        delete spell;
     }
 }
 
@@ -546,9 +551,12 @@ int Armor::take_dur_hit_and_get_reduced_dmg(const int dmg_before)
     const double armor_ddf = data_->armor.dmg_to_durability_factor;
 
     // Armor lasts twice as long for War Vets
-    const double war_vet_ddf = (player_bon::bg() == Bg::war_vet) ? 0.5 : 1.0;
+    const double war_vet_ddf =
+        (player_bon::bg() == Bg::war_vet) ?
+        0.5 :
+        1.0;
 
-    dur_ -= int(dmg_before_db * k * armor_ddf * war_vet_ddf);
+    dur_ -= (int)(dmg_before_db * k * armor_ddf * war_vet_ddf);
 
     dur_ = std::max(0, dur_);
 
@@ -557,6 +565,7 @@ int Armor::take_dur_hit_and_get_reduced_dmg(const int dmg_before)
     if (ap_after < ap_before && ap_after != 0)
     {
         const std::string armor_name = name(ItemRefType::plain);
+
         msg_log::add("My " + armor_name + " is damaged!", clr_msg_note);
     }
 
