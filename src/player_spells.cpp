@@ -96,7 +96,7 @@ void try_cast(const SpellOpt& spell_opt)
         if (spi_cost_range.max >= map::player->spi())
         {
             msg_log::add("Cast spell and risk depleting your spirit [y/n]?",
-                         clr_white_high);
+                         clr_white_lgt);
 
             if (query::yes_or_no() == YesNoAnswer::no)
             {
@@ -442,7 +442,7 @@ void BrowseSpell::draw()
             {
                 for (const auto& line : descr)
                 {
-                    lines.push_back(StrAndClr(line, clr_white_high));
+                    lines.push_back(StrAndClr(line, clr_white_lgt));
                 }
             }
 

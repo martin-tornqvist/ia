@@ -107,7 +107,7 @@ void init_data_list()
     d.spi = player_start_spi;
     d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = '@';
-    d.color = clr_white_high;
+    d.color = clr_white_lgt;
     d.tile = TileId::player_firearm;
     d.is_auto_spawn_allowed = false;
     d.actor_size = ActorSize::humanoid;
@@ -237,7 +237,7 @@ void init_data_list()
     d.speed_pct = (int)ActorSpeed::slow;
     d.ranged_cooldown_turns = 20;
     d.glyph = 'Z';
-    d.color = clr_white_high;
+    d.color = clr_white_lgt;
     d.tile = TileId::zombie_bloated;
     d.hp = 24;
     d.dmg_melee = min_dmg_to_wound + 2;
@@ -511,7 +511,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'z';
-    d.color = clr_white_high;
+    d.color = clr_white_lgt;
     d.tile = TileId::floating_skull;
     d.hp = 6;
     d.spi = 16;
@@ -959,7 +959,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'A';
-    d.color = clr_white_high;
+    d.color = clr_white_lgt;
     d.tile = TileId::giant_spider;
     d.hp = 16;
     d.dmg_melee = min_dmg_to_wound;
@@ -1373,7 +1373,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::slow;
     d.glyph = 'G';
-    d.color = clr_white_high;
+    d.color = clr_white_lgt;
     d.tile = TileId::ghost;
     d.hp = 4;
     d.spi = 12;
@@ -1505,7 +1505,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = 'Y';
-    d.color = clr_white_high;
+    d.color = clr_white_lgt;
     d.tile = TileId::void_traveler;
     d.hp = 50;
     d.spi = 30;
@@ -1832,7 +1832,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fastest;
     d.glyph = 'B';
-    d.color = clr_white_high;
+    d.color = clr_white_lgt;
     d.tile = TileId::bat;
     d.hp = 120;
     d.spi = 36;
@@ -2241,7 +2241,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'E';
-    d.color = clr_orange;
+    d.color = clr_yellow_drk;
     d.tile = TileId::mind_eater;
     d.hp = 30;
     d.spi = 40;
@@ -2959,7 +2959,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::sluggish;
     d.glyph = 'o';
-    d.color = clr_white_high;
+    d.color = clr_white_lgt;
     d.tile = TileId::ooze;
     d.hp = 12;
     d.spi = 12;

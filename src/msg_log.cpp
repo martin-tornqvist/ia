@@ -159,12 +159,13 @@ void add(const std::string& str,
 
         const int padding_len =
             repeat_str_len +
-            (current_line_nr == 0 ? 0 : (more_str.size() + 1));
+            ((current_line_nr == 0) ? 0 :
+             (more_str.size() + 1));
 
         int x_pos = x_after_msg(prev_msg);
 
         const bool is_msg_fit =
-            x_pos + (int)str.size() + padding_len - 1 < map_w;
+            (x_pos + (int)str.size() + padding_len - 1) < map_w;
 
         if (!is_msg_fit)
         {

@@ -49,7 +49,7 @@ void player_disarm()
         return;
     }
 
-    msg_log::add("Which direction?" + cancel_info_str, clr_white_high);
+    msg_log::add("Which direction?" + cancel_info_str, clr_white_lgt);
 
 
     const Dir input_dir = query::dir(AllowCenter::no);

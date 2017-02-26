@@ -67,7 +67,7 @@ public:
 
     virtual Clr interface_clr() const
     {
-        return clr_orange;
+        return clr_yellow_drk;
     }
 
     virtual void on_std_turn_in_inv(const InvType inv_type)

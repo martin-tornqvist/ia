@@ -2069,7 +2069,7 @@ void init_data_list()
         "The talisman is destroyed in the process however, so one may only be "
         "brought back once."
     };
-    d.clr = clr_white_high;
+    d.clr = clr_white_lgt;
     d.weight = ItemWeight::light;
     d.tile = TileId::amulet;
     d.glyph = '"';
@@ -2229,7 +2229,7 @@ void init_data_list()
         "+4 Hit Points, heals 1 Hit Point every 4th turn, grants resistance "
         "against poison and disease."
     };
-    d.clr = clr_white_high;
+    d.clr = clr_white_lgt;
     d.weight = ItemWeight::light;
     d.tile = TileId::orb;
     d.glyph = '"';

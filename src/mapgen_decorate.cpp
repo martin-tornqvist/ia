@@ -97,7 +97,8 @@ void decorate()
                                 if (adj_floor->type_ == FloorType::cave)
                                 {
                                     has_adj_cave_floor = true;
-                                    break;
+
+                                    // break;
                                 }
                             }
                         }
@@ -106,7 +107,8 @@ void decorate()
                     should_convert_to_cave_wall =
                         !has_adj_floor ||
                         has_adj_cave_floor;
-                }
+
+                } // else
 
                 if (should_convert_to_cave_wall)
                 {
@@ -116,9 +118,12 @@ void decorate()
                 {
                     wall->set_rnd_cmn_wall();
                 }
-            }
-        }
-    }
+
+            } // if wall
+
+        } // y loop
+
+    } // x loop
 
     for (int x = 1; x < map_w - 1; ++x)
     {
@@ -166,7 +171,7 @@ void decorate()
                 //
                 // Convert some walls to gratings
                 //
-                if (rnd::one_in(6))
+                if (rnd::one_in(4))
                 {
                     bool is_allowed = true;
 

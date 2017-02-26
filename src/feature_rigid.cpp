@@ -187,10 +187,13 @@ void Rigid::try_start_burning(const bool is_msg_allowed)
 
     if (burn_state_ == BurnState::not_burned)
     {
-        if (map::is_pos_seen_by_player(pos_) && is_msg_allowed)
+        if (map::is_pos_seen_by_player(pos_) &&
+            is_msg_allowed)
         {
             std::string str = name(Article::the) + " catches fire.";
+
             str[0] = toupper(str[0]);
+
             msg_log::add(str);
         }
 
@@ -376,7 +379,7 @@ Clr Rigid::clr() const
     {
         return clr_orange;
     }
-    else
+    else // Not burning
     {
         if (nr_turns_color_corrupted_ > 0)
         {
@@ -394,8 +397,10 @@ Clr Rigid::clr() const
         }
         else
         {
-            return burn_state_ == BurnState::not_burned ?
-                clr_default() : clr_gray_drk;
+            return
+                (burn_state_ == BurnState::not_burned) ?
+                clr_default() :
+                clr_gray_drk;
         }
     }
 }
@@ -609,18 +614,18 @@ void Wall::on_hit(const DmgType dmg_type,
 bool Wall::is_tile_any_wall_front(const TileId tile)
 {
     return
-        tile == TileId::wall_front         ||
-        tile == TileId::wall_front_alt1    ||
-        tile == TileId::wall_front_alt2    ||
-        tile == TileId::cave_wall_front    ||
+        tile == TileId::wall_front ||
+        tile == TileId::wall_front_alt1 ||
+        tile == TileId::wall_front_alt2 ||
+        tile == TileId::cave_wall_front ||
         tile == TileId::egypt_wall_front;
 }
 
 bool Wall::is_tile_any_wall_top(const TileId tile)
 {
     return
-        tile == TileId::wall_top       ||
-        tile == TileId::cave_wall_top  ||
+        tile == TileId::wall_top ||
+        tile == TileId::cave_wall_top ||
         tile == TileId::egypt_wall_top ||
         tile == TileId::rubble_high;
 }
@@ -760,9 +765,13 @@ void Wall::set_rnd_cmn_wall()
 
     switch (rnd)
     {
-    case 1:   type_ = WallType::cmn_alt; break;
+    case 1:
+        type_ = WallType::cmn_alt;
+        break;
 
-    default:  type_ = WallType::cmn;    break;
+    default:
+        type_ = WallType::cmn;
+        break;
     }
 }
 
@@ -1301,18 +1310,6 @@ std::string LiquidShallow::name(const Article article) const
         ret += "water";
         break;
 
-    case LiquidType::acid:
-        ret += "acid";
-        break;
-
-    case LiquidType::blood:
-        ret += "blood";
-        break;
-
-    case LiquidType::lava:
-        ret += "lava";
-        break;
-
     case LiquidType::mud:
         ret += "mud";
         break;
@@ -1329,18 +1326,6 @@ Clr LiquidShallow::clr_default() const
         return clr_blue_lgt;
         break;
 
-    case LiquidType::acid:
-        return clr_green_lgt;
-        break;
-
-    case LiquidType::blood:
-        return clr_red_lgt;
-        break;
-
-    case LiquidType::lava:
-        return clr_orange;
-        break;
-
     case LiquidType::mud:
         return clr_brown;
         break;
@@ -1350,6 +1335,22 @@ Clr LiquidShallow::clr_default() const
     return clr_yellow;
 }
 
+Clr LiquidShallow::clr_bg_default() const
+{
+    const auto* const item = map::cells[pos_.x][pos_.y].item;
+
+    const auto* const corpse = map::actor_at_pos(pos_, ActorState::corpse);
+
+    if (item || corpse)
+    {
+        return clr();
+    }
+    else // Nothing is "over" the liquid
+    {
+        return clr_black;
+    }
+}
+
 // -----------------------------------------------------------------------------
 // Deep liquid
 // -----------------------------------------------------------------------------
@@ -1357,7 +1358,8 @@ LiquidDeep::LiquidDeep(const P& p) :
     Rigid(p),
     type_(LiquidType::water) {}
 
-void LiquidDeep::on_hit(const DmgType dmg_type, const DmgMethod dmg_method,
+void LiquidDeep::on_hit(const DmgType dmg_type,
+                        const DmgMethod dmg_method,
                         Actor* const actor)
 {
     (void)dmg_type;
@@ -1384,18 +1386,6 @@ std::string LiquidDeep::name(const Article article) const
         ret += "water";
         break;
 
-    case LiquidType::acid:
-        ret += "acid";
-        break;
-
-    case LiquidType::blood:
-        ret += "blood";
-        break;
-
-    case LiquidType::lava:
-        ret += "lava";
-        break;
-
     case LiquidType::mud:
         ret += "mud";
         break;
@@ -1410,18 +1400,6 @@ Clr LiquidDeep::clr_default() const
     {
     case LiquidType::water:
         return clr_blue;
-        break;
-
-    case LiquidType::acid:
-        return clr_green;
-        break;
-
-    case LiquidType::blood:
-        return clr_red;
-        break;
-
-    case LiquidType::lava:
-        return clr_orange;
         break;
 
     case LiquidType::mud:
@@ -1801,6 +1779,22 @@ std::string Chains::name(const Article article) const
 Clr Chains::clr_default() const
 {
     return clr_gray;
+}
+
+Clr Chains::clr_bg_default() const
+{
+    const auto* const item = map::cells[pos_.x][pos_.y].item;
+
+    const auto* const corpse = map::actor_at_pos(pos_, ActorState::corpse);
+
+    if (item || corpse)
+    {
+        return clr();
+    }
+    else // Nothing is "over" the chains
+    {
+        return clr_black;
+    }
 }
 
 void Chains::bump(Actor& actor_bumping)

@@ -78,11 +78,6 @@ public:
 
     void on_new_turn_hook() override;
 
-    bool can_have_corpse() const override
-    {
-        return is_hidden_;
-    }
-
     bool can_have_blood() const override
     {
         return is_hidden_;
@@ -515,7 +510,7 @@ private:
 
     Clr clr() const override
     {
-        return clr_white_high;
+        return clr_white_lgt;
     }
 
     std::string title() const override

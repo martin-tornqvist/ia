@@ -272,10 +272,11 @@ void MainMenuState::draw()
     }
 
 #ifndef NDEBUG
-    io::draw_text("## DEBUG MODE ##",
+    io::draw_text("DEBUG MODE",
                   Panel::screen,
                   P(1, 1),
-                  clr_yellow);
+                  clr_black,
+                  clr_yellow_drk);
 #endif // NDEBUG
 
     std::vector<std::string> labels =

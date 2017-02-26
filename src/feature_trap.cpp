@@ -226,15 +226,15 @@ void Trap::trigger_start(const Actor* actor)
         {
             std::string msg = "I hear a click.";
 
-            auto more_prompt_on_msg = MorePromptOnMsg::no;
+            auto alerts = AlertsMon::no;
 
             if (actor == map::player)
             {
+                alerts = AlertsMon::yes;
+
                 // If player is triggering, make the message a bit more
                 // "foreboding"
                 msg += "..";
-
-                more_prompt_on_msg = MorePromptOnMsg::yes;
             }
 
             // TODO: Make a sound effect for this
@@ -244,8 +244,7 @@ void Trap::trigger_start(const Actor* actor)
                     pos_,
                     nullptr,
                     SndVol::low,
-                    AlertsMon::yes,
-                    more_prompt_on_msg);
+                    alerts);
 
             snd_emit::run(snd);
         }
@@ -518,15 +517,6 @@ void Trap::reveal(const Verbosity verbosity)
 
     is_hidden_ = false;
 
-    // Destroy any corpse on the trap
-    for (Actor* actor : game_time::actors)
-    {
-        if (actor->pos == pos_ && actor->is_corpse())
-        {
-            actor->state_ = ActorState::destroyed;
-        }
-    }
-
     clear_gore();
 
     if (map::cells[pos_.x][pos_.y].is_seen_by_player)
@@ -563,37 +553,50 @@ std::string Trap::name(const Article article) const
     }
     else // Not hidden
     {
-        return (article == Article::a ? "a " : "the ") + trap_impl_->title();
+        return
+            (article == Article::a ? "a " : "the ") +
+            trap_impl_->title();
     }
 }
 
 Clr Trap::clr_default() const
 {
-    return is_hidden_ ? mimic_feature_->clr() : trap_impl_->clr();
+    return
+        is_hidden_ ?
+        mimic_feature_->clr() :
+        trap_impl_->clr();
 }
 
 Clr Trap::clr_bg_default() const
 {
     const auto* const item = map::cells[pos_.x][pos_.y].item;
 
-    if (is_hidden_ || !item)
-    {
-        return clr_black;
-    }
-    else
+    const auto* const corpse = map::actor_at_pos(pos_, ActorState::corpse);
+
+    if (!is_hidden_ && (item || corpse))
     {
         return trap_impl_->clr();
+    }
+    else // Is hidden, or nothing is over the trap
+    {
+        return clr_black;
     }
 }
 
 char Trap::glyph() const
 {
-    return is_hidden_ ? mimic_feature_->glyph() : trap_impl_->glyph();
+    return
+        is_hidden_ ?
+        mimic_feature_->glyph() :
+        trap_impl_->glyph();
 }
 
 TileId Trap::tile() const
 {
-    return is_hidden_ ? mimic_feature_->tile() : trap_impl_->tile();
+    return
+        is_hidden_ ?
+        mimic_feature_->tile() :
+        trap_impl_->tile();
 }
 
 Dir Trap::actor_try_leave(Actor& actor, const Dir dir)
@@ -603,7 +606,10 @@ Dir Trap::actor_try_leave(Actor& actor, const Dir dir)
 
 Matl Trap::matl() const
 {
-    return is_hidden_ ? mimic_feature_->matl() : data().matl_type;
+    return
+        is_hidden_ ?
+        mimic_feature_->matl() :
+        data().matl_type;
 }
 
 // -----------------------------------------------------------------------------

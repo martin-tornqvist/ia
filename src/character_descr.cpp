@@ -28,7 +28,7 @@ void CharacterDescr::on_start()
 
     const int max_w_descr = (map_w * 3) / 4;
 
-    const Clr& clr_heading = clr_white_high;
+    const Clr& clr_heading = clr_white_lgt;
 
     const Clr& clr_text = clr_white;
 

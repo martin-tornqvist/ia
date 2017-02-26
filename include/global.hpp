@@ -231,9 +231,6 @@ enum class LiquidType
 {
     water,
     mud,
-    blood,
-    acid,
-    lava
 };
 
 enum class Condition

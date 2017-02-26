@@ -9,19 +9,20 @@ typedef SDL_Color Clr;
 // Standard colors
 //-----------------------------------------------------------------------------
 const Clr clr_black             = {  0,   0,   0, 0};
-const Clr clr_gray              = {128, 128, 128, 0};
-const Clr clr_gray_drk          = { 48,  48,  48, 0};
 const Clr clr_gray_xdrk         = { 30,  30,  30, 0};
+const Clr clr_gray_drk          = { 48,  48,  48, 0};
+const Clr clr_gray              = {128, 128, 128, 0};
 const Clr clr_white             = {192, 192, 192, 0};
-const Clr clr_white_high        = {255, 255, 255, 0};
+const Clr clr_white_lgt         = {255, 255, 255, 0};
 
 const Clr clr_red               = {128,   0,   0, 0};
 const Clr clr_red_lgt           = {255,   0,   0, 0};
 
+const Clr clr_green_drk         = {  0, 64,    0, 0};
 const Clr clr_green             = {  0, 128,   0, 0};
 const Clr clr_green_lgt         = {  0, 255,   0, 0};
-const Clr clr_green_drk         = {  0, 64,    0, 0};
 
+const Clr clr_yellow_drk        = {205, 205,   0, 0};
 const Clr clr_yellow            = {255, 255,   0, 0};
 
 const Clr clr_blue              = {  0,   0, 168, 0};
@@ -68,7 +69,7 @@ const Clr clr_title             = clr_brown_gray;
 
 const Clr clr_msg_good          = clr_green_lgt;
 const Clr clr_msg_bad           = clr_red_lgt;
-const Clr clr_msg_note          = clr_orange;
+const Clr clr_msg_note          = clr_yellow_drk;
 
 //-----------------------------------------------------------------------------
 // Misc colors

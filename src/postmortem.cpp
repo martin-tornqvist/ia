@@ -41,7 +41,7 @@ void PostmortemMenu::on_start()
 {
     info_lines_.clear();
 
-    const Clr clr_heading = clr_white_high;
+    const Clr clr_heading = clr_white_lgt;
     const Clr clr_info = clr_white;
 
     const std::string offset = "   ";
@@ -365,7 +365,7 @@ void PostmortemMenu::mk_memorial_file() const
     io::draw_text("Wrote: " + file_path + any_key_info_str,
                   Panel::screen,
                   P(1, 1),
-                  clr_white_high);
+                  clr_white_lgt);
 
     io::update_screen();
 

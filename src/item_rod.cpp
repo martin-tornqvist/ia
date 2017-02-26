@@ -330,21 +330,21 @@ void init()
     // Init possible rod colors and fake names
     rod_looks_.clear();
     rod_looks_.push_back({"Iron", "an Iron", clr_gray});
-    rod_looks_.push_back({"Zinc", "a Zinc", clr_white_high});
-    rod_looks_.push_back({"Chromium", "a Chromium", clr_white_high});
-    rod_looks_.push_back({"Tin", "a Tin", clr_white_high});
-    rod_looks_.push_back({"Silver", "a Silver", clr_white_high});
+    rod_looks_.push_back({"Zinc", "a Zinc", clr_white_lgt});
+    rod_looks_.push_back({"Chromium", "a Chromium", clr_white_lgt});
+    rod_looks_.push_back({"Tin", "a Tin", clr_white_lgt});
+    rod_looks_.push_back({"Silver", "a Silver", clr_white_lgt});
     rod_looks_.push_back({"Golden", "a Golden", clr_yellow});
-    rod_looks_.push_back({"Nickel", "a Nickel", clr_white_high});
+    rod_looks_.push_back({"Nickel", "a Nickel", clr_white_lgt});
     rod_looks_.push_back({"Copper", "a Copper", clr_brown});
     rod_looks_.push_back({"Lead", "a Lead", clr_gray});
     rod_looks_.push_back({"Tungsten", "a Tungsten", clr_white});
-    rod_looks_.push_back({"Platinum", "a Platinum", clr_white_high});
+    rod_looks_.push_back({"Platinum", "a Platinum", clr_white_lgt});
     rod_looks_.push_back({"Lithium", "a Lithium", clr_white});
     rod_looks_.push_back({"Zirconium", "a Zirconium", clr_white});
-    rod_looks_.push_back({"Gallium", "a Gallium", clr_white_high});
+    rod_looks_.push_back({"Gallium", "a Gallium", clr_white_lgt});
     rod_looks_.push_back({"Cobalt", "a Cobalt", clr_blue_lgt});
-    rod_looks_.push_back({"Titanium", "a Titanium", clr_white_high});
+    rod_looks_.push_back({"Titanium", "a Titanium", clr_white_lgt});
     rod_looks_.push_back({"Magnesium", "a Magnesium", clr_white});
 
     for (auto& d : item_data::data)

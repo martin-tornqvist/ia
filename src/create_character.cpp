@@ -409,7 +409,7 @@ void PickTraitState::draw()
         io::draw_text("(More - Page Up)",
                       Panel::screen,
                       P(opt_x0_, top_more_y_),
-                      clr_white_high);
+                      clr_white_lgt);
     }
 
     if (!browser->is_on_btm_page())
@@ -417,7 +417,7 @@ void PickTraitState::draw()
         io::draw_text("(More - Page Down)",
                       Panel::screen,
                       P(opt_x0_, btm_more_y_),
-                      clr_white_high);
+                      clr_white_lgt);
     }
 
     //

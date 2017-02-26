@@ -1664,7 +1664,7 @@ DidAction VoidTraveler::on_act()
         return DidAction::no;
     }
 
-    const int teleport_one_in_n = 6;
+    const int teleport_one_in_n = 12;
 
     if (rnd::one_in(teleport_one_in_n))
     {

@@ -70,7 +70,7 @@ bool run_drop_query(const InvType inv_type, const size_t idx)
         io::draw_text(drop_str,
                       Panel::screen,
                       P(0, 0),
-                      clr_white_high);
+                      clr_white_lgt);
 
         io::update_screen();
 
@@ -82,10 +82,10 @@ bool run_drop_query(const InvType inv_type, const size_t idx)
         io::draw_text("[enter] to drop" + cancel_info_str,
                       Panel::screen,
                       done_inf_pos,
-                      clr_white_high);
+                      clr_white_lgt);
 
         const int nr_to_drop = query::number(nr_query_pos,
-                                             clr_white_high,
+                                             clr_white_lgt,
                                              0, 3,
                                              item->nr_items_,
                                              false);
@@ -150,7 +150,7 @@ void InvState::draw_slot(const SlotId id,
     //
     const Clr clr =
         is_marked ?
-        clr_white_high : clr_menu_drk;
+        clr_white_lgt : clr_menu_drk;
 
     P p(0, y);
 
@@ -228,7 +228,7 @@ void InvState::draw_slot(const SlotId id,
 
         const Clr clr_item =
             is_marked ?
-            clr_white_high :
+            clr_white_lgt :
             item->interface_clr();
 
         io::draw_text(item_name,
@@ -269,7 +269,7 @@ void InvState::draw_backpack_item(const size_t backpack_idx,
     //
     const Clr clr =
         is_marked ?
-        clr_white_high : clr_menu_drk;
+        clr_white_lgt : clr_menu_drk;
 
     std::string key_str = "?) ";
 
@@ -303,7 +303,7 @@ void InvState::draw_backpack_item(const size_t backpack_idx,
 
     const Clr clr_item =
         is_marked ?
-        clr_white_high :
+        clr_white_lgt :
         item->interface_clr();
 
     io::draw_text(item_name,
@@ -427,7 +427,7 @@ void InvState::draw_detailed_item_descr(const Item* const item) const
         {
             for (const std::string& paragraph : base_descr)
             {
-                lines.push_back(StrAndClr(paragraph, clr_white_high));
+                lines.push_back(StrAndClr(paragraph, clr_white_lgt));
             }
         }
 
@@ -635,7 +635,7 @@ void BrowseInv::draw()
         io::draw_text("(More - Page Up)",
                       Panel::screen,
                       P(0, top_more_y_),
-                      clr_white_high);
+                      clr_white_lgt);
     }
 
     if (!browser_.is_on_btm_page())
@@ -643,7 +643,7 @@ void BrowseInv::draw()
         io::draw_text("(More - Page Down)",
                       Panel::screen,
                       P(0, btm_more_y_),
-                      clr_white_high);
+                      clr_white_lgt);
     }
 }
 
@@ -878,7 +878,7 @@ void Apply::draw()
         io::draw_text("(More - Page Up)",
                       panel,
                       P(0, top_more_y_),
-                      clr_white_high);
+                      clr_white_lgt);
     }
 
     if (!browser_.is_on_btm_page())
@@ -886,7 +886,7 @@ void Apply::draw()
         io::draw_text("(More - Page Down)",
                       panel,
                       P(0, btm_more_y_),
-                      clr_white_high);
+                      clr_white_lgt);
     }
 }
 
@@ -1073,7 +1073,7 @@ void Equip::draw()
         io::draw_text(heading + any_key_info_str,
                       panel,
                       P(0, 0),
-                      clr_white_high);
+                      clr_white_lgt);
 
         return;
     }
@@ -1141,7 +1141,7 @@ void Equip::draw()
         io::draw_text("(More - Page Up)",
                       panel,
                       P(0, top_more_y_),
-                      clr_white_high);
+                      clr_white_lgt);
     }
 
     if (!browser_.is_on_btm_page())
@@ -1149,7 +1149,7 @@ void Equip::draw()
         io::draw_text("(More - Page Down)",
                       panel,
                       P(0, btm_more_y_),
-                      clr_white_high);
+                      clr_white_lgt);
     }
 }
 
@@ -1340,7 +1340,7 @@ void SelectIdentify::draw()
         io::draw_text("(More - Page Up)",
                       Panel::screen,
                       P(0, top_more_y_),
-                      clr_white_high);
+                      clr_white_lgt);
     }
 
     if (!browser_.is_on_btm_page())
@@ -1348,7 +1348,7 @@ void SelectIdentify::draw()
         io::draw_text("(More - Page Down)",
                       Panel::screen,
                       P(0, btm_more_y_),
-                      clr_white_high);
+                      clr_white_lgt);
     }
 }
 

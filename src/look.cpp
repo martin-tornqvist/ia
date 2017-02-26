@@ -61,7 +61,7 @@ void ViewActorDescr::on_start()
     {
         put_text(s,
                  p,
-                 clr_white_high);
+                 clr_white_lgt);
         ++p.y;
     }
 
@@ -91,7 +91,7 @@ void ViewActorDescr::on_start()
             const Clr& clr =
                 (str[0] == ' ') ?
                 clr_gray :
-                clr_white_high;
+                clr_white_lgt;
 
             put_text(str,
                      p_section,
@@ -317,7 +317,7 @@ void ViewActorDescr::on_start()
         {
             str = std::to_string(val) + "%";
 
-            clr = clr_white_high;
+            clr = clr_white_lgt;
         }
         else // Not sum
         {
@@ -359,7 +359,7 @@ void ViewActorDescr::on_start()
     {
         const bool is_sum = i == (labels.size() - 1);
 
-        const Clr label_clr = clr_white_high;
+        const Clr label_clr = clr_white_lgt;
 
         const std::string& label = labels[i];
 
@@ -441,7 +441,7 @@ void ViewActorDescr::on_start()
 
     put_text("Current properties",
              p,
-             clr_white_high);
+             clr_white_lgt);
 
     const auto prop_list = actor_.prop_handler().props_list();
 

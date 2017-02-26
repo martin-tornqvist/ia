@@ -76,6 +76,7 @@ void reset_data(FeatureDataT& d)
 void add_to_list_and_reset(FeatureDataT& d)
 {
     data_list[(size_t)d.id] = d;
+
     reset_data(d);
 }
 

@@ -626,7 +626,7 @@ void handle_player_input(const InputData& input)
             else
             {
                 msg_log::add("Which direction?" + cancel_info_str,
-                             clr_white_high);
+                             clr_white_lgt);
 
                 const Dir input_dir = query::dir(AllowCenter::no);
 
@@ -921,7 +921,7 @@ void handle_player_input(const InputData& input)
         io::draw_text(query_str, Panel::screen, P(0, 0), clr_yellow);
 
         const int idx = query::number(P(query_str.size(), 0),
-                                      clr_white_high,
+                                      clr_white_lgt,
                                       0,
                                       int(ActorId::END),
                                       0,

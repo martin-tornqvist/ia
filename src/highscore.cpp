@@ -242,7 +242,7 @@ void BrowseHighscore::draw()
 
     int y_pos = 1;
 
-    const Clr& label_clr = clr_white_high;
+    const Clr& label_clr = clr_white_lgt;
 
     const Panel panel = Panel::screen;
 

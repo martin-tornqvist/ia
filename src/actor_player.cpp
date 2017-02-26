@@ -1661,7 +1661,7 @@ void Player::move(Dir dir)
                             msg_log::add("Attack " + mon_name +
                                          " with " + wpn_name +
                                          "? [y/n]",
-                                         clr_white_high);
+                                         clr_white_lgt);
 
                             if (query::yes_or_no() == YesNoAnswer::no)
                             {

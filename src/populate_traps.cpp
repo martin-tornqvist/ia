@@ -19,7 +19,9 @@ namespace
 Trap* mk_trap(const TrapId id, const P& pos)
 {
     const auto* const f = map::cells[pos.x][pos.y].rigid;
+
     const auto& d = feature_data::data(f->id());
+
     auto* const mimic = static_cast<Rigid*>(d.mk_obj(pos));
 
     if (!f->can_have_rigid())
@@ -204,15 +206,15 @@ void populate_std_lvl()
                 }
             }
         }
-    }
+    } // room loop
 
-    const int chance_allow_trapped_plain_areas =
+    const int chance_trap_plain_areas =
         std::min(85,
                  10 + ((map::dlvl - 1) * 8));
 
-    if (rnd::percent(chance_allow_trapped_plain_areas))
+    if (rnd::percent(chance_trap_plain_areas))
     {
-        TRACE_VERBOSE << "Trapping plain room" << std::endl;
+        TRACE_VERBOSE << "Trapping plain rooms" << std::endl;
 
         std::vector<P> trap_pos_bucket;
 
