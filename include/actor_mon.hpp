@@ -112,6 +112,7 @@ public:
     int aware_of_player_counter_;
     int player_aware_of_me_counter_;
     bool is_msg_mon_in_view_printed_;
+    bool is_player_feeling_msg_allowed_;
     Dir last_dir_moved_;
     std::vector<Spell*> spells_known_;
     int spell_cooldown_current_;

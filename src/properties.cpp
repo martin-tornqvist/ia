@@ -371,7 +371,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = PropId::terrified;
-    d.std_rnd_turns = Range(12, 16);
+    d.std_rnd_turns = Range(20, 30);
     d.name = "Terrified";
     d.name_short = "Terrified";
     d.descr =

@@ -28,6 +28,24 @@ enum class DidOpen
     yes
 };
 
+class Item;
+
+class ItemContainer
+{
+public:
+    ItemContainer();
+
+    ~ItemContainer();
+
+    void init(const FeatureId feature_id, const int nr_items_to_attempt);
+
+    void open(const P& feature_pos, Actor* const actor_opening);
+
+    void destroy_single_fragile();
+
+    std::vector<Item*> items_;
+};
+
 class Rigid: public Feature
 {
 public:
@@ -90,6 +108,8 @@ public:
 
     void corrupt_color();
 
+    ItemContainer item_container_;
+
 protected:
     virtual void on_new_turn_hook() {}
 
@@ -124,11 +144,16 @@ private:
     bool is_bloody_;
     BurnState burn_state_;
 
-    // Corrupted by Color out of space
+    // Corrupted by a Strange Color monster
     int nr_turns_color_corrupted_;
 };
 
-enum class FloorType {cmn, cave, stone_path};
+enum class FloorType
+{
+    cmn,
+    cave,
+    stone_path
+};
 
 class Floor: public Rigid
 {
@@ -145,6 +170,7 @@ public:
     }
 
     TileId tile() const override;
+
     std::string name(const Article article) const override;
 
     FloorType type_;
@@ -805,24 +831,6 @@ private:
                 Actor* const actor) override;
 };
 
-class Item;
-
-class ItemContainer
-{
-public:
-    ItemContainer();
-
-    ~ItemContainer();
-
-    void init(const FeatureId feature_id, const int nr_items_to_attempt);
-
-    void open(const P& feature_pos, Actor* const actor_opening);
-
-    void destroy_single_fragile();
-
-    std::vector<Item*> items_;
-};
-
 // NOTE: In some previous versions, it was possible to inspect the tomb and get
 //       a hint about its trait ("It has an aura of unrest", "There are
 //       foreboding carved signs", etc). This is currently not possible - you
@@ -880,15 +888,18 @@ private:
 
     bool is_open_, is_trait_known_;
 
-    ItemContainer item_container_;
-
     int push_lid_one_in_n_;
     TombAppearance appearance_;
     bool is_random_appearance_;
     TombTrait trait_;
 };
 
-enum class ChestMatl {wood, iron, END};
+enum class ChestMatl
+{
+    wood,
+    iron,
+    END
+};
 
 class Chest: public Rigid
 {
@@ -925,8 +936,6 @@ private:
 
     void try_sprain_player();
 
-    ItemContainer item_container_;
-
     bool is_open_, is_locked_;
 
     ChestMatl matl_;
@@ -945,8 +954,11 @@ public:
     }
 
     std::string name(const Article article) const override;
+
     TileId tile() const override;
+
     void bump(Actor& actor_bumping) override;
+
     DidOpen open(Actor* const actor_opening) override;
 
 private:
@@ -958,7 +970,6 @@ private:
 
     void player_loot();
 
-    ItemContainer item_container_;
     bool is_open_;
 };
 
@@ -1062,8 +1073,6 @@ private:
 
     bool is_trapped_;
     bool is_open_;
-
-    ItemContainer item_container_;
 };
 
 #endif

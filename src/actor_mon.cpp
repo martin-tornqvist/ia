@@ -30,17 +30,18 @@
 #include "text_format.hpp"
 
 Mon::Mon() :
-    Actor                       (),
-    wary_of_player_counter_     (0),
-    aware_of_player_counter_    (0),
-    player_aware_of_me_counter_ (0),
-    is_msg_mon_in_view_printed_ (false),
-    last_dir_moved_             (Dir::center),
-    spell_cooldown_current_     (0),
-    is_roaming_allowed_         (true),
-    leader_                     (nullptr),
-    tgt_                        (nullptr),
-    waiting_                    (false) {}
+    Actor(),
+    wary_of_player_counter_         (0),
+    aware_of_player_counter_        (0),
+    player_aware_of_me_counter_     (0),
+    is_msg_mon_in_view_printed_     (false),
+    is_player_feeling_msg_allowed_  (true),
+    last_dir_moved_                 (Dir::center),
+    spell_cooldown_current_         (0),
+    is_roaming_allowed_             (true),
+    leader_                         (nullptr),
+    tgt_                            (nullptr),
+    waiting_                        (false) {}
 
 Mon::~Mon()
 {
@@ -976,7 +977,10 @@ int Mon::nr_mon_in_group()
     return ret;
 }
 
-//--------------------------------------------------------- SPECIFIC MONSTERS
+
+// -----------------------------------------------------------------------------
+// Specific monsters
+// -----------------------------------------------------------------------------
 std::string Cultist::cultist_phrase()
 {
     std::vector<std::string> phrase_bucket;
@@ -1871,8 +1875,13 @@ DidAction KeziahMason::on_act()
 
     if (!summoned.empty())
     {
-        summoned[0]->prop_handler().try_add(
+        auto* mon = summoned[0];
+
+        mon->prop_handler().try_add(
             new PropSummoned(PropTurns::indefinite));
+
+        // Do not print a separate "feeling" for spawning this monster
+        mon->is_player_feeling_msg_allowed_ = true;
     }
 
     has_summoned_jenkin = true;
@@ -2493,9 +2502,16 @@ DidAction MajorClaphamLee::on_act()
                 mon_ids.push_back(mon_id);
             }
 
-            actor_factory::spawn(pos, mon_ids,
-                                 MakeMonAware::yes,
-                                 this);
+            auto spawned =
+                actor_factory::spawn(pos, mon_ids,
+                                     MakeMonAware::yes,
+                                     this);
+
+            for (auto* mon : spawned)
+            {
+                // Do not print a separate "feeling" for spawned monsters
+                mon->is_player_feeling_msg_allowed_ = true;
+            }
 
             has_summoned_tomb_legions = true;
 

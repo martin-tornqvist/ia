@@ -55,8 +55,9 @@ bool try_mk_aux_room(const P& p,
                      bool blocked[map_w][map_h],
                      const P& door_p)
 {
-     const R aux_rect(p, p + d - 1);
-     const R aux_rect_with_border(aux_rect.p0 - 1, aux_rect.p1 + 1);
+    const R aux_rect(p, p + d - 1);
+
+    const R aux_rect_with_border(aux_rect.p0 - 1, aux_rect.p1 + 1);
 
     ASSERT(is_pos_inside(door_p, aux_rect_with_border));
 
@@ -118,7 +119,7 @@ bool try_mk_aux_room(const P& p,
 void mk_aux_rooms(Region regions[3][3])
 {
     TRACE_FUNC_BEGIN;
-    const int nr_tries_per_side = 10;
+    const int nr_tries_per_side = 20;
 
     auto rnd_aux_room_dim = []()
     {

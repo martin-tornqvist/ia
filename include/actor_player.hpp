@@ -119,6 +119,15 @@ public:
 
     bool is_standing_in_cramped_place() const;
 
+    // Randomly prints a message such as "I sense an object of great power here"
+    // if there is a major treasure on the map (on the floor or in a container),
+    // and the player is observant
+    void item_feeling();
+
+    // Randomly prints a message such as "A chill runs down my spine" if there
+    // are unique monsters on the map, and the player is observant
+    void mon_feeling();
+
     MedicalBag* active_medical_bag;
     Explosive* active_explosive;
     Actor* tgt_;

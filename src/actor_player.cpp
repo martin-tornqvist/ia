@@ -752,6 +752,136 @@ bool Player::is_standing_in_cramped_place() const
     return false;
 }
 
+void Player::item_feeling()
+{
+    if (!player_bon::traits[(size_t)Trait::observant] ||
+        !rnd::percent(80))
+    {
+        return;
+    }
+
+    bool print_feeling = false;
+
+    auto is_nice = [](const Item& item)
+    {
+        return item.data().value == ItemValue::major_treasure;
+    };
+
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
+        {
+            const auto& cell = map::cells[x][y];
+
+            // Nice item on the floor, which is not seen by the player?
+            if (cell.item &&
+                is_nice(*cell.item) &&
+                !cell.is_seen_by_player)
+            {
+                print_feeling = true;
+
+                break;
+            }
+
+            // Nice item in container?
+            const auto& cont_items = cell.rigid->item_container_.items_;
+
+            for (const auto* const item : cont_items)
+            {
+                if (is_nice(*item))
+                {
+                    print_feeling = true;
+
+                    break;
+                }
+            }
+
+            if (print_feeling)
+            {
+                const std::vector<std::string> msg_bucket
+                {
+                    "I feel like I should examine this place thoroughly.",
+                    "I feel like there is something of great interest here.",
+                    "I sense an object of great power here."
+                };
+
+                const std::string msg = rnd::element(msg_bucket);
+
+                msg_log::add(msg,
+                             clr_msg_note,
+                             false,
+                             MorePromptOnMsg::yes);
+
+                return;
+            }
+
+        } // y loop
+
+    } // x loop
+}
+
+void Player::mon_feeling()
+{
+    if (!player_bon::traits[(size_t)Trait::observant])
+    {
+        return;
+    }
+
+    bool print_unique_mon_feeling = false;
+
+    for (Actor* actor : game_time::actors)
+    {
+        //
+        // Not a hostile, living monster?
+        //
+        if (actor->is_player() ||
+            map::player->is_leader_of(actor) ||
+            !actor->is_alive())
+        {
+            continue;
+        }
+
+        auto* mon = static_cast<Mon*>(actor);
+
+        //
+        // Print monster feeling for new monsters spawned during the level?
+        // (We do the actual printing once, after the loop, so that we don't
+        // print something silly like "A chill runs down my spine (x2)")
+        //
+        if (mon->data().is_unique &&
+            mon->is_player_feeling_msg_allowed_)
+        {
+            print_unique_mon_feeling = true;
+
+            mon->is_player_feeling_msg_allowed_ = false;
+        }
+    }
+
+    if (print_unique_mon_feeling &&
+        rnd::percent(80))
+    {
+        std::vector<std::string> msg_bucket
+        {
+            "A chill runs down my spine.",
+            "I sense a great danger.",
+        };
+
+        // This message only makes sense if the player is fearful
+        if (!player_bon::traits[(size_t)Trait::fearless] &&
+            !has_prop(PropId::frenzied))
+        {
+            msg_bucket.push_back("I feel anxious.");
+        }
+
+        const auto msg = rnd::element(msg_bucket);
+
+        msg_log::add(msg,
+                     clr_msg_note,
+                     false,
+                     MorePromptOnMsg::yes);
+    }
+}
+
 void Player::set_quick_move(const Dir dir)
 {
     nr_quick_move_steps_left_ = 10;
@@ -862,11 +992,11 @@ void Player::on_actor_turn()
     // Set current temporary shock from darkness etc
     update_tmp_shock();
 
-    //
-    // Check for monsters coming into view, and try to spot hidden monsters.
-    //
     for (Actor* actor : game_time::actors)
     {
+        //
+        // Not a hostile, living monster?
+        //
         if (actor->is_player() ||
             map::player->is_leader_of(actor) ||
             !actor->is_alive())
@@ -880,6 +1010,12 @@ void Player::on_actor_turn()
 
         if (is_mon_seen)
         {
+            // Never print a feeling for a monster that has already been seen
+            mon.is_player_feeling_msg_allowed_ = false;
+
+            //
+            // Monster comes into view and interrupts actions?
+            //
             if (!mon.is_msg_mon_in_view_printed_)
             {
                 if (active_medical_bag ||
@@ -902,7 +1038,9 @@ void Player::on_actor_turn()
                 (!mon.has_prop(PropId::invis) ||
                  has_prop(PropId::see_invis)))
             {
+                //
                 // Monster is sneaking? Try to spot it
+                //
                 if (mon.is_sneaking())
                 {
                     const auto sneak_result = mon.roll_sneak(*this);
@@ -926,6 +1064,8 @@ void Player::on_actor_turn()
             }
         }
     }
+
+    mon_feeling();
 
     const auto my_seen_foes = seen_foes();
 
@@ -1022,7 +1162,10 @@ void Player::on_actor_turn()
 
         if (nr_turns_until_ins_ > 0)
         {
-            msg_log::add("I feel my sanity slipping...");
+            msg_log::add("I feel my sanity slipping...",
+                         clr_msg_note,
+                         true,
+                         MorePromptOnMsg::yes);
         }
         else // Time to go crazy!
         {
@@ -1945,13 +2088,40 @@ void Player::update_fov()
     //
     map::cells[pos.x][pos.y].is_seen_by_player = true;
 
+    //
+    // Cheat vision
+    //
     if (init::is_cheat_vision_enabled)
     {
+        // Show all cells adjacent to cells which can be shot or seen through
+        bool reveal[map_w][map_h];
+
+        map_parsers::BlocksProjectiles()
+            .run(reveal);
+
+        map_parsers::BlocksLos()
+            .run(reveal, MapParseMode::append);
+
         for (int x = 0; x < map_w; ++x)
         {
             for (int y = 0; y < map_h; ++y)
             {
-                map::cells[x][y].is_seen_by_player = true;
+                reveal[x][y] = !reveal[x][y];
+            }
+        }
+
+        bool reveal_expanded[map_w][map_h];
+
+        map_parsers::expand(reveal, reveal_expanded);
+
+        for (int x = 0; x < map_w; ++x)
+        {
+            for (int y = 0; y < map_h; ++y)
+            {
+                if (reveal_expanded[x][y])
+                {
+                    map::cells[x][y].is_seen_by_player = true;
+                }
             }
         }
     }

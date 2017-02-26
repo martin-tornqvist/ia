@@ -45,7 +45,7 @@ Door::Door(const P& feature_pos,
             0 :
             std::min(80, (map::dlvl - 1) * 10);
 
-        const int stuck_one_in_n = 24;
+        const int stuck_one_in_n = 28;
 
         if (rnd::percent(pct_secret))
         {

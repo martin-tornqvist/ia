@@ -854,7 +854,8 @@ void SpellMayhem::run_effect(Actor* const caster) const
                 f->mk_bloody();
             }
 
-            if (rnd::one_in(4))
+            if (P(x, y) != caster->pos &&
+                rnd::one_in(4))
             {
                 f->hit(DmgType::fire, DmgMethod::elemental, nullptr);
             }

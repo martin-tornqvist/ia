@@ -449,8 +449,13 @@ std::string DeviceLantern::name_inf() const
 ConsumeItem DeviceLantern::activate(Actor* const actor)
 {
     (void)actor;
+
     toggle();
+
+    map::update_vision();
+
     game_time::tick();
+
     return ConsumeItem::no;
 }
 
@@ -503,7 +508,7 @@ void DeviceLantern::toggle()
     is_activated_ = !is_activated_;
 
     // Discourage flipping on and off frequently
-    if (is_activated_ && nr_turns_left_ >= 2)
+    if (is_activated_ && nr_turns_left_ >= 4)
     {
         nr_turns_left_ -= 2;
     }

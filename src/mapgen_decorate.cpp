@@ -166,9 +166,8 @@ void decorate()
                 //
                 // Convert some walls to gratings
                 //
-                if (rnd::one_in(20))
+                if (rnd::one_in(6))
                 {
-
                     bool is_allowed = true;
 
                     // Never allow two gratings next to each other

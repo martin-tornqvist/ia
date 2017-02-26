@@ -46,11 +46,6 @@ int AbilityVals::val(const AbilityId id,
             {
                 ret += 10;
             }
-
-            if (player_bon::traits[(size_t)Trait::perceptive])
-            {
-                ret += 10;
-            }
         }
         break;
 

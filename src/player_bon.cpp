@@ -97,9 +97,6 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
     case Trait::observant:
         break;
 
-    case Trait::perceptive:
-        break;
-
     case Trait::vigilant:
         break;
 
@@ -276,9 +273,6 @@ std::string trait_title(const Trait id)
 
     case Trait::observant:
         return "Observant";
-
-    case Trait::perceptive:
-        return "Perceptive";
 
     case Trait::vigilant:
         return "Vigilant";
@@ -573,11 +567,9 @@ std::string trait_descr(const Trait id)
 
     case Trait::observant:
         return
-            "You are more likely to spot hidden monsters and objects";
-
-    case Trait::perceptive:
-        return
-            "You are more likely to spot hidden monsters and objects";
+            "+10% chance to spot hidden monsters, doors, and traps, and 80% "
+            "chance to sense unique monsters or artifacts (when entering a "
+            "new level, or when new monsters appear)";
 
     case Trait::vigilant:
         return
@@ -777,10 +769,6 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::observant:
-        break;
-
-    case Trait::perceptive:
-        traits_out.push_back(Trait::observant);
         break;
 
     case Trait::vigilant:

@@ -165,9 +165,13 @@ void go_to_nxt()
 
     game_time::is_magic_descend_nxt_std_turn = false;
 
-    msg_log::add("I have discovered a new area.");
+    map::player->tgt_ = nullptr;
+
+    map::update_vision();
 
     map::player->restore_shock(999, true);
+
+    msg_log::add("I have discovered a new area.");
 
     //
     // NOTE: When the "intro level" is skipped, "go_to_nxt" is called when the
@@ -176,9 +180,9 @@ void go_to_nxt()
     //
     game::incr_player_xp(5, Verbosity::verbose);
 
-    map::player->tgt_ = nullptr;
+    map::player->item_feeling();
 
-    map::update_vision();
+    map::player->mon_feeling();
 
     if (map_data.is_main_dungeon == IsMainDungeon::yes &&
         map::dlvl == (dlvl_last - 1))

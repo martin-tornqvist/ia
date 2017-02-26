@@ -476,7 +476,7 @@ void init_data_list()
     d.nr_left_allowed_to_spawn = 1;
     d.is_unique = true;
     d.natural_props[(size_t)PropId::infravis] = true;
-    d.spawn_min_dlvl = 5;
+    d.spawn_min_dlvl = 6;
     d.spawn_max_dlvl = dlvl_last;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 999;
@@ -1654,7 +1654,7 @@ void init_data_list()
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::few,    1),
-        MonGroupSpawnRule(MonGroupSize::pack,   5)
+        MonGroupSpawnRule(MonGroupSize::pack,   2)
     });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;

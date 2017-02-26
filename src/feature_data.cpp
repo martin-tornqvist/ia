@@ -24,11 +24,12 @@ bool MoveRules::can_move(Actor& actor) const
     auto& prop_handler = actor.prop_handler();
 
     // If not allowing normal move, check if any property overrides this
-    for (size_t i = 0; i < size_t(PropId::END); ++i)
+    for (size_t i = 0; i < (size_t)PropId::END; ++i)
     {
         const PropId id = PropId(i);
 
-        if (prop_handler.has_prop(id) && can_move_if_have_prop_[i])
+        if (prop_handler.has_prop(id) &&
+            can_move_if_have_prop_[i])
         {
             return true;
         }
@@ -74,7 +75,7 @@ void reset_data(FeatureDataT& d)
 
 void add_to_list_and_reset(FeatureDataT& d)
 {
-    data_list[int(d.id)] = d;
+    data_list[(size_t)d.id] = d;
     reset_data(d);
 }
 

@@ -245,45 +245,26 @@ void mk_pillars_in_room(const Room& room)
         return true;
     };
 
-    if (rnd::fraction(1, 3))
+    // Place pillars in rows and columns
+    auto step_size = []()
     {
-        // Place pillars in rows and columns
-        auto step_size = []()
-        {
-            return rnd::range(1, 2);
-        };
+        return rnd::range(1, 3);
+    };
 
-        const int dx = step_size();
-        const int dy = step_size();
+    const int dx = step_size();
+    const int dy = step_size();
 
-        for (int y = room_p0.y + 1; y <= room_p1.y - 1; y += dy)
-        {
-            for (int x = room_p0.x + 1; x <= room_p1.x - 1; x += dx)
-            {
-                const P p(x, y);
+    const int place_one_in_n = rnd::range(2, 3);
 
-                if (is_free(p) && rnd::fraction(1, 3))
-                {
-                    map::put(new Wall(p));
-                }
-            }
-        }
-    }
-    else // Scatter pillars randomly
+    for (int y = room_p0.y + 1; y <= room_p1.y - 1; y += dy)
     {
-        for (int y = room_p0.y + 1; y <= room_p1.y - 1; ++y)
+        for (int x = room_p0.x + 1; x <= room_p1.x - 1; x += dx)
         {
-            for (int x = room_p0.x + 1; x <= room_p1.x - 1; ++x)
+            const P p(x, y);
+
+            if (is_free(p) && rnd::one_in(place_one_in_n))
             {
-                const Range d_range(-1, 1);
-
-                const P p(x + d_range.roll(),
-                          y + d_range.roll());
-
-                if (is_free(p) && rnd::one_in(6))
-                {
-                    map::put(new Wall(p));
-                }
+                map::put(new Wall(p));
             }
         }
     }
@@ -402,11 +383,11 @@ void valid_corridor_entries(const Room& room, std::vector<P>& out)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
     // Find all cells that meets all of the following criteria:
-    // (1) Is a wall cell
-    // (2) Is a cell not belonging to any room
-    // (3) Is not on the edge of the map
-    // (4) Is cardinally adjacent to a floor cell belonging to the room
-    // (5) Is cardinally adjacent to a cell not in the room or room outline
+    //  (1) Is a wall cell
+    //  (2) Is a cell not belonging to any room
+    //  (3) Is not on the edge of the map
+    //  (4) Is cardinally adjacent to a floor cell belonging to the room
+    //  (5) Is cardinally adjacent to a cell not in the room or room outline
 
     out.clear();
 
@@ -611,8 +592,8 @@ bool is_choke_point(const P& p,
 }
 
 void mk_pathfind_corridor(Room& room_0,
-                      Room& room_1,
-                      bool door_proposals[map_w][map_h])
+                          Room& room_1,
+                          bool door_proposals[map_w][map_h])
 {
     TRACE_FUNC_BEGIN_VERBOSE << "Making corridor between rooms "
                              << &room_0 << " and " << &room_1
@@ -688,6 +669,7 @@ void mk_pathfind_corridor(Room& room_0,
     const P& p1 = entries.second;
 
     std::vector<P> path;
+
     bool blocked_expanded[map_w][map_h];
 
     // Entry points are the same cell (rooms are adjacent)? Then simply use that
@@ -722,7 +704,8 @@ void mk_pathfind_corridor(Room& room_0,
 
             const auto* const room_ptr = map::room_map[p.x][p.y];
 
-            if (blocked[p.x][p.y] && room_ptr != &room_0)
+            if (blocked[p.x][p.y] &&
+                room_ptr != &room_0)
             {
                 return;
             }
@@ -734,7 +717,8 @@ void mk_pathfind_corridor(Room& room_0,
 
             const auto* const room_ptr = map::room_map[p.x][p.y];
 
-            if (blocked[p.x][p.y] && room_ptr != &room_1)
+            if (blocked[p.x][p.y] &&
+                room_ptr != &room_1)
             {
                 return;
             }
@@ -742,6 +726,28 @@ void mk_pathfind_corridor(Room& room_0,
 
         // Expand the blocked cells - we do not want to build adjacent to floor
         map_parsers::expand(blocked, blocked_expanded);
+
+        // Randomly mark some cells as blocked, this helps avoid boring super
+        // long straight corridors
+        for (int x = 0; x < map_w; ++x)
+        {
+            for (int y = 0; y < map_h; ++y)
+            {
+                // Blocking a high amount of cells in the late game levels
+                // creates very nice cave corridors
+                const int block_one_in_n =
+                    map::dlvl >= dlvl_first_late_game   ? 3 :
+                    map::dlvl >= dlvl_first_mid_game    ? 6 :
+                    8;
+
+                if (rnd::one_in(block_one_in_n))
+                {
+                    blocked_expanded[x][y] = true;
+
+                    continue;
+                }
+            }
+        }
 
         // We know from above that p0 and p1 are actually OK - so mark them as
         // free in the expanded blocking array
@@ -751,7 +757,7 @@ void mk_pathfind_corridor(Room& room_0,
         const bool allow_diagonal = map::dlvl >= dlvl_first_late_game;
 
         // Randomizing steps create more "snaky" paths
-        const bool randomize_step_choices =
+        const bool randomize_step_choices = true;
             map::dlvl >= dlvl_first_late_game ?
             true :
             rnd::one_in(5);
@@ -776,10 +782,10 @@ void mk_pathfind_corridor(Room& room_0,
 
         for (Room* room : rooms)
         {
-            bool is_left_of_room    = false;
-            bool is_right_of_room   = false;
-            bool is_above_room      = false;
-            bool is_below_room      = false;
+            bool is_left_of_room = false;
+            bool is_right_of_room = false;
+            bool is_above_room = false;
+            bool is_below_room = false;
 
             for (const P& p : path)
             {
@@ -845,7 +851,7 @@ void mk_pathfind_corridor(Room& room_0,
             // Make it possible to branch from the corridor
             if ((i > 1) &&
                 ((int)i < (int)path.size() - 3) &&
-                (i % 6 == 0))
+                (i % 4 == 0))
             {
                 Room* link = room_factory::mk(RoomType::corr_link, R(p, p));
 

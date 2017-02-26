@@ -111,7 +111,7 @@ bool handle_closed_blocking_door(Mon& mon, std::vector<P> path)
                 // awareness time (because monsters trying to bash down doors is
                 // a pretty central part of the game, and they should not give
                 // up so easily)
-                if (rnd::fraction(3, 4))
+                if (rnd::fraction(3, 5))
                 {
                     mon.aware_of_player_counter_++;
                 }

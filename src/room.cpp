@@ -1285,7 +1285,7 @@ void ForestRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 
                 tree_pos_bucket.push_back(p);
 
-                if (rnd::one_in(6))
+                if (rnd::one_in(10))
                 {
                     map::put(new Bush(p));
                 }

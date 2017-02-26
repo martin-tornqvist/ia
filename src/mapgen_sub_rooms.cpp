@@ -12,20 +12,15 @@ void mk_sub_rooms()
 
     const int nr_tries_to_mk_room = 40;
 
-    const int max_nr_sub_rooms = rnd::one_in(3) ? 1 : 7;
+    const int max_nr_sub_rooms =
+        rnd::one_in(3) ?
+        1 : 7;
 
     // Minimum allowed size of the sub room, including the walls
-    const P walls_min_d(4, 4);
-
-    const Fraction chance_try_make_subroom(3, 4);
+    const P walls_min_d(3, 3);
 
     for (size_t i = 0; i < map::room_list.size(); ++i)
     {
-        if (!chance_try_make_subroom.roll())
-        {
-            continue;
-        }
-
         auto* const outer_room = map::room_list[i];
 
         if (!outer_room->allow_sub_rooms())

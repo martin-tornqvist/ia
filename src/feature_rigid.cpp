@@ -513,7 +513,7 @@ std::string Floor::name(const Article article) const
 
 Clr Floor::clr_default() const
 {
-    return clr_gray;
+    return clr_white;
 }
 
 // -----------------------------------------------------------------------------

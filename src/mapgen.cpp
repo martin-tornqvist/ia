@@ -94,7 +94,7 @@ void connect_rooms()
         // room (connections are only allowed between two standard rooms, or
         // from a corridor link to a standard room - never between two corridor
         // links)
-        while (room1 == room0 ||
+        while ((room1 == room0) ||
                !is_connectable_room(*room1))
         {
             room1 = rnd_room();
@@ -592,10 +592,11 @@ bool mk_std_lvl()
     TRACE << "Init regions" << std:: endl;
     const int map_w_third = map_w / 3;
     const int map_h_third = map_h / 3;
-    const int SPL_X0      = map_w_third;
-    const int SPL_X1      = (map_w_third * 2) + 1;
-    const int SPL_Y0      = map_h_third;
-    const int SPL_Y1      = map_h_third * 2;
+
+    const int spl_x0 = map_w_third;
+    const int spl_x1 = (map_w_third * 2) + 1;
+    const int spl_y0 = map_h_third;
+    const int spl_y1 = map_h_third * 2;
 
     Region regions[3][3];
 
@@ -603,10 +604,17 @@ bool mk_std_lvl()
     {
         for (int y = 0; y < 3; ++y)
         {
-            const R r(x == 0 ? 1 : x == 1 ? SPL_X0 + 1 : SPL_X1 + 1,
-                      y == 0 ? 1 : y == 1 ? SPL_Y0 + 1 : SPL_Y1 + 1,
-                      x == 0 ? SPL_X0 - 1 : x == 1 ? SPL_X1 - 1 : map_w - 2,
-                      y == 0 ? SPL_Y0 - 1 : y == 1 ? SPL_Y1 - 1 : map_h - 2);
+            const R r((x == 0) ? 1 :
+                      (x == 1) ? (spl_x0 + 1) : (spl_x1 + 1),
+
+                      (y == 0) ? 1 :
+                      (y == 1) ? (spl_y0 + 1) : spl_y1 + 1,
+
+                      (x == 0) ? (spl_x0 - 1) :
+                      (x == 1) ? (spl_x1 - 1) : map_w - 2,
+
+                      (y == 0) ? (spl_y0 - 1) :
+                      (y == 1) ? (spl_y1 - 1) : (map_h - 2));
 
             regions[x][y] = Region(r);
         }
@@ -1026,7 +1034,7 @@ bool mk_std_lvl()
     //
     if (map::dlvl > 1)
     {
-        const int make_drk_pct = 5 + (map::dlvl / 4);
+        const int make_drk_pct = 2 + (map::dlvl / 4);
 
         if (rnd::percent(make_drk_pct))
         {
