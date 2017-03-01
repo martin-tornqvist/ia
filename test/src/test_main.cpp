@@ -1636,19 +1636,19 @@ TEST(find_choke_points)
     CHECK(d.sides[0][0] == P(20, 10));
     CHECK(d.sides[1][0] == P(22, 10));
 
-    // --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // The left position should NOT be a choke point
-    // --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     is_choke_point = mapgen::is_choke_point(P(20, 10),
                                             blocked,
                                             d);
 
     CHECK(!is_choke_point);
 
-    // --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // Set the position above the center position to free, and verify that the
     // center position is no longer a choke point
-    // --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     blocked[21][9] = false;
 
     is_choke_point = mapgen::is_choke_point(P(21, 10),
@@ -1694,10 +1694,10 @@ TEST_FIXTURE(BasicFixture, connect_rooms_with_corridor)
         .run(blocked);
 
     floodfill(5,
-                    blocked,
-                    flood,
-                    INT_MAX, -1,
-                    true);
+              blocked,
+              flood,
+              INT_MAX, -1,
+              true);
 
     CHECK(flood[20][10] > 0);
 
@@ -1707,8 +1707,8 @@ TEST_FIXTURE(BasicFixture, connect_rooms_with_corridor)
 
 TEST_FIXTURE(BasicFixture, map_parse_cells_within_dist_of_others)
 {
-    bool in[map_w][map_h]   = {};
-    bool out[map_w][map_h]  = {};
+    bool in[map_w][map_h] = {};
+    bool out[map_w][map_h] = {};
 
     in[20][10] = true;
 

@@ -18,8 +18,9 @@ class Item;
 class MarkerState: public State
 {
 public:
-    MarkerState() :
+    MarkerState(const P& origin) :
         State   (),
+        origin_ (origin),
         pos_    () {}
 
     virtual ~MarkerState() {}
@@ -38,10 +39,10 @@ public:
 protected:
     virtual void on_start_hook() {}
 
-    void draw_marker(const P& p,
-                     const std::vector<P>& trail,
-                     const int effective_range,
-                     const int blocked_from_idx);
+    void draw_marker(const std::vector<P>& trail,
+                     const int orange_from_king_dist,
+                     const int red_from_king_dist,
+                     const int red_from_idx);
 
     // Fire etc
     virtual void handle_input(const InputData& input) = 0;
@@ -62,13 +63,20 @@ protected:
         return false;
     }
 
-    virtual int effective_range() const
+    virtual int orange_from_king_dist() const
     {
-        return INT_MAX;
+        return -1;
+    }
+
+    virtual int red_from_king_dist() const
+    {
+        return -1;
     }
 
     // Necessary e.g. for marker states drawing overlayed graphics
     CellRenderData marker_render_data_[map_w][map_h];
+
+    const P origin_;
 
     P pos_;
 
@@ -86,8 +94,8 @@ private:
 class Viewing: public MarkerState
 {
 public:
-    Viewing() :
-        MarkerState () {}
+    Viewing(const P& origin) :
+        MarkerState(origin) {}
 
     ~Viewing() {}
 
@@ -113,8 +121,8 @@ protected:
 class Aiming: public MarkerState
 {
 public:
-    Aiming(Wpn& wpn) :
-        MarkerState (),
+    Aiming(const P& origin, Wpn& wpn) :
+        MarkerState (origin),
         wpn_        (wpn) {}
 
     ~Aiming() {}
@@ -134,7 +142,9 @@ protected:
         return true;
     }
 
-    int effective_range() const override;
+    int orange_from_king_dist() const override;
+
+    int red_from_king_dist() const override;
 
     Wpn& wpn_;
 };
@@ -145,8 +155,8 @@ protected:
 class Throwing: public MarkerState
 {
 public:
-    Throwing(Item& item_to_throw) :
-        MarkerState     (),
+    Throwing(const P& origin, Item& item_to_throw) :
+        MarkerState     (origin),
         item_to_throw_  (&item_to_throw) {}
 
     ~Throwing() {}
@@ -166,7 +176,9 @@ protected:
         return true;
     }
 
-    int effective_range() const override;
+    int orange_from_king_dist() const override;
+
+    int red_from_king_dist() const override;
 
     Item* item_to_throw_;
 };
@@ -177,8 +189,8 @@ protected:
 class ThrowingExplosive: public MarkerState
 {
 public:
-    ThrowingExplosive(const Item& explosive) :
-        MarkerState (),
+    ThrowingExplosive(const P& origin, const Item& explosive) :
+        MarkerState (origin),
         explosive_  (explosive) {}
 
     ~ThrowingExplosive() {}
@@ -200,6 +212,8 @@ protected:
         return true;
     }
 
+    int red_from_king_dist() const override;
+
     const Item& explosive_;
 };
 
@@ -209,8 +223,8 @@ protected:
 class CtrlTele: public MarkerState
 {
 public:
-    CtrlTele() :
-        MarkerState () {}
+    CtrlTele(const P& origin) :
+        MarkerState(origin) {}
 
     ~CtrlTele() {}
 

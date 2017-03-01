@@ -211,14 +211,7 @@ void InvState::draw_slot(const SlotId id,
             att_inf = ItemRefAttInf::thrown;
         }
 
-        ItemRefType ref_type = ItemRefType::plain;
-
-        if (slot.id == SlotId::thrown)
-        {
-            ref_type = ItemRefType::plural;
-        }
-
-        std::string item_name = item->name(ref_type,
+        std::string item_name = item->name(ItemRefType::plural,
                                            ItemRefInf::yes,
                                            att_inf);
 

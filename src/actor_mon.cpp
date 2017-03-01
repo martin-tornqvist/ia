@@ -2302,8 +2302,9 @@ DidAction Zombie::try_resurrect()
         return DidAction::no;
     }
 
-    const int min_nr_turns_until_rise = 2;
-    const int rise_one_in_n = 4;
+    const int min_nr_turns_until_rise = 3;
+
+    const int rise_one_in_n = 11;
 
     if (dead_turn_counter < min_nr_turns_until_rise)
     {
@@ -2316,7 +2317,8 @@ DidAction Zombie::try_resurrect()
         if (!actor)
         {
             state_ = ActorState::alive;
-            hp_ = (hp_max(true) * 3) / 4;
+
+            hp_ = (hp_max(true) / 2);
 
             has_resurrected = true;
 
@@ -2332,7 +2334,7 @@ DidAction Zombie::try_resurrect()
                                         ShockSrc::see_mon);
             }
 
-            aware_of_player_counter_ += data_->nr_turns_aware * 2;
+            aware_of_player_counter_ += data_->nr_turns_aware * 4;
 
             game_time::tick();
 
@@ -2345,79 +2347,101 @@ DidAction Zombie::try_resurrect()
 
 void Zombie::on_death()
 {
+    //
     // If resurrected once and has corpse, blow up the corpse
+    //
     if (has_resurrected && is_corpse())
     {
-        state_ = ActorState::destroyed;
+        destroy();
+
         map::mk_blood(pos);
         map::mk_gore(pos);
     }
 
-    // If corpse is destroyed, occasionally spawn Zombie parts. Spawning is
-    // only allowed if the corpse is not destroyed "too hard" (e.g. by a near
-    // explosion or a sledge hammer). This also serves to reward heavy weapons,
-    // since they will more often prevent spawning nasty stuff.
-
     const int summon_one_in_n = 7;
 
-    if ((state_ == ActorState::destroyed) &&
-        (hp_ > -8) &&
-        !map::cells[pos.x][pos.y].rigid->is_bottomless() &&
-        rnd::one_in(summon_one_in_n))
+    // Are we destroyed now? (By a strong attack, or by getting killed twice)
+    if (state_ == ActorState::destroyed)
     {
-        ActorId id_to_spawn = ActorId::END;
-
-        // With a small chance, spawn a Floating Skull, otherwise spawn Hands or
-        // Intestines
-        const int roll = rnd::one_in(50) ? 3 : rnd::range(1, 2);
-
-        const std::string my_name = name_the();
-
-        std::string spawn_msg = "";
-
-        if (roll == 1)
+        //
+        // If corpse is destroyed, occasionally spawn Zombie parts. Spawning is
+        // only allowed if the corpse is not destroyed "too hard" (e.g. by a
+        // near explosion or a sledge hammer). This also serves to reward heavy
+        // weapons, since they will more often prevent spawning nasty stuff.
+        //
+        if ((hp_ > -8) &&
+            !map::cells[pos.x][pos.y].rigid->is_bottomless() &&
+            rnd::one_in(summon_one_in_n))
         {
-            id_to_spawn = ActorId::crawling_hand;
+            ActorId id_to_spawn = ActorId::END;
 
-            spawn_msg =
-                "The hand of " +
-                my_name +
-                " comes off and starts crawling around!";
-        }
-        else if (roll == 2)
-        {
-            id_to_spawn = ActorId::crawling_intestines;
+            // With a small chance, spawn a Floating Skull, otherwise spawn
+            // Hands or Intestines
+            const int roll = rnd::one_in(50) ? 3 : rnd::range(1, 2);
 
-            spawn_msg =
-                "The intestines of " +
-                my_name +
-                " starts crawling around!";
-        }
-        else
-        {
-            id_to_spawn = ActorId::floating_skull;
+            const std::string my_name = name_the();
 
-            spawn_msg =
-                "The head of " +
-                my_name +
-                " starts floating around!";
-        }
+            std::string spawn_msg = "";
 
-        if (map::cells[pos.x][pos.y].is_seen_by_player)
-        {
-            ASSERT(!spawn_msg.empty());
+            if (roll == 1)
+            {
+                id_to_spawn = ActorId::crawling_hand;
 
-            msg_log::add(spawn_msg);
+                spawn_msg =
+                    "The hand of " +
+                    my_name +
+                    " comes off and starts crawling around!";
+            }
+            else if (roll == 2)
+            {
+                id_to_spawn = ActorId::crawling_intestines;
 
-            map::player->incr_shock(ShockLvl::frightening,
-                                    ShockSrc::see_mon);
-        }
+                spawn_msg =
+                    "The intestines of " +
+                    my_name +
+                    " starts crawling around!";
+            }
+            else
+            {
+                id_to_spawn = ActorId::floating_skull;
 
-        ASSERT(id_to_spawn != ActorId::END);
+                spawn_msg =
+                    "The head of " +
+                    my_name +
+                    " starts floating around!";
+            }
 
-        actor_factory::spawn(pos, {id_to_spawn},
-                             MakeMonAware::yes,
-                             nullptr);
+            if (map::cells[pos.x][pos.y].is_seen_by_player)
+            {
+                ASSERT(!spawn_msg.empty());
+
+                msg_log::add(spawn_msg);
+
+                map::player->incr_shock(ShockLvl::frightening,
+                                        ShockSrc::see_mon);
+            }
+
+            ASSERT(id_to_spawn != ActorId::END);
+
+            actor_factory::spawn(pos, {id_to_spawn},
+                                 MakeMonAware::yes,
+                                 nullptr);
+
+        } // if spawn zombie parts
+    }
+}
+
+void Zombie::on_destroyed()
+{
+    //
+    // Occasionally make Zombie Dust
+    //
+    const int mk_dust_one_in_n = 3;
+
+    if (!map::cells[pos.x][pos.y].rigid->is_bottomless() &&
+        rnd::one_in(mk_dust_one_in_n))
+    {
+        item_factory::mk_item_on_floor(ItemId::zombie_dust, pos);
     }
 }
 

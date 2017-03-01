@@ -973,17 +973,32 @@ void projectile_fire(Actor* const attacker,
 
     const bool leave_trail = wpn.data().ranged.projectile_leaves_trail;
 
-    const int size_of_path_plus_one =
+    // An "update" here means each time we update the positions of all
+    // projectiles (from the player perspective, each update is done
+    // simultaneously for all projectiles)
+    //
+    // The total number of updates we need equals the length of the path, plus
+    // the distance between the first and the last projectile (since the first
+    // projectile will finish before the last projectile)
+    const int nr_updates_tot =
         path.size() +
         ((nr_projectiles - 1) * nr_cell_jumps_mg_projectiles);
 
-    for (int i = 1; i < size_of_path_plus_one; ++i)
+    for (int update_count = 1;
+         update_count < nr_updates_tot;
+         ++update_count)
     {
-        for (int p_cnt = 0; p_cnt < nr_projectiles; ++p_cnt)
+        for (int projectile_idx = 0;
+             projectile_idx < nr_projectiles;
+             ++projectile_idx)
         {
-            // Current projectile's place in the path is the current global
-            // place (i) minus a certain number of elements
-            int path_element = i - (p_cnt * nr_cell_jumps_mg_projectiles);
+            Projectile* const proj = projectiles[projectile_idx];
+
+            // The current projectile's index in the path equals the current
+            // update count, minus the projectiles distance from the first
+            int path_element =
+                update_count -
+                (projectile_idx * nr_cell_jumps_mg_projectiles);
 
             // Emit sound
             if (path_element == 1)
@@ -1013,16 +1028,24 @@ void projectile_fire(Actor* const attacker,
                 }
             }
 
-            Projectile* const proj = projectiles[p_cnt];
-
             // All the following collision checks etc are only made if the
             // projectiles current path element corresponds to an element in
             // the real path vector
             if ((path_element >= 1) &&
                 (path_element < (int)path.size()) &&
-                !proj->is_obstructed)
+                !proj->is_dead)
             {
                 proj->pos = path[path_element];
+
+                // Are we out of range?
+                const int max_range = wpn.data().ranged.max_range;
+
+                if (king_dist(origin, proj->pos) > max_range)
+                {
+                    proj->is_dead = true;
+
+                    continue;
+                }
 
                 proj->is_seen_by_player =
                     map::cells[proj->pos.x][proj->pos.y].is_seen_by_player;
@@ -1050,7 +1073,7 @@ void projectile_fire(Actor* const attacker,
                     is_actor_aimed_for;
 
                 if (att_data.defender &&
-                    !proj->is_obstructed &&
+                    !proj->is_dead &&
                     att_data.att_result >= ActionResult::success &&
                     can_hit_height)
                 {
@@ -1087,13 +1110,20 @@ void projectile_fire(Actor* const attacker,
                     }
 
                     proj->is_done_rendering = true;
-                    proj->is_obstructed = true;
+
+                    proj->is_dead = true;
+
                     proj->actor_hit = att_data.defender;
+
                     proj->obstructed_in_element = path_element;
 
-                    const ActorDied died =
-                        proj->actor_hit->hit(att_data.dmg,
-                                             wpn.data().ranged.dmg_type);
+                    auto died = ActorDied::no;
+
+                    if (att_data.dmg > 0)
+                    {
+                        died = proj->actor_hit->hit(att_data.dmg,
+                                                    wpn.data().ranged.dmg_type);
+                    }
 
                     // NOTE: This is run regardless of if defender died or not,
                     //       it is the hook implementors responsibility to check
@@ -1125,7 +1155,7 @@ void projectile_fire(Actor* const attacker,
                             }
                         }
                     }
-                }
+                } // if actor hit
 
                 // Projectile hit feature?
                 std::vector<Mob*> mobs;
@@ -1149,10 +1179,11 @@ void projectile_fire(Actor* const attacker,
                     feature_blocking_shot = rigid;
                 }
 
-                if (feature_blocking_shot && !proj->is_obstructed)
+                if (feature_blocking_shot && !proj->is_dead)
                 {
                     proj->obstructed_in_element = path_element - 1;
-                    proj->is_obstructed = true;
+
+                    proj->is_dead = true;
 
                     if (wpn.data().ranged.makes_ricochet_snd)
                     {
@@ -1193,14 +1224,14 @@ void projectile_fire(Actor* const attacker,
                             sdl_base::sleep(delay);
                         }
                     }
-                }
+                } // if feature hit
 
                 // PROJECTILE HIT THE GROUND?
                 if ((proj->pos == aim_pos) &&
                     (aim_lvl == ActorSize::floor) &&
-                    !proj->is_obstructed)
+                    !proj->is_dead)
                 {
-                    proj->is_obstructed = true;
+                    proj->is_dead = true;
                     proj->obstructed_in_element = path_element;
 
                     if (wpn.data().ranged.makes_ricochet_snd)
@@ -1242,10 +1273,11 @@ void projectile_fire(Actor* const attacker,
                             sdl_base::sleep(delay);
                         }
                     }
-                }
+                } // if hit the ground
 
                 // RENDER FLYING PROJECTILES
-                if (!proj->is_obstructed && proj->is_seen_by_player)
+                if (!proj->is_dead &&
+                    proj->is_seen_by_player)
                 {
                     if (config::is_tiles_mode())
                     {
@@ -1261,41 +1293,45 @@ void projectile_fire(Actor* const attacker,
                     }
                 }
             }
-        } // End projectile loop
 
-        // If any projectile can be seen and not obstructed, delay
+        } // projectiles loop
+
+        // If any projectile can be seen and not dead, delay rendering
         for (Projectile* projectile : projectiles)
         {
             const P& pos = projectile->pos;
 
             if (map::cells[pos.x][pos.y].is_seen_by_player &&
-                !projectile->is_obstructed)
+                !projectile->is_dead)
             {
                 sdl_base::sleep(delay);
                 break;
             }
         }
 
-        // Check if all projectiles obstructed
-        bool is_all_obstructed = true;
+        // Check if all projectiles are dead
+        bool is_all_dead = true;
 
         for (Projectile* projectile : projectiles)
         {
-            if (!projectile->is_obstructed)
+            if (!projectile->is_dead)
             {
-                is_all_obstructed = false;
+                is_all_dead = false;
             }
         }
 
-        if (is_all_obstructed) {break;}
+        if (is_all_dead)
+        {
+            break;
+        }
 
-    } // End path-loop
+    } // path loop
 
-    // So far, only projectile 0 can have special obstruction events
-    // Must be changed if something like an assault-incinerator is added
+    // So far, only projectile 0 can have special obstruction events, this
+    // must be changed if something like an assault-incinerator is added
     const Projectile* const first_projectile = projectiles[0];
 
-    if (first_projectile->is_obstructed)
+    if (first_projectile->is_dead)
     {
         const int element = first_projectile->obstructed_in_element;
 
@@ -1318,10 +1354,10 @@ void projectile_fire(Actor* const attacker,
 void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
 {
     RangedAttData data = RangedAttData(&attacker,
-                                           attacker.pos,
-                                           aim_pos,
-                                           attacker.pos,
-                                           wpn);
+                                       attacker.pos,
+                                       aim_pos,
+                                       attacker.pos,
+                                       wpn);
 
     print_ranged_init_msgs(data);
 
@@ -1367,16 +1403,25 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
         snd_emit::run(snd);
     }
 
-    for (size_t i = 1; i < path.size(); ++i)
+    for (size_t path_idx = 1; path_idx < path.size(); ++path_idx)
     {
         // If travelled more than two steps after a killed monster, stop
         // projectile
-        if (killed_mon_idx != -1 && i > (size_t)(killed_mon_idx + 1))
+        if ((killed_mon_idx != -1) &&
+            (path_idx > (size_t)(killed_mon_idx + 1)))
         {
             break;
         }
 
-        const P current_pos(path[i]);
+        const P current_pos(path[path_idx]);
+
+        // Are we out of range?
+        const int max_range = wpn.data().ranged.max_range;
+
+        if (king_dist(origin, current_pos) > max_range)
+        {
+            break;
+        }
 
         if (actor_array[current_pos.x][current_pos.y])
         {
@@ -1429,7 +1474,11 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
                     print_proj_at_actor_msgs(data, true, wpn);
 
                     // Damage
-                    data.defender->hit(data.dmg, wpn.data().ranged.dmg_type);
+                    if (data.dmg > 0)
+                    {
+                        data.defender->hit(data.dmg,
+                                           wpn.data().ranged.dmg_type);
+                    }
 
                     ++nr_actors_hit;
 
@@ -1443,7 +1492,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
 
                     if (is_tgt_killed && killed_mon_idx == -1)
                     {
-                        killed_mon_idx = i;
+                        killed_mon_idx = path_idx;
                     }
 
                     if (!is_tgt_killed ||
@@ -1505,7 +1554,8 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
         }
 
         // Floor hit?
-        if (intended_aim_lvl == ActorSize::floor && current_pos == aim_pos)
+        if (intended_aim_lvl == ActorSize::floor &&
+            (current_pos == aim_pos))
         {
             Snd snd("I hear a ricochet.",
                     SfxId::ricochet,
@@ -1546,8 +1596,10 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
             }
 
             break;
-        }
-    }
+
+        } // if floor hit
+
+    } // path loop
 }
 
 } // namespace

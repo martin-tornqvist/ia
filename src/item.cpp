@@ -296,10 +296,12 @@ std::string Item::name(const ItemRefType ref_type,
 
     if (ref_type_used == ItemRefType::plural)
     {
-        nr_str = std::to_string(nr_items_) + " ";
+        nr_str = std::to_string(nr_items_);
     }
 
-    std::string att_str = "";
+    std::string dmg_str = "";
+
+    std::string hit_str;
 
     ItemRefAttInf att_inf_used = att_inf;
 
@@ -325,42 +327,45 @@ std::string Item::name(const ItemRefType ref_type,
         }
     }
 
+    const DiceParam zero_dice(0, 0);
+
     if (att_inf_used == ItemRefAttInf::melee)
     {
-        const DiceParam dmg_dice = dmg(AttMode::melee, map::player);
+        if (data_->melee.dmg != zero_dice)
+        {
+            const DiceParam dmg_dice = dmg(AttMode::melee, map::player);
 
-        const std::string rolls_str = std::to_string(dmg_dice.rolls);
-        const std::string sides_str = std::to_string(dmg_dice.sides);
+            const std::string rolls_str = std::to_string(dmg_dice.rolls);
+            const std::string sides_str = std::to_string(dmg_dice.sides);
 
-        const int plus = dmg_dice.plus;
+            const int plus = dmg_dice.plus;
 
-        const std::string plus_str =
-            plus == 0 ? "" :
-            plus > 0 ?
-            ("+" + std::to_string(plus)) :
-            ("-" + std::to_string(plus));
+            const std::string plus_str =
+                plus == 0 ? "" :
+                plus > 0 ?
+                ("+" + std::to_string(plus)) :
+                ("-" + std::to_string(plus));
 
-        const int item_mod = data_->melee.hit_chance_mod;
+            dmg_str =
+                rolls_str +
+                "d" +
+                sides_str +
+                plus_str;
+        }
 
-        const std::string skill_str =
-            (item_mod >= 0 ? "+" : "") +
-            std::to_string(item_mod) + "%";
+        const int hit_int = data_->melee.hit_chance_mod;
 
-        att_str =
-            " " +
-            rolls_str +
-            "d" +
-            sides_str +
-            plus_str +
-            " " +
-            skill_str;
+        hit_str =
+            (hit_int >= 0 ? "+" : "") +
+            std::to_string(hit_int) + "%";
     }
 
     if (att_inf_used == ItemRefAttInf::ranged)
     {
         std::string dmg_str = data_->ranged.dmg_info_override;
 
-        if (dmg_str.empty())
+        if (dmg_str.empty() &&
+            data_->ranged.dmg != zero_dice)
         {
             const DiceParam dmg_dice = dmg(AttMode::ranged, map::player);
 
@@ -379,53 +384,48 @@ std::string Item::name(const ItemRefType ref_type,
                 ("+" + std::to_string(plus)) :
                 ("-" + std::to_string(plus));
 
-            dmg_str = rolls_str + "d" + sides_str + plus_str;
+            dmg_str =
+                rolls_str +
+                "d" +
+                sides_str +
+                plus_str;
         }
 
-        const int item_mod = data_->ranged.hit_chance_mod;
+        const int hit_int = data_->ranged.hit_chance_mod;
 
-        const std::string skill_str =
-            (item_mod >= 0 ? "+" : "") +
-            std::to_string(item_mod) + "%";
-
-        att_str =
-            " " +
-            dmg_str +
-            " " +
-            skill_str;
+        hit_str =
+            (hit_int >= 0 ? "+" : "") +
+            std::to_string(hit_int) + "%";
     }
 
     if (att_inf_used == ItemRefAttInf::thrown)
     {
-        const DiceParam dmg_dice = dmg(AttMode::thrown, map::player);
+        if (data_->ranged.dmg != zero_dice)
+        {
+            const DiceParam dmg_dice = dmg(AttMode::thrown, map::player);
 
-        const std::string rolls_str = std::to_string(dmg_dice.rolls);
-        const std::string sides_str = std::to_string(dmg_dice.sides);
-        const int plus = dmg_dice.plus;
+            const std::string rolls_str = std::to_string(dmg_dice.rolls);
+            const std::string sides_str = std::to_string(dmg_dice.sides);
+            const int plus = dmg_dice.plus;
 
-        const std::string plus_str =
-            plus == 0 ? "" :
-            plus  > 0 ?
-            ("+" + std::to_string(plus)) :
-            ("-" + std::to_string(plus));
+            const std::string plus_str =
+                plus == 0 ? "" :
+                plus  > 0 ?
+                ("+" + std::to_string(plus)) :
+                ("-" + std::to_string(plus));
 
-        const int item_mod = data_->ranged.throw_hit_chance_mod;
+            dmg_str =
+                rolls_str +
+                "d" +
+                sides_str +
+                plus_str;
+        }
 
-        // const int skill_tot =
-        //     std::max(0, std::min(100, item_skill + ranged_skill));
+        const int hit_int = data_->ranged.throw_hit_chance_mod;
 
-        const std::string skill_str =
-            (item_mod >= 0 ? "+" : "") +
-            std::to_string(item_mod) + "%";
-
-        att_str =
-            " " +
-            rolls_str +
-            "d" +
-            sides_str +
-            plus_str +
-            " " +
-            skill_str;
+        hit_str =
+            (hit_int >= 0 ? "+" : "") +
+            std::to_string(hit_int) + "%";
     }
 
     std::string inf_str = "";
@@ -433,20 +433,20 @@ std::string Item::name(const ItemRefType ref_type,
     if (inf == ItemRefInf::yes)
     {
         inf_str = name_inf();
-
-        if (!inf_str.empty())
-        {
-            inf_str.insert(0, " ");
-        }
     }
 
     const auto& names_used =
         data_->is_identified ?
-        data_->base_name : data_->base_name_un_id;
+        data_->base_name :
+        data_->base_name_un_id;
 
     const std::string base_name = names_used.names[(size_t)ref_type_used];
 
-    const std::string ret = nr_str + base_name + att_str + inf_str;
+    const std::string ret =
+        nr_str + (nr_str.empty() ? "" : " ") + base_name +
+        (dmg_str.empty() ? "" : " ") + dmg_str +
+        (hit_str.empty() ? "" : " ") + hit_str +
+        (inf_str.empty() ? "" : " ") + inf_str;
 
     ASSERT(!ret.empty());
 
@@ -836,6 +836,19 @@ void PlayerGhoulClaw::on_melee_kill(Actor& actor_killed)
                               {nr_worms, ActorId::worm_mass},
                               MakeMonAware::yes,
                               map::player);
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Zombie Dust
+// -----------------------------------------------------------------------------
+void ZombieDust::on_ranged_hit(Actor& actor_hit)
+{
+    if (actor_hit.state() == ActorState::alive &&
+        !actor_hit.data().is_undead)
+    {
+        actor_hit.prop_handler().try_add(
+            new PropParalyzed(PropTurns::std));
     }
 }
 

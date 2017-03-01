@@ -46,42 +46,48 @@ void MarkerState::on_start()
 
 void MarkerState::draw()
 {
-    std::vector<P> trail;
+    std::vector<P> line;
 
-    const P origin(map::player->pos);
-
-    line_calc::calc_new_line(origin,
+    line_calc::calc_new_line(origin_,
                              pos_,
                              true,      // Stop at target
                              INT_MAX,   // Travel limit
                              false,     // Allow outside map
-                             trail);
+                             line);
 
-    int blocked_from_idx = -1;
+    // Remove origin position
+    if (!line.empty())
+    {
+        line.erase(line.begin());
+    }
+
+    const int orange_from_dist = orange_from_king_dist();
+
+    const int red_from_dist = red_from_king_dist();
+
+    int red_from_idx = -1;
 
     if (show_blocked())
     {
-        for (size_t i = 0; i < trail.size(); ++i)
+        for (size_t i = 0; i < line.size(); ++i)
         {
-            const P& p(trail[i]);
+            const P& p(line[i]);
 
             const Cell& c = map::cells[p.x][p.y];
 
             if (c.is_seen_by_player &&
                 !c.rigid->is_projectile_passable())
             {
-                blocked_from_idx = i;
+                red_from_idx = i;
                 break;
             }
         }
     }
 
-    const int range = effective_range();
-
-    draw_marker(pos_,
-                trail,
-                range,
-                blocked_from_idx);
+    draw_marker(line,
+                orange_from_dist,
+                red_from_dist,
+                red_from_idx);
 
     on_draw();
 }
@@ -195,10 +201,10 @@ void MarkerState::update()
     }
 }
 
-void MarkerState::draw_marker(const P& p,
-                              const std::vector<P>& trail,
-                              const int effective_range,
-                              const int blocked_from_idx)
+void MarkerState::draw_marker(const std::vector<P>& line,
+                              const int orange_from_king_dist,
+                              const int red_from_king_dist,
+                              const int red_from_idx)
 {
     for (int x = 0; x < map_w; ++x)
     {
@@ -213,38 +219,52 @@ void MarkerState::draw_marker(const P& p,
 
     Clr clr = clr_green_lgt;
 
-    // Tail
-    for (size_t i = 1; i < trail.size(); ++i)
+    //
+    // Draw the line
+    //
+    // NOTE: We include the head index in this loop, so that we can set up which
+    //       color it should be drawn with, but we do the actual drawing of the
+    //       head after the loop
+    //
+    for (size_t line_idx = 0; line_idx < line.size(); ++line_idx)
     {
-        const P& tail_p = trail[i];
+        const P& line_pos = line[line_idx];
 
-        const bool is_blocked =
-            (blocked_from_idx != -1) &&
-            ((int)i >= blocked_from_idx);
+        const int dist = king_dist(origin_, line_pos);
+
+        // Draw red due to index, or due to distance?
+        const bool red_by_idx =
+            (red_from_idx != -1) &&
+            ((int)line_idx >= red_from_idx);
+
+        const bool red_by_dist =
+            (red_from_king_dist != -1) &&
+            (dist >= red_from_king_dist);
+
+        const bool is_red = red_by_idx || red_by_dist;
 
         // NOTE: Final color is stored for drawing the head
-        if (is_blocked)
+        if (is_red)
         {
             clr = clr_red_lgt;
         }
-        else if (effective_range != -1)
+        // Not red - orange by distance?
+        else if ((orange_from_king_dist != -1) &&
+                 (dist >= orange_from_king_dist))
         {
-            const int cheb_dist = king_dist(trail[0], tail_p);
-
-            if (cheb_dist > effective_range)
-            {
-                clr = clr_orange;
-            }
+            clr = clr_orange;
         }
 
-        // Draw tail until (but not including) the head
-        if (i < (trail.size() - 1))
+        // Do not draw the head yet
+        const int tail_size_int = (int)line.size() - 1;
+
+        if ((int)line_idx < tail_size_int)
         {
-            io::cover_cell_in_map(tail_p);
+            io::cover_cell_in_map(line_pos);
 
-            auto& d = marker_render_data_[tail_p.x][tail_p.y];
+            auto& d = marker_render_data_[line_pos.x][line_pos.y];
 
-            d.tile = TileId::aim_marker_trail;
+            d.tile = TileId::aim_marker_line;
 
             d.glyph = '*';
 
@@ -252,12 +272,12 @@ void MarkerState::draw_marker(const P& p,
 
             d.clr_bg = clr_black;
 
-            // If blocked, always draw a character (more distinct)
-            if (config::is_tiles_mode() && !is_blocked)
+            // If red, always draw a character (more distinct)
+            if (config::is_tiles_mode() && !is_red)
             {
                 io::draw_tile(d.tile,
                               Panel::map,
-                              tail_p,
+                              line_pos,
                               d.clr,
                               d.clr_bg);
             }
@@ -265,15 +285,20 @@ void MarkerState::draw_marker(const P& p,
             {
                 io::draw_glyph(d.glyph,
                                Panel::map,
-                               tail_p,
+                               line_pos,
                                d.clr,
                                true,
                                d.clr_bg);
             }
         }
-    }
+    } // line loop
 
-    auto& d = marker_render_data_[p.x][p.y];
+    //
+    // Draw the head
+    //
+    const P& head_pos = line.empty() ? origin_ : line.back();
+
+    auto& d = marker_render_data_[head_pos.x][head_pos.y];
 
     d.tile = TileId::aim_marker_head;
 
@@ -283,12 +308,11 @@ void MarkerState::draw_marker(const P& p,
 
     d.clr_bg = clr_black;
 
-    // Head
     if (config::is_tiles_mode())
     {
         io::draw_tile(d.tile,
                       Panel::map,
-                      p,
+                      head_pos,
                       d.clr,
                       d.clr_bg);
     }
@@ -296,7 +320,7 @@ void MarkerState::draw_marker(const P& p,
     {
         io::draw_glyph(d.glyph,
                        Panel::map,
-                       p,
+                       head_pos,
                        d.clr,
                        true,
                        d.clr_bg);
@@ -413,19 +437,25 @@ void Aiming::on_moved()
 {
     look::print_location_info_msgs(pos_);
 
-    auto* const actor = map::actor_at_pos(pos_);
+    const bool is_in_range =
+        king_dist(origin_, pos_) < red_from_king_dist();
 
-    if (actor &&
-        !actor->is_player() &&
-        map::player->can_see_actor(*actor))
+    if (is_in_range)
     {
-        RangedAttData data(map::player,
-                           map::player->pos,    // Origin
-                           actor->pos,          // Aim position
-                           actor->pos,          // Current position
-                           wpn_);
+        auto* const actor = map::actor_at_pos(pos_);
 
-        msg_log::add(std::to_string(data.hit_chance_tot) + "% hit chance.");
+        if (actor &&
+            !actor->is_player() &&
+            map::player->can_see_actor(*actor))
+        {
+            RangedAttData data(map::player,
+                               origin_,
+                               actor->pos,  // Aim position
+                               actor->pos,  // Current position
+                               wpn_);
+
+            msg_log::add(std::to_string(data.hit_chance_tot) + "% hit chance.");
+        }
     }
 
     msg_log::add("[f] to fire" + cancel_info_str);
@@ -476,9 +506,18 @@ void Aiming::handle_input(const InputData& input)
     }
 }
 
-int Aiming::effective_range() const
+int Aiming::orange_from_king_dist() const
 {
-    return wpn_.data().ranged.effective_range;
+    const int effective_range = wpn_.data().ranged.effective_range;
+
+    return (effective_range < 0) ? -1 : (effective_range + 1);
+}
+
+int Aiming::red_from_king_dist() const
+{
+    const int max_range = wpn_.data().ranged.max_range;
+
+    return (max_range < 0) ? -1 : (max_range + 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -488,18 +527,24 @@ void Throwing::on_moved()
 {
     look::print_location_info_msgs(pos_);
 
-    auto* const actor = map::actor_at_pos(pos_);
+    const bool is_in_range =
+        king_dist(origin_, pos_) < red_from_king_dist();
 
-    if (actor &&
-        !actor->is_player() &&
-        map::player->can_see_actor(*actor))
+    if (is_in_range)
     {
-        ThrowAttData data(map::player,
-                          actor->pos,       // Aim position
-                          actor->pos,       // Current position
-                          *item_to_throw_);
+        auto* const actor = map::actor_at_pos(pos_);
 
-        msg_log::add(std::to_string(data.hit_chance_tot) + "% hit chance.");
+        if (actor &&
+            !actor->is_player() &&
+            map::player->can_see_actor(*actor))
+        {
+            ThrowAttData data(map::player,
+                              actor->pos,       // Aim position
+                              actor->pos,       // Current position
+                              *item_to_throw_);
+
+            msg_log::add(std::to_string(data.hit_chance_tot) + "% hit chance.");
+        }
     }
 
     msg_log::add("[t] to throw" + cancel_info_str);
@@ -532,8 +577,9 @@ void Throwing::handle_input(const InputData& input)
                 map::player->tgt_ = actor;
             }
 
-            const P     pos             = pos_;
-            Item* const item_to_throw   = item_to_throw_;
+            const P pos = pos_;
+
+            Item* const item_to_throw = item_to_throw_;
 
             states::pop();
 
@@ -553,9 +599,18 @@ void Throwing::handle_input(const InputData& input)
     }
 }
 
-int Throwing::effective_range() const
+int Throwing::orange_from_king_dist() const
 {
-    return item_to_throw_->data().ranged.effective_range;
+    const int effective_range = item_to_throw_->data().ranged.effective_range;
+
+    return (effective_range < 0) ? -1 : (effective_range + 1);
+}
+
+int Throwing::red_from_king_dist() const
+{
+    const int max_range = item_to_throw_->data().ranged.max_range;
+
+    return (max_range < 0) ? -1 : (max_range + 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -659,6 +714,13 @@ void ThrowingExplosive::handle_input(const InputData& input)
     default:
         break;
     }
+}
+
+int ThrowingExplosive::red_from_king_dist() const
+{
+    const int max_range = explosive_.data().ranged.max_range;
+
+    return (max_range < 0) ? -1 : (max_range + 1);
 }
 
 // -----------------------------------------------------------------------------

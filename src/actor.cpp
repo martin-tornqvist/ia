@@ -268,7 +268,8 @@ void Actor::teleport()
         prop_handler_->has_prop(PropId::tele_ctrl) &&
         !prop_handler_->has_prop(PropId::confused))
     {
-        auto tele_ctrl_state = std::unique_ptr<State>(new CtrlTele);
+        auto tele_ctrl_state = std::unique_ptr<State>(
+            new CtrlTele(pos));
 
         states::push(std::move(tele_ctrl_state));
 
@@ -278,7 +279,6 @@ void Actor::teleport()
     //
     // Teleport randomly
     //
-
     bool blocked[map_w][map_h];
 
     map_parsers::BlocksActor(*this, ParseActors::yes)
@@ -572,10 +572,10 @@ ActorDied Actor::hit(int dmg,
                         SndVol::low,
                         AlertsMon::yes);
 
-                snd_emit::run(snd);
+                snd.run();
             }
 
-            state_ = ActorState::destroyed;
+            destroy();
 
             if (is_humanoid())
             {
@@ -603,7 +603,7 @@ ActorDied Actor::hit(int dmg,
                         SndVol::low,
                         AlertsMon::yes);
 
-                snd_emit::run(snd);
+                snd.run();
             }
         }
 
@@ -868,7 +868,7 @@ void Actor::die(const bool is_destroyed,
 
     if (is_destroyed)
     {
-        state_ = ActorState::destroyed;
+        destroy();
     }
     else // Not destroyed
     {
@@ -891,7 +891,7 @@ void Actor::die(const bool is_destroyed,
                     SndVol::high,
                     AlertsMon::no);
 
-            snd_emit::run(snd);
+            snd.run();
         }
 
         if (allow_drop_items)
@@ -952,6 +952,13 @@ void Actor::die(const bool is_destroyed,
     TRACE_FUNC_END_VERBOSE;
 }
 
+void Actor::destroy()
+{
+    state_ = ActorState::destroyed;
+
+    on_destroyed();
+}
+
 std::string Actor::death_msg() const
 {
     return name_the() + " dies.";
@@ -999,8 +1006,11 @@ DidAction Actor::try_eat_corpse()
     if (corpse)
     {
         const int corpse_max_hp = corpse->hp_max(false);
+
         const int destr_one_in_n = constr_in_range(1, corpse_max_hp / 4, 8);
+
         const bool is_destroyed = rnd::one_in(destr_one_in_n);
+
         const std::string corpse_name = corpse->corpse_name_the();
 
         Snd snd("I hear ripping and chewing.",
@@ -1012,7 +1022,7 @@ DidAction Actor::try_eat_corpse()
                 AlertsMon::no,
                 MorePromptOnMsg::no);
 
-        snd_emit::run(snd);
+        snd.run();
 
         if (actor_is_player)
         {
@@ -1035,7 +1045,8 @@ DidAction Actor::try_eat_corpse()
 
         if (is_destroyed)
         {
-            corpse->state_ = ActorState::destroyed;
+            corpse->destroy();
+
             map::mk_gore(pos);
             map::mk_blood(pos);
         }
@@ -1070,7 +1081,8 @@ void Actor::on_feed()
 
 void Actor::add_light(bool light_map[map_w][map_h]) const
 {
-    if (state_ == ActorState::alive && prop_handler_->has_prop(PropId::radiant))
+    if (state_ == ActorState::alive &&
+        prop_handler_->has_prop(PropId::radiant))
     {
         // TODO: Much of the code below is duplicated from
         // ActorPlayer::add_light_hook(), some refactoring is needed.

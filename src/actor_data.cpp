@@ -655,7 +655,7 @@ void init_data_list()
     d.glyph = 'P';
     d.color = clr_magenta;
     d.tile = TileId::witch_or_warlock;
-    d.hp = 10;
+    d.hp = 18;
     d.spi = 60;
     d.ability_vals.set_val(AbilityId::melee, 40);
     d.ability_vals.set_val(AbilityId::ranged, 40);
@@ -2253,7 +2253,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_sleep] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
-    d.spawn_min_dlvl = 6;
+    d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = dlvl_last - 4;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;

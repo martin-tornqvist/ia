@@ -194,6 +194,7 @@ P column_and_row_tile(const TileId tile)
     case TileId::flare_gun:                     return P(11, 3);
     case TileId::flare_lit:                     return P(12, 3);
     case TileId::orb:                           return P(13, 3);
+    case TileId::zombie_dust:                   return P(14, 3);
     case TileId::dagger:                        return P(0, 4);
     case TileId::crowbar:                       return P(3, 4);
     case TileId::rod:                           return P(6, 4);
@@ -214,7 +215,7 @@ P column_and_row_tile(const TileId tile)
     case TileId::mi_go:                         return P(12, 5);
     case TileId::floor:                         return P(1, 6);
     case TileId::aim_marker_head:               return P(2, 6);
-    case TileId::aim_marker_trail:              return P(3, 6);
+    case TileId::aim_marker_line:               return P(3, 6);
     case TileId::wall_front:                    return P(3, 7);
     case TileId::square_checkered_sparse:       return P(5, 6);
     case TileId::rubble_high:                   return P(7, 6);

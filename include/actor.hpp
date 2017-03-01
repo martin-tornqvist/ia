@@ -99,8 +99,18 @@ public:
              const bool allow_gore,
              const bool allow_drop_items);
 
+    void destroy();
+
+    // Silently mark the monster as body-destroyed, without running any hooks
+    // etc (used e.g. by the Horn of Banishment)
+    void destroy_silent()
+    {
+        state_ = ActorState::destroyed;
+    }
+
     // Used by Ghoul class and Ghoul monsters
     DidAction try_eat_corpse();
+
     void on_feed();
 
     void on_std_turn_common();
@@ -204,13 +214,6 @@ public:
         return state_;
     }
 
-    // Simply mark the monster as body-destroyed, without running any "death"
-    // events (used e.g. by the Horn of Banishment)
-    void set_destroyed()
-    {
-        state_ = ActorState::destroyed;
-    }
-
     virtual bool is_leader_of(const Actor* const actor) const = 0;
     virtual bool is_actor_my_leader(const Actor* const actor) const = 0;
 
@@ -228,6 +231,8 @@ protected:
     friend class Trap;
 
     virtual void on_death() {}
+
+    virtual void on_destroyed() {}
 
     virtual std::string death_msg() const;
 

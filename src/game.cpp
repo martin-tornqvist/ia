@@ -463,7 +463,8 @@ void handle_player_input(const InputData& input)
                     if (wpn->nr_ammo_loaded_ >= 1 ||
                         item_data.ranged.has_infinite_ammo)
                     {
-                        std::unique_ptr<State> aim_state(new Aiming(*wpn));
+                        std::unique_ptr<State> aim_state(
+                            new Aiming(map::player->pos, *wpn));
 
                         states::push(std::move(aim_state));
                     }
@@ -663,7 +664,7 @@ void handle_player_input(const InputData& input)
             if (explosive)
             {
                 std::unique_ptr<State> throwing_explosive(
-                    new ThrowingExplosive(*explosive));
+                    new ThrowingExplosive(map::player->pos, *explosive));
 
                 states::push(std::move(throwing_explosive));
             }
@@ -684,7 +685,7 @@ void handle_player_input(const InputData& input)
                     item_to_throw->clear_actor_carrying();
 
                     std::unique_ptr<State> throwing(
-                        new Throwing(*item_to_throw));
+                        new Throwing(map::player->pos, *item_to_throw));
 
                     states::push(std::move(throwing));
                 }
@@ -705,7 +706,8 @@ void handle_player_input(const InputData& input)
     {
         if (map::player->prop_handler().allow_see())
         {
-            std::unique_ptr<State> view_state(new Viewing);
+            std::unique_ptr<State> view_state(
+                new Viewing(map::player->pos));
 
             states::push(std::move(view_state));
         }

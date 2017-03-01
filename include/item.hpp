@@ -98,6 +98,28 @@ public:
     // * The item is found in an item container, but not picked up
     void on_found();
 
+    virtual void on_projectile_blocked(const P& pos, Actor* actor)
+    {
+        (void)pos;
+        (void)actor;
+    }
+
+    virtual void on_melee_hit(Actor& actor_hit, const int dmg)
+    {
+        (void)actor_hit;
+        (void)dmg;
+    }
+
+    virtual void on_melee_kill(Actor& actor_killed)
+    {
+        (void)actor_killed;
+    }
+
+    virtual void on_ranged_hit(Actor& actor_hit)
+    {
+        (void)actor_hit;
+    }
+
     void add_carrier_prop(Prop* const prop, const Verbosity verbosity);
 
     void clear_carrier_props();
@@ -286,28 +308,6 @@ public:
         return *ammo_data_;
     }
 
-    virtual void on_projectile_blocked(const P& pos, Actor* actor)
-    {
-        (void)pos;
-        (void)actor;
-    }
-
-    virtual void on_melee_hit(Actor& actor_hit, const int dmg)
-    {
-        (void)actor_hit;
-        (void)dmg;
-    }
-
-    virtual void on_melee_kill(Actor& actor_killed)
-    {
-        (void)actor_killed;
-    }
-
-    virtual void on_ranged_hit(Actor& actor_hit)
-    {
-        (void)actor_hit;
-    }
-
     int nr_ammo_loaded_;
 
 protected:
@@ -326,6 +326,15 @@ private:
     void on_melee_hit(Actor& actor_hit, const int dmg) override;
 
     void on_melee_kill(Actor& actor_killed) override;
+};
+
+class ZombieDust : public Wpn
+{
+public:
+    ZombieDust(ItemDataT* const item_data) :
+        Wpn(item_data) {}
+
+    void on_ranged_hit(Actor& actor_hit);
 };
 
 class SawedOff: public Wpn

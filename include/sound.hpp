@@ -55,6 +55,9 @@ public:
 
     ~Snd();
 
+    // Calls the snd_emit run function with this sound
+    void run();
+
     const std::string& msg() const
     {
         return msg_;

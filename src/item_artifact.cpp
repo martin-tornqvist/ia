@@ -133,7 +133,7 @@ void HornOfBanishmentHeard::run(Actor& actor) const
             msg_log::add(actor.name_the() + mon_disappear_msg);
         }
 
-        actor.set_destroyed();
+        actor.destroy_silent();
     }
 }
 

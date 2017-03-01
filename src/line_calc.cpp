@@ -84,7 +84,7 @@ const std::vector<P>* fov_delta_line(const P& delta,
 void calc_new_line(const P& origin,
                    const P& tgt,
                    const bool should_stop_at_target,
-                   const int cheb_travel_limit,
+                   const int king_dist_limit,
                    const bool allow_outside_map,
                    std::vector<P>& line_ref)
 {
@@ -99,10 +99,10 @@ void calc_new_line(const P& origin,
     const double delta_x_db = double(tgt.x - origin.x);
     const double delta_y_db = double(tgt.y - origin.y);
 
-    const double hypot_db   = sqrt((delta_x_db * delta_x_db) + (delta_y_db * delta_y_db));
+    const double hypot_db = sqrt((delta_x_db * delta_x_db) + (delta_y_db * delta_y_db));
 
-    const double x_incr_db  = (delta_x_db / hypot_db);
-    const double y_incr_db  = (delta_y_db / hypot_db);
+    const double x_incr_db = (delta_x_db / hypot_db);
+    const double y_incr_db = (delta_y_db / hypot_db);
 
     double current_x_db = double(origin.x) + 0.5;
     double current_y_db = double(origin.y) + 0.5;
@@ -145,13 +145,13 @@ void calc_new_line(const P& origin,
             return;
         }
 
-        const int distance_traveled = king_dist(origin.x, origin.y, current_pos.x, current_pos.y);
+        const int current_king_dist = king_dist(origin, current_pos);
 
-        if (distance_traveled >= cheb_travel_limit)
+        if (current_king_dist >= king_dist_limit)
         {
             return;
         }
     }
 }
 
-} //line_calc
+} // line_calc

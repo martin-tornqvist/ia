@@ -12,13 +12,13 @@ void init();
 
 void calc_new_line(const P& origin, const P& tgt,
                    const bool should_stop_at_target,
-                   const int cheb_travel_limit,
+                   const int king_dist_limit,
                    const bool allow_outside_map,
                    std::vector<P>& line_ref);
 
 const std::vector<P>* fov_delta_line(const P& delta,
                                      const double& max_dist_abs);
 
-} //line_calc
+} // line_calc
 
-#endif
+#endif // LINE_CALC_HPP

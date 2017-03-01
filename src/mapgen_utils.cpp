@@ -729,25 +729,25 @@ void mk_pathfind_corridor(Room& room_0,
 
         // Randomly mark some cells as blocked, this helps avoid boring super
         // long straight corridors
-        for (int x = 0; x < map_w; ++x)
-        {
-            for (int y = 0; y < map_h; ++y)
-            {
-                // Blocking a high amount of cells in the late game levels
-                // creates very nice cave corridors
-                const int block_one_in_n =
-                    map::dlvl >= dlvl_first_late_game   ? 3 :
-                    map::dlvl >= dlvl_first_mid_game    ? 6 :
-                    8;
+        // for (int x = 0; x < map_w; ++x)
+        // {
+        //     for (int y = 0; y < map_h; ++y)
+        //     {
+        //         // Blocking a high amount of cells in the late game levels
+        //         // creates very nice cave corridors
+        //         const int block_one_in_n =
+        //             map::dlvl >= dlvl_first_late_game   ? 3 :
+        //             map::dlvl >= dlvl_first_mid_game    ? 6 :
+        //             10;
 
-                if (rnd::one_in(block_one_in_n))
-                {
-                    blocked_expanded[x][y] = true;
+        //         if (rnd::one_in(block_one_in_n))
+        //         {
+        //             blocked_expanded[x][y] = true;
 
-                    continue;
-                }
-            }
-        }
+        //             continue;
+        //         }
+        //     }
+        // }
 
         // We know from above that p0 and p1 are actually OK - so mark them as
         // free in the expanded blocking array

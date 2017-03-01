@@ -38,6 +38,11 @@ Snd::~Snd()
 
 }
 
+void Snd::run()
+{
+    snd_emit::run(*this);
+}
+
 void Snd::on_heard(Actor& actor) const
 {
     if (snd_heard_effect_)

@@ -36,6 +36,7 @@ Gameplay
 * The Iron Suit and Asbestos Suit no longer gives penalties to aiming or spotting hidden monsters and objects
 * Removed all negative effects from critically failing melee attacks (such as "I am exhausted"), except for a small chance of the weapon breaking - which can only happen while cursed
 * Added more monsters
+* Zombie-type monsters now occasionally drop "Zombie Dust" when they are destroyed, which can be thrown at living, non-undead monsters to paralyze them
 
 Interface
 * All active properties are now printed with descriptions on the [@] character decsription page, and when [v]iewing monsters

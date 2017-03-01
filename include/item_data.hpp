@@ -196,6 +196,8 @@ enum class ItemId
     orb_of_sorcery,
     orb_of_life,
 
+    zombie_dust,
+
     END
 };
 
@@ -293,7 +295,9 @@ public:
         DiceParam               throw_dmg;
         int                     hit_chance_mod;
         int                     throw_hit_chance_mod;
+        bool                    always_break_on_throw;
         int                     effective_range;
+        int                     max_range;
         bool                    knocks_back;
         std::string             dmg_info_override;
         ItemId                  ammo_item_id;

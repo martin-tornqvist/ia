@@ -77,8 +77,6 @@ const double fov_max_w_db = double(fov_max_w_int);
 const int snd_dist_normal = fov_std_radi_int;
 const int snd_dist_loud = snd_dist_normal * 2;
 
-const int throw_range_lmt = fov_std_radi_int + 3;
-
 const int dynamite_fuse_turns = 5;
 const int expl_std_radi = 2;
 

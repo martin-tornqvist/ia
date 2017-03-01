@@ -251,6 +251,8 @@ protected:
 
     void on_death() override;
 
+    void on_destroyed() override;
+
     DidAction try_resurrect();
 
     int dead_turn_counter;

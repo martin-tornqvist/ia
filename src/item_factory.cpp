@@ -109,6 +109,10 @@ Item* mk(const ItemId item_id, const int nr_items)
         r = new PlayerGhoulClaw(d);
         break;
 
+    case ItemId::zombie_dust:
+        r = new ZombieDust(d);
+        break;
+
     case ItemId::dynamite:
         r = new Dynamite(d);
         break;

@@ -300,7 +300,7 @@ void Door::on_hit(const DmgType dmg_type,
                                     SndVol::low,
                                     AlertsMon::yes);
 
-                            snd_emit::run(snd);
+                            snd.run();
 
                             if (is_cell_seen)
                             {
@@ -340,7 +340,7 @@ void Door::on_hit(const DmgType dmg_type,
                                     SndVol::low,
                                     AlertsMon::yes);
 
-                            snd_emit::run(snd);
+                            snd.run();
                         }
                     }
                     else // No chance of success
@@ -355,7 +355,7 @@ void Door::on_hit(const DmgType dmg_type,
                                     SndVol::low,
                                     AlertsMon::yes);
 
-                            snd_emit::run(snd);
+                            snd.run();
 
                             msg_log::add("It seems futile.");
                         }
@@ -388,7 +388,7 @@ void Door::on_hit(const DmgType dmg_type,
                                 SndVol::high,
                                 AlertsMon::yes);
 
-                        snd_emit::run(snd);
+                        snd.run();
 
                         if (map::player->can_see_actor(*actor))
                         {
@@ -417,7 +417,7 @@ void Door::on_hit(const DmgType dmg_type,
                                 SndVol::high,
                                 AlertsMon::no);
 
-                        snd_emit::run(snd);
+                        snd.run();
                     }
                 }
 
@@ -891,7 +891,7 @@ void Door::try_close(Actor* actor_trying)
                             SndVol::low,
                             AlertsMon::yes);
 
-                    snd_emit::run(snd);
+                    snd.run();
 
                     msg_log::add("I fumble with a " +
                                  base_name_short() +
@@ -907,7 +907,7 @@ void Door::try_close(Actor* actor_trying)
                             SndVol::low,
                             AlertsMon::no);
 
-                    snd_emit::run(snd);
+                    snd.run();
 
                     if (player_see_tryer)
                     {
@@ -952,7 +952,7 @@ void Door::try_close(Actor* actor_trying)
                         SndVol::low,
                         AlertsMon::yes);
 
-                snd_emit::run(snd);
+                snd.run();
 
                 msg_log::add("I close the " +
                              base_name_short() +
@@ -968,7 +968,7 @@ void Door::try_close(Actor* actor_trying)
                         SndVol::low,
                         AlertsMon::no);
 
-                snd_emit::run(snd);
+                snd.run();
 
                 if (player_see_tryer)
                 {
@@ -1054,7 +1054,7 @@ void Door::try_open(Actor* actor_trying)
                         SndVol::low,
                         AlertsMon::yes);
 
-                snd_emit::run(snd);
+                snd.run();
 
                 msg_log::add("I open the " +
                              base_name_short() +
@@ -1070,7 +1070,7 @@ void Door::try_open(Actor* actor_trying)
                         SndVol::low,
                         AlertsMon::no);
 
-                snd_emit::run(snd);
+                snd.run();
 
                 if (player_see_tryer)
                 {
@@ -1106,7 +1106,7 @@ void Door::try_open(Actor* actor_trying)
                             SndVol::low,
                             AlertsMon::yes);
 
-                    snd_emit::run(snd);
+                    snd.run();
 
                     msg_log::add("I fumble with a " +
                                  base_name_short() +
@@ -1122,7 +1122,7 @@ void Door::try_open(Actor* actor_trying)
                             SndVol::low,
                             AlertsMon::no);
 
-                    snd_emit::run(snd);
+                    snd.run();
 
                     if (player_see_tryer)
                     {
@@ -1153,7 +1153,7 @@ void Door::try_open(Actor* actor_trying)
                             SndVol::low,
                             AlertsMon::yes);
 
-                    snd_emit::run(snd);
+                    snd.run();
 
                     msg_log::add("I fumble blindly with a " +
                                  base_name_short() +
@@ -1172,7 +1172,7 @@ void Door::try_open(Actor* actor_trying)
                             SndVol::low,
                             AlertsMon::no);
 
-                    snd_emit::run(snd);
+                    snd.run();
 
                     if (player_see_tryer)
                     {

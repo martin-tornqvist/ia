@@ -30,17 +30,22 @@ void player_throw_lit_explosive(const P& aim_cell)
 
     std::vector<P> path;
 
+    auto* const explosive = map::player->active_explosive;
+
+    const int max_range = explosive->data().ranged.max_range;
+
     line_calc::calc_new_line(map::player->pos,
                              aim_cell,
                              true,
-                             throw_range_lmt,
+                             max_range,
                              false,
                              path);
 
     // Remove cells after blocked cells
     for (size_t i = 1; i < path.size(); ++i)
     {
-        const P   p = path[i];
+        const P p = path[i];
+
         const auto* f = map::cells[p.x][p.y].rigid;
 
         if (!f->is_projectile_passable())
@@ -51,8 +56,6 @@ void player_throw_lit_explosive(const P& aim_cell)
     }
 
     const P end_pos(path.empty() ? P() : path.back());
-
-    auto* const explosive = map::player->active_explosive;
 
     msg_log::add(explosive->str_on_player_throw());
 
@@ -126,7 +129,7 @@ void throw_item(Actor& actor_throwing,
     line_calc::calc_new_line(actor_throwing.pos,
                              tgt_cell,
                              false,
-                             throw_range_lmt,
+                             999,
                              false,
                              path);
 
@@ -153,8 +156,6 @@ void throw_item(Actor& actor_throwing,
 
     states::draw();
 
-    int blocked_idx = -1;
-
     bool is_actor_hit = false;
 
     const Clr item_clr = item_thrown.clr();
@@ -163,11 +164,27 @@ void throw_item(Actor& actor_throwing,
 
     P pos(-1, -1);
 
-    for (size_t i = 1; i < path.size(); ++i)
+    P drop_pos(-1, -1);
+
+    for (size_t path_idx = 1; path_idx < path.size(); ++path_idx)
     {
         states::draw();
 
-        pos.set(path[i]);
+        // Have we gone out of range?
+        {
+            const int max_range = item_thrown.data().ranged.max_range;
+
+            const P current_pos = path[path_idx];
+
+            if (king_dist(path[0], current_pos) > max_range)
+            {
+                break;
+            }
+        }
+
+        pos = path[path_idx];
+
+        drop_pos = pos;
 
         Actor* const actor_here = map::actor_at_pos(pos);
 
@@ -188,14 +205,18 @@ void throw_item(Actor& actor_throwing,
 
                 if (map::player->can_see_actor(*actor_here))
                 {
-                    const Clr hit_clr = is_pot ? item_clr : clr_red_lgt;
+                    const Clr hit_clr =
+                        is_pot ?
+                        item_clr :
+                        clr_red_lgt;
 
                     io::draw_blast_at_cells({pos}, hit_clr);
                 }
 
                 const Clr hit_message_clr =
-                    actor_here == map::player ?
-                    clr_msg_bad : clr_msg_good;
+                    (actor_here == map::player) ?
+                    clr_msg_bad :
+                    clr_msg_good;
 
                 const bool can_see_actor =
                     map::player->can_see_actor(*actor_here);
@@ -206,7 +227,13 @@ void throw_item(Actor& actor_throwing,
 
                 msg_log::add(defender_name + " is hit.", hit_message_clr);
 
-                actor_here->hit(att_data.dmg, DmgType::physical);
+                if (att_data.dmg > 0)
+                {
+                    actor_here->hit(att_data.dmg, DmgType::physical);
+                }
+
+                item_thrown.on_ranged_hit(*actor_here);
+
                 is_actor_hit = true;
 
                 // If throwing a potion on an actor, let it make stuff happen
@@ -223,15 +250,24 @@ void throw_item(Actor& actor_throwing,
                     return;
                 }
 
-                blocked_idx = i;
-
-                if (item_thrown_data.type == ItemType::throwing_wpn)
+                if (!item_thrown_data.ranged.always_break_on_throw &&
+                    item_thrown_data.type == ItemType::throwing_wpn)
                 {
                     break_item_one_in_n = 4;
                 }
 
                 break;
             }
+        } // if actor hit
+
+        const auto* feature_here = map::cells[pos.x][pos.y].rigid;
+
+        if (!feature_here->is_projectile_passable())
+        {
+            // Drop item before the wall, not on the wall
+            drop_pos = path[path_idx - 1];
+
+            break;
         }
 
         if (map::cells[pos.x][pos.y].is_seen_by_player)
@@ -251,71 +287,66 @@ void throw_item(Actor& actor_throwing,
                                    item_clr);
             }
 
-
             io::update_screen();
 
             sdl_base::sleep(config::delay_projectile_draw());
         }
 
-        const auto* feature_here = map::cells[pos.x][pos.y].rigid;
-
-        if (!feature_here->is_projectile_passable())
-        {
-            blocked_idx =
-                (item_thrown_data.type == ItemType::potion) ?
-                i :
-                (i - 1);
-            break;
-        }
-
         if (pos == tgt_cell &&
             att_data.intended_aim_lvl == ActorSize::floor)
         {
-            blocked_idx = i;
             break;
         }
-    }
+    } // path loop
 
     // If potion, collide it on the landscape
     if (item_thrown_data.type == ItemType::potion)
     {
-        if (blocked_idx >= 0)
-        {
-            const Clr hit_clr = item_clr;
+        const Clr hit_clr = item_clr;
 
-            io::draw_blast_at_seen_cells({pos}, hit_clr);
+        io::draw_blast_at_seen_cells({pos}, hit_clr);
 
-            Potion* const potion = static_cast<Potion*>(&item_thrown);
+        Potion* const potion = static_cast<Potion*>(&item_thrown);
 
-            potion->on_collide(path[blocked_idx], nullptr);
+        potion->on_collide(pos, nullptr);
 
-            delete &item_thrown;
+        delete &item_thrown;
 
-            game_time::tick(speed_pct_diff);
+        game_time::tick(speed_pct_diff);
 
-            return;
-        }
+        return;
     }
 
-    const int final_idx =
-        (blocked_idx == -1) ?
-        (path.size() - 1) : blocked_idx;
+    // Setup a collision sound effect (this may not necessarily get executed)
+    const AlertsMon alerts =
+        (&actor_throwing == map::player) ?
+        AlertsMon::yes :
+        AlertsMon::no;
 
-    const P final_pos = path[final_idx];
+    Snd snd(item_thrown_data.land_on_hard_snd_msg,
+            item_thrown_data.land_on_hard_sfx,
+            IgnoreMsgIfOriginSeen::yes,
+            drop_pos,
+            nullptr,
+            SndVol::low,
+            alerts);
 
-    if (break_item_one_in_n != -1 &&
-        rnd::one_in(break_item_one_in_n))
+    if (item_thrown.data().ranged.always_break_on_throw ||
+        ((break_item_one_in_n != -1) &&
+         rnd::one_in(break_item_one_in_n)))
     {
         delete &item_thrown;
     }
-    else // Thrown item not destroyed
+    else // Not destroyed
     {
-        const Matl matl_at_drop_pos =
-            map::cells[final_pos.x][final_pos.y].rigid->matl();
+        item_drop::drop_item_on_map(drop_pos, item_thrown);
+    }
 
+    auto is_noisy_matl = [](const Matl matl)
+    {
         bool is_noisy = false;
 
-        switch (matl_at_drop_pos)
+        switch (matl)
         {
         case Matl::empty:
             is_noisy = false;
@@ -346,27 +377,23 @@ void throw_item(Actor& actor_throwing,
             break;
         }
 
-        if (is_noisy)
+        return is_noisy;
+    };
+
+    if (!is_actor_hit)
+    {
+        const Matl matl_at_last_pos =
+            map::cells[pos.x][pos.y].rigid->matl();
+
+        const Matl matl_at_drop_pos =
+            map::cells[drop_pos.x][drop_pos.y].rigid->matl();
+
+        if (is_noisy_matl(matl_at_last_pos) ||
+            is_noisy_matl(matl_at_drop_pos))
         {
-            const AlertsMon alerts = &actor_throwing == map::player ?
-                                      AlertsMon::yes :
-                                      AlertsMon::no;
-
-            if (!is_actor_hit)
-            {
-                Snd snd(item_thrown_data.land_on_hard_snd_msg,
-                        item_thrown_data.land_on_hard_sfx,
-                        IgnoreMsgIfOriginSeen::yes,
-                        final_pos,
-                        nullptr,
-                        SndVol::low,
-                        alerts);
-
-                snd_emit::run(snd);
-            }
+            // OK, run the sound that we set up earlier
+            snd.run();
         }
-
-        item_drop::drop_item_on_map(final_pos, item_thrown);
     }
 
     game_time::tick(speed_pct_diff);

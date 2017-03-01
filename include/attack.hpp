@@ -89,7 +89,7 @@ struct Projectile
 {
     Projectile() :
         pos                     (P(-1, -1)),
-        is_obstructed           (false),
+        is_dead                 (false),
         is_seen_by_player       (true),
         actor_hit               (nullptr),
         obstructed_in_element   (-1),
@@ -123,16 +123,16 @@ struct Projectile
         clr   = clr_to_render;
     }
 
-    P               pos;
-    bool            is_obstructed;
-    bool            is_seen_by_player;
-    Actor*          actor_hit;
-    int             obstructed_in_element;
-    bool            is_done_rendering;
-    char            glyph;
-    TileId          tile;
-    Clr             clr;
-    RangedAttData*  att_data;
+    P pos;
+    bool is_dead;
+    bool is_seen_by_player;
+    Actor* actor_hit;
+    int obstructed_in_element;
+    bool is_done_rendering;
+    char glyph;
+    TileId tile;
+    Clr clr;
+    RangedAttData* att_data;
 };
 
 enum class MeleeHitSize

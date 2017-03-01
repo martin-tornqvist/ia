@@ -87,7 +87,9 @@ ItemDataT::ItemRangedData::ItemRangedData() :
     throw_dmg                           (),
     hit_chance_mod                      (0),
     throw_hit_chance_mod                (0),
+    always_break_on_throw               (false),
     effective_range                     (3),
+    max_range                           (fov_std_radi_int * 2),
     knocks_back                         (false),
     dmg_info_override                   (""),
     ammo_item_id                        (ItemId::END),
@@ -280,6 +282,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.tile = TileId::potion;
         d.ranged.throw_hit_chance_mod = 15;
         d.ranged.throw_dmg = DiceParam(1, 3, 0);
+        d.ranged.always_break_on_throw = true;
         d.max_stack_at_spawn = 2;
         d.land_on_hard_snd_msg = "";
         d.ranged.is_throwable_wpn = true;
@@ -2238,6 +2241,35 @@ void init_data_list()
     d.is_carry_shocking = true;
     d.chance_to_incl_in_spawn_list = 3;
     d.native_containers.push_back(FeatureId::tomb);
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::throwing_wpn);
+    d.id = ItemId::zombie_dust;
+    d.base_name =
+    {
+        "Zombie Dust",
+        "Handfuls of Zombie Dust",
+        "a handful of Zombie Dust"
+    };
+    d.base_descr =
+    {
+        "When thrown at a living (non-undead) creature, this powder causes "
+        "paralyzation."
+    };
+    d.spawn_std_range.max = dlvl_last;
+    d.weight = ItemWeight::extra_light;
+    d.tile = TileId::zombie_dust;
+    d.glyph = '%';
+    d.clr = clr_brown;
+    d.ranged.throw_dmg = DiceParam(0, 0);
+    d.ranged.throw_hit_chance_mod = 15;
+    d.ranged.always_break_on_throw = true;
+    d.ranged.effective_range = -1;
+    d.ranged.max_range = 3;
+    d.max_stack_at_spawn = 1;
+    d.main_att_mode = AttMode::thrown;
+    d.native_containers.push_back(FeatureId::chest);
+    d.native_containers.push_back(FeatureId::cabinet);
     data[(size_t)d.id] = d;
 }
 
