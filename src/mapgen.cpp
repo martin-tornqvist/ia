@@ -252,6 +252,29 @@ void try_place_door(const P& p)
             door = new Door(p,
                             mimic,
                             DoorType::wood);
+
+            //
+            // TODO: Temporary experimentation
+            //
+            // door = new Door(p,
+            //                 mimic,
+            //                 DoorType::metal,
+            //                 DoorSpawnState::closed);
+
+            // bool floor[map_w][map_h];
+
+            // map_parsers::IsFeature(FeatureId::floor)
+            //     .run(floor);
+
+            // auto floor_list = to_vec(floor, true);
+
+            // const P lever_pos = rnd::element(floor_list);
+
+            // auto* const lever = new Lever(lever_pos);
+
+            // lever->link_door(door);
+
+            // map::put(lever);
         }
         else // Barred gate
         {
@@ -306,13 +329,10 @@ P place_stairs()
     TRACE_FUNC_BEGIN;
 
     bool allowed_cells[map_w][map_h];
+
     allowed_stair_cells(allowed_cells);
 
-    std::vector<P> allowed_cells_list;
-
-    to_vec(allowed_cells,
-           true,
-           allowed_cells_list);
+    auto allowed_cells_list = to_vec(allowed_cells, true);
 
     const int nr_ok_cells = allowed_cells_list.size();
 
@@ -362,11 +382,7 @@ void move_player_to_nearest_allowed_pos()
     bool allowed_cells[map_w][map_h];
     allowed_stair_cells(allowed_cells);
 
-    std::vector<P> allowed_cells_list;
-
-    to_vec(allowed_cells,
-           true,
-           allowed_cells_list);
+    auto allowed_cells_list = to_vec(allowed_cells, true);
 
     if (allowed_cells_list.empty())
     {
@@ -419,8 +435,9 @@ void place_monoliths()
     }
 
     // Block the area around the player
-    const P&    player_p    = map::player->pos;
-    const int   r           = fov_std_radi_int;
+    const P& player_p = map::player->pos;
+
+    const int r = fov_std_radi_int;
 
     const R fov_r(std::max(0,           player_p.x - r),
                   std::max(0,           player_p.y - r),
@@ -435,13 +452,9 @@ void place_monoliths()
         }
     }
 
-    std::vector<P> p_bucket;
-
     for (int i = 0; i < nr_monoliths; ++i)
     {
-        to_vec(blocked_expanded,
-               false,
-               p_bucket);
+        const auto p_bucket = to_vec(blocked_expanded, false);
 
         if (p_bucket.empty())
         {

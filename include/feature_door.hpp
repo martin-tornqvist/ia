@@ -46,7 +46,6 @@ public:
         is_open_                (false),
         is_stuck_               (false),
         is_secret_              (false),
-        is_handled_externally_  (false),
         type_                   (DoorType::wood) {}
 
     Door() = delete;
@@ -92,6 +91,8 @@ public:
 
     bool try_jam(Actor* actor_trying);
 
+    void on_lever_pulled();
+
     bool is_open() const
     {
         return is_open_;
@@ -107,11 +108,6 @@ public:
         return is_stuck_;
     }
 
-    bool is_handled_externally() const
-    {
-        return is_handled_externally_;
-    }
-
     Matl matl() const override;
 
     void reveal(const Verbosity verbosity) override;
@@ -120,17 +116,19 @@ public:
     {
         ASSERT(type_ != DoorType::gate);
 
-        is_open_    = false;
-        is_secret_  = true;
+        is_open_ = false;
+        is_secret_ = true;
     }
 
     void set_stuck()
     {
-        is_open_    = false;
-        is_stuck_   = true;
+        is_open_ = false;
+        is_stuck_ = true;
     }
 
-    virtual DidOpen open(Actor* const actor_opening) override;
+    DidOpen open(Actor* const actor_opening) override;
+
+    DidClose close(Actor* const actor_closing) override;
 
     static bool is_tile_any_door(const TileId tile)
     {
@@ -160,7 +158,7 @@ private:
 
     int nr_spikes_;
 
-    bool is_open_, is_stuck_, is_secret_, is_handled_externally_;
+    bool is_open_, is_stuck_, is_secret_;
 
     DoorType type_;
 

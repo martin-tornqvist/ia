@@ -284,9 +284,7 @@ void Actor::teleport()
     map_parsers::BlocksActor(*this, ParseActors::yes)
         .run(blocked);
 
-    std::vector<P> pos_bucket;
-
-    to_vec(blocked, false, pos_bucket);
+    const auto pos_bucket = to_vec(blocked, false);
 
     if (pos_bucket.empty())
     {

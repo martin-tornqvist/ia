@@ -20,6 +20,7 @@
 #include "pickup.hpp"
 #include "game.hpp"
 #include "sound.hpp"
+#include "feature_door.hpp"
 
 
 namespace
@@ -214,12 +215,21 @@ void Rigid::disarm()
 DidOpen Rigid::open(Actor* const actor_opening)
 {
     (void)actor_opening;
+
     return DidOpen::no;
+}
+
+DidClose Rigid::close(Actor* const actor_closing)
+{
+    (void)actor_closing;
+
+    return DidClose::no;
 }
 
 DidTriggerTrap Rigid::trigger_trap(Actor* const actor)
 {
     (void)actor;
+
     return DidTriggerTrap::no;
 }
 
@@ -1443,46 +1453,89 @@ Clr Chasm::clr_default() const
 // -----------------------------------------------------------------------------
 Lever::Lever(const P& p) :
     Rigid(p),
-    is_position_left_(true),
-    door_linked_to_(nullptr)  {}
+    is_left_pos_(true),
+    linked_door_(nullptr)  {}
 
 void Lever::on_hit(const DmgType dmg_type,
                    const DmgMethod dmg_method,
                    Actor* const actor)
 {
-    (void)dmg_type; (void)dmg_method; (void)actor;
+    (void)dmg_type;
+    (void)dmg_method;
+    (void)actor;
 }
 
 std::string Lever::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "a " : "the ";
-    return ret + "lever";
+    std::string ret =
+        (article == Article::a) ?
+        "a" : "the";
+
+    ret += " lever (in ";
+
+    ret +=
+        is_left_pos_ ?
+        "left" : "right";
+
+    ret += " position)";
+
+    return ret;
 }
 
 Clr Lever::clr_default() const
 {
-    return is_position_left_ ? clr_gray : clr_white;
+    return
+        is_left_pos_?
+        clr_gray :
+        clr_white;
 }
 
 TileId Lever::tile() const
 {
-    return is_position_left_ ? TileId::lever_left : TileId::lever_right;
+    return
+        is_left_pos_ ?
+        TileId::lever_left :
+        TileId::lever_right;
 }
 
-void Lever::pull()
+void Lever::bump(Actor& actor_bumping)
 {
+    (void)actor_bumping;
+
     TRACE_FUNC_BEGIN;
-    is_position_left_ = !is_position_left_;
 
-    // TODO: Implement something like open_by_lever in the Door class instead of setting
-    // "is_open_" etc directly.
+    if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
+    {
+        msg_log::clear();
 
-//  if(!door_linked_to_->is_broken_) {
-//    TRACE << "Door linked to is not broken" << std::endl;
-//    if(!door_linked_to_->is_open_) {door_linked_to_->reveal(true);}
-//    door_linked_to_->is_open_  = !door_linked_to_->is_open_;
-//    door_linked_to_->is_stuck_ = false;
-//  }
+        msg_log::add("There is a lever here, pull it? [y/n]");
+
+        const auto answer = query::yes_or_no();
+
+        if (answer == BinaryAnswer::no)
+        {
+            msg_log::clear();
+
+            TRACE_FUNC_END;
+
+            return;
+        }
+    }
+
+    msg_log::add("I pull the lever.");
+
+    is_left_pos_ = !is_left_pos_;
+
+    if (linked_door_->is_open())
+    {
+        linked_door_->close(nullptr);
+    }
+    else // Not open
+    {
+        linked_door_->open(nullptr);
+    }
+
+    game_time::tick();
 
     TRACE_FUNC_END;
 }
@@ -2202,10 +2255,10 @@ void ItemContainer::open(const P& feature_pos,
                 msg_log::add("Unload? [G]");
             }
 
-            const YesNoAnswer answer =
+            const BinaryAnswer answer =
                 query::yes_or_no(is_unloadable_wpn ? 'G' : -1);
 
-            if (answer == YesNoAnswer::yes)
+            if (answer == BinaryAnswer::yes)
             {
                 audio::play(SfxId::pickup);
 
@@ -2224,7 +2277,7 @@ void ItemContainer::open(const P& feature_pos,
                     inv.put_in_backpack(item);
                 }
             }
-            else if (answer == YesNoAnswer::no)
+            else if (answer == BinaryAnswer::no)
             {
                 item_drop::drop_item_on_map(feature_pos, *item);
 
@@ -3230,11 +3283,9 @@ void Fountain::bump(Actor& actor_bumping)
 
             const auto answer = query::yes_or_no();
 
-            if (answer == YesNoAnswer::no)
+            if (answer == BinaryAnswer::no)
             {
                 msg_log::clear();
-
-                msg_log::add("I leave the fountain for now.");
 
                 return;
             }

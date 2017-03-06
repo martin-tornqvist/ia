@@ -69,7 +69,7 @@ const Clr clr_title             = clr_brown_gray;
 
 const Clr clr_msg_good          = clr_green_lgt;
 const Clr clr_msg_bad           = clr_red_lgt;
-const Clr clr_msg_note          = clr_yellow_drk;
+const Clr clr_msg_note          = clr_orange;
 
 //-----------------------------------------------------------------------------
 // Misc colors

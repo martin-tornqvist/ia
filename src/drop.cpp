@@ -160,8 +160,7 @@ Item* drop_item_on_map(const P& intended_pos, Item& item)
         }
     }
 
-    std::vector<P> free_cells;
-    to_vec(free_cell_array, true, free_cells);
+    auto free_cells = to_vec(free_cell_array, true);
 
     if (free_cells.empty())
     {

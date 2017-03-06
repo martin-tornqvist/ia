@@ -2211,8 +2211,7 @@ void SpellSummonMon::run_effect(Actor* const caster) const
     if (free_cells_seen_by_player.empty())
     {
         // No free cells seen by player, instead summon near the caster.
-        std::vector<P> free_cells_vector;
-        to_vec(blocked, false, free_cells_vector);
+        auto free_cells_vector = to_vec(blocked, false);
 
         if (!free_cells_vector.empty())
         {

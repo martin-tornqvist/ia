@@ -1392,11 +1392,11 @@ ConsumeItem Explosive::activate(Actor* const actor)
     {
         const std::string name = this->name(ItemRefType::a);
 
-        msg_log::add("Light " + name + " [y/n]?");
+        msg_log::add("Light " + name + "? [y/n]");
 
         auto result = query::yes_or_no();
 
-        if (result == YesNoAnswer::no)
+        if (result == BinaryAnswer::no)
         {
             msg_log::clear();
 

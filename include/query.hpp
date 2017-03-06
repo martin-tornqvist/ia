@@ -6,7 +6,7 @@
 
 struct InputData;
 
-enum class YesNoAnswer
+enum class BinaryAnswer
 {
     no,
     yes,
@@ -26,7 +26,7 @@ void init();
 
 void wait_for_key_press();
 
-YesNoAnswer yes_or_no(char key_for_special_event = -1);
+BinaryAnswer yes_or_no(char key_for_special_event = -1);
 
 Dir dir(const AllowCenter allow_center);
 

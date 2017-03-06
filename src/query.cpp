@@ -30,11 +30,11 @@ void wait_for_key_press()
     }
 }
 
-YesNoAnswer yes_or_no(char key_for_special_event)
+BinaryAnswer yes_or_no(char key_for_special_event)
 {
     if (!is_inited_ || config::is_bot_playing())
     {
-        return YesNoAnswer::yes;
+        return BinaryAnswer::yes;
     }
 
     io::update_screen();
@@ -53,15 +53,15 @@ YesNoAnswer yes_or_no(char key_for_special_event)
     if (d.key == key_for_special_event &&
         key_for_special_event != -1)
     {
-        return YesNoAnswer::special;
+        return BinaryAnswer::special;
     }
 
     if (d.key == 'y')
     {
-        return YesNoAnswer::yes;
+        return BinaryAnswer::yes;
     }
 
-    return YesNoAnswer::no;
+    return BinaryAnswer::no;
 }
 
 InputData letter(const bool accept_enter)

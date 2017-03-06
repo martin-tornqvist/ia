@@ -20,7 +20,6 @@ Door::Door(const P& feature_pos,
     is_open_                (false),
     is_stuck_               (false),
     is_secret_              (false),
-    is_handled_externally_  (false),
     type_                   (type)
 {
     //
@@ -615,7 +614,7 @@ Clr Door::clr_default() const
             break;
 
         case DoorType::metal:
-            return clr_white;
+            return clr_gray;
             break;
 
         case DoorType::gate:
@@ -795,26 +794,29 @@ void Door::try_close(Actor* actor_trying)
 
     const bool tryer_is_blind = !actor_trying->prop_handler().allow_see();
 
+    if (is_player &&
+        type_ == DoorType::metal)
+    {
+        if (tryer_is_blind)
+        {
+            msg_log::add("There is a metal door here, but it's stuck.");
+        }
+        else
+        {
+            msg_log::add("The door is stuck.");
+        }
+
+        msg_log::add("Perhaps it is handled elsewhere.");
+
+        return;
+    }
+
+    bool is_closable = true;
+
     const bool player_see_tryer =
         is_player ?
         true :
         map::player->can_see_actor(*actor_trying);
-
-    bool is_closable = true;
-
-    if (is_handled_externally_)
-    {
-        if (is_player)
-        {
-            msg_log::add("This " +
-                         base_name_short() +
-                         " cannot be closed.");
-
-            msg_log::add("Perhaps it is handled elsewhere.");
-        }
-
-        return;
-    }
 
     // Already closed?
     if (is_closable && !is_open_)
@@ -1008,16 +1010,17 @@ void Door::try_open(Actor* actor_trying)
         true :
         map::player->can_see_actor(*actor_trying);
 
-    if (is_handled_externally_)
+    if (is_player &&
+        type_ == DoorType::metal)
     {
-        if (is_player)
+        if (!player_see_door)
         {
-            msg_log::add("I see no way to open the " +
-                         base_name_short() +
-                         ".");
-
-            msg_log::add("Perhaps it is opened elsewhere.");
+            msg_log::add("There is a closed metal door here.");
         }
+
+        msg_log::add("I find no way to open it.");
+
+        msg_log::add("Perhaps it is opened elsewhere.");
 
         return;
     }
@@ -1216,4 +1219,13 @@ DidOpen Door::open(Actor* const actor_opening)
     is_stuck_ = false;
 
     return DidOpen::yes;
+}
+
+DidClose Door::close(Actor* const actor_closing)
+{
+    (void)actor_closing;
+
+    is_open_ = false;
+
+    return DidClose::yes;
 }

@@ -24,26 +24,26 @@ void player_try_close_or_jam_feature(Feature* const feature)
 
         if (player_can_see)
         {
-            msg_log::add("I see nothing there to close or jam.");
+            msg_log::add("I see nothing there to close or jam shut.");
         }
-        else //Player cannot see
+        else // Player cannot see
         {
-            msg_log::add("I find nothing there to close or jam.");
+            msg_log::add("I find nothing there to close or jam shut.");
         }
 
         return;
     }
 
-    //This point reached means it's a door
+    // This is a door
 
     Door* const door = static_cast<Door*>(feature);
 
     if (door->is_open())
     {
-        //Door is open, try to close it
+        // Door is open, try to close it
         door->try_close(map::player);
     }
-    else //Door is closed - try to jam it
+    else // Door is closed - try to jam it
     {
         const bool has_spike =
             map::player->inv().has_item_in_backpack(ItemId::iron_spike);
@@ -66,21 +66,21 @@ void player_try_close_or_jam_feature(Feature* const feature)
                 {
                     msg_log::add("I have no iron spikes left.");
                 }
-                else //Has spikes left
+                else // Has spikes left
                 {
                     msg_log::add("I have " + std::to_string(spikes_left_after) +
                                  " iron spikes left.");
                 }
             }
         }
-        else //Has no spikes to jam with
+        else // Has no spikes to jam with
         {
             msg_log::add("I have nothing to jam the door with.");
         }
     }
 }
 
-} //namespace
+} // namespace
 
 void player_try_close_or_jam()
 {
@@ -95,11 +95,11 @@ void player_try_close_or_jam()
 
     if (input_dir != Dir::END && input_dir != Dir::center)
     {
-        //Valid direction
+        // Valid direction
         const P p(map::player->pos + dir_utils::offset(input_dir));
 
         player_try_close_or_jam_feature(map::cells[p.x][p.y].rigid);
     }
 }
 
-} //close
+} // close

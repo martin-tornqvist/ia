@@ -1663,7 +1663,7 @@ void Player::move(Dir dir)
                                          "? [y/n]",
                                          clr_white_lgt);
 
-                            if (query::yes_or_no() == YesNoAnswer::no)
+                            if (query::yes_or_no() == BinaryAnswer::no)
                             {
                                 msg_log::clear();
 

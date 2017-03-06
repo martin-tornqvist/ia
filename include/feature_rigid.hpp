@@ -28,6 +28,12 @@ enum class DidOpen
     yes
 };
 
+enum class DidClose
+{
+    no,
+    yes
+};
+
 class Item;
 
 class ItemContainer
@@ -86,6 +92,8 @@ public:
     void clear_gore();
 
     virtual DidOpen open(Actor* const actor_opening);
+
+    virtual DidClose close(Actor* const actor_closing);
 
     virtual void disarm();
 
@@ -772,9 +780,15 @@ public:
     }
 
     std::string name(const Article article) const override;
+
     TileId tile() const override;
 
-    void set_linked_door(Door* const door) {door_linked_to_ = door;}
+    void bump(Actor& actor_bumping) override;
+
+    void link_door(Door* const door)
+    {
+        linked_door_ = door;
+    }
 
 private:
     Clr clr_default() const override;
@@ -783,10 +797,9 @@ private:
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 
-    void pull();
+    bool is_left_pos_;
 
-    bool is_position_left_;
-    Door* door_linked_to_;
+    Door* linked_door_;
 };
 
 class Altar: public Rigid

@@ -736,27 +736,41 @@ void find_path_to_player(Mon& mon, std::vector<P>& path)
 
             const auto* const f = map::cells[x][y].rigid;
 
-            if (!f->can_move(mon))
+            if (f->can_move(mon))
             {
-                // Doors are only blocked if the monster cannot open or bash
-                if (f->id() == FeatureId::door)
-                {
-                    // TODO: What if there is a monster that can open
-                    //       doors but not bash, and the door is stuck?
+                continue;
+            }
 
-                    const ActorDataT& d = mon.data();
+            // Doors are only blocked if the monster cannot open or bash
+            if (f->id() == FeatureId::door)
+            {
+                const auto* const door = static_cast<const Door*>(f);
 
-                    if (!d.can_open_doors &&
-                        !d.can_bash_doors)
-                    {
-                        blocked[x][y] = true;
-                    }
-                }
-                else // Not a door (e.g. a wall)
+                // Metal doors are always blocking
+                if (door->type() == DoorType::metal)
                 {
                     blocked[x][y] = true;
+
+                    continue;
+                }
+
+                // Not a metal door
+
+                // TODO: What if there is a monster that can open
+                //       doors but not bash, and the door is stuck?
+
+                // Consider non-metal doors as free if monster can open or bash
+                const ActorDataT& d = mon.data();
+
+                if (d.can_open_doors ||
+                    d.can_bash_doors)
+                {
+                    continue;
                 }
             }
+
+            // Not a door (e.g. a wall)
+            blocked[x][y] = true;
         }
     }
 

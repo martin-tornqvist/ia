@@ -245,9 +245,7 @@ void mk_items_on_floor()
     }
 
     // Spawn some extra rocks on the map (to give player some ranged attack)
-    to_vec(blocked,
-           false,
-           positions);
+    positions = to_vec(blocked, false);
 
     const int nr_rock_spawns = rnd::range(2, 3);
 

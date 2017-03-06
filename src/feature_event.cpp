@@ -96,9 +96,11 @@ void EventWallCrumble::on_new_turn()
         }
 
         // Spawn things
-        int         nr_mon_limit_except_adj_to_entry    = 9999;
-        ActorId     mon_type                            = ActorId::zombie;
-        const int   rnd                                 = rnd::range(1, 5);
+        int nr_mon_limit_except_adj_to_entry = 9999;
+
+        ActorId mon_type = ActorId::zombie;
+
+        const int rnd = rnd::range(1, 5);
 
         switch (rnd)
         {
@@ -148,9 +150,12 @@ void EventWallCrumble::on_new_turn()
             if (nr_mon_spawned < nr_mon_limit_except_adj_to_entry ||
                 is_pos_adj(p, pos_, false))
             {
-                Actor*  const actor = actor_factory::mk(mon_type, p);
-                Mon*    const mon   = static_cast<Mon*>(actor);
+                Actor* const actor = actor_factory::mk(mon_type, p);
+
+                Mon* const mon = static_cast<Mon*>(actor);
+
                 mon->aware_of_player_counter_ = mon->data().nr_turns_aware;
+
                 ++nr_mon_spawned;
             }
         }
@@ -174,9 +179,7 @@ bool EventSnakeEmerge::try_find_p()
 
     blocked_cells(R(0, 0, map_w - 1, map_h - 1), blocked);
 
-    std::vector<P> p_bucket;
-
-    to_vec(blocked, false, p_bucket);
+    auto p_bucket = to_vec(blocked, false);
 
     random_shuffle(begin(p_bucket), end(p_bucket));
 

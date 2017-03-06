@@ -306,9 +306,7 @@ std::vector<Mon*> spawn(const P& origin,
     map_parsers::BlocksMoveCmn(ParseActors::yes)
         .run(blocked);
 
-    std::vector<P> free_cells;
-
-    to_vec(blocked, false, free_cells);
+    auto free_cells = to_vec(blocked, false);
 
     std::sort(begin(free_cells), end(free_cells), IsCloserToPos(origin));
 

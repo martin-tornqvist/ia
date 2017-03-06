@@ -95,10 +95,10 @@ void try_cast(const SpellOpt& spell_opt)
 
         if (spi_cost_range.max >= map::player->spi())
         {
-            msg_log::add("Cast spell and risk depleting your spirit [y/n]?",
+            msg_log::add("Cast spell and risk depleting your spirit? [y/n]",
                          clr_white_lgt);
 
-            if (query::yes_or_no() == YesNoAnswer::no)
+            if (query::yes_or_no() == BinaryAnswer::no)
             {
                 msg_log::clear();
 
