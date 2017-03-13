@@ -70,7 +70,7 @@ void sort_entries(std::vector<HighscoreEntry>& entries)
 void write_file(std::vector<HighscoreEntry>& entries)
 {
     std::ofstream file;
-    file.open("data/highscores", std::ios::trunc);
+    file.open("res/data/highscores", std::ios::trunc);
 
     for (const auto entry : entries)
     {
@@ -94,7 +94,7 @@ std::vector<HighscoreEntry> read_file()
     std::vector<HighscoreEntry> entries;
 
     std::ifstream file;
-    file.open("data/highscores");
+    file.open("res/data/highscores");
 
     if (!file.is_open())
     {

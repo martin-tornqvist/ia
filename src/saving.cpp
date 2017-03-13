@@ -104,7 +104,7 @@ void write_file()
 {
     std::ofstream file;
 
-    file.open("data/save", std::ios::trunc);
+    file.open("res/data/save", std::ios::trunc);
 
     if (file.is_open())
     {
@@ -124,7 +124,7 @@ void write_file()
 
 void read_file()
 {
-    std::ifstream file("data/save");
+    std::ifstream file("res/data/save");
 
     if (file.is_open())
     {
@@ -137,7 +137,7 @@ void read_file()
 
         file.close();
     }
-    else //Could not open save file
+    else // Could not open save file
     {
         ASSERT(false && "Failed to open save file");
     }
@@ -208,12 +208,14 @@ void load_game()
 
 bool is_save_available()
 {
-    std::ifstream file("data/save");
+    std::ifstream file("res/data/save");
 
     if (file.good())
     {
         const bool is_empty = file.peek() == std::ifstream::traits_type::eof();
+
         file.close();
+
         return !is_empty;
     }
     else // Failed to open file

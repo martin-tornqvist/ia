@@ -33,7 +33,7 @@ void load_audio_file(const SfxId sfx, const std::string& filename)
 
     io::clear_screen();
 
-    const std::string file_rel_path = "audio/" + filename;
+    const std::string file_rel_path = "res/audio/" + filename;
 
     const std::string nr_loaded_str =
         std::to_string(nr_files_loaded_) + "/" +

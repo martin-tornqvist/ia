@@ -15,9 +15,9 @@ const std::string version_str = "develop version";
 
 const std::string date_str = __DATE__;
 
-const std::string tiles_img_name = "images/gfx_16x24.png";
-const std::string logo_img_name = "images/main_menu_logo.png";
-const std::string skull_img_name = "images/skull.png";
+const std::string tiles_img_name = "res/images/gfx_16x24.png";
+const std::string logo_img_name = "res/images/main_menu_logo.png";
+const std::string skull_img_name = "res/images/skull.png";
 
 const int screen_bpp = 32;
 

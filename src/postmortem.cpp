@@ -320,7 +320,7 @@ void PostmortemMenu::mk_memorial_file() const
     const std::string file_name =
         map::player->name_a() + "_" + time_stamp + ".txt";
 
-    const std::string file_path = "data/" + file_name;
+    const std::string file_path = "res/data/" + file_name;
 
     // Write memorial file
     std::ofstream file;

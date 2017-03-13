@@ -171,7 +171,7 @@ void decorate()
                 //
                 // Convert some walls to gratings
                 //
-                if (rnd::one_in(4))
+                if (rnd::one_in(6))
                 {
                     bool is_allowed = true;
 

@@ -1,5 +1,18 @@
 # Guide for building Infra Arcana
 
+## Fetching the source code
+
+Clone the IA repository on Github:
+
+    https://github.com/martin-tornqvist/ia.git
+
+**NOTE:** Part of the IA source code resides in a Git sub module, which you also need to initialize and update, like so:
+
+    $ git submodule init
+    $ git submodule update
+
+Run "git submodule update" again when checking out different branches or tags.
+
 ## Which branch	should I build?
 **develop** - If you want to try out new features early (the develop branch should be relatively stable and bug free, feel free to open Github issues if you encounter bugs or crashes).
 
@@ -7,70 +20,31 @@
 
 **tags (v15.0, v16.0, etc)** - If you want to build one of the official releases.
 
-**NOTE:** Part of the IA source code resides in a Git sub module, which you also need to initialize and update, like so:
+## Building Infra Arcana
 
-    $ git submodule init
-    $ git submodule update
+Infra Arcana is built with [CMake](https://cmake.org/), which is a build system generator. CMake can generate GNU Makefiles, Code::Blocks projects, Visual Studio solutions, etc for many different platforms. Look for an online tutorial on how to use CMake (some pointers are given below).
 
-## Fetching the source code
+### Unix/Linux/macOS
+You need CMake, build tools (e.g. GNU Make + gcc), as well as SDL2, SDL2-image, and SDL2-mixer. These are the required SDL packages (retrieve them with apt-get for Ubuntu and Linux Mint):
 
-If you aren't familiar with Git, you can download the whole project directly [as a compressed archive](https://github.com/InfraArcana/ia/archive/master.zip).
+    libsdl2-2.0-0 libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev
 
-## Linux
+Hint for building:
 
-The instructions below are written and tested for Linux Mint 18
+    cd <ia directory>
+    mkdir build && cd build
+    cmake ../
+    make ia
 
-### Building Infra Arcana
+NOTE: Building with CMake on macOS is not yet tested (as far as I know) - I would love to hear feedback on success or failures!
 
-You will need build tools and SDL:
+### Windows
+You need CMake, and some IDE or build tools of your choice (such as [Code::Blocks](http://www.codeblocks.org), or [Visual Studio](https://www.visualstudio.com/)). The Windows version of SDL is included in the repository already, so there is no need to download this.
 
-    $ sudo apt-get install make gcc libsdl2-2.0-0 libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev
+Run CMake. If you use the graphical interface, then for "Where is the source code?" select the root folder of the ia repo (NOT the "src" folder), and for "Where to build the binaries?" select a folder called "build" in the ia repo (the "build" folder may not actually exist yet, but it doesn't matter, just specify this path). Run "Configure" and "Generate".
 
-Go to the IA repository directory, and type:
+You may need to set up some system environment variables to fix errors, depending on which type of project you are generating.
 
-    $ make
+After running CMake, if everything went fine, the project (of the type that you selected) should be available in the "build" folder. Open this project and build the "ia" target.
 
-Or if you want to do a debug build:
-
-    $ make debug
-
-Go to the "target" directory
-
-Start IA by typing
-
-    $ ./ia
-
-(dot slash ia)
-
-If you want, you can copy the "target" directory somewhere and rename it
-
-## OS X
-
-The instructions below are written and tested for OS X 10.11.5 and Xcode 7.3.1.
-
-### Building on OS X
-
-Install Xcode/Xcode command line tools.
-
-Copy [SDL2.framework](http://www.libsdl.org/download-2.0.php), [SDL2\_image.framework](http://www.libsdl.org/projects/SDL_image/), and [SDL2\_mixer.framework](http://www.libsdl.org/projects/SDL_mixer/) to /Library/Frameworks (all users) or /Users/Username/Library/Frameworks (this user only).
-
-Release build:
-
-    $ make osx-release
-
-Debug build:
-
-    $ make osx-debug
-
-Run:
-
-    $ cd ./target
-    $ ./ia
-
-If you want, you can copy the "target" directory somewhere and rename it.
-
-## Windows
-
-Building on Windows is currently not supported. One option is to use Virtual Box to either play on Linux, or cross compile for Windows on Linux.
-
-This will be resolved eventually.
+For example, if you generated a Code::Blocks project, then in the drop-down target list (near the top of the screen) select the "ia" target. Build by clicking on the yellow cogwheel, then run the game by clicking on the green arrow.

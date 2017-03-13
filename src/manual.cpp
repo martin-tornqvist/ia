@@ -90,7 +90,7 @@ void BrowseManual::read_file()
 {
     lines_.clear();
 
-    std::ifstream file("manual.txt");
+    std::ifstream file("res/manual.txt");
 
     if (!file.is_open())
     {

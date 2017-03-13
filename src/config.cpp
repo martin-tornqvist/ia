@@ -65,14 +65,16 @@ void set_cell_px_dim_dependent_variables()
 void set_cell_px_dims_from_font_name()
 {
     TRACE_FUNC_BEGIN;
+
     std::string font_name = font_name_;
 
-    char ch = 'a';
+    char ch = font_name.front();
 
     while (ch < '0' || ch > '9')
     {
         font_name.erase(begin(font_name));
-        ch = font_name[0];
+
+        ch = font_name.front();
     }
 
     std::string w_str = "";
@@ -80,20 +82,25 @@ void set_cell_px_dims_from_font_name()
     while (ch != 'x')
     {
         font_name.erase(begin(font_name));
+
         w_str += ch;
-        ch = font_name[0];
+
+        ch = font_name.front();
     }
 
     font_name.erase(begin(font_name));
-    ch = font_name[0];
+
+    ch = font_name.front();
 
     std::string h_str = "";
 
     while (ch != '_' && ch != '.')
     {
         font_name.erase(begin(font_name));
+
         h_str += ch;
-        ch = font_name[0];
+
+        ch = font_name.front();
     }
 
     TRACE << "Parsed font image name, found dims: "
@@ -101,6 +108,7 @@ void set_cell_px_dims_from_font_name()
 
     cell_px_w_ = to_int(w_str);
     cell_px_h_ = to_int(h_str);
+
     TRACE_FUNC_END;
 }
 
@@ -109,7 +117,7 @@ void set_default_variables()
     TRACE_FUNC_BEGIN;
     is_audio_enabled_ = true;
     is_tiles_mode_ = true;
-    font_name_ = "images/16x24_v1.png";
+    font_name_ = "16x24_v1.png";
 
     set_cell_px_dims_from_font_name();
 
@@ -145,7 +153,7 @@ void player_sets_option(const MenuBrowser& browser)
 
         if (is_tiles_mode_ && (cell_px_w_ != 16 || cell_px_h_ != 24))
         {
-            font_name_ = "images/16x24_v1.png";
+            font_name_ = "16x24_v1.png";
         }
 
         set_cell_px_dims_from_font_name();
@@ -162,9 +170,10 @@ void player_sets_option(const MenuBrowser& browser)
         {
             if (font_name_ == font_image_names[i])
             {
-                font_name_ = i == font_image_names.size() - 1 ?
-                             font_image_names.front() :
-                             font_image_names[i + 1];
+                font_name_ =
+                    (i == font_image_names.size() - 1) ?
+                    font_image_names.front() :
+                    font_image_names[i + 1];
                 break;
             }
         }
@@ -173,15 +182,17 @@ void player_sets_option(const MenuBrowser& browser)
 
         if (is_tiles_mode_)
         {
-            while (cell_px_w_ != 16 || cell_px_h_ != 24)
+            while ((cell_px_w_ != 16) ||
+                   (cell_px_h_ != 24))
             {
                 for (size_t i = 0; i < font_image_names.size(); ++i)
                 {
                     if (font_name_ == font_image_names[i])
                     {
-                        font_name_ = i == font_image_names.size() - 1 ?
-                                     font_image_names.front() :
-                                     font_image_names[i + 1];
+                        font_name_ =
+                            (i == font_image_names.size() - 1) ?
+                            font_image_names.front() :
+                            font_image_names[i + 1];
                         break;
                     }
                 }
@@ -191,6 +202,7 @@ void player_sets_option(const MenuBrowser& browser)
         }
 
         set_cell_px_dim_dependent_variables();
+
         io::init();
     }
     break;
@@ -322,7 +334,7 @@ void player_sets_option(const MenuBrowser& browser)
 void read_file(std::vector<std::string>& lines)
 {
     std::ifstream file;
-    file.open("data/config");
+    file.open("res/data/config");
 
     if (file.is_open())
     {
@@ -357,7 +369,8 @@ void set_variables_from_lines(std::vector<std::string>& lines)
 
         if (cell_px_w_ != 16 || cell_px_h_ != 24)
         {
-            font_name_ = "images/16x24_v1.png";
+            font_name_ = "16x24_v1.png";
+
             set_cell_px_dims_from_font_name();
         }
     }
@@ -423,7 +436,7 @@ void set_variables_from_lines(std::vector<std::string>& lines)
 void write_lines_to_file(std::vector<std::string>& lines)
 {
     std::ofstream file;
-    file.open("data/config", std::ios::trunc);
+    file.open("res/data/config", std::ios::trunc);
 
     for (size_t i = 0; i < lines.size(); ++i)
     {
@@ -468,16 +481,16 @@ void init()
     is_bot_playing_ = false;
 
     font_image_names.clear();
-    font_image_names.push_back("images/8x12_DOS.png");
-    font_image_names.push_back("images/11x19.png");
-    font_image_names.push_back("images/11x22.png");
-    font_image_names.push_back("images/12x24.png");
-    font_image_names.push_back("images/16x24_v1.png");
-    font_image_names.push_back("images/16x24_v2.png");
-    font_image_names.push_back("images/16x24_v3.png");
-    font_image_names.push_back("images/16x24_DOS.png");
-    font_image_names.push_back("images/16x24_typewriter_v1.png");
-    font_image_names.push_back("images/16x24_typewriter_v2.png");
+    font_image_names.push_back("8x12_DOS.png");
+    font_image_names.push_back("11x19.png");
+    font_image_names.push_back("11x22.png");
+    font_image_names.push_back("12x24.png");
+    font_image_names.push_back("16x24_v1.png");
+    font_image_names.push_back("16x24_v2.png");
+    font_image_names.push_back("16x24_v3.png");
+    font_image_names.push_back("16x24_DOS.png");
+    font_image_names.push_back("16x24_typewriter_v1.png");
+    font_image_names.push_back("16x24_typewriter_v2.png");
 
     set_default_variables();
 
@@ -717,22 +730,17 @@ void ConfigState::draw()
                       P(0, 0),
                       clr_white);
 
-    std::string font_disp_name;
+    std::string font_disp_name = config::font_name_;
 
-    text_format::replace_all(config::font_name_,
-                             "images/",
-                             "",
-                             font_disp_name);
+    // text_format::replace_all(font_disp_name,
+    //                          "_",
+    //                          " ",
+    //                          font_disp_name);
 
-    text_format::replace_all(font_disp_name,
-                             "_",
-                             " ",
-                             font_disp_name);
-
-    text_format::replace_all(font_disp_name,
-                             ".png",
-                             "",
-                             font_disp_name);
+    // text_format::replace_all(font_disp_name,
+    //                          ".png",
+    //                          "",
+    //                          font_disp_name);
 
     std::vector< std::pair< std::string, std::string > > labels =
     {

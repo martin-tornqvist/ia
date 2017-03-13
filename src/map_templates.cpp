@@ -62,7 +62,7 @@ void load_level_templates()
 {
     TRACE_FUNC_BEGIN;
 
-    std::ifstream ifs("data/map/levels.txt");
+    std::ifstream ifs("res/data/map/levels.txt");
 
     ASSERT(!ifs.fail());
     ASSERT(ifs.is_open());
@@ -266,7 +266,7 @@ void load_room_templates()
     name_2_room_type["chasm"] = RoomType::chasm;
     name_2_room_type["forest"] = RoomType::forest;
 
-    std::ifstream ifs("data/map/rooms.txt");
+    std::ifstream ifs("res/data/map/rooms.txt");
 
     ASSERT(!ifs.fail());
     ASSERT(ifs.is_open());

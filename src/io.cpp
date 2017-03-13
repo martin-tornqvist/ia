@@ -206,8 +206,9 @@ void load_font()
 {
     TRACE_FUNC_BEGIN;
 
-    SDL_Surface* const font_srf_tmp =
-        IMG_Load(config::font_name().data());
+    const std::string font_path = "res/images/" + config::font_name();
+
+    SDL_Surface* const font_srf_tmp = IMG_Load(font_path.c_str());
 
     const Uint32 img_clr =
         SDL_MapRGB(font_srf_tmp->format, 255, 255, 255);
@@ -513,9 +514,16 @@ void init()
 
     if (!sdl_renderer_)
     {
-        TRACE << "Failed to create SDL renderer" << std::endl;
-        ASSERT(false);
+        TRACE << "Failed to create accelerated SDL renderer, "
+              << "trying software renderer instead." << std::endl;
+
+        sdl_renderer_ = SDL_CreateRenderer(sdl_window_,
+                                           -1,
+                                           SDL_RENDERER_SOFTWARE);
+
     }
+
+    ASSERT(sdl_renderer_);
 
     scr_srf_ = SDL_CreateRGBSurface(0,
                                     scr_px_w, scr_px_h,
