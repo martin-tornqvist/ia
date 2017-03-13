@@ -18,7 +18,7 @@ Run "git submodule update" again when checking out different branches or tags.
 
 **master** - If you want a more stable and well tested experience.
 
-**tags (v15.0, v16.0, etc)** - If you want to build one of the official releases.
+**tags (v15.0, v16.0, etc)** - If you want to build one of the official releases (note that the build method may be different for older versions).
 
 ## Building Infra Arcana
 
