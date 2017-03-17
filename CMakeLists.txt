@@ -35,9 +35,8 @@ set_target_properties(ia-debug  PROPERTIES OUTPUT_NAME ia-debug)
 # set(CMAKE_CXX_FLAGS_DEBUG )
 
 # set(CMAKE_CXX_FLAGS_RELEASE )
-
-# GNU gcc specific compiler flags
-if(CMAKE_COMPILER_IS_GNUCXX)
+# GNU gcc and Clang specific compiler flags
+if(CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_C_COMPILER_ID MATCHES "Clang") OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
     set(COMMON_COMPILE_FLAGS
         -std=c++14
         -fno-rtti
