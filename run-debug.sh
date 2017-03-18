@@ -1,7 +1,11 @@
 #!/bin/bash
 
+#
+# NOTE: This assumes that CMake has already been run
+#
+
 root_dir=$PWD
 
-make debug -j 2 && cd target/debug && ./ia
+cd build && make -j 2 ia-debug && ./ia-debug
 
 cd $root_dir
