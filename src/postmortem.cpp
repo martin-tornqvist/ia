@@ -267,8 +267,7 @@ void PostmortemMenu::on_start()
 
 void PostmortemMenu::on_popped()
 {
-    // The postmortem info is the last state which needs access to the session
-    // data, therefore it is responsible for calling the session cleanup.
+    // The postmortem info is the last state which needs to access session data
     init::cleanup_session();
 }
 

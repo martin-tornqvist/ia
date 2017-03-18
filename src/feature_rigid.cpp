@@ -1526,13 +1526,16 @@ void Lever::bump(Actor& actor_bumping)
 
     is_left_pos_ = !is_left_pos_;
 
-    if (linked_door_->is_open())
+    if (linked_door_)
     {
-        linked_door_->close(nullptr);
-    }
-    else // Not open
-    {
-        linked_door_->open(nullptr);
+        if (linked_door_->is_open())
+        {
+            linked_door_->close(nullptr);
+        }
+        else // Not open
+        {
+            linked_door_->open(nullptr);
+        }
     }
 
     game_time::tick();

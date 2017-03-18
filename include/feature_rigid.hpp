@@ -1,6 +1,8 @@
 #ifndef FEATURE_RIGID_HPP
 #define FEATURE_RIGID_HPP
 
+#include <memory>
+
 #include "feature.hpp"
 
 enum class BurnState
@@ -791,6 +793,11 @@ public:
     }
 
 private:
+    // When a (metal) door is opened by a lever, the door sets all linked
+    // levers to the right position (just as a convenience for the player to
+    // show that the second lever is already "activated")
+    friend class Door;
+
     Clr clr_default() const override;
 
     void on_hit(const DmgType dmg_type,

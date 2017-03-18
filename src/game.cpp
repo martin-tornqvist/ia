@@ -70,6 +70,8 @@ void query_quit()
     if (quit_choice == 0)
     {
         states::pop();
+
+        init::cleanup_session();
     }
 }
 
@@ -1288,7 +1290,8 @@ void GameState::update()
             game_time::tick();
         }
 
-        if (map::player->state() != ActorState::alive)
+        // We have quit the current game, or the player is dead?
+        if (!map::player || (map::player->state() != ActorState::alive))
         {
             break;
         }
@@ -1303,7 +1306,7 @@ void GameState::update()
     }
 
     // Player is dead?
-    if (map::player->state() != ActorState::alive)
+    if (map::player && (map::player->state() != ActorState::alive))
     {
         TRACE << "Player died" << std::endl;
 
@@ -1872,6 +1875,8 @@ void GameState::draw_map()
         game::draw_life_bar(pos, life_bar_length);
     }
 
+    //
     // TODO: Reimplement somehow
+    //
     // draw_player_shock_excl_marks();
 }

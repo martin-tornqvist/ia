@@ -1024,7 +1024,7 @@ std::vector<RoomAutoFeatureRule> FloodedRoom::auto_features_allowed() const
 {
     return
     {
-        {FeatureId::vines, rnd::coin_toss() ? rnd::range(4, 8) : 0}
+        {FeatureId::vines, rnd::coin_toss() ? rnd::range(2, 8) : 0}
     };
 }
 
@@ -1097,7 +1097,7 @@ void FloodedRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
     map_parsers::BlocksMoveCmn(ParseActors::no)
         .run(blocked);
 
-    const int liquid_one_in_n = rnd::range(3, 8);
+    const int liquid_one_in_n = rnd::range(3, 6);
 
     for (int x = r_.p0.x; x <= r_.p1.x; ++x)
     {
@@ -1124,7 +1124,7 @@ std::vector<RoomAutoFeatureRule> MuddyRoom::auto_features_allowed() const
 {
     return
     {
-        {FeatureId::vines, rnd::coin_toss() ? rnd::range(4, 8) : 0}
+        {FeatureId::vines, rnd::coin_toss() ? rnd::range(1, 8) : 0}
     };
 }
 
@@ -1174,7 +1174,7 @@ void MuddyRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
     map_parsers::BlocksMoveCmn(ParseActors::no)
         .run(blocked);
 
-    const int liquid_one_in_n = rnd::range(3, 8);
+    const int liquid_one_in_n = rnd::range(8, 12);
 
     for (int x = r_.p0.x; x <= r_.p1.x; ++x)
     {

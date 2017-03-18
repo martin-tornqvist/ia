@@ -146,20 +146,24 @@ void mk_position_weights(const bool blocked[map_w][map_h],
             Rigid* const rigid =
                 map::cells[choke_point.p.x][choke_point.p.y].rigid;
 
-            // Increase weight if behind a hidden door.
+            // Increase weight if behind hidden, stuck, or metal doors
             if (rigid->id() == FeatureId::door)
             {
                 Door* const door = static_cast<Door*>(rigid);
 
                 if (door->is_secret())
                 {
-                    weight_inc += std::max(1, (200 / weight_div));
+                    weight_inc += std::max(1, 200 / weight_div);
                 }
 
-                // Also increase weight a bit if the door is stuck
                 if (door->is_stuck())
                 {
-                    weight_inc += std::max(1, (200 / weight_div));
+                    weight_inc += std::max(1, 200 / weight_div);
+                }
+
+                if (door->type() == DoorType::metal)
+                {
+                    weight_inc += std::max(1, 200 / weight_div);
                 }
             }
 

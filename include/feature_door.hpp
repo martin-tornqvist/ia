@@ -28,13 +28,16 @@ class Door: public Rigid
 {
 public:
     Door(const P& feature_pos,
+
          //
-         // NOTE: This should be nullptr if type is "gate"
+         // NOTE: This should always be nullptr if type is "gate"
          //
          const Rigid* const mimic_feature,
+
          DoorType type = DoorType::wood,
+
          //
-         // NOTE: This should never any "secret" variant if type is "gate"
+         // NOTE: This should never be any "secret" variant if type is "gate"
          //
          DoorSpawnState spawn_state = DoorSpawnState::any);
 
@@ -50,7 +53,7 @@ public:
 
     Door() = delete;
 
-    ~Door() override;
+    ~Door();
 
     FeatureId id() const override
     {

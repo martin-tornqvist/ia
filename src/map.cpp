@@ -32,15 +32,9 @@ Cell::Cell() :
 
 Cell::~Cell()
 {
-    if (rigid)
-    {
-        delete rigid;
-    }
+    delete rigid;
 
-    if (item)
-    {
-        delete item;
-    }
+    delete item;
 }
 
 void Cell::reset()
@@ -54,17 +48,11 @@ void Cell::reset()
 
     pos.set(-1, -1);
 
-    if (rigid)
-    {
-        delete rigid;
-        rigid = nullptr;
-    }
+    delete rigid;
+    rigid = nullptr;
 
-    if (item)
-    {
-        delete item;
-        item = nullptr;
-    }
+    delete item;
+    item = nullptr;
 }
 
 namespace map
@@ -104,7 +92,7 @@ void reset_cells(const bool make_stone_walls)
     }
 }
 
-} //namespace
+} // namespace
 
 void init()
 {
@@ -129,9 +117,11 @@ void cleanup()
     {
         for (int y = 0; y < map_h; ++y)
         {
-            delete cells[x][y].rigid;
+            auto& cell = cells[x][y];
 
-            cells[x][y].rigid = nullptr;
+            delete cell.rigid;
+
+            cell.rigid = nullptr;
         }
     }
 

@@ -523,8 +523,6 @@ bool is_choke_point(const P& p,
     floodfill(p_side1,
               blocked,
               flood_side1);
-              // INT_MAX,
-              // p_side2); // Stop if side 2 is reached
 
     if (flood_side1[p_side2.x][p_side2.y] == 0)
     {
@@ -543,8 +541,6 @@ bool is_choke_point(const P& p,
     floodfill(p_side1,
                    blocked_cpy,
                    flood_side1);
-                   // INT_MAX);
-                   // p_side2); // Stop if side 2 is reached
 
     if (flood_side1[p_side2.x][p_side2.y] > 0)
     {
@@ -756,11 +752,10 @@ void mk_pathfind_corridor(Room& room_0,
         // Allowing diagonal steps creates a more "cave like" path
         const bool allow_diagonal = map::dlvl >= dlvl_first_late_game;
 
-        // Randomizing steps create more "snaky" paths
+        // Randomizing step choices (i.e. when to change directions) creates
+        // more "snaky" paths (note that this does NOT create longer paths - it
+        // just randomizes the variation of optimal path)
         const bool randomize_step_choices = true;
-            map::dlvl >= dlvl_first_late_game ?
-            true :
-            rnd::one_in(5);
 
         pathfind(p0,
                  p1,

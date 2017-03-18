@@ -42,6 +42,7 @@ int main(int argc, char* argv[])
         states::update();
     }
 
+    init::cleanup_session();
     init::cleanup_game();
     init::cleanup_io();
 

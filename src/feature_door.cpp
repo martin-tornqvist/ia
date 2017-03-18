@@ -82,40 +82,40 @@ Door::Door(const P& feature_pos,
     switch (DoorSpawnState(spawn_state))
     {
     case DoorSpawnState::open:
-        is_open_   = true;
-        is_stuck_  = false;
+        is_open_ = true;
+        is_stuck_ = false;
         is_secret_ = false;
         break;
 
     case DoorSpawnState::closed:
-        is_open_   = false;
-        is_stuck_  = false;
+        is_open_ = false;
+        is_stuck_ = false;
         is_secret_ = false;
         break;
 
     case DoorSpawnState::stuck:
-        is_open_   = false;
-        is_stuck_  = true;
+        is_open_ = false;
+        is_stuck_ = true;
         is_secret_ = false;
         break;
 
     case DoorSpawnState::secret:
-        is_open_   = false;
-        is_stuck_  = false;
+        is_open_ = false;
+        is_stuck_ = false;
         is_secret_ = true;
         break;
 
     case DoorSpawnState::secret_and_stuck:
-        is_open_   = false;
-        is_stuck_  = true;
+        is_open_ = false;
+        is_stuck_ = true;
         is_secret_ = true;
         break;
 
     case DoorSpawnState::any:
         ASSERT(false);
 
-        is_open_   = false;
-        is_stuck_  = false;
+        is_open_ = false;
+        is_stuck_ = false;
         is_secret_ = false;
     }
 
@@ -123,10 +123,31 @@ Door::Door(const P& feature_pos,
 
 Door::~Door()
 {
-    if (mimic_feature_)
+    //
+    // Unlink all levers
+    //
+    if (type_ == DoorType::metal)
     {
-        delete mimic_feature_;
+        for (int x = 0; x < map_w; ++x)
+        {
+            for (int y = 0; y < map_h; ++y)
+            {
+                auto* const rigid = map::cells[x][y].rigid;
+
+                if (rigid && (rigid->id() == FeatureId::lever))
+                {
+                    auto* const lever = static_cast<Lever*>(rigid);
+
+                    if (lever->linked_door_ == this)
+                    {
+                        lever->linked_door_ = nullptr;
+                    }
+                }
+            }
+        }
     }
+
+    delete mimic_feature_;
 }
 
 void Door::on_hit(const DmgType dmg_type,
@@ -614,7 +635,7 @@ Clr Door::clr_default() const
             break;
 
         case DoorType::metal:
-            return clr_gray;
+            return clr_gray_drk;
             break;
 
         case DoorType::gate:
@@ -1218,6 +1239,30 @@ DidOpen Door::open(Actor* const actor_opening)
 
     is_stuck_ = false;
 
+    //
+    // Set all linked levers to the right position (for gameplay convenience)
+    //
+    if (type_ == DoorType::metal)
+    {
+        for (int x = 0; x < map_w; ++x)
+        {
+            for (int y = 0; y < map_h; ++y)
+            {
+                auto* const rigid = map::cells[x][y].rigid;
+
+                if (rigid->id() == FeatureId::lever)
+                {
+                    auto* const lever = static_cast<Lever*>(rigid);
+
+                    if (lever->linked_door_ == this)
+                    {
+                        lever->is_left_pos_ = false;
+                    }
+                }
+            }
+        }
+    }
+
     return DidOpen::yes;
 }
 
@@ -1226,6 +1271,30 @@ DidClose Door::close(Actor* const actor_closing)
     (void)actor_closing;
 
     is_open_ = false;
+
+    //
+    // Set a linked levers to the left position (for gameplay convenience)
+    //
+    if (type_ == DoorType::metal)
+    {
+        for (int x = 0; x < map_w; ++x)
+        {
+            for (int y = 0; y < map_h; ++y)
+            {
+                auto* const rigid = map::cells[x][y].rigid;
+
+                if (rigid->id() == FeatureId::lever)
+                {
+                    auto* const lever = static_cast<Lever*>(rigid);
+
+                    if (lever->linked_door_ == this)
+                    {
+                        lever->is_left_pos_ = true;
+                    }
+                }
+            }
+        }
+    }
 
     return DidClose::yes;
 }
