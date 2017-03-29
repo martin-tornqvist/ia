@@ -238,7 +238,7 @@ void PylonBurning::on_new_turn_activated()
             DmgMethod::elemental);
     }
 
-    if (!rnd::one_in(3))
+    if (!rnd::fraction(2, 3))
     {
         return;
     }

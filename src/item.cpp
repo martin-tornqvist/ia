@@ -1069,7 +1069,7 @@ void AmmoMag::set_full_ammo()
 // -----------------------------------------------------------------------------
 MedicalBag::MedicalBag(ItemDataT* const item_data) :
     Item                    (item_data),
-    nr_supplies_            (32),
+    nr_supplies_            (24),
     nr_turns_left_action_   (-1),
     current_action_         (MedBagAction::END) {}
 
