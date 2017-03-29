@@ -168,8 +168,8 @@ void populate_std_lvl()
                                   trap_pos_bucket.end(),
                                   sorter);
 
-                        //NOTE: Trap type may have been randomized by the trap.
-                        //We retrieve the actual trap resulting id here:
+                        // NOTE: Trap type may have been randomized by the trap.
+                        //       We retrieve the actual trap resulting id here:
                         const TrapId origin_trap_type = origin_trap->type();
 
                         const int nr_adj =
@@ -197,13 +197,13 @@ void populate_std_lvl()
                             {
                                 map::put(extra_trap);
                             }
-                            else //Extra trap invalid
+                            else // Extra trap invalid
                             {
                                 delete extra_trap;
                             }
                         }
                     }
-                    else //Origin trap invalid
+                    else // Origin trap invalid
                     {
                         delete origin_trap;
                     }

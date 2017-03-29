@@ -923,7 +923,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodging, 20);
-    d.spawn_min_dlvl = 2;
+    d.spawn_min_dlvl = dlvl_first_mid_game;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
     {
@@ -965,7 +965,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodging, 20);
-    d.spawn_min_dlvl = 2;
+    d.spawn_min_dlvl = dlvl_first_mid_game;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
     {
@@ -1007,7 +1007,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodging, 20);
-    d.spawn_min_dlvl = 2;
+    d.spawn_min_dlvl = dlvl_first_mid_game;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
     {
@@ -1035,7 +1035,7 @@ void init_data_list()
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
     d.ai[(size_t)AiId::attacks] = true;
-    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
@@ -1047,14 +1047,16 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::stealth, 95);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::lgt_sens] = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    1),
-        MonGroupSpawnRule(MonGroupSize::pack,   2)
+        MonGroupSpawnRule(MonGroupSize::few,    4),
+        MonGroupSpawnRule(MonGroupSize::pack,   8),
+        MonGroupSpawnRule(MonGroupSize::swarm , 1)
     });
     d.nr_turns_aware = 5;
     d.actor_size = ActorSize::humanoid;
@@ -1101,7 +1103,7 @@ void init_data_list()
         MonGroupSpawnRule(MonGroupSize::pack,   1)
     });
     d.nr_turns_aware = 16;
-    d.actor_size = ActorSize::humanoid;
+    d.actor_size = ActorSize::giant;
     d.descr =
         "Leng spiders are huge, purplish arachnids, with pustulent bloated "
         "bodies and long, bristly legs. Native to the Dreamlands, the "

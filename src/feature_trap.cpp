@@ -294,7 +294,7 @@ void Trap::bump(Actor& actor_bumping)
 
     const bool actor_can_see = actor_bumping.prop_handler().allow_see();
 
-    const std::string trap_name = trap_impl_->title();
+    const std::string trap_name = trap_impl_->name();
 
     //
     // TODO: Reimplement something affecting chance of success, e.g.
@@ -491,7 +491,7 @@ DidTriggerTrap Trap::trigger_trap(Actor* const actor)
     (void)actor;
 
     TRACE_VERBOSE << "Name of trap triggering: "
-                  << trap_impl_->title()
+                  << trap_impl_->name()
                   << std::endl;
 
     nr_turns_until_trigger_ = -1;
@@ -527,7 +527,7 @@ void Trap::reveal(const Verbosity verbosity)
         {
             std::string msg = "";
 
-            const std::string trap_name = trap_impl_->title();
+            const std::string trap_name = trap_impl_->name();
 
             if (pos_ == map::player->pos)
             {
@@ -555,7 +555,7 @@ std::string Trap::name(const Article article) const
     {
         return
             (article == Article::a ? "a " : "the ") +
-            trap_impl_->title();
+            trap_impl_->name();
     }
 }
 

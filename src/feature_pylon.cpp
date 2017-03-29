@@ -305,7 +305,7 @@ void PylonSlow::on_new_turn_activated()
 // -----------------------------------------------------------------------------
 void PylonKnockback::on_new_turn_activated()
 {
-    if (rnd::coin_toss())
+    if (!rnd::fraction(2, 3))
     {
         return;
     }
@@ -320,7 +320,7 @@ void PylonKnockback::on_new_turn_activated()
                        pos_,
                        false,               // Not spike gun
                        Verbosity::verbose,
-                       1);                  // Extra paralyze turns
+                       2);                  // Extra paralyze turns
     }
 }
 
