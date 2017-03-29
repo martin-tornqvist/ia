@@ -345,7 +345,7 @@ ConsumeItem DeviceShockwave::trigger_effect()
         // Surived the damage? Knock the monster back
         if (actor->is_alive())
         {
-            knock_back::try_knock_back(*actor,
+            knockback::run(*actor,
                                        player_pos,
                                        false,
                                        Verbosity::verbose,

@@ -11,6 +11,7 @@
 #include "map_templates.hpp"
 #include "feature_rigid.hpp"
 #include "game_time.hpp"
+#include "feature_door.hpp"
 #include "init.hpp"
 
 namespace mapgen
@@ -22,7 +23,7 @@ bool is_all_rooms_connected()
 {
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::no)
+    map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
 
     //
@@ -947,6 +948,123 @@ void rnd_walk(const P& p0,
             {
                 p = nxt_pos;
                 break;
+            }
+        }
+    }
+}
+
+void mk_explore_spawn_weights(const bool blocked[map_w][map_h],
+                              std::vector<P>& positions_out,
+                              std::vector<int>& weights_out)
+{
+    int weight_map[map_w][map_h] = {};
+
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
+        {
+            // Give all cells a base weight of 1
+            weight_map[x][y] = 1;
+
+            // Increase weight for dark cells
+            if (map::cells[x][y].is_dark)
+            {
+                weight_map[x][y] += 10;
+            }
+        }
+    }
+
+    // Put extra weight for "optional" areas behind choke points
+    for (const auto& choke_point : map::choke_point_data)
+    {
+        // If the player and the stairs are on the same side of the choke point,
+        // this means that the "other" side is an optional map branch.
+        if (choke_point.player_side == choke_point.stairs_side)
+        {
+            ASSERT(choke_point.player_side == 0 ||
+                   choke_point.player_side == 1);
+
+            // Robustness for release mode
+            if (choke_point.player_side != 0 &&
+                choke_point.player_side != 1)
+            {
+                continue;
+            }
+
+            const int other_side_idx =
+                choke_point.player_side == 0 ?
+                1 : 0;
+
+            const auto& other_side_positions =
+                choke_point.sides[other_side_idx];
+
+            //
+            // NOTE: To avoid leaning heavily towards only putting stuff in big
+            //       hidden areas, we divide the weight given per cell based on
+            //       the total number of cells in the area.
+            //
+
+            const int weight_div =
+                std::max(1, (int)other_side_positions.size() / 2);
+
+            // Increase weight for being in an optional map branch
+            int weight_inc =
+                std::max(1, (200 / weight_div));
+
+            Rigid* const rigid =
+                map::cells[choke_point.p.x][choke_point.p.y].rigid;
+
+            // Increase weight if behind hidden, stuck, or metal doors
+            if (rigid->id() == FeatureId::door)
+            {
+                Door* const door = static_cast<Door*>(rigid);
+
+                if (door->is_secret())
+                {
+                    weight_inc += std::max(1, 100 / weight_div);
+                }
+
+                if (door->is_stuck())
+                {
+                    weight_inc += std::max(1, 100 / weight_div);
+                }
+
+                if (door->type() == DoorType::metal)
+                {
+                    weight_inc += std::max(1, 300 / weight_div);
+                }
+            }
+
+            for (const P& p : other_side_positions)
+            {
+                weight_map[p.x][p.y] += weight_inc;
+            }
+        }
+    }
+
+    // Prepare for at least the worst case of push-backs
+    positions_out.reserve(nr_map_cells);
+
+    weights_out.reserve(nr_map_cells);
+
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
+        {
+            if (blocked[x][y])
+            {
+                continue;
+            }
+
+            const int weight = weight_map[x][y];
+
+            if (weight > 0)
+            {
+                // OK, we can spawn here, save the position and the
+                // corresponding spawn chance weight
+                positions_out.push_back(P(x, y));
+
+                weights_out.push_back(weight);
             }
         }
     }

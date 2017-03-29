@@ -69,7 +69,7 @@ Trap::Trap(const P& feature_pos,
         // Attempt to set a trap implementation until a valid one is picked
         while (true)
         {
-            const auto random_id = TrapId(rnd::range(0, (int)TrapId::END - 1));
+            const auto random_id = (TrapId)rnd::range(0, (int)TrapId::END - 1);
 
             try_place_trap_or_discard(random_id);
 

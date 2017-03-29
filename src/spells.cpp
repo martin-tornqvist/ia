@@ -80,7 +80,7 @@ Spell* mk_spell_from_id(const SpellId spell_id)
     case SpellId::heal_self:
         return new SpellHealSelf;
 
-    case SpellId::knock_back:
+    case SpellId::knockback:
         return new SpellKnockBack;
 
     case SpellId::teleport:
@@ -1964,7 +1964,7 @@ void SpellKnockBack::run_effect(Actor* const caster) const
         msg_log::add("A force pushes " + target_str + "!", msg_clr);
     }
 
-    knock_back::try_knock_back(*target, caster->pos, false);
+    knockback::run(*target, caster->pos, false);
 }
 
 bool SpellKnockBack::allow_mon_cast_now(Mon& mon) const
@@ -2181,7 +2181,7 @@ void SpellSummonMon::run_effect(Actor* const caster) const
 
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::yes)
+    map_parsers::BlocksMoveCommon(ParseActors::yes)
         .run(blocked);
 
     std::vector<P> free_cells_seen_by_player;

@@ -93,7 +93,8 @@ std::vector<std::string> Item::descr() const
     return data_->base_descr;
 }
 
-DiceParam Item::dmg(const AttMode att_mode, const Actor* const actor) const
+DiceParam Item::dmg(const AttMode att_mode,
+                    const Actor* const actor) const
 {
     DiceParam out;
 
@@ -153,6 +154,7 @@ DiceParam Item::dmg(const AttMode att_mode, const Actor* const actor) const
         if (is_melee_wpn)
         {
             out = data_->melee.dmg;
+
             out.plus = melee_dmg_plus_;
         }
         else // Not a melee weapon
@@ -305,7 +307,7 @@ std::string Item::name(const ItemRefType ref_type,
 
     ItemRefAttInf att_inf_used = att_inf;
 
-    if (att_inf == ItemRefAttInf::wpn_context)
+    if (att_inf == ItemRefAttInf::wpn_main_att_mode)
     {
         switch (data_->main_att_mode)
         {
@@ -329,20 +331,23 @@ std::string Item::name(const ItemRefType ref_type,
 
     const DiceParam zero_dice(0, 0);
 
-    if (att_inf_used == ItemRefAttInf::melee)
+    switch (att_inf_used)
+    {
+    case ItemRefAttInf::melee:
     {
         if (data_->melee.dmg != zero_dice)
         {
             const DiceParam dmg_dice = dmg(AttMode::melee, map::player);
 
             const std::string rolls_str = std::to_string(dmg_dice.rolls);
+
             const std::string sides_str = std::to_string(dmg_dice.sides);
 
             const int plus = dmg_dice.plus;
 
             const std::string plus_str =
-                plus == 0 ? "" :
-                plus > 0 ?
+                (plus == 0) ? "" :
+                (plus > 0) ?
                 ("+" + std::to_string(plus)) :
                 ("-" + std::to_string(plus));
 
@@ -356,16 +361,19 @@ std::string Item::name(const ItemRefType ref_type,
         const int hit_int = data_->melee.hit_chance_mod;
 
         hit_str =
-            (hit_int >= 0 ? "+" : "") +
+            ((hit_int >= 0) ? "+" : "") +
             std::to_string(hit_int) + "%";
     }
+    break;
 
-    if (att_inf_used == ItemRefAttInf::ranged)
+    case ItemRefAttInf::ranged:
     {
-        std::string dmg_str = data_->ranged.dmg_info_override;
+        dmg_str = data_->ranged.dmg_info_override;
 
+        // Add damage info if no damage string override specified, and the
+        // weapon does non-zero base ranged damage
         if (dmg_str.empty() &&
-            data_->ranged.dmg != zero_dice)
+            (data_->ranged.dmg != zero_dice))
         {
             const DiceParam dmg_dice = dmg(AttMode::ranged, map::player);
 
@@ -379,8 +387,9 @@ std::string Item::name(const ItemRefType ref_type,
 
             const int plus = dmg_dice.plus * mul;
 
-            const std::string plus_str = plus == 0 ? "" :
-                plus > 0 ?
+            const std::string plus_str =
+                (plus == 0) ? "" :
+                (plus > 0) ?
                 ("+" + std::to_string(plus)) :
                 ("-" + std::to_string(plus));
 
@@ -394,23 +403,33 @@ std::string Item::name(const ItemRefType ref_type,
         const int hit_int = data_->ranged.hit_chance_mod;
 
         hit_str =
-            (hit_int >= 0 ? "+" : "") +
+            ((hit_int >= 0) ? "+" : "") +
             std::to_string(hit_int) + "%";
     }
+    break;
 
-    if (att_inf_used == ItemRefAttInf::thrown)
+    case ItemRefAttInf::thrown:
     {
-        if (data_->ranged.dmg != zero_dice)
+        // Print damage if non-zero throwing damage, or melee weapon with non
+        // zero melee damage (melee weapons use melee damage when thrown)
+        if ((data_->ranged.throw_dmg != zero_dice) ||
+            ((data_->main_att_mode == AttMode::melee) &&
+             (data_->ranged.throw_dmg != zero_dice)))
         {
+            //
+            // NOTE: "dmg" will return melee damage if this is a melee weapon
+            //
             const DiceParam dmg_dice = dmg(AttMode::thrown, map::player);
 
             const std::string rolls_str = std::to_string(dmg_dice.rolls);
+
             const std::string sides_str = std::to_string(dmg_dice.sides);
+
             const int plus = dmg_dice.plus;
 
             const std::string plus_str =
-                plus == 0 ? "" :
-                plus  > 0 ?
+                (plus == 0) ? "" :
+                (plus  > 0) ?
                 ("+" + std::to_string(plus)) :
                 ("-" + std::to_string(plus));
 
@@ -424,8 +443,19 @@ std::string Item::name(const ItemRefType ref_type,
         const int hit_int = data_->ranged.throw_hit_chance_mod;
 
         hit_str =
-            (hit_int >= 0 ? "+" : "") +
+            ((hit_int >= 0) ? "+" : "") +
             std::to_string(hit_int) + "%";
+    }
+    break;
+
+    case ItemRefAttInf::none:
+        break;
+
+    case ItemRefAttInf::wpn_main_att_mode:
+        TRACE << "Bad attack info type: " << (int)att_inf_used << std::endl;
+
+        ASSERT(false);
+        break;
     }
 
     std::string inf_str = "";

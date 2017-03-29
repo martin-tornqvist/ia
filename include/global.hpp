@@ -202,7 +202,7 @@ enum class ItemRefInf
 enum class ItemRefAttInf
 {
     none,
-    wpn_context,
+    wpn_main_att_mode,
     melee,
     ranged,
     thrown

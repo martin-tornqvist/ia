@@ -101,10 +101,10 @@ private:
     bool parse(const Mob& f) const override;
 };
 
-class BlocksMoveCmn : public MapParser
+class BlocksMoveCommon : public MapParser
 {
 public:
-    BlocksMoveCmn(ParseActors parse_actors) :
+    BlocksMoveCommon(ParseActors parse_actors) :
         MapParser(ParseCells::yes,
                   ParseMobs::yes,
                   parse_actors) {}
@@ -189,6 +189,21 @@ class IsFeature : public MapParser
 {
 public:
     IsFeature(const FeatureId id) :
+        MapParser   (ParseCells::yes,
+                     ParseMobs::no,
+                     ParseActors::no),
+        feature_    (id) {}
+
+private:
+    bool parse(const Cell& c) const override;
+
+    const FeatureId feature_;
+};
+
+class IsNotFeature : public MapParser
+{
+public:
+    IsNotFeature(const FeatureId id) :
         MapParser   (ParseCells::yes,
                      ParseMobs::no,
                      ParseActors::no),
@@ -328,6 +343,18 @@ struct IsCloserToPos
 {
 public:
     IsCloserToPos(const P& p) :
+        p_(p) {}
+
+    bool operator()(const P& p1, const P& p2);
+
+    P p_;
+};
+
+// Function object for sorting STL containers by distance to a position
+struct IsFurtherFromPos
+{
+public:
+    IsFurtherFromPos(const P& p) :
         p_(p) {}
 
     bool operator()(const P& p1, const P& p2);

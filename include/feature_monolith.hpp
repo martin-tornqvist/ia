@@ -31,4 +31,4 @@ private:
     bool is_activated_;
 };
 
-#endif //FEATURE_MONOLITH_HPP
+#endif // FEATURE_MONOLITH_HPP

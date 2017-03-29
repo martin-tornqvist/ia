@@ -820,7 +820,7 @@ void print_location_info_msgs(const P& pos)
         if (item)
         {
             str = item->name(ItemRefType::plural, ItemRefInf::yes,
-                             ItemRefAttInf::wpn_context);
+                             ItemRefAttInf::wpn_main_att_mode);
 
             text_format::first_to_upper(str);
 

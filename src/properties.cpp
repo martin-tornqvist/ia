@@ -1269,8 +1269,9 @@ void PropHandler::try_add(Prop* const prop,
     {
         for (Prop* old_prop : props_)
         {
-            if (old_prop->src_ == PropSrc::intr &&
-                prop->id() == old_prop->id())
+            // Is this an intrinsic property of the same type?
+            if ((old_prop->src_ == PropSrc::intr) &&
+                (prop->id() == old_prop->id()))
             {
                 if (!prop->allow_apply_more_while_active())
                 {
@@ -1281,35 +1282,39 @@ void PropHandler::try_add(Prop* const prop,
                 const int turns_left_old = old_prop->nr_turns_left_;
                 const int turns_left_new = prop->nr_turns_left_;
 
+                //
+                // TODO: Should messages be printed here? It can get spammy...
+                //
+
                 // Start message
-                if (verbosity == Verbosity::verbose &&
-                    owning_actor_->is_alive())
-                {
-                    if (is_player)
-                    {
-                        std::string msg = "";
-                        prop->msg(PropMsg::start_player, msg);
+                // if (verbosity == Verbosity::verbose &&
+                //     owning_actor_->is_alive())
+                // {
+                //     if (is_player)
+                //     {
+                //         std::string msg = "";
+                //         prop->msg(PropMsg::start_player, msg);
 
-                        if (!msg.empty())
-                        {
-                            msg_log::add(msg, clr_text, true);
-                        }
-                    }
-                    else // Not player
-                    {
-                        if (player_see_owner)
-                        {
-                            std::string msg = "";
-                            prop->msg(PropMsg::start_mon, msg);
+                //         if (!msg.empty())
+                //         {
+                //             msg_log::add(msg, clr_text, true);
+                //         }
+                //     }
+                //     else // Not player
+                //     {
+                //         if (player_see_owner)
+                //         {
+                //             std::string msg = "";
+                //             prop->msg(PropMsg::start_mon, msg);
 
-                            if (!msg.empty())
-                            {
-                                msg_log::add(
-                                    owning_actor_->name_the() + " " + msg);
-                            }
-                        }
-                    }
-                }
+                //             if (!msg.empty())
+                //             {
+                //                 msg_log::add(
+                //                     owning_actor_->name_the() + " " + msg);
+                //             }
+                //         }
+                //     }
+                // }
 
                 old_prop->on_more();
 

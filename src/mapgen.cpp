@@ -10,7 +10,6 @@
 #include "feature_event.hpp"
 #include "actor_player.hpp"
 #include "feature_door.hpp"
-#include "feature_monolith.hpp"
 #include "actor_factory.hpp"
 #include "actor_mon.hpp"
 #include "drop.hpp"
@@ -159,7 +158,7 @@ void connect_rooms()
 
         bool blocked[map_w][map_h];
 
-        map_parsers::BlocksMoveCmn(ParseActors::no).
+        map_parsers::BlocksMoveCommon(ParseActors::no).
             run(blocked);
 
         //
@@ -184,84 +183,6 @@ void connect_rooms()
     }
 
     TRACE_FUNC_END;
-}
-
-void try_place_door(const P& p)
-{
-    // Check that no other doors are within a certain distance
-    const int r = 2;
-
-    for (int dx = -r; dx <= r; ++dx)
-    {
-        for (int dy = -r; dy <= r; ++dy)
-        {
-            const P check_pos = p + P(dx, dy);
-
-            if ((dx != 0 || dy != 0) && map::is_pos_inside_map(check_pos))
-            {
-                const Cell& cell = map::cells[check_pos.x][check_pos.y];
-
-                if (cell.rigid->id() == FeatureId::door)
-                {
-                    return;
-                }
-            }
-        }
-    }
-
-    bool is_good_ver = true;
-    bool is_good_hor = true;
-
-    for (int d = -1; d <= 1; d++)
-    {
-        if (map::cells[p.x + d][p.y].rigid->id() == FeatureId::wall)
-        {
-            is_good_hor = false;
-        }
-
-        if (map::cells[p.x][p.y + d].rigid->id() == FeatureId::wall)
-        {
-            is_good_ver = false;
-        }
-
-        if (d != 0)
-        {
-            if (map::cells[p.x][p.y + d].rigid->id() != FeatureId::wall)
-            {
-                is_good_hor = false;
-            }
-
-            if (map::cells[p.x + d][p.y].rigid->id() != FeatureId::wall)
-            {
-                is_good_ver = false;
-            }
-        }
-    }
-
-    if (is_good_hor || is_good_ver)
-    {
-        //
-        // Make most doors "common" wooden doors, and occasionally make gates
-        //
-        Door* door = nullptr;
-
-        if (rnd::fraction(4, 5))
-        {
-            const Wall* const mimic = new Wall(p);
-
-            door = new Door(p,
-                            mimic,
-                            DoorType::wood);
-        }
-        else // Barred gate
-        {
-            door = new Door(p,
-                            nullptr,
-                            DoorType::gate);
-        }
-
-        map::put(door);
-    }
 }
 
 void allowed_stair_cells(bool out[map_w][map_h])
@@ -301,7 +222,7 @@ void allowed_stair_cells(bool out[map_w][map_h])
     TRACE_FUNC_END;
 }
 
-P place_stairs()
+P mk_stairs()
 {
     TRACE_FUNC_BEGIN;
 
@@ -336,11 +257,11 @@ P place_stairs()
     TRACE << "Sorting the allowed cells vector "
           << "(" << allowed_cells_list.size() << " cells)" << std:: endl;
 
-    IsCloserToPos is_closer_to_origin(map::player->pos);
+    IsCloserToPos is_closer(map::player->pos);
 
-    sort(allowed_cells_list.begin(),
-         allowed_cells_list.end(),
-         is_closer_to_origin);
+    std::sort(allowed_cells_list.begin(),
+              allowed_cells_list.end(),
+              is_closer);
 
     TRACE << "Picking furthest cell" << std:: endl;
     const P stairs_pos(allowed_cells_list[nr_ok_cells - 1]);
@@ -383,208 +304,13 @@ void move_player_to_nearest_allowed_pos()
     TRACE_FUNC_END;
 }
 
-void place_monoliths()
-{
-    // Determine number of Monoliths to place, by a weighted choice
-    std::vector<int> nr_weights =
-    {
-        50, // 0 monolith(s)
-        50, // 1 -
-        1,  // 2 -
-    };
-
-    const int nr_monoliths = rnd::weighted_choice(nr_weights);
-
-    bool blocked_expanded[map_w][map_h];
-
-    {
-        bool blocked[map_w][map_h] = {};
-
-        map_parsers::BlocksRigid()
-            .run(blocked);
-
-        map_parsers::expand(blocked, blocked_expanded);
-
-        for (Actor* const actor : game_time::actors)
-        {
-            blocked_expanded[actor->pos.x][actor->pos.y] = true;
-        }
-    }
-
-    // Block the area around the player
-    const P& player_p = map::player->pos;
-
-    const int r = fov_std_radi_int;
-
-    const R fov_r(std::max(0,           player_p.x - r),
-                  std::max(0,           player_p.y - r),
-                  std::max(map_w - 1,   player_p.y + r),
-                  std::max(map_h - 1,   player_p.y + r));
-
-    for (int x = fov_r.p0.x; x <= fov_r.p1.x; ++x)
-    {
-        for (int y = fov_r.p0.y; y <= fov_r.p1.y; ++y)
-        {
-            blocked_expanded[x][y] = true;
-        }
-    }
-
-    for (int i = 0; i < nr_monoliths; ++i)
-    {
-        const auto p_bucket = to_vec(blocked_expanded, false);
-
-        if (p_bucket.empty())
-        {
-            // Unable to place Monolith (too small map?), invalidate the map!
-            is_map_valid = false;
-            return;
-        }
-
-        const P& p = rnd::element(p_bucket);
-
-        map::cells[p.x][p.y].rigid = new Monolith(p);
-
-        for (const P& d : dir_utils::dir_list_w_center)
-        {
-            const P adj_p(p + d);
-
-            blocked_expanded[adj_p.x][adj_p.y] = true;
-        }
-    }
-}
-
-void mk_metal_doors_and_levers()
-{
-    //
-    // TODO: Perhaps the levers should be placed as far as possible away from
-    //       the player AND the door?
-    //
-
-    //
-    // Only make metal doors and levers on some maps, and never late game
-    //
-    const Fraction chance(3, 4);
-
-    if ((map::dlvl >= dlvl_first_late_game) ||
-        !chance.roll())
-    {
-        return;
-    }
-
-    //
-    // Find all chokepoints with a door
-    //
-    std::vector<const ChokePointData*> chokepoint_bucket;
-
-    for (const auto& chokepoint : map::choke_point_data)
-    {
-        if (chokepoint.sides[0].empty() ||
-            chokepoint.sides[1].empty())
-        {
-            continue;
-        }
-
-        const P& p = chokepoint.p;
-
-        auto id = map::cells[p.x][p.y].rigid->id();
-
-        if (id == FeatureId::door)
-        {
-            chokepoint_bucket.push_back(&chokepoint);
-        }
-    }
-
-    if (chokepoint_bucket.empty())
-    {
-        return;
-    }
-
-    //
-    // Shuffle the chokepoint list
-    //
-    rnd::shuffle(chokepoint_bucket);
-
-    auto get_valid_pos = [](const std::vector<P>& bucket,
-                            const bool valid[map_w][map_h])
-    {
-        for (const P& p : bucket)
-        {
-            if (valid[p.x][p.y])
-            {
-                return p;
-            }
-        }
-
-        return P(-1, -1);
-    };
-
-    for (const auto* const chokepoint : chokepoint_bucket)
-    {
-        //
-        // Find a lever position both sides of the chokepoint
-        //
-        bool valid[map_w][map_h];
-
-        // All adjacent cells must be floor
-        map_parsers::AllAdjIsAnyOfFeatures(FeatureId::floor)
-             .run(valid);
-
-        // Do not allow cells with actors (the only actor on the map so far is
-        // probably the player, but let's just check anyway for robustness sake)
-        for (const auto* const actor : game_time::actors)
-        {
-            valid[actor->pos.x][actor->pos.y] = false;
-        }
-
-        auto side_1_cpy = chokepoint->sides[0];
-        auto side_2_cpy = chokepoint->sides[1];
-
-        rnd::shuffle(side_1_cpy);
-        rnd::shuffle(side_2_cpy);
-
-        const auto lever_1_pos = get_valid_pos(side_1_cpy, valid);
-        const auto lever_2_pos = get_valid_pos(side_2_cpy, valid);
-
-        if ((lever_1_pos.x == -1) ||
-            (lever_2_pos.x == -1))
-        {
-            // Failed to find valid lever position on one or both sides, try
-            // next chokepoint
-            continue;
-        }
-
-        //
-        // OK, we have found valid positions for the door and for both levers,
-        // now we can place them on the map
-        //
-        auto* door = new Door(chokepoint->p,
-                              nullptr, // No mimic needed
-                              DoorType::metal,
-                              DoorSpawnState::closed);
-
-        map::put(door);
-
-        auto* const lever_1 = new Lever(lever_1_pos);
-        auto* const lever_2 = new Lever(lever_2_pos);
-
-        lever_1->link_door(door);
-        lever_2->link_door(door);
-
-        map::put(lever_1);
-        map::put(lever_2);
-
-        // We are done
-        return;
-    }
-}
-
 void reveal_doors_on_path_to_stairs(const P& stairs_pos)
 {
     TRACE_FUNC_BEGIN;
 
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::no)
+    map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
 
     blocked[stairs_pos.x][stairs_pos.y] = false;
@@ -682,9 +408,9 @@ bool mk_std_lvl()
         return false;
     }
 
-    //
+    // -------------------------------------------------------------------------
     // Reserve regions for a "river"
-    //
+    // -------------------------------------------------------------------------
 #ifndef DISABLE_MK_RIVER
     const int river_one_in_n = 8;
 
@@ -700,9 +426,9 @@ bool mk_std_lvl()
     }
 #endif // MK_RIVER
 
-    //
+    // -------------------------------------------------------------------------
     // Merge some regions
-    //
+    // -------------------------------------------------------------------------
 #ifndef DISABLE_MERGED_REGIONS
     merge_regions(regions);
 
@@ -712,9 +438,9 @@ bool mk_std_lvl()
     }
 #endif // MK_MERGED_REGIONS
 
-    //
+    // -------------------------------------------------------------------------
     // Make main rooms
-    //
+    // -------------------------------------------------------------------------
     TRACE << "Making main rooms" << std:: endl;
 
     for (int x = 0; x < 3; ++x)
@@ -735,9 +461,9 @@ bool mk_std_lvl()
         return false;
     }
 
-    //
+    // -------------------------------------------------------------------------
     // Make auxiliary rooms
-    //
+    // -------------------------------------------------------------------------
 #ifndef DISABLE_AUX_ROOMS
 #ifdef DEMO_MODE
     io::cover_panel(Panel::log);
@@ -752,9 +478,9 @@ bool mk_std_lvl()
 
     mk_aux_rooms(regions);
 
-    //
+    // -------------------------------------------------------------------------
     // Make sub-rooms
-    //
+    // -------------------------------------------------------------------------
     if (!is_map_valid)
     {
         return false;
@@ -799,9 +525,9 @@ bool mk_std_lvl()
         return false;
     }
 
-    //
+    // -------------------------------------------------------------------------
     // Run the pre-connect hook on all rooms
-    //
+    // -------------------------------------------------------------------------
     TRACE << "Running pre-connect functions for all rooms" << std:: endl;
 
 #ifdef DEMO_MODE
@@ -827,9 +553,9 @@ bool mk_std_lvl()
         return false;
     }
 
-    //
+    // -------------------------------------------------------------------------
     // Connect the rooms
-    //
+    // -------------------------------------------------------------------------
 #ifdef DEMO_MODE
     io::cover_panel(Panel::log);
     states::draw();
@@ -843,9 +569,9 @@ bool mk_std_lvl()
 
     connect_rooms();
 
-    //
+    // -------------------------------------------------------------------------
     // Run the post-connect hook on all rooms
-    //
+    // -------------------------------------------------------------------------
     if (!is_map_valid)
     {
         return false;
@@ -873,24 +599,12 @@ bool mk_std_lvl()
         return false;
     }
 
-    //
+    // -------------------------------------------------------------------------
     // Place doors
-    //
+    // -------------------------------------------------------------------------
     if (map::dlvl <= dlvl_last_mid_game)
     {
-        TRACE << "Placing doors" << std:: endl;
-
-        for (int x = 0; x < map_w; ++x)
-        {
-            for (int y = 0; y < map_h; ++y)
-            {
-                if (door_proposals[x][y] &&
-                    rnd::fraction(4, 5))
-                {
-                    try_place_door(P(x, y));
-                }
-            }
-        }
+        mk_doors();
     }
 
     if (!is_map_valid)
@@ -898,9 +612,9 @@ bool mk_std_lvl()
         return false;
     }
 
-    //
+    // -------------------------------------------------------------------------
     // Move player to the nearest free position
-    //
+    // -------------------------------------------------------------------------
     move_player_to_nearest_allowed_pos();
 
     if (!is_map_valid)
@@ -908,9 +622,9 @@ bool mk_std_lvl()
         return false;
     }
 
-    //
+    // -------------------------------------------------------------------------
     // Decorate the map
-    //
+    // -------------------------------------------------------------------------
 #ifndef DISABLE_DECORATE
     decorate();
 
@@ -920,28 +634,28 @@ bool mk_std_lvl()
     }
 #endif // DISABLE_DECORATE
 
-    //
+    // -------------------------------------------------------------------------
     // Place the stairs
-    //
+    // -------------------------------------------------------------------------
     // NOTE: The choke point information gathering below depends on the stairs
     //       having been placed.
     //
     P stairs_pos;
 
-    stairs_pos = place_stairs();
+    stairs_pos = mk_stairs();
 
     if (!is_map_valid)
     {
         return false;
     }
 
-    //
+    // -------------------------------------------------------------------------
     // Gather data on choke points in the map (check every position where a door
     // has previously been "proposed")
-    //
+    // -------------------------------------------------------------------------
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::no)
+    map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
 
     // Consider stairs and doors as non-blocking
@@ -967,9 +681,10 @@ bool mk_std_lvl()
             {
                 ChokePointData d;
 
-                const bool is_choke = is_choke_point(P(x, y),
-                                                     blocked,
-                                                     d);
+                const bool is_choke =
+                    is_choke_point(P(x, y),
+                                   blocked,
+                                   d);
 
                 if (is_choke)
                 {
@@ -1019,9 +734,9 @@ bool mk_std_lvl()
         return false;
     }
 
-    //
+    // -------------------------------------------------------------------------
     // Make metal doors and levers
-    //
+    // -------------------------------------------------------------------------
     mk_metal_doors_and_levers();
 
     if (!is_map_valid)
@@ -1029,9 +744,9 @@ bool mk_std_lvl()
         return false;
     }
 
-    //
+    // -------------------------------------------------------------------------
     // Explicitly make some doors leading to "optional" areas secret or stuck
-    //
+    // -------------------------------------------------------------------------
     for (const auto& choke_point : map::choke_point_data)
     {
         if (choke_point.player_side == choke_point.stairs_side)
@@ -1063,22 +778,32 @@ bool mk_std_lvl()
         return false;
     }
 
-    //
+    // -------------------------------------------------------------------------
     // Place Monoliths
-    //
+    // -------------------------------------------------------------------------
     // NOTE: This depends on choke point data having been gathered (including
     //       player side and stairs side)
     //
-    place_monoliths();
+    mk_monoliths();
 
     if (!is_map_valid)
     {
         return false;
     }
 
-    //
+    // -------------------------------------------------------------------------
+    // Place pylons and levers
+    // -------------------------------------------------------------------------
+    mk_pylons_and_levers();
+
+    if (!is_map_valid)
+    {
+        return false;
+    }
+
+    // -------------------------------------------------------------------------
     // Populate the map with monsters
-    //
+    // -------------------------------------------------------------------------
     populate_mon::populate_std_lvl();
 
     if (!is_map_valid)
@@ -1086,9 +811,9 @@ bool mk_std_lvl()
         return false;
     }
 
-    //
+    // -------------------------------------------------------------------------
     // Populate the map with traps
-    //
+    // -------------------------------------------------------------------------
     populate_traps::populate_std_lvl();
 
     if (!is_map_valid)
@@ -1096,9 +821,9 @@ bool mk_std_lvl()
         return false;
     }
 
-    //
+    // -------------------------------------------------------------------------
     // Populate the map with items on the floor
-    //
+    // -------------------------------------------------------------------------
     populate_items::mk_items_on_floor();
 
     if (!is_map_valid)
@@ -1106,9 +831,9 @@ bool mk_std_lvl()
         return false;
     }
 
-    //
+    // -------------------------------------------------------------------------
     // Place "snake emerge" events
-    //
+    // -------------------------------------------------------------------------
     const int nr_snake_emerge_events_to_try =
         rnd::one_in(30) ? 2 :
         rnd::one_in(8)  ? 1 : 0;
@@ -1132,9 +857,9 @@ bool mk_std_lvl()
         return false;
     }
 
-    //
+    // -------------------------------------------------------------------------
     // Reveal all doors on the path to the stairs (if "early" dungeon level)
-    //
+    // -------------------------------------------------------------------------
     const int last_lvl_to_reveal_stairs_path = 6;
 
     if (map::dlvl <= last_lvl_to_reveal_stairs_path)
@@ -1142,9 +867,9 @@ bool mk_std_lvl()
         reveal_doors_on_path_to_stairs(stairs_pos);
     }
 
-    //
+    // -------------------------------------------------------------------------
     // Occasionally make the whole level dark
-    //
+    // -------------------------------------------------------------------------
     if (map::dlvl > 1)
     {
         const int make_drk_pct = 2 + (map::dlvl / 4);

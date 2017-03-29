@@ -261,7 +261,7 @@ void try_spawn_due_to_time_passed()
 
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::yes)
+    map_parsers::BlocksMoveCommon(ParseActors::yes)
         .run(blocked);
 
     const int min_dist_to_player = fov_std_radi_int + 3;
@@ -326,7 +326,7 @@ void populate_intro_lvl()
 
     const int min_dist_from_player = fov_std_radi_int + 3;
 
-    map_parsers::BlocksMoveCmn(ParseActors::yes)
+    map_parsers::BlocksMoveCommon(ParseActors::yes)
         .run(blocked);
 
     const P& player_pos = map::player->pos;
@@ -404,7 +404,7 @@ void populate_std_lvl()
 
     const int min_dist_from_player = fov_std_radi_int - 1;
 
-    map_parsers::BlocksMoveCmn(ParseActors::yes)
+    map_parsers::BlocksMoveCommon(ParseActors::yes)
         .run(blocked);
 
     const P& player_pos = map::player->pos;

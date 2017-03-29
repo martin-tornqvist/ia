@@ -5,6 +5,9 @@
 
 #include "feature.hpp"
 
+class Item;
+class Lever;
+
 enum class BurnState
 {
     not_burned,
@@ -35,8 +38,6 @@ enum class DidClose
     no,
     yes
 };
-
-class Item;
 
 class ItemContainer
 {
@@ -98,6 +99,11 @@ public:
     virtual DidClose close(Actor* const actor_closing);
 
     virtual void disarm();
+
+    virtual void on_lever_pulled(Lever* const lever)
+    {
+        (void)lever;
+    }
 
     void add_light(bool light[map_w][map_h]) const override final;
 
@@ -208,6 +214,7 @@ public:
     }
 
     std::string name(const Article article) const override;
+
     WasDestroyed on_finished_burning() override;
 
 private:
@@ -586,28 +593,6 @@ private:
     int base_shock_when_adj() const override;
 };
 
-class Pillar: public Rigid
-{
-public:
-    Pillar(const P& p);
-    Pillar() = delete;
-    ~Pillar() {}
-
-    FeatureId id() const override
-    {
-        return FeatureId::pillar;
-    }
-
-    std::string name(const Article article) const override;
-
-private:
-    Clr clr_default() const override;
-
-    void on_hit(const DmgType dmg_type,
-                const DmgMethod dmg_method,
-                Actor* const actor) override;
-};
-
 class Stalagmite: public Rigid
 {
 public:
@@ -765,8 +750,6 @@ private:
                 Actor* const actor) override;
 };
 
-class Door;
-
 class Lever: public Rigid
 {
 public:
@@ -787,17 +770,28 @@ public:
 
     void bump(Actor& actor_bumping) override;
 
-    void link_door(Door* const door)
+    bool is_left_pos() const
     {
-        linked_door_ = door;
+        return is_left_pos_;
+    }
+
+    void set_linked_feature(Rigid* feature)
+    {
+        linked_feature_ = feature;
+    }
+
+    void unlink()
+    {
+        linked_feature_ = nullptr;
+    }
+
+    // Levers linked to the same feature
+    void add_sibbling(Lever* const lever)
+    {
+        sibblings_.push_back(lever);
     }
 
 private:
-    // When a (metal) door is opened by a lever, the door sets all linked
-    // levers to the right position (just as a convenience for the player to
-    // show that the second lever is already "activated")
-    friend class Door;
-
     Clr clr_default() const override;
 
     void on_hit(const DmgType dmg_type,
@@ -806,7 +800,9 @@ private:
 
     bool is_left_pos_;
 
-    Door* linked_door_;
+    Rigid* linked_feature_;
+
+    std::vector<Lever*> sibblings_;
 };
 
 class Altar: public Rigid

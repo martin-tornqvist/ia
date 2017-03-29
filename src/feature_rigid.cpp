@@ -167,7 +167,7 @@ void Rigid::on_new_turn()
             if (map::is_pos_inside_map(p))
             {
                 const bool blocks =
-                    map_parsers::BlocksMoveCmn(ParseActors::no)
+                    map_parsers::BlocksMoveCommon(ParseActors::no)
                     .cell(p);
 
                 if (!blocks)
@@ -186,7 +186,10 @@ void Rigid::try_start_burning(const bool is_msg_allowed)
 {
     clear_gore();
 
-    if (burn_state_ == BurnState::not_burned)
+    // Always start burning if not already burnt, and sometimes if already burnt
+    if ((burn_state_ == BurnState::not_burned) ||
+        ((burn_state_ == BurnState::has_burned) &&
+         rnd::one_in(3)))
     {
         if (map::is_pos_seen_by_player(pos_) &&
             is_msg_allowed)
@@ -435,9 +438,9 @@ Clr Rigid::clr_bg() const
 
 void Rigid::clear_gore()
 {
-    gore_tile_   = TileId::empty;
-    gore_glyph_  = ' ';
-    is_bloody_   = false;
+    gore_tile_ = TileId::empty;
+    gore_glyph_ = ' ';
+    is_bloody_ = false;
 }
 
 void Rigid::add_light(bool light[map_w][map_h]) const
@@ -469,7 +472,8 @@ void Floor::on_hit(const DmgType dmg_type,
                    const DmgMethod dmg_method,
                    Actor* const actor)
 {
-    if (dmg_type == DmgType::fire && dmg_method == DmgMethod::elemental)
+    if (dmg_type == DmgType::fire &&
+        dmg_method == DmgMethod::elemental)
     {
         (void)actor;
 
@@ -1105,32 +1109,6 @@ Clr Statue::clr_default() const
 }
 
 // -----------------------------------------------------------------------------
-// Pillar
-// -----------------------------------------------------------------------------
-Pillar::Pillar(const P& p) :
-    Rigid(p) {}
-
-void Pillar::on_hit(const DmgType dmg_type,
-                    const DmgMethod dmg_method,
-                    Actor* const actor)
-{
-    (void)dmg_type;
-    (void)dmg_method;
-    (void)actor;
-}
-
-std::string Pillar::name(const Article article) const
-{
-    std::string ret = article == Article::a ? "a " : "the ";
-    return ret + "pillar";
-}
-
-Clr Pillar::clr_default() const
-{
-    return clr_white;
-}
-
-// -----------------------------------------------------------------------------
 // Stalagmite
 // -----------------------------------------------------------------------------
 Stalagmite::Stalagmite(const P& p) :
@@ -1454,7 +1432,7 @@ Clr Chasm::clr_default() const
 Lever::Lever(const P& p) :
     Rigid(p),
     is_left_pos_(true),
-    linked_door_(nullptr)  {}
+    linked_feature_(nullptr)  {}
 
 void Lever::on_hit(const DmgType dmg_type,
                    const DmgMethod dmg_method,
@@ -1504,6 +1482,7 @@ void Lever::bump(Actor& actor_bumping)
 
     TRACE_FUNC_BEGIN;
 
+    // If player is blind, ask it they really want to pull the lever
     if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
     {
         msg_log::clear();
@@ -1526,16 +1505,16 @@ void Lever::bump(Actor& actor_bumping)
 
     is_left_pos_ = !is_left_pos_;
 
-    if (linked_door_)
+    // Signal that the lever has been pulled to any linked feature
+    if (linked_feature_)
     {
-        if (linked_door_->is_open())
-        {
-            linked_door_->close(nullptr);
-        }
-        else // Not open
-        {
-            linked_door_->open(nullptr);
-        }
+        linked_feature_->on_lever_pulled(this);
+    }
+
+    // Set all sibblings to same status as me
+    for (auto* const sibbling : sibblings_)
+    {
+        sibbling->is_left_pos_ = is_left_pos_;
     }
 
     game_time::tick();
@@ -2237,7 +2216,7 @@ void ItemContainer::open(const P& feature_pos,
 
             const std::string name = item->name(ItemRefType::plural,
                                                 ItemRefInf::yes,
-                                                ItemRefAttInf::wpn_context);
+                                                ItemRefAttInf::wpn_main_att_mode);
 
             msg_log::add("Pick up " + name + "? [y/n]");
 
@@ -2826,7 +2805,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
 
         bool blocked[map_w][map_h];
 
-        map_parsers::BlocksMoveCmn(ParseActors::yes)
+        map_parsers::BlocksMoveCommon(ParseActors::yes)
             .run(blocked,
                  MapParseMode::overwrite,
                  R(pos_ - 1, pos_ + 1));

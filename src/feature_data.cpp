@@ -9,6 +9,7 @@
 #include "feature_event.hpp"
 #include "feature_door.hpp"
 #include "feature_monolith.hpp"
+#include "feature_pylon.hpp"
 #include "game_time.hpp"
 
 // -----------------------------------------------------------------------------
@@ -245,13 +246,31 @@ void init_data_list()
     d.tile = TileId::monolith;
     d.is_projectile_passable = false;
     d.is_los_passable = false;
-    d.can_have_blood = false; //We don't want to mess with the color
+    d.can_have_blood = false; // We don't want to mess with the color
     d.can_have_gore = false;
     d.can_have_corpse = false;
     d.can_have_rigid = false;
     d.can_have_item = false;
     d.shock_when_adjacent = 10;
     d.matl_type = Matl::stone;
+    add_to_list_and_reset(d);
+
+    d.id = FeatureId::pylon;
+    d.mk_obj = [](const P & p)
+    {
+        return new Pylon(p, PylonId::any);
+    };
+    d.glyph = '|';
+    d.tile = TileId::pylon;
+    d.is_projectile_passable = false;
+    d.is_los_passable = false;
+    d.can_have_blood = false; // We don't want to mess with the color
+    d.can_have_gore = false;
+    d.can_have_corpse = false;
+    d.can_have_rigid = false;
+    d.can_have_item = false;
+    d.shock_when_adjacent = 10;
+    d.matl_type = Matl::metal;
     add_to_list_and_reset(d);
 
     d.id = FeatureId::lever;
@@ -507,24 +526,6 @@ void init_data_list()
     };
     d.glyph = '1';
     d.tile = TileId::fountain;
-    d.is_projectile_passable = false;
-    d.is_los_passable = false;
-    d.can_have_blood = false;
-    d.can_have_gore = false;
-    d.can_have_corpse = false;
-    d.can_have_rigid = false;
-    d.can_have_item = false;
-    d.matl_type = Matl::stone;
-    d.auto_spawn_placement = FeaturePlacement::away_from_walls;
-    add_to_list_and_reset(d);
-
-    d.id = FeatureId::pillar;
-    d.mk_obj = [](const P & p)
-    {
-        return new Pillar(p);
-    };
-    d.glyph = '|';
-    d.tile = TileId::pillar;
     d.is_projectile_passable = false;
     d.is_los_passable = false;
     d.can_have_blood = false;

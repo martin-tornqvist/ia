@@ -1148,7 +1148,7 @@ void projectile_fire(Actor* const attacker,
                                 const bool is_spike_gun =
                                     wpn.data().id == ItemId::spike_gun;
 
-                                knock_back::try_knock_back(
+                                knockback::run(
                                     *(current_data->defender),
                                     current_data->attacker->pos,
                                     is_spike_gun);
@@ -1651,7 +1651,7 @@ void melee(Actor* const attacker,
 
             if (wpn.data().melee.knocks_back)
             {
-                knock_back::try_knock_back(defender, attacker_origin, false);
+                knockback::run(defender, attacker_origin, false);
             }
         }
         else // Defender was killed

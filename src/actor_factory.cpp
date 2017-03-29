@@ -303,7 +303,7 @@ std::vector<Mon*> spawn(const P& origin,
 
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::yes)
+    map_parsers::BlocksMoveCommon(ParseActors::yes)
         .run(blocked);
 
     auto free_cells = to_vec(blocked, false);

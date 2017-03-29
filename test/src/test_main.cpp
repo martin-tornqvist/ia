@@ -1690,7 +1690,7 @@ TEST_FIXTURE(BasicFixture, connect_rooms_with_corridor)
 
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::no)
+    map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
 
     floodfill(5,
@@ -1762,7 +1762,7 @@ void check_connected()
 {
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::no)
+    map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
 
     P stair_p(-1, -1);

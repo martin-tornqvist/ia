@@ -204,7 +204,7 @@ void InvState::draw_slot(const SlotId id,
             att_inf =
                 d.main_att_mode == AttMode::thrown ?
                 ItemRefAttInf::melee :
-                ItemRefAttInf::wpn_context;
+                ItemRefAttInf::wpn_main_att_mode;
         }
         else if (slot.id == SlotId::thrown)
         {
@@ -614,7 +614,7 @@ void BrowseInv::draw()
                                y,
                                key,
                                is_marked,
-                               ItemRefAttInf::wpn_context);
+                               ItemRefAttInf::wpn_main_att_mode);
         }
 
         ++key;
@@ -858,7 +858,7 @@ void Apply::draw()
                            y,
                            key,
                            is_marked,
-                           ItemRefAttInf::wpn_context);
+                           ItemRefAttInf::wpn_main_att_mode);
 
         ++key;
 
@@ -1110,7 +1110,7 @@ void Equip::draw()
             att_inf =
                 d.main_att_mode == AttMode::thrown ?
                 ItemRefAttInf::melee :
-                ItemRefAttInf::wpn_context;
+                ItemRefAttInf::wpn_main_att_mode;
         }
         else if (slot_to_equip_.id == SlotId::thrown)
         {
@@ -1319,7 +1319,7 @@ void SelectIdentify::draw()
                                y,
                                key,
                                is_marked,
-                               ItemRefAttInf::wpn_context);
+                               ItemRefAttInf::wpn_main_att_mode);
         }
 
         ++key;

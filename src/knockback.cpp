@@ -16,10 +16,10 @@
 #include "feature_trap.hpp"
 #include "feature_mob.hpp"
 
-namespace knock_back
+namespace knockback
 {
 
-void try_knock_back(Actor& defender,
+void run(Actor& defender,
                     const P& attacked_from_pos,
                     const bool is_spike_gun,
                     const Verbosity verbosity,

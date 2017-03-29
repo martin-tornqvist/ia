@@ -6,6 +6,6 @@
 
 root_dir=$PWD
 
-cd build && make -j 2 ia-debug && ./ia-debug
+cd build && make -j 4 ia-debug && ./ia-debug
 
 cd $root_dir

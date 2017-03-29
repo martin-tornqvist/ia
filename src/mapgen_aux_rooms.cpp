@@ -132,7 +132,7 @@ void mk_aux_rooms(Region regions[3][3])
     //       cells immediately
 
     // Get blocked cells
-    map_parsers::BlocksMoveCmn(ParseActors::no)
+    map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(floor_cells);
 
     // Flip the values so that we get free cells

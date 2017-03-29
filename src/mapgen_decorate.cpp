@@ -10,7 +10,7 @@ void decorate()
 {
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::no).
+    map_parsers::BlocksMoveCommon(ParseActors::no).
         run(blocked);
 
     for (int x = 0; x < map_w; ++x)

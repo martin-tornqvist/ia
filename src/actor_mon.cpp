@@ -1324,33 +1324,33 @@ DidAction Vortex::on_act()
 
         const P delta = player_pos - pos;
 
-        P knock_back_from_pos = player_pos;
+        P knockback_from_pos = player_pos;
 
         if (delta.x >  1)
         {
-            ++knock_back_from_pos.x;
+            ++knockback_from_pos.x;
         }
 
         if (delta.x < -1)
         {
-            --knock_back_from_pos.x;
+            --knockback_from_pos.x;
         }
 
         if (delta.y >  1)
         {
-            ++knock_back_from_pos.y;
+            ++knockback_from_pos.y;
         }
 
         if (delta.y < -1)
         {
-            --knock_back_from_pos.y;
+            --knockback_from_pos.y;
         }
 
-        if (knock_back_from_pos != player_pos)
+        if (knockback_from_pos != player_pos)
         {
             TRACE << "Pos found to knockback player from: "
-                  << knock_back_from_pos.x << ", "
-                  << knock_back_from_pos.y << std::endl;
+                  << knockback_from_pos.x << ", "
+                  << knockback_from_pos.y << std::endl;
 
             TRACE << "Player pos: "
                   << player_pos.x << ", " << player_pos.y << std::endl;
@@ -1383,8 +1383,8 @@ DidAction Vortex::on_act()
 
                 // TODO: There should be a sfx here
 
-                knock_back::try_knock_back(*map::player,
-                                           knock_back_from_pos,
+                knockback::run(*map::player,
+                                           knockback_from_pos,
                                            false,
                                            Verbosity::silent);
 

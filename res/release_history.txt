@@ -5,6 +5,7 @@ Gameplay
 * You no longer gain XP from killing monsters - instead XP is raised by activities related to exploration and discovery, such as identifying items, drinking from some types of fountains, reading inscriptions on "monoliths", or seeing a new type of monster for the first time
 * Fewer monster are now spawned on the map overall, and many monster types now tend to spawn in smaller groups, but are individually stronger - they also generally folow and remember you for a shorter time than before
 * Monsters may become "suspicious" (typically with a message about them looking "wary" or "disturbed"), which gives them an increased chance of detecting you - they may still detect you immediately, but the chance for this is slightly lower than before
+* Added "Pylons", which can be activated with a lever for various effects (most commonly burning the area around them)
 * Added metal doors, which can only be opened with levers
 * Items are now more likely to spawn behind hidden, stuck, or metal doors, in areas away from the path to the stairs
 * Added a bunch of unique artifacts, and removed the (relatively bland) randomized amulets

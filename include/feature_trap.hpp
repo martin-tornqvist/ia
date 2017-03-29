@@ -37,11 +37,11 @@ enum class TrapPlacementValid
 class Trap: public Rigid
 {
 public:
-    Trap(const P& feature_pos, Rigid* const mimic_feature, TrapId id);
+    Trap(const P& p, Rigid* const mimic_feature, TrapId id);
 
-    //Spawn-by-id compliant ctor (do not use for normal cases):
-    Trap(const P& feature_pos) :
-        Rigid                   (feature_pos),
+    // Spawn-by-id compliant ctor (do not use for normal cases):
+    Trap(const P& p) :
+        Rigid                   (p),
         mimic_feature_          (nullptr),
         is_hidden_              (false),
         nr_turns_until_trigger_ (-1),
@@ -58,7 +58,7 @@ public:
 
     bool valid()
     {
-        //This trap is valid if we have succesfully created an implementation
+        // Trap is valid if we have succesfully created an implementation
         return trap_impl_;
     }
 
@@ -72,8 +72,8 @@ public:
 
     void disarm() override;
 
-    //Quietly destroys the trap, and either places rubble, or replaces it with
-    //the mimic feature (depending on trap type)
+    // Quietly destroys the trap, and either places rubble, or replaces it with
+    // the mimic feature (depending on trap type)
     void destroy();
 
     void on_new_turn_hook() override;
@@ -130,6 +130,9 @@ private:
     bool is_hidden_;
     int nr_turns_until_trigger_;
 
+    //
+    // TODO: Should be a unique pointer
+    //
     TrapImpl* trap_impl_;
 };
 
@@ -137,18 +140,18 @@ class TrapImpl
 {
 protected:
     friend class Trap;
-    TrapImpl(P pos, TrapId type, Trap* const base_trap) :
-        pos_        (pos),
+    TrapImpl(P p, TrapId type, Trap* const base_trap) :
+        pos_        (p),
         type_       (type),
         base_trap_  (base_trap) {}
 
     virtual ~TrapImpl() {}
 
-    //Called by the trap feature after picking a random trap implementation.
-    //This allows the specific implementation initialize and to modify the map.
-    //The implementation may report that the placement is impossible
-    //(e.g. no suitable wall to fire a dart from), in which case another
-    //implementation will be picked at random.
+    // Called by the trap feature after picking a random trap implementation.
+    // This allows the specific implementation initialize and to modify the map.
+    // The implementation may report that the placement is impossible
+    // (e.g. no suitable wall to fire a dart from), in which case another
+    // implementation will be picked at random.
     virtual TrapPlacementValid on_place()
     {
         return TrapPlacementValid::yes;
@@ -160,8 +163,8 @@ protected:
         return dir;
     }
 
-    //NOTE: The trigger may happen several turns after the trap activates, so
-    //it's kinda pointless to provide actor triggering as a parameter here.
+    // NOTE: The trigger may happen several turns after the trap activates, so
+    //       it's pointless to provide actor triggering as a parameter here.
     virtual void trigger() = 0;
 
     virtual Range nr_turns_range_to_trigger() const = 0;

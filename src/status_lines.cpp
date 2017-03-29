@@ -108,7 +108,8 @@ void draw()
     io::draw_text(str, panel, p, clr_white);
 
     // Wielded weapon
-    p.x = std::max(x_wielded_default, int(p.x + str.size() + 1));
+    p.x = std::max(x_wielded_default,
+                   (int)(p.x + str.size() + 1));
 
     int x_wielded = p.x;
 
@@ -136,9 +137,9 @@ void draw()
 
     // If mainly a throwing weapon, use melee info - otherwise use context
     const ItemRefAttInf att_inf =
-        data.main_att_mode == AttMode::thrown ?
+        (data.main_att_mode == AttMode::thrown) ?
         ItemRefAttInf::melee :
-        ItemRefAttInf::wpn_context;
+        ItemRefAttInf::wpn_main_att_mode;
 
     str = wpn->name(ItemRefType::plain,
                     ItemRefInf::yes,

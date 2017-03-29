@@ -220,6 +220,7 @@ P column_and_row_tile(const TileId tile)
     case TileId::square_checkered_sparse:       return P(5, 6);
     case TileId::rubble_high:                   return P(7, 6);
     case TileId::rubble_low:                    return P(8, 6);
+    case TileId::pylon:                         return P(19, 5);
     case TileId::stairs_down:                   return P(9, 6);
     case TileId::brazier:                       return P(11, 6);
     case TileId::altar:                         return P(12, 6);
@@ -228,8 +229,8 @@ P column_and_row_tile(const TileId tile)
     case TileId::door_open:                     return P(15, 6);
     case TileId::door_broken:                   return P(16, 6);
     case TileId::fountain:                      return P(18, 6);
-    case TileId::gate_open:                     return P(20, 6);
     case TileId::gate_closed:                   return P(19, 6);
+    case TileId::gate_open:                     return P(20, 6);
     case TileId::tree:                          return P(1, 7);
     case TileId::bush:                          return P(2, 7);
     case TileId::church_bench:                  return P(4, 7);

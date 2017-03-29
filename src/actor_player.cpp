@@ -1771,7 +1771,7 @@ void Player::move(Dir dir)
             {
                 std::string item_name = item->name(ItemRefType::plural,
                                                    ItemRefInf::yes,
-                                                   ItemRefAttInf::wpn_context);
+                                                   ItemRefAttInf::wpn_main_att_mode);
 
                 text_format::first_to_upper(item_name);
 
@@ -2132,7 +2132,7 @@ void Player::update_fov()
         for (int y = 0; y < map_h; ++y)
         {
             const bool is_blocking =
-                map_parsers::BlocksMoveCmn(ParseActors::no)
+                map_parsers::BlocksMoveCommon(ParseActors::no)
                 .cell(P(x, y));
 
             Cell& cell = map::cells[x][y];
@@ -2156,7 +2156,7 @@ void Player::fov_hack()
 
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::no)
+    map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
 
     for (int x = 0; x < map_w; ++x)

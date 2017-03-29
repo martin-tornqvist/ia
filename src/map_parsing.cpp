@@ -176,19 +176,19 @@ bool BlocksLos::parse(const Mob& f) const
     return !f.is_los_passable();
 }
 
-bool BlocksMoveCmn::parse(const Cell& c) const
+bool BlocksMoveCommon::parse(const Cell& c) const
 {
     return
         !map::is_pos_inside_map(c.pos, false) ||
         !c.rigid->can_move_cmn();
 }
 
-bool BlocksMoveCmn::parse(const Mob& f) const
+bool BlocksMoveCommon::parse(const Mob& f) const
 {
     return !f.can_move_cmn();
 }
 
-bool BlocksMoveCmn::parse(const Actor& a) const
+bool BlocksMoveCommon::parse(const Actor& a) const
 {
     return a.is_alive();
 }
@@ -254,6 +254,11 @@ bool BlocksRigid::parse(const Cell& c)  const
 bool IsFeature::parse(const Cell& c) const
 {
     return c.rigid->id() == feature_;
+}
+
+bool IsNotFeature::parse(const Cell& c) const
+{
+    return c.rigid->id() != feature_;
 }
 
 bool IsAnyOfFeatures::parse(const Cell& c) const
@@ -454,44 +459,47 @@ void expand(const bool in[map_w][map_h],
             bool out[map_w][map_h],
             const R& area_allowed_to_modify)
 {
-    const int X0 = std::max(0,          area_allowed_to_modify.p0.x);
-    const int Y0 = std::max(0,          area_allowed_to_modify.p0.y);
-    const int X1 = std::min(map_w - 1,  area_allowed_to_modify.p1.x);
-    const int Y1 = std::min(map_h - 1,  area_allowed_to_modify.p1.y);
+    const int x0 = std::max(0,          area_allowed_to_modify.p0.x);
+    const int y0 = std::max(0,          area_allowed_to_modify.p0.y);
+    const int x1 = std::min(map_w - 1,  area_allowed_to_modify.p1.x);
+    const int y1 = std::min(map_h - 1,  area_allowed_to_modify.p1.y);
 
-    for (int x = X0; x <= X1; ++x)
+    for (int x = x0; x <= x1; ++x)
     {
-        for (int y = Y0; y <= Y1; ++y)
+        for (int y = y0; y <= y1; ++y)
         {
             out[x][y] = false;
 
-            //Search all cells adjacent to the current position for any cell
-            //which is "true" in the input arry.
-            const int CMP_X0 = std::max(x - 1, 0);
-            const int CMP_Y0 = std::max(y - 1, 0);
-            const int CMP_X1 = std::min(x + 1, map_w - 1);
-            const int CMP_Y1 = std::min(y + 1, map_h - 1);
+            // Search all cells adjacent to the current position for any cell
+            // which is "true" in the input arry.
+            const int cmp_x0 = std::max(x - 1, 0);
+            const int cmp_y0 = std::max(y - 1, 0);
+            const int cmp_x1 = std::min(x + 1, map_w - 1);
+            const int cmp_y1 = std::min(y + 1, map_h - 1);
 
-            for (int cmp_x = CMP_X0; cmp_x <= CMP_X1; ++cmp_x)
+            for (int cmp_x = cmp_x0; cmp_x <= cmp_x1; ++cmp_x)
             {
                 bool is_found = false;
 
-                for (int cmp_y = CMP_Y0; cmp_y <= CMP_Y1; ++cmp_y)
+                for (int cmp_y = cmp_y0; cmp_y <= cmp_y1; ++cmp_y)
                 {
                     if (in[cmp_x][cmp_y])
                     {
-                        out[x][y] = is_found = true;
+                        out[x][y] = true;
+
+                        is_found = true;
+
                         break;
                     }
-                }
+                } // Compare y loop
 
                 if (is_found)
                 {
                     break;
                 }
-            }
-        }
-    }
+            } // Compare x loop
+        } // y loop
+    } // x loop
 
 } // expand
 
@@ -602,5 +610,17 @@ bool IsCloserToPos::operator()(const P& p1, const P& p2)
 {
     const int king_dist1 = king_dist(p_.x, p_.y, p1.x, p1.y);
     const int king_dist2 = king_dist(p_.x, p_.y, p2.x, p2.y);
+
     return king_dist1 < king_dist2;
+}
+
+// -----------------------------------------------------------------------------
+// Is further from pos
+// -----------------------------------------------------------------------------
+bool IsFurtherFromPos::operator()(const P& p1, const P& p2)
+{
+    const int king_dist1 = king_dist(p_.x, p_.y, p1.x, p1.y);
+    const int king_dist2 = king_dist(p_.x, p_.y, p2.x, p2.y);
+
+    return king_dist1 > king_dist2;
 }

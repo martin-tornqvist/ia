@@ -66,6 +66,14 @@ void mk_sub_rooms();
 
 void decorate();
 
+void mk_doors();
+
+void mk_metal_doors_and_levers();
+
+void mk_monoliths();
+
+void mk_pylons_and_levers();
+
 //------------------------------------------------------------------------------
 // Room reshaping utils (called by the room objects)
 //------------------------------------------------------------------------------
@@ -120,6 +128,12 @@ void pathfinder_walk(const P& p0,
                      const P& p1,
                      std::vector<P>& pos_list_ref,
                      const bool is_smooth);
+
+// Generates a map of spawn chance weights, with emphasis on hidden, optional,
+// or hard to reach areas - this can be used e.g. to place items or levers.
+void mk_explore_spawn_weights(const bool blocked[map_w][map_h],
+                              std::vector<P>& positions_out,
+                              std::vector<int>& weights_out);
 
 } // mapgen
 

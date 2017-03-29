@@ -49,8 +49,12 @@ void populate_std_lvl()
 
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::no)
+    map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
+
+    const P& player_p = map::player->pos;
+
+    blocked[player_p.x][player_p.y] = true;
 
     // Put traps in non-plain rooms
     for (Room* const room : map::room_list)

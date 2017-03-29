@@ -77,7 +77,7 @@ void find_stair_path()
 
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::no)
+    map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
 
     P stair_p(-1, -1);

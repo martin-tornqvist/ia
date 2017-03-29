@@ -94,7 +94,7 @@ public:
 
     bool try_jam(Actor* actor_trying);
 
-    void on_lever_pulled();
+    void on_lever_pulled(Lever* const lever) override;
 
     bool is_open() const
     {

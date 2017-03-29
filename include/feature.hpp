@@ -61,4 +61,4 @@ protected:
     P pos_;
 };
 
-#endif
+#endif // FEATURE_HPP

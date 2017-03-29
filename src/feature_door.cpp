@@ -138,10 +138,7 @@ Door::~Door()
                 {
                     auto* const lever = static_cast<Lever*>(rigid);
 
-                    if (lever->linked_door_ == this)
-                    {
-                        lever->linked_door_ = nullptr;
-                    }
+                    lever->unlink();
                 }
             }
         }
@@ -635,7 +632,7 @@ Clr Door::clr_default() const
             break;
 
         case DoorType::metal:
-            return clr_gray_drk;
+            return clr_cyan;
             break;
 
         case DoorType::gate:
@@ -1229,6 +1226,20 @@ void Door::try_open(Actor* actor_trying)
 
 } // try_open
 
+void Door::on_lever_pulled(Lever* const lever)
+{
+    (void)lever;
+
+    if (is_open_)
+    {
+        close(nullptr);
+    }
+    else // Closed
+    {
+        open(nullptr);
+    }
+}
+
 DidOpen Door::open(Actor* const actor_opening)
 {
     (void)actor_opening;
@@ -1239,30 +1250,6 @@ DidOpen Door::open(Actor* const actor_opening)
 
     is_stuck_ = false;
 
-    //
-    // Set all linked levers to the right position (for gameplay convenience)
-    //
-    if (type_ == DoorType::metal)
-    {
-        for (int x = 0; x < map_w; ++x)
-        {
-            for (int y = 0; y < map_h; ++y)
-            {
-                auto* const rigid = map::cells[x][y].rigid;
-
-                if (rigid->id() == FeatureId::lever)
-                {
-                    auto* const lever = static_cast<Lever*>(rigid);
-
-                    if (lever->linked_door_ == this)
-                    {
-                        lever->is_left_pos_ = false;
-                    }
-                }
-            }
-        }
-    }
-
     return DidOpen::yes;
 }
 
@@ -1271,30 +1258,6 @@ DidClose Door::close(Actor* const actor_closing)
     (void)actor_closing;
 
     is_open_ = false;
-
-    //
-    // Set a linked levers to the left position (for gameplay convenience)
-    //
-    if (type_ == DoorType::metal)
-    {
-        for (int x = 0; x < map_w; ++x)
-        {
-            for (int y = 0; y < map_h; ++y)
-            {
-                auto* const rigid = map::cells[x][y].rigid;
-
-                if (rigid->id() == FeatureId::lever)
-                {
-                    auto* const lever = static_cast<Lever*>(rigid);
-
-                    if (lever->linked_door_ == this)
-                    {
-                        lever->is_left_pos_ = true;
-                    }
-                }
-            }
-        }
-    }
 
     return DidClose::yes;
 }

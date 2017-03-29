@@ -44,7 +44,7 @@ enum class SpellId
     // Monsters only
     disease,
     heal_self,
-    knock_back,
+    knockback,
     mi_go_hypno,
     burn,
 
@@ -800,7 +800,7 @@ public:
 
     SpellId id() const override
     {
-        return SpellId::knock_back;
+        return SpellId::knockback;
     }
 
     IntrSpellShock shock_type_intr_cast() const override

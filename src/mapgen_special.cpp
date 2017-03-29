@@ -385,12 +385,6 @@ bool mk_egypt_lvl()
             }
             break;
 
-            case '|':
-            {
-                map::put(new Pillar(p));
-            }
-            break;
-
             case 'S':
             {
                 map::put(new Statue(p));
@@ -695,11 +689,6 @@ bool mk_boss_lvl()
             }
             break;
 
-            case '|':
-            {
-                map::put(new Pillar(p));
-            }
-
             case 'v':
             {
                 map::put(new Brazier(p));
@@ -767,12 +756,6 @@ bool mk_trapez_lvl()
                 wall->type_ = WallType::egypt;
 
                 map::put(wall);
-            }
-            break;
-
-            case '|':
-            {
-                map::put(new Pillar(p));
             }
             break;
 

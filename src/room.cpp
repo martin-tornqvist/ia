@@ -591,7 +591,7 @@ void HumanRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
     {
         bool blocked[map_w][map_h];
 
-        map_parsers::BlocksMoveCmn(ParseActors::no)
+        map_parsers::BlocksMoveCommon(ParseActors::no)
             .run(blocked);
 
         for (int x = r_.p0.x + 1; x <= r_.p1.x - 1; ++x)
@@ -684,7 +684,7 @@ void RitualRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::no)
+    map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
 
     const int bloody_chamber_pct = 60;
@@ -866,7 +866,7 @@ void SnakePitRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::yes)
+    map_parsers::BlocksMoveCommon(ParseActors::yes)
         .run(blocked,
              MapParseMode::overwrite,
              r_);
@@ -985,7 +985,7 @@ void MonsterRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::no)
+    map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
 
     int nr_blood_put = 0;
@@ -1094,7 +1094,7 @@ void FloodedRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::no)
+    map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
 
     const int liquid_one_in_n = rnd::range(3, 6);
@@ -1171,7 +1171,7 @@ void MuddyRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::no)
+    map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
 
     const int liquid_one_in_n = rnd::range(8, 12);
@@ -1255,7 +1255,7 @@ void ForestRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::no)
+    map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
 
     //
@@ -1355,7 +1355,7 @@ void ChasmRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksMoveCmn(ParseActors::no)
+    map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
 
     for (int x = 0; x < map_w; ++x)

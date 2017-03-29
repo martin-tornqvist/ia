@@ -142,6 +142,7 @@ enum class TileId
     grave_stone,
     tomb_open,
     tomb_closed,
+    pylon,
     water1,
     water2,
     trap_general,
