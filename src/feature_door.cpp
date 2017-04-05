@@ -147,7 +147,8 @@ Door::~Door()
     delete mimic_feature_;
 }
 
-void Door::on_hit(const DmgType dmg_type,
+void Door::on_hit(const int dmg,
+                  const DmgType dmg_type,
                   const DmgMethod dmg_method,
                   Actor* const actor)
 {
@@ -176,26 +177,25 @@ void Door::on_hit(const DmgType dmg_type,
                 {
                 case DoorType::wood:
                 case DoorType::gate:
-                    if (rnd::fraction(7, 10))
+                {
+                    if (map::is_pos_seen_by_player(pos_))
                     {
-                        if (map::is_pos_seen_by_player(pos_))
-                        {
-                            const std::string a =
-                                is_secret_ ?
-                                "A " : "The ";
+                        const std::string a =
+                            is_secret_ ?
+                            "A " : "The ";
 
-                            msg_log::add(a +
-                                         base_name_short() +
-                                         " is blown to pieces!");
-                        }
-
-                        map::put(new RubbleLow(pos_));
-
-                        map::update_vision();
-
-                        return;
+                        msg_log::add(a +
+                                     base_name_short() +
+                                     " is blown to pieces!");
                     }
-                    break;
+
+                    map::put(new RubbleLow(pos_));
+
+                    map::update_vision();
+
+                    return;
+                }
+                break;
 
                 case DoorType::metal:
                     break;
@@ -214,55 +214,11 @@ void Door::on_hit(const DmgType dmg_type,
         }
 
         //
-        // Heavy blunt
+        // Kicking, blunt (sledgehammers), or slashing (axes)
         //
-        if (dmg_method == DmgMethod::blunt_heavy)
-        {
-            ASSERT(actor);
-
-            // switch (type_)
-            // {
-            // case DoorType::wood:
-            // case DoorType::gate:
-            // {
-            //     Fraction destr_chance(6, 10);
-
-            //     if (actor == map::player)
-            //     {
-            //         if (player_bon::traits[(size_t)Trait::tough])
-            //         {
-            //             destr_chance.num += 2;
-            //         }
-
-            //         if (player_bon::traits[(size_t)Trait::rugged])
-            //         {
-            //             destr_chance.num += 2;
-            //         }
-
-            //         if (destr_chance.roll())
-            //         {
-
-            //         }
-            //     }
-            //     else //Is monster
-            //     {
-            //         if (destr_chance.roll())
-            //         {
-
-            //         }
-            //     }
-            // } break;
-
-            // case DoorType::metal:
-            //     break;
-            // }
-
-        } // blunt_heavy
-
-        //
-        // Kick
-        //
-        if (dmg_method == DmgMethod::kick)
+        if ((dmg_method == DmgMethod::kicking) ||
+            (dmg_method == DmgMethod::blunt) ||
+            (dmg_method == DmgMethod::slashing))
         {
             ASSERT(actor);
 
@@ -279,7 +235,7 @@ void Door::on_hit(const DmgType dmg_type,
             {
                 if (is_player)
                 {
-                    int destr_chance_pct = 25 - (nr_spikes_ * 3);
+                    int destr_chance_pct = 5 + (dmg * 4) - (nr_spikes_ * 3);
 
                     destr_chance_pct = std::max(1, destr_chance_pct);
 
@@ -347,7 +303,8 @@ void Door::on_hit(const DmgType dmg_type,
                         {
                             const SfxId sfx =
                                 is_secret_ ?
-                                SfxId::END : SfxId::door_bang;
+                                SfxId::END :
+                                SfxId::door_bang;
 
                             Snd snd("",
                                     sfx,
@@ -457,9 +414,9 @@ void Door::on_hit(const DmgType dmg_type,
 
             } // Door type switch
 
-        } // kick
+        } // Blunt or slashing damage method
 
-    } // physical damage
+    } // Physical damage
 
     //
     // Fire
@@ -491,7 +448,7 @@ WasDestroyed Door::on_finished_burning()
     return WasDestroyed::yes;
 }
 
-bool Door::can_move_cmn() const
+bool Door::can_move_common() const
 {
     return is_open_;
 }
@@ -1038,7 +995,7 @@ void Door::try_open(Actor* actor_trying)
 
         msg_log::add("I find no way to open it.");
 
-        msg_log::add("Perhaps it is opened elsewhere.");
+        msg_log::add("Perhaps it is handled elsewhere.");
 
         return;
     }

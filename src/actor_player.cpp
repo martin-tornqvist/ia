@@ -90,31 +90,31 @@ void Player::mk_start_items()
 
         // Occultist starts with some spells and a potion
 
+        // Spirit potion
+        Item* item = item_factory::mk(ItemId::potion_spirit);
+        static_cast<Potion*>(item)->identify(Verbosity::silent);
+        item->give_xp_for_identify(Verbosity::silent);
+        inv_->put_in_backpack(item);
+
+        // Manuscript of Darkbolt
+        item = item_factory::mk(ItemId::scroll_darkbolt);
+        static_cast<Potion*>(item)->identify(Verbosity::silent);
+        item->give_xp_for_identify(Verbosity::silent);
+        inv_->put_in_backpack(item);
+
         // Learn the Darkbolt spell
         player_spells::learn_spell(SpellId::darkbolt, Verbosity::silent);
         player_spells::set_spell_skill_pct(SpellId::darkbolt, 20);
-
-        // Identify the Darkbolt scroll
-        Item* item = item_factory::mk(ItemId::scroll_darkbolt);
-        static_cast<Scroll*>(item)->identify(Verbosity::silent);
-        item->give_xp_for_identify(Verbosity::silent);
-        delete item;
 
         // Learn the Detect Monsters spell
         player_spells::learn_spell(SpellId::det_mon, Verbosity::silent);
         player_spells::set_spell_skill_pct(SpellId::det_mon, 40);
 
         // Identify the Detect Monsters scroll
-        item = item_factory::mk(ItemId::scroll_det_mon);
+        std::unique_ptr<Item> scroll_det_mon(
+            item_factory::mk(ItemId::scroll_det_mon));
         static_cast<Scroll*>(item)->identify(Verbosity::silent);
         item->give_xp_for_identify(Verbosity::silent);
-        delete item;
-
-        // Spirit potion
-        item = item_factory::mk(ItemId::potion_spirit);
-        static_cast<Potion*>(item)->identify(Verbosity::silent);
-        item->give_xp_for_identify(Verbosity::silent);
-        inv_->put_in_backpack(item);
     }
     break;
 
@@ -950,8 +950,10 @@ void Player::act()
             !static_cast<const Trap*>(tgt_rigid)->is_hidden();
 
         const bool should_abort =
-            !tgt_rigid->can_move_cmn() ||
+            !tgt_rigid->can_move_common() ||
             is_tgt_known_trap ||
+            (tgt_rigid->id() == FeatureId::chains) ||
+            (tgt_rigid->id() == FeatureId::liquid_shallow) ||
             (tgt_rigid->burn_state() == BurnState::burning);
 
         if (should_abort)
@@ -1721,7 +1723,7 @@ void Player::move(Dir dir)
 
         if (is_features_allow_move)
         {
-            // Encumbrance
+            // Encumbrance, wounds, or spraining affecting movement
             const int enc = enc_percent();
 
             Prop* const wound_prop = prop_handler_->prop(PropId::wound);
@@ -1735,15 +1737,19 @@ void Player::move(Dir dir)
 
             const int min_nr_wounds_for_stagger = 3;
 
+            // Cannot move at all due to encumbrance?
             if (enc >= enc_immobile_lvl)
             {
                 msg_log::add("I am too encumbered to move!");
 
                 return;
             }
-            else if (enc >= 100 || nr_wounds >= min_nr_wounds_for_stagger)
+            // Move at half speed due to encumbrance or wounds?
+            else if ((enc >= 100) ||
+                     (nr_wounds >= min_nr_wounds_for_stagger))
             {
                 msg_log::add("I stagger.", clr_msg_note);
+
                 prop_handler_->try_add(new PropWaiting(PropTurns::std));
             }
 
@@ -1769,9 +1775,10 @@ void Player::move(Dir dir)
 
             if (item)
             {
-                std::string item_name = item->name(ItemRefType::plural,
-                                                   ItemRefInf::yes,
-                                                   ItemRefAttInf::wpn_main_att_mode);
+                std::string item_name =
+                    item->name(ItemRefType::plural,
+                               ItemRefInf::yes,
+                               ItemRefAttInf::wpn_main_att_mode);
 
                 text_format::first_to_upper(item_name);
 
@@ -1927,7 +1934,9 @@ void Player::kick_mon(Actor& defender)
 
     const ActorDataT& d = defender.data();
 
+    //
     // TODO: This is REALLY hacky, it should be done another way.
+    //       Why even have a "stomp" attack?? Why not just kick them as well?
     if (d.actor_size == ActorSize::floor &&
         (d.is_spider ||
          d.is_rat ||

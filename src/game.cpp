@@ -20,7 +20,7 @@
 #include "feature_mob.hpp"
 #include "feature_door.hpp"
 #include "reload.hpp"
-#include "kick.hpp"
+#include "wham.hpp"
 #include "close.hpp"
 #include "disarm.hpp"
 #include "pickup.hpp"
@@ -388,7 +388,7 @@ void handle_player_input(const InputData& input)
     //
     case 'w':
     {
-        kick::player_kick();
+        wham::run();
     }
     break;
 

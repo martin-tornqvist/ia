@@ -435,6 +435,42 @@ void InvState::draw_detailed_item_descr(const Item* const item) const
         const ItemDataT& d = item->data();
 
         // ---------------------------------------------------------------------
+        // Can be used for breaking doors or destroying corpses?
+        // ---------------------------------------------------------------------
+        const bool can_att_rigid = d.melee.att_rigid;
+        const bool can_att_corpse = d.melee.att_corpse;
+
+        std::string att_obj_str = "";
+
+        if (can_att_rigid || can_att_corpse)
+        {
+            att_obj_str = "Can be used for ";
+        }
+
+        if (can_att_rigid)
+        {
+            att_obj_str += "breaching doors";
+        }
+
+        if (can_att_corpse)
+        {
+            if (can_att_rigid)
+            {
+                att_obj_str += " and ";
+            }
+
+            att_obj_str += "destroying corpses";
+        }
+
+        if (can_att_rigid || can_att_corpse)
+        {
+            att_obj_str +=
+                " more effectively (bonus is based on attack damage).";
+
+            lines.push_back(StrAndClr(att_obj_str, clr_white_lgt));
+        }
+
+        // ---------------------------------------------------------------------
         // Disturbing to carry?
         // ---------------------------------------------------------------------
         std::string disturb_str = "";

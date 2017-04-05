@@ -19,6 +19,7 @@
 #include "sdl_base.hpp"
 #include "knockback.hpp"
 #include "drop.hpp"
+#include "text_format.hpp"
 
 AttData::AttData(Actor* const attacker,
                  Actor* const defender,
@@ -277,8 +278,8 @@ RangedAttData::RangedAttData(Actor* const attacker,
                              ActorSize aim_lvl) :
     AttData             (attacker, nullptr, wpn),
     aim_pos             (aim_pos),
-    intended_aim_lvl    (ActorSize::none),
-    defender_size       (ActorSize::none),
+    intended_aim_lvl    (ActorSize::undefined),
+    defender_size       (ActorSize::undefined),
     verb_player_attacks (wpn.data().ranged.att_msgs.player),
     verb_other_attacks  (wpn.data().ranged.att_msgs.other),
     dist_mod            (0)
@@ -286,7 +287,7 @@ RangedAttData::RangedAttData(Actor* const attacker,
     Actor* const actor_aimed_at = map::actor_at_pos(aim_pos);
 
     // If aim level parameter not given, determine intended aim level now
-    if (aim_lvl == ActorSize::none)
+    if (aim_lvl == ActorSize::undefined)
     {
         if (actor_aimed_at)
         {
@@ -420,14 +421,14 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
                            const Item& item,
                            ActorSize aim_lvl) :
     AttData             (attacker, nullptr, item),
-    intended_aim_lvl    (ActorSize::none),
-    defender_size       (ActorSize::none),
+    intended_aim_lvl    (ActorSize::undefined),
+    defender_size       (ActorSize::undefined),
     dist_mod            (0)
 {
     Actor* const actor_aimed_at = map::actor_at_pos(aim_pos);
 
     // If aim level parameter not given, determine intended aim level now
-    if (aim_lvl == ActorSize::none)
+    if (aim_lvl == ActorSize::undefined)
     {
         if (actor_aimed_at)
         {
@@ -568,6 +569,7 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
 
     std::string other_name = "";
     std::string snd_msg = "";
+
     auto snd_alerts_mon = AlertsMon::no;
 
     if (wpn.data().melee.is_noisy && !att_data.is_intrinsic_att)
@@ -668,6 +670,11 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
             if (map::player->can_see_actor(*att_data.defender))
             {
                 other_name = att_data.defender->name_the();
+
+                if (!att_data.defender->data().is_unique)
+                {
+                    text_format::first_to_lower(other_name);
+                }
             }
             else // Player cannot see defender
             {
@@ -691,12 +698,13 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
             else // Not intrinsic attack
             {
                 const std::string att_mod_str =
-                    att_data.is_weak_attack ? "feebly "    :
+                    att_data.is_weak_attack ? "feebly " :
                     att_data.is_backstab ? "covertly "  : "";
 
                 const Clr clr =
                     att_data.is_backstab ?
-                    clr_blue_lgt : clr_msg_good;
+                    clr_blue_lgt :
+                    clr_msg_good;
 
                 const std::string wpn_name_a =
                     wpn.name(ItemRefType::a,
@@ -1548,7 +1556,10 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
                 states::draw();
             }
 
-            cell.rigid->hit(DmgType::physical, DmgMethod::shotgun, nullptr);
+            cell.rigid->hit(data.dmg,
+                            DmgType::physical,
+                            DmgMethod::shotgun,
+                            nullptr);
 
             break;
         }

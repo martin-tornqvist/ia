@@ -528,15 +528,15 @@ std::string trait_descr(const Trait id)
 
     case Trait::tough:
         return
-            "+2 Hit Points, +10% carry weight limit, better results for object "
-            "interactions requiring strength (e.g. bashing doors or pushing a "
-            "lid)";
+            "+4 Hit Points, +10% carry weight limit, less likely to sprain "
+            "when kicking, more likely to succeed with object interactions "
+            "requiring strength (such as bashing things open)";
 
     case Trait::rugged:
         return
-            "+4 Hit Points, +10% carry weight limit, better results for object "
-            "interactions requiring strength (such as bashing doors, or moving "
-            "the lid from a stone coffin)";
+            "+4 Hit Points, +10% carry weight limit, less likely to sprain "
+            "when kicking, more likely to succeed with object interaction "
+            "requiring strength (such as bashing things open)";
 
     case Trait::strong_backed:
         return
@@ -1063,7 +1063,7 @@ void pick_trait(const Trait id)
     {
     case Trait::tough:
     {
-        const int hp_incr = 2;
+        const int hp_incr = 4;
 
         map::player->change_max_hp(hp_incr,
                                    Verbosity::silent);

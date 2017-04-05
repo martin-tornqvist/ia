@@ -57,7 +57,6 @@ set(SRC
   include/item_potion.hpp
   include/item_rod.hpp
   include/item_scroll.hpp
-  include/kick.hpp
   include/knockback.hpp
   include/line_calc.hpp
   include/look.hpp
@@ -91,6 +90,7 @@ set(SRC
   include/status_lines.hpp
   include/text_format.hpp
   include/throwing.hpp
+  include/wham.hpp
 
   src/ability_values.cpp
   src/actor.cpp
@@ -139,7 +139,6 @@ set(SRC
   src/item_potion.cpp
   src/item_rod.cpp
   src/item_scroll.cpp
-  src/kick.cpp
   src/knockback.cpp
   src/line_calc.cpp
   src/look.cpp
@@ -186,6 +185,7 @@ set(SRC
   src/status_lines.cpp
   src/text_format.cpp
   src/throwing.cpp
+  src/wham.cpp
 
   rl_utils/include/array2.hpp
   rl_utils/include/bresenham.hpp

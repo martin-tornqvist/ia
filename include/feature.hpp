@@ -23,7 +23,8 @@ public:
 
     const FeatureDataT& data() const;
 
-    virtual void hit(const DmgType dmg_type,
+    virtual void hit(const int dmg,
+                     const DmgType dmg_type,
                      const DmgMethod dmg_method,
                      Actor* const actor);
 
@@ -31,7 +32,7 @@ public:
 
     virtual void bump(Actor& actor_bumping);
     virtual void on_new_turn() {}
-    virtual bool can_move_cmn() const;
+    virtual bool can_move_common() const;
     virtual bool can_move(Actor& actor) const;
     virtual bool is_sound_passable() const;
     virtual bool is_los_passable() const;

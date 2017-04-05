@@ -116,7 +116,7 @@ void decorate()
                 }
                 else // Should not convert to cave wall
                 {
-                    wall->set_rnd_cmn_wall();
+                    wall->set_rnd_common_wall();
                 }
 
             } // if wall

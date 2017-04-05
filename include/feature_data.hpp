@@ -65,7 +65,7 @@ public:
 
     void reset()
     {
-        can_move_cmn_ = false;
+        can_move_common_ = false;
 
         for (int i = 0; i < (int)PropId::END; ++i)
         {
@@ -78,20 +78,20 @@ public:
         can_move_if_have_prop_[int(id)] = true;
     }
 
-    void set_can_move_cmn()
+    void set_can_move_common()
     {
-        can_move_cmn_ = true;
+        can_move_common_ = true;
     }
 
-    bool can_move_cmn() const
+    bool can_move_common() const
     {
-        return can_move_cmn_;
+        return can_move_common_;
     }
 
     bool can_move(Actor& actor) const;
 
 private:
-    bool can_move_cmn_;
+    bool can_move_common_;
     bool can_move_if_have_prop_[(size_t)PropId::END];
 };
 

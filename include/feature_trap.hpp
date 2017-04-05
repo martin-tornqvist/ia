@@ -118,7 +118,8 @@ private:
     Clr clr_default() const override;
     Clr clr_bg_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 

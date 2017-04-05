@@ -92,16 +92,18 @@ Clr Pylon::clr_default() const
         clr_gray;
 }
 
-void Pylon::on_hit(const DmgType dmg_type,
+void Pylon::on_hit(const int dmg,
+                   const DmgType dmg_type,
                    const DmgMethod dmg_method,
                    Actor* const actor)
 {
+    (void)dmg;
     (void)dmg_type;
     (void)dmg_method;
     (void)actor;
 
     //
-    // TODO:
+    // TODO
     //
 }
 
@@ -234,6 +236,7 @@ void PylonBurning::on_new_turn_activated()
         const P p_adj(pos_ + d);
 
         map::cells[p_adj.x][p_adj.y].rigid->hit(
+            1, // Doesn't matter
             DmgType::fire,
             DmgMethod::elemental);
     }

@@ -59,7 +59,7 @@ public:
                   const P& aim_pos,
                   const P& current_pos,
                   const Wpn& wpn,
-                  ActorSize aim_lvl = ActorSize::none);
+                  ActorSize aim_lvl = ActorSize::undefined);
 
     ~RangedAttData() {}
 
@@ -78,7 +78,7 @@ public:
                  const P& aim_pos,
                  const P& current_pos,
                  const Item& item,
-                 ActorSize aim_lvl = ActorSize::none);
+                 ActorSize aim_lvl = ActorSize::undefined);
 
     ActorSize intended_aim_lvl;
     ActorSize defender_size;

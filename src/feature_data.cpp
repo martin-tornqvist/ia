@@ -17,7 +17,7 @@
 // -----------------------------------------------------------------------------
 bool MoveRules::can_move(Actor& actor) const
 {
-    if (can_move_cmn_)
+    if (can_move_common_)
     {
         return true;
     }
@@ -93,7 +93,7 @@ void init_data_list()
     };
     d.glyph = '.';
     d.tile = TileId::floor;
-    d.move_rules.set_can_move_cmn();
+    d.move_rules.set_can_move_common();
     d.matl_type = Matl::stone;
     d.can_have_gore = true;
     add_to_list_and_reset(d);
@@ -104,7 +104,7 @@ void init_data_list()
     {
         return new Bridge(p);
     };
-    d.move_rules.set_can_move_cmn();
+    d.move_rules.set_can_move_common();
     d.matl_type = Matl::wood;
     add_to_list_and_reset(d);
 
@@ -156,7 +156,7 @@ void init_data_list()
     };
     d.glyph = '.';
     d.tile = TileId::floor;
-    d.move_rules.set_can_move_cmn();
+    d.move_rules.set_can_move_common();
     d.matl_type = Matl::plant;
     d.can_have_gore = true;
     add_to_list_and_reset(d);
@@ -168,7 +168,7 @@ void init_data_list()
     };
     d.glyph = '"';
     d.tile = TileId::bush;
-    d.move_rules.set_can_move_cmn();
+    d.move_rules.set_can_move_common();
     d.is_los_passable = false;
     d.matl_type = Matl::plant;
     add_to_list_and_reset(d);
@@ -180,7 +180,7 @@ void init_data_list()
     };
     d.glyph = '"';
     d.tile = TileId::vines;
-    d.move_rules.set_can_move_cmn();
+    d.move_rules.set_can_move_common();
     d.is_los_passable = false;
     d.can_have_blood = false;
     d.can_have_gore = false;
@@ -195,7 +195,7 @@ void init_data_list()
     };
     d.glyph = '"';
     d.tile = TileId::chains;
-    d.move_rules.set_can_move_cmn();
+    d.move_rules.set_can_move_common();
     d.is_los_passable = true;
     d.is_projectile_passable = true;
     d.can_have_blood = true;
@@ -311,7 +311,7 @@ void init_data_list()
     };
     d.glyph = '~';
     d.tile = TileId::water1;
-    d.move_rules.set_can_move_cmn();
+    d.move_rules.set_can_move_common();
     d.can_have_blood = false;
     d.can_have_gore = false;
     d.can_have_rigid = false;
@@ -400,7 +400,7 @@ void init_data_list()
     d.glyph = '.';
     d.tile = TileId::floor;
     d.can_have_rigid = false;
-    d.move_rules.set_can_move_cmn();
+    d.move_rules.set_can_move_common();
     d.matl_type = Matl::cloth;
     add_to_list_and_reset(d);
 
@@ -432,7 +432,7 @@ void init_data_list()
     };
     d.glyph = ',';
     d.tile = TileId::rubble_low;
-    d.move_rules.set_can_move_cmn();
+    d.move_rules.set_can_move_common();
     d.matl_type = Matl::stone;
     d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
@@ -444,7 +444,7 @@ void init_data_list()
     };
     d.glyph = '&';
     d.tile = TileId::corpse2;
-    d.move_rules.set_can_move_cmn();
+    d.move_rules.set_can_move_common();
     d.matl_type = Matl::stone;
     d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
@@ -608,7 +608,7 @@ void init_data_list()
     {
         return new Trap(p);
     };
-    d.move_rules.set_can_move_cmn();
+    d.move_rules.set_can_move_common();
     d.can_have_rigid = false;
     add_to_list_and_reset(d);
 
@@ -619,7 +619,7 @@ void init_data_list()
     };
     d.glyph = '/';
     d.tile = TileId::dynamite_lit;
-    d.move_rules.set_can_move_cmn();
+    d.move_rules.set_can_move_common();
     d.can_have_blood = false;
     d.can_have_gore = false;
     d.can_have_corpse = false;
@@ -633,7 +633,7 @@ void init_data_list()
     };
     d.glyph = '/';
     d.tile = TileId::flare_lit;
-    d.move_rules.set_can_move_cmn();
+    d.move_rules.set_can_move_common();
     add_to_list_and_reset(d);
 
     d.id = FeatureId::smoke;
@@ -643,7 +643,7 @@ void init_data_list()
     };
     d.glyph = '*';
     d.tile = TileId::smoke;
-    d.move_rules.set_can_move_cmn();
+    d.move_rules.set_can_move_common();
     d.is_los_passable = false;
     add_to_list_and_reset(d);
 
@@ -652,7 +652,7 @@ void init_data_list()
     {
         return new EventWallCrumble(p);
     };
-    d.move_rules.set_can_move_cmn();
+    d.move_rules.set_can_move_common();
     add_to_list_and_reset(d);
 
     d.id = FeatureId::event_snake_emerge;
@@ -660,7 +660,7 @@ void init_data_list()
     {
         return new EventSnakeEmerge(p);
     };
-    d.move_rules.set_can_move_cmn();
+    d.move_rules.set_can_move_common();
     add_to_list_and_reset(d);
 
     d.id = FeatureId::event_rat_cave_discovery;
@@ -668,7 +668,7 @@ void init_data_list()
     {
         return new EventRatsInTheWallsDiscovery(p);
     };
-    d.move_rules.set_can_move_cmn();
+    d.move_rules.set_can_move_common();
     add_to_list_and_reset(d);
 }
 

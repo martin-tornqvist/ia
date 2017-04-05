@@ -271,7 +271,10 @@ public:
         ItemAttMsgs             att_msgs;
         Prop*                   prop_applied;
         DmgType                 dmg_type;
+        DmgMethod               dmg_method;
         bool                    knocks_back;
+        bool                    att_corpse;
+        bool                    att_rigid;
         SfxId                   hit_small_sfx;
         SfxId                   hit_medium_sfx;
         SfxId                   hit_hard_sfx;

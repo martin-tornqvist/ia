@@ -47,9 +47,9 @@ void Feature::reveal(const Verbosity verbosity)
     (void)verbosity;
 }
 
-bool Feature::can_move_cmn() const
+bool Feature::can_move_common() const
 {
-    return data().move_rules.can_move_cmn();
+    return data().move_rules.can_move_common();
 }
 
 bool Feature::can_move(Actor& actor) const
@@ -57,11 +57,15 @@ bool Feature::can_move(Actor& actor) const
     return data().move_rules.can_move(actor);
 }
 
-void Feature::hit(const DmgType dmg_type,
+void Feature::hit(const int dmg,
+                  const DmgType dmg_type,
                   const DmgMethod dmg_method,
                   Actor* const actor)
 {
-    (void)dmg_type; (void)dmg_method; (void)actor;
+    (void)dmg;
+    (void)dmg_type;
+    (void)dmg_method;
+    (void)actor;
 }
 
 bool Feature::is_sound_passable() const

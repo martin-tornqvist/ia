@@ -1201,7 +1201,7 @@ std::vector<RoomAutoFeatureRule> CaveRoom::auto_features_allowed() const
     return
     {
         {FeatureId::rubble_low, rnd::range(2, 4)},
-        {FeatureId::stalagmite, rnd::range(2, 8)}
+        {FeatureId::stalagmite, rnd::range(2, 12)}
     };
 }
 
@@ -1828,7 +1828,7 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
                     if (map::room_map[bridge_n][y] == this)
                     {
                         auto* const floor = new Floor({bridge_n, y});
-                        floor->type_ = FloorType::cmn;
+                        floor->type_ = FloorType::common;
                         map::put(floor);
                     }
                 }
@@ -1840,7 +1840,7 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
                     if (map::room_map[x][bridge_n] == this)
                     {
                         auto* const floor = new Floor({x, bridge_n});
-                        floor->type_ = FloorType::cmn;
+                        floor->type_ = FloorType::common;
                         map::put(floor);
                     }
                 }
@@ -1908,7 +1908,7 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
                 {
                     auto* const floor = new Floor(P(x, y));
 
-                    floor->type_ = FloorType::cmn;
+                    floor->type_ = FloorType::common;
 
                     map::put(floor);
 

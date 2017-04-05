@@ -23,7 +23,7 @@ enum class PropId
     r_disease,
     // NOTE: The purpose of this is only to prevent blindness for "eyeless"
     //       monsters (e.g. constructs such as animated weapons), and is only
-    //       intended as a natural property.
+    //       intended as a natural property - not for e.g. gas masks.
     r_blind,
     lgt_sens,
     blind,
@@ -50,7 +50,6 @@ enum class PropId
     spell_reflect,
     strangled,
     conflict,
-    descend,
 
     // Properties describing the actors body and/or method of moving around
     flying,
@@ -65,6 +64,7 @@ enum class PropId
     disabled_ranged,
 
     // Special (for supporting very specific game mechanics)
+    descend,
     poss_by_zuul,
     aiming,
     nailed,

@@ -36,7 +36,8 @@ void mk_pylons_and_levers()
             .run(blocked_tmp);
 
         map_parsers::expand(blocked_tmp,
-                            blocked);
+                            blocked,
+                            3);
     }
 
     for (Actor* const actor : game_time::actors)

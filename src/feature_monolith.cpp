@@ -11,10 +11,12 @@ Monolith::Monolith(const P& p) :
     Rigid           (p),
     is_activated_   (false) {}
 
-void Monolith::on_hit(const DmgType dmg_type,
+void Monolith::on_hit(const int dmg,
+                      const DmgType dmg_type,
                       const DmgMethod dmg_method,
                       Actor* const actor)
 {
+    (void)dmg;
     (void)dmg_type;
     (void)dmg_method;
     (void)actor;

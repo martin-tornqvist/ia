@@ -154,10 +154,12 @@ TrapImpl* Trap::mk_trap_impl_from_id(const TrapId trap_id)
     }
 }
 
-void Trap::on_hit(const DmgType dmg_type,
+void Trap::on_hit(const int dmg,
+                  const DmgType dmg_type,
                   const DmgMethod dmg_method,
                   Actor* const actor)
 {
+    (void)dmg;
     (void)dmg_type;
     (void)dmg_method;
     (void)actor;

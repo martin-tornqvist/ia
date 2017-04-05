@@ -63,7 +63,10 @@ ItemDataT::ItemMeleeData::ItemMeleeData() :
     att_msgs                            (ItemAttMsgs()),
     prop_applied                        (nullptr),
     dmg_type                            (DmgType::physical),
+    dmg_method                          (DmgMethod::slashing),
     knocks_back                         (false),
+    att_corpse                          (false),
+    att_rigid                           (false),
     hit_small_sfx                       (SfxId::END),
     hit_medium_sfx                      (SfxId::END),
     hit_hard_sfx                        (SfxId::END),
@@ -752,6 +755,7 @@ void init_data_list()
     d.weight = ItemWeight::heavy;
     d.melee.dmg = DiceParam(2, 6);
     d.melee.hit_chance_mod = 85;
+    d.melee.dmg_method = DmgMethod::piercing;
     d.melee.hit_small_sfx = SfxId::hit_sharp;
     d.melee.hit_medium_sfx = SfxId::hit_sharp;
     d.melee.miss_sfx = SfxId::miss_heavy;
@@ -896,6 +900,7 @@ void init_data_list()
     d.melee.att_msgs = {"stab", "stabs me with a Dagger"};
     d.melee.dmg = DiceParam(1, 4);
     d.melee.hit_chance_mod = 20;
+    d.melee.dmg_method = DmgMethod::piercing;
     d.melee.is_noisy = false;
     d.melee.hit_medium_sfx = SfxId::hit_sharp;
     d.melee.hit_hard_sfx = SfxId::hit_sharp;
@@ -923,6 +928,8 @@ void init_data_list()
     d.melee.att_msgs = {"strike", "strikes me with a Hatchet"};
     d.melee.dmg = DiceParam(1, 5);
     d.melee.hit_chance_mod = 15;
+    d.melee.att_corpse = true;
+    d.melee.dmg_method = DmgMethod::slashing;
     d.melee.is_noisy = false;
     d.melee.hit_medium_sfx = SfxId::hit_sharp;
     d.melee.hit_hard_sfx = SfxId::hit_sharp;
@@ -943,13 +950,15 @@ void init_data_list()
 
         "Melee attacks with clubs are silent."
     };
-    d.spawn_std_range = Range(dlvl_first_mid_game, INT_MAX);
+    d.spawn_std_range = Range(dlvl_first_mid_game, dlvl_last);
     d.weight = ItemWeight::medium;
     d.tile = TileId::club;
     d.clr = clr_brown;
     d.melee.att_msgs = {"strike", "strikes me with a Club"};
     d.melee.dmg = DiceParam(2, 3);
     d.melee.hit_chance_mod = 10;
+    d.melee.att_corpse = true;
+    d.melee.dmg_method = DmgMethod::blunt;
     d.melee.is_noisy = false;
     d.melee.miss_sfx = SfxId::miss_medium;
     d.ranged.throw_hit_chance_mod = -5;
@@ -970,9 +979,12 @@ void init_data_list()
     };
     d.weight = ItemWeight::medium;
     d.tile = TileId::hammer;
-    d.melee.att_msgs = {"strike", "strikes me with a Hammer"};
+    d.melee.att_msgs = {"smash", "smashes me with a Hammer"};
     d.melee.dmg = DiceParam(2, 4);
     d.melee.hit_chance_mod = 5;
+    d.melee.att_corpse = true;
+    d.melee.dmg_method = DmgMethod::blunt;
+    d.melee.is_noisy = true;
     d.melee.miss_sfx = SfxId::miss_medium;
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.effective_range = 4;
@@ -992,12 +1004,15 @@ void init_data_list()
     };
     d.weight = ItemWeight::medium;
     d.tile = TileId::machete;
-    d.melee.att_msgs = {"strike", "strikes me with a Machete"};
+    d.melee.att_msgs = {"chop", "chops me with a Machete"};
     d.melee.dmg = DiceParam(2, 5);
     d.melee.hit_chance_mod = 0;
+    d.melee.att_corpse = true;
+    d.melee.dmg_method = DmgMethod::slashing;
     d.melee.hit_small_sfx = SfxId::hit_sharp;
     d.melee.hit_medium_sfx = SfxId::hit_sharp;
     d.melee.miss_sfx = SfxId::miss_medium;
+    d.melee.is_noisy = true;
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.effective_range = 4;
     d.native_containers.push_back(FeatureId::cabinet);
@@ -1011,8 +1026,7 @@ void init_data_list()
     {
         "A tool intended for felling trees, splitting timber, etc. Used as a "
         "weapon it can deliver devastating blows, although it requires some "
-        "skill to use effectively."
-        /*TODO: "Also effective for breaching wooden doors."*/,
+        "skill to use effectively.",
 
         "Melee attacks with axes are noisy."
     };
@@ -1021,7 +1035,11 @@ void init_data_list()
     d.melee.att_msgs = {"strike", "strikes me with an axe"};
     d.melee.dmg = DiceParam(2, 6);
     d.melee.hit_chance_mod = -5;
+    d.melee.att_corpse = true;
+    d.melee.att_rigid = true;
+    d.melee.dmg_method = DmgMethod::slashing;
     d.melee.miss_sfx = SfxId::miss_medium;
+    d.melee.is_noisy = true;
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.effective_range = 4;
     d.native_containers.push_back(FeatureId::cabinet);
@@ -1042,7 +1060,10 @@ void init_data_list()
     d.melee.att_msgs = {"strike", "strikes me with a Pitchfork"};
     d.melee.dmg = DiceParam(3, 4);
     d.melee.hit_chance_mod = -15;
+    d.melee.att_corpse = true;
     d.melee.knocks_back = true;
+    d.melee.dmg_method = DmgMethod::piercing;
+    d.melee.is_noisy = true;
     d.melee.hit_small_sfx = SfxId::hit_sharp;
     d.melee.hit_medium_sfx = SfxId::hit_sharp;
     d.melee.miss_sfx = SfxId::miss_heavy;
@@ -1063,10 +1084,13 @@ void init_data_list()
     };
     d.weight = ItemWeight::heavy;
     d.tile = TileId::sledge_hammer;
-    d.melee.att_msgs = {"strike", "strikes me with a Sledgehammer"};
+    d.melee.att_msgs = {"smash", "smash me with a Sledgehammer"};
     d.melee.dmg = DiceParam(3, 5);
     d.melee.hit_chance_mod = -15;
+    d.melee.att_corpse = true;
+    d.melee.att_rigid = true;
     d.melee.knocks_back = true;
+    d.melee.dmg_method = DmgMethod::blunt;
     d.melee.miss_sfx = SfxId::miss_heavy;
     d.ranged.throw_hit_chance_mod = -10;
     d.ranged.effective_range = 3;
@@ -1103,6 +1127,9 @@ void init_data_list()
     d.melee.hit_chance_mod = 15;
     d.melee.dmg = DiceParam(1, 2);
     d.melee.knocks_back = true;
+    d.melee.dmg_method = DmgMethod::kicking;
+    d.melee.att_rigid = true;
+    d.melee.att_corpse = true;
     d.melee.miss_sfx = SfxId::miss_medium;
     data[(size_t)d.id] = d;
 
@@ -1111,9 +1138,14 @@ void init_data_list()
     d.melee.att_msgs = {"stomp", ""};
     d.melee.hit_chance_mod =
         data[(size_t)ItemId::player_kick].melee.hit_chance_mod;
-    d.melee.dmg = data[(size_t)ItemId::player_kick].melee.dmg;
-    d.melee.miss_sfx = data[(size_t)ItemId::player_kick].melee.miss_sfx;
+    d.melee.dmg =
+        data[(size_t)ItemId::player_kick].melee.dmg;
+    d.melee.miss_sfx =
+        data[(size_t)ItemId::player_kick].melee.miss_sfx;
+    d.melee.dmg_method = DmgMethod::kicking;
     d.melee.knocks_back = false;
+    d.melee.att_rigid = false;
+    d.melee.att_corpse = false;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1131,6 +1163,8 @@ void init_data_list()
     d.melee.att_msgs = {"claw", ""};
     d.melee.hit_chance_mod = 20;
     d.melee.dmg = DiceParam(1, 8);
+    d.melee.att_corpse = true;
+    d.melee.dmg_method = DmgMethod::slashing;
     d.melee.hit_small_sfx = SfxId::hit_sharp;
     d.melee.hit_medium_sfx = SfxId::hit_sharp;
     d.melee.miss_sfx = SfxId::miss_medium;
@@ -1139,12 +1173,14 @@ void init_data_list()
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::zombie_claw;
     d.melee.att_msgs = {"", "claws me"};
+    d.melee.dmg_method = DmgMethod::slashing;
     set_dmg_from_mon_id(d, ActorId::zombie);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::zombie_claw_diseased;
     d.melee.att_msgs = {"", "claws me"};
+    d.melee.dmg_method = DmgMethod::slashing;
     set_dmg_from_mon_id(d, ActorId::zombie);
     d.melee.prop_applied = new PropInfected(PropTurns::std);
     data[(size_t)d.id] = d;
@@ -1152,12 +1188,14 @@ void init_data_list()
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::zombie_axe;
     d.melee.att_msgs = {"", "chops me with a rusty axe"};
+    d.melee.dmg_method = DmgMethod::slashing;
     set_dmg_from_mon_id(d, ActorId::zombie_axe);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::bloated_zombie_punch;
     d.melee.att_msgs = {"", "mauls me"};
+    d.melee.dmg_method = DmgMethod::blunt;
     set_dmg_from_mon_id(d, ActorId::bloated_zombie);
     d.melee.knocks_back = true;
     data[(size_t)d.id] = d;
@@ -1175,36 +1213,42 @@ void init_data_list()
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::crawling_intestines_strangle;
     d.melee.att_msgs = {"", "strangles me"};
+    d.melee.dmg_method = DmgMethod::blunt;
     set_dmg_from_mon_id(d, ActorId::crawling_intestines);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::floating_skull_bite;
     d.melee.att_msgs = {"", "bites me"};
+    d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::floating_skull);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::crawling_hand_strangle;
     d.melee.att_msgs = {"", "strangles me"};
+    d.melee.dmg_method = DmgMethod::blunt;
     set_dmg_from_mon_id(d, ActorId::crawling_hand);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::thing_strangle;
     d.melee.att_msgs = {"", "strangles me"};
+    d.melee.dmg_method = DmgMethod::blunt;
     set_dmg_from_mon_id(d, ActorId::thing);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::rat_bite;
     d.melee.att_msgs = {"", "bites me"};
+    d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::rat);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::rat_bite_diseased;
     d.melee.att_msgs = {"", "bites me"};
+    d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::rat);
     d.melee.prop_applied = new PropInfected(PropTurns::std);
     data[(size_t)d.id] = d;
@@ -1212,24 +1256,28 @@ void init_data_list()
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::rat_thing_bite;
     d.melee.att_msgs = {"", "bites me"};
+    d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::rat_thing);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::brown_jenkin_bite;
     d.melee.att_msgs = {"", "bites me"};
+    d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::brown_jenkin);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::worm_mass_bite;
     d.melee.att_msgs = {"", "bites me"};
+    d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::worm_mass);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::mind_worms_bite;
     d.melee.att_msgs = {"", "bites me"};
+    d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::mind_worms);
     d.melee.prop_applied = new PropConfused(PropTurns::specific, 9);
     data[(size_t)d.id] = d;
@@ -1237,12 +1285,14 @@ void init_data_list()
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::wolf_bite;
     d.melee.att_msgs = {"", "bites me"};
+    d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::wolf);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::green_spider_bite;
     d.melee.att_msgs = {"", "bites me"};
+    d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::green_spider);
     d.melee.prop_applied = new PropBlind(PropTurns::specific, 3);
     data[(size_t)d.id] = d;
@@ -1250,6 +1300,7 @@ void init_data_list()
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::white_spider_bite;
     d.melee.att_msgs = {"", "bites me"};
+    d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::white_spider);
     d.melee.prop_applied = new PropParalyzed(PropTurns::specific, 2);
     data[(size_t)d.id] = d;
@@ -1257,6 +1308,7 @@ void init_data_list()
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::red_spider_bite;
     d.melee.att_msgs = {"", "bites me"};
+    d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::red_spider);
     d.melee.prop_applied = new PropWeakened(PropTurns::std);
     data[(size_t)d.id] = d;
@@ -1264,18 +1316,21 @@ void init_data_list()
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::shadow_spider_bite;
     d.melee.att_msgs = {"", "bites me"};
+    d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::shadow_spider);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::leng_spider_bite;
     d.melee.att_msgs = {"", "bites me"};
+    d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::leng_spider);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::pit_viper_bite;
     d.melee.att_msgs = {"", "bites me"};
+    d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::pit_viper);
     d.melee.prop_applied = new PropPoisoned(PropTurns::specific,
                                             poison_dmg_n_turn * 4);
@@ -1284,6 +1339,7 @@ void init_data_list()
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::spitting_cobra_bite;
     d.melee.att_msgs = {"", "bites me"};
+    d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::spitting_cobra);
     d.melee.prop_applied = new PropPoisoned(PropTurns::specific,
                                             poison_dmg_n_turn * 4);
@@ -1302,6 +1358,7 @@ void init_data_list()
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::black_mamba_bite;
     d.melee.att_msgs = {"", "bites me"};
+    d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::black_mamba);
     d.melee.prop_applied = new PropPoisoned(PropTurns::specific,
                                             poison_dmg_n_turn * 4);
@@ -1326,6 +1383,7 @@ void init_data_list()
     set_dmg_from_mon_id(d, ActorId::fire_hound);
     d.melee.prop_applied = new PropBurning(PropTurns::std);
     d.melee.dmg_type = DmgType::fire;
+    d.melee.dmg_method = DmgMethod::elemental;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1333,17 +1391,20 @@ void init_data_list()
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, ActorId::zuul);
     d.melee.dmg_type = DmgType::physical;
+    d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::dust_vortex_engulf;
     d.melee.att_msgs = {"", "engulfs me"};
     set_dmg_from_mon_id(d, ActorId::dust_vortex);
+    d.melee.dmg_method = DmgMethod::elemental;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::fire_vortex_engulf;
     d.melee.att_msgs = {"", "engulfs me"};
+    d.melee.dmg_method = DmgMethod::elemental;
     set_dmg_from_mon_id(d, ActorId::fire_vortex);
     d.melee.prop_applied = new PropBurning(PropTurns::std);
     data[(size_t)d.id] = d;
@@ -1354,6 +1415,7 @@ void init_data_list()
     set_dmg_from_mon_id(d, ActorId::ghost);
     d.melee.prop_applied = new PropTerrified(PropTurns::specific, 4);
     d.melee.dmg_type = DmgType::spirit;
+    d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1362,6 +1424,7 @@ void init_data_list()
     set_dmg_from_mon_id(d, ActorId::phantasm);
     d.melee.prop_applied = new PropTerrified(PropTurns::specific, 4);
     d.melee.dmg_type = DmgType::spirit;
+    d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1370,30 +1433,35 @@ void init_data_list()
     set_dmg_from_mon_id(d, ActorId::wraith);
     d.melee.prop_applied = new PropTerrified(PropTurns::specific, 4);
     d.melee.dmg_type = DmgType::spirit;
+    d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::raven_peck;
     d.melee.att_msgs = {"", "pecks at me"};
     set_dmg_from_mon_id(d, ActorId::raven);
+    d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::giant_bat_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, ActorId::giant_bat);
+    d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::vampire_bat_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, ActorId::vampire_bat);
+    d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::abaxu_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, ActorId::abaxu);
+    d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1401,6 +1469,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "grips me with a tentacle"};
     d.melee.prop_applied = new PropParalyzed(PropTurns::specific, 1);
     set_dmg_from_mon_id(d, ActorId::flying_polyp);
+    d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1408,6 +1477,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "stings me"};
     d.melee.prop_applied = new PropParalyzed(PropTurns::specific, 2);
     set_dmg_from_mon_id(d, ActorId::mind_eater);
+    d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1415,6 +1485,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "grips me with a tentacle"};
     d.melee.prop_applied = new PropParalyzed(PropTurns::specific, 1);
     set_dmg_from_mon_id(d, ActorId::greater_polyp);
+    d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1422,42 +1493,49 @@ void init_data_list()
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, ActorId::ghoul);
     d.melee.prop_applied = new PropInfected(PropTurns::std);
+    d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::void_traveler_rip;
     d.melee.att_msgs = {"", "rips me"};
     set_dmg_from_mon_id(d, ActorId::void_traveler);
+    d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::shadow_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, ActorId::shadow);
+    d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::invis_stalker_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, ActorId::invis_stalker);
+    d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::byakhee_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, ActorId::byakhee);
+    d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::giant_mantis_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, ActorId::giant_mantis);
+    d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::giant_locust_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, ActorId::locust);
+    d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1466,12 +1544,14 @@ void init_data_list()
     set_dmg_from_mon_id(d, ActorId::mummy);
     d.melee.prop_applied = new PropCursed(PropTurns::indefinite);
     d.melee.knocks_back = true;
+    d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::croc_head_mummy_spear;
     d.melee.att_msgs = {"", "hits me with a spear"};
     set_dmg_from_mon_id(d, ActorId::croc_head_mummy);
+    d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::ranged_wpn_intr);
@@ -1488,24 +1568,28 @@ void init_data_list()
     d.id = ItemId::deep_one_spear_att;
     d.melee.att_msgs = {"", "hits me with a spear"};
     set_dmg_from_mon_id(d, ActorId::deep_one);
+    d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::ape_maul;
     d.melee.att_msgs = {"", "mauls me"};
     set_dmg_from_mon_id(d, ActorId::ape);
+    d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::ooze_black_spew_pus;
     d.melee.att_msgs = {"", "spews pus on me"};
     set_dmg_from_mon_id(d, ActorId::ooze_black);
+    d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::ooze_clear_spew_pus;
     d.melee.att_msgs = {"", "spews pus on me"};
     set_dmg_from_mon_id(d, ActorId::ooze_clear);
+    d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1513,6 +1597,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "spews infected pus on me"};
     set_dmg_from_mon_id(d, ActorId::ooze_putrid);
     d.melee.prop_applied = new PropInfected(PropTurns::std);
+    d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1520,12 +1605,14 @@ void init_data_list()
     d.melee.att_msgs = {"", "spews poisonous pus on me"};
     set_dmg_from_mon_id(d, ActorId::ooze_poison);
     d.melee.prop_applied = new PropPoisoned(PropTurns::std);
+    d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::strange_color_touch;
     d.melee.att_msgs = {"", "touches me"};
     set_dmg_from_mon_id(d, ActorId::strange_color);
+    d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1533,6 +1620,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "strikes me with a tentacle"};
     d.melee.knocks_back = true;
     set_dmg_from_mon_id(d, ActorId::chthonian);
+    d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1540,6 +1628,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, ActorId::death_fiend);
     d.melee.dmg_type = DmgType::pure;
+    d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1547,6 +1636,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, ActorId::hunting_horror);
     d.melee.prop_applied = new PropPoisoned(PropTurns::std);
+    d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1555,6 +1645,7 @@ void init_data_list()
     set_dmg_from_mon_id(d, ActorId::mold);
     d.melee.prop_applied = new PropPoisoned(PropTurns::specific,
                                             poison_dmg_n_turn * 2);
+    d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1563,6 +1654,7 @@ void init_data_list()
     set_dmg_from_mon_id(d, ActorId::mi_go);
     d.melee.prop_applied = new PropPoisoned(PropTurns::specific,
                                             poison_dmg_n_turn * 2);
+    d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1571,12 +1663,14 @@ void init_data_list()
     set_dmg_from_mon_id(d, ActorId::mi_go_commander);
     d.melee.prop_applied = new PropPoisoned(PropTurns::specific,
                                             poison_dmg_n_turn * 2);
+    d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::the_high_priest_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, ActorId::the_high_priest);
+    d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::armor);
@@ -2024,6 +2118,7 @@ void init_data_list()
     d.melee.dmg = DiceParam(2, 4, 4);
     d.melee.hit_chance_mod = 0;
     d.melee.miss_sfx = SfxId::miss_medium;
+    d.melee.dmg_method = DmgMethod::blunt;
     d.ranged.throw_hit_chance_mod = -10;
     d.ranged.effective_range = 3;
     d.is_unique = true;
@@ -2186,6 +2281,7 @@ void init_data_list()
     d.melee.hit_medium_sfx = SfxId::hit_sharp;
     d.melee.hit_hard_sfx = SfxId::hit_sharp;
     d.melee.miss_sfx = SfxId::miss_light;
+    d.melee.dmg_method = DmgMethod::piercing;
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.effective_range = 4;
     d.is_unique = true;

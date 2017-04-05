@@ -234,18 +234,19 @@ void run(const P& origin,
 
             if (expl_type == ExplType::expl)
             {
-                // Damage environment
-                Cell& cell = map::cells[pos.x][pos.y];
-
-                cell.rigid->hit(DmgType::physical,
-                                DmgMethod::explosion,
-                                nullptr);
-
                 const int rolls = expl_dmg_rolls - radi;
 
                 const int dmg =
                     rnd::dice(rolls, expl_dmg_sides) +
                     expl_dmg_plus;
+
+                // Damage environment
+                Cell& cell = map::cells[pos.x][pos.y];
+
+                cell.rigid->hit(dmg,
+                                DmgType::physical,
+                                DmgMethod::explosion,
+                                nullptr);
 
                 // Damage living actor
                 if (living_actor)
@@ -311,7 +312,8 @@ void run(const P& origin,
                 {
                     Cell& cell = map::cells[pos.x][pos.y];
 
-                    cell.rigid->hit(DmgType::fire,
+                    cell.rigid->hit(1, // Doesn't matter
+                                    DmgType::fire,
                                     DmgMethod::elemental,
                                     nullptr);
 

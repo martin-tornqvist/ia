@@ -113,7 +113,7 @@ bool handle_closed_blocking_door(Mon& mon, std::vector<P> path)
                 // up so easily)
                 if (rnd::fraction(3, 5))
                 {
-                    mon.aware_of_player_counter_++;
+                    ++mon.aware_of_player_counter_;
                 }
 
                 if (map::player->can_see_actor(mon))
@@ -128,9 +128,12 @@ bool handle_closed_blocking_door(Mon& mon, std::vector<P> path)
                                  "!");
                 }
 
-                door->hit(DmgType::physical,
-                          DmgMethod::kick,
+                door->hit(1, // Doesn't matter
+                          DmgType::physical,
+                          DmgMethod::blunt,
                           &mon);
+
+                game_time::tick();
 
                 return true;
             }

@@ -59,7 +59,8 @@ bool Actor::has_prop(const PropId id) const
     return prop_handler_->has_prop(id);
 }
 
-int Actor::ability(const AbilityId id, const bool is_affected_by_props) const
+int Actor::ability(const AbilityId id,
+                   const bool is_affected_by_props) const
 {
     return data_->ability_vals.val(id, is_affected_by_props, *this);
 }
@@ -549,20 +550,26 @@ ActorDied Actor::hit(int dmg,
     }
 
     // Damage to corpses
-    // NOTE: Corpse is automatically destroyed if damage is high enough,
-    //       otherwise it is destroyed with a random chance
     if (is_corpse() && !is_player())
     {
         ASSERT(data_->can_leave_corpse);
 
-        const int dmg_threshold = (hp_max(true) * 2) / 3;
+        // Chance to destroy is X in Y, where
+        // X = damage dealt * 4
+        // Y = maximum actor hit points
 
-        if (dmg >= dmg_threshold ||
-            rnd::fraction(3, 4))
+        const int den = hp_max(true);
+
+        const int num = std::min(dmg * 4, den);
+
+        if (rnd::fraction(num, den))
         {
-            if (method == DmgMethod::kick)
+            if ((method == DmgMethod::kicking) ||
+                (method == DmgMethod::blunt) ||
+                (method == DmgMethod::slashing) ||
+                (method == DmgMethod::piercing))
             {
-                Snd snd("*Crack!*",
+                Snd snd("*Crack!",
                         SfxId::hit_corpse_break,
                         IgnoreMsgIfOriginSeen::yes,
                         pos,
@@ -591,9 +598,18 @@ ActorDied Actor::hit(int dmg,
         }
         else // Not destroyed
         {
-            if (method == DmgMethod::kick)
+            if ((method == DmgMethod::kicking) ||
+                (method == DmgMethod::blunt) ||
+                (method == DmgMethod::slashing) ||
+                (method == DmgMethod::piercing))
             {
-                Snd snd("*Thud*",
+                const std::string msg =
+                    ((method == DmgMethod::blunt) ||
+                     (method == DmgMethod::kicking)) ?
+                    "*Thud!*" :
+                    "*Chop!*";
+
+                Snd snd(msg,
                         SfxId::hit_medium,
                         IgnoreMsgIfOriginSeen::yes,
                         pos,

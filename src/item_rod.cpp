@@ -306,7 +306,10 @@ void RodCloudMinds::run_effect()
         if (!actor->is_player())
         {
             Mon* const mon = static_cast<Mon*>(actor);
+
             mon->aware_of_player_counter_ = 0;
+
+            mon->wary_of_player_counter_ = 0;
         }
     }
 

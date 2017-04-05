@@ -135,7 +135,7 @@ enum class ActorErraticFreq
 
 enum class ActorSize
 {
-    none,
+    undefined,
     floor,
     humanoid,
     giant

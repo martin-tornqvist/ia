@@ -74,7 +74,8 @@ public:
 
     virtual Clr clr_bg() const override final;
 
-    virtual void hit(const DmgType dmg_type,
+    virtual void hit(const int dmg,
+                     const DmgType dmg_type,
                      const DmgMethod dmg_method,
                      Actor* const actor = nullptr) override;
 
@@ -129,7 +130,8 @@ public:
 protected:
     virtual void on_new_turn_hook() {}
 
-    virtual void on_hit(const DmgType dmg_type,
+    virtual void on_hit(const int dmg,
+                        const DmgType dmg_type,
                         const DmgMethod dmg_method,
                         Actor* const actor) = 0;
 
@@ -166,7 +168,7 @@ private:
 
 enum class FloorType
 {
-    cmn,
+    common,
     cave,
     stone_path
 };
@@ -194,7 +196,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
@@ -220,12 +223,17 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
-enum class GrassType {cmn, withered};
+enum class GrassType
+{
+    common,
+    withered
+};
 
 class Grass: public Rigid
 {
@@ -249,7 +257,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
@@ -276,7 +285,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
@@ -301,7 +311,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
@@ -329,7 +340,8 @@ private:
 
     Clr clr_bg_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
@@ -353,7 +365,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
@@ -377,7 +390,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 
@@ -386,8 +400,8 @@ private:
 
 enum class WallType
 {
-    cmn,
-    cmn_alt,
+    common,
+    common_alt,
     cave,
     egypt,
     cliff,
@@ -413,7 +427,7 @@ public:
     TileId front_wall_tile() const;
     TileId top_wall_tile() const;
 
-    void set_rnd_cmn_wall();
+    void set_rnd_common_wall();
     void set_random_is_moss_grown();
 
     WallType type_;
@@ -425,7 +439,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
@@ -449,7 +464,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
@@ -473,7 +489,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
@@ -497,7 +514,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
@@ -528,7 +546,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 
@@ -554,14 +573,15 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
 
 enum class StatueType
 {
-    cmn,
+    common,
     ghoul
 };
 
@@ -586,7 +606,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 
@@ -610,7 +631,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
@@ -636,7 +658,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
@@ -667,7 +690,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 
@@ -697,7 +721,8 @@ private:
 
     Clr clr_bg_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
@@ -723,7 +748,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
@@ -745,7 +771,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
@@ -794,7 +821,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 
@@ -822,7 +850,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
@@ -846,7 +875,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 };
@@ -896,15 +926,14 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 
     DidTriggerTrap trigger_trap(Actor* const actor) override;
 
     void player_loot();
-
-    void try_sprain_player();
 
     bool is_open_, is_trait_known_;
 
@@ -941,20 +970,20 @@ public:
 
     DidOpen open(Actor* const actor_opening) override;
 
-    void hit(const DmgType dmg_type,
+    void hit(const int dmg,
+             const DmgType dmg_type,
              const DmgMethod dmg_method,
              Actor* const actor) override;
 
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 
     void player_loot();
-
-    void try_sprain_player();
 
     bool is_open_, is_locked_;
 
@@ -984,7 +1013,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 
@@ -1049,7 +1079,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 
@@ -1083,7 +1114,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 

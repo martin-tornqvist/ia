@@ -254,9 +254,8 @@ enum class DmgMethod
 {
     piercing,
     slashing,
-    blunt_medium,
-    blunt_heavy,
-    kick,
+    blunt,
+    kicking,
     explosion,
     shotgun,
     elemental,

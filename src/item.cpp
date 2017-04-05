@@ -94,7 +94,7 @@ std::vector<std::string> Item::descr() const
 }
 
 DiceParam Item::dmg(const AttMode att_mode,
-                    const Actor* const actor) const
+                    const Actor* const attacker) const
 {
     DiceParam out;
 
@@ -106,7 +106,7 @@ DiceParam Item::dmg(const AttMode att_mode,
 
         out.plus = melee_dmg_plus_;
 
-        if (actor == map::player)
+        if (attacker == map::player)
         {
             if (player_bon::traits[(size_t)Trait::adept_melee_fighter])
             {
@@ -120,7 +120,7 @@ DiceParam Item::dmg(const AttMode att_mode,
         }
 
         // Bonus damage from being frenzied?
-        if (actor && actor->has_prop(PropId::frenzied))
+        if (attacker && attacker->has_prop(PropId::frenzied))
         {
             ++out.plus;
         }
@@ -131,7 +131,7 @@ DiceParam Item::dmg(const AttMode att_mode,
     {
         out = data_->ranged.dmg;
 
-        if (actor == map::player)
+        if (attacker == map::player)
         {
             if ( player_bon::traits[(size_t)Trait::adept_marksman])
             {
@@ -162,7 +162,7 @@ DiceParam Item::dmg(const AttMode att_mode,
             out = data_->ranged.throw_dmg;
         }
 
-        if (actor == map::player)
+        if (attacker == map::player)
         {
             if ( player_bon::traits[(size_t)Trait::adept_marksman])
             {
@@ -185,7 +185,7 @@ DiceParam Item::dmg(const AttMode att_mode,
     } // Attack mode switch
 
     // Apply item specific damage modifications
-    specific_dmg_mod(out, actor);
+    specific_dmg_mod(out, attacker);
 
     return out;
 }

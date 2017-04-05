@@ -307,7 +307,9 @@ ConsumeItem DeviceShockwave::trigger_effect()
 
         Rigid* const rigid = map::cells[p.x][p.y].rigid;
 
-        rigid->hit(DmgType::physical, DmgMethod::explosion);
+        rigid->hit(1, // Doesn't matter
+                   DmgType::physical,
+                   DmgMethod::explosion);
     }
 
     for (Actor* actor : game_time::actors)

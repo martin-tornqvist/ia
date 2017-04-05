@@ -34,7 +34,7 @@ Contents:
    s      Wait (and search) for a few turns
    t      Throw something from the "Thrown" slot, or throw held explosive
    v      View descriptions of things on the map
-   w      Kick something, or destroy corpses (*Wham*)
+   w      Kick or strike objects, or destroy corpses (*Wham*)
    x      Cast spell
    z      Swap to readied weapon
 

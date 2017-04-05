@@ -78,7 +78,7 @@ public:
 
     void bump(Actor& actor_bumping) override;
 
-    bool can_move_cmn() const override;
+    bool can_move_common() const override;
 
     bool can_move(Actor& actor) const override;
 
@@ -153,7 +153,8 @@ public:
 private:
     Clr clr_default() const override;
 
-    void on_hit(const DmgType dmg_type,
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 

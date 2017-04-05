@@ -26,7 +26,7 @@ int walk_blockers_in_dir(const Dir dir, const P& pos)
         {
             const auto* const f = map::cells[pos.x + 1][pos.y + dy].rigid;
 
-            if (!f->can_move_cmn())
+            if (!f->can_move_common())
             {
                 nr_blockers += 1;
             }
@@ -40,7 +40,7 @@ int walk_blockers_in_dir(const Dir dir, const P& pos)
         {
             const auto* const f = map::cells[pos.x + dx][pos.y + 1].rigid;
 
-            if (!f->can_move_cmn())
+            if (!f->can_move_common())
             {
                 nr_blockers += 1;
             }
@@ -54,7 +54,7 @@ int walk_blockers_in_dir(const Dir dir, const P& pos)
         {
             const auto* const f = map::cells[pos.x - 1][pos.y + dy].rigid;
 
-            if (!f->can_move_cmn())
+            if (!f->can_move_common())
             {
                 nr_blockers += 1;
             }
@@ -68,7 +68,7 @@ int walk_blockers_in_dir(const Dir dir, const P& pos)
         {
             const auto* const f = map::cells[pos.x + dx][pos.y - 1].rigid;
 
-            if (!f->can_move_cmn())
+            if (!f->can_move_common())
             {
                 nr_blockers += 1;
             }
@@ -110,7 +110,7 @@ void cells_in_room(const Room& room,
             {
                 auto* const f = map::cells[x][y].rigid;
 
-                if (f->can_move_cmn() && f->can_have_rigid())
+                if (f->can_move_common() && f->can_have_rigid())
                 {
                     pos_bucket.push_back(P(x, y));
                 }

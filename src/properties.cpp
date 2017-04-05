@@ -2911,7 +2911,8 @@ void PropRPhys::on_start()
 
 }
 
-bool PropRPhys::try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity) const
+bool PropRPhys::try_resist_dmg(const DmgType dmg_type,
+                               const Verbosity verbosity) const
 {
     if (dmg_type == DmgType::physical)
     {
@@ -2943,7 +2944,8 @@ void PropRFire::on_start()
     owning_actor_->prop_handler().end_prop(PropId::burning);
 }
 
-bool PropRFire::try_resist_dmg(const DmgType dmg_type, const Verbosity verbosity) const
+bool PropRFire::try_resist_dmg(const DmgType dmg_type,
+                               const Verbosity verbosity) const
 {
     if (dmg_type == DmgType::fire)
     {
@@ -3019,7 +3021,10 @@ void PropSeeInvis::on_start()
 Prop* PropBurrowing::on_tick()
 {
     const P& p = owning_actor_->pos;
-    map::cells[p.x][p.y].rigid->hit(DmgType::physical, DmgMethod::forced);
+
+    map::cells[p.x][p.y].rigid->hit(1, // Doesn't matter
+                                    DmgType::physical,
+                                    DmgMethod::forced);
 
     return this;
 }

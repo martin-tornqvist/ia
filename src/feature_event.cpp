@@ -73,7 +73,10 @@ void EventWallCrumble::on_new_turn()
                 {
                     auto* const f = map::cells[p.x][p.y].rigid;
 
-                    f->hit(DmgType::physical, DmgMethod::forced, nullptr);
+                    f->hit(1, // Doesn't matter
+                           DmgType::physical,
+                           DmgMethod::forced,
+                           nullptr);
                 }
             }
 
@@ -85,7 +88,7 @@ void EventWallCrumble::on_new_turn()
                 {
                     Rigid* const f = map::cells[p.x][p.y].rigid;
 
-                    if (!f->can_move_cmn())
+                    if (!f->can_move_common())
                     {
                         is_opening_made = false;
                     }

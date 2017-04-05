@@ -57,7 +57,8 @@ public:
 
     virtual void load() {}
 
-    DiceParam dmg(const AttMode att_mode, const Actor* const actor) const;
+    DiceParam dmg(const AttMode att_mode,
+                  const Actor* const attacker) const;
 
     virtual int weight() const;
 

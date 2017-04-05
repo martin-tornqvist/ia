@@ -180,12 +180,12 @@ bool BlocksMoveCommon::parse(const Cell& c) const
 {
     return
         !map::is_pos_inside_map(c.pos, false) ||
-        !c.rigid->can_move_cmn();
+        !c.rigid->can_move_common();
 }
 
 bool BlocksMoveCommon::parse(const Mob& f) const
 {
-    return !f.can_move_cmn();
+    return !f.can_move_common();
 }
 
 bool BlocksMoveCommon::parse(const Actor& a) const

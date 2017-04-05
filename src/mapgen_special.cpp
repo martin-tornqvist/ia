@@ -597,7 +597,7 @@ bool mk_rat_cave_level()
                 {
                     auto* wall = new Wall(p);
 
-                    wall->type_ = WallType::cmn;
+                    wall->type_ = WallType::common;
 
                     map::put(wall);
                 }
