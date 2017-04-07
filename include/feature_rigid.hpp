@@ -1023,6 +1023,37 @@ private:
     bool is_open_;
 };
 
+class Bookshelf: public Rigid
+{
+public:
+    Bookshelf(const P& pos);
+    Bookshelf() = delete;
+    ~Bookshelf() {}
+
+    FeatureId id() const override
+    {
+        return FeatureId::bookshelf;
+    }
+
+    std::string name(const Article article) const override;
+
+    TileId tile() const override;
+
+    void bump(Actor& actor_bumping) override;
+
+private:
+    Clr clr_default() const override;
+
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
+                const DmgMethod dmg_method,
+                Actor* const actor) override;
+
+    void player_loot();
+
+    bool is_looted_;
+};
+
 enum class FountainEffect
 {
     refreshing,

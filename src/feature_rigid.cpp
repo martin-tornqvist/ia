@@ -2328,7 +2328,7 @@ void ItemContainer::open(const P& feature_pos,
         }
 
         msg_log::clear();
-        msg_log::add("There are no more items.");
+        msg_log::add("There are no more items of interest.");
     }
     else // Not opened by an actor (probably opened by a spell of opening)
     {
@@ -2343,7 +2343,7 @@ void ItemContainer::open(const P& feature_pos,
 
 void ItemContainer::destroy_single_fragile()
 {
-    // TODO: Generalize this (perhaps something like "is_fragile" item data value)
+    // TODO: Generalize this (something like "is_fragile" item data)
 
     for (size_t i = 0; i < items_.size(); ++i)
     {
@@ -2608,11 +2608,6 @@ void Tomb::player_loot()
     }
     else
     {
-        msg_log::add("There are some items inside.",
-                     clr_white,
-                     false,
-                     MorePromptOnMsg::yes);
-
         item_container_.open(pos_, map::player);
     }
 }
@@ -2982,11 +2977,6 @@ void Chest::player_loot()
     }
     else // Not empty
     {
-        msg_log::add("There are some items inside.",
-                     clr_text,
-                     false,
-                     MorePromptOnMsg::yes);
-
         item_container_.open(pos_, map::player);
     }
 }
@@ -3391,18 +3381,15 @@ Cabinet::Cabinet(const P& p) :
     Rigid       (p),
     is_open_    (false)
 {
-    const int is_empty_N_IN_10  = 5;
+    Range items_range((rnd::coin_toss() ? 0 : 1), 1);
 
-    const int nr_items_min =
-        rnd::fraction(is_empty_N_IN_10, 10) ?
-        0 : 1;
-
-    const int nr_items_max =
-        player_bon::traits[(size_t)Trait::treasure_hunter] ?
-        2 : 1;
+    if (player_bon::traits[(size_t)Trait::treasure_hunter])
+    {
+        ++items_range.max;
+    }
 
     item_container_.init(FeatureId::cabinet,
-                         rnd::range(nr_items_min, nr_items_max));
+                         items_range.roll());
 }
 
 void Cabinet::on_hit(const int dmg,
@@ -3452,11 +3439,6 @@ void Cabinet::player_loot()
     }
     else
     {
-        msg_log::add("There are some items inside.",
-                     clr_text,
-                     false,
-                     MorePromptOnMsg::yes);
-
         item_container_.open(pos_, map::player);
     }
 }
@@ -3496,10 +3478,106 @@ std::string Cabinet::name(const Article article) const
 
 TileId Cabinet::tile() const
 {
-    return is_open_ ? TileId::cabinet_open : TileId::cabinet_closed;
+    return
+        is_open_ ?
+        TileId::cabinet_open :
+        TileId::cabinet_closed;
 }
 
 Clr Cabinet::clr_default() const
+{
+    return clr_brown_drk;
+}
+
+// -----------------------------------------------------------------------------
+// Bookshelf
+// -----------------------------------------------------------------------------
+Bookshelf::Bookshelf(const P& p) :
+    Rigid       (p),
+    is_looted_  (false)
+{
+    Range items_range((rnd::coin_toss() ? 0 : 1), 1);
+
+    if (player_bon::traits[(size_t)Trait::treasure_hunter])
+    {
+        ++items_range.max;
+    }
+
+    item_container_.init(FeatureId::bookshelf,
+                         items_range.roll());
+}
+
+void Bookshelf::on_hit(const int dmg,
+                       const DmgType dmg_type,
+                       const DmgMethod dmg_method,
+                       Actor* const actor)
+{
+    (void)dmg;
+    (void)dmg_type;
+    (void)dmg_method;
+    (void)actor;
+}
+
+void Bookshelf::bump(Actor& actor_bumping)
+{
+    if (actor_bumping.is_player())
+    {
+        if (item_container_.items_.empty() && is_looted_)
+        {
+            msg_log::add("The bookshelf is empty.");
+        }
+        else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
+        {
+            msg_log::add("There is a bookshelf here.");
+        }
+        // Can see
+        else  if (!is_looted_)
+        {
+            player_loot();
+        }
+    }
+}
+
+void Bookshelf::player_loot()
+{
+    msg_log::add("I search the bookshelf.",
+                 clr_text,
+                 false,
+                 MorePromptOnMsg::yes);
+
+    is_looted_ = true;
+
+    if (item_container_.items_.empty())
+    {
+        msg_log::add("There is nothing of interest.");
+    }
+    else
+    {
+        item_container_.open(pos_, map::player);
+    }
+}
+
+std::string Bookshelf::name(const Article article) const
+{
+    std::string ret = article == Article::a ? "a " : "the ";
+
+    if (burn_state() == BurnState::burning)
+    {
+        ret += "burning ";
+    }
+
+    return ret + "bookshelf";
+}
+
+TileId Bookshelf::tile() const
+{
+    return
+        is_looted_ ?
+        TileId::bookshelf_empty :
+        TileId::bookshelf_full;
+}
+
+Clr Bookshelf::clr_default() const
 {
     return clr_brown_drk;
 }
@@ -3653,11 +3731,6 @@ void Cocoon::player_loot()
     }
     else
     {
-        msg_log::add("There are some items inside.",
-                     clr_text,
-                     false,
-                     MorePromptOnMsg::yes);
-
         item_container_.open(pos_, map::player);
     }
 }

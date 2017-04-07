@@ -127,6 +127,8 @@ enum class TileId
     egypt_wall_front,
     egypt_wall_top,
     monolith,
+    bookshelf_full,
+    bookshelf_empty,
     brazier,
     altar,
     web,

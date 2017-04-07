@@ -283,6 +283,8 @@ P column_and_row_tile(const TileId tile)
     case TileId::egypt_wall_front:              return P(16, 9);
     case TileId::egypt_wall_top:                return P(17, 9);
     case TileId::monolith:                      return P(18, 9);
+    case TileId::bookshelf_full:                return P(19, 9);
+    case TileId::bookshelf_empty:               return P(20, 9);
     case TileId::popup_top_l:                   return P(0, 10);
     case TileId::popup_top_r:                   return P(1, 10);
     case TileId::popup_btm_l:                   return P(2, 10);

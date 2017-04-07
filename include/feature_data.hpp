@@ -32,6 +32,7 @@ enum class FeatureId
     cocoon,
     chest,
     cabinet,
+    bookshelf,
     fountain,
     monolith,
     pylon,

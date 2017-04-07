@@ -114,7 +114,7 @@ void init_room_bucket()
 
     if (dlvl <= dlvl_last_early_game)
     {
-        add_to_room_bucket(RoomType::human, rnd::range(2, 3));
+        add_to_room_bucket(RoomType::human, rnd::range(3, 4));
         add_to_room_bucket(RoomType::jail, rnd::range(1, 2));
         add_to_room_bucket(RoomType::ritual, 1);
         add_to_room_bucket(RoomType::crypt, rnd::range(2, 3));
@@ -122,7 +122,7 @@ void init_room_bucket()
         add_to_room_bucket(RoomType::flooded, rnd::range(1, 2));
         add_to_room_bucket(RoomType::muddy, rnd::range(1, 2));
 
-        const size_t nr_plain_rooms = room_bucket_.size() * 3;
+        const size_t nr_plain_rooms = room_bucket_.size() * 2;
 
         add_to_room_bucket(RoomType::plain, nr_plain_rooms);
     }
@@ -141,7 +141,7 @@ void init_room_bucket()
         add_to_room_bucket(RoomType::chasm, 1);
         add_to_room_bucket(RoomType::forest, 2);
 
-        const size_t nr_plain_rooms = room_bucket_.size() * 3;
+        const size_t nr_plain_rooms = room_bucket_.size() * 2;
 
         add_to_room_bucket(RoomType::plain, nr_plain_rooms);
     }
@@ -553,10 +553,11 @@ std::vector<RoomAutoFeatureRule> HumanRoom::auto_features_allowed() const
 {
     return
     {
-        {FeatureId::chest, rnd::range(1, 2)},
-        {FeatureId::cabinet, rnd::range(0, 2)},
-        {FeatureId::brazier, rnd::range(0, 2)},
-        {FeatureId::statue, rnd::range(0, 3)}
+        {FeatureId::chest,      rnd::range(1, 2)},
+        {FeatureId::cabinet,    rnd::range(0, 2)},
+        {FeatureId::bookshelf,  rnd::range(0, 2)},
+        {FeatureId::brazier,    rnd::range(0, 2)},
+        {FeatureId::statue,     rnd::range(0, 3)}
     };
 }
 

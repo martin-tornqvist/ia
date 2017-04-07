@@ -5,10 +5,15 @@ Gameplay
 * You no longer gain XP from killing monsters - instead XP is raised by activities related to exploration and discovery, such as identifying items, drinking from some types of fountains, reading inscriptions on "monoliths", or seeing a new type of monster for the first time
 * Fewer monster are now spawned on the map overall, and many monster types now tend to spawn in smaller groups, but are individually stronger - they also generally folow and remember you for a shorter time than before
 * Monsters may become "suspicious" (typically with a message about them looking "wary" or "disturbed"), which gives them an increased chance of detecting you - they may still detect you immediately, but the chance for this is slightly lower than before
-* Added "Pylons", which can be activated with a lever for various effects (most commonly burning the area around them)
-* Added metal doors, which can only be opened with levers
-* Items are now more likely to spawn behind hidden, stuck, or metal doors, in areas away from the path to the stairs
-* Added a bunch of unique artifacts, and removed the (relatively bland) randomized amulets
+* Added metal doors - can only be opened with levers
+* Added bookshelves - can contain Manuscripts
+* Added barred gates - doors that can be seen and shot through
+* Added gratings - walls that can seen and shot through
+* Added "pylons" - can be activated with a lever for various effects (most commonly burning the area around them)
+* Added hanging vines - can be walked through, but blocks line of sight
+* Added rusty chains - makes a noise when someone walks through them
+* Items are now more likely to spawn behind hidden/stuck/metal doors, and in areas away from the path to the stairs
+* Added a bunch of unique artifacts, and removed the old (relatively bland) randomized amulets
 * If you are Observant, you now get "level feelings" when there are unique monsters or artifacts (when entering a new level, or when monsters appear on the map), such as "I feel like I should examine this place thoroughly"
 * Standing in lit cells (e.g. lit by the Electric Lantern) now temporarily reduces your shock
 * Some rooms are now generated from handmade templates (loaded from a text file)
@@ -21,13 +26,10 @@ Gameplay
 * Added trait Electrically Inclined - gives bonus to using Rods, Devices, Electric Lanterns, and electricity weapons
 * The Occultist starts with fixed (non-random) items and spells
 * When quaffing Potion of Insight, you can now manually choose which item to identify
-* Potion of Insight always gives some XP, in addition to identifying an item (to avoid making Potions of Insight worthless if all items are identified)
+* Potion of Insight always gives some XP, in addition to identifying an item (to avoid making them worthless if all items are identified)
 * All Manuscripts are now guaranteed to be identified when read (previously this only applied to potions)
 * You now search for secret doors and traps a bit further away, and your chance of finding them is affected by distance - for adjacent cells there is now a higher chance of detection than before (to avoid requiring hundreds of turns to detect an obvious hidden door)
 * Traps are always immediately revealed when triggered by the player
-* Added Barred gates (doors that you can see and shoot through), and Gratings (similarly, but walls)
-* Added Hanging vines, which can be walked through, but blocks line of sight
-* Added Rusty chains, which makes a noise when someone walks through them
 * Some melee weapons can now be used for breaching doors or destroying corpses more effectively with [w] (check the item descriptions)
 * Spells now have "skill level" percentages, which determines the strength of the spell (and can also add additional spell effects) - the skill levels are primarily increased by casting from Manuscripts
 * All backgrounds can now learn spells, but the Occultist gains proficiency much faster (and as before, starts with a few spells and has access to unique spell casting traits)
@@ -39,7 +41,7 @@ Gameplay
 * The Iron Suit and Asbestos Suit no longer gives penalties to aiming or spotting hidden monsters and objects
 * Removed all negative effects from critically failing melee attacks (such as "I am exhausted"), except for a small chance of the weapon breaking - which can only happen while cursed
 * Added more monsters
-* Zombie-type monsters now occasionally drop "Zombie Dust" when they are destroyed, which can be thrown at living, non-undead monsters to paralyze them
+* Zombie-type monsters now occasionally drop "Zombie Dust" when they are destroyed - can be thrown at living, non-undead monsters to paralyze them
 
 Interface
 * All active properties are now printed with descriptions on the [@] character decsription page, and when [v]iewing monsters
