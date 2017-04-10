@@ -32,10 +32,16 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
     case Trait::expert_melee_fighter:
         break;
 
+    case Trait::master_melee_fighter:
+        break;
+
     case Trait::adept_marksman:
         break;
 
     case Trait::expert_marksman:
+        break;
+
+    case Trait::master_marksman:
         break;
 
     case Trait::steady_aimer:
@@ -226,6 +232,9 @@ std::string trait_title(const Trait id)
     case Trait::expert_melee_fighter:
         return "Expert Melee Fighter";
 
+    case Trait::master_melee_fighter:
+        return "Master Melee Fighter";
+
     case Trait::cool_headed:
         return "Cool-headed";
 
@@ -264,6 +273,9 @@ std::string trait_title(const Trait id)
 
     case Trait::expert_marksman:
         return "Expert Marksman";
+
+    case Trait::master_marksman:
+        return "Master Marksman";
 
     case Trait::steady_aimer:
         return "Steady Aimer";
@@ -445,7 +457,10 @@ std::vector<std::string> bg_descr(const Bg id)
             trait_descr(Trait::adept_melee_fighter),
             "",
             "* " + trait_title(Trait::tough),
-            trait_descr(Trait::tough)
+            trait_descr(Trait::tough),
+            "",
+            "* " + trait_title(Trait::healer),
+            trait_descr(Trait::healer)
         };
         break;
 
@@ -472,12 +487,22 @@ std::string trait_descr(const Trait id)
             "+10% hit chance, +10% attack speed, and +1 damage with melee "
             "attacks";
 
+    case Trait::master_melee_fighter:
+        return
+            "+10% hit chance, +10% attack speed, and +1 damage with melee "
+            "attacks";
+
     case Trait::adept_marksman:
         return
             "+10% hit chance, +25% attack speed, and +1 damage with firearms "
             "and thrown weapons, +50% reload speed";
 
     case Trait::expert_marksman:
+        return
+            "+10% hit chance, +25% attack speed, and +1 damage with firearms "
+            "and thrown weapons, +50% reload speed";
+
+    case Trait::master_marksman:
         return
             "+10% hit chance, +25% attack speed, and +1 damage with firearms "
             "and thrown weapons, +50% reload speed";
@@ -695,11 +720,19 @@ void trait_prereqs(const Trait trait,
         traits_out.push_back(Trait::adept_melee_fighter);
         break;
 
+    case Trait::master_melee_fighter:
+        traits_out.push_back(Trait::expert_melee_fighter);
+        break;
+
     case Trait::adept_marksman:
         break;
 
     case Trait::expert_marksman:
         traits_out.push_back(Trait::adept_marksman);
+        break;
+
+    case Trait::master_marksman:
+        traits_out.push_back(Trait::expert_marksman);
         break;
 
     case Trait::steady_aimer:
@@ -1054,6 +1087,7 @@ void pick_bg(const Bg bg)
         pick_trait(Trait::adept_melee_fighter);
         pick_trait(Trait::adept_marksman);
         pick_trait(Trait::tough);
+        pick_trait(Trait::healer);
         break;
 
     case Bg::END:

@@ -1743,6 +1743,11 @@ void melee(Actor* const attacker,
         {
             speed_pct_diff += 10;
         }
+
+        if (player_bon::traits[(size_t)Trait::master_melee_fighter])
+        {
+            speed_pct_diff += 10;
+        }
     }
 
     game_time::tick(speed_pct_diff);
@@ -1823,6 +1828,11 @@ bool ranged(Actor* const attacker,
                 }
 
                 if (player_bon::traits[(size_t)Trait::expert_marksman])
+                {
+                    speed_pct_diff += 25;
+                }
+
+                if (player_bon::traits[(size_t)Trait::master_marksman])
                 {
                     speed_pct_diff += 25;
                 }

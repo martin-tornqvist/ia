@@ -63,6 +63,11 @@ int AbilityVals::val(const AbilityId id,
                 ret += 10;
             }
 
+            if (player_bon::traits[(size_t)Trait::master_melee_fighter])
+            {
+                ret += 10;
+            }
+
             if (player_bon::traits[(size_t)Trait::perseverant] &&
                 hp_pct <= perseverant_bon_hp_pct)
             {
@@ -81,6 +86,11 @@ int AbilityVals::val(const AbilityId id,
             }
 
             if (player_bon::traits[(size_t)Trait::expert_marksman])
+            {
+                ret += 10;
+            }
+
+            if (player_bon::traits[(size_t)Trait::master_marksman])
             {
                 ret += 10;
             }

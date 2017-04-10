@@ -117,6 +117,11 @@ DiceParam Item::dmg(const AttMode att_mode,
             {
                 ++out.plus;
             }
+
+            if (player_bon::traits[(size_t)Trait::master_melee_fighter])
+            {
+                ++out.plus;
+            }
         }
 
         // Bonus damage from being frenzied?
@@ -133,12 +138,17 @@ DiceParam Item::dmg(const AttMode att_mode,
 
         if (attacker == map::player)
         {
-            if ( player_bon::traits[(size_t)Trait::adept_marksman])
+            if (player_bon::traits[(size_t)Trait::adept_marksman])
             {
                 ++out.plus;
             }
 
-            if ( player_bon::traits[(size_t)Trait::expert_marksman])
+            if (player_bon::traits[(size_t)Trait::expert_marksman])
+            {
+                ++out.plus;
+            }
+
+            if (player_bon::traits[(size_t)Trait::master_marksman])
             {
                 ++out.plus;
             }
@@ -164,12 +174,17 @@ DiceParam Item::dmg(const AttMode att_mode,
 
         if (attacker == map::player)
         {
-            if ( player_bon::traits[(size_t)Trait::adept_marksman])
+            if (player_bon::traits[(size_t)Trait::adept_marksman])
             {
                 ++out.plus;
             }
 
-            if ( player_bon::traits[(size_t)Trait::expert_marksman])
+            if (player_bon::traits[(size_t)Trait::expert_marksman])
+            {
+                ++out.plus;
+            }
+
+            if (player_bon::traits[(size_t)Trait::master_marksman])
             {
                 ++out.plus;
             }

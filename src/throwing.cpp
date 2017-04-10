@@ -115,6 +115,11 @@ void throw_item(Actor& actor_throwing,
         {
             speed_pct_diff += 25;
         }
+
+        if (player_bon::traits[(size_t)Trait::master_marksman])
+        {
+            speed_pct_diff += 25;
+        }
     }
 
     ThrowAttData att_data(&actor_throwing,

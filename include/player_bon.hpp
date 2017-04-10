@@ -16,8 +16,10 @@ enum class Trait
     // Common (except some traits can be blocked for certain backgrounds)
     adept_melee_fighter,
     expert_melee_fighter,
+    master_melee_fighter,
     adept_marksman,
     expert_marksman,
+    master_marksman,
     cool_headed,
     courageous,
     dem_expert,
