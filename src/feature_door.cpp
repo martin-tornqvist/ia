@@ -337,7 +337,7 @@ void Door::on_hit(const int dmg,
                 }
                 else // Is monster
                 {
-                    int destr_chance_pct = 8 - (nr_spikes_ * 2);
+                    int destr_chance_pct = 7 - (nr_spikes_ * 2);
 
                     destr_chance_pct = std::max(1, destr_chance_pct);
 
@@ -921,13 +921,18 @@ void Door::try_close(Actor* actor_trying)
 
             if (is_player)
             {
+                const auto alerts_mon =
+                    player_bon::traits[(size_t)Trait::silent] ?
+                    AlertsMon::no :
+                    AlertsMon::yes;
+
                 Snd snd("",
                         SfxId::door_close,
                         IgnoreMsgIfOriginSeen::yes,
                         pos_,
                         actor_trying,
                         SndVol::low,
-                        AlertsMon::yes);
+                        alerts_mon);
 
                 snd.run();
 
@@ -1024,13 +1029,18 @@ void Door::try_open(Actor* actor_trying)
 
             if (is_player)
             {
+                const auto alerts_mon =
+                    player_bon::traits[(size_t)Trait::silent] ?
+                    AlertsMon::no :
+                    AlertsMon::yes;
+
                 Snd snd("",
                         SfxId::door_open,
                         IgnoreMsgIfOriginSeen::yes,
                         pos_,
                         actor_trying,
                         SndVol::low,
-                        AlertsMon::yes);
+                        alerts_mon);
 
                 snd.run();
 

@@ -572,7 +572,11 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
 
     auto snd_alerts_mon = AlertsMon::no;
 
-    if (wpn.data().melee.is_noisy && !att_data.is_intrinsic_att)
+    const bool is_player_silent = player_bon::traits[(size_t)Trait::silent];
+
+    // Should the attack alert monsters?
+    if (wpn.data().melee.is_noisy &&
+        !((att_data.attacker == map::player) && is_player_silent))
     {
         snd_alerts_mon = AlertsMon::yes;
     }

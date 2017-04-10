@@ -121,6 +121,9 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
     case Trait::stealthy:
         break;
 
+    case Trait::silent:
+        break;
+
     case Trait::imperceptible:
         break;
 
@@ -297,6 +300,9 @@ std::string trait_title(const Trait id)
 
     case Trait::stealthy:
         return "Stealthy";
+
+    case Trait::silent:
+        return "Silent";
 
     case Trait::imperceptible:
         return "Imperceptible";
@@ -617,6 +623,11 @@ std::string trait_descr(const Trait id)
         return
             "You are more likely to avoid detection";
 
+    case Trait::silent:
+        return
+            "All your melee attacks are silent, opening or closing doos does "
+            "not alert other creatures";
+
     case Trait::vicious:
         return
             "+50% backstab damage";
@@ -806,6 +817,11 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::imperceptible:
+        traits_out.push_back(Trait::stealthy);
+        break;
+
+    case Trait::silent:
+        traits_out.push_back(Trait::dexterous);
         traits_out.push_back(Trait::stealthy);
         break;
 

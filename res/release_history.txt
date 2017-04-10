@@ -23,7 +23,8 @@ Gameplay
 * The spells Slow, Paralyze, and Terrify Enemies have been merged into "Enfeeble Enemies"
 * Burning features now only hurt creatures on the same cell (not adjacent to it)
 * "Cloud Minds" is now a Rod instead of a spell (the Rogue starts with this item, intead of the spell)
-* Added trait Electrically Inclined - gives bonus to using Rods, Devices, Electric Lanterns, and electricity weapons
+* Added trait "Electrically Inclined" - gives bonus to using Rods, Devices, Electric Lanterns, and electricity weapons
+* Added trait "Silent" - melee attacks are silent, opening and closing doors does not alert monsters
 * The Occultist starts with fixed (non-random) items and spells
 * When quaffing Potion of Insight, you can now manually choose which item to identify
 * Potion of Insight always gives some XP, in addition to identifying an item (to avoid making them worthless if all items are identified)
