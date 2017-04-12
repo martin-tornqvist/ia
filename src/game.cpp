@@ -78,12 +78,14 @@ void query_quit()
 int lifebar_length(const Actor& actor)
 {
     const int actor_hp = std::max(0, actor.hp());
+
     const int actor_hp_max = actor.hp_max(true);
 
     if (actor_hp < actor_hp_max)
     {
-        int HP_PERCENT = (actor_hp * 100) / actor_hp_max;
-        return ((config::cell_px_w() - 2) * HP_PERCENT) / 100;
+        int hp_percent = (actor_hp * 100) / actor_hp_max;
+
+        return ((config::cell_px_w() - 2) * hp_percent) / 100;
     }
 
     return -1;
@@ -914,7 +916,7 @@ void handle_player_input(const InputData& input)
     case SDLK_F8:
     {
         map::player->prop_handler().try_add(
-            new PropTeleControl(PropTurns::std));
+            new PropDeaf(PropTurns::std));
     }
     break;
 

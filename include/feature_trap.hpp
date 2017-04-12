@@ -12,6 +12,7 @@ class TrapImpl;
 enum class TrapId
 {
     blinding,
+    deafening,
     dart,
     gas_confusion,
     gas_fear,
@@ -375,6 +376,32 @@ private:
     virtual Clr clr() const override
     {
         return clr_yellow;
+    }
+
+    void trigger() override;
+
+    Range nr_turns_range_to_trigger() const override
+    {
+        return {1, 3};
+    }
+};
+
+class TrapDeafening: public MechTrapImpl
+{
+private:
+    friend class Trap;
+
+    TrapDeafening(P pos, Trap* const base_trap) :
+        MechTrapImpl(pos, TrapId::deafening, base_trap) {}
+
+    virtual std::string name() const override
+    {
+        return "deafening trap";
+    }
+
+    virtual Clr clr() const override
+    {
+        return clr_violet;
     }
 
     void trigger() override;

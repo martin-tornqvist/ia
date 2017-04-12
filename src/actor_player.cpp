@@ -1550,6 +1550,11 @@ void Player::hear_sound(const Snd& snd,
 {
     (void)is_origin_seen_by_player;
 
+    if (has_prop(PropId::deaf))
+    {
+        return;
+    }
+
     const SfxId sfx = snd.sfx();
 
     const std::string& msg = snd.msg();

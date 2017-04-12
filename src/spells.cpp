@@ -125,6 +125,9 @@ Spell* mk_spell_from_id(const SpellId spell_id)
     case SpellId::burn:
         return new SpellBurn;
 
+    case SpellId::deafen:
+        return new SpellDeafen;
+
     case SpellId::res:
         return new SpellRes;
 
@@ -2485,6 +2488,57 @@ void SpellBurn::run_effect(Actor* const caster) const
 }
 
 bool SpellBurn::allow_mon_cast_now(Mon& mon) const
+{
+    return mon.tgt_ && rnd::one_in(4);
+}
+
+// -----------------------------------------------------------------------------
+// Deafening
+// -----------------------------------------------------------------------------
+void SpellDeafen::run_effect(Actor* const caster) const
+{
+    ASSERT(!caster->is_player());
+
+    Actor* caster_used = caster;
+
+    Actor* target = static_cast<Mon*>(caster_used)->tgt_;
+
+    ASSERT(target);
+
+    // Spell resistance?
+    if (target->has_prop(PropId::r_spell))
+    {
+        on_resist(*target);
+
+        // Spell reflection?
+        if (target->has_prop(PropId::spell_reflect))
+        {
+            if (map::player->can_see_actor(*target))
+            {
+                msg_log::add(spell_reflect_msg,
+                             clr_text,
+                             false,
+                             MorePromptOnMsg::yes);
+            }
+
+            std::swap(caster_used, target);
+        }
+        else // No spell reflection, just abort
+        {
+            return;
+        }
+    }
+
+    const int skill = caster->spell_skill(id());
+
+    const int nr_turns = 100 + skill;
+
+    Prop* const prop = new PropDeaf(PropTurns::specific, nr_turns);
+
+    target->prop_handler().try_add(prop);
+}
+
+bool SpellDeafen::allow_mon_cast_now(Mon& mon) const
 {
     return mon.tgt_ && rnd::one_in(4);
 }

@@ -47,6 +47,7 @@ enum class SpellId
     knockback,
     mi_go_hypno,
     burn,
+    deafen,
 
     // Spells from special sources
     pharaoh_staff, // From the Staff of the Pharaohs artifact
@@ -1175,6 +1176,52 @@ private:
     int max_spi_cost() const override
     {
         return 7;
+    }
+};
+
+class SpellDeafen: public Spell
+{
+public:
+    SpellDeafen() : Spell() {}
+
+    bool allow_mon_cast_now(Mon& mon) const override;
+
+    bool mon_can_learn() const override
+    {
+        return true;
+    }
+
+    bool player_can_learn() const override
+    {
+        return false;
+    }
+
+    std::string name() const override
+    {
+        return "Deafen";
+    }
+
+    SpellId id() const override
+    {
+        return SpellId::deafen;
+    }
+
+    IntrSpellShock shock_type_intr_cast() const override
+    {
+        return IntrSpellShock::disturbing;
+    }
+
+    std::vector<std::string> descr_specific() const override
+    {
+        return {""};
+    }
+
+    void run_effect(Actor* const caster) const override;
+
+private:
+    int max_spi_cost() const override
+    {
+        return 4;
     }
 };
 

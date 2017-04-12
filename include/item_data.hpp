@@ -190,6 +190,7 @@ enum class ItemId
     refl_talisman,
     resurrect_talisman,
     horn_of_malice,
+    horn_of_deafening,
     horn_of_banishment,
     clockwork,
     spirit_dagger,

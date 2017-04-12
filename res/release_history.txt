@@ -44,6 +44,7 @@ Gameplay
 * Removed all negative effects from critically failing melee attacks (such as "I am exhausted"), except for a small chance of the weapon breaking - which can only happen while cursed
 * Added more monsters
 * Zombie-type monsters now occasionally drop "Zombie Dust" when they are destroyed - can be thrown at living, non-undead monsters to paralyze them
+* Added property "Deaf", deafening traps, and a deafening spell (for monsters)
 
 Interface
 * All active properties are now printed with descriptions on the [@] character decsription page, and when [v]iewing monsters

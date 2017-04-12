@@ -351,6 +351,10 @@ Item* mk(const ItemId item_id, const int nr_items)
         r = new HornOfMalice(d);
         break;
 
+    case ItemId::horn_of_deafening:
+        r = new HornOfDeafening(d);
+        break;
+
     case ItemId::horn_of_banishment:
         r = new HornOfBanishment(d);
         break;

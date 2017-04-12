@@ -629,7 +629,19 @@ int Mon::spell_skill(const SpellId id) const
 
 void Mon::hear_sound(const Snd& snd)
 {
+    if (has_prop(PropId::deaf))
+    {
+        return;
+    }
+
     snd.on_heard(*this);
+
+    // The monster may have become deaf through the sound callback (e.g. from
+    // the Horn of Deafening artifact)
+    if (has_prop(PropId::deaf))
+    {
+        return;
+    }
 
     if (is_alive() &&
         snd.is_alerting_mon())
@@ -1899,6 +1911,7 @@ void KeziahMason::mk_start_items()
     spells_known_.push_back(new SpellPest);
     spells_known_.push_back(new SpellDarkbolt);
     spells_known_.push_back(new SpellEnfeebleMon);
+    spells_known_.push_back(new SpellDeafen);
 
 
     // Make some treasures to drop

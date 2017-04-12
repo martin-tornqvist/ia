@@ -141,8 +141,9 @@ void load()
 
     for (auto& map_data : map_list)
     {
-        map_data.type               = MapType(saving::get_int());
-        map_data.is_main_dungeon    = IsMainDungeon(saving::get_int());
+        map_data.type = MapType(saving::get_int());
+
+        map_data.is_main_dungeon = IsMainDungeon(saving::get_int());
     }
 }
 
@@ -184,18 +185,21 @@ void go_to_nxt()
 
     map::player->mon_feeling();
 
-    if (map_data.is_main_dungeon == IsMainDungeon::yes &&
-        map::dlvl == (dlvl_last - 1))
+    if (!map::player->has_prop(PropId::deaf))
     {
-        msg_log::add("An ominous voice thunders in my ears.",
-                     clr_white,
-                     false,
-                     MorePromptOnMsg::yes);
+        if ((map_data.is_main_dungeon == IsMainDungeon::yes) &&
+            (map::dlvl == (dlvl_last - 1)))
+        {
+            msg_log::add("An ominous voice thunders in my ears.",
+                         clr_white,
+                         false,
+                         MorePromptOnMsg::yes);
 
-        audio::play(SfxId::boss_voice2);
+            audio::play(SfxId::boss_voice2);
+        }
+
+        audio::try_play_amb(1);
     }
-
-    audio::try_play_amb(1);
 
     if (insanity::has_sympt(InsSymptId::phobia_deep))
     {

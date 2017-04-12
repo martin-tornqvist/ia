@@ -348,7 +348,8 @@ void play(const SfxId sfx, const Dir dir, const int distance_pct)
 
 void try_play_amb(const int one_in_n_chance_to_play)
 {
-    if (!audio_chunks_.empty() && rnd::one_in(one_in_n_chance_to_play))
+    if (!audio_chunks_.empty() &&
+        rnd::one_in(one_in_n_chance_to_play))
     {
         const int seconds_now = time(nullptr);
         const int time_req_between_amb_sfx = 25;

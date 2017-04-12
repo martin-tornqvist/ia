@@ -295,6 +295,24 @@ void init_data_list()
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
 
+    d.id = PropId::deaf;
+    d.std_rnd_turns = Range(100, 200);
+    d.name = "Deaf";
+    d.name_short = "Deaf";
+    d.descr = "";
+    d.msg[(size_t)PropMsg::start_player] = "I am deaf!";
+    d.msg[(size_t)PropMsg::start_mon] = "";
+    d.msg[(size_t)PropMsg::end_player] = "I can hear again.";
+    d.msg[(size_t)PropMsg::end_mon] = "";
+    d.msg[(size_t)PropMsg::res_player] = "";
+    d.msg[(size_t)PropMsg::res_mon] = "";
+    d.is_making_mon_aware = false;
+    d.allow_display_turns = true;
+    d.allow_apply_more_while_active = true;
+    d.allow_test_on_bot = true;
+    d.alignment = PropAlignment::bad;
+    add_prop_data(d);
+
     d.id = PropId::fainted;
     d.std_rnd_turns = Range(100, 200);
     d.name = "Fainted";
@@ -1044,6 +1062,9 @@ Prop* PropHandler::mk_prop(const PropId id,
 
     case PropId::blind:
         return new PropBlind(turns_init, nr_turns);
+
+    case PropId::deaf:
+        return new PropDeaf(turns_init, nr_turns);
 
     case PropId::burning:
         return new PropBurning(turns_init, nr_turns);

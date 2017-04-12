@@ -122,6 +122,73 @@ ConsumeItem HornOfMalice::activate(Actor* const actor)
 }
 
 // -----------------------------------------------------------------------------
+// Horn of Deafening
+// -----------------------------------------------------------------------------
+void HornOfDeafeningHeard::run(Actor& actor) const
+{
+    if (!actor.is_player())
+    {
+        actor.prop_handler().try_add(
+            new PropDeaf(PropTurns::std));
+    }
+}
+
+HornOfDeafening::HornOfDeafening(ItemDataT* const item_data) :
+    Item(item_data),
+    charges_(rnd::range(18, 24))
+{
+
+}
+
+std::string HornOfDeafening::name_inf() const
+{
+    return "{" + std::to_string(charges_) + "}";
+}
+
+void HornOfDeafening::save()
+{
+    saving::put_int(charges_);
+}
+
+void HornOfDeafening::load()
+{
+    charges_ = saving::get_int();
+}
+
+ConsumeItem HornOfDeafening::activate(Actor* const actor)
+{
+    (void)actor;
+
+    if (charges_ <= 0)
+    {
+        msg_log::add("It makes no sound.");
+
+        return ConsumeItem::no;
+    }
+
+    auto effect = std::shared_ptr<SndHeardEffect>(
+        new HornOfDeafeningHeard);
+
+    Snd snd("The Horn of Deafening resounds!",
+            SfxId::END, // TODO: Make a sound effect
+            IgnoreMsgIfOriginSeen::no,
+            map::player->pos,
+            map::player,
+            SndVol::high,
+            AlertsMon::yes,
+            MorePromptOnMsg::no,
+            effect);
+
+    snd_emit::run(snd);
+
+    --charges_;
+
+    game_time::tick();
+
+    return ConsumeItem::no;
+}
+
+// -----------------------------------------------------------------------------
 // Horn of Banishment
 // -----------------------------------------------------------------------------
 void HornOfBanishmentHeard::run(Actor& actor) const

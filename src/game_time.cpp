@@ -151,7 +151,7 @@ void run_std_turn_events()
 
     snd_emit::reset_nr_snd_msg_printed_current_turn();
 
-    if (map::dlvl > 0)
+    if ((map::dlvl > 0) && !map::player->has_prop(PropId::deaf))
     {
         const int play_one_in_n = 250;
 

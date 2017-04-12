@@ -27,6 +27,7 @@ enum class PropId
     r_blind,
     lgt_sens,
     blind,
+    deaf,
     fainted,
     burning,
     radiant,
@@ -669,6 +670,13 @@ public:
 
         return 0;
     }
+};
+
+class PropDeaf: public Prop
+{
+public:
+    PropDeaf(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::deaf, turns_init, nr_turns) {}
 };
 
 class PropRadiant: public Prop

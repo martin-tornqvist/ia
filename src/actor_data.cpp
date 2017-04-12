@@ -664,6 +664,8 @@ void init_data_list()
     d.spawn_min_dlvl = 3;
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
+    d.can_open_doors = true;
+    d.can_bash_doors = true;
     d.descr =
         "During the Salem witch trials of 1692 an old woman by the name of "
         "Keziah Mason was arrested for her suspicious behavior and seeming "

@@ -122,6 +122,10 @@ TrapImpl* Trap::mk_trap_impl_from_id(const TrapId trap_id)
         return new TrapBlindingFlash(pos_, this);
         break;
 
+    case TrapId::deafening:
+        return new TrapDeafening(pos_, this);
+        break;
+
     case TrapId::teleport:
         return new TrapTeleport(pos_, this);
         break;
@@ -951,6 +955,27 @@ void TrapBlindingFlash::trigger()
                    ExplExclCenter::no,
                    {new PropBlind(PropTurns::std)},
                    &clr_yellow);
+
+    TRACE_FUNC_END_VERBOSE;
+}
+
+void TrapDeafening::trigger()
+{
+    TRACE_FUNC_BEGIN_VERBOSE;
+
+    if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+    {
+        msg_log::add("There is suddenly a crushing pressure in the air!");
+    }
+
+    explosion::run(pos_,
+                   ExplType::apply_prop,
+                   ExplSrc::misc,
+                   EmitExplSnd::no,
+                   -1,
+                   ExplExclCenter::no,
+                   {new PropDeaf(PropTurns::std)},
+                   &clr_white_lgt);
 
     TRACE_FUNC_END_VERBOSE;
 }
