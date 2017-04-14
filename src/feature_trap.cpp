@@ -736,7 +736,10 @@ void TrapDart::trigger()
     }
 
     // Fire!
-    attack::ranged(nullptr, dart_origin_, aim_pos, *wpn);
+    attack::ranged(nullptr,
+                   dart_origin_,
+                   aim_pos,
+                   *wpn);
 
     delete wpn;
 
@@ -838,7 +841,10 @@ void TrapSpear::trigger()
         }
 
         // Attack!
-        attack::melee(nullptr, spear_origin_, *actor_on_trap, *wpn);
+        attack::melee(nullptr,
+                      spear_origin_,
+                      *actor_on_trap,
+                      *wpn);
 
         delete wpn;
     }

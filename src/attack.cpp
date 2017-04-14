@@ -1672,8 +1672,8 @@ void melee(Actor* const attacker,
         else // Defender was killed
         {
             // NOTE: Destroyed actors are purged on standard turns, so it's no
-            // problem calling this function even if defender was destroyed
-            // (we haven't "ticked" game time yet)
+            //       problem calling this function even if defender was
+            //       destroyed (we haven't "ticked" game time yet)
             wpn.on_melee_kill(defender);
         }
     }
@@ -1716,7 +1716,7 @@ void melee(Actor* const attacker,
         }
     }
 
-    if (att_data.attacker)
+    if (attacker)
     {
         if (defender.is_player())
         {
@@ -1728,29 +1728,29 @@ void melee(Actor* const attacker,
         {
             static_cast<Mon&>(defender).become_aware_player(false);
         }
+
+        int speed_pct_diff = 0;
+
+        if (attacker == map::player)
+        {
+            if (player_bon::traits[(size_t)Trait::adept_melee_fighter])
+            {
+                speed_pct_diff += 10;
+            }
+
+            if (player_bon::traits[(size_t)Trait::expert_melee_fighter])
+            {
+                speed_pct_diff += 10;
+            }
+
+            if (player_bon::traits[(size_t)Trait::master_melee_fighter])
+            {
+                speed_pct_diff += 10;
+            }
+        }
+
+        game_time::tick(speed_pct_diff);
     }
-
-    int speed_pct_diff = 0;
-
-    if (attacker == map::player)
-    {
-        if (player_bon::traits[(size_t)Trait::adept_melee_fighter])
-        {
-            speed_pct_diff += 10;
-        }
-
-        if (player_bon::traits[(size_t)Trait::expert_melee_fighter])
-        {
-            speed_pct_diff += 10;
-        }
-
-        if (player_bon::traits[(size_t)Trait::master_melee_fighter])
-        {
-            speed_pct_diff += 10;
-        }
-    }
-
-    game_time::tick(speed_pct_diff);
 }
 
 bool ranged(Actor* const attacker,

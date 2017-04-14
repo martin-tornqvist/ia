@@ -433,10 +433,12 @@ void update_light_map()
 
 Actor* current_actor()
 {
+    ASSERT(current_actor_idx_ < actors.size());
+
     Actor* const actor = actors[current_actor_idx_];
 
-    // Sanity check
     ASSERT(map::is_pos_inside_map(actor->pos));
+
     return actor;
 }
 
