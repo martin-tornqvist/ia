@@ -121,7 +121,12 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         break;
 
     case Trait::strong_spirit:
+        break;
+
     case Trait::mighty_spirit:
+        break;
+
+    case Trait::magically_gifted:
         break;
 
     case Trait::stealthy:
@@ -310,6 +315,9 @@ std::string trait_title(const Trait id)
     case Trait::mighty_spirit:
         return "Mighty Spirit";
 
+    case Trait::magically_gifted:
+        return "Magically Gifted";
+
     case Trait::stealthy:
         return "Stealthy";
 
@@ -410,7 +418,7 @@ std::vector<std::string> bg_descr(const Bg id)
             "",
             "Can dispel magic traps",
             "",
-            "+2 Spirit Points",
+            "+2 Spirit Points (in addition to \"Strong Spirit\")",
             "",
             "-2 Hit Points",
             "",
@@ -640,6 +648,10 @@ std::string trait_descr(const Trait id)
             "defy harmful spells - the number of turns to regain spell "
             "resistance is reduced";
 
+    case Trait::magically_gifted:
+        return
+            "+20% skill with all spells";
+
     case Trait::stealthy:
         return
             "You are more likely to avoid detection";
@@ -762,23 +774,25 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::warlock:
-        traits_out.push_back(Trait::fearless);
-        traits_out.push_back(Trait::strong_spirit);
+        traits_out.push_back(Trait::magically_gifted);
+        traits_out.push_back(Trait::mighty_spirit);
         bg_out = Bg::occultist;
         break;
 
     case Trait::summoner:
-        traits_out.push_back(Trait::fearless);
-        traits_out.push_back(Trait::strong_spirit);
+        traits_out.push_back(Trait::magically_gifted);
+        traits_out.push_back(Trait::cool_headed);
         bg_out = Bg::occultist;
         break;
 
     case Trait::blood_sorc:
+        traits_out.push_back(Trait::magically_gifted);
         traits_out.push_back(Trait::tough);
         bg_out = Bg::occultist;
         break;
 
     case Trait::seer:
+        traits_out.push_back(Trait::magically_gifted);
         traits_out.push_back(Trait::observant);
         bg_out = Bg::occultist;
         break;
@@ -843,6 +857,10 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::mighty_spirit:
+        traits_out.push_back(Trait::strong_spirit);
+        break;
+
+    case Trait::magically_gifted:
         traits_out.push_back(Trait::strong_spirit);
         break;
 

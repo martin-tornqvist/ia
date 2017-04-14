@@ -40,6 +40,7 @@ enum class Trait
     perseverant,
     strong_spirit,
     mighty_spirit,
+    magically_gifted,
     tough,
     rugged,
     strong_backed,

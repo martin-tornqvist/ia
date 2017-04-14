@@ -23,8 +23,13 @@ Gameplay
 * The spells Slow, Paralyze, and Terrify Enemies have been merged into "Enfeeble Enemies"
 * Burning features now only hurt creatures on the same cell (not adjacent to it)
 * "Cloud Minds" is now a Rod instead of a spell (the Rogue starts with this item, intead of the spell)
+* Spells now have "skill level" percentages, which determines the strength of the spell (and can also add additional spell effects) - the skill levels are primarily increased by casting from Manuscripts
+* All backgrounds can now learn spells, but the Occultist gains proficiency much faster (and as before, starts with a few spells and has access to unique spell casting traits)
+* Different monsters have different spell skill levels (so spells cast by more powerful monsters will typically hurt more, last longer, summon nastier monsters, etc)
+* The Warlock trait now gives a chance to cast damage dealing spell multiple times (instead of the old "Charged" mechanic)
 * Added trait "Electrically Inclined" - gives bonus to using Rods, Devices, Electric Lanterns, and electricity weapons
-* Added trait "Silent" - melee attacks are silent, opening and closing doors does not alert monsters
+* Added trait "Silent" - all melee attacks are silent, opening and closing doors does not alert monsters
+* Added trait "Magically Gifted" - +20% skill with all spells
 * The War Veteran background now also starts with the "Healer" trait
 * The Occultist starts with fixed (non-random) items and spells
 * When quaffing Potion of Insight, you can now manually choose which item to identify
@@ -33,10 +38,6 @@ Gameplay
 * You now search for secret doors and traps a bit further away, and your chance of finding them is affected by distance - for adjacent cells there is now a higher chance of detection than before (to avoid requiring hundreds of turns to detect an obvious hidden door)
 * Traps are always immediately revealed when triggered by the player
 * Some melee weapons can now be used for breaching doors or destroying corpses more effectively with [w] (check the item descriptions)
-* Spells now have "skill level" percentages, which determines the strength of the spell (and can also add additional spell effects) - the skill levels are primarily increased by casting from Manuscripts
-* All backgrounds can now learn spells, but the Occultist gains proficiency much faster (and as before, starts with a few spells and has access to unique spell casting traits)
-* Different monsters have different spell skill levels (so spells cast by more powerful monsters will typically hurt more, last longer, summon nastier monsters, etc)
-* The Warlock trait now gives a chance to cast damage dealing spell multiple times (instead of the old "Charged" mechanic)
 * Chests can no longer be trapped (it was awkward to deal with, and didn't really bring anything to the game) - chests are now interacted with merely by bumping them (if they are not locked), kicking them, or using an Opening spell
 * Rogues remain aware of monsters much longer than the other Backgrounds, and the other Backgrounds remain aware for a shorter duration than before
 * Removed the random "I have a bad feeling about this..." shock events

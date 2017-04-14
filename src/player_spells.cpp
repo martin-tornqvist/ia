@@ -253,25 +253,33 @@ void incr_spell_skill(const SpellId id, const Verbosity verbosity)
 
     const int incr = incr_dice.roll();
 
-    int& v = spell_skill_pct_[(size_t)id];
+    int& base_skill = spell_skill_pct_[(size_t)id];
 
-    const int skill_before = v;
+    const int base_skill_before = base_skill;
 
-    v += incr;
+    base_skill += incr;
 
-    v = std::min(100, v);
+    base_skill = std::min(100, base_skill);
 
-    if (v > skill_before &&
+    if (base_skill > base_skill_before &&
         verbosity == Verbosity::verbose)
     {
+        const int skill_tot = spell_skill_pct_tot(id);
+
         msg_log::add("I am now more proficient at casting this spell (" +
-                     std::to_string(v) + "%).");
+                     std::to_string(skill_tot) + "%).");
     }
 }
 
 int spell_skill_pct_tot(const SpellId id)
 {
     int skill_tot = spell_skill_pct_[(size_t)id];
+
+    // Bonus skill from trait?
+    if (player_bon::traits[(size_t)Trait::magically_gifted])
+    {
+        skill_tot += 20;
+    }
 
     // Bonus skill from the Sorcery Crystal?
     if (map::player->inv().has_item_in_backpack(ItemId::orb_of_sorcery))
