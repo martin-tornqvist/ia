@@ -640,40 +640,16 @@ ActorDied Actor::hit(int dmg,
         return ActorDied::no;
     }
 
-    // Filter damage through worn armor
+    // TODO: Perhaps allow zero damage?
     dmg = std::max(1, dmg);
 
-    if (dmg_type == DmgType::physical &&
-        is_humanoid())
+    if (dmg_type == DmgType::physical)
     {
-        Armor* armor =
-            static_cast<Armor*>(inv_->item_in_slot(SlotId::body));
-
-        if (armor)
-        {
-            TRACE_VERBOSE << "Has armor, running hit on armor" << std::endl;
-
-            dmg = armor->take_dur_hit_and_get_reduced_dmg(dmg);
-
-            if (armor->is_destroyed())
-            {
-                TRACE << "Armor was destroyed" << std::endl;
-
-                if (is_player())
-                {
-                    const std::string armor_name =
-                        armor->name(ItemRefType::plain, ItemRefInf::none);
-
-                    msg_log::add("My " + armor_name + " is torn apart!",
-                                 clr_msg_note);
-                }
-
-                inv_->remove_item_in_slot(SlotId::body, true);
-
-                armor = nullptr;
-            }
-        }
+        dmg = hit_armor(dmg);
     }
+
+    // TODO: Perhaps allow zero damage?
+    dmg = std::max(1, dmg);
 
     on_hit(dmg,
            dmg_type,
@@ -792,6 +768,86 @@ ActorDied Actor::hit_spi(const int dmg, const Verbosity verbosity)
     // SP is greater than 0
 
     return ActorDied::no;
+}
+
+int Actor::armor_points() const
+{
+    int ap = 0;
+
+    // Worn armor
+    if (is_humanoid())
+    {
+        Armor* armor =
+            static_cast<Armor*>(inv_->item_in_slot(SlotId::body));
+
+        if (armor)
+        {
+            ap += armor->armor_points();
+        }
+    }
+
+    // "Natural armor"
+    if (is_player())
+    {
+        if (player_bon::traits[(size_t)Trait::tough])
+        {
+            ++ap;
+        }
+
+        if (player_bon::traits[(size_t)Trait::rugged])
+        {
+            ++ap;
+        }
+    }
+
+    return ap;
+}
+
+int Actor::hit_armor(int dmg)
+{
+    //
+    // NOTE: We retrieve armor points BEFORE damaging the armor - since it
+    //       should reduce damage taken even if it gets damaged or destroyed
+    //
+    const int ap = armor_points();
+
+    // Danage worn armor
+    if (is_humanoid())
+    {
+        Armor* armor =
+            static_cast<Armor*>(inv_->item_in_slot(SlotId::body));
+
+        if (armor)
+        {
+            TRACE_VERBOSE << "Has armor, running hit on armor" << std::endl;
+
+            armor->hit(dmg);
+
+            if (armor->is_destroyed())
+            {
+                TRACE << "Armor was destroyed" << std::endl;
+
+                if (is_player())
+                {
+                    const std::string armor_name =
+                        armor->name(ItemRefType::plain, ItemRefInf::none);
+
+                    msg_log::add("My " + armor_name + " is torn apart!",
+                                 clr_msg_note);
+                }
+
+                inv_->remove_item_in_slot(SlotId::body, true);
+
+                armor = nullptr;
+            }
+        }
+    }
+
+    // Reduce damage by the total ap value - the new damage value may be
+    // negative, this is the callers resonsibility to handle
+    dmg -= ap;
+
+    return dmg;
 }
 
 void Actor::die(const bool is_destroyed,

@@ -38,7 +38,10 @@ void draw()
 
     p.x += str.size();
 
-    str = std::to_string(player.hp()) + "/" + std::to_string(player.hp_max(true));
+    str =
+        std::to_string(player.hp()) +
+        "/" +
+        std::to_string(player.hp_max(true));
 
     io::draw_text(str, panel, p, clr_red_lgt);
 
@@ -51,7 +54,10 @@ void draw()
 
     p.x += str.size();
 
-    str = std::to_string(player.spi()) + "/" + std::to_string(player.spi_max());
+    str =
+        std::to_string(player.spi()) +
+        "/" +
+        std::to_string(player.spi_max());
 
     io::draw_text(str, panel, p, clr_magenta);
 
@@ -185,41 +191,50 @@ void draw()
     io::draw_text(str, panel, p, enc_clr);
 
     // Armor
+    p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
+
+    Clr armor_clr = clr_gray;
+
+    // Use flack jacket as default tile/glyph
+    const auto& flak_jacket_data =
+        item_data::data[(size_t)ItemId::armor_flack_jacket];
+
+    TileId armor_tile = flak_jacket_data.tile;
+
+    str = flak_jacket_data.glyph;
+
+    // If wearing body item, override the armor symbol with the item's
     const Item* const body_item = player.inv().item_in_slot(SlotId::body);
 
     if (body_item)
     {
-        p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
+        armor_clr = body_item->clr();
 
-        const Clr clr = body_item->clr();
+        armor_tile = body_item->tile();
 
-        if (config::is_tiles_mode())
-        {
-            const TileId tile = body_item->tile();
-
-            io::draw_tile(tile, panel, p, clr);
-        }
-        else // Text mode
-        {
-            str = body_item->glyph();
-
-            io::draw_text(str, panel, p, clr);
-        }
-
-        ++p.x;
-
-        str = ":";
-
-        io::draw_text(str, panel, p, clr_gray_drk);
-
-        p.x += str.size();
-
-        const Armor* const armor = static_cast<const Armor*>(body_item);
-
-        str = armor->armor_points_str(false /* Do not include brackets */);
-
-        io::draw_text(str, panel, p, clr_white);
+        str = body_item->glyph();
     }
+
+    if (config::is_tiles_mode())
+    {
+        io::draw_tile(armor_tile, panel, p, armor_clr);
+    }
+    else // Text mode
+    {
+        io::draw_text(str, panel, p, armor_clr);
+    }
+
+    ++p.x;
+
+    str = ":";
+
+    io::draw_text(str, panel, p, clr_gray_drk);
+
+    p.x += str.size();
+
+    str = std::to_string(player.armor_points());
+
+    io::draw_text(str, panel, p, clr_white);
 
     // Lantern
     const Item* const lantern_item =

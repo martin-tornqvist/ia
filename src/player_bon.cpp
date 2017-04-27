@@ -452,7 +452,7 @@ std::vector<std::string> bg_descr(const Bg id)
     case Bg::war_vet:
         return
         {
-            "Switches to prepared weapon with +100% speed",
+            "Switches to prepared weapon twice as fast",
             "",
             "Maintains armor twice as long before it breaks",
             "",
@@ -567,15 +567,15 @@ std::string trait_descr(const Trait id)
 
     case Trait::tough:
         return
-            "+4 Hit Points, +10% carry weight limit, less likely to sprain "
-            "when kicking, more likely to succeed with object interactions "
-            "requiring strength (such as bashing things open)";
+            "+1 Armor Point, +4 Hit Points, +10% carry weight limit, less "
+            "likely to sprain when kicking, more likely to succeed with "
+            "object interactions requiring strength (e.g. bashing things open)";
 
     case Trait::rugged:
         return
-            "+4 Hit Points, +10% carry weight limit, less likely to sprain "
-            "when kicking, more likely to succeed with object interaction "
-            "requiring strength (such as bashing things open)";
+            "+1 Armor Point, +4 Hit Points, +10% carry weight limit, less "
+            "likely to sprain when kicking, more likely to succeed with "
+            "object interactions requiring strength (e.g. bashing things open)";
 
     case Trait::strong_backed:
         return

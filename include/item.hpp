@@ -219,6 +219,8 @@ public:
         return clr_gray;
     }
 
+    int armor_points() const;
+
     int durability() const
     {
         return dur_;
@@ -234,22 +236,15 @@ public:
         return armor_points() <= 0;
     }
 
-    std::string armor_points_str(const bool with_brackets) const;
-
-    int take_dur_hit_and_get_reduced_dmg(const int dmg_before);
+    void hit(const int dmg);
 
 protected:
-    int armor_points() const;
-
     virtual UnequipAllowed on_unequip_hook() override
     {
         return UnequipAllowed::yes;
     }
 
-    std::string name_inf() const override
-    {
-        return armor_points_str(true);
-    }
+    std::string name_inf() const override;
 
     int dur_;
 };

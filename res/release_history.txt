@@ -30,6 +30,7 @@ Gameplay
 * Added trait "Electrically Inclined" - gives bonus to using Rods, Devices, Electric Lanterns, and electricity weapons
 * Added trait "Silent" - all melee attacks are silent, opening and closing doors does not alert monsters
 * Added trait "Magically Gifted" - +20% skill with all spells
+* The traits "Tough" and "Rugged" now also grant 1 armor point each
 * The War Veteran background now also starts with the "Healer" trait
 * The Occultist starts with fixed (non-random) items and spells
 * When quaffing Potion of Insight, you can now manually choose which item to identify

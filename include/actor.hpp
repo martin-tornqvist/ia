@@ -156,6 +156,8 @@ public:
 
     int speed_pct() const;
 
+    int armor_points() const;
+
     virtual int spell_skill(const SpellId id) const = 0;
 
     virtual std::string name_the() const
@@ -235,6 +237,9 @@ protected:
     virtual void on_destroyed() {}
 
     virtual std::string death_msg() const;
+
+    // Damages worn armor, and returns damage after armor absorbs damage
+    int hit_armor(int dmg);
 
     virtual void on_hit(int& dmg,
                         const DmgType dmg_type,

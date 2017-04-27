@@ -561,69 +561,6 @@ void Armor::load()
     dur_ = saving::get_int();
 }
 
-std::string Armor::armor_points_str(const bool with_brackets) const
-{
-    const int ap = armor_points();
-    const std::string ap_str = std::to_string(std::max(1, ap));
-
-    return with_brackets ? ("[" + ap_str + "]") : ap_str;
-}
-
-int Armor::take_dur_hit_and_get_reduced_dmg(const int dmg_before)
-{
-    TRACE_FUNC_BEGIN;
-
-    //
-    // AP:  Armor points
-    //     Damage soaked up instead of hitting the player
-    //
-    // DFF: Damage (to) Durability Factor
-    //     A factor of how much damage the armor durability takes per attack
-    //     damage point
-    //
-
-    const int ap_before = armor_points();
-
-    // TODO: Add check for if wearer is player!
-
-    // Damage factor
-    const double dmg_before_db = double(dmg_before);
-
-    // Adjustment factor
-    const double k = 2.0;
-
-    // Armor durability factor
-    const double armor_ddf = data_->armor.dmg_to_durability_factor;
-
-    // Armor lasts twice as long for War Vets
-    const double war_vet_ddf =
-        (player_bon::bg() == Bg::war_vet) ?
-        0.5 :
-        1.0;
-
-    dur_ -= (int)(dmg_before_db * k * armor_ddf * war_vet_ddf);
-
-    dur_ = std::max(0, dur_);
-
-    const int ap_after = armor_points();
-
-    if (ap_after < ap_before && ap_after != 0)
-    {
-        const std::string armor_name = name(ItemRefType::plain);
-
-        msg_log::add("My " + armor_name + " is damaged!", clr_msg_note);
-    }
-
-    TRACE << "Damage before: " + std::to_string(dmg_before) << std::endl;
-
-    const int dmg_after = std::max(1, dmg_before - ap_before);
-
-    TRACE << "Damage after: " + std::to_string(dmg_after) << std::endl;
-
-    TRACE_FUNC_END;
-    return dmg_after;
-}
-
 int Armor::armor_points() const
 {
     // NOTE: AP must be able to reach zero, otherwise the armor will never count
@@ -652,6 +589,54 @@ int Armor::armor_points() const
     }
 
     return 0;
+}
+
+void Armor::hit(const int dmg)
+{
+    const int ap_before = armor_points();
+
+    // Damage factor
+    const double dmg_db = double(dmg);
+
+    // Armor durability factor
+    const double df = data_->armor.dmg_to_durability_factor;
+
+    // Scaling factor
+    const double k = 2.0;
+
+    // Armor lasts twice as long for War Vets
+    double war_vet_k = 1.0;
+
+    ASSERT(actor_carrying_);
+
+    if ((actor_carrying_ == map::player) &&
+        (player_bon::bg() == Bg::war_vet))
+    {
+        war_vet_k = 0.5;
+    }
+
+    dur_ -= (int)(dmg_db * df * k * war_vet_k);
+
+    dur_ = std::max(0, dur_);
+
+    const int ap_after = armor_points();
+
+    if ((ap_after < ap_before) &&
+        (ap_after != 0))
+    {
+        const std::string armor_name = name(ItemRefType::plain);
+
+        msg_log::add("My " + armor_name + " is damaged!", clr_msg_note);
+    }
+}
+
+std::string Armor::name_inf() const
+{
+    const int ap = armor_points();
+
+    const std::string ap_str = std::to_string(std::max(1, ap));
+
+    return "[" + ap_str + "]";
 }
 
 void ArmorAsbSuit::on_equip_hook(const Verbosity verbosity)

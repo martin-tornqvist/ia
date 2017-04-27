@@ -1706,7 +1706,7 @@ void init_data_list()
     d.weight = ItemWeight::heavy;
     d.clr = clr_white;
     d.spawn_std_range.min = 2;
-    d.armor.armor_points = 5;
+    d.armor.armor_points = 6;
     d.armor.dmg_to_durability_factor = 0.3;
     d.land_on_hard_snd_msg = "I hear a crashing sound.";
     d.native_containers.push_back(FeatureId::cabinet);
