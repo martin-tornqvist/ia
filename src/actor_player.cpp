@@ -96,19 +96,19 @@ void Player::mk_start_items()
         item->give_xp_for_identify(Verbosity::silent);
         inv_->put_in_backpack(item);
 
-        // Manuscript of Darkbolt
-        item = item_factory::mk(ItemId::scroll_darkbolt);
-        static_cast<Potion*>(item)->identify(Verbosity::silent);
-        item->give_xp_for_identify(Verbosity::silent);
-        inv_->put_in_backpack(item);
-
         // Learn the Darkbolt spell
         player_spells::learn_spell(SpellId::darkbolt, Verbosity::silent);
-        player_spells::set_spell_skill_pct(SpellId::darkbolt, 20);
+        player_spells::set_spell_skill_pct(SpellId::darkbolt, 40);
 
         // Learn the Detect Monsters spell
         player_spells::learn_spell(SpellId::det_mon, Verbosity::silent);
         player_spells::set_spell_skill_pct(SpellId::det_mon, 40);
+
+        // Identify the Darkbolt scroll
+        std::unique_ptr<Item> scroll_darkbolt(
+            item_factory::mk(ItemId::scroll_darkbolt));
+        static_cast<Scroll*>(item)->identify(Verbosity::silent);
+        item->give_xp_for_identify(Verbosity::silent);
 
         // Identify the Detect Monsters scroll
         std::unique_ptr<Item> scroll_det_mon(
