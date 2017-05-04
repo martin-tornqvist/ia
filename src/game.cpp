@@ -657,22 +657,22 @@ void handle_player_input(const InputData& input)
     //
     case 't':
     {
-        const bool is_allowed =
-            map::player->prop_handler().
-            allow_attack_ranged(Verbosity::verbose);
+        const Item* explosive = map::player->active_explosive;
 
-        if (is_allowed)
+        if (explosive)
         {
-            const Item* explosive = map::player->active_explosive;
+            std::unique_ptr<State> throwing_explosive(
+                new ThrowingExplosive(map::player->pos, *explosive));
 
-            if (explosive)
-            {
-                std::unique_ptr<State> throwing_explosive(
-                    new ThrowingExplosive(map::player->pos, *explosive));
+            states::push(std::move(throwing_explosive));
+        }
+        else // Not holding explosive - run throwing attack instead
+        {
+            const bool is_allowed =
+                map::player->prop_handler().
+                allow_attack_ranged(Verbosity::verbose);
 
-                states::push(std::move(throwing_explosive));
-            }
-            else // Not holding explosive
+            if (is_allowed)
             {
                 Inventory& player_inv = map::player->inv();
 
@@ -1391,12 +1391,10 @@ void GameState::draw_map()
                     render_data->clr = clr_red;
                 }
 
-                if (f->is_los_passable())
+                if (f->is_los_passable() &&
+                    cell.is_lit)
                 {
-                    if (cell.is_lit)
-                    {
-                        render_data->mark_lit = true;
-                    }
+                    render_data->mark_lit = true;
                 }
             }
         }

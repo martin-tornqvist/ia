@@ -642,9 +642,11 @@ void ThrowingExplosive::on_draw()
             for (int y = expl_area.p0.y; y <= expl_area.p1.y; ++y)
             {
                 const auto& render_d = game::render_array[x][y];
+
                 const auto& marker_render_d = marker_render_data_[x][y];
 
-                if (render_d.glyph != 0 || marker_render_d.glyph != 0)
+                if (render_d.glyph != 0 ||
+                    marker_render_d.glyph != 0)
                 {
                     const bool has_marker = marker_render_d.glyph != 0;
 

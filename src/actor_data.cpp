@@ -1285,7 +1285,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::r_fire] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
-    d.spawn_min_dlvl = 9;
+    d.spawn_min_dlvl = 8;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::alone,  4),
